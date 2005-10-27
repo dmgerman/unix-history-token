@@ -2643,7 +2643,7 @@ name|int
 name|i
 decl_stmt|;
 comment|/*VR_LOCK_ASSERT(sc);*/
-comment|/* XXX: Called during detach w/o lock. */
+comment|/* XXX: Called during attach w/o lock. */
 name|VR_SETBIT16
 argument_list|(
 name|sc
@@ -2703,25 +2703,25 @@ name|vr_revid
 operator|<
 name|REV_ID_VT3065_A
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"vr%d: reset never completed!\n"
-argument_list|,
 name|sc
 operator|->
-name|vr_unit
+name|vr_ifp
+argument_list|,
+literal|"reset never completed!\n"
 argument_list|)
 expr_stmt|;
 else|else
 block|{
 comment|/* Use newer force reset command */
-name|printf
+name|if_printf
 argument_list|(
-literal|"vr%d: Using force reset command.\n"
-argument_list|,
 name|sc
 operator|->
-name|vr_unit
+name|vr_ifp
+argument_list|,
+literal|"Using force reset command.\n"
 argument_list|)
 expr_stmt|;
 name|VR_SETBIT
@@ -2949,11 +2949,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"vr%d: couldn't map ports/memory\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map ports/memory\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -3018,11 +3018,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"vr%d: couldn't map interrupt\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map interrupt\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -3033,170 +3033,7 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* 	 * Windows may put the chip in suspend mode when it 	 * shuts down. Be sure to kick it in the head to wake it 	 * up again. 	 */
-name|VR_CLRBIT
-argument_list|(
-name|sc
-argument_list|,
-name|VR_STICKHW
-argument_list|,
-operator|(
-name|VR_STICKHW_DS0
-operator||
-name|VR_STICKHW_DS1
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Reset the adapter. */
-name|vr_reset
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Turn on bit2 (MIION) in PCI configuration register 0x53 during 	 * initialization and disable AUTOPOLL. 	 */
-name|pci_write_config
-argument_list|(
-name|dev
-argument_list|,
-name|VR_PCI_MODE
-argument_list|,
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-name|VR_PCI_MODE
-argument_list|,
-literal|4
-argument_list|)
-operator||
-operator|(
-name|VR_MODE3_MIION
-operator|<<
-literal|24
-operator|)
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
-name|VR_CLRBIT
-argument_list|(
-name|sc
-argument_list|,
-name|VR_MIICMD
-argument_list|,
-name|VR_MIICMD_AUTOPOLL
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Get station address. The way the Rhine chips work, 	 * you're not allowed to directly access the EEPROM once 	 * they've been programmed a special way. Consequently, 	 * we need to read the node address from the PAR0 and PAR1 	 * registers. 	 */
-name|VR_SETBIT
-argument_list|(
-name|sc
-argument_list|,
-name|VR_EECSR
-argument_list|,
-name|VR_EECSR_LOAD
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|200
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|ETHER_ADDR_LEN
-condition|;
-name|i
-operator|++
-control|)
-name|eaddr
-index|[
-name|i
-index|]
-operator|=
-name|CSR_READ_1
-argument_list|(
-name|sc
-argument_list|,
-name|VR_PAR0
-operator|+
-name|i
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|vr_unit
-operator|=
-name|unit
-expr_stmt|;
-name|sc
-operator|->
-name|vr_ldata
-operator|=
-name|contigmalloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|vr_list_data
-argument_list|)
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_NOWAIT
-argument_list|,
-literal|0
-argument_list|,
-literal|0xffffffff
-argument_list|,
-name|PAGE_SIZE
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|vr_ldata
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"vr%d: no memory for list buffers!\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|ENXIO
-expr_stmt|;
-goto|goto
-name|fail
-goto|;
-block|}
-name|bzero
-argument_list|(
-name|sc
-operator|->
-name|vr_ldata
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|vr_list_data
-argument_list|)
-argument_list|)
-expr_stmt|;
+comment|/* Allocate ifnet structure. */
 name|ifp
 operator|=
 name|sc
@@ -3215,11 +3052,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"vr%d: can not if_alloc()\n"
+name|dev
 argument_list|,
-name|unit
+literal|"can not if_alloc()\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -3346,6 +3183,153 @@ name|IFCAP_POLLING
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Windows may put the chip in suspend mode when it 	 * shuts down. Be sure to kick it in the head to wake it 	 * up again. 	 */
+name|VR_CLRBIT
+argument_list|(
+name|sc
+argument_list|,
+name|VR_STICKHW
+argument_list|,
+operator|(
+name|VR_STICKHW_DS0
+operator||
+name|VR_STICKHW_DS1
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Reset the adapter. */
+name|vr_reset
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Turn on bit2 (MIION) in PCI configuration register 0x53 during 	 * initialization and disable AUTOPOLL. 	 */
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+name|VR_PCI_MODE
+argument_list|,
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|VR_PCI_MODE
+argument_list|,
+literal|4
+argument_list|)
+operator||
+operator|(
+name|VR_MODE3_MIION
+operator|<<
+literal|24
+operator|)
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+name|VR_CLRBIT
+argument_list|(
+name|sc
+argument_list|,
+name|VR_MIICMD
+argument_list|,
+name|VR_MIICMD_AUTOPOLL
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Get station address. The way the Rhine chips work, 	 * you're not allowed to directly access the EEPROM once 	 * they've been programmed a special way. Consequently, 	 * we need to read the node address from the PAR0 and PAR1 	 * registers. 	 */
+name|VR_SETBIT
+argument_list|(
+name|sc
+argument_list|,
+name|VR_EECSR
+argument_list|,
+name|VR_EECSR_LOAD
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|200
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ETHER_ADDR_LEN
+condition|;
+name|i
+operator|++
+control|)
+name|eaddr
+index|[
+name|i
+index|]
+operator|=
+name|CSR_READ_1
+argument_list|(
+name|sc
+argument_list|,
+name|VR_PAR0
+operator|+
+name|i
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|vr_ldata
+operator|=
+name|contigmalloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|vr_list_data
+argument_list|)
+argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_NOWAIT
+operator||
+name|M_ZERO
+argument_list|,
+literal|0
+argument_list|,
+literal|0xffffffff
+argument_list|,
+name|PAGE_SIZE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|vr_ldata
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"no memory for list buffers!\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 comment|/* Do MII setup. */
 if|if
 condition|(
@@ -3364,13 +3348,11 @@ name|vr_ifmedia_sts
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"vr%d: MII without any phy!\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|vr_unit
+literal|"MII without any phy!\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -3433,11 +3415,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"vr%d: couldn't set up irq\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't set up irq\n"
 argument_list|)
 expr_stmt|;
 name|ether_ifdetach
@@ -4400,13 +4382,11 @@ operator|->
 name|if_ierrors
 operator|++
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"vr%d: rx error (%02x):"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|vr_unit
+literal|"rx error (%02x):"
 argument_list|,
 name|rxstat
 operator|&
@@ -4681,13 +4661,11 @@ operator|!
 name|i
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"vr%d: rx shutdown error!\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|vr_unit
+literal|"rx shutdown error!\n"
 argument_list|)
 expr_stmt|;
 name|sc
@@ -4853,13 +4831,11 @@ operator|!
 name|i
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"vr%d: tx shutdown timeout\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|vr_unit
+literal|"tx shutdown timeout\n"
 argument_list|)
 expr_stmt|;
 name|sc
@@ -5040,13 +5016,13 @@ operator|&
 name|VR_F_RESTART
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"vr%d: restarting\n"
-argument_list|,
 name|sc
 operator|->
-name|vr_unit
+name|vr_ifp
+argument_list|,
+literal|"restarting\n"
 argument_list|)
 expr_stmt|;
 name|vr_stop
@@ -5299,13 +5275,11 @@ operator|&
 name|VR_ISR_RX_DROPPED
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"vr%d: rx packet lost\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|vr_unit
+literal|"rx packet lost\n"
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -5341,13 +5315,11 @@ name|VR_ISR_RX_OFLOW
 operator|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"vr%d: receive error (%04x)"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|vr_unit
+literal|"receive error (%04x)"
 argument_list|,
 name|status
 argument_list|)
@@ -5655,13 +5627,11 @@ operator|&
 name|VR_ISR_RX_DROPPED
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"vr%d: rx packet lost\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|vr_unit
+literal|"rx packet lost\n"
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -5697,13 +5667,11 @@ name|VR_ISR_RX_OFLOW
 operator|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"vr%d: receive error (%04x)"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|vr_unit
+literal|"receive error (%04x)"
 argument_list|,
 name|status
 argument_list|)
@@ -6531,13 +6499,11 @@ operator|==
 name|ENOBUFS
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"vr%d: initialization failed: no memory for rx buffers\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|vr_unit
+literal|"initialization failed: no memory for rx buffers\n"
 argument_list|)
 expr_stmt|;
 name|vr_stop
@@ -7219,13 +7185,11 @@ operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"vr%d: watchdog timeout\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|vr_unit
+literal|"watchdog timeout\n"
 argument_list|)
 expr_stmt|;
 name|vr_stop

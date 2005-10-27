@@ -2452,10 +2452,6 @@ name|vr_info
 decl_stmt|;
 comment|/* Rhine adapter info */
 name|u_int8_t
-name|vr_unit
-decl_stmt|;
-comment|/* interface number */
-name|u_int8_t
 name|vr_type
 decl_stmt|;
 name|u_int8_t
