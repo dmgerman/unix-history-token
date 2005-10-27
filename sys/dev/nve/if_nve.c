@@ -3557,6 +3557,12 @@ name|pending_rxs
 operator|=
 literal|0
 expr_stmt|;
+name|sc
+operator|->
+name|pending_txs
+operator|=
+literal|0
+expr_stmt|;
 name|ifp
 operator|->
 name|if_drv_flags
