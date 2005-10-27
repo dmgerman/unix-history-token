@@ -4507,7 +4507,6 @@ directive|endif
 comment|/* MBS_SUPPORT */
 if|if
 condition|(
-operator|!
 name|WCHAR
 argument_list|(
 operator|(
@@ -4618,7 +4617,7 @@ operator|>=
 name|buf
 operator|+
 name|size
-operator|&&
+operator|||
 operator|!
 name|WCHAR
 argument_list|(
