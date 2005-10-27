@@ -5327,6 +5327,11 @@ name|f
 operator|=
 literal|0
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|hdrtype
 operator|=
 name|REG
