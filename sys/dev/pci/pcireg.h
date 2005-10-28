@@ -639,6 +639,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCIM_BIOS_ADDR_MASK
+value|0xfffff800
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIR_CAP_PTR
 value|0x34
 end_define
