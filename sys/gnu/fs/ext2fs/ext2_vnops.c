@@ -1073,7 +1073,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Open called.  *  * Nothing to do.  */
+comment|/*  * Open called.  */
 end_comment
 
 begin_function
@@ -1090,6 +1090,25 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
+name|struct
+name|vnode
+modifier|*
+name|vp
+init|=
+name|ap
+operator|->
+name|a_vp
+decl_stmt|;
+name|struct
+name|inode
+modifier|*
+name|ip
+init|=
+name|VTOI
+argument_list|(
+name|vp
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|ap
@@ -1148,6 +1167,21 @@ operator|(
 name|EPERM
 operator|)
 return|;
+name|vnode_create_vobject
+argument_list|(
+name|ap
+operator|->
+name|a_vp
+argument_list|,
+name|ip
+operator|->
+name|i_size
+argument_list|,
+name|ap
+operator|->
+name|a_td
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
