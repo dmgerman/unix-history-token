@@ -549,11 +549,11 @@ if|if
 condition|(
 name|reg
 operator|==
-name|CARDBUS_ROM_REG
+name|PCIR_BIOS
 condition|)
 name|testval
 operator|=
-name|CARDBUS_ROM_ADDRMASK
+name|PCIM_BIOS_ADDR_MASK
 expr_stmt|;
 else|else
 name|testval
@@ -2200,6 +2200,11 @@ name|slot
 decl_stmt|,
 name|func
 decl_stmt|;
+name|int
+name|cardbusfunchigh
+init|=
+literal|0
+decl_stmt|;
 name|cardbus_detach_card
 argument_list|(
 name|cbdev
@@ -2220,26 +2225,11 @@ argument_list|(
 name|cbdev
 argument_list|)
 expr_stmt|;
-comment|/* For each function, set it up and try to attach a driver to it */
-for|for
-control|(
 name|slot
 operator|=
 literal|0
-init|;
-name|slot
-operator|<=
-name|CARDBUS_SLOTMAX
-condition|;
-name|slot
-operator|++
-control|)
-block|{
-name|int
-name|cardbusfunchigh
-init|=
-literal|0
-decl_stmt|;
+expr_stmt|;
+comment|/* For each function, set it up and try to attach a driver to it */
 for|for
 control|(
 name|func
@@ -2302,7 +2292,7 @@ name|mfdev
 condition|)
 name|cardbusfunchigh
 operator|=
-name|CARDBUS_FUNCMAX
+name|PCI_FUNCMAX
 expr_stmt|;
 name|cardbus_device_setup_regs
 argument_list|(
@@ -2464,7 +2454,6 @@ else|else
 name|cardattached
 operator|++
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(

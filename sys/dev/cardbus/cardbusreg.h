@@ -8,24 +8,6 @@ comment|/*  * Register definitions for the Cardbus Bus  */
 end_comment
 
 begin_comment
-comment|/* Cardbus bus constants */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CARDBUS_SLOTMAX
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|CARDBUS_FUNCMAX
-value|7
-end_define
-
-begin_comment
 comment|/* EXROM offsets for reading CIS */
 end_comment
 
