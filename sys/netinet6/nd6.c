@@ -7590,6 +7590,12 @@ name|IFT_GIF
 case|:
 comment|/* XXX need more cases? */
 case|case
+name|IFT_PPP
+case|:
+case|case
+name|IFT_TUNNEL
+case|:
+case|case
 name|IFT_BRIDGE
 case|:
 return|return
