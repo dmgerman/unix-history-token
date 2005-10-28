@@ -1124,7 +1124,13 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|(
 name|error
+operator|)
+condition|?
+name|error
+else|:
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
