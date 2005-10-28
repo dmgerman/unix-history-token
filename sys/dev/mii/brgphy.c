@@ -1634,6 +1634,9 @@ name|brgphy_mii_model
 condition|)
 block|{
 case|case
+name|MII_MODEL_xxBROADCOM_BCM5400
+case|:
+case|case
 name|MII_MODEL_xxBROADCOM_BCM5401
 case|:
 name|bcm5401_load_dspcode
@@ -2688,6 +2691,9 @@ condition|(
 name|brgphy_mii_model
 condition|)
 block|{
+case|case
+name|MII_MODEL_xxBROADCOM_BCM5400
+case|:
 case|case
 name|MII_MODEL_xxBROADCOM_BCM5401
 case|:
