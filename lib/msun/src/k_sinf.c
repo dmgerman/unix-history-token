@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* k_sinf.c -- float version of k_sin.c  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.  */
+comment|/* k_sinf.c -- float version of k_sin.c  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.  * Optimized by Bruce D. Evans.  */
 end_comment
 
 begin_comment
@@ -40,51 +40,55 @@ directive|include
 file|"math_private.h"
 end_include
 
+begin_comment
+comment|/* Range of maximum relative error in polynomial: ~[-1.61e-10, 1.621e-10]. */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
 name|float
 name|half
 init|=
-literal|5.0000000000e-01
+literal|0.5
 decl_stmt|,
-comment|/* 0x3f000000 */
 name|S1
 init|=
 operator|-
-literal|1.6666667163e-01
+literal|0xaaaaab
+literal|.0p
+operator|-
+literal|26
 decl_stmt|,
-comment|/* 0xbe2aaaab */
+comment|/* -0.1666666716337203979492187500 */
 name|S2
 init|=
-literal|8.3333337680e-03
+literal|0x8888ba
+literal|.0p
+operator|-
+literal|30
 decl_stmt|,
-comment|/* 0x3c088889 */
+comment|/*  0.008333379402756690979003906250 */
 name|S3
 init|=
 operator|-
-literal|1.9841270114e-04
+literal|0xd02cb0
+literal|.0p
+operator|-
+literal|36
 decl_stmt|,
-comment|/* 0xb9500d01 */
+comment|/* -0.0001985307317227125167846679687 */
 name|S4
 init|=
-literal|2.7557314297e-06
-decl_stmt|,
-comment|/* 0x3638ef1b */
-name|S5
-init|=
+literal|0xbe18ff
+literal|.0p
 operator|-
-literal|2.5050759689e-08
-decl_stmt|,
-comment|/* 0xb2d72f34 */
-name|S6
-init|=
-literal|1.5896910177e-10
+literal|42
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 0x2f2ec9d3 */
+comment|/*  0.000002832675590980215929448604584 */
 end_comment
 
 begin_function
@@ -131,19 +135,7 @@ name|S3
 operator|+
 name|z
 operator|*
-operator|(
 name|S4
-operator|+
-name|z
-operator|*
-operator|(
-name|S5
-operator|+
-name|z
-operator|*
-name|S6
-operator|)
-operator|)
 operator|)
 expr_stmt|;
 if|if

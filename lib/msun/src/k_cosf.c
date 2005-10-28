@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* k_cosf.c -- float version of k_cos.c  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.  */
+comment|/* k_cosf.c -- float version of k_cos.c  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.  * Debugged and optimized by Bruce D. Evans.  */
 end_comment
 
 begin_comment
@@ -40,51 +40,46 @@ directive|include
 file|"math_private.h"
 end_include
 
+begin_comment
+comment|/* Range of maximum relative error in polynomial: ~[-1.15e-10, 1.169e-10]. */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
 name|float
 name|one
 init|=
-literal|1.0000000000e+00
+literal|1.0
 decl_stmt|,
-comment|/* 0x3f800000 */
 name|C1
 init|=
-literal|4.1666667908e-02
+literal|0xaaaaa5
+literal|.0p
+operator|-
+literal|28
 decl_stmt|,
-comment|/* 0x3d2aaaab */
+comment|/*  0.04166664555668830871582031250 */
 name|C2
 init|=
 operator|-
-literal|1.3888889225e-03
+literal|0xb60615
+literal|.0p
+operator|-
+literal|33
 decl_stmt|,
-comment|/* 0xbab60b61 */
+comment|/* -0.001388731063343584537506103516 */
 name|C3
 init|=
-literal|2.4801587642e-05
-decl_stmt|,
-comment|/* 0x37d00d01 */
-name|C4
-init|=
+literal|0xccf47d
+literal|.0p
 operator|-
-literal|2.7557314297e-07
-decl_stmt|,
-comment|/* 0xb493f27c */
-name|C5
-init|=
-literal|2.0875723372e-09
-decl_stmt|,
-comment|/* 0x310f74f6 */
-name|C6
-init|=
-operator|-
-literal|1.1359647598e-11
+literal|39
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 0xad47d74e */
+comment|/*  0.00002443254288664320483803749084 */
 end_comment
 
 begin_function
@@ -127,25 +122,7 @@ name|C2
 operator|+
 name|z
 operator|*
-operator|(
 name|C3
-operator|+
-name|z
-operator|*
-operator|(
-name|C4
-operator|+
-name|z
-operator|*
-operator|(
-name|C5
-operator|+
-name|z
-operator|*
-name|C6
-operator|)
-operator|)
-operator|)
 operator|)
 operator|)
 expr_stmt|;
