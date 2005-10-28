@@ -6111,6 +6111,17 @@ operator|=
 name|get_pv_entry
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|pv
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"no pv entries: increase vm.pmap.shpgperproc"
+argument_list|)
+expr_stmt|;
 name|pv
 operator|->
 name|pv_va
