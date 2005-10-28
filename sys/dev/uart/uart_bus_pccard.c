@@ -185,14 +185,14 @@ parameter_list|)
 block|{
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|fcn
-init|=
-name|PCCARD_FUNCTION_UNSPEC
 decl_stmt|;
+name|fcn
+operator|=
+name|PCCARD_FUNCTION_UNSPEC
+expr_stmt|;
 name|error
 operator|=
 name|pccard_get_function
@@ -214,7 +214,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * If a serial card, we are likely the right driver.  However, 	 * some serial cards are better servered by other drivers, so 	 * allow other drivers to claim it, if they want. 	 */
+comment|/* 	 * If a serial card, we are likely the right driver.  However, 	 * some serial cards are better serviced by other drivers, so 	 * allow other drivers to claim it, if they want. 	 */
 if|if
 condition|(
 name|fcn
@@ -223,8 +223,7 @@ name|PCCARD_FUNCTION_SERIAL
 condition|)
 return|return
 operator|(
-operator|-
-literal|100
+name|BUS_PROBE_GENERIC
 operator|)
 return|;
 return|return
@@ -250,7 +249,7 @@ modifier|*
 name|sc
 decl_stmt|;
 name|int
-name|err
+name|error
 decl_stmt|;
 name|sc
 operator|=
@@ -266,9 +265,7 @@ operator|=
 operator|&
 name|uart_ns8250_class
 expr_stmt|;
-comment|/* Do not probe IRQ - pccard doesn't turn on the interrupt line */
-comment|/* until bus_setup_intr but how can I do so?*/
-name|err
+name|error
 operator|=
 name|uart_bus_probe
 argument_list|(
@@ -285,11 +282,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|err
+name|error
+operator|>
+literal|0
 condition|)
 return|return
 operator|(
-name|err
+name|error
 operator|)
 return|;
 return|return
