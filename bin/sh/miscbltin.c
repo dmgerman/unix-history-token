@@ -1189,6 +1189,8 @@ name|void
 modifier|*
 name|set
 decl_stmt|;
+name|INTOFF
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1233,6 +1235,8 @@ name|free
 argument_list|(
 name|set
 argument_list|)
+expr_stmt|;
+name|INTON
 expr_stmt|;
 block|}
 block|}
