@@ -607,6 +607,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|found_defaults
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|maxusers
 decl_stmt|;
 end_decl_stmt
