@@ -1873,6 +1873,7 @@ name|toc
 operator|->
 name|tab
 condition|)
+block|{
 name|lba2msf
 argument_list|(
 name|ntohl
@@ -1912,6 +1913,13 @@ operator|.
 name|frame
 argument_list|)
 expr_stmt|;
+name|entry
+operator|->
+name|addr_type
+operator|=
+name|CD_MSF_FORMAT
+expr_stmt|;
+block|}
 block|}
 name|error
 operator|=
@@ -5378,14 +5386,6 @@ name|len
 decl_stmt|;
 if|if
 condition|(
-name|acd_test_ready
-argument_list|(
-name|dev
-argument_list|)
-condition|)
-return|return;
-if|if
-condition|(
 operator|!
 operator|(
 name|atadev
@@ -5418,6 +5418,22 @@ name|toc
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|cdp
+operator|->
+name|disk_size
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* hack for GEOM SOS */
+if|if
+condition|(
+name|acd_test_ready
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return;
 name|bzero
 argument_list|(
 name|ccb
@@ -5428,14 +5444,6 @@ name|ccb
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|cdp
-operator|->
-name|disk_size
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-comment|/* hack for GEOM SOS */
 name|len
 operator|=
 sizeof|sizeof
