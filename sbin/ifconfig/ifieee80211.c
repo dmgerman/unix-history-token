@@ -1563,6 +1563,17 @@ operator|&
 name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|val
+operator|==
+name|NULL
+condition|)
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|set80211
 argument_list|(
 name|s
