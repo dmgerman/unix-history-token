@@ -7226,11 +7226,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|WB_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
