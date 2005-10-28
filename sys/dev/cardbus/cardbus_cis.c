@@ -1868,15 +1868,12 @@ block|}
 comment|/* Convert from BAR type to BAR offset */
 name|bar
 operator|=
-name|CARDBUS_BASE0_REG
-operator|+
-operator|(
+name|PCIR_BAR
+argument_list|(
 name|bar
 operator|-
 literal|1
-operator|)
-operator|*
-literal|4
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2707,13 +2704,20 @@ name|resource
 modifier|*
 name|res
 decl_stmt|;
-switch|switch
-condition|(
+name|uint32_t
+name|space
+decl_stmt|;
+name|space
+operator|=
 name|CARDBUS_CIS_SPACE
 argument_list|(
 operator|*
 name|start
 argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|space
 condition|)
 block|{
 case|case
@@ -2752,19 +2756,12 @@ case|:
 operator|*
 name|rid
 operator|=
-name|CARDBUS_BASE0_REG
-operator|+
-operator|(
-name|CARDBUS_CIS_SPACE
+name|PCIR_BAR
 argument_list|(
-operator|*
-name|start
-argument_list|)
+name|space
 operator|-
-literal|1
-operator|)
-operator|*
-literal|4
+name|CARDBUS_CIS_ASI_BAR0
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2775,13 +2772,6 @@ name|rid
 operator|=
 name|CARDBUS_ROM_REG
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 		 * This mask doesn't contain the bit that actually enables 		 * the Option ROM. 		 */
-block|pci_write_config(child, *rid, CARDBUS_ROM_ADDRMASK, 4);
-endif|#
-directive|endif
 break|break;
 default|default:
 name|device_printf
@@ -2790,11 +2780,7 @@ name|cbdev
 argument_list|,
 literal|"Unable to read CIS: Unknown space: %d\n"
 argument_list|,
-name|CARDBUS_CIS_SPACE
-argument_list|(
-operator|*
-name|start
-argument_list|)
+name|space
 argument_list|)
 expr_stmt|;
 return|return
@@ -2967,11 +2953,7 @@ expr_stmt|;
 comment|/* Flip to the right ROM image if CIS is in ROM */
 if|if
 condition|(
-name|CARDBUS_CIS_SPACE
-argument_list|(
-operator|*
-name|start
-argument_list|)
+name|space
 operator|==
 name|CARDBUS_CIS_ASI_ROM
 condition|)
