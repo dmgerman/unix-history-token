@@ -268,9 +268,7 @@ decl_stmt|;
 comment|/* Length of the service name */
 name|char
 name|data
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 comment|/* init data goes here */
 block|}
@@ -644,9 +642,7 @@ name|tag_len
 decl_stmt|;
 name|char
 name|tag_data
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|__packed
@@ -679,9 +675,7 @@ decl_stmt|;
 name|struct
 name|pppoe_tag
 name|tag
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|__packed

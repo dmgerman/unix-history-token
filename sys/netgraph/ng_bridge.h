@@ -261,9 +261,7 @@ decl_stmt|;
 name|struct
 name|ng_bridge_host
 name|hosts
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 struct|;

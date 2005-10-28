@@ -61,9 +61,7 @@ decl_stmt|;
 comment|/* third arg of [gs]etsockopt() */
 name|u_char
 name|value
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 comment|/* fourth arg of [gs]etsockopt() */
 block|}
