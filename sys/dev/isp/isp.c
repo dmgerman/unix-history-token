@@ -25351,11 +25351,11 @@ block|,
 comment|/* 0x7d: SEND LFA */
 name|ISPOPMAP
 argument_list|(
-literal|0x07
+literal|0x0f
 argument_list|,
 literal|0x01
 argument_list|)
-comment|/* 0x7e: Lun RESET */
+comment|/* 0x7e: LUN RESET */
 block|}
 decl_stmt|;
 end_decl_stmt

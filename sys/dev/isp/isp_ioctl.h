@@ -457,5 +457,45 @@ name|ISP_SET_FC_PARAM
 value|_IOWR(ISP_IOC, 99, struct isp_fc_param)
 end_define
 
+begin_comment
+comment|/*  * Various Reset Goodies  */
+end_comment
+
+begin_struct
+struct|struct
+name|isp_fc_tsk_mgmt
+block|{
+name|u_int32_t
+name|loopid
+decl_stmt|;
+comment|/* 0..255 */
+name|u_int32_t
+name|lun
+decl_stmt|;
+enum|enum
+block|{
+name|CLEAR_ACA
+block|,
+name|TARGET_RESET
+block|,
+name|LUN_RESET
+block|,
+name|CLEAR_TASK_SET
+block|,
+name|ABORT_TASK_SET
+block|}
+name|action
+enum|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|ISP_TSK_MGMT
+value|_IOWR(ISP_IOC, 97, struct isp_fc_tsk_mgmt)
+end_define
+
 end_unit
 

@@ -724,6 +724,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MBOX_LUN_RESET
+value|0x007E
+end_define
+
+begin_define
+define|#
+directive|define
 name|MBOX_DRIVER_HEARTBEAT
 value|0x005B
 end_define
