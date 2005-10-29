@@ -836,6 +836,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCIR_CAP_PTR_2
+value|0x14
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIR_SECSTAT_2
 value|0x16
 end_define

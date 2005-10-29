@@ -2237,7 +2237,7 @@ literal|2
 case|:
 name|ptrptr
 operator|=
-literal|0x14
+name|PCIR_CAP_PTR_2
 expr_stmt|;
 break|break;
 default|default:
