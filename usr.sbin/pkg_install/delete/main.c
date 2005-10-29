@@ -351,7 +351,7 @@ expr_stmt|;
 comment|/* 		 * If character after the '/' is alphanumeric, then we've found the 		 * package name.  Otherwise we've come across a trailing '/' and 		 * need to continue our quest. 		 */
 if|if
 condition|(
-name|isalpha
+name|isalnum
 argument_list|(
 operator|*
 name|pkgs_split
