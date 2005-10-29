@@ -1510,11 +1510,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|txp_set_filter
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|eaddr
 index|[
 literal|0
