@@ -44,13 +44,6 @@ name|DTV_OFFSET
 value|offsetof(struct tcb, tcb_dtv)
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|_thr_using_setbase
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Variant II tcb, first two members are required by rtld,  * %gs points to the structure.  */
 end_comment
