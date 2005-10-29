@@ -1218,6 +1218,51 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+comment|/* Turn off the interrupts */
+name|cbb_set
+argument_list|(
+name|sc
+argument_list|,
+name|CBB_SOCKET_MASK
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* reset 16-bit pcmcia bus */
+name|exca_clrb
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|exca
+index|[
+literal|0
+index|]
+argument_list|,
+name|EXCA_INTR
+argument_list|,
+name|EXCA_INTR_RESET
+argument_list|)
+expr_stmt|;
+comment|/* turn off power */
+name|cbb_power
+argument_list|(
+name|brdev
+argument_list|,
+name|CARD_OFF
+argument_list|)
+expr_stmt|;
+comment|/* Ack the interrupt */
+name|cbb_set
+argument_list|(
+name|sc
+argument_list|,
+name|CBB_SOCKET_EVENT
+argument_list|,
+literal|0xffffffff
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Wait for the thread to die.  kthread_exit will do a wakeup 	 * on the event thread's struct thread * so that we know it is 	 * save to proceed.  IF the thread is running, set the please 	 * die flag and wait for it to comply.  Since the wakeup on 	 * the event thread happens only in kthread_exit, we don't 	 * need to loop here. 	 */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1226,7 +1271,6 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
-comment|/*  	 * XXX do we teardown all the ones still registered to guard against 	 * XXX buggy client drivers? 	 */
 name|bus_teardown_intr
 argument_list|(
 name|brdev
@@ -1240,7 +1284,6 @@ operator|->
 name|intrhand
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Wait for the thread to die.  kthread_exit will do a wakeup 	 * on the event thread's struct thread * so that we know it is 	 * save to proceed.  IF the thread is running, set the please 	 * die flag and wait for it to comply.  Since the wakeup on 	 * the event thread happens only in kthread_exit, we don't 	 * need to loop here. 	 */
 name|sc
 operator|->
 name|flags
