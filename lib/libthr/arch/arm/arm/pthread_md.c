@@ -27,20 +27,6 @@ directive|include
 file|"pthread_md.h"
 end_include
 
-begin_decl_stmt
-name|struct
-name|umtx
-name|arm_umtx
-init|=
-block|{
-operator|.
-name|u_owner
-operator|=
-name|UMTX_UNOWNED
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|struct
 name|tcb

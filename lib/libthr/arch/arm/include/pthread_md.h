@@ -37,18 +37,6 @@ directive|include
 file|<stddef.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/umtx.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -228,15 +216,8 @@ operator|)
 return|;
 end_return
 
-begin_decl_stmt
-unit|}  extern
-name|struct
-name|umtx
-name|arm_umtx
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif
