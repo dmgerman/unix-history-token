@@ -1415,7 +1415,7 @@ argument_list|(
 name|brdev
 argument_list|)
 decl_stmt|;
-comment|/* properly reset everything at shutdown */
+comment|/* 	 * Place the cards in reset, turn off the interrupts and power 	 * down the socket. 	 */
 name|PCI_MASK_CONFIG
 argument_list|(
 name|brdev
@@ -1452,6 +1452,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|cbb_set
+argument_list|(
+name|sc
+argument_list|,
+name|CBB_SOCKET_EVENT
+argument_list|,
+literal|0xffffffff
+argument_list|)
+expr_stmt|;
 name|cbb_power
 argument_list|(
 name|brdev
@@ -1459,6 +1468,7 @@ argument_list|,
 name|CARD_OFF
 argument_list|)
 expr_stmt|;
+comment|/*  	 * For paranoia, turn off all address decoding.  Really not needed, 	 * it seems, but it can't hurt 	 */
 name|exca_putb
 argument_list|(
 operator|&
@@ -1560,17 +1570,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|4
-argument_list|)
-expr_stmt|;
-name|pci_write_config
-argument_list|(
-name|brdev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-literal|0
-argument_list|,
-literal|2
 argument_list|)
 expr_stmt|;
 return|return
