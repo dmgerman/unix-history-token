@@ -25,6 +25,17 @@ name|FBSD_MAJOR
 value|7
 end_define
 
+begin_define
+define|#
+directive|define
+name|FBSD_CC_VER
+value|700001
+end_define
+
+begin_comment
+comment|/* form like __FreeBSD_version */
+end_comment
+
 begin_undef
 undef|#
 directive|undef

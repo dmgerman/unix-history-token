@@ -87,7 +87,7 @@ directive|define
 name|FBSD_NATIVE_TARGET_OS_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do {									\ 	builtin_define_std ("__FreeBSD_cc_version=700001");		\   } while (0)
+value|do {									\ 	builtin_define_with_int_value ("__FreeBSD_cc_version", FBSD_CC_VER); \   } while (0)
 end_define
 
 begin_else
