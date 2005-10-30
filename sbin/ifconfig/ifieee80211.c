@@ -295,7 +295,7 @@ decl_stmt|;
 name|u_int8_t
 name|data
 index|[
-literal|33
+name|IEEE80211_NWID_LEN
 index|]
 decl_stmt|;
 name|ssid
@@ -362,6 +362,8 @@ argument_list|(
 name|data
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|get_string
 argument_list|(
 name|val
@@ -372,6 +374,13 @@ name|data
 argument_list|,
 operator|&
 name|len
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 name|set80211
