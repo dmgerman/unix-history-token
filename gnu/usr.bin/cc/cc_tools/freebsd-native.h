@@ -22,7 +22,7 @@ begin_define
 define|#
 directive|define
 name|FBSD_MAJOR
-value|5
+value|6
 end_define
 
 begin_undef
