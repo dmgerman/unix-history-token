@@ -647,6 +647,35 @@ return|;
 block|}
 end_function
 
+begin_struct
+struct|struct
+name|osigevent
+block|{
+name|int
+name|sigev_notify
+decl_stmt|;
+comment|/* Notification type */
+union|union
+block|{
+name|int
+name|__sigev_signo
+decl_stmt|;
+comment|/* Signal number */
+name|int
+name|__sigev_notify_kqueue
+decl_stmt|;
+block|}
+name|__sigev_u
+union|;
+name|union
+name|sigval
+name|sigev_value
+decl_stmt|;
+comment|/* Signal value */
+block|}
+struct|;
+end_struct
+
 begin_typedef
 typedef|typedef
 struct|struct

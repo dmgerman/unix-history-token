@@ -161,11 +161,24 @@ name|size_t
 name|aio_nbytes
 decl_stmt|;
 comment|/* Number of bytes for I/O */
-name|struct
-name|sigevent
-name|aio_sigevent
+name|char
+name|__spare__
+index|[
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+operator|*
+literal|2
+operator|+
+sizeof|sizeof
+argument_list|(
+name|void
+operator|*
+argument_list|)
+index|]
 decl_stmt|;
-comment|/* Signal to deliver */
+comment|/* osigevent. */
 name|int
 name|aio_lio_opcode
 decl_stmt|;
@@ -178,6 +191,11 @@ name|struct
 name|__aiocb_private
 name|_aiocb_private
 decl_stmt|;
+name|struct
+name|sigevent
+name|aio_sigevent
+decl_stmt|;
+comment|/* Signal to deliver */
 block|}
 name|aiocb_t
 typedef|;

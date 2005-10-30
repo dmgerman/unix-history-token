@@ -744,34 +744,47 @@ name|int
 name|sigev_notify
 decl_stmt|;
 comment|/* Notification type */
-union|union
-block|{
 name|int
-name|__sigev_signo
+name|sigev_signo
 decl_stmt|;
 comment|/* Signal number */
-name|int
-name|__sigev_notify_kqueue
-decl_stmt|;
-block|}
-name|__sigev_u
-union|;
 name|union
 name|sigval
 name|sigev_value
 decl_stmt|;
 comment|/* Signal value */
-comment|/*  * XXX missing sigev_notify_function, sigev_notify_attributes.  */
+union|union
+block|{
+name|__lwpid_t
+name|_threadid
+decl_stmt|;
+struct|struct
+block|{
+name|void
+function_decl|(
+modifier|*
+name|_function
+function_decl|)
+parameter_list|(
+name|union
+name|sigval
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+modifier|*
+name|_attribute
+decl_stmt|;
+comment|/* pthread_attr_t * */
+block|}
+name|_sigev_thread
+struct|;
+block|}
+name|_sigev_un
+union|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|sigev_signo
-value|__sigev_u.__sigev_signo
-end_define
 
 begin_if
 if|#
@@ -783,7 +796,14 @@ begin_define
 define|#
 directive|define
 name|sigev_notify_kqueue
-value|__sigev_u.__sigev_notify_kqueue
+value|sigev_signo
+end_define
+
+begin_define
+define|#
+directive|define
+name|sigev_notify_thread_id
+value|_sigev_un._threadid
 end_define
 
 begin_endif
@@ -794,12 +814,26 @@ end_endif
 begin_define
 define|#
 directive|define
+name|sigev_notify_function
+value|_sigev_un._sigev_thread._function
+end_define
+
+begin_define
+define|#
+directive|define
+name|sigev_notify_attributes
+value|_sigev_un._sigev_thread._attribute
+end_define
+
+begin_define
+define|#
+directive|define
 name|SIGEV_NONE
 value|0
 end_define
 
 begin_comment
-comment|/* No async notification */
+comment|/* No async notification. */
 end_comment
 
 begin_define
@@ -810,7 +844,18 @@ value|1
 end_define
 
 begin_comment
-comment|/* Generate a queued signal */
+comment|/* Generate a queued signal. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIGEV_THREAD
+value|2
+end_define
+
+begin_comment
+comment|/* Call back from another pthread. */
 end_comment
 
 begin_if
@@ -827,17 +872,24 @@ value|3
 end_define
 
 begin_comment
-comment|/* Generate a kevent */
+comment|/* Generate a kevent. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIGEV_THREAD_ID
+value|4
+end_define
+
+begin_comment
+comment|/* Send signal to a kernel thread. */
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * XXX missing SIGEV_THREAD.  */
-end_comment
 
 begin_endif
 endif|#
