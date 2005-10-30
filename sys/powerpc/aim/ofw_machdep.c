@@ -155,8 +155,22 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|long
+name|register_t
 name|ofmsr
+index|[
+literal|5
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pcpu
+name|__pcpu
+index|[
+name|MAXCPU
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -188,6 +202,86 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * Saved SPRG0-3 from OpenFirmware. Will be restored prior to the callback.  */
+end_comment
+
+begin_decl_stmt
+name|register_t
+name|ofw_sprg0_save
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ofw_sprg_prepare
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* 	 * Assume that interrupt are disabled at this point, or 	 * SPRG1-3 could be trashed 	 */
+asm|__asm __volatile("mfsprg0 %0\n\t"
+literal|"mtsprg0 %1\n\t"
+literal|"mtsprg1 %2\n\t"
+literal|"mtsprg2 %3\n\t"
+literal|"mtsprg3 %4\n\t"
+operator|:
+literal|"=&r"
+operator|(
+name|ofw_sprg0_save
+operator|)
+operator|:
+literal|"r"
+operator|(
+name|ofmsr
+index|[
+literal|1
+index|]
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|ofmsr
+index|[
+literal|2
+index|]
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|ofmsr
+index|[
+literal|3
+index|]
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|ofmsr
+index|[
+literal|4
+index|]
+operator|)
+block|)
+function|;
+end_function
+
+begin_function
+unit|}  static
+name|__inline
+name|void
+name|ofw_sprg_restore
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* 	 * Note that SPRG1-3 contents are irrelevant. They are scratch 	 * registers used in the early portion of trap handling when 	 * interrupts are disabled. 	 * 	 * PCPU data cannot be used until this routine is called ! 	 */
+asm|__asm __volatile("mtsprg0 %0" :: "r"(ofw_sprg0_save));
+block|}
+end_function
 
 begin_comment
 comment|/*  * Memory region utilities: determine if two regions overlap,  * and merge two overlapping regions into one  */
@@ -695,10 +789,19 @@ operator|:
 literal|"r"
 operator|(
 name|ofmsr
+index|[
+literal|0
+index|]
 operator|)
 block|)
 function|;
 end_function
+
+begin_expr_stmt
+name|ofw_sprg_prepare
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_if
 if|if
@@ -768,7 +871,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-unit|} 	 	result
+unit|}         	result
 operator|=
 name|ofwcall
 argument_list|(
@@ -816,6 +919,12 @@ expr_stmt|;
 block|}
 block|}
 end_if
+
+begin_expr_stmt
+name|ofw_sprg_restore
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_asm
 asm|__asm(	"\t"
