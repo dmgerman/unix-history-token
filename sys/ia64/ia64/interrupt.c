@@ -1921,7 +1921,6 @@ operator|->
 name|ih_argument
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 name|critical_exit
 argument_list|()
