@@ -1134,6 +1134,9 @@ name|socket
 modifier|*
 name|so
 parameter_list|,
+name|int
+name|backlog
+parameter_list|,
 name|struct
 name|thread
 modifier|*
@@ -1222,6 +1225,8 @@ expr_stmt|;
 name|solisten_proto
 argument_list|(
 name|so
+argument_list|,
+name|backlog
 argument_list|)
 expr_stmt|;
 block|}
@@ -1253,6 +1258,9 @@ name|struct
 name|socket
 modifier|*
 name|so
+parameter_list|,
+name|int
+name|backlog
 parameter_list|,
 name|struct
 name|thread
@@ -1369,6 +1377,8 @@ expr_stmt|;
 name|solisten_proto
 argument_list|(
 name|so
+argument_list|,
+name|backlog
 argument_list|)
 expr_stmt|;
 block|}

@@ -5463,6 +5463,9 @@ name|socket
 modifier|*
 name|so
 parameter_list|,
+name|int
+name|backlog
+parameter_list|,
 name|struct
 name|thread
 modifier|*

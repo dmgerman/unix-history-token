@@ -757,6 +757,8 @@ name|struct
 name|socket
 modifier|*
 parameter_list|,
+name|int
+parameter_list|,
 name|struct
 name|thread
 modifier|*

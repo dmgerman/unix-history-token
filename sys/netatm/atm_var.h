@@ -259,6 +259,8 @@ parameter_list|,
 name|Atm_connection
 modifier|*
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1005,6 +1007,8 @@ modifier|*
 parameter_list|,
 name|Atm_endpoint
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1690,6 +1690,8 @@ parameter_list|,
 name|ap
 parameter_list|,
 name|copp
+parameter_list|,
+name|backlog
 parameter_list|)
 name|struct
 name|socket
@@ -1712,6 +1714,9 @@ name|Atm_connection
 modifier|*
 modifier|*
 name|copp
+decl_stmt|;
+name|int
+name|backlog
 decl_stmt|;
 block|{
 name|Atm_connection
@@ -2253,6 +2258,8 @@ condition|)
 name|solisten_proto
 argument_list|(
 name|so
+argument_list|,
+name|backlog
 argument_list|)
 expr_stmt|;
 name|donex

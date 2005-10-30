@@ -1165,6 +1165,8 @@ parameter_list|(
 name|so
 parameter_list|,
 name|epp
+parameter_list|,
+name|backlog
 parameter_list|)
 name|struct
 name|socket
@@ -1174,6 +1176,9 @@ decl_stmt|;
 name|Atm_endpoint
 modifier|*
 name|epp
+decl_stmt|;
+name|int
+name|backlog
 decl_stmt|;
 block|{
 name|Atm_pcb
@@ -1217,6 +1222,8 @@ operator|&
 name|atp
 operator|->
 name|atp_conn
+argument_list|,
+name|backlog
 argument_list|)
 operator|)
 return|;

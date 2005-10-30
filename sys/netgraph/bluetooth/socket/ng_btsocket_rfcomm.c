@@ -3577,6 +3577,9 @@ name|socket
 modifier|*
 name|so
 parameter_list|,
+name|int
+name|backlog
+parameter_list|,
 name|struct
 name|thread
 modifier|*
@@ -3762,6 +3765,8 @@ block|}
 name|solisten_proto
 argument_list|(
 name|so
+argument_list|,
+name|backlog
 argument_list|)
 expr_stmt|;
 name|out

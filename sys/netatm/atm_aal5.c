@@ -238,6 +238,9 @@ name|struct
 name|socket
 modifier|*
 parameter_list|,
+name|int
+name|backlog
+parameter_list|,
 name|struct
 name|thread
 modifier|*
@@ -960,12 +963,17 @@ name|atm_aal5_listen
 parameter_list|(
 name|so
 parameter_list|,
+name|backlog
+parameter_list|,
 name|td
 parameter_list|)
 name|struct
 name|socket
 modifier|*
 name|so
+decl_stmt|;
+name|int
+name|backlog
 decl_stmt|;
 name|struct
 name|thread
@@ -986,6 +994,8 @@ name|so
 argument_list|,
 operator|&
 name|atm_aal5_endpt
+argument_list|,
+name|backlog
 argument_list|)
 expr_stmt|;
 name|ATM_OUTRO
