@@ -1682,6 +1682,20 @@ literal|0x100
 operator|)
 condition|)
 break|break;
+comment|/* 		 * Don't bother traversing trap-frames - there should 		 * be enough info down to the frame to work out where 		 * things are going wrong. Plus, prevents this shortened 		 * version of code from accessing user-space frames 		 */
+if|if
+condition|(
+name|callpc
+operator|+
+literal|4
+operator|==
+operator|(
+name|db_addr_t
+operator|)
+operator|&
+name|trapexit
+condition|)
+break|break;
 if|if
 condition|(
 name|stack_put
