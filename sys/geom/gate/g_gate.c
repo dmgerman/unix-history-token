@@ -129,7 +129,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_GATE
 argument_list|,
-literal|"gg data"
+literal|"gg_data"
 argument_list|,
 literal|"GEOM Gate Data"
 argument_list|)

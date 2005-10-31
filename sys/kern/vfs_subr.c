@@ -243,7 +243,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NETADDR
 argument_list|,
-literal|"Export Host"
+literal|"subr_export_host"
 argument_list|,
 literal|"Export host address structure"
 argument_list|)

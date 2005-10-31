@@ -221,7 +221,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_AFD
 argument_list|,
-literal|"AFD driver"
+literal|"afd_driver"
 argument_list|,
 literal|"ATAPI floppy driver buffers"
 argument_list|)

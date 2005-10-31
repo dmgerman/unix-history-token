@@ -230,7 +230,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_SMBFSHASH
 argument_list|,
-literal|"SMBFS hash"
+literal|"smbfs_hash"
 argument_list|,
 literal|"SMBFS hash table"
 argument_list|)

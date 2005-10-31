@@ -7524,6 +7524,19 @@ operator|)
 expr_stmt|;
 do|do
 block|{
+name|KASSERT
+argument_list|(
+name|unp_defer
+operator|>=
+literal|0
+argument_list|,
+operator|(
+literal|"unp_gc: unp_defer %d"
+operator|,
+name|unp_defer
+operator|)
+argument_list|)
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|fp

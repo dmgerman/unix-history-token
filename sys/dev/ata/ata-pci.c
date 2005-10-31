@@ -164,7 +164,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_ATAPCI
 argument_list|,
-literal|"ATA PCI"
+literal|"ata_pci"
 argument_list|,
 literal|"ATA driver PCI"
 argument_list|)

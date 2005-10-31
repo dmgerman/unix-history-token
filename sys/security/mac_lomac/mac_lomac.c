@@ -586,7 +586,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_MACLOMAC
 argument_list|,
-literal|"lomac label"
+literal|"mac_lomac_label"
 argument_list|,
 literal|"MAC/LOMAC labels"
 argument_list|)

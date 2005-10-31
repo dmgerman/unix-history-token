@@ -125,7 +125,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_RAID3
 argument_list|,
-literal|"raid3 data"
+literal|"raid3_data"
 argument_list|,
 literal|"GEOM_RAID3 Data"
 argument_list|)

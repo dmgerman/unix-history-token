@@ -171,7 +171,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_UDFMOUNT
 argument_list|,
-literal|"UDF mount"
+literal|"udf_mount"
 argument_list|,
 literal|"UDF mount structure"
 argument_list|)
@@ -183,7 +183,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_UDFFENTRY
 argument_list|,
-literal|"UDF fentry"
+literal|"udf_fentry"
 argument_list|,
 literal|"UDF file entry structure"
 argument_list|)

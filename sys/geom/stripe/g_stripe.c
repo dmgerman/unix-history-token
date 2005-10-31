@@ -102,7 +102,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_STRIPE
 argument_list|,
-literal|"stripe data"
+literal|"stripe_data"
 argument_list|,
 literal|"GEOM_STRIPE Data"
 argument_list|)

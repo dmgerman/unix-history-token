@@ -201,7 +201,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_BIOBUF
 argument_list|,
-literal|"BIO buffer"
+literal|"biobuf"
 argument_list|,
 literal|"BIO buffer"
 argument_list|)

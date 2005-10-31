@@ -73,7 +73,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_UMAPFSMNT
 argument_list|,
-literal|"UMAP mount"
+literal|"umap_mount"
 argument_list|,
 literal|"UMAP mount structure"
 argument_list|)

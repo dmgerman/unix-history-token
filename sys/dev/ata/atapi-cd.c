@@ -648,7 +648,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_ACD
 argument_list|,
-literal|"ACD driver"
+literal|"acd_driver"
 argument_list|,
 literal|"ATAPI CD driver buffers"
 argument_list|)

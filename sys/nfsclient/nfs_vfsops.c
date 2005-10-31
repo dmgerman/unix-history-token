@@ -226,7 +226,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NFSREQ
 argument_list|,
-literal|"NFS req"
+literal|"nfsclient_req"
 argument_list|,
 literal|"NFS request header"
 argument_list|)
@@ -238,7 +238,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NFSBIGFH
 argument_list|,
-literal|"NFSV3 bigfh"
+literal|"nfsclient_bigfh"
 argument_list|,
 literal|"NFS version 3 file handle"
 argument_list|)
@@ -250,7 +250,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NFSDIROFF
 argument_list|,
-literal|"NFSV3 diroff"
+literal|"nfsclient_diroff"
 argument_list|,
 literal|"NFS directory offset data"
 argument_list|)
@@ -262,7 +262,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NFSHASH
 argument_list|,
-literal|"NFS hash"
+literal|"nfsclient_hash"
 argument_list|,
 literal|"NFS hash tables"
 argument_list|)
@@ -274,7 +274,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NFSDIRECTIO
 argument_list|,
-literal|"NFS DirectIO"
+literal|"nfsclient_directio"
 argument_list|,
 literal|"NFS Direct IO async write state"
 argument_list|)

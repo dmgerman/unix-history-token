@@ -78,7 +78,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NTFSNTHASH
 argument_list|,
-literal|"NTFS nthash"
+literal|"ntfs_nthash"
 argument_list|,
 literal|"NTFS ntnode hash tables"
 argument_list|)

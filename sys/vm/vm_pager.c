@@ -110,7 +110,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_VMPGDATA
 argument_list|,
-literal|"VM pgdata"
+literal|"vm_pgdata"
 argument_list|,
 literal|"XXX: VM pager private data"
 argument_list|)

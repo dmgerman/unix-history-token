@@ -134,7 +134,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_SECA
 argument_list|,
-literal|"key mgmt"
+literal|"key_mgmt"
 argument_list|,
 literal|"security associations, key management"
 argument_list|)

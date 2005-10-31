@@ -125,7 +125,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_MIRROR
 argument_list|,
-literal|"mirror data"
+literal|"mirror_data"
 argument_list|,
 literal|"GEOM_MIRROR Data"
 argument_list|)

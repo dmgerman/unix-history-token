@@ -149,7 +149,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_SMBCONN
 argument_list|,
-literal|"SMB conn"
+literal|"smb_conn"
 argument_list|,
 literal|"SMB connection"
 argument_list|)

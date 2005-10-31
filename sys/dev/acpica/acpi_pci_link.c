@@ -289,7 +289,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_PCI_LINK
 argument_list|,
-literal|"PCI Link"
+literal|"pci_link"
 argument_list|,
 literal|"ACPI PCI Link structures"
 argument_list|)

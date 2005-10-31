@@ -113,7 +113,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_PORTALFSMNT
 argument_list|,
-literal|"PORTAL mount"
+literal|"portal_mount"
 argument_list|,
 literal|"PORTAL mount structure"
 argument_list|)

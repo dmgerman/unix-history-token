@@ -359,7 +359,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_UDFFID
 argument_list|,
-literal|"UDF FID"
+literal|"udf_fid"
 argument_list|,
 literal|"UDF FileId structure"
 argument_list|)
@@ -371,7 +371,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_UDFDS
 argument_list|,
-literal|"UDF DS"
+literal|"udf_ds"
 argument_list|,
 literal|"UDF Dirstream structure"
 argument_list|)

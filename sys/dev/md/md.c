@@ -223,7 +223,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_MD
 argument_list|,
-literal|"MD disk"
+literal|"md_disk"
 argument_list|,
 literal|"Memory Disk"
 argument_list|)
@@ -236,7 +236,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_MDSECT
 argument_list|,
-literal|"MD sectors"
+literal|"md_sectors"
 argument_list|,
 literal|"Memory Disk Sectors"
 argument_list|)

@@ -163,7 +163,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_SEGMENT
 argument_list|,
-literal|"cluster_save buffer"
+literal|"cluster_save_buffer"
 argument_list|,
 literal|"cluster_save buffer"
 argument_list|)

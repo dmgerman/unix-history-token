@@ -212,7 +212,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NFSLOCK
 argument_list|,
-literal|"NFS lock"
+literal|"nfsclient_lock"
 argument_list|,
 literal|"NFS lock request"
 argument_list|)
@@ -224,7 +224,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NLMINFO
 argument_list|,
-literal|"nlminfo"
+literal|"nfsclient_nlminfo"
 argument_list|,
 literal|"NFS lock process structure"
 argument_list|)

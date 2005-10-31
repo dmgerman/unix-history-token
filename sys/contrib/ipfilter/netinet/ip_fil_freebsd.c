@@ -722,7 +722,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_IPFILTER
 argument_list|,
-literal|"IP Filter"
+literal|"ipfilter"
 argument_list|,
 literal|"IP Filter packet filter data structures"
 argument_list|)

@@ -117,7 +117,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_MSDOSFSNODE
 argument_list|,
-literal|"MSDOSFS node"
+literal|"msdosfs_node"
 argument_list|,
 literal|"MSDOSFS vnode private part"
 argument_list|)

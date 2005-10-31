@@ -45,7 +45,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_REISERFSCOOKIES
 argument_list|,
-literal|"ReiserFS cookies"
+literal|"reiserfs_cookies"
 argument_list|,
 literal|"ReiserFS VOP_READDIR cookies"
 argument_list|)

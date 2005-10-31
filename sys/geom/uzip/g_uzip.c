@@ -129,7 +129,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_GEOM_UZIP
 argument_list|,
-literal|"GEOM UZIP"
+literal|"geom_uzip"
 argument_list|,
 literal|"GEOM UZIP data structures"
 argument_list|)

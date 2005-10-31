@@ -177,7 +177,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_IPATM_NIF
 argument_list|,
-literal|"ipatm nif"
+literal|"ipatm_nif"
 argument_list|,
 literal|"IP/ATM network interfaces"
 argument_list|)

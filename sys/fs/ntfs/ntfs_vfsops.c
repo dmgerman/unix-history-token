@@ -173,7 +173,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NTFSMNT
 argument_list|,
-literal|"NTFS mount"
+literal|"ntfs_mount"
 argument_list|,
 literal|"NTFS mount structure"
 argument_list|)
@@ -185,7 +185,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NTFSNTNODE
 argument_list|,
-literal|"NTFS ntnode"
+literal|"ntfs_ntnode"
 argument_list|,
 literal|"NTFS ntnode information"
 argument_list|)
@@ -197,7 +197,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NTFSFNODE
 argument_list|,
-literal|"NTFS fnode"
+literal|"ntfs_fnode"
 argument_list|,
 literal|"NTFS fnode information"
 argument_list|)
@@ -209,7 +209,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NTFSDIR
 argument_list|,
-literal|"NTFS dir"
+literal|"ntfs_dir"
 argument_list|,
 literal|"NTFS dir buffer"
 argument_list|)

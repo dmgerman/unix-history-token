@@ -248,7 +248,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_MADT
 argument_list|,
-literal|"MADT Table"
+literal|"madt_table"
 argument_list|,
 literal|"ACPI MADT Table Items"
 argument_list|)

@@ -233,7 +233,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NFSSVC
 argument_list|,
-literal|"NFS srvsock"
+literal|"nfsclient_srvsock"
 argument_list|,
 literal|"Nfs server structure"
 argument_list|)

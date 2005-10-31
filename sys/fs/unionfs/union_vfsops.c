@@ -85,7 +85,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_UNIONFSMNT
 argument_list|,
-literal|"UNION mount"
+literal|"union_mount"
 argument_list|,
 literal|"UNION mount structure"
 argument_list|)

@@ -96,7 +96,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_ICONV
 argument_list|,
-literal|"ICONV"
+literal|"iconv"
 argument_list|,
 literal|"ICONV structures"
 argument_list|)
@@ -108,7 +108,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_ICONVDATA
 argument_list|,
-literal|"ICONV data"
+literal|"iconv_data"
 argument_list|,
 literal|"ICONV data"
 argument_list|)

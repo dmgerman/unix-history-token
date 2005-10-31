@@ -300,7 +300,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_ATA
 argument_list|,
-literal|"ATA generic"
+literal|"ata_generic"
 argument_list|,
 literal|"ATA driver generic layer"
 argument_list|)

@@ -129,7 +129,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NULLFSHASH
 argument_list|,
-literal|"NULLFS hash"
+literal|"nullfs_hash"
 argument_list|,
 literal|"NULLFS hash table"
 argument_list|)
@@ -141,7 +141,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NULLFSNODE
 argument_list|,
-literal|"NULLFS node"
+literal|"nullfs_node"
 argument_list|,
 literal|"NULLFS vnode private part"
 argument_list|)

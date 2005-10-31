@@ -99,7 +99,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_MSDOSFSFILENO
 argument_list|,
-literal|"MSDOSFS fileno"
+literal|"msdosfs_fileno"
 argument_list|,
 literal|"MSDOSFS fileno mapping node"
 argument_list|)

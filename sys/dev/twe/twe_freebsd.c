@@ -3442,7 +3442,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|TWE_MALLOC_CLASS
 argument_list|,
-literal|"twe commands"
+literal|"twe_commands"
 argument_list|,
 literal|"twe commands"
 argument_list|)

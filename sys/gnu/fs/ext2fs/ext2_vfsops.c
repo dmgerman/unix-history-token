@@ -277,7 +277,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_EXT2NODE
 argument_list|,
-literal|"EXT2 node"
+literal|"ext2_node"
 argument_list|,
 literal|"EXT2 vnode private part"
 argument_list|)
@@ -290,7 +290,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_EXT2MNT
 argument_list|,
-literal|"EXT2 mount"
+literal|"ext2_mount"
 argument_list|,
 literal|"EXT2 mount structure"
 argument_list|)

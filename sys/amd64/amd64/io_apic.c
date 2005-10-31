@@ -201,7 +201,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_IOAPIC
 argument_list|,
-literal|"I/O APIC"
+literal|"ioapic"
 argument_list|,
 literal|"I/O APIC structures"
 argument_list|)

@@ -244,7 +244,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_MSDOSFSMNT
 argument_list|,
-literal|"MSDOSFS mount"
+literal|"msdosfs_mount"
 argument_list|,
 literal|"MSDOSFS mount structure"
 argument_list|)
@@ -257,7 +257,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_MSDOSFSFAT
 argument_list|,
-literal|"MSDOSFS FAT"
+literal|"msdosfs_fat"
 argument_list|,
 literal|"MSDOSFS file allocation table"
 argument_list|)

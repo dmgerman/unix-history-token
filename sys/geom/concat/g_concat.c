@@ -89,7 +89,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_CONCAT
 argument_list|,
-literal|"concat data"
+literal|"concat_data"
 argument_list|,
 literal|"GEOM_CONCAT Data"
 argument_list|)

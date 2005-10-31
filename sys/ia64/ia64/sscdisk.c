@@ -321,7 +321,7 @@ unit|MALLOC_DEFINE
 operator|(
 name|M_SSC
 operator|,
-literal|"SSC disk"
+literal|"ssc_disk"
 operator|,
 literal|"Simulator Disk"
 operator|)

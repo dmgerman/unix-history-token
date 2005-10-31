@@ -141,7 +141,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_UFSMNT
 argument_list|,
-literal|"UFS mount"
+literal|"ufs_mount"
 argument_list|,
 literal|"UFS mount structure"
 argument_list|)

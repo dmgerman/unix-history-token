@@ -140,7 +140,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_HPFSMNT
 argument_list|,
-literal|"HPFS mount"
+literal|"hpfs_mount"
 argument_list|,
 literal|"HPFS mount structure"
 argument_list|)
@@ -152,7 +152,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_HPFSNO
 argument_list|,
-literal|"HPFS node"
+literal|"hpfs_node"
 argument_list|,
 literal|"HPFS node structure"
 argument_list|)

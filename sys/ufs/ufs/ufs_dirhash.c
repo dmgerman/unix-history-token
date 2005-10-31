@@ -209,7 +209,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_DIRHASH
 argument_list|,
-literal|"UFS dirhash"
+literal|"ufs_dirhash"
 argument_list|,
 literal|"UFS directory hash tables"
 argument_list|)

@@ -782,7 +782,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_AR
 argument_list|,
-literal|"AR driver"
+literal|"ar_driver"
 argument_list|,
 literal|"ATA PseudoRAID driver"
 argument_list|)

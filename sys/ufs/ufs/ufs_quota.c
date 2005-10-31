@@ -169,7 +169,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_DQUOT
 argument_list|,
-literal|"UFS quota"
+literal|"ufs_quota"
 argument_list|,
 literal|"UFS quota entries"
 argument_list|)

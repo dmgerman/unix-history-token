@@ -429,7 +429,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_AST
 argument_list|,
-literal|"AST driver"
+literal|"ast_driver"
 argument_list|,
 literal|"ATAPI tape driver buffers"
 argument_list|)

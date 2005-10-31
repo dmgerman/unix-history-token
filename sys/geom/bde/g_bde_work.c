@@ -228,7 +228,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_GBDE
 argument_list|,
-literal|"GBDE"
+literal|"gbde"
 argument_list|,
 literal|"GBDE data structures"
 argument_list|)

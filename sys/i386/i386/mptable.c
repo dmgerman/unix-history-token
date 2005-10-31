@@ -651,7 +651,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_MPTABLE
 argument_list|,
-literal|"MP Table"
+literal|"mptable"
 argument_list|,
 literal|"MP Table Items"
 argument_list|)

@@ -185,7 +185,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NWNODE
 argument_list|,
-literal|"NWFS node"
+literal|"nwfs_node"
 argument_list|,
 literal|"NWFS vnode private part"
 argument_list|)
@@ -198,7 +198,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NWFSHASH
 argument_list|,
-literal|"NWFS hash"
+literal|"nwfs_hash"
 argument_list|,
 literal|"NWFS has table"
 argument_list|)

@@ -289,7 +289,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_TDFX
 argument_list|,
-literal|"TDFX Driver"
+literal|"tdfx_driver"
 argument_list|,
 literal|"3DFX Graphics[/2D]/3D Accelerator(s)"
 argument_list|)

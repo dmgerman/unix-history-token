@@ -145,7 +145,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NFS4DEV
 argument_list|,
-literal|"NFS4 dev"
+literal|"nfs4_dev"
 argument_list|,
 literal|"NFS4 device"
 argument_list|)

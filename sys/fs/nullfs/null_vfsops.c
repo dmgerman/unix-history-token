@@ -79,7 +79,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NULLFSMNT
 argument_list|,
-literal|"NULLFS mount"
+literal|"nullfs_mount"
 argument_list|,
 literal|"NULLFS mount structure"
 argument_list|)

@@ -191,7 +191,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_FILEDESC
 argument_list|,
-literal|"file desc"
+literal|"filedesc"
 argument_list|,
 literal|"Open file descriptor table"
 argument_list|)
@@ -204,7 +204,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_FILEDESC_TO_LEADER
 argument_list|,
-literal|"file desc to leader"
+literal|"filedesc_to_leader"
 argument_list|,
 literal|"file desc to leader structures"
 argument_list|)

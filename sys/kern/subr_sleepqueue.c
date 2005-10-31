@@ -328,7 +328,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_SLEEPQUEUE
 argument_list|,
-literal|"sleep queues"
+literal|"sleepqueue"
 argument_list|,
 literal|"sleep queues"
 argument_list|)

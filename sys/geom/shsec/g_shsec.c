@@ -95,7 +95,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_SHSEC
 argument_list|,
-literal|"shsec data"
+literal|"shsec_data"
 argument_list|,
 literal|"GEOM_SHSEC Data"
 argument_list|)

@@ -234,7 +234,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_REISERFSMNT
 argument_list|,
-literal|"ReiserFS mount"
+literal|"reiserfs_mount"
 argument_list|,
 literal|"ReiserFS mount structure"
 argument_list|)
@@ -246,7 +246,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_REISERFSPATH
 argument_list|,
-literal|"ReiserFS path"
+literal|"reiserfs_path"
 argument_list|,
 literal|"ReiserFS path structure"
 argument_list|)
@@ -258,7 +258,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_REISERFSNODE
 argument_list|,
-literal|"ReiserFS node"
+literal|"reiserfs_node"
 argument_list|,
 literal|"ReiserFS vnode private part"
 argument_list|)

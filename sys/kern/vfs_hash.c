@@ -59,7 +59,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_VFS_HASH
 argument_list|,
-literal|"VFS hash"
+literal|"vfs_hash"
 argument_list|,
 literal|"VFS hash table"
 argument_list|)

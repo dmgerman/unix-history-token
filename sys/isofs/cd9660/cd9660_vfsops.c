@@ -154,7 +154,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_ISOFSMNT
 argument_list|,
-literal|"ISOFS mount"
+literal|"isofs_mount"
 argument_list|,
 literal|"ISOFS mount structure"
 argument_list|)
@@ -166,7 +166,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_ISOFSNODE
 argument_list|,
-literal|"ISOFS node"
+literal|"isofs_node"
 argument_list|,
 literal|"ISOFS vnode private part"
 argument_list|)

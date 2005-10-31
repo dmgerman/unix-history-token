@@ -111,7 +111,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NWFSDATA
 argument_list|,
-literal|"NWFS data"
+literal|"nwfs_data"
 argument_list|,
 literal|"NWFS private data"
 argument_list|)

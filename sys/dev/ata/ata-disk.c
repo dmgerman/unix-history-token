@@ -245,7 +245,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_AD
 argument_list|,
-literal|"AD driver"
+literal|"ad_driver"
 argument_list|,
 literal|"ATA disk driver"
 argument_list|)

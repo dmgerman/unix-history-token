@@ -569,7 +569,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_ATACAM
 argument_list|,
-literal|"ATA CAM transport"
+literal|"ata_cam"
 argument_list|,
 literal|"ATA driver CAM-XPT layer"
 argument_list|)

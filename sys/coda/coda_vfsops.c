@@ -120,7 +120,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_CODA
 argument_list|,
-literal|"CODA storage"
+literal|"coda"
 argument_list|,
 literal|"Various Coda Structures"
 argument_list|)

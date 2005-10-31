@@ -180,7 +180,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_SMBNODE
 argument_list|,
-literal|"SMBFS node"
+literal|"smbufs_node"
 argument_list|,
 literal|"SMBFS vnode private part"
 argument_list|)
@@ -193,7 +193,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_SMBNODENAME
 argument_list|,
-literal|"SMBFS nname"
+literal|"smbufs_nname"
 argument_list|,
 literal|"SMBFS node name"
 argument_list|)

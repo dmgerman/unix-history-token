@@ -136,7 +136,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NTFSNTVATTR
 argument_list|,
-literal|"NTFS vattr"
+literal|"ntfs_vattr"
 argument_list|,
 literal|"NTFS file attribute information"
 argument_list|)
@@ -148,7 +148,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NTFSRDATA
 argument_list|,
-literal|"NTFS res data"
+literal|"ntfsd_resdata"
 argument_list|,
 literal|"NTFS resident data"
 argument_list|)
@@ -160,7 +160,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NTFSRUN
 argument_list|,
-literal|"NTFS vrun"
+literal|"ntfs_vrun"
 argument_list|,
 literal|"NTFS vrun storage"
 argument_list|)
@@ -172,7 +172,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NTFSDECOMP
 argument_list|,
-literal|"NTFS decomp"
+literal|"ntfs_decomp"
 argument_list|,
 literal|"NTFS decompression temporary"
 argument_list|)

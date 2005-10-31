@@ -71,7 +71,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|TW_OSLI_MALLOC_CLASS
 argument_list|,
-literal|"twa commands"
+literal|"twa_commands"
 argument_list|,
 literal|"twa commands"
 argument_list|)

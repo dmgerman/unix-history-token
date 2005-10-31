@@ -1712,7 +1712,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_VMSMALLALLOC
 argument_list|,
-literal|"VM Small alloc"
+literal|"vm_small_alloc"
 argument_list|,
 literal|"VM Small alloc data"
 argument_list|)

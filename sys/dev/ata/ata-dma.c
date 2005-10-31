@@ -197,7 +197,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_ATADMA
 argument_list|,
-literal|"ATA DMA"
+literal|"ata_dma"
 argument_list|,
 literal|"ATA driver DMA"
 argument_list|)

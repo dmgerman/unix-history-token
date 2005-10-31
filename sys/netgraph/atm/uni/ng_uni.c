@@ -178,7 +178,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NG_UNI
 argument_list|,
-literal|"netgraph_uni"
+literal|"netgraph_uni_node"
 argument_list|,
 literal|"netgraph uni node"
 argument_list|)
@@ -190,7 +190,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_UNI
 argument_list|,
-literal|"netgraph uni"
+literal|"netgraph_uni_data"
 argument_list|,
 literal|"uni protocol data"
 argument_list|)

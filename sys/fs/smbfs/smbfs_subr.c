@@ -110,7 +110,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_SMBFSDATA
 argument_list|,
-literal|"SMBFS data"
+literal|"smbfs_data"
 argument_list|,
 literal|"SMBFS private data"
 argument_list|)

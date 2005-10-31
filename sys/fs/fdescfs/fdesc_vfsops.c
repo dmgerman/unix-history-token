@@ -85,7 +85,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_FDESCMNT
 argument_list|,
-literal|"FDESC mount"
+literal|"fdesc_mount"
 argument_list|,
 literal|"FDESC mount structure"
 argument_list|)

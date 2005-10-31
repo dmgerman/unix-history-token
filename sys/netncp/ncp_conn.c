@@ -292,7 +292,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NCPDATA
 argument_list|,
-literal|"NCP data"
+literal|"ncp_data"
 argument_list|,
 literal|"NCP private data"
 argument_list|)

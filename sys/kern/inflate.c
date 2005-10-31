@@ -70,7 +70,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_GZIP
 argument_list|,
-literal|"Gzip trees"
+literal|"gzip_trees"
 argument_list|,
 literal|"Gzip trees"
 argument_list|)

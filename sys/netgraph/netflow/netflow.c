@@ -270,7 +270,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NETFLOW_HASH
 argument_list|,
-literal|"NetFlow hash"
+literal|"netflow_hash"
 argument_list|,
 literal|"NetFlow hash"
 argument_list|)

@@ -359,7 +359,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_PORTACL
 argument_list|,
-literal|"portacl rule"
+literal|"mac_portacl_rule"
 argument_list|,
 literal|"Rules for mac_portacl"
 argument_list|)
