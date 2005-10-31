@@ -1050,6 +1050,12 @@ parameter_list|,
 name|enum
 name|uio_seg
 name|segflg
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+name|controlp
 parameter_list|)
 function_decl|;
 end_function_decl
