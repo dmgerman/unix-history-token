@@ -2537,6 +2537,11 @@ operator|->
 name|hw
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
 comment|/* Print the link status */
 if|if
 condition|(
@@ -2599,6 +2604,7 @@ operator|->
 name|unit
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Identify 82544 on PCIX */
 name|em_get_bus_info
 argument_list|(
