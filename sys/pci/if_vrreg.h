@@ -2472,8 +2472,8 @@ name|vr_chain_data
 name|vr_cdata
 decl_stmt|;
 name|struct
-name|callout_handle
-name|vr_stat_ch
+name|callout
+name|vr_stat_callout
 decl_stmt|;
 name|struct
 name|mtx
