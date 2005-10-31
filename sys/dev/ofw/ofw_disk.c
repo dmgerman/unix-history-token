@@ -677,8 +677,6 @@ operator|)
 literal|2
 operator|*
 literal|33554432
-operator|*
-name|OFWD_BLOCKSIZE
 expr_stmt|;
 name|sc
 operator|->
