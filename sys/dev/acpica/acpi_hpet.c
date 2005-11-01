@@ -101,7 +101,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|ACPI_HPET
+value|ACPI_TIMER
 end_define
 
 begin_macro

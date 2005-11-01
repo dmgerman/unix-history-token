@@ -434,13 +434,6 @@ name|ACPI_OEM
 value|0x04000000
 end_define
 
-begin_define
-define|#
-directive|define
-name|ACPI_HPET
-value|0x08000000
-end_define
-
 begin_comment
 comment|/*  * Constants for different interrupt models used with acpi_SetIntrModel().  */
 end_comment
