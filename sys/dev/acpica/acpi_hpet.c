@@ -93,6 +93,24 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* ACPI CA debugging */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_COMPONENT
+value|ACPI_HPET
+end_define
+
+begin_macro
+name|ACPI_MODULE_NAME
+argument_list|(
+literal|"HPET"
+argument_list|)
+end_macro
+
 begin_struct
 struct|struct
 name|acpi_hpet_softc
