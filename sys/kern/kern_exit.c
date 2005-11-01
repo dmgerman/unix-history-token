@@ -774,6 +774,12 @@ operator|->
 name|p_sigiolst
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If this process has an nlminfo data area (for lockd), release it 	 */
 if|if
 condition|(
@@ -799,12 +805,6 @@ comment|/* 	 * Close open files and release open-file table. 	 * This may block!
 name|fdfree
 argument_list|(
 name|td
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If this thread tickled GEOM, we need to wait for the giggling to 	 * stop before we return to userland 	 */
