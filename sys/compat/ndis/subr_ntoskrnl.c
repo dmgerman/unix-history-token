@@ -1958,6 +1958,12 @@ operator|)
 return|;
 end_if
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NTOSKRNL_MULTIPLE_DPCS
+end_ifdef
+
 begin_expr_stmt
 name|bzero
 argument_list|(
@@ -1976,6 +1982,33 @@ name|mp_ncpus
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|kq_queues
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|kdpc_queue
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|bzero
