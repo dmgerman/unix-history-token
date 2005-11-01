@@ -577,11 +577,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|tmr
 operator|->
 name|tn
 operator|==
 name|NULL
+argument_list|)
 condition|)
 block|{
 name|free
@@ -655,6 +658,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|ret
 operator|!=
 literal|0
@@ -665,6 +670,7 @@ name|tmr
 argument_list|)
 operator|!=
 literal|0
+argument_list|)
 condition|)
 block|{
 name|ret
@@ -819,7 +825,7 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Drop reference count of servicing thread, 		 * may free the the thread. 		 */
+comment|/* 		 * Drop reference count of servicing thread, 		 * may free the thread. 		 */
 name|release_timer_thread
 argument_list|(
 name|tmr
@@ -1213,9 +1219,25 @@ name|link
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|tn
+operator|=
+name|NULL
+expr_stmt|;
 name|THREADS_UNLOCK
 argument_list|(
 name|curthread
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tn
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|tn
 argument_list|)
 expr_stmt|;
 block|}
@@ -1408,6 +1430,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * This function is called if user callback calls  * pthread_exit() or pthread_cancel() for the thread.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -1552,7 +1578,7 @@ decl_stmt|;
 name|sigset_t
 name|set
 decl_stmt|;
-comment|/* 	 * service thread should not be killed by callback, if user 	 * tries to do so, the thread will be restarted. 	 */
+comment|/* 	 * Service thread should not be killed by callback, if user 	 * tries to do so, the thread will be restarted. 	 */
 name|setjmp
 argument_list|(
 name|tn
@@ -1744,7 +1770,7 @@ name|THR_CLEANUP_POP
 argument_list|(
 name|curthread
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
