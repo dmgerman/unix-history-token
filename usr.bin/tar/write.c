@@ -1373,6 +1373,8 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|archive_read_open_fd
 argument_list|(
 name|a
@@ -1393,7 +1395,34 @@ name|bytes_per_block
 else|:
 name|DEFAULT_BYTES_PER_BLOCK
 argument_list|)
+operator|!=
+name|ARCHIVE_OK
+condition|)
+block|{
+name|bsdtar_errc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|1
+argument_list|,
+name|archive_errno
+argument_list|(
+name|a
+argument_list|)
+argument_list|,
+literal|"Can't open %s: %s"
+argument_list|,
+name|bsdtar
+operator|->
+name|filename
+argument_list|,
+name|archive_error_string
+argument_list|(
+name|a
+argument_list|)
+argument_list|)
 expr_stmt|;
+block|}
 comment|/* Build a list of all entries and their recorded mod times. */
 while|while
 condition|(
