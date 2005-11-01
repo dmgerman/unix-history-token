@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2004, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -186,8 +186,6 @@ operator|=
 name|AcpiEvWalkGpeList
 argument_list|(
 name|AcpiHwClearGpeBlock
-argument_list|,
-name|ACPI_ISR
 argument_list|)
 expr_stmt|;
 name|UnlockAndExit
@@ -244,12 +242,16 @@ decl_stmt|;
 name|ACPI_PARAMETER_INFO
 name|Info
 decl_stmt|;
+name|char
+modifier|*
+name|SleepStateName
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"AcpiGetSleepTypeData"
 argument_list|)
 expr_stmt|;
-comment|/*      * Validate parameters      */
+comment|/* Validate parameters */
 if|if
 condition|(
 operator|(
@@ -271,17 +273,21 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Evaluate the namespace object containing the values for this state      */
+comment|/* Evaluate the namespace object containing the values for this state */
 name|Info
 operator|.
 name|Parameters
 operator|=
 name|NULL
 expr_stmt|;
-name|Status
+name|Info
+operator|.
+name|ReturnObject
 operator|=
-name|AcpiNsEvaluateByName
-argument_list|(
+name|NULL
+expr_stmt|;
+name|SleepStateName
+operator|=
 operator|(
 name|char
 operator|*
@@ -293,6 +299,12 @@ name|AcpiGbl_SleepStateNames
 index|[
 name|SleepState
 index|]
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiNsEvaluateByName
+argument_list|(
+name|SleepStateName
 argument_list|,
 operator|&
 name|Info
@@ -318,10 +330,7 @@ argument_list|(
 name|Status
 argument_list|)
 operator|,
-name|AcpiGbl_SleepStateNames
-index|[
-name|SleepState
-index|]
+name|SleepStateName
 operator|)
 argument_list|)
 expr_stmt|;
@@ -343,7 +352,9 @@ block|{
 name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-literal|"Missing Sleep State object\n"
+literal|"No Sleep State object returned from [%s]\n"
+operator|,
+name|SleepStateName
 operator|)
 argument_list|)
 expr_stmt|;
@@ -369,7 +380,7 @@ block|{
 name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-literal|"Sleep State object not a Package\n"
+literal|"Sleep State return object is not a Package\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -378,7 +389,7 @@ operator|=
 name|AE_AML_OPERAND_TYPE
 expr_stmt|;
 block|}
-comment|/* The package must have at least two elements */
+comment|/*      * The package must have at least two elements.  NOTE (March 2005): This      * goes against the current ACPI spec which defines this object as a      * package with one encoded DWORD element.  However, existing practice      * by BIOS vendors seems to be to have 2 or more elements, at least      * one per sleep type (A/B).      */
 elseif|else
 if|if
 condition|(
@@ -396,7 +407,7 @@ block|{
 name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-literal|"Sleep State package does not have at least two elements\n"
+literal|"Sleep State return package does not have at least two elements\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -449,7 +460,7 @@ block|{
 name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-literal|"Sleep State package elements are not both Integers (%s, %s)\n"
+literal|"Sleep State return package elements are not both Integers (%s, %s)\n"
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
@@ -488,7 +499,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*          * Valid _Sx_ package size, type, and value          */
+comment|/* Valid _Sx_ package size, type, and value */
 operator|*
 name|SleepTypeA
 operator|=
@@ -549,12 +560,14 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"While evaluating SleepState [%s], bad Sleep object %p type %s\n"
+literal|"%s While evaluating SleepState [%s], bad Sleep object %p type %s\n"
 operator|,
-name|AcpiGbl_SleepStateNames
-index|[
-name|SleepState
-index|]
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|,
+name|SleepStateName
 operator|,
 name|Info
 operator|.
@@ -586,7 +599,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwGetRegisterBitMask  *  * PARAMETERS:  RegisterId          - Index of ACPI Register to access  *  * RETURN:      The bit mask to be used when accessing the register  *  * DESCRIPTION: Map RegisterId into a register bit mask.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwGetRegisterBitMask  *  * PARAMETERS:  RegisterId          - Index of ACPI Register to access  *  * RETURN:      The bitmask to be used when accessing the register  *  * DESCRIPTION: Map RegisterId into a register bitmask.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1233,7 +1246,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiHwRegisterRead  *  * PARAMETERS:  UseLock             - Mutex hw access  *              RegisterId          - RegisterID + Offset  *              ReturnValue         - Value that was read from the register  *  * RETURN:      Status and the value read.  *  * DESCRIPTION: Acpi register read function.  Registers are read at the  *              given offset.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiHwRegisterRead  *  * PARAMETERS:  UseLock             - Mutex hw access  *              RegisterId          - RegisterID + Offset  *              ReturnValue         - Where the register value is returned  *  * RETURN:      Status and the value read.  *  * DESCRIPTION: Acpi register read function.  Registers are read at the  *              given offset.  *  ******************************************************************************/
 end_comment
 
 begin_function
