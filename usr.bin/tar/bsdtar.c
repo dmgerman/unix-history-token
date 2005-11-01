@@ -2467,7 +2467,7 @@ name|only_mode
 argument_list|(
 name|bsdtar
 argument_list|,
-literal|"-F"
+literal|"--format"
 argument_list|,
 literal|"c"
 argument_list|)
