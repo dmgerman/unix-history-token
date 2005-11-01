@@ -156,6 +156,10 @@ name|AeLocalGetRootPointer
 argument_list|(
 name|Flags
 argument_list|,
+operator|(
+name|ACPI_PHYSICAL_ADDRESS
+operator|*
+operator|)
 name|Address
 argument_list|)
 operator|)

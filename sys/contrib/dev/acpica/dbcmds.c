@@ -4025,6 +4025,10 @@ name|Node
 argument_list|,
 name|METHOD_NAME__PRT
 argument_list|,
+operator|(
+name|ACPI_HANDLE
+operator|*
+operator|)
 operator|&
 name|TempNode
 argument_list|)
