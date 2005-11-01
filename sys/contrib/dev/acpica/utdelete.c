@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: utdelete - object deletion and reference count utilities  *              $Revision: 100 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: utdelete - object deletion and reference count utilities  *              $Revision: 1.107 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2004, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -37,6 +37,12 @@ directive|include
 file|<contrib/dev/acpica/acevents.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/amlcode.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -52,10 +58,42 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtDeleteInternalObj  *  * PARAMETERS:  *Object        - Pointer to the list to be deleted  *  * RETURN:      None  *  * DESCRIPTION: Low level object deletion, after reference counts have been  *              updated (All reference counts, including sub-objects!)  *  ******************************************************************************/
+comment|/* Local prototypes */
+end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|AcpiUtDeleteInternalObj
+parameter_list|(
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|Object
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|AcpiUtUpdateRefCount
+parameter_list|(
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|Object
+parameter_list|,
+name|UINT32
+name|Action
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtDeleteInternalObj  *  * PARAMETERS:  Object         - Object to be deleted  *  * RETURN:      None  *  * DESCRIPTION: Low level object deletion, after reference counts have been  *              updated (All reference counts, including sub-objects!)  *  ******************************************************************************/
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|AcpiUtDeleteInternalObj
 parameter_list|(
@@ -572,7 +610,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtDeleteInternalObjectList  *  * PARAMETERS:  *ObjList        - Pointer to the list to be deleted  *  * RETURN:      None  *  * DESCRIPTION: This function deletes an internal object list, including both  *              simple objects and package objects  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtDeleteInternalObjectList  *  * PARAMETERS:  ObjList         - Pointer to the list to be deleted  *  * RETURN:      None  *  * DESCRIPTION: This function deletes an internal object list, including both  *              simple objects and package objects  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -628,7 +666,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtUpdateRefCount  *  * PARAMETERS:  *Object         - Object whose ref count is to be updated  *              Action          - What to do  *  * RETURN:      New ref count  *  * DESCRIPTION: Modify the ref count and return it.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtUpdateRefCount  *  * PARAMETERS:  Object          - Object whose ref count is to be updated  *              Action          - What to do  *  * RETURN:      New ref count  *  * DESCRIPTION: Modify the ref count and return it.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -675,7 +713,7 @@ name|NewCount
 operator|=
 name|Count
 expr_stmt|;
-comment|/*      * Perform the reference count action (increment, decrement, or force delete)      */
+comment|/*      * Perform the reference count action      * (increment, decrement, or force delete)      */
 switch|switch
 condition|(
 name|Action
@@ -877,7 +915,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtUpdateObjectReference  *  * PARAMETERS:  *Object             - Increment ref count for this object  *                                    and all sub-objects  *              Action              - Either REF_INCREMENT or REF_DECREMENT or  *                                    REF_FORCE_DELETE  *  * RETURN:      Status  *  * DESCRIPTION: Increment the object reference count  *  * Object references are incremented when:  * 1) An object is attached to a Node (namespace object)  * 2) An object is copied (all subobjects must be incremented)  *  * Object references are decremented when:  * 1) An object is detached from an Node  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtUpdateObjectReference  *  * PARAMETERS:  Object              - Increment ref count for this object  *                                    and all sub-objects  *              Action              - Either REF_INCREMENT or REF_DECREMENT or  *                                    REF_FORCE_DELETE  *  * RETURN:      Status  *  * DESCRIPTION: Increment the object reference count  *  * Object references are incremented when:  * 1) An object is attached to a Node (namespace object)  * 2) An object is copied (all subobjects must be incremented)  *  * Object references are decremented when:  * 1) An object is detached from an Node  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -894,9 +932,8 @@ parameter_list|)
 block|{
 name|ACPI_STATUS
 name|Status
-decl_stmt|;
-name|UINT32
-name|i
+init|=
+name|AE_OK
 decl_stmt|;
 name|ACPI_GENERIC_STATE
 modifier|*
@@ -904,9 +941,18 @@ name|StateList
 init|=
 name|NULL
 decl_stmt|;
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|NextObject
+init|=
+name|NULL
+decl_stmt|;
 name|ACPI_GENERIC_STATE
 modifier|*
 name|State
+decl_stmt|;
+name|ACPI_NATIVE_UINT
+name|i
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE_PTR
 argument_list|(
@@ -915,19 +961,11 @@ argument_list|,
 name|Object
 argument_list|)
 expr_stmt|;
-comment|/* Ignore a null object ptr */
-if|if
+while|while
 condition|(
-operator|!
 name|Object
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_OK
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Make sure that this isn't a namespace handle */
 if|if
 condition|(
@@ -956,41 +994,6 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
-name|State
-operator|=
-name|AcpiUtCreateUpdateState
-argument_list|(
-name|Object
-argument_list|,
-name|Action
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-name|State
-condition|)
-block|{
-name|Object
-operator|=
-name|State
-operator|->
-name|Update
-operator|.
-name|Object
-expr_stmt|;
-name|Action
-operator|=
-name|State
-operator|->
-name|Update
-operator|.
-name|Value
-expr_stmt|;
-name|AcpiUtDeleteGenericState
-argument_list|(
-name|State
-argument_list|)
-expr_stmt|;
 comment|/*          * All sub-objects must have their reference count incremented also.          * Different object types have different subobjects.          */
 switch|switch
 condition|(
@@ -1029,7 +1032,7 @@ break|break;
 case|case
 name|ACPI_TYPE_PACKAGE
 case|:
-comment|/*              * We must update all the sub-objects of the package              * (Each of whom may have their own sub-objects, etc.              */
+comment|/*              * We must update all the sub-objects of the package,              * each of whom may have their own sub-objects.              */
 for|for
 control|(
 name|i
@@ -1085,98 +1088,38 @@ break|break;
 case|case
 name|ACPI_TYPE_BUFFER_FIELD
 case|:
-name|Status
+name|NextObject
 operator|=
-name|AcpiUtCreateUpdateStateAndPush
-argument_list|(
 name|Object
 operator|->
 name|BufferField
 operator|.
 name|BufferObj
-argument_list|,
-name|Action
-argument_list|,
-operator|&
-name|StateList
-argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-goto|goto
-name|ErrorExit
-goto|;
-block|}
 break|break;
 case|case
 name|ACPI_TYPE_LOCAL_REGION_FIELD
 case|:
-name|Status
+name|NextObject
 operator|=
-name|AcpiUtCreateUpdateStateAndPush
-argument_list|(
 name|Object
 operator|->
 name|Field
 operator|.
 name|RegionObj
-argument_list|,
-name|Action
-argument_list|,
-operator|&
-name|StateList
-argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-goto|goto
-name|ErrorExit
-goto|;
-block|}
 break|break;
 case|case
 name|ACPI_TYPE_LOCAL_BANK_FIELD
 case|:
-name|Status
+name|NextObject
 operator|=
-name|AcpiUtCreateUpdateStateAndPush
-argument_list|(
 name|Object
 operator|->
 name|BankField
 operator|.
 name|BankObj
-argument_list|,
-name|Action
-argument_list|,
-operator|&
-name|StateList
-argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-goto|goto
-name|ErrorExit
-goto|;
-block|}
 name|Status
 operator|=
 name|AcpiUtCreateUpdateStateAndPush
@@ -1209,34 +1152,14 @@ break|break;
 case|case
 name|ACPI_TYPE_LOCAL_INDEX_FIELD
 case|:
-name|Status
+name|NextObject
 operator|=
-name|AcpiUtCreateUpdateStateAndPush
-argument_list|(
 name|Object
 operator|->
 name|IndexField
 operator|.
 name|IndexObj
-argument_list|,
-name|Action
-argument_list|,
-operator|&
-name|StateList
-argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-goto|goto
-name|ErrorExit
-goto|;
-block|}
 name|Status
 operator|=
 name|AcpiUtCreateUpdateStateAndPush
@@ -1267,14 +1190,36 @@ goto|;
 block|}
 break|break;
 case|case
-name|ACPI_TYPE_REGION
-case|:
-case|case
 name|ACPI_TYPE_LOCAL_REFERENCE
 case|:
-default|default:
-comment|/* No subobjects */
+comment|/*              * The target of an Index (a package, string, or buffer) must track              * changes to the ref count of the index.              */
+if|if
+condition|(
+name|Object
+operator|->
+name|Reference
+operator|.
+name|Opcode
+operator|==
+name|AML_INDEX_OP
+condition|)
+block|{
+name|NextObject
+operator|=
+name|Object
+operator|->
+name|Reference
+operator|.
+name|Object
+expr_stmt|;
+block|}
 break|break;
+case|case
+name|ACPI_TYPE_REGION
+case|:
+default|default:
+break|break;
+comment|/* No subobjects */
 block|}
 comment|/*          * Now we can update the count in the main object.  This can only          * happen after we update the sub-objects in case this causes the          * main object to be deleted.          */
 name|AcpiUtUpdateRefCount
@@ -1284,7 +1229,31 @@ argument_list|,
 name|Action
 argument_list|)
 expr_stmt|;
+name|Object
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* Move on to the next object to be updated */
+if|if
+condition|(
+name|NextObject
+condition|)
+block|{
+name|Object
+operator|=
+name|NextObject
+expr_stmt|;
+name|NextObject
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|StateList
+condition|)
+block|{
 name|State
 operator|=
 name|AcpiUtPopGenericState
@@ -1293,6 +1262,20 @@ operator|&
 name|StateList
 argument_list|)
 expr_stmt|;
+name|Object
+operator|=
+name|State
+operator|->
+name|Update
+operator|.
+name|Object
+expr_stmt|;
+name|AcpiUtDeleteGenericState
+argument_list|(
+name|State
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|return_ACPI_STATUS
 argument_list|(
@@ -1322,7 +1305,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtAddReference  *  * PARAMETERS:  *Object        - Object whose reference count is to be  *                                  incremented  *  * RETURN:      None  *  * DESCRIPTION: Add one reference to an ACPI object  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtAddReference  *  * PARAMETERS:  Object          - Object whose reference count is to be  *                                incremented  *  * RETURN:      None  *  * DESCRIPTION: Add one reference to an ACPI object  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1388,7 +1371,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtRemoveReference  *  * PARAMETERS:  *Object        - Object whose ref count will be decremented  *  * RETURN:      None  *  * DESCRIPTION: Decrement the reference count of an ACPI internal object  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtRemoveReference  *  * PARAMETERS:  Object         - Object whose ref count will be decremented  *  * RETURN:      None  *  * DESCRIPTION: Decrement the reference count of an ACPI internal object  *  ******************************************************************************/
 end_comment
 
 begin_function

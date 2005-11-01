@@ -1,16 +1,16 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: asloperands - AML operand processing  *              $Revision: 46 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: asloperands - AML operand processing  *              $Revision: 1.57 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2004, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"aslcompiler.h"
+file|<contrib/dev/acpica/compiler/aslcompiler.h>
 end_include
 
 begin_include
@@ -22,7 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"amlcode.h"
+file|<contrib/dev/acpica/amlcode.h>
 end_include
 
 begin_define
@@ -40,10 +40,214 @@ argument_list|)
 end_macro
 
 begin_comment
+comment|/* Local prototypes */
+end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|OpnDoField
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|OpnDoBankField
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|OpnDoBuffer
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|OpnDoDefinitionBlock
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|OpnDoFieldCommon
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|FieldOp
+parameter_list|,
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|OpnDoIndexField
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|OpnDoLoadTable
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|OpnDoMethod
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|OpnDoMutex
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|OpnDoRegion
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|OpnAttachNameToNode
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    OpnDoMutex  *  * PARAMETERS:  Op        - The parent parse node  *  * RETURN:      None  *  * DESCRIPTION: Construct the operands for the MUTEX ASL keyword.  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|OpnDoMutex
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+block|{
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Next
+decl_stmt|;
+name|Next
+operator|=
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Child
+expr_stmt|;
+name|Next
+operator|=
+name|Next
+operator|->
+name|Asl
+operator|.
+name|Next
+expr_stmt|;
+if|if
+condition|(
+name|Next
+operator|->
+name|Asl
+operator|.
+name|Value
+operator|.
+name|Integer
+operator|>
+literal|15
+condition|)
+block|{
+name|AslError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_SYNC_LEVEL
+argument_list|,
+name|Next
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+return|return;
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    OpnDoMethod  *  * PARAMETERS:  Op        - The parent parse node  *  * RETURN:      None  *  * DESCRIPTION: Construct the operands for the METHOD ASL keyword.  *  ******************************************************************************/
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|OpnDoMethod
 parameter_list|(
@@ -169,7 +373,7 @@ operator|=
 name|PARSEOP_DEFAULT_ARG
 expr_stmt|;
 block|}
-comment|/* Concurrency value (0-15 valid) */
+comment|/* Concurrency value (valid values are 0-15) */
 name|Next
 operator|=
 name|Next
@@ -189,6 +393,31 @@ operator|!=
 name|PARSEOP_DEFAULT_ARG
 condition|)
 block|{
+if|if
+condition|(
+name|Next
+operator|->
+name|Asl
+operator|.
+name|Value
+operator|.
+name|Integer
+operator|>
+literal|15
+condition|)
+block|{
+name|AslError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_SYNC_LEVEL
+argument_list|,
+name|Next
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
 name|Concurrency
 operator|=
 operator|(
@@ -289,6 +518,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|OpnDoFieldCommon
 parameter_list|(
@@ -749,6 +979,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|OpnDoField
 parameter_list|(
@@ -791,6 +1022,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|OpnDoIndexField
 parameter_list|(
@@ -842,6 +1074,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|OpnDoBankField
 parameter_list|(
@@ -902,6 +1135,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|OpnDoRegion
 parameter_list|(
@@ -1000,6 +1234,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|OpnDoBuffer
 parameter_list|(
@@ -1246,10 +1481,10 @@ operator|!
 name|BufferLength
 condition|)
 block|{
-comment|/* No length AND no items -- issue a warning */
+comment|/* No length AND no items -- issue notice */
 name|AslError
 argument_list|(
-name|ASL_WARNING
+name|ASL_REMARK
 argument_list|,
 name|ASL_MSG_BUFFER_LENGTH
 argument_list|,
@@ -1300,7 +1535,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    OpnDoPackage  *  * PARAMETERS:  Op        - The parent parse node  *  * RETURN:      None  *  * DESCRIPTION: Construct the AML operands for the PACKAGE ASL keyword.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    OpnDoPackage  *  * PARAMETERS:  Op        - The parent parse node  *  * RETURN:      None  *  * DESCRIPTION: Construct the AML operands for the PACKAGE ASL keyword.  NOTE:  *              can only be called after constants have been folded, to ensure  *              that the PackageLength operand has been fully reduced.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1320,14 +1555,12 @@ name|ACPI_PARSE_OBJECT
 modifier|*
 name|PackageLengthOp
 decl_stmt|;
-comment|/* Optional arguments for this opcode with defaults */
 name|UINT32
 name|PackageLength
 init|=
 literal|0
 decl_stmt|;
-comment|/* Opcode and package length first */
-comment|/* Buffer Length is next, followed by the initializer list */
+comment|/* Opcode and package length first, followed by the initializer list */
 name|PackageLengthOp
 operator|=
 name|Op
@@ -1344,7 +1577,7 @@ name|Asl
 operator|.
 name|Next
 expr_stmt|;
-comment|/*      * We always count the number of items in the initializer list, because if      * it is larger than the buffer length, we will define the buffer size      * to be the size of the initializer list (Per ACPI Spec)      */
+comment|/* Count the number of items in the initializer list */
 if|if
 condition|(
 name|InitializerOp
@@ -1375,7 +1608,7 @@ name|Next
 expr_stmt|;
 block|}
 block|}
-comment|/* Check if initializer list is longer than the buffer length */
+comment|/* If package length is a constant, compare to the initializer list */
 if|if
 condition|(
 operator|(
@@ -1395,7 +1628,7 @@ name|Asl
 operator|.
 name|ParseOpcode
 operator|==
-name|PARSEOP_BYTECONST
+name|PARSEOP_QWORDCONST
 operator|)
 condition|)
 block|{
@@ -1408,10 +1641,11 @@ operator|.
 name|Value
 operator|.
 name|Integer
-operator|>
+operator|>=
 name|PackageLength
 condition|)
 block|{
+comment|/* Allow package to be longer than the initializer list */
 name|PackageLength
 operator|=
 operator|(
@@ -1426,8 +1660,79 @@ operator|.
 name|Integer
 expr_stmt|;
 block|}
+else|else
+block|{
+comment|/*              * Initializer list is longer than the package length. This              * is an error as per the ACPI spec.              */
+name|AslError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_LIST_LENGTH
+argument_list|,
+name|PackageLengthOp
+operator|->
+name|Asl
+operator|.
+name|Next
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 block|}
-comment|/*      * If not a variable-length package, check for a zero      * package length      */
+block|}
+if|if
+condition|(
+name|PackageLengthOp
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_DEFAULT_ARG
+condition|)
+block|{
+comment|/*          * This is the case if the PackageLength was left empty - Package()          * The package length becomes the length of the initializer list          */
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Child
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|=
+name|PARSEOP_INTEGER
+expr_stmt|;
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Child
+operator|->
+name|Asl
+operator|.
+name|Value
+operator|.
+name|Integer
+operator|=
+name|PackageLength
+expr_stmt|;
+comment|/* Set the AML opcode */
+operator|(
+name|void
+operator|)
+name|OpcSetOptimalIntegerSize
+argument_list|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Child
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* If not a variable-length package, check for a zero package length */
 if|if
 condition|(
 operator|(
@@ -1447,7 +1752,7 @@ name|Asl
 operator|.
 name|ParseOpcode
 operator|==
-name|PARSEOP_BYTECONST
+name|PARSEOP_QWORDCONST
 operator|)
 operator|||
 operator|(
@@ -1467,10 +1772,10 @@ operator|!
 name|PackageLength
 condition|)
 block|{
-comment|/* No length AND no items -- issue a warning */
+comment|/* No length AND no initializer list -- issue a remark */
 name|AslError
 argument_list|(
-name|ASL_WARNING
+name|ASL_REMARK
 argument_list|,
 name|ASL_MSG_PACKAGE_LENGTH
 argument_list|,
@@ -1482,7 +1787,57 @@ expr_stmt|;
 comment|/* But go ahead and put the buffer length of zero into the AML */
 block|}
 block|}
-comment|/*      * Just set the buffer size node to be the buffer length, regardless      * of whether it was previously an integer or a default_arg placeholder      */
+comment|/*      * If the PackageLength is a constant<= 255, we can change the      * AML opcode from VarPackage to a simple (ACPI 1.0) Package opcode.      */
+if|if
+condition|(
+operator|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Child
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_INTEGER
+operator|)
+operator|&&
+operator|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Child
+operator|->
+name|Asl
+operator|.
+name|Value
+operator|.
+name|Integer
+operator|<=
+literal|255
+operator|)
+condition|)
+block|{
+name|Op
+operator|->
+name|Asl
+operator|.
+name|AmlOpcode
+operator|=
+name|AML_PACKAGE_OP
+expr_stmt|;
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|=
+name|PARSEOP_PACKAGE
+expr_stmt|;
+comment|/*          * Just set the package size node to be the package length, regardless          * of whether it was previously an integer or a default_arg placeholder          */
 name|PackageLengthOp
 operator|->
 name|Asl
@@ -1517,6 +1872,7 @@ name|Integer
 operator|=
 name|PackageLength
 expr_stmt|;
+block|}
 comment|/* Remaining nodes are handled via the tree walk */
 block|}
 end_function
@@ -1526,6 +1882,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|OpnDoLoadTable
 parameter_list|(
@@ -1618,9 +1975,96 @@ name|Next
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|ASL_FUTURE_IMPLEMENTATION
+comment|/* TBD: NOT IMPLEMENTED */
 comment|/* Fifth child is the [optional] ParameterPathString */
 comment|/* Sixth child is the [optional] ParameterData */
-comment|/*     Next = Next->Asl.Next;     if (Next->Asl.ParseOpcode == DEFAULT_ARG)     {         Next->Asl.AmlLength = 1;         Next->Asl.ParseOpcode = ZERO;         OpcGenerateAmlOpcode (Next);     }       Next = Next->Asl.Next;     if (Next->Asl.ParseOpcode == DEFAULT_ARG)     {         Next->Asl.AmlLength = 1;         Next->Asl.ParseOpcode = ZERO;         OpcGenerateAmlOpcode (Next);     }  */
+name|Next
+operator|=
+name|Next
+operator|->
+name|Asl
+operator|.
+name|Next
+expr_stmt|;
+if|if
+condition|(
+name|Next
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|DEFAULT_ARG
+condition|)
+block|{
+name|Next
+operator|->
+name|Asl
+operator|.
+name|AmlLength
+operator|=
+literal|1
+expr_stmt|;
+name|Next
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|=
+name|ZERO
+expr_stmt|;
+name|OpcGenerateAmlOpcode
+argument_list|(
+name|Next
+argument_list|)
+expr_stmt|;
+block|}
+name|Next
+operator|=
+name|Next
+operator|->
+name|Asl
+operator|.
+name|Next
+expr_stmt|;
+if|if
+condition|(
+name|Next
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|DEFAULT_ARG
+condition|)
+block|{
+name|Next
+operator|->
+name|Asl
+operator|.
+name|AmlLength
+operator|=
+literal|1
+expr_stmt|;
+name|Next
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|=
+name|ZERO
+expr_stmt|;
+name|OpcGenerateAmlOpcode
+argument_list|(
+name|Next
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1629,6 +2073,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|OpnDoDefinitionBlock
 parameter_list|(
@@ -2028,6 +2473,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|OpnAttachNameToNode
 parameter_list|(
@@ -2250,6 +2696,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|PARSEOP_MUTEX
+case|:
+name|OpnDoMutex
+argument_list|(
+name|Op
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|PARSEOP_FIELD
 case|:
 name|OpnDoField
@@ -2289,15 +2744,6 @@ case|case
 name|PARSEOP_LOADTABLE
 case|:
 name|OpnDoLoadTable
-argument_list|(
-name|Op
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|PARSEOP_PACKAGE
-case|:
-name|OpnDoPackage
 argument_list|(
 name|Op
 argument_list|)

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exprep - ACPI AML (p-code) execution - field prep utilities  *              $Revision: 128 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exprep - ACPI AML (p-code) execution - field prep utilities  *              $Revision: 1.135 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2004, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -51,11 +51,51 @@ literal|"exprep"
 argument_list|)
 end_macro
 
+begin_comment
+comment|/* Local prototypes */
+end_comment
+
+begin_function_decl
+specifier|static
+name|UINT32
+name|AcpiExDecodeFieldAccess
+parameter_list|(
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
+parameter_list|,
+name|UINT8
+name|FieldFlags
+parameter_list|,
+name|UINT32
+modifier|*
+name|ReturnByteAlignment
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|ACPI_UNDER_DEVELOPMENT
 end_ifdef
+
+begin_function_decl
+specifier|static
+name|UINT32
+name|AcpiExGenerateAccess
+parameter_list|(
+name|UINT32
+name|FieldBitOffset
+parameter_list|,
+name|UINT32
+name|FieldBitLength
+parameter_list|,
+name|UINT32
+name|RegionLength
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiExGenerateAccess  *  * PARAMETERS:  FieldBitOffset      - Start of field within parent region/buffer  *              FieldBitLength      - Length of field in bits  *              RegionLength        - Length of parent in bytes  *  * RETURN:      Field granularity (8, 16, 32 or 64) and  *              ByteAlignment (1, 2, 3, or 4)  *  * DESCRIPTION: Generate an optimal access width for fields defined with the  *              AnyAcc keyword.  *  * NOTE: Need to have the RegionLength in order to check for boundary  *       conditions (end-of-region).  However, the RegionLength is a deferred  *       operation.  Therefore, to complete this implementation, the generation  *       of this access width must be deferred until the region length has  *       been evaluated.  *  ******************************************************************************/
@@ -189,7 +229,7 @@ operator|<<=
 literal|1
 control|)
 block|{
-comment|/*          * 1) Round end offset up to next access boundary and make sure that this          *    does not go beyond the end of the parent region.          * 2) When the Access width is greater than the FieldByteLength, we are done.          *    (This does not optimize for the perfectly aligned case yet).          */
+comment|/*          * 1) Round end offset up to next access boundary and make sure that          *    this does not go beyond the end of the parent region.          * 2) When the Access width is greater than the FieldByteLength, we          *    are done. (This does not optimize for the perfectly aligned          *    case yet).          */
 if|if
 condition|(
 name|ACPI_ROUND_UP
@@ -332,14 +372,14 @@ literal|"Field goes beyond end-of-region!\n"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Field does not fit in the region at all */
 name|return_VALUE
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Field does not fit in the region at all */
 block|}
-comment|/* This width goes beyond the end-of-region, back off to previous access */
+comment|/*              * This width goes beyond the end-of-region, back off to              * previous access              */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -358,7 +398,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Could not read/write field with one operation, just use max access width */
+comment|/*      * Could not read/write field with one operation,      * just use max access width      */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -386,7 +426,7 @@ comment|/* ACPI_UNDER_DEVELOPMENT */
 end_comment
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDecodeFieldAccess  *  * PARAMETERS:  Access          - Encoded field access bits  *              Length          - Field length.  *  * RETURN:      Field granularity (8, 16, 32 or 64) and  *              ByteAlignment (1, 2, 3, or 4)  *  * DESCRIPTION: Decode the AccessType bits of a field definition.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDecodeFieldAccess  *  * PARAMETERS:  ObjDesc             - Field object  *              FieldFlags          - Encoded fieldflags (contains access bits)  *              ReturnByteAlignment - Where the byte alignment is returned  *  * RETURN:      Field granularity (8, 16, 32 or 64) and  *              ByteAlignment (1, 2, 3, or 4)  *  * DESCRIPTION: Decode the AccessType bits of a field definition.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -456,7 +496,7 @@ operator|.
 name|BitLength
 argument_list|,
 literal|0xFFFFFFFF
-comment|/* Temp until we pass RegionLength as param */
+comment|/* Temp until we pass RegionLength as parameter */
 argument_list|)
 expr_stmt|;
 name|BitLength
@@ -542,7 +582,7 @@ name|Access
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_VALUE
+name|return_UINT32
 argument_list|(
 literal|0
 argument_list|)
@@ -569,7 +609,7 @@ name|ReturnByteAlignment
 operator|=
 name|ByteAlignment
 expr_stmt|;
-name|return_VALUE
+name|return_UINT32
 argument_list|(
 name|BitLength
 argument_list|)
@@ -578,7 +618,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExPrepCommonFieldObject  *  * PARAMETERS:  ObjDesc             - The field object  *              FieldFlags          - Access, LockRule, and UpdateRule.  *                                    The format of a FieldFlag is described  *                                    in the ACPI specification  *              FieldBitPosition    - Field start position  *              FieldBitLength      - Field length in number of bits  *  * RETURN:      Status  *  * DESCRIPTION: Initialize the areas of the field object that are common  *              to the various types of fields.  Note: This is very "sensitive"  *              code because we are solving the general case for field  *              alignment.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExPrepCommonFieldObject  *  * PARAMETERS:  ObjDesc             - The field object  *              FieldFlags          - Access, LockRule, and UpdateRule.  *                                    The format of a FieldFlag is described  *                                    in the ACPI specification  *              FieldAttribute      - Special attributes (not used)  *              FieldBitPosition    - Field start position  *              FieldBitLength      - Field length in number of bits  *  * RETURN:      Status  *  * DESCRIPTION: Initialize the areas of the field object that are common  *              to the various types of fields.  Note: This is very "sensitive"  *              code because we are solving the general case for field  *              alignment.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -682,6 +722,17 @@ name|AccessBitWidth
 argument_list|)
 expr_stmt|;
 comment|/* 1,  2,  4,  8 */
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|AccessBitWidth
+operator|=
+operator|(
+name|UINT8
+operator|)
+name|AccessBitWidth
+expr_stmt|;
 comment|/*      * BaseByteOffset is the address of the start of the field within the      * region.  It is the byte address of the first *datum* (field-width data      * unit) of the field. (i.e., the first datum that contains at least the      * first *bit* of the field.)      *      * Note: ByteAlignment is always either equal to the AccessBitWidth or 8      * (Byte access), and it defines the addressing granularity of the parent      * region or buffer.      */
 name|NearestByteAddress
 operator|=
@@ -729,66 +780,6 @@ name|BaseByteOffset
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Valid bits -- the number of bits that compose a partial datum,      * 1) At the end of the field within the region (arbitrary starting bit      *    offset)      * 2) At the end of a buffer used to contain the field (starting offset      *    always zero)      */
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
-name|EndFieldValidBits
-operator|=
-call|(
-name|UINT8
-call|)
-argument_list|(
-operator|(
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
-name|StartFieldBitOffset
-operator|+
-name|FieldBitLength
-operator|)
-operator|%
-name|AccessBitWidth
-argument_list|)
-expr_stmt|;
-comment|/* StartBufferBitOffset always = 0 */
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
-name|EndBufferValidBits
-operator|=
-call|(
-name|UINT8
-call|)
-argument_list|(
-name|FieldBitLength
-operator|%
-name|AccessBitWidth
-argument_list|)
-expr_stmt|;
-comment|/*      * DatumValidBits is the number of valid field bits in the first      * field datum.      */
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
-name|DatumValidBits
-operator|=
-call|(
-name|UINT8
-call|)
-argument_list|(
-name|AccessBitWidth
-operator|-
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
-name|StartFieldBitOffset
-argument_list|)
-expr_stmt|;
 comment|/*      * Does the entire field fit within a single field access element? (datum)      * (i.e., without crossing a datum boundary)      */
 if|if
 condition|(
@@ -826,7 +817,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExPrepFieldValue  *  * PARAMETERS:  Node                - Owning Node  *              RegionNode          - Region in which field is being defined  *              FieldFlags          - Access, LockRule, and UpdateRule.  *              FieldBitPosition    - Field start position  *              FieldBitLength      - Field length in number of bits  *  * RETURN:      Status  *  * DESCRIPTION: Construct an ACPI_OPERAND_OBJECT of type DefField and  *              connect it to the parent Node.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExPrepFieldValue  *  * PARAMETERS:  Info    - Contains all field creation info  *  * RETURN:      Status  *  * DESCRIPTION: Construct an ACPI_OPERAND_OBJECT of type DefField and  *              connect it to the parent Node.  *  ******************************************************************************/
 end_comment
 
 begin_function

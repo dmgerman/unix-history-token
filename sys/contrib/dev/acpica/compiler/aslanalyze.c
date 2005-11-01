@@ -1,16 +1,16 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: aslanalyze.c - check for semantic errors  *              $Revision: 84 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: aslanalyze.c - check for semantic errors  *              $Revision: 1.96 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2004, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"aslcompiler.h"
+file|<contrib/dev/acpica/compiler/aslcompiler.h>
 end_include
 
 begin_include
@@ -22,13 +22,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acparser.h"
+file|<contrib/dev/acpica/acparser.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"amlcode.h"
+file|<contrib/dev/acpica/amlcode.h>
 end_include
 
 begin_include
@@ -52,10 +52,147 @@ argument_list|)
 end_macro
 
 begin_comment
+comment|/* Local prototypes */
+end_comment
+
+begin_function_decl
+specifier|static
+name|UINT32
+name|AnMapArgTypeToBtype
+parameter_list|(
+name|UINT32
+name|ArgType
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|UINT32
+name|AnMapEtypeToBtype
+parameter_list|(
+name|UINT32
+name|Etype
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|AnFormatBtype
+parameter_list|(
+name|char
+modifier|*
+name|Buffer
+parameter_list|,
+name|UINT32
+name|Btype
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|UINT32
+name|AnGetBtype
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|UINT32
+name|AnCheckForReservedName
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|char
+modifier|*
+name|Name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|AnCheckForReservedMethod
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|ASL_METHOD_INFO
+modifier|*
+name|MethodInfo
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|UINT32
+name|AnMapObjTypeToBtype
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|BOOLEAN
+name|AnLastStatementIsReturn
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|AnCheckMethodReturnValue
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+specifier|const
+name|ACPI_OPCODE_INFO
+modifier|*
+name|OpInfo
+parameter_list|,
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|ArgOp
+parameter_list|,
+name|UINT32
+name|RequiredBtypes
+parameter_list|,
+name|UINT32
+name|ThisNodeBtype
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AnMapArgTypeToBtype  *  * PARAMETERS:  ArgType      - The ARGI required type(s) for this argument,  *                             from the opcode info table  *  * RETURN:      The corresponding Bit-encoded types  *  * DESCRIPTION: Convert an encoded ARGI required argument type code into a  *              bitfield type code.  Implements the implicit source conversion  *              rules.  *  ******************************************************************************/
 end_comment
 
 begin_function
+specifier|static
 name|UINT32
 name|AnMapArgTypeToBtype
 parameter_list|(
@@ -182,7 +319,7 @@ comment|/* Complex types */
 case|case
 name|ARGI_DATAOBJECT
 case|:
-comment|/* Buffer, string, package or reference to a Op - Used only by SizeOf operator*/
+comment|/*          * Buffer, string, package or reference to a Op -          * Used only by SizeOf operator          */
 return|return
 operator|(
 name|ACPI_BTYPE_STRING
@@ -227,6 +364,24 @@ operator||
 name|ACPI_BTYPE_FIELD_UNIT
 operator|)
 return|;
+case|case
+name|ARGI_DATAREFOBJ
+case|:
+return|return
+operator|(
+name|ACPI_BTYPE_INTEGER
+operator||
+name|ACPI_BTYPE_STRING
+operator||
+name|ACPI_BTYPE_BUFFER
+operator||
+name|ACPI_BTYPE_PACKAGE
+operator||
+name|ACPI_BTYPE_REFERENCE
+operator||
+name|ACPI_BTYPE_DDB_HANDLE
+operator|)
+return|;
 default|default:
 break|break;
 block|}
@@ -243,6 +398,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|UINT32
 name|AnMapEtypeToBtype
 parameter_list|(
@@ -417,70 +573,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AnMapBtypeToEtype  *  * PARAMETERS:  Btype               - Bitfield of ACPI types  *  * RETURN:      The Etype corresponding the the Btype  *  * DESCRIPTION: Convert a bitfield type to an encoded type  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|UINT32
-name|AnMapBtypeToEtype
-parameter_list|(
-name|UINT32
-name|Btype
-parameter_list|)
-block|{
-name|UINT32
-name|i
-decl_stmt|;
-name|UINT32
-name|Etype
-decl_stmt|;
-if|if
-condition|(
-name|Btype
-operator|==
-literal|0
-condition|)
-block|{
-return|return
-literal|0
-return|;
-block|}
-name|Etype
-operator|=
-literal|1
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|1
-init|;
-name|i
-operator|<
-name|Btype
-condition|;
-name|i
-operator|*=
-literal|2
-control|)
-block|{
-name|Etype
-operator|++
-expr_stmt|;
-block|}
-return|return
-operator|(
-name|Etype
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AnFormatBtype  *  * PARAMETERS:  Btype               - Bitfield of ACPI types  *              Buffer              - Where to put the ascii string  *  * RETURN:      None.  *  * DESCRIPTION: Convert a Btype to a string of ACPI types  *  ******************************************************************************/
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|AnFormatBtype
 parameter_list|(
@@ -528,7 +625,7 @@ operator|=
 literal|1
 init|;
 name|Type
-operator|<
+operator|<=
 name|ACPI_TYPE_EXTERNAL_MAX
 condition|;
 name|Type
@@ -654,6 +751,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|UINT32
 name|AnGetBtype
 parameter_list|(
@@ -760,6 +858,24 @@ operator|->
 name|Type
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ThisNodeBtype
+condition|)
+block|{
+name|AslError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_COMPILER_INTERNAL
+argument_list|,
+name|Op
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*          * Since it was a named reference, enable the          * reference bit also          */
 name|ThisNodeBtype
 operator||=
@@ -778,14 +894,9 @@ condition|)
 block|{
 name|ReferencedNode
 operator|=
-name|ACPI_CAST_PTR
-argument_list|(
-name|ACPI_PARSE_OBJECT
-argument_list|,
 name|Node
 operator|->
-name|Object
-argument_list|)
+name|Op
 expr_stmt|;
 if|if
 condition|(
@@ -861,42 +972,8 @@ begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AnCheckForReservedName  *  * PARAMETERS:  Op              - A parse node  *              Name            - NameSeg to check  *  * RETURN:      None  *  * DESCRIPTION: Check a NameSeg against the reserved list.  *  ******************************************************************************/
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ACPI_VALID_RESERVED_NAME_MAX
-value|0x80000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_NOT_RESERVED_NAME
-value|ACPI_UINT32_MAX
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_PREDEFINED_NAME
-value|(ACPI_UINT32_MAX - 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_EVENT_RESERVED_NAME
-value|(ACPI_UINT32_MAX - 2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_COMPILER_RESERVED_NAME
-value|(ACPI_UINT32_MAX - 3)
-end_define
-
 begin_function
+specifier|static
 name|UINT32
 name|AnCheckForReservedName
 parameter_list|(
@@ -1221,6 +1298,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|AnCheckForReservedMethod
 parameter_list|(
@@ -1438,7 +1516,12 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AnMapObjTypeToBtype  *  * PARAMETERS:  Op              - A parse node  *  * RETURN:      A Btype  *  * DESCRIPTION: Map object to the associated "Btype"  *  ******************************************************************************/
+end_comment
+
 begin_function
+specifier|static
 name|UINT32
 name|AnMapObjTypeToBtype
 parameter_list|(
@@ -1673,7 +1756,7 @@ name|ACPI_PARSE_OBJECT
 modifier|*
 name|NextParamType
 decl_stmt|;
-name|char
+name|UINT8
 name|ActualArgs
 init|=
 literal|0
@@ -1698,7 +1781,7 @@ case|:
 name|TotalMethods
 operator|++
 expr_stmt|;
-comment|/*          * Create and init method info          */
+comment|/* Create and init method info */
 name|MethodInfo
 operator|=
 name|UtLocalCalloc
@@ -2102,7 +2185,7 @@ operator|!
 name|MethodInfo
 condition|)
 block|{
-comment|/* Probably was an error in the method declaration, no additional error here */
+comment|/*              * Probably was an error in the method declaration,              * no additional error here              */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -2242,7 +2325,7 @@ operator|!
 name|MethodInfo
 condition|)
 block|{
-comment|/* Probably was an error in the method declaration, no additional error here */
+comment|/*              * Probably was an error in the method declaration,              * no additional error here              */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -2388,7 +2471,7 @@ operator|!
 name|MethodInfo
 condition|)
 block|{
-comment|/* Probably was an error in the method declaration, no additional error here */
+comment|/*              * Probably was an error in the method declaration,              * no additional error here              */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -2510,8 +2593,24 @@ break|break;
 case|case
 name|PARSEOP_STALL
 case|:
+comment|/* We can range check if the argument is an integer */
 if|if
 condition|(
+operator|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Child
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_INTEGER
+operator|)
+operator|&&
+operator|(
 name|Op
 operator|->
 name|Asl
@@ -2525,6 +2624,7 @@ operator|.
 name|Integer
 operator|>
 name|ACPI_UINT8_MAX
+operator|)
 condition|)
 block|{
 name|AslError
@@ -2647,7 +2747,7 @@ literal|"with arguments"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*              * Typechecking for _HID              */
+comment|/* Typechecking for _HID */
 elseif|else
 if|if
 condition|(
@@ -2803,6 +2903,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|BOOLEAN
 name|AnLastStatementIsReturn
 parameter_list|(
@@ -3108,6 +3209,7 @@ name|CompileFlags
 operator||=
 name|NODE_HAS_NO_EXIT
 expr_stmt|;
+comment|/* Used in the "typing" pass later */
 name|Op
 operator|->
 name|Asl
@@ -3118,8 +3220,7 @@ name|MethodInfo
 operator|->
 name|Op
 expr_stmt|;
-comment|/* Used in the "typing" pass later */
-comment|/*          * If there is a peer node after the return statement, then this          * node is unreachable code -- i.e., it won't be executed because of the          * preceeding Return() statement.          */
+comment|/*          * If there is a peer node after the return statement, then this          * node is unreachable code -- i.e., it won't be executed because of          *  thepreceeding Return() statement.          */
 if|if
 condition|(
 name|Op
@@ -3420,13 +3521,9 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/*                  * The method is untyped at this time (typically a forward reference).                  * We must recursively type the method here                  */
+comment|/*                  * The method is untyped at this time (typically a forward                  *  reference). We must recursively type the method here                  */
 name|TrWalkParseTree
 argument_list|(
-name|ACPI_CAST_PTR
-argument_list|(
-name|ACPI_PARSE_OBJECT
-argument_list|,
 name|Op
 operator|->
 name|Asl
@@ -3437,8 +3534,7 @@ name|Asl
 operator|.
 name|Node
 operator|->
-name|Object
-argument_list|)
+name|Op
 argument_list|,
 name|ASL_WALK_VISIT_TWICE
 argument_list|,
@@ -3500,6 +3596,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|AnCheckMethodReturnValue
 parameter_list|(
@@ -3542,14 +3639,9 @@ expr_stmt|;
 comment|/* Examine the parent op of this method */
 name|OwningOp
 operator|=
-name|ACPI_CAST_PTR
-argument_list|(
-name|ACPI_PARSE_OBJECT
-argument_list|,
 name|Node
 operator|->
-name|Object
-argument_list|)
+name|Op
 expr_stmt|;
 if|if
 condition|(
@@ -3562,7 +3654,7 @@ operator|&
 name|NODE_METHOD_NO_RETVAL
 condition|)
 block|{
-comment|/*          * Method NEVER returns a value          */
+comment|/* Method NEVER returns a value */
 name|AslError
 argument_list|(
 name|ASL_ERROR
@@ -3591,7 +3683,7 @@ operator|&
 name|NODE_METHOD_SOME_NO_RETVAL
 condition|)
 block|{
-comment|/*          * Method SOMETIMES returns a value, SOMETIMES not          */
+comment|/* Method SOMETIMES returns a value, SOMETIMES not */
 name|AslError
 argument_list|(
 name|ASL_WARNING
@@ -3619,7 +3711,7 @@ name|RequiredBtypes
 operator|)
 condition|)
 block|{
-comment|/*          * Method returns a value, but the type is wrong          */
+comment|/* Method returns a value, but the type is wrong */
 name|AnFormatBtype
 argument_list|(
 name|StringBuffer
@@ -3674,7 +3766,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AnOperandTypecheckWalkBegin  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Descending callback for the analysis walk.  Check methods for :  *              1) Initialized local variables  *              2) Valid arguments  *              3) Return types  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AnOperandTypecheckWalkBegin  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Descending callback for the analysis walk.  Check methods for:  *              1) Initialized local variables  *              2) Valid arguments  *              3) Return types  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -3867,6 +3959,27 @@ operator|==
 name|PARSEOP_METHODCALL
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|ACPI_STRCMP
+argument_list|(
+name|ArgOp
+operator|->
+name|Asl
+operator|.
+name|ExternalName
+argument_list|,
+literal|"\\_OSI"
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
 comment|/* The lone arg is a method call, check it */
 name|RequiredBtypes
 operator|=
@@ -4448,6 +4561,77 @@ name|AE_OK
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_OBSOLETE_FUNCTIONS
+end_ifdef
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AnMapBtypeToEtype  *  * PARAMETERS:  Btype               - Bitfield of ACPI types  *  * RETURN:      The Etype corresponding the the Btype  *  * DESCRIPTION: Convert a bitfield type to an encoded type  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|UINT32
+name|AnMapBtypeToEtype
+parameter_list|(
+name|UINT32
+name|Btype
+parameter_list|)
+block|{
+name|UINT32
+name|i
+decl_stmt|;
+name|UINT32
+name|Etype
+decl_stmt|;
+if|if
+condition|(
+name|Btype
+operator|==
+literal|0
+condition|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+name|Etype
+operator|=
+literal|1
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+name|Btype
+condition|;
+name|i
+operator|*=
+literal|2
+control|)
+block|{
+name|Etype
+operator|++
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|Etype
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

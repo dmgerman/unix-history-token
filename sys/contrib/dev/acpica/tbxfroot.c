@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbxfroot - Find the root ACPI table (RSDT)  *              $Revision: 79 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbxfroot - Find the root ACPI table (RSDT)  *              $Revision: 1.91 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2004, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -40,7 +40,145 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbFindTable  *  * PARAMETERS:  Signature           - String with ACPI table signature  *              OemId               - String with the table OEM ID  *              OemTableId          - String with the OEM Table ID.  *  * RETURN:      Status  *  * DESCRIPTION: Find an ACPI table (in the RSDT/XSDT) that matches the  *              Signature, OEM ID and OEM Table ID.  *  ******************************************************************************/
+comment|/* Local prototypes */
+end_comment
+
+begin_function_decl
+specifier|static
+name|ACPI_STATUS
+name|AcpiTbFindRsdp
+parameter_list|(
+name|ACPI_TABLE_DESC
+modifier|*
+name|TableInfo
+parameter_list|,
+name|UINT32
+name|Flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|UINT8
+modifier|*
+name|AcpiTbScanMemoryForRsdp
+parameter_list|(
+name|UINT8
+modifier|*
+name|StartAddress
+parameter_list|,
+name|UINT32
+name|Length
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbValidateRsdp  *  * PARAMETERS:  Rsdp        - Pointer to unvalidated RSDP  *  * RETURN:      Status  *  * DESCRIPTION: Validate the RSDP (ptr)  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiTbValidateRsdp
+parameter_list|(
+name|RSDP_DESCRIPTOR
+modifier|*
+name|Rsdp
+parameter_list|)
+block|{
+name|ACPI_FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
+comment|/*      *  The signature and checksum must both be correct      */
+if|if
+condition|(
+name|ACPI_STRNCMP
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|Rsdp
+argument_list|,
+name|RSDP_SIG
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|RSDP_SIG
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Nope, BAD Signature */
+return|return
+operator|(
+name|AE_BAD_SIGNATURE
+operator|)
+return|;
+block|}
+comment|/* Check the standard checksum */
+if|if
+condition|(
+name|AcpiTbGenerateChecksum
+argument_list|(
+name|Rsdp
+argument_list|,
+name|ACPI_RSDP_CHECKSUM_LENGTH
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+return|return
+operator|(
+name|AE_BAD_CHECKSUM
+operator|)
+return|;
+block|}
+comment|/* Check extended checksum if table version>= 2 */
+if|if
+condition|(
+operator|(
+name|Rsdp
+operator|->
+name|Revision
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|AcpiTbGenerateChecksum
+argument_list|(
+name|Rsdp
+argument_list|,
+name|ACPI_RSDP_XCHECKSUM_LENGTH
+argument_list|)
+operator|!=
+literal|0
+operator|)
+condition|)
+block|{
+return|return
+operator|(
+name|AE_BAD_CHECKSUM
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbFindTable  *  * PARAMETERS:  Signature           - String with ACPI table signature  *              OemId               - String with the table OEM ID  *              OemTableId          - String with the OEM Table ID  *              TablePtr            - Where the table pointer is returned  *  * RETURN:      Status  *  * DESCRIPTION: Find an ACPI table (in the RSDT/XSDT) that matches the  *              Signature, OEM ID and OEM Table ID.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -196,13 +334,20 @@ index|[
 literal|0
 index|]
 operator|&&
-name|ACPI_STRCMP
+name|ACPI_STRNCMP
 argument_list|(
 name|OemId
 argument_list|,
 name|Table
 operator|->
 name|OemId
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|Table
+operator|->
+name|OemId
+argument_list|)
 argument_list|)
 operator|)
 operator|||
@@ -212,13 +357,20 @@ index|[
 literal|0
 index|]
 operator|&&
-name|ACPI_STRCMP
+name|ACPI_STRNCMP
 argument_list|(
 name|OemTableId
 argument_list|,
 name|Table
 operator|->
 name|OemTableId
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|Table
+operator|->
+name|OemTableId
+argument_list|)
 argument_list|)
 operator|)
 condition|)
@@ -442,53 +594,25 @@ operator|.
 name|Logical
 expr_stmt|;
 block|}
-comment|/* The signature and checksum must both be correct */
-if|if
-condition|(
-name|ACPI_STRNCMP
+comment|/* The RDSP signature and checksum must both be correct */
+name|Status
+operator|=
+name|AcpiTbValidateRsdp
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|AcpiGbl_RSDP
-argument_list|,
-name|RSDP_SIG
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|RSDP_SIG
-argument_list|)
-operator|-
-literal|1
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* Nope, BAD Signature */
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_BAD_SIGNATURE
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
-name|AcpiTbChecksum
+name|ACPI_FAILURE
 argument_list|(
-name|AcpiGbl_RSDP
-argument_list|,
-name|ACPI_RSDP_CHECKSUM_LENGTH
+name|Status
 argument_list|)
-operator|!=
-literal|0
 condition|)
 block|{
-comment|/* Nope, BAD Checksum */
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_BAD_CHECKSUM
+name|Status
 argument_list|)
 expr_stmt|;
 block|}
@@ -505,7 +629,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"RSDP located at %p, RSDT physical=%8.8X%8.8X \n"
+literal|"RSDP located at %p, RSDT physical=%8.8X%8.8X\n"
 operator|,
 name|AcpiGbl_RSDP
 operator|,
@@ -681,14 +805,12 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* Get the next table pointer, handle RSDT vs. XSDT */
+comment|/*          * Get the next table pointer, handle RSDT vs. XSDT          * RSDT pointers are 32 bits, XSDT pointers are 64 bits          */
 if|if
 condition|(
-name|AcpiGbl_RSDP
-operator|->
-name|Revision
-operator|<
-literal|2
+name|AcpiGbl_RootTableType
+operator|==
+name|ACPI_TABLE_TYPE_RSDT
 condition|)
 block|{
 name|Address
@@ -837,6 +959,13 @@ name|AE_NOT_EXIST
 expr_stmt|;
 name|Cleanup
 label|:
+if|if
+condition|(
+name|RsdtInfo
+operator|->
+name|Pointer
+condition|)
+block|{
 name|AcpiOsUnmapMemory
 argument_list|(
 name|RsdtInfo
@@ -853,6 +982,7 @@ operator|->
 name|Length
 argument_list|)
 expr_stmt|;
+block|}
 name|ACPI_MEM_FREE
 argument_list|(
 name|RsdtInfo
@@ -901,7 +1031,7 @@ literal|16
 end_if
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiFindRootPointer  *  * PARAMETERS:  **RsdpAddress           - Where to place the RSDP address  *              Flags                   - Logical/Physical addressing  *  * RETURN:      Status, Physical address of the RSDP  *  * DESCRIPTION: Find the RSDP  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiFindRootPointer  *  * PARAMETERS:  Flags                   - Logical/Physical addressing  *              RsdpAddress             - Where to place the RSDP address  *  * RETURN:      Status, Physical address of the RSDP  *  * DESCRIPTION: Find the RSDP  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -997,6 +1127,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|UINT8
 modifier|*
 name|AcpiTbScanMemoryForRsdp
@@ -1009,6 +1140,9 @@ name|UINT32
 name|Length
 parameter_list|)
 block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 name|UINT8
 modifier|*
 name|MemRover
@@ -1016,9 +1150,6 @@ decl_stmt|;
 name|UINT8
 modifier|*
 name|EndAddress
-decl_stmt|;
-name|UINT8
-name|Checksum
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -1047,81 +1178,28 @@ operator|+=
 name|ACPI_RSDP_SCAN_STEP
 control|)
 block|{
-comment|/* The signature and checksum must both be correct */
-if|if
-condition|(
-name|ACPI_STRNCMP
+comment|/* The RSDP signature and checksum must both be correct */
+name|Status
+operator|=
+name|AcpiTbValidateRsdp
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|MemRover
-argument_list|,
-name|RSDP_SIG
-argument_list|,
-sizeof|sizeof
+name|ACPI_CAST_PTR
 argument_list|(
-name|RSDP_SIG
-argument_list|)
-operator|-
-literal|1
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* No signature match, keep looking */
-continue|continue;
-block|}
-comment|/* Signature matches, check the appropriate checksum */
-if|if
-condition|(
-operator|(
-operator|(
 name|RSDP_DESCRIPTOR
-operator|*
-operator|)
-name|MemRover
-operator|)
-operator|->
-name|Revision
-operator|<
-literal|2
-condition|)
-block|{
-comment|/* ACPI version 1.0 */
-name|Checksum
-operator|=
-name|AcpiTbChecksum
-argument_list|(
-name|MemRover
 argument_list|,
-name|ACPI_RSDP_CHECKSUM_LENGTH
+name|MemRover
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* Post ACPI 1.0, use ExtendedChecksum */
-name|Checksum
-operator|=
-name|AcpiTbChecksum
-argument_list|(
-name|MemRover
-argument_list|,
-name|ACPI_RSDP_XCHECKSUM_LENGTH
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
-name|Checksum
-operator|==
-literal|0
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
 condition|)
 block|{
-comment|/* Checksum valid, we have found a valid RSDP */
+comment|/* Sig and checksum valid, we have found a real RSDP */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -1139,17 +1217,7 @@ name|MemRover
 argument_list|)
 expr_stmt|;
 block|}
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
-literal|"Found an RSDP at physical address %p, but it has a bad checksum\n"
-operator|,
-name|MemRover
-operator|)
-argument_list|)
-expr_stmt|;
+comment|/* No sig match or bad checksum, keep searching */
 block|}
 comment|/* Searched entire block, no RSDP was found */
 name|ACPI_DEBUG_PRINT
@@ -1157,7 +1225,9 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"Searched entire block, no valid RSDP was found.\n"
+literal|"Searched entire block from %p, valid RSDP was not found\n"
+operator|,
+name|StartAddress
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1170,10 +1240,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbFindRsdp  *  * PARAMETERS:  *TableInfo              - Where the table info is returned  *              Flags                   - Current memory mode (logical vs.  *                                        physical addressing)  *  * RETURN:      Status, RSDP physical address  *  * DESCRIPTION: Search lower 1Mbyte of memory for the root system descriptor  *              pointer structure.  If it is found, set *RSDP to point to it.  *  *              NOTE1: The RSDP must be either in the first 1K of the Extended  *              BIOS Data Area or between E0000 and FFFFF (From ACPI Spec.)  *              Only a 32-bit physical address is necessary.  *  *              NOTE2: This function is always available, regardless of the  *              initialization state of the rest of ACPI.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbFindRsdp  *  * PARAMETERS:  TableInfo               - Where the table info is returned  *              Flags                   - Current memory mode (logical vs.  *                                        physical addressing)  *  * RETURN:      Status, RSDP physical address  *  * DESCRIPTION: Search lower 1Mbyte of memory for the root system descriptor  *              pointer structure.  If it is found, set *RSDP to point to it.  *  *              NOTE1: The RSDP must be either in the first 1K of the Extended  *              BIOS Data Area or between E0000 and FFFFF (From ACPI Spec.)  *              Only a 32-bit physical address is necessary.  *  *              NOTE2: This function is always available, regardless of the  *              initialization state of the rest of ACPI.  *  ******************************************************************************/
 end_comment
 
 begin_function
+specifier|static
 name|ACPI_STATUS
 name|AcpiTbFindRsdp
 parameter_list|(
@@ -1204,7 +1275,7 @@ argument_list|(
 literal|"TbFindRsdp"
 argument_list|)
 expr_stmt|;
-comment|/*      * Scan supports either 1) Logical addressing or 2) Physical addressing      */
+comment|/*      * Scan supports either logical addressing or physical addressing      */
 if|if
 condition|(
 operator|(
@@ -1216,7 +1287,7 @@ operator|==
 name|ACPI_LOGICAL_ADDRESSING
 condition|)
 block|{
-comment|/*          * 1a) Get the location of the EBDA          */
+comment|/* 1a) Get the location of the Extended BIOS Data Area (EBDA) */
 name|Status
 operator|=
 name|AcpiOsMapMemory
@@ -1271,11 +1342,11 @@ argument_list|,
 name|TablePtr
 argument_list|)
 expr_stmt|;
+comment|/* Convert segment part to physical address */
 name|PhysicalAddress
 operator|<<=
 literal|4
 expr_stmt|;
-comment|/* Convert segment to physical address */
 name|AcpiOsUnmapMemory
 argument_list|(
 name|TablePtr
@@ -1291,7 +1362,7 @@ operator|>
 literal|0x400
 condition|)
 block|{
-comment|/*              * 1b) Search EBDA paragraphs (EBDA is required to be a minimum of 1K length)              */
+comment|/*              * 1b) Search EBDA paragraphs (EBDA is required to be a              *     minimum of 1K length)              */
 name|Status
 operator|=
 name|AcpiOsMapMemory
@@ -1359,7 +1430,7 @@ condition|(
 name|MemRover
 condition|)
 block|{
-comment|/* Found it, return the physical address */
+comment|/* Return the physical address */
 name|PhysicalAddress
 operator|+=
 name|ACPI_PTR_DIFF
@@ -1453,7 +1524,7 @@ condition|(
 name|MemRover
 condition|)
 block|{
-comment|/* Found it, return the physical address */
+comment|/* Return the physical address */
 name|PhysicalAddress
 operator|=
 name|ACPI_HI_RSDP_WINDOW_BASE
@@ -1484,7 +1555,7 @@ block|}
 comment|/*      * Physical addressing      */
 else|else
 block|{
-comment|/*          * 1a) Get the location of the EBDA          */
+comment|/* 1a) Get the location of the EBDA */
 name|ACPI_MOVE_16_TO_32
 argument_list|(
 operator|&
@@ -1506,7 +1577,7 @@ operator|>
 literal|0x400
 condition|)
 block|{
-comment|/*              * 1b) Search EBDA paragraphs (EBDA is required to be a minimum of 1K length)              */
+comment|/*              * 1b) Search EBDA paragraphs (EBDA is required to be a minimum of              *     1K length)              */
 name|MemRover
 operator|=
 name|AcpiTbScanMemoryForRsdp
@@ -1524,7 +1595,7 @@ condition|(
 name|MemRover
 condition|)
 block|{
-comment|/* Found it, return the physical address */
+comment|/* Return the physical address */
 name|TableInfo
 operator|->
 name|PhysicalAddress
@@ -1541,7 +1612,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*          * 2) Search upper memory: 16-byte boundaries in E0000h-FFFFFh          */
+comment|/* 2) Search upper memory: 16-byte boundaries in E0000h-FFFFFh */
 name|MemRover
 operator|=
 name|AcpiTbScanMemoryForRsdp
@@ -1576,7 +1647,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* RSDP signature was not found */
+comment|/* A valid RSDP was not found */
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"No valid RSDP was found\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_NOT_FOUND

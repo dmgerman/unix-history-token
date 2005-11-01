@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 274 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 1.288 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2004, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_ifndef
@@ -302,6 +302,35 @@ name|ACPI_SIZE_MAX
 value|ACPI_UINT64_MAX
 end_define
 
+begin_comment
+comment|/*  * In the case of the Itanium Processor Family (IPF), the hardware does not  * support misaligned memory transfers. Set the MISALIGNMENT_NOT_SUPPORTED flag  * to indicate that special precautions must be taken to avoid alignment faults.  * (IA64 or ia64 is currently used by existing compilers to indicate IPF.)  *  * Note: EM64T and other X86-64 processors do support misaligned transfers,  * so there is no need to define this flag.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__IA64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ACPI_MISALIGNMENT_NOT_SUPPORTED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_elif
 elif|#
 directive|elif
@@ -311,7 +340,7 @@ literal|16
 end_elif
 
 begin_comment
-comment|/*! [Begin] no source code translation (keep the typedefs) */
+comment|/*! [Begin] no source code translation (keep the typedefs as-is) */
 end_comment
 
 begin_comment
@@ -431,12 +460,6 @@ define|#
 directive|define
 name|ALIGNED_ADDRESS_BOUNDARY
 value|0x00000002
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_MISALIGNED_TRANSFERS
 end_define
 
 begin_define
@@ -598,12 +621,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_MISALIGNED_TRANSFERS
-end_define
-
-begin_define
-define|#
-directive|define
 name|ACPI_MAX_PTR
 value|ACPI_UINT32_MAX
 end_define
@@ -632,20 +649,13 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Miscellaneous common types  */
+comment|/*  * This type is used for bitfields in ACPI tables. The only type that is  * even remotely portable is UINT8. Anything else is not portable, so  * do not add any more bitfield types.  */
 end_comment
 
 begin_typedef
 typedef|typedef
-name|UINT16
-name|UINT16_BIT
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|UINT32
-name|UINT32_BIT
+name|UINT8
+name|UINT8_BIT
 typedef|;
 end_typedef
 
@@ -760,6 +770,28 @@ directive|define
 name|ACPI_LOGMODE_LOGPTR
 value|ACPI_LOGICAL_ADDRESSING  | ACPI_LOGICAL_POINTER
 end_define
+
+begin_comment
+comment|/*  * If ACPI_CACHE_T was not defined in the OS-dependent header,  * define it now. This is typically the case where the local cache  * manager implementation is to be used (ACPI_USE_LOCAL_CACHE)  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_CACHE_T
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ACPI_CACHE_T
+value|ACPI_MEMORY_LIST
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Useful defines  */
@@ -2505,99 +2537,113 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_BITREG_TIMER_ENABLE
+name|ACPI_BITREG_PCIEXP_WAKE_STATUS
 value|0x07
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_BITREG_GLOBAL_LOCK_ENABLE
+name|ACPI_BITREG_TIMER_ENABLE
 value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_BITREG_POWER_BUTTON_ENABLE
+name|ACPI_BITREG_GLOBAL_LOCK_ENABLE
 value|0x09
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_BITREG_SLEEP_BUTTON_ENABLE
+name|ACPI_BITREG_POWER_BUTTON_ENABLE
 value|0x0A
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_BITREG_RT_CLOCK_ENABLE
+name|ACPI_BITREG_SLEEP_BUTTON_ENABLE
 value|0x0B
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_BITREG_WAKE_ENABLE
+name|ACPI_BITREG_RT_CLOCK_ENABLE
 value|0x0C
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_BITREG_SCI_ENABLE
+name|ACPI_BITREG_WAKE_ENABLE
 value|0x0D
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_BITREG_BUS_MASTER_RLD
+name|ACPI_BITREG_PCIEXP_WAKE_DISABLE
 value|0x0E
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_BITREG_GLOBAL_LOCK_RELEASE
+name|ACPI_BITREG_SCI_ENABLE
 value|0x0F
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_BITREG_SLEEP_TYPE_A
+name|ACPI_BITREG_BUS_MASTER_RLD
 value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_BITREG_SLEEP_TYPE_B
+name|ACPI_BITREG_GLOBAL_LOCK_RELEASE
 value|0x11
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_BITREG_SLEEP_ENABLE
+name|ACPI_BITREG_SLEEP_TYPE_A
 value|0x12
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_BITREG_ARB_DISABLE
+name|ACPI_BITREG_SLEEP_TYPE_B
 value|0x13
 end_define
 
 begin_define
 define|#
 directive|define
+name|ACPI_BITREG_SLEEP_ENABLE
+value|0x14
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_ARB_DISABLE
+value|0x15
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_BITREG_MAX
-value|0x13
+value|0x15
 end_define
 
 begin_define
@@ -3430,6 +3476,28 @@ begin_comment
 comment|/*  * Definitions for Resource Attributes  */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|UINT16
+name|ACPI_RS_LENGTH
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Resource Length field is fixed at 16 bits */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|UINT32
+name|ACPI_RSDESC_SIZE
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Max Resource Descriptor size is (Length+3) = (64K-1)+3 */
+end_comment
+
 begin_comment
 comment|/*  *  Memory Attributes  */
 end_comment
@@ -3541,14 +3609,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_EDGE_SENSITIVE
+name|ACPI_LEVEL_SENSITIVE
 value|(UINT8) 0x00
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_LEVEL_SENSITIVE
+name|ACPI_EDGE_SENSITIVE
 value|(UINT8) 0x01
 end_define
 
@@ -3740,6 +3808,30 @@ value|(UINT8) 0x01
 end_define
 
 begin_comment
+comment|/*  * If possible, pack the following structures to byte alignment  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_MISALIGNMENT_NOT_SUPPORTED
+end_ifndef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|1
+name|)
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  *  Structures used to describe device resources  */
 end_comment
 
@@ -3748,19 +3840,19 @@ typedef|typedef
 struct|struct
 name|acpi_resource_irq
 block|{
-name|UINT32
-name|EdgeLevel
+name|UINT8
+name|Triggering
 decl_stmt|;
-name|UINT32
-name|ActiveHighLow
+name|UINT8
+name|Polarity
 decl_stmt|;
-name|UINT32
-name|SharedExclusive
+name|UINT8
+name|Sharable
 decl_stmt|;
-name|UINT32
-name|NumberOfInterrupts
+name|UINT8
+name|InterruptCount
 decl_stmt|;
-name|UINT32
+name|UINT8
 name|Interrupts
 index|[
 literal|1
@@ -3776,19 +3868,19 @@ typedef|typedef
 struct|struct
 name|ACPI_RESOURCE_DMA
 block|{
-name|UINT32
+name|UINT8
 name|Type
 decl_stmt|;
-name|UINT32
+name|UINT8
 name|BusMaster
 decl_stmt|;
-name|UINT32
+name|UINT8
 name|Transfer
 decl_stmt|;
-name|UINT32
-name|NumberOfChannels
+name|UINT8
+name|ChannelCount
 decl_stmt|;
-name|UINT32
+name|UINT8
 name|Channels
 index|[
 literal|1
@@ -3802,16 +3894,16 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
-name|acpi_resource_start_dpf
+name|acpi_resource_start_dependent
 block|{
-name|UINT32
+name|UINT8
 name|CompatibilityPriority
 decl_stmt|;
-name|UINT32
+name|UINT8
 name|PerformanceRobustness
 decl_stmt|;
 block|}
-name|ACPI_RESOURCE_START_DPF
+name|ACPI_RESOURCE_START_DEPENDENT
 typedef|;
 end_typedef
 
@@ -3824,20 +3916,20 @@ typedef|typedef
 struct|struct
 name|acpi_resource_io
 block|{
-name|UINT32
+name|UINT8
 name|IoDecode
 decl_stmt|;
-name|UINT32
-name|MinBaseAddress
-decl_stmt|;
-name|UINT32
-name|MaxBaseAddress
-decl_stmt|;
-name|UINT32
+name|UINT8
 name|Alignment
 decl_stmt|;
-name|UINT32
-name|RangeLength
+name|UINT8
+name|AddressLength
+decl_stmt|;
+name|UINT16
+name|Minimum
+decl_stmt|;
+name|UINT16
+name|Maximum
 decl_stmt|;
 block|}
 name|ACPI_RESOURCE_IO
@@ -3849,11 +3941,11 @@ typedef|typedef
 struct|struct
 name|acpi_resource_fixed_io
 block|{
-name|UINT32
-name|BaseAddress
+name|UINT16
+name|Address
 decl_stmt|;
-name|UINT32
-name|RangeLength
+name|UINT8
+name|AddressLength
 decl_stmt|;
 block|}
 name|ACPI_RESOURCE_FIXED_IO
@@ -3865,11 +3957,11 @@ typedef|typedef
 struct|struct
 name|acpi_resource_vendor
 block|{
-name|UINT32
-name|Length
+name|UINT16
+name|ByteLength
 decl_stmt|;
 name|UINT8
-name|Reserved
+name|ByteData
 index|[
 literal|1
 index|]
@@ -3895,69 +3987,69 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
-name|acpi_resource_mem24
+name|acpi_resource_memory24
 block|{
-name|UINT32
-name|ReadWriteAttribute
+name|UINT8
+name|WriteProtect
 decl_stmt|;
-name|UINT32
-name|MinBaseAddress
+name|UINT16
+name|Minimum
 decl_stmt|;
-name|UINT32
-name|MaxBaseAddress
+name|UINT16
+name|Maximum
 decl_stmt|;
-name|UINT32
+name|UINT16
 name|Alignment
 decl_stmt|;
-name|UINT32
-name|RangeLength
+name|UINT16
+name|AddressLength
 decl_stmt|;
 block|}
-name|ACPI_RESOURCE_MEM24
+name|ACPI_RESOURCE_MEMORY24
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|acpi_resource_mem32
+name|acpi_resource_memory32
 block|{
-name|UINT32
-name|ReadWriteAttribute
+name|UINT8
+name|WriteProtect
 decl_stmt|;
 name|UINT32
-name|MinBaseAddress
+name|Minimum
 decl_stmt|;
 name|UINT32
-name|MaxBaseAddress
+name|Maximum
 decl_stmt|;
 name|UINT32
 name|Alignment
 decl_stmt|;
 name|UINT32
-name|RangeLength
+name|AddressLength
 decl_stmt|;
 block|}
-name|ACPI_RESOURCE_MEM32
+name|ACPI_RESOURCE_MEMORY32
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|acpi_resource_fixed_mem32
+name|acpi_resource_fixed_memory32
 block|{
-name|UINT32
-name|ReadWriteAttribute
+name|UINT8
+name|WriteProtect
 decl_stmt|;
 name|UINT32
-name|RangeBaseAddress
+name|Address
 decl_stmt|;
 name|UINT32
-name|RangeLength
+name|AddressLength
 decl_stmt|;
 block|}
-name|ACPI_RESOURCE_FIXED_MEM32
+name|ACPI_RESOURCE_FIXED_MEMORY32
 typedef|;
 end_typedef
 
@@ -3966,11 +4058,17 @@ typedef|typedef
 struct|struct
 name|acpi_memory_attribute
 block|{
-name|UINT16
-name|CacheAttribute
+name|UINT8
+name|WriteProtect
 decl_stmt|;
-name|UINT16
-name|ReadWriteAttribute
+name|UINT8
+name|Caching
+decl_stmt|;
+name|UINT8
+name|RangeType
+decl_stmt|;
+name|UINT8
+name|Translation
 decl_stmt|;
 block|}
 name|ACPI_MEMORY_ATTRIBUTE
@@ -3982,30 +4080,20 @@ typedef|typedef
 struct|struct
 name|acpi_io_attribute
 block|{
-name|UINT16
-name|RangeAttribute
+name|UINT8
+name|RangeType
 decl_stmt|;
-name|UINT16
-name|TranslationAttribute
+name|UINT8
+name|Translation
+decl_stmt|;
+name|UINT8
+name|TranslationType
+decl_stmt|;
+name|UINT8
+name|Reserved1
 decl_stmt|;
 block|}
 name|ACPI_IO_ATTRIBUTE
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_bus_attribute
-block|{
-name|UINT16
-name|Reserved1
-decl_stmt|;
-name|UINT16
-name|Reserved2
-decl_stmt|;
-block|}
-name|ACPI_BUS_ATTRIBUTE
 typedef|;
 end_typedef
 
@@ -4015,13 +4103,14 @@ union|union
 name|acpi_resource_attribute
 block|{
 name|ACPI_MEMORY_ATTRIBUTE
-name|Memory
+name|Mem
 decl_stmt|;
 name|ACPI_IO_ATTRIBUTE
 name|Io
 decl_stmt|;
-name|ACPI_BUS_ATTRIBUTE
-name|Bus
+comment|/* Used for the *WordSpace macros */
+name|UINT8
+name|TypeSpecific
 decl_stmt|;
 block|}
 name|ACPI_RESOURCE_ATTRIBUTE
@@ -4033,10 +4122,10 @@ typedef|typedef
 struct|struct
 name|acpi_resource_source
 block|{
-name|UINT32
+name|UINT8
 name|Index
 decl_stmt|;
-name|UINT32
+name|UINT16
 name|StringLength
 decl_stmt|;
 name|char
@@ -4048,42 +4137,48 @@ name|ACPI_RESOURCE_SOURCE
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* Fields common to all address descriptors, 16/32/64 bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_RESOURCE_ADDRESS_COMMON
+define|\
+value|UINT8                       ResourceType; \     UINT8                       ProducerConsumer; \     UINT8                       Decode; \     UINT8                       MinAddressFixed; \     UINT8                       MaxAddressFixed; \     ACPI_RESOURCE_ATTRIBUTE     Info;
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_resource_address
+block|{
+name|ACPI_RESOURCE_ADDRESS_COMMON
+block|}
+name|ACPI_RESOURCE_ADDRESS
+typedef|;
+end_typedef
+
 begin_typedef
 typedef|typedef
 struct|struct
 name|acpi_resource_address16
 block|{
-name|UINT32
-name|ResourceType
-decl_stmt|;
-name|UINT32
-name|ProducerConsumer
-decl_stmt|;
-name|UINT32
-name|Decode
-decl_stmt|;
-name|UINT32
-name|MinAddressFixed
-decl_stmt|;
-name|UINT32
-name|MaxAddressFixed
-decl_stmt|;
-name|ACPI_RESOURCE_ATTRIBUTE
-name|Attribute
-decl_stmt|;
-name|UINT32
+name|ACPI_RESOURCE_ADDRESS_COMMON
+name|UINT16
 name|Granularity
 decl_stmt|;
-name|UINT32
-name|MinAddressRange
+name|UINT16
+name|Minimum
 decl_stmt|;
-name|UINT32
-name|MaxAddressRange
+name|UINT16
+name|Maximum
 decl_stmt|;
-name|UINT32
-name|AddressTranslationOffset
+name|UINT16
+name|TranslationOffset
 decl_stmt|;
-name|UINT32
+name|UINT16
 name|AddressLength
 decl_stmt|;
 name|ACPI_RESOURCE_SOURCE
@@ -4099,35 +4194,18 @@ typedef|typedef
 struct|struct
 name|acpi_resource_address32
 block|{
-name|UINT32
-name|ResourceType
-decl_stmt|;
-name|UINT32
-name|ProducerConsumer
-decl_stmt|;
-name|UINT32
-name|Decode
-decl_stmt|;
-name|UINT32
-name|MinAddressFixed
-decl_stmt|;
-name|UINT32
-name|MaxAddressFixed
-decl_stmt|;
-name|ACPI_RESOURCE_ATTRIBUTE
-name|Attribute
-decl_stmt|;
+name|ACPI_RESOURCE_ADDRESS_COMMON
 name|UINT32
 name|Granularity
 decl_stmt|;
 name|UINT32
-name|MinAddressRange
+name|Minimum
 decl_stmt|;
 name|UINT32
-name|MaxAddressRange
+name|Maximum
 decl_stmt|;
 name|UINT32
-name|AddressTranslationOffset
+name|TranslationOffset
 decl_stmt|;
 name|UINT32
 name|AddressLength
@@ -4145,35 +4223,18 @@ typedef|typedef
 struct|struct
 name|acpi_resource_address64
 block|{
-name|UINT32
-name|ResourceType
-decl_stmt|;
-name|UINT32
-name|ProducerConsumer
-decl_stmt|;
-name|UINT32
-name|Decode
-decl_stmt|;
-name|UINT32
-name|MinAddressFixed
-decl_stmt|;
-name|UINT32
-name|MaxAddressFixed
-decl_stmt|;
-name|ACPI_RESOURCE_ATTRIBUTE
-name|Attribute
-decl_stmt|;
+name|ACPI_RESOURCE_ADDRESS_COMMON
 name|UINT64
 name|Granularity
 decl_stmt|;
 name|UINT64
-name|MinAddressRange
+name|Minimum
 decl_stmt|;
 name|UINT64
-name|MaxAddressRange
+name|Maximum
 decl_stmt|;
 name|UINT64
-name|AddressTranslationOffset
+name|TranslationOffset
 decl_stmt|;
 name|UINT64
 name|AddressLength
@@ -4189,22 +4250,54 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
-name|acpi_resource_ext_irq
+name|acpi_resource_extended_address64
 block|{
-name|UINT32
+name|ACPI_RESOURCE_ADDRESS_COMMON
+name|UINT8
+name|RevisionID
+decl_stmt|;
+name|UINT64
+name|Granularity
+decl_stmt|;
+name|UINT64
+name|Minimum
+decl_stmt|;
+name|UINT64
+name|Maximum
+decl_stmt|;
+name|UINT64
+name|TranslationOffset
+decl_stmt|;
+name|UINT64
+name|AddressLength
+decl_stmt|;
+name|UINT64
+name|TypeSpecific
+decl_stmt|;
+block|}
+name|ACPI_RESOURCE_EXTENDED_ADDRESS64
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_resource_extended_irq
+block|{
+name|UINT8
 name|ProducerConsumer
 decl_stmt|;
-name|UINT32
-name|EdgeLevel
+name|UINT8
+name|Triggering
 decl_stmt|;
-name|UINT32
-name|ActiveHighLow
+name|UINT8
+name|Polarity
 decl_stmt|;
-name|UINT32
-name|SharedExclusive
+name|UINT8
+name|Sharable
 decl_stmt|;
-name|UINT32
-name|NumberOfInterrupts
+name|UINT8
+name|InterruptCount
 decl_stmt|;
 name|ACPI_RESOURCE_SOURCE
 name|ResourceSource
@@ -4216,7 +4309,32 @@ literal|1
 index|]
 decl_stmt|;
 block|}
-name|ACPI_RESOURCE_EXT_IRQ
+name|ACPI_RESOURCE_EXTENDED_IRQ
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_resource_generic_register
+block|{
+name|UINT8
+name|SpaceId
+decl_stmt|;
+name|UINT8
+name|BitWidth
+decl_stmt|;
+name|UINT8
+name|BitOffset
+decl_stmt|;
+name|UINT8
+name|AccessSize
+decl_stmt|;
+name|UINT64
+name|Address
+decl_stmt|;
+block|}
+name|ACPI_RESOURCE_GENERIC_REGISTER
 typedef|;
 end_typedef
 
@@ -4227,114 +4345,132 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_RSTYPE_IRQ
+name|ACPI_RESOURCE_TYPE_IRQ
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_RSTYPE_DMA
+name|ACPI_RESOURCE_TYPE_DMA
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_RSTYPE_START_DPF
+name|ACPI_RESOURCE_TYPE_START_DEPENDENT
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_RSTYPE_END_DPF
+name|ACPI_RESOURCE_TYPE_END_DEPENDENT
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_RSTYPE_IO
+name|ACPI_RESOURCE_TYPE_IO
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_RSTYPE_FIXED_IO
+name|ACPI_RESOURCE_TYPE_FIXED_IO
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_RSTYPE_VENDOR
+name|ACPI_RESOURCE_TYPE_VENDOR
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_RSTYPE_END_TAG
+name|ACPI_RESOURCE_TYPE_END_TAG
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_RSTYPE_MEM24
+name|ACPI_RESOURCE_TYPE_MEMORY24
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_RSTYPE_MEM32
+name|ACPI_RESOURCE_TYPE_MEMORY32
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_RSTYPE_FIXED_MEM32
+name|ACPI_RESOURCE_TYPE_FIXED_MEMORY32
 value|10
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_RSTYPE_ADDRESS16
+name|ACPI_RESOURCE_TYPE_ADDRESS16
 value|11
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_RSTYPE_ADDRESS32
+name|ACPI_RESOURCE_TYPE_ADDRESS32
 value|12
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_RSTYPE_ADDRESS64
+name|ACPI_RESOURCE_TYPE_ADDRESS64
 value|13
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_RSTYPE_EXT_IRQ
+name|ACPI_RESOURCE_TYPE_EXTENDED_ADDRESS64
 value|14
 end_define
 
-begin_typedef
-typedef|typedef
-name|UINT32
-name|ACPI_RESOURCE_TYPE
-typedef|;
-end_typedef
+begin_comment
+comment|/* ACPI 3.0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_RESOURCE_TYPE_EXTENDED_IRQ
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RESOURCE_TYPE_GENERIC_REGISTER
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RESOURCE_TYPE_MAX
+value|16
+end_define
 
 begin_typedef
 typedef|typedef
@@ -4347,7 +4483,7 @@ decl_stmt|;
 name|ACPI_RESOURCE_DMA
 name|Dma
 decl_stmt|;
-name|ACPI_RESOURCE_START_DPF
+name|ACPI_RESOURCE_START_DEPENDENT
 name|StartDpf
 decl_stmt|;
 name|ACPI_RESOURCE_IO
@@ -4357,18 +4493,18 @@ name|ACPI_RESOURCE_FIXED_IO
 name|FixedIo
 decl_stmt|;
 name|ACPI_RESOURCE_VENDOR
-name|VendorSpecific
+name|Vendor
 decl_stmt|;
 name|ACPI_RESOURCE_END_TAG
 name|EndTag
 decl_stmt|;
-name|ACPI_RESOURCE_MEM24
+name|ACPI_RESOURCE_MEMORY24
 name|Memory24
 decl_stmt|;
-name|ACPI_RESOURCE_MEM32
+name|ACPI_RESOURCE_MEMORY32
 name|Memory32
 decl_stmt|;
-name|ACPI_RESOURCE_FIXED_MEM32
+name|ACPI_RESOURCE_FIXED_MEMORY32
 name|FixedMemory32
 decl_stmt|;
 name|ACPI_RESOURCE_ADDRESS16
@@ -4380,9 +4516,20 @@ decl_stmt|;
 name|ACPI_RESOURCE_ADDRESS64
 name|Address64
 decl_stmt|;
-name|ACPI_RESOURCE_EXT_IRQ
+name|ACPI_RESOURCE_EXTENDED_ADDRESS64
+name|ExtAddress64
+decl_stmt|;
+name|ACPI_RESOURCE_EXTENDED_IRQ
 name|ExtendedIrq
 decl_stmt|;
+name|ACPI_RESOURCE_GENERIC_REGISTER
+name|GenericReg
+decl_stmt|;
+comment|/* Common fields */
+name|ACPI_RESOURCE_ADDRESS
+name|Address
+decl_stmt|;
+comment|/* Common 16/32/64 address fields */
 block|}
 name|ACPI_RESOURCE_DATA
 typedef|;
@@ -4393,8 +4540,8 @@ typedef|typedef
 struct|struct
 name|acpi_resource
 block|{
-name|ACPI_RESOURCE_TYPE
-name|Id
+name|UINT32
+name|Type
 decl_stmt|;
 name|UINT32
 name|Length
@@ -4407,17 +4554,29 @@ name|ACPI_RESOURCE
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* restore default alignment */
+end_comment
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|)
+end_pragma
+
 begin_define
 define|#
 directive|define
-name|ACPI_RESOURCE_LENGTH
+name|ACPI_RS_SIZE_MIN
 value|12
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_RESOURCE_LENGTH_NO_DATA
+name|ACPI_RS_SIZE_NO_DATA
 value|8
 end_define
 
@@ -4428,11 +4587,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_SIZEOF_RESOURCE
+name|ACPI_RS_SIZE
 parameter_list|(
 name|Type
 parameter_list|)
-value|(ACPI_RESOURCE_LENGTH_NO_DATA + sizeof (Type))
+value|(UINT32) (ACPI_RS_SIZE_NO_DATA + sizeof (Type))
 end_define
 
 begin_define
@@ -4445,11 +4604,11 @@ parameter_list|)
 value|(ACPI_RESOURCE *)((UINT8 *) Res + Res->Length)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_MISALIGNED_TRANSFERS
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_MISALIGNMENT_NOT_SUPPORTED
+end_ifndef
 
 begin_define
 define|#

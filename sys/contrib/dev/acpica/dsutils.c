@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dsutils - Dispatcher utilities  *              $Revision: 107 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dsutils - Dispatcher utilities  *              $Revision: 1.115 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2004, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -69,11 +69,191 @@ literal|"dsutils"
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsClearImplicitReturn  *  * PARAMETERS:  WalkState           - Current State  *  * RETURN:      None.  *  * DESCRIPTION: Clear and remove a reference on an implicit return value.  Used  *              to delete "stale" return values (if enabled, the return value  *              from every operator is saved at least momentarily, in case the  *              parent method exits.)  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiDsClearImplicitReturn
+parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|)
+block|{
+name|ACPI_FUNCTION_NAME
+argument_list|(
+literal|"DsClearImplicitReturn"
+argument_list|)
+expr_stmt|;
+comment|/*      * Slack must be enabled for this feature      */
+if|if
+condition|(
+operator|!
+name|AcpiGbl_EnableInterpreterSlack
+condition|)
+block|{
+return|return;
+block|}
+if|if
+condition|(
+name|WalkState
+operator|->
+name|ImplicitReturnObj
+condition|)
+block|{
+comment|/*          * Delete any "stale" implicit return. However, in          * complex statements, the implicit return value can be          * bubbled up several levels.          */
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_DISPATCH
+operator|,
+literal|"Removing reference on stale implicit return obj %p\n"
+operator|,
+name|WalkState
+operator|->
+name|ImplicitReturnObj
+operator|)
+argument_list|)
+expr_stmt|;
+name|AcpiUtRemoveReference
+argument_list|(
+name|WalkState
+operator|->
+name|ImplicitReturnObj
+argument_list|)
+expr_stmt|;
+name|WalkState
+operator|->
+name|ImplicitReturnObj
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+block|}
+end_function
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|ACPI_NO_METHOD_EXECUTION
 end_ifndef
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsDoImplicitReturn  *  * PARAMETERS:  ReturnDesc          - The return value  *              WalkState           - Current State  *              AddReference        - True if a reference should be added to the  *                                    return object  *  * RETURN:      TRUE if implicit return enabled, FALSE otherwise  *  * DESCRIPTION: Implements the optional "implicit return".  We save the result  *              of every ASL operator and control method invocation in case the  *              parent method exit.  Before storing a new return value, we  *              delete the previous return value.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|BOOLEAN
+name|AcpiDsDoImplicitReturn
+parameter_list|(
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ReturnDesc
+parameter_list|,
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|,
+name|BOOLEAN
+name|AddReference
+parameter_list|)
+block|{
+name|ACPI_FUNCTION_NAME
+argument_list|(
+literal|"DsDoImplicitReturn"
+argument_list|)
+expr_stmt|;
+comment|/*      * Slack must be enabled for this feature, and we must      * have a valid return object      */
+if|if
+condition|(
+operator|(
+operator|!
+name|AcpiGbl_EnableInterpreterSlack
+operator|)
+operator|||
+operator|(
+operator|!
+name|ReturnDesc
+operator|)
+condition|)
+block|{
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_DISPATCH
+operator|,
+literal|"Result %p will be implicitly returned; Prev=%p\n"
+operator|,
+name|ReturnDesc
+operator|,
+name|WalkState
+operator|->
+name|ImplicitReturnObj
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/*      * Delete any "stale" implicit return value first. However, in      * complex statements, the implicit return value can be      * bubbled up several levels, so we don't clear the value if it      * is the same as the ReturnDesc.      */
+if|if
+condition|(
+name|WalkState
+operator|->
+name|ImplicitReturnObj
+condition|)
+block|{
+if|if
+condition|(
+name|WalkState
+operator|->
+name|ImplicitReturnObj
+operator|==
+name|ReturnDesc
+condition|)
+block|{
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
+block|}
+name|AcpiDsClearImplicitReturn
+argument_list|(
+name|WalkState
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Save the implicit return value, add a reference if requested */
+name|WalkState
+operator|->
+name|ImplicitReturnObj
+operator|=
+name|ReturnDesc
+expr_stmt|;
+if|if
+condition|(
+name|AddReference
+condition|)
+block|{
+name|AcpiUtAddReference
+argument_list|(
+name|ReturnDesc
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsIsResultUsed  *  * PARAMETERS:  Op                  - Current Op  *              WalkState           - Current State  *  * RETURN:      TRUE if result is used, FALSE otherwise  *  * DESCRIPTION: Check if a result object will be used by the parent  *  ******************************************************************************/
@@ -120,22 +300,40 @@ literal|"Null Op\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_VALUE
+name|return_UINT8
 argument_list|(
 name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * If there is no parent, we are executing at the method level.      * An executing method typically has no parent, since each method      * is parsed separately.      */
+comment|/*      * We know that this operator is not a      * Return() operator (would not come here.) The following code is the      * optional support for a so-called "implicit return". Some AML code      * assumes that the last value of the method is "implicitly" returned      * to the caller. Just save the last result as the return value.      * NOTE: this is optional because the ASL language does not actually      * support this behavior.      */
+operator|(
+name|void
+operator|)
+name|AcpiDsDoImplicitReturn
+argument_list|(
+name|WalkState
+operator|->
+name|ResultObj
+argument_list|,
+name|WalkState
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+comment|/*      * Now determine if the parent will use the result      *      * If there is no parent, or the parent is a ScopeOp, we are executing      * at the method level. An executing method typically has no parent,      * since each method is parsed separately.  A method invoked externally      * via ExecuteControlMethod has a ScopeOp as the parent.      */
 if|if
 condition|(
+operator|(
 operator|!
 name|Op
 operator|->
 name|Common
 operator|.
 name|Parent
+operator|)
 operator|||
+operator|(
 name|Op
 operator|->
 name|Common
@@ -147,36 +345,16 @@ operator|.
 name|AmlOpcode
 operator|==
 name|AML_SCOPE_OP
-condition|)
-block|{
-comment|/*          * If this is the last statement in the method, we know it is not a          * Return() operator (would not come here.) The following code is the          * optional support for a so-called "implicit return". Some AML code          * assumes that the last value of the method is "implicitly" returned          * to the caller. Just save the last result as the return value.          * NOTE: this is optional because the ASL language does not actually          * support this behavior.          */
-if|if
-condition|(
-operator|(
-name|AcpiGbl_EnableInterpreterSlack
-operator|)
-operator|&&
-operator|(
-name|WalkState
-operator|->
-name|ParserState
-operator|.
-name|Aml
-operator|>=
-name|WalkState
-operator|->
-name|ParserState
-operator|.
-name|AmlEnd
 operator|)
 condition|)
 block|{
+comment|/* No parent, the return value cannot possibly be used */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_DISPATCH
 operator|,
-literal|"Result of [%s] will be implicitly returned\n"
+literal|"At Method level, result of [%s] not used\n"
 operator|,
 name|AcpiPsGetOpcodeName
 argument_list|(
@@ -189,30 +367,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Use the top of the result stack as the implicit return value */
-name|WalkState
-operator|->
-name|ReturnDesc
-operator|=
-name|WalkState
-operator|->
-name|Results
-operator|->
-name|Results
-operator|.
-name|ObjDesc
-index|[
-literal|0
-index|]
-expr_stmt|;
-name|return_VALUE
-argument_list|(
-name|TRUE
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* No parent, the return value cannot possibly be used */
-name|return_VALUE
+name|return_UINT8
 argument_list|(
 name|FALSE
 argument_list|)
@@ -254,7 +409,7 @@ name|Op
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_VALUE
+name|return_UINT8
 argument_list|(
 name|FALSE
 argument_list|)
@@ -484,7 +639,7 @@ name|Op
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_VALUE
+name|return_UINT8
 argument_list|(
 name|TRUE
 argument_list|)
@@ -524,7 +679,7 @@ name|Op
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_VALUE
+name|return_UINT8
 argument_list|(
 name|FALSE
 argument_list|)
@@ -605,7 +760,7 @@ name|WalkState
 argument_list|)
 condition|)
 block|{
-comment|/*          * Must pop the result stack (ObjDesc should be equal to ResultObj)          */
+comment|/* Must pop the result stack (ObjDesc should be equal to ResultObj) */
 name|Status
 operator|=
 name|AcpiDsResultPop
@@ -738,7 +893,7 @@ argument_list|,
 name|WalkState
 argument_list|)
 expr_stmt|;
-comment|/*      * Remove a reference on each operand on the stack      */
+comment|/* Remove a reference on each operand on the stack */
 for|for
 control|(
 name|i
@@ -921,7 +1076,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * All prefixes have been handled, and the name is          * in NameString          */
+comment|/* All prefixes have been handled, and the name is in NameString */
 comment|/*          * Special handling for BufferField declarations.  This is a deferred          * opcode that unfortunately defines the field name as the last          * parameter instead of the first.  We get here when we are performing          * the deferred execution, so the actual name of the field is already          * in the namespace.  We don't want to attempt to look it up again          * because we may be executing in a different scope than where the          * actual opcode exists.          */
 if|if
 condition|(
@@ -1267,7 +1422,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_DISPATCH
 operator|,
-literal|"Argument previously created, already stacked \n"
+literal|"Argument previously created, already stacked\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1434,7 +1589,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsCreateOperands  *  * PARAMETERS:  FirstArg            - First argument of a parser argument tree  *  * RETURN:      Status  *  * DESCRIPTION: Convert an operator's arguments from a parse tree format to  *              namespace objects and place those argument object on the object  *              stack in preparation for evaluation by the interpreter.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsCreateOperands  *  * PARAMETERS:  WalkState           - Current state  *              FirstArg            - First argument of a parser argument tree  *  * RETURN:      Status  *  * DESCRIPTION: Convert an operator's arguments from a parse tree format to  *              namespace objects and place those argument object on the object  *              stack in preparation for evaluation by the interpreter.  *  ******************************************************************************/
 end_comment
 
 begin_function

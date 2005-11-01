@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: aslcompile - top level compile module  *              $Revision: 73 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: aslcompile - top level compile module  *              $Revision: 1.88 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2004, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_include
@@ -16,7 +16,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"aslcompiler.h"
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/compiler/aslcompiler.h>
 end_include
 
 begin_define
@@ -32,6 +38,32 @@ argument_list|(
 literal|"aslcompile"
 argument_list|)
 end_macro
+
+begin_comment
+comment|/* Local prototypes */
+end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|CmFlushSourceCode
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|ACPI_STATUS
+name|FlCheckForAscii
+parameter_list|(
+name|ASL_FILE_INFO
+modifier|*
+name|FileInfo
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AslCompilerSignon  *  * PARAMETERS:  FileId      - ID of the output file  *  * RETURN:      None  *  * DESCRIPTION: Display compiler signon  *  ******************************************************************************/
@@ -51,7 +83,7 @@ name|Prefix
 init|=
 literal|""
 decl_stmt|;
-comment|/*      * Set line prefix depending on the destination file type      */
+comment|/* Set line prefix depending on the destination file type */
 switch|switch
 condition|(
 name|FileId
@@ -119,12 +151,12 @@ default|default:
 comment|/* No other output types supported */
 break|break;
 block|}
-comment|/* Compiler signon with copyright */
+comment|/*      * Compiler signon with copyright      */
 name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|"%s\n%s%s\n%s%s version %X [%s]\n%s%s\n%sSupports ACPI Specification Revision 2.0c\n%s\n"
+literal|"%s\n%s%s\n%s"
 argument_list|,
 name|Prefix
 argument_list|,
@@ -133,9 +165,46 @@ argument_list|,
 name|IntelAcpiCA
 argument_list|,
 name|Prefix
+argument_list|)
+expr_stmt|;
+comment|/* Running compiler or disassembler? */
+if|if
+condition|(
+name|Gbl_DisasmFlag
+condition|)
+block|{
+name|FlPrintFile
+argument_list|(
+name|FileId
+argument_list|,
+literal|"%s"
+argument_list|,
+name|DisassemblerId
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|FlPrintFile
+argument_list|(
+name|FileId
+argument_list|,
+literal|"%s"
 argument_list|,
 name|CompilerId
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Version, build date, copyright, compliance */
+name|FlPrintFile
+argument_list|(
+name|FileId
 argument_list|,
+literal|" version %X [%s]\n%s%s\n%s%s\n%s\n"
+argument_list|,
+operator|(
+name|UINT32
+operator|)
 name|ACPI_CA_VERSION
 argument_list|,
 name|__DATE__
@@ -145,6 +214,8 @@ argument_list|,
 name|CompilerCopyright
 argument_list|,
 name|Prefix
+argument_list|,
+name|CompilerCompliance
 argument_list|,
 name|Prefix
 argument_list|)
@@ -178,7 +249,7 @@ name|Prefix
 init|=
 literal|""
 decl_stmt|;
-comment|/*      * Set line prefix depending on the destination file type      */
+comment|/* Set line prefix depending on the destination file type */
 switch|switch
 condition|(
 name|FileId
@@ -311,6 +382,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|CmFlushSourceCode
 parameter_list|(
@@ -351,10 +423,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    FlCheckForAscii  *  * PARAMETERS:  FileInfo        - Points to an open input file  *  * RETURN:      Status (0 = OK)  *  * DESCRIPTION: Verify that the input file is entirely ASCII.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    FlCheckForAscii  *  * PARAMETERS:  FileInfo        - Points to an open input file  *  * RETURN:      Status  *  * DESCRIPTION: Verify that the input file is entirely ASCII.  *  ******************************************************************************/
 end_comment
 
 begin_function
+specifier|static
 name|ACPI_STATUS
 name|FlCheckForAscii
 parameter_list|(
@@ -413,7 +486,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Non-ASCII character: 0x%2.2X at offset 0x%X\n"
+literal|"Non-ASCII character [0x%2.2X] found at file offset 0x%8.8X\n"
 argument_list|,
 name|Byte
 argument_list|,
@@ -429,6 +502,18 @@ name|Offset
 operator|++
 expr_stmt|;
 block|}
+comment|/* Seek back to the beginning of the source file */
+name|fseek
+argument_list|(
+name|FileInfo
+operator|->
+name|Handle
+argument_list|,
+literal|0
+argument_list|,
+name|SEEK_SET
+argument_list|)
+expr_stmt|;
 comment|/* Were there any non-ASCII characters in the file? */
 if|if
 condition|(
@@ -437,14 +522,14 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%d non-ASCII characters found in input file, appears to be binary\n"
+literal|"%d non-ASCII characters found in input file, could be a binary file\n"
 argument_list|,
 name|BadBytes
 argument_list|)
 expr_stmt|;
 name|AslError
 argument_list|(
-name|ASL_ERROR
+name|ASL_WARNING
 argument_list|,
 name|ASL_MSG_NON_ASCII
 argument_list|,
@@ -461,18 +546,7 @@ name|AE_BAD_CHARACTER
 operator|)
 return|;
 block|}
-comment|/* File is OK, seek back to the beginning */
-name|fseek
-argument_list|(
-name|FileInfo
-operator|->
-name|Handle
-argument_list|,
-literal|0
-argument_list|,
-name|SEEK_SET
-argument_list|)
-expr_stmt|;
+comment|/* File is OK */
 return|return
 operator|(
 name|AE_OK
@@ -495,23 +569,24 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|UINT32
-name|i
-init|=
-literal|0
+name|UINT8
+name|FullCompile
 decl_stmt|;
+name|UINT8
+name|Event
+decl_stmt|;
+name|FullCompile
+operator|=
 name|UtBeginEvent
 argument_list|(
-literal|12
-argument_list|,
-literal|"Total Compile time"
+literal|"*** Total Compile time ***"
 argument_list|)
 expr_stmt|;
+name|Event
+operator|=
 name|UtBeginEvent
 argument_list|(
-name|i
-argument_list|,
-literal|"Initialize"
+literal|"Open input and output files"
 argument_list|)
 expr_stmt|;
 comment|/* Open the required input and output files */
@@ -545,7 +620,14 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/* Ensure that the input file is 100% ASCII text */
+comment|/* Optional check for 100% ASCII source file */
+if|if
+condition|(
+name|Gbl_CheckForAscii
+condition|)
+block|{
+comment|/*          * NOTE: This code is optional because there can be "special" characters          * embedded in comments (such as the "copyright" symbol, 0xA9).          * Just emit a warning if there are non-ascii characters present.          */
+comment|/* Check if the input file is 100% ASCII text */
 name|Status
 operator|=
 name|FlCheckForAscii
@@ -557,23 +639,6 @@ name|ASL_FILE_INPUT
 index|]
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|AePrintErrorLog
-argument_list|(
-name|ASL_FILE_STDERR
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
 block|}
 name|Status
 operator|=
@@ -602,15 +667,14 @@ return|;
 block|}
 name|UtEndEvent
 argument_list|(
-name|i
-operator|++
+name|Event
 argument_list|)
 expr_stmt|;
 comment|/* Build the parse tree */
+name|Event
+operator|=
 name|UtBeginEvent
 argument_list|(
-name|i
-argument_list|,
 literal|"Parse source code and build parse tree"
 argument_list|)
 expr_stmt|;
@@ -619,11 +683,17 @@ argument_list|()
 expr_stmt|;
 name|UtEndEvent
 argument_list|(
-name|i
-operator|++
+name|Event
 argument_list|)
 expr_stmt|;
 comment|/* Flush out any remaining source after parse tree is complete */
+name|Event
+operator|=
+name|UtBeginEvent
+argument_list|(
+literal|"Flush source input"
+argument_list|)
+expr_stmt|;
 name|CmFlushSourceCode
 argument_list|()
 expr_stmt|;
@@ -647,12 +717,17 @@ argument_list|(
 name|RootNode
 argument_list|)
 expr_stmt|;
+name|UtEndEvent
+argument_list|(
+name|Event
+argument_list|)
+expr_stmt|;
 comment|/* Pre-process parse tree for any operator transforms */
+name|Event
+operator|=
 name|UtBeginEvent
 argument_list|(
-name|i
-argument_list|,
-literal|"Generate AML opcodes"
+literal|"Parse tree transforms"
 argument_list|)
 expr_stmt|;
 name|DbgPrint
@@ -675,7 +750,19 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|UtEndEvent
+argument_list|(
+name|Event
+argument_list|)
+expr_stmt|;
 comment|/* Generate AML opcodes corresponding to the parse tokens */
+name|Event
+operator|=
+name|UtBeginEvent
+argument_list|(
+literal|"Generate AML opcodes"
+argument_list|)
+expr_stmt|;
 name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
@@ -698,11 +785,17 @@ argument_list|)
 expr_stmt|;
 name|UtEndEvent
 argument_list|(
-name|i
-operator|++
+name|Event
 argument_list|)
 expr_stmt|;
 comment|/*      * Now that the input is parsed, we can open the AML output file.      * Note: by default, the name of this file comes from the table descriptor      * within the input file.      */
+name|Event
+operator|=
+name|UtBeginEvent
+argument_list|(
+literal|"Open AML output file"
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|FlOpenAmlOutputFile
@@ -728,11 +821,16 @@ operator|-
 literal|1
 return|;
 block|}
+name|UtEndEvent
+argument_list|(
+name|Event
+argument_list|)
+expr_stmt|;
 comment|/* Interpret and generate all compile-time constants */
+name|Event
+operator|=
 name|UtBeginEvent
 argument_list|(
-name|i
-argument_list|,
 literal|"Constant folding via AML interpreter"
 argument_list|)
 expr_stmt|;
@@ -758,15 +856,47 @@ argument_list|)
 expr_stmt|;
 name|UtEndEvent
 argument_list|(
-name|i
-operator|++
+name|Event
+argument_list|)
+expr_stmt|;
+comment|/* Update AML opcodes if necessary, after constant folding */
+name|Event
+operator|=
+name|UtBeginEvent
+argument_list|(
+literal|"Updating AML opcodes after constant folding"
+argument_list|)
+expr_stmt|;
+name|DbgPrint
+argument_list|(
+name|ASL_DEBUG_OUTPUT
+argument_list|,
+literal|"\nUpdating AML opcodes after constant folding\n\n"
+argument_list|)
+expr_stmt|;
+name|TrWalkParseTree
+argument_list|(
+name|RootNode
+argument_list|,
+name|ASL_WALK_VISIT_UPWARD
+argument_list|,
+name|NULL
+argument_list|,
+name|OpcAmlOpcodeUpdateWalk
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|UtEndEvent
+argument_list|(
+name|Event
 argument_list|)
 expr_stmt|;
 comment|/* Calculate all AML package lengths */
+name|Event
+operator|=
 name|UtBeginEvent
 argument_list|(
-name|i
-argument_list|,
 literal|"Generate AML package lengths"
 argument_list|)
 expr_stmt|;
@@ -792,8 +922,7 @@ argument_list|)
 expr_stmt|;
 name|UtEndEvent
 argument_list|(
-name|i
-operator|++
+name|Event
 argument_list|)
 expr_stmt|;
 if|if
@@ -834,10 +963,10 @@ return|;
 block|}
 comment|/*      * Create an internal namespace and use it as a symbol table      */
 comment|/* Namespace loading */
+name|Event
+operator|=
 name|UtBeginEvent
 argument_list|(
-name|i
-argument_list|,
 literal|"Create ACPI Namespace"
 argument_list|)
 expr_stmt|;
@@ -850,8 +979,7 @@ argument_list|)
 expr_stmt|;
 name|UtEndEvent
 argument_list|(
-name|i
-operator|++
+name|Event
 argument_list|)
 expr_stmt|;
 if|if
@@ -868,10 +996,10 @@ literal|1
 return|;
 block|}
 comment|/* Namespace lookup */
+name|AslGbl_NamespaceEvent
+operator|=
 name|UtBeginEvent
 argument_list|(
-name|i
-argument_list|,
 literal|"Cross reference parse tree and Namespace"
 argument_list|)
 expr_stmt|;
@@ -882,14 +1010,7 @@ argument_list|()
 expr_stmt|;
 name|UtEndEvent
 argument_list|(
-name|i
-operator|++
-argument_list|)
-expr_stmt|;
-name|UtEndEvent
-argument_list|(
-name|i
-operator|++
+name|AslGbl_NamespaceEvent
 argument_list|)
 expr_stmt|;
 if|if
@@ -906,10 +1027,10 @@ literal|1
 return|;
 block|}
 comment|/*      * Semantic analysis.  This can happen only after the      * namespace has been loaded and cross-referenced.      *      * part one - check control methods      */
+name|Event
+operator|=
 name|UtBeginEvent
 argument_list|(
-name|i
-argument_list|,
 literal|"Analyze control method return types"
 argument_list|)
 expr_stmt|;
@@ -942,15 +1063,14 @@ argument_list|)
 expr_stmt|;
 name|UtEndEvent
 argument_list|(
-name|i
-operator|++
+name|Event
 argument_list|)
 expr_stmt|;
 comment|/* Semantic error checking part two - typing of method returns */
+name|Event
+operator|=
 name|UtBeginEvent
 argument_list|(
-name|i
-argument_list|,
 literal|"Determine object types returned by methods"
 argument_list|)
 expr_stmt|;
@@ -958,7 +1078,7 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"\nSemantic analysis - Method typing \n\n"
+literal|"\nSemantic analysis - Method typing\n\n"
 argument_list|)
 expr_stmt|;
 name|TrWalkParseTree
@@ -976,15 +1096,14 @@ argument_list|)
 expr_stmt|;
 name|UtEndEvent
 argument_list|(
-name|i
-operator|++
+name|Event
 argument_list|)
 expr_stmt|;
 comment|/* Semantic error checking part three - operand type checking */
+name|Event
+operator|=
 name|UtBeginEvent
 argument_list|(
-name|i
-argument_list|,
 literal|"Analyze AML operand types"
 argument_list|)
 expr_stmt|;
@@ -992,7 +1111,7 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"\nSemantic analysis - Operand type checking \n\n"
+literal|"\nSemantic analysis - Operand type checking\n\n"
 argument_list|)
 expr_stmt|;
 name|TrWalkParseTree
@@ -1011,15 +1130,14 @@ argument_list|)
 expr_stmt|;
 name|UtEndEvent
 argument_list|(
-name|i
-operator|++
+name|Event
 argument_list|)
 expr_stmt|;
 comment|/* Semantic error checking part four - other miscellaneous checks */
+name|Event
+operator|=
 name|UtBeginEvent
 argument_list|(
-name|i
-argument_list|,
 literal|"Miscellaneous analysis"
 argument_list|)
 expr_stmt|;
@@ -1027,7 +1145,7 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"\nSemantic analysis - miscellaneous \n\n"
+literal|"\nSemantic analysis - miscellaneous\n\n"
 argument_list|)
 expr_stmt|;
 name|TrWalkParseTree
@@ -1046,15 +1164,14 @@ argument_list|)
 expr_stmt|;
 name|UtEndEvent
 argument_list|(
-name|i
-operator|++
+name|Event
 argument_list|)
 expr_stmt|;
 comment|/* Calculate all AML package lengths */
+name|Event
+operator|=
 name|UtBeginEvent
 argument_list|(
-name|i
-argument_list|,
 literal|"Finish AML package length generation"
 argument_list|)
 expr_stmt|;
@@ -1093,15 +1210,14 @@ argument_list|)
 expr_stmt|;
 name|UtEndEvent
 argument_list|(
-name|i
-operator|++
+name|Event
 argument_list|)
 expr_stmt|;
 comment|/* Code generation - emit the AML */
+name|Event
+operator|=
 name|UtBeginEvent
 argument_list|(
-name|i
-argument_list|,
 literal|"Generate AML code and write output files"
 argument_list|)
 expr_stmt|;
@@ -1110,14 +1226,13 @@ argument_list|()
 expr_stmt|;
 name|UtEndEvent
 argument_list|(
-name|i
-operator|++
+name|Event
 argument_list|)
 expr_stmt|;
+name|Event
+operator|=
 name|UtBeginEvent
 argument_list|(
-name|i
-argument_list|,
 literal|"Write optional output files"
 argument_list|)
 expr_stmt|;
@@ -1126,13 +1241,12 @@ argument_list|()
 expr_stmt|;
 name|UtEndEvent
 argument_list|(
-name|i
-operator|++
+name|Event
 argument_list|)
 expr_stmt|;
 name|UtEndEvent
 argument_list|(
-literal|13
+name|FullCompile
 argument_list|)
 expr_stmt|;
 name|CmCleanupAndExit
@@ -1143,6 +1257,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    CmDoOutputFiles  *  * PARAMETERS:  None  *  * RETURN:      None.  *  * DESCRIPTION: Create all "listing" type files  *  ******************************************************************************/
+end_comment
 
 begin_function
 name|void
@@ -1159,8 +1277,110 @@ name|LsDoHexOutput
 argument_list|()
 expr_stmt|;
 comment|/* Dump the namespace to the .nsp file if requested */
+operator|(
+name|void
+operator|)
 name|LsDisplayNamespace
 argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    CmDumpEvent  *  * PARAMETERS:  Event           - A compiler event struct  *  * RETURN:      None.  *  * DESCRIPTION: Dump a compiler event struct  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|CmDumpEvent
+parameter_list|(
+name|ASL_EVENT_INFO
+modifier|*
+name|Event
+parameter_list|)
+block|{
+name|UINT32
+name|Delta
+decl_stmt|;
+name|UINT32
+name|USec
+decl_stmt|;
+name|UINT32
+name|MSec
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|Event
+operator|->
+name|Valid
+condition|)
+block|{
+return|return;
+block|}
+comment|/* Delta will be in 100-nanosecond units */
+name|Delta
+operator|=
+call|(
+name|UINT32
+call|)
+argument_list|(
+name|Event
+operator|->
+name|EndTime
+operator|-
+name|Event
+operator|->
+name|StartTime
+argument_list|)
+expr_stmt|;
+name|USec
+operator|=
+name|Delta
+operator|/
+literal|10
+expr_stmt|;
+name|MSec
+operator|=
+name|Delta
+operator|/
+literal|10000
+expr_stmt|;
+comment|/* Round milliseconds up */
+if|if
+condition|(
+operator|(
+name|USec
+operator|-
+operator|(
+name|MSec
+operator|*
+literal|1000
+operator|)
+operator|)
+operator|>=
+literal|500
+condition|)
+block|{
+name|MSec
+operator|++
+expr_stmt|;
+block|}
+name|DbgPrint
+argument_list|(
+name|ASL_DEBUG_OUTPUT
+argument_list|,
+literal|"%8u usec %8u msec - %s\n"
+argument_list|,
+name|USec
+argument_list|,
+name|MSec
+argument_list|,
+name|Event
+operator|->
+name|EventName
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1211,51 +1431,21 @@ literal|0
 init|;
 name|i
 operator|<
-literal|13
+name|AslGbl_NextEvent
 condition|;
 name|i
 operator|++
 control|)
 block|{
-if|if
-condition|(
-name|AslGbl_Events
-index|[
-name|i
-index|]
-operator|.
-name|Valid
-condition|)
-block|{
-name|DbgPrint
+name|CmDumpEvent
 argument_list|(
-name|ASL_DEBUG_OUTPUT
-argument_list|,
-literal|"%8lu ms - %s\n"
-argument_list|,
+operator|&
 name|AslGbl_Events
 index|[
 name|i
 index|]
-operator|.
-name|EndTime
-operator|-
-name|AslGbl_Events
-index|[
-name|i
-index|]
-operator|.
-name|StartTime
-argument_list|,
-name|AslGbl_Events
-index|[
-name|i
-index|]
-operator|.
-name|EventName
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -1275,49 +1465,21 @@ literal|0
 init|;
 name|i
 operator|<
-literal|13
+name|AslGbl_NextEvent
 condition|;
 name|i
 operator|++
 control|)
 block|{
-if|if
-condition|(
-name|AslGbl_Events
-index|[
-name|i
-index|]
-operator|.
-name|Valid
-condition|)
-block|{
-name|printf
+name|CmDumpEvent
 argument_list|(
-literal|"%8lu ms : %s\n"
-argument_list|,
+operator|&
 name|AslGbl_Events
 index|[
 name|i
 index|]
-operator|.
-name|EndTime
-operator|-
-name|AslGbl_Events
-index|[
-name|i
-index|]
-operator|.
-name|StartTime
-argument_list|,
-name|AslGbl_Events
-index|[
-name|i
-index|]
-operator|.
-name|EventName
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|printf
 argument_list|(
@@ -1420,7 +1582,7 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"%32s : %d\n"
+literal|"%32s : %d usec\n"
 argument_list|,
 literal|"Time per search"
 argument_list|,
@@ -1431,20 +1593,20 @@ call|)
 argument_list|(
 name|AslGbl_Events
 index|[
-literal|7
+name|AslGbl_NamespaceEvent
 index|]
 operator|.
 name|EndTime
 operator|-
 name|AslGbl_Events
 index|[
-literal|7
+name|AslGbl_NamespaceEvent
 index|]
 operator|.
 name|StartTime
 argument_list|)
-operator|*
-literal|1000
+operator|/
+literal|10
 operator|)
 operator|/
 name|Gbl_NsLookupCount
@@ -1542,6 +1704,22 @@ argument_list|(
 name|ASL_FILE_STDOUT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Gbl_ExceptionCount
+index|[
+name|ASL_ERROR
+index|]
+operator|>
+literal|0
+condition|)
+block|{
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|exit
 argument_list|(
 literal|0

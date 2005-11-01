@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 160 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 1.172 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2004, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,   * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,   * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -45,6 +45,53 @@ literal|"nsdump"
 argument_list|)
 end_macro
 
+begin_comment
+comment|/* Local prototypes */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_OBSOLETE_FUNCTIONS
+end_ifdef
+
+begin_function_decl
+name|void
+name|AcpiNsDumpRootDevices
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|ACPI_STATUS
+name|AcpiNsDumpOneDevice
+parameter_list|(
+name|ACPI_HANDLE
+name|ObjHandle
+parameter_list|,
+name|UINT32
+name|Level
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+name|ReturnValue
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -60,7 +107,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsPrintPathname  *  * PARAMETERS:  NumSegment          - Number of ACPI name segments  *              Pathname            - The compressed (internal) path  *  * DESCRIPTION: Print an object's full namespace pathname  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsPrintPathname  *  * PARAMETERS:  NumSegments         - Number of ACPI name segments  *              Pathname            - The compressed (internal) path  *  * RETURN:      None  *  * DESCRIPTION: Print an object's full namespace pathname  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -75,6 +122,9 @@ modifier|*
 name|Pathname
 parameter_list|)
 block|{
+name|ACPI_NATIVE_UINT
+name|i
+decl_stmt|;
 name|ACPI_FUNCTION_NAME
 argument_list|(
 literal|"NsPrintPathname"
@@ -114,13 +164,44 @@ condition|(
 name|NumSegments
 condition|)
 block|{
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|4
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|ACPI_IS_PRINT
+argument_list|(
+name|Pathname
+index|[
+name|i
+index|]
+argument_list|)
+condition|?
 name|AcpiOsPrintf
 argument_list|(
-literal|"%4.4s"
+literal|"%c"
 argument_list|,
 name|Pathname
+index|[
+name|i
+index|]
+argument_list|)
+else|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"?"
 argument_list|)
 expr_stmt|;
+block|}
 name|Pathname
 operator|+=
 name|ACPI_NAME_SIZE
@@ -149,7 +230,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDumpPathname  *  * PARAMETERS:  Handle              - Object  *              Msg                 - Prefix message  *              Level               - Desired debug level  *              Component           - Caller's component ID  *  * DESCRIPTION: Print an object's full namespace pathname  *              Manages allocation/freeing of a pathname buffer  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDumpPathname  *  * PARAMETERS:  Handle              - Object  *              Msg                 - Prefix message  *              Level               - Desired debug level  *              Component           - Caller's component ID  *  * RETURN:      None  *  * DESCRIPTION: Print an object's full namespace pathname  *              Manages allocation/freeing of a pathname buffer  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -215,7 +296,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDumpOneObject  *  * PARAMETERS:  Handle              - Node to be dumped  *              Level               - Nesting level of the handle  *              Context             - Passed into WalkNamespace  *  * DESCRIPTION: Dump a single Node  *              This procedure is a UserFunction called by AcpiNsWalkNamespace.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDumpOneObject  *  * PARAMETERS:  ObjHandle           - Node to be dumped  *              Level               - Nesting level of the handle  *              Context             - Passed into WalkNamespace  *              ReturnValue         - Not used  *  * RETURN:      Status  *  * DESCRIPTION: Dump a single Node  *              This procedure is a UserFunction called by AcpiNsWalkNamespace.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -339,7 +420,7 @@ name|Info
 operator|->
 name|OwnerId
 operator|!=
-name|ACPI_UINT32_MAX
+name|ACPI_OWNER_ID_MAX
 operator|)
 operator|&&
 operator|(
@@ -359,6 +440,18 @@ name|AE_OK
 operator|)
 return|;
 block|}
+if|if
+condition|(
+operator|!
+operator|(
+name|Info
+operator|->
+name|DisplayType
+operator|&
+name|ACPI_DISPLAY_SHORT
+operator|)
+condition|)
+block|{
 comment|/* Indent the object according to the level */
 name|AcpiOsPrintf
 argument_list|(
@@ -426,15 +519,21 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Now we can print out the pertinent information      */
 name|AcpiOsPrintf
 argument_list|(
-literal|"%4.4s %-12s %p "
+literal|"%4.4s"
 argument_list|,
 name|AcpiUtGetNodeName
 argument_list|(
 name|ThisNode
 argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*      * Now we can print out the pertinent information      */
+name|AcpiOsPrintf
+argument_list|(
+literal|" %-12s %p "
 argument_list|,
 name|AcpiUtGetTypeName
 argument_list|(
@@ -468,6 +567,8 @@ condition|(
 name|Info
 operator|->
 name|DisplayType
+operator|&
+name|ACPI_DISPLAY_MASK
 condition|)
 block|{
 case|case
@@ -1236,7 +1337,7 @@ name|ACPI_TYPE_INVALID
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"        Attached Object %p: "
+literal|"Attached Object %p: "
 argument_list|,
 name|ObjDesc
 argument_list|)
@@ -1263,6 +1364,13 @@ operator|=
 sizeof|sizeof
 argument_list|(
 name|ACPI_NAMESPACE_NODE
+argument_list|)
+expr_stmt|;
+name|ACPI_DUMP_BUFFER
+argument_list|(
+name|ObjDesc
+argument_list|,
+name|BytesToDump
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1299,14 +1407,14 @@ else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"(Ptr to ACPI Object type %s, %X)\n"
+literal|"(Ptr to ACPI Object type %X [%s])\n"
+argument_list|,
+name|ObjType
 argument_list|,
 name|AcpiUtGetTypeName
 argument_list|(
 name|ObjType
 argument_list|)
-argument_list|,
-name|ObjType
 argument_list|)
 expr_stmt|;
 name|BytesToDump
@@ -1317,24 +1425,6 @@ name|ACPI_OPERAND_OBJECT
 argument_list|)
 expr_stmt|;
 block|}
-break|break;
-default|default:
-name|AcpiOsPrintf
-argument_list|(
-literal|"(String or Buffer ptr - not an object descriptor) [%s]\n"
-argument_list|,
-name|AcpiUtGetDescriptorName
-argument_list|(
-name|ObjDesc
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|BytesToDump
-operator|=
-literal|16
-expr_stmt|;
-break|break;
-block|}
 name|ACPI_DUMP_BUFFER
 argument_list|(
 name|ObjDesc
@@ -1342,6 +1432,10 @@ argument_list|,
 name|BytesToDump
 argument_list|)
 expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
 comment|/* If value is NOT an internal object, we are done */
 if|if
 condition|(
@@ -1364,8 +1458,20 @@ name|ObjType
 condition|)
 block|{
 case|case
+name|ACPI_TYPE_BUFFER
+case|:
+case|case
 name|ACPI_TYPE_STRING
 case|:
+comment|/*              * NOTE: takes advantage of common fields between string/buffer              */
+name|BytesToDump
+operator|=
+name|ObjDesc
+operator|->
+name|String
+operator|.
+name|Length
+expr_stmt|;
 name|ObjDesc
 operator|=
 operator|(
@@ -1378,23 +1484,25 @@ name|String
 operator|.
 name|Pointer
 expr_stmt|;
-break|break;
-case|case
-name|ACPI_TYPE_BUFFER
-case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"(Buffer/String pointer %p length %X)\n"
+argument_list|,
 name|ObjDesc
-operator|=
-operator|(
-name|void
-operator|*
-operator|)
-name|ObjDesc
-operator|->
-name|Buffer
-operator|.
-name|Pointer
+argument_list|,
+name|BytesToDump
+argument_list|)
 expr_stmt|;
-break|break;
+name|ACPI_DUMP_BUFFER
+argument_list|(
+name|ObjDesc
+argument_list|,
+name|BytesToDump
+argument_list|)
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
 case|case
 name|ACPI_TYPE_BUFFER_FIELD
 case|:
@@ -1518,7 +1626,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDumpObjects  *  * PARAMETERS:  Type                - Object type to be dumped  *              MaxDepth            - Maximum depth of dump. Use ACPI_UINT32_MAX  *                                    for an effectively unlimited depth.  *              OwnerId             - Dump only objects owned by this ID.  Use  *                                    ACPI_UINT32_MAX to match all owners.  *              StartHandle         - Where in namespace to start/end search  *  * DESCRIPTION: Dump typed objects within the loaded namespace.  *              Uses AcpiNsWalkNamespace in conjunction with AcpiNsDumpOneObject.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDumpObjects  *  * PARAMETERS:  Type                - Object type to be dumped  *              DisplayType         - 0 or ACPI_DISPLAY_SUMMARY  *              MaxDepth            - Maximum depth of dump. Use ACPI_UINT32_MAX  *                                    for an effectively unlimited depth.  *              OwnerId             - Dump only objects owned by this ID.  Use  *                                    ACPI_UINT32_MAX to match all owners.  *              StartHandle         - Where in namespace to start/end search  *  * RETURN:      None  *  * DESCRIPTION: Dump typed objects within the loaded namespace.  *              Uses AcpiNsWalkNamespace in conjunction with AcpiNsDumpOneObject.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1534,7 +1642,7 @@ parameter_list|,
 name|UINT32
 name|MaxDepth
 parameter_list|,
-name|UINT32
+name|ACPI_OWNER_ID
 name|OwnerId
 parameter_list|,
 name|ACPI_HANDLE
@@ -1594,7 +1702,70 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDumpTables  *  * PARAMETERS:  SearchBase          - Root of subtree to be dumped, or  *                                    NS_ALL to dump the entire namespace  *              MaxDepth            - Maximum depth of dump.  Use INT_MAX  *                                    for an effectively unlimited depth.  *  * DESCRIPTION: Dump the name space, or a portion of it.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDumpEntry  *  * PARAMETERS:  Handle              - Node to be dumped  *              DebugLevel          - Output level  *  * RETURN:      None  *  * DESCRIPTION: Dump a single Node  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiNsDumpEntry
+parameter_list|(
+name|ACPI_HANDLE
+name|Handle
+parameter_list|,
+name|UINT32
+name|DebugLevel
+parameter_list|)
+block|{
+name|ACPI_WALK_INFO
+name|Info
+decl_stmt|;
+name|ACPI_FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
+name|Info
+operator|.
+name|DebugLevel
+operator|=
+name|DebugLevel
+expr_stmt|;
+name|Info
+operator|.
+name|OwnerId
+operator|=
+name|ACPI_OWNER_ID_MAX
+expr_stmt|;
+name|Info
+operator|.
+name|DisplayType
+operator|=
+name|ACPI_DISPLAY_SUMMARY
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|AcpiNsDumpOneObject
+argument_list|(
+name|Handle
+argument_list|,
+literal|1
+argument_list|,
+operator|&
+name|Info
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_ASL_COMPILER
+end_ifdef
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDumpTables  *  * PARAMETERS:  SearchBase          - Root of subtree to be dumped, or  *                                    NS_ALL to dump the entire namespace  *              MaxDepth            - Maximum depth of dump.  Use INT_MAX  *                                    for an effectively unlimited depth.  *  * RETURN:      None  *  * DESCRIPTION: Dump the name space, or a portion of it.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1644,7 +1815,7 @@ operator|==
 name|SearchBase
 condition|)
 block|{
-comment|/*  entire namespace    */
+comment|/* Entire namespace */
 name|SearchHandle
 operator|=
 name|AcpiGbl_RootNode
@@ -1667,7 +1838,7 @@ name|ACPI_DISPLAY_OBJECTS
 argument_list|,
 name|MaxDepth
 argument_list|,
-name|ACPI_UINT32_MAX
+name|ACPI_OWNER_ID_MAX
 argument_list|,
 name|SearchHandle
 argument_list|)
@@ -1677,62 +1848,10 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDumpEntry  *  * PARAMETERS:  Handle              - Node to be dumped  *              DebugLevel          - Output level  *  * DESCRIPTION: Dump a single Node  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|void
-name|AcpiNsDumpEntry
-parameter_list|(
-name|ACPI_HANDLE
-name|Handle
-parameter_list|,
-name|UINT32
-name|DebugLevel
-parameter_list|)
-block|{
-name|ACPI_WALK_INFO
-name|Info
-decl_stmt|;
-name|ACPI_FUNCTION_ENTRY
-argument_list|()
-expr_stmt|;
-name|Info
-operator|.
-name|DebugLevel
-operator|=
-name|DebugLevel
-expr_stmt|;
-name|Info
-operator|.
-name|OwnerId
-operator|=
-name|ACPI_UINT32_MAX
-expr_stmt|;
-name|Info
-operator|.
-name|DisplayType
-operator|=
-name|ACPI_DISPLAY_SUMMARY
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|AcpiNsDumpOneObject
-argument_list|(
-name|Handle
-argument_list|,
-literal|1
-argument_list|,
-operator|&
-name|Info
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
