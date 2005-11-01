@@ -155,22 +155,22 @@ switch|switch
 condition|(
 name|res
 operator|->
-name|Id
+name|Type
 condition|)
 block|{
 case|case
-name|ACPI_RSTYPE_IRQ
+name|ACPI_RESOURCE_TYPE_IRQ
 case|:
 case|case
-name|ACPI_RSTYPE_EXT_IRQ
+name|ACPI_RESOURCE_TYPE_EXTENDED_IRQ
 case|:
 if|if
 condition|(
 name|res
 operator|->
-name|Id
+name|Type
 operator|==
-name|ACPI_RSTYPE_IRQ
+name|ACPI_RESOURCE_TYPE_IRQ
 condition|)
 block|{
 name|irqnum
@@ -181,7 +181,7 @@ name|Data
 operator|.
 name|Irq
 operator|.
-name|NumberOfInterrupts
+name|InterruptCount
 expr_stmt|;
 name|irq
 operator|=
@@ -207,7 +207,7 @@ name|Data
 operator|.
 name|ExtendedIrq
 operator|.
-name|NumberOfInterrupts
+name|InterruptCount
 expr_stmt|;
 name|irq
 operator|=
@@ -430,11 +430,11 @@ switch|switch
 condition|(
 name|res
 operator|->
-name|Id
+name|Type
 condition|)
 block|{
 case|case
-name|ACPI_RSTYPE_IRQ
+name|ACPI_RESOURCE_TYPE_IRQ
 case|:
 name|KASSERT
 argument_list|(
@@ -444,7 +444,7 @@ name|Data
 operator|.
 name|Irq
 operator|.
-name|NumberOfInterrupts
+name|InterruptCount
 operator|==
 literal|1
 argument_list|,
@@ -476,7 +476,7 @@ name|Data
 operator|.
 name|Irq
 operator|.
-name|EdgeLevel
+name|Triggering
 expr_stmt|;
 name|pol
 operator|=
@@ -486,11 +486,11 @@ name|Data
 operator|.
 name|Irq
 operator|.
-name|ActiveHighLow
+name|Polarity
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_RSTYPE_EXT_IRQ
+name|ACPI_RESOURCE_TYPE_EXTENDED_IRQ
 case|:
 name|KASSERT
 argument_list|(
@@ -500,7 +500,7 @@ name|Data
 operator|.
 name|ExtendedIrq
 operator|.
-name|NumberOfInterrupts
+name|InterruptCount
 operator|==
 literal|1
 argument_list|,
@@ -532,7 +532,7 @@ name|Data
 operator|.
 name|ExtendedIrq
 operator|.
-name|EdgeLevel
+name|Triggering
 expr_stmt|;
 name|pol
 operator|=
@@ -542,7 +542,7 @@ name|Data
 operator|.
 name|ExtendedIrq
 operator|.
-name|ActiveHighLow
+name|Polarity
 expr_stmt|;
 break|break;
 default|default:
@@ -554,7 +554,7 @@ name|__func__
 argument_list|,
 name|res
 operator|->
-name|Id
+name|Type
 argument_list|)
 expr_stmt|;
 block|}
@@ -778,11 +778,11 @@ switch|switch
 condition|(
 name|res
 operator|->
-name|Id
+name|Type
 condition|)
 block|{
 case|case
-name|ACPI_RSTYPE_END_TAG
+name|ACPI_RESOURCE_TYPE_END_TAG
 case|:
 name|ACPI_DEBUG_PRINT
 argument_list|(
@@ -799,7 +799,7 @@ name|last
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_RSTYPE_FIXED_IO
+name|ACPI_RESOURCE_TYPE_FIXED_IO
 case|:
 if|if
 condition|(
@@ -809,7 +809,7 @@ name|Data
 operator|.
 name|FixedIo
 operator|.
-name|RangeLength
+name|AddressLength
 operator|<=
 literal|0
 condition|)
@@ -827,7 +827,7 @@ name|Data
 operator|.
 name|FixedIo
 operator|.
-name|BaseAddress
+name|Address
 operator|,
 name|res
 operator|->
@@ -835,7 +835,7 @@ name|Data
 operator|.
 name|FixedIo
 operator|.
-name|RangeLength
+name|AddressLength
 operator|)
 argument_list|)
 expr_stmt|;
@@ -853,7 +853,7 @@ name|Data
 operator|.
 name|FixedIo
 operator|.
-name|BaseAddress
+name|Address
 argument_list|,
 name|res
 operator|->
@@ -861,12 +861,12 @@ name|Data
 operator|.
 name|FixedIo
 operator|.
-name|RangeLength
+name|AddressLength
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_RSTYPE_IO
+name|ACPI_RESOURCE_TYPE_IO
 case|:
 if|if
 condition|(
@@ -876,7 +876,7 @@ name|Data
 operator|.
 name|Io
 operator|.
-name|RangeLength
+name|AddressLength
 operator|<=
 literal|0
 condition|)
@@ -889,7 +889,7 @@ name|Data
 operator|.
 name|Io
 operator|.
-name|MinBaseAddress
+name|Minimum
 operator|==
 name|res
 operator|->
@@ -897,7 +897,7 @@ name|Data
 operator|.
 name|Io
 operator|.
-name|MaxBaseAddress
+name|Maximum
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -913,7 +913,7 @@ name|Data
 operator|.
 name|Io
 operator|.
-name|MinBaseAddress
+name|Minimum
 operator|,
 name|res
 operator|->
@@ -921,7 +921,7 @@ name|Data
 operator|.
 name|Io
 operator|.
-name|RangeLength
+name|AddressLength
 operator|)
 argument_list|)
 expr_stmt|;
@@ -939,7 +939,7 @@ name|Data
 operator|.
 name|Io
 operator|.
-name|MinBaseAddress
+name|Minimum
 argument_list|,
 name|res
 operator|->
@@ -947,7 +947,7 @@ name|Data
 operator|.
 name|Io
 operator|.
-name|RangeLength
+name|AddressLength
 argument_list|)
 expr_stmt|;
 block|}
@@ -966,7 +966,7 @@ name|Data
 operator|.
 name|Io
 operator|.
-name|MinBaseAddress
+name|Minimum
 operator|,
 name|res
 operator|->
@@ -974,7 +974,7 @@ name|Data
 operator|.
 name|Io
 operator|.
-name|MaxBaseAddress
+name|Maximum
 operator|,
 name|res
 operator|->
@@ -982,7 +982,7 @@ name|Data
 operator|.
 name|Io
 operator|.
-name|RangeLength
+name|AddressLength
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1000,7 +1000,7 @@ name|Data
 operator|.
 name|Io
 operator|.
-name|MinBaseAddress
+name|Minimum
 argument_list|,
 name|res
 operator|->
@@ -1008,7 +1008,7 @@ name|Data
 operator|.
 name|Io
 operator|.
-name|MaxBaseAddress
+name|Maximum
 argument_list|,
 name|res
 operator|->
@@ -1016,7 +1016,7 @@ name|Data
 operator|.
 name|Io
 operator|.
-name|RangeLength
+name|AddressLength
 argument_list|,
 name|res
 operator|->
@@ -1030,7 +1030,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|ACPI_RSTYPE_FIXED_MEM32
+name|ACPI_RESOURCE_TYPE_FIXED_MEMORY32
 case|:
 if|if
 condition|(
@@ -1040,7 +1040,7 @@ name|Data
 operator|.
 name|FixedMemory32
 operator|.
-name|RangeLength
+name|AddressLength
 operator|<=
 literal|0
 condition|)
@@ -1058,7 +1058,7 @@ name|Data
 operator|.
 name|FixedMemory32
 operator|.
-name|RangeBaseAddress
+name|Address
 operator|,
 name|res
 operator|->
@@ -1066,7 +1066,7 @@ name|Data
 operator|.
 name|FixedMemory32
 operator|.
-name|RangeLength
+name|AddressLength
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1084,7 +1084,7 @@ name|Data
 operator|.
 name|FixedMemory32
 operator|.
-name|RangeBaseAddress
+name|Address
 argument_list|,
 name|res
 operator|->
@@ -1092,12 +1092,12 @@ name|Data
 operator|.
 name|FixedMemory32
 operator|.
-name|RangeLength
+name|AddressLength
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_RSTYPE_MEM32
+name|ACPI_RESOURCE_TYPE_MEMORY32
 case|:
 if|if
 condition|(
@@ -1107,7 +1107,7 @@ name|Data
 operator|.
 name|Memory32
 operator|.
-name|RangeLength
+name|AddressLength
 operator|<=
 literal|0
 condition|)
@@ -1120,7 +1120,7 @@ name|Data
 operator|.
 name|Memory32
 operator|.
-name|MinBaseAddress
+name|Minimum
 operator|==
 name|res
 operator|->
@@ -1128,7 +1128,7 @@ name|Data
 operator|.
 name|Memory32
 operator|.
-name|MaxBaseAddress
+name|Maximum
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -1144,7 +1144,7 @@ name|Data
 operator|.
 name|Memory32
 operator|.
-name|MinBaseAddress
+name|Minimum
 operator|,
 name|res
 operator|->
@@ -1152,7 +1152,7 @@ name|Data
 operator|.
 name|Memory32
 operator|.
-name|RangeLength
+name|AddressLength
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1170,7 +1170,7 @@ name|Data
 operator|.
 name|Memory32
 operator|.
-name|MinBaseAddress
+name|Minimum
 argument_list|,
 name|res
 operator|->
@@ -1178,7 +1178,7 @@ name|Data
 operator|.
 name|Memory32
 operator|.
-name|RangeLength
+name|AddressLength
 argument_list|)
 expr_stmt|;
 block|}
@@ -1197,7 +1197,7 @@ name|Data
 operator|.
 name|Memory32
 operator|.
-name|MinBaseAddress
+name|Minimum
 operator|,
 name|res
 operator|->
@@ -1205,7 +1205,7 @@ name|Data
 operator|.
 name|Memory32
 operator|.
-name|MaxBaseAddress
+name|Maximum
 operator|,
 name|res
 operator|->
@@ -1213,7 +1213,7 @@ name|Data
 operator|.
 name|Memory32
 operator|.
-name|RangeLength
+name|AddressLength
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1231,7 +1231,7 @@ name|Data
 operator|.
 name|Memory32
 operator|.
-name|MinBaseAddress
+name|Minimum
 argument_list|,
 name|res
 operator|->
@@ -1239,7 +1239,7 @@ name|Data
 operator|.
 name|Memory32
 operator|.
-name|MaxBaseAddress
+name|Maximum
 argument_list|,
 name|res
 operator|->
@@ -1247,7 +1247,7 @@ name|Data
 operator|.
 name|Memory32
 operator|.
-name|RangeLength
+name|AddressLength
 argument_list|,
 name|res
 operator|->
@@ -1261,7 +1261,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|ACPI_RSTYPE_MEM24
+name|ACPI_RESOURCE_TYPE_MEMORY24
 case|:
 if|if
 condition|(
@@ -1271,7 +1271,7 @@ name|Data
 operator|.
 name|Memory24
 operator|.
-name|RangeLength
+name|AddressLength
 operator|<=
 literal|0
 condition|)
@@ -1284,7 +1284,7 @@ name|Data
 operator|.
 name|Memory24
 operator|.
-name|MinBaseAddress
+name|Minimum
 operator|==
 name|res
 operator|->
@@ -1292,7 +1292,7 @@ name|Data
 operator|.
 name|Memory24
 operator|.
-name|MaxBaseAddress
+name|Maximum
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -1308,7 +1308,7 @@ name|Data
 operator|.
 name|Memory24
 operator|.
-name|MinBaseAddress
+name|Minimum
 operator|,
 name|res
 operator|->
@@ -1316,7 +1316,7 @@ name|Data
 operator|.
 name|Memory24
 operator|.
-name|RangeLength
+name|AddressLength
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1334,7 +1334,7 @@ name|Data
 operator|.
 name|Memory24
 operator|.
-name|MinBaseAddress
+name|Minimum
 argument_list|,
 name|res
 operator|->
@@ -1342,7 +1342,7 @@ name|Data
 operator|.
 name|Memory24
 operator|.
-name|RangeLength
+name|AddressLength
 argument_list|)
 expr_stmt|;
 block|}
@@ -1361,7 +1361,7 @@ name|Data
 operator|.
 name|Memory24
 operator|.
-name|MinBaseAddress
+name|Minimum
 operator|,
 name|res
 operator|->
@@ -1369,7 +1369,7 @@ name|Data
 operator|.
 name|Memory24
 operator|.
-name|MaxBaseAddress
+name|Maximum
 operator|,
 name|res
 operator|->
@@ -1377,7 +1377,7 @@ name|Data
 operator|.
 name|Memory24
 operator|.
-name|RangeLength
+name|AddressLength
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1395,7 +1395,7 @@ name|Data
 operator|.
 name|Memory24
 operator|.
-name|MinBaseAddress
+name|Minimum
 argument_list|,
 name|res
 operator|->
@@ -1403,7 +1403,7 @@ name|Data
 operator|.
 name|Memory24
 operator|.
-name|MaxBaseAddress
+name|Maximum
 argument_list|,
 name|res
 operator|->
@@ -1411,7 +1411,7 @@ name|Data
 operator|.
 name|Memory24
 operator|.
-name|RangeLength
+name|AddressLength
 argument_list|,
 name|res
 operator|->
@@ -1425,7 +1425,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|ACPI_RSTYPE_IRQ
+name|ACPI_RESOURCE_TYPE_IRQ
 case|:
 comment|/* 	     * from 1.0b 6.4.2  	     * "This structure is repeated for each separate interrupt 	     * required" 	     */
 name|set
@@ -1450,7 +1450,7 @@ name|Data
 operator|.
 name|Irq
 operator|.
-name|NumberOfInterrupts
+name|InterruptCount
 argument_list|,
 name|res
 operator|->
@@ -1458,7 +1458,7 @@ name|Data
 operator|.
 name|Irq
 operator|.
-name|EdgeLevel
+name|Triggering
 argument_list|,
 name|res
 operator|->
@@ -1466,12 +1466,12 @@ name|Data
 operator|.
 name|Irq
 operator|.
-name|ActiveHighLow
+name|Polarity
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_RSTYPE_DMA
+name|ACPI_RESOURCE_TYPE_DMA
 case|:
 comment|/* 	     * from 1.0b 6.4.3  	     * "This structure is repeated for each separate dma channel 	     * required" 	     */
 name|set
@@ -1496,25 +1496,25 @@ name|Data
 operator|.
 name|Dma
 operator|.
-name|NumberOfChannels
+name|ChannelCount
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_RSTYPE_START_DPF
+name|ACPI_RESOURCE_TYPE_START_DEPENDENT
 case|:
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_RESOURCES
 operator|,
-literal|"start dependant functions\n"
+literal|"start dependent functions\n"
 operator|)
 argument_list|)
 expr_stmt|;
 name|set
 operator|->
-name|set_start_dependant
+name|set_start_dependent
 argument_list|(
 name|dev
 argument_list|,
@@ -1531,20 +1531,20 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_RSTYPE_END_DPF
+name|ACPI_RESOURCE_TYPE_END_DEPENDENT
 case|:
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_RESOURCES
 operator|,
-literal|"end dependant functions\n"
+literal|"end dependent functions\n"
 operator|)
 argument_list|)
 expr_stmt|;
 name|set
 operator|->
-name|set_end_dependant
+name|set_end_dependent
 argument_list|(
 name|dev
 argument_list|,
@@ -1553,7 +1553,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_RSTYPE_ADDRESS32
+name|ACPI_RESOURCE_TYPE_ADDRESS32
 case|:
 if|if
 condition|(
@@ -1689,7 +1689,7 @@ name|Data
 operator|.
 name|Address32
 operator|.
-name|MinAddressRange
+name|Minimum
 operator|,
 name|res
 operator|->
@@ -1715,7 +1715,7 @@ name|Data
 operator|.
 name|Address32
 operator|.
-name|MinAddressRange
+name|Minimum
 argument_list|,
 name|res
 operator|->
@@ -1742,7 +1742,7 @@ name|Data
 operator|.
 name|Address32
 operator|.
-name|MinAddressRange
+name|Minimum
 operator|,
 name|res
 operator|->
@@ -1768,7 +1768,7 @@ name|Data
 operator|.
 name|Address32
 operator|.
-name|MinAddressRange
+name|Minimum
 argument_list|,
 name|res
 operator|->
@@ -1809,7 +1809,7 @@ name|Data
 operator|.
 name|Address32
 operator|.
-name|MinAddressRange
+name|Minimum
 operator|,
 name|res
 operator|->
@@ -1817,7 +1817,7 @@ name|Data
 operator|.
 name|Address32
 operator|.
-name|MaxAddressRange
+name|Maximum
 operator|,
 name|res
 operator|->
@@ -1843,7 +1843,7 @@ name|Data
 operator|.
 name|Address32
 operator|.
-name|MinAddressRange
+name|Minimum
 argument_list|,
 name|res
 operator|->
@@ -1851,7 +1851,7 @@ name|Data
 operator|.
 name|Address32
 operator|.
-name|MaxAddressRange
+name|Maximum
 argument_list|,
 name|res
 operator|->
@@ -1886,7 +1886,7 @@ name|Data
 operator|.
 name|Address32
 operator|.
-name|MinAddressRange
+name|Minimum
 operator|,
 name|res
 operator|->
@@ -1894,7 +1894,7 @@ name|Data
 operator|.
 name|Address32
 operator|.
-name|MaxAddressRange
+name|Maximum
 operator|,
 name|res
 operator|->
@@ -1920,7 +1920,7 @@ name|Data
 operator|.
 name|Address32
 operator|.
-name|MinAddressRange
+name|Minimum
 argument_list|,
 name|res
 operator|->
@@ -1928,7 +1928,7 @@ name|Data
 operator|.
 name|Address32
 operator|.
-name|MaxAddressRange
+name|Maximum
 argument_list|,
 name|res
 operator|->
@@ -1951,7 +1951,7 @@ block|}
 block|}
 break|break;
 case|case
-name|ACPI_RSTYPE_ADDRESS16
+name|ACPI_RESOURCE_TYPE_ADDRESS16
 case|:
 if|if
 condition|(
@@ -2087,7 +2087,7 @@ name|Data
 operator|.
 name|Address16
 operator|.
-name|MinAddressRange
+name|Minimum
 operator|,
 name|res
 operator|->
@@ -2113,7 +2113,7 @@ name|Data
 operator|.
 name|Address16
 operator|.
-name|MinAddressRange
+name|Minimum
 argument_list|,
 name|res
 operator|->
@@ -2140,7 +2140,7 @@ name|Data
 operator|.
 name|Address16
 operator|.
-name|MinAddressRange
+name|Minimum
 operator|,
 name|res
 operator|->
@@ -2166,7 +2166,7 @@ name|Data
 operator|.
 name|Address16
 operator|.
-name|MinAddressRange
+name|Minimum
 argument_list|,
 name|res
 operator|->
@@ -2207,7 +2207,7 @@ name|Data
 operator|.
 name|Address16
 operator|.
-name|MinAddressRange
+name|Minimum
 operator|,
 name|res
 operator|->
@@ -2215,7 +2215,7 @@ name|Data
 operator|.
 name|Address16
 operator|.
-name|MaxAddressRange
+name|Maximum
 operator|,
 name|res
 operator|->
@@ -2241,7 +2241,7 @@ name|Data
 operator|.
 name|Address16
 operator|.
-name|MinAddressRange
+name|Minimum
 argument_list|,
 name|res
 operator|->
@@ -2249,7 +2249,7 @@ name|Data
 operator|.
 name|Address16
 operator|.
-name|MaxAddressRange
+name|Maximum
 argument_list|,
 name|res
 operator|->
@@ -2284,7 +2284,7 @@ name|Data
 operator|.
 name|Address16
 operator|.
-name|MinAddressRange
+name|Minimum
 operator|,
 name|res
 operator|->
@@ -2292,7 +2292,7 @@ name|Data
 operator|.
 name|Address16
 operator|.
-name|MaxAddressRange
+name|Maximum
 operator|,
 name|res
 operator|->
@@ -2318,7 +2318,7 @@ name|Data
 operator|.
 name|Address16
 operator|.
-name|MinAddressRange
+name|Minimum
 argument_list|,
 name|res
 operator|->
@@ -2326,7 +2326,7 @@ name|Data
 operator|.
 name|Address16
 operator|.
-name|MaxAddressRange
+name|Maximum
 argument_list|,
 name|res
 operator|->
@@ -2349,7 +2349,7 @@ block|}
 block|}
 break|break;
 case|case
-name|ACPI_RSTYPE_ADDRESS64
+name|ACPI_RESOURCE_TYPE_ADDRESS64
 case|:
 name|ACPI_DEBUG_PRINT
 argument_list|(
@@ -2362,7 +2362,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_RSTYPE_EXT_IRQ
+name|ACPI_RESOURCE_TYPE_EXTENDED_IRQ
 case|:
 if|if
 condition|(
@@ -2390,7 +2390,7 @@ break|break;
 block|}
 name|set
 operator|->
-name|set_irq
+name|set_ext_irq
 argument_list|(
 name|dev
 argument_list|,
@@ -2410,7 +2410,7 @@ name|Data
 operator|.
 name|ExtendedIrq
 operator|.
-name|NumberOfInterrupts
+name|InterruptCount
 argument_list|,
 name|res
 operator|->
@@ -2418,7 +2418,7 @@ name|Data
 operator|.
 name|ExtendedIrq
 operator|.
-name|EdgeLevel
+name|Triggering
 argument_list|,
 name|res
 operator|->
@@ -2426,12 +2426,12 @@ name|Data
 operator|.
 name|ExtendedIrq
 operator|.
-name|ActiveHighLow
+name|Polarity
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_RSTYPE_VENDOR
+name|ACPI_RESOURCE_TYPE_VENDOR
 case|:
 name|ACPI_DEBUG_PRINT
 argument_list|(
@@ -2618,6 +2618,34 @@ name|void
 modifier|*
 name|context
 parameter_list|,
+name|u_int8_t
+modifier|*
+name|irq
+parameter_list|,
+name|int
+name|count
+parameter_list|,
+name|int
+name|trig
+parameter_list|,
+name|int
+name|pol
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|acpi_res_set_ext_irq
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|context
+parameter_list|,
 name|u_int32_t
 modifier|*
 name|irq
@@ -2646,7 +2674,7 @@ name|void
 modifier|*
 name|context
 parameter_list|,
-name|u_int32_t
+name|u_int8_t
 modifier|*
 name|drq
 parameter_list|,
@@ -2659,7 +2687,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|acpi_res_set_start_dependant
+name|acpi_res_set_start_dependent
 parameter_list|(
 name|device_t
 name|dev
@@ -2677,7 +2705,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|acpi_res_set_end_dependant
+name|acpi_res_set_end_dependent
 parameter_list|(
 name|device_t
 name|dev
@@ -2709,11 +2737,13 @@ name|acpi_res_set_memoryrange
 block|,
 name|acpi_res_set_irq
 block|,
+name|acpi_res_set_ext_irq
+block|,
 name|acpi_res_set_drq
 block|,
-name|acpi_res_set_start_dependant
+name|acpi_res_set_start_dependent
 block|,
-name|acpi_res_set_end_dependant
+name|acpi_res_set_end_dependent
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3083,6 +3113,83 @@ name|void
 modifier|*
 name|context
 parameter_list|,
+name|u_int8_t
+modifier|*
+name|irq
+parameter_list|,
+name|int
+name|count
+parameter_list|,
+name|int
+name|trig
+parameter_list|,
+name|int
+name|pol
+parameter_list|)
+block|{
+name|struct
+name|acpi_res_context
+modifier|*
+name|cp
+init|=
+operator|(
+expr|struct
+name|acpi_res_context
+operator|*
+operator|)
+name|context
+decl_stmt|;
+if|if
+condition|(
+name|cp
+operator|==
+name|NULL
+operator|||
+name|irq
+operator|==
+name|NULL
+condition|)
+return|return;
+comment|/* This implements no resource relocation. */
+if|if
+condition|(
+name|count
+operator|!=
+literal|1
+condition|)
+return|return;
+name|bus_set_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_IRQ
+argument_list|,
+name|cp
+operator|->
+name|ar_nirq
+operator|++
+argument_list|,
+operator|*
+name|irq
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|acpi_res_set_ext_irq
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|context
+parameter_list|,
 name|u_int32_t
 modifier|*
 name|irq
@@ -3160,7 +3267,7 @@ name|void
 modifier|*
 name|context
 parameter_list|,
-name|u_int32_t
+name|u_int8_t
 modifier|*
 name|drq
 parameter_list|,
@@ -3222,7 +3329,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|acpi_res_set_start_dependant
+name|acpi_res_set_start_dependent
 parameter_list|(
 name|device_t
 name|dev
@@ -3258,7 +3365,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"dependant functions not supported\n"
+literal|"dependent functions not supported\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3267,7 +3374,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|acpi_res_set_end_dependant
+name|acpi_res_set_end_dependent
 parameter_list|(
 name|device_t
 name|dev
@@ -3300,7 +3407,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"dependant functions not supported\n"
+literal|"dependent functions not supported\n"
 argument_list|)
 expr_stmt|;
 block|}

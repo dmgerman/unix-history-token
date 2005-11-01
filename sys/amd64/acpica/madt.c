@@ -1086,14 +1086,12 @@ block|{
 comment|/* 		 * AcpiOsGetRootPointer only verifies the checksum for 		 * the version 1.0 portion of the RSDP.  Version 2.0 has 		 * an additional checksum that we verify first. 		 */
 if|if
 condition|(
-name|AcpiTbChecksum
+name|AcpiTbGenerateChecksum
 argument_list|(
 name|rsdp
 argument_list|,
 name|ACPI_RSDP_XCHECKSUM_LENGTH
 argument_list|)
-operator|!=
-literal|0
 condition|)
 block|{
 if|if

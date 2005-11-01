@@ -1362,14 +1362,11 @@ comment|/*  * The Flags parameter seems to state whether or not caller is an ISR
 end_comment
 
 begin_function
-name|void
+name|ACPI_NATIVE_UINT
 name|AcpiOsAcquireLock
 parameter_list|(
 name|ACPI_HANDLE
 name|Handle
-parameter_list|,
-name|UINT32
-name|Flags
 parameter_list|)
 block|{
 name|struct
@@ -1390,12 +1387,21 @@ name|Handle
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|mtx_lock
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1406,7 +1412,7 @@ parameter_list|(
 name|ACPI_HANDLE
 name|Handle
 parameter_list|,
-name|UINT32
+name|ACPI_NATIVE_UINT
 name|Flags
 parameter_list|)
 block|{

@@ -425,7 +425,7 @@ name|fake_ssdt
 operator|.
 name|Checksum
 operator|-=
-name|AcpiTbChecksum
+name|AcpiTbGenerateChecksum
 argument_list|(
 operator|&
 name|fake_ssdt

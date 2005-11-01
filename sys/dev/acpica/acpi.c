@@ -8855,9 +8855,9 @@ if|if
 condition|(
 name|rp
 operator|->
-name|Id
+name|Type
 operator|==
-name|ACPI_RSTYPE_END_TAG
+name|ACPI_RESOURCE_TYPE_END_TAG
 operator|||
 name|rp
 operator|->
@@ -8979,9 +8979,9 @@ name|Pointer
 expr_stmt|;
 name|rp
 operator|->
-name|Id
+name|Type
 operator|=
-name|ACPI_RSTYPE_END_TAG
+name|ACPI_RESOURCE_TYPE_END_TAG
 expr_stmt|;
 name|rp
 operator|->
@@ -9050,9 +9050,9 @@ if|if
 condition|(
 name|rp
 operator|->
-name|Id
+name|Type
 operator|==
-name|ACPI_RSTYPE_END_TAG
+name|ACPI_RESOURCE_TYPE_END_TAG
 operator|||
 name|rp
 operator|->
@@ -9093,9 +9093,9 @@ name|res
 operator|->
 name|Length
 operator|+
-name|ACPI_RESOURCE_LENGTH_NO_DATA
+name|ACPI_RS_SIZE_NO_DATA
 operator|+
-name|ACPI_RESOURCE_LENGTH
+name|ACPI_RS_SIZE_MIN
 operator|)
 operator|>=
 name|buf
@@ -9201,7 +9201,7 @@ name|res
 operator|->
 name|Length
 operator|+
-name|ACPI_RESOURCE_LENGTH_NO_DATA
+name|ACPI_RS_SIZE_NO_DATA
 argument_list|)
 expr_stmt|;
 comment|/* And add the terminator. */
@@ -9214,9 +9214,9 @@ argument_list|)
 expr_stmt|;
 name|rp
 operator|->
-name|Id
+name|Type
 operator|=
-name|ACPI_RSTYPE_END_TAG
+name|ACPI_RESOURCE_TYPE_END_TAG
 expr_stmt|;
 name|rp
 operator|->
