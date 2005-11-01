@@ -1375,12 +1375,9 @@ name|timer_max
 operator|=
 name|count
 expr_stmt|;
-name|THR_UMTX_UNLOCK
+name|TIMERS_UNLOCK
 argument_list|(
 name|curthread
-argument_list|,
-operator|&
-name|timer_list_lock
 argument_list|)
 expr_stmt|;
 block|}
