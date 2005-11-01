@@ -2551,7 +2551,9 @@ end_function_decl
 begin_function_decl
 name|void
 name|_thr_list_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2636,13 +2638,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
+begin_decl_stmt
 name|void
 name|_thr_assert_lock_level
-argument_list|()
+argument_list|(
+name|void
+argument_list|)
 name|__dead2
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|void
+name|_thr_timer_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

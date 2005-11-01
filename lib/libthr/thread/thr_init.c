@@ -1373,6 +1373,9 @@ expr_stmt|;
 name|_thr_list_init
 argument_list|()
 expr_stmt|;
+name|_thr_timer_init
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Avoid reinitializing some things if they don't need to be, 	 * e.g. after a fork(). 	 */
 if|if
 condition|(
