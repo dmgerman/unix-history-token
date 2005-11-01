@@ -1,28 +1,16 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbutils - AML debugger utilities  *              $Revision: 68 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbutils - AML debugger utilities  *              $Revision: 1.76 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2004, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<contrib/dev/acpica/acpi.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<contrib/dev/acpica/acparser.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<contrib/dev/acpica/amlcode.h>
 end_include
 
 begin_include
@@ -35,12 +23,6 @@ begin_include
 include|#
 directive|include
 file|<contrib/dev/acpica/acdebug.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<contrib/dev/acpica/acdispat.h>
 end_include
 
 begin_include
@@ -68,6 +50,42 @@ argument_list|(
 literal|"dbutils"
 argument_list|)
 end_macro
+
+begin_comment
+comment|/* Local prototypes */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_OBSOLETE_FUNCTIONS
+end_ifdef
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiDbSecondPassParse
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Root
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiDbDumpBuffer
+parameter_list|(
+name|UINT32
+name|Address
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbMatchArgument  *  * PARAMETERS:  UserArgument            - User command line  *              Arguments               - Array of commands to match against  *  * RETURN:      Index into command array or ACPI_TYPE_NOT_FOUND if not found  *  * DESCRIPTION: Search command array for a command match  *  ******************************************************************************/
@@ -164,7 +182,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSetOutputDestination  *  * PARAMETERS:  OutputFlags         - Current flags word  *  * RETURN:      None  *  * DESCRIPTION: Set the current destination for debugger output.  Alos sets  *              the debug output level accordingly.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSetOutputDestination  *  * PARAMETERS:  OutputFlags         - Current flags word  *  * RETURN:      None  *  * DESCRIPTION: Set the current destination for debugger output.  Also sets  *              the debug output level accordingly.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -209,52 +227,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDumpBuffer  *  * PARAMETERS:  Address             - Pointer to the buffer  *  * RETURN:      None  *  * DESCRIPTION: Print a portion of a buffer  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDumpExternalObject  *  * PARAMETERS:  ObjDesc         - External ACPI object to dump  *              Level           - Nesting level.  *  * RETURN:      None  *  * DESCRIPTION: Dump the contents of an ACPI external object  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiDbDumpBuffer
-parameter_list|(
-name|UINT32
-name|Address
-parameter_list|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"\nLocation %X:\n"
-argument_list|,
-name|Address
-argument_list|)
-expr_stmt|;
-name|AcpiDbgLevel
-operator||=
-name|ACPI_LV_TABLES
-expr_stmt|;
-name|AcpiUtDumpBuffer
-argument_list|(
-name|ACPI_TO_POINTER
-argument_list|(
-name|Address
-argument_list|)
-argument_list|,
-literal|64
-argument_list|,
-name|DB_BYTE_DISPLAY
-argument_list|,
-name|ACPI_UINT32_MAX
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDumpObject  *  * PARAMETERS:  ObjDesc         - External ACPI object to dump  *              Level           - Nesting level.  *  * RETURN:      None  *  * DESCRIPTION: Dump the contents of an ACPI external object  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|void
-name|AcpiDbDumpObject
+name|AcpiDbDumpExternalObject
 parameter_list|(
 name|ACPI_OBJECT
 modifier|*
@@ -312,7 +290,7 @@ name|ACPI_TYPE_ANY
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Object Reference] = "
+literal|"[Object Reference] = %p"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -459,7 +437,7 @@ name|ACPI_TYPE_PACKAGE
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Package]  Contains %d Elements: \n"
+literal|"[Package]  Contains %d Elements:\n"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -486,7 +464,7 @@ name|i
 operator|++
 control|)
 block|{
-name|AcpiDbDumpObject
+name|AcpiDbDumpExternalObject
 argument_list|(
 operator|&
 name|ObjDesc
@@ -510,7 +488,7 @@ name|ACPI_TYPE_LOCAL_REFERENCE
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Object Reference] = "
+literal|"[Object Reference] = %p"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -552,7 +530,7 @@ break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Unknown Type] %X \n"
+literal|"[Unknown Type] %X\n"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -585,7 +563,7 @@ condition|)
 block|{
 return|return;
 block|}
-name|ACPI_STRUPR
+name|AcpiUtStrupr
 argument_list|(
 name|Name
 argument_list|)
@@ -654,6 +632,133 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbLocalNsLookup  *  * PARAMETERS:  Name            - Name to lookup  *  * RETURN:      Pointer to a namespace node, null on failure  *  * DESCRIPTION: Lookup a name in the ACPI namespace  *  * Note: Currently begins search from the root.  Could be enhanced to use  * the current prefix (scope) node as the search beginning point.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|AcpiDbLocalNsLookup
+parameter_list|(
+name|char
+modifier|*
+name|Name
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|InternalPath
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+init|=
+name|NULL
+decl_stmt|;
+name|AcpiDbPrepNamestring
+argument_list|(
+name|Name
+argument_list|)
+expr_stmt|;
+comment|/* Build an internal namestring */
+name|Status
+operator|=
+name|AcpiNsInternalizeName
+argument_list|(
+name|Name
+argument_list|,
+operator|&
+name|InternalPath
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Invalid namestring: %s\n"
+argument_list|,
+name|Name
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+comment|/*      * Lookup the name.      * (Uses root node as the search starting point)      */
+name|Status
+operator|=
+name|AcpiNsLookup
+argument_list|(
+name|NULL
+argument_list|,
+name|InternalPath
+argument_list|,
+name|ACPI_TYPE_ANY
+argument_list|,
+name|ACPI_IMODE_EXECUTE
+argument_list|,
+name|ACPI_NS_NO_UPSEARCH
+operator||
+name|ACPI_NS_DONT_OPEN_SCOPE
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|Node
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Could not locate name: %s %s\n"
+argument_list|,
+name|Name
+argument_list|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|ACPI_MEM_FREE
+argument_list|(
+name|InternalPath
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|Node
+operator|)
+return|;
+block|}
+end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_OBSOLETE_FUNCTIONS
+end_ifdef
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSecondPassParse  *  * PARAMETERS:  Root            - Root of the parse tree  *  * RETURN:      Status  *  * DESCRIPTION: Second pass parse of the ACPI tables.  We need to wait until  *              second pass to parse the control methods  *  ******************************************************************************/
@@ -928,125 +1033,49 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbLocalNsLookup  *  * PARAMETERS:  Name            - Name to lookup  *  * RETURN:      Pointer to a namespace node  *  * DESCRIPTION: Lookup a name in the ACPI namespace  *  * Note: Currently begins search from the root.  Could be enhanced to use  * the current prefix (scope) node as the search beginning point.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDumpBuffer  *  * PARAMETERS:  Address             - Pointer to the buffer  *  * RETURN:      None  *  * DESCRIPTION: Print a portion of a buffer  *  ******************************************************************************/
 end_comment
 
 begin_function
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|AcpiDbLocalNsLookup
+name|void
+name|AcpiDbDumpBuffer
 parameter_list|(
-name|char
-modifier|*
-name|Name
+name|UINT32
+name|Address
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|InternalPath
-decl_stmt|;
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|Node
-init|=
-name|NULL
-decl_stmt|;
-name|AcpiDbPrepNamestring
-argument_list|(
-name|Name
-argument_list|)
-expr_stmt|;
-comment|/* Build an internal namestring */
-name|Status
-operator|=
-name|AcpiNsInternalizeName
-argument_list|(
-name|Name
-argument_list|,
-operator|&
-name|InternalPath
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Invalid namestring: %s\n"
+literal|"\nLocation %X:\n"
 argument_list|,
-name|Name
+name|Address
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-comment|/*      * Lookup the name.      * (Uses root node as the search starting point)      */
-name|Status
-operator|=
-name|AcpiNsLookup
+name|AcpiDbgLevel
+operator||=
+name|ACPI_LV_TABLES
+expr_stmt|;
+name|AcpiUtDumpBuffer
 argument_list|(
-name|NULL
+name|ACPI_TO_POINTER
+argument_list|(
+name|Address
+argument_list|)
 argument_list|,
-name|InternalPath
+literal|64
 argument_list|,
-name|ACPI_TYPE_ANY
+name|DB_BYTE_DISPLAY
 argument_list|,
-name|ACPI_IMODE_EXECUTE
-argument_list|,
-name|ACPI_NS_NO_UPSEARCH
-operator||
-name|ACPI_NS_DONT_OPEN_SCOPE
-argument_list|,
-name|NULL
-argument_list|,
-operator|&
-name|Node
+name|ACPI_UINT32_MAX
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"Could not locate name: %s %s\n"
-argument_list|,
-name|Name
-argument_list|,
-name|AcpiFormatException
-argument_list|(
-name|Status
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-name|ACPI_MEM_FREE
-argument_list|(
-name|InternalPath
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|Node
-operator|)
-return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

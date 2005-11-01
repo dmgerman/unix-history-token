@@ -1,16 +1,16 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: asllisting - Listing file generation  *              $Revision: 51 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: asllisting - Listing file generation  *              $Revision: 1.58 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2004, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"aslcompiler.h"
+file|<contrib/dev/acpica/compiler/aslcompiler.h>
 end_include
 
 begin_include
@@ -22,19 +22,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"amlcode.h"
+file|<contrib/dev/acpica/amlcode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"acparser.h"
+file|<contrib/dev/acpica/acparser.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"acnamesp.h"
+file|<contrib/dev/acpica/acnamesp.h>
 end_include
 
 begin_define
@@ -52,10 +52,221 @@ argument_list|)
 end_macro
 
 begin_comment
+comment|/* Local prototypes */
+end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|LsDumpAscii
+parameter_list|(
+name|UINT32
+name|FileId
+parameter_list|,
+name|UINT32
+name|Count
+parameter_list|,
+name|UINT8
+modifier|*
+name|Buffer
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|LsDumpAsciiInComment
+parameter_list|(
+name|UINT32
+name|FileId
+parameter_list|,
+name|UINT32
+name|Count
+parameter_list|,
+name|UINT8
+modifier|*
+name|Buffer
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|ACPI_STATUS
+name|LsAmlListingWalk
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|UINT32
+name|Level
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|LsGenerateListing
+parameter_list|(
+name|UINT32
+name|FileId
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|LsPushNode
+parameter_list|(
+name|char
+modifier|*
+name|Filename
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|ASL_LISTING_NODE
+modifier|*
+name|LsPopNode
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|LsCheckException
+parameter_list|(
+name|UINT32
+name|LineNumber
+parameter_list|,
+name|UINT32
+name|FileId
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|LsFlushListingBuffer
+parameter_list|(
+name|UINT32
+name|FileId
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|LsWriteListingHexBytes
+parameter_list|(
+name|UINT8
+modifier|*
+name|Buffer
+parameter_list|,
+name|UINT32
+name|Length
+parameter_list|,
+name|UINT32
+name|FileId
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|UINT32
+name|LsWriteOneSourceLine
+parameter_list|(
+name|UINT32
+name|FileId
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|LsFinishSourceListing
+parameter_list|(
+name|UINT32
+name|FileId
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|LsWriteSourceLines
+parameter_list|(
+name|UINT32
+name|ToLineNumber
+parameter_list|,
+name|UINT32
+name|ToLogicalLineNumber
+parameter_list|,
+name|UINT32
+name|FileId
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|LsWriteNodeToListing
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|UINT32
+name|FileId
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|LsDoHexOutputC
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|LsDoHexOutputAsm
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    LsDumpAscii  *  * PARAMETERS:  FileId          - ID of current listing file  *              Count           - Number of bytes to convert  *              Buffer          - Buffer of bytes to convert  *  * RETURN:      None.  *  * DESCRIPTION: Convert hex bytes to ascii  *  ******************************************************************************/
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|LsDumpAscii
 parameter_list|(
@@ -149,6 +360,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|LsDumpAsciiInComment
 parameter_list|(
@@ -294,6 +506,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|ACPI_STATUS
 name|LsAmlListingWalk
 parameter_list|(
@@ -400,6 +613,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|LsGenerateListing
 parameter_list|(
@@ -544,6 +758,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|LsPushNode
 parameter_list|(
@@ -599,6 +814,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|ASL_LISTING_NODE
 modifier|*
 name|LsPopNode
@@ -670,6 +886,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|LsCheckException
 parameter_list|(
@@ -751,6 +968,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|LsFlushListingBuffer
 parameter_list|(
@@ -1066,6 +1284,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|LsWriteListingHexBytes
 parameter_list|(
@@ -1208,6 +1427,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|UINT32
 name|LsWriteOneSourceLine
 parameter_list|(
@@ -1373,6 +1593,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|LsFinishSourceListing
 parameter_list|(
@@ -1502,6 +1723,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|LsWriteSourceLines
 parameter_list|(
@@ -1542,7 +1764,7 @@ argument_list|(
 name|FileId
 argument_list|)
 expr_stmt|;
-comment|/*      * Read lines and write them as long as we are not caught up      */
+comment|/* Read lines and write them as long as we are not caught up */
 if|if
 condition|(
 name|Gbl_SourceLine
@@ -1583,7 +1805,7 @@ literal|"    /*\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Write one line at a time until we have reached the target line #          */
+comment|/* Write one line at a time until we have reached the target line # */
 while|while
 condition|(
 operator|(
@@ -1631,6 +1853,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|LsWriteNodeToListing
 parameter_list|(
@@ -1677,7 +1900,7 @@ name|OpInfo
 operator|->
 name|Class
 expr_stmt|;
-comment|/* TBD: clean this up with a single flag that says: I start a named output block */
+comment|/* TBD: clean this up with a single flag that says:      * I start a named output block      */
 if|if
 condition|(
 name|FileId
@@ -1829,7 +2052,7 @@ name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|"    unsigned char    %s_%s_Header [] = \n    {\n"
+literal|"    unsigned char    %s_%s_Header [] =\n    {\n"
 argument_list|,
 name|Gbl_TableSignature
 argument_list|,
@@ -1900,7 +2123,7 @@ return|return;
 case|case
 name|PARSEOP_INCLUDE
 case|:
-comment|/*          * Flush everything up to and including the include source line          */
+comment|/* Flush everything up to and including the include source line */
 name|LsWriteSourceLines
 argument_list|(
 name|Op
@@ -1918,7 +2141,7 @@ argument_list|,
 name|FileId
 argument_list|)
 expr_stmt|;
-comment|/*          * Create a new listing node and push it          */
+comment|/* Create a new listing node and push it */
 name|LsPushNode
 argument_list|(
 name|Op
@@ -1938,7 +2161,7 @@ return|return;
 case|case
 name|PARSEOP_INCLUDE_END
 case|:
-comment|/*          * Flush out the rest of the include file          */
+comment|/* Flush out the rest of the include file */
 name|LsWriteSourceLines
 argument_list|(
 name|Op
@@ -1956,7 +2179,10 @@ argument_list|,
 name|FileId
 argument_list|)
 expr_stmt|;
-comment|/*          * Pop off this listing node and go back to the parent file          */
+comment|/* Pop off this listing node and go back to the parent file */
+operator|(
+name|void
+operator|)
 name|LsPopNode
 argument_list|()
 expr_stmt|;
@@ -2007,7 +2233,7 @@ case|:
 case|case
 name|AML_NAME_OP
 case|:
-comment|/* For fields, we want to dump all the AML after the entire definition */
+comment|/*              * For fields, we want to dump all the AML after the              * entire definition              */
 name|LsWriteSourceLines
 argument_list|(
 name|Op
@@ -2189,7 +2415,7 @@ name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|"    unsigned char    %s_%s_%s [] = \n    {\n"
+literal|"    unsigned char    %s_%s_%s [] =\n    {\n"
 argument_list|,
 name|Gbl_TableSignature
 argument_list|,
@@ -2342,6 +2568,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|LsDoHexOutputC
 parameter_list|(
@@ -2379,7 +2606,7 @@ name|FlPrintFile
 argument_list|(
 name|ASL_FILE_HEX_OUTPUT
 argument_list|,
-literal|"unsigned char AmlCode[] = \n{\n"
+literal|"unsigned char AmlCode[] =\n{\n"
 argument_list|)
 expr_stmt|;
 comment|/* Start at the beginning of the AML file */
@@ -2428,7 +2655,7 @@ literal|"    "
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Convert each AML byte to hex          */
+comment|/* Convert each AML byte to hex */
 name|UtConvertByteToHex
 argument_list|(
 name|FileByte
@@ -2525,6 +2752,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|LsDoHexOutputAsm
 parameter_list|(
@@ -2627,7 +2855,7 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
-comment|/*          * Convert each AML byte to hex          */
+comment|/* Convert each AML byte to hex */
 name|UtConvertByteToAsmHex
 argument_list|(
 name|FileByte

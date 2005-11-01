@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acdispat.h - dispatcher (parser to interpreter interface)  *       $Revision: 58 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acdispat.h - dispatcher (parser to interpreter interface)  *       $Revision: 1.67 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2004, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_ifndef
@@ -34,94 +34,8 @@ value|"__A0"
 end_define
 
 begin_comment
-comment|/* Common interfaces */
+comment|/*  * dsopcode - support for late evaluation  */
 end_comment
-
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiDsObjStackPush
-parameter_list|(
-name|void
-modifier|*
-name|Object
-parameter_list|,
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiDsObjStackPop
-parameter_list|(
-name|UINT32
-name|PopCount
-parameter_list|,
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-modifier|*
-name|AcpiDsObjStackGetValue
-parameter_list|(
-name|UINT32
-name|Index
-parameter_list|,
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiDsObjStackPopObject
-parameter_list|(
-name|ACPI_OPERAND_OBJECT
-modifier|*
-modifier|*
-name|Object
-parameter_list|,
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* dsopcode - support for late evaluation */
-end_comment
-
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiDsExecuteArguments
-parameter_list|(
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|Node
-parameter_list|,
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|ScopeNode
-parameter_list|,
-name|UINT32
-name|AmlLength
-parameter_list|,
-name|UINT8
-modifier|*
-name|AmlStart
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
@@ -163,36 +77,6 @@ parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiDsInitBufferField
-parameter_list|(
-name|UINT16
-name|AmlOpcode
-parameter_list|,
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|ObjDesc
-parameter_list|,
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|BufferDesc
-parameter_list|,
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|OffsetDesc
-parameter_list|,
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|LengthDesc
-parameter_list|,
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|ResultDesc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -257,7 +141,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* dsctrl - Parser/Interpreter interface, control stack routines */
+comment|/*  * dsctrl - Parser/Interpreter interface, control stack routines  */
 end_comment
 
 begin_function_decl
@@ -291,7 +175,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* dsexec - Parser/Interpreter interface, method execution callbacks */
+comment|/*  * dsexec - Parser/Interpreter interface, method execution callbacks  */
 end_comment
 
 begin_function_decl
@@ -337,27 +221,8 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* dsfield - Parser/Interpreter interface for AML fields */
+comment|/*  * dsfield - Parser/Interpreter interface for AML fields  */
 end_comment
-
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiDsGetFieldNames
-parameter_list|(
-name|ACPI_CREATE_FIELD_INFO
-modifier|*
-name|Info
-parameter_list|,
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
-parameter_list|,
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|Arg
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
@@ -447,7 +312,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* dsload - Parser/Interpreter interface, namespace load callbacks */
+comment|/*  * dsload - Parser/Interpreter interface, namespace load callbacks  */
 end_comment
 
 begin_function_decl
@@ -519,7 +384,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* dsmthdat - method data (locals/args) */
+comment|/*  * dsmthdat - method data (locals/args)  */
 end_comment
 
 begin_function_decl
@@ -589,23 +454,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|ACPI_OBJECT_TYPE
-name|AcpiDsMethodDataGetType
-parameter_list|(
-name|UINT16
-name|Opcode
-parameter_list|,
-name|UINT32
-name|Index
-parameter_list|,
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|ACPI_STATUS
 name|AcpiDsMethodDataGetValue
 parameter_list|(
@@ -623,23 +471,6 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 modifier|*
 name|DestDesc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|AcpiDsMethodDataDeleteValue
-parameter_list|(
-name|UINT16
-name|Opcode
-parameter_list|,
-name|UINT32
-name|Index
-parameter_list|,
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -696,37 +527,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiDsMethodDataSetValue
-parameter_list|(
-name|UINT16
-name|Opcode
-parameter_list|,
-name|UINT32
-name|Index
-parameter_list|,
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|Object
-parameter_list|,
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
-comment|/* dsmethod - Parser/Interpreter interface - control method parsing */
+comment|/*  * dsmethod - Parser/Interpreter interface - control method parsing  */
 end_comment
 
 begin_function_decl
 name|ACPI_STATUS
 name|AcpiDsParseMethod
 parameter_list|(
-name|ACPI_HANDLE
-name|ObjHandle
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -766,7 +577,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|ACPI_STATUS
+name|void
 name|AcpiDsTerminateControlMethod
 parameter_list|(
 name|ACPI_WALK_STATE
@@ -796,30 +607,8 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* dsobj - Parser/Interpreter interface - object initialization and conversion */
+comment|/*  * dsinit  */
 end_comment
-
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiDsInitOneObject
-parameter_list|(
-name|ACPI_HANDLE
-name|ObjHandle
-parameter_list|,
-name|UINT32
-name|Level
-parameter_list|,
-name|void
-modifier|*
-name|Context
-parameter_list|,
-name|void
-modifier|*
-modifier|*
-name|ReturnValue
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
@@ -835,6 +624,10 @@ name|StartNode
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * dsobject - Parser/Interpreter interface - object initialization and conversion  */
+end_comment
 
 begin_function_decl
 name|ACPI_STATUS
@@ -884,26 +677,6 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiDsBuildInternalObject
-parameter_list|(
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
-parameter_list|,
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|Op
-parameter_list|,
-name|ACPI_OPERAND_OBJECT
-modifier|*
-modifier|*
-name|ObjDescPtr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
 name|AcpiDsInitObjectFromOp
 parameter_list|(
 name|ACPI_WALK_STATE
@@ -945,8 +718,37 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* dsutils - Parser/Interpreter interface utility routines */
+comment|/*  * dsutils - Parser/Interpreter interface utility routines  */
 end_comment
+
+begin_function_decl
+name|void
+name|AcpiDsClearImplicitReturn
+parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|BOOLEAN
+name|AcpiDsDoImplicitReturn
+parameter_list|(
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ReturnDesc
+parameter_list|,
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|,
+name|BOOLEAN
+name|AddReference
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|BOOLEAN
@@ -1082,8 +884,37 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* dswstate - parser WALK_STATE management routines */
+comment|/*  * dswstate - parser WALK_STATE management routines  */
 end_comment
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiDsObjStackPush
+parameter_list|(
+name|void
+modifier|*
+name|Object
+parameter_list|,
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiDsObjStackPop
+parameter_list|(
+name|UINT32
+name|PopCount
+parameter_list|,
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|ACPI_WALK_STATE
@@ -1135,19 +966,8 @@ name|ACPI_PARAMETER_INFO
 modifier|*
 name|Info
 parameter_list|,
-name|UINT32
+name|UINT8
 name|PassNumber
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiDsObjStackDeleteAll
-parameter_list|(
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1245,33 +1065,6 @@ parameter_list|(
 name|ACPI_THREAD_STATE
 modifier|*
 name|Thread
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|AcpiDsDeleteWalkStateCache
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiDsResultInsert
-parameter_list|(
-name|void
-modifier|*
-name|Object
-parameter_list|,
-name|UINT32
-name|Index
-parameter_list|,
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
 parameter_list|)
 function_decl|;
 end_function_decl

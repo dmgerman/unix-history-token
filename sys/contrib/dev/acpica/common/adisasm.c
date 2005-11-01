@@ -1,58 +1,58 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: adisasm - Application-level disassembler routines  *              $Revision: 69 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: adisasm - Application-level disassembler routines  *              $Revision: 1.77 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2004, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"acpi.h"
+file|<contrib/dev/acpica/acpi.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"acparser.h"
+file|<contrib/dev/acpica/acparser.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"amlcode.h"
+file|<contrib/dev/acpica/amlcode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"acdebug.h"
+file|<contrib/dev/acpica/acdebug.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"acdisasm.h"
+file|<contrib/dev/acpica/acdisasm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"acdispat.h"
+file|<contrib/dev/acpica/acdispat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"acnamesp.h"
+file|<contrib/dev/acpica/acnamesp.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"acapps.h"
+file|<contrib/dev/acpica/acapps.h>
 end_include
 
 begin_include
@@ -97,7 +97,7 @@ end_decl_stmt
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_ACPI_ASL_COMPILER
+name|ACPI_ASL_COMPILER
 end_ifndef
 
 begin_function
@@ -146,7 +146,7 @@ block|}
 end_function
 
 begin_function
-name|ACPI_STATUS
+name|void
 name|AcpiDsTerminateControlMethod
 parameter_list|(
 name|ACPI_WALK_STATE
@@ -154,11 +154,7 @@ modifier|*
 name|WalkState
 parameter_list|)
 block|{
-return|return
-operator|(
-name|AE_OK
-operator|)
-return|;
+return|return;
 block|}
 end_function
 
@@ -236,7 +232,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AfGenerateFilename  *  * PARAMETERS:  *  * RETURN:  *  * DESCRIPTION: Build an output filename from an ACPI table ID string  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AfGenerateFilename  *  * PARAMETERS:  Prefix      - prefix string  *              TableId     - The table ID  *  * RETURN:      Pointer to the completed string  *  * DESCRIPTION: Build an output filename from an ACPI table ID string  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -362,7 +358,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AfWriteBuffer  *  * PARAMETERS:  *  * RETURN:  *  * DESCRIPTION: Open a file and write out a single buffer  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AfWriteBuffer  *  * PARAMETERS:  Filename        - name of file  *              Buffer          - data to write  *              Length          - length of data  *  * RETURN:      Actual number of bytes written  *  * DESCRIPTION: Open a file and write out a single buffer  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -443,7 +439,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AfWriteTable  *  * PARAMETERS:  *  * RETURN:  *  * DESCRIPTION: Dump the loaded tables to a file (or files)  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AfWriteTable  *  * PARAMETERS:  Table       - pointer to the ACPI table  *              Length      - length of the table  *              TableName   - the table signature  *              OemTableID  - from the table header  *  * RETURN:      None  *  * DESCRIPTION: Dump the loaded tables to a file (or files)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -656,7 +652,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    FlSplitInputPathname  *  * PARAMETERS:  InputFilename       - The user-specified ASL source file to be  *                                    compiled  *  * RETURN:      Status  *  * DESCRIPTION: Split the input path into a directory and filename part  *              1) Directory part used to open include files  *              2) Filename part used to generate output filenames  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    FlSplitInputPathname  *  * PARAMETERS:  InputFilename       - The user-specified ASL source file to be  *                                    compiled  *              OutDirectoryPath    - Where the directory path prefix is  *                                    returned  *              OutFilename         - Where the filename part is returned  *  * RETURN:      Status  *  * DESCRIPTION: Split the input path into a directory and filename part  *              1) Directory part used to open include files  *              2) Filename part used to generate output filenames  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -846,7 +842,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AdAmlDisassemble  *  * PARAMETERS:  OutToFile       - TRUE if output should go to a file  *              Filename        - AML input filename  *  * RETURN:      Status  *  * DESCRIPTION: Disassemble an entire ACPI table  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AdAmlDisassemble  *  * PARAMETERS:  Filename        - AML input filename  *              OutToFile       - TRUE if output should go to a file  *              Prefix          - Path prefix for output  *              OutFilename     - where the filename is returned  *              GetAllTables    - TRUE if all tables are desired  *  * RETURN:      Status  *  * DESCRIPTION: Disassemble an entire ACPI table  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1200,7 +1196,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"DefinitionBlock (\"%4.4s.aml\", \"%4.4s\", %hd, \"%.6s\", \"%.8s\", %u)\n"
+literal|"DefinitionBlock (\"%4.4s.aml\", \"%4.4s\", %hd, \"%.6s\", \"%.8s\", 0x%8.8X)\n"
 argument_list|,
 name|Table
 operator|->
@@ -1231,7 +1227,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AdDisplayTables  *  * PARAMETERS:  Filename            - Input file for the table  *  * RETURN:      Status  *  * DESCRIPTION: Display (disassemble) loaded tables and dump raw tables  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AdDisplayTables  *  * PARAMETERS:  Filename            - Input file for the table  *              Table               - Pointer to the raw table  *  * RETURN:      Status  *  * DESCRIPTION: Display (disassemble) loaded tables and dump raw tables  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1509,6 +1505,12 @@ operator|&=
 operator|~
 name|ACPI_PARSE_DELETE_TREE
 expr_stmt|;
+name|WalkState
+operator|->
+name|ParseFlags
+operator||=
+name|ACPI_PARSE_DISASSEMBLE
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiPsParseAml
@@ -1610,9 +1612,6 @@ block|{
 case|case
 name|AML_PACKAGE_OP
 case|:
-case|case
-name|AML_VAR_PACKAGE_OP
-case|:
 name|ExtraOp
 operator|=
 name|Op
@@ -1648,6 +1647,9 @@ operator|.
 name|Arg
 expr_stmt|;
 break|break;
+case|case
+name|AML_VAR_PACKAGE_OP
+case|:
 case|case
 name|AML_BUFFER_OP
 case|:
@@ -1936,7 +1938,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AdGetLocalTables  *  * PARAMETERS:  *  * RETURN:      None  *  * DESCRIPTION: Get the ACPI tables from either memory or a file  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AdGetLocalTables  *  * PARAMETERS:  Filename        - Not used  *              GetAllTables    - TRUE if all tables are desired  *  * RETURN:      Status  *  * DESCRIPTION: Get the ACPI tables from either memory or a file  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -2319,7 +2321,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AdParseTable  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Parse the DSDT.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AdParseTable  *  * PARAMETERS:  Table           - Pointer to the raw table  *  * RETURN:      Status  *  * DESCRIPTION: Parse the DSDT.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -2484,6 +2486,12 @@ operator|&=
 operator|~
 name|ACPI_PARSE_DELETE_TREE
 expr_stmt|;
+name|WalkState
+operator|->
+name|ParseFlags
+operator||=
+name|ACPI_PARSE_DISASSEMBLE
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiPsParseAml
@@ -2530,6 +2538,12 @@ name|Table
 operator|->
 name|Signature
 argument_list|)
+expr_stmt|;
+name|WalkState
+operator|->
+name|ParseFlags
+operator||=
+name|ACPI_PARSE_DISASSEMBLE
 expr_stmt|;
 name|Status
 operator|=

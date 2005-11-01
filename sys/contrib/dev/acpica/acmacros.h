@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 154 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 1.165 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2004, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_ifndef
@@ -85,6 +85,18 @@ parameter_list|,
 name|bit
 parameter_list|)
 value|((target)&= ~(bit))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MIN
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(((a)<(b))?(a):(b))
 end_define
 
 begin_if
@@ -694,11 +706,11 @@ parameter_list|)
 value|(BufOffset)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_MISALIGNED_TRANSFERS
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_MISALIGNMENT_NOT_SUPPORTED
+end_ifndef
 
 begin_comment
 comment|/* The hardware supports unaligned transfers, just do the little-endian move */
@@ -2026,7 +2038,7 @@ value|pl
 end_define
 
 begin_comment
-comment|/*  * Error reporting.  These versions add callers module and line#.  Since  * _THIS_MODULE gets compiled out when ACPI_DEBUG_OUTPUT isn't defined, only  * use it in debug mode.  */
+comment|/*  * Error reporting.  These versions add callers module and line#.  *  * Since _AcpiModuleName gets compiled out when ACPI_DEBUG_OUTPUT  * isn't defined, only use it in debug mode.  */
 end_comment
 
 begin_ifdef
@@ -2042,7 +2054,7 @@ name|ACPI_REPORT_INFO
 parameter_list|(
 name|fp
 parameter_list|)
-value|{AcpiUtReportInfo(_THIS_MODULE,__LINE__,_COMPONENT); \                                                 AcpiOsPrintf ACPI_PARAM_LIST(fp);}
+value|{AcpiUtReportInfo(_AcpiModuleName,__LINE__,_COMPONENT); \                                                 AcpiOsPrintf ACPI_PARAM_LIST(fp);}
 end_define
 
 begin_define
@@ -2052,7 +2064,7 @@ name|ACPI_REPORT_ERROR
 parameter_list|(
 name|fp
 parameter_list|)
-value|{AcpiUtReportError(_THIS_MODULE,__LINE__,_COMPONENT); \                                                 AcpiOsPrintf ACPI_PARAM_LIST(fp);}
+value|{AcpiUtReportError(_AcpiModuleName,__LINE__,_COMPONENT); \                                                 AcpiOsPrintf ACPI_PARAM_LIST(fp);}
 end_define
 
 begin_define
@@ -2062,7 +2074,7 @@ name|ACPI_REPORT_WARNING
 parameter_list|(
 name|fp
 parameter_list|)
-value|{AcpiUtReportWarning(_THIS_MODULE,__LINE__,_COMPONENT); \                                                 AcpiOsPrintf ACPI_PARAM_LIST(fp);}
+value|{AcpiUtReportWarning(_AcpiModuleName,__LINE__,_COMPONENT); \                                                 AcpiOsPrintf ACPI_PARAM_LIST(fp);}
 end_define
 
 begin_define
@@ -2074,7 +2086,7 @@ name|s
 parameter_list|,
 name|e
 parameter_list|)
-value|AcpiNsReportError(_THIS_MODULE,__LINE__,_COMPONENT, s, e);
+value|AcpiNsReportError(_AcpiModuleName,__LINE__,_COMPONENT, s, e);
 end_define
 
 begin_define
@@ -2090,7 +2102,7 @@ name|p
 parameter_list|,
 name|e
 parameter_list|)
-value|AcpiNsReportMethodError(_THIS_MODULE,__LINE__,_COMPONENT, s, n, p, e);
+value|AcpiNsReportMethodError(_AcpiModuleName,__LINE__,_COMPONENT, s, n, p, e);
 end_define
 
 begin_else
@@ -2228,13 +2240,45 @@ define|#
 directive|define
 name|ACPI_MODULE_NAME
 parameter_list|(
-name|name
+name|Name
 parameter_list|)
-value|static char ACPI_UNUSED_VAR *_THIS_MODULE = name;
+value|static char ACPI_UNUSED_VAR *_AcpiModuleName = Name;
 end_define
 
 begin_comment
-comment|/*  * Function entry tracing.  * The first parameter should be the procedure name as a quoted string.  This is declared  * as a local string ("_ProcName) so that it can be also used by the function exit macros below.  */
+comment|/*  * Common parameters used for debug output functions:  * line number, function name, module(file) name, component ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEBUG_PARAMETERS
+value|__LINE__, ACPI_GET_FUNCTION_NAME, _AcpiModuleName, _COMPONENT
+end_define
+
+begin_comment
+comment|/*  * Function entry tracing  */
+end_comment
+
+begin_comment
+comment|/*  * If ACPI_GET_FUNCTION_NAME was not defined in the compiler-dependent header,  * define it now. This is the case where there the compiler does not support  * a __FUNCTION__ macro or equivalent. We save the function name on the  * local stack.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_GET_FUNCTION_NAME
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ACPI_GET_FUNCTION_NAME
+value|_AcpiFunctionName
+end_define
+
+begin_comment
+comment|/*  * The Name parameter should be the procedure name as a quoted string.  * This is declared as a local string ("MyFunctionName") so that it can  * be also used by the function exit macros below.  * Note: (const char) is used to be compatible with the debug interfaces  * and macros such as __FUNCTION__.  */
 end_comment
 
 begin_define
@@ -2242,10 +2286,33 @@ define|#
 directive|define
 name|ACPI_FUNCTION_NAME
 parameter_list|(
-name|a
+name|Name
 parameter_list|)
-value|ACPI_DEBUG_PRINT_INFO _DebugInfo; \                                                 _DebugInfo.ComponentId = _COMPONENT; \                                                 _DebugInfo.ProcName    = a; \                                                 _DebugInfo.ModuleName  = _THIS_MODULE;
+value|const char *_AcpiFunctionName = Name;
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* Compiler supports __FUNCTION__ (or equivalent) -- Ignore this macro */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_FUNCTION_NAME
+parameter_list|(
+name|Name
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -2254,7 +2321,7 @@ name|ACPI_FUNCTION_TRACE
 parameter_list|(
 name|a
 parameter_list|)
-value|ACPI_FUNCTION_NAME(a) \                                                 AcpiUtTrace(__LINE__,&_DebugInfo)
+value|ACPI_FUNCTION_NAME(a) \                                             AcpiUtTrace(ACPI_DEBUG_PARAMETERS)
 end_define
 
 begin_define
@@ -2266,7 +2333,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|ACPI_FUNCTION_NAME(a) \                                                 AcpiUtTracePtr(__LINE__,&_DebugInfo,(void *)b)
+value|ACPI_FUNCTION_NAME(a) \                                             AcpiUtTracePtr(ACPI_DEBUG_PARAMETERS,(void *)b)
 end_define
 
 begin_define
@@ -2278,7 +2345,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|ACPI_FUNCTION_NAME(a) \                                                 AcpiUtTraceU32(__LINE__,&_DebugInfo,(UINT32)b)
+value|ACPI_FUNCTION_NAME(a) \                                             AcpiUtTraceU32(ACPI_DEBUG_PARAMETERS,(UINT32)b)
 end_define
 
 begin_define
@@ -2290,7 +2357,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|ACPI_FUNCTION_NAME(a) \                                                 AcpiUtTraceStr(__LINE__,&_DebugInfo,(char *)b)
+value|ACPI_FUNCTION_NAME(a) \                                             AcpiUtTraceStr(ACPI_DEBUG_PARAMETERS,(char *)b)
 end_define
 
 begin_define
@@ -2302,7 +2369,7 @@ value|AcpiUtTrackStackPtr()
 end_define
 
 begin_comment
-comment|/*  * Function exit tracing.  * WARNING: These macros include a return statement.  This is usually considered  * bad form, but having a separate exit macro is very ugly and difficult to maintain.  * One of the FUNCTION_TRACE macros above must be used in conjunction with these macros  * so that "_ProcName" is defined.  */
+comment|/*  * Function exit tracing.  * WARNING: These macros include a return statement.  This is usually considered  * bad form, but having a separate exit macro is very ugly and difficult to maintain.  * One of the FUNCTION_TRACE macros above must be used in conjunction with these macros  * so that "_AcpiFunctionName" is defined.  *  * Note: the DO_WHILE0 macro is used to prevent some compilers from complaining  * about these constructs.  */
 end_comment
 
 begin_ifdef
@@ -2345,8 +2412,18 @@ begin_define
 define|#
 directive|define
 name|return_VOID
-value|ACPI_DO_WHILE0 ({AcpiUtExit(__LINE__,&_DebugInfo);return;})
+value|ACPI_DO_WHILE0 ({ \                                             AcpiUtExit (ACPI_DEBUG_PARAMETERS); \                                             return;})
 end_define
+
+begin_comment
+comment|/*  * There are two versions of most of the return macros. The default version is  * safer, since it avoids side-effects by guaranteeing that the argument will  * not be evaluated twice.  *  * A less-safe version of the macros is provided for optional use if the  * compiler uses excessive CPU stack (for example, this may happen in the  * debug case if code optimzation is disabled.)  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_SIMPLE_RETURN_MACROS
+end_ifndef
 
 begin_define
 define|#
@@ -2355,17 +2432,7 @@ name|return_ACPI_STATUS
 parameter_list|(
 name|s
 parameter_list|)
-value|ACPI_DO_WHILE0 ({AcpiUtStatusExit(__LINE__,&_DebugInfo,(s));return((s));})
-end_define
-
-begin_define
-define|#
-directive|define
-name|return_VALUE
-parameter_list|(
-name|s
-parameter_list|)
-value|ACPI_DO_WHILE0 ({AcpiUtValueExit(__LINE__,&_DebugInfo,(ACPI_INTEGER)(s));return((s));})
+value|ACPI_DO_WHILE0 ({ \                                             register ACPI_STATUS _s = (s); \                                             AcpiUtStatusExit (ACPI_DEBUG_PARAMETERS, _s); \                                             return (_s); })
 end_define
 
 begin_define
@@ -2375,8 +2442,106 @@ name|return_PTR
 parameter_list|(
 name|s
 parameter_list|)
-value|ACPI_DO_WHILE0 ({AcpiUtPtrExit(__LINE__,&_DebugInfo,(UINT8 *)(s));return((s));})
+value|ACPI_DO_WHILE0 ({ \                                             register void *_s = (void *) (s); \                                             AcpiUtPtrExit (ACPI_DEBUG_PARAMETERS, (UINT8 *) _s); \                                             return (_s); })
 end_define
+
+begin_define
+define|#
+directive|define
+name|return_VALUE
+parameter_list|(
+name|s
+parameter_list|)
+value|ACPI_DO_WHILE0 ({ \                                             register ACPI_INTEGER _s = (s); \                                             AcpiUtValueExit (ACPI_DEBUG_PARAMETERS, _s); \                                             return (_s); })
+end_define
+
+begin_define
+define|#
+directive|define
+name|return_UINT8
+parameter_list|(
+name|s
+parameter_list|)
+value|ACPI_DO_WHILE0 ({ \                                             register UINT8 _s = (UINT8) (s); \                                             AcpiUtValueExit (ACPI_DEBUG_PARAMETERS, (ACPI_INTEGER) _s); \                                             return (_s); })
+end_define
+
+begin_define
+define|#
+directive|define
+name|return_UINT32
+parameter_list|(
+name|s
+parameter_list|)
+value|ACPI_DO_WHILE0 ({ \                                             register UINT32 _s = (UINT32) (s); \                                             AcpiUtValueExit (ACPI_DEBUG_PARAMETERS, (ACPI_INTEGER) _s); \                                             return (_s); })
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* Use original less-safe macros */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|return_ACPI_STATUS
+parameter_list|(
+name|s
+parameter_list|)
+value|ACPI_DO_WHILE0 ({ \                                             AcpiUtStatusExit (ACPI_DEBUG_PARAMETERS, (s)); \                                             return((s)); })
+end_define
+
+begin_define
+define|#
+directive|define
+name|return_PTR
+parameter_list|(
+name|s
+parameter_list|)
+value|ACPI_DO_WHILE0 ({ \                                             AcpiUtPtrExit (ACPI_DEBUG_PARAMETERS, (UINT8 *) (s)); \                                             return((s)); })
+end_define
+
+begin_define
+define|#
+directive|define
+name|return_VALUE
+parameter_list|(
+name|s
+parameter_list|)
+value|ACPI_DO_WHILE0 ({ \                                             AcpiUtValueExit (ACPI_DEBUG_PARAMETERS, (ACPI_INTEGER) (s)); \                                             return((s)); })
+end_define
+
+begin_define
+define|#
+directive|define
+name|return_UINT8
+parameter_list|(
+name|s
+parameter_list|)
+value|return_VALUE(s)
+end_define
+
+begin_define
+define|#
+directive|define
+name|return_UINT32
+parameter_list|(
+name|s
+parameter_list|)
+value|return_VALUE(s)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ACPI_SIMPLE_RETURN_MACROS */
+end_comment
 
 begin_comment
 comment|/* Conditional execution */
@@ -2456,7 +2621,7 @@ name|d
 parameter_list|,
 name|e
 parameter_list|)
-value|AcpiExDumpOperands(a,b,c,d,e,_THIS_MODULE,__LINE__)
+value|AcpiExDumpOperands(a,b,c,d,e,_AcpiModuleName,__LINE__)
 end_define
 
 begin_define
@@ -2469,18 +2634,6 @@ parameter_list|,
 name|b
 parameter_list|)
 value|AcpiNsDumpEntry (a,b)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DUMP_TABLES
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|AcpiNsDumpTables(a,b)
 end_define
 
 begin_define
@@ -2614,14 +2767,14 @@ define|#
 directive|define
 name|ACPI_MODULE_NAME
 parameter_list|(
-name|name
+name|Name
 parameter_list|)
 end_define
 
 begin_define
 define|#
 directive|define
-name|_THIS_MODULE
+name|_AcpiModuleName
 value|""
 end_define
 
@@ -2884,6 +3037,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|return_UINT8
+parameter_list|(
+name|s
+parameter_list|)
+value|return(s)
+end_define
+
+begin_define
+define|#
+directive|define
+name|return_UINT32
+parameter_list|(
+name|s
+parameter_list|)
+value|return(s)
+end_define
+
+begin_define
+define|#
+directive|define
 name|return_PTR
 parameter_list|(
 name|s
@@ -3037,7 +3210,7 @@ name|ACPI_MEM_ALLOCATE
 parameter_list|(
 name|a
 parameter_list|)
-value|AcpiUtAllocate((ACPI_SIZE)(a),_COMPONENT,_THIS_MODULE,__LINE__)
+value|AcpiUtAllocate((ACPI_SIZE)(a),_COMPONENT,_AcpiModuleName,__LINE__)
 end_define
 
 begin_define
@@ -3047,7 +3220,7 @@ name|ACPI_MEM_CALLOCATE
 parameter_list|(
 name|a
 parameter_list|)
-value|AcpiUtCallocate((ACPI_SIZE)(a), _COMPONENT,_THIS_MODULE,__LINE__)
+value|AcpiUtCallocate((ACPI_SIZE)(a), _COMPONENT,_AcpiModuleName,__LINE__)
 end_define
 
 begin_define
@@ -3085,7 +3258,7 @@ name|ACPI_MEM_ALLOCATE
 parameter_list|(
 name|a
 parameter_list|)
-value|AcpiUtAllocateAndTrack((ACPI_SIZE)(a),_COMPONENT,_THIS_MODULE,__LINE__)
+value|AcpiUtAllocateAndTrack((ACPI_SIZE)(a),_COMPONENT,_AcpiModuleName,__LINE__)
 end_define
 
 begin_define
@@ -3095,7 +3268,7 @@ name|ACPI_MEM_CALLOCATE
 parameter_list|(
 name|a
 parameter_list|)
-value|AcpiUtCallocateAndTrack((ACPI_SIZE)(a), _COMPONENT,_THIS_MODULE,__LINE__)
+value|AcpiUtCallocateAndTrack((ACPI_SIZE)(a), _COMPONENT,_AcpiModuleName,__LINE__)
 end_define
 
 begin_define
@@ -3105,7 +3278,7 @@ name|ACPI_MEM_FREE
 parameter_list|(
 name|a
 parameter_list|)
-value|AcpiUtFreeAndTrack(a,_COMPONENT,_THIS_MODULE,__LINE__)
+value|AcpiUtFreeAndTrack(a,_COMPONENT,_AcpiModuleName,__LINE__)
 end_define
 
 begin_define
