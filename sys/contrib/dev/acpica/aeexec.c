@@ -506,7 +506,6 @@ end_comment
 
 begin_function
 name|void
-name|__cdecl
 name|AeCtrlCHandler
 parameter_list|(
 name|int

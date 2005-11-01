@@ -274,7 +274,6 @@ end_define
 
 begin_function_decl
 name|void
-name|__cdecl
 name|AeCtrlCHandler
 parameter_list|(
 name|int
