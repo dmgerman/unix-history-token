@@ -182,6 +182,10 @@ name|struct
 name|ktr_header
 name|ktr_header
 decl_stmt|;
+name|void
+modifier|*
+name|ktr_buffer
+decl_stmt|;
 name|struct
 name|ucred
 modifier|*
@@ -1301,6 +1305,12 @@ name|req
 operator|->
 name|ktr_header
 operator|.
+name|ktr_unused
+operator|=
+literal|0
+expr_stmt|;
+name|req
+operator|->
 name|ktr_buffer
 operator|=
 name|NULL
@@ -1461,8 +1471,6 @@ if|if
 condition|(
 name|req
 operator|->
-name|ktr_header
-operator|.
 name|ktr_buffer
 operator|!=
 name|NULL
@@ -1471,8 +1479,6 @@ name|free
 argument_list|(
 name|req
 operator|->
-name|ktr_header
-operator|.
 name|ktr_buffer
 argument_list|,
 name|M_KTRACE
@@ -1777,8 +1783,6 @@ name|buflen
 expr_stmt|;
 name|req
 operator|->
-name|ktr_header
-operator|.
 name|ktr_buffer
 operator|=
 name|buf
@@ -1987,8 +1991,6 @@ name|namelen
 expr_stmt|;
 name|req
 operator|->
-name|ktr_header
-operator|.
 name|ktr_buffer
 operator|=
 name|buf
@@ -2185,8 +2187,6 @@ name|datalen
 expr_stmt|;
 name|req
 operator|->
-name|ktr_header
-operator|.
 name|ktr_buffer
 operator|=
 name|buf
@@ -3319,8 +3319,6 @@ return|;
 block|}
 name|req
 operator|->
-name|ktr_header
-operator|.
 name|ktr_buffer
 operator|=
 name|cp
@@ -4045,7 +4043,7 @@ condition|)
 block|{
 name|KASSERT
 argument_list|(
-name|kth
+name|req
 operator|->
 name|ktr_buffer
 operator|!=
@@ -4065,7 +4063,7 @@ index|]
 operator|.
 name|iov_base
 operator|=
-name|kth
+name|req
 operator|->
 name|ktr_buffer
 expr_stmt|;

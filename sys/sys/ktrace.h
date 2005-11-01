@@ -115,10 +115,10 @@ name|timeval
 name|ktr_time
 decl_stmt|;
 comment|/* timestamp */
-name|void
-modifier|*
-name|ktr_buffer
+name|intptr_t
+name|ktr_unused
 decl_stmt|;
+comment|/* was ktr_buffer */
 block|}
 struct|;
 end_struct
