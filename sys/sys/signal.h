@@ -597,7 +597,7 @@ value|32
 end_define
 
 begin_comment
-comment|/* Thread interrupt. */
+comment|/* reserved by thread library. */
 end_comment
 
 begin_endif
