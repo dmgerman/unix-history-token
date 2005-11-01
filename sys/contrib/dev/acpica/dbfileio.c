@@ -97,6 +97,12 @@ begin_comment
 comment|/* Local prototypes */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_APPLICATION
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|ACPI_STATUS
@@ -126,6 +132,11 @@ name|TablePtr
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbCloseDebugFile  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: If open, close the current debug output file  *  ******************************************************************************/

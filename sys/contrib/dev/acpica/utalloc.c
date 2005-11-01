@@ -37,6 +37,12 @@ begin_comment
 comment|/* Local prototypes */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_DBG_TRACK_ALLOCATIONS
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|ACPI_DEBUG_MEM_BLOCK
@@ -99,12 +105,6 @@ name|Line
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_DBG_TRACK_ALLOCATIONS
-end_ifdef
 
 begin_function_decl
 specifier|static

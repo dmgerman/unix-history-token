@@ -65,6 +65,12 @@ directive|include
 file|<contrib/dev/acpica/acdebug.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/compiler/aslcompiler.h>
+end_include
+
 begin_define
 define|#
 directive|define
