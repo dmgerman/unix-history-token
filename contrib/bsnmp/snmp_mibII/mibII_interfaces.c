@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001-2003  *	Fraunhofer Institute for Open Communication Systems (FhG Fokus).  *	All rights reserved.  *  * Author: Harti Brandt<harti@freebsd.org>  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Begemot: bsnmp/snmp_mibII/mibII_interfaces.c,v 1.15 2005/05/23 09:03:39 brandt_h Exp $  *  * Interfaces group.  */
+comment|/*  * Copyright (c) 2001-2003  *	Fraunhofer Institute for Open Communication Systems (FhG Fokus).  *	All rights reserved.  *  * Author: Harti Brandt<harti@freebsd.org>  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Begemot: bsnmp/snmp_mibII/mibII_interfaces.c,v 1.16 2005/11/02 12:07:40 brandt_h Exp $  *  * Interfaces group.  */
 end_comment
 
 begin_include
@@ -1252,13 +1252,9 @@ break|break;
 case|case
 name|LEAF_ifOperStatus
 case|:
-name|value
-operator|->
-name|v
-operator|.
-name|integer
-operator|=
-operator|(
+comment|/* 		 * According to RFC 2863 the state should be Up if the 		 * interface is ready to transmit packets. We takes this to 		 * mean that the interface should be running and should have 		 * a carrier. If it is running and has no carrier we interpret 		 * this as 'waiting for an external event' (plugging in the 		 * cable) and hence return 'dormant'. 		 */
+if|if
+condition|(
 name|ifp
 operator|->
 name|mib
@@ -1266,12 +1262,50 @@ operator|.
 name|ifmd_flags
 operator|&
 name|IFF_RUNNING
-operator|)
-condition|?
+condition|)
+block|{
+if|if
+condition|(
+name|ifp
+operator|->
+name|mib
+operator|.
+name|ifmd_data
+operator|.
+name|ifi_link_state
+operator|==
+name|LINK_STATE_DOWN
+condition|)
+name|value
+operator|->
+name|v
+operator|.
+name|integer
+operator|=
+literal|5
+expr_stmt|;
+comment|/* state dormant */
+else|else
+name|value
+operator|->
+name|v
+operator|.
+name|integer
+operator|=
 literal|1
-else|:
+expr_stmt|;
+comment|/* state up */
+block|}
+else|else
+name|value
+operator|->
+name|v
+operator|.
+name|integer
+operator|=
 literal|2
 expr_stmt|;
+comment|/* state down */
 break|break;
 case|case
 name|LEAF_ifLastChange
