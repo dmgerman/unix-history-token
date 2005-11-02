@@ -206,7 +206,7 @@ return|;
 else|else
 block|{
 comment|/* compute -1 / (x+y) carefully */
-name|double
+name|float
 name|a
 decl_stmt|,
 name|t
