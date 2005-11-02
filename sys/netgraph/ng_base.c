@@ -140,6 +140,18 @@ name|ng_nodelist_mtx
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Mutex to protect topology events. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|ng_topo_mtx
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -3815,19 +3827,9 @@ parameter_list|)
 block|{
 name|hook_p
 name|peer
-init|=
-name|NG_HOOK_PEER
-argument_list|(
-name|hook
-argument_list|)
 decl_stmt|;
 name|node_p
 name|node
-init|=
-name|NG_HOOK_NODE
-argument_list|(
-name|hook
-argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -3845,13 +3847,33 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * Protect divorce process with mutex, to avoid races on 	 * simultaneous disconnect. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|ng_topo_mtx
+argument_list|)
+expr_stmt|;
 name|hook
 operator|->
 name|hk_flags
 operator||=
 name|HK_INVALID
 expr_stmt|;
-comment|/* as soon as possible */
+name|peer
+operator|=
+name|NG_HOOK_PEER
+argument_list|(
+name|hook
+argument_list|)
+expr_stmt|;
+name|node
+operator|=
+name|NG_HOOK_NODE
+argument_list|(
+name|hook
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|peer
@@ -3893,10 +3915,21 @@ name|ng_deadnode
 condition|)
 block|{
 comment|/*  			 * If it's already divorced from a node, 			 * just free it. 			 */
-comment|/* nothing */
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ng_topo_mtx
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ng_topo_mtx
+argument_list|)
+expr_stmt|;
 name|ng_rmhook_self
 argument_list|(
 name|peer
@@ -3917,6 +3950,21 @@ argument_list|)
 expr_stmt|;
 comment|/* account for peer link */
 block|}
+else|else
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ng_topo_mtx
+argument_list|)
+expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|ng_topo_mtx
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Remove the hook from the node's list to avoid possible recursion 	 * in case the disconnection results in node shutdown. 	 */
 if|if
 condition|(
@@ -4450,6 +4498,9 @@ name|int
 name|arg2
 parameter_list|)
 block|{
+name|hook_p
+name|peer
+decl_stmt|;
 comment|/* 	 * When we run, we know that the node 'node' is locked for us. 	 * Our caller has a reference on the hook. 	 * Our caller has a reference on the node. 	 * (In this case our caller is ng_apply_item() ). 	 * The peer hook has a reference on the hook. 	 * our node pointer points to the 'dead' node. 	 * First check the hook name is unique. 	 * Should not happen because we checked before queueing this. 	 */
 if|if
 condition|(
@@ -4609,19 +4660,60 @@ expr_stmt|;
 return|return ;
 block|}
 block|}
+comment|/* 	 * Acquire topo mutex to avoid race with ng_destroy_hook(). 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|ng_topo_mtx
+argument_list|)
+expr_stmt|;
+name|peer
+operator|=
+name|hook
+operator|->
+name|hk_peer
+expr_stmt|;
+if|if
+condition|(
+name|peer
+operator|==
+operator|&
+name|ng_deadhook
+condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ng_topo_mtx
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"failed in ng_con_part2(B)\n"
+argument_list|)
+expr_stmt|;
+name|ng_destroy_hook
+argument_list|(
+name|hook
+argument_list|)
+expr_stmt|;
+return|return ;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ng_topo_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ng_send_fn
 argument_list|(
-name|hook
-operator|->
-name|hk_peer
+name|peer
 operator|->
 name|hk_node
 argument_list|,
-name|hook
-operator|->
-name|hk_peer
+name|peer
 argument_list|,
 operator|&
 name|ng_con_part3
@@ -4634,7 +4726,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"failed in ng_con_part2(B)"
+literal|"failed in ng_con_part2(C)\n"
 argument_list|)
 expr_stmt|;
 name|ng_destroy_hook
@@ -6726,6 +6818,22 @@ name|item_p
 name|item
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|ngq
+operator|!=
+operator|&
+name|ng_deadnode
+operator|.
+name|nd_input_queue
+argument_list|,
+operator|(
+literal|"%s: working on deadnode"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* ######### Hack alert ######### */
 name|atomic_add_long
 argument_list|(
@@ -6862,6 +6970,22 @@ name|item_p
 name|item
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|ngq
+operator|!=
+operator|&
+name|ng_deadnode
+operator|.
+name|nd_input_queue
+argument_list|,
+operator|(
+literal|"%s: working on deadnode"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 name|restart
 label|:
 name|mtx_lock_spin
@@ -11153,6 +11277,18 @@ operator|&
 name|ng_idhash_mtx
 argument_list|,
 literal|"netgraph idhash mutex"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|ng_topo_mtx
+argument_list|,
+literal|"netgraph topology mutex"
 argument_list|,
 name|NULL
 argument_list|,
