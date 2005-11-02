@@ -2864,6 +2864,26 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * The data size limit may need to be changed to a value 	 * that makes sense for the 32 bit binary. 	 */
+if|if
+condition|(
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_fixlimits
+operator|!=
+name|NULL
+condition|)
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_fixlimits
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0

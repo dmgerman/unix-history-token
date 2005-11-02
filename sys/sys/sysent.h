@@ -23,6 +23,12 @@ end_include
 
 begin_struct_decl
 struct_decl|struct
+name|proc
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|thread
 struct_decl|;
 end_struct_decl
@@ -324,7 +330,7 @@ name|sv_fixlimits
 function_decl|)
 parameter_list|(
 name|struct
-name|image_params
+name|proc
 modifier|*
 parameter_list|)
 function_decl|;

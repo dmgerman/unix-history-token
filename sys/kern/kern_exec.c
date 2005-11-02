@@ -3572,7 +3572,7 @@ name|sv
 operator|->
 name|sv_fixlimits
 argument_list|(
-name|imgp
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Blow away entire process VM, if address space not shared, 	 * otherwise, create a new VM space so that other threads are 	 * not disrupted 	 */
