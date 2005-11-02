@@ -8388,12 +8388,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Enable interrupts. */
-name|ndis_enable_intr
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc

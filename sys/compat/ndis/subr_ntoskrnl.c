@@ -3066,7 +3066,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|NDIS_STATUS_FAILURE
+name|STATUS_INVALID_PARAMETER
 operator|)
 return|;
 name|dest
@@ -3244,7 +3244,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|NDIS_STATUS_FAILURE
+name|STATUS_INVALID_PARAMETER
 operator|)
 return|;
 if|if
@@ -12654,7 +12654,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|NDIS_STATUS_SUCCESS
+name|STATUS_SUCCESS
 operator|)
 return|;
 block|}
@@ -13598,7 +13598,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|NDIS_STATUS_FAILURE
+name|STATUS_INSUFFICIENT_RESOURCES
 operator|)
 return|;
 name|InitializeListHead
@@ -13674,7 +13674,7 @@ name|nr
 expr_stmt|;
 return|return
 operator|(
-name|NDIS_STATUS_SUCCESS
+name|STATUS_SUCCESS
 operator|)
 return|;
 block|}
@@ -13890,7 +13890,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|NDIS_STATUS_FAILURE
+name|STATUS_INSUFFICIENT_RESOURCES
 operator|)
 return|;
 name|tc
@@ -13932,6 +13932,24 @@ argument_list|,
 name|tname
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|free
+argument_list|(
+name|tc
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|STATUS_INSUFFICIENT_RESOURCES
+operator|)
+return|;
+block|}
 operator|*
 name|handle
 operator|=
@@ -13942,7 +13960,7 @@ operator|++
 expr_stmt|;
 return|return
 operator|(
-name|error
+name|STATUS_SUCCESS
 operator|)
 return|;
 block|}
