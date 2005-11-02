@@ -1117,7 +1117,7 @@ name|m0
 init|=
 name|m_gethdr
 argument_list|(
-name|MT_HEADER
+name|MT_DATA
 argument_list|,
 name|M_DONTWAIT
 argument_list|)

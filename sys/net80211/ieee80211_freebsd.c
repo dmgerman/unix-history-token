@@ -751,7 +751,7 @@ name|m_gethdr
 argument_list|(
 name|M_NOWAIT
 argument_list|,
-name|MT_HEADER
+name|MT_DATA
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Align the data in case additional headers are added. 		 * This should only happen when a WEP header is added 		 * which only happens for shared key authentication mgt 		 * frames which all fit in MHLEN. 		 */
@@ -776,7 +776,7 @@ name|m_getcl
 argument_list|(
 name|M_NOWAIT
 argument_list|,
-name|MT_HEADER
+name|MT_DATA
 argument_list|,
 name|M_PKTHDR
 argument_list|)

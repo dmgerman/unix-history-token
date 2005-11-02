@@ -8380,7 +8380,7 @@ name|mb_copy
 argument_list|,
 name|M_DONTWAIT
 argument_list|,
-name|MT_HEADER
+name|MT_DATA
 argument_list|)
 expr_stmt|;
 if|if
@@ -11849,7 +11849,7 @@ name|m
 argument_list|,
 name|M_DONTWAIT
 argument_list|,
-name|MT_HEADER
+name|MT_DATA
 argument_list|)
 expr_stmt|;
 if|if
@@ -13105,7 +13105,7 @@ name|mb_first
 argument_list|,
 name|M_DONTWAIT
 argument_list|,
-name|MT_HEADER
+name|MT_DATA
 argument_list|)
 expr_stmt|;
 if|if
@@ -13380,7 +13380,7 @@ name|mb_first
 argument_list|,
 name|M_DONTWAIT
 argument_list|,
-name|MT_HEADER
+name|MT_DATA
 argument_list|)
 expr_stmt|;
 if|if

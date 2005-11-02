@@ -5705,12 +5705,6 @@ operator|->
 name|m_type
 operator|==
 name|MT_DATA
-operator|||
-name|m
-operator|->
-name|m_type
-operator|==
-name|MT_HEADER
 argument_list|,
 operator|(
 literal|"m->m_type == %d"

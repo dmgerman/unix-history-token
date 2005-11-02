@@ -920,11 +920,11 @@ begin_define
 define|#
 directive|define
 name|MT_HEADER
-value|2
+value|MT_DATA
 end_define
 
 begin_comment
-comment|/* packet header */
+comment|/* packet header, use M_PKTHDR instead */
 end_comment
 
 begin_if
