@@ -3737,7 +3737,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* MASK for queue entry read/write */
+comment|/* MASK for wanted queue mode */
 end_comment
 
 begin_define
@@ -3748,7 +3748,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* queued as a reader */
+comment|/* wants to be a reader */
 end_comment
 
 begin_define
@@ -3759,7 +3759,40 @@ value|0x00
 end_define
 
 begin_comment
-comment|/* queued as a writer */
+comment|/* wants to be a writer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGQF_QMODE
+value|0x08
+end_define
+
+begin_comment
+comment|/* MASK for how it was queued */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGQF_QREADER
+value|0x08
+end_define
+
+begin_comment
+comment|/* was queued as a reader */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGQF_QWRITER
+value|0x00
+end_define
+
+begin_comment
+comment|/* was queued as a writer */
 end_comment
 
 begin_comment
@@ -4805,6 +4838,46 @@ name|h
 parameter_list|)
 define|\
 value|do {								\ 		(h) = NGI_HOOK(i);					\ 		_NGI_HOOK(i) = NULL;					\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NGI_SET_WRITER
+parameter_list|(
+name|i
+parameter_list|)
+value|((i)->el_flags&= ~NGQF_QMODE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NGI_SET_READER
+parameter_list|(
+name|i
+parameter_list|)
+value|((i)->el_flags |= NGQF_QREADER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NGI_QUEUED_READER
+parameter_list|(
+name|i
+parameter_list|)
+value|((i)->el_flags& NGQF_QREADER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NGI_QUEUED_WRITER
+parameter_list|(
+name|i
+parameter_list|)
+value|(((i)->el_flags& NGQF_QMODE) == NGQF_QWRITER)
 end_define
 
 begin_comment
