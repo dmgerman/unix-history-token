@@ -156,29 +156,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|VECTOR_EXTINT
-value|252
+name|IRQ_EXTINT
+value|(NUM_IO_INTS + 1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VECTOR_NMI
-value|253
+name|IRQ_NMI
+value|(NUM_IO_INTS + 2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VECTOR_SMI
-value|254
+name|IRQ_SMI
+value|(NUM_IO_INTS + 3)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VECTOR_DISABLED
-value|255
+name|IRQ_DISABLED
+value|(NUM_IO_INTS + 4)
 end_define
 
 begin_define
@@ -209,7 +209,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * New interrupt support code..  *  * XXX: we really should have the interrupt cookie passed up from new-bus  * just be a int pin, and not map 1:1 to interrupt vector number but should  * use INTR_TYPE_FOO to set priority bands for device classes and do all the  * magic remapping of intpin to vector in here.  For now we just cheat as on  * ia64 and map intpin X to vector NRSVIDT + X.  Note that we assume that the  * first IO APIC has ISA interrupts on pins 1-15.  Not sure how you are  * really supposed to figure out which IO APIC in a system with multiple IO  * APIC's actually has the ISA interrupts routed to it.  As far as interrupt  * pin numbers, we use the ACPI System Interrupt number model where each  * IO APIC has a contiguous chunk of the System Interrupt address space.  */
+comment|/*  * I/O APIC interrupt source driver.  Each pin is assigned an IRQ cookie  * as laid out in the ACPI System Interrupt number model where each I/O  * APIC has a contiguous chunk of the System Interrupt address space.  * We assume that IRQs 1 - 15 behave like ISA IRQs and that all other  * IRQs behave as PCI IRQs by default.  We also assume that the pin for  * IRQ 0 is actually an ExtINT pin.  The apic enumerators override the  * configuration of individual pins as indicated by their tables.  */
 end_comment
 
 begin_struct
@@ -219,6 +219,9 @@ block|{
 name|struct
 name|intsrc
 name|io_intsrc
+decl_stmt|;
+name|u_int
+name|io_irq
 decl_stmt|;
 name|u_int
 name|io_intpin
@@ -363,7 +366,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|ioapic_print_vector
+name|ioapic_print_irq
 parameter_list|(
 name|struct
 name|ioapic_intsrc
@@ -798,7 +801,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|ioapic_print_vector
+name|ioapic_print_irq
 parameter_list|(
 name|struct
 name|ioapic_intsrc
@@ -810,11 +813,11 @@ switch|switch
 condition|(
 name|intpin
 operator|->
-name|io_vector
+name|io_irq
 condition|)
 block|{
 case|case
-name|VECTOR_DISABLED
+name|IRQ_DISABLED
 case|:
 name|printf
 argument_list|(
@@ -823,7 +826,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|VECTOR_EXTINT
+name|IRQ_EXTINT
 case|:
 name|printf
 argument_list|(
@@ -832,7 +835,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|VECTOR_NMI
+name|IRQ_NMI
 case|:
 name|printf
 argument_list|(
@@ -841,7 +844,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|VECTOR_SMI
+name|IRQ_SMI
 case|:
 name|printf
 argument_list|(
@@ -863,7 +866,7 @@ argument_list|)
 argument_list|,
 name|intpin
 operator|->
-name|io_vector
+name|io_irq
 argument_list|)
 expr_stmt|;
 block|}
@@ -1160,16 +1163,36 @@ name|high
 decl_stmt|,
 name|value
 decl_stmt|;
-comment|/* For disabled pins, just ensure that they are masked. */
+comment|/* 	 * If a pin is completely invalid or if it is valid but hasn't 	 * been enabled yet, just ensure that the pin is masked. 	 */
 if|if
 condition|(
 name|intpin
 operator|->
+name|io_irq
+operator|==
+name|IRQ_DISABLED
+operator|||
+operator|(
+name|intpin
+operator|->
+name|io_irq
+operator|<
+name|NUM_IO_INTS
+operator|&&
+name|intpin
+operator|->
 name|io_vector
 operator|==
-name|VECTOR_DISABLED
+literal|0
+operator|)
 condition|)
 block|{
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|icu_lock
+argument_list|)
+expr_stmt|;
 name|low
 operator|=
 name|ioapic_read
@@ -1212,6 +1235,12 @@ argument_list|,
 name|low
 operator||
 name|IOART_INTMSET
+argument_list|)
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|icu_lock
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1303,11 +1332,11 @@ switch|switch
 condition|(
 name|intpin
 operator|->
-name|io_vector
+name|io_irq
 condition|)
 block|{
 case|case
-name|VECTOR_EXTINT
+name|IRQ_EXTINT
 case|:
 name|KASSERT
 argument_list|(
@@ -1326,7 +1355,7 @@ name|IOART_DELEXINT
 expr_stmt|;
 break|break;
 case|case
-name|VECTOR_NMI
+name|IRQ_NMI
 case|:
 name|KASSERT
 argument_list|(
@@ -1345,7 +1374,7 @@ name|IOART_DELNMI
 expr_stmt|;
 break|break;
 case|case
-name|VECTOR_SMI
+name|IRQ_SMI
 case|:
 name|KASSERT
 argument_list|(
@@ -1364,16 +1393,30 @@ name|IOART_DELSMI
 expr_stmt|;
 break|break;
 default|default:
-name|low
-operator||=
-name|IOART_DELLOPRI
-operator||
-name|apic_irq_to_idt
+name|KASSERT
 argument_list|(
 name|intpin
 operator|->
 name|io_vector
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"No vector for IRQ %u"
+operator|,
+name|intpin
+operator|->
+name|io_irq
+operator|)
 argument_list|)
+expr_stmt|;
+name|low
+operator||=
+name|IOART_DELLOPRI
+operator||
+name|intpin
+operator|->
+name|io_vector
 expr_stmt|;
 block|}
 comment|/* Write the values to the APIC. */
@@ -1511,7 +1554,7 @@ operator|->
 name|io_intpin
 argument_list|)
 expr_stmt|;
-name|ioapic_print_vector
+name|ioapic_print_irq
 argument_list|(
 name|intpin
 argument_list|)
@@ -1600,6 +1643,20 @@ operator|*
 operator|)
 name|isrc
 decl_stmt|;
+name|struct
+name|ioapic
+modifier|*
+name|io
+init|=
+operator|(
+expr|struct
+name|ioapic
+operator|*
+operator|)
+name|isrc
+operator|->
+name|is_pic
+decl_stmt|;
 if|if
 condition|(
 name|intpin
@@ -1609,12 +1666,62 @@ operator|==
 name|DEST_NONE
 condition|)
 block|{
+comment|/* 		 * Allocate an APIC vector for this interrupt pin.  Once 		 * we have a vector we program the interrupt pin.  Note 		 * that after we have booted ioapic_assign_cluster() 		 * will program the interrupt pin again, but it doesn't 		 * hurt to do that and trying to avoid that adds needless 		 * complication. 		 */
+name|intpin
+operator|->
+name|io_vector
+operator|=
+name|apic_alloc_vector
+argument_list|(
+name|intpin
+operator|->
+name|io_irq
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ioapic%u: routing intpin %u ("
+argument_list|,
+name|io
+operator|->
+name|io_id
+argument_list|,
+name|intpin
+operator|->
+name|io_intpin
+argument_list|)
+expr_stmt|;
+name|ioapic_print_irq
+argument_list|(
+name|intpin
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|") to vector %u\n"
+argument_list|,
+name|intpin
+operator|->
+name|io_vector
+argument_list|)
+expr_stmt|;
+block|}
+name|ioapic_program_intpin
+argument_list|(
+name|intpin
+argument_list|)
+expr_stmt|;
 name|ioapic_assign_cluster
 argument_list|(
 name|intpin
 argument_list|)
 expr_stmt|;
-name|lapic_enable_intr
+name|apic_enable_vector
 argument_list|(
 name|intpin
 operator|->
@@ -1654,7 +1761,7 @@ return|return
 operator|(
 name|pin
 operator|->
-name|io_vector
+name|io_irq
 operator|)
 return|;
 block|}
@@ -1683,6 +1790,17 @@ operator|*
 operator|)
 name|isrc
 decl_stmt|;
+if|if
+condition|(
+name|intpin
+operator|->
+name|io_vector
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 return|return
 operator|(
 name|lapic_intr_pending
@@ -2334,7 +2452,7 @@ name|i
 expr_stmt|;
 name|intpin
 operator|->
-name|io_vector
+name|io_irq
 operator|=
 name|intbase
 operator|+
@@ -2345,7 +2463,7 @@ if|if
 condition|(
 name|intpin
 operator|->
-name|io_vector
+name|io_irq
 operator|==
 literal|0
 condition|)
@@ -2361,7 +2479,7 @@ if|if
 condition|(
 name|intpin
 operator|->
-name|io_vector
+name|io_irq
 operator|<
 name|IOAPIC_ISA_INTS
 condition|)
@@ -2431,9 +2549,9 @@ name|bootverbose
 operator|&&
 name|intpin
 operator|->
-name|io_vector
+name|io_irq
 operator|!=
-name|VECTOR_DISABLED
+name|IRQ_DISABLED
 condition|)
 block|{
 name|printf
@@ -2447,7 +2565,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|ioapic_print_vector
+name|ioapic_print_irq
 argument_list|(
 name|intpin
 argument_list|)
@@ -2564,7 +2682,7 @@ index|[
 name|pin
 index|]
 operator|.
-name|io_vector
+name|io_irq
 operator|)
 return|;
 block|}
@@ -2618,9 +2736,9 @@ index|[
 name|pin
 index|]
 operator|.
-name|io_vector
+name|io_irq
 operator|==
-name|VECTOR_DISABLED
+name|IRQ_DISABLED
 condition|)
 return|return
 operator|(
@@ -2634,9 +2752,9 @@ index|[
 name|pin
 index|]
 operator|.
-name|io_vector
+name|io_irq
 operator|=
-name|VECTOR_DISABLED
+name|IRQ_DISABLED
 expr_stmt|;
 if|if
 condition|(
@@ -2716,7 +2834,7 @@ index|[
 name|pin
 index|]
 operator|.
-name|io_vector
+name|io_irq
 operator|>=
 name|NUM_IO_INTS
 condition|)
@@ -2732,7 +2850,7 @@ index|[
 name|pin
 index|]
 operator|.
-name|io_vector
+name|io_irq
 operator|=
 name|vector
 expr_stmt|;
@@ -2827,7 +2945,7 @@ index|[
 name|pin
 index|]
 operator|.
-name|io_vector
+name|io_irq
 operator|>=
 name|NUM_IO_INTS
 condition|)
@@ -2923,9 +3041,9 @@ index|[
 name|pin
 index|]
 operator|.
-name|io_vector
+name|io_irq
 operator|==
-name|VECTOR_NMI
+name|IRQ_NMI
 condition|)
 return|return
 operator|(
@@ -2941,7 +3059,7 @@ index|[
 name|pin
 index|]
 operator|.
-name|io_vector
+name|io_irq
 operator|>=
 name|NUM_IO_INTS
 condition|)
@@ -2968,9 +3086,9 @@ index|[
 name|pin
 index|]
 operator|.
-name|io_vector
+name|io_irq
 operator|=
-name|VECTOR_NMI
+name|IRQ_NMI
 expr_stmt|;
 name|io
 operator|->
@@ -3076,9 +3194,9 @@ index|[
 name|pin
 index|]
 operator|.
-name|io_vector
+name|io_irq
 operator|==
-name|VECTOR_SMI
+name|IRQ_SMI
 condition|)
 return|return
 operator|(
@@ -3094,7 +3212,7 @@ index|[
 name|pin
 index|]
 operator|.
-name|io_vector
+name|io_irq
 operator|>=
 name|NUM_IO_INTS
 condition|)
@@ -3121,9 +3239,9 @@ index|[
 name|pin
 index|]
 operator|.
-name|io_vector
+name|io_irq
 operator|=
-name|VECTOR_SMI
+name|IRQ_SMI
 expr_stmt|;
 name|io
 operator|->
@@ -3229,9 +3347,9 @@ index|[
 name|pin
 index|]
 operator|.
-name|io_vector
+name|io_irq
 operator|==
-name|VECTOR_EXTINT
+name|IRQ_EXTINT
 condition|)
 return|return
 operator|(
@@ -3247,7 +3365,7 @@ index|[
 name|pin
 index|]
 operator|.
-name|io_vector
+name|io_irq
 operator|>=
 name|NUM_IO_INTS
 condition|)
@@ -3274,9 +3392,9 @@ index|[
 name|pin
 index|]
 operator|.
-name|io_vector
+name|io_irq
 operator|=
-name|VECTOR_EXTINT
+name|IRQ_EXTINT
 expr_stmt|;
 if|if
 condition|(
@@ -3406,7 +3524,7 @@ index|[
 name|pin
 index|]
 operator|.
-name|io_vector
+name|io_irq
 operator|>=
 name|NUM_IO_INTS
 condition|)
@@ -3517,7 +3635,7 @@ index|[
 name|pin
 index|]
 operator|.
-name|io_vector
+name|io_irq
 operator|>=
 name|NUM_IO_INTS
 condition|)
@@ -3692,6 +3810,7 @@ argument_list|(
 name|apic_id
 argument_list|)
 expr_stmt|;
+comment|/* Register valid pins as interrupt sources. */
 for|for
 control|(
 name|i
@@ -3716,31 +3835,14 @@ operator|,
 name|pin
 operator|++
 control|)
-block|{
-comment|/* 		 * Finish initializing the pins by programming the vectors 		 * and delivery mode. 		 */
 if|if
 condition|(
 name|pin
 operator|->
-name|io_vector
-operator|==
-name|VECTOR_DISABLED
-condition|)
-continue|continue;
-name|ioapic_program_intpin
-argument_list|(
-name|pin
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|pin
-operator|->
-name|io_vector
-operator|>=
+name|io_irq
+operator|<
 name|NUM_IO_INTS
 condition|)
-continue|continue;
 name|intr_register_source
 argument_list|(
 operator|&
@@ -3749,7 +3851,6 @@ operator|->
 name|io_intsrc
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
