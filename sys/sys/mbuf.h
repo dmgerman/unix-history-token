@@ -706,12 +706,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EXT_PACKET
+name|EXT_JUMBO9
 value|3
 end_define
 
 begin_comment
-comment|/* came out of Packet zone */
+comment|/* jumbo cluster 9216 bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_JUMBO16
+value|4
+end_define
+
+begin_comment
+comment|/* jumbo cluster 16184 bytes */
 end_comment
 
 begin_define
@@ -1103,6 +1114,17 @@ begin_comment
 comment|/* number of mbuf types for mbtypes[] */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MT_NOINIT
+value|255
+end_define
+
+begin_comment
+comment|/* Not a type but a flag to allocate 				   a non-initialized mbuf */
+end_comment
+
 begin_comment
 comment|/*  * General mbuf allocator statistics structure.  */
 end_comment
@@ -1235,8 +1257,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|MBUF_JUMBO9_MEM_NAME
+value|"mbuf_jumbo_9k"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBUF_JUMBO16_MEM_NAME
+value|"mbuf_jumbo_16k"
+end_define
+
+begin_define
+define|#
+directive|define
 name|MBUF_TAG_MEM_NAME
 value|"mbuf_tag"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBUF_EXTREFCNT_MEM_NAME
+value|"mbuf_ext_refcnt"
 end_define
 
 begin_ifdef
@@ -1244,40 +1287,6 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
-
-begin_comment
-comment|/*-  * mbuf external reference count management macros.  *  * MEXT_IS_REF(m): true if (m) is not the only mbuf referencing  *     the external buffer ext_buf.  *  * MEXT_REM_REF(m): remove reference to m_ext object.  *  * MEXT_ADD_REF(m): add reference to m_ext object already  *     referred to by (m).  XXX Note that it is VERY important that you  *     always set the second mbuf's m_ext.ref_cnt to point to the first  *     one's (i.e., n->m_ext.ref_cnt = m->m_ext.ref_cnt) AFTER you run  *     MEXT_ADD_REF(m).  This is because m might have a lazy initialized  *     ref_cnt (NULL) before this is run and it will only be looked up  *     from here.  We should make MEXT_ADD_REF() always take two mbufs  *     as arguments so that it can take care of this itself.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MEXT_IS_REF
-parameter_list|(
-name|m
-parameter_list|)
-value|(((m)->m_ext.ref_cnt != NULL)			\&& (*((m)->m_ext.ref_cnt)> 1))
-end_define
-
-begin_define
-define|#
-directive|define
-name|MEXT_REM_REF
-parameter_list|(
-name|m
-parameter_list|)
-value|do {						\ 	KASSERT((m)->m_ext.ref_cnt != NULL, ("m_ext refcnt lazy NULL")); \ 	KASSERT(*((m)->m_ext.ref_cnt)> 0, ("m_ext refcnt< 0"));	\ 	atomic_subtract_int((m)->m_ext.ref_cnt, 1);			\ } while(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MEXT_ADD_REF
-parameter_list|(
-name|m
-parameter_list|)
-value|do {						\ 	if ((m)->m_ext.ref_cnt == NULL) {				\ 		KASSERT((m)->m_ext.ext_type == EXT_CLUSTER ||		\ 		    (m)->m_ext.ext_type == EXT_PACKET,			\ 		    ("Unexpected mbuf type has lazy refcnt"));		\ 		(m)->m_ext.ref_cnt = (u_int *)uma_find_refcnt(		\ 		    zone_clust, (m)->m_ext.ext_buf);			\ 		*((m)->m_ext.ref_cnt) = 2;				\ 	} else								\ 		atomic_add_int((m)->m_ext.ref_cnt, 1);			\ } while (0)
-end_define
 
 begin_ifdef
 ifdef|#
@@ -1292,7 +1301,7 @@ name|MBUF_CHECKSLEEP
 parameter_list|(
 name|how
 parameter_list|)
-value|do {					\ 	if (how == M_WAITOK)						\ 		WITNESS_WARN(WARN_GIANTOK | WARN_SLEEPOK, NULL,		\ 		    "Sleeping in \"%s\"", __func__);			\ } while(0)
+value|do {					\ 	if (how == M_WAITOK)						\ 		WITNESS_WARN(WARN_GIANTOK | WARN_SLEEPOK, NULL,		\ 		    "Sleeping in \"%s\"", __func__);			\ } while (0)
 end_define
 
 begin_else
@@ -1336,6 +1345,27 @@ begin_decl_stmt
 specifier|extern
 name|uma_zone_t
 name|zone_pack
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|uma_zone_t
+name|zone_jumbo9
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|uma_zone_t
+name|zone_jumbo16
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|uma_zone_t
+name|zone_ext_refcnt
 decl_stmt|;
 end_decl_stmt
 
@@ -1693,17 +1723,6 @@ name|m
 operator|->
 name|m_next
 block|;
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-name|m
-operator|->
-name|m_flags
-operator||=
-name|M_FREELIST
-block|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|m
@@ -1748,6 +1767,23 @@ name|int
 name|how
 parameter_list|)
 block|{
+if|if
+condition|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_EXT
+condition|)
+name|printf
+argument_list|(
+literal|"%s: %p mbuf already has cluster\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
 name|m
 operator|->
 name|m_ext
@@ -1886,10 +1922,11 @@ name|M_WRITABLE
 parameter_list|(
 name|m
 parameter_list|)
-value|(!((m)->m_flags& M_RDONLY)&& (!((m)->m_flags  \& M_EXT) || !MEXT_IS_REF(m)))
+value|(!((m)->m_flags& M_RDONLY)&&			\ 			 (!(((m)->m_flags& M_EXT)) ||			\ 			 (*((m)->m_ext.ref_cnt) == 1)) )
 end_define
 
 begin_comment
+unit|\
 comment|/* Check if the supplied mbuf has a packet header, or else panic. */
 end_comment
 
@@ -1908,6 +1945,10 @@ begin_comment
 comment|/* Ensure that the supplied mbuf is a valid, non-free mbuf. */
 end_comment
 
+begin_comment
+comment|/* XXX: Broken at the moment.  Need some UMA magic to make it work again. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1916,7 +1957,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|KASSERT((((struct mbuf *)m)->m_flags& M_FREELIST) == 0,	\ 	    ("%s: attempted use of a free mbuf!", __func__))
+value|KASSERT((((struct mbuf *)m)->m_flags& 0) == 0,			\ 	    ("%s: attempted use of a free mbuf!", __func__))
 end_define
 
 begin_comment
