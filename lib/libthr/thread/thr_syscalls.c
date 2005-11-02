@@ -555,11 +555,6 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-name|curthread
-operator|=
-name|_get_curthread
-argument_list|()
-expr_stmt|;
 name|oldcancel
 operator|=
 name|_thr_cancel_enter
