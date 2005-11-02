@@ -1684,7 +1684,17 @@ argument|*prev = NULL; 	ndis_buffer		*buf; 	ndis_packet_private	*priv; 	uint32_t
 literal|0
 argument|; 	struct ifnet		*ifp; 	struct ether_header	*eh; 	int			diff;  	if (p == NULL || m0 == NULL) 		return(EINVAL);  	priv =&p->np_private; 	buf = priv->npp_head; 	p->np_refcnt =
 literal|0
-argument|;  	for (buf = priv->npp_head; buf != NULL; buf = buf->mdl_next) { 		if (buf == priv->npp_head) 			MGETHDR(m, M_DONTWAIT, MT_HEADER); 		else 			MGET(m, M_DONTWAIT, MT_DATA); 		if (m == NULL) { 			m_freem(*m0); 			*m0 = NULL; 			return(ENOBUFS); 		} 		m->m_len = MmGetMdlByteCount(buf); 		m->m_data = MmGetMdlVirtualAddress(buf); 		MEXTADD(m, m->m_data, m->m_len, ndis_return_packet, 		    p,
+argument|;  	for (buf = priv->npp_head; buf != NULL; buf = buf->mdl_next) { 		if (buf == priv->npp_head)
+ifdef|#
+directive|ifdef
+name|MT_HEADER
+argument|MGETHDR(m, M_DONTWAIT, MT_HEADER);
+else|#
+directive|else
+argument|MGETHDR(m, M_DONTWAIT, MT_DATA);
+endif|#
+directive|endif
+argument|else 			MGET(m, M_DONTWAIT, MT_DATA); 		if (m == NULL) { 			m_freem(*m0); 			*m0 = NULL; 			return(ENOBUFS); 		} 		m->m_len = MmGetMdlByteCount(buf); 		m->m_data = MmGetMdlVirtualAddress(buf); 		MEXTADD(m, m->m_data, m->m_len, ndis_return_packet, 		    p,
 literal|0
 argument|, EXT_NDIS); 		p->np_refcnt++;  		totlen += m->m_len; 		if (m->m_flags& M_PKTHDR) 			*m0 = m; 		else 			prev->m_next = m; 		prev = m; 	}
 comment|/* 	 * This is a hack to deal with the Marvell 8335 driver 	 * which, when associated with an AP in WPA-PSK mode, 	 * seems to overpad its frames by 8 bytes. I don't know 	 * that the extra 8 bytes are for, and they're not there 	 * in open mode, so for now clamp the frame size at 1514 	 * until I can figure out how to deal with this properly, 	 * otherwise if_ethersubr() will spank us by discarding 	 * the 'oversize' frames. 	 */
@@ -1788,10 +1798,6 @@ comment|/* 	 * This may look really goofy, but apparently it is possible 	 * to 
 argument|tsleep(curthread->td_proc, PWAIT,
 literal|"ndwait"
 argument|, hz);  	NDIS_LOCK(sc); 	sc->ndis_block->nmb_devicectx = sc; 	NDIS_UNLOCK(sc);  	return(
-literal|0
-argument|); }  void ndis_enable_intr(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	ndis_enable_interrupts_handler	intrenbfunc;  	sc = arg; 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	intrenbfunc = sc->ndis_chars->nmc_enable_interrupts_func; 	if (adapter == NULL || intrenbfunc == NULL) 		return; 	MSCALL1(intrenbfunc, adapter);  	return; }  void ndis_disable_intr(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	ndis_disable_interrupts_handler	intrdisfunc;  	sc = arg; 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	intrdisfunc = sc->ndis_chars->nmc_disable_interrupts_func; 	if (adapter == NULL || intrdisfunc == NULL) 	    return;  	MSCALL1(intrdisfunc, adapter);  	return; }  int ndis_isr(arg, ourintr, callhandler) 	void			*arg; 	int			*ourintr; 	int			*callhandler; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	ndis_isr_handler	isrfunc; 	uint8_t			accepted
-argument_list|,
-argument|queue;  	if (arg == NULL || ourintr == NULL || callhandler == NULL) 		return(EINVAL);  	sc = arg; 	adapter = sc->ndis_block->nmb_miniportadapterctx; 	isrfunc = sc->ndis_chars->nmc_isr_func;  	if (adapter == NULL || isrfunc == NULL) 		return(ENXIO);  	MSCALL3(isrfunc,&accepted,&queue, adapter);  	*ourintr = accepted; 	*callhandler = queue;  	return(
 literal|0
 argument|); }  static void ndis_intrsetup(dpc, dobj, ip, sc) 	kdpc			*dpc; 	device_object		*dobj; 	irp			*ip; 	struct ndis_softc	*sc; { 	ndis_miniport_interrupt	*intr;  	intr = sc->ndis_block->nmb_interrupt;
 comment|/* Sanity check. */
