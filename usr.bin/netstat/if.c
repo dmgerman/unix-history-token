@@ -584,7 +584,7 @@ name|sprintf
 argument_list|(
 name|newfmt
 argument_list|,
-literal|"%%%ds"
+literal|"%%%ds "
 argument_list|,
 name|width
 argument_list|)
@@ -637,7 +637,7 @@ name|sprintf
 argument_list|(
 name|newfmt
 argument_list|,
-literal|"%%%ds"
+literal|"%%%ds "
 argument_list|,
 name|width
 argument_list|)
@@ -657,7 +657,7 @@ name|sprintf
 argument_list|(
 name|newfmt
 argument_list|,
-literal|"%%%d%s"
+literal|"%%%d%s "
 argument_list|,
 name|width
 argument_list|,
@@ -1954,11 +1954,6 @@ operator||
 name|network_layer
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|" "
-argument_list|)
-expr_stmt|;
 name|show_stat
 argument_list|(
 literal|"lu"
@@ -1970,16 +1965,10 @@ argument_list|,
 name|link_layer
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|" "
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|bflag
 condition|)
-block|{
 name|show_stat
 argument_list|(
 literal|"lu"
@@ -1993,12 +1982,6 @@ operator||
 name|network_layer
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|" "
-argument_list|)
-expr_stmt|;
-block|}
 name|show_stat
 argument_list|(
 literal|"lu"
@@ -2012,11 +1995,6 @@ operator||
 name|network_layer
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|" "
-argument_list|)
-expr_stmt|;
 name|show_stat
 argument_list|(
 literal|"lu"
@@ -2028,16 +2006,10 @@ argument_list|,
 name|link_layer
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|" "
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|bflag
 condition|)
-block|{
 name|show_stat
 argument_list|(
 literal|"lu"
@@ -2051,12 +2023,6 @@ operator||
 name|network_layer
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|" "
-argument_list|)
-expr_stmt|;
-block|}
 name|show_stat
 argument_list|(
 literal|"lu"
@@ -2072,12 +2038,6 @@ if|if
 condition|(
 name|tflag
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|" "
-argument_list|)
-expr_stmt|;
 name|show_stat
 argument_list|(
 literal|"d"
@@ -2089,17 +2049,10 @@ argument_list|,
 name|link_layer
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|dflag
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|" "
-argument_list|)
-expr_stmt|;
 name|show_stat
 argument_list|(
 literal|"d"
@@ -2111,7 +2064,6 @@ argument_list|,
 name|link_layer
 argument_list|)
 expr_stmt|;
-block|}
 name|putchar
 argument_list|(
 literal|'\n'
@@ -2789,6 +2741,23 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|interface
+operator|&&
+name|interesting
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: unknown interface"
+argument_list|,
+name|interface
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|total
 operator|=
@@ -3014,9 +2983,11 @@ operator|!
 name|first
 condition|)
 block|{
-name|printf
+name|show_stat
 argument_list|(
-literal|"%10lu %5lu %10lu %10lu %5lu %10lu %5lu"
+literal|"lu"
+argument_list|,
+literal|10
 argument_list|,
 name|ifnet
 operator|.
@@ -3026,6 +2997,15 @@ name|ip
 operator|->
 name|ift_ip
 argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|show_stat
+argument_list|(
+literal|"lu"
+argument_list|,
+literal|5
+argument_list|,
 name|ifnet
 operator|.
 name|if_ierrors
@@ -3033,6 +3013,15 @@ operator|-
 name|ip
 operator|->
 name|ift_ie
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|show_stat
+argument_list|(
+literal|"lu"
+argument_list|,
+literal|10
 argument_list|,
 name|ifnet
 operator|.
@@ -3042,6 +3031,15 @@ name|ip
 operator|->
 name|ift_ib
 argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|show_stat
+argument_list|(
+literal|"lu"
+argument_list|,
+literal|10
+argument_list|,
 name|ifnet
 operator|.
 name|if_opackets
@@ -3049,6 +3047,15 @@ operator|-
 name|ip
 operator|->
 name|ift_op
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|show_stat
+argument_list|(
+literal|"lu"
+argument_list|,
+literal|5
 argument_list|,
 name|ifnet
 operator|.
@@ -3058,6 +3065,15 @@ name|ip
 operator|->
 name|ift_oe
 argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|show_stat
+argument_list|(
+literal|"lu"
+argument_list|,
+literal|10
+argument_list|,
 name|ifnet
 operator|.
 name|if_obytes
@@ -3066,6 +3082,15 @@ name|ip
 operator|->
 name|ift_ob
 argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|show_stat
+argument_list|(
+literal|"lu"
+argument_list|,
+literal|5
+argument_list|,
 name|ifnet
 operator|.
 name|if_collisions
@@ -3073,15 +3098,19 @@ operator|-
 name|ip
 operator|->
 name|ift_co
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|dflag
 condition|)
-name|printf
+name|show_stat
 argument_list|(
-literal|" %5u"
+literal|"u"
+argument_list|,
+literal|5
 argument_list|,
 name|ifnet
 operator|.
@@ -3092,6 +3121,8 @@ operator|-
 name|ip
 operator|->
 name|ift_dr
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -3353,9 +3384,11 @@ operator|!
 name|first
 condition|)
 block|{
-name|printf
+name|show_stat
 argument_list|(
-literal|"%10lu %5lu %10lu %10lu %5lu %10lu %5lu"
+literal|"lu"
+argument_list|,
+literal|10
 argument_list|,
 name|sum
 operator|->
@@ -3365,6 +3398,15 @@ name|total
 operator|->
 name|ift_ip
 argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|show_stat
+argument_list|(
+literal|"lu"
+argument_list|,
+literal|5
+argument_list|,
 name|sum
 operator|->
 name|ift_ie
@@ -3372,6 +3414,15 @@ operator|-
 name|total
 operator|->
 name|ift_ie
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|show_stat
+argument_list|(
+literal|"lu"
+argument_list|,
+literal|10
 argument_list|,
 name|sum
 operator|->
@@ -3381,6 +3432,15 @@ name|total
 operator|->
 name|ift_ib
 argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|show_stat
+argument_list|(
+literal|"lu"
+argument_list|,
+literal|10
+argument_list|,
 name|sum
 operator|->
 name|ift_op
@@ -3388,6 +3448,15 @@ operator|-
 name|total
 operator|->
 name|ift_op
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|show_stat
+argument_list|(
+literal|"lu"
+argument_list|,
+literal|5
 argument_list|,
 name|sum
 operator|->
@@ -3397,6 +3466,15 @@ name|total
 operator|->
 name|ift_oe
 argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|show_stat
+argument_list|(
+literal|"lu"
+argument_list|,
+literal|10
+argument_list|,
 name|sum
 operator|->
 name|ift_ob
@@ -3405,6 +3483,15 @@ name|total
 operator|->
 name|ift_ob
 argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|show_stat
+argument_list|(
+literal|"lu"
+argument_list|,
+literal|5
+argument_list|,
 name|sum
 operator|->
 name|ift_co
@@ -3412,15 +3499,19 @@ operator|-
 name|total
 operator|->
 name|ift_co
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|dflag
 condition|)
-name|printf
+name|show_stat
 argument_list|(
-literal|" %5u"
+literal|"u"
+argument_list|,
+literal|5
 argument_list|,
 name|sum
 operator|->
@@ -3429,6 +3520,8 @@ operator|-
 name|total
 operator|->
 name|ift_dr
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
