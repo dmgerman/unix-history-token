@@ -15088,6 +15088,14 @@ operator|.
 name|bv_cnt
 operator|==
 literal|0
+operator|&&
+name|vp
+operator|->
+name|v_bufobj
+operator|.
+name|bo_numoutput
+operator|==
+literal|0
 condition|)
 name|np
 operator|->
