@@ -2493,6 +2493,12 @@ condition|(
 name|sd
 operator|!=
 name|NULL
+operator|&&
+name|sd
+operator|->
+name|mixer_dev
+operator|!=
+name|NULL
 condition|)
 block|{
 operator|*

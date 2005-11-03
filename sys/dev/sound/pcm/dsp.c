@@ -5389,6 +5389,12 @@ if|if
 condition|(
 operator|(
 name|pdev
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
+name|pdev
 operator|->
 name|si_drv1
 operator|==
