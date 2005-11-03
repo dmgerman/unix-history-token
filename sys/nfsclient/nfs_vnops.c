@@ -4458,7 +4458,7 @@ operator|!=
 name|NULLVP
 condition|)
 block|{
-name|vrele
+name|vput
 argument_list|(
 name|newvp
 argument_list|)
