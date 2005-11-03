@@ -2571,13 +2571,13 @@ name|P_TRACED
 condition|)
 name|tdsignal
 argument_list|(
+name|p
+argument_list|,
 name|td
 argument_list|,
 name|SIGTRAP
 argument_list|,
 name|NULL
-argument_list|,
-name|SIGTARGET_TD
 argument_list|)
 expr_stmt|;
 comment|/* clear "fork but no exec" flag, as we _are_ execing */

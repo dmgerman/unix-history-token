@@ -937,6 +937,8 @@ argument_list|)
 expr_stmt|;
 name|tdsignal
 argument_list|(
+name|p
+argument_list|,
 name|td2
 argument_list|,
 operator|(
@@ -947,8 +949,6 @@ operator|->
 name|data
 argument_list|,
 name|NULL
-argument_list|,
-name|SIGTARGET_TD
 argument_list|)
 expr_stmt|;
 block|}
