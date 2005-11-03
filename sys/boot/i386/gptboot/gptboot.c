@@ -324,7 +324,7 @@ begin_define
 define|#
 directive|define
 name|RBX_MASK
-value|0x2011ffff
+value|(OPT_SET(RBX_ASKNAME) | OPT_SET(RBX_SINGLE) | \ 			OPT_SET(RBX_DFLTROOT) | OPT_SET(RBX_KDB ) | \ 			OPT_SET(RBX_CONFIG) | OPT_SET(RBX_VERBOSE) | \ 			OPT_SET(RBX_SERIAL) | OPT_SET(RBX_CDROM) | \ 			OPT_SET(RBX_GDB ) | OPT_SET(RBX_MUTE) | \ 			OPT_SET(RBX_PAUSE) | OPT_SET(RBX_DUAL))
 end_define
 
 begin_define
@@ -448,11 +448,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|OPT_SET
+parameter_list|(
+name|opt
+parameter_list|)
+value|(1<< (opt))
+end_define
+
+begin_define
+define|#
+directive|define
 name|OPT_CHECK
 parameter_list|(
 name|opt
 parameter_list|)
-value|((opts>> (opt))& 1)
+value|((opts)& OPT_SET(opt))
 end_define
 
 begin_decl_stmt
@@ -2410,13 +2420,15 @@ else|else
 block|{
 name|opts
 operator||=
-literal|1
-operator|<<
+name|OPT_SET
+argument_list|(
 name|RBX_DUAL
+argument_list|)
 operator||
-literal|1
-operator|<<
+name|OPT_SET
+argument_list|(
 name|RBX_SERIAL
+argument_list|)
 expr_stmt|;
 name|cp
 operator|=
@@ -2520,21 +2532,21 @@ literal|1
 return|;
 name|opts
 operator|^=
-literal|1
-operator|<<
+name|OPT_SET
+argument_list|(
 name|flags
 index|[
 name|i
 index|]
+argument_list|)
 expr_stmt|;
 block|}
 name|ioctrl
 operator|=
-name|opts
-operator|&
-literal|1
-operator|<<
+name|OPT_CHECK
+argument_list|(
 name|RBX_DUAL
+argument_list|)
 condition|?
 operator|(
 name|IO_SERIAL
@@ -2542,11 +2554,10 @@ operator||
 name|IO_KEYBOARD
 operator|)
 else|:
-name|opts
-operator|&
-literal|1
-operator|<<
+name|OPT_CHECK
+argument_list|(
 name|RBX_SERIAL
+argument_list|)
 condition|?
 name|IO_SERIAL
 else|:
