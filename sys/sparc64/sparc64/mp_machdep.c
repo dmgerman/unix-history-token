@@ -162,6 +162,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/smp.h>
 end_include
 
@@ -233,6 +239,16 @@ begin_decl_stmt
 name|struct
 name|ipi_tlb_args
 name|ipi_tlb_args
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|pcb
+name|stoppcbs
+index|[
+name|MAXCPU
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -1714,6 +1730,18 @@ name|PCPU_GET
 argument_list|(
 name|cpuid
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|savectx
+argument_list|(
+operator|&
+name|stoppcbs
+index|[
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+index|]
 argument_list|)
 expr_stmt|;
 name|atomic_set_acq_int

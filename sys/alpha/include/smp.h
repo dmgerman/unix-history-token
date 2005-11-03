@@ -73,6 +73,15 @@ name|boot_cpu_id
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pcb
+name|stoppcbs
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|ipi_selected

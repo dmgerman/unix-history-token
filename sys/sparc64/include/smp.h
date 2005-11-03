@@ -178,6 +178,15 @@ name|pcpu
 struct_decl|;
 end_struct_decl
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pcb
+name|stoppcbs
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|cpu_mp_bootstrap
