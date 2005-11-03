@@ -1505,8 +1505,6 @@ goto|;
 block|}
 name|tdsignal
 argument_list|(
-name|p
-argument_list|,
 name|ttd
 argument_list|,
 name|uap
@@ -1514,6 +1512,8 @@ operator|->
 name|sig
 argument_list|,
 name|NULL
+argument_list|,
+name|SIGTARGET_TD
 argument_list|)
 expr_stmt|;
 name|out
