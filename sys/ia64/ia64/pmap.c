@@ -5470,9 +5470,6 @@ decl_stmt|;
 name|pv_entry_t
 name|pv
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -5502,10 +5499,13 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|s
-operator|=
-name|splvm
-argument_list|()
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -5628,12 +5628,6 @@ argument_list|,
 name|PG_WRITEABLE
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6905,9 +6899,6 @@ name|loops
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 if|if
 condition|(
 name|m
@@ -6919,12 +6910,15 @@ condition|)
 return|return
 name|FALSE
 return|;
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Not found, check current mappings returning immediately if found. 	 */
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|pv
@@ -6943,11 +6937,6 @@ operator|==
 name|pmap
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 name|TRUE
 return|;
@@ -6963,11 +6952,6 @@ literal|16
 condition|)
 break|break;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|FALSE
