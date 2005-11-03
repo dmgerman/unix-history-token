@@ -4981,6 +4981,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|thread
+modifier|*
+name|thread_find
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|lwpid_t
+name|tid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|thr_exit1
 parameter_list|(
