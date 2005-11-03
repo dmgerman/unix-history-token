@@ -1362,6 +1362,9 @@ case|:
 case|case
 name|IFT_L2VLAN
 case|:
+case|case
+name|IFT_BRIDGE
+case|:
 return|return
 operator|(
 literal|1
@@ -2848,6 +2851,12 @@ operator|->
 name|sdl_type
 operator|==
 name|IFT_L2VLAN
+operator|||
+name|sdl
+operator|->
+name|sdl_type
+operator|==
+name|IFT_BRIDGE
 operator|)
 operator|&&
 name|sdl
@@ -3150,6 +3159,15 @@ case|:
 name|printf
 argument_list|(
 literal|" [firewire]"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IFT_BRIDGE
+case|:
+name|printf
+argument_list|(
+literal|" [bridge]"
 argument_list|)
 expr_stmt|;
 break|break;
