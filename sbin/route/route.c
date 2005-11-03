@@ -4116,16 +4116,24 @@ name|ENOBUFS
 case|:
 name|err
 operator|=
-literal|"routing table overflow"
+literal|"not enough memory"
 expr_stmt|;
 break|break;
 case|case
-name|EDQUOT
+name|EADDRINUSE
 case|:
 comment|/* handle recursion avoidance in rt_setgate() */
 name|err
 operator|=
 literal|"gateway uses the same route"
+expr_stmt|;
+break|break;
+case|case
+name|EEXIST
+case|:
+name|err
+operator|=
+literal|"route already in table"
 expr_stmt|;
 break|break;
 default|default:
