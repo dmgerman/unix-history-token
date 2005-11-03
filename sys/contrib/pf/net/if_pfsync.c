@@ -1722,6 +1722,12 @@ operator|=
 name|r
 expr_stmt|;
 comment|/* XXX get pointers to nat_rule and anchor */
+comment|/* XXX when we have nat_rule/anchors, use STATE_INC_COUNTERS */
+name|r
+operator|->
+name|states
+operator|++
+expr_stmt|;
 comment|/* fill in the rest of the state entry */
 name|pf_state_host_ntoh
 argument_list|(
@@ -1815,14 +1821,14 @@ name|st
 operator|->
 name|creation
 operator|=
+name|time_second
+operator|-
 name|ntohl
 argument_list|(
 name|sp
 operator|->
 name|creation
 argument_list|)
-operator|+
-name|time_second
 expr_stmt|;
 name|st
 operator|->
@@ -1970,6 +1976,12 @@ name|pfi_maybe_destroy
 argument_list|(
 name|kif
 argument_list|)
+expr_stmt|;
+comment|/* XXX when we have nat_rule/anchors, use STATE_DEC_COUNTERS */
+name|r
+operator|->
+name|states
+operator|--
 expr_stmt|;
 name|pool_put
 argument_list|(
