@@ -4029,6 +4029,9 @@ operator|(
 name|ACPI_HANDLE
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 operator|&
 name|TempNode
 argument_list|)
