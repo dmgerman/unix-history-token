@@ -613,8 +613,17 @@ name|struct
 name|rtentry
 modifier|*
 name|rt
+init|=
+name|NULL
 decl_stmt|;
 comment|/*   			 * check route 			 */
+if|if
+condition|(
+name|rt0
+operator|!=
+name|NULL
+condition|)
+block|{
 name|error
 operator|=
 name|rt_check
@@ -635,6 +644,12 @@ condition|)
 goto|goto
 name|bad
 goto|;
+name|RT_UNLOCK
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|dst
