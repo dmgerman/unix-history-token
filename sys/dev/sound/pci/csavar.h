@@ -247,6 +247,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|csa_resetdsp
+parameter_list|(
+name|csa_res
+modifier|*
+name|resp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
