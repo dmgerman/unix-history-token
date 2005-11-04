@@ -835,6 +835,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|ip6_mcast_pmtu
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* enable pMTU discovery for multicast? */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|ip6_v6only
 decl_stmt|;
 end_decl_stmt

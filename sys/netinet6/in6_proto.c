@@ -1386,6 +1386,18 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|ip6_mcast_pmtu
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* enable pMTU discovery for multicast? */
+end_comment
+
+begin_decl_stmt
+name|int
 name|ip6_v6only
 init|=
 literal|1
@@ -2427,6 +2439,27 @@ name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|ip6_maxfrags
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet6_ip6
+argument_list|,
+name|IPV6CTL_MCAST_PMTU
+argument_list|,
+name|mcast_pmtu
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ip6_mcast_pmtu
 argument_list|,
 literal|0
 argument_list|,

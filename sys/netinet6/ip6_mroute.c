@@ -164,6 +164,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/icmp6.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/ip6.h>
 end_include
 
@@ -6422,9 +6428,11 @@ directive|endif
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|MULTICAST_PMTUD
+comment|/* 		 * pMTU discovery is intentionally disabled by default, since 		 * various router may notify pMTU in multicast, which can be 		 * a DDoS to a router 		 */
+if|if
+condition|(
+name|ip6_mcast_pmtu
+condition|)
 name|icmp6_error
 argument_list|(
 name|mb_copy
@@ -6436,8 +6444,8 @@ argument_list|,
 name|linkmtu
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+else|else
+block|{
 ifdef|#
 directive|ifdef
 name|MRT6DEBUG
@@ -6451,8 +6459,8 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"phyint_send: packet too big on %s o %s g %s"
-literal|" size %d(discarded)\n"
+literal|"phyint_send: packet too big on %s o %s "
+literal|"g %s size %d(discarded)\n"
 argument_list|,
 name|if_name
 argument_list|(
@@ -6491,8 +6499,7 @@ name|mb_copy
 argument_list|)
 expr_stmt|;
 comment|/* simply discard the packet */
-endif|#
-directive|endif
+block|}
 block|}
 name|splx
 argument_list|(

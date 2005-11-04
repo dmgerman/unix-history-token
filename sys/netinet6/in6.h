@@ -2514,16 +2514,56 @@ begin_comment
 comment|/* max fragments */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|IPV6CTL_IFQ
+value|42
+end_define
+
+begin_comment
+comment|/* ip6intrq node */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6CTL_ISATAPRTR
+value|43
+end_define
+
+begin_comment
+comment|/* isatap router */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|IPV6CTL_MCAST_PMTU
+value|44
+end_define
+
+begin_comment
+comment|/* enable pMTU discovery for multicast? */
+end_comment
+
 begin_comment
 comment|/* New entries should be added here from current IPV6CTL_MAXID value. */
 end_comment
 
 begin_comment
 comment|/* to define items, should talk with KAME guys first, for *BSD compatibility */
-end_comment
-
-begin_comment
-comment|/* 42-44 is already used in KAME */
 end_comment
 
 begin_define
