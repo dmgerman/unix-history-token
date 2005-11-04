@@ -4135,7 +4135,7 @@ name|src
 operator|->
 name|si_value
 operator|.
-name|sigval_int
+name|sival_int
 expr_stmt|;
 name|dst
 operator|->
