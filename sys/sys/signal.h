@@ -713,11 +713,11 @@ name|sigval
 block|{
 comment|/* Members as suggested by Annex C of POSIX 1003.1b. */
 name|int
-name|sigval_int
+name|sival_int
 decl_stmt|;
 name|void
 modifier|*
-name|sigval_ptr
+name|sival_ptr
 decl_stmt|;
 block|}
 union|;
@@ -768,7 +768,6 @@ function_decl|)
 parameter_list|(
 name|union
 name|sigval
-modifier|*
 parameter_list|)
 function_decl|;
 name|void

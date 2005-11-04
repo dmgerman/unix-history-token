@@ -7333,7 +7333,7 @@ name|aio_sigevent
 operator|.
 name|sigev_value
 operator|.
-name|sigval_ptr
+name|sival_ptr
 expr_stmt|;
 block|}
 else|else
@@ -10772,7 +10772,7 @@ name|lioj_signal
 operator|.
 name|sigev_value
 operator|.
-name|sigval_ptr
+name|sival_ptr
 expr_stmt|;
 if|if
 condition|(

@@ -4811,7 +4811,7 @@ name|it_sigev
 operator|.
 name|sigev_value
 operator|.
-name|sigval_int
+name|sival_int
 operator|=
 name|id
 expr_stmt|;

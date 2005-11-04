@@ -90,7 +90,6 @@ function_decl|)
 parameter_list|(
 name|union
 name|sigval
-modifier|*
 parameter_list|,
 name|int
 parameter_list|)
@@ -493,7 +492,6 @@ argument_list|)
 argument_list|(
 expr|union
 name|sigval
-operator|*
 argument_list|,
 name|int
 argument_list|)
@@ -635,7 +633,7 @@ name|ev
 operator|.
 name|sigev_value
 operator|.
-name|sigval_int
+name|sival_int
 operator|=
 name|tmr
 operator|->
@@ -1685,7 +1683,7 @@ name|si
 operator|.
 name|si_value
 operator|.
-name|sigval_int
+name|sival_int
 operator|==
 name|tmr
 operator|->
@@ -1713,7 +1711,6 @@ name|tmr
 operator|->
 name|function
 argument_list|(
-operator|&
 name|tmr
 operator|->
 name|value

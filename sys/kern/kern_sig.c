@@ -9210,7 +9210,7 @@ name|ksi
 operator|.
 name|ksi_value
 operator|.
-name|sigval_ptr
+name|sival_ptr
 operator|=
 name|uap
 operator|->
