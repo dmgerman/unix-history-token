@@ -1350,6 +1350,31 @@ name|priv
 operator|->
 name|ifp
 expr_stmt|;
+comment|/* Only allow reconfiguration if not running. */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"fec%d: can't add new iface; bundle is running\n"
+argument_list|,
+name|priv
+operator|->
+name|unit
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
 comment|/* Find the interface */
 name|bifp
 operator|=
@@ -1736,6 +1761,13 @@ name|fec_if
 operator|=
 name|bifp
 expr_stmt|;
+name|new
+operator|->
+name|fec_ifstat
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -1827,6 +1859,31 @@ name|priv
 operator|->
 name|ifp
 expr_stmt|;
+comment|/* Only allow reconfiguration if not running. */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"fec%d: can't remove iface; bundle is running\n"
+argument_list|,
+name|priv
+operator|->
+name|unit
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
 comment|/* Find the interface */
 name|bifp
 operator|=
@@ -2214,14 +2271,14 @@ condition|(
 name|b
 operator|->
 name|fec_ifcnt
-operator|==
-literal|1
-operator|||
+operator|!=
+literal|2
+operator|&&
 name|b
 operator|->
 name|fec_ifcnt
-operator|==
-literal|3
+operator|!=
+name|FEC_BUNDLESIZ
 condition|)
 block|{
 name|printf
@@ -2761,6 +2818,8 @@ condition|(
 name|p
 operator|->
 name|fec_ifstat
+operator|==
+literal|1
 condition|)
 block|{
 name|ifmr
@@ -2918,14 +2977,14 @@ condition|(
 name|b
 operator|->
 name|fec_ifcnt
-operator|==
-literal|1
-operator|||
+operator|!=
+literal|2
+operator|&&
 name|b
 operator|->
 name|fec_ifcnt
-operator|==
-literal|3
+operator|!=
+name|FEC_BUNDLESIZ
 condition|)
 block|{
 name|printf
