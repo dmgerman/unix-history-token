@@ -733,12 +733,19 @@ break|break;
 case|case
 name|ACPI_RESOURCE_NAME_END_TAG
 case|:
-comment|/*                  * End Tag:                  * Terminate the loop now                  */
-name|AmlBufferLength
+comment|/*                  * End Tag: This is the normal exit, add size of EndTag                  */
+operator|*
+name|SizeNeeded
 operator|=
-name|BytesParsed
+name|BufferSize
+operator|+
+name|ACPI_RS_SIZE_MIN
 expr_stmt|;
-break|break;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
 default|default:
 break|break;
 block|}
