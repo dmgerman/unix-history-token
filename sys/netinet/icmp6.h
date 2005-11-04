@@ -2919,6 +2919,27 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|icmp6_error2
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|icmp6_input
 parameter_list|(

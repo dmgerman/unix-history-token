@@ -7835,21 +7835,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* XXX: hack for KAME's link-local address kludge */
-name|gateway
-operator|->
-name|s6_addr16
-index|[
-literal|1
-index|]
-operator|=
-name|htons
-argument_list|(
-name|ifp
-operator|->
-name|if_index
-argument_list|)
-expr_stmt|;
 name|RADIX_NODE_HEAD_LOCK
 argument_list|(
 name|rnh
