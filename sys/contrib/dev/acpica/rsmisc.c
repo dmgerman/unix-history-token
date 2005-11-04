@@ -696,10 +696,6 @@ name|Resource
 operator|->
 name|Length
 operator|+=
-name|Resource
-operator|->
-name|Length
-operator|+
 operator|(
 name|ItemCount
 operator|-
@@ -765,11 +761,7 @@ block|{
 name|Resource
 operator|->
 name|Length
-operator|=
-name|Resource
-operator|->
-name|Length
-operator|+
+operator|+=
 operator|(
 name|ItemCount
 operator|-
