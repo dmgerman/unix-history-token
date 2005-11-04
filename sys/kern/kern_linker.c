@@ -6107,6 +6107,16 @@ argument_list|,
 name|verinfo
 argument_list|)
 expr_stmt|;
+comment|/* Don't count self-dependencies */
+if|if
+condition|(
+name|lf
+operator|==
+name|mod
+operator|->
+name|container
+condition|)
+continue|continue;
 name|mod
 operator|->
 name|container
