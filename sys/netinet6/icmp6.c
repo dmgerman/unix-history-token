@@ -1469,7 +1469,7 @@ operator|)
 name|param
 argument_list|)
 expr_stmt|;
-comment|/* 	 * icmp6_reflect() is designed to be in the input path. 	 * icmp6_error() can be called from both input and outut path, 	 * and if we are in output path rcvif could contain bogus value. 	 * clear m->m_pkthdr.rcvif for safety, we should have enough scope 	 * information in ip header (nip6). 	 */
+comment|/* 	 * icmp6_reflect() is designed to be in the input path. 	 * icmp6_error() can be called from both input and output path, 	 * and if we are in output path rcvif could contain bogus value. 	 * clear m->m_pkthdr.rcvif for safety, we should have enough scope 	 * information in ip header (nip6). 	 */
 name|m
 operator|->
 name|m_pkthdr
@@ -1501,7 +1501,7 @@ comment|/* header order: IPv6 - ICMPv6 */
 return|return;
 name|freeit
 label|:
-comment|/* 	 * If we can't tell wheter or not we can generate ICMP6, free it. 	 */
+comment|/* 	 * If we can't tell whether or not we can generate ICMP6, free it. 	 */
 name|m_freem
 argument_list|(
 name|m
@@ -1777,7 +1777,7 @@ name|ip6_dst
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * Deliver very specific ICMP6 type only. 		 * This is important to deilver TOOBIG.  Otherwise PMTUD 		 * will not work. 		 */
+comment|/* 		 * Deliver very specific ICMP6 type only. 		 * This is important to deliver TOOBIG.  Otherwise PMTUD 		 * will not work. 		 */
 switch|switch
 condition|(
 name|icmp6
