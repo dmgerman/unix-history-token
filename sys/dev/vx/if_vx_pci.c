@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/ethernet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -660,6 +666,20 @@ operator|&
 name|sc
 operator|->
 name|vx_mtx
+argument_list|)
+expr_stmt|;
+name|ether_ifdetach
+argument_list|(
+name|sc
+operator|->
+name|vx_ifp
+argument_list|)
+expr_stmt|;
+name|if_free
+argument_list|(
+name|sc
+operator|->
+name|vx_ifp
 argument_list|)
 expr_stmt|;
 name|bad
