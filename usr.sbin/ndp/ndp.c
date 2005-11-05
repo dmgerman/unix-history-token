@@ -4386,29 +4386,13 @@ operator||
 name|RTF_STATIC
 operator|)
 expr_stmt|;
-if|if
-condition|(
-name|rtm
-operator|->
-name|rtm_flags
-operator|&
-name|RTF_ANNOUNCE
-condition|)
-block|{
-name|rtm
-operator|->
-name|rtm_flags
-operator|&=
-operator|~
-name|RTF_HOST
-expr_stmt|;
-name|rtm
-operator|->
-name|rtm_addrs
-operator||=
-name|RTA_NETMASK
-expr_stmt|;
-block|}
+if|#
+directive|if
+literal|0
+comment|/* we don't support ipv6addr/128 type proxying */
+block|if (rtm->rtm_flags& RTF_ANNOUNCE) { 			rtm->rtm_flags&= ~RTF_HOST; 			rtm->rtm_addrs |= RTA_NETMASK; 		}
+endif|#
+directive|endif
 comment|/* FALLTHROUGH */
 case|case
 name|RTM_GET
@@ -4429,7 +4413,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|if (rtm->rtm_addrs& (w)) { \ 		bcopy((char *)&s, cp, sizeof(s)); cp += sizeof(s);}
+value|if (rtm->rtm_addrs& (w)) { \ 		bcopy((char *)&s, cp, sizeof(s)); cp += SA_SIZE(&s);}
 name|NEXTADDR
 argument_list|(
 name|RTA_DST
@@ -4444,30 +4428,13 @@ argument_list|,
 name|sdl_m
 argument_list|)
 expr_stmt|;
-name|memset
-argument_list|(
-operator|&
-name|so_mask
-operator|.
-name|sin6_addr
-argument_list|,
-literal|0xff
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|so_mask
-operator|.
-name|sin6_addr
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|NEXTADDR
-argument_list|(
-name|RTA_NETMASK
-argument_list|,
-name|so_mask
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* we don't support ipv6addr/128 type proxying */
+block|memset(&so_mask.sin6_addr, 0xff, sizeof(so_mask.sin6_addr)); 	NEXTADDR(RTA_NETMASK, so_mask);
+endif|#
+directive|endif
 name|rtm
 operator|->
 name|rtm_msglen
