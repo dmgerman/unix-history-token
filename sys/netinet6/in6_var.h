@@ -1132,6 +1132,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SIOCSIFINFO_IN6
+value|_IOWR('i', 109, struct in6_ndireq)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SIOCSNDFLUSH_IN6
 value|_IOWR('i', 77, struct in6_ifreq)
 end_define

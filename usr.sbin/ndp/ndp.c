@@ -4776,6 +4776,19 @@ name|f
 parameter_list|)
 define|\
 value|do {\ 		if (strcmp(cp, (s)) == 0) {\ 			if (clear)\ 				newflags&= ~(f);\ 			else\ 				newflags |= (f);\ 		}\ 	} while (0)
+comment|/*  * XXX: this macro is not 100% correct, in that it matches "nud" against  *      "nudbogus".  But we just let it go since this is minor.  */
+define|#
+directive|define
+name|SETVALUE
+parameter_list|(
+name|f
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|do { \ 		char *valptr; \ 		unsigned long newval; \ 		v = 0;
+comment|/* unspecified */
+value|\ 		if (strncmp(cp, f, strlen(f)) == 0) { \ 			valptr = strchr(cp, '='); \ 			if (valptr == NULL) \ 				err(1, "syntax error in %s field", (f)); \ 			errno = 0; \ 			newval = strtoul(++valptr, NULL, 0); \ 			if (errno) \ 				err(1, "syntax error in %s's value", (f)); \ 			v = newval; \ 		} \ 	} while (0)
 name|SETFLAG
 argument_list|(
 literal|"disabled"
@@ -4814,6 +4827,33 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|SETVALUE
+argument_list|(
+literal|"basereachable"
+argument_list|,
+name|ND
+operator|.
+name|basereachable
+argument_list|)
+expr_stmt|;
+name|SETVALUE
+argument_list|(
+literal|"retrans"
+argument_list|,
+name|ND
+operator|.
+name|retrans
+argument_list|)
+expr_stmt|;
+name|SETVALUE
+argument_list|(
+literal|"curhlim"
+argument_list|,
+name|ND
+operator|.
+name|chlim
+argument_list|)
+expr_stmt|;
 name|ND
 operator|.
 name|flags
@@ -4826,7 +4866,7 @@ name|ioctl
 argument_list|(
 name|s
 argument_list|,
-name|SIOCSIFINFO_FLAGS
+name|SIOCSIFINFO_IN6
 argument_list|,
 operator|(
 name|caddr_t
@@ -4842,7 +4882,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"ioctl(SIOCSIFINFO_FLAGS)"
+literal|"ioctl(SIOCSIFINFO_IN6)"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -4850,6 +4890,9 @@ block|}
 undef|#
 directive|undef
 name|SETFLAG
+undef|#
+directive|undef
+name|SETVALUE
 block|}
 if|if
 condition|(
@@ -4866,6 +4909,33 @@ argument_list|,
 literal|"%s: not initialized yet"
 argument_list|,
 name|ifname
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|s
+argument_list|,
+name|SIOCGIFINFO_IN6
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|nd
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"ioctl(SIOCGIFINFO_IN6)"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
