@@ -860,6 +860,18 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|MSGBUF_SEQ_TO_POS
+parameter_list|(
+name|size
+parameter_list|,
+name|seq
+parameter_list|)
+value|((seq) % (size))
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -1057,6 +1069,24 @@ operator|)
 name|kgdb_parse
 argument_list|(
 literal|"msgbufp->msg_wseq"
+argument_list|)
+expr_stmt|;
+name|rseq
+operator|=
+name|MSGBUF_SEQ_TO_POS
+argument_list|(
+name|size
+argument_list|,
+name|rseq
+argument_list|)
+expr_stmt|;
+name|wseq
+operator|=
+name|MSGBUF_SEQ_TO_POS
+argument_list|(
+name|size
+argument_list|,
+name|wseq
 argument_list|)
 expr_stmt|;
 if|if
