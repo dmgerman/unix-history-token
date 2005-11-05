@@ -208,6 +208,12 @@ directive|include
 file|<fs/devfs/devfs.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<fs/devfs/devfs_int.h>
+end_include
+
 begin_undef
 undef|#
 directive|undef
@@ -4364,6 +4370,10 @@ name|dev
 parameter_list|)
 block|{
 name|struct
+name|cdev_priv
+name|priv
+decl_stmt|;
+name|struct
 name|cdev
 name|si
 decl_stmt|;
@@ -4379,11 +4389,30 @@ argument_list|,
 sizeof|sizeof
 name|si
 argument_list|)
+operator|&&
+name|KVM_READ
+argument_list|(
+name|si
+operator|.
+name|si_priv
+argument_list|,
+operator|&
+name|priv
+argument_list|,
+sizeof|sizeof
+name|priv
+argument_list|)
 condition|)
 block|{
-comment|/* XXX: FIXME! */
 return|return
-literal|0
+operator|(
+operator|(
+name|dev_t
+operator|)
+name|priv
+operator|.
+name|cdp_inode
+operator|)
 return|;
 block|}
 else|else
