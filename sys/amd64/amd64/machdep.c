@@ -3672,7 +3672,7 @@ begin_define
 define|#
 directive|define
 name|PHYSMAP_SIZE
-value|(2 * 8)
+value|(2 * 20)
 end_define
 
 begin_decl_stmt
