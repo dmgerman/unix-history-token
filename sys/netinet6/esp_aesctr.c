@@ -126,7 +126,7 @@ decl_stmt|;
 name|u_int8_t
 name|iv
 index|[
-literal|16
+literal|8
 index|]
 decl_stmt|;
 name|u_int32_t
