@@ -3428,9 +3428,6 @@ name|int
 name|nge_if_flags
 decl_stmt|;
 name|u_int8_t
-name|nge_unit
-decl_stmt|;
-name|u_int8_t
 name|nge_type
 decl_stmt|;
 name|u_int8_t
