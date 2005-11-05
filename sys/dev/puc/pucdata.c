@@ -6708,6 +6708,53 @@ block|, 	    }
 block|, 	}
 block|,
 block|{
+comment|/* "VScom 200Li" 00=14D2 02=8028 uart@20 uart@+8 */
+literal|"VScom 200Li"
+block|,
+block|{
+literal|0x14d2
+block|,
+literal|0x8028
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xffff
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x20
+block|,
+literal|0x00
+block|,
+name|DEFAULT_RCLK
+block|}
+block|,
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x20
+block|,
+literal|0x08
+block|,
+name|DEFAULT_RCLK
+block|}
+block|, 	    }
+block|, 	}
+block|,
+block|{
 literal|0
 block|}
 block|}
