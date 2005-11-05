@@ -964,7 +964,7 @@ name|ext_type
 condition|)
 block|{
 case|case
-name|EXT_CLUSTER
+name|EXT_PACKET
 case|:
 comment|/* The packet zone is special. */
 if|if
@@ -1000,6 +1000,20 @@ argument_list|)
 expr_stmt|;
 return|return;
 comment|/* Job done. */
+case|case
+name|EXT_CLUSTER
+case|:
+name|uma_zfree
+argument_list|(
+name|zone_clust
+argument_list|,
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_buf
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|EXT_JUMBO9

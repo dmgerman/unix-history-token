@@ -1353,7 +1353,7 @@ name|m_ext
 operator|.
 name|ext_type
 operator|==
-name|EXT_CLUSTER
+name|EXT_PACKET
 argument_list|,
 operator|(
 literal|"%s: ext_type != EXT_CLUSTER"
@@ -1743,6 +1743,15 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_type
+operator|=
+name|EXT_PACKET
+expr_stmt|;
+comment|/* Override. */
 ifdef|#
 directive|ifdef
 name|INVARIANTS

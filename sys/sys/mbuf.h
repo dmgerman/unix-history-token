@@ -728,6 +728,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EXT_PACKET
+value|5
+end_define
+
+begin_comment
+comment|/* mbuf+cluster from packet zone */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EXT_NET_DRV
 value|100
 end_define
