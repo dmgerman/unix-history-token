@@ -3658,7 +3658,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_DEBUG
+name|LOG_INFO
 argument_list|,
 literal|"<%s> ND option check failed for an RS from %s on %s"
 argument_list|,
@@ -3708,7 +3708,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_INFO
 argument_list|,
 literal|"<%s> RS from unspecified src on %s has a link-layer"
 literal|" address option"
@@ -4207,7 +4207,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_INFO
 argument_list|,
 literal|"<%s> ND option check failed for an RA from %s on %s"
 argument_list|,
