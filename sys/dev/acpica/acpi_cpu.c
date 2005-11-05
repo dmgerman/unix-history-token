@@ -116,7 +116,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acpi.h"
+file|<contrib/dev/acpica/acpi.h>
 end_include
 
 begin_include
@@ -439,6 +439,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* Index of lowest non-C3 state. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cpu_short_slp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Count of< 1us sleeps. */
 end_comment
 
 begin_decl_stmt
@@ -2896,7 +2907,7 @@ name|sc
 operator|->
 name|cpu_dev
 argument_list|,
-literal|"Skipping invalid Cx state package\n"
+literal|"skipping invalid Cx state package\n"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -3567,6 +3578,71 @@ name|cpu_prev_sleep
 operator|<
 literal|100
 condition|)
+block|{
+comment|/* 	 * If we sleep too short all the time, this system may not implement 	 * C2/3 correctly (i.e. reads return immediately).  In this case, 	 * back off and use the next higher level. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|cpu_prev_sleep
+operator|<=
+literal|1
+condition|)
+block|{
+name|cpu_short_slp
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|cpu_short_slp
+operator|==
+literal|1000
+operator|&&
+name|cpu_cx_lowest
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|cpu_non_c3
+operator|==
+name|cpu_cx_lowest
+operator|&&
+name|cpu_non_c3
+operator|!=
+literal|0
+condition|)
+name|cpu_non_c3
+operator|--
+expr_stmt|;
+name|cpu_cx_lowest
+operator|--
+expr_stmt|;
+name|cpu_short_slp
+operator|=
+literal|0
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|cpu_dev
+argument_list|,
+literal|"too many short sleeps, backing off to C%d\n"
+argument_list|,
+name|cpu_cx_lowest
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+name|cpu_short_slp
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -3601,6 +3677,7 @@ operator|=
 name|i
 expr_stmt|;
 break|break;
+block|}
 block|}
 comment|/*      * Check for bus master activity.  If there was activity, clear      * the bit and use the lowest non-C3 state.  Note that the USB      * driver polling for new devices keeps this bit set all the      * time if USB is loaded.      */
 if|if
@@ -3836,6 +3913,9 @@ name|ACPI_MTX_DO_NOT_LOCK
 argument_list|)
 expr_stmt|;
 block|}
+name|ACPI_ENABLE_IRQS
+argument_list|()
+expr_stmt|;
 comment|/* Find the actual time asleep in microseconds, minus overhead. */
 name|end_time
 operator|=
@@ -3858,9 +3938,6 @@ operator|-
 name|cx_next
 operator|->
 name|trans_lat
-expr_stmt|;
-name|ACPI_ENABLE_IRQS
-argument_list|()
 expr_stmt|;
 block|}
 end_function
