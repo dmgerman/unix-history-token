@@ -1405,10 +1405,7 @@ name|bsdtar
 argument_list|,
 literal|1
 argument_list|,
-name|archive_errno
-argument_list|(
-name|a
-argument_list|)
+literal|0
 argument_list|,
 literal|"Can't open %s: %s"
 argument_list|,
