@@ -1365,8 +1365,6 @@ name|int
 name|i
 decl_stmt|,
 name|error
-decl_stmt|,
-name|s
 decl_stmt|;
 name|debug_called
 argument_list|(
@@ -1403,11 +1401,6 @@ literal|"failed"
 else|:
 literal|"done"
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
 expr_stmt|;
 name|error
 operator|=
@@ -1485,11 +1478,6 @@ block|}
 comment|/* XXX disable interrupts? */
 name|shutdown_out
 label|:
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error

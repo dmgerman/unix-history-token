@@ -4564,19 +4564,12 @@ operator|->
 name|ac_sc
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|error
 decl_stmt|;
 name|debug_called
 argument_list|(
 literal|2
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
 expr_stmt|;
 name|error
 operator|=
@@ -4640,11 +4633,6 @@ name|ac
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -6450,8 +6438,6 @@ block|{
 name|int
 name|done
 decl_stmt|,
-name|s
-decl_stmt|,
 name|i
 decl_stmt|;
 comment|/* mark the new mailbox we are going to copy in as busy */
@@ -6524,11 +6510,6 @@ name|i
 operator|--
 control|)
 block|{
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 comment|/* is the mailbox free? */
 if|if
 condition|(
@@ -6610,12 +6591,6 @@ literal|100
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-comment|/* drop spl to allow completion interrupts */
 block|}
 comment|/*      * Now give the command to the controller      */
 if|if
@@ -7187,8 +7162,6 @@ modifier|*
 name|ac
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|i
 decl_stmt|,
 name|nextslot
@@ -7224,11 +7197,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|nextslot
 operator|=
 name|sc
@@ -7245,11 +7213,6 @@ argument_list|,
 name|acc
 argument_list|,
 name|acc_link
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 for|for
@@ -7538,8 +7501,6 @@ name|mbsave
 parameter_list|)
 block|{
 name|int
-name|s
-decl_stmt|,
 name|worked
 decl_stmt|;
 name|u_int32_t
@@ -7556,11 +7517,6 @@ expr_stmt|;
 name|worked
 operator|=
 literal|0
-expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
 expr_stmt|;
 comment|/* work waiting for us? */
 if|if
@@ -7673,11 +7629,6 @@ literal|1
 expr_stmt|;
 comment|/* got some work */
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|worked
@@ -7703,8 +7654,6 @@ name|mbsave
 parameter_list|)
 block|{
 name|int
-name|s
-decl_stmt|,
 name|worked
 decl_stmt|;
 name|u_int8_t
@@ -7718,11 +7667,6 @@ expr_stmt|;
 name|worked
 operator|=
 literal|0
-expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
 expr_stmt|;
 comment|/* check for valid interrupt status */
 name|istat
@@ -7790,11 +7734,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|worked
