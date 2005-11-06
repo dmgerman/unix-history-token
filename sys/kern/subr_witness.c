@@ -3968,6 +3968,31 @@ condition|)
 goto|goto
 name|reversal
 goto|;
+comment|/* 			 * If we are locking Giant and this is a non-sleepable 			 * lock, then treat it as a reversal. 			 */
+if|if
+condition|(
+operator|(
+name|lock1
+operator|->
+name|li_lock
+operator|->
+name|lo_flags
+operator|&
+name|LO_SLEEPABLE
+operator|)
+operator|==
+literal|0
+operator|&&
+name|lock
+operator|==
+operator|&
+name|Giant
+operator|.
+name|mtx_object
+condition|)
+goto|goto
+name|reversal
+goto|;
 comment|/* 			 * Check the lock order hierarchy for a reveresal. 			 */
 if|if
 condition|(
@@ -4050,9 +4075,68 @@ literal|1
 expr_stmt|;
 block|}
 comment|/* 			 * Ok, yell about it. 			 */
+if|if
+condition|(
+operator|(
+operator|(
+name|lock
+operator|->
+name|lo_flags
+operator|&
+name|LO_SLEEPABLE
+operator|)
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|lock1
+operator|->
+name|li_lock
+operator|->
+name|lo_flags
+operator|&
+name|LO_SLEEPABLE
+operator|)
+operator|==
+literal|0
+operator|)
+condition|)
 name|printf
 argument_list|(
-literal|"lock order reversal\n"
+literal|"lock order reversal: (sleepable after non-sleepable)\n"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|lock1
+operator|->
+name|li_lock
+operator|->
+name|lo_flags
+operator|&
+name|LO_SLEEPABLE
+operator|)
+operator|==
+literal|0
+operator|&&
+name|lock
+operator|==
+operator|&
+name|Giant
+operator|.
+name|mtx_object
+condition|)
+name|printf
+argument_list|(
+literal|"lock order reversal: (Giant after non-sleepable)\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"lock order reversal:\n"
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Try to locate an earlier lock with 			 * witness w in our list. 			 */
