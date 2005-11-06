@@ -6,14 +6,16 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/cdefs.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -39,16 +41,20 @@ directive|include
 file|<sys/aac_ioctl.h>
 end_include
 
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
 
 begin_comment
-comment|/*  * Simple program to print out the queue stats on the given queue index.  * See /sys/dev/aac/aac_ioctl.h for the definitions of each queue index.  */
+comment|/*  * Simple program to print out the queue stats on the given queue index.  * See /sys/sys/aac_ioctl.h for the definitions of each queue index.  */
 end_comment
 
 begin_function
