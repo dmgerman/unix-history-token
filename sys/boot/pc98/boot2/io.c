@@ -1417,20 +1417,6 @@ name|data
 init|=
 literal|0
 decl_stmt|;
-name|u_char
-name|epson_machine_id
-init|=
-operator|*
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-name|V
-argument_list|(
-literal|0xA1624
-argument_list|)
-decl_stmt|;
 comment|/* PC98_SYSTEM_PARAMETER(0x501) */
 name|ret
 operator|=
@@ -1626,41 +1612,10 @@ expr_stmt|;
 block|}
 block|}
 else|else
-block|{
 name|ret
 operator||=
 name|M_NOT_H98
 expr_stmt|;
-switch|switch
-condition|(
-name|epson_machine_id
-condition|)
-block|{
-case|case
-literal|0x20
-case|:
-comment|/* note A */
-case|case
-literal|0x22
-case|:
-comment|/* note W */
-case|case
-literal|0x27
-case|:
-comment|/* note AE */
-case|case
-literal|0x2a
-case|:
-comment|/* note WR */
-name|ret
-operator||=
-name|M_NOTE
-expr_stmt|;
-break|break;
-default|default:
-break|break;
-block|}
-block|}
 operator|(
 operator|*
 operator|(
