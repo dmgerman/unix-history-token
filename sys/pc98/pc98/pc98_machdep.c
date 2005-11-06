@@ -165,17 +165,14 @@ name|epson_machine_id
 condition|)
 block|{
 case|case
-literal|0x34
+name|EPSON_PC486_HX
 case|:
-comment|/* PC486HX */
 case|case
-literal|0x35
+name|EPSON_PC486_HG
 case|:
-comment|/* PC486HG */
 case|case
-literal|0x3B
+name|EPSON_PC486_HA
 case|:
-comment|/* PC486HA */
 comment|/* Cache control start. */
 name|outb
 argument_list|(
@@ -272,29 +269,23 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|0x2B
+name|EPSON_PC486_GR
 case|:
-comment|/* PC486GR/GF */
 case|case
-literal|0x30
+name|EPSON_PC486_P
 case|:
-comment|/* PC486P */
 case|case
-literal|0x31
+name|EPSON_PC486_GR_SUPER
 case|:
-comment|/* PC486GRSuper */
 case|case
-literal|0x32
+name|EPSON_PC486_GR_PLUS
 case|:
-comment|/* PC486GR+ */
 case|case
-literal|0x37
+name|EPSON_PC486_SE
 case|:
-comment|/* PC486SE */
 case|case
-literal|0x38
+name|EPSON_PC486_SR
 case|:
-comment|/* PC486SR */
 comment|/* Disable 0xF00000-0xFFFFFF. */
 name|outb
 argument_list|(

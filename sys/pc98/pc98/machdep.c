@@ -7564,17 +7564,14 @@ default|default:
 endif|#
 directive|endif
 case|case
-literal|0x34
+name|EPSON_PC486_HX
 case|:
-comment|/* PC-486HX */
 case|case
-literal|0x35
+name|EPSON_PC486_HG
 case|:
-comment|/* PC-486HG */
 case|case
-literal|0x3B
+name|EPSON_PC486_HA
 case|:
-comment|/* PC-486HA */
 name|pg_n
 operator|=
 literal|0
