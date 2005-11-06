@@ -2135,6 +2135,10 @@ parameter_list|)
 block|{  }
 end_function
 
+begin_comment
+comment|/*  * The if_start method for vlan(4) interface. It doesn't  * raises the IFF_DRV_OACTIVE flag, since it is called  * only from IFQ_HANDOFF() macro in ether_output_frame().  * If the interface queue is full, and vlan_start() is  * not called, the queue would never get emptied and  * interface would stall forever.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -2180,12 +2184,6 @@ operator|=
 name|ifv
 operator|->
 name|ifv_p
-expr_stmt|;
-name|ifp
-operator|->
-name|if_drv_flags
-operator||=
-name|IFF_DRV_OACTIVE
 expr_stmt|;
 for|for
 control|(
@@ -2529,13 +2527,6 @@ name|if_oerrors
 operator|++
 expr_stmt|;
 block|}
-name|ifp
-operator|->
-name|if_drv_flags
-operator|&=
-operator|~
-name|IFF_DRV_OACTIVE
-expr_stmt|;
 block|}
 end_function
 
