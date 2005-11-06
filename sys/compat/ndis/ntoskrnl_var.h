@@ -4575,6 +4575,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|STATUS_NOT_FOUND
+value|0xC0000225
+end_define
+
+begin_define
+define|#
+directive|define
 name|STATUS_WAIT_0
 value|0x00000000
 end_define
