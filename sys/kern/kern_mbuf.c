@@ -1356,7 +1356,7 @@ operator|==
 name|EXT_PACKET
 argument_list|,
 operator|(
-literal|"%s: ext_type != EXT_CLUSTER"
+literal|"%s: ext_type != EXT_PACKET"
 operator|,
 name|__func__
 operator|)
