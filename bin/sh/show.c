@@ -1719,11 +1719,6 @@ index|[
 literal|100
 index|]
 decl_stmt|;
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
 name|int
 name|flags
 decl_stmt|;

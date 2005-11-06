@@ -3398,10 +3398,11 @@ expr_stmt|;
 name|TRACE
 argument_list|(
 operator|(
-literal|"makejob(0x%lx, %d) returns %%%d\n"
+literal|"makejob(%p, %d) returns %%%d\n"
 operator|,
 operator|(
-name|long
+name|void
+operator|*
 operator|)
 name|node
 operator|,
@@ -3739,14 +3740,15 @@ decl_stmt|;
 name|TRACE
 argument_list|(
 operator|(
-literal|"forkshell(%%%d, 0x%lx, %d) called\n"
+literal|"forkshell(%%%d, %p, %d) called\n"
 operator|,
 name|jp
 operator|-
 name|jobtab
 operator|,
 operator|(
-name|long
+name|void
+operator|*
 operator|)
 name|n
 operator|,

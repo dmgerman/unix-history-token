@@ -2468,7 +2468,9 @@ begin_function_decl
 name|MKINIT
 name|void
 name|deletefuncs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -3026,12 +3028,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Locate and print what a word is...  */
+comment|/*  * Shared code for the following builtin commands:  *    type, command -v, command -V  */
 end_comment
 
 begin_function
 name|int
-name|typecmd
+name|typecmd_impl
 parameter_list|(
 name|int
 name|argc
@@ -3040,6 +3042,9 @@ name|char
 modifier|*
 modifier|*
 name|argv
+parameter_list|,
+name|int
+name|cmd
 parameter_list|)
 block|{
 name|struct
@@ -3090,6 +3095,12 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|cmd
+operator|!=
+name|TYPECMD_SMALLV
+condition|)
 name|out1str
 argument_list|(
 name|argv
@@ -3146,6 +3157,23 @@ operator|*
 name|pp
 condition|)
 block|{
+if|if
+condition|(
+name|cmd
+operator|==
+name|TYPECMD_SMALLV
+condition|)
+name|out1fmt
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|argv
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+else|else
 name|out1str
 argument_list|(
 literal|" is a shell keyword\n"
@@ -3173,6 +3201,27 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|cmd
+operator|==
+name|TYPECMD_SMALLV
+condition|)
+name|out1fmt
+argument_list|(
+literal|"alias %s='%s'\n"
+argument_list|,
+name|argv
+index|[
+name|i
+index|]
+argument_list|,
+name|ap
+operator|->
+name|val
+argument_list|)
+expr_stmt|;
+else|else
 name|out1fmt
 argument_list|(
 literal|" is an alias for %s\n"
@@ -3315,11 +3364,31 @@ operator|>=
 literal|0
 condition|)
 do|;
+if|if
+condition|(
+name|cmd
+operator|==
+name|TYPECMD_SMALLV
+condition|)
+name|out1fmt
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+else|else
 name|out1fmt
 argument_list|(
 literal|" is%s %s\n"
 argument_list|,
+operator|(
 name|cmdp
+operator|&&
+name|cmd
+operator|==
+name|TYPECMD_TYPE
+operator|)
 condition|?
 literal|" a tracked alias for"
 else|:
@@ -3345,6 +3414,24 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|cmd
+operator|==
+name|TYPECMD_SMALLV
+condition|)
+name|out1fmt
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|argv
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+else|else
 name|out1fmt
 argument_list|(
 literal|" is %s\n"
@@ -3355,6 +3442,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|out1fmt
 argument_list|(
@@ -3372,6 +3460,23 @@ block|}
 case|case
 name|CMDFUNCTION
 case|:
+if|if
+condition|(
+name|cmd
+operator|==
+name|TYPECMD_SMALLV
+condition|)
+name|out1fmt
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|argv
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+else|else
 name|out1str
 argument_list|(
 literal|" is a shell function\n"
@@ -3381,6 +3486,23 @@ break|break;
 case|case
 name|CMDBUILTIN
 case|:
+if|if
+condition|(
+name|cmd
+operator|==
+name|TYPECMD_SMALLV
+condition|)
+name|out1fmt
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|argv
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+else|else
 name|out1str
 argument_list|(
 literal|" is a shell builtin\n"
@@ -3388,6 +3510,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+if|if
+condition|(
+name|cmd
+operator|!=
+name|TYPECMD_SMALLV
+condition|)
 name|out1str
 argument_list|(
 literal|": not found\n"
@@ -3402,6 +3530,36 @@ block|}
 block|}
 return|return
 name|error
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Locate and print what a word is...  */
+end_comment
+
+begin_function
+name|int
+name|typecmd
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|argv
+parameter_list|)
+block|{
+return|return
+name|typecmd_impl
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+name|TYPECMD_TYPE
+argument_list|)
 return|;
 block|}
 end_function

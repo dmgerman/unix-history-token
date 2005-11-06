@@ -51,6 +51,25 @@ begin_comment
 comment|/* command is a shell function */
 end_comment
 
+begin_comment
+comment|/* values for typecmd_impl's third parameter */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|TYPECMD_SMALLV
+block|,
+comment|/* command -v */
+name|TYPECMD_BIGV
+block|,
+comment|/* command -V */
+name|TYPECMD_TYPE
+comment|/* type */
+block|}
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|cmdentry
@@ -239,6 +258,21 @@ name|unsetfunc
 parameter_list|(
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|typecmd_impl
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

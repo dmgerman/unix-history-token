@@ -78,6 +78,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ckfree
+parameter_list|(
+name|pointer
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|char
 modifier|*
 name|savestr
@@ -291,16 +300,6 @@ parameter_list|(
 name|p
 parameter_list|)
 value|stalloc(stackblocksize() - sstrnleft)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ckfree
-parameter_list|(
-name|p
-parameter_list|)
-value|free((pointer)(p))
 end_define
 
 end_unit
