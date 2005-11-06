@@ -5827,9 +5827,9 @@ name|freebsd32_copyoutiov
 argument_list|(
 name|iov
 argument_list|,
-name|iov
-operator|->
-name|iov_len
+name|m32
+operator|.
+name|msg_iovlen
 argument_list|,
 operator|(
 expr|struct
