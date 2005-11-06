@@ -42,6 +42,16 @@ directive|ifdef
 name|__FreeBSD__
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_comment
+comment|/* __FreeBSD_version */
+end_comment
+
 begin_comment
 comment|/* A default configuration for FreeBSD, used if there is no config.h. */
 end_comment
