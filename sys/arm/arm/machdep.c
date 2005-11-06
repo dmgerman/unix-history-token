@@ -1041,6 +1041,9 @@ name|pcb32_sp
 operator|-
 literal|1
 expr_stmt|;
+name|pmap_postinit
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ARM_CACHE_LOCK_ENABLE

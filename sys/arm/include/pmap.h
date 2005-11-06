@@ -2131,6 +2131,15 @@ name|_tmppt
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|pmap_postinit
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
