@@ -186,6 +186,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fs/devfs/devfs_int.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -4094,6 +4100,18 @@ argument_list|,
 name|MTX_DEF
 operator||
 name|MTX_DUPOK
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|devmtx
+argument_list|,
+literal|"cdev"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|mtx_lock
