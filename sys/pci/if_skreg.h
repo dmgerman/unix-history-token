@@ -178,6 +178,17 @@ value|0x1032
 end_define
 
 begin_comment
+comment|/*  * Linksys gigabit ethernet rev 2 sub-device ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SUBDEVICEID_LINKSYS_EG1032_REV2
+value|0x0015
+end_define
+
+begin_comment
 comment|/*  * D-Link PCI vendor ID  */
 end_comment
 

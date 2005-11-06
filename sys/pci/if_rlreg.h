@@ -4029,6 +4029,39 @@ value|0xc107
 end_define
 
 begin_comment
+comment|/*  * Linksys vendor ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKSYS_VENDORID
+value|0x1737
+end_define
+
+begin_comment
+comment|/*  * Linksys EG1032 device ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKSYS_DEVICEID_EG1032
+value|0x1032
+end_define
+
+begin_comment
+comment|/*  * Linksys EG1032 rev 3 sub-device ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKSYS_SUBDEVICE_EG1032_REV3
+value|0x0024
+end_define
+
+begin_comment
 comment|/*  * Peppercon vendor ID  */
 end_comment
 

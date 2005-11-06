@@ -356,6 +356,16 @@ literal|"Corega CG-LAPCIGT (RTL8169S) Gigabit Ethernet"
 block|}
 block|,
 block|{
+name|LINKSYS_VENDORID
+block|,
+name|LINKSYS_DEVICEID_EG1032
+block|,
+name|RL_HWREV_8169S
+block|,
+literal|"Linksys EG1032 (RTL8169S) Gigabit Ethernet"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -3413,6 +3423,40 @@ name|rl_did
 operator|)
 condition|)
 block|{
+comment|/* 			 * Only attach to rev. 3 of the Linksys EG1032 adapter. 			 * Rev. 2 i supported by sk(4). 			 */
+if|if
+condition|(
+operator|(
+name|t
+operator|->
+name|rl_vid
+operator|==
+name|LINKSYS_VENDORID
+operator|)
+operator|&&
+operator|(
+name|t
+operator|->
+name|rl_did
+operator|==
+name|LINKSYS_DEVICEID_EG1032
+operator|)
+operator|&&
+operator|(
+name|pci_get_subdevice
+argument_list|(
+name|dev
+argument_list|)
+operator|!=
+name|LINKSYS_SUBDEVICE_EG1032_REV3
+operator|)
+condition|)
+block|{
+name|t
+operator|++
+expr_stmt|;
+continue|continue;
+block|}
 comment|/* 			 * Temporarily map the I/O space 			 * so we can read the chip ID register. 			 */
 name|rid
 operator|=
