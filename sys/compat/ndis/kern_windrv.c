@@ -173,6 +173,7 @@ file|<compat/ndis/usbd_var.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mtx
 name|drvdb_mtx
@@ -2529,6 +2530,9 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
+name|x86_critical_enter
+argument_list|()
+expr_stmt|;
 name|t
 operator|->
 name|tid_oldfs
@@ -2544,6 +2548,9 @@ name|curthread
 operator|->
 name|td_oncpu
 expr_stmt|;
+name|sched_pin
+argument_list|()
+expr_stmt|;
 name|x86_setfs
 argument_list|(
 name|SEL_TO_FS
@@ -2553,6 +2560,9 @@ operator|->
 name|tid_selector
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|x86_critical_exit
+argument_list|()
 expr_stmt|;
 comment|/* Now entering Windows land, population: you. */
 return|return;
@@ -2575,6 +2585,9 @@ name|tid
 modifier|*
 name|t
 decl_stmt|;
+name|x86_critical_enter
+argument_list|()
+expr_stmt|;
 name|t
 operator|=
 name|x86_gettid
@@ -2586,6 +2599,12 @@ name|t
 operator|->
 name|tid_oldfs
 argument_list|)
+expr_stmt|;
+name|sched_unpin
+argument_list|()
+expr_stmt|;
+name|x86_critical_exit
+argument_list|()
 expr_stmt|;
 comment|/* Welcome back to UNIX land, we missed you. */
 ifdef|#
