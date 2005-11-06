@@ -398,6 +398,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_TIMEGM
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_UNISTD_H
 value|1
 end_define
