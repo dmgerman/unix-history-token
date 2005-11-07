@@ -6931,7 +6931,7 @@ literal|1
 expr_stmt|;
 name|ret
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 block|}
 elseif|else
@@ -6952,7 +6952,7 @@ literal|2
 expr_stmt|;
 name|ret
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 block|}
 elseif|else
@@ -6973,7 +6973,7 @@ literal|3
 expr_stmt|;
 name|ret
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 block|}
 return|return

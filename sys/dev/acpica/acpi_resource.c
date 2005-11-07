@@ -653,12 +653,6 @@ name|Length
 operator|=
 name|ACPI_ALLOCATE_BUFFER
 expr_stmt|;
-name|buf
-operator|.
-name|Pointer
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|ACPI_FAILURE
