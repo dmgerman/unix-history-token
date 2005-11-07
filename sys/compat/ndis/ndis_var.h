@@ -5575,7 +5575,7 @@ begin_define
 define|#
 directive|define
 name|EXT_NDIS
-value|0x999
+value|EXT_NET_DRV
 end_define
 
 begin_comment
