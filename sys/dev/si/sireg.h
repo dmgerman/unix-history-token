@@ -225,7 +225,7 @@ begin_define
 define|#
 directive|define
 name|SIPCIBADR
-value|0x10
+value|PCIR_BAR(0)
 end_define
 
 begin_comment
@@ -273,7 +273,7 @@ begin_define
 define|#
 directive|define
 name|SIJETSSIDREG
-value|0x2c
+value|PCIR_SUBVEND_0
 end_define
 
 begin_comment
@@ -284,7 +284,7 @@ begin_define
 define|#
 directive|define
 name|SIJETBADR
-value|0x18
+value|PCIR_BAR(2)
 end_define
 
 begin_comment
