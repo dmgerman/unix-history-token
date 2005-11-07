@@ -3037,6 +3037,39 @@ comment|/* AMD 3DNow! */
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|cpu_feature
+operator|&
+name|CPUID_HTT
+operator|&&
+name|strcmp
+argument_list|(
+name|cpu_vendor
+argument_list|,
+literal|"AuthenticAMD"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|cpu_feature
+operator|&=
+operator|~
+name|CPUID_HTT
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"\n    HTT bit cleared - FreeBSD"
+literal|" does not have licenseing issues"
+literal|" requiring it.\n"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 			 * If this CPU supports hyperthreading then mention 			 * the number of logical CPU's it contains. 			 */
 if|if
 condition|(
