@@ -4312,7 +4312,7 @@ operator|.
 name|channel
 argument_list|)
 expr_stmt|;
-name|mss_unlock
+name|mss_lock
 argument_list|(
 name|mss
 argument_list|)
