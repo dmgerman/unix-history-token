@@ -4315,19 +4315,18 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-comment|/* XXX temp debugging */
-comment|/* should not happen - syncache should pick up these connections */
-if|if
-condition|(
+comment|/* Syncache takes care of sockets in the listen state. */
+name|KASSERT
+argument_list|(
 name|tp
 operator|->
 name|t_state
-operator|==
+operator|!=
 name|TCPS_LISTEN
-condition|)
-name|panic
-argument_list|(
+argument_list|,
+operator|(
 literal|"tcp_input: TCPS_LISTEN"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * This is the second part of the MSS DoS prevention code (after 	 * minmss on the sending side) and it deals with too many too small 	 * tcp packets in a too short timeframe (1 second). 	 * 	 * For every full second we count the number of received packets 	 * and bytes. If we get a lot of packets per second for this connection 	 * (tcp_minmssoverload) we take a closer look at it and compute the 	 * average packet size for the past second. If that is less than 	 * tcp_minmss we get too many packets with very small payload which 	 * is not good and burdens our system (and every packet generates 	 * a wakeup to the process connected to our socket). We can reasonable 	 * expect this to be small packet DoS attack to exhaust our CPU 	 * cycles. 	 * 	 * Care has to be taken for the minimum packet overload value. This 	 * value defines the minimum number of packets per second before we 	 * start to worry. This must not be too low to avoid killing for 	 * example interactive connections with many small packets like 	 * telnet or SSH. 	 * 	 * Setting either tcp_minmssoverload or tcp_minmss to "0" disables 	 * this check. 	 * 	 * Account for packet if payload packet, skip over ACK, etc. 	 */
