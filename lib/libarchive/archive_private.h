@@ -360,7 +360,7 @@ comment|/* Format-specific data for readers. */
 block|}
 name|formats
 index|[
-literal|4
+literal|8
 index|]
 struct|;
 name|struct
