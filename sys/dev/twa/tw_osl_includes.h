@@ -158,12 +158,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/twa/tw_osl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/twa/tw_osl_externs.h>
 end_include
 

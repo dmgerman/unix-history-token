@@ -69,16 +69,16 @@ name|TWA_COMMAND_QUEUE_OFFSET_HIGH
 value|0x24
 end_define
 
-begin_comment
-comment|/* Control register bit definitions. */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|TWA_CONTROL_CLEAR_SBUF_WRITE_ERROR
-value|0x00000008
+name|TWA_LARGE_RESPONSE_QUEUE_OFFSET
+value|0x30
 end_define
+
+begin_comment
+comment|/* Control register bit definitions. */
+end_comment
 
 begin_define
 define|#
@@ -180,13 +180,6 @@ define|#
 directive|define
 name|TWA_STATUS_ROM_BIOS_IN_SBUF
 value|0x00000002
-end_define
-
-begin_define
-define|#
-directive|define
-name|TWA_STATUS_SBUF_WRITE_ERROR
-value|0x00000008
 end_define
 
 begin_define
@@ -324,6 +317,20 @@ define|#
 directive|define
 name|TWA_PCI_CONFIG_CLEAR_PCI_ABORT
 value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TWA_RESET_PHASE1_NOTIFICATION_RESPONSE
+value|0xFFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|TWA_RESET_PHASE1_WAIT_TIME_MS
+value|500
 end_define
 
 begin_comment
@@ -513,7 +520,7 @@ begin_define
 define|#
 directive|define
 name|TWA_BUNDLED_FW_VERSION_STRING
-value|"2.06.00.009"
+value|"3.02.00.004"
 end_define
 
 begin_define
@@ -569,21 +576,35 @@ begin_define
 define|#
 directive|define
 name|TWA_CURRENT_FW_SRL
-value|28
+value|30
 end_define
 
 begin_define
 define|#
 directive|define
-name|TWA_CURRENT_FW_BRANCH
+name|TWA_CURRENT_FW_BRANCH_9K
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|TWA_CURRENT_FW_BUILD
-value|9
+name|TWA_CURRENT_FW_BUILD_9K
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|TWA_CURRENT_FW_BRANCH_9K_X
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|TWA_CURRENT_FW_BUILD_9K_X
+value|4
 end_define
 
 begin_define
@@ -596,12 +617,23 @@ end_define
 begin_define
 define|#
 directive|define
-name|TWA_9000_ARCH_ID
+name|TWA_ARCH_ID_9K
 value|0x5
 end_define
 
 begin_comment
-comment|/* 9000 series controllers */
+comment|/* 9000 PCI controllers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TWA_ARCH_ID_9K_X
+value|0x6
+end_define
+
+begin_comment
+comment|/* 9000 PCI-X controllers */
 end_comment
 
 begin_define
@@ -639,6 +671,39 @@ name|TWA_SENSE_DATA_LENGTH
 value|18
 end_define
 
+begin_define
+define|#
+directive|define
+name|TWA_ARCH_ID
+parameter_list|(
+name|device_id
+parameter_list|)
+define|\
+value|(((device_id) == TW_CL_DEVICE_ID_9K) ? TWA_ARCH_ID_9K :		\ 	TWA_ARCH_ID_9K_X)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TWA_CURRENT_FW_BRANCH
+parameter_list|(
+name|arch_id
+parameter_list|)
+define|\
+value|(((arch_id) == TWA_ARCH_ID_9K) ? TWA_CURRENT_FW_BRANCH_9K :	\ 	TWA_CURRENT_FW_BRANCH_9K_X)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TWA_CURRENT_FW_BUILD
+parameter_list|(
+name|arch_id
+parameter_list|)
+define|\
+value|(((arch_id) == TWA_ARCH_ID_9K) ? TWA_CURRENT_FW_BUILD_9K :	\ 	TWA_CURRENT_FW_BUILD_9K_X)
+end_define
+
 begin_comment
 comment|/*  * All SG addresses and DMA'able memory allocated by the OSL should be  * TWA_ALIGNMENT bytes aligned, and have a size that is a multiple of  * TWA_SG_ELEMENT_SIZE_FACTOR.  */
 end_comment
@@ -647,6 +712,9 @@ begin_define
 define|#
 directive|define
 name|TWA_ALIGNMENT
+parameter_list|(
+name|device_id
+parameter_list|)
 value|0x4
 end_define
 
@@ -654,7 +722,11 @@ begin_define
 define|#
 directive|define
 name|TWA_SG_ELEMENT_SIZE_FACTOR
-value|512
+parameter_list|(
+name|device_id
+parameter_list|)
+define|\
+value|(((device_id) == TW_CL_DEVICE_ID_9K) ? 512 : 4)
 end_define
 
 begin_comment
@@ -738,6 +810,17 @@ end_define
 
 begin_comment
 comment|/* BIOSs version [16] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TWA_PARAM_CTLR_MODEL
+value|8
+end_define
+
+begin_comment
+comment|/* Controller model [16] */
 end_comment
 
 begin_define
@@ -1269,6 +1352,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|TW_CLI_READ_LARGE_RESPONSE_QUEUE
+parameter_list|(
+name|ctlr_handle
+parameter_list|)
+define|\
+value|tw_osl_read_reg(ctlr_handle, TWA_LARGE_RESPONSE_QUEUE_OFFSET, 4)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TW_CLI_SOFT_RESET
 parameter_list|(
 name|ctlr
@@ -1486,6 +1580,36 @@ end_define
 
 begin_comment
 comment|/* 20:8:4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GET_RESP_ID_9K_X
+parameter_list|(
+name|undef2__resp_id
+parameter_list|)
+define|\
+value|((undef2__resp_id)& 0xFFF)
+end_define
+
+begin_comment
+comment|/* 20:12 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GET_LARGE_RESP_ID
+parameter_list|(
+name|misc__large_resp_id
+parameter_list|)
+define|\
+value|((misc__large_resp_id)& 0xFFFF)
+end_define
+
+begin_comment
+comment|/* 16:16 */
 end_comment
 
 begin_define
