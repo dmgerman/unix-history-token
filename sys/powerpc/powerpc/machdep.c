@@ -318,6 +318,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/mmuvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/pcb.h>
 end_include
 
@@ -1209,6 +1215,9 @@ block|}
 name|kdb_init
 argument_list|()
 expr_stmt|;
+name|kobj_machdep_init
+argument_list|()
+expr_stmt|;
 comment|/* 	 * XXX: Initialize the interrupt tables. 	 *      Disable translation in case the vector area 	 *      hasn't been mapped (G5) 	 */
 name|mtmsr
 argument_list|(
@@ -1637,6 +1646,14 @@ name|isync
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Initialise virtual memory. 	 */
+name|pmap_mmu_install
+argument_list|(
+name|MMU_TYPE_OEA
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* XXX temporary */
 name|pmap_bootstrap
 argument_list|(
 name|startkernel

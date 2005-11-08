@@ -360,20 +360,25 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|pmap_pte_spill
-parameter_list|(
-name|vm_offset_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|pmap_dev_direct_mapped
 parameter_list|(
 name|vm_offset_t
 parameter_list|,
 name|vm_size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|boolean_t
+name|pmap_mmu_install
+parameter_list|(
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|prio
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -388,11 +393,20 @@ parameter_list|)
 value|pmap_kextract(((vm_offset_t)(va)))
 end_define
 
+begin_define
+define|#
+directive|define
+name|PHYS_AVAIL_SZ
+value|128
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|vm_offset_t
 name|phys_avail
-index|[]
+index|[
+name|PHYS_AVAIL_SZ
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -414,6 +428,13 @@ begin_decl_stmt
 specifier|extern
 name|vm_offset_t
 name|msgbuf_phys
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|pmap_bootstrapped
 decl_stmt|;
 end_decl_stmt
 
