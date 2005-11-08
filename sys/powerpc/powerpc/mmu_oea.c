@@ -209,10 +209,22 @@ directive|include
 file|<machine/sr.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/mmuvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mmu_if.h"
+end_include
+
 begin_define
 define|#
 directive|define
-name|PMAP_DEBUG
+name|MOEA_DEBUG
 end_define
 
 begin_define
@@ -442,7 +454,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|PMAP_PVO_CHECK
+name|MOEA_PVO_CHECK
 parameter_list|(
 name|pvo
 parameter_list|)
@@ -468,56 +480,9 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-name|int
-name|pmap_bootstrapped
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Virtual and physical address of message buffer.  */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|msgbuf
-modifier|*
-name|msgbufp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vm_offset_t
-name|msgbuf_phys
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|pmap_pagedaemon_waken
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Map of physical memory regions.  */
 end_comment
-
-begin_decl_stmt
-name|vm_offset_t
-name|phys_avail
-index|[
-literal|128
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|u_int
-name|phys_avail_count
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -538,6 +503,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|u_int
+name|phys_avail_count
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|regions_sz
 decl_stmt|,
@@ -551,39 +522,6 @@ name|struct
 name|ofw_map
 modifier|*
 name|translations
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * First and last available kernel virtual addresses.  */
-end_comment
-
-begin_decl_stmt
-name|vm_offset_t
-name|virtual_avail
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vm_offset_t
-name|virtual_end
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vm_offset_t
-name|kernel_vm_end
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Kernel pmap.  */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|pmap
-name|kernel_pmap_store
 decl_stmt|;
 end_decl_stmt
 
@@ -602,7 +540,7 @@ end_comment
 begin_decl_stmt
 name|struct
 name|mtx
-name|pmap_table_mutex
+name|moea_table_mutex
 decl_stmt|;
 end_decl_stmt
 
@@ -615,19 +553,19 @@ specifier|static
 name|struct
 name|pteg
 modifier|*
-name|pmap_pteg_table
+name|moea_pteg_table
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|u_int
-name|pmap_pteg_count
+name|moea_pteg_count
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|u_int
-name|pmap_pteg_mask
+name|moea_pteg_mask
 decl_stmt|;
 end_decl_stmt
 
@@ -639,7 +577,7 @@ begin_decl_stmt
 name|struct
 name|pvo_head
 modifier|*
-name|pmap_pvo_table
+name|moea_pvo_table
 decl_stmt|;
 end_decl_stmt
 
@@ -650,11 +588,11 @@ end_comment
 begin_decl_stmt
 name|struct
 name|pvo_head
-name|pmap_pvo_kunmanaged
+name|moea_pvo_kunmanaged
 init|=
 name|LIST_HEAD_INITIALIZER
 argument_list|(
-name|pmap_pvo_kunmanaged
+name|moea_pvo_kunmanaged
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -666,11 +604,11 @@ end_comment
 begin_decl_stmt
 name|struct
 name|pvo_head
-name|pmap_pvo_unmanaged
+name|moea_pvo_unmanaged
 init|=
 name|LIST_HEAD_INITIALIZER
 argument_list|(
-name|pmap_pvo_unmanaged
+name|moea_pvo_unmanaged
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -681,7 +619,7 @@ end_comment
 
 begin_decl_stmt
 name|uma_zone_t
-name|pmap_upvo_zone
+name|moea_upvo_zone
 decl_stmt|;
 end_decl_stmt
 
@@ -691,7 +629,7 @@ end_comment
 
 begin_decl_stmt
 name|uma_zone_t
-name|pmap_mpvo_zone
+name|moea_mpvo_zone
 decl_stmt|;
 end_decl_stmt
 
@@ -711,14 +649,14 @@ specifier|static
 name|struct
 name|pvo_entry
 modifier|*
-name|pmap_bpvo_pool
+name|moea_bpvo_pool
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|int
-name|pmap_bpvo_pool_index
+name|moea_bpvo_pool_index
 init|=
 literal|0
 decl_stmt|;
@@ -734,7 +672,7 @@ end_define
 begin_decl_stmt
 specifier|static
 name|u_int
-name|pmap_vsid_bitmap
+name|moea_vsid_bitmap
 index|[
 name|NPMAPS
 operator|/
@@ -746,7 +684,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|boolean_t
-name|pmap_initialized
+name|moea_initialized
 init|=
 name|FALSE
 decl_stmt|;
@@ -758,7 +696,7 @@ end_comment
 
 begin_decl_stmt
 name|u_int
-name|pmap_pte_valid
+name|moea_pte_valid
 init|=
 literal|0
 decl_stmt|;
@@ -766,7 +704,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|u_int
-name|pmap_pte_overflow
+name|moea_pte_overflow
 init|=
 literal|0
 decl_stmt|;
@@ -774,7 +712,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|u_int
-name|pmap_pte_replacements
+name|moea_pte_replacements
 init|=
 literal|0
 decl_stmt|;
@@ -782,7 +720,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|u_int
-name|pmap_pvo_entries
+name|moea_pvo_entries
 init|=
 literal|0
 decl_stmt|;
@@ -790,7 +728,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|u_int
-name|pmap_pvo_enter_calls
+name|moea_pvo_enter_calls
 init|=
 literal|0
 decl_stmt|;
@@ -798,7 +736,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|u_int
-name|pmap_pvo_remove_calls
+name|moea_pvo_remove_calls
 init|=
 literal|0
 decl_stmt|;
@@ -806,7 +744,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|u_int
-name|pmap_pte_spills
+name|moea_pte_spills
 init|=
 literal|0
 decl_stmt|;
@@ -819,12 +757,12 @@ name|_machdep
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|pmap_pte_valid
+name|moea_pte_valid
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|pmap_pte_valid
+name|moea_pte_valid
 argument_list|,
 literal|0
 argument_list|,
@@ -840,12 +778,12 @@ name|_machdep
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|pmap_pte_overflow
+name|moea_pte_overflow
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|pmap_pte_overflow
+name|moea_pte_overflow
 argument_list|,
 literal|0
 argument_list|,
@@ -861,12 +799,12 @@ name|_machdep
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|pmap_pte_replacements
+name|moea_pte_replacements
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|pmap_pte_replacements
+name|moea_pte_replacements
 argument_list|,
 literal|0
 argument_list|,
@@ -882,12 +820,12 @@ name|_machdep
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|pmap_pvo_entries
+name|moea_pvo_entries
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|pmap_pvo_entries
+name|moea_pvo_entries
 argument_list|,
 literal|0
 argument_list|,
@@ -903,12 +841,12 @@ name|_machdep
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|pmap_pvo_enter_calls
+name|moea_pvo_enter_calls
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|pmap_pvo_enter_calls
+name|moea_pvo_enter_calls
 argument_list|,
 literal|0
 argument_list|,
@@ -924,12 +862,12 @@ name|_machdep
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|pmap_pvo_remove_calls
+name|moea_pvo_remove_calls
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|pmap_pvo_remove_calls
+name|moea_pvo_remove_calls
 argument_list|,
 literal|0
 argument_list|,
@@ -945,12 +883,12 @@ name|_machdep
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|pmap_pte_spills
+name|moea_pte_spills
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|pmap_pte_spills
+name|moea_pte_spills
 argument_list|,
 literal|0
 argument_list|,
@@ -963,13 +901,13 @@ begin_decl_stmt
 name|struct
 name|pvo_entry
 modifier|*
-name|pmap_pvo_zeropage
+name|moea_pvo_zeropage
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|vm_offset_t
-name|pmap_rkva_start
+name|moea_rkva_start
 init|=
 name|VM_MIN_KERNEL_ADDRESS
 decl_stmt|;
@@ -977,20 +915,20 @@ end_decl_stmt
 
 begin_decl_stmt
 name|u_int
-name|pmap_rkva_count
+name|moea_rkva_count
 init|=
 literal|4
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Allocate physical memory for use in pmap_bootstrap.  */
+comment|/*  * Allocate physical memory for use in moea_bootstrap.  */
 end_comment
 
 begin_function_decl
 specifier|static
 name|vm_offset_t
-name|pmap_bootstrap_alloc
+name|moea_bootstrap_alloc
 parameter_list|(
 name|vm_size_t
 parameter_list|,
@@ -1006,7 +944,7 @@ end_comment
 begin_function_decl
 specifier|static
 name|int
-name|pmap_pte_insert
+name|moea_pte_insert
 parameter_list|(
 name|u_int
 parameter_list|,
@@ -1024,7 +962,7 @@ end_comment
 begin_function_decl
 specifier|static
 name|int
-name|pmap_pvo_enter
+name|moea_pvo_enter
 parameter_list|(
 name|pmap_t
 parameter_list|,
@@ -1048,7 +986,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|pmap_pvo_remove
+name|moea_pvo_remove
 parameter_list|(
 name|struct
 name|pvo_entry
@@ -1064,7 +1002,7 @@ specifier|static
 name|struct
 name|pvo_entry
 modifier|*
-name|pmap_pvo_find_va
+name|moea_pvo_find_va
 parameter_list|(
 name|pmap_t
 parameter_list|,
@@ -1081,7 +1019,7 @@ specifier|static
 name|struct
 name|pte
 modifier|*
-name|pmap_pvo_to_pte
+name|moea_pvo_to_pte
 parameter_list|(
 specifier|const
 name|struct
@@ -1102,9 +1040,9 @@ specifier|static
 name|struct
 name|pvo_entry
 modifier|*
-name|pmap_rkva_alloc
+name|moea_rkva_alloc
 parameter_list|(
-name|void
+name|mmu_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1112,7 +1050,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|pmap_pa_map
+name|moea_pa_map
 parameter_list|(
 name|struct
 name|pvo_entry
@@ -1133,7 +1071,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|pmap_pa_unmap
+name|moea_pa_unmap
 parameter_list|(
 name|struct
 name|pvo_entry
@@ -1152,7 +1090,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|pmap_syncicache
+name|moea_syncicache
 parameter_list|(
 name|vm_offset_t
 parameter_list|,
@@ -1164,7 +1102,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|boolean_t
-name|pmap_query_bit
+name|moea_query_bit
 parameter_list|(
 name|vm_page_t
 parameter_list|,
@@ -1176,7 +1114,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|u_int
-name|pmap_clear_bit
+name|moea_clear_bit
 parameter_list|(
 name|vm_page_t
 parameter_list|,
@@ -1184,6 +1122,18 @@ name|int
 parameter_list|,
 name|int
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|moea_kremove
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|vm_offset_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1197,6 +1147,726 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|int
+name|moea_pte_spill
+parameter_list|(
+name|vm_offset_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Kernel MMU interface  */
+end_comment
+
+begin_function_decl
+name|void
+name|moea_change_wiring
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|pmap_t
+parameter_list|,
+name|vm_offset_t
+parameter_list|,
+name|boolean_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|moea_clear_modify
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|vm_page_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|moea_clear_reference
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|vm_page_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|moea_copy_page
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|vm_page_t
+parameter_list|,
+name|vm_page_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|moea_enter
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|pmap_t
+parameter_list|,
+name|vm_offset_t
+parameter_list|,
+name|vm_page_t
+parameter_list|,
+name|vm_prot_t
+parameter_list|,
+name|boolean_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|vm_page_t
+name|moea_enter_quick
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|pmap_t
+parameter_list|,
+name|vm_offset_t
+parameter_list|,
+name|vm_page_t
+parameter_list|,
+name|vm_prot_t
+parameter_list|,
+name|vm_page_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|vm_paddr_t
+name|moea_extract
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|pmap_t
+parameter_list|,
+name|vm_offset_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|vm_page_t
+name|moea_extract_and_hold
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|pmap_t
+parameter_list|,
+name|vm_offset_t
+parameter_list|,
+name|vm_prot_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|moea_init
+parameter_list|(
+name|mmu_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|boolean_t
+name|moea_is_modified
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|vm_page_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|boolean_t
+name|moea_ts_referenced
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|vm_page_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|vm_offset_t
+name|moea_map
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|vm_offset_t
+modifier|*
+parameter_list|,
+name|vm_offset_t
+parameter_list|,
+name|vm_offset_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|boolean_t
+name|moea_page_exists_quick
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|pmap_t
+parameter_list|,
+name|vm_page_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|moea_page_protect
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|vm_page_t
+parameter_list|,
+name|vm_prot_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|moea_pinit
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|pmap_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|moea_pinit0
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|pmap_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|moea_protect
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|pmap_t
+parameter_list|,
+name|vm_offset_t
+parameter_list|,
+name|vm_offset_t
+parameter_list|,
+name|vm_prot_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|moea_qenter
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|vm_offset_t
+parameter_list|,
+name|vm_page_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|moea_qremove
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|vm_offset_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|moea_release
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|pmap_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|moea_remove
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|pmap_t
+parameter_list|,
+name|vm_offset_t
+parameter_list|,
+name|vm_offset_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|moea_remove_all
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|vm_page_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|moea_zero_page
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|vm_page_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|moea_zero_page_area
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|vm_page_t
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|moea_zero_page_idle
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|vm_page_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|moea_activate
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|moea_deactivate
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|moea_bootstrap
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|vm_offset_t
+parameter_list|,
+name|vm_offset_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|moea_mapdev
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|vm_offset_t
+parameter_list|,
+name|vm_size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|moea_unmapdev
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|vm_offset_t
+parameter_list|,
+name|vm_size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|vm_offset_t
+name|moea_kextract
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|vm_offset_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|moea_kenter
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|vm_offset_t
+parameter_list|,
+name|vm_offset_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|boolean_t
+name|moea_dev_direct_mapped
+parameter_list|(
+name|mmu_t
+parameter_list|,
+name|vm_offset_t
+parameter_list|,
+name|vm_size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|mmu_method_t
+name|moea_methods
+index|[]
+init|=
+block|{
+name|MMUMETHOD
+argument_list|(
+name|mmu_change_wiring
+argument_list|,
+name|moea_change_wiring
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_clear_modify
+argument_list|,
+name|moea_clear_modify
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_clear_reference
+argument_list|,
+name|moea_clear_reference
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_copy_page
+argument_list|,
+name|moea_copy_page
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_enter
+argument_list|,
+name|moea_enter
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_enter_quick
+argument_list|,
+name|moea_enter_quick
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_extract
+argument_list|,
+name|moea_extract
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_extract_and_hold
+argument_list|,
+name|moea_extract_and_hold
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_init
+argument_list|,
+name|moea_init
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_is_modified
+argument_list|,
+name|moea_is_modified
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_ts_referenced
+argument_list|,
+name|moea_ts_referenced
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_map
+argument_list|,
+name|moea_map
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_page_exists_quick
+argument_list|,
+name|moea_page_exists_quick
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_page_protect
+argument_list|,
+name|moea_page_protect
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_pinit
+argument_list|,
+name|moea_pinit
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_pinit0
+argument_list|,
+name|moea_pinit0
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_protect
+argument_list|,
+name|moea_protect
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_qenter
+argument_list|,
+name|moea_qenter
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_qremove
+argument_list|,
+name|moea_qremove
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_release
+argument_list|,
+name|moea_release
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_remove
+argument_list|,
+name|moea_remove
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_remove_all
+argument_list|,
+name|moea_remove_all
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_zero_page
+argument_list|,
+name|moea_zero_page
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_zero_page_area
+argument_list|,
+name|moea_zero_page_area
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_zero_page_idle
+argument_list|,
+name|moea_zero_page_idle
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_activate
+argument_list|,
+name|moea_activate
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_deactivate
+argument_list|,
+name|moea_deactivate
+argument_list|)
+block|,
+comment|/* Internal interfaces */
+name|MMUMETHOD
+argument_list|(
+name|mmu_bootstrap
+argument_list|,
+name|moea_bootstrap
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_mapdev
+argument_list|,
+name|moea_mapdev
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_unmapdev
+argument_list|,
+name|moea_unmapdev
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_kextract
+argument_list|,
+name|moea_kextract
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_kenter
+argument_list|,
+name|moea_kenter
+argument_list|)
+block|,
+name|MMUMETHOD
+argument_list|(
+name|mmu_dev_direct_mapped
+argument_list|,
+name|moea_dev_direct_mapped
+argument_list|)
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|mmu_def_t
+name|oea_mmu
+init|=
+block|{
+name|MMU_TYPE_OEA
+block|,
+name|moea_methods
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|MMU_DEF
+argument_list|(
+name|oea_mmu
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static
@@ -1269,7 +1939,7 @@ return|return
 operator|(
 name|hash
 operator|&
-name|pmap_pteg_mask
+name|moea_pteg_mask
 operator|)
 return|;
 block|}
@@ -1322,7 +1992,7 @@ condition|)
 return|return
 operator|(
 operator|&
-name|pmap_pvo_unmanaged
+name|moea_pvo_unmanaged
 operator|)
 return|;
 end_if
@@ -1369,7 +2039,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|pmap_attr_clear
+name|moea_attr_clear
 parameter_list|(
 name|vm_page_t
 name|m
@@ -1394,7 +2064,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|pmap_attr_fetch
+name|moea_attr_fetch
 parameter_list|(
 name|vm_page_t
 name|m
@@ -1416,7 +2086,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|pmap_attr_save
+name|moea_attr_save
 parameter_list|(
 name|vm_page_t
 name|m
@@ -1440,7 +2110,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|pmap_pte_compare
+name|moea_pte_compare
 parameter_list|(
 specifier|const
 name|struct
@@ -1482,7 +2152,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|pmap_pte_match
+name|moea_pte_match
 parameter_list|(
 name|struct
 name|pte
@@ -1540,7 +2210,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|pmap_pte_create
+name|moea_pte_create
 parameter_list|(
 name|struct
 name|pte
@@ -1599,7 +2269,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|pmap_pte_synch
+name|moea_pte_synch
 parameter_list|(
 name|struct
 name|pte
@@ -1633,7 +2303,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|pmap_pte_clear
+name|moea_pte_clear
 parameter_list|(
 name|struct
 name|pte
@@ -1676,7 +2346,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|pmap_pte_set
+name|moea_pte_set
 parameter_list|(
 name|struct
 name|pte
@@ -1718,7 +2388,7 @@ expr_stmt|;
 name|SYNC
 argument_list|()
 expr_stmt|;
-name|pmap_pte_valid
+name|moea_pte_valid
 operator|++
 expr_stmt|;
 block|}
@@ -1728,7 +2398,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|pmap_pte_unset
+name|moea_pte_unset
 parameter_list|(
 name|struct
 name|pte
@@ -1781,14 +2451,14 @@ name|SYNC
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Save the reg& chg bits. 	 */
-name|pmap_pte_synch
+name|moea_pte_synch
 argument_list|(
 name|pt
 argument_list|,
 name|pvo_pt
 argument_list|)
 expr_stmt|;
-name|pmap_pte_valid
+name|moea_pte_valid
 operator|--
 expr_stmt|;
 block|}
@@ -1798,7 +2468,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|pmap_pte_change
+name|moea_pte_change
 parameter_list|(
 name|struct
 name|pte
@@ -1815,7 +2485,7 @@ name|va
 parameter_list|)
 block|{
 comment|/* 	 * Invalidate the PTE 	 */
-name|pmap_pte_unset
+name|moea_pte_unset
 argument_list|(
 name|pt
 argument_list|,
@@ -1824,7 +2494,7 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-name|pmap_pte_set
+name|moea_pte_set
 argument_list|(
 name|pt
 argument_list|,
@@ -2030,8 +2700,11 @@ end_function
 
 begin_function
 name|void
-name|pmap_bootstrap
+name|moea_bootstrap
 parameter_list|(
+name|mmu_t
+name|mmup
+parameter_list|,
 name|vm_offset_t
 name|kernelstart
 parameter_list|,
@@ -2305,7 +2978,7 @@ argument_list|,
 name|BAT_PP_RW
 argument_list|)
 expr_stmt|;
-asm|__asm ("sync; isync; \n"
+asm|__asm (".balign 32; \n"
 literal|"mtibatu 0,%0; mtibatl 0,%1; isync; \n"
 literal|"mtdbatu 0,%0; mtdbatl 0,%1; isync"
 operator|::
@@ -2446,7 +3119,7 @@ name|CTR0
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"pmap_bootstrap: physical memory"
+literal|"moea_bootstrap: physical memory"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2629,7 +3302,7 @@ name|regions_sz
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_bootstrap: phys_avail too small"
+literal|"moea_bootstrap: phys_avail too small"
 argument_list|)
 expr_stmt|;
 end_if
@@ -2882,7 +3555,7 @@ name|PTEGCOUNT
 end_ifdef
 
 begin_expr_stmt
-name|pmap_pteg_count
+name|moea_pteg_count
 operator|=
 name|PTEGCOUNT
 expr_stmt|;
@@ -2894,7 +3567,7 @@ directive|else
 end_else
 
 begin_expr_stmt
-name|pmap_pteg_count
+name|moea_pteg_count
 operator|=
 literal|0x1000
 expr_stmt|;
@@ -2903,18 +3576,18 @@ end_expr_stmt
 begin_while
 while|while
 condition|(
-name|pmap_pteg_count
+name|moea_pteg_count
 operator|<
 name|physmem
 condition|)
-name|pmap_pteg_count
+name|moea_pteg_count
 operator|<<=
 literal|1
 expr_stmt|;
 end_while
 
 begin_expr_stmt
-name|pmap_pteg_count
+name|moea_pteg_count
 operator|>>=
 literal|1
 expr_stmt|;
@@ -2932,7 +3605,7 @@ end_comment
 begin_expr_stmt
 name|size
 operator|=
-name|pmap_pteg_count
+name|moea_pteg_count
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -2947,9 +3620,9 @@ name|CTR2
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"pmap_bootstrap: %d PTEGs, %d bytes"
+literal|"moea_bootstrap: %d PTEGs, %d bytes"
 argument_list|,
-name|pmap_pteg_count
+name|moea_pteg_count
 argument_list|,
 name|size
 argument_list|)
@@ -2957,14 +3630,14 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|pmap_pteg_table
+name|moea_pteg_table
 operator|=
 operator|(
 expr|struct
 name|pteg
 operator|*
 operator|)
-name|pmap_bootstrap_alloc
+name|moea_bootstrap_alloc
 argument_list|(
 name|size
 argument_list|,
@@ -2978,9 +3651,9 @@ name|CTR1
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"pmap_bootstrap: PTEG table at %p"
+literal|"moea_bootstrap: PTEG table at %p"
 argument_list|,
-name|pmap_pteg_table
+name|moea_pteg_table
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2992,9 +3665,9 @@ operator|(
 name|void
 operator|*
 operator|)
-name|pmap_pteg_table
+name|moea_pteg_table
 argument_list|,
-name|pmap_pteg_count
+name|moea_pteg_count
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -3006,9 +3679,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|pmap_pteg_mask
+name|moea_pteg_mask
 operator|=
-name|pmap_pteg_count
+name|moea_pteg_count
 operator|-
 literal|1
 expr_stmt|;
@@ -3027,19 +3700,19 @@ expr|struct
 name|pvo_head
 argument_list|)
 operator|*
-name|pmap_pteg_count
+name|moea_pteg_count
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|pmap_pvo_table
+name|moea_pvo_table
 operator|=
 operator|(
 expr|struct
 name|pvo_head
 operator|*
 operator|)
-name|pmap_bootstrap_alloc
+name|moea_bootstrap_alloc
 argument_list|(
 name|size
 argument_list|,
@@ -3053,9 +3726,9 @@ name|CTR1
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"pmap_bootstrap: PVO table at %p"
+literal|"moea_bootstrap: PVO table at %p"
 argument_list|,
-name|pmap_pvo_table
+name|moea_pvo_table
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3069,7 +3742,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|pmap_pteg_count
+name|moea_pteg_count
 condition|;
 name|i
 operator|++
@@ -3077,7 +3750,7 @@ control|)
 name|LIST_INIT
 argument_list|(
 operator|&
-name|pmap_pvo_table
+name|moea_pvo_table
 index|[
 name|i
 index|]
@@ -3093,7 +3766,7 @@ begin_expr_stmt
 name|mtx_init
 argument_list|(
 operator|&
-name|pmap_table_mutex
+name|moea_table_mutex
 argument_list|,
 literal|"pmap table"
 argument_list|,
@@ -3111,7 +3784,7 @@ end_comment
 begin_expr_stmt
 name|msgbuf_phys
 operator|=
-name|pmap_bootstrap_alloc
+name|moea_bootstrap_alloc
 argument_list|(
 name|MSGBUF_SIZE
 argument_list|,
@@ -3125,14 +3798,14 @@ comment|/* 	 * Initialise the unmanaged pvo pool. 	 */
 end_comment
 
 begin_expr_stmt
-name|pmap_bpvo_pool
+name|moea_bpvo_pool
 operator|=
 operator|(
 expr|struct
 name|pvo_entry
 operator|*
 operator|)
-name|pmap_bootstrap_alloc
+name|moea_bootstrap_alloc
 argument_list|(
 name|BPVO_POOL_SIZE
 operator|*
@@ -3148,7 +3821,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|pmap_bpvo_pool_index
+name|moea_bpvo_pool_index
 operator|=
 literal|0
 expr_stmt|;
@@ -3159,7 +3832,7 @@ comment|/* 	 * Make sure kernel vsid is allocated as well as VSID 0. 	 */
 end_comment
 
 begin_expr_stmt
-name|pmap_vsid_bitmap
+name|moea_vsid_bitmap
 index|[
 operator|(
 name|KERNEL_VSIDBITS
@@ -3185,7 +3858,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|pmap_vsid_bitmap
+name|moea_vsid_bitmap
 index|[
 literal|0
 index|]
@@ -3199,8 +3872,10 @@ comment|/* 	 * Set up the Open Firmware pmap and add it's mappings. 	 */
 end_comment
 
 begin_expr_stmt
-name|pmap_pinit
+name|moea_pinit
 argument_list|(
+name|mmup
+argument_list|,
 operator|&
 name|ofw_pmap
 argument_list|)
@@ -3248,7 +3923,7 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_bootstrap: can't find /chosen"
+literal|"moea_bootstrap: can't find /chosen"
 argument_list|)
 expr_stmt|;
 end_if
@@ -3285,7 +3960,7 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_bootstrap: can't get mmu package"
+literal|"moea_bootstrap: can't get mmu package"
 argument_list|)
 expr_stmt|;
 end_if
@@ -3309,7 +3984,7 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_bootstrap: can't get ofw translation count"
+literal|"moea_bootstrap: can't get ofw translation count"
 argument_list|)
 expr_stmt|;
 end_if
@@ -3378,7 +4053,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_bootstrap: no space to copy translations"
+literal|"moea_bootstrap: no space to copy translations"
 argument_list|)
 expr_stmt|;
 end_if
@@ -3412,7 +4087,7 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_bootstrap: can't get ofw translations"
+literal|"moea_bootstrap: can't get ofw translations"
 argument_list|)
 expr_stmt|;
 end_if
@@ -3422,7 +4097,7 @@ name|CTR0
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"pmap_bootstrap: translations"
+literal|"moea_bootstrap: translations"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3559,8 +4234,10 @@ name|om_pa
 operator|+
 name|off
 expr_stmt|;
-name|pmap_enter
+name|moea_enter
 argument_list|(
+name|mmup
+argument_list|,
 operator|&
 name|ofw_pmap
 argument_list|,
@@ -3685,7 +4362,7 @@ end_comment
 begin_expr_stmt
 name|pa
 operator|=
-name|pmap_bootstrap_alloc
+name|moea_bootstrap_alloc
 argument_list|(
 name|KSTACK_PAGES
 operator|*
@@ -3721,7 +4398,7 @@ name|CTR2
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"pmap_bootstrap: kstack0 at %#x (%#x)"
+literal|"moea_bootstrap: kstack0 at %#x (%#x)"
 argument_list|,
 name|kstack0_phys
 argument_list|,
@@ -3774,8 +4451,10 @@ name|i
 operator|*
 name|PAGE_SIZE
 expr_stmt|;
-name|pmap_kenter
+name|moea_kenter
 argument_list|(
+name|mmup
+argument_list|,
 name|va
 argument_list|,
 name|pa
@@ -3943,10 +4622,10 @@ operator|(
 operator|(
 name|u_int
 operator|)
-name|pmap_pteg_table
+name|moea_pteg_table
 operator||
 operator|(
-name|pmap_pteg_mask
+name|moea_pteg_mask
 operator|>>
 literal|10
 operator|)
@@ -3977,8 +4656,10 @@ end_comment
 
 begin_macro
 unit|void
-name|pmap_activate
+name|moea_activate
 argument_list|(
+argument|mmu_t mmu
+argument_list|,
 argument|struct thread *td
 argument_list|)
 end_macro
@@ -4010,8 +4691,10 @@ operator|=
 operator|(
 name|pmap_t
 operator|)
-name|pmap_kextract
+name|moea_kextract
 argument_list|(
+name|mmu
+argument_list|,
 operator|(
 name|vm_offset_t
 operator|)
@@ -4046,8 +4729,11 @@ end_block
 
 begin_function
 name|void
-name|pmap_deactivate
+name|moea_deactivate
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|struct
 name|thread
 modifier|*
@@ -4091,31 +4777,12 @@ block|}
 end_function
 
 begin_function
-name|vm_offset_t
-name|pmap_addr_hint
-parameter_list|(
-name|vm_object_t
-name|object
-parameter_list|,
-name|vm_offset_t
-name|va
-parameter_list|,
-name|vm_size_t
-name|size
-parameter_list|)
-block|{
-return|return
-operator|(
-name|va
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
 name|void
-name|pmap_change_wiring
+name|moea_change_wiring
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|pmap_t
 name|pm
 parameter_list|,
@@ -4138,7 +4805,7 @@ argument_list|)
 expr_stmt|;
 name|pvo
 operator|=
-name|pmap_pvo_find_va
+name|moea_pvo_find_va
 argument_list|(
 name|pm
 argument_list|,
@@ -4228,32 +4895,11 @@ end_function
 
 begin_function
 name|void
-name|pmap_copy
+name|moea_copy_page
 parameter_list|(
-name|pmap_t
-name|dst_pmap
+name|mmu_t
+name|mmu
 parameter_list|,
-name|pmap_t
-name|src_pmap
-parameter_list|,
-name|vm_offset_t
-name|dst_addr
-parameter_list|,
-name|vm_size_t
-name|len
-parameter_list|,
-name|vm_offset_t
-name|src_addr
-parameter_list|)
-block|{
-comment|/* 	 * This is not needed as it's mainly an optimisation. 	 * It may want to be implemented later though. 	 */
-block|}
-end_function
-
-begin_function
-name|void
-name|pmap_copy_page
-parameter_list|(
 name|vm_page_t
 name|msrc
 parameter_list|,
@@ -4307,8 +4953,11 @@ end_comment
 
 begin_function
 name|void
-name|pmap_zero_page
+name|moea_zero_page
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|vm_page_t
 name|m
 parameter_list|)
@@ -4342,23 +4991,25 @@ block|}
 elseif|else
 if|if
 condition|(
-name|pmap_initialized
+name|moea_initialized
 condition|)
 block|{
 if|if
 condition|(
-name|pmap_pvo_zeropage
+name|moea_pvo_zeropage
 operator|==
 name|NULL
 condition|)
-name|pmap_pvo_zeropage
+name|moea_pvo_zeropage
 operator|=
-name|pmap_rkva_alloc
-argument_list|()
-expr_stmt|;
-name|pmap_pa_map
+name|moea_rkva_alloc
 argument_list|(
-name|pmap_pvo_zeropage
+name|mmu
+argument_list|)
+expr_stmt|;
+name|moea_pa_map
+argument_list|(
+name|moea_pvo_zeropage
 argument_list|,
 name|pa
 argument_list|,
@@ -4374,7 +5025,7 @@ name|caddr_t
 operator|)
 name|PVO_VADDR
 argument_list|(
-name|pmap_pvo_zeropage
+name|moea_pvo_zeropage
 argument_list|)
 expr_stmt|;
 block|}
@@ -4382,7 +5033,7 @@ else|else
 block|{
 name|panic
 argument_list|(
-literal|"pmap_zero_page: can't zero pa %#x"
+literal|"moea_zero_page: can't zero pa %#x"
 argument_list|,
 name|pa
 argument_list|)
@@ -4401,9 +5052,9 @@ name|pa
 operator|>=
 name|SEGMENT_LENGTH
 condition|)
-name|pmap_pa_unmap
+name|moea_pa_unmap
 argument_list|(
-name|pmap_pvo_zeropage
+name|moea_pvo_zeropage
 argument_list|,
 name|NULL
 argument_list|,
@@ -4415,8 +5066,11 @@ end_function
 
 begin_function
 name|void
-name|pmap_zero_page_area
+name|moea_zero_page_area
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|vm_page_t
 name|m
 parameter_list|,
@@ -4456,23 +5110,25 @@ block|}
 elseif|else
 if|if
 condition|(
-name|pmap_initialized
+name|moea_initialized
 condition|)
 block|{
 if|if
 condition|(
-name|pmap_pvo_zeropage
+name|moea_pvo_zeropage
 operator|==
 name|NULL
 condition|)
-name|pmap_pvo_zeropage
+name|moea_pvo_zeropage
 operator|=
-name|pmap_rkva_alloc
-argument_list|()
-expr_stmt|;
-name|pmap_pa_map
+name|moea_rkva_alloc
 argument_list|(
-name|pmap_pvo_zeropage
+name|mmu
+argument_list|)
+expr_stmt|;
+name|moea_pa_map
+argument_list|(
+name|moea_pvo_zeropage
 argument_list|,
 name|pa
 argument_list|,
@@ -4488,7 +5144,7 @@ name|caddr_t
 operator|)
 name|PVO_VADDR
 argument_list|(
-name|pmap_pvo_zeropage
+name|moea_pvo_zeropage
 argument_list|)
 expr_stmt|;
 block|}
@@ -4496,7 +5152,7 @@ else|else
 block|{
 name|panic
 argument_list|(
-literal|"pmap_zero_page: can't zero pa %#x"
+literal|"moea_zero_page: can't zero pa %#x"
 argument_list|,
 name|pa
 argument_list|)
@@ -4517,9 +5173,9 @@ name|pa
 operator|>=
 name|SEGMENT_LENGTH
 condition|)
-name|pmap_pa_unmap
+name|moea_pa_unmap
 argument_list|(
-name|pmap_pvo_zeropage
+name|moea_pvo_zeropage
 argument_list|,
 name|NULL
 argument_list|,
@@ -4531,13 +5187,16 @@ end_function
 
 begin_function
 name|void
-name|pmap_zero_page_idle
+name|moea_zero_page_idle
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|vm_page_t
 name|m
 parameter_list|)
 block|{
-comment|/* XXX this is called outside of Giant, is pmap_zero_page safe? */
+comment|/* XXX this is called outside of Giant, is moea_zero_page safe? */
 comment|/* XXX maybe have a dedicated mapping for this to avoid the problem? */
 name|mtx_lock
 argument_list|(
@@ -4545,8 +5204,10 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-name|pmap_zero_page
+name|moea_zero_page
 argument_list|(
+name|mmu
+argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
@@ -4565,8 +5226,11 @@ end_comment
 
 begin_function
 name|void
-name|pmap_enter
+name|moea_enter
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|pmap_t
 name|pmap
 parameter_list|,
@@ -4609,17 +5273,17 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|pmap_initialized
+name|moea_initialized
 condition|)
 block|{
 name|pvo_head
 operator|=
 operator|&
-name|pmap_pvo_kunmanaged
+name|moea_pvo_kunmanaged
 expr_stmt|;
 name|zone
 operator|=
-name|pmap_upvo_zone
+name|moea_upvo_zone
 expr_stmt|;
 name|pvo_flags
 operator|=
@@ -4649,7 +5313,7 @@ name|m
 expr_stmt|;
 name|zone
 operator|=
-name|pmap_mpvo_zone
+name|moea_mpvo_zone
 expr_stmt|;
 name|pvo_flags
 operator|=
@@ -4688,7 +5352,7 @@ condition|)
 name|pvo_head
 operator|=
 operator|&
-name|pmap_pvo_kunmanaged
+name|moea_pvo_kunmanaged
 expr_stmt|;
 comment|/* 	 * If this is a managed page, and it's the first reference to the page, 	 * clear the execness of the page.  Otherwise fetch the execness. 	 */
 if|if
@@ -4720,7 +5384,7 @@ name|pvo_head
 argument_list|)
 condition|)
 block|{
-name|pmap_attr_clear
+name|moea_attr_clear
 argument_list|(
 name|pg
 argument_list|,
@@ -4732,7 +5396,7 @@ else|else
 block|{
 name|was_exec
 operator|=
-name|pmap_attr_fetch
+name|moea_attr_fetch
 argument_list|(
 name|pg
 argument_list|)
@@ -4865,7 +5529,7 @@ name|PVO_FAKE
 expr_stmt|;
 name|error
 operator|=
-name|pmap_pvo_enter
+name|moea_pvo_enter
 argument_list|(
 name|pmap
 argument_list|,
@@ -4912,7 +5576,7 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Flush the real memory from the cache. 		 */
-name|pmap_syncicache
+name|moea_syncicache
 argument_list|(
 name|VM_PAGE_TO_PHYS
 argument_list|(
@@ -4928,7 +5592,7 @@ name|pg
 operator|!=
 name|NULL
 condition|)
-name|pmap_attr_save
+name|moea_attr_save
 argument_list|(
 name|pg
 argument_list|,
@@ -4944,7 +5608,7 @@ name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
 comment|/* XXX syncicache always until problems are sorted */
-name|pmap_syncicache
+name|moea_syncicache
 argument_list|(
 name|VM_PAGE_TO_PHYS
 argument_list|(
@@ -4964,8 +5628,11 @@ end_function
 
 begin_function
 name|vm_page_t
-name|pmap_enter_quick
+name|moea_enter_quick
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|pmap_t
 name|pm
 parameter_list|,
@@ -5003,8 +5670,10 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-name|pmap_enter
+name|moea_enter
 argument_list|(
+name|mmu
+argument_list|,
 name|pm
 argument_list|,
 name|va
@@ -5053,8 +5722,11 @@ end_function
 
 begin_function
 name|vm_paddr_t
-name|pmap_extract
+name|moea_extract
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|pmap_t
 name|pm
 parameter_list|,
@@ -5077,7 +5749,7 @@ argument_list|)
 expr_stmt|;
 name|pvo
 operator|=
-name|pmap_pvo_find_va
+name|moea_pvo_find_va
 argument_list|(
 name|pm
 argument_list|,
@@ -5137,8 +5809,11 @@ end_comment
 
 begin_function
 name|vm_page_t
-name|pmap_extract_and_hold
+name|moea_extract_and_hold
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|pmap_t
 name|pmap
 parameter_list|,
@@ -5177,7 +5852,7 @@ argument_list|)
 expr_stmt|;
 name|pvo
 operator|=
-name|pmap_pvo_find_va
+name|moea_pvo_find_va
 argument_list|(
 name|pmap
 argument_list|,
@@ -5269,49 +5944,22 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Grow the number of kernel page table entries.  Unneeded.  */
-end_comment
-
 begin_function
 name|void
-name|pmap_growkernel
+name|moea_init
 parameter_list|(
-name|vm_offset_t
-name|addr
-parameter_list|)
-block|{ }
-end_function
-
-begin_comment
-comment|/*  *	Initialize a vm_page's machine-dependent fields.  */
-end_comment
-
-begin_function
-name|void
-name|pmap_page_init
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|)
-block|{ }
-end_function
-
-begin_function
-name|void
-name|pmap_init
-parameter_list|(
-name|void
+name|mmu_t
+name|mmu
 parameter_list|)
 block|{
 name|CTR0
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"pmap_init"
+literal|"moea_init"
 argument_list|)
 expr_stmt|;
-name|pmap_upvo_zone
+name|moea_upvo_zone
 operator|=
 name|uma_zcreate
 argument_list|(
@@ -5338,7 +5986,7 @@ operator||
 name|UMA_ZONE_NOFREE
 argument_list|)
 expr_stmt|;
-name|pmap_mpvo_zone
+name|moea_mpvo_zone
 operator|=
 name|uma_zcreate
 argument_list|(
@@ -5365,7 +6013,7 @@ operator||
 name|UMA_ZONE_NOFREE
 argument_list|)
 expr_stmt|;
-name|pmap_initialized
+name|moea_initialized
 operator|=
 name|TRUE
 expr_stmt|;
@@ -5373,26 +6021,12 @@ block|}
 end_function
 
 begin_function
-name|void
-name|pmap_init2
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|CTR0
-argument_list|(
-name|KTR_PMAP
-argument_list|,
-literal|"pmap_init2"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
 name|boolean_t
-name|pmap_is_modified
+name|moea_is_modified
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|vm_page_t
 name|m
 parameter_list|)
@@ -5420,7 +6054,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|pmap_query_bit
+name|moea_query_bit
 argument_list|(
 name|m
 argument_list|,
@@ -5431,33 +6065,13 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  *	pmap_is_prefaultable:  *  *	Return whether or not the specified virtual address is elgible  *	for prefault.  */
-end_comment
-
-begin_function
-name|boolean_t
-name|pmap_is_prefaultable
-parameter_list|(
-name|pmap_t
-name|pmap
-parameter_list|,
-name|vm_offset_t
-name|addr
-parameter_list|)
-block|{
-return|return
-operator|(
-name|FALSE
-operator|)
-return|;
-block|}
-end_function
-
 begin_function
 name|void
-name|pmap_clear_reference
+name|moea_clear_reference
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|vm_page_t
 name|m
 parameter_list|)
@@ -5479,7 +6093,7 @@ operator|!=
 literal|0
 condition|)
 return|return;
-name|pmap_clear_bit
+name|moea_clear_bit
 argument_list|(
 name|m
 argument_list|,
@@ -5493,8 +6107,11 @@ end_function
 
 begin_function
 name|void
-name|pmap_clear_modify
+name|moea_clear_modify
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|vm_page_t
 name|m
 parameter_list|)
@@ -5516,7 +6133,7 @@ operator|!=
 literal|0
 condition|)
 return|return;
-name|pmap_clear_bit
+name|moea_clear_bit
 argument_list|(
 name|m
 argument_list|,
@@ -5529,13 +6146,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	pmap_ts_referenced:  *  *	Return a count of reference bits for a page, clearing those bits.  *	It is not necessary for every reference bit to be cleared, but it  *	is necessary that 0 only be returned when there are truly no  *	reference bits set.  *  *	XXX: The exact number of bits to check and clear is a matter that  *	should be tested and standardized at some point in the future for  *	optimal aging of shared pages.  */
+comment|/*  *	moea_ts_referenced:  *  *	Return a count of reference bits for a page, clearing those bits.  *	It is not necessary for every reference bit to be cleared, but it  *	is necessary that 0 only be returned when there are truly no  *	reference bits set.  *  *	XXX: The exact number of bits to check and clear is a matter that  *	should be tested and standardized at some point in the future for  *	optimal aging of shared pages.  */
 end_comment
 
 begin_function
-name|int
-name|pmap_ts_referenced
+name|boolean_t
+name|moea_ts_referenced
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|vm_page_t
 name|m
 parameter_list|)
@@ -5566,7 +6186,7 @@ operator|)
 return|;
 name|count
 operator|=
-name|pmap_clear_bit
+name|moea_clear_bit
 argument_list|(
 name|m
 argument_list|,
@@ -5589,8 +6209,11 @@ end_comment
 
 begin_function
 name|void
-name|pmap_kenter
+name|moea_kenter
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|vm_offset_t
 name|va
 parameter_list|,
@@ -5610,7 +6233,7 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-block|if (va< VM_MIN_KERNEL_ADDRESS) 		panic("pmap_kenter: attempt to enter non-kernel address %#x", 		    va);
+block|if (va< VM_MIN_KERNEL_ADDRESS) 		panic("moea_kenter: attempt to enter non-kernel address %#x", 		    va);
 endif|#
 directive|endif
 name|pte_lo
@@ -5686,14 +6309,14 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|pmap_pvo_enter
+name|moea_pvo_enter
 argument_list|(
 name|kernel_pmap
 argument_list|,
-name|pmap_upvo_zone
+name|moea_upvo_zone
 argument_list|,
 operator|&
-name|pmap_pvo_kunmanaged
+name|moea_pvo_kunmanaged
 argument_list|,
 name|va
 argument_list|,
@@ -5716,7 +6339,7 @@ name|ENOENT
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_kenter: failed to enter va %#x pa %#x: %d"
+literal|"moea_kenter: failed to enter va %#x pa %#x: %d"
 argument_list|,
 name|va
 argument_list|,
@@ -5741,7 +6364,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|pmap_syncicache
+name|moea_syncicache
 argument_list|(
 name|pa
 argument_list|,
@@ -5763,8 +6386,11 @@ end_comment
 
 begin_function
 name|vm_offset_t
-name|pmap_kextract
+name|moea_kextract
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|vm_offset_t
 name|va
 parameter_list|)
@@ -5803,7 +6429,7 @@ argument_list|)
 expr_stmt|;
 name|pvo
 operator|=
-name|pmap_pvo_find_va
+name|moea_pvo_find_va
 argument_list|(
 name|kernel_pmap
 argument_list|,
@@ -5822,7 +6448,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"pmap_kextract: no addr found"
+literal|"moea_kextract: no addr found"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5863,14 +6489,19 @@ end_comment
 
 begin_function
 name|void
-name|pmap_kremove
+name|moea_kremove
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|vm_offset_t
 name|va
 parameter_list|)
 block|{
-name|pmap_remove
+name|moea_remove
 argument_list|(
+name|mmu
+argument_list|,
 name|kernel_pmap
 argument_list|,
 name|va
@@ -5889,8 +6520,11 @@ end_comment
 
 begin_function
 name|vm_offset_t
-name|pmap_map
+name|moea_map
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|vm_offset_t
 modifier|*
 name|virt
@@ -5934,8 +6568,10 @@ name|va
 operator|+=
 name|PAGE_SIZE
 control|)
-name|pmap_kenter
+name|moea_kenter
 argument_list|(
+name|mmu
+argument_list|,
 name|va
 argument_list|,
 name|pa_start
@@ -5954,98 +6590,17 @@ return|;
 block|}
 end_function
 
-begin_function
-name|int
-name|pmap_mincore
-parameter_list|(
-name|pmap_t
-name|pmap
-parameter_list|,
-name|vm_offset_t
-name|addr
-parameter_list|)
-block|{
-name|TODO
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|pmap_object_init_pt
-parameter_list|(
-name|pmap_t
-name|pm
-parameter_list|,
-name|vm_offset_t
-name|addr
-parameter_list|,
-name|vm_object_t
-name|object
-parameter_list|,
-name|vm_pindex_t
-name|pindex
-parameter_list|,
-name|vm_size_t
-name|size
-parameter_list|)
-block|{
-name|VM_OBJECT_LOCK_ASSERT
-argument_list|(
-name|object
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|object
-operator|->
-name|type
-operator|==
-name|OBJT_DEVICE
-argument_list|,
-operator|(
-literal|"pmap_object_init_pt: non-device object"
-operator|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|pm
-operator|==
-operator|&
-name|curproc
-operator|->
-name|p_vmspace
-operator|->
-name|vm_pmap
-operator|||
-name|pm
-operator|==
-name|kernel_pmap
-argument_list|,
-operator|(
-literal|"pmap_object_init_pt: non current pmap"
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * Lower the permission for all mappings to a given page.  */
 end_comment
 
 begin_function
 name|void
-name|pmap_page_protect
+name|moea_page_protect
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|vm_page_t
 name|m
 parameter_list|,
@@ -6128,7 +6683,7 @@ argument_list|,
 name|pvo_vlink
 argument_list|)
 expr_stmt|;
-name|PMAP_PVO_CHECK
+name|MOEA_PVO_CHECK
 argument_list|(
 name|pvo
 argument_list|)
@@ -6157,7 +6712,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|pmap_pvo_remove
+name|moea_pvo_remove
 argument_list|(
 name|pvo
 argument_list|,
@@ -6211,7 +6766,7 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
-name|PMAP_PVO_CHECK
+name|MOEA_PVO_CHECK
 argument_list|(
 name|pvo
 argument_list|)
@@ -6221,7 +6776,7 @@ block|}
 comment|/* 		 * Grab the PTE before we diddle the bits so pvo_to_pte can 		 * verify the pte contents are as expected. 		 */
 name|pt
 operator|=
-name|pmap_pvo_to_pte
+name|moea_pvo_to_pte
 argument_list|(
 name|pvo
 argument_list|,
@@ -6252,7 +6807,7 @@ name|pt
 operator|!=
 name|NULL
 condition|)
-name|pmap_pte_change
+name|moea_pte_change
 argument_list|(
 name|pt
 argument_list|,
@@ -6271,7 +6826,7 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
-name|PMAP_PVO_CHECK
+name|MOEA_PVO_CHECK
 argument_list|(
 name|pvo
 argument_list|)
@@ -6305,8 +6860,11 @@ end_comment
 
 begin_function
 name|boolean_t
-name|pmap_page_exists_quick
+name|moea_page_exists_quick
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|pmap_t
 name|pmap
 parameter_list|,
@@ -6325,7 +6883,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|pmap_initialized
+name|moea_initialized
 operator|||
 operator|(
 name|m
@@ -6384,14 +6942,17 @@ end_function
 begin_decl_stmt
 specifier|static
 name|u_int
-name|pmap_vsidcontext
+name|moea_vsidcontext
 decl_stmt|;
 end_decl_stmt
 
 begin_function
 name|void
-name|pmap_pinit
+name|moea_pinit
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|pmap_t
 name|pmap
 parameter_list|)
@@ -6414,7 +6975,7 @@ operator|<
 name|VM_MIN_KERNEL_ADDRESS
 argument_list|,
 operator|(
-literal|"pmap_pinit: virt pmap"
+literal|"moea_pinit: virt pmap"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6450,10 +7011,10 @@ decl_stmt|,
 name|n
 decl_stmt|;
 comment|/* 		 * Create a new value by mutiplying by a prime and adding in 		 * entropy from the timebase register.  This is to make the 		 * VSID more random so that the PT hash function collides 		 * less often.  (Note that the prime casues gcc to do shifts 		 * instead of a multiply.) 		 */
-name|pmap_vsidcontext
+name|moea_vsidcontext
 operator|=
 operator|(
-name|pmap_vsidcontext
+name|moea_vsidcontext
 operator|*
 literal|0x1105
 operator|)
@@ -6462,7 +7023,7 @@ name|entropy
 expr_stmt|;
 name|hash
 operator|=
-name|pmap_vsidcontext
+name|moea_vsidcontext
 operator|&
 operator|(
 name|NPMAPS
@@ -6501,14 +7062,14 @@ expr_stmt|;
 name|hash
 operator|=
 operator|(
-name|pmap_vsidcontext
+name|moea_vsidcontext
 operator|&
 literal|0xfffff
 operator|)
 expr_stmt|;
 if|if
 condition|(
-name|pmap_vsid_bitmap
+name|moea_vsid_bitmap
 index|[
 name|n
 index|]
@@ -6520,7 +7081,7 @@ comment|/* collision? */
 comment|/* anything free in this bucket? */
 if|if
 condition|(
-name|pmap_vsid_bitmap
+name|moea_vsid_bitmap
 index|[
 name|n
 index|]
@@ -6531,7 +7092,7 @@ block|{
 name|entropy
 operator|=
 operator|(
-name|pmap_vsidcontext
+name|moea_vsidcontext
 operator|>>
 literal|20
 operator|)
@@ -6543,7 +7104,7 @@ operator|=
 name|ffs
 argument_list|(
 operator|~
-name|pmap_vsid_bitmap
+name|moea_vsid_bitmap
 index|[
 name|i
 index|]
@@ -6573,7 +7134,7 @@ operator||=
 name|i
 expr_stmt|;
 block|}
-name|pmap_vsid_bitmap
+name|moea_vsid_bitmap
 index|[
 name|n
 index|]
@@ -6611,7 +7172,7 @@ return|return;
 block|}
 name|panic
 argument_list|(
-literal|"pmap_pinit: out of segments"
+literal|"moea_pinit: out of segments"
 argument_list|)
 expr_stmt|;
 block|}
@@ -6623,14 +7184,19 @@ end_comment
 
 begin_function
 name|void
-name|pmap_pinit0
+name|moea_pinit0
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|pmap_t
 name|pm
 parameter_list|)
 block|{
-name|pmap_pinit
+name|moea_pinit
 argument_list|(
+name|mmu
+argument_list|,
 name|pm
 argument_list|)
 expr_stmt|;
@@ -6658,8 +7224,11 @@ end_comment
 
 begin_function
 name|void
-name|pmap_protect
+name|moea_protect
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|pmap_t
 name|pm
 parameter_list|,
@@ -6690,7 +7259,7 @@ name|CTR4
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"pmap_protect: pm=%p sva=%#x eva=%#x prot=%#x"
+literal|"moea_protect: pm=%p sva=%#x eva=%#x prot=%#x"
 argument_list|,
 name|pm
 argument_list|,
@@ -6717,7 +7286,7 @@ operator|==
 name|kernel_pmap
 argument_list|,
 operator|(
-literal|"pmap_protect: non current pmap"
+literal|"moea_protect: non current pmap"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6738,8 +7307,10 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-name|pmap_remove
+name|moea_remove
 argument_list|(
+name|mmu
+argument_list|,
 name|pm
 argument_list|,
 name|sva
@@ -6783,7 +7354,7 @@ control|)
 block|{
 name|pvo
 operator|=
-name|pmap_pvo_find_va
+name|moea_pvo_find_va
 argument_list|(
 name|pm
 argument_list|,
@@ -6820,7 +7391,7 @@ expr_stmt|;
 comment|/* 		 * Grab the PTE pointer before we diddle with the cached PTE 		 * copy. 		 */
 name|pt
 operator|=
-name|pmap_pvo_to_pte
+name|moea_pvo_to_pte
 argument_list|(
 name|pvo
 argument_list|,
@@ -6852,7 +7423,7 @@ name|pt
 operator|!=
 name|NULL
 condition|)
-name|pmap_pte_change
+name|moea_pte_change
 argument_list|(
 name|pt
 argument_list|,
@@ -6890,8 +7461,11 @@ end_comment
 
 begin_function
 name|void
-name|pmap_qenter
+name|moea_qenter
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|vm_offset_t
 name|sva
 parameter_list|,
@@ -6918,8 +7492,10 @@ operator|>
 literal|0
 condition|)
 block|{
-name|pmap_kenter
+name|moea_kenter
 argument_list|(
+name|mmu
+argument_list|,
 name|va
 argument_list|,
 name|VM_PAGE_TO_PHYS
@@ -6941,13 +7517,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove page mappings from kernel virtual address space.  Intended for  * temporary mappings entered by pmap_qenter.  */
+comment|/*  * Remove page mappings from kernel virtual address space.  Intended for  * temporary mappings entered by moea_qenter.  */
 end_comment
 
 begin_function
 name|void
-name|pmap_qremove
+name|moea_qremove
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|vm_offset_t
 name|sva
 parameter_list|,
@@ -6970,8 +7549,10 @@ operator|>
 literal|0
 condition|)
 block|{
-name|pmap_kremove
+name|moea_kremove
 argument_list|(
+name|mmu
+argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
@@ -6985,8 +7566,11 @@ end_function
 
 begin_function
 name|void
-name|pmap_release
+name|moea_release
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|pmap_t
 name|pmap
 parameter_list|)
@@ -7010,7 +7594,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_release"
+literal|"moea_release"
 argument_list|)
 expr_stmt|;
 name|idx
@@ -7045,7 +7629,7 @@ name|idx
 operator|/=
 name|VSID_NBPW
 expr_stmt|;
-name|pmap_vsid_bitmap
+name|moea_vsid_bitmap
 index|[
 name|idx
 index|]
@@ -7067,8 +7651,11 @@ end_comment
 
 begin_function
 name|void
-name|pmap_remove
+name|moea_remove
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|pmap_t
 name|pm
 parameter_list|,
@@ -7109,7 +7696,7 @@ control|)
 block|{
 name|pvo
 operator|=
-name|pmap_pvo_find_va
+name|moea_pvo_find_va
 argument_list|(
 name|pm
 argument_list|,
@@ -7126,7 +7713,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|pmap_pvo_remove
+name|moea_pvo_remove
 argument_list|(
 name|pvo
 argument_list|,
@@ -7147,13 +7734,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove physical page from all pmaps in which it resides. pmap_pvo_remove()  * will reflect changes in pte's back to the vm_page.  */
+comment|/*  * Remove physical page from all pmaps in which it resides. moea_pvo_remove()  * will reflect changes in pte's back to the vm_page.  */
 end_comment
 
 begin_function
 name|void
-name|pmap_remove_all
+name|moea_remove_all
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|vm_page_t
 name|m
 parameter_list|)
@@ -7216,7 +7806,7 @@ argument_list|,
 name|pvo_vlink
 argument_list|)
 expr_stmt|;
-name|PMAP_PVO_CHECK
+name|MOEA_PVO_CHECK
 argument_list|(
 name|pvo
 argument_list|)
@@ -7233,7 +7823,7 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
-name|pmap_pvo_remove
+name|moea_pvo_remove
 argument_list|(
 name|pvo
 argument_list|,
@@ -7258,33 +7848,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove all pages from specified address space, this aids process exit  * speeds.  This is much faster than pmap_remove in the case of running down  * an entire address space.  Only works for the current pmap.  */
-end_comment
-
-begin_function
-name|void
-name|pmap_remove_pages
-parameter_list|(
-name|pmap_t
-name|pm
-parameter_list|,
-name|vm_offset_t
-name|sva
-parameter_list|,
-name|vm_offset_t
-name|eva
-parameter_list|)
-block|{ }
-end_function
-
-begin_comment
-comment|/*  * Allocate a physical page of memory directly from the phys_avail map.  * Can only be called from pmap_bootstrap before avail start and end are  * calculated.  */
+comment|/*  * Allocate a physical page of memory directly from the phys_avail map.  * Can only be called from moea_bootstrap before avail start and end are  * calculated.  */
 end_comment
 
 begin_function
 specifier|static
 name|vm_offset_t
-name|pmap_bootstrap_alloc
+name|moea_bootstrap_alloc
 parameter_list|(
 name|vm_size_t
 name|size
@@ -7520,7 +8090,7 @@ return|;
 block|}
 name|panic
 argument_list|(
-literal|"pmap_bootstrap_alloc: could not allocate memory"
+literal|"moea_bootstrap_alloc: could not allocate memory"
 argument_list|)
 expr_stmt|;
 block|}
@@ -7535,9 +8105,10 @@ specifier|static
 name|struct
 name|pvo_entry
 modifier|*
-name|pmap_rkva_alloc
+name|moea_rkva_alloc
 parameter_list|(
-name|void
+name|mmu_t
+name|mmu
 parameter_list|)
 block|{
 name|struct
@@ -7558,28 +8129,30 @@ name|pteidx
 decl_stmt|;
 if|if
 condition|(
-name|pmap_rkva_count
+name|moea_rkva_count
 operator|==
 literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_rkva_alloc: no more reserved KVAs"
+literal|"moea_rkva_alloc: no more reserved KVAs"
 argument_list|)
 expr_stmt|;
 name|kva
 operator|=
-name|pmap_rkva_start
+name|moea_rkva_start
 operator|+
 operator|(
 name|PAGE_SIZE
 operator|*
 operator|--
-name|pmap_rkva_count
+name|moea_rkva_count
 operator|)
 expr_stmt|;
-name|pmap_kenter
+name|moea_kenter
 argument_list|(
+name|mmu
+argument_list|,
 name|kva
 argument_list|,
 literal|0
@@ -7587,7 +8160,7 @@ argument_list|)
 expr_stmt|;
 name|pvo
 operator|=
-name|pmap_pvo_find_va
+name|moea_pvo_find_va
 argument_list|(
 name|kernel_pmap
 argument_list|,
@@ -7605,12 +8178,12 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_kva_alloc: pmap_pvo_find_va failed"
+literal|"moea_kva_alloc: moea_pvo_find_va failed"
 argument_list|)
 expr_stmt|;
 name|pt
 operator|=
-name|pmap_pvo_to_pte
+name|moea_pvo_to_pte
 argument_list|(
 name|pvo
 argument_list|,
@@ -7625,10 +8198,10 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_kva_alloc: pmap_pvo_to_pte failed"
+literal|"moea_kva_alloc: moea_pvo_to_pte failed"
 argument_list|)
 expr_stmt|;
-name|pmap_pte_unset
+name|moea_pte_unset
 argument_list|(
 name|pt
 argument_list|,
@@ -7647,7 +8220,7 @@ argument_list|(
 name|pvo
 argument_list|)
 expr_stmt|;
-name|pmap_pte_overflow
+name|moea_pte_overflow
 operator|++
 expr_stmt|;
 return|return
@@ -7661,7 +8234,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|pmap_pa_map
+name|moea_pa_map
 parameter_list|(
 name|struct
 name|pvo_entry
@@ -7696,7 +8269,7 @@ condition|)
 block|{
 name|pt
 operator|=
-name|pmap_pvo_to_pte
+name|moea_pvo_to_pte
 argument_list|(
 name|pvo
 argument_list|,
@@ -7711,7 +8284,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|pmap_pte_unset
+name|moea_pte_unset
 argument_list|(
 name|pt
 argument_list|,
@@ -7730,7 +8303,7 @@ argument_list|(
 name|pvo
 argument_list|)
 expr_stmt|;
-name|pmap_pte_overflow
+name|moea_pte_overflow
 operator|++
 expr_stmt|;
 block|}
@@ -7762,7 +8335,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|pmap_pte_spill
+name|moea_pte_spill
 argument_list|(
 name|pvo
 operator|->
@@ -7771,7 +8344,7 @@ argument_list|)
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_pa_map: could not spill pvo %p"
+literal|"moea_pa_map: could not spill pvo %p"
 argument_list|,
 name|pvo
 argument_list|)
@@ -7794,7 +8367,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|pmap_pa_unmap
+name|moea_pa_unmap
 parameter_list|(
 name|struct
 name|pvo_entry
@@ -7818,7 +8391,7 @@ name|pt
 decl_stmt|;
 name|pt
 operator|=
-name|pmap_pvo_to_pte
+name|moea_pvo_to_pte
 argument_list|(
 name|pvo
 argument_list|,
@@ -7833,7 +8406,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|pmap_pte_unset
+name|moea_pte_unset
 argument_list|(
 name|pt
 argument_list|,
@@ -7852,7 +8425,7 @@ argument_list|(
 name|pvo
 argument_list|)
 expr_stmt|;
-name|pmap_pte_overflow
+name|moea_pte_overflow
 operator|++
 expr_stmt|;
 block|}
@@ -7899,7 +8472,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_pa_unmap: restoring but depth == 0"
+literal|"moea_pa_unmap: restoring but depth == 0"
 argument_list|)
 expr_stmt|;
 name|pvo
@@ -7912,7 +8485,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|pmap_pte_spill
+name|moea_pte_spill
 argument_list|(
 name|pvo
 operator|->
@@ -7921,7 +8494,7 @@ argument_list|)
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_pa_unmap: could not spill pvo %p"
+literal|"moea_pa_unmap: could not spill pvo %p"
 argument_list|,
 name|pvo
 argument_list|)
@@ -7933,7 +8506,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|pmap_syncicache
+name|moea_syncicache
 parameter_list|(
 name|vm_offset_t
 name|pa
@@ -8009,7 +8582,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pmap_pvo_enter
+name|moea_pvo_enter
 parameter_list|(
 name|pmap_t
 name|pm
@@ -8055,7 +8628,7 @@ decl_stmt|;
 name|int
 name|bootstrap
 decl_stmt|;
-name|pmap_pvo_enter_calls
+name|moea_pvo_enter_calls
 operator|++
 expr_stmt|;
 name|first
@@ -8096,14 +8669,14 @@ comment|/* 	 * Remove any existing mapping for this page.  Reuse the pvo entry i
 name|mtx_lock
 argument_list|(
 operator|&
-name|pmap_table_mutex
+name|moea_table_mutex
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|pvo
 argument_list|,
-argument|&pmap_pvo_table[ptegidx]
+argument|&moea_pvo_table[ptegidx]
 argument_list|,
 argument|pvo_olink
 argument_list|)
@@ -8158,7 +8731,7 @@ block|{
 name|mtx_unlock
 argument_list|(
 operator|&
-name|pmap_table_mutex
+name|moea_table_mutex
 argument_list|)
 expr_stmt|;
 return|return
@@ -8167,7 +8740,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|pmap_pvo_remove
+name|moea_pvo_remove
 argument_list|(
 name|pvo
 argument_list|,
@@ -8181,7 +8754,7 @@ block|}
 comment|/* 	 * If we aren't overwriting a mapping, try to allocate. 	 */
 if|if
 condition|(
-name|pmap_initialized
+name|moea_initialized
 condition|)
 block|{
 name|pvo
@@ -8198,16 +8771,16 @@ else|else
 block|{
 if|if
 condition|(
-name|pmap_bpvo_pool_index
+name|moea_bpvo_pool_index
 operator|>=
 name|BPVO_POOL_SIZE
 condition|)
 block|{
 name|panic
 argument_list|(
-literal|"pmap_enter: bpvo pool exhausted, %d, %d, %d"
+literal|"moea_enter: bpvo pool exhausted, %d, %d, %d"
 argument_list|,
-name|pmap_bpvo_pool_index
+name|moea_bpvo_pool_index
 argument_list|,
 name|BPVO_POOL_SIZE
 argument_list|,
@@ -8224,12 +8797,12 @@ block|}
 name|pvo
 operator|=
 operator|&
-name|pmap_bpvo_pool
+name|moea_bpvo_pool
 index|[
-name|pmap_bpvo_pool_index
+name|moea_bpvo_pool_index
 index|]
 expr_stmt|;
-name|pmap_bpvo_pool_index
+name|moea_bpvo_pool_index
 operator|++
 expr_stmt|;
 name|bootstrap
@@ -8247,7 +8820,7 @@ block|{
 name|mtx_unlock
 argument_list|(
 operator|&
-name|pmap_table_mutex
+name|moea_table_mutex
 argument_list|)
 expr_stmt|;
 return|return
@@ -8256,7 +8829,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-name|pmap_pvo_entries
+name|moea_pvo_entries
 operator|++
 expr_stmt|;
 name|pvo
@@ -8274,7 +8847,7 @@ expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|pmap_pvo_table
+name|moea_pvo_table
 index|[
 name|ptegidx
 index|]
@@ -8320,7 +8893,7 @@ condition|(
 name|pvo_head
 operator|!=
 operator|&
-name|pmap_pvo_kunmanaged
+name|moea_pvo_kunmanaged
 condition|)
 name|pvo
 operator|->
@@ -8350,7 +8923,7 @@ name|pvo_vaddr
 operator||=
 name|PVO_FAKE
 expr_stmt|;
-name|pmap_pte_create
+name|moea_pte_create
 argument_list|(
 operator|&
 name|pvo
@@ -8416,7 +8989,7 @@ expr_stmt|;
 comment|/* 	 * We hope this succeeds but it isn't required. 	 */
 name|i
 operator|=
-name|pmap_pte_insert
+name|moea_pte_insert
 argument_list|(
 name|ptegidx
 argument_list|,
@@ -8445,17 +9018,17 @@ else|else
 block|{
 name|panic
 argument_list|(
-literal|"pmap_pvo_enter: overflow"
+literal|"moea_pvo_enter: overflow"
 argument_list|)
 expr_stmt|;
-name|pmap_pte_overflow
+name|moea_pte_overflow
 operator|++
 expr_stmt|;
 block|}
 name|mtx_unlock
 argument_list|(
 operator|&
-name|pmap_table_mutex
+name|moea_table_mutex
 argument_list|)
 expr_stmt|;
 return|return
@@ -8473,7 +9046,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|pmap_pvo_remove
+name|moea_pvo_remove
 parameter_list|(
 name|struct
 name|pvo_entry
@@ -8492,7 +9065,7 @@ decl_stmt|;
 comment|/* 	 * If there is an active pte entry, we need to deactivate it (and 	 * save the ref& cfg bits). 	 */
 name|pt
 operator|=
-name|pmap_pvo_to_pte
+name|moea_pvo_to_pte
 argument_list|(
 name|pvo
 argument_list|,
@@ -8506,7 +9079,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|pmap_pte_unset
+name|moea_pte_unset
 argument_list|(
 name|pt
 argument_list|,
@@ -8528,7 +9101,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|pmap_pte_overflow
+name|moea_pte_overflow
 operator|--
 expr_stmt|;
 block|}
@@ -8604,7 +9177,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|pmap_attr_save
+name|moea_attr_save
 argument_list|(
 name|pg
 argument_list|,
@@ -8658,17 +9231,17 @@ name|pvo_vaddr
 operator|&
 name|PVO_MANAGED
 condition|?
-name|pmap_mpvo_zone
+name|moea_mpvo_zone
 else|:
-name|pmap_upvo_zone
+name|moea_upvo_zone
 argument_list|,
 name|pvo
 argument_list|)
 expr_stmt|;
-name|pmap_pvo_entries
+name|moea_pvo_entries
 operator|--
 expr_stmt|;
-name|pmap_pvo_remove_calls
+name|moea_pvo_remove_calls
 operator|++
 expr_stmt|;
 block|}
@@ -8678,7 +9251,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|pmap_pvo_pte_index
+name|moea_pvo_pte_index
 parameter_list|(
 specifier|const
 name|struct
@@ -8717,7 +9290,7 @@ name|PTE_HID
 condition|)
 name|pteidx
 operator|^=
-name|pmap_pteg_mask
+name|moea_pteg_mask
 operator|*
 literal|8
 expr_stmt|;
@@ -8734,7 +9307,7 @@ specifier|static
 name|struct
 name|pvo_entry
 modifier|*
-name|pmap_pvo_find_va
+name|moea_pvo_find_va
 parameter_list|(
 name|pmap_t
 name|pm
@@ -8786,14 +9359,14 @@ expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|pmap_table_mutex
+name|moea_table_mutex
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|pvo
 argument_list|,
-argument|&pmap_pvo_table[ptegidx]
+argument|&moea_pvo_table[ptegidx]
 argument_list|,
 argument|pvo_olink
 argument_list|)
@@ -8821,7 +9394,7 @@ condition|)
 operator|*
 name|pteidx_p
 operator|=
-name|pmap_pvo_pte_index
+name|moea_pvo_pte_index
 argument_list|(
 name|pvo
 argument_list|,
@@ -8834,7 +9407,7 @@ block|}
 name|mtx_unlock
 argument_list|(
 operator|&
-name|pmap_table_mutex
+name|moea_table_mutex
 argument_list|)
 expr_stmt|;
 return|return
@@ -8850,7 +9423,7 @@ specifier|static
 name|struct
 name|pte
 modifier|*
-name|pmap_pvo_to_pte
+name|moea_pvo_to_pte
 parameter_list|(
 specifier|const
 name|struct
@@ -8910,7 +9483,7 @@ argument_list|)
 expr_stmt|;
 name|pteidx
 operator|=
-name|pmap_pvo_pte_index
+name|moea_pvo_pte_index
 argument_list|(
 name|pvo
 argument_list|,
@@ -8921,7 +9494,7 @@ block|}
 name|pt
 operator|=
 operator|&
-name|pmap_pteg_table
+name|moea_pteg_table
 index|[
 name|pteidx
 operator|>>
@@ -8956,7 +9529,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"pmap_pvo_to_pte: pvo %p has valid pte in pvo but no "
+literal|"moea_pvo_to_pte: pvo %p has valid pte in pvo but no "
 literal|"valid pte index"
 argument_list|,
 name|pvo
@@ -8985,7 +9558,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"pmap_pvo_to_pte: pvo %p has valid pte index in pvo "
+literal|"moea_pvo_to_pte: pvo %p has valid pte index in pvo "
 literal|"pvo but no valid pte"
 argument_list|,
 name|pvo
@@ -9031,8 +9604,8 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"pmap_pvo_to_pte: pvo %p has valid pte in "
-literal|"pmap_pteg_table %p but invalid in pvo"
+literal|"moea_pvo_to_pte: pvo %p has valid pte in "
+literal|"moea_pteg_table %p but invalid in pvo"
 argument_list|,
 name|pvo
 argument_list|,
@@ -9068,8 +9641,8 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"pmap_pvo_to_pte: pvo %p pte does not match "
-literal|"pte %p in pmap_pteg_table"
+literal|"moea_pvo_to_pte: pvo %p pte does not match "
+literal|"pte %p in moea_pteg_table"
 argument_list|,
 name|pvo
 argument_list|,
@@ -9096,8 +9669,8 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"pmap_pvo_to_pte: pvo %p has invalid pte %p in "
-literal|"pmap_pteg_table but valid in pvo"
+literal|"moea_pvo_to_pte: pvo %p has invalid pte %p in "
+literal|"moea_pteg_table but valid in pvo"
 argument_list|,
 name|pvo
 argument_list|,
@@ -9119,7 +9692,7 @@ end_comment
 
 begin_function
 name|int
-name|pmap_pte_spill
+name|moea_pte_spill
 parameter_list|(
 name|vm_offset_t
 name|addr
@@ -9158,7 +9731,7 @@ name|pte
 modifier|*
 name|pt
 decl_stmt|;
-name|pmap_pte_spills
+name|moea_pte_spills
 operator|++
 expr_stmt|;
 name|sr
@@ -9181,7 +9754,7 @@ comment|/* 	 * Have to substitute some entry.  Use the primary hash for this. 	 
 name|pteg
 operator|=
 operator|&
-name|pmap_pteg_table
+name|moea_pteg_table
 index|[
 name|ptegidx
 index|]
@@ -9189,7 +9762,7 @@ expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|pmap_table_mutex
+name|moea_table_mutex
 argument_list|)
 expr_stmt|;
 asm|__asm __volatile("mftb %0" : "=r"(i));
@@ -9219,13 +9792,13 @@ name|LIST_FOREACH
 argument_list|(
 argument|pvo
 argument_list|,
-argument|&pmap_pvo_table[ptegidx]
+argument|&moea_pvo_table[ptegidx]
 argument_list|,
 argument|pvo_olink
 argument_list|)
 block|{
 comment|/* 		 * We need to find a pvo entry for this address. 		 */
-name|PMAP_PVO_CHECK
+name|MOEA_PVO_CHECK
 argument_list|(
 name|pvo
 argument_list|)
@@ -9236,7 +9809,7 @@ name|source_pvo
 operator|==
 name|NULL
 operator|&&
-name|pmap_pte_match
+name|moea_pte_match
 argument_list|(
 operator|&
 name|pvo
@@ -9260,7 +9833,7 @@ block|{
 comment|/* 			 * Now found an entry to be spilled into the pteg. 			 * The PTE is now valid, so we know it's active. 			 */
 name|j
 operator|=
-name|pmap_pte_insert
+name|moea_pte_insert
 argument_list|(
 name|ptegidx
 argument_list|,
@@ -9284,10 +9857,10 @@ argument_list|,
 name|j
 argument_list|)
 expr_stmt|;
-name|pmap_pte_overflow
+name|moea_pte_overflow
 operator|--
 expr_stmt|;
-name|PMAP_PVO_CHECK
+name|MOEA_PVO_CHECK
 argument_list|(
 name|pvo
 argument_list|)
@@ -9295,7 +9868,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|pmap_table_mutex
+name|moea_table_mutex
 argument_list|)
 expr_stmt|;
 return|return
@@ -9333,7 +9906,7 @@ name|victim_pvo
 operator|==
 name|NULL
 operator|&&
-name|pmap_pte_compare
+name|moea_pte_compare
 argument_list|(
 name|pt
 argument_list|,
@@ -9367,7 +9940,7 @@ block|{
 name|mtx_unlock
 argument_list|(
 operator|&
-name|pmap_table_mutex
+name|moea_table_mutex
 argument_list|)
 expr_stmt|;
 return|return
@@ -9397,7 +9970,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_pte_spill: victim p-pte (%p) has no pvo"
+literal|"moea_pte_spill: victim p-pte (%p) has no pvo"
 literal|"entry"
 argument_list|,
 name|pt
@@ -9408,12 +9981,12 @@ name|LIST_FOREACH
 argument_list|(
 argument|pvo
 argument_list|,
-argument|&pmap_pvo_table[ptegidx ^ pmap_pteg_mask]
+argument|&moea_pvo_table[ptegidx ^ moea_pteg_mask]
 argument_list|,
 argument|pvo_olink
 argument_list|)
 block|{
-name|PMAP_PVO_CHECK
+name|MOEA_PVO_CHECK
 argument_list|(
 name|pvo
 argument_list|)
@@ -9421,7 +9994,7 @@ expr_stmt|;
 comment|/* 			 * We also need the pvo entry of the victim we are 			 * replacing so save the R& C bits of the PTE. 			 */
 if|if
 condition|(
-name|pmap_pte_compare
+name|moea_pte_compare
 argument_list|(
 name|pt
 argument_list|,
@@ -9447,7 +10020,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_pte_spill: victim s-pte (%p) has no pvo"
+literal|"moea_pte_spill: victim s-pte (%p) has no pvo"
 literal|"entry"
 argument_list|,
 name|pt
@@ -9464,7 +10037,7 @@ operator|&=
 operator|~
 name|PTE_HID
 expr_stmt|;
-name|pmap_pte_unset
+name|moea_pte_unset
 argument_list|(
 name|pt
 argument_list|,
@@ -9478,7 +10051,7 @@ operator|->
 name|pvo_vaddr
 argument_list|)
 expr_stmt|;
-name|pmap_pte_set
+name|moea_pte_set
 argument_list|(
 name|pt
 argument_list|,
@@ -9500,15 +10073,15 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|pmap_pte_replacements
+name|moea_pte_replacements
 operator|++
 expr_stmt|;
-name|PMAP_PVO_CHECK
+name|MOEA_PVO_CHECK
 argument_list|(
 name|victim_pvo
 argument_list|)
 expr_stmt|;
-name|PMAP_PVO_CHECK
+name|MOEA_PVO_CHECK
 argument_list|(
 name|source_pvo
 argument_list|)
@@ -9516,7 +10089,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|pmap_table_mutex
+name|moea_table_mutex
 argument_list|)
 expr_stmt|;
 return|return
@@ -9530,7 +10103,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pmap_pte_insert
+name|moea_pte_insert
 parameter_list|(
 name|u_int
 name|ptegidx
@@ -9554,7 +10127,7 @@ for|for
 control|(
 name|pt
 operator|=
-name|pmap_pteg_table
+name|moea_pteg_table
 index|[
 name|ptegidx
 index|]
@@ -9596,7 +10169,7 @@ operator|&=
 operator|~
 name|PTE_HID
 expr_stmt|;
-name|pmap_pte_set
+name|moea_pte_set
 argument_list|(
 name|pt
 argument_list|,
@@ -9613,7 +10186,7 @@ block|}
 comment|/* 	 * Now try secondary hash. 	 */
 name|ptegidx
 operator|^=
-name|pmap_pteg_mask
+name|moea_pteg_mask
 expr_stmt|;
 name|ptegidx
 operator|++
@@ -9622,7 +10195,7 @@ for|for
 control|(
 name|pt
 operator|=
-name|pmap_pteg_table
+name|moea_pteg_table
 index|[
 name|ptegidx
 index|]
@@ -9663,7 +10236,7 @@ name|pte_hi
 operator||=
 name|PTE_HID
 expr_stmt|;
-name|pmap_pte_set
+name|moea_pte_set
 argument_list|(
 name|pt
 argument_list|,
@@ -9679,7 +10252,7 @@ block|}
 block|}
 name|panic
 argument_list|(
-literal|"pmap_pte_insert: overflow"
+literal|"moea_pte_insert: overflow"
 argument_list|)
 expr_stmt|;
 return|return
@@ -9694,7 +10267,7 @@ end_function
 begin_function
 specifier|static
 name|boolean_t
-name|pmap_query_bit
+name|moea_query_bit
 parameter_list|(
 name|vm_page_t
 name|m
@@ -9716,7 +10289,7 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-block|if (pmap_attr_fetch(m)& ptebit) 		return (TRUE);
+block|if (moea_attr_fetch(m)& ptebit) 		return (TRUE);
 endif|#
 directive|endif
 name|LIST_FOREACH
@@ -9728,7 +10301,7 @@ argument_list|,
 argument|pvo_vlink
 argument_list|)
 block|{
-name|PMAP_PVO_CHECK
+name|MOEA_PVO_CHECK
 argument_list|(
 name|pvo
 argument_list|)
@@ -9746,14 +10319,14 @@ operator|&
 name|ptebit
 condition|)
 block|{
-name|pmap_attr_save
+name|moea_attr_save
 argument_list|(
 name|m
 argument_list|,
 name|ptebit
 argument_list|)
 expr_stmt|;
-name|PMAP_PVO_CHECK
+name|MOEA_PVO_CHECK
 argument_list|(
 name|pvo
 argument_list|)
@@ -9779,7 +10352,7 @@ argument_list|,
 argument|pvo_vlink
 argument_list|)
 block|{
-name|PMAP_PVO_CHECK
+name|MOEA_PVO_CHECK
 argument_list|(
 name|pvo
 argument_list|)
@@ -9788,7 +10361,7 @@ comment|/* sanity check */
 comment|/* 		 * See if this pvo has a valid PTE.  if so, fetch the 		 * REF/CHG bits from the valid PTE.  If the appropriate 		 * ptebit is set, cache it and return success. 		 */
 name|pt
 operator|=
-name|pmap_pvo_to_pte
+name|moea_pvo_to_pte
 argument_list|(
 name|pvo
 argument_list|,
@@ -9803,7 +10376,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|pmap_pte_synch
+name|moea_pte_synch
 argument_list|(
 name|pt
 argument_list|,
@@ -9824,14 +10397,14 @@ operator|&
 name|ptebit
 condition|)
 block|{
-name|pmap_attr_save
+name|moea_attr_save
 argument_list|(
 name|m
 argument_list|,
 name|ptebit
 argument_list|)
 expr_stmt|;
-name|PMAP_PVO_CHECK
+name|MOEA_PVO_CHECK
 argument_list|(
 name|pvo
 argument_list|)
@@ -9856,7 +10429,7 @@ end_function
 begin_function
 specifier|static
 name|u_int
-name|pmap_clear_bit
+name|moea_clear_bit
 parameter_list|(
 name|vm_page_t
 name|m
@@ -9888,12 +10461,12 @@ decl_stmt|;
 comment|/* 	 * Clear the cached value. 	 */
 name|rv
 operator|=
-name|pmap_attr_fetch
+name|moea_attr_fetch
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|pmap_attr_clear
+name|moea_attr_clear
 argument_list|(
 name|m
 argument_list|,
@@ -9918,7 +10491,7 @@ argument_list|,
 argument|pvo_vlink
 argument_list|)
 block|{
-name|PMAP_PVO_CHECK
+name|MOEA_PVO_CHECK
 argument_list|(
 name|pvo
 argument_list|)
@@ -9926,7 +10499,7 @@ expr_stmt|;
 comment|/* sanity check */
 name|pt
 operator|=
-name|pmap_pvo_to_pte
+name|moea_pvo_to_pte
 argument_list|(
 name|pvo
 argument_list|,
@@ -9941,7 +10514,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|pmap_pte_synch
+name|moea_pte_synch
 argument_list|(
 name|pt
 argument_list|,
@@ -9965,7 +10538,7 @@ block|{
 name|count
 operator|++
 expr_stmt|;
-name|pmap_pte_clear
+name|moea_pte_clear
 argument_list|(
 name|pt
 argument_list|,
@@ -9996,7 +10569,7 @@ operator|&=
 operator|~
 name|ptebit
 expr_stmt|;
-name|PMAP_PVO_CHECK
+name|MOEA_PVO_CHECK
 argument_list|(
 name|pvo
 argument_list|)
@@ -10031,7 +10604,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|pmap_bat_mapped
+name|moea_bat_mapped
 parameter_list|(
 name|int
 name|idx
@@ -10182,9 +10755,12 @@ block|}
 end_function
 
 begin_function
-name|int
-name|pmap_dev_direct_mapped
+name|boolean_t
+name|moea_dev_direct_mapped
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|vm_offset_t
 name|pa
 parameter_list|,
@@ -10211,7 +10787,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|pmap_bat_mapped
+name|moea_bat_mapped
 argument_list|(
 name|i
 argument_list|,
@@ -10242,8 +10818,11 @@ end_comment
 begin_function
 name|void
 modifier|*
-name|pmap_mapdev
+name|moea_mapdev
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|vm_offset_t
 name|pa
 parameter_list|,
@@ -10306,7 +10885,7 @@ control|)
 block|{
 if|if
 condition|(
-name|pmap_bat_mapped
+name|moea_bat_mapped
 argument_list|(
 name|i
 argument_list|,
@@ -10343,7 +10922,7 @@ name|va
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_mapdev: Couldn't alloc kernel virtual memory"
+literal|"moea_mapdev: Couldn't alloc kernel virtual memory"
 argument_list|)
 expr_stmt|;
 for|for
@@ -10358,8 +10937,10 @@ literal|0
 condition|;
 control|)
 block|{
-name|pmap_kenter
+name|moea_kenter
 argument_list|(
+name|mmu
+argument_list|,
 name|tmpva
 argument_list|,
 name|ppa
@@ -10402,8 +10983,11 @@ end_function
 
 begin_function
 name|void
-name|pmap_unmapdev
+name|moea_unmapdev
 parameter_list|(
+name|mmu_t
+name|mmu
+parameter_list|,
 name|vm_offset_t
 name|va
 parameter_list|,
