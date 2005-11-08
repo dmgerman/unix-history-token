@@ -24,12 +24,6 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<machine/asmacros.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/frame.h>
 end_include
 
