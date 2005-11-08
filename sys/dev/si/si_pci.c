@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/pci/pcireg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/pci/pcivar.h>
 end_include
 
