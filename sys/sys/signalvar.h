@@ -1440,7 +1440,7 @@ name|ksiginfo_t
 modifier|*
 name|ksiginfo_alloc
 parameter_list|(
-name|void
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
