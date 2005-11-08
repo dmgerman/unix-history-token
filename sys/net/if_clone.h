@@ -153,6 +153,14 @@ name|mtx
 name|ifc_mtx
 decl_stmt|;
 comment|/* Muted to protect members. */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|ifnet
+argument_list|)
+name|ifc_iflist
+expr_stmt|;
+comment|/* (i) List of cloned interfaces */
 block|}
 struct|;
 end_struct

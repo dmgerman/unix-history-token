@@ -893,12 +893,6 @@ modifier|*
 name|sc_ifp
 decl_stmt|;
 comment|/* make this an interface */
-name|LIST_ENTRY
-argument_list|(
-argument|bridge_softc
-argument_list|)
-name|sc_list
-expr_stmt|;
 name|struct
 name|mtx
 name|sc_mtx

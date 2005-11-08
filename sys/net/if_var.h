@@ -559,6 +559,13 @@ name|mtx
 name|if_addr_mtx
 decl_stmt|;
 comment|/* mutex to protect address lists */
+name|LIST_ENTRY
+argument_list|(
+argument|ifnet
+argument_list|)
+name|if_clones
+expr_stmt|;
+comment|/* interfaces of a cloner */
 block|}
 struct|;
 end_struct
