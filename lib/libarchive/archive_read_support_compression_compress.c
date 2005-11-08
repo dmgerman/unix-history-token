@@ -544,6 +544,12 @@ name|state
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|a
+operator|->
+name|compression_data
+operator|=
+name|state
+expr_stmt|;
 name|state
 operator|->
 name|uncompressed_buffer_size
@@ -638,6 +644,7 @@ name|code
 operator|!=
 literal|037
 condition|)
+comment|/* This should be impossible. */
 goto|goto
 name|fatal
 goto|;
@@ -658,9 +665,21 @@ name|code
 operator|!=
 literal|0235
 condition|)
+block|{
+comment|/* This can happen if the library is receiving 1-byte 		 * blocks and gzip and compress are both enabled. 		 * You can't distinguish gzip and compress only from 		 * the first byte. */
+name|archive_set_error
+argument_list|(
+name|a
+argument_list|,
+name|ARCHIVE_ERRNO_FILE_FORMAT
+argument_list|,
+literal|"Compress signature did not match."
+argument_list|)
+expr_stmt|;
 goto|goto
 name|fatal
 goto|;
+block|}
 name|code
 operator|=
 name|getbits
@@ -792,12 +811,6 @@ name|a
 argument_list|,
 name|state
 argument_list|)
-expr_stmt|;
-name|a
-operator|->
-name|compression_data
-operator|=
-name|state
 expr_stmt|;
 return|return
 operator|(
@@ -1177,6 +1190,8 @@ name|state
 decl_stmt|;
 name|int
 name|ret
+init|=
+name|ARCHIVE_OK
 decl_stmt|;
 name|state
 operator|=
@@ -1184,10 +1199,21 @@ name|a
 operator|->
 name|compression_data
 expr_stmt|;
-name|ret
-operator|=
-name|ARCHIVE_OK
-expr_stmt|;
+if|if
+condition|(
+name|state
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|state
+operator|->
+name|uncompressed_buffer
+operator|!=
+name|NULL
+condition|)
 name|free
 argument_list|(
 name|state
@@ -1200,6 +1226,7 @@ argument_list|(
 name|state
 argument_list|)
 expr_stmt|;
+block|}
 name|a
 operator|->
 name|compression_data
@@ -1214,6 +1241,8 @@ name|client_closer
 operator|!=
 name|NULL
 condition|)
+name|ret
+operator|=
 call|(
 name|a
 operator|->
