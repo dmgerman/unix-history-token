@@ -11445,11 +11445,11 @@ name|ki
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
-name|EAGAIN
-operator|)
-return|;
+name|aio_init_aioinfo
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
