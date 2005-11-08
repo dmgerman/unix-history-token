@@ -2452,10 +2452,6 @@ name|vr_info
 decl_stmt|;
 comment|/* Rhine adapter info */
 name|u_int8_t
-name|vr_unit
-decl_stmt|;
-comment|/* interface number */
-name|u_int8_t
 name|vr_type
 decl_stmt|;
 name|u_int8_t
@@ -2476,8 +2472,8 @@ name|vr_chain_data
 name|vr_cdata
 decl_stmt|;
 name|struct
-name|callout_handle
-name|vr_stat_ch
+name|callout
+name|vr_stat_callout
 decl_stmt|;
 name|struct
 name|mtx
