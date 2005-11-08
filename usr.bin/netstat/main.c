@@ -1694,10 +1694,9 @@ name|AF_INET6
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*INET6*/
 ifdef|#
 directive|ifdef
-name|INET6
+name|IPSEC
 elseif|else
 if|if
 condition|(
@@ -1716,7 +1715,6 @@ name|PF_KEY
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*INET6*/
 elseif|else
 if|if
 condition|(
