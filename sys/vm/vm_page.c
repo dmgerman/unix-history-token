@@ -5334,6 +5334,11 @@ name|pindex
 expr_stmt|;
 name|retry_alloc
 label|:
+name|pmap_remove_all
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|vm_page_remove
 argument_list|(
 name|m
