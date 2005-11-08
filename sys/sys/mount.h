@@ -3174,6 +3174,23 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|vfs_mount_error
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|vfs_mountroot
 parameter_list|(
 name|void
