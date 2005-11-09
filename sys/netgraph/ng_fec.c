@@ -216,31 +216,7 @@ name|IFP2NG
 parameter_list|(
 name|ifp
 parameter_list|)
-value|(struct ng_node *)(ifp->if_afdata[AF_NETGRAPH])
-end_define
-
-begin_define
-define|#
-directive|define
-name|IFP2NG_SET
-parameter_list|(
-name|ifp
-parameter_list|,
-name|val
-parameter_list|)
-value|ifp->if_afdata[AF_NETGRAPH] = (val);
-end_define
-
-begin_define
-define|#
-directive|define
-name|FEC_INC
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|(x) = (x + 1) % y
+value|((ifp)->if_afdata[AF_NETGRAPH])
 end_define
 
 begin_comment
@@ -1532,12 +1508,10 @@ argument_list|(
 name|bifp
 argument_list|)
 expr_stmt|;
+name|IFP2NG
+argument_list|(
 name|bifp
-operator|->
-name|if_afdata
-index|[
-name|AF_NETGRAPH
-index|]
+argument_list|)
 operator|=
 name|priv
 operator|->
@@ -1905,12 +1879,10 @@ argument_list|(
 name|bifp
 argument_list|)
 expr_stmt|;
+name|IFP2NG
+argument_list|(
 name|bifp
-operator|->
-name|if_afdata
-index|[
-name|AF_NETGRAPH
-index|]
+argument_list|)
 operator|=
 name|NULL
 expr_stmt|;
