@@ -172,12 +172,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|pmap_pagedaemon_waken
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|pmap_bootstrapped
 decl_stmt|;
 end_decl_stmt
