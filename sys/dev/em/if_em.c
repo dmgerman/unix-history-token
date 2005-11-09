@@ -3758,9 +3758,9 @@ operator|&=
 operator|~
 name|IFF_DRV_RUNNING
 expr_stmt|;
-name|ifp
+name|adapter
 operator|->
-name|if_oerrors
+name|watchdog_events
 operator|++
 expr_stmt|;
 name|em_init_locked
@@ -4595,16 +4595,10 @@ operator|&
 name|E1000_ICR_RXO
 condition|)
 block|{
-name|log
-argument_list|(
-name|LOG_WARNING
-argument_list|,
-literal|"%s: RX overrun\n"
-argument_list|,
-name|ifp
+name|adapter
 operator|->
-name|if_xname
-argument_list|)
+name|rx_overruns
+operator|++
 expr_stmt|;
 name|wantinit
 operator|=
@@ -14993,6 +14987,10 @@ operator|->
 name|stats
 operator|.
 name|latecol
+operator|+
+name|adapter
+operator|->
+name|watchdog_events
 expr_stmt|;
 block|}
 end_function
@@ -15449,6 +15447,28 @@ operator|->
 name|stats
 operator|.
 name|cexterr
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"em%d: RX overruns = %ld\n"
+argument_list|,
+name|unit
+argument_list|,
+name|adapter
+operator|->
+name|rx_overruns
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"em%d: watchdog timeouts = %ld\n"
+argument_list|,
+name|unit
+argument_list|,
+name|adapter
+operator|->
+name|watchdog_events
 argument_list|)
 expr_stmt|;
 name|printf

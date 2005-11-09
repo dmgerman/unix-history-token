@@ -88,12 +88,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/bus.h>
 end_include
 
@@ -982,6 +976,14 @@ decl_stmt|;
 name|unsigned
 name|long
 name|no_tx_dma_setup
+decl_stmt|;
+name|unsigned
+name|long
+name|watchdog_events
+decl_stmt|;
+name|unsigned
+name|long
+name|rx_overruns
 decl_stmt|;
 comment|/* Used in for 82547 10Mb Half workaround */
 define|#
