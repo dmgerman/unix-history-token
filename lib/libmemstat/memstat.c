@@ -113,6 +113,30 @@ literal|"Data format error"
 operator|)
 return|;
 case|case
+name|MEMSTAT_ERROR_KVM
+case|:
+return|return
+operator|(
+literal|"KVM error"
+operator|)
+return|;
+case|case
+name|MEMSTAT_ERROR_KVM_NOSYMBOL
+case|:
+return|return
+operator|(
+literal|"KVM unable to find symbol"
+operator|)
+return|;
+case|case
+name|MEMSTAT_ERROR_KVM_SHORTREAD
+case|:
+return|return
+operator|(
+literal|"KVM short read"
+operator|)
+return|;
+case|case
 name|MEMSTAT_ERROR_UNDEFINED
 case|:
 default|default:

@@ -150,6 +150,39 @@ begin_comment
 comment|/* Error in stat data. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MEMSTAT_ERROR_KVM
+value|6
+end_define
+
+begin_comment
+comment|/* See kvm_geterr() for err. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MEMSTAT_ERROR_KVM_NOSYMBOL
+value|7
+end_define
+
+begin_comment
+comment|/* Symbol not available. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MEMSTAT_ERROR_KVM_SHORTREAD
+value|8
+end_define
+
+begin_comment
+comment|/* Short kvm_read return. */
+end_comment
+
 begin_comment
 comment|/*  * Forward declare struct memory_type, which holds per-type properties and  * statistics.  This is an opaque type, to be frobbed only from within the  * library, in order to avoid building ABI assumptions into the application.  * Accessor methods should be used to get and sometimes set the fields from  * consumers of the library.  */
 end_comment
@@ -318,6 +351,42 @@ name|list
 parameter_list|,
 name|int
 name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Functions to retrieve data from a kernel core (or /dev/kmem).  */
+end_comment
+
+begin_function_decl
+name|int
+name|memstat_kvm_all
+parameter_list|(
+name|struct
+name|memory_type_list
+modifier|*
+name|list
+parameter_list|,
+name|void
+modifier|*
+name|kvm_handle
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|memstat_kvm_uma
+parameter_list|(
+name|struct
+name|memory_type_list
+modifier|*
+name|list
+parameter_list|,
+name|void
+modifier|*
+name|kvm_handle
 parameter_list|)
 function_decl|;
 end_function_decl
