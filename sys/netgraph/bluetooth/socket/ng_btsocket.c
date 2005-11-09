@@ -477,190 +477,161 @@ index|[]
 init|=
 block|{
 block|{
+operator|.
+name|pr_type
+operator|=
 name|SOCK_RAW
 block|,
-comment|/* protocol type */
+operator|.
+name|pr_domain
+operator|=
 operator|&
 name|ng_btsocket_domain
 block|,
-comment|/* backpointer to domain */
+operator|.
+name|pr_protocol
+operator|=
 name|BLUETOOTH_PROTO_HCI
 block|,
-comment|/* protocol */
+operator|.
+name|pr_flags
+operator|=
 name|PR_ATOMIC
 operator||
 name|PR_ADDR
 block|,
-comment|/* flags */
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-comment|/* input, output, ctlinput */
+operator|.
+name|pr_ctloutput
+operator|=
 name|ng_btsocket_hci_raw_ctloutput
 block|,
-comment|/* ctloutput */
-name|NULL
-block|,
-comment|/* ousrreq() */
+operator|.
+name|pr_init
+operator|=
 name|ng_btsocket_hci_raw_init
 block|,
-comment|/* init */
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-comment|/* fasttimeo, slowtimo, drain */
+operator|.
+name|pr_usrreqs
+operator|=
 operator|&
 name|ng_btsocket_hci_raw_usrreqs
-block|,
-comment|/* usrreq table (above) */
-comment|/* { NULL } */
-comment|/* pfh (protocol filter head?) */
-block|}
+block|, }
 block|,
 block|{
+operator|.
+name|pr_type
+operator|=
 name|SOCK_RAW
 block|,
-comment|/* protocol type */
+operator|.
+name|pr_domain
+operator|=
 operator|&
 name|ng_btsocket_domain
 block|,
-comment|/* backpointer to domain */
+operator|.
+name|pr_protocol
+operator|=
 name|BLUETOOTH_PROTO_L2CAP
 block|,
-comment|/* protocol */
+operator|.
+name|pr_flags
+operator|=
 name|PR_ATOMIC
 operator||
 name|PR_ADDR
 block|,
-comment|/* flags */
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-comment|/* input, output, ctlinput */
-name|NULL
-block|,
-comment|/* ctloutput */
-name|NULL
-block|,
-comment|/* ousrreq() */
+operator|.
+name|pr_init
+operator|=
 name|ng_btsocket_l2cap_raw_init
 block|,
-comment|/* init */
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-comment|/* fasttimeo, slowtimo, drain */
+operator|.
+name|pr_usrreqs
+operator|=
 operator|&
 name|ng_btsocket_l2cap_raw_usrreqs
-block|,
-comment|/* usrreq table (above) */
-comment|/* { NULL } */
-comment|/* pfh (protocol filter head?) */
-block|}
+block|, }
 block|,
 block|{
+operator|.
+name|pr_type
+operator|=
 name|SOCK_SEQPACKET
 block|,
-comment|/* protocol type */
+operator|.
+name|pr_domain
+operator|=
 operator|&
 name|ng_btsocket_domain
 block|,
-comment|/* backpointer to domain */
+operator|.
+name|pr_protocol
+operator|=
 name|BLUETOOTH_PROTO_L2CAP
 block|,
-comment|/* protocol */
+operator|.
+name|pr_flags
+operator|=
 name|PR_ATOMIC
 operator||
 name|PR_CONNREQUIRED
 block|,
-comment|/* flags */
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-comment|/* input, output, ctlinput */
+operator|.
+name|pr_ctloutput
+operator|=
 name|ng_btsocket_l2cap_ctloutput
 block|,
-comment|/* ctloutput */
-name|NULL
-block|,
-comment|/* ousrreq() */
+operator|.
+name|pr_init
+operator|=
 name|ng_btsocket_l2cap_init
 block|,
-comment|/* init */
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-comment|/* fasttimeo, slowtimo, drain */
+operator|.
+name|pr_usrreqs
+operator|=
 operator|&
 name|ng_btsocket_l2cap_usrreqs
-block|,
-comment|/* usrreq table (above) */
-comment|/* { NULL } */
-comment|/* pfh (protocol filter head?) */
-block|}
+block|, }
 block|,
 block|{
+operator|.
+name|pr_type
+operator|=
 name|SOCK_STREAM
 block|,
-comment|/* protocol type */
+operator|.
+name|pr_domain
+operator|=
 operator|&
 name|ng_btsocket_domain
 block|,
-comment|/* backpointer to domain */
+operator|.
+name|pr_protocol
+operator|=
 name|BLUETOOTH_PROTO_RFCOMM
 block|,
-comment|/* protocol */
+operator|.
+name|pr_flags
+operator|=
 name|PR_CONNREQUIRED
 block|,
-comment|/* flags */
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-comment|/* input, output, ctlinput */
+operator|.
+name|pr_ctloutput
+operator|=
 name|ng_btsocket_rfcomm_ctloutput
 block|,
-comment|/* ctloutput */
-name|NULL
-block|,
-comment|/* ousrreq() */
+operator|.
+name|pr_init
+operator|=
 name|ng_btsocket_rfcomm_init
 block|,
-comment|/* init */
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-comment|/* fasttimeo, slowtimo, drain */
+operator|.
+name|pr_usrreqs
+operator|=
 operator|&
 name|ng_btsocket_rfcomm_usrreqs
-block|,
-comment|/* usrreq table (above) */
-comment|/* { NULL } */
-comment|/* pfh (protocol filter head?) */
-block|}
+block|, }
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -691,38 +662,25 @@ name|domain
 name|ng_btsocket_domain
 init|=
 block|{
+operator|.
+name|dom_family
+operator|=
 name|AF_BLUETOOTH
 block|,
-comment|/* family */
+operator|.
+name|dom_name
+operator|=
 literal|"bluetooth"
 block|,
-comment|/* domain name */
-name|NULL
-block|,
-comment|/* init() */
-name|NULL
-block|,
-comment|/* externalize() */
-name|NULL
-block|,
-comment|/* dispose() */
+operator|.
+name|dom_protosw
+operator|=
 name|ng_btsocket_protosw
 block|,
-comment|/* protosw entry */
+operator|.
+name|dom_protoswNPROTOSW
+operator|=
 name|ng_btsocket_protosw_end
-block|,
-comment|/* end of protosw entries */
-name|NULL
-block|,
-comment|/* next domain in list */
-name|NULL
-block|,
-comment|/* rtattach() */
-literal|0
-block|,
-comment|/* arg to rtattach in bits */
-literal|0
-comment|/* maxrtkey */
 block|}
 decl_stmt|;
 end_decl_stmt

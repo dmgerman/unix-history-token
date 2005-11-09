@@ -4860,92 +4860,66 @@ index|[]
 init|=
 block|{
 block|{
+operator|.
+name|pr_type
+operator|=
 name|SOCK_DGRAM
 block|,
-comment|/* protocol type */
+operator|.
+name|pr_domain
+operator|=
 operator|&
 name|ngdomain
 block|,
-comment|/* backpointer to domain */
+operator|.
+name|pr_protocol
+operator|=
 name|NG_CONTROL
 block|,
+operator|.
+name|pr_flags
+operator|=
 name|PR_ATOMIC
 operator||
 name|PR_ADDR
 comment|/* | PR_RIGHTS */
 block|,
-comment|/* flags */
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* input, output, ctlinput, ctloutput */
-name|NULL
-block|,
-comment|/* ousrreq */
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* init, fasttimeo, slowtimo, drain */
+operator|.
+name|pr_usrreqs
+operator|=
 operator|&
 name|ngc_usrreqs
-block|,
-comment|/* usrreq table (above) */
-comment|/*{NULL}*/
-comment|/* pffh (protocol filter head?) */
 block|}
 block|,
 block|{
+operator|.
+name|pr_type
+operator|=
 name|SOCK_DGRAM
 block|,
-comment|/* protocol type */
+operator|.
+name|pr_domain
+operator|=
 operator|&
 name|ngdomain
 block|,
-comment|/* backpointer to domain */
+operator|.
+name|pr_protocol
+operator|=
 name|NG_DATA
 block|,
+operator|.
+name|pr_flags
+operator|=
 name|PR_ATOMIC
 operator||
 name|PR_ADDR
 block|,
-comment|/* flags */
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* input, output, ctlinput, ctloutput */
-name|NULL
-block|,
-comment|/* ousrreq() */
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* init, fasttimeo, slowtimo, drain */
+operator|.
+name|pr_usrreqs
+operator|=
 operator|&
 name|ngd_usrreqs
-block|,
-comment|/* usrreq table (above) */
-comment|/*{NULL}*/
-comment|/* pffh (protocol filter head?) */
 block|}
 block|}
 decl_stmt|;
@@ -4957,22 +4931,24 @@ name|domain
 name|ngdomain
 init|=
 block|{
+operator|.
+name|dom_family
+operator|=
 name|AF_NETGRAPH
 block|,
+operator|.
+name|dom_name
+operator|=
 literal|"netgraph"
 block|,
-name|NULL
-block|,
-comment|/* init() */
-name|NULL
-block|,
-comment|/* externalise() */
-name|NULL
-block|,
-comment|/* dispose() */
+operator|.
+name|dom_protosw
+operator|=
 name|ngsw
 block|,
-comment|/* protosw entry */
+operator|.
+name|dom_protoswNPROTOSW
+operator|=
 operator|&
 name|ngsw
 index|[
@@ -4989,19 +4965,6 @@ literal|0
 index|]
 argument_list|)
 index|]
-block|,
-comment|/* Number of protosw entries */
-name|NULL
-block|,
-comment|/* next domain in list */
-name|NULL
-block|,
-comment|/* rtattach() */
-literal|0
-block|,
-comment|/* arg to rtattach in bits */
-literal|0
-comment|/* maxrtkey */
 block|}
 decl_stmt|;
 end_decl_stmt
