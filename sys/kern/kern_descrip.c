@@ -8604,7 +8604,7 @@ name|filedesc
 modifier|*
 name|fdp
 decl_stmt|;
-comment|/* 	 * POSIX record locking dictates that any close releases ALL 	 * locks owned by this process.  This is handled by setting 	 * a flag in the unlock to free ONLY locks obeying POSIX 	 * semantics, and not to free BSD-style file locks. 	 * If the descriptor was in a message, POSIX-style locks 	 * aren't passed with the descriptor. 	 */
+comment|/* 	 * POSIX record locking dictates that any close releases ALL 	 * locks owned by this process.  This is handled by setting 	 * a flag in the unlock to free ONLY locks obeying POSIX 	 * semantics, and not to free BSD-style file locks. 	 * If the descriptor was in a message, POSIX-style locks 	 * aren't passed with the descripto, and the thread pointer 	 * will be NULL.  Callers should be careful only to pass a 	 * NULL thread pointer when there really is no owning 	 * context that might have locks, or the locks will be 	 * leaked. 	 */
 if|if
 condition|(
 name|fp
@@ -8612,6 +8612,10 @@ operator|->
 name|f_type
 operator|==
 name|DTYPE_VNODE
+operator|&&
+name|td
+operator|!=
+name|NULL
 condition|)
 block|{
 name|int
