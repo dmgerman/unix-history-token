@@ -13746,6 +13746,14 @@ block|{
 name|int
 name|reason
 decl_stmt|;
+name|int
+name|status
+init|=
+name|p
+operator|->
+name|p_xstat
+decl_stmt|;
+comment|/* convert to int */
 name|reason
 operator|=
 name|CLD_EXITED
@@ -13754,9 +13762,7 @@ if|if
 condition|(
 name|WCOREDUMP
 argument_list|(
-name|p
-operator|->
-name|p_xstat
+name|status
 argument_list|)
 condition|)
 name|reason
@@ -13768,9 +13774,7 @@ if|if
 condition|(
 name|WIFSIGNALED
 argument_list|(
-name|p
-operator|->
-name|p_xstat
+name|status
 argument_list|)
 condition|)
 name|reason
