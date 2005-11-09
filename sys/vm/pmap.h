@@ -83,13 +83,6 @@ name|kernel_vm_end
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|pmap_pagedaemon_waken
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|void
 name|pmap_change_wiring

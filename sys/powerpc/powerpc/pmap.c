@@ -494,12 +494,6 @@ name|msgbuf_phys
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|pmap_pagedaemon_waken
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Map of physical memory regions.  */
 end_comment
