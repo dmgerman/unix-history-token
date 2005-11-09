@@ -8753,7 +8753,7 @@ name|device_printf
 argument_list|(
 name|child
 argument_list|,
-literal|"%#lx bytes of rid %#x res %d failed.\n"
+literal|"%#lx bytes of rid %#x res %d failed (%#lx, %#lx).\n"
 argument_list|,
 name|count
 argument_list|,
@@ -8761,6 +8761,10 @@ operator|*
 name|rid
 argument_list|,
 name|type
+argument_list|,
+name|start
+argument_list|,
+name|end
 argument_list|)
 expr_stmt|;
 goto|goto
