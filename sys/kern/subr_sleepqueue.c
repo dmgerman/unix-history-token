@@ -922,7 +922,7 @@ name|TDP_NOSLEEPING
 operator|)
 argument_list|,
 operator|(
-literal|"trying to sleep while sleeping is prohibited"
+literal|"Trying sleep, but thread marked as sleeping prohibited"
 operator|)
 argument_list|)
 expr_stmt|;
