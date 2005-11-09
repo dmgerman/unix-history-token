@@ -2000,7 +2000,7 @@ name|show_stat
 argument_list|(
 literal|"d"
 argument_list|,
-literal|3
+literal|4
 argument_list|,
 name|timer
 argument_list|,
@@ -2015,7 +2015,7 @@ name|show_stat
 argument_list|(
 literal|"d"
 argument_list|,
-literal|3
+literal|4
 argument_list|,
 name|drops
 argument_list|,
