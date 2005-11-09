@@ -100,7 +100,7 @@ name|int
 name|state
 init|=
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|arg
 decl_stmt|;
@@ -241,6 +241,9 @@ operator|=
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|state
 expr_stmt|;
