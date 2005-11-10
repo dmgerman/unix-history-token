@@ -2798,7 +2798,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* if ifp is provided, check for equality with rtentry */
+comment|/*  	 * if ifp is provided, check for equality with rtentry 	 * We should use rt->rt_ifa->ifa_ifp, instead of rt->rt_ifp, 	 * to support the case of sending packets to an address of our own. 	 * (where the former interface is the first argument of if_simloop() 	 *  (=ifp), the latter is lo0) 	 */
 if|if
 condition|(
 name|ifp
@@ -2809,7 +2809,9 @@ name|ro
 operator|.
 name|ro_rt
 operator|->
-name|rt_ifp
+name|rt_ifa
+operator|->
+name|ifa_ifp
 operator|!=
 name|ifp
 condition|)
