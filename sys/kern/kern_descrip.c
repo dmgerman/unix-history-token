@@ -11414,7 +11414,7 @@ name|p
 decl_stmt|;
 name|db_printf
 argument_list|(
-literal|"%8s %4s %8s %8s %4s %5s %8s %5s %12s\n"
+literal|"%8s %4s %8s %8s %4s %5s %6s %8s %5s %12s\n"
 argument_list|,
 literal|"File"
 argument_list|,
@@ -11427,6 +11427,8 @@ argument_list|,
 literal|"GCFl"
 argument_list|,
 literal|"Count"
+argument_list|,
+literal|"MCount"
 argument_list|,
 literal|"Vnode"
 argument_list|,
@@ -11453,7 +11455,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"%8p %4s %8p %08x %04x %5d %8p %5d %12s\n"
+literal|"%8p %4s %8p %08x %04x %5d %6d %8p %5d %12s\n"
 argument_list|,
 name|fp
 argument_list|,
@@ -11479,6 +11481,10 @@ argument_list|,
 name|fp
 operator|->
 name|f_count
+argument_list|,
+name|fp
+operator|->
+name|f_msgcount
 argument_list|,
 name|fp
 operator|->
