@@ -38,28 +38,14 @@ end_if
 begin_define
 define|#
 directive|define
-name|_W_INT
-parameter_list|(
-name|w
-parameter_list|)
-value|(*(int *)&(w))
-end_define
-
-begin_comment
-comment|/* Convert union wait to int. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|WCOREFLAG
 value|0200
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -70,11 +56,6 @@ name|i
 parameter_list|)
 value|(i)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
