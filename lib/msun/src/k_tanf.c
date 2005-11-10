@@ -59,50 +59,47 @@ init|=
 literal|3.7748947079e-08
 decl_stmt|,
 comment|/* 0x33222168 */
+comment|/* Bounds for tan(x)/x - t(x): ~[-1.73e-09, 1.724e-09]. */
 name|T
 index|[]
 init|=
 block|{
-literal|3.3333334327e-01
-block|,
-comment|/* 0x3eaaaaab */
-literal|1.3333334029e-01
-block|,
-comment|/* 0x3e088889 */
-literal|5.3968254477e-02
-block|,
-comment|/* 0x3d5d0dd1 */
-literal|2.1869488060e-02
-block|,
-comment|/* 0x3cb327a4 */
-literal|8.8632395491e-03
-block|,
-comment|/* 0x3c11371f */
-literal|3.5920790397e-03
-block|,
-comment|/* 0x3b6b6916 */
-literal|1.4562094584e-03
-block|,
-comment|/* 0x3abede48 */
-literal|5.8804126456e-04
-block|,
-comment|/* 0x3a1a26c8 */
-literal|2.4646313977e-04
-block|,
-comment|/* 0x398137b9 */
-literal|7.8179444245e-05
-block|,
-comment|/* 0x38a3f445 */
-literal|7.1407252108e-05
-block|,
-comment|/* 0x3895c07a */
+literal|0xaaaaa3
+literal|.0p
 operator|-
-literal|1.8558637748e-05
+literal|25
 block|,
-comment|/* 0xb79bae5f */
-literal|2.5907305826e-05
+comment|/* 0.33333310485 */
+literal|0x888b06
+literal|.0p
+operator|-
+literal|26
 block|,
-comment|/* 0x37d95384 */
+comment|/* 0.13334283238 */
+literal|0xdc84c8
+literal|.0p
+operator|-
+literal|28
+block|,
+comment|/* 0.053837567568 */
+literal|0xb9d8f1
+literal|.0p
+operator|-
+literal|29
+block|,
+comment|/* 0.022686453536 */
+literal|0xcfe632
+literal|.0p
+operator|-
+literal|31
+block|,
+comment|/* 0.0063445800915 */
+literal|0xeaf97e
+literal|.0p
+operator|-
+literal|31
+block|,
+comment|/* 0.0071708550677 */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -212,7 +209,7 @@ name|z
 operator|*
 name|z
 expr_stmt|;
-comment|/* Break x^5*(T[1]+x^2*T[2]+...) into      *	  x^5(T[1]+x^4*T[3]+...+x^20*T[11]) +      *	  x^5(x^2*(T[2]+x^4*T[4]+...+x^22*[T12]))      */
+comment|/* Break x^5*(T[1]+x^2*T[2]+...) into      *	  x^5*(T[1]+x^4*T[3]+x^8*T[5]) +      *	  x^5*(x^2*(T[2]+x^4*T[4]))      */
 name|r
 operator|=
 name|T
@@ -230,37 +227,10 @@ index|]
 operator|+
 name|w
 operator|*
-operator|(
 name|T
 index|[
 literal|5
 index|]
-operator|+
-name|w
-operator|*
-operator|(
-name|T
-index|[
-literal|7
-index|]
-operator|+
-name|w
-operator|*
-operator|(
-name|T
-index|[
-literal|9
-index|]
-operator|+
-name|w
-operator|*
-name|T
-index|[
-literal|11
-index|]
-operator|)
-operator|)
-operator|)
 operator|)
 expr_stmt|;
 name|v
@@ -275,46 +245,10 @@ index|]
 operator|+
 name|w
 operator|*
-operator|(
 name|T
 index|[
 literal|4
 index|]
-operator|+
-name|w
-operator|*
-operator|(
-name|T
-index|[
-literal|6
-index|]
-operator|+
-name|w
-operator|*
-operator|(
-name|T
-index|[
-literal|8
-index|]
-operator|+
-name|w
-operator|*
-operator|(
-name|T
-index|[
-literal|10
-index|]
-operator|+
-name|w
-operator|*
-name|T
-index|[
-literal|12
-index|]
-operator|)
-operator|)
-operator|)
-operator|)
 operator|)
 expr_stmt|;
 name|s
