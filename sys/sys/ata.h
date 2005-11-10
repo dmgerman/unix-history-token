@@ -895,6 +895,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATA_READ_NATIVE_MAX_ADDDRESS48
+value|0x27
+end_define
+
+begin_comment
+comment|/* read native max addr 48bit */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATA_READ_MUL48
 value|0x29
 end_define
@@ -945,6 +956,17 @@ end_define
 
 begin_comment
 comment|/* write DMA QUEUED 48bit LBA*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_SET_MAX_ADDRESS48
+value|0x37
+end_define
+
+begin_comment
+comment|/* set max address 48bit */
 end_comment
 
 begin_define
