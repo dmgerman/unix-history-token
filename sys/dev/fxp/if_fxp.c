@@ -9324,15 +9324,7 @@ name|cb_ias
 operator|->
 name|macaddr
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|IFP2ENADDR
-argument_list|(
-name|sc
-operator|->
-name|ifp
-argument_list|)
-argument_list|)
+name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Start the IAS (Individual Address Setup) command/DMA. 	 */

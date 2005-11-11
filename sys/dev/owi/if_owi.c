@@ -5898,7 +5898,6 @@ operator|(
 name|char
 operator|*
 operator|)
-operator|&
 name|IFP2ENADDR
 argument_list|(
 name|sc
@@ -8404,7 +8403,6 @@ operator|(
 name|char
 operator|*
 operator|)
-operator|&
 name|IFP2ENADDR
 argument_list|(
 name|sc

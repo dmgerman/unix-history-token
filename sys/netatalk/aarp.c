@@ -1642,13 +1642,7 @@ argument_list|(
 name|ifp
 argument_list|)
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|IFP2ENADDR
-argument_list|(
-name|ifp
-argument_list|)
-argument_list|)
+name|ETHER_ADDR_LEN
 argument_list|)
 condition|)
 block|{

@@ -3626,7 +3626,6 @@ condition|)
 return|return;
 name|bcopy
 argument_list|(
-operator|&
 name|IFP2ENADDR
 argument_list|(
 name|sc
@@ -3650,7 +3649,6 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-operator|&
 name|IFP2ENADDR
 argument_list|(
 name|sc

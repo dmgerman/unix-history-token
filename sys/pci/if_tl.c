@@ -8552,7 +8552,6 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-operator|&
 name|IFP2ENADDR
 argument_list|(
 name|sc

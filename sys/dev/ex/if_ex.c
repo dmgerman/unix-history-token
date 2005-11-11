@@ -4268,7 +4268,6 @@ name|uint16_t
 operator|*
 operator|)
 operator|(
-operator|&
 name|IFP2ENADDR
 argument_list|(
 name|sc

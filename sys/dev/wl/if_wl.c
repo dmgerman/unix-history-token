@@ -5182,7 +5182,6 @@ name|eh
 operator|->
 name|ether_dhost
 argument_list|,
-operator|&
 name|IFP2ENADDR
 argument_list|(
 name|sc

@@ -5271,7 +5271,6 @@ name|u_int8_t
 operator|*
 operator|)
 operator|(
-operator|&
 name|IFP2ENADDR
 argument_list|(
 name|scp
