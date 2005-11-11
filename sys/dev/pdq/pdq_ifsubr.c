@@ -1937,6 +1937,11 @@ parameter_list|(
 name|pdq_softc_t
 modifier|*
 name|sc
+parameter_list|,
+specifier|const
+name|pdq_uint8_t
+modifier|*
+name|llc
 parameter_list|)
 block|{
 name|struct
@@ -2110,6 +2115,8 @@ directive|endif
 name|fddi_ifattach
 argument_list|(
 name|ifp
+argument_list|,
+name|llc
 argument_list|,
 name|FDDI_BPF_SUPPORTED
 argument_list|)

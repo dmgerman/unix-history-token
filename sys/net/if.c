@@ -168,12 +168,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_arp.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if_clone.h>
 end_include
 
@@ -9336,7 +9330,6 @@ block|{
 case|case
 name|IFT_ETHER
 case|:
-comment|/* these types use struct arpcom */
 case|case
 name|IFT_FDDI
 case|:
@@ -9352,20 +9345,6 @@ case|:
 case|case
 name|IFT_BRIDGE
 case|:
-name|bcopy
-argument_list|(
-name|lladdr
-argument_list|,
-name|IFP2ENADDR
-argument_list|(
-name|ifp
-argument_list|)
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-comment|/* 		 * XXX We also need to store the lladdr in LLADDR(sdl), 		 * which is done below. This is a pain because we must 		 * remember to keep the info in sync. 		 */
-comment|/* FALLTHROUGH */
 case|case
 name|IFT_ARCNET
 case|:

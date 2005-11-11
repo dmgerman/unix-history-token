@@ -1238,6 +1238,10 @@ name|pdq_ifattach
 parameter_list|(
 name|pdq_softc_t
 modifier|*
+parameter_list|,
+specifier|const
+name|pdq_uint8_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

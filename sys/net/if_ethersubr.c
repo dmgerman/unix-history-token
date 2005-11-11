@@ -3754,7 +3754,7 @@ parameter_list|,
 specifier|const
 name|u_int8_t
 modifier|*
-name|llc
+name|lla
 parameter_list|)
 block|{
 name|int
@@ -3884,7 +3884,7 @@ name|if_addrlen
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|llc
+name|lla
 argument_list|,
 name|LLADDR
 argument_list|(
@@ -3896,28 +3896,14 @@ operator|->
 name|if_addrlen
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX: This doesn't belong here; we do it until 	 * XXX:  all drivers are cleaned up 	 */
-if|if
-condition|(
-name|llc
-operator|!=
 name|IFP2ENADDR
 argument_list|(
 name|ifp
 argument_list|)
-condition|)
-name|bcopy
+operator|=
+name|LLADDR
 argument_list|(
-name|llc
-argument_list|,
-name|IFP2ENADDR
-argument_list|(
-name|ifp
-argument_list|)
-argument_list|,
-name|ifp
-operator|->
-name|if_addrlen
+name|sdl
 argument_list|)
 expr_stmt|;
 name|bpfattach
@@ -3961,7 +3947,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|llc
+name|lla
 index|[
 name|i
 index|]
@@ -3983,7 +3969,7 @@ name|ifp
 argument_list|,
 literal|"Ethernet address: %6D\n"
 argument_list|,
-name|llc
+name|lla
 argument_list|,
 literal|":"
 argument_list|)

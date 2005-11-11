@@ -608,6 +608,10 @@ name|struct
 name|ifnet
 modifier|*
 parameter_list|,
+specifier|const
+name|u_int8_t
+modifier|*
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;

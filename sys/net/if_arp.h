@@ -297,10 +297,8 @@ name|ac_ifp
 decl_stmt|;
 comment|/* network-visible interface */
 name|u_char
+modifier|*
 name|_ac_enaddr
-index|[
-literal|6
-index|]
 decl_stmt|;
 comment|/* ethernet hardware address */
 name|void
