@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/speaker.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/ppireg.h>
 end_include
 
@@ -99,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|<machine/timerreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/speaker/speaker.h>
 end_include
 
 begin_decl_stmt
