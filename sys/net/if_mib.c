@@ -157,7 +157,7 @@ index|]
 operator|>
 name|if_index
 operator|||
-name|ifaddr_byindex
+name|ifnet_byindex
 argument_list|(
 name|name
 index|[
@@ -172,15 +172,13 @@ name|ENOENT
 return|;
 name|ifp
 operator|=
-name|ifaddr_byindex
+name|ifnet_byindex
 argument_list|(
 name|name
 index|[
 literal|0
 index|]
 argument_list|)
-operator|->
-name|ifa_ifp
 expr_stmt|;
 switch|switch
 condition|(
