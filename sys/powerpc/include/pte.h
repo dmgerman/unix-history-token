@@ -25,20 +25,18 @@ directive|ifndef
 name|LOCORE
 end_ifndef
 
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
-end_include
+begin_comment
+comment|/* 32-bit PTE */
+end_comment
 
 begin_struct
 struct|struct
 name|pte
 block|{
-name|u_int
+name|u_int32_t
 name|pte_hi
 decl_stmt|;
-name|u_int
+name|u_int32_t
 name|pte_lo
 decl_stmt|;
 block|}
@@ -60,6 +58,39 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* 64-bit (long) PTE */
+end_comment
+
+begin_struct
+struct|struct
+name|lpte
+block|{
+name|u_int64_t
+name|pte_hi
+decl_stmt|;
+name|u_int64_t
+name|pte_lo
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|lpteg
+block|{
+name|struct
+name|lpte
+name|pt
+index|[
+literal|8
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_endif
 endif|#
 directive|endif
@@ -67,6 +98,10 @@ end_endif
 
 begin_comment
 comment|/* LOCORE */
+end_comment
+
+begin_comment
+comment|/* 32-bit PTE definitions */
 end_comment
 
 begin_comment
@@ -237,6 +272,199 @@ begin_comment
 comment|/* pseudo bit in attrs; page is exec */
 end_comment
 
+begin_comment
+comment|/* 64-bit PTE definitions */
+end_comment
+
+begin_comment
+comment|/* High quadword: */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LPTE_VSID_SHIFT
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|LPTE_API
+value|0x0000000000000F80ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|LPTE_BIG
+value|0x0000000000000004ULL
+end_define
+
+begin_comment
+comment|/* 4kb/16Mb page */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LPTE_HID
+value|0x0000000000000002ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|LPTE_VALID
+value|0x0000000000000001ULL
+end_define
+
+begin_comment
+comment|/* Low quadword: */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXTEND_PTE
+parameter_list|(
+name|x
+parameter_list|)
+value|UINT64_C(x)
+end_define
+
+begin_comment
+comment|/* make constants 64-bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LPTE_RPGN
+value|0xfffffffffffff000ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|LPTE_REF
+value|EXTEND_PTE( PTE_REF )
+end_define
+
+begin_define
+define|#
+directive|define
+name|LPTE_CHG
+value|EXTEND_PTE( PTE_CHG )
+end_define
+
+begin_define
+define|#
+directive|define
+name|LPTE_WIMG
+value|EXTEND_PTE( PTE_WIMG )
+end_define
+
+begin_define
+define|#
+directive|define
+name|LPTE_W
+value|EXTEND_PTE( PTE_W )
+end_define
+
+begin_define
+define|#
+directive|define
+name|LPTE_I
+value|EXTEND_PTE( PTE_I )
+end_define
+
+begin_define
+define|#
+directive|define
+name|LPTE_M
+value|EXTEND_PTE( PTE_M )
+end_define
+
+begin_define
+define|#
+directive|define
+name|LPTE_G
+value|EXTEND_PTE( PTE_G )
+end_define
+
+begin_define
+define|#
+directive|define
+name|LPTE_NOEXEC
+value|0x0000000000000004ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|LPTE_PP
+value|EXTEND_PTE( PTE_PP )
+end_define
+
+begin_define
+define|#
+directive|define
+name|LPTE_SO
+value|EXTEND_PTE( PTE_SO )
+end_define
+
+begin_comment
+comment|/* Super. Only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LPTE_SW
+value|EXTEND_PTE( PTE_SW )
+end_define
+
+begin_comment
+comment|/* Super. Write-Only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LPTE_BW
+value|EXTEND_PTE( PTE_BW )
+end_define
+
+begin_comment
+comment|/* Supervisor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LPTE_BR
+value|EXTEND_PTE( PTE_BR )
+end_define
+
+begin_comment
+comment|/* Both Read Only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LPTE_RW
+value|LPTE_BW
+end_define
+
+begin_define
+define|#
+directive|define
+name|LPTE_RO
+value|LPTE_BR
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -248,6 +476,14 @@ typedef|typedef
 name|struct
 name|pte
 name|pte_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|lpte
+name|lpte_t
 typedef|;
 end_typedef
 
@@ -298,51 +534,6 @@ directive|define
 name|ADDR_POFF
 value|0x00000fff
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCORE
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|pte_t
-modifier|*
-name|ptable
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ptab_cnt
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* LOCORE */
-end_comment
 
 begin_comment
 comment|/*  * Bits in DSISR:  */
