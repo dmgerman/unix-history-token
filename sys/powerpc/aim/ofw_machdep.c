@@ -182,13 +182,6 @@ name|ofw_pmap
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|pmap_bootstrapped
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|int
