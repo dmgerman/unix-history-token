@@ -2305,7 +2305,7 @@ argument_list|,
 name|BAT_PP_RW
 argument_list|)
 expr_stmt|;
-asm|__asm ("sync; isync; \n"
+asm|__asm (".balign 32; \n"
 literal|"mtibatu 0,%0; mtibatl 0,%1; isync; \n"
 literal|"mtdbatu 0,%0; mtdbatl 0,%1; isync"
 operator|::
