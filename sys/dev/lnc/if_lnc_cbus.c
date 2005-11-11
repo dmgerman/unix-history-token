@@ -102,7 +102,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_arp.h>
+file|<net/if_dl.h>
 end_include
 
 begin_include
@@ -1116,7 +1116,7 @@ block|}
 comment|/* 	 * ISA Configuration 	 * 	 * XXX - Following parameters are Contec C-NET(98)S only. 	 *       So, check the Ethernet address here. 	 * 	 *       Contec uses 00 80 4c ?? ?? ?? 	 */
 if|if
 condition|(
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
@@ -1131,7 +1131,7 @@ name|u_char
 operator|)
 literal|0x00
 operator|&&
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
@@ -1146,7 +1146,7 @@ name|u_char
 operator|)
 literal|0x80
 operator|&&
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->

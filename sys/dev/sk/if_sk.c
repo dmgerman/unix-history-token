@@ -11488,7 +11488,7 @@ operator|*
 operator|)
 operator|(
 operator|&
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc_if
 operator|->
@@ -11513,7 +11513,7 @@ operator|*
 operator|)
 operator|(
 operator|&
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc_if
 operator|->
@@ -11538,7 +11538,7 @@ operator|*
 operator|)
 operator|(
 operator|&
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc_if
 operator|->
@@ -12298,7 +12298,7 @@ name|i
 operator|*
 literal|4
 argument_list|,
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc_if
 operator|->
@@ -12310,7 +12310,7 @@ operator|*
 literal|2
 index|]
 operator||
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc_if
 operator|->

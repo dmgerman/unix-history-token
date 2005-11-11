@@ -1748,7 +1748,7 @@ break|break;
 block|}
 name|bcopy
 argument_list|(
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|priv
 operator|->
@@ -2552,7 +2552,7 @@ return|;
 comment|/* Overwrite source MAC address */
 name|bcopy
 argument_list|(
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|ifp
 argument_list|)

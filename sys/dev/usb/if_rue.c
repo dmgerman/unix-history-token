@@ -4685,7 +4685,7 @@ name|sc
 argument_list|,
 name|RUE_IDR0
 argument_list|,
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->

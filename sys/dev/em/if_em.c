@@ -3962,7 +3962,7 @@ expr_stmt|;
 comment|/* Get the latest mac address, User can use a LAA */
 name|bcopy
 argument_list|(
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|adapter
 operator|->

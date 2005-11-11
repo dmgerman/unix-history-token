@@ -7648,7 +7648,7 @@ name|ic
 operator|->
 name|ic_myaddr
 argument_list|,
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|ifp
 argument_list|)

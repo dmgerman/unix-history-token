@@ -9008,16 +9008,11 @@ expr|struct
 name|sockaddr_dl
 operator|*
 operator|)
-operator|(
-name|ifaddr_byindex
-argument_list|(
 name|ifp
 operator|->
-name|if_index
-argument_list|)
+name|if_addr
 operator|->
 name|ifa_addr
-operator|)
 expr_stmt|;
 comment|/* 			 * Change our mind and don't try copy. 			 */
 if|if

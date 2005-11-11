@@ -1130,7 +1130,7 @@ return|;
 comment|/*      * Construct a LLC TEST message which will point to ourselves.      */
 name|bcopy
 argument_list|(
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
@@ -1153,7 +1153,7 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
@@ -16325,7 +16325,7 @@ name|hash
 operator|=
 name|tulip_mchash
 argument_list|(
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|ifp
 argument_list|)
@@ -16364,7 +16364,7 @@ operator|(
 name|u_int16_t
 operator|*
 operator|)
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|ifp
 argument_list|)
@@ -16386,7 +16386,7 @@ operator|(
 name|u_int16_t
 operator|*
 operator|)
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|ifp
 argument_list|)
@@ -16408,7 +16408,7 @@ operator|(
 name|u_int16_t
 operator|*
 operator|)
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|ifp
 argument_list|)
@@ -16612,7 +16612,7 @@ operator|(
 name|u_int16_t
 operator|*
 operator|)
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|ifp
 argument_list|)
@@ -16633,7 +16633,7 @@ operator|(
 name|u_int16_t
 operator|*
 operator|)
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|ifp
 argument_list|)
@@ -16654,7 +16654,7 @@ operator|(
 name|u_int16_t
 operator|*
 operator|)
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|ifp
 argument_list|)

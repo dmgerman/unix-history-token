@@ -292,7 +292,7 @@ name|ifaddrhead
 name|if_addrhead
 decl_stmt|;
 comment|/* linked list of addresses per if */
-comment|/* 		 * if_addrhead is the list of all addresses associated to 		 * an interface. 		 * Some code in the kernel assumes that first element 		 * of the list has type AF_LINK, and contains sockaddr_dl 		 * addresses which store the link-level address and the name 		 * of the interface. 		 * However, access to the AF_LINK address through this 		 * field is deprecated. Use ifaddr_byindex() instead. 		 */
+comment|/* 		 * if_addrhead is the list of all addresses associated to 		 * an interface. 		 * Some code in the kernel assumes that first element 		 * of the list has type AF_LINK, and contains sockaddr_dl 		 * addresses which store the link-level address and the name 		 * of the interface. 		 * However, access to the AF_LINK address through this 		 * field is deprecated. Use if_addr or ifaddr_byindex() instead. 		 */
 name|struct
 name|knlist
 name|if_klist
@@ -473,11 +473,12 @@ name|sockaddr
 modifier|*
 parameter_list|)
 function_decl|;
-name|void
+name|struct
+name|ifaddr
 modifier|*
-name|if_spare1
+name|if_addr
 decl_stmt|;
-comment|/* spare pointer 1 */
+comment|/* pointer to link-level address */
 name|void
 modifier|*
 name|if_spare2
@@ -1868,11 +1869,6 @@ modifier|*
 name|ife_ifnet
 decl_stmt|;
 name|struct
-name|ifaddr
-modifier|*
-name|ife_ifnet_addr
-decl_stmt|;
-name|struct
 name|cdev
 modifier|*
 name|ife_dev
@@ -1902,7 +1898,7 @@ name|ifaddr_byindex
 parameter_list|(
 name|idx
 parameter_list|)
-value|ifindex_table[(idx)].ife_ifnet_addr
+value|ifnet_byindex(idx)->if_addr
 end_define
 
 begin_define
@@ -2389,7 +2385,7 @@ parameter_list|(
 name|ifp
 parameter_list|)
 define|\
-value|LLADDR((struct sockaddr_dl *) ifaddr_byindex((ifp)->if_index)->ifa_addr)
+value|LLADDR((struct sockaddr_dl *)((ifp)->if_addr->ifa_addr))
 end_define
 
 begin_ifdef

@@ -196,6 +196,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_dl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/ethernet.h>
 end_include
 
@@ -8980,7 +8986,7 @@ name|cfg
 operator|->
 name|an_macaddr
 argument_list|,
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
@@ -12775,7 +12781,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->

@@ -4846,7 +4846,7 @@ name|u_char
 modifier|*
 name|laddr
 init|=
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->

@@ -48,7 +48,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_arp.h>
+file|<net/if_dl.h>
 end_include
 
 begin_include
@@ -2382,7 +2382,7 @@ name|sc
 operator|->
 name|TRlldAdapter
 argument_list|,
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->

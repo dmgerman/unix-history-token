@@ -5690,7 +5690,7 @@ operator|!=
 name|AF_INET
 condition|)
 continue|continue;
-comment|/*		arprequest(sc->sc_carpdev,&in,&in, IFP2ENADDR(sc->sc_ifp)); */
+comment|/*		arprequest(sc->sc_carpdev,&in,&in, IF_LLADDR(sc->sc_ifp)); */
 name|arp_ifinit2
 argument_list|(
 name|sc
@@ -5699,7 +5699,7 @@ name|sc_carpdev
 argument_list|,
 name|ifa
 argument_list|,
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
@@ -6163,7 +6163,7 @@ block|{
 operator|*
 name|enaddr
 operator|=
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|vh
 operator|->
@@ -6251,7 +6251,7 @@ block|{
 operator|*
 name|enaddr
 operator|=
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|vh
 operator|->
@@ -6559,7 +6559,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
@@ -6604,7 +6604,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
@@ -6750,7 +6750,7 @@ name|bcmp
 argument_list|(
 name|dhost
 argument_list|,
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|vh
 operator|->
@@ -10024,7 +10024,7 @@ name|carpr
 operator|.
 name|carpr_vhid
 expr_stmt|;
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
@@ -10036,7 +10036,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
@@ -10048,7 +10048,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
@@ -10060,7 +10060,7 @@ index|]
 operator|=
 literal|0x5e
 expr_stmt|;
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
@@ -10072,7 +10072,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
@@ -10084,7 +10084,7 @@ index|]
 operator|=
 literal|1
 expr_stmt|;
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->

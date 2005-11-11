@@ -5571,7 +5571,7 @@ name|IEEE80211_FC1_DIR_NODS
 argument_list|,
 name|dst
 argument_list|,
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->

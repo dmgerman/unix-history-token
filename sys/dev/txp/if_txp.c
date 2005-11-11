@@ -6227,7 +6227,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
@@ -6249,7 +6249,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
@@ -6271,7 +6271,7 @@ index|[
 literal|3
 index|]
 operator|=
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
@@ -6293,7 +6293,7 @@ index|[
 literal|2
 index|]
 operator|=
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
@@ -6315,7 +6315,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
@@ -6337,7 +6337,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->

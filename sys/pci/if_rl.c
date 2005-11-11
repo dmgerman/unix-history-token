@@ -6293,7 +6293,7 @@ operator|*
 operator|)
 operator|(
 operator|&
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
@@ -6318,7 +6318,7 @@ operator|*
 operator|)
 operator|(
 operator|&
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->

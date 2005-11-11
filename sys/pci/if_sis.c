@@ -7974,7 +7974,7 @@ operator|(
 name|u_int16_t
 operator|*
 operator|)
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
@@ -8006,7 +8006,7 @@ operator|(
 name|u_int16_t
 operator|*
 operator|)
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
@@ -8038,7 +8038,7 @@ operator|(
 name|u_int16_t
 operator|*
 operator|)
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
@@ -8073,7 +8073,7 @@ operator|(
 name|u_int16_t
 operator|*
 operator|)
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
@@ -8105,7 +8105,7 @@ operator|(
 name|u_int16_t
 operator|*
 operator|)
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
@@ -8137,7 +8137,7 @@ operator|(
 name|u_int16_t
 operator|*
 operator|)
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->

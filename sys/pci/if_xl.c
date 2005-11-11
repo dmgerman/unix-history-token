@@ -3626,7 +3626,7 @@ condition|)
 return|return;
 name|bcopy
 argument_list|(
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
@@ -3649,7 +3649,7 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
@@ -12267,7 +12267,7 @@ name|XL_W2_STATION_ADDR_LO
 operator|+
 name|i
 argument_list|,
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->

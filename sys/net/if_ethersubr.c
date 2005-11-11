@@ -1526,7 +1526,7 @@ name|eh
 operator|->
 name|ether_shost
 argument_list|,
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|ifp
 argument_list|)
@@ -2978,7 +2978,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEV_CARP
-comment|/* 		 * XXX: Okay, we need to call carp_forus() and - if it is for 		 * us jump over code that does the normal check 		 * "IFP2ENADDR(ifp) == ether_dhost". The check sequence is a bit 		 * different from OpenBSD, so we jump over as few code as 		 * possible, to catch _all_ sanity checks. This needs 		 * evaluation, to see if the carp ether_dhost values break any 		 * of these checks! 		 */
+comment|/* 		 * XXX: Okay, we need to call carp_forus() and - if it is for 		 * us jump over code that does the normal check 		 * "IF_LLADDR(ifp) == ether_dhost". The check sequence is a bit 		 * different from OpenBSD, so we jump over as few code as 		 * possible, to catch _all_ sanity checks. This needs 		 * evaluation, to see if the carp ether_dhost values break any 		 * of these checks! 		 */
 if|if
 condition|(
 name|ifp
@@ -3028,7 +3028,7 @@ name|eh
 operator|->
 name|ether_dhost
 argument_list|,
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|ifp
 argument_list|)
@@ -3837,12 +3837,9 @@ name|etherbroadcastaddr
 expr_stmt|;
 name|ifa
 operator|=
-name|ifaddr_byindex
-argument_list|(
 name|ifp
 operator|->
-name|if_index
-argument_list|)
+name|if_addr
 expr_stmt|;
 name|KASSERT
 argument_list|(
@@ -3894,16 +3891,6 @@ argument_list|,
 name|ifp
 operator|->
 name|if_addrlen
-argument_list|)
-expr_stmt|;
-name|IFP2ENADDR
-argument_list|(
-name|ifp
-argument_list|)
-operator|=
-name|LLADDR
-argument_list|(
-name|sdl
 argument_list|)
 expr_stmt|;
 name|bpfattach
@@ -4553,7 +4540,7 @@ expr|union
 name|ipx_host
 operator|*
 operator|)
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|ifp
 argument_list|)
@@ -4574,7 +4561,7 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|ifp
 argument_list|)
@@ -4633,7 +4620,7 @@ name|ifr_data
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|ifp
 argument_list|)

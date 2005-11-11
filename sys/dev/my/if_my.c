@@ -5539,7 +5539,7 @@ name|eh
 operator|->
 name|ether_dhost
 argument_list|,
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->

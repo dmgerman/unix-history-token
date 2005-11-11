@@ -3434,7 +3434,7 @@ name|KUE_CMD_SET_MAC
 argument_list|,
 literal|0
 argument_list|,
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->

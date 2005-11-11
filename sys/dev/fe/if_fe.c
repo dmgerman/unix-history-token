@@ -4268,7 +4268,7 @@ name|sc
 argument_list|,
 name|FE_DLCR8
 argument_list|,
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->

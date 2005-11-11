@@ -296,11 +296,6 @@ modifier|*
 name|ac_ifp
 decl_stmt|;
 comment|/* network-visible interface */
-name|u_char
-modifier|*
-name|_ac_enaddr
-decl_stmt|;
-comment|/* ethernet hardware address */
 name|void
 modifier|*
 name|ac_netgraph
@@ -318,16 +313,6 @@ parameter_list|(
 name|ifp
 parameter_list|)
 value|((struct arpcom *)(ifp->if_l2com))
-end_define
-
-begin_define
-define|#
-directive|define
-name|IFP2ENADDR
-parameter_list|(
-name|ifp
-parameter_list|)
-value|(IFP2AC(ifp)->_ac_enaddr)
 end_define
 
 begin_define

@@ -9313,7 +9313,7 @@ literal|0xffffffff
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->

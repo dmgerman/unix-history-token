@@ -3897,7 +3897,7 @@ name|__FreeBSD__
 argument_list|)
 name|eaddr
 operator|=
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|ifp
 argument_list|)

@@ -698,14 +698,11 @@ index|[
 name|RTAX_IFP
 index|]
 operator|=
-name|ifaddr_byindex
-argument_list|(
 name|newrt
 operator|->
 name|rt_ifp
 operator|->
-name|if_index
-argument_list|)
+name|if_addr
 operator|->
 name|ifa_addr
 expr_stmt|;

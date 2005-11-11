@@ -12669,16 +12669,12 @@ operator|(
 name|u_int16_t
 operator|*
 operator|)
-operator|&
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
 name|ti_ifp
 argument_list|)
-index|[
-literal|0
-index|]
 expr_stmt|;
 name|CSR_WRITE_4
 argument_list|(

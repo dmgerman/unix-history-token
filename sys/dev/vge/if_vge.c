@@ -8386,7 +8386,7 @@ name|VGE_PAR0
 operator|+
 name|i
 argument_list|,
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->

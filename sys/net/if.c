@@ -2437,12 +2437,9 @@ name|ifp
 operator|->
 name|if_type
 expr_stmt|;
-name|ifaddr_byindex
-argument_list|(
 name|ifp
 operator|->
-name|if_index
-argument_list|)
+name|if_addr
 operator|=
 name|ifa
 expr_stmt|;
@@ -2998,7 +2995,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Detach an interface, removing it from the  * list of "active" interfaces and freeing the struct ifnet.  *  * XXXRW: There are some significant questions about event ordering, and  * how to prevent things from starting to use the interface during detach.  */
+comment|/*  * Detach an interface, removing it from the  * list of "active" interfaces.  *  * XXXRW: There are some significant questions about event ordering, and  * how to prevent things from starting to use the interface during detach.  */
 end_comment
 
 begin_function
@@ -3146,13 +3143,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Remove address from ifindex_table[] and maybe decrement if_index. 	 * Clean up all addresses. 	 */
-name|ifaddr_byindex
-argument_list|(
+comment|/* 	 * Remove link ifaddr pointer and maybe decrement if_index. 	 * Clean up all addresses. 	 */
 name|ifp
 operator|->
-name|if_index
-argument_list|)
+name|if_addr
 operator|=
 name|NULL
 expr_stmt|;
@@ -6103,12 +6097,9 @@ argument_list|)
 expr_stmt|;
 name|ifa
 operator|=
-name|ifaddr_byindex
-argument_list|(
 name|ifp
 operator|->
-name|if_index
-argument_list|)
+name|if_addr
 expr_stmt|;
 name|IFA_LOCK
 argument_list|(
@@ -9266,12 +9257,9 @@ name|ifr
 decl_stmt|;
 name|ifa
 operator|=
-name|ifaddr_byindex
-argument_list|(
 name|ifp
 operator|->
-name|if_index
-argument_list|)
+name|if_addr
 expr_stmt|;
 if|if
 condition|(

@@ -96,13 +96,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_types.h>
+file|<net/if_dl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/if_arp.h>
+file|<net/if_types.h>
 end_include
 
 begin_include
@@ -1535,7 +1535,7 @@ name|if_setlladdr
 argument_list|(
 name|ifp
 argument_list|,
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|bifp
 argument_list|)
@@ -1565,7 +1565,7 @@ expr_stmt|;
 comment|/* Save the real MAC address. */
 name|bcopy
 argument_list|(
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|bifp
 argument_list|)
@@ -1587,7 +1587,7 @@ name|if_setlladdr
 argument_list|(
 name|bifp
 argument_list|,
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|ifp
 argument_list|)
@@ -4396,7 +4396,7 @@ name|ether_ifattach
 argument_list|(
 name|ifp
 argument_list|,
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|priv
 operator|->

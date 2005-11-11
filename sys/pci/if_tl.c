@@ -6255,7 +6255,7 @@ name|eh
 operator|->
 name|ether_shost
 argument_list|,
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
@@ -8549,10 +8549,7 @@ name|tl_setfilt
 argument_list|(
 name|sc
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->

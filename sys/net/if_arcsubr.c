@@ -2649,12 +2649,9 @@ else|#
 directive|else
 name|ifa
 operator|=
-name|ifaddr_byindex
-argument_list|(
 name|ifp
 operator|->
-name|if_index
-argument_list|)
+name|if_addr
 expr_stmt|;
 endif|#
 directive|endif

@@ -3621,7 +3621,7 @@ expr_stmt|;
 comment|/* Load station MAC address */
 name|ea
 operator|=
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->

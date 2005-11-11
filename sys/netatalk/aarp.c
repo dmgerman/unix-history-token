@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_dl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -770,7 +776,7 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|ifp
 argument_list|)
@@ -1637,7 +1643,7 @@ name|ea
 operator|->
 name|aarp_sha
 argument_list|,
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|ifp
 argument_list|)
@@ -2316,7 +2322,7 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|ifp
 argument_list|)
@@ -3143,7 +3149,7 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|ifp
 argument_list|)

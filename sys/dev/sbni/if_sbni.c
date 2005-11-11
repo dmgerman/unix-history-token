@@ -108,13 +108,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/ethernet.h>
+file|<net/if_dl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/if_arp.h>
+file|<net/ethernet.h>
 end_include
 
 begin_include
@@ -4780,7 +4780,7 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
@@ -5003,7 +5003,7 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->

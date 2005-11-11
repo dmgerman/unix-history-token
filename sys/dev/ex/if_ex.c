@@ -1497,7 +1497,7 @@ name|I_ADDR_REG0
 operator|+
 name|i
 argument_list|,
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
@@ -4267,14 +4267,12 @@ operator|(
 name|uint16_t
 operator|*
 operator|)
-operator|(
-name|IFP2ENADDR
+name|IF_LLADDR
 argument_list|(
 name|sc
 operator|->
 name|ifp
 argument_list|)
-operator|)
 expr_stmt|;
 name|CSR_WRITE_2
 argument_list|(
