@@ -781,7 +781,7 @@ break|break;
 default|default:
 name|warnx
 argument_list|(
-literal|"unknown metdata record %d in file %s"
+literal|"unknown metadata record %d in file %s"
 argument_list|,
 name|md
 operator|->
@@ -1651,6 +1651,32 @@ operator|->
 name|fts_info
 operator|!=
 name|FTS_F
+condition|)
+continue|continue;
+if|if
+condition|(
+name|p
+operator|->
+name|fts_namelen
+operator|>=
+literal|8
+operator|&&
+name|strcmp
+argument_list|(
+name|p
+operator|->
+name|fts_name
+operator|+
+name|p
+operator|->
+name|fts_namelen
+operator|-
+literal|8
+argument_list|,
+literal|".symbols"
+argument_list|)
+operator|==
+literal|0
 condition|)
 continue|continue;
 name|read_kld
