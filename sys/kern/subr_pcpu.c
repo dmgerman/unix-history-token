@@ -559,7 +559,7 @@ operator|=
 literal|0
 init|;
 name|id
-operator|<
+operator|<=
 name|mp_maxid
 condition|;
 name|id
