@@ -21,6 +21,13 @@ end_define
 
 begin_decl_stmt
 specifier|extern
+name|match_t
+name|MatchType
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|Prefix

@@ -41,7 +41,15 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"YNORhjvyzf:p:P:C:c:d:i:I:k:K:r:t:X:D:m:s:S:o:b:"
+literal|"EGYNORhjvxyzf:p:P:C:c:d:i:I:k:K:r:t:X:D:m:s:S:o:b:"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|match_t
+name|MatchType
+init|=
+name|MATCH_GLOB
 decl_stmt|;
 end_decl_stmt
 
@@ -325,6 +333,30 @@ case|:
 name|Verbose
 operator|=
 name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'x'
+case|:
+name|MatchType
+operator|=
+name|MATCH_REGEX
+expr_stmt|;
+break|break;
+case|case
+literal|'E'
+case|:
+name|MatchType
+operator|=
+name|MATCH_EREGEX
+expr_stmt|;
+break|break;
+case|case
+literal|'G'
+case|:
+name|MatchType
+operator|=
+name|MATCH_EXACT
 expr_stmt|;
 break|break;
 case|case
@@ -751,7 +783,7 @@ literal|"                  [-s srcdir] [-S basedir] "
 argument_list|,
 literal|"                  -c comment -d description -f packlist pkg-filename"
 argument_list|,
-literal|"       pkg_create [-YNhvyzR] -b pkg-name [pkg-filename]"
+literal|"       pkg_create [-EGYNhvxyzR] -b pkg-name [pkg-filename]"
 argument_list|)
 expr_stmt|;
 name|exit
