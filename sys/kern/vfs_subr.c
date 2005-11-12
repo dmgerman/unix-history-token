@@ -17117,6 +17117,17 @@ operator|(
 literal|0
 operator|)
 return|;
+name|KASSERT
+argument_list|(
+name|ap
+operator|->
+name|a_cookies
+argument_list|,
+operator|(
+literal|"NULL ap->a_cookies value with non-NULL ap->a_ncookies!"
+operator|)
+argument_list|)
+expr_stmt|;
 operator|*
 name|ap
 operator|->
