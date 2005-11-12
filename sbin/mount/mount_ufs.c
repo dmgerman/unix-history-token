@@ -171,7 +171,6 @@ name|argc
 parameter_list|,
 name|char
 modifier|*
-specifier|const
 name|argv
 index|[]
 parameter_list|)
