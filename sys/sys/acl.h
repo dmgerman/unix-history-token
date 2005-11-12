@@ -19,6 +19,24 @@ directive|define
 name|_SYS_ACL_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
+end_include
+
 begin_comment
 comment|/*  * POSIX.1e ACL types and related constants.  */
 end_comment
@@ -326,6 +344,13 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_decl_stmt
+specifier|extern
+name|uma_zone_t
+name|acl_zone
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * POSIX.1e ACLs are capable of expressing the read, write, and execute  * bits of the POSIX mode field.  We provide two masks: one that defines  * the bits the ACL will replace in the mode, and the other that defines  * the bits that must be preseved when an ACL is updating a mode.  */
 end_comment
@@ -343,29 +368,6 @@ directive|define
 name|ACL_PRESERVE_MASK
 value|(~ACL_OVERRIDE_MASK)
 end_define
-
-begin_comment
-comment|/*  * Storage for ACLs and support structures.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MALLOC_DECLARE
-end_ifdef
-
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_ACL
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * File system independent code to move back and forth between POSIX mode  * and POSIX.1e ACL representations.  */
