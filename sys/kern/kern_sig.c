@@ -12133,8 +12133,11 @@ operator|!=
 name|newsig
 condition|)
 block|{
+name|ksiginfo_t
+name|ksi
+decl_stmt|;
 comment|/* 				 * clear old signal. 				 * XXX shrug off debugger, it causes siginfo to 				 * be thrown away. 				 */
-name|sigqueue_delete
+name|sigqueue_get
 argument_list|(
 operator|&
 name|td
@@ -12142,6 +12145,9 @@ operator|->
 name|td_sigqueue
 argument_list|,
 name|sig
+argument_list|,
+operator|&
+name|ksi
 argument_list|)
 expr_stmt|;
 comment|/* 				 * If parent wants us to take the signal, 				 * then it will leave it in p->p_xstat; 				 * otherwise we just look for signals again. 			 	*/
