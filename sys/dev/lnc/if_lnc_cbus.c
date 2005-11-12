@@ -1126,6 +1126,9 @@ index|[
 literal|0
 index|]
 operator|==
+operator|(
+name|char
+operator|)
 literal|0x00
 operator|&&
 name|IF_LLADDR
@@ -1138,6 +1141,9 @@ index|[
 literal|1
 index|]
 operator|==
+operator|(
+name|char
+operator|)
 literal|0x80
 operator|&&
 name|IF_LLADDR
@@ -1150,6 +1156,9 @@ index|[
 literal|2
 index|]
 operator|==
+operator|(
+name|char
+operator|)
 literal|0x4c
 condition|)
 block|{
