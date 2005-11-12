@@ -41,7 +41,7 @@ file|"math_private.h"
 end_include
 
 begin_comment
-comment|/* Range of maximum relative error in polynomial: ~[-1.61e-10, 1.621e-10]. */
+comment|/* |sin(x)/x - s(x)|< 2**-32.5 (~[-1.57e-10, 1.572e-10]). */
 end_comment
 
 begin_decl_stmt
@@ -60,27 +60,27 @@ literal|.0p
 operator|-
 literal|26
 decl_stmt|,
-comment|/* -0.1666666716337203979492187500 */
+comment|/* -0.16666667163 */
 name|S2
 init|=
-literal|0x8888ba
+literal|0x8888bb
 literal|.0p
 operator|-
 literal|30
 decl_stmt|,
-comment|/*  0.008333379402756690979003906250 */
+comment|/*  0.0083333803341 */
 name|S3
 init|=
 operator|-
-literal|0xd02cb0
+literal|0xd02de1
 literal|.0p
 operator|-
 literal|36
 decl_stmt|,
-comment|/* -0.0001985307317227125167846679687 */
+comment|/* -0.00019853517006 */
 name|S4
 init|=
-literal|0xbe18ff
+literal|0xbe6dbe
 literal|.0p
 operator|-
 literal|42
@@ -88,7 +88,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  0.000002832675590980215929448604584 */
+comment|/*  0.0000028376084629 */
 end_comment
 
 begin_function
