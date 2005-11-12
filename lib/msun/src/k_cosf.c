@@ -41,7 +41,7 @@ file|"math_private.h"
 end_include
 
 begin_comment
-comment|/* Range of maximum relative error in polynomial: ~[-1.15e-10, 1.169e-10]. */
+comment|/* |cos(x) - c(x)|< 2**-33.1 (~[-9.39e-11, 1.083e-10]). */
 end_comment
 
 begin_decl_stmt
@@ -59,7 +59,7 @@ literal|.0p
 operator|-
 literal|28
 decl_stmt|,
-comment|/*  0.04166664555668830871582031250 */
+comment|/*  0.041666645557 */
 name|C2
 init|=
 operator|-
@@ -68,7 +68,7 @@ literal|.0p
 operator|-
 literal|33
 decl_stmt|,
-comment|/* -0.001388731063343584537506103516 */
+comment|/* -0.0013887310633 */
 name|C3
 init|=
 literal|0xccf47d
@@ -79,7 +79,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  0.00002443254288664320483803749084 */
+comment|/*  0.000024432542887 */
 end_comment
 
 begin_function
