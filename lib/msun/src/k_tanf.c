@@ -44,11 +44,6 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|float
-name|one
-init|=
-literal|1.0000000000e+00
-decl_stmt|,
-comment|/* 0x3f800000 */
 name|pio4
 init|=
 literal|7.8539812565e-01
@@ -59,7 +54,7 @@ init|=
 literal|3.7748947079e-08
 decl_stmt|,
 comment|/* 0x33222168 */
-comment|/* Bounds for tan(x)/x - t(x): ~[-1.73e-09, 1.724e-09]. */
+comment|/* |tan(x)/x - t(x)|< 2**-29.2 (~[-1.73e-09, 1.724e-09]). */
 name|T
 index|[]
 init|=
@@ -147,7 +142,6 @@ name|hx
 operator|&
 literal|0x7fffffff
 expr_stmt|;
-comment|/* high word of |x| */
 if|if
 condition|(
 name|ix
@@ -155,7 +149,7 @@ operator|>=
 literal|0x3f2ca140
 condition|)
 block|{
-comment|/* |x|>=0.6744 */
+comment|/* |x|>=0.67434 */
 if|if
 condition|(
 name|hx
