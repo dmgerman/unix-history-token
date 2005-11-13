@@ -185,17 +185,6 @@ literal|""
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|found_err
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* flag set in diagN() on error */
-end_comment
-
 begin_function
 name|int
 name|main

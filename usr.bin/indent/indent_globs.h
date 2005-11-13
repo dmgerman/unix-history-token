@@ -396,6 +396,12 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|found_err
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|pointer_as_binop
 decl_stmt|;
 end_decl_stmt
