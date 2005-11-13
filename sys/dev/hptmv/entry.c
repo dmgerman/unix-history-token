@@ -947,11 +947,7 @@ name|char
 name|DRIVER_VERSION
 index|[]
 init|=
-literal|"v1.12 ("
-name|__DATE__
-literal|" "
-name|__TIME__
-literal|")"
+literal|"v1.12"
 decl_stmt|;
 end_decl_stmt
 
