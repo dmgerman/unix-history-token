@@ -125,10 +125,10 @@ if|if
 condition|(
 name|ix
 operator|<
-literal|0x24000000
+literal|0x39800000
 condition|)
 return|return
-name|w
+name|one
 return|;
 comment|/* cosh(tiny) = 1 */
 return|return
@@ -147,12 +147,12 @@ name|w
 operator|)
 return|;
 block|}
-comment|/* |x| in [0.5*ln2,22], return (exp(|x|)+1/exp(|x|)/2; */
+comment|/* |x| in [0.5*ln2,9], return (exp(|x|)+1/exp(|x|))/2; */
 if|if
 condition|(
 name|ix
 operator|<
-literal|0x41b00000
+literal|0x41100000
 condition|)
 block|{
 name|t
@@ -175,12 +175,12 @@ operator|/
 name|t
 return|;
 block|}
-comment|/* |x| in [22, log(maxdouble)] return half*exp(|x|) */
+comment|/* |x| in [9, log(maxfloat)] return half*exp(|x|) */
 if|if
 condition|(
 name|ix
 operator|<
-literal|0x42b17180
+literal|0x42b17217
 condition|)
 return|return
 name|half
@@ -193,7 +193,7 @@ name|x
 argument_list|)
 argument_list|)
 return|;
-comment|/* |x| in [log(maxdouble), overflowthresold] */
+comment|/* |x| in [log(maxfloat), overflowthresold] */
 if|if
 condition|(
 name|ix
