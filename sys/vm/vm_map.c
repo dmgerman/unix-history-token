@@ -5153,7 +5153,11 @@ condition|(
 operator|(
 name|prot
 operator|&
+operator|(
 name|VM_PROT_READ
+operator||
+name|VM_PROT_EXECUTE
+operator|)
 operator|)
 operator|==
 literal|0
@@ -5473,6 +5477,8 @@ name|tmpidx
 argument_list|)
 argument_list|,
 name|p
+argument_list|,
+name|prot
 argument_list|,
 name|mpte
 argument_list|)
