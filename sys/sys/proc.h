@@ -2289,6 +2289,14 @@ modifier|*
 name|p_sched
 decl_stmt|;
 comment|/* (*) Scheduler-specific data. */
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|ktr_request
+argument_list|)
+name|p_ktr
+expr_stmt|;
+comment|/* (o) KTR event queue. */
 block|}
 struct|;
 end_struct
