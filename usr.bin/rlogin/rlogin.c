@@ -555,12 +555,13 @@ decl_stmt|;
 name|socklen_t
 name|sslen
 decl_stmt|;
-name|int
-name|i
-decl_stmt|,
+name|size_t
 name|len
 decl_stmt|,
 name|len2
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 name|argoff
 operator|=
