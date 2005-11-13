@@ -600,6 +600,13 @@ begin_comment
 comment|/* reserved by thread library. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SIGLWP
+value|SIGTHR
+end_define
+
 begin_endif
 endif|#
 directive|endif
