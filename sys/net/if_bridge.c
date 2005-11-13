@@ -7798,7 +7798,7 @@ condition|(
 name|bridge_pfil
 argument_list|(
 operator|&
-name|m
+name|mc
 argument_list|,
 name|NULL
 argument_list|,
@@ -7809,14 +7809,14 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-return|return;
+continue|continue;
 if|if
 condition|(
-name|m
+name|mc
 operator|==
 name|NULL
 condition|)
-return|return;
+continue|continue;
 block|}
 name|bridge_enqueue
 argument_list|(
