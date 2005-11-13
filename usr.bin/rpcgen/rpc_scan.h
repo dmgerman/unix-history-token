@@ -153,6 +153,7 @@ block|{
 name|tok_kind
 name|kind
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|str

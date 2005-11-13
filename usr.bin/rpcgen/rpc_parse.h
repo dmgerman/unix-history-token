@@ -72,6 +72,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+specifier|const
 name|char
 modifier|*
 name|const_def
@@ -110,10 +111,12 @@ begin_struct
 struct|struct
 name|typedef_def
 block|{
+specifier|const
 name|char
 modifier|*
 name|old_prefix
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|old_type
@@ -121,6 +124,7 @@ decl_stmt|;
 name|relation
 name|rel
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|array_max
@@ -141,10 +145,12 @@ begin_struct
 struct|struct
 name|enumval_list
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|assignment
@@ -190,14 +196,17 @@ begin_struct
 struct|struct
 name|declaration
 block|{
+specifier|const
 name|char
 modifier|*
 name|prefix
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|type
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -205,6 +214,7 @@ decl_stmt|;
 name|relation
 name|rel
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|array_max
@@ -269,6 +279,7 @@ begin_struct
 struct|struct
 name|case_list
 block|{
+specifier|const
 name|char
 modifier|*
 name|case_name
@@ -352,10 +363,12 @@ begin_struct
 struct|struct
 name|proc_list
 block|{
+specifier|const
 name|char
 modifier|*
 name|proc_name
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|proc_num
@@ -366,10 +379,12 @@ decl_stmt|;
 name|int
 name|arg_num
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|res_type
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|res_prefix
@@ -395,10 +410,12 @@ begin_struct
 struct|struct
 name|version_list
 block|{
+specifier|const
 name|char
 modifier|*
 name|vers_name
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|vers_num
@@ -428,6 +445,7 @@ begin_struct
 struct|struct
 name|program_def
 block|{
+specifier|const
 name|char
 modifier|*
 name|prog_num
@@ -452,6 +470,7 @@ begin_struct
 struct|struct
 name|definition
 block|{
+specifier|const
 name|char
 modifier|*
 name|def_name
@@ -508,6 +527,7 @@ begin_struct
 struct|struct
 name|bas_type
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
