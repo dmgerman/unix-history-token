@@ -349,6 +349,9 @@ name|optarg
 argument_list|,
 name|val
 argument_list|,
+operator|(
+name|size_t
+operator|)
 operator|-
 literal|1
 argument_list|)
@@ -426,6 +429,9 @@ literal|"fstype"
 argument_list|,
 name|fstype
 argument_list|,
+operator|(
+name|size_t
+operator|)
 operator|-
 literal|1
 argument_list|)
@@ -442,6 +448,9 @@ literal|"fspath"
 argument_list|,
 name|mntpath
 argument_list|,
+operator|(
+name|size_t
+operator|)
 operator|-
 literal|1
 argument_list|)
@@ -458,6 +467,9 @@ literal|"from"
 argument_list|,
 name|dev
 argument_list|,
+operator|(
+name|size_t
+operator|)
 operator|-
 literal|1
 argument_list|)
