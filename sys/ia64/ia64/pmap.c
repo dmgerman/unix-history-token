@@ -3313,6 +3313,19 @@ name|pv
 operator|->
 name|pv_pmap
 expr_stmt|;
+comment|/* Avoid deadlock and lock recursion. */
+if|if
+condition|(
+name|pmap
+operator|>
+name|locked_pmap
+condition|)
+name|PMAP_LOCK
+argument_list|(
+name|pmap
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|pmap
