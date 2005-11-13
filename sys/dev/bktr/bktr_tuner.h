@@ -135,8 +135,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|Bt848_MAX_TUNER
+name|LG_TPI8PSB12P_PAL
 value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|Bt848_MAX_TUNER
+value|16
 end_define
 
 begin_comment
