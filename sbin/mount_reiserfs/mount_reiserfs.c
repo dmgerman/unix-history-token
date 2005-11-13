@@ -123,6 +123,12 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
+name|char
+name|fstype
+index|[]
+init|=
+literal|"reiserfs"
+decl_stmt|;
 name|mntflags
 operator|=
 literal|0
@@ -252,8 +258,11 @@ name|iovlen
 argument_list|,
 literal|"fstype"
 argument_list|,
-literal|"reiserfs"
+name|fstype
 argument_list|,
+operator|(
+name|size_t
+operator|)
 operator|-
 literal|1
 argument_list|)
@@ -270,6 +279,9 @@ literal|"fspath"
 argument_list|,
 name|mntpath
 argument_list|,
+operator|(
+name|size_t
+operator|)
 operator|-
 literal|1
 argument_list|)
@@ -286,6 +298,9 @@ literal|"from"
 argument_list|,
 name|dev
 argument_list|,
+operator|(
+name|size_t
+operator|)
 operator|-
 literal|1
 argument_list|)
