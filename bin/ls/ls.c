@@ -425,6 +425,28 @@ comment|/* list files beginning with . */
 end_comment
 
 begin_decl_stmt
+specifier|static
+name|int
+name|f_nolistdot
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* don't list files beginning with . */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|f_forcelistdot
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* force list files beginning with . */
+end_comment
+
+begin_decl_stmt
 name|int
 name|f_longform
 decl_stmt|;
@@ -899,17 +921,6 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Root is -A automatically. */
-if|if
-condition|(
-operator|!
-name|getuid
-argument_list|()
-condition|)
-name|f_listdot
-operator|=
-literal|1
-expr_stmt|;
 name|fts_options
 operator|=
 name|FTS_PHYSICAL
@@ -925,7 +936,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"1ABCFGHLPRSTWZabcdfghiklmnopqrstuwx"
+literal|"1ABCFGHILPRSTWZabcdfghiklmnopqrstuwx"
 argument_list|)
 operator|)
 operator|!=
@@ -1119,11 +1130,23 @@ name|fts_options
 operator||=
 name|FTS_SEEDOT
 expr_stmt|;
-comment|/* FALLTHROUGH */
+name|f_forcelistdot
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'A'
 case|:
 name|f_listdot
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'I'
+case|:
+name|f_nolistdot
 operator|=
 literal|1
 expr_stmt|;
@@ -1346,6 +1369,20 @@ expr_stmt|;
 name|argv
 operator|+=
 name|optind
+expr_stmt|;
+comment|/* Root is -A automatically. */
+if|if
+condition|(
+operator|!
+name|getuid
+argument_list|()
+operator|&&
+operator|!
+name|f_nolistdot
+condition|)
+name|f_listdot
+operator|=
+literal|1
 expr_stmt|;
 comment|/* Enabling of colours is conditional on the environment. */
 if|if
@@ -1981,8 +2018,17 @@ index|]
 operator|==
 literal|'.'
 operator|&&
+operator|(
+operator|(
 operator|!
 name|f_listdot
+operator|||
+name|f_nolistdot
+operator|)
+operator|&&
+operator|!
+name|f_forcelistdot
+operator|)
 condition|)
 break|break;
 comment|/* 			 * If already output something, put out a newline as 			 * a separator.  If multiple arguments, precede each 			 * directory with its name. 			 */
@@ -2728,8 +2774,17 @@ index|]
 operator|==
 literal|'.'
 operator|&&
+operator|(
+operator|(
 operator|!
 name|f_listdot
+operator|||
+name|f_nolistdot
+operator|)
+operator|&&
+operator|!
+name|f_forcelistdot
+operator|)
 condition|)
 block|{
 name|cur
