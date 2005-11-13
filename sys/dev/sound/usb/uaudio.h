@@ -141,7 +141,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|uaudio_chan_set_param_speed
 parameter_list|(
 name|device_t
@@ -151,7 +151,7 @@ name|u_int32_t
 name|speed
 parameter_list|,
 name|int
-name|dir
+name|reqdir
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -237,19 +237,22 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|unsigned
 name|uaudio_query_formats
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
-name|u_int32_t
-modifier|*
-name|pfmt
+name|int
+name|dir
 parameter_list|,
-name|u_int32_t
+name|unsigned
+name|maxfmt
+parameter_list|,
+name|struct
+name|pcmchan_caps
 modifier|*
-name|rfmt
+name|fmt
 parameter_list|)
 function_decl|;
 end_function_decl
