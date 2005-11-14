@@ -71,12 +71,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<assert.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<err.h>
 end_include
 
@@ -720,6 +714,13 @@ operator|)
 operator|-
 literal|1
 condition|)
+block|{
+if|if
+condition|(
+name|val
+operator|!=
+name|NULL
+condition|)
 name|len
 operator|=
 name|strlen
@@ -729,6 +730,12 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
+else|else
+name|len
+operator|=
+literal|0
+expr_stmt|;
+block|}
 operator|(
 operator|*
 name|iov
