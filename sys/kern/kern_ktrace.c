@@ -1188,6 +1188,12 @@ name|td
 argument_list|)
 expr_stmt|;
 comment|/* XXX: In caller instead? */
+name|mtx_lock
+argument_list|(
+operator|&
+name|ktrace_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1199,6 +1205,12 @@ name|type
 argument_list|)
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ktrace_mtx
+argument_list|)
+expr_stmt|;
 name|ktrace_exit
 argument_list|(
 name|td
@@ -1210,12 +1222,6 @@ name|NULL
 operator|)
 return|;
 block|}
-name|mtx_lock
-argument_list|(
-operator|&
-name|ktrace_mtx
-argument_list|)
-expr_stmt|;
 name|req
 operator|=
 name|STAILQ_FIRST
@@ -1237,12 +1243,6 @@ operator|&
 name|ktr_free
 argument_list|,
 name|ktr_list
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ktrace_mtx
 argument_list|)
 expr_stmt|;
 name|req
@@ -1278,6 +1278,12 @@ operator|~
 name|KTRFAC_DROP
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ktrace_mtx
+argument_list|)
+expr_stmt|;
 name|microtime
 argument_list|(
 operator|&
