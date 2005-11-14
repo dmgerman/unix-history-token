@@ -667,7 +667,6 @@ end_define
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|arglist
@@ -4794,7 +4793,10 @@ name|argcount
 operator|++
 index|]
 operator|=
+name|strdup
+argument_list|(
 name|cp
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -4835,7 +4837,10 @@ index|[
 name|place
 index|]
 operator|=
+name|strdup
+argument_list|(
 name|cp
+argument_list|)
 expr_stmt|;
 block|}
 end_function
