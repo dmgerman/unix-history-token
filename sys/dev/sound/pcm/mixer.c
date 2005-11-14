@@ -169,6 +169,12 @@ operator|=
 literal|75
 block|,
 index|[
+name|SOUND_MIXER_IGAIN
+index|]
+operator|=
+literal|0
+block|,
+index|[
 name|SOUND_MIXER_LINE1
 index|]
 operator|=
