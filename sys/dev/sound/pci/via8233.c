@@ -3463,9 +3463,9 @@ index|[
 name|i
 index|]
 operator|.
-name|rbase
+name|channel
 operator|==
-literal|0
+name|NULL
 condition|)
 continue|continue;
 name|stat
@@ -3558,9 +3558,9 @@ index|[
 name|i
 index|]
 operator|.
-name|rbase
+name|channel
 operator|==
-literal|0
+name|NULL
 condition|)
 continue|continue;
 name|stat
