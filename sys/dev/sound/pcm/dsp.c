@@ -3786,6 +3786,11 @@ decl_stmt|;
 name|u_int32_t
 name|fragsz
 decl_stmt|;
+name|u_int32_t
+name|r_maxfrags
+decl_stmt|,
+name|r_fragsz
+decl_stmt|;
 name|RANGE
 argument_list|(
 name|fragln
@@ -3870,7 +3875,7 @@ argument_list|,
 name|fragsz
 argument_list|)
 expr_stmt|;
-name|maxfrags
+name|r_maxfrags
 operator|=
 name|sndbuf_getblkcnt
 argument_list|(
@@ -3879,7 +3884,7 @@ operator|->
 name|bufsoft
 argument_list|)
 expr_stmt|;
-name|fragsz
+name|r_fragsz
 operator|=
 name|sndbuf_getblksz
 argument_list|(
@@ -3892,6 +3897,17 @@ name|CHN_UNLOCK
 argument_list|(
 name|rdch
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|r_maxfrags
+operator|=
+name|maxfrags
+expr_stmt|;
+name|r_fragsz
+operator|=
+name|fragsz
 expr_stmt|;
 block|}
 if|if
@@ -3941,6 +3957,18 @@ name|CHN_UNLOCK
 argument_list|(
 name|wrch
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* use whatever came from the read channel */
+name|maxfrags
+operator|=
+name|r_maxfrags
+expr_stmt|;
+name|fragsz
+operator|=
+name|r_fragsz
 expr_stmt|;
 block|}
 name|fragln
