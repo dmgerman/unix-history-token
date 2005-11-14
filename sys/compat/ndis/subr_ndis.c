@@ -6174,6 +6174,14 @@ operator|>=
 literal|700000
 if|if
 condition|(
+name|sc
+operator|->
+name|ifp
+operator|->
+name|if_addr
+operator|==
+name|NULL
+operator|||
 name|bcmp
 argument_list|(
 name|IF_LLADDR
