@@ -1656,7 +1656,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int
+name|int
 name|ieee80211_mhz2ieee
 parameter_list|(
 name|u_int
@@ -1667,7 +1667,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int
+name|int
 name|ieee80211_chan2ieee
 parameter_list|(
 name|struct
