@@ -1826,7 +1826,7 @@ comment|/*----------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/***********************************************************************  ***************** Node Structure and Methods **************************  ***********************************************************************  * Structure of a node  * including the eembedded queue structure.  *  * The structure for queueing Netgraph request items   * embedded in the node structure  */
+comment|/***********************************************************************  ***************** Node Structure and Methods **************************  ***********************************************************************  * Structure of a node  * including the eembedded queue structure.  *  * The structure for queueing Netgraph request items  * embedded in the node structure  */
 end_comment
 
 begin_struct
@@ -5087,7 +5087,7 @@ value|do {								\ 		if (resp) {						\ 			ng_ID_t _dest = NGI_RETADDR(item);		
 end_define
 
 begin_comment
-comment|/***********************************************************************  ******** Structures Definitions and Macros for defining a node  *******  ***********************************************************************  *   * Here we define the structures needed to actually define a new node  * type.  */
+comment|/***********************************************************************  ******** Structures Definitions and Macros for defining a node  *******  ***********************************************************************  *  * Here we define the structures needed to actually define a new node  * type.  */
 end_comment
 
 begin_comment
@@ -5306,7 +5306,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Methods that the nodes can use.  * Many of these methods should usually NOT be used directly but via   * Macros above.  */
+comment|/*  * Methods that the nodes can use.  * Many of these methods should usually NOT be used directly but via  * Macros above.  */
 end_comment
 
 begin_function_decl

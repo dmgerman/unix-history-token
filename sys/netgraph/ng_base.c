@@ -262,7 +262,7 @@ comment|/* NETGRAPH_DEBUG */
 end_comment
 
 begin_comment
-comment|/*  * DEAD versions of the structures.   * In order to avoid races, it is sometimes neccesary to point  * at SOMETHING even though theoretically, the current entity is   * INVALID. Use these to avoid these races.  */
+comment|/*  * DEAD versions of the structures.  * In order to avoid races, it is sometimes neccesary to point  * at SOMETHING even though theoretically, the current entity is  * INVALID. Use these to avoid these races.  */
 end_comment
 
 begin_decl_stmt
@@ -809,7 +809,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* imported , these used to be externally visible, some may go back */
+comment|/* Imported, these used to be externally visible, some may go back. */
 end_comment
 
 begin_function_decl
@@ -2504,7 +2504,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Forceably start the shutdown process on a node. Either call  * it's shutdown method, or do the default shutdown if there is  * no type-specific method.  *  * We can only be called form a shutdown message, so we know we have  * a writer lock, and therefore exclusive access. It also means  * that we should not be on the work queue, but we check anyhow.  *  * Persistent node types must have a type-specific method which  * Allocates a new node in which case, this one is irretrievably going away,  * or cleans up anything it needs, and just makes the node valid again,  * in which case we allow the node to survive.   *  * XXX We need to think of how to tell a persistant node that we  * REALLY need to go away because the hardware has gone or we  * are rebooting.... etc.  */
+comment|/*  * Forceably start the shutdown process on a node. Either call  * it's shutdown method, or do the default shutdown if there is  * no type-specific method.  *  * We can only be called form a shutdown message, so we know we have  * a writer lock, and therefore exclusive access. It also means  * that we should not be on the work queue, but we check anyhow.  *  * Persistent node types must have a type-specific method which  * Allocates a new node in which case, this one is irretrievably going away,  * or cleans up anything it needs, and just makes the node valid again,  * in which case we allow the node to survive.  *  * XXX We need to think of how to tell a persistant node that we  * REALLY need to go away because the hardware has gone or we  * are rebooting.... etc.  */
 end_comment
 
 begin_function
@@ -3814,7 +3814,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Destroy a hook  *  * As hooks are always attached, this really destroys two hooks.  * The one given, and the one attached to it. Disconnect the hooks  * from each other first. We reconnect the peer hook to the 'dead'  * hook so that it can still exist after we depart. We then  * send the peer its own destroy message. This ensures that we only  * interact with the peer's structures when it is locked processing that   * message. We hold a reference to the peer hook so we are guaranteed that  * the peer hook and node are still going to exist until  * we are finished there as the hook holds a ref on the node.  * We run this same code again on the peer hook, but that time it is already   * attached to the 'dead' hook.   *  * This routine is called at all stages of hook creation   * on error detection and must be able to handle any such stage.  */
+comment|/*  * Destroy a hook  *  * As hooks are always attached, this really destroys two hooks.  * The one given, and the one attached to it. Disconnect the hooks  * from each other first. We reconnect the peer hook to the 'dead'  * hook so that it can still exist after we depart. We then  * send the peer its own destroy message. This ensures that we only  * interact with the peer's structures when it is locked processing that  * message. We hold a reference to the peer hook so we are guaranteed that  * the peer hook and node are still going to exist until  * we are finished there as the hook holds a ref on the node.  * We run this same code again on the peer hook, but that time it is already  * attached to the 'dead' hook.  *  * This routine is called at all stages of hook creation  * on error detection and must be able to handle any such stage.  */
 end_comment
 
 begin_function
@@ -3914,7 +3914,7 @@ operator|&
 name|ng_deadnode
 condition|)
 block|{
-comment|/*  			 * If it's already divorced from a node, 			 * just free it. 			 */
+comment|/* 			 * If it's already divorced from a node, 			 * just free it. 			 */
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -3998,7 +3998,7 @@ operator|->
 name|disconnect
 condition|)
 block|{
-comment|/* 		 * The type handler may elect to destroy the node so don't 		 * trust its existance after this point. (except  		 * that we still hold a reference on it. (which we 		 * inherrited from the hook we are destroying) 		 */
+comment|/* 		 * The type handler may elect to destroy the node so don't 		 * trust its existance after this point. (except 		 * that we still hold a reference on it. (which we 		 * inherrited from the hook we are destroying) 		 */
 call|(
 modifier|*
 name|node
@@ -4617,7 +4617,7 @@ name|hook
 argument_list|)
 expr_stmt|;
 comment|/* one for the node */
-comment|/* 	 * We now have a symetrical situation, where both hooks have been 	 * linked to their nodes, the newhook methods have been called 	 * And the references are all correct. The hooks are still marked 	 * as invalid, as we have not called the 'connect' methods 	 * yet. 	 * We can call the local one immediatly as we have the  	 * node locked, but we need to queue the remote one. 	 */
+comment|/* 	 * We now have a symetrical situation, where both hooks have been 	 * linked to their nodes, the newhook methods have been called 	 * And the references are all correct. The hooks are still marked 	 * as invalid, as we have not called the 'connect' methods 	 * yet. 	 * We can call the local one immediatly as we have the 	 * node locked, but we need to queue the remote one. 	 */
 if|if
 condition|(
 name|hook
@@ -4750,7 +4750,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Connect this node with another node. We assume that this node is   * currently locked, as we are only called from an NGM_CONNECT message.  */
+comment|/*  * Connect this node with another node. We assume that this node is  * currently locked, as we are only called from an NGM_CONNECT message.  */
 end_comment
 
 begin_function
@@ -4949,7 +4949,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Make a peer and connect.  * We assume that the local node is locked.  * The new node probably doesn't need a lock until  * it has a hook, because it cannot really have any work until then,  * but we should think about it a bit more.  *  * The problem may come if the other node also fires up  * some hardware or a timer or some other source of activation,  * also it may already get a command msg via it's ID.  *  * We could use the same method as ng_con_nodes() but we'd have  * to add ability to remove the node when failing. (Not hard, just   * make arg1 point to the node to remove).  * Unless of course we just ignore failure to connect and leave  * an unconnected node?  */
+comment|/*  * Make a peer and connect.  * We assume that the local node is locked.  * The new node probably doesn't need a lock until  * it has a hook, because it cannot really have any work until then,  * but we should think about it a bit more.  *  * The problem may come if the other node also fires up  * some hardware or a timer or some other source of activation,  * also it may already get a command msg via it's ID.  *  * We could use the same method as ng_con_nodes() but we'd have  * to add ability to remove the node when failing. (Not hard, just  * make arg1 point to the node to remove).  * Unless of course we just ignore failure to connect and leave  * an unconnected node?  */
 end_comment
 
 begin_function
@@ -4980,8 +4980,7 @@ name|node2
 decl_stmt|;
 name|hook_p
 name|hook1
-decl_stmt|;
-name|hook_p
+decl_stmt|,
 name|hook2
 decl_stmt|;
 name|int
@@ -5948,7 +5947,7 @@ name|node
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Now follow the sequence of hooks  	 * XXX 	 * We actually cannot guarantee that the sequence 	 * is not being demolished as we crawl along it 	 * without extra-ordinary locking etc. 	 * So this is a bit dodgy to say the least. 	 * We can probably hold up some things by holding 	 * the nodelist mutex for the time of this 	 * crawl if we wanted.. At least that way we wouldn't have to 	 * worry about the nodes dissappearing, but the hooks would still 	 * be a problem. 	 */
+comment|/* 	 * Now follow the sequence of hooks 	 * XXX 	 * We actually cannot guarantee that the sequence 	 * is not being demolished as we crawl along it 	 * without extra-ordinary locking etc. 	 * So this is a bit dodgy to say the least. 	 * We can probably hold up some things by holding 	 * the nodelist mutex for the time of this 	 * crawl if we wanted.. At least that way we wouldn't have to 	 * worry about the nodes dissappearing, but the hooks would still 	 * be a problem. 	 */
 for|for
 control|(
 name|cp
@@ -6061,7 +6060,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("hooknotvalid %s %s %d %d %d %d ", 					path, 					segment, 					hook == NULL, 		     			NG_HOOK_PEER(hook) == NULL, 		     			NG_HOOK_NOT_VALID(hook), 		     			NG_HOOK_NOT_VALID(NG_HOOK_PEER(hook)));
+block|printf("hooknotvalid %s %s %d %d %d %d ", 					path, 					segment, 					hook == NULL, 					NG_HOOK_PEER(hook) == NULL, 					NG_HOOK_NOT_VALID(hook), 					NG_HOOK_NOT_VALID(NG_HOOK_PEER(hook)));
 endif|#
 directive|endif
 return|return
@@ -6070,7 +6069,7 @@ name|ENOENT
 operator|)
 return|;
 block|}
-comment|/* 		 * Hop on over to the next node  		 * XXX 		 * Big race conditions here as hooks and nodes go away  		 * *** Idea.. store an ng_ID_t in each hook and use that 		 * instead of the direct hook in this crawl? 		 */
+comment|/* 		 * Hop on over to the next node 		 * XXX 		 * Big race conditions here as hooks and nodes go away 		 * *** Idea.. store an ng_ID_t in each hook and use that 		 * instead of the direct hook in this crawl? 		 */
 name|oldnode
 operator|=
 name|node
@@ -6483,7 +6482,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-comment|/*  	 * If there is nothing queued, then just return. 	 * No point in continuing. 	 * XXXGL: assert this? 	 */
+comment|/* 	 * If there is nothing queued, then just return. 	 * No point in continuing. 	 * XXXGL: assert this? 	 */
 if|if
 condition|(
 operator|!
@@ -6531,7 +6530,7 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/* 		 * Head of queue is a reader and we have no write active. 		 * We don't care how many readers are already active.  		 * Add the correct increment for the reader count. 		 */
+comment|/* 		 * Head of queue is a reader and we have no write active. 		 * We don't care how many readers are already active. 		 * Add the correct increment for the reader count. 		 */
 name|add_arg
 operator|=
 name|READER_INCREMENT
@@ -6646,7 +6645,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*  		 * Since there is still something on the queue 		 * we don't need to change the PENDING flag. 		 */
+comment|/* 		 * Since there is still something on the queue 		 * we don't need to change the PENDING flag. 		 */
 name|atomic_add_long
 argument_list|(
 operator|&
@@ -7776,7 +7775,7 @@ name|rw
 argument_list|)
 expr_stmt|;
 comment|/* drops r/w lock when done */
-comment|/* 	 * If the node goes away when we remove the reference,  	 * whatever we just did caused it.. whatever we do, DO NOT 	 * access the node again! 	 */
+comment|/* 	 * If the node goes away when we remove the reference, 	 * whatever we just did caused it.. whatever we do, DO NOT 	 * access the node again! 	 */
 if|if
 condition|(
 name|NG_NODE_UNREF
@@ -8094,7 +8093,7 @@ argument_list|(
 name|item
 argument_list|)
 decl_stmt|;
-comment|/*  			 * check if the generic handler owns it. 			 */
+comment|/* 			 * check if the generic handler owns it. 			 */
 if|if
 condition|(
 operator|(
@@ -12151,7 +12150,7 @@ operator|&
 name|ng_worklist_mtx
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We have the node. We also take over the reference 		 * that the list had on it. 		 * Now process as much as you can, until it won't 		 * let you have another item off the queue. 		 * All this time, keep the reference 		 * that lets us be sure that the node still exists. 		 * Let the reference go at the last minute. 		 * ng_dequeue will put us back on the worklist 		 * if there is more too do. This may be of use if there 		 * are Multiple Processors and multiple Net threads in the  		 * future. 		 */
+comment|/* 		 * We have the node. We also take over the reference 		 * that the list had on it. 		 * Now process as much as you can, until it won't 		 * let you have another item off the queue. 		 * All this time, keep the reference 		 * that lets us be sure that the node still exists. 		 * Let the reference go at the last minute. 		 * ng_dequeue will put us back on the worklist 		 * if there is more too do. This may be of use if there 		 * are Multiple Processors and multiple Net threads in the 		 * future. 		 */
 for|for
 control|(
 init|;
@@ -13195,7 +13194,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Official timeout routines for Netgraph nodes.  */
+comment|/*  * Official timeout routines for Netgraph nodes.  */
 end_comment
 
 begin_function
@@ -13461,7 +13460,7 @@ name|node
 operator|)
 condition|)
 block|{
-comment|/* 		 * We successfully removed it from the queue before it ran 		 * So now we need to unreference everything that was  		 * given extra references. (NG_FREE_ITEM does this). 		 */
+comment|/* 		 * We successfully removed it from the queue before it ran 		 * So now we need to unreference everything that was 		 * given extra references. (NG_FREE_ITEM does this). 		 */
 name|NG_FREE_ITEM
 argument_list|(
 name|item
