@@ -1845,8 +1845,8 @@ name|wb_chain_data
 name|wb_cdata
 decl_stmt|;
 name|struct
-name|callout_handle
-name|wb_stat_ch
+name|callout
+name|wb_stat_callout
 decl_stmt|;
 name|struct
 name|mtx
