@@ -363,7 +363,7 @@ typedef|typedef
 struct|struct
 name|point
 block|{
-name|float
+name|double
 name|x
 decl_stmt|,
 name|y

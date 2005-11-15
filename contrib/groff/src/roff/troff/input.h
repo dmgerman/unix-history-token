@@ -4,7 +4,7 @@ comment|// -*- C++ -*-
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 2001 Free Software Foundation, Inc.      Written by James Clark (jjc@jclark.com)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* Copyright (C) 2001, 2004 Free Software Foundation, Inc.      Written by James Clark (jjc@jclark.com)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin St - Fifth Floor, Boston, MA 02110-1301, USA. */
 end_comment
 
 begin_comment
@@ -287,7 +287,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|const
 name|int
-name|COMPATIBLE_SAVE
+name|PUSH_GROFF_MODE
 init|=
 literal|0211
 decl_stmt|;
@@ -296,9 +296,36 @@ end_decl_stmt
 begin_decl_stmt
 specifier|const
 name|int
-name|COMPATIBLE_RESTORE
+name|PUSH_COMP_MODE
 init|=
 literal|0212
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|int
+name|POP_GROFFCOMP_MODE
+init|=
+literal|0213
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|int
+name|BEGIN_QUOTE
+init|=
+literal|0214
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|int
+name|END_QUOTE
+init|=
+literal|0215
 decl_stmt|;
 end_decl_stmt
 
@@ -581,7 +608,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|const
 name|int
-name|COMPATIBLE_SAVE
+name|PUSH_GROFF_MODE
 init|=
 literal|071
 decl_stmt|;
@@ -590,9 +617,36 @@ end_decl_stmt
 begin_decl_stmt
 specifier|const
 name|int
-name|COMPATIBLE_RESTORE
+name|PUSH_COMP_MODE
 init|=
 literal|072
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|int
+name|POP_GROFFCOMP_MODE
+init|=
+literal|073
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|int
+name|BEGIN_QUOTE
+init|=
+literal|074
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|int
+name|END_QUOTE
+init|=
+literal|075
 decl_stmt|;
 end_decl_stmt
 
@@ -604,6 +658,26 @@ end_endif
 begin_comment
 comment|/* IS_EBCDIC_HOST */
 end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|do_glyph_color
+parameter_list|(
+name|symbol
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|do_fill_color
+parameter_list|(
+name|symbol
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 

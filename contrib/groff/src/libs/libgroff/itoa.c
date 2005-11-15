@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (C) 1989, 1990, 1991, 1992, 2000, 2002      Free Software Foundation, Inc.      Written by James Clark (jjc@jclark.com)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* Copyright (C) 1989, 1990, 1991, 1992, 2000, 2002, 2004      Free Software Foundation, Inc.      Written by James Clark (jjc@jclark.com)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin St - Fifth Floor, Boston, MA 02110-1301, USA. */
 end_comment
 
 begin_define
@@ -21,16 +21,25 @@ name|UINT_DIGITS
 value|20
 end_define
 
-begin_function
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
 name|char
 modifier|*
 name|i_to_a
 parameter_list|(
-name|i
-parameter_list|)
 name|int
 name|i
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Room for INT_DIGITS digits, - and '\0' */
 specifier|static
@@ -130,19 +139,14 @@ return|return
 name|p
 return|;
 block|}
-end_function
-
-begin_function
 name|char
 modifier|*
 name|ui_to_a
 parameter_list|(
-name|i
-parameter_list|)
 name|unsigned
 name|int
 name|i
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Room for UINT_DIGITS digits and '\0' */
 specifier|static
@@ -193,7 +197,16 @@ return|return
 name|p
 return|;
 block|}
-end_function
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -4,11 +4,11 @@ comment|// -*- C++ -*-
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.  *  *  Gaius Mulley (gaius@glam.ac.uk) wrote html-text.h  *  *  html-text.h  *  *  provides a state machine interface which generates html text.  */
+comment|/* Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005  * Free Software Foundation, Inc.  *  *  Gaius Mulley (gaius@glam.ac.uk) wrote html-text.h  *  *  html-text.h  *  *  provides a state machine interface which generates html text.  */
 end_comment
 
 begin_comment
-comment|/* This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin St - Fifth Floor, Boston, MA 02110-1301, USA. */
 end_comment
 
 begin_include
@@ -22,6 +22,13 @@ include|#
 directive|include
 file|"html-table.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|STYLE_VERTICAL_SPACE
+value|"1em"
+end_define
 
 begin_comment
 comment|/*  *  html tags  */
@@ -178,6 +185,9 @@ specifier|const
 name|char
 modifier|*
 name|arg
+parameter_list|,
+name|int
+name|space
 parameter_list|)
 function_decl|;
 comment|// used for no indentation
@@ -201,6 +211,9 @@ name|pageoffset
 parameter_list|,
 name|int
 name|linelength
+parameter_list|,
+name|int
+name|space
 parameter_list|)
 function_decl|;
 name|void
@@ -329,6 +342,12 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+name|int
+name|retrieve_para_space
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 name|void
 name|emit_space
 parameter_list|(
@@ -337,6 +356,12 @@ parameter_list|)
 function_decl|;
 name|int
 name|is_in_pre
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|int
+name|uses_indent
 parameter_list|(
 name|void
 parameter_list|)
@@ -356,6 +381,19 @@ parameter_list|)
 function_decl|;
 name|void
 name|remove_para_align
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|void
+name|remove_para_space
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|char
+modifier|*
+name|get_alignment
 parameter_list|(
 name|void
 parameter_list|)
@@ -439,6 +477,9 @@ parameter_list|,
 name|html_indent
 modifier|*
 name|in
+parameter_list|,
+name|int
+name|space
 parameter_list|)
 function_decl|;
 name|void
@@ -513,6 +554,11 @@ specifier|const
 name|char
 modifier|*
 name|arg
+parameter_list|,
+name|int
+name|space
+init|=
+literal|2
 parameter_list|)
 function_decl|;
 name|void

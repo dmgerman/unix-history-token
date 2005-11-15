@@ -4,7 +4,7 @@ comment|// -*- C++ -*-
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1989, 1990, 1991, 1992, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.      Written by James Clark (jjc@jclark.com)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* Copyright (C) 1989, 1990, 1991, 1992, 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.      Written by James Clark (jjc@jclark.com)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin St - Fifth Floor, Boston, MA 02110-1301, USA. */
 end_comment
 
 begin_struct
@@ -82,11 +82,11 @@ name|vertical_size
 struct_decl|;
 end_struct_decl
 
-begin_struct_decl
-struct_decl|struct
+begin_decl_stmt
+name|class
 name|charinfo
-struct_decl|;
-end_struct_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|class
@@ -142,6 +142,20 @@ name|node
 modifier|*
 name|last
 decl_stmt|;
+name|statem
+modifier|*
+name|state
+decl_stmt|;
+name|statem
+modifier|*
+name|push_state
+decl_stmt|;
+name|int
+name|div_nest_level
+decl_stmt|;
+name|int
+name|is_special
+decl_stmt|;
 name|node
 argument_list|()
 expr_stmt|;
@@ -149,7 +163,17 @@ name|node
 argument_list|(
 name|node
 operator|*
-name|n
+argument_list|)
+expr_stmt|;
+name|node
+argument_list|(
+name|node
+operator|*
+argument_list|,
+name|statem
+operator|*
+argument_list|,
+name|int
 argument_list|)
 expr_stmt|;
 name|node
@@ -158,18 +182,21 @@ name|add_char
 parameter_list|(
 name|charinfo
 modifier|*
-name|c
 parameter_list|,
 name|environment
 modifier|*
 parameter_list|,
 name|hunits
 modifier|*
-name|widthp
 parameter_list|,
 name|int
 modifier|*
-name|spacep
+parameter_list|,
+name|node
+modifier|*
+modifier|*
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 name|virtual
@@ -193,6 +220,13 @@ function_decl|;
 name|virtual
 name|int
 name|force_tprint
+parameter_list|()
+init|=
+literal|0
+function_decl|;
+name|virtual
+name|int
+name|is_tag
 parameter_list|()
 init|=
 literal|0
@@ -255,11 +289,9 @@ name|vertical_extent
 parameter_list|(
 name|vunits
 modifier|*
-name|min
 parameter_list|,
 name|vunits
 modifier|*
-name|max
 parameter_list|)
 function_decl|;
 name|virtual
@@ -368,19 +400,15 @@ modifier|*
 name|get_breakpoints
 parameter_list|(
 name|hunits
-name|width
 parameter_list|,
 name|int
-name|nspaces
 parameter_list|,
 name|breakpoint
 modifier|*
-name|rest
 init|=
 literal|0
 parameter_list|,
 name|int
-name|is_inner
 init|=
 literal|0
 parameter_list|)
@@ -517,6 +545,16 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
+name|virtual
+name|void
+name|debug_node
+parameter_list|()
+function_decl|;
+name|virtual
+name|void
+name|debug_node_list
+parameter_list|()
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -534,6 +572,26 @@ literal|0
 argument_list|)
 operator|,
 name|last
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|state
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|push_state
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|div_nest_level
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|is_special
 argument_list|(
 literal|0
 argument_list|)
@@ -557,7 +615,85 @@ name|last
 argument_list|(
 literal|0
 argument_list|)
+operator|,
+name|state
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|push_state
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|div_nest_level
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|is_special
+argument_list|(
+literal|0
+argument_list|)
 block|{ }
+specifier|inline
+name|node
+operator|::
+name|node
+argument_list|(
+argument|node *n
+argument_list|,
+argument|statem *s
+argument_list|,
+argument|int divlevel
+argument_list|)
+operator|:
+name|next
+argument_list|(
+name|n
+argument_list|)
+operator|,
+name|last
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|push_state
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|div_nest_level
+argument_list|(
+name|divlevel
+argument_list|)
+operator|,
+name|is_special
+argument_list|(
+literal|0
+argument_list|)
+block|{
+if|if
+condition|(
+name|s
+condition|)
+name|state
+operator|=
+name|new
+name|statem
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+else|else
+name|state
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|inline
 name|node
 operator|::
@@ -636,6 +772,10 @@ name|int
 name|force_tprint
 argument_list|()
 block|;
+name|int
+name|is_tag
+argument_list|()
+block|;
 specifier|const
 name|char
 operator|*
@@ -694,6 +834,11 @@ argument_list|,
 name|color
 operator|*
 argument_list|,
+name|statem
+operator|*
+argument_list|,
+name|int
+argument_list|,
 name|node
 operator|*
 operator|=
@@ -702,6 +847,24 @@ argument_list|)
 block|;
 name|public
 operator|:
+name|space_node
+argument_list|(
+name|hunits
+argument_list|,
+name|color
+operator|*
+argument_list|,
+name|statem
+operator|*
+argument_list|,
+name|int
+argument_list|,
+name|node
+operator|*
+operator|=
+literal|0
+argument_list|)
+block|;
 name|space_node
 argument_list|(
 name|hunits
@@ -777,14 +940,17 @@ name|breakpoint
 operator|*
 name|get_breakpoints
 argument_list|(
-argument|hunits width
+name|hunits
 argument_list|,
-argument|int nspaces
+name|int
 argument_list|,
-argument|breakpoint *rest =
+name|breakpoint
+operator|*
+operator|=
 literal|0
 argument_list|,
-argument|int is_inner =
+name|int
+operator|=
 literal|0
 argument_list|)
 block|;
@@ -835,6 +1001,10 @@ argument_list|()
 block|;
 name|int
 name|force_tprint
+argument_list|()
+block|;
+name|int
+name|is_tag
 argument_list|()
 block|;
 name|hyphenation_type
@@ -902,6 +1072,11 @@ name|color
 operator|*
 argument_list|,
 name|width_list
+operator|*
+argument_list|,
+name|int
+argument_list|,
+name|statem
 operator|*
 argument_list|,
 name|int
@@ -990,6 +1165,10 @@ block|;
 name|int
 name|force_tprint
 argument_list|()
+block|;
+name|int
+name|is_tag
+argument_list|()
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -1009,6 +1188,11 @@ name|int
 argument_list|,
 name|color
 operator|*
+argument_list|,
+name|statem
+operator|*
+argument_list|,
+name|int
 argument_list|,
 name|node
 operator|*
@@ -1074,18 +1258,25 @@ name|int
 name|force_tprint
 argument_list|()
 block|;
+name|int
+name|is_tag
+argument_list|()
+block|;
 name|breakpoint
 operator|*
 name|get_breakpoints
 argument_list|(
-argument|hunits width
+name|hunits
 argument_list|,
-argument|int nspaces
+name|int
 argument_list|,
-argument|breakpoint *rest =
+name|breakpoint
+operator|*
+operator|=
 literal|0
 argument_list|,
-argument|int is_inner =
+name|int
+operator|=
 literal|0
 argument_list|)
 block|;
@@ -1161,9 +1352,26 @@ name|n
 block|;
 name|diverted_space_node
 argument_list|(
-argument|vunits d
+name|vunits
 argument_list|,
-argument|node *p =
+name|node
+operator|*
+operator|=
+literal|0
+argument_list|)
+block|;
+name|diverted_space_node
+argument_list|(
+name|vunits
+argument_list|,
+name|statem
+operator|*
+argument_list|,
+name|int
+argument_list|,
+name|node
+operator|*
+operator|=
 literal|0
 argument_list|)
 block|;
@@ -1194,6 +1402,10 @@ argument_list|()
 block|;
 name|int
 name|force_tprint
+argument_list|()
+block|;
+name|int
+name|is_tag
 argument_list|()
 block|; }
 decl_stmt|;
@@ -1216,9 +1428,26 @@ name|n
 block|;
 name|diverted_copy_file_node
 argument_list|(
-argument|symbol s
+name|symbol
 argument_list|,
-argument|node *p =
+name|node
+operator|*
+operator|=
+literal|0
+argument_list|)
+block|;
+name|diverted_copy_file_node
+argument_list|(
+name|symbol
+argument_list|,
+name|statem
+operator|*
+argument_list|,
+name|int
+argument_list|,
+name|node
+operator|*
+operator|=
 literal|0
 argument_list|)
 block|;
@@ -1250,6 +1479,10 @@ block|;
 name|int
 name|force_tprint
 argument_list|()
+block|;
+name|int
+name|is_tag
+argument_list|()
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -1268,14 +1501,19 @@ name|public
 operator|:
 name|extra_size_node
 argument_list|(
-argument|vunits i
+name|vunits
 argument_list|)
-operator|:
-name|n
+block|;
+name|extra_size_node
 argument_list|(
-argument|i
+name|vunits
+argument_list|,
+name|statem
+operator|*
+argument_list|,
+name|int
 argument_list|)
-block|{}
+block|;
 name|void
 name|set_vertical_size
 argument_list|(
@@ -1304,6 +1542,10 @@ block|;
 name|int
 name|force_tprint
 argument_list|()
+block|;
+name|int
+name|is_tag
+argument_list|()
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -1322,14 +1564,19 @@ name|public
 operator|:
 name|vertical_size_node
 argument_list|(
-argument|vunits i
+name|vunits
+argument_list|,
+name|statem
+operator|*
+argument_list|,
+name|int
 argument_list|)
-operator|:
-name|n
+block|;
+name|vertical_size_node
 argument_list|(
-argument|i
+name|vunits
 argument_list|)
-block|{}
+block|;
 name|void
 name|set_vertical_size
 argument_list|(
@@ -1369,6 +1616,10 @@ block|;
 name|int
 name|force_tprint
 argument_list|()
+block|;
+name|int
+name|is_tag
+argument_list|()
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -1406,13 +1657,56 @@ argument|hunits i
 argument_list|,
 argument|color *c
 argument_list|,
-argument|node *next =
+argument|node *nxt =
 literal|0
 argument_list|)
 operator|:
 name|node
 argument_list|(
-name|next
+name|nxt
+argument_list|)
+block|,
+name|n
+argument_list|(
+name|i
+argument_list|)
+block|,
+name|was_tab
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|unformat
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|col
+argument_list|(
+argument|c
+argument_list|)
+block|{}
+name|hmotion_node
+argument_list|(
+argument|hunits i
+argument_list|,
+argument|color *c
+argument_list|,
+argument|statem *s
+argument_list|,
+argument|int divlevel
+argument_list|,
+argument|node *nxt =
+literal|0
+argument_list|)
+operator|:
+name|node
+argument_list|(
+name|nxt
+argument_list|,
+name|s
+argument_list|,
+name|divlevel
 argument_list|)
 block|,
 name|n
@@ -1445,13 +1739,60 @@ argument|int flag2
 argument_list|,
 argument|color *c
 argument_list|,
-argument|node *next =
+argument|statem *s
+argument_list|,
+argument|int divlevel
+argument_list|,
+argument|node *nxt =
 literal|0
 argument_list|)
 operator|:
 name|node
 argument_list|(
-name|next
+name|nxt
+argument_list|,
+name|s
+argument_list|,
+name|divlevel
+argument_list|)
+block|,
+name|n
+argument_list|(
+name|i
+argument_list|)
+block|,
+name|was_tab
+argument_list|(
+name|flag1
+argument_list|)
+block|,
+name|unformat
+argument_list|(
+name|flag2
+argument_list|)
+block|,
+name|col
+argument_list|(
+argument|c
+argument_list|)
+block|{}
+name|hmotion_node
+argument_list|(
+argument|hunits i
+argument_list|,
+argument|int flag1
+argument_list|,
+argument|int flag2
+argument_list|,
+argument|color *c
+argument_list|,
+argument|node *nxt =
+literal|0
+argument_list|)
+operator|:
+name|node
+argument_list|(
+name|nxt
 argument_list|)
 block|,
 name|n
@@ -1532,6 +1873,10 @@ name|int
 name|force_tprint
 argument_list|()
 block|;
+name|int
+name|is_tag
+argument_list|()
+block|;
 name|node
 operator|*
 name|add_self
@@ -1584,6 +1929,24 @@ operator|=
 literal|0
 argument_list|)
 block|;
+name|space_char_hmotion_node
+argument_list|(
+name|hunits
+argument_list|,
+name|color
+operator|*
+argument_list|,
+name|statem
+operator|*
+argument_list|,
+name|int
+argument_list|,
+name|node
+operator|*
+operator|=
+literal|0
+argument_list|)
+block|;
 name|node
 operator|*
 name|copy
@@ -1625,6 +1988,10 @@ argument_list|()
 block|;
 name|int
 name|force_tprint
+argument_list|()
+block|;
+name|int
+name|is_tag
 argument_list|()
 block|;
 name|node
@@ -1676,21 +2043,25 @@ name|public
 operator|:
 name|vmotion_node
 argument_list|(
-argument|vunits i
+name|vunits
 argument_list|,
-argument|color *c
+name|color
+operator|*
 argument_list|)
-operator|:
-name|n
+block|;
+name|vmotion_node
 argument_list|(
-name|i
+name|vunits
+argument_list|,
+name|color
+operator|*
+argument_list|,
+name|statem
+operator|*
+argument_list|,
+name|int
 argument_list|)
-block|,
-name|col
-argument_list|(
-argument|c
-argument_list|)
-block|{}
+block|;
 name|void
 name|tprint
 argument_list|(
@@ -1723,6 +2094,10 @@ block|;
 name|int
 name|force_tprint
 argument_list|()
+block|;
+name|int
+name|is_tag
+argument_list|()
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -1745,29 +2120,35 @@ name|public
 operator|:
 name|hline_node
 argument_list|(
-argument|hunits i
+name|hunits
 argument_list|,
-argument|node *c
+name|node
+operator|*
 argument_list|,
-argument|node *next =
+name|node
+operator|*
+operator|=
 literal|0
 argument_list|)
-operator|:
+block|;
+name|hline_node
+argument_list|(
+name|hunits
+argument_list|,
 name|node
-argument_list|(
-name|next
+operator|*
+argument_list|,
+name|statem
+operator|*
+argument_list|,
+name|int
+argument_list|,
+name|node
+operator|*
+operator|=
+literal|0
 argument_list|)
-block|,
-name|x
-argument_list|(
-name|i
-argument_list|)
-block|,
-name|n
-argument_list|(
-argument|c
-argument_list|)
-block|{}
+block|;
 operator|~
 name|hline_node
 argument_list|()
@@ -1804,6 +2185,10 @@ block|;
 name|int
 name|force_tprint
 argument_list|()
+block|;
+name|int
+name|is_tag
+argument_list|()
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -1826,29 +2211,35 @@ name|public
 operator|:
 name|vline_node
 argument_list|(
-argument|vunits i
+name|vunits
 argument_list|,
-argument|node *c
+name|node
+operator|*
 argument_list|,
-argument|node *next=
+name|node
+operator|*
+operator|=
 literal|0
 argument_list|)
-operator|:
+block|;
+name|vline_node
+argument_list|(
+name|vunits
+argument_list|,
 name|node
-argument_list|(
-name|next
+operator|*
+argument_list|,
+name|statem
+operator|*
+argument_list|,
+name|int
+argument_list|,
+name|node
+operator|*
+operator|=
+literal|0
 argument_list|)
-block|,
-name|x
-argument_list|(
-name|i
-argument_list|)
-block|,
-name|n
-argument_list|(
-argument|c
-argument_list|)
-block|{}
+block|;
 operator|~
 name|vline_node
 argument_list|()
@@ -1899,6 +2290,10 @@ block|;
 name|int
 name|force_tprint
 argument_list|()
+block|;
+name|int
+name|is_tag
+argument_list|()
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -1946,6 +2341,10 @@ argument_list|()
 block|;
 name|int
 name|force_tprint
+argument_list|()
+block|;
+name|int
+name|is_tag
 argument_list|()
 block|;
 name|hyphenation_type
@@ -1998,6 +2397,10 @@ argument_list|()
 block|;
 name|int
 name|force_tprint
+argument_list|()
+block|;
+name|int
+name|is_tag
 argument_list|()
 block|;
 name|int
@@ -2028,7 +2431,17 @@ name|zero_width_node
 argument_list|(
 name|node
 operator|*
-name|gn
+argument_list|)
+block|;
+name|zero_width_node
+argument_list|(
+name|node
+operator|*
+argument_list|,
+name|statem
+operator|*
+argument_list|,
+name|int
 argument_list|)
 block|;
 operator|~
@@ -2064,6 +2477,10 @@ name|int
 name|force_tprint
 argument_list|()
 block|;
+name|int
+name|is_tag
+argument_list|()
+block|;
 name|void
 name|append
 argument_list|(
@@ -2080,11 +2497,9 @@ name|vertical_extent
 argument_list|(
 name|vunits
 operator|*
-name|min
 argument_list|,
 name|vunits
 operator|*
-name|max
 argument_list|)
 block|; }
 decl_stmt|;
@@ -2108,6 +2523,19 @@ name|public
 operator|:
 name|left_italic_corrected_node
 argument_list|(
+name|node
+operator|*
+operator|=
+literal|0
+argument_list|)
+block|;
+name|left_italic_corrected_node
+argument_list|(
+name|statem
+operator|*
+argument_list|,
+name|int
+argument_list|,
 name|node
 operator|*
 operator|=
@@ -2159,6 +2587,10 @@ argument_list|()
 block|;
 name|int
 name|force_tprint
+argument_list|()
+block|;
+name|int
+name|is_tag
 argument_list|()
 block|;
 name|hunits
@@ -2270,6 +2702,14 @@ operator|:
 name|overstrike_node
 argument_list|()
 block|;
+name|overstrike_node
+argument_list|(
+name|statem
+operator|*
+argument_list|,
+name|int
+argument_list|)
+block|;
 operator|~
 name|overstrike_node
 argument_list|()
@@ -2313,6 +2753,10 @@ argument_list|()
 block|;
 name|int
 name|force_tprint
+argument_list|()
+block|;
+name|int
+name|is_tag
 argument_list|()
 block|;
 name|node
@@ -2364,6 +2808,14 @@ operator|:
 name|bracket_node
 argument_list|()
 block|;
+name|bracket_node
+argument_list|(
+name|statem
+operator|*
+argument_list|,
+name|int
+argument_list|)
+block|;
 operator|~
 name|bracket_node
 argument_list|()
@@ -2407,6 +2859,10 @@ argument_list|()
 block|;
 name|int
 name|force_tprint
+argument_list|()
+block|;
+name|int
+name|is_tag
 argument_list|()
 block|; }
 decl_stmt|;
@@ -2487,6 +2943,11 @@ argument_list|,
 name|color
 operator|*
 argument_list|,
+name|statem
+operator|*
+argument_list|,
+name|int
+argument_list|,
 name|int
 operator|=
 literal|0
@@ -2519,6 +2980,10 @@ argument_list|()
 block|;
 name|int
 name|force_tprint
+argument_list|()
+block|;
+name|int
+name|is_tag
 argument_list|()
 block|;
 name|int
@@ -2567,24 +3032,42 @@ argument_list|)
 block|;
 name|suppress_node
 argument_list|(
-argument|symbol f
+name|symbol
 argument_list|,
-argument|char p
+name|char
 argument_list|,
-argument|int id
+name|int
 argument_list|)
 block|;
 name|suppress_node
 argument_list|(
-argument|int
+name|int
 argument_list|,
-argument|int
+name|int
 argument_list|,
-argument|symbol f
+name|symbol
 argument_list|,
-argument|char p
+name|char
 argument_list|,
-argument|int id
+name|int
+argument_list|,
+name|statem
+operator|*
+argument_list|,
+name|int
+argument_list|)
+block|;
+name|suppress_node
+argument_list|(
+name|int
+argument_list|,
+name|int
+argument_list|,
+name|symbol
+argument_list|,
+name|char
+argument_list|,
+name|int
 argument_list|)
 block|;
 name|node
@@ -2620,6 +3103,10 @@ name|int
 name|force_tprint
 argument_list|()
 block|;
+name|int
+name|is_tag
+argument_list|()
+block|;
 name|private
 operator|:
 name|void
@@ -2627,13 +3114,88 @@ name|put
 argument_list|(
 name|troff_output_file
 operator|*
-name|out
 argument_list|,
 specifier|const
 name|char
 operator|*
-name|s
 argument_list|)
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|class
+name|tag_node
+range|:
+name|public
+name|node
+block|{
+name|public
+operator|:
+name|string
+name|tag_string
+block|;
+name|int
+name|delayed
+block|;
+name|tag_node
+argument_list|()
+block|;
+name|tag_node
+argument_list|(
+name|string
+argument_list|,
+name|int
+argument_list|)
+block|;
+name|tag_node
+argument_list|(
+name|string
+argument_list|,
+name|statem
+operator|*
+argument_list|,
+name|int
+argument_list|,
+name|int
+argument_list|)
+block|;
+name|node
+operator|*
+name|copy
+argument_list|()
+block|;
+name|void
+name|tprint
+argument_list|(
+name|troff_output_file
+operator|*
+argument_list|)
+block|;
+name|int
+name|same
+argument_list|(
+name|node
+operator|*
+argument_list|)
+block|;
+specifier|const
+name|char
+operator|*
+name|type
+argument_list|()
+block|;
+name|int
+name|force_tprint
+argument_list|()
+block|;
+name|int
+name|is_tag
+argument_list|()
+block|;
+name|int
+name|ends_sentence
+argument_list|()
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -2703,6 +3265,29 @@ name|color
 operator|*
 argument_list|)
 block|;
+name|draw_node
+argument_list|(
+name|char
+argument_list|,
+name|hvpair
+operator|*
+argument_list|,
+name|int
+argument_list|,
+name|font_size
+argument_list|,
+name|color
+operator|*
+argument_list|,
+name|color
+operator|*
+argument_list|,
+name|statem
+operator|*
+argument_list|,
+name|int
+argument_list|)
+block|;
 operator|~
 name|draw_node
 argument_list|()
@@ -2743,6 +3328,10 @@ block|;
 name|int
 name|force_tprint
 argument_list|()
+block|;
+name|int
+name|is_tag
+argument_list|()
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -2760,7 +3349,6 @@ name|make_node
 parameter_list|(
 name|charinfo
 modifier|*
-name|ci
 parameter_list|,
 name|environment
 modifier|*
@@ -2787,11 +3375,9 @@ name|same_node_list
 parameter_list|(
 name|node
 modifier|*
-name|n1
 parameter_list|,
 name|node
 modifier|*
-name|n2
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2803,7 +3389,6 @@ name|reverse_node_list
 parameter_list|(
 name|node
 modifier|*
-name|n
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2834,7 +3419,6 @@ name|int
 name|get_bold_fontno
 parameter_list|(
 name|int
-name|f
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2883,7 +3467,6 @@ name|int
 name|mount_font
 parameter_list|(
 name|int
-name|n
 parameter_list|,
 name|symbol
 parameter_list|,
@@ -2896,11 +3479,32 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|int
+name|check_font
+parameter_list|(
+name|symbol
+parameter_list|,
+name|symbol
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|check_style
+parameter_list|(
+name|symbol
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|void
 name|mount_style
 parameter_list|(
 name|int
-name|n
 parameter_list|,
 name|symbol
 parameter_list|)
@@ -2913,7 +3517,6 @@ name|int
 name|is_good_fontno
 parameter_list|(
 name|int
-name|n
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2977,7 +3580,6 @@ name|void
 name|trailer
 parameter_list|(
 name|vunits
-name|page_length
 parameter_list|)
 function_decl|;
 name|virtual
@@ -3068,7 +3670,6 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|filename
 parameter_list|)
 function_decl|;
 name|virtual
@@ -3096,6 +3697,9 @@ function_decl|;
 endif|#
 directive|endif
 comment|/* COLUMN */
+name|mtsm
+name|state
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -3143,7 +3747,6 @@ name|int
 name|in_output_page_list
 parameter_list|(
 name|int
-name|n
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3215,6 +3818,22 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|symbol
+name|get_style_name
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|search_path
+name|include_search_path
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 
