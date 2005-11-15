@@ -30,11 +30,12 @@ struct|struct
 name|pcb
 block|{
 name|register_t
-name|padxx
+name|__pad0
 index|[
 literal|8
 index|]
 decl_stmt|;
+comment|/* Spare */
 name|register_t
 name|pcb_cr3
 decl_stmt|;
@@ -63,8 +64,9 @@ name|register_t
 name|pcb_rip
 decl_stmt|;
 name|register_t
-name|pcb_rflags
+name|__pad1
 decl_stmt|;
+comment|/* Spare */
 name|register_t
 name|pcb_fsbase
 decl_stmt|;
