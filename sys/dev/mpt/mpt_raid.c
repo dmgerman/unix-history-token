@@ -5360,6 +5360,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|u_int
+name|nonopt_volumes
+decl_stmt|;
 if|if
 condition|(
 name|mpt
@@ -5754,6 +5757,10 @@ operator||=
 name|MPT_RVF_ACTIVE
 expr_stmt|;
 block|}
+name|nonopt_volumes
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -5879,6 +5886,19 @@ operator||=
 name|MPT_RVF_ANNOUNCED
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|vol_pg
+operator|->
+name|VolumeStatus
+operator|.
+name|State
+operator|!=
+name|MPI_RAIDVOL0_STATUS_STATE_OPTIMAL
+condition|)
+name|nonopt_volumes
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -6405,6 +6425,12 @@ literal|" )\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|mpt
+operator|->
+name|raid_nonopt_volumes
+operator|=
+name|nonopt_volumes
+expr_stmt|;
 block|}
 end_function
 
@@ -7389,6 +7415,31 @@ argument_list|,
 literal|"I"
 argument_list|,
 literal|"volume resync priority (0 == NC, 1 - 255)"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|tree
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"nonoptimal_volumes"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|mpt
+operator|->
+name|raid_nonopt_volumes
+argument_list|,
+literal|0
+argument_list|,
+literal|"number of nonoptimal volumes"
 argument_list|)
 expr_stmt|;
 block|}

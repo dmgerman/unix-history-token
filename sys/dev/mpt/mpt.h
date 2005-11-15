@@ -1535,6 +1535,9 @@ decl_stmt|;
 name|u_int
 name|raid_queue_depth
 decl_stmt|;
+name|u_int
+name|raid_nonopt_volumes
+decl_stmt|;
 name|struct
 name|proc
 modifier|*
