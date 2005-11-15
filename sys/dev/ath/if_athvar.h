@@ -445,25 +445,6 @@ name|mtx
 name|axq_lock
 decl_stmt|;
 comment|/* lock on q and link */
-comment|/* 	 * State for patching up CTS when bursting. 	 */
-name|struct
-name|ath_buf
-modifier|*
-name|axq_linkbuf
-decl_stmt|;
-comment|/* va of last buffer */
-name|struct
-name|ath_desc
-modifier|*
-name|axq_lastdsWithCTS
-decl_stmt|;
-comment|/* first desc of last descriptor 						 * that contains CTS  						 */
-name|struct
-name|ath_desc
-modifier|*
-name|axq_gatingds
-decl_stmt|;
-comment|/* final desc of the gating desc 						 * that determines whether 						 * lastdsWithCTS has been DMA'ed 						 * or not 						 */
 block|}
 struct|;
 end_struct
@@ -2500,29 +2481,6 @@ name|_ds
 parameter_list|)
 define|\
 value|((*(_ah)->ah_procTxDesc)((_ah), (_ds)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ath_hal_updateCTSForBursting
-parameter_list|(
-name|_ah
-parameter_list|,
-name|_ds
-parameter_list|,
-name|_prevds
-parameter_list|,
-name|_prevdsWithCTS
-parameter_list|, \
-name|_gatingds
-parameter_list|,
-name|_txOpLimit
-parameter_list|,
-name|_ctsDuration
-parameter_list|)
-define|\
-value|((*(_ah)->ah_updateCTSForBursting)((_ah), (_ds), (_prevds), \ 		(_prevdsWithCTS), (_gatingds), (_txOpLimit), (_ctsDuration)))
 end_define
 
 begin_define
