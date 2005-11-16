@@ -1379,6 +1379,7 @@ name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
+operator|*
 name|pe
 argument_list|)
 argument_list|)
