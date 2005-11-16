@@ -139,143 +139,121 @@ index|[]
 init|=
 block|{
 block|{
+operator|.
+name|pr_type
+operator|=
 name|SOCK_DGRAM
 block|,
 comment|/* ioctl()-only */
+operator|.
+name|pr_domain
+operator|=
 operator|&
 name|atmdomain
 block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* pr_input */
-literal|0
-block|,
-comment|/* pr_output */
-literal|0
-block|,
-comment|/* pr_ctlinput */
-literal|0
-block|,
-comment|/* pr_ctloutput */
-literal|0
-block|,
-comment|/* pr_ousrreq */
-literal|0
-block|,
-comment|/* pr_init */
-literal|0
-block|,
-comment|/* pr_fasttimo */
-literal|0
-block|,
-comment|/* pr_slowtimo */
-literal|0
-block|,
-comment|/* pr_drain */
+operator|.
+name|pr_usrreqs
+operator|=
 operator|&
 name|atm_dgram_usrreqs
-block|,
-comment|/* pr_usrreqs */
 block|}
 block|,
 block|{
+operator|.
+name|pr_type
+operator|=
 name|SOCK_SEQPACKET
 block|,
 comment|/* AAL-5 */
+operator|.
+name|pr_domain
+operator|=
 operator|&
 name|atmdomain
 block|,
+operator|.
+name|pr_protocol
+operator|=
 name|ATM_PROTO_AAL5
 block|,
+operator|.
+name|pr_flags
+operator|=
 name|PR_ATOMIC
 operator||
 name|PR_CONNREQUIRED
 block|,
-literal|0
-block|,
-comment|/* pr_input */
-literal|0
-block|,
-comment|/* pr_output */
-literal|0
-block|,
-comment|/* pr_ctlinput */
+operator|.
+name|pr_ctloutput
+operator|=
 name|atm_aal5_ctloutput
 block|,
-comment|/* pr_ctloutput */
-literal|0
-block|,
-comment|/* pr_ousrreq */
-literal|0
-block|,
-comment|/* pr_init */
-literal|0
-block|,
-comment|/* pr_fasttimo */
-literal|0
-block|,
-comment|/* pr_slowtimo */
-literal|0
-block|,
-comment|/* pr_drain */
+operator|.
+name|pr_usrreqs
+operator|=
 operator|&
 name|atm_aal5_usrreqs
-block|,
-comment|/* pr_usrreqs */
 block|}
 block|,
 ifdef|#
 directive|ifdef
 name|XXX
 block|{
+operator|.
+name|pr_type
+operator|=
 name|SOCK_SEQPACKET
 block|,
 comment|/* SSCOP */
+operator|.
+name|pr_domain
+operator|=
 operator|&
 name|atmdomain
 block|,
+operator|.
+name|pr_protocol
+operator|=
 name|ATM_PROTO_SSCOP
 block|,
+operator|.
+name|pr_flags
+operator|=
 name|PR_ATOMIC
 operator||
 name|PR_CONNREQUIRED
 operator||
 name|PR_WANTRCVD
 block|,
+operator|.
+name|pr_input
+operator|=
 name|x
 block|,
-comment|/* pr_input */
+operator|.
+name|pr_output
+operator|=
 name|x
 block|,
-comment|/* pr_output */
+operator|.
+name|pr_ctlinput
+operator|=
 name|x
 block|,
-comment|/* pr_ctlinput */
+operator|.
+name|pr_ctloutput
+operator|=
 name|x
 block|,
-comment|/* pr_ctloutput */
-literal|0
-block|,
-comment|/* pr_ousrreq */
-literal|0
-block|,
-comment|/* pr_init */
-literal|0
-block|,
-comment|/* pr_fasttimo */
-literal|0
-block|,
-comment|/* pr_slowtimo */
+operator|.
+name|pr_drain
+operator|=
 name|x
 block|,
-comment|/* pr_drain */
+operator|.
+name|pr_usrreqs
+operator|=
 name|x
-block|,
-comment|/* pr_usrreqs */
 block|}
 block|,
 endif|#
@@ -290,18 +268,29 @@ name|domain
 name|atmdomain
 init|=
 block|{
+operator|.
+name|dom_family
+operator|=
 name|AF_ATM
 block|,
+operator|.
+name|dom_name
+operator|=
 literal|"atm"
 block|,
+operator|.
+name|dom_init
+operator|=
 name|atm_initialize
 block|,
-literal|0
-block|,
-literal|0
-block|,
+operator|.
+name|dom_protosw
+operator|=
 name|atmsw
 block|,
+operator|.
+name|dom_protoswNPROTOSW
+operator|=
 operator|&
 name|atmsw
 index|[
