@@ -3300,6 +3300,22 @@ condition|)
 block|{
 if|if
 condition|(
+name|strcmp
+argument_list|(
+name|p
+argument_list|,
+literal|"noauto"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 				 * Do not pass noauto option to nmount(). 				 * or external mount program.  noauto is 				 * only used to prevent mounting a filesystem 				 * when 'mount -a' is specified, and is 				 * not a real mount option. 				 */
+continue|continue;
+block|}
+elseif|else
+if|if
+condition|(
 operator|*
 name|p
 operator|==
