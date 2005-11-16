@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: pkill.c,v 1.8 2005/03/02 15:31:44 abs Exp $	*/
+comment|/*	$NetBSD: pkill.c,v 1.16 2005/10/10 22:13:20 kleink Exp $	*/
 end_comment
 
 begin_comment
@@ -268,6 +268,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|kinfo_proc
 modifier|*
@@ -276,6 +277,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|selected
@@ -283,6 +285,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -293,18 +296,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nproc
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pgrep
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|signum
 init|=
@@ -313,54 +319,63 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|newest
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|oldest
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|interactive
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|inverse
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|longfmt
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|matchargs
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|fullmatch
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|kthreads
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|cflags
 init|=
@@ -369,6 +384,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|kvm_t
 modifier|*
 name|kd
@@ -376,12 +392,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|pid_t
 name|mypid
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|listhead
 name|euidlist
@@ -394,6 +412,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|listhead
 name|ruidlist
@@ -406,6 +425,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|listhead
 name|rgidlist
@@ -418,6 +438,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|listhead
 name|pgrplist
@@ -430,6 +451,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|listhead
 name|ppidlist
@@ -442,6 +464,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|listhead
 name|tdevlist
@@ -454,6 +477,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|listhead
 name|sidlist
@@ -466,6 +490,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|listhead
 name|jidlist
@@ -478,31 +503,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|int
-name|main
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
 name|void
 parameter_list|)
-function_decl|;
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__noreturn__
 end_function_decl
 
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|void
+specifier|static
+name|int
 name|killact
 parameter_list|(
+specifier|const
 name|struct
 name|kinfo_proc
 modifier|*
@@ -511,9 +533,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+specifier|static
+name|int
 name|grepact
 parameter_list|(
+specifier|const
 name|struct
 name|kinfo_proc
 modifier|*
@@ -522,6 +546,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|makelist
 parameter_list|(
@@ -539,6 +564,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|takepid
 parameter_list|(
@@ -564,15 +590,6 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 name|char
 name|buf
 index|[
@@ -624,12 +641,13 @@ decl_stmt|;
 name|size_t
 name|jsz
 decl_stmt|;
-name|void
+name|int
 function_decl|(
 modifier|*
 name|action
 function_decl|)
 parameter_list|(
+specifier|const
 name|struct
 name|kinfo_proc
 modifier|*
@@ -1209,7 +1227,7 @@ name|errx
 argument_list|(
 name|STATUS_ERROR
 argument_list|,
-literal|"-n and -o are mutually exclusive"
+literal|"Options -n and -o are mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1233,13 +1251,15 @@ if|if
 condition|(
 name|pidfilelock
 condition|)
+block|{
 name|errx
 argument_list|(
 name|STATUS_ERROR
 argument_list|,
-literal|"-L doesn't make sense without -F"
+literal|"Option -L doesn't make sense without -F"
 argument_list|)
 expr_stmt|;
+block|}
 name|pidfromfile
 operator|=
 operator|-
@@ -1277,7 +1297,7 @@ name|errx
 argument_list|(
 name|STATUS_ERROR
 argument_list|,
-literal|"kvm_openfiles(): %s"
+literal|"Cannot open kernel files (%s)"
 argument_list|,
 name|buf
 argument_list|)
@@ -1303,13 +1323,20 @@ name|plist
 operator|==
 name|NULL
 condition|)
+block|{
 name|errx
 argument_list|(
 name|STATUS_ERROR
 argument_list|,
-literal|"kvm_getprocs() failed"
+literal|"Cannot get process list (%s)"
+argument_list|,
+name|kvm_geterr
+argument_list|(
+name|kd
+argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Allocate memory which will be used to keep track of the 	 * selection. 	 */
 if|if
 condition|(
@@ -1324,13 +1351,17 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|errx
+block|{
+name|err
 argument_list|(
 name|STATUS_ERROR
 argument_list|,
-literal|"memory allocation failure"
+literal|"Cannot allocate memory for %d processes"
+argument_list|,
+name|nproc
 argument_list|)
 expr_stmt|;
+block|}
 name|memset
 argument_list|(
 name|selected
@@ -1392,7 +1423,10 @@ name|errx
 argument_list|(
 name|STATUS_BADUSAGE
 argument_list|,
-literal|"bad expression: %s"
+literal|"Cannot compile regular expression `%s' (%s)"
+argument_list|,
+operator|*
+name|argv
 argument_list|,
 name|buf
 argument_list|)
@@ -1634,7 +1668,7 @@ name|errx
 argument_list|(
 name|STATUS_ERROR
 argument_list|,
-literal|"regexec(): %s"
+literal|"Regular expression evaluation error (%s)"
 argument_list|,
 name|buf
 argument_list|)
@@ -2375,9 +2409,7 @@ name|inverse
 condition|)
 continue|continue;
 name|rv
-operator|=
-literal|1
-expr_stmt|;
+operator||=
 call|(
 modifier|*
 name|action
@@ -2400,6 +2432,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -2440,7 +2473,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|STATUS_ERROR
+name|STATUS_BADUSAGE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2451,6 +2484,7 @@ specifier|static
 name|void
 name|show_process
 parameter_list|(
+specifier|const
 name|struct
 name|kinfo_proc
 modifier|*
@@ -2578,9 +2612,11 @@ block|}
 end_function
 
 begin_function
-name|void
+specifier|static
+name|int
 name|killact
 parameter_list|(
+specifier|const
 name|struct
 name|kinfo_proc
 modifier|*
@@ -2650,7 +2686,11 @@ name|first
 operator|!=
 literal|'Y'
 condition|)
-return|return;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -2666,10 +2706,16 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+block|{
+comment|/*  		 * Check for ESRCH, which indicates that the process 		 * disappeared between us matching it and us 		 * signalling it; don't issue a warning about it. 		 */
+if|if
+condition|(
+name|errno
+operator|!=
+name|ESRCH
+condition|)
+name|warn
 argument_list|(
-name|STATUS_ERROR
-argument_list|,
 literal|"signalling pid %d"
 argument_list|,
 operator|(
@@ -2680,13 +2726,27 @@ operator|->
 name|ki_pid
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Return 0 to indicate that the process should not be 		 * considered a match, since we didn't actually get to 		 * signal it. 		 */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
-name|void
+specifier|static
+name|int
 name|grepact
 parameter_list|(
+specifier|const
 name|struct
 name|kinfo_proc
 modifier|*
@@ -2705,10 +2765,16 @@ argument_list|,
 name|delim
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|makelist
 parameter_list|(
@@ -2749,13 +2815,16 @@ specifier|const
 name|char
 modifier|*
 name|cp
+decl_stmt|,
+modifier|*
+name|prefix
 decl_stmt|;
 name|char
 modifier|*
 name|sp
 decl_stmt|,
 modifier|*
-name|p
+name|ep
 decl_stmt|,
 name|buf
 index|[
@@ -2768,6 +2837,10 @@ decl_stmt|;
 name|empty
 operator|=
 literal|1
+expr_stmt|;
+name|prefix
+operator|=
+name|_PATH_DEV
 expr_stmt|;
 while|while
 condition|(
@@ -2813,13 +2886,21 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|errx
+block|{
+name|err
 argument_list|(
 name|STATUS_ERROR
 argument_list|,
-literal|"memory allocation failure"
+literal|"Cannot allocate %zu bytes"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|li
+argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|SLIST_INSERT_HEAD
 argument_list|(
 name|head
@@ -2845,7 +2926,7 @@ argument_list|(
 name|sp
 argument_list|,
 operator|&
-name|p
+name|ep
 argument_list|,
 literal|0
 argument_list|)
@@ -2853,7 +2934,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-name|p
+name|ep
 operator|==
 literal|'\0'
 condition|)
@@ -2909,6 +2990,7 @@ case|:
 name|usage
 argument_list|()
 expr_stmt|;
+comment|/* NOTREACHED */
 default|default:
 break|break;
 block|}
@@ -2939,7 +3021,7 @@ name|errx
 argument_list|(
 name|STATUS_BADUSAGE
 argument_list|,
-literal|"unknown user `%s'"
+literal|"Unknown user `%s'"
 argument_list|,
 name|sp
 argument_list|)
@@ -2973,7 +3055,7 @@ name|errx
 argument_list|(
 name|STATUS_BADUSAGE
 argument_list|,
-literal|"unknown group `%s'"
+literal|"Unknown group `%s'"
 argument_list|,
 name|sp
 argument_list|)
@@ -3023,11 +3105,18 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|cp
 operator|=
 literal|"console"
 expr_stmt|;
-elseif|else
+block|}
+else|else
+block|{
+name|cp
+operator|=
+name|sp
+expr_stmt|;
 if|if
 condition|(
 name|strncmp
@@ -3038,24 +3127,14 @@ literal|"tty"
 argument_list|,
 literal|3
 argument_list|)
-operator|==
+operator|!=
 literal|0
 condition|)
-name|cp
+name|prefix
 operator|=
-name|sp
+name|_PATH_TTY
 expr_stmt|;
-else|else
-name|cp
-operator|=
-name|NULL
-expr_stmt|;
-if|if
-condition|(
-name|cp
-operator|==
-name|NULL
-condition|)
+block|}
 name|snprintf
 argument_list|(
 name|buf
@@ -3065,22 +3144,9 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"/dev/tty%s"
+literal|"%s%s"
 argument_list|,
-name|sp
-argument_list|)
-expr_stmt|;
-else|else
-name|snprintf
-argument_list|(
-name|buf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-argument_list|,
-literal|"/dev/%s"
+name|prefix
 argument_list|,
 name|cp
 argument_list|)
@@ -3094,8 +3160,9 @@ argument_list|,
 operator|&
 name|st
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 if|if
@@ -3104,20 +3171,22 @@ name|errno
 operator|==
 name|ENOENT
 condition|)
+block|{
 name|errx
 argument_list|(
 name|STATUS_BADUSAGE
 argument_list|,
-literal|"no such tty: `%s'"
+literal|"No such tty: `%s'"
 argument_list|,
 name|sp
 argument_list|)
 expr_stmt|;
+block|}
 name|err
 argument_list|(
 name|STATUS_ERROR
 argument_list|,
-literal|"stat(%s)"
+literal|"Cannot access `%s'"
 argument_list|,
 name|sp
 argument_list|)
@@ -3139,7 +3208,7 @@ name|errx
 argument_list|(
 name|STATUS_BADUSAGE
 argument_list|,
-literal|"not a tty: `%s'"
+literal|"Not a tty: `%s'"
 argument_list|,
 name|sp
 argument_list|)
@@ -3158,7 +3227,6 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
 if|if
 condition|(
@@ -3171,6 +3239,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|takepid
 parameter_list|(
@@ -3218,7 +3287,7 @@ name|err
 argument_list|(
 name|STATUS_ERROR
 argument_list|,
-literal|"can't open pid file `%s'"
+literal|"Cannot open pidfile `%s'"
 argument_list|,
 name|pidfile
 argument_list|)
@@ -3258,7 +3327,7 @@ name|errx
 argument_list|(
 name|STATUS_ERROR
 argument_list|,
-literal|"file '%s' can be locked"
+literal|"File '%s' can be locked"
 argument_list|,
 name|pidfile
 argument_list|)
@@ -3277,7 +3346,7 @@ name|errx
 argument_list|(
 name|STATUS_ERROR
 argument_list|,
-literal|"error while locking file '%s'"
+literal|"Error while locking file '%s'"
 argument_list|,
 name|pidfile
 argument_list|)
@@ -3322,7 +3391,7 @@ name|errx
 argument_list|(
 name|STATUS_ERROR
 argument_list|,
-literal|"pid file `%s' is empty"
+literal|"Pidfile `%s' is empty"
 argument_list|,
 name|pidfile
 argument_list|)
@@ -3340,7 +3409,7 @@ name|err
 argument_list|(
 name|STATUS_ERROR
 argument_list|,
-literal|"can't read from pid file `%s'"
+literal|"Cannot read from pid file `%s'"
 argument_list|,
 name|pidfile
 argument_list|)
@@ -3388,7 +3457,7 @@ name|errx
 argument_list|(
 name|STATUS_ERROR
 argument_list|,
-literal|"invalid pid in file `%s'"
+literal|"Invalid pid in file `%s'"
 argument_list|,
 name|pidfile
 argument_list|)
@@ -3408,7 +3477,7 @@ name|errx
 argument_list|(
 name|STATUS_ERROR
 argument_list|,
-literal|"invalid pid in file `%s'"
+literal|"Invalid pid in file `%s'"
 argument_list|,
 name|pidfile
 argument_list|)
