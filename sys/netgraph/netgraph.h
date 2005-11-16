@@ -5148,7 +5148,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Use the NETGRAPH_INIT() macro to link a node type into the  * netgraph system. This works for types compiled into the kernel  * as well as KLD modules. The first argument should be the type  * name (eg, echo) and the second a pointer to the type struct.  *  * If a different link time is desired, e.g., a device driver that  * needs to install its netgraph type before probing, use the  * NETGRAPH_INIT_ORDERED() macro instead. Deivce drivers probably  * want to use SI_SUB_DRIVERS instead of SI_SUB_PSEUDO.  */
+comment|/*  * Use the NETGRAPH_INIT() macro to link a node type into the  * netgraph system. This works for types compiled into the kernel  * as well as KLD modules. The first argument should be the type  * name (eg, echo) and the second a pointer to the type struct.  *  * If a different link time is desired, e.g., a device driver that  * needs to install its netgraph type before probing, use the  * NETGRAPH_INIT_ORDERED() macro instead.  Device drivers probably  * want to use SI_SUB_DRIVERS/SI_ORDER_FIRST.  */
 end_comment
 
 begin_define
