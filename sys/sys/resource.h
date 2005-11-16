@@ -184,7 +184,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* cpu time in milliseconds */
+comment|/* maximum cpu time in seconds */
 end_comment
 
 begin_define
