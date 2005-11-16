@@ -427,23 +427,12 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|f_nolistdot
+name|f_noautodot
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* don't list files beginning with . */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|f_forcelistdot
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* force list files beginning with . */
+comment|/* do not automatically enable -A for root */
 end_comment
 
 begin_decl_stmt
@@ -1130,11 +1119,7 @@ name|fts_options
 operator||=
 name|FTS_SEEDOT
 expr_stmt|;
-name|f_forcelistdot
-operator|=
-literal|1
-expr_stmt|;
-break|break;
+comment|/* FALLTHROUGH */
 case|case
 literal|'A'
 case|:
@@ -1146,7 +1131,7 @@ break|break;
 case|case
 literal|'I'
 case|:
-name|f_nolistdot
+name|f_noautodot
 operator|=
 literal|1
 expr_stmt|;
@@ -1370,15 +1355,22 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
-comment|/* Root is -A automatically. */
+comment|/* Root is -A automatically unless -I. */
 if|if
 condition|(
 operator|!
+name|f_listdot
+operator|&&
 name|getuid
 argument_list|()
+operator|==
+operator|(
+name|uid_t
+operator|)
+literal|0
 operator|&&
 operator|!
-name|f_nolistdot
+name|f_noautodot
 condition|)
 name|f_listdot
 operator|=
@@ -2018,17 +2010,8 @@ index|]
 operator|==
 literal|'.'
 operator|&&
-operator|(
-operator|(
 operator|!
 name|f_listdot
-operator|||
-name|f_nolistdot
-operator|)
-operator|&&
-operator|!
-name|f_forcelistdot
-operator|)
 condition|)
 break|break;
 comment|/* 			 * If already output something, put out a newline as 			 * a separator.  If multiple arguments, precede each 			 * directory with its name. 			 */
@@ -2774,17 +2757,8 @@ index|]
 operator|==
 literal|'.'
 operator|&&
-operator|(
-operator|(
 operator|!
 name|f_listdot
-operator|||
-name|f_nolistdot
-operator|)
-operator|&&
-operator|!
-name|f_forcelistdot
-operator|)
 condition|)
 block|{
 name|cur
