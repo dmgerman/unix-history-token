@@ -146,7 +146,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<machine/speaker.h>
+file|<dev/speaker/speaker.h>
 end_include
 
 begin_endif
