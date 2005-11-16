@@ -2392,6 +2392,11 @@ literal|1
 condition|)
 block|{
 comment|/* 		 * No remaining claims to this record; let MLD6 know 		 * that we are leaving the multicast group. 		 */
+name|mld_stoptimer
+argument_list|(
+name|in6m
+argument_list|)
+expr_stmt|;
 name|mld6_stop_listening
 argument_list|(
 name|in6m
