@@ -587,8 +587,15 @@ value|32
 end_define
 
 begin_comment
-comment|/* Thread interrupt. */
+comment|/* reserved by thread library. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SIGLWP
+value|SIGTHR
+end_define
 
 begin_endif
 endif|#
