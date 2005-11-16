@@ -115,9 +115,7 @@ decl_stmt|;
 name|struct
 name|ng_vlan_filter
 name|filter
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 struct|;
