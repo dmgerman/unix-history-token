@@ -138,19 +138,7 @@ name|IFP2NG
 parameter_list|(
 name|ifp
 parameter_list|)
-value|((struct ng_node *)IFP2AC((ifp))->ac_netgraph)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IFP2NG_SET
-parameter_list|(
-name|ifp
-parameter_list|,
-name|val
-parameter_list|)
-value|(IFP2AC((ifp))->ac_netgraph = (val))
+value|(IFP2AC((ifp))->ac_netgraph)
 end_define
 
 begin_comment
@@ -1128,12 +1116,12 @@ name|ifp
 operator|=
 name|ifp
 expr_stmt|;
-name|IFP2NG_SET
+name|IFP2NG
 argument_list|(
 name|ifp
-argument_list|,
-name|node
 argument_list|)
+operator|=
+name|node
 expr_stmt|;
 name|priv
 operator|->
@@ -1221,12 +1209,12 @@ argument_list|)
 expr_stmt|;
 comment|/* Force real removal of node */
 comment|/* 	 * We can't assume the ifnet is still around when we run shutdown 	 * So zap it now. XXX We HOPE that anything running at this time 	 * handles it (as it should in the non netgraph case). 	 */
-name|IFP2NG_SET
+name|IFP2NG
 argument_list|(
 name|ifp
-argument_list|,
-name|NULL
 argument_list|)
+operator|=
+name|NULL
 expr_stmt|;
 name|priv
 operator|->
