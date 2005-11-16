@@ -737,6 +737,8 @@ literal|"dir_mode"
 block|,
 literal|"caseopt"
 block|,
+literal|"errmsg"
+block|,
 name|NULL
 block|}
 decl_stmt|;
@@ -824,11 +826,22 @@ argument_list|,
 name|smbfs_opts
 argument_list|)
 condition|)
+block|{
+name|vfs_mount_error
+argument_list|(
+name|mp
+argument_list|,
+literal|"%s"
+argument_list|,
+literal|"Invalid option"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 name|smb_makescred
 argument_list|(
 operator|&
@@ -859,11 +872,20 @@ operator|&
 name|v
 argument_list|)
 condition|)
+block|{
+name|vfs_mount_error
+argument_list|(
+name|mp
+argument_list|,
+literal|"No dev option"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 name|error
 operator|=
 name|smb_dev2share
@@ -886,6 +908,17 @@ condition|)
 block|{
 name|printf
 argument_list|(
+literal|"invalid device handle %d (%d)\n"
+argument_list|,
+name|v
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+name|vfs_mount_error
+argument_list|(
+name|mp
+argument_list|,
 literal|"invalid device handle %d (%d)\n"
 argument_list|,
 name|v
@@ -971,6 +1004,17 @@ block|{
 name|printf
 argument_list|(
 literal|"could not alloc smbmount\n"
+argument_list|)
+expr_stmt|;
+name|vfs_mount_error
+argument_list|(
+name|mp
+argument_list|,
+literal|"could not alloc smbmount"
+argument_list|,
+name|v
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 name|error
@@ -1077,6 +1121,13 @@ name|sm_caseopt
 argument_list|)
 condition|)
 block|{
+name|vfs_mount_error
+argument_list|(
+name|mp
+argument_list|,
+literal|"Invalid caseopt"
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|EINVAL
@@ -1104,6 +1155,13 @@ name|v
 argument_list|)
 condition|)
 block|{
+name|vfs_mount_error
+argument_list|(
+name|mp
+argument_list|,
+literal|"Invalid uid"
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|EINVAL
@@ -1137,6 +1195,13 @@ name|v
 argument_list|)
 condition|)
 block|{
+name|vfs_mount_error
+argument_list|(
+name|mp
+argument_list|,
+literal|"Invalid gid"
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|EINVAL
@@ -1170,6 +1235,13 @@ name|v
 argument_list|)
 condition|)
 block|{
+name|vfs_mount_error
+argument_list|(
+name|mp
+argument_list|,
+literal|"Invalid file_mode"
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|EINVAL
@@ -1215,6 +1287,13 @@ name|v
 argument_list|)
 condition|)
 block|{
+name|vfs_mount_error
+argument_list|(
+name|mp
+argument_list|,
+literal|"Invalid dir_mode"
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|EINVAL
@@ -1422,9 +1501,20 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|vfs_mount_error
+argument_list|(
+name|mp
+argument_list|,
+literal|"smbfs_root error: %d"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 name|VOP_UNLOCK
 argument_list|(
 name|vp
@@ -1805,6 +1895,13 @@ argument_list|(
 literal|"smp == NULL (bug in umount)\n"
 argument_list|)
 expr_stmt|;
+name|vfs_mount_error
+argument_list|(
+name|mp
+argument_list|,
+literal|"smp == NULL (bug in umount)"
+argument_list|)
+expr_stmt|;
 return|return
 name|EINVAL
 return|;
@@ -2140,9 +2237,18 @@ name|np
 operator|==
 name|NULL
 condition|)
+block|{
+name|vfs_mount_error
+argument_list|(
+name|mp
+argument_list|,
+literal|"np == NULL"
+argument_list|)
+expr_stmt|;
 return|return
 name|EINVAL
 return|;
+block|}
 name|sbp
 operator|->
 name|f_iosize
