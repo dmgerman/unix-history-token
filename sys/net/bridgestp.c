@@ -88,12 +88,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/condvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -395,6 +389,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_initialize_port
 parameter_list|(
@@ -410,6 +405,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_ifupdstatus
 parameter_list|(
@@ -425,6 +421,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_enable_port
 parameter_list|(
@@ -440,6 +437,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_disable_port
 parameter_list|(
@@ -454,7 +452,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notused
+end_ifdef
+
 begin_function_decl
+specifier|static
 name|void
 name|bstp_enable_change_detection
 parameter_list|(
@@ -466,6 +471,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_disable_change_detection
 parameter_list|(
@@ -476,7 +482,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* notused */
+end_comment
+
 begin_function_decl
+specifier|static
 name|int
 name|bstp_root_bridge
 parameter_list|(
@@ -489,6 +505,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bstp_supersedes_port_info
 parameter_list|(
@@ -508,6 +525,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bstp_designated_port
 parameter_list|(
@@ -523,6 +541,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bstp_designated_for_some_port
 parameter_list|(
@@ -534,6 +553,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_transmit_config
 parameter_list|(
@@ -549,6 +569,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_transmit_tcn
 parameter_list|(
@@ -560,6 +581,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_received_config_bpdu
 parameter_list|(
@@ -579,6 +601,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_received_tcn_bpdu
 parameter_list|(
@@ -598,6 +621,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_record_config_information
 parameter_list|(
@@ -617,6 +641,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_record_config_timeout_values
 parameter_list|(
@@ -632,6 +657,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_config_bpdu_generation
 parameter_list|(
@@ -643,6 +669,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_send_config_bpdu
 parameter_list|(
@@ -662,6 +689,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_configuration_update
 parameter_list|(
@@ -673,6 +701,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_root_selection
 parameter_list|(
@@ -684,6 +713,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_designated_port_selection
 parameter_list|(
@@ -695,6 +725,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_become_designated_port
 parameter_list|(
@@ -710,6 +741,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_port_state_selection
 parameter_list|(
@@ -721,6 +753,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_make_forwarding
 parameter_list|(
@@ -736,6 +769,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_make_blocking
 parameter_list|(
@@ -751,6 +785,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_set_port_state
 parameter_list|(
@@ -763,7 +798,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notused
+end_ifdef
+
 begin_function_decl
+specifier|static
 name|void
 name|bstp_set_bridge_priority
 parameter_list|(
@@ -777,6 +819,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_set_port_priority
 parameter_list|(
@@ -794,6 +837,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_set_path_cost
 parameter_list|(
@@ -810,7 +854,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* notused */
+end_comment
+
 begin_function_decl
+specifier|static
 name|void
 name|bstp_topology_change_detection
 parameter_list|(
@@ -822,6 +876,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_topology_change_acknowledged
 parameter_list|(
@@ -833,6 +888,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_acknowledge_topology_change
 parameter_list|(
@@ -848,6 +904,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_tick
 parameter_list|(
@@ -858,6 +915,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_timer_start
 parameter_list|(
@@ -871,6 +929,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_timer_stop
 parameter_list|(
@@ -882,6 +941,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bstp_timer_expired
 parameter_list|(
@@ -895,6 +955,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_hold_timer_expiry
 parameter_list|(
@@ -910,6 +971,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_message_age_timer_expiry
 parameter_list|(
@@ -925,6 +987,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_forward_delay_timer_expiry
 parameter_list|(
@@ -940,6 +1003,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_topology_change_timer_expiry
 parameter_list|(
@@ -951,6 +1015,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_tcn_timer_expiry
 parameter_list|(
@@ -962,6 +1027,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bstp_hello_timer_expiry
 parameter_list|(
@@ -973,6 +1039,7 @@ function_decl|;
 end_function_decl
 
 begin_function
+specifier|static
 name|void
 name|bstp_transmit_config
 parameter_list|(
@@ -1186,6 +1253,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_send_config_bpdu
 parameter_list|(
@@ -1706,6 +1774,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bstp_root_bridge
 parameter_list|(
@@ -1730,6 +1799,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bstp_supersedes_port_info
 parameter_list|(
@@ -1878,6 +1948,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_record_config_information
 parameter_list|(
@@ -1945,6 +2016,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_record_config_timeout_values
 parameter_list|(
@@ -1995,6 +2067,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_config_bpdu_generation
 parameter_list|(
@@ -2060,6 +2133,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bstp_designated_port
 parameter_list|(
@@ -2101,6 +2175,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_transmit_tcn
 parameter_list|(
@@ -2341,6 +2416,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_configuration_update
 parameter_list|(
@@ -2369,6 +2445,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_root_selection
 parameter_list|(
@@ -2647,6 +2724,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_designated_port_selection
 parameter_list|(
@@ -2786,6 +2864,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_become_designated_port
 parameter_list|(
@@ -2836,6 +2915,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_port_state_selection
 parameter_list|(
@@ -2955,6 +3035,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_make_forwarding
 parameter_list|(
@@ -3000,6 +3081,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_make_blocking
 parameter_list|(
@@ -3102,6 +3184,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_set_port_state
 parameter_list|(
@@ -3124,6 +3207,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_topology_change_detection
 parameter_list|(
@@ -3193,6 +3277,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_topology_change_acknowledged
 parameter_list|(
@@ -3220,6 +3305,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_acknowledge_topology_change
 parameter_list|(
@@ -3957,6 +4043,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_received_config_bpdu
 parameter_list|(
@@ -4141,6 +4228,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_received_tcn_bpdu
 parameter_list|(
@@ -4193,6 +4281,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_hello_timer_expiry
 parameter_list|(
@@ -4221,6 +4310,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_message_age_timer_expiry
 parameter_list|(
@@ -4335,6 +4425,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_forward_delay_timer_expiry
 parameter_list|(
@@ -4414,6 +4505,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bstp_designated_for_some_port
 parameter_list|(
@@ -4475,6 +4567,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_tcn_timer_expiry
 parameter_list|(
@@ -4503,6 +4596,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_topology_change_timer_expiry
 parameter_list|(
@@ -4528,6 +4622,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_hold_timer_expiry
 parameter_list|(
@@ -5058,6 +5153,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_initialize_port
 parameter_list|(
@@ -5132,6 +5228,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_enable_port
 parameter_list|(
@@ -5162,6 +5259,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_disable_port
 parameter_list|(
@@ -5324,7 +5422,14 @@ block|}
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notused
+end_ifdef
+
 begin_function
+specifier|static
 name|void
 name|bstp_set_bridge_priority
 parameter_list|(
@@ -5482,6 +5587,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_set_port_priority
 parameter_list|(
@@ -5560,6 +5666,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_set_path_cost
 parameter_list|(
@@ -5597,6 +5704,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_enable_change_detection
 parameter_list|(
@@ -5616,6 +5724,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_disable_change_detection
 parameter_list|(
@@ -5634,7 +5743,17 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* notused */
+end_comment
+
 begin_function
+specifier|static
 name|void
 name|bstp_ifupdstatus
 parameter_list|(
@@ -5788,6 +5907,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_tick
 parameter_list|(
@@ -6043,6 +6163,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_timer_start
 parameter_list|(
@@ -6071,6 +6192,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bstp_timer_stop
 parameter_list|(
@@ -6096,6 +6218,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bstp_timer_expired
 parameter_list|(
