@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* e_rem_pio2f.c -- float version of e_rem_pio2.c  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.  * Conversion to not use float except for the arg by Bruce Evans.  */
+comment|/* e_rem_pio2f.c -- float version of e_rem_pio2.c  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.  * Debugged and optimized by Bruce D. Evans.  */
 end_comment
 
 begin_comment
@@ -29,7 +29,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __ieee754_rem_pio2f(x,y)  *  * return the remainder of x rem pi/2 in y[0]+y[1]  * use __kernel_rem_pio2f()  */
+comment|/* __ieee754_rem_pio2f(x,y)  *  * return the remainder of x rem pi/2 in y[0]+y[1]  * use double precision internally  * use __kernel_rem_pio2() for large x  */
 end_comment
 
 begin_include
@@ -192,7 +192,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * invpio2:  53 bits of 2/pi  * pio2_1:   first  33 bit of pi/2  * pio2_1t:  pi/2 - pio2_1  */
+comment|/*  * invpio2:  53 bits of 2/pi  * e1pio2:   1*pi/2 rounded to 53 bits  * e2pio2:   2*pi/2 rounded to 53 bits  * e3pio2:   3*pi/2 rounded to 53 bits  * e4pio2:   4*pi/2 rounded to 53 bits  * pio2_1:   first  33 bit of pi/2  * pio2_1t:  pi/2 - pio2_1  */
 end_comment
 
 begin_decl_stmt
@@ -219,11 +219,34 @@ init|=
 literal|6.36619772367581382433e-01
 decl_stmt|,
 comment|/* 0x3FE45F30, 0x6DC9C883 */
-name|pio2
+name|e1pio2
 init|=
-literal|1.57079632679489655700e+00
+literal|1
+operator|*
+name|M_PI_2
 decl_stmt|,
-comment|/* 0x3FF921FB, 0x54442d18 */
+comment|/* 0x3FF921FB, 0x54442D18 */
+name|e2pio2
+init|=
+literal|2
+operator|*
+name|M_PI_2
+decl_stmt|,
+comment|/* 0x400921FB, 0x54442D18 */
+name|e3pio2
+init|=
+literal|3
+operator|*
+name|M_PI_2
+decl_stmt|,
+comment|/* 0x4012D97C, 0x7F3321D2 */
+name|e4pio2
+init|=
+literal|4
+operator|*
+name|M_PI_2
+decl_stmt|,
+comment|/* 0x401921FB, 0x54442D18 */
 name|pio2_1
 init|=
 literal|1.57079632673412561417e+00
@@ -298,9 +321,9 @@ if|if
 condition|(
 name|ix
 operator|<=
-literal|0x3f490fd8
+literal|0x3f490fda
 condition|)
-comment|/* |x| ~<= pi/4 , no need for reduction */
+comment|/* |x| ~<= pi/4, reduction is null */
 block|{
 name|y
 index|[
@@ -320,77 +343,79 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* 33+53 bit pi is good enough for special and medium size cases */
+comment|/* 53 bit pi is good enough for special cases */
 if|if
 condition|(
 name|ix
-operator|<
-literal|0x4016cbe4
-condition|)
-block|{
-comment|/* |x|< 3pi/4, special case with n=+-1 */
-if|if
-condition|(
-name|hx
-operator|>
-literal|0
-condition|)
-block|{
-name|z
-operator|=
-name|x
-operator|-
-name|pio2
-expr_stmt|;
-name|n
-operator|=
-literal|1
-expr_stmt|;
-block|}
-else|else
-block|{
-name|z
-operator|=
-name|x
-operator|+
-name|pio2
-expr_stmt|;
-name|n
-operator|=
-literal|3
-expr_stmt|;
-block|}
-name|y
-index|[
-literal|0
-index|]
-operator|=
-name|z
-expr_stmt|;
-name|y
-index|[
-literal|1
-index|]
-operator|=
-name|z
-operator|-
-name|y
-index|[
-literal|0
-index|]
-expr_stmt|;
-return|return
-name|n
-return|;
-block|}
-if|if
-condition|(
-name|ix
-operator|<
+operator|<=
 literal|0x407b53d1
 condition|)
 block|{
-comment|/* |x|< 5*pi/4, special case with n=+-2 */
+comment|/* |x| ~<= 5*pi/4 */
+if|if
+condition|(
+name|ix
+operator|<=
+literal|0x4016cbe3
+condition|)
+block|{
+comment|/* |x| ~<= 3*pi/4 */
+if|if
+condition|(
+name|hx
+operator|>
+literal|0
+condition|)
+block|{
+name|z
+operator|=
+name|x
+operator|-
+name|e1pio2
+expr_stmt|;
+name|n
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+name|z
+operator|=
+name|x
+operator|+
+name|e1pio2
+expr_stmt|;
+name|n
+operator|=
+literal|3
+expr_stmt|;
+block|}
+name|y
+index|[
+literal|0
+index|]
+operator|=
+name|z
+expr_stmt|;
+name|y
+index|[
+literal|1
+index|]
+operator|=
+name|z
+operator|-
+name|y
+index|[
+literal|0
+index|]
+expr_stmt|;
+return|return
+name|n
+return|;
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|hx
@@ -401,18 +426,14 @@ name|z
 operator|=
 name|x
 operator|-
-literal|2
-operator|*
-name|pio2
+name|e2pio2
 expr_stmt|;
 else|else
 name|z
 operator|=
 name|x
 operator|+
-literal|2
-operator|*
-name|pio2
+name|e2pio2
 expr_stmt|;
 name|y
 index|[
@@ -437,14 +458,23 @@ return|return
 literal|2
 return|;
 block|}
+block|}
 if|if
 condition|(
 name|ix
-operator|<
+operator|<=
+literal|0x40e231d5
+condition|)
+block|{
+comment|/* |x| ~<= 9*pi/4*/
+if|if
+condition|(
+name|ix
+operator|<=
 literal|0x40afeddf
 condition|)
 block|{
-comment|/* |x|< 7*pi/4, special case with n=+-3 */
+comment|/* |x| ~<= 7*pi/4 */
 if|if
 condition|(
 name|hx
@@ -456,9 +486,7 @@ name|z
 operator|=
 name|x
 operator|-
-literal|3
-operator|*
-name|pio2
+name|e3pio2
 expr_stmt|;
 name|n
 operator|=
@@ -471,9 +499,7 @@ name|z
 operator|=
 name|x
 operator|+
-literal|3
-operator|*
-name|pio2
+name|e3pio2
 expr_stmt|;
 name|n
 operator|=
@@ -503,14 +529,8 @@ return|return
 name|n
 return|;
 block|}
-if|if
-condition|(
-name|ix
-operator|<
-literal|0x40e231d6
-condition|)
+else|else
 block|{
-comment|/* |x|< 9*pi/4, special case with n=+-4 */
 if|if
 condition|(
 name|hx
@@ -521,18 +541,14 @@ name|z
 operator|=
 name|x
 operator|-
-literal|4
-operator|*
-name|pio2
+name|e4pio2
 expr_stmt|;
 else|else
 name|z
 operator|=
 name|x
 operator|+
-literal|4
-operator|*
-name|pio2
+name|e4pio2
 expr_stmt|;
 name|y
 index|[
@@ -557,6 +573,8 @@ return|return
 literal|0
 return|;
 block|}
+block|}
+comment|/* 33+53 bit pi is good enough for medium size */
 if|if
 condition|(
 name|ix
