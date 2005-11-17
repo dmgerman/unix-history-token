@@ -210,15 +210,29 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EM_TXD
+name|EM_MIN_TXD
+value|80
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_MAX_TXD_82543
 value|256
 end_define
 
 begin_define
 define|#
 directive|define
-name|EM_TXD_82544
+name|EM_MAX_TXD
 value|4096
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_DEFAULT_TXD
+value|EM_MAX_TXD_82543
 end_define
 
 begin_comment
@@ -228,15 +242,29 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EM_RXD
+name|EM_MIN_RXD
+value|80
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_MAX_RXD_82543
 value|256
 end_define
 
 begin_define
 define|#
 directive|define
-name|EM_RXD_82544
+name|EM_MAX_RXD
 value|4096
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_DEFAULT_RXD
+value|EM_MAX_RXD_82543
 end_define
 
 begin_comment
