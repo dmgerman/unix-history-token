@@ -2769,6 +2769,10 @@ argument_list|,
 name|ksw
 operator|->
 name|ksw_total
+operator|-
+name|ksw
+operator|->
+name|ksw_used
 argument_list|,
 operator|(
 name|ksw
