@@ -6246,6 +6246,12 @@ name|SC2IFP
 argument_list|(
 name|vh
 argument_list|)
+operator|&&
+name|vh
+operator|->
+name|sc_state
+operator|==
+name|MASTER
 condition|)
 block|{
 operator|*
@@ -6384,6 +6390,12 @@ name|if_drv_flags
 operator|&
 name|IFF_DRV_RUNNING
 operator|)
+operator|&&
+name|vh
+operator|->
+name|sc_state
+operator|==
+name|MASTER
 condition|)
 block|{
 name|CARP_UNLOCK
