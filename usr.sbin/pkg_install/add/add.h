@@ -44,6 +44,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|Boolean
+name|PrefixRecursive
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|Boolean
 name|NoInstall
 decl_stmt|;
 end_decl_stmt
