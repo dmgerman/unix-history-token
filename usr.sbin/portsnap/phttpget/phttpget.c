@@ -958,6 +958,13 @@ condition|(
 operator|(
 name|len
 operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|len
+operator|==
 operator|-
 literal|1
 operator|)
@@ -966,6 +973,7 @@ operator|(
 name|errno
 operator|!=
 name|EINTR
+operator|)
 operator|)
 condition|)
 return|return
