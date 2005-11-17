@@ -954,7 +954,7 @@ condition|)
 name|printf
 argument_list|(
 literal|"\nHTT bit cleared - FreeBSD"
-literal|" does not have licenseing issues"
+literal|" does not have licensing issues"
 literal|" requiring it.\n"
 argument_list|)
 expr_stmt|;
