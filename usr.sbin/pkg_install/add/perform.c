@@ -1346,6 +1346,45 @@ operator|!
 name|Fake
 condition|)
 block|{
+name|char
+name|prefixArg
+index|[
+literal|2
+operator|+
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+comment|/* "-P" + Prefix */
+if|if
+condition|(
+name|PrefixRecursive
+condition|)
+block|{
+name|strlcpy
+argument_list|(
+name|prefixArg
+argument_list|,
+literal|"-P"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|prefixArg
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|strlcat
+argument_list|(
+name|prefixArg
+argument_list|,
+name|Prefix
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|prefixArg
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -1466,13 +1505,19 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"%s %s'%s'"
+literal|"%s %s %s '%s'"
 argument_list|,
 name|PkgAddCmd
 argument_list|,
 name|Verbose
 condition|?
 literal|"-v "
+else|:
+literal|""
+argument_list|,
+name|PrefixRecursive
+condition|?
+name|prefixArg
 else|:
 literal|""
 argument_list|,
@@ -1594,13 +1639,19 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"(pwd; /bin/cat +CONTENTS) | %s %s-S"
+literal|"(pwd; /bin/cat +CONTENTS) | %s %s %s -S"
 argument_list|,
 name|PkgAddCmd
 argument_list|,
 name|Verbose
 condition|?
-literal|"-v "
+literal|"-v"
+else|:
+literal|""
+argument_list|,
+name|PrefixRecursive
+condition|?
+name|prefixArg
 else|:
 literal|""
 argument_list|)

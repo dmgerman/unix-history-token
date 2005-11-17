@@ -53,7 +53,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"hvIRfnrp:SMt:C:"
+literal|"hvIRfnrp:P:SMt:C:"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,6 +63,14 @@ modifier|*
 name|Prefix
 init|=
 name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Boolean
+name|PrefixRecursive
+init|=
+name|FALSE
 decl_stmt|;
 end_decl_stmt
 
@@ -579,6 +587,22 @@ case|:
 name|Prefix
 operator|=
 name|optarg
+expr_stmt|;
+name|PrefixRecursive
+operator|=
+name|FALSE
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+name|Prefix
+operator|=
+name|optarg
+expr_stmt|;
+name|PrefixRecursive
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -1638,7 +1662,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: pkg_add [-vInrfRMS] [-t template] [-p prefix] [-C chrootdir]"
+literal|"usage: pkg_add [-vInrfRMS] [-t template] [-p prefix] [-P prefix] [-C chrootdir]"
 argument_list|,
 literal|"               pkg-name [pkg-name ...]"
 argument_list|)
