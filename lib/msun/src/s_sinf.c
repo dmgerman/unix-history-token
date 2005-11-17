@@ -53,10 +53,6 @@ name|y
 index|[
 literal|2
 index|]
-decl_stmt|,
-name|z
-init|=
-literal|0.0
 decl_stmt|;
 name|int32_t
 name|n
@@ -70,7 +66,6 @@ argument_list|,
 name|x
 argument_list|)
 expr_stmt|;
-comment|/* |x| ~< pi/4 */
 name|ix
 operator|&=
 literal|0x7fffffff
@@ -79,16 +74,17 @@ if|if
 condition|(
 name|ix
 operator|<=
-literal|0x3f490fd8
+literal|0x3f490fda
 condition|)
 block|{
+comment|/* |x| ~<= pi/4 */
 if|if
 condition|(
 name|ix
 operator|<
 literal|0x39800000
 condition|)
-comment|/* if x< 2**-12 */
+comment|/* |x|< 2**-12 */
 if|if
 condition|(
 operator|(
@@ -103,13 +99,13 @@ condition|)
 return|return
 name|x
 return|;
-comment|/* generate inexact */
+comment|/* x with inexact if x != 0 */
 return|return
 name|__kernel_sinf
 argument_list|(
 name|x
 argument_list|,
-name|z
+literal|0.0
 argument_list|,
 literal|0
 argument_list|)
