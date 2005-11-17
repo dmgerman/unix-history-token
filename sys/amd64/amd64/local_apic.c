@@ -1393,7 +1393,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"lapic%d: timer"
+literal|"cpu%d: timer"
 argument_list|,
 name|lapic_id
 argument_list|()
