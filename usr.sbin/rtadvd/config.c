@@ -3502,7 +3502,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add a prefix to the list of specified interface and reconstruct  * the outgoing packet.  * The prefix must not be in the list.  * XXX: other parameters of the prefix (e.g. lifetime) shoule be  * able to be specified.  */
+comment|/*  * Add a prefix to the list of specified interface and reconstruct  * the outgoing packet.  * The prefix must not be in the list.  * XXX: other parameters of the prefix (e.g. lifetime) should be  * able to be specified.  */
 end_comment
 
 begin_function
