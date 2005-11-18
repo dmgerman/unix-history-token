@@ -1984,7 +1984,7 @@ name|m
 parameter_list|,
 name|len
 parameter_list|)
-value|do {						\ 	(m)->m_data += (MLEN - (len))& ~(sizeof(long) - 1);		\ } while (0)
+value|do {						\ 	KASSERT(!((m)->m_flags& (M_PKTHDR|M_EXT)),			\ 		("%s: M_ALIGN not normal mbuf", __func__));		\ 	KASSERT((m)->m_data == (m)->m_dat,				\ 		("%s: M_ALIGN not a virgin mbuf", __func__));		\ 	(m)->m_data += (MLEN - (len))& ~(sizeof(long) - 1);		\ } while (0)
 end_define
 
 begin_comment
@@ -2000,7 +2000,7 @@ name|m
 parameter_list|,
 name|len
 parameter_list|)
-value|do {						\ 	(m)->m_data += (MHLEN - (len))& ~(sizeof(long) - 1);		\ } while (0)
+value|do {						\ 	KASSERT((m)->m_flags& M_PKTHDR&& !((m)->m_flags& M_EXT),	\ 		("%s: MH_ALIGN not PKTHDR mbuf", __func__));		\ 	KASSERT((m)->m_data == (m)->m_pktdat,				\ 		("%s: MH_ALIGN not a virgin mbuf", __func__));		\ 	(m)->m_data += (MHLEN - (len))& ~(sizeof(long) - 1);		\ } while (0)
 end_define
 
 begin_comment
