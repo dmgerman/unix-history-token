@@ -830,6 +830,13 @@ name|CLOCK_MONOTONIC
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|CLOCK_UPTIME
+value|5
+end_define
+
 begin_endif
 endif|#
 directive|endif

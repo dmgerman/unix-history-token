@@ -1041,6 +1041,9 @@ break|break;
 case|case
 name|CLOCK_MONOTONIC
 case|:
+case|case
+name|CLOCK_UPTIME
+case|:
 name|nanouptime
 argument_list|(
 name|ats
@@ -1430,6 +1433,9 @@ name|CLOCK_REALTIME
 case|:
 case|case
 name|CLOCK_MONOTONIC
+case|:
+case|case
+name|CLOCK_UPTIME
 case|:
 comment|/* 		 * Round up the result of the division cheaply by adding 1. 		 * Rounding up is especially important if rounding down 		 * would give 0.  Perfect rounding is unimportant. 		 */
 name|ts
