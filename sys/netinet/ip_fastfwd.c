@@ -146,6 +146,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/ip_options.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/in_cksum.h>
 end_include
 

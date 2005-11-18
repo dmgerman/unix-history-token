@@ -127,37 +127,6 @@ comment|/* _KERNEL */
 end_comment
 
 begin_comment
-comment|/*  * Structure stored in mbuf in inpcb.ip_options  * and passed to ip_output when ip options are in use.  * The actual length of the options (including ipopt_dst)  * is in m_len.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX_IPOPTLEN
-value|40
-end_define
-
-begin_struct
-struct|struct
-name|ipoption
-block|{
-name|struct
-name|in_addr
-name|ipopt_dst
-decl_stmt|;
-comment|/* first-hop dst if source routed */
-name|char
-name|ipopt_list
-index|[
-name|MAX_IPOPTLEN
-index|]
-decl_stmt|;
-comment|/* options proper */
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * Structure attached to inpcb.ip_moptions and  * passed to ip_output when IP multicast options are in use.  */
 end_comment
 
@@ -509,17 +478,6 @@ begin_comment
 comment|/* ip forwarding */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|ip_doopts
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* process or ignore IP options */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -693,6 +651,21 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ip_forward
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|int
+name|srcrt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ip_init
 parameter_list|(
 name|void
@@ -828,34 +801,6 @@ name|void
 name|ip_slowtimo
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|mbuf
-modifier|*
-name|ip_srcroute
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ip_stripoptions
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
