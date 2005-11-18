@@ -353,7 +353,7 @@ begin_define
 define|#
 directive|define
 name|MAX_TRAP_MSG
-value|28
+value|30
 end_define
 
 begin_decl_stmt
@@ -451,6 +451,12 @@ comment|/* 27 T_STKFLT */
 literal|"machine check trap"
 block|,
 comment|/* 28 T_MCHK */
+literal|"SIMD floating-point exception"
+block|,
+comment|/* 29 T_XMMFLT */
+literal|"reserved (unknown) fault"
+block|,
+comment|/* 30 T_RESERVED */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2013,6 +2019,10 @@ name|struct
 name|soft_segment_descriptor
 name|softseg
 decl_stmt|;
+name|char
+modifier|*
+name|msg
+decl_stmt|;
 name|code
 operator|=
 name|frame
@@ -2050,16 +2060,25 @@ name|type
 operator|<=
 name|MAX_TRAP_MSG
 condition|)
+name|msg
+operator|=
+name|trap_msg
+index|[
+name|type
+index|]
+expr_stmt|;
+else|else
+name|msg
+operator|=
+literal|"UNKNOWN"
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\n\nFatal trap %d: %s while in %s mode\n"
 argument_list|,
 name|type
 argument_list|,
-name|trap_msg
-index|[
-name|type
-index|]
+name|msg
 argument_list|,
 name|ISPL
 argument_list|(
