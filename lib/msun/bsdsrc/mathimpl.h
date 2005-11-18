@@ -83,30 +83,23 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Functions internal to the math package, yet not static.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|double
-name|__exp__E
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_struct
 struct|struct
 name|Double
 block|{
 name|double
 name|a
-decl_stmt|,
+decl_stmt|;
+name|double
 name|b
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Functions internal to the math package, yet not static.  */
+end_comment
 
 begin_function_decl
 name|double
