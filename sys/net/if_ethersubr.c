@@ -3341,6 +3341,16 @@ operator|~
 name|M_HASFCS
 expr_stmt|;
 block|}
+comment|/* Reset layer specific mbuf flags to avoid confusing upper layers. */
+name|m
+operator|->
+name|m_flags
+operator|&=
+operator|~
+operator|(
+name|M_PROTOFLAGS
+operator|)
+expr_stmt|;
 switch|switch
 condition|(
 name|ether_type

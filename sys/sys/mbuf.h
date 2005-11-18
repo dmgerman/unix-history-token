@@ -792,6 +792,17 @@ value|(M_PKTHDR|M_EOR|M_RDONLY|M_PROTO1|M_PROTO1|M_PROTO2|\ 			    M_PROTO3|M_PR
 end_define
 
 begin_comment
+comment|/*  * Flags to purge when crossing layers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PROTOFLAGS
+value|(M_PROTO1|M_PROTO2|M_PROTO3|M_PROTO4|M_PROTO5)
+end_define
+
+begin_comment
 comment|/*  * Flags indicating hw checksum support and sw checksum requirements.  */
 end_comment
 

@@ -3244,6 +3244,16 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 		 * Reset layer specific mbuf flags 		 * to avoid confusing lower layers. 		 */
+name|m
+operator|->
+name|m_flags
+operator|&=
+operator|~
+operator|(
+name|M_PROTOFLAGS
+operator|)
+expr_stmt|;
 name|error
 operator|=
 call|(
@@ -3436,6 +3446,16 @@ operator|.
 name|len
 expr_stmt|;
 block|}
+comment|/* 			 * Reset layer specific mbuf flags 			 * to avoid confusing upper layers. 			 */
+name|m
+operator|->
+name|m_flags
+operator|&=
+operator|~
+operator|(
+name|M_PROTOFLAGS
+operator|)
+expr_stmt|;
 name|error
 operator|=
 call|(
