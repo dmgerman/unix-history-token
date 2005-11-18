@@ -1778,6 +1778,13 @@ operator|.
 name|index
 argument_list|)
 expr_stmt|;
+name|disk_gone
+argument_list|(
+name|softc
+operator|->
+name|disk
+argument_list|)
+expr_stmt|;
 name|xpt_print_path
 argument_list|(
 name|periph
