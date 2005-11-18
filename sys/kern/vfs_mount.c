@@ -2504,6 +2504,26 @@ goto|goto
 name|bail
 goto|;
 block|}
+comment|/* 	 * We need to see if we have the "update" option 	 * before we call vfs_domount(), since vfs_domount() has special 	 * logic based on MNT_UPDATE.  This is very important 	 * when we want to update the root filesystem. 	 */
+if|if
+condition|(
+name|vfs_getopt
+argument_list|(
+name|optlist
+argument_list|,
+literal|"update"
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|fsflags
+operator||=
+name|MNT_UPDATE
+expr_stmt|;
 comment|/* 	 * Be ultra-paranoid about making sure the type and fspath 	 * variables will fit in our mp buffers, including the 	 * terminating NUL. 	 */
 if|if
 condition|(
