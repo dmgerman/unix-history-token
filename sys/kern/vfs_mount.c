@@ -6579,6 +6579,9 @@ decl_stmt|,
 modifier|*
 name|path
 decl_stmt|;
+name|time_t
+name|timebase
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -6755,7 +6758,11 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Iterate over all currently mounted file systems and use 		 * the time stamp found to check and/or initialize the RTC. 		 * Typically devfs has no time stamp and the only other FS 		 * is the actual / FS. 		 */
+comment|/* 		 * Iterate over all currently mounted file systems and use 		 * the time stamp found to check and/or initialize the RTC. 		 * Typically devfs has no time stamp and the only other FS 		 * is the actual / FS. 		 * Call inittodr() only once and pass it the largest of the 		 * timestamps we encounter. 		 */
+name|timebase
+operator|=
+literal|0
+expr_stmt|;
 do|do
 block|{
 if|if
@@ -6763,15 +6770,14 @@ condition|(
 name|mp
 operator|->
 name|mnt_time
-operator|!=
-literal|0
+operator|>
+name|timebase
 condition|)
-name|inittodr
-argument_list|(
+name|timebase
+operator|=
 name|mp
 operator|->
 name|mnt_time
-argument_list|)
 expr_stmt|;
 name|mp
 operator|=
@@ -6790,6 +6796,11 @@ operator|!=
 name|NULL
 condition|)
 do|;
+name|inittodr
+argument_list|(
+name|timebase
+argument_list|)
+expr_stmt|;
 name|devfs_fixup
 argument_list|(
 name|curthread
