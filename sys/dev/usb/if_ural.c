@@ -267,7 +267,7 @@ begin_decl_stmt
 name|int
 name|uraldebug
 init|=
-literal|2
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -6525,7 +6525,6 @@ name|ieee80211_frame
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/* XXX should do automatic rate adaptation */
 if|if
 condition|(
 name|ic
@@ -11060,6 +11059,29 @@ if|if
 condition|(
 name|sc
 operator|->
+name|amrr_xfer
+operator|!=
+name|NULL
+condition|)
+block|{
+name|usbd_free_xfer
+argument_list|(
+name|sc
+operator|->
+name|amrr_xfer
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|amrr_xfer
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sc
+operator|->
 name|sc_rx_pipeh
 operator|!=
 name|NULL
@@ -11124,21 +11146,6 @@ expr_stmt|;
 name|ural_free_tx_list
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|amrr_xfer
-operator|!=
-name|NULL
-condition|)
-name|usbd_free_xfer
-argument_list|(
-name|sc
-operator|->
-name|amrr_xfer
 argument_list|)
 expr_stmt|;
 block|}
@@ -11310,7 +11317,7 @@ operator|=
 name|splusb
 argument_list|()
 expr_stmt|;
-comment|/* asynchronously read STA registers (cleared by read) */
+comment|/* 	 * Asynchronously read statistic registers (cleared by read). 	 */
 name|req
 operator|.
 name|bmRequestType
@@ -11347,7 +11354,10 @@ name|req
 operator|.
 name|wLength
 argument_list|,
-literal|22
+sizeof|sizeof
+name|sc
+operator|->
+name|sta
 argument_list|)
 expr_stmt|;
 name|usbd_setup_default_xfer
@@ -11371,7 +11381,10 @@ name|sc
 operator|->
 name|sta
 argument_list|,
-literal|22
+sizeof|sizeof
+name|sc
+operator|->
+name|sta
 argument_list|,
 literal|0
 argument_list|,
@@ -11459,7 +11472,7 @@ index|[
 literal|8
 index|]
 operator|+
-comment|/* TX more-retry ok count  */
+comment|/* TX more-retry ok count */
 name|sc
 operator|->
 name|sta
