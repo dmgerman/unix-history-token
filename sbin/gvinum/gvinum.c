@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 2004 Lukas Ertl  *  All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  *  Copyright (c) 2004 Lukas Ertl, 2005 Chris Jones  *  All rights reserved.  *   * Portions of this software were developed for the FreeBSD Project   * by Chris Jones thanks to the support of Google's Summer of Code   * program and mentoring by Lukas Ertl.   *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -160,6 +160,19 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|gvinum_move
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|gvinum_parityop
 parameter_list|(
 name|int
@@ -176,6 +189,19 @@ end_function_decl
 begin_function_decl
 name|void
 name|gvinum_printconfig
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|gvinum_rename
 parameter_list|(
 name|int
 parameter_list|,
@@ -1582,75 +1608,40 @@ block|{
 name|printf
 argument_list|(
 literal|"COMMANDS\n"
-literal|"attach plex volume [rename]\n"
-literal|"attach subdisk plex [offset] [rename]\n"
-literal|"        Attach a plex to a volume, or a subdisk to a plex.\n"
-literal|"checkparity plex [-f] [-v]\n"
-literal|"        Check the parity blocks of a RAID-4 or RAID-5 plex.\n"
-literal|"concat [-f] [-n name] [-v] drives\n"
-literal|"        Create a concatenated volume from the specified drives.\n"
-literal|"create [-f] description-file\n"
-literal|"        Create a volume as described in description-file.\n"
-literal|"detach [-f] [plex | subdisk]\n"
-literal|"        Detach a plex or subdisk from the volume or plex to"
-literal|"which it is\n"
-literal|"        attached.\n"
-literal|"dumpconfig [drive ...]\n"
-literal|"        List the configuration information stored on the"
-literal|" specified\n"
-literal|"        drives, or all drives in the system if no drive names"
-literal|" are speci-\n"
-literal|"        fied.\n"
-literal|"info [-v] [-V]\n"
-literal|"        List information about volume manager state.\n"
-literal|"init [-S size] [-w] plex | subdisk\n"
-literal|"        Initialize the contents of a subdisk or all the subdisks"
-literal|" of a\n"
-literal|"        plex to all zeros.\n"
-literal|"label volume\n"
-literal|"        Create a volume label.\n"
-literal|"l | list [-r] [-s] [-v] [-V] [volume | plex | subdisk]\n"
+literal|"checkparity [-f] plex\n"
+literal|"        Check the parity blocks of a RAID-5 plex.\n"
+literal|"create description-file\n"
+literal|"        Create as per description-file or open editor.\n"
+literal|"l | list [-r] [-v] [-V] [volume | plex | subdisk]\n"
 literal|"        List information about specified objects.\n"
-literal|"ld [-r] [-s] [-v] [-V] [volume]\n"
+literal|"ld [-r] [-v] [-V] [volume]\n"
 literal|"        List information about drives.\n"
-literal|"ls [-r] [-s] [-v] [-V] [subdisk]\n"
+literal|"ls [-r] [-v] [-V] [subdisk]\n"
 literal|"        List information about subdisks.\n"
-literal|"lp [-r] [-s] [-v] [-V] [plex]\n"
+literal|"lp [-r] [-v] [-V] [plex]\n"
 literal|"        List information about plexes.\n"
-literal|"lv [-r] [-s] [-v] [-V] [volume]\n"
+literal|"lv [-r] [-v] [-V] [volume]\n"
 literal|"        List information about volumes.\n"
-literal|"mirror [-f] [-n name] [-s] [-v] drives\n"
-literal|"        Create a mirrored volume from the specified drives.\n"
 literal|"move | mv -f drive object ...\n"
 literal|"        Move the object(s) to the specified drive.\n"
-literal|"printconfig [file]\n"
-literal|"        Write a copy of the current configuration to file.\n"
 literal|"quit    Exit the vinum program when running in interactive mode."
 literal|"  Nor-\n"
 literal|"        mally this would be done by entering the EOF character.\n"
 literal|"rename [-r] [drive | subdisk | plex | volume] newname\n"
 literal|"        Change the name of the specified object.\n"
-literal|"rebuildparity plex [-f] [-v] [-V]\n"
-literal|"        Rebuild the parity blocks of a RAID-4 or RAID-5 plex.\n"
-literal|"resetconfig\n"
-literal|"        Reset the complete vinum configuration.\n"
-literal|"rm [-f] [-r] volume | plex | subdisk\n"
+literal|"rebuildparity plex [-f]\n"
+literal|"        Rebuild the parity blocks of a RAID-5 plex.\n"
+literal|"rm [-r] volume | plex | subdisk | drive\n"
 literal|"        Remove an object.\n"
 literal|"saveconfig\n"
 literal|"        Save vinum configuration to disk after configuration"
 literal|" failures.\n"
-literal|"setstate state [volume | plex | subdisk | drive]\n"
+literal|"setstate [-f] state [volume | plex | subdisk | drive]\n"
 literal|"        Set state without influencing other objects, for"
 literal|" diagnostic pur-\n"
 literal|"        poses only.\n"
-literal|"start [-i interval] [-S size] [-w] volume | plex | subdisk\n"
+literal|"start [-S size] volume | plex | subdisk\n"
 literal|"        Allow the system to access the objects.\n"
-literal|"stop [-f] [volume | plex | subdisk]\n"
-literal|"        Terminate access to the objects, or stop vinum if no"
-literal|" parameters\n"
-literal|"        are specified.\n"
-literal|"stripe [-f] [-n name] [-v] drives\n"
-literal|"        Create a striped volume from the specified drives.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2242,6 +2233,284 @@ return|return;
 block|}
 end_function
 
+begin_comment
+comment|/* Note that move is currently of form '[-r] target object [...]' */
+end_comment
+
+begin_function
+name|void
+name|gvinum_move
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|argv
+parameter_list|)
+block|{
+name|struct
+name|gctl_req
+modifier|*
+name|req
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|errstr
+decl_stmt|;
+name|char
+name|buf
+index|[
+literal|20
+index|]
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|,
+name|i
+decl_stmt|,
+name|j
+decl_stmt|;
+name|flags
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|argc
+condition|)
+block|{
+name|optreset
+operator|=
+literal|1
+expr_stmt|;
+name|optind
+operator|=
+literal|1
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|j
+operator|=
+name|getopt
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+literal|"f"
+argument_list|)
+operator|)
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+switch|switch
+condition|(
+name|j
+condition|)
+block|{
+case|case
+literal|'f'
+case|:
+name|flags
+operator||=
+name|GV_FLAG_F
+expr_stmt|;
+break|break;
+case|case
+literal|'?'
+case|:
+default|default:
+return|return;
+block|}
+block|}
+name|argc
+operator|-=
+name|optind
+expr_stmt|;
+name|argv
+operator|+=
+name|optind
+expr_stmt|;
+block|}
+switch|switch
+condition|(
+name|argc
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|warnx
+argument_list|(
+literal|"no destination or object(s) to move specified"
+argument_list|)
+expr_stmt|;
+return|return;
+case|case
+literal|1
+case|:
+name|warnx
+argument_list|(
+literal|"no object(s) to move specified"
+argument_list|)
+expr_stmt|;
+return|return;
+default|default:
+break|break;
+block|}
+name|req
+operator|=
+name|gctl_get_handle
+argument_list|()
+expr_stmt|;
+name|gctl_ro_param
+argument_list|(
+name|req
+argument_list|,
+literal|"class"
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|"VINUM"
+argument_list|)
+expr_stmt|;
+name|gctl_ro_param
+argument_list|(
+name|req
+argument_list|,
+literal|"verb"
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|"move"
+argument_list|)
+expr_stmt|;
+name|gctl_ro_param
+argument_list|(
+name|req
+argument_list|,
+literal|"argc"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|,
+operator|&
+name|argc
+argument_list|)
+expr_stmt|;
+name|gctl_ro_param
+argument_list|(
+name|req
+argument_list|,
+literal|"flags"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|,
+operator|&
+name|flags
+argument_list|)
+expr_stmt|;
+name|gctl_ro_param
+argument_list|(
+name|req
+argument_list|,
+literal|"destination"
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+name|argc
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"argv%d"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|gctl_ro_param
+argument_list|(
+name|req
+argument_list|,
+name|buf
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+name|argv
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+name|errstr
+operator|=
+name|gctl_issue
+argument_list|(
+name|req
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errstr
+operator|!=
+name|NULL
+condition|)
+name|warnx
+argument_list|(
+literal|"can't move object(s):  %s"
+argument_list|,
+name|errstr
+argument_list|)
+expr_stmt|;
+name|gctl_free
+argument_list|(
+name|req
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+end_function
+
 begin_function
 name|void
 name|gvinum_printconfig
@@ -2670,6 +2939,237 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|gvinum_rename
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|argv
+parameter_list|)
+block|{
+name|struct
+name|gctl_req
+modifier|*
+name|req
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|errstr
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|,
+name|j
+decl_stmt|;
+name|flags
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|argc
+condition|)
+block|{
+name|optreset
+operator|=
+literal|1
+expr_stmt|;
+name|optind
+operator|=
+literal|1
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|j
+operator|=
+name|getopt
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+literal|"r"
+argument_list|)
+operator|)
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+switch|switch
+condition|(
+name|j
+condition|)
+block|{
+case|case
+literal|'r'
+case|:
+name|flags
+operator||=
+name|GV_FLAG_R
+expr_stmt|;
+break|break;
+case|case
+literal|'?'
+case|:
+default|default:
+return|return;
+block|}
+block|}
+name|argc
+operator|-=
+name|optind
+expr_stmt|;
+name|argv
+operator|+=
+name|optind
+expr_stmt|;
+block|}
+switch|switch
+condition|(
+name|argc
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|warnx
+argument_list|(
+literal|"no object to rename specified"
+argument_list|)
+expr_stmt|;
+return|return;
+case|case
+literal|1
+case|:
+name|warnx
+argument_list|(
+literal|"no new name specified"
+argument_list|)
+expr_stmt|;
+return|return;
+case|case
+literal|2
+case|:
+break|break;
+default|default:
+name|warnx
+argument_list|(
+literal|"more than one new name specified"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|req
+operator|=
+name|gctl_get_handle
+argument_list|()
+expr_stmt|;
+name|gctl_ro_param
+argument_list|(
+name|req
+argument_list|,
+literal|"class"
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|"VINUM"
+argument_list|)
+expr_stmt|;
+name|gctl_ro_param
+argument_list|(
+name|req
+argument_list|,
+literal|"verb"
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|"rename"
+argument_list|)
+expr_stmt|;
+name|gctl_ro_param
+argument_list|(
+name|req
+argument_list|,
+literal|"flags"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|,
+operator|&
+name|flags
+argument_list|)
+expr_stmt|;
+name|gctl_ro_param
+argument_list|(
+name|req
+argument_list|,
+literal|"object"
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|gctl_ro_param
+argument_list|(
+name|req
+argument_list|,
+literal|"newname"
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+name|errstr
+operator|=
+name|gctl_issue
+argument_list|(
+name|req
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errstr
+operator|!=
+name|NULL
+condition|)
+name|warnx
+argument_list|(
+literal|"can't rename object:  %s"
+argument_list|,
+name|errstr
+argument_list|)
+expr_stmt|;
+name|gctl_free
+argument_list|(
+name|req
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -3556,10 +4056,73 @@ index|[
 literal|0
 index|]
 argument_list|,
+literal|"move"
+argument_list|)
+condition|)
+name|gvinum_move
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|"mv"
+argument_list|)
+condition|)
+name|gvinum_move
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
 literal|"printconfig"
 argument_list|)
 condition|)
 name|gvinum_printconfig
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|"rename"
+argument_list|)
+condition|)
+name|gvinum_rename
 argument_list|(
 name|argc
 argument_list|,
