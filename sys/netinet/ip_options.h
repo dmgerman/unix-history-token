@@ -15,17 +15,6 @@ directive|define
 name|_NETINET_IP_OPTIONS_H_
 end_define
 
-begin_comment
-comment|/*  * Structure stored in mbuf in inpcb.ip_options  * and passed to ip_output when ip options are in use.  * The actual length of the options (including ipopt_dst)  * is in m_len.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX_IPOPTLEN
-value|40
-end_define
-
 begin_struct
 struct|struct
 name|ipoptrt
@@ -81,26 +70,6 @@ name|struct
 name|ipoptrt
 name|ip_srcrt
 decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|ipoption
-block|{
-name|struct
-name|in_addr
-name|ipopt_dst
-decl_stmt|;
-comment|/* first-hop dst if source routed */
-name|char
-name|ipopt_list
-index|[
-name|MAX_IPOPTLEN
-index|]
-decl_stmt|;
-comment|/* options proper */
 block|}
 struct|;
 end_struct
