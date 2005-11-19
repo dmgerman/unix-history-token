@@ -271,13 +271,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|MINPV
-value|2048
-end_define
-
 begin_if
 if|#
 directive|if
@@ -2358,7 +2351,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* 	 * init the pv free list 	 */
+name|int
+name|shpgperproc
+init|=
+name|PMAP_SHPGPERPROC
+decl_stmt|;
+comment|/* 	 * Initialize the address space (zone) for the pv entries.  Set a 	 * high water mark so that the system can recover from excessive 	 * numbers of pv entries. 	 */
 name|pvzone
 operator|=
 name|uma_zcreate
@@ -2386,30 +2384,6 @@ operator||
 name|UMA_ZONE_NOFREE
 argument_list|)
 expr_stmt|;
-name|uma_prealloc
-argument_list|(
-name|pvzone
-argument_list|,
-name|MINPV
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Initialize the address space (zone) for the pv_entries.  Set a  * high water mark so that the system can recover from excessive  * numbers of pv entries.  */
-end_comment
-
-begin_function
-name|void
-name|pmap_init2
-parameter_list|()
-block|{
-name|int
-name|shpgperproc
-init|=
-name|PMAP_SHPGPERPROC
-decl_stmt|;
 name|TUNABLE_INT_FETCH
 argument_list|(
 literal|"vm.pmap.shpgperproc"
@@ -2424,7 +2398,9 @@ name|shpgperproc
 operator|*
 name|maxproc
 operator|+
-name|vm_page_array_size
+name|cnt
+operator|.
+name|v_page_count
 expr_stmt|;
 name|TUNABLE_INT_FETCH
 argument_list|(
@@ -2455,6 +2431,13 @@ name|pv_entry_max
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
+name|void
+name|pmap_init2
+parameter_list|()
+block|{ }
 end_function
 
 begin_comment
@@ -6122,8 +6105,6 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|pv_entry_high_water
-operator|&&
 operator|(
 name|pv_entry_count
 operator|>
