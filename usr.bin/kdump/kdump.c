@@ -362,6 +362,8 @@ name|fancy
 init|=
 literal|1
 decl_stmt|,
+name|suppressdata
+decl_stmt|,
 name|tail
 decl_stmt|,
 name|maxdata
@@ -455,7 +457,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"f:dElm:np:RTt:"
+literal|"f:dElm:np:RsTt:"
 argument_list|)
 operator|)
 operator|!=
@@ -522,6 +524,14 @@ name|atoi
 argument_list|(
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+name|suppressdata
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -2725,6 +2735,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|suppressdata
+condition|)
+return|return;
+if|if
+condition|(
 name|maxdata
 operator|&&
 name|datalen
@@ -3114,7 +3129,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: kdump [-dEnlRT] [-f trfile] [-m maxdata] [-p pid] [-t [cnisuw]]\n"
+literal|"usage: kdump [-dEnlRsT] [-f trfile] [-m maxdata] [-p pid] [-t [cnisuw]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
