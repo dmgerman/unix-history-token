@@ -9,35 +9,6 @@ end_comment
 
 begin_struct
 struct|struct
-name|iwi_firmware
-block|{
-name|void
-modifier|*
-name|boot
-decl_stmt|;
-name|int
-name|boot_size
-decl_stmt|;
-name|void
-modifier|*
-name|ucode
-decl_stmt|;
-name|int
-name|ucode_size
-decl_stmt|;
-name|void
-modifier|*
-decl|main
-decl_stmt|;
-name|int
-name|main_size
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|iwi_rx_radiotap_header
 block|{
 name|struct
@@ -321,29 +292,17 @@ name|unrhdr
 modifier|*
 name|sc_unr
 decl_stmt|;
-name|struct
-name|iwi_firmware
-name|fw
-decl_stmt|;
 name|uint32_t
 name|flags
 decl_stmt|;
 define|#
 directive|define
-name|IWI_FLAG_FW_CACHED
+name|IWI_FLAG_FW_INITED
 value|(1<< 0)
 define|#
 directive|define
-name|IWI_FLAG_FW_INITED
-value|(1<< 1)
-define|#
-directive|define
-name|IWI_FLAG_FW_WARNED
-value|(1<< 2)
-define|#
-directive|define
 name|IWI_FLAG_SCANNING
-value|(1<< 3)
+value|(1<< 1)
 name|struct
 name|iwi_cmd_ring
 name|cmdq
@@ -449,20 +408,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|SIOCSLOADFW
-value|_IOW('i', 137, struct ifreq)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIOCSKILLFW
-value|_IOW('i', 138, struct ifreq)
-end_define
 
 begin_define
 define|#

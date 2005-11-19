@@ -572,6 +572,25 @@ name|IWI_RATE_OFDM54
 value|3
 end_define
 
+begin_comment
+comment|/* firmware binary image header */
+end_comment
+
+begin_struct
+struct|struct
+name|iwi_firmware_hdr
+block|{
+name|uint32_t
+name|version
+decl_stmt|;
+name|uint32_t
+name|mode
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|iwi_hdr
