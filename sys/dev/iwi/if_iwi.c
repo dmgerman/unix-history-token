@@ -10088,10 +10088,11 @@ name|char
 modifier|*
 name|uc
 decl_stmt|;
+name|size_t
+name|size
+decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|size
 decl_stmt|,
 name|ntries
 decl_stmt|,
@@ -10582,9 +10583,10 @@ name|mlen
 decl_stmt|,
 name|tmp
 decl_stmt|;
-name|int
+name|size_t
 name|size
-decl_stmt|,
+decl_stmt|;
+name|int
 name|ntries
 decl_stmt|,
 name|error
