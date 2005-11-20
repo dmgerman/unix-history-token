@@ -14193,7 +14193,7 @@ argument_list|,
 sizeof|sizeof
 name|path
 argument_list|,
-literal|"/etc/firmware/%s.fw"
+literal|"/boot/firmware/%s.fw"
 argument_list|,
 name|name
 argument_list|)
