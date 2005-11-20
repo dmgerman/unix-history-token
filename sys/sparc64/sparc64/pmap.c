@@ -2630,19 +2630,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize the address space (zone) for the pv_entries.  Set a  * high water mark so that the system can recover from excessive  * numbers of pv entries.  */
-end_comment
-
-begin_function
-name|void
-name|pmap_init2
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
-end_function
-
-begin_comment
 comment|/*  * Extract the physical page address associated with the given  * map/virtual_address pair.  */
 end_comment
 

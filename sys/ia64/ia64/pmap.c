@@ -2280,13 +2280,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-name|void
-name|pmap_init2
-parameter_list|()
-block|{ }
-end_function
-
 begin_comment
 comment|/***************************************************  * Manipulate TLBs for a pmap  ***************************************************/
 end_comment

@@ -7313,15 +7313,6 @@ end_function
 
 begin_function
 name|void
-name|pmap_init2
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
-end_function
-
-begin_function
-name|void
 name|pmap_postinit
 parameter_list|(
 name|void

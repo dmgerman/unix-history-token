@@ -471,21 +471,6 @@ block|}
 end_function
 
 begin_function
-name|void
-name|pmap_init2
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|MMU_INIT2
-argument_list|(
-name|mmu_obj
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
 name|boolean_t
 name|pmap_is_modified
 parameter_list|(
