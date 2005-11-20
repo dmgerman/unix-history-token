@@ -128,10 +128,6 @@ name|y
 index|[
 literal|2
 index|]
-decl_stmt|,
-name|z
-init|=
-literal|0.0
 decl_stmt|;
 name|int32_t
 name|n
@@ -188,7 +184,7 @@ name|__kernel_tanf
 argument_list|(
 name|x
 argument_list|,
-name|z
+literal|0.0
 argument_list|,
 literal|1
 argument_list|)
