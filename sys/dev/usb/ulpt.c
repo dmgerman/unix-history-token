@@ -2697,7 +2697,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|flags
+name|flag
 operator|&
 name|FREAD
 operator|)
