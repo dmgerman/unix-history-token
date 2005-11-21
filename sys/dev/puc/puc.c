@@ -35,23 +35,6 @@ directive|include
 file|"opt_puc.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PUC_FASTINTR
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|PUC_FASTINTR
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
