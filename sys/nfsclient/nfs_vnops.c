@@ -13708,11 +13708,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
 name|KASSERT
 argument_list|(
 operator|!
@@ -13817,8 +13812,9 @@ argument_list|,
 name|td
 argument_list|)
 condition|)
-name|error
-operator|=
+operator|(
+name|void
+operator|)
 name|nfs_doio
 argument_list|(
 name|ap
@@ -13834,7 +13830,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
