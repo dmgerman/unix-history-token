@@ -581,6 +581,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPU_ID_ARM920T_ALT
+value|0x41009200
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPU_ID_ARM922T
 value|0x41029220
 end_define

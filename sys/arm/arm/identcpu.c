@@ -771,6 +771,16 @@ name|generic_steppings
 block|}
 block|,
 block|{
+name|CPU_ID_ARM920T_ALT
+block|,
+name|CPU_CLASS_ARM9TDMI
+block|,
+literal|"ARM920T"
+block|,
+name|generic_steppings
+block|}
+block|,
+block|{
 name|CPU_ID_ARM922T
 block|,
 name|CPU_CLASS_ARM9TDMI
