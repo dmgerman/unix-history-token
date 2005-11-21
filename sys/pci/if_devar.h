@@ -2785,9 +2785,9 @@ define|#
 directive|define
 name|TULIP_SP_MAC
 parameter_list|(
-name|x
+name|ptr
 parameter_list|)
-value|((x)<< 16)
+value|(be16dec(ptr)<< 16)
 end_define
 
 begin_else
@@ -2800,9 +2800,9 @@ define|#
 directive|define
 name|TULIP_SP_MAC
 parameter_list|(
-name|x
+name|ptr
 parameter_list|)
-value|(x)
+value|(le16dec(ptr))
 end_define
 
 begin_endif
