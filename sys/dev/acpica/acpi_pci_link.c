@@ -2590,6 +2590,40 @@ decl_stmt|;
 name|uint8_t
 name|bios_irq
 decl_stmt|;
+name|uintptr_t
+name|bus
+decl_stmt|;
+comment|/* 	 * Look up the PCI bus for the specified PCI bridge device.  Note 	 * that the PCI bridge device might not have any children yet. 	 * However, looking up its bus number doesn't require a valid child 	 * device, so we just pass NULL. 	 */
+if|if
+condition|(
+name|BUS_READ_IVAR
+argument_list|(
+name|pcib
+argument_list|,
+name|NULL
+argument_list|,
+name|PCIB_IVAR_BUS
+argument_list|,
+operator|&
+name|bus
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|pcib
+argument_list|,
+literal|"Unable to read PCI bus number"
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"this is bad"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Bump the reference count. */
 name|ACPI_SERIAL_BEGIN
 argument_list|(
@@ -2644,10 +2678,7 @@ name|bios_irq
 operator|=
 name|acpi_pci_link_search_irq
 argument_list|(
-name|pcib_get_bus
-argument_list|(
-name|pcib
-argument_list|)
+name|bus
 argument_list|,
 name|slot
 argument_list|,
@@ -2690,10 +2721,10 @@ literal|"BIOS IRQ %u for %d.%d.INT%c is invalid\n"
 argument_list|,
 name|bios_irq
 argument_list|,
-name|pcib_get_bus
-argument_list|(
-name|pcib
-argument_list|)
+operator|(
+name|int
+operator|)
+name|bus
 argument_list|,
 name|slot
 argument_list|,
@@ -2781,10 +2812,10 @@ literal|"BIOS IRQ %u for %d.%d.INT%c does not match previous BIOS IRQ %u\n"
 argument_list|,
 name|bios_irq
 argument_list|,
-name|pcib_get_bus
-argument_list|(
-name|pcib
-argument_list|)
+operator|(
+name|int
+operator|)
+name|bus
 argument_list|,
 name|slot
 argument_list|,
