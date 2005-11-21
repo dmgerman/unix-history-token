@@ -414,11 +414,8 @@ name|device_t
 name|dev
 decl_stmt|;
 name|struct
-name|callout_handle
-name|stat_ch
-decl_stmt|;
-name|u_int32_t
-name|unit
+name|callout
+name|stat_callout
 decl_stmt|;
 name|void
 modifier|*
@@ -479,12 +476,6 @@ decl_stmt|;
 name|u_int32_t
 name|pending_txs
 decl_stmt|;
-name|u_int32_t
-name|flags
-decl_stmt|;
-name|u_int32_t
-name|miicfg
-decl_stmt|;
 name|struct
 name|mtx
 name|mtx
@@ -495,7 +486,7 @@ name|osmtx
 decl_stmt|;
 comment|/* Stuff for dealing with the NVIDIA OS API */
 name|struct
-name|callout_handle
+name|callout
 name|ostimer
 decl_stmt|;
 name|PTIMER_FUNC
@@ -573,6 +564,16 @@ parameter_list|(
 name|_sc
 parameter_list|)
 value|mtx_unlock(&(_sc)->mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVE_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->mtx, MA_OWNED)
 end_define
 
 begin_define
