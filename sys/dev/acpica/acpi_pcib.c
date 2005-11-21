@@ -328,6 +328,16 @@ operator|==
 literal|'\0'
 condition|)
 return|return;
+comment|/*      * In practice, we only see SourceIndex's of 0 out in the wild.      * When indices != 0 have been found, they've been bugs in the ASL.      */
+if|if
+condition|(
+name|entry
+operator|->
+name|SourceIndex
+operator|!=
+literal|0
+condition|)
+return|return;
 comment|/* Lookup the associated handle and device. */
 name|pcib
 operator|=
@@ -862,7 +872,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * If source is empty/NULL, the source index is a global IRQ number      * and it's hard-wired so we're done.      */
+comment|/*      * If source is empty/NULL, the source index is a global IRQ number      * and it's hard-wired so we're done.      *      * XXX: If the source index is non-zero, ignore the source device and      * assume that this is a hard-wired entry.      */
 if|if
 condition|(
 name|prt
@@ -879,6 +889,12 @@ literal|0
 index|]
 operator|==
 literal|'\0'
+operator|||
+name|prt
+operator|->
+name|SourceIndex
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
