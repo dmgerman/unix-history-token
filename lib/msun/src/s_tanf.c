@@ -34,10 +34,22 @@ directive|include
 file|"math.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|INLINE_KERNEL_TANF
+end_define
+
 begin_include
 include|#
 directive|include
 file|"math_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"k_tanf.c"
 end_include
 
 begin_comment

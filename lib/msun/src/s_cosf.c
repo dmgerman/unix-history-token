@@ -34,10 +34,34 @@ directive|include
 file|"math.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|INLINE_KERNEL_COSF
+end_define
+
+begin_define
+define|#
+directive|define
+name|INLINE_KERNEL_SINF
+end_define
+
 begin_include
 include|#
 directive|include
 file|"math_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"k_cosf.c"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"k_sinf.c"
 end_include
 
 begin_comment

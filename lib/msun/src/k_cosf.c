@@ -10,6 +10,12 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|INLINE_KERNEL_COSF
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|lint
 end_ifndef
 
@@ -22,6 +28,11 @@ init|=
 literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -82,7 +93,17 @@ begin_comment
 comment|/*  0.000024432542887 */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INLINE_KERNEL_COSF
+end_ifdef
+
 begin_function
+specifier|extern
+specifier|inline
+endif|#
+directive|endif
 name|float
 name|__kernel_cosf
 parameter_list|(
