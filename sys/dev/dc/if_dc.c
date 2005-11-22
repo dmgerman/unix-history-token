@@ -5112,7 +5112,6 @@ operator|=
 name|DC_SP_MAC
 argument_list|(
 operator|(
-operator|(
 name|u_int16_t
 operator|*
 operator|)
@@ -5122,10 +5121,8 @@ name|sc
 operator|->
 name|dc_ifp
 argument_list|)
-operator|)
-index|[
+operator|+
 literal|0
-index|]
 argument_list|)
 expr_stmt|;
 name|sp
@@ -5136,7 +5133,6 @@ operator|=
 name|DC_SP_MAC
 argument_list|(
 operator|(
-operator|(
 name|u_int16_t
 operator|*
 operator|)
@@ -5146,10 +5142,8 @@ name|sc
 operator|->
 name|dc_ifp
 argument_list|)
-operator|)
-index|[
+operator|+
 literal|1
-index|]
 argument_list|)
 expr_stmt|;
 name|sp
@@ -5160,7 +5154,6 @@ operator|=
 name|DC_SP_MAC
 argument_list|(
 operator|(
-operator|(
 name|u_int16_t
 operator|*
 operator|)
@@ -5170,10 +5163,8 @@ name|sc
 operator|->
 name|dc_ifp
 argument_list|)
-operator|)
-index|[
+operator|+
 literal|2
-index|]
 argument_list|)
 expr_stmt|;
 name|sframe
@@ -6228,7 +6219,6 @@ operator|=
 name|DC_SP_MAC
 argument_list|(
 operator|(
-operator|(
 name|u_int16_t
 operator|*
 operator|)
@@ -6238,10 +6228,8 @@ name|sc
 operator|->
 name|dc_ifp
 argument_list|)
-operator|)
-index|[
+operator|+
 literal|0
-index|]
 argument_list|)
 expr_stmt|;
 name|sp
@@ -6252,7 +6240,6 @@ operator|=
 name|DC_SP_MAC
 argument_list|(
 operator|(
-operator|(
 name|u_int16_t
 operator|*
 operator|)
@@ -6262,10 +6249,8 @@ name|sc
 operator|->
 name|dc_ifp
 argument_list|)
-operator|)
-index|[
+operator|+
 literal|1
-index|]
 argument_list|)
 expr_stmt|;
 name|sp
@@ -6276,7 +6261,6 @@ operator|=
 name|DC_SP_MAC
 argument_list|(
 operator|(
-operator|(
 name|u_int16_t
 operator|*
 operator|)
@@ -6286,10 +6270,8 @@ name|sc
 operator|->
 name|dc_ifp
 argument_list|)
-operator|)
-index|[
+operator|+
 literal|2
-index|]
 argument_list|)
 expr_stmt|;
 name|DC_SETBIT
