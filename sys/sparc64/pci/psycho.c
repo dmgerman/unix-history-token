@@ -1,10 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999, 2000 Matthew R. Green  * Copyright (c) 2001 - 2003 by Thomas Moestl<tmm@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: NetBSD: psycho.c,v 1.39 2001/10/07 20:30:41 eeh Exp  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1999, 2000 Matthew R. Green  * Copyright (c) 2001 - 2003 by Thomas Moestl<tmm@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: NetBSD: psycho.c,v 1.39 2001/10/07 20:30:41 eeh Exp  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
-comment|/*  * Support for `psycho' and `psycho+' UPA to PCI bridge and  * UltraSPARC IIi and IIe `sabre' PCI controllers.  */
+comment|/*  * Support for `Psycho' and `Psycho+' UPA to PCI bridge and  * UltraSPARC IIi and IIe `Sabre' PCI controllers  */
 end_comment
 
 begin_include
@@ -112,18 +126,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/frame.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/intr_machdep.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/nexusvar.h>
 end_include
 
@@ -166,12 +168,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/pci/pcireg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sparc64/pci/ofw_pci.h>
 end_include
 
@@ -192,6 +188,43 @@ include|#
 directive|include
 file|"pcib_if.h"
 end_include
+
+begin_function_decl
+specifier|static
+specifier|const
+name|struct
+name|psycho_desc
+modifier|*
+name|psycho_find_desc
+parameter_list|(
+specifier|const
+name|struct
+name|psycho_desc
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+specifier|const
+name|struct
+name|psycho_desc
+modifier|*
+name|psycho_get_desc
+parameter_list|(
+name|phandle_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -363,7 +396,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Methods.  */
+comment|/*  * Methods  */
 end_comment
 
 begin_decl_stmt
@@ -721,24 +754,7 @@ name|void
 modifier|*
 name|pci_cookie
 decl_stmt|;
-comment|/* interrupt cookie of parent bus */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|psycho_strayclr
-block|{
-name|struct
-name|psycho_softc
-modifier|*
-name|psc_sc
-decl_stmt|;
-name|bus_addr_t
-name|psc_clr
-decl_stmt|;
-comment|/* clear register */
+comment|/* parent bus int. cookie */
 block|}
 struct|;
 end_struct
@@ -800,7 +816,7 @@ value|PSYCHO_WRITE8((sc), (sc)->sc_pcictl + (off), (v))
 end_define
 
 begin_comment
-comment|/*  * "sabre" is the UltraSPARC IIi onboard UPA to PCI bridge.  It manages a  * single PCI bus and does not have a streaming buffer.  It often has an APB  * (advanced PCI bridge) connected to it, which was designed specifically for  * the IIi.  The APB let's the IIi handle two independednt PCI buses, and  * appears as two "simba"'s underneath the sabre.  *  * "psycho" and "psycho+" are dual UPA to PCI bridges.  They sit on the UPA bus  * and manage two PCI buses.  "psycho" has two 64-bit 33MHz buses, while  * "psycho+" controls both a 64-bit 33Mhz and a 64-bit 66Mhz PCI bus.  You  * will usually find a "psycho+" since I don't think the original "psycho"  * ever shipped, and if it did it would be in the U30.  *  * Each "psycho" PCI bus appears as a separate OFW node, but since they are  * both part of the same IC, they only have a single register space.  As such,  * they need to be configured together, even though the autoconfiguration will  * attach them separately.  *  * On UltraIIi machines, "sabre" itself usually takes pci0, with "simba" often  * as pci1 and pci2, although they have been implemented with other PCI bus  * numbers on some machines.  *  * On UltraII machines, there can be any number of "psycho+" ICs, each  * providing two PCI buses.  */
+comment|/*  * "Sabre" is the UltraSPARC IIi onboard UPA to PCI bridge.  It manages a  * single PCI bus and does not have a streaming buffer.  It often has an APB  * (advanced PCI bridge) connected to it, which was designed specifically for  * the IIi.  The APB let's the IIi handle two independednt PCI buses, and  * appears as two "Simba"'s underneath the Sabre.  *  * "Psycho" and "Psycho+" are dual UPA to PCI bridges.  They sit on the UPA bus  * and manage two PCI buses.  "Psycho" has two 64-bit 33MHz buses, while  * "Psycho+" controls both a 64-bit 33Mhz and a 64-bit 66Mhz PCI bus.  You  * will usually find a "Psycho+" since I don't think the original "Psycho"  * ever shipped, and if it did it would be in the U30.  *  * Each "Psycho" PCI bus appears as a separate OFW node, but since they are  * both part of the same IC, they only have a single register space.  As such,  * they need to be configured together, even though the autoconfiguration will  * attach them separately.  *  * On UltraIIi machines, "Sabre" itself usually takes pci0, with "Simba" often  * as pci1 and pci2, although they have been implemented with other PCI bus  * numbers on some machines.  *  * On UltraII machines, there can be any number of "Psycho+" ICs, each  * providing two PCI buses.  */
 end_comment
 
 begin_ifdef
@@ -844,6 +860,7 @@ begin_struct
 struct|struct
 name|psycho_desc
 block|{
+specifier|const
 name|char
 modifier|*
 name|pd_string
@@ -851,6 +868,7 @@ decl_stmt|;
 name|int
 name|pd_mode
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|pd_name
@@ -861,6 +879,7 @@ end_struct
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|psycho_desc
 name|psycho_compats
@@ -904,6 +923,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|psycho_desc
 name|psycho_models
@@ -939,21 +959,25 @@ end_decl_stmt
 
 begin_function
 specifier|static
+specifier|const
 name|struct
 name|psycho_desc
 modifier|*
 name|psycho_find_desc
 parameter_list|(
+specifier|const
 name|struct
 name|psycho_desc
 modifier|*
 name|table
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|string
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|psycho_desc
 modifier|*
@@ -1004,6 +1028,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|struct
 name|psycho_desc
 modifier|*
@@ -1012,11 +1037,13 @@ parameter_list|(
 name|phandle_t
 name|node
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|model
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|psycho_desc
 modifier|*
@@ -1096,20 +1123,11 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|phandle_t
-name|node
-decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|dtype
 decl_stmt|;
-name|node
-operator|=
-name|nexus_get_node
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|dtype
 operator|=
 name|nexus_get_device_type
@@ -1141,7 +1159,10 @@ literal|0
 operator|&&
 name|psycho_get_desc
 argument_list|(
-name|node
+name|nexus_get_node
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 name|nexus_get_model
 argument_list|(
@@ -1204,6 +1225,7 @@ name|upa_regs
 modifier|*
 name|reg
 decl_stmt|;
+specifier|const
 name|struct
 name|psycho_desc
 modifier|*
@@ -1212,7 +1234,7 @@ decl_stmt|;
 name|phandle_t
 name|node
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|csr
 decl_stmt|;
 name|u_long
@@ -1241,7 +1263,7 @@ name|map
 decl_stmt|,
 name|clr
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|mr
 decl_stmt|;
 endif|#
@@ -1301,7 +1323,7 @@ name|desc
 operator|->
 name|pd_mode
 expr_stmt|;
-comment|/* 	 * The psycho gets three register banks: 	 * (0) per-PBM configuration and status registers 	 * (1) per-PBM PCI configuration space, containing only the 	 *     PBM 256-byte PCI header 	 * (2) the shared psycho configuration registers 	 */
+comment|/* 	 * The Psycho gets three register banks: 	 * (0) per-PBM configuration and status registers 	 * (1) per-PBM PCI configuration space, containing only the 	 *     PBM 256-byte PCI header 	 * (2) the shared Psycho configuration registers 	 */
 name|reg
 operator|=
 name|nexus_get_reg
@@ -1333,7 +1355,9 @@ literal|2
 condition|)
 name|panic
 argument_list|(
-literal|"psycho_attach: %d not enough registers"
+literal|"%s: %d not enough registers"
+argument_list|,
+name|__func__
 argument_list|,
 name|nreg
 argument_list|)
@@ -1412,8 +1436,9 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"psycho_attach: bogus pci control register "
-literal|"location"
+literal|"%s: bogus PCI control register location"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -1428,7 +1453,9 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"psycho_attach: %d not enough registers"
+literal|"%s: %d not enough registers"
+argument_list|,
+name|__func__
 argument_list|,
 name|nreg
 argument_list|)
@@ -1469,7 +1496,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	 * Match other psycho's that are already configured against 	 * the base physical address. This will be the same for a 	 * pair of devices that share register space. 	 */
+comment|/* 	 * Match other Psycho's that are already configured against 	 * the base physical address. This will be the same for a 	 * pair of devices that share register space. 	 */
 name|SLIST_FOREACH
 argument_list|(
 argument|asc
@@ -1490,7 +1517,7 @@ operator|->
 name|sc_basepaddr
 condition|)
 block|{
-comment|/* Found partner */
+comment|/* Found partner. */
 name|osc
 operator|=
 name|asc
@@ -1560,7 +1587,9 @@ name|sc_basepaddr
 condition|)
 name|panic
 argument_list|(
-literal|"psycho_attach: can't allocate device memory"
+literal|"%s: could not allocate device memory"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1588,7 +1617,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * There's another psycho using the same register space. Copy the 		 * relevant stuff. 		 */
+comment|/* 		 * There's another Psycho using the same register space. 		 * Copy the relevant stuff. 		 */
 name|sc
 operator|->
 name|sc_mem_res
@@ -1645,7 +1674,7 @@ argument_list|(
 name|csr
 argument_list|)
 operator|<<
-literal|6
+name|INTMAP_IGN_SHIFT
 expr_stmt|;
 name|device_printf
 argument_list|(
@@ -1753,7 +1782,9 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"psycho_attach: sabre TAS not initialized."
+literal|"%s: Sabre TAS not initialized."
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1780,10 +1811,10 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/* Initialize memory and i/o rmans */
+comment|/* Initialize memory and I/O rmans. */
 name|sc
 operator|->
-name|sc_io_rman
+name|sc_pci_io_rman
 operator|.
 name|rm_type
 operator|=
@@ -1791,7 +1822,7 @@ name|RMAN_ARRAY
 expr_stmt|;
 name|sc
 operator|->
-name|sc_io_rman
+name|sc_pci_io_rman
 operator|.
 name|rm_descr
 operator|=
@@ -1804,7 +1835,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|sc_io_rman
+name|sc_pci_io_rman
 argument_list|)
 operator|!=
 literal|0
@@ -1814,7 +1845,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|sc_io_rman
+name|sc_pci_io_rman
 argument_list|,
 literal|0
 argument_list|,
@@ -1825,12 +1856,14 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"psycho_probe: failed to set up i/o rman"
+literal|"%s: failed to set up I/O rman"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|sc_mem_rman
+name|sc_pci_mem_rman
 operator|.
 name|rm_type
 operator|=
@@ -1838,7 +1871,7 @@ name|RMAN_ARRAY
 expr_stmt|;
 name|sc
 operator|->
-name|sc_mem_rman
+name|sc_pci_mem_rman
 operator|.
 name|rm_descr
 operator|=
@@ -1851,7 +1884,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|sc_mem_rman
+name|sc_pci_mem_rman
 argument_list|)
 operator|!=
 literal|0
@@ -1861,7 +1894,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|sc_mem_rman
+name|sc_pci_mem_rman
 argument_list|,
 literal|0
 argument_list|,
@@ -1872,7 +1905,9 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"psycho_probe: failed to set up memory rman"
+literal|"%s: failed to set up memory rman"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1881,9 +1916,7 @@ name|sc_nrange
 operator|=
 name|OF_getprop_alloc
 argument_list|(
-name|sc
-operator|->
-name|sc_node
+name|node
 argument_list|,
 literal|"ranges"
 argument_list|,
@@ -1917,10 +1950,12 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"could not get psycho ranges"
+literal|"%s: could not get Psycho ranges"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Find the addresses of the various bus spaces. 	 * There should not be multiple ones of one kind. 	 * The physical start addresses of the ranges are the configuration, 	 * memory and IO handles. 	 */
+comment|/* 	 * Find the addresses of the various bus spaces. 	 * There should not be multiple ones of one kind. 	 * The physical start addresses of the ranges are the configuration, 	 * memory and I/O handles. 	 */
 for|for
 control|(
 name|n
@@ -1954,7 +1989,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_bh
+name|sc_pci_bh
 index|[
 name|i
 index|]
@@ -1963,14 +1998,16 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"psycho_attach: duplicate range for space %d"
+literal|"%s: duplicate range for space %d"
+argument_list|,
+name|__func__
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|sc_bh
+name|sc_pci_bh
 index|[
 name|i
 index|]
@@ -2006,7 +2043,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_bh
+name|sc_pci_bh
 index|[
 name|n
 index|]
@@ -2015,13 +2052,15 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"psycho_attach: range %d missing"
+literal|"%s: range %d missing"
+argument_list|,
+name|__func__
 argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Register the softc, this is needed for paired psychos. */
+comment|/* Register the softc, this is needed for paired Psychos. */
 name|SLIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -2032,7 +2071,7 @@ argument_list|,
 name|sc_link
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we're a sabre or the first of a pair of psycho's to arrive here, 	 * start up the IOMMU. 	 */
+comment|/* 	 * If we're a Sabre or the first of a pair of Psycho's to arrive here, 	 * start up the IOMMU. 	 */
 if|if
 condition|(
 name|osc
@@ -2040,7 +2079,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Establish handlers for interesting interrupts.... 		 * 		 * XXX We need to remember these and remove this to support 		 * hotplug on the UPA/FHC bus. 		 * 		 * XXX Not all controllers have these, but installing them 		 * is better than trying to sort through this mess. 		 */
+comment|/* 		 * Establish handlers for interesting interrupts... 		 * 		 * XXX We need to remember these and remove this to support 		 * hotplug on the UPA/FHC bus. 		 * 		 * XXX Not all controllers have these, but installing them 		 * is better than trying to sort through this mess. 		 */
 name|psycho_set_intr
 argument_list|(
 name|sc
@@ -2101,7 +2140,7 @@ argument_list|,
 name|psycho_powerfail
 argument_list|)
 expr_stmt|;
-comment|/* Psycho-specific initialization. */
+comment|/* Psycho-specific initialization */
 if|if
 condition|(
 name|sc
@@ -2164,7 +2203,7 @@ name|PSR_TC0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Setup IOMMU and PCI configuration if we're the first 		 * of a pair of psycho's to arrive here. 		 * 		 * We should calculate a TSB size based on amount of RAM 		 * and number of bus controllers and number and type of 		 * child devices. 		 * 		 * For the moment, 32KB should be more than enough. 		 */
+comment|/* 		 * Setup IOMMU and PCI configuration if we're the first 		 * of a pair of Psycho's to arrive here. 		 * 		 * We should calculate a TSB size based on amount of RAM 		 * and number of bus controllers and number and type of 		 * child devices. 		 * 		 * For the moment, 32KB should be more than enough. 		 */
 name|sc
 operator|->
 name|sc_is
@@ -2192,7 +2231,9 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"psycho_attach: malloc iommu_state failed"
+literal|"%s: malloc iommu_state failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|sc
@@ -2221,9 +2262,7 @@ if|if
 condition|(
 name|OF_getproplen
 argument_list|(
-name|sc
-operator|->
-name|sc_node
+name|node
 argument_list|,
 literal|"no-streaming-cache"
 argument_list|)
@@ -2268,9 +2307,7 @@ if|if
 condition|(
 name|OF_getproplen
 argument_list|(
-name|sc
-operator|->
-name|sc_node
+name|node
 argument_list|,
 literal|"no-streaming-cache"
 argument_list|)
@@ -2303,7 +2340,7 @@ block|}
 comment|/* Allocate our tags. */
 name|sc
 operator|->
-name|sc_memt
+name|sc_pci_memt
 operator|=
 name|psycho_alloc_bus_tag
 argument_list|(
@@ -2314,7 +2351,7 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|sc_iot
+name|sc_pci_iot
 operator|=
 name|psycho_alloc_bus_tag
 argument_list|(
@@ -2325,7 +2362,7 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|sc_cfgt
+name|sc_pci_cfgt
 operator|=
 name|psycho_alloc_bus_tag
 argument_list|(
@@ -2369,20 +2406,22 @@ argument_list|,
 operator|&
 name|sc
 operator|->
-name|sc_dmat
+name|sc_pci_dmat
 argument_list|)
 operator|!=
 literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"psycho_attach: bus_dma_tag_create failed"
+literal|"%s: bus_dma_tag_create failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* Customize the tag. */
 name|sc
 operator|->
-name|sc_dmat
+name|sc_pci_dmat
 operator|->
 name|dt_cookie
 operator|=
@@ -2392,19 +2431,19 @@ name|sc_is
 expr_stmt|;
 name|sc
 operator|->
-name|sc_dmat
+name|sc_pci_dmat
 operator|->
 name|dt_mt
 operator|=
 operator|&
 name|iommu_dma_methods
 expr_stmt|;
-comment|/* XXX: register as root dma tag (kludge). */
+comment|/* XXX: register as root DMA tag (kludge). */
 name|sparc64_root_dma_tag
 operator|=
 name|sc
 operator|->
-name|sc_dmat
+name|sc_pci_dmat
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2649,7 +2688,9 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"could not get psycho bus-range"
+literal|"%s: could not get Psycho bus-range"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -2663,27 +2704,27 @@ argument_list|)
 condition|)
 name|panic
 argument_list|(
-literal|"broken psycho bus-range (%d)"
+literal|"%s: broken Psycho bus-range (%d)"
+argument_list|,
+name|__func__
 argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|sc_secbus
+name|sc_pci_secbus
 operator|=
 name|sc
 operator|->
-name|sc_subbus
+name|sc_pci_subbus
 operator|=
 name|ofw_pci_alloc_busno
 argument_list|(
-name|sc
-operator|->
-name|sc_node
+name|node
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Program the bus range registers. 	 * NOTE: for the psycho, the second write changes the bus number the 	 * psycho itself uses for it's configuration space, so these 	 * writes must be kept in this order! 	 * The sabre always uses bus 0, but there only can be one sabre per 	 * machine. 	 */
+comment|/* 	 * Program the bus range registers. 	 * NOTE: for the Psycho, the second write changes the bus number the 	 * Psycho itself uses for it's configuration space, so these 	 * writes must be kept in this order! 	 * The Sabre always uses bus 0, but there only can be one Sabre per 	 * machine. 	 */
 name|PCIB_WRITE_CONFIG
 argument_list|(
 name|dev
@@ -2701,7 +2742,7 @@ name|PCSR_SUBBUS
 argument_list|,
 name|sc
 operator|->
-name|sc_subbus
+name|sc_pci_subbus
 argument_list|,
 literal|1
 argument_list|)
@@ -2723,7 +2764,7 @@ name|PCSR_SECBUS
 argument_list|,
 name|sc
 operator|->
-name|sc_secbus
+name|sc_pci_secbus
 argument_list|,
 literal|1
 argument_list|)
@@ -2735,7 +2776,7 @@ argument_list|,
 operator|&
 name|sc
 operator|->
-name|sc_iinfo
+name|sc_pci_iinfo
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2751,7 +2792,7 @@ literal|"pci"
 argument_list|,
 name|sc
 operator|->
-name|sc_secbus
+name|sc_pci_secbus
 argument_list|)
 expr_stmt|;
 return|return
@@ -2796,7 +2837,7 @@ name|rid
 decl_stmt|,
 name|vec
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|mr
 decl_stmt|;
 name|mr
@@ -2853,7 +2894,9 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"psycho_set_intr: failed to get interrupt"
+literal|"%s: failed to get interrupt"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|bus_setup_intr
@@ -2935,7 +2978,7 @@ name|intrmap
 decl_stmt|,
 name|intrclr
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|im
 decl_stmt|;
 name|u_long
@@ -3179,7 +3222,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Interrupt handlers.  */
+comment|/*  * Interrupt handlers  */
 end_comment
 
 begin_function
@@ -3197,14 +3240,9 @@ name|psycho_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|psycho_softc
-operator|*
-operator|)
 name|arg
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|afar
 decl_stmt|,
 name|afsr
@@ -3287,14 +3325,9 @@ name|psycho_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|psycho_softc
-operator|*
-operator|)
 name|arg
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|afar
 decl_stmt|,
 name|afsr
@@ -3376,14 +3409,9 @@ name|psycho_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|psycho_softc
-operator|*
-operator|)
 name|arg
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|afar
 decl_stmt|,
 name|afsr
@@ -3450,14 +3478,9 @@ name|psycho_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|psycho_softc
-operator|*
-operator|)
 name|arg
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|afar
 decl_stmt|,
 name|afsr
@@ -3527,11 +3550,6 @@ name|psycho_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|psycho_softc
-operator|*
-operator|)
 name|arg
 decl_stmt|;
 name|kdb_enter
@@ -3586,11 +3604,6 @@ name|psycho_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|psycho_softc
-operator|*
-operator|)
 name|arg
 decl_stmt|;
 name|PSYCHO_WRITE8
@@ -3625,6 +3638,7 @@ comment|/* PSYCHO_MAP_WAKEUP */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|psycho_iommu_init
 parameter_list|(
@@ -3650,7 +3664,7 @@ name|sc
 operator|->
 name|sc_is
 decl_stmt|;
-comment|/* punch in our copies */
+comment|/* Punch in our copies. */
 name|is
 operator|->
 name|is_bustag
@@ -3703,7 +3717,7 @@ name|is_dtcmp
 operator|=
 name|PSR_IOMMU_TLB_CMP_DIAG
 expr_stmt|;
-comment|/* give us a nice name.. */
+comment|/* Give us a nice name... */
 name|name
 operator|=
 operator|(
@@ -3727,7 +3741,9 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"couldn't malloc iommu name"
+literal|"%s: could not malloc iommu name"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|snprintf
@@ -3784,7 +3800,7 @@ end_function
 
 begin_function
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|psycho_read_config
 parameter_list|(
 name|device_t
@@ -3819,16 +3835,16 @@ name|offset
 init|=
 literal|0
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|byte
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|shrt
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|wrd
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|r
 decl_stmt|;
 name|int
@@ -3836,11 +3852,6 @@ name|i
 decl_stmt|;
 name|sc
 operator|=
-operator|(
-expr|struct
-name|psycho_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|dev
@@ -3863,7 +3874,7 @@ name|bh
 operator|=
 name|sc
 operator|->
-name|sc_bh
+name|sc_pci_bh
 index|[
 name|PCI_CS_CONFIG
 index|]
@@ -3882,7 +3893,7 @@ name|bus_space_peek_1
 argument_list|(
 name|sc
 operator|->
-name|sc_cfgt
+name|sc_pci_cfgt
 argument_list|,
 name|bh
 argument_list|,
@@ -3906,7 +3917,7 @@ name|bus_space_peek_2
 argument_list|(
 name|sc
 operator|->
-name|sc_cfgt
+name|sc_pci_cfgt
 argument_list|,
 name|bh
 argument_list|,
@@ -3930,7 +3941,7 @@ name|bus_space_peek_4
 argument_list|(
 name|sc
 operator|->
-name|sc_cfgt
+name|sc_pci_cfgt
 argument_list|,
 name|bh
 argument_list|,
@@ -3948,7 +3959,9 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"psycho_read_config: bad width"
+literal|"%s: bad width"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -3962,7 +3975,7 @@ directive|ifdef
 name|PSYCHO_DEBUG
 name|printf
 argument_list|(
-literal|"psycho read data error reading: %d.%d.%d: 0x%x\n"
+literal|"Psycho read data error reading: %d.%d.%d: 0x%x\n"
 argument_list|,
 name|bus
 argument_list|,
@@ -4009,7 +4022,7 @@ parameter_list|,
 name|u_int
 name|reg
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|val
 parameter_list|,
 name|int
@@ -4031,11 +4044,6 @@ literal|0
 decl_stmt|;
 name|sc
 operator|=
-operator|(
-expr|struct
-name|psycho_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|dev
@@ -4058,7 +4066,7 @@ name|bh
 operator|=
 name|sc
 operator|->
-name|sc_bh
+name|sc_pci_bh
 index|[
 name|PCI_CS_CONFIG
 index|]
@@ -4075,7 +4083,7 @@ name|bus_space_write_1
 argument_list|(
 name|sc
 operator|->
-name|sc_cfgt
+name|sc_pci_cfgt
 argument_list|,
 name|bh
 argument_list|,
@@ -4092,7 +4100,7 @@ name|bus_space_write_2
 argument_list|(
 name|sc
 operator|->
-name|sc_cfgt
+name|sc_pci_cfgt
 argument_list|,
 name|bh
 argument_list|,
@@ -4109,7 +4117,7 @@ name|bus_space_write_4
 argument_list|(
 name|sc
 operator|->
-name|sc_cfgt
+name|sc_pci_cfgt
 argument_list|,
 name|bh
 argument_list|,
@@ -4122,7 +4130,9 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"psycho_write_config: bad width"
+literal|"%s: bad width"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -4148,11 +4158,6 @@ name|struct
 name|psycho_softc
 modifier|*
 name|sc
-init|=
-name|device_get_softc
-argument_list|(
-name|bridge
-argument_list|)
 decl_stmt|;
 name|struct
 name|ofw_pci_register
@@ -4174,7 +4179,7 @@ name|pintr
 decl_stmt|,
 name|mintr
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|maskbuf
 index|[
 sizeof|sizeof
@@ -4188,6 +4193,13 @@ name|pintr
 argument_list|)
 index|]
 decl_stmt|;
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|bridge
+argument_list|)
+expr_stmt|;
 name|pintr
 operator|=
 name|pin
@@ -4201,7 +4213,7 @@ argument_list|,
 operator|&
 name|sc
 operator|->
-name|sc_iinfo
+name|sc_pci_iinfo
 argument_list|,
 operator|&
 name|reg
@@ -4235,7 +4247,7 @@ operator|(
 name|mintr
 operator|)
 return|;
-comment|/* 	 * If this is outside of the range for an intpin, it's likely a full 	 * INO, and no mapping is required at all; this happens on the u30,  	 * where there's no interrupt map at the psycho node. Fortunately, 	 * there seem to be no INOs in the intpin range on this boxen, so 	 * this easy heuristics will do. 	 */
+comment|/* 	 * If this is outside of the range for an intpin, it's likely a full 	 * INO, and no mapping is required at all; this happens on the U30,  	 * where there's no interrupt map at the Psycho node. Fortunately, 	 * there seem to be no INOs in the intpin range on this boxen, so 	 * this easy heuristics will do. 	 */
 if|if
 condition|(
 name|pin
@@ -4247,7 +4259,7 @@ operator|(
 name|pin
 operator|)
 return|;
-comment|/* 	 * Guess the INO; we always assume that this is a non-OBIO 	 * device, and that pin is a "real" intpin number. Determine 	 * the mapping register to be used by the slot number. 	 * We only need to do this on e450s, it seems; here, the slot numbers 	 * for bus A are one-based, while those for bus B seemingly have an 	 * offset of 2 (hence the factor of 3 below). 	 */
+comment|/* 	 * Guess the INO; we always assume that this is a non-OBIO 	 * device, and that pin is a "real" intpin number. Determine 	 * the mapping register to be used by the slot number. 	 * We only need to do this on E450s, it seems; here, the slot numbers 	 * for bus A are one-based, while those for bus B seemingly have an 	 * offset of 2 (hence the factor of 3 below). 	 */
 name|intrmap
 operator|=
 name|PSR_PCIA0_INT_MAP
@@ -4343,11 +4355,6 @@ name|sc
 decl_stmt|;
 name|sc
 operator|=
-operator|(
-expr|struct
-name|psycho_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|dev
@@ -4366,7 +4373,7 @@ name|result
 operator|=
 name|sc
 operator|->
-name|sc_secbus
+name|sc_pci_secbus
 expr_stmt|;
 return|return
 operator|(
@@ -4400,16 +4407,9 @@ name|struct
 name|psycho_clr
 modifier|*
 name|pc
-decl_stmt|;
-name|pc
-operator|=
-operator|(
-expr|struct
-name|psycho_clr
-operator|*
-operator|)
+init|=
 name|arg
-expr_stmt|;
+decl_stmt|;
 name|pc
 operator|->
 name|pci_handler
@@ -4491,7 +4491,7 @@ argument_list|(
 name|ires
 argument_list|)
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|mr
 decl_stmt|;
 name|int
@@ -4501,11 +4501,6 @@ name|error
 decl_stmt|;
 name|sc
 operator|=
-operator|(
-expr|struct
-name|psycho_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|dev
@@ -4598,7 +4593,9 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"psycho_setup_intr: INO %d, map %#lx, clr %#lx\n"
+literal|"%s: INO %d, map %#lx, clr %#lx\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|ino
 argument_list|,
@@ -4776,19 +4773,12 @@ name|struct
 name|psycho_clr
 modifier|*
 name|pc
+init|=
+name|cookie
 decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|pc
-operator|=
-operator|(
-expr|struct
-name|psycho_clr
-operator|*
-operator|)
-name|cookie
-expr_stmt|;
 name|error
 operator|=
 name|BUS_TEARDOWN_INTR
@@ -4897,11 +4887,6 @@ name|RF_ACTIVE
 expr_stmt|;
 name|sc
 operator|=
-operator|(
-expr|struct
-name|psycho_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|bus
@@ -4914,7 +4899,7 @@ operator|==
 name|SYS_RES_IRQ
 condition|)
 block|{
-comment|/* 		 * XXX: Don't accept blank ranges for now, only single 		 * interrupts. The other case should not happen with the MI pci 		 * code... 		 * XXX: This may return a resource that is out of the range 		 * that was specified. Is this correct...? 		 */
+comment|/* 		 * XXX: Don't accept blank ranges for now, only single 		 * interrupts. The other case should not happen with the 		 * MI PCI code... 		 * XXX: This may return a resource that is out of the 		 * range that was specified. Is this correct...? 		 */
 if|if
 condition|(
 name|start
@@ -4923,7 +4908,9 @@ name|end
 condition|)
 name|panic
 argument_list|(
-literal|"psycho_alloc_resource: XXX: interrupt range"
+literal|"%s: XXX: interrupt range"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|start
@@ -4973,19 +4960,19 @@ operator|=
 operator|&
 name|sc
 operator|->
-name|sc_mem_rman
+name|sc_pci_mem_rman
 expr_stmt|;
 name|bt
 operator|=
 name|sc
 operator|->
-name|sc_memt
+name|sc_pci_memt
 expr_stmt|;
 name|bh
 operator|=
 name|sc
 operator|->
-name|sc_bh
+name|sc_pci_bh
 index|[
 name|PCI_CS_MEM32
 index|]
@@ -4999,19 +4986,19 @@ operator|=
 operator|&
 name|sc
 operator|->
-name|sc_io_rman
+name|sc_pci_io_rman
 expr_stmt|;
 name|bt
 operator|=
 name|sc
 operator|->
-name|sc_iot
+name|sc_pci_iot
 expr_stmt|;
 name|bh
 operator|=
 name|sc
 operator|->
-name|sc_bh
+name|sc_pci_bh
 index|[
 name|PCI_CS_IO
 index|]
@@ -5435,11 +5422,6 @@ name|diag
 decl_stmt|;
 name|sc
 operator|=
-operator|(
-expr|struct
-name|psycho_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|dev
@@ -5467,8 +5449,9 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"psycho_intr_pending: mapping not found for"
-literal|" %d\n"
+literal|"%s: mapping not found for %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|intr
 argument_list|)
@@ -5515,11 +5498,6 @@ name|sc
 decl_stmt|;
 name|sc
 operator|=
-operator|(
-expr|struct
-name|psycho_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|dev
@@ -5538,13 +5516,13 @@ name|tag
 operator|=
 name|sc
 operator|->
-name|sc_iot
+name|sc_pci_iot
 expr_stmt|;
 return|return
 operator|(
 name|sc
 operator|->
-name|sc_bh
+name|sc_pci_bh
 index|[
 name|PCI_CS_IO
 index|]
@@ -5560,13 +5538,13 @@ name|tag
 operator|=
 name|sc
 operator|->
-name|sc_memt
+name|sc_pci_memt
 expr_stmt|;
 return|return
 operator|(
 name|sc
 operator|->
-name|sc_bh
+name|sc_pci_bh
 index|[
 name|PCI_CS_MEM32
 index|]
@@ -5577,7 +5555,11 @@ return|;
 default|default:
 name|panic
 argument_list|(
-literal|"psycho_get_bus_handle: illegal space\n"
+literal|"%s: illegal space (%d)\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|type
 argument_list|)
 expr_stmt|;
 block|}
@@ -5600,12 +5582,14 @@ name|struct
 name|psycho_softc
 modifier|*
 name|sc
-init|=
+decl_stmt|;
+name|sc
+operator|=
 name|device_get_softc
 argument_list|(
 name|bus
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/* We only have one child, the PCI bus, which needs our own node. */
 return|return
 operator|(
@@ -5633,12 +5617,14 @@ name|struct
 name|psycho_softc
 modifier|*
 name|sc
-init|=
+decl_stmt|;
+name|sc
+operator|=
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/* If necessary, adjust the subordinate bus number register. */
 if|if
 condition|(
@@ -5646,7 +5632,7 @@ name|subbus
 operator|>
 name|sc
 operator|->
-name|sc_subbus
+name|sc_pci_subbus
 condition|)
 block|{
 ifdef|#
@@ -5660,7 +5646,7 @@ literal|"adjusting secondary bus number from %d to %d\n"
 argument_list|,
 name|sc
 operator|->
-name|sc_subbus
+name|sc_pci_subbus
 argument_list|,
 name|subbus
 argument_list|)
@@ -5669,7 +5655,7 @@ endif|#
 directive|endif
 name|sc
 operator|->
-name|sc_subbus
+name|sc_pci_subbus
 operator|=
 name|subbus
 expr_stmt|;
@@ -5679,7 +5665,7 @@ name|dev
 argument_list|,
 name|sc
 operator|->
-name|sc_secbus
+name|sc_pci_secbus
 argument_list|,
 name|PCS_DEVICE
 argument_list|,
@@ -5741,16 +5727,9 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"psycho_alloc_bus_tag: out of memory"
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|bt
+literal|"%s: out of memory"
 argument_list|,
-sizeof|sizeof
-expr|*
-name|bt
+name|__func__
 argument_list|)
 expr_stmt|;
 name|bt
