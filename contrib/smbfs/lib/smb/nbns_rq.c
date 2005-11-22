@@ -370,7 +370,9 @@ name|sin_port
 operator|=
 name|htons
 argument_list|(
-literal|137
+name|ctx
+operator|->
+name|nb_nmbtcpport
 argument_list|)
 expr_stmt|;
 if|if
@@ -636,7 +638,9 @@ name|sin_port
 operator|=
 name|htons
 argument_list|(
-name|SMB_TCP_PORT
+name|ctx
+operator|->
+name|nb_smbtcpport
 argument_list|)
 expr_stmt|;
 operator|*

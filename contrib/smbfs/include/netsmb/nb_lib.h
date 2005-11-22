@@ -153,6 +153,14 @@ name|struct
 name|sockaddr_in
 name|nb_lastns
 decl_stmt|;
+name|long
+name|nb_nmbtcpport
+decl_stmt|;
+comment|/* default: NMB_TCP_PORT = 137 */
+name|long
+name|nb_smbtcpport
+decl_stmt|;
+comment|/* default: SMB_TCP_PORT = 139 */
 block|}
 struct|;
 end_struct
@@ -425,6 +433,8 @@ name|struct
 name|sockaddr
 modifier|*
 modifier|*
+parameter_list|,
+name|long
 parameter_list|)
 function_decl|;
 end_function_decl

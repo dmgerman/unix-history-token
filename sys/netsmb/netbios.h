@@ -56,6 +56,13 @@ end_endif
 begin_define
 define|#
 directive|define
+name|NMB_TCP_PORT
+value|137
+end_define
+
+begin_define
+define|#
+directive|define
 name|NBPROTO_TCPSSN
 value|1
 end_define
