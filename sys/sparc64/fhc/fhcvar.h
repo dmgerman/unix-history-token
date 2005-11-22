@@ -124,32 +124,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|ofw_bus_get_compat_t
-name|fhc_get_compat
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ofw_bus_get_model_t
-name|fhc_get_model
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ofw_bus_get_name_t
-name|fhc_get_name
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ofw_bus_get_node_t
-name|fhc_get_node
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ofw_bus_get_type_t
-name|fhc_get_type
+name|ofw_bus_get_devinfo_t
+name|fhc_get_devinfo
 decl_stmt|;
 end_decl_stmt
 
