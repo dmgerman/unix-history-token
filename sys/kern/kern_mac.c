@@ -2556,23 +2556,11 @@ condition|(
 name|mac_enforce_vm
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|mac_cred_mmapped_drop_perms
 argument_list|(
 name|td
 argument_list|,
 name|newcred
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 block|}
@@ -2661,6 +2649,8 @@ name|short
 name|label_type
 decl_stmt|;
 name|int
+name|vfslocked
+decl_stmt|,
 name|error
 decl_stmt|;
 name|error
@@ -2820,13 +2810,15 @@ operator|=
 name|mac_vnode_label_alloc
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vn_lock
 argument_list|(
 name|vp
@@ -2856,13 +2848,11 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|error
 operator|=
 name|mac_externalize_vnode_label
@@ -3103,6 +3093,8 @@ name|mac
 name|mac
 decl_stmt|;
 name|int
+name|vfslocked
+decl_stmt|,
 name|error
 decl_stmt|;
 name|error
@@ -3211,13 +3203,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* VFS */
 name|NDINIT
 argument_list|(
 operator|&
@@ -3225,6 +3210,8 @@ name|nd
 argument_list|,
 name|LOOKUP
 argument_list|,
+name|MPSAFE
+operator||
 name|LOCKLEAF
 operator||
 name|FOLLOW
@@ -3257,6 +3244,14 @@ name|intlabel
 operator|=
 name|mac_vnode_label_alloc
 argument_list|()
+expr_stmt|;
+name|vfslocked
+operator|=
+name|NDHASGIANT
+argument_list|(
+operator|&
+name|nd
+argument_list|)
 expr_stmt|;
 name|mac_copy_vnode_label
 argument_list|(
@@ -3292,6 +3287,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|VFS_UNLOCK_GIANT
+argument_list|(
+name|vfslocked
+argument_list|)
+expr_stmt|;
 name|mac_vnode_label_free
 argument_list|(
 name|intlabel
@@ -3323,13 +3323,6 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* VFS */
 name|free
 argument_list|(
 name|buffer
@@ -3392,6 +3385,8 @@ name|mac
 name|mac
 decl_stmt|;
 name|int
+name|vfslocked
+decl_stmt|,
 name|error
 decl_stmt|;
 name|error
@@ -3500,13 +3495,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* VFS */
 name|NDINIT
 argument_list|(
 operator|&
@@ -3514,6 +3502,8 @@ name|nd
 argument_list|,
 name|LOOKUP
 argument_list|,
+name|MPSAFE
+operator||
 name|LOCKLEAF
 operator||
 name|NOFOLLOW
@@ -3546,6 +3536,14 @@ name|intlabel
 operator|=
 name|mac_vnode_label_alloc
 argument_list|()
+expr_stmt|;
+name|vfslocked
+operator|=
+name|NDHASGIANT
+argument_list|(
+operator|&
+name|nd
+argument_list|)
 expr_stmt|;
 name|mac_copy_vnode_label
 argument_list|(
@@ -3581,6 +3579,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|VFS_UNLOCK_GIANT
+argument_list|(
+name|vfslocked
+argument_list|)
+expr_stmt|;
 name|mac_vnode_label_free
 argument_list|(
 name|intlabel
@@ -3612,13 +3615,6 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* VFS */
 name|free
 argument_list|(
 name|buffer
@@ -3700,6 +3696,8 @@ name|buffer
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|vfslocked
 decl_stmt|;
 name|error
 operator|=
@@ -3858,13 +3856,15 @@ name|fp
 operator|->
 name|f_vnode
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|error
 operator|=
 name|vn_start_write
@@ -3886,13 +3886,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|mac_vnode_label_free
 argument_list|(
 name|intlabel
@@ -3938,13 +3936,11 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|mac_vnode_label_free
 argument_list|(
 name|intlabel
@@ -4143,6 +4139,8 @@ modifier|*
 name|buffer
 decl_stmt|;
 name|int
+name|vfslocked
+decl_stmt|,
 name|error
 decl_stmt|;
 name|error
@@ -4264,13 +4262,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* VFS */
 name|NDINIT
 argument_list|(
 operator|&
@@ -4278,6 +4269,8 @@ name|nd
 argument_list|,
 name|LOOKUP
 argument_list|,
+name|MPSAFE
+operator||
 name|LOCKLEAF
 operator||
 name|FOLLOW
@@ -4294,6 +4287,14 @@ expr_stmt|;
 name|error
 operator|=
 name|namei
+argument_list|(
+operator|&
+name|nd
+argument_list|)
+expr_stmt|;
+name|vfslocked
+operator|=
+name|NDHASGIANT
 argument_list|(
 operator|&
 name|nd
@@ -4357,13 +4358,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|out
 label|:
 name|mac_vnode_label_free
@@ -4421,6 +4420,8 @@ modifier|*
 name|buffer
 decl_stmt|;
 name|int
+name|vfslocked
+decl_stmt|,
 name|error
 decl_stmt|;
 name|error
@@ -4542,13 +4543,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* VFS */
 name|NDINIT
 argument_list|(
 operator|&
@@ -4556,6 +4550,8 @@ name|nd
 argument_list|,
 name|LOOKUP
 argument_list|,
+name|MPSAFE
+operator||
 name|LOCKLEAF
 operator||
 name|NOFOLLOW
@@ -4572,6 +4568,14 @@ expr_stmt|;
 name|error
 operator|=
 name|namei
+argument_list|(
+operator|&
+name|nd
+argument_list|)
+expr_stmt|;
+name|vfslocked
+operator|=
+name|NDHASGIANT
 argument_list|(
 operator|&
 name|nd
@@ -4635,13 +4639,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|out
 label|:
 name|mac_vnode_label_free
