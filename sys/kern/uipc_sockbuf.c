@@ -1054,7 +1054,7 @@ expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
-name|so
+name|head
 operator|->
 name|so_incomp
 argument_list|,
