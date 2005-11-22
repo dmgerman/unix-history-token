@@ -20,16 +20,6 @@ comment|/*  * Various 'tests in progress' and configuration parameters.  */
 end_comment
 
 begin_comment
-comment|/*  * Send CPUSTOP IPI for stop/restart of other CPUs on DDB break. #define VERBOSE_CPUSTOP_ON_DDBBREAK  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPUSTOP_ON_DDBBREAK
-end_define
-
-begin_comment
 comment|/*  * TLB counters.  * #define COUNT_XINVLTLB_HITS  */
 end_comment
 
