@@ -47,6 +47,12 @@ directive|include
 file|"opt_sched.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_smp.h"
+end_include
+
 begin_if
 if|#
 directive|if
@@ -300,16 +306,6 @@ include|#
 directive|include
 file|<machine/smp.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/smptests.h>
-end_include
-
-begin_comment
-comment|/** COUNT_XINVLTLB_HITS */
-end_comment
 
 begin_include
 include|#

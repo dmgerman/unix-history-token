@@ -19,14 +19,6 @@ begin_comment
 comment|/*  * Various 'tests in progress' and configuration parameters.  */
 end_comment
 
-begin_comment
-comment|/*  * TLB counters.  * #define COUNT_XINVLTLB_HITS  */
-end_comment
-
-begin_comment
-comment|/*  * Per-CPU IPI interrupt counters.  * #define	COUNT_IPIS  */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
