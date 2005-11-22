@@ -33,51 +33,6 @@ directive|ifndef
 name|LOCORE
 end_ifndef
 
-begin_comment
-comment|/*  * For sending values to POST displays.  * XXX FIXME: where does this really belong, isa.h/isa.c perhaps?  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|current_postcode
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/** XXX currently in mp_machdep.c */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|POSTCODE
-parameter_list|(
-name|X
-parameter_list|)
-value|current_postcode = (X), \ 			outb(0x80, current_postcode)
-end_define
-
-begin_define
-define|#
-directive|define
-name|POSTCODE_LO
-parameter_list|(
-name|X
-parameter_list|)
-value|current_postcode&= 0xf0, \ 			current_postcode |= ((X)& 0x0f), \ 			outb(0x80, current_postcode)
-end_define
-
-begin_define
-define|#
-directive|define
-name|POSTCODE_HI
-parameter_list|(
-name|X
-parameter_list|)
-value|current_postcode&= 0x0f, \ 			current_postcode |= (((X)<< 4)& 0xf0), \ 			outb(0x80, current_postcode)
-end_define
-
 begin_include
 include|#
 directive|include
