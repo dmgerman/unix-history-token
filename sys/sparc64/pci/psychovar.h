@@ -40,9 +40,6 @@ decl_stmt|;
 name|bus_space_handle_t
 name|sc_bushandle
 decl_stmt|;
-name|bus_dma_tag_t
-name|sc_dmatag
-decl_stmt|;
 name|bus_addr_t
 name|sc_pcictl
 decl_stmt|;
@@ -70,9 +67,6 @@ name|iommu_state
 modifier|*
 name|sc_is
 decl_stmt|;
-name|uint32_t
-name|sc_dvmabase
-decl_stmt|;
 name|struct
 name|resource
 modifier|*
@@ -96,14 +90,6 @@ decl_stmt|;
 name|struct
 name|ofw_bus_iinfo
 name|sc_pci_iinfo
-decl_stmt|;
-name|struct
-name|upa_ranges
-modifier|*
-name|sc_range
-decl_stmt|;
-name|int
-name|sc_nrange
 decl_stmt|;
 comment|/* Tags for PCI access */
 name|bus_space_tag_t
