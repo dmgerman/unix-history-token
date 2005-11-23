@@ -623,10 +623,17 @@ end_comment
 begin_if
 if|#
 directive|if
+operator|(
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
 name|defined
 argument_list|(
 name|INVARIANTS
 argument_list|)
+operator|)
 operator|||
 name|defined
 argument_list|(
@@ -714,7 +721,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(INVARIANTS) || defined(QUEUE_MACRO_DEBUG) */
+comment|/* (_KERNEL&& INVARIANTS) || QUEUE_MACRO_DEBUG */
 end_comment
 
 begin_define
