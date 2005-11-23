@@ -2915,8 +2915,12 @@ name|lge_ring_data
 name|lge_cdata
 decl_stmt|;
 name|struct
-name|callout_handle
-name|lge_stat_ch
+name|callout
+name|lge_stat_callout
+decl_stmt|;
+name|struct
+name|mtx
+name|lge_mtx
 decl_stmt|;
 name|SLIST_HEAD
 argument_list|(
@@ -3024,6 +3028,36 @@ name|reg
 parameter_list|)
 define|\
 value|bus_space_read_1(sc->lge_btag, sc->lge_bhandle, reg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LGE_LOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_lock(&(sc)->lge_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LGE_UNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_unlock(&(sc)->lge_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LGE_LOCK_ASSERT
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_assert(&(sc)->lge_mtx, MA_OWNED)
 end_define
 
 begin_define
