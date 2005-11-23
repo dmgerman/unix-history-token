@@ -54,58 +54,52 @@ end_include
 begin_decl_stmt
 specifier|static
 specifier|const
-name|float
+name|double
 name|pio4
 init|=
-literal|7.8539812565e-01
+name|M_PI_4
 decl_stmt|,
-comment|/* 0x3f490fda */
-name|pio4lo
-init|=
-literal|3.7748947079e-08
-decl_stmt|,
-comment|/* 0x33222168 */
-comment|/* |tan(x)/x - t(x)|< 2**-29.2 (~[-1.73e-09, 1.724e-09]). */
+comment|/* |tan(x)/x - t(x)|< 2**-29.1 (~[-1.72e-09, 1.719e-09]). */
 name|T
 index|[]
 init|=
 block|{
-literal|0xaaaaa3
+literal|0x1555545f8b54d0
 literal|.0p
 operator|-
-literal|25
+literal|54
 block|,
-comment|/* 0.33333310485 */
-literal|0x888b06
+comment|/* 0.333333104424423432022 */
+literal|0x111160cdc2c9af
 literal|.0p
 operator|-
-literal|26
+literal|55
 block|,
-comment|/* 0.13334283238 */
-literal|0xdc84c8
+comment|/* 0.133342838734802765499 */
+literal|0x1b9097e5693cd0
 literal|.0p
 operator|-
-literal|28
+literal|57
 block|,
-comment|/* 0.053837567568 */
-literal|0xb9d8f1
+comment|/* 0.0538375346701457369036 */
+literal|0x173b2333895b6f
 literal|.0p
 operator|-
-literal|29
+literal|58
 block|,
-comment|/* 0.022686453536 */
-literal|0xcfe632
+comment|/* 0.0226865291791357691353 */
+literal|0x19fcb197e825ab
 literal|.0p
 operator|-
-literal|31
+literal|60
 block|,
-comment|/* 0.0063445800915 */
-literal|0xeaf97e
+comment|/* 0.00634450313965243938713 */
+literal|0x1d5f3701b44a27
 literal|.0p
 operator|-
-literal|31
+literal|60
 block|,
-comment|/* 0.0071708550677 */
+comment|/* 0.00717088210082520490646 */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -122,19 +116,16 @@ specifier|inline
 endif|#
 directive|endif
 name|float
-name|__kernel_tanf
+name|__kernel_tandf
 parameter_list|(
-name|float
+name|double
 name|x
-parameter_list|,
-name|float
-name|y
 parameter_list|,
 name|int
 name|iy
 parameter_list|)
 block|{
-name|float
+name|double
 name|z
 decl_stmt|,
 name|r
@@ -183,33 +174,12 @@ operator|=
 operator|-
 name|x
 expr_stmt|;
-name|y
-operator|=
-operator|-
-name|y
-expr_stmt|;
 block|}
-name|z
+name|x
 operator|=
 name|pio4
 operator|-
 name|x
-expr_stmt|;
-name|w
-operator|=
-name|pio4lo
-operator|-
-name|y
-expr_stmt|;
-name|x
-operator|=
-name|z
-operator|+
-name|w
-expr_stmt|;
-name|y
-operator|=
-literal|0.0
 expr_stmt|;
 block|}
 name|z
@@ -274,20 +244,14 @@ name|x
 expr_stmt|;
 name|r
 operator|=
-name|y
-operator|+
 name|z
 operator|*
-operator|(
 name|s
 operator|*
 operator|(
 name|r
 operator|+
 name|v
-operator|)
-operator|+
-name|y
 operator|)
 expr_stmt|;
 name|r
@@ -315,13 +279,13 @@ block|{
 name|v
 operator|=
 operator|(
-name|float
+name|double
 operator|)
 name|iy
 expr_stmt|;
 return|return
 call|(
-name|float
+name|double
 call|)
 argument_list|(
 literal|1
@@ -340,9 +304,6 @@ operator|*
 operator|(
 name|v
 operator|-
-operator|(
-name|float
-operator|)
 literal|2.0
 operator|*
 operator|(
@@ -379,14 +340,7 @@ return|return
 operator|-
 literal|1.0
 operator|/
-operator|(
-operator|(
-name|double
-operator|)
-name|x
-operator|+
-name|r
-operator|)
+name|w
 return|;
 block|}
 end_function
