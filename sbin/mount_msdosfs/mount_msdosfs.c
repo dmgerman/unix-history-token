@@ -361,7 +361,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"sl9u:g:m:M:o:L:D:"
+literal|"sl9u:g:m:M:o:L:D:W:"
 argument_list|)
 operator|)
 operator|!=
@@ -433,7 +433,7 @@ name|iovlen
 argument_list|,
 literal|"nowin95"
 argument_list|,
-name|NULL
+literal|""
 argument_list|,
 operator|(
 name|size_t
