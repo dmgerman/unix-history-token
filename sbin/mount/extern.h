@@ -36,23 +36,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* mount_ufs.c */
-end_comment
-
-begin_function_decl
-name|int
-name|mount_ufs
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-index|[]
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function_decl
 name|int
 name|mount_fs
