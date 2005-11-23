@@ -1992,7 +1992,7 @@ if|if
 condition|(
 name|value
 operator|==
-literal|0xffffff
+literal|0xffffffff
 condition|)
 block|{
 name|pmap_unmapdev
