@@ -3353,6 +3353,29 @@ if|if
 condition|(
 name|sc
 operator|->
+name|amrr_xfer
+operator|!=
+name|NULL
+condition|)
+block|{
+name|usbd_free_xfer
+argument_list|(
+name|sc
+operator|->
+name|amrr_xfer
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|amrr_xfer
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sc
+operator|->
 name|sc_rx_pipeh
 operator|!=
 name|NULL
@@ -4900,6 +4923,8 @@ condition|(
 name|len
 operator|<
 name|RAL_RX_DESC_SIZE
+operator|+
+name|IEEE80211_MIN_LEN
 condition|)
 block|{
 name|printf
@@ -5604,9 +5629,8 @@ literal|4
 expr_stmt|;
 name|len
 operator|+=
-literal|4
+name|IEEE80211_CRC_LEN
 expr_stmt|;
-comment|/* account for FCS */
 if|if
 condition|(
 name|RAL_RATE_IS_OFDM
@@ -6341,7 +6365,7 @@ argument_list|,
 name|rate
 argument_list|)
 expr_stmt|;
-comment|/* xfer length needs to be a multiple of two! */
+comment|/* align end on a 2-bytes boundary */
 name|xferlen
 operator|=
 operator|(
@@ -6358,6 +6382,21 @@ operator|)
 operator|&
 operator|~
 literal|1
+expr_stmt|;
+comment|/* 	 * No space left in the last URB to store the extra 2 bytes, force 	 * sending of another URB. 	 */
+if|if
+condition|(
+operator|(
+name|xferlen
+operator|%
+literal|64
+operator|)
+operator|==
+literal|0
+condition|)
+name|xferlen
+operator|+=
+literal|2
 expr_stmt|;
 name|DPRINTFN
 argument_list|(
@@ -6816,7 +6855,7 @@ argument_list|,
 name|rate
 argument_list|)
 expr_stmt|;
-comment|/* xfer length needs to be a multiple of two! */
+comment|/* align end on a 2-bytes boundary */
 name|xferlen
 operator|=
 operator|(
@@ -6833,6 +6872,21 @@ operator|)
 operator|&
 operator|~
 literal|1
+expr_stmt|;
+comment|/* 	 * No space left in the last URB to store the extra 2 bytes, force 	 * sending of another URB. 	 */
+if|if
+condition|(
+operator|(
+name|xferlen
+operator|%
+literal|64
+operator|)
+operator|==
+literal|0
+condition|)
+name|xferlen
+operator|+=
+literal|2
 expr_stmt|;
 name|DPRINTFN
 argument_list|(
@@ -7931,7 +7985,6 @@ name|error
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 block|}
 end_function
