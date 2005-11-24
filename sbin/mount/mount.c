@@ -578,6 +578,8 @@ name|fs
 index|[]
 init|=
 block|{
+literal|"cd9660"
+block|,
 literal|"mfs"
 block|,
 literal|"msdosfs"
