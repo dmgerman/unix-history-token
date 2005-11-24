@@ -497,7 +497,7 @@ begin_function_decl
 name|void
 name|strmode
 parameter_list|(
-name|mode_t
+name|int
 parameter_list|,
 name|char
 modifier|*
