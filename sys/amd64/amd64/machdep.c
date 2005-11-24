@@ -1626,7 +1626,7 @@ name|td
 decl_stmt|;
 name|struct
 name|sigreturn_args
-comment|/* { 		const __ucontext *sigcntxp; 	} */
+comment|/* { 		const struct __ucontext *sigcntxp; 	} */
 modifier|*
 name|uap
 decl_stmt|;
