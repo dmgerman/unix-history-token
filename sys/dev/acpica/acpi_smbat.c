@@ -1670,6 +1670,12 @@ literal|0
 expr_stmt|;
 name|out
 label|:
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
 name|memcpy
 argument_list|(
 name|bst
@@ -2083,6 +2089,7 @@ condition|)
 goto|goto
 name|out
 goto|;
+comment|/* XXX check if device was replugged during read? */
 name|acpi_smbat_info_updated
 argument_list|(
 operator|&
@@ -2091,13 +2098,18 @@ operator|->
 name|bif_lastupdated
 argument_list|)
 expr_stmt|;
-comment|/* XXX check if device was replugged during read? */
 name|error
 operator|=
 literal|0
 expr_stmt|;
 name|out
 label|:
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
 name|memcpy
 argument_list|(
 name|bif
