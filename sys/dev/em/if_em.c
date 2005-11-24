@@ -5442,6 +5442,9 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|bus_dmamap_t
+name|map
+decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -5567,6 +5570,12 @@ name|nsegs
 argument_list|,
 name|BUS_DMA_NOWAIT
 argument_list|)
+expr_stmt|;
+name|map
+operator|=
+name|tx_buffer
+operator|->
+name|map
 expr_stmt|;
 if|if
 condition|(
@@ -6240,8 +6249,6 @@ name|adapter
 operator|->
 name|txtag
 argument_list|,
-name|tx_buffer
-operator|->
 name|map
 argument_list|,
 name|BUS_DMASYNC_PREWRITE
