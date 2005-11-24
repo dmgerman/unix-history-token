@@ -931,8 +931,8 @@ name|uint32_t
 operator|*
 operator|)
 name|KERNVIRTADDR
-operator|!=
-literal|0
+operator|==
+name|MAGIC_TRAMP_NUMBER
 condition|)
 block|{
 name|fake_preload
@@ -967,7 +967,11 @@ operator|(
 name|uint32_t
 operator|*
 operator|)
+operator|(
 name|KERNVIRTADDR
+operator|+
+literal|4
+operator|)
 expr_stmt|;
 name|fake_preload
 index|[
@@ -1004,7 +1008,7 @@ operator|)
 operator|(
 name|KERNVIRTADDR
 operator|+
-literal|4
+literal|8
 operator|)
 expr_stmt|;
 name|lastaddr
@@ -1017,7 +1021,7 @@ operator|)
 operator|(
 name|KERNVIRTADDR
 operator|+
-literal|4
+literal|8
 operator|)
 expr_stmt|;
 name|zend
@@ -1031,7 +1035,11 @@ operator|(
 name|uint32_t
 operator|*
 operator|)
+operator|(
 name|KERNVIRTADDR
+operator|+
+literal|4
+operator|)
 expr_stmt|;
 name|ksym_start
 operator|=
