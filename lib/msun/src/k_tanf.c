@@ -51,55 +51,54 @@ directive|include
 file|"math_private.h"
 end_include
 
+begin_comment
+comment|/* |tan(x)/x - t(x)|< 2**-25.5 (~[-2e-08, 2e-08]). */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
 name|double
-name|pio4
-init|=
-name|M_PI_4
-decl_stmt|,
-comment|/* |tan(x)/x - t(x)|< 2**-29.1 (~[-1.72e-09, 1.719e-09]). */
 name|T
 index|[]
 init|=
 block|{
-literal|0x1555545f8b54d0
+literal|0x15554d3418c99f
 literal|.0p
 operator|-
 literal|54
 block|,
-comment|/* 0.333333104424423432022 */
-literal|0x111160cdc2c9af
+comment|/* 0.333331395030791399758 */
+literal|0x1112fd38999f72
 literal|.0p
 operator|-
 literal|55
 block|,
-comment|/* 0.133342838734802765499 */
-literal|0x1b9097e5693cd0
+comment|/* 0.133392002712976742718 */
+literal|0x1b54c91d865afe
 literal|.0p
 operator|-
 literal|57
 block|,
-comment|/* 0.0538375346701457369036 */
-literal|0x173b2333895b6f
+comment|/* 0.0533812378445670393523 */
+literal|0x191df3908c33ce
 literal|.0p
 operator|-
 literal|58
 block|,
-comment|/* 0.0226865291791357691353 */
-literal|0x19fcb197e825ab
+comment|/* 0.0245283181166547278873 */
+literal|0x185dadfcecf44e
 literal|.0p
 operator|-
-literal|60
+literal|61
 block|,
-comment|/* 0.00634450313965243938713 */
-literal|0x1d5f3701b44a27
+comment|/* 0.00297435743359967304927 */
+literal|0x1362b9bf971bcd
 literal|.0p
 operator|-
-literal|60
+literal|59
 block|,
-comment|/* 0.00717088210082520490646 */
+comment|/* 0.00946564784943673166728 */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -154,34 +153,6 @@ name|hx
 operator|&
 literal|0x7fffffff
 expr_stmt|;
-if|if
-condition|(
-name|ix
-operator|>=
-literal|0x3f2ca140
-condition|)
-block|{
-comment|/* |x|>=0.67434 */
-if|if
-condition|(
-name|hx
-operator|<
-literal|0
-condition|)
-block|{
-name|x
-operator|=
-operator|-
-name|x
-expr_stmt|;
-block|}
-name|x
-operator|=
-name|pio4
-operator|-
-name|x
-expr_stmt|;
-block|}
 name|z
 operator|=
 name|x
@@ -269,63 +240,6 @@ name|x
 operator|+
 name|r
 expr_stmt|;
-if|if
-condition|(
-name|ix
-operator|>=
-literal|0x3f2ca140
-condition|)
-block|{
-name|v
-operator|=
-operator|(
-name|double
-operator|)
-name|iy
-expr_stmt|;
-return|return
-call|(
-name|double
-call|)
-argument_list|(
-literal|1
-operator|-
-operator|(
-operator|(
-name|hx
-operator|>>
-literal|30
-operator|)
-operator|&
-literal|2
-operator|)
-argument_list|)
-operator|*
-operator|(
-name|v
-operator|-
-literal|2.0
-operator|*
-operator|(
-name|x
-operator|-
-operator|(
-name|w
-operator|*
-name|w
-operator|/
-operator|(
-name|w
-operator|+
-name|v
-operator|)
-operator|-
-name|r
-operator|)
-operator|)
-operator|)
-return|;
-block|}
 if|if
 condition|(
 name|iy
