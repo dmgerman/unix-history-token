@@ -99,7 +99,7 @@ comment|/* Errno for BIO_ERROR. */
 name|long
 name|bio_resid
 decl_stmt|;
-comment|/* Remaining I/0 in bytes. */
+comment|/* Remaining I/O in bytes. */
 name|void
 function_decl|(
 modifier|*
