@@ -1128,6 +1128,13 @@ name|BGE_ASICREV_BCM5714
 value|0x05
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_ASICREV_BCM5752
+value|0x06
+end_define
+
 begin_comment
 comment|/* chip revisions */
 end_comment
@@ -10562,6 +10569,13 @@ define|#
 directive|define
 name|BCOM_DEVICEID_BCM5751M
 value|0x167D
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM5752
+value|0x1600
 end_define
 
 begin_define
