@@ -385,6 +385,12 @@ name|IFF_MULTICAST
 expr_stmt|;
 name|ifp
 operator|->
+name|if_drv_flags
+operator|=
+name|IFF_DRV_RUNNING
+expr_stmt|;
+name|ifp
+operator|->
 name|if_ioctl
 operator|=
 name|discioctl
