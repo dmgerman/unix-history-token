@@ -497,6 +497,14 @@ block|,
 block|{
 name|BCOM_VENDORID
 block|,
+name|BCOM_DEVICEID_BCM5752
+block|,
+literal|"Broadcom BCM5752 Gigabit Ethernet"
+block|}
+block|,
+block|{
+name|BCOM_VENDORID
+block|,
 name|BCOM_DEVICEID_BCM5782
 block|,
 literal|"Broadcom BCM5782 Gigabit Ethernet"
@@ -10744,7 +10752,7 @@ operator|->
 name|bge_chipid
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Treat the 5714 like the 5750 until we have more info 	 * on this chip. 	 */
+comment|/* 	 * Treat the 5714 and the 5752 like the 5750 until we have more info 	 * on this chip. 	 */
 if|if
 condition|(
 name|sc
@@ -10752,6 +10760,12 @@ operator|->
 name|bge_asicrev
 operator|==
 name|BGE_ASICREV_BCM5714
+operator|||
+name|sc
+operator|->
+name|bge_asicrev
+operator|==
+name|BGE_ASICREV_BCM5752
 condition|)
 name|sc
 operator|->
