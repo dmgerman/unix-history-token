@@ -2212,7 +2212,7 @@ name|ifp
 operator|->
 name|if_flags
 operator|=
-literal|0
+name|IFF_LOOPBACK
 expr_stmt|;
 name|ifp
 operator|->
