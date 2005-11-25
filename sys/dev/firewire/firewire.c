@@ -6909,6 +6909,11 @@ name|fw_pkt
 modifier|*
 name|fp
 decl_stmt|;
+name|union
+name|fw_self_id
+modifier|*
+name|fwsid
+decl_stmt|;
 if|if
 condition|(
 name|fc
@@ -6961,9 +6966,8 @@ name|done
 goto|;
 comment|/* check link */
 comment|/* XXX we need to check phy_id first */
-if|if
-condition|(
-operator|!
+name|fwsid
+operator|=
 name|fw_find_self_id
 argument_list|(
 name|fc
@@ -6972,6 +6976,14 @@ name|fc
 operator|->
 name|ongonode
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|fwsid
+operator|||
+operator|!
+name|fwsid
 operator|->
 name|p0
 operator|.
