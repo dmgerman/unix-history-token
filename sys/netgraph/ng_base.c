@@ -140,6 +140,18 @@ name|ng_nodelist_mtx
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Mutex to protect topology events. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|ng_topo_mtx
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -250,7 +262,7 @@ comment|/* NETGRAPH_DEBUG */
 end_comment
 
 begin_comment
-comment|/*  * DEAD versions of the structures.   * In order to avoid races, it is sometimes neccesary to point  * at SOMETHING even though theoretically, the current entity is   * INVALID. Use these to avoid these races.  */
+comment|/*  * DEAD versions of the structures.  * In order to avoid races, it is sometimes neccesary to point  * at SOMETHING even though theoretically, the current entity is  * INVALID. Use these to avoid these races.  */
 end_comment
 
 begin_decl_stmt
@@ -663,6 +675,9 @@ name|node
 parameter_list|,
 name|item_p
 name|item
+parameter_list|,
+name|int
+name|rw
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -794,7 +809,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* imported , these used to be externally visible, some may go back */
+comment|/* Imported, these used to be externally visible, some may go back. */
 end_comment
 
 begin_function_decl
@@ -2489,7 +2504,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Forceably start the shutdown process on a node. Either call  * it's shutdown method, or do the default shutdown if there is  * no type-specific method.  *  * We can only be called form a shutdown message, so we know we have  * a writer lock, and therefore exclusive access. It also means  * that we should not be on the work queue, but we check anyhow.  *  * Persistent node types must have a type-specific method which  * Allocates a new node in which case, this one is irretrievably going away,  * or cleans up anything it needs, and just makes the node valid again,  * in which case we allow the node to survive.   *  * XXX We need to think of how to tell a persistant node that we  * REALLY need to go away because the hardware has gone or we  * are rebooting.... etc.  */
+comment|/*  * Forceably start the shutdown process on a node. Either call  * it's shutdown method, or do the default shutdown if there is  * no type-specific method.  *  * We can only be called form a shutdown message, so we know we have  * a writer lock, and therefore exclusive access. It also means  * that we should not be on the work queue, but we check anyhow.  *  * Persistent node types must have a type-specific method which  * Allocates a new node in which case, this one is irretrievably going away,  * or cleans up anything it needs, and just makes the node valid again,  * in which case we allow the node to survive.  *  * XXX We need to think of how to tell a persistant node that we  * REALLY need to go away because the hardware has gone or we  * are rebooting.... etc.  */
 end_comment
 
 begin_function
@@ -3799,7 +3814,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Destroy a hook  *  * As hooks are always attached, this really destroys two hooks.  * The one given, and the one attached to it. Disconnect the hooks  * from each other first. We reconnect the peer hook to the 'dead'  * hook so that it can still exist after we depart. We then  * send the peer its own destroy message. This ensures that we only  * interact with the peer's structures when it is locked processing that   * message. We hold a reference to the peer hook so we are guaranteed that  * the peer hook and node are still going to exist until  * we are finished there as the hook holds a ref on the node.  * We run this same code again on the peer hook, but that time it is already   * attached to the 'dead' hook.   *  * This routine is called at all stages of hook creation   * on error detection and must be able to handle any such stage.  */
+comment|/*  * Destroy a hook  *  * As hooks are always attached, this really destroys two hooks.  * The one given, and the one attached to it. Disconnect the hooks  * from each other first. We reconnect the peer hook to the 'dead'  * hook so that it can still exist after we depart. We then  * send the peer its own destroy message. This ensures that we only  * interact with the peer's structures when it is locked processing that  * message. We hold a reference to the peer hook so we are guaranteed that  * the peer hook and node are still going to exist until  * we are finished there as the hook holds a ref on the node.  * We run this same code again on the peer hook, but that time it is already  * attached to the 'dead' hook.  *  * This routine is called at all stages of hook creation  * on error detection and must be able to handle any such stage.  */
 end_comment
 
 begin_function
@@ -3812,19 +3827,9 @@ parameter_list|)
 block|{
 name|hook_p
 name|peer
-init|=
-name|NG_HOOK_PEER
-argument_list|(
-name|hook
-argument_list|)
 decl_stmt|;
 name|node_p
 name|node
-init|=
-name|NG_HOOK_NODE
-argument_list|(
-name|hook
-argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -3842,13 +3847,33 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * Protect divorce process with mutex, to avoid races on 	 * simultaneous disconnect. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|ng_topo_mtx
+argument_list|)
+expr_stmt|;
 name|hook
 operator|->
 name|hk_flags
 operator||=
 name|HK_INVALID
 expr_stmt|;
-comment|/* as soon as possible */
+name|peer
+operator|=
+name|NG_HOOK_PEER
+argument_list|(
+name|hook
+argument_list|)
+expr_stmt|;
+name|node
+operator|=
+name|NG_HOOK_NODE
+argument_list|(
+name|hook
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|peer
@@ -3889,11 +3914,22 @@ operator|&
 name|ng_deadnode
 condition|)
 block|{
-comment|/*  			 * If it's already divorced from a node, 			 * just free it. 			 */
-comment|/* nothing */
+comment|/* 			 * If it's already divorced from a node, 			 * just free it. 			 */
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ng_topo_mtx
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ng_topo_mtx
+argument_list|)
+expr_stmt|;
 name|ng_rmhook_self
 argument_list|(
 name|peer
@@ -3914,6 +3950,21 @@ argument_list|)
 expr_stmt|;
 comment|/* account for peer link */
 block|}
+else|else
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ng_topo_mtx
+argument_list|)
+expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|ng_topo_mtx
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Remove the hook from the node's list to avoid possible recursion 	 * in case the disconnection results in node shutdown. 	 */
 if|if
 condition|(
@@ -3947,7 +3998,7 @@ operator|->
 name|disconnect
 condition|)
 block|{
-comment|/* 		 * The type handler may elect to destroy the node so don't 		 * trust its existance after this point. (except  		 * that we still hold a reference on it. (which we 		 * inherrited from the hook we are destroying) 		 */
+comment|/* 		 * The type handler may elect to destroy the node so don't 		 * trust its existance after this point. (except 		 * that we still hold a reference on it. (which we 		 * inherrited from the hook we are destroying) 		 */
 call|(
 modifier|*
 name|node
@@ -4447,6 +4498,9 @@ name|int
 name|arg2
 parameter_list|)
 block|{
+name|hook_p
+name|peer
+decl_stmt|;
 comment|/* 	 * When we run, we know that the node 'node' is locked for us. 	 * Our caller has a reference on the hook. 	 * Our caller has a reference on the node. 	 * (In this case our caller is ng_apply_item() ). 	 * The peer hook has a reference on the hook. 	 * our node pointer points to the 'dead' node. 	 * First check the hook name is unique. 	 * Should not happen because we checked before queueing this. 	 */
 if|if
 condition|(
@@ -4563,7 +4617,7 @@ name|hook
 argument_list|)
 expr_stmt|;
 comment|/* one for the node */
-comment|/* 	 * We now have a symetrical situation, where both hooks have been 	 * linked to their nodes, the newhook methods have been called 	 * And the references are all correct. The hooks are still marked 	 * as invalid, as we have not called the 'connect' methods 	 * yet. 	 * We can call the local one immediatly as we have the  	 * node locked, but we need to queue the remote one. 	 */
+comment|/* 	 * We now have a symetrical situation, where both hooks have been 	 * linked to their nodes, the newhook methods have been called 	 * And the references are all correct. The hooks are still marked 	 * as invalid, as we have not called the 'connect' methods 	 * yet. 	 * We can call the local one immediatly as we have the 	 * node locked, but we need to queue the remote one. 	 */
 if|if
 condition|(
 name|hook
@@ -4606,19 +4660,60 @@ expr_stmt|;
 return|return ;
 block|}
 block|}
+comment|/* 	 * Acquire topo mutex to avoid race with ng_destroy_hook(). 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|ng_topo_mtx
+argument_list|)
+expr_stmt|;
+name|peer
+operator|=
+name|hook
+operator|->
+name|hk_peer
+expr_stmt|;
+if|if
+condition|(
+name|peer
+operator|==
+operator|&
+name|ng_deadhook
+condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ng_topo_mtx
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"failed in ng_con_part2(B)\n"
+argument_list|)
+expr_stmt|;
+name|ng_destroy_hook
+argument_list|(
+name|hook
+argument_list|)
+expr_stmt|;
+return|return ;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ng_topo_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ng_send_fn
 argument_list|(
-name|hook
-operator|->
-name|hk_peer
+name|peer
 operator|->
 name|hk_node
 argument_list|,
-name|hook
-operator|->
-name|hk_peer
+name|peer
 argument_list|,
 operator|&
 name|ng_con_part3
@@ -4631,7 +4726,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"failed in ng_con_part2(B)"
+literal|"failed in ng_con_part2(C)\n"
 argument_list|)
 expr_stmt|;
 name|ng_destroy_hook
@@ -4655,7 +4750,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Connect this node with another node. We assume that this node is   * currently locked, as we are only called from an NGM_CONNECT message.  */
+comment|/*  * Connect this node with another node. We assume that this node is  * currently locked, as we are only called from an NGM_CONNECT message.  */
 end_comment
 
 begin_function
@@ -4854,7 +4949,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Make a peer and connect.  * We assume that the local node is locked.  * The new node probably doesn't need a lock until  * it has a hook, because it cannot really have any work until then,  * but we should think about it a bit more.  *  * The problem may come if the other node also fires up  * some hardware or a timer or some other source of activation,  * also it may already get a command msg via it's ID.  *  * We could use the same method as ng_con_nodes() but we'd have  * to add ability to remove the node when failing. (Not hard, just   * make arg1 point to the node to remove).  * Unless of course we just ignore failure to connect and leave  * an unconnected node?  */
+comment|/*  * Make a peer and connect.  * We assume that the local node is locked.  * The new node probably doesn't need a lock until  * it has a hook, because it cannot really have any work until then,  * but we should think about it a bit more.  *  * The problem may come if the other node also fires up  * some hardware or a timer or some other source of activation,  * also it may already get a command msg via it's ID.  *  * We could use the same method as ng_con_nodes() but we'd have  * to add ability to remove the node when failing. (Not hard, just  * make arg1 point to the node to remove).  * Unless of course we just ignore failure to connect and leave  * an unconnected node?  */
 end_comment
 
 begin_function
@@ -4885,8 +4980,7 @@ name|node2
 decl_stmt|;
 name|hook_p
 name|hook1
-decl_stmt|;
-name|hook_p
+decl_stmt|,
 name|hook2
 decl_stmt|;
 name|int
@@ -5853,7 +5947,7 @@ name|node
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Now follow the sequence of hooks  	 * XXX 	 * We actually cannot guarantee that the sequence 	 * is not being demolished as we crawl along it 	 * without extra-ordinary locking etc. 	 * So this is a bit dodgy to say the least. 	 * We can probably hold up some things by holding 	 * the nodelist mutex for the time of this 	 * crawl if we wanted.. At least that way we wouldn't have to 	 * worry about the nodes dissappearing, but the hooks would still 	 * be a problem. 	 */
+comment|/* 	 * Now follow the sequence of hooks 	 * XXX 	 * We actually cannot guarantee that the sequence 	 * is not being demolished as we crawl along it 	 * without extra-ordinary locking etc. 	 * So this is a bit dodgy to say the least. 	 * We can probably hold up some things by holding 	 * the nodelist mutex for the time of this 	 * crawl if we wanted.. At least that way we wouldn't have to 	 * worry about the nodes dissappearing, but the hooks would still 	 * be a problem. 	 */
 for|for
 control|(
 name|cp
@@ -5966,7 +6060,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("hooknotvalid %s %s %d %d %d %d ", 					path, 					segment, 					hook == NULL, 		     			NG_HOOK_PEER(hook) == NULL, 		     			NG_HOOK_NOT_VALID(hook), 		     			NG_HOOK_NOT_VALID(NG_HOOK_PEER(hook)));
+block|printf("hooknotvalid %s %s %d %d %d %d ", 					path, 					segment, 					hook == NULL, 					NG_HOOK_PEER(hook) == NULL, 					NG_HOOK_NOT_VALID(hook), 					NG_HOOK_NOT_VALID(NG_HOOK_PEER(hook)));
 endif|#
 directive|endif
 return|return
@@ -5975,7 +6069,7 @@ name|ENOENT
 operator|)
 return|;
 block|}
-comment|/* 		 * Hop on over to the next node  		 * XXX 		 * Big race conditions here as hooks and nodes go away  		 * *** Idea.. store an ng_ID_t in each hook and use that 		 * instead of the direct hook in this crawl? 		 */
+comment|/* 		 * Hop on over to the next node 		 * XXX 		 * Big race conditions here as hooks and nodes go away 		 * *** Idea.. store an ng_ID_t in each hook and use that 		 * instead of the direct hook in this crawl? 		 */
 name|oldnode
 operator|=
 name|node
@@ -6088,6 +6182,10 @@ name|struct
 name|ng_queue
 modifier|*
 name|ngq
+parameter_list|,
+name|int
+modifier|*
+name|rw
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6179,42 +6277,35 @@ comment|/*  * Definition of the bits fields in the ng_queue flag word.  * Define
 end_comment
 
 begin_comment
-comment|/*-  Safety Barrier--------+ (adjustable to suit taste) (not used yet)                        |                        V +-------+-------+-------+-------+-------+-------+-------+-------+ | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |A|c|t|i|v|e| |R|e|a|d|e|r| |C|o|u|n|t| | | | | | | | | |R|A|W| | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |P|W|P| +-------+-------+-------+-------+-------+-------+-------+-------+ \___________________________ ____________________________/ | | |                             V                              | | |                   [active reader count]                    | | |                                                            | | |           Read Pending ------------------------------------+ | |                                                              | |           Active Writer -------------------------------------+ |                                                                |           Write Pending ---------------------------------------+   */
+comment|/*-  Safety Barrier--------+ (adjustable to suit taste) (not used yet)                        |                        V +-------+-------+-------+-------+-------+-------+-------+-------+   | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |   | |A|c|t|i|v|e| |R|e|a|d|e|r| |C|o|u|n|t| | | | | | | | | |P|A|   | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |O|W| +-------+-------+-------+-------+-------+-------+-------+-------+   \___________________________ ____________________________/ | |                             V                                | |                   [active reader count]                      | |                                                              | |             Operation Pending -------------------------------+ |                                                                |           Active Writer ---------------------------------------+   */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|WRITE_PENDING
+name|WRITER_ACTIVE
 value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
-name|WRITER_ACTIVE
+name|OP_PENDING
 value|0x00000002
 end_define
 
 begin_define
 define|#
 directive|define
-name|READ_PENDING
+name|READER_INCREMENT
 value|0x00000004
 end_define
 
 begin_define
 define|#
 directive|define
-name|READER_INCREMENT
-value|0x00000008
-end_define
-
-begin_define
-define|#
-directive|define
 name|READER_MASK
-value|0xfffffff8
+value|0xfffffffc
 end_define
 
 begin_comment
@@ -6229,7 +6320,7 @@ value|0x00100000
 end_define
 
 begin_comment
-comment|/* 64K items queued should be enough */
+comment|/* 128K items queued should be enough */
 end_comment
 
 begin_comment
@@ -6237,18 +6328,18 @@ comment|/* Defines of more elaborate states on the queue */
 end_comment
 
 begin_comment
-comment|/* Mask of bits a read cares about */
+comment|/* Mask of bits a new read cares about */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NGQ_RMASK
-value|(WRITE_PENDING|WRITER_ACTIVE|READ_PENDING)
+value|(WRITER_ACTIVE|OP_PENDING)
 end_define
 
 begin_comment
-comment|/* Mask of bits a write cares about */
+comment|/* Mask of bits a new write cares about */
 end_comment
 
 begin_define
@@ -6259,27 +6350,71 @@ value|(NGQ_RMASK|READER_MASK)
 end_define
 
 begin_comment
-comment|/* tests to decide if we could get a read or write off the queue */
+comment|/* Test to decide if there is something on the queue. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CAN_GET_READ
+name|QUEUE_ACTIVE
 parameter_list|(
-name|flag
+name|QP
 parameter_list|)
-value|((flag& NGQ_RMASK) == READ_PENDING)
+value|((QP)->q_flags& OP_PENDING)
+end_define
+
+begin_comment
+comment|/* How to decide what the next queued item is. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HEAD_IS_READER
+parameter_list|(
+name|QP
+parameter_list|)
+value|NGI_QUEUED_READER((QP)->queue)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CAN_GET_WRITE
+name|HEAD_IS_WRITER
 parameter_list|(
-name|flag
+name|QP
 parameter_list|)
-value|((flag& NGQ_WMASK) == WRITE_PENDING)
+value|NGI_QUEUED_WRITER((QP)->queue)
+end_define
+
+begin_comment
+comment|/* notused */
+end_comment
+
+begin_comment
+comment|/* Read the status to decide if the next item on the queue can now run. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QUEUED_READER_CAN_PROCEED
+parameter_list|(
+name|QP
+parameter_list|)
+define|\
+value|(((QP)->q_flags& (NGQ_RMASK& ~OP_PENDING)) == 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|QUEUED_WRITER_CAN_PROCEED
+parameter_list|(
+name|QP
+parameter_list|)
+define|\
+value|(((QP)->q_flags& (NGQ_WMASK& ~OP_PENDING)) == 0)
 end_define
 
 begin_comment
@@ -6289,11 +6424,26 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CAN_GET_WORK
+name|NEXT_QUEUED_ITEM_CAN_PROCEED
 parameter_list|(
-name|flag
+name|QP
 parameter_list|)
-value|(CAN_GET_READ(flag) || CAN_GET_WRITE(flag))
+define|\
+value|(QUEUE_ACTIVE(QP)&& 						\ 	((HEAD_IS_READER(QP)) ? QUEUED_READER_CAN_PROCEED(QP) :		\ 				QUEUED_WRITER_CAN_PROCEED(QP)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NGQRW_R
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|NGQRW_W
+value|1
 end_define
 
 begin_comment
@@ -6310,6 +6460,10 @@ name|struct
 name|ng_queue
 modifier|*
 name|ngq
+parameter_list|,
+name|int
+modifier|*
+name|rw
 parameter_list|)
 block|{
 name|item_p
@@ -6328,51 +6482,41 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If there is nothing queued, then just return. 	 * No point in continuing. 	 * XXXGL: assert this? 	 */
 if|if
 condition|(
-name|CAN_GET_READ
+operator|!
+name|QUEUE_ACTIVE
 argument_list|(
 name|ngq
-operator|->
-name|q_flags
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * Head of queue is a reader and we have no write active. 		 * We don't care how many readers are already active.  		 * Adjust the flags for the item we are about to dequeue. 		 * Add the correct increment for the reader count as well. 		 */
-name|add_arg
-operator|=
+return|return
 operator|(
-name|READER_INCREMENT
-operator|-
-name|READ_PENDING
+name|NULL
 operator|)
-expr_stmt|;
+return|;
 block|}
-elseif|else
+comment|/* 	 * From here, we can assume there is a head item. 	 * We need to find out what it is and if it can be dequeued, given 	 * the current state of the node. 	 */
 if|if
 condition|(
-name|CAN_GET_WRITE
+name|HEAD_IS_READER
 argument_list|(
 name|ngq
-operator|->
-name|q_flags
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * There is a pending write, no readers and no active writer. 		 * This means we can go ahead with the pending writer. Note 		 * the fact that we now have a writer, ready for when we take 		 * it off the queue. 		 * 		 * We don't need to worry about a possible collision with the 		 * fasttrack reader. 		 * 		 * The fasttrack thread may take a long time to discover that we 		 * are running so we would have an inconsistent state in the 		 * flags for a while. Since we ignore the reader count 		 * entirely when the WRITER_ACTIVE flag is set, this should 		 * not matter (in fact it is defined that way). If it tests 		 * the flag before this operation, the WRITE_PENDING flag 		 * will make it fail, and if it tests it later, the 		 * WRITER_ACTIVE flag will do the same. If it is SO slow that 		 * we have actually completed the operation, and neither flag 		 * is set (nor the READ_PENDING) by the time that it tests 		 * the flags, then it is actually ok for it to continue. If 		 * it completes and we've finished and the read pending is 		 * set it still fails. 		 * 		 * So we can just ignore it,  as long as we can ensure that the 		 * transition from WRITE_PENDING state to the WRITER_ACTIVE 		 * state is atomic. 		 * 		 * After failing, first it will be held back by the mutex, then 		 * when it can proceed, it will queue its request, then it 		 * would arrive at this function. Usually it will have to 		 * leave empty handed because the ACTIVE WRITER bit will be 		 * set. 		 * 		 * Adjust the flags for the item we are about to dequeue 		 * and for the new active writer. 		 */
-name|add_arg
-operator|=
-operator|(
-name|WRITER_ACTIVE
-operator|-
-name|WRITE_PENDING
-operator|)
-expr_stmt|;
-comment|/* 		 * We want to write "active writer, no readers " Now go make 		 * it true. In fact there may be a number in the readers 		 * count but we know it is not true and will be fixed soon. 		 * We will fix the flags for the next pending entry in a 		 * moment. 		 */
-block|}
-else|else
+if|if
+condition|(
+operator|!
+name|QUEUED_READER_CAN_PROCEED
+argument_list|(
+name|ngq
+argument_list|)
+condition|)
 block|{
-comment|/* 		 * We can't dequeue anything.. return and say so. Probably we 		 * have a write pending and the readers count is non zero. If 		 * we got here because a reader hit us just at the wrong 		 * moment with the fasttrack code, and put us in a strange 		 * state, then it will be through in just a moment, (as soon 		 * as we release the mutex) and keep things moving. 		 * Make sure we remove ourselves from the work queue. 		 */
+comment|/* 			 * It's a reader but we can't use it. 			 * We are stalled so make sure we don't 			 * get called again until something changes. 			 */
 name|ng_worklist_remove
 argument_list|(
 name|ngq
@@ -6382,7 +6526,55 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|NULL
+operator|)
+return|;
+block|}
+comment|/* 		 * Head of queue is a reader and we have no write active. 		 * We don't care how many readers are already active. 		 * Add the correct increment for the reader count. 		 */
+name|add_arg
+operator|=
+name|READER_INCREMENT
+expr_stmt|;
+operator|*
+name|rw
+operator|=
+name|NGQRW_R
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|QUEUED_WRITER_CAN_PROCEED
+argument_list|(
+name|ngq
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * There is a pending write, no readers and no active writer. 		 * This means we can go ahead with the pending writer. Note 		 * the fact that we now have a writer, ready for when we take 		 * it off the queue. 		 * 		 * We don't need to worry about a possible collision with the 		 * fasttrack reader. 		 * 		 * The fasttrack thread may take a long time to discover that we 		 * are running so we would have an inconsistent state in the 		 * flags for a while. Since we ignore the reader count 		 * entirely when the WRITER_ACTIVE flag is set, this should 		 * not matter (in fact it is defined that way). If it tests 		 * the flag before this operation, the OP_PENDING flag 		 * will make it fail, and if it tests it later, the 		 * WRITER_ACTIVE flag will do the same. If it is SO slow that 		 * we have actually completed the operation, and neither flag 		 * is set by the time that it tests the flags, then it is 		 * actually ok for it to continue. If it completes and we've 		 * finished and the read pending is set it still fails. 		 * 		 * So we can just ignore it,  as long as we can ensure that the 		 * transition from WRITE_PENDING state to the WRITER_ACTIVE 		 * state is atomic. 		 * 		 * After failing, first it will be held back by the mutex, then 		 * when it can proceed, it will queue its request, then it 		 * would arrive at this function. Usually it will have to 		 * leave empty handed because the ACTIVE WRITER bit will be 		 * set. 		 * 		 * Adjust the flags for the new active writer. 		 */
+name|add_arg
+operator|=
+name|WRITER_ACTIVE
+expr_stmt|;
+operator|*
+name|rw
+operator|=
+name|NGQRW_W
+expr_stmt|;
+comment|/* 		 * We want to write "active writer, no readers " Now go make 		 * it true. In fact there may be a number in the readers 		 * count but we know it is not true and will be fixed soon. 		 * We will fix the flags for the next pending entry in a 		 * moment. 		 */
+block|}
+else|else
+block|{
+comment|/* 		 * We can't dequeue anything.. return and say so. Probably we 		 * have a write pending and the readers count is non zero. If 		 * we got here because a reader hit us just at the wrong 		 * moment with the fasttrack code, and put us in a strange 		 * state, then it will be coming through in just a moment, 		 * (just as soon as we release the mutex) and keep things 		 * moving. 		 * Make sure we remove ourselves from the work queue. It 		 * would be a waste of effort to do all this again. 		 */
+name|ng_worklist_remove
+argument_list|(
+name|ngq
+operator|->
+name|q_node
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
 operator|)
 return|;
 block|}
@@ -6415,7 +6607,12 @@ name|el_next
 operator|)
 condition|)
 block|{
-comment|/* 		 * that was the last entry in the queue so set the 'last 		 * pointer up correctly and make sure the pending flags are 		 * clear. 		 */
+comment|/* 		 * that was the last entry in the queue so set the 'last 		 * pointer up correctly and make sure the pending flag is 		 * clear. 		 */
+name|add_arg
+operator|+=
+operator|-
+name|OP_PENDING
+expr_stmt|;
 name|ngq
 operator|->
 name|last
@@ -6448,34 +6645,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*  		 * Since there is something on the queue, note what it is 		 * in the flags word. 		 */
-if|if
-condition|(
-operator|(
-name|ngq
-operator|->
-name|queue
-operator|->
-name|el_flags
-operator|&
-name|NGQF_RW
-operator|)
-operator|==
-name|NGQF_READER
-condition|)
-block|{
-name|add_arg
-operator|+=
-name|READ_PENDING
-expr_stmt|;
-block|}
-else|else
-block|{
-name|add_arg
-operator|+=
-name|WRITE_PENDING
-expr_stmt|;
-block|}
+comment|/* 		 * Since there is still something on the queue 		 * we don't need to change the PENDING flag. 		 */
 name|atomic_add_long
 argument_list|(
 operator|&
@@ -6489,11 +6659,9 @@ expr_stmt|;
 comment|/* 		 * If we see more doable work, make sure we are 		 * on the work queue. 		 */
 if|if
 condition|(
-name|CAN_GET_WORK
+name|NEXT_QUEUED_ITEM_CAN_PROCEED
 argument_list|(
 name|ngq
-operator|->
-name|q_flags
 argument_list|)
 condition|)
 block|{
@@ -6506,7 +6674,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * We have successfully cleared the old pending flag, set the new one 	 * if it is needed, and incremented the appropriate active field. 	 * (all in one atomic addition.. ) 	 */
 return|return
 operator|(
 name|item
@@ -6516,22 +6683,8 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Queue a packet to be picked up by someone else.  * We really don't care who, but we can't or don't want to hang around  * to process it ourselves. We are probably an interrupt routine..  * 1 = writer, 0 = reader  */
+comment|/*  * Queue a packet to be picked up by someone else.  * We really don't care who, but we can't or don't want to hang around  * to process it ourselves. We are probably an interrupt routine..  * If the queue could be run, flag the netisr handler to start.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|NGQRW_R
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|NGQRW_W
-value|1
-end_define
 
 begin_function
 specifier|static
@@ -6559,6 +6712,23 @@ operator|->
 name|q_mtx
 argument_list|,
 name|MA_OWNED
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rw
+operator|==
+name|NGQRW_W
+condition|)
+name|NGI_SET_WRITER
+argument_list|(
+name|item
+argument_list|)
+expr_stmt|;
+else|else
+name|NGI_SET_READER
+argument_list|(
+name|item
 argument_list|)
 expr_stmt|;
 name|item
@@ -6589,15 +6759,6 @@ operator|->
 name|queue
 operator|)
 condition|)
-block|{
-comment|/* 		 * When called with constants for rw, the optimiser will 		 * remove the unneeded branch below. 		 */
-if|if
-condition|(
-name|rw
-operator|==
-name|NGQRW_W
-condition|)
-block|{
 name|atomic_add_long
 argument_list|(
 operator|&
@@ -6605,24 +6766,9 @@ name|ngq
 operator|->
 name|q_flags
 argument_list|,
-name|WRITE_PENDING
+name|OP_PENDING
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|atomic_add_long
-argument_list|(
-operator|&
-name|ngq
-operator|->
-name|q_flags
-argument_list|,
-name|READ_PENDING
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 name|ngq
 operator|->
 name|last
@@ -6633,6 +6779,21 @@ name|item
 operator|->
 name|el_next
 operator|)
+expr_stmt|;
+comment|/* 	 * We can take the worklist lock with the node locked 	 * BUT NOT THE REVERSE! 	 */
+if|if
+condition|(
+name|NEXT_QUEUED_ITEM_CAN_PROCEED
+argument_list|(
+name|ngq
+argument_list|)
+condition|)
+name|ng_setisr
+argument_list|(
+name|ngq
+operator|->
+name|q_node
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -6656,6 +6817,22 @@ name|item_p
 name|item
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|ngq
+operator|!=
+operator|&
+name|ng_deadnode
+operator|.
+name|nd_input_queue
+argument_list|,
+operator|(
+literal|"%s: working on deadnode"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* ######### Hack alert ######### */
 name|atomic_add_long
 argument_list|(
@@ -6709,7 +6886,7 @@ name|q_mtx
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Try again. Another processor (or interrupt for that matter) may 	 * have removed the last queued item that was stopping us from 	 * running, between the previous test, and the moment that we took 	 * the mutex. (Or maybe a writer completed.) 	 */
+comment|/* 	 * Try again. Another processor (or interrupt for that matter) may 	 * have removed the last queued item that was stopping us from 	 * running, between the previous test, and the moment that we took 	 * the mutex. (Or maybe a writer completed.) 	 * Even if another fast-track reader hits during this period 	 * we don't care as multiple readers is OK. 	 */
 if|if
 condition|(
 operator|(
@@ -6750,12 +6927,6 @@ operator|)
 return|;
 block|}
 comment|/* 	 * and queue the request for later. 	 */
-name|item
-operator|->
-name|el_flags
-operator||=
-name|NGQF_READER
-expr_stmt|;
 name|ng_queue_rw
 argument_list|(
 name|ngq
@@ -6763,22 +6934,6 @@ argument_list|,
 name|item
 argument_list|,
 name|NGQRW_R
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|CAN_GET_WORK
-argument_list|(
-name|ngq
-operator|->
-name|q_flags
-argument_list|)
-condition|)
-name|ng_setisr
-argument_list|(
-name|ngq
-operator|->
-name|q_node
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin
@@ -6814,6 +6969,22 @@ name|item_p
 name|item
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|ngq
+operator|!=
+operator|&
+name|ng_deadnode
+operator|.
+name|nd_input_queue
+argument_list|,
+operator|(
+literal|"%s: working on deadnode"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 name|restart
 label|:
 name|mtx_lock_spin
@@ -6840,6 +7011,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* collision could happen *HERE* */
 name|atomic_add_long
 argument_list|(
 operator|&
@@ -6891,13 +7063,6 @@ operator|)
 return|;
 block|}
 comment|/* 	 * and queue the request for later. 	 */
-name|item
-operator|->
-name|el_flags
-operator|&=
-operator|~
-name|NGQF_RW
-expr_stmt|;
 name|ng_queue_rw
 argument_list|(
 name|ngq
@@ -6905,22 +7070,6 @@ argument_list|,
 name|item
 argument_list|,
 name|NGQRW_W
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|CAN_GET_WORK
-argument_list|(
-name|ngq
-operator|->
-name|q_flags
-argument_list|)
-condition|)
-name|ng_setisr
-argument_list|(
-name|ngq
-operator|->
-name|q_node
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin
@@ -7005,9 +7154,6 @@ block|{
 name|item_p
 name|item
 decl_stmt|;
-name|u_int
-name|add_arg
-decl_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -7016,48 +7162,13 @@ operator|->
 name|q_mtx
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-comment|/* Now take a look at what's on the queue */
-if|if
+while|while
 condition|(
 name|ngq
 operator|->
-name|q_flags
-operator|&
-name|READ_PENDING
+name|queue
 condition|)
 block|{
-name|add_arg
-operator|=
-operator|-
-name|READ_PENDING
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|ngq
-operator|->
-name|q_flags
-operator|&
-name|WRITE_PENDING
-condition|)
-block|{
-name|add_arg
-operator|=
-operator|-
-name|WRITE_PENDING
-expr_stmt|;
-block|}
-else|else
-block|{
-break|break;
-block|}
 name|item
 operator|=
 name|ngq
@@ -7097,37 +7208,6 @@ operator|->
 name|queue
 operator|)
 expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-operator|(
-name|ngq
-operator|->
-name|queue
-operator|->
-name|el_flags
-operator|&
-name|NGQF_RW
-operator|)
-operator|==
-name|NGQF_READER
-condition|)
-block|{
-name|add_arg
-operator|+=
-name|READ_PENDING
-expr_stmt|;
-block|}
-else|else
-block|{
-name|add_arg
-operator|+=
-name|WRITE_PENDING
-expr_stmt|;
-block|}
-block|}
 name|atomic_add_long
 argument_list|(
 operator|&
@@ -7135,9 +7215,11 @@ name|ngq
 operator|->
 name|q_flags
 argument_list|,
-name|add_arg
+operator|-
+name|OP_PENDING
 argument_list|)
 expr_stmt|;
+block|}
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -7146,6 +7228,7 @@ operator|->
 name|q_mtx
 argument_list|)
 expr_stmt|;
+comment|/* If the item is supplying a callback, call it with an error */
 if|if
 condition|(
 name|item
@@ -7248,16 +7331,6 @@ name|queue
 decl_stmt|,
 name|rw
 decl_stmt|;
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|,
-name|ierror
-decl_stmt|;
-name|item_p
-name|oitem
-decl_stmt|;
 name|struct
 name|ng_queue
 modifier|*
@@ -7267,6 +7340,11 @@ operator|&
 name|node
 operator|->
 name|nd_input_queue
+decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -7437,17 +7515,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* By default data is a reader in the locking scheme */
-name|item
-operator|->
-name|el_flags
-operator||=
-name|NGQF_READER
-expr_stmt|;
-name|rw
-operator|=
-name|NGQRW_R
-expr_stmt|;
 break|break;
 case|case
 name|NGQF_MESG
@@ -7471,61 +7538,10 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* Data messages count as writers unles explicitly exempted */
-if|if
-condition|(
-name|NGI_MSG
-argument_list|(
-name|item
-argument_list|)
-operator|->
-name|header
-operator|.
-name|cmd
-operator|&
-name|NGM_READONLY
-condition|)
-block|{
-name|item
-operator|->
-name|el_flags
-operator||=
-name|NGQF_READER
-expr_stmt|;
-name|rw
-operator|=
-name|NGQRW_R
-expr_stmt|;
-block|}
-else|else
-block|{
-name|item
-operator|->
-name|el_flags
-operator|&=
-operator|~
-name|NGQF_RW
-expr_stmt|;
-name|rw
-operator|=
-name|NGQRW_W
-expr_stmt|;
-block|}
 break|break;
 case|case
 name|NGQF_FN
 case|:
-name|item
-operator|->
-name|el_flags
-operator|&=
-operator|~
-name|NGQF_RW
-expr_stmt|;
-name|rw
-operator|=
-name|NGQRW_W
-expr_stmt|;
 break|break;
 default|default:
 name|NG_FREE_ITEM
@@ -7542,7 +7558,45 @@ name|EINVAL
 operator|)
 return|;
 block|}
-comment|/* 	 * If the node specifies single threading, force writer semantics 	 * Similarly the node may say one hook always produces writers. 	 * These are over-rides. 	 */
+switch|switch
+condition|(
+name|item
+operator|->
+name|el_flags
+operator|&
+name|NGQF_RW
+condition|)
+block|{
+case|case
+name|NGQF_READER
+case|:
+name|rw
+operator|=
+name|NGQRW_R
+expr_stmt|;
+break|break;
+case|case
+name|NGQF_WRITER
+case|:
+name|rw
+operator|=
+name|NGQRW_W
+expr_stmt|;
+break|break;
+default|default:
+name|panic
+argument_list|(
+literal|"%s: invalid item flags %lx"
+argument_list|,
+name|__func__
+argument_list|,
+name|item
+operator|->
+name|el_flags
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * If the node specifies single threading, force writer semantics. 	 * Similarly, the node may say one hook always produces writers. 	 * These are overrides. 	 */
 if|if
 condition|(
 operator|(
@@ -7565,19 +7619,10 @@ name|HK_FORCE_WRITER
 operator|)
 operator|)
 condition|)
-block|{
 name|rw
 operator|=
 name|NGQRW_W
 expr_stmt|;
-name|item
-operator|->
-name|el_flags
-operator|&=
-operator|~
-name|NGQF_READER
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|queue
@@ -7617,23 +7662,6 @@ argument_list|,
 name|rw
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If there are active elements then we can rely on 		 * them. if not we should not rely on another packet 		 * coming here by another path, 		 * so it is best to put us in the netisr list. 		 * We can take the worklist lock with the node locked 		 * BUT NOT THE REVERSE! 		 */
-if|if
-condition|(
-name|CAN_GET_WORK
-argument_list|(
-name|ngq
-operator|->
-name|q_flags
-argument_list|)
-condition|)
-block|{
-name|ng_setisr
-argument_list|(
-name|node
-argument_list|)
-expr_stmt|;
-block|}
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -7662,11 +7690,6 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Take a queue item and a node and see if we can apply the item to 	 * the node. We may end up getting a different item to apply instead. 	 * Will allow for a piggyback reply only in the case where 	 * there is no queueing. 	 */
-name|oitem
-operator|=
-name|item
-expr_stmt|;
 comment|/* 	 * We already decided how we will be queueud or treated. 	 * Try get the appropriate operating permission. 	 */
 if|if
 condition|(
@@ -7674,7 +7697,6 @@ name|rw
 operator|==
 name|NGQRW_R
 condition|)
-block|{
 name|item
 operator|=
 name|ng_acquire_read
@@ -7684,9 +7706,7 @@ argument_list|,
 name|item
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|item
 operator|=
 name|ng_acquire_write
@@ -7696,8 +7716,6 @@ argument_list|,
 name|item
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* 	 * May have come back with a different item. 	 * or maybe none at all. The one we started with will 	 * have been queued in thises cases. 	 */
 if|if
 condition|(
 name|item
@@ -7737,7 +7755,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Take over the reference frm the item. 	 * Hold it until the called function returns. 	 */
 name|NGI_GET_NODE
 argument_list|(
 name|item
@@ -7746,30 +7763,19 @@ name|node
 argument_list|)
 expr_stmt|;
 comment|/* zaps stored node */
-name|ierror
+name|error
 operator|=
 name|ng_apply_item
 argument_list|(
 name|node
 argument_list|,
 name|item
+argument_list|,
+name|rw
 argument_list|)
 expr_stmt|;
 comment|/* drops r/w lock when done */
-comment|/* only return an error if it was our initial item.. (compat hack) */
-if|if
-condition|(
-name|oitem
-operator|==
-name|item
-condition|)
-block|{
-name|error
-operator|=
-name|ierror
-expr_stmt|;
-block|}
-comment|/* 	 * If the node goes away when we remove the reference,  	 * whatever we just did caused it.. whatever we do, DO NOT 	 * access the node again! 	 */
+comment|/* 	 * If the node goes away when we remove the reference, 	 * whatever we just did caused it.. whatever we do, DO NOT 	 * access the node again! 	 */
 if|if
 condition|(
 name|NG_NODE_UNREF
@@ -7798,11 +7804,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|CAN_GET_WORK
+name|NEXT_QUEUED_ITEM_CAN_PROCEED
 argument_list|(
 name|ngq
-operator|->
-name|q_flags
 argument_list|)
 condition|)
 name|ng_setisr
@@ -7844,23 +7848,13 @@ name|node
 parameter_list|,
 name|item_p
 name|item
+parameter_list|,
+name|int
+name|rw
 parameter_list|)
 block|{
 name|hook_p
 name|hook
-decl_stmt|;
-name|int
-name|was_reader
-init|=
-operator|(
-operator|(
-name|item
-operator|->
-name|el_flags
-operator|&
-name|NGQF_RW
-operator|)
-operator|)
 decl_stmt|;
 name|int
 name|error
@@ -7909,7 +7903,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * If item has apply callback, store it. Clear callback 	 * immediately, two avoid another call in case if 	 * item would be reused by destination node. 	 */
+comment|/* 	 * If the item has an "apply" callback, store it. 	 * Clear item's callback immediately, to avoid an extra call if 	 * the item is reused by the destination node. 	 */
 if|if
 condition|(
 name|item
@@ -8099,7 +8093,7 @@ argument_list|(
 name|item
 argument_list|)
 decl_stmt|;
-comment|/*  			 * check if the generic handler owns it. 			 */
+comment|/* 			 * check if the generic handler owns it. 			 */
 if|if
 condition|(
 operator|(
@@ -8287,7 +8281,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|was_reader
+name|rw
+operator|==
+name|NGQRW_R
 condition|)
 block|{
 name|ng_leave_read
@@ -11286,6 +11282,18 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|ng_topo_mtx
+argument_list|,
+literal|"netgraph topology mutex"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|NETGRAPH_DEBUG
@@ -12142,13 +12150,16 @@ operator|&
 name|ng_worklist_mtx
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We have the node. We also take over the reference 		 * that the list had on it. 		 * Now process as much as you can, until it won't 		 * let you have another item off the queue. 		 * All this time, keep the reference 		 * that lets us be sure that the node still exists. 		 * Let the reference go at the last minute. 		 * ng_dequeue will put us back on the worklist 		 * if there is more too do. This may be of use if there 		 * are Multiple Processors and multiple Net threads in the  		 * future. 		 */
+comment|/* 		 * We have the node. We also take over the reference 		 * that the list had on it. 		 * Now process as much as you can, until it won't 		 * let you have another item off the queue. 		 * All this time, keep the reference 		 * that lets us be sure that the node still exists. 		 * Let the reference go at the last minute. 		 * ng_dequeue will put us back on the worklist 		 * if there is more too do. This may be of use if there 		 * are Multiple Processors and multiple Net threads in the 		 * future. 		 */
 for|for
 control|(
 init|;
 condition|;
 control|)
 block|{
+name|int
+name|rw
+decl_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -12167,6 +12178,9 @@ operator|&
 name|node
 operator|->
 name|nd_input_queue
+argument_list|,
+operator|&
+name|rw
 argument_list|)
 expr_stmt|;
 if|if
@@ -12214,6 +12228,8 @@ argument_list|(
 name|node
 argument_list|,
 name|item
+argument_list|,
+name|rw
 argument_list|)
 expr_stmt|;
 name|NG_NODE_UNREF
@@ -12414,7 +12430,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Put mbuf into the item.  * Hook and node references will be removed when the item is dequeued.  * (or equivalent)  * (XXX) Unsafe because no reference held by peer on remote node.  * remote node might go away in this timescale.  * We know the hooks can't go away because that would require getting  * a writer item on both nodes and we must have at least a  reader  * here to eb able to do this.  * Note that the hook loaded is the REMOTE hook.  *  * This is possibly in the critical path for new data.  */
+comment|/*  * Put mbuf into the item.  * Hook and node references will be removed when the item is dequeued.  * (or equivalent)  * (XXX) Unsafe because no reference held by peer on remote node.  * remote node might go away in this timescale.  * We know the hooks can't go away because that would require getting  * a writer item on both nodes and we must have at least a  reader  * here to be able to do this.  * Note that the hook loaded is the REMOTE hook.  *  * This is possibly in the critical path for new data.  */
 end_comment
 
 begin_function
@@ -12465,6 +12481,8 @@ operator|->
 name|el_flags
 operator|=
 name|NGQF_DATA
+operator||
+name|NGQF_READER
 expr_stmt|;
 name|item
 operator|->
@@ -12534,11 +12552,33 @@ return|;
 block|}
 name|ITEM_DEBUG_CHECKS
 expr_stmt|;
+comment|/* Messages items count as writers unless explicitly exempted. */
+if|if
+condition|(
+name|msg
+operator|->
+name|header
+operator|.
+name|cmd
+operator|&
+name|NGM_READONLY
+condition|)
 name|item
 operator|->
 name|el_flags
 operator|=
 name|NGQF_MESG
+operator||
+name|NGQF_READER
+expr_stmt|;
+else|else
+name|item
+operator|->
+name|el_flags
+operator|=
+name|NGQF_MESG
+operator||
+name|NGQF_WRITER
 expr_stmt|;
 name|item
 operator|->
@@ -12884,18 +12924,6 @@ operator|)
 return|;
 block|}
 comment|/* Fill out the contents */
-name|item
-operator|->
-name|el_flags
-operator|=
-name|NGQF_MESG
-expr_stmt|;
-name|item
-operator|->
-name|el_next
-operator|=
-name|NULL
-expr_stmt|;
 name|NGI_SET_NODE
 argument_list|(
 name|item
@@ -12980,6 +13008,8 @@ operator|->
 name|el_flags
 operator|=
 name|NGQF_MESG
+operator||
+name|NGQF_WRITER
 expr_stmt|;
 name|item
 operator|->
@@ -13164,7 +13194,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Official timeout routines for Netgraph nodes.  */
+comment|/*  * Official timeout routines for Netgraph nodes.  */
 end_comment
 
 begin_function
@@ -13367,17 +13397,28 @@ decl_stmt|;
 name|int
 name|rval
 decl_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|c
-operator|==
+operator|!=
 name|NULL
-condition|)
-return|return
+argument_list|,
 operator|(
-literal|0
+literal|"ng_uncallout: NULL callout"
 operator|)
-return|;
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|node
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"ng_uncallout: NULL node"
+operator|)
+argument_list|)
+expr_stmt|;
 name|rval
 operator|=
 name|callout_stop
@@ -13419,7 +13460,7 @@ name|node
 operator|)
 condition|)
 block|{
-comment|/* 		 * We successfully removed it from the queue before it ran 		 * So now we need to unreference everything that was  		 * given extra references. (NG_FREE_ITEM does this). 		 */
+comment|/* 		 * We successfully removed it from the queue before it ran 		 * So now we need to unreference everything that was 		 * given extra references. (NG_FREE_ITEM does this). 		 */
 name|NG_FREE_ITEM
 argument_list|(
 name|item

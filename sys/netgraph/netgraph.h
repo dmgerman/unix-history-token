@@ -1826,7 +1826,7 @@ comment|/*----------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/***********************************************************************  ***************** Node Structure and Methods **************************  ***********************************************************************  * Structure of a node  * including the eembedded queue structure.  *  * The structure for queueing Netgraph request items   * embedded in the node structure  */
+comment|/***********************************************************************  ***************** Node Structure and Methods **************************  ***********************************************************************  * Structure of a node  * including the eembedded queue structure.  *  * The structure for queueing Netgraph request items  * embedded in the node structure  */
 end_comment
 
 begin_struct
@@ -3737,7 +3737,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* MASK for queue entry read/write */
+comment|/* MASK for wanted queue mode */
 end_comment
 
 begin_define
@@ -3748,7 +3748,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* queued as a reader */
+comment|/* wants to be a reader */
 end_comment
 
 begin_define
@@ -3759,7 +3759,40 @@ value|0x00
 end_define
 
 begin_comment
-comment|/* queued as a writer */
+comment|/* wants to be a writer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGQF_QMODE
+value|0x08
+end_define
+
+begin_comment
+comment|/* MASK for how it was queued */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGQF_QREADER
+value|0x08
+end_define
+
+begin_comment
+comment|/* was queued as a reader */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGQF_QWRITER
+value|0x00
+end_define
+
+begin_comment
+comment|/* was queued as a writer */
 end_comment
 
 begin_comment
@@ -4807,6 +4840,46 @@ define|\
 value|do {								\ 		(h) = NGI_HOOK(i);					\ 		_NGI_HOOK(i) = NULL;					\ 	} while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|NGI_SET_WRITER
+parameter_list|(
+name|i
+parameter_list|)
+value|((i)->el_flags&= ~NGQF_QMODE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NGI_SET_READER
+parameter_list|(
+name|i
+parameter_list|)
+value|((i)->el_flags |= NGQF_QREADER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NGI_QUEUED_READER
+parameter_list|(
+name|i
+parameter_list|)
+value|((i)->el_flags& NGQF_QREADER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NGI_QUEUED_WRITER
+parameter_list|(
+name|i
+parameter_list|)
+value|(((i)->el_flags& NGQF_QMODE) == NGQF_QWRITER)
+end_define
+
 begin_comment
 comment|/********************************************************************** * Data macros.  Send, manipulate and free. **********************************************************************/
 end_comment
@@ -5014,7 +5087,7 @@ value|do {								\ 		if (resp) {						\ 			ng_ID_t _dest = NGI_RETADDR(item);		
 end_define
 
 begin_comment
-comment|/***********************************************************************  ******** Structures Definitions and Macros for defining a node  *******  ***********************************************************************  *   * Here we define the structures needed to actually define a new node  * type.  */
+comment|/***********************************************************************  ******** Structures Definitions and Macros for defining a node  *******  ***********************************************************************  *  * Here we define the structures needed to actually define a new node  * type.  */
 end_comment
 
 begin_comment
@@ -5233,7 +5306,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Methods that the nodes can use.  * Many of these methods should usually NOT be used directly but via   * Macros above.  */
+comment|/*  * Methods that the nodes can use.  * Many of these methods should usually NOT be used directly but via  * Macros above.  */
 end_comment
 
 begin_function_decl
