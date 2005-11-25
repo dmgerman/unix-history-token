@@ -71,10 +71,6 @@ decl_stmt|;
 comment|/* File list to add to clean rule */
 name|char
 modifier|*
-name|f_needs
-decl_stmt|;
-name|char
-modifier|*
 name|f_warn
 decl_stmt|;
 comment|/* warning message */
@@ -109,13 +105,6 @@ define|#
 directive|define
 name|NORMAL
 value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|INVISIBLE
-value|2
 end_define
 
 begin_define
@@ -176,13 +165,6 @@ define|#
 directive|define
 name|BEFORE_DEPEND
 value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISDUP
-value|8
 end_define
 
 begin_define
