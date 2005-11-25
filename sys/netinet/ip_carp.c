@@ -6194,6 +6194,12 @@ operator|&
 name|vh
 operator|->
 name|sc_if
+operator|&&
+name|vh
+operator|->
+name|sc_state
+operator|==
+name|MASTER
 condition|)
 block|{
 operator|*
@@ -6331,6 +6337,12 @@ operator||
 name|IFF_RUNNING
 operator|)
 operator|)
+operator|&&
+name|vh
+operator|->
+name|sc_state
+operator|==
+name|MASTER
 condition|)
 block|{
 name|CARP_UNLOCK
