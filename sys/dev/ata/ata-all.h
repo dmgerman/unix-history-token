@@ -1888,7 +1888,7 @@ begin_define
 define|#
 directive|define
 name|ATA_MAX_28BIT_LBA
-value|268435455
+value|268435455UL
 end_define
 
 begin_comment
