@@ -873,7 +873,7 @@ name|g_debugflags
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Set various trace levels for GEOM debugging"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -894,7 +894,7 @@ name|g_collectstats
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Control statistics collection on GEOM providers and consumers"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -918,7 +918,7 @@ expr|struct
 name|g_class
 argument_list|)
 argument_list|,
-literal|""
+literal|"sizeof(struct g_class)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -942,7 +942,7 @@ expr|struct
 name|g_geom
 argument_list|)
 argument_list|,
-literal|""
+literal|"sizeof(struct g_geom)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -966,7 +966,7 @@ expr|struct
 name|g_provider
 argument_list|)
 argument_list|,
-literal|""
+literal|"sizeof(struct g_provider)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -990,7 +990,7 @@ expr|struct
 name|g_consumer
 argument_list|)
 argument_list|,
-literal|""
+literal|"sizeof(struct g_consumer)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1014,7 +1014,7 @@ expr|struct
 name|g_bioq
 argument_list|)
 argument_list|,
-literal|""
+literal|"sizeof(struct g_bioq)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
