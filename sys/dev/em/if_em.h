@@ -34,25 +34,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mbuf.h>
+file|<sys/bus.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/protosw.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
+file|<sys/endian.h>
 end_include
 
 begin_include
@@ -64,7 +52,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
 end_include
 
 begin_include
@@ -82,7 +88,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/syslog.h>
+file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rman.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/bpf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/ethernet.h>
 end_include
 
 begin_include
@@ -100,12 +130,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/ethernet.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if_dl.h>
 end_include
 
@@ -113,12 +137,6 @@ begin_include
 include|#
 directive|include
 file|<net/if_media.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/bpf.h>
 end_include
 
 begin_include
@@ -166,48 +184,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/rman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/clock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/pci/pcivar.h>
 end_include
 
@@ -215,18 +191,6 @@ begin_include
 include|#
 directive|include
 file|<dev/pci/pcireg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/endian.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
 end_include
 
 begin_include
@@ -240,25 +204,67 @@ comment|/* Tunables */
 end_comment
 
 begin_comment
-comment|/*  * EM_MAX_TXD: Maximum number of Transmit Descriptors  * Valid Range: 80-256 for 82542 and 82543-based adapters  *              80-4096 for others  * Default Value: 256  *   This value is the number of transmit descriptors allocated by the driver.  *   Increasing this value allows the driver to queue more transmits. Each  *   descriptor is 16 bytes.  */
+comment|/*  * EM_TXD: Maximum number of Transmit Descriptors  * Valid Range: 80-256 for 82542 and 82543-based adapters  *              80-4096 for others  * Default Value: 256  *   This value is the number of transmit descriptors allocated by the driver.  *   Increasing this value allows the driver to queue more transmits. Each  *   descriptor is 16 bytes.  *   Since TDLEN should be multiple of 128bytes, the number of transmit  *   desscriptors should meet the following condition.  *      (num_tx_desc * sizeof(struct em_tx_desc)) % 128 == 0  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_MIN_TXD
+value|80
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_MAX_TXD_82543
+value|256
+end_define
 
 begin_define
 define|#
 directive|define
 name|EM_MAX_TXD
-value|256
+value|4096
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_DEFAULT_TXD
+value|EM_MAX_TXD_82543
 end_define
 
 begin_comment
-comment|/*  * EM_MAX_RXD - Maximum number of receive Descriptors  * Valid Range: 80-256 for 82542 and 82543-based adapters  *              80-4096 for others  * Default Value: 256  *   This value is the number of receive descriptors allocated by the driver.  *   Increasing this value allows the driver to buffer more incoming packets.  *   Each descriptor is 16 bytes.  A receive buffer is also allocated for each  *   descriptor. The maximum MTU size is 16110.  *  */
+comment|/*  * EM_RXD - Maximum number of receive Descriptors  * Valid Range: 80-256 for 82542 and 82543-based adapters  *              80-4096 for others  * Default Value: 256  *   This value is the number of receive descriptors allocated by the driver.  *   Increasing this value allows the driver to buffer more incoming packets.  *   Each descriptor is 16 bytes.  A receive buffer is also allocated for each  *   descriptor. The maximum MTU size is 16110.  *   Since TDLEN should be multiple of 128bytes, the number of transmit  *   desscriptors should meet the following condition.  *      (num_tx_desc * sizeof(struct em_tx_desc)) % 128 == 0  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EM_MAX_RXD
+name|EM_MIN_RXD
+value|80
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_MAX_RXD_82543
 value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_MAX_RXD
+value|4096
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_DEFAULT_RXD
+value|EM_MAX_RXD_82543
 end_define
 
 begin_comment
@@ -339,7 +345,7 @@ begin_define
 define|#
 directive|define
 name|EM_TX_CLEANUP_THRESHOLD
-value|EM_MAX_TXD / 8
+value|(adapter->num_tx_desc / 8)
 end_define
 
 begin_comment
@@ -388,29 +394,6 @@ define|#
 directive|define
 name|EM_VENDOR_ID
 value|0x8086
-end_define
-
-begin_define
-define|#
-directive|define
-name|EM_MMBA
-value|0x0010
-end_define
-
-begin_comment
-comment|/* Mem base address */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EM_ROUNDUP
-parameter_list|(
-name|size
-parameter_list|,
-name|unit
-parameter_list|)
-value|(((size) + (unit) - 1)& ~((unit) - 1))
 end_define
 
 begin_define
@@ -1012,6 +995,14 @@ decl_stmt|;
 name|unsigned
 name|long
 name|no_tx_dma_setup
+decl_stmt|;
+name|unsigned
+name|long
+name|watchdog_events
+decl_stmt|;
+name|unsigned
+name|long
+name|rx_overruns
 decl_stmt|;
 comment|/* Used in for 82547 10Mb Half workaround */
 define|#

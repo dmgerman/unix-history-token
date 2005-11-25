@@ -87,6 +87,10 @@ name|em_82547
 block|,
 name|em_82547_rev_2
 block|,
+name|em_82571
+block|,
+name|em_82572
+block|,
 name|em_82573
 block|,
 name|em_num_macs
@@ -109,6 +113,9 @@ name|em_eeprom_microwire
 block|,
 name|em_eeprom_flash
 block|,
+name|em_eeprom_none
+block|,
+comment|/* No NVM support */
 name|em_num_eeprom_types
 block|}
 name|em_eeprom_type
@@ -269,6 +276,8 @@ name|em_bus_width_64
 block|,
 name|em_bus_width_pciex_1
 block|,
+name|em_bus_width_pciex_2
+block|,
 name|em_bus_width_pciex_4
 block|,
 name|em_bus_width_reserved
@@ -352,6 +361,10 @@ block|,
 name|em_igp_cable_length_110
 init|=
 literal|110
+block|,
+name|em_igp_cable_length_115
+init|=
+literal|115
 block|,
 name|em_igp_cable_length_120
 init|=
@@ -2036,22 +2049,6 @@ end_comment
 
 begin_function_decl
 name|uint32_t
-name|em_io_read
-parameter_list|(
-name|struct
-name|em_hw
-modifier|*
-name|hw
-parameter_list|,
-name|unsigned
-name|long
-name|port
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|uint32_t
 name|em_read_reg_io
 parameter_list|(
 name|struct
@@ -2061,25 +2058,6 @@ name|hw
 parameter_list|,
 name|uint32_t
 name|offset
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|em_io_write
-parameter_list|(
-name|struct
-name|em_hw
-modifier|*
-name|hw
-parameter_list|,
-name|unsigned
-name|long
-name|port
-parameter_list|,
-name|uint32_t
-name|value
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2290,6 +2268,68 @@ name|hw
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|E1000_BAR_TYPE
+parameter_list|(
+name|v
+parameter_list|)
+value|((v)& E1000_BAR_TYPE_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_BAR_TYPE_MASK
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_BAR_TYPE_MEM
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_BAR_TYPE_IO
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_BAR_MEM_TYPE
+parameter_list|(
+name|v
+parameter_list|)
+value|((v)& E1000_BAR_MEM_TYPE_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_BAR_MEM_TYPE_MASK
+value|0x00000006
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_BAR_MEM_TYPE_32BIT
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_BAR_MEM_TYPE_64BIT
+value|0x00000004
+end_define
 
 begin_define
 define|#
@@ -2564,6 +2604,48 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_DEV_ID_82571EB_COPPER
+value|0x105E
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_82571EB_FIBER
+value|0x105F
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_82571EB_SERDES
+value|0x1060
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_82572EI_COPPER
+value|0x107D
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_82572EI_FIBER
+value|0x107E
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_82572EI_SERDES
+value|0x107F
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_DEV_ID_82573E
 value|0x108B
 end_define
@@ -2573,6 +2655,13 @@ define|#
 directive|define
 name|E1000_DEV_ID_82573E_IAMT
 value|0x108C
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_82573L
+value|0x109A
 end_define
 
 begin_define
@@ -3485,6 +3574,17 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * TDBA/RDBA should be aligned on 16 byte boundary. But TDLEN/RDLEN should be  * multiple of 128 bytes. So we align TDBA/RDBA on 128 byte boundary. This will  * also optimize cache line size effect. H/W supports up to cache line size 128.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DBA_ALIGN
+value|128
+end_define
+
+begin_comment
 comment|/* Transmit Descriptor bit definitions */
 end_comment
 
@@ -4106,6 +4206,13 @@ name|E1000_FFVT_SIZE
 value|E1000_FLEXIBLE_FILTER_SIZE_MAX
 end_define
 
+begin_define
+define|#
+directive|define
+name|E1000_DISABLE_SERDES_LOOPBACK
+value|0x0400
+end_define
+
 begin_comment
 comment|/* Register Set. (82543, 82544)  *  * Registers are defined to be 32 bits and  should be accessed as 32 bit values.  * These registers are physically located on the NIC, but are mapped into the  * host memory address space.  *  * RW - register is both readable and writable  * RO - register is read only  * WO - register is write only  * R/clr - register is read only and is cleared when read  * A - register array  */
 end_comment
@@ -4196,6 +4303,17 @@ end_define
 
 begin_comment
 comment|/* MDI Control - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_SCTL
+value|0x00024
+end_define
+
+begin_comment
+comment|/* SerDes Control - RW */
 end_comment
 
 begin_define
@@ -4317,6 +4435,72 @@ end_define
 
 begin_comment
 comment|/* RX Control - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RDTR1
+value|0x02820
+end_define
+
+begin_comment
+comment|/* RX Delay Timer (1) - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RDBAL1
+value|0x02900
+end_define
+
+begin_comment
+comment|/* RX Descriptor Base Address Low (1) - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RDBAH1
+value|0x02904
+end_define
+
+begin_comment
+comment|/* RX Descriptor Base Address High (1) - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RDLEN1
+value|0x02908
+end_define
+
+begin_comment
+comment|/* RX Descriptor Length (1) - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RDH1
+value|0x02910
+end_define
+
+begin_comment
+comment|/* RX Descriptor Head (1) - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RDT1
+value|0x02918
+end_define
+
+begin_comment
+comment|/* RX Descriptor Tail (1) - RW */
 end_comment
 
 begin_define
@@ -4654,6 +4838,72 @@ end_define
 
 begin_comment
 comment|/* RX Delay Timer - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RDBAL0
+value|E1000_RDBAL
+end_define
+
+begin_comment
+comment|/* RX Desc Base Address Low (0) - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RDBAH0
+value|E1000_RDBAH
+end_define
+
+begin_comment
+comment|/* RX Desc Base Address High (0) - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RDLEN0
+value|E1000_RDLEN
+end_define
+
+begin_comment
+comment|/* RX Desc Length (0) - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RDH0
+value|E1000_RDH
+end_define
+
+begin_comment
+comment|/* RX Desc Head (0) - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RDT0
+value|E1000_RDT
+end_define
+
+begin_comment
+comment|/* RX Desc Tail (0) - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RDTR0
+value|E1000_RDTR
+end_define
+
+begin_comment
+comment|/* RX Delay Timer (0) - RW */
 end_comment
 
 begin_define
@@ -5595,7 +5845,7 @@ begin_define
 define|#
 directive|define
 name|E1000_IAC
-value|0x4100
+value|0x04100
 end_define
 
 begin_comment
@@ -5606,7 +5856,7 @@ begin_define
 define|#
 directive|define
 name|E1000_ICRXPTC
-value|0x4104
+value|0x04104
 end_define
 
 begin_comment
@@ -5617,7 +5867,7 @@ begin_define
 define|#
 directive|define
 name|E1000_ICRXATC
-value|0x4108
+value|0x04108
 end_define
 
 begin_comment
@@ -5628,7 +5878,7 @@ begin_define
 define|#
 directive|define
 name|E1000_ICTXPTC
-value|0x410C
+value|0x0410C
 end_define
 
 begin_comment
@@ -5639,7 +5889,7 @@ begin_define
 define|#
 directive|define
 name|E1000_ICTXATC
-value|0x4110
+value|0x04110
 end_define
 
 begin_comment
@@ -5650,7 +5900,7 @@ begin_define
 define|#
 directive|define
 name|E1000_ICTXQEC
-value|0x4118
+value|0x04118
 end_define
 
 begin_comment
@@ -5661,7 +5911,7 @@ begin_define
 define|#
 directive|define
 name|E1000_ICTXQMTC
-value|0x411C
+value|0x0411C
 end_define
 
 begin_comment
@@ -5672,7 +5922,7 @@ begin_define
 define|#
 directive|define
 name|E1000_ICRXDMTC
-value|0x4120
+value|0x04120
 end_define
 
 begin_comment
@@ -5683,7 +5933,7 @@ begin_define
 define|#
 directive|define
 name|E1000_ICRXOC
-value|0x4124
+value|0x04124
 end_define
 
 begin_comment
@@ -5999,6 +6249,76 @@ comment|/* Host Inteface Control */
 end_comment
 
 begin_comment
+comment|/* RSS registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_CPUVEC
+value|0x02C10
+end_define
+
+begin_comment
+comment|/* CPU Vector Register - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MRQC
+value|0x05818
+end_define
+
+begin_comment
+comment|/* Multiple Receive Control - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RETA
+value|0x05C00
+end_define
+
+begin_comment
+comment|/* Redirection Table - RW Array */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RSSRK
+value|0x05C80
+end_define
+
+begin_comment
+comment|/* RSS Random Key - RW Array */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RSSIM
+value|0x05864
+end_define
+
+begin_comment
+comment|/* RSS Interrupt Mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RSSIR
+value|0x05868
+end_define
+
+begin_comment
+comment|/* RSS Interrupt Request */
+end_comment
+
+begin_comment
 comment|/* Register Set (82542)  *  * Some of the 82542 registers are located at different offsets than they are  * in more current versions of the 8254x. Despite the difference in location,  * the registers function in the same manner.  */
 end_comment
 
@@ -6056,6 +6376,13 @@ define|#
 directive|define
 name|E1000_82542_MDIC
 value|E1000_MDIC
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_SCTL
+value|E1000_SCTL
 end_define
 
 begin_define
@@ -6175,6 +6502,90 @@ define|#
 directive|define
 name|E1000_82542_RDT
 value|0x00128
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_RDTR0
+value|E1000_82542_RDTR
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_RDBAL0
+value|E1000_82542_RDBAL
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_RDBAH0
+value|E1000_82542_RDBAH
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_RDLEN0
+value|E1000_82542_RDLEN
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_RDH0
+value|E1000_82542_RDH
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_RDT0
+value|E1000_82542_RDT
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_RDTR1
+value|0x00130
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_RDBAL1
+value|0x00138
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_RDBAH1
+value|0x0013C
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_RDLEN1
+value|0x00140
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_RDH1
+value|0x00148
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_RDT1
+value|0x00150
 end_define
 
 begin_define
@@ -7206,6 +7617,48 @@ name|E1000_82542_HICR
 value|E1000_HICR
 end_define
 
+begin_define
+define|#
+directive|define
+name|E1000_82542_CPUVEC
+value|E1000_CPUVEC
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_MRQC
+value|E1000_MRQC
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_RETA
+value|E1000_RETA
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_RSSRK
+value|E1000_RSSRK
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_RSSIM
+value|E1000_RSSIM
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_RSSIR
+value|E1000_RSSIR
+end_define
+
 begin_comment
 comment|/* Statistics counters collected by the MAC */
 end_comment
@@ -7638,6 +8091,9 @@ name|boolean_t
 name|tbi_compatibility_on
 decl_stmt|;
 name|boolean_t
+name|laa_is_present
+decl_stmt|;
+name|boolean_t
 name|phy_reset_disable
 decl_stmt|;
 name|boolean_t
@@ -7946,6 +8402,17 @@ end_define
 
 begin_comment
 comment|/* Force Duplex */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_CTRL_D_UD_EN
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* Dock/Undock enable */
 end_comment
 
 begin_define
@@ -8647,6 +9114,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_EECD_SECVAL_SHIFT
+value|22
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_STM_OPCODE
 value|0xDB00
 end_define
@@ -9012,6 +9486,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_CTRL_EXT_CANC
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* Interrupt delay cancellation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_CTRL_EXT_DRV_LOAD
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* Driver loaded bit for FW */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_CTRL_EXT_IAME
 value|0x08000000
 end_define
@@ -9226,6 +9722,13 @@ define|#
 directive|define
 name|E1000_LEDCTL_LED3_MODE_SHIFT
 value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_LED3_BLINK_RATE
+value|0x20000000
 end_define
 
 begin_define
@@ -11398,6 +11901,73 @@ comment|/* packet checksum disabled */
 end_comment
 
 begin_comment
+comment|/* Multiple Receive Queue Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MRQC_ENABLE_MASK
+value|0x00000003
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_MRQC_ENABLE_RSS_2Q
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_MRQC_ENABLE_RSS_INT
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_MRQC_RSS_FIELD_MASK
+value|0xFFFF0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_MRQC_RSS_FIELD_IPV4_TCP
+value|0x00010000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_MRQC_RSS_FIELD_IPV4
+value|0x00020000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_MRQC_RSS_FIELD_IPV6_TCP
+value|0x00040000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_MRQC_RSS_FIELD_IPV6_EX
+value|0x00080000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_MRQC_RSS_FIELD_IPV6
+value|0x00100000
+end_define
+
+begin_comment
 comment|/* Definitions for power management and wakeup registers */
 end_comment
 
@@ -12472,8 +13042,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_GCR_BEM32
-value|0x00400000
+name|E1000_GCR_L1_ACT_WITHOUT_L0S_RX
+value|0x08000000
 end_define
 
 begin_comment
@@ -12864,6 +13434,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|EEPROM_VERSION
+value|0x0005
+end_define
+
+begin_define
+define|#
+directive|define
 name|EEPROM_SERDES_AMPLITUDE
 value|0x0006
 end_define
@@ -12927,6 +13504,17 @@ directive|define
 name|EEPROM_CHECKSUM_REG
 value|0x003F
 end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_EEPROM_CFG_DONE
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* MNG config cycle done */
+end_comment
 
 begin_comment
 comment|/* Word definitions for ID LED Settings */
@@ -13555,6 +14143,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_PBA_32K
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_PBA_38K
+value|0x0026
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_PBA_40K
 value|0x0028
 end_define
@@ -14039,6 +14641,28 @@ begin_comment
 comment|/* Extended Status Reg */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAX_PHY_REG_ADDRESS
+value|0x1F
+end_define
+
+begin_comment
+comment|/* 5 bit address bus (0-0x1F) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_PHY_MULTI_PAGE_REG
+value|0xF
+end_define
+
+begin_comment
+comment|/* Registers equal on all pages */
+end_comment
+
 begin_comment
 comment|/* M88E1000 Specific Registers */
 end_comment
@@ -14477,28 +15101,6 @@ directive|define
 name|IGP01E1000_ANALOG_REGS_PAGE
 value|0x20C0
 end_define
-
-begin_define
-define|#
-directive|define
-name|MAX_PHY_REG_ADDRESS
-value|0x1F
-end_define
-
-begin_comment
-comment|/* 5 bit address bus (0-0x1F) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX_PHY_MULTI_PAGE_REG
-value|0xF
-end_define
-
-begin_comment
-comment|/*Registers that are equal on all pages*/
-end_comment
 
 begin_comment
 comment|/* PHY Control Register */
@@ -16499,7 +17101,7 @@ begin_define
 define|#
 directive|define
 name|IGP02E1000_AGC_LENGTH_TABLE_SIZE
-value|128
+value|113
 end_define
 
 begin_comment
@@ -16517,7 +17119,7 @@ begin_define
 define|#
 directive|define
 name|IGP02E1000_AGC_RANGE
-value|10
+value|15
 end_define
 
 begin_comment

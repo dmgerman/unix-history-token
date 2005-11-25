@@ -28,13 +28,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/bus.h>
 end_include
 
 begin_include
@@ -46,31 +46,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/protosw.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/bus.h>
+file|<sys/socket.h>
 end_include
 
 begin_include
@@ -94,24 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/clock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/pci/pcivar.h>
 end_include
 
@@ -120,20 +84,6 @@ include|#
 directive|include
 file|<dev/pci/pcireg.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|ASSERT
-parameter_list|(
-name|x
-parameter_list|)
-value|if(!(x)) panic("EM: x")
-end_define
-
-begin_comment
-comment|/* The happy-fun DELAY macro is defined in /usr/src/sys/i386/include/clock.h */
-end_comment
 
 begin_define
 define|#
@@ -398,6 +348,12 @@ decl_stmt|;
 name|bus_space_handle_t
 name|mem_bus_space_handle
 decl_stmt|;
+name|bus_space_tag_t
+name|io_bus_space_tag
+decl_stmt|;
+name|bus_space_handle_t
+name|io_bus_space_handle
+decl_stmt|;
 name|struct
 name|device
 modifier|*
@@ -586,6 +542,34 @@ name|value
 parameter_list|)
 define|\
 value|E1000_WRITE_OFFSET(hw, E1000_REG_OFFSET(hw, reg) + ((index)<< 2), value)
+end_define
+
+begin_define
+define|#
+directive|define
+name|em_io_read
+parameter_list|(
+name|hw
+parameter_list|,
+name|port
+parameter_list|)
+define|\
+value|bus_space_read_4(((struct em_osdep *)(hw)->back)->io_bus_space_tag, \ 	((struct em_osdep *)(hw)->back)->io_bus_space_handle, (port))
+end_define
+
+begin_define
+define|#
+directive|define
+name|em_io_write
+parameter_list|(
+name|hw
+parameter_list|,
+name|port
+parameter_list|,
+name|value
+parameter_list|)
+define|\
+value|bus_space_write_4(((struct em_osdep *)(hw)->back)->io_bus_space_tag, \ 	((struct em_osdep *)(hw)->back)->io_bus_space_handle, (port),	 \ 	(value))
 end_define
 
 begin_endif
