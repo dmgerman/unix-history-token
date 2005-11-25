@@ -2589,7 +2589,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Algorithm:  * 1. Suck in all the data, splitting into fields.  * 2. Sort the ports according to port directory.  * 3. Using a binary search, translate each dependency from a  * port directory name into a pointer to a port.  * 4. Recursively follow dependencies, expanding the lists of  * pointers as needed (using realloc).  * 5. Iterate through the ports, printing them out (remembering  * to list the dependent ports in alphabetical order).  */
+comment|/*  * Algorithm:  * 1. Suck in all the data, splitting into fields.  * 1a. If there are no ports, there is no INDEX.  * 2. Sort the ports according to port directory.  * 3. Using a binary search, translate each dependency from a  * port directory name into a pointer to a port.  * 4. Recursively follow dependencies, expanding the lists of  * pointers as needed (using realloc).  * 5. Iterate through the ports, printing them out (remembering  * to list the dependent ports in alphabetical order).  */
 end_comment
 
 begin_function
@@ -2882,6 +2882,16 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* 	 * 1a. If there are no ports, there is no INDEX. 	 */
+if|if
+condition|(
+name|pplen
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 comment|/* 	 * 2. Sort the ports according to port directory. 	 */
 for|for
 control|(
