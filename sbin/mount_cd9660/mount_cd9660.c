@@ -192,6 +192,7 @@ parameter_list|(
 name|struct
 name|iovec
 modifier|*
+modifier|*
 parameter_list|,
 name|int
 modifier|*
@@ -524,6 +525,7 @@ if|if
 condition|(
 name|set_charset
 argument_list|(
+operator|&
 name|iov
 argument_list|,
 operator|&
@@ -1048,6 +1050,7 @@ parameter_list|(
 name|struct
 name|iovec
 modifier|*
+modifier|*
 name|iov
 parameter_list|,
 name|int
@@ -1201,7 +1204,6 @@ operator|)
 return|;
 name|build_iovec
 argument_list|(
-operator|&
 name|iov
 argument_list|,
 name|iovlen
@@ -1219,7 +1221,6 @@ argument_list|)
 expr_stmt|;
 name|build_iovec
 argument_list|(
-operator|&
 name|iov
 argument_list|,
 name|iovlen
