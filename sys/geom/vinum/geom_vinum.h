@@ -39,6 +39,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|gv_drive_modify
+parameter_list|(
+name|struct
+name|gv_drive
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|gv_save_config_all
 parameter_list|(
 name|struct
@@ -197,6 +208,44 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* geom_vinum_move.c */
+end_comment
+
+begin_function_decl
+name|void
+name|gv_move
+parameter_list|(
+name|struct
+name|g_geom
+modifier|*
+parameter_list|,
+name|struct
+name|gctl_req
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* geom_vinum_rename.c */
+end_comment
+
+begin_function_decl
+name|void
+name|gv_rename
+parameter_list|(
+name|struct
+name|g_geom
+modifier|*
+parameter_list|,
+name|struct
+name|gctl_req
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* geom_vinum_rm.c */
 end_comment
 
@@ -211,6 +260,31 @@ parameter_list|,
 name|struct
 name|gctl_req
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|gv_rm_sd
+parameter_list|(
+name|struct
+name|gv_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|gctl_req
+modifier|*
+name|req
+parameter_list|,
+name|struct
+name|gv_sd
+modifier|*
+name|s
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl

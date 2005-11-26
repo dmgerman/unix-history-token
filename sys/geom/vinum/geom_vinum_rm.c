@@ -124,28 +124,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|gv_rm_sd
-parameter_list|(
-name|struct
-name|gv_softc
-modifier|*
-parameter_list|,
-name|struct
-name|gctl_req
-modifier|*
-parameter_list|,
-name|struct
-name|gv_sd
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
 name|gv_rm_vol
 parameter_list|(
 name|struct
@@ -1104,7 +1082,6 @@ comment|/* Remove a subdisk. */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|gv_rm_sd
 parameter_list|(

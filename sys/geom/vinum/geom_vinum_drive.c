@@ -149,17 +149,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|gv_drive_modify
-parameter_list|(
-name|struct
-name|gv_drive
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|void
 name|gv_config_new_drive
