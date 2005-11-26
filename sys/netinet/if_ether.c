@@ -665,7 +665,7 @@ name|rt
 operator|->
 name|rt_expire
 operator|<=
-name|time_second
+name|time_uptime
 condition|)
 block|{
 name|struct
@@ -995,7 +995,7 @@ name|rt
 operator|->
 name|rt_expire
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 break|break;
 block|}
@@ -2172,7 +2172,7 @@ name|rt
 operator|->
 name|rt_expire
 operator|>
-name|time_second
+name|time_uptime
 operator|)
 operator|&&
 name|sdl
@@ -2214,7 +2214,7 @@ literal|0
 operator|)
 operator|&&
 operator|(
-name|time_second
+name|time_uptime
 operator|+
 name|la
 operator|->
