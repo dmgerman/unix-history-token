@@ -133,6 +133,28 @@ directive|include
 file|<dev/amr/amr_tables.h>
 end_include
 
+begin_comment
+comment|/*  * The CAM interface appears to be completely broken.  Disable it.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AMR_ENABLE_CAM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|AMR_ENABLE_CAM
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|d_open_t
@@ -891,6 +913,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+name|AMR_ENABLE_CAM
+operator|!=
+literal|0
+end_if
+
 begin_comment
 comment|/*      * Attach our 'real' SCSI channels to CAM.      */
 end_comment
@@ -919,6 +949,11 @@ literal|"CAM attach done"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*      * Create the control device.      */
@@ -1362,12 +1397,19 @@ name|amr_command_cluster
 modifier|*
 name|acc
 decl_stmt|;
+if|#
+directive|if
+name|AMR_ENABLE_CAM
+operator|!=
+literal|0
 comment|/* detach from CAM */
 name|amr_cam_detach
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* cancel status timeout */
 name|untimeout
 argument_list|(
@@ -3757,6 +3799,11 @@ operator|&
 name|ac
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|AMR_ENABLE_CAM
+operator|!=
+literal|0
 comment|/* if that failed, build a command from a ccb */
 if|if
 condition|(
@@ -3775,6 +3822,8 @@ operator|&
 name|ac
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* if we don't have anything to do, give up */
 if|if
 condition|(
