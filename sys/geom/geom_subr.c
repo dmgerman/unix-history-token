@@ -3607,7 +3607,7 @@ operator|!
 name|error
 condition|)
 block|{
-comment|/* 		 * If we open first write, spoil any partner consumers. 		 * If we close last write, trigger re-taste. 		 */
+comment|/* 		 * If we open first write, spoil any partner consumers. 		 * If we close last write and provider is not errored, 		 * trigger re-taste. 		 */
 if|if
 condition|(
 name|pp
@@ -3642,6 +3642,12 @@ name|acw
 operator|==
 operator|-
 name|dcw
+operator|&&
+name|pp
+operator|->
+name|error
+operator|==
+literal|0
 operator|&&
 operator|!
 operator|(
