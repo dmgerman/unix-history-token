@@ -248,6 +248,17 @@ end_comment
 
 begin_typedef
 typedef|typedef
+name|__int32_t
+name|__mqd_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* mq_open()... */
+end_comment
+
+begin_typedef
+typedef|typedef
 name|__uint32_t
 name|__uid_t
 typedef|;

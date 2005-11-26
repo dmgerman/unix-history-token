@@ -177,6 +177,17 @@ begin_comment
 comment|/* crypto */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DTYPE_MQUEUE
+value|7
+end_define
+
+begin_comment
+comment|/* posix message queue */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
