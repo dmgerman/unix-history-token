@@ -11739,7 +11739,7 @@ name|VFS_SET
 argument_list|(
 name|mqfs_vfsops
 argument_list|,
-name|mqueue
+name|mqueuefs
 argument_list|,
 name|VFCF_SYNTHETIC
 argument_list|)
@@ -11749,7 +11749,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
-name|mqueue
+name|mqueuefs
 argument_list|,
 literal|1
 argument_list|)
