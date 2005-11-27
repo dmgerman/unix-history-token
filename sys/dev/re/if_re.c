@@ -7729,6 +7729,7 @@ break|break;
 if|if
 condition|(
 operator|(
+operator|(
 name|status
 operator|&
 name|RL_ISR_RX_OK
@@ -7739,6 +7740,13 @@ name|status
 operator|&
 name|RL_ISR_RX_ERR
 operator|)
+operator|)
+operator|&&
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
 condition|)
 name|re_rxeof
 argument_list|(
@@ -7747,6 +7755,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 operator|(
 name|status
 operator|&
@@ -7764,6 +7773,13 @@ name|status
 operator|&
 name|RL_ISR_TX_DESC_UNAVAIL
 operator|)
+operator|)
+operator|&&
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
 condition|)
 name|re_txeof
 argument_list|(
