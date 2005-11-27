@@ -92,11 +92,6 @@ define|#
 directive|define
 name|OHCI_ADD_LEN
 value|0x0002
-define|#
-directive|define
-name|OHCI_TD_HANDLED
-value|0x0004
-comment|/* signal process_done has seen it */
 block|}
 name|ohci_soft_td_t
 typedef|;
