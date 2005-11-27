@@ -8769,6 +8769,10 @@ operator|~
 name|S_ISTXT
 operator|)
 expr_stmt|;
+name|mq
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -8924,14 +8928,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|fdp
-operator|=
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_fd
-expr_stmt|;
 name|error
 operator|=
 name|falloc
