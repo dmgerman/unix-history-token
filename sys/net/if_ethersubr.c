@@ -2281,6 +2281,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|m
@@ -2362,10 +2367,17 @@ name|m
 operator|==
 name|NULL
 condition|)
+block|{
 comment|/* nope... */
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOBUFS
 return|;
+block|}
 name|bcopy
 argument_list|(
 operator|&
