@@ -1225,7 +1225,7 @@ name|__func__
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Check if the process exceeds its cpu resource allocation.  If 	 * over max, arrange to kill the process in ast(). 	 */
+comment|/* 	 * Check if the process exceeds its cpu resource allocation.  If 	 * it reaches the max, arrange to kill the process in ast(). 	 */
 if|if
 condition|(
 name|p
@@ -1241,7 +1241,7 @@ operator|.
 name|rux_runtime
 operator|.
 name|sec
-operator|>
+operator|>=
 name|p
 operator|->
 name|p_cpulimit
