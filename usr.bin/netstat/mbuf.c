@@ -240,11 +240,6 @@ condition|(
 name|live
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"live\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|memstat_sysctl_all
@@ -277,11 +272,6 @@ block|}
 block|}
 else|else
 block|{
-name|printf
-argument_list|(
-literal|"kvm\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|memstat_kvm_all
