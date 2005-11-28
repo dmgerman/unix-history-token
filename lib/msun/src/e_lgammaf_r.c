@@ -756,10 +756,10 @@ if|if
 condition|(
 name|ix
 operator|<
-literal|0x1c800000
+literal|0x35000000
 condition|)
 block|{
-comment|/* |x|<2**-70, return -log(|x|) */
+comment|/* |x|<2**-21, return -log(|x|) */
 if|if
 condition|(
 name|hx
