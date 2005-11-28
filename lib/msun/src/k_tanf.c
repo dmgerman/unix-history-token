@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* k_tanf.c -- float version of k_tan.c  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.  */
+comment|/* k_tanf.c -- float version of k_tan.c  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.  * Optimized by Bruce D. Evans.  */
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|INLINE_KERNEL_TANF
+name|INLINE_KERNEL_TANDF
 end_ifndef
 
 begin_ifndef
@@ -106,7 +106,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|INLINE_KERNEL_TANF
+name|INLINE_KERNEL_TANDF
 end_ifdef
 
 begin_function
@@ -148,6 +148,7 @@ expr_stmt|;
 comment|/* Break x^5*(T[1]+x^2*T[2]+...) into      *	  x^5*(T[1]+x^4*T[3]+x^8*T[5]) +      *	  x^5*(x^2*(T[2]+x^4*T[4]))      */
 name|r
 operator|=
+operator|(
 name|T
 index|[
 literal|1
@@ -167,6 +168,7 @@ name|T
 index|[
 literal|5
 index|]
+operator|)
 operator|)
 operator|+
 name|z

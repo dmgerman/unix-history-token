@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* s_tanf.c -- float version of s_tan.c.  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.  */
+comment|/* s_tanf.c -- float version of s_tan.c.  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.  * Optimized by Bruce D. Evans.  */
 end_comment
 
 begin_comment
@@ -37,7 +37,7 @@ end_include
 begin_define
 define|#
 directive|define
-name|INLINE_KERNEL_TANF
+name|INLINE_KERNEL_TANDF
 end_define
 
 begin_include
