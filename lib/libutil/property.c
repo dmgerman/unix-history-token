@@ -277,7 +277,9 @@ block|,
 name|STOP
 block|}
 name|state
-enum|;
+enum|,
+name|last_state
+expr_stmt|;
 name|int
 name|ch
 init|=
@@ -305,6 +307,8 @@ name|NULL
 expr_stmt|;
 name|state
 operator|=
+name|last_state
+operator|=
 name|LOOK
 expr_stmt|;
 while|while
@@ -327,10 +331,16 @@ name|bp
 operator|==
 name|max
 condition|)
+block|{
+name|last_state
+operator|=
+name|state
+expr_stmt|;
 name|state
 operator|=
 name|FILL
 expr_stmt|;
+block|}
 else|else
 name|ch
 operator|=
@@ -390,13 +400,13 @@ name|state
 operator|=
 name|STOP
 expr_stmt|;
-break|break;
 block|}
 else|else
 block|{
+comment|/* 		 * Restore the state from before the fill (which will be 		 * initialised to LOOK for the first FILL). This ensures that 		 * if we were part-way through eg., a VALUE state, when the 		 * buffer ran out, that the previous operation will be allowed 		 * to complete. 		 */
 name|state
 operator|=
-name|LOOK
+name|last_state
 expr_stmt|;
 name|ch
 operator|=
@@ -407,10 +417,10 @@ index|]
 expr_stmt|;
 name|bp
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 block|}
-comment|/* FALLTHROUGH deliberately since we already have a character and state == LOOK */
+continue|continue;
 case|case
 name|LOOK
 case|:
