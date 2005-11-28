@@ -1,7 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mach64_drv.h -- Private header for mach64 driver -*- linux-c -*-  * Created: Fri Nov 24 22:07:58 2000 by gareth@valinux.com  *  * Copyright 2000 Gareth Hughes  * Copyright 2002 Frank C. Earl  * Copyright 2002-2003 Leif Delgass  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * THE COPYRIGHT OWNER(S) BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Gareth Hughes<gareth@valinux.com>  *    Frank C. Earl<fearl@airmail.net>  *    Leif Delgass<ldelgass@retinalburn.net>  *    Josï¿½Fonseca<j_r_fonseca@yahoo.co.uk>  *  * $FreeBSD$  */
+comment|/* mach64_drv.h -- Private header for mach64 driver -*- linux-c -*-  * Created: Fri Nov 24 22:07:58 2000 by gareth@valinux.com  */
 end_comment
+
+begin_comment
+comment|/*-  * Copyright 2000 Gareth Hughes  * Copyright 2002 Frank C. Earl  * Copyright 2002-2003 Leif Delgass  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * THE COPYRIGHT OWNER(S) BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Gareth Hughes<gareth@valinux.com>  *    Frank C. Earl<fearl@airmail.net>  *    Leif Delgass<ldelgass@retinalburn.net>  *    Josï¿½Fonseca<j_r_fonseca@yahoo.co.uk>  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_ifndef
 ifndef|#
@@ -131,10 +149,11 @@ typedef|typedef
 struct|struct
 name|drm_mach64_descriptor_ring
 block|{
-name|dma_addr_t
-name|handle
+name|drm_dma_handle_t
+modifier|*
+name|dmah
 decl_stmt|;
-comment|/* handle (bus address) of ring returned by pci_alloc_consistent() */
+comment|/* Handle to pci dma memory */
 name|void
 modifier|*
 name|start
@@ -288,6 +307,21 @@ name|drm_mach64_private_t
 typedef|;
 end_typedef
 
+begin_decl_stmt
+specifier|extern
+name|drm_ioctl_desc_t
+name|mach64_ioctls
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|mach64_max_ioctl
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* mach64_dma.c */
 end_comment
@@ -345,7 +379,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|mach64_driver_pretakedown
+name|mach64_driver_lastclose
 parameter_list|(
 name|drm_device_t
 modifier|*

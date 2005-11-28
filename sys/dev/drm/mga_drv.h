@@ -1,11 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mga_drv.h -- Private header for the Matrox G200/G400 driver -*- linux-c -*-  * Created: Mon Dec 13 01:50:01 1999 by jhartmann@precisioninsight.com */
+comment|/* mga_drv.h -- Private header for the Matrox G200/G400 driver -*- linux-c -*-  * Created: Mon Dec 13 01:50:01 1999 by jhartmann@precisioninsight.com  *  * Copyright 1999 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All rights reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Gareth Hughes<gareth@valinux.com>  */
 end_comment
 
-begin_comment
-comment|/*-  * Copyright 1999 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All rights reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Gareth Hughes<gareth@valinux.com>  *  * $FreeBSD$  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_ifndef
 ifndef|#
@@ -48,7 +58,7 @@ begin_define
 define|#
 directive|define
 name|DRIVER_DATE
-value|"20021029"
+value|"20051102"
 end_define
 
 begin_define
@@ -62,14 +72,14 @@ begin_define
 define|#
 directive|define
 name|DRIVER_MINOR
-value|1
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRIVER_PATCHLEVEL
-value|0
+value|1
 end_define
 
 begin_typedef
@@ -200,11 +210,43 @@ decl_stmt|;
 name|int
 name|usec_timeout
 decl_stmt|;
+comment|/** 	 * If set, the new DMA initialization sequence was used.  This is 	 * primarilly used to select how the driver should uninitialized its 	 * internal DMA structures. 	 */
+name|int
+name|used_new_dma_init
+decl_stmt|;
+comment|/** 	 * If AGP memory is used for DMA buffers, this will be the value 	 * \c MGA_PAGPXFER.  Otherwise, it will be zero (for a PCI transfer). 	 */
+name|u32
+name|dma_access
+decl_stmt|;
+comment|/** 	 * If AGP memory is used for DMA buffers, this will be the value 	 * \c MGA_WAGP_ENABLE.  Otherwise, it will be zero (for a PCI 	 * transfer). 	 */
+name|u32
+name|wagp_enable
+decl_stmt|;
+comment|/** 	 * \name MMIO region parameters. 	 *  	 * \sa drm_mga_private_t::mmio 	 */
+comment|/*@{*/
+name|u32
+name|mmio_base
+decl_stmt|;
+comment|/**< Bus address of base of MMIO. */
+name|u32
+name|mmio_size
+decl_stmt|;
+comment|/**< Size of the MMIO region. */
+comment|/*@}*/
 name|u32
 name|clear_cmd
 decl_stmt|;
 name|u32
 name|maccess
+decl_stmt|;
+name|wait_queue_head_t
+name|fence_queue
+decl_stmt|;
+name|atomic_t
+name|last_fence_retired
+decl_stmt|;
+name|u32
+name|next_fence_to_post
 decl_stmt|;
 name|unsigned
 name|int
@@ -268,20 +310,49 @@ name|primary
 decl_stmt|;
 name|drm_local_map_t
 modifier|*
-name|buffers
-decl_stmt|;
-name|drm_local_map_t
-modifier|*
 name|agp_textures
+decl_stmt|;
+name|unsigned
+name|long
+name|agp_handle
+decl_stmt|;
+name|unsigned
+name|int
+name|agp_size
 decl_stmt|;
 block|}
 name|drm_mga_private_t
 typedef|;
 end_typedef
 
+begin_decl_stmt
+specifier|extern
+name|drm_ioctl_desc_t
+name|mga_ioctls
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|mga_max_ioctl
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* mga_dma.c */
 end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|mga_dma_bootstrap
+parameter_list|(
+name|DRM_IOCTL_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -325,8 +396,36 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|int
+name|mga_driver_load
+parameter_list|(
+name|drm_device_t
+modifier|*
+name|dev
+parameter_list|,
+name|unsigned
+name|long
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|mga_driver_unload
+parameter_list|(
+name|drm_device_t
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|void
-name|mga_driver_pretakedown
+name|mga_driver_lastclose
 parameter_list|(
 name|drm_device_t
 modifier|*
@@ -417,6 +516,20 @@ end_comment
 
 begin_function_decl
 specifier|extern
+name|unsigned
+name|int
+name|mga_warp_microcode_size
+parameter_list|(
+specifier|const
+name|drm_mga_private_t
+modifier|*
+name|dev_priv
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|mga_warp_install_microcode
 parameter_list|(
@@ -435,6 +548,27 @@ parameter_list|(
 name|drm_mga_private_t
 modifier|*
 name|dev_priv
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* mga_irq.c */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|mga_driver_fence_wait
+parameter_list|(
+name|drm_device_t
+modifier|*
+name|dev
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|sequence
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -498,6 +632,27 @@ parameter_list|(
 name|drm_device_t
 modifier|*
 name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|long
+name|mga_compat_ioctl
+parameter_list|(
+name|struct
+name|file
+modifier|*
+name|filp
+parameter_list|,
+name|unsigned
+name|int
+name|cmd
+parameter_list|,
+name|unsigned
+name|long
+name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -770,7 +925,7 @@ parameter_list|,
 name|dirty
 parameter_list|)
 define|\
-value|do {									\ 	if ( (dirty)& ~MGA_UPLOAD_CLIPRECTS ) {			\ 		if ( dev_priv->chipset == MGA_CARD_TYPE_G400 ) {	\ 			mga_g400_emit_state( dev_priv );		\ 		} else {						\ 			mga_g200_emit_state( dev_priv );		\ 		}							\ 	}								\ } while (0)
+value|do {									\ 	if ( (dirty)& ~MGA_UPLOAD_CLIPRECTS ) {			\ 		if ( dev_priv->chipset>= MGA_CARD_TYPE_G400 ) {	\ 			mga_g400_emit_state( dev_priv );		\ 		} else {						\ 			mga_g200_emit_state( dev_priv );		\ 		}							\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -2116,6 +2271,31 @@ define|#
 directive|define
 name|MGA_EXEC
 value|0x0100
+end_define
+
+begin_comment
+comment|/* AGP PLL encoding (for G200 only).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MGA_AGP_PLL
+value|0x1e4c
+end_define
+
+begin_define
+define|#
+directive|define
+name|MGA_AGP2XPLL_DISABLE
+value|(0<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MGA_AGP2XPLL_ENABLE
+value|(1<< 0)
 end_define
 
 begin_comment

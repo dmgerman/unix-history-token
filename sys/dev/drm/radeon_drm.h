@@ -1,11 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* radeon_drm.h -- Public header for the radeon driver -*- linux-c -*- */
+comment|/* radeon_drm.h -- Public header for the radeon driver -*- linux-c -*-  *  * Copyright 2000 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Fremont, California.  * Copyright 2002 Tungsten Graphics, Inc., Cedar Park, Texas.  * All rights reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * PRECISION INSIGHT AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER  * DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Kevin E. Martin<martin@valinux.com>  *    Gareth Hughes<gareth@valinux.com>  *    Keith Whitwell<keith@tungstengraphics.com>  */
 end_comment
 
-begin_comment
-comment|/*-  * Copyright 2000 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Fremont, California.  * Copyright 2002 Tungsten Graphics, Inc., Cedar Park, Texas.  * All rights reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * PRECISION INSIGHT AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER  * DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Kevin E. Martin<martin@valinux.com>  *    Gareth Hughes<gareth@valinux.com>  *    Keith Whitwell<keith@tungstengraphics.com>  *  * $FreeBSD$  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_ifndef
 ifndef|#
@@ -1033,8 +1043,71 @@ end_define
 begin_define
 define|#
 directive|define
-name|RADEON_MAX_STATE_PACKETS
+name|R200_EMIT_PP_AFS_0
 value|85
+end_define
+
+begin_define
+define|#
+directive|define
+name|R200_EMIT_PP_AFS_1
+value|86
+end_define
+
+begin_define
+define|#
+directive|define
+name|R200_EMIT_ATF_TFACTOR
+value|87
+end_define
+
+begin_define
+define|#
+directive|define
+name|R200_EMIT_PP_TXCTLALL_0
+value|88
+end_define
+
+begin_define
+define|#
+directive|define
+name|R200_EMIT_PP_TXCTLALL_1
+value|89
+end_define
+
+begin_define
+define|#
+directive|define
+name|R200_EMIT_PP_TXCTLALL_2
+value|90
+end_define
+
+begin_define
+define|#
+directive|define
+name|R200_EMIT_PP_TXCTLALL_3
+value|91
+end_define
+
+begin_define
+define|#
+directive|define
+name|R200_EMIT_PP_TXCTLALL_4
+value|92
+end_define
+
+begin_define
+define|#
+directive|define
+name|R200_EMIT_PP_TXCTLALL_5
+value|93
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_MAX_STATE_PACKETS
+value|94
 end_define
 
 begin_comment
@@ -2523,7 +2596,7 @@ decl_stmt|;
 name|int
 name|is_pci
 decl_stmt|;
-comment|/* not used, driver asks hardware */
+comment|/* for overriding only */
 name|int
 name|cp_mode
 decl_stmt|;
@@ -2565,11 +2638,15 @@ decl_stmt|;
 name|unsigned
 name|long
 name|fb_offset
+name|DEPRECATED
 decl_stmt|;
+comment|/* deprecated, driver asks hardware */
 name|unsigned
 name|long
 name|mmio_offset
+name|DEPRECATED
 decl_stmt|;
+comment|/* deprecated, driver asks hardware */
 name|unsigned
 name|long
 name|ring_offset
@@ -3211,6 +3288,17 @@ end_define
 
 begin_comment
 comment|/* enable/disable color tiling */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADEON_SETPARAM_PCIGART_LOCATION
+value|3
+end_define
+
+begin_comment
+comment|/* PCI Gart Location */
 end_comment
 
 begin_comment

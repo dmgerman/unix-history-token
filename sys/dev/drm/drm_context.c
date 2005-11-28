@@ -4,8 +4,22 @@ comment|/* drm_context.h -- IOCTLs for generic contexts -*- linux-c -*-  * Creat
 end_comment
 
 begin_comment
-comment|/*-  * Copyright 1999, 2000 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Rickard E. (Rik) Faith<faith@valinux.com>  *    Gareth Hughes<gareth@valinux.com>  *  * $FreeBSD$  */
+comment|/*-  * Copyright 1999, 2000 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Rickard E. (Rik) Faith<faith@valinux.com>  *    Gareth Hughes<gareth@valinux.com>  *  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -852,6 +866,9 @@ block|{
 name|drm_ctx_res_t
 name|res
 decl_stmt|;
+name|drm_ctx_t
+name|ctx
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -880,6 +897,17 @@ operator|>=
 name|DRM_RESERVED_CONTEXTS
 condition|)
 block|{
+name|bzero
+argument_list|(
+operator|&
+name|ctx
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ctx
+argument_list|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -894,6 +922,12 @@ name|i
 operator|++
 control|)
 block|{
+name|ctx
+operator|.
+name|handle
+operator|=
+name|i
+expr_stmt|;
 if|if
 condition|(
 name|DRM_COPY_TO_USER
@@ -907,11 +941,11 @@ name|i
 index|]
 argument_list|,
 operator|&
-name|i
+name|ctx
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|i
+name|ctx
 argument_list|)
 argument_list|)
 condition|)
@@ -1044,6 +1078,8 @@ if|if
 condition|(
 name|dev
 operator|->
+name|driver
+operator|.
 name|context_ctor
 operator|&&
 name|ctx
@@ -1058,6 +1094,8 @@ argument_list|()
 expr_stmt|;
 name|dev
 operator|->
+name|driver
+operator|.
 name|context_ctor
 argument_list|(
 name|dev
@@ -1318,6 +1356,8 @@ if|if
 condition|(
 name|dev
 operator|->
+name|driver
+operator|.
 name|context_dtor
 condition|)
 block|{
@@ -1326,6 +1366,8 @@ argument_list|()
 expr_stmt|;
 name|dev
 operator|->
+name|driver
+operator|.
 name|context_dtor
 argument_list|(
 name|dev
