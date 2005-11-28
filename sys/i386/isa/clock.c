@@ -2626,6 +2626,11 @@ argument_list|,
 name|rtc_statusb
 argument_list|)
 expr_stmt|;
+name|rtcin
+argument_list|(
+name|RTC_INTR
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3581,6 +3586,11 @@ argument_list|,
 name|rtc_statusb
 argument_list|)
 expr_stmt|;
+name|rtcin
+argument_list|(
+name|RTC_INTR
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3878,6 +3888,11 @@ argument_list|(
 name|RTC_STATUSB
 argument_list|,
 name|rtc_statusb
+argument_list|)
+expr_stmt|;
+name|rtcin
+argument_list|(
+name|RTC_INTR
 argument_list|)
 expr_stmt|;
 ifdef|#
