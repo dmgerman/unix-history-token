@@ -742,6 +742,7 @@ argument_list|,
 name|vector
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 comment|/* 	 * Execute fast interrupt handlers directly. 	 * To support clock handlers, if a handler registers 	 * with a NULL argument, then we pass it a pointer to 	 * an intrframe as its argument. 	 */
 name|td
