@@ -191,12 +191,11 @@ literal|0x4016cbe3
 condition|)
 comment|/* |x| ~<= 3pi/4 */
 return|return
-operator|-
 name|__kernel_sindf
 argument_list|(
-name|x
-operator|-
 name|c1pio2
+operator|-
+name|x
 argument_list|)
 return|;
 else|else
@@ -299,9 +298,9 @@ case|case
 literal|1
 case|:
 return|return
-operator|-
 name|__kernel_sindf
 argument_list|(
+operator|-
 operator|(
 name|double
 operator|)
@@ -309,7 +308,7 @@ name|y
 index|[
 literal|0
 index|]
-operator|+
+operator|-
 name|y
 index|[
 literal|1
