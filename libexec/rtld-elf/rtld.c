@@ -9044,6 +9044,11 @@ name|serinfo
 operator|->
 name|dls_size
 operator|+=
+sizeof|sizeof
+argument_list|(
+name|Dl_serpath
+argument_list|)
+operator|+
 name|dirlen
 operator|+
 literal|1
