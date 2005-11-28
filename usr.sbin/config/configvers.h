@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|CONFIGVERS
-value|700000
+value|600004
 end_define
 
 begin_comment
