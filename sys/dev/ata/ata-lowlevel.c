@@ -390,7 +390,7 @@ name|request
 operator|->
 name|dev
 argument_list|,
-literal|"error issueing %s command\n"
+literal|"error issuing %s command\n"
 argument_list|,
 name|ata_cmd2str
 argument_list|(
@@ -618,7 +618,7 @@ name|request
 operator|->
 name|dev
 argument_list|,
-literal|"error issueing %s command\n"
+literal|"error issuing %s command\n"
 argument_list|,
 name|ata_cmd2str
 argument_list|(
