@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* s_sinf.c -- float version of s_sin.c.  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.  */
+comment|/* s_sinf.c -- float version of s_sin.c.  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.  * Optimized by Bruce D. Evans.  */
 end_comment
 
 begin_comment
@@ -183,7 +183,7 @@ operator|<=
 literal|0x407b53d1
 condition|)
 block|{
-comment|/* |x|<= ~5*pi/4 */
+comment|/* |x| ~<= 5*pi/4 */
 if|if
 condition|(
 name|ix
@@ -191,7 +191,7 @@ operator|<=
 literal|0x4016cbe3
 condition|)
 block|{
-comment|/* |x|<= ~3pi/4 */
+comment|/* |x| ~<= 3pi/4 */
 if|if
 condition|(
 name|hx
@@ -244,7 +244,7 @@ operator|<=
 literal|0x40e231d5
 condition|)
 block|{
-comment|/* |x|<= ~9*pi/4 */
+comment|/* |x| ~<= 9*pi/4 */
 if|if
 condition|(
 name|ix
@@ -252,7 +252,7 @@ operator|<=
 literal|0x40afeddf
 condition|)
 block|{
-comment|/* |x|<= ~7*pi/4 */
+comment|/* |x| ~<= 7*pi/4 */
 if|if
 condition|(
 name|hx
