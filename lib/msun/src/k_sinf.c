@@ -10,7 +10,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|INLINE_KERNEL_SINF
+name|INLINE_KERNEL_SINDF
 end_ifndef
 
 begin_ifndef
@@ -52,60 +52,56 @@ file|"math_private.h"
 end_include
 
 begin_comment
-comment|/* |sin(x)/x - s(x)|< 2**-32.5 (~[-1.57e-10, 1.572e-10]). */
+comment|/* |sin(x)/x - s(x)|< 2**-37.5 (~[-4.89e-12, 4.824e-12]). */
 end_comment
 
 begin_decl_stmt
 specifier|static
 specifier|const
-name|float
-name|half
-init|=
-literal|0.5
-decl_stmt|,
+name|double
 name|S1
 init|=
 operator|-
-literal|0xaaaaab
+literal|0x15555554cbac77
 literal|.0p
 operator|-
-literal|26
+literal|55
 decl_stmt|,
-comment|/* -0.16666667163 */
+comment|/* -0.166666666416265235595 */
 name|S2
 init|=
-literal|0x8888bb
+literal|0x111110896efbb2
 literal|.0p
 operator|-
-literal|30
+literal|59
 decl_stmt|,
-comment|/*  0.0083333803341 */
+comment|/*  0.0083333293858894631756 */
 name|S3
 init|=
 operator|-
-literal|0xd02de1
+literal|0x1a00f9e2cae774
 literal|.0p
 operator|-
-literal|36
+literal|65
 decl_stmt|,
-comment|/* -0.00019853517006 */
+comment|/* -0.000198393348360966317347 */
 name|S4
 init|=
-literal|0xbe6dbe
+literal|0x16cd878c3b46a7
 literal|.0p
 operator|-
-literal|42
+literal|71
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  0.0000028376084629 */
+comment|/*  0.0000027183114939898219064 */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|INLINE_KERNEL_SINF
+name|INLINE_KERNEL_SINDF
 end_ifdef
 
 begin_function
@@ -114,19 +110,13 @@ specifier|inline
 endif|#
 directive|endif
 name|float
-name|__kernel_sinf
+name|__kernel_sindf
 parameter_list|(
-name|float
+name|double
 name|x
-parameter_list|,
-name|float
-name|y
-parameter_list|,
-name|int
-name|iy
 parameter_list|)
 block|{
-name|float
+name|double
 name|z
 decl_stmt|,
 name|r
@@ -159,12 +149,6 @@ operator|*
 name|S4
 operator|)
 expr_stmt|;
-if|if
-condition|(
-name|iy
-operator|==
-literal|0
-condition|)
 return|return
 name|x
 operator|+
@@ -176,32 +160,6 @@ operator|+
 name|z
 operator|*
 name|r
-operator|)
-return|;
-else|else
-return|return
-name|x
-operator|-
-operator|(
-operator|(
-name|z
-operator|*
-operator|(
-name|half
-operator|*
-name|y
-operator|-
-name|v
-operator|*
-name|r
-operator|)
-operator|-
-name|y
-operator|)
-operator|-
-name|v
-operator|*
-name|S1
 operator|)
 return|;
 block|}

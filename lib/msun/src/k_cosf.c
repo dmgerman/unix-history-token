@@ -10,7 +10,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|INLINE_KERNEL_COSF
+name|INLINE_KERNEL_COSDF
 end_ifndef
 
 begin_ifndef
@@ -52,51 +52,60 @@ file|"math_private.h"
 end_include
 
 begin_comment
-comment|/* |cos(x) - c(x)|< 2**-33.1 (~[-9.39e-11, 1.083e-10]). */
+comment|/* |cos(x) - c(x)|< 2**-34.1 (~[-5.37e-11, 5.295e-11]). */
 end_comment
 
 begin_decl_stmt
 specifier|static
 specifier|const
-name|float
+name|double
 name|one
 init|=
 literal|1.0
 decl_stmt|,
-name|C1
+name|C0
 init|=
-literal|0xaaaaa5
+operator|-
+literal|0x1ffffffd0c5e81
 literal|.0p
 operator|-
-literal|28
+literal|54
 decl_stmt|,
-comment|/*  0.041666645557 */
+comment|/* -0.499999997251031003120 */
+name|C1
+init|=
+literal|0x155553e1053a42
+literal|.0p
+operator|-
+literal|57
+decl_stmt|,
+comment|/*  0.0416666233237390631894 */
 name|C2
 init|=
 operator|-
-literal|0xb60615
+literal|0x16c087e80f1e27
 literal|.0p
 operator|-
-literal|33
+literal|62
 decl_stmt|,
-comment|/* -0.0013887310633 */
+comment|/* -0.00138867637746099294692 */
 name|C3
 init|=
-literal|0xccf47d
+literal|0x199342e0ee5069
 literal|.0p
 operator|-
-literal|39
+literal|68
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  0.000024432542887 */
+comment|/*  0.0000243904487962774090654 */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|INLINE_KERNEL_COSF
+name|INLINE_KERNEL_COSDF
 end_ifdef
 
 begin_function
@@ -105,23 +114,16 @@ specifier|inline
 endif|#
 directive|endif
 name|float
-name|__kernel_cosf
+name|__kernel_cosdf
 parameter_list|(
-name|float
+name|double
 name|x
-parameter_list|,
-name|float
-name|y
 parameter_list|)
 block|{
-name|float
-name|hz
-decl_stmt|,
+name|double
 name|z
 decl_stmt|,
 name|r
-decl_stmt|,
-name|w
 decl_stmt|;
 name|z
 operator|=
@@ -147,45 +149,18 @@ name|C3
 operator|)
 operator|)
 expr_stmt|;
-name|hz
-operator|=
-operator|(
-name|float
-operator|)
-literal|0.5
-operator|*
-name|z
-expr_stmt|;
-name|w
-operator|=
-name|one
-operator|-
-name|hz
-expr_stmt|;
 return|return
-name|w
-operator|+
-operator|(
-operator|(
 operator|(
 name|one
-operator|-
-name|w
-operator|)
-operator|-
-name|hz
+operator|+
+name|z
+operator|*
+name|C0
 operator|)
 operator|+
-operator|(
 name|z
 operator|*
 name|r
-operator|-
-name|x
-operator|*
-name|y
-operator|)
-operator|)
 return|;
 block|}
 end_function
