@@ -122,9 +122,6 @@ name|int
 name|recsize
 decl_stmt|;
 name|int
-name|error
-decl_stmt|;
-name|int
 name|j
 decl_stmt|;
 name|off_t
@@ -163,8 +160,7 @@ name|pp
 operator|->
 name|sectorsize
 argument_list|,
-operator|&
-name|error
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -281,8 +277,7 @@ name|voloff
 argument_list|,
 name|recsize
 argument_list|,
-operator|&
-name|error
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
