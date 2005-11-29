@@ -19743,7 +19743,7 @@ name|len
 operator|=
 name|F_INSN_SIZE
 argument_list|(
-name|ipfw_insn_pipe
+name|ipfw_insn
 argument_list|)
 expr_stmt|;
 case|case
