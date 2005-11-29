@@ -331,10 +331,17 @@ return|;
 case|case
 literal|0x25608086
 case|:
-comment|/* i845G */
 return|return
 operator|(
 literal|"Intel 82845G host to AGP bridge"
+operator|)
+return|;
+case|case
+literal|0x35808086
+case|:
+return|return
+operator|(
+literal|"Intel 82855GM host to AGP bridge"
 operator|)
 return|;
 block|}
@@ -738,6 +745,10 @@ literal|0x33408086
 case|:
 comment|/* i855 */
 case|case
+literal|0x35808086
+case|:
+comment|/* i855GM */
+case|case
 literal|0x255d8086
 case|:
 comment|/* E7205 */
@@ -1102,6 +1113,10 @@ case|case
 literal|0x33408086
 case|:
 comment|/* i855 */
+case|case
+literal|0x35808086
+case|:
+comment|/* i855GM */
 case|case
 literal|0x255d8086
 case|:
