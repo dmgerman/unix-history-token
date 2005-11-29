@@ -5280,7 +5280,7 @@ name|tap
 operator|->
 name|wr_flags
 operator|=
-literal|0
+name|IEEE80211_RADIOTAP_F_FCS
 expr_stmt|;
 name|tap
 operator|->
