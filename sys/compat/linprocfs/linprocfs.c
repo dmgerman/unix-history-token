@@ -1587,13 +1587,6 @@ argument_list|)
 expr_stmt|;
 name|ADD_OPTION
 argument_list|(
-name|MNT_NODEV
-argument_list|,
-literal|"nodev"
-argument_list|)
-expr_stmt|;
-name|ADD_OPTION
-argument_list|(
 name|MNT_UNION
 argument_list|,
 literal|"union"

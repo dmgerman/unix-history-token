@@ -697,17 +697,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MNT_NODEV
-value|0
-end_define
-
-begin_comment
-comment|/* Deprecated option */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MNT_UNION
 value|0x00000020
 end_define
