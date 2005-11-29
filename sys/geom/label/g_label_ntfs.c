@@ -285,6 +285,15 @@ operator|&
 name|error
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|filerecp
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|done
+goto|;
 name|fr
 operator|=
 operator|(
