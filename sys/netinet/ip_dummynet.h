@@ -371,12 +371,13 @@ begin_struct
 struct|struct
 name|dn_flow_set
 block|{
-name|struct
-name|dn_flow_set
-modifier|*
+name|SLIST_ENTRY
+argument_list|(
+argument|dn_flow_set
+argument_list|)
 name|next
-decl_stmt|;
-comment|/* next flow set in all_flow_sets list */
+expr_stmt|;
+comment|/* linked list in a hash slot */
 name|u_short
 name|fs_nr
 decl_stmt|;
@@ -553,6 +554,16 @@ block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+name|SLIST_HEAD
+argument_list|(
+name|dn_flow_set_head
+argument_list|,
+name|dn_flow_set
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Pipe descriptor. Contains global parameters, delay-line queue,  * and the flow_set used for fixed-rate queues.  *  * For WF2Q+ support it also has 3 heaps holding dn_flow_queue:  *   not_eligible_heap, for queues whose start time is higher  *	than the virtual time. Sorted by start time.  *   scheduler_heap, for queues eligible for scheduling. Sorted by  *	finish time.  *   idle_heap, all flows that are idle and can be removed. We  *	do that on each tick so we do not slow down too much  *	operations during forwarding.  *  */
 end_comment
@@ -562,11 +573,13 @@ struct|struct
 name|dn_pipe
 block|{
 comment|/* a pipe */
-name|struct
-name|dn_pipe
-modifier|*
+name|SLIST_ENTRY
+argument_list|(
+argument|dn_pipe
+argument_list|)
 name|next
-decl_stmt|;
+expr_stmt|;
+comment|/* linked list in a hash slot */
 name|int
 name|pipe_nr
 decl_stmt|;
@@ -644,6 +657,16 @@ comment|/* used with fixed-rate flows */
 block|}
 struct|;
 end_struct
+
+begin_expr_stmt
+name|SLIST_HEAD
+argument_list|(
+name|dn_pipe_head
+argument_list|,
+name|dn_pipe
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_ifdef
 ifdef|#
