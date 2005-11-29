@@ -32,6 +32,9 @@ decl_stmt|;
 name|uint8_t
 name|wr_flags
 decl_stmt|;
+name|uint8_t
+name|wr_rate
+decl_stmt|;
 name|uint16_t
 name|wr_chan_freq
 decl_stmt|;
@@ -53,7 +56,7 @@ define|#
 directive|define
 name|RAL_RX_RADIOTAP_PRESENT
 define|\
-value|((1<< IEEE80211_RADIOTAP_FLAGS) |				\ 	 (1<< IEEE80211_RADIOTAP_CHANNEL) |				\ 	 (1<< IEEE80211_RADIOTAP_ANTENNA) |				\ 	 (1<< IEEE80211_RADIOTAP_DB_ANTSIGNAL))
+value|((1<< IEEE80211_RADIOTAP_FLAGS) |				\ 	 (1<< IEEE80211_RADIOTAP_RATE) |				\ 	 (1<< IEEE80211_RADIOTAP_CHANNEL) |				\ 	 (1<< IEEE80211_RADIOTAP_ANTENNA) |				\ 	 (1<< IEEE80211_RADIOTAP_DB_ANTSIGNAL))
 end_define
 
 begin_struct

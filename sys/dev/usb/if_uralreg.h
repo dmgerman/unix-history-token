@@ -953,13 +953,17 @@ name|RAL_RX_CRC_ERROR
 value|(1<< 5)
 define|#
 directive|define
+name|RAL_RX_OFDM
+value|(1<< 6)
+define|#
+directive|define
 name|RAL_RX_PHY_ERROR
 value|(1<< 7)
 name|uint8_t
-name|rate
+name|rssi
 decl_stmt|;
 name|uint8_t
-name|rssi
+name|rate
 decl_stmt|;
 name|uint16_t
 name|reserved
