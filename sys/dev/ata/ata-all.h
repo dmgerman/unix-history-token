@@ -2037,6 +2037,10 @@ literal|32
 index|]
 decl_stmt|;
 comment|/* size must match maps above */
+name|u_int32_t
+name|residual
+decl_stmt|;
+comment|/* bytes still to transfer */
 name|caddr_t
 name|data_1
 decl_stmt|;
