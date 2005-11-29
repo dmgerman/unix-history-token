@@ -2734,22 +2734,27 @@ name|ic
 operator|->
 name|ic_caps
 operator|=
-name|IEEE80211_C_MONITOR
-operator||
 name|IEEE80211_C_IBSS
 operator||
+comment|/* IBSS mode supported */
+name|IEEE80211_C_MONITOR
+operator||
+comment|/* monitor mode supported */
 name|IEEE80211_C_HOSTAP
 operator||
-name|IEEE80211_C_SHPREAMBLE
-operator||
-name|IEEE80211_C_SHSLOT
-operator||
-name|IEEE80211_C_PMGT
-operator||
+comment|/* HostAp mode supported */
 name|IEEE80211_C_TXPMGT
 operator||
+comment|/* tx power management */
+name|IEEE80211_C_SHPREAMBLE
+operator||
+comment|/* short preamble supported */
+name|IEEE80211_C_SHSLOT
+operator||
+comment|/* short slot time supported */
 name|IEEE80211_C_WPA
 expr_stmt|;
+comment|/* 802.11i */
 if|if
 condition|(
 name|sc
@@ -9304,7 +9309,7 @@ name|rate
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * PLCP length field (LENGTH). 		 * From IEEE Std 802.11a-1999, pp. 14. 		 */
+comment|/* IEEE Std 802.11a-1999, pp. 14 */
 name|plcp_length
 operator|=
 name|len
@@ -9313,29 +9318,24 @@ literal|0xfff
 expr_stmt|;
 name|desc
 operator|->
-name|plcp_length
+name|plcp_length_hi
 operator|=
-name|htole16
-argument_list|(
-operator|(
 name|plcp_length
 operator|>>
 literal|6
-operator|)
-operator|<<
-literal|8
-operator||
-operator|(
+expr_stmt|;
+name|desc
+operator|->
+name|plcp_length_lo
+operator|=
 name|plcp_length
 operator|&
 literal|0x3f
-operator|)
-argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Long PLCP LENGTH field. 		 * From IEEE Std 802.11b-1999, pp. 16. 		 */
+comment|/* IEEE Std 802.11b-1999, pp. 16 */
 name|plcp_length
 operator|=
 operator|(
@@ -9386,12 +9386,19 @@ expr_stmt|;
 block|}
 name|desc
 operator|->
-name|plcp_length
+name|plcp_length_hi
 operator|=
-name|htole16
-argument_list|(
 name|plcp_length
-argument_list|)
+operator|>>
+literal|8
+expr_stmt|;
+name|desc
+operator|->
+name|plcp_length_lo
+operator|=
+name|plcp_length
+operator|&
+literal|0xff
 expr_stmt|;
 block|}
 name|desc
@@ -9523,7 +9530,7 @@ argument_list|)
 condition|?
 literal|12
 else|:
-literal|4
+literal|2
 expr_stmt|;
 name|error
 operator|=
@@ -9883,7 +9890,7 @@ argument_list|)
 condition|?
 literal|12
 else|:
-literal|4
+literal|2
 expr_stmt|;
 name|error
 operator|=
@@ -11996,7 +12003,7 @@ name|sc
 argument_list|,
 name|ic
 operator|->
-name|ic_ibss_chan
+name|ic_curchan
 argument_list|)
 expr_stmt|;
 return|return

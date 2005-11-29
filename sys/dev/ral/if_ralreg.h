@@ -1400,8 +1400,11 @@ define|#
 directive|define
 name|RAL_PLCP_LENGEXT
 value|0x80
-name|uint16_t
-name|plcp_length
+name|uint8_t
+name|plcp_length_lo
+decl_stmt|;
+name|uint8_t
+name|plcp_length_hi
 decl_stmt|;
 name|uint32_t
 name|iv
