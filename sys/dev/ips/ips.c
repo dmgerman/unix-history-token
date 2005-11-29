@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<dev/ips/ipsreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ips/ips.h>
 end_include
 
@@ -2160,15 +2166,11 @@ argument_list|(
 literal|5000000
 argument_list|)
 expr_stmt|;
-name|pci_read_config
+name|ips_read_4
 argument_list|(
 name|sc
-operator|->
-name|dev
 argument_list|,
-literal|0
-argument_list|,
-literal|4
+name|MORPHEUS_REG_OIMR
 argument_list|)
 expr_stmt|;
 name|tmp

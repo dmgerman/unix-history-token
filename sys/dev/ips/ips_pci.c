@@ -20,7 +20,25 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<dev/ips/ipsreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ips/ips.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/pcireg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/pcivar.h>
 end_include
 
 begin_function_decl
