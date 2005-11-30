@@ -507,17 +507,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|bzero
-argument_list|(
-name|sc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|mc146818_softc
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
