@@ -623,7 +623,7 @@ begin_define
 define|#
 directive|define
 name|SIGRTMAX
-value|128
+value|126
 end_define
 
 begin_define
