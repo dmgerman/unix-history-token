@@ -128,6 +128,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HISTORIC_LABEL_OFFSET
+value|512
+end_define
+
+begin_define
+define|#
+directive|define
 name|LABELSIZE
 value|(148 + 16 * MAXPARTITIONS)
 end_define
@@ -2233,6 +2240,32 @@ argument_list|,
 name|ms
 argument_list|,
 name|secsize
+argument_list|)
+expr_stmt|;
+comment|/* 		 * If sector size is not 512 the label still can be at 		 * offset 512, not at the start of the second sector. At least 		 * it's true for labels created by the FreeBSD's bsdlabel(8). 		 */
+if|if
+condition|(
+name|error
+operator|&&
+name|secsize
+operator|!=
+name|HISTORIC_LABEL_OFFSET
+condition|)
+name|error
+operator|=
+name|g_bsd_try
+argument_list|(
+name|gp
+argument_list|,
+name|gsp
+argument_list|,
+name|cp
+argument_list|,
+name|secsize
+argument_list|,
+name|ms
+argument_list|,
+name|HISTORIC_LABEL_OFFSET
 argument_list|)
 expr_stmt|;
 comment|/* Next, look for alpha labels */
