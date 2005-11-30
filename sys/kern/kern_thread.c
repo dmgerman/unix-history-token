@@ -1195,6 +1195,14 @@ name|p_ksi
 operator|=
 name|NULL
 expr_stmt|;
+name|LIST_INIT
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_mqnotifier
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_numksegrps

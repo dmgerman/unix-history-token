@@ -352,6 +352,12 @@ name|turnstile
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|mqueue_notifier
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * Here we define the three structures used for process information.  *  * The first is the thread. It might be thought of as a "Kernel  * Schedulable Entity Context".  * This structure contains all the information as to where a thread of  * execution is now, or was when it was suspended, why it was suspended,  * and anything else that will be needed to restart it when it is  * rescheduled. Always associated with a KSE when running, but can be  * reassigned to an equivalent KSE when being restarted for  * load balancing. Each of these is associated with a kernel stack  * and a pcb.  *  * It is important to remember that a particular thread structure may only  * exist as long as the system call or kernel entrance (e.g. by pagefault)  * which it is currently executing. It should therefore NEVER be referenced  * by pointers in long lived structures that live longer than a single  * request. If several threads complete their work at the same time,  * they will all rewind their stacks to the user boundary, report their  * completion state, and all but one will be freed. That last one will  * be kept to provide a kernel stack and pcb for the NEXT syscall or kernel  * entrance (basically to save freeing and then re-allocating it).  The existing  * thread keeps a cached spare thread available to allow it to quickly  * get one when it needs a new one. There is also a system  * cache of free threads. Threads have priority and partake in priority  * inheritance schemes.  */
 end_comment
@@ -2297,6 +2303,14 @@ argument_list|)
 name|p_ktr
 expr_stmt|;
 comment|/* (o) KTR event queue. */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|mqueue_notifier
+argument_list|)
+name|p_mqnotifier
+expr_stmt|;
+comment|/* (c) mqueue notifiers.*/
 block|}
 struct|;
 end_struct
