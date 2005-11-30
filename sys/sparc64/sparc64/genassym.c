@@ -248,12 +248,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/upa.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/utrap.h>
 end_include
 
