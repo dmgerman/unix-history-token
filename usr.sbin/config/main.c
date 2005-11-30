@@ -644,15 +644,13 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
+operator|!
+name|S_ISDIR
+argument_list|(
 name|buf
 operator|.
 name|st_mode
-operator|&
-name|S_IFMT
-operator|)
-operator|!=
-name|S_IFDIR
+argument_list|)
 condition|)
 name|errx
 argument_list|(
@@ -2200,7 +2198,7 @@ control|)
 block|{
 if|if
 condition|(
-name|strcmp
+name|eq
 argument_list|(
 name|dp
 operator|->
@@ -2210,8 +2208,6 @@ name|hl
 operator|->
 name|h_name
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 break|break;
@@ -2365,7 +2361,7 @@ control|)
 block|{
 if|if
 condition|(
-name|strcmp
+name|eq
 argument_list|(
 name|s
 argument_list|,
@@ -2373,8 +2369,6 @@ name|hl
 operator|->
 name|h_name
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 name|free
