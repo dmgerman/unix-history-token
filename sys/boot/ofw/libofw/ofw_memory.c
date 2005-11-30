@@ -477,10 +477,6 @@ name|struct
 name|ofw_reg
 name|available
 decl_stmt|;
-name|void
-modifier|*
-name|base
-decl_stmt|;
 name|memoryp
 operator|=
 name|OF_instance_to_package

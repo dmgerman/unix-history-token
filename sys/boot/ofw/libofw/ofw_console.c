@@ -364,9 +364,6 @@ name|unsigned
 name|char
 name|ch
 decl_stmt|;
-name|int
-name|l
-decl_stmt|;
 if|if
 condition|(
 name|saved_char
