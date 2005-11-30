@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -283,6 +289,8 @@ name|background
 decl_stmt|,
 name|channel
 decl_stmt|,
+name|service
+decl_stmt|,
 name|s
 decl_stmt|,
 name|amaster
@@ -297,6 +305,11 @@ decl_stmt|;
 name|char
 modifier|*
 name|tty
+init|=
+name|NULL
+decl_stmt|,
+modifier|*
+name|ep
 init|=
 name|NULL
 decl_stmt|,
@@ -323,6 +336,10 @@ operator|=
 name|channel
 operator|=
 literal|0
+expr_stmt|;
+name|service
+operator|=
+name|SDP_SERVICE_CLASS_SERIAL_PORT
 expr_stmt|;
 comment|/* Parse command line options */
 while|while
@@ -422,11 +439,79 @@ case|:
 comment|/* RFCOMM channel */
 name|channel
 operator|=
-name|atoi
+name|strtoul
 argument_list|(
+name|optarg
+argument_list|,
+operator|&
+name|ep
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|ep
+operator|!=
+literal|'\0'
+condition|)
+block|{
+name|channel
+operator|=
+literal|0
+expr_stmt|;
+switch|switch
+condition|(
+name|tolower
+argument_list|(
+name|optarg
+index|[
+literal|0
+index|]
+argument_list|)
+condition|)
+block|{
+case|case
+literal|'d'
+case|:
+comment|/* DialUp Networking */
+name|service
+operator|=
+name|SDP_SERVICE_CLASS_DIALUP_NETWORKING
+expr_stmt|;
+break|break;
+case|case
+literal|'f'
+case|:
+comment|/* Fax */
+name|service
+operator|=
+name|SDP_SERVICE_CLASS_FAX
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+comment|/* Serial Port */
+name|service
+operator|=
+name|SDP_SERVICE_CLASS_SERIAL_PORT
+expr_stmt|;
+break|break;
+default|default:
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Unknown service name: %s"
+argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
+comment|/* NOT REACHED */
+block|}
+block|}
 break|break;
 case|case
 literal|'b'
@@ -622,6 +707,10 @@ condition|(
 name|channel
 operator|==
 literal|0
+operator|&&
+name|service
+operator|!=
+literal|0
 condition|)
 if|if
 condition|(
@@ -632,7 +721,7 @@ argument_list|,
 operator|&
 name|addr
 argument_list|,
-name|SDP_SERVICE_CLASS_SERIAL_PORT
+name|service
 argument_list|,
 operator|&
 name|channel
