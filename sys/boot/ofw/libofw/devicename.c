@@ -406,6 +406,10 @@ name|found
 label|:
 if|if
 condition|(
+name|path
+operator|!=
+name|NULL
+operator|&&
 operator|*
 name|s
 operator|!=
@@ -427,6 +431,22 @@ name|ofw_devdesc
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|idev
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ofw_parsedev: malloc failed\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|ENOMEM
+return|;
+block|}
 name|strcpy
 argument_list|(
 name|idev
