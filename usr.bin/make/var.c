@@ -8684,13 +8684,6 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|var
-index|[
-name|len
-index|]
-operator|==
-literal|'\0'
-operator|&&
 name|strncmp
 argument_list|(
 name|var
@@ -8703,6 +8696,13 @@ name|len
 argument_list|)
 operator|==
 literal|0
+operator|&&
+name|var
+index|[
+name|len
+index|]
+operator|==
+literal|'\0'
 condition|)
 block|{
 return|return
