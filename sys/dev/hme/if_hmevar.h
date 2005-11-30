@@ -184,6 +184,12 @@ index|[
 name|HME_NTXQ
 index|]
 decl_stmt|;
+name|bus_dma_segment_t
+name|rb_txsegs
+index|[
+name|HME_NTXQ
+index|]
+decl_stmt|;
 name|struct
 name|hme_txdq
 name|rb_txfreeq
