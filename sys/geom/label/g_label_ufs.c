@@ -107,8 +107,6 @@ modifier|*
 name|pp
 decl_stmt|;
 name|int
-name|error
-decl_stmt|,
 name|sb
 decl_stmt|,
 name|superblock
@@ -196,8 +194,7 @@ name|superblock
 argument_list|,
 name|SBLOCKSIZE
 argument_list|,
-operator|&
-name|error
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

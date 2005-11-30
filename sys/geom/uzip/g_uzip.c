@@ -1937,8 +1937,7 @@ name|pp
 operator|->
 name|sectorsize
 argument_list|,
-operator|&
-name|error
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2308,8 +2307,7 @@ name|pp
 operator|->
 name|sectorsize
 argument_list|,
-operator|&
-name|error
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

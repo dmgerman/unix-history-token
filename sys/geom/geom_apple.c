@@ -634,8 +634,6 @@ modifier|*
 name|cp
 decl_stmt|;
 name|int
-name|error
-decl_stmt|,
 name|i
 decl_stmt|;
 name|struct
@@ -750,8 +748,7 @@ literal|0
 argument_list|,
 name|sectorsize
 argument_list|,
-operator|&
-name|error
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -820,8 +817,7 @@ name|sectorsize
 argument_list|,
 name|sectorsize
 argument_list|,
-operator|&
-name|error
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -901,8 +897,7 @@ operator|)
 operator|*
 name|sectorsize
 argument_list|,
-operator|&
-name|error
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

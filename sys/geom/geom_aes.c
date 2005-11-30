@@ -1429,8 +1429,7 @@ literal|0
 argument_list|,
 name|sectorsize
 argument_list|,
-operator|&
-name|error
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

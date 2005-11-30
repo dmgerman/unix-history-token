@@ -1371,8 +1371,7 @@ name|ms
 operator|->
 name|sectorsize
 argument_list|,
-operator|&
-name|error
+name|NULL
 argument_list|)
 expr_stmt|;
 name|g_topology_lock
