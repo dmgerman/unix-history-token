@@ -477,6 +477,11 @@ argument_list|,
 literal|"ACPI PCI Link"
 argument_list|)
 expr_stmt|;
+name|device_quiet
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2571,7 +2576,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"this is bad"
+literal|"PCI bridge without a bus number"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2624,6 +2629,22 @@ name|l_irq
 index|]
 operator|++
 expr_stmt|;
+comment|/* 	 * The BIOS only routes interrupts via ISA IRQs using the ATPICs 	 * (8259As).  Thus, if this link is routed via an ISA IRQ, go 	 * look to see if the BIOS routed an IRQ for this link at the 	 * indicated (bus, slot, pin).  If so, we prefer that IRQ for 	 * this link and add that IRQ to our list of known-good IRQs. 	 * This provides a good work-around for link devices whose _CRS 	 * method is either broken or bogus.  We only use the value 	 * returned by _CRS if we can't find a valid IRQ via this method 	 * in fact. 	 * 	 * If this link is not routed via an ISA IRQ (because we are using 	 * APIC for example), then don't bother looking up the BIOS IRQ 	 * as if we find one it won't be valid anyway. 	 */
+if|if
+condition|(
+operator|!
+name|link
+operator|->
+name|l_isa_irq
+condition|)
+block|{
+name|ACPI_SERIAL_END
+argument_list|(
+name|pci_link
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* Try to find a BIOS IRQ setting from any matching devices. */
 name|bios_irq
 operator|=
