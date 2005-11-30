@@ -2176,10 +2176,6 @@ condition|(
 name|vhdr
 operator|==
 name|NULL
-operator|||
-name|error
-operator|!=
-literal|0
 condition|)
 break|break;
 if|if

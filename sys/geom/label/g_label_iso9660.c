@@ -170,10 +170,6 @@ condition|(
 name|sector
 operator|==
 name|NULL
-operator|||
-name|error
-operator|!=
-literal|0
 condition|)
 return|return;
 if|if

@@ -205,10 +205,6 @@ condition|(
 name|fs
 operator|==
 name|NULL
-operator|||
-name|error
-operator|!=
-literal|0
 condition|)
 continue|continue;
 comment|/* Check for magic and make sure things are the right size */

@@ -759,10 +759,6 @@ condition|(
 name|buf
 operator|==
 name|NULL
-operator|||
-name|error
-operator|!=
-literal|0
 condition|)
 break|break;
 comment|/* 		 * Test for the sector 0 driver record signature, and  		 * validate sector and disk size 		 */
@@ -833,10 +829,6 @@ condition|(
 name|buf
 operator|==
 name|NULL
-operator|||
-name|error
-operator|!=
-literal|0
 condition|)
 break|break;
 comment|/* 		 * Decode the first partition: it's another indication of 		 * validity, as well as giving the size of the partition 		 * map 		 */
@@ -918,10 +910,6 @@ condition|(
 name|buf
 operator|==
 name|NULL
-operator|||
-name|error
-operator|!=
-literal|0
 condition|)
 break|break;
 for|for

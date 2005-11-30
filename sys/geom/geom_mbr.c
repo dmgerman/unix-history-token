@@ -1567,10 +1567,6 @@ condition|(
 name|buf
 operator|==
 name|NULL
-operator|||
-name|error
-operator|!=
-literal|0
 condition|)
 break|break;
 comment|/* 		 * Calculate MD5 from the first sector and use it for avoiding 		 * recursive slices creation. 		 */
@@ -2531,10 +2527,6 @@ condition|(
 name|buf
 operator|==
 name|NULL
-operator|||
-name|error
-operator|!=
-literal|0
 condition|)
 break|break;
 if|if
