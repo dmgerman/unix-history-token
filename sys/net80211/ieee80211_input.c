@@ -8796,9 +8796,9 @@ operator|==
 name|IEEE80211_MODE_11A
 operator|||
 operator|(
-name|ni
-operator|->
-name|ni_capinfo
+name|scan
+operator|.
+name|capinfo
 operator|&
 name|IEEE80211_CAPINFO_SHORT_SLOTTIME
 operator|)
