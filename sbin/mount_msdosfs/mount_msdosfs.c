@@ -582,6 +582,13 @@ argument_list|,
 name|quirk
 argument_list|)
 expr_stmt|;
+name|cs_local
+operator|=
+name|strdup
+argument_list|(
+name|quirk
+argument_list|)
+expr_stmt|;
 block|}
 break|break;
 case|case
