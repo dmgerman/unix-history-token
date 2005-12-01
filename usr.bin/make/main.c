@@ -969,6 +969,9 @@ block|{
 name|char
 modifier|*
 name|fname
+decl_stmt|,
+modifier|*
+name|fnamesave
 decl_stmt|;
 comment|/* makefile to read */
 name|FILE
@@ -992,6 +995,8 @@ name|int
 name|setMAKEFILE
 decl_stmt|;
 comment|/* XXX - remove this once constification is done */
+name|fnamesave
+operator|=
 name|fname
 operator|=
 name|estrdup
@@ -1248,7 +1253,7 @@ condition|)
 block|{
 name|free
 argument_list|(
-name|fname
+name|fnamesave
 argument_list|)
 expr_stmt|;
 return|return
@@ -1290,7 +1295,7 @@ end_function
 begin_expr_stmt
 name|free
 argument_list|(
-name|fname
+name|fnamesave
 argument_list|)
 expr_stmt|;
 end_expr_stmt
