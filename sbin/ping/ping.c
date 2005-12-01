@@ -8898,15 +8898,15 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: ping [-AaDdfnoQqRrv] [-c count] [-i wait] [-l preload] [-M mask | time]"
+literal|"usage: ping [-AaDdfnoQqRrv] [-c count] [-G sweepmaxsize] [-g sweepminsize]"
 argument_list|,
-literal|"            [-m ttl]"
+literal|"            [-h sweepincrsize] [-i wait] [-l preload] [-M mask | time] [-m ttl]"
+argument_list|,
+literal|"           "
 name|SECOPT
-literal|" [-p pattern] [-S src_addr] [-s packetsize]"
+literal|" [-p pattern] [-S src_addr] [-s packetsize] [-t timeout]"
 argument_list|,
-literal|"            [-t timeout] [-z tos] [-G sweepmaxsize ] [-g sweepminsize ]"
-argument_list|,
-literal|"            [-h sweepincrsize ] host"
+literal|"            [-z tos] host"
 argument_list|,
 literal|"       ping [-AaDdfLnoQqRrv] [-c count] [-I iface] [-i wait] [-l preload]"
 argument_list|,
