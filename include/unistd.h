@@ -317,7 +317,7 @@ begin_define
 define|#
 directive|define
 name|_POSIX_BARRIERS
-value|-1
+value|200112L
 end_define
 
 begin_define
@@ -352,7 +352,7 @@ begin_define
 define|#
 directive|define
 name|_POSIX_SPIN_LOCKS
-value|-1
+value|200112L
 end_define
 
 begin_define
