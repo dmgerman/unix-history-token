@@ -78,13 +78,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/filedesc.h>
+file|<sys/file.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<sys/filedesc.h>
 end_include
 
 begin_include
@@ -168,12 +168,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysent.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/syscall.h>
 end_include
 
@@ -186,25 +180,13 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysent.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sx.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vnode.h>
 end_include
 
 begin_include
@@ -235,6 +217,12 @@ begin_include
 include|#
 directive|include
 file|<machine/atomic.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<posix4/posix4.h>
 end_include
 
 begin_comment
@@ -2992,6 +2980,13 @@ expr_stmt|;
 name|mq_fdclose
 operator|=
 name|mqueue_fdclose
+expr_stmt|;
+name|p31b_setcfg
+argument_list|(
+name|CTL_P1003_1B_MESSAGE_PASSING
+argument_list|,
+name|_POSIX_MESSAGE_PASSING
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
