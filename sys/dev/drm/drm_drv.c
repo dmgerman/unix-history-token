@@ -39,6 +39,25 @@ directive|include
 file|"dev/drm/drm_sarea.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DRM_DEBUG_DEFAULT_ON
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|drm_debug_flag
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 name|int
 name|drm_debug_flag
@@ -46,6 +65,11 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
