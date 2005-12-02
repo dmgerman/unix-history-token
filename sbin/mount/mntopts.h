@@ -16,7 +16,7 @@ comment|/* option name */
 name|int
 name|m_inverse
 decl_stmt|;
-comment|/* if a negative option, e.g. "dev" */
+comment|/* if a negative option, e.g. "atime" */
 name|int
 name|m_flag
 decl_stmt|;
