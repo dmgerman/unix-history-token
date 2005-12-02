@@ -429,6 +429,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+end_if
+
+begin_define
+define|#
+directive|define
+name|MQ_PRIO_MAX
+value|64
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
