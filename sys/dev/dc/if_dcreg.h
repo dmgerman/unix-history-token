@@ -2676,9 +2676,9 @@ define|#
 directive|define
 name|DC_SP_MAC
 parameter_list|(
-name|ptr
+name|x
 parameter_list|)
-value|(be16dec(ptr)<< 16)
+value|((x)<< 16)
 end_define
 
 begin_else
@@ -2691,9 +2691,9 @@ define|#
 directive|define
 name|DC_SP_MAC
 parameter_list|(
-name|ptr
+name|x
 parameter_list|)
-value|(le16dec(ptr))
+value|(x)
 end_define
 
 begin_endif
