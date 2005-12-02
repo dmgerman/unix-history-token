@@ -6923,7 +6923,7 @@ operator|.
 name|resident_count
 operator|++
 expr_stmt|;
-comment|/* 	 * Now validate mapping with RO protection 	 */
+comment|/* 	 * Validate the mapping with limited access, read and/or execute but 	 * not write. 	 */
 operator|*
 name|pte
 operator|=
@@ -6937,18 +6937,23 @@ argument_list|)
 operator||
 name|PG_V
 operator||
-name|PG_KRE
+name|pte_prot
+argument_list|(
+name|pmap
+argument_list|,
+name|prot
+operator|&
+operator|(
+name|VM_PROT_READ
 operator||
-name|PG_URE
+name|VM_PROT_EXECUTE
+operator|)
+argument_list|)
 operator||
 name|managed
 expr_stmt|;
 name|out
 label|:
-name|alpha_pal_imb
-argument_list|()
-expr_stmt|;
-comment|/* XXX overkill? */
 name|PMAP_UNLOCK
 argument_list|(
 name|pmap
