@@ -7326,6 +7326,17 @@ name|error
 decl_stmt|;
 if|if
 condition|(
+name|msg_prio
+operator|>=
+name|MQ_PRIO_MAX
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+if|if
+condition|(
 name|msg_len
 operator|>
 name|mq
@@ -7513,7 +7524,7 @@ name|ts2
 operator|=
 name|ets
 expr_stmt|;
-name|getnanouptime
+name|getnanotime
 argument_list|(
 operator|&
 name|ts
@@ -7684,11 +7695,6 @@ operator|&
 name|mq
 operator|->
 name|mq_mutex
-argument_list|)
-expr_stmt|;
-name|mqueue_freemsg
-argument_list|(
-name|msg
 argument_list|)
 expr_stmt|;
 return|return
@@ -8278,7 +8284,7 @@ name|ts2
 operator|=
 name|ets
 expr_stmt|;
-name|getnanouptime
+name|getnanotime
 argument_list|(
 operator|&
 name|ts
