@@ -56,7 +56,7 @@ condition|)
 block|{
 name|t
 operator|=
-name|ceil
+name|floor
 argument_list|(
 name|x
 argument_list|)
@@ -66,11 +66,12 @@ condition|(
 name|t
 operator|-
 name|x
-operator|>
+operator|<=
+operator|-
 literal|0.5
 condition|)
 name|t
-operator|-=
+operator|+=
 literal|1.0
 expr_stmt|;
 return|return
@@ -83,7 +84,7 @@ else|else
 block|{
 name|t
 operator|=
-name|ceil
+name|floor
 argument_list|(
 operator|-
 name|x
@@ -94,11 +95,12 @@ condition|(
 name|t
 operator|+
 name|x
-operator|>
+operator|<=
+operator|-
 literal|0.5
 condition|)
 name|t
-operator|-=
+operator|+=
 literal|1.0
 expr_stmt|;
 return|return
