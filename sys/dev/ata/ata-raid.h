@@ -898,7 +898,7 @@ parameter_list|(
 name|dev
 parameter_list|)
 define|\
-value|(((struct ad_softc *)device_get_ivars(dev))->total_secs - 2)
+value|(((struct ad_softc *)device_get_ivars(dev))->total_secs - 3)
 end_define
 
 begin_struct
@@ -1088,6 +1088,10 @@ define|#
 directive|define
 name|INTEL_T_RAID1
 value|0x01
+define|#
+directive|define
+name|INTEL_T_RAID5
+value|0x05
 name|u_int8_t
 name|total_disks
 decl_stmt|;

@@ -1631,19 +1631,6 @@ name|mode
 parameter_list|)
 block|{
 name|struct
-name|ata_pci_controller
-modifier|*
-name|ctlr
-init|=
-name|device_get_softc
-argument_list|(
-name|GRANDPARENT
-argument_list|(
-name|dev
-argument_list|)
-argument_list|)
-decl_stmt|;
-name|struct
 name|ata_device
 modifier|*
 name|atadev
@@ -1696,15 +1683,12 @@ name|ATA_UDMA6
 argument_list|)
 argument_list|)
 condition|)
+comment|/* XXX SOS we should query SATA STATUS for the speed */
 name|atadev
 operator|->
 name|mode
 operator|=
-name|ctlr
-operator|->
-name|chip
-operator|->
-name|max_dma
+name|ATA_SA150
 expr_stmt|;
 block|}
 else|else
@@ -10220,7 +10204,7 @@ name|ATA_I82801FB_S1
 block|,
 literal|0
 block|,
-literal|0
+name|AHCI
 block|,
 literal|0x00
 block|,
@@ -10234,7 +10218,7 @@ name|ATA_I82801FB_R1
 block|,
 literal|0
 block|,
-literal|0
+name|AHCI
 block|,
 literal|0x00
 block|,
@@ -10248,7 +10232,7 @@ name|ATA_I82801FB_M
 block|,
 literal|0
 block|,
-literal|0
+name|AHCI
 block|,
 literal|0x00
 block|,
@@ -10276,11 +10260,11 @@ name|ATA_I82801GB_S1
 block|,
 literal|0
 block|,
-literal|0
+name|AHCI
 block|,
 literal|0x00
 block|,
-name|ATA_SA150
+name|ATA_SA300
 block|,
 literal|"Intel ICH7"
 block|}
@@ -10290,11 +10274,11 @@ name|ATA_I82801GB_R1
 block|,
 literal|0
 block|,
-literal|0
+name|AHCI
 block|,
 literal|0x00
 block|,
-name|ATA_SA150
+name|ATA_SA300
 block|,
 literal|"Intel ICH7"
 block|}
@@ -10304,11 +10288,11 @@ name|ATA_I82801GB_M
 block|,
 literal|0
 block|,
-literal|0
+name|AHCI
 block|,
 literal|0x00
 block|,
-name|ATA_SA150
+name|ATA_SA300
 block|,
 literal|"Intel ICH7"
 block|}
@@ -10318,11 +10302,11 @@ name|ATA_I82801GB_AH
 block|,
 literal|0
 block|,
-literal|0
+name|AHCI
 block|,
 literal|0x00
 block|,
-name|ATA_SA150
+name|ATA_SA300
 block|,
 literal|"Intel ICH7"
 block|}
@@ -10708,7 +10692,45 @@ block|}
 comment|/* SATA parts can be either compat or AHCI */
 else|else
 block|{
-comment|/* if we have BAR(5) as a memory resource we should use AHCI mode */
+comment|/* force all ports active "the legacy way" */
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+literal|0x92
+argument_list|,
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+literal|0x92
+argument_list|,
+literal|2
+argument_list|)
+operator||
+literal|0x0f
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+name|ctlr
+operator|->
+name|reset
+operator|=
+name|ata_intel_reset
+expr_stmt|;
+comment|/* if we have AHCI capability and BAR(5) as a memory resource */
+if|if
+condition|(
+name|ctlr
+operator|->
+name|chip
+operator|->
+name|cfg1
+operator|==
+name|AHCI
+condition|)
+block|{
 name|ctlr
 operator|->
 name|r_type2
@@ -10747,6 +10769,21 @@ argument_list|,
 name|RF_ACTIVE
 argument_list|)
 operator|)
+condition|)
+block|{
+comment|/* is AHCI or RAID mode enabled in BIOS ? */
+if|if
+condition|(
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+literal|0x90
+argument_list|,
+literal|1
+argument_list|)
+operator|&
+literal|0xc0
 condition|)
 block|{
 if|if
@@ -10796,27 +10833,6 @@ return|return
 name|ENXIO
 return|;
 block|}
-comment|/* force all ports active "the legacy way" */
-name|pci_write_config
-argument_list|(
-name|dev
-argument_list|,
-literal|0x92
-argument_list|,
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-literal|0x92
-argument_list|,
-literal|2
-argument_list|)
-operator||
-literal|0x0f
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
 comment|/* enable AHCI mode */
 name|ATA_OUTL
 argument_list|(
@@ -10889,14 +10905,15 @@ operator|=
 name|ata_ahci_allocate
 expr_stmt|;
 block|}
-else|else
-block|{
-name|ctlr
-operator|->
-name|reset
-operator|=
-name|ata_intel_reset
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|else {
+comment|/* enable SATA registers in compat mode */
+block|pci_write_config(dev, 0x94, 				     pci_read_config(dev, 0x94, 4) | 1<< 9, 4); 		}
+endif|#
+directive|endif
+block|}
 block|}
 name|ctlr
 operator|->
@@ -10904,6 +10921,7 @@ name|setmode
 operator|=
 name|ata_sata_setmode
 expr_stmt|;
+comment|/* enable PCI interrupt */
 name|pci_write_config
 argument_list|(
 name|dev
@@ -12013,32 +12031,14 @@ name|mask
 decl_stmt|,
 name|timeout
 decl_stmt|;
-comment|/* ICH6 has 4 SATA ports as master/slave on 2 channels so deal with pairs */
+comment|/* ICH6& ICH7 in compat mode has 4 SATA ports as master/slave on 2 ch's */
 if|if
 condition|(
 name|ctlr
 operator|->
 name|chip
 operator|->
-name|chipid
-operator|==
-name|ATA_I82801FB_S1
-operator|||
-name|ctlr
-operator|->
-name|chip
-operator|->
-name|chipid
-operator|==
-name|ATA_I82801FB_R1
-operator|||
-name|ctlr
-operator|->
-name|chip
-operator|->
-name|chipid
-operator|==
-name|ATA_I82801FB_M
+name|cfg1
 condition|)
 block|{
 name|mask
@@ -12084,7 +12084,7 @@ operator|->
 name|unit
 operator|)
 expr_stmt|;
-comment|/* XXX SOS should be in intel_allocate when we grow it */
+comment|/* XXX SOS should be in intel_allocate if we grow it */
 name|ch
 operator|->
 name|flags
@@ -14163,7 +14163,7 @@ literal|0
 block|,
 name|NV4OFF
 block|,
-name|ATA_SA150
+name|ATA_SA300
 block|,
 literal|"nVidia nForce4"
 block|}
@@ -14177,7 +14177,7 @@ literal|0
 block|,
 name|NV4OFF
 block|,
-name|ATA_SA150
+name|ATA_SA300
 block|,
 literal|"nVidia nForce4"
 block|}

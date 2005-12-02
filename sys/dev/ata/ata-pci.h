@@ -1701,6 +1701,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AHCI
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATPOLD
 value|1
 end_define
