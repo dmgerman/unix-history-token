@@ -830,11 +830,6 @@ parameter_list|)
 block|{
 name|device_t
 name|pcib
-init|=
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
 decl_stmt|;
 name|struct
 name|ofw_pci_register
@@ -857,6 +852,13 @@ name|busno
 decl_stmt|,
 name|func
 decl_stmt|;
+name|pcib
+operator|=
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Ask the bridge for the bus number - in some cases, we need to 	 * renumber buses, so the firmware information cannot be trusted. 	 */
 name|busno
 operator|=
