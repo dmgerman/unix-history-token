@@ -286,6 +286,7 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* 		     * Some bit is set after the 0.5 bit.  To avoid the 		     * possibility of errors from double rounding in 		     * w = TWO52[sx]+x, adjust the 0.25 bit to a lower 		     * guard bit.  We do this for all j0<=51.  The 		     * adjustment is trickiest for j0==18 and j0==19 		     * since then it spans the word boundary. 		     */
 if|if
 condition|(
 name|j0
@@ -295,6 +296,17 @@ condition|)
 name|i1
 operator|=
 literal|0x40000000
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|j0
+operator|==
+literal|18
+condition|)
+name|i1
+operator|=
+literal|0x80000000
 expr_stmt|;
 else|else
 name|i0
