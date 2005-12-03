@@ -44,14 +44,9 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_comment
-comment|/*  * TWO23 is long double instead of double to avoid a bug in gcc.  Without  * this, gcc thinks that TWO23[sx]+x and w-TWO23[sx] already have double  * precision and doesn't clip them to double precision when they are  * assigned and returned.  */
-end_comment
-
 begin_decl_stmt
 specifier|static
 specifier|const
-name|long
 name|double
 name|TWO52
 index|[
@@ -437,6 +432,13 @@ argument_list|,
 name|i1
 argument_list|)
 expr_stmt|;
+operator|*
+operator|(
+specifier|volatile
+name|double
+operator|*
+operator|)
+operator|&
 name|w
 operator|=
 name|TWO52
@@ -446,6 +448,7 @@ index|]
 operator|+
 name|x
 expr_stmt|;
+comment|/* clip any extra precision */
 return|return
 name|w
 operator|-
