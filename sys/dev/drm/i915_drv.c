@@ -387,7 +387,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|i915
 argument_list|,
-name|pci
+name|agp
 argument_list|,
 name|i915_driver
 argument_list|,
