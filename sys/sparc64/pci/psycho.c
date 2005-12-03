@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Support for `Psycho' and `Psycho+' UPA to PCI bridge and  * UltraSPARC IIi and IIe `Sabre' PCI controllers  */
+comment|/*  * Support for `Hummingbird' (UltraSPARC IIe), `Psycho' and `Psycho+'  * (UltraSPARC II) and `Sabre' (UltraSPARC IIi) UPA to PCI bridges.  */
 end_comment
 
 begin_include
@@ -824,7 +824,7 @@ value|PSYCHO_WRITE8((sc), (sc)->sc_pcictl + (off), (v))
 end_define
 
 begin_comment
-comment|/*  * "Sabre" is the UltraSPARC IIi onboard UPA to PCI bridge.  It manages a  * single PCI bus and does not have a streaming buffer.  It often has an APB  * (advanced PCI bridge) connected to it, which was designed specifically for  * the IIi.  The APB let's the IIi handle two independednt PCI buses, and  * appears as two "Simba"'s underneath the Sabre.  *  * "Psycho" and "Psycho+" are dual UPA to PCI bridges.  They sit on the UPA bus  * and manage two PCI buses.  "Psycho" has two 64-bit 33MHz buses, while  * "Psycho+" controls both a 64-bit 33Mhz and a 64-bit 66Mhz PCI bus.  You  * will usually find a "Psycho+" since I don't think the original "Psycho"  * ever shipped, and if it did it would be in the U30.  *  * Each "Psycho" PCI bus appears as a separate OFW node, but since they are  * both part of the same IC, they only have a single register space.  As such,  * they need to be configured together, even though the autoconfiguration will  * attach them separately.  *  * On UltraIIi machines, "Sabre" itself usually takes pci0, with "Simba" often  * as pci1 and pci2, although they have been implemented with other PCI bus  * numbers on some machines.  *  * On UltraII machines, there can be any number of "Psycho+" ICs, each  * providing two PCI buses.  */
+comment|/*  * "Sabre" is the UltraSPARC IIi onboard UPA to PCI bridge.  It manages a  * single PCI bus and does not have a streaming buffer.  It often has an APB  * (advanced PCI bridge) connected to it, which was designed specifically for  * the IIi.  The APB let's the IIi handle two independednt PCI buses, and  * appears as two "Simba"'s underneath the Sabre.  *  * "Hummingbird" is the UltraSPARC IIe onboard UPA to PCI bridge. It's  * basically the same as Sabre but without an APB underneath it.  *  * "Psycho" and "Psycho+" are dual UPA to PCI bridges.  They sit on the UPA bus  * and manage two PCI buses.  "Psycho" has two 64-bit 33MHz buses, while  * "Psycho+" controls both a 64-bit 33Mhz and a 64-bit 66Mhz PCI bus.  You  * will usually find a "Psycho+" since I don't think the original "Psycho"  * ever shipped, and if it did it would be in the U30.  *  * Each "Psycho" PCI bus appears as a separate OFW node, but since they are  * both part of the same IC, they only have a single register space.  As such,  * they need to be configured together, even though the autoconfiguration will  * attach them separately.  *  * On UltraIIi machines, "Sabre" itself usually takes pci0, with "Simba" often  * as pci1 and pci2, although they have been implemented with other PCI bus  * numbers on some machines.  *  * On UltraII machines, there can be any number of "Psycho+" ICs, each  * providing two PCI buses.  */
 end_comment
 
 begin_ifdef
@@ -907,7 +907,7 @@ literal|"pci108e,a000"
 block|,
 name|PSYCHO_MODE_SABRE
 block|,
-literal|"Sabre (US-IIi) compatible"
+literal|"Sabre compatible"
 block|}
 block|,
 block|{
@@ -915,7 +915,7 @@ literal|"pci108e,a001"
 block|,
 name|PSYCHO_MODE_SABRE
 block|,
-literal|"Sabre (US-IIe) compatible"
+literal|"Hummingbird compatible"
 block|}
 block|,
 block|{
@@ -1665,7 +1665,7 @@ name|sc_ign
 operator|=
 literal|0x7c0
 expr_stmt|;
-comment|/* APB IGN is always 0x7c */
+comment|/* Hummingbird/Sabre IGN is always 0x1f. */
 if|if
 condition|(
 name|sc
@@ -1791,7 +1791,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"%s: Sabre TAS not initialized."
+literal|"%s: Hummingbird/Sabre TAS not initialized."
 argument_list|,
 name|__func__
 argument_list|)
@@ -2033,7 +2033,7 @@ argument_list|,
 name|sc_link
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we're a Sabre or the first of a pair of Psycho's to arrive here, 	 * start up the IOMMU. 	 */
+comment|/* 	 * If we're a Hummingbird/Sabre or the first of a pair of Psycho's to 	 * arrive here, start up the IOMMU. 	 */
 if|if
 condition|(
 name|osc
@@ -2112,7 +2112,7 @@ operator|==
 name|PSYCHO_MODE_PSYCHO
 condition|)
 block|{
-comment|/* 			 * Sabres do not have the following two interrupts. 			 */
+comment|/* 			 * Hummingbirds/Sabres do not have the following two 			 * interrupts. 			 */
 name|psycho_set_intr
 argument_list|(
 name|sc
@@ -2258,7 +2258,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Just copy IOMMU state, config tag and address */
+comment|/* Just copy IOMMU state, config tag and address. */
 name|sc
 operator|->
 name|sc_is
@@ -2689,7 +2689,7 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Program the bus range registers. 	 * NOTE: for the Psycho, the second write changes the bus number the 	 * Psycho itself uses for it's configuration space, so these 	 * writes must be kept in this order! 	 * The Sabre always uses bus 0, but there only can be one Sabre per 	 * machine. 	 */
+comment|/* 	 * Program the bus range registers. 	 * NOTE: for the Psycho, the second write changes the bus number the 	 * Psycho itself uses for it's configuration space, so these 	 * writes must be kept in this order! 	 * The Hummingbird/Sabre always uses bus 0, but there only can be one 	 * Hummingbird/Sabre per machine. 	 */
 name|PCIB_WRITE_CONFIG
 argument_list|(
 name|dev
@@ -2749,7 +2749,7 @@ name|ofw_pci_intr_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Workaround for incorrect interrupt map entries on E250. 	 */
+comment|/* 	 * On E250 the interrupt map entry for the EBus bridge is wrong, 	 * causing incorrect interrupts to be assigned to some devices on 	 * the EBus. Work around it by changing our copy of the interrupt 	 * map mask to do perform a full comparison of the INO. That way 	 * the interrupt map entry for the EBus bridge won't match at all 	 * and the INOs specified in the "interrupts" properties of the 	 * EBus devices will be used directly instead. 	 */
 if|if
 condition|(
 name|strcmp
@@ -2999,7 +2999,7 @@ name|found
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Hunt thru obio first */
+comment|/* Hunt thru OBIO first. */
 name|diag
 operator|=
 name|PSYCHO_READ8
@@ -3081,7 +3081,7 @@ argument_list|,
 name|PSR_PCI_INT_DIAG
 argument_list|)
 expr_stmt|;
-comment|/* Now do PCI interrupts */
+comment|/* Now do PCI interrupts. */
 for|for
 control|(
 name|intrmap

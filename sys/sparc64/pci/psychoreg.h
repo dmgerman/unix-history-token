@@ -1191,11 +1191,7 @@ comment|/* what the bits mean! */
 end_comment
 
 begin_comment
-comment|/* PCI [a|b] control/status register */
-end_comment
-
-begin_comment
-comment|/* note that the Sabre only has one set of PCI control/status registers */
+comment|/*  * PCI [a|b] control/status register  * Note that the Hummingbird/Sabre only has one set of PCI control/status  * registers.  */
 end_comment
 
 begin_define
