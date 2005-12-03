@@ -1012,13 +1012,6 @@ name|MAX_KMAPENT
 value|128
 end_define
 
-begin_define
-define|#
-directive|define
-name|MAX_MAPENT
-value|128
-end_define
-
 begin_comment
 comment|/*  * Copy-on-write flags for vm_map operations  */
 end_comment
