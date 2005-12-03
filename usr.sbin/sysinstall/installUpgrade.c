@@ -746,6 +746,16 @@ block|,
 block|{
 name|JUST_COPY
 block|,
+literal|"sysctl.conf"
+block|,
+name|TRUE
+block|,
+name|NULL
+block|}
+block|,
+block|{
+name|JUST_COPY
+block|,
 literal|"syslog.conf"
 block|,
 name|TRUE
