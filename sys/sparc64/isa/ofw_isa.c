@@ -105,7 +105,7 @@ name|ps
 condition|)
 block|{
 case|case
-name|PCI_CS_IO
+name|OFW_PCI_CS_IO
 case|:
 return|return
 operator|(
@@ -113,7 +113,7 @@ name|SYS_RES_IOPORT
 operator|)
 return|;
 case|case
-name|PCI_CS_MEM32
+name|OFW_PCI_CS_MEM32
 case|:
 return|return
 operator|(

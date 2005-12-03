@@ -1235,7 +1235,7 @@ modifier|*
 name|asc
 decl_stmt|;
 name|struct
-name|upa_ranges
+name|ofw_pci_ranges
 modifier|*
 name|range
 decl_stmt|;
@@ -1944,7 +1944,7 @@ operator|&
 name|range
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Make sure that the expected ranges are present. The PCI_CS_MEM64 	 * one is not currently used though. 	 */
+comment|/* 	 * Make sure that the expected ranges are present. The OFW_PCI_CS_MEM64 	 * one is not currently used though. 	 */
 if|if
 condition|(
 name|nrange
@@ -1975,7 +1975,7 @@ control|)
 block|{
 name|i
 operator|=
-name|UPA_RANGE_CS
+name|OFW_PCI_RANGE_CS
 argument_list|(
 operator|&
 name|range
@@ -2011,7 +2011,7 @@ index|[
 name|i
 index|]
 operator|=
-name|UPA_RANGE_PHYS
+name|OFW_PCI_RANGE_PHYS
 argument_list|(
 operator|&
 name|range
@@ -3861,7 +3861,7 @@ name|sc
 operator|->
 name|sc_pci_bh
 index|[
-name|PCI_CS_CONFIG
+name|OFW_PCI_CS_CONFIG
 index|]
 expr_stmt|;
 switch|switch
@@ -4053,7 +4053,7 @@ name|sc
 operator|->
 name|sc_pci_bh
 index|[
-name|PCI_CS_CONFIG
+name|OFW_PCI_CS_CONFIG
 index|]
 expr_stmt|;
 switch|switch
@@ -4959,7 +4959,7 @@ name|sc
 operator|->
 name|sc_pci_bh
 index|[
-name|PCI_CS_MEM32
+name|OFW_PCI_CS_MEM32
 index|]
 expr_stmt|;
 break|break;
@@ -4985,7 +4985,7 @@ name|sc
 operator|->
 name|sc_pci_bh
 index|[
-name|PCI_CS_IO
+name|OFW_PCI_CS_IO
 index|]
 expr_stmt|;
 break|break;
@@ -5509,7 +5509,7 @@ name|sc
 operator|->
 name|sc_pci_bh
 index|[
-name|PCI_CS_IO
+name|OFW_PCI_CS_IO
 index|]
 operator|+
 name|childhdl
@@ -5531,7 +5531,7 @@ name|sc
 operator|->
 name|sc_pci_bh
 index|[
-name|PCI_CS_MEM32
+name|OFW_PCI_CS_MEM32
 index|]
 operator|+
 name|childhdl

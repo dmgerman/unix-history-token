@@ -39,35 +39,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|upa_ranges
-block|{
-name|u_int32_t
-name|cspace
-decl_stmt|;
-name|u_int32_t
-name|child_hi
-decl_stmt|;
-name|u_int32_t
-name|child_lo
-decl_stmt|;
-name|u_int32_t
-name|phys_hi
-decl_stmt|;
-name|u_int32_t
-name|phys_lo
-decl_stmt|;
-name|u_int32_t
-name|size_hi
-decl_stmt|;
-name|u_int32_t
-name|size_lo
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_define
 define|#
 directive|define
@@ -88,49 +59,6 @@ name|r
 parameter_list|)
 define|\
 value|(((u_int64_t)(r)->size_hi<< 32) | (u_int64_t)(r)->size_lo)
-end_define
-
-begin_define
-define|#
-directive|define
-name|UPA_RANGE_CHILD
-parameter_list|(
-name|r
-parameter_list|)
-define|\
-value|(((u_int64_t)(r)->child_hi<< 32) | (u_int64_t)(r)->child_lo)
-end_define
-
-begin_define
-define|#
-directive|define
-name|UPA_RANGE_PHYS
-parameter_list|(
-name|r
-parameter_list|)
-define|\
-value|(((u_int64_t)(r)->phys_hi<< 32) | (u_int64_t)(r)->phys_lo)
-end_define
-
-begin_define
-define|#
-directive|define
-name|UPA_RANGE_SIZE
-parameter_list|(
-name|r
-parameter_list|)
-define|\
-value|(((u_int64_t)(r)->size_hi<< 32) | (u_int64_t)(r)->size_lo)
-end_define
-
-begin_define
-define|#
-directive|define
-name|UPA_RANGE_CS
-parameter_list|(
-name|r
-parameter_list|)
-value|(((r)->cspace>> 24)& 0x03)
 end_define
 
 begin_endif
