@@ -127,9 +127,6 @@ begin_struct
 struct|struct
 name|central_softc
 block|{
-name|phandle_t
-name|sc_node
-decl_stmt|;
 name|int
 name|sc_nrange
 decl_stmt|;
@@ -489,12 +486,6 @@ name|nexus_get_node
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|sc_node
-operator|=
-name|node
 expr_stmt|;
 name|sc
 operator|->
