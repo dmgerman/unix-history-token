@@ -262,7 +262,7 @@ literal|"UNAME_s"
 argument_list|)
 operator|)
 condition|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|name
 operator|->
@@ -459,7 +459,7 @@ literal|"UNAME_r"
 argument_list|)
 operator|)
 condition|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|name
 operator|->
@@ -619,7 +619,7 @@ literal|"UNAME_v"
 argument_list|)
 operator|)
 condition|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|name
 operator|->
@@ -731,7 +731,7 @@ literal|"UNAME_m"
 argument_list|)
 operator|)
 condition|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|name
 operator|->
