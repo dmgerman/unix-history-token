@@ -359,13 +359,6 @@ name|obj_zone
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|VM_OBJECTS_INIT
-value|256
-end_define
-
 begin_function_decl
 specifier|static
 name|int
@@ -883,13 +876,6 @@ argument_list|,
 name|UMA_ZONE_VM
 operator||
 name|UMA_ZONE_NOFREE
-argument_list|)
-expr_stmt|;
-name|uma_prealloc
-argument_list|(
-name|obj_zone
-argument_list|,
-name|VM_OBJECTS_INIT
 argument_list|)
 expr_stmt|;
 block|}
