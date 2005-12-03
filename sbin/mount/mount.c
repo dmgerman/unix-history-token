@@ -2285,23 +2285,6 @@ index|[
 name|PATH_MAX
 index|]
 decl_stmt|;
-if|#
-directive|if
-name|__GNUC__
-operator|(
-name|void
-operator|)
-operator|&
-name|optbuf
-expr_stmt|;
-operator|(
-name|void
-operator|)
-operator|&
-name|name
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* resolve the mountpoint with realpath(3) */
 operator|(
 name|void
