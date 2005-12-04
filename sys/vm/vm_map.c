@@ -1080,18 +1080,10 @@ name|vm
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Lock the map, to wait out all other references to it. 	 * Delete all of the mappings and pages they hold, then call 	 * the pmap module to reclaim anything left. 	 */
-name|vm_map_lock
-argument_list|(
-operator|&
-name|vm
-operator|->
-name|vm_map
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
-name|vm_map_delete
+name|vm_map_remove
 argument_list|(
 operator|&
 name|vm
@@ -1109,14 +1101,6 @@ operator|->
 name|vm_map
 operator|.
 name|max_offset
-argument_list|)
-expr_stmt|;
-name|vm_map_unlock
-argument_list|(
-operator|&
-name|vm
-operator|->
-name|vm_map
 argument_list|)
 expr_stmt|;
 name|uma_zfree
