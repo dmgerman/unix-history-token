@@ -2964,117 +2964,14 @@ goto|;
 block|}
 if|#
 directive|if
-name|__broken__
+literal|0
 comment|/* XXX FIXME */
 comment|/* Isoc-in */
-name|error
-operator|=
-name|usbd_open_pipe
-argument_list|(
-name|sc
-operator|->
-name|sc_iface1
-argument_list|,
-name|sc
-operator|->
-name|sc_isoc_in_ep
-argument_list|,
-name|USBD_EXCLUSIVE_USE
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|sc_isoc_in_pipe
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-name|USBD_NORMAL_COMPLETION
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s: %s - Could not open isoc-in pipe. %s (%d)\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|USBDEVNAME
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|)
-argument_list|,
-name|usbd_errstr
-argument_list|(
-name|error
-argument_list|)
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
+block|error = usbd_open_pipe(sc->sc_iface1, sc->sc_isoc_in_ep, 			USBD_EXCLUSIVE_USE,&sc->sc_isoc_in_pipe); 	if (error != USBD_NORMAL_COMPLETION) { 		printf("%s: %s - Could not open isoc-in pipe. %s (%d)\n", 			__func__, USBDEVNAME(sc->sc_dev), usbd_errstr(error), 			error); 		goto bad; 	}
 comment|/* Isoc-out */
-name|error
-operator|=
-name|usbd_open_pipe
-argument_list|(
-name|sc
-operator|->
-name|sc_iface1
-argument_list|,
-name|sc
-operator|->
-name|sc_isoc_out_ep
-argument_list|,
-name|USBD_EXCLUSIVE_USE
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|sc_isoc_out_pipe
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-name|USBD_NORMAL_COMPLETION
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s: %s - Could not open isoc-out pipe. %s (%d)\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|USBDEVNAME
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|)
-argument_list|,
-name|usbd_errstr
-argument_list|(
-name|error
-argument_list|)
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
+block|error = usbd_open_pipe(sc->sc_iface1, sc->sc_isoc_out_ep,  			USBD_EXCLUSIVE_USE,&sc->sc_isoc_out_pipe); 	if (error != USBD_NORMAL_COMPLETION) { 		printf("%s: %s - Could not open isoc-out pipe. %s (%d)\n", 			__func__, USBDEVNAME(sc->sc_dev), usbd_errstr(error), 			error); 		goto bad; 	}
 endif|#
 directive|endif
-comment|/* __broken__ */
 comment|/* Create Netgraph node */
 if|if
 condition|(
@@ -8407,51 +8304,12 @@ goto|;
 block|}
 if|#
 directive|if
-name|__broken__
+literal|0
 comment|/* XXX FIXME */
 comment|/* Start isoc-in transfer */
-name|status
-operator|=
-name|ubt_isoc_in_start
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|status
-operator|!=
-name|USBD_NORMAL_COMPLETION
-condition|)
-block|{
-name|NG_UBT_ALERT
-argument_list|(
-literal|"%s: %s - Could not start isoc-in transfer. %s (%d)\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|USBDEVNAME
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|)
-argument_list|,
-name|usbd_errstr
-argument_list|(
-name|status
-argument_list|)
-argument_list|,
-name|status
-argument_list|)
-expr_stmt|;
-goto|goto
-name|fail
-goto|;
-block|}
+block|status = ubt_isoc_in_start(sc); 	if (status != USBD_NORMAL_COMPLETION) { 		NG_UBT_ALERT( "%s: %s - Could not start isoc-in transfer. %s (%d)\n", 			__func__, USBDEVNAME(sc->sc_dev), usbd_errstr(status), 			status); 		goto fail; 	}
 endif|#
 directive|endif
-comment|/* __broken__ */
 return|return
 operator|(
 literal|0
@@ -9415,30 +9273,11 @@ expr_stmt|;
 break|break;
 if|#
 directive|if
-name|__broken__
+literal|0
 comment|/* XXX FIXME */
-case|case
-name|NG_HCI_SCO_DATA_PKT
-case|:
-name|f
-operator|=
-name|ubt_isoc_out_start
-expr_stmt|;
-name|q
-operator|=
-operator|&
-name|sc
-operator|->
-name|sc_scoq
-expr_stmt|;
-name|b
-operator|=
-name|UBT_SCO_XMIT
-expr_stmt|;
-break|break;
+block|case NG_HCI_SCO_DATA_PKT: 		f = ubt_isoc_out_start; 		q =&sc->sc_scoq; 		b = UBT_SCO_XMIT; 		break;
 endif|#
 directive|endif
-comment|/* __broken__ */
 default|default:
 name|NG_UBT_ERR
 argument_list|(

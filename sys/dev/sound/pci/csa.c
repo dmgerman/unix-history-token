@@ -2829,8 +2829,8 @@ name|resp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set the serial port FIFO pointer to the first sample in the FIFO. 	 */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|notdef
 name|csa_writeio
 argument_list|(
@@ -2975,8 +2975,8 @@ operator|++
 control|)
 block|{
 comment|/* 		 * First, lets wait a short while to let things settle out a bit, 		 * and to prevent retrying the read too quickly. 		 */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|notdef
 name|DELAY
 argument_list|(
@@ -3061,8 +3061,8 @@ name|ACOSV_SLV4
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Power down the DAC and ADC.  We will power them up (if) when we need 	 * them. 	 */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|notdef
 name|csa_writeio
 argument_list|(
@@ -3077,8 +3077,8 @@ endif|#
 directive|endif
 comment|/* notdef */
 comment|/* 	 * Turn off the Processor by turning off the software clock enable flag in 	 * the clock control register. 	 */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|notdef
 name|clkcr1
 operator|=

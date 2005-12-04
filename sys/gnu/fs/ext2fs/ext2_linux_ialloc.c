@@ -1076,11 +1076,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|linux
-end_if
+end_ifdef
 
 begin_comment
 comment|/*  * This function increments the inode version number  *  * This may be used one day by the NFS server  */

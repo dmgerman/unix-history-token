@@ -3,11 +3,11 @@ begin_comment
 comment|/*  * $FreeBSD$  *  * Copyright (c) 2002-2004 David Boggs.<boggs@boggs.palo-alto.ca.us>  * All rights reserved.  *  * BSD License:  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * GNU General Public License:  *  * This program is free software; you can redistribute it and/or modify it   * under the terms of the GNU General Public License as published by the Free   * Software Foundation; either version 2 of the License, or (at your option)   * any later version.  *   * This program is distributed in the hope that it will be useful, but WITHOUT   * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or   * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for   * more details.  *  * You should have received a copy of the GNU General Public License along with  * this program; if not, write to the Free Software Foundation, Inc., 59   * Temple Place - Suite 330, Boston, MA  02111-1307, USA.  *  * Description:  *  * This is an open-source Unix device driver for PCI-bus WAN interface cards.  * It sends and receives packets in HDLC frames over synchronous links.  * A generic PC plus Unix plus some SBE/LMC cards makes an OPEN router.  * This driver works with FreeBSD, NetBSD, OpenBSD, BSD/OS and Linux.  * It has been tested on i386 (32-bit little-end), Sparc (64-bit big-end),  * and Alpha (64-bit little-end) architectures.  *  * History and Authors:  *  * Ron Crane had the neat idea to use a Fast Ethernet chip as a PCI  * interface and add an Ethernet-to-HDLC gate array to make a WAN card.  * David Boggs designed the Ethernet-to-HDLC gate arrays and PC cards.  * We did this at our company, LAN Media Corporation (LMC).  * SBE Corp aquired LMC and continues to make the cards.  *  * Since the cards use Tulip Ethernet chips, we started with Matt Thomas'  * ubiquitous "de" driver.  Michael Graff stripped out the Ethernet stuff  * and added HSSI stuff.  Basil Gunn ported it to Solaris (lost) and  * Rob Braun ported it to Linux.  Andrew Stanley-Jones added support  * for three more cards and wrote the first version of lmcconfig.  * During 2002-5 David Boggs rewrote it and now feels responsible for it.  *  * Responsible Individual:  *  * Send bug reports and improvements to<boggs@boggs.palo-alto.ca.us>.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -465,11 +465,11 @@ begin_comment
 comment|/*__FreeBSD__*/
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__NetBSD__
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -793,11 +793,11 @@ begin_comment
 comment|/*__NetBSD__*/
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__OpenBSD__
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -1099,11 +1099,11 @@ begin_comment
 comment|/*__OpenBSD__*/
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__bsdi__
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -1418,11 +1418,11 @@ begin_comment
 comment|/*__bsdi__*/
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__linux__
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -12848,7 +12848,10 @@ if|#
 directive|if
 operator|(
 operator|(
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 operator|&&
 operator|(
 name|__FreeBSD_version
@@ -12858,11 +12861,20 @@ operator|)
 operator|)
 operator|||
 expr|\
+name|defined
+argument_list|(
 name|__NetBSD__
+argument_list|)
 operator|||
+name|defined
+argument_list|(
 name|__OpenBSD__
+argument_list|)
 operator|||
+name|defined
+argument_list|(
 name|__bsdi__
+argument_list|)
 operator|)
 end_if
 
@@ -13267,11 +13279,11 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-end_if
+end_ifdef
 
 begin_function
 specifier|static
@@ -13413,8 +13425,8 @@ return|return
 name|EINVAL
 return|;
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
 comment|/* Create a DMA tag for descriptors and buffers. */
 if|if
@@ -13645,9 +13657,15 @@ block|}
 elif|#
 directive|elif
 operator|(
+name|defined
+argument_list|(
 name|__NetBSD__
+argument_list|)
 operator|||
+name|defined
+argument_list|(
 name|__OpenBSD__
+argument_list|)
 operator|)
 comment|/* Use the DMA tag passed to attach() for descriptors and buffers. */
 name|ring
@@ -13935,7 +13953,10 @@ return|;
 block|}
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|__bsdi__
+argument_list|)
 comment|/* Allocate wired physical memory for DMA descriptor array. */
 if|if
 condition|(
@@ -14180,8 +14201,8 @@ operator|->
 name|first
 expr_stmt|;
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
 comment|/* Free the dmamaps of all DMA descriptors. */
 for|for
@@ -14285,9 +14306,15 @@ expr_stmt|;
 elif|#
 directive|elif
 operator|(
+name|defined
+argument_list|(
 name|__NetBSD__
+argument_list|)
 operator|||
+name|defined
+argument_list|(
 name|__OpenBSD__
+argument_list|)
 operator|)
 comment|/* Free the dmamaps of all DMA descriptors. */
 for|for
@@ -14426,7 +14453,10 @@ argument_list|)
 expr_stmt|;
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|__bsdi__
+argument_list|)
 comment|/* Free kernel memory for DMA descriptor array. */
 if|if
 condition|(
@@ -14508,7 +14538,10 @@ decl_stmt|;
 if|#
 directive|if
 operator|(
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 operator|&&
 name|DEVICE_POLLING
 operator|)
@@ -15101,7 +15134,10 @@ directive|endif
 if|#
 directive|if
 operator|(
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 operator|&&
 name|DEVICE_POLLING
 operator|)
@@ -15688,8 +15724,8 @@ name|BUS_DMASYNC_PREREAD
 argument_list|)
 expr_stmt|;
 comment|/* Set up the DMA descriptor. */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
 name|desc
 operator|->
@@ -15707,9 +15743,15 @@ expr_stmt|;
 elif|#
 directive|elif
 operator|(
+name|defined
+argument_list|(
 name|__NetBSD__
+argument_list|)
 operator|||
+name|defined
+argument_list|(
 name|__OpenBSD__
+argument_list|)
 operator|)
 name|desc
 operator|->
@@ -15728,7 +15770,10 @@ name|ds_addr
 expr_stmt|;
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|__bsdi__
+argument_list|)
 name|desc
 operator|->
 name|address1
@@ -16371,15 +16416,24 @@ expr_stmt|;
 if|#
 directive|if
 operator|(
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 operator|||
+name|defined
+argument_list|(
 name|__NetBSD__
+argument_list|)
 operator|||
+name|defined
+argument_list|(
 name|__OpenBSD__
+argument_list|)
 operator|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
 name|bus_dma_segment_t
 modifier|*
@@ -16399,9 +16453,15 @@ decl_stmt|;
 elif|#
 directive|elif
 operator|(
+name|defined
+argument_list|(
 name|__NetBSD__
+argument_list|)
 operator|||
+name|defined
+argument_list|(
 name|__OpenBSD__
+argument_list|)
 operator|)
 name|bus_dma_segment_t
 modifier|*
@@ -16487,7 +16547,10 @@ block|}
 block|}
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|__bsdi__
+argument_list|)
 name|desc
 operator|->
 name|address1
@@ -16911,11 +16974,11 @@ begin_comment
 comment|/* BSD */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__linux__
-end_if
+end_ifdef
 
 begin_comment
 comment|/* NOTE: this is the LINUX version of the interrupt/DMA code, */
@@ -20076,7 +20139,10 @@ begin_if
 if|#
 directive|if
 operator|(
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 operator|&&
 name|DEVICE_POLLING
 operator|)
@@ -20231,7 +20297,10 @@ return|;
 if|#
 directive|if
 operator|(
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 operator|&&
 name|DEVICE_POLLING
 operator|)
@@ -20555,8 +20624,8 @@ modifier|*
 name|sppp
 parameter_list|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
 if|if
 condition|(
@@ -20580,9 +20649,15 @@ operator|)
 condition|)
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|__NetBSD__
+argument_list|)
 operator|||
+name|defined
+argument_list|(
 name|__OpenBSD__
+argument_list|)
 if|if
 condition|(
 operator|!
@@ -20621,8 +20696,8 @@ modifier|*
 name|sppp
 parameter_list|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
 if|if
 condition|(
@@ -20646,9 +20721,15 @@ operator|)
 condition|)
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|__NetBSD__
+argument_list|)
 operator|||
+name|defined
+argument_list|(
 name|__OpenBSD__
+argument_list|)
 if|if
 condition|(
 operator|!
@@ -21115,9 +21196,15 @@ expr_stmt|;
 if|#
 directive|if
 operator|(
+name|defined
+argument_list|(
 name|__NetBSD__
+argument_list|)
 operator|||
+name|defined
+argument_list|(
 name|__OpenBSD__
+argument_list|)
 operator|)
 name|sc
 operator|->
@@ -21130,7 +21217,10 @@ name|PP_CISCO
 expr_stmt|;
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 name|sc
 operator|->
 name|ifp
@@ -21206,9 +21296,15 @@ expr_stmt|;
 if|#
 directive|if
 operator|(
+name|defined
+argument_list|(
 name|__NetBSD__
+argument_list|)
 operator|||
+name|defined
+argument_list|(
 name|__OpenBSD__
+argument_list|)
 operator|)
 name|sc
 operator|->
@@ -21220,7 +21316,10 @@ name|PP_CISCO
 expr_stmt|;
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 name|sc
 operator|->
 name|ifp
@@ -21286,9 +21385,15 @@ expr_stmt|;
 if|#
 directive|if
 operator|(
+name|defined
+argument_list|(
 name|__NetBSD__
+argument_list|)
 operator|||
+name|defined
+argument_list|(
 name|__OpenBSD__
+argument_list|)
 operator|)
 name|sc
 operator|->
@@ -21301,7 +21406,10 @@ name|PP_CISCO
 expr_stmt|;
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 name|sc
 operator|->
 name|ifp
@@ -22581,7 +22689,10 @@ block|{
 if|#
 directive|if
 operator|(
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 operator|&&
 name|DEVICE_POLLING
 operator|)
@@ -22672,8 +22783,8 @@ argument_list|(
 name|ifp
 argument_list|)
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__OpenBSD__
 name|struct
 name|ifreq
@@ -22730,8 +22841,8 @@ name|data
 argument_list|)
 expr_stmt|;
 break|break;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__OpenBSD__
 comment|/* Catch the IOCTLs used by ifconfig. */
 case|case
@@ -23541,8 +23652,8 @@ name|line_pkg
 operator|=
 name|PKG_SPPP
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
 if|if
 condition|(
@@ -23576,9 +23687,15 @@ condition|)
 elif|#
 directive|elif
 operator|(
+name|defined
+argument_list|(
 name|__NetBSD__
+argument_list|)
 operator|||
+name|defined
+argument_list|(
 name|__OpenBSD__
+argument_list|)
 operator|)
 if|if
 condition|(
@@ -23698,9 +23815,15 @@ operator|>=
 literal|500000
 operator|)
 operator|||
+name|defined
+argument_list|(
 name|__OpenBSD__
+argument_list|)
 operator|||
+name|defined
+argument_list|(
 name|__NetBSD__
+argument_list|)
 operator|)
 if|if
 condition|(
@@ -23737,11 +23860,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__OpenBSD__
-end_if
+end_ifdef
 
 begin_comment
 comment|/* Callback from ifmedia. */
@@ -24179,7 +24302,10 @@ comment|/* p2p changes this */
 if|#
 directive|if
 operator|(
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 operator|&&
 name|DEVICE_POLLING
 operator|)
@@ -24210,7 +24336,10 @@ comment|/* Every OS does it differently! */
 if|#
 directive|if
 operator|(
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 operator|&&
 operator|(
 name|__FreeBSD_version
@@ -24292,7 +24421,10 @@ argument_list|)
 expr_stmt|;
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|__NetBSD__
+argument_list|)
 name|strcpy
 argument_list|(
 name|ifp
@@ -24326,7 +24458,10 @@ argument_list|)
 expr_stmt|;
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|__bsdi__
+argument_list|)
 name|ifp
 operator|->
 name|if_name
@@ -24535,12 +24670,23 @@ if|#
 directive|if
 operator|(
 operator|(
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
 name|__NetBSD_Version__
 operator|>=
 literal|106000000
 operator|)
 operator|||
+expr|\
 operator|(
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+operator|&&
 name|OpenBSD
 operator|>=
 literal|200211
@@ -24563,8 +24709,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__OpenBSD__
 comment|/* Initialize ifmedia mechanism. */
 name|ifmedia_init
@@ -24802,8 +24948,8 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__OpenBSD__
 name|ifmedia_delete_instance
 argument_list|(
@@ -24820,7 +24966,10 @@ directive|endif
 if|#
 directive|if
 operator|(
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 operator|&&
 name|DEVICE_POLLING
 operator|)
@@ -24850,12 +24999,23 @@ if|#
 directive|if
 operator|(
 operator|(
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
 name|__NetBSD_Version__
 operator|>=
 literal|106000000
 operator|)
 operator|||
+expr|\
 operator|(
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+operator|&&
 name|OpenBSD
 operator|>=
 literal|200211
@@ -26034,7 +26194,10 @@ block|,
 if|#
 directive|if
 operator|(
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 operator|&&
 operator|(
 name|__FreeBSD_version
@@ -27669,8 +27832,8 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* This is the I/O configuration interface for FreeBSD */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
 specifier|static
 name|int
@@ -28472,8 +28635,8 @@ endif|#
 directive|endif
 comment|/* __FreeBSD__ */
 comment|/* This is the I/O configuration interface for NetBSD. */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__NetBSD__
 specifier|static
 name|int
@@ -29780,8 +29943,8 @@ endif|#
 directive|endif
 comment|/* __NetBSD__ */
 comment|/* This is the I/O configuration interface for OpenBSD. */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__OpenBSD__
 specifier|static
 name|int
@@ -30970,8 +31133,8 @@ endif|#
 directive|endif
 comment|/* __OpenBSD__ */
 comment|/* This is the I/O configuration interface for BSD/OS. */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__bsdi__
 specifier|static
 name|int
@@ -31464,8 +31627,8 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* __bsdi__ */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__linux__
 comment|/* The kernel calls this procedure when an interrupt happens. */
 specifier|static

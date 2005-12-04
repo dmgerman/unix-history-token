@@ -10739,6 +10739,11 @@ block|{
 if|#
 directive|if
 operator|(
+name|defined
+argument_list|(
+name|OpenBSD
+argument_list|)
+operator|&&
 name|OpenBSD
 operator|>=
 literal|200311
@@ -11731,6 +11736,11 @@ directive|ifdef
 name|_KERNEL
 if|#
 directive|if
+name|defined
+argument_list|(
+name|OpenBSD
+argument_list|)
+operator|&&
 name|OpenBSD
 operator|>=
 literal|200311

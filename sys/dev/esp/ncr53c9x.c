@@ -12754,6 +12754,11 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
+name|defined
+argument_list|(
+name|NCR53C9X_DEBUG
+argument_list|)
+operator|&&
 name|NCR53C9X_DEBUG
 operator|>
 literal|1

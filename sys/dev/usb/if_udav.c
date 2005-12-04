@@ -221,6 +221,11 @@ end_endif
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|NRND
+argument_list|)
+operator|&&
 name|NRND
 operator|>
 literal|0
@@ -2522,6 +2527,11 @@ endif|#
 directive|endif
 if|#
 directive|if
+name|defined
+argument_list|(
+name|NRND
+argument_list|)
+operator|&&
 name|NRND
 operator|>
 literal|0
@@ -2813,6 +2823,11 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
+name|defined
+argument_list|(
+name|NRND
+argument_list|)
+operator|&&
 name|NRND
 operator|>
 literal|0

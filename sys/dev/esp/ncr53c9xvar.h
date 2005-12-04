@@ -311,6 +311,11 @@ index|]
 decl_stmt|;
 if|#
 directive|if
+name|defined
+argument_list|(
+name|NCR53C9X_DEBUG
+argument_list|)
+operator|&&
 name|NCR53C9X_DEBUG
 operator|>
 literal|1
@@ -329,6 +334,11 @@ end_struct
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|NCR53C9X_DEBUG
+argument_list|)
+operator|&&
 name|NCR53C9X_DEBUG
 operator|>
 literal|1

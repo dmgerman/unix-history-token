@@ -24850,6 +24850,11 @@ name|error
 decl_stmt|;
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
 name|__NetBSD_Version__
 operator|>=
 literal|103080000

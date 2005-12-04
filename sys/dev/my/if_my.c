@@ -241,13 +241,11 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-operator|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|MY_USEIOSPACE
-operator|)
-end_if
+end_ifdef
 
 begin_define
 define|#

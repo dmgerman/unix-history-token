@@ -1395,8 +1395,8 @@ operator|->
 name|iores
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|notyet
 comment|/* force irq 9 */
 name|l
@@ -1599,8 +1599,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|notyet
 comment|/* enable interrupts */
 name|VIAPM_OUTB
@@ -1674,8 +1674,8 @@ operator|->
 name|iores
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|notyet
 if|if
 condition|(
@@ -2023,8 +2023,8 @@ operator|(
 name|error
 operator|)
 return|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|notyet
 if|if
 condition|(

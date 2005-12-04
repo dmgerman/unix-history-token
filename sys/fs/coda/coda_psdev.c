@@ -2416,8 +2416,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|notyet
 name|tempset
 operator|=

@@ -1411,8 +1411,8 @@ operator|&
 name|IO_APPEND
 condition|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|notyet
 comment|/* 			 * File size can be changed by another client 			 */
 name|smbfs_attr_cacheremove

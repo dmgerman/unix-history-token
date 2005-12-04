@@ -4139,6 +4139,11 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
+name|defined
+argument_list|(
+name|BKTR_SYSTEM_DEFAULT
+argument_list|)
+operator|&&
 name|BKTR_SYSTEM_DEFAULT
 operator|==
 name|BROOKTREE_PAL

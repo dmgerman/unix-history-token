@@ -1193,6 +1193,11 @@ name|sc_media
 value|udav_mii.mii_media
 if|#
 directive|if
+name|defined
+argument_list|(
+name|NRND
+argument_list|)
+operator|&&
 name|NRND
 operator|>
 literal|0

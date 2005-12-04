@@ -6904,8 +6904,8 @@ name|isr
 operator|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|SLHCI_DEBUG
 name|bitmask_snprintf
 argument_list|(
@@ -6980,8 +6980,8 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|SLHCI_DEBUG
 for|for
 control|(

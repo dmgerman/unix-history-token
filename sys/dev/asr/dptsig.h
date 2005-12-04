@@ -253,11 +253,11 @@ begin_comment
 comment|/* For the Macintosh */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|STRUCTALIGNMENTSUPPORTED
-end_if
+end_ifdef
 
 begin_pragma
 pragma|#
@@ -2913,11 +2913,11 @@ begin_comment
 comment|/* For the Macintosh */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|STRUCTALIGNMENTSUPPORTED
-end_if
+end_ifdef
 
 begin_pragma
 pragma|#

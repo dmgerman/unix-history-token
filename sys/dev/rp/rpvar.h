@@ -148,11 +148,11 @@ begin_comment
 comment|/* Actually not used */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|notdef
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|extern

@@ -384,6 +384,11 @@ end_define
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|BKTR_SYSTEM_DEFAULT
+argument_list|)
+operator|&&
 name|BKTR_SYSTEM_DEFAULT
 operator|==
 name|BROOKTREE_PAL
@@ -4970,6 +4975,11 @@ name|CARD_LEADTEK
 case|:
 if|#
 directive|if
+name|defined
+argument_list|(
+name|BKTR_SYSTEM_DEFAULT
+argument_list|)
+operator|&&
 name|BKTR_SYSTEM_DEFAULT
 operator|==
 name|BROOKTREE_PAL

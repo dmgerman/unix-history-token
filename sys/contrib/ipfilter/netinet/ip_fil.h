@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
 comment|/*  * Copyright (C) 1993-2001, 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_fil.h	1.35 6/5/96  * $FreeBSD$  * Id: ip_fil.h,v 2.170.2.18 2005/03/28 10:47:52 darrenr Exp  */
 end_comment
 
@@ -5390,6 +5386,11 @@ end_if
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|NetBSD
+argument_list|)
+operator|&&
 operator|(
 name|NetBSD
 operator|>=
@@ -6337,11 +6338,17 @@ begin_if
 if|#
 directive|if
 operator|(
+name|defined
+argument_list|(
+name|_BSDI_VERSION
+argument_list|)
+operator|&&
 name|_BSDI_VERSION
 operator|>=
 literal|199510
 operator|)
 operator|||
+expr|\
 operator|(
 name|__FreeBSD_version
 operator|>=
@@ -6369,7 +6376,13 @@ argument_list|(
 name|__NetBSD__
 argument_list|)
 operator|||
+expr|\
 operator|(
+name|defined
+argument_list|(
+name|_BSDI_VERSION
+argument_list|)
+operator|&&
 name|_BSDI_VERSION
 operator|>=
 literal|199701

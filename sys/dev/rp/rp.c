@@ -4042,8 +4042,8 @@ name|DELTA_CTS
 operator||
 name|DELTA_DSR
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|notdef
 name|ChanStatus
 operator|=
