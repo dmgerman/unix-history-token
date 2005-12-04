@@ -77,13 +77,11 @@ directive|include
 file|<dev/ispfw/asm_2300.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|_MACHINE_ARCH
-operator|==
-name|sparc64
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sparc64__
+end_ifdef
 
 begin_include
 include|#
@@ -180,13 +178,11 @@ name|PCI_PRODUCT_QLOGIC_ISP6312
 value|0x6312
 end_define
 
-begin_if
-if|#
-directive|if
-name|_MACHINE_ARCH
-operator|==
-name|sparc64
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sparc64__
+end_ifdef
 
 begin_define
 define|#
@@ -555,11 +551,9 @@ operator|=
 name|isp_2300_risc_code
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|_MACHINE_ARCH
-operator|==
-name|sparc64
+ifdef|#
+directive|ifdef
+name|__sparc64__
 case|case
 name|SBUS_PRODUCT_QLOGIC_ISP1000
 case|:
