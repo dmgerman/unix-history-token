@@ -897,7 +897,16 @@ name|PALM35
 block|}
 block|,
 comment|/*	{{ USB_VENDOR_SONY, USB_PRODUCT_SONY_CLIE_25 }, PALM4 },*/
+block|{
+block|{
+name|USB_VENDOR_SONY
+block|,
+name|USB_PRODUCT_SONY_CLIE_TJ37
 block|}
+block|,
+name|PALM4
+block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
