@@ -1224,8 +1224,8 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|NOTYET
 name|mpt
 operator|=

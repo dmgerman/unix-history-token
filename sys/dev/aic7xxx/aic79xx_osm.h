@@ -372,11 +372,11 @@ begin_comment
 comment|/* This driver supports target mode */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|NOT_YET
-end_if
+end_ifdef
 
 begin_define
 define|#

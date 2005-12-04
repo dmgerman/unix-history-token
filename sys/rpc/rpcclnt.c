@@ -1719,8 +1719,8 @@ condition|)
 goto|goto
 name|bad
 goto|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__OpenBSD__
 name|MGET
 argument_list|(
@@ -1854,8 +1854,8 @@ condition|)
 goto|goto
 name|bad
 goto|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__OpenBSD__
 name|MGET
 argument_list|(
@@ -6131,8 +6131,8 @@ name|curthread
 decl_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__OpenBSD__
 name|s
 operator|=

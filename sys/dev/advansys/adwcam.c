@@ -5909,12 +5909,9 @@ case|:
 comment|/* 			 * Handle RDMA failure by resetting the 			 * SCSI Bus and chip. 			 */
 if|#
 directive|if
-name|XXX
-name|AdvResetChipAndSB
-argument_list|(
-name|adv_dvc_varp
-argument_list|)
-expr_stmt|;
+literal|0
+comment|/* XXX */
+block|AdvResetChipAndSB(adv_dvc_varp);
 endif|#
 directive|endif
 break|break;

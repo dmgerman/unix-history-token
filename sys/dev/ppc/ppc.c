@@ -6512,6 +6512,11 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
+name|defined
+argument_list|(
+name|PPC_DEBUG
+argument_list|)
+operator|&&
 name|PPC_DEBUG
 operator|>
 literal|1

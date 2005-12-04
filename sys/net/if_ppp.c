@@ -168,11 +168,11 @@ directive|include
 file|<net/bpf.h>
 end_include
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|INET
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -203,11 +203,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|IPX
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -638,8 +638,6 @@ init|=
 block|{
 if|#
 directive|if
-name|DO_BSD_COMPRESS
-operator|&&
 name|defined
 argument_list|(
 name|PPP_BSDCOMP
@@ -651,8 +649,6 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|DO_DEFLATE
-operator|&&
 name|defined
 argument_list|(
 name|PPP_DEFLATE

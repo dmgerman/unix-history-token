@@ -108,11 +108,11 @@ begin_comment
 comment|/* see console.h for the definitions of the following ioctls */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|notdef
-end_if
+end_ifdef
 
 begin_define
 define|#
@@ -436,11 +436,11 @@ begin_comment
 comment|/* see console.h for the definition of the following ioctl */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|notdef
-end_if
+end_ifdef
 
 begin_define
 define|#
@@ -1422,11 +1422,11 @@ name|SETFKEY
 value|_IOWR('k', 1, fkeyarg_t)
 end_define
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|notdef
-end_if
+end_ifdef
 
 begin_comment
 comment|/* see console.h */

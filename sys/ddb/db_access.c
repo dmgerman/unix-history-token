@@ -68,6 +68,24 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BYTE_MSF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|BYTE_MSF
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|db_expr_t
 name|db_get_value

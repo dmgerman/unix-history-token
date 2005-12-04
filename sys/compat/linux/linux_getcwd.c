@@ -1327,8 +1327,8 @@ condition|)
 goto|goto
 name|out
 goto|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DIAGNOSTIC
 if|if
 condition|(

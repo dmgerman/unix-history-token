@@ -2454,8 +2454,8 @@ name|AHD_SCB_CONFIG_USED
 expr_stmt|;
 block|}
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|AHD_DEBUG
 if|if
 condition|(

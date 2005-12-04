@@ -1960,8 +1960,8 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|NTFS_DEBUG
 specifier|register
 name|struct
@@ -2046,8 +2046,8 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|NTFS_DEBUG
 specifier|register
 name|struct

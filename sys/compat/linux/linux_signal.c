@@ -340,8 +340,8 @@ name|b
 argument_list|)
 condition|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__alpha__
 name|l
 operator|=

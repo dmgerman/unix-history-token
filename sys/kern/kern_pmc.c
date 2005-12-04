@@ -47,11 +47,11 @@ directive|include
 file|<sys/smp.h>
 end_include
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HWPMC_HOOKS
-end_if
+end_ifdef
 
 begin_define
 define|#

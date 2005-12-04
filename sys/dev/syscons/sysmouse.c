@@ -963,8 +963,8 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|notyet
 case|case
 name|MOUSE_GETVARS

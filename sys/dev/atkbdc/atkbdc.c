@@ -995,8 +995,8 @@ name|IO_KBD
 operator|+
 name|KBD_STATUS_PORT
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|notyet
 name|bus_space_map
 argument_list|(

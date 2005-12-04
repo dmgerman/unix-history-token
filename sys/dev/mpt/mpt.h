@@ -2065,11 +2065,11 @@ else|#
 directive|else
 end_else
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|LOCKING_WORKED_AS_IT_SHOULD
-end_if
+end_ifdef
 
 begin_error
 error|#

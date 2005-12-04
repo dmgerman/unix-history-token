@@ -143,11 +143,11 @@ parameter_list|)
 value|DEBUGOUT(F);
 end_define
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|DBG
-end_if
+end_ifdef
 
 begin_define
 define|#

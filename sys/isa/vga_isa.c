@@ -595,22 +595,9 @@ operator|)
 expr_stmt|;
 if|#
 directive|if
-name|experimental
-name|device_add_child
-argument_list|(
-name|dev
-argument_list|,
-literal|"fb"
-argument_list|,
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-name|bus_generic_attach
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
+literal|0
+comment|/* experimental */
+block|device_add_child(dev, "fb", -1); 	bus_generic_attach(dev);
 endif|#
 directive|endif
 return|return

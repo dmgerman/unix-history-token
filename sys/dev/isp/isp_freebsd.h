@@ -205,13 +205,11 @@ begin_comment
 comment|/*  * Efficiency- get rid of SBus code&& tests unless we need them.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|_MACHINE_ARCH
-operator|==
-name|sparc64
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sparc64__
+end_ifdef
 
 begin_define
 define|#

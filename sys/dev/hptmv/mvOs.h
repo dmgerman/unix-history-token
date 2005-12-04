@@ -15,11 +15,11 @@ directive|define
 name|__INCmvOsBsdh
 end_define
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|DBG
-end_if
+end_ifdef
 
 begin_define
 define|#
@@ -676,11 +676,11 @@ begin_comment
 comment|/*************************************************************************  * Debug support  *************************************************************************/
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|DEBUG
-end_if
+end_ifdef
 
 begin_define
 define|#

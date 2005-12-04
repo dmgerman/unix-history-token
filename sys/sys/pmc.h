@@ -2256,6 +2256,11 @@ end_decl_stmt
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|DEBUG
+argument_list|)
+operator|&&
 name|DEBUG
 end_if
 

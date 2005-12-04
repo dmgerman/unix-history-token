@@ -6,8 +6,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ARCMSR_DEBUG
-value|1
+name|ARCMSR_DEBUG0
+value|0
 end_define
 
 begin_comment

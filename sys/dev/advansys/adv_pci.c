@@ -964,6 +964,11 @@ name|ADV_PCI_MAX_DMA_ADDR
 expr_stmt|;
 if|#
 directive|if
+name|defined
+argument_list|(
+name|CC_DISABLE_PCI_PARITY_INT
+argument_list|)
+operator|&&
 name|CC_DISABLE_PCI_PARITY_INT
 block|{
 name|u_int16_t

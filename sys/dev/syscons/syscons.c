@@ -164,9 +164,15 @@ end_include
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
 name|__sparc64__
+argument_list|)
 operator|||
+name|defined
+argument_list|(
 name|__powerpc__
+argument_list|)
 end_if
 
 begin_include
@@ -3206,8 +3212,8 @@ literal|"reset WAIT_ACQ, "
 operator|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|not_yet_done
 if|if
 condition|(

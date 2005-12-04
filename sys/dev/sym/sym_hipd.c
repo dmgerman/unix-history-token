@@ -244,6 +244,24 @@ name|u32
 typedef|;
 end_typedef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BITS_PER_LONG
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|BITS_PER_LONG
+value|(sizeof(long) * 8)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  *  From 'cam.error_recovery_diffs.20010313.context' patch.  */
 end_comment
@@ -10673,11 +10691,13 @@ name|features
 operator|&
 name|FE_DAC
 condition|)
-if|#
-directive|if
+block|{
+if|if
+condition|(
 name|BITS_PER_LONG
 operator|>
 literal|32
+condition|)
 name|np
 operator|->
 name|rv_ccntl1
@@ -10688,8 +10708,7 @@ operator||
 name|EXTIBMV
 operator|)
 expr_stmt|;
-else|#
-directive|else
+else|else
 name|np
 operator|->
 name|rv_ccntl1
@@ -10698,8 +10717,7 @@ operator|(
 name|DDAC
 operator|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 comment|/* 	 *  Phase mismatch handled by SCRIPTS (895A/896/1010) ?   	 */
 if|if
 condition|(
@@ -35371,11 +35389,12 @@ name|scripta_ba
 operator|+
 literal|4096
 expr_stmt|;
-if|#
-directive|if
+if|if
+condition|(
 name|BITS_PER_LONG
 operator|>
 literal|32
+condition|)
 name|np
 operator|->
 name|scr_ram_seg
@@ -35389,8 +35408,6 @@ operator|>>
 literal|32
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 name|np

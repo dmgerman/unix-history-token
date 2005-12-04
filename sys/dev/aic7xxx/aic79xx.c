@@ -855,11 +855,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|AHD_TARGET_MODE
-end_if
+end_ifdef
 
 begin_function_decl
 specifier|static
@@ -5599,8 +5599,8 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|AHD_TARGET_MODE
 else|else
 block|{
@@ -23118,8 +23118,8 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|AHD_TARGET_MODE
 name|int
 name|j
@@ -23186,8 +23186,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|AHD_TARGET_MODE
 if|if
 condition|(
@@ -29079,8 +29079,8 @@ argument_list|,
 name|CLRSCSIINT
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|NEEDS_MORE_TESTING
 comment|/* 	 * Always enable abort on incoming L_Qs if this feature is 	 * supported.  We use this to catch invalid SCB references. 	 */
 if|if
@@ -31725,8 +31725,8 @@ operator|!=
 literal|0
 condition|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|AHD_TARGET_MODE
 name|int
 name|group
@@ -34773,8 +34773,8 @@ argument_list|(
 name|ahd
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|AHD_TARGET_MODE
 if|if
 condition|(

@@ -2885,8 +2885,8 @@ goto|;
 block|}
 endif|#
 directive|endif
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|FAST_IPSEC
 comment|/* 	 * enforce IPsec policy checking if we are seeing last header. 	 * note that we do not visit this with protocols with pcb layer 	 * code - like udp/tcp/raw ip. 	 */
 if|if

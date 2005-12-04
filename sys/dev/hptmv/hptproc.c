@@ -1252,9 +1252,9 @@ literal|0
 condition|)
 block|{}
 comment|/* just to compile */
-if|#
-directive|if
-name|DBGUG
+ifdef|#
+directive|ifdef
+name|DEBUG
 elseif|else
 if|if
 condition|(

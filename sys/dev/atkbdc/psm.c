@@ -13929,11 +13929,11 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|notyet
-end_if
+end_ifdef
 
 begin_comment
 comment|/* Logitech MouseMan Cordless II */

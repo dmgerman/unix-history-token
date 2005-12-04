@@ -101,11 +101,11 @@ name|MOUSE_READDATA
 value|_IOWR('M', 9, mousedata_t)
 end_define
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|notyet
-end_if
+end_ifdef
 
 begin_define
 define|#

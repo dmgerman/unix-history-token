@@ -310,8 +310,8 @@ operator|&
 name|adw_asc38C0800_default_eeprom
 block|}
 block|,
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|NOTYET
 comment|/* XXX Disabled until I have hardware to test with */
 comment|/* asc38C1600 based controllers */

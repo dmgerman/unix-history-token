@@ -29,6 +29,24 @@ directive|include
 file|"opt_fb.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FB_DEBUG
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|FB_DEBUG
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -802,7 +820,6 @@ begin_define
 define|#
 directive|define
 name|VGA_SLOW_IOACCESS
-value|1
 end_define
 
 begin_endif
@@ -6506,8 +6523,8 @@ comment|/* we don't need these... */
 block|fb_init_struct(&biosadapter[V_ADP_PRIMARY], ...);     fb_init_struct(&biosadapter[V_ADP_SECONDARY], ...);
 endif|#
 directive|endif
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|notyet
 comment|/*      * We cannot have two video adapter of the same type; there must be      * only one of color or mono adapter, or one each of them.      */
 if|if
@@ -9749,8 +9766,8 @@ literal|0x20
 argument_list|)
 expr_stmt|;
 comment|/* enable palette */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|VGA_SLOW_IOACCESS
 ifdef|#
 directive|ifdef
@@ -10002,8 +10019,8 @@ literal|0x20
 argument_list|)
 expr_stmt|;
 comment|/* enable palette */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|VGA_SLOW_IOACCESS
 ifdef|#
 directive|ifdef
@@ -12651,8 +12668,8 @@ literal|0x20
 argument_list|)
 expr_stmt|;
 comment|/* enable palette */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|notyet
 comment|/* a temporary workaround for kernel panic, XXX */
 ifndef|#
