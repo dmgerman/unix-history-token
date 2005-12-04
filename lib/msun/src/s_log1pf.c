@@ -302,6 +302,13 @@ operator|<
 literal|0x5a000000
 condition|)
 block|{
+operator|*
+operator|(
+specifier|volatile
+name|float
+operator|*
+operator|)
+operator|&
 name|u
 operator|=
 operator|(
