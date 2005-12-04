@@ -4386,36 +4386,6 @@ parameter_list|)
 value|((path)->pos_in_item)
 end_define
 
-begin_if
-if|#
-directive|if
-operator|(
-name|_MACHINE_ARCH
-operator|==
-name|amd64
-operator|)
-end_if
-
-begin_comment
-comment|/* To workaround a bug in gcc. He generates a call to memset() which  * is a inline function; this causes a compile time error. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INITIALIZE_PATH
-parameter_list|(
-name|var
-parameter_list|)
-define|\
-value|struct path var;							\     bzero(&var, sizeof(var));						\     var.path_length = ILLEGAL_PATH_ELEMENT_OFFSET;
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -4426,11 +4396,6 @@ parameter_list|)
 define|\
 value|struct path var = { ILLEGAL_PATH_ELEMENT_OFFSET, }
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Get path element by path and path position. */
