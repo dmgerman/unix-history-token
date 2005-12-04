@@ -297,13 +297,11 @@ begin_comment
 comment|/* Parse type for the 'last_cs' and 'cs_next' fields in struct slcompress,    which are pointers converted to integer indices, so parse them that way. */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|_MACHINE_ARCH
-operator|==
-name|i386
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__LP64__
+end_ifndef
 
 begin_define
 define|#
@@ -312,13 +310,10 @@ name|NG_VJC_TSTATE_PTR_TYPE
 value|&ng_parse_uint32_type
 end_define
 
-begin_elif
-elif|#
-directive|elif
-name|_MACHINE_ARCH
-operator|==
-name|alpha
-end_elif
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -326,17 +321,6 @@ directive|define
 name|NG_VJC_TSTATE_PTR_TYPE
 value|&ng_parse_uint64_type
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_error
-error|#
-directive|error
-error|Unspported _MACHINE_ARCH
-end_error
 
 begin_endif
 endif|#
