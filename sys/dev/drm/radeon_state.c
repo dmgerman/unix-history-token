@@ -13772,27 +13772,13 @@ operator|->
 name|ring_rptr_offset
 expr_stmt|;
 break|break;
+ifndef|#
+directive|ifndef
+name|__LP64__
+comment|/* 		 * This ioctl() doesn't work on 64-bit platforms because hw_lock is a 		 * pointer which can't fit into an int-sized variable.  According to 		 * Michel DÃ¤nzer, the ioctl() is only used on embedded platforms, so 		 * not supporting it shouldn't be a problem.  If the same functionality 		 * is needed on 64-bit platforms, a new ioctl() would have to be added, 		 * so backwards-compatibility for the embedded platforms can be 		 * maintained.  --davidm 4-Feb-2004. 		 */
 case|case
 name|RADEON_PARAM_SAREA_HANDLE
 case|:
-comment|/* 		 * This ioctl() doesn't work on 64-bit platforms because hw_lock is a 		 * pointer which can't fit into an int-sized variable.  According to 		 * Michel DÃ¤nzer, the ioctl() is only used on embedded platforms, so 		 * not supporting it shouldn't be a problem.  If the same functionality 		 * is needed on 64-bit platforms, a new ioctl() would have to be added, 		 * so backwards-compatibility for the embedded platforms can be 		 * maintained.  --davidm 4-Feb-2004. 		 */
-if|if
-condition|(
-sizeof|sizeof
-argument_list|(
-name|long
-argument_list|)
-operator|*
-literal|8
-operator|==
-literal|64
-condition|)
-return|return
-name|DRM_ERR
-argument_list|(
-name|EINVAL
-argument_list|)
-return|;
 comment|/* The lock is the first dword in the sarea. */
 name|value
 operator|=
@@ -13806,6 +13792,8 @@ operator|.
 name|hw_lock
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|RADEON_PARAM_GART_TEX_HANDLE
 case|:
