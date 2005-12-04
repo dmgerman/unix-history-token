@@ -169,7 +169,7 @@ operator|<
 literal|0x3FDA827A
 condition|)
 block|{
-comment|/* x< 0.41422  */
+comment|/* 1+x< sqrt(2)+ */
 if|if
 condition|(
 name|ax
@@ -256,7 +256,7 @@ operator|(
 operator|(
 name|int32_t
 operator|)
-literal|0xbfd2bec3
+literal|0xbfd2bec4
 operator|)
 condition|)
 block|{
@@ -273,7 +273,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* -0.2929<x<0.41422 */
+comment|/* sqrt(2)/2-<= 1+x< sqrt(2)+ */
 block|}
 if|if
 condition|(
@@ -385,6 +385,7 @@ name|hu
 operator|&=
 literal|0x000fffff
 expr_stmt|;
+comment|/* 	     * The approximation to sqrt(2) used in thresholds is not 	     * critical.  However, the ones used above must give less 	     * strict bounds than the one here so that the k==0 case is 	     * never reached from here, since here we have committed to 	     * using the correction term but don't use it if k==0. 	     */
 if|if
 condition|(
 name|hu
@@ -392,6 +393,7 @@ operator|<
 literal|0x6a09e
 condition|)
 block|{
+comment|/* u ~< sqrt(2) */
 name|SET_HIGH_WORD
 argument_list|(
 name|u
