@@ -39,18 +39,23 @@ comment|/* General lock type. */
 name|u_int
 name|lo_flags
 decl_stmt|;
-name|TAILQ_ENTRY
+union|union
+block|{
+comment|/* Data for witness. */
+name|STAILQ_ENTRY
 argument_list|(
 argument|lock_object
 argument_list|)
-name|lo_list
+name|lod_list
 expr_stmt|;
-comment|/* List of all locks in system. */
 name|struct
 name|witness
 modifier|*
-name|lo_witness
+name|lod_witness
 decl_stmt|;
+block|}
+name|lo_witness_data
+union|;
 block|}
 struct|;
 end_struct

@@ -120,6 +120,24 @@ file|<machine/stdarg.h>
 end_include
 
 begin_comment
+comment|/* Easier to stay with the old names. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|lo_list
+value|lo_witness_data.lod_list
+end_define
+
+begin_define
+define|#
+directive|define
+name|lo_witness
+value|lo_witness_data.lod_witness
+end_define
+
+begin_comment
 comment|/* Define this to check for blessed mutexes */
 end_comment
 
@@ -2016,11 +2034,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * List of all locks in the system.  */
+comment|/*  * List of locks initialized prior to witness being initialized whose  * enrollment is currently deferred.  */
 end_comment
 
 begin_macro
-name|TAILQ_HEAD
+name|STAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|lock_object
@@ -2028,54 +2046,14 @@ argument_list|)
 end_macro
 
 begin_expr_stmt
-name|all_locks
+name|pending_locks
 operator|=
-name|TAILQ_HEAD_INITIALIZER
+name|STAILQ_HEAD_INITIALIZER
 argument_list|(
-name|all_locks
+name|pending_locks
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|mtx
-name|all_mtx
-init|=
-block|{
-block|{
-operator|&
-name|lock_class_mtx_sleep
-block|,
-comment|/* mtx_object.lo_class */
-literal|"All locks list"
-block|,
-comment|/* mtx_object.lo_name */
-literal|"All locks list"
-block|,
-comment|/* mtx_object.lo_type */
-name|LO_INITIALIZED
-block|,
-comment|/* mtx_object.lo_flags */
-block|{
-name|NULL
-block|,
-name|NULL
-block|}
-block|,
-comment|/* mtx_object.lo_list */
-name|NULL
-block|}
-block|,
-comment|/* mtx_object.lo_witness */
-name|MTX_UNOWNED
-block|,
-literal|0
-comment|/* mtx_lock, mtx_recurse */
-block|}
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * This global is set to 0 once it becomes safe to use the witness code.  */
@@ -2104,25 +2082,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Global variables for book keeping.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|lock_cur_cnt
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|lock_max_cnt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * The WITNESS-enabled diagnostic code.  */
+comment|/*  * The WITNESS-enabled diagnostic code.  Note that the witness code does  * assume that the early boot is single-threaded at least until after this  * routine is completed.  */
 end_comment
 
 begin_function
@@ -2179,19 +2139,6 @@ argument_list|,
 literal|"%s: initializing witness"
 argument_list|,
 name|__func__
-argument_list|)
-expr_stmt|;
-name|TAILQ_INSERT_HEAD
-argument_list|(
-operator|&
-name|all_locks
-argument_list|,
-operator|&
-name|all_mtx
-operator|.
-name|mtx_object
-argument_list|,
-name|lo_list
 argument_list|)
 expr_stmt|;
 name|mtx_init
@@ -2386,29 +2333,51 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Iterate through all locks and add them to witness. */
-name|mtx_lock
+while|while
+condition|(
+operator|!
+name|STAILQ_EMPTY
 argument_list|(
 operator|&
-name|all_mtx
+name|pending_locks
+argument_list|)
+condition|)
+block|{
+name|lock
+operator|=
+name|STAILQ_FIRST
+argument_list|(
+operator|&
+name|pending_locks
 argument_list|)
 expr_stmt|;
-name|TAILQ_FOREACH
+name|STAILQ_REMOVE_HEAD
 argument_list|(
-argument|lock
+operator|&
+name|pending_locks
 argument_list|,
-argument|&all_locks
-argument_list|,
-argument|lo_list
+name|lo_list
 argument_list|)
-block|{
-if|if
-condition|(
+expr_stmt|;
+name|KASSERT
+argument_list|(
 name|lock
 operator|->
 name|lo_flags
 operator|&
 name|LO_WITNESS
-condition|)
+argument_list|,
+operator|(
+literal|"%s: lock %s is on pending list but not LO_WITNESS"
+operator|,
+name|__func__
+operator|,
+name|lock
+operator|->
+name|lo_name
+operator|)
+argument_list|)
+expr_stmt|;
 name|lock
 operator|->
 name|lo_witness
@@ -2424,20 +2393,7 @@ operator|->
 name|lo_class
 argument_list|)
 expr_stmt|;
-else|else
-name|lock
-operator|->
-name|lo_witness
-operator|=
-name|NULL
-expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|all_mtx
-argument_list|)
-expr_stmt|;
 comment|/* Mark the witness code as being ready for use. */
 name|witness_cold
 operator|=
@@ -2584,6 +2540,7 @@ name|lock_class
 modifier|*
 name|class
 decl_stmt|;
+comment|/* Various sanity checks. */
 name|class
 operator|=
 name|lock
@@ -2724,16 +2681,49 @@ operator|->
 name|lo_name
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|all_mtx
-argument_list|)
+comment|/* 	 * If we shouldn't watch this lock, then just clear lo_witness. 	 * Otherwise, if witness_cold is set, then it is too early to 	 * enroll this lock, so defer it to witness_initialize() by adding 	 * it to the pending_locks list.  If it is not too early, then enroll 	 * the lock now. 	 */
+name|lock
+operator|->
+name|lo_flags
+operator||=
+name|LO_INITIALIZED
 expr_stmt|;
-name|TAILQ_INSERT_TAIL
+if|if
+condition|(
+name|witness_watch
+operator|==
+literal|0
+operator|||
+name|panicstr
+operator|!=
+name|NULL
+operator|||
+operator|(
+name|lock
+operator|->
+name|lo_flags
+operator|&
+name|LO_WITNESS
+operator|)
+operator|==
+literal|0
+condition|)
+name|lock
+operator|->
+name|lo_witness
+operator|=
+name|NULL
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|witness_cold
+condition|)
+block|{
+name|STAILQ_INSERT_TAIL
 argument_list|(
 operator|&
-name|all_locks
+name|pending_locks
 argument_list|,
 name|lock
 argument_list|,
@@ -2744,50 +2734,10 @@ name|lock
 operator|->
 name|lo_flags
 operator||=
-name|LO_INITIALIZED
+name|LO_ENROLLPEND
 expr_stmt|;
-name|lock_cur_cnt
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|lock_cur_cnt
-operator|>
-name|lock_max_cnt
-condition|)
-name|lock_max_cnt
-operator|=
-name|lock_cur_cnt
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|all_mtx
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|witness_cold
-operator|&&
-name|witness_watch
-operator|!=
-literal|0
-operator|&&
-name|panicstr
-operator|==
-name|NULL
-operator|&&
-operator|(
-name|lock
-operator|->
-name|lo_flags
-operator|&
-name|LO_WITNESS
-operator|)
-operator|!=
-literal|0
-condition|)
+block|}
+else|else
 name|lock
 operator|->
 name|lo_witness
@@ -2800,13 +2750,6 @@ name|lo_type
 argument_list|,
 name|class
 argument_list|)
-expr_stmt|;
-else|else
-name|lock
-operator|->
-name|lo_witness
-operator|=
-name|NULL
 expr_stmt|;
 block|}
 end_function
@@ -2875,19 +2818,35 @@ name|lo_name
 argument_list|)
 expr_stmt|;
 comment|/* XXX: need to verify that no one holds the lock */
+if|if
+condition|(
+operator|(
+name|lock
+operator|->
+name|lo_flags
+operator|&
+operator|(
+name|LO_WITNESS
+operator||
+name|LO_ENROLLPEND
+operator|)
+operator|)
+operator|==
+name|LO_WITNESS
+operator|&&
+name|lock
+operator|->
+name|lo_witness
+operator|!=
+name|NULL
+condition|)
+block|{
 name|w
 operator|=
 name|lock
 operator|->
 name|lo_witness
 expr_stmt|;
-if|if
-condition|(
-name|w
-operator|!=
-name|NULL
-condition|)
-block|{
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -2929,21 +2888,24 @@ name|w_mtx
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_lock
+comment|/* 	 * If this lock is destroyed before witness is up and running, 	 * remove it from the pending list. 	 */
+if|if
+condition|(
+name|lock
+operator|->
+name|lo_flags
+operator|&
+name|LO_ENROLLPEND
+condition|)
+block|{
+name|STAILQ_REMOVE
 argument_list|(
 operator|&
-name|all_mtx
-argument_list|)
-expr_stmt|;
-name|lock_cur_cnt
-operator|--
-expr_stmt|;
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|all_locks
+name|pending_locks
 argument_list|,
 name|lock
+argument_list|,
+name|lock_object
 argument_list|,
 name|lo_list
 argument_list|)
@@ -2953,13 +2915,15 @@ operator|->
 name|lo_flags
 operator|&=
 operator|~
-name|LO_INITIALIZED
+name|LO_ENROLLPEND
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|all_mtx
-argument_list|)
+block|}
+name|lock
+operator|->
+name|lo_flags
+operator|&=
+operator|~
+name|LO_INITIALIZED
 expr_stmt|;
 block|}
 end_function

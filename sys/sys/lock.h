@@ -199,6 +199,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LO_ENROLLPEND
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* On the pending enroll list. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LI_RECURSEMASK
 value|0x0000ffff
 end_define
