@@ -254,6 +254,10 @@ parameter_list|,
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|char
+modifier|*
+name|from
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1267,6 +1271,10 @@ parameter_list|,
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|char
+modifier|*
+name|from
 parameter_list|)
 block|{
 name|size_t
@@ -1285,7 +1293,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Unresolved dependency: %s"
+literal|"%s: no entry for %s"
+argument_list|,
+name|from
 argument_list|,
 name|name
 argument_list|)
@@ -1352,6 +1362,8 @@ argument_list|,
 name|en
 argument_list|,
 name|name
+argument_list|,
+name|from
 argument_list|)
 return|;
 else|else
@@ -1365,6 +1377,8 @@ argument_list|,
 name|mid
 argument_list|,
 name|name
+argument_list|,
+name|from
 argument_list|)
 return|;
 block|}
@@ -1435,6 +1449,10 @@ name|i
 index|]
 operator|.
 name|name
+argument_list|,
+name|p
+operator|->
+name|portdir
 argument_list|)
 expr_stmt|;
 for|for
@@ -1477,6 +1495,10 @@ name|i
 index|]
 operator|.
 name|name
+argument_list|,
+name|p
+operator|->
+name|portdir
 argument_list|)
 expr_stmt|;
 for|for
@@ -1519,6 +1541,10 @@ name|i
 index|]
 operator|.
 name|name
+argument_list|,
+name|p
+operator|->
+name|portdir
 argument_list|)
 expr_stmt|;
 for|for
@@ -1561,6 +1587,10 @@ name|i
 index|]
 operator|.
 name|name
+argument_list|,
+name|p
+operator|->
+name|portdir
 argument_list|)
 expr_stmt|;
 for|for
@@ -1603,6 +1633,10 @@ name|i
 index|]
 operator|.
 name|name
+argument_list|,
+name|p
+operator|->
+name|portdir
 argument_list|)
 expr_stmt|;
 block|}
