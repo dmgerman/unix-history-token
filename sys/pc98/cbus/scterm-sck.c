@@ -1980,8 +1980,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 break|break;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|notyet
 case|case
 literal|'Q'
@@ -4429,8 +4429,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|notyet
 block|}
 elseif|else

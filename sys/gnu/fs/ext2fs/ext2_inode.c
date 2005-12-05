@@ -537,8 +537,8 @@ operator|->
 name|mnt_maxsymlinklen
 condition|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DIAGNOSTIC
 if|if
 condition|(
@@ -1540,8 +1540,8 @@ block|}
 block|}
 name|done
 label|:
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DIAGNOSTIC
 for|for
 control|(

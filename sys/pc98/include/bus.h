@@ -1018,11 +1018,11 @@ asm|__asm __volatile("" : : : "memory");
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|BUS_SPACE_NO_LEGACY
-end_if
+end_ifdef
 
 begin_undef
 undef|#

@@ -6517,8 +6517,8 @@ modifier|*
 name|palette
 parameter_list|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|notyet
 name|int
 name|bits
@@ -7692,8 +7692,8 @@ block|{
 return|return
 literal|1
 return|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|notyet
 name|u_char
 modifier|*

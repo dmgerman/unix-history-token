@@ -451,8 +451,8 @@ name|port
 argument_list|)
 condition|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 if|if
 condition|(
@@ -1348,8 +1348,8 @@ name|port
 argument_list|)
 condition|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 if|if
 condition|(

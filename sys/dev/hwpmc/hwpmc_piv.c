@@ -2519,8 +2519,8 @@ literal|0
 condition|)
 block|{
 comment|/* TSC */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 name|pc
 operator|=
@@ -2973,8 +2973,8 @@ operator|==
 literal|0
 condition|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 name|pc
 operator|=

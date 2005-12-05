@@ -639,8 +639,8 @@ operator|(
 name|error
 operator|)
 return|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DIAGNOSTIC
 if|if
 condition|(

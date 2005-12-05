@@ -4749,7 +4749,10 @@ end_define
 begin_elif
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|__linux__
+argument_list|)
 end_elif
 
 begin_comment
@@ -6997,11 +7000,20 @@ comment|/* buffer2 bus address */
 if|#
 directive|if
 operator|(
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 operator|||
+name|defined
+argument_list|(
 name|__NetBSD__
+argument_list|)
 operator|||
+name|defined
+argument_list|(
 name|__OpenBSD__
+argument_list|)
 operator|)
 name|bus_dmamap_t
 name|map
@@ -7196,8 +7208,8 @@ name|int
 name|num_descs
 decl_stmt|;
 comment|/* used to set rx quota */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__linux__
 name|struct
 name|sk_buff
@@ -7227,11 +7239,20 @@ decl_stmt|;
 if|#
 directive|if
 operator|(
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 operator|||
+name|defined
+argument_list|(
 name|__NetBSD__
+argument_list|)
 operator|||
+name|defined
+argument_list|(
 name|__OpenBSD__
+argument_list|)
 operator|)
 name|bus_dma_tag_t
 name|tag
@@ -7386,9 +7407,15 @@ begin_if
 if|#
 directive|if
 operator|(
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 operator|&&
+name|defined
+argument_list|(
 name|DEVICE_POLLING
+argument_list|)
 operator|)
 end_if
 
@@ -7419,11 +7446,12 @@ end_endif
 begin_if
 if|#
 directive|if
-operator|(
+name|defined
+argument_list|(
 name|ALTQ
-operator|!=
-literal|0
-operator|)
+argument_list|)
+operator|&&
+name|ALTQ
 end_if
 
 begin_define
@@ -7469,9 +7497,15 @@ block|{
 if|#
 directive|if
 operator|(
+name|defined
+argument_list|(
 name|__NetBSD__
+argument_list|)
 operator|||
+name|defined
+argument_list|(
 name|__OpenBSD__
+argument_list|)
 operator|)
 name|struct
 name|device
@@ -7531,8 +7565,8 @@ comment|/* hang mbuf here while building dma descs */
 endif|#
 directive|endif
 comment|/* __NetBSD__ || __OpenBSD__ */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__bsdi__
 name|struct
 name|device
@@ -7650,8 +7684,8 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__linux__
 if|#
 directive|if
@@ -7721,8 +7755,8 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
 name|struct
 name|device
@@ -7773,8 +7807,8 @@ modifier|*
 name|tx_mbuf
 decl_stmt|;
 comment|/* hang mbuf here while building dma descs */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEVICE_POLLING
 name|int
 name|quota
@@ -7815,8 +7849,8 @@ directive|endif
 endif|#
 directive|endif
 comment|/* __FreeBSD__ */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__linux__
 name|struct
 name|pci_dev
@@ -7945,11 +7979,11 @@ begin_comment
 comment|/* Hide the minor differences between OS versions */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-end_if
+end_ifdef
 
 begin_typedef
 typedef|typedef
@@ -8389,11 +8423,11 @@ begin_comment
 comment|/* __FreeBSD__ */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__NetBSD__
-end_if
+end_ifdef
 
 begin_typedef
 typedef|typedef
@@ -8635,11 +8669,11 @@ begin_comment
 comment|/* __NetBSD__ */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__OpenBSD__
-end_if
+end_ifdef
 
 begin_typedef
 typedef|typedef
@@ -8881,11 +8915,11 @@ begin_comment
 comment|/* __OpenBSD__ */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__bsdi__
-end_if
+end_ifdef
 
 begin_typedef
 typedef|typedef
@@ -9295,11 +9329,11 @@ begin_comment
 comment|/* __bsdi__ */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__linux__
-end_if
+end_ifdef
 
 begin_function
 specifier|static
@@ -9731,12 +9765,18 @@ begin_if
 if|#
 directive|if
 operator|(
+name|defined
+argument_list|(
 name|__bsdi__
+argument_list|)
 operator|||
 comment|/* unconditionally */
 expr|\
 operator|(
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 operator|&&
 operator|(
 name|__FreeBSD_version
@@ -9747,7 +9787,10 @@ operator|)
 operator|||
 expr|\
 operator|(
+name|defined
+argument_list|(
 name|__NetBSD__
+argument_list|)
 operator|&&
 operator|(
 name|__NetBSD_Version__
@@ -9758,7 +9801,10 @@ operator|)
 operator|||
 expr|\
 operator|(
+name|defined
+argument_list|(
 name|__OpenBSD__
+argument_list|)
 operator|&&
 operator|(
 name|OpenBSD
@@ -10517,7 +10563,10 @@ if|#
 directive|if
 operator|(
 operator|(
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 operator|&&
 operator|(
 name|__FreeBSD_version
@@ -10527,11 +10576,20 @@ operator|)
 operator|)
 operator|||
 expr|\
+name|defined
+argument_list|(
 name|__NetBSD__
+argument_list|)
 operator|||
+name|defined
+argument_list|(
 name|__OpenBSD__
+argument_list|)
 operator|||
+name|defined
+argument_list|(
 name|__bsdi__
+argument_list|)
 operator|)
 end_if
 
@@ -10615,11 +10673,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-end_if
+end_ifdef
 
 begin_function_decl
 specifier|static
@@ -10744,11 +10802,11 @@ begin_comment
 comment|/* BSD */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__linux__
-end_if
+end_ifdef
 
 begin_function_decl
 specifier|static
@@ -10944,9 +11002,15 @@ begin_if
 if|#
 directive|if
 operator|(
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 operator|&&
+name|defined
+argument_list|(
 name|DEVICE_POLLING
+argument_list|)
 operator|)
 end_if
 
@@ -11206,11 +11270,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__OpenBSD__
-end_if
+end_ifdef
 
 begin_function_decl
 specifier|static
@@ -11607,11 +11671,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-end_if
+end_ifdef
 
 begin_function_decl
 specifier|static
@@ -11662,11 +11726,11 @@ begin_comment
 comment|/* __FreeBSD__ */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__NetBSD__
-end_if
+end_ifdef
 
 begin_function_decl
 specifier|static
@@ -11757,11 +11821,11 @@ begin_comment
 comment|/* __NetBSD__ */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__OpenBSD__
-end_if
+end_ifdef
 
 begin_function_decl
 specifier|static
@@ -11838,11 +11902,11 @@ begin_comment
 comment|/* __OpenBSD__ */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__bsdi__
-end_if
+end_ifdef
 
 begin_function_decl
 specifier|static
@@ -11902,11 +11966,11 @@ begin_comment
 comment|/* __bsdi__ */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__linux__
-end_if
+end_ifdef
 
 begin_function_decl
 specifier|static

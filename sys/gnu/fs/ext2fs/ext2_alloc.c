@@ -225,8 +225,8 @@ name|ip
 operator|->
 name|i_e2fs
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DIAGNOSTIC
 if|if
 condition|(
@@ -793,8 +793,8 @@ name|len
 operator|-
 literal|1
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DIAGNOSTIC
 for|for
 control|(
@@ -1044,8 +1044,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DIAGNOSTIC
 if|if
 condition|(
@@ -1204,8 +1204,8 @@ name|bap
 operator|=
 name|ebap
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DIAGNOSTIC
 if|if
 condition|(

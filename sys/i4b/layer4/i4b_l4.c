@@ -2884,6 +2884,11 @@ endif|#
 directive|endif
 if|#
 directive|if
+name|defined
+argument_list|(
+name|NIBC
+argument_list|)
+operator|&&
 name|NIBC
 operator|>
 literal|0
@@ -3098,6 +3103,11 @@ endif|#
 directive|endif
 if|#
 directive|if
+name|defined
+argument_list|(
+name|NIBC
+argument_list|)
+operator|&&
 name|NIBC
 operator|>
 literal|0

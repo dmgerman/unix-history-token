@@ -326,12 +326,6 @@ parameter_list|()
 value|enable_intr()
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|PCVT_SLOW_INTERRUPT
-end_undef
-
 begin_else
 else|#
 directive|else
@@ -351,19 +345,6 @@ directive|define
 name|PCVT_ENABLE_INTR
 parameter_list|()
 value|splx(s)
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|PCVT_SLOW_INTERRUPT
-end_undef
-
-begin_define
-define|#
-directive|define
-name|PCVT_SLOW_INTERRUPT
-value|1
 end_define
 
 begin_endif

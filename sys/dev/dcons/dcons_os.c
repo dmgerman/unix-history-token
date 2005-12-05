@@ -876,12 +876,21 @@ begin_if
 if|#
 directive|if
 operator|(
+name|defined
+argument_list|(
 name|KDB
+argument_list|)
 operator|||
+name|defined
+argument_list|(
 name|DDB
+argument_list|)
 operator|)
 operator|&&
+name|defined
+argument_list|(
 name|ALT_BREAK_TO_DEBUGGER
+argument_list|)
 end_if
 
 begin_function
@@ -2687,7 +2696,10 @@ operator|<
 literal|502122
 if|#
 directive|if
+name|defined
+argument_list|(
 name|DDB
+argument_list|)
 operator|&&
 name|DCONS_FORCE_GDB
 if|#
@@ -3289,7 +3301,10 @@ operator|<
 literal|502122
 if|#
 directive|if
+name|defined
+argument_list|(
 name|DDB
+argument_list|)
 operator|&&
 name|DCONS_FORCE_GDB
 if|#

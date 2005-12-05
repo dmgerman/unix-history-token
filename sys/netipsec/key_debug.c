@@ -2638,8 +2638,8 @@ operator|->
 name|lft_s
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|notyet
 comment|/* XXX: misc[123] ? */
 endif|#

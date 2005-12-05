@@ -919,8 +919,8 @@ argument_list|,
 name|plb
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 if|if
 condition|(

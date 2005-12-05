@@ -486,6 +486,11 @@ end_comment
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|I4B_T203_ACTIVE
+argument_list|)
+operator|&&
 name|I4B_T203_ACTIVE
 end_if
 
@@ -540,6 +545,11 @@ parameter_list|)
 block|{
 if|#
 directive|if
+name|defined
+argument_list|(
+name|I4B_T203_ACTIVE
+argument_list|)
+operator|&&
 name|I4B_T203_ACTIVE
 if|if
 condition|(
@@ -600,6 +610,11 @@ parameter_list|)
 block|{
 if|#
 directive|if
+name|defined
+argument_list|(
+name|I4B_T203_ACTIVE
+argument_list|)
+operator|&&
 name|I4B_T203_ACTIVE
 name|CRIT_VAR
 expr_stmt|;
@@ -665,6 +680,11 @@ parameter_list|)
 block|{
 if|#
 directive|if
+name|defined
+argument_list|(
+name|I4B_T203_ACTIVE
+argument_list|)
+operator|&&
 name|I4B_T203_ACTIVE
 name|CRIT_VAR
 expr_stmt|;

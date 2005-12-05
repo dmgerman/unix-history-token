@@ -2832,8 +2832,8 @@ name|i_e2fs
 operator|->
 name|s_blocksize
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DIAGNOSTIC
 if|if
 condition|(

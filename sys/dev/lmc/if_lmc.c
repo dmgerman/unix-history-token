@@ -14543,7 +14543,10 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 operator|&&
+name|defined
+argument_list|(
 name|DEVICE_POLLING
+argument_list|)
 operator|)
 comment|/* Input packet flow control (livelock prevention): */
 comment|/* Give pkts to higher levels only if quota is> 0. */
@@ -15139,7 +15142,10 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 operator|&&
+name|defined
+argument_list|(
 name|DEVICE_POLLING
+argument_list|)
 operator|)
 name|sc
 operator|->
@@ -20144,7 +20150,10 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 operator|&&
+name|defined
+argument_list|(
 name|DEVICE_POLLING
+argument_list|)
 operator|)
 end_if
 
@@ -20302,7 +20311,10 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 operator|&&
+name|defined
+argument_list|(
 name|DEVICE_POLLING
+argument_list|)
 operator|)
 if|if
 condition|(
@@ -22694,7 +22706,10 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 operator|&&
+name|defined
+argument_list|(
 name|DEVICE_POLLING
+argument_list|)
 operator|)
 comment|/* XXX necessary? */
 case|case
@@ -24307,7 +24322,10 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 operator|&&
+name|defined
+argument_list|(
 name|DEVICE_POLLING
+argument_list|)
 operator|)
 name|ifp
 operator|->
@@ -24971,7 +24989,10 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 operator|&&
+name|defined
+argument_list|(
 name|DEVICE_POLLING
+argument_list|)
 operator|)
 if|if
 condition|(

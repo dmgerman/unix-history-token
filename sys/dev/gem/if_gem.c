@@ -1663,8 +1663,8 @@ operator|->
 name|sc_enaddr
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|notyet
 comment|/* 	 * Add a suspend hook to make sure we come back up after a 	 * resume. 	 */
 name|sc

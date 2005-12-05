@@ -1217,8 +1217,8 @@ name|IO_APPEND
 condition|)
 block|{
 comment|/* We can relay only on local information about file size, 		 * because until file is closed NetWare will not return 		 * the correct size. */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|notyet
 name|nwfs_attr_cacheremove
 argument_list|(

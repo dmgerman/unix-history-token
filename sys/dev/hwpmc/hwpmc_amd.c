@@ -87,11 +87,11 @@ directive|include
 file|<machine/specialreg.h>
 end_include
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|enum
@@ -1421,8 +1421,8 @@ return|return
 literal|0
 return|;
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 name|KASSERT
 argument_list|(
@@ -1643,8 +1643,8 @@ condition|)
 return|return
 literal|0
 return|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 name|KASSERT
 argument_list|(
@@ -2224,8 +2224,8 @@ return|return
 literal|0
 return|;
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 name|KASSERT
 argument_list|(
@@ -2506,8 +2506,8 @@ modifier|*
 name|pmc
 parameter_list|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 specifier|const
 name|struct
@@ -2596,8 +2596,8 @@ name|phw_pmc
 operator|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 name|pd
 operator|=
@@ -2788,8 +2788,8 @@ return|return
 literal|0
 return|;
 comment|/* TSCs are always running */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 name|KASSERT
 argument_list|(
@@ -3013,8 +3013,8 @@ condition|)
 return|return
 literal|0
 return|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 name|KASSERT
 argument_list|(
@@ -4003,8 +4003,8 @@ condition|)
 return|return
 literal|0
 return|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 comment|/* check the TSC */
 name|KASSERT
@@ -4224,8 +4224,8 @@ return|return
 name|NULL
 return|;
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 name|amd_pmc_class
 operator|=

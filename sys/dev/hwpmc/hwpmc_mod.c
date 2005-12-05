@@ -463,11 +463,11 @@ begin_comment
 comment|/*  * Prototypes  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|DEBUG
-end_if
+end_ifdef
 
 begin_function_decl
 specifier|static
@@ -1030,11 +1030,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|struct
@@ -1452,11 +1452,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|DEBUG
-end_if
+end_ifdef
 
 begin_enum
 enum|enum
@@ -3059,8 +3059,8 @@ argument_list|,
 name|pp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 name|LIST_FOREACH
 argument_list|(
@@ -5676,11 +5676,11 @@ begin_comment
 comment|/*  * The 'hook' invoked from the kernel proper  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|const
@@ -6234,8 +6234,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 name|KASSERT
 argument_list|(
@@ -6957,8 +6957,8 @@ name|void
 operator|)
 name|pm
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 name|KASSERT
 argument_list|(
@@ -7048,8 +7048,8 @@ modifier|*
 name|pm
 parameter_list|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 specifier|volatile
 name|int
@@ -7077,8 +7077,8 @@ operator|>
 literal|0
 condition|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 name|maxloop
 operator|--
@@ -8876,11 +8876,11 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -12176,8 +12176,8 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 if|if
 condition|(
@@ -14530,8 +14530,8 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 comment|/* parse debug flags first */
 if|if
@@ -15194,8 +15194,8 @@ name|struct
 name|pmc_binding
 name|pb
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 name|struct
 name|pmc_processhash
@@ -15392,8 +15392,8 @@ condition|(
 name|pmc_processhash
 condition|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 name|struct
 name|pmc_process
