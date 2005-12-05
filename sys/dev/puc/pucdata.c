@@ -4254,6 +4254,7 @@ literal|0
 block|}
 block|,
 block|{
+comment|/* { PUC_PORT_TYPE_COM, 0x10, 0x00, COM_FREQ }, */
 block|{
 name|PUC_PORT_TYPE_COM
 block|,
@@ -4261,7 +4262,9 @@ literal|0x10
 block|,
 literal|0x00
 block|,
-name|COM_FREQ
+literal|33000000
+operator|/
+literal|2
 block|}
 block|, 	    }
 block|, 	}
