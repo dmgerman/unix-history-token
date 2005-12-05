@@ -1326,7 +1326,7 @@ name|mp
 operator|->
 name|mnt_optnew
 argument_list|,
-literal|"long"
+literal|"nolong"
 argument_list|,
 operator|&
 name|smp
@@ -1335,12 +1335,6 @@ name|sm_flags
 argument_list|,
 name|SMBFS_MOUNT_NO_LONG
 argument_list|)
-expr_stmt|;
-name|smp
-operator|->
-name|sm_flags
-operator|^=
-name|SMBFS_MOUNT_NO_LONG
 expr_stmt|;
 comment|/*	simple_lock_init(&smp->sm_npslock);*/
 name|pc
