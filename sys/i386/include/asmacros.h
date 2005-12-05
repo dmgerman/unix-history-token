@@ -143,39 +143,6 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|LOCORE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|PCPU
-parameter_list|(
-name|member
-parameter_list|)
-value|%fs:PC_ ## member
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCPU_ADDR
-parameter_list|(
-name|member
-parameter_list|,
-name|reg
-parameter_list|)
-value|movl %fs:PC_PRVSPACE,reg; \ 			addl $PC_ ## member,reg
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|GPROF
 end_ifdef
 
@@ -372,7 +339,7 @@ name|LOCORE
 end_ifdef
 
 begin_comment
-comment|/*  * Convenience macros for declaring interrupt entry points and trap  * stubs.  */
+comment|/*  * Convenience macro for declaring interrupt entry points.  */
 end_comment
 
 begin_define
@@ -385,14 +352,75 @@ parameter_list|)
 value|ALIGN_TEXT; .globl __CONCAT(X,name); \ 			.type __CONCAT(X,name),@function; __CONCAT(X,name):
 end_define
 
+begin_comment
+comment|/*  * Macros to create and destroy a trap frame.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|TRAP
+name|PUSH_FRAME
+define|\
+value|pushl	$0 ;
+comment|/* dummy error code */
+value|\ 	pushl	$0 ;
+comment|/* dummy trap type */
+value|\ 	pushal ;
+comment|/* 8 ints */
+value|\ 	pushl	%ds ;
+comment|/* save data and extra segments ... */
+value|\ 	pushl	%es ;							\ 	pushl	%fs
+end_define
+
+begin_define
+define|#
+directive|define
+name|POP_FRAME
+define|\
+value|popl	%fs ;							\ 	popl	%es ;							\ 	popl	%ds ;							\ 	popal ;								\ 	addl	$4+4,%esp
+end_define
+
+begin_comment
+comment|/*  * Access per-CPU data.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCPU
 parameter_list|(
-name|a
+name|member
 parameter_list|)
-value|pushl $(a) ; jmp alltraps
+value|%fs:PC_ ## member
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCPU_ADDR
+parameter_list|(
+name|member
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|movl %fs:PC_PRVSPACE, reg ;					\ 	addl $PC_ ## member, reg
+end_define
+
+begin_comment
+comment|/*  * Setup the kernel segment registers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SET_KERNEL_SREGS
+define|\
+value|movl	$KDSEL, %eax ;
+comment|/* reload with kernel's data segment */
+value|\ 	movl	%eax, %ds ;						\ 	movl	%eax, %es ;						\ 	movl	$KPSEL, %eax ;
+comment|/* reload with per-CPU data segment */
+value|\ 	movl	%eax, %fs
 end_define
 
 begin_endif
