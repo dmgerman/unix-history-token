@@ -17,6 +17,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MAX_VOLUMES
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|MAX_DISKS
 value|16
 end_define
@@ -47,9 +54,15 @@ name|struct
 name|ar_softc
 modifier|*
 name|raid
+index|[
+name|MAX_VOLUMES
+index|]
 decl_stmt|;
 name|int
 name|disk_number
+index|[
+name|MAX_VOLUMES
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -66,22 +79,21 @@ block|{
 name|int
 name|lun
 decl_stmt|;
-comment|/* logical unit number of this RAID */
 name|u_int8_t
 name|name
 index|[
 literal|32
 index|]
 decl_stmt|;
-comment|/* name of array if any */
+name|int
+name|volume
+decl_stmt|;
 name|u_int64_t
 name|magic_0
 decl_stmt|;
-comment|/* magic for this array */
 name|u_int64_t
 name|magic_1
 decl_stmt|;
-comment|/* magic for this array */
 name|int
 name|type
 decl_stmt|;
@@ -194,7 +206,6 @@ value|0x1fff
 name|u_int
 name|generation
 decl_stmt|;
-comment|/* generation of this array */
 name|u_int64_t
 name|total_sectors
 decl_stmt|;
@@ -218,7 +229,7 @@ comment|/* array width in disks */
 name|u_int
 name|interleave
 decl_stmt|;
-comment|/* interleave in blocks */
+comment|/* interleave in sectors */
 name|u_int
 name|total_disks
 decl_stmt|;
@@ -921,6 +932,18 @@ index|[
 literal|6
 index|]
 decl_stmt|;
+define|#
+directive|define
+name|INTEL_VERSION_1100
+value|"1.1.00"
+define|#
+directive|define
+name|INTEL_VERSION_1201
+value|"1.2.01"
+define|#
+directive|define
+name|INTEL_VERSION_1202
+value|"1.2.02"
 name|u_int8_t
 name|dummy_0
 index|[
@@ -1041,7 +1064,7 @@ name|u_int32_t
 name|reserved
 decl_stmt|;
 name|u_int32_t
-name|filler_1
+name|filler_0
 index|[
 literal|20
 index|]
@@ -1096,13 +1119,13 @@ name|u_int8_t
 name|total_disks
 decl_stmt|;
 name|u_int8_t
-name|dummy_2
+name|magic
 index|[
 literal|3
 index|]
 decl_stmt|;
 name|u_int32_t
-name|filler_2
+name|filler_1
 index|[
 literal|7
 index|]
