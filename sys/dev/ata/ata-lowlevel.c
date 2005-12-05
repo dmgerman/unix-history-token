@@ -287,6 +287,8 @@ argument_list|)
 decl_stmt|;
 name|int
 name|dummy
+decl_stmt|,
+name|error
 decl_stmt|;
 name|ATA_DEBUG_RQ
 argument_list|(
@@ -545,6 +547,9 @@ case|:
 comment|/* check sanity, setup SG list and DMA engine */
 if|if
 condition|(
+operator|(
+name|error
+operator|=
 name|ch
 operator|->
 name|dma
@@ -578,6 +583,7 @@ argument_list|,
 operator|&
 name|dummy
 argument_list|)
+operator|)
 condition|)
 block|{
 name|device_printf
@@ -593,7 +599,7 @@ name|request
 operator|->
 name|result
 operator|=
-name|EIO
+name|error
 expr_stmt|;
 goto|goto
 name|begin_finished
@@ -845,6 +851,9 @@ block|}
 comment|/* check sanity, setup SG list and DMA engine */
 if|if
 condition|(
+operator|(
+name|error
+operator|=
 name|ch
 operator|->
 name|dma
@@ -878,6 +887,7 @@ argument_list|,
 operator|&
 name|dummy
 argument_list|)
+operator|)
 condition|)
 block|{
 name|device_printf
@@ -893,7 +903,7 @@ name|request
 operator|->
 name|result
 operator|=
-name|EIO
+name|error
 expr_stmt|;
 goto|goto
 name|begin_finished
