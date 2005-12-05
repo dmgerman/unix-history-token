@@ -635,7 +635,7 @@ specifier|static
 name|int
 name|maxmsg
 init|=
-literal|20
+literal|100
 decl_stmt|;
 end_decl_stmt
 
@@ -10684,6 +10684,12 @@ operator|.
 name|sigev_notify
 operator|!=
 name|SIGEV_THREAD_ID
+operator|&&
+name|ev
+operator|.
+name|sigev_notify
+operator|!=
+name|SIGEV_NONE
 condition|)
 return|return
 operator|(
@@ -10818,7 +10824,15 @@ operator|=
 name|EBUSY
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|ev
+operator|.
+name|sigev_notify
+operator|!=
+name|SIGEV_NONE
+condition|)
 block|{
 name|PROC_LOCK
 argument_list|(
