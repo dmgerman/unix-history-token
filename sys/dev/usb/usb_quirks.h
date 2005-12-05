@@ -89,6 +89,11 @@ directive|define
 name|UQ_BROKEN_BIDIR
 value|0x2000
 comment|/* printer has broken bidir mode */
+define|#
+directive|define
+name|UQ_BROKEN_IPOD
+value|0x4000
+comment|/* iPod has something broken */
 block|}
 struct|;
 end_struct
