@@ -276,7 +276,7 @@ end_struct
 
 begin_struct_decl
 struct_decl|struct
-name|intrframe
+name|trapframe
 struct_decl|;
 end_struct_decl
 
@@ -401,9 +401,9 @@ modifier|*
 name|isrc
 parameter_list|,
 name|struct
-name|intrframe
+name|trapframe
 modifier|*
-name|iframe
+name|frame
 parameter_list|)
 function_decl|;
 end_function_decl

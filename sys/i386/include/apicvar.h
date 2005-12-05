@@ -777,8 +777,11 @@ begin_function_decl
 name|void
 name|lapic_handle_intr
 parameter_list|(
+name|int
+name|vector
+parameter_list|,
 name|struct
-name|intrframe
+name|trapframe
 name|frame
 parameter_list|)
 function_decl|;

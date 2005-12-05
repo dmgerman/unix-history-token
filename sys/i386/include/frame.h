@@ -170,92 +170,13 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Interrupt stack frame */
-end_comment
-
-begin_struct
-struct|struct
-name|intrframe
-block|{
-name|int
-name|if_vec
-decl_stmt|;
-name|int
-name|if_fs
-decl_stmt|;
-name|int
-name|if_es
-decl_stmt|;
-name|int
-name|if_ds
-decl_stmt|;
-name|int
-name|if_edi
-decl_stmt|;
-name|int
-name|if_esi
-decl_stmt|;
-name|int
-name|if_ebp
-decl_stmt|;
-name|int
-label|:
-literal|32
-expr_stmt|;
-name|int
-name|if_ebx
-decl_stmt|;
-name|int
-name|if_edx
-decl_stmt|;
-name|int
-name|if_ecx
-decl_stmt|;
-name|int
-name|if_eax
-decl_stmt|;
-name|int
-label|:
-literal|32
-expr_stmt|;
-comment|/* for compat with trap frame - trapno */
-name|int
-label|:
-literal|32
-expr_stmt|;
-comment|/* for compat with trap frame - err */
-comment|/* below portion defined in 386 hardware */
-name|int
-name|if_eip
-decl_stmt|;
-name|int
-name|if_cs
-decl_stmt|;
-name|int
-name|if_eflags
-decl_stmt|;
-comment|/* below only when crossing rings (e.g. user to kernel) */
-name|int
-name|if_esp
-decl_stmt|;
-name|int
-name|if_ss
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* frame of clock (same as interrupt frame) */
+comment|/* frame of clock (same as trap frame) */
 end_comment
 
 begin_struct
 struct|struct
 name|clockframe
 block|{
-name|int
-name|cf_vec
-decl_stmt|;
 name|int
 name|cf_fs
 decl_stmt|;
@@ -320,26 +241,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|CLOCK_TO_TRAPFRAME
-parameter_list|(
-name|frame
-parameter_list|)
-value|((struct trapframe *)&(frame)->cf_fs)
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTR_TO_TRAPFRAME
-parameter_list|(
-name|frame
-parameter_list|)
-value|((struct trapframe *)&(frame)->if_fs)
-end_define
 
 begin_endif
 endif|#

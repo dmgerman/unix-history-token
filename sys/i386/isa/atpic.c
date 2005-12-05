@@ -2398,9 +2398,12 @@ begin_function
 name|void
 name|atpic_handle_intr
 parameter_list|(
+name|u_int
+name|vector
+parameter_list|,
 name|struct
-name|intrframe
-name|iframe
+name|trapframe
+name|frame
 parameter_list|)
 block|{
 name|struct
@@ -2410,21 +2413,14 @@ name|isrc
 decl_stmt|;
 name|KASSERT
 argument_list|(
-operator|(
-name|u_int
-operator|)
-name|iframe
-operator|.
-name|if_vec
+name|vector
 operator|<
 name|NUM_ISA_IRQS
 argument_list|,
 operator|(
-literal|"unknown int %d\n"
+literal|"unknown int %u\n"
 operator|,
-name|iframe
-operator|.
-name|if_vec
+name|vector
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2433,9 +2429,7 @@ operator|=
 operator|&
 name|atintrs
 index|[
-name|iframe
-operator|.
-name|if_vec
+name|vector
 index|]
 operator|.
 name|at_intsrc
@@ -2450,15 +2444,11 @@ operator|==
 name|NULL
 operator|&&
 operator|(
-name|iframe
-operator|.
-name|if_vec
+name|vector
 operator|==
 literal|7
 operator|||
-name|iframe
-operator|.
-name|if_vec
+name|vector
 operator|==
 literal|15
 operator|)
@@ -2544,7 +2534,7 @@ argument_list|(
 name|isrc
 argument_list|,
 operator|&
-name|iframe
+name|frame
 argument_list|)
 expr_stmt|;
 block|}

@@ -2622,8 +2622,11 @@ begin_function
 name|void
 name|lapic_handle_intr
 parameter_list|(
+name|int
+name|vector
+parameter_list|,
 name|struct
-name|intrframe
+name|trapframe
 name|frame
 parameter_list|)
 block|{
@@ -2634,9 +2637,7 @@ name|isrc
 decl_stmt|;
 if|if
 condition|(
-name|frame
-operator|.
-name|if_vec
+name|vector
 operator|==
 operator|-
 literal|1
@@ -2652,9 +2653,7 @@ name|intr_lookup_source
 argument_list|(
 name|apic_idt_to_irq
 argument_list|(
-name|frame
-operator|.
-name|if_vec
+name|vector
 argument_list|)
 argument_list|)
 expr_stmt|;

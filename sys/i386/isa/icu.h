@@ -53,9 +53,12 @@ begin_function_decl
 name|void
 name|atpic_handle_intr
 parameter_list|(
+name|u_int
+name|vector
+parameter_list|,
 name|struct
-name|intrframe
-name|iframe
+name|trapframe
+name|frame
 parameter_list|)
 function_decl|;
 end_function_decl
