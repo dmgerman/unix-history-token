@@ -2683,6 +2683,11 @@ name|lapic
 modifier|*
 name|la
 decl_stmt|;
+comment|/* Send EOI first thing. */
+name|lapic_eoi
+argument_list|()
+expr_stmt|;
+comment|/* Look up our local APIC structure for the tick counters. */
 name|la
 operator|=
 operator|&

@@ -46,6 +46,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_smp.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_xbox.h"
 end_include
 
@@ -4776,6 +4782,21 @@ argument_list|(
 name|cpumask
 argument_list|)
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|COUNT_IPIS
+operator|*
+name|ipi_lazypmap_counts
+index|[
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+index|]
+operator|++
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|rcr3
