@@ -48,23 +48,6 @@ begin_comment
 comment|/*  * main.c  *	The main file for this entire program. Exit routines etc  *	reside here.  *  * Utility functions defined in this file:  *	Main_ParseArgLine  *			Takes a line of arguments, breaks them and  *			treats them as if they were given when first  *			invoked. Used by the parse module to implement  *			the .MFLAGS target.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MACHINE
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<sys/utsname.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -99,6 +82,12 @@ begin_include
 include|#
 directive|include
 file|<sys/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/utsname.h>
 end_include
 
 begin_include
@@ -2704,7 +2693,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* 	 * PC-98 kernel sets the `i386' string to the utsname.machine and 	 * it cannot be distinguished from IBM-PC by uname(3).  Therefore, 	 * we check machine.ispc98 and adjust the machine variable before 	 * using usname(3) below. 	 * NOTE: machdep.ispc98 was defined on 1998/8/31. At that time, 	 * __FreeBSD_version was defined as 300003. So, this check can 	 * safely be done with any kernel with version> 300003. 	 */
+comment|/* 	 * FreeBSD/pc98 kernel used to set the utsname.machine to 	 * "i386", and MACHINE was defined as "i386", so it could 	 * not be distinguished from FreeBSD/i386.  Therefore, we 	 * had to check machine.ispc98 and adjust the MACHINE 	 * variable. 	 * NOTE: The code is still here to be able to compile new 	 * make binary on old FreeBSD/pc98 systems, and have the 	 * MACHINE variable set properly. 	 */
 if|if
 condition|(
 operator|(
@@ -2761,7 +2750,7 @@ literal|"pc98"
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Get the name of this type of MACHINE from utsname 	 * so we can share an executable for similar machines. 	 * (i.e. m68k: amiga hp300, mac68k, sun3, ...) 	 * 	 * Note that while MACHINE is decided at run-time, 	 * MACHINE_ARCH is always known at compile time. 	 */
+comment|/* 	 * Get the name of this type of MACHINE from utsname 	 * so we can share an executable for similar machines. 	 * (i.e. m68k: amiga hp300, mac68k, sun3, ...) 	 * 	 * Note that both MACHINE and MACHINE_ARCH are decided at 	 * run-time. 	 */
 if|if
 condition|(
 name|machine
@@ -2769,15 +2758,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|MACHINE
-name|machine
-operator|=
-name|MACHINE
-expr_stmt|;
-else|#
-directive|else
 specifier|static
 name|struct
 name|utsname
@@ -2807,8 +2787,6 @@ name|utsname
 operator|.
 name|machine
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 if|if
 condition|(

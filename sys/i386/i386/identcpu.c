@@ -280,7 +280,7 @@ name|char
 name|machine
 index|[]
 init|=
-literal|"i386"
+name|MACHINE
 decl_stmt|;
 end_decl_stmt
 
