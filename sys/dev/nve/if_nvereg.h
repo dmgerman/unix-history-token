@@ -480,10 +480,6 @@ name|struct
 name|mtx
 name|mtx
 decl_stmt|;
-name|struct
-name|mtx
-name|osmtx
-decl_stmt|;
 comment|/* Stuff for dealing with the NVIDIA OS API */
 name|struct
 name|callout
@@ -574,26 +570,6 @@ parameter_list|(
 name|_sc
 parameter_list|)
 value|mtx_assert(&(_sc)->mtx, MA_OWNED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVE_OSLOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_lock_spin(&(_sc)->osmtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVE_OSUNLOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_unlock_spin(&(_sc)->osmtx)
 end_define
 
 begin_define
