@@ -464,11 +464,11 @@ begin_comment
 comment|/***************************** Core Includes **********************************/
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|AHD_REG_PRETTY_PRINT
-end_if
+end_ifdef
 
 begin_define
 define|#

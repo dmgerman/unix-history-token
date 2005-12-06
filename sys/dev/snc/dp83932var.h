@@ -773,6 +773,11 @@ name|gone
 decl_stmt|;
 if|#
 directive|if
+name|defined
+argument_list|(
+name|NRND
+argument_list|)
+operator|&&
 name|NRND
 operator|>
 literal|0

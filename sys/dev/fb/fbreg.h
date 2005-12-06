@@ -160,7 +160,10 @@ end_function_decl
 begin_elif
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|__amd64__
+argument_list|)
 end_elif
 
 begin_define
@@ -248,7 +251,10 @@ end_define
 begin_elif
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|__ia64__
+argument_list|)
 end_elif
 
 begin_include
@@ -435,7 +441,10 @@ end_function
 begin_elif
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|__powerpc__
+argument_list|)
 end_elif
 
 begin_define

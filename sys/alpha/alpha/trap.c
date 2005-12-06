@@ -2488,8 +2488,8 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|notdef
 comment|/* can't happen, ever. */
 if|if

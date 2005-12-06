@@ -368,11 +368,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|FB_INSTALL_CDEV
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -7275,6 +7275,11 @@ parameter_list|)
 block|{
 if|#
 directive|if
+name|defined
+argument_list|(
+name|FB_DEBUG
+argument_list|)
+operator|&&
 name|FB_DEBUG
 operator|>
 literal|1
@@ -7302,6 +7307,11 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
+name|defined
+argument_list|(
+name|FB_DEBUG
+argument_list|)
+operator|&&
 name|FB_DEBUG
 operator|>
 literal|1
