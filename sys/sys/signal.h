@@ -785,6 +785,12 @@ comment|/* pthread_attr_t * */
 block|}
 name|_sigev_thread
 struct|;
+name|long
+name|__spare__
+index|[
+literal|8
+index|]
+decl_stmt|;
 block|}
 name|_sigev_un
 union|;
@@ -956,10 +962,6 @@ name|sigval
 name|si_value
 decl_stmt|;
 comment|/* signal value */
-name|long
-name|si_band
-decl_stmt|;
-comment|/* band event for SIGPOLL */
 union|union
 block|{
 struct|struct
@@ -982,13 +984,38 @@ decl_stmt|;
 block|}
 name|_timer
 struct|;
+struct|struct
+block|{
 name|int
-name|__spare__
+name|_mqd
+decl_stmt|;
+block|}
+name|_mesgq
+struct|;
+struct|struct
+block|{
+name|long
+name|_band
+decl_stmt|;
+comment|/* band event for SIGPOLL */
+block|}
+name|_poll
+struct|;
+comment|/* was this ever used ? */
+struct|struct
+block|{
+name|long
+name|__spare1__
+decl_stmt|;
+name|int
+name|__spare2__
 index|[
 literal|7
 index|]
 decl_stmt|;
-comment|/* gimme some slack */
+block|}
+name|__spare__
+struct|;
 block|}
 name|_reason
 union|;
@@ -1016,6 +1043,20 @@ define|#
 directive|define
 name|si_overrun
 value|_reason._timer._overrun
+end_define
+
+begin_define
+define|#
+directive|define
+name|si_mqd
+value|_reason._mesgq._mqd
+end_define
+
+begin_define
+define|#
+directive|define
+name|si_band
+value|_reason._poll._band
 end_define
 
 begin_comment
@@ -1751,6 +1792,17 @@ end_comment
 
 begin_comment
 comment|/* message on an empty message queue. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SI_KERNEL
+value|0x10006
+end_define
+
+begin_comment
+comment|/* Normal signal is sent by kernel. */
 end_comment
 
 begin_endif
