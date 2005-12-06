@@ -879,7 +879,7 @@ define|#
 directive|define
 name|ZERO_EDX
 parameter_list|()
-value|do {							\ 	emitm(&stream, 0x31, 1);					\ 	emitm(&stream, 0xc9, 1);					\ } while (0)
+value|do {							\ 	emitm(&stream, 0x31, 1);					\ 	emitm(&stream, 0xd2, 1);					\ } while (0)
 end_define
 
 begin_endif
