@@ -1350,9 +1350,9 @@ name|out
 argument_list|,
 literal|"%16ju "
 argument_list|,
-name|tlast
-operator|-
 name|tnow
+operator|-
+name|tlast
 argument_list|)
 expr_stmt|;
 name|tlast
