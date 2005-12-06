@@ -13743,7 +13743,16 @@ operator|->
 name|p_ksi
 argument_list|)
 condition|)
+block|{
+name|PROC_UNLOCK
+argument_list|(
+name|p
+operator|->
+name|p_pptr
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 block|}
 name|tdsignal
 argument_list|(
