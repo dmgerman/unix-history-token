@@ -420,17 +420,63 @@ name|ia32_sigval
 name|si_value
 decl_stmt|;
 comment|/* signal value */
-name|int32_t
-name|si_band
+union|union
+block|{
+struct|struct
+block|{
+name|int
+name|_trapno
+decl_stmt|;
+comment|/* machine specific trap code */
+block|}
+name|_fault
+struct|;
+struct|struct
+block|{
+name|int
+name|_timerid
+decl_stmt|;
+name|int
+name|_overrun
+decl_stmt|;
+block|}
+name|_timer
+struct|;
+struct|struct
+block|{
+name|int
+name|_mqd
+decl_stmt|;
+block|}
+name|_mesgq
+struct|;
+struct|struct
+block|{
+name|int
+name|_band
 decl_stmt|;
 comment|/* band event for SIGPOLL */
+block|}
+name|_poll
+struct|;
+comment|/* was this ever used ? */
+struct|struct
+block|{
 name|int
-name|__spare__
+name|__spare1__
+decl_stmt|;
+name|int
+name|__spare2__
 index|[
 literal|7
 index|]
 decl_stmt|;
-comment|/* gimme some slack */
+block|}
+name|__spare__
+struct|;
+block|}
+name|_reason
+union|;
 block|}
 struct|;
 end_struct
