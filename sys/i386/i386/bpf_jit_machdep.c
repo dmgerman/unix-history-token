@@ -317,7 +317,7 @@ argument_list|)
 argument_list|,
 name|M_BPFJIT
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2294,7 +2294,7 @@ name|cur_ip
 argument_list|,
 name|M_BPFJIT
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
