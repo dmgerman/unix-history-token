@@ -870,6 +870,18 @@ parameter_list|()
 value|do {							\ 	emitm(&stream, 0x31, 1);					\ 	emitm(&stream, 0xc0, 1);					\ } while (0)
 end_define
 
+begin_comment
+comment|/* xor edx,edx */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ZERO_EDX
+parameter_list|()
+value|do {							\ 	emitm(&stream, 0x31, 1);					\ 	emitm(&stream, 0xc9, 1);					\ } while (0)
+end_define
+
 begin_endif
 endif|#
 directive|endif

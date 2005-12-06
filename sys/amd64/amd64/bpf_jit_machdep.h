@@ -341,7 +341,7 @@ value|do {						\ 	emitm(&stream, 0x48, 1);					\ 	emitm(&stream, (8<< 4) | 3 | 
 end_define
 
 begin_comment
-comment|/* mov dr32,sr32[off] */
+comment|/* mov dr32,sr64[off] */
 end_comment
 
 begin_define
@@ -351,11 +351,11 @@ name|MOVodd
 parameter_list|(
 name|dr32
 parameter_list|,
-name|sr32
+name|sr64
 parameter_list|,
 name|off
 parameter_list|)
-value|do {					\ 	emitm(&stream, (8<< 4) | 3 | (1<< 3), 1);			\ 	emitm(&stream,							\ 	    (1<< 6) | ((dr32& 0x7)<< 3) | (sr32& 0x7), 1);		\ 	emitm(&stream, off, 1);						\ } while (0)
+value|do {					\ 	emitm(&stream, (8<< 4) | 3 | (1<< 3), 1);			\ 	emitm(&stream,							\ 	    (1<< 6) | ((dr32& 0x7)<< 3) | (sr64& 0x7), 1);		\ 	emitm(&stream, off, 1);						\ } while (0)
 end_define
 
 begin_comment
@@ -377,7 +377,7 @@ value|do {					\ 	emitm(&stream, (8<< 4) | 1 | (1<< 3), 1);			\ 	emitm(&stream,	
 end_define
 
 begin_comment
-comment|/* mov dr32,sr32[or32] */
+comment|/* mov dr32,sr64[or64] */
 end_comment
 
 begin_define
@@ -387,15 +387,15 @@ name|MOVobd
 parameter_list|(
 name|dr32
 parameter_list|,
-name|sr32
+name|sr64
 parameter_list|,
-name|or32
+name|or64
 parameter_list|)
-value|do {					\ 	emitm(&stream, (8<< 4) | 3 | (1<< 3), 1);			\ 	emitm(&stream, ((dr32& 0x7)<< 3) | 4, 1);			\ 	emitm(&stream, ((or32& 0x7)<< 3) | (sr32& 0x7), 1);		\ } while (0)
+value|do {					\ 	emitm(&stream, (8<< 4) | 3 | (1<< 3), 1);			\ 	emitm(&stream, ((dr32& 0x7)<< 3) | 4, 1);			\ 	emitm(&stream, ((or64& 0x7)<< 3) | (sr64& 0x7), 1);		\ } while (0)
 end_define
 
 begin_comment
-comment|/* mov dr16,sr32[or32] */
+comment|/* mov dr16,sr64[or64] */
 end_comment
 
 begin_define
@@ -405,15 +405,15 @@ name|MOVobw
 parameter_list|(
 name|dr32
 parameter_list|,
-name|sr32
+name|sr64
 parameter_list|,
-name|or32
+name|or64
 parameter_list|)
-value|do {					\ 	emitm(&stream, 0x66, 1);					\ 	emitm(&stream, (8<< 4) | 3 | (1<< 3), 1);			\ 	emitm(&stream, ((dr32& 0x7)<< 3) | 4, 1);			\ 	emitm(&stream, ((or32& 0x7)<< 3) | (sr32& 0x7), 1);		\ } while (0)
+value|do {					\ 	emitm(&stream, 0x66, 1);					\ 	emitm(&stream, (8<< 4) | 3 | (1<< 3), 1);			\ 	emitm(&stream, ((dr32& 0x7)<< 3) | 4, 1);			\ 	emitm(&stream, ((or64& 0x7)<< 3) | (sr64& 0x7), 1);		\ } while (0)
 end_define
 
 begin_comment
-comment|/* mov dr8,sr32[or32] */
+comment|/* mov dr8,sr64[or64] */
 end_comment
 
 begin_define
@@ -423,15 +423,15 @@ name|MOVobb
 parameter_list|(
 name|dr8
 parameter_list|,
-name|sr32
+name|sr64
 parameter_list|,
-name|or32
+name|or64
 parameter_list|)
-value|do {					\ 	emitm(&stream, 0x8a, 1);					\ 	emitm(&stream, ((dr8& 0x7)<< 3) | 4, 1);			\ 	emitm(&stream, ((or32& 0x7)<< 3) | (sr32& 0x7), 1);		\ } while (0)
+value|do {					\ 	emitm(&stream, 0x8a, 1);					\ 	emitm(&stream, ((dr8& 0x7)<< 3) | 4, 1);			\ 	emitm(&stream, ((or64& 0x7)<< 3) | (sr64& 0x7), 1);		\ } while (0)
 end_define
 
 begin_comment
-comment|/* mov [dr32][or32],sr32 */
+comment|/* mov [dr64][or64],sr32 */
 end_comment
 
 begin_define
@@ -439,13 +439,13 @@ define|#
 directive|define
 name|MOVomd
 parameter_list|(
-name|dr32
+name|dr64
 parameter_list|,
-name|or32
+name|or64
 parameter_list|,
 name|sr32
 parameter_list|)
-value|do {					\ 	emitm(&stream, 0x89, 1);					\ 	emitm(&stream, ((sr32& 0x7)<< 3) | 4, 1);			\ 	emitm(&stream, ((or32& 0x7)<< 3) | (dr32& 0x7), 1);		\ } while (0)
+value|do {					\ 	emitm(&stream, 0x89, 1);					\ 	emitm(&stream, ((sr32& 0x7)<< 3) | 4, 1);			\ 	emitm(&stream, ((or64& 0x7)<< 3) | (dr64& 0x7), 1);		\ } while (0)
 end_define
 
 begin_comment
@@ -789,7 +789,7 @@ value|do {							\ 	emitm(&stream, 0xf7, 1);					\ 	emitm(&stream, (27<< 3) | (r
 end_define
 
 begin_comment
-comment|/* cmp dr32,sr32[off] */
+comment|/* cmp dr32,sr64[off] */
 end_comment
 
 begin_define
@@ -799,11 +799,11 @@ name|CMPodd
 parameter_list|(
 name|dr32
 parameter_list|,
-name|sr32
+name|sr64
 parameter_list|,
 name|off
 parameter_list|)
-value|do {					\ 	emitm(&stream, (3<< 4) | 3 | (1<< 3), 1);			\ 	emitm(&stream,							\ 	    (1<< 6) | ((dr32& 0x7)<< 3) | (sr32& 0x7), 1);		\ 	emitm(&stream, off, 1);						\ } while (0)
+value|do {					\ 	emitm(&stream, (3<< 4) | 3 | (1<< 3), 1);			\ 	emitm(&stream,							\ 	    (1<< 6) | ((dr32& 0x7)<< 3) | (sr64& 0x7), 1);		\ 	emitm(&stream, off, 1);						\ } while (0)
 end_define
 
 begin_comment
@@ -974,6 +974,18 @@ directive|define
 name|ZERO_EAX
 parameter_list|()
 value|do {							\ 	emitm(&stream, 0x31, 1);					\ 	emitm(&stream, 0xc0, 1);					\ } while (0)
+end_define
+
+begin_comment
+comment|/* xor edx,edx */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ZERO_EDX
+parameter_list|()
+value|do {							\ 	emitm(&stream, 0x31, 1);					\ 	emitm(&stream, 0xc9, 1);					\ } while (0)
 end_define
 
 begin_endif
