@@ -787,6 +787,13 @@ name|ksi_timerid
 value|ksi_info.si_timerid
 end_define
 
+begin_define
+define|#
+directive|define
+name|ksi_mqd
+value|ksi_info.si_mqd
+end_define
+
 begin_comment
 comment|/* bits for ksi_flags */
 end_comment
