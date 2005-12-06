@@ -500,9 +500,6 @@ name|proc
 modifier|*
 name|nt_proc
 decl_stmt|;
-name|int
-name|nt_fd
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2506,7 +2503,12 @@ name|mnt_flag
 operator||=
 name|MNT_LOCAL
 expr_stmt|;
-comment|/* mp->mnt_kern_flag |= MNTK_MPSAFE; */
+name|mp
+operator|->
+name|mnt_kern_flag
+operator||=
+name|MNTK_MPSAFE
+expr_stmt|;
 name|vfs_getnewfsid
 argument_list|(
 name|mp
@@ -8784,7 +8786,9 @@ if|if
 condition|(
 name|nt
 operator|->
-name|nt_fd
+name|nt_ksi
+operator|.
+name|ksi_mqd
 operator|==
 name|fd
 condition|)
@@ -10968,7 +10972,9 @@ name|p
 expr_stmt|;
 name|nt
 operator|->
-name|nt_fd
+name|nt_ksi
+operator|.
+name|ksi_mqd
 operator|=
 name|uap
 operator|->
