@@ -312,12 +312,8 @@ struct|struct
 name|ypmaplist
 block|{
 name|char
+modifier|*
 name|ypml_name
-index|[
-name|YPMAXMAP
-operator|+
-literal|1
-index|]
 decl_stmt|;
 name|struct
 name|ypmaplist
