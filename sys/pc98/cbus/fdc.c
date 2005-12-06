@@ -4561,7 +4561,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/*  * XXX I think using __i386__ is wrong here since we actually want to probe  * for the machine type, not the CPU type (so non-PC arch's like the PC98 will  * fail the probe).  However, for whatever reason, testing for _MACHINE_ARCH  * == i386 breaks the test on FreeBSD/Alpha.  */
+comment|/*  * XXX I think using __i386__ is wrong here since we actually want to probe  * for the machine type, not the CPU type (so non-PC arch's like the PC98 will  * fail the probe).  */
 ifdef|#
 directive|ifdef
 name|__i386__
