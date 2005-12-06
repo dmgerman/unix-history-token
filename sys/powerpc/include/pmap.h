@@ -390,7 +390,7 @@ name|vtophys
 parameter_list|(
 name|va
 parameter_list|)
-value|pmap_kextract(((vm_offset_t)(va)))
+value|pmap_kextract((vm_offset_t)(va))
 end_define
 
 begin_define

@@ -377,6 +377,16 @@ parameter_list|)
 value|(PTmap + (alpha_btop(va) \& ((1<< 3*ALPHA_PTSHIFT)-1)))
 end_define
 
+begin_define
+define|#
+directive|define
+name|vtophys
+parameter_list|(
+name|va
+parameter_list|)
+value|pmap_kextract((vm_offset_t)(va))
+end_define
+
 begin_comment
 comment|/*  *	Routine:	pmap_kextract  *	Function:  *		Extract the physical page address associated  *		kernel virtual address.  */
 end_comment
@@ -437,16 +447,6 @@ name|pa
 return|;
 block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|vtophys
-parameter_list|(
-name|va
-parameter_list|)
-value|pmap_kextract(((vm_offset_t) (va)))
-end_define
 
 begin_function
 specifier|static

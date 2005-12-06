@@ -16,7 +16,7 @@ name|_MACHINE_PMAP_H_
 end_define
 
 begin_comment
-comment|/*  * Page-directory and page-table entires follow this format, with a few  * of the fields not present here and there, depending on a lot of things.  */
+comment|/*  * Page-directory and page-table entries follow this format, with a few  * of the fields not present here and there, depending on a lot of things.  */
 end_comment
 
 begin_comment
@@ -642,22 +642,13 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * virtual address to page table entry and  * to physical address. Likewise for alternate address space.  * Note: these work recursively, thus vtopte of a pte will give  * the corresponding pde that in turn maps it.  */
+comment|/*  * virtual address to page table entry and  * to physical address.  * Note: these work recursively, thus vtopte of a pte will give  * the corresponding pde that in turn maps it.  */
 end_comment
 
 begin_function_decl
 name|pt_entry_t
 modifier|*
 name|vtopte
-parameter_list|(
-name|vm_offset_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|vm_paddr_t
-name|pmap_kextract
 parameter_list|(
 name|vm_offset_t
 parameter_list|)
@@ -671,7 +662,7 @@ name|vtophys
 parameter_list|(
 name|va
 parameter_list|)
-value|pmap_kextract(((vm_offset_t) (va)))
+value|pmap_kextract((vm_offset_t)(va))
 end_define
 
 begin_function
@@ -1187,6 +1178,15 @@ name|pa
 parameter_list|,
 name|int
 name|i
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|vm_paddr_t
+name|pmap_kextract
+parameter_list|(
+name|vm_offset_t
 parameter_list|)
 function_decl|;
 end_function_decl
