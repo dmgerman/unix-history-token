@@ -107,6 +107,16 @@ modifier|*
 name|bd_wfilter
 decl_stmt|;
 comment|/* write filter code */
+ifdef|#
+directive|ifdef
+name|BPF_JITTER
+name|bpf_jit_filter
+modifier|*
+name|bd_bfilter
+decl_stmt|;
+comment|/* binary filter code */
+endif|#
+directive|endif
 name|u_long
 name|bd_rcount
 decl_stmt|;
