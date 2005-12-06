@@ -3200,9 +3200,6 @@ operator|->
 name|valid
 condition|)
 break|break;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3223,12 +3220,10 @@ index|]
 operator|->
 name|busy
 condition|)
-block|{
-name|vm_page_unlock_queues
+break|break;
+name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
-break|break;
-block|}
 name|vm_page_busy
 argument_list|(
 name|ma
