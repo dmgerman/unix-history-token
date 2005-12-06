@@ -3459,12 +3459,9 @@ expr_stmt|;
 else|else
 name|AcpiOsStall
 argument_list|(
-name|hz
-operator|*
-literal|1000
+literal|10000
 argument_list|)
 expr_stmt|;
-comment|// XXX too big
 block|}
 block|}
 comment|/* Calculate new delay and log it. */
@@ -3478,11 +3475,7 @@ name|period
 operator|+=
 name|i
 operator|*
-operator|(
-name|hz
-operator|*
-literal|1000
-operator|)
+literal|10000
 expr_stmt|;
 name|CTR2
 argument_list|(
