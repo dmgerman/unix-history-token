@@ -1205,6 +1205,22 @@ literal|"NVIDIA nForce MCP11 Networking Adapter"
 block|}
 block|,
 block|{
+name|NVIDIA_VENDORID
+block|,
+name|NFORCE_MCPNET12_DEVICEID
+block|,
+literal|"NVIDIA nForce MCP12 Networking Adapter"
+block|}
+block|,
+block|{
+name|NVIDIA_VENDORID
+block|,
+name|NFORCE_MCPNET13_DEVICEID
+block|,
+literal|"NVIDIA nForce MCP13 Networking Adapter"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
