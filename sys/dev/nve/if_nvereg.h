@@ -135,8 +135,12 @@ begin_define
 define|#
 directive|define
 name|NV_MAX_FRAGS
-value|63
+value|32
 end_define
+
+begin_comment
+comment|// match adapter.h:ADAPTER_WRITE_DATA.sElement[]
+end_comment
 
 begin_define
 define|#
