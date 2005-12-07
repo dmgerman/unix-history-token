@@ -512,7 +512,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"0E:I:J:L:n:oP:pR:s:tx"
+literal|"0E:I:J:L:n:oP:pR:s:rtx"
 argument_list|)
 operator|)
 operator|!=
@@ -676,6 +676,11 @@ argument_list|,
 literal|"replacements must be a number"
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+literal|'r'
+case|:
+comment|/* GNU compatibility */
 break|break;
 case|case
 literal|'s'
