@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|TW_CL_VERSION_STRING
-value|"1.00.00.007"
+value|"1.00.01.011"
 end_define
 
 begin_define
@@ -70,7 +70,77 @@ value|0x1002
 end_define
 
 begin_comment
-comment|/* 9000 series device id */
+comment|/* 9000 PCI series device id */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TW_CL_DEVICE_ID_9K_X
+value|0x1003
+end_define
+
+begin_comment
+comment|/* 9000 PCI-X series device id */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TW_CL_BAR_TYPE_IO
+value|1
+end_define
+
+begin_comment
+comment|/* I/O base address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TW_CL_BAR_TYPE_MEM
+value|2
+end_define
+
+begin_comment
+comment|/* memory base address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TW_CL_BAR_TYPE_SBUF
+value|3
+end_define
+
+begin_comment
+comment|/* SBUF base address */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TW_OSL_ENCLOSURE_SUPPORT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TW_CL_MAX_NUM_UNITS
+value|65
+end_define
+
+begin_comment
+comment|/* max # of units we support 						-- enclosure target id is 64 */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* TW_OSL_ENCLOSURE_SUPPORT */
 end_comment
 
 begin_define
@@ -82,6 +152,15 @@ end_define
 
 begin_comment
 comment|/* max # of units we support */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* TW_OSL_ENCLOSURE_SUPPORT */
 end_comment
 
 begin_define
@@ -200,6 +279,17 @@ end_define
 
 begin_comment
 comment|/* Flash firmware */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TW_CL_DEFERRED_INTR_USED
+value|(1<<5)
+end_define
+
+begin_comment
+comment|/* OS Layer uses deferred intr */
 end_comment
 
 begin_comment
@@ -1038,6 +1128,18 @@ define|\
 value|(struct_type *)((TW_INT8 *)addr -		\ 	TW_CL_STRUCT_OFFSET(struct_type, field))
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TW_BUILDING_API
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|"tw_osl_inline.h"
+end_include
+
 begin_comment
 comment|/*  * The following are extern declarations of OS Layer defined functions called  * by the Common Layer.  If any function has been defined as a macro in  * tw_osl_share.h, we will not make the extern declaration here.  */
 end_comment
@@ -1058,6 +1160,39 @@ name|TW_VOID
 name|tw_osl_breakpoint
 parameter_list|(
 name|TW_VOID
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|tw_osl_ctlr_busy
+end_ifndef
+
+begin_comment
+comment|/* Called when CL is too busy to accept new requests. */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|TW_VOID
+name|tw_osl_ctlr_busy
+parameter_list|(
+name|struct
+name|tw_cl_ctlr_handle
+modifier|*
+name|ctlr_handle
+parameter_list|,
+name|struct
+name|tw_cl_req_handle
+modifier|*
+name|req_handle
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1708,6 +1843,184 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|TW_OSL_NON_DMA_MEM_ALLOC_PER_REQUEST
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|tw_osl_sync_io_block
+end_ifndef
+
+begin_comment
+comment|/* Block new I/O requests from being sent by the OS Layer. */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|TW_VOID
+name|tw_osl_sync_io_block
+parameter_list|(
+name|struct
+name|tw_cl_ctlr_handle
+modifier|*
+name|ctlr_handle
+parameter_list|,
+name|TW_SYNC_HANDLE
+modifier|*
+name|sync_handle
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|tw_osl_sync_io_unblock
+end_ifndef
+
+begin_comment
+comment|/* Allow new I/O requests from the OS Layer. */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|TW_VOID
+name|tw_osl_sync_io_unblock
+parameter_list|(
+name|struct
+name|tw_cl_ctlr_handle
+modifier|*
+name|ctlr_handle
+parameter_list|,
+name|TW_SYNC_HANDLE
+modifier|*
+name|sync_handle
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|tw_osl_sync_isr_block
+end_ifndef
+
+begin_comment
+comment|/* Block the ISR from being called by the OS Layer. */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|TW_VOID
+name|tw_osl_sync_isr_block
+parameter_list|(
+name|struct
+name|tw_cl_ctlr_handle
+modifier|*
+name|ctlr_handle
+parameter_list|,
+name|TW_SYNC_HANDLE
+modifier|*
+name|sync_handle
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|tw_osl_sync_isr_unblock
+end_ifndef
+
+begin_comment
+comment|/* Allow calls to the ISR from the OS Layer. */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|TW_VOID
+name|tw_osl_sync_isr_unblock
+parameter_list|(
+name|struct
+name|tw_cl_ctlr_handle
+modifier|*
+name|ctlr_handle
+parameter_list|,
+name|TW_SYNC_HANDLE
+modifier|*
+name|sync_handle
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* TW_OSL_NON_DMA_MEM_ALLOC_PER_REQUEST */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|tw_osl_vsprintf
+end_ifndef
+
+begin_comment
+comment|/* Standard vsprintf. */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|TW_INT32
+name|tw_osl_vsprintf
+parameter_list|(
+name|TW_INT8
+modifier|*
+name|dest
+parameter_list|,
+specifier|const
+name|TW_INT8
+modifier|*
+name|fmt
+parameter_list|,
+name|va_list
+name|ap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|TW_OSL_CAN_SLEEP
 end_ifdef
 
@@ -1968,6 +2281,9 @@ name|TW_UINT32
 name|flags
 parameter_list|,
 name|TW_INT32
+name|device_id
+parameter_list|,
+name|TW_INT32
 name|max_simult_reqs
 parameter_list|,
 name|TW_INT32
@@ -2023,6 +2339,36 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Return PCI BAR info. */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|TW_INT32
+name|tw_cl_get_pci_bar_info
+parameter_list|(
+name|TW_INT32
+name|device_id
+parameter_list|,
+name|TW_INT32
+name|bar_type
+parameter_list|,
+name|TW_INT32
+modifier|*
+name|bar_num
+parameter_list|,
+name|TW_INT32
+modifier|*
+name|bar0_offset
+parameter_list|,
+name|TW_INT32
+modifier|*
+name|bar_size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Initialize Common Layer for a given controller. */
 end_comment
 
@@ -2038,6 +2384,9 @@ name|ctlr_handle
 parameter_list|,
 name|TW_UINT32
 name|flags
+parameter_list|,
+name|TW_INT32
+name|device_id
 parameter_list|,
 name|TW_INT32
 name|max_simult_reqs
@@ -2257,6 +2606,15 @@ name|req_handle
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* TW_BUILDING_API */
+end_comment
 
 begin_endif
 endif|#

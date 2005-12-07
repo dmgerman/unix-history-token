@@ -103,14 +103,22 @@ argument_list|,
 literal|"entered"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Serialize access to this function so multiple threads don't try to 	 * do the same thing (such as clearing interrupt bits). 	 */
+comment|/* 	 * Synchronize access between writes to command and control registers 	 * in 64-bit environments, on G66. 	 */
+if|if
+condition|(
+name|ctlr
+operator|->
+name|state
+operator|&
+name|TW_CLI_CTLR_STATE_G66_WORKAROUND_NEEDED
+condition|)
 name|tw_osl_get_lock
 argument_list|(
 name|ctlr_handle
 argument_list|,
 name|ctlr
 operator|->
-name|intr_lock
+name|io_lock
 argument_list|)
 expr_stmt|;
 comment|/* Read the status register to determine the type of interrupt. */
@@ -289,13 +297,21 @@ comment|/* request for a deferred isr call */
 block|}
 name|out
 label|:
+if|if
+condition|(
+name|ctlr
+operator|->
+name|state
+operator|&
+name|TW_CLI_CTLR_STATE_G66_WORKAROUND_NEEDED
+condition|)
 name|tw_osl_free_lock
 argument_list|(
 name|ctlr_handle
 argument_list|,
 name|ctlr
 operator|->
-name|intr_lock
+name|io_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -888,6 +904,17 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TW_OSL_NON_DMA_MEM_ALLOC_PER_REQUEST
+name|tw_osl_free_lock
+argument_list|(
+name|ctlr
+operator|->
+name|ctlr_handle
+argument_list|,
+name|ctlr
+operator|->
+name|intr_lock
+argument_list|)
+expr_stmt|;
 comment|/* Call the CL internal callback, if there's one. */
 if|if
 condition|(
@@ -900,6 +927,17 @@ operator|->
 name|tw_cli_callback
 argument_list|(
 name|req
+argument_list|)
+expr_stmt|;
+name|tw_osl_get_lock
+argument_list|(
+name|ctlr
+operator|->
+name|ctlr_handle
+argument_list|,
+name|ctlr
+operator|->
+name|intr_lock
 argument_list|)
 expr_stmt|;
 endif|#

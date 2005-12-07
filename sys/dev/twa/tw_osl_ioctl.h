@@ -26,13 +26,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"tw_cl_fwif.h"
+file|<dev/twa/tw_cl_fwif.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tw_cl_ioctl.h"
+file|<dev/twa/tw_cl_ioctl.h>
 end_include
 
 begin_pragma
