@@ -51,6 +51,12 @@ name|TW_OSLI_MAX_NUM_AENS
 value|0x100
 end_define
 
+begin_define
+define|#
+directive|define
+name|TW_OSLI_DEFERRED_INTR_USED
+end_define
+
 begin_comment
 comment|/* Possible values of req->state. */
 end_comment
@@ -368,6 +374,9 @@ name|state
 decl_stmt|;
 name|TW_UINT32
 name|flags
+decl_stmt|;
+name|TW_INT32
+name|device_id
 decl_stmt|;
 name|TW_UINT32
 name|alignment

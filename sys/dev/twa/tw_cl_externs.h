@@ -733,6 +733,26 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Find a particular response in the controller response queue. */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|TW_INT32
+name|tw_cli_find_response
+parameter_list|(
+name|struct
+name|tw_cli_ctlr_context
+modifier|*
+name|ctlr
+parameter_list|,
+name|TW_INT32
+name|req_id
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Drain the controller AEN queue. */
 end_comment
 

@@ -138,6 +138,42 @@ name|TW_UINT16
 name|working_build
 decl_stmt|;
 comment|/* build # of the firmware that the 					driver is compatible with */
+name|TW_UINT16
+name|driver_srl_high
+decl_stmt|;
+comment|/* highest driver supported srl */
+name|TW_UINT16
+name|driver_branch_high
+decl_stmt|;
+comment|/* highest driver supported branch */
+name|TW_UINT16
+name|driver_build_high
+decl_stmt|;
+comment|/* highest driver supported build */
+name|TW_UINT16
+name|driver_srl_low
+decl_stmt|;
+comment|/* lowest driver supported srl */
+name|TW_UINT16
+name|driver_branch_low
+decl_stmt|;
+comment|/* lowest driver supported branch */
+name|TW_UINT16
+name|driver_build_low
+decl_stmt|;
+comment|/* lowest driver supported build */
+name|TW_UINT16
+name|fw_on_ctlr_srl
+decl_stmt|;
+comment|/* srl of running firmware */
+name|TW_UINT16
+name|fw_on_ctlr_branch
+decl_stmt|;
+comment|/* branch # of running firmware */
+name|TW_UINT16
+name|fw_on_ctlr_build
+decl_stmt|;
+comment|/* build # of running firmware */
 block|}
 struct|;
 end_struct

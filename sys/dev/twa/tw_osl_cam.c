@@ -14,7 +14,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"tw_osl_includes.h"
+file|<dev/twa/tw_osl_includes.h>
 end_include
 
 begin_include
@@ -674,6 +674,42 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Function name:	tw_osli_complete_ccb  * Description:		Completes a ccb to CAM.  *  * Input:		ccb	-- ptr to CAM request  * Output:		None  * Return value:	None  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|TW_VOID
+name|tw_osli_complete_ccb
+parameter_list|(
+name|union
+name|ccb
+modifier|*
+name|ccb
+parameter_list|)
+block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|xpt_done
+argument_list|(
+name|ccb
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Function name:	tw_osli_execute_scsi  * Description:		Build a fw cmd, based on a CAM style ccb, and  *			send it down.  *  * Input:		req	-- ptr to OSL internal request context  *			ccb	-- ptr to CAM style ccb  * Output:		None  * Return value:	0	-- success  *			non-zero-- failure  */
 end_comment
 
@@ -792,7 +828,7 @@ name|status
 operator||=
 name|CAM_TID_INVALID
 expr_stmt|;
-name|xpt_done
+name|tw_osli_complete_ccb
 argument_list|(
 name|ccb
 argument_list|)
@@ -839,7 +875,7 @@ name|status
 operator||=
 name|CAM_LUN_INVALID
 expr_stmt|;
-name|xpt_done
+name|tw_osli_complete_ccb
 argument_list|(
 name|ccb
 argument_list|)
@@ -880,7 +916,7 @@ name|status
 operator|=
 name|CAM_REQ_CMP_ERR
 expr_stmt|;
-name|xpt_done
+name|tw_osli_complete_ccb
 argument_list|(
 name|ccb
 argument_list|)
@@ -1112,7 +1148,7 @@ name|status
 operator|=
 name|CAM_REQ_TOO_BIG
 expr_stmt|;
-name|xpt_done
+name|tw_osli_complete_ccb
 argument_list|(
 name|ccb
 argument_list|)
@@ -1175,7 +1211,7 @@ name|status
 operator|=
 name|CAM_REQ_CMP_ERR
 expr_stmt|;
-name|xpt_done
+name|tw_osli_complete_ccb
 argument_list|(
 name|ccb
 argument_list|)
@@ -1224,7 +1260,7 @@ operator|&=
 operator|~
 name|CAM_SIM_QUEUED
 expr_stmt|;
-name|xpt_done
+name|tw_osli_complete_ccb
 argument_list|(
 name|ccb
 argument_list|)
@@ -1380,7 +1416,7 @@ name|status
 operator||=
 name|CAM_REQUEUE_REQ
 expr_stmt|;
-name|xpt_done
+name|tw_osli_complete_ccb
 argument_list|(
 name|ccb
 argument_list|)
@@ -1437,7 +1473,7 @@ name|status
 operator|=
 name|CAM_UA_ABORT
 expr_stmt|;
-name|xpt_done
+name|tw_osli_complete_ccb
 argument_list|(
 name|ccb
 argument_list|)
@@ -1519,7 +1555,7 @@ name|status
 operator|=
 name|CAM_REQ_CMP
 expr_stmt|;
-name|xpt_done
+name|tw_osli_complete_ccb
 argument_list|(
 name|ccb
 argument_list|)
@@ -1544,7 +1580,7 @@ name|status
 operator|=
 name|CAM_FUNC_NOTAVAIL
 expr_stmt|;
-name|xpt_done
+name|tw_osli_complete_ccb
 argument_list|(
 name|ccb
 argument_list|)
@@ -1600,7 +1636,7 @@ name|status
 operator|=
 name|CAM_REQ_CMP
 expr_stmt|;
-name|xpt_done
+name|tw_osli_complete_ccb
 argument_list|(
 name|ccb
 argument_list|)
@@ -1630,7 +1666,7 @@ literal|1
 comment|/* extended */
 argument_list|)
 expr_stmt|;
-name|xpt_done
+name|tw_osli_complete_ccb
 argument_list|(
 name|ccb
 argument_list|)
@@ -1726,7 +1762,7 @@ name|path_inq
 operator|->
 name|initiator_id
 operator|=
-literal|12
+name|TW_CL_MAX_NUM_UNITS
 expr_stmt|;
 name|path_inq
 operator|->
@@ -1776,7 +1812,7 @@ name|status
 operator|=
 name|CAM_REQ_CMP
 expr_stmt|;
-name|xpt_done
+name|tw_osli_complete_ccb
 argument_list|(
 name|ccb
 argument_list|)
@@ -1803,7 +1839,7 @@ name|status
 operator|=
 name|CAM_REQ_INVALID
 expr_stmt|;
-name|xpt_done
+name|tw_osli_complete_ccb
 argument_list|(
 name|ccb
 argument_list|)
@@ -2055,6 +2091,21 @@ argument_list|,
 literal|"entering"
 argument_list|)
 expr_stmt|;
+comment|/* If we get here before sc->sim is initialized, return an error. */
+if|if
+condition|(
+operator|!
+operator|(
+name|sc
+operator|->
+name|sim
+operator|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 if|if
 condition|(
 operator|(
@@ -2315,6 +2366,12 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|xpt_freeze_simq
 argument_list|(
 name|sc
@@ -2324,11 +2381,46 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|state
 operator||=
 name|TW_OSLI_CTLR_STATE_SIMQ_FROZEN
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Function name:	tw_osl_ctlr_busy  * Description:		CL calls this function on cmd queue full or otherwise,  *			when it is too busy to accept new requests.  *  * Input:		ctlr_handle	-- ptr to controller handle  *			req_handle	-- ptr to request handle sent by OSL.  * Output:		None  * Return value:	None  */
+end_comment
+
+begin_function
+name|TW_VOID
+name|tw_osl_ctlr_busy
+parameter_list|(
+name|struct
+name|tw_cl_ctlr_handle
+modifier|*
+name|ctlr_handle
+parameter_list|,
+name|struct
+name|tw_cl_req_handle
+modifier|*
+name|req_handle
+parameter_list|)
+block|{
+name|tw_osli_disallow_new_requests
+argument_list|(
+name|ctlr_handle
+operator|->
+name|osl_ctlr_ctxt
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -2547,14 +2639,7 @@ operator|==
 name|EBUSY
 condition|)
 block|{
-comment|/* 			 * Cmd queue is full, or common layer is out 			 * of resources.  Freeze the simq to maintain 			 * ccb ordering.  The next ccb that gets 			 * completed will unfreeze the simq. 			 */
-name|tw_osli_disallow_new_requests
-argument_list|(
-name|req
-operator|->
-name|ctlr
-argument_list|)
-expr_stmt|;
+comment|/* 			 * Cmd queue is full, or the Common Layer is out of 			 * resources.  The simq will already have been frozen 			 * by CL's call to tw_osl_ctlr_busy, and this will 			 * maintain ccb ordering.  The next ccb that gets 			 * completed will unfreeze the simq. 			 */
 name|ccb
 operator|->
 name|ccb_h
@@ -2777,21 +2862,9 @@ operator|&=
 operator|~
 name|CAM_SIM_QUEUED
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-name|xpt_done
+name|tw_osli_complete_ccb
 argument_list|(
 name|ccb
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 if|if

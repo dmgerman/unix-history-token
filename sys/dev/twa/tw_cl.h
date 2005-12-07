@@ -145,6 +145,28 @@ value|(1<<4)
 end_define
 
 begin_comment
+comment|/* G133 controller is in 'phase 1' of being reset. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TW_CLI_CTLR_STATE_RESET_PHASE1_IN_PROGRESS
+value|(1<<5)
+end_define
+
+begin_comment
+comment|/* G66 register write access bug needs to be worked around. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TW_CLI_CTLR_STATE_G66_WORKAROUND_NEEDED
+value|(1<<6)
+end_define
+
+begin_comment
 comment|/* Possible values of ctlr->ioctl_lock.lock. */
 end_comment
 
@@ -567,6 +589,14 @@ name|cmd_pkt_phys
 decl_stmt|;
 comment|/* phys addr of cmd_pkt_buf */
 name|TW_UINT32
+name|device_id
+decl_stmt|;
+comment|/* controller device id */
+name|TW_UINT32
+name|arch_id
+decl_stmt|;
+comment|/* controller architecture id */
+name|TW_UINT32
 name|state
 decl_stmt|;
 comment|/* controller state */
@@ -574,6 +604,10 @@ name|TW_UINT32
 name|flags
 decl_stmt|;
 comment|/* controller settings */
+name|TW_UINT32
+name|sg_size_factor
+decl_stmt|;
+comment|/* SG element size should be a 							multiple of this */
 comment|/* Request queues and arrays. */
 name|struct
 name|tw_cl_link
@@ -653,6 +687,18 @@ name|TW_UINT16
 name|working_build
 decl_stmt|;
 comment|/* build # of the firmware 					that the driver is compatible with */
+name|TW_UINT16
+name|fw_on_ctlr_srl
+decl_stmt|;
+comment|/* srl of running firmware */
+name|TW_UINT16
+name|fw_on_ctlr_branch
+decl_stmt|;
+comment|/* branch # of running 							firmware */
+name|TW_UINT16
+name|fw_on_ctlr_build
+decl_stmt|;
+comment|/* build # of running 							firmware */
 name|TW_UINT32
 name|operating_mode
 decl_stmt|;
@@ -1095,6 +1141,72 @@ operator|)
 operator|)
 condition|)
 block|{
+name|TW_SYNC_HANDLE
+name|sync_handle
+decl_stmt|;
+name|tw_osl_get_lock
+argument_list|(
+name|ctlr
+operator|->
+name|ctlr_handle
+argument_list|,
+name|ctlr
+operator|->
+name|gen_lock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|req
+operator|->
+name|state
+operator|==
+name|TW_CLI_REQ_STATE_COMPLETE
+condition|)
+block|{
+if|if
+condition|(
+name|ctlr
+operator|->
+name|flags
+operator|&
+name|TW_CL_DEFERRED_INTR_USED
+condition|)
+name|tw_osl_sync_io_block
+argument_list|(
+name|ctlr
+operator|->
+name|ctlr_handle
+argument_list|,
+operator|&
+name|sync_handle
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|ctlr
+operator|->
+name|flags
+operator|&
+name|TW_CL_DEFERRED_INTR_USED
+operator|)
+condition|)
+name|tw_osl_sync_isr_block
+argument_list|(
+name|ctlr
+operator|->
+name|ctlr_handle
+argument_list|,
+operator|&
+name|sync_handle
+argument_list|)
+expr_stmt|;
+block|}
 name|ctlr
 operator|->
 name|free_req_ids
@@ -1143,6 +1255,69 @@ name|ctlr
 operator|->
 name|num_free_req_ids
 operator|++
+expr_stmt|;
+if|if
+condition|(
+name|req
+operator|->
+name|state
+operator|==
+name|TW_CLI_REQ_STATE_COMPLETE
+condition|)
+block|{
+if|if
+condition|(
+name|ctlr
+operator|->
+name|flags
+operator|&
+name|TW_CL_DEFERRED_INTR_USED
+condition|)
+name|tw_osl_sync_io_unblock
+argument_list|(
+name|ctlr
+operator|->
+name|ctlr_handle
+argument_list|,
+operator|&
+name|sync_handle
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|ctlr
+operator|->
+name|flags
+operator|&
+name|TW_CL_DEFERRED_INTR_USED
+operator|)
+condition|)
+name|tw_osl_sync_isr_unblock
+argument_list|(
+name|ctlr
+operator|->
+name|ctlr_handle
+argument_list|,
+operator|&
+name|sync_handle
+argument_list|)
+expr_stmt|;
+block|}
+name|tw_osl_free_lock
+argument_list|(
+name|ctlr
+operator|->
+name|ctlr_handle
+argument_list|,
+name|ctlr
+operator|->
+name|gen_lock
+argument_list|)
 expr_stmt|;
 return|return;
 block|}

@@ -146,25 +146,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"tw_osl_share.h"
+file|<dev/twa/tw_osl_share.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tw_cl_share.h"
+file|<dev/twa/tw_cl_share.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tw_osl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tw_osl_externs.h"
+file|<dev/twa/tw_osl_externs.h>
 end_include
 
 begin_endif
