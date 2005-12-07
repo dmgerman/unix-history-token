@@ -15,6 +15,12 @@ directive|define
 name|_SUBR_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
 begin_function_decl
 name|unsigned
 name|g_lcm
@@ -142,9 +148,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-modifier|*
-name|gctl_get_param
+name|int
+name|gctl_get_int
 parameter_list|(
 name|struct
 name|gctl_req
@@ -154,20 +159,16 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|param
+name|pfmt
 parameter_list|,
-name|int
-modifier|*
-name|len
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|char
-specifier|const
-modifier|*
-name|gctl_get_asciiparam
+name|intmax_t
+name|gctl_get_intmax
 parameter_list|(
 name|struct
 name|gctl_req
@@ -177,15 +178,18 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|param
+name|pfmt
+parameter_list|,
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+specifier|const
+name|char
 modifier|*
-name|gctl_get_paraml
+name|gctl_get_ascii
 parameter_list|(
 name|struct
 name|gctl_req
@@ -195,10 +199,9 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|param
+name|pfmt
 parameter_list|,
-name|int
-name|len
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
