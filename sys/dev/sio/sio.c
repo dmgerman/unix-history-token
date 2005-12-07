@@ -1700,9 +1700,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* TUNABLE_INT("machdep.conspeed",&comdefaultrate); */
-end_comment
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"machdep.conspeed"
+argument_list|,
+name|__DEVOLATILE
+argument_list|(
+name|int
+operator|*
+argument_list|,
+operator|&
+name|comdefaultrate
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
