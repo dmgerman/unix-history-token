@@ -279,7 +279,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AT_BRK
+name|T_BRK
 value|10
 end_define
 
