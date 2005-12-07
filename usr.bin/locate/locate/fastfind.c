@@ -442,6 +442,13 @@ begin_comment
 comment|/* _LOCATE_STATISTIC_ */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|char
+name|separator
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 ifdef|#
@@ -1369,9 +1376,13 @@ condition|)
 operator|(
 name|void
 operator|)
-name|puts
+name|printf
 argument_list|(
+literal|"%s%c"
+argument_list|,
 name|path
+argument_list|,
+name|separator
 argument_list|)
 expr_stmt|;
 else|else
@@ -1391,9 +1402,13 @@ else|else
 operator|(
 name|void
 operator|)
-name|puts
+name|printf
 argument_list|(
+literal|"%s%c"
+argument_list|,
 name|path
+argument_list|,
+name|separator
 argument_list|)
 expr_stmt|;
 block|}

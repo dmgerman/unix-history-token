@@ -271,6 +271,18 @@ begin_comment
 comment|/* counter for matches [-c] */
 end_comment
 
+begin_decl_stmt
+name|char
+name|separator
+init|=
+literal|'\n'
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* line separator */
+end_comment
+
 begin_function_decl
 name|void
 name|usage
@@ -546,7 +558,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Scd:il:ms"
+literal|"0Scd:il:ms"
 argument_list|)
 operator|)
 operator|!=
@@ -558,6 +570,15 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'0'
+case|:
+comment|/* 'find -print0' style */
+name|separator
+operator|=
+literal|'\0'
+expr_stmt|;
+break|break;
 case|case
 literal|'S'
 case|:
