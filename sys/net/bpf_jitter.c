@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/bpf.h>
 end_include
 
@@ -86,6 +92,53 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_net
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|bpf_jitter
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"BPF JIT compiler"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|bpf_jitter_enable
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_bpf_jitter
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|enable
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|bpf_jitter_enable
+argument_list|,
+literal|0
+argument_list|,
+literal|"enable BPF JIT compiler"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|bpf_jit_filter

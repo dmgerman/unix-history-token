@@ -23,6 +23,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|bpf_jitter_enable
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Prototype of a filtering function created by the jitter.  *  * The syntax and the meaning of the parameters is analogous to the one of  * bpf_filter(). Notice that the filter is not among the parameters because  * it is hardwired in the function.  */
 end_comment
