@@ -92,7 +92,7 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_int
+name|int
 name|g_zero_clear
 init|=
 literal|1
@@ -100,7 +100,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_kern_geom_zero
 argument_list|,
@@ -115,7 +115,37 @@ name|g_zero_clear
 argument_list|,
 literal|0
 argument_list|,
-literal|"Zero-fill bio_data."
+literal|"Clear read data buffer"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|g_zero_byte
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_geom_zero
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|byte
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|g_zero_byte
+argument_list|,
+literal|0
+argument_list|,
+literal|"Byte (octet) value to clear the buffers with"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -150,11 +180,13 @@ if|if
 condition|(
 name|g_zero_clear
 condition|)
-name|bzero
+name|memset
 argument_list|(
 name|bp
 operator|->
 name|bio_data
+argument_list|,
+name|g_zero_byte
 argument_list|,
 name|bp
 operator|->
