@@ -595,9 +595,9 @@ modifier|*
 name|isrc
 parameter_list|,
 name|struct
-name|intrframe
+name|trapframe
 modifier|*
-name|iframe
+name|frame
 parameter_list|)
 block|{
 name|struct
@@ -744,7 +744,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Execute fast interrupt handlers directly. 	 * To support clock handlers, if a handler registers 	 * with a NULL argument, then we pass it a pointer to 	 * an intrframe as its argument. 	 */
+comment|/* 	 * Execute fast interrupt handlers directly. 	 * To support clock handlers, if a handler registers 	 * with a NULL argument, then we pass it a pointer to 	 * a trapframe as its argument. 	 */
 name|td
 operator|->
 name|td_intr_nesting_level
@@ -802,7 +802,7 @@ name|ih_argument
 operator|==
 name|NULL
 condition|?
-name|iframe
+name|frame
 else|:
 name|ih
 operator|->
@@ -825,7 +825,7 @@ name|ih
 operator|->
 name|ih_handler
 argument_list|(
-name|iframe
+name|frame
 argument_list|)
 expr_stmt|;
 else|else

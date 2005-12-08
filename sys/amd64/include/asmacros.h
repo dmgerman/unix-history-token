@@ -143,39 +143,6 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|LOCORE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|PCPU
-parameter_list|(
-name|member
-parameter_list|)
-value|%gs:PC_ ## member
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCPU_ADDR
-parameter_list|(
-name|member
-parameter_list|,
-name|reg
-parameter_list|)
-value|movq %gs:PC_PRVSPACE,reg; \ 			addq $PC_ ## member,reg
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|GPROF
 end_ifdef
 
@@ -383,6 +350,67 @@ parameter_list|(
 name|name
 parameter_list|)
 value|ALIGN_TEXT; .globl __CONCAT(X,name); \ 			.type __CONCAT(X,name),@function; __CONCAT(X,name):
+end_define
+
+begin_comment
+comment|/*  * Macros to create and destroy a trap frame.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PUSH_FRAME
+define|\
+value|subq	$TF_RIP,%rsp ;
+comment|/* skip dummy tf_err and tf_trapno */
+value|\ 	testb	$SEL_RPL_MASK,TF_CS(%rsp) ;
+comment|/* come from kernel? */
+value|\ 	jz	1f ;
+comment|/* Yes, dont swapgs again */
+value|\ 	swapgs ;							\ 1:	movq	%rdi,TF_RDI(%rsp) ;					\ 	movq	%rsi,TF_RSI(%rsp) ;					\ 	movq	%rdx,TF_RDX(%rsp) ;					\ 	movq	%rcx,TF_RCX(%rsp) ;					\ 	movq	%r8,TF_R8(%rsp) ;					\ 	movq	%r9,TF_R9(%rsp) ;					\ 	movq	%rax,TF_RAX(%rsp) ;					\ 	movq	%rbx,TF_RBX(%rsp) ;					\ 	movq	%rbp,TF_RBP(%rsp) ;					\ 	movq	%r10,TF_R10(%rsp) ;					\ 	movq	%r11,TF_R11(%rsp) ;					\ 	movq	%r12,TF_R12(%rsp) ;					\ 	movq	%r13,TF_R13(%rsp) ;					\ 	movq	%r14,TF_R14(%rsp) ;					\ 	movq	%r15,TF_R15(%rsp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|POP_FRAME
+define|\
+value|movq	TF_RDI(%rsp),%rdi ;					\ 	movq	TF_RSI(%rsp),%rsi ;					\ 	movq	TF_RDX(%rsp),%rdx ;					\ 	movq	TF_RCX(%rsp),%rcx ;					\ 	movq	TF_R8(%rsp),%r8 ;					\ 	movq	TF_R9(%rsp),%r9 ;					\ 	movq	TF_RAX(%rsp),%rax ;					\ 	movq	TF_RBX(%rsp),%rbx ;					\ 	movq	TF_RBP(%rsp),%rbp ;					\ 	movq	TF_R10(%rsp),%r10 ;					\ 	movq	TF_R11(%rsp),%r11 ;					\ 	movq	TF_R12(%rsp),%r12 ;					\ 	movq	TF_R13(%rsp),%r13 ;					\ 	movq	TF_R14(%rsp),%r14 ;					\ 	movq	TF_R15(%rsp),%r15 ;					\ 	testb	$SEL_RPL_MASK,TF_CS(%rsp) ;
+comment|/* come from kernel? */
+value|\ 	jz	1f ;
+comment|/* keep kernel GS.base */
+value|\ 	cli ;								\ 	swapgs ;							\ 1:	addq	$TF_RIP,%rsp
+end_define
+
+begin_comment
+comment|/* skip over tf_err, tf_trapno */
+end_comment
+
+begin_comment
+comment|/*  * Access per-CPU data.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCPU
+parameter_list|(
+name|member
+parameter_list|)
+value|%gs:PC_ ## member
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCPU_ADDR
+parameter_list|(
+name|member
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|movq %gs:PC_PRVSPACE, reg ;				\ 	addq $PC_ ## member, reg
 end_define
 
 begin_endif

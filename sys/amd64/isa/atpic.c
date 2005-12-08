@@ -84,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/cpufunc.h>
 end_include
 
@@ -2133,13 +2127,12 @@ begin_function
 name|void
 name|atpic_handle_intr
 parameter_list|(
-name|void
-modifier|*
-name|cookie
+name|u_int
+name|vector
 parameter_list|,
 name|struct
-name|intrframe
-name|iframe
+name|trapframe
+name|frame
 parameter_list|)
 block|{
 name|struct
@@ -2147,24 +2140,16 @@ name|intsrc
 modifier|*
 name|isrc
 decl_stmt|;
-name|int
-name|vec
-init|=
-operator|(
-name|uintptr_t
-operator|)
-name|cookie
-decl_stmt|;
 name|KASSERT
 argument_list|(
-name|vec
+name|vector
 operator|<
 name|NUM_ISA_IRQS
 argument_list|,
 operator|(
-literal|"unknown int %d\n"
+literal|"unknown int %u\n"
 operator|,
-name|vec
+name|vector
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2173,7 +2158,7 @@ operator|=
 operator|&
 name|atintrs
 index|[
-name|vec
+name|vector
 index|]
 operator|.
 name|at_intsrc
@@ -2188,11 +2173,11 @@ operator|==
 name|NULL
 operator|&&
 operator|(
-name|vec
+name|vector
 operator|==
 literal|7
 operator|||
-name|vec
+name|vector
 operator|==
 literal|15
 operator|)
@@ -2278,7 +2263,7 @@ argument_list|(
 name|isrc
 argument_list|,
 operator|&
-name|iframe
+name|frame
 argument_list|)
 expr_stmt|;
 block|}

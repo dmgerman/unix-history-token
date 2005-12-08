@@ -84,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm.h>
 end_include
 
@@ -2618,12 +2612,11 @@ begin_function
 name|void
 name|lapic_handle_intr
 parameter_list|(
-name|void
-modifier|*
-name|cookie
+name|int
+name|vector
 parameter_list|,
 name|struct
-name|intrframe
+name|trapframe
 name|frame
 parameter_list|)
 block|{
@@ -2632,17 +2625,9 @@ name|intsrc
 modifier|*
 name|isrc
 decl_stmt|;
-name|int
-name|vec
-init|=
-operator|(
-name|uintptr_t
-operator|)
-name|cookie
-decl_stmt|;
 if|if
 condition|(
-name|vec
+name|vector
 operator|==
 operator|-
 literal|1
@@ -2658,7 +2643,7 @@ name|intr_lookup_source
 argument_list|(
 name|apic_idt_to_irq
 argument_list|(
-name|vec
+name|vector
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2687,6 +2672,11 @@ name|lapic
 modifier|*
 name|la
 decl_stmt|;
+comment|/* Send EOI first thing. */
+name|lapic_eoi
+argument_list|()
+expr_stmt|;
+comment|/* Look up our local APIC structure for the tick counters. */
 name|la
 operator|=
 operator|&

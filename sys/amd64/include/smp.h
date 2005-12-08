@@ -185,6 +185,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|cpustop_handler
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|init_secondary
 parameter_list|(
 name|void
