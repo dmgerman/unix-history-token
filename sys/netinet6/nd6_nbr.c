@@ -3987,9 +3987,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* reply to DAD */
-name|ip6
-operator|->
-name|ip6_dst
+name|daddr6
 operator|.
 name|s6_addr16
 index|[
@@ -3998,9 +3996,7 @@ index|]
 operator|=
 name|IPV6_ADDR_INT16_MLL
 expr_stmt|;
-name|ip6
-operator|->
-name|ip6_dst
+name|daddr6
 operator|.
 name|s6_addr16
 index|[
@@ -4009,9 +4005,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|ip6
-operator|->
-name|ip6_dst
+name|daddr6
 operator|.
 name|s6_addr32
 index|[
@@ -4020,9 +4014,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|ip6
-operator|->
-name|ip6_dst
+name|daddr6
 operator|.
 name|s6_addr32
 index|[
@@ -4031,9 +4023,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|ip6
-operator|->
-name|ip6_dst
+name|daddr6
 operator|.
 name|s6_addr32
 index|[
