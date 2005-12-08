@@ -1730,6 +1730,17 @@ end_if
 begin_define
 define|#
 directive|define
+name|SI_NOINFO
+value|0
+end_define
+
+begin_comment
+comment|/* No signal info besides si_signo. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SI_USER
 value|0x10001
 end_define
@@ -1792,17 +1803,6 @@ end_comment
 
 begin_comment
 comment|/* message on an empty message queue. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SI_KERNEL
-value|0x10006
-end_define
-
-begin_comment
-comment|/* Normal signal is sent by kernel. */
 end_comment
 
 begin_endif
