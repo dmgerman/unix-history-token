@@ -1132,7 +1132,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|FREEBSD32_SYS_futimes
+name|FREEBSD32_SYS_freebsd32_futimes
 value|206
 end_define
 

@@ -3497,19 +3497,19 @@ name|SYF_MPSAFE
 operator||
 name|AS
 argument_list|(
-name|futimes_args
+name|freebsd32_futimes_args
 argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|futimes
+name|freebsd32_futimes
 block|,
 name|AUE_NULL
 block|}
 block|,
-comment|/* 206 = futimes */
+comment|/* 206 = freebsd32_futimes */
 block|{
 name|SYF_MPSAFE
 operator||

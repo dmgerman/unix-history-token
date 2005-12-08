@@ -629,9 +629,9 @@ comment|/* 204 = munlock */
 literal|"undelete"
 block|,
 comment|/* 205 = undelete */
-literal|"futimes"
+literal|"freebsd32_futimes"
 block|,
-comment|/* 206 = futimes */
+comment|/* 206 = freebsd32_futimes */
 literal|"getpgid"
 block|,
 comment|/* 207 = getpgid */
