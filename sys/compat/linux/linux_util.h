@@ -297,7 +297,7 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|int									\ linux_ ## s(struct thread *td, struct linux_ ## s ## _args *args)	\ {									\ 	return (unimplemented_syscall(td, #s));				\ }									\ struct __hack
+value|int									\ linux_ ## s(struct thread *td, struct linux_ ## s ## _args *args)	\ {									\ 	static pid_t pid;						\ 									\ 	if (pid != td->td_proc->p_pid) {				\ 		linux_msg(td, "syscall %s not implemented", #s);	\ 		pid = td->td_proc->p_pid;				\ 	};								\ 	return (ENOSYS);						\ }									\ struct __hack
 end_define
 
 begin_function_decl
@@ -328,40 +328,6 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
-
-begin_function
-specifier|static
-name|__inline
-name|int
-name|unimplemented_syscall
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|syscallname
-parameter_list|)
-block|{
-name|linux_msg
-argument_list|(
-name|td
-argument_list|,
-literal|"syscall %s not implemented"
-argument_list|,
-name|syscallname
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENOSYS
-operator|)
-return|;
-block|}
-end_function
 
 begin_endif
 endif|#
