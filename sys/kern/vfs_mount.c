@@ -500,6 +500,8 @@ name|global_opts
 index|[]
 init|=
 block|{
+literal|"errmsg"
+block|,
 literal|"fstype"
 block|,
 literal|"fspath"
