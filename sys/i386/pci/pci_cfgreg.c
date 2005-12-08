@@ -604,7 +604,7 @@ name|pci_pir_open
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Grope around in the PCI config space to see if this is a 	 * chipset that is capable of doing memory-mapped config cycles. 	 * This also implies that it can do PCIe extended config cycles. 	 */
-comment|/* Check for the Intel 7520 and 925 chipsets */
+comment|/* Check for supported chipsets */
 name|vid
 operator|=
 name|pci_cfgregread
@@ -637,19 +637,23 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|vid
 operator|==
 literal|0x8086
-operator|)
-operator|&&
-operator|(
+condition|)
+block|{
+if|if
+condition|(
 name|did
 operator|==
 literal|0x3590
-operator|)
+operator|||
+name|did
+operator|==
+literal|0x3592
 condition|)
 block|{
+comment|/* Intel 7520 or 7320 */
 name|pciebar
 operator|=
 name|pci_cfgregread
@@ -674,19 +678,16 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
-name|vid
-operator|==
-literal|0x8086
-operator|)
-operator|&&
-operator|(
 name|did
 operator|==
 literal|0x2580
-operator|)
+operator|||
+name|did
+operator|==
+literal|0x2584
 condition|)
 block|{
+comment|/* Intel 915 or 925 */
 name|pciebar
 operator|=
 name|pci_cfgregread
@@ -705,6 +706,7 @@ expr_stmt|;
 name|pciereg_cfgopen
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
