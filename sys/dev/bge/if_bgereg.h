@@ -10230,6 +10230,68 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|bge_extrx_bd
+block|{
+name|bge_hostaddr
+name|bge_addr1
+decl_stmt|;
+name|bge_hostaddr
+name|bge_addr2
+decl_stmt|;
+name|bge_hostaddr
+name|bge_addr3
+decl_stmt|;
+name|u_int16_t
+name|bge_len2
+decl_stmt|;
+name|u_int16_t
+name|bge_len1
+decl_stmt|;
+name|u_int16_t
+name|bge_rsvd1
+decl_stmt|;
+name|u_int16_t
+name|bge_len3
+decl_stmt|;
+name|bge_hostaddr
+name|bge_addr0
+decl_stmt|;
+name|u_int16_t
+name|bge_len0
+decl_stmt|;
+name|u_int16_t
+name|bge_idx
+decl_stmt|;
+name|u_int16_t
+name|bge_flags
+decl_stmt|;
+name|u_int16_t
+name|bge_type
+decl_stmt|;
+name|u_int16_t
+name|bge_tcp_udp_csum
+decl_stmt|;
+name|u_int16_t
+name|bge_ip_csum
+decl_stmt|;
+name|u_int16_t
+name|bge_vlan_tag
+decl_stmt|;
+name|u_int16_t
+name|bge_error_flag
+decl_stmt|;
+name|u_int32_t
+name|bge_rsvd0
+decl_stmt|;
+name|u_int32_t
+name|bge_opaque
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -11488,13 +11550,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|BGE_PAGE_SIZE
-value|PAGE_SIZE
-end_define
-
-begin_define
-define|#
-directive|define
 name|BGE_MIN_FRAMELEN
 value|60
 end_define
@@ -11764,6 +11819,20 @@ name|BGE_JMEM
 value|((BGE_JLEN * BGE_JSLOTS) + BGE_RESID)
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_NSEG_JUMBO
+value|(MJUM9BYTES/PAGE_SIZE + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_NSEG_NEW
+value|32
+end_define
+
 begin_comment
 comment|/*  * Ring structures. Most of these reside in host memory and we tell  * the NIC where they are via the ring control blocks. The exceptions  * are the tx and command rings, which live in NIC memory and which  * we access via the shared memory window.  */
 end_comment
@@ -11781,7 +11850,7 @@ name|bus_addr_t
 name|bge_rx_std_ring_paddr
 decl_stmt|;
 name|struct
-name|bge_rx_bd
+name|bge_extrx_bd
 modifier|*
 name|bge_rx_jumbo_ring
 decl_stmt|;
@@ -11820,10 +11889,6 @@ decl_stmt|;
 name|bus_addr_t
 name|bge_stats_paddr
 decl_stmt|;
-name|void
-modifier|*
-name|bge_jumbo_buf
-decl_stmt|;
 name|struct
 name|bge_gib
 name|bge_info
@@ -11845,7 +11910,7 @@ define|#
 directive|define
 name|BGE_JUMBO_RX_RING_SZ
 define|\
-value|(sizeof(struct bge_rx_bd) * BGE_JUMBO_RX_RING_CNT)
+value|(sizeof(struct bge_extrx_bd) * BGE_JUMBO_RX_RING_CNT)
 end_define
 
 begin_define
@@ -11911,9 +11976,6 @@ name|bus_dma_tag_t
 name|bge_stats_tag
 decl_stmt|;
 name|bus_dma_tag_t
-name|bge_jumbo_tag
-decl_stmt|;
-name|bus_dma_tag_t
 name|bge_mtag
 decl_stmt|;
 comment|/* mbuf mapping tag */
@@ -11957,9 +12019,6 @@ decl_stmt|;
 name|bus_dmamap_t
 name|bge_stats_map
 decl_stmt|;
-name|bus_dmamap_t
-name|bge_jumbo_map
-decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -11982,13 +12041,6 @@ modifier|*
 name|bge_rx_jumbo_chain
 index|[
 name|BGE_JUMBO_RX_RING_CNT
-index|]
-decl_stmt|;
-comment|/* Stick the jumbo mem management stuff here too. */
-name|caddr_t
-name|bge_jslots
-index|[
-name|BGE_JSLOTS
 index|]
 decl_stmt|;
 block|}
@@ -12074,23 +12126,6 @@ end_define
 begin_comment
 comment|/* impossible value */
 end_comment
-
-begin_struct
-struct|struct
-name|bge_jpool_entry
-block|{
-name|int
-name|slot
-decl_stmt|;
-name|SLIST_ENTRY
-argument_list|(
-argument|bge_jpool_entry
-argument_list|)
-name|jpool_entries
-expr_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_struct
 struct|struct
@@ -12213,22 +12248,6 @@ name|u_int16_t
 name|bge_jumbo
 decl_stmt|;
 comment|/* current jumo ring head */
-name|SLIST_HEAD
-argument_list|(
-argument|__bge_jfreehead
-argument_list|,
-argument|bge_jpool_entry
-argument_list|)
-name|bge_jfree_listhead
-expr_stmt|;
-name|SLIST_HEAD
-argument_list|(
-argument|__bge_jinusehead
-argument_list|,
-argument|bge_jpool_entry
-argument_list|)
-name|bge_jinuse_listhead
-expr_stmt|;
 name|u_int32_t
 name|bge_stat_ticks
 decl_stmt|;
