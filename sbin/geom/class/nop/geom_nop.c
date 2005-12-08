@@ -215,6 +215,18 @@ block|,
 literal|"[-fv] prov ..."
 block|}
 block|,
+block|{
+literal|"reset"
+block|,
+name|G_FLAG_VERBOSE
+block|,
+name|NULL
+block|,
+name|G_NULL_OPTS
+block|,
+literal|"[-v] prov ..."
+block|}
+block|,
 name|G_CMD_SENTINEL
 block|}
 decl_stmt|;
