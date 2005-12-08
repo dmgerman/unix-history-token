@@ -548,12 +548,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MJUM4BYTES
+value|(4 * 1024)
+end_define
+
+begin_comment
+comment|/* jumbo cluster 4k */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MJUM9BYTES
 value|(9 * 1024)
 end_define
 
 begin_comment
-comment|/* jumbo frame 9k */
+comment|/* jumbo cluster 9k */
 end_comment
 
 begin_define
@@ -564,7 +575,7 @@ value|(16 * 1024)
 end_define
 
 begin_comment
-comment|/* jumbo frame 16k */
+comment|/* jumbo cluster 16k */
 end_comment
 
 begin_comment
