@@ -279,6 +279,12 @@ directive|include
 file|<sys/reboot.h>
 end_include
 
+begin_undef
+undef|#
+directive|undef
+name|DDB
+end_undef
+
 begin_include
 include|#
 directive|include
@@ -1216,7 +1222,7 @@ operator|.
 name|pv_pa
 operator|=
 name|freemempos
-operator|-
+operator|+
 operator|(
 name|loop
 operator|%
@@ -1250,12 +1256,6 @@ name|i
 operator|++
 expr_stmt|;
 block|}
-name|freemempos
-operator|-=
-literal|2
-operator|*
-name|PAGE_SIZE
-expr_stmt|;
 name|freemem_pt
 operator|=
 name|freemempos
