@@ -624,6 +624,9 @@ name|tf_trapno
 expr_stmt|;
 ifdef|#
 directive|ifdef
+name|SMP
+ifdef|#
+directive|ifdef
 name|STOP_NMI
 comment|/* Handler for NMI IPIs used for stopping CPUs. */
 if|if
@@ -647,6 +650,9 @@ block|}
 endif|#
 directive|endif
 comment|/* STOP_NMI */
+endif|#
+directive|endif
+comment|/* SMP */
 ifdef|#
 directive|ifdef
 name|KDB
