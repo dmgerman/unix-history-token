@@ -783,7 +783,7 @@ name|device_printf
 argument_list|(
 name|pcib
 argument_list|,
-literal|"no PRT entry for %d.%d.INT%c"
+literal|"no PRT entry for %d.%d.INT%c\n"
 argument_list|,
 name|pci_get_bus
 argument_list|(
