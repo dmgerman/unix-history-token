@@ -6685,21 +6685,6 @@ operator|->
 name|timestamp
 condition|)
 block|{
-if|#
-directive|if
-name|_FreeBSD_version
-operator|<
-literal|500000
-comment|/* XXX check */
-define|#
-directive|define
-name|_long_to_time
-parameter_list|(
-name|x
-parameter_list|)
-value|(time_t)(x)
-endif|#
-directive|endif
 name|t
 operator|=
 name|_long_to_time
