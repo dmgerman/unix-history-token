@@ -7408,6 +7408,9 @@ init|=
 operator|(
 name|int
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|arg
 decl_stmt|;
 name|int
