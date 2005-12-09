@@ -868,6 +868,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|atomic_set_acq_long
+value|atomic_set_32
+end_define
+
+begin_define
+define|#
+directive|define
 name|atomic_set_int
 value|atomic_set_32
 end_define
@@ -883,6 +890,13 @@ begin_define
 define|#
 directive|define
 name|atomic_clear_int
+value|atomic_clear_32
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_clear_acq_long
 value|atomic_clear_32
 end_define
 
@@ -911,6 +925,13 @@ begin_define
 define|#
 directive|define
 name|atomic_add_int
+value|atomic_add_32
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_add_acq_long
 value|atomic_add_32
 end_define
 
@@ -960,6 +981,13 @@ begin_define
 define|#
 directive|define
 name|atomic_cmpset_acq_ptr
+value|atomic_cmpset_ptr
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_cmpset_acq_long
 value|atomic_cmpset_ptr
 end_define
 
