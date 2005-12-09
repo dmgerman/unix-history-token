@@ -189,12 +189,6 @@ directive|include
 file|<sys/sem.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/timers.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -772,13 +766,6 @@ expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
-argument_list|)
-expr_stmt|;
-name|itimers_event_hook
-argument_list|(
-name|p
-argument_list|,
-name|ITIMER_EV_EXIT
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Reset any sigio structures pointing to us as a result of 	 * F_SETOWN with our pid. 	 */
