@@ -3090,7 +3090,7 @@ name|indent
 argument_list|,
 name|sc
 operator|->
-name|sc_writebytes
+name|sc_wrotebytes
 argument_list|)
 expr_stmt|;
 block|}
