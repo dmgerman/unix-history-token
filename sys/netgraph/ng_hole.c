@@ -709,6 +709,16 @@ name|hook_p
 name|hook
 parameter_list|)
 block|{
+name|FREE
+argument_list|(
+name|NG_HOOK_PRIVATE
+argument_list|(
+name|hook
+argument_list|)
+argument_list|,
+name|M_NETGRAPH
+argument_list|)
+expr_stmt|;
 name|NG_HOOK_SET_PRIVATE
 argument_list|(
 name|hook
