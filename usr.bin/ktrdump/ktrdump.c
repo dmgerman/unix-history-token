@@ -1350,6 +1350,13 @@ name|out
 argument_list|,
 literal|"%16ju "
 argument_list|,
+operator|!
+name|iflag
+condition|?
+name|tlast
+operator|-
+name|tnow
+else|:
 name|tnow
 operator|-
 name|tlast
