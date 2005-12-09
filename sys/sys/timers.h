@@ -353,21 +353,6 @@ value|1
 end_define
 
 begin_function_decl
-name|void
-name|itimers_event_hook
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|,
-name|int
-name|event
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|itimer_accept
 parameter_list|(
