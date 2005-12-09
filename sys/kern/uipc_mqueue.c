@@ -865,17 +865,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|static
 name|struct
 name|mqfs_node
 modifier|*
-name|mqfs_create_file
+name|mqfs_create_link
 parameter_list|(
 name|struct
 name|mqfs_node
@@ -893,11 +888,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
+specifier|static
 name|struct
 name|mqfs_node
 modifier|*
-name|mqfs_create_link
+name|mqfs_create_file
 parameter_list|(
 name|struct
 name|mqfs_node
@@ -8804,6 +8805,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline
 name|void
 name|notifier_insert
 parameter_list|(
@@ -8835,6 +8837,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline
 name|void
 name|notifier_delete
 parameter_list|(
