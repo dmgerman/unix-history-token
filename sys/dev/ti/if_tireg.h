@@ -4100,6 +4100,12 @@ name|bus_dma_tag_t
 name|ti_parent_dmat
 decl_stmt|;
 name|bus_dma_tag_t
+name|ti_jumbo_dmat
+decl_stmt|;
+name|bus_dmamap_t
+name|ti_jumbo_dmamap
+decl_stmt|;
+name|bus_dma_tag_t
 name|ti_rdata_dmat
 decl_stmt|;
 name|bus_dmamap_t
