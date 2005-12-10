@@ -393,6 +393,8 @@ modifier|*
 name|plim
 decl_stmt|;
 name|int
+name|locked
+decl_stmt|,
 name|refcnt
 decl_stmt|;
 comment|/* 	 * Drop Giant if caller has it.  Eventually we should warn about 	 * being called with Giant held. 	 */
@@ -969,12 +971,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|sx_xlock
 argument_list|(
 operator|&
@@ -1007,6 +1003,17 @@ operator|->
 name|s_ttyvp
 condition|)
 block|{
+name|locked
+operator|=
+name|VFS_LOCK_GIANT
+argument_list|(
+name|sp
+operator|->
+name|s_ttyvp
+operator|->
+name|v_mount
+argument_list|)
+expr_stmt|;
 comment|/* 			 * Controlling process. 			 * Signal foreground pgrp, 			 * drain controlling terminal 			 * and revoke access to controlling terminal. 			 */
 if|if
 condition|(
@@ -1202,6 +1209,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 			 * s_ttyp is not zero'd; we use this to indicate 			 * that the session once had a controlling terminal. 			 * (for logging and informational purposes) 			 */
+name|VFS_UNLOCK_GIANT
+argument_list|(
+name|locked
+argument_list|)
+expr_stmt|;
 block|}
 name|SESS_LOCK
 argument_list|(
@@ -1247,12 +1259,6 @@ operator|)
 name|acct_process
 argument_list|(
 name|td
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1319,10 +1325,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|mtx_lock
+name|locked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|tracevp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -1330,10 +1339,9 @@ argument_list|(
 name|tracevp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|locked
 argument_list|)
 expr_stmt|;
 block|}
@@ -1370,10 +1378,13 @@ name|p_textvp
 operator|=
 name|NULL
 expr_stmt|;
-name|mtx_lock
+name|locked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vtmp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -1381,10 +1392,9 @@ argument_list|(
 name|vtmp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|locked
 argument_list|)
 expr_stmt|;
 block|}
