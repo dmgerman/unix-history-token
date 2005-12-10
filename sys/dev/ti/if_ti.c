@@ -335,19 +335,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pci/if_tireg.h>
+file|<dev/ti/if_tireg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<pci/ti_fw.h>
+file|<dev/ti/ti_fw.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<pci/ti_fw2.h>
+file|<dev/ti/ti_fw2.h>
 end_include
 
 begin_define
