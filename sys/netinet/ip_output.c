@@ -3437,7 +3437,7 @@ name|CSUM_DATA_VALID
 operator||
 name|CSUM_PSEUDO_HDR
 expr_stmt|;
-name|m0
+name|m
 operator|->
 name|m_pkthdr
 operator|.
