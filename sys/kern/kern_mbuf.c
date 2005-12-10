@@ -1566,6 +1566,11 @@ operator|=
 name|EXT_CLUSTER
 expr_stmt|;
 break|break;
+if|#
+directive|if
+name|MJUM4BYTES
+operator|!=
+name|MCLBYTES
 case|case
 name|MJUM4BYTES
 case|:
@@ -1574,6 +1579,8 @@ operator|=
 name|EXT_JUMBO4
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|MJUM9BYTES
 case|:
