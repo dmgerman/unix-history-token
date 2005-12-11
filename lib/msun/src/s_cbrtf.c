@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* s_cbrtf.c -- float version of s_cbrt.c.  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.  */
+comment|/* s_cbrtf.c -- float version of s_cbrt.c.  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.  * Debugged by Bruce D. Evans.  */
 end_comment
 
 begin_comment
@@ -112,6 +112,8 @@ decl_stmt|,
 name|s
 decl_stmt|,
 name|t
+decl_stmt|,
+name|w
 decl_stmt|;
 name|int32_t
 name|hx
@@ -258,6 +260,66 @@ name|D
 operator|/
 name|s
 operator|)
+expr_stmt|;
+comment|/* chop t to 12 bits and make it larger than cbrt(x) */
+name|GET_FLOAT_WORD
+argument_list|(
+name|high
+argument_list|,
+name|t
+argument_list|)
+expr_stmt|;
+name|SET_FLOAT_WORD
+argument_list|(
+name|t
+argument_list|,
+name|high
+operator|+
+literal|0x00001000
+argument_list|)
+expr_stmt|;
+comment|/* one step Newton iteration to 24 bits with error less than 0.984 ulps */
+name|s
+operator|=
+name|t
+operator|*
+name|t
+expr_stmt|;
+comment|/* t*t is exact */
+name|r
+operator|=
+name|x
+operator|/
+name|s
+expr_stmt|;
+name|w
+operator|=
+name|t
+operator|+
+name|t
+expr_stmt|;
+name|r
+operator|=
+operator|(
+name|r
+operator|-
+name|t
+operator|)
+operator|/
+operator|(
+name|w
+operator|+
+name|r
+operator|)
+expr_stmt|;
+comment|/* r-t is exact */
+name|t
+operator|=
+name|t
+operator|+
+name|t
+operator|*
+name|r
 expr_stmt|;
 comment|/* retore the sign bit */
 name|GET_FLOAT_WORD
