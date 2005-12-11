@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2002-2004 Sam Leffler, Errno Consulting  * All righ
 end_comment
 
 begin_comment
-comment|/*  * 80211debug [-i interface] flags  * (default interface is wlan.0).  */
+comment|/*  * wlandebug [-i interface] flags  * (default interface is wlan.0).  */
 end_comment
 
 begin_include
