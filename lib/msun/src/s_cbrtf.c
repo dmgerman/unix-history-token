@@ -273,12 +273,16 @@ name|SET_FLOAT_WORD
 argument_list|(
 name|t
 argument_list|,
+operator|(
 name|high
+operator|&
+literal|0xfffff000
+operator|)
 operator|+
 literal|0x00001000
 argument_list|)
 expr_stmt|;
-comment|/* one step Newton iteration to 24 bits with error less than 0.984 ulps */
+comment|/* one step Newton iteration to 24 bits with error less than 0.667 ulps */
 name|s
 operator|=
 name|t
