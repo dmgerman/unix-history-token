@@ -152,13 +152,11 @@ name|ast_tx_protect
 decl_stmt|;
 comment|/* tx frames with protection */
 name|u_int32_t
-name|ast_tx_ctsburst
+name|ast_unused1
 decl_stmt|;
-comment|/* tx frames with cts and bursting */
 name|u_int32_t
-name|ast_tx_ctsext
+name|ast_unused2
 decl_stmt|;
-comment|/* tx frames with cts extension */
 name|u_int32_t
 name|ast_rx_nombuf
 decl_stmt|;
