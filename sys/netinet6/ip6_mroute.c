@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/raw_cb.h>
 end_include
 
@@ -563,12 +569,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * 'Interfaces' associated with decapsulator (so we can tell  * packets that went through it from ones that get reflected  * by a broken gateway).  These interfaces are never linked into  * the system ifnet list& no routes point to them.  I.e., packets  * can't be sent this way.  They only exist as a placeholder for  * multicast source verification.  */
+comment|/*  * 'Interfaces' associated with decapsulator (so we can tell  * packets that went through it from ones that get reflected  * by a broken gateway).  Different from IPv4 register_if,  * these interfaces are linked into the system ifnet list,  * because per-interface IPv6 statistics are maintained in  * ifp->if_afdata.  But it does not have any routes point   * to them.  I.e., packets can't be sent this way.  They  * only exist as a placeholder for multicast source   * verification.  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ifnet
+modifier|*
 name|multicast_register_if6
 decl_stmt|;
 end_decl_stmt
@@ -2046,11 +2054,19 @@ name|mifi_t
 operator|)
 operator|-
 literal|1
+operator|&&
+name|multicast_register_if6
+operator|!=
+name|NULL
 condition|)
 block|{
 name|if_detach
 argument_list|(
-operator|&
+name|multicast_register_if6
+argument_list|)
+expr_stmt|;
+name|if_free
+argument_list|(
 name|multicast_register_if6
 argument_list|)
 expr_stmt|;
@@ -2061,6 +2077,10 @@ name|mifi_t
 operator|)
 operator|-
 literal|1
+expr_stmt|;
+name|multicast_register_if6
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 name|ip6_mrouter
@@ -2235,11 +2255,6 @@ operator|&
 name|MIFF_REGISTER
 condition|)
 block|{
-name|ifp
-operator|=
-operator|&
-name|multicast_register_if6
-expr_stmt|;
 if|if
 condition|(
 name|reg_mif_num
@@ -2251,6 +2266,13 @@ operator|-
 literal|1
 condition|)
 block|{
+name|ifp
+operator|=
+name|if_alloc
+argument_list|(
+name|IFT_OTHER
+argument_list|)
+expr_stmt|;
 name|if_initname
 argument_list|(
 name|ifp
@@ -2266,13 +2288,14 @@ name|if_flags
 operator||=
 name|IFF_LOOPBACK
 expr_stmt|;
+name|if_attach
+argument_list|(
 name|ifp
-operator|->
-name|if_index
+argument_list|)
+expr_stmt|;
+name|multicast_register_if6
 operator|=
-name|mifcp
-operator|->
-name|mif6c_mifi
+name|ifp
 expr_stmt|;
 name|reg_mif_num
 operator|=
@@ -2280,10 +2303,21 @@ name|mifcp
 operator|->
 name|mif6c_mifi
 expr_stmt|;
-name|if_attach
-argument_list|(
+comment|/*  			 * it is impossible to guess the ifindex of the  			 * register interface.  So mif6c_pifi is automatically 			 * calculated. 			 */
+name|mifcp
+operator|->
+name|mif6c_pifi
+operator|=
 name|ifp
-argument_list|)
+operator|->
+name|if_index
+expr_stmt|;
+block|}
+else|else
+block|{
+name|ifp
+operator|=
+name|multicast_register_if6
 expr_stmt|;
 block|}
 block|}
@@ -2558,11 +2592,19 @@ name|mifi_t
 operator|)
 operator|-
 literal|1
+operator|&&
+name|multicast_register_if6
+operator|!=
+name|NULL
 condition|)
 block|{
 name|if_detach
 argument_list|(
-operator|&
+name|multicast_register_if6
+argument_list|)
+expr_stmt|;
+name|if_free
+argument_list|(
 name|multicast_register_if6
 argument_list|)
 expr_stmt|;
@@ -2573,6 +2615,10 @@ name|mifi_t
 operator|)
 operator|-
 literal|1
+expr_stmt|;
+name|multicast_register_if6
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 block|}
