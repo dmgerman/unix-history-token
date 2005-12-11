@@ -2470,13 +2470,6 @@ name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
 comment|/* 				 * get rid of the unnecessary page 				 */
-name|pmap_remove_all
-argument_list|(
-name|fs
-operator|.
-name|first_m
-argument_list|)
-expr_stmt|;
 name|vm_page_free
 argument_list|(
 name|fs
