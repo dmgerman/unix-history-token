@@ -52,7 +52,7 @@ name|B1
 init|=
 literal|715094163
 decl_stmt|,
-comment|/* B1 = (682-0.03306235651)*2**20 */
+comment|/* B1 = (1023-1023/3-0.03306235651)*2**20 */
 name|B2
 init|=
 literal|696219795
@@ -60,7 +60,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* B2 = (664-0.03306235651)*2**20 */
+comment|/* B2 = (1023-1023/3-54/3-0.03306235651)*2**20 */
 end_comment
 
 begin_decl_stmt
@@ -191,7 +191,7 @@ name|hx
 argument_list|)
 expr_stmt|;
 comment|/* x<- |x| */
-comment|/* rough cbrt to 5 bits */
+comment|/*      * Rough cbrt to 5 bits:      *    cbrt(2**e*(1+m) ~= 2**(e/3)*(1+(e%3+m)/3)      * where e is integral and>= 0, m is real and in [0, 1), and "/" and      * "%" are integer division and modulus with rounding towards minus      * infinity.  The RHS is always>= the LHS and has a maximum relative      * error of about 1 in 16.  Adding a bias of -0.03306235651 to the      * (e%3+m)/3 term reduces the error to about 1 in 32. With the IEEE      * floating point representation, for finite positive normal values,      * ordinary integer divison of the value in bits magically gives      * almost exactly the RHS of the above provided we first subtract the      * exponent bias (1023 for doubles) and later add it back.  We do the      * subtraction virtually to keep e>= 0 so that ordinary integer      * division rounds towards minus infinity; this is also efficient.      */
 if|if
 condition|(
 name|hx
@@ -243,7 +243,7 @@ operator|+
 name|B1
 argument_list|)
 expr_stmt|;
-comment|/* new cbrt to 23 bits, may be implemented in single precision */
+comment|/* new cbrt to 23 bits; may be implemented in single precision */
 name|r
 operator|=
 name|t
@@ -276,7 +276,7 @@ operator|/
 name|s
 operator|)
 expr_stmt|;
-comment|/* chopped to 20 bits and make it larger than cbrt(x) */
+comment|/* chop t to 20 bits and make it larger than cbrt(x) */
 name|GET_HIGH_WORD
 argument_list|(
 name|high
@@ -295,7 +295,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* one step newton iteration to 53 bits with error less than 0.667 ulps */
+comment|/* one step Newton iteration to 53 bits with error less than 0.667 ulps */
 name|s
 operator|=
 name|t
@@ -329,7 +329,7 @@ operator|+
 name|r
 operator|)
 expr_stmt|;
-comment|/* r-s is exact */
+comment|/* r-t is exact */
 name|t
 operator|=
 name|t
@@ -338,7 +338,7 @@ name|t
 operator|*
 name|r
 expr_stmt|;
-comment|/* retore the sign bit */
+comment|/* restore the sign bit */
 name|GET_HIGH_WORD
 argument_list|(
 name|high

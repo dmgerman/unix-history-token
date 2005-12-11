@@ -52,7 +52,7 @@ name|B1
 init|=
 literal|709958130
 decl_stmt|,
-comment|/* B1 = (84+2/3-0.03306235651)*2**23 */
+comment|/* B1 = (127-127.0/3-0.03306235651)*2**23 */
 name|B2
 init|=
 literal|642849266
@@ -60,7 +60,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* B2 = (76+2/3-0.03306235651)*2**23 */
+comment|/* B2 = (127-127.0/3-24/3-0.03306235651)*2**23 */
 end_comment
 
 begin_decl_stmt
@@ -325,7 +325,7 @@ name|t
 operator|*
 name|r
 expr_stmt|;
-comment|/* retore the sign bit */
+comment|/* restore the sign bit */
 name|GET_FLOAT_WORD
 argument_list|(
 name|high
