@@ -477,20 +477,6 @@ argument_list|)
 expr_stmt|;
 name|STAT
 argument_list|(
-name|tx_ctsburst
-argument_list|,
-literal|"tx frames with 11g protection and bursting"
-argument_list|)
-expr_stmt|;
-name|STAT
-argument_list|(
-name|tx_ctsext
-argument_list|,
-literal|"tx frames with 11g cts protection extended for bursting"
-argument_list|)
-expr_stmt|;
-name|STAT
-argument_list|(
 name|rx_nombuf
 argument_list|,
 literal|"rx setup failed 'cuz no mbuf"
