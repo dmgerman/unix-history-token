@@ -91,9 +91,10 @@ value|0x2000
 comment|/* printer has broken bidir mode */
 define|#
 directive|define
-name|UQ_BROKEN_IPOD
+name|UQ_NO_OPEN_CLEARSTALL
 value|0x4000
-comment|/* iPod has something broken */
+comment|/* don't usbd_clear_endpoint_stall() */
+comment|/* in usbd_setup_pipe() */
 block|}
 struct|;
 end_struct

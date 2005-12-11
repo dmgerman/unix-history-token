@@ -4026,7 +4026,7 @@ name|quirks
 operator|->
 name|uq_flags
 operator|&
-name|UQ_BROKEN_IPOD
+name|UQ_NO_OPEN_CLEARSTALL
 operator|)
 condition|)
 block|{

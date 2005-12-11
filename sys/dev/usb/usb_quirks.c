@@ -286,7 +286,7 @@ block|,
 name|ANY
 block|,
 block|{
-name|UQ_BROKEN_IPOD
+name|UQ_NO_OPEN_CLEARSTALL
 block|}
 block|}
 block|,
@@ -298,7 +298,7 @@ block|,
 name|ANY
 block|,
 block|{
-name|UQ_BROKEN_IPOD
+name|UQ_NO_OPEN_CLEARSTALL
 block|}
 block|}
 block|,
