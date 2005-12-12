@@ -1141,14 +1141,10 @@ expr_stmt|;
 if|if
 condition|(
 name|irq_res
-operator|==
+operator|!=
 name|NULL
 condition|)
-name|panic
-argument_list|(
-literal|"npx: can't get IRQ"
-argument_list|)
-expr_stmt|;
+block|{
 if|if
 condition|(
 name|bus_setup_intr
@@ -1176,6 +1172,7 @@ argument_list|(
 literal|"npx: can't create intr"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Partially reset the coprocessor, if any.  Some BIOS's don't reset 	 * it after a warm boot. 	 */
 name|npx_full_reset
 argument_list|()
@@ -1435,6 +1432,13 @@ index|]
 operator|=
 name|save_idt_npxtrap
 expr_stmt|;
+if|if
+condition|(
+name|irq_res
+operator|!=
+name|NULL
+condition|)
+block|{
 name|bus_teardown_intr
 argument_list|(
 name|dev
@@ -1455,6 +1459,7 @@ argument_list|,
 name|irq_res
 argument_list|)
 expr_stmt|;
+block|}
 name|bus_release_resource
 argument_list|(
 name|dev
