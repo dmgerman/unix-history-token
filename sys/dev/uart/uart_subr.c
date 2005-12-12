@@ -782,12 +782,6 @@ return|;
 comment|/* Set defaults. */
 name|di
 operator|->
-name|ops
-operator|=
-name|uart_ns8250_ops
-expr_stmt|;
-name|di
-operator|->
 name|bas
 operator|.
 name|chan

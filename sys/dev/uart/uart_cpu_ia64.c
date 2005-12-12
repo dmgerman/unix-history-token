@@ -417,6 +417,12 @@ block|}
 comment|/* FALLTHROUGH */
 block|}
 comment|/* Check the environment. */
+name|di
+operator|->
+name|ops
+operator|=
+name|uart_ns8250_ops
+expr_stmt|;
 return|return
 operator|(
 name|uart_getenv

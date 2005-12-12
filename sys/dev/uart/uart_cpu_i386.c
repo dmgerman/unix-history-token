@@ -132,6 +132,12 @@ decl_stmt|,
 name|ivar
 decl_stmt|;
 comment|/* Check the environment. */
+name|di
+operator|->
+name|ops
+operator|=
+name|uart_ns8250_ops
+expr_stmt|;
 if|if
 condition|(
 name|uart_getenv
