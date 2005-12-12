@@ -881,7 +881,6 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
 name|void
 name|ieee80211_set_chan
 parameter_list|(
@@ -901,6 +900,19 @@ modifier|*
 name|chan
 parameter_list|)
 block|{
+if|if
+condition|(
+name|chan
+operator|==
+name|IEEE80211_CHAN_ANYC
+condition|)
+comment|/* XXX while scanning */
+name|chan
+operator|=
+name|ic
+operator|->
+name|ic_curchan
+expr_stmt|;
 name|ni
 operator|->
 name|ni_chan
