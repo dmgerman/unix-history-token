@@ -1757,6 +1757,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_IOC_MCAST_RATE
+value|72
+end_define
+
+begin_comment
+comment|/* tx rate for mcast frames */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_IOC_FRAGTHRESHOLD
 value|73
 end_define

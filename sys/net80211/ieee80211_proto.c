@@ -317,6 +317,12 @@ name|IEEE80211_FIXED_RATE_NONE
 expr_stmt|;
 name|ic
 operator|->
+name|ic_mcast_rate
+operator|=
+name|IEEE80211_MCAST_RATE_DEFAULT
+expr_stmt|;
+name|ic
+operator|->
 name|ic_protmode
 operator|=
 name|IEEE80211_PROT_CTSONLY
