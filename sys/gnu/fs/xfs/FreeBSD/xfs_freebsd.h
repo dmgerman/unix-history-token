@@ -878,6 +878,23 @@ parameter_list|)
 value|((((x)+((y)-1))/(y))*(y))
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__user
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__user
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Juggle IRIX device numbers - still used in ondisk structures  */
 end_comment
