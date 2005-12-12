@@ -596,8 +596,6 @@ literal|"nullfs"
 block|,
 literal|"portalfs"
 block|,
-literal|"reiserfs"
-block|,
 literal|"smbfs"
 block|,
 literal|"udf"
