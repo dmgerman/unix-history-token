@@ -4892,7 +4892,7 @@ name|ic
 operator|->
 name|ic_chan_active
 argument_list|)
-operator|>
+operator|<
 name|ireq
 operator|->
 name|i_len
