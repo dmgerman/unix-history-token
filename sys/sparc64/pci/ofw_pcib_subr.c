@@ -405,7 +405,10 @@ name|PCIB_ROUTE_INTERRUPT
 argument_list|(
 name|device_get_parent
 argument_list|(
+name|device_get_parent
+argument_list|(
 name|bridge
+argument_list|)
 argument_list|)
 argument_list|,
 name|bridge
