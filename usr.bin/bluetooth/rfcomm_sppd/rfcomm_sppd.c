@@ -491,6 +491,15 @@ name|SDP_SERVICE_CLASS_FAX
 expr_stmt|;
 break|break;
 case|case
+literal|'l'
+case|:
+comment|/* LAN */
+name|service
+operator|=
+name|SDP_SERVICE_CLASS_LAN_ACCESS_USING_PPP
+expr_stmt|;
+break|break;
+case|case
 literal|'s'
 case|:
 comment|/* Serial Port */
