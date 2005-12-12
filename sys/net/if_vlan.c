@@ -2990,6 +2990,16 @@ name|ifv
 operator|->
 name|ifv_mtufudge
 expr_stmt|;
+name|ifv
+operator|->
+name|ifv_ifp
+operator|->
+name|if_baudrate
+operator|=
+name|p
+operator|->
+name|if_baudrate
+expr_stmt|;
 comment|/* 	 * Copy only a selected subset of flags from the parent. 	 * Other flags are none of our business. 	 */
 name|ifv
 operator|->
