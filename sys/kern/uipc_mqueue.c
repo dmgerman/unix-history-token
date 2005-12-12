@@ -7720,7 +7720,9 @@ name|mq
 operator|->
 name|mq_mutex
 argument_list|,
-name|PSOCK
+name|curthread
+operator|->
+name|td_priority
 operator||
 name|PCATCH
 argument_list|,
@@ -8539,7 +8541,9 @@ name|mq
 operator|->
 name|mq_mutex
 argument_list|,
-name|PSOCK
+name|curthread
+operator|->
+name|td_priority
 operator||
 name|PCATCH
 argument_list|,
