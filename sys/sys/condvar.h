@@ -122,6 +122,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|cv_wait_unlock
+parameter_list|(
+name|struct
+name|cv
+modifier|*
+name|cvp
+parameter_list|,
+name|struct
+name|mtx
+modifier|*
+name|mp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|cv_wait_sig
 parameter_list|(
