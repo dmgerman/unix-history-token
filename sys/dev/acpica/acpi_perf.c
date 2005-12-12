@@ -1065,6 +1065,12 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+specifier|static
+name|int
+name|once
+init|=
+literal|1
+decl_stmt|;
 name|uint32_t
 modifier|*
 name|p
@@ -1241,6 +1247,15 @@ literal|6
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|once
+condition|)
+block|{
+name|once
+operator|=
+literal|0
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|dev
@@ -1248,6 +1263,7 @@ argument_list|,
 literal|"invalid _PSS package\n"
 argument_list|)
 expr_stmt|;
+block|}
 continue|continue;
 block|}
 comment|/* Parse the rest of the package into the struct. */
