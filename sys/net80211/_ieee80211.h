@@ -444,6 +444,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|IEEE80211_CHAN_ALL
+define|\
+value|(IEEE80211_CHAN_2GHZ | IEEE80211_CHAN_5GHZ | IEEE80211_CHAN_GFSK | \ 	 IEEE80211_CHAN_CCK | IEEE80211_CHAN_OFDM | IEEE80211_CHAN_DYN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_ALLTURBO
+define|\
+value|(IEEE80211_CHAN_ALL | IEEE80211_CHAN_TURBO)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_IS_CHAN_FHSS
 parameter_list|(
 name|_c
