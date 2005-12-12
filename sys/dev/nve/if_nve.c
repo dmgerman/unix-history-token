@@ -3347,6 +3347,11 @@ argument_list|,
 literal|"nve: do pfnInit\n"
 argument_list|)
 expr_stmt|;
+name|nve_ifmedia_upd_locked
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 comment|/* Setup Hardware interface and allocate memory structures */
 name|error
 operator|=
@@ -3447,11 +3452,6 @@ comment|/* Setup multicast filter */
 name|nve_setmulti
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-name|nve_ifmedia_upd_locked
-argument_list|(
-name|ifp
 argument_list|)
 expr_stmt|;
 comment|/* Update interface parameters */
@@ -6418,8 +6418,7 @@ name|M_ZERO
 argument_list|,
 literal|0
 argument_list|,
-operator|~
-literal|0
+literal|0xffffffff
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
