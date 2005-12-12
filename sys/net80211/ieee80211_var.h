@@ -226,6 +226,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_BMISS_MAX
+value|2
+end_define
+
+begin_comment
+comment|/* maximum consecutive bmiss allowed */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_PS_SLEEP
 value|0x1
 end_define
@@ -634,6 +645,14 @@ decl_stmt|;
 name|u_int16_t
 name|ic_fragthreshold
 decl_stmt|;
+name|u_int8_t
+name|ic_bmiss_count
+decl_stmt|;
+comment|/* current beacon miss count */
+name|int
+name|ic_bmiss_max
+decl_stmt|;
+comment|/* max bmiss before scan */
 name|struct
 name|ieee80211_node
 modifier|*
