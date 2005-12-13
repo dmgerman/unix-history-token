@@ -3237,6 +3237,21 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|!
+name|pmap_page_is_mapped
+argument_list|(
+name|m
+argument_list|)
+argument_list|,
+operator|(
+literal|"vm_page_free_toq: freeing mapped page %p"
+operator|,
+name|m
+operator|)
+argument_list|)
+expr_stmt|;
 name|cnt
 operator|.
 name|v_tfree
