@@ -135,6 +135,16 @@ index|]
 operator|.
 name|control
 operator|||
+operator|!
+name|srv
+operator|->
+name|fdidx
+index|[
+name|fd
+index|]
+operator|.
+name|priv
+operator|||
 name|req_end
 operator|-
 name|req
