@@ -82,7 +82,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../../../sys/net80211/ieee80211_ioctl.h"
+file|"../../../../sys/net80211/ieee80211_ioctl.h"
 end_include
 
 begin_decl_stmt
