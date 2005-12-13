@@ -3624,12 +3624,15 @@ name|retval
 decl_stmt|,
 name|best
 decl_stmt|;
-comment|/* 	 * We only support built in local APICs.  Unfortunately, we can't 	 * just check the CPUID_APIC bit in cpu_features because some BIOSen 	 * don't set that flag.  Instead, we assume that all Pentium-class 	 * and later machines have a local APIC.  The only non-Pentium-class 	 * CPUs that can talk to an external APIC are 486s, so we just 	 * bail if we are on a 486. 	 */
+comment|/* We only support built in local APICs. */
 if|if
 condition|(
-name|cpu_class
-operator|==
-name|CPUCLASS_486
+operator|!
+operator|(
+name|cpu_feature
+operator|&
+name|CPUID_APIC
+operator|)
 condition|)
 return|return;
 comment|/* Don't probe if APIC mode is disabled. */
