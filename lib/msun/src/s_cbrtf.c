@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* s_cbrtf.c -- float version of s_cbrt.c.  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.  * Debugged by Bruce D. Evans.  */
+comment|/* s_cbrtf.c -- float version of s_cbrt.c.  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.  * Debugged and optimized by Bruce D. Evans.  */
 end_comment
 
 begin_comment
@@ -168,14 +168,6 @@ name|x
 operator|)
 return|;
 comment|/* cbrt(0) is itself */
-name|SET_FLOAT_WORD
-argument_list|(
-name|x
-argument_list|,
-name|hx
-argument_list|)
-expr_stmt|;
-comment|/* x<- |x| */
 comment|/* rough cbrt to 5 bits */
 if|if
 condition|(
@@ -208,11 +200,19 @@ name|SET_FLOAT_WORD
 argument_list|(
 name|t
 argument_list|,
+name|sign
+operator||
+operator|(
+operator|(
 name|high
+operator|&
+literal|0x7fffffff
+operator|)
 operator|/
 literal|3
 operator|+
 name|B2
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -221,11 +221,15 @@ name|SET_FLOAT_WORD
 argument_list|(
 name|t
 argument_list|,
+name|sign
+operator||
+operator|(
 name|hx
 operator|/
 literal|3
 operator|+
 name|B1
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* new cbrt to 23 bits */
@@ -261,7 +265,7 @@ operator|/
 name|s
 operator|)
 expr_stmt|;
-comment|/* chop t to 12 bits and make it larger than cbrt(x) */
+comment|/* chop t to 12 bits and make it larger in magnitude than cbrt(x) */
 name|GET_FLOAT_WORD
 argument_list|(
 name|high
@@ -324,23 +328,6 @@ operator|+
 name|t
 operator|*
 name|r
-expr_stmt|;
-comment|/* restore the sign bit */
-name|GET_FLOAT_WORD
-argument_list|(
-name|high
-argument_list|,
-name|t
-argument_list|)
-expr_stmt|;
-name|SET_FLOAT_WORD
-argument_list|(
-name|t
-argument_list|,
-name|high
-operator||
-name|sign
-argument_list|)
 expr_stmt|;
 return|return
 operator|(

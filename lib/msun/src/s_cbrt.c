@@ -4,7 +4,7 @@ comment|/* @(#)s_cbrt.c 5.1 93/09/24 */
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  *  * Optimized by Bruce D. Evans.  */
 end_comment
 
 begin_ifndef
@@ -183,14 +183,6 @@ name|x
 operator|)
 return|;
 comment|/* cbrt(0) is itself */
-name|SET_HIGH_WORD
-argument_list|(
-name|x
-argument_list|,
-name|hx
-argument_list|)
-expr_stmt|;
-comment|/* x<- |x| */
 comment|/*      * Rough cbrt to 5 bits:      *    cbrt(2**e*(1+m) ~= 2**(e/3)*(1+(e%3+m)/3)      * where e is integral and>= 0, m is real and in [0, 1), and "/" and      * "%" are integer division and modulus with rounding towards minus      * infinity.  The RHS is always>= the LHS and has a maximum relative      * error of about 1 in 16.  Adding a bias of -0.03306235651 to the      * (e%3+m)/3 term reduces the error to about 1 in 32. With the IEEE      * floating point representation, for finite positive normal values,      * ordinary integer divison of the value in bits magically gives      * almost exactly the RHS of the above provided we first subtract the      * exponent bias (1023 for doubles) and later add it back.  We do the      * subtraction virtually to keep e>= 0 so that ordinary integer      * division rounds towards minus infinity; this is also efficient.      */
 if|if
 condition|(
@@ -223,11 +215,19 @@ name|SET_HIGH_WORD
 argument_list|(
 name|t
 argument_list|,
+name|sign
+operator||
+operator|(
+operator|(
 name|high
+operator|&
+literal|0x7fffffff
+operator|)
 operator|/
 literal|3
 operator|+
 name|B2
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -236,11 +236,15 @@ name|SET_HIGH_WORD
 argument_list|(
 name|t
 argument_list|,
+name|sign
+operator||
+operator|(
 name|hx
 operator|/
 literal|3
 operator|+
 name|B1
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* new cbrt to 23 bits; may be implemented in single precision */
@@ -276,7 +280,7 @@ operator|/
 name|s
 operator|)
 expr_stmt|;
-comment|/* chop t to 20 bits and make it larger than cbrt(x) */
+comment|/* chop t to 20 bits and make it larger in magnitude than cbrt(x) */
 name|GET_HIGH_WORD
 argument_list|(
 name|high
@@ -337,23 +341,6 @@ operator|+
 name|t
 operator|*
 name|r
-expr_stmt|;
-comment|/* restore the sign bit */
-name|GET_HIGH_WORD
-argument_list|(
-name|high
-argument_list|,
-name|t
-argument_list|)
-expr_stmt|;
-name|SET_HIGH_WORD
-argument_list|(
-name|t
-argument_list|,
-name|high
-operator||
-name|sign
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
