@@ -238,7 +238,6 @@ comment|/* And other global data */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|u_int32_t
 name|nfs_xid
 init|=
@@ -499,7 +498,8 @@ name|mbp
 parameter_list|,
 name|u_int32_t
 modifier|*
-name|xidp
+modifier|*
+name|xidpp
 parameter_list|)
 block|{
 name|struct
@@ -657,11 +657,13 @@ name|nfs_xid
 operator|++
 expr_stmt|;
 operator|*
+name|xidpp
+operator|=
+name|tl
+expr_stmt|;
+operator|*
 name|tl
 operator|++
-operator|=
-operator|*
-name|xidp
 operator|=
 name|txdr_unsigned
 argument_list|(

@@ -209,6 +209,13 @@ name|FALSE
 value|0
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|u_int32_t
+name|nfs_xid
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Estimate rto for an nfs rpc sent via. an unreliable datagram.  * Use the mean and mean deviation of rtt for the appropriate type of rpc  * for the frequent rpcs and a default for the others.  * The justification for doing "other" this way is that these rpcs  * happen so infrequently that timer est. would probably be stale.  * Also, since many of these rpcs are  * non-idempotent, a conservative timeout is desired.  * getattr, lookup - A+2D  * read, write     - A+4D  * other           - nm_timeo  */
 end_comment
@@ -4271,7 +4278,8 @@ name|timeval
 name|now
 decl_stmt|;
 name|u_int32_t
-name|xid
+modifier|*
+name|xidp
 decl_stmt|;
 comment|/* Reject requests while attempting a forced unmount. */
 if|if
@@ -4507,7 +4515,7 @@ operator|&
 name|mheadend
 argument_list|,
 operator|&
-name|xid
+name|xidp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * For stream protocols, insert a Sun RPC Record Mark. 	 */
@@ -4564,7 +4572,8 @@ name|rep
 operator|->
 name|r_xid
 operator|=
-name|xid
+operator|*
+name|xidp
 expr_stmt|;
 name|tryagain
 label|:
@@ -5247,6 +5256,28 @@ literal|1
 condition|)
 name|trylater_cnt
 operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|++
+name|nfs_xid
+operator|==
+literal|0
+condition|)
+name|nfs_xid
+operator|++
+expr_stmt|;
+name|rep
+operator|->
+name|r_xid
+operator|=
+operator|*
+name|xidp
+operator|=
+name|txdr_unsigned
+argument_list|(
+name|nfs_xid
+argument_list|)
 expr_stmt|;
 goto|goto
 name|tryagain
