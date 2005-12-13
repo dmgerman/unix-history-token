@@ -198,8 +198,8 @@ name|hx
 operator|<
 literal|0x00100000
 condition|)
-comment|/* subnormal number */
 block|{
+comment|/* subnormal number */
 name|SET_HIGH_WORD
 argument_list|(
 name|t

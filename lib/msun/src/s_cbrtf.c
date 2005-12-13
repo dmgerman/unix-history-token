@@ -183,8 +183,8 @@ name|hx
 operator|<
 literal|0x00800000
 condition|)
-comment|/* subnormal number */
 block|{
+comment|/* subnormal number */
 name|SET_FLOAT_WORD
 argument_list|(
 name|t
