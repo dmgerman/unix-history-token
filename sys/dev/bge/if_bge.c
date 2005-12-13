@@ -16763,10 +16763,13 @@ block|}
 comment|/* 	 * Sometimes PCS encoding errors are detected in 	 * TBI mode (on fiber NICs), and for some reason 	 * the chip will signal them as link changes. 	 * If we get a link change event, but the 'PCS 	 * encoding error' bit in the MAC status register 	 * is set, don't bother doing a link check. 	 * This avoids spurious "gigabit link up" messages 	 * that sometimes appear on fiber NICs during 	 * periods of heavy traffic. (There should be no 	 * effect on copper NICs.) 	 */
 if|if
 condition|(
+operator|!
 name|sc
 operator|->
 name|bge_tbi
-condition|)
+operator|||
+operator|(
+operator|(
 name|status
 operator|=
 name|CSR_READ_4
@@ -16775,17 +16778,7 @@ name|sc
 argument_list|,
 name|BGE_MAC_STS
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|sc
-operator|->
-name|bge_tbi
-operator|||
-operator|!
-operator|(
-name|status
+operator|)
 operator|&
 operator|(
 name|BGE_MACSTAT_PORT_DECODE_ERROR
@@ -16793,6 +16786,8 @@ operator||
 name|BGE_MACSTAT_MI_COMPLETE
 operator|)
 operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|sc
