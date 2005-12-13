@@ -42,9 +42,15 @@ literal|1
 decl_stmt|;
 comment|/* descriptor is a control socket */
 name|unsigned
+name|priv
+range|:
+literal|1
+decl_stmt|;
+comment|/* descriptor is privileged */
+name|unsigned
 name|reserved
 range|:
-literal|2
+literal|1
 decl_stmt|;
 name|unsigned
 name|rsp_cs
