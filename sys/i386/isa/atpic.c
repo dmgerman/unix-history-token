@@ -2313,6 +2313,30 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* 	 * If any of the ISA IRQs have an interrupt source already, then 	 * assume that the APICs are being used and don't register any 	 * of our interrupt sources.  This makes sure we don't accidentally 	 * use mixed mode.  The "accidental" use could otherwise occur on 	 * machines that route the ACPI SCI interrupt to a different ISA 	 * IRQ (at least one machines routes it to IRQ 13) thus disabling 	 * that APIC ISA routing and allowing the ATPIC source for that IRQ 	 * to leak through.  We used to depend on this feature for routing 	 * IRQ0 via mixed mode, but now we don't use mixed mode at all. 	 */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NUM_ISA_IRQS
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|intr_lookup_source
+argument_list|(
+name|i
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+return|return;
 comment|/* Loop through all interrupt sources and add them. */
 for|for
 control|(
