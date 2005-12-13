@@ -41,17 +41,6 @@ directive|include
 file|<ddb/ddb.h>
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_error
-error|#
-directive|error
-literal|"Must have options for KDB, DDB in kernel config"
-end_error
-
 begin_endif
 endif|#
 directive|endif
@@ -62,6 +51,12 @@ include|#
 directive|include
 file|<support/kdb.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DDB
+end_ifdef
 
 begin_macro
 name|DB_SET
@@ -87,6 +82,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
