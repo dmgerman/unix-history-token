@@ -1064,6 +1064,13 @@ name|ipfw_table
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|IP_FW_TABLEARG
+value|65535
+end_define
+
 begin_comment
 comment|/*  * Main firewall chains definitions and global var's definitions.  */
 end_comment
