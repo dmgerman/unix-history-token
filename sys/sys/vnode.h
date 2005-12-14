@@ -1769,11 +1769,6 @@ name|int
 name|vdesc_componentname_offset
 decl_stmt|;
 comment|/* if any */
-comment|/* 	 * Finally, we've got a list of private data (about each operation) 	 * for each transport layer.  (Support to manage this list is not 	 * yet part of BSD.) 	 */
-name|caddr_t
-modifier|*
-name|vdesc_transports
-decl_stmt|;
 block|}
 struct|;
 end_struct
