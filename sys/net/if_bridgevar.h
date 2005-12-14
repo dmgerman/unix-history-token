@@ -290,6 +290,28 @@ begin_comment
 comment|/* set if path cost (ifbreq) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|BRDGADDS
+value|23
+end_define
+
+begin_comment
+comment|/* add bridge span member (ifbreq) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BRDGDELS
+value|24
+end_define
+
+begin_comment
+comment|/* delete bridge span member (ifbreq) */
+end_comment
+
 begin_comment
 comment|/*  * Generic bridge control request.  */
 end_comment
@@ -369,8 +391,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IFBIF_SPAN
+value|0x08
+end_define
+
+begin_comment
+comment|/* if is a span port */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IFBIFBITS
-value|"\020\1LEARNING\2DISCOVER\3STP"
+value|"\020\1LEARNING\2DISCOVER\3STP\4SPAN"
 end_define
 
 begin_comment
@@ -1018,6 +1051,14 @@ name|uint32_t
 name|sc_rthash_key
 decl_stmt|;
 comment|/* key for hash */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|bridge_iflist
+argument_list|)
+name|sc_spanlist
+expr_stmt|;
+comment|/* span ports list */
 block|}
 struct|;
 end_struct
