@@ -1,11 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* r128_drv.h -- Private header for r128 driver -*- linux-c -*-  * Created: Mon Dec 13 09:51:11 1999 by faith@precisioninsight.com */
+comment|/* r128_drv.h -- Private header for r128 driver -*- linux-c -*-  * Created: Mon Dec 13 09:51:11 1999 by faith@precisioninsight.com  */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright 1999 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All rights reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * PRECISION INSIGHT AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER  * DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Rickard E. (Rik) Faith<faith@valinux.com>  *    Kevin E. Martin<martin@valinux.com>  *    Gareth Hughes<gareth@valinux.com>  *    Michel Dï¿½zer<daenzerm@student.ethz.ch>  *  * $FreeBSD$  */
+comment|/*-  * Copyright 1999 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All rights reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * PRECISION INSIGHT AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER  * DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Rickard E. (Rik) Faith<faith@valinux.com>  *    Kevin E. Martin<martin@valinux.com>  *    Gareth Hughes<gareth@valinux.com>  *    Michel Dï¿½zer<daenzerm@student.ethz.ch>  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_ifndef
 ifndef|#
@@ -187,13 +201,6 @@ name|is_pci
 decl_stmt|;
 name|unsigned
 name|long
-name|phys_pci_gart
-decl_stmt|;
-name|dma_addr_t
-name|bus_pci_gart
-decl_stmt|;
-name|unsigned
-name|long
 name|cce_buffers_offset
 decl_stmt|;
 name|atomic_t
@@ -277,6 +284,9 @@ name|drm_local_map_t
 modifier|*
 name|agp_textures
 decl_stmt|;
+name|drm_ati_pcigart_info
+name|gart_info
+decl_stmt|;
 block|}
 name|drm_r128_private_t
 typedef|;
@@ -307,6 +317,21 @@ block|}
 name|drm_r128_buf_priv_t
 typedef|;
 end_typedef
+
+begin_decl_stmt
+specifier|extern
+name|drm_ioctl_desc_t
+name|r128_ioctls
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|r128_max_ioctl
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* r128_cce.c */
@@ -509,7 +534,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|r128_driver_pretakedown
+name|r128_driver_lastclose
 parameter_list|(
 name|drm_device_t
 modifier|*
@@ -521,7 +546,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|r128_driver_prerelease
+name|r128_driver_preclose
 parameter_list|(
 name|drm_device_t
 modifier|*
@@ -529,6 +554,27 @@ name|dev
 parameter_list|,
 name|DRMFILE
 name|filp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|long
+name|r128_compat_ioctl
+parameter_list|(
+name|struct
+name|file
+modifier|*
+name|filp
+parameter_list|,
+name|unsigned
+name|int
+name|cmd
+parameter_list|,
+name|unsigned
+name|long
+name|arg
 parameter_list|)
 function_decl|;
 end_function_decl

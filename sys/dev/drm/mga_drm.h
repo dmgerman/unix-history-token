@@ -1,11 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mga_drm.h -- Public header for the Matrox g200/g400 driver -*- linux-c -*-  * Created: Tue Jan 25 01:50:01 1999 by jhartmann@precisioninsight.com */
+comment|/* mga_drm.h -- Public header for the Matrox g200/g400 driver -*- linux-c -*-  * Created: Tue Jan 25 01:50:01 1999 by jhartmann@precisioninsight.com  *  * Copyright 1999 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All rights reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Jeff Hartmann<jhartmann@valinux.com>  *    Keith Whitwell<keith@tungstengraphics.com>  *  * Rewritten by:  *    Gareth Hughes<gareth@valinux.com>  */
 end_comment
 
-begin_comment
-comment|/*-  * Copyright 1999 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All rights reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Jeff Hartmann<jhartmann@valinux.com>  *    Keith Whitwell<keith@tungstengraphics.com>  *  * Rewritten by:  *    Gareth Hughes<gareth@valinux.com>  *  * $FreeBSD$  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_ifndef
 ifndef|#
@@ -243,6 +253,24 @@ define|#
 directive|define
 name|MGA_CARD_TYPE_G400
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|MGA_CARD_TYPE_G450
+value|3
+end_define
+
+begin_comment
+comment|/* not currently used */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MGA_CARD_TYPE_G550
+value|4
 end_define
 
 begin_define
@@ -768,10 +796,6 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* WARNING: If you change any of these defines, make sure to change the  * defines in the Xserver file (xf86drmMga.h)  */
-end_comment
-
-begin_comment
 comment|/* MGA specific ioctls  * The device specific ioctl range is 0x40 to 0x79.  */
 end_comment
 
@@ -845,6 +869,31 @@ name|DRM_MGA_GETPARAM
 value|0x09
 end_define
 
+begin_comment
+comment|/* 3.2:  * ioctls for operating on fences.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DRM_MGA_SET_FENCE
+value|0x0a
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_MGA_WAIT_FENCE
+value|0x0b
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_MGA_DMA_BOOTSTRAP
+value|0x0c
+end_define
+
 begin_define
 define|#
 directive|define
@@ -913,6 +962,27 @@ define|#
 directive|define
 name|DRM_IOCTL_MGA_GETPARAM
 value|DRM_IOWR(DRM_COMMAND_BASE + DRM_MGA_GETPARAM, drm_mga_getparam_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_MGA_SET_FENCE
+value|DRM_IOW( DRM_COMMAND_BASE + DRM_MGA_SET_FENCE, uint32_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_MGA_WAIT_FENCE
+value|DRM_IOWR(DRM_COMMAND_BASE + DRM_MGA_WAIT_FENCE, uint32_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_MGA_DMA_BOOTSTRAP
+value|DRM_IOWR(DRM_COMMAND_BASE + DRM_MGA_DMA_BOOTSTRAP, drm_mga_dma_bootstrap_t)
 end_define
 
 begin_typedef
@@ -1038,22 +1108,42 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
-name|drm_mga_fullscreen
+name|drm_mga_dma_bootstrap
 block|{
-enum|enum
-block|{
-name|MGA_INIT_FULLSCREEN
-init|=
-literal|0x01
-block|,
-name|MGA_CLEANUP_FULLSCREEN
-init|=
-literal|0x02
+comment|/** 	 * \name AGP texture region 	 *  	 * On return from the DRM_MGA_DMA_BOOTSTRAP ioctl, these fields will 	 * be filled in with the actual AGP texture settings. 	 *  	 * \warning 	 * If these fields are non-zero, but dma_mga_dma_bootstrap::agp_mode 	 * is zero, it means that PCI memory (most likely through the use of 	 * an IOMMU) is being used for "AGP" textures. 	 */
+comment|/*@{*/
+name|unsigned
+name|long
+name|texture_handle
+decl_stmt|;
+comment|/**< Handle used to map AGP textures. */
+name|uint32_t
+name|texture_size
+decl_stmt|;
+comment|/**< Size of the AGP texture region. */
+comment|/*@}*/
+comment|/** 	 * Requested size of the primary DMA region. 	 *  	 * On return from the DRM_MGA_DMA_BOOTSTRAP ioctl, this field will be 	 * filled in with the actual AGP mode.  If AGP was not available 	 */
+name|uint32_t
+name|primary_size
+decl_stmt|;
+comment|/** 	 * Requested number of secondary DMA buffers. 	 *  	 * On return from the DRM_MGA_DMA_BOOTSTRAP ioctl, this field will be 	 * filled in with the actual number of secondary DMA buffers 	 * allocated.  Particularly when PCI DMA is used, this may be 	 * (subtantially) less than the number requested. 	 */
+name|uint32_t
+name|secondary_bin_count
+decl_stmt|;
+comment|/** 	 * Requested size of each secondary DMA buffer. 	 *  	 * While the kernel \b is free to reduce 	 * dma_mga_dma_bootstrap::secondary_bin_count, it is \b not allowed 	 * to reduce dma_mga_dma_bootstrap::secondary_bin_size. 	 */
+name|uint32_t
+name|secondary_bin_size
+decl_stmt|;
+comment|/** 	 * Bit-wise mask of AGPSTAT2_* values.  Currently only \c AGPSTAT2_1X, 	 * \c AGPSTAT2_2X, and \c AGPSTAT2_4X are supported.  If this value is 	 * zero, it means that PCI DMA should be used, even if AGP is 	 * possible. 	 *  	 * On return from the DRM_MGA_DMA_BOOTSTRAP ioctl, this field will be 	 * filled in with the actual AGP mode.  If AGP was not available 	 * (i.e., PCI DMA was used), this value will be zero. 	 */
+name|uint32_t
+name|agp_mode
+decl_stmt|;
+comment|/** 	 * Desired AGP GART size, measured in megabytes. 	 */
+name|uint8_t
+name|agp_size
+decl_stmt|;
 block|}
-name|func
-enum|;
-block|}
-name|drm_mga_fullscreen_t
+name|drm_mga_dma_bootstrap_t
 typedef|;
 end_typedef
 
@@ -1213,6 +1303,17 @@ define|#
 directive|define
 name|MGA_PARAM_IRQ_NR
 value|1
+end_define
+
+begin_comment
+comment|/* 3.2: Query the actual card type.  The DDX only distinguishes between  * G200 chips and non-G200 chips, which it calls G400.  It turns out that  * there are some very sublte differences between the G4x0 chips and the G550  * chips.  Using this parameter query, a client-side driver can detect the  * difference between a G4x0 and a G550.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MGA_PARAM_CARD_TYPE
+value|2
 end_define
 
 begin_typedef

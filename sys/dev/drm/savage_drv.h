@@ -1,7 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* savage_drv.h -- Private header for the savage driver  *  * Copyright 2004  Felix Kuehling  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sub license,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the  * next paragraph) shall be included in all copies or substantial portions  * of the Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND  * NON-INFRINGEMENT. IN NO EVENT SHALL FELIX KUEHLING BE LIABLE FOR  * ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  *  * $FreeBSD$  */
+comment|/* savage_drv.h -- Private header for the savage driver */
 end_comment
+
+begin_comment
+comment|/*-  * Copyright 2004  Felix Kuehling  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sub license,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the  * next paragraph) shall be included in all copies or substantial portions  * of the Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND  * NON-INFRINGEMENT. IN NO EVENT SHALL FELIX KUEHLING BE LIABLE FOR  * ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_ifndef
 ifndef|#
@@ -271,6 +289,21 @@ name|S3_LAST
 block|}
 enum|;
 end_enum
+
+begin_decl_stmt
+specifier|extern
+name|drm_ioctl_desc_t
+name|savage_ioctls
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|savage_max_ioctl
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -559,6 +592,7 @@ name|drm_savage_private
 modifier|*
 name|dev_priv
 parameter_list|,
+specifier|const
 name|drm_clip_rect_t
 modifier|*
 name|pbox
@@ -588,37 +622,7 @@ end_comment
 begin_function_decl
 specifier|extern
 name|int
-name|savage_bci_init
-parameter_list|(
-name|DRM_IOCTL_ARGS
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
 name|savage_bci_cmdbuf
-parameter_list|(
-name|DRM_IOCTL_ARGS
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|savage_bci_event_emit
-parameter_list|(
-name|DRM_IOCTL_ARGS
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|savage_bci_event_wait
 parameter_list|(
 name|DRM_IOCTL_ARGS
 parameter_list|)
@@ -719,7 +723,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|savage_preinit
+name|savage_driver_load
 parameter_list|(
 name|drm_device_t
 modifier|*
@@ -735,7 +739,31 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|savage_postcleanup
+name|savage_driver_firstopen
+parameter_list|(
+name|drm_device_t
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|savage_driver_lastclose
+parameter_list|(
+name|drm_device_t
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|savage_driver_unload
 parameter_list|(
 name|drm_device_t
 modifier|*
@@ -784,6 +812,7 @@ name|drm_savage_private_t
 modifier|*
 name|dev_priv
 parameter_list|,
+specifier|const
 name|drm_clip_rect_t
 modifier|*
 name|pbox
@@ -800,6 +829,7 @@ name|drm_savage_private_t
 modifier|*
 name|dev_priv
 parameter_list|,
+specifier|const
 name|drm_clip_rect_t
 modifier|*
 name|pbox
@@ -2304,18 +2334,6 @@ parameter_list|)
 value|*bci_ptr++ = (uint32_t)(val)
 end_define
 
-begin_define
-define|#
-directive|define
-name|BCI_COPY_FROM_USER
-parameter_list|(
-name|src
-parameter_list|,
-name|n
-parameter_list|)
-value|do {				\     unsigned int i;						\     for (i = 0; i< n; ++i) {					\ 	uint32_t val;						\ 	DRM_GET_USER_UNCHECKED(val,&((uint32_t*)(src))[i]);	\ 	BCI_WRITE(val);						\     }								\ } while(0)
-end_define
-
 begin_comment
 comment|/*  * command DMA support  */
 end_comment
@@ -2359,13 +2377,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|DMA_COPY_FROM_USER
+name|DMA_COPY
 parameter_list|(
 name|src
 parameter_list|,
 name|n
 parameter_list|)
-value|do {				\ 	DRM_COPY_FROM_USER_UNCHECKED(dma_ptr, (src), (n)*4);	\ 	dma_ptr += n;						\ } while(0)
+value|do {					\ 	memcpy(dma_ptr, (src), (n)*4);				\ 	dma_ptr += n;						\ } while(0)
 end_define
 
 begin_if

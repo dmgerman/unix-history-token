@@ -1,11 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* sis_mm.c -- Private header for Direct Rendering Manager -*- linux-c -*-  * Created: Mon Jan  4 10:05:05 1999 by sclin@sis.com.tw */
+comment|/* sis_mm.c -- Private header for Direct Rendering Manager -*- linux-c -*-  * Created: Mon Jan  4 10:05:05 1999 by sclin@sis.com.tw  *  * Copyright 2000 Silicon Integrated Systems Corp, Inc., HsinChu, Taiwan.  * All rights reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * PRECISION INSIGHT AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER  * DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Sung-Ching Lin<sclin@sis.com.tw>  *  */
 end_comment
 
-begin_comment
-comment|/*-  * Copyright 2000 Silicon Integrated Systems Corp, Inc., HsinChu, Taiwan.  * All rights reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * PRECISION INSIGHT AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER  * DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Sung-Ching Lin<sclin@sis.com.tw>  *  * $FreeBSD$  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_if
 if|#
@@ -1965,9 +1975,7 @@ operator|=
 block|{
 name|sis_fb_alloc
 block|,
-literal|1
-block|,
-literal|0
+name|DRM_AUTH
 block|}
 block|,
 index|[
@@ -1980,9 +1988,7 @@ operator|=
 block|{
 name|sis_fb_free
 block|,
-literal|1
-block|,
-literal|0
+name|DRM_AUTH
 block|}
 block|,
 index|[
@@ -1995,9 +2001,11 @@ operator|=
 block|{
 name|sis_ioctl_agp_init
 block|,
-literal|1
-block|,
-literal|1
+name|DRM_AUTH
+operator||
+name|DRM_MASTER
+operator||
+name|DRM_ROOT_ONLY
 block|}
 block|,
 index|[
@@ -2010,9 +2018,7 @@ operator|=
 block|{
 name|sis_ioctl_agp_alloc
 block|,
-literal|1
-block|,
-literal|0
+name|DRM_AUTH
 block|}
 block|,
 index|[
@@ -2025,9 +2031,7 @@ operator|=
 block|{
 name|sis_ioctl_agp_free
 block|,
-literal|1
-block|,
-literal|0
+name|DRM_AUTH
 block|}
 block|,
 index|[
@@ -2040,9 +2044,11 @@ operator|=
 block|{
 name|sis_fb_init
 block|,
-literal|1
-block|,
-literal|1
+name|DRM_AUTH
+operator||
+name|DRM_MASTER
+operator||
+name|DRM_ROOT_ONLY
 block|}
 block|}
 decl_stmt|;

@@ -1,11 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* r128_state.c -- State support for r128 -*- linux-c -*-  * Created: Thu Jan 27 02:53:43 2000 by gareth@valinux.com */
+comment|/* r128_state.c -- State support for r128 -*- linux-c -*-  * Created: Thu Jan 27 02:53:43 2000 by gareth@valinux.com  */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * PRECISION INSIGHT AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER  * DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Gareth Hughes<gareth@valinux.com>  *  * $FreeBSD$  */
+comment|/*-  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * PRECISION INSIGHT AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER  * DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Gareth Hughes<gareth@valinux.com>  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -7208,6 +7222,7 @@ operator|&
 name|depth
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 name|R128_WRITE_PIXELS
 case|:
@@ -7221,6 +7236,7 @@ operator|&
 name|depth
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 name|R128_READ_SPAN
 case|:
@@ -7234,6 +7250,7 @@ operator|&
 name|depth
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 name|R128_READ_PIXELS
 case|:
@@ -7247,6 +7264,7 @@ operator|&
 name|depth
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 name|COMMIT_RING
 argument_list|()
@@ -7788,7 +7806,7 @@ end_function
 
 begin_function
 name|void
-name|r128_driver_prerelease
+name|r128_driver_preclose
 parameter_list|(
 name|drm_device_t
 modifier|*
@@ -7832,7 +7850,7 @@ end_function
 
 begin_function
 name|void
-name|r128_driver_pretakedown
+name|r128_driver_lastclose
 parameter_list|(
 name|drm_device_t
 modifier|*
@@ -7863,9 +7881,11 @@ operator|=
 block|{
 name|r128_cce_init
 block|,
-literal|1
-block|,
-literal|1
+name|DRM_AUTH
+operator||
+name|DRM_MASTER
+operator||
+name|DRM_ROOT_ONLY
 block|}
 block|,
 index|[
@@ -7878,9 +7898,11 @@ operator|=
 block|{
 name|r128_cce_start
 block|,
-literal|1
-block|,
-literal|1
+name|DRM_AUTH
+operator||
+name|DRM_MASTER
+operator||
+name|DRM_ROOT_ONLY
 block|}
 block|,
 index|[
@@ -7893,9 +7915,11 @@ operator|=
 block|{
 name|r128_cce_stop
 block|,
-literal|1
-block|,
-literal|1
+name|DRM_AUTH
+operator||
+name|DRM_MASTER
+operator||
+name|DRM_ROOT_ONLY
 block|}
 block|,
 index|[
@@ -7908,9 +7932,11 @@ operator|=
 block|{
 name|r128_cce_reset
 block|,
-literal|1
-block|,
-literal|1
+name|DRM_AUTH
+operator||
+name|DRM_MASTER
+operator||
+name|DRM_ROOT_ONLY
 block|}
 block|,
 index|[
@@ -7923,9 +7949,7 @@ operator|=
 block|{
 name|r128_cce_idle
 block|,
-literal|1
-block|,
-literal|0
+name|DRM_AUTH
 block|}
 block|,
 index|[
@@ -7938,9 +7962,7 @@ operator|=
 block|{
 name|r128_engine_reset
 block|,
-literal|1
-block|,
-literal|0
+name|DRM_AUTH
 block|}
 block|,
 index|[
@@ -7953,9 +7975,7 @@ operator|=
 block|{
 name|r128_fullscreen
 block|,
-literal|1
-block|,
-literal|0
+name|DRM_AUTH
 block|}
 block|,
 index|[
@@ -7968,9 +7988,7 @@ operator|=
 block|{
 name|r128_cce_swap
 block|,
-literal|1
-block|,
-literal|0
+name|DRM_AUTH
 block|}
 block|,
 index|[
@@ -7983,9 +8001,7 @@ operator|=
 block|{
 name|r128_cce_flip
 block|,
-literal|1
-block|,
-literal|0
+name|DRM_AUTH
 block|}
 block|,
 index|[
@@ -7998,9 +8014,7 @@ operator|=
 block|{
 name|r128_cce_clear
 block|,
-literal|1
-block|,
-literal|0
+name|DRM_AUTH
 block|}
 block|,
 index|[
@@ -8013,9 +8027,7 @@ operator|=
 block|{
 name|r128_cce_vertex
 block|,
-literal|1
-block|,
-literal|0
+name|DRM_AUTH
 block|}
 block|,
 index|[
@@ -8028,9 +8040,7 @@ operator|=
 block|{
 name|r128_cce_indices
 block|,
-literal|1
-block|,
-literal|0
+name|DRM_AUTH
 block|}
 block|,
 index|[
@@ -8043,9 +8053,7 @@ operator|=
 block|{
 name|r128_cce_blit
 block|,
-literal|1
-block|,
-literal|0
+name|DRM_AUTH
 block|}
 block|,
 index|[
@@ -8058,9 +8066,7 @@ operator|=
 block|{
 name|r128_cce_depth
 block|,
-literal|1
-block|,
-literal|0
+name|DRM_AUTH
 block|}
 block|,
 index|[
@@ -8073,9 +8079,7 @@ operator|=
 block|{
 name|r128_cce_stipple
 block|,
-literal|1
-block|,
-literal|0
+name|DRM_AUTH
 block|}
 block|,
 index|[
@@ -8088,9 +8092,11 @@ operator|=
 block|{
 name|r128_cce_indirect
 block|,
-literal|1
-block|,
-literal|1
+name|DRM_AUTH
+operator||
+name|DRM_MASTER
+operator||
+name|DRM_ROOT_ONLY
 block|}
 block|,
 index|[
@@ -8103,9 +8109,7 @@ operator|=
 block|{
 name|r128_getparam
 block|,
-literal|1
-block|,
-literal|0
+name|DRM_AUTH
 block|}
 block|, }
 decl_stmt|;

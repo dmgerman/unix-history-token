@@ -1,34 +1,48 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* i915_dma.c -- DMA support for the I915 -*- linux-c -*-  *  * $FreeBSD$  */
+comment|/* i915_dma.c -- DMA support for the I915 -*- linux-c -*-  */
 end_comment
 
 begin_comment
-comment|/**************************************************************************  *  * Copyright 2003 Tungsten Graphics, Inc., Cedar Park, Texas.  * All Rights Reserved.  *  **************************************************************************/
+comment|/*-  * Copyright 2003 Tungsten Graphics, Inc., Cedar Park, Texas.  * All Rights Reserved.  *   * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the  * "Software"), to deal in the Software without restriction, including  * without limitation the rights to use, copy, modify, merge, publish,  * distribute, sub license, and/or sell copies of the Software, and to  * permit persons to whom the Software is furnished to do so, subject to  * the following conditions:  *   * The above copyright notice and this permission notice (including the  * next paragraph) shall be included in all copies or substantial portions  * of the Software.  *   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.  * IN NO EVENT SHALL TUNGSTEN GRAPHICS AND/OR ITS SUPPLIERS BE LIABLE FOR  * ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  *   */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"drmP.h"
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|"dev/drm/drmP.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"drm.h"
+file|"dev/drm/drm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"i915_drm.h"
+file|"dev/drm/i915_drm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"i915_drv.h"
+file|"dev/drm/i915_drv.h"
 end_include
 
 begin_comment
@@ -366,22 +380,16 @@ if|if
 condition|(
 name|dev_priv
 operator|->
-name|hw_status_page
+name|status_page_dmah
 condition|)
 block|{
 name|drm_pci_free
 argument_list|(
 name|dev
 argument_list|,
-name|PAGE_SIZE
-argument_list|,
 name|dev_priv
 operator|->
-name|hw_status_page
-argument_list|,
-name|dev_priv
-operator|->
-name|dma_status_page
+name|status_page_dmah
 argument_list|)
 expr_stmt|;
 comment|/* Need to rewrite hardware status page */
@@ -774,7 +782,7 @@ expr_stmt|;
 comment|/* Program Hardware Status Page */
 name|dev_priv
 operator|->
-name|hw_status_page
+name|status_page_dmah
 operator|=
 name|drm_pci_alloc
 argument_list|(
@@ -785,11 +793,6 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|,
 literal|0xffffffff
-argument_list|,
-operator|&
-name|dev_priv
-operator|->
-name|dma_status_page
 argument_list|)
 expr_stmt|;
 if|if
@@ -797,7 +800,7 @@ condition|(
 operator|!
 name|dev_priv
 operator|->
-name|hw_status_page
+name|status_page_dmah
 condition|)
 block|{
 name|dev
@@ -827,6 +830,26 @@ name|ENOMEM
 argument_list|)
 return|;
 block|}
+name|dev_priv
+operator|->
+name|hw_status_page
+operator|=
+name|dev_priv
+operator|->
+name|status_page_dmah
+operator|->
+name|vaddr
+expr_stmt|;
+name|dev_priv
+operator|->
+name|dma_status_page
+operator|=
+name|dev_priv
+operator|->
+name|status_page_dmah
+operator|->
+name|busaddr
+expr_stmt|;
 name|memset
 argument_list|(
 name|dev_priv
@@ -3182,8 +3205,70 @@ block|}
 end_function
 
 begin_function
+name|int
+name|i915_driver_load
+parameter_list|(
+name|drm_device_t
+modifier|*
+name|dev
+parameter_list|,
+name|unsigned
+name|long
+name|flags
+parameter_list|)
+block|{
+comment|/* i915 has 4 more counters */
+name|dev
+operator|->
+name|counters
+operator|+=
+literal|4
+expr_stmt|;
+name|dev
+operator|->
+name|types
+index|[
+literal|6
+index|]
+operator|=
+name|_DRM_STAT_IRQ
+expr_stmt|;
+name|dev
+operator|->
+name|types
+index|[
+literal|7
+index|]
+operator|=
+name|_DRM_STAT_PRIMARY
+expr_stmt|;
+name|dev
+operator|->
+name|types
+index|[
+literal|8
+index|]
+operator|=
+name|_DRM_STAT_SECONDARY
+expr_stmt|;
+name|dev
+operator|->
+name|types
+index|[
+literal|9
+index|]
+operator|=
+name|_DRM_STAT_DMA
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
 name|void
-name|i915_driver_pretakedown
+name|i915_driver_lastclose
 parameter_list|(
 name|drm_device_t
 modifier|*
@@ -3226,7 +3311,7 @@ end_function
 
 begin_function
 name|void
-name|i915_driver_prerelease
+name|i915_driver_preclose
 parameter_list|(
 name|drm_device_t
 modifier|*
@@ -3295,9 +3380,11 @@ operator|=
 block|{
 name|i915_dma_init
 block|,
-literal|1
-block|,
-literal|1
+name|DRM_AUTH
+operator||
+name|DRM_MASTER
+operator||
+name|DRM_ROOT_ONLY
 block|}
 block|,
 index|[
@@ -3310,9 +3397,7 @@ operator|=
 block|{
 name|i915_flush_ioctl
 block|,
-literal|1
-block|,
-literal|0
+name|DRM_AUTH
 block|}
 block|,
 index|[
@@ -3325,9 +3410,7 @@ operator|=
 block|{
 name|i915_flip_bufs
 block|,
-literal|1
-block|,
-literal|0
+name|DRM_AUTH
 block|}
 block|,
 index|[
@@ -3340,9 +3423,7 @@ operator|=
 block|{
 name|i915_batchbuffer
 block|,
-literal|1
-block|,
-literal|0
+name|DRM_AUTH
 block|}
 block|,
 index|[
@@ -3355,9 +3436,7 @@ operator|=
 block|{
 name|i915_irq_emit
 block|,
-literal|1
-block|,
-literal|0
+name|DRM_AUTH
 block|}
 block|,
 index|[
@@ -3370,9 +3449,7 @@ operator|=
 block|{
 name|i915_irq_wait
 block|,
-literal|1
-block|,
-literal|0
+name|DRM_AUTH
 block|}
 block|,
 index|[
@@ -3385,9 +3462,7 @@ operator|=
 block|{
 name|i915_getparam
 block|,
-literal|1
-block|,
-literal|0
+name|DRM_AUTH
 block|}
 block|,
 index|[
@@ -3400,9 +3475,11 @@ operator|=
 block|{
 name|i915_setparam
 block|,
-literal|1
-block|,
-literal|1
+name|DRM_AUTH
+operator||
+name|DRM_MASTER
+operator||
+name|DRM_ROOT_ONLY
 block|}
 block|,
 index|[
@@ -3415,9 +3492,7 @@ operator|=
 block|{
 name|i915_mem_alloc
 block|,
-literal|1
-block|,
-literal|0
+name|DRM_AUTH
 block|}
 block|,
 index|[
@@ -3430,9 +3505,7 @@ operator|=
 block|{
 name|i915_mem_free
 block|,
-literal|1
-block|,
-literal|0
+name|DRM_AUTH
 block|}
 block|,
 index|[
@@ -3445,9 +3518,11 @@ operator|=
 block|{
 name|i915_mem_init_heap
 block|,
-literal|1
-block|,
-literal|1
+name|DRM_AUTH
+operator||
+name|DRM_MASTER
+operator||
+name|DRM_ROOT_ONLY
 block|}
 block|,
 index|[
@@ -3460,9 +3535,7 @@ operator|=
 block|{
 name|i915_cmdbuffer
 block|,
-literal|1
-block|,
-literal|0
+name|DRM_AUTH
 block|}
 block|}
 decl_stmt|;
@@ -3478,6 +3551,25 @@ name|i915_ioctls
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/**  * Determine if the device really is AGP or not.  *  * All Intel graphics chipsets are treated as AGP, even if they are really  * PCI-e.  *  * \param dev   The device to be tested.  *  * \returns  * A value of 1 is always retured to indictate every i9x5 is AGP.  */
+end_comment
+
+begin_function
+name|int
+name|i915_driver_device_is_agp
+parameter_list|(
+name|drm_device_t
+modifier|*
+name|dev
+parameter_list|)
+block|{
+return|return
+literal|1
+return|;
+block|}
+end_function
 
 end_unit
 

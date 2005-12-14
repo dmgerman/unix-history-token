@@ -1,11 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* drm_dma.c -- DMA IOCTL and function support  * Created: Fri Oct 18 2003 by anholt@FreeBSD.org  */
+comment|/* drm_irq.c -- IRQ IOCTL and function support  * Created: Fri Oct 18 2003 by anholt@FreeBSD.org  */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright 2003 Eric Anholt  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * ERIC ANHOLT BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Eric Anholt<anholt@FreeBSD.org>  *  * $FreeBSD$  */
+comment|/*-  * Copyright 2003 Eric Anholt  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * ERIC ANHOLT BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Eric Anholt<anholt@FreeBSD.org>  *  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -184,6 +198,8 @@ argument_list|)
 expr_stmt|;
 name|dev
 operator|->
+name|driver
+operator|.
 name|irq_handler
 argument_list|(
 name|arg
@@ -217,6 +233,14 @@ block|{
 name|int
 name|retcode
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+name|pci_intr_handle_t
+name|ih
+decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|dev
@@ -292,6 +316,8 @@ expr_stmt|;
 comment|/* Before installing handler */
 name|dev
 operator|->
+name|driver
+operator|.
 name|irq_preinstall
 argument_list|(
 name|dev
@@ -437,8 +463,6 @@ operator|->
 name|pa
 argument_list|,
 operator|&
-name|dev
-operator|->
 name|ih
 argument_list|)
 operator|!=
@@ -466,8 +490,6 @@ name|pa
 operator|.
 name|pa_pc
 argument_list|,
-name|dev
-operator|->
 name|ih
 argument_list|,
 name|IPL_TTY
@@ -478,7 +500,8 @@ argument_list|(
 operator|*
 argument_list|)
 argument_list|(
-name|DRM_IRQ_ARGS
+name|void
+operator|*
 argument_list|)
 operator|)
 name|dev
@@ -512,6 +535,8 @@ argument_list|()
 expr_stmt|;
 name|dev
 operator|->
+name|driver
+operator|.
 name|irq_postinstall
 argument_list|(
 name|dev
@@ -597,9 +622,14 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 name|int
 name|irqrid
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -619,6 +649,9 @@ name|irq_enabled
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 name|irqrid
 operator|=
 name|dev
@@ -631,6 +664,8 @@ name|irqrid
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 name|DRM_DEBUG
 argument_list|(
 literal|"%s: irq=%d\n"
@@ -644,6 +679,8 @@ argument_list|)
 expr_stmt|;
 name|dev
 operator|->
+name|driver
+operator|.
 name|irq_uninstall
 argument_list|(
 name|dev
@@ -775,6 +812,8 @@ condition|(
 operator|!
 name|dev
 operator|->
+name|driver
+operator|.
 name|use_irq
 condition|)
 return|return
@@ -821,6 +860,8 @@ condition|(
 operator|!
 name|dev
 operator|->
+name|driver
+operator|.
 name|use_irq
 condition|)
 return|return
@@ -974,6 +1015,8 @@ name|ret
 operator|=
 name|dev
 operator|->
+name|driver
+operator|.
 name|vblank_wait
 argument_list|(
 name|dev
