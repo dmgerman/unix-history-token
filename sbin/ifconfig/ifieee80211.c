@@ -8044,6 +8044,7 @@ argument_list|)
 operator|>=
 literal|0
 operator|&&
+operator|(
 name|memcmp
 argument_list|(
 name|ireq
@@ -8059,6 +8060,9 @@ argument_list|)
 argument_list|)
 operator|!=
 literal|0
+operator|||
+name|verbose
+operator|)
 condition|)
 name|printf
 argument_list|(
