@@ -2527,7 +2527,7 @@ directive|define
 name|VIA_L_SHIFT
 value|4
 name|u_int64_t
-name|total_sectors
+name|disk_sectors
 decl_stmt|;
 name|u_int32_t
 name|disk_id
