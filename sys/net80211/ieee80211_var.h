@@ -896,6 +896,17 @@ begin_comment
 comment|/* CONF: ATH Turbo enabled*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_F_BURST
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* CONF: bursting enabled */
+end_comment
+
 begin_comment
 comment|/* NB: this is intentionally setup to be IEEE80211_CAPINFO_PRIVACY */
 end_comment
