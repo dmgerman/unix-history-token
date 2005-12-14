@@ -168,9 +168,8 @@ name|FREEBSD_4
 end_ifdef
 
 begin_decl_stmt
-specifier|static
 name|int
-name|disks_registered
+name|amr_disks_registered
 init|=
 literal|0
 decl_stmt|;
@@ -973,7 +972,7 @@ name|FREEBSD_4
 if|if
 condition|(
 operator|--
-name|disks_registered
+name|amr_disks_registered
 operator|==
 literal|0
 condition|)

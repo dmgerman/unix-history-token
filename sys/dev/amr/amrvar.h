@@ -25,7 +25,7 @@ begin_define
 define|#
 directive|define
 name|LSI_DESC_PCI
-value|"LSILogic MegaRAID 1.51"
+value|"LSILogic MegaRAID 1.53"
 end_define
 
 begin_ifdef
@@ -177,6 +177,30 @@ name|int
 name|ac_status
 decl_stmt|;
 comment|/* command completion status */
+union|union
+block|{
+name|struct
+name|amr_sgentry
+modifier|*
+name|sg32
+decl_stmt|;
+name|struct
+name|amr_sg64entry
+modifier|*
+name|sg64
+decl_stmt|;
+block|}
+name|ac_sg
+union|;
+name|u_int32_t
+name|ac_sgbusaddr
+decl_stmt|;
+name|u_int32_t
+name|ac_sg64_lo
+decl_stmt|;
+name|u_int32_t
+name|ac_sg64_hi
+decl_stmt|;
 name|struct
 name|amr_mailbox
 name|ac_mailbox
@@ -216,36 +240,21 @@ define|#
 directive|define
 name|AMR_CMD_BUSY
 value|(1<<7)
+define|#
+directive|define
+name|AMR_CMD_SG64
+value|(1<<8)
+define|#
+directive|define
+name|AC_IS_SG64
+parameter_list|(
+name|ac
+parameter_list|)
+value|((ac)->ac_flags& AMR_CMD_SG64)
 name|struct
 name|bio
 modifier|*
 name|ac_bio
-decl_stmt|;
-name|void
-modifier|*
-name|ac_data
-decl_stmt|;
-name|size_t
-name|ac_length
-decl_stmt|;
-name|bus_dmamap_t
-name|ac_dmamap
-decl_stmt|;
-name|u_int32_t
-name|ac_dataphys
-decl_stmt|;
-name|void
-modifier|*
-name|ac_ccb_data
-decl_stmt|;
-name|size_t
-name|ac_ccb_length
-decl_stmt|;
-name|bus_dmamap_t
-name|ac_ccb_dmamap
-decl_stmt|;
-name|u_int32_t
-name|ac_ccb_dataphys
 decl_stmt|;
 name|void
 function_decl|(
@@ -262,6 +271,32 @@ function_decl|;
 name|void
 modifier|*
 name|ac_private
+decl_stmt|;
+name|void
+modifier|*
+name|ac_data
+decl_stmt|;
+name|size_t
+name|ac_length
+decl_stmt|;
+name|bus_dmamap_t
+name|ac_dmamap
+decl_stmt|;
+name|bus_dmamap_t
+name|ac_dma64map
+decl_stmt|;
+name|void
+modifier|*
+name|ac_ccb_data
+decl_stmt|;
+name|size_t
+name|ac_ccb_length
+decl_stmt|;
+name|bus_dmamap_t
+name|ac_ccb_dmamap
+decl_stmt|;
+name|bus_dmamap_t
+name|ac_ccb_dma64map
 decl_stmt|;
 block|}
 struct|;
@@ -327,6 +362,9 @@ name|bus_dma_tag_t
 name|amr_buffer_dmat
 decl_stmt|;
 comment|/* data buffer DMA tag */
+name|bus_dma_tag_t
+name|amr_buffer64_dmat
+decl_stmt|;
 name|struct
 name|resource
 modifier|*
@@ -366,6 +404,12 @@ modifier|*
 name|amr_sgtable
 decl_stmt|;
 comment|/* s/g lists */
+name|struct
+name|amr_sg64entry
+modifier|*
+name|amr_sg64table
+decl_stmt|;
+comment|/* 64bit s/g lists */
 name|u_int32_t
 name|amr_sgbusaddr
 decl_stmt|;
@@ -431,6 +475,14 @@ define|#
 directive|define
 name|AMR_STATE_QUEUE_FRZN
 value|(1<<5)
+define|#
+directive|define
+name|AMR_STATE_LD_DELETE
+value|(1<<6)
+define|#
+directive|define
+name|AMR_STATE_REMAP_LD
+value|(1<<7)
 comment|/* per-controller queues */
 name|struct
 name|bio_queue_head
@@ -504,6 +556,10 @@ name|cdev
 modifier|*
 name|amr_dev_t
 decl_stmt|;
+name|struct
+name|mtx
+name|amr_list_lock
+decl_stmt|;
 comment|/* controller type-specific support */
 name|int
 name|amr_type
@@ -530,6 +586,17 @@ parameter_list|(
 name|sc
 parameter_list|)
 value|((sc)->amr_type& AMR_TYPE_40LD)
+define|#
+directive|define
+name|AMR_TYPE_SG64
+value|(1<<2)
+define|#
+directive|define
+name|AMR_IS_SG64
+parameter_list|(
+name|sc
+parameter_list|)
+value|((sc)->amr_type& AMR_TYPE_SG64)
 name|int
 function_decl|(
 modifier|*
@@ -603,9 +670,18 @@ name|callout_handle
 name|amr_timeout
 decl_stmt|;
 comment|/* periodic status check */
+name|int
+name|amr_allow_vol_config
+decl_stmt|;
+name|int
+name|amr_linux_no_adapters
+decl_stmt|;
+name|int
+name|amr_ld_del_supported
+decl_stmt|;
 name|struct
 name|mtx
-name|amr_io_lock
+name|amr_hw_lock
 decl_stmt|;
 block|}
 struct|;
@@ -676,6 +752,32 @@ name|struct
 name|amr_softc
 modifier|*
 name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|amr_linux_ioctl_int
+parameter_list|(
+name|struct
+name|cdev
+modifier|*
+name|dev
+parameter_list|,
+name|u_long
+name|cmd
+parameter_list|,
+name|caddr_t
+name|addr
+parameter_list|,
+name|int32_t
+name|flag
+parameter_list|,
+name|d_thread_t
+modifier|*
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
