@@ -3198,7 +3198,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_ULONG
 argument_list|(
 name|_net_local_stream
 argument_list|,
@@ -3219,7 +3219,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_ULONG
 argument_list|(
 name|_net_local_stream
 argument_list|,
@@ -3248,7 +3248,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_ULONG
 argument_list|(
 name|_net_local_dgram
 argument_list|,
@@ -3269,7 +3269,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_ULONG
 argument_list|(
 name|_net_local_dgram
 argument_list|,

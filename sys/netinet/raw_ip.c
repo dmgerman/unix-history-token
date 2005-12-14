@@ -2453,7 +2453,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_ULONG
 argument_list|(
 name|_net_inet_raw
 argument_list|,
@@ -2474,7 +2474,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_ULONG
 argument_list|(
 name|_net_inet_raw
 argument_list|,
