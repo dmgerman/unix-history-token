@@ -4010,6 +4010,20 @@ name|err
 operator|)
 return|;
 block|}
+if|if
+condition|(
+operator|!
+operator|(
+name|dev
+operator|->
+name|quirks
+operator|->
+name|uq_flags
+operator|&
+name|UQ_NO_OPEN_CLEARSTALL
+operator|)
+condition|)
+block|{
 comment|/* Clear any stall and make sure DATA0 toggle will be used next. */
 if|if
 condition|(
@@ -4032,7 +4046,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Some devices reject this command, so ignore a STALL. 		 * Some device just time out on this command, so ignore 		 * that too. 		 */
+comment|/* 			 * Some devices reject this command, so ignore a STALL. 			 * Some device just time out on this command, so ignore 			 * that too. 			 */
 if|if
 condition|(
 name|err
@@ -4062,6 +4076,7 @@ operator|(
 name|err
 operator|)
 return|;
+block|}
 block|}
 block|}
 operator|*
