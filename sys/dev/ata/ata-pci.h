@@ -1648,6 +1648,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_VIA8251
+value|0x33491106
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_VIA8361
 value|0x31121106
 end_define
@@ -2046,6 +2053,13 @@ define|#
 directive|define
 name|VIABAR
 value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|VIAAHCI
+value|0x80
 end_define
 
 begin_comment

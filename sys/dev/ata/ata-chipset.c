@@ -10913,14 +10913,6 @@ operator|=
 name|ata_ahci_allocate
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-block|else {
-comment|/* enable SATA registers in compat mode */
-block|pci_write_config(dev, 0x94, 				     pci_read_config(dev, 0x94, 4) | 1<< 9, 4); 		}
-endif|#
-directive|endif
 block|}
 block|}
 name|ctlr
@@ -27528,6 +27520,20 @@ literal|"VIA 8237"
 block|}
 block|,
 block|{
+name|ATA_VIA8251
+block|,
+literal|0x00
+block|,
+name|VIA133
+block|,
+literal|0x00
+block|,
+name|ATA_UDMA6
+block|,
+literal|"VIA 8251"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -27589,6 +27595,20 @@ block|,
 name|ATA_SA150
 block|,
 literal|"VIA 6421"
+block|}
+block|,
+block|{
+name|ATA_VIA8251
+block|,
+literal|0x00
+block|,
+literal|0
+block|,
+name|VIAAHCI
+block|,
+name|ATA_SA150
+block|,
+literal|"VIA 8251"
 block|}
 block|,
 block|{
