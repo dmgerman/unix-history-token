@@ -5554,9 +5554,6 @@ argument_list|(
 literal|"Linux ELF exec handler removed\n"
 argument_list|)
 expr_stmt|;
-name|linux_mib_destroy
-argument_list|()
-expr_stmt|;
 block|}
 else|else
 name|printf

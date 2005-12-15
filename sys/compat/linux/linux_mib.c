@@ -656,22 +656,6 @@ end_function
 
 begin_function
 name|void
-name|linux_mib_destroy
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|mtx_destroy
-argument_list|(
-operator|&
-name|osname_lock
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
 name|linux_get_osname
 parameter_list|(
 name|struct

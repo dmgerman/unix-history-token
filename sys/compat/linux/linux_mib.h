@@ -17,15 +17,6 @@ end_define
 
 begin_function_decl
 name|void
-name|linux_mib_destroy
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|linux_get_osname
 parameter_list|(
 name|struct
