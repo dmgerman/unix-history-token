@@ -370,7 +370,7 @@ begin_define
 define|#
 directive|define
 name|NOPT
-value|12
+value|13
 end_define
 
 begin_define
@@ -482,12 +482,12 @@ index|[
 name|NOPT
 index|]
 init|=
-literal|"DhaCgmnpqrsv"
+literal|"DhaCgmnPpqrsv"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Also 'P', 'S' */
+comment|/* Also 'S' */
 end_comment
 
 begin_decl_stmt
