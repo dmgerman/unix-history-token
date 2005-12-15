@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/pci/pcireg.h>
 end_include
 
@@ -7608,15 +7614,14 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG1
 argument_list|,
-literal|"isp_send_ctio2: ent0[%d]0x%llx:%lld"
+literal|"isp_send_ctio2: ent0[%d]0x%jx:%ju"
 argument_list|,
 name|cto
 operator|->
 name|ct_seg_count
 argument_list|,
 operator|(
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|dm_segs
 index|[
@@ -7626,8 +7631,7 @@ operator|.
 name|ds_addr
 argument_list|,
 operator|(
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|dm_segs
 index|[
@@ -7822,7 +7826,7 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG1
 argument_list|,
-literal|"isp_send_ctio2: ent%d[%d]0x%llx:%lld"
+literal|"isp_send_ctio2: ent%d[%d]%jx:%ju"
 argument_list|,
 name|cto
 operator|->
@@ -7835,8 +7839,7 @@ argument_list|,
 name|seg
 argument_list|,
 operator|(
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|dm_segs
 index|[
@@ -7846,8 +7849,7 @@ operator|.
 name|ds_addr
 argument_list|,
 operator|(
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|dm_segs
 index|[
