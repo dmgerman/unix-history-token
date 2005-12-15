@@ -1965,7 +1965,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PR_LBA
+name|PROMISE_LBA
 parameter_list|(
 name|dev
 parameter_list|)
@@ -2536,8 +2536,12 @@ name|stripe_layout
 decl_stmt|;
 define|#
 directive|define
-name|VIA_L_MASK
+name|VIA_L_DISKS
 value|0x07
+define|#
+directive|define
+name|VIA_L_MASK
+value|0xf0
 define|#
 directive|define
 name|VIA_L_SHIFT
