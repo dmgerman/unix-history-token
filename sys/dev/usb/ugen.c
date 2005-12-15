@@ -5794,18 +5794,13 @@ argument_list|(
 literal|5
 argument_list|,
 operator|(
-literal|"ugen_isoc_rintr: xfer %d, count=%d\n"
+literal|"ugen_isoc_rintr: xfer %td, count=%d\n"
 operator|,
-call|(
-name|int
-call|)
-argument_list|(
 name|req
 operator|-
 name|sce
 operator|->
 name|isoreqs
-argument_list|)
 operator|,
 name|count
 operator|)
