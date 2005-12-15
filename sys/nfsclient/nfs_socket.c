@@ -3437,7 +3437,9 @@ operator|||
 operator|(
 name|so
 operator|->
-name|so_state
+name|so_rcv
+operator|.
+name|sb_state
 operator|&
 name|SBS_CANTRCVMORE
 operator|)
