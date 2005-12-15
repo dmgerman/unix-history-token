@@ -321,22 +321,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|curthread
-operator|->
-name|joiner
-condition|)
-name|_thr_umtx_wake
-argument_list|(
-operator|&
-name|curthread
-operator|->
-name|state
-argument_list|,
-name|INT_MAX
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|SHOULD_REPORT_EVENT
 argument_list|(
 name|curthread
@@ -349,6 +333,7 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Kernel will do wakeup at the address, so joiner thread 	 * will be resumed if it is sleeping at the address. 	 */
 name|thr_exit
 argument_list|(
 operator|&
