@@ -16933,11 +16933,6 @@ name|IP_FW_RESETLOG
 operator|)
 condition|)
 block|{
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500034
 name|error
 operator|=
 name|securelevel_ge
@@ -16960,22 +16955,6 @@ operator|(
 name|error
 operator|)
 return|;
-else|#
-directive|else
-comment|/* FreeBSD 4.x */
-if|if
-condition|(
-name|securelevel
-operator|>=
-literal|3
-condition|)
-return|return
-operator|(
-name|EPERM
-operator|)
-return|;
-endif|#
-directive|endif
 block|}
 name|error
 operator|=
