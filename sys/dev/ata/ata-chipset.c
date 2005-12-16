@@ -4479,7 +4479,7 @@ literal|0x00
 block|,
 name|ATA_UDMA2
 block|,
-literal|"Acard ATP850"
+literal|"ATP850"
 block|}
 block|,
 block|{
@@ -4493,7 +4493,7 @@ literal|0x00
 block|,
 name|ATA_UDMA4
 block|,
-literal|"Acard ATP860A"
+literal|"ATP860A"
 block|}
 block|,
 block|{
@@ -4507,7 +4507,7 @@ literal|0x00
 block|,
 name|ATA_UDMA4
 block|,
-literal|"Acard ATP860R"
+literal|"ATP860R"
 block|}
 block|,
 block|{
@@ -4521,7 +4521,7 @@ literal|0x00
 block|,
 name|ATA_UDMA6
 block|,
-literal|"Acard ATP865A"
+literal|"ATP865A"
 block|}
 block|,
 block|{
@@ -4535,7 +4535,7 @@ literal|0x00
 block|,
 name|ATA_UDMA6
 block|,
-literal|"Acard ATP865R"
+literal|"ATP865R"
 block|}
 block|,
 block|{
@@ -4580,7 +4580,7 @@ name|sprintf
 argument_list|(
 name|buffer
 argument_list|,
-literal|"%s %s controller"
+literal|"Acard %s %s controller"
 argument_list|,
 name|idx
 operator|->
@@ -5497,7 +5497,7 @@ name|ALISATA
 block|,
 name|ATA_SA150
 block|,
-literal|"AcerLabs M5289"
+literal|"M5289"
 block|}
 block|,
 block|{
@@ -5511,7 +5511,7 @@ name|ALISATA
 block|,
 name|ATA_SA150
 block|,
-literal|"AcerLabs M5287"
+literal|"M5287"
 block|}
 block|,
 block|{
@@ -5525,7 +5525,7 @@ name|ALISATA
 block|,
 name|ATA_SA150
 block|,
-literal|"AcerLabs M5281"
+literal|"M5281"
 block|}
 block|,
 block|{
@@ -5539,7 +5539,7 @@ name|ALINEW
 block|,
 name|ATA_UDMA6
 block|,
-literal|"AcerLabs M5229"
+literal|"M5229"
 block|}
 block|,
 block|{
@@ -5553,7 +5553,7 @@ name|ALINEW
 block|,
 name|ATA_UDMA5
 block|,
-literal|"AcerLabs M5229"
+literal|"M5229"
 block|}
 block|,
 block|{
@@ -5567,7 +5567,7 @@ name|ALINEW
 block|,
 name|ATA_UDMA4
 block|,
-literal|"AcerLabs M5229"
+literal|"M5229"
 block|}
 block|,
 block|{
@@ -5581,7 +5581,7 @@ name|ALIOLD
 block|,
 name|ATA_UDMA2
 block|,
-literal|"AcerLabs M5229"
+literal|"M5229"
 block|}
 block|,
 block|{
@@ -5595,7 +5595,7 @@ name|ALIOLD
 block|,
 name|ATA_WDMA2
 block|,
-literal|"AcerLabs M5229"
+literal|"M5229"
 block|}
 block|,
 block|{
@@ -5640,7 +5640,7 @@ name|sprintf
 argument_list|(
 name|buffer
 argument_list|,
-literal|"%s %s controller"
+literal|"AcerLabs %s %s controller"
 argument_list|,
 name|idx
 operator|->
@@ -6987,7 +6987,7 @@ literal|0x00
 block|,
 name|ATA_UDMA4
 block|,
-literal|"AMD 756"
+literal|"756"
 block|}
 block|,
 block|{
@@ -7003,7 +7003,7 @@ name|AMDBUG
 block|,
 name|ATA_UDMA5
 block|,
-literal|"AMD 766"
+literal|"766"
 block|}
 block|,
 block|{
@@ -7017,7 +7017,7 @@ name|AMDCABLE
 block|,
 name|ATA_UDMA5
 block|,
-literal|"AMD 768"
+literal|"768"
 block|}
 block|,
 block|{
@@ -7031,7 +7031,7 @@ name|AMDCABLE
 block|,
 name|ATA_UDMA6
 block|,
-literal|"AMD 8111"
+literal|"8111"
 block|}
 block|,
 block|{
@@ -7076,7 +7076,7 @@ name|sprintf
 argument_list|(
 name|buffer
 argument_list|,
-literal|"%s %s controller"
+literal|"AMD %s %s controller"
 argument_list|,
 name|idx
 operator|->
@@ -7253,7 +7253,7 @@ literal|0
 block|,
 name|ATA_UDMA5
 block|,
-literal|"ATI IXP200"
+literal|"IXP200"
 block|}
 block|,
 block|{
@@ -7267,7 +7267,7 @@ literal|0
 block|,
 name|ATA_UDMA6
 block|,
-literal|"ATI IXP300"
+literal|"IXP300"
 block|}
 block|,
 block|{
@@ -7281,7 +7281,7 @@ literal|0
 block|,
 name|ATA_UDMA6
 block|,
-literal|"ATI IXP400"
+literal|"IXP400"
 block|}
 block|,
 block|{
@@ -7295,7 +7295,7 @@ literal|0
 block|,
 name|ATA_SA150
 block|,
-literal|"ATI IXP300"
+literal|"IXP300"
 block|}
 block|,
 block|{
@@ -7309,7 +7309,7 @@ literal|0
 block|,
 name|ATA_SA150
 block|,
-literal|"ATI IXP400"
+literal|"IXP400"
 block|}
 block|,
 block|{
@@ -7323,7 +7323,7 @@ literal|0
 block|,
 name|ATA_SA150
 block|,
-literal|"ATI IXP400"
+literal|"IXP400"
 block|}
 block|,
 block|{
@@ -7368,7 +7368,7 @@ name|sprintf
 argument_list|(
 name|buffer
 argument_list|,
-literal|"%s %s controller"
+literal|"ATI %s %s controller"
 argument_list|,
 name|idx
 operator|->
@@ -8660,7 +8660,7 @@ literal|0x00
 block|,
 name|ATA_UDMA6
 block|,
-literal|"HighPoint HPT374"
+literal|"HPT374"
 block|}
 block|,
 block|{
@@ -8674,7 +8674,7 @@ literal|0x00
 block|,
 name|ATA_UDMA6
 block|,
-literal|"HighPoint HPT372N"
+literal|"HPT372N"
 block|}
 block|,
 block|{
@@ -8688,7 +8688,7 @@ literal|0x00
 block|,
 name|ATA_UDMA6
 block|,
-literal|"HighPoint HPT372"
+literal|"HPT372"
 block|}
 block|,
 block|{
@@ -8702,7 +8702,7 @@ literal|0x00
 block|,
 name|ATA_UDMA6
 block|,
-literal|"HighPoint HPT371"
+literal|"HPT371"
 block|}
 block|,
 block|{
@@ -8716,7 +8716,7 @@ literal|0x00
 block|,
 name|ATA_UDMA6
 block|,
-literal|"HighPoint HPT372"
+literal|"HPT372"
 block|}
 block|,
 block|{
@@ -8730,7 +8730,7 @@ literal|0x00
 block|,
 name|ATA_UDMA5
 block|,
-literal|"HighPoint HPT370"
+literal|"HPT370"
 block|}
 block|,
 block|{
@@ -8744,7 +8744,7 @@ literal|0x00
 block|,
 name|ATA_UDMA4
 block|,
-literal|"HighPoint HPT368"
+literal|"HPT368"
 block|}
 block|,
 block|{
@@ -8758,7 +8758,7 @@ name|HPTOLD
 block|,
 name|ATA_UDMA4
 block|,
-literal|"HighPoint HPT366"
+literal|"HPT366"
 block|}
 block|,
 block|{
@@ -8772,7 +8772,7 @@ literal|0x00
 block|,
 name|ATA_UDMA6
 block|,
-literal|"HighPoint HPT302"
+literal|"HPT302"
 block|}
 block|,
 block|{
@@ -8869,7 +8869,7 @@ name|sprintf
 argument_list|(
 name|buffer
 argument_list|,
-literal|"%s %s controller"
+literal|"HighPoint %s %s controller"
 argument_list|,
 name|buffer
 argument_list|,
@@ -9924,7 +9924,7 @@ literal|0x00
 block|,
 name|ATA_WDMA2
 block|,
-literal|"Intel PIIX"
+literal|"PIIX"
 block|}
 block|,
 block|{
@@ -9938,7 +9938,7 @@ literal|0x00
 block|,
 name|ATA_WDMA2
 block|,
-literal|"Intel PIIX3"
+literal|"PIIX3"
 block|}
 block|,
 block|{
@@ -9952,7 +9952,7 @@ literal|0x00
 block|,
 name|ATA_UDMA2
 block|,
-literal|"Intel PIIX4"
+literal|"PIIX4"
 block|}
 block|,
 block|{
@@ -9966,7 +9966,7 @@ literal|0x00
 block|,
 name|ATA_UDMA2
 block|,
-literal|"Intel PIIX4"
+literal|"PIIX4"
 block|}
 block|,
 block|{
@@ -9980,7 +9980,7 @@ literal|0x00
 block|,
 name|ATA_UDMA2
 block|,
-literal|"Intel PIIX4"
+literal|"PIIX4"
 block|}
 block|,
 block|{
@@ -9994,7 +9994,7 @@ literal|0x00
 block|,
 name|ATA_UDMA2
 block|,
-literal|"Intel ICH0"
+literal|"ICH0"
 block|}
 block|,
 block|{
@@ -10008,7 +10008,7 @@ literal|0x00
 block|,
 name|ATA_UDMA4
 block|,
-literal|"Intel ICH"
+literal|"ICH"
 block|}
 block|,
 block|{
@@ -10022,7 +10022,7 @@ literal|0x00
 block|,
 name|ATA_UDMA4
 block|,
-literal|"Intel ICH"
+literal|"ICH"
 block|}
 block|,
 block|{
@@ -10036,7 +10036,7 @@ literal|0x00
 block|,
 name|ATA_UDMA5
 block|,
-literal|"Intel ICH2"
+literal|"ICH2"
 block|}
 block|,
 block|{
@@ -10050,7 +10050,7 @@ literal|0x00
 block|,
 name|ATA_UDMA5
 block|,
-literal|"Intel ICH2"
+literal|"ICH2"
 block|}
 block|,
 block|{
@@ -10064,7 +10064,7 @@ literal|0x00
 block|,
 name|ATA_UDMA5
 block|,
-literal|"Intel ICH3"
+literal|"ICH3"
 block|}
 block|,
 block|{
@@ -10078,7 +10078,7 @@ literal|0x00
 block|,
 name|ATA_UDMA5
 block|,
-literal|"Intel ICH3"
+literal|"ICH3"
 block|}
 block|,
 block|{
@@ -10092,7 +10092,7 @@ literal|0x00
 block|,
 name|ATA_UDMA5
 block|,
-literal|"Intel ICH4"
+literal|"ICH4"
 block|}
 block|,
 block|{
@@ -10106,7 +10106,7 @@ literal|0x00
 block|,
 name|ATA_UDMA5
 block|,
-literal|"Intel ICH4"
+literal|"ICH4"
 block|}
 block|,
 block|{
@@ -10120,7 +10120,7 @@ literal|0x00
 block|,
 name|ATA_UDMA5
 block|,
-literal|"Intel ICH5"
+literal|"ICH5"
 block|}
 block|,
 block|{
@@ -10134,7 +10134,7 @@ literal|0x00
 block|,
 name|ATA_SA150
 block|,
-literal|"Intel ICH5"
+literal|"ICH5"
 block|}
 block|,
 block|{
@@ -10148,7 +10148,7 @@ literal|0x00
 block|,
 name|ATA_SA150
 block|,
-literal|"Intel ICH5"
+literal|"ICH5"
 block|}
 block|,
 block|{
@@ -10162,7 +10162,7 @@ literal|0x00
 block|,
 name|ATA_UDMA5
 block|,
-literal|"Intel 6300ESB"
+literal|"6300ESB"
 block|}
 block|,
 block|{
@@ -10176,7 +10176,7 @@ literal|0x00
 block|,
 name|ATA_SA150
 block|,
-literal|"Intel 6300ESB"
+literal|"6300ESB"
 block|}
 block|,
 block|{
@@ -10190,7 +10190,7 @@ literal|0x00
 block|,
 name|ATA_SA150
 block|,
-literal|"Intel 6300ESB"
+literal|"6300ESB"
 block|}
 block|,
 block|{
@@ -10204,7 +10204,7 @@ literal|0x00
 block|,
 name|ATA_UDMA5
 block|,
-literal|"Intel ICH6"
+literal|"ICH6"
 block|}
 block|,
 block|{
@@ -10218,7 +10218,7 @@ literal|0x00
 block|,
 name|ATA_SA150
 block|,
-literal|"Intel ICH6"
+literal|"ICH6"
 block|}
 block|,
 block|{
@@ -10232,7 +10232,7 @@ literal|0x00
 block|,
 name|ATA_SA150
 block|,
-literal|"Intel ICH6"
+literal|"ICH6"
 block|}
 block|,
 block|{
@@ -10246,7 +10246,7 @@ literal|0x00
 block|,
 name|ATA_SA150
 block|,
-literal|"Intel ICH6"
+literal|"ICH6"
 block|}
 block|,
 block|{
@@ -10260,7 +10260,7 @@ literal|0x00
 block|,
 name|ATA_UDMA5
 block|,
-literal|"Intel ICH7"
+literal|"ICH7"
 block|}
 block|,
 block|{
@@ -10274,7 +10274,7 @@ literal|0x00
 block|,
 name|ATA_SA300
 block|,
-literal|"Intel ICH7"
+literal|"ICH7"
 block|}
 block|,
 block|{
@@ -10288,7 +10288,7 @@ literal|0x00
 block|,
 name|ATA_SA300
 block|,
-literal|"Intel ICH7"
+literal|"ICH7"
 block|}
 block|,
 block|{
@@ -10302,7 +10302,7 @@ literal|0x00
 block|,
 name|ATA_SA300
 block|,
-literal|"Intel ICH7"
+literal|"ICH7"
 block|}
 block|,
 block|{
@@ -10316,7 +10316,7 @@ literal|0x00
 block|,
 name|ATA_SA300
 block|,
-literal|"Intel ICH7"
+literal|"ICH7"
 block|}
 block|,
 block|{
@@ -10330,7 +10330,7 @@ literal|0x00
 block|,
 name|ATA_SA150
 block|,
-literal|"Intel 31244"
+literal|"31244"
 block|}
 block|,
 block|{
@@ -10375,7 +10375,7 @@ name|sprintf
 argument_list|(
 name|buffer
 argument_list|,
-literal|"%s %s controller"
+literal|"Intel %s %s controller"
 argument_list|,
 name|idx
 operator|->
@@ -12891,7 +12891,7 @@ literal|0x00
 block|,
 name|ATA_UDMA6
 block|,
-literal|"ITE IT8212F"
+literal|"IT8212F"
 block|}
 block|,
 block|{
@@ -12905,7 +12905,7 @@ literal|0x00
 block|,
 name|ATA_UDMA6
 block|,
-literal|"ITE IT8211F"
+literal|"IT8211F"
 block|}
 block|,
 block|{
@@ -12950,7 +12950,7 @@ name|sprintf
 argument_list|(
 name|buffer
 argument_list|,
-literal|"%s %s controller"
+literal|"ITE %s %s controller"
 argument_list|,
 name|idx
 operator|->
@@ -13997,7 +13997,7 @@ name|NVIDIA
 block|,
 name|ATA_UDMA5
 block|,
-literal|"nVidia nForce"
+literal|"nForce"
 block|}
 block|,
 block|{
@@ -14011,11 +14011,11 @@ name|NVIDIA
 block|,
 name|ATA_UDMA6
 block|,
-literal|"nVidia nForce2"
+literal|"nForce2"
 block|}
 block|,
 block|{
-name|ATA_NFORCE2_MCP
+name|ATA_NFORCE2_PRO
 block|,
 literal|0
 block|,
@@ -14025,11 +14025,11 @@ name|NVIDIA
 block|,
 name|ATA_UDMA6
 block|,
-literal|"nVidia nForce2 MCP"
+literal|"nForce2 Pro"
 block|}
 block|,
 block|{
-name|ATA_NFORCE2_MCP_S1
+name|ATA_NFORCE2_PRO_S1
 block|,
 literal|0
 block|,
@@ -14039,7 +14039,7 @@ literal|0
 block|,
 name|ATA_SA150
 block|,
-literal|"nVidia nForce2 MCP"
+literal|"nForce2 Pro"
 block|}
 block|,
 block|{
@@ -14053,7 +14053,7 @@ name|NVIDIA
 block|,
 name|ATA_UDMA6
 block|,
-literal|"nVidia nForce3"
+literal|"nForce3"
 block|}
 block|,
 block|{
@@ -14067,7 +14067,7 @@ name|NVIDIA
 block|,
 name|ATA_UDMA6
 block|,
-literal|"nVidia nForce3 Pro"
+literal|"nForce3 Pro"
 block|}
 block|,
 block|{
@@ -14081,7 +14081,7 @@ literal|0
 block|,
 name|ATA_SA150
 block|,
-literal|"nVidia nForce3 Pro"
+literal|"nForce3 Pro"
 block|}
 block|,
 block|{
@@ -14095,11 +14095,11 @@ literal|0
 block|,
 name|ATA_SA150
 block|,
-literal|"nVidia nForce3 Pro"
+literal|"nForce3 Pro"
 block|}
 block|,
 block|{
-name|ATA_NFORCE3_MCP
+name|ATA_NFORCE_MCP04
 block|,
 literal|0
 block|,
@@ -14109,11 +14109,11 @@ name|NVIDIA
 block|,
 name|ATA_UDMA6
 block|,
-literal|"nVidia nForce3 MCP"
+literal|"nForce MCP"
 block|}
 block|,
 block|{
-name|ATA_NFORCE3_MCP_S1
+name|ATA_NFORCE_MCP04_S1
 block|,
 literal|0
 block|,
@@ -14123,11 +14123,11 @@ name|NV4OFF
 block|,
 name|ATA_SA150
 block|,
-literal|"nVidia nForce3 MCP"
+literal|"nForce MCP"
 block|}
 block|,
 block|{
-name|ATA_NFORCE3_MCP_S2
+name|ATA_NFORCE_MCP04_S2
 block|,
 literal|0
 block|,
@@ -14137,11 +14137,11 @@ name|NV4OFF
 block|,
 name|ATA_SA150
 block|,
-literal|"nVidia nForce3 MCP"
+literal|"nForce MCP"
 block|}
 block|,
 block|{
-name|ATA_NFORCE4
+name|ATA_NFORCE_CK804
 block|,
 literal|0
 block|,
@@ -14151,11 +14151,11 @@ name|NVIDIA
 block|,
 name|ATA_UDMA6
 block|,
-literal|"nVidia nForce4"
+literal|"nForce CK804"
 block|}
 block|,
 block|{
-name|ATA_NFORCE4_S1
+name|ATA_NFORCE_CK804_S1
 block|,
 literal|0
 block|,
@@ -14165,11 +14165,11 @@ name|NV4OFF
 block|,
 name|ATA_SA300
 block|,
-literal|"nVidia nForce4"
+literal|"nForce CK804"
 block|}
 block|,
 block|{
-name|ATA_NFORCE4_S2
+name|ATA_NFORCE_CK804_S2
 block|,
 literal|0
 block|,
@@ -14179,7 +14179,91 @@ name|NV4OFF
 block|,
 name|ATA_SA300
 block|,
-literal|"nVidia nForce4"
+literal|"nForce CK804"
+block|}
+block|,
+block|{
+name|ATA_NFORCE_MCP51
+block|,
+literal|0
+block|,
+name|AMDNVIDIA
+block|,
+name|NVIDIA
+block|,
+name|ATA_UDMA6
+block|,
+literal|"nForce MCP51"
+block|}
+block|,
+block|{
+name|ATA_NFORCE_MCP51_S1
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|NV4OFF
+block|,
+name|ATA_SA300
+block|,
+literal|"nForce MCP51"
+block|}
+block|,
+block|{
+name|ATA_NFORCE_MCP51_S2
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|NV4OFF
+block|,
+name|ATA_SA300
+block|,
+literal|"nForce MCP51"
+block|}
+block|,
+block|{
+name|ATA_NFORCE_MCP55
+block|,
+literal|0
+block|,
+name|AMDNVIDIA
+block|,
+name|NVIDIA
+block|,
+name|ATA_UDMA6
+block|,
+literal|"nForce MCP55"
+block|}
+block|,
+block|{
+name|ATA_NFORCE_MCP55_S1
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|NV4OFF
+block|,
+name|ATA_SA300
+block|,
+literal|"nForce MCP55"
+block|}
+block|,
+block|{
+name|ATA_NFORCE_MCP55_S2
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|NV4OFF
+block|,
+name|ATA_SA300
+block|,
+literal|"nForce MCP55"
 block|}
 block|,
 block|{
@@ -14224,7 +14308,7 @@ name|sprintf
 argument_list|(
 name|buffer
 argument_list|,
-literal|"%s %s controller"
+literal|"nVidia %s %s controller"
 argument_list|,
 name|idx
 operator|->
@@ -15320,7 +15404,7 @@ literal|0x00
 block|,
 name|ATA_UDMA2
 block|,
-literal|"Promise PDC20246"
+literal|"PDC20246"
 block|}
 block|,
 block|{
@@ -15334,7 +15418,7 @@ literal|0x00
 block|,
 name|ATA_UDMA4
 block|,
-literal|"Promise PDC20262"
+literal|"PDC20262"
 block|}
 block|,
 block|{
@@ -15348,7 +15432,7 @@ literal|0x00
 block|,
 name|ATA_UDMA4
 block|,
-literal|"Promise PDC20263"
+literal|"PDC20263"
 block|}
 block|,
 block|{
@@ -15362,7 +15446,7 @@ literal|0x00
 block|,
 name|ATA_UDMA5
 block|,
-literal|"Promise PDC20265"
+literal|"PDC20265"
 block|}
 block|,
 block|{
@@ -15376,7 +15460,7 @@ literal|0x00
 block|,
 name|ATA_UDMA5
 block|,
-literal|"Promise PDC20267"
+literal|"PDC20267"
 block|}
 block|,
 block|{
@@ -15390,7 +15474,7 @@ name|PRTX4
 block|,
 name|ATA_UDMA5
 block|,
-literal|"Promise PDC20268"
+literal|"PDC20268"
 block|}
 block|,
 block|{
@@ -15404,7 +15488,7 @@ literal|0x00
 block|,
 name|ATA_UDMA6
 block|,
-literal|"Promise PDC20269"
+literal|"PDC20269"
 block|}
 block|,
 block|{
@@ -15418,7 +15502,7 @@ name|PRTX4
 block|,
 name|ATA_UDMA5
 block|,
-literal|"Promise PDC20270"
+literal|"PDC20270"
 block|}
 block|,
 block|{
@@ -15432,7 +15516,7 @@ literal|0x00
 block|,
 name|ATA_UDMA6
 block|,
-literal|"Promise PDC20271"
+literal|"PDC20271"
 block|}
 block|,
 block|{
@@ -15446,7 +15530,7 @@ literal|0x00
 block|,
 name|ATA_UDMA6
 block|,
-literal|"Promise PDC20275"
+literal|"PDC20275"
 block|}
 block|,
 block|{
@@ -15460,7 +15544,7 @@ name|PRSX6K
 block|,
 name|ATA_UDMA6
 block|,
-literal|"Promise PDC20276"
+literal|"PDC20276"
 block|}
 block|,
 block|{
@@ -15474,7 +15558,7 @@ literal|0x00
 block|,
 name|ATA_UDMA6
 block|,
-literal|"Promise PDC20277"
+literal|"PDC20277"
 block|}
 block|,
 block|{
@@ -15488,7 +15572,7 @@ name|PRSATA
 block|,
 name|ATA_SA150
 block|,
-literal|"Promise PDC20318"
+literal|"PDC20318"
 block|}
 block|,
 block|{
@@ -15502,7 +15586,7 @@ name|PRSATA
 block|,
 name|ATA_SA150
 block|,
-literal|"Promise PDC20319"
+literal|"PDC20319"
 block|}
 block|,
 block|{
@@ -15516,7 +15600,7 @@ name|PRCMBO
 block|,
 name|ATA_SA150
 block|,
-literal|"Promise PDC20371"
+literal|"PDC20371"
 block|}
 block|,
 block|{
@@ -15530,7 +15614,7 @@ name|PRCMBO
 block|,
 name|ATA_SA150
 block|,
-literal|"Promise PDC20375"
+literal|"PDC20375"
 block|}
 block|,
 block|{
@@ -15544,7 +15628,7 @@ name|PRCMBO
 block|,
 name|ATA_SA150
 block|,
-literal|"Promise PDC20376"
+literal|"PDC20376"
 block|}
 block|,
 block|{
@@ -15558,7 +15642,7 @@ name|PRCMBO
 block|,
 name|ATA_SA150
 block|,
-literal|"Promise PDC20377"
+literal|"PDC20377"
 block|}
 block|,
 block|{
@@ -15572,7 +15656,7 @@ name|PRCMBO
 block|,
 name|ATA_SA150
 block|,
-literal|"Promise PDC20378"
+literal|"PDC20378"
 block|}
 block|,
 block|{
@@ -15586,7 +15670,7 @@ name|PRCMBO
 block|,
 name|ATA_SA150
 block|,
-literal|"Promise PDC20379"
+literal|"PDC20379"
 block|}
 block|,
 block|{
@@ -15600,7 +15684,7 @@ name|PRCMBO2
 block|,
 name|ATA_SA150
 block|,
-literal|"Promise PDC20571"
+literal|"PDC20571"
 block|}
 block|,
 block|{
@@ -15614,7 +15698,7 @@ name|PRCMBO2
 block|,
 name|ATA_SA150
 block|,
-literal|"Promise PDC20575"
+literal|"PDC20575"
 block|}
 block|,
 block|{
@@ -15628,7 +15712,7 @@ name|PRCMBO2
 block|,
 name|ATA_SA150
 block|,
-literal|"Promise PDC20579"
+literal|"PDC20579"
 block|}
 block|,
 block|{
@@ -15642,7 +15726,7 @@ name|PRCMBO2
 block|,
 name|ATA_SA150
 block|,
-literal|"Promise PDC20580"
+literal|"PDC20580"
 block|}
 block|,
 block|{
@@ -15656,7 +15740,7 @@ name|PRPATA
 block|,
 name|ATA_UDMA6
 block|,
-literal|"Promise PDC20617"
+literal|"PDC20617"
 block|}
 block|,
 block|{
@@ -15670,7 +15754,7 @@ name|PRPATA
 block|,
 name|ATA_UDMA6
 block|,
-literal|"Promise PDC20618"
+literal|"PDC20618"
 block|}
 block|,
 block|{
@@ -15684,7 +15768,7 @@ name|PRPATA
 block|,
 name|ATA_UDMA6
 block|,
-literal|"Promise PDC20619"
+literal|"PDC20619"
 block|}
 block|,
 block|{
@@ -15698,7 +15782,7 @@ name|PRPATA
 block|,
 name|ATA_UDMA6
 block|,
-literal|"Promise PDC20620"
+literal|"PDC20620"
 block|}
 block|,
 block|{
@@ -15712,7 +15796,7 @@ name|PRSX4X
 block|,
 name|ATA_UDMA5
 block|,
-literal|"Promise PDC20621"
+literal|"PDC20621"
 block|}
 block|,
 block|{
@@ -15726,7 +15810,7 @@ name|PRSX4X
 block|,
 name|ATA_SA150
 block|,
-literal|"Promise PDC20622"
+literal|"PDC20622"
 block|}
 block|,
 block|{
@@ -15740,7 +15824,7 @@ name|PRSATA2
 block|,
 name|ATA_SA150
 block|,
-literal|"Promise PDC40518"
+literal|"PDC40518"
 block|}
 block|,
 block|{
@@ -15754,7 +15838,7 @@ name|PRSATA2
 block|,
 name|ATA_SA150
 block|,
-literal|"Promise PDC40519"
+literal|"PDC40519"
 block|}
 block|,
 block|{
@@ -15768,7 +15852,7 @@ name|PRSATA2
 block|,
 name|ATA_SA300
 block|,
-literal|"Promise PDC40718"
+literal|"PDC40718"
 block|}
 block|,
 block|{
@@ -15782,7 +15866,7 @@ name|PRSATA2
 block|,
 name|ATA_SA300
 block|,
-literal|"Promise PDC40719"
+literal|"PDC40719"
 block|}
 block|,
 block|{
@@ -16044,7 +16128,7 @@ name|sprintf
 argument_list|(
 name|buffer
 argument_list|,
-literal|"%s %s controller"
+literal|"Promise %s %s controller"
 argument_list|,
 name|buffer
 argument_list|,
@@ -21856,7 +21940,7 @@ literal|0x00
 block|,
 name|ATA_UDMA2
 block|,
-literal|"ServerWorks ROSB4"
+literal|"ROSB4"
 block|}
 block|,
 block|{
@@ -21870,7 +21954,7 @@ literal|0x00
 block|,
 name|ATA_UDMA5
 block|,
-literal|"ServerWorks CSB5"
+literal|"CSB5"
 block|}
 block|,
 block|{
@@ -21884,7 +21968,7 @@ literal|0x00
 block|,
 name|ATA_UDMA4
 block|,
-literal|"ServerWorks CSB5"
+literal|"CSB5"
 block|}
 block|,
 block|{
@@ -21898,7 +21982,7 @@ literal|0x00
 block|,
 name|ATA_UDMA5
 block|,
-literal|"ServerWorks CSB6"
+literal|"CSB6"
 block|}
 block|,
 block|{
@@ -21912,7 +21996,7 @@ literal|0x00
 block|,
 name|ATA_UDMA4
 block|,
-literal|"ServerWorks CSB6"
+literal|"CSB6"
 block|}
 block|,
 block|{
@@ -21957,7 +22041,7 @@ name|sprintf
 argument_list|(
 name|buffer
 argument_list|,
-literal|"%s %s controller"
+literal|"ServerWorks %s %s controller"
 argument_list|,
 name|idx
 operator|->
@@ -25675,7 +25759,7 @@ literal|0
 block|,
 name|ATA_SA150
 block|,
-literal|"SiS 182"
+literal|"182"
 block|}
 block|,
 comment|/* south */
@@ -25690,7 +25774,7 @@ literal|0
 block|,
 name|ATA_SA150
 block|,
-literal|"SiS 181"
+literal|"181"
 block|}
 block|,
 comment|/* south */
@@ -25705,7 +25789,7 @@ literal|0
 block|,
 name|ATA_SA150
 block|,
-literal|"SiS 180"
+literal|"180"
 block|}
 block|,
 comment|/* south */
@@ -25720,7 +25804,7 @@ literal|0
 block|,
 name|ATA_UDMA6
 block|,
-literal|"SiS 965"
+literal|"965"
 block|}
 block|,
 comment|/* south */
@@ -25735,7 +25819,7 @@ literal|0
 block|,
 name|ATA_UDMA6
 block|,
-literal|"SiS 964"
+literal|"964"
 block|}
 block|,
 comment|/* south */
@@ -25750,7 +25834,7 @@ literal|0
 block|,
 name|ATA_UDMA6
 block|,
-literal|"SiS 963"
+literal|"963"
 block|}
 block|,
 comment|/* south */
@@ -25765,7 +25849,7 @@ literal|0
 block|,
 name|ATA_UDMA6
 block|,
-literal|"SiS 962"
+literal|"962"
 block|}
 block|,
 comment|/* south */
@@ -25780,7 +25864,7 @@ literal|0
 block|,
 name|ATA_UDMA5
 block|,
-literal|"SiS 745"
+literal|"745"
 block|}
 block|,
 comment|/* 1chip */
@@ -25795,7 +25879,7 @@ literal|0
 block|,
 name|ATA_UDMA5
 block|,
-literal|"SiS 735"
+literal|"735"
 block|}
 block|,
 comment|/* 1chip */
@@ -25810,7 +25894,7 @@ literal|0
 block|,
 name|ATA_UDMA5
 block|,
-literal|"SiS 733"
+literal|"733"
 block|}
 block|,
 comment|/* 1chip */
@@ -25825,7 +25909,7 @@ literal|0
 block|,
 name|ATA_UDMA5
 block|,
-literal|"SiS 730"
+literal|"730"
 block|}
 block|,
 comment|/* 1chip */
@@ -25840,7 +25924,7 @@ literal|0
 block|,
 name|ATA_UDMA5
 block|,
-literal|"SiS 635"
+literal|"635"
 block|}
 block|,
 comment|/* 1chip */
@@ -25855,7 +25939,7 @@ literal|0
 block|,
 name|ATA_UDMA5
 block|,
-literal|"SiS 633"
+literal|"633"
 block|}
 block|,
 comment|/* unknown */
@@ -25870,7 +25954,7 @@ literal|0
 block|,
 name|ATA_UDMA5
 block|,
-literal|"SiS 630S"
+literal|"630S"
 block|}
 block|,
 comment|/* 1chip */
@@ -25885,7 +25969,7 @@ literal|0
 block|,
 name|ATA_UDMA4
 block|,
-literal|"SiS 630"
+literal|"630"
 block|}
 block|,
 comment|/* 1chip */
@@ -25900,7 +25984,7 @@ literal|0
 block|,
 name|ATA_UDMA4
 block|,
-literal|"SiS 620"
+literal|"620"
 block|}
 block|,
 comment|/* 1chip */
@@ -25915,7 +25999,7 @@ literal|0
 block|,
 name|ATA_UDMA5
 block|,
-literal|"SiS 550"
+literal|"550"
 block|}
 block|,
 block|{
@@ -25929,7 +26013,7 @@ literal|0
 block|,
 name|ATA_UDMA4
 block|,
-literal|"SiS 540"
+literal|"540"
 block|}
 block|,
 block|{
@@ -25943,7 +26027,7 @@ literal|0
 block|,
 name|ATA_UDMA4
 block|,
-literal|"SiS 530"
+literal|"530"
 block|}
 block|,
 block|{
@@ -25957,7 +26041,7 @@ literal|1
 block|,
 name|ATA_UDMA2
 block|,
-literal|"SiS 5513"
+literal|"5513"
 block|}
 block|,
 block|{
@@ -25971,7 +26055,7 @@ literal|1
 block|,
 name|ATA_WDMA2
 block|,
-literal|"SiS 5513"
+literal|"5513"
 block|}
 block|,
 block|{
@@ -26286,7 +26370,7 @@ name|sprintf
 argument_list|(
 name|buffer
 argument_list|,
-literal|"%s %s controller"
+literal|"SiS %s %s controller"
 argument_list|,
 name|idx
 operator|->
@@ -27348,7 +27432,7 @@ literal|0x00
 block|,
 name|ATA_UDMA2
 block|,
-literal|"VIA 82C586B"
+literal|"82C586B"
 block|}
 block|,
 block|{
@@ -27362,7 +27446,7 @@ literal|0x00
 block|,
 name|ATA_WDMA2
 block|,
-literal|"VIA 82C586"
+literal|"82C586"
 block|}
 block|,
 block|{
@@ -27376,7 +27460,7 @@ name|VIACLK
 block|,
 name|ATA_UDMA4
 block|,
-literal|"VIA 82C596B"
+literal|"82C596B"
 block|}
 block|,
 block|{
@@ -27390,7 +27474,7 @@ literal|0x00
 block|,
 name|ATA_UDMA2
 block|,
-literal|"VIA 82C596"
+literal|"82C596"
 block|}
 block|,
 block|{
@@ -27404,7 +27488,7 @@ name|VIABUG
 block|,
 name|ATA_UDMA5
 block|,
-literal|"VIA 82C686B"
+literal|"82C686B"
 block|}
 block|,
 block|{
@@ -27418,7 +27502,7 @@ name|VIACLK
 block|,
 name|ATA_UDMA4
 block|,
-literal|"VIA 82C686A"
+literal|"82C686A"
 block|}
 block|,
 block|{
@@ -27432,7 +27516,7 @@ literal|0x00
 block|,
 name|ATA_UDMA2
 block|,
-literal|"VIA 82C686"
+literal|"82C686"
 block|}
 block|,
 block|{
@@ -27446,7 +27530,7 @@ name|VIABUG
 block|,
 name|ATA_UDMA5
 block|,
-literal|"VIA 8231"
+literal|"8231"
 block|}
 block|,
 block|{
@@ -27460,7 +27544,7 @@ literal|0x00
 block|,
 name|ATA_UDMA5
 block|,
-literal|"VIA 8233"
+literal|"8233"
 block|}
 block|,
 block|{
@@ -27474,7 +27558,7 @@ literal|0x00
 block|,
 name|ATA_UDMA5
 block|,
-literal|"VIA 8233C"
+literal|"8233C"
 block|}
 block|,
 block|{
@@ -27488,7 +27572,7 @@ literal|0x00
 block|,
 name|ATA_UDMA6
 block|,
-literal|"VIA 8233A"
+literal|"8233A"
 block|}
 block|,
 block|{
@@ -27502,7 +27586,7 @@ literal|0x00
 block|,
 name|ATA_UDMA6
 block|,
-literal|"VIA 8235"
+literal|"8235"
 block|}
 block|,
 block|{
@@ -27516,7 +27600,7 @@ literal|0x00
 block|,
 name|ATA_UDMA6
 block|,
-literal|"VIA 8237"
+literal|"8237"
 block|}
 block|,
 block|{
@@ -27530,7 +27614,7 @@ literal|0x00
 block|,
 name|ATA_UDMA6
 block|,
-literal|"VIA 8251"
+literal|"8251"
 block|}
 block|,
 block|{
@@ -27566,7 +27650,7 @@ literal|0x00
 block|,
 name|ATA_UDMA6
 block|,
-literal|"VIA 6410"
+literal|"6410"
 block|}
 block|,
 block|{
@@ -27580,7 +27664,7 @@ literal|0x00
 block|,
 name|ATA_SA150
 block|,
-literal|"VIA 6420"
+literal|"6420"
 block|}
 block|,
 block|{
@@ -27594,7 +27678,7 @@ name|VIABAR
 block|,
 name|ATA_SA150
 block|,
-literal|"VIA 6421"
+literal|"6421"
 block|}
 block|,
 block|{
@@ -27608,7 +27692,7 @@ name|VIAAHCI
 block|,
 name|ATA_SA150
 block|,
-literal|"VIA 8251"
+literal|"8251"
 block|}
 block|,
 block|{
@@ -27687,7 +27771,7 @@ name|sprintf
 argument_list|(
 name|buffer
 argument_list|,
-literal|"%s %s controller"
+literal|"VIA %s %s controller"
 argument_list|,
 name|idx
 operator|->
