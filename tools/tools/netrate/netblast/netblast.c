@@ -379,7 +379,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"start:             %d.%09lu\n"
+literal|"start:             %zd.%09lu\n"
 argument_list|,
 name|starttime
 operator|.
@@ -392,7 +392,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"finish:            %d.%09lu\n"
+literal|"finish:            %zd.%09lu\n"
 argument_list|,
 name|tmptime
 operator|.
