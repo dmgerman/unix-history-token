@@ -187,7 +187,7 @@ begin_define
 define|#
 directive|define
 name|AMDPM_DEVICEID_AMD8111PM
-value|0x746A
+value|0x746B
 end_define
 
 begin_comment
