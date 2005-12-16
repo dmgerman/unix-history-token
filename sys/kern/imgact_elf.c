@@ -1544,7 +1544,7 @@ name|vm_map_find
 argument_list|(
 name|map
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|0
 argument_list|,
