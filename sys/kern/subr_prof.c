@@ -2173,7 +2173,7 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-name|uintptr_t
+name|uintfptr_t
 name|pc
 parameter_list|,
 name|u_int
@@ -2345,7 +2345,7 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-name|uintptr_t
+name|uintfptr_t
 name|pc
 parameter_list|,
 name|u_int
