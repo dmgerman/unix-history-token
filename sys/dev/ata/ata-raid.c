@@ -21761,6 +21761,9 @@ operator|=
 operator|(
 name|u_int32_t
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|rdp
 operator|->
 name|disks
