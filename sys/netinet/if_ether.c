@@ -276,7 +276,7 @@ name|arpt_prune
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"ARP table prune interval in seconds"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -297,7 +297,7 @@ name|arpt_keep
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"ARP entry lifetime in seconds"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -423,7 +423,7 @@ name|arp_maxtries
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"ARP resolution attempts before returning error"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -444,7 +444,7 @@ name|useloopback
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Use the loopback interface for local traffic"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -465,7 +465,7 @@ name|arp_proxyall
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Enable proxy ARP for all suitable requests"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
