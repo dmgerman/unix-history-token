@@ -135,7 +135,7 @@ begin_define
 define|#
 directive|define
 name|MAX_BPAGES
-value|512
+value|8192
 end_define
 
 begin_struct_decl
