@@ -381,7 +381,7 @@ name|ELF64_R_TYPE
 parameter_list|(
 name|info
 parameter_list|)
-value|((unsigned char)(info))
+value|((info)& 0xffffffffL)
 end_define
 
 begin_comment
@@ -397,7 +397,7 @@ name|sym
 parameter_list|,
 name|type
 parameter_list|)
-value|(((sym)<< 32) + (unsigned char)(type))
+value|(((sym)<< 32) + ((type)& 0xffffffffL))
 end_define
 
 begin_comment
