@@ -926,6 +926,12 @@ modifier|*
 name|sc_ifp
 decl_stmt|;
 comment|/* make this an interface */
+name|LIST_ENTRY
+argument_list|(
+argument|bridge_softc
+argument_list|)
+name|sc_list
+expr_stmt|;
 name|struct
 name|mtx
 name|sc_mtx
@@ -1297,21 +1303,6 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
-name|struct
-name|ifnet
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-function_decl|(
-modifier|*
-name|bridge_detach_p
-function_decl|)
-parameter_list|(
 name|struct
 name|ifnet
 modifier|*
