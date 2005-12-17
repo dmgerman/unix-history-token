@@ -2208,7 +2208,7 @@ name|pfil_ipfw
 operator|=
 name|enable
 expr_stmt|;
-comment|/* 	 * Disable pfil so that ipfw doesnt run twice, if the user really wants 	 * both then they can re-enable pfil_bridge and/or pfil_member. 	 */
+comment|/* 		 * Disable pfil so that ipfw doesnt run twice, if the user 		 * really wants both then they can re-enable pfil_bridge and/or 		 * pfil_member. 		 */
 if|if
 condition|(
 name|pfil_ipfw
@@ -3169,7 +3169,7 @@ name|EINVAL
 expr_stmt|;
 break|break;
 default|default:
-comment|/*  		 * drop the lock as ether_ioctl() will call bridge_start() and 		 * cause the lock to be recursed. 		 */
+comment|/* 		 * drop the lock as ether_ioctl() will call bridge_start() and 		 * cause the lock to be recursed. 		 */
 name|BRIDGE_UNLOCK
 argument_list|(
 name|sc
@@ -8634,7 +8634,7 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-comment|/* 		 * Filter on the output interface. Pass a NULL bridge interface 		 * pointer so we do not redundantly filter on the bridge for  		 * each interface we broadcast on. 		 */
+comment|/* 		 * Filter on the output interface. Pass a NULL bridge interface 		 * pointer so we do not redundantly filter on the bridge for 		 * each interface we broadcast on. 		 */
 if|if
 condition|(
 name|runfilt
