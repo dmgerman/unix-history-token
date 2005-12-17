@@ -1558,6 +1558,8 @@ argument_list|,
 name|FALSE
 argument_list|,
 name|prot
+operator||
+name|VM_PROT_WRITE
 argument_list|,
 name|max
 argument_list|,
