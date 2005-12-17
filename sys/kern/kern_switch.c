@@ -2075,7 +2075,7 @@ operator|++
 expr_stmt|;
 name|CTR4
 argument_list|(
-name|KTR_CRITICAL
+name|KTR_CONTENTION
 argument_list|,
 literal|"critical_enter by thread %p (%ld, %s) to %d"
 argument_list|,
@@ -2208,7 +2208,7 @@ operator|--
 expr_stmt|;
 name|CTR4
 argument_list|(
-name|KTR_CRITICAL
+name|KTR_CONTENTION
 argument_list|,
 literal|"critical_exit by thread %p (%ld, %s) to %d"
 argument_list|,

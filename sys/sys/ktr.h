@@ -81,12 +81,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KTR_FS
+name|KTR_SPARE1
 value|0x00000020
 end_define
 
 begin_comment
-comment|/* Filesystem */
+comment|/* Unused */
 end_comment
 
 begin_define
@@ -147,12 +147,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KTR_CLK
+name|KTR_SPARE2
 value|0x00000800
 end_define
 
 begin_comment
-comment|/* hardclock verbose */
+comment|/* Unused */
 end_comment
 
 begin_define
@@ -191,23 +191,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KTR_KGDB
+name|KTR_SPARE3
 value|0x00008000
 end_define
 
 begin_comment
-comment|/* Trace kgdb internals */
+comment|/* Unused */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|KTR_IO
+name|KTR_SPARE4
 value|0x00010000
 end_define
 
 begin_comment
-comment|/* Upper I/O  */
+comment|/* Unused */
 end_comment
 
 begin_define
@@ -330,12 +330,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KTR_CRITICAL
+name|KTR_SPARE5
 value|0x10000000
 end_define
 
 begin_comment
-comment|/* Critical sections */
+comment|/* Unused */
 end_comment
 
 begin_define
