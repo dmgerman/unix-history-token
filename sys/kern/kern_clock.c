@@ -828,13 +828,6 @@ name|need_softclock
 init|=
 literal|0
 decl_stmt|;
-name|CTR0
-argument_list|(
-name|KTR_INTR
-argument_list|,
-literal|"hardclock fired"
-argument_list|)
-expr_stmt|;
 name|hardclock_process
 argument_list|(
 name|frame
