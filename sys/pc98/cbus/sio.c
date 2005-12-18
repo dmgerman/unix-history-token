@@ -3743,6 +3743,23 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"machdep.conspeed"
+argument_list|,
+name|__DEVOLATILE
+argument_list|(
+name|int
+operator|*
+argument_list|,
+operator|&
+name|comdefaultrate
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  *	Unload the driver and clear the table.  *	XXX this is mostly wrong.  *	XXX TODO:  *	This is usually called when the card is ejected, but  *	can be caused by a kldunload of a controller driver.  *	The idea is to reset the driver's view of the device  *	and ensure that any driver entry points such as  *	read and write do not hang.  */
 end_comment
