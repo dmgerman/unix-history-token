@@ -109,6 +109,17 @@ block|{
 name|int32_t
 name|hx
 decl_stmt|;
+union|union
+block|{
+name|double
+name|value
+decl_stmt|;
+name|uint64_t
+name|bits
+decl_stmt|;
+block|}
+name|u
+union|;
 name|double
 name|r
 decl_stmt|,
@@ -119,6 +130,9 @@ init|=
 literal|0.0
 decl_stmt|,
 name|w
+decl_stmt|;
+name|uint64_t
+name|bits
 decl_stmt|;
 name|u_int32_t
 name|sign
@@ -247,7 +261,7 @@ name|B1
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * New cbrt to 26 bits; may be implemented in single precision:      *    cbrt(x) = t*cbrt(x/t**3) ~= t*R(x/t**3)      * where R(r) = (14*r**2 + 35*r + 5)/(5*r**2 + 35*r + 14) is the      * (2,2) Pade approximation to cbrt(r) at r = 1.  We replace      * r = x/t**3 by 1/r = t**3/x since the latter can be evaluated      * more efficiently, and rearrange the expression for R(r) to use      * 4 additions and 2 divisions instead of the 4 additions, 4      * multiplications and 1 division that would be required using      * Horner's rule on the numerator and denominator.  t being good      * to 32 bits means that |t/cbrt(x)-1|< 1/32, so |x/t**3-1|< 0.1      * and for R(r) we can use any approximation to cbrt(r) that is good      * to 20 bits on [0.9, 1.1].  The (2,2) Pade approximation is not an      * especially good choice.      */
+comment|/*      * New cbrt to 25 bits:      *    cbrt(x) = t*cbrt(x/t**3) ~= t*R(x/t**3)      * where R(r) = (14*r**2 + 35*r + 5)/(5*r**2 + 35*r + 14) is the      * (2,2) Pade approximation to cbrt(r) at r = 1.  We replace      * r = x/t**3 by 1/r = t**3/x since the latter can be evaluated      * more efficiently, and rearrange the expression for R(r) to use      * 4 additions and 2 divisions instead of the 4 additions, 4      * multiplications and 1 division that would be required using      * Horner's rule on the numerator and denominator.  t being good      * to 32 bits means that |t/cbrt(x)-1|< 1/32, so |x/t**3-1|< 0.1      * and for R(r) we can use any approximation to cbrt(r) that is good      * to 20 bits on [0.9, 1.1].  The (2,2) Pade approximation is not an      * especially good choice.      */
 name|r
 operator|=
 name|t
@@ -280,26 +294,34 @@ operator|/
 name|s
 operator|)
 expr_stmt|;
-comment|/* chop t to 20 bits and make it larger in magnitude than cbrt(x) */
-name|GET_HIGH_WORD
-argument_list|(
-name|high
-argument_list|,
+comment|/*      * Round t away from zero to 25 bits (sloppily except for ensuring that      * the result is larger in magnitude than cbrt(x) but not much more than      * 2 25-bit ulps larger).  With rounding towards zero, the error bound      * would be ~5/6 instead of ~4/6.  With a maximum error of 1 25-bit ulps      * in the rounded t, the infinite-precision error in the Newton      * approximation barely affects third digit in the the final error      * 0.667; the error in the rounded t can be up to about 12 25-bit ulps      * before the final error is larger than 0.667 ulps.      */
+name|u
+operator|.
+name|value
+operator|=
 name|t
-argument_list|)
 expr_stmt|;
-name|INSERT_WORDS
-argument_list|(
-name|t
-argument_list|,
-name|high
+name|u
+operator|.
+name|bits
+operator|=
+operator|(
+name|u
+operator|.
+name|bits
 operator|+
-literal|0x00000001
-argument_list|,
-literal|0
-argument_list|)
+literal|0x20000000
+operator|)
+operator|&
+literal|0xfffffffff0000000ULL
 expr_stmt|;
-comment|/* one step Newton iteration to 53 bits with error less than 0.667 ulps */
+name|t
+operator|=
+name|u
+operator|.
+name|value
+expr_stmt|;
+comment|/* one step Newton iteration to 53 bits with error< 0.667 ulps */
 name|s
 operator|=
 name|t
@@ -313,12 +335,14 @@ name|x
 operator|/
 name|s
 expr_stmt|;
+comment|/* error<= 0.5 ulps; |r|< |t| */
 name|w
 operator|=
 name|t
 operator|+
 name|t
 expr_stmt|;
+comment|/* t+t is exact */
 name|r
 operator|=
 operator|(
@@ -333,7 +357,7 @@ operator|+
 name|r
 operator|)
 expr_stmt|;
-comment|/* r-t is exact */
+comment|/* r-t is exact; w+r ~= 3*t */
 name|t
 operator|=
 name|t
@@ -342,6 +366,7 @@ name|t
 operator|*
 name|r
 expr_stmt|;
+comment|/* error<= 0.5 + 0.5/3 + epsilon */
 return|return
 operator|(
 name|t

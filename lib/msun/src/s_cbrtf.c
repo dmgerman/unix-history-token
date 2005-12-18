@@ -265,7 +265,7 @@ operator|/
 name|s
 operator|)
 expr_stmt|;
-comment|/* chop t to 12 bits and make it larger in magnitude than cbrt(x) */
+comment|/*      * Round t away from zero to 12 bits (sloppily except for ensuring that      * the result is larger in magnitude than cbrt(x) but not much more than      * 1 12-bit ulp larger).  With rounding towards zero, the error bound      * would be ~5/6 instead of ~4/6, and with t 2 12-bit ulps larger the      * infinite-precision error in the Newton approximation would affect      * the second digit instead of the third digit of 4/6 = 0.666..., etc.      */
 name|GET_FLOAT_WORD
 argument_list|(
 name|high
@@ -279,14 +279,14 @@ name|t
 argument_list|,
 operator|(
 name|high
+operator|+
+literal|0x1002
+operator|)
 operator|&
 literal|0xfffff000
-operator|)
-operator|+
-literal|0x00001000
 argument_list|)
 expr_stmt|;
-comment|/* one step Newton iteration to 24 bits with error less than 0.667 ulps */
+comment|/* one step Newton iteration to 24 bits with error< 0.667 ulps */
 name|s
 operator|=
 name|t
@@ -300,12 +300,14 @@ name|x
 operator|/
 name|s
 expr_stmt|;
+comment|/* error<= 0.5 ulps; |r|< |t| */
 name|w
 operator|=
 name|t
 operator|+
 name|t
 expr_stmt|;
+comment|/* t+t is exact */
 name|r
 operator|=
 operator|(
@@ -320,7 +322,7 @@ operator|+
 name|r
 operator|)
 expr_stmt|;
-comment|/* r-t is exact */
+comment|/* r-t is exact; w+r ~= 3*t */
 name|t
 operator|=
 name|t
@@ -329,6 +331,7 @@ name|t
 operator|*
 name|r
 expr_stmt|;
+comment|/* error<= 0.5 + 0.5/3 + epsilon */
 return|return
 operator|(
 name|t
