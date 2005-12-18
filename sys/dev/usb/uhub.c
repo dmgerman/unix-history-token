@@ -3359,7 +3359,7 @@ name|buflen
 argument_list|,
 literal|"vendor=0x%04x product=0x%04x "
 literal|"devclass=0x%02x devsubclass=0x%02x "
-literal|"sernum=\"%s\""
+literal|"release=0x%04x sernum=\"%s\""
 argument_list|,
 name|UGETW
 argument_list|(
@@ -3391,6 +3391,15 @@ name|ddesc
 operator|.
 name|bDeviceSubClass
 argument_list|,
+name|UGETW
+argument_list|(
+name|dev
+operator|->
+name|ddesc
+operator|.
+name|bcdDevice
+argument_list|)
+argument_list|,
 name|serial
 argument_list|)
 expr_stmt|;
@@ -3420,7 +3429,7 @@ name|buflen
 argument_list|,
 literal|"vendor=0x%04x product=0x%04x "
 literal|"devclass=0x%02x devsubclass=0x%02x "
-literal|"sernum=\"%s\" "
+literal|"release=0x%04x sernum=\"%s\" "
 literal|"intclass=0x%02x intsubclass=0x%02x"
 argument_list|,
 name|UGETW
@@ -3452,6 +3461,15 @@ operator|->
 name|ddesc
 operator|.
 name|bDeviceSubClass
+argument_list|,
+name|UGETW
+argument_list|(
+name|dev
+operator|->
+name|ddesc
+operator|.
+name|bcdDevice
+argument_list|)
 argument_list|,
 name|serial
 argument_list|,
