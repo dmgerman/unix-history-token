@@ -159,6 +159,40 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Uncomment this to enable logging of critical_enter/exit. */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|KTR_CRITICAL
+value|KTR_SCHED
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|KTR_CRITICAL
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2075,7 +2109,7 @@ operator|++
 expr_stmt|;
 name|CTR4
 argument_list|(
-name|KTR_CONTENTION
+name|KTR_CRITICAL
 argument_list|,
 literal|"critical_enter by thread %p (%ld, %s) to %d"
 argument_list|,
@@ -2208,7 +2242,7 @@ operator|--
 expr_stmt|;
 name|CTR4
 argument_list|(
-name|KTR_CONTENTION
+name|KTR_CRITICAL
 argument_list|,
 literal|"critical_exit by thread %p (%ld, %s) to %d"
 argument_list|,
