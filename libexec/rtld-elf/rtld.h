@@ -328,6 +328,28 @@ name|Needed_Entry
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|Struct_Name_Entry
+block|{
+name|STAILQ_ENTRY
+argument_list|(
+argument|Struct_Name_Entry
+argument_list|)
+name|link
+expr_stmt|;
+name|char
+name|name
+index|[
+literal|1
+index|]
+decl_stmt|;
+block|}
+name|Name_Entry
+typedef|;
+end_typedef
+
 begin_comment
 comment|/* Lock object */
 end_comment
@@ -441,6 +463,40 @@ block|}
 name|LockInfo
 typedef|;
 end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|Struct_Ver_Entry
+block|{
+name|Elf_Word
+name|hash
+decl_stmt|;
+name|unsigned
+name|int
+name|flags
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|file
+decl_stmt|;
+block|}
+name|Ver_Entry
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|VER_INFO_HIDDEN
+value|0x01
+end_define
 
 begin_comment
 comment|/*  * Shared object descriptor.  *  * Items marked with "(%)" are dynamically allocated, and must be freed  * when the structure is destroyed.  *  * CAUTION: It appears that the JDK port peeks into these structures.  * It looks at "next" and "mapbase" at least.  Don't add new members  * near the front, until this can be straightened out.  */
@@ -623,6 +679,32 @@ name|strsize
 decl_stmt|;
 comment|/* Size in bytes of string table */
 specifier|const
+name|Elf_Verneed
+modifier|*
+name|verneed
+decl_stmt|;
+comment|/* Required versions. */
+name|Elf_Word
+name|verneednum
+decl_stmt|;
+comment|/* Number of entries in verneed table */
+specifier|const
+name|Elf_Verdef
+modifier|*
+name|verdef
+decl_stmt|;
+comment|/* Provided versions. */
+name|Elf_Word
+name|verdefnum
+decl_stmt|;
+comment|/* Number of entries in verdef table */
+specifier|const
+name|Elf_Versym
+modifier|*
+name|versyms
+decl_stmt|;
+comment|/* Symbol versions table */
+specifier|const
 name|Elf_Hashelt
 modifier|*
 name|buckets
@@ -655,6 +737,23 @@ modifier|*
 name|needed
 decl_stmt|;
 comment|/* Shared objects needed by this one (%) */
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|Struct_Name_Entry
+argument_list|)
+name|names
+expr_stmt|;
+comment|/* List of names for this object we 					       know about. */
+name|Ver_Entry
+modifier|*
+name|vertab
+decl_stmt|;
+comment|/* Versions required /defined by this object */
+name|int
+name|vernum
+decl_stmt|;
+comment|/* Number of entries in vertab */
 name|Elf_Addr
 name|init
 decl_stmt|;
@@ -750,6 +849,32 @@ directive|define
 name|RTLD_STATIC_TLS_EXTRA
 value|64
 end_define
+
+begin_comment
+comment|/* Flags to be passed into symlook_ family of functions. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYMLOOK_IN_PLT
+value|0x01
+end_define
+
+begin_comment
+comment|/* Lookup for PLT symbol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYMLOOK_DLSYM
+value|0x02
+end_define
+
+begin_comment
+comment|/* Return newes versioned symbol. Used by 				   dlsym. */
+end_comment
 
 begin_comment
 comment|/*  * Symbol cache entry used during relocation to avoid multiple lookups  * of the same symbol.  */
@@ -953,7 +1078,7 @@ name|Obj_Entry
 modifier|*
 modifier|*
 parameter_list|,
-name|bool
+name|int
 parameter_list|,
 name|SymCache
 modifier|*
@@ -1026,7 +1151,11 @@ specifier|const
 name|Obj_Entry
 modifier|*
 parameter_list|,
-name|bool
+specifier|const
+name|Ver_Entry
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1111,6 +1240,23 @@ parameter_list|(
 name|Obj_Entry
 modifier|*
 name|obj
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|Ver_Entry
+modifier|*
+name|fetch_ventry
+parameter_list|(
+specifier|const
+name|Obj_Entry
+modifier|*
+name|obj
+parameter_list|,
+name|unsigned
+name|long
 parameter_list|)
 function_decl|;
 end_function_decl
