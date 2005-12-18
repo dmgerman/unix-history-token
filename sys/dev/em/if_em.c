@@ -13573,12 +13573,6 @@ argument_list|)
 operator|&
 name|E1000_RXD_SPC_VLAN_MASK
 operator|)
-argument_list|,
-name|adapter
-operator|->
-name|fmp
-operator|=
-name|NULL
 argument_list|)
 expr_stmt|;
 ifndef|#

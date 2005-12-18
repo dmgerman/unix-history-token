@@ -8947,12 +8947,6 @@ argument_list|,
 name|current_desc
 operator|->
 name|special
-argument_list|,
-name|adapter
-operator|->
-name|fmp
-operator|=
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if

@@ -181,10 +181,8 @@ parameter_list|,
 name|_m
 parameter_list|,
 name|_t
-parameter_list|,
-name|_errcase
 parameter_list|)
-value|do {		\ 	struct m_tag *mtag;					\ 	mtag = m_tag_alloc(MTAG_VLAN, MTAG_VLAN_TAG,		\ 			   sizeof (u_int), M_NOWAIT);		\ 	if (mtag == NULL) {					\ 		(_ifp)->if_ierrors++;				\ 		m_freem(_m);					\ 		_errcase;					\ 	}							\ 	VLAN_TAG_VALUE(mtag) = (_t);				\ 	m_tag_prepend((_m), mtag);				\ 	(_m)->m_flags |= M_VLANTAG;				\ } while (0)
+value|do {			\ 	struct m_tag *mtag;					\ 	mtag = m_tag_alloc(MTAG_VLAN, MTAG_VLAN_TAG,		\ 			   sizeof (u_int), M_NOWAIT);		\ 	if (mtag != NULL) {					\ 		VLAN_TAG_VALUE(mtag) = (_t);			\ 		m_tag_prepend((_m), mtag);			\ 		(_m)->m_flags |= M_VLANTAG;			\ 	} else {						\ 		(_ifp)->if_ierrors++;				\ 		m_freem(_m);					\ 		_m = NULL;					\ 	}							\ } while (0)
 end_define
 
 begin_define
