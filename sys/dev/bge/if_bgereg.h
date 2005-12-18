@@ -12449,6 +12449,9 @@ name|u_int32_t
 name|bge_tx_coal_ticks
 decl_stmt|;
 name|u_int32_t
+name|bge_tx_prodidx
+decl_stmt|;
+name|u_int32_t
 name|bge_rx_max_coal_bds
 decl_stmt|;
 name|u_int32_t
