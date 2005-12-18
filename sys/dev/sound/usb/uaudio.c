@@ -21920,7 +21920,7 @@ block|,
 block|{
 name|AUDIO_ENCODING_SLINEAR_LE
 block|,
-literal|24
+literal|32
 block|,
 name|AFMT_S32_LE
 block|}
@@ -21944,7 +21944,7 @@ block|,
 block|{
 name|AUDIO_ENCODING_SLINEAR_BE
 block|,
-literal|24
+literal|32
 block|,
 name|AFMT_S32_BE
 block|}
