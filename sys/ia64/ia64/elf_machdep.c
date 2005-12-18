@@ -354,7 +354,7 @@ parameter_list|(
 name|linker_file_t
 name|lf
 parameter_list|,
-name|Elf_Word
+name|Elf_Size
 name|symidx
 parameter_list|,
 name|elf_lookup_fn
@@ -614,7 +614,7 @@ name|addend
 decl_stmt|,
 name|addr
 decl_stmt|;
-name|Elf_Word
+name|Elf_Size
 name|rtype
 decl_stmt|,
 name|symidx

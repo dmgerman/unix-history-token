@@ -832,7 +832,7 @@ name|strtabp
 init|=
 name|NULL
 decl_stmt|;
-name|Elf_Word
+name|Elf_Size
 modifier|*
 name|symfwmap
 init|=
@@ -1536,7 +1536,7 @@ name|nsyms
 operator|*
 sizeof|sizeof
 argument_list|(
-name|Elf_Word
+name|Elf_Size
 argument_list|)
 argument_list|,
 name|fn
@@ -1561,7 +1561,7 @@ name|nsyms
 operator|*
 sizeof|sizeof
 argument_list|(
-name|Elf_Word
+name|Elf_Size
 argument_list|)
 argument_list|,
 name|fn
@@ -1617,7 +1617,7 @@ name|sp
 decl_stmt|,
 name|symswap
 decl_stmt|;
-name|Elf_Word
+name|Elf_Size
 name|mapswap
 decl_stmt|;
 name|sp

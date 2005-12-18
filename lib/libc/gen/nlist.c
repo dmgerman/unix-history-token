@@ -969,7 +969,7 @@ name|symstroff
 init|=
 literal|0
 decl_stmt|;
-name|Elf_Word
+name|Elf_Size
 name|symsize
 init|=
 literal|0
@@ -978,7 +978,7 @@ name|symstrsize
 init|=
 literal|0
 decl_stmt|;
-name|Elf_Sword
+name|Elf_Ssize
 name|cc
 decl_stmt|,
 name|i
@@ -1017,7 +1017,7 @@ name|shdr
 init|=
 name|NULL
 decl_stmt|;
-name|Elf_Word
+name|Elf_Size
 name|shdr_size
 decl_stmt|;
 name|void

@@ -28,21 +28,21 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|uint32_t
 name|Elf32_Addr
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_int16_t
+name|uint16_t
 name|Elf32_Half
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|uint32_t
 name|Elf32_Off
 typedef|;
 end_typedef
@@ -56,22 +56,33 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|uint32_t
 name|Elf32_Word
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|Elf32_Word
+name|Elf32_Hashelt
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Non-standard class-dependent datatype used for abstraction. */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|Elf32_Word
 name|Elf32_Size
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|Elf32_Off
-name|Elf32_Hashelt
+name|Elf32_Sword
+name|Elf32_Ssize
 typedef|;
 end_typedef
 
@@ -176,7 +187,7 @@ name|Elf32_Off
 name|sh_offset
 decl_stmt|;
 comment|/* Offset in file. */
-name|Elf32_Size
+name|Elf32_Word
 name|sh_size
 decl_stmt|;
 comment|/* Size in bytes. */
@@ -188,11 +199,11 @@ name|Elf32_Word
 name|sh_info
 decl_stmt|;
 comment|/* Depends on section type. */
-name|Elf32_Size
+name|Elf32_Word
 name|sh_addralign
 decl_stmt|;
 comment|/* Alignment in bytes. */
-name|Elf32_Size
+name|Elf32_Word
 name|sh_entsize
 decl_stmt|;
 comment|/* Size of each entry in section. */
@@ -225,11 +236,11 @@ name|Elf32_Addr
 name|p_paddr
 decl_stmt|;
 comment|/* Physical address (not used). */
-name|Elf32_Size
+name|Elf32_Word
 name|p_filesz
 decl_stmt|;
 comment|/* Size of contents in file. */
-name|Elf32_Size
+name|Elf32_Word
 name|p_memsz
 decl_stmt|;
 comment|/* Size of contents in memory. */
@@ -237,7 +248,7 @@ name|Elf32_Word
 name|p_flags
 decl_stmt|;
 comment|/* Access permission flags. */
-name|Elf32_Size
+name|Elf32_Word
 name|p_align
 decl_stmt|;
 comment|/* Alignment in memory and file. */
@@ -260,7 +271,7 @@ decl_stmt|;
 comment|/* Entry type. */
 union|union
 block|{
-name|Elf32_Size
+name|Elf32_Word
 name|d_val
 decl_stmt|;
 comment|/* Integer value. */
@@ -382,7 +393,7 @@ name|Elf32_Addr
 name|st_value
 decl_stmt|;
 comment|/* Symbol value. */
-name|Elf32_Size
+name|Elf32_Word
 name|st_size
 decl_stmt|;
 comment|/* Size of associated object. */

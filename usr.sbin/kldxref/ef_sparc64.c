@@ -73,7 +73,7 @@ name|Elf_Rela
 modifier|*
 name|a
 decl_stmt|;
-name|Elf_Word
+name|Elf_Size
 name|w
 decl_stmt|;
 switch|switch

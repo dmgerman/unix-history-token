@@ -1767,7 +1767,7 @@ name|Elf_Rela
 modifier|*
 name|rela
 decl_stmt|;
-name|Elf_Half
+name|Elf_Word
 modifier|*
 name|where32
 decl_stmt|;
@@ -1775,7 +1775,7 @@ name|Elf_Addr
 modifier|*
 name|where
 decl_stmt|;
-name|Elf_Word
+name|Elf_Size
 name|rtype
 decl_stmt|,
 name|symidx
@@ -1827,7 +1827,7 @@ expr_stmt|;
 name|where32
 operator|=
 operator|(
-name|Elf_Half
+name|Elf_Word
 operator|*
 operator|)
 name|where

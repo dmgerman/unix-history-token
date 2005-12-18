@@ -482,7 +482,7 @@ parameter_list|(
 name|linker_file_t
 name|lf
 parameter_list|,
-name|Elf_Word
+name|Elf_Size
 name|symidx
 parameter_list|,
 name|int
@@ -4684,7 +4684,7 @@ parameter_list|(
 name|elf_file_t
 name|ef
 parameter_list|,
-name|Elf_Word
+name|Elf_Size
 name|r_info
 parameter_list|)
 block|{
@@ -4844,7 +4844,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|Elf_Word
+name|Elf_Size
 name|symidx
 decl_stmt|;
 name|Elf_Addr
@@ -5938,7 +5938,7 @@ parameter_list|(
 name|linker_file_t
 name|lf
 parameter_list|,
-name|Elf_Word
+name|Elf_Size
 name|symidx
 parameter_list|,
 name|int
@@ -6141,7 +6141,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|Elf_Word
+name|Elf_Size
 name|symidx
 decl_stmt|;
 comment|/* Perform relocations without addend if there are any: */
