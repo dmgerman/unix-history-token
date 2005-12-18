@@ -479,6 +479,20 @@ parameter_list|)
 value|(((bind)<< 4) + ((type)& 0xf))
 end_define
 
+begin_comment
+comment|/* Macro for accessing the fields of st_other. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELF64_ST_VISIBILITY
+parameter_list|(
+name|oth
+parameter_list|)
+value|((oth)& 0x3)
+end_define
+
 begin_endif
 endif|#
 directive|endif
