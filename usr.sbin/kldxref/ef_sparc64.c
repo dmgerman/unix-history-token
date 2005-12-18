@@ -163,6 +163,10 @@ name|warnx
 argument_list|(
 literal|"unhandled relocation type %u"
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|ELF_R_TYPE
 argument_list|(
 name|a

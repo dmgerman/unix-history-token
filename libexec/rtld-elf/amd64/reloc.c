@@ -1204,13 +1204,17 @@ comment|/* missing: R_X86_64_GOTPCREL, R_X86_64_32, R_X86_64_32S, R_X86_64_16, R
 default|default:
 name|_rtld_error
 argument_list|(
-literal|"%s: Unsupported relocation type %d"
+literal|"%s: Unsupported relocation type %u"
 literal|" in non-PLT relocations\n"
 argument_list|,
 name|obj
 operator|->
 name|path
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|ELF_R_TYPE
 argument_list|(
 name|rela

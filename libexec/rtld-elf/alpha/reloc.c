@@ -436,13 +436,17 @@ break|break;
 default|default:
 name|_rtld_error
 argument_list|(
-literal|"%s: Unsupported relocation type %d"
+literal|"%s: Unsupported relocation type %u"
 literal|" in non-PLT relocations\n"
 argument_list|,
 name|obj
 operator|->
 name|path
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|ELF_R_TYPE
 argument_list|(
 name|rela
