@@ -3071,7 +3071,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%s<ReadBytes>%ju</ReadBytess>\n"
+literal|"%s<ReadBytes>%ju</ReadBytes>\n"
 argument_list|,
 name|indent
 argument_list|,
