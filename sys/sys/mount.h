@@ -956,7 +956,7 @@ value|(MNT_NOSUID	| MNT_NOEXEC	| \ 			MNT_SYNCHRONOUS	| MNT_UNION	| MNT_ASYNC	| 
 end_define
 
 begin_comment
-comment|/*  * External filesystem command modifier flags.  * Unmount can use the MNT_FORCE flag.  * XXX These are not STATES and really should be somewhere else.  */
+comment|/*  * External filesystem command modifier flags.  * Unmount can use the MNT_FORCE flag.  * XXX: These are not STATES and really should be somewhere else.  * XXX: MNT_BYFSID collides with MNT_ACLS, but because MNT_ACLS is only used for  *      mount(2) and MNT_BYFSID is only used for unmount(2) it's harmless.  */
 end_comment
 
 begin_define
@@ -1035,6 +1035,13 @@ end_define
 begin_comment
 comment|/*  * Still available.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MNT_SPARE_0x00000010
+value|0x00000010
+end_define
 
 begin_define
 define|#
