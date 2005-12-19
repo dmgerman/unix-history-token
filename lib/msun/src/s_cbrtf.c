@@ -63,39 +63,33 @@ begin_comment
 comment|/* B2 = (127-127.0/3-24/3-0.03306235651)*2**23 */
 end_comment
 
+begin_comment
+comment|/* |1/cbrt(x) - p(x)|< 2**-14.5 (~[-4.37e-4, 4.366e-5]). */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
 name|float
-name|C
+name|P0
 init|=
-literal|5.4285717010e-01
+literal|1.5586718321
 decl_stmt|,
-comment|/* 19/35     = 0x3f0af8b0 */
-name|D
+comment|/*  0x3fc7828f */
+name|P1
 init|=
 operator|-
-literal|7.0530611277e-01
+literal|0.78271341324
 decl_stmt|,
-comment|/* -864/1225 = 0xbf348ef1 */
-name|E
+comment|/* -0xbf485fe8 */
+name|P2
 init|=
-literal|1.4142856598e+00
-decl_stmt|,
-comment|/* 99/70     = 0x3fb50750 */
-name|F
-init|=
-literal|1.6071428061e+00
-decl_stmt|,
-comment|/* 45/28     = 0x3fcdb6db */
-name|G
-init|=
-literal|3.5714286566e-01
+literal|0.22403796017
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 5/14      = 0x3eb6db6e */
+comment|/*  0x3e656a35 */
 end_comment
 
 begin_function
@@ -232,37 +226,41 @@ name|B1
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* new cbrt to 23 bits */
+comment|/* new cbrt to 14 bits */
 name|r
 operator|=
+operator|(
 name|t
 operator|*
+name|t
+operator|)
+operator|*
+operator|(
 name|t
 operator|/
 name|x
+operator|)
 expr_stmt|;
-name|s
+name|t
 operator|=
-name|C
+name|t
+operator|*
+operator|(
+operator|(
+name|P0
 operator|+
 name|r
 operator|*
-name|t
-expr_stmt|;
-name|t
-operator|*=
-name|G
+name|P1
+operator|)
 operator|+
-name|F
-operator|/
 operator|(
-name|s
-operator|+
-name|E
-operator|+
-name|D
-operator|/
-name|s
+name|r
+operator|*
+name|r
+operator|)
+operator|*
+name|P2
 operator|)
 expr_stmt|;
 comment|/*      * Round t away from zero to 12 bits (sloppily except for ensuring that      * the result is larger in magnitude than cbrt(x) but not much more than      * 1 12-bit ulp larger).  With rounding towards zero, the error bound      * would be ~5/6 instead of ~4/6, and with t 2 12-bit ulps larger the      * infinite-precision error in the Newton approximation would affect      * the second digit instead of the third digit of 4/6 = 0.666..., etc.      */
@@ -280,13 +278,13 @@ argument_list|,
 operator|(
 name|high
 operator|+
-literal|0x1002
+literal|0x1800
 operator|)
 operator|&
 literal|0xfffff000
 argument_list|)
 expr_stmt|;
-comment|/* one step Newton iteration to 24 bits with error< 0.667 ulps */
+comment|/* one step Newton iteration to 24 bits with error< 0.669 ulps */
 name|s
 operator|=
 name|t

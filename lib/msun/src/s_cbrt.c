@@ -63,39 +63,44 @@ begin_comment
 comment|/* B2 = (1023-1023/3-54/3-0.03306235651)*2**20 */
 end_comment
 
+begin_comment
+comment|/* |1/cbrt(x) - p(x)|< 2**-23.5 (~[-7.93e-8, 7.929e-8]). */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
 name|double
-name|C
+name|P0
 init|=
-literal|5.42857142857142815906e-01
+literal|1.87595182427177009643
 decl_stmt|,
-comment|/* 19/35     = 0x3FE15F15, 0xF15F15F1 */
-name|D
+comment|/* 0x3ffe03e6, 0x0f61e692 */
+name|P1
 init|=
 operator|-
-literal|7.05306122448979611050e-01
+literal|1.88497979543377169875
 decl_stmt|,
-comment|/* -864/1225 = 0xBFE691DE, 0x2532C834 */
-name|E
+comment|/* 0xbffe28e0, 0x92f02420 */
+name|P2
 init|=
-literal|1.41428571428571436819e+00
+literal|1.621429720105354466140
 decl_stmt|,
-comment|/* 99/70     = 0x3FF6A0EA, 0x0EA0EA0F */
-name|F
+comment|/* 0x3ff9f160, 0x4a49d6c2 */
+name|P3
 init|=
-literal|1.60714285714285720630e+00
+operator|-
+literal|0.758397934778766047437
 decl_stmt|,
-comment|/* 45/28     = 0x3FF9B6DB, 0x6DB6DB6E */
-name|G
+comment|/* 0xbfe844cb, 0xbee751d9 */
+name|P4
 init|=
-literal|3.57142857142857150787e-01
+literal|0.145996192886612446982
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 5/14      = 0x3FD6DB6D, 0xB6DB6DB7 */
+comment|/* 0x3fc2b000, 0xd4e4edd7 */
 end_comment
 
 begin_function
@@ -261,40 +266,60 @@ name|B1
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * New cbrt to 25 bits:      *    cbrt(x) = t*cbrt(x/t**3) ~= t*R(x/t**3)      * where R(r) = (14*r**2 + 35*r + 5)/(5*r**2 + 35*r + 14) is the      * (2,2) Pade approximation to cbrt(r) at r = 1.  We replace      * r = x/t**3 by 1/r = t**3/x since the latter can be evaluated      * more efficiently, and rearrange the expression for R(r) to use      * 4 additions and 2 divisions instead of the 4 additions, 4      * multiplications and 1 division that would be required using      * Horner's rule on the numerator and denominator.  t being good      * to 32 bits means that |t/cbrt(x)-1|< 1/32, so |x/t**3-1|< 0.1      * and for R(r) we can use any approximation to cbrt(r) that is good      * to 20 bits on [0.9, 1.1].  The (2,2) Pade approximation is not an      * especially good choice.      */
+comment|/*      * New cbrt to 23 bits:      *    cbrt(x) = t*cbrt(x/t**3) ~= t*P(t**3/x)      * where P(r) is a polynomial of degree 4 that approximates 1/cbrt(r)      * to within 2**-23.5 when |r - 1|< 1/10.  The rough approximation      * has produced t such than |t/cbrt(x) - 1| ~< 1/32, and cubing this      * gives us bounds for r = t**3/x.      *      * Try to optimize for parallel evaluation as in k_tanf.c.      */
 name|r
 operator|=
+operator|(
 name|t
 operator|*
+name|t
+operator|)
+operator|*
+operator|(
 name|t
 operator|/
 name|x
+operator|)
 expr_stmt|;
-name|s
+name|t
 operator|=
-name|C
+name|t
+operator|*
+operator|(
+operator|(
+name|P0
 operator|+
 name|r
 operator|*
-name|t
-expr_stmt|;
-name|t
-operator|*=
-name|G
-operator|+
-name|F
-operator|/
 operator|(
-name|s
+name|P1
 operator|+
-name|E
+name|r
+operator|*
+name|P2
+operator|)
+operator|)
 operator|+
-name|D
-operator|/
-name|s
+operator|(
+operator|(
+name|r
+operator|*
+name|r
+operator|)
+operator|*
+name|r
+operator|)
+operator|*
+operator|(
+name|P3
+operator|+
+name|r
+operator|*
+name|P4
+operator|)
 operator|)
 expr_stmt|;
-comment|/*      * Round t away from zero to 25 bits (sloppily except for ensuring that      * the result is larger in magnitude than cbrt(x) but not much more than      * 2 25-bit ulps larger).  With rounding towards zero, the error bound      * would be ~5/6 instead of ~4/6.  With a maximum error of 1 25-bit ulps      * in the rounded t, the infinite-precision error in the Newton      * approximation barely affects third digit in the the final error      * 0.667; the error in the rounded t can be up to about 12 25-bit ulps      * before the final error is larger than 0.667 ulps.      */
+comment|/*      * Round t away from zero to 23 bits (sloppily except for ensuring that      * the result is larger in magnitude than cbrt(x) but not much more than      * 2 23-bit ulps larger).  With rounding towards zero, the error bound      * would be ~5/6 instead of ~4/6.  With a maximum error of 2 23-bit ulps      * in the rounded t, the infinite-precision error in the Newton      * approximation barely affects third digit in the the final error      * 0.667; the error in the rounded t can be up to about 3 23-bit ulps      * before the final error is larger than 0.667 ulps.      */
 name|u
 operator|.
 name|value
@@ -310,10 +335,10 @@ name|u
 operator|.
 name|bits
 operator|+
-literal|0x20000000
+literal|0x80000000
 operator|)
 operator|&
-literal|0xfffffffff0000000ULL
+literal|0xffffffffc0000000ULL
 expr_stmt|;
 name|t
 operator|=
