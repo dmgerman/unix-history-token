@@ -5891,7 +5891,7 @@ name|VFS_MOUNT
 argument_list|(
 name|mp
 argument_list|,
-name|curthread
+name|td
 argument_list|)
 expr_stmt|;
 name|KASSERT
