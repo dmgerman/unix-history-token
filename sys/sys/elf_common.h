@@ -1501,6 +1501,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SHT_GNU_verdef
+value|0x6ffffffd
+end_define
+
+begin_comment
+comment|/* Symbol versions provided */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_GNU_verneed
+value|0x6ffffffe
+end_define
+
+begin_comment
+comment|/* Symbol versions required */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_GNU_versym
+value|0x6fffffff
+end_define
+
+begin_comment
+comment|/* Symbol version table */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SHT_HIOS
 value|0x6fffffff
 end_define
@@ -2277,7 +2310,7 @@ begin_define
 define|#
 directive|define
 name|DT_HIOS
-value|0x6fff0000
+value|0x6ffff000
 end_define
 
 begin_comment
