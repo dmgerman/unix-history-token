@@ -960,6 +960,24 @@ block|,
 comment|/*quirks*/
 name|DA_Q_NO_SYNC_CACHE
 block|}
+block|,
+block|{
+comment|/* 		 * Motorola E398 Mobile Phone (TransFlash memory card). 		 * Reported by: Wojciech A. Koszek<dunstan@FreeBSD.czest.pl> 		 * PR: usb/89889 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"Motorola"
+block|,
+literal|"Motorola Phone"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
