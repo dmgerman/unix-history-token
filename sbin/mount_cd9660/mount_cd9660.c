@@ -737,7 +737,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|build_iovec
+name|build_iovec_argf
 argument_list|(
 operator|&
 name|iov
@@ -747,10 +747,8 @@ name|iovlen
 argument_list|,
 literal|"ssector"
 argument_list|,
-operator|&
-name|ssector
+literal|"%d"
 argument_list|,
-sizeof|sizeof
 name|ssector
 argument_list|)
 expr_stmt|;
