@@ -510,6 +510,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|ret
+operator|=
+literal|0
+expr_stmt|;
 name|tmp
 operator|=
 name|pthread
