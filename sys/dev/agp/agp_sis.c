@@ -401,11 +401,6 @@ condition|(
 name|desc
 condition|)
 block|{
-name|device_verbose
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|device_set_desc
 argument_list|(
 name|dev
@@ -1119,7 +1114,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|agp_sis
 argument_list|,
-name|pci
+name|hostb
 argument_list|,
 name|agp_sis_driver
 argument_list|,
