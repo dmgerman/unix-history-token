@@ -136,9 +136,6 @@ literal|0.0
 decl_stmt|,
 name|w
 decl_stmt|;
-name|uint64_t
-name|bits
-decl_stmt|;
 name|u_int32_t
 name|sign
 decl_stmt|;
@@ -147,9 +144,11 @@ name|high
 decl_stmt|,
 name|low
 decl_stmt|;
-name|GET_HIGH_WORD
+name|EXTRACT_WORDS
 argument_list|(
 name|hx
+argument_list|,
+name|low
 argument_list|,
 name|x
 argument_list|)
@@ -179,13 +178,15 @@ name|x
 operator|)
 return|;
 comment|/* cbrt(NaN,INF) is itself */
-name|GET_LOW_WORD
-argument_list|(
-name|low
-argument_list|,
-name|x
-argument_list|)
-expr_stmt|;
+comment|/*      * Rough cbrt to 5 bits:      *    cbrt(2**e*(1+m) ~= 2**(e/3)*(1+(e%3+m)/3)      * where e is integral and>= 0, m is real and in [0, 1), and "/" and      * "%" are integer division and modulus with rounding towards minus      * infinity.  The RHS is always>= the LHS and has a maximum relative      * error of about 1 in 16.  Adding a bias of -0.03306235651 to the      * (e%3+m)/3 term reduces the error to about 1 in 32. With the IEEE      * floating point representation, for finite positive normal values,      * ordinary integer divison of the value in bits magically gives      * almost exactly the RHS of the above provided we first subtract the      * exponent bias (1023 for doubles) and later add it back.  We do the      * subtraction virtually to keep e>= 0 so that ordinary integer      * division rounds towards minus infinity; this is also efficient.      */
+if|if
+condition|(
+name|hx
+operator|<
+literal|0x00100000
+condition|)
+block|{
+comment|/* zero or subnormal? */
 if|if
 condition|(
 operator|(
@@ -202,15 +203,6 @@ name|x
 operator|)
 return|;
 comment|/* cbrt(0) is itself */
-comment|/*      * Rough cbrt to 5 bits:      *    cbrt(2**e*(1+m) ~= 2**(e/3)*(1+(e%3+m)/3)      * where e is integral and>= 0, m is real and in [0, 1), and "/" and      * "%" are integer division and modulus with rounding towards minus      * infinity.  The RHS is always>= the LHS and has a maximum relative      * error of about 1 in 16.  Adding a bias of -0.03306235651 to the      * (e%3+m)/3 term reduces the error to about 1 in 32. With the IEEE      * floating point representation, for finite positive normal values,      * ordinary integer divison of the value in bits magically gives      * almost exactly the RHS of the above provided we first subtract the      * exponent bias (1023 for doubles) and later add it back.  We do the      * subtraction virtually to keep e>= 0 so that ordinary integer      * division rounds towards minus infinity; this is also efficient.      */
-if|if
-condition|(
-name|hx
-operator|<
-literal|0x00100000
-condition|)
-block|{
-comment|/* subnormal number */
 name|SET_HIGH_WORD
 argument_list|(
 name|t
@@ -230,7 +222,7 @@ argument_list|,
 name|t
 argument_list|)
 expr_stmt|;
-name|SET_HIGH_WORD
+name|INSERT_WORDS
 argument_list|(
 name|t
 argument_list|,
@@ -247,11 +239,13 @@ literal|3
 operator|+
 name|B2
 operator|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|SET_HIGH_WORD
+name|INSERT_WORDS
 argument_list|(
 name|t
 argument_list|,
@@ -264,6 +258,8 @@ literal|3
 operator|+
 name|B1
 operator|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/*      * New cbrt to 23 bits:      *    cbrt(x) = t*cbrt(x/t**3) ~= t*P(t**3/x)      * where P(r) is a polynomial of degree 4 that approximates 1/cbrt(r)      * to within 2**-23.5 when |r - 1|< 1/10.  The rough approximation      * has produced t such than |t/cbrt(x) - 1| ~< 1/32, and cubing this      * gives us bounds for r = t**3/x.      *      * Try to optimize for parallel evaluation as in k_tanf.c.      */
