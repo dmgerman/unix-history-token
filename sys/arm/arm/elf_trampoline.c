@@ -143,6 +143,8 @@ condition|)
 block|{
 if|if
 condition|(
+literal|0
+operator|&&
 name|len
 operator|>=
 literal|4
@@ -309,20 +311,64 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|int
+name|physaddr
+init|=
+name|KERNPHYSADDR
+decl_stmt|;
+name|int
+name|tmp1
+decl_stmt|;
+asm|__asm __volatile("adr %0, 2f\n"
+literal|"bic %0, %0, #0xff000000\n"
+literal|"bic sp, sp, #0xff000000\n"
+literal|"and %1, %1, #0xff000000\n"
+literal|"orr %0, %0, %1\n"
+literal|"orr sp, sp, %1\n"
+literal|"mrc p15, 0, %1, c1, c0, 0\n"
+literal|"bic %1, %1, #1\n"
+comment|/* Disable MMU */
+literal|"orr %1, %1, #(4 | 8)\n"
+comment|/* Add DC enable,  						     WBUF enable */
+literal|"orr %1, %1, #0x1000\n"
+comment|/* Add IC enable */
+literal|"orr %1, %1, #(0x800)\n"
+comment|/* BPRD enable */
+literal|"mcr p15, 0, %1, c1, c0, 0\n"
+literal|"nop\n"
+literal|"nop\n"
+literal|"nop\n"
+literal|"mov pc, %0\n"
+literal|"2: nop\n"
+operator|:
+literal|"=r"
+operator|(
+name|tmp1
+operator|)
+operator|,
+literal|"+r"
+operator|(
+name|physaddr
+operator|)
+block|)
+function|;
+end_function
+
+begin_expr_stmt
 name|__start
 argument_list|()
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
 begin_ifdef
+unit|}
 ifdef|#
 directive|ifdef
 name|KZIP
 end_ifdef
 
 begin_decl_stmt
-specifier|static
+unit|static
 name|unsigned
 name|char
 modifier|*
@@ -569,6 +615,12 @@ decl_stmt|;
 name|orig_input
 operator|=
 name|kernel
+expr_stmt|;
+name|memcnt
+operator|=
+name|memtot
+operator|=
+literal|0
 expr_stmt|;
 name|i_input
 operator|=
@@ -882,6 +934,53 @@ name|long
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|shdr
+operator|=
+operator|(
+name|Elf_Shdr
+operator|*
+operator|)
+name|lastaddr
+expr_stmt|;
+name|lastaddr
+operator|+=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|shdr
+argument_list|)
+operator|*
+name|eh
+operator|->
+name|e_shnum
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|shdr
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|kstart
+operator|+
+name|eh
+operator|->
+name|e_shoff
+operator|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|shdr
+argument_list|)
+operator|*
+name|eh
+operator|->
+name|e_shnum
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|eh
@@ -901,20 +1000,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|shdr
-operator|=
-operator|(
-name|Elf_Shdr
-operator|*
-operator|)
-operator|(
-name|kstart
-operator|+
-name|eh
-operator|->
-name|e_shoff
-operator|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -1625,7 +1710,24 @@ name|curaddr
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Invalidate the instruction cache. */
+asm|__asm __volatile("mcr p15, 0, %0, c7, c5, 0\n"
+literal|"mcr p15, 0, %0, c7, c10, 4\n"
+operator|:
+operator|:
+literal|"r"
+operator|(
+name|curaddr
+operator|)
+block|)
+function|;
+end_function
+
+begin_comment
 comment|/* Jump to the entry point. */
+end_comment
+
+begin_expr_stmt
 operator|(
 operator|(
 name|void
@@ -1647,11 +1749,20 @@ operator|)
 operator|(
 operator|)
 expr_stmt|;
+end_expr_stmt
+
+begin_asm
 asm|__asm __volatile(".globl func_end\n"
+end_asm
+
+begin_expr_stmt
 literal|"func_end:"
-block|)
-function|;
-end_function
+end_expr_stmt
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_decl_stmt
 unit|}  extern
