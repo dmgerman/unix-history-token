@@ -1570,6 +1570,17 @@ begin_comment
 comment|/* payload compression (IPComp) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IPPROTO_SCTP
+value|132
+end_define
+
+begin_comment
+comment|/* SCTP */
+end_comment
+
 begin_comment
 comment|/* 101-254: Partly Unassigned */
 end_comment
