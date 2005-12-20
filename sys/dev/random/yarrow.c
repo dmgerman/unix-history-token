@@ -196,7 +196,6 @@ comment|/* The reseed thread mutex */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|mtx
 name|random_reseed_mtx
@@ -1266,16 +1265,16 @@ argument_list|)
 expr_stmt|;
 comment|/* 7. Dump to seed file */
 comment|/* XXX Not done here yet */
+comment|/* Unblock the device if it was blocked due to being unseeded */
+name|random_yarrow_unblock
+argument_list|()
+expr_stmt|;
 comment|/* Release the reseed mutex */
 name|mtx_unlock
 argument_list|(
 operator|&
 name|random_reseed_mtx
 argument_list|)
-expr_stmt|;
-comment|/* Unblock the device if it was blocked due to being unseeded */
-name|random_yarrow_unblock
-argument_list|()
 expr_stmt|;
 block|}
 end_function
