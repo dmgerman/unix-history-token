@@ -1027,6 +1027,13 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+name|destroy_dev
+argument_list|(
+name|sc
+operator|->
+name|as_devnode
+argument_list|)
+expr_stmt|;
 name|bus_release_resource
 argument_list|(
 name|dev
@@ -1046,13 +1053,6 @@ operator|&
 name|sc
 operator|->
 name|as_lock
-argument_list|)
-expr_stmt|;
-name|destroy_dev
-argument_list|(
-name|sc
-operator|->
-name|as_devnode
 argument_list|)
 expr_stmt|;
 name|agp_flush_cache
