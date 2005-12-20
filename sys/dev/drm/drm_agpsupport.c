@@ -112,6 +112,29 @@ block|}
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|700010
+return|return
+operator|(
+name|pci_find_extcap
+argument_list|(
+name|dev
+operator|->
+name|device
+argument_list|,
+name|cap
+argument_list|,
+name|NULL
+argument_list|)
+operator|==
+literal|0
+operator|)
+return|;
+else|#
+directive|else
 comment|/* Code taken from agp.c.  IWBNI that was a public interface. */
 name|u_int32_t
 name|status
@@ -210,6 +233,8 @@ block|}
 return|return
 literal|0
 return|;
+endif|#
+directive|endif
 else|#
 directive|else
 comment|/* XXX: fill me in for non-FreeBSD */
