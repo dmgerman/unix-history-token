@@ -1218,9 +1218,6 @@ name|end
 parameter_list|,
 name|vm_prot_t
 name|prot
-parameter_list|,
-name|vm_prot_t
-name|max
 parameter_list|)
 block|{
 name|struct
@@ -1258,9 +1255,9 @@ argument_list|(
 name|end
 argument_list|)
 argument_list|,
-name|max
+name|VM_PROT_ALL
 argument_list|,
-name|max
+name|VM_PROT_ALL
 argument_list|,
 literal|0
 argument_list|)
@@ -1380,9 +1377,6 @@ parameter_list|,
 name|vm_prot_t
 name|prot
 parameter_list|,
-name|vm_prot_t
-name|max
-parameter_list|,
 name|int
 name|cow
 parameter_list|)
@@ -1434,8 +1428,6 @@ name|start
 argument_list|)
 argument_list|,
 name|prot
-argument_list|,
-name|max
 argument_list|)
 expr_stmt|;
 if|if
@@ -1502,8 +1494,6 @@ argument_list|,
 name|end
 argument_list|,
 name|prot
-argument_list|,
-name|max
 argument_list|)
 expr_stmt|;
 if|if
@@ -1561,7 +1551,7 @@ name|prot
 operator||
 name|VM_PROT_WRITE
 argument_list|,
-name|max
+name|VM_PROT_ALL
 argument_list|,
 literal|0
 argument_list|)
@@ -1718,7 +1708,7 @@ name|end
 argument_list|,
 name|prot
 argument_list|,
-name|max
+name|VM_PROT_ALL
 argument_list|,
 name|cow
 argument_list|)
@@ -1815,10 +1805,6 @@ decl_stmt|;
 name|vm_offset_t
 name|file_addr
 decl_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
 comment|/* 	 * It's necessary to fail if the filsz + offset taken from the 	 * header is greater than the actual file pager object's size. 	 * If we were to allow this, then the vm_map_find() below would 	 * walk right off the end of the file object and into the ether. 	 * 	 * While I'm here, might as well check for something else that 	 * is invalid: filsz cannot be greater than memsz. 	 */
 if|if
 condition|(
@@ -1982,8 +1968,6 @@ argument_list|,
 comment|/* virtual end */
 name|prot
 argument_list|,
-name|VM_PROT_ALL
-argument_list|,
 name|cow
 argument_list|)
 expr_stmt|;
@@ -2097,8 +2081,6 @@ argument_list|,
 name|map_addr
 operator|+
 name|map_len
-argument_list|,
-name|VM_PROT_ALL
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,
@@ -2236,7 +2218,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
