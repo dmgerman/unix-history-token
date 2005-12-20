@@ -6774,7 +6774,7 @@ operator|&
 name|WRONG_CSWSIG
 condition|)
 block|{
-name|uDWord
+name|u_int32_t
 name|dCSWSignature
 init|=
 name|UGETDW
