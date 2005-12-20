@@ -324,6 +324,24 @@ value|0x0f
 end_define
 
 begin_comment
+comment|/* Capability Register Offsets */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCICAP_ID
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCICAP_NEXTPTR
+value|0x1
+end_define
+
+begin_comment
 comment|/* Capability Identification Numbers */
 end_comment
 
