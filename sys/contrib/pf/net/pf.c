@@ -7185,14 +7185,14 @@ if|if
 condition|(
 name|cur
 operator|->
-name|sync_flags
+name|local_flags
 operator|&
 name|PFSTATE_EXPIRING
 condition|)
 return|return;
 name|cur
 operator|->
-name|sync_flags
+name|local_flags
 operator||=
 name|PFSTATE_EXPIRING
 expr_stmt|;
