@@ -109,6 +109,24 @@ directive|include
 file|<pthread.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__hidden
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__hidden
+value|__attribute__((visibility("hidden")))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -126,13 +144,6 @@ include|#
 directive|include
 file|"thread_db.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|__hidden
-value|__attribute__((visibility("hidden")))
-end_define
 
 begin_typedef
 typedef|typedef
