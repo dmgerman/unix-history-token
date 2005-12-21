@@ -468,11 +468,12 @@ name|connect_type_cnt
 decl_stmt|,
 name|i
 decl_stmt|,
-name|len
-decl_stmt|,
 name|maxsock
 decl_stmt|,
 name|msgsock
+decl_stmt|;
+name|size_t
+name|len
 decl_stmt|;
 name|int
 name|on
