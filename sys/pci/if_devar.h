@@ -1585,7 +1585,7 @@ decl_stmt|;
 name|u_char
 name|tulip_enaddr
 index|[
-literal|6
+name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 name|bus_space_tag_t
