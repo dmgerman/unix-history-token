@@ -279,12 +279,6 @@ directive|include
 file|<sys/reboot.h>
 end_include
 
-begin_undef
-undef|#
-directive|undef
-name|DDB
-end_undef
-
 begin_include
 include|#
 directive|include
