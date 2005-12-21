@@ -318,6 +318,43 @@ name|MTAG_GIF_CALLED
 value|0
 end_define
 
+begin_struct
+struct|struct
+name|etherip_header
+block|{
+name|u_int8_t
+name|eip_ver
+decl_stmt|;
+comment|/* version/reserved */
+name|u_int8_t
+name|eip_pad
+decl_stmt|;
+comment|/* required padding byte */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|ETHERIP_VER_VERS_MASK
+value|0x0f
+end_define
+
+begin_define
+define|#
+directive|define
+name|ETHERIP_VER_RSVD_MASK
+value|0xf0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ETHERIP_VERSION
+value|0x03
+end_define
+
 begin_comment
 comment|/* Prototypes */
 end_comment

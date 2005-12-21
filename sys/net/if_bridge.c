@@ -3418,6 +3418,10 @@ literal|0
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|IFT_GIF
+case|:
+break|break;
 default|default:
 ifdef|#
 directive|ifdef
@@ -3634,7 +3638,16 @@ operator|(
 name|EBUSY
 operator|)
 return|;
-comment|/* Allow the first member to define the MTU */
+comment|/* Allow the first Ethernet member to define the MTU */
+if|if
+condition|(
+name|ifs
+operator|->
+name|if_type
+operator|!=
+name|IFT_GIF
+condition|)
+block|{
 if|if
 condition|(
 name|LIST_EMPTY
@@ -3687,6 +3700,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 block|}
 if|if
 condition|(
@@ -3772,6 +3786,10 @@ condition|)
 goto|goto
 name|out
 goto|;
+break|break;
+case|case
+name|IFT_GIF
+case|:
 break|break;
 default|default:
 name|error
@@ -6802,6 +6820,15 @@ name|bif_ifp
 expr_stmt|;
 if|if
 condition|(
+name|dst_if
+operator|->
+name|if_type
+operator|==
+name|IFT_GIF
+condition|)
+continue|continue;
+if|if
+condition|(
 operator|(
 name|dst_if
 operator|->
@@ -8260,6 +8287,17 @@ argument_list|,
 argument|bif_next
 argument_list|)
 block|{
+if|if
+condition|(
+name|bif
+operator|->
+name|bif_ifp
+operator|->
+name|if_type
+operator|==
+name|IFT_GIF
+condition|)
+continue|continue;
 comment|/* It is destined for us. */
 if|if
 condition|(
