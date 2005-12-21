@@ -472,7 +472,7 @@ name|maxsock
 decl_stmt|,
 name|msgsock
 decl_stmt|;
-name|size_t
+name|socklen_t
 name|len
 decl_stmt|;
 name|int
