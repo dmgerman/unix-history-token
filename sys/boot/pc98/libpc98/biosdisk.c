@@ -3680,6 +3680,15 @@ expr_stmt|;
 comment|/* Decide whether we have to bounce */
 if|if
 condition|(
+name|VTOP
+argument_list|(
+name|dest
+argument_list|)
+operator|>>
+literal|20
+operator|!=
+literal|0
+operator|||
 operator|(
 operator|(
 name|VTOP
@@ -3705,7 +3714,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/*  	 * There is a 64k physical boundary somewhere in the destination buffer, so we have 	 * to arrange a suitable bounce buffer.  Allocate a buffer twice as large as we 	 * need to.  Use the bottom half unless there is a break there, in which case we 	 * use the top half. 	 */
+comment|/*  	 * There is a 64k physical boundary somewhere in the destination buffer, or the 	 * destination buffer is above first 1MB of physical memory so we have 	 * to arrange a suitable bounce buffer.  Allocate a buffer twice as large as we 	 * need to.  Use the bottom half unless there is a break there, in which case we 	 * use the top half. 	 */
 name|x
 operator|=
 name|min
@@ -3722,7 +3731,7 @@ argument_list|)
 expr_stmt|;
 name|bbuf
 operator|=
-name|malloc
+name|alloca
 argument_list|(
 name|x
 operator|*
@@ -4206,17 +4215,6 @@ condition|(
 name|result
 condition|)
 block|{
-if|if
-condition|(
-name|bbuf
-operator|!=
-name|NULL
-condition|)
-name|free
-argument_list|(
-name|bbuf
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -4259,17 +4257,6 @@ name|x
 expr_stmt|;
 block|}
 comment|/*    hexdump(dest, (blks * BIOSDISK_SECSIZE)); */
-if|if
-condition|(
-name|bbuf
-operator|!=
-name|NULL
-condition|)
-name|free
-argument_list|(
-name|bbuf
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -4363,6 +4350,15 @@ expr_stmt|;
 comment|/* Decide whether we have to bounce */
 if|if
 condition|(
+name|VTOP
+argument_list|(
+name|dest
+argument_list|)
+operator|>>
+literal|20
+operator|!=
+literal|0
+operator|||
 operator|(
 operator|(
 name|VTOP
@@ -4388,7 +4384,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/*  	 * There is a 64k physical boundary somewhere in the destination buffer, so we have 	 * to arrange a suitable bounce buffer.  Allocate a buffer twice as large as we 	 * need to.  Use the bottom half unless there is a break there, in which case we 	 * use the top half. 	 */
+comment|/*  	 * There is a 64k physical boundary somewhere in the destination buffer, or the 	 * destination buffer is above first 1MB of physical memory so we have 	 * to arrange a suitable bounce buffer.  Allocate a buffer twice as large as we 	 * need to.  Use the bottom half unless there is a break there, in which case we 	 * use the top half. 	 */
 name|x
 operator|=
 name|min
@@ -4405,7 +4401,7 @@ argument_list|)
 expr_stmt|;
 name|bbuf
 operator|=
-name|malloc
+name|alloca
 argument_list|(
 name|x
 operator|*
@@ -4888,17 +4884,6 @@ condition|(
 name|result
 condition|)
 block|{
-if|if
-condition|(
-name|bbuf
-operator|!=
-name|NULL
-condition|)
-name|free
-argument_list|(
-name|bbuf
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -4908,17 +4893,6 @@ return|;
 block|}
 block|}
 comment|/*    hexdump(dest, (blks * BIOSDISK_SECSIZE)); */
-if|if
-condition|(
-name|bbuf
-operator|!=
-name|NULL
-condition|)
-name|free
-argument_list|(
-name|bbuf
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
