@@ -175,7 +175,7 @@ name|dest
 operator|+
 name|len
 operator|>=
-name|memtop
+name|memtop_copyin
 condition|)
 block|{
 name|errno

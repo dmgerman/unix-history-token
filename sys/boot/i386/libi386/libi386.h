@@ -417,6 +417,29 @@ name|memtop
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* last address of physical memory + 1 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|memtop_copyin
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* memtop less heap size for the cases */
+end_comment
+
+begin_comment
+comment|/*  when heap is at the top of extended memory */
+end_comment
+
+begin_comment
+comment|/*  for other cases - just the same as memtop */
+end_comment
+
 begin_function_decl
 name|int
 name|biospci_find_devclass
