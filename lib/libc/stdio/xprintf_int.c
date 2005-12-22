@@ -1253,6 +1253,7 @@ condition|(
 name|sign
 operator|&&
 operator|(
+name|signed
 name|char
 operator|)
 name|argp
@@ -1266,6 +1267,7 @@ name|uu
 operator|=
 operator|-
 operator|(
+name|signed
 name|char
 operator|)
 name|argp
