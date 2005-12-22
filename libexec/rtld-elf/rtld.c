@@ -8258,6 +8258,11 @@ argument_list|(
 name|obj
 argument_list|)
 expr_stmt|;
+name|init_dag
+argument_list|(
+name|obj
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|result
@@ -8295,11 +8300,6 @@ operator|-
 literal|1
 operator|||
 operator|(
-name|init_dag
-argument_list|(
-name|obj
-argument_list|)
-operator|,
 name|relocate_objects
 argument_list|(
 name|obj
