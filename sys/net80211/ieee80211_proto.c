@@ -3870,9 +3870,9 @@ operator|=
 operator|(
 name|ic
 operator|->
-name|ic_caps
+name|ic_flags
 operator|&
-name|IEEE80211_C_BURST
+name|IEEE80211_F_BURST
 operator|)
 condition|?
 name|phyParam

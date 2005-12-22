@@ -733,6 +733,20 @@ comment|/* 	 * Enable WME by default if we're capable. 	 */
 block|if (ic->ic_caps& IEEE80211_C_WME) 		ic->ic_flags |= IEEE80211_F_WME;
 endif|#
 directive|endif
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_caps
+operator|&
+name|IEEE80211_C_BURST
+condition|)
+name|ic
+operator|->
+name|ic_flags
+operator||=
+name|IEEE80211_F_BURST
+expr_stmt|;
 operator|(
 name|void
 operator|)
