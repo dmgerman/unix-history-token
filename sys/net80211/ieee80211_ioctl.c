@@ -8411,7 +8411,6 @@ condition|)
 return|return
 name|EINVAL
 return|;
-comment|/* NB: data.length is validated by the wireless extensions code */
 name|MALLOC
 argument_list|(
 name|ie
@@ -8425,7 +8424,7 @@ name|i_len
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
