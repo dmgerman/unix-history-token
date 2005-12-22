@@ -337,6 +337,19 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* number of references from net80211 layer */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nrefs
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -419,6 +432,10 @@ name|wc_iv
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|nrefs
+operator|++
+expr_stmt|;
+comment|/* NB: we assume caller locking */
 return|return
 name|ctx
 return|;
@@ -452,6 +469,21 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|nrefs
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"imbalanced attach/detach"
+operator|)
+argument_list|)
+expr_stmt|;
+name|nrefs
+operator|--
+expr_stmt|;
+comment|/* NB: we assume caller locking */
 block|}
 end_function
 
@@ -2647,6 +2679,31 @@ return|;
 case|case
 name|MOD_UNLOAD
 case|:
+case|case
+name|MOD_QUIESCE
+case|:
+if|if
+condition|(
+name|nrefs
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"wlan_wep: still in use (%u dynamic refs)\n"
+argument_list|,
+name|nrefs
+argument_list|)
+expr_stmt|;
+return|return
+name|EBUSY
+return|;
+block|}
+if|if
+condition|(
+name|type
+operator|==
+name|MOD_UNLOAD
+condition|)
 name|ieee80211_crypto_unregister
 argument_list|(
 operator|&
