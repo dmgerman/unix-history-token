@@ -255,6 +255,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|IEEE80211_MCAST_RATE_DEFAULT
+value|(2*1)
+end_define
+
+begin_comment
+comment|/* default mcast rate (1M) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_RTS_DEFAULT
 value|IEEE80211_RTS_MAX
 end_define
@@ -613,6 +624,10 @@ name|int
 name|ic_fixed_rate
 decl_stmt|;
 comment|/* index to ic_sup_rates[] */
+name|int
+name|ic_mcast_rate
+decl_stmt|;
+comment|/* rate for mcast frames */
 name|u_int16_t
 name|ic_rtsthreshold
 decl_stmt|;
