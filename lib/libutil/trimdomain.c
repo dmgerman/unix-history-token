@@ -191,9 +191,8 @@ name|hostsize
 operator|+
 literal|1
 expr_stmt|;
-for|for
-control|(
-init|;
+if|if
+condition|(
 operator|(
 name|s
 operator|=
@@ -215,10 +214,7 @@ argument_list|)
 operator|)
 operator|!=
 name|NULL
-condition|;
-name|s
-operator|++
-control|)
+condition|)
 block|{
 if|if
 condition|(
@@ -254,7 +250,6 @@ name|s
 operator|=
 literal|'\0'
 expr_stmt|;
-break|break;
 block|}
 elseif|else
 if|if
@@ -316,7 +311,6 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
 block|}
 block|}
