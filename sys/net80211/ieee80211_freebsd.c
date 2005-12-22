@@ -599,6 +599,31 @@ argument_list|,
 literal|"driver capabilities"
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|oid
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"bmiss_max"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ic
+operator|->
+name|ic_bmiss_max
+argument_list|,
+literal|0
+argument_list|,
+literal|"consecutive beacon misses before scanning"
+argument_list|)
+expr_stmt|;
 name|ic
 operator|->
 name|ic_sysctl

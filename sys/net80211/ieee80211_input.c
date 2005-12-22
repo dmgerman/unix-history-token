@@ -8924,6 +8924,12 @@ argument_list|,
 name|rstamp
 argument_list|)
 expr_stmt|;
+name|ic
+operator|->
+name|ic_bmiss_count
+operator|=
+literal|0
+expr_stmt|;
 return|return;
 block|}
 comment|/* 		 * If scanning, just pass information to the scan module. 		 */
