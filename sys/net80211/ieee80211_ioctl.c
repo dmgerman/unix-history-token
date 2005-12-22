@@ -12450,18 +12450,6 @@ break|break;
 case|case
 name|IEEE80211_IOC_BSSID
 case|:
-comment|/* NB: should only be set when in STA mode */
-if|if
-condition|(
-name|ic
-operator|->
-name|ic_opmode
-operator|!=
-name|IEEE80211_M_STA
-condition|)
-return|return
-name|EINVAL
-return|;
 if|if
 condition|(
 name|ireq
