@@ -1668,8 +1668,7 @@ block|{
 comment|/* Since we didn't run, we can't read.  Fake it. */
 name|unit
 operator|=
-operator|-
-literal|1
+literal|0
 expr_stmt|;
 return|return;
 block|}
