@@ -4612,7 +4612,7 @@ name|ifma
 operator|->
 name|ifma_protospec
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|splx
@@ -4783,7 +4783,7 @@ name|ifma
 operator|->
 name|ifma_protospec
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|LIST_REMOVE
 argument_list|(
