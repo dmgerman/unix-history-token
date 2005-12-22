@@ -4813,6 +4813,14 @@ operator|==
 literal|0
 condition|)
 break|break;
+comment|/* 		 * XXX: some laptops trigger several spurious interrupts 		 * on em(4) when in the resume cycle. The ICR register 		 * reports all-ones value in this case. Processing such 		 * interrupts would lead to a freeze. I don't know why. 		 */
+if|if
+condition|(
+name|reg_icr
+operator|==
+literal|0xffffffff
+condition|)
+break|break;
 if|if
 condition|(
 name|ifp
