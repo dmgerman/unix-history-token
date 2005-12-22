@@ -2412,7 +2412,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
@@ -10372,6 +10372,8 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+if|if
+condition|(
 name|bge_read_eeprom
 argument_list|(
 name|sc
@@ -10389,7 +10391,28 @@ argument_list|(
 name|hwcfg
 argument_list|)
 argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"bge%d: failed to read EEPROM\n"
+argument_list|,
+name|unit
+argument_list|)
 expr_stmt|;
+name|bge_release_resources
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 name|hwcfg
 operator|=
 name|ntohl
