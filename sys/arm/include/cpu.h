@@ -153,31 +153,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CLKF_USERMODE
-parameter_list|(
-name|frame
-parameter_list|)
-value|((frame->if_spsr& PSR_MODE) == PSR_USR32_MODE)
-end_define
-
-begin_define
-define|#
-directive|define
 name|TRAPF_USERMODE
 parameter_list|(
 name|frame
 parameter_list|)
 value|((frame->tf_spsr& PSR_MODE) == PSR_USR32_MODE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLKF_PC
-parameter_list|(
-name|frame
-parameter_list|)
-value|(frame->if_pc)
 end_define
 
 begin_define

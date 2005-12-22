@@ -36,46 +36,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|CLKF_USERMODE
-parameter_list|(
-name|frame
-parameter_list|)
-value|(((frame)->srr1& PSL_PR) != 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLKF_BASEPRI
-parameter_list|(
-name|frame
-parameter_list|)
-value|((frame)->pri == 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLKF_PC
-parameter_list|(
-name|frame
-parameter_list|)
-value|((frame)->srr0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLKF_INTR
-parameter_list|(
-name|frame
-parameter_list|)
-value|((frame)->depth> 0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|TRAPF_USERMODE
 parameter_list|(
 name|frame

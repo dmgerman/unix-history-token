@@ -318,7 +318,7 @@ name|void
 name|ipi_bitmap_handler
 parameter_list|(
 name|struct
-name|clockframe
+name|trapframe
 name|frame
 parameter_list|)
 function_decl|;

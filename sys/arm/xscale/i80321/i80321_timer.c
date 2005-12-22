@@ -88,7 +88,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpufunc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/frame.h>
 end_include
 
 begin_include
@@ -1112,7 +1124,7 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|clockframe
+name|trapframe
 modifier|*
 name|frame
 init|=
@@ -1128,7 +1140,15 @@ argument_list|)
 expr_stmt|;
 name|hardclock
 argument_list|(
+name|TRAPF_USERMODE
+argument_list|(
 name|frame
+argument_list|)
+argument_list|,
+name|TRAPF_PC
+argument_list|(
+name|frame
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

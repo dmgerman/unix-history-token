@@ -128,27 +128,6 @@ parameter_list|)
 value|((framep)->tf_eip)
 end_define
 
-begin_define
-define|#
-directive|define
-name|CLKF_USERMODE
-parameter_list|(
-name|framep
-parameter_list|)
-define|\
-value|((ISPL((framep)->cf_cs) == SEL_UPL) || ((framep)->cf_eflags& PSL_VM))
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLKF_PC
-parameter_list|(
-name|framep
-parameter_list|)
-value|((framep)->cf_eip)
-end_define
-
 begin_comment
 comment|/*  * CTL_MACHDEP definitions.  */
 end_comment

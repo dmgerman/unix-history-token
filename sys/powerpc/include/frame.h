@@ -88,26 +88,6 @@ parameter_list|)
 value|((td)->td_frame)
 end_define
 
-begin_struct
-struct|struct
-name|clockframe
-block|{
-name|register_t
-name|srr1
-decl_stmt|;
-name|register_t
-name|srr0
-decl_stmt|;
-name|int
-name|pri
-decl_stmt|;
-name|int
-name|depth
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_comment
 comment|/*  * Call frame for PowerPC used during fork.  */
 end_comment

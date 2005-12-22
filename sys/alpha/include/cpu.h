@@ -33,22 +33,6 @@ directive|include
 file|<machine/frame.h>
 end_include
 
-begin_comment
-comment|/*  * Arguments to hardclock and gatherstats encapsulate the previous  * machine state in an opaque clockframe.  One the Alpha, we use  * what we push on an interrupt (a trapframe).  */
-end_comment
-
-begin_struct
-struct|struct
-name|clockframe
-block|{
-name|struct
-name|trapframe
-name|cf_tf
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_define
 define|#
 directive|define
@@ -68,26 +52,6 @@ parameter_list|(
 name|framep
 parameter_list|)
 value|((framep)->tf_regs[FRAME_PC])
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLKF_USERMODE
-parameter_list|(
-name|framep
-parameter_list|)
-value|TRAPF_USERMODE(&(framep)->cf_tf)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLKF_PC
-parameter_list|(
-name|framep
-parameter_list|)
-value|TRAPF_PC(&(framep)->cf_tf)
 end_define
 
 begin_comment

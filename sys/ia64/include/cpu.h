@@ -29,52 +29,6 @@ directive|include
 file|<machine/frame.h>
 end_include
 
-begin_comment
-comment|/*  * Arguments to hardclock and gatherstats encapsulate the previous machine  * state in an opaque clockframe.  */
-end_comment
-
-begin_struct
-struct|struct
-name|clockframe
-block|{
-name|struct
-name|trapframe
-name|cf_tf
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|CLKF_PC
-parameter_list|(
-name|cf
-parameter_list|)
-value|((cf)->cf_tf.tf_special.iip)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLKF_CPL
-parameter_list|(
-name|cf
-parameter_list|)
-value|((cf)->cf_tf.tf_special.psr& IA64_PSR_CPL)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLKF_USERMODE
-parameter_list|(
-name|cf
-parameter_list|)
-value|(CLKF_CPL(cf) != IA64_PSR_CPL_KERN)
-end_define
-
 begin_define
 define|#
 directive|define

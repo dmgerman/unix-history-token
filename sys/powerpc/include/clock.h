@@ -79,7 +79,7 @@ name|void
 name|decr_intr
 parameter_list|(
 name|struct
-name|clockframe
+name|trapframe
 modifier|*
 parameter_list|)
 function_decl|;

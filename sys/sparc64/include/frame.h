@@ -131,18 +131,6 @@ end_define
 
 begin_struct
 struct|struct
-name|clockframe
-block|{
-name|struct
-name|trapframe
-name|cf_tf
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|frame
 block|{
 name|u_long

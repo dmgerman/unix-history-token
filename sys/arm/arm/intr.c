@@ -131,7 +131,8 @@ begin_function_decl
 name|void
 name|arm_handler_execute
 parameter_list|(
-name|void
+name|struct
+name|trapframe
 modifier|*
 parameter_list|,
 name|int
@@ -349,7 +350,8 @@ begin_function
 name|void
 name|arm_handler_execute
 parameter_list|(
-name|void
+name|struct
+name|trapframe
 modifier|*
 name|frame
 parameter_list|,

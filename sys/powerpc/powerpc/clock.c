@@ -559,7 +559,7 @@ name|void
 name|decr_intr
 parameter_list|(
 name|struct
-name|clockframe
+name|trapframe
 modifier|*
 name|frame
 parameter_list|)
@@ -632,12 +632,20 @@ comment|/* 	 * Do standard timer interrupt stuff. 	 * Do softclock stuff only on
 if|#
 directive|if
 literal|0
-block|while (--nticks> 0) { 		hardclock(frame); 	}
+block|while (--nticks> 0) { 		hardclock(TRAPF_USERMODE(frame), TRAPF_PC(frame)); 	}
 endif|#
 directive|endif
 name|hardclock
 argument_list|(
+name|TRAPF_USERMODE
+argument_list|(
 name|frame
+argument_list|)
+argument_list|,
+name|TRAPF_PC
+argument_list|(
+name|frame
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

@@ -537,9 +537,11 @@ specifier|static
 name|void
 name|handleclock
 parameter_list|(
-name|void
-modifier|*
-name|arg
+name|int
+name|usermode
+parameter_list|,
+name|uintfptr_t
+name|pc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -740,7 +742,7 @@ comment|/*  * Machine-dependent clock routines.  *  * Startrtclock restarts the 
 end_comment
 
 begin_comment
-comment|/*  * Start the real-time and statistics clocks. Leave stathz 0 since there  * are no other timers available.  */
+comment|/*  * Start the real-time and statistics clocks.  */
 end_comment
 
 begin_function
@@ -868,7 +870,20 @@ operator|&
 name|i8254_timecounter
 argument_list|)
 expr_stmt|;
+name|platform
+operator|.
+name|clockintr
+operator|=
+name|handleclock
+expr_stmt|;
 block|}
+else|else
+name|platform
+operator|.
+name|clockintr
+operator|=
+name|hardclock
+expr_stmt|;
 if|if
 condition|(
 name|ncpus
@@ -895,21 +910,9 @@ name|hz
 operator|/
 literal|8
 expr_stmt|;
-name|platform
-operator|.
-name|clockintr
+name|profhz
 operator|=
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
-name|void
-operator|*
-argument_list|)
-operator|)
-name|handleclock
+name|hz
 expr_stmt|;
 comment|/* 	 * Get the clock started. 	 */
 name|CLOCK_INIT
@@ -1378,21 +1381,26 @@ specifier|static
 name|void
 name|handleclock
 parameter_list|(
-name|void
-modifier|*
-name|arg
+name|int
+name|usermode
+parameter_list|,
+name|uintfptr_t
+name|pc
 parameter_list|)
 block|{
-comment|/* 	 * XXX: TurboLaser doesn't have an i8254 counter. 	 * XXX: A replacement is needed, and another method 	 * XXX: of determining this would be nice. 	 */
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|hwrpb
 operator|->
 name|rpb_type
 operator|!=
 name|ST_DEC_21000
-condition|)
-block|{
+argument_list|,
+operator|(
+literal|"custom clock handler called on TurboLaser"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|timecounter
@@ -1438,10 +1446,11 @@ name|clock_lock
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 name|hardclock
 argument_list|(
-name|arg
+name|usermode
+argument_list|,
+name|pc
 argument_list|)
 expr_stmt|;
 block|}

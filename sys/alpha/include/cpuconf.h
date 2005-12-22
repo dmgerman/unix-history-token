@@ -124,8 +124,9 @@ modifier|*
 name|clockintr
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|int
+parameter_list|,
+name|uintfptr_t
 parameter_list|)
 function_decl|;
 name|void

@@ -96,7 +96,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpufunc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/frame.h>
 end_include
 
 begin_include
@@ -503,7 +515,7 @@ name|arg
 decl_stmt|;
 block|{
 name|struct
-name|clockframe
+name|trapframe
 modifier|*
 name|frame
 init|=
@@ -659,7 +671,15 @@ argument_list|)
 expr_stmt|;
 name|hardclock
 argument_list|(
+name|TRAPF_USERMODE
+argument_list|(
 name|frame
+argument_list|)
+argument_list|,
+name|TRAPF_PC
+argument_list|(
+name|frame
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|#
@@ -678,7 +698,7 @@ literal|0
 end_if
 
 begin_comment
-unit|static void statintr(arg) 	void *arg; { 	struct clockframe *frame = arg; 	u_int32_t oscr, nextmatch, oldmatch; 	int s;  	bus_space_write_4(saost_sc->sc_iot, saost_sc->sc_ioh, 			SAOST_SR, 2);
+unit|static void statintr(arg) 	void *arg; { 	struct trapframe *frame = arg; 	u_int32_t oscr, nextmatch, oldmatch; 	int s;  	bus_space_write_4(saost_sc->sc_iot, saost_sc->sc_ioh, 			SAOST_SR, 2);
 comment|/* schedule next clock intr */
 end_comment
 
@@ -688,7 +708,7 @@ comment|/* 		 * we couldn't set the matching register in time. 		 * just set it 
 end_comment
 
 begin_endif
-unit|s = splhigh(); 		oscr = bus_space_read_4(saost_sc->sc_iot, saost_sc->sc_ioh, 					SAOST_CR); 		nextmatch = oscr + 10; 		bus_space_write_4(saost_sc->sc_iot, saost_sc->sc_ioh, 				  SAOST_MR1, nextmatch); 		splx(s); 	}  	saost_sc->sc_statclock_count = nextmatch; 	statclock(frame);  }
+unit|s = splhigh(); 		oscr = bus_space_read_4(saost_sc->sc_iot, saost_sc->sc_ioh, 					SAOST_CR); 		nextmatch = oscr + 10; 		bus_space_write_4(saost_sc->sc_iot, saost_sc->sc_ioh, 				  SAOST_MR1, nextmatch); 		splx(s); 	}  	saost_sc->sc_statclock_count = nextmatch; 	statclock(TRAPF_USERMODE(frame));  }
 endif|#
 directive|endif
 end_endif

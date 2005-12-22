@@ -787,7 +787,7 @@ name|void
 name|lapic_handle_timer
 parameter_list|(
 name|struct
-name|clockframe
+name|trapframe
 name|frame
 parameter_list|)
 function_decl|;
