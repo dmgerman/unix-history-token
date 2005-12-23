@@ -9060,6 +9060,8 @@ operator|.
 name|rcvif
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|in6_embedscope
 argument_list|(
 operator|&
@@ -9074,7 +9076,10 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|bad
+goto|;
 name|bzero
 argument_list|(
 operator|&
@@ -9122,6 +9127,8 @@ operator|.
 name|rcvif
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|in6_embedscope
 argument_list|(
 operator|&
@@ -9134,7 +9141,10 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|bad
+goto|;
 ifdef|#
 directive|ifdef
 name|COMPAT_RFC1885
