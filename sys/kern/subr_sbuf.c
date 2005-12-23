@@ -1836,7 +1836,7 @@ comment|/* XXX */
 block|}
 return|return
 operator|(
-literal|0
+name|done
 operator|)
 return|;
 block|}
