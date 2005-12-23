@@ -1773,7 +1773,7 @@ block|{
 name|size_t
 name|r
 init|=
-name|fread
+name|__fread
 argument_list|(
 operator|(
 name|void
