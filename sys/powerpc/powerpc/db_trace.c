@@ -708,6 +708,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|asttrapexit
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|end
 index|[]
 decl_stmt|;
@@ -974,9 +982,10 @@ argument_list|,
 name|stackframe
 argument_list|)
 expr_stmt|;
-comment|/* 		 * The trap code labels the return address from the 		 * call to C code as 'trapexit'. Use this to determine 		 * if the callframe has to traverse a saved trap context 		 */
+comment|/* 		 * The trap code labels the return addresses from the 		 * call to C code as 'trapexit' and 'asttrapexit. Use this 		 * to determine if the callframe has to traverse a saved 		 * trap context 		 */
 if|if
 condition|(
+operator|(
 name|lr
 operator|+
 literal|4
@@ -986,6 +995,19 @@ name|db_addr_t
 operator|)
 operator|&
 name|trapexit
+operator|)
+operator|||
+operator|(
+name|lr
+operator|+
+literal|4
+operator|==
+operator|(
+name|db_addr_t
+operator|)
+operator|&
+name|asttrapexit
+operator|)
 condition|)
 block|{
 specifier|const
@@ -1694,6 +1716,16 @@ name|db_addr_t
 operator|)
 operator|&
 name|trapexit
+operator|||
+name|callpc
+operator|+
+literal|4
+operator|==
+operator|(
+name|db_addr_t
+operator|)
+operator|&
+name|asttrapexit
 condition|)
 break|break;
 if|if
