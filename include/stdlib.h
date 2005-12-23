@@ -206,6 +206,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|abort2
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|int
+argument_list|,
+name|void
+operator|*
+operator|*
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|abs
 argument_list|(
