@@ -876,7 +876,7 @@ name|INKERNEL
 parameter_list|(
 name|va
 parameter_list|)
-value|(((va)>= DMAP_MIN_ADDRESS&& (va)< DMAP_MAX_ADDRESS) \ 	    || (va)>= KERNBASE)
+value|(((va)>= DMAP_MIN_ADDRESS&& (va)< DMAP_MAX_ADDRESS) \ 	    || ((va)>= KERNBASE&& (va)< VM_MAX_KERNEL_ADDRESS))
 end_define
 
 begin_struct
@@ -2535,6 +2535,31 @@ argument_list|)
 operator|==
 operator|-
 literal|1
+condition|)
+break|break;
+if|if
+condition|(
+name|frame
+operator|->
+name|f_frame
+operator|<=
+name|frame
+operator|||
+operator|(
+name|vm_offset_t
+operator|)
+name|frame
+operator|->
+name|f_frame
+operator|>=
+operator|(
+name|vm_offset_t
+operator|)
+name|rbp
+operator|+
+name|KSTACK_PAGES
+operator|*
+name|PAGE_SIZE
 condition|)
 break|break;
 name|frame
