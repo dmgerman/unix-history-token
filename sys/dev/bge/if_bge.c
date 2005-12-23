@@ -1895,13 +1895,13 @@ operator|==
 name|BGE_TIMEOUT
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"bge%d: VPD read timed out\n"
-argument_list|,
 name|sc
 operator|->
-name|bge_unit
+name|bge_dev
+argument_list|,
+literal|"VPD read timed out\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2107,13 +2107,13 @@ operator|!=
 name|VPD_RES_ID
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"bge%d: bad VPD resource id: expected %x got %x\n"
-argument_list|,
 name|sc
 operator|->
-name|bge_unit
+name|bge_dev
+argument_list|,
+literal|"bad VPD resource id: expected %x got %x\n"
 argument_list|,
 name|VPD_RES_ID
 argument_list|,
@@ -2211,13 +2211,13 @@ operator|!=
 name|VPD_RES_READ
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"bge%d: bad VPD resource id: expected %x got %x\n"
-argument_list|,
 name|sc
 operator|->
-name|bge_unit
+name|bge_dev
+argument_list|,
+literal|"bad VPD resource id: expected %x got %x\n"
 argument_list|,
 name|VPD_RES_READ
 argument_list|,
@@ -2412,13 +2412,13 @@ operator|==
 name|BGE_TIMEOUT
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"bge%d: eeprom read timed out\n"
-argument_list|,
 name|sc
 operator|->
-name|bge_unit
+name|bge_dev
+argument_list|,
+literal|"EEPROM read timed out\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2709,13 +2709,13 @@ operator|==
 name|BGE_TIMEOUT
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"bge%d: PHY read timed out\n"
-argument_list|,
 name|sc
 operator|->
-name|bge_unit
+name|bge_ifp
+argument_list|,
+literal|"PHY read timed out\n"
 argument_list|)
 expr_stmt|;
 name|val
@@ -2936,13 +2936,13 @@ operator|==
 name|BGE_TIMEOUT
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"bge%d: PHY read timed out\n"
-argument_list|,
 name|sc
 operator|->
-name|bge_unit
+name|bge_ifp
+argument_list|,
+literal|"PHY read timed out\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4897,13 +4897,13 @@ operator|&
 name|BGE_RXCPUMODE_ROMFAIL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"bge%d: RX CPU self-diagnostics failed!\n"
-argument_list|,
 name|sc
 operator|->
-name|bge_unit
+name|bge_dev
+argument_list|,
+literal|"RX CPU self-diagnostics failed!\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5570,13 +5570,13 @@ operator|==
 name|BGE_TIMEOUT
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"bge%d: buffer manager failed to start\n"
-argument_list|,
 name|sc
 operator|->
-name|bge_unit
+name|bge_dev
+argument_list|,
+literal|"buffer manager failed to start\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5645,13 +5645,13 @@ operator|==
 name|BGE_TIMEOUT
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"bge%d: flow-through queue init failed\n"
-argument_list|,
 name|sc
 operator|->
-name|bge_unit
+name|bge_dev
+argument_list|,
+literal|"flow-through queue init failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6568,13 +6568,13 @@ operator|==
 name|BGE_TIMEOUT
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"bge%d: host coalescing engine failed to idle\n"
-argument_list|,
 name|sc
 operator|->
-name|bge_unit
+name|bge_dev
+argument_list|,
+literal|"host coalescing engine failed to idle\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -7266,15 +7266,6 @@ argument_list|(
 expr|struct
 name|bge_softc
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|bge_unit
-operator|=
-name|device_get_unit
-argument_list|(
-name|dev
 argument_list|)
 expr_stmt|;
 name|sc
@@ -8164,7 +8155,9 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|dev
+name|sc
+operator|->
+name|bge_dev
 argument_list|,
 literal|"could not allocate parent dma tag\n"
 argument_list|)
@@ -8227,7 +8220,9 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|dev
+name|sc
+operator|->
+name|bge_dev
 argument_list|,
 literal|"could not allocate dma tag\n"
 argument_list|)
@@ -8283,7 +8278,9 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|dev
+name|sc
+operator|->
+name|bge_dev
 argument_list|,
 literal|"can't create DMA map for RX\n"
 argument_list|)
@@ -8340,7 +8337,9 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|dev
+name|sc
+operator|->
+name|bge_dev
 argument_list|,
 literal|"can't create DMA map for RX\n"
 argument_list|)
@@ -8402,7 +8401,9 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|dev
+name|sc
+operator|->
+name|bge_dev
 argument_list|,
 literal|"could not allocate dma tag\n"
 argument_list|)
@@ -8599,7 +8600,9 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|dev
+name|sc
+operator|->
+name|bge_dev
 argument_list|,
 literal|"could not allocate dma tag\n"
 argument_list|)
@@ -8660,7 +8663,9 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|dev
+name|sc
+operator|->
+name|bge_dev
 argument_list|,
 literal|"could not allocate dma tag\n"
 argument_list|)
@@ -8824,7 +8829,9 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|dev
+name|sc
+operator|->
+name|bge_dev
 argument_list|,
 literal|"can't create DMA map for RX\n"
 argument_list|)
@@ -8893,7 +8900,9 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|dev
+name|sc
+operator|->
+name|bge_dev
 argument_list|,
 literal|"could not allocate dma tag\n"
 argument_list|)
@@ -9081,7 +9090,9 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|dev
+name|sc
+operator|->
+name|bge_dev
 argument_list|,
 literal|"could not allocate dma tag\n"
 argument_list|)
@@ -9263,7 +9274,9 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|dev
+name|sc
+operator|->
+name|bge_dev
 argument_list|,
 literal|"could not allocate dma tag\n"
 argument_list|)
@@ -9445,7 +9458,9 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|dev
+name|sc
+operator|->
+name|bge_dev
 argument_list|,
 literal|"could not allocate dma tag\n"
 argument_list|)
@@ -9623,8 +9638,6 @@ literal|6
 index|]
 decl_stmt|;
 name|int
-name|unit
-decl_stmt|,
 name|error
 init|=
 literal|0
@@ -9638,24 +9651,11 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|unit
-operator|=
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|bge_dev
 operator|=
 name|dev
-expr_stmt|;
-name|sc
-operator|->
-name|bge_unit
-operator|=
-name|unit
 expr_stmt|;
 comment|/* 	 * Map control/status registers. 	 */
 name|pci_enable_busmaster
@@ -9694,11 +9694,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"bge%d: couldn't map memory\n"
+name|sc
+operator|->
+name|bge_dev
 argument_list|,
-name|unit
+literal|"couldn't map memory\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -9763,11 +9765,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"bge%d: couldn't map interrupt\n"
+name|sc
+operator|->
+name|bge_dev
 argument_list|,
-name|unit
+literal|"couldn't map interrupt\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -9778,12 +9782,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|sc
-operator|->
-name|bge_unit
-operator|=
-name|unit
-expr_stmt|;
 name|BGE_LOCK_INIT
 argument_list|(
 name|sc
@@ -9935,13 +9933,13 @@ name|sc
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"bge%d: chip initialization failed\n"
-argument_list|,
 name|sc
 operator|->
-name|bge_unit
+name|bge_dev
+argument_list|,
+literal|"chip initialization failed\n"
 argument_list|)
 expr_stmt|;
 name|bge_release_resources
@@ -10081,11 +10079,13 @@ name|ETHER_ADDR_LEN
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"bge%d: failed to read station address\n"
+name|sc
+operator|->
+name|bge_dev
 argument_list|,
-name|unit
+literal|"failed to read station address\n"
 argument_list|)
 expr_stmt|;
 name|bge_release_resources
@@ -10137,13 +10137,13 @@ name|dev
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"bge%d: failed to allocate DMA resources\n"
-argument_list|,
 name|sc
 operator|->
-name|bge_unit
+name|bge_dev
+argument_list|,
+literal|"failed to allocate DMA resources\n"
 argument_list|)
 expr_stmt|;
 name|bge_release_resources
@@ -10209,13 +10209,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"bge%d: failed to if_alloc()\n"
-argument_list|,
 name|sc
 operator|->
-name|bge_unit
+name|bge_dev
+argument_list|,
+literal|"failed to if_alloc()\n"
 argument_list|)
 expr_stmt|;
 name|bge_release_resources
@@ -10433,11 +10433,13 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"bge%d: failed to read EEPROM\n"
+name|sc
+operator|->
+name|bge_dev
 argument_list|,
-name|unit
+literal|"failed to read EEPROM\n"
 argument_list|)
 expr_stmt|;
 name|bge_release_resources
@@ -10619,13 +10621,13 @@ name|bge_ifmedia_sts
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"bge%d: MII without any PHY!\n"
-argument_list|,
 name|sc
 operator|->
-name|bge_unit
+name|bge_dev
+argument_list|,
+literal|"MII without any PHY!\n"
 argument_list|)
 expr_stmt|;
 name|bge_release_resources
@@ -10745,11 +10747,13 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"bge%d: couldn't set up irq\n"
+name|sc
+operator|->
+name|bge_dev
 argument_list|,
-name|unit
+literal|"couldn't set up irq\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -11421,13 +11425,13 @@ operator|==
 name|BGE_TIMEOUT
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"bge%d: firmware handshake timed out\n"
-argument_list|,
 name|sc
 operator|->
-name|bge_unit
+name|bge_dev
+argument_list|,
+literal|"firmware handshake timed out\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -13176,13 +13180,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"bge%d: gigabit link up\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|bge_unit
+literal|"gigabit link up\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -13272,13 +13274,11 @@ operator|)
 operator|&&
 name|bootverbose
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"bge%d: gigabit link up\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|bge_unit
+literal|"gigabit link up\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -14719,13 +14719,13 @@ name|sc
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"bge%d: initialization failure\n"
-argument_list|,
 name|sc
 operator|->
-name|bge_unit
+name|bge_dev
+argument_list|,
+literal|"initialization failure\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -14917,13 +14917,13 @@ name|i
 operator|==
 literal|10
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"bge%d: 5705 A0 chip failed to load RX ring\n"
-argument_list|,
 name|sc
 operator|->
-name|bge_unit
+name|bge_dev
+argument_list|,
+literal|"5705 A0 chip failed to load RX ring\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -16171,13 +16171,11 @@ name|ifp
 operator|->
 name|if_softc
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"bge%d: watchdog timeout -- resetting\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|bge_unit
+literal|"watchdog timeout -- resetting\n"
 argument_list|)
 expr_stmt|;
 name|ifp

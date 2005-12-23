@@ -12381,10 +12381,6 @@ name|bge_ifmedia
 decl_stmt|;
 comment|/* TBI media info */
 name|u_int8_t
-name|bge_unit
-decl_stmt|;
-comment|/* interface number */
-name|u_int8_t
 name|bge_extram
 decl_stmt|;
 comment|/* has external SSRAM */
