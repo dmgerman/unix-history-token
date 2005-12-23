@@ -1435,7 +1435,7 @@ value|((unsigned)(type)< D_LAST ? memtype[type]->ks_shortdesc : "???")
 end_define
 
 begin_comment
-comment|/*  * End system adaptaion definitions.  */
+comment|/*  * End system adaptation definitions.  */
 end_comment
 
 begin_comment
