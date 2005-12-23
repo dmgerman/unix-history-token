@@ -14245,15 +14245,6 @@ operator|->
 name|path
 argument_list|)
 expr_stmt|;
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
-operator|=
-literal|0
-expr_stmt|;
 return|return
 operator|(
 operator|-
