@@ -888,9 +888,16 @@ begin_comment
 comment|/* XXX XSI requires pollution from<sys/wait.h> here.  We'd rather not. */
 end_comment
 
-begin_comment
-comment|/* long	 a64l(const char *); */
-end_comment
+begin_function_decl
+name|long
+name|a64l
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|double
@@ -985,9 +992,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* char	*l64a(long); */
-end_comment
+begin_function_decl
+name|char
+modifier|*
+name|l64a
+parameter_list|(
+name|long
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -1630,6 +1643,20 @@ specifier|const
 name|void
 modifier|*
 parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|l64a_r
+parameter_list|(
+name|long
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
