@@ -1421,6 +1421,28 @@ operator|.
 name|pa_head
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|ds_start
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ds_start
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|ds_end
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ds_end
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ev
 operator|=
 name|NULL
@@ -4298,7 +4320,7 @@ name|ds_end
 operator|.
 name|pm_intr_bufferfull
 condition|)
-name|warn
+name|warnx
 argument_list|(
 literal|"WARNING: some samples were dropped.  Please "
 literal|"consider tuning the \"kern.hwpmc.nsamples\" "
@@ -4315,7 +4337,7 @@ name|ds_end
 operator|.
 name|pm_buffer_requests_failed
 condition|)
-name|warn
+name|warnx
 argument_list|(
 literal|"WARNING: some events were discarded.  Please "
 literal|"consider tuning the \"kern.hwpmc.nbuffers\" "
