@@ -42,6 +42,12 @@ name|adjkerntz
 decl_stmt|;
 end_decl_stmt
 
+begin_struct_decl
+struct_decl|struct
+name|trapframe
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|sysbeep
