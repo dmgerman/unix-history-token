@@ -3686,10 +3686,13 @@ literal|0
 argument_list|)
 name|printf
 argument_list|(
-literal|"%s: sec = %ld usec = %ld ticks = %d\n"
+literal|"%s: sec = %jd usec = %ld ticks = %d\n"
 argument_list|,
 name|__func__
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|t
 operator|.
 name|tv_sec

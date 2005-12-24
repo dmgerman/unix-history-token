@@ -168,6 +168,12 @@ directive|include
 file|<assert.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2147,8 +2153,11 @@ name|report
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"exiting after %ld minutes of inactivity"
+literal|"exiting after %jd minutes of inactivity"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|actualtimeout
 operator|.
 name|tv_sec

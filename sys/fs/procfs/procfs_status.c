@@ -532,8 +532,11 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|" %ld,%ld %ld,%ld %ld,%ld"
+literal|" %jd,%ld %jd,%ld %jd,%ld"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|start
 operator|.
 name|tv_sec
@@ -542,6 +545,9 @@ name|start
 operator|.
 name|tv_usec
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|ut
 operator|.
 name|tv_sec
@@ -550,6 +556,9 @@ name|ut
 operator|.
 name|tv_usec
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|st
 operator|.
 name|tv_sec

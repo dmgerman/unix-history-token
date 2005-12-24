@@ -77,10 +77,21 @@ begin_struct
 struct|struct
 name|timeval
 block|{
+ifdef|#
+directive|ifdef
+name|__alpha__
 name|long
 name|tv_sec
 decl_stmt|;
-comment|/* seconds (XXX should be time_t) */
+comment|/* seconds */
+else|#
+directive|else
+name|time_t
+name|tv_sec
+decl_stmt|;
+comment|/* seconds */
+endif|#
+directive|endif
 name|suseconds_t
 name|tv_usec
 decl_stmt|;

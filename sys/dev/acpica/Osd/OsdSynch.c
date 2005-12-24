@@ -934,10 +934,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: Wakeup timeleft(%lu, %lu), tmo %u, sem %p, thread %d\n"
+literal|"%s: Wakeup timeleft(%jd, %lu), tmo %u, sem %p, thread %d\n"
 argument_list|,
 name|__func__
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|timelefttv
 operator|.
 name|tv_sec
