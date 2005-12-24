@@ -11390,11 +11390,46 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 		 * If we are not called from dlsym (i.e. this is a normal 		 * relocation from unversioned binary, accept the symbol 		 * immediately if it happens to have first version after 		 * this shared object became versioned. Otherwise, if 		 * symbol is versioned and not hidden, remember it. If it 		 * is the only symbol with this name exported by the 		 * shared object, it will be returned as a match at the 		 * end of the function. If symbol is global (verndx< 2) 		 * accept it unconditionally. 		 */
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|SYMLOOK_DLSYM
+operator|)
+operator|==
+literal|0
+operator|&&
+name|verndx
+operator|==
+name|VER_NDX_GIVEN
+condition|)
+return|return
+name|symp
+return|;
+elseif|else
 if|if
 condition|(
 name|verndx
 operator|>=
 name|VER_NDX_GIVEN
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|obj
+operator|->
+name|versyms
+index|[
+name|symnum
+index|]
+operator|&
+name|VER_NDX_HIDDEN
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -11410,6 +11445,7 @@ expr_stmt|;
 name|vcount
 operator|++
 expr_stmt|;
+block|}
 continue|continue;
 block|}
 block|}
@@ -11538,7 +11574,7 @@ name|name
 argument_list|)
 condition|)
 block|{
-comment|/* 		     * Version does not match. Look if this is a default symbol 		     * and if it is not hidden. If default symbol (num< 2) 		     * is available, use it. Do not return symbol if we are 		     * called by dlvsym, because dlvsym looks for a specific 		     * version and default one is not what dlvsym wants. 		     */
+comment|/* 		     * Version does not match. Look if this is a global symbol 		     * and if it is not hidden. If global symbol (verndx< 2) 		     * is available, use it. Do not return symbol if we are 		     * called by dlvsym, because dlvsym looks for a specific 		     * version and default one is not what dlvsym wants. 		     */
 if|if
 condition|(
 operator|(
@@ -13799,7 +13835,7 @@ name|defined
 argument_list|(
 name|__arm__
 argument_list|)
-comment|/*      * If we were the last thing to allocate out of the static TLS      * block, we give our space back to the 'allocator'. This is a      * simplistic workaround to allow libGL.so.1 to be loaded and      * unloaded multiple times. We only handle the Variant II      * mechanism for now - this really needs a proper allocator.        */
+comment|/*      * If we were the last thing to allocate out of the static TLS      * block, we give our space back to the 'allocator'. This is a      * simplistic workaround to allow libGL.so.1 to be loaded and      * unloaded multiple times. We only handle the Variant II      * mechanism for now - this really needs a proper allocator.      */
 if|if
 condition|(
 name|calculate_tls_end
@@ -14168,7 +14204,11 @@ return|;
 block|}
 name|_rtld_error
 argument_list|(
-literal|"Unexpected  inconsistency: %s not found in dependency list"
+literal|"%s: Unexpected  inconsistency: dependency %s not found"
+argument_list|,
+name|obj
+operator|->
+name|path
 argument_list|,
 name|name
 argument_list|)
@@ -14234,11 +14274,13 @@ condition|)
 block|{
 name|_rtld_error
 argument_list|(
-literal|"%s does not have version information, but %s requires it"
+literal|"%s: version %s required by %s not defined"
 argument_list|,
 name|depobj
 operator|->
 name|path
+argument_list|,
+name|vername
 argument_list|,
 name|refobj
 operator|->
@@ -14269,7 +14311,7 @@ condition|)
 block|{
 name|_rtld_error
 argument_list|(
-literal|"Unsupported version of Elf_Verdef entry in %s : %d"
+literal|"%s: Unsupported version %d of Elf_Verdef entry"
 argument_list|,
 name|depobj
 operator|->
@@ -14387,15 +14429,15 @@ operator|)
 return|;
 name|_rtld_error
 argument_list|(
-literal|"Version %s required by %s can not be found in %s"
+literal|"%s: version %s required by %s not found"
+argument_list|,
+name|depobj
+operator|->
+name|path
 argument_list|,
 name|vername
 argument_list|,
 name|refobj
-operator|->
-name|path
-argument_list|,
-name|depobj
 operator|->
 name|path
 argument_list|)
@@ -14478,7 +14520,7 @@ condition|)
 block|{
 name|_rtld_error
 argument_list|(
-literal|"Unsupported version of Elf_Verneed entry in %s: %d"
+literal|"%s: Unsupported version %d of Elf_Verneed entry"
 argument_list|,
 name|obj
 operator|->
@@ -14622,7 +14664,11 @@ condition|)
 block|{
 name|_rtld_error
 argument_list|(
-literal|"Unsupported version of Elf_Verneed entry: %d"
+literal|"%s: Unsupported version %d of Elf_Verdef entry"
+argument_list|,
+name|obj
+operator|->
+name|path
 argument_list|,
 name|vd
 operator|->
