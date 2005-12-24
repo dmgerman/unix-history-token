@@ -6866,7 +6866,23 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* tap off packets passing the bridge */
+comment|/* 		 * Tap off packets passing the bridge. Broadcast packets will 		 * already be tapped as they are reinjected into ether_input. 		 */
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+operator|(
+name|M_BCAST
+operator||
+name|M_MCAST
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
 name|BPF_MTAP
 argument_list|(
 name|ifp
