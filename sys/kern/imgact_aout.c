@@ -313,14 +313,16 @@ operator|->
 name|image_header
 decl_stmt|;
 name|struct
-name|vmspace
+name|thread
 modifier|*
-name|vmspace
+name|td
+init|=
+name|curthread
 decl_stmt|;
 name|struct
-name|vnode
+name|vmspace
 modifier|*
-name|vp
+name|vmspace
 decl_stmt|;
 name|vm_map_t
 name|map
@@ -648,6 +650,18 @@ operator|->
 name|proc
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Avoid a possible deadlock if the current address space is destroyed 	 * and that address space maps the locked vnode.  In the common case, 	 * the locked vnode's v_usecount is decremented but remains greater 	 * than zero.  Consequently, the vnode lock is not needed by vrele(). 	 * However, in cases where the vnode lock is external, such as nullfs, 	 * v_usecount may become zero. 	 */
+name|VOP_UNLOCK
+argument_list|(
+name|imgp
+operator|->
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Destroy old process VM and create a new one (with a new stack) 	 */
 name|exec_new_vmspace
 argument_list|(
@@ -655,6 +669,19 @@ name|imgp
 argument_list|,
 operator|&
 name|aout_sysvec
+argument_list|)
+expr_stmt|;
+name|vn_lock
+argument_list|(
+name|imgp
+operator|->
+name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The vm space can be changed by exec_new_vmspace 	 */
@@ -665,12 +692,6 @@ operator|->
 name|proc
 operator|->
 name|p_vmspace
-expr_stmt|;
-name|vp
-operator|=
-name|imgp
-operator|->
-name|vp
 expr_stmt|;
 name|object
 operator|=
