@@ -5288,6 +5288,9 @@ case|:
 case|case
 name|NI_QTYPE_NODEADDR
 case|:
+case|case
+name|NI_QTYPE_IPV4ADDR
+case|:
 switch|switch
 condition|(
 name|ni6
@@ -5568,6 +5571,9 @@ break|break;
 case|case
 name|NI_QTYPE_NODEADDR
 case|:
+case|case
+name|NI_QTYPE_IPV4ADDR
+case|:
 if|if
 condition|(
 operator|(
@@ -5670,6 +5676,11 @@ operator|=
 name|MCLBYTES
 expr_stmt|;
 comment|/* XXX: will truncate pkt later */
+break|break;
+case|case
+name|NI_QTYPE_IPV4ADDR
+case|:
+comment|/* unsupported - should respond with unknown Qtype? */
 break|break;
 default|default:
 comment|/* 		 * XXX: We must return a reply with the ICMP6 code 		 * `unknown Qtype' in this case.  However we regard the case 		 * as an FQDN query for backward compatibility. 		 * Older versions set a random value to this field, 		 * so it rarely varies in the defined qtypes. 		 * But the mechanism is not reliable... 		 * maybe we should obsolete older versions. 		 */
