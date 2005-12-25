@@ -269,6 +269,12 @@ directive|ifndef
 name|__FreeBSD__
 end_ifndef
 
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
+end_include
+
 begin_struct
 struct|struct
 name|pf_frent
@@ -9782,7 +9788,7 @@ name|DPFPRINTF
 argument_list|(
 operator|(
 literal|" tsval: %u  tsecr: %u  +ticks: %u  "
-literal|"idle: %lus %lums\n"
+literal|"idle: %jus %lums\n"
 operator|,
 name|tsval
 operator|,
@@ -9790,6 +9796,9 @@ name|tsecr
 operator|,
 name|tsval_from_last
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|delta_ts
 operator|.
 name|tv_sec
