@@ -153,12 +153,13 @@ name|struct
 name|in6_addrlifetime
 name|ia6_lifetime
 decl_stmt|;
-name|struct
-name|ifprefix
-modifier|*
-name|ia6_ifpr
+name|time_t
+name|ia6_createtime
 decl_stmt|;
-comment|/* back pointer to ifprefix */
+comment|/* the creation time of this address, which is 				 * currently used for temporary addresses only. 				 */
+name|time_t
+name|ia6_updatetime
+decl_stmt|;
 comment|/* back pointer to the ND prefix (for autoconfigured addresses only) */
 name|struct
 name|nd_prefix
@@ -1667,15 +1668,47 @@ name|u_int
 name|in6m_timer
 decl_stmt|;
 comment|/* MLD6 listener report timer */
+name|struct
+name|timeval
+name|in6m_timer_expire
+decl_stmt|;
+comment|/* when the timer expires */
+name|struct
+name|callout
+modifier|*
+name|in6m_timer_ch
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|IN6M_TIMER_UNDEF
+value|-1
+end_define
 
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_comment
+comment|/* flags to in6_update_ifa */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IN6_IFAUPDATE_DADDELAY
+value|0x1
+end_define
+
+begin_comment
+comment|/* first time to configure an address */
+end_comment
 
 begin_extern
 extern|extern LIST_HEAD(in6_multihead
@@ -1792,6 +1825,8 @@ operator|*
 operator|,
 name|int
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1827,6 +1862,8 @@ modifier|*
 parameter_list|,
 name|int
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1902,6 +1939,8 @@ operator|,
 expr|struct
 name|in6_ifaddr
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2002,6 +2041,20 @@ name|__P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|in6_if2idlen
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifnet
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

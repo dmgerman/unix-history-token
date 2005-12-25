@@ -57,6 +57,17 @@ name|MLD_IREPORTEDLAST
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|MLD_REPORTPENDING
+value|2
+end_define
+
+begin_comment
+comment|/* implementation specific */
+end_comment
+
 begin_function_decl
 name|void
 name|mld6_init

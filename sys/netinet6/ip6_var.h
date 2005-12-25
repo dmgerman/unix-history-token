@@ -677,12 +677,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IPV6_DADOUTPUT
+name|IPV6_UNSPECSRC
 value|0x01
 end_define
 
 begin_comment
-comment|/* DAD */
+comment|/* allow :: as the source address */
 end_comment
 
 begin_define

@@ -1796,7 +1796,7 @@ name|in6_aliasreq
 name|ifra
 decl_stmt|;
 name|struct
-name|nd_prefix
+name|nd_prefixctl
 name|pr0
 decl_stmt|;
 name|int
@@ -2038,13 +2038,6 @@ name|ia6t_pltime
 operator|=
 name|ND6_INFINITE_LIFETIME
 expr_stmt|;
-comment|/* 	 * Do not let in6_update_ifa() do DAD, since we need a random delay 	 * before sending an NS at the first time the interface becomes up. 	 * Instead, in6_if_up() will start DAD with a proper random delay. 	 */
-name|ifra
-operator|.
-name|ifra_flags
-operator||=
-name|IN6_IFF_NODAD
-expr_stmt|;
 comment|/* 	 * Now call in6_update_ifa() to do a bunch of procedures to configure 	 * a link-local address. We can set the 3rd argument to NULL, because 	 * we know there's no other link-local address on the interface 	 * and therefore we are adding one (instead of updating one). 	 */
 if|if
 condition|(
@@ -2059,6 +2052,8 @@ operator|&
 name|ifra
 argument_list|,
 name|NULL
+argument_list|,
+name|IN6_IFAUPDATE_DADDELAY
 argument_list|)
 operator|)
 operator|!=
@@ -2097,7 +2092,6 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * Adjust ia6_flags so that in6_if_up will perform DAD. 	 * XXX: Some P2P interfaces seem not to send packets just after 	 * becoming up, so we skip p2p interfaces for safety. 	 */
 name|ia
 operator|=
 name|in6ifa_ifpforlinklocal
@@ -2126,38 +2120,6 @@ comment|/* NOTREACHED */
 block|}
 endif|#
 directive|endif
-if|if
-condition|(
-name|in6if_do_dad
-argument_list|(
-name|ifp
-argument_list|)
-operator|&&
-operator|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_POINTOPOINT
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|ia
-operator|->
-name|ia6_flags
-operator|&=
-operator|~
-name|IN6_IFF_NODAD
-expr_stmt|;
-name|ia
-operator|->
-name|ia6_flags
-operator||=
-name|IN6_IFF_TENTATIVE
-expr_stmt|;
-block|}
 comment|/* 	 * Make the link-local prefix (fe80::%link/64) as on-link. 	 * Since we'd like to manage prefixes separately from addresses, 	 * we make an ND6 prefix structure for the link-local prefix, 	 * and add it to the prefix list as a never-expire prefix. 	 * XXX: this change might affect some existing code base... 	 */
 name|bzero
 argument_list|(
@@ -2192,16 +2154,6 @@ name|sin6_addr
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-name|pr0
-operator|.
-name|ndpr_mask
-operator|=
-name|ifra
-operator|.
-name|ifra_prefixmask
-operator|.
-name|sin6_addr
 expr_stmt|;
 name|pr0
 operator|.
@@ -2495,6 +2447,8 @@ operator|&
 name|ifra
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|!=
@@ -3640,7 +3594,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|in6_get_tmpifid
 parameter_list|(
 name|ifp
@@ -3772,6 +3726,11 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
