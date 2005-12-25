@@ -3185,6 +3185,11 @@ modifier|*
 name|rtldimage
 decl_stmt|;
 name|char
+name|libname
+index|[
+name|PATH_MAX
+index|]
+decl_stmt|,
 name|libpath
 index|[
 name|PATH_MAX
@@ -3417,13 +3422,31 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+name|libstart
+operator|=
+literal|0
+expr_stmt|;
+name|libpath
+index|[
+literal|0
+index|]
+operator|=
+name|libname
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 name|sscanf
 argument_list|(
 name|line
 argument_list|,
-literal|"%s %jx"
+literal|"%s \"%[^\"]\" %jx"
+argument_list|,
+name|libname
 argument_list|,
 name|libpath
 argument_list|,
@@ -3431,9 +3454,28 @@ operator|&
 name|libstart
 argument_list|)
 operator|!=
-literal|2
+literal|3
 condition|)
 continue|continue;
+if|if
+condition|(
+name|libstart
+operator|==
+literal|0
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"WARNING: object \"%s\" was not found "
+literal|"for program \"%s\"."
+argument_list|,
+name|libname
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|image
 operator|=
 name|pmcstat_image_from_path
@@ -5361,7 +5403,7 @@ name|setenv
 argument_list|(
 literal|"LD_TRACE_LOADED_OBJECTS_FMT1"
 argument_list|,
-literal|"%p %x\n"
+literal|"%o \"%p\" %x\n"
 argument_list|,
 literal|1
 argument_list|)
