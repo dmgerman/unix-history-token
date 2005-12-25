@@ -812,11 +812,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|log
+name|nd6log
 argument_list|(
+operator|(
 name|LOG_INFO
-argument_list|,
+operator|,
 literal|"generate_tmp_ifid: computed MD5 value is zero.\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|val32
@@ -2043,7 +2045,7 @@ name|ifra_flags
 operator||=
 name|IN6_IFF_NODAD
 expr_stmt|;
-comment|/* 	 * Now call in6_update_ifa() to do a bunch of procedures to configure 	 * a link-local address. We can set NULL to the 3rd argument, because 	 * we know there's no other link-local address on the interface 	 * and therefore we are adding one (instead of updating one). 	 */
+comment|/* 	 * Now call in6_update_ifa() to do a bunch of procedures to configure 	 * a link-local address. We can set the 3rd argument to NULL, because 	 * we know there's no other link-local address on the interface 	 * and therefore we are adding one (instead of updating one). 	 */
 if|if
 condition|(
 operator|(
@@ -2070,20 +2072,22 @@ name|error
 operator|!=
 name|EAFNOSUPPORT
 condition|)
-name|log
+name|nd6log
 argument_list|(
+operator|(
 name|LOG_NOTICE
-argument_list|,
+operator|,
 literal|"in6_ifattach_linklocal: failed to "
 literal|"configure a link-local address on %s "
 literal|"(errno=%d)\n"
-argument_list|,
+operator|,
 name|if_name
 argument_list|(
 name|ifp
 argument_list|)
-argument_list|,
+operator|,
 name|error
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2497,19 +2501,21 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|log
+name|nd6log
 argument_list|(
+operator|(
 name|LOG_ERR
-argument_list|,
+operator|,
 literal|"in6_ifattach_loopback: failed to configure "
 literal|"the loopback address on %s (errno=%d)\n"
-argument_list|,
+operator|,
 name|if_name
 argument_list|(
 name|ifp
 argument_list|)
-argument_list|,
+operator|,
 name|error
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2772,10 +2778,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|htons
-argument_list|(
-literal|0xff02
-argument_list|)
+name|IPV6_ADDR_INT16_MLL
 expr_stmt|;
 name|in6
 operator|->
@@ -2922,17 +2925,19 @@ operator|==
 literal|0
 condition|)
 block|{
-name|log
+name|nd6log
 argument_list|(
+operator|(
 name|LOG_INFO
-argument_list|,
+operator|,
 literal|"in6_ifattach: "
 literal|"%s is not multicast capable, IPv6 not enabled\n"
-argument_list|,
+operator|,
 name|if_name
 argument_list|(
 name|ifp
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;

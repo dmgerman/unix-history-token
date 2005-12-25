@@ -883,8 +883,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|ifa
+operator|==
+name|NULL
 condition|)
 name|ifa
 operator|=
@@ -923,8 +924,9 @@ directive|endif
 comment|/* (2) check. */
 if|if
 condition|(
-operator|!
 name|ifa
+operator|==
+name|NULL
 condition|)
 block|{
 name|struct
@@ -3014,8 +3016,9 @@ name|ifp
 operator|->
 name|if_addrlen
 operator|&&
-operator|!
 name|lladdr
+operator|==
+name|NULL
 condition|)
 goto|goto
 name|freeit
@@ -3128,8 +3131,9 @@ decl_stmt|;
 comment|/* 		 * Check if the link-layer address has changed or not. 		 */
 if|if
 condition|(
-operator|!
 name|lladdr
+operator|==
+name|NULL
 condition|)
 name|llchange
 operator|=
@@ -3184,6 +3188,8 @@ name|is_override
 operator|&&
 operator|(
 name|lladdr
+operator|!=
+name|NULL
 operator|&&
 name|llchange
 operator|)
@@ -3231,6 +3237,8 @@ name|is_override
 operator|&&
 operator|(
 name|lladdr
+operator|!=
+name|NULL
 operator|&&
 operator|!
 name|llchange
@@ -3238,8 +3246,9 @@ operator|)
 operator|)
 comment|/* (2b) */
 operator|||
-operator|!
 name|lladdr
+operator|==
+name|NULL
 condition|)
 block|{
 comment|/* (2c) */
@@ -3247,6 +3256,8 @@ comment|/* 			 * Update link-local address, if any. 			 */
 if|if
 condition|(
 name|lladdr
+operator|!=
+name|NULL
 condition|)
 block|{
 name|sdl
@@ -3317,6 +3328,8 @@ block|{
 if|if
 condition|(
 name|lladdr
+operator|!=
+name|NULL
 operator|&&
 name|llchange
 condition|)
@@ -4873,10 +4886,11 @@ return|return;
 block|}
 if|if
 condition|(
-operator|!
 name|ifa
 operator|->
 name|ifa_ifp
+operator|==
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -6087,8 +6101,9 @@ name|duplicate
 decl_stmt|;
 if|if
 condition|(
-operator|!
 name|ifa
+operator|==
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -6163,8 +6178,9 @@ block|}
 comment|/* 	 * if I'm yet to start DAD, someone else started using this address 	 * first.  I have a duplicate and you win. 	 */
 if|if
 condition|(
-operator|!
 name|dp
+operator|==
+name|NULL
 operator|||
 name|dp
 operator|->
@@ -6228,8 +6244,9 @@ name|dp
 decl_stmt|;
 if|if
 condition|(
-operator|!
 name|ifa
+operator|==
+name|NULL
 condition|)
 name|panic
 argument_list|(
