@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
 end_include
 
@@ -2984,6 +2990,10 @@ name|int
 name|gn
 decl_stmt|;
 comment|/* True if we have seen g or n */
+name|unsigned
+name|long
+name|nval
+decl_stmt|;
 name|char
 name|wfile
 index|[
@@ -3139,14 +3149,12 @@ name|gn
 operator|=
 literal|1
 expr_stmt|;
-comment|/* XXX Check for overflow */
-name|s
-operator|->
-name|n
+name|errno
 operator|=
-operator|(
-name|int
-operator|)
+literal|0
+expr_stmt|;
+name|nval
+operator|=
 name|strtol
 argument_list|(
 name|p
@@ -3156,6 +3164,36 @@ name|p
 argument_list|,
 literal|10
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|==
+name|ERANGE
+operator|||
+name|nval
+operator|>
+name|INT_MAX
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%lu: %s: overflow in the 'N' substitute flag"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
+argument_list|)
+expr_stmt|;
+name|s
+operator|->
+name|n
+operator|=
+name|nval
+expr_stmt|;
+name|p
+operator|--
 expr_stmt|;
 break|break;
 case|case
