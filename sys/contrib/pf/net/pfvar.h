@@ -3207,6 +3207,10 @@ define|#
 directive|define
 name|PFSTATE_EXPIRING
 value|0x01
+define|#
+directive|define
+name|PFSTATE_SRC_CONN
+value|0x02
 else|#
 directive|else
 name|u_int8_t
