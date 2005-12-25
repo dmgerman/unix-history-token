@@ -1750,11 +1750,11 @@ operator|==
 literal|'\n'
 condition|)
 block|{
-name|printf
+name|diag2
 argument_list|(
-literal|"%d: Unterminated literal\n"
+literal|1
 argument_list|,
-name|line_no
+literal|"Unterminated literal"
 argument_list|)
 expr_stmt|;
 goto|goto
