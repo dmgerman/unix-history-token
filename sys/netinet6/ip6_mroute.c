@@ -225,7 +225,7 @@ begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
 argument_list|(
-name|M_MRTABLE
+name|M_MRTABLE6
 argument_list|,
 literal|"mf6c"
 argument_list|,
@@ -2004,7 +2004,7 @@ name|free
 argument_list|(
 name|rte
 argument_list|,
-name|M_MRTABLE
+name|M_MRTABLE6
 argument_list|)
 expr_stmt|;
 name|rte
@@ -2026,7 +2026,7 @@ name|free
 argument_list|(
 name|frt
 argument_list|,
-name|M_MRTABLE
+name|M_MRTABLE6
 argument_list|)
 expr_stmt|;
 block|}
@@ -3185,7 +3185,7 @@ name|free
 argument_list|(
 name|rte
 argument_list|,
-name|M_MRTABLE
+name|M_MRTABLE6
 argument_list|)
 expr_stmt|;
 name|rte
@@ -3402,7 +3402,7 @@ operator|*
 name|rt
 argument_list|)
 argument_list|,
-name|M_MRTABLE
+name|M_MRTABLE6
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -3817,7 +3817,7 @@ name|free
 argument_list|(
 name|rt
 argument_list|,
-name|M_MRTABLE
+name|M_MRTABLE6
 argument_list|)
 expr_stmt|;
 name|splx
@@ -4252,7 +4252,7 @@ operator|*
 name|rte
 argument_list|)
 argument_list|,
-name|M_MRTABLE
+name|M_MRTABLE6
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -4332,7 +4332,7 @@ name|free
 argument_list|(
 name|rte
 argument_list|,
-name|M_MRTABLE
+name|M_MRTABLE6
 argument_list|)
 expr_stmt|;
 name|splx
@@ -4458,7 +4458,7 @@ operator|*
 name|rt
 argument_list|)
 argument_list|,
-name|M_MRTABLE
+name|M_MRTABLE6
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -4474,7 +4474,7 @@ name|free
 argument_list|(
 name|rte
 argument_list|,
-name|M_MRTABLE
+name|M_MRTABLE6
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -4520,7 +4520,7 @@ name|free
 argument_list|(
 name|rte
 argument_list|,
-name|M_MRTABLE
+name|M_MRTABLE6
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -4532,7 +4532,7 @@ name|free
 argument_list|(
 name|rt
 argument_list|,
-name|M_MRTABLE
+name|M_MRTABLE6
 argument_list|)
 expr_stmt|;
 name|splx
@@ -4637,7 +4637,7 @@ name|free
 argument_list|(
 name|rte
 argument_list|,
-name|M_MRTABLE
+name|M_MRTABLE6
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -4649,7 +4649,7 @@ name|free
 argument_list|(
 name|rt
 argument_list|,
-name|M_MRTABLE
+name|M_MRTABLE6
 argument_list|)
 expr_stmt|;
 name|splx
@@ -4771,7 +4771,7 @@ name|free
 argument_list|(
 name|rte
 argument_list|,
-name|M_MRTABLE
+name|M_MRTABLE6
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -4783,7 +4783,7 @@ name|free
 argument_list|(
 name|rt
 argument_list|,
-name|M_MRTABLE
+name|M_MRTABLE6
 argument_list|)
 expr_stmt|;
 name|splx
@@ -4972,7 +4972,7 @@ name|free
 argument_list|(
 name|rte
 argument_list|,
-name|M_MRTABLE
+name|M_MRTABLE6
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -5215,7 +5215,7 @@ name|free
 argument_list|(
 name|rte
 argument_list|,
-name|M_MRTABLE
+name|M_MRTABLE6
 argument_list|)
 expr_stmt|;
 name|rte
@@ -5252,7 +5252,7 @@ name|free
 argument_list|(
 name|mfc
 argument_list|,
-name|M_MRTABLE
+name|M_MRTABLE6
 argument_list|)
 expr_stmt|;
 block|}

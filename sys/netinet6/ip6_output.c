@@ -282,7 +282,7 @@ begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
 argument_list|(
-name|M_IPMOPTS
+name|M_IP6MOPTS
 argument_list|,
 literal|"ip6_moptions"
 argument_list|,
@@ -10443,7 +10443,7 @@ operator|*
 name|im6o
 argument_list|)
 argument_list|,
-name|M_IPMOPTS
+name|M_IP6MOPTS
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -11110,7 +11110,7 @@ operator|*
 name|imm
 argument_list|)
 argument_list|,
-name|M_IPMADDR
+name|M_IP6MADDR
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -11156,7 +11156,7 @@ name|free
 argument_list|(
 name|imm
 argument_list|,
-name|M_IPMADDR
+name|M_IP6MADDR
 argument_list|)
 expr_stmt|;
 break|break;
@@ -11461,7 +11461,7 @@ name|free
 argument_list|(
 name|imm
 argument_list|,
-name|M_IPMADDR
+name|M_IP6MADDR
 argument_list|)
 expr_stmt|;
 break|break;
@@ -11507,7 +11507,7 @@ argument_list|(
 operator|*
 name|im6op
 argument_list|,
-name|M_IPMOPTS
+name|M_IP6MOPTS
 argument_list|)
 expr_stmt|;
 operator|*
@@ -11815,7 +11815,7 @@ name|free
 argument_list|(
 name|imm
 argument_list|,
-name|M_IPMADDR
+name|M_IP6MADDR
 argument_list|)
 expr_stmt|;
 block|}
@@ -11823,7 +11823,7 @@ name|free
 argument_list|(
 name|im6o
 argument_list|,
-name|M_IPMOPTS
+name|M_IP6MOPTS
 argument_list|)
 expr_stmt|;
 block|}

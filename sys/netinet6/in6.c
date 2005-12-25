@@ -210,7 +210,7 @@ end_include
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
-name|M_IPMADDR
+name|M_IP6MADDR
 argument_list|,
 literal|"in6_multi"
 argument_list|,
@@ -6709,7 +6709,7 @@ operator|*
 name|imm
 argument_list|)
 argument_list|,
-name|M_IPMADDR
+name|M_IP6MADDR
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -6755,7 +6755,7 @@ name|free
 argument_list|(
 name|imm
 argument_list|,
-name|M_IPMADDR
+name|M_IP6MADDR
 argument_list|)
 expr_stmt|;
 return|return
@@ -6797,7 +6797,7 @@ name|free
 argument_list|(
 name|imm
 argument_list|,
-name|M_IPMADDR
+name|M_IP6MADDR
 argument_list|)
 expr_stmt|;
 return|return

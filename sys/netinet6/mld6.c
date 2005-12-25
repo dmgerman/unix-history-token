@@ -1819,7 +1819,7 @@ operator|*
 name|in6m
 argument_list|)
 argument_list|,
-name|M_IPMADDR
+name|M_IP6MADDR
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -1974,7 +1974,7 @@ name|free
 argument_list|(
 name|in6m
 argument_list|,
-name|M_IPMADDR
+name|M_IP6MADDR
 argument_list|)
 expr_stmt|;
 block|}
