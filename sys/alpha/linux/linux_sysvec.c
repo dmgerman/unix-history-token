@@ -858,6 +858,8 @@ operator|&
 name|elf_linux_sysvec
 block|,
 name|NULL
+block|,
+name|BI_CAN_EXEC_DYN
 block|, 				 }
 decl_stmt|;
 end_decl_stmt
@@ -882,6 +884,8 @@ operator|&
 name|elf_linux_sysvec
 block|,
 name|NULL
+block|,
+name|BI_CAN_EXEC_DYN
 block|, 				 }
 decl_stmt|;
 end_decl_stmt

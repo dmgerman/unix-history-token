@@ -219,6 +219,8 @@ operator|&
 name|elf64_freebsd_sysvec
 block|,
 name|NULL
+block|,
+literal|0
 block|, 					  }
 decl_stmt|;
 end_decl_stmt
@@ -263,6 +265,8 @@ operator|&
 name|elf64_freebsd_sysvec
 block|,
 name|NULL
+block|,
+literal|0
 block|, 					  }
 decl_stmt|;
 end_decl_stmt

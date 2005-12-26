@@ -555,6 +555,8 @@ operator|&
 name|ia32_freebsd_sysvec
 block|,
 literal|"/libexec/ld-elf32.so.1"
+block|,
+literal|0
 block|, 					  }
 decl_stmt|;
 end_decl_stmt
@@ -599,6 +601,8 @@ operator|&
 name|ia32_freebsd_sysvec
 block|,
 literal|"/libexec/ld-elf32.so.1"
+block|,
+literal|0
 block|, 					  }
 decl_stmt|;
 end_decl_stmt

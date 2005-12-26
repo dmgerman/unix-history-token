@@ -125,6 +125,13 @@ name|char
 modifier|*
 name|interp_newpath
 decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|BI_CAN_EXEC_DYN
+value|0x0001
 block|}
 name|__ElfN
 typedef|(
