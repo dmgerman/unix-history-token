@@ -6012,7 +6012,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle an interrupt.  *  * The hardware sets the CCCR_OVF whenever a counter overflow occurs, so the handler  * examines all the 18 CCCR registers, processing the counters that have overflowed.  *  * On HTT machines, the CCCR register is shared and will interrupt  * both logical processors if so configured.  Thus multiple logical  * CPUs could enter the NMI service routine at the same time.  These  * will get serialized using a per-cpu spinlock dedicated for use in  * the NMI handler.  */
+comment|/*  * Handle an interrupt.  *  * The hardware sets the CCCR_OVF whenever a counter overflow occurs,  * so the handler examines all the 18 CCCR registers, processing the  * counters that have overflowed.  *  * On HTT machines, the CCCR register is shared and will interrupt  * both logical processors if so configured.  Thus multiple logical  * CPUs could enter the NMI service routine at the same time.  These  * will get serialized using a per-cpu spinlock dedicated for use in  * the NMI handler.  */
 end_comment
 
 begin_function
