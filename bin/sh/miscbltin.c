@@ -1148,10 +1148,8 @@ name|error
 argument_list|(
 literal|"Illegal number: %s"
 argument_list|,
-name|argv
-index|[
-literal|1
-index|]
+operator|*
+name|argptr
 argument_list|)
 expr_stmt|;
 name|mask
@@ -1191,6 +1189,8 @@ name|void
 modifier|*
 name|set
 decl_stmt|;
+name|INTOFF
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1235,6 +1235,8 @@ name|free
 argument_list|(
 name|set
 argument_list|)
+expr_stmt|;
+name|INTON
 expr_stmt|;
 block|}
 block|}

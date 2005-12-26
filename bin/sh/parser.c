@@ -7224,7 +7224,7 @@ name|ps
 index|[
 name|i
 index|]
-operator|==
+operator|=
 literal|'\0'
 expr_stmt|;
 name|gethostname
@@ -7293,7 +7293,7 @@ name|ps
 index|[
 name|i
 index|]
-operator|==
+operator|=
 literal|'\0'
 expr_stmt|;
 name|getcwd

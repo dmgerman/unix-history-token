@@ -622,6 +622,19 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|out1str
+argument_list|(
+literal|"trap -- "
+argument_list|)
+expr_stmt|;
+name|out1qstr
+argument_list|(
+name|trap
+index|[
+name|signo
+index|]
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|signo
@@ -629,16 +642,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|out1fmt
+name|out1str
 argument_list|(
-literal|"trap -- '%s' %s\n"
-argument_list|,
-name|trap
-index|[
-name|signo
-index|]
-argument_list|,
-literal|"exit"
+literal|" exit\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -653,12 +659,7 @@ condition|)
 block|{
 name|out1fmt
 argument_list|(
-literal|"trap -- '%s' %s\n"
-argument_list|,
-name|trap
-index|[
-name|signo
-index|]
+literal|" %s\n"
 argument_list|,
 name|sys_signame
 index|[
@@ -671,12 +672,7 @@ else|else
 block|{
 name|out1fmt
 argument_list|(
-literal|"trap -- '%s' %d\n"
-argument_list|,
-name|trap
-index|[
-name|signo
-index|]
+literal|" %d\n"
 argument_list|,
 name|signo
 argument_list|)
@@ -1555,6 +1551,7 @@ operator|!=
 name|NULL
 operator|&&
 operator|!
+operator|(
 name|trap
 index|[
 name|signo
@@ -1564,6 +1561,7 @@ literal|0
 index|]
 operator|==
 literal|'\0'
+operator|)
 operator|&&
 operator|!
 operator|(

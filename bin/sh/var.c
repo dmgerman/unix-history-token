@@ -2405,6 +2405,19 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
+if|if
+condition|(
+name|values
+operator|&&
+name|argc
+operator|!=
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"-p requires no arguments"
+argument_list|)
+expr_stmt|;
 name|listsetvar
 argument_list|(
 name|cmdenviron
@@ -2423,7 +2436,7 @@ operator|(
 name|name
 operator|=
 operator|*
-name|argptr
+name|argv
 operator|++
 operator|)
 operator|!=
