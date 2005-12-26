@@ -4559,6 +4559,13 @@ name|flagsp
 operator|=
 name|flags
 expr_stmt|;
+name|vfs_mark_atime
+argument_list|(
+name|vp
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 name|done
 label|:
 name|vput
