@@ -352,7 +352,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * KTR_USER - data comming from userland  */
+comment|/*  * KTR_USER - data coming from userland  */
 end_comment
 
 begin_define
