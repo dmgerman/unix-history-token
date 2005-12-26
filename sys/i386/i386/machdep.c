@@ -6304,16 +6304,6 @@ begin_comment
 comment|/* table descriptors */
 end_comment
 
-begin_decl_stmt
-name|int
-name|private_tss
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* flag indicating private tss */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -10389,10 +10379,6 @@ name|GPROC0_SEL
 argument_list|,
 name|SEL_KPL
 argument_list|)
-expr_stmt|;
-name|private_tss
-operator|=
-literal|0
 expr_stmt|;
 name|PCPU_SET
 argument_list|(

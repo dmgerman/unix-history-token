@@ -1372,11 +1372,8 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Switch to the new TSS. */
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
+name|critical_enter
+argument_list|()
 expr_stmt|;
 name|td
 operator|->
@@ -1386,11 +1383,11 @@ name|pcb_ext
 operator|=
 name|ext
 expr_stmt|;
-name|private_tss
-operator||=
-name|PCPU_GET
+name|PCPU_SET
 argument_list|(
-name|cpumask
+name|private_tss
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1413,11 +1410,8 @@ name|SEL_KPL
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
+name|critical_exit
+argument_list|()
 expr_stmt|;
 return|return
 literal|0
