@@ -564,9 +564,7 @@ name|in6_cksum
 argument_list|(
 name|m
 argument_list|,
-name|ip6
-operator|->
-name|ip6_nxt
+name|proto
 argument_list|,
 operator|*
 name|offp
