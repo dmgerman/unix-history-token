@@ -15591,7 +15591,27 @@ name|ata
 operator|.
 name|command
 operator|!=
+name|ATA_READ_DMA48
+operator|&&
+name|request
+operator|->
+name|u
+operator|.
+name|ata
+operator|.
+name|command
+operator|!=
 name|ATA_WRITE_DMA
+operator|&&
+name|request
+operator|->
+name|u
+operator|.
+name|ata
+operator|.
+name|command
+operator|!=
+name|ATA_WRITE_DMA48
 condition|)
 block|{
 comment|/* disable the EDMA machinery */
