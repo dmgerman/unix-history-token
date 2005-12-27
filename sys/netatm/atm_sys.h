@@ -509,7 +509,7 @@ define|#
 directive|define
 name|ATM_TIME
 define|\
-value|struct timeval now, delta;					\ 	KT_TIME(now);							\ 	delta.tv_sec = now.tv_sec - atm_debugtime.tv_sec;		\ 	delta.tv_usec = now.tv_usec - atm_debugtime.tv_usec;		\ 	atm_debugtime = now;						\ 	if (delta.tv_usec< 0) {					\ 		delta.tv_sec--;						\ 		delta.tv_usec += 1000000;				\ 	}								\ 	printf("%3ld.%6ld: ", delta.tv_sec, delta.tv_usec);
+value|struct timeval now, delta;					\ 	KT_TIME(now);							\ 	delta.tv_sec = now.tv_sec - atm_debugtime.tv_sec;		\ 	delta.tv_usec = now.tv_usec - atm_debugtime.tv_usec;		\ 	atm_debugtime = now;						\ 	if (delta.tv_usec< 0) {					\ 		delta.tv_sec--;						\ 		delta.tv_usec += 1000000;				\ 	}								\ 	printf("%3ld.%6ld: ", (long)delta.tv_sec, delta.tv_usec);
 end_define
 
 begin_define
