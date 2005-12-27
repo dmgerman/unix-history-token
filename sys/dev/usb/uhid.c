@@ -278,6 +278,16 @@ directive|include
 file|<dev/usb/ugraphire_rdesc.h>
 end_include
 
+begin_comment
+comment|/* For hid blacklist quirk */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<dev/usb/usb_quirks.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -803,6 +813,24 @@ operator|->
 name|bInterfaceClass
 operator|!=
 name|UICLASS_HID
+condition|)
+return|return
+operator|(
+name|UMATCH_NONE
+operator|)
+return|;
+if|if
+condition|(
+name|usbd_get_quirks
+argument_list|(
+name|uaa
+operator|->
+name|device
+argument_list|)
+operator|->
+name|uq_flags
+operator|&
+name|UQ_HID_IGNORE
 condition|)
 return|return
 operator|(
