@@ -2272,7 +2272,7 @@ argument_list|,
 literal|"completed callback/wakeup"
 argument_list|)
 expr_stmt|;
-comment|/* if we are part of a composite operation update progress */
+comment|/* if we are part of a composite operation we need to maintain progress */
 if|if
 condition|(
 operator|(
@@ -2297,6 +2297,7 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+comment|/* update whats done */
 if|if
 condition|(
 name|request
@@ -2337,6 +2338,7 @@ operator|->
 name|this
 operator|)
 expr_stmt|;
+comment|/* find ready to go dependencies */
 if|if
 condition|(
 name|composite
@@ -2373,22 +2375,14 @@ condition|)
 block|{
 name|index
 operator|=
-operator|(
-operator|(
 name|composite
 operator|->
 name|wr_needed
 operator|&
-operator|(
 operator|~
 name|composite
 operator|->
 name|wr_done
-operator|)
-operator|)
-operator|)
-operator|-
-literal|1
 expr_stmt|;
 block|}
 name|mtx_unlock
@@ -2399,9 +2393,38 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+comment|/* if we have any ready candidates kick them off */
 if|if
 condition|(
 name|index
+condition|)
+block|{
+name|int
+name|bit
+decl_stmt|;
+for|for
+control|(
+name|bit
+operator|=
+literal|0
+init|;
+name|bit
+operator|<
+name|MAX_COMPOSITES
+condition|;
+name|bit
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|index
+operator|&
+operator|(
+literal|1
+operator|<<
+name|bit
+operator|)
 condition|)
 name|ata_start
 argument_list|(
@@ -2411,7 +2434,7 @@ name|composite
 operator|->
 name|request
 index|[
-name|index
+name|bit
 index|]
 operator|->
 name|dev
@@ -2419,7 +2442,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* get results back to the initiator */
+block|}
+block|}
+comment|/* get results back to the initiator for this request */
 if|if
 condition|(
 name|request

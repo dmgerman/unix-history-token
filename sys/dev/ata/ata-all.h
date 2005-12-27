@@ -1999,6 +1999,17 @@ begin_comment
 comment|/* structure used for composite atomic operations */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAX_COMPOSITES
+value|32
+end_define
+
+begin_comment
+comment|/* u_int32_t bits */
+end_comment
+
 begin_struct
 struct|struct
 name|ata_composite
@@ -2033,10 +2044,9 @@ name|ata_request
 modifier|*
 name|request
 index|[
-literal|32
+name|MAX_COMPOSITES
 index|]
 decl_stmt|;
-comment|/* size must match maps above */
 name|u_int32_t
 name|residual
 decl_stmt|;
