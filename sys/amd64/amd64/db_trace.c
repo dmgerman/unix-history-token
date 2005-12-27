@@ -1015,7 +1015,7 @@ name|int
 name|watchnum
 parameter_list|,
 name|unsigned
-name|int
+name|long
 name|watchaddr
 parameter_list|,
 name|int
@@ -2590,7 +2590,7 @@ name|int
 name|watchnum
 decl_stmt|;
 name|unsigned
-name|int
+name|long
 name|watchaddr
 decl_stmt|;
 name|int
