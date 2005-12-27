@@ -247,7 +247,7 @@ comment|/* len=4 */
 end_comment
 
 begin_comment
-comment|/* TI * */
+comment|/* TI */
 end_comment
 
 begin_define
