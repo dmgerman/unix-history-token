@@ -4378,7 +4378,7 @@ operator|=
 operator|&
 name|kseq_cpu
 index|[
-name|cpus
+name|i
 index|]
 expr_stmt|;
 name|ksg
