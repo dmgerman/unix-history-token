@@ -182,6 +182,13 @@ name|IOMASK
 value|0xfffffffc
 end_define
 
+begin_define
+define|#
+directive|define
+name|ATA_PROBE_OK
+value|-10
+end_define
+
 begin_comment
 comment|/* prototypes */
 end_comment
@@ -288,7 +295,7 @@ name|dev
 argument_list|)
 condition|)
 return|return
-literal|0
+name|ATA_PROBE_OK
 return|;
 break|break;
 case|case
@@ -303,7 +310,7 @@ name|dev
 argument_list|)
 condition|)
 return|return
-literal|0
+name|ATA_PROBE_OK
 return|;
 break|break;
 case|case
@@ -318,7 +325,7 @@ name|dev
 argument_list|)
 condition|)
 return|return
-literal|0
+name|ATA_PROBE_OK
 return|;
 break|break;
 case|case
@@ -333,7 +340,7 @@ name|dev
 argument_list|)
 condition|)
 return|return
-literal|0
+name|ATA_PROBE_OK
 return|;
 break|break;
 case|case
@@ -348,7 +355,7 @@ name|dev
 argument_list|)
 condition|)
 return|return
-literal|0
+name|ATA_PROBE_OK
 return|;
 break|break;
 case|case
@@ -363,7 +370,7 @@ name|dev
 argument_list|)
 condition|)
 return|return
-literal|0
+name|ATA_PROBE_OK
 return|;
 break|break;
 case|case
@@ -378,7 +385,7 @@ name|dev
 argument_list|)
 condition|)
 return|return
-literal|0
+name|ATA_PROBE_OK
 return|;
 break|break;
 case|case
@@ -393,7 +400,7 @@ name|dev
 argument_list|)
 condition|)
 return|return
-literal|0
+name|ATA_PROBE_OK
 return|;
 break|break;
 case|case
@@ -408,7 +415,7 @@ name|dev
 argument_list|)
 condition|)
 return|return
-literal|0
+name|ATA_PROBE_OK
 return|;
 break|break;
 case|case
@@ -423,7 +430,7 @@ name|dev
 argument_list|)
 condition|)
 return|return
-literal|0
+name|ATA_PROBE_OK
 return|;
 break|break;
 case|case
@@ -438,7 +445,7 @@ name|dev
 argument_list|)
 condition|)
 return|return
-literal|0
+name|ATA_PROBE_OK
 return|;
 break|break;
 case|case
@@ -453,7 +460,7 @@ name|dev
 argument_list|)
 condition|)
 return|return
-literal|0
+name|ATA_PROBE_OK
 return|;
 break|break;
 case|case
@@ -468,7 +475,7 @@ name|dev
 argument_list|)
 condition|)
 return|return
-literal|0
+name|ATA_PROBE_OK
 return|;
 break|break;
 case|case
@@ -483,7 +490,7 @@ name|dev
 argument_list|)
 condition|)
 return|return
-literal|0
+name|ATA_PROBE_OK
 return|;
 break|break;
 case|case
@@ -498,7 +505,7 @@ name|dev
 argument_list|)
 condition|)
 return|return
-literal|0
+name|ATA_PROBE_OK
 return|;
 break|break;
 case|case
@@ -513,7 +520,7 @@ name|dev
 argument_list|)
 condition|)
 return|return
-literal|0
+name|ATA_PROBE_OK
 return|;
 break|break;
 case|case
@@ -528,7 +535,7 @@ name|dev
 argument_list|)
 condition|)
 return|return
-literal|0
+name|ATA_PROBE_OK
 return|;
 break|break;
 case|case
@@ -557,7 +564,7 @@ literal|"Cenatek Rocket Drive controller"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|ATA_PROBE_OK
 return|;
 block|}
 break|break;
@@ -594,7 +601,7 @@ literal|"RZ 100? ATA controller !WARNING! data loss/corruption risk"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|ATA_PROBE_OK
 return|;
 block|}
 break|break;
@@ -620,12 +627,19 @@ operator|==
 name|PCIS_STORAGE_IDE
 operator|)
 condition|)
-return|return
+block|{
+if|if
+condition|(
+operator|!
 name|ata_generic_ident
 argument_list|(
 name|dev
 argument_list|)
+condition|)
+return|return
+name|ATA_PROBE_OK
 return|;
+block|}
 return|return
 name|ENXIO
 return|;
