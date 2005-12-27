@@ -1394,6 +1394,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|Bflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show information about bpf consumers */
+end_comment
+
+begin_decl_stmt
+name|int
 name|bflag
 decl_stmt|;
 end_decl_stmt
@@ -1623,7 +1633,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Aabdf:ghI:iLlM:mN:np:rSstuWw:z"
+literal|"AaBbdf:ghI:iLlM:mN:np:rSstuWw:z"
 argument_list|)
 operator|)
 operator|!=
@@ -1647,6 +1657,14 @@ case|case
 literal|'a'
 case|:
 name|aflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'B'
+case|:
+name|Bflag
 operator|=
 literal|1
 expr_stmt|;
@@ -2145,6 +2163,22 @@ name|getgid
 argument_list|()
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Bflag
+condition|)
+block|{
+name|bpf_stats
+argument_list|(
+name|interface
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|mflag
@@ -3410,7 +3444,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
+literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: netstat [-AaLnSW] [-f protocol_family | -p protocol]\n"
 literal|"               [-M core] [-N system]"
@@ -3426,6 +3460,8 @@ literal|"       netstat -i | -I interface -s [-f protocol_family | -p protocol]\
 literal|"               [-M core] [-N system]"
 argument_list|,
 literal|"       netstat -m [-M core] [-N system]"
+argument_list|,
+literal|"       netstat -B [ -I interface]"
 argument_list|,
 literal|"       netstat -r [-AenW] [-f address_family] [-M core] [-N system]"
 argument_list|,
