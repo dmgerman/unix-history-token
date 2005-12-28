@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2001 Jake Burkholder<jake@FreeBSD.org>  * All right
 end_comment
 
 begin_comment
-comment|/*** Here is the logic..  If there are N processors, then there are at most N KSEs (kernel schedulable entities) working to process threads that belong to a KSEGROUP (kg). If there are X of these KSEs actually running at the moment in question, then there are at most M (N-X) of these KSEs on the run queue, as running KSEs are not on the queue.  Runnable threads are queued off the KSEGROUP in priority order. If there are M or more threads runnable, the top M threads (by priority) are 'preassigned' to the M KSEs not running. The KSEs take their priority from those threads and are put on the run queue.  The last thread that had a priority high enough to have a KSE associated with it, AND IS ON THE RUN QUEUE is pointed to by kg->kg_last_assigned. If no threads queued off the KSEGROUP have KSEs assigned as all the available KSEs are activly running, or because there are no threads queued, that pointer is NULL.  When a KSE is removed from the run queue to become runnable, we know it was associated with the highest priority thread in the queue (at the head of the queue). If it is also the last assigned we know M was 1 and must now be 0. Since the thread is no longer queued that pointer must be removed from it. Since we know there were no more KSEs available, (M was 1 and is now 0) and since we are not FREEING our KSE but using it, we know there are STILL no more KSEs available, we can prove that the next thread in the ksegrp list will not have a KSE to assign to it, so we can show that the pointer must be made 'invalid' (NULL).  The pointer exists so that when a new thread is made runnable, it can have its priority compared with the last assigned thread to see if it should 'steal' its KSE or not.. i.e. is it 'earlier' on the list than that thread or later.. If it's earlier, then the KSE is removed from the last assigned (which is now not assigned a KSE) and reassigned to the new thread, which is placed earlier in the list. The pointer is then backed up to the previous thread (which may or may not be the new thread).  When a thread sleeps or is removed, the KSE becomes available and if there  are queued threads that are not assigned KSEs, the highest priority one of them is assigned the KSE, which is then placed back on the run queue at the approipriate place, and the kg->kg_last_assigned pointer is adjusted down to point to it.  The following diagram shows 2 KSEs and 3 threads from a single process.   RUNQ: --->KSE---KSE--...    (KSEs queued at priorities from threads)               \    \____                   \        \     KSEGROUP---thread--thread--thread    (queued in priority order)         \                 /           \_______________/           (last_assigned)  The result of this scheme is that the M available KSEs are always queued at the priorities they have inherrited from the M highest priority threads for that KSEGROUP. If this situation changes, the KSEs are  reassigned to keep this true. ***/
+comment|/*** Here is the logic..  If there are N processors, then there are at most N KSEs (kernel schedulable entities) working to process threads that belong to a KSEGROUP (kg). If there are X of these KSEs actually running at the moment in question, then there are at most M (N-X) of these KSEs on the run queue, as running KSEs are not on the queue.  Runnable threads are queued off the KSEGROUP in priority order. If there are M or more threads runnable, the top M threads (by priority) are 'preassigned' to the M KSEs not running. The KSEs take their priority from those threads and are put on the run queue.  The last thread that had a priority high enough to have a KSE associated with it, AND IS ON THE RUN QUEUE is pointed to by kg->kg_last_assigned. If no threads queued off the KSEGROUP have KSEs assigned as all the available KSEs are activly running, or because there are no threads queued, that pointer is NULL.  When a KSE is removed from the run queue to become runnable, we know it was associated with the highest priority thread in the queue (at the head of the queue). If it is also the last assigned we know M was 1 and must now be 0. Since the thread is no longer queued that pointer must be removed from it. Since we know there were no more KSEs available, (M was 1 and is now 0) and since we are not FREEING our KSE but using it, we know there are STILL no more KSEs available, we can prove that the next thread in the ksegrp list will not have a KSE to assign to it, so we can show that the pointer must be made 'invalid' (NULL).  The pointer exists so that when a new thread is made runnable, it can have its priority compared with the last assigned thread to see if it should 'steal' its KSE or not.. i.e. is it 'earlier' on the list than that thread or later.. If it's earlier, then the KSE is removed from the last assigned (which is now not assigned a KSE) and reassigned to the new thread, which is placed earlier in the list. The pointer is then backed up to the previous thread (which may or may not be the new thread).  When a thread sleeps or is removed, the KSE becomes available and if there are queued threads that are not assigned KSEs, the highest priority one of them is assigned the KSE, which is then placed back on the run queue at the approipriate place, and the kg->kg_last_assigned pointer is adjusted down to point to it.  The following diagram shows 2 KSEs and 3 threads from a single process.   RUNQ: --->KSE---KSE--...    (KSEs queued at priorities from threads)               \    \____                \        \     KSEGROUP---thread--thread--thread    (queued in priority order)         \                 /          \_______________/           (last_assigned)  The result of this scheme is that the M available KSEs are always queued at the priorities they have inherrited from the M highest priority threads for that KSEGROUP. If this situation changes, the KSEs are reassigned to keep this true. ***/
 end_comment
 
 begin_include
@@ -1126,7 +1126,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function is called when a thread is about to be put on a  * ksegrp run queue because it has been made runnable or its   * priority has been adjusted and the ksegrp does not have a   * free kse slot.  It determines if a thread from the same ksegrp  * should be preempted.  If so, it tries to switch threads  * if the thread is on the same cpu or notifies another cpu that  * it should switch threads.   */
+comment|/*  * This function is called when a thread is about to be put on a  * ksegrp run queue because it has been made runnable or its  * priority has been adjusted and the ksegrp does not have a  * free kse slot.  It determines if a thread from the same ksegrp  * should be preempted.  If so, it tries to switch threads  * if the thread is on the same cpu or notifies another cpu that  * it should switch threads.  */
 end_comment
 
 begin_function
@@ -1362,7 +1362,7 @@ name|stopped_cpus
 operator||
 name|idle_cpus_mask
 expr_stmt|;
-comment|/*  		 * Find a cpu with the worst priority that runs at thread from 		 * the same  ksegrp - if multiple exist give first the last run 		 * cpu and then the current cpu priority  		 */
+comment|/* 		 * Find a cpu with the worst priority that runs at thread from 		 * the same  ksegrp - if multiple exist give first the last run 		 * cpu and then the current cpu priority 		 */
 name|SLIST_FOREACH
 argument_list|(
 argument|pc
@@ -1844,7 +1844,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/*  	 * If the concurrency has reduced, and we would go in the  	 * assigned section, then keep removing entries from the  	 * system run queue, until we are not in that section  	 * or there is room for us to be put in that section. 	 * What we MUST avoid is the case where there are threads of less 	 * priority than the new one scheduled, but it can not 	 * be scheduled itself. That would lead to a non contiguous set 	 * of scheduled threads, and everything would break. 	 */
+comment|/* 	 * If the concurrency has reduced, and we would go in the 	 * assigned section, then keep removing entries from the 	 * system run queue, until we are not in that section 	 * or there is room for us to be put in that section. 	 * What we MUST avoid is the case where there are threads of less 	 * priority than the new one scheduled, but it can not 	 * be scheduled itself. That would lead to a non contiguous set 	 * of scheduled threads, and everything would break. 	 */
 name|tda
 operator|=
 name|kg
@@ -2017,7 +2017,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*  			 * We are past last_assigned, so  			 * give the next slot to whatever is next, 			 * which may or may not be us. 			 */
+comment|/* 			 * We are past last_assigned, so 			 * give the next slot to whatever is next, 			 * which may or may not be us. 			 */
 name|td2
 operator|=
 name|TAILQ_NEXT
