@@ -1440,7 +1440,7 @@ name|TI_GCR_NIC_ADDR
 parameter_list|(
 name|x
 parameter_list|)
-value|(x - TI_GCR_BASE);
+value|(x - TI_GCR_BASE)
 end_define
 
 begin_comment
@@ -2752,13 +2752,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ETHER_ALIGN
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
 name|TI_FRAMELEN
 value|1518
 end_define
@@ -3133,48 +3126,42 @@ begin_struct
 struct|struct
 name|ti_cmd_desc
 block|{
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|BIG_ENDIAN
 name|u_int32_t
-name|ti_cmd
-range|:
-literal|8
+name|ti_cmdx
 decl_stmt|;
-name|u_int32_t
-name|ti_code
-range|:
-literal|12
-decl_stmt|;
-name|u_int32_t
-name|ti_idx
-range|:
-literal|12
-decl_stmt|;
-else|#
-directive|else
-name|u_int32_t
-name|ti_idx
-range|:
-literal|12
-decl_stmt|;
-name|u_int32_t
-name|ti_code
-range|:
-literal|12
-decl_stmt|;
-name|u_int32_t
-name|ti_cmd
-range|:
-literal|8
-decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|TI_CMD_CMD
+parameter_list|(
+name|cmd
+parameter_list|)
+value|(((((cmd)->ti_cmdx))>> 24)& 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TI_CMD_CODE
+parameter_list|(
+name|cmd
+parameter_list|)
+value|(((((cmd)->ti_cmdx))>> 12)& 0xfff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TI_CMD_IDX
+parameter_list|(
+name|cmd
+parameter_list|)
+value|((((cmd)->ti_cmdx))& 0xfff)
+end_define
 
 begin_define
 define|#
@@ -3414,8 +3401,7 @@ name|y
 parameter_list|,
 name|z
 parameter_list|)
-define|\
-value|cmd.ti_cmd = (x);		\ 	cmd.ti_code = (y);		\ 	cmd.ti_idx = (z);		\ 	ti_cmd(sc,&cmd);
+value|do {				\ 	cmd.ti_cmdx = (((x)<< 24) | ((y)<< 12) | ((z)));	\ 	ti_cmd(sc,&cmd);					\ } while(0)
 end_define
 
 begin_define
@@ -3433,8 +3419,7 @@ name|v
 parameter_list|,
 name|w
 parameter_list|)
-define|\
-value|cmd.ti_cmd = (x);		\ 	cmd.ti_code = (y);		\ 	cmd.ti_idx = (z);		\ 	ti_cmd_ext(sc,&cmd, (v), (w));
+value|do {			\ 	cmd.ti_cmdx = (((x)<< 24) | ((y)<< 12) | ((z)));	\ 	ti_cmd_ext(sc,&cmd, (v), (w));				\ } while(0)
 end_define
 
 begin_comment
@@ -3450,7 +3435,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|(x) = (x + 1) % y
+value|(x) = ((x) + 1) % y
 end_define
 
 begin_define
@@ -3462,8 +3447,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-define|\
-value|if (x->ti_hwrev == TI_HWREV_TIGON) {				\ 		TI_DO_CMD(TI_CMD_SET_RX_JUMBO_PROD_IDX, 0, y);	\ 	} else {							\ 		CSR_WRITE_4(x, TI_MB_JUMBORXPROD_IDX, y);		\ 	}
+value|do {				\ 	if ((x)->ti_hwrev == TI_HWREV_TIGON)				\ 		TI_DO_CMD(TI_CMD_SET_RX_JUMBO_PROD_IDX, 0, (y));	\ 	else								\ 		CSR_WRITE_4((x), TI_MB_JUMBORXPROD_IDX, (y));		\ } while(0)
 end_define
 
 begin_define
@@ -3476,7 +3460,7 @@ parameter_list|,
 name|y
 parameter_list|)
 define|\
-value|CSR_WRITE_4(x, TI_MB_MINIRXPROD_IDX, y);
+value|CSR_WRITE_4((x), TI_MB_MINIRXPROD_IDX, (y))
 end_define
 
 begin_define
@@ -3488,8 +3472,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-define|\
-value|if (x->ti_hwrev == TI_HWREV_TIGON) {				\ 		TI_DO_CMD(TI_CMD_SET_RX_PROD_IDX, 0, y);		\ 	} else {							\ 		CSR_WRITE_4(x, TI_MB_STDRXPROD_IDX, y);			\ 	}
+value|do {				\ 	if ((x)->ti_hwrev == TI_HWREV_TIGON)				\ 		TI_DO_CMD(TI_CMD_SET_RX_PROD_IDX, 0, (y));		\ 	else								\ 		CSR_WRITE_4((x), TI_MB_STDRXPROD_IDX, (y));		\ } while(0)
 end_define
 
 begin_comment
@@ -3500,51 +3483,45 @@ begin_struct
 struct|struct
 name|ti_event_desc
 block|{
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|BIG_ENDIAN
 name|u_int32_t
-name|ti_event
-range|:
-literal|8
+name|ti_eventx
 decl_stmt|;
-name|u_int32_t
-name|ti_code
-range|:
-literal|12
-decl_stmt|;
-name|u_int32_t
-name|ti_idx
-range|:
-literal|12
-decl_stmt|;
-else|#
-directive|else
-name|u_int32_t
-name|ti_idx
-range|:
-literal|12
-decl_stmt|;
-name|u_int32_t
-name|ti_code
-range|:
-literal|12
-decl_stmt|;
-name|u_int32_t
-name|ti_event
-range|:
-literal|8
-decl_stmt|;
-endif|#
-directive|endif
 name|u_int32_t
 name|ti_rsvd
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|TI_EVENT_EVENT
+parameter_list|(
+name|e
+parameter_list|)
+value|(((((e)->ti_eventx))>> 24)& 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TI_EVENT_CODE
+parameter_list|(
+name|e
+parameter_list|)
+value|(((((e)->ti_eventx))>> 12)& 0xfff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TI_EVENT_IDX
+parameter_list|(
+name|e
+parameter_list|)
+value|(((((e)->ti_eventx)))& 0xfff)
+end_define
 
 begin_comment
 comment|/*  * Tigon events.  */
@@ -3664,7 +3641,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_4(sc->ti_btag, sc->ti_bhandle, reg, val)
+value|bus_space_write_4((sc)->ti_btag, (sc)->ti_bhandle, (reg), (val))
 end_define
 
 begin_define
@@ -3677,7 +3654,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_4(sc->ti_btag, sc->ti_bhandle, reg)
+value|bus_space_read_4((sc)->ti_btag, (sc)->ti_bhandle, (reg))
 end_define
 
 begin_define
@@ -3692,7 +3669,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|CSR_WRITE_4(sc, reg, (CSR_READ_4(sc, reg) | x))
+value|CSR_WRITE_4((sc), (reg), (CSR_READ_4((sc), (reg)) | (x)))
 end_define
 
 begin_define
@@ -3707,7 +3684,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|CSR_WRITE_4(sc, reg, (CSR_READ_4(sc, reg)& ~x))
+value|CSR_WRITE_4((sc), (reg), (CSR_READ_4((sc), (reg))& ~(x)))
 end_define
 
 begin_comment
@@ -3866,24 +3843,22 @@ literal|6
 index|]
 decl_stmt|;
 name|struct
-name|ti_tx_desc
-modifier|*
-name|ti_tx_ring_nic
-decl_stmt|;
-comment|/* pointer to shared mem */
-name|struct
-name|ti_cmd_desc
-modifier|*
-name|ti_cmd_ring
-decl_stmt|;
-comment|/* pointer to shared mem */
-name|struct
 name|ti_gib
 name|ti_info
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|TI_RD_OFF
+parameter_list|(
+name|x
+parameter_list|)
+value|offsetof(struct ti_ring_data, x)
+end_define
 
 begin_comment
 comment|/*  * Mbuf pointers. We need these to keep track of the virtual addresses  * of our mbuf chains since we can only convert from physical to virtual,  * not the other way around.  */
@@ -4073,12 +4048,6 @@ begin_struct
 struct|struct
 name|ti_softc
 block|{
-name|STAILQ_ENTRY
-argument_list|(
-argument|ti_softc
-argument_list|)
-name|ti_links
-expr_stmt|;
 name|device_t
 name|ti_dev
 decl_stmt|;
@@ -4089,9 +4058,6 @@ name|ti_ifp
 decl_stmt|;
 name|bus_space_handle_t
 name|ti_bhandle
-decl_stmt|;
-name|vm_offset_t
-name|ti_vhandle
 decl_stmt|;
 name|bus_space_tag_t
 name|ti_btag
@@ -4156,7 +4122,7 @@ decl_stmt|;
 name|bus_dmamap_t
 name|ti_rdata_dmamap
 decl_stmt|;
-name|uint32_t
+name|bus_addr_t
 name|ti_rdata_phys
 decl_stmt|;
 name|struct
@@ -4334,8 +4300,7 @@ begin_define
 define|#
 directive|define
 name|EEPROM_START
-define|\
-value|TI_SETBIT(sc, TI_MISC_LOCAL_CTL, TI_MLC_EE_CLK);
+value|do {							\ 	TI_SETBIT(sc, TI_MISC_LOCAL_CTL, TI_MLC_EE_CLK);
 comment|/* Pull clock pin high */
 value|\ 	TI_SETBIT(sc, TI_MISC_LOCAL_CTL, TI_MLC_EE_DOUT);
 comment|/* Set DATA bit to 1 */
@@ -4344,11 +4309,9 @@ comment|/* Enable xmit to write bit */
 value|\ 	TI_CLRBIT(sc, TI_MISC_LOCAL_CTL, TI_MLC_EE_DOUT);
 comment|/* Pull DATA bit to 0 again */
 value|\ 	TI_CLRBIT(sc, TI_MISC_LOCAL_CTL, TI_MLC_EE_CLK);
-end_define
-
-begin_comment
 comment|/* Pull clock low again */
-end_comment
+value|\ } while(0)
+end_define
 
 begin_comment
 comment|/*  * EEPROM_STOP ends access to the EEPROM and clears the ETXEN bit so  * that no further data can be written to the EEPROM I/O pin.  */
@@ -4358,8 +4321,7 @@ begin_define
 define|#
 directive|define
 name|EEPROM_STOP
-define|\
-value|TI_CLRBIT(sc, TI_MISC_LOCAL_CTL, TI_MLC_EE_TXEN);
+value|do {							\ 	TI_CLRBIT(sc, TI_MISC_LOCAL_CTL, TI_MLC_EE_TXEN);
 comment|/* Disable xmit */
 value|\ 	TI_CLRBIT(sc, TI_MISC_LOCAL_CTL, TI_MLC_EE_DOUT);
 comment|/* Pull DATA to 0 */
@@ -4372,38 +4334,9 @@ comment|/* Toggle DATA to 1 */
 value|\ 	TI_CLRBIT(sc, TI_MISC_LOCAL_CTL, TI_MLC_EE_TXEN);
 comment|/* Disable xmit. */
 value|\ 	TI_CLRBIT(sc, TI_MISC_LOCAL_CTL, TI_MLC_EE_CLK);
-end_define
-
-begin_comment
 comment|/* Pull clock low again */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__alpha__
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|vtophys
-end_undef
-
-begin_define
-define|#
-directive|define
-name|vtophys
-parameter_list|(
-name|va
-parameter_list|)
-value|alpha_XXX_dmamap((vm_offset_t)va)
+value|\ } while(0)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
