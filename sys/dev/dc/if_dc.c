@@ -14523,6 +14523,12 @@ operator|&&
 name|status
 operator|!=
 literal|0xFFFFFFFF
+operator|&&
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
 condition|)
 block|{
 name|CSR_WRITE_4
