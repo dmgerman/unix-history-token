@@ -886,7 +886,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function does the math and alloctes the top level "indir" structure  * for a device of "size" sectors.  */
+comment|/*  * This function does the math and allocates the top level "indir" structure  * for a device of "size" sectors.  */
 end_comment
 
 begin_function
@@ -2573,7 +2573,7 @@ name|bp
 operator|->
 name|bio_data
 expr_stmt|;
-comment|/* 	 * offs is the ofset at whih to start operating on the 	 * next (ie, first) page.  lastp is the last page on 	 * which we're going to operate.  lastend is the ending 	 * position within that last page (ie, PAGE_SIZE if 	 * we're operating on complete aligned pages). 	 */
+comment|/* 	 * offs is the offset at which to start operating on the 	 * next (ie, first) page.  lastp is the last page on 	 * which we're going to operate.  lastend is the ending 	 * position within that last page (ie, PAGE_SIZE if 	 * we're operating on complete aligned pages). 	 */
 name|offs
 operator|=
 name|bp
