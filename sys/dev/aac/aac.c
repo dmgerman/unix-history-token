@@ -1678,6 +1678,14 @@ operator|->
 name|aac_container_tqh
 argument_list|)
 expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|aac_ev_cmfree
+argument_list|)
+expr_stmt|;
 comment|/* Initialize the local AIF queue pointers */
 name|sc
 operator|->
