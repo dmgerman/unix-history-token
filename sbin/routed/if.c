@@ -3655,35 +3655,12 @@ argument_list|(
 name|INADDR_LOOPBACK
 argument_list|)
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"loop %x\n"
-argument_list|,
-name|ifs
-operator|.
-name|int_addr
-argument_list|)
-expr_stmt|;
 name|ifs
 operator|.
 name|int_state
 operator||=
 name|IS_PASSIVE
 expr_stmt|;
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"alias %x\n"
-argument_list|,
-name|ifs
-operator|.
-name|int_addr
-argument_list|)
-expr_stmt|;
-block|}
 name|ifs
 operator|.
 name|int_dstaddr
