@@ -5171,6 +5171,7 @@ name|FREEBSD32_ALIGN
 parameter_list|(
 name|p
 parameter_list|)
+define|\
 value|(((u_long)(p) + FREEBSD32_ALIGNBYTES)& ~FREEBSD32_ALIGNBYTES)
 end_define
 
