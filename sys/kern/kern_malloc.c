@@ -1883,9 +1883,14 @@ expr_stmt|;
 comment|/* Get the size of the original block */
 if|if
 condition|(
+operator|!
+operator|(
 name|slab
 operator|->
-name|us_keg
+name|us_flags
+operator|&
+name|UMA_SLAB_MALLOC
+operator|)
 condition|)
 name|alloc
 operator|=
