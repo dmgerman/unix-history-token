@@ -14694,6 +14694,26 @@ return|;
 block|}
 end_function
 
+begin_struct
+struct|struct
+name|ata_marvell_response
+block|{
+name|u_int16_t
+name|tag
+decl_stmt|;
+name|u_int8_t
+name|edma_status
+decl_stmt|;
+name|u_int8_t
+name|dev_status
+decl_stmt|;
+name|u_int32_t
+name|timestamp
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_function
 specifier|static
 name|void
@@ -14720,6 +14740,11 @@ name|struct
 name|ata_request
 modifier|*
 name|request
+decl_stmt|;
+name|struct
+name|ata_marvell_response
+modifier|*
+name|response
 decl_stmt|;
 name|u_int32_t
 name|cause
@@ -15060,39 +15085,47 @@ operator|<<
 literal|3
 operator|)
 expr_stmt|;
-comment|/* XXX SOS get status and error into request */
+name|response
+operator|=
+operator|(
+expr|struct
+name|ata_marvell_response
+operator|*
+operator|)
+operator|(
+name|u_int8_t
+operator|*
+operator|)
+operator|(
+name|ch
+operator|->
+name|dma
+operator|->
+name|work
+operator|)
+operator|+
+literal|1024
+operator|+
+operator|(
+name|slot
+operator|<<
+literal|3
+operator|)
+expr_stmt|;
+comment|/* record status for this request */
 name|request
 operator|->
 name|status
 operator|=
-literal|0
+name|response
+operator|->
+name|dev_status
 expr_stmt|;
-comment|/* XXX SOS */
 name|request
 operator|->
 name|error
 operator|=
 literal|0
-expr_stmt|;
-comment|/* XXX SOS */
-if|if
-condition|(
-operator|!
-operator|(
-name|request
-operator|->
-name|flags
-operator|&
-name|ATA_R_TIMEOUT
-operator|)
-condition|)
-name|request
-operator|->
-name|donecount
-operator|=
-name|request
-operator|->
-name|bytecount
 expr_stmt|;
 comment|/* ack response */
 name|ATA_OUTL
@@ -15111,6 +15144,36 @@ argument_list|,
 name|rsp_out
 argument_list|)
 expr_stmt|;
+comment|/* update progress */
+if|if
+condition|(
+operator|!
+operator|(
+name|request
+operator|->
+name|status
+operator|&
+name|ATA_S_ERROR
+operator|)
+operator|&&
+operator|!
+operator|(
+name|request
+operator|->
+name|flags
+operator|&
+name|ATA_R_TIMEOUT
+operator|)
+condition|)
+name|request
+operator|->
+name|donecount
+operator|=
+name|request
+operator|->
+name|bytecount
+expr_stmt|;
+comment|/* finish up this request */
 name|ch
 operator|->
 name|running
@@ -15525,8 +15588,6 @@ argument_list|)
 decl_stmt|;
 name|u_int32_t
 name|req_in
-decl_stmt|,
-name|req_out
 decl_stmt|;
 name|u_int8_t
 modifier|*
@@ -15551,7 +15612,6 @@ name|int
 name|slot
 decl_stmt|;
 comment|/* only DMA R/W goes through the EMDA machine */
-comment|/* XXX SOS add ATAPI commands support later */
 if|if
 condition|(
 name|request
@@ -15637,22 +15697,6 @@ name|request
 argument_list|)
 return|;
 block|}
-name|req_out
-operator|=
-name|ATA_INL
-argument_list|(
-name|ctlr
-operator|->
-name|r_res1
-argument_list|,
-literal|0x02018
-operator|+
-name|ATA_MV_EDMA_BASE
-argument_list|(
-name|ch
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* get next free request queue slot */
 name|req_in
 operator|=
@@ -15727,6 +15771,7 @@ operator|*
 operator|)
 name|bytep
 expr_stmt|;
+comment|/* fill in this request */
 name|quadp
 index|[
 literal|0
@@ -16145,6 +16190,7 @@ literal|10
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* tell EDMA it has a new request */
 name|slot
 operator|=
 operator|(
@@ -16176,7 +16222,6 @@ operator|<<
 literal|5
 operator|)
 expr_stmt|;
-comment|/* tell EDMA it has a new request */
 name|ATA_OUTL
 argument_list|(
 name|ctlr
@@ -16248,12 +16293,31 @@ argument_list|,
 literal|0x00000002
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+operator|(
+name|ATA_INL
+argument_list|(
+name|ctlr
+operator|->
+name|r_res1
+argument_list|,
+literal|0x02028
+operator|+
+name|ATA_MV_EDMA_BASE
+argument_list|(
+name|ch
+argument_list|)
+argument_list|)
+operator|&
+literal|0x00000001
+operator|)
+condition|)
 name|DELAY
 argument_list|(
-literal|100000
+literal|10
 argument_list|)
 expr_stmt|;
-comment|/* SOS should poll for disabled */
 comment|/* clear SATA error register */
 name|ATA_IDX_OUTL
 argument_list|(
