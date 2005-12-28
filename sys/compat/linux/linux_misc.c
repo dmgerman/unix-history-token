@@ -2257,9 +2257,12 @@ name|printf
 argument_list|(
 name|LMSG
 argument_list|(
-literal|"incoming timeout (%ld/%ld)"
+literal|"incoming timeout (%jd/%ld)"
 argument_list|)
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|utv
 operator|.
 name|tv_sec
@@ -2496,9 +2499,12 @@ name|printf
 argument_list|(
 name|LMSG
 argument_list|(
-literal|"outgoing timeout (%ld/%ld)"
+literal|"outgoing timeout (%jd/%ld)"
 argument_list|)
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|utv
 operator|.
 name|tv_sec
@@ -4668,8 +4674,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"setitimer: value: sec: %ld, usec: %ld\n"
+literal|"setitimer: value: sec: %jd, usec: %ld\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|aitv
 operator|.
 name|it_value
@@ -4685,8 +4694,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"setitimer: interval: sec: %ld, usec: %ld\n"
+literal|"setitimer: interval: sec: %jd, usec: %ld\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|aitv
 operator|.
 name|it_interval
