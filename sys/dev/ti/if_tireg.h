@@ -4149,6 +4149,9 @@ directive|define
 name|ti_tx_considx
 value|ti_rdata->ti_tx_considx_r
 name|u_int16_t
+name|ti_tx_saved_prodidx
+decl_stmt|;
+name|u_int16_t
 name|ti_tx_saved_considx
 decl_stmt|;
 name|u_int16_t

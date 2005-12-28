@@ -7930,6 +7930,12 @@ name|ti_tx_saved_considx
 operator|=
 literal|0
 expr_stmt|;
+name|sc
+operator|->
+name|ti_tx_saved_prodidx
+operator|=
+literal|0
+expr_stmt|;
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -14058,12 +14064,9 @@ name|if_softc
 expr_stmt|;
 name|prodidx
 operator|=
-name|CSR_READ_4
-argument_list|(
 name|sc
-argument_list|,
-name|TI_MB_SENDPROD_IDX
-argument_list|)
+operator|->
+name|ti_tx_saved_prodidx
 expr_stmt|;
 while|while
 condition|(
@@ -14196,6 +14199,12 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Transmit */
+name|sc
+operator|->
+name|ti_tx_saved_prodidx
+operator|=
+name|prodidx
+expr_stmt|;
 name|CSR_WRITE_4
 argument_list|(
 name|sc
