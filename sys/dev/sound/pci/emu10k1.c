@@ -2956,11 +2956,11 @@ name|fxrt1
 operator|=
 name|FXBUS_MIDI_CHORUS
 operator||
-name|FXBUS_PCM_LEFT
+name|FXBUS_PCM_RIGHT
 operator|<<
 literal|8
 operator||
-name|FXBUS_PCM_RIGHT
+name|FXBUS_PCM_LEFT
 operator|<<
 literal|16
 operator||
@@ -2984,11 +2984,11 @@ name|fxrt1
 operator|=
 name|FXBUS_MIDI_CHORUS
 operator||
-name|FXBUS_PCM_LEFT
+name|FXBUS_PCM_RIGHT
 operator|<<
 literal|4
 operator||
-name|FXBUS_PCM_RIGHT
+name|FXBUS_PCM_LEFT
 operator|<<
 literal|8
 operator||
