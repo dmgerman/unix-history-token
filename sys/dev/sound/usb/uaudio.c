@@ -21565,7 +21565,7 @@ name|UA_SAMP_LO
 argument_list|(
 name|a1d
 argument_list|)
-operator|<
+operator|<=
 name|ch
 operator|->
 name|sample_rate
@@ -21573,7 +21573,7 @@ operator|&&
 name|ch
 operator|->
 name|sample_rate
-operator|<
+operator|<=
 name|UA_SAMP_HI
 argument_list|(
 name|a1d
