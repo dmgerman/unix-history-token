@@ -6831,26 +6831,6 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * We issue a warning for any spin locks not defined in the static 	 * order list as a way to discourage their use (folks should really 	 * be using non-spin mutexes most of the time).  However, several 	 * 3rd part device drivers use spin locks because that is all they 	 * have available on Windows and Linux and they think that normal 	 * mutexes are insufficient. 	 */
-if|if
-condition|(
-operator|(
-name|lock_class
-operator|->
-name|lc_flags
-operator|&
-name|LC_SPINLOCK
-operator|)
-operator|&&
-name|witness_spin_warn
-condition|)
-name|printf
-argument_list|(
-literal|"WITNESS: spin lock %s not in order list"
-argument_list|,
-name|description
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -6862,11 +6842,9 @@ operator|)
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 name|w
 operator|->
 name|w_name
@@ -6964,6 +6942,28 @@ name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|w_mtx
+argument_list|)
+expr_stmt|;
+name|out
+label|:
+comment|/* 	 * We issue a warning for any spin locks not defined in the static 	 * order list as a way to discourage their use (folks should really 	 * be using non-spin mutexes most of the time).  However, several 	 * 3rd part device drivers use spin locks because that is all they 	 * have available on Windows and Linux and they think that normal 	 * mutexes are insufficient. 	 */
+if|if
+condition|(
+operator|(
+name|lock_class
+operator|->
+name|lc_flags
+operator|&
+name|LC_SPINLOCK
+operator|)
+operator|&&
+name|witness_spin_warn
+condition|)
+name|printf
+argument_list|(
+literal|"WITNESS: spin lock %s not in order list\n"
+argument_list|,
+name|description
 argument_list|)
 expr_stmt|;
 return|return
@@ -9702,7 +9702,7 @@ name|td
 argument_list|)
 condition|)
 continue|continue;
-name|printf
+name|db_printf
 argument_list|(
 literal|"Process %d (%s) thread %p (%d)\n"
 argument_list|,
