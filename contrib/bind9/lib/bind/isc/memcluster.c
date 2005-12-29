@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  * Copyright (c) 1997,1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT  * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2005 by Internet Systems Consortium, Inc. ("ISC")  * Copyright (c) 1997,1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT  * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: memcluster.c,v 1.3.206.4 2004/09/16 00:57:34 marka Exp $"
+literal|"$Id: memcluster.c,v 1.3.206.7 2005/10/11 00:48:15 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -321,6 +321,83 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DO_PTHREADS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<pthread.h>
+end_include
+
+begin_decl_stmt
+specifier|static
+name|pthread_mutex_t
+name|memlock
+init|=
+name|PTHREAD_MUTEX_INITIALIZER
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|MEMLOCK
+value|(void)pthread_mutex_lock(&memlock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MEMUNLOCK
+value|(void)pthread_mutex_unlock(&memlock)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*  * Catch bad lock usage in non threaded build.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|int
+name|memlock
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|MEMLOCK
+value|do { INSIST(memlock == 0); memlock = 1; } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MEMUNLOCK
+value|do { INSIST(memlock == 1); memlock = 0; } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DO_PTHEADS */
+end_comment
+
 begin_comment
 comment|/* Private data. */
 end_comment
@@ -339,6 +416,12 @@ name|mem_target
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MEMCLUSTER_BIG_MALLOC
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|size_t
@@ -352,6 +435,11 @@ name|size_t
 name|mem_target_fudge
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -535,6 +623,9 @@ name|mem_target
 operator|=
 name|target_size
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|MEMCLUSTER_BIG_MALLOC
 name|mem_target_half
 operator|=
 name|mem_target
@@ -549,6 +640,8 @@ name|mem_target
 operator|/
 literal|4
 expr_stmt|;
+endif|#
+directive|endif
 name|freelists
 operator|=
 name|malloc
@@ -785,6 +878,8 @@ name|void
 modifier|*
 name|ret
 decl_stmt|;
+name|MEMLOCK
+expr_stmt|;
 if|#
 directive|if
 operator|!
@@ -810,6 +905,7 @@ name|freelists
 operator|==
 name|NULL
 condition|)
+block|{
 if|if
 condition|(
 name|meminit
@@ -822,11 +918,16 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+name|MEMUNLOCK
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+block|}
+block|}
 if|if
 condition|(
 name|size
@@ -834,6 +935,8 @@ operator|==
 literal|0U
 condition|)
 block|{
+name|MEMUNLOCK
+expr_stmt|;
 name|errno
 operator|=
 name|EINVAL
@@ -892,6 +995,8 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|MEMUNLOCK
+expr_stmt|;
 name|errno
 operator|=
 name|ENOMEM
@@ -947,6 +1052,8 @@ name|e
 expr_stmt|;
 endif|#
 directive|endif
+name|MEMUNLOCK
+expr_stmt|;
 name|e
 operator|->
 name|fencepost
@@ -993,6 +1100,8 @@ operator|)
 return|;
 else|#
 directive|else
+name|MEMUNLOCK
+expr_stmt|;
 return|return
 operator|(
 name|malloc
@@ -1060,6 +1169,8 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|MEMUNLOCK
+expr_stmt|;
 name|errno
 operator|=
 name|ENOMEM
@@ -1182,6 +1293,8 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|MEMUNLOCK
+expr_stmt|;
 name|errno
 operator|=
 name|ENOMEM
@@ -1507,6 +1620,8 @@ operator|.
 name|freefrags
 operator|--
 expr_stmt|;
+name|MEMUNLOCK
+expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -1628,6 +1743,8 @@ name|p
 decl_stmt|;
 endif|#
 directive|endif
+name|MEMLOCK
+expr_stmt|;
 if|#
 directive|if
 operator|!
@@ -1661,6 +1778,8 @@ operator|==
 literal|0U
 condition|)
 block|{
+name|MEMUNLOCK
+expr_stmt|;
 name|errno
 operator|=
 name|EINVAL
@@ -1919,6 +2038,8 @@ operator|.
 name|gets
 operator|--
 expr_stmt|;
+name|MEMUNLOCK
+expr_stmt|;
 return|return;
 block|}
 comment|/* The free list uses the "rounded-up" size "new_size": */
@@ -2101,6 +2222,8 @@ operator|.
 name|freefrags
 operator|++
 expr_stmt|;
+name|MEMUNLOCK
+expr_stmt|;
 block|}
 end_function
 
@@ -2239,13 +2362,19 @@ name|e
 decl_stmt|;
 endif|#
 directive|endif
+name|MEMLOCK
+expr_stmt|;
 if|if
 condition|(
 name|freelists
 operator|==
 name|NULL
 condition|)
+block|{
+name|MEMUNLOCK
+expr_stmt|;
 return|return;
+block|}
 for|for
 control|(
 name|i
@@ -2440,6 +2569,8 @@ block|}
 block|}
 endif|#
 directive|endif
+name|MEMUNLOCK
+expr_stmt|;
 block|}
 end_function
 

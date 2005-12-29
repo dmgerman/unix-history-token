@@ -8,7 +8,7 @@ comment|/*  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *  
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT  * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2005 by Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT  * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_if
@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_send.c,v 1.5.2.2.4.5 2004/08/10 02:19:56 marka Exp $"
+literal|"$Id: res_send.c,v 1.5.2.2.4.7 2005/08/15 02:04:41 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -181,6 +181,44 @@ directive|include
 file|"port_after.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_POLL
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STROPTS_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stropts.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<poll.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USE_POLL */
+end_comment
+
 begin_comment
 comment|/* Options.  Leave them on. */
 end_comment
@@ -213,6 +251,12 @@ parameter_list|)
 value|((res)->_u._ext)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USE_POLL
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -224,6 +268,25 @@ operator|-
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|static
+name|int
+name|highestFD
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Forward. */
@@ -383,11 +446,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|NEED_PSELECT
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|USE_POLL
+argument_list|)
+end_if
 
 begin_function_decl
 specifier|static
@@ -1213,6 +1285,20 @@ index|[
 name|NI_MAXHOST
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_POLL
+name|highestFD
+operator|=
+name|sysconf
+argument_list|(
+name|_SC_OPEN_MAX
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|statp
@@ -3664,9 +3750,6 @@ name|timeout
 decl_stmt|,
 name|finish
 decl_stmt|;
-name|fd_set
-name|dsmask
-decl_stmt|;
 name|struct
 name|sockaddr_storage
 name|from
@@ -3683,6 +3766,23 @@ name|n
 decl_stmt|,
 name|s
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_POLL
+name|int
+name|polltimeout
+decl_stmt|;
+name|struct
+name|pollfd
+name|pollfd
+decl_stmt|;
+else|#
+directive|else
+name|fd_set
+name|dsmask
+decl_stmt|;
+endif|#
+directive|endif
 name|nsap
 operator|=
 name|get_nsaddr
@@ -4083,6 +4183,9 @@ argument_list|()
 expr_stmt|;
 name|nonow
 label|:
+ifndef|#
+directive|ifndef
+name|USE_POLL
 name|FD_ZERO
 argument_list|(
 operator|&
@@ -4148,6 +4251,75 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|timeout
+operator|=
+name|evSubTime
+argument_list|(
+name|finish
+argument_list|,
+name|now
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|timeout
+operator|.
+name|tv_sec
+operator|<
+literal|0
+condition|)
+name|timeout
+operator|=
+name|evConsTime
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|polltimeout
+operator|=
+literal|1000
+operator|*
+name|timeout
+operator|.
+name|tv_sec
+operator|+
+name|timeout
+operator|.
+name|tv_nsec
+operator|/
+literal|1000000
+expr_stmt|;
+name|pollfd
+operator|.
+name|fd
+operator|=
+name|s
+expr_stmt|;
+name|pollfd
+operator|.
+name|events
+operator|=
+name|POLLRDNORM
+expr_stmt|;
+name|n
+operator|=
+name|poll
+argument_list|(
+operator|&
+name|pollfd
+argument_list|,
+literal|1
+argument_list|,
+name|polltimeout
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* USE_POLL */
 if|if
 condition|(
 name|n
@@ -4197,6 +4369,9 @@ condition|)
 goto|goto
 name|wait
 goto|;
+ifndef|#
+directive|ifndef
+name|USE_POLL
 name|Perror
 argument_list|(
 name|statp
@@ -4208,6 +4383,22 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|Perror
+argument_list|(
+name|statp
+argument_list|,
+name|stderr
+argument_list|,
+literal|"poll"
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* USE_POLL */
 name|res_nclose
 argument_list|(
 name|statp
@@ -5106,11 +5297,20 @@ block|}
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|NEED_PSELECT
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|USE_POLL
+argument_list|)
+end_if
 
 begin_comment
 comment|/* XXX needs to move to the porting library. */

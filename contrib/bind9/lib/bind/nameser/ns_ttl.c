@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_ttl.c,v 1.1.206.1 2004/03/09 08:33:45 marka Exp $"
+literal|"$Id: ns_ttl.c,v 1.1.206.2 2005/07/28 07:43:21 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -638,6 +638,15 @@ operator|+=
 name|tmp
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|dirty
+condition|)
+goto|goto
+name|einval
+goto|;
 operator|*
 name|dst
 operator|=

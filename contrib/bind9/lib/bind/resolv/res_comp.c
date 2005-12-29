@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_comp.c,v 1.1.2.1.4.1 2004/03/09 08:33:54 marka Exp $"
+literal|"$Id: res_comp.c,v 1.1.2.1.4.2 2005/07/28 07:43:22 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -803,6 +803,73 @@ end_ifdef
 
 begin_comment
 comment|/*  * This module must export the following externally-visible symbols:  *	___putlong  *	___putshort  *	__getlong  *	__getshort  * Note that one _ comes from C and the others come from us.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SOLARIS2
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__putlong
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|__putlong
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__putshort
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|__putshort
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|putlong
+name|=
+name|__putlong
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|putshort
+name|=
+name|__putshort
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SOLARIS2 */
 end_comment
 
 begin_function

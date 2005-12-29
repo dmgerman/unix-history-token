@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_parse.c,v 1.3.2.1.4.1 2004/03/09 08:33:44 marka Exp $"
+literal|"$Id: ns_parse.c,v 1.3.2.1.4.3 2005/10/11 00:48:16 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,6 +100,12 @@ begin_comment
 comment|/* Macros. */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SOLARIS2
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -109,6 +115,27 @@ name|err
 parameter_list|)
 value|do { errno = (err); return (-1); } while (0)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|RETERR
+parameter_list|(
+name|err
+parameter_list|)
+define|\
+value|do { errno = (err); if (errno == errno) return (-1); } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Public. */
@@ -694,13 +721,13 @@ name|int
 name|tmp
 decl_stmt|;
 comment|/* Make section right. */
-if|if
-condition|(
-operator|(
 name|tmp
 operator|=
 name|section
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|tmp
 operator|<
 literal|0
 operator|||

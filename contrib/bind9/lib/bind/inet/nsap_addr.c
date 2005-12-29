@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nsap_addr.c,v 1.2.206.1 2004/03/09 08:33:33 marka Exp $"
+literal|"$Id: nsap_addr.c,v 1.2.206.2 2005/07/28 07:43:18 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -90,6 +90,12 @@ begin_include
 include|#
 directive|include
 file|<resolv.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<resolv_mt.h>
 end_include
 
 begin_include
@@ -373,16 +379,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-specifier|static
 name|char
+modifier|*
 name|tmpbuf
-index|[
-literal|2
-operator|+
-literal|255
-operator|*
-literal|3
-index|]
+init|=
+name|inet_nsap_ntoa_tmpbuf
 decl_stmt|;
 name|char
 modifier|*

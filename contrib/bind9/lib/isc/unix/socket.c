@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: socket.c,v 1.207.2.19.2.15 2004/11/18 21:31:16 marka Exp $ */
+comment|/* $Id: socket.c,v 1.207.2.19.2.22 2005/11/03 23:08:42 marka Exp $ */
 end_comment
 
 begin_include
@@ -1246,7 +1246,7 @@ decl_stmt|;
 name|char
 name|peerbuf
 index|[
-literal|256
+name|ISC_SOCKADDR_FORMATSIZE
 index|]
 decl_stmt|;
 name|va_list
@@ -1748,6 +1748,13 @@ name|msg
 operator|=
 name|SELECT_POKE_NOTHING
 expr_stmt|;
+operator|*
+name|fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* Silence compiler. */
 if|if
 condition|(
 name|SOFT_ERROR
@@ -1910,6 +1917,32 @@ index|[
 name|ISC_STRERRORSIZE
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_FIONBIO_IOCTL
+name|int
+name|on
+init|=
+literal|1
+decl_stmt|;
+name|ret
+operator|=
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|FIONBIO
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|on
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|flags
 operator|=
 name|fcntl
@@ -1923,7 +1956,7 @@ argument_list|)
 expr_stmt|;
 name|flags
 operator||=
-name|O_NONBLOCK
+name|PORT_NONBLOCK
 expr_stmt|;
 name|ret
 operator|=
@@ -1936,6 +1969,8 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ret
@@ -1962,12 +1997,23 @@ name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|,
+ifdef|#
+directive|ifdef
+name|USE_FIONBIO_IOCTL
+literal|"ioctl(%d, FIONBIO,&on): %s"
+argument_list|,
+name|fd
+argument_list|,
+else|#
+directive|else
 literal|"fcntl(%d, F_SETFL, %d): %s"
 argument_list|,
 name|fd
 argument_list|,
 name|flags
 argument_list|,
+endif|#
+directive|endif
 name|strbuf
 argument_list|)
 expr_stmt|;
@@ -2021,6 +2067,7 @@ directive|else
 name|ISC_SOCKADDR_LEN_T
 name|hdrlen
 decl_stmt|;
+comment|/* 	 * Cast NULL so that any pointer arithmetic performed by CMSG_DATA 	 * is correct. 	 */
 name|hdrlen
 operator|=
 operator|(
@@ -2028,10 +2075,16 @@ name|ISC_SOCKADDR_LEN_T
 operator|)
 name|CMSG_DATA
 argument_list|(
+operator|(
+operator|(
+expr|struct
+name|cmsghdr
+operator|*
+operator|)
 name|NULL
+operator|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 return|return
 operator|(
 name|hdrlen
@@ -5278,7 +5331,7 @@ name|sock
 operator|->
 name|recvcmsgbuflen
 operator|!=
-literal|0
+literal|0U
 condition|)
 block|{
 name|sock
@@ -5346,7 +5399,7 @@ name|sock
 operator|->
 name|sendcmsgbuflen
 operator|!=
-literal|0
+literal|0U
 condition|)
 block|{
 name|sock
@@ -5896,6 +5949,13 @@ index|[
 name|ISC_STRERRORSIZE
 index|]
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|err
+init|=
+literal|"socket"
+decl_stmt|;
 name|REQUIRE
 argument_list|(
 name|VALID_MANAGER
@@ -5988,7 +6048,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|F_DUPFD
-comment|/*          * Leave a space for stdio to work in.          */
+comment|/* 	 * Leave a space for stdio to work in. 	 */
 if|if
 condition|(
 name|sock
@@ -6045,6 +6105,10 @@ operator|->
 name|fd
 operator|=
 name|new
+expr_stmt|;
+name|err
+operator|=
+literal|"isc_socket_create: fcntl"
 expr_stmt|;
 block|}
 endif|#
@@ -6175,7 +6239,9 @@ name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|,
-literal|"socket() %s: %s"
+literal|"%s() %s: %s"
+argument_list|,
+name|err
 argument_list|,
 name|isc_msgcat_get
 argument_list|(
@@ -6415,7 +6481,7 @@ name|sock
 operator|->
 name|recvcmsgbuflen
 operator|==
-literal|0
+literal|0U
 condition|)
 block|{
 comment|/* 			 * Warn explicitly because this anomaly can be hidden 			 * in usual operation (and unexpectedly appear later). 			 */
@@ -7628,6 +7694,13 @@ index|[
 name|ISC_STRERRORSIZE
 index|]
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|err
+init|=
+literal|"accept"
+decl_stmt|;
 name|UNUSED
 argument_list|(
 name|me
@@ -7837,7 +7910,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|F_DUPFD
-comment|/*          * Leave a space for stdio to work in.          */
+comment|/* 	 * Leave a space for stdio to work in. 	 */
 if|if
 condition|(
 name|fd
@@ -7884,6 +7957,10 @@ expr_stmt|;
 name|fd
 operator|=
 name|new
+expr_stmt|;
+name|err
+operator|=
+literal|"fcntl"
 expr_stmt|;
 block|}
 endif|#
@@ -7980,7 +8057,9 @@ name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|,
-literal|"internal_accept: accept() %s: %s"
+literal|"internal_accept: %s() %s: %s"
+argument_list|,
+name|err
 argument_list|,
 name|isc_msgcat_get
 argument_list|(
@@ -8012,7 +8091,7 @@ if|if
 condition|(
 name|addrlen
 operator|==
-literal|0
+literal|0U
 condition|)
 block|{
 name|UNEXPECTED_ERROR
@@ -13413,6 +13492,13 @@ argument_list|,
 name|ISC_R_NOTCONNECTED
 argument_list|)
 expr_stmt|;
+name|ERROR_MATCH
+argument_list|(
+name|ECONNRESET
+argument_list|,
+name|ISC_R_CONNECTIONRESET
+argument_list|)
+expr_stmt|;
 undef|#
 directive|undef
 name|ERROR_MATCH
@@ -13659,6 +13745,12 @@ name|char
 name|strbuf
 index|[
 name|ISC_STRERRORSIZE
+index|]
+decl_stmt|;
+name|char
+name|peerbuf
+index|[
+name|ISC_SOCKADDR_FORMATSIZE
 index|]
 decl_stmt|;
 name|UNUSED
@@ -13974,6 +14066,13 @@ argument_list|,
 name|ISC_R_TIMEDOUT
 argument_list|)
 expr_stmt|;
+name|ERROR_MATCH
+argument_list|(
+name|ECONNRESET
+argument_list|,
+name|ISC_R_CONNECTIONRESET
+argument_list|)
+expr_stmt|;
 undef|#
 directive|undef
 name|ERROR_MATCH
@@ -13983,6 +14082,21 @@ operator|->
 name|result
 operator|=
 name|ISC_R_UNEXPECTED
+expr_stmt|;
+name|isc_sockaddr_format
+argument_list|(
+operator|&
+name|sock
+operator|->
+name|address
+argument_list|,
+name|peerbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|peerbuf
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|isc__strerror
 argument_list|(
@@ -14002,7 +14116,9 @@ name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|,
-literal|"internal_connect: connect() %s"
+literal|"internal_connect: connect(%s) %s"
+argument_list|,
+name|peerbuf
 argument_list|,
 name|strbuf
 argument_list|)

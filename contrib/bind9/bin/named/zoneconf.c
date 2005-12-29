@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: zoneconf.c,v 1.87.2.4.10.13 2004/04/20 14:12:09 marka Exp $ */
+comment|/* $Id: zoneconf.c,v 1.87.2.4.10.15 2005/09/06 02:12:39 marka Exp $ */
 end_comment
 
 begin_include
@@ -1875,9 +1875,14 @@ name|ISC_R_SUCCESS
 condition|)
 name|cpval
 operator|=
+name|isc_mem_strdup
+argument_list|(
+name|mctx
+argument_list|,
 name|cfg_obj_asstring
 argument_list|(
 name|obj
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -1885,8 +1890,19 @@ name|cpval
 operator|=
 name|default_dbtype
 expr_stmt|;
-name|RETERR
-argument_list|(
+if|if
+condition|(
+name|cpval
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ISC_R_NOMEMORY
+operator|)
+return|;
+name|result
+operator|=
 name|strtoargv
 argument_list|(
 name|mctx
@@ -1899,11 +1915,34 @@ argument_list|,
 operator|&
 name|dbargv
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+operator|&&
+name|cpval
+operator|!=
+name|default_dbtype
+condition|)
+block|{
+name|isc_mem_free
+argument_list|(
+name|mctx
+argument_list|,
+name|cpval
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|result
+operator|)
+return|;
+block|}
 comment|/* 	 * ANSI C is strange here.  There is no logical reason why (char **) 	 * cannot be promoted automatically to (const char * const *) by the 	 * compiler w/o generating a warning. 	 */
-name|RETERR
-argument_list|(
+name|result
+operator|=
 name|dns_zone_setdbtype
 argument_list|(
 name|zone
@@ -1918,7 +1957,6 @@ specifier|const
 operator|*
 operator|)
 name|dbargv
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|isc_mem_put
@@ -1936,6 +1974,30 @@ name|dbargv
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cpval
+operator|!=
+name|default_dbtype
+condition|)
+name|isc_mem_free
+argument_list|(
+name|mctx
+argument_list|,
+name|cpval
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+return|return
+operator|(
+name|result
+operator|)
+return|;
 name|obj
 operator|=
 name|NULL

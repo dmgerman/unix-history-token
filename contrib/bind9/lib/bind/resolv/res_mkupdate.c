@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_mkupdate.c,v 1.1.2.1.4.3 2004/06/03 04:44:48 marka Exp $"
+literal|"$Id: res_mkupdate.c,v 1.1.2.1.4.5 2005/10/14 05:43:47 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -306,9 +306,6 @@ modifier|*
 name|cp
 decl_stmt|,
 modifier|*
-name|sp1
-decl_stmt|,
-modifier|*
 name|sp2
 decl_stmt|,
 modifier|*
@@ -456,15 +453,6 @@ name|rcode
 operator|=
 name|NOERROR
 expr_stmt|;
-name|sp1
-operator|=
-name|buf
-operator|+
-literal|2
-operator|*
-name|INT16SZ
-expr_stmt|;
-comment|/* save pointer to zocount */
 name|cp
 operator|=
 name|buf
@@ -5093,12 +5081,18 @@ name|rrecp
 operator|->
 name|r_class
 operator|=
+operator|(
+name|ns_class
+operator|)
 name|class
 expr_stmt|;
 name|rrecp
 operator|->
 name|r_type
 operator|=
+operator|(
+name|ns_type
+operator|)
 name|type
 expr_stmt|;
 name|rrecp
@@ -5111,6 +5105,9 @@ name|rrecp
 operator|->
 name|r_section
 operator|=
+operator|(
+name|ns_sect
+operator|)
 name|section
 expr_stmt|;
 return|return

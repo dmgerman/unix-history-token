@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: rdataset.h,v 1.41.2.5.2.6 2004/03/08 02:08:01 marka Exp $ */
+comment|/* $Id: rdataset.h,v 1.41.2.5.2.8 2005/03/17 03:58:31 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -275,14 +275,14 @@ begin_define
 define|#
 directive|define
 name|DNS_RDATASETATTR_QUESTION
-value|0x0001
+value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
 name|DNS_RDATASETATTR_RENDERED
-value|0x0002
+value|0x00000002
 end_define
 
 begin_comment
@@ -293,7 +293,7 @@ begin_define
 define|#
 directive|define
 name|DNS_RDATASETATTR_ANSWERED
-value|0x0004
+value|0x00000004
 end_define
 
 begin_comment
@@ -304,7 +304,7 @@ begin_define
 define|#
 directive|define
 name|DNS_RDATASETATTR_CACHE
-value|0x0008
+value|0x00000008
 end_define
 
 begin_comment
@@ -315,7 +315,7 @@ begin_define
 define|#
 directive|define
 name|DNS_RDATASETATTR_ANSWER
-value|0x0010
+value|0x00000010
 end_define
 
 begin_comment
@@ -326,7 +326,7 @@ begin_define
 define|#
 directive|define
 name|DNS_RDATASETATTR_ANSWERSIG
-value|0x0020
+value|0x00000020
 end_define
 
 begin_comment
@@ -337,7 +337,7 @@ begin_define
 define|#
 directive|define
 name|DNS_RDATASETATTR_EXTERNAL
-value|0x0040
+value|0x00000040
 end_define
 
 begin_comment
@@ -348,7 +348,7 @@ begin_define
 define|#
 directive|define
 name|DNS_RDATASETATTR_NCACHE
-value|0x0080
+value|0x00000080
 end_define
 
 begin_comment
@@ -359,7 +359,7 @@ begin_define
 define|#
 directive|define
 name|DNS_RDATASETATTR_CHAINING
-value|0x0100
+value|0x00000100
 end_define
 
 begin_comment
@@ -370,7 +370,7 @@ begin_define
 define|#
 directive|define
 name|DNS_RDATASETATTR_TTLADJUSTED
-value|0x0200
+value|0x00000200
 end_define
 
 begin_comment
@@ -381,21 +381,21 @@ begin_define
 define|#
 directive|define
 name|DNS_RDATASETATTR_FIXEDORDER
-value|0x0400
+value|0x00000400
 end_define
 
 begin_define
 define|#
 directive|define
 name|DNS_RDATASETATTR_RANDOMIZE
-value|0x0800
+value|0x00000800
 end_define
 
 begin_define
 define|#
 directive|define
 name|DNS_RDATASETATTR_CHASE
-value|0x1000
+value|0x00001000
 end_define
 
 begin_comment
@@ -406,26 +406,33 @@ begin_define
 define|#
 directive|define
 name|DNS_RDATASETATTR_NXDOMAIN
-value|0x2000
+value|0x00002000
 end_define
 
 begin_define
 define|#
 directive|define
 name|DNS_RDATASETATTR_NOQNAME
-value|0x4000
+value|0x00004000
 end_define
 
 begin_define
 define|#
 directive|define
 name|DNS_RDATASETATTR_CHECKNAMES
-value|0x8000
+value|0x00008000
 end_define
 
 begin_comment
 comment|/* Used by resolver. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_RDATASETATTR_REQUIREDGLUE
+value|0x00010000
+end_define
 
 begin_comment
 comment|/*  * _OMITDNSSEC:  * 	Omit DNSSEC records when rendering ncache records.  */

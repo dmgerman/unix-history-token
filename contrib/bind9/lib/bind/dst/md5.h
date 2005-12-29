@@ -19,6 +19,12 @@ directive|define
 name|HEADER_MD5_H
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_MD5
+end_ifndef
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -215,6 +221,26 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/md5.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_MD5 */
+end_comment
 
 end_unit
 

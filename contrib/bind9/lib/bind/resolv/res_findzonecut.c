@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_findzonecut.c,v 1.2.2.3.4.3 2004/09/16 07:06:11 marka Exp $"
+literal|"$Id: res_findzonecut.c,v 1.2.2.3.4.4 2005/10/11 00:48:16 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1527,9 +1527,6 @@ name|u_char
 modifier|*
 name|rdata
 decl_stmt|;
-name|int
-name|rdlen
-decl_stmt|;
 name|ns_rr
 name|rr
 decl_stmt|;
@@ -1755,13 +1752,6 @@ expr_stmt|;
 name|rdata
 operator|=
 name|ns_rr_rdata
-argument_list|(
-name|rr
-argument_list|)
-expr_stmt|;
-name|rdlen
-operator|=
-name|ns_rr_rdlen
 argument_list|(
 name|rr
 argument_list|)
@@ -2566,9 +2556,6 @@ decl_stmt|;
 name|ns_rr
 name|rr
 decl_stmt|;
-name|int
-name|rdlen
-decl_stmt|;
 if|if
 condition|(
 name|ns_parserr
@@ -2690,13 +2677,6 @@ block|}
 name|rdata
 operator|=
 name|ns_rr_rdata
-argument_list|(
-name|rr
-argument_list|)
-expr_stmt|;
-name|rdlen
-operator|=
-name|ns_rr_rdlen
 argument_list|(
 name|rr
 argument_list|)
