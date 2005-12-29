@@ -3518,7 +3518,11 @@ name|cardbus_driver
 argument_list|,
 name|cardbus_methods
 argument_list|,
-literal|0
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|cardbus_softc
+argument_list|)
 argument_list|,
 name|pci_driver
 argument_list|)
