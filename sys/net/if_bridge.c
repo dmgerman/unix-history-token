@@ -1410,6 +1410,19 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|pfil_onlyip
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* only pass IP[46] packets when pfil is enabled */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
 name|pfil_bridge
 init|=
 literal|1
@@ -1445,6 +1458,27 @@ end_decl_stmt
 begin_comment
 comment|/* layer2 filter with ipfw */
 end_comment
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_link_bridge
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|pfil_onlyip
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|pfil_onlyip
+argument_list|,
+literal|0
+argument_list|,
+literal|"Only pass IP packets when pfil is enabled"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -2208,12 +2242,16 @@ name|pfil_ipfw
 operator|=
 name|enable
 expr_stmt|;
-comment|/* 		 * Disable pfil so that ipfw doesnt run twice, if the user 		 * really wants both then they can re-enable pfil_bridge and/or 		 * pfil_member. 		 */
+comment|/* 		 * Disable pfil so that ipfw doesnt run twice, if the user 		 * really wants both then they can re-enable pfil_bridge and/or 		 * pfil_member. Also allow non-ip packets as ipfw can filter by 		 * layer2 type. 		 */
 if|if
 condition|(
 name|pfil_ipfw
 condition|)
 block|{
+name|pfil_onlyip
+operator|=
+literal|0
+expr_stmt|;
 name|pfil_bridge
 operator|=
 literal|0
@@ -10384,6 +10422,24 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* Default error if not error == 0 */
+if|if
+condition|(
+name|pfil_bridge
+operator|==
+literal|0
+operator|&&
+name|pfil_member
+operator|==
+literal|0
+operator|&&
+name|pfil_ipfw
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+comment|/* filtering is disabled */
 name|i
 operator|=
 name|min
@@ -10570,15 +10626,10 @@ directive|endif
 comment|/* INET6 */
 break|break;
 default|default:
-comment|/* 			 * ipfw allows layer2 protocol filtering using 			 * 'mac-type' so we will let the packet past, if 			 * ipfw is disabled then drop it. 			 */
+comment|/* 			 * Check to see if the user wants to pass non-ip 			 * packets, these will not be checked by pfil(9) and 			 * passed unconditionally so the default is to drop. 			 */
 if|if
 condition|(
-operator|!
-name|IPFW_LOADED
-operator|||
-name|pfil_ipfw
-operator|==
-literal|0
+name|pfil_onlyip
 condition|)
 goto|goto
 name|bad
