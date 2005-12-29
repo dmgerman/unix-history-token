@@ -423,8 +423,8 @@ decl_stmt|;
 define|#
 directive|define
 name|MAX_BUTTONS
-value|7
-comment|/* chosen because sc_buttons is u_char */
+value|31
+comment|/* chosen because sc_buttons is int */
 name|u_char
 name|qbuf
 index|[
