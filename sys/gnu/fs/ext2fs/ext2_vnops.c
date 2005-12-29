@@ -1072,10 +1072,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Open called.  */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -1090,25 +1086,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-name|struct
-name|vnode
-modifier|*
-name|vp
-init|=
-name|ap
-operator|->
-name|a_vp
-decl_stmt|;
-name|struct
-name|inode
-modifier|*
-name|ip
-init|=
-name|VTOI
-argument_list|(
-name|vp
-argument_list|)
-decl_stmt|;
 if|if
 condition|(
 name|ap
@@ -1173,7 +1150,12 @@ name|ap
 operator|->
 name|a_vp
 argument_list|,
-name|ip
+name|VTOI
+argument_list|(
+name|ap
+operator|->
+name|a_vp
+argument_list|)
 operator|->
 name|i_size
 argument_list|,
