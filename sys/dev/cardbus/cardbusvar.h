@@ -27,13 +27,6 @@ name|uint8_t
 name|ibelow1mb
 decl_stmt|;
 comment|/* bit mask of BARs which require below 1Mb */
-define|#
-directive|define
-name|BARBIT
-parameter_list|(
-name|RID
-parameter_list|)
-value|(1<<(((RID)-PCIR_BARS)/4))
 name|uint16_t
 name|mfrid
 decl_stmt|;
