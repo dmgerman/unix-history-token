@@ -303,6 +303,9 @@ block|,
 operator|&
 name|g_label_reiserfs
 block|,
+operator|&
+name|g_label_ntfs
+block|,
 name|NULL
 block|}
 decl_stmt|;
