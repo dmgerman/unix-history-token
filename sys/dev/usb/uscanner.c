@@ -692,6 +692,16 @@ block|,
 literal|0
 block|}
 block|,
+block|{
+block|{
+name|USB_VENDOR_HP
+block|,
+name|USB_PRODUCT_HP_82x0C
+block|}
+block|,
+literal|0
+block|}
+block|,
 comment|/* Microtek */
 block|{
 block|{
