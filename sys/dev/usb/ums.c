@@ -2181,7 +2181,7 @@ name|dz
 decl_stmt|,
 name|dt
 decl_stmt|;
-name|u_char
+name|int
 name|buttons
 init|=
 literal|0
