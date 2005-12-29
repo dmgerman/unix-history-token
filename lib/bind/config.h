@@ -455,14 +455,6 @@ comment|/* #undef NEED_PTHREAD_SCOPE_SYSTEM */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the<dlfcn.h> header file. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_DLFCN_H */
-end_comment
-
-begin_comment
 comment|/* Define to 1 if you have the<fcntl.h> header file. */
 end_comment
 
@@ -708,6 +700,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Defined if extern char *optarg is not declared. */
+end_comment
+
+begin_comment
+comment|/* #undef NEED_OPTARG */
+end_comment
+
+begin_comment
 comment|/* Define to the address where bug reports for this package should be sent. */
 end_comment
 
@@ -763,6 +763,17 @@ value|""
 end_define
 
 begin_comment
+comment|/* Sets which flag to pass to open/fcntl to make non-blocking    (O_NDELAY/O_NONBLOCK). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PORT_NONBLOCK
+value|O_NONBLOCK
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the ANSI C header files. */
 end_comment
 
@@ -785,6 +796,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Defined if you need to use ioctl(FIONBIO) instead a fcntl call to make    non-blocking. */
+end_comment
+
+begin_comment
+comment|/* #undef USE_FIONBIO_IOCTL */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if your processor stores words with the most significant byte    first (like Motorola and SPARC, unlike Intel and VAX). */
 end_comment
 
@@ -801,23 +820,12 @@ comment|/* #undef const */
 end_comment
 
 begin_comment
-comment|/* Define to `__inline__' or `__inline' if that's what the C compiler    calls it, or to nothing if 'inline' is not supported under any name.  */
+comment|/* Define as `__inline' if that's what the C compiler calls it, or to nothing    if it is not supported. */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__cplusplus
-end_ifndef
 
 begin_comment
 comment|/* #undef inline */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Define to `unsigned' if<sys/types.h> does not define. */
@@ -833,6 +841,14 @@ end_comment
 
 begin_comment
 comment|/* #undef ssize_t */
+end_comment
+
+begin_comment
+comment|/* Define to `unsigned long' if<sys/types.h> does not define. */
+end_comment
+
+begin_comment
+comment|/* #undef uintptr_t */
 end_comment
 
 end_unit
