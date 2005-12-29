@@ -142,16 +142,6 @@ name|int
 name|pcb_psl
 decl_stmt|;
 comment|/* process status long */
-name|void
-function_decl|(
-modifier|*
-name|pcb_switchout
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-comment|/* Special switchout function. */
 name|u_long
 name|pcb_vm86
 index|[
