@@ -54,6 +54,10 @@ parameter_list|(
 name|sc
 parameter_list|)
 value|((sc)->cdce_ifp)
+name|struct
+name|ifmedia
+name|cdce_ifmedia
+decl_stmt|;
 name|usbd_device_handle
 name|cdce_udev
 decl_stmt|;
