@@ -769,10 +769,6 @@ name|off_t
 name|secoff
 decl_stmt|;
 comment|/* 	 * We need to read entire aligned sectors, and we assume that the 	 * disklabel does not span sectors, so one sector is enough. 	 */
-name|error
-operator|=
-literal|0
-expr_stmt|;
 name|secoff
 operator|=
 name|offset
@@ -791,8 +787,7 @@ name|secoff
 argument_list|,
 name|secsize
 argument_list|,
-operator|&
-name|error
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -800,10 +795,6 @@ condition|(
 name|buf
 operator|==
 name|NULL
-operator|||
-name|error
-operator|!=
-literal|0
 condition|)
 return|return
 operator|(
@@ -990,10 +981,6 @@ condition|(
 name|buf
 operator|==
 name|NULL
-operator|||
-name|error
-operator|!=
-literal|0
 condition|)
 return|return
 operator|(

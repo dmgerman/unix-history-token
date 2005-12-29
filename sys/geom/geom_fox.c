@@ -1776,8 +1776,7 @@ literal|0
 argument_list|,
 name|sectorsize
 argument_list|,
-operator|&
-name|error
+name|NULL
 argument_list|)
 expr_stmt|;
 name|g_topology_lock
@@ -1788,10 +1787,6 @@ condition|(
 name|buf
 operator|==
 name|NULL
-operator|||
-name|error
-operator|!=
-literal|0
 condition|)
 break|break;
 if|if

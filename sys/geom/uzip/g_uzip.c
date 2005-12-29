@@ -1937,8 +1937,7 @@ name|pp
 operator|->
 name|sectorsize
 argument_list|,
-operator|&
-name|error
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1946,10 +1945,6 @@ condition|(
 name|buf
 operator|==
 name|NULL
-operator|||
-name|error
-operator|!=
-literal|0
 condition|)
 goto|goto
 name|err
@@ -2312,8 +2307,7 @@ name|pp
 operator|->
 name|sectorsize
 argument_list|,
-operator|&
-name|error
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2321,10 +2315,6 @@ condition|(
 name|buf
 operator|==
 name|NULL
-operator|||
-name|error
-operator|!=
-literal|0
 condition|)
 goto|goto
 name|err

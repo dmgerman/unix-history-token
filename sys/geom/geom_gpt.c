@@ -591,8 +591,6 @@ decl_stmt|,
 name|tblsz
 decl_stmt|;
 name|int
-name|error
-decl_stmt|,
 name|ps
 decl_stmt|;
 name|uint32_t
@@ -693,8 +691,7 @@ literal|2
 operator|*
 name|secsz
 argument_list|,
-operator|&
-name|error
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -702,10 +699,6 @@ condition|(
 name|mbr
 operator|==
 name|NULL
-operator|||
-name|error
-operator|!=
-literal|0
 condition|)
 break|break;
 if|if
@@ -793,8 +786,7 @@ name|secsz
 argument_list|,
 name|tblsz
 argument_list|,
-operator|&
-name|error
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

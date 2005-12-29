@@ -1371,8 +1371,7 @@ name|ms
 operator|->
 name|sectorsize
 argument_list|,
-operator|&
-name|error
+name|NULL
 argument_list|)
 expr_stmt|;
 name|g_topology_lock
@@ -1383,10 +1382,6 @@ condition|(
 name|buf
 operator|==
 name|NULL
-operator|||
-name|error
-operator|!=
-literal|0
 condition|)
 break|break;
 comment|/* 		 * Calculate MD5 from the first sector and use it for avoiding 		 * recursive labels creation. 		 */

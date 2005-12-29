@@ -11347,9 +11347,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|error
-operator|!=
-literal|0
+name|buf
+operator|==
+name|NULL
 condition|)
 block|{
 name|G_MIRROR_DEBUG

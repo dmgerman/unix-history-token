@@ -1429,8 +1429,7 @@ literal|0
 argument_list|,
 name|sectorsize
 argument_list|,
-operator|&
-name|error
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1438,10 +1437,6 @@ condition|(
 name|buf
 operator|==
 name|NULL
-operator|||
-name|error
-operator|!=
-literal|0
 condition|)
 block|{
 break|break;

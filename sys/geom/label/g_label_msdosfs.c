@@ -127,8 +127,6 @@ name|volume
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|error
 decl_stmt|;
 name|g_topology_assert_not
 argument_list|()
@@ -162,8 +160,7 @@ name|pp
 operator|->
 name|sectorsize
 argument_list|,
-operator|&
-name|error
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -171,10 +168,6 @@ condition|(
 name|sector
 operator|==
 name|NULL
-operator|||
-name|error
-operator|!=
-literal|0
 condition|)
 return|return;
 if|if

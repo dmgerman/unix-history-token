@@ -634,8 +634,6 @@ modifier|*
 name|cp
 decl_stmt|;
 name|int
-name|error
-decl_stmt|,
 name|i
 decl_stmt|;
 name|struct
@@ -750,8 +748,7 @@ literal|0
 argument_list|,
 name|sectorsize
 argument_list|,
-operator|&
-name|error
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -759,10 +756,6 @@ condition|(
 name|buf
 operator|==
 name|NULL
-operator|||
-name|error
-operator|!=
-literal|0
 condition|)
 break|break;
 comment|/* 		 * Test for the sector 0 driver record signature, and  		 * validate sector and disk size 		 */
@@ -824,8 +817,7 @@ name|sectorsize
 argument_list|,
 name|sectorsize
 argument_list|,
-operator|&
-name|error
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -833,10 +825,6 @@ condition|(
 name|buf
 operator|==
 name|NULL
-operator|||
-name|error
-operator|!=
-literal|0
 condition|)
 break|break;
 comment|/* 		 * Decode the first partition: it's another indication of 		 * validity, as well as giving the size of the partition 		 * map 		 */
@@ -909,8 +897,7 @@ operator|)
 operator|*
 name|sectorsize
 argument_list|,
-operator|&
-name|error
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -918,10 +905,6 @@ condition|(
 name|buf
 operator|==
 name|NULL
-operator|||
-name|error
-operator|!=
-literal|0
 condition|)
 break|break;
 for|for
