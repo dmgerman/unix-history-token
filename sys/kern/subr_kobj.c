@@ -780,7 +780,7 @@ name|kobj_lookup_hits
 operator|--
 expr_stmt|;
 name|kobj_lookup_misses
-operator|--
+operator|++
 expr_stmt|;
 endif|#
 directive|endif
