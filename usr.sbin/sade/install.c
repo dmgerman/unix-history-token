@@ -2593,7 +2593,7 @@ block|}
 name|msgConfirm
 argument_list|(
 literal|"Now you need to create BSD partitions inside of the fdisk partition(s)\n"
-literal|"just created.  If you have a reasonable amount of disk space (200MB or more)\n"
+literal|"just created.  If you have a reasonable amount of disk space (1GB or more)\n"
 literal|"and don't have any special requirements, simply use the (A)uto command to\n"
 literal|"allocate space automatically.  If you have more specific needs or just don't\n"
 literal|"care for the layout chosen by (A)uto, press F1 for more information on\n"
@@ -2605,7 +2605,7 @@ directive|else
 name|msgConfirm
 argument_list|(
 literal|"First you need to create BSD partitions on the disk which you are\n"
-literal|"installing to.  If you have a reasonable amount of disk space (200MB or more)\n"
+literal|"installing to.  If you have a reasonable amount of disk space (1GB or more)\n"
 literal|"and don't have any special requirements, simply use the (A)uto command to\n"
 literal|"allocate space automatically.  If you have more specific needs or just don't\n"
 literal|"care for the layout chosen by (A)uto, press F1 for more information on\n"
