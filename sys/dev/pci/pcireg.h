@@ -545,6 +545,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCI_RID2BAR
+parameter_list|(
+name|rid
+parameter_list|)
+value|(1<<(((rid)-PCIR_BARS)/4))
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIR_CIS
 value|0x28
 end_define
