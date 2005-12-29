@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|_MCOUNT_DECL
-value|void mcount
+value|void __mcount
 end_define
 
 begin_define
@@ -36,12 +36,45 @@ name|fptrdiff_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*  * The mcount trampoline macro, expanded in libc/gmon/mcount.c  *  * For PowerPC SVR4 ABI profiling, the compiler will insert  * a data declaration and code sequence at the start of a routine of the form  *  * .function_mc:       	.data  *			.align	2  *			.long	0  *			.text  *  * function:		mflr	%r0  *			addis	%r11,%r0, .function_mc@ha  *			stw	%r0,4(%r1)  *			addi	%r0,%r11, .function_mc@l  *			bl	_mcount  *  * The link register is saved in the LR save word in the caller's  * stack frame, r0 is set up to point to the allocated longword,  * and control is transferred to _mcount.  *  * On return from _mcount, the routine should function as it would  * with no profiling so _mcount must restore register state to that upon  * entry. Any routine called by the _mcount trampoline will save  * callee-save registers, so _mcount must make sure it saves volatile  * registers that may have state after it returns i.e. parameter registers.  *  * The FreeBSD libc mcount routine ignores the r0 longword pointer, but  * instead requires as parameters the current PC and called PC. The current  * PC is obtained from the link register, as a result of "bl _mcount" in  * the stub, while the caller's PC is obtained from the LR save word.  *  * On return from libc mcount, the return is done indirectly with the  * ctr register rather than the link register, to allow the link register  * to be restored to what it was on entry to the profiled routine.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PIC
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_PLT
+value|"@plt"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_PLT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|MCOUNT
 define|\
-value|void \ _mcount() \ { \ }
+value|__asm("	.globl	_mcount						\n" \ "	.type	_mcount,@function				\n" \ "_mcount:							\n" \ "	stwu	%r1,-64(%r1)	/* alloca for reg save space */	\n" \ "	stw	%r3,16(%r1)	/* save parameter registers, */	\n" \ "	stw	%r4,20(%r1)    	/*  r3-10		     */	\n" \ "	stw	%r5,24(%r1)	       				\n" \ "	stw	%r6,28(%r1)	       				\n" \ "	stw	%r7,32(%r1)	       				\n" \ "	stw	%r8,36(%r1)	       				\n" \ "	stw	%r9,40(%r1)	       				\n" \ "	stw	%r10,44(%r1)					\n" \ "								\n" \ "	mflr	%r4		/* link register is 'selfpc' */	\n" \ "	stw	%r4,48(%r1)    	/* save since bl will scrub  */	\n" \ "	lwz	%r3,68(%r1)    	/* get 'frompc' from LR-save */	\n" \ "	bl	__mcount" _PLT "  /* __mcount(frompc, selfpc)*/	\n" \ "	lwz	%r3,68(%r1)					\n" \ "	mtlr	%r3		/* restore caller's lr	     */	\n" \ "	lwz	%r4,48(%r1)     			       	\n" \ "	mtctr	%r4		/* set up ctr for call back  */	\n" \ "				/* note that blr is not used!*/	\n" \ "	lwz	%r3,16(%r1)	/* restore r3-10 parameters  */	\n" \ "	lwz	%r4,20(%r1)	       				\n" \ "	lwz	%r5,24(%r1)	       				\n" \ "	lwz	%r6,28(%r1)	       				\n" \ "	lwz	%r7,32(%r1)	       				\n" \ "	lwz	%r8,36(%r1)	       				\n" \ "	lwz	%r9,40(%r1)	       				\n" \ "	lwz	%r10,44(%r1)					\n" \ "	addi	%r1,%r1,64	/* blow away alloca save area */ \n" \ "	bctr			/* return with indirect call */	\n" \ "_mcount_end:				\n" \ "	.size	_mcount,_mcount_end-_mcount");
 end_define
 
 begin_ifdef
@@ -57,6 +90,7 @@ name|MCOUNT_ENTER
 parameter_list|(
 name|s
 parameter_list|)
+value|s = intr_disable();
 end_define
 
 begin_define
@@ -66,6 +100,7 @@ name|MCOUNT_EXIT
 parameter_list|(
 name|s
 parameter_list|)
+value|intr_restore(s);
 end_define
 
 begin_define
@@ -75,6 +110,7 @@ name|MCOUNT_DECL
 parameter_list|(
 name|s
 parameter_list|)
+value|register_t s
 end_define
 
 begin_function_decl
