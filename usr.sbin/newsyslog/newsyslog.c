@@ -4158,7 +4158,7 @@ literal|1
 argument_list|,
 literal|"%s"
 argument_list|,
-name|conf
+name|fname
 argument_list|)
 expr_stmt|;
 name|parse_file
