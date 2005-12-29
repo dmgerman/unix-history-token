@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: rbtdb.c,v 1.168.2.11.2.16 2004/05/23 11:07:23 marka Exp $ */
+comment|/* $Id: rbtdb.c,v 1.168.2.11.2.22 2005/10/14 01:38:48 marka Exp $ */
 end_comment
 
 begin_comment
@@ -359,6 +359,17 @@ directive|define
 name|RBTDB_RDATATYPE_NCACHEANY
 define|\
 value|RBTDB_RDATATYPE_VALUE(0, dns_rdatatype_any)
+end_define
+
+begin_comment
+comment|/*  * Allow clients with a virtual time of upto 5 minutes in the past to see  * records that would have otherwise have expired.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RBTDB_VIRTUAL
+value|300
 end_define
 
 begin_struct
@@ -1486,7 +1497,7 @@ operator|!=
 name|NULL
 operator|)
 condition|?
-literal|5
+literal|1000
 else|:
 literal|0
 argument_list|)
@@ -11259,8 +11270,6 @@ name|rbtdb_rdatatype_t
 name|matchtype
 decl_stmt|,
 name|sigmatchtype
-decl_stmt|,
-name|nsectype
 decl_stmt|;
 name|matchtype
 operator|=
@@ -11269,15 +11278,6 @@ argument_list|(
 name|dns_rdatatype_nsec
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|nsectype
-operator|=
-name|RBTDB_RDATATYPE_VALUE
-argument_list|(
-literal|0
-argument_list|,
-name|dns_rdatatype_nsec
 argument_list|)
 expr_stmt|;
 name|sigmatchtype
@@ -11419,6 +11419,23 @@ name|now
 condition|)
 block|{
 comment|/* 				 * This rdataset is stale.  If no one else is 				 * using the node, we can clean it up right 				 * now, otherwise we mark it as stale, and the 				 * node as dirty, so it will get cleaned up  				 * later. 				 */
+if|if
+condition|(
+name|header
+operator|->
+name|ttl
+operator|>
+name|search
+operator|->
+name|now
+operator|-
+name|RBTDB_VIRTUAL
+condition|)
+name|header_prev
+operator|=
+name|header
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|node
@@ -12186,6 +12203,21 @@ name|now
 condition|)
 block|{
 comment|/* 			 * This rdataset is stale.  If no one else is using the 			 * node, we can clean it up right now, otherwise we 			 * mark it as stale, and the node as dirty, so it will 			 * get cleaned up later. 			 */
+if|if
+condition|(
+name|header
+operator|->
+name|ttl
+operator|>
+name|now
+operator|-
+name|RBTDB_VIRTUAL
+condition|)
+name|header_prev
+operator|=
+name|header
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|node
@@ -13240,6 +13272,21 @@ block|{
 comment|/* 			 * This rdataset is stale.  If no one else is using the 			 * node, we can clean it up right now, otherwise we 			 * mark it as stale, and the node as dirty, so it will 			 * get cleaned up later. 			 */
 if|if
 condition|(
+name|header
+operator|->
+name|ttl
+operator|>
+name|now
+operator|-
+name|RBTDB_VIRTUAL
+condition|)
+name|header_prev
+operator|=
+name|header
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|node
 operator|->
 name|references
@@ -14154,6 +14201,8 @@ operator|->
 name|ttl
 operator|<=
 name|now
+operator|-
+name|RBTDB_VIRTUAL
 condition|)
 block|{
 comment|/* 			 * We don't check if rbtnode->references == 0 and try 			 * to free like we do in cache_find(), because 			 * rbtnode->references must be non-zero.  This is so 			 * because 'node' is an argument to the function. 			 */
@@ -15390,6 +15439,17 @@ name|now
 condition|)
 block|{
 comment|/* 			 * We don't check if rbtnode->references == 0 and try 			 * to free like we do in cache_find(), because 			 * rbtnode->references must be non-zero.  This is so 			 * because 'node' is an argument to the function. 			 */
+if|if
+condition|(
+name|header
+operator|->
+name|ttl
+operator|<=
+name|now
+operator|-
+name|RBTDB_VIRTUAL
+condition|)
+block|{
 name|header
 operator|->
 name|attributes
@@ -15402,6 +15462,7 @@ name|dirty
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -18566,6 +18627,21 @@ argument_list|,
 name|newheader
 argument_list|)
 expr_stmt|;
+name|UNLOCK
+argument_list|(
+operator|&
+name|rbtdb
+operator|->
+name|node_locks
+index|[
+name|rbtnode
+operator|->
+name|locknum
+index|]
+operator|.
+name|lock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ISC_R_NOMEMORY
@@ -21263,6 +21339,17 @@ operator|.
 name|mctx
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Must be initalized before free_rbtdb() is called. 	 */
+name|isc_ondestroy_init
+argument_list|(
+operator|&
+name|rbtdb
+operator|->
+name|common
+operator|.
+name|ondest
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Make a copy of the origin name. 	 */
 name|result
 operator|=
@@ -21572,16 +21659,6 @@ argument_list|(
 name|rbtdb
 operator|->
 name|open_versions
-argument_list|)
-expr_stmt|;
-name|isc_ondestroy_init
-argument_list|(
-operator|&
-name|rbtdb
-operator|->
-name|common
-operator|.
-name|ondest
 argument_list|)
 expr_stmt|;
 name|rbtdb

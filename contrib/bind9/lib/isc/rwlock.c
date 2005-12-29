@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: rwlock.c,v 1.33.2.4.2.1 2004/03/06 08:14:35 marka Exp $ */
+comment|/* $Id: rwlock.c,v 1.33.2.4.2.3 2005/03/17 03:58:32 marka Exp $ */
 end_comment
 
 begin_include
@@ -450,11 +450,13 @@ name|result
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|result
+operator|=
 name|ISC_R_UNEXPECTED
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|destroy_lock
+goto|;
 block|}
 name|result
 operator|=
@@ -498,11 +500,13 @@ name|result
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|result
+operator|=
 name|ISC_R_UNEXPECTED
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|destroy_rcond
+goto|;
 block|}
 name|rwl
 operator|->
@@ -513,6 +517,34 @@ expr_stmt|;
 return|return
 operator|(
 name|ISC_R_SUCCESS
+operator|)
+return|;
+name|destroy_rcond
+label|:
+operator|(
+name|void
+operator|)
+name|isc_condition_destroy
+argument_list|(
+operator|&
+name|rwl
+operator|->
+name|readable
+argument_list|)
+expr_stmt|;
+name|destroy_lock
+label|:
+name|DESTROYLOCK
+argument_list|(
+operator|&
+name|rwl
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|result
 operator|)
 return|;
 block|}

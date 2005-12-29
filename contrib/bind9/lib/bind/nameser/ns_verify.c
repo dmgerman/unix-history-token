@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_verify.c,v 1.1.206.1 2004/03/09 08:33:45 marka Exp $"
+literal|"$Id: ns_verify.c,v 1.1.206.2 2005/10/11 00:48:16 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -554,8 +554,6 @@ name|fudge
 decl_stmt|,
 name|sigfieldlen
 decl_stmt|,
-name|id
-decl_stmt|,
 name|otherfieldlen
 decl_stmt|;
 name|dst_init
@@ -818,7 +816,7 @@ name|cp
 operator|+=
 name|sigfieldlen
 expr_stmt|;
-comment|/* Read the original id and error. */
+comment|/* Skip id and read error. */
 name|BOUNDS_CHECK
 argument_list|(
 name|cp
@@ -828,12 +826,9 @@ operator|*
 name|INT16SZ
 argument_list|)
 expr_stmt|;
-name|GETSHORT
-argument_list|(
-name|id
-argument_list|,
 name|cp
-argument_list|)
+operator|+=
+name|INT16SZ
 expr_stmt|;
 name|GETSHORT
 argument_list|(
@@ -1663,9 +1658,6 @@ modifier|*
 name|recstart
 decl_stmt|,
 modifier|*
-name|rdatastart
-decl_stmt|,
-modifier|*
 name|sigstart
 decl_stmt|;
 name|unsigned
@@ -1714,8 +1706,6 @@ decl_stmt|,
 name|length
 decl_stmt|,
 name|fudge
-decl_stmt|,
-name|id
 decl_stmt|,
 name|error
 decl_stmt|;
@@ -2079,10 +2069,6 @@ name|NS_TSIG_ERROR_FORMERR
 operator|)
 return|;
 comment|/* Read the algorithm name. */
-name|rdatastart
-operator|=
-name|cp
-expr_stmt|;
 name|n
 operator|=
 name|dn_expand
@@ -2222,7 +2208,7 @@ name|cp
 operator|+=
 name|sigfieldlen
 expr_stmt|;
-comment|/* Read the original id and error. */
+comment|/* Skip id and read error. */
 name|BOUNDS_CHECK
 argument_list|(
 name|cp
@@ -2232,12 +2218,9 @@ operator|*
 name|INT16SZ
 argument_list|)
 expr_stmt|;
-name|GETSHORT
-argument_list|(
-name|id
-argument_list|,
 name|cp
-argument_list|)
+operator|+=
+name|INT16SZ
 expr_stmt|;
 name|GETSHORT
 argument_list|(

@@ -48,7 +48,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_debug.c,v 1.3.2.5.4.5 2004/07/28 20:16:46 marka Exp $"
+literal|"$Id: res_debug.c,v 1.3.2.5.4.6 2005/07/28 07:43:22 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -131,6 +131,12 @@ begin_include
 include|#
 directive|include
 file|<resolv.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<resolv_mt.h>
 end_include
 
 begin_include
@@ -2669,12 +2675,11 @@ modifier|*
 name|success
 parameter_list|)
 block|{
-specifier|static
 name|char
+modifier|*
 name|unname
-index|[
-literal|20
-index|]
+init|=
+name|sym_ntos_unname
 decl_stmt|;
 for|for
 control|(
@@ -2767,12 +2772,11 @@ modifier|*
 name|success
 parameter_list|)
 block|{
-specifier|static
 name|char
+modifier|*
 name|unname
-index|[
-literal|20
-index|]
+init|=
+name|sym_ntop_unname
 decl_stmt|;
 for|for
 control|(
@@ -3085,12 +3089,11 @@ name|u_long
 name|option
 parameter_list|)
 block|{
-specifier|static
 name|char
+modifier|*
 name|nbuf
-index|[
-literal|40
-index|]
+init|=
+name|p_option_nbuf
 decl_stmt|;
 switch|switch
 condition|(
@@ -3274,14 +3277,12 @@ name|u_int32_t
 name|value
 parameter_list|)
 block|{
-specifier|static
 name|char
+modifier|*
 name|nbuf
-index|[
-literal|40
-index|]
+init|=
+name|p_time_nbuf
 decl_stmt|;
-comment|/* XXX nonreentrant */
 if|if
 condition|(
 name|ns_format_ttl
@@ -3536,14 +3537,12 @@ name|u_int8_t
 name|prec
 decl_stmt|;
 block|{
-specifier|static
 name|char
+modifier|*
 name|retbuf
-index|[
-sizeof|sizeof
-expr|"90000000.00"]
-expr_stmt|;
-comment|/* XXX nonreentrant */
+init|=
+name|precsize_ntoa_retbuf
+decl_stmt|;
 name|unsigned
 name|long
 name|val
@@ -5603,15 +5602,12 @@ name|u_long
 name|secs
 parameter_list|)
 block|{
-comment|/* XXX nonreentrant */
-specifier|static
 name|char
+modifier|*
 name|output
-index|[
-literal|15
-index|]
+init|=
+name|p_secstodate_output
 decl_stmt|;
-comment|/* YYYYMMDDHHMMSS and null */
 name|time_t
 name|clock
 init|=

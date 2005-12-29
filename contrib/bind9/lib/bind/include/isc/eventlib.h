@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/* eventlib.h - exported interfaces for eventlib  * vix 09sep95 [initial]  *  * $Id: eventlib.h,v 1.1.2.1.4.1 2004/03/09 08:33:31 marka Exp $  */
+comment|/* eventlib.h - exported interfaces for eventlib  * vix 09sep95 [initial]  *  * $Id: eventlib.h,v 1.1.2.1.4.2 2005/07/28 07:43:18 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -451,6 +451,17 @@ directive|define
 name|EV_EXCEPT
 value|4
 end_define
+
+begin_define
+define|#
+directive|define
+name|EV_WASNONBLOCKING
+value|8
+end_define
+
+begin_comment
+comment|/* Internal library use. */
+end_comment
 
 begin_comment
 comment|/* eventlib.c */

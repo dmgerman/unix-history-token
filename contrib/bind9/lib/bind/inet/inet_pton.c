@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_pton.c,v 1.2.206.1 2004/03/09 08:33:33 marka Exp $"
+literal|"$Id: inet_pton.c,v 1.2.206.2 2005/07/28 07:43:18 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -511,7 +511,7 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
-name|saw_xdigit
+name|seen_xdigits
 decl_stmt|;
 name|u_int
 name|val
@@ -564,7 +564,7 @@ name|curtok
 operator|=
 name|src
 expr_stmt|;
-name|saw_xdigit
+name|seen_xdigits
 operator|=
 literal|0
 expr_stmt|;
@@ -643,19 +643,16 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|val
+operator|++
+name|seen_xdigits
 operator|>
-literal|0xffff
+literal|4
 condition|)
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-name|saw_xdigit
-operator|=
-literal|1
-expr_stmt|;
 continue|continue;
 block|}
 if|if
@@ -672,7 +669,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|saw_xdigit
+name|seen_xdigits
 condition|)
 block|{
 if|if
@@ -744,7 +741,7 @@ name|val
 operator|&
 literal|0xff
 expr_stmt|;
-name|saw_xdigit
+name|seen_xdigits
 operator|=
 literal|0
 expr_stmt|;
@@ -784,7 +781,7 @@ name|tp
 operator|+=
 name|NS_INADDRSZ
 expr_stmt|;
-name|saw_xdigit
+name|seen_xdigits
 operator|=
 literal|0
 expr_stmt|;
@@ -799,7 +796,7 @@ return|;
 block|}
 if|if
 condition|(
-name|saw_xdigit
+name|seen_xdigits
 condition|)
 block|{
 if|if

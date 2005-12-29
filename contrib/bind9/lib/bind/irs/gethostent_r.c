@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gethostent_r.c,v 1.4.206.3 2004/09/01 02:03:07 marka Exp $"
+literal|"$Id: gethostent_r.c,v 1.4.206.4 2005/09/03 12:47:38 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -183,8 +183,13 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|HOST_R_ERRNO
 name|HOST_R_ERRNO
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|HOST_R_SETANSWER
@@ -302,8 +307,13 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|HOST_R_ERRNO
 name|HOST_R_ERRNO
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|HOST_R_SETANSWER
@@ -408,8 +418,13 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|HOST_R_ERRNO
 name|HOST_R_ERRNO
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|HOST_R_SETANSWER
@@ -502,6 +517,16 @@ parameter_list|)
 endif|#
 directive|endif
 block|{
+ifdef|#
+directive|ifdef
+name|HOST_R_ENT_ARGS
+name|UNUSED
+argument_list|(
+name|hdptr
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|sethostent
 argument_list|(
 name|stay_open
@@ -538,6 +563,16 @@ parameter_list|)
 endif|#
 directive|endif
 block|{
+ifdef|#
+directive|ifdef
+name|HOST_R_ENT_ARGS
+name|UNUSED
+argument_list|(
+name|hdptr
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|endhostent
 argument_list|()
 expr_stmt|;

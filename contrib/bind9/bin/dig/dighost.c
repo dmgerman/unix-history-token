@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: dighost.c,v 1.221.2.19.2.20 2004/11/22 23:30:31 marka Exp $ */
+comment|/* $Id: dighost.c,v 1.221.2.19.2.31 2005/10/14 01:38:40 marka Exp $ */
 end_comment
 
 begin_comment
@@ -69,12 +69,6 @@ begin_include
 include|#
 directive|include
 file|<dns/nsec.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<isc/file.h>
 end_include
 
 begin_include
@@ -182,6 +176,12 @@ begin_include
 include|#
 directive|include
 file|<isc/entropy.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/file.h>
 end_include
 
 begin_include
@@ -347,17 +347,11 @@ name|lwconf
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
-name|ISC_LIST
-argument_list|(
-argument|dig_lookup_t
-argument_list|)
-end_macro
-
-begin_expr_stmt
+begin_decl_stmt
+name|dig_lookuplist_t
 name|lookup_list
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|dig_serverlist_t
@@ -365,17 +359,11 @@ name|server_list
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
-name|ISC_LIST
-argument_list|(
-argument|dig_searchlist_t
-argument_list|)
-end_macro
-
-begin_expr_stmt
+begin_decl_stmt
+name|dig_searchlistlist_t
 name|search_list
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|isc_boolean_t
@@ -894,6 +882,21 @@ parameter_list|,
 name|dns_name_t
 modifier|*
 name|target
+parameter_list|,
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|free_name
+parameter_list|(
+name|dns_name_t
+modifier|*
+name|name
 parameter_list|,
 name|isc_mem_t
 modifier|*
@@ -4836,12 +4839,31 @@ argument_list|(
 literal|"lwres_context_create failed"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
+name|isc_file_exists
+argument_list|(
+name|RESOLV_CONF
+argument_list|)
+condition|)
+name|lwresult
+operator|=
 name|lwres_conf_parse
 argument_list|(
 name|lwctx
+argument_list|,
+name|RESOLV_CONF
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|lwresult
+operator|!=
+name|LWRES_R_SUCCESS
+condition|)
+name|fatal
+argument_list|(
+literal|"parse of %s failed"
 argument_list|,
 name|RESOLV_CONF
 argument_list|)
@@ -4903,6 +4925,14 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|ndots
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
 name|ndots
 operator|=
 name|lwconf
@@ -4916,6 +4946,7 @@ argument_list|,
 name|ndots
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* If we don't find a nameserver fall back to localhost */
 if|if
 condition|(
@@ -6469,7 +6500,7 @@ name|sigchase
 operator|=
 name|ISC_FALSE
 expr_stmt|;
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|query_name
@@ -6481,7 +6512,7 @@ goto|goto
 name|novalidation
 goto|;
 block|}
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|query_name
@@ -7130,6 +7161,18 @@ expr_stmt|;
 name|lookup
 operator|->
 name|trace_root
+operator|=
+name|ISC_FALSE
+expr_stmt|;
+if|if
+condition|(
+name|lookup
+operator|->
+name|ns_search_only
+condition|)
+name|lookup
+operator|->
+name|recurse
 operator|=
 name|ISC_FALSE
 expr_stmt|;
@@ -7941,7 +7984,6 @@ name|new_search
 operator|&&
 name|usesearch
 condition|)
-block|{
 name|lookup
 operator|->
 name|origin
@@ -7951,7 +7993,6 @@ argument_list|(
 name|search_list
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|lookup
@@ -9462,12 +9503,10 @@ name|timeout
 operator|==
 literal|0
 condition|)
-block|{
 name|local_timeout
 operator|=
 name|default_timeout
 expr_stmt|;
-block|}
 else|else
 name|local_timeout
 operator|=
@@ -10328,9 +10367,6 @@ modifier|*
 name|l
 init|=
 name|NULL
-decl_stmt|,
-modifier|*
-name|n
 decl_stmt|;
 name|dig_query_t
 modifier|*
@@ -10519,8 +10555,6 @@ operator|->
 name|retries
 operator|--
 expr_stmt|;
-name|n
-operator|=
 name|requeue_lookup
 argument_list|(
 name|l
@@ -11871,8 +11905,7 @@ block|{
 name|puts
 argument_list|(
 literal|"; Transfer failed.  "
-literal|"Didn't start with "
-literal|"SOA answer."
+literal|"Didn't start with SOA answer."
 argument_list|)
 expr_stmt|;
 return|return
@@ -12757,7 +12790,7 @@ empty_stmt|;
 elseif|else
 endif|#
 directive|endif
-comment|/* 		 * We don't expect a match above when the packet is  		 * sent to 0.0.0.0, :: or to a multicast addresses. 		 * XXXMPA broadcast needs to be handled here as well. 		 */
+comment|/* 		 * We don't expect a match above when the packet is 		 * sent to 0.0.0.0, :: or to a multicast addresses. 		 * XXXMPA broadcast needs to be handled here as well. 		 */
 if|if
 condition|(
 operator|(
@@ -13852,16 +13885,6 @@ operator|==
 name|query
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DIG_SIGCHASE
-name|int
-name|count
-init|=
-literal|0
-decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|msg
@@ -13960,20 +13983,6 @@ name|n
 init|=
 literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DIG_SIGCHASE
-name|count
-operator|=
-name|msg
-operator|->
-name|counts
-index|[
-name|DNS_SECTION_ANSWER
-index|]
-expr_stmt|;
-else|#
-directive|else
 name|int
 name|count
 init|=
@@ -13984,8 +13993,6 @@ index|[
 name|DNS_SECTION_ANSWER
 index|]
 decl_stmt|;
-endif|#
-directive|endif
 name|debug
 argument_list|(
 literal|"in TRACE code"
@@ -14106,7 +14113,7 @@ operator|->
 name|trace_root
 condition|)
 block|{
-comment|/* 				 * This is the initial NS query.  				 */
+comment|/* 				 * This is the initial NS query. 				 */
 name|int
 name|n
 decl_stmt|;
@@ -15374,7 +15381,7 @@ operator|&
 name|chase_name
 argument_list|)
 condition|)
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|chase_name
@@ -15393,7 +15400,7 @@ operator|&
 name|chase_current_name
 argument_list|)
 condition|)
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|chase_current_name
@@ -15409,7 +15416,7 @@ operator|&
 name|chase_authority_name
 argument_list|)
 condition|)
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|chase_authority_name
@@ -15430,7 +15437,7 @@ operator|&
 name|chase_signame
 argument_list|)
 condition|)
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|chase_signame
@@ -15853,7 +15860,9 @@ operator|!=
 name|dns_rdatatype_rrsig
 condition|)
 return|return
+operator|(
 name|rdataset
+operator|)
 return|;
 block|}
 elseif|else
@@ -15952,7 +15961,9 @@ name|siginfo
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|rdataset
+operator|)
 return|;
 block|}
 name|dns_rdata_reset
@@ -15978,11 +15989,15 @@ operator|==
 name|type
 condition|)
 return|return
+operator|(
 name|rdataset
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function
@@ -16062,7 +16077,9 @@ operator|!=
 name|NULL
 condition|)
 return|return
+operator|(
 name|rdataset
+operator|)
 return|;
 block|}
 name|msg_name
@@ -16176,7 +16193,9 @@ operator|!=
 name|NULL
 condition|)
 return|return
+operator|(
 name|rdataset
+operator|)
 return|;
 if|if
 condition|(
@@ -16215,7 +16234,9 @@ operator|!=
 name|NULL
 condition|)
 return|return
+operator|(
 name|rdataset
+operator|)
 return|;
 if|if
 condition|(
@@ -16254,11 +16275,15 @@ operator|!=
 name|NULL
 condition|)
 return|return
+operator|(
 name|rdataset
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function
@@ -16306,9 +16331,6 @@ decl_stmt|;
 name|dns_rdatatype_t
 name|querytype
 decl_stmt|;
-if|if
-condition|(
-operator|(
 name|temp
 operator|=
 name|chase_scanname
@@ -16319,17 +16341,18 @@ name|type
 argument_list|,
 name|covers
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|temp
 operator|!=
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 name|temp
 operator|)
 return|;
-block|}
 if|if
 condition|(
 operator|*
@@ -16337,13 +16360,11 @@ name|lookedup
 operator|==
 name|ISC_TRUE
 condition|)
-block|{
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-block|}
 name|lookup
 operator|=
 name|clone_lookup
@@ -17069,7 +17090,9 @@ name|tempnamekey
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ISC_R_FAILURE
+operator|)
 return|;
 block|}
 break|break;
@@ -17199,7 +17222,9 @@ operator|!=
 name|ISC_TRUE
 condition|)
 return|return
+operator|(
 name|ISC_R_FAILURE
+operator|)
 return|;
 else|else
 name|filename
@@ -17231,7 +17256,9 @@ literal|"No trusted key\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ISC_R_FAILURE
+operator|)
 return|;
 block|}
 if|if
@@ -17258,7 +17285,9 @@ name|filename
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ISC_R_FAILURE
+operator|)
 return|;
 block|}
 while|while
@@ -17303,7 +17332,9 @@ name|fp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ISC_R_FAILURE
+operator|)
 return|;
 block|}
 if|if
@@ -17329,7 +17360,9 @@ name|fptemp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ISC_R_FAILURE
+operator|)
 return|;
 block|}
 name|fclose
@@ -17378,7 +17411,9 @@ name|fp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ISC_R_FAILURE
+operator|)
 return|;
 block|}
 name|insert_trustedkey
@@ -17398,7 +17433,9 @@ name|NULL
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|ISC_R_SUCCESS
+operator|)
 return|;
 block|}
 end_function
@@ -17507,7 +17544,7 @@ argument_list|(
 name|p_ret
 argument_list|)
 condition|)
-name|dns_name_free
+name|free_name
 argument_list|(
 name|p_ret
 argument_list|,
@@ -18255,7 +18292,9 @@ name|mctx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ISC_R_SUCCESS
+operator|)
 return|;
 block|}
 end_function
@@ -18304,13 +18343,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|name_reln
 operator|!=
 name|dns_namereln_subdomain
-operator|)
 operator|||
-operator|(
 name|dns_name_countlabels
 argument_list|(
 name|name
@@ -18322,7 +18358,6 @@ name|zone_name
 argument_list|)
 operator|+
 literal|1
-operator|)
 condition|)
 block|{
 name|printf
@@ -18355,7 +18390,9 @@ literal|" FAILED\n\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ISC_R_FAILURE
+operator|)
 return|;
 block|}
 name|dns_name_getlabelsequence
@@ -18385,7 +18422,9 @@ name|child_name
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ISC_R_SUCCESS
+operator|)
 return|;
 block|}
 end_function
@@ -18490,7 +18529,9 @@ name|sigrdata
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ISC_R_SUCCESS
+operator|)
 return|;
 block|}
 name|dns_rdata_freestruct
@@ -18517,7 +18558,9 @@ name|sigrdata
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ISC_R_FAILURE
+operator|)
 return|;
 block|}
 end_function
@@ -18574,7 +18617,9 @@ literal|" FAILED\n\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ISC_R_FAILURE
+operator|)
 return|;
 block|}
 name|INSIST
@@ -18600,7 +18645,9 @@ name|mctx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ISC_R_SUCCESS
+operator|)
 return|;
 block|}
 end_function
@@ -18731,7 +18778,7 @@ argument_list|(
 name|target
 argument_list|)
 condition|)
-name|dns_name_free
+name|free_name
 argument_list|(
 name|target
 argument_list|,
@@ -18754,6 +18801,36 @@ argument_list|(
 name|result
 argument_list|,
 literal|"dns_name_dup"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|free_name
+parameter_list|(
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|,
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|)
+block|{
+name|dns_name_free
+argument_list|(
+name|name
+argument_list|,
+name|mctx
+argument_list|)
+expr_stmt|;
+name|dns_name_init
+argument_list|(
+name|name
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -18815,11 +18892,11 @@ name|rdataset
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
+operator|(
 name|ISC_R_FAILURE
+operator|)
 return|;
-block|}
 name|result
 operator|=
 name|dns_rdataset_first
@@ -18960,7 +19037,9 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
+operator|(
 name|ISC_R_SUCCESS
+operator|)
 return|;
 block|}
 block|}
@@ -19011,7 +19090,9 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
+operator|(
 name|ISC_R_NOTFOUND
+operator|)
 return|;
 block|}
 end_function
@@ -19178,7 +19259,9 @@ name|keyrdata
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ISC_R_NOTFOUND
+operator|)
 return|;
 block|}
 end_function
@@ -19365,7 +19448,9 @@ name|sigrdata
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|result
+operator|)
 return|;
 block|}
 block|}
@@ -19393,7 +19478,9 @@ name|sigrdata
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ISC_R_NOTFOUND
+operator|)
 return|;
 block|}
 end_function
@@ -19646,7 +19733,9 @@ literal|" new DS rdata\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|result
+operator|)
 return|;
 block|}
 if|if
@@ -19723,7 +19812,9 @@ name|dnsseckey
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|result
+operator|)
 return|;
 block|}
 block|}
@@ -19788,13 +19879,15 @@ block|dns_rdata_reset(&dsrdata); WARNING
 endif|#
 directive|endif
 return|return
+operator|(
 name|ISC_R_NOTFOUND
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  *  * take a pointer on a rdataset in parameter and try to resolv it.  * the searched rrset is a rrset on 'name' with type 'type'  * (and if the type is a rrsig the signature cover 'covers').  * the lookedup is to known if you have already done the query on the net.  * ISC_R_SUCCESS: if we found the rrset  * ISC_R_NOTFOUND: we do not found the rrset in cache  * and we do a query on the net  * ISC_R_FAILURE: rrset not found   */
+comment|/*  *  * take a pointer on a rdataset in parameter and try to resolv it.  * the searched rrset is a rrset on 'name' with type 'type'  * (and if the type is a rrsig the signature cover 'covers').  * the lookedup is to known if you have already done the query on the net.  * ISC_R_SUCCESS: if we found the rrset  * ISC_R_NOTFOUND: we do not found the rrset in cache  * and we do a query on the net  * ISC_R_FAILURE: rrset not found  */
 end_comment
 
 begin_function
@@ -20105,7 +20198,7 @@ name|result
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|chase_name
@@ -20540,7 +20633,7 @@ operator|&
 name|chase_authority_name
 argument_list|)
 condition|)
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|chase_authority_name
@@ -20854,7 +20947,7 @@ argument_list|,
 name|mctx
 argument_list|)
 expr_stmt|;
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|chase_authority_name
@@ -20924,11 +21017,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|&
-name|rdata_name
-operator|==
-name|NULL
-operator|||
 name|rdataset
 operator|==
 name|NULL
@@ -20936,6 +21024,14 @@ operator|||
 name|sigrdataset
 operator|==
 name|NULL
+operator|||
+name|dns_name_countlabels
+argument_list|(
+operator|&
+name|rdata_name
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|printf
@@ -20972,7 +21068,7 @@ operator|!=
 name|ISC_R_SUCCESS
 condition|)
 block|{
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|rdata_name
@@ -20990,7 +21086,7 @@ goto|goto
 name|cleanandgo
 goto|;
 block|}
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|rdata_name
@@ -21043,7 +21139,7 @@ operator|&
 name|chase_current_name
 argument_list|)
 condition|)
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|chase_current_name
@@ -21059,7 +21155,7 @@ operator|&
 name|chase_authority_name
 argument_list|)
 condition|)
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|chase_authority_name
@@ -21247,11 +21343,11 @@ name|ndata
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
+operator|(
 name|ISC_R_ADDRNOTAVAIL
+operator|)
 return|;
-block|}
 block|}
 else|else
 block|{
@@ -21304,7 +21400,9 @@ literal|"\n;; No Answers: Validation FAILED\n\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ISC_R_NOTFOUND
+operator|)
 return|;
 block|}
 name|dup_name
@@ -21387,7 +21485,7 @@ operator|&
 name|chase_name
 argument_list|)
 condition|)
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|chase_name
@@ -21396,7 +21494,9 @@ name|mctx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ISC_R_NOTFOUND
+operator|)
 return|;
 block|}
 if|if
@@ -21548,7 +21648,7 @@ literal|"\n;; DNSKEY is missing to continue validation:"
 literal|" FAILED\n\n"
 argument_list|)
 expr_stmt|;
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|chase_signame
@@ -21564,7 +21664,7 @@ operator|&
 name|chase_name
 argument_list|)
 condition|)
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|chase_name
@@ -21573,7 +21673,9 @@ name|mctx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ISC_R_NOTFOUND
+operator|)
 return|;
 block|}
 if|if
@@ -21583,7 +21685,7 @@ operator|==
 name|ISC_R_NOTFOUND
 condition|)
 block|{
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|chase_signame
@@ -21658,7 +21760,7 @@ literal|"\n;; RRSIG for DNSKEY  is missing  to continue"
 literal|" validation : FAILED\n\n"
 argument_list|)
 expr_stmt|;
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|chase_signame
@@ -21674,7 +21776,7 @@ operator|&
 name|chase_name
 argument_list|)
 condition|)
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|chase_name
@@ -21683,7 +21785,9 @@ name|mctx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ISC_R_NOTFOUND
+operator|)
 return|;
 block|}
 if|if
@@ -21693,7 +21797,7 @@ operator|==
 name|ISC_R_NOTFOUND
 condition|)
 block|{
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|chase_signame
@@ -21789,7 +21893,7 @@ operator|==
 name|ISC_R_NOTFOUND
 condition|)
 block|{
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|chase_signame
@@ -21989,6 +22093,14 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|dns_name_init
+argument_list|(
+operator|&
+name|rdata_name
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|nameFromString
 argument_list|(
 name|current_lookup
@@ -22026,7 +22138,7 @@ operator|&
 name|sigrdataset
 argument_list|)
 expr_stmt|;
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|query_name
@@ -22036,11 +22148,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|&
-name|rdata_name
-operator|==
-name|NULL
-operator|||
 name|rdataset
 operator|==
 name|NULL
@@ -22048,6 +22155,14 @@ operator|||
 name|sigrdataset
 operator|==
 name|NULL
+operator|||
+name|dns_name_countlabels
+argument_list|(
+operator|&
+name|rdata_name
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|printf
@@ -22097,7 +22212,7 @@ argument_list|,
 name|mctx
 argument_list|)
 expr_stmt|;
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|rdata_name
@@ -22183,7 +22298,7 @@ operator|!=
 name|ISC_R_SUCCESS
 condition|)
 block|{
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|chase_name
@@ -22191,7 +22306,7 @@ argument_list|,
 name|mctx
 argument_list|)
 expr_stmt|;
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|chase_signame
@@ -22236,7 +22351,7 @@ operator|==
 name|ISC_R_SUCCESS
 condition|)
 block|{
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|chase_name
@@ -22244,7 +22359,7 @@ argument_list|,
 name|mctx
 argument_list|)
 expr_stmt|;
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|chase_signame
@@ -22275,7 +22390,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|chase_name
@@ -22283,7 +22398,7 @@ argument_list|,
 name|mctx
 argument_list|)
 expr_stmt|;
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|chase_signame
@@ -22323,7 +22438,7 @@ operator|!=
 name|ISC_R_SUCCESS
 condition|)
 block|{
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|chase_signame
@@ -22331,7 +22446,7 @@ argument_list|,
 name|mctx
 argument_list|)
 expr_stmt|;
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|chase_name
@@ -22376,7 +22491,7 @@ argument_list|,
 name|mctx
 argument_list|)
 expr_stmt|;
-name|dns_name_free
+name|free_name
 argument_list|(
 operator|&
 name|chase_signame
@@ -22482,7 +22597,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * return 1  if name1<  name2  *        0  if name1  == name2  *        -1 if name1>  name2  *    and -2 if problem  */
+comment|/*  * return 1  if name1<  name2  *	  0  if name1  == name2  *	  -1 if name1>  name2  *    and -2 if problem  */
 end_comment
 
 begin_function
@@ -22620,8 +22735,10 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 elseif|else
 if|if
@@ -22631,7 +22748,9 @@ operator|>
 literal|0
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 block|}
@@ -22642,7 +22761,9 @@ operator|==
 name|nblabel2
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 if|if
 condition|(
@@ -22651,12 +22772,16 @@ operator|<
 name|nblabel2
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 else|else
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -22965,7 +23090,9 @@ name|mctx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ISC_R_SUCCESS
+operator|)
 return|;
 block|}
 name|dns_rdata_freestruct
@@ -23068,11 +23195,6 @@ argument_list|(
 name|class
 argument_list|)
 expr_stmt|;
-name|UNUSED
-argument_list|(
-name|rdata_name
-argument_list|)
-expr_stmt|;
 name|ret
 operator|=
 name|dns_rdataset_first
@@ -23144,9 +23266,20 @@ literal|"There isn't RRSIG NSEC for the zone \n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ISC_R_FAILURE
+operator|)
 return|;
 block|}
+name|dup_name
+argument_list|(
+name|name
+argument_list|,
+name|rdata_name
+argument_list|,
+name|mctx
+argument_list|)
+expr_stmt|;
 operator|*
 name|rdataset
 operator|=
@@ -23356,7 +23489,6 @@ name|ret
 operator|)
 return|;
 block|}
-comment|/* Never get here */
 block|}
 end_function
 
