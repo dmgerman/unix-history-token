@@ -549,7 +549,7 @@ name|PCI_RID2BAR
 parameter_list|(
 name|rid
 parameter_list|)
-value|(1<<(((rid)-PCIR_BARS)/4))
+value|(((rid)-PCIR_BARS)/4)
 end_define
 
 begin_define
