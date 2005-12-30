@@ -809,7 +809,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Someboy is trying to run a linked script for job %s"
+literal|"Somebody is trying to run a linked script for job %s"
 argument_list|,
 name|filename
 argument_list|)
