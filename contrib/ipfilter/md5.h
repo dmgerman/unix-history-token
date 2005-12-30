@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD$	*/
-end_comment
-
-begin_comment
 comment|/*  ***********************************************************************  ** md5.h -- header file for implementation of MD5                    **  ** RSA Data Security, Inc. MD5 Message-Digest Algorithm              **  ** Created: 2/17/90 RLR                                              **  ** Revised: 12/27/90 SRD,AJ,BSK,JT Reference C version               **  ** Revised (for MD5): RLR 4/27/91                                    **  **   -- G modified to have y&~z instead of y&z                       **  **   -- FF, GG, HH modified to add in last register done             **  **   -- Access pattern: round 2 works mod 5, round 3 works mod 3     **  **   -- distinct additive constant for each step                     **  **   -- round 4 added, working mod 7                                 **  ***********************************************************************  */
 end_comment
 

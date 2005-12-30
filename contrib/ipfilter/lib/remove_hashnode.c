@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD$	*/
-end_comment
-
-begin_comment
-comment|/*  * Copyright (C) 2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Id: remove_hashnode.c,v 1.1 2003/04/13 06:40:14 darrenr Exp  */
+comment|/*  * Copyright (C) 2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: remove_hashnode.c,v 1.1 2003/04/13 06:40:14 darrenr Exp $  */
 end_comment
 
 begin_include

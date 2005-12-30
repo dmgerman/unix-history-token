@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD$	*/
-end_comment
-
-begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Id: facpri.c,v 1.6 2003/12/01 01:59:43 darrenr Exp  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: facpri.c,v 1.6.2.1 2005/11/14 17:45:06 darrenr Exp $  */
 end_comment
 
 begin_include
@@ -105,7 +101,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)Id: facpri.c,v 1.6 2003/12/01 01:59:43 darrenr Exp"
+literal|"@(#)$Id: facpri.c,v 1.6.2.1 2005/11/14 17:45:06 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

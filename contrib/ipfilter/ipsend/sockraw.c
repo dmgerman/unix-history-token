@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD$	*/
-end_comment
-
-begin_comment
 comment|/*  * (C)opyright 2000 Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * WARNING: Attempting to use this .c file on HP-UX 11.00 will cause the  *          system to crash.  */
 end_comment
 

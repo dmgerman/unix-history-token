@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD$	*/
-end_comment
-
-begin_comment
-comment|/*  * Copyright (C) 2000 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Id: mlfk_rule.c,v 2.4.4.2 2004/04/16 23:32:08 darrenr Exp  */
+comment|/*  * Copyright (C) 2000 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: mlfk_rule.c,v 2.4.4.2 2004/04/16 23:32:08 darrenr Exp $  */
 end_comment
 
 begin_include

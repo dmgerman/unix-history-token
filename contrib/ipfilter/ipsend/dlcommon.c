@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD$	*/
-end_comment
-
-begin_comment
 comment|/*  * Common (shared) DLPI test routines.  * Mostly pretty boring boilerplate sorta stuff.  * These can be split into individual library routines later  * but it's just convenient to keep them in a single file  * while they're being developed.  *  * Not supported:  *   Connection Oriented stuff  *   QOS stuff  */
 end_comment
 

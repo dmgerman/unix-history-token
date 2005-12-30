@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD$	*/
-end_comment
-
-begin_comment
 comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
@@ -35,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)Id: ipsyncs.c,v 1.5.2.1 2004/10/31 18:46:44 darrenr Exp"
+literal|"@(#)$Id: ipsyncs.c,v 1.5.2.1 2004/10/31 18:46:44 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

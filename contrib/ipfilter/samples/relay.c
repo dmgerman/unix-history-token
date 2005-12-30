@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD$	*/
-end_comment
-
-begin_comment
 comment|/*  * Sample program to be used as a transparent proxy.  *  * Must be executed with permission enough to do an ioctl on /dev/ipl  * or equivalent.  This is just a sample and is only alpha quality.  * - Darren Reed (8 April 1996)  */
 end_comment
 
@@ -76,25 +72,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ip_compat.h"
+file|"netinet/ip_compat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ip_fil.h"
+file|"netinet/ip_fil.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ip_nat.h"
+file|"netinet/ip_nat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ipl.h"
+file|"netinet/ipl.h"
 end_include
 
 begin_define

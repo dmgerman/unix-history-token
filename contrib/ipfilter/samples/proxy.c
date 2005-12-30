@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD$	*/
-end_comment
-
-begin_comment
 comment|/*  * Sample transparent proxy program.  *  * Sample implementation of a program which intercepts a TCP connectiona and  * just echos all data back to the origin.  Written to work via inetd as a  * "nonwait" program running as root; ie.  * tcpmux          stream  tcp     nowait root /usr/local/bin/proxy proxy  * with a NAT rue like this:  * rdr smc0 0/0 port 80 -> 127.0.0.1/32 port 1  */
 end_comment
 
@@ -476,23 +472,17 @@ name|natlook
 operator|.
 name|nl_outport
 operator|=
-name|ntohs
-argument_list|(
 name|sin
 operator|.
 name|sin_port
-argument_list|)
 expr_stmt|;
 name|natlook
 operator|.
 name|nl_inport
 operator|=
-name|ntohs
-argument_list|(
 name|sloc
 operator|.
 name|sin_port
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Open the NAT device and lookup the mapping pair. 	 */
 name|fd

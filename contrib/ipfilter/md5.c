@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD$	*/
-end_comment
-
-begin_comment
 comment|/*  ***********************************************************************  ** md5.c -- the source code for MD5 routines                         **  ** RSA Data Security, Inc. MD5 Message-Digest Algorithm              **  ** Created: 2/17/90 RLR                                              **  ** Revised: 1/91 SRD,AJ,BSK,JT Reference C ver., 7/10 constant corr. **  ***********************************************************************  */
 end_comment
 

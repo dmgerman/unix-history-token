@@ -1,8 +1,4 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*	$NetBSD$	*/
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -12,7 +8,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ipl.h"
+file|"netinet/ipl.h"
 end_include
 
 begin_include
@@ -220,6 +216,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|tu
+operator|.
+name|ipft_cookie
+operator|=
+name|NULL
+expr_stmt|;
 operator|*
 name|t
 operator|++
@@ -302,6 +304,12 @@ block|}
 block|}
 else|else
 block|{
+name|tu
+operator|.
+name|ipft_cookie
+operator|=
+name|NULL
+expr_stmt|;
 name|strncpy
 argument_list|(
 name|tu
@@ -352,7 +360,18 @@ name|ipft_cookie
 operator|==
 name|NULL
 condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Null cookie for %s\n"
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|tu
 operator|.
 name|ipft_name

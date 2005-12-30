@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD$	*/
-end_comment
-
-begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Id: v6ionames.c,v 1.1.4.1 2005/01/02 13:08:49 darrenr Exp  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: v6ionames.c,v 1.1.4.2 2005/10/17 18:31:09 darrenr Exp $  */
 end_comment
 
 begin_include
@@ -104,6 +100,16 @@ block|,
 literal|0
 block|,
 literal|"dstopts"
+block|}
+block|,
+block|{
+name|IPPROTO_MOBILITY
+block|,
+literal|0x000100
+block|,
+literal|0
+block|,
+literal|"mobility"
 block|}
 block|,
 block|{

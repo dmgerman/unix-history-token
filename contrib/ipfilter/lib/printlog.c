@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD$	*/
-end_comment
-
-begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Id: printlog.c,v 1.6 2002/01/28 06:50:47 darrenr Exp  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: printlog.c,v 1.6.4.1 2005/11/14 17:45:06 darrenr Exp $  */
 end_comment
 
 begin_include
@@ -95,15 +91,6 @@ argument_list|(
 literal|" level "
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|fp
-operator|->
-name|fr_loglevel
-operator|&
-name|LOG_FACMASK
-condition|)
-block|{
 name|s
 operator|=
 name|fac_toname
@@ -122,12 +109,6 @@ condition|)
 name|s
 operator|=
 literal|"!!!"
-expr_stmt|;
-block|}
-else|else
-name|s
-operator|=
-literal|""
 expr_stmt|;
 name|u
 operator|=

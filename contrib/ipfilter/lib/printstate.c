@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD$	*/
-end_comment
-
-begin_comment
 comment|/*  * Copyright (C) 2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
@@ -917,15 +913,35 @@ argument_list|)
 expr_stmt|;
 name|PRINTF
 argument_list|(
-literal|"\tpkt_options& %x = %x\n"
+literal|"\tpkt_options& %x = %x, %x = %x \n"
 argument_list|,
 name|ips
 operator|.
 name|is_optmsk
+index|[
+literal|0
+index|]
 argument_list|,
 name|ips
 operator|.
 name|is_opt
+index|[
+literal|0
+index|]
+argument_list|,
+name|ips
+operator|.
+name|is_optmsk
+index|[
+literal|1
+index|]
+argument_list|,
+name|ips
+operator|.
+name|is_opt
+index|[
+literal|1
+index|]
 argument_list|)
 expr_stmt|;
 name|PRINTF

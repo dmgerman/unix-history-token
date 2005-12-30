@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD$	*/
-end_comment
-
-begin_comment
 comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Added redirect stuff and a variety of bug fixes. (mcn@EnGarde.com)  */
 end_comment
 
@@ -298,7 +294,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ipl.h"
+file|"netinet/ipl.h"
 end_include
 
 begin_include
@@ -404,7 +400,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)Id: ipnat.c,v 1.24.2.1 2004/04/28 17:56:22 darrenr Exp"
+literal|"@(#)$Id: ipnat.c,v 1.24.2.2 2005/05/10 21:19:30 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

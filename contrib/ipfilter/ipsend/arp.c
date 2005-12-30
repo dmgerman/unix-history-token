@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD$	*/
-end_comment
-
-begin_comment
 comment|/*  * arp.c (C) 1995-1998 Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
@@ -35,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)Id: arp.c,v 2.8 2003/12/01 02:01:15 darrenr Exp"
+literal|"@(#)$Id: arp.c,v 2.8.2.1 2005/06/12 07:18:38 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,6 +77,12 @@ operator|!
 name|defined
 argument_list|(
 name|__osf__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_AIX51
 argument_list|)
 end_if
 

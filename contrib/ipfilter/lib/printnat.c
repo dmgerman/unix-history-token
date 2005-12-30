@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD$	*/
-end_comment
-
-begin_comment
 comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Added redirect stuff and a variety of bug fixes. (mcn@EnGarde.com)  */
 end_comment
 
@@ -36,7 +32,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)Id: printnat.c,v 1.22.2.8 2005/01/12 03:39:04 darrenr Exp"
+literal|"@(#)$Id: printnat.c,v 1.22.2.11 2005/11/14 17:45:06 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,24 +40,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-specifier|static
-name|void
-name|printproto
-name|__P
-argument_list|(
-operator|(
-name|ipnat_t
-operator|*
-operator|,
-expr|struct
-name|protoent
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Print out a NAT rule  */
@@ -211,7 +189,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|",%s "
+literal|",%s"
 argument_list|,
 name|np
 operator|->
@@ -597,6 +575,26 @@ name|in4
 argument_list|)
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|np
+operator|->
+name|in_inmsk
+operator|==
+literal|0
+operator|&&
+name|np
+operator|->
+name|in_inip
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"/0"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|np
@@ -644,11 +642,20 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|putchar
+argument_list|(
+literal|' '
+argument_list|)
+expr_stmt|;
 name|printproto
 argument_list|(
-name|np
-argument_list|,
 name|pr
+argument_list|,
+name|np
+operator|->
+name|in_p
+argument_list|,
+name|np
 argument_list|)
 expr_stmt|;
 if|if
@@ -1110,29 +1117,15 @@ operator|->
 name|in_plabel
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pr
-operator|!=
-name|NULL
-condition|)
-name|fputs
+name|printproto
 argument_list|(
 name|pr
-operator|->
-name|p_name
-argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"%d"
 argument_list|,
 name|np
 operator|->
 name|in_p
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -1218,7 +1211,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" icmpidmap"
+literal|" icmpidmap "
 argument_list|)
 expr_stmt|;
 block|}
@@ -1226,15 +1219,19 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|" portmap"
+literal|" portmap "
 argument_list|)
 expr_stmt|;
 block|}
 name|printproto
 argument_list|(
-name|np
-argument_list|,
 name|pr
+argument_list|,
+name|np
+operator|->
+name|in_p
+argument_list|,
+name|np
 argument_list|)
 expr_stmt|;
 if|if
@@ -1321,13 +1318,24 @@ name|np
 operator|->
 name|in_p
 condition|)
-name|printproto
+block|{
+name|putchar
 argument_list|(
-name|np
-argument_list|,
-name|pr
+literal|' '
 argument_list|)
 expr_stmt|;
+name|printproto
+argument_list|(
+name|pr
+argument_list|,
+name|np
+operator|->
+name|in_p
+argument_list|,
+name|np
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|np
@@ -1551,113 +1559,6 @@ name|in_comment
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|printproto
-parameter_list|(
-name|np
-parameter_list|,
-name|pr
-parameter_list|)
-name|ipnat_t
-modifier|*
-name|np
-decl_stmt|;
-name|struct
-name|protoent
-modifier|*
-name|pr
-decl_stmt|;
-block|{
-if|if
-condition|(
-operator|(
-name|np
-operator|->
-name|in_flags
-operator|&
-name|IPN_TCPUDP
-operator|)
-operator|==
-name|IPN_TCPUDP
-condition|)
-name|printf
-argument_list|(
-literal|" tcp/udp"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|np
-operator|->
-name|in_flags
-operator|&
-name|IPN_TCP
-condition|)
-name|printf
-argument_list|(
-literal|" tcp"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|np
-operator|->
-name|in_flags
-operator|&
-name|IPN_UDP
-condition|)
-name|printf
-argument_list|(
-literal|" udp"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|np
-operator|->
-name|in_flags
-operator|&
-name|IPN_ICMPQUERY
-condition|)
-name|printf
-argument_list|(
-literal|" icmp"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|pr
-operator|!=
-name|NULL
-condition|)
-name|printf
-argument_list|(
-literal|" %s"
-argument_list|,
-name|pr
-operator|->
-name|p_name
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|" %d"
-argument_list|,
-name|np
-operator|->
-name|in_p
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
