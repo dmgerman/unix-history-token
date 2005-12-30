@@ -476,23 +476,17 @@ name|natlook
 operator|.
 name|nl_outport
 operator|=
-name|ntohs
-argument_list|(
 name|sin
 operator|.
 name|sin_port
-argument_list|)
 expr_stmt|;
 name|natlook
 operator|.
 name|nl_inport
 operator|=
-name|ntohs
-argument_list|(
 name|sloc
 operator|.
 name|sin_port
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Open the NAT device and lookup the mapping pair. 	 */
 name|fd

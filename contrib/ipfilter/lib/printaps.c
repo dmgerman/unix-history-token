@@ -36,7 +36,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)Id: printaps.c,v 1.4 2004/01/08 13:34:32 darrenr Exp"
+literal|"@(#)$Id: printaps.c,v 1.4 2004/01/08 13:34:32 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

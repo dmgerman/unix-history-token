@@ -185,7 +185,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)Id: ipsdr.c,v 2.2 2001/06/09 17:09:25 darrenr Exp"
+literal|"@(#)$Id: ipsdr.c,v 2.2 2001/06/09 17:09:25 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

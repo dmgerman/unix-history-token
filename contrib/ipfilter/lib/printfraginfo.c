@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2004 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Id: printfraginfo.c,v 1.1.2.2 2004/03/23 15:15:45 darrenr Exp  */
+comment|/*  * Copyright (C) 2004 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: printfraginfo.c,v 1.1.2.2 2004/03/23 15:15:45 darrenr Exp $  */
 end_comment
 
 begin_include

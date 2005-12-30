@@ -242,7 +242,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)Id: sbpf.c,v 2.5 2002/02/24 07:30:03 darrenr Exp"
+literal|"@(#)$Id: sbpf.c,v 2.5 2002/02/24 07:30:03 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

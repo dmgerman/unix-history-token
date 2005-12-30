@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1995-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Id: ipft_tx.c,v 1.15.2.2 2004/12/09 19:41:21 darrenr Exp  */
+comment|/*  * Copyright (C) 1995-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ipft_tx.c,v 1.15.2.6 2005/12/04 10:07:22 darrenr Exp $  */
 end_comment
 
 begin_if
@@ -35,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)Id: ipft_tx.c,v 1.15.2.2 2004/12/09 19:41:21 darrenr Exp"
+literal|"@(#)$Id: ipft_tx.c,v 1.15.2.6 2005/12/04 10:07:22 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -884,12 +884,13 @@ condition|)
 continue|continue;
 if|if
 condition|(
-operator|!
 operator|(
 name|opts
 operator|&
-name|OPT_BRIEF
+name|OPT_DEBUG
 operator|)
+operator|!=
+literal|0
 condition|)
 name|printf
 argument_list|(
@@ -941,6 +942,16 @@ return|;
 endif|#
 directive|endif
 block|}
+if|if
+condition|(
+name|feof
+argument_list|(
+name|tfp
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
 return|return
 operator|-
 literal|1
@@ -1806,6 +1817,27 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|t
+operator|=
+name|strchr
+argument_list|(
+operator|*
+name|cpp
+argument_list|,
+literal|','
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|t
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|t
+operator|=
+literal|'\0'
+expr_stmt|;
 for|for
 control|(
 name|s
@@ -1834,25 +1866,20 @@ operator|,
 name|i
 operator|++
 control|)
+block|{
 if|if
 condition|(
 operator|*
 name|s
 operator|&&
 operator|!
-name|strncasecmp
+name|strcasecmp
 argument_list|(
 operator|*
 name|cpp
 argument_list|,
 operator|*
 name|s
-argument_list|,
-name|strlen
-argument_list|(
-operator|*
-name|s
-argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -1864,17 +1891,9 @@ name|i
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|t
-operator|=
-name|strchr
-argument_list|(
-operator|*
-name|cpp
-argument_list|,
-literal|','
-argument_list|)
-operator|)
+operator|!=
+name|NULL
 condition|)
 name|ic
 operator|->
@@ -1892,6 +1911,18 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
+block|}
+if|if
+condition|(
+name|t
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|t
+operator|=
+literal|','
+expr_stmt|;
 block|}
 if|if
 condition|(

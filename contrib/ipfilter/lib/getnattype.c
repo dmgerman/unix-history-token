@@ -36,7 +36,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)Id: getnattype.c,v 1.3 2004/01/17 17:26:07 darrenr Exp"
+literal|"@(#)$Id: getnattype.c,v 1.3 2004/01/17 17:26:07 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

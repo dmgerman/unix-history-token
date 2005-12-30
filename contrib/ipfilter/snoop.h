@@ -20,7 +20,7 @@ name|__SNOOP_H__
 end_define
 
 begin_comment
-comment|/*  * written to comply with the RFC (1761) from Sun.  * Id: snoop.h,v 2.3 2001/06/09 17:09:23 darrenr Exp  */
+comment|/*  * written to comply with the RFC (1761) from Sun.  * $Id: snoop.h,v 2.3 2001/06/09 17:09:23 darrenr Exp $  */
 end_comment
 
 begin_struct

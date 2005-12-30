@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Id: make_range.c,v 1.2 2002/05/18 07:27:52 darrenr Exp  */
+comment|/*  * Copyright (C) 2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: make_range.c,v 1.2 2002/05/18 07:27:52 darrenr Exp $  */
 end_comment
 
 begin_include

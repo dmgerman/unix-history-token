@@ -35,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)Id: inet_addr.c,v 1.8.2.3 2004/12/09 19:41:20 darrenr Exp"
+literal|"@(#)$Id: inet_addr.c,v 1.8.2.3 2004/12/09 19:41:20 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

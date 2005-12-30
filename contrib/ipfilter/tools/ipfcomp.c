@@ -35,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)Id: ipfcomp.c,v 1.24.2.2 2004/04/28 10:34:44 darrenr Exp"
+literal|"@(#)$Id: ipfcomp.c,v 1.24.2.2 2004/04/28 10:34:44 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

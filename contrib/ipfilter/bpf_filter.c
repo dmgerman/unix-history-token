@@ -36,7 +36,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /devel/CVS/IP-Filter/bpf_filter.c,v 2.2 2003/08/19 16:49:58 darrenr Exp $ (LBL)"
+literal|"@(#) $Header: /devel/CVS/IP-Filter/bpf_filter.c,v 2.2.2.1 2005/06/18 02:41:30 darrenr Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 

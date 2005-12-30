@@ -66,6 +66,25 @@ argument_list|(
 name|name
 argument_list|)
 return|;
+ifdef|#
+directive|ifdef
+name|_AIX51
+comment|/* 	 * For some bogus reason, "ip" is 252 in /etc/protocols on AIX 5 	 */
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+name|name
+argument_list|,
+literal|"ip"
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+endif|#
+directive|endif
 name|p
 operator|=
 name|getprotobyname

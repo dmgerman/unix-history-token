@@ -241,7 +241,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)Id: sdlpi.c,v 2.8.2.1 2004/12/09 19:41:13 darrenr Exp"
+literal|"@(#)$Id: sdlpi.c,v 2.8.2.1 2004/12/09 19:41:13 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

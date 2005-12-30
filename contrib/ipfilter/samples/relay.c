@@ -76,19 +76,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ip_compat.h"
+file|"netinet/ip_compat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ip_fil.h"
+file|"netinet/ip_fil.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ip_nat.h"
+file|"netinet/ip_nat.h"
 end_include
 
 begin_include

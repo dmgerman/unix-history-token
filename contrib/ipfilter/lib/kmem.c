@@ -85,6 +85,12 @@ name|defined
 argument_list|(
 name|linux
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_AIX51
+argument_list|)
 end_if
 
 begin_include
@@ -251,7 +257,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)Id: kmem.c,v 1.16.2.1 2004/06/20 10:25:58 darrenr Exp"
+literal|"@(#)$Id: kmem.c,v 1.16.2.2 2005/06/12 07:18:41 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -281,10 +287,17 @@ argument_list|(
 name|__osf__
 argument_list|)
 operator|&&
+expr|\
 operator|!
 name|defined
 argument_list|(
 name|linux
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_AIX51
 argument_list|)
 end_if
 

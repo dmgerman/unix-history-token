@@ -24,7 +24,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)Id: nat_setgroupmap.c,v 1.1 2003/04/13 06:40:14 darrenr Exp"
+literal|"@(#)$Id: nat_setgroupmap.c,v 1.1 2003/04/13 06:40:14 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

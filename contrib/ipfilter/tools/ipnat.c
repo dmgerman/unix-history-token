@@ -404,7 +404,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)Id: ipnat.c,v 1.24.2.1 2004/04/28 17:56:22 darrenr Exp"
+literal|"@(#)$Id: ipnat.c,v 1.24.2.2 2005/05/10 21:19:30 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

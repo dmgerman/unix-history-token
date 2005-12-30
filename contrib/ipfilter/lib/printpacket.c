@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Id: printpacket.c,v 1.12.4.1 2005/02/21 05:09:24 darrenr Exp  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: printpacket.c,v 1.12.4.2 2005/12/04 09:33:06 darrenr Exp $  */
 end_comment
 
 begin_include
@@ -239,7 +239,14 @@ operator|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ip %d(%d) %d"
+literal|"ip #%d %d(%d) %d"
+argument_list|,
+name|ntohs
+argument_list|(
+name|ip
+operator|->
+name|ip_id
+argument_list|)
 argument_list|,
 name|ntohs
 argument_list|(
