@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
 comment|/*  * Copyright (C) 1993-2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
@@ -35,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)Id: ip_fil_freebsd.c,v 2.53.2.25 2005/02/01 03:15:56 darrenr Exp"
+literal|"@(#)$Id: ip_fil_freebsd.c,v 2.53.2.27 2005/08/20 13:48:19 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -842,6 +838,8 @@ decl_stmt|,
 name|ipf_global
 decl_stmt|,
 name|ipf_ipidfrag
+decl_stmt|,
+name|ipf_frcache
 decl_stmt|;
 end_decl_stmt
 
@@ -986,6 +984,64 @@ end_endif
 begin_comment
 comment|/* __FreeBSD_version>= 500011 */
 end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|502103
+operator|)
+end_if
+
+begin_decl_stmt
+specifier|static
+name|eventhandler_tag
+name|ipf_arrivetag
+decl_stmt|,
+name|ipf_departtag
+decl_stmt|,
+name|ipf_clonetag
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|void
+name|ipf_ifevent
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+specifier|static
+name|void
+name|ipf_ifevent
+parameter_list|(
+name|arg
+parameter_list|)
+name|void
+modifier|*
+name|arg
+decl_stmt|;
+block|{
+name|frsync
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -1305,6 +1361,14 @@ operator|&
 name|ipf_mutex
 argument_list|,
 literal|"ipf filter rwlock"
+argument_list|)
+expr_stmt|;
+name|RWLOCK_INIT
+argument_list|(
+operator|&
+name|ipf_frcache
+argument_list|,
+literal|"ipf cache rwlock"
 argument_list|)
 expr_stmt|;
 name|RWLOCK_INIT
@@ -1631,6 +1695,54 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|502103
+operator|)
+name|ipf_arrivetag
+operator|=
+name|EVENTHANDLER_REGISTER
+argument_list|(
+name|ifnet_arrival_event
+argument_list|, \
+name|ipf_ifevent
+argument_list|,
+name|NULL
+argument_list|, \
+name|EVENTHANDLER_PRI_ANY
+argument_list|)
+expr_stmt|;
+name|ipf_departtag
+operator|=
+name|EVENTHANDLER_REGISTER
+argument_list|(
+name|ifnet_departure_event
+argument_list|, \
+name|ipf_ifevent
+argument_list|,
+name|NULL
+argument_list|, \
+name|EVENTHANDLER_PRI_ANY
+argument_list|)
+expr_stmt|;
+name|ipf_clonetag
+operator|=
+name|EVENTHANDLER_REGISTER
+argument_list|(
+name|if_clone_event
+argument_list|,
+name|ipf_ifevent
+argument_list|, \
+name|NULL
+argument_list|,
+name|EVENTHANDLER_PRI_ANY
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|fr_checkp
@@ -1791,6 +1903,60 @@ name|ipforwarding
 operator|=
 literal|0
 expr_stmt|;
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|502103
+operator|)
+if|if
+condition|(
+name|ipf_arrivetag
+operator|!=
+name|NULL
+condition|)
+block|{
+name|EVENTHANDLER_DEREGISTER
+argument_list|(
+name|ifnet_arrival_event
+argument_list|,
+name|ipf_arrivetag
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ipf_departtag
+operator|!=
+name|NULL
+condition|)
+block|{
+name|EVENTHANDLER_DEREGISTER
+argument_list|(
+name|ifnet_departure_event
+argument_list|,
+name|ipf_departtag
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ipf_clonetag
+operator|!=
+name|NULL
+condition|)
+block|{
+name|EVENTHANDLER_DEREGISTER
+argument_list|(
+name|if_clone_event
+argument_list|,
+name|ipf_clonetag
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|SPL_NET
 argument_list|(
 name|s
@@ -2142,6 +2308,12 @@ expr_stmt|;
 name|RW_DESTROY
 argument_list|(
 operator|&
+name|ipf_frcache
+argument_list|)
+expr_stmt|;
+name|RW_DESTROY
+argument_list|(
+operator|&
 name|ipf_ipidfrag
 argument_list|)
 expr_stmt|;
@@ -2299,7 +2471,7 @@ condition|(
 operator|(
 name|securelevel
 operator|>=
-literal|2
+literal|3
 operator|)
 operator|&&
 operator|(

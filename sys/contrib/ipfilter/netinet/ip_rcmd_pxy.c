@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
-comment|/*  * Copyright (C) 1998-2003 by Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Id: ip_rcmd_pxy.c,v 1.41.2.4 2005/02/04 10:22:55 darrenr Exp  *  * Simple RCMD transparent proxy for in-kernel use.  For use with the NAT  * code.  */
+comment|/*  * Copyright (C) 1998-2003 by Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_rcmd_pxy.c,v 1.41.2.5 2005/10/02 04:20:07 darrenr Exp $  *  * Simple RCMD transparent proxy for in-kernel use.  For use with the NAT  * code.  */
 end_comment
 
 begin_define
@@ -755,6 +751,18 @@ argument_list|(
 name|fi
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|fi
+operator|.
+name|fin_state
+operator|=
+name|NULL
+expr_stmt|;
+name|fi
+operator|.
+name|fin_nat
+operator|=
+name|NULL
 expr_stmt|;
 name|fi
 operator|.

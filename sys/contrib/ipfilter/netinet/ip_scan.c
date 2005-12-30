@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
 comment|/*  * Copyright (C) 1995-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
@@ -234,6 +230,12 @@ name|defined
 argument_list|(
 name|linux
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|AIX
+argument_list|)
 end_if
 
 begin_include
@@ -367,7 +369,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)Id: ip_scan.c,v 2.40.2.2 2005/01/18 10:13:16 darrenr Exp"
+literal|"@(#)$Id: ip_scan.c,v 2.40.2.4 2005/08/20 13:48:24 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2643,7 +2645,11 @@ name|fin_mp
 argument_list|,
 name|fin
 operator|->
-name|fin_hlen
+name|fin_plen
+operator|-
+name|fin
+operator|->
+name|fin_dlen
 operator|+
 name|thoff
 argument_list|,

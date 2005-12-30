@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
 comment|/*  * Copyright (C) 1993-2001, 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
@@ -330,7 +326,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)Id: ip_htable.c,v 2.34.2.2 2004/10/17 15:49:15 darrenr Exp"
+literal|"@(#)$Id: ip_htable.c,v 2.34.2.4 2005/11/13 15:38:37 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -642,9 +638,19 @@ name|iph
 operator|==
 name|NULL
 condition|)
+block|{
+name|ipht_nomem
+index|[
+name|op
+operator|->
+name|iplo_unit
+index|]
+operator|++
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 name|err
 operator|=
 name|COPYIN
@@ -860,39 +866,25 @@ name|iph_name
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|err
-operator|=
-name|COPYOUT
+operator|(
+name|void
+operator|)
+name|strncpy
 argument_list|(
-name|iph
-argument_list|,
 name|op
 operator|->
-name|iplo_struct
+name|iplo_name
+argument_list|,
+name|name
 argument_list|,
 sizeof|sizeof
 argument_list|(
-operator|*
-name|iph
+name|op
+operator|->
+name|iplo_name
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|err
-operator|!=
-literal|0
-condition|)
-block|{
-name|KFREE
-argument_list|(
-name|iph
-argument_list|)
-expr_stmt|;
-return|return
-name|EFAULT
-return|;
-block|}
 name|iph
 operator|->
 name|iph_type

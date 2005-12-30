@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
-comment|/*  * Copyright (C) 2000-2003 Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Id: ip_irc_pxy.c,v 2.39.2.4 2005/02/04 10:22:55 darrenr Exp  */
+comment|/*  * Copyright (C) 2000-2003 Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_irc_pxy.c,v 2.39.2.5 2005/12/04 23:39:27 darrenr Exp $  */
 end_comment
 
 begin_define
@@ -240,6 +236,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|ippr_irc_dcctypes

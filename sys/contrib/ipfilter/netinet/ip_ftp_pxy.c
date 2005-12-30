@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
-comment|/*  * Copyright (C) 1997-2003 by Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Simple FTP transparent proxy for in-kernel use.  For use with the NAT  * code.  *  * Id: ip_ftp_pxy.c,v 2.88.2.15 2005/03/19 19:38:10 darrenr Exp  */
+comment|/*  * Copyright (C) 1997-2003 by Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Simple FTP transparent proxy for in-kernel use.  For use with the NAT  * code.  *  * $Id: ip_ftp_pxy.c,v 2.88.2.16 2005/12/04 23:39:27 darrenr Exp $  */
 end_comment
 
 begin_define
@@ -2809,10 +2805,8 @@ index|[
 name|IPF_FTPBUFSZ
 index|]
 decl_stmt|;
+specifier|const
 name|char
-modifier|*
-name|s
-decl_stmt|,
 modifier|*
 name|brackets
 index|[
@@ -2827,6 +2821,10 @@ decl_stmt|;
 name|ftpside_t
 modifier|*
 name|f
+decl_stmt|;
+name|char
+modifier|*
+name|s
 decl_stmt|;
 if|if
 condition|(

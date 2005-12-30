@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
-comment|/*  * Copyright (C) 1995-2001, 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_nat.h	1.5 2/4/96  * Id: ip_nat.h,v 2.90.2.9 2005/03/28 11:09:55 darrenr Exp  */
+comment|/*  * Copyright (C) 1995-2001, 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_nat.h	1.5 2/4/96  * $Id: ip_nat.h,v 2.90.2.11 2005/06/18 02:41:32 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -49,6 +45,11 @@ name|defined
 argument_list|(
 name|__GNUC__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_AIX51
+argument_list|)
 end_if
 
 begin_define
@@ -77,13 +78,6 @@ define|#
 directive|define
 name|SIOCGNATL
 value|_IOWR('r', 63, struct ipfobj)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIOCPROXY
-value|_IOWR('r', 64, struct ap_control)
 end_define
 
 begin_else
@@ -117,13 +111,6 @@ define|#
 directive|define
 name|SIOCGNATL
 value|_IOWR(r, 63, struct ipfobj)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIOCPROXY
-value|_IOWR(r, 64, struct ap_control)
 end_define
 
 begin_endif
@@ -1433,6 +1420,12 @@ block|}
 name|natget_t
 typedef|;
 end_typedef
+
+begin_undef
+undef|#
+directive|undef
+name|tr_flags
+end_undef
 
 begin_typedef
 typedef|typedef

@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
 comment|/*  * Copyright (C) 1993-2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
@@ -312,6 +308,12 @@ operator|!
 name|defined
 argument_list|(
 name|__sgi
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|AIX
 argument_list|)
 end_if
 
@@ -665,7 +667,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)Id: ip_frag.c,v 2.77 2004/01/27 00:24:54 darrenr Exp"
+literal|"@(#)$Id: ip_frag.c,v 2.77.2.4 2005/08/20 13:48:21 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1372,13 +1374,9 @@ name|FR_FRSTRICT
 condition|)
 if|if
 condition|(
-operator|(
-name|ip
+name|fin
 operator|->
-name|ip_off
-operator|&
-name|IP_OFFMASK
-operator|)
+name|fin_off
 operator|!=
 literal|0
 condition|)
@@ -1592,9 +1590,6 @@ return|return
 name|NULL
 return|;
 block|}
-if|if
-condition|(
-operator|(
 name|fra
 operator|->
 name|ipfr_rule
@@ -1602,17 +1597,48 @@ operator|=
 name|fin
 operator|->
 name|fin_fr
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|fra
+operator|->
+name|ipfr_rule
 operator|!=
 name|NULL
 condition|)
+block|{
+name|frentry_t
+modifier|*
+name|fr
+decl_stmt|;
+name|fr
+operator|=
 name|fin
 operator|->
 name|fin_fr
+expr_stmt|;
+name|MUTEX_ENTER
+argument_list|(
+operator|&
+name|fr
+operator|->
+name|fr_lock
+argument_list|)
+expr_stmt|;
+name|fr
 operator|->
 name|fr_ref
 operator|++
 expr_stmt|;
+name|MUTEX_EXIT
+argument_list|(
+operator|&
+name|fr
+operator|->
+name|fr_lock
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Insert the fragment into the fragment table, copy the struct used 	 * in the search using bcopy rather than reassign each field. 	 * Set the ttl to the default. 	 */
 if|if
 condition|(
@@ -3694,22 +3720,11 @@ name|nat_t
 modifier|*
 name|nat
 decl_stmt|;
-if|#
-directive|if
-name|defined
+name|SPL_INT
 argument_list|(
-name|USE_SPL
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-name|int
 name|s
-decl_stmt|;
-endif|#
-directive|endif
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fr_frag_lock
@@ -4006,6 +4021,12 @@ operator|!
 name|defined
 argument_list|(
 name|__osf__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|linux
 argument_list|)
 operator|)
 end_if

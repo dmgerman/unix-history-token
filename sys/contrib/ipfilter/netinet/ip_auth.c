@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
 comment|/*  * Copyright (C) 1998-2003 by Darren Reed& Guido van Rooij.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
@@ -841,7 +837,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)Id: ip_auth.c,v 2.73.2.3 2004/08/26 11:25:21 darrenr Exp"
+literal|"@(#)$Id: ip_auth.c,v 2.73.2.5 2005/06/12 07:18:14 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2134,15 +2130,11 @@ name|ifqueue
 modifier|*
 name|ifq
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_SPL
-name|int
+name|SPL_INT
+argument_list|(
 name|s
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* USE_SPL */
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|frauth_t
@@ -2821,9 +2813,17 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* MENTAT */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|linux
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|AIX
+argument_list|)
 else|#
 directive|else
 if|#
@@ -2851,6 +2851,11 @@ name|IRIX
 operator|>=
 literal|60500
 operator|)
+operator|||
+name|defined
+argument_list|(
+name|AIX
+argument_list|)
 operator|||
 expr|\
 operator|(
@@ -2950,16 +2955,26 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* MENTAT */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|linux
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|AIX
+argument_list|)
 else|#
 directive|else
 if|#
 directive|if
+operator|(
 name|__FreeBSD_version
 operator|>=
 literal|501000
+operator|)
 name|netisr_dispatch
 argument_list|(
 name|NETISR_IP
@@ -2971,9 +2986,11 @@ else|#
 directive|else
 if|#
 directive|if
+operator|(
 name|IRIX
 operator|>=
 literal|60516
+operator|)
 name|ifq
 operator|=
 operator|&
@@ -3506,28 +3523,11 @@ name|mb_t
 modifier|*
 name|m
 decl_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
+name|SPL_INT
 argument_list|(
-name|MENAT
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|USE_SPL
-argument_list|)
-name|int
 name|s
-decl_stmt|;
-endif|#
-directive|endif
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fr_auth_lock
@@ -3804,28 +3804,11 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
+name|SPL_INT
 argument_list|(
-name|MENAT
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|USE_SPL
-argument_list|)
-name|int
 name|s
-decl_stmt|;
-endif|#
-directive|endif
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(

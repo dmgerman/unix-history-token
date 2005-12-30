@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
-comment|/*  * Copyright (C) 1997-2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Id: ip_log.c,v 2.75.2.6 2004/10/16 07:59:27 darrenr Exp  */
+comment|/*  * Copyright (C) 1997-2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_log.c,v 2.75.2.7 2005/06/11 07:47:44 darrenr Exp $  */
 end_comment
 
 begin_include
@@ -2446,28 +2442,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-if|#
-directive|if
-name|defined
+name|SPL_INT
 argument_list|(
-name|_KERNEL
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|MENTAT
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|USE_SPL
-argument_list|)
-name|int
 name|s
-decl_stmt|;
-endif|#
-directive|endif
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Check to see if this log record has a CRC which matches the last 	 * record logged.  If it does, just up the count on the previous one 	 * rather than create a new one. 	 */
 if|if
 condition|(
@@ -3034,28 +3013,11 @@ name|iplog_t
 modifier|*
 name|ipl
 decl_stmt|;
-if|#
-directive|if
-name|defined
+name|SPL_INT
 argument_list|(
-name|_KERNEL
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|MENTAT
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|USE_SPL
-argument_list|)
-name|int
 name|s
-decl_stmt|;
-endif|#
-directive|endif
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Sanity checks.  Make sure the minor # is valid and we're copying 	 * a valid chunk of data. 	 */
 if|if
 condition|(
@@ -3594,28 +3556,11 @@ decl_stmt|;
 name|int
 name|used
 decl_stmt|;
-if|#
-directive|if
-name|defined
+name|SPL_INT
 argument_list|(
-name|_KERNEL
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|MENTAT
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|USE_SPL
-argument_list|)
-name|int
 name|s
-decl_stmt|;
-endif|#
-directive|endif
+argument_list|)
+expr_stmt|;
 name|SPL_NET
 argument_list|(
 name|s

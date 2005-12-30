@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
-comment|/*  * Copyright (C) 1995-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_state.h	1.3 1/12/96 (C) 1995 Darren Reed  * Id: ip_state.h,v 2.68.2.3 2005/03/03 14:24:11 darrenr Exp  */
+comment|/*  * Copyright (C) 1995-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_state.h	1.3 1/12/96 (C) 1995 Darren Reed  * $Id: ip_state.h,v 2.68.2.5 2005/08/20 13:48:25 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -30,6 +26,11 @@ operator|||
 name|defined
 argument_list|(
 name|__GNUC__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_AIX51
 argument_list|)
 end_if
 
@@ -275,10 +276,16 @@ name|is_tag
 decl_stmt|;
 name|u_32_t
 name|is_opt
+index|[
+literal|2
+index|]
 decl_stmt|;
 comment|/* packet options set */
 name|u_32_t
 name|is_optmsk
+index|[
+literal|2
+index|]
 decl_stmt|;
 comment|/*    "      "    mask */
 name|u_short
