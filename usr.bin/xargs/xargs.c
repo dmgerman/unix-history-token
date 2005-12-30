@@ -340,6 +340,8 @@ name|jfound
 decl_stmt|,
 name|Lflag
 decl_stmt|,
+name|Sflag
+decl_stmt|,
 name|wasquoted
 decl_stmt|,
 name|xflag
@@ -512,7 +514,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"0E:I:J:L:n:oP:pR:s:rtx"
+literal|"0E:I:J:L:n:oP:pR:S:s:rtx"
 argument_list|)
 operator|)
 operator|!=
@@ -683,6 +685,36 @@ case|:
 comment|/* GNU compatibility */
 break|break;
 case|case
+literal|'S'
+case|:
+name|Sflag
+operator|=
+name|strtoul
+argument_list|(
+name|optarg
+argument_list|,
+operator|&
+name|endptr
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|endptr
+operator|!=
+literal|'\0'
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"replsize must be a number"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'s'
 case|:
 name|nline
@@ -745,6 +777,16 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|Iflag
+operator|&&
+name|Sflag
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
 name|Iflag
 operator|&&
 operator|!
@@ -753,6 +795,17 @@ condition|)
 name|Rflag
 operator|=
 literal|5
+expr_stmt|;
+if|if
+condition|(
+name|Iflag
+operator|&&
+operator|!
+name|Sflag
+condition|)
+name|Sflag
+operator|=
+literal|255
 expr_stmt|;
 if|if
 condition|(
@@ -1779,7 +1832,7 @@ argument_list|,
 operator|(
 name|size_t
 operator|)
-literal|255
+name|Sflag
 argument_list|)
 expr_stmt|;
 if|if
@@ -2427,9 +2480,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: xargs [-0opt] [-E eofstr] [-I replstr [-R replacements]] [-J replstr]\n"
-literal|"             [-L number] [-n number [-x]] [-P maxprocs] [-s size]\n"
-literal|"             [utility [argument ...]]\n"
+literal|"usage: xargs [-0opt] [-E eofstr] [-I replstr [-R replacements] [-S replsize]]\n"
+literal|"             [-J replstr] [-L number] [-n number [-x]] [-P maxprocs]\n"
+literal|"             [-s size] [utility [argument ...]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
