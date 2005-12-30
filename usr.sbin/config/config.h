@@ -503,6 +503,24 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|makeenv
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|makehints
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|headers
 parameter_list|(
 name|void

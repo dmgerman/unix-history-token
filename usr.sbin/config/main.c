@@ -695,6 +695,7 @@ argument_list|(
 literal|3
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Ensure that required elements (machine, cpu, ident) are present. 	 */
 if|if
 condition|(
 name|machinename
@@ -705,6 +706,44 @@ block|{
 name|printf
 argument_list|(
 literal|"Specify machine type, e.g. ``machine i386''\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ident
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"no ident line specified\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|SLIST_EMPTY
+argument_list|(
+operator|&
+name|cputype
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"cpu type must be specified\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -870,6 +909,14 @@ name|makefile
 argument_list|()
 expr_stmt|;
 comment|/* build Makefile */
+name|makeenv
+argument_list|()
+expr_stmt|;
+comment|/* build env.c */
+name|makehints
+argument_list|()
+expr_stmt|;
+comment|/* build hints.c */
 name|headers
 argument_list|()
 expr_stmt|;
