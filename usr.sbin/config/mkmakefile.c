@@ -1525,8 +1525,6 @@ name|match
 decl_stmt|,
 name|nreqs
 decl_stmt|,
-name|devfound
-decl_stmt|,
 name|std
 decl_stmt|,
 name|filetype
@@ -2222,11 +2220,6 @@ goto|goto
 name|nextparam
 goto|;
 block|}
-name|devfound
-operator|=
-literal|0
-expr_stmt|;
-comment|/* XXX duplicate device entries */
 name|STAILQ_FOREACH
 argument_list|(
 argument|dp
@@ -2253,18 +2246,10 @@ name|d_done
 operator||=
 name|DEVDONE
 expr_stmt|;
-name|devfound
-operator|=
-literal|1
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|devfound
-condition|)
 goto|goto
 name|nextparam
 goto|;
+block|}
 if|if
 condition|(
 name|mandatory
