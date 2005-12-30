@@ -1564,41 +1564,6 @@ operator|->
 name|res
 condition|)
 block|{
-if|if
-condition|(
-name|rman_get_device
-argument_list|(
-name|rle
-operator|->
-name|res
-argument_list|)
-operator|!=
-name|cbdev
-condition|)
-name|device_printf
-argument_list|(
-name|cbdev
-argument_list|,
-literal|"Bug: Resource still "
-literal|"owned by child.  "
-literal|"(type=%d, rid=%d, addr=%lx)\n"
-argument_list|,
-name|rle
-operator|->
-name|type
-argument_list|,
-name|rle
-operator|->
-name|rid
-argument_list|,
-name|rman_get_start
-argument_list|(
-name|rle
-operator|->
-name|res
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|BUS_RELEASE_RESOURCE
 argument_list|(
 name|device_get_parent
@@ -1627,7 +1592,7 @@ name|res
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 			 * zero out config so the card won't acknowledge 			 * access to the space anymore 			 */
+comment|/* 			 * zero out config so the card won't acknowledge 			 * access to the space anymore. XXX doesn't handle 			 * 64-bit bars. 			 */
 name|pci_write_config
 argument_list|(
 name|dinfo
