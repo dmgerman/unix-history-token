@@ -82,11 +82,26 @@ directive|include
 file|<sys/file.h>
 end_include
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|AIX
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<sys/fcntl.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -242,6 +257,13 @@ operator|!
 name|defined
 argument_list|(
 name|__sgi
+argument_list|)
+operator|&&
+expr|\
+operator|!
+name|defined
+argument_list|(
+name|AIX
 argument_list|)
 end_if
 
@@ -615,39 +637,11 @@ directive|include
 file|"netinet/ip_raudio_pxy.c"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPFILTER_H323
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|"netinet/ip_h323_pxy.c"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPFILTER_PRO
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"netinet/ip_msnrpc_pxy.c"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -693,7 +687,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)Id: ip_proxy.c,v 2.62.2.12 2005/03/03 14:28:24 darrenr Exp"
+literal|"@(#)$Id: ip_proxy.c,v 2.62.2.14 2005/06/18 02:41:33 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

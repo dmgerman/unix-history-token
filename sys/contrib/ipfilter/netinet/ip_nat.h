@@ -49,6 +49,11 @@ name|defined
 argument_list|(
 name|__GNUC__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_AIX51
+argument_list|)
 end_if
 
 begin_define
@@ -78,10 +83,6 @@ directive|define
 name|SIOCGNATL
 value|_IOWR('r', 63, struct ipfobj)
 end_define
-
-begin_comment
-comment|/*	SIOCPROXY	_IOWR('r', 64, struct ap_control) */
-end_comment
 
 begin_else
 else|#
@@ -115,10 +116,6 @@ directive|define
 name|SIOCGNATL
 value|_IOWR(r, 63, struct ipfobj)
 end_define
-
-begin_comment
-comment|/*	SIOCPROXY	_IOWR(r, 64, struct ap_control) */
-end_comment
 
 begin_endif
 endif|#
@@ -1427,6 +1424,12 @@ block|}
 name|natget_t
 typedef|;
 end_typedef
+
+begin_undef
+undef|#
+directive|undef
+name|tr_flags
+end_undef
 
 begin_typedef
 typedef|typedef

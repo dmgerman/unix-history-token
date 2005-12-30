@@ -98,6 +98,11 @@ name|defined
 argument_list|(
 name|__GNUC__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_AIX51
+argument_list|)
 end_if
 
 begin_define
@@ -4460,6 +4465,13 @@ name|TCP_WSCALE_FIRST
 value|0x00000002
 end_define
 
+begin_define
+define|#
+directive|define
+name|TCP_SACK_PERMIT
+value|0x00000004
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -4481,6 +4493,10 @@ block|}
 name|tcpinfo_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*  * Structures to define a GRE header as seen in a packet.  */
+end_comment
 
 begin_struct
 struct|struct
@@ -4643,6 +4659,10 @@ name|gr_ver
 value|gr_bits.grb_ver
 end_define
 
+begin_comment
+comment|/*  * GRE information tracked by "keep state"  */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -4674,6 +4694,37 @@ name|x
 parameter_list|)
 value|((ntohs(x)>> 13)& 7)
 end_define
+
+begin_comment
+comment|/*  * Format of an Authentication header  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|authhdr
+block|{
+name|u_char
+name|ah_next
+decl_stmt|;
+name|u_char
+name|ah_plen
+decl_stmt|;
+name|u_short
+name|ah_reserved
+decl_stmt|;
+name|u_32_t
+name|ah_spi
+decl_stmt|;
+name|u_32_t
+name|ah_seq
+decl_stmt|;
+comment|/* Following the sequence number field is 0 or more bytes of */
+comment|/* authentication data, as specified by ah_plen - RFC 2402.  */
+block|}
+name|authhdr_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * Timeout tail queue list member  */
@@ -7087,12 +7138,20 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|ipfrwlock_t
+name|ipf_frcache
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|memstr
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -8180,19 +8239,6 @@ operator|(
 expr|struct
 name|friostat
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|fr_icmp4errortype
-name|__P
-argument_list|(
-operator|(
-name|int
 operator|)
 argument_list|)
 decl_stmt|;

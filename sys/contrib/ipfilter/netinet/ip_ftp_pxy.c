@@ -2809,10 +2809,8 @@ index|[
 name|IPF_FTPBUFSZ
 index|]
 decl_stmt|;
+specifier|const
 name|char
-modifier|*
-name|s
-decl_stmt|,
 modifier|*
 name|brackets
 index|[
@@ -2827,6 +2825,10 @@ decl_stmt|;
 name|ftpside_t
 modifier|*
 name|f
+decl_stmt|;
+name|char
+modifier|*
+name|s
 decl_stmt|;
 if|if
 condition|(

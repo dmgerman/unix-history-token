@@ -848,6 +848,11 @@ operator|=
 name|iplread
 block|,
 operator|.
+name|d_write
+operator|=
+name|iplwrite
+block|,
+operator|.
 name|d_ioctl
 operator|=
 name|iplioctl
