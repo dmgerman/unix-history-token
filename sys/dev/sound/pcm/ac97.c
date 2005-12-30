@@ -4224,6 +4224,27 @@ operator|=
 name|j
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|reg
+operator|==
+name|AC97_MIX_BEEP
+condition|)
+block|{
+comment|/* 					 * Few codec such as CX20468-21 does 					 * have this control register, although 					 * the only usable part is the mute bit. 					 */
+name|codec
+operator|->
+name|mix
+index|[
+name|i
+index|]
+operator|.
+name|enable
+operator|=
+literal|1
+expr_stmt|;
+block|}
 else|else
 name|codec
 operator|->
