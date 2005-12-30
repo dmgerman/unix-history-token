@@ -4119,11 +4119,7 @@ argument_list|(
 name|wrch
 argument_list|)
 expr_stmt|;
-name|chn_wrupdate
-argument_list|(
-name|wrch
-argument_list|)
-expr_stmt|;
+comment|/* XXX abusive DMA update: chn_wrupdate(wrch); */
 name|a
 operator|->
 name|bytes
@@ -4205,11 +4201,7 @@ argument_list|(
 name|rdch
 argument_list|)
 expr_stmt|;
-name|chn_rdupdate
-argument_list|(
-name|rdch
-argument_list|)
-expr_stmt|;
+comment|/* XXX abusive DMA update: chn_rdupdate(rdch); */
 name|a
 operator|->
 name|bytes
@@ -4296,11 +4288,7 @@ argument_list|(
 name|wrch
 argument_list|)
 expr_stmt|;
-name|chn_wrupdate
-argument_list|(
-name|wrch
-argument_list|)
-expr_stmt|;
+comment|/* XXX abusive DMA update: chn_wrupdate(wrch); */
 name|a
 operator|->
 name|bytes
@@ -4668,11 +4656,7 @@ argument_list|(
 name|wrch
 argument_list|)
 expr_stmt|;
-name|chn_wrupdate
-argument_list|(
-name|wrch
-argument_list|)
-expr_stmt|;
+comment|/* XXX abusive DMA update: chn_wrupdate(wrch); */
 operator|*
 name|arg_i
 operator|=
