@@ -59,6 +59,25 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|pci_add_resources
+parameter_list|(
+name|device_t
+name|bus
+parameter_list|,
+name|device_t
+name|dev
+parameter_list|,
+name|int
+name|force
+parameter_list|,
+name|uint32_t
+name|prefetchmask
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|pci_driver_added
 parameter_list|(
 name|device_t
