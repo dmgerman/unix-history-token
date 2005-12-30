@@ -4577,35 +4577,6 @@ expr_stmt|;
 if|if
 condition|(
 name|res
-operator|==
-name|NULL
-condition|)
-name|printf
-argument_list|(
-literal|"alloc failed\n"
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"Allocated for %#x: start %#lx end %#lx\n"
-argument_list|,
-name|reg
-argument_list|,
-name|rman_get_start
-argument_list|(
-name|res
-argument_list|)
-argument_list|,
-name|rman_get_end
-argument_list|(
-name|res
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|res
 operator|!=
 name|NULL
 condition|)
