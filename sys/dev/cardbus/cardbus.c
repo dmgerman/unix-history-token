@@ -937,7 +937,7 @@ name|dinfo
 operator|->
 name|mprefetchable
 operator|&
-name|BARBIT
+name|PCI_RID2BAR
 argument_list|(
 name|rle
 operator|->
@@ -1023,7 +1023,7 @@ name|dinfo
 operator|->
 name|mprefetchable
 operator|&
-name|BARBIT
+name|PCI_RID2BAR
 argument_list|(
 name|rle
 operator|->
@@ -1188,7 +1188,7 @@ name|dinfo
 operator|->
 name|mprefetchable
 operator|&
-name|BARBIT
+name|PCI_RID2BAR
 argument_list|(
 name|rle
 operator|->
@@ -1318,7 +1318,7 @@ name|dinfo
 operator|->
 name|mprefetchable
 operator|&
-name|BARBIT
+name|PCI_RID2BAR
 argument_list|(
 name|rle
 operator|->
@@ -1490,7 +1490,7 @@ name|dinfo
 operator|->
 name|mprefetchable
 operator|&
-name|BARBIT
+name|PCI_RID2BAR
 argument_list|(
 name|rle
 operator|->
