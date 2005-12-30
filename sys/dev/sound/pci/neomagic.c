@@ -929,17 +929,13 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|nm_wr
-argument_list|(
-name|sc
-argument_list|,
-literal|0x6cc
-argument_list|,
-literal|0x87
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* 	 * The following code-line may cause a hang for some chipsets, see 	 * PR 56617. 	 * In case of a bugreport without this line have a look at the PR and 	 * conditionize the code-line based upon the specific version of 	 * the chip. 	 */
+block|nm_wr(sc, 0x6cc, 0x87, 1);
+endif|#
+directive|endif
 name|nm_wr
 argument_list|(
 name|sc

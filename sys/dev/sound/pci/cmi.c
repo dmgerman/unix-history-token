@@ -4291,11 +4291,10 @@ comment|/*flags*/
 literal|0
 argument_list|,
 comment|/*lockfunc*/
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
 comment|/*lockfunc*/
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|sc

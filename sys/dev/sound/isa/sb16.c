@@ -1544,9 +1544,15 @@ name|m
 argument_list|)
 decl_stmt|;
 name|u_char
-name|recdev
+name|recdev_l
+decl_stmt|,
+name|recdev_r
 decl_stmt|;
-name|recdev
+name|recdev_l
+operator|=
+literal|0
+expr_stmt|;
+name|recdev_r
 operator|=
 literal|0
 expr_stmt|;
@@ -1556,51 +1562,78 @@ name|src
 operator|&
 name|SOUND_MASK_MIC
 condition|)
-name|recdev
+block|{
+name|recdev_l
 operator||=
 literal|0x01
 expr_stmt|;
 comment|/* mono mic */
+name|recdev_r
+operator||=
+literal|0x01
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|src
 operator|&
 name|SOUND_MASK_CD
 condition|)
-name|recdev
+block|{
+name|recdev_l
 operator||=
-literal|0x06
+literal|0x04
 expr_stmt|;
-comment|/* l+r cd */
+comment|/* l cd */
+name|recdev_r
+operator||=
+literal|0x02
+expr_stmt|;
+comment|/* r cd */
+block|}
 if|if
 condition|(
 name|src
 operator|&
 name|SOUND_MASK_LINE
 condition|)
-name|recdev
+block|{
+name|recdev_l
 operator||=
-literal|0x18
+literal|0x10
 expr_stmt|;
-comment|/* l+r line */
+comment|/* l line */
+name|recdev_r
+operator||=
+literal|0x08
+expr_stmt|;
+comment|/* r line */
+block|}
 if|if
 condition|(
 name|src
 operator|&
 name|SOUND_MASK_SYNTH
 condition|)
-name|recdev
+block|{
+name|recdev_l
 operator||=
-literal|0x60
+literal|0x40
 expr_stmt|;
-comment|/* l+r midi */
+comment|/* l midi */
+name|recdev_r
+operator||=
+literal|0x20
+expr_stmt|;
+comment|/* r midi */
+block|}
 name|sb_setmixer
 argument_list|(
 name|sb
 argument_list|,
 name|SB16_IMASK_L
 argument_list|,
-name|recdev
+name|recdev_l
 argument_list|)
 expr_stmt|;
 name|sb_setmixer
@@ -1609,7 +1642,7 @@ name|sb
 argument_list|,
 name|SB16_IMASK_R
 argument_list|,
-name|recdev
+name|recdev_r
 argument_list|)
 expr_stmt|;
 comment|/* Switch on/off FM tuner source */
@@ -2168,8 +2201,6 @@ name|arg
 decl_stmt|;
 name|int
 name|reason
-init|=
-literal|3
 decl_stmt|,
 name|c
 decl_stmt|;
@@ -2538,6 +2569,7 @@ operator|&
 name|BD_F_SB16X
 condition|)
 block|{
+comment|/* full-duplex doesn't work! */
 name|pprio
 operator|=
 name|sb
@@ -2564,7 +2596,9 @@ name|sb
 operator|->
 name|drq1
 else|:
-name|NULL
+name|sb
+operator|->
+name|drq2
 argument_list|)
 expr_stmt|;
 name|sb
@@ -4296,7 +4330,7 @@ name|status
 argument_list|,
 name|SND_STATUSLEN
 argument_list|,
-literal|"at io 0x%lx irq %ld drq %ld%s bufsz %ud %s"
+literal|"at io 0x%lx irq %ld drq %ld%s bufsz %u %s"
 argument_list|,
 name|rman_get_start
 argument_list|(

@@ -465,6 +465,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SD_F_SOFTVOL
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
 name|SD_F_PRIO_RD
 value|0x10000000
 end_define
@@ -536,6 +543,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AFMT_24BIT
+value|(AFMT_S24_LE | AFMT_S24_BE | AFMT_U24_LE | AFMT_U24_BE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AFMT_16BIT
 value|(AFMT_S16_LE | AFMT_S16_BE | AFMT_U16_LE | AFMT_U16_BE)
 end_define
@@ -544,21 +558,21 @@ begin_define
 define|#
 directive|define
 name|AFMT_8BIT
-value|(AFMT_U8 | AFMT_S8)
+value|(AFMT_MU_LAW | AFMT_A_LAW | AFMT_U8 | AFMT_S8)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AFMT_SIGNED
-value|(AFMT_S16_LE | AFMT_S16_BE | AFMT_S8)
+value|(AFMT_S32_LE | AFMT_S32_BE | AFMT_S24_LE | AFMT_S24_BE | \ 			AFMT_S16_LE | AFMT_S16_BE | AFMT_S8)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AFMT_BIGENDIAN
-value|(AFMT_S16_BE | AFMT_U16_BE)
+value|(AFMT_S32_BE | AFMT_U32_BE | AFMT_S24_BE | AFMT_U24_BE | \ 			AFMT_S16_BE | AFMT_U16_BE)
 end_define
 
 begin_function_decl
@@ -1234,6 +1248,24 @@ end_typedef
 
 begin_function_decl
 name|int
+name|sndstat_acquire
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sndstat_release
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|sndstat_register
 parameter_list|(
 name|device_t
@@ -1277,15 +1309,6 @@ parameter_list|(
 name|char
 modifier|*
 name|str
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|sndstat_busy
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl

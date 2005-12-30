@@ -277,6 +277,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC98
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|int
@@ -292,6 +298,11 @@ name|mss
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -488,6 +499,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC98
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|u_char
@@ -503,6 +520,11 @@ name|reg
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -4234,6 +4256,11 @@ name|served
 operator||=
 literal|0x10
 expr_stmt|;
+name|mss_unlock
+argument_list|(
+name|mss
+argument_list|)
+expr_stmt|;
 name|chn_intr
 argument_list|(
 name|mss
@@ -4241,6 +4268,11 @@ operator|->
 name|pch
 operator|.
 name|channel
+argument_list|)
+expr_stmt|;
+name|mss_lock
+argument_list|(
+name|mss
 argument_list|)
 expr_stmt|;
 block|}
@@ -4266,6 +4298,11 @@ name|served
 operator||=
 literal|0x20
 expr_stmt|;
+name|mss_unlock
+argument_list|(
+name|mss
+argument_list|)
+expr_stmt|;
 name|chn_intr
 argument_list|(
 name|mss
@@ -4273,6 +4310,11 @@ operator|->
 name|rch
 operator|.
 name|channel
+argument_list|)
+expr_stmt|;
+name|mss_lock
+argument_list|(
+name|mss
 argument_list|)
 expr_stmt|;
 block|}
@@ -5149,6 +5191,13 @@ operator||
 name|sel
 argument_list|)
 expr_stmt|;
+name|ad_wait_init
+argument_list|(
+name|mss
+argument_list|,
+literal|10000
+argument_list|)
+expr_stmt|;
 block|}
 name|ad_leave_MCE
 argument_list|(
@@ -5298,13 +5347,26 @@ operator||
 name|arg
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|FULL_DUPLEX
+name|ad_wait_init
 argument_list|(
 name|mss
+argument_list|,
+literal|10000
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ad_read
+argument_list|(
+name|mss
+argument_list|,
+literal|12
+argument_list|)
+operator|&
+literal|0x40
 condition|)
+block|{
+comment|/* mode2? */
 name|ad_write
 argument_list|(
 name|mss
@@ -5315,6 +5377,14 @@ name|arg
 argument_list|)
 expr_stmt|;
 comment|/* capture mode */
+name|ad_wait_init
+argument_list|(
+name|mss
+argument_list|,
+literal|10000
+argument_list|)
+expr_stmt|;
+block|}
 name|ad_leave_MCE
 argument_list|(
 name|mss
@@ -5809,6 +5879,12 @@ operator|&
 literal|8
 operator|)
 condition|)
+block|{
+name|mss_unlock
+argument_list|(
+name|mss
+argument_list|)
+expr_stmt|;
 name|chn_intr
 argument_list|(
 name|mss
@@ -5818,6 +5894,12 @@ operator|.
 name|channel
 argument_list|)
 expr_stmt|;
+name|mss_lock
+argument_list|(
+name|mss
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|sndbuf_runsz
@@ -5835,6 +5917,12 @@ operator|&
 literal|4
 operator|)
 condition|)
+block|{
+name|mss_unlock
+argument_list|(
+name|mss
+argument_list|)
+expr_stmt|;
 name|chn_intr
 argument_list|(
 name|mss
@@ -5844,6 +5932,12 @@ operator|.
 name|channel
 argument_list|)
 expr_stmt|;
+name|mss_lock
+argument_list|(
+name|mss
+argument_list|)
+expr_stmt|;
+block|}
 name|opti_wr
 argument_list|(
 name|mss
@@ -6982,6 +7076,9 @@ operator|=
 name|MD_AD1848
 expr_stmt|;
 comment|/* AD1848 or CS4248 */
+ifndef|#
+directive|ifndef
+name|PC98
 if|if
 condition|(
 name|opti_detect
@@ -7038,6 +7135,8 @@ goto|goto
 name|gotit
 goto|;
 block|}
+endif|#
+directive|endif
 comment|/*      	* Check that the I/O address is in use.      	*      	* bit 7 of the base I/O port is known to be 0 after the chip has      	* performed its power on initialization. Just assume this has      	* happened before the OS is starting.      	*      	* If the I/O address is unused, it typically returns 0xff.      	*/
 for|for
 control|(
@@ -7761,6 +7860,9 @@ return|return
 name|ENXIO
 return|;
 block|}
+ifndef|#
+directive|ifndef
+name|PC98
 specifier|static
 name|int
 name|opti_detect
@@ -8059,6 +8161,8 @@ return|return
 literal|0
 return|;
 block|}
+endif|#
+directive|endif
 specifier|static
 name|char
 modifier|*
@@ -10801,6 +10905,9 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+ifndef|#
+directive|ifndef
+name|PC98
 name|u_char
 name|opti_read
 parameter_list|(
@@ -10946,6 +11053,8 @@ operator|-
 literal|1
 return|;
 block|}
+endif|#
+directive|endif
 specifier|static
 name|device_method_t
 name|pnpmss_methods

@@ -473,6 +473,11 @@ name|AD1816_INTRCI
 operator|)
 condition|)
 block|{
+name|ad1816_unlock
+argument_list|(
+name|ad1816
+argument_list|)
+expr_stmt|;
 name|chn_intr
 argument_list|(
 name|ad1816
@@ -480,6 +485,11 @@ operator|->
 name|rch
 operator|.
 name|channel
+argument_list|)
+expr_stmt|;
+name|ad1816_lock
+argument_list|(
+name|ad1816
 argument_list|)
 expr_stmt|;
 name|served
@@ -507,6 +517,11 @@ name|AD1816_INTRPI
 operator|)
 condition|)
 block|{
+name|ad1816_unlock
+argument_list|(
+name|ad1816
+argument_list|)
+expr_stmt|;
 name|chn_intr
 argument_list|(
 name|ad1816
@@ -514,6 +529,11 @@ operator|->
 name|pch
 operator|.
 name|channel
+argument_list|)
+expr_stmt|;
+name|ad1816_lock
+argument_list|(
+name|ad1816
 argument_list|)
 expr_stmt|;
 name|served
