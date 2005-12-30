@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
-comment|/*  * Copyright (C) 2002-2003 by Darren Reed  *  * Simple PPTP transparent proxy for in-kernel use.  For use with the NAT  * code.  *  * Id: ip_pptp_pxy.c,v 2.10.2.9 2005/03/16 18:17:34 darrenr Exp  *  */
+comment|/*  * Copyright (C) 2002-2003 by Darren Reed  *  * Simple PPTP transparent proxy for in-kernel use.  For use with the NAT  * code.  *  * $Id: ip_pptp_pxy.c,v 2.10.2.11 2005/12/04 23:39:27 darrenr Exp $  *  */
 end_comment
 
 begin_define
@@ -488,25 +484,11 @@ name|ip_t
 modifier|*
 name|ip
 decl_stmt|;
-name|int
-name|off
-decl_stmt|;
 name|ip
 operator|=
 name|fin
 operator|->
 name|fin_ip
-expr_stmt|;
-name|off
-operator|=
-name|fin
-operator|->
-name|fin_hlen
-operator|+
-sizeof|sizeof
-argument_list|(
-name|udphdr_t
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1443,6 +1425,7 @@ name|rev
 decl_stmt|;
 block|{
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|funcname

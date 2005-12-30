@@ -1,8 +1,4 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -26,6 +22,11 @@ operator|||
 name|defined
 argument_list|(
 name|__GNUC__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_AIX51
 argument_list|)
 end_if
 
