@@ -334,23 +334,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ELFOSABI_SYSV
+name|ELFOSABI_NONE
 value|0
 end_define
 
 begin_comment
 comment|/* UNIX System V ABI */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ELFOSABI_NONE
-value|ELFOSABI_SYSV
-end_define
-
-begin_comment
-comment|/* symbol used in old spec */
 end_comment
 
 begin_define
@@ -422,12 +411,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ELFOSABI_MONTEREY
+name|ELFOSABI_AIX
 value|7
 end_define
 
 begin_comment
-comment|/* Monterey */
+comment|/* AIX */
 end_comment
 
 begin_define
@@ -488,6 +477,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ELFOSABI_OPENVMS
+value|13
+end_define
+
+begin_comment
+comment|/* Open VMS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELFOSABI_NSK
+value|14
+end_define
+
+begin_comment
+comment|/* HP Non-Stop Kernel */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ELFOSABI_ARM
 value|97
 end_define
@@ -505,6 +516,28 @@ end_define
 
 begin_comment
 comment|/* Standalone (embedded) application */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELFOSABI_SYSV
+value|ELFOSABI_NONE
+end_define
+
+begin_comment
+comment|/* symbol used in old spec */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELFOSABI_MONTEREY
+value|ELFOSABI_AIX
+end_define
+
+begin_comment
+comment|/* Monterey */
 end_comment
 
 begin_comment
@@ -580,6 +613,50 @@ begin_comment
 comment|/* Core file. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ET_LOOS
+value|0xfe00
+end_define
+
+begin_comment
+comment|/* First operating system specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ET_HIOS
+value|0xfeff
+end_define
+
+begin_comment
+comment|/* Last operating system-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ET_LOPROC
+value|0xff00
+end_define
+
+begin_comment
+comment|/* First processor-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ET_HIPROC
+value|0xffff
+end_define
+
+begin_comment
+comment|/* Last processor-specific. */
+end_comment
+
 begin_comment
 comment|/* Values for e_machine. */
 end_comment
@@ -653,17 +730,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EM_486
-value|6
-end_define
-
-begin_comment
-comment|/* Intel i486. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|EM_860
 value|7
 end_define
@@ -680,11 +746,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* MIPS R3000 Big-Endian only */
-end_comment
-
-begin_comment
-comment|/* Extensions.  This list is not complete. */
+comment|/* MIPS R3000 Big-Endian only. */
 end_comment
 
 begin_define
@@ -695,22 +757,18 @@ value|9
 end_define
 
 begin_comment
-comment|/* IBM System/370 */
+comment|/* IBM System/370. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EM_MIPS_RS4_BE
+name|EM_MIPS_RS3_LE
 value|10
 end_define
 
 begin_comment
-comment|/* MIPS R4000 Big-Endian */
-end_comment
-
-begin_comment
-comment|/* Depreciated */
+comment|/* MIPS R3000 Little-Endian. */
 end_comment
 
 begin_define
@@ -721,7 +779,18 @@ value|15
 end_define
 
 begin_comment
-comment|/* HPPA */
+comment|/* HP PA-RISC. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_VPP500
+value|17
+end_define
+
+begin_comment
+comment|/* Fujitsu VPP500. */
 end_comment
 
 begin_define
@@ -732,7 +801,18 @@ value|18
 end_define
 
 begin_comment
-comment|/* SPARC v8plus */
+comment|/* SPARC v8plus. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_960
+value|19
+end_define
+
+begin_comment
+comment|/* Intel 80960. */
 end_comment
 
 begin_define
@@ -743,7 +823,7 @@ value|20
 end_define
 
 begin_comment
-comment|/* PowerPC 32-bit */
+comment|/* PowerPC 32-bit. */
 end_comment
 
 begin_define
@@ -754,7 +834,62 @@ value|21
 end_define
 
 begin_comment
-comment|/* PowerPC 64-bit */
+comment|/* PowerPC 64-bit. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_S390
+value|22
+end_define
+
+begin_comment
+comment|/* IBM System/390. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_V800
+value|36
+end_define
+
+begin_comment
+comment|/* NEC V800. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_FR20
+value|37
+end_define
+
+begin_comment
+comment|/* Fujitsu FR20. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_RH32
+value|38
+end_define
+
+begin_comment
+comment|/* TRW RH-32. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_RCE
+value|39
+end_define
+
+begin_comment
+comment|/* Motorola RCE. */
 end_comment
 
 begin_define
@@ -765,7 +900,18 @@ value|40
 end_define
 
 begin_comment
-comment|/* ARM */
+comment|/* ARM. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_SH
+value|42
+end_define
+
+begin_comment
+comment|/* Hitachi SH. */
 end_comment
 
 begin_define
@@ -776,7 +922,73 @@ value|43
 end_define
 
 begin_comment
-comment|/* SPARC v9 64-bit */
+comment|/* SPARC v9 64-bit. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_TRICORE
+value|44
+end_define
+
+begin_comment
+comment|/* Siemens TriCore embedded processor. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_ARC
+value|45
+end_define
+
+begin_comment
+comment|/* Argonaut RISC Core. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_H8_300
+value|46
+end_define
+
+begin_comment
+comment|/* Hitachi H8/300. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_H8_300H
+value|47
+end_define
+
+begin_comment
+comment|/* Hitachi H8/300H. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_H8S
+value|48
+end_define
+
+begin_comment
+comment|/* Hitachi H8S. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_H8_500
+value|49
+end_define
+
+begin_comment
+comment|/* Hitachi H8/500. */
 end_comment
 
 begin_define
@@ -787,7 +999,128 @@ value|50
 end_define
 
 begin_comment
-comment|/* Intel IA-64 Processor */
+comment|/* Intel IA-64 Processor. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_MIPS_X
+value|51
+end_define
+
+begin_comment
+comment|/* Stanford MIPS-X. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_COLDFIRE
+value|52
+end_define
+
+begin_comment
+comment|/* Motorola ColdFire. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_68HC12
+value|53
+end_define
+
+begin_comment
+comment|/* Motorola M68HC12. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_MMA
+value|54
+end_define
+
+begin_comment
+comment|/* Fujitsu MMA. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_PCP
+value|55
+end_define
+
+begin_comment
+comment|/* Siemens PCP. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_NCPU
+value|56
+end_define
+
+begin_comment
+comment|/* Sony nCPU. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_NDR1
+value|57
+end_define
+
+begin_comment
+comment|/* Denso NDR1 microprocessor. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_STARCORE
+value|58
+end_define
+
+begin_comment
+comment|/* Motorola Star*Core processor. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_ME16
+value|59
+end_define
+
+begin_comment
+comment|/* Toyota ME16 processor. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_ST100
+value|60
+end_define
+
+begin_comment
+comment|/* STMicroelectronics ST100 processor. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_TINYJ
+value|61
+end_define
+
+begin_comment
+comment|/* Advanced Logic Corp. TinyJ processor. */
 end_comment
 
 begin_define
@@ -801,6 +1134,43 @@ begin_comment
 comment|/* Advanced Micro Devices x86-64 */
 end_comment
 
+begin_comment
+comment|/* Non-standard or deprecated. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_486
+value|6
+end_define
+
+begin_comment
+comment|/* Intel i486. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_MIPS_RS4_BE
+value|10
+end_define
+
+begin_comment
+comment|/* MIPS R4000 Big-Endian */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_ALPHA_STD
+value|41
+end_define
+
+begin_comment
+comment|/* Digital Alpha (standard value). */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -809,7 +1179,7 @@ value|0x9026
 end_define
 
 begin_comment
-comment|/* Alpha (written in the absence of an ABI */
+comment|/* Alpha (written in the absence of an ABI) */
 end_comment
 
 begin_comment
@@ -863,6 +1233,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SHN_LOOS
+value|0xff20
+end_define
+
+begin_comment
+comment|/* First operating system-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHN_HIOS
+value|0xff3f
+end_define
+
+begin_comment
+comment|/* Last operating system-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SHN_ABS
 value|0xfff1
 end_define
@@ -880,6 +1272,17 @@ end_define
 
 begin_comment
 comment|/* Common data. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHN_XINDEX
+value|0xffff
+end_define
+
+begin_comment
+comment|/* Escape -- index stored elsewhere. */
 end_comment
 
 begin_define
@@ -1032,12 +1435,56 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SHT_NUM
-value|12
+name|SHT_INIT_ARRAY
+value|14
 end_define
 
 begin_comment
-comment|/* number of section types */
+comment|/* Initialization function pointers. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_FINI_ARRAY
+value|15
+end_define
+
+begin_comment
+comment|/* Termination function pointers. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_PREINIT_ARRAY
+value|16
+end_define
+
+begin_comment
+comment|/* Pre-initialization function ptrs. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_GROUP
+value|17
+end_define
+
+begin_comment
+comment|/* Section group. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_SYMTAB_SHNDX
+value|18
+end_define
+
+begin_comment
+comment|/* Section indexes (see SHN_XINDEX). */
 end_comment
 
 begin_define
@@ -1146,6 +1593,72 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SHF_MERGE
+value|0x10
+end_define
+
+begin_comment
+comment|/* Section may be merged. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHF_STRINGS
+value|0x20
+end_define
+
+begin_comment
+comment|/* Section contains strings. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHF_INFO_LINK
+value|0x40
+end_define
+
+begin_comment
+comment|/* sh_info holds section index. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHF_LINK_ORDER
+value|0x80
+end_define
+
+begin_comment
+comment|/* Special ordering requirements. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHF_OS_NONCONFORMING
+value|0x100
+end_define
+
+begin_comment
+comment|/* OS-specific processing required. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHF_GROUP
+value|0x200
+end_define
+
+begin_comment
+comment|/* Member of section group. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SHF_TLS
 value|0x400
 end_define
@@ -1157,12 +1670,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SHF_MASKOS
+value|0x0ff00000
+end_define
+
+begin_comment
+comment|/* OS-specific semantics. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SHF_MASKPROC
 value|0xf0000000
 end_define
 
 begin_comment
-comment|/* Reserved for processor-specific. */
+comment|/* Processor-specific semantics. */
 end_comment
 
 begin_comment
@@ -1260,23 +1784,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PT_COUNT
-value|8
-end_define
-
-begin_comment
-comment|/* Number of defined p_type values. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PT_LOOS
 value|0x60000000
 end_define
 
 begin_comment
-comment|/* OS-specific */
+comment|/* First OS-specific. */
 end_comment
 
 begin_define
@@ -1287,7 +1800,7 @@ value|0x6fffffff
 end_define
 
 begin_comment
-comment|/* OS-specific */
+comment|/* Last OS-specific. */
 end_comment
 
 begin_define
@@ -1347,6 +1860,28 @@ end_define
 
 begin_comment
 comment|/* Readable. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PF_MASKOS
+value|0x0ff00000
+end_define
+
+begin_comment
+comment|/* Operating system-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PF_MASKPROC
+value|0xf0000000
+end_define
+
+begin_comment
+comment|/* Processor-specific. */
 end_comment
 
 begin_comment
@@ -1730,17 +2265,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DT_COUNT
-value|33
-end_define
-
-begin_comment
-comment|/* Number of defined d_tag values. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|DT_LOOS
 value|0x6000000d
 end_define
@@ -1753,7 +2277,7 @@ begin_define
 define|#
 directive|define
 name|DT_HIOS
-value|0x6fff0000
+value|0x6ffff000
 end_define
 
 begin_comment
@@ -1918,6 +2442,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|STB_LOOS
+value|10
+end_define
+
+begin_comment
+comment|/* Reserved range for operating system */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STB_HIOS
+value|12
+end_define
+
+begin_comment
+comment|/*   specific semantics. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|STB_LOPROC
 value|13
 end_define
@@ -1934,7 +2480,7 @@ value|15
 end_define
 
 begin_comment
-comment|/*  specific symbol bindings */
+comment|/*   specific semantics. */
 end_comment
 
 begin_comment
@@ -1999,12 +2545,45 @@ end_comment
 begin_define
 define|#
 directive|define
+name|STT_COMMON
+value|5
+end_define
+
+begin_comment
+comment|/* Uninitialized common block. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|STT_TLS
 value|6
 end_define
 
 begin_comment
 comment|/* TLS object. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STT_LOOS
+value|10
+end_define
+
+begin_comment
+comment|/* Reserved range for operating system */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STT_HIOS
+value|12
+end_define
+
+begin_comment
+comment|/*   specific semantics. */
 end_comment
 
 begin_define
@@ -2026,7 +2605,55 @@ value|15
 end_define
 
 begin_comment
-comment|/*  specific symbol types */
+comment|/*   specific semantics. */
+end_comment
+
+begin_comment
+comment|/* Symbol visibility - ELFNN_ST_VISIBILITY - st_other */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STV_DEFAULT
+value|0x0
+end_define
+
+begin_comment
+comment|/* Default visibility (see binding). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STV_INTERNAL
+value|0x1
+end_define
+
+begin_comment
+comment|/* Special meaning in relocatable objects. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STV_HIDDEN
+value|0x2
+end_define
+
+begin_comment
+comment|/* Not visible. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STV_PROTECTED
+value|0x3
+end_define
+
+begin_comment
+comment|/* Visible but not preemptible. */
 end_comment
 
 begin_comment

@@ -544,7 +544,7 @@ parameter_list|(
 name|linker_file_t
 name|lf
 parameter_list|,
-name|Elf_Word
+name|Elf_Size
 name|symidx
 parameter_list|,
 name|int
@@ -4342,7 +4342,7 @@ parameter_list|(
 name|elf_file_t
 name|ef
 parameter_list|,
-name|Elf_Word
+name|Elf_Size
 name|r_info
 parameter_list|)
 block|{
@@ -6048,7 +6048,7 @@ parameter_list|(
 name|linker_file_t
 name|lf
 parameter_list|,
-name|Elf_Word
+name|Elf_Size
 name|symidx
 parameter_list|)
 block|{
@@ -6094,7 +6094,7 @@ parameter_list|(
 name|linker_file_t
 name|lf
 parameter_list|,
-name|Elf_Word
+name|Elf_Size
 name|symidx
 parameter_list|)
 block|{
@@ -6158,7 +6158,7 @@ parameter_list|(
 name|linker_file_t
 name|lf
 parameter_list|,
-name|Elf_Word
+name|Elf_Size
 name|symidx
 parameter_list|,
 name|int

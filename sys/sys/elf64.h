@@ -28,50 +28,50 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|u_int64_t
+name|uint64_t
 name|Elf64_Addr
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|uint16_t
 name|Elf64_Half
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_int64_t
+name|uint64_t
 name|Elf64_Off
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|int64_t
+name|int32_t
 name|Elf64_Sword
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_int64_t
+name|int64_t
+name|Elf64_Sxword
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|uint32_t
 name|Elf64_Word
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_int64_t
-name|Elf64_Size
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|u_int16_t
-name|Elf64_Quarter
+name|uint64_t
+name|Elf64_Xword
 typedef|;
 end_typedef
 
@@ -99,7 +99,7 @@ end_else
 
 begin_typedef
 typedef|typedef
-name|Elf64_Half
+name|Elf64_Word
 name|Elf64_Hashelt
 typedef|;
 end_typedef
@@ -108,6 +108,24 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Non-standard class-dependent datatype used for abstraction. */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|Elf64_Xword
+name|Elf64_Size
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|Elf64_Sxword
+name|Elf64_Ssize
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * ELF header.  */
@@ -125,15 +143,15 @@ name|EI_NIDENT
 index|]
 decl_stmt|;
 comment|/* File identification. */
-name|Elf64_Quarter
+name|Elf64_Half
 name|e_type
 decl_stmt|;
 comment|/* File type. */
-name|Elf64_Quarter
+name|Elf64_Half
 name|e_machine
 decl_stmt|;
 comment|/* Machine architecture. */
-name|Elf64_Half
+name|Elf64_Word
 name|e_version
 decl_stmt|;
 comment|/* ELF format version. */
@@ -149,31 +167,31 @@ name|Elf64_Off
 name|e_shoff
 decl_stmt|;
 comment|/* Section header file offset. */
-name|Elf64_Half
+name|Elf64_Word
 name|e_flags
 decl_stmt|;
 comment|/* Architecture-specific flags. */
-name|Elf64_Quarter
+name|Elf64_Half
 name|e_ehsize
 decl_stmt|;
 comment|/* Size of ELF header in bytes. */
-name|Elf64_Quarter
+name|Elf64_Half
 name|e_phentsize
 decl_stmt|;
 comment|/* Size of program header entry. */
-name|Elf64_Quarter
+name|Elf64_Half
 name|e_phnum
 decl_stmt|;
 comment|/* Number of program header entries. */
-name|Elf64_Quarter
+name|Elf64_Half
 name|e_shentsize
 decl_stmt|;
 comment|/* Size of section header entry. */
-name|Elf64_Quarter
+name|Elf64_Half
 name|e_shnum
 decl_stmt|;
 comment|/* Number of section header entries. */
-name|Elf64_Quarter
+name|Elf64_Half
 name|e_shstrndx
 decl_stmt|;
 comment|/* Section name strings section. */
@@ -190,15 +208,15 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|Elf64_Half
+name|Elf64_Word
 name|sh_name
 decl_stmt|;
 comment|/* Section name (index into the 					   section header string table). */
-name|Elf64_Half
+name|Elf64_Word
 name|sh_type
 decl_stmt|;
 comment|/* Section type. */
-name|Elf64_Size
+name|Elf64_Xword
 name|sh_flags
 decl_stmt|;
 comment|/* Section flags. */
@@ -210,23 +228,23 @@ name|Elf64_Off
 name|sh_offset
 decl_stmt|;
 comment|/* Offset in file. */
-name|Elf64_Size
+name|Elf64_Xword
 name|sh_size
 decl_stmt|;
 comment|/* Size in bytes. */
-name|Elf64_Half
+name|Elf64_Word
 name|sh_link
 decl_stmt|;
 comment|/* Index of a related section. */
-name|Elf64_Half
+name|Elf64_Word
 name|sh_info
 decl_stmt|;
 comment|/* Depends on section type. */
-name|Elf64_Size
+name|Elf64_Xword
 name|sh_addralign
 decl_stmt|;
 comment|/* Alignment in bytes. */
-name|Elf64_Size
+name|Elf64_Xword
 name|sh_entsize
 decl_stmt|;
 comment|/* Size of each entry in section. */
@@ -243,11 +261,11 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|Elf64_Half
+name|Elf64_Word
 name|p_type
 decl_stmt|;
 comment|/* Entry type. */
-name|Elf64_Half
+name|Elf64_Word
 name|p_flags
 decl_stmt|;
 comment|/* Access permission flags. */
@@ -263,15 +281,15 @@ name|Elf64_Addr
 name|p_paddr
 decl_stmt|;
 comment|/* Physical address (not used). */
-name|Elf64_Size
+name|Elf64_Xword
 name|p_filesz
 decl_stmt|;
 comment|/* Size of contents in file. */
-name|Elf64_Size
+name|Elf64_Xword
 name|p_memsz
 decl_stmt|;
 comment|/* Size of contents in memory. */
-name|Elf64_Size
+name|Elf64_Xword
 name|p_align
 decl_stmt|;
 comment|/* Alignment in memory and file. */
@@ -288,13 +306,13 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|Elf64_Size
+name|Elf64_Sxword
 name|d_tag
 decl_stmt|;
 comment|/* Entry type. */
 union|union
 block|{
-name|Elf64_Size
+name|Elf64_Xword
 name|d_val
 decl_stmt|;
 comment|/* Integer value. */
@@ -326,7 +344,7 @@ name|Elf64_Addr
 name|r_offset
 decl_stmt|;
 comment|/* Location to be relocated. */
-name|Elf64_Size
+name|Elf64_Xword
 name|r_info
 decl_stmt|;
 comment|/* Relocation type and symbol index. */
@@ -347,11 +365,11 @@ name|Elf64_Addr
 name|r_offset
 decl_stmt|;
 comment|/* Location to be relocated. */
-name|Elf64_Size
+name|Elf64_Xword
 name|r_info
 decl_stmt|;
 comment|/* Relocation type and symbol index. */
-name|Elf64_Off
+name|Elf64_Sxword
 name|r_addend
 decl_stmt|;
 comment|/* Addend. */
@@ -381,7 +399,7 @@ name|ELF64_R_TYPE
 parameter_list|(
 name|info
 parameter_list|)
-value|((unsigned char)(info))
+value|((info)& 0xffffffffL)
 end_define
 
 begin_comment
@@ -397,7 +415,7 @@ name|sym
 parameter_list|,
 name|type
 parameter_list|)
-value|(((sym)<< 32) + (unsigned char)(type))
+value|(((sym)<< 32) + ((type)& 0xffffffffL))
 end_define
 
 begin_comment
@@ -408,7 +426,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|Elf64_Half
+name|Elf64_Word
 name|st_name
 decl_stmt|;
 comment|/* String table index of name. */
@@ -422,7 +440,7 @@ name|char
 name|st_other
 decl_stmt|;
 comment|/* Reserved (not used). */
-name|Elf64_Quarter
+name|Elf64_Half
 name|st_shndx
 decl_stmt|;
 comment|/* Section index of symbol. */
@@ -430,7 +448,7 @@ name|Elf64_Addr
 name|st_value
 decl_stmt|;
 comment|/* Symbol value. */
-name|Elf64_Size
+name|Elf64_Xword
 name|st_size
 decl_stmt|;
 comment|/* Size of associated object. */
@@ -477,6 +495,20 @@ parameter_list|,
 name|type
 parameter_list|)
 value|(((bind)<< 4) + ((type)& 0xf))
+end_define
+
+begin_comment
+comment|/* Macro for accessing the fields of st_other. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELF64_ST_VISIBILITY
+parameter_list|(
+name|oth
+parameter_list|)
+value|((oth)& 0x3)
 end_define
 
 begin_endif

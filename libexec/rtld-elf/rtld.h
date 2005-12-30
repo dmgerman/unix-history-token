@@ -452,11 +452,11 @@ struct|struct
 name|Struct_Obj_Entry
 block|{
 comment|/*      * These two items have to be set right for compatibility with the      * original ElfKit crt1.o.      */
-name|Elf_Word
+name|Elf_Size
 name|magic
 decl_stmt|;
 comment|/* Magic number (sanity check) */
-name|Elf_Word
+name|Elf_Size
 name|version
 decl_stmt|;
 comment|/* Version number of struct format */

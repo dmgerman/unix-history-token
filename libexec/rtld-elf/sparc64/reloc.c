@@ -1453,7 +1453,7 @@ specifier|static
 name|void
 name|install_plt
 parameter_list|(
-name|Elf_Half
+name|Elf_Word
 modifier|*
 name|pltgot
 parameter_list|,
@@ -1929,7 +1929,7 @@ name|Elf_Addr
 modifier|*
 name|where
 decl_stmt|;
-name|Elf_Half
+name|Elf_Word
 modifier|*
 name|where32
 decl_stmt|;
@@ -1961,7 +1961,7 @@ expr_stmt|;
 name|where32
 operator|=
 operator|(
-name|Elf_Half
+name|Elf_Word
 operator|*
 operator|)
 name|where
@@ -2750,7 +2750,7 @@ decl_stmt|;
 name|Elf_Addr
 name|offset
 decl_stmt|;
-name|Elf_Half
+name|Elf_Word
 modifier|*
 name|where
 decl_stmt|;
@@ -2769,7 +2769,7 @@ comment|/* 		 * At the PLT entry pointed at by `where', we now construct 		 * a 
 name|where
 operator|=
 operator|(
-name|Elf_Half
+name|Elf_Word
 operator|*
 operator|)
 name|wherep
@@ -3465,7 +3465,7 @@ modifier|*
 name|obj
 parameter_list|)
 block|{
-name|Elf_Half
+name|Elf_Word
 modifier|*
 name|entry
 decl_stmt|;
@@ -3481,7 +3481,7 @@ block|{
 name|entry
 operator|=
 operator|(
-name|Elf_Half
+name|Elf_Word
 operator|*
 operator|)
 name|obj
@@ -3537,7 +3537,7 @@ specifier|static
 name|void
 name|install_plt
 parameter_list|(
-name|Elf_Half
+name|Elf_Word
 modifier|*
 name|pltgot
 parameter_list|,

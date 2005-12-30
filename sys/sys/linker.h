@@ -1031,7 +1031,7 @@ name|elf_lookup_fn
 parameter_list|(
 name|linker_file_t
 parameter_list|,
-name|Elf_Word
+name|Elf_Size
 parameter_list|,
 name|int
 parameter_list|)
@@ -1099,7 +1099,7 @@ parameter_list|(
 name|linker_file_t
 name|_lf
 parameter_list|,
-name|Elf_Word
+name|Elf_Size
 name|_symidx
 parameter_list|)
 function_decl|;
@@ -1114,7 +1114,7 @@ parameter_list|(
 name|linker_file_t
 name|_lf
 parameter_list|,
-name|Elf_Word
+name|Elf_Size
 name|_symidx
 parameter_list|)
 function_decl|;

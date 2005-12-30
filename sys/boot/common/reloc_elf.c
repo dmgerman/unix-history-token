@@ -118,7 +118,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|__sparc__
-name|Elf_Word
+name|Elf_Size
 name|w
 decl_stmt|;
 specifier|const
@@ -259,7 +259,7 @@ name|addend
 decl_stmt|,
 name|addr
 decl_stmt|;
-name|Elf_Word
+name|Elf_Size
 name|rtype
 decl_stmt|,
 name|symidx
@@ -564,7 +564,7 @@ name|where
 decl_stmt|,
 name|val
 decl_stmt|;
-name|Elf_Word
+name|Elf_Size
 name|rtype
 decl_stmt|,
 name|symidx

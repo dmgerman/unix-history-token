@@ -4332,7 +4332,7 @@ name|elf_file
 modifier|*
 name|ef
 parameter_list|,
-name|Elf_Word
+name|Elf_Size
 name|symidx
 parameter_list|)
 block|{

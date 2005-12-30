@@ -73,7 +73,7 @@ name|Elf_Rela
 modifier|*
 name|a
 decl_stmt|;
-name|Elf_Word
+name|Elf_Size
 name|w
 decl_stmt|;
 switch|switch
@@ -163,6 +163,10 @@ name|warnx
 argument_list|(
 literal|"unhandled relocation type %u"
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|ELF_R_TYPE
 argument_list|(
 name|a

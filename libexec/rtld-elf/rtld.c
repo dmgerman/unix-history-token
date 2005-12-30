@@ -2454,7 +2454,7 @@ name|Obj_Entry
 modifier|*
 name|obj
 parameter_list|,
-name|Elf_Word
+name|Elf_Size
 name|reloff
 parameter_list|)
 block|{

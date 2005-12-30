@@ -350,7 +350,7 @@ decl_stmt|;
 name|Elf_Addr
 name|addend
 decl_stmt|;
-name|Elf_Word
+name|Elf_Size
 name|rtype
 decl_stmt|,
 name|symidx
