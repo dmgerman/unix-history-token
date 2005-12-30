@@ -4593,7 +4593,9 @@ decl_stmt|;
 name|char
 name|ssid
 index|[
-literal|14
+name|IEEE80211_NWID_LEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|uint8_t
@@ -4699,7 +4701,7 @@ condition|)
 return|return;
 name|printf
 argument_list|(
-literal|"%-14.14s  %-17.17s  %4s %4s  %-5s %3s %4s\n"
+literal|"%-32.32s  %-17.17s  %4s %4s  %-5s %3s %4s\n"
 argument_list|,
 literal|"SSID"
 argument_list|,
@@ -4754,7 +4756,7 @@ operator|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-14.*s  %s  %3d  %3dM %2d:%-2d  %3d %-4.4s"
+literal|"%-32.*s  %s  %3d  %3dM %2d:%-2d  %3d %-4.4s"
 argument_list|,
 name|copy_essid
 argument_list|(
