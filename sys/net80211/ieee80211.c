@@ -3642,18 +3642,14 @@ operator|==
 name|IEEE80211_MODE_AUTO
 condition|)
 block|{
-comment|/* ignore turbo channels for autoselect */
+comment|/* ignore static turbo channels for autoselect */
 if|if
 condition|(
-operator|(
+operator|!
+name|IEEE80211_IS_CHAN_T
+argument_list|(
 name|c
-operator|->
-name|ic_flags
-operator|&
-name|IEEE80211_CHAN_TURBO
-operator|)
-operator|==
-literal|0
+argument_list|)
 condition|)
 break|break;
 block|}
@@ -3755,18 +3751,14 @@ operator|==
 name|IEEE80211_MODE_AUTO
 condition|)
 block|{
-comment|/* take anything but pure turbo channels */
+comment|/* take anything but static turbo channels */
 if|if
 condition|(
-operator|(
+operator|!
+name|IEEE80211_IS_CHAN_T
+argument_list|(
 name|c
-operator|->
-name|ic_flags
-operator|&
-name|IEEE80211_CHAN_TURBO
-operator|)
-operator|==
-literal|0
+argument_list|)
 condition|)
 name|setbit
 argument_list|(
