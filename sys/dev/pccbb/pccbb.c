@@ -2113,13 +2113,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"Status is 0x%x %x\n"
+literal|"Status is 0x%x\n"
 operator|,
 name|status
-operator|,
-name|sc
-operator|->
-name|bsh
 operator|)
 argument_list|)
 expr_stmt|;
