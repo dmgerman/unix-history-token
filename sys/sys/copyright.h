@@ -58,9 +58,7 @@ name|copyright
 index|[]
 init|=
 name|COPYRIGHT_FreeBSD
-comment|/**/
 name|COPYRIGHT_PC98
-comment|/**/
 name|COPYRIGHT_UCB
 decl_stmt|;
 end_decl_stmt
@@ -76,7 +74,6 @@ name|copyright
 index|[]
 init|=
 name|COPYRIGHT_FreeBSD
-comment|/**/
 name|COPYRIGHT_UCB
 decl_stmt|;
 end_decl_stmt
