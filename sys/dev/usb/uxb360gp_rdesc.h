@@ -9,6 +9,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|uByte
 name|uhid_xb360gp_report_descr
 index|[]
