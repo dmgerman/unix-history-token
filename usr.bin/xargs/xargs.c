@@ -1212,11 +1212,15 @@ name|eofstr
 operator|!=
 literal|'\0'
 operator|&&
-name|strcmp
+name|strncmp
 argument_list|(
 name|argp
 argument_list|,
 name|eofstr
+argument_list|,
+name|p
+operator|-
+name|argp
 argument_list|)
 operator|==
 literal|0
