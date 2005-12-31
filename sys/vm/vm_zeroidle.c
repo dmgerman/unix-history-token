@@ -455,7 +455,7 @@ operator|+
 name|PQ_PRIME2
 operator|)
 operator|&
-name|PQ_L2_MASK
+name|PQ_COLORMASK
 expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(

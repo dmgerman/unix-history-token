@@ -2831,9 +2831,10 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+name|VM_PAGE_GETQUEUE
+argument_list|(
 name|m
-operator|->
-name|queue
+argument_list|)
 operator|!=
 name|PQ_INACTIVE
 condition|)
@@ -3405,9 +3406,10 @@ expr_stmt|;
 comment|/* 				 * The page might have been moved to another 				 * queue during potential blocking in vget() 				 * above.  The page might have been freed and 				 * reused for another vnode.  The object might 				 * have been reused for another vnode. 				 */
 if|if
 condition|(
+name|VM_PAGE_GETQUEUE
+argument_list|(
 name|m
-operator|->
-name|queue
+argument_list|)
 operator|!=
 name|PQ_INACTIVE
 operator|||
@@ -3649,11 +3651,12 @@ condition|)
 block|{
 name|KASSERT
 argument_list|(
+name|VM_PAGE_INQUEUE2
+argument_list|(
 name|m
-operator|->
-name|queue
-operator|==
+argument_list|,
 name|PQ_ACTIVE
+argument_list|)
 argument_list|,
 operator|(
 literal|"vm_pageout_scan: page %p isn't active"
@@ -3993,7 +3996,7 @@ operator|+
 name|PQ_PRIME2
 operator|)
 operator|&
-name|PQ_L2_MASK
+name|PQ_COLORMASK
 operator|)
 operator|!=
 name|cache_first_failure
@@ -4738,11 +4741,12 @@ name|actcount
 decl_stmt|;
 name|KASSERT
 argument_list|(
+name|VM_PAGE_INQUEUE2
+argument_list|(
 name|m
-operator|->
-name|queue
-operator|==
+argument_list|,
 name|PQ_ACTIVE
+argument_list|)
 argument_list|,
 operator|(
 literal|"vm_pageout_page_stats: page %p isn't active"
@@ -5081,7 +5085,7 @@ operator|/
 literal|768
 operator|)
 operator|+
-name|PQ_L2_SIZE
+name|PQ_NUMCOLORS
 expr_stmt|;
 name|cnt
 operator|.
