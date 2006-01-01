@@ -2432,6 +2432,15 @@ literal|0
 operator|)
 return|;
 block|}
+name|response
+index|[
+name|rsize
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|match
 operator|=
 name|regexec
