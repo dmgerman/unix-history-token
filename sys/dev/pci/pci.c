@@ -4283,30 +4283,11 @@ operator|==
 name|testval
 operator|)
 condition|)
-block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"ignored rid %#x: base %#llx map %#x testval %#x\n"
-argument_list|,
-name|reg
-argument_list|,
-name|base
-argument_list|,
-name|map
-argument_list|,
-name|testval
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|barlen
 operator|)
 return|;
-block|}
 comment|/* 	 * This code theoretically does the right thing, but has 	 * undesirable side effects in some cases where peripherals 	 * respond oddly to having these bits enabled.  Let the user 	 * be able to turn them off (since pci_enable_io_modes is 1 by 	 * default). 	 */
 if|if
 condition|(
