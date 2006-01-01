@@ -1612,70 +1612,30 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|int
-name|chn_rddump
-parameter_list|(
-name|struct
-name|pcm_channel
-modifier|*
-name|c
-parameter_list|,
-name|unsigned
-name|int
-name|cnt
-parameter_list|)
-block|{
-name|struct
-name|snd_dbuf
-modifier|*
-name|b
-init|=
-name|c
-operator|->
-name|bufhard
-decl_stmt|;
-name|CHN_LOCKASSERT
-argument_list|(
-name|c
-argument_list|)
-expr_stmt|;
+begin_if
 if|#
 directive|if
 literal|0
-block|static uint32_t kk = 0; 	printf("%u: dumping %d bytes\n", ++kk, cnt);
+end_if
+
+begin_if
+unit|static int chn_rddump(struct pcm_channel *c, unsigned int cnt) {     	struct snd_dbuf *b = c->bufhard;  	CHN_LOCKASSERT(c);
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static uint32_t kk = 0; 	printf("%u: dumping %d bytes\n", ++kk, cnt);
 endif|#
 directive|endif
-name|c
-operator|->
-name|xruns
-operator|++
-expr_stmt|;
-name|sndbuf_setxrun
-argument_list|(
-name|b
-argument_list|,
-name|sndbuf_getxrun
-argument_list|(
-name|b
-argument_list|)
-operator|+
-name|cnt
-argument_list|)
-expr_stmt|;
-return|return
-name|sndbuf_dispose
-argument_list|(
-name|b
-argument_list|,
-name|NULL
-argument_list|,
-name|cnt
-argument_list|)
-return|;
-block|}
-end_function
+end_endif
+
+begin_endif
+unit|c->xruns++; 	sndbuf_setxrun(b, sndbuf_getxrun(b) + cnt); 	return sndbuf_dispose(b, NULL, cnt); }
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Feed new data from the read buffer. Can be called in the bottom half.  */
@@ -1745,20 +1705,6 @@ argument_list|(
 name|bs
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|amt
-operator|<
-name|sndbuf_getready
-argument_list|(
-name|b
-argument_list|)
-condition|)
-name|c
-operator|->
-name|xruns
-operator|++
-expr_stmt|;
 name|ret
 operator|=
 operator|(
@@ -1797,13 +1743,22 @@ name|amt
 operator|>
 literal|0
 condition|)
-name|chn_rddump
-argument_list|(
+block|{
 name|c
+operator|->
+name|xruns
+operator|++
+expr_stmt|;
+name|sndbuf_dispose
+argument_list|(
+name|b
+argument_list|,
+name|NULL
 argument_list|,
 name|amt
 argument_list|)
 expr_stmt|;
+block|}
 name|chn_wakeup
 argument_list|(
 name|c
@@ -1885,17 +1840,12 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ret
-condition|)
-name|printf
+name|DEB
 argument_list|(
+argument|if (ret) 		printf(
 literal|"chn_rdfeed: %d\n"
-argument_list|,
-name|ret
+argument|, ret);
 argument_list|)
-expr_stmt|;
 block|}
 end_function
 
