@@ -13,5 +13,11 @@ directive|include
 file|<i386/_types.h>
 end_include
 
+begin_undef
+undef|#
+directive|undef
+name|__HAVE_ACPI
+end_undef
+
 end_unit
 
