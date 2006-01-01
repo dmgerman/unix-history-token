@@ -1223,6 +1223,13 @@ operator|&
 name|physmem
 argument_list|)
 expr_stmt|;
+name|physmem
+operator|=
+name|ctob
+argument_list|(
+name|physmem
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
