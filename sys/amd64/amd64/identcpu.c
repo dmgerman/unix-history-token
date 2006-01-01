@@ -196,7 +196,15 @@ specifier|static
 name|void
 name|setPQL2_AMD
 parameter_list|(
-name|void
+name|int
+modifier|*
+specifier|const
+name|size
+parameter_list|,
+name|int
+modifier|*
+specifier|const
+name|ways
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2067,7 +2075,15 @@ specifier|static
 name|void
 name|setPQL2_AMD
 parameter_list|(
-name|void
+name|int
+modifier|*
+specifier|const
+name|size
+parameter_list|,
+name|int
+modifier|*
+specifier|const
+name|ways
 parameter_list|)
 block|{
 if|if
@@ -2168,7 +2184,7 @@ block|}
 block|}
 end_function
 
-begin_function_decl
+begin_function
 name|void
 name|setPQL2
 parameter_list|(
@@ -2182,10 +2198,6 @@ modifier|*
 specifier|const
 name|ways
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_block
 block|{
 if|if
 condition|(
@@ -2206,7 +2218,7 @@ name|ways
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
