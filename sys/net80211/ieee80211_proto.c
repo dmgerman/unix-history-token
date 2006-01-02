@@ -3763,8 +3763,8 @@ operator|(
 name|ic
 operator|->
 name|ic_opmode
-operator|!=
-name|IEEE80211_M_HOSTAP
+operator|==
+name|IEEE80211_M_STA
 operator|&&
 operator|(
 name|ic
