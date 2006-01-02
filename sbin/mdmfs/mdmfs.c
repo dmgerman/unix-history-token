@@ -459,6 +459,8 @@ decl_stmt|,
 name|softdep
 decl_stmt|,
 name|autounit
+decl_stmt|,
+name|newfs
 decl_stmt|;
 name|char
 modifier|*
@@ -510,6 +512,10 @@ expr_stmt|;
 name|autounit
 operator|=
 name|false
+expr_stmt|;
+name|newfs
+operator|=
+name|true
 expr_stmt|;
 name|have_mdtype
 operator|=
@@ -590,7 +596,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:b:Cc:Dd:e:F:f:hi:LlMm:Nn:O:o:p:Ss:t:Uv:w:X"
+literal|"a:b:Cc:Dd:e:F:f:hi:LlMm:Nn:O:o:p:PSs:t:Uv:w:X"
 argument_list|)
 operator|)
 operator|!=
@@ -881,6 +887,21 @@ literal|"-o %s"
 argument_list|,
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+if|if
+condition|(
+name|compat
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+name|newfs
+operator|=
+name|false
 expr_stmt|;
 break|break;
 case|case
@@ -1189,6 +1210,22 @@ argument_list|,
 literal|"-U"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mdtype
+operator|!=
+name|MD_VNODE
+operator|&&
+operator|!
+name|newfs
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-P requires a vnode-backed disk"
+argument_list|)
+expr_stmt|;
 comment|/* Do the work. */
 if|if
 condition|(
@@ -1219,6 +1256,10 @@ argument_list|,
 name|mdtype
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|newfs
+condition|)
 name|do_newfs
 argument_list|(
 name|newfs_arg
@@ -3026,7 +3067,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-DLlMNSUX] [-a maxcontig] [-b block-size] [-c cylinders]\n"
+literal|"usage: %s [-DLlMNPSUX] [-a maxcontig] [-b block-size] [-c cylinders]\n"
 literal|"\t[-d rotdelay] [-e maxbpg] [-F file] [-f frag-size] [-i bytes]\n"
 literal|"\t[-m percent-free] [-n rotational-positions] [-O optimization]\n"
 literal|"\t[-o mount-options] [-p permissions] [-s size] [-v version]\n"
