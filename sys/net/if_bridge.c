@@ -3444,7 +3444,7 @@ case|:
 case|case
 name|IFT_L2VLAN
 case|:
-comment|/* 		     * Take the interface out of promiscuous mode. 		     */
+comment|/* 			 * Take the interface out of promiscuous mode. 			 */
 operator|(
 name|void
 operator|)
