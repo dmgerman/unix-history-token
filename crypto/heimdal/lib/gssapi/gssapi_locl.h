@@ -7,6 +7,10 @@ begin_comment
 comment|/* $Id: gssapi_locl.h,v 1.24.2.5 2003/09/18 22:01:52 lha Exp $ */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -45,7 +49,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<gssapi.h>
+file|"gssapi.h"
 end_include
 
 begin_include
