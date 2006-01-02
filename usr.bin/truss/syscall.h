@@ -21,6 +21,8 @@ name|Octal
 block|,
 name|Int
 block|,
+name|Name
+block|,
 name|String
 block|,
 name|Ptr
@@ -172,6 +174,10 @@ name|long
 modifier|*
 parameter_list|,
 name|long
+parameter_list|,
+name|struct
+name|trussinfo
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
