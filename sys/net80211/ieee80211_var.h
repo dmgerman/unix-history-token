@@ -1231,6 +1231,17 @@ begin_comment
 comment|/* STATUS: enable full bgscan completion */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_FEXT_ERPUPDATE
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* STATUS: update ERP element */
+end_comment
+
 begin_comment
 comment|/* ic_caps */
 end_comment
