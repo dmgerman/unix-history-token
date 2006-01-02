@@ -4831,7 +4831,7 @@ operator|)
 operator|==
 name|IFBAF_DYNAMIC
 operator|&&
-name|time_second
+name|time_uptime
 operator|<
 name|brt
 operator|->
@@ -4845,7 +4845,7 @@ name|brt
 operator|->
 name|brt_expire
 operator|-
-name|time_second
+name|time_uptime
 expr_stmt|;
 else|else
 name|bareq
@@ -9010,7 +9010,7 @@ name|brt
 operator|->
 name|brt_expire
 operator|=
-name|time_second
+name|time_uptime
 operator|+
 name|sc
 operator|->
@@ -9092,7 +9092,7 @@ operator|)
 condition|?
 literal|0
 else|:
-name|time_second
+name|time_uptime
 operator|+
 name|sc
 operator|->
@@ -9425,7 +9425,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|time_second
+name|time_uptime
 operator|>=
 name|brt
 operator|->
