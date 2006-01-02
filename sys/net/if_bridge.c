@@ -9061,8 +9061,12 @@ name|dst_if
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|flags
 operator|&
+name|IFBAF_TYPEMASK
+operator|)
+operator|==
 name|IFBAF_DYNAMIC
 condition|)
 name|brt
