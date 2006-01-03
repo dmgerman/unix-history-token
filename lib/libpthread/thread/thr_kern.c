@@ -1101,7 +1101,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 	 * Restore signal mask early, so any memory problems could 	 * dump core. 	 */
-name|sigprocmask
+name|__sys_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,
