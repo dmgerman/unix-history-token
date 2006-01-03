@@ -778,6 +778,58 @@ value|if_link
 end_define
 
 begin_comment
+comment|/*  * Locks for address lists on the network interface.  In FreeBSD 6 and  * later, the if_addr_mtx was added to struct ifnet.  In order to  * maintain ABI compatibility with drivers compiled for earlier FreeBSD 5  * releases, we can't do that here.  Instead, a global if_addr_mtx is  * shared for all link layer address lists.  These macros still take a  * dummy "if" argument to maintain API compatibility with FreeBSD 6 and  * later.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|if_addr_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|IF_ADDR_LOCK_INIT
+parameter_list|(
+define|if)	mtx_init(&if_addr_mtx,		\ 				    "if_addr_mtx", NULL, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_ADDR_LOCK_DESTROY
+parameter_list|(
+define|if)	mtx_destroy(&if_addr_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_ADDR_LOCK
+parameter_list|(
+define|if)	mtx_lock(&if_addr_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_ADDR_UNLOCK
+parameter_list|(
+define|if)	mtx_unlock(&if_addr_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_ADDR_LOCK_ASSERT
+parameter_list|(
+define|if)	mtx_assert(&if_addr_mtx, MA_OWNED)
+end_define
+
+begin_comment
 comment|/*  * Output queues (ifp->if_snd) and slow device input queues (*ifp->if_slowq)  * are queues of messages stored on ifqueue structures  * (defined above).  Entries are added to and deleted from these structures  * by these macros, which should be called with ipl raised to splimp().  */
 end_comment
 
@@ -2308,23 +2360,6 @@ name|struct
 name|ifaddr
 modifier|*
 name|ifaof_ifpforaddr
-parameter_list|(
-name|struct
-name|sockaddr
-modifier|*
-parameter_list|,
-name|struct
-name|ifnet
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|ifmultiaddr
-modifier|*
-name|ifmaof_ifpforaddr
 parameter_list|(
 name|struct
 name|sockaddr
