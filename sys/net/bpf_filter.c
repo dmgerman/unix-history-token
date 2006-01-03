@@ -2150,7 +2150,7 @@ operator|<
 literal|1
 condition|)
 return|return
-literal|0
+literal|1
 return|;
 for|for
 control|(
