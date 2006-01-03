@@ -3540,8 +3540,6 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|sleep
-label|:
 name|error
 operator|=
 name|msleep
@@ -3554,8 +3552,6 @@ operator|->
 name|mutex
 argument_list|,
 name|PZERO
-operator||
-name|PCATCH
 argument_list|,
 literal|"ichsmb"
 argument_list|,
@@ -3576,22 +3572,6 @@ condition|(
 name|error
 condition|)
 block|{
-case|case
-name|ERESTART
-case|:
-if|if
-condition|(
-name|sc
-operator|->
-name|ich_cmd
-operator|!=
-operator|-
-literal|1
-condition|)
-goto|goto
-name|sleep
-goto|;
-comment|/* FALLTHROUGH */
 case|case
 literal|0
 case|:
