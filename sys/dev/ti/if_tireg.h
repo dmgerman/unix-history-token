@@ -1830,7 +1830,7 @@ begin_define
 define|#
 directive|define
 name|TI_MAXTXSEGS
-value|128
+value|32
 end_define
 
 begin_comment
@@ -3747,6 +3747,38 @@ name|TI_JMEM
 value|((TI_JLEN * TI_JSLOTS) + TI_RESID)
 end_define
 
+begin_struct
+struct|struct
+name|ti_txdesc
+block|{
+name|struct
+name|mbuf
+modifier|*
+name|tx_m
+decl_stmt|;
+name|bus_dmamap_t
+name|tx_dmamap
+decl_stmt|;
+name|STAILQ_ENTRY
+argument_list|(
+argument|ti_txdesc
+argument_list|)
+name|tx_q
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_expr_stmt
+name|STAILQ_HEAD
+argument_list|(
+name|ti_txdq
+argument_list|,
+name|ti_txdesc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Ring structures. Most of these reside in host memory and we tell  * the NIC where they are via the ring control blocks. The exceptions  * are the tx and command rings, which live in NIC memory and which  * we access via the shared memory window.  */
 end_comment
@@ -3869,18 +3901,19 @@ struct|struct
 name|ti_chain_data
 block|{
 name|struct
-name|mbuf
-modifier|*
-name|ti_tx_chain
+name|ti_txdesc
+name|ti_txdesc
 index|[
 name|TI_TX_RING_CNT
 index|]
 decl_stmt|;
-name|bus_dmamap_t
-name|ti_tx_maps
-index|[
-name|TI_TX_RING_CNT
-index|]
+name|struct
+name|ti_txdq
+name|ti_txfreeq
+decl_stmt|;
+name|struct
+name|ti_txdq
+name|ti_txbusyq
 decl_stmt|;
 name|struct
 name|mbuf
@@ -4148,30 +4181,30 @@ define|#
 directive|define
 name|ti_tx_considx
 value|ti_rdata->ti_tx_considx_r
-name|u_int16_t
+name|int
 name|ti_tx_saved_prodidx
 decl_stmt|;
-name|u_int16_t
+name|int
 name|ti_tx_saved_considx
 decl_stmt|;
-name|u_int16_t
+name|int
 name|ti_rx_saved_considx
 decl_stmt|;
-name|u_int16_t
+name|int
 name|ti_ev_saved_considx
 decl_stmt|;
-name|u_int16_t
+name|int
 name|ti_cmd_saved_prodidx
 decl_stmt|;
-name|u_int16_t
+name|int
 name|ti_std
 decl_stmt|;
 comment|/* current std ring head */
-name|u_int16_t
+name|int
 name|ti_mini
 decl_stmt|;
 comment|/* current mini ring head */
-name|u_int16_t
+name|int
 name|ti_jumbo
 decl_stmt|;
 comment|/* current jumo ring head */
