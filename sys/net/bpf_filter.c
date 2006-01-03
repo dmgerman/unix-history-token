@@ -2143,11 +2143,22 @@ name|bpf_insn
 modifier|*
 name|p
 decl_stmt|;
+comment|/* Do not accept negative length filter. */
 if|if
 condition|(
 name|len
 operator|<
-literal|1
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+comment|/* An empty filter means accept all. */
+if|if
+condition|(
+name|len
+operator|==
+literal|0
 condition|)
 return|return
 literal|1
