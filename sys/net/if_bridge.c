@@ -1410,6 +1410,19 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|pfil_onlyip
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* only pass IP[46] packets when pfil is enabled */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
 name|pfil_bridge
 init|=
 literal|1
@@ -1445,6 +1458,27 @@ end_decl_stmt
 begin_comment
 comment|/* layer2 filter with ipfw */
 end_comment
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_link_bridge
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|pfil_onlyip
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|pfil_onlyip
+argument_list|,
+literal|0
+argument_list|,
+literal|"Only pass IP packets when pfil is enabled"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -2228,12 +2262,16 @@ name|pfil_ipfw
 operator|=
 name|enable
 expr_stmt|;
-comment|/* 		 * Disable pfil so that ipfw doesnt run twice, if the user 		 * really wants both then they can re-enable pfil_bridge and/or 		 * pfil_member. 		 */
+comment|/* 		 * Disable pfil so that ipfw doesnt run twice, if the user 		 * really wants both then they can re-enable pfil_bridge and/or 		 * pfil_member. Also allow non-ip packets as ipfw can filter by 		 * layer2 type. 		 */
 if|if
 condition|(
 name|pfil_ipfw
 condition|)
 block|{
+name|pfil_onlyip
+operator|=
+literal|0
+expr_stmt|;
 name|pfil_bridge
 operator|=
 literal|0
@@ -3426,7 +3464,7 @@ case|:
 case|case
 name|IFT_L2VLAN
 case|:
-comment|/* 		     * Take the interface out of promiscuous mode. 		     */
+comment|/* 			 * Take the interface out of promiscuous mode. 			 */
 operator|(
 name|void
 operator|)
@@ -4707,10 +4745,6 @@ name|struct
 name|ifbareq
 name|bareq
 decl_stmt|;
-name|struct
-name|timeval
-name|tv
-decl_stmt|;
 name|int
 name|count
 init|=
@@ -4740,12 +4774,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|getmicrotime
-argument_list|(
-operator|&
-name|tv
-argument_list|)
-expr_stmt|;
 name|len
 operator|=
 name|bac
@@ -4823,9 +4851,7 @@ operator|)
 operator|==
 name|IFBAF_DYNAMIC
 operator|&&
-name|tv
-operator|.
-name|tv_sec
+name|time_uptime
 operator|<
 name|brt
 operator|->
@@ -4839,9 +4865,7 @@ name|brt
 operator|->
 name|brt_expire
 operator|-
-name|tv
-operator|.
-name|tv_sec
+name|time_uptime
 expr_stmt|;
 else|else
 name|bareq
@@ -8939,10 +8963,6 @@ name|bridge_rtnode
 modifier|*
 name|brt
 decl_stmt|;
-name|struct
-name|timeval
-name|tv
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -8952,12 +8972,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * A route for this destination might already exist.  If so, 	 * update it, otherwise create a new one. 	 */
-name|getmicrotime
-argument_list|(
-operator|&
-name|tv
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -9014,18 +9028,6 @@ operator|)
 return|;
 name|brt
 operator|->
-name|brt_expire
-operator|=
-name|tv
-operator|.
-name|tv_sec
-operator|+
-name|sc
-operator|->
-name|sc_brttimeout
-expr_stmt|;
-name|brt
-operator|->
 name|brt_flags
 operator|=
 name|IFBAF_DYNAMIC
@@ -9079,36 +9081,34 @@ name|dst_if
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|flags
+operator|&
+name|IFBAF_TYPEMASK
+operator|)
+operator|==
+name|IFBAF_DYNAMIC
+condition|)
+name|brt
+operator|->
+name|brt_expire
+operator|=
+name|time_uptime
+operator|+
+name|sc
+operator|->
+name|sc_brttimeout
+expr_stmt|;
+if|if
+condition|(
 name|setflags
 condition|)
-block|{
 name|brt
 operator|->
 name|brt_flags
 operator|=
 name|flags
 expr_stmt|;
-name|brt
-operator|->
-name|brt_expire
-operator|=
-operator|(
-name|flags
-operator|&
-name|IFBAF_STATIC
-operator|)
-condition|?
-literal|0
-else|:
-name|tv
-operator|.
-name|tv_sec
-operator|+
-name|sc
-operator|->
-name|sc_brttimeout
-expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -9385,19 +9385,9 @@ decl_stmt|,
 modifier|*
 name|nbrt
 decl_stmt|;
-name|struct
-name|timeval
-name|tv
-decl_stmt|;
 name|BRIDGE_LOCK_ASSERT
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-name|getmicrotime
-argument_list|(
-operator|&
-name|tv
 argument_list|)
 expr_stmt|;
 for|for
@@ -9445,9 +9435,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|tv
-operator|.
-name|tv_sec
+name|time_uptime
 operator|>=
 name|brt
 operator|->
@@ -10404,6 +10392,24 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* Default error if not error == 0 */
+if|if
+condition|(
+name|pfil_bridge
+operator|==
+literal|0
+operator|&&
+name|pfil_member
+operator|==
+literal|0
+operator|&&
+name|pfil_ipfw
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+comment|/* filtering is disabled */
 name|i
 operator|=
 name|min
@@ -10590,15 +10596,10 @@ directive|endif
 comment|/* INET6 */
 break|break;
 default|default:
-comment|/* 			 * ipfw allows layer2 protocol filtering using 			 * 'mac-type' so we will let the packet past, if 			 * ipfw is disabled then drop it. 			 */
+comment|/* 			 * Check to see if the user wants to pass non-ip 			 * packets, these will not be checked by pfil(9) and 			 * passed unconditionally so the default is to drop. 			 */
 if|if
 condition|(
-operator|!
-name|IPFW_LOADED
-operator|||
-name|pfil_ipfw
-operator|==
-literal|0
+name|pfil_onlyip
 condition|)
 goto|goto
 name|bad
