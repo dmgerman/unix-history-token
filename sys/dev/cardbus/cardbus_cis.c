@@ -150,6 +150,13 @@ parameter_list|)
 value|if (cardbus_cis_debug) device_printf x
 end_define
 
+begin_define
+define|#
+directive|define
+name|CIS_CONFIG_SPACE
+value|(struct resource *)~0UL
+end_define
+
 begin_function_decl
 specifier|static
 name|int
@@ -1788,19 +1795,15 @@ name|reg
 operator|&
 name|TPL_BAR_REG_AS
 condition|)
-block|{
 name|type
 operator|=
 name|SYS_RES_IOPORT
 expr_stmt|;
-block|}
 else|else
-block|{
 name|type
 operator|=
 name|SYS_RES_MEMORY
 expr_stmt|;
-block|}
 name|bar
 operator|=
 name|reg
@@ -2544,13 +2547,7 @@ if|if
 condition|(
 name|res
 operator|==
-operator|(
-expr|struct
-name|resource
-operator|*
-operator|)
-operator|~
-literal|0UL
+name|CIS_CONFIG_SPACE
 condition|)
 block|{
 return|return
@@ -2624,13 +2621,7 @@ if|if
 condition|(
 name|res
 operator|!=
-operator|(
-expr|struct
-name|resource
-operator|*
-operator|)
-operator|~
-literal|0UL
+name|CIS_CONFIG_SPACE
 condition|)
 block|{
 name|bus_release_resource
@@ -2734,13 +2725,7 @@ expr_stmt|;
 comment|/* CIS in PCI config space need no initialization */
 return|return
 operator|(
-operator|(
-expr|struct
-name|resource
-operator|*
-operator|)
-operator|~
-literal|0UL
+name|CIS_CONFIG_SPACE
 operator|)
 return|;
 case|case
