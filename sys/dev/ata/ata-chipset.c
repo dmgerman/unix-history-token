@@ -19076,6 +19076,13 @@ name|strcpy
 argument_list|(
 name|buffer
 argument_list|,
+literal|"Promise "
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|buffer
+argument_list|,
 name|idx
 operator|->
 name|text
@@ -19238,7 +19245,7 @@ name|sprintf
 argument_list|(
 name|buffer
 argument_list|,
-literal|"Promise %s %s controller"
+literal|"%s %s controller"
 argument_list|,
 name|buffer
 argument_list|,
