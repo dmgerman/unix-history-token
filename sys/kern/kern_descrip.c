@@ -10328,11 +10328,6 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
-argument_list|(
-name|fdp
-argument_list|)
-expr_stmt|;
 comment|/* 		 * we now own the reference to fp that the ofiles[] array 		 * used to own.  Release it. 		 */
 if|if
 condition|(
@@ -10345,6 +10340,11 @@ argument_list|(
 name|fp
 argument_list|,
 name|td
+argument_list|)
+expr_stmt|;
+name|FILEDESC_UNLOCK
+argument_list|(
+name|fdp
 argument_list|)
 expr_stmt|;
 return|return
