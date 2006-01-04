@@ -9930,10 +9930,13 @@ name|mii_media_status
 expr_stmt|;
 if|if
 condition|(
+name|IFM_SUBTYPE
+argument_list|(
 name|ifmr
 operator|->
-name|ifm_status
-operator|&
+name|ifm_active
+argument_list|)
+operator|==
 name|IFM_10_T
 operator|&&
 name|sc
