@@ -367,6 +367,14 @@ condition|(
 name|pq_cachesize
 operator|>
 literal|0
+operator|&&
+name|pq_cachenways
+operator|>
+literal|0
+operator|&&
+name|PAGE_SIZE
+operator|>
+literal|1024
 condition|)
 name|PQ_NUMCOLORS
 operator|=
