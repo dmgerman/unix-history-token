@@ -13686,8 +13686,8 @@ literal|0
 index|]
 operator|.
 name|tv_usec
-operator|>
-literal|999999
+operator|>=
+literal|1000000
 operator|||
 name|tvp
 index|[
@@ -13704,8 +13704,8 @@ literal|1
 index|]
 operator|.
 name|tv_usec
-operator|>
-literal|999999
+operator|>=
+literal|1000000
 condition|)
 return|return
 operator|(
