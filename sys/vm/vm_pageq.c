@@ -362,6 +362,15 @@ operator|&
 name|pq_cachenways
 argument_list|)
 expr_stmt|;
+name|CTASSERT
+argument_list|(
+name|PAGE_SIZE
+operator|/
+literal|1024
+operator|>
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pq_cachesize
@@ -371,10 +380,6 @@ operator|&&
 name|pq_cachenways
 operator|>
 literal|0
-operator|&&
-name|PAGE_SIZE
-operator|>
-literal|1024
 condition|)
 name|PQ_NUMCOLORS
 operator|=
