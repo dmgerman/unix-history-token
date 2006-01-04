@@ -1321,13 +1321,6 @@ operator|=
 name|dev
 operator|->
 name|si_tty
-operator|=
-name|ttymalloc
-argument_list|(
-name|dev
-operator|->
-name|si_tty
-argument_list|)
 expr_stmt|;
 name|tp
 operator|->
@@ -2872,10 +2865,8 @@ name|dev
 expr_stmt|;
 name|tp
 operator|=
-name|ttymalloc
-argument_list|(
-name|NULL
-argument_list|)
+name|ttyalloc
+argument_list|()
 expr_stmt|;
 name|dev
 operator|->
