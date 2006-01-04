@@ -421,6 +421,11 @@ argument_list|,
 literal|"ssccons"
 argument_list|)
 expr_stmt|;
+name|ssc_tp
+operator|=
+name|ttyalloc
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -600,16 +605,11 @@ literal|0
 decl_stmt|;
 name|tp
 operator|=
-name|ssc_tp
-operator|=
 name|dev
 operator|->
 name|si_tty
 operator|=
-name|ttymalloc
-argument_list|(
 name|ssc_tp
-argument_list|)
 expr_stmt|;
 name|s
 operator|=

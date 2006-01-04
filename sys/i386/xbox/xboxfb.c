@@ -1347,6 +1347,11 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
+name|xboxfb_tp
+operator|=
+name|ttyalloc
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1538,16 +1543,11 @@ name|tp
 decl_stmt|;
 name|tp
 operator|=
-name|xboxfb_tp
-operator|=
 name|dev
 operator|->
 name|si_tty
 operator|=
-name|ttymalloc
-argument_list|(
 name|xboxfb_tp
-argument_list|)
 expr_stmt|;
 name|tp
 operator|->
