@@ -127,9 +127,9 @@ name|pcmchan_caps
 name|ess_playcaps
 init|=
 block|{
-literal|5000
+literal|6000
 block|,
-literal|49000
+literal|48000
 block|,
 name|ess_playfmt
 block|,
@@ -185,9 +185,9 @@ name|pcmchan_caps
 name|ess_reccaps
 init|=
 block|{
-literal|5000
+literal|6000
 block|,
-literal|49000
+literal|48000
 block|,
 name|ess_recfmt
 block|,
