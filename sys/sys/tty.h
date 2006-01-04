@@ -2169,20 +2169,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|tty
-modifier|*
-name|ttymalloc
-parameter_list|(
-name|struct
-name|tty
-modifier|*
-name|tp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|ttymodem
 parameter_list|(
