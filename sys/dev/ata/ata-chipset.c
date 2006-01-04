@@ -19508,8 +19508,6 @@ break|break;
 case|case
 name|PRMIO
 case|:
-comment|//      if (ctlr->r_res1)
-comment|//          bus_release_resource(dev, ctlr->r_type1, ctlr->r_rid1,ctlr->r_res1);
 name|ctlr
 operator|->
 name|r_type1
@@ -24608,7 +24606,7 @@ name|int
 name|error
 decl_stmt|;
 name|u_int32_t
-name|timings33
+name|timings
 index|[]
 index|[
 literal|2
@@ -24983,19 +24981,19 @@ operator|<<
 literal|2
 operator|)
 argument_list|,
-name|timings33
+name|timings
+index|[
+name|ata_mode2idx
+argument_list|(
+name|mode
+argument_list|)
+index|]
 index|[
 name|ctlr
 operator|->
 name|chip
 operator|->
 name|cfg1
-index|]
-index|[
-name|ata_mode2idx
-argument_list|(
-name|mode
-argument_list|)
 index|]
 argument_list|,
 literal|4
