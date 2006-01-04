@@ -9137,7 +9137,7 @@ name|d
 operator|->
 name|data
 index|[
-literal|0
+literal|1
 index|]
 expr_stmt|;
 break|break;
