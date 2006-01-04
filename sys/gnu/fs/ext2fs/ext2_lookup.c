@@ -1114,6 +1114,9 @@ name|cnp
 operator|->
 name|cn_thread
 decl_stmt|;
+name|ino_t
+name|saved_ino
+decl_stmt|;
 name|int
 name|DIRBLKSIZ
 init|=
@@ -2346,6 +2349,12 @@ operator|&
 name|ISDOTDOT
 condition|)
 block|{
+name|saved_ino
+operator|=
+name|dp
+operator|->
+name|i_ino
+expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|pdp
@@ -2364,9 +2373,7 @@ name|vdp
 operator|->
 name|v_mount
 argument_list|,
-name|dp
-operator|->
-name|i_ino
+name|saved_ino
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
