@@ -1428,9 +1428,22 @@ name|ai_protocol
 operator|=
 name|ANY
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_SOCKLEN_T
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
 name|__sparcv9
+argument_list|)
 comment|/* 	 * clear _ai_pad to preserve binary 	 * compatibility with previously compiled 64-bit 	 * applications in a pre-SUSv3 environment by 	 * guaranteeing the upper 32-bits are empty. 	 */
 name|pai
 operator|->
@@ -1440,7 +1453,6 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* __sparcv9 */
 name|pai
 operator|->
 name|ai_addrlen
@@ -1559,9 +1571,22 @@ name|pai
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_SOCKLEN_T
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
 name|__sparcv9
+argument_list|)
 comment|/* 		 * We need to clear _ai_pad to preserve binary 		 * compatibility.  See prior comment. 		 */
 name|pai
 operator|->
