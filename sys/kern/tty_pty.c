@@ -670,12 +670,8 @@ name|pt
 operator|->
 name|pt_tty
 operator|=
-name|ttymalloc
-argument_list|(
-name|pt
-operator|->
-name|pt_tty
-argument_list|)
+name|ttyalloc
+argument_list|()
 expr_stmt|;
 name|pt
 operator|->
