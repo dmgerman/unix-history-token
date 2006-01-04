@@ -218,25 +218,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I486_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I586_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
-end_if
-
 begin_function_decl
 specifier|static
 name|void
@@ -246,11 +227,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void
@@ -491,25 +467,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I486_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I586_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
-end_if
-
 begin_decl_stmt
 specifier|static
 name|char
@@ -561,11 +518,6 @@ literal|"Intel Pentium 4"
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 specifier|static
@@ -738,25 +690,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I486_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I586_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
-end_if
-
 begin_function
 specifier|static
 name|void
@@ -870,11 +803,6 @@ block|}
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|void
 name|printcpuinfo
@@ -882,22 +810,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I486_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I586_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
 name|u_int
 name|regs
 index|[
@@ -910,8 +822,6 @@ name|char
 modifier|*
 name|brand
 decl_stmt|;
-endif|#
-directive|endif
 name|cpu_class
 operator|=
 name|i386_cpus
@@ -943,22 +853,6 @@ name|cpu_model
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I486_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I586_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
 comment|/* Check for extended CPUID information and a processor name. */
 name|init_exthigh
 argument_list|()
@@ -2699,8 +2593,6 @@ argument_list|,
 name|brand
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|printf
 argument_list|(
 literal|"%s ("
@@ -2881,22 +2773,6 @@ argument_list|(
 literal|"-class CPU)\n"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I486_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I586_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
 if|if
 condition|(
 operator|*
@@ -3560,8 +3436,6 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -6637,22 +6511,6 @@ specifier|const
 name|ways
 parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I486_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I586_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
 comment|/* make sure the cpu_exthigh variable is initialized */
 name|init_exthigh
 argument_list|()
@@ -6694,8 +6552,6 @@ argument_list|,
 name|ways
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
