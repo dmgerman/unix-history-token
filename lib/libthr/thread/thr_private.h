@@ -941,6 +941,10 @@ comment|/* How many low level locks the thread held. */
 name|int
 name|locklevel
 decl_stmt|;
+comment|/* 	 * Set to non-zero when this thread has entered a critical 	 * region.  We allow for recursive entries into critical regions. 	 */
+name|int
+name|critical_count
+decl_stmt|;
 comment|/* Signal blocked counter. */
 name|int
 name|sigblock
@@ -1189,6 +1193,17 @@ end_struct
 begin_define
 define|#
 directive|define
+name|THR_IN_CRITICAL
+parameter_list|(
+name|thrd
+parameter_list|)
+define|\
+value|(((thrd)->locklevel> 0) ||			\ 	((thrd)->critical_count> 0))
+end_define
+
+begin_define
+define|#
+directive|define
 name|THR_UMTX_TRYLOCK
 parameter_list|(
 name|thrd
@@ -1263,7 +1278,7 @@ parameter_list|,
 name|lck
 parameter_list|)
 define|\
-value|do {							\ 	if ((thrd)->locklevel> 0) {			\ 		_thr_umtx_unlock((lck), (thrd)->tid);	\ 		(thrd)->locklevel--;			\ 	} else { 					\ 		_thr_assert_lock_level();		\ 	}						\ } while (0)
+value|do {							\ 	if ((thrd)->locklevel> 0) {			\ 		_thr_umtx_unlock((lck), (thrd)->tid);	\ 		(thrd)->locklevel--;			\ 		_thr_ast(thrd);				\ 	} else { 					\ 		_thr_assert_lock_level();		\ 	}						\ } while (0)
 end_define
 
 begin_define
@@ -2181,6 +2196,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|_thr_ref_delete_unlocked
+argument_list|(
+expr|struct
+name|pthread
+operator|*
+argument_list|,
+expr|struct
+name|pthread
+operator|*
+argument_list|)
+name|__hidden
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|_thr_find_thread
 argument_list|(
@@ -2456,12 +2487,10 @@ argument_list|(
 expr|struct
 name|pthread
 operator|*
-name|curthread
 argument_list|,
 expr|struct
 name|pthread
 operator|*
-name|thread
 argument_list|)
 name|__hidden
 decl_stmt|;
@@ -2474,12 +2503,10 @@ argument_list|(
 expr|struct
 name|pthread
 operator|*
-name|curthread
 argument_list|,
 expr|struct
 name|pthread
 operator|*
-name|thread
 argument_list|)
 name|__hidden
 decl_stmt|;
@@ -2492,7 +2519,6 @@ argument_list|(
 expr|struct
 name|pthread
 operator|*
-name|curthread
 argument_list|)
 name|__hidden
 decl_stmt|;
@@ -2506,6 +2532,18 @@ name|void
 argument_list|)
 name|__hidden
 name|__dead2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|_thr_ast
+argument_list|(
+expr|struct
+name|pthread
+operator|*
+argument_list|)
+name|__hidden
 decl_stmt|;
 end_decl_stmt
 

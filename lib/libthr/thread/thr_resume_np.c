@@ -239,13 +239,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|_thr_send_sig
-argument_list|(
-name|thread
-argument_list|,
-name|SIGCANCEL
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

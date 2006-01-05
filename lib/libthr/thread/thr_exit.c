@@ -295,6 +295,28 @@ argument_list|)
 expr_stmt|;
 comment|/* Never reach! */
 block|}
+name|THR_LOCK
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+name|curthread
+operator|->
+name|state
+operator|=
+name|PS_DEAD
+expr_stmt|;
+name|THR_UNLOCK
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Thread was created with initial refcount 1, we drop the 	 * reference count to allow it to be garbage collected. 	 */
+name|curthread
+operator|->
+name|refcount
+operator|--
+expr_stmt|;
 if|if
 condition|(
 name|curthread
@@ -307,12 +329,6 @@ name|THR_GCLIST_ADD
 argument_list|(
 name|curthread
 argument_list|)
-expr_stmt|;
-name|curthread
-operator|->
-name|state
-operator|=
-name|PS_DEAD
 expr_stmt|;
 name|THREAD_LIST_UNLOCK
 argument_list|(
