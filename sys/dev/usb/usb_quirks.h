@@ -89,6 +89,11 @@ directive|define
 name|UQ_BROKEN_BIDIR
 value|0x2000
 comment|/* printer has broken bidir mode */
+define|#
+directive|define
+name|UQ_HID_IGNORE
+value|0x8000
+comment|/* device should be ignored by hid class */
 block|}
 struct|;
 end_struct
