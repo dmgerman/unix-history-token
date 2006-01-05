@@ -288,6 +288,27 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
+name|__powerpc__
+block|{
+literal|"FreeBSD ELF"
+block|,
+name|powerpc_syscall_entry
+block|,
+name|powerpc_syscall_exit
+block|}
+block|,
+block|{
+literal|"FreeBSD ELF32"
+block|,
+name|powerpc_syscall_entry
+block|,
+name|powerpc_syscall_exit
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|__sparc64__
 block|{
 literal|"FreeBSD ELF64"
