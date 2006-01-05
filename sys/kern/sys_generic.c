@@ -1810,7 +1810,6 @@ operator|(
 name|EBADF
 operator|)
 return|;
-comment|/* XXX this can't be right */
 name|error
 operator|=
 name|dofilewrite
@@ -2026,7 +2025,6 @@ operator|(
 name|EBADF
 operator|)
 return|;
-comment|/* XXX this can't be right */
 if|if
 condition|(
 operator|!
