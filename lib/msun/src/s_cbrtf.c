@@ -196,8 +196,7 @@ name|B1
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* first step Newton iteration (solving t*t-x/t == 0) to 16 bits */
-comment|/* in double precision to avoid problems with denormals */
+comment|/*      * First step Newton iteration (solving t*t-x/t == 0) to 16 bits.  In      * double precision so that its terms can be arranged for efficiency      * without causing overflow or underflow.      */
 name|T
 operator|=
 name|t
@@ -215,6 +214,9 @@ operator|=
 name|T
 operator|*
 operator|(
+operator|(
+name|double
+operator|)
 name|x
 operator|+
 name|x
@@ -230,8 +232,7 @@ operator|+
 name|r
 operator|)
 expr_stmt|;
-comment|/* second step Newton iteration to 47 bits */
-comment|/* in double precision for accuracy */
+comment|/*      * Second step Newton iteration to 47 bits.  In double precision for      * efficiency and accuracy.      */
 name|r
 operator|=
 name|T
@@ -245,6 +246,9 @@ operator|=
 name|T
 operator|*
 operator|(
+operator|(
+name|double
+operator|)
 name|x
 operator|+
 name|x
