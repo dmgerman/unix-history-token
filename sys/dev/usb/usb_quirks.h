@@ -95,6 +95,11 @@ name|UQ_NO_OPEN_CLEARSTALL
 value|0x4000
 comment|/* don't usbd_clear_endpoint_stall() */
 comment|/* in usbd_setup_pipe() */
+define|#
+directive|define
+name|UQ_HID_IGNORE
+value|0x8000
+comment|/* device should be ignored by hid class */
 block|}
 struct|;
 end_struct
