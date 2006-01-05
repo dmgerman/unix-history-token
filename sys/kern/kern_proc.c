@@ -4359,7 +4359,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|fill_kinfo_proc
+name|fill_kinfo_proc_only
 argument_list|(
 name|p
 argument_list|,
