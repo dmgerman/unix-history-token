@@ -5407,7 +5407,7 @@ case|:
 name|ddprintf
 argument_list|(
 operator|(
-literal|"ntfs_isnamepermitted: skiped DOS name\n"
+literal|"ntfs_isnamepermitted: skipped DOS name\n"
 operator|)
 argument_list|)
 expr_stmt|;
