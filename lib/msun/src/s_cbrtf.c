@@ -63,35 +63,6 @@ begin_comment
 comment|/* B2 = (127-127.0/3-24/3-0.03306235651)*2**23 */
 end_comment
 
-begin_comment
-comment|/* |1/cbrt(x) - p(x)|< 2**-14.5 (~[-4.37e-4, 4.366e-5]). */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|float
-name|P0
-init|=
-literal|1.5586718321
-decl_stmt|,
-comment|/*  0x3fc7828f */
-name|P1
-init|=
-operator|-
-literal|0.78271341324
-decl_stmt|,
-comment|/* -0xbf485fe8 */
-name|P2
-init|=
-literal|0.22403796017
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  0x3e656a35 */
-end_comment
-
 begin_function
 name|float
 name|cbrtf
@@ -100,14 +71,13 @@ name|float
 name|x
 parameter_list|)
 block|{
-name|float
+name|double
 name|r
 decl_stmt|,
-name|s
-decl_stmt|,
+name|T
+decl_stmt|;
+name|float
 name|t
-decl_stmt|,
-name|w
 decl_stmt|;
 name|int32_t
 name|hx
@@ -226,113 +196,74 @@ name|B1
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* new cbrt to 14 bits */
+comment|/* first step Newton iteration (solving t*t-x/t == 0) to 16 bits */
+comment|/* in double precision to avoid problems with denormals */
+name|T
+operator|=
+name|t
+expr_stmt|;
 name|r
 operator|=
-operator|(
-name|t
+name|T
 operator|*
-name|t
-operator|)
+name|T
+operator|*
+name|T
+expr_stmt|;
+name|T
+operator|=
+name|T
 operator|*
 operator|(
-name|t
-operator|/
 name|x
-operator|)
-expr_stmt|;
-name|t
-operator|=
-name|t
-operator|*
-operator|(
-operator|(
-name|P0
 operator|+
-name|r
-operator|*
-name|P1
-operator|)
-operator|+
-operator|(
-name|r
-operator|*
-name|r
-operator|)
-operator|*
-name|P2
-operator|)
-expr_stmt|;
-comment|/*      * Round t away from zero to 12 bits (sloppily except for ensuring that      * the result is larger in magnitude than cbrt(x) but not much more than      * 1 12-bit ulp larger).  With rounding towards zero, the error bound      * would be ~5/6 instead of ~4/6, and with t 2 12-bit ulps larger the      * infinite-precision error in the Newton approximation would affect      * the second digit instead of the third digit of 4/6 = 0.666..., etc.      */
-name|GET_FLOAT_WORD
-argument_list|(
-name|high
-argument_list|,
-name|t
-argument_list|)
-expr_stmt|;
-name|SET_FLOAT_WORD
-argument_list|(
-name|t
-argument_list|,
-operator|(
-name|high
-operator|+
-literal|0x1800
-operator|)
-operator|&
-literal|0xfffff000
-argument_list|)
-expr_stmt|;
-comment|/* one step Newton iteration to 24 bits with error< 0.669 ulps */
-name|s
-operator|=
-name|t
-operator|*
-name|t
-expr_stmt|;
-comment|/* t*t is exact */
-name|r
-operator|=
 name|x
-operator|/
-name|s
-expr_stmt|;
-comment|/* error<= 0.5 ulps; |r|< |t| */
-name|w
-operator|=
-name|t
 operator|+
-name|t
-expr_stmt|;
-comment|/* t+t is exact */
 name|r
-operator|=
-operator|(
-name|r
-operator|-
-name|t
 operator|)
 operator|/
 operator|(
-name|w
+name|x
+operator|+
+name|r
 operator|+
 name|r
 operator|)
 expr_stmt|;
-comment|/* r-t is exact; w+r ~= 3*t */
-name|t
+comment|/* second step Newton iteration to 47 bits */
+comment|/* in double precision for accuracy */
+name|r
 operator|=
-name|t
-operator|+
-name|t
+name|T
 operator|*
-name|r
+name|T
+operator|*
+name|T
 expr_stmt|;
-comment|/* error<= 0.5 + 0.5/3 + epsilon */
+name|T
+operator|=
+name|T
+operator|*
+operator|(
+name|x
+operator|+
+name|x
+operator|+
+name|r
+operator|)
+operator|/
+operator|(
+name|x
+operator|+
+name|r
+operator|+
+name|r
+operator|)
+expr_stmt|;
+comment|/* rounding to 24 bits is perfect in round-to-nearest mode */
 return|return
 operator|(
-name|t
+name|T
 operator|)
 return|;
 block|}
