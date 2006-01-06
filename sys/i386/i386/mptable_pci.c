@@ -329,18 +329,24 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|driver_t
-name|mptable_hostb_driver
-init|=
-block|{
-literal|"pcib"
-block|,
-name|mptable_hostb_methods
-block|,
-literal|1
-block|, }
+name|devclass_t
+name|hostb_devclass
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|DEFINE_CLASS_0
+argument_list|(
+name|pcib
+argument_list|,
+name|mptable_hostb_driver
+argument_list|,
+name|mptable_hostb_methods
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|DRIVER_MODULE
@@ -351,7 +357,7 @@ name|legacy
 argument_list|,
 name|mptable_hostb_driver
 argument_list|,
-name|pcib_devclass
+name|hostb_devclass
 argument_list|,
 literal|0
 argument_list|,
@@ -600,22 +606,28 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|driver_t
+name|devclass_t
+name|pcib_devclass
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|DEFINE_CLASS_0
+argument_list|(
+name|pcib
+argument_list|,
 name|mptable_pcib_driver
-init|=
-block|{
-literal|"pcib"
-block|,
+argument_list|,
 name|mptable_pcib_pci_methods
-block|,
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|pcib_softc
 argument_list|)
-block|, }
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|DRIVER_MODULE
