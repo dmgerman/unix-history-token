@@ -9107,7 +9107,7 @@ name|EBADF
 operator|)
 return|;
 block|}
-comment|/* 	 * Note: FREAD failure returns EBADF to maintain backwards 	 * compatibility with what routines returned before. 	 * 	 * Only one flag, or 0, may be specified. 	 */
+comment|/* 	 * FREAD and FWRITE failure return EBADF as per POSIX. 	 * 	 * Only one flag, or 0, may be specified. 	 */
 if|if
 condition|(
 name|flags
@@ -9160,7 +9160,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EINVAL
+name|EBADF
 operator|)
 return|;
 block|}
