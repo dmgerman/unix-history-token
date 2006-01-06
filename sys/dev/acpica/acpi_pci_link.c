@@ -2657,15 +2657,23 @@ name|link
 operator|==
 name|NULL
 condition|)
-name|panic
+block|{
+name|device_printf
 argument_list|(
-literal|"%s: apparently invalid index %d"
+name|dev
 argument_list|,
-name|__func__
+literal|"apparently invalid index %d\n"
 argument_list|,
 name|index
 argument_list|)
 expr_stmt|;
+name|ACPI_SERIAL_END
+argument_list|(
+name|pci_link
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|link
 operator|->
 name|l_references
