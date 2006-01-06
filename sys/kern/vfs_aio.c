@@ -6931,7 +6931,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EBADF
+name|error
 operator|)
 return|;
 block|}

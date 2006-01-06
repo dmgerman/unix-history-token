@@ -1807,7 +1807,7 @@ name|error
 condition|)
 return|return
 operator|(
-name|EBADF
+name|error
 operator|)
 return|;
 name|error
@@ -2022,7 +2022,7 @@ name|error
 condition|)
 return|return
 operator|(
-name|EBADF
+name|error
 operator|)
 return|;
 if|if
