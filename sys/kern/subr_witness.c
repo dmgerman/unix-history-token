@@ -2388,9 +2388,10 @@ name|lock
 operator|->
 name|lo_type
 argument_list|,
+name|LOCK_CLASS
+argument_list|(
 name|lock
-operator|->
-name|lo_class
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2543,9 +2544,10 @@ decl_stmt|;
 comment|/* Various sanity checks. */
 name|class
 operator|=
+name|LOCK_CLASS
+argument_list|(
 name|lock
-operator|->
-name|lo_class
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2765,10 +2767,22 @@ name|lock
 parameter_list|)
 block|{
 name|struct
+name|lock_class
+modifier|*
+name|class
+decl_stmt|;
+name|struct
 name|witness
 modifier|*
 name|w
 decl_stmt|;
+name|class
+operator|=
+name|LOCK_CLASS
+argument_list|(
+name|lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|witness_cold
@@ -2777,9 +2791,7 @@ name|panic
 argument_list|(
 literal|"lock (%s) %s destroyed while witness_cold"
 argument_list|,
-name|lock
-operator|->
-name|lo_class
+name|class
 operator|->
 name|lc_name
 argument_list|,
@@ -2806,9 +2818,7 @@ literal|"%s: lock (%s) %s is not initialized"
 argument_list|,
 name|__func__
 argument_list|,
-name|lock
-operator|->
-name|lo_class
+name|class
 operator|->
 name|lc_name
 argument_list|,
@@ -3840,9 +3850,10 @@ name|lo_witness
 expr_stmt|;
 name|class
 operator|=
+name|LOCK_CLASS
+argument_list|(
 name|lock
-operator|->
-name|lo_class
+argument_list|)
 expr_stmt|;
 name|td
 operator|=
@@ -5005,9 +5016,10 @@ expr_stmt|;
 comment|/* Determine lock list for this lock. */
 if|if
 condition|(
+name|LOCK_CLASS
+argument_list|(
 name|lock
-operator|->
-name|lo_class
+argument_list|)
 operator|->
 name|lc_flags
 operator|&
@@ -5308,9 +5320,10 @@ condition|)
 return|return;
 name|class
 operator|=
+name|LOCK_CLASS
+argument_list|(
 name|lock
-operator|->
-name|lo_class
+argument_list|)
 expr_stmt|;
 name|file
 operator|=
@@ -5378,9 +5391,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|lock
-operator|->
-name|lo_class
+name|class
 operator|->
 name|lc_flags
 operator|&
@@ -5575,9 +5586,10 @@ condition|)
 return|return;
 name|class
 operator|=
+name|LOCK_CLASS
+argument_list|(
 name|lock
-operator|->
-name|lo_class
+argument_list|)
 expr_stmt|;
 name|file
 operator|=
@@ -5618,9 +5630,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|lock
-operator|->
-name|lo_class
+name|class
 operator|->
 name|lc_flags
 operator|&
@@ -5832,9 +5842,10 @@ name|curthread
 expr_stmt|;
 name|class
 operator|=
+name|LOCK_CLASS
+argument_list|(
 name|lock
-operator|->
-name|lo_class
+argument_list|)
 expr_stmt|;
 name|file
 operator|=
@@ -8448,9 +8459,10 @@ literal|"exclusive"
 else|:
 literal|"shared"
 argument_list|,
+name|LOCK_CLASS
+argument_list|(
 name|lock
-operator|->
-name|lo_class
+argument_list|)
 operator|->
 name|lc_name
 argument_list|,
@@ -8771,6 +8783,11 @@ name|lock_instance
 modifier|*
 name|instance
 decl_stmt|;
+name|struct
+name|lock_class
+modifier|*
+name|class
+decl_stmt|;
 name|KASSERT
 argument_list|(
 operator|!
@@ -8800,11 +8817,16 @@ operator|!=
 name|NULL
 condition|)
 return|return;
+name|class
+operator|=
+name|LOCK_CLASS
+argument_list|(
+name|lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|lock
-operator|->
-name|lo_class
+name|class
 operator|->
 name|lc_flags
 operator|&
@@ -8852,9 +8874,7 @@ literal|"%s: lock (%s) %s not locked"
 argument_list|,
 name|__func__
 argument_list|,
-name|lock
-operator|->
-name|lo_class
+name|class
 operator|->
 name|lc_name
 argument_list|,
@@ -8908,6 +8928,11 @@ name|lock_instance
 modifier|*
 name|instance
 decl_stmt|;
+name|struct
+name|lock_class
+modifier|*
+name|class
+decl_stmt|;
 name|KASSERT
 argument_list|(
 operator|!
@@ -8937,11 +8962,16 @@ operator|!=
 name|NULL
 condition|)
 return|return;
+name|class
+operator|=
+name|LOCK_CLASS
+argument_list|(
+name|lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|lock
-operator|->
-name|lo_class
+name|class
 operator|->
 name|lc_flags
 operator|&
@@ -8989,9 +9019,7 @@ literal|"%s: lock (%s) %s not locked"
 argument_list|,
 name|__func__
 argument_list|,
-name|lock
-operator|->
-name|lo_class
+name|class
 operator|->
 name|lc_name
 argument_list|,
@@ -9060,6 +9088,11 @@ name|lock_instance
 modifier|*
 name|instance
 decl_stmt|;
+name|struct
+name|lock_class
+modifier|*
+name|class
+decl_stmt|;
 if|if
 condition|(
 name|lock
@@ -9077,12 +9110,17 @@ operator|!=
 name|NULL
 condition|)
 return|return;
+name|class
+operator|=
+name|LOCK_CLASS
+argument_list|(
+name|lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
-name|lock
-operator|->
-name|lo_class
+name|class
 operator|->
 name|lc_flags
 operator|&
@@ -9106,9 +9144,7 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|lock
-operator|->
-name|lo_class
+name|class
 operator|->
 name|lc_flags
 operator|&
@@ -9135,9 +9171,7 @@ name|panic
 argument_list|(
 literal|"Lock (%s) %s is not sleep or spin!"
 argument_list|,
-name|lock
-operator|->
-name|lo_class
+name|class
 operator|->
 name|lc_name
 argument_list|,
@@ -9172,9 +9206,7 @@ name|panic
 argument_list|(
 literal|"Lock (%s) %s locked @ %s:%d."
 argument_list|,
-name|lock
-operator|->
-name|lo_class
+name|class
 operator|->
 name|lc_name
 argument_list|,
@@ -9238,9 +9270,7 @@ name|panic
 argument_list|(
 literal|"Lock (%s) %s not locked @ %s:%d."
 argument_list|,
-name|lock
-operator|->
-name|lo_class
+name|class
 operator|->
 name|lc_name
 argument_list|,
@@ -9279,9 +9309,7 @@ name|panic
 argument_list|(
 literal|"Lock (%s) %s not exclusively locked @ %s:%d."
 argument_list|,
-name|lock
-operator|->
-name|lo_class
+name|class
 operator|->
 name|lc_name
 argument_list|,
@@ -9318,9 +9346,7 @@ name|panic
 argument_list|(
 literal|"Lock (%s) %s exclusively locked @ %s:%d."
 argument_list|,
-name|lock
-operator|->
-name|lo_class
+name|class
 operator|->
 name|lc_name
 argument_list|,
@@ -9357,9 +9383,7 @@ name|panic
 argument_list|(
 literal|"Lock (%s) %s not recursed @ %s:%d."
 argument_list|,
-name|lock
-operator|->
-name|lo_class
+name|class
 operator|->
 name|lc_name
 argument_list|,
@@ -9396,9 +9420,7 @@ name|panic
 argument_list|(
 literal|"Lock (%s) %s recursed @ %s:%d."
 argument_list|,
-name|lock
-operator|->
-name|lo_class
+name|class
 operator|->
 name|lc_name
 argument_list|,

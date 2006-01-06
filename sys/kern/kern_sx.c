@@ -254,10 +254,11 @@ argument_list|)
 expr_stmt|;
 name|lock
 operator|->
-name|lo_class
+name|lo_flags
 operator|=
-operator|&
-name|lock_class_sx
+name|LOCK_CLASS_SX
+operator|<<
+name|LO_CLASSSHIFT
 expr_stmt|;
 name|lock
 operator|->
@@ -272,7 +273,7 @@ expr_stmt|;
 name|lock
 operator|->
 name|lo_flags
-operator|=
+operator||=
 name|LO_WITNESS
 operator||
 name|LO_RECURSABLE

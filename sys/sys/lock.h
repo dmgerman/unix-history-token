@@ -222,6 +222,76 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LO_CLASSMASK
+value|0x0f000000
+end_define
+
+begin_comment
+comment|/* Class index bitmask. */
+end_comment
+
+begin_comment
+comment|/*  * Lock classes are statically assigned an index into the gobal lock_classes  * array.  Debugging code looks up the lock class for a given lock object  * by indexing the array.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LO_CLASSSHIFT
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|LO_CLASSINDEX
+parameter_list|(
+name|lock
+parameter_list|)
+value|((((lock)->lo_flags)& LO_CLASSMASK)>> LO_CLASSSHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCK_CLASS
+parameter_list|(
+name|lock
+parameter_list|)
+value|(lock_classes[LO_CLASSINDEX((lock))])
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCK_CLASS_SPIN_MUTEX
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCK_CLASS_SLEEP_MUTEX
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCK_CLASS_SX
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCK_CLASS_MAX
+value|LOCK_CLASS_SX
+end_define
+
+begin_define
+define|#
+directive|define
 name|LI_RECURSEMASK
 value|0x0000ffff
 end_define
@@ -586,7 +656,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {	\ 	if (LOCK_LOG_TEST((lo), (flags)))				\ 		CTR5(KTR_LOCK, opname " (%s) %s r = %d at %s:%d",	\ 		    (lo)->lo_class->lc_name, (lo)->lo_name,		\ 		    (u_int)(recurse), (file), (line));			\ } while (0)
+value|do {	\ 	if (LOCK_LOG_TEST((lo), (flags)))				\ 		CTR5(KTR_LOCK, opname " (%s) %s r = %d at %s:%d",	\ 		    LOCK_CLASS(lo)->lc_name, (lo)->lo_name,		\ 		    (u_int)(recurse), (file), (line));			\ } while (0)
 end_define
 
 begin_define
@@ -606,7 +676,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {	\ 	if (LOCK_LOG_TEST((lo), (flags)))				\ 		CTR5(KTR_LOCK, "TRY_" opname " (%s) %s result=%d at %s:%d",\ 		    (lo)->lo_class->lc_name, (lo)->lo_name,		\ 		    (u_int)(result), (file), (line));			\ } while (0)
+value|do {	\ 	if (LOCK_LOG_TEST((lo), (flags)))				\ 		CTR5(KTR_LOCK, "TRY_" opname " (%s) %s result=%d at %s:%d",\ 		    LOCK_CLASS(lo)->lc_name, (lo)->lo_name,		\ 		    (u_int)(result), (file), (line));			\ } while (0)
 end_define
 
 begin_define
@@ -618,7 +688,7 @@ name|lo
 parameter_list|,
 name|flags
 parameter_list|)
-value|do {					\ 	if (LOCK_LOG_TEST((lo), (flags)))				\ 		CTR4(KTR_LOCK, "%s: %p (%s) %s", __func__, (lo),	\  		    (lo)->lo_class->lc_name, (lo)->lo_name);		\ } while (0)
+value|do {					\ 	if (LOCK_LOG_TEST((lo), (flags)))				\ 		CTR4(KTR_LOCK, "%s: %p (%s) %s", __func__, (lo),	\  		    LOCK_CLASS(lo)->lc_name, (lo)->lo_name);		\ } while (0)
 end_define
 
 begin_define
@@ -711,6 +781,16 @@ specifier|extern
 name|struct
 name|lock_class
 name|lock_class_sx
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|lock_class
+modifier|*
+name|lock_classes
+index|[]
 decl_stmt|;
 end_decl_stmt
 

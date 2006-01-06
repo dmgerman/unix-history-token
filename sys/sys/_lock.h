@@ -19,11 +19,6 @@ begin_struct
 struct|struct
 name|lock_object
 block|{
-name|struct
-name|lock_class
-modifier|*
-name|lo_class
-decl_stmt|;
 specifier|const
 name|char
 modifier|*
