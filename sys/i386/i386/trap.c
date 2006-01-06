@@ -885,7 +885,7 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Page faults need interrupts disabled until later, 			 * and we shouldn't enable interrupts while in a 			 * critical section or if servicing an NMI. 			 */
+comment|/* 			 * Page faults need interrupts disabled until later, 			 * and we shouldn't enable interrupts while holding 			 * a spin lock or if servicing an NMI. 			 */
 if|if
 condition|(
 name|type
@@ -898,7 +898,9 @@ name|T_PAGEFLT
 operator|&&
 name|td
 operator|->
-name|td_critnest
+name|td_md
+operator|.
+name|md_spinlock_count
 operator|==
 literal|0
 condition|)

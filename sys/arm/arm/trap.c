@@ -934,7 +934,9 @@ if|if
 condition|(
 name|td
 operator|->
-name|td_critnest
+name|td_md
+operator|.
+name|md_spinlock_count
 operator|==
 literal|0
 operator|&&
@@ -2571,7 +2573,9 @@ if|if
 condition|(
 name|td
 operator|->
-name|td_critnest
+name|td_md
+operator|.
+name|md_spinlock_count
 operator|==
 literal|0
 operator|&&
@@ -3962,7 +3966,9 @@ if|if
 condition|(
 name|td
 operator|->
-name|td_critnest
+name|td_md
+operator|.
+name|md_spinlock_count
 operator|==
 literal|0
 operator|&&
