@@ -6585,11 +6585,7 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-name|agg_lock
-argument_list|(
-name|ess
-argument_list|)
-expr_stmt|;
+comment|/* XXX sound locking violation: agg_lock(ess); */
 name|ret
 operator|=
 name|agg_rdcodec
@@ -6599,11 +6595,7 @@ argument_list|,
 name|regno
 argument_list|)
 expr_stmt|;
-name|agg_unlock
-argument_list|(
-name|ess
-argument_list|)
-expr_stmt|;
+comment|/* agg_unlock(ess); */
 return|return
 name|ret
 return|;
@@ -6639,11 +6631,7 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-name|agg_lock
-argument_list|(
-name|ess
-argument_list|)
-expr_stmt|;
+comment|/* XXX sound locking violation: agg_lock(ess); */
 name|ret
 operator|=
 name|agg_wrcodec
@@ -6655,11 +6643,7 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
-name|agg_unlock
-argument_list|(
-name|ess
-argument_list|)
-expr_stmt|;
+comment|/* agg_unlock(ess); */
 return|return
 name|ret
 return|;
@@ -9824,6 +9808,11 @@ literal|0x80
 condition|)
 block|{
 comment|/* XXX - TODO: PT101 */
+name|agg_unlock
+argument_list|(
+name|ess
+argument_list|)
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|dev
@@ -9839,6 +9828,11 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|agg_unlock
+argument_list|(
+name|ess
+argument_list|)
+expr_stmt|;
 name|codec
 operator|=
 name|AC97_CREATE
@@ -9934,11 +9928,21 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|agg_lock
+argument_list|(
+name|ess
+argument_list|)
+expr_stmt|;
 name|agg_power
 argument_list|(
 name|ess
 argument_list|,
 name|powerstate_init
+argument_list|)
+expr_stmt|;
+name|agg_unlock
+argument_list|(
+name|ess
 argument_list|)
 expr_stmt|;
 for|for
@@ -9991,11 +9995,6 @@ argument_list|,
 name|ess
 operator|->
 name|bufsz
-argument_list|)
-expr_stmt|;
-name|agg_unlock
-argument_list|(
-name|ess
 argument_list|)
 expr_stmt|;
 name|snprintf
@@ -10321,6 +10320,11 @@ argument_list|(
 name|ess
 argument_list|,
 name|PCI_POWERSTATE_D3
+argument_list|)
+expr_stmt|;
+name|agg_unlock
+argument_list|(
+name|ess
 argument_list|)
 expr_stmt|;
 name|bus_teardown_intr
