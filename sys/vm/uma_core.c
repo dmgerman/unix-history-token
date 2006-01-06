@@ -1180,27 +1180,6 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_debug
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|nosleepwithlocks
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|nosleepwithlocks
-argument_list|,
-literal|0
-argument_list|,
-literal|"Convert M_WAITOK to M_NOWAIT to avoid lock-held-across-sleep paths"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_else
 else|#
 directive|else
@@ -1215,6 +1194,11 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -1235,11 +1219,6 @@ literal|"Convert M_WAITOK to M_NOWAIT to avoid lock-held-across-sleep paths"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|SYSCTL_OID
@@ -7299,9 +7278,6 @@ name|badness
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|WITNESS
 name|WITNESS_WARN
 argument_list|(
 name|WARN_GIANTOK
@@ -7317,8 +7293,6 @@ operator|->
 name|uz_name
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 if|if
 condition|(
