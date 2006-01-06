@@ -635,14 +635,23 @@ argument_list|)
 name|drive
 expr_stmt|;
 comment|/* Entry in the vinum config. */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|gv_bioq
-argument_list|)
+ifdef|#
+directive|ifdef
+name|_KERNEL
+name|struct
+name|bio_queue_head
+modifier|*
 name|bqueue
-expr_stmt|;
+decl_stmt|;
 comment|/* BIO queue of this drive. */
+else|#
+directive|else
+name|char
+modifier|*
+name|padding
+decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|mtx
 name|bqueue_mtx
@@ -935,22 +944,32 @@ name|mtx
 name|bqueue_mtx
 decl_stmt|;
 comment|/* Lock for the BIO queue. */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|gv_bioq
-argument_list|)
+ifdef|#
+directive|ifdef
+name|_KERNEL
+name|struct
+name|bio_queue_head
+modifier|*
 name|bqueue
-expr_stmt|;
+decl_stmt|;
 comment|/* BIO queue. */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|gv_bioq
-argument_list|)
+name|struct
+name|bio_queue_head
+modifier|*
 name|wqueue
-expr_stmt|;
+decl_stmt|;
 comment|/* Waiting BIO queue. */
+else|#
+directive|else
+name|char
+modifier|*
+name|bpad
+decl_stmt|,
+modifier|*
+name|wpad
+decl_stmt|;
+endif|#
+directive|endif
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -1067,14 +1086,23 @@ name|mtx
 name|bqueue_mtx
 decl_stmt|;
 comment|/* Lock for the BIO queue. */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|gv_bioq
-argument_list|)
+ifdef|#
+directive|ifdef
+name|_KERNEL
+name|struct
+name|bio_queue_head
+modifier|*
 name|bqueue
-expr_stmt|;
+decl_stmt|;
 comment|/* BIO queue. */
+else|#
+directive|else
+name|char
+modifier|*
+name|padding
+decl_stmt|;
+endif|#
+directive|endif
 name|LIST_HEAD
 argument_list|(
 argument_list|,
