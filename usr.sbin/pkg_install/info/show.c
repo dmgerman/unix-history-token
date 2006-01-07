@@ -388,6 +388,12 @@ name|ign
 init|=
 name|FALSE
 decl_stmt|;
+name|char
+modifier|*
+name|prefix
+init|=
+name|NULL
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -485,6 +491,17 @@ break|break;
 case|case
 name|PLIST_CWD
 case|:
+if|if
+condition|(
+operator|!
+name|prefix
+condition|)
+name|prefix
+operator|=
+name|p
+operator|->
+name|name
+expr_stmt|;
 name|printf
 argument_list|(
 name|Quiet
@@ -493,6 +510,16 @@ literal|"@cwd %s\n"
 else|:
 literal|"\tCWD to %s\n"
 argument_list|,
+operator|(
+name|p
+operator|->
+name|name
+operator|==
+name|NULL
+operator|)
+condition|?
+name|prefix
+else|:
 name|p
 operator|->
 name|name
