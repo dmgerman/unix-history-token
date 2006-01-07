@@ -4057,22 +4057,6 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Perform the non-mtx related part of mtx_unlock_spin(). */
-if|if
-condition|(
-name|LO_CLASSINDEX
-argument_list|(
-operator|&
-name|m
-operator|->
-name|mtx_object
-argument_list|)
-operator|==
-name|LOCK_CLASS_SPIN_MUTEX
-condition|)
-name|spinlock_exit
-argument_list|()
-expr_stmt|;
 comment|/* Tell witness this isn't locked to make it happy. */
 name|WITNESS_UNLOCK
 argument_list|(
