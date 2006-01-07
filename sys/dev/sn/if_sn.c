@@ -1252,8 +1252,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_drv_flags
@@ -1285,8 +1283,6 @@ label|:
 comment|/* 	 * Sneak a peek at the next packet 	 */
 name|m
 operator|=
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_snd
@@ -1353,8 +1349,6 @@ literal|"large packet discarded (A)\n"
 argument_list|)
 expr_stmt|;
 operator|++
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_oerrors
@@ -1362,8 +1356,6 @@ expr_stmt|;
 name|IF_DEQUEUE
 argument_list|(
 operator|&
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_snd
@@ -1502,16 +1494,12 @@ name|intr_mask
 operator|=
 name|mask
 expr_stmt|;
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_timer
 operator|=
 literal|1
 expr_stmt|;
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_drv_flags
@@ -1627,8 +1615,6 @@ comment|/* 	 * Get the packet from the kernel.  This will include the Ethernet 	
 name|IF_DEQUEUE
 argument_list|(
 operator|&
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_snd
@@ -1794,16 +1780,12 @@ argument_list|,
 name|MMUCR_ENQUEUE
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_drv_flags
 operator||=
 name|IFF_DRV_OACTIVE
 expr_stmt|;
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_timer
@@ -1817,8 +1799,6 @@ argument_list|,
 name|top
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_opackets
@@ -1930,8 +1910,6 @@ expr_stmt|;
 comment|/* 	 * Sneak a peek at the next packet 	 */
 name|m
 operator|=
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_snd
@@ -2007,8 +1985,6 @@ literal|"large packet discarded (B)\n"
 argument_list|)
 expr_stmt|;
 operator|++
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_oerrors
@@ -2016,8 +1992,6 @@ expr_stmt|;
 name|IF_DEQUEUE
 argument_list|(
 operator|&
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_snd
@@ -2103,8 +2077,6 @@ argument_list|,
 literal|"Memory allocation failed.  Weird.\n"
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_timer
@@ -2221,8 +2193,6 @@ comment|/* 	 * Get the packet from the kernel.  This will include the Ethernet 	
 name|IF_DEQUEUE
 argument_list|(
 operator|&
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_snd
@@ -2395,8 +2365,6 @@ argument_list|,
 name|top
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_opackets
@@ -2410,8 +2378,6 @@ expr_stmt|;
 name|try_start
 label|:
 comment|/* 	 * Now pass control to snstart() to queue any additional packets 	 */
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_drv_flags
@@ -2425,16 +2391,12 @@ name|ifp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We've sent something, so we're active.  Set a watchdog in case the 	 * TX_EMPTY interrupt is lost. 	 */
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_drv_flags
 operator||=
 name|IFF_DRV_OACTIVE
 expr_stmt|;
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_timer
@@ -2574,8 +2536,6 @@ name|IM_RX_OVRN_INT
 argument_list|)
 expr_stmt|;
 operator|++
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_ierrors
@@ -2645,8 +2605,6 @@ operator|&=
 operator|~
 name|IM_ALLOC_INT
 expr_stmt|;
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_drv_flags
@@ -2656,8 +2614,6 @@ name|IFF_DRV_OACTIVE
 expr_stmt|;
 name|snresume
 argument_list|(
-name|sc
-operator|->
 name|ifp
 argument_list|)
 expr_stmt|;
@@ -2754,8 +2710,6 @@ block|}
 else|else
 block|{
 operator|++
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_oerrors
@@ -2768,8 +2722,6 @@ operator|&
 name|EPHSR_LATCOL
 condition|)
 operator|++
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_collisions
@@ -2841,8 +2793,6 @@ name|MMUCR_FREEPKT
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Attempt to queue more transmits. 		 */
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_drv_flags
@@ -2852,8 +2802,6 @@ name|IFF_DRV_OACTIVE
 expr_stmt|;
 name|snstart_locked
 argument_list|(
-name|sc
-operator|->
 name|ifp
 argument_list|)
 expr_stmt|;
@@ -2906,8 +2854,6 @@ name|COUNTER_REG_W
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Single collisions 		 */
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_collisions
@@ -2917,8 +2863,6 @@ operator|&
 name|ECR_COLN_MASK
 expr_stmt|;
 comment|/* 		 * Multiple collisions 		 */
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_collisions
@@ -2939,8 +2883,6 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Attempt to enqueue some more stuff. 		 */
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_drv_flags
@@ -2950,8 +2892,6 @@ name|IFF_DRV_OACTIVE
 expr_stmt|;
 name|snstart_locked
 argument_list|(
-name|sc
-operator|->
 name|ifp
 argument_list|)
 expr_stmt|;
@@ -3129,8 +3069,6 @@ name|RS_ERRORS
 condition|)
 block|{
 operator|++
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_ierrors
@@ -3175,8 +3113,6 @@ name|m_pkthdr
 operator|.
 name|rcvif
 operator|=
-name|sc
-operator|->
 name|ifp
 expr_stmt|;
 name|m
@@ -3219,8 +3155,6 @@ name|m
 argument_list|)
 expr_stmt|;
 operator|++
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_ierrors
@@ -3297,8 +3231,6 @@ argument_list|)
 expr_stmt|;
 block|}
 operator|++
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_ipackets
