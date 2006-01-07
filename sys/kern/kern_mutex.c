@@ -4060,14 +4060,15 @@ expr_stmt|;
 comment|/* Perform the non-mtx related part of mtx_unlock_spin(). */
 if|if
 condition|(
+name|LO_CLASSINDEX
+argument_list|(
+operator|&
 name|m
 operator|->
 name|mtx_object
-operator|.
-name|lo_class
+argument_list|)
 operator|==
-operator|&
-name|lock_class_mtx_spin
+name|LOCK_CLASS_SPIN_MUTEX
 condition|)
 name|spinlock_exit
 argument_list|()
