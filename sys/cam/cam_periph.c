@@ -6518,6 +6518,12 @@ case|:
 case|case
 name|CAM_REQ_TOO_BIG
 case|:
+case|case
+name|CAM_LUN_INVALID
+case|:
+case|case
+name|CAM_TID_INVALID
+case|:
 name|error
 operator|=
 name|EINVAL
