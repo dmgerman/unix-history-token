@@ -2114,7 +2114,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"invald mode: %s"
+literal|"invalid mode: %s"
 argument_list|,
 name|av
 index|[
