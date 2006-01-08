@@ -459,12 +459,8 @@ begin_define
 define|#
 directive|define
 name|SIGSERVICE
-value|SIGCANCEL
+value|(SIGCANCEL+1)
 end_define
-
-begin_comment
-comment|/* Reuse SIGCANCEL */
-end_comment
 
 begin_define
 define|#
@@ -2222,6 +2218,32 @@ name|sigemptyset
 argument_list|(
 operator|&
 name|set
+argument_list|)
+expr_stmt|;
+name|sigaddset
+argument_list|(
+operator|&
+name|set
+argument_list|,
+name|SIGCANCEL
+argument_list|)
+expr_stmt|;
+name|__sys_sigprocmask
+argument_list|(
+name|SIG_UNBLOCK
+argument_list|,
+operator|&
+name|set
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|sigdelset
+argument_list|(
+operator|&
+name|set
+argument_list|,
+name|SIGCANCEL
 argument_list|)
 expr_stmt|;
 name|sigaddset
