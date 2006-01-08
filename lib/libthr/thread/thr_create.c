@@ -789,6 +789,9 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
+name|_thread_active_threads
+operator|--
+expr_stmt|;
 name|new_thread
 operator|->
 name|tlflags
