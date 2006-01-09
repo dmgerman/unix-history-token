@@ -3595,6 +3595,11 @@ name|td
 argument_list|)
 condition|)
 block|{
+name|MNT_ILOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 goto|goto
 name|loop
 goto|;
