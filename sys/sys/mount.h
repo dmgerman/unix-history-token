@@ -568,6 +568,18 @@ name|u_int
 name|mnt_hashseed
 decl_stmt|;
 comment|/* Random seed for vfs_hash */
+name|int
+name|mnt_markercnt
+decl_stmt|;
+comment|/* marker vnodes in use */
+name|int
+name|mnt_holdcnt
+decl_stmt|;
+comment|/* hold count */
+name|int
+name|mnt_holdcntwaiters
+decl_stmt|;
+comment|/* waits on hold count */
 block|}
 struct|;
 end_struct
@@ -582,7 +594,45 @@ name|struct
 name|vnode
 modifier|*
 modifier|*
-name|nvp
+name|mvp
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|vnode
+modifier|*
+name|__mnt_vnode_first
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|mvp
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|__mnt_vnode_markerfree
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|mvp
 parameter_list|,
 name|struct
 name|mount
@@ -601,10 +651,36 @@ name|vp
 parameter_list|,
 name|mp
 parameter_list|,
-name|vp2
+name|mvp
 parameter_list|)
 define|\
-value|for ((vp2) = TAILQ_FIRST(&(mp)->mnt_nvnodelist);	\ 		(vp = __mnt_vnode_next(&(vp2), (mp))) != NULL;)
+value|for (vp = __mnt_vnode_first(&(mvp), (mp)); \ 		(vp) != NULL; vp = __mnt_vnode_next(&(mvp), (mp)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MNT_VNODE_FOREACH_ABORT_ILOCKED
+parameter_list|(
+name|mp
+parameter_list|,
+name|mvp
+parameter_list|)
+define|\
+value|__mnt_vnode_markerfree(&(mvp), (mp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MNT_VNODE_FOREACH_ABORT
+parameter_list|(
+name|mp
+parameter_list|,
+name|mvp
+parameter_list|)
+define|\
+value|do {								\ 	  MNT_ILOCK(mp);						\           MNT_VNODE_FOREACH_ABORT_ILOCKED(mp, mvp);			\ 	  MNT_IUNLOCK(mp);						\ 	} while (0)
 end_define
 
 begin_define

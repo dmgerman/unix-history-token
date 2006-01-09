@@ -114,6 +114,8 @@ block|,
 name|VFIFO
 block|,
 name|VBAD
+block|,
+name|VMARKER
 block|}
 enum|;
 end_enum

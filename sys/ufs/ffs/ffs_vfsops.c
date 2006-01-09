@@ -2209,7 +2209,7 @@ modifier|*
 name|vp
 decl_stmt|,
 modifier|*
-name|nvp
+name|mvp
 decl_stmt|,
 modifier|*
 name|devvp
@@ -2758,7 +2758,7 @@ argument|vp
 argument_list|,
 argument|mp
 argument_list|,
-argument|nvp
+argument|mvp
 argument_list|)
 block|{
 name|VI_LOCK
@@ -2802,6 +2802,13 @@ name|td
 argument_list|)
 condition|)
 block|{
+name|MNT_VNODE_FOREACH_ABORT
+argument_list|(
+name|mp
+argument_list|,
+name|mvp
+argument_list|)
+expr_stmt|;
 goto|goto
 name|loop
 goto|;
@@ -2884,6 +2891,13 @@ expr_stmt|;
 name|vrele
 argument_list|(
 name|vp
+argument_list|)
+expr_stmt|;
+name|MNT_VNODE_FOREACH_ABORT
+argument_list|(
+name|mp
+argument_list|,
+name|mvp
 argument_list|)
 expr_stmt|;
 return|return
@@ -5874,7 +5888,7 @@ block|{
 name|struct
 name|vnode
 modifier|*
-name|nvp
+name|mvp
 decl_stmt|,
 modifier|*
 name|vp
@@ -6003,7 +6017,7 @@ argument|vp
 argument_list|,
 argument|mp
 argument_list|,
-argument|nvp
+argument|mvp
 argument_list|)
 block|{
 comment|/* 		 * Depend on the mntvnode_slock to keep things stable enough 		 * for a quick test.  Since there might be hundreds of 		 * thousands of vnodes, we cannot afford even a subroutine 		 * call unless there's a good chance that we have work to do. 		 */
@@ -6119,9 +6133,18 @@ name|error
 operator|==
 name|ENOLCK
 condition|)
+block|{
+name|MNT_VNODE_FOREACH_ABORT_ILOCKED
+argument_list|(
+name|mp
+argument_list|,
+name|mvp
+argument_list|)
+expr_stmt|;
 goto|goto
 name|loop
 goto|;
+block|}
 continue|continue;
 block|}
 if|if
