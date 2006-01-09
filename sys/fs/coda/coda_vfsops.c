@@ -205,7 +205,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|MRAK_INT_GEN
+name|MARK_INT_GEN
 parameter_list|(
 name|op
 parameter_list|)
