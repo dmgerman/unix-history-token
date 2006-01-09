@@ -1268,6 +1268,42 @@ define|\
 value|do {							\ 	(thrd)->locklevel++;				\ 	_thr_umtx_lock(lck, (thrd)->tid);		\ } while (0)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_PTHREADS_INVARIANTS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|THR_ASSERT_LOCKLEVEL
+parameter_list|(
+name|thrd
+parameter_list|)
+define|\
+value|do {							\ 	if (__predict_false((thrd)->locklevel<= 0))	\ 		_thr_assert_lock_level();		\ } while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|THR_ASSERT_LOCKLEVEL
+parameter_list|(
+name|thrd
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -1278,7 +1314,7 @@ parameter_list|,
 name|lck
 parameter_list|)
 define|\
-value|do {							\ 	if ((thrd)->locklevel> 0) {			\ 		_thr_umtx_unlock((lck), (thrd)->tid);	\ 		(thrd)->locklevel--;			\ 		_thr_ast(thrd);				\ 	} else { 					\ 		_thr_assert_lock_level();		\ 	}						\ } while (0)
+value|do {							\ 	THR_ASSERT_LOCKLEVEL(thrd);			\ 	_thr_umtx_unlock((lck), (thrd)->tid);		\ 	(thrd)->locklevel--;				\ 	_thr_ast(thrd);					\ } while (0)
 end_define
 
 begin_define
