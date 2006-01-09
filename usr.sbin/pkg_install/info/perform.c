@@ -410,6 +410,8 @@ argument_list|(
 name|NULL
 argument_list|,
 name|pkg
+argument_list|,
+name|KeepPackage
 argument_list|)
 operator|)
 operator|!=
