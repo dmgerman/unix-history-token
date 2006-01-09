@@ -354,7 +354,7 @@ begin_define
 define|#
 directive|define
 name|ATH_RX_RADIOTAP_PRESENT
-value|(		\ 	(1<< IEEE80211_RADIOTAP_FLAGS)		| \ 	(1<< IEEE80211_RADIOTAP_RATE)		| \ 	(1<< IEEE80211_RADIOTAP_CHANNEL)	| \ 	(1<< IEEE80211_RADIOTAP_ANTENNA)	| \ 	(1<< IEEE80211_RADIOTAP_DB_ANTSIGNAL)	| \ 	0)
+value|(		\ 	(1<< IEEE80211_RADIOTAP_TSFT)		| \ 	(1<< IEEE80211_RADIOTAP_FLAGS)		| \ 	(1<< IEEE80211_RADIOTAP_RATE)		| \ 	(1<< IEEE80211_RADIOTAP_CHANNEL)	| \ 	(1<< IEEE80211_RADIOTAP_ANTENNA)	| \ 	(1<< IEEE80211_RADIOTAP_DBM_ANTSIGNAL)	| \ 	(1<< IEEE80211_RADIOTAP_DBM_ANTNOISE)	| \ 	0)
 end_define
 
 begin_struct
@@ -365,10 +365,12 @@ name|struct
 name|ieee80211_radiotap_header
 name|wr_ihdr
 decl_stmt|;
+name|u_int64_t
+name|wr_tsf
+decl_stmt|;
 name|u_int8_t
 name|wr_flags
 decl_stmt|;
-comment|/* XXX for padding */
 name|u_int8_t
 name|wr_rate
 decl_stmt|;
@@ -379,10 +381,13 @@ name|u_int16_t
 name|wr_chan_flags
 decl_stmt|;
 name|u_int8_t
-name|wr_antenna
+name|wr_antsignal
 decl_stmt|;
 name|u_int8_t
-name|wr_antsignal
+name|wr_antnoise
+decl_stmt|;
+name|u_int8_t
+name|wr_antenna
 decl_stmt|;
 block|}
 struct|;
@@ -392,7 +397,7 @@ begin_define
 define|#
 directive|define
 name|ATH_TX_RADIOTAP_PRESENT
-value|(		\ 	(1<< IEEE80211_RADIOTAP_FLAGS)		| \ 	(1<< IEEE80211_RADIOTAP_RATE)		| \ 	(1<< IEEE80211_RADIOTAP_CHANNEL)	| \ 	(1<< IEEE80211_RADIOTAP_DBM_TX_POWER)	| \ 	(1<< IEEE80211_RADIOTAP_ANTENNA)	| \ 	0)
+value|(		\ 	(1<< IEEE80211_RADIOTAP_TSFT)		| \ 	(1<< IEEE80211_RADIOTAP_FLAGS)		| \ 	(1<< IEEE80211_RADIOTAP_RATE)		| \ 	(1<< IEEE80211_RADIOTAP_CHANNEL)	| \ 	(1<< IEEE80211_RADIOTAP_DBM_TX_POWER)	| \ 	(1<< IEEE80211_RADIOTAP_ANTENNA)	| \ 	0)
 end_define
 
 begin_struct
@@ -403,10 +408,12 @@ name|struct
 name|ieee80211_radiotap_header
 name|wt_ihdr
 decl_stmt|;
+name|u_int64_t
+name|wt_tsf
+decl_stmt|;
 name|u_int8_t
 name|wt_flags
 decl_stmt|;
-comment|/* XXX for padding */
 name|u_int8_t
 name|wt_rate
 decl_stmt|;
