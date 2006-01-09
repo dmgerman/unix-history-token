@@ -38,18 +38,6 @@ directive|define
 name|__NO_STRICT_ALIGNMENT
 end_define
 
-begin_define
-define|#
-directive|define
-name|__HAVE_ACPI
-end_define
-
-begin_define
-define|#
-directive|define
-name|__PCI_REROUTE_INTERRUPT
-end_define
-
 begin_comment
 comment|/*  * Basic types upon which most other types are built.  */
 end_comment
