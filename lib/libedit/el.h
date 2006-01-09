@@ -197,6 +197,16 @@ end_comment
 begin_define
 define|#
 directive|define
+name|el_strdup
+parameter_list|(
+name|a
+parameter_list|)
+value|strdup(a)
+end_define
+
+begin_define
+define|#
+directive|define
 name|el_malloc
 parameter_list|(
 name|a
