@@ -596,7 +596,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"obsolete pre-RFC2553 sockaddr_in6 rejected"
+literal|"obsolete pre-RFC2553 sockaddr_in6 rejected\n"
 argument_list|)
 expr_stmt|;
 name|error
