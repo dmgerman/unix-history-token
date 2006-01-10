@@ -63,17 +63,20 @@ begin_struct
 struct|struct
 name|ng_source_stats
 block|{
-name|u_int64_t
+name|uint64_t
 name|outOctets
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|outFrames
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|queueOctets
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|queueFrames
+decl_stmt|;
+name|uint32_t
+name|maxPps
 decl_stmt|;
 name|struct
 name|timeval
@@ -86,6 +89,10 @@ decl_stmt|;
 name|struct
 name|timeval
 name|elapsedTime
+decl_stmt|;
+name|struct
+name|timeval
+name|lastTime
 decl_stmt|;
 block|}
 struct|;
@@ -108,7 +115,7 @@ begin_define
 define|#
 directive|define
 name|NG_SOURCE_STATS_TYPE_INFO
-value|{			\ 	  { "outOctets",&ng_parse_uint64_type	},	\ 	  { "outFrames",&ng_parse_uint64_type	},	\ 	  { "queueOctets",&ng_parse_uint32_type	},	\ 	  { "queueFrames",&ng_parse_uint32_type	},	\ 	  { "startTime",&ng_source_timeval_type },	\ 	  { "endTime",&ng_source_timeval_type },	\ 	  { "elapsedTime",&ng_source_timeval_type },	\ 	  { NULL }						\ }
+value|{			\ 	  { "outOctets",&ng_parse_uint64_type	},	\ 	  { "outFrames",&ng_parse_uint64_type	},	\ 	  { "queueOctets",&ng_parse_uint32_type	},	\ 	  { "queueFrames",&ng_parse_uint32_type	},	\ 	  { "maxPps",&ng_parse_uint32_type	},	\ 	  { "startTime",&ng_source_timeval_type },	\ 	  { "endTime",&ng_source_timeval_type },	\ 	  { "elapsedTime",&ng_source_timeval_type },	\ 	  { "lastTime",&ng_source_timeval_type },	\ 	  { NULL }						\ }
 end_define
 
 begin_comment
@@ -141,6 +148,9 @@ comment|/* clear the queued data */
 name|NGM_SOURCE_SETIFACE
 block|,
 comment|/* configure downstream iface */
+name|NGM_SOURCE_SETPPS
+block|,
+comment|/* rate-limiting packets per second */
 block|}
 enum|;
 end_enum
