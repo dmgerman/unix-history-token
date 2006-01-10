@@ -453,7 +453,7 @@ name|pcmchan_caps
 name|fm801ch_caps
 init|=
 block|{
-literal|4000
+literal|5500
 block|,
 literal|48000
 block|,
