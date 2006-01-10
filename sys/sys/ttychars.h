@@ -15,12 +15,6 @@ directive|define
 name|_SYS_TTYCHARS_H_
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
-end_ifndef
-
 begin_comment
 comment|/*  * 4.3 COMPATIBILITY FILE  *  * User visible structures and constants related to terminal handling.  */
 end_comment
@@ -109,15 +103,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* BURN_BRIDGES */
-end_comment
 
 begin_endif
 endif|#

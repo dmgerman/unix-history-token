@@ -63,18 +63,12 @@ directive|include
 file|<sys/sx.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
-end_ifndef
-
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|COMPAT_43
+name|COMPAT_43TTY
 argument_list|)
 end_if
 
@@ -83,11 +77,6 @@ include|#
 directive|include
 file|<sys/ioctl_compat.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -2826,20 +2815,15 @@ condition|(
 name|cmd
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
 ifdef|#
 directive|ifdef
-name|COMPAT_43
+name|COMPAT_43TTY
 case|case
 name|TIOCSETP
 case|:
 case|case
 name|TIOCSETN
 case|:
-endif|#
-directive|endif
 endif|#
 directive|endif
 case|case
@@ -3287,12 +3271,9 @@ case|:
 case|case
 name|TIOCSETAF
 case|:
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
 ifdef|#
 directive|ifdef
-name|COMPAT_43
+name|COMPAT_43TTY
 case|case
 name|TIOCSETP
 case|:
@@ -3314,8 +3295,6 @@ case|:
 case|case
 name|TIOCLSET
 case|:
-endif|#
-directive|endif
 endif|#
 directive|endif
 name|pt
