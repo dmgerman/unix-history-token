@@ -731,7 +731,7 @@ argument_list|)
 argument_list|,
 name|size
 argument_list|,
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -786,7 +786,7 @@ argument_list|)
 argument_list|,
 name|size
 argument_list|,
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 operator|&
 name|p
