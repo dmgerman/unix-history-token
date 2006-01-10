@@ -3725,6 +3725,9 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|uint32_t
+name|subdev
+decl_stmt|;
 name|u_int16_t
 name|extcaps
 decl_stmt|;
@@ -3817,6 +3820,22 @@ operator|->
 name|devid
 operator|=
 name|pci_get_device
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|subdev
+operator|=
+operator|(
+name|pci_get_subdevice
+argument_list|(
+name|dev
+argument_list|)
+operator|<<
+literal|16
+operator|)
+operator||
+name|pci_get_subvendor
 argument_list|(
 name|dev
 argument_list|)
@@ -4231,17 +4250,24 @@ condition|)
 goto|goto
 name|bad
 goto|;
-comment|/* 	 * Turn on inverted external amplifier sense flags for ICH4/82801DB. 	 * Does ICH3/82801CA need this too ? I left them out for now. 	 * 	 * http://lists.freebsd.org/pipermail/freebsd-multimedia/2003-November/000531.html 	 */
-if|if
+comment|/* 	 * Turn on inverted external amplifier sense flags for few 	 * 'special' boards. 	 */
+switch|switch
 condition|(
-name|vendor
-operator|==
-name|INTEL_VENDORID
-operator|&&
-name|devid
-operator|==
-name|INTEL_82801DB
+name|subdev
 condition|)
+block|{
+case|case
+literal|0x203a161f
+case|:
+comment|/* Gateway 4028GZ */
+case|case
+literal|0x8144104d
+case|:
+comment|/* Sony - VAIO PCG-TR* */
+case|case
+literal|0x8197104d
+case|:
+comment|/* Sony S1XP */
 name|ac97_setflags
 argument_list|(
 name|sc
@@ -4258,6 +4284,10 @@ operator||
 name|AC97_F_EAPD_INV
 argument_list|)
 expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
 name|mixer_init
 argument_list|(
 name|dev
