@@ -666,6 +666,7 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|col
@@ -711,6 +712,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
 name|snprintf
 argument_list|(
 name|path
@@ -727,6 +729,18 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
+name|col
+operator|=
+name|ptr
+operator|+
+name|strlen
+argument_list|(
+name|ptr
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
