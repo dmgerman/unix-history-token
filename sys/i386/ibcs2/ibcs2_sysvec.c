@@ -327,6 +327,10 @@ name|type
 condition|)
 block|{
 case|case
+name|MOD_LOAD
+case|:
+break|break;
+case|case
 name|MOD_UNLOAD
 case|:
 comment|/* if this was an ELF module we'd use elf_brand_inuse()... */
@@ -368,12 +372,12 @@ operator|&
 name|allproc_lock
 argument_list|)
 expr_stmt|;
+break|break;
 default|default:
-return|return
-operator|(
+name|rval
+operator|=
 name|EOPNOTSUPP
-operator|)
-return|;
+expr_stmt|;
 break|break;
 block|}
 return|return
