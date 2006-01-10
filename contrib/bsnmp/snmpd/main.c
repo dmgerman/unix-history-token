@@ -6435,7 +6435,7 @@ literal|"SNMP read"
 argument_list|,
 name|NULL
 argument_list|,
-literal|"public"
+name|NULL
 argument_list|)
 expr_stmt|;
 operator|(
@@ -6449,7 +6449,7 @@ literal|"SNMP write"
 argument_list|,
 name|NULL
 argument_list|,
-literal|"public"
+name|NULL
 argument_list|)
 expr_stmt|;
 name|community
