@@ -636,6 +636,15 @@ condition|(
 name|func
 operator|!=
 name|F_GET
+operator|&&
+operator|!
+operator|(
+name|func
+operator|==
+name|F_DELETE
+operator|&&
+name|aflag
+operator|)
 condition|)
 name|errx
 argument_list|(
