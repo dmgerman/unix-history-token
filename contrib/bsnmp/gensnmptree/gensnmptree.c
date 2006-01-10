@@ -1313,6 +1313,12 @@ name|lno
 operator|=
 name|lno
 expr_stmt|;
+name|node
+operator|->
+name|flags
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|tok
