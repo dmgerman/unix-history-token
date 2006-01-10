@@ -4039,9 +4039,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|probe
-operator|>
-literal|0
+name|gotlastaddr
 condition|)
 name|printf
 argument_list|(
