@@ -341,7 +341,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|no_abs_paths_flag
+name|abs_paths_flag
 init|=
 name|false
 decl_stmt|;

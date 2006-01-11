@@ -108,6 +108,8 @@ name|NO_ABSOLUTE_FILENAMES_OPTION
 init|=
 literal|256
 block|,
+name|ABSOLUTE_FILENAMES_OPTION
+block|,
 name|NO_PRESERVE_OWNER_OPTION
 block|,
 name|ONLY_VERIFY_CRC_OPTION
@@ -660,6 +662,23 @@ block|,
 name|N_
 argument_list|(
 literal|"Create all files relative to the current directory"
+argument_list|)
+block|,
+literal|210
+block|}
+block|,
+block|{
+literal|"absolute-filenames"
+block|,
+name|ABSOLUTE_FILENAMES_OPTION
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|N_
+argument_list|(
+literal|"do not strip leading file name components that contain \"..\" and leading slashes from file names"
 argument_list|)
 block|,
 literal|210
@@ -1882,7 +1901,16 @@ case|case
 name|NO_ABSOLUTE_FILENAMES_OPTION
 case|:
 comment|/* --no-absolute-filenames */
-name|no_abs_paths_flag
+name|abs_paths_flag
+operator|=
+name|false
+expr_stmt|;
+break|break;
+case|case
+name|ABSOLUTE_FILENAMES_OPTION
+case|:
+comment|/* --absolute-filenames */
+name|abs_paths_flag
 operator|=
 name|true
 expr_stmt|;
@@ -2811,9 +2839,9 @@ argument_list|)
 expr_stmt|;
 name|CHECK_USAGE
 argument_list|(
-name|no_abs_paths_flag
+name|abs_paths_flag
 argument_list|,
-literal|"--no-absolute-pathnames"
+literal|"--absolute-pathnames"
 argument_list|,
 literal|"--create"
 argument_list|)
@@ -2967,9 +2995,9 @@ argument_list|)
 expr_stmt|;
 name|CHECK_USAGE
 argument_list|(
-name|no_abs_paths_flag
+name|abs_paths_flag
 argument_list|,
-literal|"--no-absolute-pathnames"
+literal|"--absolute-pathnames"
 argument_list|,
 literal|"--pass-through"
 argument_list|)
