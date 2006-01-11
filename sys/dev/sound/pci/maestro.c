@@ -7723,9 +7723,9 @@ name|pcmchan_caps
 name|playcaps
 init|=
 block|{
-literal|2000
+literal|8000
 block|,
-literal|767999
+literal|48000
 block|,
 name|playfmt
 block|,
