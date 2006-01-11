@@ -12067,7 +12067,9 @@ operator|)
 operator|!=
 literal|0xc0
 condition|)
-continue|continue;
+goto|goto
+name|NEXT
+goto|;
 name|x
 operator|=
 name|y
@@ -13552,6 +13554,8 @@ name|inputbytes
 operator|=
 literal|0
 expr_stmt|;
+name|NEXT
+label|:
 if|if
 condition|(
 operator|++
