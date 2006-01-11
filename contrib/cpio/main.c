@@ -288,7 +288,7 @@ literal|'M'
 block|}
 block|,
 block|{
-literal|"no-absolute-filenames"
+literal|"absolute-filenames"
 block|,
 literal|0
 block|,
@@ -556,7 +556,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\        %s {-i|--extract} [-bcdfmnrtsuvBSV] [-C bytes] [-E file] [-H format]\n\        [-M message] [-R [user][:.][group]] [-I [[user@]host:]archive]\n\        [-F [[user@]host:]archive] [--file=[[user@]host:]archive]\n\        [--make-directories] [--nonmatching] [--preserve-modification-time]\n\        [--numeric-uid-gid] [--rename] [--list] [--swap-bytes] [--swap] [--dot]\n\        [--unconditional] [--verbose] [--block-size=blocks] [--swap-halfwords]\n\        [--io-size=bytes] [--pattern-file=file] [--format=format]\n\        [--owner=[user][:.][group]] [--no-preserve-owner] [--message=message]\n\        [--force-local] [--no-absolute-filenames] [--sparse] [--only-verify-crc]\n\        [--quiet] [--help] [--version] [pattern...] [< archive]\n"
+literal|"\        %s {-i|--extract} [-bcdfmnrtsuvBSV] [-C bytes] [-E file] [-H format]\n\        [-M message] [-R [user][:.][group]] [-I [[user@]host:]archive]\n\        [-F [[user@]host:]archive] [--file=[[user@]host:]archive]\n\        [--make-directories] [--nonmatching] [--preserve-modification-time]\n\        [--numeric-uid-gid] [--rename] [--list] [--swap-bytes] [--swap] [--dot]\n\        [--unconditional] [--verbose] [--block-size=blocks] [--swap-halfwords]\n\        [--io-size=bytes] [--pattern-file=file] [--format=format]\n\        [--owner=[user][:.][group]] [--no-preserve-owner] [--message=message]\n\        [--force-local] [--absolute-filenames] [--sparse] [--only-verify-crc]\n\        [--quiet] [--help] [--version] [pattern...] [< archive]\n"
 argument_list|,
 name|program_name
 argument_list|)
@@ -1164,8 +1164,8 @@ break|break;
 case|case
 literal|136
 case|:
-comment|/* --no-absolute-filenames */
-name|no_abs_paths_flag
+comment|/* --absolute-filenames */
+name|abs_paths_flag
 operator|=
 name|TRUE
 expr_stmt|;
@@ -1656,7 +1656,7 @@ operator|)
 operator|||
 name|rename_batch_file
 operator|||
-name|no_abs_paths_flag
+name|abs_paths_flag
 operator|||
 name|input_archive_name
 operator|||
@@ -1724,7 +1724,7 @@ name|append_flag
 operator|||
 name|rename_batch_file
 operator|||
-name|no_abs_paths_flag
+name|abs_paths_flag
 condition|)
 name|usage
 argument_list|(
