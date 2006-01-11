@@ -621,7 +621,7 @@ parameter_list|,
 name|cmp
 parameter_list|)
 define|\
-value|void name##_RB_INSERT_COLOR(struct name *, struct type *);	\ void name##_RB_REMOVE_COLOR(struct name *, struct type *, struct type *);\ struct type *name##_RB_REMOVE(struct name *, struct type *);		\ struct type *name##_RB_INSERT(struct name *, struct type *);		\ struct type *name##_RB_FIND(struct name *, struct type *);		\ struct type *name##_RB_NEXT(struct type *);				\ struct type *name##_RB_MINMAX(struct name *, int);
+value|void name##_RB_INSERT_COLOR(struct name *, struct type *);	\ void name##_RB_REMOVE_COLOR(struct name *, struct type *, struct type *);\ struct type *name##_RB_REMOVE(struct name *, struct type *);		\ struct type *name##_RB_INSERT(struct name *, struct type *);		\ struct type *name##_RB_FIND(struct name *, struct type *);		\ struct type *name##_RB_NFIND(struct name *, struct type *);		\ struct type *name##_RB_NEXT(struct type *);				\ struct type *name##_RB_MINMAX(struct name *, int);
 end_define
 
 begin_comment
@@ -648,6 +648,8 @@ comment|/* Inserts a node into the RB tree */
 value|\ struct type *								\ name##_RB_INSERT(struct name *head, struct type *elm)			\ {									\ 	struct type *tmp;						\ 	struct type *parent = NULL;					\ 	int comp = 0;							\ 	tmp = RB_ROOT(head);						\ 	while (tmp) {							\ 		parent = tmp;						\ 		comp = (cmp)(elm, parent);				\ 		if (comp< 0)						\ 			tmp = RB_LEFT(tmp, field);			\ 		else if (comp> 0)					\ 			tmp = RB_RIGHT(tmp, field);			\ 		else							\ 			return (tmp);					\ 	}								\ 	RB_SET(elm, parent, field);					\ 	if (parent != NULL) {						\ 		if (comp< 0)						\ 			RB_LEFT(parent, field) = elm;			\ 		else							\ 			RB_RIGHT(parent, field) = elm;			\ 		RB_AUGMENT(parent);					\ 	} else								\ 		RB_ROOT(head) = elm;					\ 	name##_RB_INSERT_COLOR(head, elm);				\ 	return (NULL);							\ }									\ 									\
 comment|/* Finds the node with the same key as elm */
 value|\ struct type *								\ name##_RB_FIND(struct name *head, struct type *elm)			\ {									\ 	struct type *tmp = RB_ROOT(head);				\ 	int comp;							\ 	while (tmp) {							\ 		comp = cmp(elm, tmp);					\ 		if (comp< 0)						\ 			tmp = RB_LEFT(tmp, field);			\ 		else if (comp> 0)					\ 			tmp = RB_RIGHT(tmp, field);			\ 		else							\ 			return (tmp);					\ 	}								\ 	return (NULL);							\ }									\ 									\
+comment|/* Finds the first node greater than or equal to the search key */
+value|\ struct type *								\ name##_RB_NFIND(struct name *head, struct type *elm)			\ {									\ 	struct type *ret = RB_ROOT(head);				\ 	struct type *tmp;						\ 	int comp;							\ 	while (ret&& (comp = cmp(elm, ret)) != 0) {			\ 		if (comp< 0) {						\ 			if ((tmp = RB_LEFT(ret, field)) == NULL)	\ 				break;					\ 			ret = tmp;					\ 		} else {						\ 			if ((tmp = RB_RIGHT(ret, field)) == NULL) {	\ 				tmp = ret;				\ 				ret = RB_PARENT(ret, field);		\ 				while (ret&& tmp == RB_RIGHT(ret,	\ 				    field)) {				\ 					tmp = ret;			\ 					ret = RB_PARENT(ret, field);	\ 				}					\ 				break;					\ 			}						\ 			ret = tmp;					\ 		}							\ 	}								\ 	return (ret);							\ }									\ 									\
 comment|/* ARGSUSED */
 value|\ struct type *								\ name##_RB_NEXT(struct type *elm)					\ {									\ 	if (RB_RIGHT(elm, field)) {					\ 		elm = RB_RIGHT(elm, field);				\ 		while (RB_LEFT(elm, field))				\ 			elm = RB_LEFT(elm, field);			\ 	} else {							\ 		if (RB_PARENT(elm, field)&&				\ 		    (elm == RB_LEFT(RB_PARENT(elm, field), field)))	\ 			elm = RB_PARENT(elm, field);			\ 		else {							\ 			while (RB_PARENT(elm, field)&&			\ 			    (elm == RB_RIGHT(RB_PARENT(elm, field), field)))\ 				elm = RB_PARENT(elm, field);		\ 			elm = RB_PARENT(elm, field);			\ 		}							\ 	}								\ 	return (elm);							\ }									\ 									\ struct type *								\ name##_RB_MINMAX(struct name *head, int val)				\ {									\ 	struct type *tmp = RB_ROOT(head);				\ 	struct type *parent = NULL;					\ 	while (tmp) {							\ 		parent = tmp;						\ 		if (val< 0)						\ 			tmp = RB_LEFT(tmp, field);			\ 		else							\ 			tmp = RB_RIGHT(tmp, field);			\ 	}								\ 	return (parent);						\ }
 end_define
@@ -706,6 +708,20 @@ parameter_list|,
 name|y
 parameter_list|)
 value|name##_RB_FIND(x, y)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RB_NFIND
+parameter_list|(
+name|name
+parameter_list|,
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|name##_RB_NFIND(x, y)
 end_define
 
 begin_define
