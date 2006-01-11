@@ -644,18 +644,6 @@ argument_list|(
 name|tq
 argument_list|)
 expr_stmt|;
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-comment|/* NB: insure we don't miss wakeup */
-name|TQ_UNLOCK
-argument_list|(
-name|tq
-argument_list|)
-expr_stmt|;
-comment|/* let taskqueue thread run */
 name|TQ_SLEEP
 argument_list|(
 name|tq
@@ -663,25 +651,15 @@ argument_list|,
 name|p
 argument_list|,
 operator|&
-name|p
+name|tq
 operator|->
-name|p_mtx
+name|tq_mutex
 argument_list|,
 name|PWAIT
 argument_list|,
 literal|"taskqueue_destroy"
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-name|TQ_LOCK
-argument_list|(
-name|tq
 argument_list|)
 expr_stmt|;
 block|}
