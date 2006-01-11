@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/limits.h>
 end_include
 
@@ -6492,6 +6498,23 @@ name|ngq
 argument_list|)
 condition|)
 block|{
+name|CTR3
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%s: node %p queue empty; queue flags 0x%lx"
+argument_list|,
+name|__func__
+argument_list|,
+name|ngq
+operator|->
+name|q_node
+argument_list|,
+name|ngq
+operator|->
+name|q_flags
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -6522,6 +6545,24 @@ argument_list|(
 name|ngq
 operator|->
 name|q_node
+argument_list|)
+expr_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%s: node %p queued reader can't proceed;"
+literal|" queue flags 0x%lx"
+argument_list|,
+name|__func__
+argument_list|,
+name|ngq
+operator|->
+name|q_node
+argument_list|,
+name|ngq
+operator|->
+name|q_flags
 argument_list|)
 expr_stmt|;
 return|return
@@ -6572,6 +6613,24 @@ operator|->
 name|q_node
 argument_list|)
 expr_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%s: node %p can't dequeue anything;"
+literal|" queue flags 0x%lx"
+argument_list|,
+name|__func__
+argument_list|,
+name|ngq
+operator|->
+name|q_node
+argument_list|,
+name|ngq
+operator|->
+name|q_flags
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -6592,6 +6651,30 @@ operator|=
 name|item
 operator|->
 name|el_next
+expr_stmt|;
+name|CTR5
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%s: node %p dequeued item %p with flags 0x%lx;"
+literal|" queue flags 0x%lx"
+argument_list|,
+name|__func__
+argument_list|,
+name|ngq
+operator|->
+name|q_node
+argument_list|,
+name|item
+argument_list|,
+name|item
+operator|->
+name|el_flags
+argument_list|,
+name|ngq
+operator|->
+name|q_flags
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -6674,6 +6757,32 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|CTR5
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%s: node %p returning item %p as %s; queue flags 0x%lx"
+argument_list|,
+name|__func__
+argument_list|,
+name|ngq
+operator|->
+name|q_node
+argument_list|,
+name|item
+argument_list|,
+operator|*
+name|rw
+condition|?
+literal|"WRITER"
+else|:
+literal|"READER"
+argument_list|,
+name|ngq
+operator|->
+name|q_flags
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|item
@@ -6745,6 +6854,27 @@ name|last
 operator|=
 name|item
 expr_stmt|;
+name|CTR4
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%s: node %p queued item %p as %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|ngq
+operator|->
+name|q_node
+argument_list|,
+name|item
+argument_list|,
+name|rw
+condition|?
+literal|"WRITER"
+else|:
+literal|"READER"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If it was the first item in the queue then we need to 	 * set the last pointer and the type flags. 	 */
 if|if
 condition|(
@@ -6759,6 +6889,7 @@ operator|->
 name|queue
 operator|)
 condition|)
+block|{
 name|atomic_add_long
 argument_list|(
 operator|&
@@ -6769,6 +6900,20 @@ argument_list|,
 name|OP_PENDING
 argument_list|)
 expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%s: node %p set OP_PENDING"
+argument_list|,
+name|__func__
+argument_list|,
+name|ngq
+operator|->
+name|q_node
+argument_list|)
+expr_stmt|;
+block|}
 name|ngq
 operator|->
 name|last
@@ -6858,6 +7003,21 @@ literal|0
 condition|)
 block|{
 comment|/* Successfully grabbed node */
+name|CTR3
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%s: node %p fast acquired item %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|ngq
+operator|->
+name|q_node
+argument_list|,
+name|item
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|item
@@ -6918,6 +7078,21 @@ name|ngq
 operator|->
 name|q_mtx
 operator|)
+argument_list|)
+expr_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%s: node %p slow acquired item %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|ngq
+operator|->
+name|q_node
+argument_list|,
+name|item
 argument_list|)
 expr_stmt|;
 return|return
@@ -7056,6 +7231,21 @@ goto|goto
 name|restart
 goto|;
 block|}
+name|CTR3
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%s: node %p acquired item %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|ngq
+operator|->
+name|q_node
+argument_list|,
+name|item
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|item
@@ -12150,6 +12340,17 @@ operator|&
 name|ng_worklist_mtx
 argument_list|)
 expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%s: node %p taken off worklist"
+argument_list|,
+name|__func__
+argument_list|,
+name|node
+argument_list|)
+expr_stmt|;
 comment|/* 		 * We have the node. We also take over the reference 		 * that the list had on it. 		 * Now process as much as you can, until it won't 		 * let you have another item off the queue. 		 * All this time, keep the reference 		 * that lets us be sure that the node still exists. 		 * Let the reference go at the last minute. 		 * ng_dequeue will put us back on the worklist 		 * if there is more too do. This may be of use if there 		 * are Multiple Processors and multiple Net threads in the 		 * future. 		 */
 for|for
 control|(
@@ -12257,6 +12458,18 @@ name|node_p
 name|node
 parameter_list|)
 block|{
+name|mtx_assert
+argument_list|(
+operator|&
+name|node
+operator|->
+name|nd_input_queue
+operator|.
+name|q_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -12297,6 +12510,17 @@ argument_list|)
 expr_stmt|;
 name|NG_NODE_UNREF
 argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%s: node %p removed off worklist"
+argument_list|,
+name|__func__
+argument_list|,
 name|node
 argument_list|)
 expr_stmt|;
@@ -12386,7 +12610,30 @@ name|node
 argument_list|)
 expr_stmt|;
 comment|/* XXX fafe in mutex? */
+name|CTR2
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%s: node %p put on worklist"
+argument_list|,
+name|__func__
+argument_list|,
+name|node
+argument_list|)
+expr_stmt|;
 block|}
+else|else
+name|CTR2
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%s: node %p already on worklist"
+argument_list|,
+name|__func__
+argument_list|,
+name|node
+argument_list|)
+expr_stmt|;
 name|schednetisr
 argument_list|(
 name|NETISR_NETGRAPH
