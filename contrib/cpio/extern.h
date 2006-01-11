@@ -215,7 +215,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|no_abs_paths_flag
+name|abs_paths_flag
 decl_stmt|;
 end_decl_stmt
 
