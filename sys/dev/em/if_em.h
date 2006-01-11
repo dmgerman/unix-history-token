@@ -88,6 +88,30 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/taskqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -857,6 +881,26 @@ decl_stmt|;
 name|int
 name|em_insert_vlan_header
 decl_stmt|;
+name|struct
+name|task
+name|link_task
+decl_stmt|;
+name|struct
+name|task
+name|rxtx_task
+decl_stmt|;
+name|struct
+name|taskqueue
+modifier|*
+name|tq
+decl_stmt|;
+comment|/* private task queue */
+name|struct
+name|proc
+modifier|*
+name|tqproc
+decl_stmt|;
+comment|/* thread handling sc_tq */
 comment|/* Info about the board itself */
 name|u_int32_t
 name|part_num
@@ -942,11 +986,14 @@ decl_stmt|;
 name|u_int32_t
 name|next_rx_desc_to_check
 decl_stmt|;
+name|u_int32_t
+name|rx_buffer_len
+decl_stmt|;
 name|u_int16_t
 name|num_rx_desc
 decl_stmt|;
-name|u_int32_t
-name|rx_buffer_len
+name|int
+name|rx_process_limit
 decl_stmt|;
 name|struct
 name|em_buffer
