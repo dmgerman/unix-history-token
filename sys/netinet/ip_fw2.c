@@ -13875,6 +13875,10 @@ literal|0
 operator|&&
 name|is_ipv4
 operator|&&
+name|offset
+operator|==
+literal|0
+operator|&&
 operator|(
 name|proto
 operator|!=

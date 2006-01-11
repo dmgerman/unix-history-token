@@ -336,12 +336,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* If TRUE, don't use any absolute paths, prefix them by `./'.  */
+comment|/* If TRUE, allow any absolute paths */
 end_comment
 
 begin_decl_stmt
 name|int
-name|no_abs_paths_flag
+name|abs_paths_flag
 init|=
 name|FALSE
 decl_stmt|;
