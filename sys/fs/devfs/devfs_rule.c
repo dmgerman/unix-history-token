@@ -716,11 +716,13 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EIO
-operator|)
-return|;
+expr_stmt|;
+break|break;
+block|}
 name|error
 operator|=
 name|devfs_rule_insert
