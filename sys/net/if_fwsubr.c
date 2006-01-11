@@ -177,16 +177,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|IFP2FC
-parameter_list|(
-name|IFP
-parameter_list|)
-value|((struct fw_com *)IFP)
-end_define
-
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
@@ -251,7 +241,7 @@ name|fw_com
 modifier|*
 name|fc
 init|=
-name|IFP2FC
+name|IFP2FWC
 argument_list|(
 name|ifp
 argument_list|)
@@ -2107,7 +2097,7 @@ name|fw_com
 modifier|*
 name|fc
 init|=
-name|IFP2FC
+name|IFP2FWC
 argument_list|(
 name|ifp
 argument_list|)
@@ -2819,7 +2809,7 @@ expr_stmt|;
 name|bcopy
 argument_list|(
 operator|&
-name|IFP2FC
+name|IFP2FWC
 argument_list|(
 name|ifp
 argument_list|)
@@ -3087,7 +3077,7 @@ name|fw_com
 modifier|*
 name|fc
 init|=
-name|IFP2FC
+name|IFP2FWC
 argument_list|(
 name|ifp
 argument_list|)
@@ -3349,7 +3339,7 @@ name|fw_com
 modifier|*
 name|fc
 init|=
-name|IFP2FC
+name|IFP2FWC
 argument_list|(
 name|ifp
 argument_list|)
