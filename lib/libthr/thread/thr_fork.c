@@ -189,17 +189,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * For a while, allow libpthread to work with a libc that doesn't  * export the malloc lock.  */
-end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|__malloc_lock
-end_pragma
-
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
@@ -290,28 +279,18 @@ block|}
 comment|/* 	 * Try our best to protect memory from being corrupted in 	 * child process because another thread in malloc code will 	 * simply be kill by fork(). 	 */
 if|if
 condition|(
-operator|(
 name|_thr_isthreaded
 argument_list|()
 operator|!=
 literal|0
-operator|)
-operator|&&
-operator|(
-name|__malloc_lock
-operator|!=
-name|NULL
-operator|)
 condition|)
 block|{
 name|unlock_malloc
 operator|=
 literal|1
 expr_stmt|;
-name|_spinlock
-argument_list|(
-name|__malloc_lock
-argument_list|)
+name|_malloc_prefork
+argument_list|()
 expr_stmt|;
 block|}
 else|else
@@ -393,7 +372,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* reinitialize libc spinlocks, this includes __malloc_lock. */
+comment|/* reinitialize libc spinlocks. */
 name|_thr_spinlock_init
 argument_list|()
 expr_stmt|;
@@ -456,10 +435,8 @@ if|if
 condition|(
 name|unlock_malloc
 condition|)
-name|_spinunlock
-argument_list|(
-name|__malloc_lock
-argument_list|)
+name|_malloc_postfork
+argument_list|()
 expr_stmt|;
 comment|/* Run down atfork parent handlers. */
 name|TAILQ_FOREACH
