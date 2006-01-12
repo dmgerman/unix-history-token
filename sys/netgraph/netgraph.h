@@ -4880,6 +4880,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NG_FWD_ITEM_HOOK_FLAGS
+parameter_list|(
+name|error
+parameter_list|,
+name|item
+parameter_list|,
+name|hook
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|do {								\ 		(error) =						\ 		    ng_address_hook(NULL, (item), (hook), NG_NOFLAGS);	\ 		if (error == 0) {					\ 			SAVE_LINE(item);				\ 			(error) = ng_snd_item((item), (flags));		\ 		}							\ 		(item) = NULL;						\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|NG_FWD_ITEM_HOOK
 parameter_list|(
 name|error
@@ -4889,12 +4906,31 @@ parameter_list|,
 name|hook
 parameter_list|)
 define|\
-value|do {								\ 		(error) =						\ 		    ng_address_hook(NULL, (item), (hook), 0);	\ 		if (error == 0) {					\ 			SAVE_LINE(item);				\ 			(error) = ng_snd_item((item), 0);		\ 		}							\ 		(item) = NULL;						\ 	} while (0)
+value|NG_FWD_ITEM_HOOK_FLAGS(error, item, hook, NG_NOFLAGS)
 end_define
 
 begin_comment
 comment|/*  * Forward a data packet. Mbuf pointer is updated to new value. We  * presume you dealt with the old one when you update it to the new one  * (or it maybe the old one). We got a packet and possibly had to modify  * the mbuf. You should probably use NGI_GET_M() if you are going to use  * this too.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_FWD_NEW_DATA_FLAGS
+parameter_list|(
+name|error
+parameter_list|,
+name|item
+parameter_list|,
+name|hook
+parameter_list|,
+name|m
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|do {								\ 		NGI_M(item) = (m);					\ 		(m) = NULL;						\ 		NG_FWD_ITEM_HOOK_FLAGS(error, item, hook, flags);	\ 	} while (0)
+end_define
 
 begin_define
 define|#
@@ -4910,12 +4946,29 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|do {								\ 		NGI_M(item) = (m);					\ 		(m) = NULL;						\ 		NG_FWD_ITEM_HOOK(error, item, hook);			\ 	} while (0)
+value|NG_FWD_NEW_DATA_FLAGS(error, item, hook, m, NG_NOFLAGS)
 end_define
 
 begin_comment
 comment|/* Send a previously unpackaged mbuf. XXX: This should be called  * NG_SEND_DATA in future, but this name is kept for compatibility  * reasons.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_SEND_DATA_FLAGS
+parameter_list|(
+name|error
+parameter_list|,
+name|hook
+parameter_list|,
+name|m
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|do {								\ 		item_p _item;						\ 		if ((_item = ng_package_data((m), flags))) {		\ 			NG_FWD_ITEM_HOOK_FLAGS(error, _item, hook, flags);\ 		} else {						\ 			(error) = ENOMEM;				\ 		}							\ 		(m) = NULL;						\ 	} while (0)
+end_define
 
 begin_define
 define|#
@@ -4929,8 +4982,12 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|do {								\ 		item_p _item;						\ 		if ((_item = ng_package_data((m), NG_NOFLAGS))) {	\ 			NG_FWD_ITEM_HOOK(error, _item, hook);		\ 		} else {						\ 			(error) = ENOMEM;				\ 		}							\ 		(m) = NULL;						\ 	} while (0)
+value|NG_SEND_DATA_FLAGS(error, hook, m, NG_NOFLAGS)
 end_define
+
+begin_comment
+comment|/* NG_SEND_DATA() compat for meta-data times */
+end_comment
 
 begin_define
 define|#
@@ -4945,7 +5002,8 @@ name|m
 parameter_list|,
 name|x
 parameter_list|)
-value|NG_SEND_DATA_ONLY(error, hook, m)
+define|\
+value|NG_SEND_DATA_FLAGS(error, hook, m, NG_NOFLAGS)
 end_define
 
 begin_define
