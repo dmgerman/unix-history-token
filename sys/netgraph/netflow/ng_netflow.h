@@ -26,7 +26,7 @@ begin_define
 define|#
 directive|define
 name|NGM_NETFLOW_COOKIE
-value|1115810374
+value|1137078102
 end_define
 
 begin_define
@@ -71,21 +71,43 @@ block|{
 name|NGM_NETFLOW_INFO
 init|=
 literal|1
+operator||
+name|NGM_READONLY
+operator||
+name|NGM_HASREPLY
 block|,
 comment|/* get node info */
 name|NGM_NETFLOW_IFINFO
+init|=
+literal|2
+operator||
+name|NGM_READONLY
+operator||
+name|NGM_HASREPLY
 block|,
 comment|/* get iface info */
 name|NGM_NETFLOW_SHOW
+init|=
+literal|3
+operator||
+name|NGM_READONLY
+operator||
+name|NGM_HASREPLY
 block|,
 comment|/* show ip cache flow */
 name|NGM_NETFLOW_SETDLT
+init|=
+literal|4
 block|,
 comment|/* set data-link type */
 name|NGM_NETFLOW_SETIFINDEX
+init|=
+literal|5
 block|,
 comment|/* set interface index */
 name|NGM_NETFLOW_SETTIMEOUTS
+init|=
+literal|6
 block|,
 comment|/* set active/inactive flow timeouts */
 block|}
