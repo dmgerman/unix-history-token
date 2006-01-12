@@ -201,7 +201,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* this command is guaranteed to not alter data or'd into the command */
+comment|/* This command is guaranteed to not alter data (or'd into the command). */
 end_comment
 
 begin_define
@@ -209,6 +209,17 @@ define|#
 directive|define
 name|NGM_READONLY
 value|0x10000000
+end_define
+
+begin_comment
+comment|/* This command is guaranteed to have a reply (or'd into the command). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGM_HASREPLY
+value|0x20000000
 end_define
 
 begin_comment
@@ -285,166 +296,136 @@ begin_define
 define|#
 directive|define
 name|NGM_GENERIC_COOKIE
-value|977674408
+value|1137070366
 end_define
 
 begin_comment
-comment|/* Generic messages defined for this type cookie */
+comment|/* Generic messages defined for this type cookie. */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_enum
+enum|enum
+block|{
 name|NGM_SHUTDOWN
-value|1
-end_define
-
-begin_comment
-comment|/* shut down node */
-end_comment
-
-begin_define
-define|#
-directive|define
+init|=
+literal|1
+block|,
+comment|/* Shut down node. */
 name|NGM_MKPEER
-value|2
-end_define
-
-begin_comment
-comment|/* create and attach a peer node */
-end_comment
-
-begin_define
-define|#
-directive|define
+init|=
+literal|2
+block|,
+comment|/* Create and attach a peer node. */
 name|NGM_CONNECT
-value|3
-end_define
-
-begin_comment
-comment|/* connect two nodes */
-end_comment
-
-begin_define
-define|#
-directive|define
+init|=
+literal|3
+block|,
+comment|/* Connect two nodes. */
 name|NGM_NAME
-value|4
-end_define
-
-begin_comment
-comment|/* give a node a name */
-end_comment
-
-begin_define
-define|#
-directive|define
+init|=
+literal|4
+block|,
+comment|/* Give a node a name. */
 name|NGM_RMHOOK
-value|5
-end_define
-
-begin_comment
-comment|/* break a connection btw. two nodes */
-end_comment
-
-begin_define
-define|#
-directive|define
+init|=
+literal|5
+block|,
+comment|/* Break a connection between two nodes. */
+comment|/* Get nodeinfo for target. */
 name|NGM_NODEINFO
-value|(6|NGM_READONLY)
-end_define
-
-begin_comment
-comment|/* get nodeinfo for target */
-end_comment
-
-begin_define
-define|#
-directive|define
+init|=
+operator|(
+literal|6
+operator||
+name|NGM_READONLY
+operator||
+name|NGM_HASREPLY
+operator|)
+block|,
+comment|/* Get list of hooks on node. */
 name|NGM_LISTHOOKS
-value|(7|NGM_READONLY)
-end_define
-
-begin_comment
-comment|/* get list of hooks on node */
-end_comment
-
-begin_define
-define|#
-directive|define
+init|=
+operator|(
+literal|7
+operator||
+name|NGM_READONLY
+operator||
+name|NGM_HASREPLY
+operator|)
+block|,
+comment|/* List globally named nodes. */
 name|NGM_LISTNAMES
-value|(8|NGM_READONLY)
-end_define
-
-begin_comment
-comment|/* list globally named nodes */
-end_comment
-
-begin_define
-define|#
-directive|define
+init|=
+operator|(
+literal|8
+operator||
+name|NGM_READONLY
+operator||
+name|NGM_HASREPLY
+operator|)
+block|,
+comment|/* List all nodes. */
 name|NGM_LISTNODES
-value|(9|NGM_READONLY)
-end_define
-
-begin_comment
-comment|/* list nodes, named& not */
-end_comment
-
-begin_define
-define|#
-directive|define
+init|=
+operator|(
+literal|9
+operator||
+name|NGM_READONLY
+operator||
+name|NGM_HASREPLY
+operator|)
+block|,
+comment|/* List installed node types. */
 name|NGM_LISTTYPES
-value|(10|NGM_READONLY)
-end_define
-
-begin_comment
-comment|/* list installed node types */
-end_comment
-
-begin_define
-define|#
-directive|define
+init|=
+operator|(
+literal|10
+operator||
+name|NGM_READONLY
+operator||
+name|NGM_HASREPLY
+operator|)
+block|,
+comment|/* (optional) Get text status. */
 name|NGM_TEXT_STATUS
-value|(11|NGM_READONLY)
-end_define
-
-begin_comment
-comment|/* (optional) get txt status */
-end_comment
-
-begin_define
-define|#
-directive|define
+init|=
+operator|(
+literal|11
+operator||
+name|NGM_READONLY
+operator||
+name|NGM_HASREPLY
+operator|)
+block|,
+comment|/* Convert struct ng_mesg to ASCII. */
 name|NGM_BINARY2ASCII
-value|(12|NGM_READONLY)
-end_define
-
-begin_comment
-comment|/* convert ng_mesg to ascii */
-end_comment
-
-begin_define
-define|#
-directive|define
+init|=
+operator|(
+literal|12
+operator||
+name|NGM_READONLY
+operator||
+name|NGM_HASREPLY
+operator|)
+block|,
+comment|/* Convert ASCII to struct ng_mesg. */
 name|NGM_ASCII2BINARY
-value|(13|NGM_READONLY)
-end_define
-
-begin_comment
-comment|/* convert ascii to ng_mesg */
-end_comment
-
-begin_define
-define|#
-directive|define
+init|=
+operator|(
+literal|13
+operator||
+name|NGM_READONLY
+operator||
+name|NGM_HASREPLY
+operator|)
+block|,
+comment|/* (optional) Get/set text config. */
 name|NGM_TEXT_CONFIG
-value|14
-end_define
-
-begin_comment
-comment|/* (optional) get/set text config */
-end_comment
+init|=
+literal|14
+block|, }
+enum|;
+end_enum
 
 begin_comment
 comment|/*  * Flow control and intra node control messages.  * These are routed between nodes to allow flow control and to allow  * events to be passed around the graph.   * There will be some form of default handling for these but I   * do not yet know what it is..  */
