@@ -6471,13 +6471,20 @@ name|ngq
 argument_list|)
 condition|)
 block|{
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_NET
 argument_list|,
-literal|"%s: node %p queue empty; queue flags 0x%lx"
+literal|"%20s: node [%x] (%p) queue empty; "
+literal|"queue flags 0x%lx"
 argument_list|,
 name|__func__
+argument_list|,
+name|ngq
+operator|->
+name|q_node
+operator|->
+name|nd_ID
 argument_list|,
 name|ngq
 operator|->
@@ -6520,14 +6527,20 @@ operator|->
 name|q_node
 argument_list|)
 expr_stmt|;
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_NET
 argument_list|,
-literal|"%s: node %p queued reader can't proceed;"
-literal|" queue flags 0x%lx"
+literal|"%20s: node [%x] (%p) queued reader "
+literal|"can't proceed; queue flags 0x%lx"
 argument_list|,
 name|__func__
+argument_list|,
+name|ngq
+operator|->
+name|q_node
+operator|->
+name|nd_ID
 argument_list|,
 name|ngq
 operator|->
@@ -6586,14 +6599,20 @@ operator|->
 name|q_node
 argument_list|)
 expr_stmt|;
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_NET
 argument_list|,
-literal|"%s: node %p can't dequeue anything;"
-literal|" queue flags 0x%lx"
+literal|"%20s: node [%x] (%p) can't dequeue anything; "
+literal|"queue flags 0x%lx"
 argument_list|,
 name|__func__
+argument_list|,
+name|ngq
+operator|->
+name|q_node
+operator|->
+name|nd_ID
 argument_list|,
 name|ngq
 operator|->
@@ -6625,14 +6644,20 @@ name|item
 operator|->
 name|el_next
 expr_stmt|;
-name|CTR5
+name|CTR6
 argument_list|(
 name|KTR_NET
 argument_list|,
-literal|"%s: node %p dequeued item %p with flags 0x%lx;"
-literal|" queue flags 0x%lx"
+literal|"%20s: node [%x] (%p) dequeued item %p with flags 0x%lx; "
+literal|"queue flags 0x%lx"
 argument_list|,
 name|__func__
+argument_list|,
+name|ngq
+operator|->
+name|q_node
+operator|->
+name|nd_ID
 argument_list|,
 name|ngq
 operator|->
@@ -6730,13 +6755,20 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|CTR5
+name|CTR6
 argument_list|(
 name|KTR_NET
 argument_list|,
-literal|"%s: node %p returning item %p as %s; queue flags 0x%lx"
+literal|"%20s: node [%x] (%p) returning item %p as %s; "
+literal|"queue flags 0x%lx"
 argument_list|,
 name|__func__
+argument_list|,
+name|ngq
+operator|->
+name|q_node
+operator|->
+name|nd_ID
 argument_list|,
 name|ngq
 operator|->
@@ -6827,13 +6859,19 @@ name|last
 operator|=
 name|item
 expr_stmt|;
-name|CTR4
+name|CTR5
 argument_list|(
 name|KTR_NET
 argument_list|,
-literal|"%s: node %p queued item %p as %s"
+literal|"%20s: node [%x] (%p) queued item %p as %s"
 argument_list|,
 name|__func__
+argument_list|,
+name|ngq
+operator|->
+name|q_node
+operator|->
+name|nd_ID
 argument_list|,
 name|ngq
 operator|->
@@ -6873,13 +6911,19 @@ argument_list|,
 name|OP_PENDING
 argument_list|)
 expr_stmt|;
-name|CTR2
+name|CTR3
 argument_list|(
 name|KTR_NET
 argument_list|,
-literal|"%s: node %p set OP_PENDING"
+literal|"%20s: node [%x] (%p) set OP_PENDING"
 argument_list|,
 name|__func__
+argument_list|,
+name|ngq
+operator|->
+name|q_node
+operator|->
+name|nd_ID
 argument_list|,
 name|ngq
 operator|->
@@ -6976,13 +7020,19 @@ literal|0
 condition|)
 block|{
 comment|/* Successfully grabbed node */
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_NET
 argument_list|,
-literal|"%s: node %p fast acquired item %p"
+literal|"%20s: node [%x] (%p) fast acquired item %p"
 argument_list|,
 name|__func__
+argument_list|,
+name|ngq
+operator|->
+name|q_node
+operator|->
+name|nd_ID
 argument_list|,
 name|ngq
 operator|->
@@ -7053,13 +7103,19 @@ name|q_mtx
 operator|)
 argument_list|)
 expr_stmt|;
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_NET
 argument_list|,
-literal|"%s: node %p slow acquired item %p"
+literal|"%20s: node [%x] (%p) slow acquired item %p"
 argument_list|,
 name|__func__
+argument_list|,
+name|ngq
+operator|->
+name|q_node
+operator|->
+name|nd_ID
 argument_list|,
 name|ngq
 operator|->
@@ -7204,13 +7260,19 @@ goto|goto
 name|restart
 goto|;
 block|}
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_NET
 argument_list|,
-literal|"%s: node %p acquired item %p"
+literal|"%20s: node [%x] (%p) acquired item %p"
 argument_list|,
 name|__func__
+argument_list|,
+name|ngq
+operator|->
+name|q_node
+operator|->
+name|nd_ID
 argument_list|,
 name|ngq
 operator|->
@@ -12313,13 +12375,17 @@ operator|&
 name|ng_worklist_mtx
 argument_list|)
 expr_stmt|;
-name|CTR2
+name|CTR3
 argument_list|(
 name|KTR_NET
 argument_list|,
-literal|"%s: node %p taken off worklist"
+literal|"%20s: node [%x] (%p) taken off worklist"
 argument_list|,
 name|__func__
+argument_list|,
+name|node
+operator|->
+name|nd_ID
 argument_list|,
 name|node
 argument_list|)
@@ -12486,13 +12552,17 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-name|CTR2
+name|CTR3
 argument_list|(
 name|KTR_NET
 argument_list|,
-literal|"%s: node %p removed from worklist"
+literal|"%20s: node [%x] (%p) removed from worklist"
 argument_list|,
 name|__func__
+argument_list|,
+name|node
+operator|->
+name|nd_ID
 argument_list|,
 name|node
 argument_list|)
@@ -12583,26 +12653,34 @@ name|node
 argument_list|)
 expr_stmt|;
 comment|/* XXX fafe in mutex? */
-name|CTR2
+name|CTR3
 argument_list|(
 name|KTR_NET
 argument_list|,
-literal|"%s: node %p put on worklist"
+literal|"%20s: node [%x] (%p) put on worklist"
 argument_list|,
 name|__func__
+argument_list|,
+name|node
+operator|->
+name|nd_ID
 argument_list|,
 name|node
 argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|CTR2
+name|CTR3
 argument_list|(
 name|KTR_NET
 argument_list|,
-literal|"%s: node %p already on worklist"
+literal|"%20s: node [%x] (%p) already on worklist"
 argument_list|,
 name|__func__
+argument_list|,
+name|node
+operator|->
+name|nd_ID
 argument_list|,
 name|node
 argument_list|)
