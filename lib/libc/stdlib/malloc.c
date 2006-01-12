@@ -5041,7 +5041,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/*       * (size& alignment) is enough to assure the requested alignment, since      * the allocator always allocates power-of-two blocks.      */
+comment|/*       * (size | alignment) is enough to assure the requested alignment, since      * the allocator always allocates power-of-two blocks.      */
 name|err
 operator|=
 name|errno
@@ -5055,7 +5055,7 @@ name|NULL
 argument_list|,
 operator|(
 name|size
-operator|&
+operator||
 name|alignment
 operator|)
 argument_list|,
