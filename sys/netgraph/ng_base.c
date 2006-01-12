@@ -12517,7 +12517,7 @@ name|CTR2
 argument_list|(
 name|KTR_NET
 argument_list|,
-literal|"%s: node %p removed off worklist"
+literal|"%s: node %p removed from worklist"
 argument_list|,
 name|__func__
 argument_list|,
