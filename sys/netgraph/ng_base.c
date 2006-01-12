@@ -2713,33 +2713,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NETGRAPH_DEBUG
-end_ifdef
-
-begin_function
-name|void
-name|ng_ref_node
-parameter_list|(
-name|node_p
-name|node
-parameter_list|)
-block|{
-name|_NG_NODE_REF
-argument_list|(
-name|node
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Remove a reference to the node, possibly the last.  * deadnode always acts as it it were the last.  */
 end_comment
