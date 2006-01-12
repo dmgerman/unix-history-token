@@ -823,8 +823,23 @@ begin_comment
 comment|/*>= ??? */
 end_comment
 
+begin_function_decl
+name|int
+name|posix_memalign
+parameter_list|(
+name|void
+modifier|*
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/* int	 posix_memalign(void **, size_t, size_t); (ADV) */
+comment|/* (ADV) */
 end_comment
 
 begin_function_decl
