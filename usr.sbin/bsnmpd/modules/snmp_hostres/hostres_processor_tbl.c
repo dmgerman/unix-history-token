@@ -1436,9 +1436,7 @@ continue|continue;
 block|}
 name|assert
 argument_list|(
-name|hrState_g
-operator|.
-name|kd
+name|hr_kd
 operator|!=
 name|NULL
 argument_list|)

@@ -254,12 +254,19 @@ return|;
 block|}
 name|HRDBG
 argument_list|(
-literal|"boot timestamp from kernel: {%ld, %ld}"
+literal|"boot timestamp from kernel: {%lld, %ld}"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|kernel_boot_timestamp
 operator|.
 name|tv_sec
 argument_list|,
+operator|(
+name|long
+operator|)
 name|kernel_boot_timestamp
 operator|.
 name|tv_usec
