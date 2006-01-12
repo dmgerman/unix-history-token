@@ -3701,14 +3701,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* Parse command line arguments */
-name|parse_args
-argument_list|(
-name|argc
-argument_list|,
-name|argv
-argument_list|)
-expr_stmt|;
 name|font_current
 operator|=
 name|get_font
@@ -3741,6 +3733,14 @@ else|else
 name|dir
 operator|=
 name|keymapdir
+expr_stmt|;
+comment|/* Parse command line arguments */
+name|parse_args
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
 expr_stmt|;
 comment|/* Read and display options */
 name|menu_read
