@@ -2038,10 +2038,25 @@ name|r
 operator|!=
 literal|0
 condition|)
+block|{
 name|speed
 operator|=
 name|VCHAN_DEFAULT_SPEED
 expr_stmt|;
+comment|/* 					 * Workaround for sb16 running 					 * poorly at 45k. 					 */
+if|if
+condition|(
+name|speed
+operator|>
+name|parent_caps
+operator|->
+name|maxspeed
+condition|)
+name|speed
+operator|=
+literal|44100
+expr_stmt|;
+block|}
 block|}
 comment|/* 			 * Limit speed based on driver caps. 			 * This is supposed to help fixed rate, non-VRA 			 * AC97 cards, but.. (see below) 			 */
 if|if
