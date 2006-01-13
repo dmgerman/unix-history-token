@@ -37,7 +37,7 @@ begin_define
 define|#
 directive|define
 name|MAX_SPINLOCKS
-value|20
+value|72
 end_define
 
 begin_comment
