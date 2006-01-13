@@ -5852,7 +5852,7 @@ operator|=
 operator|*
 name|rp
 expr_stmt|;
-comment|/* 		 * zero the pointer before calling 		 * unp_discard since it may end up 		 * in unp_gc().. 		 */
+comment|/* 		 * zero the pointer before calling 		 * unp_discard since it may end up 		 * in unp_gc().. 		 * 		 * XXXRW: This is less true than it used to be. 		 */
 operator|*
 name|rp
 operator|++
