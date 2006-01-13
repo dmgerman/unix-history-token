@@ -171,10 +171,34 @@ parameter_list|)
 value|(*(u_int *)((_mt) + 1))
 end_define
 
+begin_comment
+comment|/*  * This macro is kept for API compatibility.   */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|VLAN_INPUT_TAG
+parameter_list|(
+name|_ifp
+parameter_list|,
+name|_m
+parameter_list|,
+name|_t
+parameter_list|,
+name|_errcase
+parameter_list|)
+value|do {	\ 	struct m_tag *mtag;				\ 	mtag = m_tag_alloc(MTAG_VLAN, MTAG_VLAN_TAG,	\ 	    sizeof (u_int), M_NOWAIT);			\ 	if (mtag != NULL) {				\ 		VLAN_TAG_VALUE(mtag) = (_t);		\ 		m_tag_prepend((_m), mtag);		\ 		(_m)->m_flags |= M_VLANTAG;		\ 	} else {					\ 		(_ifp)->if_ierrors++;			\ 		m_freem(_m);				\ 		_errcase;				\ 	}						\ } while (0)
+end_define
+
+begin_comment
+comment|/*  * This macro is equal to VLAN_INPUT_TAG() in HEAD.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VLAN_INPUT_TAG_NEW
 parameter_list|(
 name|_ifp
 parameter_list|,

@@ -13706,7 +13706,7 @@ name|status
 operator|&
 name|E1000_RXD_STAT_VP
 condition|)
-name|VLAN_INPUT_TAG
+name|VLAN_INPUT_TAG_NEW
 argument_list|(
 name|ifp
 argument_list|,

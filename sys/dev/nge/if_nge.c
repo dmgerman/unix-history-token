@@ -5307,7 +5307,7 @@ operator|&
 name|NGE_RXEXTSTS_VLANPKT
 condition|)
 block|{
-name|VLAN_INPUT_TAG
+name|VLAN_INPUT_TAG_NEW
 argument_list|(
 name|ifp
 argument_list|,

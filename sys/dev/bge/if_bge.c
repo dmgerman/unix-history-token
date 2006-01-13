@@ -13134,7 +13134,7 @@ condition|(
 name|have_tag
 condition|)
 block|{
-name|VLAN_INPUT_TAG
+name|VLAN_INPUT_TAG_NEW
 argument_list|(
 name|ifp
 argument_list|,

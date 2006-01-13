@@ -8883,7 +8883,7 @@ name|status
 operator|&
 name|IXGB_RX_DESC_STATUS_VP
 condition|)
-name|VLAN_INPUT_TAG
+name|VLAN_INPUT_TAG_NEW
 argument_list|(
 name|eh
 argument_list|,
@@ -8929,7 +8929,7 @@ name|status
 operator|&
 name|IXGB_RX_DESC_STATUS_VP
 condition|)
-name|VLAN_INPUT_TAG
+name|VLAN_INPUT_TAG_NEW
 argument_list|(
 name|ifp
 argument_list|,

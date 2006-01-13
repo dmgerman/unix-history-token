@@ -7038,7 +7038,7 @@ operator|&
 name|RL_RDESC_VLANCTL_TAG
 condition|)
 block|{
-name|VLAN_INPUT_TAG
+name|VLAN_INPUT_TAG_NEW
 argument_list|(
 name|ifp
 argument_list|,
