@@ -9211,6 +9211,12 @@ name|ENXIO
 operator|)
 return|;
 block|}
+comment|/* 	 * XXX The interrupt shouldn't be set up until the driver and the 	 * chip is more initialized. 	 */
+name|em_disable_intr
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Try allocating a fast interrupt and the associated deferred 	 * processing contexts.  If that doesn't work, try just using an 	 * ithread. 	 */
 ifndef|#
 directive|ifndef
@@ -9409,6 +9415,11 @@ operator|&
 name|adapter
 operator|->
 name|osdep
+expr_stmt|;
+name|em_enable_intr
+argument_list|(
+name|adapter
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
