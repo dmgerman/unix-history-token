@@ -3209,18 +3209,27 @@ literal|0
 condition|)
 block|{
 comment|/* attach vlan tag */
-comment|/* XXX goto err? */
 name|VLAN_INPUT_TAG
 argument_list|(
-argument|ifp
+name|ifp
 argument_list|,
-argument|m
+name|m
 argument_list|,
-argument|ni->ni_vlan
-argument_list|,
-argument|goto out
+name|ni
+operator|->
+name|ni_vlan
 argument_list|)
-empty_stmt|;
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|out
+goto|;
+comment|/* XXX goto err? */
 block|}
 call|(
 modifier|*
