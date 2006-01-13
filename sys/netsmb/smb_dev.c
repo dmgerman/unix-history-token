@@ -1715,10 +1715,11 @@ operator|=
 name|smb_sm_done
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
 name|error
-operator|=
-literal|0
-expr_stmt|;
+condition|)
+break|break;
 name|EVENTHANDLER_DEREGISTER
 argument_list|(
 name|dev_clone
