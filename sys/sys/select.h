@@ -262,7 +262,7 @@ name|n
 parameter_list|,
 name|p
 parameter_list|)
-value|((p)->__fds_bits[(n)/_NFDBITS]& __fdset_mask(n))
+value|(((p)->__fds_bits[(n)/_NFDBITS]& __fdset_mask(n)) != 0)
 end_define
 
 begin_define
