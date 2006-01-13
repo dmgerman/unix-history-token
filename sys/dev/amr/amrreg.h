@@ -257,13 +257,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|AMR_CONFIG_ENQ3_SOLICITED_NOTIFY
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
 name|AMR_CONFIG_PRODUCT_INFO
 value|0x0e
 end_define
@@ -1197,11 +1190,20 @@ index|[
 name|AMR_40LD_MAXDRIVES
 index|]
 decl_stmt|;
-comment|/* physical drive state */
-name|u_int16_t
-name|ae_driveformat
+comment|/* logical drive state */
+name|u_int8_t
+name|ae_pdrivestate
 index|[
 name|AMR_40LD_MAXPHYSDRIVES
+index|]
+decl_stmt|;
+comment|/* physical drive state */
+name|u_int16_t
+name|ae_pdriveformat
+index|[
+name|AMR_40LD_MAXPHYSDRIVES
+operator|/
+literal|16
 index|]
 decl_stmt|;
 name|u_int8_t
