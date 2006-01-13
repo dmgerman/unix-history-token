@@ -676,14 +676,10 @@ decl_stmt|;
 comment|/* 	 * If the queue is empty then it's easy. 	 */
 if|if
 condition|(
-operator|(
-name|bq
-operator|=
 name|bioq_first
 argument_list|(
 name|bioq
 argument_list|)
-operator|)
 operator|==
 name|NULL
 condition|)
