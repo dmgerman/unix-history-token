@@ -939,7 +939,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Don't forget to do ``make cleandepend; make depend''\n"
+literal|"Don't forget to do ``make cleandepend&& make depend''\n"
 argument_list|)
 expr_stmt|;
 name|exit
