@@ -13094,6 +13094,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|*
 name|newdest
 operator|==
 name|NULL
