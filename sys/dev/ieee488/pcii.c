@@ -107,13 +107,8 @@ name|resource
 modifier|*
 name|res
 index|[
-literal|2
+literal|3
 index|]
-decl_stmt|;
-name|struct
-name|resource
-modifier|*
-name|dma
 decl_stmt|;
 name|void
 modifier|*
