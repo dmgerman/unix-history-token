@@ -5162,6 +5162,13 @@ argument_list|(
 name|wpipe
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+break|break;
 block|}
 else|else
 block|{
