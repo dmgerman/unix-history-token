@@ -4257,13 +4257,17 @@ name|subdev
 condition|)
 block|{
 case|case
+literal|0x202f161f
+case|:
+comment|/* Gateway 7326GZ */
+case|case
 literal|0x203a161f
 case|:
 comment|/* Gateway 4028GZ */
 case|case
 literal|0x8144104d
 case|:
-comment|/* Sony - VAIO PCG-TR* */
+comment|/* Sony VAIO PCG-TR* */
 case|case
 literal|0x8197104d
 case|:
