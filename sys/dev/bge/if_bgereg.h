@@ -12017,7 +12017,7 @@ begin_define
 define|#
 directive|define
 name|BGE_NSEG_JUMBO
-value|(MJUM9BYTES/PAGE_SIZE + 1)
+value|3
 end_define
 
 begin_define
