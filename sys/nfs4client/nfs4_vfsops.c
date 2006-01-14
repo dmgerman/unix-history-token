@@ -3509,7 +3509,7 @@ modifier|*
 name|vp
 decl_stmt|,
 modifier|*
-name|nvp
+name|mvp
 decl_stmt|;
 name|int
 name|error
@@ -3532,7 +3532,7 @@ argument|vp
 argument_list|,
 argument|mp
 argument_list|,
-argument|nvp
+argument|mvp
 argument_list|)
 block|{
 name|VI_LOCK
@@ -3598,6 +3598,13 @@ block|{
 name|MNT_ILOCK
 argument_list|(
 name|mp
+argument_list|)
+expr_stmt|;
+name|MNT_VNODE_FOREACH_ABORT_ILOCKED
+argument_list|(
+name|mp
+argument_list|,
+name|mvp
 argument_list|)
 expr_stmt|;
 goto|goto

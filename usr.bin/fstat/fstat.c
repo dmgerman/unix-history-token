@@ -3387,6 +3387,9 @@ case|:
 case|case
 name|VBAD
 case|:
+case|case
+name|VMARKER
+case|:
 return|return
 literal|0
 return|;

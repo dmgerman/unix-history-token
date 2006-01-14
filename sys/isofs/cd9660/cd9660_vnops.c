@@ -404,6 +404,9 @@ case|:
 case|case
 name|VBAD
 case|:
+case|case
+name|VMARKER
+case|:
 return|return
 operator|(
 literal|0
