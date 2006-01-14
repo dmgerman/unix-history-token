@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1997-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1997-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: mem.c,v 1.98.2.7.2.5 2004/03/16 05:50:24 marka Exp $ */
+comment|/* $Id: mem.c,v 1.98.2.7.2.7 2005/03/17 03:58:32 marka Exp $ */
 end_comment
 
 begin_include
@@ -3227,6 +3227,54 @@ operator|)
 return|;
 if|if
 condition|(
+name|isc_mutex_init
+argument_list|(
+operator|&
+name|ctx
+operator|->
+name|lock
+argument_list|)
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+block|{
+name|UNEXPECTED_ERROR
+argument_list|(
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
+literal|"isc_mutex_init() %s"
+argument_list|,
+name|isc_msgcat_get
+argument_list|(
+name|isc_msgcat
+argument_list|,
+name|ISC_MSGSET_GENERAL
+argument_list|,
+name|ISC_MSG_FAILED
+argument_list|,
+literal|"failed"
+argument_list|)
+argument_list|)
+expr_stmt|;
+call|(
+name|memfree
+call|)
+argument_list|(
+name|arg
+argument_list|,
+name|ctx
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ISC_R_UNEXPECTED
+operator|)
+return|;
+block|}
+if|if
+condition|(
 name|init_max_size
 operator|==
 literal|0U
@@ -3561,47 +3609,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* ISC_MEM_USE_INTERNAL_MALLOC */
-if|if
-condition|(
-name|isc_mutex_init
-argument_list|(
-operator|&
-name|ctx
-operator|->
-name|lock
-argument_list|)
-operator|!=
-name|ISC_R_SUCCESS
-condition|)
-block|{
-name|UNEXPECTED_ERROR
-argument_list|(
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|,
-literal|"isc_mutex_init() %s"
-argument_list|,
-name|isc_msgcat_get
-argument_list|(
-name|isc_msgcat
-argument_list|,
-name|ISC_MSGSET_GENERAL
-argument_list|,
-name|ISC_MSG_FAILED
-argument_list|,
-literal|"failed"
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|result
-operator|=
-name|ISC_R_UNEXPECTED
-expr_stmt|;
-goto|goto
-name|error
-goto|;
-block|}
 if|#
 directive|if
 name|ISC_MEM_TRACKLINES
@@ -3710,6 +3717,8 @@ label|:
 if|if
 condition|(
 name|ctx
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -3717,6 +3726,8 @@ condition|(
 name|ctx
 operator|->
 name|stats
+operator|!=
+name|NULL
 condition|)
 call|(
 name|memfree
@@ -3737,6 +3748,8 @@ condition|(
 name|ctx
 operator|->
 name|freelists
+operator|!=
+name|NULL
 condition|)
 call|(
 name|memfree
@@ -3760,6 +3773,8 @@ condition|(
 name|ctx
 operator|->
 name|debuglist
+operator|!=
+name|NULL
 condition|)
 call|(
 name|ctx
@@ -3779,6 +3794,14 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* ISC_MEM_TRACKLINES */
+name|DESTROYLOCK
+argument_list|(
+operator|&
+name|ctx
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 call|(
 name|memfree
 call|)

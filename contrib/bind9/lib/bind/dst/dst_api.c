@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /proj/cvs/prod/bind9/lib/bind/dst/dst_api.c,v 1.4.2.6.8.1 2004/09/16 00:57:33 marka Exp $"
+literal|"$Header: /proj/cvs/prod/bind9/lib/bind/dst/dst_api.c,v 1.4.2.6.8.3 2005/10/11 00:48:14 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1097,6 +1097,33 @@ name|EREPORT
 argument_list|(
 operator|(
 literal|"dst_read_private_key(): Null key name passed in\n"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|in_keyname
+argument_list|)
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|keyname
+argument_list|)
+condition|)
+block|{
+name|EREPORT
+argument_list|(
+operator|(
+literal|"dst_read_private_key(): keyname too big\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4015,9 +4042,6 @@ init|=
 name|NULL
 decl_stmt|;
 name|int
-name|res
-decl_stmt|;
-name|int
 name|dnslen
 decl_stmt|;
 name|u_char
@@ -4137,9 +4161,6 @@ return|;
 block|}
 if|if
 condition|(
-operator|(
-name|res
-operator|=
 name|new_key
 operator|->
 name|dk_func
@@ -4150,7 +4171,6 @@ name|new_key
 argument_list|,
 name|exp
 argument_list|)
-operator|)
 operator|<=
 literal|0
 condition|)

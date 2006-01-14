@@ -68,6 +68,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_INTTYPES_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_undef
 undef|#
 directive|undef
@@ -181,10 +198,6 @@ directive|define
 name|USE_IFNAMELINKID
 value|1
 end_define
-
-begin_comment
-comment|/* XXX sunos and cygwin needs O_NDELAY */
-end_comment
 
 begin_define
 define|#
@@ -369,6 +382,78 @@ undef|#
 directive|undef
 name|IN6ADDR_LOOPBACK_INIT
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_AIX
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IN6ADDR_ANY_INIT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IN6ADDR_ANY_INIT
+value|{{{ 0, 0, 0, 0 }}}
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IN6ADDR_LOOPBACK_INIT
+end_ifndef
+
+begin_if
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+end_if
+
+begin_define
+define|#
+directive|define
+name|IN6ADDR_LOOPBACK_INIT
+value|{{{ 0, 0, 0, 1 }}}
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|IN6ADDR_LOOPBACK_INIT
+value|{{{0, 0, 0, 0x01000000}}}
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1096,7 +1181,7 @@ name|ALIGN
 parameter_list|(
 name|p
 parameter_list|)
-value|(((unsigned int)(p) + (sizeof(int) - 1))& ~(sizeof(int) - 1))
+value|(((uintptr_t)(p) + (sizeof(long) - 1))& ~(sizeof(long) - 1))
 end_define
 
 begin_endif
@@ -1350,11 +1435,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|NEED_INNETGR_R
-end_ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|NGR_R_RETURN
+argument_list|)
+end_if
 
 begin_function_decl
 name|NGR_R_RETURN
@@ -1881,6 +1974,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NGR_R_ARGS
+end_ifdef
+
 begin_function_decl
 name|int
 name|getnetgrent_r
@@ -1904,6 +2003,11 @@ name|NGR_R_ARGS
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

@@ -23,6 +23,12 @@ directive|include
 file|<port_before.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_MD5
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -2579,6 +2585,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_MD5 */
+end_comment
 
 begin_endif
 endif|#

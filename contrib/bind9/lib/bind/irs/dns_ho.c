@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dns_ho.c,v 1.5.2.7.4.5 2004/08/24 00:32:15 marka Exp $"
+literal|"$Id: dns_ho.c,v 1.5.2.7.4.6 2005/10/11 00:48:14 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3786,8 +3786,6 @@ name|int
 name|error
 init|=
 name|NETDB_SUCCESS
-decl_stmt|,
-name|arcount
 decl_stmt|;
 name|int
 function_decl|(
@@ -4019,15 +4017,6 @@ argument_list|(
 name|hp
 operator|->
 name|qdcount
-argument_list|)
-expr_stmt|;
-name|arcount
-operator|=
-name|ntohs
-argument_list|(
-name|hp
-operator|->
-name|arcount
 argument_list|)
 expr_stmt|;
 name|bp

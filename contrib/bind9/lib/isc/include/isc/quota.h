@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: quota.h,v 1.8.12.3 2004/03/08 09:04:52 marka Exp $ */
+comment|/* $Id: quota.h,v 1.8.12.6 2005/08/11 15:00:08 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -72,7 +72,7 @@ decl_stmt|;
 name|int
 name|used
 decl_stmt|;
-name|isc_boolean_t
+name|int
 name|soft
 decl_stmt|;
 block|}
@@ -120,7 +120,7 @@ name|isc_quota_t
 modifier|*
 name|quota
 parameter_list|,
-name|isc_boolean_t
+name|int
 name|soft
 parameter_list|)
 function_decl|;
@@ -128,6 +128,24 @@ end_function_decl
 
 begin_comment
 comment|/*  * Turn on/off soft quotas.  */
+end_comment
+
+begin_function_decl
+name|void
+name|isc_quota_max
+parameter_list|(
+name|isc_quota_t
+modifier|*
+name|quota
+parameter_list|,
+name|int
+name|max
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Re-set a maximum quota.  */
 end_comment
 
 begin_function_decl

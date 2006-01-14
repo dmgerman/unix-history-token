@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: tsig_250.c,v 1.52.2.1.2.6 2004/03/08 09:04:40 marka Exp $ */
+comment|/* $Id: tsig_250.c,v 1.52.2.1.2.8 2005/03/20 22:34:01 marka Exp $ */
 end_comment
 
 begin_comment
@@ -754,6 +754,9 @@ literal|32
 operator|)
 operator||
 operator|(
+operator|(
+name|isc_uint64_t
+operator|)
 name|sr
 operator|.
 name|base
@@ -765,6 +768,9 @@ literal|24
 operator|)
 operator||
 operator|(
+operator|(
+name|isc_uint64_t
+operator|)
 name|sr
 operator|.
 name|base
@@ -776,6 +782,9 @@ literal|16
 operator|)
 operator||
 operator|(
+operator|(
+name|isc_uint64_t
+operator|)
 name|sr
 operator|.
 name|base
@@ -786,6 +795,9 @@ operator|<<
 literal|8
 operator|)
 operator||
+operator|(
+name|isc_uint64_t
+operator|)
 name|sr
 operator|.
 name|base
@@ -2296,6 +2308,9 @@ literal|32
 operator|)
 operator||
 operator|(
+operator|(
+name|isc_uint64_t
+operator|)
 name|sr
 operator|.
 name|base
@@ -2307,6 +2322,9 @@ literal|24
 operator|)
 operator||
 operator|(
+operator|(
+name|isc_uint64_t
+operator|)
 name|sr
 operator|.
 name|base
@@ -2318,6 +2336,9 @@ literal|16
 operator|)
 operator||
 operator|(
+operator|(
+name|isc_uint64_t
+operator|)
 name|sr
 operator|.
 name|base
@@ -2328,6 +2349,9 @@ operator|<<
 literal|8
 operator|)
 operator||
+operator|(
+name|isc_uint64_t
+operator|)
 name|sr
 operator|.
 name|base

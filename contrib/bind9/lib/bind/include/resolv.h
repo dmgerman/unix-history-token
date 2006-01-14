@@ -8,7 +8,7 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/*  *	@(#)resolv.h	8.1 (Berkeley) 6/2/93  *	$Id: resolv.h,v 1.7.2.11.4.2 2004/06/25 00:41:05 marka Exp $  */
+comment|/*  *	@(#)resolv.h	8.1 (Berkeley) 6/2/93  *	$Id: resolv.h,v 1.7.2.11.4.3 2005/08/25 04:44:13 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -1258,6 +1258,25 @@ name|_res
 value|(*__res_state())
 else|#
 directive|else
+ifdef|#
+directive|ifdef
+name|__linux
+name|__BEGIN_DECLS
+specifier|extern
+expr|struct
+name|__res_state
+operator|*
+name|__res_state
+argument_list|(
+name|void
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__END_DECLS
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|__BIND_NOSTATIC

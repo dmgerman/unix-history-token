@@ -1077,6 +1077,12 @@ comment|/*CONSTCOND*/
 value|0)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SOLARIS2
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -1093,6 +1099,31 @@ value|\ } while (
 comment|/*CONSTCOND*/
 value|0)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ERR
+parameter_list|(
+name|err
+parameter_list|)
+define|\
+value|do { \
+comment|/* external reference: error, and label bad */
+value|\ 	error = (err); \ 	if (error == error) \ 		goto bad; \ } while (
+comment|/*CONSTCOND*/
+value|0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1397,6 +1428,31 @@ name|ai_protocol
 operator|=
 name|ANY
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_SOCKLEN_T
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__sparcv9
+argument_list|)
+comment|/* 	 * clear _ai_pad to preserve binary 	 * compatibility with previously compiled 64-bit 	 * applications in a pre-SUSv3 environment by 	 * guaranteeing the upper 32-bits are empty. 	 */
+name|pai
+operator|->
+name|_ai_pad
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|pai
 operator|->
 name|ai_addrlen
@@ -1515,6 +1571,31 @@ name|pai
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_SOCKLEN_T
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__sparcv9
+argument_list|)
+comment|/* 		 * We need to clear _ai_pad to preserve binary 		 * compatibility.  See prior comment. 		 */
+name|pai
+operator|->
+name|_ai_pad
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 		 * if both socktype/protocol are specified, check if they 		 * are meaningful combination. 		 */
 if|if
 condition|(

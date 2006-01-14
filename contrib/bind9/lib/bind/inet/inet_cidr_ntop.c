@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_cidr_ntop.c,v 1.1.2.1.8.2 2004/03/17 00:29:46 marka Exp $"
+literal|"$Id: inet_cidr_ntop.c,v 1.1.2.1.8.3 2005/11/03 23:08:40 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -761,12 +761,24 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+name|best
+operator|.
+name|len
+operator|=
+literal|0
+expr_stmt|;
 name|cur
 operator|.
 name|base
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|cur
+operator|.
+name|len
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(

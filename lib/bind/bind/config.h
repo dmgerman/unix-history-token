@@ -28,6 +28,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_INTTYPES_H
+value|1
+end_define
+
+begin_comment
+comment|/* #undef HAVE_STROPTS_H */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HAVE_SYS_TIMERS_H
 value|1
 end_define
@@ -162,6 +173,10 @@ directive|define
 name|HAS_PW_CLASS
 value|1
 end_define
+
+begin_comment
+comment|/* #undef uintptr_t */
+end_comment
 
 begin_comment
 comment|/* Shut up warnings about sputaux in stdio.h on BSD/OS pre-4.1 */

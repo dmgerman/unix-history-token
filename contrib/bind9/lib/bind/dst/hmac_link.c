@@ -18,7 +18,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /proj/cvs/prod/bind9/lib/bind/dst/hmac_link.c,v 1.2.2.1 2003/06/27 03:51:36 marka Exp $"
+literal|"$Header: /proj/cvs/prod/bind9/lib/bind/dst/hmac_link.c,v 1.2.2.1.4.1 2005/07/28 07:43:16 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,11 +113,44 @@ directive|ifdef
 name|USE_MD5
 end_ifdef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_MD5
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|"md5.h"
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SOLARIS2
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/md5.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -1807,8 +1840,17 @@ end_comment
 
 begin_function
 name|int
-name|dst_hmac_md5_init
+ifdef|#
+directive|ifdef
+name|SUNW_LIBMD5
+name|dst_md5_hmac_init
 parameter_list|()
+else|#
+directive|else
+function|dst_hmac_md5_init
+parameter_list|()
+endif|#
+directive|endif
 block|{
 if|if
 condition|(

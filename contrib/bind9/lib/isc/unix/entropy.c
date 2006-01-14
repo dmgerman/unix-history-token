@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: entropy.c,v 1.60.2.3.8.9 2004/03/16 05:02:31 marka Exp $ */
+comment|/* $Id: entropy.c,v 1.60.2.3.8.11 2005/07/12 05:47:43 marka Exp $ */
 end_comment
 
 begin_comment
@@ -1698,6 +1698,32 @@ index|[
 name|ISC_STRERRORSIZE
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_FIONBIO_IOCTL
+name|int
+name|on
+init|=
+literal|1
+decl_stmt|;
+name|ret
+operator|=
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|FIONBIO
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|on
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|flags
 operator|=
 name|fcntl
@@ -1711,7 +1737,7 @@ argument_list|)
 expr_stmt|;
 name|flags
 operator||=
-name|O_NONBLOCK
+name|PORT_NONBLOCK
 expr_stmt|;
 name|ret
 operator|=
@@ -1724,6 +1750,8 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ret
@@ -1750,12 +1778,23 @@ name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|,
+ifdef|#
+directive|ifdef
+name|USE_FIONBIO_IOCTL
+literal|"ioctl(%d, FIONBIO,&on): %s"
+argument_list|,
+name|fd
+argument_list|,
+else|#
+directive|else
 literal|"fcntl(%d, F_SETFL, %d): %s"
 argument_list|,
 name|fd
 argument_list|,
 name|flags
 argument_list|,
+endif|#
+directive|endif
 name|strbuf
 argument_list|)
 expr_stmt|;
@@ -1929,7 +1968,7 @@ name|fname
 argument_list|,
 name|O_RDONLY
 operator||
-name|O_NONBLOCK
+name|PORT_NONBLOCK
 argument_list|,
 literal|0
 argument_list|)

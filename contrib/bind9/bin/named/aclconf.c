@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: aclconf.c,v 1.27.12.3 2004/03/08 04:04:18 marka Exp $ */
+comment|/* $Id: aclconf.c,v 1.27.12.5 2005/03/17 03:58:25 marka Exp $ */
 end_comment
 
 begin_include
@@ -64,6 +64,13 @@ include|#
 directive|include
 file|<named/aclconf.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|LOOP_MAGIC
+value|ISC_MAGIC('L','O','O','P')
+end_define
 
 begin_function
 name|void
@@ -320,6 +327,9 @@ name|dns_acl_t
 modifier|*
 name|dacl
 decl_stmt|;
+name|dns_acl_t
+name|loop
+decl_stmt|;
 name|char
 modifier|*
 name|aclname
@@ -369,6 +379,35 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|ISC_MAGIC_VALID
+argument_list|(
+name|dacl
+argument_list|,
+name|LOOP_MAGIC
+argument_list|)
+condition|)
+block|{
+name|cfg_obj_log
+argument_list|(
+name|nameobj
+argument_list|,
+name|dns_lctx
+argument_list|,
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"acl loop detected: %s"
+argument_list|,
+name|aclname
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ISC_R_FAILURE
+operator|)
+return|;
+block|}
 name|dns_acl_attach
 argument_list|(
 name|dacl
@@ -422,6 +461,52 @@ name|result
 operator|)
 return|;
 block|}
+comment|/* 	 * Add a loop detection element. 	 */
+name|memset
+argument_list|(
+operator|&
+name|loop
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|loop
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ISC_LINK_INIT
+argument_list|(
+operator|&
+name|loop
+argument_list|,
+name|nextincache
+argument_list|)
+expr_stmt|;
+name|loop
+operator|.
+name|name
+operator|=
+name|aclname
+expr_stmt|;
+name|loop
+operator|.
+name|magic
+operator|=
+name|LOOP_MAGIC
+expr_stmt|;
+name|ISC_LIST_APPEND
+argument_list|(
+name|ctx
+operator|->
+name|named_acl_cache
+argument_list|,
+operator|&
+name|loop
+argument_list|,
+name|nextincache
+argument_list|)
+expr_stmt|;
 name|result
 operator|=
 name|ns_acl_fromconfig
@@ -437,6 +522,30 @@ argument_list|,
 operator|&
 name|dacl
 argument_list|)
+expr_stmt|;
+name|ISC_LIST_UNLINK
+argument_list|(
+name|ctx
+operator|->
+name|named_acl_cache
+argument_list|,
+operator|&
+name|loop
+argument_list|,
+name|nextincache
+argument_list|)
+expr_stmt|;
+name|loop
+operator|.
+name|magic
+operator|=
+literal|0
+expr_stmt|;
+name|loop
+operator|.
+name|name
+operator|=
+name|NULL
 expr_stmt|;
 if|if
 condition|(

@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getnetent_r.c,v 1.3.206.1 2004/03/09 08:33:36 marka Exp $"
+literal|"$Id: getnetent_r.c,v 1.3.206.2 2005/09/03 12:47:38 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -525,6 +525,16 @@ parameter_list|)
 endif|#
 directive|endif
 block|{
+ifdef|#
+directive|ifdef
+name|NET_R_ENT_ARGS
+name|UNUSED
+argument_list|(
+name|ndptr
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|setnetent
 argument_list|(
 name|stay_open
@@ -559,6 +569,16 @@ parameter_list|()
 endif|#
 directive|endif
 block|{
+ifdef|#
+directive|ifdef
+name|NET_R_ENT_ARGS
+name|UNUSED
+argument_list|(
+name|ndptr
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|endnetent
 argument_list|()
 expr_stmt|;
