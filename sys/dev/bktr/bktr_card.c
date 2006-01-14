@@ -1367,7 +1367,92 @@ literal|0xAA0000
 block|}
 block|,
 comment|/* GPIO mask */
+block|{
+name|CARD_TERRATVALUE
+block|,
+comment|/* the card id */
+literal|"TerraTec TValue"
+block|,
+comment|/* the 'name' */
+name|NULL
+block|,
+comment|/* the tuner */
+literal|0
+block|,
+comment|/* the tuner i2c address */
+literal|0
+block|,
+comment|/* dbx is optional */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* EEProm type */
+literal|0
+block|,
+comment|/* EEProm size */
+comment|/* Tuner, Extern, Intern, Mute, Enabled */
+block|{
+literal|0x500
+block|,
+literal|0x900
+block|,
+literal|0x300
+block|,
+literal|0x900
+block|,
+literal|1
 block|}
+block|,
+comment|/* audio MUX values */
+literal|0xffff00
+block|}
+block|,
+comment|/* GPIO mask */
+block|{
+name|CARD_PIXELVIEW_PLAYTV_PRO_REV_4C
+block|,
+comment|/* the card id */
+literal|"PixelView PlayTV Pro REV-4C "
+block|,
+comment|/* the 'name' */
+name|NULL
+block|,
+comment|/* the tuner */
+literal|0
+block|,
+comment|/* the tuner i2c address */
+literal|0
+block|,
+comment|/* dbx is optional */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* EEProm type */
+literal|0
+block|,
+comment|/* EEProm size */
+block|{
+literal|0x01
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0x03
+block|,
+literal|1
+block|}
+block|,
+comment|/* audio MUX values */
+literal|0x00ffffff
+block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -2020,6 +2105,13 @@ name|PCI_VENDOR_ASKEY
 value|0x144F
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCI_VENDOR_TERRATEC
+value|0x153B
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -2094,6 +2186,41 @@ define|#
 directive|define
 name|MODEL_IODATA_GV_BCTV3_PCI
 value|0x4020
+end_define
+
+begin_define
+define|#
+directive|define
+name|MODEL_TERRATVALUE_1117
+value|0x1117
+end_define
+
+begin_define
+define|#
+directive|define
+name|MODEL_TERRATVALUE_1118
+value|0x1118
+end_define
+
+begin_define
+define|#
+directive|define
+name|MODEL_TERRATVALUE_1119
+value|0x1119
+end_define
+
+begin_define
+define|#
+directive|define
+name|MODEL_TERRATVALUE_111A
+value|0x111a
+end_define
+
+begin_define
+define|#
+directive|define
+name|MODEL_TERRATVALUE_1134
+value|0x1134
 end_define
 
 begin_function
@@ -2955,6 +3082,74 @@ expr_stmt|;
 goto|goto
 name|checkTuner
 goto|;
+block|}
+if|if
+condition|(
+name|subsystem_vendor_id
+operator|==
+name|PCI_VENDOR_TERRATEC
+condition|)
+block|{
+switch|switch
+condition|(
+name|subsystem_id
+condition|)
+block|{
+case|case
+name|MODEL_TERRATVALUE_1117
+case|:
+case|case
+name|MODEL_TERRATVALUE_1118
+case|:
+case|case
+name|MODEL_TERRATVALUE_1119
+case|:
+case|case
+name|MODEL_TERRATVALUE_111A
+case|:
+case|case
+name|MODEL_TERRATVALUE_1134
+case|:
+name|bktr
+operator|->
+name|card
+operator|=
+name|cards
+index|[
+operator|(
+name|card
+operator|=
+name|CARD_TERRATVALUE
+operator|)
+index|]
+expr_stmt|;
+name|bktr
+operator|->
+name|card
+operator|.
+name|eepromAddr
+operator|=
+name|eeprom_i2c_address
+expr_stmt|;
+name|bktr
+operator|->
+name|card
+operator|.
+name|eepromSize
+operator|=
+call|(
+name|u_char
+call|)
+argument_list|(
+literal|256
+operator|/
+name|EEPROMBLOCKSIZE
+argument_list|)
+expr_stmt|;
+goto|goto
+name|checkTuner
+goto|;
+block|}
 block|}
 comment|/* Vendor is unknown. We will use the standard probe code */
 comment|/* which may not give best results */
@@ -4811,6 +5006,21 @@ name|ALPS_TSCH5
 argument_list|)
 expr_stmt|;
 comment|/* ALPS_TSCH6, in fact. */
+goto|goto
+name|checkDBX
+goto|;
+break|break;
+case|case
+name|CARD_TERRATVALUE
+case|:
+name|select_tuner
+argument_list|(
+name|bktr
+argument_list|,
+name|PHILIPS_PAL
+argument_list|)
+expr_stmt|;
+comment|/* Phlips PAL tuner */
 goto|goto
 name|checkDBX
 goto|;

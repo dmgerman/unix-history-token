@@ -169,8 +169,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|Bt848_MAX_CARD
+name|CARD_TERRATVALUE
 value|21
+end_define
+
+begin_define
+define|#
+directive|define
+name|CARD_PIXELVIEW_PLAYTV_PRO_REV_4C
+value|22
+end_define
+
+begin_define
+define|#
+directive|define
+name|Bt848_MAX_CARD
+value|23
 end_define
 
 begin_define

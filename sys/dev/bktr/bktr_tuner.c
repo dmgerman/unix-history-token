@@ -1097,6 +1097,44 @@ block|}
 block|}
 block|,
 comment|/* the band-switch values */
+comment|/* LG TPI8PSB12P PAL */
+block|{
+literal|"LG TPI8PSB12P PAL"
+block|,
+comment|/* the 'name' */
+name|TTYPE_PAL
+block|,
+comment|/* input type */
+block|{
+name|TSA552x_SCONTROL
+block|,
+comment|/* control byte for Tuner PLL */
+name|TSA552x_SCONTROL
+block|,
+name|TSA552x_SCONTROL
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+comment|/* band-switch crosspoints */
+block|{
+literal|0xa0
+block|,
+literal|0x90
+block|,
+literal|0x30
+block|,
+literal|0x8e
+block|}
+block|}
+block|,
+comment|/* the band-switch values */
 block|}
 decl_stmt|;
 end_decl_stmt
