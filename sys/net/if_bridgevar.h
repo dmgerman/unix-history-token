@@ -861,6 +861,10 @@ name|uint32_t
 name|bif_flags
 decl_stmt|;
 comment|/* member if flags */
+name|int
+name|bif_mutecap
+decl_stmt|;
+comment|/* member muted caps */
 block|}
 struct|;
 end_struct
