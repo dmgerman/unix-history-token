@@ -1243,7 +1243,7 @@ if|if
 condition|(
 operator|*
 name|index
-operator|>
+operator|>=
 name|NG_NETFLOW_MAXIFACES
 condition|)
 name|ERROUT
@@ -1385,7 +1385,7 @@ condition|(
 name|set
 operator|->
 name|iface
-operator|>
+operator|>=
 name|NG_NETFLOW_MAXIFACES
 condition|)
 name|ERROUT
@@ -1508,7 +1508,7 @@ condition|(
 name|set
 operator|->
 name|iface
-operator|>
+operator|>=
 name|NG_NETFLOW_MAXIFACES
 condition|)
 name|ERROUT
