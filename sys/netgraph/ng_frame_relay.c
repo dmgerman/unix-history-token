@@ -1225,6 +1225,13 @@ argument_list|(
 name|hook
 argument_list|)
 decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|m
+init|=
+name|NULL
+decl_stmt|;
 name|int
 name|error
 init|=
@@ -1242,11 +1249,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|data
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|m
 decl_stmt|;
 comment|/* Data doesn't come in from just anywhere (e.g debug hook) */
 if|if
