@@ -7143,17 +7143,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|FREE
-argument_list|(
-name|workBuf
-argument_list|,
-name|M_NETGRAPH_PARSE
-argument_list|)
-expr_stmt|;
 comment|/* Closing brace/bracket */
-if|if
-condition|(
-operator|(
 name|error
 operator|=
 name|ng_parse_append
@@ -7182,18 +7172,7 @@ literal|'}'
 else|:
 literal|']'
 argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-goto|goto
-name|fail
-goto|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+expr_stmt|;
 name|fail
 label|:
 comment|/* Clean up after failure */
