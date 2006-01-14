@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: forward.c,v 1.5.206.1 2004/03/06 08:13:38 marka Exp $ */
+comment|/* $Id: forward.c,v 1.5.206.3 2005/03/17 03:58:30 marka Exp $ */
 end_comment
 
 begin_include
@@ -610,6 +610,45 @@ modifier|*
 name|forwardersp
 parameter_list|)
 block|{
+return|return
+operator|(
+name|dns_fwdtable_find2
+argument_list|(
+name|fwdtable
+argument_list|,
+name|name
+argument_list|,
+name|NULL
+argument_list|,
+name|forwardersp
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|isc_result_t
+name|dns_fwdtable_find2
+parameter_list|(
+name|dns_fwdtable_t
+modifier|*
+name|fwdtable
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|foundname
+parameter_list|,
+name|dns_forwarders_t
+modifier|*
+modifier|*
+name|forwardersp
+parameter_list|)
+block|{
 name|isc_result_t
 name|result
 decl_stmt|;
@@ -643,7 +682,7 @@ name|name
 argument_list|,
 literal|0
 argument_list|,
-name|NULL
+name|foundname
 argument_list|,
 operator|(
 name|void

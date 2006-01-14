@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2001, 2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2001, 2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: getaddresses.c,v 1.13.126.6 2004/09/16 01:00:58 marka Exp $ */
+comment|/* $Id: getaddresses.c,v 1.13.126.8 2005/10/14 02:13:06 marka Exp $ */
 end_comment
 
 begin_include
@@ -232,21 +232,27 @@ argument_list|)
 expr_stmt|;
 name|have_ipv4
 operator|=
+name|ISC_TF
+argument_list|(
 operator|(
 name|isc_net_probeipv4
 argument_list|()
 operator|==
 name|ISC_R_SUCCESS
 operator|)
+argument_list|)
 expr_stmt|;
 name|have_ipv6
 operator|=
+name|ISC_TF
+argument_list|(
 operator|(
 name|isc_net_probeipv6
 argument_list|()
 operator|==
 name|ISC_R_SUCCESS
 operator|)
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Try IPv4, then IPv6.  In order to handle the extended format 	 * for IPv6 scoped addresses (address%scope_ID), we'll use a local 	 * working buffer of 128 bytes.  The length is an ad-hoc value, but 	 * should be enough for this purpose; the buffer can contain a string 	 * of at least 80 bytes for scope_ID in addition to any IPv6 numeric 	 * addresses (up to 46 bytes), the delimiter character and the 	 * terminating NULL character. 	 */
 if|if

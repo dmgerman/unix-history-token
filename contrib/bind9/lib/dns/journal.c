@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: journal.c,v 1.77.2.1.10.9 2004/09/16 04:57:02 marka Exp $ */
+comment|/* $Id: journal.c,v 1.77.2.1.10.13 2005/11/03 23:08:41 marka Exp $ */
 end_comment
 
 begin_include
@@ -17,6 +17,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -7046,14 +7052,15 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* 	 * Read an RR. 	 */
-name|result
-operator|=
+name|CHECK
+argument_list|(
 name|journal_read_rrhdr
 argument_list|(
 name|j
 argument_list|,
 operator|&
 name|rrhdr
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Perform a sanity check on the journal RR size. 	 * The smallest possible RR has a 1-byte owner name 	 * and a 10-byte header.  The largest possible 	 * RR has 65535 bytes of data, a header, and a maximum- 	 * size owner name, well below 70 k total. 	 */
@@ -7967,6 +7974,9 @@ name|i
 decl_stmt|,
 name|t
 decl_stmt|;
+name|isc_boolean_t
+name|append
+decl_stmt|;
 name|CHECK
 argument_list|(
 name|dns_diff_sort
@@ -8215,7 +8225,26 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Identical RRs in both databases; skip them both. 		 */
+comment|/* 		 * Identical RRs in both databases; skip them both 		 * if the ttl differs. 		 */
+name|append
+operator|=
+name|ISC_TF
+argument_list|(
+name|p
+index|[
+literal|0
+index|]
+operator|->
+name|ttl
+operator|!=
+name|p
+index|[
+literal|1
+index|]
+operator|->
+name|ttl
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -8247,6 +8276,28 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|append
+condition|)
+block|{
+name|ISC_LIST_APPEND
+argument_list|(
+name|r
+operator|->
+name|tuples
+argument_list|,
+name|p
+index|[
+name|i
+index|]
+argument_list|,
+name|link
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|dns_difftuple_free
 argument_list|(
 operator|&
@@ -8256,6 +8307,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|next
 label|:

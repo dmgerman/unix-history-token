@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: ds_43.c,v 1.6.2.2 2004/03/16 12:38:14 marka Exp $ */
+comment|/* $Id: ds_43.c,v 1.6.2.4 2005/09/06 07:29:31 marka Exp $ */
 end_comment
 
 begin_comment
@@ -42,6 +42,10 @@ parameter_list|)
 block|{
 name|isc_token_t
 name|token
+decl_stmt|;
+name|unsigned
+name|char
+name|c
 decl_stmt|;
 name|REQUIRE
 argument_list|(
@@ -130,38 +134,38 @@ argument_list|,
 operator|&
 name|token
 argument_list|,
-name|isc_tokentype_number
+name|isc_tokentype_string
 argument_list|,
 name|ISC_FALSE
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|RETTOK
+argument_list|(
+name|dns_secalg_fromtext
+argument_list|(
+operator|&
+name|c
+argument_list|,
+operator|&
 name|token
 operator|.
 name|value
 operator|.
-name|as_ulong
-operator|>
-literal|0xffU
-condition|)
-name|RETTOK
-argument_list|(
-name|ISC_R_RANGE
+name|as_textregion
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|RETERR
 argument_list|(
-name|uint8_tobuffer
+name|mem_tobuffer
 argument_list|(
-name|token
-operator|.
-name|value
-operator|.
-name|as_ulong
-argument_list|,
 name|target
+argument_list|,
+operator|&
+name|c
+argument_list|,
+literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;

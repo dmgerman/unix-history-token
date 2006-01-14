@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: rdata.c,v 1.147.2.11.2.16 2004/10/06 05:37:40 marka Exp $ */
+comment|/* $Id: rdata.c,v 1.147.2.11.2.20 2005/07/22 05:27:52 marka Exp $ */
 end_comment
 
 begin_include
@@ -4445,22 +4445,61 @@ operator|(
 name|ISC_R_NOSPACE
 operator|)
 return|;
-name|snprintf
-argument_list|(
+operator|*
 name|tp
-argument_list|,
-literal|5
-argument_list|,
-literal|"\\%03u"
-argument_list|,
+operator|++
+operator|=
+literal|0x5c
+expr_stmt|;
+operator|*
+name|tp
+operator|++
+operator|=
+literal|0x30
+operator|+
+operator|(
+operator|(
 operator|*
 name|sp
-operator|++
-argument_list|)
+operator|/
+literal|100
+operator|)
+operator|%
+literal|10
+operator|)
 expr_stmt|;
+operator|*
 name|tp
-operator|+=
-literal|4
+operator|++
+operator|=
+literal|0x30
+operator|+
+operator|(
+operator|(
+operator|*
+name|sp
+operator|/
+literal|10
+operator|)
+operator|%
+literal|10
+operator|)
+expr_stmt|;
+operator|*
+name|tp
+operator|++
+operator|=
+literal|0x30
+operator|+
+operator|(
+operator|*
+name|sp
+operator|%
+literal|10
+operator|)
+expr_stmt|;
+name|sp
+operator|++
 expr_stmt|;
 name|tl
 operator|-=
@@ -4468,6 +4507,7 @@ literal|4
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* double quote, semi-colon, backslash */
 if|if
 condition|(
 operator|*
@@ -5624,8 +5664,7 @@ modifier|*
 name|region
 parameter_list|)
 block|{
-name|unsigned
-name|long
+name|isc_uint32_t
 name|value
 decl_stmt|;
 name|REQUIRE

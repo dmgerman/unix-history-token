@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ev_connects.c,v 1.4.206.1 2004/03/09 08:33:40 marka Exp $"
+literal|"$Id: ev_connects.c,v 1.4.206.2 2005/07/08 04:52:54 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -783,9 +783,9 @@ ifdef|#
 directive|ifdef
 name|USE_FIONBIO_IOCTL
 name|int
-name|on
+name|off
 init|=
-literal|1
+literal|0
 decl_stmt|;
 name|OK
 argument_list|(
@@ -802,7 +802,7 @@ name|char
 operator|*
 operator|)
 operator|&
-name|on
+name|off
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -819,7 +819,8 @@ argument_list|,
 name|F_SETFL
 argument_list|,
 name|mode
-operator||
+operator|&
+operator|~
 name|PORT_NONBLOCK
 argument_list|)
 argument_list|)

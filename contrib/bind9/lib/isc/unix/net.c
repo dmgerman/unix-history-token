@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: net.c,v 1.22.2.2.10.7 2004/04/29 01:31:22 marka Exp $ */
+comment|/* $Id: net.c,v 1.22.2.2.10.9 2005/03/17 03:58:33 marka Exp $ */
 end_comment
 
 begin_include
@@ -885,6 +885,12 @@ begin_comment
 comment|/* IPV6_V6ONLY */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISC_PLATFORM_HAVEIN6PKTINFO
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -1087,6 +1093,15 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* ISC_PLATFORM_HAVEIN6PKTINFO */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* WANT_IPV6 */
 end_comment
 
@@ -1136,6 +1151,9 @@ directive|ifdef
 name|ISC_PLATFORM_HAVEIPV6
 ifdef|#
 directive|ifdef
+name|ISC_PLATFORM_HAVEIN6PKTINFO
+ifdef|#
+directive|ifdef
 name|WANT_IPV6
 name|initialize_ipv6pktinfo
 argument_list|()
@@ -1146,6 +1164,8 @@ name|ipv6pktinfo_result
 operator|=
 name|ISC_R_NOTFOUND
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 endif|#

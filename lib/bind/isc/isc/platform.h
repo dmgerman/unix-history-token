@@ -140,12 +140,11 @@ begin_comment
 comment|/*  * If this system needs inet_pton(), ISC_PLATFORM_NEEDPTON will be defined.  */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|ISC_PLATFORM_NEEDPTON
-value|1
-end_define
+end_undef
 
 begin_comment
 comment|/*  * If this system needs inet_aton(), ISC_PLATFORM_NEEDATON will be defined.  */

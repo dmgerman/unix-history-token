@@ -21,7 +21,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: hesiod.c,v 1.1.2.1.4.3 2004/05/17 07:48:56 marka Exp $"
+literal|"$Id: hesiod.c,v 1.1.2.1.4.4 2005/07/28 07:43:19 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -328,23 +328,18 @@ literal|1
 operator|)
 return|;
 block|}
+name|memset
+argument_list|(
 name|ctx
-operator|->
-name|LHS
-operator|=
-name|NULL
-expr_stmt|;
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
 name|ctx
-operator|->
-name|RHS
-operator|=
-name|NULL
-expr_stmt|;
-name|ctx
-operator|->
-name|res
-operator|=
-name|NULL
+argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
