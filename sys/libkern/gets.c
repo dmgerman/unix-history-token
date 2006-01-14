@@ -138,6 +138,10 @@ operator|--
 expr_stmt|;
 block|}
 continue|continue;
+case|case
+literal|'\0'
+case|:
+continue|continue;
 default|default:
 if|if
 condition|(
