@@ -10415,11 +10415,6 @@ name|scsi_inquiry_data
 modifier|*
 name|iq
 decl_stmt|;
-name|union
-name|asr_ccb
-modifier|*
-name|ccb
-decl_stmt|;
 name|int
 name|bus
 decl_stmt|,
@@ -11629,34 +11624,6 @@ operator|->
 name|ha_QueueSize
 argument_list|)
 expr_stmt|;
-comment|/* 	 * fill in the prototype cam_path. 	 */
-if|if
-condition|(
-operator|(
-name|ccb
-operator|=
-name|asr_alloc_ccb
-argument_list|(
-name|sc
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"CAM could not be notified of asynchronous callback parameters\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-block|}
 for|for
 control|(
 name|bus
@@ -11869,11 +11836,6 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-name|asr_free_ccb
-argument_list|(
-name|ccb
-argument_list|)
-expr_stmt|;
 comment|/* 	 *	Generate the device node information 	 */
 name|sc
 operator|->
