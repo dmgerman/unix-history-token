@@ -10912,6 +10912,10 @@ name|hlen
 operator|>
 literal|0
 operator|&&
+name|offset
+operator|==
+literal|0
+operator|&&
 operator|(
 name|proto
 operator|!=
