@@ -3776,6 +3776,11 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * The zone allocator couldn't provide more entries. 		 * Treat this as if the cache was full; drop the oldest 		 * entry and insert the new one. 		 */
+name|tcpstat
+operator|.
+name|tcps_sc_zonefail
+operator|++
+expr_stmt|;
 comment|/* NB: guarded by INP_INFO_WLOCK(&tcbinfo) */
 for|for
 control|(
@@ -3812,6 +3817,32 @@ name|NULL
 condition|)
 break|break;
 block|}
+if|if
+condition|(
+name|sc
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* Generic memory failure. */
+if|if
+condition|(
+name|ipopts
+condition|)
+operator|(
+name|void
+operator|)
+name|m_free
+argument_list|(
+name|ipopts
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|sc
 operator|->
 name|sc_tp
@@ -3826,11 +3857,6 @@ name|sc
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-name|tcpstat
-operator|.
-name|tcps_sc_zonefail
-operator|++
 expr_stmt|;
 name|sc
 operator|=
