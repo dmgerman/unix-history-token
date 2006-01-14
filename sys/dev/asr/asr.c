@@ -1434,7 +1434,7 @@ name|int
 name|asr_probe
 parameter_list|(
 name|device_t
-name|tag
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1445,7 +1445,7 @@ name|int
 name|asr_attach
 parameter_list|(
 name|device_t
-name|tag
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2673,7 +2673,7 @@ name|int
 name|asr_probe
 parameter_list|(
 name|device_t
-name|tag
+name|dev
 parameter_list|)
 block|{
 name|u_int32_t
@@ -2684,7 +2684,7 @@ operator|=
 operator|(
 name|pci_get_device
 argument_list|(
-name|tag
+name|dev
 argument_list|)
 operator|<<
 literal|16
@@ -2692,7 +2692,7 @@ operator|)
 operator||
 name|pci_get_vendor
 argument_list|(
-name|tag
+name|dev
 argument_list|)
 expr_stmt|;
 if|if
@@ -2712,7 +2712,7 @@ condition|)
 block|{
 name|device_set_desc
 argument_list|(
-name|tag
+name|dev
 argument_list|,
 literal|"Adaptec Caching SCSI RAID"
 argument_list|)
@@ -9746,7 +9746,7 @@ name|int
 name|asr_pci_map_mem
 parameter_list|(
 name|device_t
-name|tag
+name|dev
 parameter_list|,
 name|Asr_softc_t
 modifier|*
@@ -9782,7 +9782,7 @@ name|p
 operator|=
 name|pci_read_config
 argument_list|(
-name|tag
+name|dev
 argument_list|,
 name|PCIR_BAR
 argument_list|(
@@ -9833,7 +9833,7 @@ name|p
 operator|=
 name|pci_read_config
 argument_list|(
-name|tag
+name|dev
 argument_list|,
 name|rid
 argument_list|,
@@ -9845,7 +9845,7 @@ argument_list|)
 expr_stmt|;
 name|pci_write_config
 argument_list|(
-name|tag
+name|dev
 argument_list|,
 name|rid
 argument_list|,
@@ -9865,7 +9865,7 @@ operator|-
 operator|(
 name|pci_read_config
 argument_list|(
-name|tag
+name|dev
 argument_list|,
 name|rid
 argument_list|,
@@ -9881,7 +9881,7 @@ operator|)
 expr_stmt|;
 name|pci_write_config
 argument_list|(
-name|tag
+name|dev
 argument_list|,
 name|rid
 argument_list|,
@@ -9910,7 +9910,7 @@ name|s
 operator|=
 name|pci_read_config
 argument_list|(
-name|tag
+name|dev
 argument_list|,
 name|PCIR_DEVVENDOR
 argument_list|,
@@ -9931,7 +9931,7 @@ name|s
 operator|=
 name|pci_read_config
 argument_list|(
-name|tag
+name|dev
 argument_list|,
 name|PCIR_SUBVEND_0
 argument_list|,
@@ -9988,7 +9988,7 @@ name|ha_mem_res
 operator|=
 name|bus_alloc_resource
 argument_list|(
-name|tag
+name|dev
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
@@ -10089,7 +10089,7 @@ name|p
 operator|=
 name|pci_read_config
 argument_list|(
-name|tag
+name|dev
 argument_list|,
 name|rid
 argument_list|,
@@ -10101,7 +10101,7 @@ argument_list|)
 expr_stmt|;
 name|pci_write_config
 argument_list|(
-name|tag
+name|dev
 argument_list|,
 name|rid
 argument_list|,
@@ -10121,7 +10121,7 @@ operator|-
 operator|(
 name|pci_read_config
 argument_list|(
-name|tag
+name|dev
 argument_list|,
 name|rid
 argument_list|,
@@ -10137,7 +10137,7 @@ operator|)
 expr_stmt|;
 name|pci_write_config
 argument_list|(
-name|tag
+name|dev
 argument_list|,
 name|rid
 argument_list|,
@@ -10172,7 +10172,7 @@ name|ha_mes_res
 operator|=
 name|bus_alloc_resource
 argument_list|(
-name|tag
+name|dev
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
@@ -10269,7 +10269,7 @@ name|int
 name|asr_pci_map_int
 parameter_list|(
 name|device_t
-name|tag
+name|dev
 parameter_list|,
 name|Asr_softc_t
 modifier|*
@@ -10287,7 +10287,7 @@ name|ha_irq_res
 operator|=
 name|bus_alloc_resource_any
 argument_list|(
-name|tag
+name|dev
 argument_list|,
 name|SYS_RES_IRQ
 argument_list|,
@@ -10318,7 +10318,7 @@ if|if
 condition|(
 name|bus_setup_intr
 argument_list|(
-name|tag
+name|dev
 argument_list|,
 name|sc
 operator|->
@@ -10361,7 +10361,7 @@ name|ha_irq
 operator|=
 name|pci_read_config
 argument_list|(
-name|tag
+name|dev
 argument_list|,
 name|PCIR_INTLINE
 argument_list|,
@@ -10393,7 +10393,7 @@ name|int
 name|asr_attach
 parameter_list|(
 name|device_t
-name|tag
+name|dev
 parameter_list|)
 block|{
 name|PI2O_EXEC_STATUS_GET_REPLY
@@ -10426,42 +10426,21 @@ decl_stmt|,
 name|size
 decl_stmt|,
 name|unit
-init|=
-name|device_get_unit
-argument_list|(
-name|tag
-argument_list|)
 decl_stmt|;
-if|if
-condition|(
-operator|(
 name|sc
 operator|=
-name|malloc
+name|device_get_softc
 argument_list|(
-sizeof|sizeof
+name|dev
+argument_list|)
+expr_stmt|;
+name|unit
+operator|=
+name|device_get_unit
 argument_list|(
-operator|*
-name|sc
+name|dev
 argument_list|)
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_NOWAIT
-operator||
-name|M_ZERO
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-block|}
+expr_stmt|;
 if|if
 condition|(
 name|Asr_softc
@@ -10534,17 +10513,17 @@ condition|(
 operator|!
 name|asr_pci_map_mem
 argument_list|(
-name|tag
+name|dev
 argument_list|,
 name|sc
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"asr%d: could not map memory\n"
+name|dev
 argument_list|,
-name|unit
+literal|"could not map memory\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -10556,13 +10535,13 @@ block|}
 comment|/* Enable if not formerly enabled */
 name|pci_write_config
 argument_list|(
-name|tag
+name|dev
 argument_list|,
 name|PCIR_COMMAND
 argument_list|,
 name|pci_read_config
 argument_list|(
-name|tag
+name|dev
 argument_list|,
 name|PCIR_COMMAND
 argument_list|,
@@ -10606,7 +10585,7 @@ name|dinfo
 init|=
 name|device_get_ivars
 argument_list|(
-name|tag
+name|dev
 argument_list|)
 struct|;
 name|sc
@@ -10687,11 +10666,11 @@ name|NULL
 operator|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"asr%d: could not initialize hardware\n"
+name|dev
 argument_list|,
-name|unit
+literal|"could not initialize hardware\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -10786,7 +10765,7 @@ condition|(
 operator|!
 name|asr_pci_map_int
 argument_list|(
-name|tag
+name|dev
 argument_list|,
 operator|(
 name|void
@@ -10796,11 +10775,11 @@ name|sc
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"asr%d: could not map interrupt\n"
+name|dev
 argument_list|,
-name|unit
+literal|"could not map interrupt\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -11048,11 +11027,11 @@ block|}
 block|}
 else|else
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"asr%d: failed to initialize\n"
+name|dev
 argument_list|,
-name|unit
+literal|"failed to initialize\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -11202,11 +11181,11 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 	 *	Print the HBA model number as inquired from the card. 	 */
-name|printf
+name|device_printf
 argument_list|(
-literal|"asr%d:"
+name|dev
 argument_list|,
-name|unit
+literal|" "
 argument_list|)
 expr_stmt|;
 if|if
@@ -11696,11 +11675,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"asr%d: CAM could not be notified of asynchronous callback parameters\n"
+name|dev
 argument_list|,
-name|unit
+literal|"CAM could not be notified of asynchronous callback parameters\n"
 argument_list|)
 expr_stmt|;
 return|return
