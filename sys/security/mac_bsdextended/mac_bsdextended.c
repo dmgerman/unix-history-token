@@ -537,7 +537,7 @@ expr_stmt|;
 if|if
 condition|(
 name|index
-operator|>
+operator|>=
 name|MAC_BSDEXTENDED_MAXRULES
 condition|)
 return|return
