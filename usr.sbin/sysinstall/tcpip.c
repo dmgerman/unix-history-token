@@ -3206,7 +3206,9 @@ name|sprintf
 argument_list|(
 name|temp
 argument_list|,
-literal|"DHCP"
+literal|"DHCP %s"
+argument_list|,
+name|extras
 argument_list|)
 expr_stmt|;
 else|else
