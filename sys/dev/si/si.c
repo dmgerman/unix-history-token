@@ -2549,9 +2549,10 @@ argument_list|,
 literal|"A%r%r"
 argument_list|,
 name|unit
-argument_list|(
+argument_list|,
+call|(
 name|int
-argument_list|)
+call|)
 argument_list|(
 name|pp
 operator|-
