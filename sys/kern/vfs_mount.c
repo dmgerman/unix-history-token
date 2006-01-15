@@ -4219,6 +4219,9 @@ name|mp
 operator|->
 name|mnt_optnew
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|VFS_STATFS
 argument_list|(
 name|mp
