@@ -3111,6 +3111,14 @@ operator|(
 name|rv
 operator|)
 return|;
+else|#
+directive|else
+name|sc
+operator|->
+name|sc_dying
+operator|=
+literal|1
+expr_stmt|;
 endif|#
 directive|endif
 name|UWRITE2
