@@ -1890,6 +1890,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|vfs_busy
 argument_list|(
 name|mp
