@@ -142,27 +142,6 @@ index|[]
 init|=
 block|{
 block|{
-literal|0x1684a34d
-block|,
-name|NULL
-block|}
-block|,
-comment|/* SMC8416 */
-block|{
-literal|0xd680d041
-block|,
-name|NULL
-block|}
-block|,
-comment|/* PNP80d6 */
-block|{
-literal|0x1980635e
-block|,
-name|NULL
-block|}
-block|,
-comment|/* WSC8019 */
-block|{
 literal|0x0131d805
 block|,
 name|NULL
@@ -170,19 +149,19 @@ block|}
 block|,
 comment|/* ANX3101 */
 block|{
+literal|0x4cf48906
+block|,
+name|NULL
+block|}
+block|,
+comment|/* ATIf44c */
+block|{
 literal|0x01200507
 block|,
 name|NULL
 block|}
 block|,
 comment|/* AXE2001 */
-block|{
-literal|0x19808c4a
-block|,
-name|NULL
-block|}
-block|,
-comment|/* RTL8019 */
 block|{
 literal|0x0090252a
 block|,
@@ -198,12 +177,40 @@ block|}
 block|,
 comment|/* KTC2000 */
 block|{
-literal|0x4cf48906
+literal|0xd680d041
 block|,
 name|NULL
 block|}
 block|,
-comment|/* ATIf44c */
+comment|/* PNP80d6 */
+block|{
+literal|0x6081d041
+block|,
+name|NULL
+block|}
+block|,
+comment|/* PNP8160 */
+block|{
+literal|0x19808c4a
+block|,
+name|NULL
+block|}
+block|,
+comment|/* RTL8019 */
+block|{
+literal|0x1684a34d
+block|,
+name|NULL
+block|}
+block|,
+comment|/* SMC8416 */
+block|{
+literal|0x1980635e
+block|,
+name|NULL
+block|}
+block|,
+comment|/* WSC8019 */
 block|{
 literal|0
 block|,
