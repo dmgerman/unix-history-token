@@ -4846,6 +4846,11 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|->
 name|if_ierrors
@@ -4879,6 +4884,11 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|->
 name|if_ierrors
@@ -4895,6 +4905,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|->
 name|if_ierrors
@@ -4921,6 +4936,11 @@ name|buf_802_11
 argument_list|)
 condition|)
 block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"an%d: oversized packet "
