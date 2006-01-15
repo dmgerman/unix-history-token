@@ -10624,6 +10624,8 @@ condition|(
 name|p
 operator|->
 name|next
+operator|.
+name|sle_next
 operator|!=
 operator|(
 expr|struct
@@ -10869,6 +10871,8 @@ condition|(
 name|fs
 operator|->
 name|next
+operator|.
+name|sle_next
 operator|!=
 operator|(
 expr|struct
