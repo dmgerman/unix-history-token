@@ -1279,7 +1279,7 @@ argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
-literal|"chmod 555 %s&& chown root.%s %s"
+literal|"chmod 555 %s&& chown root:%s %s"
 argument_list|,
 name|tconf
 operator|.
@@ -1423,7 +1423,7 @@ argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
-literal|"chown -R root.%s %s/pub"
+literal|"chown -R root:%s %s/pub"
 argument_list|,
 name|tconf
 operator|.
