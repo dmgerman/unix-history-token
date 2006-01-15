@@ -10782,14 +10782,7 @@ parameter_list|(
 name|usbd_xfer_handle
 name|xfer
 parameter_list|)
-block|{
-name|xfer
-operator|->
-name|hcpriv
-operator|=
-name|NULL
-expr_stmt|;
-block|}
+block|{ }
 end_function
 
 begin_comment
