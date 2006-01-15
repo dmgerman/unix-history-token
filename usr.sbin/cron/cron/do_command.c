@@ -186,9 +186,9 @@ case|case
 literal|0
 case|:
 comment|/* child process */
-name|acquire_daemonlock
+name|pidfile_close
 argument_list|(
-literal|1
+name|pfh
 argument_list|)
 expr_stmt|;
 name|child_process
