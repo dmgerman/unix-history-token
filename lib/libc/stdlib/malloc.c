@@ -569,6 +569,12 @@ name|SIZEOF_PTR
 value|8
 end_define
 
+begin_define
+define|#
+directive|define
+name|NO_TLS
+end_define
+
 begin_endif
 endif|#
 directive|endif
