@@ -94,7 +94,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|T_TAG_OFERFLOW
+name|T_TAG_OVERFLOW
 value|10
 end_define
 
