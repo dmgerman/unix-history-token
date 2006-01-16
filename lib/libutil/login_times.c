@@ -331,7 +331,7 @@ decl_stmt|;
 comment|/* Make local copy and force lowercase to simplify parsing */
 name|p
 operator|=
-name|strncpy
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
