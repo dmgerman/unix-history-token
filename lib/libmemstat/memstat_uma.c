@@ -1300,7 +1300,6 @@ modifier|*
 name|kvm_handle
 parameter_list|)
 block|{
-specifier|static
 name|LIST_HEAD
 argument_list|(
 argument_list|,
