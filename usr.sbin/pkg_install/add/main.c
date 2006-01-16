@@ -53,7 +53,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"hvIRfnrp:P:SMt:C:"
+literal|"hvIRfnrp:P:SMt:C:K"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,6 +102,14 @@ end_decl_stmt
 begin_decl_stmt
 name|Boolean
 name|Remote
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Boolean
+name|KeepPackage
 init|=
 name|FALSE
 decl_stmt|;
@@ -654,13 +662,17 @@ name|TRUE
 expr_stmt|;
 break|break;
 case|case
-literal|'n'
+literal|'K'
 case|:
-name|Fake
+name|KeepPackage
 operator|=
 name|TRUE
 expr_stmt|;
-name|Verbose
+break|break;
+case|case
+literal|'n'
+case|:
+name|Fake
 operator|=
 name|TRUE
 expr_stmt|;
@@ -1686,7 +1698,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: pkg_add [-vInrfRMS] [-t template] [-p prefix] [-P prefix] [-C chrootdir]"
+literal|"usage: pkg_add [-vInrfRMSK] [-t template] [-p prefix] [-P prefix] [-C chrootdir]"
 argument_list|,
 literal|"               pkg-name [pkg-name ...]"
 argument_list|)
