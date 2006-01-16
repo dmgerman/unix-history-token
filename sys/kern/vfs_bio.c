@@ -7345,12 +7345,6 @@ name|char
 modifier|*
 name|waitmsg
 decl_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|bqlock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|defrag
@@ -7393,10 +7387,6 @@ operator|=
 name|VFS_BIO_NEED_ANY
 expr_stmt|;
 block|}
-name|bd_speedup
-argument_list|()
-expr_stmt|;
-comment|/* heeeelp */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -7406,6 +7396,28 @@ expr_stmt|;
 name|needsbuffer
 operator||=
 name|flags
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|nblock
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|bqlock
+argument_list|)
+expr_stmt|;
+name|bd_speedup
+argument_list|()
+expr_stmt|;
+comment|/* heeeelp */
+name|mtx_lock
+argument_list|(
+operator|&
+name|nblock
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
