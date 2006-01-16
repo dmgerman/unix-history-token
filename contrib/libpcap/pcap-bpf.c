@@ -2890,11 +2890,13 @@ argument_list|(
 name|u_int
 argument_list|)
 operator|*
+operator|(
 name|bdl
 operator|.
 name|bfl_len
 operator|+
 literal|1
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
