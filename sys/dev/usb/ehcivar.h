@@ -287,7 +287,7 @@ value|0x0002
 end_define
 
 begin_comment
-comment|/* workaround for VIA chipsets */
+comment|/* workaround for VIA / ATI chipsets */
 end_comment
 
 begin_typedef
