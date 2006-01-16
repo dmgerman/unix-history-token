@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/umtx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/frame.h>
 end_include
 
@@ -1312,6 +1318,7 @@ name|state
 operator|!=
 name|NULL
 condition|)
+block|{
 name|suword
 argument_list|(
 operator|(
@@ -1325,6 +1332,18 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|kern_umtx_wake
+argument_list|(
+name|td
+argument_list|,
+name|uap
+operator|->
+name|state
+argument_list|,
+name|INT_MAX
+argument_list|)
+expr_stmt|;
+block|}
 name|PROC_LOCK
 argument_list|(
 name|p
