@@ -1028,18 +1028,12 @@ modifier|*
 name|curthread
 parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-block|TAILQ_INIT(&curthread->mutexq); 	TAILQ_INIT(&curthread->pri_mutexq); 	curthread->priority_mutex_count = 0;
-else|#
-directive|else
 name|struct
 name|pthread_mutex
 modifier|*
 name|m
 decl_stmt|;
-comment|/* 	 * Fix mutex ownership for child process. 	 * note that process shared mutex should not 	 * be inherited because owner is forking thread 	 * which is in parent process, they should be 	 * removed from the owned mutex list, current 	 * process shared mutex is not supported, so I 	 * am not worried. 	 */
+comment|/* 	 * Fix mutex ownership for child process. 	 * note that process shared mutex should not 	 * be inherited because owner is forking thread 	 * which is in parent process, they should be 	 * removed from the owned mutex list, current, 	 * process shared mutex is not supported, so I 	 * am not worried. 	 */
 name|TAILQ_FOREACH
 argument_list|(
 argument|m
@@ -1089,8 +1083,6 @@ name|m_queue
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 end_function
 
