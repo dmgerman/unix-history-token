@@ -413,6 +413,8 @@ argument_list|(
 name|NULL
 argument_list|,
 name|pkg
+argument_list|,
+name|KeepPackage
 argument_list|)
 operator|)
 condition|)
@@ -1588,6 +1590,8 @@ argument_list|,
 name|p
 operator|->
 name|name
+argument_list|,
+name|KeepPackage
 argument_list|)
 operator|)
 operator|!=
@@ -2826,6 +2830,13 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+if|if
+condition|(
+operator|!
+name|Fake
+condition|)
+block|{
 name|warnx
 argument_list|(
 literal|"cannot open %s as display file"
@@ -2833,6 +2844,8 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 block|}
 goto|goto
 name|success

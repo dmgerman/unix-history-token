@@ -41,7 +41,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"abcdDe:EfgGhiIjkl:LmoO:pPqQrRst:vVW:xX"
+literal|"abcdDe:EfgGhiIjkKl:LmoO:pPqQrRst:vVW:xX"
 decl_stmt|;
 end_decl_stmt
 
@@ -125,6 +125,14 @@ modifier|*
 name|LookUpOrigin
 init|=
 name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Boolean
+name|KeepPackage
+init|=
+name|FALSE
 decl_stmt|;
 end_decl_stmt
 
@@ -391,6 +399,14 @@ case|:
 name|Flags
 operator||=
 name|SHOW_DEINSTALL
+expr_stmt|;
+break|break;
+case|case
+literal|'K'
+case|:
+name|KeepPackage
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -830,7 +846,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: pkg_info [-bcdDEfgGiIjkLmopPqQrRsvVxX] [-e package] [-l prefix]"
+literal|"usage: pkg_info [-bcdDEfgGiIjkKLmopPqQrRsvVxX] [-e package] [-l prefix]"
 argument_list|,
 literal|"                [-t template] -a | pkg-name ..."
 argument_list|,
