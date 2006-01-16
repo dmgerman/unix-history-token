@@ -4543,6 +4543,7 @@ comment|/* Get the maximum LUN supported by the device. 	 */
 if|if
 condition|(
 operator|(
+operator|(
 name|sc
 operator|->
 name|proto
@@ -4551,6 +4552,16 @@ name|UMASS_PROTO_WIRE
 operator|)
 operator|==
 name|UMASS_PROTO_BBB
+operator|)
+operator|&&
+operator|!
+operator|(
+name|sc
+operator|->
+name|quirks
+operator|&
+name|NO_GETMAXLUN
+operator|)
 condition|)
 name|sc
 operator|->
