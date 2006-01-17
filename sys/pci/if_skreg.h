@@ -1634,7 +1634,7 @@ begin_define
 define|#
 directive|define
 name|SK_IMTIMER_TICKS_YUKON_EC
-value|128
+value|125
 end_define
 
 begin_define
