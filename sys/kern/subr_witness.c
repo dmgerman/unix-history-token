@@ -2551,29 +2551,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|lock
-operator|->
-name|lo_flags
-operator|&
-name|LO_INITIALIZED
-condition|)
-name|panic
-argument_list|(
-literal|"%s: lock (%s) %s is already initialized"
-argument_list|,
-name|__func__
-argument_list|,
-name|class
-operator|->
-name|lc_name
-argument_list|,
-name|lock
-operator|->
-name|lo_name
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 operator|(
 name|lock
 operator|->
@@ -2684,12 +2661,6 @@ name|lo_name
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If we shouldn't watch this lock, then just clear lo_witness. 	 * Otherwise, if witness_cold is set, then it is too early to 	 * enroll this lock, so defer it to witness_initialize() by adding 	 * it to the pending_locks list.  If it is not too early, then enroll 	 * the lock now. 	 */
-name|lock
-operator|->
-name|lo_flags
-operator||=
-name|LO_INITIALIZED
-expr_stmt|;
 if|if
 condition|(
 name|witness_watch
@@ -2790,33 +2761,6 @@ condition|)
 name|panic
 argument_list|(
 literal|"lock (%s) %s destroyed while witness_cold"
-argument_list|,
-name|class
-operator|->
-name|lc_name
-argument_list|,
-name|lock
-operator|->
-name|lo_name
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|lock
-operator|->
-name|lo_flags
-operator|&
-name|LO_INITIALIZED
-operator|)
-operator|==
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"%s: lock (%s) %s is not initialized"
-argument_list|,
-name|__func__
 argument_list|,
 name|class
 operator|->
@@ -2928,13 +2872,6 @@ operator|~
 name|LO_ENROLLPEND
 expr_stmt|;
 block|}
-name|lock
-operator|->
-name|lo_flags
-operator|&=
-operator|~
-name|LO_INITIALIZED
-expr_stmt|;
 block|}
 end_function
 

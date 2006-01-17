@@ -264,29 +264,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|LOCK_CLASS_SPIN_MUTEX
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|LOCK_CLASS_SLEEP_MUTEX
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|LOCK_CLASS_SX
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
 name|LOCK_CLASS_MAX
-value|LOCK_CLASS_SX
+value|(LO_CLASSMASK>> LO_CLASSSHIFT)
 end_define
 
 begin_define
@@ -703,6 +682,16 @@ parameter_list|)
 value|LOCK_LOG_INIT(lo, flags)
 end_define
 
+begin_define
+define|#
+directive|define
+name|lock_initalized
+parameter_list|(
+name|lo
+parameter_list|)
+value|((lo)->lo_flags& LO_INITIALIZED)
+end_define
+
 begin_comment
 comment|/*  * Helpful macros for quickly coming up with assertions with informative  * panic messages.  */
 end_comment
@@ -793,6 +782,48 @@ name|lock_classes
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|lock_init
+parameter_list|(
+name|struct
+name|lock_object
+modifier|*
+name|lock
+parameter_list|,
+name|struct
+name|lock_class
+modifier|*
+name|class
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|type
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|lock_destroy
+parameter_list|(
+name|struct
+name|lock_object
+modifier|*
+name|lock
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -1324,7 +1355,6 @@ name|WITNESS_INIT
 parameter_list|(
 name|lock
 parameter_list|)
-value|((lock)->lo_flags |= LO_INITIALIZED)
 end_define
 
 begin_define
@@ -1334,7 +1364,6 @@ name|WITNESS_DESTROY
 parameter_list|(
 name|lock
 parameter_list|)
-value|((lock)->lo_flags&= ~LO_INITIALIZED)
 end_define
 
 begin_define
