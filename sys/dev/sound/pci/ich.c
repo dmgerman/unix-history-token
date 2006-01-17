@@ -4257,6 +4257,10 @@ name|subdev
 condition|)
 block|{
 case|case
+literal|0x202f161f
+case|:
+comment|/* Gateway 7326GZ */
+case|case
 literal|0x203a161f
 case|:
 comment|/* Gateway 4028GZ */
