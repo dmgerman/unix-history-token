@@ -688,13 +688,13 @@ name|rtype
 condition|)
 block|{
 case|case
-name|R_IA64_DIR64LSB
+name|R_IA_64_DIR64LSB
 case|:
 case|case
-name|R_IA64_FPTR64LSB
+name|R_IA_64_FPTR64LSB
 case|:
 case|case
-name|R_IA64_REL64LSB
+name|R_IA_64_REL64LSB
 case|:
 name|addend
 operator|=
@@ -781,7 +781,7 @@ if|if
 condition|(
 name|rtype
 operator|==
-name|R_IA64_REL64LSB
+name|R_IA_64_REL64LSB
 condition|)
 operator|*
 name|where
@@ -802,11 +802,11 @@ name|rtype
 condition|)
 block|{
 case|case
-name|R_IA64_NONE
+name|R_IA_64_NONE
 case|:
 break|break;
 case|case
-name|R_IA64_DIR64LSB
+name|R_IA_64_DIR64LSB
 case|:
 comment|/* word64 LSB	S + A */
 name|addr
@@ -841,7 +841,7 @@ name|addend
 expr_stmt|;
 break|break;
 case|case
-name|R_IA64_FPTR64LSB
+name|R_IA_64_FPTR64LSB
 case|:
 comment|/* word64 LSB	@fptr(S + A) */
 if|if
@@ -889,12 +889,12 @@ name|addr
 expr_stmt|;
 break|break;
 case|case
-name|R_IA64_REL64LSB
+name|R_IA_64_REL64LSB
 case|:
 comment|/* word64 LSB	BD + A */
 break|break;
 case|case
-name|R_IA64_IPLTLSB
+name|R_IA_64_IPLTLSB
 case|:
 name|addr
 operator|=

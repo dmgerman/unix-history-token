@@ -522,9 +522,9 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
-name|R_IA64_DIR64LSB
+name|R_IA_64_DIR64LSB
 argument_list|,
-name|R_IA64_DIR64LSB
+name|R_IA_64_DIR64LSB
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -532,9 +532,9 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
-name|R_IA64_FPTR64LSB
+name|R_IA_64_FPTR64LSB
 argument_list|,
-name|R_IA64_FPTR64LSB
+name|R_IA_64_FPTR64LSB
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -542,9 +542,9 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
-name|R_IA64_NONE
+name|R_IA_64_NONE
 argument_list|,
-name|R_IA64_NONE
+name|R_IA_64_NONE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -552,9 +552,9 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
-name|R_IA64_REL64LSB
+name|R_IA_64_REL64LSB
 argument_list|,
-name|R_IA64_REL64LSB
+name|R_IA_64_REL64LSB
 argument_list|)
 expr_stmt|;
 end_expr_stmt

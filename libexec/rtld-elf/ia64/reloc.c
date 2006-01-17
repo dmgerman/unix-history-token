@@ -547,7 +547,7 @@ argument_list|)
 condition|)
 block|{
 case|case
-name|R_IA64_REL64LSB
+name|R_IA_64_REL64LSB
 case|:
 comment|/* 		 * We handle rtld's relocations in rtld_start.S 		 */
 if|if
@@ -575,7 +575,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|R_IA64_DIR64LSB
+name|R_IA_64_DIR64LSB
 case|:
 block|{
 specifier|const
@@ -661,7 +661,7 @@ expr_stmt|;
 break|break;
 block|}
 case|case
-name|R_IA64_FPTR64LSB
+name|R_IA_64_FPTR64LSB
 case|:
 block|{
 comment|/* 		 * We have to make sure that all @fptr references to 		 * the same function are identical so that code can 		 * compare function pointers. 		 */
@@ -860,7 +860,7 @@ expr_stmt|;
 break|break;
 block|}
 case|case
-name|R_IA64_IPLTLSB
+name|R_IA_64_IPLTLSB
 case|:
 block|{
 comment|/* 		 * Relocation typically used to populate C++ virtual function 		 * tables. It creates a 128-bit function descriptor at the 		 * specified memory address. 		 */
@@ -991,7 +991,7 @@ expr_stmt|;
 break|break;
 block|}
 case|case
-name|R_IA64_DTPMOD64LSB
+name|R_IA_64_DTPMOD64LSB
 case|:
 block|{
 specifier|const
@@ -1047,7 +1047,7 @@ expr_stmt|;
 break|break;
 block|}
 case|case
-name|R_IA64_DTPREL64LSB
+name|R_IA_64_DTPREL64LSB
 case|:
 block|{
 specifier|const
@@ -1107,7 +1107,7 @@ expr_stmt|;
 break|break;
 block|}
 case|case
-name|R_IA64_TPREL64LSB
+name|R_IA_64_TPREL64LSB
 case|:
 block|{
 specifier|const
@@ -1209,7 +1209,7 @@ expr_stmt|;
 break|break;
 block|}
 case|case
-name|R_IA64_NONE
+name|R_IA_64_NONE
 case|:
 break|break;
 default|default:
@@ -1609,7 +1609,7 @@ operator|->
 name|r_info
 argument_list|)
 operator|==
-name|R_IA64_IPLTLSB
+name|R_IA_64_IPLTLSB
 argument_list|)
 expr_stmt|;
 comment|/* Relocate the @fptr pointing into the PLT. */
@@ -1703,7 +1703,7 @@ operator|->
 name|r_info
 argument_list|)
 operator|==
-name|R_IA64_IPLTLSB
+name|R_IA_64_IPLTLSB
 argument_list|)
 expr_stmt|;
 comment|/* Relocate the @fptr pointing into the PLT. */
@@ -1843,7 +1843,7 @@ operator|->
 name|r_info
 argument_list|)
 operator|==
-name|R_IA64_IPLTLSB
+name|R_IA_64_IPLTLSB
 argument_list|)
 expr_stmt|;
 name|where
