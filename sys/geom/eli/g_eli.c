@@ -2082,8 +2082,6 @@ name|int
 name|err
 decl_stmt|,
 name|error
-decl_stmt|,
-name|flags
 decl_stmt|;
 name|size_t
 name|size
@@ -2490,12 +2488,6 @@ operator|->
 name|crd_len
 operator|=
 name|secsize
-expr_stmt|;
-name|crd
-operator|->
-name|crd_flags
-operator|=
-name|flags
 expr_stmt|;
 name|crd
 operator|->
