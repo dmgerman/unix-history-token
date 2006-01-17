@@ -80,8 +80,7 @@ name|MD4_CTX
 modifier|*
 parameter_list|,
 specifier|const
-name|unsigned
-name|char
+name|void
 modifier|*
 parameter_list|,
 name|unsigned
@@ -170,8 +169,7 @@ modifier|*
 name|MD4Data
 parameter_list|(
 specifier|const
-name|unsigned
-name|char
+name|void
 modifier|*
 parameter_list|,
 name|unsigned

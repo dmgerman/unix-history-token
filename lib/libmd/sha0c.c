@@ -311,7 +311,7 @@ name|SHA_Update
 parameter_list|(
 name|c
 parameter_list|,
-name|data
+name|in
 parameter_list|,
 name|len
 parameter_list|)
@@ -320,10 +320,9 @@ modifier|*
 name|c
 decl_stmt|;
 specifier|const
-name|unsigned
-name|char
+name|void
 modifier|*
-name|data
+name|in
 decl_stmt|;
 name|size_t
 name|len
@@ -344,6 +343,14 @@ name|sc
 decl_stmt|;
 name|u_int32_t
 name|l
+decl_stmt|;
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|data
+init|=
+name|in
 decl_stmt|;
 if|if
 condition|(

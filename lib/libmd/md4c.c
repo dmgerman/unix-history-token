@@ -589,7 +589,7 @@ name|MD4Update
 parameter_list|(
 name|context
 parameter_list|,
-name|input
+name|in
 parameter_list|,
 name|inputLen
 parameter_list|)
@@ -599,10 +599,9 @@ name|context
 decl_stmt|;
 comment|/* context */
 specifier|const
-name|unsigned
-name|char
+name|void
 modifier|*
-name|input
+name|in
 decl_stmt|;
 comment|/* input block */
 name|unsigned
@@ -618,6 +617,14 @@ decl_stmt|,
 name|idx
 decl_stmt|,
 name|partLen
+decl_stmt|;
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|input
+init|=
+name|in
 decl_stmt|;
 comment|/* Compute number of bytes mod 64 */
 name|idx

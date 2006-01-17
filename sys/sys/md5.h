@@ -80,8 +80,7 @@ name|MD5_CTX
 modifier|*
 parameter_list|,
 specifier|const
-name|unsigned
-name|char
+name|void
 modifier|*
 parameter_list|,
 name|unsigned
@@ -160,8 +159,7 @@ modifier|*
 name|MD5Data
 parameter_list|(
 specifier|const
-name|unsigned
-name|char
+name|void
 modifier|*
 parameter_list|,
 name|unsigned

@@ -480,8 +480,7 @@ modifier|*
 name|MDXData
 parameter_list|(
 specifier|const
-name|unsigned
-name|char
+name|void
 modifier|*
 name|data
 parameter_list|,

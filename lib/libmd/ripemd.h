@@ -137,8 +137,7 @@ modifier|*
 name|c
 parameter_list|,
 specifier|const
-name|unsigned
-name|char
+name|void
 modifier|*
 name|data
 parameter_list|,
@@ -218,8 +217,7 @@ modifier|*
 name|RIPEMD160_Data
 parameter_list|(
 specifier|const
-name|unsigned
-name|char
+name|void
 modifier|*
 parameter_list|,
 name|unsigned

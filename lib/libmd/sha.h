@@ -137,8 +137,7 @@ modifier|*
 name|c
 parameter_list|,
 specifier|const
-name|unsigned
-name|char
+name|void
 modifier|*
 name|data
 parameter_list|,
@@ -218,8 +217,7 @@ modifier|*
 name|SHA_Data
 parameter_list|(
 specifier|const
-name|unsigned
-name|char
+name|void
 modifier|*
 parameter_list|,
 name|unsigned
@@ -251,8 +249,7 @@ modifier|*
 name|c
 parameter_list|,
 specifier|const
-name|unsigned
-name|char
+name|void
 modifier|*
 name|data
 parameter_list|,
@@ -332,8 +329,7 @@ modifier|*
 name|SHA1_Data
 parameter_list|(
 specifier|const
-name|unsigned
-name|char
+name|void
 modifier|*
 parameter_list|,
 name|unsigned

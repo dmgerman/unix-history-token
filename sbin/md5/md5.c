@@ -286,8 +286,7 @@ name|Data
 function_decl|)
 parameter_list|(
 specifier|const
-name|unsigned
-name|char
+name|void
 modifier|*
 parameter_list|,
 name|unsigned

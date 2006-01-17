@@ -1574,10 +1574,9 @@ modifier|*
 name|ctx
 parameter_list|,
 specifier|const
-name|unsigned
-name|char
+name|void
 modifier|*
-name|src
+name|in
 parameter_list|,
 name|size_t
 name|len
@@ -1591,6 +1590,14 @@ index|]
 decl_stmt|;
 name|uint32_t
 name|r
+decl_stmt|;
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|src
+init|=
+name|in
 decl_stmt|;
 comment|/* Number of bytes left in the buffer from previous updates */
 name|r
