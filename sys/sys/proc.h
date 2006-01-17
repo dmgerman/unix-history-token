@@ -540,7 +540,7 @@ name|turnstile
 modifier|*
 name|td_blocked
 decl_stmt|;
-comment|/* (j) Lock process is blocked on. */
+comment|/* (j) Lock thread is blocked on. */
 specifier|const
 name|char
 modifier|*
