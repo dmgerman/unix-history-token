@@ -5934,7 +5934,7 @@ name|po
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * If this process is the target of a PMC, check if the new 		 * credentials are compatible with the owner's permissions. 		 */
+comment|/* 		 * If the process being exec'ed is not the target of any 		 * PMC, we are done. 		 */
 if|if
 condition|(
 operator|(
@@ -5950,8 +5950,21 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|freepath
+condition|)
+name|FREE
+argument_list|(
+name|freepath
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 break|break;
-comment|/* 		 * Log the exec event to all monitoring owners.  Skip 		 * owners who have already recieved the event because 		 * the have system sampling PMCs active. 		 */
+block|}
+comment|/* 		 * Log the exec event to all monitoring owners.  Skip 		 * owners who have already recieved the event because 		 * they had system sampling PMCs active. 		 */
 for|for
 control|(
 name|ri
