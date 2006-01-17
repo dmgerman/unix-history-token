@@ -427,6 +427,14 @@ operator|)
 name|a
 expr_stmt|;
 comment|/* UNUSED */
+if|if
+condition|(
+name|mine
+operator|->
+name|buffer
+operator|!=
+name|NULL
+condition|)
 name|free
 argument_list|(
 name|mine
