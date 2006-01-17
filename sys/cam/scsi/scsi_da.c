@@ -616,7 +616,7 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
-comment|/* 		 * Doesn't like the synchronize cache command. 		 */
+comment|/* 		 * Doesn't like the synchronize cache command. 		 * Reported by: Blaz Zupan<blaz@gold.amis.net> 		 */
 block|{
 name|T_DIRECT
 block|,
@@ -643,6 +643,24 @@ block|,
 name|quantum
 block|,
 literal|"LPS525S"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
+comment|/* 		 * Doesn't like the synchronize cache command. 		 * Reported by: walter@pelissero.de 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+name|quantum
+block|,
+literal|"LPS540S"
 block|,
 literal|"*"
 block|}
@@ -685,6 +703,24 @@ block|}
 block|,
 comment|/*quirks*/
 name|DA_Q_NO_6_BYTE
+block|}
+block|,
+block|{
+comment|/* 		 * Doesn't like the synchronize cache command. 		 * Reported by: walter@pelissero.de 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"CONNER"
+block|,
+literal|"CP3500*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
@@ -883,7 +919,61 @@ name|SIP_MEDIA_REMOVABLE
 block|,
 literal|"FL"
 block|,
-literal|"NexIA+*"
+literal|"Nex*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
+comment|/* 		 * ZICPlay USB MP3 Player with FM 		 * PR: kern/75057 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"ACTIONS*"
+block|,
+literal|"USB DISK*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
+comment|/* 		 * TEAC USB floppy mechanisms 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"TEAC"
+block|,
+literal|"FD-05*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
+comment|/* 		 * Kingston DataTraveler II+ USB Pen-Drive. 		 * Reported by: Pawel Jakub Dawidek<pjd@FreeBSD.org> 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"Kingston"
+block|,
+literal|"DataTraveler II+"
 block|,
 literal|"*"
 block|}
