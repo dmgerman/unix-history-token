@@ -1619,8 +1619,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|SK_IMTIMER_TICKS
-value|54
+name|SK_IMTIMER_TICKS_GENESIS
+value|53
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_IMTIMER_TICKS_YUKON
+value|78
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_IMTIMER_TICKS_YUKON_EC
+value|128
 end_define
 
 begin_define
@@ -1629,8 +1643,10 @@ directive|define
 name|SK_IM_USECS
 parameter_list|(
 name|x
+parameter_list|,
+name|t
 parameter_list|)
-value|((x) * SK_IMTIMER_TICKS)
+value|((x) * (t))
 end_define
 
 begin_define
@@ -7874,6 +7890,9 @@ name|sk_intrmask
 decl_stmt|;
 name|int
 name|sk_int_mod
+decl_stmt|;
+name|int
+name|sk_int_ticks
 decl_stmt|;
 name|struct
 name|sk_if_softc

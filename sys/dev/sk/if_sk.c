@@ -6259,7 +6259,33 @@ argument_list|,
 name|SK_RAMCTL_UNRESET
 argument_list|)
 expr_stmt|;
-comment|/*          * Configure interrupt moderation. The moderation timer 	 * defers interrupts specified in the interrupt moderation 	 * timer mask based on the timeout specified in the interrupt 	 * moderation timer init register. Each bit in the timer 	 * register represents 18.825ns, so to specify a timeout in 	 * microseconds, we have to multiply by 54. 	 */
+comment|/*          * Configure interrupt moderation. The moderation timer 	 * defers interrupts specified in the interrupt moderation 	 * timer mask based on the timeout specified in the interrupt 	 * moderation timer init register. Each bit in the timer 	 * register represents one tick, so to specify a timeout in 	 * microseconds, we have to multiply by the correct number of 	 * ticks-per-microsecond. 	 */
+switch|switch
+condition|(
+name|sc
+operator|->
+name|sk_type
+condition|)
+block|{
+case|case
+name|SK_GENESIS
+case|:
+name|sc
+operator|->
+name|sk_int_ticks
+operator|=
+name|SK_IMTIMER_TICKS_GENESIS
+expr_stmt|;
+break|break;
+default|default:
+name|sc
+operator|->
+name|sk_int_ticks
+operator|=
+name|SK_IMTIMER_TICKS_YUKON
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|bootverbose
@@ -6288,6 +6314,10 @@ argument_list|(
 name|sc
 operator|->
 name|sk_int_mod
+argument_list|,
+name|sc
+operator|->
+name|sk_int_ticks
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -13060,6 +13090,10 @@ argument_list|(
 name|sc
 operator|->
 name|sk_int_mod
+argument_list|,
+name|sc
+operator|->
+name|sk_int_ticks
 argument_list|)
 condition|)
 block|{
@@ -13074,6 +13108,10 @@ argument_list|(
 name|sc
 operator|->
 name|sk_int_mod
+argument_list|,
+name|sc
+operator|->
+name|sk_int_ticks
 argument_list|)
 argument_list|)
 expr_stmt|;
