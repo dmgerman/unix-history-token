@@ -4098,17 +4098,6 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pp
-operator|!=
-name|NULL
-condition|)
-name|g_destroy_provider
-argument_list|(
-name|pp
-argument_list|)
-expr_stmt|;
 name|g_destroy_geom
 argument_list|(
 name|gp
