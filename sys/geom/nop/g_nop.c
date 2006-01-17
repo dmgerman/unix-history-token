@@ -411,6 +411,13 @@ operator|->
 name|sc_failprob
 condition|)
 block|{
+name|G_NOP_LOGREQ
+argument_list|(
+name|bp
+argument_list|,
+literal|"Returning EIO."
+argument_list|)
+expr_stmt|;
 name|g_io_deliver
 argument_list|(
 name|bp
