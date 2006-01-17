@@ -1054,6 +1054,14 @@ argument_list|,
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;
+name|LIST_INIT
+argument_list|(
+operator|&
+name|thread0
+operator|.
+name|td_contested
+argument_list|)
+expr_stmt|;
 name|thread0
 operator|.
 name|td_turnstile

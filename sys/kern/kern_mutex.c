@@ -4105,15 +4105,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* Setup thread0 so that mutexes work. */
-name|LIST_INIT
-argument_list|(
-operator|&
-name|thread0
-operator|.
-name|td_contested
-argument_list|)
-expr_stmt|;
 comment|/* Setup turnstiles so that sleep mutexes work. */
 name|init_turnstiles
 argument_list|()
