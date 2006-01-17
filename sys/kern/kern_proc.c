@@ -5065,6 +5065,19 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|p
+operator|->
+name|p_ucred
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"process credential is NULL for non-NEW proc"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 			 * Show a user only appropriate processes. 			 */
 if|if
 condition|(
@@ -5094,12 +5107,6 @@ name|KERN_PROC_GID
 case|:
 if|if
 condition|(
-name|p
-operator|->
-name|p_ucred
-operator|==
-name|NULL
-operator|||
 name|p
 operator|->
 name|p_ucred
@@ -5163,12 +5170,6 @@ name|KERN_PROC_RGID
 case|:
 if|if
 condition|(
-name|p
-operator|->
-name|p_ucred
-operator|==
-name|NULL
-operator|||
 name|p
 operator|->
 name|p_ucred
@@ -5322,12 +5323,6 @@ condition|(
 name|p
 operator|->
 name|p_ucred
-operator|==
-name|NULL
-operator|||
-name|p
-operator|->
-name|p_ucred
 operator|->
 name|cr_uid
 operator|!=
@@ -5353,12 +5348,6 @@ name|KERN_PROC_RUID
 case|:
 if|if
 condition|(
-name|p
-operator|->
-name|p_ucred
-operator|==
-name|NULL
-operator|||
 name|p
 operator|->
 name|p_ucred
