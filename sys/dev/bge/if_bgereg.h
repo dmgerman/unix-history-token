@@ -12108,6 +12108,15 @@ name|char
 modifier|*
 name|bge_vpd_readonly
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
+name|int
+name|rxcycles
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* DEVICE_POLLING */
 block|}
 struct|;
 end_struct
