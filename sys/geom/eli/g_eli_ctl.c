@@ -3307,6 +3307,24 @@ argument_list|,
 name|param
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|prov
+operator|==
+name|NULL
+condition|)
+block|{
+name|G_ELI_DEBUG
+argument_list|(
+literal|0
+argument_list|,
+literal|"No 'arg%d' argument."
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|sc
 operator|=
 name|g_eli_find_device
