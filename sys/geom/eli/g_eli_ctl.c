@@ -808,7 +808,7 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-name|u_int
+name|int
 name|i
 decl_stmt|;
 name|g_topology_assert
@@ -938,9 +938,6 @@ literal|0
 init|;
 name|i
 operator|<
-operator|(
-name|u_int
-operator|)
 operator|*
 name|nargs
 condition|;
@@ -957,7 +954,7 @@ argument_list|(
 name|param
 argument_list|)
 argument_list|,
-literal|"arg%u"
+literal|"arg%d"
 argument_list|,
 name|i
 argument_list|)
@@ -982,7 +979,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"No 'arg%u' argument."
+literal|"No 'arg%d' argument."
 argument_list|,
 name|i
 argument_list|)
@@ -3293,7 +3290,7 @@ argument_list|(
 name|param
 argument_list|)
 argument_list|,
-literal|"arg%u"
+literal|"arg%d"
 argument_list|,
 name|i
 argument_list|)
@@ -3343,7 +3340,7 @@ condition|)
 block|{
 name|G_ELI_DEBUG
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 literal|"No such provider: %s."
 argument_list|,
