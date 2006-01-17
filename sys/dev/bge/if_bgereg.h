@@ -12477,6 +12477,15 @@ name|char
 modifier|*
 name|bge_vpd_readonly
 decl_stmt|;
+name|u_long
+name|bge_rx_discards
+decl_stmt|;
+name|u_long
+name|bge_tx_discards
+decl_stmt|;
+name|u_long
+name|bge_tx_collisions
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
