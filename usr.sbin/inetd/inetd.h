@@ -212,20 +212,11 @@ name|int
 name|se_numchild
 decl_stmt|;
 comment|/* current number of children */
-name|int
-name|se_free
-decl_stmt|;
-comment|/* free when numchild == 0 */
-ifdef|#
-directive|ifdef
-name|SANITY_CHECK
 name|pid_t
 modifier|*
 name|se_pids
 decl_stmt|;
 comment|/* array of child pids */
-endif|#
-directive|endif
 name|char
 modifier|*
 name|se_user
@@ -607,120 +598,6 @@ comment|/* function which performs it */
 block|}
 struct|;
 end_struct
-
-begin_function_decl
-name|void
-name|watch
-parameter_list|(
-name|short
-parameter_list|,
-name|uintptr_t
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|WATCH_SOCK
-parameter_list|(
-name|fd
-parameter_list|,
-name|data
-parameter_list|)
-value|watch(EVFILT_READ, fd, data, 0, 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|UNWATCH_SOCK
-parameter_list|(
-name|fd
-parameter_list|,
-name|data
-parameter_list|)
-value|watch(EVFILT_READ, fd, data, 0, 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WATCH_SIG
-parameter_list|(
-name|sig
-parameter_list|,
-name|data
-parameter_list|)
-value|watch(EVFILT_SIGNAL, sig, data, 0, 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|UNWATCH_SIG
-parameter_list|(
-name|sig
-parameter_list|,
-name|data
-parameter_list|)
-value|watch(EVFILT_SIGNAL, sig, data, 0, 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WATCH_PROC
-parameter_list|(
-name|proc
-parameter_list|,
-name|data
-parameter_list|)
-value|watch(EVFILT_PROC, proc, data, NOTE_EXIT, 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|UNWATCH_PROC
-parameter_list|(
-name|proc
-parameter_list|,
-name|data
-parameter_list|)
-value|watch(EVFILT_PROC, proc, data, NOTE_EXIT, 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WATCH_FD
-parameter_list|(
-name|fd
-parameter_list|,
-name|data
-parameter_list|)
-value|watch(EVFILT_VNODE, fd, data, NOTE_DELETE|NOTE_WRITE|NOTE_EXTEND|NOTE_RENAME, 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|UNWATCH_FD
-parameter_list|(
-name|fd
-parameter_list|,
-name|data
-parameter_list|)
-value|watch(EVFILT_VNODE, fd, data, NOTE_DELETE|NOTE_WRITE|NOTE_EXTEND|NOTE_RENAME, 0)
-end_define
 
 end_unit
 
