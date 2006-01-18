@@ -4746,10 +4746,9 @@ name|memsz
 argument_list|,
 literal|0
 argument_list|,
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|sc
@@ -5747,11 +5746,10 @@ comment|/*flags*/
 literal|0
 argument_list|,
 comment|/*lockfunc*/
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
 comment|/*lockarg*/
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|sc
