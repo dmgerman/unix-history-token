@@ -600,17 +600,13 @@ operator|!=
 literal|0xffff
 condition|)
 block|{
-if|if
-condition|(
+name|printf
+argument_list|(
+literal|"satacap=0x%04x\n"
+argument_list|,
 name|parm
 operator|->
 name|satacapabilities
-operator|&
-name|ATA_SATA_GEN1
-condition|)
-name|printf
-argument_list|(
-literal|"Serial ATA v1.0\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -624,6 +620,26 @@ condition|)
 name|printf
 argument_list|(
 literal|"Serial ATA II\n"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|parm
+operator|->
+name|satacapabilities
+operator|&
+name|ATA_SATA_GEN1
+condition|)
+name|printf
+argument_list|(
+literal|"Serial ATA v1.0\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"Unknown serial ATA version\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -748,6 +764,20 @@ name|parm
 operator|->
 name|satacapabilities
 operator|&
+name|ATA_SATA_GEN2
+condition|)
+name|printf
+argument_list|(
+literal|"Serial ATA II\n"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|parm
+operator|->
+name|satacapabilities
+operator|&
 name|ATA_SATA_GEN1
 condition|)
 name|printf
@@ -755,17 +785,10 @@ argument_list|(
 literal|"Serial ATA v1.0\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|parm
-operator|->
-name|satacapabilities
-operator|&
-name|ATA_SATA_GEN2
-condition|)
+else|else
 name|printf
 argument_list|(
-literal|"Serial ATA II\n"
+literal|"Unknown serial ATA version\n"
 argument_list|)
 expr_stmt|;
 block|}
