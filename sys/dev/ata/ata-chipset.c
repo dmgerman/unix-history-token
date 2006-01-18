@@ -18000,7 +18000,7 @@ literal|0
 block|,
 name|PRMIO
 block|,
-name|PRCMBO2
+name|PRSATA2
 block|,
 name|ATA_SA150
 block|,
@@ -18042,7 +18042,7 @@ literal|0
 block|,
 name|PRMIO
 block|,
-name|PRCMBO2
+name|PRSATA2
 block|,
 name|ATA_SA300
 block|,
