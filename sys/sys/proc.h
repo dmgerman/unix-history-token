@@ -737,6 +737,15 @@ name|u_int
 name|td_critnest
 decl_stmt|;
 comment|/* (k*) Critical section nest level. */
+name|char
+name|td_name
+index|[
+name|MAXCOMLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* (*) Thread name. */
 name|struct
 name|mdthread
 name|td_md
