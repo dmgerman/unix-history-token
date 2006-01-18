@@ -1395,12 +1395,9 @@ name|IEEE80211_IOC_SCAN_REQ
 value|23
 end_define
 
-begin_define
-define|#
-directive|define
-name|IEEE80211_IOC_SCAN_RESULTS
-value|24
-end_define
+begin_comment
+comment|/* 24 was IEEE80211_IOC_SCAN_RESULTS */
+end_comment
 
 begin_define
 define|#
@@ -1787,8 +1784,19 @@ begin_comment
 comment|/* packet bursting */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_SCAN_RESULTS
+value|76
+end_define
+
 begin_comment
-comment|/*  * Scan result data returned for IEEE80211_IOC_SCAN_RESULTS.  */
+comment|/* get scan results */
+end_comment
+
+begin_comment
+comment|/*  * Scan result data returned for IEEE80211_IOC_SCAN_RESULTS.  * Each result is a fixed size structure followed by a variable  * length SSID and one or more variable length information elements.  * The size of each variable length item is found in the fixed  * size structure and the entire length of the record is specified  * in isr_len.  Result records are rounded to a multiple of 4 bytes.  */
 end_comment
 
 begin_struct
@@ -1800,6 +1808,10 @@ name|isr_len
 decl_stmt|;
 comment|/* length (mult of 4) */
 name|u_int16_t
+name|isr_ie_len
+decl_stmt|;
+comment|/* IE length */
+name|u_int16_t
 name|isr_freq
 decl_stmt|;
 comment|/* MHz */
@@ -1807,10 +1819,10 @@ name|u_int16_t
 name|isr_flags
 decl_stmt|;
 comment|/* channel flags */
-name|u_int8_t
+name|int8_t
 name|isr_noise
 decl_stmt|;
-name|u_int8_t
+name|int8_t
 name|isr_rssi
 decl_stmt|;
 name|u_int8_t
@@ -1845,13 +1857,9 @@ name|isr_ssid_len
 decl_stmt|;
 comment|/* SSID length */
 name|u_int8_t
-name|isr_ie_len
-decl_stmt|;
-comment|/* IE length */
-name|u_int8_t
 name|isr_pad
 index|[
-literal|5
+literal|8
 index|]
 decl_stmt|;
 comment|/* variable length SSID followed by IE data */
