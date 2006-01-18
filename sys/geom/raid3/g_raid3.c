@@ -13196,17 +13196,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|buf
-operator|!=
-name|NULL
-condition|)
-name|g_free
-argument_list|(
-name|buf
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
