@@ -383,7 +383,9 @@ comment|/*  * Try to forward a packet based on the destination address.  * This 
 end_comment
 
 begin_function
-name|int
+name|struct
+name|mbuf
+modifier|*
 name|ip_fastforward
 parameter_list|(
 name|struct
@@ -461,7 +463,7 @@ operator|!
 name|ipforwarding
 condition|)
 return|return
-literal|0
+name|m
 return|;
 name|M_ASSERTVALID
 argument_list|(
@@ -542,7 +544,7 @@ name|ips_toosmall
 operator|++
 expr_stmt|;
 return|return
-literal|1
+name|NULL
 return|;
 comment|/* mbuf already free'd */
 block|}
@@ -628,7 +630,7 @@ name|hlen
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|ipstat
@@ -637,8 +639,9 @@ name|ips_badhlen
 operator|++
 expr_stmt|;
 return|return
-literal|1
+name|NULL
 return|;
+comment|/* mbuf already free'd */
 block|}
 name|ip
 operator|=
@@ -883,9 +886,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-return|return
-literal|1
-return|;
+goto|goto
+name|drop
+goto|;
 endif|#
 directive|endif
 comment|/* 	 * Step 2: fallback conditions to normal ip_input path processing 	 */
@@ -914,7 +917,7 @@ operator|==
 literal|1
 condition|)
 return|return
-literal|0
+name|m
 return|;
 elseif|else
 if|if
@@ -938,8 +941,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+name|NULL
 return|;
+comment|/* mbuf already free'd */
 block|}
 comment|/* else ignore IP options and continue */
 block|}
@@ -1039,7 +1043,7 @@ operator|==
 name|INADDR_ANY
 condition|)
 return|return
-literal|0
+name|m
 return|;
 comment|/* 	 * Is it for a local address on this host? 	 */
 if|if
@@ -1052,7 +1056,7 @@ name|ip_dst
 argument_list|)
 condition|)
 return|return
-literal|0
+name|m
 return|;
 name|ipstat
 operator|.
@@ -1135,9 +1139,9 @@ name|m
 operator|==
 name|NULL
 condition|)
-return|return
-literal|1
-return|;
+goto|goto
+name|drop
+goto|;
 name|M_ASSERTVALID
 argument_list|(
 name|m
@@ -1253,8 +1257,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+name|NULL
 return|;
+comment|/* mbuf already free'd */
 block|}
 comment|/* 	 * Decrement the TTL and incrementally change the IP header checksum. 	 * Don't bother doing this with hw checksum offloading, it's faster 	 * doing it right here. 	 */
 name|ip
@@ -1330,7 +1335,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-literal|1
+name|NULL
 return|;
 comment|/* icmp unreach already sent */
 name|ifp
@@ -1392,7 +1397,7 @@ name|NULL
 condition|)
 block|{
 goto|goto
-name|consumed
+name|drop
 goto|;
 block|}
 name|M_ASSERTVALID
@@ -1526,7 +1531,7 @@ name|ro_rt
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|m
 return|;
 block|}
 comment|/* 		 * Redo route lookup with new destination address 		 */
@@ -1614,7 +1619,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-literal|1
+name|NULL
 return|;
 comment|/* icmp unreach already sent */
 name|ifp
@@ -2083,7 +2088,7 @@ name|ro_rt
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+name|NULL
 return|;
 name|drop
 label|:
@@ -2110,7 +2115,7 @@ name|ro_rt
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+name|NULL
 return|;
 block|}
 end_function

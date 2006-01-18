@@ -7123,10 +7123,16 @@ name|PPP_HDRLEN
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|m
+operator|=
 name|ip_fastforward
 argument_list|(
 name|m
 argument_list|)
+operator|)
+operator|==
+name|NULL
 condition|)
 return|return;
 name|isr
