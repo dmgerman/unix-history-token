@@ -617,6 +617,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|R_IA_64_GPREL32MSB
+value|0x2c
+end_define
+
+begin_comment
+comment|/* word32 MSB	@gprel(S + A) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_IA_64_GPREL32LSB
+value|0x2d
+end_define
+
+begin_comment
+comment|/* word32 LSB	@gprel(S + A) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|R_IA_64_GPREL64MSB
 value|0x2e
 end_define
@@ -755,6 +777,17 @@ end_define
 
 begin_comment
 comment|/* word64 LSB	@fptr(S + A) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_IA_64_PCREL60B
+value|0x48
+end_define
+
+begin_comment
+comment|/* immediate60 form1 S + A - P */
 end_comment
 
 begin_define
@@ -1074,6 +1107,39 @@ end_define
 
 begin_comment
 comment|/* word64 LSB	S + A */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_IA_64_PCREL21BI
+value|0x79
+end_define
+
+begin_comment
+comment|/* immediate21 form1 S + A - P */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_IA_64_PCREL22
+value|0x7a
+end_define
+
+begin_comment
+comment|/* immediate22	S + A - P */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_IA_64_PCREL64I
+value|0x7b
+end_define
+
+begin_comment
+comment|/* immediate64	S + A - P */
 end_comment
 
 begin_define
