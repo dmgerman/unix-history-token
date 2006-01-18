@@ -84,19 +84,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-name|LOCK_DEBUG
-operator|>
-literal|0
-operator|||
-name|defined
-argument_list|(
-name|DDB
-argument_list|)
-end_if
-
 begin_decl_stmt
 name|struct
 name|lock_class
@@ -120,11 +107,6 @@ name|lock_class_sx
 block|, }
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void
