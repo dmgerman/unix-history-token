@@ -1144,7 +1144,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATA_PDC20580
+name|ATA_PDC20771
 value|0x3570105a
 end_define
 
@@ -1174,6 +1174,20 @@ define|#
 directive|define
 name|ATA_PDC40719
 value|0x3515105a
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_PDC40775
+value|0x3d73105a
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_PDC40779
+value|0x3577105a
 end_define
 
 begin_define
@@ -1216,6 +1230,20 @@ define|#
 directive|define
 name|ATA_PDC20622
 value|0x6622105a
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_PDC20624
+value|0x6624105a
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_PDC81518
+value|0x8002105a
 end_define
 
 begin_define
