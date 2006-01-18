@@ -2638,6 +2638,9 @@ operator|++
 expr_stmt|;
 block|}
 comment|/* 		 * See if we belong to the destination multicast group on the 		 * arrival interface. 		 */
+name|IN_MULTI_LOCK
+argument_list|()
+expr_stmt|;
 name|IN_LOOKUP_MULTI
 argument_list|(
 name|ip
@@ -2652,6 +2655,9 @@ name|rcvif
 argument_list|,
 name|inm
 argument_list|)
+expr_stmt|;
+name|IN_MULTI_UNLOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

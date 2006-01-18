@@ -950,6 +950,9 @@ return|return;
 block|}
 block|}
 comment|/* 		 * - Start the timers in all of our membership records 		 *   that the query applies to for the interface on 		 *   which the query arrived excl. those that belong 		 *   to the "all-hosts" group (224.0.0.1). 		 * - Restart any timer that is already running but has 		 *   a value longer than the requested timeout. 		 * - Use the value specified in the query message as 		 *   the maximum timeout. 		 */
+name|IN_MULTI_LOCK
+argument_list|()
+expr_stmt|;
 name|IN_FIRST_MULTI
 argument_list|(
 name|step
@@ -1041,6 +1044,9 @@ name|inm
 argument_list|)
 expr_stmt|;
 block|}
+name|IN_MULTI_UNLOCK
+argument_list|()
+expr_stmt|;
 break|break;
 case|case
 name|IGMP_V1_MEMBERSHIP_REPORT
@@ -1154,6 +1160,9 @@ name|ia_subnet
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If we belong to the group being reported, stop 		 * our timer for that group. 		 */
+name|IN_MULTI_LOCK
+argument_list|()
+expr_stmt|;
 name|IN_LOOKUP_MULTI
 argument_list|(
 name|igmp
@@ -1190,6 +1199,9 @@ operator|=
 name|IGMP_OTHERMEMBER
 expr_stmt|;
 block|}
+name|IN_MULTI_UNLOCK
+argument_list|()
+expr_stmt|;
 break|break;
 block|}
 comment|/* 	 * Pass all valid IGMP packets up to any process(es) listening 	 * on a raw IGMP socket. 	 */
@@ -1213,12 +1225,9 @@ modifier|*
 name|inm
 parameter_list|)
 block|{
-name|int
-name|s
-init|=
-name|splnet
+name|IN_MULTI_LOCK_ASSERT
 argument_list|()
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|inm
@@ -1311,11 +1320,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1329,6 +1333,9 @@ modifier|*
 name|inm
 parameter_list|)
 block|{
+name|IN_MULTI_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|inm
@@ -1393,9 +1400,6 @@ name|struct
 name|in_multistep
 name|step
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 comment|/* 	 * Quick check to see if any work needs to be done, in order 	 * to minimize the overhead of fasttimo processing. 	 */
 if|if
 condition|(
@@ -1403,9 +1407,7 @@ operator|!
 name|igmp_timers_are_running
 condition|)
 return|return;
-name|s
-operator|=
-name|splnet
+name|IN_MULTI_LOCK
 argument_list|()
 expr_stmt|;
 name|igmp_timers_are_running
@@ -1483,10 +1485,8 @@ name|inm
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|IN_MULTI_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1498,12 +1498,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|s
-init|=
-name|splnet
-argument_list|()
-decl_stmt|;
 name|struct
 name|router_info
 modifier|*
@@ -1570,11 +1564,6 @@ argument_list|(
 literal|"[igmp.c,_slowtimo] --> exiting \n"
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1615,6 +1604,9 @@ name|struct
 name|ip_moptions
 name|imo
 decl_stmt|;
+name|IN_MULTI_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 name|MGETHDR
 argument_list|(
 name|m
