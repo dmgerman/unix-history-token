@@ -4604,6 +4604,8 @@ name|cp
 decl_stmt|;
 name|int
 name|len
+decl_stmt|,
+name|ssidmax
 decl_stmt|;
 operator|(
 name|void
@@ -4699,9 +4701,21 @@ name|ieee80211req_scan_result
 argument_list|)
 condition|)
 return|return;
+name|ssidmax
+operator|=
+name|verbose
+condition|?
+name|IEEE80211_NWID_LEN
+else|:
+literal|14
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-32.32s  %-17.17s  %4s %4s  %-5s %3s %4s\n"
+literal|"%-*.*s  %-17.17s  %4s %4s  %-5s %3s %4s\n"
+argument_list|,
+name|ssidmax
+argument_list|,
+name|ssidmax
 argument_list|,
 literal|"SSID"
 argument_list|,
@@ -4756,7 +4770,9 @@ operator|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-32.*s  %s  %3d  %3dM %2d:%-2d  %3d %-4.4s"
+literal|"%-*.*s  %s  %3d  %3dM %2d:%-2d  %3d %-4.4s"
+argument_list|,
+name|ssidmax
 argument_list|,
 name|copy_essid
 argument_list|(
