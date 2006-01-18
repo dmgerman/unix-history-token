@@ -126,23 +126,10 @@ end_comment
 begin_function_decl
 specifier|static
 name|int
-name|ata_begin_transaction
+name|ata_generic_status
 parameter_list|(
-name|struct
-name|ata_request
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|ata_end_transaction
-parameter_list|(
-name|struct
-name|ata_request
-modifier|*
+name|device_t
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -236,6 +223,14 @@ name|ch
 operator|->
 name|hw
 operator|.
+name|status
+operator|=
+name|ata_generic_status
+expr_stmt|;
+name|ch
+operator|->
+name|hw
+operator|.
 name|command
 operator|=
 name|ata_generic_command
@@ -248,7 +243,6 @@ comment|/* must be called with ATA channel locked and state_mtx held */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|ata_begin_transaction
 parameter_list|(
@@ -1047,7 +1041,6 @@ comment|/* must be called with ATA channel locked and state_mtx held */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|ata_end_transaction
 parameter_list|(
@@ -2266,7 +2259,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* must be called with ATA channel locked */
+comment|/* must be called with ATA channel locked and state_mtx held */
 end_comment
 
 begin_function
@@ -3105,6 +3098,66 @@ argument_list|,
 literal|"\20\4ATAPI_SLAVE\3ATAPI_MASTER\2ATA_SLAVE\1ATA_MASTER"
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* must be called with ATA channel locked and state_mtx held */
+end_comment
+
+begin_function
+name|int
+name|ata_generic_status
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|struct
+name|ata_channel
+modifier|*
+name|ch
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|ATA_IDX_INB
+argument_list|(
+name|ch
+argument_list|,
+name|ATA_ALTSTAT
+argument_list|)
+operator|&
+name|ATA_S_BUSY
+condition|)
+block|{
+name|DELAY
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ATA_IDX_INB
+argument_list|(
+name|ch
+argument_list|,
+name|ATA_ALTSTAT
+argument_list|)
+operator|&
+name|ATA_S_BUSY
+condition|)
+return|return
+literal|0
+return|;
+block|}
+return|return
+literal|1
+return|;
 block|}
 end_function
 

@@ -215,17 +215,6 @@ end_comment
 begin_function_decl
 specifier|static
 name|void
-name|ata_interrupt
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|ata_boot_attach
 parameter_list|(
 name|void
@@ -739,6 +728,10 @@ name|r_irq
 argument_list|,
 name|ATA_INTR_FLAGS
 argument_list|,
+operator|(
+name|driver_intr_t
+operator|*
+operator|)
 name|ata_interrupt
 argument_list|,
 name|ch
@@ -1555,8 +1548,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|void
+name|int
 name|ata_interrupt
 parameter_list|(
 name|void
@@ -1591,6 +1583,28 @@ argument_list|)
 expr_stmt|;
 do|do
 block|{
+comment|/* ignore interrupt if its not for us */
+if|if
+condition|(
+name|ch
+operator|->
+name|hw
+operator|.
+name|status
+operator|&&
+operator|!
+name|ch
+operator|->
+name|hw
+operator|.
+name|status
+argument_list|(
+name|ch
+operator|->
+name|dev
+argument_list|)
+condition|)
+break|break;
 comment|/* do we have a running request */
 if|if
 condition|(
@@ -1611,38 +1625,7 @@ argument_list|,
 literal|"interrupt"
 argument_list|)
 expr_stmt|;
-comment|/* ignore interrupt if device is busy */
-if|if
-condition|(
-name|ATA_IDX_INB
-argument_list|(
-name|ch
-argument_list|,
-name|ATA_ALTSTAT
-argument_list|)
-operator|&
-name|ATA_S_BUSY
-condition|)
-block|{
-name|DELAY
-argument_list|(
-literal|100
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ATA_IDX_INB
-argument_list|(
-name|ch
-argument_list|,
-name|ATA_ALTSTAT
-argument_list|)
-operator|&
-name|ATA_S_BUSY
-condition|)
-break|break;
-block|}
-comment|/* check for the right state */
+comment|/* safetycheck for the right state */
 if|if
 condition|(
 name|ch
@@ -1726,7 +1709,9 @@ argument_list|(
 name|request
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|1
+return|;
 block|}
 block|}
 do|while
@@ -1742,6 +1727,9 @@ operator|->
 name|state_mtx
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
