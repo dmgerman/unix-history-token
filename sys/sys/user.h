@@ -370,7 +370,7 @@ value|16
 end_define
 
 begin_comment
-comment|/* size of returned ki_ocomm name */
+comment|/* size of returned thread name */
 end_comment
 
 begin_define
@@ -674,7 +674,7 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-comment|/* command name */
+comment|/* thread name */
 name|char
 name|ki_wmesg
 index|[
