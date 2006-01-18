@@ -3384,6 +3384,7 @@ condition|)
 goto|goto
 name|drop
 goto|;
+elseif|else
 endif|#
 directive|endif
 if|if
