@@ -534,6 +534,39 @@ begin_comment
 comment|/* size of an mbuf cluster */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MJUM4BYTES
+value|(4 * 1024)
+end_define
+
+begin_comment
+comment|/* jumbo cluster 4k */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MJUM9BYTES
+value|(9 * 1024)
+end_define
+
+begin_comment
+comment|/* jumbo cluster 9k */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MJUM16BYTES
+value|(16 * 1024)
+end_define
+
+begin_comment
+comment|/* jumbo cluster 16k */
+end_comment
+
 begin_comment
 comment|/*  * Some macros for units conversion  */
 end_comment
