@@ -7440,6 +7440,8 @@ name|DEVICE_POLLING
 if|if
 condition|(
 name|ifp
+operator|&&
+name|ifp
 operator|->
 name|if_capenable
 operator|&
