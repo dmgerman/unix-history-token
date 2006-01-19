@@ -2849,7 +2849,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|bool
 name|malloc_init_hard
 parameter_list|(
 name|void
@@ -17829,7 +17829,7 @@ end_comment
 begin_function
 specifier|static
 name|__inline
-name|void
+name|bool
 name|malloc_init
 parameter_list|(
 name|void
@@ -17851,15 +17851,23 @@ name|malloc_initialized
 operator|==
 name|false
 condition|)
+return|return
+operator|(
 name|malloc_init_hard
 argument_list|()
-expr_stmt|;
+operator|)
+return|;
+return|return
+operator|(
+name|false
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|bool
 name|malloc_init_hard
 parameter_list|(
 name|void
@@ -18901,14 +18909,17 @@ operator|*
 name|narenas
 argument_list|)
 expr_stmt|;
-comment|/* OOM here is fatal. */
-name|assert
-argument_list|(
+if|if
+condition|(
 name|arenas
-operator|!=
+operator|==
 name|NULL
-argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+name|true
+operator|)
+return|;
 comment|/* 	 * Zero the array.  In practice, this should always be pre-zeroed, 	 * since it was just mmap()ed, but let's be sure. 	 */
 name|memset
 argument_list|(
@@ -18931,17 +18942,20 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* OOM here is fatal. */
-name|assert
-argument_list|(
+if|if
+condition|(
 name|arenas
 index|[
 literal|0
 index|]
-operator|!=
+operator|==
 name|NULL
-argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+name|true
+operator|)
+return|;
 name|malloc_mutex_init
 argument_list|(
 operator|&
@@ -18952,6 +18966,11 @@ name|malloc_initialized
 operator|=
 name|true
 expr_stmt|;
+return|return
+operator|(
+name|false
+operator|)
+return|;
 block|}
 end_function
 
@@ -18984,9 +19003,20 @@ name|arena_t
 modifier|*
 name|arena
 decl_stmt|;
+if|if
+condition|(
 name|malloc_init
 argument_list|()
+condition|)
+block|{
+name|ret
+operator|=
+name|NULL
 expr_stmt|;
+goto|goto
+name|RETURN
+goto|;
+block|}
 if|if
 condition|(
 name|size
@@ -19039,6 +19069,8 @@ name|ret
 operator|=
 name|NULL
 expr_stmt|;
+name|RETURN
+label|:
 if|if
 condition|(
 name|ret
@@ -19085,8 +19117,6 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-name|RETURN
-label|:
 name|UTRACE
 argument_list|(
 literal|0
@@ -19131,9 +19161,17 @@ name|void
 modifier|*
 name|result
 decl_stmt|;
+if|if
+condition|(
 name|malloc_init
 argument_list|()
+condition|)
+name|result
+operator|=
+name|NULL
 expr_stmt|;
+else|else
+block|{
 comment|/* Make sure that alignment is a large enough power of 2. */
 if|if
 condition|(
@@ -19166,7 +19204,8 @@ block|{
 name|malloc_printf
 argument_list|(
 literal|"%s: (malloc) Error in"
-literal|" posix_memalign(%zu, %zu): invalid alignment\n"
+literal|" posix_memalign(%zu, %zu):"
+literal|" invalid alignment\n"
 argument_list|,
 name|_getprogname
 argument_list|()
@@ -19219,6 +19258,7 @@ name|result
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|result
@@ -19318,9 +19358,20 @@ name|arena_t
 modifier|*
 name|arena
 decl_stmt|;
+if|if
+condition|(
 name|malloc_init
 argument_list|()
+condition|)
+block|{
+name|ret
+operator|=
+name|NULL
 expr_stmt|;
+goto|goto
+name|RETURN
+goto|;
+block|}
 if|if
 condition|(
 name|num
@@ -19629,9 +19680,17 @@ block|}
 block|}
 else|else
 block|{
+if|if
+condition|(
 name|malloc_init
 argument_list|()
+condition|)
+name|ret
+operator|=
+name|NULL
 expr_stmt|;
+else|else
+block|{
 name|arena
 operator|=
 name|choose_arena
@@ -19657,6 +19716,7 @@ name|ret
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ret
