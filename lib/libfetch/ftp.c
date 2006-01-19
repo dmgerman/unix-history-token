@@ -1465,11 +1465,25 @@ operator|)
 operator|!=
 name|FTP_OK
 condition|)
+block|{
+if|if
+condition|(
+name|mode
+operator|==
+literal|'S'
+condition|)
+block|{
+comment|/* 			 * Stream mode is supposed to be the default - so 			 * much so that some servers not only do not 			 * support any other mode, but do not support the 			 * MODE command at all. 			 * 			 * If "MODE S" fails, it is unlikely that we 			 * previously succeeded in setting a different 			 * mode.  Therefore, we simply hope that the 			 * server is already in the correct mode, and 			 * silently ignore the failure. 			 */
+block|}
+else|else
+block|{
 return|return
 operator|(
 name|e
 operator|)
 return|;
+block|}
+block|}
 switch|switch
 condition|(
 name|type
