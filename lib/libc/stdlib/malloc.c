@@ -1661,21 +1661,15 @@ begin_comment
 comment|/*  * Try to use brk for chunk-size allocations, due to address space constraints.  */
 end_comment
 
-begin_decl_stmt
-name|void
-modifier|*
-name|brk_base
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Result of first sbrk(0) call. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|void
 modifier|*
-name|brk_prev
+name|brk_base
 decl_stmt|;
 end_decl_stmt
 
@@ -1684,15 +1678,24 @@ comment|/* Current end of brk, or ((void *)-1) if brk is exhausted. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|void
 modifier|*
-name|brk_max
+name|brk_prev
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* Upper limit on brk addresses (may be an over-estimate). */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+modifier|*
+name|brk_max
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -1752,6 +1755,7 @@ comment|/*  * Current chunk that is being used for internal memory allocations. 
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|void
 modifier|*
 name|base_chunk
@@ -1759,6 +1763,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 modifier|*
 name|base_next_addr
@@ -1766,6 +1771,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 modifier|*
 name|base_past_addr
@@ -1777,6 +1783,7 @@ comment|/* Addr immediately past base_chunk. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|chunk_node_t
 modifier|*
 name|base_chunk_nodes
@@ -1788,6 +1795,7 @@ comment|/* LIFO cache of chunk nodes. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|malloc_mutex_t
 name|base_mtx
 decl_stmt|;
@@ -1800,6 +1808,7 @@ name|MALLOC_STATS
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|uint64_t
 name|base_total
 decl_stmt|;
@@ -1902,6 +1911,7 @@ comment|/* Chunk statistics. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|chunk_stats_t
 name|stats_chunks
 decl_stmt|;
@@ -4750,7 +4760,7 @@ comment|/* Generate red-black tree code for chunks. */
 end_comment
 
 begin_expr_stmt
-name|RB_GENERATE
+name|RB_GENERATE_STATIC
 argument_list|(
 name|chunk_tree_s
 argument_list|,
@@ -4908,7 +4918,7 @@ comment|/* Generate red-black tree code for regions. */
 end_comment
 
 begin_expr_stmt
-name|RB_GENERATE
+name|RB_GENERATE_STATIC
 argument_list|(
 name|region_tree_s
 argument_list|,
