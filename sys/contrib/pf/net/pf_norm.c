@@ -4499,7 +4499,13 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|frp
+operator|==
+name|NULL
+condition|)
 block|{
 comment|/* There is a gap between fragments */
 name|DPFPRINTF
