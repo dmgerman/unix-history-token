@@ -3184,7 +3184,7 @@ argument_list|)
 expr_stmt|;
 name|bad
 label|:
-name|nfs_disconnect
+name|nfs4_disconnect
 argument_list|(
 name|nmp
 argument_list|)
@@ -3315,7 +3315,7 @@ name|error
 operator|)
 return|;
 comment|/* 	 * We are now committed to the unmount. 	 */
-name|nfs_disconnect
+name|nfs4_disconnect
 argument_list|(
 name|nmp
 argument_list|)
