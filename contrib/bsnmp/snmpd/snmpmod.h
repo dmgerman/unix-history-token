@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001-2003  *	Fraunhofer Institute for Open Communication Systems (FhG Fokus).  *	All rights reserved.  *  * Author: Harti Brandt<harti@freebsd.org>  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Begemot: bsnmp/snmpd/snmpmod.h,v 1.28 2005/05/23 09:03:59 brandt_h Exp $  *  * SNMP daemon data and functions exported to modules.  */
+comment|/*  * Copyright (c) 2001-2003  *	Fraunhofer Institute for Open Communication Systems (FhG Fokus).  *	All rights reserved.  *  * Author: Harti Brandt<harti@freebsd.org>  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Begemot: bsnmp/snmpd/snmpmod.h,v 1.31 2005/10/04 13:30:36 brandt_h Exp $  *  * SNMP daemon data and functions exported to modules.  */
 end_comment
 
 begin_ifndef
@@ -65,7 +65,7 @@ value|16
 end_define
 
 begin_comment
-comment|/*  * These macros help to handle object lists for SNMP tables. They use  * tail queues to hold the objects in ascending order in the list.  * ordering can be done either on an integer/unsigned field or and asn_oid.  */
+comment|/*  * These macros help to handle object lists for SNMP tables. They use  * tail queues to hold the objects in ascending order in the list.  * ordering can be done either on an integer/unsigned field, an asn_oid  * or an ordering function.  */
 end_comment
 
 begin_define
@@ -81,7 +81,7 @@ name|LINK
 parameter_list|,
 name|INDEX
 parameter_list|)
-value|do {	\ 	__typeof (PTR) _lelem;						\ 									\ 	TAILQ_FOREACH(_lelem, (LIST), LINK)				\ 		if (asn_compare_oid(&_lelem->INDEX,&(PTR)->INDEX)> 0)	\ 			break;						\ 	if (_lelem == NULL)						\ 		TAILQ_INSERT_TAIL((LIST), (PTR), LINK);			\ 	else								\ 		TAILQ_INSERT_BEFORE(_lelem, (PTR), LINK);		\     } while(0)
+value|do {	\ 	__typeof (PTR) _lelem;						\ 									\ 	TAILQ_FOREACH(_lelem, (LIST), LINK)				\ 		if (asn_compare_oid(&_lelem->INDEX,&(PTR)->INDEX)> 0)	\ 			break;						\ 	if (_lelem == NULL)						\ 		TAILQ_INSERT_TAIL((LIST), (PTR), LINK);			\ 	else								\ 		TAILQ_INSERT_BEFORE(_lelem, (PTR), LINK);		\     } while (0)
 end_define
 
 begin_define
@@ -97,7 +97,41 @@ name|LINK
 parameter_list|,
 name|INDEX
 parameter_list|)
-value|do {	\ 	__typeof (PTR) _lelem;						\ 									\ 	TAILQ_FOREACH(_lelem, (LIST), LINK)				\ 		if ((asn_subid_t)_lelem->INDEX> (asn_subid_t)(PTR)->INDEX)\ 			break;						\ 	if (_lelem == NULL)						\ 		TAILQ_INSERT_TAIL((LIST), (PTR), LINK);			\ 	else								\ 		TAILQ_INSERT_BEFORE(_lelem, (PTR), LINK);		\     } while(0)
+value|do {	\ 	__typeof (PTR) _lelem;						\ 									\ 	TAILQ_FOREACH(_lelem, (LIST), LINK)				\ 		if ((asn_subid_t)_lelem->INDEX> (asn_subid_t)(PTR)->INDEX)\ 			break;						\ 	if (_lelem == NULL)						\ 		TAILQ_INSERT_TAIL((LIST), (PTR), LINK);			\ 	else								\ 		TAILQ_INSERT_BEFORE(_lelem, (PTR), LINK);		\     } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INSERT_OBJECT_FUNC_LINK
+parameter_list|(
+name|PTR
+parameter_list|,
+name|LIST
+parameter_list|,
+name|LINK
+parameter_list|,
+name|FUNC
+parameter_list|)
+value|do {		\ 	__typeof (PTR) _lelem;						\ 									\ 	TAILQ_FOREACH(_lelem, (LIST), LINK)				\ 		if ((FUNC)(_lelem, (PTR))> 0)				\ 			break;						\ 	if (_lelem == NULL)						\ 		TAILQ_INSERT_TAIL((LIST), (PTR), LINK);			\ 	else								\ 		TAILQ_INSERT_BEFORE(_lelem, (PTR), LINK);		\     } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INSERT_OBJECT_FUNC_LINK_REV
+parameter_list|(
+name|PTR
+parameter_list|,
+name|LIST
+parameter_list|,
+name|HEAD
+parameter_list|,
+name|LINK
+parameter_list|,
+name|FUNC
+parameter_list|)
+value|do {	\ 	__typeof (PTR) _lelem;						\ 									\ 	TAILQ_FOREACH_REVERSE(_lelem, (LIST), HEAD, LINK)		\ 		if ((FUNC)(_lelem, (PTR))< 0)				\ 			break;						\ 	if (_lelem == NULL)						\ 		TAILQ_INSERT_HEAD((LIST), (PTR), LINK);			\ 	else								\ 		TAILQ_INSERT_AFTER((LIST), _lelem, (PTR), LINK);	\     } while (0)
 end_define
 
 begin_define
@@ -170,6 +204,42 @@ parameter_list|,
 name|INDEX
 parameter_list|)
 value|({	\ 	__typeof (TAILQ_FIRST(LIST)) _lelem;				\ 									\ 	if ((OID)->len - SUB == 0)					\ 		_lelem = TAILQ_FIRST(LIST);				\ 	else								\ 		TAILQ_FOREACH(_lelem, (LIST), LINK)			\ 			if ((OID)->subs[SUB]< (asn_subid_t)_lelem->INDEX)\ 				break;					\ 	(_lelem);							\     })
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIND_OBJECT_FUNC_LINK
+parameter_list|(
+name|LIST
+parameter_list|,
+name|OID
+parameter_list|,
+name|SUB
+parameter_list|,
+name|LINK
+parameter_list|,
+name|FUNC
+parameter_list|)
+value|({		\ 	__typeof (TAILQ_FIRST(LIST)) _lelem;				\ 									\ 	TAILQ_FOREACH(_lelem, (LIST), LINK)				\ 		if ((FUNC)(OID, SUB, _lelem) == 0)			\ 			break;						\ 	(_lelem);							\     })
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEXT_OBJECT_FUNC_LINK
+parameter_list|(
+name|LIST
+parameter_list|,
+name|OID
+parameter_list|,
+name|SUB
+parameter_list|,
+name|LINK
+parameter_list|,
+name|FUNC
+parameter_list|)
+value|({		\ 	__typeof (TAILQ_FIRST(LIST)) _lelem;				\ 									\ 	TAILQ_FOREACH(_lelem, (LIST), LINK)				\ 		if ((FUNC)(OID, SUB, _lelem)< 0)			\ 			break;						\ 	(_lelem);							\     })
 end_define
 
 begin_comment
@@ -306,6 +376,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|INSERT_OBJECT_FUNC_REV
+parameter_list|(
+name|PTR
+parameter_list|,
+name|LIST
+parameter_list|,
+name|HEAD
+parameter_list|,
+name|FUNC
+parameter_list|)
+define|\
+value|INSERT_OBJECT_FUNC_LINK_REV(PTR, LIST, HEAD, link, FUNC)
+end_define
+
+begin_define
+define|#
+directive|define
 name|FIND_OBJECT_OID
 parameter_list|(
 name|LIST
@@ -336,6 +423,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|FIND_OBJECT_FUNC
+parameter_list|(
+name|LIST
+parameter_list|,
+name|OID
+parameter_list|,
+name|SUB
+parameter_list|,
+name|FUNC
+parameter_list|)
+define|\
+value|FIND_OBJECT_FUNC_LINK(LIST, OID, SUB, link, FUNC)
+end_define
+
+begin_define
+define|#
+directive|define
 name|NEXT_OBJECT_OID
 parameter_list|(
 name|LIST
@@ -361,6 +465,23 @@ name|SUB
 parameter_list|)
 define|\
 value|NEXT_OBJECT_INT_LINK_INDEX(LIST, OID, SUB, link, index)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEXT_OBJECT_FUNC
+parameter_list|(
+name|LIST
+parameter_list|,
+name|OID
+parameter_list|,
+name|SUB
+parameter_list|,
+name|FUNC
+parameter_list|)
+define|\
+value|NEXT_OBJECT_FUNC_LINK(LIST, OID, SUB, link, FUNC)
 end_define
 
 begin_struct_decl
@@ -476,7 +597,7 @@ name|char
 modifier|*
 name|comment
 decl_stmt|;
-comment|/* the initialisation function */
+comment|/* the initialization function */
 name|int
 function_decl|(
 modifier|*
@@ -813,6 +934,34 @@ name|void
 modifier|*
 name|timer_start
 parameter_list|(
+name|u_int
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|struct
+name|lmodule
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|timer_start_repeat
+parameter_list|(
+name|u_int
+parameter_list|,
 name|u_int
 parameter_list|,
 name|void

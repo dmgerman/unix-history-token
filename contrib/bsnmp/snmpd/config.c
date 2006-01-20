@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001-2003  *	Fraunhofer Institute for Open Communication Systems (FhG Fokus).  *	All rights reserved.  *  * Author: Harti Brandt<harti@freebsd.org>  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Begemot: bsnmp/snmpd/config.c,v 1.22 2004/08/12 17:09:49 brandt Exp $  *  * Parse configuration file.  */
+comment|/*  * Copyright (c) 2001-2003  *	Fraunhofer Institute for Open Communication Systems (FhG Fokus).  *	All rights reserved.  *  * Author: Harti Brandt<harti@freebsd.org>  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Begemot: bsnmp/snmpd/config.c,v 1.24 2005/10/04 11:21:37 brandt_h Exp $  *  * Parse configuration file.  */
 end_comment
 
 begin_include
@@ -666,6 +666,7 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|col
@@ -711,6 +712,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
 name|snprintf
 argument_list|(
 name|path
@@ -727,6 +729,18 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
+name|col
+operator|=
+name|ptr
+operator|+
+name|strlen
+argument_list|(
+name|ptr
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -3560,7 +3574,7 @@ condition|)
 name|report
 argument_list|(
 literal|"subid too large %#"
-name|PRIx64
+name|QUADXFMT
 argument_list|,
 name|numval
 argument_list|)
@@ -3795,7 +3809,7 @@ condition|)
 name|report
 argument_list|(
 literal|"INTEGER too large %"
-name|PRIu64
+name|QUADFMT
 argument_list|,
 name|numval
 argument_list|)
@@ -4945,7 +4959,7 @@ block|{
 if|if
 condition|(
 name|t
-operator|!=
+operator|==
 name|TOK_ASSIGN
 condition|)
 block|{
@@ -6022,6 +6036,22 @@ operator|=
 name|strlen
 argument_list|(
 name|value
+argument_list|)
+expr_stmt|;
+name|m
+operator|->
+name|perm
+operator|=
+literal|1
+expr_stmt|;
+name|LIST_INSERT_HEAD
+argument_list|(
+operator|&
+name|macros
+argument_list|,
+name|m
+argument_list|,
+name|link
 argument_list|)
 expr_stmt|;
 return|return
