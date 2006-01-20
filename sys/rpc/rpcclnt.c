@@ -1828,6 +1828,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 		 *&thread0 gives us root credentials to ensure sobind 		 * will give us a reserved ephemeral port. 		 */
 name|error
 operator|=
 name|sobind
@@ -1842,7 +1843,8 @@ operator|)
 operator|&
 name|sin
 argument_list|,
-name|td
+operator|&
+name|thread0
 argument_list|)
 expr_stmt|;
 endif|#
