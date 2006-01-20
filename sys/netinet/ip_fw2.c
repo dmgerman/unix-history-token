@@ -18375,6 +18375,11 @@ operator|&
 name|layer3_chain
 argument_list|)
 expr_stmt|;
+name|uma_zdestroy
+argument_list|(
+name|ipfw_dyn_rule_zone
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
