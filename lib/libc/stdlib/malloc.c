@@ -797,7 +797,7 @@ begin_define
 define|#
 directive|define
 name|CACHELINE
-value|((size_t) (1<< CACHELINE_2POW))
+value|((size_t)(1<< CACHELINE_2POW))
 end_define
 
 begin_comment
@@ -2981,7 +2981,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|((void *) ((size_t) (a)& ~chunk_size_mask))
+value|((void *)((uintptr_t)(a)& ~chunk_size_mask))
 end_define
 
 begin_comment
@@ -2996,7 +2996,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|((size_t) (a)& chunk_size_mask)
+value|((size_t)((uintptr_t)(a)& chunk_size_mask))
 end_define
 
 begin_comment
@@ -3331,14 +3331,14 @@ comment|/* Make sure there's enough space for the allocation. */
 if|if
 condition|(
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|base_next_addr
 operator|+
 name|csize
 operator|>
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|base_past_addr
 condition|)
@@ -3411,7 +3411,7 @@ operator|*
 operator|)
 operator|(
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|base_chunk
 operator|+
@@ -3441,7 +3441,7 @@ operator|*
 operator|)
 operator|(
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|base_next_addr
 operator|+
@@ -4709,14 +4709,14 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|a
 operator|->
 name|chunk
 operator|<
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|b
 operator|->
@@ -5070,22 +5070,22 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|ret
 operator|>=
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|brk_base
 operator|&&
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|ret
 operator|<
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|brk_max
 condition|)
@@ -5335,22 +5335,22 @@ name|USE_BRK
 if|if
 condition|(
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|chunk
 operator|>=
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|brk_base
 operator|&&
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|chunk
 operator|<
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|brk_max
 condition|)
@@ -5567,7 +5567,7 @@ operator|*
 operator|)
 operator|(
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|ret
 operator|+
@@ -5587,7 +5587,7 @@ operator|*
 operator|)
 operator|(
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|ret
 operator|+
@@ -5609,7 +5609,7 @@ operator|*
 operator|)
 operator|(
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|ret
 operator|+
@@ -5881,22 +5881,22 @@ name|USE_BRK
 if|if
 condition|(
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|chunk
 operator|>=
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|brk_base
 operator|&&
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|chunk
 operator|<
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|brk_max
 condition|)
@@ -7306,12 +7306,12 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|next
 operator|<
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|arena
 operator|->
@@ -7364,12 +7364,12 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|split_next
 operator|<
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|treg
 condition|)
@@ -7439,12 +7439,12 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|next
 operator|<
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|arena
 operator|->
@@ -7497,12 +7497,12 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|frag_next
 operator|<
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|treg
 condition|)
@@ -7755,12 +7755,12 @@ comment|/* Determine whether frag will be coalesced with. */
 if|if
 condition|(
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|next
 operator|<
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|arena
 operator|->
@@ -7814,12 +7814,12 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|frag_next
 operator|<
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|reg
 condition|)
@@ -7906,12 +7906,12 @@ argument_list|(
 name|a_size
 operator|==
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|reg
 operator|-
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|a
 argument_list|)
@@ -13478,7 +13478,8 @@ condition|)
 block|{
 name|size_t
 name|split_size
-decl_stmt|,
+decl_stmt|;
+name|uintptr_t
 name|p
 decl_stmt|;
 comment|/* 			 * Put this allocation toward the end of reg, since 			 * it is large, and we try to put all large regions at 			 * the end of split regions. 			 */
@@ -13495,7 +13496,7 @@ expr_stmt|;
 name|p
 operator|=
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 operator|&
 operator|(
@@ -13548,7 +13549,7 @@ operator|=
 name|p
 operator|-
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|reg
 expr_stmt|;
@@ -13560,7 +13561,7 @@ condition|(
 operator|(
 operator|(
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 operator|&
 name|reg
@@ -13578,7 +13579,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|size_t
+name|uintptr_t
 name|p
 decl_stmt|;
 comment|/* 				 * reg is unaligned.  Calculate the offset into 				 * reg to actually base the allocation at. 				 */
@@ -13586,7 +13587,7 @@ name|p
 operator|=
 operator|(
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 operator|&
 name|reg
@@ -13608,7 +13609,7 @@ condition|(
 name|p
 operator|-
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 operator|&
 name|reg
@@ -13641,7 +13642,7 @@ operator|=
 name|p
 operator|-
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|reg
 expr_stmt|;
@@ -13728,7 +13729,7 @@ name|assert
 argument_list|(
 operator|(
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 operator|&
 name|reg
@@ -14052,7 +14053,7 @@ name|assert
 argument_list|(
 operator|(
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|ret
 operator|&
@@ -16397,7 +16398,7 @@ block|}
 name|offset
 operator|=
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|ret
 operator|&
@@ -16439,7 +16440,7 @@ operator|*
 operator|)
 operator|(
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|ret
 operator|+
@@ -16475,7 +16476,7 @@ operator|*
 operator|)
 operator|(
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|ret
 operator|+
@@ -16521,7 +16522,7 @@ operator|*
 operator|)
 operator|(
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|ret
 operator|+
@@ -16654,7 +16655,7 @@ name|assert
 argument_list|(
 operator|(
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|ret
 operator|&
@@ -16768,22 +16769,22 @@ name|USE_BRK
 if|if
 condition|(
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|ret
 operator|>=
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|brk_base
 operator|&&
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|ret
 operator|<
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|brk_max
 condition|)
@@ -17539,7 +17540,8 @@ literal|"Pointer size: %u\n"
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|size_t
+name|void
+operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -18611,7 +18613,7 @@ operator|*
 operator|)
 operator|(
 operator|(
-name|size_t
+name|uintptr_t
 operator|)
 name|brk_base
 operator|+
