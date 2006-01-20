@@ -13,6 +13,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|uByte
 name|uhid_graphire_report_descr
 index|[]
@@ -330,6 +331,420 @@ comment|/*    FEATURE (Data,Var,Abs)		*/
 literal|0xc0
 block|,
 comment|/*  END_COLLECTION			*/
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|uByte
+name|uhid_graphire3_4x5_report_descr
+index|[]
+init|=
+block|{
+literal|0x05
+block|,
+literal|0x01
+block|,
+comment|/* USAGE_PAGE (Generic Desktop)	*/
+literal|0x09
+block|,
+literal|0x02
+block|,
+comment|/* USAGE (Mouse)			*/
+literal|0xa1
+block|,
+literal|0x01
+block|,
+comment|/* COLLECTION (Application)		*/
+literal|0x85
+block|,
+literal|0x01
+block|,
+comment|/*   REPORT_ID (1)			*/
+literal|0x09
+block|,
+literal|0x01
+block|,
+comment|/*   USAGE (Pointer)			*/
+literal|0xa1
+block|,
+literal|0x00
+block|,
+comment|/*   COLLECTION (Physical)		*/
+literal|0x05
+block|,
+literal|0x09
+block|,
+comment|/*     USAGE_PAGE (Button)		*/
+literal|0x19
+block|,
+literal|0x01
+block|,
+comment|/*     USAGE_MINIMUM (Button 1)	*/
+literal|0x29
+block|,
+literal|0x03
+block|,
+comment|/*     USAGE_MAXIMUM (Button 3)	*/
+literal|0x15
+block|,
+literal|0x00
+block|,
+comment|/*     LOGICAL_MINIMUM (0)		*/
+literal|0x25
+block|,
+literal|0x01
+block|,
+comment|/*     LOGICAL_MAXIMUM (1)		*/
+literal|0x95
+block|,
+literal|0x03
+block|,
+comment|/*     REPORT_COUNT (3)		*/
+literal|0x75
+block|,
+literal|0x01
+block|,
+comment|/*     REPORT_SIZE (1)		*/
+literal|0x81
+block|,
+literal|0x02
+block|,
+comment|/*     INPUT (Data,Var,Abs)		*/
+literal|0x95
+block|,
+literal|0x01
+block|,
+comment|/*     REPORT_COUNT (1)		*/
+literal|0x75
+block|,
+literal|0x05
+block|,
+comment|/*     REPORT_SIZE (5)		*/
+literal|0x81
+block|,
+literal|0x01
+block|,
+comment|/*     INPUT (Cnst,Ary,Abs)		*/
+literal|0x05
+block|,
+literal|0x01
+block|,
+comment|/*     USAGE_PAGE (Generic Desktop)	*/
+literal|0x09
+block|,
+literal|0x30
+block|,
+comment|/*     USAGE (X)			*/
+literal|0x09
+block|,
+literal|0x31
+block|,
+comment|/*     USAGE (Y)			*/
+literal|0x09
+block|,
+literal|0x38
+block|,
+comment|/*     USAGE (Wheel)			*/
+literal|0x15
+block|,
+literal|0x81
+block|,
+comment|/*     LOGICAL_MINIMUM (-127)	*/
+literal|0x25
+block|,
+literal|0x7f
+block|,
+comment|/*     LOGICAL_MAXIMUM (127)		*/
+literal|0x75
+block|,
+literal|0x08
+block|,
+comment|/*     REPORT_SIZE (8)		*/
+literal|0x95
+block|,
+literal|0x03
+block|,
+comment|/*     REPORT_COUNT (3)		*/
+literal|0x81
+block|,
+literal|0x06
+block|,
+comment|/*     INPUT (Data,Var,Rel)		*/
+literal|0xc0
+block|,
+comment|/*   END_COLLECTION			*/
+literal|0xc0
+block|,
+comment|/* END_COLLECTION			*/
+literal|0x05
+block|,
+literal|0x0d
+block|,
+comment|/* USAGE_PAGE (Digitizers)		*/
+literal|0x09
+block|,
+literal|0x01
+block|,
+comment|/* USAGE (Pointer)			*/
+literal|0xa1
+block|,
+literal|0x01
+block|,
+comment|/* COLLECTION (Applicaption)		*/
+literal|0x85
+block|,
+literal|0x02
+block|,
+comment|/*   REPORT_ID (2)			*/
+literal|0x05
+block|,
+literal|0x0d
+block|,
+comment|/*   USAGE_PAGE (Digitizers)		*/
+literal|0x09
+block|,
+literal|0x01
+block|,
+comment|/*   USAGE (Digitizer)		*/
+literal|0xa1
+block|,
+literal|0x00
+block|,
+comment|/*   COLLECTION (Physical)		*/
+literal|0x09
+block|,
+literal|0x33
+block|,
+comment|/*     USAGE (Touch)			*/
+literal|0x09
+block|,
+literal|0x44
+block|,
+comment|/*     USAGE (Barrel Switch)		*/
+literal|0x09
+block|,
+literal|0x44
+block|,
+comment|/*     USAGE (Barrel Switch)		*/
+literal|0x15
+block|,
+literal|0x00
+block|,
+comment|/*     LOGICAL_MINIMUM (0)		*/
+literal|0x25
+block|,
+literal|0x01
+block|,
+comment|/*     LOGICAL_MAXIMUM (1)		*/
+literal|0x75
+block|,
+literal|0x01
+block|,
+comment|/*     REPORT_SIZE (1)		*/
+literal|0x95
+block|,
+literal|0x03
+block|,
+comment|/*     REPORT_COUNT (3)		*/
+literal|0x81
+block|,
+literal|0x02
+block|,
+comment|/*     INPUT (Data,Var,Abs)		*/
+literal|0x75
+block|,
+literal|0x01
+block|,
+comment|/*     REPORT_SIZE (1)		*/
+literal|0x95
+block|,
+literal|0x02
+block|,
+comment|/*     REPORT_COUNT (2)		*/
+literal|0x81
+block|,
+literal|0x01
+block|,
+comment|/*     INPUT (Cnst,Ary,Abs)		*/
+literal|0x09
+block|,
+literal|0x3c
+block|,
+comment|/*     USAGE (Invert)		*/
+literal|0x09
+block|,
+literal|0x38
+block|,
+comment|/*     USAGE (Transducer Index)	*/
+literal|0x09
+block|,
+literal|0x32
+block|,
+comment|/*     USAGE (In Range)		*/
+literal|0x75
+block|,
+literal|0x01
+block|,
+comment|/*     REPORT_SIZE (1)		*/
+literal|0x95
+block|,
+literal|0x03
+block|,
+comment|/*     REPORT_COUNT (3)		*/
+literal|0x81
+block|,
+literal|0x02
+block|,
+comment|/*     INPUT (Data,Var,Abs)		*/
+literal|0x05
+block|,
+literal|0x01
+block|,
+comment|/*     USAGE_PAGE (Generic Desktop)	*/
+literal|0x09
+block|,
+literal|0x30
+block|,
+comment|/*     USAGE (X)			*/
+literal|0x15
+block|,
+literal|0x00
+block|,
+comment|/*     LOGICAL_MINIMUM (0)		*/
+literal|0x26
+block|,
+literal|0xde
+block|,
+literal|0x27
+block|,
+comment|/*     LOGICAL_MAXIMUM (10206)	*/
+literal|0x75
+block|,
+literal|0x10
+block|,
+comment|/*     REPORT_SIZE (16)		*/
+literal|0x95
+block|,
+literal|0x01
+block|,
+comment|/*     REPORT_COUNT (1)		*/
+literal|0x81
+block|,
+literal|0x02
+block|,
+comment|/*     INPUT (Data,Var,Abs)		*/
+literal|0x09
+block|,
+literal|0x31
+block|,
+comment|/*     USAGE (Y)			*/
+literal|0x26
+block|,
+literal|0xfe
+block|,
+literal|0x1c
+block|,
+comment|/*     LOGICAL_MAXIMUM (7422)	*/
+literal|0x75
+block|,
+literal|0x10
+block|,
+comment|/*     REPORT_SIZE (16)		*/
+literal|0x95
+block|,
+literal|0x01
+block|,
+comment|/*     REPORT_COUNT (1)		*/
+literal|0x81
+block|,
+literal|0x02
+block|,
+comment|/*     INPUT (Data,Var,Abs)		*/
+literal|0x05
+block|,
+literal|0x0d
+block|,
+comment|/*     USAGE_PAGE (Digitizers)	*/
+literal|0x09
+block|,
+literal|0x30
+block|,
+comment|/*     USAGE (Tip Pressure)		*/
+literal|0x26
+block|,
+literal|0xff
+block|,
+literal|0x01
+block|,
+comment|/*     LOGICAL_MAXIMUM (511)		*/
+literal|0x75
+block|,
+literal|0x10
+block|,
+comment|/*     REPORT_SIZE (16)		*/
+literal|0x95
+block|,
+literal|0x01
+block|,
+comment|/*     REPORT_COUNT (1)		*/
+literal|0x81
+block|,
+literal|0x02
+block|,
+comment|/*     INPUT (Data,Var,Abs)		*/
+literal|0xc0
+block|,
+comment|/*   END_COLLECTION			*/
+literal|0x05
+block|,
+literal|0x0d
+block|,
+comment|/*   USAGE_PAGE (Digitizers)		*/
+literal|0x09
+block|,
+literal|0x00
+block|,
+comment|/*   USAGE (Undefined)		*/
+literal|0x85
+block|,
+literal|0x02
+block|,
+comment|/*   REPORT_ID (2)			*/
+literal|0x95
+block|,
+literal|0x01
+block|,
+comment|/*   REPORT_COUNT (1)		*/
+literal|0xb1
+block|,
+literal|0x02
+block|,
+comment|/*   FEATURE (Data,Var,Abs)		*/
+literal|0x09
+block|,
+literal|0x00
+block|,
+comment|/*   USAGE (Undefined)		*/
+literal|0x85
+block|,
+literal|0x03
+block|,
+comment|/*   REPORT_ID (3)			*/
+literal|0x95
+block|,
+literal|0x01
+block|,
+comment|/*   REPORT_COUNT (1)		*/
+literal|0xb1
+block|,
+literal|0x02
+block|,
+comment|/*   FEATURE (Data,Var,Abs)		*/
+literal|0xc0
+comment|/* END_COLLECTION			*/
 block|}
 decl_stmt|;
 end_decl_stmt
