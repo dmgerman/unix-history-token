@@ -37,7 +37,7 @@ begin_define
 define|#
 directive|define
 name|VCHAN_DEFAULT_SPEED
-value|44100
+value|48000
 end_define
 
 begin_decl_stmt
@@ -1630,10 +1630,34 @@ name|r
 operator|!=
 literal|0
 condition|)
+block|{
+comment|/* 					 * Workaround for sb16 running 					 * poorly at 45k / 49k. 					 */
+switch|switch
+condition|(
+name|parent_caps
+operator|->
+name|maxspeed
+condition|)
+block|{
+case|case
+literal|45000
+case|:
+case|case
+literal|49000
+case|:
+name|speed
+operator|=
+literal|44100
+expr_stmt|;
+break|break;
+default|default:
 name|speed
 operator|=
 name|VCHAN_DEFAULT_SPEED
 expr_stmt|;
+break|break;
+block|}
+block|}
 block|}
 comment|/* 			 * Limit speed based on driver caps. 			 * This is supposed to help fixed rate, non-VRA 			 * AC97 cards, but.. (see below) 			 */
 if|if
