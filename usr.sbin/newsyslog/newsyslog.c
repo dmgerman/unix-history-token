@@ -8107,6 +8107,10 @@ modifier|*
 name|pgm_path
 decl_stmt|;
 name|int
+name|errsav
+decl_stmt|,
+name|fcount
+decl_stmt|,
 name|zstatus
 decl_stmt|;
 name|pid_t
@@ -8227,6 +8231,29 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|pgm_name
+operator|=
+name|strrchr
+argument_list|(
+name|pgm_path
+argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pgm_name
+operator|==
+name|NULL
+condition|)
+name|pgm_name
+operator|=
+name|pgm_path
+expr_stmt|;
+else|else
+name|pgm_name
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|zwork
@@ -8271,29 +8298,6 @@ condition|(
 name|noaction
 condition|)
 block|{
-name|pgm_name
-operator|=
-name|strrchr
-argument_list|(
-name|pgm_path
-argument_list|,
-literal|'/'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|pgm_name
-operator|==
-name|NULL
-condition|)
-name|pgm_name
-operator|=
-name|pgm_path
-expr_stmt|;
-else|else
-name|pgm_name
-operator|++
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"\t%s %s\n"
@@ -8316,25 +8320,71 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|fcount
+operator|=
+literal|1
+expr_stmt|;
 name|pidzip
 operator|=
 name|fork
 argument_list|()
 expr_stmt|;
-if|if
+while|while
 condition|(
 name|pidzip
 operator|<
 literal|0
 condition|)
-name|err
+block|{
+comment|/* 		 * The fork failed.  If the failure was due to a temporary 		 * problem, then wait a short time and try it again. 		 */
+name|errsav
+operator|=
+name|errno
+expr_stmt|;
+name|warn
+argument_list|(
+literal|"fork() for `%s %s'"
+argument_list|,
+name|pgm_name
+argument_list|,
+name|zwork
+operator|->
+name|zw_fname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errsav
+operator|!=
+name|EAGAIN
+operator|||
+name|fcount
+operator|>
+literal|5
+condition|)
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"gzip fork"
+literal|"Exiting..."
 argument_list|)
 expr_stmt|;
-elseif|else
+name|sleep
+argument_list|(
+name|fcount
+operator|*
+literal|12
+argument_list|)
+expr_stmt|;
+name|fcount
+operator|++
+expr_stmt|;
+name|pidzip
+operator|=
+name|fork
+argument_list|()
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -8365,9 +8415,13 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s"
+literal|"execl(`%s -f %s')"
 argument_list|,
 name|pgm_path
+argument_list|,
+name|zwork
+operator|->
+name|zw_fname
 argument_list|)
 expr_stmt|;
 block|}
@@ -8391,6 +8445,7 @@ operator|-
 literal|1
 condition|)
 block|{
+comment|/* XXX - should this be a fatal error? */
 name|warn
 argument_list|(
 literal|"%s: waitpid(%d)"
@@ -8411,11 +8466,15 @@ name|zstatus
 argument_list|)
 condition|)
 block|{
-name|warn
+name|warnx
 argument_list|(
-literal|"%s: did not terminate normally"
+literal|"`%s -f %s' did not terminate normally"
 argument_list|,
-name|pgm_path
+name|pgm_name
+argument_list|,
+name|zwork
+operator|->
+name|zw_fname
 argument_list|)
 expr_stmt|;
 return|return;
@@ -8428,11 +8487,15 @@ name|zstatus
 argument_list|)
 condition|)
 block|{
-name|warn
+name|warnx
 argument_list|(
-literal|"%s: terminated with %d (non-zero) status"
+literal|"`%s -f %s' terminated with a non-zero status (%d)"
 argument_list|,
-name|pgm_path
+name|pgm_name
+argument_list|,
+name|zwork
+operator|->
+name|zw_fname
 argument_list|,
 name|WEXITSTATUS
 argument_list|(
@@ -10914,6 +10977,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Change the attributes of a given filename to what was specified in  * the newsyslog.conf entry.  This routine is only called for files  * that newsyslog expects that it has created, and thus it is a fatal  * error if this routine finds that the file does not exist.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -11019,13 +11086,30 @@ if|if
 condition|(
 name|failed
 condition|)
-name|warn
+block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|EPERM
+condition|)
+name|err
 argument_list|(
-literal|"can't chmod %s"
+literal|1
+argument_list|,
+literal|"chmod(%s) in change_attrs"
 argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
+name|warn
+argument_list|(
+literal|"change_attrs couldn't chmod(%s)"
+argument_list|,
+name|fname
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ent
