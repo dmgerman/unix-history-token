@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2004-2005  *	Hartmut Brandt.  *	All rights reserved.  * Copyright (c) 2001-2003  *	Fraunhofer Institute for Open Communication Systems (FhG Fokus).  *	All rights reserved.  *  * Author: Harti Brandt<harti@freebsd.org>  *         Kendy Kutzner  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Begemot: bsnmp/lib/snmpclient.c,v 1.31 2005/05/23 11:10:13 brandt_h Exp $  *  * Support functions for SNMP clients.  */
+comment|/*  * Copyright (c) 2004-2005  *	Hartmut Brandt.  *	All rights reserved.  * Copyright (c) 2001-2003  *	Fraunhofer Institute for Open Communication Systems (FhG Fokus).  *	All rights reserved.  *  * Author: Harti Brandt<harti@freebsd.org>  *         Kendy Kutzner  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Begemot: bsnmp/lib/snmpclient.c,v 1.34 2005/10/04 14:32:42 brandt_h Exp $  *  * Support functions for SNMP clients.  */
 end_comment
 
 begin_include
@@ -87,11 +87,37 @@ directive|include
 file|<netdb.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDINT_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<stdint.h>
 end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|HAVE_INTTYPES_H
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -145,6 +171,50 @@ include|#
 directive|include
 file|"snmppriv.h"
 end_include
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|INT32_MAX
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|INT32_MAX
+value|(0x7fffffff)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|UINT32_MAX
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|UINT32_MAX
+value|(0xffffffff)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* global context */
@@ -2936,7 +3006,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Fetch a table. Returns 0 if ok, -1 on errors.  * This is the synchronuous variant.  */
+comment|/*  * Fetch a table. Returns 0 if ok, -1 on errors.  * This is the synchronous variant.  */
 end_comment
 
 begin_function
@@ -8136,7 +8206,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check the reponse to a SET PDU. We check: - the error status must be 0 -  * the number of bindings must be equal in response and request - the  * syntaxes must be the same in response and request - the OIDs must be the  * same in response and request  */
+comment|/*  * Check the response to a SET PDU. We check: - the error status must be 0 -  * the number of bindings must be equal in response and request - the  * syntaxes must be the same in response and request - the OIDs must be the  * same in response and request  */
 end_comment
 
 begin_function
