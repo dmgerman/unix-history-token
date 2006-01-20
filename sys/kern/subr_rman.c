@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 1998 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright 1998 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *  * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -241,6 +241,8 @@ block|{
 specifier|static
 name|int
 name|once
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -331,7 +333,7 @@ name|rm
 operator|->
 name|rm_mtx
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 name|ENOMEM
@@ -439,7 +441,7 @@ if|if
 condition|(
 name|r
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 name|ENOMEM
@@ -749,7 +751,7 @@ name|bmask
 decl_stmt|;
 name|rv
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|DPRINTF
 argument_list|(
@@ -1186,7 +1188,7 @@ if|if
 condition|(
 name|rv
 operator|==
-literal|0
+name|NULL
 condition|)
 goto|goto
 name|out
@@ -1302,7 +1304,7 @@ if|if
 condition|(
 name|r
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|free
@@ -1314,7 +1316,7 @@ argument_list|)
 expr_stmt|;
 name|rv
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 goto|goto
 name|out
@@ -1641,7 +1643,7 @@ if|if
 condition|(
 name|rv
 operator|==
-literal|0
+name|NULL
 condition|)
 goto|goto
 name|out
@@ -1696,7 +1698,7 @@ name|s
 operator|->
 name|r_sharehead
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|s
@@ -1724,7 +1726,7 @@ name|s
 operator|->
 name|r_sharehead
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|free
@@ -1736,7 +1738,7 @@ argument_list|)
 expr_stmt|;
 name|rv
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 goto|goto
 name|out
@@ -1829,7 +1831,7 @@ argument_list|)
 expr_stmt|;
 name|rv
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 block|}
@@ -1957,7 +1959,7 @@ name|r
 operator|->
 name|r_sharehead
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|r
@@ -2183,7 +2185,7 @@ name|r
 operator|->
 name|r_sharehead
 operator|==
-literal|0
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -2440,7 +2442,7 @@ argument_list|,
 name|r_sharelink
 argument_list|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|free
@@ -2456,7 +2458,7 @@ name|s
 operator|->
 name|r_sharehead
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|s
 operator|->
@@ -3250,6 +3252,12 @@ literal|2
 index|]
 expr_stmt|;
 comment|/* 	 * Find the indexed resource manager 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|rman_mtx
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|rm
@@ -3268,6 +3276,12 @@ literal|0
 condition|)
 break|break;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|rman_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rm
@@ -3373,6 +3387,12 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Find the indexed resource and return it. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|rman_mtx
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|res
@@ -3536,6 +3556,12 @@ name|res
 operator|->
 name|r_flags
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|rman_mtx
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|SYSCTL_OUT
@@ -3558,6 +3584,12 @@ operator|)
 return|;
 block|}
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|rman_mtx
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOENT
