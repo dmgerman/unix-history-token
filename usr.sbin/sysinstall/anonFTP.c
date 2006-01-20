@@ -1279,7 +1279,7 @@ argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
-literal|"chmod 555 %s&& chown root.%s %s"
+literal|"chmod 555 %s&& chown root:%s %s"
 argument_list|,
 name|tconf
 operator|.
@@ -1410,7 +1410,7 @@ argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
-literal|"awk -F: '{if ((substr($1, 1, 1) != \"+\")&& (substr($1, 1, 1) != \"-\")&& ($3< 100)) print $0}' /etc/group> %s/etc/group&& chmod 444 %s/etc/group"
+literal|"awk -F: '!/^#/ {if ((substr($1, 1, 1) != \"+\")&& (substr($1, 1, 1) != \"-\")&& ($3< 100)) printf \"%%s:*:%%s:\\n\", $1, $3}' /etc/group> %s/etc/group&& chmod 444 %s/etc/group"
 argument_list|,
 name|tconf
 operator|.
@@ -1423,7 +1423,7 @@ argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
-literal|"chown -R root.%s %s/pub"
+literal|"chown -R root:%s %s/pub"
 argument_list|,
 name|tconf
 operator|.
