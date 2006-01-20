@@ -727,7 +727,11 @@ name|XPORT_PPB
 block|,
 comment|/* Parallel Port Bus */
 name|XPORT_ATA
+block|,
 comment|/* AT Attachment */
+name|XPORT_SAS
+block|,
+comment|/* Serial Attached SCSI */
 block|}
 name|cam_xport
 typedef|;
@@ -1806,6 +1810,18 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ccb_pathinq_settings_sas
+block|{
+name|u_int32_t
+name|bitrate
+decl_stmt|;
+comment|/* Mbps */
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -1934,6 +1950,10 @@ decl_stmt|;
 name|struct
 name|ccb_pathinq_settings_fc
 name|fc
+decl_stmt|;
+name|struct
+name|ccb_pathinq_settings_sas
+name|sas
 decl_stmt|;
 name|char
 name|ccb_pathinq_settings_opaque
@@ -2627,6 +2647,26 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ccb_trans_settings_sas
+block|{
+name|u_int
+name|valid
+decl_stmt|;
+comment|/* Which fields to honor */
+define|#
+directive|define
+name|CTS_SAS_VALID_SPEED
+value|0x1000
+name|u_int32_t
+name|bitrate
+decl_stmt|;
+comment|/* Mbps */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* Get/Set transfer rate/width/disconnection/tag queueing settings */
 end_comment
@@ -2681,6 +2721,10 @@ decl_stmt|;
 name|struct
 name|ccb_trans_settings_fc
 name|fc
+decl_stmt|;
+name|struct
+name|ccb_trans_settings_sas
+name|sas
 decl_stmt|;
 block|}
 name|xport_specific
