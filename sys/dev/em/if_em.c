@@ -31,7 +31,7 @@ file|<dev/em/if_em.h>
 end_include
 
 begin_comment
-comment|/*********************************************************************  *  Set this to one to display debug statistics                                                     *********************************************************************/
+comment|/*********************************************************************  *  Set this to one to display debug statistics  *********************************************************************/
 end_comment
 
 begin_decl_stmt
@@ -629,7 +629,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*********************************************************************  *  Function prototypes              *********************************************************************/
+comment|/*********************************************************************  *  Function prototypes  *********************************************************************/
 end_comment
 
 begin_function_decl
@@ -1575,7 +1575,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*********************************************************************  *  FreeBSD Device Interface Entry Points                      *********************************************************************/
+comment|/*********************************************************************  *  FreeBSD Device Interface Entry Points  *********************************************************************/
 end_comment
 
 begin_decl_stmt
@@ -2097,7 +2097,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  Device initialization routine  *  *  The attach entry point is called when the driver is being loaded.  *  This routine identifies the type of hardware, allocates all resources   *  and initializes the hardware.       *    *  return 0 on success, positive on failure  *********************************************************************/
+comment|/*********************************************************************  *  Device initialization routine  *  *  The attach entry point is called when the driver is being loaded.  *  This routine identifies the type of hardware, allocates all resources  *  and initializes the hardware.  *  *  return 0 on success, positive on failure  *********************************************************************/
 end_comment
 
 begin_function
@@ -2678,7 +2678,7 @@ name|EM_MASTER_SLAVE
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*  	 * Set the max frame size assuming standard ethernet  	 * sized frames  	 */
+comment|/* 	 * Set the max frame size assuming standard ethernet 	 * sized frames. 	 */
 name|adapter
 operator|->
 name|hw
@@ -2701,7 +2701,7 @@ name|MINIMUM_ETHERNET_PACKET_SIZE
 operator|+
 name|ETHER_CRC_LEN
 expr_stmt|;
-comment|/*  	 * This controls when hardware reports transmit completion  	 * status.  	 */
+comment|/* 	 * This controls when hardware reports transmit completion 	 * status. 	 */
 name|adapter
 operator|->
 name|hw
@@ -3184,7 +3184,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  Device removal routine  *  *  The detach entry point is called when the driver is being removed.  *  This routine stops the adapter and deallocates all the resources  *  that were allocated for driver operation.  *    *  return 0 on success, positive on failure  *********************************************************************/
+comment|/*********************************************************************  *  Device removal routine  *  *  The detach entry point is called when the driver is being removed.  *  This routine stops the adapter and deallocates all the resources  *  that were allocated for driver operation.  *  *  return 0 on success, positive on failure  *********************************************************************/
 end_comment
 
 begin_function
@@ -3541,11 +3541,6 @@ name|ifp
 parameter_list|)
 block|{
 name|struct
-name|mbuf
-modifier|*
-name|m_head
-decl_stmt|;
-name|struct
 name|adapter
 modifier|*
 name|adapter
@@ -3553,6 +3548,11 @@ init|=
 name|ifp
 operator|->
 name|if_softc
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|m_head
 decl_stmt|;
 name|mtx_assert
 argument_list|(
@@ -3646,7 +3646,7 @@ argument_list|,
 name|m_head
 argument_list|)
 expr_stmt|;
-comment|/* Set timeout in case hardware has problems transmitting */
+comment|/* Set timeout in case hardware has problems transmitting. */
 name|ifp
 operator|->
 name|if_timer
@@ -3654,7 +3654,6 @@ operator|=
 name|EM_TX_TIMEOUT
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3701,7 +3700,6 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3727,6 +3725,15 @@ name|data
 parameter_list|)
 block|{
 name|struct
+name|adapter
+modifier|*
+name|adapter
+init|=
+name|ifp
+operator|->
+name|if_softc
+decl_stmt|;
+name|struct
 name|ifreq
 modifier|*
 name|ifr
@@ -3737,15 +3744,6 @@ name|ifreq
 operator|*
 operator|)
 name|data
-decl_stmt|;
-name|struct
-name|adapter
-modifier|*
-name|adapter
-init|=
-name|ifp
-operator|->
-name|if_softc
 decl_stmt|;
 name|int
 name|error
@@ -4298,13 +4296,11 @@ name|struct
 name|adapter
 modifier|*
 name|adapter
-decl_stmt|;
-name|adapter
-operator|=
+init|=
 name|ifp
 operator|->
 name|if_softc
-expr_stmt|;
+decl_stmt|;
 name|EM_LOCK
 argument_list|(
 name|adapter
@@ -4384,7 +4380,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  Init entry point  *  *  This routine is used in two ways. It is used by the stack as  *  init entry point in network interface structure. It is also used  *  by the driver as a hw/sw initialization routine to get to a   *  consistent state.  *  *  return 0 on success, positive on failure  **********************************************************************/
+comment|/*********************************************************************  *  Init entry point  *  *  This routine is used in two ways. It is used by the stack as  *  init entry point in network interface structure. It is also used  *  by the driver as a hw/sw initialization routine to get to a  *  consistent state.  *  *  return 0 on success, positive on failure  **********************************************************************/
 end_comment
 
 begin_function
@@ -4865,7 +4861,7 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|reg_icr
 decl_stmt|;
 name|mtx_assert
@@ -5256,7 +5252,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*********************************************************************  *  *  Interrupt Service routine    *  **********************************************************************/
+comment|/*********************************************************************  *  *  Interrupt Service routine  *  **********************************************************************/
 end_comment
 
 begin_ifndef
@@ -5484,7 +5480,6 @@ return|return;
 block|}
 endif|#
 directive|endif
-comment|/* DEVICE_POLLING */
 for|for
 control|(
 init|;
@@ -5668,7 +5663,6 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6167,51 +6161,14 @@ modifier|*
 name|m_headp
 parameter_list|)
 block|{
-name|u_int32_t
-name|txd_upper
-decl_stmt|;
-name|u_int32_t
-name|txd_lower
-decl_stmt|,
-name|txd_used
-init|=
-literal|0
-decl_stmt|,
-name|txd_saved
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|i
-decl_stmt|,
-name|j
-decl_stmt|,
-name|error
-init|=
-literal|0
-decl_stmt|;
-name|bus_dmamap_t
-name|map
-decl_stmt|;
 name|struct
-name|mbuf
+name|ifnet
 modifier|*
-name|m_head
-decl_stmt|;
-comment|/* For 82544 Workaround */
-name|DESC_ARRAY
-name|desc_array
-decl_stmt|;
-name|u_int32_t
-name|array_elements
-decl_stmt|;
-name|u_int32_t
-name|counter
-decl_stmt|;
-name|struct
-name|m_tag
-modifier|*
-name|mtag
+name|ifp
+init|=
+name|adapter
+operator|->
+name|ifp
 decl_stmt|;
 name|bus_dma_segment_t
 name|segs
@@ -6219,8 +6176,8 @@ index|[
 name|EM_MAX_SCATTER
 index|]
 decl_stmt|;
-name|int
-name|nsegs
+name|bus_dmamap_t
+name|map
 decl_stmt|;
 name|struct
 name|em_buffer
@@ -6231,24 +6188,54 @@ name|struct
 name|em_tx_desc
 modifier|*
 name|current_tx_desc
-init|=
-name|NULL
 decl_stmt|;
 name|struct
-name|ifnet
+name|mbuf
 modifier|*
-name|ifp
+name|m_head
+decl_stmt|;
+name|struct
+name|m_tag
+modifier|*
+name|mtag
+decl_stmt|;
+name|uint32_t
+name|txd_upper
+decl_stmt|,
+name|txd_lower
+decl_stmt|,
+name|txd_used
+decl_stmt|,
+name|txd_saved
+decl_stmt|;
+name|int
+name|nsegs
+decl_stmt|,
+name|i
+decl_stmt|,
+name|j
+decl_stmt|;
+name|int
+name|error
 init|=
-name|adapter
-operator|->
-name|ifp
+literal|0
 decl_stmt|;
 name|m_head
 operator|=
 operator|*
 name|m_headp
 expr_stmt|;
-comment|/*          * Force a cleanup if number of TX descriptors          * available hits the threshold          */
+name|current_tx_desc
+operator|=
+name|NULL
+expr_stmt|;
+name|txd_used
+operator|=
+name|txd_saved
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 	 * Force a cleanup if number of TX descriptors 	 * available hits the threshold. 	 */
 if|if
 condition|(
 name|adapter
@@ -6284,7 +6271,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/*          * Map the packet for DMA.          */
+comment|/* 	 * Map the packet for DMA. 	 */
 name|tx_buffer
 operator|=
 operator|&
@@ -6406,7 +6393,7 @@ name|txd_lower
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Find out if we are in vlan mode */
+comment|/* Find out if we are in vlan mode. */
 name|mtag
 operator|=
 name|VLAN_OUTPUT_TAG
@@ -6654,7 +6641,7 @@ name|j
 operator|++
 control|)
 block|{
-comment|/* If adapter is 82544 and on PCIX bus */
+comment|/* If adapter is 82544 and on PCIX bus. */
 if|if
 condition|(
 name|adapter
@@ -6662,7 +6649,15 @@ operator|->
 name|pcix_82544
 condition|)
 block|{
-comment|/*  			 * Check the Address and Length combination and  			 * split the data accordingly  			 */
+name|DESC_ARRAY
+name|desc_array
+decl_stmt|;
+name|uint32_t
+name|array_elements
+decl_stmt|,
+name|counter
+decl_stmt|;
+comment|/* 			 * Check the Address and Length combination and 			 * split the data accordingly 			 */
 name|array_elements
 operator|=
 name|em_fill_descriptors
@@ -6779,7 +6774,7 @@ operator||
 name|txd_lower
 operator||
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|)
 name|desc_array
 operator|.
@@ -6931,23 +6926,19 @@ name|adapter
 operator|->
 name|pcix_82544
 condition|)
-block|{
 name|adapter
 operator|->
 name|num_tx_desc_avail
 operator|-=
 name|txd_used
 expr_stmt|;
-block|}
 else|else
-block|{
 name|adapter
 operator|->
 name|num_tx_desc_avail
 operator|-=
 name|nsegs
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|mtag
@@ -6955,7 +6946,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Set the vlan id */
+comment|/* Set the vlan id. */
 name|current_tx_desc
 operator|->
 name|upper
@@ -6972,7 +6963,7 @@ name|mtag
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Tell hardware to add tag */
+comment|/* Tell hardware to add tag. */
 name|current_tx_desc
 operator|->
 name|lower
@@ -7002,7 +6993,7 @@ argument_list|,
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
-comment|/*          * Last Descriptor of Packet needs End Of Packet (EOP)          */
+comment|/* 	 * Last Descriptor of Packet needs End Of Packet (EOP). 	 */
 name|current_tx_desc
 operator|->
 name|lower
@@ -7014,7 +7005,7 @@ argument_list|(
 name|E1000_TXD_CMD_EOP
 argument_list|)
 expr_stmt|;
-comment|/*          * Advance the Transmit Descriptor Tail (Tdt), this tells the E1000          * that this frame is available to transmit.          */
+comment|/* 	 * Advance the Transmit Descriptor Tail (Tdt), this tells the E1000 	 * that this frame is available to transmit. 	 */
 name|bus_dmamap_sync
 argument_list|(
 name|adapter
@@ -7122,7 +7113,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  * 82547 workaround to avoid controller hang in half-duplex environment.  * The workaround is to avoid queuing a large packet that would span     * the internal Tx FIFO ring boundary. We need to reset the FIFO pointers  * in this case. We do that only when FIFO is quiescent.  *  **********************************************************************/
+comment|/*********************************************************************  *  * 82547 workaround to avoid controller hang in half-duplex environment.  * The workaround is to avoid queuing a large packet that would span  * the internal Tx FIFO ring boundary. We need to reset the FIFO pointers  * in this case. We do that only when FIFO is quiescent.  *  **********************************************************************/
 end_comment
 
 begin_function
@@ -7397,21 +7388,17 @@ argument_list|(
 name|adapter
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 else|else
-block|{
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-block|}
 block|}
 block|}
 return|return
@@ -7721,9 +7708,6 @@ modifier|*
 name|adapter
 parameter_list|)
 block|{
-name|u_int32_t
-name|reg_rctl
-decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -7732,6 +7716,9 @@ init|=
 name|adapter
 operator|->
 name|ifp
+decl_stmt|;
+name|uint32_t
+name|reg_rctl
 decl_stmt|;
 name|reg_rctl
 operator|=
@@ -7774,7 +7761,7 @@ argument_list|,
 name|reg_rctl
 argument_list|)
 expr_stmt|;
-comment|/* Disable VLAN stripping in promiscous mode  		 * This enables bridging of vlan tagged frames to occur  		 * and also allows vlan tags to be seen in tcpdump 		 */
+comment|/* Disable VLAN stripping in promiscous mode 		 * This enables bridging of vlan tagged frames to occur 		 * and also allows vlan tags to be seen in tcpdump 		 */
 if|if
 condition|(
 name|ifp
@@ -7840,7 +7827,6 @@ name|em_insert_vlan_header
 operator|=
 literal|0
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7855,9 +7841,6 @@ modifier|*
 name|adapter
 parameter_list|)
 block|{
-name|u_int32_t
-name|reg_rctl
-decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -7866,6 +7849,9 @@ init|=
 name|adapter
 operator|->
 name|ifp
+decl_stmt|;
+name|uint32_t
+name|reg_rctl
 decl_stmt|;
 name|reg_rctl
 operator|=
@@ -7924,7 +7910,6 @@ name|em_insert_vlan_header
 operator|=
 literal|0
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7943,29 +7928,6 @@ modifier|*
 name|adapter
 parameter_list|)
 block|{
-name|u_int32_t
-name|reg_rctl
-init|=
-literal|0
-decl_stmt|;
-name|u_int8_t
-name|mta
-index|[
-name|MAX_NUM_MULTICAST_ADDRESSES
-operator|*
-name|ETH_LENGTH_OF_ADDRESS
-index|]
-decl_stmt|;
-name|struct
-name|ifmultiaddr
-modifier|*
-name|ifma
-decl_stmt|;
-name|int
-name|mcnt
-init|=
-literal|0
-decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -7974,6 +7936,29 @@ init|=
 name|adapter
 operator|->
 name|ifp
+decl_stmt|;
+name|struct
+name|ifmultiaddr
+modifier|*
+name|ifma
+decl_stmt|;
+name|uint32_t
+name|reg_rctl
+init|=
+literal|0
+decl_stmt|;
+name|uint8_t
+name|mta
+index|[
+name|MAX_NUM_MULTICAST_ADDRESSES
+operator|*
+name|ETH_LENGTH_OF_ADDRESS
+index|]
+decl_stmt|;
+name|int
+name|mcnt
+init|=
+literal|0
 decl_stmt|;
 name|IOCTL_DEBUGOUT
 argument_list|(
@@ -8013,7 +7998,6 @@ name|pci_cmd_word
 operator|&
 name|CMD_MEM_WRT_INVALIDATE
 condition|)
-block|{
 name|em_pci_clear_mwi
 argument_list|(
 operator|&
@@ -8022,7 +8006,6 @@ operator|->
 name|hw
 argument_list|)
 expr_stmt|;
-block|}
 name|reg_rctl
 operator||=
 name|E1000_RCTL_RST
@@ -8219,7 +8202,6 @@ name|pci_cmd_word
 operator|&
 name|CMD_MEM_WRT_INVALIDATE
 condition|)
-block|{
 name|em_pci_set_mwi
 argument_list|(
 operator|&
@@ -8229,8 +8211,6 @@ name|hw
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-return|return;
 block|}
 end_function
 
@@ -8249,23 +8229,21 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|ifnet
-modifier|*
-name|ifp
-decl_stmt|;
-name|struct
 name|adapter
 modifier|*
 name|adapter
 init|=
 name|arg
 decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
 name|ifp
-operator|=
+init|=
 name|adapter
 operator|->
 name|ifp
-expr_stmt|;
+decl_stmt|;
 name|EM_LOCK
 argument_list|(
 name|adapter
@@ -8299,13 +8277,11 @@ name|if_drv_flags
 operator|&
 name|IFF_DRV_RUNNING
 condition|)
-block|{
 name|em_print_hw_stats
 argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-block|}
 name|em_smartspeed
 argument_list|(
 name|adapter
@@ -8330,7 +8306,6 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8499,12 +8474,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  *  This routine disables all traffic on the adapter by issuing a  *  global reset on the MAC and deallocates TX/RX buffers.   *  **********************************************************************/
+comment|/*********************************************************************  *  *  This routine disables all traffic on the adapter by issuing a  *  global reset on the MAC and deallocates TX/RX buffers.  *  **********************************************************************/
 end_comment
 
 begin_function
@@ -8518,31 +8492,24 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|ifnet
-modifier|*
-name|ifp
-decl_stmt|;
-name|struct
 name|adapter
 modifier|*
 name|adapter
 init|=
 name|arg
 decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
 name|ifp
-operator|=
+init|=
 name|adapter
 operator|->
 name|ifp
-expr_stmt|;
-name|mtx_assert
+decl_stmt|;
+name|EM_LOCK_ASSERT
 argument_list|(
-operator|&
 name|adapter
-operator|->
-name|mtx
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|INIT_DEBUGOUT
@@ -8601,7 +8568,6 @@ operator||
 name|IFF_DRV_OACTIVE
 operator|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9684,7 +9650,7 @@ name|EIO
 operator|)
 return|;
 block|}
-comment|/* 	 * These parameters control the automatic generation (Tx) and  	 * response (Rx) to Ethernet PAUSE frames. 	 * - High water mark should allow for at least two frames to be 	 *   received after sending an XOFF. 	 * - Low water mark works best when it is very near the high water mark. 	 *   This allows the receiver to restart by sending XON when it has drained 	 *   a bit.  Here we use an arbitary value of 1500 which will restart after 	 *   one full frame is pulled from the buffer.  There could be several smaller 	 *   frames in the buffer and if so they will not trigger the XON until their 	 *   total number reduces the buffer by 1500. 	 * - The pause time is fairly large at 1000 x 512ns = 512 usec. 	 */
+comment|/* 	 * These parameters control the automatic generation (Tx) and 	 * response (Rx) to Ethernet PAUSE frames. 	 * - High water mark should allow for at least two frames to be 	 *   received after sending an XOFF. 	 * - Low water mark works best when it is very near the high water mark. 	 *   This allows the receiver to restart by sending XON when it has drained 	 *   a bit.  Here we use an arbitary value of 1500 which will restart after 	 *   one full frame is pulled from the buffer.  There could be several smaller 	 *   frames in the buffer and if so they will not trigger the XON until their 	 *   total number reduces the buffer by 1500. 	 * - The pause time is fairly large at 1000 x 512ns = 512 usec. 	 */
 name|rx_buffer_size
 operator|=
 operator|(
@@ -10113,7 +10079,7 @@ name|IFCAP_POLLING
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*  	 * Specify the media types supported by this adapter and register 	 * callbacks to update media and link information 	 */
+comment|/* 	 * Specify the media types supported by this adapter and register 	 * callbacks to update media and link information 	 */
 name|ifmedia_init
 argument_list|(
 operator|&
@@ -11053,7 +11019,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  *  Allocate memory for tx_buffer structures. The tx_buffer stores all   *  the information needed to transmit a packet on the wire.   *  **********************************************************************/
+comment|/*********************************************************************  *  *  Allocate memory for tx_buffer structures. The tx_buffer stores all  *  the information needed to transmit a packet on the wire.  *  **********************************************************************/
 end_comment
 
 begin_function
@@ -11136,7 +11102,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  *  Allocate and initialize transmit structures.   *  **********************************************************************/
+comment|/*********************************************************************  *  *  Allocate and initialize transmit structures.  *  **********************************************************************/
 end_comment
 
 begin_function
@@ -12697,24 +12663,16 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-name|nmp
+name|mp
 parameter_list|)
 block|{
 name|struct
-name|mbuf
-modifier|*
-name|mp
-init|=
-name|nmp
-decl_stmt|;
-name|struct
-name|em_buffer
-modifier|*
-name|rx_buffer
-decl_stmt|;
-name|struct
 name|ifnet
 modifier|*
+name|ifp
+init|=
+name|adapter
+operator|->
 name|ifp
 decl_stmt|;
 name|bus_dma_segment_t
@@ -12723,17 +12681,16 @@ index|[
 literal|1
 index|]
 decl_stmt|;
+name|struct
+name|em_buffer
+modifier|*
+name|rx_buffer
+decl_stmt|;
 name|int
 name|error
 decl_stmt|,
 name|nsegs
 decl_stmt|;
-name|ifp
-operator|=
-name|adapter
-operator|->
-name|ifp
-expr_stmt|;
 if|if
 condition|(
 name|mp
@@ -12822,7 +12779,6 @@ name|if_mtu
 operator|<=
 name|ETHERMTU
 condition|)
-block|{
 name|m_adj
 argument_list|(
 name|mp
@@ -12830,7 +12786,6 @@ argument_list|,
 name|ETHER_ALIGN
 argument_list|)
 expr_stmt|;
-block|}
 name|rx_buffer
 operator|=
 operator|&
@@ -12841,7 +12796,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-comment|/*          * Using memory from the mbuf cluster pool, invoke the          * bus_dma machinery to arrange the memory mapping.          */
+comment|/* 	 * Using memory from the mbuf cluster pool, invoke the 	 * bus_dma machinery to arrange the memory mapping. 	 */
 name|error
 operator|=
 name|bus_dmamap_load_mbuf_sg
@@ -12882,7 +12837,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* If nsegs is wrong then the stack is corrupt */
+comment|/* If nsegs is wrong then the stack is corrupt. */
 name|KASSERT
 argument_list|(
 name|nsegs
@@ -12941,7 +12896,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  *  Allocate memory for rx_buffer structures. Since we use one   *  rx_buffer per received packet, the maximum number of rx_buffer's   *  that we'll need is equal to the number of receive descriptors   *  that we've allocated.  *  **********************************************************************/
+comment|/*********************************************************************  *  *  Allocate memory for rx_buffer structures. Since we use one  *  rx_buffer per received packet, the maximum number of rx_buffer's  *  that we'll need is equal to the number of receive descriptors  *  that we've allocated.  *  **********************************************************************/
 end_comment
 
 begin_function
@@ -13241,7 +13196,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  *  Allocate and initialize receive structures.  *    **********************************************************************/
+comment|/*********************************************************************  *  *  Allocate and initialize receive structures.  *  **********************************************************************/
 end_comment
 
 begin_function
@@ -13304,7 +13259,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  *  Enable receive unit.  *    **********************************************************************/
+comment|/*********************************************************************  *  *  Enable receive unit.  *  **********************************************************************/
 end_comment
 
 begin_function
@@ -13926,17 +13881,17 @@ name|mbuf
 modifier|*
 name|mp
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|accept_frame
 init|=
 literal|0
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|eop
 init|=
 literal|0
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|len
 decl_stmt|,
 name|desc_len
@@ -14004,13 +13959,11 @@ operator|&
 name|E1000_RXD_STAT_DD
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 while|while
 condition|(
 operator|(
@@ -14140,14 +14093,12 @@ name|desc_len
 expr_stmt|;
 block|}
 else|else
-block|{
 name|len
 operator|=
 name|desc_len
 operator|-
 name|ETHER_CRC_LEN
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -14169,10 +14120,10 @@ operator|&
 name|E1000_RXD_ERR_FRAME_ERR_MASK
 condition|)
 block|{
-name|u_int8_t
+name|uint8_t
 name|last_byte
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|pkt_len
 init|=
 name|desc_len
@@ -14266,12 +14217,10 @@ operator|--
 expr_stmt|;
 block|}
 else|else
-block|{
 name|accept_frame
 operator|=
 literal|0
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -14383,7 +14332,7 @@ operator|&=
 operator|~
 name|M_PKTHDR
 expr_stmt|;
-comment|/*                                   * Adjust length of previous mbuf in chain if we                                   * received less than 4 bytes in the last descriptor.                                  */
+comment|/* 				 * Adjust length of previous mbuf in chain if 				 * we received less than 4 bytes in the last 				 * descriptor. 				 */
 if|if
 condition|(
 name|prev_len_adj
@@ -14592,7 +14541,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* Zero out the receive descriptors status  */
+comment|/* Zero out the receive descriptors status. */
 name|current_desc
 operator|->
 name|status
@@ -14618,7 +14567,7 @@ operator||
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
-comment|/* Advance our pointers to the next descriptor */
+comment|/* Advance our pointers to the next descriptor. */
 if|if
 condition|(
 operator|++
@@ -14722,13 +14671,11 @@ operator|&
 name|E1000_RXD_STAT_DD
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 return|return
 operator|(
 literal|1
@@ -14744,7 +14691,7 @@ name|__NO_STRICT_ALIGNMENT
 end_ifndef
 
 begin_comment
-comment|/*  * When jumbo frames are enabled we should realign entire payload on  * architecures with strict alignment. This is serious design mistake of 8254x  * as it nullifies DMA operations. 8254x just allows RX buffer size to be  * 2048/4096/8192/16384. What we really want is 2048 - ETHER_ALIGN to align its  * payload. On architecures without strict alignment restrictions 8254x still  * performs unaligned memory access which would reduce the performance too.   * To avoid copying over an entire frame to align, we allocate a new mbuf and  * copy ethernet header to the new mbuf. The new mbuf is prepended into the  * existing mbuf chain.  *  * Be aware, best performance of the 8254x is achived only when jumbo frame is  * not used at all on architectures with strict alignment.  */
+comment|/*  * When jumbo frames are enabled we should realign entire payload on  * architecures with strict alignment. This is serious design mistake of 8254x  * as it nullifies DMA operations. 8254x just allows RX buffer size to be  * 2048/4096/8192/16384. What we really want is 2048 - ETHER_ALIGN to align its  * payload. On architecures without strict alignment restrictions 8254x still  * performs unaligned memory access which would reduce the performance too.  * To avoid copying over an entire frame to align, we allocate a new mbuf and  * copy ethernet header to the new mbuf. The new mbuf is prepended into the  * existing mbuf chain.  *  * Be aware, best performance of the 8254x is achived only when jumbo frame is  * not used at all on architectures with strict alignment.  */
 end_comment
 
 begin_function
@@ -14925,7 +14872,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*********************************************************************  *  *  Verify that the hardware indicated that the checksum is valid.   *  Inform the stack about the status of checksum so that stack  *  doesn't spend time verifying the checksum.  *  *********************************************************************/
+comment|/*********************************************************************  *  *  Verify that the hardware indicated that the checksum is valid.  *  Inform the stack about the status of checksum so that stack  *  doesn't spend time verifying the checksum.  *  *********************************************************************/
 end_comment
 
 begin_function
@@ -15230,7 +15177,7 @@ modifier|*
 name|adapter
 parameter_list|)
 block|{
-comment|/* 	 * The first version of 82542 had an errata where when link was forced it 	 * would stay up even up even if the cable was disconnected.  Sequence errors 	 * were used to detect the disconnect and then the driver would unforce the link. 	 * This code in the in the ISR.  For this to work correctly the Sequence error  	 * interrupt had to be enabled all the time. 	 */
+comment|/* 	 * The first version of 82542 had an errata where when link was forced 	 * it would stay up even up even if the cable was disconnected. 	 * Sequence errors were used to detect the disconnect and then the 	 * driver would unforce the link. This code in the in the ISR. For this 	 * to work correctly the Sequence error interrupt had to be enabled 	 * all the time. 	 */
 if|if
 condition|(
 name|adapter
@@ -15735,7 +15682,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**********************************************************************  *  *  Update the board statistics counters.   *  **********************************************************************/
+comment|/**********************************************************************  *  *  Update the board statistics counters.  *  **********************************************************************/
 end_comment
 
 begin_function
