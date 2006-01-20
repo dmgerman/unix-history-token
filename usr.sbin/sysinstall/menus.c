@@ -8877,6 +8877,20 @@ literal|"ntpdate_enable=YES,ntpdate_flags=ntp.karpo.cz"
 block|}
 block|,
 block|{
+literal|"Czech #2"
+block|,
+literal|"ntp.cgi.cz"
+block|,
+name|dmenuVarsCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"ntpdate_enable=YES,ntpdate_flags=ntp.cgi.cz"
+block|}
+block|,
+block|{
 literal|"Denmark"
 block|,
 literal|"clock.netcetera.dk"
