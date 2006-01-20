@@ -1724,7 +1724,7 @@ name|ch
 operator|->
 name|caps_32bit
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 block|}
 name|ch
