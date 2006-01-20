@@ -3601,6 +3601,7 @@ name|bus_data_generation_update
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* 	 * If a parent class is specified, then set that as our parent so 	 * that this devclass will support drivers for the parent class as 	 * well.  If the parent class has the same name don't do this though 	 * as it creates a cycle that can trigger an infinite loop in 	 * device_probe_child() if a device exists for which there is no 	 * suitable driver. 	 */
 if|if
 condition|(
 name|parentname
@@ -3611,6 +3612,15 @@ operator|!
 name|dc
 operator|->
 name|parent
+operator|&&
+name|strcmp
+argument_list|(
+name|classname
+argument_list|,
+name|parentname
+argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|dc
