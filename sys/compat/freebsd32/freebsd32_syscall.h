@@ -1314,7 +1314,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|FREEBSD32_SYS_lutimes
+name|FREEBSD32_SYS_freebsd32_lutimes
 value|276
 end_define
 

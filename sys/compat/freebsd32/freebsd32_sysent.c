@@ -4534,19 +4534,19 @@ name|SYF_MPSAFE
 operator||
 name|AS
 argument_list|(
-name|lutimes_args
+name|freebsd32_lutimes_args
 argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|lutimes
+name|freebsd32_lutimes
 block|,
 name|AUE_NULL
 block|}
 block|,
-comment|/* 276 = lutimes */
+comment|/* 276 = freebsd32_lutimes */
 block|{
 name|SYF_MPSAFE
 operator||

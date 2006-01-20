@@ -839,9 +839,9 @@ comment|/* 274 = lchmod */
 literal|"netbsd_lchown"
 block|,
 comment|/* 275 = netbsd_lchown */
-literal|"lutimes"
+literal|"freebsd32_lutimes"
 block|,
-comment|/* 276 = lutimes */
+comment|/* 276 = freebsd32_lutimes */
 literal|"netbsd_msync"
 block|,
 comment|/* 277 = netbsd_msync */
