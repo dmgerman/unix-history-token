@@ -12281,6 +12281,15 @@ operator|&
 name|IFCAP_RXCSUM
 condition|)
 block|{
+if|if
+condition|(
+name|cur_rx
+operator|->
+name|bge_flags
+operator|&
+name|BGE_RXBDFLAG_IP_CSUM
+condition|)
+block|{
 name|m
 operator|->
 name|m_pkthdr
@@ -12309,6 +12318,7 @@ name|csum_flags
 operator||=
 name|CSUM_IP_VALID
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|cur_rx
