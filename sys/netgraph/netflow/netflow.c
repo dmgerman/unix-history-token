@@ -299,6 +299,9 @@ parameter_list|(
 name|priv_p
 parameter_list|,
 name|item_p
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -660,6 +663,9 @@ name|priv
 parameter_list|,
 name|item_p
 name|item
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 comment|/* 	 * It may happen on SMP, that some thread has already 	 * put its item there, in this case we bail out and 	 * send what we have to collector. 	 */
@@ -710,6 +716,8 @@ argument_list|(
 name|priv
 argument_list|,
 name|item
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 block|}
@@ -737,6 +745,9 @@ name|struct
 name|flow_entry
 modifier|*
 name|fle
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 if|if
@@ -806,6 +817,8 @@ name|priv
 argument_list|,
 operator|*
 name|item
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1761,6 +1774,8 @@ operator|&
 name|item
 argument_list|,
 name|fle
+argument_list|,
+name|NG_QUEUE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1775,6 +1790,8 @@ argument_list|(
 name|priv
 argument_list|,
 name|item
+argument_list|,
+name|NG_QUEUE
 argument_list|)
 expr_stmt|;
 name|uma_zdestroy
@@ -2248,6 +2265,8 @@ operator|&
 name|item
 argument_list|,
 name|fle
+argument_list|,
+name|NG_QUEUE
 argument_list|)
 expr_stmt|;
 name|atomic_add_32
@@ -2352,6 +2371,20 @@ operator|&
 name|item
 argument_list|,
 name|fle
+argument_list|,
+name|NG_QUEUE
+argument_list|)
+expr_stmt|;
+name|atomic_add_32
+argument_list|(
+operator|&
+name|priv
+operator|->
+name|info
+operator|.
+name|nfinfo_act_exp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -2437,6 +2470,8 @@ argument_list|(
 name|priv
 argument_list|,
 name|item
+argument_list|,
+name|NG_QUEUE
 argument_list|)
 expr_stmt|;
 return|return
@@ -2448,7 +2483,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return records from cache to userland.  *  * TODO: consider NGM_READONLY  * TODO: matching particular IP should be done in kernel, here.  */
+comment|/*  * Return records from cache to userland.  *  * TODO: matching particular IP should be done in kernel, here.  */
 end_comment
 
 begin_function
@@ -2703,6 +2738,9 @@ name|priv
 parameter_list|,
 name|item_p
 name|item
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -2855,7 +2893,7 @@ operator|!=
 name|NULL
 condition|)
 comment|/* Should also NET_LOCK_GIANT(). */
-name|NG_FWD_ITEM_HOOK
+name|NG_FWD_ITEM_HOOK_FLAGS
 argument_list|(
 name|error
 argument_list|,
@@ -2864,6 +2902,8 @@ argument_list|,
 name|priv
 operator|->
 name|export
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 return|return
@@ -3410,6 +3450,8 @@ operator|&
 name|item
 argument_list|,
 name|fle
+argument_list|,
+name|NG_NOFLAGS
 argument_list|)
 expr_stmt|;
 name|used
@@ -3449,6 +3491,8 @@ argument_list|(
 name|priv
 argument_list|,
 name|item
+argument_list|,
+name|NG_NOFLAGS
 argument_list|)
 expr_stmt|;
 comment|/* Schedule next expire. */
