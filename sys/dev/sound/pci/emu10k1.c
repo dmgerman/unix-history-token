@@ -114,13 +114,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|EMU10K1X_PCI_ID
-value|0x00061102
-end_define
-
-begin_define
-define|#
-directive|define
 name|EMU10K3_PCI_ID
 value|0x00081102
 end_define
@@ -10882,14 +10875,6 @@ case|:
 name|s
 operator|=
 literal|"Creative EMU10K1"
-expr_stmt|;
-break|break;
-case|case
-name|EMU10K1X_PCI_ID
-case|:
-name|s
-operator|=
-literal|"Creative SB Live! (Dell OEM)"
 expr_stmt|;
 break|break;
 case|case
