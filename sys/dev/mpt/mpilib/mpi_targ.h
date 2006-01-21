@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2000-2005, LSI Logic Corporation and its contributors.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon including  *    a substantially similar Disclaimer requirement for further binary  *    redistribution.  * 3. Neither the name of the LSI Logic Corporation nor the names of its  *    contributors may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF THE COPYRIGHT  * OWNER OR CONTRIBUTOR IS ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  *           Name:  MPI_TARG.H  *          Title:  MPI Target mode messages and structures  *  Creation Date:  June 22, 2000  *  *    MPI_TARG.H Version:  01.02.09  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  05-08-00  00.10.01  Original release for 0.10 spec dated 4/26/2000.  *  06-06-00  01.00.01  Update version number for 1.0 release.  *  06-22-00  01.00.02  Added _MSG_TARGET_CMD_BUFFER_POST_REPLY structure.  *                      Corrected DECSRIPTOR typo to DESCRIPTOR.  *  11-02-00  01.01.01  Original release for post 1.0 work  *                      Modified target mode to use IoIndex instead of  *                      HostIndex and IocIndex. Added Alias.  *  01-09-01  01.01.02  Added defines for TARGET_ASSIST_FLAGS_REPOST_CMD_BUFFER  *                      and TARGET_STATUS_SEND_FLAGS_REPOST_CMD_BUFFER.  *  02-20-01  01.01.03  Started using MPI_POINTER.  *                      Added structures for MPI_TARGET_SCSI_SPI_CMD_BUFFER and  *                      MPI_TARGET_FCP_CMD_BUFFER.  *  03-27-01  01.01.04  Added structure offset comments.  *  08-08-01  01.02.01  Original release for v1.2 work.  *  09-28-01  01.02.02  Added structure for MPI_TARGET_SCSI_SPI_STATUS_IU.  *                      Added PriorityReason field to some replies and  *                      defined more PriorityReason codes.  *                      Added some defines for to support previous version  *                      of MPI.  *  10-04-01  01.02.03  Added PriorityReason to MSG_TARGET_ERROR_REPLY.  *  11-01-01  01.02.04  Added define for TARGET_STATUS_SEND_FLAGS_HIGH_PRIORITY.  *  03-14-02  01.02.05  Modified MPI_TARGET_FCP_RSP_BUFFER to get the proper  *                      byte ordering.  *  05-31-02  01.02.06  Modified TARGET_MODE_REPLY_ALIAS_MASK to only include  *                      one bit.  *                      Added AliasIndex field to MPI_TARGET_FCP_CMD_BUFFER.  *  09-16-02  01.02.07  Added flags for confirmed completion.  *                      Added PRIORITY_REASON_TARGET_BUSY.  *  11-15-02  01.02.08  Added AliasID field to MPI_TARGET_SCSI_SPI_CMD_BUFFER.  *  04-01-03  01.02.09  Added OptionalOxid field to MPI_TARGET_FCP_CMD_BUFFER.  *  --------------------------------------------------------------------------  */
+comment|/*-  * Copyright (c) 2000-2005, LSI Logic Corporation and its contributors.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon including  *    a substantially similar Disclaimer requirement for further binary  *    redistribution.  * 3. Neither the name of the LSI Logic Corporation nor the names of its  *    contributors may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF THE COPYRIGHT  * OWNER OR CONTRIBUTOR IS ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  *           Name:  mpi_targ.h  *          Title:  MPI Target mode messages and structures  *  Creation Date:  June 22, 2000  *  *    mpi_targ.h Version:  01.05.05  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  05-08-00  00.10.01  Original release for 0.10 spec dated 4/26/2000.  *  06-06-00  01.00.01  Update version number for 1.0 release.  *  06-22-00  01.00.02  Added _MSG_TARGET_CMD_BUFFER_POST_REPLY structure.  *                      Corrected DECSRIPTOR typo to DESCRIPTOR.  *  11-02-00  01.01.01  Original release for post 1.0 work  *                      Modified target mode to use IoIndex instead of  *                      HostIndex and IocIndex. Added Alias.  *  01-09-01  01.01.02  Added defines for TARGET_ASSIST_FLAGS_REPOST_CMD_BUFFER  *                      and TARGET_STATUS_SEND_FLAGS_REPOST_CMD_BUFFER.  *  02-20-01  01.01.03  Started using MPI_POINTER.  *                      Added structures for MPI_TARGET_SCSI_SPI_CMD_BUFFER and  *                      MPI_TARGET_FCP_CMD_BUFFER.  *  03-27-01  01.01.04  Added structure offset comments.  *  08-08-01  01.02.01  Original release for v1.2 work.  *  09-28-01  01.02.02  Added structure for MPI_TARGET_SCSI_SPI_STATUS_IU.  *                      Added PriorityReason field to some replies and  *                      defined more PriorityReason codes.  *                      Added some defines for to support previous version  *                      of MPI.  *  10-04-01  01.02.03  Added PriorityReason to MSG_TARGET_ERROR_REPLY.  *  11-01-01  01.02.04  Added define for TARGET_STATUS_SEND_FLAGS_HIGH_PRIORITY.  *  03-14-02  01.02.05  Modified MPI_TARGET_FCP_RSP_BUFFER to get the proper  *                      byte ordering.  *  05-31-02  01.02.06  Modified TARGET_MODE_REPLY_ALIAS_MASK to only include  *                      one bit.  *                      Added AliasIndex field to MPI_TARGET_FCP_CMD_BUFFER.  *  09-16-02  01.02.07  Added flags for confirmed completion.  *                      Added PRIORITY_REASON_TARGET_BUSY.  *  11-15-02  01.02.08  Added AliasID field to MPI_TARGET_SCSI_SPI_CMD_BUFFER.  *  04-01-03  01.02.09  Added OptionalOxid field to MPI_TARGET_FCP_CMD_BUFFER.  *  05-11-04  01.03.01  Original release for MPI v1.3.  *  08-19-04  01.05.01  Added new request message structures for  *                      MSG_TARGET_CMD_BUF_POST_BASE_REQUEST,  *                      MSG_TARGET_CMD_BUF_POST_LIST_REQUEST, and  *                      MSG_TARGET_ASSIST_EXT_REQUEST.  *                      Added new structures for SAS SSP Command buffer, SSP  *                      Task buffer, and SSP Status IU.  *  10-05-04  01.05.02  MSG_TARGET_CMD_BUFFER_POST_BASE_LIST_REPLY added.  *  02-22-05  01.05.03  Changed a comment.  *  03-11-05  01.05.04  Removed TargetAssistExtended Request.  *  06-24-05  01.05.05  Added TargetAssistExtended structures and defines.  *  --------------------------------------------------------------------------  */
 end_comment
 
 begin_ifndef
@@ -323,6 +323,72 @@ name|pPriorityCommandReceivedReply_t
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MSG_TARGET_CMD_BUFFER_POST_ERROR_REPLY
+block|{
+name|U16
+name|Reserved
+decl_stmt|;
+comment|/* 00h */
+name|U8
+name|MsgLength
+decl_stmt|;
+comment|/* 02h */
+name|U8
+name|Function
+decl_stmt|;
+comment|/* 03h */
+name|U16
+name|Reserved1
+decl_stmt|;
+comment|/* 04h */
+name|U8
+name|Reserved2
+decl_stmt|;
+comment|/* 06h */
+name|U8
+name|MsgFlags
+decl_stmt|;
+comment|/* 07h */
+name|U32
+name|MsgContext
+decl_stmt|;
+comment|/* 08h */
+name|U8
+name|PriorityReason
+decl_stmt|;
+comment|/* 0Ch */
+name|U8
+name|Reserved3
+decl_stmt|;
+comment|/* 0Dh */
+name|U16
+name|IOCStatus
+decl_stmt|;
+comment|/* 0Eh */
+name|U32
+name|IOCLogInfo
+decl_stmt|;
+comment|/* 10h */
+name|U32
+name|ReplyWord
+decl_stmt|;
+comment|/* 14h */
+block|}
+name|MSG_TARGET_CMD_BUFFER_POST_ERROR_REPLY
+operator|,
+name|MPI_POINTER
+name|PTR_MSG_TARGET_CMD_BUFFER_POST_ERROR_REPLY
+operator|,
+name|TargetCmdBufferPostErrorReply_t
+operator|,
+name|MPI_POINTER
+name|pTargetCmdBufferPostErrorReply_t
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
@@ -400,10 +466,99 @@ name|PRIORITY_REASON_UNKNOWN
 value|(0xFF)
 end_define
 
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Target Command Buffer Post Base Request                                  */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
-name|_MSG_TARGET_CMD_BUFFER_POST_ERROR_REPLY
+name|_MSG_TARGET_CMD_BUF_POST_BASE_REQUEST
+block|{
+name|U8
+name|BufferPostFlags
+decl_stmt|;
+comment|/* 00h */
+name|U8
+name|PortNumber
+decl_stmt|;
+comment|/* 01h */
+name|U8
+name|ChainOffset
+decl_stmt|;
+comment|/* 02h */
+name|U8
+name|Function
+decl_stmt|;
+comment|/* 03h */
+name|U16
+name|TotalCmdBuffers
+decl_stmt|;
+comment|/* 04h */
+name|U8
+name|Reserved
+decl_stmt|;
+comment|/* 06h */
+name|U8
+name|MsgFlags
+decl_stmt|;
+comment|/* 07h */
+name|U32
+name|MsgContext
+decl_stmt|;
+comment|/* 08h */
+name|U32
+name|Reserved1
+decl_stmt|;
+comment|/* 0Ch */
+name|U16
+name|CmdBufferLength
+decl_stmt|;
+comment|/* 10h */
+name|U16
+name|NextCmdBufferOffset
+decl_stmt|;
+comment|/* 12h */
+name|U32
+name|BaseAddressLow
+decl_stmt|;
+comment|/* 14h */
+name|U32
+name|BaseAddressHigh
+decl_stmt|;
+comment|/* 18h */
+block|}
+name|MSG_TARGET_CMD_BUF_POST_BASE_REQUEST
+operator|,
+name|MPI_POINTER
+name|PTR__MSG_TARGET_CMD_BUF_POST_BASE_REQUEST
+operator|,
+name|TargetCmdBufferPostBaseRequest_t
+operator|,
+name|MPI_POINTER
+name|pTargetCmdBufferPostBaseRequest_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|CMD_BUFFER_POST_BASE_FLAGS_AUTO_POST_ALL
+value|(0x01)
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MSG_TARGET_CMD_BUFFER_POST_BASE_LIST_REPLY
 block|{
 name|U16
 name|Reserved
@@ -433,14 +588,10 @@ name|U32
 name|MsgContext
 decl_stmt|;
 comment|/* 08h */
-name|U8
-name|PriorityReason
-decl_stmt|;
-comment|/* 0Ch */
-name|U8
+name|U16
 name|Reserved3
 decl_stmt|;
-comment|/* 0Dh */
+comment|/* 0Ch */
 name|U16
 name|IOCStatus
 decl_stmt|;
@@ -449,22 +600,103 @@ name|U32
 name|IOCLogInfo
 decl_stmt|;
 comment|/* 10h */
-name|U32
-name|ReplyWord
-decl_stmt|;
-comment|/* 14h */
 block|}
-name|MSG_TARGET_CMD_BUFFER_POST_ERROR_REPLY
+name|MSG_TARGET_CMD_BUFFER_POST_BASE_LIST_REPLY
 operator|,
 name|MPI_POINTER
-name|PTR_MSG_TARGET_CMD_BUFFER_POST_ERROR_REPLY
+name|PTR_MSG_TARGET_CMD_BUFFER_POST_BASE_LIST_REPLY
 operator|,
-name|TargetCmdBufferPostErrorReply_t
+name|TargetCmdBufferPostBaseListReply_t
 operator|,
 name|MPI_POINTER
-name|pTargetCmdBufferPostErrorReply_t
+name|pTargetCmdBufferPostBaseListReply_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Target Command Buffer Post List Request                                  */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MSG_TARGET_CMD_BUF_POST_LIST_REQUEST
+block|{
+name|U8
+name|Reserved
+decl_stmt|;
+comment|/* 00h */
+name|U8
+name|PortNumber
+decl_stmt|;
+comment|/* 01h */
+name|U8
+name|ChainOffset
+decl_stmt|;
+comment|/* 02h */
+name|U8
+name|Function
+decl_stmt|;
+comment|/* 03h */
+name|U16
+name|CmdBufferCount
+decl_stmt|;
+comment|/* 04h */
+name|U8
+name|Reserved1
+decl_stmt|;
+comment|/* 06h */
+name|U8
+name|MsgFlags
+decl_stmt|;
+comment|/* 07h */
+name|U32
+name|MsgContext
+decl_stmt|;
+comment|/* 08h */
+name|U32
+name|Reserved2
+decl_stmt|;
+comment|/* 0Ch */
+name|U16
+name|IoIndex
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* 10h */
+block|}
+name|MSG_TARGET_CMD_BUF_POST_LIST_REQUEST
+operator|,
+name|MPI_POINTER
+name|PTR_MSG_TARGET_CMD_BUF_POST_LIST_REQUEST
+operator|,
+name|TargetCmdBufferPostListRequest_t
+operator|,
+name|MPI_POINTER
+name|pTargetCmdBufferPostListRequest_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Command Buffer Formats (with 16 byte CDB)                                */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -597,6 +829,160 @@ name|MpiTargetScsiSpiCmdBuffer
 operator|,
 name|MPI_POINTER
 name|pMpiTargetScsiSpiCmdBuffer
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI_TARGET_SSP_CMD_BUFFER
+block|{
+name|U8
+name|FrameType
+decl_stmt|;
+comment|/* 00h */
+name|U8
+name|Reserved1
+decl_stmt|;
+comment|/* 01h */
+name|U16
+name|Reserved2
+decl_stmt|;
+comment|/* 02h */
+name|U16
+name|InitiatorTag
+decl_stmt|;
+comment|/* 04h */
+name|U16
+name|DevHandle
+decl_stmt|;
+comment|/* 06h */
+comment|/* COMMAND information unit starts here */
+name|U8
+name|LogicalUnitNumber
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* 08h */
+name|U8
+name|Reserved3
+decl_stmt|;
+comment|/* 10h */
+name|U8
+name|TaskAttribute
+decl_stmt|;
+comment|/* lower 3 bits */
+comment|/* 11h */
+name|U8
+name|Reserved4
+decl_stmt|;
+comment|/* 12h */
+name|U8
+name|AdditionalCDBLength
+decl_stmt|;
+comment|/* upper 5 bits */
+comment|/* 13h */
+name|U8
+name|CDB
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* 14h */
+comment|/* Additional CDB bytes extend past the CDB field */
+block|}
+name|MPI_TARGET_SSP_CMD_BUFFER
+operator|,
+name|MPI_POINTER
+name|PTR_MPI_TARGET_SSP_CMD_BUFFER
+operator|,
+name|MpiTargetSspCmdBuffer
+operator|,
+name|MPI_POINTER
+name|pMpiTargetSspCmdBuffer
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI_TARGET_SSP_TASK_BUFFER
+block|{
+name|U8
+name|FrameType
+decl_stmt|;
+comment|/* 00h */
+name|U8
+name|Reserved1
+decl_stmt|;
+comment|/* 01h */
+name|U16
+name|Reserved2
+decl_stmt|;
+comment|/* 02h */
+name|U16
+name|InitiatorTag
+decl_stmt|;
+comment|/* 04h */
+name|U16
+name|DevHandle
+decl_stmt|;
+comment|/* 06h */
+comment|/* TASK information unit starts here */
+name|U8
+name|LogicalUnitNumber
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* 08h */
+name|U8
+name|Reserved3
+decl_stmt|;
+comment|/* 10h */
+name|U8
+name|Reserved4
+decl_stmt|;
+comment|/* 11h */
+name|U8
+name|TaskManagementFunction
+decl_stmt|;
+comment|/* 12h */
+name|U8
+name|Reserved5
+decl_stmt|;
+comment|/* 13h */
+name|U16
+name|ManagedTaskTag
+decl_stmt|;
+comment|/* 14h */
+name|U16
+name|Reserved6
+decl_stmt|;
+comment|/* 16h */
+name|U32
+name|Reserved7
+decl_stmt|;
+comment|/* 18h */
+name|U32
+name|Reserved8
+decl_stmt|;
+comment|/* 1Ch */
+name|U32
+name|Reserved9
+decl_stmt|;
+comment|/* 20h */
+block|}
+name|MPI_TARGET_SSP_TASK_BUFFER
+operator|,
+name|MPI_POINTER
+name|PTR_MPI_TARGET_SSP_TASK_BUFFER
+operator|,
+name|MpiTargetSspTaskBuffer
+operator|,
+name|MPI_POINTER
+name|pMpiTargetSspTaskBuffer
 typedef|;
 end_typedef
 
@@ -792,6 +1178,325 @@ name|MPI_POINTER
 name|pTargetErrorReply_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Target Assist Extended Request                                           */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MSG_TARGET_ASSIST_EXT_REQUEST
+block|{
+name|U8
+name|StatusCode
+decl_stmt|;
+comment|/* 00h */
+name|U8
+name|TargetAssistFlags
+decl_stmt|;
+comment|/* 01h */
+name|U8
+name|ChainOffset
+decl_stmt|;
+comment|/* 02h */
+name|U8
+name|Function
+decl_stmt|;
+comment|/* 03h */
+name|U16
+name|QueueTag
+decl_stmt|;
+comment|/* 04h */
+name|U8
+name|Reserved1
+decl_stmt|;
+comment|/* 06h */
+name|U8
+name|MsgFlags
+decl_stmt|;
+comment|/* 07h */
+name|U32
+name|MsgContext
+decl_stmt|;
+comment|/* 08h */
+name|U32
+name|ReplyWord
+decl_stmt|;
+comment|/* 0Ch */
+name|U8
+name|LUN
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* 10h */
+name|U32
+name|RelativeOffset
+decl_stmt|;
+comment|/* 18h */
+name|U32
+name|Reserved2
+decl_stmt|;
+comment|/* 1Ch */
+name|U32
+name|Reserved3
+decl_stmt|;
+comment|/* 20h */
+name|U32
+name|PrimaryReferenceTag
+decl_stmt|;
+comment|/* 24h */
+name|U16
+name|PrimaryApplicationTag
+decl_stmt|;
+comment|/* 28h */
+name|U16
+name|PrimaryApplicationTagMask
+decl_stmt|;
+comment|/* 2Ah */
+name|U32
+name|Reserved4
+decl_stmt|;
+comment|/* 2Ch */
+name|U32
+name|DataLength
+decl_stmt|;
+comment|/* 30h */
+name|U32
+name|BidirectionalDataLength
+decl_stmt|;
+comment|/* 34h */
+name|U32
+name|SecondaryReferenceTag
+decl_stmt|;
+comment|/* 38h */
+name|U16
+name|SecondaryApplicationTag
+decl_stmt|;
+comment|/* 3Ch */
+name|U16
+name|Reserved5
+decl_stmt|;
+comment|/* 3Eh */
+name|U16
+name|EEDPFlags
+decl_stmt|;
+comment|/* 40h */
+name|U16
+name|ApplicationTagTranslationMask
+decl_stmt|;
+comment|/* 42h */
+name|U32
+name|EEDPBlockSize
+decl_stmt|;
+comment|/* 44h */
+name|U8
+name|SGLOffset0
+decl_stmt|;
+comment|/* 48h */
+name|U8
+name|SGLOffset1
+decl_stmt|;
+comment|/* 49h */
+name|U8
+name|SGLOffset2
+decl_stmt|;
+comment|/* 4Ah */
+name|U8
+name|SGLOffset3
+decl_stmt|;
+comment|/* 4Bh */
+name|U32
+name|Reserved6
+decl_stmt|;
+comment|/* 4Ch */
+name|SGE_IO_UNION
+name|SGL
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* 50h */
+block|}
+name|MSG_TARGET_ASSIST_EXT_REQUEST
+operator|,
+name|MPI_POINTER
+name|PTR_MSG_TARGET_ASSIST_EXT_REQUEST
+operator|,
+name|TargetAssistExtRequest_t
+operator|,
+name|MPI_POINTER
+name|pTargetAssistExtRequest_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* see the defines after MSG_TARGET_ASSIST_REQUEST for TargetAssistFlags */
+end_comment
+
+begin_comment
+comment|/* defines for the MsgFlags field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASSIST_EXT_MSGFLAGS_BIDIRECTIONAL
+value|(0x20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASSIST_EXT_MSGFLAGS_MULTICAST
+value|(0x10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASSIST_EXT_MSGFLAGS_SGL_OFFSET_CHAINS
+value|(0x08)
+end_define
+
+begin_comment
+comment|/* defines for the EEDPFlags field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASSIST_EXT_EEDP_MASK_OP
+value|(0x0007)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASSIST_EXT_EEDP_NOOP_OP
+value|(0x0000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASSIST_EXT_EEDP_CHK_OP
+value|(0x0001)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASSIST_EXT_EEDP_STRIP_OP
+value|(0x0002)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASSIST_EXT_EEDP_CHKRM_OP
+value|(0x0003)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASSIST_EXT_EEDP_INSERT_OP
+value|(0x0004)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASSIST_EXT_EEDP_REPLACE_OP
+value|(0x0006)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASSIST_EXT_EEDP_CHKREGEN_OP
+value|(0x0007)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASSIST_EXT_EEDP_PASS_REF_TAG
+value|(0x0008)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASSIST_EXT_EEDP_T10_CHK_MASK
+value|(0x0700)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASSIST_EXT_EEDP_T10_CHK_GUARD
+value|(0x0100)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASSIST_EXT_EEDP_T10_CHK_APPTAG
+value|(0x0200)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASSIST_EXT_EEDP_T10_CHK_REFTAG
+value|(0x0400)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASSIST_EXT_EEDP_T10_CHK_SHIFT
+value|(8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASSIST_EXT_EEDP_INC_SEC_APPTAG
+value|(0x1000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASSIST_EXT_EEDP_INC_PRI_APPTAG
+value|(0x2000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASSIST_EXT_EEDP_INC_SEC_REFTAG
+value|(0x4000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASSIST_EXT_EEDP_INC_PRI_REFTAG
+value|(0x8000)
+end_define
 
 begin_comment
 comment|/****************************************************************************/
@@ -1020,6 +1725,77 @@ name|TargetScsiSpiStatusIU_t
 operator|,
 name|MPI_POINTER
 name|pTargetScsiSpiStatusIU_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * NOTE: The SSP status IU is big-endian. When used on a little-endian system,  * this structure properly orders the bytes.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI_TARGET_SSP_RSP_IU
+block|{
+name|U32
+name|Reserved0
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* reserved for SSP header */
+comment|/* 00h */
+comment|/* start of RESPONSE information unit */
+name|U32
+name|Reserved1
+decl_stmt|;
+comment|/* 18h */
+name|U32
+name|Reserved2
+decl_stmt|;
+comment|/* 1Ch */
+name|U16
+name|Reserved3
+decl_stmt|;
+comment|/* 20h */
+name|U8
+name|DataPres
+decl_stmt|;
+comment|/* lower 2 bits */
+comment|/* 22h */
+name|U8
+name|Status
+decl_stmt|;
+comment|/* 23h */
+name|U32
+name|Reserved4
+decl_stmt|;
+comment|/* 24h */
+name|U32
+name|SenseDataLength
+decl_stmt|;
+comment|/* 28h */
+name|U32
+name|ResponseDataLength
+decl_stmt|;
+comment|/* 2Ch */
+name|U8
+name|ResponseSenseData
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* 30h */
+block|}
+name|MPI_TARGET_SSP_RSP_IU
+operator|,
+name|MPI_POINTER
+name|PTR_MPI_TARGET_SSP_RSP_IU
+operator|,
+name|MpiTargetSspRspIu_t
+operator|,
+name|MPI_POINTER
+name|pMpiTargetSspRspIu_t
 typedef|;
 end_typedef
 
