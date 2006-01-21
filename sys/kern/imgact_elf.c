@@ -1628,6 +1628,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|vm_object_reference
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|vm_map_lock
 argument_list|(
 name|map
@@ -1657,6 +1662,17 @@ expr_stmt|;
 name|vm_map_unlock
 argument_list|(
 name|map
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rv
+operator|!=
+name|KERN_SUCCESS
+condition|)
+name|vm_object_deallocate
+argument_list|(
+name|object
 argument_list|)
 expr_stmt|;
 block|}
@@ -1850,11 +1866,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|vm_object_reference
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 comment|/* cow flags: don't dump readonly sections in core */
 name|cow
 operator|=
@@ -1908,18 +1919,11 @@ name|rv
 operator|!=
 name|KERN_SUCCESS
 condition|)
-block|{
-name|vm_object_deallocate
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
 comment|/* we can stop now if we've covered it all */
 if|if
 condition|(
@@ -2866,8 +2870,6 @@ decl_stmt|;
 name|Elf_Auxargs
 modifier|*
 name|elf_auxargs
-init|=
-name|NULL
 decl_stmt|;
 name|struct
 name|vmspace
@@ -3050,7 +3052,7 @@ name|i
 operator|++
 control|)
 block|{
-switch|switch
+if|if
 condition|(
 name|phdr
 index|[
@@ -3058,11 +3060,10 @@ name|i
 index|]
 operator|.
 name|p_type
+operator|==
+name|PT_INTERP
 condition|)
 block|{
-case|case
-name|PT_INTERP
-case|:
 comment|/* Path to interpreter */
 if|if
 condition|(
@@ -3109,8 +3110,6 @@ index|]
 operator|.
 name|p_offset
 expr_stmt|;
-break|break;
-default|default:
 break|break;
 block|}
 block|}
