@@ -408,6 +408,12 @@ name|USB_PRODUCT_LINKSYS4_WUSB54GP
 block|}
 block|,
 block|{
+name|USB_VENDOR_LINKSYS4
+block|,
+name|USB_PRODUCT_LINKSYS4_HU200TS
+block|}
+block|,
+block|{
 name|USB_VENDOR_MELCO
 block|,
 name|USB_PRODUCT_MELCO_KG54
@@ -423,6 +429,12 @@ block|{
 name|USB_VENDOR_MELCO
 block|,
 name|USB_PRODUCT_MELCO_KG54YB
+block|}
+block|,
+block|{
+name|USB_VENDOR_MELCO
+block|,
+name|USB_PRODUCT_MELCO_NINWIFI
 block|}
 block|,
 block|{
