@@ -7,36 +7,6 @@ begin_comment
 comment|/*-  * Copyright (c) 1996-1999 Whistle Communications, Inc.  * All rights reserved.  *   * Subject to the following obligations and disclaimer of warranty, use and  * redistribution of this software, in source or object code forms, with or  * without modifications are expressly permitted by Whistle Communications;  * provided, however, that:  * 1. Any and all reproductions of the source or object code must include the  *    copyright notice above and the following disclaimer of warranties; and  * 2. No rights are granted, in any manner or form, to use Whistle  *    Communications, Inc. trademarks, including the mark "WHISTLE  *    COMMUNICATIONS" on advertising, endorsements, or otherwise except as  *    such appears in the above copyright notice or in the software.  *   * THIS SOFTWARE IS BEING PROVIDED BY WHISTLE COMMUNICATIONS "AS IS", AND  * TO THE MAXIMUM EXTENT PERMITTED BY LAW, WHISTLE COMMUNICATIONS MAKES NO  * REPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED, REGARDING THIS SOFTWARE,  * INCLUDING WITHOUT LIMITATION, ANY AND ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.  * WHISTLE COMMUNICATIONS DOES NOT WARRANT, GUARANTEE, OR MAKE ANY  * REPRESENTATIONS REGARDING THE USE OF, OR THE RESULTS OF THE USE OF THIS  * SOFTWARE IN TERMS OF ITS CORRECTNESS, ACCURACY, RELIABILITY OR OTHERWISE.  * IN NO EVENT SHALL WHISTLE COMMUNICATIONS BE LIABLE FOR ANY DAMAGES  * RESULTING FROM OR ARISING OUT OF ANY USE OF THIS SOFTWARE, INCLUDING  * WITHOUT LIMITATION, ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * PUNITIVE, OR CONSEQUENTIAL DAMAGES, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES, LOSS OF USE, DATA OR PROFITS, HOWEVER CAUSED AND UNDER ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF WHISTLE COMMUNICATIONS IS ADVISED OF THE POSSIBILITY  * OF SUCH DAMAGE.  *  * Author: Julian Elischer<julian@freebsd.org>  *  * $FreeBSD$  * $Whistle: ng_pppoe.c,v 1.10 1999/11/01 09:24:52 julian Exp $  */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|DBG
-value|do { printf("ng_device: %s\n", __func__ ); } while (0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|DBG
-value|do {} while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -58,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mbuf.h>
 end_include
 
@@ -71,12 +47,6 @@ begin_include
 include|#
 directive|include
 file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/syslog.h>
 end_include
 
 begin_include
@@ -534,7 +504,7 @@ comment|/* number of tags we are set up to work with */
 end_comment
 
 begin_comment
-comment|/*  * Information we store for each hook on each node for negotiating the   * session. The mbuf and cluster are freed once negotiation has completed.  * The whole negotiation block is then discarded.  */
+comment|/*  * Information we store for each hook on each node for negotiating the  * session. The mbuf and cluster are freed once negotiation has completed.  * The whole negotiation block is then discarded.  */
 end_comment
 
 begin_struct
@@ -612,7 +582,7 @@ block|{
 name|hook_p
 name|hook
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|Session_ID
 decl_stmt|;
 name|enum
@@ -632,8 +602,6 @@ name|negp
 name|neg
 decl_stmt|;
 comment|/* used when negotiating */
-comment|/*struct sess_con	*hash_next;*/
-comment|/* not yet used */
 block|}
 struct|;
 end_struct
@@ -676,7 +644,7 @@ begin_struct
 struct|struct
 name|ng_pppoe_mode_t
 block|{
-name|u_int8_t
+name|uint8_t
 name|id
 decl_stmt|;
 specifier|const
@@ -818,7 +786,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|PPPOE
+name|PPPoE
 block|{
 name|node_p
 name|node
@@ -838,7 +806,7 @@ name|u_int
 name|packets_out
 decl_stmt|;
 comment|/* packets out towards ethernet */
-name|u_int32_t
+name|uint32_t
 name|flags
 decl_stmt|;
 specifier|const
@@ -848,8 +816,6 @@ modifier|*
 name|mode
 decl_stmt|;
 comment|/* standard PPPoE or 3Com? */
-comment|/*struct sess_con *buckets[HASH_SIZE];*/
-comment|/* not yet used */
 block|}
 struct|;
 end_struct
@@ -857,7 +823,7 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|PPPOE
+name|PPPoE
 modifier|*
 name|priv_p
 typedef|;
@@ -983,13 +949,21 @@ end_comment
 
 begin_function
 specifier|static
-name|u_int16_t
+name|uint16_t
 name|get_new_sid
 parameter_list|(
 name|node_p
 name|node
 parameter_list|)
 block|{
+name|priv_p
+name|privp
+init|=
+name|NG_NODE_PRIVATE
+argument_list|(
+name|node
+argument_list|)
+decl_stmt|;
 specifier|static
 name|int
 name|pppoe_sid
@@ -1002,19 +976,9 @@ decl_stmt|;
 name|hook_p
 name|hook
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|val
 decl_stmt|;
-name|priv_p
-name|privp
-init|=
-name|NG_NODE_PRIVATE
-argument_list|(
-name|node
-argument_list|)
-decl_stmt|;
-name|DBG
-expr_stmt|;
 name|restart
 label|:
 name|val
@@ -1038,7 +1002,7 @@ goto|goto
 name|restart
 goto|;
 block|}
-comment|/* Check it isn't already in use */
+comment|/* Check it isn't already in use. */
 name|LIST_FOREACH
 argument_list|(
 argument|hook
@@ -1048,7 +1012,7 @@ argument_list|,
 argument|hk_hooks
 argument_list|)
 block|{
-comment|/* don't check special hooks */
+comment|/* Don't check special hooks. */
 if|if
 condition|(
 operator|(
@@ -1095,14 +1059,27 @@ goto|goto
 name|restart
 goto|;
 block|}
-return|return
+name|CTR2
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%20s: new sid %d"
+argument_list|,
+name|__func__
+argument_list|,
 name|val
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|val
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Return the location where the next tag can be put   */
+comment|/*  * Return the location where the next tag can be put  */
 end_comment
 
 begin_expr_stmt
@@ -1152,7 +1129,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/*  * Look for a tag of a specific type  * Don't trust any length the other end says.  * but assume we already sanity checked ph->length.  */
+comment|/*  * Look for a tag of a specific type.  * Don't trust any length the other end says,  * but assume we already sanity checked ph->length.  */
 end_comment
 
 begin_function
@@ -1169,7 +1146,7 @@ name|pppoe_hdr
 modifier|*
 name|ph
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|idx
 parameter_list|)
 block|{
@@ -1190,11 +1167,6 @@ name|ph
 argument_list|)
 decl_stmt|;
 specifier|const
-name|char
-modifier|*
-name|ptn
-decl_stmt|;
-specifier|const
 name|struct
 name|pppoe_tag
 modifier|*
@@ -1208,9 +1180,12 @@ index|[
 literal|0
 index|]
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|ptn
+decl_stmt|;
 comment|/* 	 * Keep processing tags while a tag header will still fit. 	 */
-name|DBG
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1227,7 +1202,7 @@ operator|<=
 name|end
 condition|)
 block|{
-comment|/* 	     * If the tag data would go past the end of the packet, abort. 	     */
+comment|/* 		 * If the tag data would go past the end of the packet, abort. 		 */
 name|ptn
 operator|=
 operator|(
@@ -1258,9 +1233,24 @@ name|ptn
 operator|>
 name|end
 condition|)
+block|{
+name|CTR2
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%20s: invalid length for tag %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|idx
+argument_list|)
+expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
+block|}
 if|if
 condition|(
 name|pt
@@ -1269,9 +1259,24 @@ name|tag_type
 operator|==
 name|idx
 condition|)
+block|{
+name|CTR2
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%20s: found tag %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|idx
+argument_list|)
+expr_stmt|;
 return|return
+operator|(
 name|pt
+operator|)
 return|;
+block|}
 name|pt
 operator|=
 operator|(
@@ -1283,18 +1288,31 @@ operator|)
 name|ptn
 expr_stmt|;
 block|}
+name|CTR2
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%20s: not found tag %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|idx
+argument_list|)
+expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/**************************************************************************  * inlines to initialise or add tags to a session's tag list,  **************************************************************************/
+comment|/**************************************************************************  * Inlines to initialise or add tags to a session's tag list.  **************************************************************************/
 end_comment
 
 begin_comment
-comment|/*  * Initialise the session's tag list  */
+comment|/*  * Initialise the session's tag list.  */
 end_comment
 
 begin_function
@@ -1306,24 +1324,21 @@ name|sessp
 name|sp
 parameter_list|)
 block|{
-name|DBG
-expr_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|sp
 operator|->
 name|neg
-operator|==
+operator|!=
 name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"pppoe: asked to init NULL neg pointer\n"
+argument_list|,
+operator|(
+literal|"%s: no neg"
+operator|,
+name|__func__
+operator|)
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 name|sp
 operator|->
 name|neg
@@ -1350,34 +1365,29 @@ modifier|*
 name|tp
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
 name|negp
 name|neg
-decl_stmt|;
-name|DBG
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|neg
-operator|=
+init|=
 name|sp
 operator|->
 name|neg
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|KASSERT
 argument_list|(
-literal|"pppoe: asked to use NULL neg pointer\n"
+name|neg
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"%s: no neg"
+operator|,
+name|__func__
+operator|)
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 if|if
 condition|(
 operator|(
@@ -1419,7 +1429,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Make up a packet, using the tags filled out for the session.  *  * Assume that the actual pppoe header and ethernet header   * are filled out externally to this routine.  * Also assume that neg->wh points to the correct   * location at the front of the buffer space.  */
+comment|/*  * Make up a packet, using the tags filled out for the session.  *  * Assume that the actual pppoe header and ethernet header  * are filled out externally to this routine.  * Also assume that neg->wh points to the correct  * location at the front of the buffer space.  */
 end_comment
 
 begin_function
@@ -1462,40 +1472,51 @@ decl_stmt|;
 name|int
 name|tlen
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|length
 init|=
 literal|0
 decl_stmt|;
-name|DBG
-expr_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 operator|(
 name|sp
 operator|->
 name|neg
-operator|==
+operator|!=
 name|NULL
 operator|)
-operator|||
+operator|&&
 operator|(
 name|sp
 operator|->
 name|neg
 operator|->
 name|m
-operator|==
+operator|!=
 name|NULL
 operator|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"pppoe: make_packet called from wrong state\n"
+argument_list|,
+operator|(
+literal|"%s: make_packet called from wrong state"
+operator|,
+name|__func__
+operator|)
 argument_list|)
 expr_stmt|;
-block|}
+name|CTR2
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%20s: called %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|sp
+operator|->
+name|Session_ID
+argument_list|)
+expr_stmt|;
 name|dp
 operator|=
 operator|(
@@ -1679,7 +1700,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*   * Find a hook that has a service string that matches that  * we are seeking. for now use a simple string.  * In the future we may need something like regexp().  * for testing allow a null string to match 1st found and a null service  * to match all requests. Also make '*' do the same.  */
+comment|/*  * Find a hook that has a service string that matches that  * we are seeking. for now use a simple string.  * In the future we may need something like regexp().  * for testing allow a null string to match 1st found and a null service  * to match all requests. Also make '*' do the same.  */
 end_comment
 
 begin_define
@@ -1742,8 +1763,6 @@ decl_stmt|;
 name|hook_p
 name|hook
 decl_stmt|;
-name|DBG
-expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|hook
@@ -1872,6 +1891,19 @@ literal|0
 condition|)
 break|break;
 block|}
+name|CTR3
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%20s: matched %p for %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|hook
+argument_list|,
+name|svc_name
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|hook
@@ -1885,7 +1917,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**************************************************************************  * Routine to find a particular session that matches an incoming packet	  *  **************************************************************************/
+comment|/**************************************************************************  * Routine to find a particular session that matches an incoming packet.  *  **************************************************************************/
 end_comment
 
 begin_function
@@ -1903,6 +1935,14 @@ modifier|*
 name|wh
 parameter_list|)
 block|{
+name|priv_p
+name|privp
+init|=
+name|NG_NODE_PRIVATE
+argument_list|(
+name|node
+argument_list|)
+decl_stmt|;
 name|sessp
 name|sp
 init|=
@@ -1913,15 +1953,7 @@ name|hook
 init|=
 name|NULL
 decl_stmt|;
-name|priv_p
-name|privp
-init|=
-name|NG_NODE_PRIVATE
-argument_list|(
-name|node
-argument_list|)
-decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|session
 init|=
 name|ntohs
@@ -1933,9 +1965,7 @@ operator|.
 name|sid
 argument_list|)
 decl_stmt|;
-comment|/* 	 * find matching peer/session combination. 	 */
-name|DBG
-expr_stmt|;
+comment|/* 	 * Find matching peer/session combination. 	 */
 name|LIST_FOREACH
 argument_list|(
 argument|hook
@@ -2037,6 +2067,19 @@ block|{
 break|break;
 block|}
 block|}
+name|CTR3
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%20s: matched %p for %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|hook
+argument_list|,
+name|session
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|hook
@@ -2060,11 +2103,6 @@ modifier|*
 name|tag
 parameter_list|)
 block|{
-name|hook_p
-name|hook
-init|=
-name|NULL
-decl_stmt|;
 name|priv_p
 name|privp
 init|=
@@ -2073,12 +2111,15 @@ argument_list|(
 name|node
 argument_list|)
 decl_stmt|;
+name|hook_p
+name|hook
+init|=
+name|NULL
+decl_stmt|;
 name|union
 name|uniq
 name|uniq
 decl_stmt|;
-name|DBG
-expr_stmt|;
 name|bcopy
 argument_list|(
 name|tag
@@ -2096,7 +2137,7 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* cycle through all known hooks */
+comment|/* Cycle through all known hooks. */
 name|LIST_FOREACH
 argument_list|(
 argument|hook
@@ -2106,7 +2147,7 @@ argument_list|,
 argument|hk_hooks
 argument_list|)
 block|{
-comment|/* don't check special hooks */
+comment|/* Don't check special hooks. */
 if|if
 condition|(
 operator|(
@@ -2147,6 +2188,21 @@ argument_list|)
 condition|)
 break|break;
 block|}
+name|CTR3
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%20s: matched %p for %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|hook
+argument_list|,
+name|uniq
+operator|.
+name|pointer
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|hook
@@ -2156,11 +2212,11 @@ block|}
 end_function
 
 begin_comment
-comment|/**************************************************************************  * start of Netgraph entrypoints					  *  **************************************************************************/
+comment|/**************************************************************************  * Start of Netgraph entrypoints.					  *  **************************************************************************/
 end_comment
 
 begin_comment
-comment|/*  * Allocate the private data structure and the generic node  * and link them together.  *  * ng_make_node_common() returns with a generic node struct  * with a single reference for us.. we transfer it to the  * private structure.. when we free the private struct we must  * unref the node so it gets freed too.  */
+comment|/*  * Allocate the private data structure and link it with node.  */
 end_comment
 
 begin_function
@@ -2173,21 +2229,17 @@ name|node
 parameter_list|)
 block|{
 name|priv_p
-name|privdata
+name|privp
 decl_stmt|;
-name|DBG
-expr_stmt|;
-comment|/* Initialize private descriptor */
-name|MALLOC
+comment|/* Initialize private descriptor. */
+name|privp
+operator|=
+name|malloc
 argument_list|(
-name|privdata
-argument_list|,
-name|priv_p
-argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
-name|privdata
+name|privp
 argument_list|)
 argument_list|,
 name|M_NETGRAPH_PPPOE
@@ -2199,7 +2251,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|privdata
+name|privp
 operator|==
 name|NULL
 condition|)
@@ -2208,22 +2260,22 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-comment|/* Link structs together; this counts as our one reference to *nodep */
+comment|/* Link structs together; this counts as our one reference to *node. */
 name|NG_NODE_SET_PRIVATE
 argument_list|(
 name|node
 argument_list|,
-name|privdata
+name|privp
 argument_list|)
 expr_stmt|;
-name|privdata
+name|privp
 operator|->
 name|node
 operator|=
 name|node
 expr_stmt|;
 comment|/* Initialize to standard mode (the first one in ng_pppoe_modes[]). */
-name|privdata
+name|privp
 operator|->
 name|mode
 operator|=
@@ -2232,6 +2284,21 @@ name|ng_pppoe_modes
 index|[
 literal|0
 index|]
+expr_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%20s: created node [%x] (%p)"
+argument_list|,
+name|__func__
+argument_list|,
+name|node
+operator|->
+name|nd_ID
+argument_list|,
+name|node
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -2242,7 +2309,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Give our ok for a hook to be added...  * point the hook's private info to the hook structure.  *  * The following hook names are special:  *  Ethernet:  the hook that should be connected to a NIC.  *  debug:	copies of data sent out here  (when I write the code).  * All other hook names need only be unique. (the framework checks this).  */
+comment|/*  * Give our ok for a hook to be added...  * point the hook's private info to the hook structure.  *  * The following hook names are special:  *  "ethernet":  the hook that should be connected to a NIC.  *  "debug":	copies of data sent out here  (when I write the code).  * All other hook names need only be unique. (the framework checks this).  */
 end_comment
 
 begin_function
@@ -2274,8 +2341,6 @@ decl_stmt|;
 name|sessp
 name|sp
 decl_stmt|;
-name|DBG
-expr_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -2338,12 +2403,10 @@ block|}
 else|else
 block|{
 comment|/* 		 * Any other unique name is OK. 		 * The infrastructure has already checked that it's unique, 		 * so just allocate it and hook it in. 		 */
-name|MALLOC
-argument_list|(
 name|sp
-argument_list|,
-name|sessp
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -2363,13 +2426,11 @@ name|sp
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 name|ENOMEM
 operator|)
 return|;
-block|}
 name|NG_HOOK_SET_PRIVATE
 argument_list|(
 name|hook
@@ -2384,6 +2445,25 @@ operator|=
 name|hook
 expr_stmt|;
 block|}
+name|CTR5
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%20s: node [%x] (%p) connected hook %s (%p)"
+argument_list|,
+name|__func__
+argument_list|,
+name|node
+operator|->
+name|nd_ID
+argument_list|,
+name|node
+argument_list|,
+name|name
+argument_list|,
+name|hook
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2458,8 +2538,6 @@ name|ng_mesg
 modifier|*
 name|msg
 decl_stmt|;
-name|DBG
-expr_stmt|;
 name|NGI_GET_MSG
 argument_list|(
 name|item
@@ -2467,7 +2545,34 @@ argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
-comment|/* Deal with message according to cookie and command */
+name|CTR5
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%20s: node [%x] (%p) got message %d with cookie %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|node
+operator|->
+name|nd_ID
+argument_list|,
+name|node
+argument_list|,
+name|msg
+operator|->
+name|header
+operator|.
+name|cmd
+argument_list|,
+name|msg
+operator|->
+name|header
+operator|.
+name|typecookie
+argument_list|)
+expr_stmt|;
+comment|/* Deal with message according to cookie and command. */
 switch|switch
 condition|(
 name|msg
@@ -2613,7 +2718,7 @@ name|EMSGSIZE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* make sure strcmp will terminate safely */
+comment|/* Make sure strcmp will terminate safely. */
 name|ourmsg
 operator|->
 name|hook
@@ -2630,7 +2735,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* cycle through all known hooks */
+comment|/* Cycle through all known hooks. */
 name|LIST_FOREACH
 argument_list|(
 argument|hook
@@ -2669,13 +2774,11 @@ name|hook
 operator|==
 name|NULL
 condition|)
-block|{
 name|LEAVE
 argument_list|(
 name|ENOENT
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -2702,13 +2805,11 @@ operator|->
 name|ethernet_hook
 operator|)
 condition|)
-block|{
 name|LEAVE
 argument_list|(
 name|EINVAL
 argument_list|)
 expr_stmt|;
-block|}
 name|sp
 operator|=
 name|NG_HOOK_PRIVATE
@@ -2747,13 +2848,11 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
-block|{
 name|LEAVE
 argument_list|(
 name|EEXIST
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* 			 * PPPOE_SERVICE advertisments are set up 			 * on sessions that are in PRIMED state. 			 */
 if|if
@@ -2766,9 +2865,7 @@ name|cmd
 operator|==
 name|NGM_PPPOE_SERVICE
 condition|)
-block|{
 break|break;
-block|}
 if|if
 condition|(
 name|sp
@@ -2789,13 +2886,11 @@ name|EISCONN
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * set up prototype header 			 */
-name|MALLOC
-argument_list|(
+comment|/* 			 * Set up prototype header. 			 */
 name|neg
-argument_list|,
-name|negp
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -2815,27 +2910,22 @@ name|neg
 operator|==
 name|NULL
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"pppoe: Session out of memory\n"
-argument_list|)
-expr_stmt|;
 name|LEAVE
 argument_list|(
 name|ENOMEM
 argument_list|)
 expr_stmt|;
-block|}
-name|MGETHDR
-argument_list|(
 name|neg
 operator|->
 name|m
-argument_list|,
+operator|=
+name|m_getcl
+argument_list|(
 name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
+argument_list|,
+name|M_PKTHDR
 argument_list|)
 expr_stmt|;
 if|if
@@ -2847,12 +2937,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"pppoe: Session out of mbufs\n"
-argument_list|)
-expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|neg
 argument_list|,
@@ -2875,55 +2960,6 @@ name|rcvif
 operator|=
 name|NULL
 expr_stmt|;
-name|MCLGET
-argument_list|(
-name|neg
-operator|->
-name|m
-argument_list|,
-name|M_DONTWAIT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|neg
-operator|->
-name|m
-operator|->
-name|m_flags
-operator|&
-name|M_EXT
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"pppoe: Session out of mcls\n"
-argument_list|)
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|neg
-operator|->
-name|m
-argument_list|)
-expr_stmt|;
-name|FREE
-argument_list|(
-name|neg
-argument_list|,
-name|M_NETGRAPH_PPPOE
-argument_list|)
-expr_stmt|;
-name|LEAVE
-argument_list|(
-name|ENOBUFS
-argument_list|)
-expr_stmt|;
-block|}
 name|sp
 operator|->
 name|neg
@@ -3088,13 +3124,11 @@ condition|(
 operator|!
 name|resp
 condition|)
-block|{
 name|LEAVE
 argument_list|(
 name|ENOMEM
 argument_list|)
 expr_stmt|;
-block|}
 name|stats
 operator|=
 operator|(
@@ -3127,7 +3161,7 @@ block|}
 case|case
 name|NGM_PPPOE_CONNECT
 case|:
-comment|/* 			 * Check the hook exists and is Uninitialised. 			 * Send a PADI request, and start the timeout logic. 			 * Store the originator of this message so we can send 			 * a success of fail message to them later. 			 * Move the session to SINIT 			 * Set up the session to the correct state and 			 * start it. 			 */
+comment|/* 			 * Check the hook exists and is Uninitialised. 			 * Send a PADI request, and start the timeout logic. 			 * Store the originator of this message so we can send 			 * a success of fail message to them later. 			 * Move the session to SINIT. 			 * Set up the session to the correct state and 			 * start it. 			 */
 name|neg
 operator|->
 name|service
@@ -3149,7 +3183,7 @@ operator|=
 name|htons
 argument_list|(
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|)
 name|ourmsg
 operator|->
@@ -3218,7 +3252,7 @@ operator|=
 name|htons
 argument_list|(
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|)
 name|ourmsg
 operator|->
@@ -3268,7 +3302,7 @@ name|code
 operator|=
 name|PADT_CODE
 expr_stmt|;
-comment|/* 			 * wait for PADI packet coming from ethernet 			 */
+comment|/* 			 * Wait for PADI packet coming from Ethernet. 			 */
 name|sp
 operator|->
 name|state
@@ -3301,7 +3335,7 @@ operator|=
 name|htons
 argument_list|(
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|)
 name|ourmsg
 operator|->
@@ -3351,7 +3385,7 @@ name|code
 operator|=
 name|PADO_CODE
 expr_stmt|;
-comment|/* 			 * Wait for PADI packet coming from hook 			 */
+comment|/* 			 * Wait for PADI packet coming from hook. 			 */
 name|sp
 operator|->
 name|state
@@ -3362,7 +3396,7 @@ break|break;
 case|case
 name|NGM_PPPOE_SERVICE
 case|:
-comment|/*  			 * Check the session is primed. 			 * for now just allow ONE service to be advertised. 			 * If you do it twice you just overwrite. 			 */
+comment|/* 			 * Check the session is primed. 			 * for now just allow ONE service to be advertised. 			 * If you do it twice you just overwrite. 			 */
 if|if
 condition|(
 name|sp
@@ -3410,7 +3444,7 @@ operator|=
 name|htons
 argument_list|(
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|)
 name|ourmsg
 operator|->
@@ -3501,7 +3535,7 @@ name|arglen
 operator|-
 literal|1
 expr_stmt|;
-comment|/* Search for matching mode string */
+comment|/* Search for matching mode string. */
 for|for
 control|(
 name|mode
@@ -3644,7 +3678,18 @@ name|EINVAL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Take care of synchronous response, if any */
+name|CTR2
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%20s: returning %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+comment|/* Take care of synchronous response, if any. */
 name|quit
 label|:
 name|NG_RESPOND_MSG
@@ -3658,7 +3703,7 @@ argument_list|,
 name|resp
 argument_list|)
 expr_stmt|;
-comment|/* Free the message and return */
+comment|/* Free the message and return. */
 name|NG_FREE_MSG
 argument_list|(
 name|msg
@@ -3710,8 +3755,19 @@ block|}
 name|__packed
 name|uniqtag
 struct|;
-comment|/*  	 * kick the state machine into starting up 	 */
-name|DBG
+comment|/* 	 * Kick the state machine into starting up. 	 */
+name|CTR2
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%20s: called %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|sp
+operator|->
+name|Session_ID
+argument_list|)
 expr_stmt|;
 name|sp
 operator|->
@@ -3719,7 +3775,7 @@ name|state
 operator|=
 name|PPPOE_SINIT
 expr_stmt|;
-comment|/* Reset the packet header to broadcast. Since we are in a client 	 * mode use configured ethertype. */
+comment|/* 	 * Reset the packet header to broadcast. Since we are 	 * in a client 	 * mode use configured ethertype. 	 */
 name|memcpy
 argument_list|(
 operator|(
@@ -3876,6 +3932,19 @@ name|ngpppoe_sts
 modifier|*
 name|sts
 decl_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%20s: called %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|sp
+operator|->
+name|Session_ID
+argument_list|)
+expr_stmt|;
 name|NG_MKMESSAGE
 argument_list|(
 name|msg
@@ -3998,6 +4067,19 @@ name|ng_mesg
 modifier|*
 name|msg
 decl_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%20s: called %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|sp
+operator|->
+name|Session_ID
+argument_list|)
+expr_stmt|;
 name|NG_MKMESSAGE
 argument_list|(
 name|msg
@@ -4008,7 +4090,7 @@ name|NGM_PPPOE_SESSIONID
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|u_int16_t
+name|uint16_t
 argument_list|)
 argument_list|,
 name|M_NOWAIT
@@ -4027,7 +4109,7 @@ operator|)
 return|;
 operator|*
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 name|msg
@@ -4109,32 +4191,6 @@ argument_list|)
 decl_stmt|;
 specifier|const
 name|struct
-name|pppoe_full_hdr
-modifier|*
-name|wh
-decl_stmt|;
-specifier|const
-name|struct
-name|pppoe_hdr
-modifier|*
-name|ph
-decl_stmt|;
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
-name|u_int16_t
-name|session
-decl_stmt|;
-name|u_int16_t
-name|length
-decl_stmt|;
-name|u_int8_t
-name|code
-decl_stmt|;
-specifier|const
-name|struct
 name|pppoe_tag
 modifier|*
 name|utag
@@ -4146,8 +4202,44 @@ name|tag
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
+name|struct
+name|pppoe_full_hdr
+modifier|*
+name|wh
+decl_stmt|;
+specifier|const
+name|struct
+name|pppoe_hdr
+modifier|*
+name|ph
+decl_stmt|;
+name|negp
+name|neg
+init|=
+name|NULL
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|m
+decl_stmt|;
 name|hook_p
 name|sendhook
+decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
+name|uint16_t
+name|session
+decl_stmt|;
+name|uint16_t
+name|length
+decl_stmt|;
+name|uint8_t
+name|code
 decl_stmt|;
 struct|struct
 block|{
@@ -4163,17 +4255,28 @@ block|}
 name|__packed
 name|uniqtag
 struct|;
-name|negp
-name|neg
-init|=
-name|NULL
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
-name|DBG
+name|CTR6
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%20s: node [%x] (%p) received %p on \"%s\" (%p)"
+argument_list|,
+name|__func__
+argument_list|,
+name|node
+operator|->
+name|nd_ID
+argument_list|,
+name|node
+argument_list|,
+name|item
+argument_list|,
+name|hook
+operator|->
+name|hk_name
+argument_list|,
+name|hook
+argument_list|)
 expr_stmt|;
 name|NGI_GET_M
 argument_list|(
@@ -4195,7 +4298,7 @@ operator|->
 name|debug_hook
 condition|)
 block|{
-comment|/* 		 * Data from the debug hook gets sent without modification 		 * straight to the ethernet.  		 */
+comment|/* 		 * Data from the debug hook gets sent without modification 		 * straight to the ethernet. 		 */
 name|NG_FWD_ITEM_HOOK
 argument_list|(
 name|error
@@ -4227,7 +4330,7 @@ operator|->
 name|ethernet_hook
 condition|)
 block|{
-comment|/* 		 * Incoming data.  		 * Dig out various fields from the packet. 		 * use them to decide where to send it. 		 */
+comment|/* 		 * Incoming data. 		 * Dig out various fields from the packet. 		 * Use them to decide where to send it. 		 */
 name|privp
 operator|->
 name|packets_in
@@ -4317,7 +4420,7 @@ comment|/* fall through */
 case|case
 name|ETHERTYPE_PPPOE_DISC
 case|:
-comment|/* 			 * We need to try to make sure that the tag area 			 * is contiguous, or we could wander off the end 			 * of a buffer and make a mess.  			 * (Linux wouldn't have this problem). 			 */
+comment|/* 			 * We need to try to make sure that the tag area 			 * is contiguous, or we could wander off the end 			 * of a buffer and make a mess. 			 * (Linux wouldn't have this problem). 			 */
 if|if
 condition|(
 name|m
@@ -4517,7 +4620,7 @@ block|{
 case|case
 name|PADI_CODE
 case|:
-comment|/* 				 * We are a server: 				 * Look for a hook with the required service 				 * and send the ENTIRE packet up there. 				 * It should come back to a new hook in  				 * PRIMED state. Look there for further 				 * processing. 				 */
+comment|/* 				 * We are a server: 				 * Look for a hook with the required service 				 * and send the ENTIRE packet up there. 				 * It should come back to a new hook in 				 * PRIMED state. Look there for further 				 * processing. 				 */
 name|tag
 operator|=
 name|get_tag
@@ -4597,7 +4700,7 @@ break|break;
 case|case
 name|PADO_CODE
 case|:
-comment|/* 				 * We are a client: 				 * Use the host_uniq tag to find the  				 * hook this is in response to. 				 * Received #2, now send #3 				 * For now simply accept the first we receive. 				 */
+comment|/* 				 * We are a client: 				 * Use the host_uniq tag to find the 				 * hook this is in response to. 				 * Received #2, now send #3 				 * For now simply accept the first we receive. 				 */
 name|utag
 operator|=
 name|get_tag
@@ -4856,7 +4959,7 @@ break|break;
 case|case
 name|PADR_CODE
 case|:
-comment|/* 				 * We are a server: 				 * Use the ac_cookie tag to find the  				 * hook this is in response to. 				 */
+comment|/* 				 * We are a server: 				 * Use the ac_cookie tag to find the 				 * hook this is in response to. 				 */
 name|utag
 operator|=
 name|get_tag
@@ -4934,7 +5037,7 @@ operator|==
 name|PPPOE_NEWCONNECTED
 condition|)
 block|{
-comment|/* 					 * Whoa! drop back to resend that  					 * PADS packet. 					 * We should still have a copy of it. 					 */
+comment|/* 					 * Whoa! drop back to resend that 					 * PADS packet. 					 * We should still have a copy of it. 					 */
 name|sp
 operator|->
 name|state
@@ -5119,7 +5222,7 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Having sent the last Negotiation header, 				 * Set up the stored packet header to  				 * be correct for the actual session. 				 * But keep the negotialtion stuff 				 * around in case we need to resend this last  				 * packet. We'll discard it when we move 				 * from NEWCONNECTED to CONNECTED 				 */
+comment|/* 				 * Having sent the last Negotiation header, 				 * Set up the stored packet header to 				 * be correct for the actual session. 				 * But keep the negotialtion stuff 				 * around in case we need to resend this last 				 * packet. We'll discard it when we move 				 * from NEWCONNECTED to CONNECTED 				 */
 name|sp
 operator|->
 name|pkt_hdr
@@ -5185,7 +5288,7 @@ break|break;
 case|case
 name|PADS_CODE
 case|:
-comment|/* 				 * We are a client: 				 * Use the host_uniq tag to find the  				 * hook this is in response to. 				 * take the session ID and store it away. 				 * Also make sure the pre-made header is 				 * correct and set us into Session mode. 				 */
+comment|/* 				 * We are a client: 				 * Use the host_uniq tag to find the 				 * hook this is in response to. 				 * take the session ID and store it away. 				 * Also make sure the pre-made header is 				 * correct and set us into Session mode. 				 */
 name|utag
 operator|=
 name|get_tag
@@ -5332,7 +5435,7 @@ name|state
 operator|=
 name|PPPOE_CONNECTED
 expr_stmt|;
-comment|/* 				 * Now we have gone to Connected mode,  				 * Free all resources needed for  				 * negotiation. 				 * Keep a copy of the header we will be using. 				 */
+comment|/* 				 * Now we have gone to Connected mode, 				 * Free all resources needed for 				 * negotiation. 				 * Keep a copy of the header we will be using. 				 */
 name|sp
 operator|->
 name|pkt_hdr
@@ -5391,7 +5494,7 @@ operator|->
 name|m
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|sp
 operator|->
@@ -5468,7 +5571,7 @@ case|:
 case|case
 name|ETHERTYPE_PPPOE_SESS
 case|:
-comment|/* 			 * find matching peer/session combination. 			 */
+comment|/* 			 * Find matching peer/session combination. 			 */
 name|sendhook
 operator|=
 name|pppoe_findsession
@@ -5586,7 +5689,7 @@ name|state
 operator|=
 name|PPPOE_CONNECTED
 expr_stmt|;
-comment|/* 					 * Now we have gone to Connected mode,  					 * Free all resources needed for  					 * negotiation. Be paranoid about 					 * whether there may be a timeout. 					 */
+comment|/* 					 * Now we have gone to Connected mode, 					 * Free all resources needed for 					 * negotiation. Be paranoid about 					 * whether there may be a timeout. 					 */
 name|m_freem
 argument_list|(
 name|sp
@@ -5608,7 +5711,7 @@ argument_list|,
 name|node
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|sp
 operator|->
@@ -5656,7 +5759,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 * 	Not ethernet or debug hook.. 		 * 		 * The packet has come in on a normal hook. 		 * We need to find out what kind of hook, 		 * So we can decide how to handle it. 		 * Check the hook's state. 		 */
+comment|/* 		 * Not ethernet or debug hook.. 		 * 		 * The packet has come in on a normal hook. 		 * We need to find out what kind of hook, 		 * So we can decide how to handle it. 		 * Check the hook's state. 		 */
 name|sp
 operator|=
 name|NG_HOOK_PRIVATE
@@ -5801,13 +5904,11 @@ name|m
 operator|==
 name|NULL
 condition|)
-block|{
 name|LEAVE
 argument_list|(
 name|ENOBUFS
 argument_list|)
 expr_stmt|;
-block|}
 name|wh
 operator|=
 name|mtod
@@ -5858,7 +5959,7 @@ block|}
 case|case
 name|PPPOE_PRIMED
 case|:
-comment|/* 			 * A PADI packet is being returned by the application 			 * that has set up this hook. This indicates that it  			 * wants us to offer service. 			 */
+comment|/* 			 * A PADI packet is being returned by the application 			 * that has set up this hook. This indicates that it 			 * wants us to offer service. 			 */
 name|neg
 operator|=
 name|sp
@@ -5897,13 +5998,11 @@ name|m
 operator|==
 name|NULL
 condition|)
-block|{
 name|LEAVE
 argument_list|(
 name|ENOBUFS
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|wh
 operator|=
@@ -5953,7 +6052,7 @@ name|ph
 operator|.
 name|code
 expr_stmt|;
-comment|/* Use peers mode in session */
+comment|/* Use peers mode in session. */
 name|neg
 operator|->
 name|pkt
@@ -5976,14 +6075,11 @@ name|code
 operator|!=
 name|PADI_CODE
 condition|)
-block|{
 name|LEAVE
 argument_list|(
 name|EINVAL
 argument_list|)
 expr_stmt|;
-block|}
-empty_stmt|;
 name|ng_uncallout
 argument_list|(
 operator|&
@@ -6040,7 +6136,7 @@ name|code
 operator|=
 name|PADO_CODE
 expr_stmt|;
-comment|/* 			 * start working out the tags to respond with. 			 */
+comment|/* 			 * Start working out the tags to respond with. 			 */
 name|uniqtag
 operator|.
 name|hdr
@@ -6113,7 +6209,7 @@ name|tag
 argument_list|)
 expr_stmt|;
 comment|/* return service */
-comment|/* 			 * If we have a NULL service request 			 * and have an extra service defined in this hook, 			 * then also add a tag for the extra service. 			 * XXX this is a hack. eventually we should be able 			 * to support advertising many services, not just one  			 */
+comment|/* 			 * If we have a NULL service request 			 * and have an extra service defined in this hook, 			 * then also add a tag for the extra service. 			 * XXX this is a hack. eventually we should be able 			 * to support advertising many services, not just one 			 */
 if|if
 condition|(
 operator|(
@@ -6279,8 +6375,6 @@ argument_list|(
 name|node
 argument_list|)
 decl_stmt|;
-name|DBG
-expr_stmt|;
 name|NG_NODE_SET_PRIVATE
 argument_list|(
 name|node
@@ -6295,7 +6389,7 @@ operator|->
 name|node
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|privdata
 argument_list|,
@@ -6311,7 +6405,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Hook disconnection  *  * Clean up all dangling links and information about the session/hook.  * For this type, removal of the last link destroys the node  */
+comment|/*  * Hook disconnection  *  * Clean up all dangling links and information about the session/hook.  * For this type, removal of the last link destroys the node.  */
 end_comment
 
 begin_function
@@ -6345,8 +6439,6 @@ decl_stmt|;
 name|int
 name|hooks
 decl_stmt|;
-name|DBG
-expr_stmt|;
 name|hooks
 operator|=
 name|NG_NODE_NUMHOOKS
@@ -6354,7 +6446,7 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-comment|/* this one already not counted */
+comment|/* This one already not counted. */
 if|if
 condition|(
 name|NG_HOOK_PRIVATE
@@ -6490,7 +6582,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-comment|/* revert the stored header to DISC/PADT mode */
+comment|/* Revert the stored header to DISC/PADT mode. */
 name|wh
 operator|=
 operator|&
@@ -6506,7 +6598,7 @@ name|code
 operator|=
 name|PADT_CODE
 expr_stmt|;
-comment|/* Configure ethertype depending on what was used during 			 * sessions stage. */
+comment|/* 			 * Configure ethertype depending on what was used 			 * during sessions stage. 			 */
 if|if
 condition|(
 name|sp
@@ -6536,7 +6628,7 @@ name|ether_type
 operator|=
 name|ETHERTYPE_PPPOE_DISC
 expr_stmt|;
-comment|/* generate a packet of that type */
+comment|/* Generate a packet of that type. */
 name|MGETHDR
 argument_list|(
 name|m
@@ -6604,7 +6696,7 @@ name|wh
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Add a General error message and adjust 				 * sizes 				 */
+comment|/* 				 * Add a General error message and adjust 				 * sizes. 				 */
 name|wh
 operator|=
 name|mtod
@@ -6740,7 +6832,7 @@ operator|->
 name|m
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|sp
 operator|->
@@ -6750,7 +6842,7 @@ name|M_NETGRAPH_PPPOE
 argument_list|)
 expr_stmt|;
 block|}
-name|FREE
+name|free
 argument_list|(
 name|sp
 argument_list|,
@@ -6764,8 +6856,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* work out how many session hooks there are */
-comment|/* Node goes away on last session hook removal */
+comment|/* 		 * Work out how many session hooks there are. 		 * Node goes away on last session hook removal. 		 */
 if|if
 condition|(
 name|privp
@@ -6819,7 +6910,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * timeouts come here.  */
+comment|/*  * Timeouts come here.  */
 end_comment
 
 begin_function
@@ -6841,6 +6932,17 @@ name|int
 name|arg2
 parameter_list|)
 block|{
+name|priv_p
+name|privp
+init|=
+name|NG_NODE_PRIVATE
+argument_list|(
+name|NG_HOOK_NODE
+argument_list|(
+name|hook
+argument_list|)
+argument_list|)
+decl_stmt|;
 name|sessp
 name|sp
 init|=
@@ -6856,11 +6958,6 @@ name|sp
 operator|->
 name|neg
 decl_stmt|;
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -6868,18 +6965,35 @@ name|m0
 init|=
 name|NULL
 decl_stmt|;
-name|priv_p
-name|privp
+name|int
+name|error
 init|=
-name|NG_NODE_PRIVATE
-argument_list|(
-name|NG_HOOK_NODE
-argument_list|(
-name|hook
-argument_list|)
-argument_list|)
+literal|0
 decl_stmt|;
-name|DBG
+name|CTR6
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%20s: node [%x] (%p) hook \"%s\" (%p) session %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|node
+operator|->
+name|nd_ID
+argument_list|,
+name|node
+argument_list|,
+name|hook
+operator|->
+name|hk_name
+argument_list|,
+name|hook
+argument_list|,
+name|sp
+operator|->
+name|Session_ID
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -6888,14 +7002,14 @@ operator|->
 name|state
 condition|)
 block|{
-comment|/* 		 * resend the last packet, using an exponential backoff. 		 * After a period of time, stop growing the backoff, 		 * and either leave it, or revert to the start. 		 */
+comment|/* 		 * Resend the last packet, using an exponential backoff. 		 * After a period of time, stop growing the backoff, 		 * And either leave it, or revert to the start. 		 */
 case|case
 name|PPPOE_SINIT
 case|:
 case|case
 name|PPPOE_SREQ
 case|:
-comment|/* timeouts on these produce resends */
+comment|/* Timeouts on these produce resends. */
 name|m0
 operator|=
 name|m_copypacket
@@ -6966,7 +7080,7 @@ operator|==
 name|PPPOE_SREQ
 condition|)
 block|{
-comment|/* revert to SINIT mode */
+comment|/* Revert to SINIT mode. */
 name|pppoe_start
 argument_list|(
 name|sp
@@ -6990,7 +7104,7 @@ case|:
 case|case
 name|PPPOE_SOFFER
 case|:
-comment|/* a timeout on these says "give up" */
+comment|/* A timeout on these says "give up" */
 name|ng_rmhook_self
 argument_list|(
 name|hook
@@ -6998,7 +7112,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-comment|/* timeouts have no meaning in other states */
+comment|/* Timeouts have no meaning in other states. */
 name|printf
 argument_list|(
 literal|"pppoe: unexpected timeout\n"
@@ -7059,7 +7173,18 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|DBG
+name|CTR2
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%20s: called %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|sp
+operator|->
+name|Session_ID
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -7089,7 +7214,7 @@ break|break;
 case|case
 name|PPPOE_NEWCONNECTED
 case|:
-comment|/* send the PADS without a timeout - we're now connected */
+comment|/* Send the PADS without a timeout - we're now connected. */
 name|m0
 operator|=
 name|m_copypacket
@@ -7118,7 +7243,7 @@ break|break;
 case|case
 name|PPPOE_PRIMED
 case|:
-comment|/* No packet to send, but set up the timeout */
+comment|/* No packet to send, but set up the timeout. */
 name|ng_callout
 argument_list|(
 operator|&
@@ -7145,7 +7270,7 @@ break|break;
 case|case
 name|PPPOE_SOFFER
 case|:
-comment|/* 		 * send the offer but if they don't respond 		 * in PPPOE_OFFER_TIMEOUT seconds, forget about it. 		 */
+comment|/* 		 * Send the offer but if they don't respond 		 * in PPPOE_OFFER_TIMEOUT seconds, forget about it. 		 */
 name|m0
 operator|=
 name|m_copypacket
@@ -7265,7 +7390,6 @@ literal|"pppoe: timeout: bad state\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* return (error); */
 block|}
 end_function
 
@@ -7327,7 +7451,18 @@ literal|0
 index|]
 decl_stmt|;
 comment|/* 	 * Keep processing tags while a tag header will still fit. 	 */
-name|DBG
+name|CTR2
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%20s: called %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|sp
+operator|->
+name|Session_ID
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -7472,7 +7607,18 @@ name|ngpppoe_sts
 modifier|*
 name|sts
 decl_stmt|;
-name|DBG
+name|CTR2
+argument_list|(
+name|KTR_NET
+argument_list|,
+literal|"%20s: called %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|sp
+operator|->
+name|Session_ID
+argument_list|)
 expr_stmt|;
 name|NG_MKMESSAGE
 argument_list|(
