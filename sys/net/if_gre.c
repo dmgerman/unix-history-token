@@ -402,10 +402,6 @@ block|,
 operator|.
 name|pr_input
 operator|=
-operator|(
-name|pr_input_t
-operator|*
-operator|)
 name|gre_input
 block|,
 operator|.
@@ -470,10 +466,6 @@ block|,
 operator|.
 name|pr_input
 operator|=
-operator|(
-name|pr_input_t
-operator|*
-operator|)
 name|gre_mobile_input
 block|,
 operator|.
