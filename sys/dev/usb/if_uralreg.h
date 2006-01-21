@@ -38,6 +38,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RAL_VENDOR_REQUEST
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
 name|RAL_WRITE_MAC
 value|0x02
 end_define
