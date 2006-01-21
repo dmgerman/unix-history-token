@@ -2419,16 +2419,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|ng_ref_node
-parameter_list|(
-name|node_p
-name|node
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|static
 name|__inline
 name|void
@@ -2825,8 +2815,7 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-comment|/*_NG_NODE_REF(node);*/
-name|ng_ref_node
+name|_NG_NODE_REF
 argument_list|(
 name|node
 argument_list|)
