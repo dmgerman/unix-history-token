@@ -201,7 +201,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* this command is guaranteed to not alter data or'd into the command */
+comment|/* This command is guaranteed to not alter data (or'd into the command). */
 end_comment
 
 begin_define
@@ -209,6 +209,17 @@ define|#
 directive|define
 name|NGM_READONLY
 value|0x10000000
+end_define
+
+begin_comment
+comment|/* This command is guaranteed to have a reply (or'd into the command). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGM_HASREPLY
+value|0x20000000
 end_define
 
 begin_comment
