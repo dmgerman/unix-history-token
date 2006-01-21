@@ -2550,11 +2550,6 @@ name|resptype_seen
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|seq_seen
-init|=
-literal|0
-decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -2992,16 +2987,6 @@ case|case
 literal|0x53
 case|:
 comment|/* The remote tells us what it thinks the sequence 			 * numbers are. If it's not size 2, it must be a 			 * duplicate to have gotten this far, skip it. */
-if|if
-condition|(
-name|seq_seen
-operator|!=
-literal|0
-condition|)
-comment|/* already seen seq numbers */
-goto|goto
-name|nextIE
-goto|;
 if|if
 condition|(
 name|segsize
