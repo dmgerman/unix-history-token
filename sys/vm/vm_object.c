@@ -291,6 +291,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|vm_object_vndeallocate
+parameter_list|(
+name|vm_object_t
+name|object
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  *	Virtual memory objects maintain the actual data  *	associated with allocated virtual memory.  A given  *	page of memory exists within exactly one object.  *  *	An object is only deallocated when all "references"  *	are given up.  Only one "reference" to a given  *	region of an object should be writeable.  *  *	Associated with each object is a list of all resident  *	memory pages belonging to that object; this list is  *	maintained by the "vm_page" module, and locked by the object's  *	lock.  *  *	Each object also records a "pager" routine which is  *	used to retrieve (and store) pages to the proper backing  *	storage.  In addition, objects may be backed by other  *	objects from which they were virtual-copied.  *  *	The only items within the object structure which are  *	modified after time of creation are:  *		reference count		locked by object's lock  *		pager routine		locked by object's lock  *  */
 end_comment
@@ -1336,6 +1347,7 @@ comment|/*  * Handle deallocating an object of type OBJT_VNODE.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|vm_object_vndeallocate
 parameter_list|(
