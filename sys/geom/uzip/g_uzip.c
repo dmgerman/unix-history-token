@@ -2891,7 +2891,7 @@ name|DECLARE_GEOM_CLASS
 argument_list|(
 name|g_uzip_class
 argument_list|,
-name|geom_uzip
+name|g_uzip
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2899,7 +2899,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|geom_uzip
+name|g_uzip
 argument_list|,
 name|zlib
 argument_list|,
