@@ -2285,7 +2285,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Is this user hiding from finger?  * If ~<user>/.nofinger exists, return 1 (hide), else return 0 (nohide).  */
+comment|/*  * Is this user hiding from finger?  * If ~<user>/.nofinger exists, return 1 (hide), else return 0 (nohide).  * Nobody can hide from root.  */
 end_comment
 
 begin_function
@@ -2312,6 +2312,8 @@ index|]
 decl_stmt|;
 if|if
 condition|(
+name|invoker_root
+operator|||
 operator|!
 name|pw
 operator|->

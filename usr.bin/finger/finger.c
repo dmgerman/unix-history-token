@@ -217,6 +217,14 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|invoker_root
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -493,6 +501,10 @@ operator|==
 literal|0
 condition|)
 block|{
+name|invoker_root
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|(

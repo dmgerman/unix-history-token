@@ -54,6 +54,17 @@ name|gflag
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|invoker_root
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Invoked by root */
+end_comment
+
 begin_function_decl
 name|void
 name|enter_lastlog
