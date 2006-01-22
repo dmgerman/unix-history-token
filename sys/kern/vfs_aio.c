@@ -5676,7 +5676,7 @@ name|cb
 operator|->
 name|jobstate
 operator|!=
-name|JOBST_JOBQGLOBAL
+name|JOBST_JOBQSOCK
 condition|)
 name|panic
 argument_list|(
