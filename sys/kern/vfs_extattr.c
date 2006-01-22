@@ -8301,6 +8301,12 @@ condition|)
 return|return
 operator|(
 name|error
+operator|==
+name|EINVAL
+condition|?
+name|EPERM
+else|:
+name|error
 operator|)
 return|;
 name|vfslocked

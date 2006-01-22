@@ -1981,7 +1981,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|EPERM
+name|EINVAL
 expr_stmt|;
 goto|goto
 name|bad
