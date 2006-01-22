@@ -4555,6 +4555,24 @@ argument_list|(
 name|aiocbe
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|aio_job_mtx
+argument_list|)
+expr_stmt|;
+comment|/* Decrement the active job count. */
+name|ki
+operator|->
+name|kaio_active_count
+operator|--
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|aio_job_mtx
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|userp
@@ -4613,12 +4631,6 @@ argument_list|(
 operator|&
 name|aio_job_mtx
 argument_list|)
-expr_stmt|;
-comment|/* Decrement the active job count. */
-name|ki
-operator|->
-name|kaio_active_count
-operator|--
 expr_stmt|;
 block|}
 comment|/* 		 * Disconnect from user address space. 		 */
