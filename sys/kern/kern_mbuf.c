@@ -1405,23 +1405,6 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|m
-operator|->
-name|m_ext
-operator|.
-name|ref_cnt
-operator|==
-name|NULL
-argument_list|,
-operator|(
-literal|"%s: ref_cnt != NULL"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INVARIANTS
