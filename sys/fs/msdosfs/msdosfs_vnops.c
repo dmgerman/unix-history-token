@@ -7298,8 +7298,6 @@ operator|!=
 name|winChksum
 argument_list|(
 name|dentp
-operator|->
-name|deName
 argument_list|)
 condition|)
 block|{

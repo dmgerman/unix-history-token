@@ -606,9 +606,10 @@ begin_function_decl
 name|u_int8_t
 name|winChksum
 parameter_list|(
-name|u_int8_t
+name|struct
+name|direntry
 modifier|*
-name|name
+name|dep
 parameter_list|)
 function_decl|;
 end_function_decl
