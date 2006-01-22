@@ -538,7 +538,7 @@ name|sig
 operator|.
 name|sigev_value
 operator|.
-name|sigval_ptr
+name|sival_ptr
 operator|=
 name|lio
 index|[
