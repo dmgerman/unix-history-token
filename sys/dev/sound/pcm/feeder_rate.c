@@ -41,6 +41,21 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RATE_TEST
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* if (!(x)) printf y */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RATE_TRACE
 parameter_list|(
 name|x
@@ -3397,27 +3412,45 @@ operator|)
 name|b
 decl_stmt|;
 comment|/* 	 * This loop has been optimized to generalize both up / down 	 * sampling without causing missing samples or excessive buffer 	 * feeding. 	 */
-name|RATE_ASSERT
+name|RATE_TEST
 argument_list|(
 name|count
 operator|>=
 literal|4
 operator|&&
+operator|(
 name|count
-operator|%
-literal|4
+operator|&
+literal|3
+operator|)
 operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"%s: Count size not byte integral\n"
+literal|"%s: Count size not byte integral (%d)\n"
 operator|,
 name|__func__
+operator|,
+name|count
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|count
+operator|<
+literal|4
+condition|)
+return|return
+literal|0
+return|;
 name|count
 operator|>>=
+literal|1
+expr_stmt|;
+name|count
+operator|&=
+operator|~
 literal|1
 expr_stmt|;
 name|slot
@@ -3452,6 +3485,30 @@ operator|->
 name|gy
 operator|)
 operator|<<
+literal|1
+expr_stmt|;
+name|RATE_TEST
+argument_list|(
+operator|(
+name|slot
+operator|&
+literal|1
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"%s: Slot count not sample integral (%d)\n"
+operator|,
+name|__func__
+operator|,
+name|slot
+operator|)
+argument_list|)
+expr_stmt|;
+name|slot
+operator|&=
+operator|~
 literal|1
 expr_stmt|;
 comment|/* 	 * Optimize buffer feeding aggresively to ensure calculated slot 	 * can be fitted nicely into available buffer free space, hence 	 * avoiding multiple feeding. 	 */
@@ -3616,7 +3673,7 @@ operator|>=
 literal|0
 argument_list|,
 operator|(
-literal|"%s: Buffer overrun: %d> %d\n"
+literal|"%s: [1] Buffer overrun: %d> %d\n"
 operator|,
 name|__func__
 operator|,
@@ -3640,6 +3697,11 @@ name|fetch
 operator|=
 name|slot
 expr_stmt|;
+name|fetch
+operator|&=
+operator|~
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|fetch
@@ -3647,18 +3709,22 @@ operator|>
 literal|0
 condition|)
 block|{
-name|RATE_ASSERT
+name|RATE_TEST
 argument_list|(
+operator|(
 name|fetch
-operator|%
-literal|2
+operator|&
+literal|1
+operator|)
 operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"%s: Fetch size not sample integral\n"
+literal|"%s: Fetch size not sample integral (%d)\n"
 operator|,
 name|__func__
+operator|,
+name|fetch
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3700,23 +3766,32 @@ operator|==
 literal|0
 condition|)
 break|break;
-name|RATE_ASSERT
+name|RATE_TEST
 argument_list|(
+operator|(
 name|fetch
-operator|%
-literal|4
+operator|&
+literal|3
+operator|)
 operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"%s: Fetch size not byte integral\n"
+literal|"%s: Fetch size not byte integral (%d)\n"
 operator|,
 name|__func__
+operator|,
+name|fetch
 operator|)
 argument_list|)
 expr_stmt|;
 name|fetch
 operator|>>=
+literal|1
+expr_stmt|;
+name|fetch
+operator|&=
+operator|~
 literal|1
 expr_stmt|;
 name|info
@@ -3777,7 +3852,7 @@ operator|->
 name|bpos
 condition|)
 block|{
-name|RATE_ASSERT
+name|RATE_TEST
 argument_list|(
 name|info
 operator|->
@@ -3805,7 +3880,7 @@ operator|->
 name|bpos
 argument_list|,
 operator|(
-literal|"%s: Buffer overrun: %d> %d\n"
+literal|"%s: [2] Buffer overrun: %d> %d\n"
 operator|,
 name|__func__
 operator|,
@@ -3839,6 +3914,7 @@ expr_stmt|;
 name|RATE_ASSERT
 argument_list|(
 operator|(
+operator|(
 name|info
 operator|->
 name|bpos
@@ -3847,15 +3923,24 @@ name|info
 operator|->
 name|pos
 operator|)
-operator|%
-literal|2
+operator|&
+literal|1
+operator|)
 operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"%s: Buffer not sample integral\n"
+literal|"%s: Buffer not sample integral (%d)\n"
 operator|,
 name|__func__
+operator|,
+name|info
+operator|->
+name|bpos
+operator|-
+name|info
+operator|->
+name|pos
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3887,7 +3972,7 @@ operator|->
 name|bpos
 argument_list|,
 operator|(
-literal|"%s: Buffer overrun: %d> %d\n"
+literal|"%s: [3] Buffer overrun: %d> %d\n"
 operator|,
 name|__func__
 operator|,
@@ -3970,6 +4055,25 @@ name|count
 condition|)
 break|break;
 block|}
+name|RATE_TEST
+argument_list|(
+name|count
+operator|==
+name|i
+argument_list|,
+operator|(
+literal|"Expect: %u , Got: %u\n"
+operator|,
+name|count
+operator|<<
+literal|1
+operator|,
+name|i
+operator|<<
+literal|1
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 name|i
 operator|<<
