@@ -4105,7 +4105,10 @@ name|st
 operator|.
 name|st_size
 operator|<
-operator|(
+call|(
+name|ssize_t
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|version
@@ -4115,7 +4118,7 @@ sizeof|sizeof
 argument_list|(
 name|int
 argument_list|)
-operator|)
+argument_list|)
 operator|||
 name|st
 operator|.
