@@ -4,30 +4,107 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*-  * Qlogic ISP Host Adapter Public Target Interface Structures&& Routines  *---------------------------------------  * Copyright (c) 2000 by Matthew Jacob  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * Matthew Jacob  * Feral Software  * mjacob@feral.com  */
+comment|/*-  * Qlogic ISP Host Adapter Public Target Interface Structures&& Routines  *  * Copyright (c) 1997-2006 by Matthew Jacob  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*  * Required software target mode message and event handling structures.  *  * The message and event structures are used by the MI layer  * to propagate messages and events upstream.  */
+comment|/*  * Qlogic ISP Host Adapter Public Target Interface Structures&& Routines  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|IN_MSGLEN
+name|_ISP_TPUBLIC_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|IN_MSGLEN
-value|8
+name|_ISP_TPUBLIC_H
+value|1
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/*  * Action codes set by the Qlogic MD target driver for  * the external layer to figure out what to do with.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|QOUT_HBA_REG
+init|=
+literal|0
+block|,
+comment|/* the argument is a pointer to a hba_register_t */
+name|QOUT_ENABLE
+block|,
+comment|/* the argument is a pointer to a enadis_t */
+name|QOUT_DISABLE
+block|,
+comment|/* the argument is a pointer to a enadis_t */
+name|QOUT_TMD_START
+block|,
+comment|/* the argument is a pointer to a tmd_cmd_t */
+name|QOUT_TMD_DONE
+block|,
+comment|/* the argument is a pointer to a tmd_cmd_t */
+name|QOUT_NOTIFY
+block|,
+comment|/* the argument is a pointer to a tmd_notify_t */
+name|QOUT_HBA_UNREG
+comment|/* the argument is a pointer to a hba_register_t */
+block|}
+name|tact_e
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * Action codes set by the external layer for the  * MD Qlogic driver to figure out what to do with.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|QIN_HBA_REG
+init|=
+literal|99
+block|,
+comment|/* the argument is a pointer to a hba_register_t */
+name|QIN_ENABLE
+block|,
+comment|/* the argument is a pointer to a enadis_t */
+name|QIN_DISABLE
+block|,
+comment|/* the argument is a pointer to a enadis_t */
+name|QIN_TMD_CONT
+block|,
+comment|/* the argument is a pointer to a tmd_cmd_t */
+name|QIN_TMD_FIN
+block|,
+comment|/* the argument is a pointer to a tmd_cmd_t */
+name|QIN_NOTIFY_ACK
+block|,
+comment|/* the argument is a pointer to a tmd_notify_t */
+name|QIN_HBA_UNREG
+block|,
+comment|/* the argument is a pointer to a hba_register_t */
+block|}
+name|qact_e
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * This structure is used to register to other software modules the  * binding of an HBA identifier, driver name and instance and the  * lun width capapbilities of this target driver. It's up to each  * platform to figure out how it wants to do this, but a typical  * sequence would be for the MD layer to find some external module's  * entry point and start by sending a QOUT_HBA_REG with info filled  * in, and the external module to call back with a QIN_HBA_REG that  * passes back the corresponding information.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QR_VERSION
+value|2
+end_define
 
 begin_typedef
 typedef|typedef
@@ -35,64 +112,207 @@ struct|struct
 block|{
 name|void
 modifier|*
-name|nt_hba
+name|r_identity
 decl_stmt|;
-comment|/* HBA tag */
-name|u_int64_t
-name|nt_iid
-decl_stmt|;
-comment|/* inititator id */
-name|u_int64_t
-name|nt_tgt
-decl_stmt|;
-comment|/* target id */
-name|u_int64_t
-name|nt_lun
-decl_stmt|;
-comment|/* logical unit */
-name|u_int32_t
-name|nt_tagval
-decl_stmt|;
-comment|/* tag value */
-name|u_int8_t
-name|nt_bus
-decl_stmt|;
-comment|/* bus */
-name|u_int8_t
-name|nt_tagtype
-decl_stmt|;
-comment|/* tag type */
-name|u_int8_t
-name|nt_msg
+name|void
+function_decl|(
+modifier|*
+name|r_action
+function_decl|)
+parameter_list|(
+name|qact_e
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+name|char
+name|r_name
 index|[
-name|IN_MSGLEN
+literal|8
 index|]
 decl_stmt|;
-comment|/* message content */
+name|int
+name|r_inst
+decl_stmt|;
+name|int
+name|r_version
+decl_stmt|;
+enum|enum
+block|{
+name|R_FC
+block|,
+name|R_SCSI
 block|}
-name|tmd_msg_t
+name|r_type
+enum|;
+block|}
+name|hba_register_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * Notify structure  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|NT_ABORT_TASK
+init|=
+literal|0x1000
+block|,
+name|NT_ABORT_TASK_SET
+block|,
+name|NT_CLEAR_ACA
+block|,
+name|NT_CLEAR_TASK_SET
+block|,
+name|NT_LUN_RESET
+block|,
+name|NT_TARGET_RESET
+block|,
+name|NT_BUS_RESET
+block|,
+name|NT_LIP_RESET
+block|,
+name|NT_LINK_UP
+block|,
+name|NT_LINK_DOWN
+block|,
+name|NT_LOGOUT
+block|,
+name|NT_HBA_RESET
+block|}
+name|tmd_ncode_t
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
 struct|struct
+name|tmd_notify
 block|{
 name|void
 modifier|*
-name|ev_hba
+name|nt_hba
 decl_stmt|;
 comment|/* HBA tag */
-name|u_int32_t
-name|ev_bus
+name|uint64_t
+name|nt_iid
 decl_stmt|;
-comment|/* bus */
-name|u_int32_t
-name|ev_event
+comment|/* inititator id */
+name|uint64_t
+name|nt_tgt
 decl_stmt|;
-comment|/* type of async event */
+comment|/* target id */
+name|uint16_t
+name|nt_lun
+decl_stmt|;
+comment|/* logical unit */
+name|uint16_t
+name|nt_padding
+decl_stmt|;
+comment|/* padding */
+name|uint32_t
+name|nt_tagval
+decl_stmt|;
+comment|/* tag value */
+name|tmd_ncode_t
+name|nt_ncode
+decl_stmt|;
+comment|/* action */
+name|void
+modifier|*
+name|nt_lreserved
+decl_stmt|;
+name|void
+modifier|*
+name|nt_hreserved
+decl_stmt|;
 block|}
-name|tmd_event_t
+name|tmd_notify_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|LUN_ANY
+value|0xffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|INI_ANY
+value|((uint64_t) -1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_ANY
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MATCH_TMD
+parameter_list|(
+name|tmd
+parameter_list|,
+name|iid
+parameter_list|,
+name|lun
+parameter_list|,
+name|tag
+parameter_list|)
+define|\
+value|(                                                   \         (tmd)&&                                        \         (iid == INI_ANY || iid == tmd->cd_iid)&&       \         (lun == LUN_ANY || lun == tmd->cd_lun)&&       \         (tag == TAG_ANY || tag == tmd->cd_tagval)       \     )
+end_define
+
+begin_comment
+comment|/*  * A word about ENABLE/DISABLE: the argument is a pointer to a enadis_t  * with cd_hba, cd_iid, cd_chan, cd_tgt and cd_lun filled out.  *  * If an error occurs in either enabling or disabling the described lun  * cd_error is set with an appropriate non-zero value.  *  * Logical unit zero must be the first enabled and the last disabled.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|void
+modifier|*
+name|en_private
+decl_stmt|;
+comment|/* for outer layer usage */
+name|void
+modifier|*
+name|en_hba
+decl_stmt|;
+comment|/* HBA tag */
+name|u_int64_t
+name|en_iid
+decl_stmt|;
+comment|/* initiator ID */
+name|u_int64_t
+name|en_tgt
+decl_stmt|;
+comment|/* target id */
+name|u_int64_t
+name|en_lun
+decl_stmt|;
+comment|/* logical unit */
+name|u_int8_t
+name|en_chan
+decl_stmt|;
+comment|/* channel on card */
+name|int32_t
+name|en_error
+decl_stmt|;
+block|}
+name|enadis_t
 typedef|;
 end_typedef
 
@@ -524,250 +744,20 @@ comment|/* private layer flags */
 end_comment
 
 begin_comment
-comment|/*  * Action codes set by the Qlogic MD target driver for  * the external layer to figure out what to do with.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|QOUT_HBA_REG
-init|=
-literal|0
-block|,
-comment|/* the argument is a pointer to a hba_register_t */
-name|QOUT_ENABLE
-block|,
-comment|/* the argument is a pointer to a enadis_t */
-name|QOUT_DISABLE
-block|,
-comment|/* the argument is a pointer to a enadis_t */
-name|QOUT_TMD_START
-block|,
-comment|/* the argument is a pointer to a tmd_cmd_t */
-name|QOUT_TMD_DONE
-block|,
-comment|/* the argument is a pointer to a tmd_cmd_t */
-name|QOUT_TEVENT
-block|,
-comment|/* the argument is a pointer to a tmd_event_t */
-name|QOUT_TMSG
-block|,
-comment|/* the argument is a pointer to a tmd_msg_t */
-name|QOUT_IOCTL
-block|,
-comment|/* the argument is a pointer to a ioctl_cmd_t */
-name|QOUT_HBA_UNREG
-comment|/* the argument is a pointer to a hba_register_t */
-block|}
-name|tact_e
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * Action codes set by the external layer for the  * MD Qlogic driver to figure out what to do with.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|QIN_HBA_REG
-init|=
-literal|99
-block|,
-comment|/* the argument is a pointer to a hba_register_t */
-name|QIN_ENABLE
-block|,
-comment|/* the argument is a pointer to a enadis_t */
-name|QIN_DISABLE
-block|,
-comment|/* the argument is a pointer to a enadis_t */
-name|QIN_TMD_CONT
-block|,
-comment|/* the argument is a pointer to a tmd_cmd_t */
-name|QIN_TMD_FIN
-block|,
-comment|/* the argument is a pointer to a tmd_cmd_t */
-name|QIN_IOCTL
-block|,
-comment|/* the argument is a pointer to a ioctl_cmd_t */
-name|QIN_HBA_UNREG
-block|,
-comment|/* the argument is a pointer to a hba_register_t */
-block|}
-name|qact_e
-typedef|;
-end_typedef
-
-begin_comment
 comment|/*  * A word about the START/CONT/DONE/FIN dance:  *  *	When the HBA is enabled for receiving commands, one may	show up  *	without notice. When that happens, the Qlogic target mode driver  *	gets a tmd_cmd_t, fills it with the info that just arrived, and  *	calls the outer layer with a QOUT_TMD_START code and pointer to  *	the tmd_cmd_t.  *  *	The outer layer decodes the command, fetches data, prepares stuff,  *	whatever, and starts by passing back the pointer with a QIN_TMD_CONT  *	code which causes the Qlogic target mode driver to generate CTIOs to  *	satisfy whatever action needs to be taken. When those CTIOs complete,  *	the Qlogic target driver sends the pointer to the cmd_tmd_t back with  *	a QOUT_TMD_DONE code. This repeats for as long as necessary.  *  *	The outer layer signals it wants to end the command by settings within  *	the tmd_cmd_t itself. When the final QIN_TMD_CONT is reported completed,  *	the outer layer frees the tmd_cmd_t by sending the pointer to it  *	back with a QIN_TMD_FIN code.  *  *	The graph looks like:  *  *	QOUT_TMD_START -> [ QIN_TMD_CONT -> QOUT_TMD_DONE ] * -> QIN_TMD_FIN.  *  */
 end_comment
 
 begin_comment
-comment|/*  * A word about ENABLE/DISABLE: the argument is a pointer to a enadis_t  * with cd_hba, cd_iid, cd_chan, cd_tgt and cd_lun filled out.  *  * If an error occurs in either enabling or disabling the described lun  * cd_error is set with an appropriate non-zero value.  *  * Logical unit zero must be the first enabled and the last disabled.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|void
-modifier|*
-name|cd_private
-decl_stmt|;
-comment|/* for outer layer usage */
-name|void
-modifier|*
-name|cd_hba
-decl_stmt|;
-comment|/* HBA tag */
-name|u_int64_t
-name|cd_iid
-decl_stmt|;
-comment|/* initiator ID */
-name|u_int64_t
-name|cd_tgt
-decl_stmt|;
-comment|/* target id */
-name|u_int64_t
-name|cd_lun
-decl_stmt|;
-comment|/* logical unit */
-name|u_int8_t
-name|cd_chan
-decl_stmt|;
-comment|/* channel on card */
-name|int32_t
-name|cd_error
-decl_stmt|;
-block|}
-name|enadis_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * This structure is used to register to other software modules the  * binding of an HBA identifier, driver name and instance and the  * lun width capapbilities of this target driver. It's up to each  * platform to figure out how it wants to do this, but a typical  * sequence would be for the MD layer to find some external module's  * entry point and start by sending a QOUT_HBA_REG with info filled  * in, and the external module to call back with a QIN_HBA_REG that  * passes back the corresponding information.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|QR_VERSION
-value|1
-end_define
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|void
-modifier|*
-name|r_identity
-decl_stmt|;
-name|void
-function_decl|(
-modifier|*
-name|r_action
-function_decl|)
-parameter_list|(
-name|qact_e
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-name|char
-name|r_name
-index|[
-literal|8
-index|]
-decl_stmt|;
-name|int
-name|r_inst
-decl_stmt|;
-name|int
-name|r_version
-decl_stmt|;
-enum|enum
-block|{
-name|R_FC
-block|,
-name|R_SCSI
-block|}
-name|r_type
-enum|;
-block|}
-name|hba_register_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * This structure is used to pass an encapsulated ioctl through to the  * MD layer. In many implementations it's often convenient to open just  * one device, but actions you want to take need to be taken on the  * underlying HBA. Rather than invent a separate protocol for each action,  * an ioctl passthrough seems simpler.  *  * In order to avoid cross domain copy problems, though, the caller will  * be responsible for allocating and providing a staging area for all ioctl  * related data. This, unavoidably, requires some ioctl decode capability  * in the outer layer code.`  *  * And also, albeit being cheesy, we'll define a few internal ioctls here.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|void
-modifier|*
-name|i_identity
-decl_stmt|;
-comment|/* HBA tag */
-name|void
-modifier|*
-name|i_syncptr
-decl_stmt|;
-comment|/* synchronization pointer */
-name|int
-name|i_cmd
-decl_stmt|;
-comment|/* ioctl command */
-name|void
-modifier|*
-name|i_arg
-decl_stmt|;
-comment|/* ioctl argument area */
-name|int
-name|i_errno
-decl_stmt|;
-comment|/* ioctl error return */
-block|}
-name|ioctl_cmd_t
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|QI_IOC
-value|('Q'<< 8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|QI_SCSI_TINI
-value|QI_IOC|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|QI_SCSI_CMD
-value|QI_IOC|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|QI_WWPN_XLT
-value|QI_IOC|2
-end_define
-
-begin_comment
 comment|/*  * Target handler functions.  *  * The MD target handler function (the outer layer calls this)  * should be be prototyped like:  *  *	void target_action(qact_e, void *arg)  *  * The outer layer target handler function (the MD layer calls this)  * should be be prototyped like:  *  *	void system_target_handler(tact_e, void *arg)  */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _ISP_TPUBLIC_H */
 end_comment
 
 end_unit
