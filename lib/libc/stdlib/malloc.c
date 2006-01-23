@@ -18252,7 +18252,7 @@ case|case
 literal|'c'
 case|:
 name|opt_ndelay
-operator|<<=
+operator|>>=
 literal|1
 expr_stmt|;
 if|if
@@ -18270,7 +18270,7 @@ case|case
 literal|'C'
 case|:
 name|opt_ndelay
-operator|>>=
+operator|<<=
 literal|1
 expr_stmt|;
 if|if
