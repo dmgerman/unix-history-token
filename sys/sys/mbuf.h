@@ -1947,6 +1947,7 @@ name|n
 operator|==
 name|NULL
 condition|)
+block|{
 name|uma_zfree
 argument_list|(
 name|zone_mbuf
@@ -1954,11 +1955,15 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 end_if
 
 begin_return
 return|return
-name|n
+name|m
 return|;
 end_return
 
