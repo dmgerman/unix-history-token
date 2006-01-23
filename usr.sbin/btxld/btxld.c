@@ -79,6 +79,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<a.out.h>
 end_include
 
@@ -1307,6 +1313,9 @@ name|entry
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|snprintf
 argument_list|(
 name|name
@@ -3138,6 +3147,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|n
 operator|!=
 name|nbyte
