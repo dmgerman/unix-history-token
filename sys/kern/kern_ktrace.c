@@ -4385,6 +4385,11 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
+name|vrele
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
