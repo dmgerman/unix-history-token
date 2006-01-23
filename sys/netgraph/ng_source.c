@@ -2464,7 +2464,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send packets out our output hook  */
+comment|/*  * Send packets out our output hook.  */
 end_comment
 
 begin_function
@@ -2484,10 +2484,6 @@ name|sent_p
 parameter_list|)
 block|{
 name|struct
-name|ifqueue
-name|tmp_queue
-decl_stmt|;
-name|struct
 name|mbuf
 modifier|*
 name|m
@@ -2497,8 +2493,6 @@ name|m2
 decl_stmt|;
 name|int
 name|sent
-init|=
-literal|0
 decl_stmt|;
 name|int
 name|error
@@ -2552,18 +2546,7 @@ name|sc
 operator|->
 name|packets
 expr_stmt|;
-comment|/* Copy the required number of packets to a temporary queue */
-name|bzero
-argument_list|(
-operator|&
-name|tmp_queue
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|tmp_queue
-argument_list|)
-argument_list|)
-expr_stmt|;
+comment|/* Go through the queue sending packets one by one. */
 for|for
 control|(
 name|sent
@@ -2599,7 +2582,7 @@ operator|==
 name|NULL
 condition|)
 break|break;
-comment|/* duplicate the packet */
+comment|/* Duplicate the packet. */
 name|m2
 operator|=
 name|m_copypacket
@@ -2643,51 +2626,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* Queue the copy for sending at splimp. */
-name|_IF_ENQUEUE
-argument_list|(
-operator|&
-name|tmp_queue
-argument_list|,
-name|m2
-argument_list|)
-expr_stmt|;
-block|}
-name|sent
-operator|=
-literal|0
-expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-name|_IF_DEQUEUE
-argument_list|(
-operator|&
-name|tmp_queue
-argument_list|,
-name|m2
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m2
-operator|==
-name|NULL
-condition|)
-break|break;
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-condition|)
-block|{
-operator|++
-name|sent
-expr_stmt|;
 name|sc
 operator|->
 name|stats
@@ -2722,26 +2660,7 @@ if|if
 condition|(
 name|error
 condition|)
-name|log
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|"%s: error=%d"
-argument_list|,
-name|__func__
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|NG_FREE_M
-argument_list|(
-name|m2
-argument_list|)
-expr_stmt|;
-block|}
+break|break;
 block|}
 name|sc
 operator|->
