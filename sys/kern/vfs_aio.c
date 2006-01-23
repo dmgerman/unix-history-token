@@ -4940,8 +4940,10 @@ name|start
 operator|!=
 name|NULL
 condition|)
+operator|(
 operator|*
 name|start
+operator|)
 operator|--
 expr_stmt|;
 name|mtx_unlock
