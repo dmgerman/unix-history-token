@@ -2854,6 +2854,10 @@ condition|(
 name|ifa
 operator|->
 name|ifa_addr
+operator|&&
+name|ifa
+operator|->
+name|ifa_addr
 operator|->
 name|sa_family
 operator|==
