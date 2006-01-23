@@ -1634,6 +1634,15 @@ name|sc
 operator|->
 name|sc_io
 expr_stmt|;
+if|if
+condition|(
+name|start
+operator|<
+name|sc
+operator|->
+name|sc_io
+condition|)
+block|{
 name|start
 operator|=
 name|start
@@ -1654,6 +1663,7 @@ name|sc
 operator|->
 name|sc_io
 expr_stmt|;
+block|}
 break|break;
 default|default:
 return|return
