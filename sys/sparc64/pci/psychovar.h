@@ -33,26 +33,20 @@ comment|/* Interrupt Group Number for this device */
 name|int
 name|sc_ign
 decl_stmt|;
-comment|/* Our tags (from parent). */
+comment|/* Our tags (from parent) */
 name|bus_space_tag_t
 name|sc_bustag
 decl_stmt|;
 name|bus_space_handle_t
 name|sc_bushandle
 decl_stmt|;
-name|bus_dma_tag_t
-name|sc_dmatag
-decl_stmt|;
 name|bus_addr_t
 name|sc_pcictl
-decl_stmt|;
-name|int
-name|sc_clockfreq
 decl_stmt|;
 name|phandle_t
 name|sc_node
 decl_stmt|;
-comment|/* Firmware node. */
+comment|/* Firmware node */
 name|int
 name|sc_mode
 decl_stmt|;
@@ -73,9 +67,6 @@ name|iommu_state
 modifier|*
 name|sc_is
 decl_stmt|;
-name|u_int32_t
-name|sc_dvmabase
-decl_stmt|;
 name|struct
 name|resource
 modifier|*
@@ -86,60 +77,52 @@ name|resource
 modifier|*
 name|sc_irq_res
 index|[
-literal|6
+name|PSYCHO_NINTR
 index|]
 decl_stmt|;
 name|void
 modifier|*
 name|sc_ihand
 index|[
-literal|6
+name|PSYCHO_NINTR
 index|]
 decl_stmt|;
 name|struct
 name|ofw_bus_iinfo
-name|sc_iinfo
+name|sc_pci_iinfo
 decl_stmt|;
-name|struct
-name|upa_ranges
-modifier|*
-name|sc_range
-decl_stmt|;
-name|int
-name|sc_nrange
-decl_stmt|;
-comment|/* Tags for PCI access. */
+comment|/* Tags for PCI access */
 name|bus_space_tag_t
-name|sc_cfgt
+name|sc_pci_cfgt
 decl_stmt|;
 name|bus_space_tag_t
-name|sc_memt
+name|sc_pci_memt
 decl_stmt|;
 name|bus_space_tag_t
-name|sc_iot
+name|sc_pci_iot
 decl_stmt|;
 name|bus_dma_tag_t
-name|sc_dmat
+name|sc_pci_dmat
 decl_stmt|;
 name|bus_space_handle_t
-name|sc_bh
+name|sc_pci_bh
 index|[
-literal|4
+name|PSYCHO_NRANGE
 index|]
 decl_stmt|;
 name|u_int
-name|sc_secbus
+name|sc_pci_secbus
 decl_stmt|;
 name|u_int
-name|sc_subbus
+name|sc_pci_subbus
 decl_stmt|;
 name|struct
 name|rman
-name|sc_mem_rman
+name|sc_pci_mem_rman
 decl_stmt|;
 name|struct
 name|rman
-name|sc_io_rman
+name|sc_pci_io_rman
 decl_stmt|;
 name|SLIST_ENTRY
 argument_list|(
@@ -157,7 +140,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _SPARC64_PCI_PSYCHOVAR_H_ */
+comment|/* !_SPARC64_PCI_PSYCHOVAR_H_ */
 end_comment
 
 end_unit
