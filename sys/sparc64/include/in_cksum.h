@@ -104,12 +104,12 @@ literal|"addcc %0, %1, %0\n"
 literal|"srl %0, 16, %0\n"
 literal|"addc %0, 0, %0\n"
 operator|:
-literal|"=r"
+literal|"=&r"
 operator|(
 name|__ret
 operator|)
 operator|,
-literal|"=r"
+literal|"=&r"
 operator|(
 name|__tmp
 operator|)
@@ -168,7 +168,7 @@ operator|(
 name|sum
 operator|)
 operator|,
-literal|"=r"
+literal|"=&r"
 operator|(
 name|__tmp
 operator|)
@@ -222,7 +222,7 @@ name|__tmp3
 decl_stmt|,
 name|__tmp4
 decl_stmt|;
-comment|/* 	 * Use 32 bit memory accesses and additions - addition with carry only 	 * works for 32 bits, and fixing up alignent issues for 64 is probably 	 * more trouble than it's worth. 	 * This may read outside of the ip header, but does not cross a page 	 * boundary in doing so, so that should be OK. 	 * Actually, this specialized implementation might be overkill - using 	 * a generic implementation for both in_cksum_skip and in_cksum_hdr 	 * should not be too much more expensive. 	 */
+comment|/* 	 * Use 32 bit memory accesses and additions - addition with carry only 	 * works for 32 bits, and fixing up alignment issues for 64 is probably 	 * more trouble than it's worth. 	 * This may read outside of the ip header, but does not cross a page 	 * boundary in doing so, so that should be OK. 	 * Actually, this specialized implementation might be overkill - using 	 * a generic implementation for both in_cksum_skip and in_cksum_hdr 	 * should not be too much more expensive. 	 */
 define|#
 directive|define
 name|__LD_ADD
@@ -332,7 +332,7 @@ literal|"not %0\n"
 literal|"sll %0, 16, %0\n"
 literal|"srl %0, 16, %0\n"
 operator|:
-literal|"=r"
+literal|"=&r"
 operator|(
 name|__ret
 operator|)
@@ -342,17 +342,17 @@ operator|(
 name|__tmp1
 operator|)
 operator|,
-literal|"=r"
+literal|"=&r"
 operator|(
 name|__tmp2
 operator|)
 operator|,
-literal|"=r"
+literal|"=&r"
 operator|(
 name|__tmp3
 operator|)
 operator|,
-literal|"=r"
+literal|"=&r"
 operator|(
 name|__tmp4
 operator|)
