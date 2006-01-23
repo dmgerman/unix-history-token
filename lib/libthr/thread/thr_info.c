@@ -27,6 +27,16 @@ directive|include
 file|"thr_private.h"
 end_include
 
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_set_name_np
+argument_list|,
+name|pthread_set_name_np
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Set the thread name for debug. */
 end_comment
