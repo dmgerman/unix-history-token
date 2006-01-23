@@ -4940,7 +4940,7 @@ condition|(
 name|error
 condition|)
 block|{
-comment|/* XXX should really panic here, fs is corrupt */
+comment|/* XXX should downgrade to ro here, fs is corrupt */
 if|if
 condition|(
 name|newparent
@@ -5001,7 +5001,7 @@ condition|(
 name|error
 condition|)
 block|{
-comment|/* XXX should really panic here, fs is corrupt */
+comment|/* XXX should downgrade to ro here, fs is corrupt */
 if|if
 condition|(
 name|newparent
@@ -5136,7 +5136,7 @@ condition|(
 name|error
 condition|)
 block|{
-comment|/* XXX should really panic here, fs is corrupt */
+comment|/* XXX should downgrade to ro here, fs is corrupt */
 name|brelse
 argument_list|(
 name|bp
@@ -5211,7 +5211,7 @@ condition|(
 name|error
 condition|)
 block|{
-comment|/* XXX should really panic here, fs is corrupt */
+comment|/* XXX should downgrade to ro here, fs is corrupt */
 name|VOP_UNLOCK
 argument_list|(
 name|fvp
