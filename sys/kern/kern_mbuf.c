@@ -1816,6 +1816,9 @@ operator|)
 name|mem
 expr_stmt|;
 comment|/* m is virgin. */
+operator|(
+name|void
+operator|)
 name|uma_zalloc_arg
 argument_list|(
 name|zone_clust
