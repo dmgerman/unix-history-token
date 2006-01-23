@@ -16,11 +16,25 @@ name|_SPARC64_PCI_PSYCHOREG_H_
 end_define
 
 begin_comment
-comment|/*  * Sun4u PCI definitions.  Here's where we deal w/the machine  * dependencies of psycho and the PCI controller on the UltraIIi.  *  * All PCI registers are bit-swapped, however they are not byte-swapped.  * This means that they must be accessed using little-endian access modes,  * either map the pages little-endian or use little-endian ASIs.  *  * PSYCHO implements two PCI buses, A and B.  */
+comment|/*  * Sun4u PCI definitions.  Here's where we deal w/the machine  * dependencies of Psycho and the PCI controller on the UltraIIi.  *  * All PCI registers are bit-swapped, however they are not byte-swapped.  * This means that they must be accessed using little-endian access modes,  * either map the pages little-endian or use little-endian ASIs.  *  * PSYCHO implements two PCI buses, A and B.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PSYCHO_NINTR
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|PSYCHO_NRANGE
+value|4
+end_define
+
 begin_comment
-comment|/*  * psycho register offsets.  *  * NB: FFB0 and FFB1 intr map regs also appear at 0x6000 and 0x8000  * respectively.  */
+comment|/*  * Psycho register offsets  *  * NB: FFB0 and FFB1 intr map regs also appear at 0x6000 and 0x8000  * respectively.  */
 end_comment
 
 begin_define
@@ -141,7 +155,7 @@ value|0x0200
 end_define
 
 begin_comment
-comment|/* IOMMU registers. */
+comment|/* IOMMU registers */
 end_comment
 
 begin_define
@@ -816,7 +830,7 @@ value|0x2000
 end_define
 
 begin_comment
-comment|/* PCICTL registers for 1st psycho. */
+comment|/* PCICTL registers for 1st Psycho */
 end_comment
 
 begin_define
@@ -827,7 +841,7 @@ value|0x4000
 end_define
 
 begin_comment
-comment|/* PCICTL registers for 2nd psycho. */
+comment|/* PCICTL registers for 2nd Psycho */
 end_comment
 
 begin_define
@@ -941,7 +955,7 @@ comment|/* Streaming buffer diag regs */
 end_comment
 
 begin_comment
-comment|/*  * Here is the rest of the map, which we're not specifying:  *  * 1fe.0100.0000 - 1fe.01ff.ffff	PCI configuration space  * 1fe.0100.0000 - 1fe.0100.00ff	PCI B configuration header  * 1fe.0101.0000 - 1fe.0101.00ff	PCI A configuration header  * 1fe.0200.0000 - 1fe.0200.ffff	PCI A I/O space  * 1fe.0201.0000 - 1fe.0201.ffff	PCI B I/O space  * 1ff.0000.0000 - 1ff.7fff.ffff	PCI A memory space  * 1ff.8000.0000 - 1ff.ffff.ffff	PCI B memory space  *  * NB: config and I/O space can use 1-4 byte accesses, not 8 byte  * accesses.  Memory space can use any sized accesses.  *  * Note that the SUNW,sabre/SUNW,simba combinations found on the  * Ultra5 and Ultra10 machines uses slightly differrent addresses  * than the above.  This is mostly due to the fact that the APB is  * a multi-function PCI device with two PCI bridges, and the U2P is  * two separate PCI bridges.  It uses the same PCI configuration  * space, though the configuration header for each PCI bus is  * located differently due to the SUNW,simba PCI busses being  * function 0 and function 1 of the APB, whereas the psycho's are  * each their own PCI device.  The I/O and memory spaces are each  * split into 8 equally sized areas (8x2MB blocks for I/O space,  * and 8x512MB blocks for memory space).  These are allocated in to  * either PCI A or PCI B, or neither in the APB's `I/O Address Map  * Register A/B' (0xde) and `Memory Address Map Register A/B' (0xdf)  * registers of each simba.  We must ensure that both of the  * following are correct (the prom should do this for us):  *  *    (PCI A Memory Address Map)& (PCI B Memory Address Map) == 0  *  *    (PCI A I/O Address Map)& (PCI B I/O Address Map) == 0  *  * 1fe.0100.0000 - 1fe.01ff.ffff	PCI configuration space  * 1fe.0100.0800 - 1fe.0100.08ff	PCI B configuration header  * 1fe.0100.0900 - 1fe.0100.09ff	PCI A configuration header  * 1fe.0200.0000 - 1fe.02ff.ffff	PCI I/O space (divided)  * 1ff.0000.0000 - 1ff.ffff.ffff	PCI memory space (divided)  */
+comment|/*  * Here is the rest of the map, which we're not specifying:  *  * 1fe.0100.0000 - 1fe.01ff.ffff	PCI configuration space  * 1fe.0100.0000 - 1fe.0100.00ff	PCI B configuration header  * 1fe.0101.0000 - 1fe.0101.00ff	PCI A configuration header  * 1fe.0200.0000 - 1fe.0200.ffff	PCI A I/O space  * 1fe.0201.0000 - 1fe.0201.ffff	PCI B I/O space  * 1ff.0000.0000 - 1ff.7fff.ffff	PCI A memory space  * 1ff.8000.0000 - 1ff.ffff.ffff	PCI B memory space  *  * NB: config and I/O space can use 1-4 byte accesses, not 8 byte  * accesses.  Memory space can use any sized accesses.  *  * Note that the SUNW,sabre/SUNW,simba combinations found on the  * Ultra5 and Ultra10 machines uses slightly differrent addresses  * than the above.  This is mostly due to the fact that the APB is  * a multi-function PCI device with two PCI bridges, and the U2P is  * two separate PCI bridges.  It uses the same PCI configuration  * space, though the configuration header for each PCI bus is  * located differently due to the SUNW,simba PCI busses being  * function 0 and function 1 of the APB, whereas the Psycho's are  * each their own PCI device.  The I/O and memory spaces are each  * split into 8 equally sized areas (8x2MB blocks for I/O space,  * and 8x512MB blocks for memory space).  These are allocated in to  * either PCI A or PCI B, or neither in the APB's `I/O Address Map  * Register A/B' (0xde) and `Memory Address Map Register A/B' (0xdf)  * registers of each Simba.  We must ensure that both of the  * following are correct (the prom should do this for us):  *  *    (PCI A Memory Address Map)& (PCI B Memory Address Map) == 0  *  *    (PCI A I/O Address Map)& (PCI B I/O Address Map) == 0  *  * 1fe.0100.0000 - 1fe.01ff.ffff	PCI configuration space  * 1fe.0100.0800 - 1fe.0100.08ff	PCI B configuration header  * 1fe.0100.0900 - 1fe.0100.09ff	PCI A configuration header  * 1fe.0200.0000 - 1fe.02ff.ffff	PCI I/O space (divided)  * 1ff.0000.0000 - 1ff.ffff.ffff	PCI memory space (divided)  */
 end_comment
 
 begin_comment
@@ -1033,7 +1047,7 @@ comment|/* UPA/PCI handshake */
 end_comment
 
 begin_comment
-comment|/* Offsets into the PSR_PCICTL* register block. */
+comment|/* Offsets into the PSR_PCICTL* register block */
 end_comment
 
 begin_define
@@ -1103,7 +1117,7 @@ comment|/* IOMMU streaming buffer registers. */
 end_comment
 
 begin_comment
-comment|/* Device space defines. */
+comment|/* Device space defines */
 end_comment
 
 begin_define
@@ -1177,11 +1191,7 @@ comment|/* what the bits mean! */
 end_comment
 
 begin_comment
-comment|/* PCI [a|b] control/status register */
-end_comment
-
-begin_comment
-comment|/* note that the sabre only has one set of PCI control/status registers */
+comment|/*  * PCI [a|b] control/status register  * Note that the Hummingbird/Sabre only has one set of PCI control/status  * registers.  */
 end_comment
 
 begin_define
@@ -1295,7 +1305,7 @@ value|(1UL<< 23)
 end_define
 
 begin_comment
-comment|/* Error caused by block transaction. */
+comment|/* Error caused by block transaction */
 end_comment
 
 begin_define
@@ -1306,7 +1316,7 @@ value|(1UL<< 56)
 end_define
 
 begin_comment
-comment|/* Pri. DVMA translation error. */
+comment|/* Pri. DVMA translation error */
 end_comment
 
 begin_define
@@ -1317,7 +1327,7 @@ value|(1UL<< 57)
 end_define
 
 begin_comment
-comment|/* Sec. DVMA translation error. */
+comment|/* Sec. DVMA translation error */
 end_comment
 
 begin_define
@@ -1328,7 +1338,7 @@ value|(1UL<< 58)
 end_define
 
 begin_comment
-comment|/* Sec. error during DVMA write. */
+comment|/* Sec. error during DVMA write */
 end_comment
 
 begin_define
@@ -1339,7 +1349,7 @@ value|(1UL<< 59)
 end_define
 
 begin_comment
-comment|/* Sec. error during DVMA read. */
+comment|/* Sec. error during DVMA read */
 end_comment
 
 begin_define
@@ -1350,7 +1360,7 @@ value|(1UL<< 60)
 end_define
 
 begin_comment
-comment|/* Sec. error during PIO access. */
+comment|/* Sec. error during PIO access */
 end_comment
 
 begin_define
@@ -1361,7 +1371,7 @@ value|(1UL<< 61)
 end_define
 
 begin_comment
-comment|/* Pri. error during DVMA write. */
+comment|/* Pri. error during DVMA write */
 end_comment
 
 begin_define
@@ -1372,7 +1382,7 @@ value|(1UL<< 62)
 end_define
 
 begin_comment
-comment|/* Pri. error during DVMA read. */
+comment|/* Pri. error during DVMA read */
 end_comment
 
 begin_define
@@ -1383,7 +1393,7 @@ value|(1UL<< 63)
 end_define
 
 begin_comment
-comment|/* Pri. error during PIO access. */
+comment|/* Pri. error during PIO access */
 end_comment
 
 begin_comment
@@ -1398,7 +1408,7 @@ value|(1UL<< 23)
 end_define
 
 begin_comment
-comment|/* Error caused by block transaction. */
+comment|/* Error caused by block transaction */
 end_comment
 
 begin_define
@@ -1409,7 +1419,7 @@ value|(1UL<< 58)
 end_define
 
 begin_comment
-comment|/* Sec. error caused by DVMA write. */
+comment|/* Sec. error caused by DVMA write */
 end_comment
 
 begin_define
@@ -1420,7 +1430,7 @@ value|(1UL<< 59)
 end_define
 
 begin_comment
-comment|/* Sec. error caused by DVMA read. */
+comment|/* Sec. error caused by DVMA read */
 end_comment
 
 begin_define
@@ -1431,7 +1441,7 @@ value|(1UL<< 60)
 end_define
 
 begin_comment
-comment|/* Sec. error caused by PIO access. */
+comment|/* Sec. error caused by PIO access */
 end_comment
 
 begin_define
@@ -1442,7 +1452,7 @@ value|(1UL<< 61)
 end_define
 
 begin_comment
-comment|/* Pri. error caused by DVMA write. */
+comment|/* Pri. error caused by DVMA write */
 end_comment
 
 begin_define
@@ -1453,7 +1463,7 @@ value|(1UL<< 62)
 end_define
 
 begin_comment
-comment|/* Pri. error caused by DVMA read. */
+comment|/* Pri. error caused by DVMA read */
 end_comment
 
 begin_define
@@ -1464,7 +1474,7 @@ value|(1UL<< 63)
 end_define
 
 begin_comment
-comment|/* Pri. error caused by PIO access. */
+comment|/* Pri. error caused by PIO access */
 end_comment
 
 begin_define
@@ -1476,7 +1486,7 @@ value|(CEAFSR_P_PIO | CEAFSR_P_DRD | CEAFSR_P_DWR |			\ 	 CEAFSR_S_PIO | CEAFSR_
 end_define
 
 begin_comment
-comment|/* Definitions for the target address space register. */
+comment|/* Definitions for the target address space register */
 end_comment
 
 begin_define
@@ -1487,7 +1497,7 @@ value|29
 end_define
 
 begin_comment
-comment|/* Definitions for the psycho configuration space */
+comment|/* Definitions for the Psycho configuration space */
 end_comment
 
 begin_define
@@ -1498,7 +1508,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Device number of psycho CS entry */
+comment|/* Device number of Psycho CS entry */
 end_comment
 
 begin_define
@@ -1509,7 +1519,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Function number of psycho CS entry */
+comment|/* Function number of Psycho CS entry */
 end_comment
 
 begin_comment
@@ -1544,7 +1554,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _SPARC64_PCI_PSYCHOREG_H_ */
+comment|/* !_SPARC64_PCI_PSYCHOREG_H_ */
 end_comment
 
 end_unit
