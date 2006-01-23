@@ -4137,7 +4137,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|mtu
@@ -4206,7 +4205,13 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * badport_bandlim() - check for ICMP bandwidth limit  *  *	Return 0 if it is ok to send an ICMP error response, -1 if we have  *	hit our bandwidth limit and it is not ok.  *  *	If icmplim is<= 0, the feature is disabled and 0 is returned.  *  *	For now we separate the TCP and UDP subsystems w/ different 'which'  *	values.  We may eventually remove this separation (and simplify the  *	code further).  *  *	Note that the printing of the error message is delayed so we can  *	properly print the icmp error rate that the system was trying to do  *	(i.e. 22000/100 pps, etc...).  This can cause long delays in printing  *	the 'final' error, but it doesn't make sense to solve the printing  *	delay with more complex code.  */
+end_comment
+
+begin_function
 name|int
 name|badport_bandlim
 parameter_list|(
