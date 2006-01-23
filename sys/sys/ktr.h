@@ -431,6 +431,12 @@ begin_comment
 comment|/* Trace classes to compile in */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KTR
+end_ifdef
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -448,6 +454,37 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !KTR */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|KTR_COMPILE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|KTR_COMPILE
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KTR */
+end_comment
 
 begin_comment
 comment|/* Trace classes that can not be used with KTR_ALQ */
@@ -566,15 +603,6 @@ name|ktr_buf
 index|[]
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !LOCORE */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -757,19 +785,6 @@ end_else
 begin_comment
 comment|/* KTR */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|KTR_COMPILE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|KTR_COMPILE
-value|0
-end_define
 
 begin_define
 define|#
@@ -1253,6 +1268,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !LOCORE */
+end_comment
 
 begin_endif
 endif|#
