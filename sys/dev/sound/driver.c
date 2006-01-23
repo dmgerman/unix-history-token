@@ -404,7 +404,7 @@ name|MODULE_DEPEND
 argument_list|(
 name|snd_driver
 argument_list|,
-name|snd_sb8
+name|snd_sb16
 argument_list|,
 literal|1
 argument_list|,
@@ -420,7 +420,7 @@ name|MODULE_DEPEND
 argument_list|(
 name|snd_driver
 argument_list|,
-name|snd_sb16
+name|snd_sb8
 argument_list|,
 literal|1
 argument_list|,
