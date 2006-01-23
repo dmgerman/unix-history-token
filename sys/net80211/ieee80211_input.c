@@ -8702,6 +8702,18 @@ name|ni_tstamp
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* count beacon frame for s/w bmiss handling */
+name|ic
+operator|->
+name|ic_swbmiss_count
+operator|++
+expr_stmt|;
+name|ic
+operator|->
+name|ic_bmiss_count
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|ni
@@ -8944,12 +8956,6 @@ name|rssi
 argument_list|,
 name|rstamp
 argument_list|)
-expr_stmt|;
-name|ic
-operator|->
-name|ic_bmiss_count
-operator|=
-literal|0
 expr_stmt|;
 return|return;
 block|}
