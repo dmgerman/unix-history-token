@@ -12495,9 +12495,6 @@ block|{
 name|region_t
 modifier|*
 name|ret
-decl_stmt|,
-modifier|*
-name|next
 decl_stmt|;
 name|chunk_node_t
 modifier|*
@@ -12664,7 +12661,38 @@ operator|->
 name|sep
 argument_list|)
 expr_stmt|;
-comment|/* Create a separator at the end of this new region. */
+comment|/* 	 * Avoiding the following when possible is worthwhile, because it 	 * avoids touching a page that for many applications would never be 	 * touched otherwise. 	 */
+ifdef|#
+directive|ifdef
+name|USE_BRK
+if|if
+condition|(
+operator|(
+name|uintptr_t
+operator|)
+name|ret
+operator|>=
+operator|(
+name|uintptr_t
+operator|)
+name|brk_base
+operator|&&
+operator|(
+name|uintptr_t
+operator|)
+name|ret
+operator|<
+operator|(
+name|uintptr_t
+operator|)
+name|brk_max
+condition|)
+block|{
+name|region_t
+modifier|*
+name|next
+decl_stmt|;
+comment|/* 		 * This may be a re-used brk chunk, so we have no guarantee 		 * that the memory is zero-filled.  Therefore manually create a 		 * separator at the end of this new region (all zero bits). 		 */
 name|next
 operator|=
 operator|(
@@ -12723,6 +12751,9 @@ operator|->
 name|sep
 argument_list|)
 expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|fit
