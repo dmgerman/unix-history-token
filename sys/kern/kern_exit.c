@@ -1605,7 +1605,7 @@ name|q
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Save exit status and finalize rusage info except for times, 	 * adding in child rusage info. 	 */
+comment|/* 	 * Save exit status and finalize rusage info except for times, 	 * adding in child rusage info later when our time is locked. 	 */
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -1642,30 +1642,6 @@ operator|->
 name|p_stats
 operator|->
 name|p_ru
-expr_stmt|;
-name|ruadd
-argument_list|(
-name|p
-operator|->
-name|p_ru
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_rux
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_stats
-operator|->
-name|p_cru
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_crux
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Notify interested parties of our demise. 	 */
 name|KNOTE_LOCKED
@@ -1949,6 +1925,30 @@ argument_list|(
 name|p
 operator|->
 name|p_pptr
+argument_list|)
+expr_stmt|;
+name|ruadd
+argument_list|(
+name|p
+operator|->
+name|p_ru
+argument_list|,
+operator|&
+name|p
+operator|->
+name|p_rux
+argument_list|,
+operator|&
+name|p
+operator|->
+name|p_stats
+operator|->
+name|p_cru
+argument_list|,
+operator|&
+name|p
+operator|->
+name|p_crux
 argument_list|)
 expr_stmt|;
 comment|/* Do the same timestamp bookkeeping that mi_switch() would do. */
