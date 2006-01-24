@@ -191,7 +191,7 @@ literal|"  -h  --help         print this usage and exit\n"
 argument_list|,
 literal|"  -i  --interactive  force interactive mode\n"
 argument_list|,
-literal|"  -l  --mathlib      use the predefine math routines\n"
+literal|"  -l  --mathlib      use the predefined math routines\n"
 argument_list|,
 literal|"  -q  --quiet        don't print initial banner\n"
 argument_list|,
