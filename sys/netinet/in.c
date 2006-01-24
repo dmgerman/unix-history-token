@@ -2375,6 +2375,16 @@ argument_list|,
 name|ia_link
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ia
+operator|->
+name|ia_addr
+operator|.
+name|sin_family
+operator|==
+name|AF_INET
+condition|)
 name|LIST_REMOVE
 argument_list|(
 name|ia
