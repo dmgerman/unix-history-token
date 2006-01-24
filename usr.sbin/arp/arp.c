@@ -636,6 +636,15 @@ condition|(
 name|func
 operator|!=
 name|F_GET
+operator|&&
+operator|!
+operator|(
+name|func
+operator|==
+name|F_DELETE
+operator|&&
+name|aflag
+operator|)
 condition|)
 name|errx
 argument_list|(
@@ -3267,7 +3276,7 @@ literal|"       arp [-n] [-i interface] -a"
 argument_list|,
 literal|"       arp -d hostname [pub]"
 argument_list|,
-literal|"       arp -d -a"
+literal|"       arp -d [-i interface] -a"
 argument_list|,
 literal|"       arp -s hostname ether_addr [temp] [pub]"
 argument_list|,
