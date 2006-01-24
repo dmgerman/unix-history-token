@@ -913,6 +913,14 @@ name|oaiocb_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*  * Below is a key of locks used to protect each member of struct aiocblist  * aioliojob and kaioinfo and any backends.  *  * * - need not protected  * a - locked by proc mtx  * b - locked by backend lock, the backend lock can be null in some cases,  *     for example, BIO belongs to this type, in this case, proc lock is  *     reused.  * c - locked by aio_job_mtx, the lock for the generic file I/O backend.  */
+end_comment
+
+begin_comment
+comment|/*  * Current, there is only two backends: BIO and generic file I/O.  * socket I/O is served by generic file I/O, this is not a good idea, since  * disk file I/O and any other types without O_NONBLOCK flag can block daemon  * threads, if there is no thread to serve socket I/O, the socket I/O will be  * delayed too long or starved, we should create some threads dedicated to  * sockets to do non-blocking I/O, same for pipe and fifo, for these I/O  * systems we really need non-blocking interface, fiddling O_NONBLOCK in file  * structure is not safe because there is race between userland and aio  * daemons.  */
+end_comment
+
 begin_struct
 struct|struct
 name|aiocblist
@@ -923,86 +931,92 @@ argument|aiocblist
 argument_list|)
 name|list
 expr_stmt|;
-comment|/* List of jobs */
+comment|/* (b) internal list of for backend */
 name|TAILQ_ENTRY
 argument_list|(
 argument|aiocblist
 argument_list|)
 name|plist
 expr_stmt|;
-comment|/* List of jobs for proc */
+comment|/* (a) list of jobs for each backend */
 name|TAILQ_ENTRY
 argument_list|(
 argument|aiocblist
 argument_list|)
 name|allist
 expr_stmt|;
+comment|/* (a) list of all jobs in proc */
 name|int
 name|jobflags
 decl_stmt|;
+comment|/* (a) job flags */
 name|int
 name|jobstate
 decl_stmt|;
+comment|/* (b) job state */
 name|int
 name|inputcharge
 decl_stmt|;
+comment|/* (*) input blockes */
 name|int
 name|outputcharge
 decl_stmt|;
+comment|/* (*) output blockes */
 name|struct
 name|buf
 modifier|*
 name|bp
 decl_stmt|;
-comment|/* Buffer pointer */
+comment|/* (*) private to BIO backend, 				  	 * buffer pointer 					 */
 name|struct
 name|proc
 modifier|*
 name|userproc
 decl_stmt|;
-comment|/* User process */
+comment|/* (*) user process */
 name|struct
 name|ucred
 modifier|*
 name|cred
 decl_stmt|;
-comment|/* Active credential when created */
+comment|/* (*) active credential when created */
 name|struct
 name|file
 modifier|*
 name|fd_file
 decl_stmt|;
-comment|/* Pointer to file structure */
+comment|/* (*) pointer to file structure */
 name|struct
 name|aioliojob
 modifier|*
 name|lio
 decl_stmt|;
-comment|/* Optional lio job */
+comment|/* (*) optional lio job */
 name|struct
 name|aiocb
 modifier|*
 name|uuaiocb
 decl_stmt|;
-comment|/* Pointer in userspace of aiocb */
+comment|/* (*) pointer in userspace of aiocb */
 name|struct
 name|knlist
 name|klist
 decl_stmt|;
-comment|/* list of knotes */
+comment|/* (a) list of knotes */
 name|struct
 name|aiocb
 name|uaiocb
 decl_stmt|;
-comment|/* Kernel I/O control block */
+comment|/* (*) kernel I/O control block */
 name|ksiginfo_t
 name|ksi
 decl_stmt|;
-comment|/* Realtime signal info */
+comment|/* (a) realtime signal info */
 name|struct
 name|task
 name|biotask
 decl_stmt|;
+comment|/* (*) private to BIO backend */
 block|}
 struct|;
 end_struct
@@ -1054,20 +1068,20 @@ block|{
 name|int
 name|aiothreadflags
 decl_stmt|;
-comment|/* AIO proc flags */
+comment|/* (c) AIO proc flags */
 name|TAILQ_ENTRY
 argument_list|(
 argument|aiothreadlist
 argument_list|)
 name|list
 expr_stmt|;
-comment|/* List of processes */
+comment|/* (c) list of processes */
 name|struct
 name|thread
 modifier|*
 name|aiothread
 decl_stmt|;
-comment|/* The AIO thread */
+comment|/* (*) the AIO thread */
 block|}
 struct|;
 end_struct
@@ -1083,32 +1097,36 @@ block|{
 name|int
 name|lioj_flags
 decl_stmt|;
+comment|/* (a) listio flags */
 name|int
 name|lioj_count
 decl_stmt|;
+comment|/* (a) listio flags */
 name|int
 name|lioj_finished_count
 decl_stmt|;
+comment|/* (a) listio flags */
 name|struct
 name|sigevent
 name|lioj_signal
 decl_stmt|;
-comment|/* signal on all I/O done */
+comment|/* (a) signal on all I/O done */
 name|TAILQ_ENTRY
 argument_list|(
 argument|aioliojob
 argument_list|)
 name|lioj_list
 expr_stmt|;
+comment|/* (a) lio list */
 name|struct
 name|knlist
 name|klist
 decl_stmt|;
-comment|/* list of knotes */
+comment|/* (a) list of knotes */
 name|ksiginfo_t
 name|lioj_ksi
 decl_stmt|;
-comment|/* Realtime signal info */
+comment|/* (a) Realtime signal info */
 block|}
 struct|;
 end_struct
@@ -1157,31 +1175,31 @@ block|{
 name|int
 name|kaio_flags
 decl_stmt|;
-comment|/* per process kaio flags */
+comment|/* (a) per process kaio flags */
 name|int
 name|kaio_maxactive_count
 decl_stmt|;
-comment|/* maximum number of AIOs */
+comment|/* (*) maximum number of AIOs */
 name|int
 name|kaio_active_count
 decl_stmt|;
-comment|/* number of currently used AIOs */
+comment|/* (c) number of currently used AIOs */
 name|int
 name|kaio_qallowed_count
 decl_stmt|;
-comment|/* maxiumu size of AIO queue */
+comment|/* (*) maxiumu size of AIO queue */
 name|int
 name|kaio_count
 decl_stmt|;
-comment|/* size of AIO queue */
+comment|/* (a) size of AIO queue */
 name|int
 name|kaio_ballowed_count
 decl_stmt|;
-comment|/* maximum number of buffers */
+comment|/* (*) maximum number of buffers */
 name|int
 name|kaio_buffer_count
 decl_stmt|;
-comment|/* number of physio buffers */
+comment|/* (a) number of physio buffers */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -1189,7 +1207,7 @@ argument|aiocblist
 argument_list|)
 name|kaio_all
 expr_stmt|;
-comment|/* all AIOs in the process */
+comment|/* (a) all AIOs in the process */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -1197,7 +1215,7 @@ argument|aiocblist
 argument_list|)
 name|kaio_done
 expr_stmt|;
-comment|/* done queue for process */
+comment|/* (a) done queue for process */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -1205,7 +1223,7 @@ argument|aioliojob
 argument_list|)
 name|kaio_liojoblist
 expr_stmt|;
-comment|/* list of lio jobs */
+comment|/* (a) list of lio jobs */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -1213,7 +1231,7 @@ argument|aiocblist
 argument_list|)
 name|kaio_jobqueue
 expr_stmt|;
-comment|/* job queue for process */
+comment|/* (a) job queue for process */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -1221,7 +1239,7 @@ argument|aiocblist
 argument_list|)
 name|kaio_bufqueue
 expr_stmt|;
-comment|/* buffer job queue for process */
+comment|/* (a) buffer job queue for process */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -1229,7 +1247,7 @@ argument|aiocblist
 argument_list|)
 name|kaio_sockqueue
 expr_stmt|;
-comment|/* queue for aios waiting on sockets */
+comment|/* (a) queue for aios waiting on sockets, 						 *  not used yet. 						 */
 block|}
 struct|;
 end_struct
@@ -1268,7 +1286,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Idle daemons */
+comment|/* (c) Idle daemons */
 end_comment
 
 begin_decl_stmt
@@ -1307,7 +1325,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Async job list */
+comment|/* (c) Async job list */
 end_comment
 
 begin_decl_stmt
@@ -2952,6 +2970,9 @@ name|socket
 modifier|*
 name|so
 decl_stmt|;
+name|int
+name|remove
+decl_stmt|;
 name|KASSERT
 argument_list|(
 name|curthread
@@ -2994,88 +3015,6 @@ operator||=
 name|KAIO_RUNDOWN
 expr_stmt|;
 comment|/* 	 * Try to cancel all pending requests. This code simulates 	 * aio_cancel on all pending I/O requests. 	 */
-while|while
-condition|(
-operator|(
-name|cbe
-operator|=
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|ki
-operator|->
-name|kaio_sockqueue
-argument_list|)
-operator|)
-condition|)
-block|{
-name|fp
-operator|=
-name|cbe
-operator|->
-name|fd_file
-expr_stmt|;
-name|so
-operator|=
-name|fp
-operator|->
-name|f_data
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|aio_sock_mtx
-argument_list|)
-expr_stmt|;
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|so
-operator|->
-name|so_aiojobq
-argument_list|,
-name|cbe
-argument_list|,
-name|list
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|aio_sock_mtx
-argument_list|)
-expr_stmt|;
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|ki
-operator|->
-name|kaio_sockqueue
-argument_list|,
-name|cbe
-argument_list|,
-name|plist
-argument_list|)
-expr_stmt|;
-name|TAILQ_INSERT_HEAD
-argument_list|(
-operator|&
-name|ki
-operator|->
-name|kaio_jobqueue
-argument_list|,
-name|cbe
-argument_list|,
-name|plist
-argument_list|)
-expr_stmt|;
-name|cbe
-operator|->
-name|jobstate
-operator|=
-name|JOBST_JOBQGLOBAL
-expr_stmt|;
-block|}
 name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|cbe
@@ -3087,6 +3026,10 @@ argument_list|,
 argument|cbn
 argument_list|)
 block|{
+name|remove
+operator|=
+literal|0
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -3112,12 +3055,70 @@ argument_list|,
 name|list
 argument_list|)
 expr_stmt|;
+name|remove
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|cbe
+operator|->
+name|jobstate
+operator|==
+name|JOBST_JOBQSOCK
+condition|)
+block|{
+name|fp
+operator|=
+name|cbe
+operator|->
+name|fd_file
+expr_stmt|;
+name|MPASS
+argument_list|(
+name|fp
+operator|->
+name|f_type
+operator|==
+name|DTYPE_SOCKET
+argument_list|)
+expr_stmt|;
+name|so
+operator|=
+name|fp
+operator|->
+name|f_data
+expr_stmt|;
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_aiojobq
+argument_list|,
+name|cbe
+argument_list|,
+name|list
+argument_list|)
+expr_stmt|;
+name|remove
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|mtx_unlock
 argument_list|(
 operator|&
 name|aio_job_mtx
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|remove
+condition|)
+block|{
 name|cbe
 operator|->
 name|jobstate
@@ -3167,29 +3168,7 @@ name|DONE_QUEUE
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|aio_job_mtx
-argument_list|)
-expr_stmt|;
 block|}
-block|}
-if|if
-condition|(
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|ki
-operator|->
-name|kaio_sockqueue
-argument_list|)
-condition|)
-goto|goto
-name|restart
-goto|;
 comment|/* Wait for all running I/O to be finished */
 if|if
 condition|(
@@ -3471,7 +3450,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The AIO processing activity.  This is the code that does the I/O request for  * the non-physio version of the operations.  The normal vn operations are used,  * and this code should work in all instances for every type of file, including  * pipes, sockets, fifos, and regular files.  *  * XXX I don't think these code work well with pipes, sockets and fifo, the  * problem is the aiod threads can be blocked if there is not data or no  * buffer space, and file was not opened with O_NONBLOCK, all aiod threads  * will be blocked if there is couple of such processes. We need a FOF_OFFSET  * like flag to override f_flag to tell low level system to do non-blocking  * I/O, we can not muck O_NONBLOCK because there is full of race between  * userland and aiod threads, although there is a trigger mechanism for socket,  * but it also does not work well if userland is misbehaviored.  */
+comment|/*  * The AIO processing activity.  This is the code that does the I/O request for  * the non-physio version of the operations.  The normal vn operations are used,  * and this code should work in all instances for every type of file, including  * pipes, sockets, fifos, and regular files.  *  * XXX I don't think it works well for socket, pipe, and fifo.  */
 end_comment
 
 begin_function
@@ -5503,18 +5482,6 @@ decl_stmt|,
 modifier|*
 name|cbn
 decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-name|struct
-name|kaioinfo
-modifier|*
-name|ki
-init|=
-name|NULL
-decl_stmt|;
 name|int
 name|opcode
 decl_stmt|,
@@ -5536,73 +5503,31 @@ name|so
 operator|->
 name|so_snd
 condition|)
-block|{
 name|opcode
 operator|=
 name|LIO_WRITE
 expr_stmt|;
-name|SOCKBUF_LOCK
-argument_list|(
-operator|&
-name|so
-operator|->
-name|so_snd
-argument_list|)
-expr_stmt|;
-name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_flags
-operator|&=
-operator|~
-name|SB_AIO
-expr_stmt|;
-name|SOCKBUF_UNLOCK
-argument_list|(
-operator|&
-name|so
-operator|->
-name|so_snd
-argument_list|)
-expr_stmt|;
-block|}
 else|else
-block|{
 name|opcode
 operator|=
 name|LIO_READ
 expr_stmt|;
 name|SOCKBUF_LOCK
 argument_list|(
-operator|&
-name|so
-operator|->
-name|so_rcv
+name|sb
 argument_list|)
 expr_stmt|;
-name|so
+name|sb
 operator|->
-name|so_rcv
-operator|.
 name|sb_flags
 operator|&=
 operator|~
 name|SB_AIO
 expr_stmt|;
-name|SOCKBUF_UNLOCK
-argument_list|(
-operator|&
-name|so
-operator|->
-name|so_rcv
-argument_list|)
-expr_stmt|;
-block|}
 name|mtx_lock
 argument_list|(
 operator|&
-name|aio_sock_mtx
+name|aio_job_mtx
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH_SAFE
@@ -5640,18 +5565,7 @@ argument_list|(
 literal|"invalid queue value"
 argument_list|)
 expr_stmt|;
-name|p
-operator|=
-name|cb
-operator|->
-name|userproc
-expr_stmt|;
-name|ki
-operator|=
-name|p
-operator|->
-name|p_aioinfo
-expr_stmt|;
+comment|/* XXX 			 * We don't have actual sockets backend yet, 			 * so we simply move the requests to the generic 			 * file I/O backend. 			 */
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -5664,48 +5578,6 @@ argument_list|,
 name|list
 argument_list|)
 expr_stmt|;
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|ki
-operator|->
-name|kaio_sockqueue
-argument_list|,
-name|cb
-argument_list|,
-name|plist
-argument_list|)
-expr_stmt|;
-comment|/* 			 * XXX check AIO_RUNDOWN, and don't put on 			 * jobqueue if it was set. 			 */
-name|TAILQ_INSERT_TAIL
-argument_list|(
-operator|&
-name|ki
-operator|->
-name|kaio_jobqueue
-argument_list|,
-name|cb
-argument_list|,
-name|plist
-argument_list|)
-expr_stmt|;
-name|cb
-operator|->
-name|jobstate
-operator|=
-name|JOBST_JOBQGLOBAL
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|aio_job_mtx
-argument_list|)
-expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -5716,17 +5588,6 @@ argument_list|,
 name|list
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|aio_job_mtx
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|wakecount
 operator|++
 expr_stmt|;
@@ -5735,7 +5596,12 @@ block|}
 name|mtx_unlock
 argument_list|(
 operator|&
-name|aio_sock_mtx
+name|aio_job_mtx
+argument_list|)
+expr_stmt|;
+name|SOCKBUF_UNLOCK
+argument_list|(
+name|sb
 argument_list|)
 expr_stmt|;
 while|while
@@ -6855,10 +6721,16 @@ operator|)
 operator|)
 condition|)
 block|{
+name|sb
+operator|->
+name|sb_flags
+operator||=
+name|SB_AIO
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|aio_sock_mtx
+name|aio_job_mtx
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
@@ -6876,30 +6748,12 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|aio_sock_mtx
+name|aio_job_mtx
 argument_list|)
-expr_stmt|;
-name|sb
-operator|->
-name|sb_flags
-operator||=
-name|SB_AIO
 expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
-argument_list|)
-expr_stmt|;
-name|TAILQ_INSERT_TAIL
-argument_list|(
-operator|&
-name|ki
-operator|->
-name|kaio_sockqueue
-argument_list|,
-name|aiocbe
-argument_list|,
-name|plist
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
@@ -6912,6 +6766,18 @@ argument_list|,
 name|aiocbe
 argument_list|,
 name|allist
+argument_list|)
+expr_stmt|;
+name|TAILQ_INSERT_TAIL
+argument_list|(
+operator|&
+name|ki
+operator|->
+name|kaio_jobqueue
+argument_list|,
+name|aiocbe
+argument_list|,
+name|plist
 argument_list|)
 expr_stmt|;
 name|aiocbe
@@ -7958,6 +7824,9 @@ name|int
 name|error
 decl_stmt|;
 name|int
+name|remove
+decl_stmt|;
+name|int
 name|cancelled
 init|=
 literal|0
@@ -8060,188 +7929,6 @@ operator|)
 return|;
 block|}
 block|}
-elseif|else
-if|if
-condition|(
-name|fp
-operator|->
-name|f_type
-operator|==
-name|DTYPE_SOCKET
-condition|)
-block|{
-name|so
-operator|=
-name|fp
-operator|->
-name|f_data
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|aio_sock_mtx
-argument_list|)
-expr_stmt|;
-name|TAILQ_FOREACH_SAFE
-argument_list|(
-argument|cbe
-argument_list|,
-argument|&so->so_aiojobq
-argument_list|,
-argument|list
-argument_list|,
-argument|cbn
-argument_list|)
-block|{
-if|if
-condition|(
-name|cbe
-operator|->
-name|userproc
-operator|==
-name|p
-operator|&&
-operator|(
-name|uap
-operator|->
-name|aiocbp
-operator|==
-name|NULL
-operator|||
-name|uap
-operator|->
-name|aiocbp
-operator|==
-name|cbe
-operator|->
-name|uuaiocb
-operator|)
-condition|)
-block|{
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|so
-operator|->
-name|so_aiojobq
-argument_list|,
-name|cbe
-argument_list|,
-name|list
-argument_list|)
-expr_stmt|;
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|ki
-operator|->
-name|kaio_sockqueue
-argument_list|,
-name|cbe
-argument_list|,
-name|plist
-argument_list|)
-expr_stmt|;
-name|cbe
-operator|->
-name|jobstate
-operator|=
-name|JOBST_JOBRUNNING
-expr_stmt|;
-name|cbe
-operator|->
-name|uaiocb
-operator|.
-name|_aiocb_private
-operator|.
-name|status
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|cbe
-operator|->
-name|uaiocb
-operator|.
-name|_aiocb_private
-operator|.
-name|error
-operator|=
-name|ECANCELED
-expr_stmt|;
-name|aio_bio_done_notify
-argument_list|(
-name|p
-argument_list|,
-name|cbe
-argument_list|,
-name|DONE_QUEUE
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-name|cancelled
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|uap
-operator|->
-name|aiocbp
-operator|!=
-name|NULL
-condition|)
-break|break;
-block|}
-block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|aio_sock_mtx
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cancelled
-operator|&&
-name|uap
-operator|->
-name|aiocbp
-operator|!=
-name|NULL
-condition|)
-block|{
-name|fdrop
-argument_list|(
-name|fp
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
-name|td
-operator|->
-name|td_retval
-index|[
-literal|0
-index|]
-operator|=
-name|AIO_CANCELED
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-block|}
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -8293,6 +7980,10 @@ operator|)
 operator|)
 condition|)
 block|{
+name|remove
+operator|=
+literal|0
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -8318,12 +8009,64 @@ argument_list|,
 name|list
 argument_list|)
 expr_stmt|;
+name|remove
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|cbe
+operator|->
+name|jobstate
+operator|==
+name|JOBST_JOBQSOCK
+condition|)
+block|{
+name|MPASS
+argument_list|(
+name|fp
+operator|->
+name|f_type
+operator|==
+name|DTYPE_SOCKET
+argument_list|)
+expr_stmt|;
+name|so
+operator|=
+name|fp
+operator|->
+name|f_data
+expr_stmt|;
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_aiojobq
+argument_list|,
+name|cbe
+argument_list|,
+name|list
+argument_list|)
+expr_stmt|;
+name|remove
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|mtx_unlock
 argument_list|(
 operator|&
 name|aio_job_mtx
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|remove
+condition|)
+block|{
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -8372,16 +8115,19 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|aio_job_mtx
-argument_list|)
-expr_stmt|;
 name|notcancelled
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|uap
+operator|->
+name|aiocbp
+operator|!=
+name|NULL
+condition|)
+break|break;
 block|}
 block|}
 name|PROC_UNLOCK
@@ -8398,6 +8144,36 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|uap
+operator|->
+name|aiocbp
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|cancelled
+condition|)
+block|{
+name|td
+operator|->
+name|td_retval
+index|[
+literal|0
+index|]
+operator|=
+name|AIO_CANCELED
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+block|}
 if|if
 condition|(
 name|notcancelled
