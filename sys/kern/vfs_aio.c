@@ -4347,6 +4347,7 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+comment|/* The daemon resides in its own pgrp. */
 name|setsid
 argument_list|(
 name|td
