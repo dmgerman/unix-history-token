@@ -3982,11 +3982,6 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|snddev_info
-modifier|*
-name|d
-decl_stmt|;
-name|struct
 name|sc_info
 modifier|*
 name|sc
@@ -4000,13 +3995,6 @@ index|[
 name|SND_STATUSLEN
 index|]
 decl_stmt|;
-name|d
-operator|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|sc
 operator|=
 name|malloc
