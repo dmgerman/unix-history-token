@@ -2178,6 +2178,15 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|ata_legacy
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+operator|&&
 name|ch
 operator|->
 name|dma
