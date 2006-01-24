@@ -40,6 +40,12 @@ begin_comment
 comment|/* for uiomove etc. */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -52,6 +58,21 @@ define|#
 directive|define
 name|DMA_ALIGN_MASK
 value|(~(DMA_ALIGN_THRESHOLD - 1))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|DMA_ALIGN_MASK
+parameter_list|(
+name|bps
+parameter_list|)
+value|(~((bps) - 1))
 end_define
 
 begin_define
@@ -5723,11 +5744,25 @@ expr_stmt|;
 comment|/* Apply channel align mask */
 endif|#
 directive|endif
+if|#
+directive|if
+literal|0
+block|hwptr&= DMA_ALIGN_MASK;
+comment|/* Apply DMA align mask */
+endif|#
+directive|endif
 name|hwptr
 operator|&=
 name|DMA_ALIGN_MASK
+argument_list|(
+name|sndbuf_getbps
+argument_list|(
+name|c
+operator|->
+name|bufhard
+argument_list|)
+argument_list|)
 expr_stmt|;
-comment|/* Apply DMA align mask */
 return|return
 name|hwptr
 return|;
