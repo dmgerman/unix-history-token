@@ -119,6 +119,36 @@ directive|include
 file|<machine/stdarg.h>
 end_include
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|KTR_WITNESS
+value|KTR_SUBSYS
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|KTR_WITNESS
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Easier to stay with the old names. */
 end_comment

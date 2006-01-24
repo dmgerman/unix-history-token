@@ -20,7 +20,7 @@ name|_SYS_KTR_H_
 end_define
 
 begin_comment
-comment|/*  * Trace classes  */
+comment|/*  * Trace classes  *  * Two of the trace classes (KTR_DEV and KTR_SUBSYS) are special in that  * they are really placeholders so that indvidual drivers and subsystems  * can map their internal tracing to the general class when they wish to  * have tracing enabled and map it to 0 when they don't.  */
 end_comment
 
 begin_define
@@ -81,12 +81,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KTR_SPARE1
+name|KTR_SUBSYS
 value|0x00000020
 end_define
 
 begin_comment
-comment|/* Unused */
+comment|/* Subsystem. */
 end_comment
 
 begin_define
@@ -257,9 +257,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KTR_WITNESS
+name|KTR_SPARE1
 value|0x00200000
 end_define
+
+begin_comment
+comment|/* Unused */
+end_comment
 
 begin_define
 define|#
