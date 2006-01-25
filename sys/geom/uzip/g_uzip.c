@@ -1479,6 +1479,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|g_destroy_bio
+argument_list|(
+name|bp2
+argument_list|)
+expr_stmt|;
 name|g_io_deliver
 argument_list|(
 name|bp
