@@ -759,11 +759,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ktr_mask
-operator|&=
-operator|~
-name|KTR_ALQ_MASK
-expr_stmt|;
 name|ktr_alq_cnt
 operator|=
 literal|0

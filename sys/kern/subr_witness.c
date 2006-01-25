@@ -119,6 +119,10 @@ directive|include
 file|<machine/stdarg.h>
 end_include
 
+begin_comment
+comment|/* Note that these traces do not work with KTR_ALQ. */
+end_comment
+
 begin_if
 if|#
 directive|if

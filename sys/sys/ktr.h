@@ -491,17 +491,6 @@ comment|/* KTR */
 end_comment
 
 begin_comment
-comment|/* Trace classes that can not be used with KTR_ALQ */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KTR_ALQ_MASK
-value|(KTR_WITNESS)
-end_define
-
-begin_comment
 comment|/*  * Version number for ktr_entry struct.  Increment this when you break binary  * compatibility.  */
 end_comment
 
