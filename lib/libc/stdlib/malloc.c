@@ -10675,18 +10675,6 @@ name|fit
 condition|)
 block|{
 comment|/* 		 * Use frag, but try to use the beginning for smaller regions, 		 * and the end for larger regions.  This reduces fragmentation 		 * in some pathological use cases.  It tends to group 		 * short-lived (smaller) regions, which increases the 		 * effectiveness of coalescing. 		 */
-name|total_size
-operator|=
-name|region_next_size_get
-argument_list|(
-operator|&
-name|arena
-operator|->
-name|frag
-operator|->
-name|sep
-argument_list|)
-expr_stmt|;
 name|assert
 argument_list|(
 name|size
