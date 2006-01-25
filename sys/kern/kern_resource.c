@@ -3182,6 +3182,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 name|calcru1
 argument_list|(
 name|p
@@ -3192,12 +3198,6 @@ argument_list|,
 name|up
 argument_list|,
 name|sp
-argument_list|)
-expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
 argument_list|)
 expr_stmt|;
 name|p
