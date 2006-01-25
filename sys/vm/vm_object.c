@@ -5906,6 +5906,14 @@ decl_stmt|;
 comment|/* 			 * If we do not entirely shadow the backing object, 			 * there is nothing we can do so we give up. 			 */
 if|if
 condition|(
+name|object
+operator|->
+name|resident_page_count
+operator|!=
+name|object
+operator|->
+name|size
+operator|&&
 name|vm_object_backing_scan
 argument_list|(
 name|object
