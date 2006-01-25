@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003 - 2005 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2003 - 2006 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -745,6 +745,55 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_MARVELL_ID
+value|0x11ab
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_M88SX5040
+value|0x504011ab
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_M88SX5041
+value|0x504111ab
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_M88SX5080
+value|0x508011ab
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_M88SX5081
+value|0x508111ab
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_M88SX6041
+value|0x604111ab
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_M88SX6081
+value|0x608111ab
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_MICRON_ID
 value|0x1042
 end_define
@@ -801,14 +850,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATA_NFORCE2_MCP
+name|ATA_NFORCE2_PRO
 value|0x008510de
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATA_NFORCE2_MCP_S1
+name|ATA_NFORCE2_PRO_S1
 value|0x008e10de
 end_define
 
@@ -843,43 +892,85 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATA_NFORCE3_MCP
+name|ATA_NFORCE_MCP04
 value|0x003510de
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATA_NFORCE3_MCP_S1
+name|ATA_NFORCE_MCP04_S1
 value|0x003610de
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATA_NFORCE3_MCP_S2
+name|ATA_NFORCE_MCP04_S2
 value|0x003e10de
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATA_NFORCE4
+name|ATA_NFORCE_CK804
 value|0x005310de
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATA_NFORCE4_S1
+name|ATA_NFORCE_CK804_S1
 value|0x005410de
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATA_NFORCE4_S2
+name|ATA_NFORCE_CK804_S2
 value|0x005510de
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_NFORCE_MCP51
+value|0x026510de
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_NFORCE_MCP51_S1
+value|0x026610de
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_NFORCE_MCP51_S2
+value|0x026710de
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_NFORCE_MCP55
+value|0x036e10de
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_NFORCE_MCP55_S1
+value|0x037e10de
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_NFORCE_MCP55_S2
+value|0x037f10de
 end_define
 
 begin_define
@@ -1053,7 +1144,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATA_PDC20580
+name|ATA_PDC20771
 value|0x3570105a
 end_define
 
@@ -1083,6 +1174,20 @@ define|#
 directive|define
 name|ATA_PDC40719
 value|0x3515105a
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_PDC40775
+value|0x3d73105a
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_PDC40779
+value|0x3577105a
 end_define
 
 begin_define
@@ -1125,6 +1230,20 @@ define|#
 directive|define
 name|ATA_PDC20622
 value|0x6622105a
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_PDC20624
+value|0x6624105a
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_PDC81518
+value|0x8002105a
 end_define
 
 begin_define
@@ -1648,6 +1767,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_VIA8251
+value|0x33491106
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_VIA8361
 value|0x31121106
 end_define
@@ -1697,6 +1823,13 @@ end_define
 begin_comment
 comment|/* chipset setup related defines */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|AHCI
+value|1
+end_define
 
 begin_define
 define|#
@@ -1759,6 +1892,20 @@ define|#
 directive|define
 name|HPTOLD
 value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV5XXX
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV6XXX
+value|6
 end_define
 
 begin_define
@@ -2041,6 +2188,13 @@ name|VIABAR
 value|0x40
 end_define
 
+begin_define
+define|#
+directive|define
+name|VIAAHCI
+value|0x80
+end_define
+
 begin_comment
 comment|/* global prototypes ata-pci.c */
 end_comment
@@ -2199,6 +2353,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|ata_pci_hw
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ata_pci_status
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* global prototypes ata-chipset.c */
 end_comment
@@ -2295,6 +2469,15 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ata_marvell_ident
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ata_national_ident
 parameter_list|(
 name|device_t
@@ -2361,21 +2544,6 @@ name|int
 name|ata_legacy
 parameter_list|(
 name|device_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|ata_chip_id
-modifier|*
-name|ata_match_chip
-parameter_list|(
-name|device_t
-parameter_list|,
-name|struct
-name|ata_chip_id
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

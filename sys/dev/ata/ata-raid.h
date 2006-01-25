@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000 - 2005 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2000 - 2006 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -12,6 +12,13 @@ define|#
 directive|define
 name|MAX_ARRAYS
 value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_VOLUMES
+value|4
 end_define
 
 begin_define
@@ -47,9 +54,15 @@ name|struct
 name|ar_softc
 modifier|*
 name|raid
+index|[
+name|MAX_VOLUMES
+index|]
 decl_stmt|;
 name|int
 name|disk_number
+index|[
+name|MAX_VOLUMES
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -66,22 +79,21 @@ block|{
 name|int
 name|lun
 decl_stmt|;
-comment|/* logical unit number of this RAID */
 name|u_int8_t
 name|name
 index|[
 literal|32
 index|]
 decl_stmt|;
-comment|/* name of array if any */
+name|int
+name|volume
+decl_stmt|;
 name|u_int64_t
 name|magic_0
 decl_stmt|;
-comment|/* magic for this array */
 name|u_int64_t
 name|magic_1
 decl_stmt|;
-comment|/* magic for this array */
 name|int
 name|type
 decl_stmt|;
@@ -181,16 +193,19 @@ name|AR_F_SII_RAID
 value|0x0400
 define|#
 directive|define
-name|AR_F_VIA_RAID
+name|AR_F_SIS_RAID
 value|0x0800
 define|#
 directive|define
+name|AR_F_VIA_RAID
+value|0x1000
+define|#
+directive|define
 name|AR_F_FORMAT_MASK
-value|0x0fff
+value|0x1fff
 name|u_int
 name|generation
 decl_stmt|;
-comment|/* generation of this array */
 name|u_int64_t
 name|total_sectors
 decl_stmt|;
@@ -214,7 +229,7 @@ comment|/* array width in disks */
 name|u_int
 name|interleave
 decl_stmt|;
-comment|/* interleave in blocks */
+comment|/* interleave in sectors */
 name|u_int
 name|total_disks
 decl_stmt|;
@@ -894,7 +909,7 @@ parameter_list|(
 name|dev
 parameter_list|)
 define|\
-value|(((struct ad_softc *)device_get_ivars(dev))->total_secs - 2)
+value|(((struct ad_softc *)device_get_ivars(dev))->total_secs - 3)
 end_define
 
 begin_struct
@@ -917,6 +932,18 @@ index|[
 literal|6
 index|]
 decl_stmt|;
+define|#
+directive|define
+name|INTEL_VERSION_1100
+value|"1.1.00"
+define|#
+directive|define
+name|INTEL_VERSION_1201
+value|"1.2.01"
+define|#
+directive|define
+name|INTEL_VERSION_1202
+value|"1.2.02"
 name|u_int8_t
 name|dummy_0
 index|[
@@ -1037,7 +1064,7 @@ name|u_int32_t
 name|reserved
 decl_stmt|;
 name|u_int32_t
-name|filler_1
+name|filler_0
 index|[
 literal|20
 index|]
@@ -1084,17 +1111,21 @@ define|#
 directive|define
 name|INTEL_T_RAID1
 value|0x01
+define|#
+directive|define
+name|INTEL_T_RAID5
+value|0x05
 name|u_int8_t
 name|total_disks
 decl_stmt|;
 name|u_int8_t
-name|dummy_2
+name|magic
 index|[
 literal|3
 index|]
 decl_stmt|;
 name|u_int32_t
-name|filler_2
+name|filler_1
 index|[
 literal|7
 index|]
@@ -1934,7 +1965,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PR_LBA
+name|PROMISE_LBA
 parameter_list|(
 name|dev
 parameter_list|)
@@ -2321,6 +2352,107 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* Silicon Integrated Systems RAID Metadata */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIS_LBA
+parameter_list|(
+name|dev
+parameter_list|)
+define|\
+value|( ((struct ad_softc *)device_get_ivars(dev))->total_secs - 16)
+end_define
+
+begin_struct
+struct|struct
+name|sis_raid_conf
+block|{
+name|u_int16_t
+name|magic
+decl_stmt|;
+define|#
+directive|define
+name|SIS_MAGIC
+value|0x0010
+name|u_int8_t
+name|disks
+decl_stmt|;
+define|#
+directive|define
+name|SIS_D_MASTER
+value|0xf0
+define|#
+directive|define
+name|SIS_D_MIRROR
+value|0x0f
+name|u_int8_t
+name|type_total_disks
+decl_stmt|;
+define|#
+directive|define
+name|SIS_D_MASK
+value|0x0f
+define|#
+directive|define
+name|SIS_T_MASK
+value|0xf0
+define|#
+directive|define
+name|SIS_T_JBOD
+value|0x10
+define|#
+directive|define
+name|SIS_T_RAID0
+value|0x20
+define|#
+directive|define
+name|SIS_T_RAID1
+value|0x30
+name|u_int32_t
+name|dummy_0
+decl_stmt|;
+name|u_int32_t
+name|controller_pci_id
+decl_stmt|;
+name|u_int16_t
+name|stripe_sectors
+decl_stmt|;
+name|u_int16_t
+name|dummy_1
+decl_stmt|;
+name|u_int32_t
+name|timestamp
+decl_stmt|;
+name|u_int8_t
+name|model
+index|[
+literal|40
+index|]
+decl_stmt|;
+name|u_int8_t
+name|disk_number
+decl_stmt|;
+name|u_int8_t
+name|dummy_2
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|int8_t
+name|filler1
+index|[
+literal|448
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
 comment|/* VIA Tech V-RAID Metadata */
 end_comment
 
@@ -2355,7 +2487,7 @@ decl_stmt|;
 define|#
 directive|define
 name|VIA_T_MASK
-value|0xfe
+value|0x7e
 define|#
 directive|define
 name|VIA_T_BOOTABLE
@@ -2370,8 +2502,20 @@ name|VIA_T_RAID1
 value|0x0c
 define|#
 directive|define
+name|VIA_T_RAID01
+value|0x4c
+define|#
+directive|define
+name|VIA_T_RAID5
+value|0x2c
+define|#
+directive|define
 name|VIA_T_SPAN
 value|0x44
+define|#
+directive|define
+name|VIA_T_UNKNOWN
+value|0x80
 name|u_int8_t
 name|disk_index
 decl_stmt|;
@@ -2383,19 +2527,27 @@ define|#
 directive|define
 name|VIA_D_DEGRADED
 value|0x10
+define|#
+directive|define
+name|VIA_D_HIGH_IDX
+value|0x20
 name|u_int8_t
 name|stripe_layout
 decl_stmt|;
 define|#
 directive|define
-name|VIA_L_MASK
+name|VIA_L_DISKS
 value|0x07
+define|#
+directive|define
+name|VIA_L_MASK
+value|0xf0
 define|#
 directive|define
 name|VIA_L_SHIFT
 value|4
 name|u_int64_t
-name|total_sectors
+name|disk_sectors
 decl_stmt|;
 name|u_int32_t
 name|disk_id

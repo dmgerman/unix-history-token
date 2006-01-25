@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 - 2005 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1998 - 2006 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -126,23 +126,10 @@ end_comment
 begin_function_decl
 specifier|static
 name|int
-name|ata_begin_transaction
+name|ata_generic_status
 parameter_list|(
-name|struct
-name|ata_request
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|ata_end_transaction
-parameter_list|(
-name|struct
-name|ata_request
-modifier|*
+name|device_t
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -236,6 +223,14 @@ name|ch
 operator|->
 name|hw
 operator|.
+name|status
+operator|=
+name|ata_generic_status
+expr_stmt|;
+name|ch
+operator|->
+name|hw
+operator|.
 name|command
 operator|=
 name|ata_generic_command
@@ -248,7 +243,6 @@ comment|/* must be called with ATA channel locked and state_mtx held */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|ata_begin_transaction
 parameter_list|(
@@ -287,6 +281,8 @@ argument_list|)
 decl_stmt|;
 name|int
 name|dummy
+decl_stmt|,
+name|error
 decl_stmt|;
 name|ATA_DEBUG_RQ
 argument_list|(
@@ -390,7 +386,7 @@ name|request
 operator|->
 name|dev
 argument_list|,
-literal|"error issueing %s command\n"
+literal|"error issuing %s command\n"
 argument_list|,
 name|ata_cmd2str
 argument_list|(
@@ -545,6 +541,9 @@ case|:
 comment|/* check sanity, setup SG list and DMA engine */
 if|if
 condition|(
+operator|(
+name|error
+operator|=
 name|ch
 operator|->
 name|dma
@@ -578,6 +577,7 @@ argument_list|,
 operator|&
 name|dummy
 argument_list|)
+operator|)
 condition|)
 block|{
 name|device_printf
@@ -593,7 +593,7 @@ name|request
 operator|->
 name|result
 operator|=
-name|EIO
+name|error
 expr_stmt|;
 goto|goto
 name|begin_finished
@@ -618,7 +618,7 @@ name|request
 operator|->
 name|dev
 argument_list|,
-literal|"error issueing %s command\n"
+literal|"error issuing %s command\n"
 argument_list|,
 name|ata_cmd2str
 argument_list|(
@@ -845,6 +845,9 @@ block|}
 comment|/* check sanity, setup SG list and DMA engine */
 if|if
 condition|(
+operator|(
+name|error
+operator|=
 name|ch
 operator|->
 name|dma
@@ -878,6 +881,7 @@ argument_list|,
 operator|&
 name|dummy
 argument_list|)
+operator|)
 condition|)
 block|{
 name|device_printf
@@ -893,7 +897,7 @@ name|request
 operator|->
 name|result
 operator|=
-name|EIO
+name|error
 expr_stmt|;
 goto|goto
 name|begin_finished
@@ -1037,7 +1041,6 @@ comment|/* must be called with ATA channel locked and state_mtx held */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|ata_end_transaction
 parameter_list|(
@@ -2256,7 +2259,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* must be called with ATA channel locked */
+comment|/* must be called with ATA channel locked and state_mtx held */
 end_comment
 
 begin_function
@@ -3095,6 +3098,66 @@ argument_list|,
 literal|"\20\4ATAPI_SLAVE\3ATAPI_MASTER\2ATA_SLAVE\1ATA_MASTER"
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* must be called with ATA channel locked and state_mtx held */
+end_comment
+
+begin_function
+name|int
+name|ata_generic_status
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|struct
+name|ata_channel
+modifier|*
+name|ch
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|ATA_IDX_INB
+argument_list|(
+name|ch
+argument_list|,
+name|ATA_ALTSTAT
+argument_list|)
+operator|&
+name|ATA_S_BUSY
+condition|)
+block|{
+name|DELAY
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ATA_IDX_INB
+argument_list|(
+name|ch
+argument_list|,
+name|ATA_ALTSTAT
+argument_list|)
+operator|&
+name|ATA_S_BUSY
+condition|)
+return|return
+literal|0
+return|;
+block|}
+return|return
+literal|1
+return|;
 block|}
 end_function
 

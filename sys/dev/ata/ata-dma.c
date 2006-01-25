@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 - 2005 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1998 - 2006 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -197,7 +197,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_ATADMA
 argument_list|,
-literal|"ATA DMA"
+literal|"ata_dma"
 argument_list|,
 literal|"ATA driver DMA"
 argument_list|)
@@ -582,7 +582,7 @@ name|dma
 operator|->
 name|segsize
 argument_list|,
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -1381,6 +1381,9 @@ name|struct
 name|ata_dmasetprd_args
 name|cba
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|ch
@@ -1400,8 +1403,7 @@ literal|"FAILURE - already active DMA on this device\n"
 argument_list|)
 expr_stmt|;
 return|return
-operator|-
-literal|1
+name|EIO
 return|;
 block|}
 if|if
@@ -1418,8 +1420,7 @@ literal|"FAILURE - zero length DMA transfer attempted\n"
 argument_list|)
 expr_stmt|;
 return|return
-operator|-
-literal|1
+name|EIO
 return|;
 block|}
 if|if
@@ -1464,8 +1465,7 @@ literal|"FAILURE - non aligned DMA transfer attempted\n"
 argument_list|)
 expr_stmt|;
 return|return
-operator|-
-literal|1
+name|EIO
 return|;
 block|}
 if|if
@@ -1495,8 +1495,7 @@ name|max_iosize
 argument_list|)
 expr_stmt|;
 return|return
-operator|-
-literal|1
+name|EIO
 return|;
 block|}
 name|cba
@@ -1507,6 +1506,9 @@ name|addr
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|error
+operator|=
 name|bus_dmamap_load
 argument_list|(
 name|ch
@@ -1534,16 +1536,20 @@ argument_list|,
 operator|&
 name|cba
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
 argument_list|)
+operator|)
 operator|||
+operator|(
+name|error
+operator|=
 name|cba
 operator|.
 name|error
+operator|)
 condition|)
 return|return
-operator|-
-literal|1
+name|error
 return|;
 operator|*
 name|entries
