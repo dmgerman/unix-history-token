@@ -84,7 +84,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"snmpmod.h"
+file|<bsnmp/snmpmod.h>
 end_include
 
 begin_include
