@@ -533,6 +533,22 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* vprintf_errno.c */
+end_comment
+
+begin_decl_stmt
+name|printf_arginfo_function
+name|__printf_arginfo_errno
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|printf_render
+name|__printf_render_errno
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* vprintf_float.c */
 end_comment
 
@@ -545,6 +561,22 @@ end_decl_stmt
 begin_decl_stmt
 name|printf_render
 name|__printf_render_float
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* vprintf_hexdump.c */
+end_comment
+
+begin_decl_stmt
+name|printf_arginfo_function
+name|__printf_arginfo_hexdump
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|printf_render
+name|__printf_render_hexdump
 decl_stmt|;
 end_decl_stmt
 
@@ -573,6 +605,22 @@ end_decl_stmt
 begin_decl_stmt
 name|printf_render
 name|__printf_render_int
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* vprintf_quoute.c */
+end_comment
+
+begin_decl_stmt
+name|printf_arginfo_function
+name|__printf_arginfo_quote
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|printf_render
+name|__printf_render_quote
 decl_stmt|;
 end_decl_stmt
 
@@ -617,22 +665,6 @@ end_decl_stmt
 begin_decl_stmt
 name|printf_render
 name|__printf_render_time
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* vprintf_hexdump.c */
-end_comment
-
-begin_decl_stmt
-name|printf_arginfo_function
-name|__printf_arginfo_hexdump
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|printf_render
-name|__printf_render_hexdump
 decl_stmt|;
 end_decl_stmt
 
