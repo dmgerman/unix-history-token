@@ -68,6 +68,8 @@ block|,
 name|p_ppc
 block|,
 name|p_amd64
+block|,
+name|p_arm
 block|}
 enum|;
 end_enum

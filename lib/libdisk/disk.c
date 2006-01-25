@@ -205,6 +205,13 @@ argument_list|(
 name|__amd64__
 argument_list|)
 name|p_amd64
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+name|p_arm
 else|#
 directive|else
 name|IHAVENOIDEA
