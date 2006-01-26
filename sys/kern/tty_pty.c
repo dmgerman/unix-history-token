@@ -1555,6 +1555,13 @@ name|pt_ucntl
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|pt
+operator|->
+name|devs
+condition|)
 name|pty_create_slave
 argument_list|(
 name|td

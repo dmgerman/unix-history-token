@@ -2052,6 +2052,19 @@ name|EIO
 operator|)
 return|;
 comment|/* 	 * XXX: Might want to make the ownership/permissions here more 	 * configurable. 	 */
+if|if
+condition|(
+name|pt
+operator|->
+name|pt_devs
+condition|)
+name|devs
+operator|=
+name|pt
+operator|->
+name|pt_devs
+expr_stmt|;
+else|else
 name|pt
 operator|->
 name|pt_devs
