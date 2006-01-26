@@ -978,6 +978,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCI_QLOGIC_ISP2422
+define|\
+value|((PCI_PRODUCT_QLOGIC_ISP2422<< 16) | PCI_VENDOR_QLOGIC)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCI_QLOGIC_ISP6312
 define|\
 value|((PCI_PRODUCT_QLOGIC_ISP6312<< 16) | PCI_VENDOR_QLOGIC)
