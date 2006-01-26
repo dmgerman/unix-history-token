@@ -1206,15 +1206,6 @@ name|devpts_dir
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"it is %d %d\n"
-argument_list|,
-name|maxpts
-argument_list|,
-name|curpts
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|tf
