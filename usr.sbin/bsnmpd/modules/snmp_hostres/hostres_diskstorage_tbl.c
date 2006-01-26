@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -1009,6 +1015,40 @@ argument_list|)
 argument_list|)
 operator|!=
 literal|0
+condition|)
+continue|continue;
+comment|/* 			 * Avoid false disk devices. For example adw(4) and 			 * adv(4) - they are not disks! 			 */
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|map
+operator|->
+name|name_key
+argument_list|)
+operator|>
+name|strlen
+argument_list|(
+name|found
+operator|->
+name|dev_name
+argument_list|)
+operator|&&
+operator|!
+name|isdigit
+argument_list|(
+name|map
+operator|->
+name|name_key
+index|[
+name|strlen
+argument_list|(
+name|found
+operator|->
+name|dev_name
+argument_list|)
+index|]
+argument_list|)
 condition|)
 continue|continue;
 comment|/* First get the entry from the hrDeviceTbl */
