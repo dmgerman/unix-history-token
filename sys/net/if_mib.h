@@ -115,6 +115,17 @@ begin_comment
 comment|/* specific to the type of interface */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IFDATA_DRIVERNAME
+value|3
+end_define
+
+begin_comment
+comment|/* driver name and unit */
+end_comment
+
 begin_comment
 comment|/*  * MIB tags at the net.link.generic.system level  */
 end_comment
