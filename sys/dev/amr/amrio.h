@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|AMR_IO_VERSION_NUMBER
-value|0x01
+value|153
 end_define
 
 begin_define

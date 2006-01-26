@@ -48,7 +48,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/amr/amr_compat.h>
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bio.h>
 end_include
 
 begin_include
@@ -274,6 +280,55 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
+name|u_int
+name|amr_force_sg32
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.amr.force_sg32"
+argument_list|,
+operator|&
+name|amr_force_sg32
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_hw_amr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_hw_amr
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|force_sg32
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|amr_force_sg32
+argument_list|,
+literal|0
+argument_list|,
+literal|"Force the AMR driver to use 32bit scatter gather"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
 name|device_method_t
 name|amr_methods
 index|[]
@@ -392,6 +447,7 @@ end_expr_stmt
 begin_struct
 specifier|static
 struct|struct
+name|amr_ident
 block|{
 name|int
 name|vendor
@@ -400,12 +456,21 @@ name|int
 name|device
 decl_stmt|;
 name|int
-name|flag
+name|flags
 decl_stmt|;
 define|#
 directive|define
-name|PROBE_SIGNATURE
+name|AMR_ID_PROBE_SIG
 value|(1<<0)
+comment|/* generic i960RD, check signature */
+define|#
+directive|define
+name|AMR_ID_DO_SG64
+value|(1<<1)
+define|#
+directive|define
+name|AMR_ID_QUARTZ
+value|(1<<2)
 block|}
 name|amr_device_ids
 index|[]
@@ -432,16 +497,17 @@ literal|0x8086
 block|,
 literal|0x1960
 block|,
-name|PROBE_SIGNATURE
+name|AMR_ID_QUARTZ
+operator||
+name|AMR_ID_PROBE_SIG
 block|}
 block|,
-comment|/* generic i960RD, check for signature */
 block|{
 literal|0x101e
 block|,
 literal|0x1960
 block|,
-literal|0
+name|AMR_ID_QUARTZ
 block|}
 block|,
 block|{
@@ -449,7 +515,9 @@ literal|0x1000
 block|,
 literal|0x1960
 block|,
-name|PROBE_SIGNATURE
+name|AMR_ID_QUARTZ
+operator||
+name|AMR_ID_PROBE_SIG
 block|}
 block|,
 block|{
@@ -457,7 +525,9 @@ literal|0x1000
 block|,
 literal|0x0407
 block|,
-literal|0
+name|AMR_ID_QUARTZ
+operator||
+name|AMR_ID_DO_SG64
 block|}
 block|,
 block|{
@@ -465,7 +535,9 @@ literal|0x1000
 block|,
 literal|0x0408
 block|,
-literal|0
+name|AMR_ID_QUARTZ
+operator||
+name|AMR_ID_DO_SG64
 block|}
 block|,
 block|{
@@ -473,7 +545,9 @@ literal|0x1000
 block|,
 literal|0x0409
 block|,
-literal|0
+name|AMR_ID_QUARTZ
+operator||
+name|AMR_ID_DO_SG64
 block|}
 block|,
 block|{
@@ -481,7 +555,11 @@ literal|0x1028
 block|,
 literal|0x000e
 block|,
-name|PROBE_SIGNATURE
+name|AMR_ID_QUARTZ
+operator||
+name|AMR_ID_DO_SG64
+operator||
+name|AMR_ID_PROBE_SIG
 block|}
 block|,
 comment|/* perc4/di i960 */
@@ -490,7 +568,9 @@ literal|0x1028
 block|,
 literal|0x000f
 block|,
-literal|0
+name|AMR_ID_QUARTZ
+operator||
+name|AMR_ID_DO_SG64
 block|}
 block|,
 comment|/* perc4/di Verde*/
@@ -499,7 +579,9 @@ literal|0x1028
 block|,
 literal|0x0013
 block|,
-literal|0
+name|AMR_ID_QUARTZ
+operator||
+name|AMR_ID_DO_SG64
 block|}
 block|,
 comment|/* perc4/di */
@@ -516,39 +598,36 @@ end_struct
 
 begin_function
 specifier|static
-name|int
-name|amr_pci_probe
+name|struct
+name|amr_ident
+modifier|*
+name|amr_find_ident
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|)
 block|{
+name|struct
+name|amr_ident
+modifier|*
+name|id
+decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|sig
 decl_stmt|;
-name|debug_called
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 for|for
 control|(
-name|i
+name|id
 operator|=
-literal|0
-init|;
 name|amr_device_ids
-index|[
-name|i
-index|]
-operator|.
+init|;
+name|id
+operator|->
 name|vendor
 operator|!=
 literal|0
 condition|;
-name|i
+name|id
 operator|++
 control|)
 block|{
@@ -560,11 +639,8 @@ argument_list|(
 name|dev
 argument_list|)
 operator|==
-name|amr_device_ids
-index|[
-name|i
-index|]
-operator|.
+name|id
+operator|->
 name|vendor
 operator|)
 operator|&&
@@ -574,11 +650,8 @@ argument_list|(
 name|dev
 argument_list|)
 operator|==
-name|amr_device_ids
-index|[
-name|i
-index|]
-operator|.
+name|id
+operator|->
 name|device
 operator|)
 condition|)
@@ -586,14 +659,11 @@ block|{
 comment|/* do we need to test for a signature? */
 if|if
 condition|(
-name|amr_device_ids
-index|[
-name|i
-index|]
-operator|.
-name|flag
+name|id
+operator|->
+name|flags
 operator|&
-name|PROBE_SIGNATURE
+name|AMR_ID_PROBE_SIG
 condition|)
 block|{
 name|sig
@@ -623,6 +693,45 @@ operator|)
 condition|)
 continue|continue;
 block|}
+return|return
+operator|(
+name|id
+operator|)
+return|;
+block|}
+block|}
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|amr_pci_probe
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|debug_called
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|amr_find_ident
+argument_list|(
+name|dev
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
 name|device_set_desc
 argument_list|(
 name|dev
@@ -635,7 +744,6 @@ operator|(
 name|BUS_PROBE_DEFAULT
 operator|)
 return|;
-block|}
 block|}
 return|return
 operator|(
@@ -658,6 +766,11 @@ name|struct
 name|amr_softc
 modifier|*
 name|sc
+decl_stmt|;
+name|struct
+name|amr_ident
+modifier|*
+name|id
 decl_stmt|;
 name|int
 name|rid
@@ -699,26 +812,30 @@ name|amr_dev
 operator|=
 name|dev
 expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|amr_io_lock
-argument_list|,
-literal|"AMR IO Lock"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
 comment|/* assume failure is 'not configured' */
 name|error
 operator|=
 name|ENXIO
 expr_stmt|;
 comment|/*      * Determine board type.      */
+if|if
+condition|(
+operator|(
+name|id
+operator|=
+name|amr_find_ident
+argument_list|(
+name|dev
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|command
 operator|=
 name|pci_read_config
@@ -732,68 +849,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|pci_get_device
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|0x1960
-operator|)
-operator|||
-operator|(
-name|pci_get_device
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|0x0407
-operator|)
-operator|||
-operator|(
-name|pci_get_device
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|0x0408
-operator|)
-operator|||
-operator|(
-name|pci_get_device
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|0x0409
-operator|)
-operator|||
-operator|(
-name|pci_get_device
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|0x000e
-operator|)
-operator|||
-operator|(
-name|pci_get_device
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|0x000f
-operator|)
-operator|||
-operator|(
-name|pci_get_device
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|0x0013
-operator|)
+name|id
+operator|->
+name|flags
+operator|&
+name|AMR_ID_QUARTZ
 condition|)
 block|{
 comment|/* 	 * Make sure we are going to be able to talk to this board. 	 */
@@ -815,9 +875,11 @@ argument_list|,
 literal|"memory window not available\n"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 block|}
 name|sc
 operator|->
@@ -847,10 +909,52 @@ argument_list|,
 literal|"I/O window not available\n"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 block|}
+block|}
+if|if
+condition|(
+operator|(
+name|amr_force_sg32
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|id
+operator|->
+name|flags
+operator|&
+name|AMR_ID_DO_SG64
+operator|)
+operator|&&
+operator|(
+sizeof|sizeof
+argument_list|(
+name|vm_paddr_t
+argument_list|)
+operator|>
+literal|4
+operator|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Using 64-bit DMA\n"
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|amr_type
+operator||=
+name|AMR_TYPE_SG64
+expr_stmt|;
 block|}
 comment|/* force the busmaster enable bit on */
 if|if
@@ -1078,7 +1182,14 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-comment|/* alignment, boundary */
+comment|/* alignment,boundary */
+name|AMR_IS_SG64
+argument_list|(
+name|sc
+argument_list|)
+condition|?
+name|BUS_SPACE_MAXADDR
+else|:
 name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
 comment|/* lowaddr */
@@ -1138,7 +1249,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-comment|/* alignment, boundary */
+comment|/* alignment,boundary */
 name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
 comment|/* lowaddr */
@@ -1163,16 +1274,82 @@ argument_list|,
 comment|/* flags */
 name|busdma_lock_mutex
 argument_list|,
+comment|/* lockfunc */
 operator|&
 name|sc
 operator|->
-name|amr_io_lock
+name|amr_list_lock
 argument_list|,
-comment|/* lockfunc, lockarg */
+comment|/* lockarg */
 operator|&
 name|sc
 operator|->
 name|amr_buffer_dmat
+argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|amr_dev
+argument_list|,
+literal|"can't allocate buffer DMA tag\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+if|if
+condition|(
+name|bus_dma_tag_create
+argument_list|(
+name|sc
+operator|->
+name|amr_parent_dmat
+argument_list|,
+comment|/* parent */
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+comment|/* alignment,boundary */
+name|BUS_SPACE_MAXADDR
+argument_list|,
+comment|/* lowaddr */
+name|BUS_SPACE_MAXADDR
+argument_list|,
+comment|/* highaddr */
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+comment|/* filter, filterarg */
+name|MAXBSIZE
+argument_list|,
+name|AMR_NSEG
+argument_list|,
+comment|/* maxsize, nsegments */
+name|MAXBSIZE
+argument_list|,
+comment|/* maxsegsize */
+name|BUS_DMA_ALLOCNOW
+argument_list|,
+comment|/* flags */
+name|busdma_lock_mutex
+argument_list|,
+comment|/* lockfunc */
+operator|&
+name|sc
+operator|->
+name|amr_list_lock
+argument_list|,
+comment|/* lockarg */
+operator|&
+name|sc
+operator|->
+name|amr_buffer64_dmat
 argument_list|)
 condition|)
 block|{
@@ -1197,6 +1374,34 @@ literal|"dma tag done"
 argument_list|)
 expr_stmt|;
 comment|/*      * Allocate and set up mailbox in a bus-visible fashion.      */
+name|mtx_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|amr_list_lock
+argument_list|,
+literal|"AMR List Lock"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|amr_hw_lock
+argument_list|,
+literal|"AMR HW Lock"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1365,8 +1570,6 @@ name|int
 name|i
 decl_stmt|,
 name|error
-decl_stmt|,
-name|s
 decl_stmt|;
 name|debug_called
 argument_list|(
@@ -1403,11 +1606,6 @@ literal|"failed"
 else|:
 literal|"done"
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
 expr_stmt|;
 name|error
 operator|=
@@ -1485,11 +1683,6 @@ block|}
 comment|/* XXX disable interrupts? */
 name|shutdown_out
 label|:
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1641,25 +1834,9 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/* collect finished commands, queue anything waiting */
-name|mtx_lock
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|amr_io_lock
-argument_list|)
-expr_stmt|;
 name|amr_done
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|amr_io_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -1683,12 +1860,11 @@ block|{
 name|u_int8_t
 modifier|*
 name|p
-decl_stmt|;
 name|debug_called
 argument_list|(
 literal|1
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|amr_free
 argument_list|(
 name|sc
@@ -1706,6 +1882,19 @@ argument_list|(
 name|sc
 operator|->
 name|amr_buffer_dmat
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|amr_buffer64_dmat
+condition|)
+name|bus_dma_tag_destroy
+argument_list|(
+name|sc
+operator|->
+name|amr_buffer64_dmat
 argument_list|)
 expr_stmt|;
 comment|/* free and destroy DMA memory and tag for s/g lists */
@@ -1744,13 +1933,7 @@ name|amr_sg_dmat
 argument_list|)
 expr_stmt|;
 comment|/* free and destroy DMA memory and tag for mailbox */
-if|if
-condition|(
-name|sc
-operator|->
-name|amr_mailbox
-condition|)
-block|{
+comment|/* XXX Brain damaged GCC Alert! */
 name|p
 operator|=
 operator|(
@@ -1767,8 +1950,15 @@ operator|*
 operator|)
 name|sc
 operator|->
-name|amr_mailbox
+name|amr_mailbox64
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|amr_mailbox
+condition|)
+block|{
 name|bus_dmamem_free
 argument_list|(
 name|sc
@@ -1776,8 +1966,6 @@ operator|->
 name|amr_mailbox_dmat
 argument_list|,
 name|p
-operator|-
-literal|16
 argument_list|,
 name|sc
 operator|->
@@ -1961,6 +2149,10 @@ block|{
 name|size_t
 name|segsize
 decl_stmt|;
+name|u_int8_t
+modifier|*
+name|p
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1969,7 +2161,27 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/*      * Create a single tag describing a region large enough to hold all of      * the s/g lists we will need.      *      * Note that we could probably use AMR_LIMITCMD here, but that may become tunable.      */
+comment|/*      * Create a single tag describing a region large enough to hold all of      * the s/g lists we will need.      *      * Note that we could probably use AMR_LIMITCMD here, but that may become      * tunable.      */
+if|if
+condition|(
+name|AMR_IS_SG64
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+name|segsize
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|amr_sg64entry
+argument_list|)
+operator|*
+name|AMR_NSEG
+operator|*
+name|AMR_MAXCMD
+expr_stmt|;
+else|else
 name|segsize
 operator|=
 sizeof|sizeof
@@ -1995,7 +2207,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-comment|/* alignment, boundary */
+comment|/* alignment,boundary */
 name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
 comment|/* lowaddr */
@@ -2018,13 +2230,11 @@ comment|/* maxsegsize */
 literal|0
 argument_list|,
 comment|/* flags */
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
-comment|/* lockfunc */
-operator|&
-name|Giant
+name|NULL
 argument_list|,
-comment|/* lockarg */
+comment|/* lockfunc, lockarg */
 operator|&
 name|sc
 operator|->
@@ -2053,7 +2263,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/*      * Allocate enough s/g maps for all commands and permanently map them into      * controller-visible space.      *	      * XXX this assumes we can get enough space for all the s/g maps in one       * contiguous slab.  We may need to switch to a more complex arrangement where      * we allocate in smaller chunks and keep a lookup table from slot to bus address.      *      * XXX HACK ALERT: at least some controllers don't like the s/g memory being      *                 allocated below 0x2000.  We leak some memory if we get some      *                 below this mark and allocate again.  We should be able to      *	               avoid this with the tag setup, but that does't seem to work.      */
+comment|/*      * Allocate enough s/g maps for all commands and permanently map them into      * controller-visible space.      *	      * XXX this assumes we can get enough space for all the s/g maps in one       * contiguous slab.  We may need to switch to a more complex arrangement      * where we allocate in smaller chunks and keep a lookup table from slot      * to bus address.      *      * XXX HACK ALERT:	at least some controllers don't like the s/g memory      *			being allocated below 0x2000.  We leak some memory if      *			we get some below this mark and allocate again.  We      *			should be able to avoid this with the tag setup, but      *			that does't seem to work.      */
 name|retry
 label|:
 name|error
@@ -2070,9 +2280,7 @@ operator|*
 operator|*
 operator|)
 operator|&
-name|sc
-operator|->
-name|amr_sgtable
+name|p
 argument_list|,
 name|BUS_DMA_NOWAIT
 argument_list|,
@@ -2112,9 +2320,7 @@ name|sc
 operator|->
 name|amr_sg_dmamap
 argument_list|,
-name|sc
-operator|->
-name|amr_sgtable
+name|p
 argument_list|,
 name|segsize
 argument_list|,
@@ -2149,6 +2355,35 @@ goto|goto
 name|retry
 goto|;
 block|}
+if|if
+condition|(
+name|AMR_IS_SG64
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+name|sc
+operator|->
+name|amr_sg64table
+operator|=
+operator|(
+expr|struct
+name|amr_sg64entry
+operator|*
+operator|)
+name|p
+expr_stmt|;
+name|sc
+operator|->
+name|amr_sgtable
+operator|=
+operator|(
+expr|struct
+name|amr_sgentry
+operator|*
+operator|)
+name|p
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2207,7 +2442,13 @@ name|segs
 operator|->
 name|ds_addr
 operator|+
-literal|16
+name|offsetof
+argument_list|(
+expr|struct
+name|amr_mailbox64
+argument_list|,
+name|mb
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -2249,7 +2490,7 @@ literal|16
 argument_list|,
 literal|0
 argument_list|,
-comment|/* alignment, boundary */
+comment|/* alignment,boundary */
 name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
 comment|/* lowaddr */
@@ -2264,27 +2505,24 @@ comment|/* filter, filterarg */
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|amr_mailbox
+name|amr_mailbox64
 argument_list|)
-operator|+
-literal|16
 argument_list|,
+comment|/* maxsize */
 literal|1
 argument_list|,
-comment|/* maxsize, nsegments */
+comment|/* nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* maxsegsize */
 literal|0
 argument_list|,
 comment|/* flags */
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
-comment|/* lockfunc */
-operator|&
-name|Giant
+name|NULL
 argument_list|,
-comment|/* lockarg */
+comment|/* lockfunc, lockarg */
 operator|&
 name|sc
 operator|->
@@ -2404,26 +2642,18 @@ expr|struct
 name|amr_mailbox64
 operator|*
 operator|)
-operator|(
 name|p
-operator|+
-literal|12
-operator|)
 expr_stmt|;
 name|sc
 operator|->
 name|amr_mailbox
 operator|=
-operator|(
-expr|struct
-name|amr_mailbox
-operator|*
-operator|)
-operator|(
-name|p
-operator|+
-literal|16
-operator|)
+operator|&
+name|sc
+operator|->
+name|amr_mailbox64
+operator|->
+name|mb
 expr_stmt|;
 return|return
 operator|(
