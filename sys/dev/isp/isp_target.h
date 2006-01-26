@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*-  * Qlogic Target Mode Structure and Flag Definitions  *  * Copyright (c) 1997, 1998  * Patrick Stirling  * pms@psconsult.com  * All rights reserved.  *  * Additional Copyright (c) 1999, 2000, 2001  * Matthew Jacob  * mjacob@feral.com  * All rights reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*-  * Qlogic Target Mode Structure and Flag Definitions  *  * Copyright (c) 1997, 1998  * Patrick Stirling  * pms@psconsult.com  * All rights reserved.  *  * Additonal Copyright (c) 1997-2006 by Matthew Jacob  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifndef
@@ -391,6 +391,41 @@ decl_stmt|;
 comment|/* sequence id */
 block|}
 name|in_fcentry_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|isphdr_t
+name|in_header
+decl_stmt|;
+name|u_int32_t
+name|in_reserved
+decl_stmt|;
+name|u_int16_t
+name|in_iid
+decl_stmt|;
+comment|/* initiator */
+name|u_int16_t
+name|in_scclun
+decl_stmt|;
+name|u_int32_t
+name|in_reserved2
+decl_stmt|;
+name|u_int16_t
+name|in_status
+decl_stmt|;
+name|u_int16_t
+name|in_task_flags
+decl_stmt|;
+name|u_int16_t
+name|in_seqid
+decl_stmt|;
+comment|/* sequence id */
+block|}
+name|in_fcentry_e_t
 typedef|;
 end_typedef
 
@@ -836,6 +871,50 @@ name|na_fcentry_t
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|isphdr_t
+name|na_header
+decl_stmt|;
+name|u_int32_t
+name|na_reserved
+decl_stmt|;
+name|u_int16_t
+name|na_iid
+decl_stmt|;
+comment|/* initiator */
+name|u_int16_t
+name|na_scclun
+decl_stmt|;
+name|u_int16_t
+name|na_flags
+decl_stmt|;
+name|u_int16_t
+name|na_reserved2
+decl_stmt|;
+name|u_int16_t
+name|na_status
+decl_stmt|;
+name|u_int16_t
+name|na_task_flags
+decl_stmt|;
+name|u_int16_t
+name|na_seqid
+decl_stmt|;
+comment|/* sequence id */
+name|u_int16_t
+name|na_reserved3
+index|[
+name|NA2_RSVDLEN
+index|]
+decl_stmt|;
+block|}
+name|na_fcentry_e_t
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
@@ -1048,7 +1127,7 @@ parameter_list|,
 name|aep
 parameter_list|)
 define|\
-value|tid = aep->at_handle;						\ 	if (aep->at_flags& AT_TQAE) {					\ 		tid |= (aep->at_tag_val<< 16);				\ 		tid |= (1<< 24);					\ 	}								\ 	tid |= (inst<< 25)
+value|tid = aep->at_handle;						\ 	if (aep->at_flags& AT_TQAE) {					\ 		tid |= (aep->at_tag_val<< 16);				\ 		tid |= (1<< 24);					\ 	}								\ 	tid |= (GET_BUS_VAL(aep->at_iid)<< 25);			\ 	tid |= (inst<< 26)
 end_define
 
 begin_define
@@ -1058,12 +1137,14 @@ name|CT_MAKE_TAGID
 parameter_list|(
 name|tid
 parameter_list|,
+name|bus
+parameter_list|,
 name|inst
 parameter_list|,
 name|ct
 parameter_list|)
 define|\
-value|tid = ct->ct_fwhandle;						\ 	if (ct->ct_flags& CT_TQAE) {					\ 		tid |= (ct->ct_tag_val<< 16);				\ 		tid |= (1<< 24);					\ 	}								\ 	tid |= (inst<< 25)
+value|tid = ct->ct_fwhandle;						\ 	if (ct->ct_flags& CT_TQAE) {					\ 		tid |= (ct->ct_tag_val<< 16);				\ 		tid |= (1<< 24);					\ 	}								\ 	tid |= ((bus& 0x1)<< 25);					\ 	tid |= (inst<< 26)
 end_define
 
 begin_define
@@ -1093,7 +1174,17 @@ name|AT_GET_INST
 parameter_list|(
 name|val
 parameter_list|)
-value|(((val)>> 25)& 0x7f)
+value|(((val)>> 26)& 0x3f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT_GET_BUS
+parameter_list|(
+name|val
+parameter_list|)
+value|(((val)>> 25)& 0x1)
 end_define
 
 begin_define
@@ -1118,7 +1209,7 @@ parameter_list|,
 name|inp
 parameter_list|)
 define|\
-value|tid = inp->in_seqid;						\ 	tid |= (inp->in_tag_val<< 16);					\ 	tid |= (1<< 24);						\ 	tid |= (inst<< 25)
+value|tid = inp->in_seqid;						\ 	tid |= (inp->in_tag_val<< 16);					\ 	tid |= (1<< 24);						\ 	tid |= (GET_BUS_VAL(inp->in_iid)<< 25);			\ 	tid |= (inst<< 26)
 end_define
 
 begin_define
@@ -1131,7 +1222,20 @@ parameter_list|,
 name|inst
 parameter_list|)
 define|\
-value|tid&= ~(0x1ffffff);						\ 	tid |= (inst<< 25)
+value|tid&= ~(0x3ffffff);						\ 	tid |= (inst<< 26)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_INSERT_BUS
+parameter_list|(
+name|tid
+parameter_list|,
+name|bus
+parameter_list|)
+define|\
+value|tid&= ~(1<< 25);						\ 	tid |= (bus<< 25)
 end_define
 
 begin_comment
@@ -1220,6 +1324,80 @@ name|at_oxid
 decl_stmt|;
 block|}
 name|at2_entry_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|isphdr_t
+name|at_header
+decl_stmt|;
+name|u_int32_t
+name|at_reserved
+decl_stmt|;
+name|u_int16_t
+name|at_iid
+decl_stmt|;
+comment|/* initiator */
+name|u_int16_t
+name|at_rxid
+decl_stmt|;
+comment|/* response ID */
+name|u_int16_t
+name|at_flags
+decl_stmt|;
+name|u_int16_t
+name|at_status
+decl_stmt|;
+comment|/* firmware status */
+name|u_int8_t
+name|at_crn
+decl_stmt|;
+comment|/* command reference number */
+name|u_int8_t
+name|at_taskcodes
+decl_stmt|;
+name|u_int8_t
+name|at_taskflags
+decl_stmt|;
+name|u_int8_t
+name|at_execodes
+decl_stmt|;
+name|u_int8_t
+name|at_cdb
+index|[
+name|ATIO2_CDBLEN
+index|]
+decl_stmt|;
+comment|/* received CDB */
+name|u_int32_t
+name|at_datalen
+decl_stmt|;
+comment|/* allocated data len */
+name|u_int16_t
+name|at_scclun
+decl_stmt|;
+comment|/* SCC Lun or reserved */
+name|u_int16_t
+name|at_wwpn
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* WWPN of initiator */
+name|u_int16_t
+name|at_reserved2
+index|[
+literal|6
+index|]
+decl_stmt|;
+name|u_int16_t
+name|at_oxid
+decl_stmt|;
+block|}
+name|at2e_entry_t
 typedef|;
 end_typedef
 
@@ -1367,6 +1545,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|FC_HAS_TAG
+value|AT2_HAS_TAG
+end_define
+
+begin_define
+define|#
+directive|define
+name|FC_GET_TAG
+value|AT2_GET_TAG
+end_define
+
+begin_define
+define|#
+directive|define
+name|FC_GET_INST
+value|AT2_GET_INST
+end_define
+
+begin_define
+define|#
+directive|define
+name|FC_GET_HANDLE
+value|AT2_GET_HANDLE
+end_define
+
+begin_define
+define|#
+directive|define
 name|IN_FC_MAKE_TAGID
 parameter_list|(
 name|tid
@@ -1485,7 +1691,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * For some of the dual port SCSI adapters, port (bus #) is reported  * in the MSbit of ct_iid. Bit fields are a bit too awkward here.  *  * Note that this does not apply to FC adapters at all which can and  * do report IIDs between 129&& 255 (these represent devices that have  * logged in across a SCSI fabric).  */
+comment|/*  * For some of the dual port SCSI adapters, port (bus #) is reported  * in the MSbit of ct_iid. Bit fields are a bit too awkward here.  *  * Note that this does not apply to FC adapters at all which can and  * do report IIDs between 0x81&& 0xfe (or 0x7ff) which represent devices  * that have logged in across a SCSI fabric.  */
 end_comment
 
 begin_define
@@ -1903,6 +2109,28 @@ begin_comment
 comment|/* Outstanding Immed. Notify. entry */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CT_SRR
+value|0x45
+end_define
+
+begin_comment
+comment|/* SRR Received */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CT_LUN_RESET
+value|0x48
+end_define
+
+begin_comment
+comment|/* Lun Reset Received */
+end_comment
+
 begin_comment
 comment|/*  * When the firmware returns a CTIO entry, it may overwrite the last  * part of the structure with sense data. This starts at offset 0x2E  * into the entry, which is in the middle of ct_dataseg[1]. Rather  * than define a new struct for this, I'm just using the sense data  * offset.  */
 end_comment
@@ -2092,6 +2320,145 @@ name|ct2_entry_t
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|isphdr_t
+name|ct_header
+decl_stmt|;
+name|u_int16_t
+name|ct_reserved
+decl_stmt|;
+name|u_int16_t
+name|ct_fwhandle
+decl_stmt|;
+comment|/* just to match CTIO */
+name|u_int16_t
+name|ct_iid
+decl_stmt|;
+comment|/* initiator id */
+name|u_int16_t
+name|ct_rxid
+decl_stmt|;
+comment|/* response ID */
+name|u_int16_t
+name|ct_flags
+decl_stmt|;
+name|u_int16_t
+name|ct_status
+decl_stmt|;
+comment|/* isp status */
+name|u_int16_t
+name|ct_timeout
+decl_stmt|;
+name|u_int16_t
+name|ct_seg_count
+decl_stmt|;
+name|u_int32_t
+name|ct_reloff
+decl_stmt|;
+comment|/* relative offset */
+name|int32_t
+name|ct_resid
+decl_stmt|;
+comment|/* residual length */
+union|union
+block|{
+struct|struct
+block|{
+name|u_int32_t
+name|_reserved
+decl_stmt|;
+name|u_int16_t
+name|_reserved2
+decl_stmt|;
+name|u_int16_t
+name|ct_scsi_status
+decl_stmt|;
+name|u_int32_t
+name|ct_xfrlen
+decl_stmt|;
+union|union
+block|{
+name|ispds_t
+name|ct_a
+index|[
+name|ISP_RQDSEG_T2
+index|]
+decl_stmt|;
+comment|/* CTIO2 */
+name|ispds64_t
+name|ct_b
+index|[
+name|ISP_RQDSEG_T3
+index|]
+decl_stmt|;
+comment|/* CTIO3 */
+name|ispdslist_t
+name|ct_c
+decl_stmt|;
+comment|/* CTIO4 */
+block|}
+name|_u
+union|;
+block|}
+name|m0
+struct|;
+struct|struct
+block|{
+name|u_int16_t
+name|_reserved
+decl_stmt|;
+name|u_int16_t
+name|_reserved2
+decl_stmt|;
+name|u_int16_t
+name|ct_senselen
+decl_stmt|;
+name|u_int16_t
+name|ct_scsi_status
+decl_stmt|;
+name|u_int16_t
+name|ct_resplen
+decl_stmt|;
+name|u_int8_t
+name|ct_resp
+index|[
+name|MAXRESPLEN
+index|]
+decl_stmt|;
+block|}
+name|m1
+struct|;
+struct|struct
+block|{
+name|u_int32_t
+name|_reserved
+decl_stmt|;
+name|u_int16_t
+name|_reserved2
+decl_stmt|;
+name|u_int16_t
+name|_reserved3
+decl_stmt|;
+name|u_int32_t
+name|ct_datalen
+decl_stmt|;
+name|ispds_t
+name|ct_fcp_rsp_iudata
+decl_stmt|;
+block|}
+name|m2
+struct|;
+block|}
+name|rsp
+union|;
+block|}
+name|ct2e_entry_t
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*  * ct_flags values for CTIO2  */
 end_comment
@@ -2257,6 +2624,24 @@ name|void
 modifier|*
 parameter_list|,
 name|u_int16_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * This function externalizes the ability to acknowledge an Immediate Notify  * request.  */
+end_comment
+
+begin_function_decl
+name|void
+name|isp_notify_ack
+parameter_list|(
+name|struct
+name|ispsoftc
+modifier|*
+parameter_list|,
+name|void
 modifier|*
 parameter_list|)
 function_decl|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * PCI specific probe and attach routines for Qlogic ISP SCSI adapters.  * FreeBSD Version.  *  * Copyright (c) 1997, 1998, 1999, 2000, 2001 by Matthew Jacob  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * PCI specific probe and attach routines for Qlogic ISP SCSI adapters.  * FreeBSD Version.  *  * Copyright (c) 1997-2006 by Matthew Jacob  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -45,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stdint.h>
 end_include
 
 begin_include
@@ -830,6 +836,42 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|PCI_PRODUCT_QLOGIC_ISP2322
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT_QLOGIC_ISP2322
+value|0x2322
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PCI_PRODUCT_QLOGIC_ISP2422
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT_QLOGIC_ISP2422
+value|0x2422
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|PCI_PRODUCT_QLOGIC_ISP6312
 end_ifndef
 
@@ -923,6 +965,22 @@ directive|define
 name|PCI_QLOGIC_ISP2312
 define|\
 value|((PCI_PRODUCT_QLOGIC_ISP2312<< 16) | PCI_VENDOR_QLOGIC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_QLOGIC_ISP2322
+define|\
+value|((PCI_PRODUCT_QLOGIC_ISP2322<< 16) | PCI_VENDOR_QLOGIC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_QLOGIC_ISP2422
+define|\
+value|((PCI_PRODUCT_QLOGIC_ISP2422<< 16) | PCI_VENDOR_QLOGIC)
 end_define
 
 begin_define
@@ -1280,6 +1338,28 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Qlogic ISP 2312 PCI FC-AL Adapter"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PCI_QLOGIC_ISP2322
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Qlogic ISP 2322 PCI FC-AL Adapter"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PCI_QLOGIC_ISP2422
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Qlogic ISP 2422 PCI FC-AL Adapter"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2313,6 +2393,82 @@ operator|=
 name|PCI_MBOX_REGS2300_OFF
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|pci_get_devid
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|PCI_QLOGIC_ISP2322
+condition|)
+block|{
+name|mdvp
+operator|=
+operator|&
+name|mdvec_2300
+expr_stmt|;
+name|basetype
+operator|=
+name|ISP_HA_FC_2322
+expr_stmt|;
+name|psize
+operator|=
+sizeof|sizeof
+argument_list|(
+name|fcparam
+argument_list|)
+expr_stmt|;
+name|pcs
+operator|->
+name|pci_poff
+index|[
+name|MBOX_BLOCK
+operator|>>
+name|_BLK_REG_SHFT
+index|]
+operator|=
+name|PCI_MBOX_REGS2300_OFF
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|pci_get_devid
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|PCI_QLOGIC_ISP2422
+condition|)
+block|{
+name|mdvp
+operator|=
+operator|&
+name|mdvec_2300
+expr_stmt|;
+name|basetype
+operator|=
+name|ISP_HA_FC_2422
+expr_stmt|;
+name|psize
+operator|=
+sizeof|sizeof
+argument_list|(
+name|fcparam
+argument_list|)
+expr_stmt|;
+name|pcs
+operator|->
+name|pci_poff
+index|[
+name|MBOX_BLOCK
+operator|>>
+name|_BLK_REG_SHFT
+index|]
+operator|=
+name|PCI_MBOX_REGS2300_OFF
+expr_stmt|;
+block|}
 name|isp
 operator|=
 operator|&
@@ -2389,8 +2545,23 @@ operator|=
 name|dev
 expr_stmt|;
 comment|/* 	 * Try and find firmware for this device. 	 */
+comment|/* 	 * Don't even attempt to get firmware for the 2322/2422 (yet) 	 */
 if|if
 condition|(
+name|IS_2322
+argument_list|(
+name|isp
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|IS_24XX
+argument_list|(
+name|isp
+argument_list|)
+operator|==
+literal|0
+operator|&&
 name|isp_get_firmware_p
 condition|)
 block|{
@@ -3465,7 +3636,7 @@ expr_stmt|;
 comment|/* 	 * Last minute checks... 	 */
 if|if
 condition|(
-name|IS_2312
+name|IS_23XX
 argument_list|(
 name|isp
 argument_list|)
@@ -7608,15 +7779,14 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG1
 argument_list|,
-literal|"isp_send_ctio2: ent0[%d]0x%llx:%lld"
+literal|"isp_send_ctio2: ent0[%d]0x%jx:%ju"
 argument_list|,
 name|cto
 operator|->
 name|ct_seg_count
 argument_list|,
 operator|(
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|dm_segs
 index|[
@@ -7626,8 +7796,7 @@ operator|.
 name|ds_addr
 argument_list|,
 operator|(
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|dm_segs
 index|[
@@ -7822,7 +7991,7 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG1
 argument_list|,
-literal|"isp_send_ctio2: ent%d[%d]0x%llx:%lld"
+literal|"isp_send_ctio2: ent%d[%d]%jx:%ju"
 argument_list|,
 name|cto
 operator|->
@@ -7835,8 +8004,7 @@ argument_list|,
 name|seg
 argument_list|,
 operator|(
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|dm_segs
 index|[
@@ -7846,8 +8014,7 @@ operator|.
 name|ds_addr
 argument_list|,
 operator|(
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|dm_segs
 index|[
