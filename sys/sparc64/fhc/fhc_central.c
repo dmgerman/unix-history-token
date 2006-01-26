@@ -131,6 +131,27 @@ argument_list|,
 name|fhc_central_attach
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|device_shutdown
+argument_list|,
+name|bus_generic_shutdown
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|device_suspend
+argument_list|,
+name|bus_generic_suspend
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|device_resume
+argument_list|,
+name|bus_generic_resume
+argument_list|)
+block|,
 comment|/* Bus interface. */
 name|DEVMETHOD
 argument_list|(
