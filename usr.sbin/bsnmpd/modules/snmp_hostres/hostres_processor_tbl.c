@@ -939,7 +939,7 @@ name|save_sample
 argument_list|(
 name|entry
 argument_list|,
-name|plist
+name|kp
 argument_list|)
 expr_stmt|;
 block|}
@@ -1535,6 +1535,11 @@ name|HRDBG
 argument_list|(
 literal|"[%llu] ENTER"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|get_ticks
 argument_list|()
 argument_list|)
@@ -1546,6 +1551,11 @@ name|HRDBG
 argument_list|(
 literal|"[%llu] EXIT"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|get_ticks
 argument_list|()
 argument_list|)
