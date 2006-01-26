@@ -61,6 +61,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -8255,31 +8261,10 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+name|isprint
+argument_list|(
 name|temp
-operator|>=
-literal|' '
-operator|&&
-name|temp
-operator|<=
-literal|'~'
-condition|)
-name|buf
-index|[
-name|count
-index|]
-operator|=
-name|temp
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|temp
-operator|>=
-literal|'A'
-operator|&&
-name|temp
-operator|<=
-literal|'Z'
+argument_list|)
 condition|)
 name|buf
 index|[
