@@ -6243,7 +6243,7 @@ name|_aiocb_private
 operator|.
 name|error
 argument_list|,
-name|EBADF
+name|error
 argument_list|)
 expr_stmt|;
 return|return
@@ -7274,6 +7274,11 @@ argument_list|(
 name|cb
 argument_list|)
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|suword
 argument_list|(
 operator|&
@@ -7304,6 +7309,7 @@ literal|0
 expr_stmt|;
 block|}
 else|else
+block|{
 name|error
 operator|=
 name|EINVAL
@@ -7313,6 +7319,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|error
