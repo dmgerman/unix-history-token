@@ -805,16 +805,6 @@ else|:
 name|mediasize
 operator|)
 expr_stmt|;
-if|if
-condition|(
-name|entry
-operator|->
-name|media
-operator|==
-name|DSM_HARDDISK
-condition|)
-block|{
-comment|/* XXX libdisk crashes if a empty cdrom device is opened */
 name|partition_tbl_handle_disk
 argument_list|(
 name|entry
@@ -826,7 +816,6 @@ operator|->
 name|dev_name
 argument_list|)
 expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
