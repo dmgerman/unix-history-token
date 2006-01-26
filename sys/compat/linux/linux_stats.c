@@ -475,7 +475,7 @@ operator|<=
 literal|'9'
 condition|)
 block|{
-comment|/*     		   * Linux checks major and minors of the slave device to make 		   * sure it's a pty deivce, so let's make him believe it is. 		   */
+comment|/*     		   * Linux checks major and minors of the slave device to make 		   * sure it's a pty device, so let's make him believe it is. 		   */
 name|buf
 operator|.
 name|st_rdev
