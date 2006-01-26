@@ -1945,6 +1945,13 @@ name|LINUX_TIOCCBRK
 value|0x5428
 end_define
 
+begin_define
+define|#
+directive|define
+name|LINUX_TIOCGPTN
+value|0x5430
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
