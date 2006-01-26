@@ -99,8 +99,15 @@ begin_comment
 comment|/* reset exclusive use of tty */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TIOCGPTN
+value|_IOR('t', 15, int)
+end_define
+
 begin_comment
-comment|/* 15 unused */
+comment|/* Get pts number. */
 end_comment
 
 begin_define
