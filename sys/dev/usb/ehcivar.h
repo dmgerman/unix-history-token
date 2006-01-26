@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ehcivar.h,v 1.12 2001/12/31 12:16:57 augustss Exp $	*/
+comment|/*	$NetBSD: ehcivar.h,v 1.19 2005/04/29 15:04:29 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -227,6 +227,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|EHCI_MAX_POLLRATE
+value|(1<< (EHCI_IPOLLRATES - 1))
+end_define
+
+begin_define
+define|#
+directive|define
 name|EHCI_IQHIDX
 parameter_list|(
 name|lev
@@ -270,6 +277,17 @@ end_define
 
 begin_comment
 comment|/* ehci_init() has been called. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_SCFLG_LOSTINTRBUG
+value|0x0002
+end_define
+
+begin_comment
+comment|/* workaround for VIA / ATI chipsets */
 end_comment
 
 begin_typedef
@@ -323,7 +341,7 @@ comment|/* offset to operational regs */
 name|char
 name|sc_vendor
 index|[
-literal|16
+literal|32
 index|]
 decl_stmt|;
 comment|/* vendor string for root hub */
@@ -382,6 +400,15 @@ decl_stmt|;
 name|u_int
 name|sc_flsize
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+name|u_int
+name|sc_rand
+decl_stmt|;
+comment|/* XXX need proper intr scheduling */
+endif|#
+directive|endif
 name|struct
 name|ehci_soft_islot
 name|sc_islots
@@ -452,6 +479,9 @@ decl_stmt|;
 name|usb_callout_t
 name|sc_tmo_pcd
 decl_stmt|;
+name|usb_callout_t
+name|sc_tmo_intrlist
+decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -472,6 +502,18 @@ directive|endif
 name|char
 name|sc_dying
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+name|struct
+name|usb_dma_reserve
+name|sc_dma_reserve
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 name|ehci_softc_t
 typedef|;
