@@ -820,7 +820,7 @@ decl_stmt|;
 name|int
 name|loop_copy
 init|=
-literal|0
+literal|1
 decl_stmt|;
 name|int
 name|hlen
@@ -974,8 +974,7 @@ argument_list|)
 expr_stmt|;
 name|loop_copy
 operator|=
-operator|-
-literal|1
+literal|0
 expr_stmt|;
 comment|/* if this is for us, don't do it */
 switch|switch
@@ -1398,8 +1397,7 @@ name|AF_UNSPEC
 case|:
 name|loop_copy
 operator|=
-operator|-
-literal|1
+literal|0
 expr_stmt|;
 comment|/* if this is for us, don't do it */
 name|eh
@@ -1605,12 +1603,7 @@ operator|&
 name|IFF_SIMPLEX
 operator|)
 operator|&&
-operator|(
 name|loop_copy
-operator|!=
-operator|-
-literal|1
-operator|)
 operator|&&
 name|m_tag_find
 argument_list|(
@@ -1667,19 +1660,11 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|m
 operator|->
 name|m_flags
 operator|&
 name|M_BCAST
-operator|)
-operator|||
-operator|(
-name|loop_copy
-operator|>
-literal|0
-operator|)
 condition|)
 block|{
 name|struct
