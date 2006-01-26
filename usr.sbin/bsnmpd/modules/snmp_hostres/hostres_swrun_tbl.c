@@ -604,7 +604,7 @@ name|name
 argument_list|,
 name|kp
 operator|->
-name|ki_ocomm
+name|ki_comm
 argument_list|,
 sizeof|sizeof
 argument_list|(

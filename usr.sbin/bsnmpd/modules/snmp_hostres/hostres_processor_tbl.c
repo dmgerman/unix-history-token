@@ -790,7 +790,7 @@ name|strcmp
 argument_list|(
 name|kp
 operator|->
-name|ki_ocomm
+name|ki_comm
 argument_list|,
 literal|"idle"
 argument_list|)
@@ -811,7 +811,7 @@ name|sscanf
 argument_list|(
 name|kp
 operator|->
-name|ki_ocomm
+name|ki_comm
 argument_list|,
 literal|"idle: cpu%d%n"
 argument_list|,
@@ -833,7 +833,7 @@ name|strlen
 argument_list|(
 name|kp
 operator|->
-name|ki_ocomm
+name|ki_comm
 argument_list|)
 condition|)
 block|{
@@ -848,7 +848,7 @@ literal|"'%s' proc with pid %d is on CPU #%d (last on #%d)"
 argument_list|,
 name|kp
 operator|->
-name|ki_ocomm
+name|ki_comm
 argument_list|,
 name|kp
 operator|->
