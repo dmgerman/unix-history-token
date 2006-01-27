@@ -1266,6 +1266,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|WITNESS_CHECK
+parameter_list|(
+name|flags
+parameter_list|,
+name|lock
+parameter_list|,
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|witness_warn((flags), (lock), (fmt), ## __VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
 name|WITNESS_WARN
 parameter_list|(
 name|flags
@@ -1451,6 +1468,22 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WITNESS_CHECK
+parameter_list|(
+name|flags
+parameter_list|,
+name|lock
+parameter_list|,
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+value|0
 end_define
 
 begin_define

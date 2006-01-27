@@ -7248,7 +7248,7 @@ directive|ifdef
 name|WITNESS
 name|badness
 operator|=
-name|WITNESS_WARN
+name|WITNESS_CHECK
 argument_list|(
 name|WARN_GIANTOK
 operator||
