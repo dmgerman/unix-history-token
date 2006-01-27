@@ -43,6 +43,42 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_comment
+comment|/* Which queue to block on or which queue to wakeup one or more threads from. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_EXCLUSIVE_QUEUE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|TS_SHARED_QUEUE
+value|1
+end_define
+
+begin_comment
+comment|/* The type of lock currently held. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_EXCLUSIVE_LOCK
+value|TS_EXCLUSIVE_QUEUE
+end_define
+
+begin_define
+define|#
+directive|define
+name|TS_SHARED_LOCK
+value|TS_SHARED_QUEUE
+end_define
+
 begin_function_decl
 name|void
 name|init_turnstiles
@@ -83,6 +119,8 @@ parameter_list|(
 name|struct
 name|turnstile
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -118,6 +156,8 @@ parameter_list|(
 name|struct
 name|turnstile
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -164,6 +204,8 @@ parameter_list|(
 name|struct
 name|turnstile
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -175,6 +217,8 @@ parameter_list|(
 name|struct
 name|turnstile
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -190,6 +234,8 @@ parameter_list|,
 name|struct
 name|thread
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
