@@ -392,12 +392,6 @@ directive|define
 name|MALLOC_STATS
 end_define
 
-begin_define
-define|#
-directive|define
-name|MALLOC_STATS_ARENAS
-end_define
-
 begin_comment
 comment|/*  * Include redzones before/after every region, and check for buffer overflows.  */
 end_comment
@@ -870,9 +864,9 @@ comment|/* 	 * Number of allocation requests that corresponded to the size of th
 name|uint64_t
 name|nrequests
 decl_stmt|;
-comment|/* 	 * Number of best-fit allocations that were successfully serviced by 	 * this bin. 	 */
+comment|/* 	 * Number of exact-fit allocations that were successfully serviced by 	 * this bin. 	 */
 name|uint64_t
-name|nfit
+name|nserviced
 decl_stmt|;
 comment|/* High-water marks for this bin. */
 name|unsigned
@@ -881,7 +875,7 @@ name|highcached
 decl_stmt|;
 comment|/* 	 * Current number of regions in this bin.  This number isn't needed 	 * during normal operation, so is maintained here in order to allow 	 * calculating the high water mark. 	 */
 name|unsigned
-name|nregions
+name|curcached
 decl_stmt|;
 block|}
 struct|;
@@ -947,9 +941,9 @@ struct|;
 comment|/* Frag statistics. */
 struct|struct
 block|{
-comment|/* 		 * Number of times a region is cached in the "frag" field of 		 * the arena. 		 */
+comment|/* Number of times the "frag" field of the arena is refilled. */
 name|uint64_t
-name|ncached
+name|nrefills
 decl_stmt|;
 comment|/* 		 * Number of times a region is requested from the "frag" field 		 * of the arena. 		 */
 name|uint64_t
@@ -969,13 +963,9 @@ comment|/* 		 * Number of allocation requests that were too large for a bin, 		 
 name|uint64_t
 name|nrequests
 decl_stmt|;
-comment|/* 		 * Number of best-fit allocations that were successfully 		 * serviced by large_regions. 		 */
+comment|/* 		 * Number of allocation requests that were successfully 		 * serviced by large_regions. 		 */
 name|uint64_t
-name|nfit
-decl_stmt|;
-comment|/* 		 * Number of allocation requests that were successfully serviced 		 * large_regions, but that a bin could have serviced. 		 */
-name|uint64_t
-name|noverfit
+name|nserviced
 decl_stmt|;
 comment|/* 		 * High-water mark for large_regions (number of nodes in tree). 		 */
 name|unsigned
@@ -4083,7 +4073,7 @@ name|stats_arenas
 operator|->
 name|frag
 operator|.
-name|ncached
+name|nrefills
 operator|+=
 name|arena
 operator|->
@@ -4091,7 +4081,7 @@ name|stats
 operator|.
 name|frag
 operator|.
-name|ncached
+name|nrefills
 expr_stmt|;
 name|stats_arenas
 operator|->
@@ -4163,7 +4153,7 @@ index|[
 name|i
 index|]
 operator|.
-name|nfit
+name|nserviced
 operator|+=
 name|arena
 operator|->
@@ -4174,7 +4164,7 @@ index|[
 name|i
 index|]
 operator|.
-name|nfit
+name|nserviced
 expr_stmt|;
 if|if
 condition|(
@@ -4220,6 +4210,26 @@ operator|.
 name|highcached
 expr_stmt|;
 block|}
+name|stats_arenas
+operator|->
+name|bins
+index|[
+name|i
+index|]
+operator|.
+name|curcached
+operator|+=
+name|arena
+operator|->
+name|stats
+operator|.
+name|bins
+index|[
+name|i
+index|]
+operator|.
+name|curcached
+expr_stmt|;
 block|}
 comment|/* large and large_regions. */
 name|stats_arenas
@@ -4240,7 +4250,7 @@ name|stats_arenas
 operator|->
 name|large
 operator|.
-name|nfit
+name|nserviced
 operator|+=
 name|arena
 operator|->
@@ -4248,21 +4258,7 @@ name|stats
 operator|.
 name|large
 operator|.
-name|nfit
-expr_stmt|;
-name|stats_arenas
-operator|->
-name|large
-operator|.
-name|noverfit
-operator|+=
-name|arena
-operator|->
-name|stats
-operator|.
-name|large
-operator|.
-name|noverfit
+name|nserviced
 expr_stmt|;
 if|if
 condition|(
@@ -4451,7 +4447,7 @@ name|malloc_printf
 argument_list|(
 literal|" %13s%13s%13s\n"
 argument_list|,
-literal|"ncached"
+literal|"nrefills"
 argument_list|,
 literal|"nrequests"
 argument_list|,
@@ -4466,7 +4462,7 @@ name|stats_arenas
 operator|->
 name|frag
 operator|.
-name|ncached
+name|nrefills
 argument_list|,
 name|stats_arenas
 operator|->
@@ -4488,7 +4484,7 @@ argument_list|)
 expr_stmt|;
 name|malloc_printf
 argument_list|(
-literal|" %4s%7s%13s%13s%11s\n"
+literal|" %4s%7s%13s%13s%11s%11s\n"
 argument_list|,
 literal|"bin"
 argument_list|,
@@ -4496,9 +4492,11 @@ literal|"size"
 argument_list|,
 literal|"nrequests"
 argument_list|,
-literal|"nfit"
+literal|"nserviced"
 argument_list|,
 literal|"highcached"
+argument_list|,
+literal|"curcached"
 argument_list|)
 expr_stmt|;
 for|for
@@ -4517,7 +4515,7 @@ control|)
 block|{
 name|malloc_printf
 argument_list|(
-literal|" %4u%7u%13llu%13llu%11lu\n"
+literal|" %4u%7u%13llu%13llu%11lu%11lu\n"
 argument_list|,
 name|i
 argument_list|,
@@ -4547,7 +4545,7 @@ index|[
 name|i
 index|]
 operator|.
-name|nfit
+name|nserviced
 argument_list|,
 name|stats_arenas
 operator|->
@@ -4557,6 +4555,15 @@ name|i
 index|]
 operator|.
 name|highcached
+argument_list|,
+name|stats_arenas
+operator|->
+name|bins
+index|[
+name|i
+index|]
+operator|.
+name|curcached
 argument_list|)
 expr_stmt|;
 block|}
@@ -4567,13 +4574,11 @@ argument_list|)
 expr_stmt|;
 name|malloc_printf
 argument_list|(
-literal|" %13s%13s%13s%13s%13s\n"
+literal|" %13s%13s%13s%13s\n"
 argument_list|,
 literal|"nrequests"
 argument_list|,
-literal|"nfit"
-argument_list|,
-literal|"noverfit"
+literal|"nserviced"
 argument_list|,
 literal|"highcached"
 argument_list|,
@@ -4582,7 +4587,7 @@ argument_list|)
 expr_stmt|;
 name|malloc_printf
 argument_list|(
-literal|" %13llu%13llu%13llu%13lu%13lu\n"
+literal|" %13llu%13llu%13lu%13lu\n"
 argument_list|,
 name|stats_arenas
 operator|->
@@ -4594,13 +4599,7 @@ name|stats_arenas
 operator|->
 name|large
 operator|.
-name|nfit
-argument_list|,
-name|stats_arenas
-operator|->
-name|large
-operator|.
-name|noverfit
+name|nserviced
 argument_list|,
 name|stats_arenas
 operator|->
@@ -6637,7 +6636,7 @@ index|[
 name|bin
 index|]
 operator|.
-name|nregions
+name|curcached
 operator|--
 expr_stmt|;
 endif|#
@@ -8289,7 +8288,7 @@ index|[
 name|bin
 index|]
 operator|.
-name|nregions
+name|curcached
 operator|++
 expr_stmt|;
 if|if
@@ -8303,7 +8302,7 @@ index|[
 name|bin
 index|]
 operator|.
-name|nregions
+name|curcached
 operator|>
 name|arena
 operator|->
@@ -8337,7 +8336,7 @@ index|[
 name|bin
 index|]
 operator|.
-name|nregions
+name|curcached
 expr_stmt|;
 block|}
 endif|#
@@ -8503,7 +8502,7 @@ index|[
 name|bin
 index|]
 operator|.
-name|nregions
+name|curcached
 operator|++
 expr_stmt|;
 if|if
@@ -8517,7 +8516,7 @@ index|[
 name|bin
 index|]
 operator|.
-name|nregions
+name|curcached
 operator|>
 name|arena
 operator|->
@@ -8551,7 +8550,7 @@ index|[
 name|bin
 index|]
 operator|.
-name|nregions
+name|curcached
 expr_stmt|;
 block|}
 endif|#
@@ -8687,7 +8686,7 @@ index|[
 name|bin
 index|]
 operator|.
-name|nregions
+name|curcached
 operator|--
 expr_stmt|;
 endif|#
@@ -10452,7 +10451,7 @@ name|stats
 operator|.
 name|frag
 operator|.
-name|ncached
+name|nrefills
 operator|++
 expr_stmt|;
 endif|#
@@ -10573,7 +10572,7 @@ name|stats
 operator|.
 name|frag
 operator|.
-name|ncached
+name|nrefills
 operator|++
 expr_stmt|;
 endif|#
@@ -12246,7 +12245,7 @@ index|[
 name|bin
 index|]
 operator|.
-name|nfit
+name|nserviced
 operator|++
 expr_stmt|;
 endif|#
@@ -12527,29 +12526,13 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MALLOC_STATS
-if|if
-condition|(
-name|size
-operator|>
-name|bin_maxsize
-condition|)
 name|arena
 operator|->
 name|stats
 operator|.
 name|large
 operator|.
-name|nfit
-operator|++
-expr_stmt|;
-else|else
-name|arena
-operator|->
-name|stats
-operator|.
-name|large
-operator|.
-name|noverfit
+name|nserviced
 operator|++
 expr_stmt|;
 endif|#
@@ -16766,8 +16749,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|RETURN
-label|:
 ifdef|#
 directive|ifdef
 name|MALLOC_STATS
@@ -16796,6 +16777,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|RETURN
+label|:
 if|if
 condition|(
 name|opt_junk
@@ -17475,8 +17458,6 @@ argument_list|(
 name|ptr
 argument_list|)
 expr_stmt|;
-name|RETURN
-label|:
 ifdef|#
 directive|ifdef
 name|MALLOC_STATS
@@ -17505,6 +17486,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|RETURN
+label|:
 return|return
 operator|(
 name|ret
@@ -17793,6 +17776,8 @@ name|arena
 decl_stmt|;
 name|unsigned
 name|i
+decl_stmt|,
+name|narenas_used
 decl_stmt|;
 comment|/* Print chunk stats. */
 block|{
@@ -17849,13 +17834,14 @@ name|curchunks
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|MALLOC_STATS_ARENAS
 comment|/* Print stats for each arena. */
 for|for
 control|(
 name|i
+operator|=
+literal|0
+operator|,
+name|narenas_used
 operator|=
 literal|0
 init|;
@@ -17881,6 +17867,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|narenas_used
+operator|++
+expr_stmt|;
 name|malloc_printf
 argument_list|(
 literal|"\narenas[%u] statistics:\n"
@@ -17925,8 +17914,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
+comment|/* 			 * Only print merged stats if multiple arenas were 			 * used. 			 */
+if|if
+condition|(
+name|narenas_used
+operator|>
+literal|1
+condition|)
+block|{
 comment|/* Merge arena stats from arenas. */
 name|memset
 argument_list|(
@@ -18007,6 +18002,7 @@ operator|&
 name|stats_arenas
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
