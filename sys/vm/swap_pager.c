@@ -4530,6 +4530,27 @@ name|object
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*  	 * swapdev_strategy() manually sets b_vp and b_bufobj before calling  	 * bstrategy(). Set them back to NULL now we're done with it, or we'll 	 * trigger a KASSERT in relpbuf(). 	 */
+if|if
+condition|(
+name|bp
+operator|->
+name|b_vp
+condition|)
+block|{
+name|bp
+operator|->
+name|b_vp
+operator|=
+name|NULL
+expr_stmt|;
+name|bp
+operator|->
+name|b_bufobj
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 comment|/* 	 * release the physical I/O buffer 	 */
 name|relpbuf
 argument_list|(
