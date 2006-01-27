@@ -1305,7 +1305,6 @@ name|dot3Compliance
 operator|=
 name|DOT3COMPLIANCE_COLLS
 expr_stmt|;
-comment|/* 	 * Set default state for ALTPHYS flag (used to disable the  	 * tranceiver for AUI operation), based on config option. 	 */
 name|ifp
 operator|->
 name|if_flags
@@ -1316,6 +1315,7 @@ name|IFF_SIMPLEX
 operator||
 name|IFF_MULTICAST
 expr_stmt|;
+comment|/* 	 * Set default state for LINK2 flag (used to disable the  	 * tranceiver for AUI operation), based on config option. 	 * We only set this flag before we attach the device, so there's 	 * no race.  It is convenient to allow users to turn this off 	 * by default in the kernel config, but given our more advanced 	 * boot time configuration options, this might no longer be needed. 	 */
 if|if
 condition|(
 name|device_get_flags
@@ -1329,7 +1329,7 @@ name|ifp
 operator|->
 name|if_flags
 operator||=
-name|IFF_ALTPHYS
+name|IFF_LINK2
 expr_stmt|;
 comment|/* 	 * Attach the interface 	 */
 name|ether_ifattach
@@ -1428,7 +1428,7 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"%s "
+literal|"%s"
 argument_list|,
 name|sc
 operator|->
@@ -1478,7 +1478,7 @@ name|ifp
 operator|->
 name|if_flags
 operator|&
-name|IFF_ALTPHYS
+name|IFF_LINK2
 operator|)
 operator|)
 condition|?
@@ -2212,7 +2212,7 @@ name|ifp
 operator|->
 name|if_flags
 operator|&
-name|IFF_ALTPHYS
+name|IFF_LINK2
 condition|)
 name|ed_asic_outb
 argument_list|(
@@ -4208,10 +4208,10 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 		 * An unfortunate hack to provide the (required) software 		 * control of the tranceiver for 3Com/HP boards. 		 * The ALTPHYS flag disables the tranceiver if set. 		 */
 ifdef|#
 directive|ifdef
 name|ED_3C503
+comment|/* 		 * An unfortunate hack to provide the (required) software 		 * control of the tranceiver for 3Com/HP boards. 		 * The LINK2 flag disables the tranceiver if set. 		 */
 if|if
 condition|(
 name|sc
@@ -4227,7 +4227,7 @@ name|ifp
 operator|->
 name|if_flags
 operator|&
-name|IFF_ALTPHYS
+name|IFF_LINK2
 condition|)
 name|ed_asic_outb
 argument_list|(

@@ -1173,7 +1173,7 @@ name|ifp
 operator|->
 name|if_flags
 operator|&
-name|IFF_ALTPHYS
+name|IFF_LINK2
 condition|)
 block|{
 comment|/* 		 * Use the AUI port. 		 */
