@@ -926,7 +926,7 @@ operator|==
 name|T_PAGEFLT
 condition|)
 block|{
-comment|/* 		 * For some Cyrix CPUs, %cr2 is clobbered by 		 * interrupts.  This problem is worked around by using 		 * an interrupt gate for the pagefault handler.  We 		 * are finally ready to read %cr2 and then must 		 * reenable interrupts. 		 * 		 * If we get a page fault while in a critical section, then 		 * it is most likely a fatal kernel page fault.  The kernel 		 * is already going to panic trying to get a sleep lock to 		 * do the VM lookup, so just consider it a fatal trap so the 		 * kernel can print out a useful trap message and even get 		 * to the debugger. 		 */
+comment|/* 		 * For some Cyrix CPUs, %cr2 is clobbered by 		 * interrupts.  This problem is worked around by using 		 * an interrupt gate for the pagefault handler.  We 		 * are finally ready to read %cr2 and then must 		 * reenable interrupts. 		 * 		 * If we get a page fault while in a critical section, then 		 * it is most likely a fatal kernel page fault.  The kernel 		 * is already going to panic trying to get a sleep lock to 		 * do the VM lookup, so just consider it a fatal trap so the 		 * kernel can print out a useful trap message and even get 		 * to the debugger. 		 * 		 * If we get a page fault while holding a non-sleepable 		 * lock, then it is most likely a fatal kernel page fault. 		 * If WITNESS is enabled, then it's going to whine about 		 * bogus LORs with various VM locks, so just skip to the 		 * fatal trap handling directly. 		 */
 name|eva
 operator|=
 name|rcr2
@@ -937,13 +937,22 @@ condition|(
 name|td
 operator|->
 name|td_critnest
-operator|==
+operator|!=
+literal|0
+operator|||
+name|WITNESS_CHECK
+argument_list|(
+name|WARN_SLEEPOK
+operator||
+name|WARN_GIANTOK
+argument_list|,
+name|NULL
+argument_list|,
+literal|"Kernel page fault"
+argument_list|)
+operator|!=
 literal|0
 condition|)
-name|enable_intr
-argument_list|()
-expr_stmt|;
-else|else
 name|trap_fatal
 argument_list|(
 operator|&
@@ -951,6 +960,10 @@ name|frame
 argument_list|,
 name|eva
 argument_list|)
+expr_stmt|;
+else|else
+name|enable_intr
+argument_list|()
 expr_stmt|;
 block|}
 if|if

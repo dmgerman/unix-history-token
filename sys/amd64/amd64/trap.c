@@ -811,12 +811,25 @@ operator|==
 name|T_PAGEFLT
 condition|)
 block|{
-comment|/* 		 * If we get a page fault while in a critical section, then 		 * it is most likely a fatal kernel page fault.  The kernel 		 * is already going to panic trying to get a sleep lock to 		 * do the VM lookup, so just consider it a fatal trap so the 		 * kernel can print out a useful trap message and even get 		 * to the debugger. 		 */
+comment|/* 		 * If we get a page fault while in a critical section, then 		 * it is most likely a fatal kernel page fault.  The kernel 		 * is already going to panic trying to get a sleep lock to 		 * do the VM lookup, so just consider it a fatal trap so the 		 * kernel can print out a useful trap message and even get 		 * to the debugger. 		 * 		 * If we get a page fault while holding a non-sleepable 		 * lock, then it is most likely a fatal kernel page fault. 		 * If WITNESS is enabled, then it's going to whine about 		 * bogus LORs with various VM locks, so just skip to the 		 * fatal trap handling directly. 		 */
 if|if
 condition|(
 name|td
 operator|->
 name|td_critnest
+operator|!=
+literal|0
+operator|||
+name|WITNESS_CHECK
+argument_list|(
+name|WARN_SLEEPOK
+operator||
+name|WARN_GIANTOK
+argument_list|,
+name|NULL
+argument_list|,
+literal|"Kernel page fault"
+argument_list|)
 operator|!=
 literal|0
 condition|)
