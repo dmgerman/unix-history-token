@@ -1439,7 +1439,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: host = %s, port = %s"
+literal|"host = %s, port = %s: %s"
 argument_list|,
 name|env_HTTP_PROXY
 condition|?
