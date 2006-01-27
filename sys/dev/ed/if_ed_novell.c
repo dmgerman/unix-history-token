@@ -685,6 +685,12 @@ argument_list|,
 literal|0xff
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_write_mbufs
+operator|=
+name|ed_pio_write_mbufs
+expr_stmt|;
 return|return
 operator|(
 literal|0

@@ -586,6 +586,12 @@ name|ED_PAGE_SIZE
 operator|*
 name|ED_TXBUF_SIZE
 expr_stmt|;
+name|sc
+operator|->
+name|sc_write_mbufs
+operator|=
+name|ed_shmem_write_mbufs
+expr_stmt|;
 return|return
 operator|(
 literal|0

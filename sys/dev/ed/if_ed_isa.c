@@ -273,7 +273,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Final sanity check for Gateway Ethernet cards before 	 * believing that they really are Gateway AT. 	 */
+comment|/* 	 * Final sanity check for Gateway Ethernet cards before 	 * believing that they really are Gateway AT. 	 * XXX I think this is stale. 	 */
 if|if
 condition|(
 operator|(
@@ -700,31 +700,6 @@ name|error
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|ED_HPP
-if|if
-condition|(
-name|sc
-operator|->
-name|vendor
-operator|==
-name|ED_VENDOR_HP
-operator|&&
-name|sc
-operator|->
-name|type
-operator|==
-name|ED_TYPE_HP_PCLANPLUS
-condition|)
-name|sc
-operator|->
-name|readmem
-operator|=
-name|ed_hpp_readmem
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|ed_attach
 argument_list|(

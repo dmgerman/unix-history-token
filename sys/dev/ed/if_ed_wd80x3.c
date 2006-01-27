@@ -1783,6 +1783,12 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_write_mbufs
+operator|=
+name|ed_shmem_write_mbufs
+expr_stmt|;
 return|return
 operator|(
 name|error
