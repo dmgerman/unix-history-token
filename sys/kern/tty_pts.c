@@ -455,6 +455,16 @@ parameter_list|)
 value|((void *)&(tp)->t_canq)
 end_define
 
+begin_define
+define|#
+directive|define
+name|NUM_TO_MINOR
+parameter_list|(
+name|c
+parameter_list|)
+value|((c& 0xff) | ((c& ~0xff)<< 16))
+end_define
+
 begin_comment
 comment|/*-  * Once a tty is allocated, it cannot (currently) be freed.  As such,  * we keep a global list of ptys that have been used so we can recycle  * them.  An another list is provided for released pts, whiiich are   * not currently allocated, permitting reuse.  pt_flags holds state  * associated with a particular session, so isn't overloaded for this.  * When a pty descriptor is unused, its number is set to -1 giving  * more consistent and traditional allocation orders to pty numbers.  *  * Locking: (p) indicates that the field is locked by the global pt_mtx.  * (c) indicates the value is constant after allocation.   Other fields  * await tty locking generally, and are protected by Giant.  */
 end_comment
@@ -758,6 +768,10 @@ condition|(
 name|nb_allocated
 operator|>=
 name|max_pts
+operator|||
+name|nb_allocated
+operator|==
+literal|0xffffff
 condition|)
 block|{
 name|mtx_unlock
@@ -2076,9 +2090,12 @@ argument_list|(
 operator|&
 name|pts_cdevsw
 argument_list|,
+name|NUM_TO_MINOR
+argument_list|(
 name|pt
 operator|->
 name|pt_num
+argument_list|)
 argument_list|,
 name|td
 operator|->
@@ -4601,9 +4618,12 @@ argument_list|(
 operator|&
 name|ptc_cdevsw
 argument_list|,
+name|NUM_TO_MINOR
+argument_list|(
 name|pt
 operator|->
 name|pt_num
+argument_list|)
 argument_list|,
 name|cred
 argument_list|,
