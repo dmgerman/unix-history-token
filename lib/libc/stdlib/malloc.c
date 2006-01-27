@@ -875,6 +875,7 @@ name|highcached
 decl_stmt|;
 comment|/* 	 * Current number of regions in this bin.  This number isn't needed 	 * during normal operation, so is maintained here in order to allow 	 * calculating the high water mark. 	 */
 name|unsigned
+name|long
 name|curcached
 decl_stmt|;
 block|}
