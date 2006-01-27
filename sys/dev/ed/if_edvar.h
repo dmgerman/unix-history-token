@@ -1131,7 +1131,7 @@ comment|/* Allied-Telesis SIC */
 end_comment
 
 begin_comment
-comment|/*  * Compile-time config flags  */
+comment|/*  * Configure time flags  */
 end_comment
 
 begin_comment
