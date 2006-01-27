@@ -1544,14 +1544,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|NDFREE
-argument_list|(
-operator|&
-name|nd
-argument_list|,
-name|NDF_ONLY_PNBUF
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -1561,6 +1553,14 @@ operator|(
 name|error
 operator|)
 return|;
+name|NDFREE
+argument_list|(
+operator|&
+name|nd
+argument_list|,
+name|NDF_ONLY_PNBUF
+argument_list|)
+expr_stmt|;
 comment|/* We just unlock so we hold a reference */
 name|VOP_UNLOCK
 argument_list|(
