@@ -168,6 +168,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|ed_hpp_set_physical_link
+parameter_list|(
+name|struct
+name|ed_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Interrupt conversion table for the HP PC LAN+  */
 end_comment
@@ -1129,6 +1142,12 @@ name|ENXIO
 operator|)
 return|;
 block|}
+name|sc
+operator|->
+name|sc_mediachg
+operator|=
+name|ed_hpp_set_physical_link
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1142,6 +1161,7 @@ comment|/*  * HP PC Lan+ : Set the physical link to use AUI or TP/TL.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ed_hpp_set_physical_link
 parameter_list|(

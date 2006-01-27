@@ -987,17 +987,6 @@ end_ifdef
 
 begin_function_decl
 name|void
-name|ed_hpp_set_physical_link
-parameter_list|(
-name|struct
-name|ed_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|ed_hpp_readmem
 parameter_list|(
 name|struct
