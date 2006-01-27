@@ -410,6 +410,7 @@ block|{
 comment|/* Not present in kernel, try loading it. */
 if|if
 condition|(
+operator|(
 name|kldload
 argument_list|(
 name|name2
@@ -425,6 +426,25 @@ argument_list|)
 operator|==
 operator|-
 literal|1
+operator|)
+operator|&&
+operator|(
+name|kldload
+argument_list|(
+name|name1
+argument_list|)
+operator|==
+operator|-
+literal|1
+operator|||
+name|modfind
+argument_list|(
+name|name1
+argument_list|)
+operator|==
+operator|-
+literal|1
+operator|)
 condition|)
 block|{
 if|if
@@ -434,9 +454,9 @@ operator|!=
 name|EEXIST
 condition|)
 block|{
-name|errx
+name|syslog
 argument_list|(
-name|EXIT_FAILURE
+name|LOG_WARNING
 argument_list|,
 literal|"%s module not available!"
 argument_list|,
