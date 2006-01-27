@@ -179,11 +179,30 @@ begin_comment
 comment|/******************************************************************************/
 end_comment
 
+begin_comment
+comment|/*   * In order to disable various extra features that may have negative  * performance impacts, (assertions, expanded statistics, redzones), define  * NO_MALLOC_EXTRAS.  */
+end_comment
+
+begin_comment
+comment|/* #define NO_MALLOC_EXTRAS */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_MALLOC_EXTRAS
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|MALLOC_DEBUG
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -386,21 +405,43 @@ begin_comment
 comment|/*  * Calculate statistics that can be used to get an idea of how well caching is  * working.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_MALLOC_EXTRAS
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|MALLOC_STATS
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Include redzones before/after every region, and check for buffer overflows.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_MALLOC_EXTRAS
+end_ifndef
 
 begin_define
 define|#
 directive|define
 name|MALLOC_REDZONES
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
