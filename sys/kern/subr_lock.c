@@ -104,6 +104,9 @@ name|lock_class_mtx_sleep
 block|,
 operator|&
 name|lock_class_sx
+block|,
+operator|&
+name|lock_class_rw
 block|, }
 decl_stmt|;
 end_decl_stmt

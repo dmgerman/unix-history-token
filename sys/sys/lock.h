@@ -777,6 +777,14 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|lock_class
+name|lock_class_rw
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|lock_class
 modifier|*
 name|lock_classes
 index|[]
