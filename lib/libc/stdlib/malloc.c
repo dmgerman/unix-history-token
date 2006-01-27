@@ -6180,8 +6180,6 @@ name|size
 parameter_list|)
 block|{
 name|unsigned
-name|ret
-decl_stmt|,
 name|minbin
 decl_stmt|,
 name|i
@@ -6216,15 +6214,11 @@ name|size
 operator|>
 name|bin_maxsize
 condition|)
-block|{
-name|ret
-operator|=
+return|return
+operator|(
 name|UINT_MAX
-expr_stmt|;
-goto|goto
-name|RETURN
-goto|;
-block|}
+operator|)
+return|;
 name|minbin
 operator|=
 operator|(
@@ -6302,8 +6296,8 @@ literal|0
 condition|)
 block|{
 comment|/* Usable allocation found. */
-name|ret
-operator|=
+return|return
+operator|(
 operator|(
 name|i
 operator|*
@@ -6320,21 +6314,13 @@ operator|+
 name|bit
 operator|-
 literal|1
-expr_stmt|;
-goto|goto
-name|RETURN
-goto|;
+operator|)
+return|;
 block|}
 block|}
-name|ret
-operator|=
-name|UINT_MAX
-expr_stmt|;
-name|RETURN
-label|:
 return|return
 operator|(
-name|ret
+name|UINT_MAX
 operator|)
 return|;
 block|}
@@ -11203,19 +11189,19 @@ name|bool
 name|fit
 parameter_list|)
 block|{
-name|region_t
-modifier|*
-name|ret
-decl_stmt|;
 if|if
 condition|(
 name|arena
 operator|->
 name|split
-operator|!=
+operator|==
 name|NULL
 condition|)
-block|{
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 ifdef|#
 directive|ifdef
 name|MALLOC_STATS
@@ -11245,6 +11231,10 @@ operator|>=
 name|size
 condition|)
 block|{
+name|region_t
+modifier|*
+name|ret
+decl_stmt|;
 if|if
 condition|(
 name|fit
@@ -11253,7 +11243,7 @@ block|{
 name|size_t
 name|total_size
 decl_stmt|;
-comment|/* 				 * Use split, but try to use the beginning for 				 * smaller regions, and the end for larger 				 * regions.  This reduces fragmentation in some 				 * pathological use cases.  It tends to group 				 * short-lived (smaller) regions, which 				 * increases the effectiveness of coalescing. 				 */
+comment|/* 			 * Use split, but try to use the beginning for smaller 			 * regions, and the end for larger regions.  This 			 * reduces fragmentation in some pathological use 			 * cases.  It tends to group short-lived (smaller) 			 * regions, which increases the effectiveness of 			 * coalescing. 			 */
 name|total_size
 operator|=
 name|region_next_size_get
@@ -11301,7 +11291,7 @@ name|region_t
 modifier|*
 name|next
 decl_stmt|;
-comment|/* 						 * Carve space from the 						 * beginning of split. 						 */
+comment|/* 					 * Carve space from the beginning of 					 * split. 					 */
 comment|/* ret. */
 name|ret
 operator|=
@@ -11409,7 +11399,7 @@ decl_stmt|;
 name|size_t
 name|prev_size
 decl_stmt|;
-comment|/* 						 * Carve space from the end of 						 * split. 						 */
+comment|/* Carve space from the end of split. */
 comment|/* prev. */
 name|prev_size
 operator|=
@@ -11569,7 +11559,7 @@ directive|endif
 block|}
 else|else
 block|{
-comment|/* 					 * split is close enough to the right 					 * size that there isn't enough room to 					 * create a neighboring region. 					 */
+comment|/* 				 * Split is close enough to the right size that 				 * there isn't enough room to create a 				 * neighboring region. 				 */
 comment|/* ret. */
 name|ret
 operator|=
@@ -11748,11 +11738,13 @@ operator|->
 name|sep
 argument_list|)
 expr_stmt|;
-goto|goto
-name|RETURN
-goto|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 block|}
-elseif|else
+comment|/* If we get here, split has failed to service the request. */
 if|if
 condition|(
 name|size
@@ -11764,7 +11756,7 @@ name|region_t
 modifier|*
 name|reg
 decl_stmt|;
-comment|/* 			 * The split region is too small to service a small 			 * request.  Clear split. 			 */
+comment|/* 		 * The split region is too small to service a small request. 		 * Clear split. 		 */
 name|reg
 operator|=
 name|arena
@@ -11793,16 +11785,9 @@ name|reg
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-name|ret
-operator|=
-name|NULL
-expr_stmt|;
-name|RETURN
-label|:
 return|return
 operator|(
-name|ret
+name|NULL
 operator|)
 return|;
 block|}
@@ -12292,9 +12277,11 @@ operator|++
 expr_stmt|;
 endif|#
 directive|endif
-goto|goto
-name|RETURN
-goto|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 block|}
 comment|/* Look at frag to see whether it's large enough. */
 name|ret
@@ -12314,18 +12301,14 @@ name|ret
 operator|!=
 name|NULL
 condition|)
-goto|goto
-name|RETURN
-goto|;
-name|ret
-operator|=
-name|NULL
-expr_stmt|;
-name|RETURN
-label|:
 return|return
 operator|(
 name|ret
+operator|)
+return|;
+return|return
+operator|(
+name|NULL
 operator|)
 return|;
 block|}
@@ -12446,15 +12429,11 @@ name|node
 operator|==
 name|NULL
 condition|)
-block|{
-name|ret
-operator|=
+return|return
+operator|(
 name|NULL
-expr_stmt|;
-goto|goto
-name|RETURN
-goto|;
-block|}
+operator|)
+return|;
 comment|/* Cached large region found. */
 name|ret
 operator|=
@@ -12579,8 +12558,6 @@ operator|++
 expr_stmt|;
 endif|#
 directive|endif
-name|RETURN
-label|:
 return|return
 operator|(
 name|ret
@@ -12631,15 +12608,11 @@ name|chunk
 operator|==
 name|NULL
 condition|)
-block|{
-name|ret
-operator|=
+return|return
+operator|(
 name|NULL
-expr_stmt|;
-goto|goto
-name|RETURN
-goto|;
-block|}
+operator|)
+return|;
 ifdef|#
 directive|ifdef
 name|MALLOC_DEBUG
@@ -12893,8 +12866,6 @@ name|NULL
 operator|)
 argument_list|)
 expr_stmt|;
-name|RETURN
-label|:
 return|return
 operator|(
 name|ret
@@ -12987,9 +12958,11 @@ name|ret
 operator|!=
 name|NULL
 condition|)
-goto|goto
-name|RETURN
-goto|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 block|}
 name|ret
 operator|=
@@ -13008,9 +12981,11 @@ name|ret
 operator|!=
 name|NULL
 condition|)
-goto|goto
-name|RETURN
-goto|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 name|ret
 operator|=
 name|arena_split_reg_alloc
@@ -13028,9 +13003,11 @@ name|ret
 operator|!=
 name|NULL
 condition|)
-goto|goto
-name|RETURN
-goto|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 comment|/* 	 * Only try allocating from frag here if size is large, since 	 * arena_bin_reg_alloc() already falls back to allocating from frag for 	 * small regions. 	 */
 if|if
 condition|(
@@ -13056,9 +13033,11 @@ name|ret
 operator|!=
 name|NULL
 condition|)
-goto|goto
-name|RETURN
-goto|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 block|}
 name|ret
 operator|=
@@ -13077,18 +13056,14 @@ name|ret
 operator|!=
 name|NULL
 condition|)
-goto|goto
-name|RETURN
-goto|;
-name|ret
-operator|=
-name|NULL
-expr_stmt|;
-name|RETURN
-label|:
 return|return
 operator|(
 name|ret
+operator|)
+return|;
+return|return
+operator|(
+name|NULL
 operator|)
 return|;
 block|}
@@ -13171,13 +13146,11 @@ name|size
 condition|)
 block|{
 comment|/* size is large enough to cause size_t wrap-around. */
-name|ret
-operator|=
+return|return
+operator|(
 name|NULL
-expr_stmt|;
-goto|goto
-name|RETURN
-goto|;
+operator|)
+return|;
 block|}
 name|assert
 argument_list|(
@@ -13226,13 +13199,11 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
-name|ret
-operator|=
+return|return
+operator|(
 name|NULL
-expr_stmt|;
-goto|goto
-name|RETURN
-goto|;
+operator|)
+return|;
 block|}
 ifdef|#
 directive|ifdef
@@ -13374,8 +13345,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|RETURN
-label|:
 return|return
 operator|(
 name|ret
@@ -13473,13 +13442,11 @@ name|size
 condition|)
 block|{
 comment|/* size is large enough to cause size_t wrap-around. */
-name|ret
-operator|=
+return|return
+operator|(
 name|NULL
-expr_stmt|;
-goto|goto
-name|RETURN
-goto|;
+operator|)
+return|;
 block|}
 comment|/* 		 * Calculate how large of a region to allocate.  There must be 		 * enough space to advance far enough to have at least 		 * sizeof(region_small_sizer_t) leading bytes, yet also land at 		 * an alignment boundary. 		 */
 if|if
@@ -13534,13 +13501,11 @@ name|quantum_size
 condition|)
 block|{
 comment|/* size_t wrap-around occurred. */
-name|ret
-operator|=
+return|return
+operator|(
 name|NULL
-expr_stmt|;
-goto|goto
-name|RETURN
-goto|;
+operator|)
+return|;
 block|}
 name|malloc_mutex_lock
 argument_list|(
@@ -13582,13 +13547,11 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
-name|ret
-operator|=
+return|return
+operator|(
 name|NULL
-expr_stmt|;
-goto|goto
-name|RETURN
-goto|;
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -14238,8 +14201,6 @@ block|}
 endif|#
 directive|endif
 block|}
-name|RETURN
-label|:
 name|assert
 argument_list|(
 operator|(
@@ -14329,9 +14290,11 @@ name|ret
 operator|==
 name|NULL
 condition|)
-goto|goto
-name|RETURN
-goto|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|memset
 argument_list|(
 name|ret
@@ -14343,8 +14306,6 @@ operator|*
 name|size
 argument_list|)
 expr_stmt|;
-name|RETURN
-label|:
 return|return
 operator|(
 name|ret
@@ -15321,9 +15282,6 @@ modifier|*
 name|arena
 parameter_list|)
 block|{
-name|bool
-name|ret
-decl_stmt|;
 name|unsigned
 name|i
 decl_stmt|;
@@ -15460,15 +15418,11 @@ name|delayed
 operator|==
 name|NULL
 condition|)
-block|{
-name|ret
-operator|=
+return|return
+operator|(
 name|true
-expr_stmt|;
-goto|goto
-name|RETURN
-goto|;
-block|}
+operator|)
+return|;
 name|memset
 argument_list|(
 name|arena
@@ -15529,15 +15483,9 @@ name|ARENA_MAGIC
 expr_stmt|;
 endif|#
 directive|endif
-name|ret
-operator|=
-name|false
-expr_stmt|;
-name|RETURN
-label|:
 return|return
 operator|(
-name|ret
+name|false
 operator|)
 return|;
 block|}
@@ -15929,13 +15877,11 @@ literal|0
 condition|)
 block|{
 comment|/* size is large enough to cause size_t wrap-around. */
-name|ret
-operator|=
+return|return
+operator|(
 name|NULL
-expr_stmt|;
-goto|goto
-name|RETURN
-goto|;
+operator|)
+return|;
 block|}
 comment|/* Allocate a chunk node with which to track the chunk. */
 name|node
@@ -15949,15 +15895,11 @@ name|node
 operator|==
 name|NULL
 condition|)
-block|{
-name|ret
-operator|=
+return|return
+operator|(
 name|NULL
-expr_stmt|;
-goto|goto
-name|RETURN
-goto|;
-block|}
+operator|)
+return|;
 name|ret
 operator|=
 name|chunk_alloc
@@ -15977,13 +15919,11 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-name|ret
-operator|=
+return|return
+operator|(
 name|NULL
-expr_stmt|;
-goto|goto
-name|RETURN
-goto|;
+operator|)
+return|;
 block|}
 comment|/* Insert node into chunks. */
 name|node
@@ -16047,8 +15987,6 @@ operator|&
 name|chunks_mtx
 argument_list|)
 expr_stmt|;
-name|RETURN
-label|:
 return|return
 operator|(
 name|ret
@@ -16550,15 +16488,11 @@ name|node
 operator|==
 name|NULL
 condition|)
-block|{
-name|ret
-operator|=
+return|return
+operator|(
 name|NULL
-expr_stmt|;
-goto|goto
-name|RETURN
-goto|;
-block|}
+operator|)
+return|;
 name|ret
 operator|=
 name|chunk_alloc
@@ -16578,13 +16512,11 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-name|ret
-operator|=
+return|return
+operator|(
 name|NULL
-expr_stmt|;
-goto|goto
-name|RETURN
-goto|;
+operator|)
+return|;
 block|}
 name|offset
 operator|=
@@ -16819,18 +16751,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|RETURN
-label|:
 if|if
 condition|(
 name|opt_junk
-condition|)
-block|{
-if|if
-condition|(
-name|ret
-operator|!=
-name|NULL
 condition|)
 name|memset
 argument_list|(
@@ -16841,7 +16764,6 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-block|}
 name|assert
 argument_list|(
 operator|(
@@ -17362,9 +17284,11 @@ name|ret
 operator|==
 name|NULL
 condition|)
-goto|goto
-name|RETURN
-goto|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 if|if
 condition|(
 name|opt_junk
@@ -17421,9 +17345,11 @@ name|ret
 operator|==
 name|NULL
 condition|)
-goto|goto
-name|RETURN
-goto|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 if|if
 condition|(
 name|opt_junk
@@ -17528,8 +17454,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|RETURN
-label|:
 return|return
 operator|(
 name|ret
