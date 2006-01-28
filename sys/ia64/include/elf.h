@@ -507,7 +507,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_NONE
+name|R_IA_64_NONE
 value|0
 end_define
 
@@ -518,7 +518,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_IMM14
+name|R_IA_64_IMM14
 value|0x21
 end_define
 
@@ -529,7 +529,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_IMM22
+name|R_IA_64_IMM22
 value|0x22
 end_define
 
@@ -540,7 +540,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_IMM64
+name|R_IA_64_IMM64
 value|0x23
 end_define
 
@@ -551,7 +551,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_DIR32MSB
+name|R_IA_64_DIR32MSB
 value|0x24
 end_define
 
@@ -562,7 +562,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_DIR32LSB
+name|R_IA_64_DIR32LSB
 value|0x25
 end_define
 
@@ -573,7 +573,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_DIR64MSB
+name|R_IA_64_DIR64MSB
 value|0x26
 end_define
 
@@ -584,7 +584,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_DIR64LSB
+name|R_IA_64_DIR64LSB
 value|0x27
 end_define
 
@@ -595,7 +595,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_GPREL22
+name|R_IA_64_GPREL22
 value|0x2a
 end_define
 
@@ -606,7 +606,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_GPREL64I
+name|R_IA_64_GPREL64I
 value|0x2b
 end_define
 
@@ -617,7 +617,29 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_GPREL64MSB
+name|R_IA_64_GPREL32MSB
+value|0x2c
+end_define
+
+begin_comment
+comment|/* word32 MSB	@gprel(S + A) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_IA_64_GPREL32LSB
+value|0x2d
+end_define
+
+begin_comment
+comment|/* word32 LSB	@gprel(S + A) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_IA_64_GPREL64MSB
 value|0x2e
 end_define
 
@@ -628,7 +650,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_GPREL64LSB
+name|R_IA_64_GPREL64LSB
 value|0x2f
 end_define
 
@@ -639,7 +661,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_LTOFF22
+name|R_IA_64_LTOFF22
 value|0x32
 end_define
 
@@ -650,7 +672,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_LTOFF64I
+name|R_IA_64_LTOFF64I
 value|0x33
 end_define
 
@@ -661,7 +683,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_PLTOFF22
+name|R_IA_64_PLTOFF22
 value|0x3a
 end_define
 
@@ -672,7 +694,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_PLTOFF64I
+name|R_IA_64_PLTOFF64I
 value|0x3b
 end_define
 
@@ -683,7 +705,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_PLTOFF64MSB
+name|R_IA_64_PLTOFF64MSB
 value|0x3e
 end_define
 
@@ -694,7 +716,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_PLTOFF64LSB
+name|R_IA_64_PLTOFF64LSB
 value|0x3f
 end_define
 
@@ -705,7 +727,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_FPTR64I
+name|R_IA_64_FPTR64I
 value|0x43
 end_define
 
@@ -716,7 +738,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_FPTR32MSB
+name|R_IA_64_FPTR32MSB
 value|0x44
 end_define
 
@@ -727,7 +749,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_FPTR32LSB
+name|R_IA_64_FPTR32LSB
 value|0x45
 end_define
 
@@ -738,7 +760,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_FPTR64MSB
+name|R_IA_64_FPTR64MSB
 value|0x46
 end_define
 
@@ -749,7 +771,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_FPTR64LSB
+name|R_IA_64_FPTR64LSB
 value|0x47
 end_define
 
@@ -760,7 +782,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_PCREL21B
+name|R_IA_64_PCREL60B
+value|0x48
+end_define
+
+begin_comment
+comment|/* immediate60 form1 S + A - P */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_IA_64_PCREL21B
 value|0x49
 end_define
 
@@ -771,7 +804,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_PCREL21M
+name|R_IA_64_PCREL21M
 value|0x4a
 end_define
 
@@ -782,7 +815,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_PCREL21F
+name|R_IA_64_PCREL21F
 value|0x4b
 end_define
 
@@ -793,7 +826,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_PCREL32MSB
+name|R_IA_64_PCREL32MSB
 value|0x4c
 end_define
 
@@ -804,7 +837,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_PCREL32LSB
+name|R_IA_64_PCREL32LSB
 value|0x4d
 end_define
 
@@ -815,7 +848,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_PCREL64MSB
+name|R_IA_64_PCREL64MSB
 value|0x4e
 end_define
 
@@ -826,7 +859,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_PCREL64LSB
+name|R_IA_64_PCREL64LSB
 value|0x4f
 end_define
 
@@ -837,7 +870,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_LTOFF_FPTR22
+name|R_IA_64_LTOFF_FPTR22
 value|0x52
 end_define
 
@@ -848,7 +881,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_LTOFF_FPTR64I
+name|R_IA_64_LTOFF_FPTR64I
 value|0x53
 end_define
 
@@ -859,7 +892,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_LTOFF_FPTR32MSB
+name|R_IA_64_LTOFF_FPTR32MSB
 value|0x54
 end_define
 
@@ -870,7 +903,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_LTOFF_FPTR32LSB
+name|R_IA_64_LTOFF_FPTR32LSB
 value|0x55
 end_define
 
@@ -881,7 +914,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_LTOFF_FPTR64MSB
+name|R_IA_64_LTOFF_FPTR64MSB
 value|0x56
 end_define
 
@@ -892,7 +925,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_LTOFF_FPTR64LSB
+name|R_IA_64_LTOFF_FPTR64LSB
 value|0x57
 end_define
 
@@ -903,7 +936,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_SEGREL32MSB
+name|R_IA_64_SEGREL32MSB
 value|0x5c
 end_define
 
@@ -914,7 +947,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_SEGREL32LSB
+name|R_IA_64_SEGREL32LSB
 value|0x5d
 end_define
 
@@ -925,7 +958,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_SEGREL64MSB
+name|R_IA_64_SEGREL64MSB
 value|0x5e
 end_define
 
@@ -936,7 +969,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_SEGREL64LSB
+name|R_IA_64_SEGREL64LSB
 value|0x5f
 end_define
 
@@ -947,7 +980,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_SECREL32MSB
+name|R_IA_64_SECREL32MSB
 value|0x64
 end_define
 
@@ -958,7 +991,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_SECREL32LSB
+name|R_IA_64_SECREL32LSB
 value|0x65
 end_define
 
@@ -969,7 +1002,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_SECREL64MSB
+name|R_IA_64_SECREL64MSB
 value|0x66
 end_define
 
@@ -980,7 +1013,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_SECREL64LSB
+name|R_IA_64_SECREL64LSB
 value|0x67
 end_define
 
@@ -991,7 +1024,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_REL32MSB
+name|R_IA_64_REL32MSB
 value|0x6c
 end_define
 
@@ -1002,7 +1035,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_REL32LSB
+name|R_IA_64_REL32LSB
 value|0x6d
 end_define
 
@@ -1013,7 +1046,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_REL64MSB
+name|R_IA_64_REL64MSB
 value|0x6e
 end_define
 
@@ -1024,7 +1057,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_REL64LSB
+name|R_IA_64_REL64LSB
 value|0x6f
 end_define
 
@@ -1035,7 +1068,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_LTV32MSB
+name|R_IA_64_LTV32MSB
 value|0x74
 end_define
 
@@ -1046,7 +1079,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_LTV32LSB
+name|R_IA_64_LTV32LSB
 value|0x75
 end_define
 
@@ -1057,7 +1090,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_LTV64MSB
+name|R_IA_64_LTV64MSB
 value|0x76
 end_define
 
@@ -1068,7 +1101,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_LTV64LSB
+name|R_IA_64_LTV64LSB
 value|0x77
 end_define
 
@@ -1079,7 +1112,40 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_IPLTMSB
+name|R_IA_64_PCREL21BI
+value|0x79
+end_define
+
+begin_comment
+comment|/* immediate21 form1 S + A - P */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_IA_64_PCREL22
+value|0x7a
+end_define
+
+begin_comment
+comment|/* immediate22	S + A - P */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_IA_64_PCREL64I
+value|0x7b
+end_define
+
+begin_comment
+comment|/* immediate64	S + A - P */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_IA_64_IPLTMSB
 value|0x80
 end_define
 
@@ -1090,7 +1156,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_IPLTLSB
+name|R_IA_64_IPLTLSB
 value|0x81
 end_define
 
@@ -1101,7 +1167,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_SUB
+name|R_IA_64_SUB
 value|0x85
 end_define
 
@@ -1112,7 +1178,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_LTOFF22X
+name|R_IA_64_LTOFF22X
 value|0x86
 end_define
 
@@ -1123,7 +1189,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_LDXMOV
+name|R_IA_64_LDXMOV
 value|0x87
 end_define
 
@@ -1134,7 +1200,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_TPREL14
+name|R_IA_64_TPREL14
 value|0x91
 end_define
 
@@ -1145,7 +1211,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_TPREL22
+name|R_IA_64_TPREL22
 value|0x92
 end_define
 
@@ -1156,7 +1222,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_TPREL64I
+name|R_IA_64_TPREL64I
 value|0x93
 end_define
 
@@ -1167,7 +1233,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_TPREL64MSB
+name|R_IA_64_TPREL64MSB
 value|0x96
 end_define
 
@@ -1178,7 +1244,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_TPREL64LSB
+name|R_IA_64_TPREL64LSB
 value|0x97
 end_define
 
@@ -1189,7 +1255,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_LTOFF_TPREL22
+name|R_IA_64_LTOFF_TPREL22
 value|0x9a
 end_define
 
@@ -1200,7 +1266,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_DTPMOD64MSB
+name|R_IA_64_DTPMOD64MSB
 value|0xa6
 end_define
 
@@ -1211,7 +1277,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_DTPMOD64LSB
+name|R_IA_64_DTPMOD64LSB
 value|0xa7
 end_define
 
@@ -1222,7 +1288,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_LTOFF_DTPMOD22
+name|R_IA_64_LTOFF_DTPMOD22
 value|0xaa
 end_define
 
@@ -1233,7 +1299,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_DTPREL14
+name|R_IA_64_DTPREL14
 value|0xb1
 end_define
 
@@ -1244,7 +1310,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_DTPREL22
+name|R_IA_64_DTPREL22
 value|0xb2
 end_define
 
@@ -1255,7 +1321,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_DTPREL64I
+name|R_IA_64_DTPREL64I
 value|0xb3
 end_define
 
@@ -1266,7 +1332,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_DTPREL32MSB
+name|R_IA_64_DTPREL32MSB
 value|0xb4
 end_define
 
@@ -1277,7 +1343,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_DTPREL32LSB
+name|R_IA_64_DTPREL32LSB
 value|0xb5
 end_define
 
@@ -1288,7 +1354,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_DTPREL64MSB
+name|R_IA_64_DTPREL64MSB
 value|0xb6
 end_define
 
@@ -1299,7 +1365,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_DTPREL64LSB
+name|R_IA_64_DTPREL64LSB
 value|0xb7
 end_define
 
@@ -1310,7 +1376,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_IA64_LTOFF_DTPREL22
+name|R_IA_64_LTOFF_DTPREL22
 value|0xba
 end_define
 
@@ -1382,7 +1448,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DT_IA64_PLT_RESERVE
+name|DT_IA_64_PLT_RESERVE
 value|0x70000000
 end_define
 
