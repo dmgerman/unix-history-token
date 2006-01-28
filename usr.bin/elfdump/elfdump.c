@@ -1457,7 +1457,7 @@ case|case
 literal|0x70000000
 case|:
 return|return
-literal|"DT_IA64_PLT_RESERVE"
+literal|"DT_IA_64_PLT_RESERVE"
 return|;
 case|case
 literal|0x7ffffffd

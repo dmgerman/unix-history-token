@@ -2410,7 +2410,7 @@ name|pltres
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * When there are no PLT relocations, the DT_IA64_PLT_RESERVE entry 	 * is bogus. Do not setup the BOR pointers in that case. An example 	 * of where this happens is /usr/lib/libxpg4.so.3. 	 */
+comment|/* 	 * When there are no PLT relocations, the DT_IA_64_PLT_RESERVE entry 	 * is bogus. Do not setup the BOR pointers in that case. An example 	 * of where this happens is /usr/lib/libxpg4.so.3. 	 */
 if|if
 condition|(
 name|obj
@@ -2451,7 +2451,7 @@ name|dynp
 operator|->
 name|d_tag
 operator|==
-name|DT_IA64_PLT_RESERVE
+name|DT_IA_64_PLT_RESERVE
 condition|)
 name|pltres
 operator|=
@@ -2481,7 +2481,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Can't find DT_IA64_PLT_RESERVE entry"
+literal|"Can't find DT_IA_64_PLT_RESERVE entry"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The PLT RESERVE section is used to get values to pass to 	 * _rtld_bind when lazy binding. 	 */

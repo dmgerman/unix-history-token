@@ -1448,7 +1448,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DT_IA64_PLT_RESERVE
+name|DT_IA_64_PLT_RESERVE
 value|0x70000000
 end_define
 
