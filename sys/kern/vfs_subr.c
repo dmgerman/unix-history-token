@@ -8692,9 +8692,6 @@ name|int
 name|oldflags
 decl_stmt|;
 name|int
-name|usecount
-decl_stmt|;
-name|int
 name|error
 decl_stmt|;
 name|error
@@ -8766,12 +8763,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|usecount
-operator|=
-name|vp
-operator|->
-name|v_usecount
-expr_stmt|;
 name|v_incr_usecount
 argument_list|(
 name|vp
@@ -8805,26 +8796,6 @@ expr_stmt|;
 comment|/* 		 * must expand vrele here because we do not want 		 * to call VOP_INACTIVE if the reference count 		 * drops back to zero since it was never really 		 * active. 		 */
 name|v_decr_usecount
 argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Print warning when race below occur: 		 * 		 * thread1	thread2 		 * -------	------- 		 *					v_usecount=0 		 * vref(vp)				v_usecount=1 		 *		vget(vp) 		 *		v_incr_usecount(vp)	v_usecount=2 		 *		vn_lock(vp) 		 * vrele(vp)				v_usecount=1 		 *		v_decr_usecount(vp)	v_usecount=0 		 * 		 * In such situation VOP_INACTIVE() will not be called for 		 * the vnode vp. 		 */
-if|if
-condition|(
-name|usecount
-operator|>
-literal|0
-operator|&&
-name|vp
-operator|->
-name|v_usecount
-operator|==
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"vinactive() won't be called for vp=%p\n"
-argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
