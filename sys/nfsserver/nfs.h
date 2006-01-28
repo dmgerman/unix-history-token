@@ -1052,6 +1052,7 @@ decl_stmt|;
 comment|/* File handle */
 name|struct
 name|ucred
+modifier|*
 name|nd_cr
 decl_stmt|;
 comment|/* Credentials */

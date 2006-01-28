@@ -622,7 +622,6 @@ name|ucred
 modifier|*
 name|cred
 init|=
-operator|&
 name|nfsd
 operator|->
 name|nd_cr
@@ -1111,7 +1110,6 @@ name|ucred
 modifier|*
 name|cred
 init|=
-operator|&
 name|nfsd
 operator|->
 name|nd_cr
@@ -1436,7 +1434,6 @@ name|ucred
 modifier|*
 name|cred
 init|=
-operator|&
 name|nfsd
 operator|->
 name|nd_cr
@@ -2423,7 +2420,6 @@ name|ucred
 modifier|*
 name|cred
 init|=
-operator|&
 name|nfsd
 operator|->
 name|nd_cr
@@ -3265,7 +3261,6 @@ name|ucred
 modifier|*
 name|cred
 init|=
-operator|&
 name|nfsd
 operator|->
 name|nd_cr
@@ -3934,7 +3929,6 @@ name|ucred
 modifier|*
 name|cred
 init|=
-operator|&
 name|nfsd
 operator|->
 name|nd_cr
@@ -5410,7 +5404,6 @@ name|ucred
 modifier|*
 name|cred
 init|=
-operator|&
 name|nfsd
 operator|->
 name|nd_cr
@@ -6964,7 +6957,6 @@ name|nd_dpos
 expr_stmt|;
 name|cred
 operator|=
-operator|&
 name|nfsd
 operator|->
 name|nd_cr
@@ -7586,12 +7578,10 @@ if|if
 condition|(
 name|nfsrv_samecred
 argument_list|(
-operator|&
 name|owp
 operator|->
 name|nd_cr
 argument_list|,
-operator|&
 name|nfsd
 operator|->
 name|nd_cr
@@ -7730,7 +7720,6 @@ name|NULL
 expr_stmt|;
 name|cred
 operator|=
-operator|&
 name|nfsd
 operator|->
 name|nd_cr
@@ -8949,7 +8938,6 @@ name|ucred
 modifier|*
 name|cred
 init|=
-operator|&
 name|nfsd
 operator|->
 name|nd_cr
@@ -10485,7 +10473,6 @@ name|ucred
 modifier|*
 name|cred
 init|=
-operator|&
 name|nfsd
 operator|->
 name|nd_cr
@@ -11668,7 +11655,6 @@ name|ucred
 modifier|*
 name|cred
 init|=
-operator|&
 name|nfsd
 operator|->
 name|nd_cr
@@ -12351,7 +12337,6 @@ name|ucred
 modifier|*
 name|cred
 init|=
-operator|&
 name|nfsd
 operator|->
 name|nd_cr
@@ -13693,7 +13678,6 @@ name|ucred
 modifier|*
 name|cred
 init|=
-operator|&
 name|nfsd
 operator|->
 name|nd_cr
@@ -14629,7 +14613,6 @@ name|ucred
 modifier|*
 name|cred
 init|=
-operator|&
 name|nfsd
 operator|->
 name|nd_cr
@@ -15674,7 +15657,6 @@ name|ucred
 modifier|*
 name|cred
 init|=
-operator|&
 name|nfsd
 operator|->
 name|nd_cr
@@ -16671,7 +16653,6 @@ name|ucred
 modifier|*
 name|cred
 init|=
-operator|&
 name|nfsd
 operator|->
 name|nd_cr
@@ -17456,7 +17437,6 @@ name|ucred
 modifier|*
 name|cred
 init|=
-operator|&
 name|nfsd
 operator|->
 name|nd_cr
@@ -19090,7 +19070,6 @@ name|ucred
 modifier|*
 name|cred
 init|=
-operator|&
 name|nfsd
 operator|->
 name|nd_cr
@@ -20996,7 +20975,6 @@ name|ucred
 modifier|*
 name|cred
 init|=
-operator|&
 name|nfsd
 operator|->
 name|nd_cr
@@ -21857,7 +21835,6 @@ name|ucred
 modifier|*
 name|cred
 init|=
-operator|&
 name|nfsd
 operator|->
 name|nd_cr
@@ -22495,7 +22472,6 @@ name|ucred
 modifier|*
 name|cred
 init|=
-operator|&
 name|nfsd
 operator|->
 name|nd_cr
@@ -22983,7 +22959,6 @@ name|ucred
 modifier|*
 name|cred
 init|=
-operator|&
 name|nfsd
 operator|->
 name|nd_cr
