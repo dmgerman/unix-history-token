@@ -2161,7 +2161,7 @@ name|printf
 argument_list|(
 literal|"version, juggle.c %s\n"
 argument_list|,
-literal|"$P4: //depot/projects/netsmp/src/tools/netperf/juggle/juggle.c#3 $"
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 if|if
