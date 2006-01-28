@@ -3243,11 +3243,16 @@ name|sleepqueue
 modifier|*
 name|sq
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 name|struct
 name|lock_object
 modifier|*
 name|lock
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|thread
 modifier|*
