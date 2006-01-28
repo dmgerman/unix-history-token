@@ -81,7 +81,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|UT_TAG_OFERFLOW
+name|UT_TAG_OVERFLOW
 value|10
 end_define
 
