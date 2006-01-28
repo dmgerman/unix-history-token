@@ -387,10 +387,6 @@ name|PR_ATOMIC
 operator||
 name|PR_ADDR
 block|,
-operator|(
-name|pr_input_t
-operator|*
-operator|)
 name|gre_input
 block|,
 operator|(
@@ -438,10 +434,6 @@ name|PR_ATOMIC
 operator||
 name|PR_ADDR
 block|,
-operator|(
-name|pr_input_t
-operator|*
-operator|)
 name|gre_mobile_input
 block|,
 operator|(
