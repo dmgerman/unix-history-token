@@ -607,7 +607,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|use_old_pty
+name|use_pts
 init|=
 literal|0
 decl_stmt|;
@@ -637,7 +637,7 @@ argument_list|(
 literal|"kern.pts.enable"
 argument_list|,
 operator|&
-name|use_old_pty
+name|use_pts
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -672,7 +672,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|use_old_pty
+name|use_pts
 argument_list|,
 literal|0
 argument_list|,
