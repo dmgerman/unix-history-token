@@ -40,6 +40,12 @@ begin_comment
 comment|/* for uiomove etc. */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -52,6 +58,21 @@ define|#
 directive|define
 name|DMA_ALIGN_MASK
 value|(~(DMA_ALIGN_THRESHOLD - 1))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|DMA_ALIGN_MASK
+parameter_list|(
+name|bps
+parameter_list|)
+value|(~((bps) - 1))
 end_define
 
 begin_define
@@ -5723,11 +5744,25 @@ expr_stmt|;
 comment|/* Apply channel align mask */
 endif|#
 directive|endif
+if|#
+directive|if
+literal|0
+block|hwptr&= DMA_ALIGN_MASK;
+comment|/* Apply DMA align mask */
+endif|#
+directive|endif
 name|hwptr
 operator|&=
 name|DMA_ALIGN_MASK
+argument_list|(
+name|sndbuf_getbps
+argument_list|(
+name|c
+operator|->
+name|bufhard
+argument_list|)
+argument_list|)
 expr_stmt|;
-comment|/* Apply DMA align mask */
 return|return
 name|hwptr
 return|;
@@ -6305,46 +6340,11 @@ return|return
 name|EOPNOTSUPP
 return|;
 block|}
-if|if
-condition|(
-operator|(
-name|type
-operator|==
-name|FEEDER_RATE
-operator|&&
-operator|!
-name|fmtvalid
-argument_list|(
-name|fc
-operator|->
-name|desc
-operator|->
-name|in
-argument_list|,
-name|fmtlist
-argument_list|)
-operator|)
-operator|||
-name|c
-operator|->
-name|feeder
-operator|->
-name|desc
-operator|->
-name|out
-operator|!=
-name|fc
-operator|->
-name|desc
-operator|->
-name|in
-condition|)
-block|{
 name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"build fmtchain from 0x%x to 0x%x: "
+literal|"build fmtchain from 0x%08x to 0x%08x: "
 argument_list|,
 name|c
 operator|->
@@ -6412,7 +6412,6 @@ literal|"ok\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|err
 operator|=
 name|chn_addfeeder
@@ -6475,54 +6474,6 @@ block|}
 block|}
 if|if
 condition|(
-name|fmtvalid
-argument_list|(
-name|c
-operator|->
-name|feeder
-operator|->
-name|desc
-operator|->
-name|out
-argument_list|,
-name|fmtlist
-argument_list|)
-operator|&&
-operator|!
-operator|(
-name|c
-operator|->
-name|direction
-operator|==
-name|PCMDIR_REC
-operator|&&
-name|c
-operator|->
-name|format
-operator|!=
-name|c
-operator|->
-name|feeder
-operator|->
-name|desc
-operator|->
-name|out
-operator|)
-condition|)
-name|hwfmt
-operator|=
-name|c
-operator|->
-name|feeder
-operator|->
-name|desc
-operator|->
-name|out
-expr_stmt|;
-else|else
-block|{
-if|if
-condition|(
 name|c
 operator|->
 name|direction
@@ -6566,7 +6517,6 @@ argument_list|,
 name|fmtlist
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|hwfmt
@@ -6586,7 +6536,7 @@ name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"Invalid hardware format: 0x%x\n"
+literal|"Invalid hardware format: 0x%08x\n"
 argument_list|,
 name|hwfmt
 argument_list|)

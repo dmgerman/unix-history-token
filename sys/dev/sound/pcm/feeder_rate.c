@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999 Cameron Grant<cg@FreeBSD.org>  * Copyright (c) 2003 Orion Hodson<orion@FreeBSD.org>  * Copyright (c) 2005 Ariff Abdullah<ariff@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * 2005-06-11:  * ==========  *  * *New* and rewritten soft sample rate converter supporting arbitary sample  * rate, fine grained scalling/coefficients and unified up/down stereo  * converter. Most of disclaimers from orion's previous version also applied  * here, regarding with linear interpolation deficiencies, pre/post  * anti-aliasing filtering issues. This version comes with much simpler and  * tighter interface, although it works almost exactly like the older one.  *  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  *                                                                         *  * This new implementation is fully dedicated in memory of Cameron Grant,  *  * the creator of magnificent, highly addictive feeder infrastructure.     *  *                                                                         *  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  *  * Orion's notes:  * =============  *  * This rate conversion code uses linear interpolation without any  * pre- or post- interpolation filtering to combat aliasing.  This  * greatly limits the sound quality and should be addressed at some  * stage in the future.  *   * Since this accuracy of interpolation is sensitive and examination  * of the algorithm output is harder from the kernel, th code is  * designed to be compiled in the kernel and in a userland test  * harness.  This is done by selectively including and excluding code  * with several portions based on whether _KERNEL is defined.  It's a  * little ugly, but exceedingly useful.  The testsuite and its  * revisions can be found at:  *		http://people.freebsd.org/~orion/files/feedrate/  *  * Special thanks to Ken Marx for exposing flaws in the code and for  * testing revisions.  */
+comment|/*-  * Copyright (c) 1999 Cameron Grant<cg@FreeBSD.org>  * Copyright (c) 2003 Orion Hodson<orion@FreeBSD.org>  * Copyright (c) 2005 Ariff Abdullah<ariff@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * 2005-06-11:  * ==========  *  * *New* and rewritten soft sample rate converter supporting arbitrary sample  * rates, fine grained scaling/coefficients and a unified up/down stereo  * converter. Most of the disclaimers from orion's notes also applies  * here, regarding linear interpolation deficiencies and pre/post  * anti-aliasing filtering issues. This version comes with a much simpler and  * tighter interface, although it works almost exactly like the older one.  *  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  *                                                                         *  * This new implementation is fully dedicated in memory of Cameron Grant,  *  * the creator of the magnificent, highly addictive feeder infrastructure. *  *                                                                         *  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  *  * Orion's notes:  * =============  *  * This rate conversion code uses linear interpolation without any  * pre- or post- interpolation filtering to combat aliasing.  This  * greatly limits the sound quality and should be addressed at some  * stage in the future.  *   * Since this accuracy of interpolation is sensitive and examination  * of the algorithm output is harder from the kernel, the code is  * designed to be compiled in the kernel and in a userland test  * harness.  This is done by selectively including and excluding code  * with several portions based on whether _KERNEL is defined.  It's a  * little ugly, but exceedingly useful.  The testsuite and its  * revisions can be found at:  *		http://people.freebsd.org/~orion/files/feedrate/  *  * Special thanks to Ken Marx for exposing flaws in the code and for  * testing revisions.  */
 end_comment
 
 begin_include
@@ -36,6 +36,21 @@ end_define
 
 begin_comment
 comment|/* KASSERT(x,y) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RATE_TEST
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* if (!(x)) printf y */
 end_comment
 
 begin_define
@@ -209,6 +224,10 @@ name|uint32_t
 name|bufsz
 decl_stmt|;
 comment|/* total buffer size */
+name|uint32_t
+name|stray
+decl_stmt|;
+comment|/* stray bytes */
 name|int32_t
 name|scale
 decl_stmt|,
@@ -1140,6 +1159,12 @@ expr_stmt|;
 name|info
 operator|->
 name|alpha
+operator|=
+literal|0
+expr_stmt|;
+name|info
+operator|->
+name|stray
 operator|=
 literal|0
 expr_stmt|;
@@ -3018,27 +3043,45 @@ operator|)
 name|b
 decl_stmt|;
 comment|/* 	 * This loop has been optimized to generalize both up / down 	 * sampling without causing missing samples or excessive buffer 	 * feeding. 	 */
-name|RATE_ASSERT
+name|RATE_TEST
 argument_list|(
 name|count
 operator|>=
 literal|4
 operator|&&
+operator|(
 name|count
-operator|%
-literal|4
+operator|&
+literal|3
+operator|)
 operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"%s: Count size not byte integral\n"
+literal|"%s: Count size not byte integral (%d)\n"
 operator|,
 name|__func__
+operator|,
+name|count
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|count
+operator|<
+literal|4
+condition|)
+return|return
+literal|0
+return|;
 name|count
 operator|>>=
+literal|1
+expr_stmt|;
+name|count
+operator|&=
+operator|~
 literal|1
 expr_stmt|;
 name|slot
@@ -3075,7 +3118,45 @@ operator|)
 operator|<<
 literal|1
 expr_stmt|;
-comment|/* 	 * Optimize buffer feeding aggresively to ensure calculated slot 	 * can be fitted nicely into available buffer free space, hence 	 * avoiding multiple feeding. 	 */
+name|RATE_TEST
+argument_list|(
+operator|(
+name|slot
+operator|&
+literal|1
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"%s: Slot count not sample integral (%d)\n"
+operator|,
+name|__func__
+operator|,
+name|slot
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Optimize buffer feeding aggressively to ensure calculated slot 	 * can be fitted nicely into available buffer free space, hence 	 * avoiding multiple feeding. 	 */
+name|RATE_TEST
+argument_list|(
+name|info
+operator|->
+name|stray
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"%s: [1] Stray bytes: %u\n"
+operator|,
+name|__func__
+operator|,
+name|info
+operator|->
+name|stray
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|info
@@ -3222,6 +3303,7 @@ control|)
 block|{
 name|fetch
 operator|=
+operator|(
 name|info
 operator|->
 name|bufsz
@@ -3229,6 +3311,15 @@ operator|-
 name|info
 operator|->
 name|bpos
+operator|)
+operator|<<
+literal|1
+expr_stmt|;
+name|fetch
+operator|-=
+name|info
+operator|->
+name|stray
 expr_stmt|;
 name|RATE_ASSERT
 argument_list|(
@@ -3237,7 +3328,7 @@ operator|>=
 literal|0
 argument_list|,
 operator|(
-literal|"%s: Buffer overrun: %d> %d\n"
+literal|"%s: [1] Buffer overrun: %d> %d\n"
 operator|,
 name|__func__
 operator|,
@@ -3253,13 +3344,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|slot
+operator|<<
+literal|1
+operator|)
 operator|<
 name|fetch
 condition|)
 name|fetch
 operator|=
 name|slot
+operator|<<
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -3270,16 +3367,66 @@ condition|)
 block|{
 name|RATE_ASSERT
 argument_list|(
-name|fetch
-operator|%
-literal|2
-operator|==
+operator|(
+operator|(
+name|info
+operator|->
+name|bpos
+operator|<<
+literal|1
+operator|)
+operator|-
+name|info
+operator|->
+name|stray
+operator|)
+operator|>=
 literal|0
+operator|&&
+operator|(
+operator|(
+name|info
+operator|->
+name|bpos
+operator|<<
+literal|1
+operator|)
+operator|-
+name|info
+operator|->
+name|stray
+operator|)
+operator|<
+operator|(
+name|info
+operator|->
+name|bufsz
+operator|<<
+literal|1
+operator|)
 argument_list|,
 operator|(
-literal|"%s: Fetch size not sample integral\n"
+literal|"%s: DANGER - BUFFER OVERRUN! bufsz=%d, pos=%d\n"
 operator|,
 name|__func__
+operator|,
+name|info
+operator|->
+name|bufsz
+operator|<<
+literal|1
+operator|,
+operator|(
+name|info
+operator|->
+name|bpos
+operator|<<
+literal|1
+operator|)
+operator|-
+name|info
+operator|->
+name|stray
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3301,18 +3448,30 @@ operator|(
 name|info
 operator|->
 name|buffer
+operator|)
 operator|+
+operator|(
 name|info
 operator|->
 name|bpos
-operator|)
-argument_list|,
-name|fetch
 operator|<<
 literal|1
+operator|)
+operator|-
+name|info
+operator|->
+name|stray
+argument_list|,
+name|fetch
 argument_list|,
 name|source
 argument_list|)
+expr_stmt|;
+name|info
+operator|->
+name|stray
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -3321,23 +3480,59 @@ operator|==
 literal|0
 condition|)
 break|break;
-name|RATE_ASSERT
+name|RATE_TEST
 argument_list|(
+operator|(
 name|fetch
-operator|%
-literal|4
+operator|&
+literal|3
+operator|)
 operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"%s: Fetch size not byte integral\n"
+literal|"%s: Fetch size not byte integral (%d)\n"
 operator|,
 name|__func__
+operator|,
+name|fetch
+operator|)
+argument_list|)
+expr_stmt|;
+name|info
+operator|->
+name|stray
+operator|+=
+name|fetch
+operator|&
+literal|3
+expr_stmt|;
+name|RATE_TEST
+argument_list|(
+name|info
+operator|->
+name|stray
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"%s: Stray bytes detected (%d)\n"
+operator|,
+name|__func__
+operator|,
+name|info
+operator|->
+name|stray
 operator|)
 argument_list|)
 expr_stmt|;
 name|fetch
 operator|>>=
+literal|1
+expr_stmt|;
+name|fetch
+operator|&=
+operator|~
 literal|1
 expr_stmt|;
 name|info
@@ -3398,7 +3593,7 @@ operator|->
 name|bpos
 condition|)
 block|{
-name|RATE_ASSERT
+name|RATE_TEST
 argument_list|(
 name|info
 operator|->
@@ -3426,7 +3621,7 @@ operator|->
 name|bpos
 argument_list|,
 operator|(
-literal|"%s: Buffer overrun: %d> %d\n"
+literal|"%s: [2] Buffer overrun: %d> %d\n"
 operator|,
 name|__func__
 operator|,
@@ -3460,6 +3655,7 @@ expr_stmt|;
 name|RATE_ASSERT
 argument_list|(
 operator|(
+operator|(
 name|info
 operator|->
 name|bpos
@@ -3468,15 +3664,24 @@ name|info
 operator|->
 name|pos
 operator|)
-operator|%
-literal|2
+operator|&
+literal|1
+operator|)
 operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"%s: Buffer not sample integral\n"
+literal|"%s: Buffer not sample integral (%d)\n"
 operator|,
 name|__func__
+operator|,
+name|info
+operator|->
+name|bpos
+operator|-
+name|info
+operator|->
+name|pos
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3508,7 +3713,7 @@ operator|->
 name|bpos
 argument_list|,
 operator|(
-literal|"%s: Buffer overrun: %d> %d\n"
+literal|"%s: [3] Buffer overrun: %d> %d\n"
 operator|,
 name|__func__
 operator|,
@@ -3534,6 +3739,25 @@ name|bpos
 condition|)
 block|{
 comment|/* 			 * End of buffer cycle. Copy last unit sample 			 * to beginning of buffer so next cycle can 			 * interpolate using it. 			 */
+name|RATE_TEST
+argument_list|(
+name|info
+operator|->
+name|stray
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"%s: [2] Stray bytes: %u\n"
+operator|,
+name|__func__
+operator|,
+name|info
+operator|->
+name|stray
+operator|)
+argument_list|)
+expr_stmt|;
 name|info
 operator|->
 name|buffer
@@ -3591,6 +3815,31 @@ name|count
 condition|)
 break|break;
 block|}
+if|#
+directive|if
+literal|0
+block|RATE_TEST(count == i, ("Expect: %u , Got: %u\n", count<< 1, i<< 1));
+endif|#
+directive|endif
+name|RATE_TEST
+argument_list|(
+name|info
+operator|->
+name|stray
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"%s: [3] Stray bytes: %u\n"
+operator|,
+name|__func__
+operator|,
+name|info
+operator|->
+name|stray
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 name|i
 operator|<<
