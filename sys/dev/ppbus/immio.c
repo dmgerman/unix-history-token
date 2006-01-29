@@ -2905,6 +2905,9 @@ if|if
 condition|(
 name|h
 operator|==
+operator|(
+name|char
+operator|)
 operator|-
 literal|1
 condition|)
