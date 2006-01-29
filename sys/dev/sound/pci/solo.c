@@ -68,11 +68,12 @@ begin_comment
 comment|/* if defined, playback always uses the 2nd channel and full duplex works */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|ESS18XX_DUPLEX
-end_undef
+value|1
+end_define
 
 begin_comment
 comment|/* more accurate clocks and split audio1/audio2 rates */
