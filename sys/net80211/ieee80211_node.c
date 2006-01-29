@@ -8124,10 +8124,10 @@ argument_list|)
 expr_stmt|;
 name|gen
 operator|=
+operator|++
 name|nt
 operator|->
 name|nt_scangen
-operator|++
 expr_stmt|;
 name|IEEE80211_DPRINTF
 argument_list|(
@@ -8604,10 +8604,10 @@ argument_list|)
 expr_stmt|;
 name|gen
 operator|=
+operator|++
 name|nt
 operator|->
 name|nt_scangen
-operator|++
 expr_stmt|;
 name|restart
 label|:
