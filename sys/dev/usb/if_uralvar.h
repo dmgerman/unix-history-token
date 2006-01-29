@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2005  *	Damien Bergamini<damien.bergamini@free.fr>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*-  * Copyright (c) 2005, 2006  *	Damien Bergamini<damien.bergamini@free.fr>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_define
@@ -32,6 +32,9 @@ decl_stmt|;
 name|uint8_t
 name|wr_flags
 decl_stmt|;
+name|uint8_t
+name|wr_rate
+decl_stmt|;
 name|uint16_t
 name|wr_chan_freq
 decl_stmt|;
@@ -53,7 +56,7 @@ define|#
 directive|define
 name|RAL_RX_RADIOTAP_PRESENT
 define|\
-value|((1<< IEEE80211_RADIOTAP_FLAGS) |				\ 	 (1<< IEEE80211_RADIOTAP_CHANNEL) |				\ 	 (1<< IEEE80211_RADIOTAP_ANTENNA) |				\ 	 (1<< IEEE80211_RADIOTAP_DB_ANTSIGNAL))
+value|((1<< IEEE80211_RADIOTAP_FLAGS) |				\ 	 (1<< IEEE80211_RADIOTAP_RATE) |				\ 	 (1<< IEEE80211_RADIOTAP_CHANNEL) |				\ 	 (1<< IEEE80211_RADIOTAP_ANTENNA) |				\ 	 (1<< IEEE80211_RADIOTAP_DB_ANTSIGNAL))
 end_define
 
 begin_struct
@@ -154,6 +157,29 @@ end_struct
 
 begin_struct
 struct|struct
+name|ural_amrr
+block|{
+name|int
+name|txcnt
+decl_stmt|;
+name|int
+name|retrycnt
+decl_stmt|;
+name|int
+name|success
+decl_stmt|;
+name|int
+name|success_threshold
+decl_stmt|;
+name|int
+name|recovery
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|ural_softc
 block|{
 name|struct
@@ -202,6 +228,9 @@ decl_stmt|;
 name|uint8_t
 name|rf_rev
 decl_stmt|;
+name|usbd_xfer_handle
+name|amrr_xfer
+decl_stmt|;
 name|usbd_pipe_handle
 name|sc_rx_pipeh
 decl_stmt|;
@@ -215,6 +244,10 @@ decl_stmt|;
 name|struct
 name|usb_task
 name|sc_task
+decl_stmt|;
+name|struct
+name|ural_amrr
+name|amrr
 decl_stmt|;
 name|struct
 name|ural_rx_data
@@ -245,8 +278,18 @@ name|struct
 name|callout
 name|scan_ch
 decl_stmt|;
+name|struct
+name|callout
+name|amrr_ch
+decl_stmt|;
 name|int
 name|sc_tx_timer
+decl_stmt|;
+name|uint16_t
+name|sta
+index|[
+literal|11
+index|]
 decl_stmt|;
 name|uint32_t
 name|rf_regs
