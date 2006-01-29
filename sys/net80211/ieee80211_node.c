@@ -3079,7 +3079,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 		 * Decrement the failure counts so entries will be 		 * reconsidered the next time around.  We really want 		 * to do this only for sta's where we've previously 		 had some success. 		 */
+comment|/* 		 * Decrement the failure counts so entries will be 		 * reconsidered the next time around.  We really want 		 * to do this only for sta's where we've previously 		 * had some success. 		 */
 name|IEEE80211_NODE_LOCK
 argument_list|(
 name|nt
@@ -3497,11 +3497,20 @@ name|obss
 operator|!=
 name|NULL
 condition|)
+block|{
+name|copy_bss
+argument_list|(
+name|selbs
+argument_list|,
+name|obss
+argument_list|)
+expr_stmt|;
 name|ieee80211_free_node
 argument_list|(
 name|obss
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Set the erp state (mostly the slot time) to deal with 	 * the auto-select case; this should be redundant if the 	 * mode is locked. 	 */
 name|ic
 operator|->
