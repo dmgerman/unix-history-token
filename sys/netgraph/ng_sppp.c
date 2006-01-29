@@ -1095,6 +1095,12 @@ name|if_softc
 operator|=
 name|priv
 expr_stmt|;
+name|priv
+operator|->
+name|ifp
+operator|=
+name|ifp
+expr_stmt|;
 comment|/* Get an interface unit number */
 if|if
 condition|(
