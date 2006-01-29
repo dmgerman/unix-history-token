@@ -8426,7 +8426,7 @@ argument_list|)
 init|;
 name|rid
 operator|<
-name|PCIR_CARDBUSCIS
+name|PCIR_CIS
 condition|;
 control|)
 block|{
@@ -8482,7 +8482,7 @@ if|if
 condition|(
 name|rid
 operator|>=
-name|PCIR_CARDBUSCIS
+name|PCIR_CIS
 condition|)
 block|{
 name|printf
