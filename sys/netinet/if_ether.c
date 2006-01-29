@@ -2908,12 +2908,6 @@ operator|||
 name|ifp
 operator|->
 name|if_bridge
-operator|||
-name|ifp
-operator|->
-name|if_type
-operator|==
-name|IFT_BRIDGE
 condition|)
 name|bridged
 operator|=
