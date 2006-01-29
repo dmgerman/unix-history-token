@@ -775,13 +775,9 @@ name|IEEE80211_BINTVAL_DEFAULT
 expr_stmt|;
 name|ic
 operator|->
-name|ic_bmisstimeout
+name|ic_bmissthreshold
 operator|=
 literal|7
-operator|*
-name|ic
-operator|->
-name|ic_bintval
 expr_stmt|;
 comment|/* default 7 beacons */
 name|ic

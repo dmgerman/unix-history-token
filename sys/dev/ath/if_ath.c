@@ -9820,14 +9820,9 @@ name|bs
 operator|.
 name|bs_bmissthreshold
 operator|=
-name|howmany
-argument_list|(
 name|ic
 operator|->
-name|ic_bmisstimeout
-argument_list|,
-name|intval
-argument_list|)
+name|ic_bmissthreshold
 expr_stmt|;
 if|if
 condition|(

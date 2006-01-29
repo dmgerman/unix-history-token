@@ -646,6 +646,9 @@ name|u_int16_t
 name|ic_fragthreshold
 decl_stmt|;
 name|u_int8_t
+name|ic_bmissthreshold
+decl_stmt|;
+name|u_int8_t
 name|ic_bmiss_count
 decl_stmt|;
 comment|/* current beacon miss count */
@@ -728,10 +731,6 @@ name|u_int16_t
 name|ic_txpowlimit
 decl_stmt|;
 comment|/* global tx power limit */
-name|u_int16_t
-name|ic_bmisstimeout
-decl_stmt|;
-comment|/* beacon miss threshold (ms) */
 name|u_int16_t
 name|ic_nonerpsta
 decl_stmt|;
