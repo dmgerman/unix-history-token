@@ -2001,13 +2001,18 @@ name|RW_LOCK_READ
 condition|)
 name|db_printf
 argument_list|(
-literal|"RLOCK: %d locks\n"
+literal|"RLOCK: %jd locks\n"
 argument_list|,
+call|(
+name|intmax_t
+call|)
+argument_list|(
 name|RW_READERS
 argument_list|(
 name|rw
 operator|->
 name|rw_lock
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
