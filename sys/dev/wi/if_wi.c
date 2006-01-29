@@ -8969,6 +8969,11 @@ name|n
 operator|=
 literal|0
 expr_stmt|;
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|__FreeBSD_version
@@ -9045,6 +9050,11 @@ name|n
 operator|++
 expr_stmt|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 return|return
 name|wi_write_rid
 argument_list|(

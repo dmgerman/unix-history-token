@@ -11256,6 +11256,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|__FreeBSD_version
@@ -11347,6 +11352,11 @@ name|nmcasts
 operator|++
 expr_stmt|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 block|}
 name|mcsp
 operator|->

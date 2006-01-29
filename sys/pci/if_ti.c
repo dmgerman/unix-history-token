@@ -7221,6 +7221,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Now program new ones. */
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
@@ -7305,6 +7310,11 @@ name|mc_addr
 argument_list|)
 expr_stmt|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 comment|/* Re-enable interrupts. */
 name|CSR_WRITE_4
 argument_list|(

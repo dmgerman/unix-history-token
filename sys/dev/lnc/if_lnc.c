@@ -960,6 +960,11 @@ argument_list|,
 name|MULTICAST_FILTER_LEN
 argument_list|)
 expr_stmt|;
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
@@ -1021,6 +1026,11 @@ literal|7
 operator|)
 expr_stmt|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

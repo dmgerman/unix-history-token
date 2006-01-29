@@ -2857,6 +2857,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * From the 11 bits returned by the crc routine, the top 7 	 * bits represent the 16-bit word in the mcast hash table 	 * that needs to be updated, and the lower 4 bits represent 	 * which bit within that byte needs to be set. 	 */
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
@@ -2943,6 +2948,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|CSR_WRITE_4
 argument_list|(
 name|sc

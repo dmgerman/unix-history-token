@@ -5739,6 +5739,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
@@ -5819,6 +5824,11 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|mcast
 operator|.
 name|wi_len

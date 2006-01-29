@@ -3015,6 +3015,11 @@ operator|~
 name|IFF_ALLMULTI
 expr_stmt|;
 comment|/* Loop through multicast addresses */
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
@@ -3074,6 +3079,11 @@ name|mcount
 operator|++
 expr_stmt|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|NIC_PUT
 argument_list|(
 name|sc

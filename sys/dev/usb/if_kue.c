@@ -1297,6 +1297,11 @@ operator|&=
 operator|~
 name|KUE_RXFILT_ALLMULTI
 expr_stmt|;
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|__FreeBSD_version
@@ -1373,6 +1378,11 @@ name|i
 operator|++
 expr_stmt|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|i

@@ -3927,6 +3927,11 @@ name|count
 operator|=
 literal|0
 expr_stmt|;
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|maddr
@@ -3951,6 +3956,11 @@ name|count
 operator|++
 expr_stmt|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4145,6 +4155,11 @@ operator|*
 literal|6
 argument_list|)
 expr_stmt|;
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|maddr
@@ -4217,6 +4232,11 @@ operator|++
 argument_list|)
 expr_stmt|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 comment|/* Program our MAC address as well */
 comment|/* XXX: Is this necessary?  The Linux driver does this 		 * but the NetBSD driver does not */
 name|addr

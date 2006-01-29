@@ -15705,6 +15705,13 @@ name|multicnt
 operator|=
 literal|0
 expr_stmt|;
+name|IF_ADDR_LOCK
+argument_list|(
+name|sc
+operator|->
+name|tulip_ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
@@ -16502,6 +16509,13 @@ endif|#
 directive|endif
 block|}
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|sc
+operator|->
+name|tulip_ifp
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|defined

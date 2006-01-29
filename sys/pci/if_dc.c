@@ -5001,6 +5001,11 @@ argument_list|,
 name|DC_NETCFG_RX_ALLMULTI
 argument_list|)
 expr_stmt|;
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
@@ -5059,6 +5064,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -5386,6 +5396,11 @@ operator|)
 condition|)
 return|return;
 comment|/* Now program new ones. */
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
@@ -5484,6 +5499,11 @@ operator|)
 operator|)
 expr_stmt|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -5760,6 +5780,11 @@ operator|)
 condition|)
 return|return;
 comment|/* now program new ones */
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
@@ -5831,6 +5856,11 @@ operator|)
 operator|)
 expr_stmt|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -6089,6 +6119,11 @@ argument_list|,
 name|DC_NETCFG_RX_ALLMULTI
 argument_list|)
 expr_stmt|;
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
@@ -6147,6 +6182,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ifp

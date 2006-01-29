@@ -2537,6 +2537,11 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* Now program new ones */
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
@@ -2721,6 +2726,11 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 end_function

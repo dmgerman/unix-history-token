@@ -4724,6 +4724,11 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|__FreeBSD_version
@@ -4794,6 +4799,11 @@ literal|0x7
 operator|)
 expr_stmt|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* disable all multicast */

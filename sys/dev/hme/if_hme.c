@@ -8200,6 +8200,13 @@ operator||=
 name|HME_MAC_RXCFG_HENABLE
 expr_stmt|;
 comment|/* 	 * Set up multicast address filter by passing all multicast addresses 	 * through a crc generator, and then using the high order 6 bits as an 	 * index into the 64 bit logical address filter.  The high order bit 	 * selects the word, while the rest of the bits select the bit within 	 * the word. 	 */
+name|IF_ADDR_LOCK
+argument_list|(
+name|sc
+operator|->
+name|sc_ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|inm
@@ -8261,6 +8268,13 @@ literal|0xf
 operator|)
 expr_stmt|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|sc
+operator|->
+name|sc_ifp
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|->
 name|if_flags

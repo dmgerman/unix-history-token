@@ -3765,6 +3765,11 @@ name|i
 operator|=
 literal|1
 expr_stmt|;
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH_REVERSE
 argument_list|(
 argument|ifma
@@ -3870,6 +3875,11 @@ operator|)
 operator|)
 expr_stmt|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 block|}
 name|tl_dio_write32
 argument_list|(

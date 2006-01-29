@@ -1268,6 +1268,14 @@ name|IFF_ALLMULTI
 expr_stmt|;
 endif|#
 directive|endif
+name|IF_ADDR_LOCK
+argument_list|(
+name|PDQ_IFNET
+argument_list|(
+name|sc
+argument_list|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|ifma
@@ -1406,6 +1414,14 @@ name|num_addrs
 operator|--
 expr_stmt|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|PDQ_IFNET
+argument_list|(
+name|sc
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/*      * If not all the address fit into the CAM, turn on all-multicast mode.      */
 if|if
 condition|(

@@ -9700,6 +9700,13 @@ operator|+
 literal|8
 argument_list|)
 expr_stmt|;
+name|IF_ADDR_LOCK
+argument_list|(
+name|sc
+operator|->
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
@@ -9804,6 +9811,13 @@ operator|++
 name|cnt
 expr_stmt|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|sc
+operator|->
+name|ifp
+argument_list|)
+expr_stmt|;
 name|outw
 argument_list|(
 name|PIOR1

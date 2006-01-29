@@ -11720,6 +11720,11 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * The multicast list is only 16 items long so use promiscuous 	 * mode and don't bother updating the multicast list. 	 */
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
@@ -11738,6 +11743,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|ray_com_runq_done
 argument_list|(
 name|sc
@@ -11758,6 +11768,11 @@ operator|->
 name|if_flags
 operator||=
 name|IFF_ALLMULTI
+expr_stmt|;
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
 expr_stmt|;
 name|ray_com_runq_done
 argument_list|(
@@ -11848,6 +11863,11 @@ operator|+=
 name|ETHER_ADDR_LEN
 expr_stmt|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|ray_com_ecf
 argument_list|(
 name|sc

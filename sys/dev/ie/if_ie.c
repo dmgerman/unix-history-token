@@ -7593,6 +7593,13 @@ name|mcast_count
 operator|=
 literal|0
 expr_stmt|;
+name|IF_ADDR_LOCK
+argument_list|(
+name|sc
+operator|->
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
@@ -7690,6 +7697,13 @@ name|mcast_count
 operator|++
 expr_stmt|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|sc
+operator|->
+name|ifp
+argument_list|)
+expr_stmt|;
 name|setflag
 label|:
 name|sc

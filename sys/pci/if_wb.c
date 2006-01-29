@@ -2441,6 +2441,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* now program new ones */
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
@@ -2520,6 +2525,11 @@ name|mcnt
 operator|++
 expr_stmt|;
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mcnt
