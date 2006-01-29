@@ -12722,6 +12722,19 @@ name|power
 operator|=
 literal|31
 expr_stmt|;
+comment|/* adjust txpower using ifconfig settings */
+name|power
+operator|-=
+operator|(
+literal|100
+operator|-
+name|ic
+operator|->
+name|ic_txpowlimit
+operator|)
+operator|/
+literal|8
+expr_stmt|;
 name|DPRINTFN
 argument_list|(
 literal|2
