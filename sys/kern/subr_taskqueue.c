@@ -1578,7 +1578,7 @@ name|NULL
 argument_list|,
 name|SWI_TQ_FAST
 argument_list|,
-literal|0
+name|INTR_MPSAFE
 argument_list|,
 operator|&
 name|taskqueue_fast_ih
