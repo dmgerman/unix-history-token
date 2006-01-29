@@ -4971,6 +4971,10 @@ operator|==
 name|T_NO
 operator|||
 operator|*
+operator|(
+name|int8_t
+operator|*
+operator|)
 name|cp
 operator|==
 name|T_ATM_ABSENT
