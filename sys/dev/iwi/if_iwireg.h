@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2004, 2005  *      Damien Bergamini<damien.bergamini@free.fr>. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2004-2006  *      Damien Bergamini<damien.bergamini@free.fr>. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_define
@@ -894,7 +894,7 @@ directive|define
 name|IWI_DATA_XFLAG_QOS
 value|0x10
 name|uint8_t
-name|wep_txkey
+name|weptxkey
 decl_stmt|;
 name|uint8_t
 name|wepkey
@@ -997,10 +997,6 @@ name|IWI_CMD_SET_WEP_KEY
 value|18
 define|#
 directive|define
-name|IWI_CMD_SCAN
-value|20
-define|#
-directive|define
 name|IWI_CMD_ASSOCIATE
 value|21
 define|#
@@ -1015,6 +1011,10 @@ define|#
 directive|define
 name|IWI_CMD_SET_WME_PARAMS
 value|25
+define|#
+directive|define
+name|IWI_CMD_SCAN
+value|26
 define|#
 directive|define
 name|IWI_CMD_SET_OPTIE
@@ -1136,7 +1136,7 @@ name|type
 decl_stmt|;
 define|#
 directive|define
-name|IWI_RATESET_TYPE_NEGOCIATED
+name|IWI_RATESET_TYPE_NEGOTIATED
 value|0
 define|#
 directive|define
@@ -1293,27 +1293,8 @@ begin_struct
 struct|struct
 name|iwi_scan
 block|{
-name|uint8_t
-name|type
-decl_stmt|;
-define|#
-directive|define
-name|IWI_SCAN_TYPE_PASSIVE
-value|1
-define|#
-directive|define
-name|IWI_SCAN_TYPE_DIRECTED
-value|2
-define|#
-directive|define
-name|IWI_SCAN_TYPE_BROADCAST
-value|3
-define|#
-directive|define
-name|IWI_SCAN_TYPE_BDIRECTED
-value|4
-name|uint16_t
-name|dwelltime
+name|uint32_t
+name|index
 decl_stmt|;
 name|uint8_t
 name|channels
@@ -1330,11 +1311,49 @@ directive|define
 name|IWI_CHAN_2GHZ
 value|(1<< 6)
 name|uint8_t
-name|reserved
+name|type
 index|[
-literal|3
+literal|27
 index|]
 decl_stmt|;
+define|#
+directive|define
+name|IWI_SCAN_TYPE_PASSIVE
+value|0x11
+define|#
+directive|define
+name|IWI_SCAN_TYPE_DIRECTED
+value|0x22
+define|#
+directive|define
+name|IWI_SCAN_TYPE_BROADCAST
+value|0x33
+define|#
+directive|define
+name|IWI_SCAN_TYPE_BDIRECTED
+value|0x44
+name|uint8_t
+name|reserved1
+decl_stmt|;
+name|uint16_t
+name|reserved2
+decl_stmt|;
+name|uint16_t
+name|passive
+decl_stmt|;
+comment|/* dwell time */
+name|uint16_t
+name|directed
+decl_stmt|;
+comment|/* dwell time */
+name|uint16_t
+name|broadcast
+decl_stmt|;
+comment|/* dwell time */
+name|uint16_t
+name|bdirected
+decl_stmt|;
+comment|/* dwell time */
 block|}
 name|__packed
 struct|;
@@ -1494,8 +1513,33 @@ end_struct
 begin_define
 define|#
 directive|define
+name|IWI_MEM_EVENT_CTL
+value|0x00300004
+end_define
+
+begin_define
+define|#
+directive|define
 name|IWI_MEM_EEPROM_CTL
 value|0x00300040
+end_define
+
+begin_comment
+comment|/* possible flags for register IWI_MEM_EVENT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWI_LED_ASSOC
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWI_LED_MASK
+value|0xd9fffffb
 end_define
 
 begin_define
@@ -1699,6 +1743,32 @@ end_define
 begin_comment
 comment|/*  * indirect memory space access macros  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MEM_READ_1
+parameter_list|(
+name|sc
+parameter_list|,
+name|addr
+parameter_list|)
+define|\
+value|(CSR_WRITE_4((sc), IWI_CSR_INDIRECT_ADDR, (addr)),		\ 	 CSR_READ_1((sc), IWI_CSR_INDIRECT_DATA))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MEM_READ_4
+parameter_list|(
+name|sc
+parameter_list|,
+name|addr
+parameter_list|)
+define|\
+value|(CSR_WRITE_4((sc), IWI_CSR_INDIRECT_ADDR, (addr)),		\ 	 CSR_READ_4((sc), IWI_CSR_INDIRECT_DATA))
+end_define
 
 begin_define
 define|#
