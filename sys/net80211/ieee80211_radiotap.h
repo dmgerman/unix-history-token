@@ -364,6 +364,17 @@ begin_comment
 comment|/* frame has padding between 						 * 802.11 header and payload 						 * (to 32-bit boundary) 						 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_RADIOTAP_F_BADFCS
+value|0x40
+end_define
+
+begin_comment
+comment|/* does not pass FCS check */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
