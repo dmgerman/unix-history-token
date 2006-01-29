@@ -1219,6 +1219,22 @@ return|return
 name|ENXIO
 return|;
 block|}
+comment|/* Enable workaround for dropped interrupts as required */
+if|if
+condition|(
+name|pci_get_vendor
+argument_list|(
+name|self
+argument_list|)
+operator|==
+name|PCI_EHCI_VENDORID_VIA
+condition|)
+name|sc
+operator|->
+name|sc_flags
+operator||=
+name|EHCI_SCFLG_LOSTINTRBUG
+expr_stmt|;
 comment|/* 	 * Find companion controllers.  According to the spec they always 	 * have lower function numbers so they should be enumerated already. 	 */
 name|parent
 operator|=

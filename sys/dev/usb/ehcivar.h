@@ -272,6 +272,17 @@ begin_comment
 comment|/* ehci_init() has been called. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EHCI_SCFLG_LOSTINTRBUG
+value|0x0002
+end_define
+
+begin_comment
+comment|/* workaround for VIA chipsets */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -451,6 +462,9 @@ name|sc_doorbell_lock
 decl_stmt|;
 name|usb_callout_t
 name|sc_tmo_pcd
+decl_stmt|;
+name|usb_callout_t
+name|sc_tmo_intrlist
 decl_stmt|;
 name|device_ptr_t
 name|sc_child
