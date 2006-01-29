@@ -1775,6 +1775,7 @@ directive|else
 comment|/* 		 * If some other thread has a write lock or we have one 		 * and are asserting a read lock, fail.  Also, if no one 		 * has a lock at all, fail. 		 */
 if|if
 condition|(
+operator|(
 name|rw
 operator|->
 name|rw_lock
@@ -1789,21 +1790,21 @@ name|rw_lock
 operator|&
 name|RW_LOCK_READ
 operator|)
+operator|)
 operator|&&
 operator|(
 name|what
 operator|==
-name|RW_RLOCKED
+name|RA_RLOCKED
 operator|||
-name|RW_OWNER
+operator|(
+name|rw_owner
 argument_list|(
 name|rw
 argument_list|)
 operator|!=
-operator|(
-name|uintptr_t
-operator|)
 name|curthread
+operator|)
 operator|)
 condition|)
 name|panic
@@ -1819,7 +1820,7 @@ argument_list|,
 operator|(
 name|what
 operator|==
-name|RW_RLOCKED
+name|RA_RLOCKED
 operator|)
 condition|?
 literal|"read "
