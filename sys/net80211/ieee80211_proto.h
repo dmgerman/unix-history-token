@@ -1242,6 +1242,11 @@ name|u_int16_t
 name|bo_trailer_len
 decl_stmt|;
 comment|/* trailer length in bytes */
+name|u_int8_t
+modifier|*
+name|bo_erp
+decl_stmt|;
+comment|/* start of ERP element */
 block|}
 struct|;
 end_struct
