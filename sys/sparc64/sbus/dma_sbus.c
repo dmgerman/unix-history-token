@@ -228,18 +228,6 @@ name|dma_get_resource_list
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static bus_setup_intr_t dma_setup_intr;
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 name|ofw_bus_get_compat_t
@@ -326,6 +314,27 @@ argument_list|,
 name|dma_attach
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|device_shutdown
+argument_list|,
+name|bus_generic_shutdown
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|device_suspend
+argument_list|,
+name|bus_generic_suspend
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|device_resume
+argument_list|,
+name|bus_generic_resume
+argument_list|)
+block|,
 comment|/* Bus interface */
 name|DEVMETHOD
 argument_list|(
@@ -341,12 +350,6 @@ argument_list|,
 name|dma_probe_nomatch
 argument_list|)
 block|,
-if|#
-directive|if
-literal|0
-block|DEVMETHOD(bus_setup_intr,	dma_setup_intr),
-else|#
-directive|else
 name|DEVMETHOD
 argument_list|(
 name|bus_setup_intr
@@ -354,8 +357,6 @@ argument_list|,
 name|bus_generic_setup_intr
 argument_list|)
 block|,
-endif|#
-directive|endif
 name|DEVMETHOD
 argument_list|(
 name|bus_teardown_intr
@@ -618,17 +619,6 @@ operator|=
 name|device_get_softc
 argument_list|(
 name|dev
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|dsc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|dma_softc
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|lsc
@@ -2037,23 +2027,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|static int dma_setup_intr(device_t dev, device_t child, struct resource *ires, int flags,     driver_intr_t *intr, void *arg, void **cookiep) { 	struct lsi64854_softc *sc;  	sc = (struct lsi64854_softc *)device_get_softc(dev);
-comment|/* XXX - for now only le; do ESP later */
-end_comment
-
-begin_endif
-unit|if (sc->sc_channel == L64854_CHANNEL_ENET) { 		sc->sc_intrchain = intr; 		sc->sc_intrchainarg = arg; 		intr = (driver_intr_t *)lsi64854_enet_intr; 		arg = sc; 	}  	return (BUS_SETUP_INTR(device_get_parent(dev), child, ires, flags, 	    intr, arg, cookiep)); }
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
