@@ -139,24 +139,6 @@ begin_comment
 comment|/*  * Drivers that support hardware VLAN tagging pass a packet's tag  * up through the stack by appending a packet tag with this value.  * Output is handled likewise, the driver must locate the packet  * tag to extract the VLAN tag.  The following macros are used to  * do this work.  On input, do:  *  *	VLAN_INPUT_TAG(ifp, m, tag,);  *  * to mark the packet m with the specified VLAN tag.  The last  * parameter provides code to execute in case of an error.  On  * output the driver should check mbuf to see if a VLAN tag is  * present and only then check for a tag; this is done with:  *  *	struct m_tag *mtag;  *	mtag = VLAN_OUTPUT_TAG(ifp, m);  *	if (mtag != NULL) {  *		... = VLAN_TAG_VALUE(mtag);  *		... pass tag to hardware ...  *	}  *  * Note that a driver must indicate it supports hardware VLAN  * tagging by marking IFCAP_VLAN_HWTAGGING in if_capabilities.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MTAG_VLAN
-value|1035328035
-end_define
-
-begin_define
-define|#
-directive|define
-name|MTAG_VLAN_TAG
-value|0
-end_define
-
-begin_comment
-comment|/* tag of VLAN interface */
-end_comment
-
 begin_comment
 comment|/*  * This macro must expand to a lvalue so that it can be used  * to set a tag with a simple assignment.  */
 end_comment
@@ -182,7 +164,7 @@ name|_m
 parameter_list|,
 name|_t
 parameter_list|)
-value|do {			\ 	struct m_tag *mtag;					\ 	mtag = m_tag_alloc(MTAG_VLAN, MTAG_VLAN_TAG,		\ 			   sizeof (u_int), M_NOWAIT);		\ 	if (mtag != NULL) {					\ 		VLAN_TAG_VALUE(mtag) = (_t);			\ 		m_tag_prepend((_m), mtag);			\ 		(_m)->m_flags |= M_VLANTAG;			\ 	} else {						\ 		(_ifp)->if_ierrors++;				\ 		m_freem(_m);					\ 		_m = NULL;					\ 	}							\ } while (0)
+value|do {			\ 	struct m_tag *mtag = (struct m_tag *)			\ 	    uma_zalloc(zone_mtag_vlan, M_NOWAIT);		\ 	if (mtag != NULL) {					\ 		VLAN_TAG_VALUE(mtag) = (_t);			\ 		m_tag_prepend((_m), mtag);			\ 		(_m)->m_flags |= M_VLANTAG;			\ 	} else {						\ 		(_ifp)->if_ierrors++;				\ 		m_freem(_m);					\ 		_m = NULL;					\ 	}							\ } while (0)
 end_define
 
 begin_define
@@ -197,6 +179,31 @@ parameter_list|)
 define|\
 value|((_m)->m_flags& M_VLANTAG ?				\ 		m_tag_locate((_m), MTAG_VLAN, MTAG_VLAN_TAG, NULL) : NULL)
 end_define
+
+begin_define
+define|#
+directive|define
+name|VLAN_CAPABILITIES
+parameter_list|(
+name|_ifp
+parameter_list|)
+value|do {				\ 	if ((_ifp)->if_vlantrunk != NULL) 			\ 		(*vlan_trunk_cap_p)(_ifp);			\ } while (0)
+end_define
+
+begin_function_decl
+specifier|extern
+name|void
+function_decl|(
+modifier|*
+name|vlan_trunk_cap_p
+function_decl|)
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

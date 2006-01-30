@@ -718,6 +718,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IFCAP_VLAN_HWCSUM
+value|0x0080
+end_define
+
+begin_comment
+comment|/* can do IFCAP_HWCSUM on VLANs */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IFCAP_HWCSUM
 value|(IFCAP_RXCSUM | IFCAP_TXCSUM)
 end_define

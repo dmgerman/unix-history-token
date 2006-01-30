@@ -2939,9 +2939,9 @@ operator|)
 operator|&&
 name|ifp
 operator|->
-name|if_nvlans
-operator|>
-literal|0
+name|if_vlantrunk
+operator|!=
+name|NULL
 operator|)
 condition|)
 block|{
@@ -3183,9 +3183,9 @@ if|if
 condition|(
 name|ifp
 operator|->
-name|if_nvlans
+name|if_vlantrunk
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|ifp
@@ -3237,9 +3237,9 @@ if|if
 condition|(
 name|ifp
 operator|->
-name|if_nvlans
+name|if_vlantrunk
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|KASSERT

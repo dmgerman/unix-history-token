@@ -1416,6 +1416,13 @@ name|zone_ext_refcnt
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|uma_zone_t
+name|zone_mtag_vlan
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 specifier|static
 name|__inline
@@ -3421,6 +3428,28 @@ end_define
 
 begin_comment
 comment|/* CARP info */
+end_comment
+
+begin_comment
+comment|/* Specific cookies and tags. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTAG_VLAN
+value|1035328035
+end_define
+
+begin_define
+define|#
+directive|define
+name|MTAG_VLAN_TAG
+value|0
+end_define
+
+begin_comment
+comment|/* tag of VLAN interface */
 end_comment
 
 begin_comment

@@ -4828,6 +4828,24 @@ begin_comment
 comment|/* XXX: private from if_vlan */
 end_comment
 
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|vlan_trunk_cap_p
+function_decl|)
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* XXX: private from if_vlan */
+end_comment
+
 begin_comment
 comment|/*  * Handle a change in the interface link state. To avoid LORs  * between driver lock and upper layer locks, as well as possible  * recursions, we post event to taskqueue, and all job  * is done in static do_link_state_change().  */
 end_comment
@@ -4955,9 +4973,9 @@ if|if
 condition|(
 name|ifp
 operator|->
-name|if_nvlans
+name|if_vlantrunk
 operator|!=
-literal|0
+name|NULL
 condition|)
 call|(
 modifier|*

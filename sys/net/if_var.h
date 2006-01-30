@@ -71,6 +71,12 @@ name|carp_if
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|ifvlantrunk
+struct_decl|;
+end_struct_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -322,10 +328,12 @@ name|short
 name|if_timer
 decl_stmt|;
 comment|/* time 'til if_watchdog called */
-name|u_short
-name|if_nvlans
+name|struct
+name|ifvlantrunk
+modifier|*
+name|if_vlantrunk
 decl_stmt|;
-comment|/* number of active vlans */
+comment|/* pointer to 802.1q data */
 name|int
 name|if_flags
 decl_stmt|;
