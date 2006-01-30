@@ -4025,7 +4025,7 @@ name|GID_WHEEL
 argument_list|,
 literal|0666
 argument_list|,
-literal|"pty%d"
+literal|"pty/%d"
 argument_list|,
 name|pt
 operator|->
