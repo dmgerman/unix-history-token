@@ -1831,6 +1831,7 @@ name|allerror
 operator|=
 name|error
 expr_stmt|;
+comment|/* Do not turn this into vput.  td is not always curthread. */
 name|VOP_UNLOCK
 argument_list|(
 name|vp
