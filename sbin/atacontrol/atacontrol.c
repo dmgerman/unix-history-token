@@ -600,15 +600,6 @@ operator|!=
 literal|0xffff
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"satacap=0x%04x\n"
-argument_list|,
-name|parm
-operator|->
-name|satacapabilities
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|parm
