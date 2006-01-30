@@ -411,6 +411,11 @@ decl_stmt|;
 name|u_int8_t
 name|tos
 decl_stmt|;
+name|GIF_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sin_src

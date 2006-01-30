@@ -375,6 +375,11 @@ name|itos
 decl_stmt|,
 name|otos
 decl_stmt|;
+name|GIF_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sin6_src
