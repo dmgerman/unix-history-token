@@ -190,7 +190,7 @@ name|NULL
 block|,
 name|G_NULL_OPTS
 block|,
-literal|"[-v] name prov prov ..."
+literal|"[-v] name prov ..."
 block|}
 block|,
 block|{
@@ -252,7 +252,7 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-literal|"[-hv] name prov prov ..."
+literal|"[-hv] name prov ..."
 block|}
 block|,
 block|{
@@ -463,7 +463,7 @@ expr_stmt|;
 if|if
 condition|(
 name|nargs
-operator|<=
+operator|<
 literal|2
 condition|)
 block|{

@@ -2198,13 +2198,13 @@ operator|->
 name|md_id
 argument_list|)
 expr_stmt|;
-comment|/* Two disks is minimum. */
+comment|/* One disks is minimum. */
 if|if
 condition|(
 name|md
 operator|->
 name|md_all
-operator|<=
+operator|<
 literal|1
 condition|)
 return|return
@@ -3396,7 +3396,7 @@ if|if
 condition|(
 operator|*
 name|nargs
-operator|<=
+operator|<
 literal|2
 condition|)
 block|{
