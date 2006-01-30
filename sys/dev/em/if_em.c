@@ -4251,6 +4251,11 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+name|VLAN_CAPABILITIES
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 default|default:
@@ -10046,12 +10051,16 @@ operator|->
 name|if_capabilities
 operator||=
 name|IFCAP_HWCSUM
+operator||
+name|IFCAP_VLAN_HWCSUM
 expr_stmt|;
 name|ifp
 operator|->
 name|if_capenable
 operator||=
 name|IFCAP_HWCSUM
+operator||
+name|IFCAP_VLAN_HWCSUM
 expr_stmt|;
 block|}
 comment|/* 	 * Tell the upper layer(s) we support long frames. 	 */

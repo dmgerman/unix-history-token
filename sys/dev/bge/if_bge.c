@@ -10396,6 +10396,8 @@ operator||
 name|IFCAP_VLAN_HWTAGGING
 operator||
 name|IFCAP_VLAN_MTU
+operator||
+name|IFCAP_VLAN_HWCSUM
 expr_stmt|;
 name|ifp
 operator|->
@@ -16105,6 +16107,11 @@ operator|->
 name|if_hwassist
 operator|=
 literal|0
+expr_stmt|;
+name|VLAN_CAPABILITIES
+argument_list|(
+name|ifp
+argument_list|)
 expr_stmt|;
 block|}
 break|break;
