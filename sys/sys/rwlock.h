@@ -643,7 +643,7 @@ name|rw
 parameter_list|,
 name|what
 parameter_list|)
-value|_rw_assert((sx), (what), LOCK_FILE, LOCK_LINE)
+value|_rw_assert((rw), (what), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_else
