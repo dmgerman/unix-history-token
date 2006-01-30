@@ -14667,7 +14667,7 @@ name|uma_zone_set_max
 argument_list|(
 name|sc
 operator|->
-name|sc_zone_64k
+name|sc_zone_16k
 argument_list|,
 name|g_raid3_n16k
 argument_list|)
