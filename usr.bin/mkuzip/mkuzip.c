@@ -556,7 +556,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s"
+literal|"stat(%s)"
 argument_list|,
 name|iname
 argument_list|)
@@ -653,7 +653,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s"
+literal|"open(%s)"
 argument_list|,
 name|iname
 argument_list|)
@@ -694,7 +694,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s"
+literal|"open(%s)"
 argument_list|,
 name|oname
 argument_list|)
@@ -980,7 +980,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s"
+literal|"write(%s)"
 argument_list|,
 name|oname
 argument_list|)
@@ -1107,7 +1107,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s"
+literal|"writev(%s)"
 argument_list|,
 name|oname
 argument_list|)
