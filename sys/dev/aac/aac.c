@@ -31,13 +31,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|AAC_DRIVER_BUILD_DATE
-value|__DATE__ " " __TIME__
-end_define
-
-begin_define
-define|#
-directive|define
 name|AAC_DRIVERNAME
 value|"aac"
 end_define
@@ -1685,6 +1678,14 @@ operator|->
 name|aac_container_tqh
 argument_list|)
 expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|aac_ev_cmfree
+argument_list|)
+expr_stmt|;
 comment|/* Initialize the local AIF queue pointers */
 name|sc
 operator|->
@@ -1715,7 +1716,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/*  	 * Allocate and connect our interrupt. 	 */
+comment|/* 	 * Allocate and connect our interrupt. 	 */
 name|sc
 operator|->
 name|aac_irq_rid
@@ -1900,7 +1901,7 @@ return|;
 block|}
 block|}
 block|}
-comment|/*  	 * Print a little information about the controller. 	 */
+comment|/* 	 * Print a little information about the controller. 	 */
 name|aac_describe_controller
 argument_list|(
 name|sc
@@ -2477,7 +2478,7 @@ decl_stmt|;
 name|device_t
 name|child
 decl_stmt|;
-comment|/*  	 * Check container volume type for validity.  Note that many of 	 * the possible types may never show up. 	 */
+comment|/* 	 * Check container volume type for validity.  Note that many of 	 * the possible types may never show up. 	 */
 if|if
 condition|(
 operator|(
@@ -3244,7 +3245,7 @@ name|aac_state
 operator||=
 name|AAC_STATE_SUSPEND
 expr_stmt|;
-comment|/*  	 * Send a Container shutdown followed by a HostShutdown FIB to the 	 * controller to convince it that we don't want to talk to it anymore. 	 * We've been closed and all I/O completed already 	 */
+comment|/* 	 * Send a Container shutdown followed by a HostShutdown FIB to the 	 * controller to convince it that we don't want to talk to it anymore. 	 * We've been closed and all I/O completed already 	 */
 name|device_printf
 argument_list|(
 name|sc
@@ -3986,7 +3987,7 @@ operator|&
 name|AAC_QUEUE_FRZN
 condition|)
 break|break;
-comment|/* 		 * Try to get a command that's been put off for lack of  		 * resources 		 */
+comment|/* 		 * Try to get a command that's been put off for lack of 		 * resources 		 */
 name|cm
 operator|=
 name|aac_dequeue_ready
@@ -3994,7 +3995,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Try to build a command off the bio queue (ignore error  		 * return) 		 */
+comment|/* 		 * Try to build a command off the bio queue (ignore error 		 * return) 		 */
 if|if
 condition|(
 name|cm
@@ -4877,7 +4878,7 @@ name|cm
 operator|->
 name|cm_timestamp
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 name|cm
 operator|->
@@ -5982,7 +5983,7 @@ name|cm_sc
 operator|->
 name|aac_max_fib_size
 expr_stmt|;
-comment|/*  	 * These are duplicated in aac_start to cover the case where an 	 * intermediate stage may have destroyed them.  They're left 	 * initialised here for debugging purposes only. 	 */
+comment|/* 	 * These are duplicated in aac_start to cover the case where an 	 * intermediate stage may have destroyed them.  They're left 	 * initialised here for debugging purposes only. 	 */
 name|cm
 operator|->
 name|cm_fib
@@ -7055,7 +7056,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Fix up the address values in the FIB.  Use the command array index 	 * instead of a pointer since these fields are only 32 bits.  Shift 	 * the SenderFibAddress over to make room for the fast response bit  	 * and for the AIF bit 	 */
+comment|/* Fix up the address values in the FIB.  Use the command array index 	 * instead of a pointer since these fields are only 32 bits.  Shift 	 * the SenderFibAddress over to make room for the fast response bit 	 * and for the AIF bit 	 */
 name|cm
 operator|->
 name|cm_fib
@@ -8141,7 +8142,7 @@ expr_stmt|;
 comment|/* 	 * First wait for the adapter to come ready. 	 */
 name|then
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 do|do
 block|{
@@ -8198,7 +8199,7 @@ return|;
 block|}
 if|if
 condition|(
-name|time_second
+name|time_uptime
 operator|>
 operator|(
 name|then
@@ -8788,7 +8789,7 @@ name|PrintfBufferSize
 operator|=
 name|AAC_PRINTF_BUFSIZE
 expr_stmt|;
-comment|/*  	 * The adapter assumes that pages are 4K in size, except on some  	 * broken firmware versions that do the page->byte conversion twice, 	 * therefore 'assuming' that this value is in 16MB units (2^24). 	 * Round up since the granularity is so high. 	 */
+comment|/* 	 * The adapter assumes that pages are 4K in size, except on some  	 * broken firmware versions that do the page->byte conversion twice, 	 * therefore 'assuming' that this value is in 16MB units (2^24). 	 * Round up since the granularity is so high. 	 */
 name|ip
 operator|->
 name|HostPhysMemPages
@@ -8828,7 +8829,7 @@ name|ip
 operator|->
 name|HostElapsedSeconds
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 comment|/* reset later if invalid */
 name|ip
@@ -8888,7 +8889,7 @@ name|sc
 operator|->
 name|aac_max_fib_size
 expr_stmt|;
-comment|/* 	 * Initialise FIB queues.  Note that it appears that the layout of the 	 * indexes and the segmentation of the entries may be mandated by the 	 * adapter, which is only told about the base of the queue index fields. 	 * 	 * The initial values of the indices are assumed to inform the adapter 	 * of the sizes of the respective queues, and theoretically it could  	 * work out the entire layout of the queue structures from this.  We 	 * take the easy route and just lay this area out like everyone else 	 * does. 	 * 	 * The Linux driver uses a much more complex scheme whereby several  	 * header records are kept for each queue.  We use a couple of generic  	 * list manipulation functions which 'know' the size of each list by 	 * virtue of a table. 	 */
+comment|/* 	 * Initialise FIB queues.  Note that it appears that the layout of the 	 * indexes and the segmentation of the entries may be mandated by the 	 * adapter, which is only told about the base of the queue index fields. 	 * 	 * The initial values of the indices are assumed to inform the adapter 	 * of the sizes of the respective queues, and theoretically it could 	 * work out the entire layout of the queue structures from this.  We 	 * take the easy route and just lay this area out like everyone else 	 * does. 	 * 	 * The Linux driver uses a much more complex scheme whereby several 	 * header records are kept for each queue.  We use a couple of generic 	 * list manipulation functions which 'know' the size of each list by 	 * virtue of a table. 	 */
 name|qoffset
 operator|=
 name|offsetof
@@ -9481,13 +9482,13 @@ expr_stmt|;
 comment|/* spin waiting for the command to complete */
 name|then
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 do|do
 block|{
 if|if
 condition|(
-name|time_second
+name|time_uptime
 operator|>
 operator|(
 name|then
@@ -10657,7 +10658,7 @@ literal|0
 expr_stmt|;
 name|deadline
 operator|=
-name|time_second
+name|time_uptime
 operator|-
 name|AAC_CMD_TIMEOUT
 expr_stmt|;
@@ -10702,7 +10703,7 @@ call|(
 name|int
 call|)
 argument_list|(
-name|time_second
+name|time_uptime
 operator|-
 name|cm
 operator|->
@@ -12412,7 +12413,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * New comm. interface: get, set outbound queue index   */
+comment|/*  * New comm. interface: get, set outbound queue index  */
 end_comment
 
 begin_function
@@ -13247,7 +13248,7 @@ argument_list|,
 literal|"FSACTL_OPEN_GET_ADAPTER_FIB"
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Pass the caller out an AdapterFibContext. 		 * 		 * Note that because we only support one opener, we 		 * basically ignore this.  Set the caller's context to a magic 		 * number just in case. 		 * 		 * The Linux code hands the driver a pointer into kernel space, 		 * and then trusts it when the caller hands it back.  Aiee! 		 * Here, we give it the proc pointer of the per-adapter aif  		 * thread. It's only used as a sanity check in other calls. 		 */
+comment|/* 		 * Pass the caller out an AdapterFibContext. 		 * 		 * Note that because we only support one opener, we 		 * basically ignore this.  Set the caller's context to a magic 		 * number just in case. 		 * 		 * The Linux code hands the driver a pointer into kernel space, 		 * and then trusts it when the caller hands it back.  Aiee! 		 * Here, we give it the proc pointer of the per-adapter aif 		 * thread. It's only used as a sanity check in other calls. 		 */
 name|cookie
 operator|=
 operator|(
@@ -13393,7 +13394,7 @@ case|:
 case|case
 name|FSACTL_LNX_DELETE_DISK
 case|:
-comment|/* 		 * We don't trust the underland to tell us when to delete a 		 * container, rather we rely on an AIF coming from the  		 * controller 		 */
+comment|/* 		 * We don't trust the underland to tell us when to delete a 		 * container, rather we rely on an AIF coming from the 		 * controller 		 */
 name|error
 operator|=
 literal|0
@@ -13933,7 +13934,7 @@ name|cm
 operator|->
 name|cm_timestamp
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 comment|/* 	 * Pass the FIB to the controller, wait for it to complete. 	 */
 if|if
@@ -14178,7 +14179,7 @@ case|:
 case|case
 name|AifEnDeleteContainer
 case|:
-comment|/* 			 * A container was added or deleted, but the message  			 * doesn't tell us anything else!  Re-enumerate the 			 * containers and sort things out. 			 */
+comment|/* 			 * A container was added or deleted, but the message 			 * doesn't tell us anything else!  Re-enumerate the 			 * containers and sort things out. 			 */
 name|aac_alloc_sync_fib
 argument_list|(
 name|sc
