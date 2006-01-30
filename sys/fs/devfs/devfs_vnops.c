@@ -1069,7 +1069,6 @@ name|int
 name|error
 decl_stmt|;
 comment|/* 	 * Hack: a tty device that is a controlling terminal 	 * has a reference from the session structure. 	 * We cannot easily tell that a character device is 	 * a controlling terminal, unless it is the closing 	 * process' controlling terminal.  In that case, 	 * if the reference count is 2 (this last descriptor 	 * plus the session), release the reference from the session. 	 */
-comment|/* 	 * This needs to be rewritten to take the vp interlock into 	 * consideration. 	 */
 name|oldvp
 operator|=
 name|NULL
