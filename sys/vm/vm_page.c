@@ -2609,31 +2609,23 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|#
-directive|if
-name|defined
+name|KASSERT
 argument_list|(
-name|DIAGNOSTIC
-argument_list|)
-if|if
-condition|(
 name|cnt
 operator|.
 name|v_cache_count
-operator|>
+operator|==
 literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"vm_page_alloc(NORMAL): missing pages on cache queue: %d\n"
 argument_list|,
+operator|(
+literal|"vm_page_alloc: cache queue is missing %d pages"
+operator|,
 name|cnt
 operator|.
 name|v_cache_count
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
