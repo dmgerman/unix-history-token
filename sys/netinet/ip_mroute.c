@@ -7716,11 +7716,11 @@ argument_list|)
 expr_stmt|;
 name|TV_DELTA
 argument_list|(
+name|now
+argument_list|,
 name|rt
 operator|->
 name|mfc_last_assert
-argument_list|,
-name|now
 argument_list|,
 name|delta
 argument_list|)
