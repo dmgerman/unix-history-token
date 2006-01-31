@@ -1477,6 +1477,15 @@ name|firstvararg
 parameter_list|)
 end_define
 
+begin_define
+define|#
+directive|define
+name|__format_arg
+parameter_list|(
+name|fmtarg
+parameter_list|)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1506,6 +1515,16 @@ name|firstvararg
 parameter_list|)
 define|\
 value|__attribute__((__format__ (__scanf__, fmtarg, firstvararg)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__format_arg
+parameter_list|(
+name|fmtarg
+parameter_list|)
+value|__attribute__((__format_arg__ (fmtarg)))
 end_define
 
 begin_endif

@@ -203,15 +203,13 @@ specifier|const
 name|char
 modifier|*
 parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(__format_arg__
+function_decl|__format_arg
 parameter_list|(
 function_decl|4
 end_function_decl
 
 begin_empty_stmt
-unit|)))
+unit|)
 empty_stmt|;
 end_empty_stmt
 
