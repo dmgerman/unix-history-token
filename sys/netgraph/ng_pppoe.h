@@ -132,8 +132,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|NG_PPPOE_NONSTANDARD
+name|NG_PPPOE_3COM
 value|"3Com"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_PPPOE_NONSTANDARD
+value|NG_PPPOE_3COM
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_PPPOE_DLINK
+value|"D-Link"
 end_define
 
 begin_comment
@@ -487,7 +501,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ETHERTYPE_PPPOE_STUPID_DISC
+name|ETHERTYPE_PPPOE_3COM_DISC
 value|0x3c12
 end_define
 
@@ -498,7 +512,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ETHERTYPE_PPPOE_STUPID_SESS
+name|ETHERTYPE_PPPOE_3COM_SESS
 value|0x3c13
 end_define
 
@@ -606,7 +620,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ETHERTYPE_PPPOE_STUPID_DISC
+name|ETHERTYPE_PPPOE_3COM_DISC
 value|0x123c
 end_define
 
@@ -617,7 +631,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ETHERTYPE_PPPOE_STUPID_SESS
+name|ETHERTYPE_PPPOE_3COM_SESS
 value|0x133c
 end_define
 
