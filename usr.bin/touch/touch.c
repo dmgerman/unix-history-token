@@ -711,6 +711,7 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
+continue|continue;
 block|}
 comment|/* 		 * System V and POSIX 1003.1 require that a NULL argument 		 * set the access/modification times to the current time. 		 * The permission checks are different, too, in that the 		 * ability to write the file is sufficient.  Take a shot. 		 */
 if|if
