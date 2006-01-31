@@ -174,6 +174,10 @@ modifier|*
 name|gif_ifp
 decl_stmt|;
 name|struct
+name|mtx
+name|gif_mtx
+decl_stmt|;
+name|struct
 name|sockaddr
 modifier|*
 name|gif_psrc
@@ -244,6 +248,56 @@ parameter_list|(
 name|sc
 parameter_list|)
 value|((sc)->gif_ifp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GIF_LOCK_INIT
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_init(&(sc)->gif_mtx, "gif softc",	\ 				     NULL, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GIF_LOCK_DESTROY
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_destroy(&(sc)->gif_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GIF_LOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_lock(&(sc)->gif_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GIF_UNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_unlock(&(sc)->gif_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GIF_LOCK_ASSERT
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_assert(&(sc)->gif_mtx, MA_OWNED)
 end_define
 
 begin_define
@@ -358,17 +412,6 @@ end_define
 begin_comment
 comment|/* Prototypes */
 end_comment
-
-begin_function_decl
-name|void
-name|gifattach0
-parameter_list|(
-name|struct
-name|gif_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
