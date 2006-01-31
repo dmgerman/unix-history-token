@@ -176,6 +176,13 @@ name|VLAN_DEF_HWIDTH
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|VLAN_IFFLAGS
+value|(IFF_BROADCAST | IFF_MULTICAST)
+end_define
+
 begin_expr_stmt
 name|LIST_HEAD
 argument_list|(
@@ -3166,6 +3173,12 @@ name|ifq_maxlen
 operator|=
 name|ifqmaxlen
 expr_stmt|;
+name|ifp
+operator|->
+name|if_flags
+operator|=
+name|VLAN_IFFLAGS
+expr_stmt|;
 name|ether_ifattach
 argument_list|(
 name|ifp
@@ -4251,6 +4264,23 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
+name|p
+operator|->
+name|if_flags
+operator|&
+name|VLAN_IFFLAGS
+operator|)
+operator|!=
+name|VLAN_IFFLAGS
+condition|)
+return|return
+operator|(
+name|EPROTONOSUPPORT
+operator|)
+return|;
+if|if
+condition|(
 name|ifv
 operator|->
 name|ifv_trunk
@@ -4500,8 +4530,7 @@ comment|/* 	 * Copy only a selected subset of flags from the parent. 	 * Other f
 define|#
 directive|define
 name|VLAN_COPY_FLAGS
-define|\
-value|(IFF_BROADCAST | IFF_MULTICAST | IFF_SIMPLEX | IFF_POINTOPOINT)
+value|(IFF_SIMPLEX)
 name|ifp
 operator|->
 name|if_flags
