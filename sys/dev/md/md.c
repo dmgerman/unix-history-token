@@ -286,33 +286,43 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/* Image gets put here: */
+comment|/*  * Preloaded image gets put here.  * Applications that patch the object with the image can determine  * the size looking at the start and end markers (strings),  * so we want them contiguous.  */
 end_comment
 
-begin_decl_stmt
+begin_struct
 specifier|static
+struct|struct
+block|{
 name|u_char
-name|mfs_root
+name|start
 index|[
 name|MD_ROOT_SIZE
 operator|*
 literal|1024
 index|]
-init|=
-literal|"MFS Filesystem goes here"
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|u_char
-name|end_mfs_root
-index|[]
-name|__unused
-init|=
-literal|"MFS Filesystem had better STOP here"
+name|end
+index|[
+literal|128
+index|]
 decl_stmt|;
-end_decl_stmt
+block|}
+name|mfs_root
+init|=
+block|{
+operator|.
+name|start
+operator|=
+literal|"MFS Filesystem goes here"
+block|,
+operator|.
+name|end
+operator|=
+literal|"MFS Filesystem had better STOP here"
+block|, }
+struct|;
+end_struct
 
 begin_endif
 endif|#
@@ -5816,10 +5826,15 @@ expr_stmt|;
 name|md_preloaded
 argument_list|(
 name|mfs_root
+operator|.
+name|start
 argument_list|,
-name|MD_ROOT_SIZE
-operator|*
-literal|1024
+sizeof|sizeof
+argument_list|(
+name|mfs_root
+operator|.
+name|start
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sx_xunlock
