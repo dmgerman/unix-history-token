@@ -6166,6 +6166,7 @@ argument_list|,
 literal|"no value for 'trace'"
 argument_list|)
 expr_stmt|;
+else|else
 name|snmp_trace
 operator|=
 name|strtoul
