@@ -1155,6 +1155,11 @@ operator|->
 name|td_ucred
 operator|->
 name|cr_prison
+operator|&&
+name|suser
+argument_list|(
+name|td
+argument_list|)
 condition|)
 block|{
 return|return
