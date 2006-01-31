@@ -3312,11 +3312,6 @@ name|gctl_req
 modifier|*
 name|req
 parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|prov
-parameter_list|,
 name|struct
 name|g_eli_metadata
 modifier|*
@@ -3965,8 +3960,6 @@ condition|)
 name|eli_setkey_attached
 argument_list|(
 name|req
-argument_list|,
-name|prov
 argument_list|,
 operator|&
 name|md
