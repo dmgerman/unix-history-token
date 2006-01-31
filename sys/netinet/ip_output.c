@@ -3307,6 +3307,10 @@ expr_stmt|;
 comment|/* 		 * This case can happen if the user changed the MTU 		 * of an interface after enabling IP on it.  Because 		 * most netifs don't keep track of routes pointing to 		 * them, there is no way for one to update all its 		 * routes when the MTU is changed. 		 */
 if|if
 condition|(
+name|ro
+operator|!=
+name|NULL
+operator|&&
 operator|(
 name|ro
 operator|->
