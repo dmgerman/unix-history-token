@@ -270,6 +270,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|FNICHOST
+value|"whois.afrinic.net"
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEFAULT_PORT
 value|"whois"
 end_define
@@ -327,6 +334,8 @@ block|,
 name|PNICHOST
 block|,
 name|BNICHOST
+block|,
+name|FNICHOST
 block|,
 name|NULL
 block|}
@@ -500,7 +509,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"aAbc:dgh:iIklmp:QrR6"
+literal|"aAbc:dfgh:iIklmp:QrR6"
 argument_list|)
 operator|)
 operator|!=
@@ -551,6 +560,14 @@ case|:
 name|host
 operator|=
 name|DNICHOST
+expr_stmt|;
+break|break;
+case|case
+literal|'f'
+case|:
+name|host
+operator|=
+name|FNICHOST
 expr_stmt|;
 break|break;
 case|case
@@ -1791,7 +1808,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: whois [-aAbdgiIklmQrR6] [-c country-code | -h hostname] "
+literal|"usage: whois [-aAbdfgiIklmQrR6] [-c country-code | -h hostname] "
 literal|"[-p port] name ...\n"
 argument_list|)
 expr_stmt|;
