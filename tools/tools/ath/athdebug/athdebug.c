@@ -155,21 +155,6 @@ init|=
 literal|0x00080000
 block|,
 comment|/* node management */
-name|ATH_DEBUG_LED
-init|=
-literal|0x00100000
-block|,
-comment|/* led management */
-name|ATH_DEBUG_FF
-init|=
-literal|0x00200000
-block|,
-comment|/* fast frames */
-name|ATH_DEBUG_DFS
-init|=
-literal|0x00400000
-block|,
-comment|/* DFS processing */
 name|ATH_DEBUG_FATAL
 init|=
 literal|0x80000000
@@ -299,24 +284,6 @@ block|{
 literal|"node"
 block|,
 name|ATH_DEBUG_NODE
-block|}
-block|,
-block|{
-literal|"led"
-block|,
-name|ATH_DEBUG_LED
-block|}
-block|,
-block|{
-literal|"ff"
-block|,
-name|ATH_DEBUG_FF
-block|}
-block|,
-block|{
-literal|"dfs"
-block|,
-name|ATH_DEBUG_DFS
 block|}
 block|,
 block|{

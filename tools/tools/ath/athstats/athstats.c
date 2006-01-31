@@ -64,25 +64,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../../../../sys/contrib/dev/ath/ah_desc.h"
+file|"../../../sys/contrib/dev/ath/ah_desc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../../../../sys/net80211/ieee80211_ioctl.h"
+file|"../../../sys/net80211/ieee80211_ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../../../../sys/net80211/ieee80211_radiotap.h"
+file|"../../../sys/net80211/ieee80211_radiotap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../../../../sys/dev/ath/if_athioctl.h"
+file|"../../../sys/dev/ath/if_athioctl.h"
 end_include
 
 begin_struct
