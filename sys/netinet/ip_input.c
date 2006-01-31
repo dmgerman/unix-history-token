@@ -8450,22 +8450,24 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
-elseif|else
+block|}
 endif|#
 directive|endif
 comment|/*IPSEC || FAST_IPSEC*/
-comment|/* 		 * When doing source routing 'ia' can be NULL.  Fall back 		 * to the minimum guaranteed routeable packet size and use 		 * the same hack as IPSEC to setup a dummyifp for icmp. 		 */
+comment|/* 		 * If the MTU wasn't set before use the interface mtu or 		 * fall back to the next smaller mtu step compared to the 		 * current packet size. 		 */
+if|if
+condition|(
+name|mtu
+operator|==
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 name|ia
-operator|==
+operator|!=
 name|NULL
 condition|)
-name|mtu
-operator|=
-name|IP_MSS
-expr_stmt|;
-else|else
 name|mtu
 operator|=
 name|ia
@@ -8474,21 +8476,19 @@ name|ia_ifp
 operator|->
 name|if_mtu
 expr_stmt|;
-if|#
-directive|if
-name|defined
+else|else
+name|mtu
+operator|=
+name|ip_next_mtu
 argument_list|(
-name|IPSEC
+name|ip
+operator|->
+name|ip_len
+argument_list|,
+literal|0
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|FAST_IPSEC
-argument_list|)
+expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/*IPSEC || FAST_IPSEC*/
 name|ipstat
 operator|.
 name|ips_cantfrag
