@@ -4444,21 +4444,8 @@ operator|->
 name|ip_p
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX 		 * this shouldn't happen, but if it does, the 		 * correct behavior may be to insert the checksum 		 * in the existing chain instead of rearranging it. 		 */
-name|m
-operator|=
-name|m_pullup
-argument_list|(
-name|m
-argument_list|,
-name|offset
-operator|+
-sizeof|sizeof
-argument_list|(
-name|u_short
-argument_list|)
-argument_list|)
-expr_stmt|;
+comment|/* 		 * XXX 		 * this shouldn't happen, but if it does, the 		 * correct behavior may be to insert the checksum 		 * in the appropriate next mbuf in the chain. 		 */
+return|return;
 block|}
 operator|*
 operator|(
