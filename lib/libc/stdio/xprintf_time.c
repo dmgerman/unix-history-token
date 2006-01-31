@@ -415,7 +415,7 @@ name|sprintf
 argument_list|(
 name|p
 argument_list|,
-literal|"%jd"
+literal|"%jds"
 argument_list|,
 name|t
 argument_list|)
