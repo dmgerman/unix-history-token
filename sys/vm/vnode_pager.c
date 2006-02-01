@@ -322,7 +322,7 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
-name|size_t
+name|off_t
 name|isize
 parameter_list|,
 name|struct

@@ -3934,7 +3934,7 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
-name|size_t
+name|off_t
 name|size
 parameter_list|,
 name|struct
