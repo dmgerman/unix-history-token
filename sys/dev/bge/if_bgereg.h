@@ -12465,6 +12465,11 @@ decl_stmt|;
 name|int
 name|bge_link
 decl_stmt|;
+comment|/* link state */
+name|int
+name|bge_link_evt
+decl_stmt|;
+comment|/* pending link event */
 name|struct
 name|callout
 name|bge_stat_ch
