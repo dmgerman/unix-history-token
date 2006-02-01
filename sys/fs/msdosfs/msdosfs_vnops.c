@@ -4707,13 +4707,6 @@ argument_list|(
 literal|"rename: lost dir entry"
 argument_list|)
 expr_stmt|;
-name|vrele
-argument_list|(
-name|ap
-operator|->
-name|a_fvp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|newparent
@@ -4730,6 +4723,13 @@ expr_stmt|;
 name|vrele
 argument_list|(
 name|tdvp
+argument_list|)
+expr_stmt|;
+name|vrele
+argument_list|(
+name|ap
+operator|->
+name|a_fvp
 argument_list|)
 expr_stmt|;
 return|return
@@ -4773,13 +4773,6 @@ argument_list|(
 literal|"rename: lost dir entry"
 argument_list|)
 expr_stmt|;
-name|vrele
-argument_list|(
-name|ap
-operator|->
-name|a_fvp
-argument_list|)
-expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|fvp
@@ -4800,6 +4793,13 @@ argument_list|,
 literal|0
 argument_list|,
 name|td
+argument_list|)
+expr_stmt|;
+name|vrele
+argument_list|(
+name|ap
+operator|->
+name|a_fvp
 argument_list|)
 expr_stmt|;
 name|xp

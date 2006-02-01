@@ -5522,15 +5522,7 @@ operator|->
 name|a_fvp
 argument_list|)
 expr_stmt|;
-comment|/* It seems to be incumbent on us to drop locks on all four vnodes */
-comment|/* From-vnodes are not locked, only ref'd.  To-vnodes are locked. */
-name|vrele
-argument_list|(
-name|ap
-operator|->
-name|a_fvp
-argument_list|)
-expr_stmt|;
+comment|/* Release parents first, then children. */
 name|vrele
 argument_list|(
 name|odvp
@@ -5551,8 +5543,18 @@ name|a_tvp
 operator|==
 name|ndvp
 condition|)
-block|{
 name|vrele
+argument_list|(
+name|ndvp
+argument_list|)
+expr_stmt|;
+else|else
+name|vput
+argument_list|(
+name|ndvp
+argument_list|)
+expr_stmt|;
+name|vput
 argument_list|(
 name|ap
 operator|->
@@ -5561,19 +5563,16 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
-name|vput
-argument_list|(
-name|ap
-operator|->
-name|a_tvp
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 name|vput
 argument_list|(
 name|ndvp
+argument_list|)
+expr_stmt|;
+name|vrele
+argument_list|(
+name|ap
+operator|->
+name|a_fvp
 argument_list|)
 expr_stmt|;
 return|return
