@@ -13811,7 +13811,7 @@ operator|&
 name|IFF_UP
 condition|)
 block|{
-comment|/* 			 * If only the state of the PROMISC flag changed, 			 * then just use the 'set promisc mode' command 			 * instead of reinitializing the entire NIC. Doing 			 * a full re-init means reloading the firmware and 			 * waiting for it to start up, which may take a 			 * second or two. 			 */
+comment|/* 			 * If only the state of the PROMISC flag changed, 			 * then just use the 'set promisc mode' command 			 * instead of reinitializing the entire NIC. Doing 			 * a full re-init means reloading the firmware and 			 * waiting for it to start up, which may take a 			 * second or two.  Similarly for ALLMULTI. 			 */
 if|if
 condition|(
 name|ifp
@@ -13878,6 +13878,34 @@ argument_list|,
 name|BGE_RX_MODE
 argument_list|,
 name|BGE_RXMODE_RX_PROMISC
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_RUNNING
+operator|&&
+operator|(
+name|ifp
+operator|->
+name|if_flags
+operator|^
+name|sc
+operator|->
+name|bge_if_flags
+operator|)
+operator|&
+name|IFF_ALLMULTI
+condition|)
+block|{
+name|bge_setmulti
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
