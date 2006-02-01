@@ -11685,6 +11685,27 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* Nothing to do */
+if|if
+condition|(
+name|sc
+operator|->
+name|bge_rx_saved_considx
+operator|==
+name|sc
+operator|->
+name|bge_ldata
+operator|.
+name|bge_status_block
+operator|->
+name|bge_idx
+index|[
+literal|0
+index|]
+operator|.
+name|bge_rx_prod_idx
+condition|)
+return|return;
 name|ifp
 operator|=
 name|sc
@@ -12477,7 +12498,6 @@ operator|->
 name|bge_jumbo
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -12511,6 +12531,27 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* Nothing to do */
+if|if
+condition|(
+name|sc
+operator|->
+name|bge_tx_saved_considx
+operator|==
+name|sc
+operator|->
+name|bge_ldata
+operator|.
+name|bge_status_block
+operator|->
+name|bge_idx
+index|[
+literal|0
+index|]
+operator|.
+name|bge_tx_cons_idx
+condition|)
+return|return;
 name|ifp
 operator|=
 name|sc
@@ -12703,7 +12744,6 @@ operator|&=
 operator|~
 name|IFF_DRV_OACTIVE
 expr_stmt|;
-return|return;
 block|}
 end_function
 
