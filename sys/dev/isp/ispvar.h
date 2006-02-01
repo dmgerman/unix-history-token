@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*-  * Soft Definitions for for Qlogic ISP SCSI adapters.  *  * Copyright (c) 1997, 1998, 1999, 2000 by Matthew Jacob  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*-  * Soft Definitions for for Qlogic ISP SCSI adapters.  *  * Copyright (c) 1997-2006 by Matthew Jacob  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -1123,64 +1123,66 @@ typedef|typedef
 struct|struct
 block|{
 name|u_int32_t
-name|isp_fwoptions
-range|:
-literal|16
-decl_stmt|,
+label|:
+literal|13
+operator|,
 name|isp_gbspeed
-range|:
+operator|:
+literal|3
+operator|,
+operator|:
 literal|2
-decl_stmt|,
+operator|,
 name|isp_iid_set
-range|:
+operator|:
 literal|1
-decl_stmt|,
+operator|,
 name|loop_seen_once
-range|:
+operator|:
 literal|1
-decl_stmt|,
+operator|,
 name|isp_loopstate
-range|:
+operator|:
 literal|4
-decl_stmt|,
+operator|,
 comment|/* Current Loop State */
 name|isp_fwstate
-range|:
+operator|:
 literal|3
-decl_stmt|,
+operator|,
 comment|/* ISP F/W state */
 name|isp_gotdparms
-range|:
+operator|:
 literal|1
-decl_stmt|,
+operator|,
 name|isp_topo
-range|:
+operator|:
 literal|3
-decl_stmt|,
+operator|,
 name|isp_onfabric
-range|:
+operator|:
 literal|1
+expr_stmt|;
+name|u_int32_t
+label|:
+literal|8
+operator|,
+name|isp_portid
+operator|:
+literal|24
+expr_stmt|;
+comment|/* S_ID */
+name|u_int16_t
+name|isp_fwoptions
 decl_stmt|;
-name|u_int8_t
+name|u_int16_t
 name|isp_iid
 decl_stmt|;
 comment|/* 'initiator' id */
-name|u_int8_t
+name|u_int16_t
 name|isp_loopid
 decl_stmt|;
 comment|/* hard loop id */
-name|u_int8_t
-name|isp_alpa
-decl_stmt|;
-comment|/* ALPA */
-name|u_int32_t
-name|isp_portid
-decl_stmt|;
-specifier|volatile
-name|u_int16_t
-name|isp_lipseq
-decl_stmt|;
-comment|/* LIP sequence # */
 name|u_int16_t
 name|isp_fwattr
 decl_stmt|;
@@ -1214,13 +1216,12 @@ struct|struct
 name|lportdb
 block|{
 name|u_int32_t
-name|port_type
-range|:
-literal|8
-decl_stmt|,
 name|loopid
 range|:
-literal|8
+literal|16
+decl_stmt|,
+range|:
+literal|2
 decl_stmt|,
 name|fc4_type
 range|:
@@ -1229,9 +1230,6 @@ decl_stmt|,
 name|last_fabric_dev
 range|:
 literal|1
-decl_stmt|,
-range|:
-literal|2
 decl_stmt|,
 name|relogin
 range|:
@@ -1257,12 +1255,22 @@ name|roles
 range|:
 literal|2
 decl_stmt|,
+name|tvalid
+range|:
+literal|1
+decl_stmt|,
 name|valid
 range|:
 literal|1
 decl_stmt|;
 name|u_int32_t
+name|port_type
+range|:
+literal|8
+decl_stmt|,
 name|portid
+range|:
+literal|24
 decl_stmt|;
 name|u_int64_t
 name|node_wwn
@@ -1677,7 +1685,7 @@ specifier|volatile
 name|u_int16_t
 name|isp_mboxtmp
 index|[
-name|MAX_MAILBOX
+name|MAILBOX_STORAGE
 index|]
 decl_stmt|;
 specifier|volatile
@@ -2322,6 +2330,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|ISP_HA_FC_2322
+value|0x50
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_HA_FC_2400
+value|0x60
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_HA_FC_2422
+value|0x61
+end_define
+
+begin_define
+define|#
+directive|define
 name|IS_SCSI
 parameter_list|(
 name|isp
@@ -2487,6 +2516,26 @@ parameter_list|(
 name|isp
 parameter_list|)
 value|((isp)->isp_type == ISP_HA_FC_2312)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_2322
+parameter_list|(
+name|isp
+parameter_list|)
+value|((isp)->isp_type == ISP_HA_FC_2322)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_24XX
+parameter_list|(
+name|isp
+parameter_list|)
+value|((isp)->isp_type>= ISP_HA_FC_2400)
 end_define
 
 begin_comment
@@ -2844,15 +2893,12 @@ comment|/* FC Fabric Device Arrival */
 name|ISPASYNC_PROMENADE
 block|,
 comment|/* FC Objects coming&& going */
-name|ISPASYNC_TARGET_MESSAGE
+name|ISPASYNC_TARGET_NOTIFY
 block|,
-comment|/* target message */
-name|ISPASYNC_TARGET_EVENT
-block|,
-comment|/* target asynchronous event */
+comment|/* target asynchronous notification event */
 name|ISPASYNC_TARGET_ACTION
 block|,
-comment|/* other target command action */
+comment|/* target action requested */
 name|ISPASYNC_CONF_CHANGE
 block|,
 comment|/* Platform Configuration Change */
@@ -2910,85 +2956,8 @@ value|((void *) 2)
 end_define
 
 begin_comment
-comment|/*  * Platform Dependent Error and Debug Printout  */
+comment|/*  * Platform Dependent Error and Debug Printout  *  * Generally this is:  *  *    void isp_prt(struct ispsoftc *, int level, const char *, ...)  *  * but due to compiler differences on different platforms this won't be  * formally done here. Instead, it goes in each platform definition file.  */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__INTEL_COMPILER
-argument_list|)
-end_if
-
-begin_function_decl
-name|void
-name|isp_prt
-parameter_list|(
-name|struct
-name|ispsoftc
-modifier|*
-parameter_list|,
-name|int
-name|level
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(__format__
-parameter_list|(
-name|__printf__
-parameter_list|,
-function_decl|3
-operator|,
-function_decl|4
-end_function_decl
-
-begin_empty_stmt
-unit|)))
-empty_stmt|;
-end_empty_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-name|void
-name|isp_prt
-parameter_list|(
-name|struct
-name|ispsoftc
-modifier|*
-parameter_list|,
-name|int
-name|level
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
