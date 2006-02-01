@@ -1274,6 +1274,8 @@ literal|"tcp_sack_option"
 argument_list|)
 expr_stmt|;
 comment|/* Should never happen */
+name|next_block
+label|:
 while|while
 condition|(
 name|tmp_olen
@@ -1807,7 +1809,9 @@ name|temp
 operator|==
 name|NULL
 condition|)
-continue|continue;
+goto|goto
+name|next_block
+goto|;
 comment|/* ENOBUFS */
 name|temp
 operator|->
