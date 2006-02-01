@@ -188,6 +188,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Work-around for old<sys/cdefs.h> */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__format_arg
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__format_arg
+parameter_list|(
+name|a
+parameter_list|)
+value|__attribute__((__format_arg__(a)))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|char
 modifier|*
