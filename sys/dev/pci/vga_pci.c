@@ -132,30 +132,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If AGP capabilities are present on this device, then create 	 * an AGP child. 	 */
-if|if
-condition|(
-name|pci_find_extcap
-argument_list|(
-name|dev
-argument_list|,
-name|PCIY_AGP
-argument_list|,
-name|NULL
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|device_add_child
-argument_list|(
-name|dev
-argument_list|,
-literal|"agp"
-argument_list|,
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
 comment|/* Always create a drm child for now to make it easier on drm. */
 name|device_add_child
 argument_list|(
