@@ -1696,7 +1696,7 @@ end_ifdef
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|INVARIANT_SUPPORT
+name|INVARIANTS
 end_ifndef
 
 begin_undef
