@@ -2741,7 +2741,7 @@ operator|&
 name|wired
 argument_list|)
 expr_stmt|;
-comment|/* 			 * If we don't need the page any longer, put it on the active 			 * list (the easiest thing to do here).  If no one needs it, 			 * pageout will grab it eventually. 			 */
+comment|/* 			 * If we don't need the page any longer, put it on the inactive 			 * list (the easiest thing to do here).  If no one needs it, 			 * pageout will grab it eventually. 			 */
 if|if
 condition|(
 name|result
