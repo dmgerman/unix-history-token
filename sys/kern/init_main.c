@@ -194,6 +194,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<security/audit/audit.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -1493,6 +1499,21 @@ expr_stmt|;
 comment|/* Don't jail it. */
 ifdef|#
 directive|ifdef
+name|AUDIT
+name|audit_proc_alloc
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|audit_proc_kproc0
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|MAC
 name|mac_create_proc0
 argument_list|(
@@ -2743,6 +2764,16 @@ name|MAC
 name|mac_create_proc1
 argument_list|(
 name|newcred
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|AUDIT
+name|audit_proc_init
+argument_list|(
+name|initproc
 argument_list|)
 expr_stmt|;
 endif|#
