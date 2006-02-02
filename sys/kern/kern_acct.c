@@ -409,7 +409,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * If accounting is to be started to a file, open that file for 	 * appending and make sure it's a 'normal'.  While we could 	 * conditionally acquire Giant here, we're actually interacting with 	 * vnodes from possibly two file systems, making the logic a bit 	 * complicated.  For now, use Giant unconditionally.  	 */
+comment|/* 	 * If accounting is to be started to a file, open that file for 	 * appending and make sure it's a 'normal'.  While we could 	 * conditionally acquire Giant here, we're actually interacting with 	 * vnodes from possibly two file systems, making the logic a bit 	 * complicated.  For now, use Giant unconditionally. 	 */
 name|mtx_lock
 argument_list|(
 operator|&
