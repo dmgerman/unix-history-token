@@ -306,6 +306,18 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
+name|auditinfo
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|kaudit_record
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|kg_sched
 struct_decl|;
 end_struct_decl
@@ -761,6 +773,12 @@ modifier|*
 name|td_sched
 decl_stmt|;
 comment|/* (*) Scheduler-specific data. */
+name|struct
+name|kaudit_record
+modifier|*
+name|td_ar
+decl_stmt|;
+comment|/* (k) Active audit record, if any. */
 block|}
 struct|;
 end_struct
@@ -2324,6 +2342,12 @@ argument_list|)
 name|p_mqnotifier
 expr_stmt|;
 comment|/* (c) mqueue notifiers.*/
+name|struct
+name|auditinfo
+modifier|*
+name|p_au
+decl_stmt|;
+comment|/* (c) Process audit properties. */
 block|}
 struct|;
 end_struct

@@ -1020,6 +1020,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|audit_thread_alloc
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Define a macro to wrap the audit_arg_* calls by checking the global  * audit_enabled flag before performing the actual call.  */
 end_comment
