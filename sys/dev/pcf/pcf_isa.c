@@ -327,6 +327,20 @@ name|port
 decl_stmt|,
 name|error
 decl_stmt|;
+comment|/* skip PnP probes */
+if|if
+condition|(
+name|isa_get_logicalid
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+comment|/* The port address must be explicitly specified */
 name|bus_get_resource
 argument_list|(
 name|dev
@@ -342,7 +356,6 @@ operator|&
 name|count
 argument_list|)
 expr_stmt|;
-comment|/* The port address must be explicitly specified */
 if|if
 condition|(
 operator|(
