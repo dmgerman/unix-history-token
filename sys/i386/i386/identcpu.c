@@ -6357,13 +6357,13 @@ condition|(
 operator|*
 name|size
 operator|<
-literal|128
+literal|256
 condition|)
 block|{
 operator|*
 name|size
 operator|=
-literal|128
+literal|256
 expr_stmt|;
 operator|*
 name|ways
