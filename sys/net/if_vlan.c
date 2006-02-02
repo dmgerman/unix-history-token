@@ -1177,12 +1177,6 @@ name|INVARIANTS
 name|int
 name|i
 decl_stmt|;
-name|TRUNK_LOCK_ASSERT
-argument_list|(
-name|trunk
-argument_list|)
-expr_stmt|;
-comment|/* XXX just unhook trunk first? */
 name|KASSERT
 argument_list|(
 name|trunk
@@ -4316,6 +4310,16 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|VLAN_ARRAY
+name|vlan_inithash
+argument_list|(
+name|trunk
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|VLAN_LOCK
 argument_list|()
 expr_stmt|;
@@ -4329,6 +4333,16 @@ name|NULL
 condition|)
 block|{
 comment|/* A race that that is very unlikely to be hit. */
+ifndef|#
+directive|ifndef
+name|VLAN_ARRAY
+name|vlan_freehash
+argument_list|(
+name|trunk
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|free
 argument_list|(
 name|trunk
@@ -4340,16 +4354,6 @@ goto|goto
 name|exists
 goto|;
 block|}
-ifndef|#
-directive|ifndef
-name|VLAN_ARRAY
-name|vlan_inithash
-argument_list|(
-name|trunk
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|TRUNK_LOCK_INIT
 argument_list|(
 name|trunk
