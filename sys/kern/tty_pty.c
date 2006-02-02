@@ -787,6 +787,8 @@ parameter_list|)
 block|{
 if|if
 condition|(
+literal|0
+operator|&&
 name|pt
 operator|->
 name|pt_devc_open
