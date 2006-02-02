@@ -5239,8 +5239,6 @@ operator||
 name|BGE_MODECTL_HOST_SEND_BDS
 operator||
 name|BGE_MODECTL_TX_NO_PHDR_CSUM
-operator||
-name|BGE_MODECTL_RX_NO_PHDR_CSUM
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Disable memory write invalidate.  Apparently it is not supported 	 * properly by these devices. 	 */
@@ -12346,6 +12344,8 @@ operator|.
 name|csum_flags
 operator||=
 name|CSUM_DATA_VALID
+operator||
+name|CSUM_PSEUDO_HDR
 expr_stmt|;
 block|}
 block|}
