@@ -527,7 +527,7 @@ name|IPFW_WLOCK_ASSERT
 parameter_list|(
 name|_chain
 parameter_list|)
-value|do {				\ 	rw_assert(rw, RA_WLOCKED);					\ 	NET_ASSERT_GIANT();						\ } while (0)
+value|do {				\ 	rw_assert(&(_chain)->rwmtx, RA_WLOCKED);					\ 	NET_ASSERT_GIANT();						\ } while (0)
 end_define
 
 begin_define
