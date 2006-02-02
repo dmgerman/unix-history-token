@@ -1104,12 +1104,12 @@ expr_stmt|;
 comment|/* 	 * Run through list of ipfilter hooks for input packets 	 */
 if|if
 condition|(
+operator|!
+name|PFIL_HOOKED
+argument_list|(
+operator|&
 name|inet_pfil_hook
-operator|.
-name|ph_busy_count
-operator|==
-operator|-
-literal|1
+argument_list|)
 condition|)
 goto|goto
 name|passin
@@ -1364,12 +1364,12 @@ comment|/* 	 * Step 5: outgoing firewall packet processing 	 */
 comment|/* 	 * Run through list of hooks for output packets. 	 */
 if|if
 condition|(
+operator|!
+name|PFIL_HOOKED
+argument_list|(
+operator|&
 name|inet_pfil_hook
-operator|.
-name|ph_busy_count
-operator|==
-operator|-
-literal|1
+argument_list|)
 condition|)
 goto|goto
 name|passout

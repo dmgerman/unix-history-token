@@ -50,12 +50,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/condvar.h>
+file|<sys/rwlock.h>
 end_include
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_struct_decl
 struct_decl|struct
@@ -200,25 +196,13 @@ decl_stmt|;
 name|int
 name|ph_type
 decl_stmt|;
-comment|/* 	 * Locking: use a busycounter per pfil_head. 	 * Use ph_busy_count = -1 to indicate pfil_head is empty. 	 */
 name|int
-name|ph_busy_count
+name|ph_nhooks
 decl_stmt|;
-comment|/* count of threads with read lock */
-name|int
-name|ph_want_write
-decl_stmt|;
-comment|/* want write lock flag */
 name|struct
-name|cv
-name|ph_cv
-decl_stmt|;
-comment|/* for waking up writers */
-name|struct
-name|mtx
+name|rwlock
 name|ph_mtx
 decl_stmt|;
-comment|/* mutex on locking state */
 union|union
 block|{
 name|u_long
@@ -393,6 +377,72 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|PFIL_HOOKED
+parameter_list|(
+name|p
+parameter_list|)
+value|(&(p)->ph_nhooks> 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFIL_RLOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|rw_rlock(&(p)->ph_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFIL_WLOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|rw_wlock(&(p)->ph_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFIL_RUNLOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|rw_runlock(&(p)->ph_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFIL_WUNLOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|rw_wunlock(&(p)->ph_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFIL_LIST_LOCK
+parameter_list|()
+value|mtx_lock(&pfil_global_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFIL_LIST_UNLOCK
+parameter_list|()
+value|mtx_unlock(&pfil_global_lock)
+end_define
+
 begin_expr_stmt
 specifier|static
 name|__inline
@@ -406,19 +456,6 @@ argument_list|,
 argument|struct pfil_head *ph
 argument_list|)
 block|{
-name|KASSERT
-argument_list|(
-name|ph
-operator|->
-name|ph_busy_count
-operator|>
-literal|0
-argument_list|,
-operator|(
-literal|"pfil_hook_get: called on unbusy pfil_head"
-operator|)
-argument_list|)
-block|;
 if|if
 condition|(
 name|dir

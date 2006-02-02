@@ -1888,12 +1888,12 @@ comment|/* 	 * Run through list of hooks for input packets. 	 * 	 * NB: Beware o
 comment|/* Jump over all PFIL processing if hooks are not active. */
 if|if
 condition|(
+operator|!
+name|PFIL_HOOKED
+argument_list|(
+operator|&
 name|inet_pfil_hook
-operator|.
-name|ph_busy_count
-operator|==
-operator|-
-literal|1
+argument_list|)
 condition|)
 goto|goto
 name|passin
