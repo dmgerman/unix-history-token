@@ -182,6 +182,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<security/audit/audit.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -1006,6 +1012,16 @@ ifdef|#
 directive|ifdef
 name|MAC
 name|mac_init_proc
+argument_list|(
+name|newproc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|AUDIT
+name|audit_proc_alloc
 argument_list|(
 name|newproc
 argument_list|)
@@ -1922,6 +1938,18 @@ name|p_ucred
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
+ifdef|#
+directive|ifdef
+name|AUDIT
+name|audit_proc_fork
+argument_list|(
+name|p1
+argument_list|,
+name|p2
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|pargs_hold
 argument_list|(
 name|p2
@@ -2869,6 +2897,16 @@ ifdef|#
 directive|ifdef
 name|MAC
 name|mac_destroy_proc
+argument_list|(
+name|newproc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|AUDIT
+name|audit_proc_free
 argument_list|(
 name|newproc
 argument_list|)

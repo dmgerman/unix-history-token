@@ -221,6 +221,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<security/audit/audit.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -3184,6 +3190,16 @@ ifdef|#
 directive|ifdef
 name|MAC
 name|mac_destroy_proc
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|AUDIT
+name|audit_proc_free
 argument_list|(
 name|p
 argument_list|)
