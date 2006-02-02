@@ -235,40 +235,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * Hackery- remove TARGET MODE when compiling as a module on sparc64  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__sparc64__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|KLD_MODULE
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|ISP_TARGET_MODE
-argument_list|)
-end_if
-
-begin_undef
-undef|#
-directive|undef
-name|ISP_TARGET_MODE
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -756,13 +722,6 @@ end_endif
 begin_comment
 comment|/*  * Required Macros/Defines  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|INLINE
-value|__inline
-end_define
 
 begin_define
 define|#
@@ -1961,7 +1920,7 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|INLINE
+name|__inline
 name|void
 name|isp_mbox_wait_complete
 parameter_list|(
@@ -1974,7 +1933,7 @@ end_function_decl
 
 begin_function
 specifier|static
-name|INLINE
+name|__inline
 name|void
 name|isp_mbox_wait_complete
 parameter_list|(
@@ -2231,7 +2190,7 @@ end_function
 
 begin_function_decl
 specifier|static
-name|INLINE
+name|__inline
 name|u_int64_t
 name|nanotime_sub
 parameter_list|(
@@ -2248,7 +2207,7 @@ end_function_decl
 
 begin_function
 specifier|static
-name|INLINE
+name|__inline
 name|u_int64_t
 name|nanotime_sub
 parameter_list|(
@@ -2308,7 +2267,7 @@ end_function
 
 begin_function_decl
 specifier|static
-name|INLINE
+name|__inline
 name|char
 modifier|*
 name|strncat
@@ -2327,7 +2286,7 @@ end_function_decl
 
 begin_function
 specifier|static
-name|INLINE
+name|__inline
 name|char
 modifier|*
 name|strncat
@@ -2403,13 +2362,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Common inline functions  */
+comment|/*  * ISP Library functions  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<dev/isp/isp_inline.h>
+file|<dev/isp/isp_library.h>
 end_include
 
 begin_endif
