@@ -289,6 +289,36 @@ begin_comment
 comment|/* get ifnet list */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_32BIT
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SIOCGIFCONF32
+value|_IOWR('i', 36, struct ifconf32)
+end_define
+
+begin_comment
+comment|/* get ifnet list */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
