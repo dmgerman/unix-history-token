@@ -604,9 +604,9 @@ name|amr_submit_command
 function_decl|)
 parameter_list|(
 name|struct
-name|amr_softc
+name|amr_command
 modifier|*
-name|sc
+name|ac
 parameter_list|)
 function_decl|;
 name|int
