@@ -897,10 +897,10 @@ begin_struct
 struct|struct
 name|igmpmsg
 block|{
-name|u_long
+name|uint32_t
 name|unused1
 decl_stmt|;
-name|u_long
+name|uint32_t
 name|unused2
 decl_stmt|;
 name|u_char
