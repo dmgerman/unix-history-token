@@ -1318,7 +1318,7 @@ name|ad_type
 parameter_list|,
 name|icb
 parameter_list|)
-value|((struct ad_type *)(icb))->len
+value|le32toh(((struct ad_type *)(icb))->len)
 end_define
 
 end_unit

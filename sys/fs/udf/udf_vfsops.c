@@ -1174,9 +1174,12 @@ name|tag
 expr_stmt|;
 if|if
 condition|(
+name|le16toh
+argument_list|(
 name|tag
 operator|->
 name|id
+argument_list|)
 operator|!=
 name|id
 condition|)

@@ -5148,6 +5148,8 @@ operator|->
 name|bshift
 operator|)
 operator|+
+name|le32toh
+argument_list|(
 operator|(
 operator|(
 expr|struct
@@ -5160,6 +5162,7 @@ operator|)
 operator|)
 operator|->
 name|pos
+argument_list|)
 expr_stmt|;
 operator|*
 name|max_size
