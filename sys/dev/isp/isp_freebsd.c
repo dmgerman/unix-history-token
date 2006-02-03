@@ -1050,7 +1050,7 @@ end_function
 
 begin_function
 specifier|static
-name|INLINE
+name|__inline
 name|void
 name|isp_freeze_loopdown
 parameter_list|(
@@ -2907,7 +2907,7 @@ end_ifdef
 
 begin_function_decl
 specifier|static
-name|INLINE
+name|__inline
 name|int
 name|is_lun_enabled
 parameter_list|(
@@ -2924,7 +2924,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|INLINE
+name|__inline
 name|int
 name|are_any_luns_enabled
 parameter_list|(
@@ -2939,7 +2939,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|INLINE
+name|__inline
 name|tstate_t
 modifier|*
 name|get_lun_statep
@@ -2957,7 +2957,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|INLINE
+name|__inline
 name|void
 name|rls_lun_statep
 parameter_list|(
@@ -2973,7 +2973,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|INLINE
+name|__inline
 name|atio_private_data_t
 modifier|*
 name|isp_get_atpd
@@ -3195,7 +3195,7 @@ end_function_decl
 
 begin_function
 specifier|static
-name|INLINE
+name|__inline
 name|int
 name|is_lun_enabled
 parameter_list|(
@@ -3296,7 +3296,7 @@ end_function
 
 begin_function
 specifier|static
-name|INLINE
+name|__inline
 name|int
 name|are_any_luns_enabled
 parameter_list|(
@@ -3399,7 +3399,7 @@ end_function
 
 begin_function
 specifier|static
-name|INLINE
+name|__inline
 name|tstate_t
 modifier|*
 name|get_lun_statep
@@ -3558,7 +3558,7 @@ end_function
 
 begin_function
 specifier|static
-name|INLINE
+name|__inline
 name|void
 name|rls_lun_statep
 parameter_list|(
@@ -3588,7 +3588,7 @@ end_function
 
 begin_function
 specifier|static
-name|INLINE
+name|__inline
 name|atio_private_data_t
 modifier|*
 name|isp_get_atpd
@@ -3927,7 +3927,7 @@ end_function
 
 begin_function
 specifier|static
-name|INLINE
+name|__inline
 name|void
 name|destroy_lun_state
 parameter_list|(

@@ -726,13 +726,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INLINE
-value|__inline
-end_define
-
-begin_define
-define|#
-directive|define
 name|ISP2100_SCRLEN
 value|0x800
 end_define
@@ -1927,7 +1920,7 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|INLINE
+name|__inline
 name|void
 name|isp_mbox_wait_complete
 parameter_list|(
@@ -1940,7 +1933,7 @@ end_function_decl
 
 begin_function
 specifier|static
-name|INLINE
+name|__inline
 name|void
 name|isp_mbox_wait_complete
 parameter_list|(
@@ -2197,7 +2190,7 @@ end_function
 
 begin_function_decl
 specifier|static
-name|INLINE
+name|__inline
 name|u_int64_t
 name|nanotime_sub
 parameter_list|(
@@ -2214,7 +2207,7 @@ end_function_decl
 
 begin_function
 specifier|static
-name|INLINE
+name|__inline
 name|u_int64_t
 name|nanotime_sub
 parameter_list|(
@@ -2274,7 +2267,7 @@ end_function
 
 begin_function_decl
 specifier|static
-name|INLINE
+name|__inline
 name|char
 modifier|*
 name|strncat
@@ -2293,7 +2286,7 @@ end_function_decl
 
 begin_function
 specifier|static
-name|INLINE
+name|__inline
 name|char
 modifier|*
 name|strncat
@@ -2369,13 +2362,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Common inline functions  */
+comment|/*  * ISP Library functions  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<dev/isp/isp_inline.h>
+file|<dev/isp/isp_library.h>
 end_include
 
 begin_endif
