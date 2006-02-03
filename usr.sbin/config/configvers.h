@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * 6 digits of version.  The most significant are branch indicators  * (eg: RELENG_2_2 = 22, -current presently = 70 etc).  The least  * significant digits are incremented as needed.  *  * DO NOT CASUALLY BUMP THIS NUMBER!  The rules are not the same as shared  * libs or param.h/osreldate.  *  * It is the version number of the protocol between config(8) and the  * sys/conf/ Makefiles (the kernel build system).  *  * It is now also used to trap certain problems that the syntax parser cannot  * detect.  *  * Unfortunately, there is no version number for user supplied config files.  *  * Once, config(8) used to silently report errors and continue anyway.  This  * was a huge problem for 'make buildkernel' which was run with the installed  * /usr/sbin/config, not a cross built one.  We started bumping the version  * number as a way to trap cases where the previous installworld was not  * compatable with the new buildkernel.  The buildtools phase and much more  * comprehensive error code returns solved this original problem.  *  * Most end-users will use buildkenel and the build tools from buildworld.  * The people that are inconvenienced by gratuitous bumps are developers  * who run config by hand.   *  * $FreeBSD$  */
+comment|/*-  * This file is in the public domain  *  * $FreeBSD$  */
+end_comment
+
+begin_comment
+comment|/*  * 6 digits of version.  The most significant are branch indicators at the  * time when the last incompatible change was made (which is why it is  * presently 6 on 7-current).  The least significant digits are incremented  * as described below.  The format is similar to the __FreeBSD_version, but  * not tied to it.  *  * DO NOT CASUALLY BUMP THIS NUMBER!  The rules are not the same as shared  * libs or param.h/osreldate.  *  * It is the version number of the protocol between config(8) and the  * sys/conf/ Makefiles (the kernel build system).  *  * It is now also used to trap certain problems that the syntax parser cannot  * detect.  *  * Unfortunately, there is no version number for user supplied config files.  *  * Once, config(8) used to silently report errors and continue anyway.  This  * was a huge problem for 'make buildkernel' which was run with the installed  * /usr/sbin/config, not a cross built one.  We started bumping the version  * number as a way to trap cases where the previous installworld was not  * compatable with the new buildkernel.  The buildtools phase and much more  * comprehensive error code returns solved this original problem.  *  * Most end-users will use buildkernel and the build tools from buildworld.  * The people that are inconvenienced by gratuitous bumps are developers  * who run config by hand.  However, developers shouldn't gratuitously be  * inconvenienced.  *  * One should bump the CONFIGVERS in the following ways:  *  * (1) If you change config such that it won't read old config files,  *     then bump the major number.  You shouldn't be doing this unless  *     you are overhauling config.  Do not casually bump this number  *     and by implication do not make changes that would force a bump  *     of this number casually.  You should limit major bumps to once  *     per branch.  * (2) For each new feature added, bump the minor version of this file.  *     When a new feature is actually used by the build system, update the  *     %VERSREQ field in the Makefile.$ARCH of all the affected makefiles  *     (typically all of them).  *  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -10,9 +14,15 @@ name|CONFIGVERS
 value|600004
 end_define
 
-begin_comment
-comment|/*  * Examples of when there should NOT be a bump:  * - Adding a new keyword  * - Changing the syntax of a keyword such that old syntax will break config.  * - Changing the syntax of a keyword such that new syntax will break old  *   config binaries.  *  * Examples of when there should be a bump:  * - When files generated in sys/$mach/compile/NAME are changed and the  *   Makefile.$mach rules might not handle it correctly.  * - When there are incompatable changes to the way sys/conf/files.* or the  *   other associated files are parsed such that they will be interpreted  *   incorrectly rather than fail outright.  */
-end_comment
+begin_define
+define|#
+directive|define
+name|MAJOR_VERS
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) / 100000)
+end_define
 
 end_unit
 
