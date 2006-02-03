@@ -2483,6 +2483,11 @@ argument_list|,
 operator|(
 literal|"audit_arg_upath: flag %llu"
 operator|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|flag
 operator|)
 argument_list|)
@@ -2504,6 +2509,11 @@ argument_list|,
 operator|(
 literal|"audit_arg_upath: flag %llu"
 operator|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|flag
 operator|)
 argument_list|)
