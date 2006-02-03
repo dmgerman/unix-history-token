@@ -1138,7 +1138,7 @@ comment|/* CPU_CLASS_ARM8 */
 block|{
 literal|"ARM9TDMI"
 block|,
-name|NULL
+literal|"CPU_ARM9TDMI"
 block|}
 block|,
 comment|/* CPU_CLASS_ARM9TDMI */
@@ -1350,7 +1350,7 @@ name|cpu_class
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s %s (%s core)\n"
+literal|"CPU: %s %s (%s core)\n"
 argument_list|,
 name|cpuids
 index|[
@@ -1397,6 +1397,11 @@ argument_list|(
 literal|"unknown CPU (ID = 0x%x)\n"
 argument_list|,
 name|cpuid
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" "
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1545,6 +1550,11 @@ argument_list|(
 literal|" branch prediction enabled"
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 comment|/* Print cache info. */
 if|if
 condition|(
@@ -1564,7 +1574,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%dKB/%dB %d-way %s unified cache\n"
+literal|"  %dKB/%dB %d-way %s unified cache\n"
 argument_list|,
 name|arm_pdcache_size
 operator|/
@@ -1585,7 +1595,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"%dKB/%dB %d-way Instruction cache\n"
+literal|"  %dKB/%dB %d-way Instruction cache\n"
 argument_list|,
 name|arm_picache_size
 operator|/
@@ -1598,7 +1608,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%dKB/%dB %d-way %s Data cache\n"
+literal|"  %dKB/%dB %d-way %s Data cache\n"
 argument_list|,
 name|arm_pdcache_size
 operator|/
@@ -1615,11 +1625,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
