@@ -1509,6 +1509,7 @@ operator|&
 name|allproc_lock
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Reparent all of our children to init. 	 */
 name|sx_xlock
 argument_list|(
 operator|&
