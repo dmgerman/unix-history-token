@@ -3568,6 +3568,11 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+name|VFS_UNLOCK_GIANT
+argument_list|(
+name|vfslocked
+argument_list|)
+expr_stmt|;
 name|FILEDESC_LOCK_FAST
 argument_list|(
 name|fdp
@@ -3588,6 +3593,15 @@ expr_stmt|;
 name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|fdp
+argument_list|)
+expr_stmt|;
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
+argument_list|(
+name|vpold
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
 name|vrele
