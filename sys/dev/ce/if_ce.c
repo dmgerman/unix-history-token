@@ -316,6 +316,31 @@ directive|include
 file|<bpf.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|NBPFILTER
+value|NBPF
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"opt_bpf.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|NBPFILTER
+value|DEV_BPF
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -326,13 +351,6 @@ include|#
 directive|include
 file|<net/bpf.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|NBPFILTER
-value|NBPF
-end_define
 
 begin_endif
 endif|#
