@@ -54,12 +54,6 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/user.h>
-end_include
-
 begin_comment
 comment|/*  * Audit subsystem condition flags.  The audit_enabled flag is set and  * removed automatically as a result of configuring log files, and  * can be observed but should not be directly manipulated.  The audit  * suspension flag permits audit to be temporarily disabled without  * reconfiguring the audit target.  */
 end_comment
