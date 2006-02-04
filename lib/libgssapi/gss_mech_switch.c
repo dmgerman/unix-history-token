@@ -662,6 +662,7 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|*
 name|p
 argument_list|)
 condition|)
@@ -686,6 +687,7 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|*
 name|p
 argument_list|)
 condition|)
@@ -710,6 +712,7 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|*
 name|p
 argument_list|)
 condition|)
