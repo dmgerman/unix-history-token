@@ -89,34 +89,6 @@ directive|include
 file|<sys/malloc.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ISP_TARGET_MODE
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PAE
-end_ifdef
-
-begin_error
-error|#
-directive|error
-literal|"PAE and ISP_TARGET_MODE not supported yet"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -5486,7 +5458,6 @@ name|bus_size_t
 name|slim
 decl_stmt|;
 comment|/* segment size */
-comment|/* XXX Should be bus_size_t, but i386/PAE is broken */
 name|bus_addr_t
 name|llim
 decl_stmt|;
@@ -5494,7 +5465,7 @@ comment|/* low limit of unavailable dma */
 name|bus_addr_t
 name|hlim
 decl_stmt|;
-comment|/* low limit of unavailable dma */
+comment|/* high limit of unavailable dma */
 name|struct
 name|imush
 name|im
@@ -8199,11 +8170,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PAE
-end_ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ISP_DAC_SUPPORTED
+argument_list|)
+operator|&&
+operator|(
+name|ISP_64BIT_CORRECTLY_DONE
+operator|)
+end_if
 
 begin_define
 define|#
