@@ -5486,11 +5486,12 @@ name|bus_size_t
 name|slim
 decl_stmt|;
 comment|/* segment size */
-name|bus_size_t
+comment|/* XXX Should be bus_size_t, but i386/PAE is broken */
+name|bus_addr_t
 name|llim
 decl_stmt|;
 comment|/* low limit of unavailable dma */
-name|bus_size_t
+name|bus_addr_t
 name|hlim
 decl_stmt|;
 comment|/* low limit of unavailable dma */
