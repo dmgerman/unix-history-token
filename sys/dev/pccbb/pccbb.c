@@ -321,14 +321,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
+name|TUNABLE_ULONG
 argument_list|(
 literal|"hw.cbb.start_memory"
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
 name|cbb_start_mem
 argument_list|)
@@ -365,14 +361,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
+name|TUNABLE_ULONG
 argument_list|(
 literal|"hw.cbb.start_16_io"
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
 name|cbb_start_16_io
 argument_list|)
@@ -409,14 +401,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
+name|TUNABLE_ULONG
 argument_list|(
 literal|"hw.cbb.start_32_io"
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
 name|cbb_start_32_io
 argument_list|)
