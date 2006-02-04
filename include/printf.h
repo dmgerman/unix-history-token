@@ -15,12 +15,6 @@ directive|define
 name|_PRINTF_H_
 end_define
 
-begin_union_decl
-union_decl|union
-name|arg
-union_decl|;
-end_union_decl
-
 begin_comment
 comment|/*  * The API defined by glibc allows a renderer to take multiple arguments  * This is obviously usable for things like (ptr+len) pairs etc.  * But the do not actually provide support for it at the end of the day,  * they offer only one argument to the arginfo function, but do accept  *>1 returns, although the do not check the types of those arguments  * argument  * Be compatible for now.  */
 end_comment

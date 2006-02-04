@@ -162,6 +162,8 @@ name|tp
 decl_stmt|;
 name|intmax_t
 name|t
+decl_stmt|,
+name|tx
 decl_stmt|;
 name|int
 name|i
@@ -291,6 +293,10 @@ operator|->
 name|alt
 condition|)
 block|{
+name|tx
+operator|=
+name|t
+expr_stmt|;
 if|if
 condition|(
 name|t
@@ -407,6 +413,10 @@ if|if
 condition|(
 name|t
 operator|!=
+literal|0
+operator|||
+name|tx
+operator|==
 literal|0
 condition|)
 name|p
