@@ -3582,7 +3582,7 @@ operator|&=
 operator|~
 name|VSNUL
 expr_stmt|;
-comment|/*  				 * Remove any recorded regions beyond  				 * start of variable  				 */
+comment|/* 				 * Remove any recorded regions beyond 				 * start of variable 				 */
 name|removerecordregions
 argument_list|(
 name|startloc

@@ -278,7 +278,7 @@ comment|/* 	 * This doesn't seem to be needed, since main() emits a newline. 	 *
 if|#
 directive|if
 literal|0
-block|if (tcgetpgrp(0) == getpid())	 		write(STDERR_FILENO, "\n", 1);
+block|if (tcgetpgrp(0) == getpid()) 		write(STDERR_FILENO, "\n", 1);
 endif|#
 directive|endif
 if|if
