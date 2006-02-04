@@ -10111,6 +10111,13 @@ expr_stmt|;
 if|if
 condition|(
 name|ess
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|ess
 operator|->
 name|stat
 operator|!=
@@ -10180,12 +10187,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|ess
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
 name|ess
@@ -10193,6 +10194,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|ret
 return|;
