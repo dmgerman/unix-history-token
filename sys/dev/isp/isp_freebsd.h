@@ -183,23 +183,13 @@ directive|include
 file|"opt_isp.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PAE
-end_ifdef
+begin_comment
+comment|/* disabled until done correctly */
+end_comment
 
-begin_define
-define|#
-directive|define
-name|ISP_DAC_SUPPORTED
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* #define	ISP_DAC_SUPPORTED	1 */
+end_comment
 
 begin_comment
 comment|/*  * Efficiency- get rid of SBus code&& tests unless we need them.  */
@@ -722,13 +712,6 @@ end_endif
 begin_comment
 comment|/*  * Required Macros/Defines  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|INLINE
-value|__inline
-end_define
 
 begin_define
 define|#
@@ -1927,7 +1910,7 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|INLINE
+name|__inline
 name|void
 name|isp_mbox_wait_complete
 parameter_list|(
@@ -1940,7 +1923,7 @@ end_function_decl
 
 begin_function
 specifier|static
-name|INLINE
+name|__inline
 name|void
 name|isp_mbox_wait_complete
 parameter_list|(
@@ -2197,7 +2180,7 @@ end_function
 
 begin_function_decl
 specifier|static
-name|INLINE
+name|__inline
 name|u_int64_t
 name|nanotime_sub
 parameter_list|(
@@ -2214,7 +2197,7 @@ end_function_decl
 
 begin_function
 specifier|static
-name|INLINE
+name|__inline
 name|u_int64_t
 name|nanotime_sub
 parameter_list|(
@@ -2274,7 +2257,7 @@ end_function
 
 begin_function_decl
 specifier|static
-name|INLINE
+name|__inline
 name|char
 modifier|*
 name|strncat
@@ -2293,7 +2276,7 @@ end_function_decl
 
 begin_function
 specifier|static
-name|INLINE
+name|__inline
 name|char
 modifier|*
 name|strncat
@@ -2369,13 +2352,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Common inline functions  */
+comment|/*  * ISP Library functions  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<dev/isp/isp_inline.h>
+file|<dev/isp/isp_library.h>
 end_include
 
 begin_endif

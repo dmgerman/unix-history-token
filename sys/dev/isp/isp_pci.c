@@ -89,34 +89,6 @@ directive|include
 file|<sys/malloc.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ISP_TARGET_MODE
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PAE
-end_ifdef
-
-begin_error
-error|#
-directive|error
-literal|"PAE and ISP_TARGET_MODE not supported yet"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -4034,7 +4006,7 @@ end_define
 
 begin_function
 specifier|static
-name|INLINE
+name|__inline
 name|int
 name|isp_pci_rd_debounced
 parameter_list|(
@@ -5483,12 +5455,17 @@ decl_stmt|,
 name|ns
 decl_stmt|;
 name|bus_size_t
-name|alim
-decl_stmt|,
 name|slim
-decl_stmt|,
-name|xlim
 decl_stmt|;
+comment|/* segment size */
+name|bus_addr_t
+name|llim
+decl_stmt|;
+comment|/* low limit of unavailable dma */
+name|bus_addr_t
+name|hlim
+decl_stmt|;
+comment|/* high limit of unavailable dma */
 name|struct
 name|imush
 name|im
@@ -5510,21 +5487,21 @@ block|}
 ifdef|#
 directive|ifdef
 name|ISP_DAC_SUPPORTED
-name|alim
+name|llim
 operator|=
-name|BUS_SPACE_UNRESTRICTED
-expr_stmt|;
-name|xlim
+name|hlim
 operator|=
-name|BUS_SPACE_MAXADDR_32BIT
+name|BUS_SPACE_MAXADDR
 expr_stmt|;
 else|#
 directive|else
-name|xlim
-operator|=
-name|alim
+name|llim
 operator|=
 name|BUS_SPACE_MAXADDR_32BIT
+expr_stmt|;
+name|hlim
+operator|=
+name|BUS_SPACE_MAXADDR
 expr_stmt|;
 endif|#
 directive|endif
@@ -5548,14 +5525,25 @@ condition|)
 block|{
 name|slim
 operator|=
-name|BUS_SPACE_MAXADDR_32BIT
+call|(
+name|bus_size_t
+call|)
+argument_list|(
+literal|1ULL
+operator|<<
+literal|32
+argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
 name|slim
 operator|=
-name|BUS_SPACE_MAXADDR_24BIT
+operator|(
+literal|1
+operator|<<
+literal|24
+operator|)
 expr_stmt|;
 block|}
 name|ISP_UNLOCK
@@ -5572,12 +5560,10 @@ argument_list|,
 literal|1
 argument_list|,
 name|slim
-operator|+
-literal|1
 argument_list|,
-name|alim
+name|llim
 argument_list|,
-name|alim
+name|hlim
 argument_list|,
 name|NULL
 argument_list|,
@@ -5876,6 +5862,7 @@ operator|)
 operator|+
 literal|1
 expr_stmt|;
+comment|/* 	 * Create a tag for the control spaces- force it to within 32 bits. 	 */
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -5887,12 +5874,10 @@ argument_list|,
 name|QENTRY_LEN
 argument_list|,
 name|slim
-operator|+
-literal|1
 argument_list|,
-name|xlim
+name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
-name|xlim
+name|BUS_SPACE_MAXADDR
 argument_list|,
 name|NULL
 argument_list|,
@@ -8185,11 +8170,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PAE
-end_ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ISP_DAC_SUPPORTED
+argument_list|)
+operator|&&
+operator|(
+name|ISP_64BIT_CORRECTLY_DONE
+operator|)
+end_if
 
 begin_define
 define|#
