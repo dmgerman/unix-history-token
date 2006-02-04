@@ -18816,7 +18816,7 @@ block|}
 comment|/* Determine how many arenas to use. */
 name|narenas
 operator|=
-literal|1
+name|ncpus
 expr_stmt|;
 if|if
 condition|(
