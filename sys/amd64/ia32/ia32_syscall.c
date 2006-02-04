@@ -161,6 +161,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<security/audit/audit.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -679,6 +685,13 @@ argument_list|,
 name|narg
 argument_list|)
 expr_stmt|;
+name|AUDIT_SYSCALL_ENTER
+argument_list|(
+name|code
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 call|(
@@ -691,6 +704,13 @@ argument_list|(
 name|td
 argument_list|,
 name|args64
+argument_list|)
+expr_stmt|;
+name|AUDIT_SYSCALL_EXIT
+argument_list|(
+name|error
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 block|}
