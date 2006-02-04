@@ -1377,7 +1377,7 @@ name|ifp
 operator|->
 name|if_oerrors
 expr_stmt|;
-name|IF_DRV_DEQUEUE
+name|IFQ_DRV_DEQUEUE
 argument_list|(
 operator|&
 name|ifp
@@ -1636,7 +1636,7 @@ literal|8
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Get the packet from the kernel.  This will include the Ethernet 	 * frame header, MAC Addresses etc. 	 */
-name|IF_DRV_DEQUEUE
+name|IFQ_DRV_DEQUEUE
 argument_list|(
 operator|&
 name|ifp
@@ -2013,7 +2013,7 @@ name|ifp
 operator|->
 name|if_oerrors
 expr_stmt|;
-name|IF_DRV_DEQUEUE
+name|IFQ_DRV_DEQUEUE
 argument_list|(
 operator|&
 name|ifp
@@ -2214,7 +2214,7 @@ literal|8
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Get the packet from the kernel.  This will include the Ethernet 	 * frame header, MAC Addresses etc. 	 */
-name|IF_DRV_DEQUEUE
+name|IFQ_DRV_DEQUEUE
 argument_list|(
 operator|&
 name|ifp
