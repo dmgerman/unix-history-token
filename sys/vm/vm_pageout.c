@@ -3110,11 +3110,6 @@ literal|0
 condition|)
 block|{
 comment|/* 			 * Invalid pages can be easily freed 			 */
-name|pmap_remove_all
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 name|vm_page_free
 argument_list|(
 name|m
