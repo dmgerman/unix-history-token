@@ -10586,16 +10586,29 @@ expr_stmt|;
 comment|/* Check if the device is there? */
 if|if
 condition|(
-operator|(
 name|ASR_resetIOP
 argument_list|(
 name|sc
 argument_list|)
 operator|==
 literal|0
-operator|)
-operator|||
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Cannot reset adapter\n"
+argument_list|)
+expr_stmt|;
+return|return
 operator|(
+name|EIO
+operator|)
+return|;
+block|}
+if|if
+condition|(
 operator|(
 name|status
 operator|=
@@ -10611,14 +10624,28 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 operator|)
 operator|==
 name|NULL
-operator|)
-operator|||
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Cannot allocate memory\n"
+argument_list|)
+expr_stmt|;
+return|return
 operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
+if|if
+condition|(
 name|ASR_getStatus
 argument_list|(
 name|sc
@@ -10627,7 +10654,6 @@ name|status
 argument_list|)
 operator|==
 name|NULL
-operator|)
 condition|)
 block|{
 name|device_printf
@@ -10637,12 +10663,18 @@ argument_list|,
 literal|"could not initialize hardware\n"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|status
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENODEV
 operator|)
 return|;
-comment|/* Get next, maybe better luck */
 block|}
 name|sc
 operator|->
