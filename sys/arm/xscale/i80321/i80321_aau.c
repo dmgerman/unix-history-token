@@ -898,6 +898,12 @@ name|dst
 expr_stmt|;
 name|desc
 operator|->
+name|next_desc
+operator|=
+literal|0
+expr_stmt|;
+name|desc
+operator|->
 name|count
 operator|=
 name|len
