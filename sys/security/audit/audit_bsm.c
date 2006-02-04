@@ -2655,6 +2655,9 @@ argument_list|,
 operator|(
 name|u_int32_t
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|ar
 operator|->
 name|ar_arg_addr
@@ -2895,6 +2898,9 @@ argument_list|,
 operator|(
 name|u_int32_t
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|ar
 operator|->
 name|ar_arg_addr
@@ -3054,6 +3060,9 @@ literal|"addr"
 argument_list|,
 operator|(
 name|u_int32_t
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|ar
 operator|->
@@ -3398,6 +3407,9 @@ argument_list|,
 operator|(
 name|u_int32_t
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|ar
 operator|->
 name|ar_arg_addr
@@ -3570,6 +3582,9 @@ literal|"addr"
 argument_list|,
 operator|(
 name|u_int32_t
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|ar
 operator|->
@@ -4608,6 +4623,9 @@ argument_list|,
 operator|(
 name|int
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|ar
 operator|->
 name|ar_arg_svipc_addr
@@ -4796,6 +4814,9 @@ literal|"shmaddr"
 argument_list|,
 operator|(
 name|int
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|ar
 operator|->
