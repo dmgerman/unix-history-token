@@ -1859,7 +1859,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|u_int8_t
+name|void
 modifier|*
 name|p
 name|debug_called
@@ -1935,11 +1935,10 @@ name|amr_sg_dmat
 argument_list|)
 expr_stmt|;
 comment|/* free and destroy DMA memory and tag for mailbox */
-comment|/* XXX Brain damaged GCC Alert! */
 name|p
 operator|=
 operator|(
-name|u_int8_t
+name|void
 operator|*
 operator|)
 operator|(
@@ -2151,7 +2150,7 @@ block|{
 name|size_t
 name|segsize
 decl_stmt|;
-name|u_int8_t
+name|void
 modifier|*
 name|p
 decl_stmt|;
@@ -2469,7 +2468,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|u_int8_t
+name|void
 modifier|*
 name|p
 decl_stmt|;
