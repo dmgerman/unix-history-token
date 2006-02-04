@@ -41,7 +41,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* variable struct is staticly allocated */
+comment|/* variable struct is statically allocated */
 end_comment
 
 begin_define
@@ -52,7 +52,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/* text is staticly allocated */
+comment|/* text is statically allocated */
 end_comment
 
 begin_define
