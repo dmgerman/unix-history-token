@@ -2919,6 +2919,10 @@ operator|(
 name|u_int32_t
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|an_rx_desc
 operator|)
@@ -3099,6 +3103,10 @@ operator|(
 name|u_int32_t
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|an_tx_desc
 operator|)
@@ -3243,6 +3251,10 @@ argument_list|,
 operator|(
 operator|(
 name|u_int32_t
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 operator|&
@@ -5176,6 +5188,10 @@ operator|(
 name|u_int32_t
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|an_rx_desc
 operator|)
@@ -5492,6 +5508,10 @@ argument_list|,
 operator|(
 operator|(
 name|u_int32_t
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 operator|&
@@ -7391,6 +7411,10 @@ operator|(
 name|u_int32_t
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|an_rid_desc
 operator|)
@@ -7976,6 +8000,10 @@ argument_list|,
 operator|(
 operator|(
 name|u_int32_t
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 operator|&
@@ -13941,6 +13969,10 @@ argument_list|,
 operator|(
 operator|(
 name|u_int32_t
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 operator|&
