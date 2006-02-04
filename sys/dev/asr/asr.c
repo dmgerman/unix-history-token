@@ -2111,7 +2111,7 @@ begin_define
 define|#
 directive|define
 name|EMPTY_QUEUE
-value|(-1L)
+value|(0xffffffff)
 end_define
 
 begin_function
@@ -2396,8 +2396,7 @@ name|Message_Ptr
 argument_list|)
 operator|)
 operator|!=
-operator|-
-literal|1L
+literal|0xffffffff
 condition|)
 block|{
 comment|/* 		 * Wait for a response (Poll), timeouts are dangerous if 		 * the card is truly responsive. We assume response in 2s. 		 */
@@ -2583,8 +2582,7 @@ name|Message_Ptr
 argument_list|)
 operator|)
 operator|!=
-operator|-
-literal|1L
+literal|0xffffffff
 condition|)
 block|{
 comment|/* 		 *	Wait for a response (Poll), timeouts are dangerous if 		 * the card is truly responsive. We assume response in 50ms. 		 */
@@ -8285,8 +8283,7 @@ name|Message_Ptr
 argument_list|)
 operator|)
 operator|!=
-operator|-
-literal|1L
+literal|0xffffffff
 condition|)
 block|{
 name|u_long
