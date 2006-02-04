@@ -494,7 +494,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Initialize the varable symbol tables and import the environment  */
+comment|/*  * Initialize the variable symbol tables and import the environment.  */
 end_comment
 
 begin_ifdef
@@ -867,7 +867,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set the value of a variable.  The flags argument is tored with the  * flags of the variable.  If val is NULL, the variable is unset.  */
+comment|/*  * Set the value of a variable.  The flags argument is stored with the  * flags of the variable.  If val is NULL, the variable is unset.  */
 end_comment
 
 begin_function
