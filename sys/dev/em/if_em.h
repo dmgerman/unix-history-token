@@ -100,18 +100,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sched.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/bus.h>
 end_include
 
@@ -895,12 +883,6 @@ modifier|*
 name|tq
 decl_stmt|;
 comment|/* private task queue */
-name|struct
-name|proc
-modifier|*
-name|tqproc
-decl_stmt|;
-comment|/* thread handling sc_tq */
 comment|/* Info about the board itself */
 name|u_int32_t
 name|part_num
