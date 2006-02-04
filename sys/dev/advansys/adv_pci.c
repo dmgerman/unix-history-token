@@ -192,7 +192,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|u_int8_t
+name|void
 modifier|*
 name|overrun_buf
 decl_stmt|;
@@ -758,11 +758,6 @@ name|bus_dmamem_alloc
 argument_list|(
 name|overrun_dmat
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|*
-operator|)
 operator|&
 name|overrun_buf
 argument_list|,
