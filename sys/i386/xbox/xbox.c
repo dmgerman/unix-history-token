@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -31,6 +37,18 @@ begin_include
 include|#
 directive|include
 file|<machine/xbox.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/pmap.h>
 end_include
 
 begin_include
@@ -93,6 +111,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|ptr
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -111,17 +133,55 @@ argument_list|,
 name|SHUTDOWN_PRI_LAST
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Some XBOX loaders, such as Cromwell, have a flaw which cause the 	 * nve(4) driver to fail attaching to the NIC. 	 * 	 * This is because they leave the NIC running; this will cause the 	 * Nvidia driver to fail as the NIC does not return any sensible 	 * values and thus fails attaching (using an error 0x5, this means 	 * it cannot find a valid PHY) 	 * 	 * We bluntly tell the NIC to stop whatever it's doing; this makes 	 * nve(4) attach correctly. As the NIC always resides at 	 * 0xfef00000-0xfef003ff on an XBOX, we simply hardcode this address. 	 */
+name|ptr
+operator|=
+name|pmap_mapdev
+argument_list|(
+literal|0xfef00000
+argument_list|,
+literal|0x400
+argument_list|)
+expr_stmt|;
+operator|*
+operator|(
+name|uint32_t
+operator|*
+operator|)
+operator|(
+name|ptr
+operator|+
+literal|0x188
+operator|)
+operator|=
+literal|0
+expr_stmt|;
+comment|/* clear adapter control field */
+name|pmap_unmapdev
+argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
+name|ptr
+argument_list|,
+literal|0x400
+argument_list|)
+expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * This must be called before the drivers, as the if_nve(4) driver will fail  * if we do not do this in advance.  */
+end_comment
 
 begin_macro
 name|SYSINIT
 argument_list|(
 argument|xbox
 argument_list|,
-argument|SI_SUB_CONFIGURE
+argument|SI_SUB_DRIVERS
 argument_list|,
-argument|SI_ORDER_MIDDLE
+argument|SI_ORDER_FIRST
 argument_list|,
 argument|xbox_init
 argument_list|,
