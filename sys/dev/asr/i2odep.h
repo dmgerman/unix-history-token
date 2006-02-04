@@ -92,16 +92,14 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|long
+name|u_int32_t
 name|U32
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|short
+name|int32_t
 name|S32
 typedef|;
 end_typedef
