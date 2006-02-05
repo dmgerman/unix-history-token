@@ -379,6 +379,23 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net/if_pflog.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|INET6
 end_ifdef
 
@@ -1317,6 +1334,15 @@ begin_decl_stmt
 name|struct
 name|mtx
 name|pf_task_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|pflog_packet_t
+modifier|*
+name|pflog_packet_ptr
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
