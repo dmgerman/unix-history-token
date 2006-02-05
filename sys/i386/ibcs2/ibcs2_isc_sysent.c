@@ -112,7 +112,7 @@ operator|*
 operator|)
 name|ibcs2_rename
 block|,
-name|AUE_NULL
+name|AUE_RENAME
 block|}
 block|,
 comment|/* 2 = ibcs2_rename */
@@ -135,8 +135,6 @@ block|}
 block|,
 comment|/* 3 = ibcs2_sigaction */
 block|{
-name|SYF_MPSAFE
-operator||
 name|AS
 argument_list|(
 name|ibcs2_sigprocmask_args
@@ -184,7 +182,7 @@ operator|*
 operator|)
 name|getgroups
 block|,
-name|AUE_NULL
+name|AUE_GETGROUPS
 block|}
 block|,
 comment|/* 6 = getgroups */
@@ -202,7 +200,7 @@ operator|*
 operator|)
 name|setgroups
 block|,
-name|AUE_NULL
+name|AUE_SETGROUPS
 block|}
 block|,
 comment|/* 7 = setgroups */
@@ -220,7 +218,7 @@ operator|*
 operator|)
 name|ibcs2_pathconf
 block|,
-name|AUE_NULL
+name|AUE_PATHCONF
 block|}
 block|,
 comment|/* 8 = ibcs2_pathconf */
@@ -238,7 +236,7 @@ operator|*
 operator|)
 name|ibcs2_fpathconf
 block|,
-name|AUE_NULL
+name|AUE_FPATHCONF
 block|}
 block|,
 comment|/* 9 = ibcs2_fpathconf */
@@ -269,7 +267,7 @@ operator|*
 operator|)
 name|ibcs2_wait
 block|,
-name|AUE_NULL
+name|AUE_WAIT4
 block|}
 block|,
 comment|/* 11 = ibcs2_wait */
@@ -284,7 +282,7 @@ operator|*
 operator|)
 name|setsid
 block|,
-name|AUE_NULL
+name|AUE_SETSID
 block|}
 block|,
 comment|/* 12 = setsid */
@@ -299,7 +297,7 @@ operator|*
 operator|)
 name|getpid
 block|,
-name|AUE_NULL
+name|AUE_GETPID
 block|}
 block|,
 comment|/* 13 = getpid */
@@ -379,7 +377,7 @@ operator|*
 operator|)
 name|ibcs2_symlink
 block|,
-name|AUE_NULL
+name|AUE_SYMLINK
 block|}
 block|,
 comment|/* 18 = ibcs2_symlink */
@@ -397,7 +395,7 @@ operator|*
 operator|)
 name|ibcs2_readlink
 block|,
-name|AUE_NULL
+name|AUE_READLINK
 block|}
 block|,
 comment|/* 19 = ibcs2_readlink */
