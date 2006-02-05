@@ -532,6 +532,31 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AUDIT
+comment|/* 	 * The Sun BSM exit token contains two components: an exit status as 	 * passed to exit(), and a return value to indicate what sort of exit 	 * it was.  The exit status is WEXITSTATUS(rv), but it's not clear 	 * what the return value is. 	 */
+name|AUDIT_ARG
+argument_list|(
+name|exit
+argument_list|,
+name|WEXITSTATUS
+argument_list|(
+name|rv
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|AUDIT_SYSCALL_EXIT
+argument_list|(
+literal|0
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Are we a task leader? */
 if|if
 condition|(
