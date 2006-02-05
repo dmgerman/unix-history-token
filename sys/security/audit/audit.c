@@ -3062,6 +3062,36 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Thread destruction.  */
+end_comment
+
+begin_function
+name|void
+name|audit_thread_free
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+block|{
+name|KASSERT
+argument_list|(
+name|td
+operator|->
+name|td_ar
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"audit_thread_free: td_ar != NULL"
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*   * Initialize the audit information for the a process, presumably the first   * process in the system.  * XXX It is not clear what the initial values should be for audit ID,   * session ID, etc.   */
 end_comment
 

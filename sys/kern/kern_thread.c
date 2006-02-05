@@ -639,6 +639,16 @@ comment|/* NOTREACHED */
 block|}
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|AUDIT
+name|audit_thread_free
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|free_unr
 argument_list|(
 name|tid_unrhdr
