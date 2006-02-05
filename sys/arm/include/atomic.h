@@ -384,9 +384,9 @@ literal|"str	%1, [%0]\n"
 literal|"adr	%1, 1b\n"
 literal|"mov	%0, #0xe0000004\n"
 literal|"str	%1, [%0]\n"
-literal|"ldr	%1, %2\n"
+literal|"ldr	%1, [%2]\n"
 literal|"cmp	%1, %3\n"
-literal|"streq	%4, %2\n"
+literal|"streq	%4, [%2]\n"
 literal|"2:\n"
 literal|"mov	%1, #0\n"
 literal|"str	%1, [%0]\n"
@@ -403,9 +403,8 @@ operator|(
 name|done
 operator|)
 operator|,
-literal|"=m"
+literal|"+r"
 operator|(
-operator|*
 name|p
 operator|)
 operator|,
@@ -417,12 +416,6 @@ operator|,
 literal|"+r"
 operator|(
 name|newval
-operator|)
-operator|:
-literal|"m"
-operator|(
-operator|*
-name|p
 operator|)
 block|)
 function|;
@@ -463,9 +456,9 @@ literal|"str	%1, [%0]\n"
 literal|"adr	%1, 1b\n"
 literal|"mov	%0, #0xe0000004\n"
 literal|"str	%1, [%0]\n"
-literal|"ldr	%1, %2\n"
+literal|"ldr	%1, [%2]\n"
 literal|"add	%1, %1, %3\n"
-literal|"str	%1, %2\n"
+literal|"str	%1, [%2]\n"
 literal|"2:\n"
 literal|"mov	%1, #0\n"
 literal|"str	%1, [%0]\n"
@@ -480,21 +473,14 @@ operator|(
 name|start
 operator|)
 operator|,
-literal|"=m"
+literal|"+r"
 operator|(
-operator|*
 name|p
 operator|)
 operator|,
 literal|"+r"
 operator|(
 name|val
-operator|)
-operator|:
-literal|"m"
-operator|(
-operator|*
-name|p
 operator|)
 block|)
 function|;
@@ -527,9 +513,9 @@ literal|"str	%1, [%0]\n"
 literal|"adr	%1, 1b\n"
 literal|"mov	%0, #0xe0000004\n"
 literal|"str	%1, [%0]\n"
-literal|"ldr	%1, %2\n"
+literal|"ldr	%1, [%2]\n"
 literal|"sub	%1, %1, %3\n"
-literal|"str	%1, %2\n"
+literal|"str	%1, [%2]\n"
 literal|"2:\n"
 literal|"mov	%1, #0\n"
 literal|"str	%1, [%0]\n"
@@ -544,21 +530,14 @@ operator|(
 name|start
 operator|)
 operator|,
-literal|"=m"
+literal|"+r"
 operator|(
-operator|*
 name|p
 operator|)
 operator|,
 literal|"+r"
 operator|(
 name|val
-operator|)
-operator|:
-literal|"m"
-operator|(
-operator|*
-name|p
 operator|)
 block|)
 function|;
@@ -591,9 +570,9 @@ literal|"str	%1, [%0]\n"
 literal|"adr	%1, 1b\n"
 literal|"mov	%0, #0xe0000004\n"
 literal|"str	%1, [%0]\n"
-literal|"ldr	%1, %2\n"
+literal|"ldr	%1, [%2]\n"
 literal|"orr	%1, %1, %3\n"
-literal|"str	%1, %2\n"
+literal|"str	%1, [%2]\n"
 literal|"2:\n"
 literal|"mov	%1, #0\n"
 literal|"str	%1, [%0]\n"
@@ -608,21 +587,14 @@ operator|(
 name|start
 operator|)
 operator|,
-literal|"=m"
+literal|"+r"
 operator|(
-operator|*
 name|address
 operator|)
 operator|,
 literal|"+r"
 operator|(
 name|setmask
-operator|)
-operator|:
-literal|"m"
-operator|(
-operator|*
-name|address
 operator|)
 block|)
 function|;
@@ -655,9 +627,9 @@ literal|"str	%1, [%0]\n"
 literal|"adr	%1, 1b\n"
 literal|"mov	%0, #0xe0000004\n"
 literal|"str	%1, [%0]\n"
-literal|"ldr	%1, %2\n"
+literal|"ldr	%1, [%2]\n"
 literal|"bic	%1, %1, %3\n"
-literal|"str	%1, %2\n"
+literal|"str	%1, [%2]\n"
 literal|"2:\n"
 literal|"mov	%1, #0\n"
 literal|"str	%1, [%0]\n"
@@ -672,21 +644,14 @@ operator|(
 name|start
 operator|)
 operator|,
-literal|"=m"
+literal|"+r"
 operator|(
-operator|*
 name|address
 operator|)
 operator|,
 literal|"+r"
 operator|(
 name|clearmask
-operator|)
-operator|:
-literal|"m"
-operator|(
-operator|*
-name|address
 operator|)
 block|)
 function|;
@@ -719,9 +684,9 @@ literal|"str	%1, [%0]\n"
 literal|"adr	%1, 1b\n"
 literal|"mov	%0, #0xe0000004\n"
 literal|"str	%1, [%0]\n"
-literal|"ldr	%1, %2\n"
+literal|"ldr	%1, [%2]\n"
 literal|"add	%3, %1, %3\n"
-literal|"str	%3, %2\n"
+literal|"str	%3, [%2]\n"
 literal|"2:\n"
 literal|"mov	%3, #0\n"
 literal|"str	%3, [%0]\n"
@@ -736,21 +701,14 @@ operator|(
 name|start
 operator|)
 operator|,
-literal|"=m"
+literal|"+r"
 operator|(
-operator|*
 name|p
 operator|)
 operator|,
 literal|"+r"
 operator|(
 name|v
-operator|)
-operator|:
-literal|"m"
-operator|(
-operator|*
-name|p
 operator|)
 block|)
 function|;
