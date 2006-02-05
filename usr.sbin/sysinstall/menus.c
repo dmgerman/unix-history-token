@@ -12440,7 +12440,7 @@ directive|endif
 block|{
 literal|" NFS port"
 block|,
-literal|"Require that the NFS clients used reserved ports"
+literal|"Require that the NFS clients use reserved ports"
 block|,
 name|dmenuVarCheck
 block|,
