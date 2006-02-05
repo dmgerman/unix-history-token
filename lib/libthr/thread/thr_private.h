@@ -952,10 +952,6 @@ value|((u_int32_t) 0xd09ba115)
 name|u_int32_t
 name|magic
 decl_stmt|;
-name|char
-modifier|*
-name|name
-decl_stmt|;
 comment|/* 	 * Lock for accesses to this thread structure. 	 */
 name|umtx_t
 name|lock

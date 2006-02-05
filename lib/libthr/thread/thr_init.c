@@ -1738,12 +1738,12 @@ name|PTHREAD_CANCEL_ENABLE
 operator||
 name|PTHREAD_CANCEL_DEFERRED
 expr_stmt|;
+name|thr_set_name
+argument_list|(
 name|thread
 operator|->
-name|name
-operator|=
-name|strdup
-argument_list|(
+name|tid
+argument_list|,
 literal|"initial thread"
 argument_list|)
 expr_stmt|;
@@ -1850,9 +1850,6 @@ name|_thr_spinlock_init
 argument_list|()
 expr_stmt|;
 name|_thr_list_init
-argument_list|()
-expr_stmt|;
-name|_thr_timer_init
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Avoid reinitializing some things if they don't need to be, 	 * e.g. after a fork(). 	 */

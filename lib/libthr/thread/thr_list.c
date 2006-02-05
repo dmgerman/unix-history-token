@@ -705,27 +705,6 @@ argument_list|,
 name|thread
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|thread
-operator|->
-name|name
-condition|)
-block|{
-name|free
-argument_list|(
-name|thread
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
-name|thread
-operator|->
-name|name
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 comment|/* 	 * Always free tcb, as we only know it is part of RTLD TLS 	 * block, but don't know its detail and can not assume how 	 * it works, so better to avoid caching it here. 	 */
 if|if
 condition|(
