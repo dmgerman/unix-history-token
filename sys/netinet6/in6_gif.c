@@ -1946,8 +1946,7 @@ argument_list|,
 name|gif_encapcheck
 argument_list|,
 operator|(
-expr|struct
-name|protosw
+name|void
 operator|*
 operator|)
 operator|&
