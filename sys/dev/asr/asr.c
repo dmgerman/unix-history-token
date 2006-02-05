@@ -2223,8 +2223,7 @@ block|{
 name|U32
 name|Mask
 init|=
-operator|-
-literal|1L
+literal|0xffffffff
 decl_stmt|;
 name|U32
 name|MessageOffset
@@ -2477,8 +2476,7 @@ name|KASSERT
 argument_list|(
 name|Old
 operator|!=
-operator|-
-literal|1L
+literal|0xffffffff
 argument_list|,
 operator|(
 literal|"Old == -1"
