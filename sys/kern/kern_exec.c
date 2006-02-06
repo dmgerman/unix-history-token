@@ -362,6 +362,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|exec_free_args
+parameter_list|(
+name|struct
+name|image_args
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* XXX This should be vm_size_t. */
 end_comment
@@ -834,12 +846,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|exec_free_args
-argument_list|(
-operator|&
-name|args
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -960,12 +966,6 @@ argument_list|,
 name|uap
 operator|->
 name|mac_p
-argument_list|)
-expr_stmt|;
-name|exec_free_args
-argument_list|(
-operator|&
-name|args
 argument_list|)
 expr_stmt|;
 return|return
@@ -2953,14 +2953,8 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|imgp
-operator|->
-name|vmspace_destroyed
-condition|)
-block|{
-comment|/* sorry, no more process anymore. exit gracefully */
+name|done2
+label|:
 ifdef|#
 directive|ifdef
 name|MAC
@@ -2992,6 +2986,16 @@ argument_list|(
 name|args
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|&&
+name|imgp
+operator|->
+name|vmspace_destroyed
+condition|)
+block|{
+comment|/* sorry, no more process anymore. exit gracefully */
 name|exit1
 argument_list|(
 name|td
@@ -3005,39 +3009,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* NOT REACHED */
-name|error
-operator|=
-literal|0
-expr_stmt|;
 block|}
-name|done2
-label|:
-ifdef|#
-directive|ifdef
-name|MAC
-name|mac_execve_exit
-argument_list|(
-name|imgp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|interplabel
-operator|!=
-name|NULL
-condition|)
-name|mac_vnode_label_free
-argument_list|(
-name|interplabel
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -4175,6 +4147,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|exec_free_args
 parameter_list|(

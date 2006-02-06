@@ -1808,12 +1808,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|exec_free_args
-argument_list|(
-operator|&
-name|eargs
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error

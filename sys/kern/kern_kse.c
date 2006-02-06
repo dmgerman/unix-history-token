@@ -1306,12 +1306,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|exec_free_args
-argument_list|(
-operator|&
-name|iargs
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
