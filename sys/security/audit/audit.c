@@ -1170,6 +1170,23 @@ operator|&
 name|AR_COMMIT_USER
 condition|)
 block|{
+comment|/* 		 * Try submitting the record to any active audit pipes. 		 */
+name|audit_pipe_submit
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|ar
+operator|->
+name|k_udata
+argument_list|,
+name|ar
+operator|->
+name|k_ulen
+argument_list|)
+expr_stmt|;
+comment|/* 		 * And to disk. 		 */
 name|ret
 operator|=
 name|vn_rdwr
@@ -1288,6 +1305,22 @@ goto|goto
 name|out
 goto|;
 block|}
+comment|/* 	 * Try submitting the record to any active audit pipes. 	 */
+name|audit_pipe_submit
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|bsm
+operator|->
+name|data
+argument_list|,
+name|bsm
+operator|->
+name|len
+argument_list|)
+expr_stmt|;
 comment|/* 	 * XXX 	 * We should break the write functionality away from the BSM record 	 * generation and have the BSM generation done before this function 	 * is called. This function will then take the BSM record as a 	 * parameter. 	 */
 name|ret
 operator|=
