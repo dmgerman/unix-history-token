@@ -1053,7 +1053,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|kern_access
+name|kern_eaccess
 argument_list|(
 name|td
 argument_list|,
