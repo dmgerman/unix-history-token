@@ -417,6 +417,9 @@ literal|"+r"
 operator|(
 name|newval
 operator|)
+operator|:
+operator|:
+literal|"memory"
 block|)
 function|;
 end_function
@@ -482,6 +485,9 @@ literal|"+r"
 operator|(
 name|val
 operator|)
+operator|:
+operator|:
+literal|"memory"
 block|)
 function|;
 end_function
@@ -539,6 +545,9 @@ literal|"+r"
 operator|(
 name|val
 operator|)
+operator|:
+operator|:
+literal|"memory"
 block|)
 function|;
 end_function
@@ -596,6 +605,9 @@ literal|"+r"
 operator|(
 name|setmask
 operator|)
+operator|:
+operator|:
+literal|"memory"
 block|)
 function|;
 end_function
@@ -653,6 +665,9 @@ literal|"+r"
 operator|(
 name|clearmask
 operator|)
+operator|:
+operator|:
+literal|"memory"
 block|)
 function|;
 end_function
@@ -710,6 +725,9 @@ literal|"+r"
 operator|(
 name|v
 operator|)
+operator|:
+operator|:
+literal|"memory"
 block|)
 function|;
 end_function
