@@ -2149,9 +2149,9 @@ if|if
 condition|(
 name|dp
 operator|->
-name|v_mount
-operator|==
-name|NULL
+name|v_iflag
+operator|&
+name|VI_DOOMED
 condition|)
 block|{
 comment|/* forced unmount */
@@ -2858,9 +2858,9 @@ if|if
 condition|(
 name|dp
 operator|->
-name|v_mount
-operator|==
-name|NULL
+name|v_iflag
+operator|&
+name|VI_DOOMED
 condition|)
 block|{
 comment|/* We can't know whether the directory was mounted with 			 * NOSYMFOLLOW, so we can't follow safely. */
