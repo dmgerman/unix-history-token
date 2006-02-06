@@ -12291,7 +12291,10 @@ block|}
 block|}
 comment|/* any drive action to take care of ? */
 return|return
-literal|1
+name|ata_pci_status
+argument_list|(
+name|dev
+argument_list|)
 return|;
 block|}
 end_function
