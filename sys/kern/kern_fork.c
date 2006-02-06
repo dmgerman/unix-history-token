@@ -3169,11 +3169,6 @@ name|frame
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check if a kernel thread misbehaved and returned from its main 	 * function. 	 */
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|p
@@ -3183,11 +3178,6 @@ operator|&
 name|P_KTHREAD
 condition|)
 block|{
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"Kernel thread \"%s\" (pid %d) exited prematurely.\n"
@@ -3207,11 +3197,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
