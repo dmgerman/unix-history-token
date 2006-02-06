@@ -2681,6 +2681,13 @@ name|error
 decl_stmt|,
 name|nfound
 decl_stmt|;
+name|AUDIT_ARG
+argument_list|(
+name|pid
+argument_list|,
+name|pid
+argument_list|)
+expr_stmt|;
 name|q
 operator|=
 name|td
