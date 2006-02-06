@@ -3136,6 +3136,17 @@ decl_stmt|;
 name|TDBG_FUNC
 argument_list|()
 expr_stmt|;
+name|bzero
+argument_list|(
+name|info
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|info
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|pt_validate
