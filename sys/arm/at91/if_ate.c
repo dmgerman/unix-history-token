@@ -783,6 +783,17 @@ argument_list|,
 name|eaddr
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|ifp
+operator|=
+name|ifp
+operator|=
+name|if_alloc
+argument_list|(
+name|IFT_ETHER
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mii_phy_probe
@@ -815,17 +826,6 @@ goto|goto
 name|out
 goto|;
 block|}
-name|sc
-operator|->
-name|ifp
-operator|=
-name|ifp
-operator|=
-name|if_alloc
-argument_list|(
-name|IFT_ETHER
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|->
 name|if_softc
@@ -2944,6 +2944,21 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+name|mb
+operator|->
+name|m_len
+operator|=
+name|sc
+operator|->
+name|rx_descs
+index|[
+name|i
+index|]
+operator|.
+name|status
+operator|&
+name|ETH_LEN_MASK
+expr_stmt|;
 comment|/* 				 * For the last buffer, set the wrap bit so 				 * the controller restarts from the first 				 * descriptor. 				 */
 if|if
 condition|(
@@ -3772,7 +3787,7 @@ operator|->
 name|tick_ch
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Enable some parts of the MAC that are needed always (like the 	 * MII bus.  This turns off the RE and TE bits, which will remain 	 * off until atestart() is called to turn them on.  With RE and TE 	 * turned off, there's no DMA to worry about after this write. 	 */
+comment|/* 	 * Enable some parts of the MAC that are needed always (like the 	 * MII bus.  This turns off the RE and TE bits, which will remain 	 * off until ateinit() is called to turn them on.  With RE and TE 	 * turned off, there's no DMA to worry about after this write. 	 */
 name|WR4
 argument_list|(
 name|sc
