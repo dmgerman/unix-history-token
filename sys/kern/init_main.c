@@ -271,6 +271,10 @@ begin_decl_stmt
 name|struct
 name|thread
 name|thread0
+name|__aligned
+argument_list|(
+literal|8
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
