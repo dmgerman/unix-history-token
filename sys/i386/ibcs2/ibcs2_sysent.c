@@ -95,7 +95,7 @@ operator|*
 operator|)
 name|sys_exit
 block|,
-name|AUE_NULL
+name|AUE_EXIT
 block|}
 block|,
 comment|/* 1 = exit */
@@ -110,7 +110,7 @@ operator|*
 operator|)
 name|fork
 block|,
-name|AUE_NULL
+name|AUE_FORK
 block|}
 block|,
 comment|/* 2 = fork */
@@ -162,7 +162,7 @@ operator|*
 operator|)
 name|ibcs2_open
 block|,
-name|AUE_NULL
+name|AUE_OPEN_RWTC
 block|}
 block|,
 comment|/* 5 = ibcs2_open */
@@ -180,7 +180,7 @@ operator|*
 operator|)
 name|close
 block|,
-name|AUE_NULL
+name|AUE_CLOSE
 block|}
 block|,
 comment|/* 6 = close */
@@ -198,7 +198,7 @@ operator|*
 operator|)
 name|ibcs2_wait
 block|,
-name|AUE_NULL
+name|AUE_WAIT4
 block|}
 block|,
 comment|/* 7 = ibcs2_wait */
@@ -216,7 +216,7 @@ operator|*
 operator|)
 name|ibcs2_creat
 block|,
-name|AUE_NULL
+name|AUE_CREAT
 block|}
 block|,
 comment|/* 8 = ibcs2_creat */
@@ -234,7 +234,7 @@ operator|*
 operator|)
 name|link
 block|,
-name|AUE_NULL
+name|AUE_LINK
 block|}
 block|,
 comment|/* 9 = link */
@@ -252,7 +252,7 @@ operator|*
 operator|)
 name|ibcs2_unlink
 block|,
-name|AUE_NULL
+name|AUE_UNLINK
 block|}
 block|,
 comment|/* 10 = ibcs2_unlink */
@@ -270,7 +270,7 @@ operator|*
 operator|)
 name|ibcs2_execv
 block|,
-name|AUE_NULL
+name|AUE_EXECVE
 block|}
 block|,
 comment|/* 11 = ibcs2_execv */
@@ -288,7 +288,7 @@ operator|*
 operator|)
 name|ibcs2_chdir
 block|,
-name|AUE_NULL
+name|AUE_CHDIR
 block|}
 block|,
 comment|/* 12 = ibcs2_chdir */
@@ -324,7 +324,7 @@ operator|*
 operator|)
 name|ibcs2_mknod
 block|,
-name|AUE_NULL
+name|AUE_MKNOD
 block|}
 block|,
 comment|/* 14 = ibcs2_mknod */
@@ -342,7 +342,7 @@ operator|*
 operator|)
 name|ibcs2_chmod
 block|,
-name|AUE_NULL
+name|AUE_CHMOD
 block|}
 block|,
 comment|/* 15 = ibcs2_chmod */
@@ -360,7 +360,7 @@ operator|*
 operator|)
 name|ibcs2_chown
 block|,
-name|AUE_NULL
+name|AUE_CHOWN
 block|}
 block|,
 comment|/* 16 = ibcs2_chown */
@@ -396,7 +396,7 @@ operator|*
 operator|)
 name|ibcs2_stat
 block|,
-name|AUE_NULL
+name|AUE_STAT
 block|}
 block|,
 comment|/* 18 = ibcs2_stat */
@@ -414,7 +414,7 @@ operator|*
 operator|)
 name|ibcs2_lseek
 block|,
-name|AUE_NULL
+name|AUE_LSEEK
 block|}
 block|,
 comment|/* 19 = ibcs2_lseek */
@@ -445,7 +445,7 @@ operator|*
 operator|)
 name|ibcs2_mount
 block|,
-name|AUE_NULL
+name|AUE_MOUNT
 block|}
 block|,
 comment|/* 21 = ibcs2_mount */
@@ -461,7 +461,7 @@ operator|*
 operator|)
 name|ibcs2_umount
 block|,
-name|AUE_NULL
+name|AUE_UMOUNT
 block|}
 block|,
 comment|/* 22 = ibcs2_umount */
@@ -479,7 +479,7 @@ operator|*
 operator|)
 name|ibcs2_setuid
 block|,
-name|AUE_NULL
+name|AUE_SETUID
 block|}
 block|,
 comment|/* 23 = ibcs2_setuid */
@@ -494,7 +494,7 @@ operator|*
 operator|)
 name|getuid
 block|,
-name|AUE_NULL
+name|AUE_GETUID
 block|}
 block|,
 comment|/* 24 = getuid */
@@ -512,7 +512,7 @@ operator|*
 operator|)
 name|ibcs2_stime
 block|,
-name|AUE_NULL
+name|AUE_SETTIMEOFDAY
 block|}
 block|,
 comment|/* 25 = ibcs2_stime */
@@ -530,7 +530,7 @@ operator|*
 operator|)
 name|ptrace
 block|,
-name|AUE_NULL
+name|AUE_PTRACE
 block|}
 block|,
 comment|/* 26 = ptrace */
@@ -566,7 +566,7 @@ operator|*
 operator|)
 name|ibcs2_fstat
 block|,
-name|AUE_NULL
+name|AUE_FSTAT
 block|}
 block|,
 comment|/* 28 = ibcs2_fstat */
@@ -653,7 +653,7 @@ operator|*
 operator|)
 name|ibcs2_access
 block|,
-name|AUE_NULL
+name|AUE_ACCESS
 block|}
 block|,
 comment|/* 33 = ibcs2_access */
@@ -671,7 +671,7 @@ operator|*
 operator|)
 name|ibcs2_nice
 block|,
-name|AUE_NULL
+name|AUE_NICE
 block|}
 block|,
 comment|/* 34 = ibcs2_nice */
@@ -689,7 +689,7 @@ operator|*
 operator|)
 name|ibcs2_statfs
 block|,
-name|AUE_NULL
+name|AUE_STATFS
 block|}
 block|,
 comment|/* 35 = ibcs2_statfs */
@@ -722,7 +722,7 @@ operator|*
 operator|)
 name|ibcs2_kill
 block|,
-name|AUE_NULL
+name|AUE_KILL
 block|}
 block|,
 comment|/* 37 = ibcs2_kill */
@@ -740,7 +740,7 @@ operator|*
 operator|)
 name|ibcs2_fstatfs
 block|,
-name|AUE_NULL
+name|AUE_FSTATFS
 block|}
 block|,
 comment|/* 38 = ibcs2_fstatfs */
@@ -809,7 +809,7 @@ operator|*
 operator|)
 name|pipe
 block|,
-name|AUE_NULL
+name|AUE_PIPE
 block|}
 block|,
 comment|/* 42 = pipe */
@@ -845,7 +845,7 @@ operator|*
 operator|)
 name|profil
 block|,
-name|AUE_NULL
+name|AUE_PROFILE
 block|}
 block|,
 comment|/* 44 = profil */
@@ -881,7 +881,7 @@ operator|*
 operator|)
 name|ibcs2_setgid
 block|,
-name|AUE_NULL
+name|AUE_SETGID
 block|}
 block|,
 comment|/* 46 = ibcs2_setgid */
@@ -896,7 +896,7 @@ operator|*
 operator|)
 name|getgid
 block|,
-name|AUE_NULL
+name|AUE_GETGID
 block|}
 block|,
 comment|/* 47 = getgid */
@@ -930,7 +930,7 @@ operator|*
 operator|)
 name|ibcs2_msgsys
 block|,
-name|AUE_NULL
+name|AUE_MSGSYS
 block|}
 block|,
 comment|/* 49 = ibcs2_msgsys */
@@ -977,7 +977,7 @@ operator|*
 operator|)
 name|ibcs2_shmsys
 block|,
-name|AUE_NULL
+name|AUE_SHMSYS
 block|}
 block|,
 comment|/* 52 = ibcs2_shmsys */
@@ -993,7 +993,7 @@ operator|*
 operator|)
 name|ibcs2_semsys
 block|,
-name|AUE_NULL
+name|AUE_SEMSYS
 block|}
 block|,
 comment|/* 53 = ibcs2_semsys */
@@ -1009,7 +1009,7 @@ operator|*
 operator|)
 name|ibcs2_ioctl
 block|,
-name|AUE_NULL
+name|AUE_IOCTL
 block|}
 block|,
 comment|/* 54 = ibcs2_ioctl */
@@ -1076,7 +1076,7 @@ operator|*
 operator|)
 name|fsync
 block|,
-name|AUE_NULL
+name|AUE_FSYNC
 block|}
 block|,
 comment|/* 58 = fsync */
@@ -1094,7 +1094,7 @@ operator|*
 operator|)
 name|ibcs2_execve
 block|,
-name|AUE_NULL
+name|AUE_EXECVE
 block|}
 block|,
 comment|/* 59 = ibcs2_execve */
@@ -1112,7 +1112,7 @@ operator|*
 operator|)
 name|umask
 block|,
-name|AUE_NULL
+name|AUE_UMASK
 block|}
 block|,
 comment|/* 60 = umask */
@@ -1130,7 +1130,7 @@ operator|*
 operator|)
 name|chroot
 block|,
-name|AUE_NULL
+name|AUE_CHROOT
 block|}
 block|,
 comment|/* 61 = chroot */
@@ -1148,7 +1148,7 @@ operator|*
 operator|)
 name|ibcs2_fcntl
 block|,
-name|AUE_NULL
+name|AUE_FCNTL
 block|}
 block|,
 comment|/* 62 = ibcs2_fcntl */
@@ -1379,7 +1379,7 @@ operator|*
 operator|)
 name|ibcs2_rmdir
 block|,
-name|AUE_NULL
+name|AUE_RMDIR
 block|}
 block|,
 comment|/* 79 = ibcs2_rmdir */
@@ -1397,7 +1397,7 @@ operator|*
 operator|)
 name|ibcs2_mkdir
 block|,
-name|AUE_NULL
+name|AUE_MKDIR
 block|}
 block|,
 comment|/* 80 = ibcs2_mkdir */
@@ -1413,7 +1413,7 @@ operator|*
 operator|)
 name|ibcs2_getdents
 block|,
-name|AUE_NULL
+name|AUE_GETDIRENTRIES
 block|}
 block|,
 comment|/* 81 = ibcs2_getdents */
@@ -1475,7 +1475,7 @@ operator|*
 operator|)
 name|ibcs2_getmsg
 block|,
-name|AUE_NULL
+name|AUE_GETMSG
 block|}
 block|,
 comment|/* 85 = ibcs2_getmsg */
@@ -1493,7 +1493,7 @@ operator|*
 operator|)
 name|ibcs2_putmsg
 block|,
-name|AUE_NULL
+name|AUE_PUTMSG
 block|}
 block|,
 comment|/* 86 = ibcs2_putmsg */
@@ -1509,7 +1509,7 @@ operator|*
 operator|)
 name|ibcs2_poll
 block|,
-name|AUE_NULL
+name|AUE_POLL
 block|}
 block|,
 comment|/* 87 = ibcs2_poll */
@@ -1558,7 +1558,7 @@ operator|*
 operator|)
 name|ibcs2_symlink
 block|,
-name|AUE_NULL
+name|AUE_SYMLINK
 block|}
 block|,
 comment|/* 90 = ibcs2_symlink */
@@ -1576,7 +1576,7 @@ operator|*
 operator|)
 name|ibcs2_lstat
 block|,
-name|AUE_NULL
+name|AUE_LSTAT
 block|}
 block|,
 comment|/* 91 = ibcs2_lstat */
@@ -1594,7 +1594,7 @@ operator|*
 operator|)
 name|ibcs2_readlink
 block|,
-name|AUE_NULL
+name|AUE_READLINK
 block|}
 block|,
 comment|/* 92 = ibcs2_readlink */
