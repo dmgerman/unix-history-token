@@ -90,6 +90,17 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|rebooting
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* boot() has been called. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 specifier|const
 name|char
 modifier|*

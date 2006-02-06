@@ -418,6 +418,16 @@ comment|/* system is dumping */
 end_comment
 
 begin_decl_stmt
+name|int
+name|rebooting
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* system is rebooting */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|struct
 name|dumperinfo
@@ -1103,6 +1113,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* We're in the process of rebooting. */
+name|rebooting
+operator|=
+literal|1
+expr_stmt|;
 comment|/* collect extra flags that shutdown_nice might have set */
 name|howto
 operator||=
