@@ -451,6 +451,7 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
+comment|/* 	 * Reparent curthread from proc0 to init so that the zombie 	 * is harvested. 	 */
 name|sx_xlock
 argument_list|(
 operator|&
@@ -480,6 +481,13 @@ operator|&
 name|proctree_lock
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Wakeup anyone waiting for us to exit. 	 */
+name|wakeup
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+comment|/* Buh-bye! */
 name|exit1
 argument_list|(
 name|td

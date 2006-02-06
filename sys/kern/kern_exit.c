@@ -1873,20 +1873,6 @@ operator|->
 name|p_pptr
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If this is a kthread, then wakeup anyone waiting for it to exit. 	 */
-if|if
-condition|(
-name|p
-operator|->
-name|p_flag
-operator|&
-name|P_KTHREAD
-condition|)
-name|wakeup
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
