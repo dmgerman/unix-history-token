@@ -437,7 +437,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * Structure per mounted filesystem.  Each mounted filesystem has an  * array of operations and an instance record.  The filesystems are  * put on a doubly linked list.  *  */
+comment|/*  * Structure per mounted filesystem.  Each mounted filesystem has an  * array of operations and an instance record.  The filesystems are  * put on a doubly linked list.  *  * Lock reference:  * 	m - mountlist_mtx  *	i - interlock  *	l - mnt_lock  *  * Unmarked fields are considered stable as long as a ref is held.  *  */
 end_comment
 
 begin_struct
@@ -450,7 +450,7 @@ argument|mount
 argument_list|)
 name|mnt_list
 expr_stmt|;
-comment|/* mount list */
+comment|/* (m) mount list */
 name|struct
 name|vfsops
 modifier|*
@@ -476,11 +476,6 @@ name|mnt_syncer
 decl_stmt|;
 comment|/* syncer vnode */
 name|struct
-name|vnodelst
-name|mnt_nvnodelist
-decl_stmt|;
-comment|/* list of vnodes this mount */
-name|struct
 name|lock
 name|mnt_lock
 decl_stmt|;
@@ -491,9 +486,26 @@ name|mnt_mtx
 decl_stmt|;
 comment|/* mount structure interlock */
 name|int
+name|mnt_ref
+decl_stmt|;
+comment|/* (i) Reference count */
+name|struct
+name|vnodelst
+name|mnt_nvnodelist
+decl_stmt|;
+comment|/* (i) list of vnodes */
+name|int
+name|mnt_nvnodelistsize
+decl_stmt|;
+comment|/* (i) # of vnodes */
+name|int
 name|mnt_writeopcount
 decl_stmt|;
-comment|/* write syscalls in progress */
+comment|/* (i) write syscalls pending */
+name|int
+name|mnt_kern_flag
+decl_stmt|;
+comment|/* (i) kernel only flags */
 name|u_int
 name|mnt_flag
 decl_stmt|;
@@ -510,10 +522,6 @@ modifier|*
 name|mnt_optnew
 decl_stmt|;
 comment|/* new options passed to fs */
-name|int
-name|mnt_kern_flag
-decl_stmt|;
-comment|/* kernel only flags */
 name|int
 name|mnt_maxsymlinklen
 decl_stmt|;
@@ -560,10 +568,6 @@ modifier|*
 name|mnt_fslabel
 decl_stmt|;
 comment|/* MAC label for the fs */
-name|int
-name|mnt_nvnodelistsize
-decl_stmt|;
-comment|/* # of vnodes on this mount */
 name|u_int
 name|mnt_hashseed
 decl_stmt|;
@@ -711,6 +715,26 @@ parameter_list|(
 name|mp
 parameter_list|)
 value|(&(mp)->mnt_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MNT_REF
+parameter_list|(
+name|mp
+parameter_list|)
+value|(mp)->mnt_ref++
+end_define
+
+begin_define
+define|#
+directive|define
+name|MNT_REL
+parameter_list|(
+name|mp
+parameter_list|)
+value|do {						\ 	(mp)->mnt_ref--;						\ 	if ((mp)->mnt_ref == 0)						\ 		wakeup((mp));						\ } while (0)
 end_define
 
 begin_endif
@@ -3101,21 +3125,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|vfs_lock
-parameter_list|(
-name|struct
-name|mount
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* lock a vfs */
-end_comment
-
-begin_function_decl
 name|void
 name|vfs_msync
 parameter_list|(
@@ -3127,21 +3136,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function_decl
-name|void
-name|vfs_unlock
-parameter_list|(
-name|struct
-name|mount
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* unlock a vfs */
-end_comment
 
 begin_function_decl
 name|int
@@ -3287,6 +3281,28 @@ specifier|const
 name|char
 modifier|*
 name|from
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vfs_ref
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vfs_rel
+parameter_list|(
+name|struct
+name|mount
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
