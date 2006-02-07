@@ -675,6 +675,11 @@ argument_list|)
 expr_stmt|;
 name|ap
 operator|->
+name|ap_qlen
+operator|--
+expr_stmt|;
+name|ap
+operator|->
 name|ap_drops
 operator|++
 expr_stmt|;
