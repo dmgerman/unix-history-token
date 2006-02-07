@@ -2673,13 +2673,20 @@ condition|)
 return|return;
 name|printf
 argument_list|(
-literal|"IT IS %x\n"
+literal|"IT IS %x %x\n"
 argument_list|,
 name|RD4
 argument_list|(
 name|sc
 argument_list|,
 name|ETH_RSR
+argument_list|)
+argument_list|,
+name|RD4
+argument_list|(
+name|sc
+argument_list|,
+name|ETH_CTL
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2958,6 +2965,26 @@ operator|.
 name|status
 operator|&
 name|ETH_LEN_MASK
+expr_stmt|;
+name|mb
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|=
+name|mb
+operator|->
+name|m_len
+expr_stmt|;
+name|mb
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|=
+name|sc
+operator|->
+name|ifp
 expr_stmt|;
 comment|/* 				 * For the last buffer, set the wrap bit so 				 * the controller restarts from the first 				 * descriptor. 				 */
 if|if
