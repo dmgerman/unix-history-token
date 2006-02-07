@@ -867,12 +867,13 @@ operator|->
 name|p_rux
 operator|.
 name|rux_runtime
-operator|.
-name|sec
 operator|>=
 name|rlim
 operator|.
 name|rlim_max
+operator|*
+name|cpu_tickrate
+argument_list|()
 condition|)
 block|{
 name|mtx_unlock_spin

@@ -1866,8 +1866,7 @@ begin_struct
 struct|struct
 name|rusage_ext
 block|{
-name|struct
-name|bintime
+name|u_int64_t
 name|rux_runtime
 decl_stmt|;
 comment|/* (cj) Real time. */

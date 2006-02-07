@@ -117,8 +117,7 @@ modifier|*
 name|pc_curpcb
 decl_stmt|;
 comment|/* Current pcb */
-name|struct
-name|bintime
+name|uint64_t
 name|pc_switchtime
 decl_stmt|;
 name|int

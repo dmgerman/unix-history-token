@@ -1590,12 +1590,12 @@ expr_stmt|;
 name|spinlock_exit
 argument_list|()
 expr_stmt|;
-name|binuptime
-argument_list|(
-name|PCPU_PTR
+name|PCPU_SET
 argument_list|(
 name|switchtime
-argument_list|)
+argument_list|,
+name|cpu_ticks
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|PCPU_SET
