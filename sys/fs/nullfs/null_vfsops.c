@@ -358,8 +358,6 @@ name|LOOKUP
 argument_list|,
 name|FOLLOW
 operator||
-name|WANTPARENT
-operator||
 name|LOCKLEAF
 argument_list|,
 name|UIO_SYSSPACE
@@ -426,19 +424,6 @@ operator|=
 name|ndp
 operator|->
 name|ni_vp
-expr_stmt|;
-name|vrele
-argument_list|(
-name|ndp
-operator|->
-name|ni_dvp
-argument_list|)
-expr_stmt|;
-name|ndp
-operator|->
-name|ni_dvp
-operator|=
-name|NULLVP
 expr_stmt|;
 comment|/* 	 * Check multi null mount to avoid `lock against myself' panic. 	 */
 if|if
