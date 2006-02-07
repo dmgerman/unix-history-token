@@ -5169,6 +5169,9 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+name|NET_LOCK_GIANT
+argument_list|()
+expr_stmt|;
 name|ifp
 operator|=
 name|adapter
@@ -5247,7 +5250,9 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-return|return;
+name|NET_UNLOCK_GIANT
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
