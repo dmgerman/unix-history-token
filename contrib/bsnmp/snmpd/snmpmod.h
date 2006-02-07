@@ -1319,6 +1319,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|string_get_max
+parameter_list|(
+name|struct
+name|snmp_value
+modifier|*
+parameter_list|,
+specifier|const
+name|u_char
+modifier|*
+parameter_list|,
+name|ssize_t
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|string_free
 parameter_list|(
