@@ -2823,9 +2823,11 @@ name|pl
 decl_stmt|;
 if|if
 condition|(
-name|ptrace
+name|ps_linfo
 argument_list|(
-name|PT_LWPINFO
+name|ta
+operator|->
+name|ph
 argument_list|,
 name|lwp
 argument_list|,
@@ -2834,11 +2836,6 @@ name|caddr_t
 operator|)
 operator|&
 name|pl
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|pl
-argument_list|)
 argument_list|)
 condition|)
 return|return
