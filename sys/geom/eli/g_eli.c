@@ -239,7 +239,7 @@ name|g_eli_tries
 argument_list|,
 literal|0
 argument_list|,
-literal|"Number of tries when asking for passphrase"
+literal|"Number of tries for entering the passphrase"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -280,7 +280,7 @@ name|g_eli_visible_passphrase
 argument_list|,
 literal|0
 argument_list|,
-literal|"Turn on echo when entering passphrase (debug purposes only!!)"
+literal|"Turn on echo when entering the passphrase (for debug purposes only!!)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -309,7 +309,7 @@ name|g_eli_overwrites
 argument_list|,
 literal|0
 argument_list|,
-literal|"Number of overwrites on-disk keys when destroying"
+literal|"Number of times on-disk keys should be overwritten when destroying them"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -551,7 +551,7 @@ name|G_ELI_DEBUG
 argument_list|(
 literal|1
 argument_list|,
-literal|"Reruning crypto %s request (sid: %ju -> %ju)."
+literal|"Rerunning crypto %s request (sid: %ju -> %ju)."
 argument_list|,
 name|bp
 operator|->
@@ -3718,7 +3718,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"Cannot setup crypto session "
+literal|"Cannot set up crypto session "
 literal|"for %s (error=%d)."
 argument_list|,
 name|bpp
@@ -3735,7 +3735,7 @@ name|G_ELI_DEBUG
 argument_list|(
 literal|1
 argument_list|,
-literal|"Cannot setup crypto session "
+literal|"Cannot set up crypto session "
 literal|"for %s (error=%d)."
 argument_list|,
 name|bpp
@@ -4219,7 +4219,7 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"Device %s is still open, so it "
-literal|"can't be definitely removed."
+literal|"cannot be definitely removed."
 argument_list|,
 name|pp
 operator|->
