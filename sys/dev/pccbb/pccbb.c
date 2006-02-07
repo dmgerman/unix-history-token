@@ -1132,6 +1132,26 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/* 	 * Before we delete the children (which we have to do because 	 * attach doesn't check for children busses correctly), we have 	 * to detach the children.  Even if we didn't need to delete the 	 * children, we have to detach them. 	 */
+name|error
+operator|=
+name|bus_generic_detach
+argument_list|(
+name|brdev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+comment|/* 	 * Since the attach routine doesn't search for children before it 	 * attaches them to this device, we must delete them here in order 	 * for the kldload/unload case to work.  If we failed to do that, then 	 * we'd get duplicate devices when cbb.ko was reloaded. 	 */
 name|device_get_children
 argument_list|(
 name|brdev
@@ -1142,10 +1162,6 @@ argument_list|,
 operator|&
 name|numdevs
 argument_list|)
-expr_stmt|;
-name|error
-operator|=
-literal|0
 expr_stmt|;
 for|for
 control|(
@@ -1160,19 +1176,6 @@ condition|;
 name|tmp
 operator|++
 control|)
-block|{
-if|if
-condition|(
-name|device_detach
-argument_list|(
-name|devlist
-index|[
-name|tmp
-index|]
-argument_list|)
-operator|==
-literal|0
-condition|)
 name|device_delete_child
 argument_list|(
 name|brdev
@@ -1183,11 +1186,6 @@ name|tmp
 index|]
 argument_list|)
 expr_stmt|;
-else|else
-name|error
-operator|++
-expr_stmt|;
-block|}
 name|free
 argument_list|(
 name|devlist
@@ -1195,17 +1193,6 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|>
-literal|0
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 comment|/* Turn off the interrupts */
 name|cbb_set
 argument_list|(
