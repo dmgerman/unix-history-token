@@ -6372,6 +6372,17 @@ name|NULL
 operator|)
 return|;
 comment|/* 	 * Fill in the syncache values. 	 * XXX duplicate code from syncache_add 	 */
+name|bzero
+argument_list|(
+name|sc
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|sc
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_ipopts
