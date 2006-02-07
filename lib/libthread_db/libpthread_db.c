@@ -1257,9 +1257,11 @@ block|}
 comment|/* check lwp */
 name|ret
 operator|=
-name|ptrace
+name|ps_lgetregs
 argument_list|(
-name|PT_GETREGS
+name|ta
+operator|->
+name|ph
 argument_list|,
 name|ta
 operator|->
@@ -1270,20 +1272,14 @@ index|]
 operator|.
 name|lwp
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
 name|gregs
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|ret
 operator|!=
-literal|0
+name|PS_OK
 condition|)
 block|{
 comment|/* no longer exists */
