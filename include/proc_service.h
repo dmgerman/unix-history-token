@@ -205,6 +205,22 @@ end_function_decl
 
 begin_function_decl
 name|ps_err_e
+name|ps_linfo
+parameter_list|(
+name|struct
+name|ps_prochandle
+modifier|*
+parameter_list|,
+name|lwpid_t
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ps_err_e
 name|ps_pcontinue
 parameter_list|(
 name|struct
