@@ -209,14 +209,16 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: gbde attach destination [-l lockfile] [-p pass-phrase]\n"
+literal|"usage: gbde attach destination [-k keyfile] [-l lockfile] [-p pass-phrase]\n"
 literal|"       gbde detach destination\n"
-literal|"       gbde init destination [-i] [-f filename] [-L new-lockfile]\n"
-literal|"            [-P new-pass-phrase]\n"
-literal|"       gbde setkey destination [-n key] [-l lockfile] [-p pass-phrase]\n"
+literal|"       gbde init destination [-i] [-f filename] [-K new-keyfile]\n"
 literal|"            [-L new-lockfile] [-P new-pass-phrase]\n"
-literal|"       gbde nuke destination [-n key] [-l lockfile] [-p pass-phrase]\n"
-literal|"       gbde destroy destination [-l lockfile] [-p pass-phrase]\n"
+literal|"       gbde setkey destination [-n key]\n"
+literal|"            [-k keyfile] [-l lockfile] [-p pass-phrase]\n"
+literal|"            [-K new-keyfile] [-L new-lockfile] [-P new-pass-phrase]\n"
+literal|"       gbde nuke destination [-n key]\n"
+literal|"            [-k keyfile] [-l lockfile] [-p pass-phrase]\n"
+literal|"       gbde destroy destination [-k keyfile] [-l lockfile] [-p pass-phrase]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -494,22 +496,145 @@ specifier|const
 name|char
 modifier|*
 name|input
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|keyfile
 parameter_list|)
 block|{
 name|char
 name|buf1
 index|[
 name|BUFSIZ
+operator|+
+name|SHA512_DIGEST_LENGTH
 index|]
-decl_stmt|,
+decl_stmt|;
+name|char
 name|buf2
 index|[
 name|BUFSIZ
+operator|+
+name|SHA512_DIGEST_LENGTH
 index|]
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|p
 decl_stmt|;
+name|int
+name|kfd
+decl_stmt|,
+name|klen
+decl_stmt|,
+name|bpos
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|keyfile
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* Read up to BUFSIZ bytes from keyfile */
+name|kfd
+operator|=
+name|open
+argument_list|(
+name|keyfile
+argument_list|,
+name|O_RDONLY
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|kfd
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|keyfile
+argument_list|)
+expr_stmt|;
+name|klen
+operator|=
+name|read
+argument_list|(
+name|kfd
+argument_list|,
+name|buf1
+argument_list|,
+name|BUFSIZ
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|klen
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|keyfile
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|kfd
+argument_list|)
+expr_stmt|;
+comment|/* Prepend the passphrase with the hash of the key read */
+name|g_bde_hash_pass
+argument_list|(
+name|sc
+argument_list|,
+name|buf1
+argument_list|,
+name|klen
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|buf1
+argument_list|,
+name|sc
+operator|->
+name|sha2
+argument_list|,
+name|SHA512_DIGEST_LENGTH
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|buf2
+argument_list|,
+name|sc
+operator|->
+name|sha2
+argument_list|,
+name|SHA512_DIGEST_LENGTH
+argument_list|)
+expr_stmt|;
+name|bpos
+operator|=
+name|SHA512_DIGEST_LENGTH
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|input
@@ -517,16 +642,45 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|g_bde_hash_pass
-argument_list|(
-name|sc
-argument_list|,
-name|input
-argument_list|,
+if|if
+condition|(
 name|strlen
 argument_list|(
 name|input
 argument_list|)
+operator|>=
+name|BUFSIZ
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Passphrase too long"
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|buf1
+operator|+
+name|bpos
+argument_list|,
+name|input
+argument_list|)
+expr_stmt|;
+name|g_bde_hash_pass
+argument_list|(
+name|sc
+argument_list|,
+name|buf1
+argument_list|,
+name|strlen
+argument_list|(
+name|buf1
+operator|+
+name|bpos
+argument_list|)
+operator|+
+name|bpos
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -559,9 +713,13 @@ else|:
 literal|"Enter passphrase: "
 argument_list|,
 name|buf1
+operator|+
+name|bpos
 argument_list|,
 sizeof|sizeof
 name|buf1
+operator|-
+name|bpos
 argument_list|,
 name|RPP_ECHO_OFF
 operator||
@@ -593,9 +751,13 @@ argument_list|(
 literal|"Reenter new passphrase: "
 argument_list|,
 name|buf2
+operator|+
+name|bpos
 argument_list|,
 sizeof|sizeof
 name|buf2
+operator|-
+name|bpos
 argument_list|,
 name|RPP_ECHO_OFF
 operator||
@@ -620,8 +782,12 @@ condition|(
 name|strcmp
 argument_list|(
 name|buf1
+operator|+
+name|bpos
 argument_list|,
 name|buf2
+operator|+
+name|bpos
 argument_list|)
 condition|)
 block|{
@@ -638,6 +804,8 @@ condition|(
 name|strlen
 argument_list|(
 name|buf1
+operator|+
+name|bpos
 argument_list|)
 operator|<
 literal|3
@@ -661,7 +829,11 @@ argument_list|,
 name|strlen
 argument_list|(
 name|buf1
+operator|+
+name|bpos
 argument_list|)
+operator|+
+name|bpos
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -3561,6 +3733,14 @@ decl_stmt|;
 specifier|const
 name|char
 modifier|*
+name|k_opt
+decl_stmt|,
+modifier|*
+name|K_opt
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
 name|l_opt
 decl_stmt|,
 modifier|*
@@ -3691,7 +3871,7 @@ name|ACT_ATTACH
 expr_stmt|;
 name|opts
 operator|=
-literal|"l:p:"
+literal|"k:l:p:"
 expr_stmt|;
 block|}
 elseif|else
@@ -3743,7 +3923,7 @@ literal|1
 expr_stmt|;
 name|opts
 operator|=
-literal|"f:iL:P:"
+literal|"f:iK:L:P:"
 expr_stmt|;
 block|}
 elseif|else
@@ -3771,7 +3951,7 @@ literal|1
 expr_stmt|;
 name|opts
 operator|=
-literal|"l:L:n:p:P:"
+literal|"k:K:l:L:n:p:P:"
 expr_stmt|;
 block|}
 elseif|else
@@ -3799,7 +3979,7 @@ literal|1
 expr_stmt|;
 name|opts
 operator|=
-literal|"l:p:"
+literal|"k:l:p:"
 expr_stmt|;
 block|}
 elseif|else
@@ -3827,7 +4007,7 @@ literal|1
 expr_stmt|;
 name|opts
 operator|=
-literal|"l:n:p:"
+literal|"k:l:n:p:"
 expr_stmt|;
 block|}
 else|else
@@ -3863,6 +4043,14 @@ operator|=
 name|NULL
 expr_stmt|;
 name|P_opt
+operator|=
+name|NULL
+expr_stmt|;
+name|k_opt
+operator|=
+name|NULL
+expr_stmt|;
+name|K_opt
 operator|=
 name|NULL
 expr_stmt|;
@@ -3925,6 +4113,22 @@ operator|=
 operator|!
 name|i_opt
 expr_stmt|;
+case|case
+literal|'k'
+case|:
+name|k_opt
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'K'
+case|:
+name|K_opt
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
 case|case
 literal|'l'
 case|:
@@ -4172,6 +4376,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|p_opt
+argument_list|,
+name|k_opt
 argument_list|)
 expr_stmt|;
 name|cmd_attach
@@ -4218,6 +4424,8 @@ argument_list|,
 literal|1
 argument_list|,
 name|P_opt
+argument_list|,
+name|K_opt
 argument_list|)
 expr_stmt|;
 name|cmd_write
@@ -4246,6 +4454,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|p_opt
+argument_list|,
+name|k_opt
 argument_list|)
 expr_stmt|;
 name|cmd_open
@@ -4281,6 +4491,8 @@ argument_list|,
 literal|1
 argument_list|,
 name|P_opt
+argument_list|,
+name|K_opt
 argument_list|)
 expr_stmt|;
 name|cmd_write
@@ -4311,6 +4523,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|p_opt
+argument_list|,
+name|k_opt
 argument_list|)
 expr_stmt|;
 name|cmd_open
@@ -4365,6 +4579,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|p_opt
+argument_list|,
+name|k_opt
 argument_list|)
 expr_stmt|;
 name|cmd_open
