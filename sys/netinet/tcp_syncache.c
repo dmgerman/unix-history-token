@@ -1198,6 +1198,8 @@ argument_list|,
 name|UMA_ALIGN_PTR
 argument_list|,
 name|UMA_ZONE_NOFREE
+operator||
+name|UMA_ZONE_ZINIT
 argument_list|)
 expr_stmt|;
 name|uma_zone_set_max
@@ -3909,17 +3911,6 @@ return|;
 block|}
 block|}
 comment|/* 	 * Fill in the syncache values. 	 */
-name|bzero
-argument_list|(
-name|sc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|sc
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|sc_tp
@@ -6372,17 +6363,6 @@ name|NULL
 operator|)
 return|;
 comment|/* 	 * Fill in the syncache values. 	 * XXX duplicate code from syncache_add 	 */
-name|bzero
-argument_list|(
-name|sc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|sc
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|sc_ipopts
