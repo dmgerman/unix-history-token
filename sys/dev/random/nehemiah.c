@@ -85,6 +85,16 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|random_nehemiah_deinit
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|random_nehemiah_read
 parameter_list|(
@@ -115,11 +125,7 @@ block|,
 operator|.
 name|deinit
 operator|=
-operator|(
-name|random_deinit_func_t
-operator|*
-operator|)
-name|random_null_func
+name|random_nehemiah_deinit
 block|,
 operator|.
 name|read
@@ -295,6 +301,14 @@ name|__aligned
 argument_list|(
 literal|16
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|random_nehemiah_mtx
 decl_stmt|;
 end_decl_stmt
 
@@ -491,6 +505,34 @@ name|round_count
 operator|=
 literal|12
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|random_nehemiah_mtx
+argument_list|,
+literal|"random nehemiah"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|random_nehemiah_deinit
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|mtx_destroy
+argument_list|(
+operator|&
+name|random_nehemiah_mtx
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -519,6 +561,12 @@ name|uint8_t
 modifier|*
 name|p
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|random_nehemiah_mtx
+argument_list|)
+expr_stmt|;
 comment|/* Get a random AES key */
 name|count
 operator|=
@@ -682,6 +730,12 @@ operator|(
 name|size_t
 operator|)
 name|c
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|random_nehemiah_mtx
 argument_list|)
 expr_stmt|;
 return|return

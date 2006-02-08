@@ -268,6 +268,14 @@ name|random_yarrow
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|random_reseed_mtx
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* If this was c++, this would be a template */
 end_comment
