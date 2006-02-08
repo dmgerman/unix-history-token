@@ -449,6 +449,11 @@ expr_stmt|;
 if|if
 condition|(
 name|cp
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|cp
 operator|->
 name|acr
 operator|||
@@ -459,6 +464,7 @@ operator|||
 name|cp
 operator|->
 name|ace
+operator|)
 condition|)
 block|{
 name|gctl_error
@@ -769,6 +775,12 @@ operator|)
 return|;
 block|}
 comment|/* Replace the old sd by the new one. */
+if|if
+condition|(
+name|cp
+operator|!=
+name|NULL
+condition|)
 name|g_detach
 argument_list|(
 name|cp
@@ -845,6 +857,13 @@ name|d
 argument_list|)
 expr_stmt|;
 comment|/* And reconnect the consumer ... */
+if|if
+condition|(
+name|cp
+operator|!=
+name|NULL
+condition|)
+block|{
 name|newsd
 operator|->
 name|consumer
@@ -876,8 +895,8 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"proposed move would create a loop in GEOM "
-literal|"config"
+literal|"proposed move would create a loop "
+literal|"in GEOM config"
 argument_list|)
 expr_stmt|;
 return|return
@@ -885,6 +904,7 @@ operator|(
 name|err
 operator|)
 return|;
+block|}
 block|}
 name|LIST_INSERT_HEAD
 argument_list|(
