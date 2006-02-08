@@ -644,8 +644,6 @@ decl_stmt|,
 name|user
 decl_stmt|;
 name|u_int
-name|sticks
-decl_stmt|,
 name|ucode
 decl_stmt|;
 name|ksiginfo_t
@@ -691,10 +689,6 @@ name|srr1
 operator|&
 name|PSL_PR
 expr_stmt|;
-name|sticks
-operator|=
-literal|0
-expr_stmt|;
 name|CTR3
 argument_list|(
 name|KTR_TRAP
@@ -722,11 +716,11 @@ condition|(
 name|user
 condition|)
 block|{
-name|sticks
-operator|=
 name|td
 operator|->
-name|td_sticks
+name|td_pticks
+operator|=
+literal|0
 expr_stmt|;
 name|td
 operator|->
@@ -1134,8 +1128,6 @@ argument_list|(
 name|td
 argument_list|,
 name|frame
-argument_list|,
-name|sticks
 argument_list|)
 expr_stmt|;
 name|mtx_assert

@@ -609,10 +609,10 @@ modifier|*
 name|td_upcall
 decl_stmt|;
 comment|/* (k + j) Upcall structure. */
-name|u_int64_t
-name|td_sticks
+name|u_int
+name|td_pticks
 decl_stmt|;
-comment|/* (k) Statclock hits in system mode. */
+comment|/* (k) Statclock hits for profiling */
 name|u_int
 name|td_uuticks
 decl_stmt|;
@@ -4451,8 +4451,6 @@ parameter_list|,
 name|struct
 name|trapframe
 modifier|*
-parameter_list|,
-name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl

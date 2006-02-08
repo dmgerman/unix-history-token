@@ -3236,8 +3236,6 @@ argument_list|(
 name|td
 argument_list|,
 name|frame
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 ifdef|#

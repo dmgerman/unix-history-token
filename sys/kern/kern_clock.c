@@ -1487,7 +1487,7 @@ argument_list|)
 expr_stmt|;
 name|td
 operator|->
-name|td_sticks
+name|td_pticks
 operator|++
 expr_stmt|;
 name|p

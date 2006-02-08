@@ -669,11 +669,6 @@ name|td
 operator|->
 name|td_proc
 decl_stmt|;
-name|u_int
-name|sticks
-init|=
-literal|0
-decl_stmt|;
 name|int
 name|i
 init|=
@@ -1009,11 +1004,11 @@ operator|)
 condition|)
 block|{
 comment|/* user trap */
-name|sticks
-operator|=
 name|td
 operator|->
-name|td_sticks
+name|td_pticks
+operator|=
+literal|0
 expr_stmt|;
 name|td
 operator|->
@@ -2285,8 +2280,6 @@ name|td
 argument_list|,
 operator|&
 name|frame
-argument_list|,
-name|sticks
 argument_list|)
 expr_stmt|;
 name|mtx_assert
@@ -3298,9 +3291,6 @@ decl_stmt|;
 name|register_t
 name|orig_tf_eflags
 decl_stmt|;
-name|u_int
-name|sticks
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -3364,11 +3354,11 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|sticks
-operator|=
 name|td
 operator|->
-name|td_sticks
+name|td_pticks
+operator|=
+literal|0
 expr_stmt|;
 name|td
 operator|->
@@ -3949,8 +3939,6 @@ name|td
 argument_list|,
 operator|&
 name|frame
-argument_list|,
-name|sticks
 argument_list|)
 expr_stmt|;
 name|CTR4

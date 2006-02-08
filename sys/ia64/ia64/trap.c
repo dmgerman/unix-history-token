@@ -1576,9 +1576,6 @@ name|sig
 decl_stmt|,
 name|user
 decl_stmt|;
-name|u_int
-name|sticks
-decl_stmt|;
 name|ksiginfo_t
 name|ksi
 decl_stmt|;
@@ -1624,11 +1621,11 @@ argument_list|(
 name|IA64_FPSR_DEFAULT
 argument_list|)
 expr_stmt|;
-name|sticks
-operator|=
 name|td
 operator|->
-name|td_sticks
+name|td_pticks
+operator|=
+literal|0
 expr_stmt|;
 name|td
 operator|->
@@ -1654,11 +1651,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sticks
-operator|=
-literal|0
-expr_stmt|;
-comment|/* XXX bogus -Wuninitialized warning */
 name|KASSERT
 argument_list|(
 name|cold
@@ -3425,8 +3417,6 @@ argument_list|(
 name|td
 argument_list|,
 name|tf
-argument_list|,
-name|sticks
 argument_list|)
 expr_stmt|;
 name|mtx_assert
@@ -3720,9 +3710,6 @@ name|code
 decl_stmt|,
 name|error
 decl_stmt|;
-name|u_int
-name|sticks
-decl_stmt|;
 name|ia64_set_fpsr
 argument_list|(
 name|IA64_FPSR_DEFAULT
@@ -3768,11 +3755,11 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
-name|sticks
-operator|=
 name|td
 operator|->
-name|td_sticks
+name|td_pticks
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -4126,8 +4113,6 @@ argument_list|(
 name|td
 argument_list|,
 name|tf
-argument_list|,
-name|sticks
 argument_list|)
 expr_stmt|;
 ifdef|#

@@ -757,9 +757,6 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-name|u_int
-name|sticks
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -861,11 +858,11 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
-name|sticks
-operator|=
 name|td
 operator|->
-name|td_sticks
+name|td_pticks
+operator|=
+literal|0
 expr_stmt|;
 name|td
 operator|->
@@ -1104,8 +1101,6 @@ argument_list|(
 name|td
 argument_list|,
 name|tf
-argument_list|,
-name|sticks
 argument_list|)
 expr_stmt|;
 name|mtx_assert
@@ -2060,9 +2055,6 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-name|u_int
-name|sticks
-decl_stmt|;
 name|u_long
 name|code
 decl_stmt|;
@@ -2141,11 +2133,11 @@ name|regcnt
 operator|=
 name|REG_MAXARGS
 expr_stmt|;
-name|sticks
-operator|=
 name|td
 operator|->
-name|td_sticks
+name|td_pticks
+operator|=
+literal|0
 expr_stmt|;
 name|td
 operator|->
@@ -2736,8 +2728,6 @@ argument_list|(
 name|td
 argument_list|,
 name|tf
-argument_list|,
-name|sticks
 argument_list|)
 expr_stmt|;
 ifdef|#

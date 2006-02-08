@@ -313,9 +313,6 @@ decl_stmt|;
 name|register_t
 name|orig_tf_rflags
 decl_stmt|;
-name|u_int
-name|sticks
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -348,11 +345,11 @@ operator|.
 name|v_syscall
 argument_list|)
 expr_stmt|;
-name|sticks
-operator|=
 name|td
 operator|->
-name|td_sticks
+name|td_pticks
+operator|=
+literal|0
 expr_stmt|;
 name|td
 operator|->
@@ -902,8 +899,6 @@ name|td
 argument_list|,
 operator|&
 name|frame
-argument_list|,
-name|sticks
 argument_list|)
 expr_stmt|;
 ifdef|#

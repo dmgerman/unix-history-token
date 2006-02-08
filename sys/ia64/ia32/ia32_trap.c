@@ -870,9 +870,6 @@ decl_stmt|;
 name|int
 name|sig
 decl_stmt|;
-name|u_int
-name|sticks
-decl_stmt|;
 name|ksiginfo_t
 name|ksi
 decl_stmt|;
@@ -912,11 +909,11 @@ name|td_frame
 operator|=
 name|tf
 expr_stmt|;
-name|sticks
-operator|=
 name|td
 operator|->
-name|td_sticks
+name|td_pticks
+operator|=
+literal|0
 expr_stmt|;
 name|p
 operator|=
@@ -1235,8 +1232,6 @@ argument_list|(
 name|td
 argument_list|,
 name|tf
-argument_list|,
-name|sticks
 argument_list|)
 expr_stmt|;
 name|mtx_assert
