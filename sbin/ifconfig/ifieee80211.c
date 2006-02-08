@@ -4778,10 +4778,7 @@ name|copy_essid
 argument_list|(
 name|ssid
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ssid
-argument_list|)
+name|ssidmax
 argument_list|,
 name|vp
 argument_list|,
