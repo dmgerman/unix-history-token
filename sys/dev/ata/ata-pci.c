@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -2193,6 +2199,9 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|dumping
+operator|||
 operator|!
 name|ata_legacy
 argument_list|(
@@ -2201,6 +2210,7 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|)
+operator|)
 operator|&&
 name|ch
 operator|->
