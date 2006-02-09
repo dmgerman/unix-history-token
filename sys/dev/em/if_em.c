@@ -4342,6 +4342,7 @@ return|return;
 block|}
 if|if
 condition|(
+operator|!
 name|em_check_for_link
 argument_list|(
 operator|&
@@ -12648,7 +12649,7 @@ elseif|else
 if|if
 condition|(
 name|num_avail
-operator|==
+operator|!=
 name|adapter
 operator|->
 name|num_tx_desc_avail
