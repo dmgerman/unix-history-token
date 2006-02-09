@@ -407,70 +407,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Setup rate codes for management/control frames.  We force  * all such frames to the lowest rate.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|ath_rate_setmgtrates
-parameter_list|(
-name|struct
-name|ath_softc
-modifier|*
-name|sc
-parameter_list|,
-name|struct
-name|ath_node
-modifier|*
-name|an
-parameter_list|)
-block|{
-specifier|const
-name|HAL_RATE_TABLE
-modifier|*
-name|rt
-init|=
-name|sc
-operator|->
-name|sc_currates
-decl_stmt|;
-comment|/* setup rates for management frames */
-comment|/* XXX management/control frames always go at lowest speed */
-name|an
-operator|->
-name|an_tx_mgtrate
-operator|=
-name|rt
-operator|->
-name|info
-index|[
-literal|0
-index|]
-operator|.
-name|rateCode
-expr_stmt|;
-name|an
-operator|->
-name|an_tx_mgtratesp
-operator|=
-name|an
-operator|->
-name|an_tx_mgtrate
-operator||
-name|rt
-operator|->
-name|info
-index|[
-literal|0
-index|]
-operator|.
-name|shortPreamble
-expr_stmt|;
-block|}
-end_function
-
 begin_function
 name|void
 name|ath_rate_node_init
@@ -496,13 +432,6 @@ name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* NB: assumed to be zero'd by caller */
-name|ath_rate_setmgtrates
-argument_list|(
-name|sc
-argument_list|,
-name|an
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

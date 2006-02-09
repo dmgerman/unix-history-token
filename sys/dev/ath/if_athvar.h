@@ -183,14 +183,6 @@ name|ieee80211_node
 name|an_node
 decl_stmt|;
 comment|/* base class */
-name|u_int8_t
-name|an_tx_mgtrate
-decl_stmt|;
-comment|/* h/w rate for management/ctl frames */
-name|u_int8_t
-name|an_tx_mgtratesp
-decl_stmt|;
-comment|/* short preamble h/w rate for " " */
 name|u_int32_t
 name|an_avgrssi
 decl_stmt|;
@@ -775,6 +767,10 @@ literal|32
 index|]
 struct|;
 comment|/* h/w rate ix mappings */
+name|u_int8_t
+name|sc_minrateix
+decl_stmt|;
+comment|/* min h/w rate index */
 name|u_int8_t
 name|sc_protrix
 decl_stmt|;
