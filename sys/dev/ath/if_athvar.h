@@ -811,9 +811,17 @@ name|sc_minrateix
 decl_stmt|;
 comment|/* min h/w rate index */
 name|u_int8_t
+name|sc_mcastrix
+decl_stmt|;
+comment|/* mcast h/w rate index */
+name|u_int8_t
 name|sc_protrix
 decl_stmt|;
 comment|/* protection rate index */
+name|u_int
+name|sc_mcastrate
+decl_stmt|;
+comment|/* ieee rate for mcastrateix */
 name|u_int
 name|sc_txantenna
 decl_stmt|;
