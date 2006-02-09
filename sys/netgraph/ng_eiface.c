@@ -783,23 +783,13 @@ operator|)
 operator|)
 condition|)
 return|return;
-comment|/* Don't do anything if output is active */
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_drv_flags
-operator|&
-name|IFF_DRV_OACTIVE
-condition|)
-return|return;
-name|ifp
-operator|->
-name|if_drv_flags
-operator||=
-name|IFF_DRV_OACTIVE
-expr_stmt|;
-comment|/* 	 * Grab a packet to transmit. 	 */
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+comment|/* 		 * Grab a packet to transmit. 		 */
 name|IF_DEQUEUE
 argument_list|(
 operator|&
@@ -810,24 +800,15 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* If there's nothing to send, return. */
+comment|/* If there's nothing to send, break. */
 if|if
 condition|(
 name|m
 operator|==
 name|NULL
 condition|)
-block|{
-name|ifp
-operator|->
-name|if_drv_flags
-operator|&=
-operator|~
-name|IFF_DRV_OACTIVE
-expr_stmt|;
-return|return;
-block|}
-comment|/* 	 * Berkeley packet filter. 	 * Pass packet to bpf if there is a listener. 	 * XXX is this safe? locking? 	 */
+break|break;
+comment|/* 		 * Berkeley packet filter. 		 * Pass packet to bpf if there is a listener. 		 * XXX is this safe? locking? 		 */
 name|BPF_MTAP
 argument_list|(
 name|ifp
@@ -844,7 +825,7 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
-comment|/* 	 * Send packet; if hook is not connected, mbuf will get 	 * freed. 	 */
+comment|/* 		 * Send packet; if hook is not connected, mbuf will get 		 * freed. 		 */
 name|NG_SEND_DATA_ONLY
 argument_list|(
 name|error
@@ -875,6 +856,7 @@ operator|->
 name|if_opackets
 operator|++
 expr_stmt|;
+block|}
 block|}
 name|ifp
 operator|->
@@ -913,6 +895,22 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
+comment|/* Don't do anything if output is active */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_OACTIVE
+condition|)
+return|return;
+name|ifp
+operator|->
+name|if_drv_flags
+operator||=
+name|IFF_DRV_OACTIVE
+expr_stmt|;
 name|ng_send_fn
 argument_list|(
 name|priv
