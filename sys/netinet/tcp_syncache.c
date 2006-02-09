@@ -1198,8 +1198,6 @@ argument_list|,
 name|UMA_ALIGN_PTR
 argument_list|,
 name|UMA_ZONE_NOFREE
-operator||
-name|UMA_ZONE_ZINIT
 argument_list|)
 expr_stmt|;
 name|uma_zone_set_max
@@ -3781,6 +3779,8 @@ operator|.
 name|zone
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -3882,6 +3882,8 @@ operator|.
 name|zone
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -6349,6 +6351,8 @@ operator|.
 name|zone
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
