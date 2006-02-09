@@ -582,9 +582,6 @@ name|sc_ic
 decl_stmt|;
 comment|/* IEEE 802.11 common */
 name|int
-name|sc_regdomain
-decl_stmt|;
-name|int
 name|sc_countrycode
 decl_stmt|;
 name|int
@@ -2128,6 +2125,19 @@ name|_prd
 parameter_list|)
 define|\
 value|ath_hal_getcapability(_ah, HAL_CAP_REG_DMN, 0, (_prd))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_setregdomain
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_rd
+parameter_list|)
+define|\
+value|((*(_ah)->ah_setRegulatoryDomain)((_ah), (_rd), NULL))
 end_define
 
 begin_define
