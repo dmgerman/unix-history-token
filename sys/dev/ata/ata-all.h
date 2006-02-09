@@ -2360,10 +2360,6 @@ name|max_iosize
 decl_stmt|;
 comment|/* max IO size */
 name|int
-name|cmd
-decl_stmt|;
-comment|/* last cmd executed */
-name|int
 name|flags
 decl_stmt|;
 define|#
