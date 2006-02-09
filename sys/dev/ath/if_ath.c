@@ -2909,6 +2909,9 @@ operator||
 name|IEEE80211_C_MONITOR
 comment|/* monitor mode */
 operator||
+name|IEEE80211_C_AHDEMO
+comment|/* adhoc demo mode */
+operator||
 name|IEEE80211_C_SHPREAMBLE
 comment|/* short preamble supported */
 operator||
@@ -3143,6 +3146,14 @@ name|ieee80211_ifattach
 argument_list|(
 name|ic
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_opmode
+operator|=
+name|ic
+operator|->
+name|ic_opmode
 expr_stmt|;
 comment|/* override default methods */
 name|ic
@@ -4421,9 +4432,9 @@ name|ath_hal_reset
 argument_list|(
 name|ah
 argument_list|,
-name|ic
+name|sc
 operator|->
-name|ic_opmode
+name|sc_opmode
 argument_list|,
 operator|&
 name|sc
@@ -5017,9 +5028,9 @@ name|ath_hal_reset
 argument_list|(
 name|ah
 argument_list|,
-name|ic
+name|sc
 operator|->
-name|ic_opmode
+name|sc_opmode
 argument_list|,
 operator|&
 name|sc
@@ -5827,6 +5838,51 @@ operator|==
 name|ENETRESET
 condition|)
 block|{
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+init|=
+name|ifp
+operator|->
+name|if_softc
+decl_stmt|;
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+operator|&
+name|sc
+operator|->
+name|sc_ic
+decl_stmt|;
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_opmode
+operator|==
+name|IEEE80211_M_AHDEMO
+condition|)
+block|{
+comment|/*  			 * Adhoc demo mode is just ibss mode w/o beacons 			 * (mostly).  The hal knows nothing about it; 			 * tell it we're operating in ibss mode. 			 */
+name|sc
+operator|->
+name|sc_opmode
+operator|=
+name|HAL_M_IBSS
+expr_stmt|;
+block|}
+else|else
+name|sc
+operator|->
+name|sc_opmode
+operator|=
+name|ic
+operator|->
+name|ic_opmode
+expr_stmt|;
 if|if
 condition|(
 name|IS_UP
@@ -18689,9 +18745,9 @@ name|ath_hal_reset
 argument_list|(
 name|ah
 argument_list|,
-name|ic
+name|sc
 operator|->
-name|ic_opmode
+name|sc_opmode
 argument_list|,
 operator|&
 name|hchan
@@ -19444,6 +19500,12 @@ condition|)
 goto|goto
 name|bad
 goto|;
+comment|/* 			 * Configure the beacon and sleep timers. 			 */
+name|ath_beacon_config
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|IEEE80211_M_STA
@@ -19478,6 +19540,12 @@ argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Configure the beacon and sleep timers. 			 */
+name|ath_beacon_config
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 break|break;
@@ -19486,12 +19554,6 @@ comment|/* 		 * Let the hal process statistics collected during a 		 * scan so i
 name|ath_hal_process_noisefloor
 argument_list|(
 name|ah
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Configure the beacon and sleep timers. 		 */
-name|ath_beacon_config
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Reset rssi stats; maybe not the best place... 		 */

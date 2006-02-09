@@ -767,6 +767,10 @@ name|ieee80211_phymode
 name|sc_curmode
 decl_stmt|;
 comment|/* current phy mode */
+name|HAL_OPMODE
+name|sc_opmode
+decl_stmt|;
+comment|/* current operating mode */
 name|u_int16_t
 name|sc_curtxpow
 decl_stmt|;
