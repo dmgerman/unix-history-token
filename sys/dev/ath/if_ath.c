@@ -9622,6 +9622,11 @@ expr_stmt|;
 comment|/* 	 * Enable the CAB queue before the beacon queue to 	 * insure cab frames are triggered by this beacon. 	 */
 if|if
 condition|(
+name|ncabq
+operator|!=
+literal|0
+operator|&&
+operator|(
 name|sc
 operator|->
 name|sc_boff
@@ -9632,6 +9637,7 @@ literal|4
 index|]
 operator|&
 literal|1
+operator|)
 condition|)
 comment|/* NB: only at DTIM */
 name|ath_hal_txstart
