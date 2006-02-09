@@ -14507,6 +14507,9 @@ name|iswep
 decl_stmt|,
 name|ismcast
 decl_stmt|,
+name|ismrr
+decl_stmt|;
+name|int
 name|keyix
 decl_stmt|,
 name|hdrlen
@@ -15115,6 +15118,11 @@ operator|=
 name|HAL_TXDESC_CLRDMASK
 expr_stmt|;
 comment|/* XXX needed for crypto errs */
+name|ismrr
+operator|=
+literal|0
+expr_stmt|;
+comment|/* default no multi-rate retry*/
 comment|/* 	 * Calculate Atheros packet type from IEEE80211 packet header, 	 * setup for rate calculations, and select h/w transmit queue. 	 */
 switch|switch
 condition|(
@@ -15214,7 +15222,7 @@ name|shortPreamble
 expr_stmt|;
 name|try0
 operator|=
-name|ATH_TXMAXTRY
+name|ATH_TXMGTTRY
 expr_stmt|;
 comment|/* NB: force all management frames to highest queue */
 if|if
@@ -15285,7 +15293,7 @@ name|shortPreamble
 expr_stmt|;
 name|try0
 operator|=
-name|ATH_TXMAXTRY
+name|ATH_TXMGTTRY
 expr_stmt|;
 comment|/* NB: force all ctl frames to highest queue */
 if|if
@@ -15350,6 +15358,16 @@ operator|=
 name|txrate
 expr_stmt|;
 comment|/* for LED blinking */
+if|if
+condition|(
+name|try0
+operator|!=
+name|ATH_TXMAXTRY
+condition|)
+name|ismrr
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 		 * Default all non-QoS traffic to the background queue. 		 */
 if|if
 condition|(
@@ -15831,10 +15849,15 @@ name|lpAckDuration
 expr_stmt|;
 block|}
 comment|/* 		 * Must disable multi-rate retry when using RTS/CTS. 		 */
+name|ismrr
+operator|=
+literal|0
+expr_stmt|;
 name|try0
 operator|=
-name|ATH_TXMAXTRY
+name|ATH_TXMGTTRY
 expr_stmt|;
+comment|/* XXX */
 block|}
 else|else
 name|ctsrate
@@ -16091,9 +16114,7 @@ expr_stmt|;
 comment|/* 	 * Setup the multi-rate retry state only when we're 	 * going to use it.  This assumes ath_hal_setuptxdesc 	 * initializes the descriptors (so we don't have to) 	 * when the hardware supports multi-rate retry and 	 * we don't use it. 	 */
 if|if
 condition|(
-name|try0
-operator|!=
-name|ATH_TXMAXTRY
+name|ismrr
 condition|)
 name|ath_rate_setupxtxdesc
 argument_list|(

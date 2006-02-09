@@ -103,6 +103,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATH_TXMGTTRY
+value|4
+end_define
+
+begin_comment
+comment|/* xmit attempts for mgt/ctl frames */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATH_TXINTR_PERIOD
 value|5
 end_define
