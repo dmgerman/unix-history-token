@@ -12016,12 +12016,6 @@ return|return
 name|ENOMEM
 return|;
 block|}
-name|bf
-operator|->
-name|bf_m
-operator|=
-name|m
-expr_stmt|;
 name|m
 operator|->
 name|m_pkthdr
@@ -12091,6 +12085,11 @@ operator|.
 name|ast_rx_busdma
 operator|++
 expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 return|return
 name|error
 return|;
@@ -12111,6 +12110,12 @@ operator|->
 name|bf_nseg
 operator|)
 argument_list|)
+expr_stmt|;
+name|bf
+operator|->
+name|bf_m
+operator|=
+name|m
 expr_stmt|;
 block|}
 name|bus_dmamap_sync
@@ -12903,6 +12908,45 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|m
+operator|=
+name|bf
+operator|->
+name|bf_m
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* NB: shouldn't happen */
+comment|/* 			 * If mbuf allocation failed previously there 			 * will be no mbuf; try again to re-populate it. 			 */
+comment|/* XXX make debug msg */
+name|if_printf
+argument_list|(
+name|ifp
+argument_list|,
+literal|"%s: no mbuf!\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|STAILQ_REMOVE_HEAD
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_rxbuf
+argument_list|,
+name|bf_list
+argument_list|)
+expr_stmt|;
+goto|goto
+name|rx_next
+goto|;
+block|}
 name|ds
 operator|=
 name|bf
@@ -12922,31 +12966,6 @@ condition|)
 block|{
 comment|/* NB: never process the self-linked entry at the end */
 break|break;
-block|}
-name|m
-operator|=
-name|bf
-operator|->
-name|bf_m
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* NB: shouldn't happen */
-name|if_printf
-argument_list|(
-name|ifp
-argument_list|,
-literal|"%s: no mbuf!\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-continue|continue;
 block|}
 comment|/* XXX sync descriptor memory */
 comment|/* 		 * Must provide the virtual address of the current 		 * descriptor, the physical address, and the virtual 		 * address of the next descriptor in the h/w chain. 		 * This allows the HAL to look ahead to see if the 		 * hardware is done with a descriptor by checking the 		 * done bit in the following descriptor and the address 		 * of the current descriptor the DMA engine is working 		 * on.  All this is necessary because of our use of 		 * a self-linked list to avoid rx overruns. 		 */
