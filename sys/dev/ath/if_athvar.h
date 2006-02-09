@@ -555,6 +555,12 @@ parameter_list|)
 value|do { \ 	STAILQ_REMOVE_HEAD(&(_tq)->axq_q, _field); \ 	(_tq)->axq_depth--; \ } while (0)
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|ath_tx99
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|ath_softc
@@ -668,6 +674,12 @@ modifier|*
 name|sc_rc
 decl_stmt|;
 comment|/* tx rate control support */
+name|struct
+name|ath_tx99
+modifier|*
+name|sc_tx99
+decl_stmt|;
+comment|/* tx99 adjunct state */
 name|void
 function_decl|(
 modifier|*
