@@ -557,6 +557,12 @@ end_define
 
 begin_struct_decl
 struct_decl|struct
+name|taskqueue
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|ath_tx99
 struct_decl|;
 end_struct_decl
@@ -659,6 +665,12 @@ name|mtx
 name|sc_mtx
 decl_stmt|;
 comment|/* master lock (recursive) */
+name|struct
+name|taskqueue
+modifier|*
+name|sc_tq
+decl_stmt|;
+comment|/* private task queue */
 name|struct
 name|ath_hal
 modifier|*

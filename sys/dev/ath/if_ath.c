@@ -114,6 +114,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/taskqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -2290,6 +2302,42 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_tq
+operator|=
+name|taskqueue_create
+argument_list|(
+literal|"ath_taskq"
+argument_list|,
+name|M_NOWAIT
+argument_list|,
+name|taskqueue_thread_enqueue
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_tq
+argument_list|)
+expr_stmt|;
+name|taskqueue_start_threads
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_tq
+argument_list|,
+literal|1
+argument_list|,
+name|PI_NET
+argument_list|,
+literal|"%s taskq"
+argument_list|,
+name|ifp
+operator|->
+name|if_xname
+argument_list|)
+expr_stmt|;
 name|TASK_INIT
 argument_list|(
 operator|&
@@ -3421,6 +3469,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|taskqueue_free
+argument_list|(
+name|sc
+operator|->
+name|sc_tq
+argument_list|)
+expr_stmt|;
 name|ath_rate_detach
 argument_list|(
 name|sc
@@ -3823,7 +3878,9 @@ expr_stmt|;
 comment|/* disable intr's until reset */
 name|taskqueue_enqueue
 argument_list|(
-name|taskqueue_swi
+name|sc
+operator|->
+name|sc_tq
 argument_list|,
 operator|&
 name|sc
@@ -3857,7 +3914,9 @@ expr_stmt|;
 comment|/* disable intr's until reset */
 name|taskqueue_enqueue
 argument_list|(
-name|taskqueue_swi
+name|sc
+operator|->
+name|sc_tq
 argument_list|,
 operator|&
 name|sc
@@ -3937,7 +3996,9 @@ name|HAL_INT_RX
 condition|)
 name|taskqueue_enqueue
 argument_list|(
-name|taskqueue_swi
+name|sc
+operator|->
+name|sc_tq
 argument_list|,
 operator|&
 name|sc
@@ -3953,7 +4014,9 @@ name|HAL_INT_TX
 condition|)
 name|taskqueue_enqueue
 argument_list|(
-name|taskqueue_swi
+name|sc
+operator|->
+name|sc_tq
 argument_list|,
 operator|&
 name|sc
@@ -3977,7 +4040,9 @@ operator|++
 expr_stmt|;
 name|taskqueue_enqueue
 argument_list|(
-name|taskqueue_swi
+name|sc
+operator|->
+name|sc_tq
 argument_list|,
 operator|&
 name|sc
@@ -9184,7 +9249,9 @@ condition|)
 comment|/* NB: 3 is a guess */
 name|taskqueue_enqueue
 argument_list|(
-name|taskqueue_swi
+name|sc
+operator|->
+name|sc_tq
 argument_list|,
 operator|&
 name|sc
