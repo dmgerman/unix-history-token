@@ -220,10 +220,6 @@ name|u_int32_t
 name|an_avgrssi
 decl_stmt|;
 comment|/* average rssi over all rx frames */
-name|HAL_NODE_STATS
-name|an_halstats
-decl_stmt|;
-comment|/* rssi statistics used by hal */
 comment|/* variable-length rate control state follows */
 block|}
 struct|;
@@ -1074,6 +1070,10 @@ name|callout
 name|sc_cal_ch
 decl_stmt|;
 comment|/* callout handle for cals */
+name|HAL_NODE_STATS
+name|sc_halstats
+decl_stmt|;
+comment|/* station-mode rssi stats */
 name|struct
 name|callout
 name|sc_scan_ch
