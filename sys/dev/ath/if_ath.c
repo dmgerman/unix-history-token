@@ -15238,7 +15238,7 @@ return|return
 name|EIO
 return|;
 block|}
-comment|/* 		 * Adjust the packet + header lengths for the crypto 		 * additions and calculate the h/w key index.  When 		 * a s/w mic is done the frame will have had any mic 		 * added to it prior to entry so skb->len above will 		 * account for it. Otherwise we need to add it to the 		 * packet length. 		 */
+comment|/* 		 * Adjust the packet + header lengths for the crypto 		 * additions and calculate the h/w key index.  When 		 * a s/w mic is done the frame will have had any mic 		 * added to it prior to entry so m0->m_pkthdr.len above will 		 * account for it. Otherwise we need to add it to the 		 * packet length. 		 */
 name|cip
 operator|=
 name|k
@@ -16007,19 +16007,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* 		 * Default all non-QoS traffic to the background queue. 		 */
-if|if
-condition|(
-name|wh
-operator|->
-name|i_fc
-index|[
-literal|0
-index|]
-operator|&
-name|IEEE80211_FC0_SUBTYPE_QOS
-condition|)
-block|{
 name|pri
 operator|=
 name|M_WME_GETAC
@@ -16038,24 +16025,9 @@ index|]
 operator|.
 name|wmep_noackPolicy
 condition|)
-block|{
 name|flags
 operator||=
 name|HAL_TXDESC_NOACK
-expr_stmt|;
-name|sc
-operator|->
-name|sc_stats
-operator|.
-name|ast_tx_noack
-operator|++
-expr_stmt|;
-block|}
-block|}
-else|else
-name|pri
-operator|=
-name|WME_AC_BE
 expr_stmt|;
 break|break;
 default|default:
@@ -16125,13 +16097,6 @@ operator||=
 name|HAL_TXDESC_NOACK
 expr_stmt|;
 comment|/* no ack on broad/multicast */
-name|sc
-operator|->
-name|sc_stats
-operator|.
-name|ast_tx_noack
-operator|++
-expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -16167,6 +16132,20 @@ name|ast_tx_rts
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|flags
+operator|&
+name|HAL_TXDESC_NOACK
+condition|)
+comment|/* NB: avoid double counting */
+name|sc
+operator|->
+name|sc_stats
+operator|.
+name|ast_tx_noack
+operator|++
+expr_stmt|;
 comment|/* 	 * If 802.11g protection is enabled, determine whether 	 * to use RTS/CTS or just CTS.  Note that this is only 	 * done for OFDM unicast frames. 	 */
 if|if
 condition|(
