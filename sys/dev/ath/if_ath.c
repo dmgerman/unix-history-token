@@ -5414,7 +5414,7 @@ name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|ATH_DEBUG_ANY
+name|ATH_DEBUG_XMIT
 argument_list|,
 literal|"%s: out of xmit buffers\n"
 argument_list|,
@@ -5468,15 +5468,18 @@ name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|ATH_DEBUG_ANY
+name|ATH_DEBUG_XMIT
 argument_list|,
-literal|"%s: ignore data packet, state %u\n"
+literal|"%s: discard data packet, state %s\n"
 argument_list|,
 name|__func__
 argument_list|,
+name|ieee80211_state_name
+index|[
 name|ic
 operator|->
 name|ic_state
+index|]
 argument_list|)
 expr_stmt|;
 name|sc
@@ -5741,7 +5744,7 @@ name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|ATH_DEBUG_ANY
+name|ATH_DEBUG_XMIT
 argument_list|,
 literal|"%s: encapsulation failure\n"
 argument_list|,
@@ -19049,7 +19052,7 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_RESET
 argument_list|,
-literal|"%s: %u (%u MHz) -> %u (%u MHz)\n"
+literal|"%s: %u (%u MHz, hal flags 0x%x) -> %u (%u MHz, hal flags 0x%x)\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -19074,6 +19077,12 @@ name|sc_curchan
 operator|.
 name|channel
 argument_list|,
+name|sc
+operator|->
+name|sc_curchan
+operator|.
+name|channelFlags
+argument_list|,
 name|ath_hal_mhz2ieee
 argument_list|(
 name|hchan
@@ -19088,6 +19097,10 @@ argument_list|,
 name|hchan
 operator|.
 name|channel
+argument_list|,
+name|hchan
+operator|.
+name|channelFlags
 argument_list|)
 expr_stmt|;
 if|if
@@ -19164,8 +19177,10 @@ name|ic
 operator|->
 name|ic_ifp
 argument_list|,
-literal|"ath_chan_set: unable to reset "
-literal|"channel %u (%u Mhz)\n"
+literal|"%s: unable to reset "
+literal|"channel %u (%u Mhz, flags 0x%x hal flags 0x%x)\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|ieee80211_chan2ieee
 argument_list|(
@@ -19177,6 +19192,14 @@ argument_list|,
 name|chan
 operator|->
 name|ic_freq
+argument_list|,
+name|chan
+operator|->
+name|ic_flags
+argument_list|,
+name|hchan
+operator|.
+name|channelFlags
 argument_list|)
 expr_stmt|;
 return|return
@@ -19221,7 +19244,9 @@ name|ic
 operator|->
 name|ic_ifp
 argument_list|,
-literal|"ath_chan_set: unable to restart recv logic\n"
+literal|"%s: unable to restart recv logic\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -19339,29 +19364,6 @@ operator|.
 name|ast_per_cal
 operator|++
 expr_stmt|;
-name|DPRINTF
-argument_list|(
-name|sc
-argument_list|,
-name|ATH_DEBUG_CALIBRATE
-argument_list|,
-literal|"%s: channel %u/%x\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|sc
-operator|->
-name|sc_curchan
-operator|.
-name|channel
-argument_list|,
-name|sc
-operator|->
-name|sc_curchan
-operator|.
-name|channelFlags
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ath_hal_getrfgain
@@ -19373,6 +19375,17 @@ name|HAL_RFGAIN_NEED_CHANGE
 condition|)
 block|{
 comment|/* 		 * Rfgain is out of bounds, reset the chip 		 * to load new gain values. 		 */
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_CALIBRATE
+argument_list|,
+literal|"%s: rfgain change\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_stats
@@ -21871,7 +21884,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"R%d (%p %p) %08x %08x %08x %08x %08x %08x %c\n"
+literal|"R%d (%p %p) L:%08x D:%08x %08x %08x %08x %08x %c\n"
 argument_list|,
 name|i
 argument_list|,
@@ -21991,7 +22004,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"T%d (%p %p) %08x %08x %08x %08x %08x %08x %08x %08x %c\n"
+literal|"T%d (%p %p) L:%08x D:%08x %08x %08x %08x %08x %08x %08x %c\n"
 argument_list|,
 name|i
 argument_list|,
