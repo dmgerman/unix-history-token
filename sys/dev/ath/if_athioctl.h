@@ -36,6 +36,10 @@ name|ast_bmiss
 decl_stmt|;
 comment|/* beacon miss interrupts */
 name|u_int32_t
+name|ast_bmiss_phantom
+decl_stmt|;
+comment|/* beacon miss interrupts */
+name|u_int32_t
 name|ast_bstuck
 decl_stmt|;
 comment|/* beacon stuck interrupts */

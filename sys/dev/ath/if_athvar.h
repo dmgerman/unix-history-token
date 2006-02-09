@@ -977,6 +977,10 @@ name|u_int8_t
 name|sc_rxotherant
 decl_stmt|;
 comment|/* rx's on non-default antenna*/
+name|u_int64_t
+name|sc_lastrx
+decl_stmt|;
+comment|/* tsf at last rx'd frame */
 name|struct
 name|ath_descdma
 name|sc_txdma
