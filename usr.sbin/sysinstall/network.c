@@ -377,25 +377,22 @@ condition|(
 name|cp
 condition|)
 block|{
+comment|/* 	 * If this interface isn't a DHCP one, bring it up. 	 * If it is, then it's already up. 	 */
 if|if
 condition|(
-name|strcmp
+name|strstr
 argument_list|(
 name|cp
 argument_list|,
 literal|"DHCP"
 argument_list|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|msgDebug
 argument_list|(
-literal|"ifconfig %s %s\n"
-argument_list|,
-name|dev
-operator|->
-name|name
-argument_list|,
-name|cp
+literal|"Not a DHCP interface.\n"
 argument_list|)
 expr_stmt|;
 name|i
@@ -472,6 +469,14 @@ name|rp
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+else|else
+block|{
+name|msgDebug
+argument_list|(
+literal|"A DHCP interface.  Should already be up.\n"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 elseif|else
