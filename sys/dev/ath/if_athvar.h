@@ -470,6 +470,13 @@ name|mtx
 name|axq_lock
 decl_stmt|;
 comment|/* lock on q and link */
+name|char
+name|axq_name
+index|[
+literal|12
+index|]
+decl_stmt|;
+comment|/* e.g. "ath0_txq4" */
 block|}
 struct|;
 end_struct
@@ -483,8 +490,7 @@ name|_sc
 parameter_list|,
 name|_tq
 parameter_list|)
-define|\
-value|mtx_init(&(_tq)->axq_lock, \ 		device_get_nameunit((_sc)->sc_dev), "xmit q", MTX_DEF)
+value|do { \ 	snprintf((_tq)->axq_name, sizeof((_tq)->axq_name), "%s_txq%u", \ 		device_get_nameunit((_sc)->sc_dev), (_tq)->axq_qnum); \ 	mtx_init(&(_tq)->axq_lock, (_tq)->axq_name, "ath_txq", MTX_DEF); \ } while (0);
 end_define
 
 begin_define
@@ -956,6 +962,13 @@ name|mtx
 name|sc_txbuflock
 decl_stmt|;
 comment|/* txbuf lock */
+name|char
+name|sc_txname
+index|[
+literal|12
+index|]
+decl_stmt|;
+comment|/* e.g. "ath0_buf" */
 name|int
 name|sc_tx_timer
 decl_stmt|;
@@ -1146,8 +1159,7 @@ name|ATH_TXBUF_LOCK_INIT
 parameter_list|(
 name|_sc
 parameter_list|)
-define|\
-value|mtx_init(&(_sc)->sc_txbuflock, \ 		device_get_nameunit((_sc)->sc_dev), "xmit buf q", MTX_DEF)
+value|do { \ 	snprintf((_sc)->sc_txname, sizeof((_sc)->sc_txname), "%s_buf", \ 		device_get_nameunit((_sc)->sc_dev)); \ 	mtx_init(&(_sc)->sc_txbuflock, (_sc)->sc_txname, "ath_buf", MTX_DEF); \ } while (0)
 end_define
 
 begin_define
