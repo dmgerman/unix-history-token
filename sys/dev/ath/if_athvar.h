@@ -754,6 +754,11 @@ range|:
 literal|1
 decl_stmt|,
 comment|/* mcast key cache search */
+name|sc_syncbeacon
+range|:
+literal|1
+decl_stmt|,
+comment|/* sync/resync beacon timers */
 name|sc_hasclrkey
 range|:
 literal|1
