@@ -33,7 +33,7 @@ begin_define
 define|#
 directive|define
 name|NG_NETFLOW_MAXIFACES
-value|512
+value|2048
 end_define
 
 begin_comment
@@ -611,14 +611,6 @@ name|node_p
 name|node
 decl_stmt|;
 comment|/* link to the node itself */
-name|struct
-name|ng_netflow_iface
-name|ifaces
-index|[
-name|NG_NETFLOW_MAXIFACES
-index|]
-decl_stmt|;
-comment|/* incoming */
 name|hook_p
 name|export
 decl_stmt|;
@@ -627,10 +619,6 @@ name|struct
 name|ng_netflow_info
 name|info
 decl_stmt|;
-name|uint32_t
-name|flow_seq
-decl_stmt|;
-comment|/* current flow sequence */
 name|struct
 name|callout
 name|exp_callout
@@ -664,6 +652,17 @@ decl_stmt|;
 name|struct
 name|mtx
 name|export_mtx
+decl_stmt|;
+name|uint32_t
+name|flow_seq
+decl_stmt|;
+comment|/* current flow sequence */
+name|struct
+name|ng_netflow_iface
+name|ifaces
+index|[
+name|NG_NETFLOW_MAXIFACES
+index|]
 decl_stmt|;
 block|}
 struct|;
