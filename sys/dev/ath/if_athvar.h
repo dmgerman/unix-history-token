@@ -56,6 +56,12 @@ name|ATH_TIMEOUT
 value|1000
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATH_RXBUF
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -67,6 +73,17 @@ begin_comment
 comment|/* number of RX buffers */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATH_TXBUF
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -77,6 +94,11 @@ end_define
 begin_comment
 comment|/* number of TX buffers */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
