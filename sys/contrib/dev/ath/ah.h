@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002-2004 Sam Leffler, Errno Consulting, Atheros  * Communications, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the following conditions are met:  * 1. The materials contained herein are unmodified and are used  *    unmodified.  * 2. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following NO  *    ''WARRANTY'' disclaimer below (''Disclaimer''), without  *    modification.  * 3. Redistributions in binary form must reproduce at minimum a  *    disclaimer similar to the Disclaimer below and any redistribution  *    must be conditioned upon including a substantially similar  *    Disclaimer requirement for further binary redistribution.  * 4. Neither the names of the above-listed copyright holders nor the  *    names of any contributors may be used to endorse or promote  *    product derived from this software without specific prior written  *    permission.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT,  * MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE  * FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGES.  *  * $Id: ah.h,v 1.82 2004/11/30 00:31:42 sam Exp $  */
+comment|/*-  * Copyright (c) 2002-2006 Sam Leffler, Errno Consulting, Atheros  * Communications, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the following conditions are met:  * 1. The materials contained herein are unmodified and are used  *    unmodified.  * 2. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following NO  *    ''WARRANTY'' disclaimer below (''Disclaimer''), without  *    modification.  * 3. Redistributions in binary form must reproduce at minimum a  *    disclaimer similar to the Disclaimer below and any redistribution  *    must be conditioned upon including a substantially similar  *    Disclaimer requirement for further binary redistribution.  * 4. Neither the names of the above-listed copyright holders nor the  *    names of any contributors may be used to endorse or promote  *    product derived from this software without specific prior written  *    permission.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT,  * MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE  * FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGES.  *  * $Id: //depot/sw/linuxsrc/src/802_11/madwifi/hal/main/ah.h#134 $  */
 end_comment
 
 begin_ifndef
@@ -240,13 +240,73 @@ init|=
 literal|16
 block|,
 comment|/* per-packet tx power control  */
+name|HAL_CAP_PHYDIAG
+init|=
+literal|17
+block|,
+comment|/* hardware phy error diagnostic */
+name|HAL_CAP_BSSIDMASK
+init|=
+literal|18
+block|,
+comment|/* hardware supports bssid mask */
+name|HAL_CAP_MCAST_KEYSRCH
+init|=
+literal|19
+block|,
+comment|/* hardware has multicast key search */
+name|HAL_CAP_TSF_ADJUST
+init|=
+literal|20
+block|,
+comment|/* hardware has beacon tsf adjust */
+name|HAL_CAP_XR
+init|=
+literal|21
+block|,
+comment|/* hardware has XR support  */
+name|HAL_CAP_WME_TKIPMIC
+init|=
+literal|22
+block|,
+comment|/* hardware can support TKIP MIC when WMM is turned on */
+name|HAL_CAP_CHAN_HALFRATE
+init|=
+literal|23
+block|,
+comment|/* hardware can support half rate channels */
+name|HAL_CAP_CHAN_QUARTERRATE
+init|=
+literal|24
+block|,
+comment|/* hardware can support quarter rate channels */
+name|HAL_CAP_RFSILENT
+init|=
+literal|25
+block|,
+comment|/* hardware has rfsilent support  */
+name|HAL_CAP_TPC_ACK
+init|=
+literal|26
+block|,
+comment|/* ack txpower with per-packet tpc */
+name|HAL_CAP_TPC_CTS
+init|=
+literal|27
+block|,
+comment|/* cts txpower with per-packet tpc */
+name|HAL_CAP_11D
+init|=
+literal|28
+block|,
+comment|/* 11d beacon support for changing cc */
 block|}
 name|HAL_CAPABILITY_TYPE
 typedef|;
 end_typedef
 
 begin_comment
-comment|/*   * "States" for setting the LED.  These correspond to  * the possible 802.11 operational states and there may  * be a many-to-one mapping between these states and the  * actual hardware states for the LED's (i.e. the hardware  * may have fewer states).  */
+comment|/*   * "States" for setting the LED.  These correspond to  * the possible 802.11 operational states and there may  * be a many-to-one mapping between these states and the  * actual hardware state for the LED's (i.e. the hardware  * may have fewer states).  */
 end_comment
 
 begin_typedef
@@ -305,11 +365,11 @@ init|=
 literal|3
 block|,
 comment|/* "crap after beacon" xmit q */
-name|HAL_TX_QUEUE_PSPOLL
+name|HAL_TX_QUEUE_UAPSD
 init|=
 literal|4
 block|,
-comment|/* power-save poll xmit q */
+comment|/* u-apsd power save xmit q */
 block|}
 name|HAL_TX_QUEUE
 typedef|;
@@ -359,6 +419,11 @@ init|=
 literal|4
 block|,
 comment|/* uplink power save */
+name|HAL_XR_DATA
+init|=
+literal|5
+block|,
+comment|/* uplink power save */
 block|}
 name|HAL_TX_QUEUE_SUBTYPE
 typedef|;
@@ -372,51 +437,92 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
-name|TXQ_FLAG_TXOKINT_ENABLE
+comment|/* 	 * Per queue interrupt enables.  When set the associated 	 * interrupt may be delivered for packets sent through 	 * the queue.  Without these enabled no interrupts will 	 * be delivered for transmits through the queue. 	 */
+name|HAL_TXQ_TXOKINT_ENABLE
 init|=
 literal|0x0001
 block|,
 comment|/* enable TXOK interrupt */
-name|TXQ_FLAG_TXERRINT_ENABLE
+name|HAL_TXQ_TXERRINT_ENABLE
 init|=
 literal|0x0001
 block|,
 comment|/* enable TXERR interrupt */
-name|TXQ_FLAG_TXDESCINT_ENABLE
+name|HAL_TXQ_TXDESCINT_ENABLE
 init|=
 literal|0x0002
 block|,
 comment|/* enable TXDESC interrupt */
-name|TXQ_FLAG_TXEOLINT_ENABLE
+name|HAL_TXQ_TXEOLINT_ENABLE
 init|=
 literal|0x0004
 block|,
 comment|/* enable TXEOL interrupt */
-name|TXQ_FLAG_TXURNINT_ENABLE
+name|HAL_TXQ_TXURNINT_ENABLE
 init|=
 literal|0x0008
 block|,
 comment|/* enable TXURN interrupt */
-name|TXQ_FLAG_BACKOFF_DISABLE
+comment|/* 	 * Enable hardware compression for packets sent through 	 * the queue.  The compression buffer must be setup and 	 * packets must have a key entry marked in the tx descriptor. 	 */
+name|HAL_TXQ_COMPRESSION_ENABLE
 init|=
 literal|0x0010
 block|,
-comment|/* disable Post Backoff  */
-name|TXQ_FLAG_COMPRESSION_ENABLE
+comment|/* enable h/w compression */
+comment|/* 	 * Disable queue when veol is hit or ready time expires. 	 * By default the queue is disabled only on reaching the 	 * physical end of queue (i.e. a null link ptr in the 	 * descriptor chain). 	 */
+name|HAL_TXQ_RDYTIME_EXP_POLICY_ENABLE
 init|=
 literal|0x0020
 block|,
-comment|/* compression enabled */
-name|TXQ_FLAG_RDYTIME_EXP_POLICY_ENABLE
+comment|/* 	 * Schedule frames on delivery of a DBA (DMA Beacon Alert) 	 * event.  Frames will be transmitted only when this timer 	 * fires, e.g to transmit a beacon in ap or adhoc modes. 	 */
+name|HAL_TXQ_DBA_GATED
 init|=
 literal|0x0040
 block|,
-comment|/* enable ready time 							expiry policy */
-name|TXQ_FLAG_FRAG_BURST_BACKOFF_ENABLE
+comment|/* schedule based on DBA */
+comment|/* 	 * Each transmit queue has a counter that is incremented 	 * each time the queue is enabled and decremented when 	 * the list of frames to transmit is traversed (or when 	 * the ready time for the queue expires).  This counter 	 * must be non-zero for frames to be scheduled for 	 * transmission.  The following controls disable bumping 	 * this counter under certain conditions.  Typically this 	 * is used to gate frames based on the contents of another 	 * queue (e.g. CAB traffic may only follow a beacon frame). 	 * These are meaningful only when frames are scheduled 	 * with a non-ASAP policy (e.g. DBA-gated). 	 */
+name|HAL_TXQ_CBR_DIS_QEMPTY
 init|=
 literal|0x0080
 block|,
-comment|/* enable backoff while 							sending fragment burst*/
+comment|/* disable on this q empty */
+name|HAL_TXQ_CBR_DIS_BEMPTY
+init|=
+literal|0x0100
+block|,
+comment|/* disable on beacon q empty */
+comment|/* 	 * Fragment burst backoff policy.  Normally the no backoff 	 * is done after a successful transmission, the next fragment 	 * is sent at SIFS.  If this flag is set backoff is done 	 * after each fragment, regardless whether it was ack'd or 	 * not, after the backoff count reaches zero a normal channel 	 * access procedure is done before the next transmit (i.e. 	 * wait AIFS instead of SIFS). 	 */
+name|HAL_TXQ_FRAG_BURST_BACKOFF_ENABLE
+init|=
+literal|0x00800000
+block|,
+comment|/* 	 * Disable post-tx backoff following each frame. 	 */
+name|HAL_TXQ_BACKOFF_DISABLE
+init|=
+literal|0x00010000
+block|,
+comment|/* disable post backoff  */
+comment|/* 	 * DCU arbiter lockout control.  This controls how 	 * lower priority tx queues are handled with respect to 	 * to a specific queue when multiple queues have frames 	 * to send.  No lockout means lower priority queues arbitrate 	 * concurrently with this queue.  Intra-frame lockout 	 * means lower priority queues are locked out until the 	 * current frame transmits (e.g. including backoffs and bursting). 	 * Global lockout means nothing lower can arbitrary so 	 * long as there is traffic activity on this queue (frames, 	 * backoff, etc). 	 */
+name|HAL_TXQ_ARB_LOCKOUT_INTRA
+init|=
+literal|0x00020000
+block|,
+comment|/* intra-frame lockout */
+name|HAL_TXQ_ARB_LOCKOUT_GLOBAL
+init|=
+literal|0x00040000
+block|,
+comment|/* full lockout s */
+name|HAL_TXQ_IGNORE_VIRTCOL
+init|=
+literal|0x00080000
+block|,
+comment|/* ignore virt collisions */
+name|HAL_TXQ_SEQNUM_INC_DIS
+init|=
+literal|0x00100000
+block|,
+comment|/* disable seqnum increment */
 block|}
 name|HAL_TX_QUEUE_FLAGS
 typedef|;
@@ -465,19 +571,34 @@ comment|/* long retry limit (not used)*/
 name|u_int32_t
 name|tqi_cbrPeriod
 decl_stmt|;
+comment|/* CBR period (us) */
 name|u_int32_t
 name|tqi_cbrOverflowLimit
 decl_stmt|;
+comment|/* threshold for CBROVF int */
 name|u_int32_t
 name|tqi_burstTime
 decl_stmt|;
+comment|/* max burst duration (us) */
 name|u_int32_t
 name|tqi_readyTime
 decl_stmt|;
+comment|/* frame schedule time (us) */
+name|u_int32_t
+name|tqi_compBuf
+decl_stmt|;
+comment|/* comp buffer phys addr */
 block|}
 name|HAL_TXQ_INFO
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|HAL_TQI_NONVAL
+value|0xffff
+end_define
 
 begin_comment
 comment|/* token to use for aifs, cwmin, cwmax */
@@ -488,6 +609,35 @@ define|#
 directive|define
 name|HAL_TXQ_USEDEFAULT
 value|((u_int32_t) -1)
+end_define
+
+begin_comment
+comment|/* compression definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_COMP_BUF_MAX_SIZE
+value|9216
+end_define
+
+begin_comment
+comment|/* 9K */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_COMP_BUF_ALIGN_SIZE
+value|512
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_DECOMP_MASK_SIZE
+value|128
 end_define
 
 begin_comment
@@ -517,6 +667,14 @@ block|,
 name|HAL_PKT_TYPE_PROBE_RESP
 init|=
 literal|4
+block|,
+name|HAL_PKT_TYPE_CHIRP
+init|=
+literal|5
+block|,
+name|HAL_PKT_TYPE_GRP_POLL
+init|=
+literal|6
 block|, }
 name|HAL_PKT_TYPE
 typedef|;
@@ -560,6 +718,11 @@ init|=
 literal|0x00000020
 block|,
 comment|/* Promiscuous mode */
+name|HAL_RX_FILTER_XRPOLL
+init|=
+literal|0x00000040
+block|,
+comment|/* Allow XR poll frmae */
 name|HAL_RX_FILTER_PROBEREQ
 init|=
 literal|0x00000080
@@ -584,25 +747,21 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
-name|HAL_PM_UNDEFINED
+name|HAL_PM_AWAKE
 init|=
 literal|0
 block|,
-name|HAL_PM_AUTO
+name|HAL_PM_FULL_SLEEP
 init|=
 literal|1
 block|,
-name|HAL_PM_AWAKE
+name|HAL_PM_NETWORK_SLEEP
 init|=
 literal|2
 block|,
-name|HAL_PM_FULL_SLEEP
+name|HAL_PM_UNDEFINED
 init|=
 literal|3
-block|,
-name|HAL_PM_NETWORK_SLEEP
-init|=
-literal|4
 block|}
 name|HAL_POWER_MODE
 typedef|;
@@ -675,10 +834,30 @@ init|=
 literal|0x00100000
 block|,
 comment|/* Non-common mapping */
+name|HAL_INT_TIM
+init|=
+literal|0x00200000
+block|,
+comment|/* Non-common mapping */
+name|HAL_INT_DTIM
+init|=
+literal|0x00400000
+block|,
+comment|/* Non-common mapping */
+name|HAL_INT_DTIMSYNC
+init|=
+literal|0x00800000
+block|,
+comment|/* Non-common mapping */
 name|HAL_INT_GPIO
 init|=
 literal|0x01000000
 block|,
+name|HAL_INT_CABEND
+init|=
+literal|0x02000000
+block|,
+comment|/* Non-common mapping */
 name|HAL_INT_FATAL
 init|=
 literal|0x40000000
@@ -689,6 +868,16 @@ init|=
 literal|0x80000000
 block|,
 comment|/* Set/clear IER */
+name|HAL_INT_BMISC
+init|=
+name|HAL_INT_TIM
+operator||
+name|HAL_INT_DTIM
+operator||
+name|HAL_INT_DTIMSYNC
+operator||
+name|HAL_INT_CABEND
+block|,
 comment|/* Interrupt bits that map directly to ISR/IMR bits */
 name|HAL_INT_COMMON
 init|=
@@ -761,20 +950,28 @@ name|u_int16_t
 name|channelFlags
 decl_stmt|;
 comment|/* see below */
+name|u_int8_t
+name|privFlags
+decl_stmt|;
+name|int8_t
+name|maxRegTxPower
+decl_stmt|;
+comment|/* max regulatory tx power in dBm */
+name|int8_t
+name|maxTxPower
+decl_stmt|;
+comment|/* max true tx power in 0.25 dBm */
+name|int8_t
+name|minTxPower
+decl_stmt|;
+comment|/* min true tx power in 0.25 dBm */
 block|}
 name|HAL_CHANNEL
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|CHANNEL_RAD_INT
-value|0x0001
-end_define
-
 begin_comment
-comment|/* Radar interference detected on channel */
+comment|/* channelFlags */
 end_comment
 
 begin_define
@@ -786,17 +983,6 @@ end_define
 
 begin_comment
 comment|/* CW interference detected on channel */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHANNEL_BUSY
-value|0x0004
-end_define
-
-begin_comment
-comment|/* Busy, occupied or overlap with adjoin chan */
 end_comment
 
 begin_define
@@ -890,12 +1076,82 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CHANNEL_AR
+name|CHANNEL_STURBO
+value|0x2000
+end_define
+
+begin_comment
+comment|/* Static turbo, no 11a-only usage */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHANNEL_HALF
+value|0x4000
+end_define
+
+begin_comment
+comment|/* Half rate channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHANNEL_QUARTER
 value|0x8000
 end_define
 
 begin_comment
-comment|/* Software use: radar detected */
+comment|/* Quarter rate channel */
+end_comment
+
+begin_comment
+comment|/* privFlags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHANNEL_INTERFERENCE
+value|0x01
+end_define
+
+begin_comment
+comment|/* Software use: channel interference  				        used for as AR as well as RADAR  				        interference detection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHANNEL_DFS
+value|0x02
+end_define
+
+begin_comment
+comment|/* DFS required on channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHANNEL_4MS_LIMIT
+value|0x04
+end_define
+
+begin_comment
+comment|/* 4msec packet limit on this channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHANNEL_DFS_CLEAR
+value|0x08
+end_define
+
+begin_comment
+comment|/* if channel has been checked for DFS */
 end_comment
 
 begin_define
@@ -959,8 +1215,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|CHANNEL_ST
+value|(CHANNEL_T|CHANNEL_STURBO)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CHANNEL_108G
 value|(CHANNEL_2GHZ|CHANNEL_OFDM|CHANNEL_TURBO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHANNEL_108A
+value|CHANNEL_T
 end_define
 
 begin_define
@@ -975,7 +1245,7 @@ define|#
 directive|define
 name|CHANNEL_ALL
 define|\
-value|(CHANNEL_OFDM|CHANNEL_CCK|CHANNEL_5GHZ|CHANNEL_2GHZ|CHANNEL_TURBO)
+value|(CHANNEL_OFDM|CHANNEL_CCK| CHANNEL_2GHZ | CHANNEL_5GHZ | CHANNEL_TURBO)
 end_define
 
 begin_define
@@ -983,6 +1253,34 @@ define|#
 directive|define
 name|CHANNEL_ALL_NOTURBO
 value|(CHANNEL_ALL&~ CHANNEL_TURBO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_ANTENNA_MIN_MODE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_ANTENNA_FIXED_A
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_ANTENNA_FIXED_B
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_ANTENNA_MAX_MODE
+value|3
 end_define
 
 begin_typedef
@@ -1054,18 +1352,22 @@ name|HAL_MODE_11A
 init|=
 literal|0x001
 block|,
+comment|/* 11a channels */
 name|HAL_MODE_TURBO
 init|=
 literal|0x002
 block|,
+comment|/* 11a turbo-only channels */
 name|HAL_MODE_11B
 init|=
 literal|0x004
 block|,
+comment|/* 11b channels */
 name|HAL_MODE_PUREG
 init|=
 literal|0x008
 block|,
+comment|/* 11g channels (OFDM only) */
 ifdef|#
 directive|ifdef
 name|notdef
@@ -1073,18 +1375,41 @@ name|HAL_MODE_11G
 init|=
 literal|0x010
 block|,
+comment|/* 11g channels (OFDM/CCK) */
 else|#
 directive|else
 name|HAL_MODE_11G
 init|=
 literal|0x008
 block|,
+comment|/* XXX historical */
 endif|#
 directive|endif
 name|HAL_MODE_108G
 init|=
 literal|0x020
 block|,
+comment|/* 11a+Turbo channels */
+name|HAL_MODE_108A
+init|=
+literal|0x040
+block|,
+comment|/* 11g+Turbo channels */
+name|HAL_MODE_XR
+init|=
+literal|0x100
+block|,
+comment|/* XR channels */
+name|HAL_MODE_11A_HALF_RATE
+init|=
+literal|0x200
+block|,
+comment|/* 11A half rate channels */
+name|HAL_MODE_11A_QUARTER_RATE
+init|=
+literal|0x400
+block|,
+comment|/* 11A quarter rate channels */
 name|HAL_MODE_ALL
 init|=
 literal|0xfff
@@ -1442,7 +1767,7 @@ comment|/* HAL ABI version */
 define|#
 directive|define
 name|HAL_ABI_VERSION
-value|0x04112900
+value|0x05122200
 comment|/* YYMMDDnn */
 name|u_int16_t
 name|ah_devid
@@ -1487,6 +1812,13 @@ name|u_int16_t
 name|ah_analog2GhzRev
 decl_stmt|;
 comment|/* 2GHz radio revision */
+name|u_int8_t
+name|ah_decompMask
+index|[
+name|HAL_DECOMP_MASK_SIZE
+index|]
+decl_stmt|;
+comment|/* decomp mask array */
 specifier|const
 name|HAL_RATE_TABLE
 modifier|*
@@ -1578,6 +1910,9 @@ modifier|*
 parameter_list|,
 name|HAL_CHANNEL
 modifier|*
+parameter_list|,
+name|HAL_BOOL
+modifier|*
 parameter_list|)
 function_decl|;
 name|HAL_BOOL
@@ -1592,6 +1927,101 @@ name|ath_hal
 modifier|*
 parameter_list|,
 name|u_int32_t
+parameter_list|)
+function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_arEnable
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_arDisable
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_arReset
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|)
+function_decl|;
+name|HAL_BOOL
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_radarHaveEvent
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|)
+function_decl|;
+name|HAL_BOOL
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_processDfs
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|HAL_CHANNEL
+modifier|*
+parameter_list|)
+function_decl|;
+name|u_int32_t
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_dfsNolCheck
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|HAL_CHANNEL
+modifier|*
+parameter_list|,
+name|u_int32_t
+parameter_list|)
+function_decl|;
+name|HAL_BOOL
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_radarWait
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|HAL_CHANNEL
+modifier|*
 parameter_list|)
 function_decl|;
 comment|/* Transmit functions */
@@ -1778,38 +2208,6 @@ name|HAL_BOOL
 name|__ahdecl
 function_decl|(
 modifier|*
-name|ah_updateCTSForBursting
-function_decl|)
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-parameter_list|,
-name|struct
-name|ath_desc
-modifier|*
-parameter_list|,
-name|struct
-name|ath_desc
-modifier|*
-parameter_list|,
-name|struct
-name|ath_desc
-modifier|*
-parameter_list|,
-name|struct
-name|ath_desc
-modifier|*
-parameter_list|,
-name|u_int32_t
-parameter_list|,
-name|u_int32_t
-parameter_list|)
-function_decl|;
-name|HAL_BOOL
-name|__ahdecl
-function_decl|(
-modifier|*
 name|ah_setupTxDesc
 function_decl|)
 parameter_list|(
@@ -1853,6 +2251,15 @@ name|rtsctsRate
 parameter_list|,
 name|u_int
 name|rtsctsDuration
+parameter_list|,
+name|u_int
+name|compicvLen
+parameter_list|,
+name|u_int
+name|compivLen
+parameter_list|,
+name|u_int
+name|comp
 parameter_list|)
 function_decl|;
 name|HAL_BOOL
@@ -1947,6 +2354,22 @@ name|ath_hal
 modifier|*
 parameter_list|,
 name|u_int32_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_reqTxIntrDesc
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|struct
+name|ath_desc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2144,6 +2567,9 @@ name|struct
 name|ath_desc
 modifier|*
 name|next
+parameter_list|,
+name|u_int64_t
+name|tsf
 parameter_list|)
 function_decl|;
 name|void
@@ -2159,6 +2585,9 @@ modifier|*
 parameter_list|,
 specifier|const
 name|HAL_NODE_STATS
+modifier|*
+parameter_list|,
+name|HAL_CHANNEL
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2275,6 +2704,37 @@ name|__ahdecl
 function_decl|(
 modifier|*
 name|ah_setMacAddress
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+specifier|const
+name|u_int8_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_getBssIdMask
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|u_int8_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|HAL_BOOL
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_setBssIdMask
 function_decl|)
 parameter_list|(
 name|struct
@@ -2595,6 +3055,38 @@ name|ath_hal
 modifier|*
 parameter_list|)
 function_decl|;
+name|HAL_BOOL
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_setDecompMask
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|u_int16_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_setCoverageClass
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|u_int8_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
 comment|/* Key Cache Functions */
 name|u_int32_t
 name|__ahdecl
@@ -2695,9 +3187,6 @@ name|mode
 parameter_list|,
 name|int
 name|setChip
-parameter_list|,
-name|u_int16_t
-name|sleepDuration
 parameter_list|)
 function_decl|;
 name|HAL_POWER_MODE
@@ -2712,44 +3201,18 @@ name|ath_hal
 modifier|*
 parameter_list|)
 function_decl|;
-name|HAL_BOOL
+name|int16_t
 name|__ahdecl
 function_decl|(
 modifier|*
-name|ah_initPSPoll
-function_decl|)
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-parameter_list|)
-function_decl|;
-name|HAL_BOOL
-name|__ahdecl
-function_decl|(
-modifier|*
-name|ah_enablePSPoll
+name|ah_getChanNoise
 function_decl|)
 parameter_list|(
 name|struct
 name|ath_hal
 modifier|*
 parameter_list|,
-name|u_int8_t
-modifier|*
-parameter_list|,
-name|u_int16_t
-parameter_list|)
-function_decl|;
-name|HAL_BOOL
-name|__ahdecl
-function_decl|(
-modifier|*
-name|ah_disablePSPoll
-function_decl|)
-parameter_list|(
-name|struct
-name|ath_hal
+name|HAL_CHANNEL
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2922,6 +3385,25 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Set the Vendor ID for Vendor SKU's which can modify the  * channel properties returned by ath_hal_init_channels.  * Return AH_TRUE if set succeeds  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|HAL_BOOL
+name|__ahdecl
+name|ath_hal_setvendor
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|u_int32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Return a list of channels available for use with the hardware.  * The list is based on what the hardware is capable of, the specified  * country code, the modeSelect mask, and whether or not outdoor  * channels are to be permitted.  *  * The channel list is returned in the supplied array.  maxchans  * defines the maximum size of this array.  nchans contains the actual  * number of channels returned.  If a problem occurred or there were  * no channels that met the criteria then AH_FALSE is returned.  */
 end_comment
 
@@ -2946,6 +3428,17 @@ name|u_int
 modifier|*
 name|nchans
 parameter_list|,
+name|u_int8_t
+modifier|*
+name|regclassids
+parameter_list|,
+name|u_int
+name|maxregids
+parameter_list|,
+name|u_int
+modifier|*
+name|nregids
+parameter_list|,
 name|HAL_CTRY_CODE
 name|cc
 parameter_list|,
@@ -2957,6 +3450,24 @@ name|enableOutdoor
 parameter_list|,
 name|HAL_BOOL
 name|enableExtendedChannels
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Calibrate noise floor data following a channel scan or similar.  * This must be called prior retrieving noise floor data.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|__ahdecl
+name|ath_hal_process_noisefloor
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3034,32 +3545,38 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Return if device is public safety.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|HAL_BOOL
+name|__ahdecl
+name|ath_hal_ispublicsafetysku
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Convert between IEEE channel number and channel frequency  * using the specified channel flags; e.g. CHANNEL_2GHZ.  */
 end_comment
 
 begin_function_decl
 specifier|extern
-name|u_int
+name|int
 name|__ahdecl
 name|ath_hal_mhz2ieee
 parameter_list|(
-name|u_int
-name|mhz
+name|struct
+name|ath_hal
+modifier|*
 parameter_list|,
 name|u_int
-name|flags
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|u_int
-name|__ahdecl
-name|ath_hal_ieee2mhz
-parameter_list|(
-name|u_int
-name|ieee
+name|mhz
 parameter_list|,
 name|u_int
 name|flags
