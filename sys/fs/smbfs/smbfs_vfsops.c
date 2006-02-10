@@ -6,29 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_netsmb.h"
-end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NETSMB
-end_ifndef
-
-begin_error
-error|#
-directive|error
-literal|"SMBFS requires option NETSMB"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
