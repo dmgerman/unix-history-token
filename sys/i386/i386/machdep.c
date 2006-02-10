@@ -7638,20 +7638,6 @@ name|arch_i386_is_xbox
 condition|)
 block|{
 comment|/* 		 * We queried the memory size before, so chop off 4MB for 		 * the framebuffer and inform the OS of this. 		 */
-name|extmem
-operator|=
-operator|(
-name|arch_i386_xbox_memsize
-operator|-
-literal|4
-operator|)
-operator|*
-literal|1024
-expr_stmt|;
-name|basemem
-operator|=
-literal|0
-expr_stmt|;
 name|physmap
 index|[
 literal|0
@@ -7664,9 +7650,15 @@ index|[
 literal|1
 index|]
 operator|=
-name|extmem
+operator|(
+name|arch_i386_xbox_memsize
 operator|*
 literal|1024
+operator|*
+literal|1024
+operator|)
+operator|-
+name|XBOX_FB_SIZE
 expr_stmt|;
 name|physmap_idx
 operator|=

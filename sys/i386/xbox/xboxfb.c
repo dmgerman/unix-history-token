@@ -169,34 +169,6 @@ name|CHAR_WIDTH
 value|10
 end_define
 
-begin_define
-define|#
-directive|define
-name|RAM_SIZE
-value|(arch_i386_xbox_memsize * 1024 * 1024)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FB_SIZE
-value|(0x400000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FB_START
-value|(0xf0000000 | (RAM_SIZE - FB_SIZE))
-end_define
-
-begin_define
-define|#
-directive|define
-name|FB_START_PTR
-value|(0xFD600800)
-end_define
-
 begin_comment
 comment|/* colours */
 end_comment
@@ -718,7 +690,7 @@ name|SCREEN_BPP
 operator|)
 operator|>
 operator|(
-name|FB_SIZE
+name|XBOX_FB_SIZE
 operator|-
 name|SCREEN_SIZE
 operator|)
@@ -763,7 +735,7 @@ expr_stmt|;
 operator|*
 name|xcon_memstartptr
 operator|=
-name|FB_START
+name|XBOX_FB_START
 expr_stmt|;
 block|}
 comment|/* we achieve much faster scrolling by just altering the video memory 	 * address base. once all memory is used, we return to the beginning 	 * again */
@@ -812,7 +784,7 @@ expr_stmt|;
 operator|*
 name|xcon_memstartptr
 operator|=
-name|FB_START
+name|XBOX_FB_START
 operator|+
 operator|(
 name|xcon_yoffs
@@ -885,7 +857,7 @@ init|;
 name|i
 operator|<
 operator|(
-name|FB_SIZE
+name|XBOX_FB_SIZE
 operator|/
 name|PAGE_SIZE
 operator|)
@@ -906,7 +878,7 @@ operator|*
 name|PAGE_SIZE
 operator|)
 argument_list|,
-name|FB_START
+name|XBOX_FB_START
 operator|+
 operator|(
 name|i
@@ -926,9 +898,9 @@ operator|)
 operator|*
 name|PAGE_SIZE
 argument_list|,
-name|FB_START_PTR
+name|XBOX_FB_START_PTR
 operator|-
-name|FB_START_PTR
+name|XBOX_FB_START_PTR
 operator|%
 name|PAGE_SIZE
 argument_list|)
@@ -956,7 +928,7 @@ operator|)
 operator|*
 name|PAGE_SIZE
 operator|+
-name|FB_START_PTR
+name|XBOX_FB_START_PTR
 operator|%
 name|PAGE_SIZE
 operator|)
@@ -1278,9 +1250,9 @@ name|xcon_map
 operator|=
 name|pmap_mapdev
 argument_list|(
-name|FB_START
+name|XBOX_FB_START
 argument_list|,
-name|FB_SIZE
+name|XBOX_FB_SIZE
 argument_list|)
 expr_stmt|;
 name|xcon_memstartptr
@@ -1291,7 +1263,7 @@ operator|*
 operator|)
 name|pmap_mapdev
 argument_list|(
-name|FB_START_PTR
+name|XBOX_FB_START_PTR
 argument_list|,
 name|PAGE_SIZE
 argument_list|)
@@ -1299,7 +1271,7 @@ expr_stmt|;
 operator|*
 name|xcon_memstartptr
 operator|=
-name|FB_START
+name|XBOX_FB_START
 expr_stmt|;
 comment|/* ditch all ugly previous mappings */
 for|for
@@ -1311,7 +1283,7 @@ init|;
 name|i
 operator|<
 operator|(
-name|FB_SIZE
+name|XBOX_FB_SIZE
 operator|/
 name|PAGE_SIZE
 operator|)
@@ -1338,7 +1310,7 @@ name|pmap_kremove
 argument_list|(
 name|PAGE_SIZE
 operator|+
-name|FB_SIZE
+name|XBOX_FB_SIZE
 argument_list|)
 expr_stmt|;
 comment|/* probe for a keyboard */

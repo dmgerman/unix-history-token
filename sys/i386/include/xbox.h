@@ -43,6 +43,34 @@ name|XBOX_LED_FLASHGREEN
 value|0x03
 end_define
 
+begin_define
+define|#
+directive|define
+name|XBOX_RAM_SIZE
+value|(arch_i386_xbox_memsize * 1024 * 1024)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XBOX_FB_SIZE
+value|(0x400000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XBOX_FB_START
+value|(0xf0000000 | (XBOX_RAM_SIZE - XBOX_FB_SIZE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|XBOX_FB_START_PTR
+value|(0xFD600800)
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|int
