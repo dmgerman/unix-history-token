@@ -583,6 +583,12 @@ name|int
 name|sc_idle
 decl_stmt|;
 comment|/* DIRTY flags removed. */
+name|time_t
+name|sc_last_write
+decl_stmt|;
+name|u_int
+name|sc_writes
+decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
