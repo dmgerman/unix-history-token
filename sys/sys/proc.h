@@ -614,6 +614,18 @@ name|td_pticks
 decl_stmt|;
 comment|/* (k) Statclock hits for profiling */
 name|u_int
+name|td_sticks
+decl_stmt|;
+comment|/* (k) Statclock hits in system mode. */
+name|u_int
+name|td_iticks
+decl_stmt|;
+comment|/* (k) Statclock hits in intr mode. */
+name|u_int
+name|td_uticks
+decl_stmt|;
+comment|/* (k) Statclock hits in user mode. */
+name|u_int
 name|td_uuticks
 decl_stmt|;
 comment|/* (k) Statclock hits (usr), for UTS. */
