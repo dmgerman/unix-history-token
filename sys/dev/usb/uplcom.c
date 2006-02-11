@@ -769,7 +769,7 @@ decl_stmt|;
 name|int32_t
 name|release
 decl_stmt|;
-comment|/* release is a 16bit entity, 					  * if -1 is specified we "don't care" 					  */
+comment|/* release is a 16bit entity, 					  * if -1 is specified we "don't care" 					  * This is a floor value.  The table 					  * must have newer revs before older 					  * revs (and -1 last). 					  */
 name|char
 name|chiptype
 decl_stmt|;
@@ -1301,7 +1301,7 @@ name|i
 index|]
 operator|.
 name|release
-operator|==
+operator|<=
 name|uaa
 operator|->
 name|release
