@@ -150,12 +150,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/clock.h>
 end_include
 
@@ -175,6 +169,54 @@ begin_include
 include|#
 directive|include
 file|<sys/rman.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<pci/pcireg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pci/pcivar.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/pcireg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/pcivar.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<machine/bus.h>
 end_include
 
 begin_include
@@ -938,6 +980,12 @@ name|bus_dmamap_t
 name|dmap
 decl_stmt|;
 comment|/* DMA map for data buffer */
+name|struct
+name|req_entry
+modifier|*
+name|chain
+decl_stmt|;
+comment|/* for SGE overallocations */
 block|}
 struct|;
 end_struct
@@ -1332,7 +1380,11 @@ name|mpt_pers_mask
 decl_stmt|;
 name|uint32_t
 label|:
-literal|15
+literal|14
+operator|,
+name|is_sas
+operator|:
+literal|1
 operator|,
 name|raid_mwce_set
 operator|:
@@ -1390,6 +1442,9 @@ name|mpt_max_devices
 decl_stmt|;
 name|uint8_t
 name|mpt_max_buses
+decl_stmt|;
+name|uint8_t
+name|ioc_facts_flags
 decl_stmt|;
 comment|/* 	 * Port Facts 	 * XXX - Add multi-port support!. 	 */
 name|uint16_t
@@ -1640,6 +1695,11 @@ name|bus_addr_t
 name|request_phys
 decl_stmt|;
 comment|/* BusADdr of request memory */
+name|uint32_t
+name|max_seg_cnt
+decl_stmt|;
+comment|/* calculated after IOC facts */
+comment|/* 	 * Hardware management 	 */
 name|u_int
 name|reset_cnt
 decl_stmt|;
@@ -2492,7 +2552,7 @@ begin_define
 define|#
 directive|define
 name|MPT_REPLY_SIZE
-value|128
+value|256
 end_define
 
 begin_define
@@ -2502,7 +2562,7 @@ name|MPT_MAX_REQUESTS
 parameter_list|(
 name|mpt
 parameter_list|)
-value|((mpt)->is_fc ? 1024 : 256)
+value|512
 end_define
 
 begin_define
@@ -2520,7 +2580,7 @@ value|32
 end_define
 
 begin_comment
-comment|/* included in MPT_REQUEST_SIZE */
+comment|/* included in MPT_REQUEST_AREA */
 end_comment
 
 begin_define
@@ -2744,15 +2804,8 @@ comment|/************************** Scatter Gather Managment *******************
 end_comment
 
 begin_comment
-comment|/*  * We cannot tell prior to getting IOC facts how big the IOC's request  * area is. Because of this we cannot tell at compile time how many  * simple SG elements we can fit within an IOC request prior to having  * to put in a chain element.  *   * Experimentally we know that the Ultra4 parts have a 96 byte request  * element size and the Fibre Channel units have a 144 byte request  * element size. Therefore, if we have 512-32 (== 480) bytes of request  * area to play with, we have room for between 3 and 5 request sized  * regions- the first of which is the command  plus a simple SG list,  * the rest of which are chained continuation SG lists. Given that the  * normal request we use is 48 bytes w/o the first SG element, we can  * assume we have 480-48 == 432 bytes to have simple SG elements and/or  * chain elements. If we assume 32 bit addressing, this works out to  * 54 SG or chain elements. If we assume 5 chain elements, then we have  * a maximum of 49 seperate actual SG segments.  */
+comment|/* MPT_RQSL- size of request frame, in bytes */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|MPT_SGL_MAX
-value|49
-end_define
 
 begin_define
 define|#
@@ -2764,6 +2817,10 @@ parameter_list|)
 value|(mpt->request_frame_size<< 2)
 end_define
 
+begin_comment
+comment|/* MPT_NSGL- how many SG entries can fit in a request frame size */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2771,8 +2828,26 @@ name|MPT_NSGL
 parameter_list|(
 name|mpt
 parameter_list|)
-value|(MPT_RQSL(mpt) / sizeof (SGE_SIMPLE32))
+value|(MPT_RQSL(mpt) / sizeof (SGE_IO_UNION))
 end_define
+
+begin_comment
+comment|/* MPT_NRFM- how many request frames can fit in each request alloc we make */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPT_NRFM
+parameter_list|(
+name|mpt
+parameter_list|)
+value|(MPT_REQUEST_AREA / MPT_RQSL(mpt))
+end_define
+
+begin_comment
+comment|/*  * MPT_NSGL_FIRST- # of SG elements that can fit after  * an I/O request but still within the request frame.  * Do this safely based upon SGE_IO_UNION.  *  * Note that the first element is *within* the SCSI request.  */
+end_comment
 
 begin_define
 define|#
@@ -2782,7 +2857,7 @@ parameter_list|(
 name|mpt
 parameter_list|)
 define|\
-value|(((mpt->request_frame_size<< 2) -		\ 	sizeof (MSG_SCSI_IO_REQUEST) -			\ 	sizeof (SGE_IO_UNION)) / sizeof (SGE_SIMPLE32))
+value|((MPT_RQSL(mpt) - sizeof (MSG_SCSI_IO_REQUEST) + sizeof (SGE_IO_UNION)) / \     sizeof (SGE_IO_UNION))
 end_define
 
 begin_comment
@@ -2872,6 +2947,10 @@ block|,
 name|MPT_PRT_DEBUG
 block|,
 name|MPT_PRT_TRACE
+block|,
+name|MPT_PRT_NONE
+init|=
+literal|100
 block|}
 enum|;
 end_enum
@@ -3490,6 +3569,20 @@ parameter_list|(
 name|MSG_SCSI_IO_REQUEST
 modifier|*
 name|msg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mpt_dump_sgl
+parameter_list|(
+name|SGE_IO_UNION
+modifier|*
+name|se
+parameter_list|,
+name|int
+name|offset
 parameter_list|)
 function_decl|;
 end_function_decl
