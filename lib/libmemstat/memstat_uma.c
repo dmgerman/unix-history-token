@@ -1955,7 +1955,7 @@ name|list
 operator|->
 name|mtl_error
 operator|=
-name|MEMSTAT_ERROR_NOMEMORY
+name|ret
 expr_stmt|;
 return|return
 operator|(
@@ -2019,7 +2019,7 @@ name|list
 operator|->
 name|mtl_error
 operator|=
-name|MEMSTAT_ERROR_NOMEMORY
+name|ret
 expr_stmt|;
 return|return
 operator|(
