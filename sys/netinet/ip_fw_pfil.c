@@ -31,12 +31,6 @@ directive|include
 file|"opt_inet.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_inet6.h"
-end_include
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -66,6 +60,12 @@ end_endif
 begin_comment
 comment|/* KLD_MODULE */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"opt_inet6.h"
+end_include
 
 begin_include
 include|#
