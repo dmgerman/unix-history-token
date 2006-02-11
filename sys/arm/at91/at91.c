@@ -1399,8 +1399,6 @@ literal|"ohci"
 argument_list|,
 literal|0
 argument_list|,
-name|AT91RM92_BASE
-operator|+
 comment|// UHP
 name|AT91RM92_OHCI_BASE
 argument_list|,
