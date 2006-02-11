@@ -444,6 +444,27 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* 	 * Correct spinlock nesting.  The idle thread context that we are 	 * borrowing was created so that it would start out with a single 	 * spin lock (sched_lock) held in fork_trampoline().  Since we 	 * don't have any locks and explicitly acquire locks when we need 	 * to, the nesting count will be off by 1. 	 */
+end_comment
+
+begin_expr_stmt
+name|curthread
+operator|->
+name|td_md
+operator|.
+name|md_spinlock_count
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|critical_exit
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* 	 * Get and save the CPU specific MCA records. Should we get the 	 * MCA state for each processor, or just the CMC state? 	 */
 end_comment
 
@@ -502,34 +523,6 @@ name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* 	 * Correct spinlock nesting.  The idle thread context that we are 	 * borrowing was created so that it would start out with a single 	 * spin lock (sched_lock) held in fork_trampoline().  Since we've 	 * explicitly acquired locks in this function, the nesting count 	 * is now 2 rather than 1.  Since we are nested, calling 	 * spinlock_exit() will simply adjust the counts without allowing 	 * spin lock using code to interrupt us. 	 */
-end_comment
-
-begin_expr_stmt
-name|spinlock_exit
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|KASSERT
-argument_list|(
-name|curthread
-operator|->
-name|td_md
-operator|.
-name|md_spinlock_count
-operator|==
-literal|1
-argument_list|,
-operator|(
-literal|"invalid count"
-operator|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
