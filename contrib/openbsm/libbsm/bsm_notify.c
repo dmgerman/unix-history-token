@@ -1,23 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2004 Apple Computer, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/libbsm/bsm_notify.c#8 $  */
+comment|/*  * Copyright (c) 2004 Apple Computer, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/libbsm/bsm_notify.c#9 $  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__APPLE__
-end_ifdef
 
 begin_comment
 comment|/*  * Based on sample code from Marc Majka.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<notify.h>
-end_include
 
 begin_include
 include|#
@@ -74,6 +62,18 @@ end_include
 begin_comment
 comment|/* syslog() */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__APPLE__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<notify.h>
+end_include
 
 begin_comment
 comment|/* If 1, assumes a kernel that sends the right notification. */
@@ -480,6 +480,105 @@ end_endif
 begin_comment
 comment|/* !__APPLE__ */
 end_comment
+
+begin_function
+name|int
+name|cannot_audit
+parameter_list|(
+name|int
+name|val
+name|__unused
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|__APPLE__
+return|return
+operator|(
+operator|!
+operator|(
+name|au_get_state
+argument_list|()
+operator|==
+name|AUC_AUDITING
+operator|)
+operator|)
+return|;
+else|#
+directive|else
+name|unsigned
+name|long
+name|au_cond
+decl_stmt|;
+if|if
+condition|(
+name|auditon
+argument_list|(
+name|A_GETCOND
+argument_list|,
+operator|&
+name|au_cond
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|ENOSYS
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Audit status check failed (%s)"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|au_cond
+operator|==
+name|AUC_NOAUDIT
+operator|||
+name|au_cond
+operator|==
+name|AUC_DISABLED
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+endif|#
+directive|endif
+comment|/* !__APPLE__ */
+block|}
+end_function
 
 end_unit
 
