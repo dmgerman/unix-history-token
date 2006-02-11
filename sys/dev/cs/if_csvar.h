@@ -61,7 +61,7 @@ comment|/* Type of chip */
 name|u_char
 name|enaddr
 index|[
-literal|6
+name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 name|struct
