@@ -83,6 +83,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|G_RAID3_DISK_FLAG_BROKEN
+value|0x0000000000000010ULL
+end_define
+
+begin_define
+define|#
+directive|define
 name|G_RAID3_DISK_FLAG_MASK
 value|(G_RAID3_DISK_FLAG_DIRTY |	\ 					 G_RAID3_DISK_FLAG_SYNCHRONIZING | \ 					 G_RAID3_DISK_FLAG_FORCE_SYNC)
 end_define
