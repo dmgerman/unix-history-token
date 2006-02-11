@@ -2009,6 +2009,9 @@ case|case
 name|AUE_CHROOT
 case|:
 case|case
+name|AUE_EACCESS
+case|:
+case|case
 name|AUE_EXECVE
 case|:
 case|case
