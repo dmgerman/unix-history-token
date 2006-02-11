@@ -3280,6 +3280,14 @@ name|p_au
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|p
+operator|->
+name|p_au
+operator|->
+name|ai_auid
+operator|=
+name|AU_DEFAUDITID
+expr_stmt|;
 block|}
 end_function
 
