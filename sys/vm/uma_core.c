@@ -12379,6 +12379,16 @@ condition|)
 goto|goto
 name|skip
 goto|;
+if|if
+condition|(
+name|CPU_ABSENT
+argument_list|(
+name|i
+argument_list|)
+condition|)
+goto|goto
+name|skip
+goto|;
 name|cache
 operator|=
 operator|&
