@@ -1198,10 +1198,6 @@ name|irq_res
 argument_list|,
 name|INTR_TYPE_BIO
 argument_list|,
-operator|(
-name|driver_intr_t
-operator|*
-operator|)
 name|ohci_intr
 argument_list|,
 name|sc

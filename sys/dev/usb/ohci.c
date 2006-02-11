@@ -5832,7 +5832,7 @@ function_decl|;
 end_function_decl
 
 begin_function
-name|int
+name|void
 name|ohci_intr
 parameter_list|(
 name|void
@@ -5856,11 +5856,7 @@ name|sc
 operator|->
 name|sc_dying
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 comment|/* If we get an interrupt while polling, then just ignore it. */
 if|if
 condition|(
@@ -5881,20 +5877,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
-return|return
-operator|(
 name|ohci_intr1
 argument_list|(
 name|sc
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
