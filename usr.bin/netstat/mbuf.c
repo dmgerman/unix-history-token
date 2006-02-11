@@ -768,12 +768,18 @@ operator|/
 literal|1024
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|printf("%llu/%llu/%llu requests for mbufs denied (mbufs/clusters/" 	    "mbuf+clusters)\n", mbuf_failures, cluster_failures, 	    packet_failures);
-endif|#
-directive|endif
+name|printf
+argument_list|(
+literal|"%llu/%llu/%llu requests for mbufs denied (mbufs/clusters/"
+literal|"mbuf+clusters)\n"
+argument_list|,
+name|mbuf_failures
+argument_list|,
+name|cluster_failures
+argument_list|,
+name|packet_failures
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|live
