@@ -3969,6 +3969,13 @@ begin_comment
 comment|/*  * Lookup a PCB based on the local address and port.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|INP_LOOKUP_MAPPED_PCB_COST
+value|3
+end_define
+
 begin_function
 name|struct
 name|inpcb
@@ -4005,11 +4012,26 @@ name|inpcb
 modifier|*
 name|inp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 name|int
 name|matchwild
 init|=
 literal|3
-decl_stmt|,
+operator|+
+name|INP_LOOKUP_MAPPED_PCB_COST
+decl_stmt|;
+else|#
+directive|else
+name|int
+name|matchwild
+init|=
+literal|3
+decl_stmt|;
+endif|#
+directive|endif
+name|int
 name|wildcard
 decl_stmt|;
 name|u_short
@@ -4212,6 +4234,23 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+comment|/* 				 * We never select the PCB that has 				 * INP_IPV6 flag and is bound to :: if 				 * we have another PCB which is bound 				 * to 0.0.0.0.  If a PCB has the 				 * INP_IPV6 flag, then we set its cost 				 * higher than IPv4 only PCBs. 				 * 				 * Note that the case only happens 				 * when a socket is bound to ::, under 				 * the condition that the use of the 				 * mapped address is allowed. 				 */
+if|if
+condition|(
+operator|(
+name|inp
+operator|->
+name|inp_vflag
+operator|&
+name|INP_IPV6
+operator|)
+operator|!=
+literal|0
+condition|)
+name|wildcard
+operator|+=
+name|INP_LOOKUP_MAPPED_PCB_COST
+expr_stmt|;
 endif|#
 directive|endif
 if|if
@@ -4313,6 +4352,12 @@ return|;
 block|}
 block|}
 end_function
+
+begin_undef
+undef|#
+directive|undef
+name|INP_LOOKUP_MAPPED_PCB_COST
+end_undef
 
 begin_comment
 comment|/*  * Lookup PCB in hash list.  */
