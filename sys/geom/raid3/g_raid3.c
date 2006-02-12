@@ -4582,7 +4582,7 @@ operator|=
 name|g_raid3_idletime
 operator|-
 operator|(
-name|time_second
+name|time_uptime
 operator|-
 name|sc
 operator|->
@@ -4724,7 +4724,7 @@ name|sc
 operator|->
 name|sc_last_write
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 name|g_topology_lock
 argument_list|()
@@ -8508,7 +8508,7 @@ name|sc
 operator|->
 name|sc_last_write
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 name|ndisks
 operator|=
@@ -14474,7 +14474,7 @@ name|sc
 operator|->
 name|sc_last_write
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 name|sc
 operator|->

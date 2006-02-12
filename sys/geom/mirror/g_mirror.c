@@ -4019,7 +4019,7 @@ operator|=
 name|g_mirror_idletime
 operator|-
 operator|(
-name|time_second
+name|time_uptime
 operator|-
 name|sc
 operator|->
@@ -4141,7 +4141,7 @@ name|sc
 operator|->
 name|sc_last_write
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 name|g_topology_lock
 argument_list|()
@@ -6962,7 +6962,7 @@ name|sc
 operator|->
 name|sc_last_write
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 comment|/* 		 * Allocate all bios before sending any request, so we can 		 * return ENOMEM in nice and clean way. 		 */
 name|bioq_init
@@ -12487,7 +12487,7 @@ name|sc
 operator|->
 name|sc_last_write
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 name|sc
 operator|->
