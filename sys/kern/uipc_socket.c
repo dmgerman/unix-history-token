@@ -2297,7 +2297,9 @@ argument_list|)
 expr_stmt|;
 comment|/* note: does not decrement the ref count */
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 return|return
@@ -7855,7 +7857,9 @@ name|valsize
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -8833,7 +8837,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -9755,7 +9761,9 @@ name|m
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -9795,7 +9803,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 while|while
 condition|(
@@ -9928,7 +9938,9 @@ literal|"ip6_sooptmcopyin"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -9973,7 +9985,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 while|while
 condition|(
@@ -10125,7 +10139,9 @@ operator|=
 name|valsize
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
