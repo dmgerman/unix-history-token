@@ -11346,10 +11346,6 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/* umass_cam_poll  *	all requests are handled through umass_cam_action, requests  *	are never pending. So, nothing to do here.  */
-end_comment
-
 begin_function
 name|Static
 name|void
@@ -11361,9 +11357,6 @@ modifier|*
 name|sim
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|USB_DEBUG
 name|struct
 name|umass_softc
 modifier|*
@@ -11394,9 +11387,31 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* nop */
+name|usbd_set_polling
+argument_list|(
+name|sc
+operator|->
+name|sc_udev
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|usbd_dopoll
+argument_list|(
+name|sc
+operator|->
+name|iface
+argument_list|)
+expr_stmt|;
+name|usbd_set_polling
+argument_list|(
+name|sc
+operator|->
+name|sc_udev
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
