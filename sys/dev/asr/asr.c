@@ -1459,7 +1459,7 @@ begin_decl_stmt
 specifier|static
 name|Asr_softc_t
 modifier|*
-name|Asr_softc
+name|Asr_softc_list
 decl_stmt|;
 end_decl_stmt
 
@@ -8539,7 +8539,7 @@ for|for
 control|(
 name|ha
 operator|=
-name|Asr_softc
+name|Asr_softc_list
 init|;
 name|ha
 condition|;
@@ -8754,7 +8754,7 @@ for|for
 control|(
 name|ha
 operator|=
-name|Asr_softc
+name|Asr_softc_list
 init|;
 name|ha
 condition|;
@@ -10885,7 +10885,7 @@ name|dev
 expr_stmt|;
 if|if
 condition|(
-name|Asr_softc
+name|Asr_softc_list
 operator|==
 name|NULL
 condition|)
@@ -10924,7 +10924,7 @@ control|(
 name|ha
 operator|=
 operator|&
-name|Asr_softc
+name|Asr_softc_list
 init|;
 operator|*
 name|ha
