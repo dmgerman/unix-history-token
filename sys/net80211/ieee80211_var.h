@@ -732,6 +732,10 @@ name|ic_txpowlimit
 decl_stmt|;
 comment|/* global tx power limit */
 name|u_int16_t
+name|ic_pad0
+decl_stmt|;
+comment|/* was ic_bmisstimeout */
+name|u_int16_t
 name|ic_nonerpsta
 decl_stmt|;
 comment|/* # non-ERP stations */
@@ -837,6 +841,13 @@ name|void
 modifier|*
 name|ic_as
 decl_stmt|;
+name|u_int32_t
+name|ic_pad
+index|[
+literal|64
+index|]
+decl_stmt|;
+comment|/* future expansion */
 block|}
 struct|;
 end_struct

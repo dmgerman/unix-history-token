@@ -432,6 +432,13 @@ name|ieee80211_nodestats
 name|ni_stats
 decl_stmt|;
 comment|/* per-node statistics */
+name|u_int32_t
+name|ni_pad
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* future expansion */
 block|}
 struct|;
 end_struct

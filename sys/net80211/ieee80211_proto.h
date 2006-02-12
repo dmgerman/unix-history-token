@@ -1247,6 +1247,14 @@ modifier|*
 name|bo_erp
 decl_stmt|;
 comment|/* start of ERP element */
+name|void
+modifier|*
+name|bo_pad
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* future expansion */
 block|}
 struct|;
 end_struct
