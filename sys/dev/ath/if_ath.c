@@ -17957,15 +17957,6 @@ operator|->
 name|sc_cabq
 argument_list|)
 expr_stmt|;
-name|ath_tx_processq
-argument_list|(
-name|sc
-argument_list|,
-name|sc
-operator|->
-name|sc_cabq
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|->
 name|if_drv_flags
