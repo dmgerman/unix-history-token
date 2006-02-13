@@ -172,7 +172,7 @@ begin_define
 define|#
 directive|define
 name|NEWPTS_PREFIX
-value|"pts/"
+value|"pts"
 end_define
 
 begin_define
