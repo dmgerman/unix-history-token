@@ -140,6 +140,11 @@ name|struct
 name|asn_oid
 name|spec_oid
 decl_stmt|;
+comment|/* private data - don't touch */
+name|void
+modifier|*
+name|private
+decl_stmt|;
 block|}
 struct|;
 end_struct
