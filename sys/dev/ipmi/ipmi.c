@@ -5416,7 +5416,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|IMPI_DEBUG
 end_ifdef
 
 begin_function
