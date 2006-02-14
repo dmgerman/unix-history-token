@@ -734,7 +734,7 @@ begin_define
 define|#
 directive|define
 name|STATCOL
-value|2
+value|0
 end_define
 
 begin_define
@@ -770,7 +770,7 @@ begin_define
 define|#
 directive|define
 name|PAGECOL
-value|46
+value|47
 end_define
 
 begin_define
@@ -795,11 +795,11 @@ begin_define
 define|#
 directive|define
 name|PROCSROW
-value|7
+value|6
 end_define
 
 begin_comment
-comment|/* uses 2 rows and 18 cols */
+comment|/* uses 3 rows and 19 cols */
 end_comment
 
 begin_define
@@ -1419,7 +1419,7 @@ name|STATROW
 argument_list|,
 name|STATCOL
 operator|+
-literal|4
+literal|6
 argument_list|,
 literal|"users    Load"
 argument_list|)
@@ -1485,7 +1485,7 @@ name|PAGEROW
 argument_list|,
 name|PAGECOL
 argument_list|,
-literal|"        VN PAGER  SWAP PAGER "
+literal|"         VN PAGER   SWAP PAGER"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -1496,7 +1496,7 @@ literal|1
 argument_list|,
 name|PAGECOL
 argument_list|,
-literal|"        in  out     in  out "
+literal|"         in   out     in   out"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -1790,7 +1790,18 @@ name|PROCSROW
 argument_list|,
 name|PROCSCOL
 argument_list|,
-literal|"Proc:r  p  d  s  w"
+literal|"Proc:"
+argument_list|)
+expr_stmt|;
+name|mvprintw
+argument_list|(
+name|PROCSROW
+operator|+
+literal|1
+argument_list|,
+name|PROCSCOL
+argument_list|,
+literal|"  r   p   d   s   w"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -2737,7 +2748,7 @@ name|STATROW
 argument_list|,
 name|STATCOL
 argument_list|,
-literal|3
+literal|5
 argument_list|)
 expr_stmt|;
 name|putfloat
@@ -2751,7 +2762,7 @@ name|STATROW
 argument_list|,
 name|STATCOL
 operator|+
-literal|18
+literal|20
 argument_list|,
 literal|5
 argument_list|,
@@ -2771,7 +2782,7 @@ name|STATROW
 argument_list|,
 name|STATCOL
 operator|+
-literal|24
+literal|26
 argument_list|,
 literal|5
 argument_list|,
@@ -2791,7 +2802,7 @@ name|STATROW
 argument_list|,
 name|STATCOL
 operator|+
-literal|30
+literal|32
 argument_list|,
 literal|5
 argument_list|,
@@ -2806,7 +2817,7 @@ name|STATROW
 argument_list|,
 name|STATCOL
 operator|+
-literal|53
+literal|55
 argument_list|,
 name|buf
 argument_list|)
@@ -3008,11 +3019,9 @@ literal|1
 argument_list|,
 name|PROCSROW
 operator|+
-literal|1
+literal|2
 argument_list|,
 name|PROCSCOL
-operator|+
-literal|3
 argument_list|,
 literal|3
 argument_list|)
@@ -3025,11 +3034,11 @@ name|t_pw
 argument_list|,
 name|PROCSROW
 operator|+
-literal|1
+literal|2
 argument_list|,
 name|PROCSCOL
 operator|+
-literal|6
+literal|4
 argument_list|,
 literal|3
 argument_list|)
@@ -3042,11 +3051,11 @@ name|t_dw
 argument_list|,
 name|PROCSROW
 operator|+
-literal|1
+literal|2
 argument_list|,
 name|PROCSCOL
 operator|+
-literal|9
+literal|8
 argument_list|,
 literal|3
 argument_list|)
@@ -3059,7 +3068,7 @@ name|t_sl
 argument_list|,
 name|PROCSROW
 operator|+
-literal|1
+literal|2
 argument_list|,
 name|PROCSCOL
 operator|+
@@ -3076,11 +3085,11 @@ name|t_sw
 argument_list|,
 name|PROCSROW
 operator|+
-literal|1
+literal|2
 argument_list|,
 name|PROCSCOL
 operator|+
-literal|15
+literal|16
 argument_list|,
 literal|3
 argument_list|)
@@ -3482,7 +3491,7 @@ name|PAGECOL
 operator|+
 literal|6
 argument_list|,
-literal|4
+literal|5
 argument_list|)
 expr_stmt|;
 name|PUTRATE
@@ -3495,9 +3504,9 @@ literal|2
 argument_list|,
 name|PAGECOL
 operator|+
-literal|11
+literal|12
 argument_list|,
-literal|4
+literal|5
 argument_list|)
 expr_stmt|;
 name|PUTRATE
@@ -3510,7 +3519,7 @@ literal|2
 argument_list|,
 name|PAGECOL
 operator|+
-literal|17
+literal|19
 argument_list|,
 literal|5
 argument_list|)
@@ -3525,9 +3534,9 @@ literal|2
 argument_list|,
 name|PAGECOL
 operator|+
-literal|23
+literal|25
 argument_list|,
-literal|4
+literal|5
 argument_list|)
 expr_stmt|;
 name|PUTRATE
@@ -3542,7 +3551,7 @@ name|PAGECOL
 operator|+
 literal|6
 argument_list|,
-literal|4
+literal|5
 argument_list|)
 expr_stmt|;
 name|PUTRATE
@@ -3555,9 +3564,9 @@ literal|3
 argument_list|,
 name|PAGECOL
 operator|+
-literal|11
+literal|12
 argument_list|,
-literal|4
+literal|5
 argument_list|)
 expr_stmt|;
 name|PUTRATE
@@ -3570,7 +3579,7 @@ literal|3
 argument_list|,
 name|PAGECOL
 operator|+
-literal|17
+literal|19
 argument_list|,
 literal|5
 argument_list|)
@@ -3585,9 +3594,9 @@ literal|3
 argument_list|,
 name|PAGECOL
 operator|+
-literal|23
+literal|25
 argument_list|,
-literal|4
+literal|5
 argument_list|)
 expr_stmt|;
 name|PUTRATE
