@@ -2680,17 +2680,6 @@ argument_list|)
 operator|-
 name|psiz
 expr_stmt|;
-if|if
-condition|(
-name|f1
-operator|>
-literal|99.9
-condition|)
-name|f1
-operator|=
-literal|99.9
-expr_stmt|;
-comment|/* no room to display 100.0 */
 name|putfloat
 argument_list|(
 name|f1
