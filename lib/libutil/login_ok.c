@@ -240,7 +240,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * login_timelist()  * This function is intentinoally public - reused by TAS.  * Returns an allocated list of time periods given an array  * of time periods in ascii form.  */
+comment|/*  * login_timelist()  * This function is intentionally public - reused by TAS.  * Returns an allocated list of time periods given an array  * of time periods in ascii form.  */
 end_comment
 
 begin_function
