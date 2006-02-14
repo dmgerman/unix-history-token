@@ -506,6 +506,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|bi_setboothowto
+parameter_list|(
+name|int
+name|howto
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|vm_offset_t
 name|bi_copyenv
 parameter_list|(
