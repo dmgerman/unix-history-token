@@ -749,8 +749,6 @@ operator|->
 name|if_softc
 decl_stmt|;
 name|int
-name|len
-decl_stmt|,
 name|error
 init|=
 literal|0
@@ -816,15 +814,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* Copy length before the mbuf gets invalidated */
-name|len
-operator|=
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-expr_stmt|;
 comment|/* 		 * Send packet; if hook is not connected, mbuf will get 		 * freed. 		 */
 name|NG_SEND_DATA_ONLY
 argument_list|(
@@ -844,19 +833,17 @@ name|error
 operator|==
 literal|0
 condition|)
-block|{
-name|ifp
-operator|->
-name|if_obytes
-operator|+=
-name|len
-expr_stmt|;
 name|ifp
 operator|->
 name|if_opackets
 operator|++
 expr_stmt|;
-block|}
+else|else
+name|ifp
+operator|->
+name|if_oerrors
+operator|++
+expr_stmt|;
 block|}
 name|ifp
 operator|->
