@@ -2643,10 +2643,10 @@ name|mode_t
 name|file_mode
 parameter_list|,
 name|uid_t
-name|uid
+name|file_uid
 parameter_list|,
 name|gid_t
-name|gid
+name|file_gid
 parameter_list|,
 name|mode_t
 name|acc_mode
