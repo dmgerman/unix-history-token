@@ -986,9 +986,6 @@ name|flock
 modifier|*
 name|fl
 decl_stmt|;
-name|int
-name|ioflg
-decl_stmt|;
 name|struct
 name|proc
 modifier|*
@@ -1399,11 +1396,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 block|{
-comment|/* 				 * We timed out, so we rewrite the request 				 * to the fifo, but only if it isn't already 				 * full. 				 */
-name|ioflg
-operator||=
-name|IO_NDELAY
-expr_stmt|;
+comment|/* 				 * We timed out, so we rewrite the request 				 * to the fifo. 				 */
 continue|continue;
 block|}
 break|break;
