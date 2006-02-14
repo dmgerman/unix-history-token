@@ -781,14 +781,14 @@ value|6
 end_define
 
 begin_comment
-comment|/* uses all rows to bottom and 17 cols */
+comment|/* uses all rows to bottom and 16 cols */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|INTSCOL
-value|63
+value|64
 end_define
 
 begin_define
@@ -817,14 +817,14 @@ value|7
 end_define
 
 begin_comment
-comment|/* uses 2 rows and 30 cols */
+comment|/* uses 2 rows and 29 cols */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|GENSTATCOL
-value|20
+value|21
 end_define
 
 begin_define
@@ -1527,7 +1527,7 @@ name|INTSROW
 argument_list|,
 name|INTSCOL
 operator|+
-literal|2
+literal|1
 argument_list|,
 literal|"Interrupts"
 argument_list|)
@@ -1540,7 +1540,7 @@ literal|1
 argument_list|,
 name|INTSCOL
 operator|+
-literal|7
+literal|6
 argument_list|,
 literal|"total"
 argument_list|)
@@ -1672,7 +1672,7 @@ name|VMSTATCOL
 operator|+
 literal|10
 argument_list|,
-literal|"pdwake"
+literal|"pdwak"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -1772,7 +1772,7 @@ name|GENSTATROW
 argument_list|,
 name|GENSTATCOL
 argument_list|,
-literal|"  Csw  Trp  Sys  Int  Sof  Flt"
+literal|" Csw  Trp  Sys  Int  Sof  Flt"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -1874,7 +1874,7 @@ literal|4
 argument_list|,
 name|DISKCOL
 argument_list|,
-literal|"%% busy"
+literal|"%%busy"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * For now, we don't support a fourth disk statistic.  So there's 	 * no point in providing a label for it.  If someone can think of a 	 * fourth useful disk statistic, there is room to add it. 	 */
@@ -2076,7 +2076,7 @@ index|]
 argument_list|,
 name|INTSCOL
 operator|+
-literal|7
+literal|6
 argument_list|,
 literal|"%-10.10s"
 argument_list|,
@@ -2484,7 +2484,7 @@ index|]
 argument_list|,
 name|INTSCOL
 operator|+
-literal|7
+literal|6
 argument_list|,
 literal|"%-10.10s"
 argument_list|,
@@ -2533,7 +2533,7 @@ index|]
 argument_list|,
 name|INTSCOL
 argument_list|,
-literal|6
+literal|5
 argument_list|)
 expr_stmt|;
 block|}
@@ -2547,7 +2547,7 @@ literal|1
 argument_list|,
 name|INTSCOL
 argument_list|,
-literal|6
+literal|5
 argument_list|)
 expr_stmt|;
 name|Z
@@ -2762,9 +2762,9 @@ name|STATROW
 argument_list|,
 name|STATCOL
 operator|+
-literal|17
+literal|18
 argument_list|,
-literal|6
+literal|5
 argument_list|,
 literal|2
 argument_list|,
@@ -2782,9 +2782,9 @@ name|STATROW
 argument_list|,
 name|STATCOL
 operator|+
-literal|23
+literal|24
 argument_list|,
-literal|6
+literal|5
 argument_list|,
 literal|2
 argument_list|,
@@ -2802,9 +2802,9 @@ name|STATROW
 argument_list|,
 name|STATCOL
 operator|+
-literal|29
+literal|30
 argument_list|,
-literal|6
+literal|5
 argument_list|,
 literal|2
 argument_list|,
@@ -2844,9 +2844,9 @@ literal|2
 argument_list|,
 name|MEMCOL
 operator|+
-literal|3
+literal|4
 argument_list|,
-literal|8
+literal|7
 argument_list|)
 expr_stmt|;
 name|putint
@@ -2864,9 +2864,9 @@ literal|2
 argument_list|,
 name|MEMCOL
 operator|+
-literal|11
+literal|12
 argument_list|,
-literal|8
+literal|7
 argument_list|)
 expr_stmt|;
 name|putint
@@ -2884,9 +2884,9 @@ literal|2
 argument_list|,
 name|MEMCOL
 operator|+
-literal|19
+literal|20
 argument_list|,
-literal|9
+literal|8
 argument_list|)
 expr_stmt|;
 name|putint
@@ -2904,9 +2904,9 @@ literal|2
 argument_list|,
 name|MEMCOL
 operator|+
-literal|28
+literal|29
 argument_list|,
-literal|9
+literal|8
 argument_list|)
 expr_stmt|;
 name|putint
@@ -2924,9 +2924,9 @@ literal|3
 argument_list|,
 name|MEMCOL
 operator|+
-literal|3
+literal|4
 argument_list|,
-literal|8
+literal|7
 argument_list|)
 expr_stmt|;
 name|putint
@@ -2944,9 +2944,9 @@ literal|3
 argument_list|,
 name|MEMCOL
 operator|+
-literal|11
+literal|12
 argument_list|,
-literal|8
+literal|7
 argument_list|)
 expr_stmt|;
 name|putint
@@ -2964,9 +2964,9 @@ literal|3
 argument_list|,
 name|MEMCOL
 operator|+
-literal|19
+literal|20
 argument_list|,
-literal|9
+literal|8
 argument_list|)
 expr_stmt|;
 name|putint
@@ -2984,9 +2984,9 @@ literal|3
 argument_list|,
 name|MEMCOL
 operator|+
-literal|28
+literal|29
 argument_list|,
-literal|9
+literal|8
 argument_list|)
 expr_stmt|;
 name|putint
@@ -3004,9 +3004,9 @@ literal|2
 argument_list|,
 name|MEMCOL
 operator|+
-literal|37
+literal|38
 argument_list|,
-literal|8
+literal|7
 argument_list|)
 expr_stmt|;
 name|putint
@@ -3491,9 +3491,9 @@ literal|2
 argument_list|,
 name|PAGECOL
 operator|+
-literal|5
+literal|6
 argument_list|,
-literal|5
+literal|4
 argument_list|)
 expr_stmt|;
 name|PUTRATE
@@ -3506,9 +3506,9 @@ literal|2
 argument_list|,
 name|PAGECOL
 operator|+
-literal|10
+literal|11
 argument_list|,
-literal|5
+literal|4
 argument_list|)
 expr_stmt|;
 name|PUTRATE
@@ -3536,9 +3536,9 @@ literal|2
 argument_list|,
 name|PAGECOL
 operator|+
-literal|22
+literal|23
 argument_list|,
-literal|5
+literal|4
 argument_list|)
 expr_stmt|;
 name|PUTRATE
@@ -3551,9 +3551,9 @@ literal|3
 argument_list|,
 name|PAGECOL
 operator|+
-literal|5
+literal|6
 argument_list|,
-literal|5
+literal|4
 argument_list|)
 expr_stmt|;
 name|PUTRATE
@@ -3566,9 +3566,9 @@ literal|3
 argument_list|,
 name|PAGECOL
 operator|+
-literal|10
+literal|11
 argument_list|,
-literal|5
+literal|4
 argument_list|)
 expr_stmt|;
 name|PUTRATE
@@ -3596,9 +3596,9 @@ literal|3
 argument_list|,
 name|PAGECOL
 operator|+
-literal|22
+literal|23
 argument_list|,
-literal|5
+literal|4
 argument_list|)
 expr_stmt|;
 name|PUTRATE
@@ -3611,7 +3611,7 @@ literal|1
 argument_list|,
 name|GENSTATCOL
 argument_list|,
-literal|5
+literal|4
 argument_list|)
 expr_stmt|;
 name|PUTRATE
@@ -3626,7 +3626,7 @@ name|GENSTATCOL
 operator|+
 literal|5
 argument_list|,
-literal|5
+literal|4
 argument_list|)
 expr_stmt|;
 name|PUTRATE
@@ -3641,7 +3641,7 @@ name|GENSTATCOL
 operator|+
 literal|10
 argument_list|,
-literal|5
+literal|4
 argument_list|)
 expr_stmt|;
 name|PUTRATE
@@ -3656,7 +3656,7 @@ name|GENSTATCOL
 operator|+
 literal|15
 argument_list|,
-literal|5
+literal|4
 argument_list|)
 expr_stmt|;
 name|PUTRATE
@@ -3671,7 +3671,7 @@ name|GENSTATCOL
 operator|+
 literal|20
 argument_list|,
-literal|5
+literal|4
 argument_list|)
 expr_stmt|;
 name|PUTRATE
@@ -3686,7 +3686,7 @@ name|GENSTATCOL
 operator|+
 literal|25
 argument_list|,
-literal|5
+literal|4
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -3868,9 +3868,9 @@ literal|2
 argument_list|,
 name|NAMEICOL
 operator|+
-literal|9
+literal|10
 argument_list|,
-literal|9
+literal|8
 argument_list|)
 expr_stmt|;
 define|#
@@ -3928,9 +3928,9 @@ literal|2
 argument_list|,
 name|NAMEICOL
 operator|+
-literal|23
+literal|24
 argument_list|,
-literal|9
+literal|8
 argument_list|)
 expr_stmt|;
 name|putfloat
