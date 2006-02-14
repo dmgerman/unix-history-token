@@ -244,10 +244,6 @@ modifier|*
 name|ifp
 decl_stmt|;
 comment|/* interface, for ip_output		*/
-name|int
-name|flags
-decl_stmt|;
-comment|/* flags, for ip_output (IPv6 ?)	*/
 name|struct
 name|_ip6dn_args
 name|ip6opt

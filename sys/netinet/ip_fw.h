@@ -1213,10 +1213,6 @@ modifier|*
 name|eh
 decl_stmt|;
 comment|/* for bridged packets		*/
-name|int
-name|flags
-decl_stmt|;
-comment|/* for dummynet			*/
 name|struct
 name|ipfw_flow_id
 name|f_id
