@@ -788,7 +788,7 @@ begin_define
 define|#
 directive|define
 name|INTSCOL
-value|61
+value|63
 end_define
 
 begin_define
@@ -1523,9 +1523,9 @@ name|INTSROW
 argument_list|,
 name|INTSCOL
 operator|+
-literal|3
+literal|2
 argument_list|,
-literal|" Interrupts"
+literal|"Interrupts"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -1536,7 +1536,7 @@ literal|1
 argument_list|,
 name|INTSCOL
 operator|+
-literal|9
+literal|7
 argument_list|,
 literal|"total"
 argument_list|)
@@ -2072,7 +2072,7 @@ index|]
 argument_list|,
 name|INTSCOL
 operator|+
-literal|9
+literal|7
 argument_list|,
 literal|"%-10.10s"
 argument_list|,
@@ -2480,7 +2480,7 @@ index|]
 argument_list|,
 name|INTSCOL
 operator|+
-literal|9
+literal|7
 argument_list|,
 literal|"%-10.10s"
 argument_list|,
@@ -2528,8 +2528,6 @@ name|i
 index|]
 argument_list|,
 name|INTSCOL
-operator|+
-literal|2
 argument_list|,
 literal|6
 argument_list|)
@@ -2544,8 +2542,6 @@ operator|+
 literal|1
 argument_list|,
 name|INTSCOL
-operator|+
-literal|2
 argument_list|,
 literal|6
 argument_list|)
