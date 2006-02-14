@@ -196,6 +196,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RP_DEVICE_ID_UPCI_32
+value|0x0801
+end_define
+
+begin_define
+define|#
+directive|define
 name|RP_DEVICE_ID_UPCI_8O
 value|0x0805
 end_define
@@ -673,6 +680,9 @@ name|dev
 argument_list|)
 condition|)
 block|{
+case|case
+name|RP_DEVICE_ID_UPCI_32
+case|:
 case|case
 name|RP_DEVICE_ID_UPCI_8O
 case|:
