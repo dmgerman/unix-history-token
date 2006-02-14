@@ -603,7 +603,7 @@ operator|->
 name|v_mount
 operator|->
 name|mnt_kern_flag
-operator||
+operator|&
 name|MNTK_MPSAFE
 expr_stmt|;
 name|mp
