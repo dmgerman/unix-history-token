@@ -2027,12 +2027,6 @@ name|if_mtu
 operator|=
 name|ETHERMTU
 expr_stmt|;
-name|ifp
-operator|->
-name|if_baudrate
-operator|=
-literal|100000000
-expr_stmt|;
 name|IFQ_SET_MAXLEN
 argument_list|(
 operator|&

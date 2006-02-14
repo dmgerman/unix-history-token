@@ -5156,12 +5156,6 @@ name|if_init
 operator|=
 name|sis_init
 expr_stmt|;
-name|ifp
-operator|->
-name|if_baudrate
-operator|=
-literal|10000000
-expr_stmt|;
 name|IFQ_SET_MAXLEN
 argument_list|(
 operator|&

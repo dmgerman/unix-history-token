@@ -4029,12 +4029,6 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
-name|if_baudrate
-operator|=
-literal|100000000
-expr_stmt|;
-name|ifp
-operator|->
 name|if_init
 operator|=
 name|fxp_init

@@ -3553,12 +3553,6 @@ name|wb_init
 expr_stmt|;
 name|ifp
 operator|->
-name|if_baudrate
-operator|=
-literal|10000000
-expr_stmt|;
-name|ifp
-operator|->
 name|if_snd
 operator|.
 name|ifq_maxlen
