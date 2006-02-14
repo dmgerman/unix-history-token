@@ -517,6 +517,8 @@ literal|0x1960
 block|,
 name|AMR_ID_QUARTZ
 operator||
+name|AMR_ID_DO_SG64
+operator||
 name|AMR_ID_PROBE_SIG
 block|}
 block|,
