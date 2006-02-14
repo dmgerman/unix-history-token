@@ -116,7 +116,7 @@ name|ktr_time
 decl_stmt|;
 comment|/* timestamp */
 name|intptr_t
-name|ktr_unused
+name|ktr_tid
 decl_stmt|;
 comment|/* was ktr_buffer */
 block|}
