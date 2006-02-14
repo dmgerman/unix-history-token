@@ -727,7 +727,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* uses 1 row and 68 cols */
+comment|/* uses 1 row and 67 cols */
 end_comment
 
 begin_define
@@ -745,7 +745,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* uses 4 rows and 31 cols */
+comment|/* uses 4 rows and 45 cols */
 end_comment
 
 begin_define
@@ -763,7 +763,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* uses 4 rows and 26 cols */
+comment|/* uses 4 rows and 27 cols */
 end_comment
 
 begin_define
@@ -799,7 +799,7 @@ value|7
 end_define
 
 begin_comment
-comment|/* uses 2 rows and 20 cols */
+comment|/* uses 2 rows and 18 cols */
 end_comment
 
 begin_define
@@ -835,7 +835,7 @@ value|6
 end_define
 
 begin_comment
-comment|/* uses 17 rows and 12 cols */
+comment|/* uses 17-18 rows and 12-15 cols */
 end_comment
 
 begin_define
@@ -844,6 +844,10 @@ directive|define
 name|VMSTATCOL
 value|48
 end_define
+
+begin_comment
+comment|/* actually 50-51 for some fields */
+end_comment
 
 begin_define
 define|#
@@ -871,7 +875,7 @@ value|14
 end_define
 
 begin_comment
-comment|/* uses 3 rows and 38 cols */
+comment|/* uses 3 rows and 37 cols */
 end_comment
 
 begin_define
@@ -889,7 +893,7 @@ value|18
 end_define
 
 begin_comment
-comment|/* uses 5 rows and 50 cols (for 9 drives) */
+comment|/* uses 5 rows and 47 cols (for 7 drives) */
 end_comment
 
 begin_define
