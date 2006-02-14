@@ -2358,6 +2358,7 @@ name|addrloop
 goto|;
 comment|/* XXX: see below */
 block|}
+elseif|else
 if|if
 condition|(
 name|IFA6_IS_DEPRECATED
