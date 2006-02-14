@@ -2250,6 +2250,9 @@ modifier|*
 name|efl
 init|=
 name|NULL
+decl_stmt|,
+modifier|*
+name|efl_temp
 decl_stmt|;
 name|int
 name|error
@@ -2441,13 +2444,15 @@ argument_list|,
 name|el_next
 argument_list|)
 expr_stmt|;
-name|SLIST_FOREACH
+name|SLIST_FOREACH_SAFE
 argument_list|(
 argument|efl
 argument_list|,
 argument|&efdev
 argument_list|,
 argument|el_next
+argument_list|,
+argument|efl_temp
 argument_list|)
 block|{
 for|for
