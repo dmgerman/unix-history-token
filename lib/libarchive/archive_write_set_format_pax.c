@@ -304,6 +304,9 @@ name|char
 modifier|*
 name|src
 parameter_list|,
+name|size_t
+name|src_length
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -1976,6 +1979,11 @@ name|ustar_entry_name
 argument_list|,
 name|p
 argument_list|,
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+argument_list|,
 name|NULL
 argument_list|)
 argument_list|)
@@ -3511,6 +3519,9 @@ name|char
 modifier|*
 name|src
 parameter_list|,
+name|size_t
+name|src_length
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -3544,9 +3555,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|p
-decl_stmt|;
-name|size_t
-name|s
 decl_stmt|;
 name|int
 name|need_slash
@@ -3585,16 +3593,9 @@ operator|+
 literal|2
 expr_stmt|;
 comment|/* Step 0: Quick bailout in a common case. */
-name|s
-operator|=
-name|strlen
-argument_list|(
-name|src
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|s
+name|src_length
 operator|<
 literal|100
 operator|&&
@@ -3603,12 +3604,21 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|strcpy
+name|strncpy
 argument_list|(
 name|dest
 argument_list|,
 name|src
+argument_list|,
+name|src_length
 argument_list|)
+expr_stmt|;
+name|dest
+index|[
+name|src_length
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 return|return
 operator|(
@@ -3621,7 +3631,7 @@ name|filename_end
 operator|=
 name|src
 operator|+
-name|s
+name|src_length
 expr_stmt|;
 comment|/* Remove trailing '/' chars and '/.' pairs. */
 for|for
@@ -3952,22 +3962,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|prefix_end
-operator|>
-name|prefix
-operator|||
-name|suffix_end
-operator|>
-name|suffix
-condition|)
-operator|*
-name|p
-operator|++
-operator|=
-literal|'/'
-expr_stmt|;
+comment|/* Note: assume insert does not have leading or trailing '/' */
 name|strcpy
 argument_list|(
 name|p
@@ -4050,6 +4045,7 @@ modifier|*
 name|src
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
@@ -4083,11 +4079,11 @@ block|}
 comment|/* Prune final '/' and other unwanted final elements. */
 name|p
 operator|=
-name|dest
+name|src
 operator|+
 name|strlen
 argument_list|(
-name|dest
+name|src
 argument_list|)
 expr_stmt|;
 for|for
@@ -4101,7 +4097,7 @@ if|if
 condition|(
 name|p
 operator|>
-name|dest
+name|src
 operator|&&
 name|p
 index|[
@@ -4112,11 +4108,8 @@ operator|==
 literal|'/'
 condition|)
 block|{
-operator|*
 operator|--
 name|p
-operator|=
-literal|'\0'
 expr_stmt|;
 continue|continue;
 block|}
@@ -4125,7 +4118,7 @@ if|if
 condition|(
 name|p
 operator|>
-name|dest
+name|src
 operator|+
 literal|1
 operator|&&
@@ -4146,22 +4139,19 @@ operator|==
 literal|'/'
 condition|)
 block|{
-operator|*
 operator|--
 name|p
-operator|=
-literal|'\0'
 expr_stmt|;
 continue|continue;
 block|}
 break|break;
 block|}
-comment|/* Pathological case: After above, there was nothing left. */
+comment|/* Pathological case: After above, there was nothing left. 	 * This includes "/." "/./." "/.//./." etc. */
 if|if
 condition|(
 name|p
 operator|==
-name|dest
+name|src
 condition|)
 block|{
 name|strcpy
@@ -4177,7 +4167,7 @@ name|dest
 operator|)
 return|;
 block|}
-comment|/* Convert unadorned "." into "dot" */
+comment|/* Convert unadorned "." into a suitable filename. */
 if|if
 condition|(
 operator|*
@@ -4185,12 +4175,11 @@ name|src
 operator|==
 literal|'.'
 operator|&&
-name|src
-index|[
-literal|1
-index|]
+name|p
 operator|==
-literal|'\0'
+name|src
+operator|+
+literal|1
 condition|)
 block|{
 name|strcpy
@@ -4211,6 +4200,10 @@ name|build_ustar_entry_name
 argument_list|(
 name|dest
 argument_list|,
+name|src
+argument_list|,
+name|p
+operator|-
 name|src
 argument_list|,
 literal|"PaxHeader"
