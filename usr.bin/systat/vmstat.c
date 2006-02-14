@@ -2144,7 +2144,7 @@ parameter_list|,
 name|w
 parameter_list|)
 define|\
-value|Y(fld); \ 	putint((int)((float)s.fld/etime + 0.5), l, c, w)
+value|do { \ 	Y(fld); \ 	putint((int)((float)s.fld/etime + 0.5), l, c, w); \ } while (0)
 end_define
 
 begin_define
