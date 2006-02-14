@@ -2011,7 +2011,7 @@ operator|=
 name|mtp
 operator|->
 name|mt_memalloced
-operator|=
+operator|-
 name|mtp
 operator|->
 name|mt_memfreed
