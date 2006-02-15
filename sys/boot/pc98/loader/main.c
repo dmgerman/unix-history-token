@@ -292,6 +292,11 @@ name|bios_basemem
 argument_list|)
 expr_stmt|;
 comment|/*       * XXX Chicken-and-egg problem; we want to have console output early, but some      * console attributes may depend on reading from eg. the boot device, which we      * can't do yet.      *      * We can use printf() etc. once this is done.      * If the previous boot stage has requested a serial console, prefer that.      */
+name|bi_setboothowto
+argument_list|(
+name|initial_howto
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|initial_howto
@@ -299,15 +304,6 @@ operator|&
 name|RB_MULTIPLE
 condition|)
 block|{
-name|setenv
-argument_list|(
-literal|"boot_multicons"
-argument_list|,
-literal|"YES"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|initial_howto
