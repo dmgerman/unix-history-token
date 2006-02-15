@@ -66,6 +66,7 @@ value|0x03
 end_define
 
 begin_decl_stmt
+specifier|static
 name|pthread_mutex_t
 name|_thr_once_lock
 init|=
@@ -74,6 +75,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|pthread_cond_t
 name|_thr_once_cv
 init|=
@@ -280,6 +282,22 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|_thr_once_init
+parameter_list|()
+block|{
+name|_thr_once_lock
+operator|=
+name|PTHREAD_MUTEX_INITIALIZER
+expr_stmt|;
+name|_thr_once_cv
+operator|=
+name|PTHREAD_COND_INITIALIZER
+expr_stmt|;
 block|}
 end_function
 

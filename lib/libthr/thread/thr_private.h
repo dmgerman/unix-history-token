@@ -1739,22 +1739,6 @@ name|__hidden
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|pthread_mutex_t
-name|_thr_once_lock
-name|__hidden
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|pthread_cond_t
-name|_thr_once_cv
-name|__hidden
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Function prototype definitions.  */
 end_comment
@@ -2633,6 +2617,16 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|_thr_timer_init
+argument_list|(
+name|void
+argument_list|)
+name|__hidden
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|_thr_once_init
 argument_list|(
 name|void
 argument_list|)
