@@ -23615,6 +23615,11 @@ return|;
 case|case
 name|SIOCGATHDIAG
 case|:
+name|ATH_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|ath_ioctl_diag
@@ -23627,6 +23632,11 @@ name|ath_diag
 operator|*
 operator|)
 name|ifr
+argument_list|)
+expr_stmt|;
+name|ATH_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 break|break;
