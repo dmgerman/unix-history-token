@@ -165,7 +165,7 @@ begin_define
 define|#
 directive|define
 name|EM_TX_CLEANUP_THRESHOLD
-value|(adapter->num_tx_desc / 8)
+value|(sc->num_tx_desc / 8)
 end_define
 
 begin_comment
@@ -437,59 +437,56 @@ name|EM_MAX_SCATTER
 value|64
 end_define
 
-begin_comment
-comment|/* ******************************************************************************  * vendor_info_array  *  * This array contains the list of Subvendor/Subdevice IDs on which the driver  * should load.  *  * ******************************************************************************/
-end_comment
-
 begin_typedef
 typedef|typedef
-struct|struct
-name|_em_vendor_info_t
+enum|enum
+name|_XSUM_CONTEXT_T
 block|{
-name|unsigned
-name|int
-name|vendor_id
-decl_stmt|;
-name|unsigned
-name|int
-name|device_id
-decl_stmt|;
-name|unsigned
-name|int
-name|subvendor_id
-decl_stmt|;
-name|unsigned
-name|int
-name|subdevice_id
-decl_stmt|;
-name|unsigned
-name|int
-name|index
-decl_stmt|;
+name|OFFLOAD_NONE
+block|,
+name|OFFLOAD_TCP_IP
+block|,
+name|OFFLOAD_UDP_IP
 block|}
-name|em_vendor_info_t
+name|XSUM_CONTEXT_T
 typedef|;
 end_typedef
 
+begin_decl_stmt
+name|struct
+name|em_softc
+name|sc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX: ugly forward declaration */
+end_comment
+
 begin_struct
 struct|struct
-name|em_buffer
+name|em_int_delay_info
 block|{
 name|struct
-name|mbuf
+name|em_softc
 modifier|*
-name|m_head
+name|sc
 decl_stmt|;
-name|bus_dmamap_t
-name|map
+comment|/* XXX: ugly pointer */
+name|int
+name|offset
 decl_stmt|;
-comment|/* bus_dma map for packet */
+comment|/* Register offset to read/write */
+name|int
+name|value
+decl_stmt|;
+comment|/* Current value in usecs */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * Bus dma allocation structure used by  * em_dma_malloc and em_dma_free.  */
+comment|/*  * Bus dma allocation structure used by  * em_dma_malloc() and em_dma_free().  */
 end_comment
 
 begin_struct
@@ -518,101 +515,13 @@ block|}
 struct|;
 end_struct
 
-begin_typedef
-typedef|typedef
-enum|enum
-name|_XSUM_CONTEXT_T
-block|{
-name|OFFLOAD_NONE
-block|,
-name|OFFLOAD_TCP_IP
-block|,
-name|OFFLOAD_UDP_IP
-block|}
-name|XSUM_CONTEXT_T
-typedef|;
-end_typedef
-
-begin_struct_decl
-struct_decl|struct
-name|adapter
-struct_decl|;
-end_struct_decl
-
-begin_struct
-struct|struct
-name|em_int_delay_info
-block|{
-name|struct
-name|adapter
-modifier|*
-name|adapter
-decl_stmt|;
-comment|/* Back-pointer to the adapter struct */
-name|int
-name|offset
-decl_stmt|;
-comment|/* Register offset to read/write */
-name|int
-name|value
-decl_stmt|;
-comment|/* Current value in usecs */
-block|}
-struct|;
-end_struct
-
 begin_comment
-comment|/* For 82544 PCIX  Workaround */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|_ADDRESS_LENGTH_PAIR
-block|{
-name|u_int64_t
-name|address
-decl_stmt|;
-name|u_int32_t
-name|length
-decl_stmt|;
-block|}
-name|ADDRESS_LENGTH_PAIR
-operator|,
-typedef|*
-name|PADDRESS_LENGTH_PAIR
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|_DESCRIPTOR_PAIR
-block|{
-name|ADDRESS_LENGTH_PAIR
-name|descriptor
-index|[
-literal|4
-index|]
-decl_stmt|;
-name|u_int32_t
-name|elements
-decl_stmt|;
-block|}
-name|DESC_ARRAY
-operator|,
-typedef|*
-name|PDESC_ARRAY
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Our adapter structure */
+comment|/* Driver softc. */
 end_comment
 
 begin_struct
 struct|struct
-name|adapter
+name|em_softc
 block|{
 name|struct
 name|ifnet
@@ -623,7 +532,7 @@ name|struct
 name|em_hw
 name|hw
 decl_stmt|;
-comment|/* FreeBSD operating-system-specific structures */
+comment|/* FreeBSD operating-system-specific structures. */
 name|struct
 name|em_osdep
 name|osdep
@@ -667,9 +576,6 @@ decl_stmt|;
 name|int
 name|io_rid
 decl_stmt|;
-name|u_int8_t
-name|unit
-decl_stmt|;
 name|struct
 name|mtx
 name|mtx
@@ -692,19 +598,19 @@ name|tq
 decl_stmt|;
 comment|/* private task queue */
 comment|/* Info about the board itself */
-name|u_int32_t
+name|uint32_t
 name|part_num
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|link_active
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|link_speed
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|link_duplex
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|smartspeed
 decl_stmt|;
 name|struct
@@ -726,7 +632,7 @@ decl_stmt|;
 name|XSUM_CONTEXT_T
 name|active_checksum_context
 decl_stmt|;
-comment|/*          * Transmit definitions          *          * We have an array of num_tx_desc descriptors (handled          * by the controller) paired with an array of tx_buffers          * (at tx_buffer_area).          * The index of the next available descriptor is next_avail_tx_desc.          * The number of remaining tx_desc is num_tx_desc_avail.          */
+comment|/* 	 * Transmit definitions 	 * 	 * We have an array of num_tx_desc descriptors (handled 	 * by the controller) paired with an array of tx_buffers 	 * (at tx_buffer_area). 	 * The index of the next available descriptor is next_avail_tx_desc. 	 * The number of remaining tx_desc is num_tx_desc_avail. 	 */
 name|struct
 name|em_dma_alloc
 name|txdma
@@ -737,20 +643,20 @@ name|em_tx_desc
 modifier|*
 name|tx_desc_base
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|next_avail_tx_desc
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|oldest_used_tx_desc
 decl_stmt|;
 specifier|volatile
-name|u_int16_t
+name|uint16_t
 name|num_tx_desc_avail
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|num_tx_desc
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|txd_cmd
 decl_stmt|;
 name|struct
@@ -762,7 +668,7 @@ name|bus_dma_tag_t
 name|txtag
 decl_stmt|;
 comment|/* dma tag for tx */
-comment|/*  	 * Receive definitions          *          * we have an array of num_rx_desc rx_desc (handled by the          * controller), and paired with an array of rx_buffers          * (at rx_buffer_area).          * The next pair to check on receive is at offset next_rx_desc_to_check          */
+comment|/*  	 * Receive definitions 	 * 	 * we have an array of num_rx_desc rx_desc (handled by the 	 * controller), and paired with an array of rx_buffers 	 * (at rx_buffer_area). 	 * The next pair to check on receive is at offset next_rx_desc_to_check 	 */
 name|struct
 name|em_dma_alloc
 name|rxdma
@@ -773,13 +679,13 @@ name|em_rx_desc
 modifier|*
 name|rx_desc_base
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|next_rx_desc_to_check
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|rx_buffer_len
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|num_rx_desc
 decl_stmt|;
 name|int
@@ -793,7 +699,7 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|rxtag
 decl_stmt|;
-comment|/* Jumbo frame */
+comment|/* First/last mbuf pointers, for collecting multisegment RX packets. */
 name|struct
 name|mbuf
 modifier|*
@@ -862,22 +768,22 @@ define|#
 directive|define
 name|EM_82547_PKT_THRESH
 value|0x3e0
-name|u_int32_t
+name|uint32_t
 name|tx_fifo_size
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|tx_fifo_head
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|tx_fifo_head_addr
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|tx_fifo_reset_cnt
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|tx_fifo_wrk_cnt
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|tx_head_addr
 decl_stmt|;
 comment|/* For 82544 PCIX Workaround */
@@ -894,6 +800,102 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* ******************************************************************************  * vendor_info_array  *  * This array contains the list of Subvendor/Subdevice IDs on which the driver  * should load.  *  * ******************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_em_vendor_info_t
+block|{
+name|unsigned
+name|int
+name|vendor_id
+decl_stmt|;
+name|unsigned
+name|int
+name|device_id
+decl_stmt|;
+name|unsigned
+name|int
+name|subvendor_id
+decl_stmt|;
+name|unsigned
+name|int
+name|subdevice_id
+decl_stmt|;
+name|unsigned
+name|int
+name|index
+decl_stmt|;
+block|}
+name|em_vendor_info_t
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|em_buffer
+block|{
+name|struct
+name|mbuf
+modifier|*
+name|m_head
+decl_stmt|;
+name|bus_dmamap_t
+name|map
+decl_stmt|;
+comment|/* bus_dma map for packet */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* For 82544 PCIX  Workaround */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ADDRESS_LENGTH_PAIR
+block|{
+name|u_int64_t
+name|address
+decl_stmt|;
+name|u_int32_t
+name|length
+decl_stmt|;
+block|}
+name|ADDRESS_LENGTH_PAIR
+operator|,
+typedef|*
+name|PADDRESS_LENGTH_PAIR
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_DESCRIPTOR_PAIR
+block|{
+name|ADDRESS_LENGTH_PAIR
+name|descriptor
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|u_int32_t
+name|elements
+decl_stmt|;
+block|}
+name|DESC_ARRAY
+operator|,
+typedef|*
+name|PDESC_ARRAY
+typedef|;
+end_typedef
 
 begin_define
 define|#
