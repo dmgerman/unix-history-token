@@ -954,11 +954,6 @@ name|sc_monpass
 decl_stmt|;
 comment|/* frames to pass in mon.mode */
 name|struct
-name|task
-name|sc_fataltask
-decl_stmt|;
-comment|/* fatal int processing */
-name|struct
 name|ath_descdma
 name|sc_rxdma
 decl_stmt|;
@@ -1910,6 +1905,21 @@ name|_outsize
 parameter_list|)
 define|\
 value|((*(_ah)->ah_getDiagState)((_ah), (_id), \ 		(_indata), (_insize), (_outdata), (_outsize)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getfatalstate
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_outdata
+parameter_list|,
+name|_outsize
+parameter_list|)
+define|\
+value|ath_hal_getdiagstate(_ah, 27, NULL, 0, (void **)(_outdata), _outsize)
 end_define
 
 begin_define
