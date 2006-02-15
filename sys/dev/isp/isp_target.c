@@ -3,6 +3,31 @@ begin_comment
 comment|/*-  * Machine and OS Independent Target Mode Code for the Qlogic SCSI/FC adapters.  *  * Copyright (c) 1997-2006 by Matthew Jacob  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Bug fixes gratefully acknowledged from:  *	Oded Kedem<oded@kashya.com>  */
 end_comment
@@ -33,20 +58,6 @@ ifdef|#
 directive|ifdef
 name|__FreeBSD__
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_include
 include|#
@@ -234,12 +245,12 @@ name|void
 modifier|*
 name|vptr
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|optrp
 parameter_list|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|status
 decl_stmt|,
 name|seqid
@@ -366,7 +377,7 @@ value|unp.hp
 block|}
 name|unp
 union|;
-name|u_int8_t
+name|uint8_t
 name|local
 index|[
 name|QENTRY_LEN
@@ -1103,14 +1114,14 @@ parameter_list|,
 name|int
 name|inot_cnt
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|opaque
 parameter_list|)
 block|{
 name|lun_entry_t
 name|el
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|nxti
 decl_stmt|,
 name|optr
@@ -1423,12 +1434,12 @@ name|void
 modifier|*
 name|outp
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|nxti
 decl_stmt|,
 name|optr
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|etype
 init|=
 operator|(
@@ -1701,7 +1712,7 @@ operator|.
 name|at_scclun
 operator|=
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|)
 name|aep
 operator|->
@@ -1717,7 +1728,7 @@ operator|.
 name|at_lun
 operator|=
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|)
 name|aep
 operator|->
@@ -1923,10 +1934,10 @@ name|void
 modifier|*
 name|arg
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|code
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|hdl
 parameter_list|)
 block|{
@@ -2791,7 +2802,7 @@ block|{
 name|tmd_notify_t
 name|nt
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|status
 init|=
 name|inp
@@ -3189,7 +3200,7 @@ operator|.
 name|nt_lun
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|nt
@@ -3200,7 +3211,7 @@ literal|32
 argument_list|)
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|nt
 operator|.
@@ -3244,7 +3255,7 @@ argument_list|,
 literal|"ABORT TASK SET"
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|nt
@@ -3255,7 +3266,7 @@ literal|32
 argument_list|)
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|nt
 operator|.
@@ -3298,7 +3309,7 @@ argument_list|,
 literal|"CLEAR TASK SET"
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|nt
@@ -3309,7 +3320,7 @@ literal|32
 argument_list|)
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|nt
 operator|.
@@ -3352,7 +3363,7 @@ argument_list|,
 literal|"LUN RESET"
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|nt
@@ -3363,7 +3374,7 @@ literal|32
 argument_list|)
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|nt
 operator|.
@@ -3406,7 +3417,7 @@ argument_list|,
 literal|"TARGET RESET"
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|nt
@@ -3417,7 +3428,7 @@ literal|32
 argument_list|)
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|nt
 operator|.
@@ -3460,7 +3471,7 @@ argument_list|,
 literal|"CLEAR ACA"
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|nt
@@ -3471,7 +3482,7 @@ literal|32
 argument_list|)
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|nt
 operator|.
@@ -3514,7 +3525,7 @@ operator|.
 name|nt_lun
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|nt
@@ -3525,7 +3536,7 @@ literal|32
 argument_list|)
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|nt
 operator|.
@@ -3585,7 +3596,7 @@ index|[
 name|QENTRY_LEN
 index|]
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|nxti
 decl_stmt|,
 name|optr

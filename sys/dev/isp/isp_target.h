@@ -48,51 +48,51 @@ block|{
 name|isphdr_t
 name|le_header
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|le_reserved
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|le_lun
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|le_rsvd
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|le_ops
 decl_stmt|;
 comment|/* Modify LUN only */
-name|u_int8_t
+name|uint8_t
 name|le_tgt
 decl_stmt|;
 comment|/* Not for FC */
-name|u_int32_t
+name|uint32_t
 name|le_flags
 decl_stmt|;
 comment|/* Not for FC */
-name|u_int8_t
+name|uint8_t
 name|le_status
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|le_reserved2
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|le_cmd_count
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|le_in_count
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|le_cdb6len
 decl_stmt|;
 comment|/* Not for FC */
-name|u_int8_t
+name|uint8_t
 name|le_cdb7len
 decl_stmt|;
 comment|/* Not for FC */
-name|u_int16_t
+name|uint16_t
 name|le_timeout
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|le_reserved3
 index|[
 literal|20
@@ -291,59 +291,59 @@ block|{
 name|isphdr_t
 name|in_header
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|in_reserved
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|in_lun
 decl_stmt|;
 comment|/* lun */
-name|u_int8_t
+name|uint8_t
 name|in_iid
 decl_stmt|;
 comment|/* initiator */
-name|u_int8_t
+name|uint8_t
 name|in_reserved2
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|in_tgt
 decl_stmt|;
 comment|/* target */
-name|u_int32_t
+name|uint32_t
 name|in_flags
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|in_status
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|in_rsvd2
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|in_tag_val
 decl_stmt|;
 comment|/* tag value */
-name|u_int8_t
+name|uint8_t
 name|in_tag_type
 decl_stmt|;
 comment|/* tag type */
-name|u_int16_t
+name|uint16_t
 name|in_seqid
 decl_stmt|;
 comment|/* sequence id */
-name|u_int8_t
+name|uint8_t
 name|in_msg
 index|[
 name|IN_MSGLEN
 index|]
 decl_stmt|;
 comment|/* SCSI message bytes */
-name|u_int16_t
+name|uint16_t
 name|in_reserved3
 index|[
 name|IN_RSVDLEN
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|in_sense
 index|[
 name|QLTM_SENSELEN
@@ -362,30 +362,30 @@ block|{
 name|isphdr_t
 name|in_header
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|in_reserved
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|in_lun
 decl_stmt|;
 comment|/* lun */
-name|u_int8_t
+name|uint8_t
 name|in_iid
 decl_stmt|;
 comment|/* initiator */
-name|u_int16_t
+name|uint16_t
 name|in_scclun
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|in_reserved2
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|in_status
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|in_task_flags
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|in_seqid
 decl_stmt|;
 comment|/* sequence id */
@@ -401,26 +401,26 @@ block|{
 name|isphdr_t
 name|in_header
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|in_reserved
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|in_iid
 decl_stmt|;
 comment|/* initiator */
-name|u_int16_t
+name|uint16_t
 name|in_scclun
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|in_reserved2
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|in_status
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|in_task_flags
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|in_seqid
 decl_stmt|;
 comment|/* sequence id */
@@ -737,38 +737,38 @@ block|{
 name|isphdr_t
 name|na_header
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|na_reserved
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|na_lun
 decl_stmt|;
 comment|/* lun */
-name|u_int8_t
+name|uint8_t
 name|na_iid
 decl_stmt|;
 comment|/* initiator */
-name|u_int8_t
+name|uint8_t
 name|na_reserved2
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|na_tgt
 decl_stmt|;
 comment|/* target */
-name|u_int32_t
+name|uint32_t
 name|na_flags
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|na_status
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|na_event
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|na_seqid
 decl_stmt|;
 comment|/* sequence id */
-name|u_int16_t
+name|uint16_t
 name|na_reserved3
 index|[
 name|NA_RSVDLEN
@@ -830,37 +830,37 @@ block|{
 name|isphdr_t
 name|na_header
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|na_reserved
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|na_lun
 decl_stmt|;
 comment|/* lun */
-name|u_int8_t
+name|uint8_t
 name|na_iid
 decl_stmt|;
 comment|/* initiator */
-name|u_int16_t
+name|uint16_t
 name|na_scclun
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|na_flags
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|na_reserved2
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|na_status
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|na_task_flags
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|na_seqid
 decl_stmt|;
 comment|/* sequence id */
-name|u_int16_t
+name|uint16_t
 name|na_reserved3
 index|[
 name|NA2_RSVDLEN
@@ -878,33 +878,33 @@ block|{
 name|isphdr_t
 name|na_header
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|na_reserved
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|na_iid
 decl_stmt|;
 comment|/* initiator */
-name|u_int16_t
+name|uint16_t
 name|na_scclun
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|na_flags
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|na_reserved2
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|na_status
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|na_task_flags
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|na_seqid
 decl_stmt|;
 comment|/* sequence id */
-name|u_int16_t
+name|uint16_t
 name|na_reserved3
 index|[
 name|NA2_RSVDLEN
@@ -955,55 +955,55 @@ block|{
 name|isphdr_t
 name|at_header
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|at_reserved
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|at_handle
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|at_lun
 decl_stmt|;
 comment|/* lun */
-name|u_int8_t
+name|uint8_t
 name|at_iid
 decl_stmt|;
 comment|/* initiator */
-name|u_int8_t
+name|uint8_t
 name|at_cdblen
 decl_stmt|;
 comment|/* cdb length */
-name|u_int8_t
+name|uint8_t
 name|at_tgt
 decl_stmt|;
 comment|/* target */
-name|u_int32_t
+name|uint32_t
 name|at_flags
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|at_status
 decl_stmt|;
 comment|/* firmware status */
-name|u_int8_t
+name|uint8_t
 name|at_scsi_status
 decl_stmt|;
 comment|/* scsi status */
-name|u_int8_t
+name|uint8_t
 name|at_tag_val
 decl_stmt|;
 comment|/* tag value */
-name|u_int8_t
+name|uint8_t
 name|at_tag_type
 decl_stmt|;
 comment|/* tag type */
-name|u_int8_t
+name|uint8_t
 name|at_cdb
 index|[
 name|ATIO_CDBLEN
 index|]
 decl_stmt|;
 comment|/* received CDB */
-name|u_int8_t
+name|uint8_t
 name|at_sense
 index|[
 name|QLTM_SENSELEN
@@ -1256,70 +1256,70 @@ block|{
 name|isphdr_t
 name|at_header
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|at_reserved
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|at_lun
 decl_stmt|;
 comment|/* lun or reserved */
-name|u_int8_t
+name|uint8_t
 name|at_iid
 decl_stmt|;
 comment|/* initiator */
-name|u_int16_t
+name|uint16_t
 name|at_rxid
 decl_stmt|;
 comment|/* response ID */
-name|u_int16_t
+name|uint16_t
 name|at_flags
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|at_status
 decl_stmt|;
 comment|/* firmware status */
-name|u_int8_t
+name|uint8_t
 name|at_crn
 decl_stmt|;
 comment|/* command reference number */
-name|u_int8_t
+name|uint8_t
 name|at_taskcodes
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|at_taskflags
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|at_execodes
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|at_cdb
 index|[
 name|ATIO2_CDBLEN
 index|]
 decl_stmt|;
 comment|/* received CDB */
-name|u_int32_t
+name|uint32_t
 name|at_datalen
 decl_stmt|;
 comment|/* allocated data len */
-name|u_int16_t
+name|uint16_t
 name|at_scclun
 decl_stmt|;
 comment|/* SCC Lun or reserved */
-name|u_int16_t
+name|uint16_t
 name|at_wwpn
 index|[
 literal|4
 index|]
 decl_stmt|;
 comment|/* WWPN of initiator */
-name|u_int16_t
+name|uint16_t
 name|at_reserved2
 index|[
 literal|6
 index|]
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|at_oxid
 decl_stmt|;
 block|}
@@ -1334,66 +1334,66 @@ block|{
 name|isphdr_t
 name|at_header
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|at_reserved
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|at_iid
 decl_stmt|;
 comment|/* initiator */
-name|u_int16_t
+name|uint16_t
 name|at_rxid
 decl_stmt|;
 comment|/* response ID */
-name|u_int16_t
+name|uint16_t
 name|at_flags
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|at_status
 decl_stmt|;
 comment|/* firmware status */
-name|u_int8_t
+name|uint8_t
 name|at_crn
 decl_stmt|;
 comment|/* command reference number */
-name|u_int8_t
+name|uint8_t
 name|at_taskcodes
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|at_taskflags
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|at_execodes
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|at_cdb
 index|[
 name|ATIO2_CDBLEN
 index|]
 decl_stmt|;
 comment|/* received CDB */
-name|u_int32_t
+name|uint32_t
 name|at_datalen
 decl_stmt|;
 comment|/* allocated data len */
-name|u_int16_t
+name|uint16_t
 name|at_scclun
 decl_stmt|;
 comment|/* SCC Lun or reserved */
-name|u_int16_t
+name|uint16_t
 name|at_wwpn
 index|[
 literal|4
 index|]
 decl_stmt|;
 comment|/* WWPN of initiator */
-name|u_int16_t
+name|uint16_t
 name|at_reserved2
 index|[
 literal|6
 index|]
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|at_oxid
 decl_stmt|;
 block|}
@@ -1609,7 +1609,7 @@ block|{
 name|isphdr_t
 name|ct_header
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|ct_reserved
 decl_stmt|;
 define|#
@@ -1617,56 +1617,56 @@ directive|define
 name|ct_syshandle
 value|ct_reserved
 comment|/* we use this */
-name|u_int16_t
+name|uint16_t
 name|ct_fwhandle
 decl_stmt|;
 comment|/* required by f/w */
-name|u_int8_t
+name|uint8_t
 name|ct_lun
 decl_stmt|;
 comment|/* lun */
-name|u_int8_t
+name|uint8_t
 name|ct_iid
 decl_stmt|;
 comment|/* initiator id */
-name|u_int8_t
+name|uint8_t
 name|ct_reserved2
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|ct_tgt
 decl_stmt|;
 comment|/* our target id */
-name|u_int32_t
+name|uint32_t
 name|ct_flags
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|ct_status
 decl_stmt|;
 comment|/* isp status */
-name|u_int8_t
+name|uint8_t
 name|ct_scsi_status
 decl_stmt|;
 comment|/* scsi status */
-name|u_int8_t
+name|uint8_t
 name|ct_tag_val
 decl_stmt|;
 comment|/* tag value */
-name|u_int8_t
+name|uint8_t
 name|ct_tag_type
 decl_stmt|;
 comment|/* tag type */
-name|u_int32_t
+name|uint32_t
 name|ct_xfrlen
 decl_stmt|;
 comment|/* transfer length */
-name|u_int32_t
+name|uint32_t
 name|ct_resid
 decl_stmt|;
 comment|/* residual length */
-name|u_int16_t
+name|uint16_t
 name|ct_timeout
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|ct_seg_count
 decl_stmt|;
 comment|/* 	 * This is so we can share tag name space with 	 * CTIO{2,3,4} with the minimum of pain. 	 */
@@ -2150,7 +2150,7 @@ begin_define
 define|#
 directive|define
 name|UINT32_ENTRY_SIZE
-value|(sizeof(at_entry_t)/sizeof(u_int32_t))
+value|(sizeof(at_entry_t)/sizeof(uint32_t))
 end_define
 
 begin_comment
@@ -2171,39 +2171,39 @@ block|{
 name|isphdr_t
 name|ct_header
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|ct_reserved
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|ct_fwhandle
 decl_stmt|;
 comment|/* just to match CTIO */
-name|u_int8_t
+name|uint8_t
 name|ct_lun
 decl_stmt|;
 comment|/* lun */
-name|u_int8_t
+name|uint8_t
 name|ct_iid
 decl_stmt|;
 comment|/* initiator id */
-name|u_int16_t
+name|uint16_t
 name|ct_rxid
 decl_stmt|;
 comment|/* response ID */
-name|u_int16_t
+name|uint16_t
 name|ct_flags
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|ct_status
 decl_stmt|;
 comment|/* isp status */
-name|u_int16_t
+name|uint16_t
 name|ct_timeout
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|ct_seg_count
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|ct_reloff
 decl_stmt|;
 comment|/* relative offset */
@@ -2216,16 +2216,16 @@ block|{
 comment|/* 		 * The three different modes that the target driver 		 * can set the CTIO{2,3,4} up as. 		 * 		 * The first is for sending FCP_DATA_IUs as well as 		 * (optionally) sending a terminal SCSI status FCP_RSP_IU. 		 * 		 * The second is for sending SCSI sense data in an FCP_RSP_IU. 		 * Note that no FCP_DATA_IUs will be sent. 		 * 		 * The third is for sending FCP_RSP_IUs as built specifically 		 * in system memory as located by the isp_dataseg. 		 */
 struct|struct
 block|{
-name|u_int32_t
+name|uint32_t
 name|_reserved
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|_reserved2
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|ct_scsi_status
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|ct_xfrlen
 decl_stmt|;
 union|union
@@ -2268,22 +2268,22 @@ name|m0
 struct|;
 struct|struct
 block|{
-name|u_int16_t
+name|uint16_t
 name|_reserved
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|_reserved2
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|ct_senselen
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|ct_scsi_status
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|ct_resplen
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|ct_resp
 index|[
 name|MAXRESPLEN
@@ -2294,16 +2294,16 @@ name|m1
 struct|;
 struct|struct
 block|{
-name|u_int32_t
+name|uint32_t
 name|_reserved
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|_reserved2
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|_reserved3
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|ct_datalen
 decl_stmt|;
 name|ispds_t
@@ -2327,35 +2327,35 @@ block|{
 name|isphdr_t
 name|ct_header
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|ct_reserved
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|ct_fwhandle
 decl_stmt|;
 comment|/* just to match CTIO */
-name|u_int16_t
+name|uint16_t
 name|ct_iid
 decl_stmt|;
 comment|/* initiator id */
-name|u_int16_t
+name|uint16_t
 name|ct_rxid
 decl_stmt|;
 comment|/* response ID */
-name|u_int16_t
+name|uint16_t
 name|ct_flags
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|ct_status
 decl_stmt|;
 comment|/* isp status */
-name|u_int16_t
+name|uint16_t
 name|ct_timeout
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|ct_seg_count
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|ct_reloff
 decl_stmt|;
 comment|/* relative offset */
@@ -2367,16 +2367,16 @@ union|union
 block|{
 struct|struct
 block|{
-name|u_int32_t
+name|uint32_t
 name|_reserved
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|_reserved2
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|ct_scsi_status
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|ct_xfrlen
 decl_stmt|;
 union|union
@@ -2407,22 +2407,22 @@ name|m0
 struct|;
 struct|struct
 block|{
-name|u_int16_t
+name|uint16_t
 name|_reserved
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|_reserved2
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|ct_senselen
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|ct_scsi_status
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|ct_resplen
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|ct_resp
 index|[
 name|MAXRESPLEN
@@ -2433,16 +2433,16 @@ name|m1
 struct|;
 struct|struct
 block|{
-name|u_int32_t
+name|uint32_t
 name|_reserved
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|_reserved2
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|_reserved3
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|ct_datalen
 decl_stmt|;
 name|ispds_t
@@ -2616,14 +2616,13 @@ begin_function_decl
 name|int
 name|isp_target_notify
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|void
 modifier|*
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2637,8 +2636,7 @@ begin_function_decl
 name|void
 name|isp_notify_ack
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|void
@@ -2673,8 +2671,7 @@ begin_function_decl
 name|int
 name|isp_lun_cmd
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|int
@@ -2689,7 +2686,7 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2702,8 +2699,7 @@ begin_function_decl
 name|int
 name|isp_target_put_entry
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -2721,8 +2717,7 @@ begin_function_decl
 name|int
 name|isp_target_put_atio
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|void
@@ -2739,16 +2734,15 @@ begin_function_decl
 name|int
 name|isp_endcmd
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|void
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2768,8 +2762,7 @@ begin_function_decl
 name|int
 name|isp_target_async
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|int

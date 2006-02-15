@@ -2138,13 +2138,13 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_int16_t
+name|uint16_t
 name|param
 index|[
 name|MAILBOX_STORAGE
 index|]
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|ibits
 decl_stmt|,
 name|obits
@@ -5002,7 +5002,7 @@ comment|/* Offset 5 */
 end_comment
 
 begin_comment
-comment|/* 	u_int8_t bios_configuration_mode     :2; 	u_int8_t bios_disable                :1; 	u_int8_t selectable_scsi_boot_enable :1; 	u_int8_t cd_rom_boot_enable          :1; 	u_int8_t disable_loading_risc_code   :1; 	u_int8_t enable_64bit_addressing     :1; 	u_int8_t unused_7                    :1;  */
+comment|/* 	uint8_t bios_configuration_mode     :2; 	uint8_t bios_disable                :1; 	uint8_t selectable_scsi_boot_enable :1; 	uint8_t cd_rom_boot_enable          :1; 	uint8_t disable_loading_risc_code   :1; 	uint8_t enable_64bit_addressing     :1; 	uint8_t unused_7                    :1;  */
 end_comment
 
 begin_comment
@@ -5010,7 +5010,7 @@ comment|/* Offsets 6, 7 */
 end_comment
 
 begin_comment
-comment|/*         u_int8_t boot_lun_number    :5;         u_int8_t scsi_bus_number    :1;         u_int8_t unused_6           :1;         u_int8_t unused_7           :1;         u_int8_t boot_target_number :4;         u_int8_t unused_12          :1;         u_int8_t unused_13          :1;         u_int8_t unused_14          :1;         u_int8_t unused_15          :1;  */
+comment|/*         uint8_t boot_lun_number    :5;         uint8_t scsi_bus_number    :1;         uint8_t unused_6           :1;         uint8_t unused_7           :1;         uint8_t boot_target_number :4;         uint8_t unused_12          :1;         uint8_t unused_13          :1;         uint8_t unused_14          :1;         uint8_t unused_15          :1;  */
 end_comment
 
 begin_define
@@ -5955,7 +5955,7 @@ name|ISP2100_NVRAM_PORT_NAME
 parameter_list|(
 name|c
 parameter_list|)
-value|(\ 		(((u_int64_t)(c)[18])<< 56) | \ 		(((u_int64_t)(c)[19])<< 48) | \ 		(((u_int64_t)(c)[20])<< 40) | \ 		(((u_int64_t)(c)[21])<< 32) | \ 		(((u_int64_t)(c)[22])<< 24) | \ 		(((u_int64_t)(c)[23])<< 16) | \ 		(((u_int64_t)(c)[24])<<  8) | \ 		(((u_int64_t)(c)[25])<<  0))
+value|(\ 		(((uint64_t)(c)[18])<< 56) | \ 		(((uint64_t)(c)[19])<< 48) | \ 		(((uint64_t)(c)[20])<< 40) | \ 		(((uint64_t)(c)[21])<< 32) | \ 		(((uint64_t)(c)[22])<< 24) | \ 		(((uint64_t)(c)[23])<< 16) | \ 		(((uint64_t)(c)[24])<<  8) | \ 		(((uint64_t)(c)[25])<<  0))
 end_define
 
 begin_define
@@ -5975,7 +5975,7 @@ name|ISP2200_NVRAM_NODE_NAME
 parameter_list|(
 name|c
 parameter_list|)
-value|(\ 		(((u_int64_t)(c)[30])<< 56) | \ 		(((u_int64_t)(c)[31])<< 48) | \ 		(((u_int64_t)(c)[32])<< 40) | \ 		(((u_int64_t)(c)[33])<< 32) | \ 		(((u_int64_t)(c)[34])<< 24) | \ 		(((u_int64_t)(c)[35])<< 16) | \ 		(((u_int64_t)(c)[36])<<  8) | \ 		(((u_int64_t)(c)[37])<<  0))
+value|(\ 		(((uint64_t)(c)[30])<< 56) | \ 		(((uint64_t)(c)[31])<< 48) | \ 		(((uint64_t)(c)[32])<< 40) | \ 		(((uint64_t)(c)[33])<< 32) | \ 		(((uint64_t)(c)[34])<< 24) | \ 		(((uint64_t)(c)[35])<< 16) | \ 		(((uint64_t)(c)[36])<<  8) | \ 		(((uint64_t)(c)[37])<<  0))
 end_define
 
 begin_define
@@ -6055,7 +6055,7 @@ name|ISP2100_NVRAM_BOOT_NODE_NAME
 parameter_list|(
 name|c
 parameter_list|)
-value|(\ 		(((u_int64_t)(c)[72])<< 56) | \ 		(((u_int64_t)(c)[73])<< 48) | \ 		(((u_int64_t)(c)[74])<< 40) | \ 		(((u_int64_t)(c)[75])<< 32) | \ 		(((u_int64_t)(c)[76])<< 24) | \ 		(((u_int64_t)(c)[77])<< 16) | \ 		(((u_int64_t)(c)[78])<<  8) | \ 		(((u_int64_t)(c)[79])<<  0))
+value|(\ 		(((uint64_t)(c)[72])<< 56) | \ 		(((uint64_t)(c)[73])<< 48) | \ 		(((uint64_t)(c)[74])<< 40) | \ 		(((uint64_t)(c)[75])<< 32) | \ 		(((uint64_t)(c)[76])<< 24) | \ 		(((uint64_t)(c)[77])<< 16) | \ 		(((uint64_t)(c)[78])<<  8) | \ 		(((uint64_t)(c)[79])<<  0))
 end_define
 
 begin_define
@@ -6087,11 +6087,11 @@ define|#
 directive|define
 name|QLA2200_RISC_IMAGE_DUMP_SIZE
 define|\
-value|(1 * sizeof (u_int16_t)) +
+value|(1 * sizeof (uint16_t)) +
 comment|/* 'used' flag (also HBA type) */
-value|\ 	(352 * sizeof (u_int16_t)) +
+value|\ 	(352 * sizeof (uint16_t)) +
 comment|/* RISC registers */
-value|\  	(61440 * sizeof (u_int16_t))
+value|\  	(61440 * sizeof (uint16_t))
 end_define
 
 begin_comment
@@ -6103,15 +6103,15 @@ define|#
 directive|define
 name|QLA2300_RISC_IMAGE_DUMP_SIZE
 define|\
-value|(1 * sizeof (u_int16_t)) +
+value|(1 * sizeof (uint16_t)) +
 comment|/* 'used' flag (also HBA type) */
-value|\ 	(464 * sizeof (u_int16_t)) +
+value|\ 	(464 * sizeof (uint16_t)) +
 comment|/* RISC registers */
-value|\  	(63488 * sizeof (u_int16_t)) +
+value|\  	(63488 * sizeof (uint16_t)) +
 comment|/* RISC SRAM (0x0800..0xffff) */
-value|\ 	(4096 * sizeof (u_int16_t)) +
+value|\ 	(4096 * sizeof (uint16_t)) +
 comment|/* RISC SRAM (0x10000..0x10FFF) */
-value|\ 	(61440 * sizeof (u_int16_t))
+value|\ 	(61440 * sizeof (uint16_t))
 end_define
 
 begin_comment

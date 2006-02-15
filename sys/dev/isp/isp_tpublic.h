@@ -292,19 +292,19 @@ modifier|*
 name|en_hba
 decl_stmt|;
 comment|/* HBA tag */
-name|u_int64_t
+name|uint64_t
 name|en_iid
 decl_stmt|;
 comment|/* initiator ID */
-name|u_int64_t
+name|uint64_t
 name|en_tgt
 decl_stmt|;
 comment|/* target id */
-name|u_int64_t
+name|uint64_t
 name|en_lun
 decl_stmt|;
 comment|/* logical unit */
-name|u_int8_t
+name|uint8_t
 name|en_chan
 decl_stmt|;
 comment|/* channel on card */
@@ -394,39 +394,39 @@ modifier|*
 name|cd_data
 decl_stmt|;
 comment|/* 'pointer' to data */
-name|u_int64_t
+name|uint64_t
 name|cd_iid
 decl_stmt|;
 comment|/* initiator ID */
-name|u_int64_t
+name|uint64_t
 name|cd_tgt
 decl_stmt|;
 comment|/* target id */
-name|u_int64_t
+name|uint64_t
 name|cd_lun
 decl_stmt|;
 comment|/* logical unit */
-name|u_int32_t
+name|uint32_t
 name|cd_tagval
 decl_stmt|;
 comment|/* tag value */
-name|u_int32_t
+name|uint32_t
 name|cd_lflags
 decl_stmt|;
 comment|/* flags lower level sets */
-name|u_int32_t
+name|uint32_t
 name|cd_hflags
 decl_stmt|;
 comment|/* flags higher level sets */
-name|u_int32_t
+name|uint32_t
 name|cd_totlen
 decl_stmt|;
 comment|/* total data requirement */
-name|u_int32_t
+name|uint32_t
 name|cd_resid
 decl_stmt|;
 comment|/* total data residual */
-name|u_int32_t
+name|uint32_t
 name|cd_xfrlen
 decl_stmt|;
 comment|/* current data requirement */
@@ -434,7 +434,7 @@ name|int32_t
 name|cd_error
 decl_stmt|;
 comment|/* current error */
-name|u_int32_t
+name|uint32_t
 name|cd_scsi_status
 range|:
 literal|16
@@ -456,19 +456,19 @@ range|:
 literal|6
 decl_stmt|;
 comment|/* tag type */
-name|u_int8_t
+name|uint8_t
 name|cd_senselen
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|cd_cdblen
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|cd_sense
 index|[
 name|TMD_SENSELEN
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|cd_cdb
 index|[
 name|TMD_CDBLEN
@@ -490,40 +490,40 @@ operator|*
 argument_list|)
 index|]
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|llongs
 index|[
 name|QCDS
 operator|/
 sizeof|sizeof
 argument_list|(
-name|u_int64_t
+name|uint64_t
 argument_list|)
 index|]
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|longs
 index|[
 name|QCDS
 operator|/
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 index|]
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|shorts
 index|[
 name|QCDS
 operator|/
 sizeof|sizeof
 argument_list|(
-name|u_int16_t
+name|uint16_t
 argument_list|)
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|bytes
 index|[
 name|QCDS

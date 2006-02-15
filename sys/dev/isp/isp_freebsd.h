@@ -184,14 +184,6 @@ file|"opt_isp.h"
 end_include
 
 begin_comment
-comment|/* disabled until done correctly */
-end_comment
-
-begin_comment
-comment|/* #define	ISP_DAC_SUPPORTED	1 */
-end_comment
-
-begin_comment
 comment|/*  * Efficiency- get rid of SBus code&& tests unless we need them.  */
 end_comment
 
@@ -277,7 +269,7 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 modifier|*
 parameter_list|)
@@ -308,16 +300,16 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_int32_t
+name|uint32_t
 name|orig_datalen
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|bytes_xfered
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|last_xframt
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|tag
 range|:
 literal|16
@@ -407,7 +399,7 @@ decl_stmt|;
 name|int
 name|bus
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|hold
 decl_stmt|;
 name|int
@@ -457,13 +449,13 @@ name|ispsoftc
 modifier|*
 name|next
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|default_port_wwn
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|default_node_wwn
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|default_id
 decl_stmt|;
 name|device_t
@@ -493,7 +485,7 @@ name|struct
 name|intr_config_hook
 name|ehook
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 label|:
 literal|1
 operator|,
@@ -555,7 +547,7 @@ define|#
 directive|define
 name|TM_TMODE_ENABLED
 value|0x01
-name|u_int8_t
+name|uint8_t
 name|tmflags
 index|[
 literal|2
@@ -960,6 +952,13 @@ define|#
 directive|define
 name|XS_T
 value|struct ccb_scsiio
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_DMA_ADDR_T
+value|bus_addr_t
 end_define
 
 begin_define
@@ -1378,7 +1377,7 @@ name|s
 parameter_list|,
 name|d
 parameter_list|)
-value|d = (*((u_int8_t *)s))
+value|d = (*((uint8_t *)s))
 end_define
 
 begin_define
@@ -1393,7 +1392,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|d = (isp->isp_bustype == ISP_BT_SBUS)?			\ 	*((u_int16_t *)s) : bswap16(*((u_int16_t *)s))
+value|d = (isp->isp_bustype == ISP_BT_SBUS)?			\ 	*((uint16_t *)s) : bswap16(*((uint16_t *)s))
 end_define
 
 begin_define
@@ -1408,7 +1407,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|d = (isp->isp_bustype == ISP_BT_SBUS)?			\ 	*((u_int32_t *)s) : bswap32(*((u_int32_t *)s))
+value|d = (isp->isp_bustype == ISP_BT_SBUS)?			\ 	*((uint32_t *)s) : bswap32(*((uint32_t *)s))
 end_define
 
 begin_else
@@ -1469,7 +1468,7 @@ name|s
 parameter_list|,
 name|d
 parameter_list|)
-value|d = (*((u_int8_t *)s))
+value|d = (*((uint8_t *)s))
 end_define
 
 begin_define
@@ -1483,7 +1482,7 @@ name|s
 parameter_list|,
 name|d
 parameter_list|)
-value|d = bswap16(*((u_int16_t *)s))
+value|d = bswap16(*((uint16_t *)s))
 end_define
 
 begin_define
@@ -1497,7 +1496,7 @@ name|s
 parameter_list|,
 name|d
 parameter_list|)
-value|d = bswap32(*((u_int32_t *)s))
+value|d = bswap32(*((uint32_t *)s))
 end_define
 
 begin_endif
@@ -1643,6 +1642,23 @@ include|#
 directive|include
 file|<dev/isp/ispmbox.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISP_TARGET_MODE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dev/isp/isp_tpublic.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -2087,7 +2103,7 @@ name|j
 operator|++
 control|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|isr
 decl_stmt|,
 name|sema
@@ -2181,7 +2197,7 @@ end_function
 begin_function_decl
 specifier|static
 name|__inline
-name|u_int64_t
+name|uint64_t
 name|nanotime_sub
 parameter_list|(
 name|struct
@@ -2198,7 +2214,7 @@ end_function_decl
 begin_function
 specifier|static
 name|__inline
-name|u_int64_t
+name|uint64_t
 name|nanotime_sub
 parameter_list|(
 name|struct
@@ -2212,7 +2228,7 @@ modifier|*
 name|a
 parameter_list|)
 block|{
-name|u_int64_t
+name|uint64_t
 name|elapsed
 decl_stmt|;
 name|struct

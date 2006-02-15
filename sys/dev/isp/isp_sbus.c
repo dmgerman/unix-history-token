@@ -91,7 +91,7 @@ end_include
 
 begin_function_decl
 specifier|static
-name|u_int16_t
+name|uint16_t
 name|isp_sbus_rd_reg
 parameter_list|(
 name|struct
@@ -114,7 +114,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -128,13 +128,13 @@ name|struct
 name|ispsoftc
 modifier|*
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -167,10 +167,10 @@ parameter_list|,
 name|ispreq_t
 modifier|*
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -187,7 +187,7 @@ parameter_list|,
 name|XS_T
 modifier|*
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1640,7 +1640,7 @@ name|isp
 init|=
 name|arg
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|isr
 decl_stmt|,
 name|sema
@@ -1765,15 +1765,15 @@ name|ispsoftc
 modifier|*
 name|isp
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|isrp
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|semap
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|mbp
 parameter_list|)
@@ -1790,7 +1790,7 @@ operator|*
 operator|)
 name|isp
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|isr
 decl_stmt|,
 name|sema
@@ -1907,7 +1907,7 @@ end_function
 
 begin_function
 specifier|static
-name|u_int16_t
+name|uint16_t
 name|isp_sbus_rd_reg
 parameter_list|(
 name|struct
@@ -1919,7 +1919,7 @@ name|int
 name|regoff
 parameter_list|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|rval
 decl_stmt|;
 name|struct
@@ -2007,7 +2007,7 @@ parameter_list|,
 name|int
 name|regoff
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|val
 parameter_list|)
 block|{
@@ -2237,7 +2237,7 @@ decl_stmt|;
 name|caddr_t
 name|base
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|len
 decl_stmt|;
 name|int
@@ -2888,14 +2888,14 @@ name|void
 modifier|*
 name|rq
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|nxtip
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|optr
 decl_stmt|;
-name|u_int
+name|int
 name|error
 decl_stmt|;
 block|}
@@ -2984,7 +2984,7 @@ name|seglim
 decl_stmt|,
 name|datalen
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|nxti
 decl_stmt|;
 name|mp
@@ -3269,7 +3269,7 @@ operator|!=
 name|eseg
 condition|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|onxti
 decl_stmt|;
 name|ispcontreq_t
@@ -3492,11 +3492,11 @@ name|ispreq_t
 modifier|*
 name|rq
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|nxtip
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|optr
 parameter_list|)
 block|{
@@ -4087,7 +4087,7 @@ name|XS_T
 modifier|*
 name|xs
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|handle
 parameter_list|)
 block|{

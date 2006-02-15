@@ -138,7 +138,7 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|,
 name|struct
 name|cam_path
@@ -1234,7 +1234,7 @@ case|case
 name|ISP_GET_FW_CRASH_DUMP
 case|:
 block|{
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|ptr
 init|=
@@ -2276,7 +2276,7 @@ operator|*
 operator|)
 name|addr
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|param
 init|=
 name|f
@@ -2536,7 +2536,7 @@ operator|*
 operator|)
 name|addr
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|loopid
 decl_stmt|;
 name|mbreg_t
@@ -4140,7 +4140,7 @@ name|tstate_t
 modifier|*
 name|tptr
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|seq
 decl_stmt|;
 name|int
@@ -5333,7 +5333,7 @@ name|ccb
 modifier|*
 name|ccb
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|seq
 decl_stmt|;
 name|tstate_t
@@ -6321,18 +6321,18 @@ name|ccb
 operator|->
 name|csio
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|hp
 decl_stmt|,
 name|save_handle
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|nxti
 decl_stmt|,
 name|optr
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|local
 index|[
 name|QENTRY_LEN
@@ -6996,7 +6996,7 @@ operator|->
 name|ct_tag_val
 operator|=
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|)
 name|AT_GET_TAG
 argument_list|(
@@ -7329,7 +7329,7 @@ name|ccb_scsiio
 modifier|*
 name|cso
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|nxti
 decl_stmt|,
 name|optr
@@ -8993,7 +8993,7 @@ name|resid
 init|=
 literal|0
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|tval
 decl_stmt|;
 comment|/* 	 * CTIO and CTIO2 are close enough.... 	 */
@@ -9864,7 +9864,7 @@ name|void
 modifier|*
 name|cbarg
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|code
 parameter_list|,
 name|struct
@@ -9924,7 +9924,7 @@ name|isp
 argument_list|)
 condition|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|oflags
 decl_stmt|,
 name|nflags
@@ -10121,7 +10121,7 @@ argument_list|(
 name|sim
 argument_list|)
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|isr
 decl_stmt|,
 name|sema
@@ -10196,7 +10196,7 @@ argument_list|(
 name|xs
 argument_list|)
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|handle
 decl_stmt|;
 name|int
@@ -10238,7 +10238,7 @@ condition|(
 name|handle
 condition|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|isr
 decl_stmt|,
 name|sema
@@ -10449,7 +10449,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|u_int16_t
+name|uint16_t
 name|nxti
 decl_stmt|,
 name|optr
@@ -11302,11 +11302,11 @@ operator|!=
 name|CAM_TIME_INFINITY
 condition|)
 block|{
-name|u_int64_t
+name|uint64_t
 name|ticks
 init|=
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|hz
 decl_stmt|;
@@ -11696,7 +11696,7 @@ name|i
 operator|++
 control|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|isr
 decl_stmt|,
 name|sema
@@ -12394,7 +12394,7 @@ name|isp
 operator|->
 name|isp_param
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|dptr
 decl_stmt|;
@@ -12622,7 +12622,7 @@ name|isp
 operator|->
 name|isp_param
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|dptr
 decl_stmt|;
@@ -13169,7 +13169,7 @@ name|path
 argument_list|)
 argument_list|)
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|dval
 decl_stmt|,
 name|pval
@@ -15312,7 +15312,7 @@ else|:
 literal|"Departed"
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|lp
@@ -15323,7 +15323,7 @@ literal|32
 argument_list|)
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|lp
@@ -15334,7 +15334,7 @@ literal|0xffffffffLL
 argument_list|)
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|lp
@@ -15345,7 +15345,7 @@ literal|32
 argument_list|)
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|lp
@@ -16080,7 +16080,7 @@ case|case
 name|ISPASYNC_FW_CRASH
 case|:
 block|{
-name|u_int16_t
+name|uint16_t
 name|mbox1
 decl_stmt|,
 name|mbox6
