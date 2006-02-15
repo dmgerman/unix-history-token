@@ -4634,6 +4634,14 @@ argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
+name|em_init_rx_addrs
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|hw
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ifp
