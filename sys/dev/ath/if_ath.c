@@ -17865,7 +17865,21 @@ name|int
 name|qnum
 parameter_list|)
 block|{
-comment|/* XXX not yet */
+name|u_int32_t
+name|txqs
+init|=
+literal|1
+operator|<<
+name|qnum
+decl_stmt|;
+name|ath_hal_gettxintrtxqs
+argument_list|(
+name|ah
+argument_list|,
+operator|&
+name|txqs
+argument_list|)
+expr_stmt|;
 return|return
 literal|1
 return|;
