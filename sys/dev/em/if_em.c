@@ -4634,29 +4634,6 @@ argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
-comment|/* Initialize the hardware */
-if|if
-condition|(
-name|em_hardware_init
-argument_list|(
-name|sc
-argument_list|)
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Unable to initialize the hardware\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-name|em_update_link_status
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ifp
