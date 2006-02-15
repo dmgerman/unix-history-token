@@ -17941,7 +17941,15 @@ name|txqs
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
+name|txqs
+operator|&
+operator|(
 literal|1
+operator|<<
+name|qnum
+operator|)
+operator|)
 return|;
 block|}
 end_function
