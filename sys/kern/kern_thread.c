@@ -2744,6 +2744,8 @@ condition|)
 name|sleepq_abort
 argument_list|(
 name|td2
+argument_list|,
+name|EINTR
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2789,6 +2791,8 @@ condition|)
 name|sleepq_abort
 argument_list|(
 name|td2
+argument_list|,
+name|ERESTART
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3152,7 +3156,7 @@ name|return_instead
 condition|)
 return|return
 operator|(
-literal|1
+name|EINTR
 operator|)
 return|;
 comment|/* Should we goto user boundary if we didn't come from there? */
@@ -3177,7 +3181,7 @@ name|return_instead
 condition|)
 return|return
 operator|(
-literal|1
+name|ERESTART
 operator|)
 return|;
 comment|/* If thread will exit, flush its pending signals */

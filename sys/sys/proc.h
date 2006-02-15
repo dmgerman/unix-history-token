@@ -868,12 +868,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_UNUSED7
+name|TDF_SLEEPABORT
 value|0x00000080
 end_define
 
 begin_comment
-comment|/* --available -- */
+comment|/* sleepq_abort was called. */
 end_comment
 
 begin_define
