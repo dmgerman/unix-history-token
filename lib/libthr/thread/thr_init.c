@@ -1846,6 +1846,14 @@ operator|&
 name|_thr_event_lock
 argument_list|)
 expr_stmt|;
+name|_thr_once_lock
+operator|=
+name|PTHREAD_MUTEX_INITIALIZER
+expr_stmt|;
+name|_thr_once_cv
+operator|=
+name|PTHREAD_COND_INITIALIZER
+expr_stmt|;
 name|_thr_spinlock_init
 argument_list|()
 expr_stmt|;

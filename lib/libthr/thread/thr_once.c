@@ -66,18 +66,16 @@ value|0x03
 end_define
 
 begin_decl_stmt
-specifier|static
 name|pthread_mutex_t
-name|once_lock
+name|_thr_once_lock
 init|=
 name|PTHREAD_MUTEX_INITIALIZER
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|pthread_cond_t
-name|once_cv
+name|_thr_once_cv
 init|=
 name|PTHREAD_COND_INITIALIZER
 decl_stmt|;
@@ -106,7 +104,7 @@ decl_stmt|;
 name|_pthread_mutex_lock
 argument_list|(
 operator|&
-name|once_lock
+name|_thr_once_lock
 argument_list|)
 expr_stmt|;
 name|once_control
@@ -118,13 +116,13 @@ expr_stmt|;
 name|_pthread_mutex_unlock
 argument_list|(
 operator|&
-name|once_lock
+name|_thr_once_lock
 argument_list|)
 expr_stmt|;
 name|_pthread_cond_broadcast
 argument_list|(
 operator|&
-name|once_cv
+name|_thr_once_cv
 argument_list|)
 expr_stmt|;
 block|}
@@ -169,7 +167,7 @@ return|;
 name|_pthread_mutex_lock
 argument_list|(
 operator|&
-name|once_lock
+name|_thr_once_lock
 argument_list|)
 expr_stmt|;
 while|while
@@ -192,10 +190,10 @@ condition|)
 name|_pthread_cond_wait
 argument_list|(
 operator|&
-name|once_cv
+name|_thr_once_cv
 argument_list|,
 operator|&
-name|once_lock
+name|_thr_once_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If previous thread was canceled, then the state still 	 * could be ONCE_NEVER_DONE, we need to check it again. 	 */
@@ -226,7 +224,7 @@ expr_stmt|;
 name|_pthread_mutex_unlock
 argument_list|(
 operator|&
-name|once_lock
+name|_thr_once_lock
 argument_list|)
 expr_stmt|;
 name|_pthread_cleanup_push
@@ -247,7 +245,7 @@ expr_stmt|;
 name|_pthread_mutex_lock
 argument_list|(
 operator|&
-name|once_lock
+name|_thr_once_lock
 argument_list|)
 expr_stmt|;
 name|once_control
@@ -264,7 +262,7 @@ block|}
 name|_pthread_mutex_unlock
 argument_list|(
 operator|&
-name|once_lock
+name|_thr_once_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -274,7 +272,7 @@ condition|)
 name|_pthread_cond_broadcast
 argument_list|(
 operator|&
-name|once_cv
+name|_thr_once_cv
 argument_list|)
 expr_stmt|;
 return|return
