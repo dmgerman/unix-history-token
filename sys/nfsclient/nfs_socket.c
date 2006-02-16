@@ -3703,6 +3703,8 @@ block|{
 if|if
 condition|(
 name|error
+operator|&&
+name|error
 operator|!=
 name|ECONNRESET
 condition|)
@@ -3936,6 +3938,8 @@ condition|)
 block|{
 if|if
 condition|(
+name|error
+operator|&&
 name|error
 operator|!=
 name|ECONNRESET
