@@ -195,20 +195,6 @@ name|ATA_PROBE_OK
 value|-10
 end_define
 
-begin_comment
-comment|/* prototypes */
-end_comment
-
-begin_function_decl
-specifier|static
-name|void
-name|ata_pci_dmainit
-parameter_list|(
-name|device_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|int
 name|ata_legacy
@@ -2578,7 +2564,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|ata_pci_dmainit
 parameter_list|(
