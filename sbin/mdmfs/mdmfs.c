@@ -228,6 +228,17 @@ begin_comment
 comment|/* Length of mdname. */
 end_comment
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|path_mdconfig
+init|=
+name|_PATH_MDCONFIG
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -596,7 +607,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:b:Cc:Dd:e:F:f:hi:LlMm:Nn:O:o:p:PSs:t:Uv:w:X"
+literal|"a:b:Cc:Dd:E:e:F:f:hi:LlMm:Nn:O:o:Pp:Ss:t:Uv:w:X"
 argument_list|)
 operator|)
 operator|!=
@@ -692,6 +703,14 @@ literal|"-d %s"
 argument_list|,
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'E'
+case|:
+name|path_mdconfig
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -1554,7 +1573,7 @@ name|NULL
 argument_list|,
 literal|"%s -a %s%s -u %s%d"
 argument_list|,
-name|_PATH_MDCONFIG
+name|path_mdconfig
 argument_list|,
 name|ta
 argument_list|,
@@ -1680,7 +1699,7 @@ name|fd
 argument_list|,
 literal|"%s -a %s%s"
 argument_list|,
-name|_PATH_MDCONFIG
+name|path_mdconfig
 argument_list|,
 name|ta
 argument_list|,
@@ -1886,7 +1905,7 @@ name|NULL
 argument_list|,
 literal|"%s -d -u %s%d"
 argument_list|,
-name|_PATH_MDCONFIG
+name|path_mdconfig
 argument_list|,
 name|mdname
 argument_list|,
@@ -3068,8 +3087,8 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: %s [-DLlMNPSUX] [-a maxcontig] [-b block-size] [-c cylinders]\n"
-literal|"\t[-d rotdelay] [-e maxbpg] [-F file] [-f frag-size] [-i bytes]\n"
-literal|"\t[-m percent-free] [-n rotational-positions] [-O optimization]\n"
+literal|"\t[-d rotdelay] [-E path-mdconfig] [-e maxbpg] [-F file] [-f frag-size]\n"
+literal|"\t[-i bytes] [-m percent-free] [-n rotational-positions] [-O optimization]\n"
 literal|"\t[-o mount-options] [-p permissions] [-s size] [-v version]\n"
 literal|"\t[-w user:group] md-device mount-point\n"
 argument_list|,
@@ -3081,8 +3100,8 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: %s -C [-lNU] [-a maxcontig] [-b block-size] [-c cylinders]\n"
-literal|"\t[-d rotdelay] [-e maxbpg] [-F file] [-f frag-size] [-i bytes]\n"
-literal|"\t[-m percent-free] [-n rotational-positions] [-O optimization]\n"
+literal|"\t[-d rotdelay] [-E path-mdconfig] [-e maxbpg] [-F file] [-f frag-size]\n"
+literal|"\t[-i bytes] [-m percent-free] [-n rotational-positions] [-O optimization]\n"
 literal|"\t[-o mount-options] [-s size] [-v version] md-device mount-point\n"
 argument_list|,
 name|name
