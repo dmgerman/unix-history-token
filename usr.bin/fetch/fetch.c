@@ -2197,7 +2197,22 @@ operator|.
 name|st_size
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|r
+operator|==
+operator|-
+literal|1
+operator|||
+operator|!
+name|S_ISREG
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+condition|)
 block|{
 comment|/* 			 * Whatever value sb.st_size has now is either 			 * wrong (if stat(2) failed) or irrelevant (if the 			 * path does not refer to a regular file) 			 */
 name|sb
@@ -2207,6 +2222,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|r
@@ -2229,7 +2245,6 @@ expr_stmt|;
 goto|goto
 name|failure
 goto|;
-block|}
 block|}
 block|}
 comment|/* start the transfer */
