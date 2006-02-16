@@ -4913,7 +4913,7 @@ condition|(
 name|rn
 operator|->
 name|rn_bit
-operator|<
+operator|<=
 name|lastb
 condition|)
 block|{
@@ -4925,6 +4925,21 @@ comment|/* printf("up too far\n"); */
 comment|/* 				 * XXX we should jump to the 'Process leaves' 				 * part, because the values of 'rn' and 'next' 				 * we compute will not be used. Not a big deal 				 * because this loop will terminate, but it is 				 * inefficient and hard to understand! 				 */
 block|}
 block|}
+comment|/*  		 * At the top of the tree, no need to traverse the right 		 * half, prevent the traversal of the entire tree in the 		 * case of default route. 		 */
+if|if
+condition|(
+name|rn
+operator|->
+name|rn_parent
+operator|->
+name|rn_flags
+operator|&
+name|RNF_ROOT
+condition|)
+name|stopping
+operator|=
+literal|1
+expr_stmt|;
 comment|/* Find the next *leaf* since next node might vanish, too */
 for|for
 control|(
