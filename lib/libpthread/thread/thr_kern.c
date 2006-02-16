@@ -5432,6 +5432,12 @@ operator|<=
 name|MAX_CACHED_KSEGS
 condition|)
 return|return;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|worklist
+argument_list|)
+expr_stmt|;
 name|crit
 operator|=
 name|_kse_critical_enter
