@@ -3773,6 +3773,8 @@ operator|.
 name|zone
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -3848,6 +3850,8 @@ operator|.
 name|zone
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -3877,17 +3881,6 @@ return|;
 block|}
 block|}
 comment|/* 	 * Fill in the syncache values. 	 */
-name|bzero
-argument_list|(
-name|sc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|sc
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|sc_tp
@@ -6326,6 +6319,8 @@ operator|.
 name|zone
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
