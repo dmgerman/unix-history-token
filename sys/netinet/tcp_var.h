@@ -611,6 +611,10 @@ name|sackhint
 name|sackhint
 decl_stmt|;
 comment|/* SACK scoreboard hint */
+name|int
+name|t_rttlow
+decl_stmt|;
+comment|/* smallest observerved RTT */
 block|}
 struct|;
 end_struct
