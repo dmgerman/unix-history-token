@@ -1733,6 +1733,7 @@ name|ea1
 operator|==
 name|NULL
 condition|)
+block|{
 name|warnx
 argument_list|(
 literal|"invalid Ethernet address '%s'"
@@ -1740,6 +1741,12 @@ argument_list|,
 name|eaddr
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 else|else
 block|{
 operator|*
