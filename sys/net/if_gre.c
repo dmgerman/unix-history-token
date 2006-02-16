@@ -3135,11 +3135,6 @@ operator|=
 operator|(
 name|satosin
 argument_list|(
-operator|(
-expr|struct
-name|sockadrr
-operator|*
-operator|)
 operator|&
 name|lifr
 operator|->
@@ -3156,11 +3151,6 @@ operator|=
 operator|(
 name|satosin
 argument_list|(
-operator|(
-expr|struct
-name|sockadrr
-operator|*
-operator|)
 operator|&
 name|lifr
 operator|->
