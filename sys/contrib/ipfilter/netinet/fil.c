@@ -5934,6 +5934,13 @@ return|return
 operator|-
 literal|1
 return|;
+name|m
+operator|=
+operator|*
+name|fin
+operator|->
+name|fin_mp
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|_KERNEL
