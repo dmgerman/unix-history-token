@@ -237,6 +237,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_SWBMISS_THRESHOLD
+value|50
+end_define
+
+begin_comment
+comment|/* s/w bmiss threshold (TU's) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_PS_SLEEP
 value|0x1
 end_define
@@ -295,7 +306,7 @@ name|IEEE80211_MS_TO_TU
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x) * 1000) / 1024)
+value|(((x) * 1024) / 1000)
 end_define
 
 begin_define
@@ -305,7 +316,17 @@ name|IEEE80211_TU_TO_MS
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x) * 1024) / 1000)
+value|(((x) * 1000) / 1024)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_TU_TO_TICKS
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x) * hz) / 1024)
 end_define
 
 begin_struct_decl
@@ -656,6 +677,19 @@ name|int
 name|ic_bmiss_max
 decl_stmt|;
 comment|/* max bmiss before scan */
+name|u_int16_t
+name|ic_swbmiss_count
+decl_stmt|;
+comment|/* beacons in last period */
+name|u_int16_t
+name|ic_swbmiss_period
+decl_stmt|;
+comment|/* s/w bmiss period */
+name|struct
+name|callout
+name|ic_swbmiss
+decl_stmt|;
+comment|/* s/w beacon miss timer */
 name|struct
 name|ieee80211_node
 modifier|*
@@ -844,7 +878,7 @@ decl_stmt|;
 name|u_int32_t
 name|ic_pad
 index|[
-literal|64
+literal|56
 index|]
 decl_stmt|;
 comment|/* future expansion */
@@ -1250,6 +1284,17 @@ end_define
 
 begin_comment
 comment|/* STATUS: update ERP element */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FEXT_SWBMISS
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* CONF: do bmiss in s/w */
 end_comment
 
 begin_comment
