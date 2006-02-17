@@ -1016,11 +1016,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|EXT_JUMBO4
+name|EXT_JUMBOP
 case|:
 name|uma_zfree
 argument_list|(
-name|zone_jumbo4
+name|zone_jumbop
 argument_list|,
 name|m
 operator|->
