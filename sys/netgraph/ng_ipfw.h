@@ -91,10 +91,6 @@ define|#
 directive|define
 name|NG_IPFW_IN
 value|1
-name|int
-name|flags
-decl_stmt|;
-comment|/* flags, for ip_output (IPv6 ?) */
 block|}
 struct|;
 end_struct
