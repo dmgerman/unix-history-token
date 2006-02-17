@@ -15446,6 +15446,11 @@ literal|0
 operator|)
 return|;
 block|}
+name|sc
+operator|->
+name|bge_link_evt
+operator|++
+expr_stmt|;
 name|mii
 operator|=
 name|device_get_softc
@@ -16781,6 +16786,30 @@ name|bge_tx_saved_considx
 operator|=
 name|BGE_TXCONS_UNSET
 expr_stmt|;
+comment|/* 	 * We can't just call bge_link_upd() cause chip is almost stopped so 	 * bge_link_upd -> bge_tick_locked -> bge_stats_update sequence may 	 * lead to hardware deadlock. So we just clearing MAC's link state 	 * (PHY may still have link UP). 	 */
+if|if
+condition|(
+name|bootverbose
+operator|&&
+name|sc
+operator|->
+name|bge_link
+condition|)
+name|if_printf
+argument_list|(
+name|sc
+operator|->
+name|bge_ifp
+argument_list|,
+literal|"link DOWN\n"
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|bge_link
+operator|=
+literal|0
+expr_stmt|;
 name|ifp
 operator|->
 name|if_drv_flags
@@ -16792,7 +16821,6 @@ operator||
 name|IFF_DRV_OACTIVE
 operator|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -17308,8 +17336,20 @@ name|LINK_STATE_DOWN
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Discard link events for MII/GMII cards if MI auto-polling disabled */
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|CSR_READ_4
+argument_list|(
+name|sc
+argument_list|,
+name|BGE_MI_MODE
+argument_list|)
+operator|&
+name|BGE_MIMODE_AUTOPOLL
+condition|)
 block|{
 comment|/*  		 * Some broken BCM chips have BGE_STATFLAG_LINKSTATE_CHANGED bit 		 * in status word always set. Workaround this bug by reading 		 * PHY link status directly. 		 */
 name|link
@@ -17458,7 +17498,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* Clear the interrupt */
+comment|/* Clear the attention */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
