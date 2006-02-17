@@ -321,6 +321,14 @@ literal|"Intel E7205 host to AGP bridge"
 operator|)
 return|;
 case|case
+literal|0x25508086
+case|:
+return|return
+operator|(
+literal|"Intel E7505 host to AGP bridge"
+operator|)
+return|;
+case|case
 literal|0x25788086
 case|:
 return|return
@@ -748,6 +756,10 @@ literal|0x255d8086
 case|:
 comment|/* E7205 */
 case|case
+literal|0x25508086
+case|:
+comment|/* E7505 */
+case|case
 literal|0x25708086
 case|:
 comment|/* i865 */
@@ -867,6 +879,10 @@ case|case
 literal|0x255d8086
 case|:
 comment|/* E7205 */
+case|case
+literal|0x25508086
+case|:
+comment|/* E7505 */
 case|case
 literal|0x25318086
 case|:
@@ -1116,6 +1132,10 @@ case|case
 literal|0x255d8086
 case|:
 comment|/* E7205 */
+case|case
+literal|0x25508086
+case|:
+comment|/* E7505 */
 case|case
 literal|0x25708086
 case|:
