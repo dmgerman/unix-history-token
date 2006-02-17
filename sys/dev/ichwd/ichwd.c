@@ -176,6 +176,30 @@ literal|"Intel 82801EB/ER watchdog timer"
 block|}
 block|,
 block|{
+name|VENDORID_INTEL
+block|,
+name|DEVICEID_82801FBR
+block|,
+literal|"Intel 82801FB/FR watchdog timer"
+block|}
+block|,
+block|{
+name|VENDORID_INTEL
+block|,
+name|DEVICEID_ICH5
+block|,
+literal|"Intel ICH5 watchdog timer"
+block|}
+block|,
+block|{
+name|VENDORID_INTEL
+block|,
+name|DEVICEID_6300ESB
+block|,
+literal|"Intel 6300ESB watchdog timer"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -196,33 +220,91 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|ichwd_read_1
+name|ichwd_read_tco_1
 parameter_list|(
 name|sc
 parameter_list|,
 name|off
 parameter_list|)
 define|\
-value|bus_space_read_1((sc)->smi_bst, (sc)->smi_bsh, (off))
+value|bus_space_read_1((sc)->tco_bst, (sc)->tco_bsh, (off))
 end_define
 
 begin_define
 define|#
 directive|define
-name|ichwd_read_2
+name|ichwd_read_tco_2
 parameter_list|(
 name|sc
 parameter_list|,
 name|off
 parameter_list|)
 define|\
-value|bus_space_read_2((sc)->smi_bst, (sc)->smi_bsh, (off))
+value|bus_space_read_2((sc)->tco_bst, (sc)->tco_bsh, (off))
 end_define
 
 begin_define
 define|#
 directive|define
-name|ichwd_read_4
+name|ichwd_read_tco_4
+parameter_list|(
+name|sc
+parameter_list|,
+name|off
+parameter_list|)
+define|\
+value|bus_space_read_4((sc)->tco_bst, (sc)->tco_bsh, (off))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ichwd_write_tco_1
+parameter_list|(
+name|sc
+parameter_list|,
+name|off
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|bus_space_write_1((sc)->tco_bst, (sc)->tco_bsh, (off), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ichwd_write_tco_2
+parameter_list|(
+name|sc
+parameter_list|,
+name|off
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|bus_space_write_2((sc)->tco_bst, (sc)->tco_bsh, (off), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ichwd_write_tco_4
+parameter_list|(
+name|sc
+parameter_list|,
+name|off
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|bus_space_write_4((sc)->tco_bst, (sc)->tco_bsh, (off), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ichwd_read_smi_4
 parameter_list|(
 name|sc
 parameter_list|,
@@ -235,37 +317,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ichwd_write_1
-parameter_list|(
-name|sc
-parameter_list|,
-name|off
-parameter_list|,
-name|val
-parameter_list|)
-define|\
-value|bus_space_write_1((sc)->smi_bst, (sc)->smi_bsh, (off), (val))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ichwd_write_2
-parameter_list|(
-name|sc
-parameter_list|,
-name|off
-parameter_list|,
-name|val
-parameter_list|)
-define|\
-value|bus_space_write_2((sc)->smi_bst, (sc)->smi_bsh, (off), (val))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ichwd_write_4
+name|ichwd_write_smi_4
 parameter_list|(
 name|sc
 parameter_list|,
@@ -289,19 +341,20 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|ichwd_write_4
+name|ichwd_write_smi_4
 argument_list|(
 name|sc
 argument_list|,
 name|SMI_EN
 argument_list|,
-name|ichwd_read_4
+name|ichwd_read_smi_4
 argument_list|(
 name|sc
 argument_list|,
 name|SMI_EN
 argument_list|)
-operator||
+operator|&
+operator|~
 name|SMI_TCO_EN
 argument_list|)
 expr_stmt|;
@@ -320,20 +373,19 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|ichwd_write_4
+name|ichwd_write_smi_4
 argument_list|(
 name|sc
 argument_list|,
 name|SMI_EN
 argument_list|,
-name|ichwd_read_4
+name|ichwd_read_smi_4
 argument_list|(
 name|sc
 argument_list|,
 name|SMI_EN
 argument_list|)
-operator|&
-operator|~
+operator||
 name|SMI_TCO_EN
 argument_list|)
 expr_stmt|;
@@ -352,7 +404,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|ichwd_write_2
+name|ichwd_write_tco_2
 argument_list|(
 name|sc
 argument_list|,
@@ -361,7 +413,7 @@ argument_list|,
 name|TCO_TIMEOUT
 argument_list|)
 expr_stmt|;
-name|ichwd_write_2
+name|ichwd_write_tco_2
 argument_list|(
 name|sc
 argument_list|,
@@ -370,7 +422,7 @@ argument_list|,
 name|TCO_BOOT_STS
 argument_list|)
 expr_stmt|;
-name|ichwd_write_2
+name|ichwd_write_tco_2
 argument_list|(
 name|sc
 argument_list|,
@@ -399,7 +451,7 @@ name|cnt
 decl_stmt|;
 name|cnt
 operator|=
-name|ichwd_read_2
+name|ichwd_read_tco_2
 argument_list|(
 name|sc
 argument_list|,
@@ -408,7 +460,7 @@ argument_list|)
 operator|&
 name|TCO_CNT_PRESERVE
 expr_stmt|;
-name|ichwd_write_2
+name|ichwd_write_tco_2
 argument_list|(
 name|sc
 argument_list|,
@@ -459,7 +511,7 @@ name|cnt
 decl_stmt|;
 name|cnt
 operator|=
-name|ichwd_read_2
+name|ichwd_read_tco_2
 argument_list|(
 name|sc
 argument_list|,
@@ -468,7 +520,7 @@ argument_list|)
 operator|&
 name|TCO_CNT_PRESERVE
 expr_stmt|;
-name|ichwd_write_2
+name|ichwd_write_tco_2
 argument_list|(
 name|sc
 argument_list|,
@@ -513,7 +565,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|ichwd_write_1
+name|ichwd_write_tco_1
 argument_list|(
 name|sc
 argument_list|,
@@ -553,7 +605,7 @@ name|uint8_t
 name|timeout
 parameter_list|)
 block|{
-name|ichwd_write_1
+name|ichwd_write_tco_1
 argument_list|(
 name|sc
 argument_list|,
@@ -619,16 +671,15 @@ name|unsigned
 name|int
 name|timeout
 decl_stmt|;
-name|cmd
-operator|&=
-name|WD_INTERVAL
-expr_stmt|;
 comment|/* disable / enable */
 if|if
 condition|(
+operator|!
+operator|(
 name|cmd
-operator|==
-literal|0
+operator|&
+name|WD_ACTIVE
+operator|)
 condition|)
 block|{
 if|if
@@ -660,6 +711,10 @@ name|ichwd_tmr_enable
 argument_list|(
 name|sc
 argument_list|)
+expr_stmt|;
+name|cmd
+operator|&=
+name|WD_INTERVAL
 expr_stmt|;
 comment|/* convert from power-of-to-ns to WDT ticks */
 if|if
@@ -741,8 +796,10 @@ end_function
 begin_decl_stmt
 specifier|static
 name|unsigned
-name|long
+name|int
 name|pmbase
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1009,7 +1066,26 @@ name|device
 operator|=
 name|dev
 expr_stmt|;
+if|if
+condition|(
+name|pmbase
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Not found\n"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* allocate I/O register space */
+name|sc
+operator|->
+name|smi_rid
+operator|=
+literal|0
+expr_stmt|;
 name|sc
 operator|->
 name|smi_res
@@ -1029,13 +1105,8 @@ name|pmbase
 operator|+
 name|SMI_BASE
 argument_list|,
-name|pmbase
-operator|+
-name|SMI_BASE
-operator|+
-name|SMI_LEN
-operator|-
-literal|1
+operator|~
+literal|0ul
 argument_list|,
 name|SMI_LEN
 argument_list|,
@@ -1088,6 +1159,12 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
+name|tco_rid
+operator|=
+literal|1
+expr_stmt|;
+name|sc
+operator|->
 name|tco_res
 operator|=
 name|bus_alloc_resource
@@ -1105,13 +1182,8 @@ name|pmbase
 operator|+
 name|TCO_BASE
 argument_list|,
-name|pmbase
-operator|+
-name|TCO_BASE
-operator|+
-name|TCO_LEN
-operator|-
-literal|1
+operator|~
+literal|0ul
 argument_list|,
 name|TCO_LEN
 argument_list|,
@@ -1414,6 +1486,13 @@ argument_list|,
 name|ichwd_detach
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|device_shutdown
+argument_list|,
+name|ichwd_detach
+argument_list|)
+block|,
 block|{
 literal|0
 block|,
@@ -1509,7 +1588,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|ichwd
 argument_list|,
-name|nexus
+name|isa
 argument_list|,
 name|ichwd_driver
 argument_list|,
@@ -1521,10 +1600,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/*  * this doesn't seem to work, though I can't figure out why.  * currently not a big issue since watchdog is standard. MODULE_DEPEND(ichwd, watchdog, 1, 1, 1);  */
-end_comment
 
 end_unit
 
