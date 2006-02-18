@@ -109,13 +109,6 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|g_orphan_t
-name|g_slice_orphan
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|g_access_t
 name|g_slice_access
 decl_stmt|;
@@ -2663,7 +2656,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|g_slice_orphan
 parameter_list|(

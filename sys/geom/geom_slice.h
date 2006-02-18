@@ -164,6 +164,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|g_slice_orphan
+parameter_list|(
+name|struct
+name|g_consumer
+modifier|*
+name|cp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
