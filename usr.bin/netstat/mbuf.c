@@ -856,6 +856,16 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"%llu/%llu mbuf+clusters of packet zone in use "
+literal|"(current/cache)\n"
+argument_list|,
+name|packet_count
+argument_list|,
+name|packet_free
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"%llu/%llu/%llu/%llu %lluk (page size) jumbo clusters in use "
 literal|"(current/cache/total/max)\n"
 argument_list|,
