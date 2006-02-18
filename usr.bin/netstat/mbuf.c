@@ -856,7 +856,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%llu/%llu mbuf+clusters of packet zone in use "
+literal|"%llu/%llu mbuf+clusters out of packet secondary zone in use "
 literal|"(current/cache)\n"
 argument_list|,
 name|packet_count
