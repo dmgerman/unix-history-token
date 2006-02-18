@@ -154,7 +154,7 @@ value|0x80
 define|#
 directive|define
 name|TH_FLAGS
-value|(TH_FIN|TH_SYN|TH_RST|TH_ACK|TH_URG|TH_ECE|TH_CWR)
+value|(TH_FIN|TH_SYN|TH_RST|TH_PUSH|TH_ACK|TH_URG|TH_ECE|TH_CWR)
 name|u_short
 name|th_win
 decl_stmt|;
