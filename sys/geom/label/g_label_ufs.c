@@ -132,6 +132,23 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+name|SBLOCKSIZE
+operator|%
+name|cp
+operator|->
+name|provider
+operator|->
+name|sectorsize
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* 	 * Walk through the standard places that superblocks hide and look 	 * for UFS magic. If we find magic, then check that the size in the 	 * superblock corresponds to the size of the underlying provider. 	 * Finally, look for a volume label and create an appropriate 	 * provider based on that. 	 */
 for|for
 control|(
@@ -155,20 +172,10 @@ name|sb
 operator|++
 control|)
 block|{
-comment|/* 		 * Take care not to issue an invalid I/O request.  The 		 * offset and size of the superblock candidate must be 		 * multiples of the provider's sector size, otherwise an 		 * FFS can't exist on the provider anyway. 		 */
+comment|/* 		 * Take care not to issue an invalid I/O request. The offset of 		 * the superblock candidate must be multiples of the provider's 		 * sector size, otherwise an FFS can't exist on the provider 		 * anyway. 		 */
 if|if
 condition|(
 name|superblock
-operator|%
-name|cp
-operator|->
-name|provider
-operator|->
-name|sectorsize
-operator|!=
-literal|0
-operator|||
-name|SBLOCKSIZE
 operator|%
 name|cp
 operator|->
