@@ -3229,6 +3229,13 @@ name|ic_reset
 operator|=
 name|ural_reset
 expr_stmt|;
+comment|/* enable s/w bmiss handling in sta mode */
+name|ic
+operator|->
+name|ic_flags_ext
+operator||=
+name|IEEE80211_FEXT_SWBMISS
+expr_stmt|;
 comment|/* override state transition machine */
 name|sc
 operator|->
