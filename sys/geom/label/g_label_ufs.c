@@ -144,11 +144,7 @@ name|sectorsize
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 comment|/* 	 * Walk through the standard places that superblocks hide and look 	 * for UFS magic. If we find magic, then check that the size in the 	 * superblock corresponds to the size of the underlying provider. 	 * Finally, look for a volume label and create an appropriate 	 * provider based on that. 	 */
 for|for
 control|(
