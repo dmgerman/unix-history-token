@@ -2110,7 +2110,7 @@ condition|(
 operator|!
 name|kld_isloaded
 argument_list|(
-literal|"cpu/p4tcc"
+literal|"cpu/ichss"
 argument_list|)
 operator|&&
 name|kld_load
