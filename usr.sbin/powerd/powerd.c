@@ -2104,6 +2104,30 @@ name|mode
 operator|=
 name|mode_none
 expr_stmt|;
+comment|/* Make sure the cpufreq module is loaded */
+if|if
+condition|(
+operator|!
+name|kld_isloaded
+argument_list|(
+literal|"cpu/p4tcc"
+argument_list|)
+operator|&&
+name|kld_load
+argument_list|(
+literal|"cpufreq"
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"failed to load cpufreq module"
+argument_list|)
+expr_stmt|;
 comment|/* Poll interval is in units of ms. */
 name|poll_ival
 operator|*=
