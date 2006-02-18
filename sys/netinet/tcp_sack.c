@@ -162,28 +162,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/ip_icmp.h>
-end_include
-
-begin_comment
-comment|/* for ICMP_BANDLIM		*/
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<netinet/in_var.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/icmp_var.h>
-end_include
-
-begin_comment
-comment|/* for ICMP_BANDLIM		*/
-end_comment
 
 begin_include
 include|#
