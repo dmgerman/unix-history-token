@@ -678,5 +678,22 @@ directive|include
 file|"config_f.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_NLS_CATALOGS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NLS_CATALOGS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 end_unit
 
