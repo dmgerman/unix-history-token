@@ -91,6 +91,11 @@ value|0x2000
 comment|/* printer has broken bidir mode */
 define|#
 directive|define
+name|UQ_OPEN_CLEARSTALL
+value|0x4000
+comment|/* device needs clear endpoint stall */
+define|#
+directive|define
 name|UQ_HID_IGNORE
 value|0x8000
 comment|/* device should be ignored by hid class */
