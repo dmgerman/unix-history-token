@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -188,20 +194,6 @@ directive|define
 name|ATA_PROBE_OK
 value|-10
 end_define
-
-begin_comment
-comment|/* prototypes */
-end_comment
-
-begin_function_decl
-specifier|static
-name|void
-name|ata_pci_dmainit
-parameter_list|(
-name|device_t
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 name|int
@@ -2193,6 +2185,9 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|dumping
+operator|||
 operator|!
 name|ata_legacy
 argument_list|(
@@ -2201,6 +2196,7 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|)
+operator|)
 operator|&&
 name|ch
 operator|->
@@ -2568,7 +2564,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|ata_pci_dmainit
 parameter_list|(
