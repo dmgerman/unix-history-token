@@ -162,13 +162,13 @@ comment|/* HIDReconnectInitiate */
 literal|0x0206
 argument_list|)
 block|,
-comment|/* HIDDesctiptorList */
+comment|/* HIDDescriptorList */
 name|SDP_ATTR_RANGE
 argument_list|(
-literal|0x020a
+literal|0x0209
 argument_list|,
 comment|/* HIDBatteryPower */
-literal|0x020a
+literal|0x0209
 argument_list|)
 block|,
 name|SDP_ATTR_RANGE
@@ -547,7 +547,7 @@ break|break;
 case|case
 literal|0x0206
 case|:
-comment|/* HIDDesctiptorList */
+comment|/* HIDDescriptorList */
 if|if
 condition|(
 name|hid_sdp_parse_hid_descriptor
@@ -583,7 +583,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-literal|0x020a
+literal|0x0209
 case|:
 comment|/* HIDBatteryPower */
 name|battery_power
