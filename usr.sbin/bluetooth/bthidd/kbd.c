@@ -480,7 +480,7 @@ comment|/* D8 */
 comment|/* Print Screen                 46 */
 name|E0PREFIX
 operator||
-literal|37
+literal|0x37
 block|,
 comment|/* E0 B7 */
 comment|/* Scroll Lock                  47 */
@@ -1112,6 +1112,11 @@ operator|-
 literal|1
 block|,
 comment|/* Reserved */
+comment|/* Reserved                     C7 */
+operator|-
+literal|1
+block|,
+comment|/* Reserved */
 comment|/* Reserved                     C8 */
 operator|-
 literal|1
@@ -1187,6 +1192,11 @@ operator|-
 literal|1
 block|,
 comment|/* Reserved */
+comment|/* Reserved                     D7 */
+operator|-
+literal|1
+block|,
+comment|/* Reserved */
 comment|/* Reserved                     D8 */
 operator|-
 literal|1
@@ -1227,10 +1237,6 @@ operator|-
 literal|1
 block|,
 comment|/* Reserved */
-comment|/* Left Control                 E0 */
-literal|0x1D
-block|,
-comment|/* 9D */
 comment|/* Left Control                 E0 */
 literal|0x1D
 block|,
