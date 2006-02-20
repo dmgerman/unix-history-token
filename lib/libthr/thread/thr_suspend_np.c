@@ -399,6 +399,12 @@ name|flags
 operator||=
 name|THR_FLAGS_NEED_SUSPEND
 expr_stmt|;
+name|tmp
+operator|=
+name|thread
+operator|->
+name|cycle
+expr_stmt|;
 name|THR_THREAD_UNLOCK
 argument_list|(
 name|curthread
@@ -418,12 +424,6 @@ condition|(
 name|waitok
 condition|)
 block|{
-name|tmp
-operator|=
-name|thread
-operator|->
-name|cycle
-expr_stmt|;
 name|_thr_umtx_wait
 argument_list|(
 operator|&
