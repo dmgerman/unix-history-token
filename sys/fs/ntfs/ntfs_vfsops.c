@@ -2955,7 +2955,7 @@ name|vpp
 operator|=
 name|nvp
 expr_stmt|;
-name|vnode_create_vobject
+name|vnode_create_vobject_off
 argument_list|(
 name|nvp
 argument_list|,

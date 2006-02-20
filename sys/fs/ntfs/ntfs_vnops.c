@@ -1995,7 +1995,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|vnode_create_vobject
+name|vnode_create_vobject_off
 argument_list|(
 name|ap
 operator|->

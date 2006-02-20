@@ -991,7 +991,7 @@ name|n_flag
 operator||=
 name|NOPEN
 expr_stmt|;
-name|vnode_create_vobject
+name|vnode_create_vobject_off
 argument_list|(
 name|ap
 operator|->

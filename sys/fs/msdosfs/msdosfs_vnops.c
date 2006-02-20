@@ -681,7 +681,7 @@ operator|->
 name|a_vp
 argument_list|)
 decl_stmt|;
-name|vnode_create_vobject
+name|vnode_create_vobject_off
 argument_list|(
 name|ap
 operator|->

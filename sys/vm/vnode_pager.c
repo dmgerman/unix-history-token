@@ -310,7 +310,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Create the VM system backing object for this vnode */
+comment|/*  * Compatibility function for RELENG_6, in which vnode_create_vobject()  * takes file size as size_t due to an oversight.  The type may not just  * change to off_t because the ABI to 3rd party modules must be preserved  * for RELENG_6 lifetime.  */
 end_comment
 
 begin_function
@@ -323,6 +323,45 @@ modifier|*
 name|vp
 parameter_list|,
 name|size_t
+name|isize
+name|__unused
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+block|{
+comment|/* 	 * Size of 0 will indicate to vnode_create_vobject_off() 	 * VOP_GETATTR() is to be called to get the actual size. 	 */
+return|return
+operator|(
+name|vnode_create_vobject_off
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|td
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Create the VM system backing object for this vnode -- for RELENG_6 only.  * In HEAD, vnode_create_vobject() has been fixed to take file size as off_t  * and so it can be used as is.  */
+end_comment
+
+begin_function
+name|int
+name|vnode_create_vobject_off
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+name|off_t
 name|isize
 parameter_list|,
 name|struct

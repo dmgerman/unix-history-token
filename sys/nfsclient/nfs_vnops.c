@@ -2257,7 +2257,7 @@ name|ra_expect_lbn
 operator|=
 literal|0
 expr_stmt|;
-name|vnode_create_vobject
+name|vnode_create_vobject_off
 argument_list|(
 name|vp
 argument_list|,

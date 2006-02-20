@@ -4017,6 +4017,26 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|vnode_create_vobject_off
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+name|off_t
+name|size
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|vnode_destroy_vobject
 parameter_list|(

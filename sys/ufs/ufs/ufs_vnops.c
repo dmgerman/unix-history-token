@@ -1112,7 +1112,7 @@ operator|(
 name|EPERM
 operator|)
 return|;
-name|vnode_create_vobject
+name|vnode_create_vobject_off
 argument_list|(
 name|vp
 argument_list|,
