@@ -13149,9 +13149,9 @@ if|if
 condition|(
 name|ic
 operator|->
-name|ic_opt_ie
-operator|!=
-name|NULL
+name|ic_flags
+operator|&
+name|IEEE80211_F_WPA
 condition|)
 name|assoc
 operator|.
