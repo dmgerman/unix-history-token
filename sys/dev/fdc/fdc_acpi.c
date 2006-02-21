@@ -350,9 +350,6 @@ decl_stmt|,
 modifier|*
 name|pkg
 decl_stmt|;
-name|ACPI_HANDLE
-name|h
-decl_stmt|;
 name|uint32_t
 name|fde
 index|[
@@ -377,13 +374,6 @@ comment|/* Initialize variables and get a temporary buffer for _FDE. */
 name|error
 operator|=
 name|ENXIO
-expr_stmt|;
-name|h
-operator|=
-name|acpi_get_handle
-argument_list|(
-name|dev
-argument_list|)
 expr_stmt|;
 name|buf
 operator|.
