@@ -4905,6 +4905,14 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* 		 * Don't trust the various socket layers to get the 		 * packet header and length correct (e.g. kern/15175). 		 * 		 * Also, do not trust that soreceive() will clear m_nextpkt 		 * for us (e.g. kern/84952, kern/82413). 		 */
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|n
