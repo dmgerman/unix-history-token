@@ -9664,6 +9664,21 @@ index|[
 name|kid
 index|]
 expr_stmt|;
+comment|/* 		 * Global slots start off w/o any assigned key index. 		 * Force one here for consistency with IEEE80211_IOC_WEPKEY. 		 */
+if|if
+condition|(
+name|wk
+operator|->
+name|wk_keyix
+operator|==
+name|IEEE80211_KEYIX_NONE
+condition|)
+name|wk
+operator|->
+name|wk_keyix
+operator|=
+name|kid
+expr_stmt|;
 name|ni
 operator|=
 name|NULL
