@@ -3420,7 +3420,7 @@ name|_PHOLD
 parameter_list|(
 name|p
 parameter_list|)
-value|do {							\ 	PROC_LOCK_ASSERT((p), MA_OWNED);				\ 	(p)->p_lock++;							\ 	if (((p)->p_sflag& PS_INMEM) == 0)				\ 		faultin((p));						\ } while (0)
+value|do {							\ 	PROC_LOCK_ASSERT((p), MA_OWNED);				\ 	KASSERT(!((p)->p_flag& P_WEXIT), ("PHOLD of exiting process"));\ 	(p)->p_lock++;							\ 	if (((p)->p_sflag& PS_INMEM) == 0)				\ 		faultin((p));						\ } while (0)
 end_define
 
 begin_define
@@ -3440,7 +3440,7 @@ name|_PRELE
 parameter_list|(
 name|p
 parameter_list|)
-value|do {							\ 	PROC_LOCK_ASSERT((p), MA_OWNED);				\ 	(--(p)->p_lock);						\ } while (0)
+value|do {							\ 	PROC_LOCK_ASSERT((p), MA_OWNED);				\ 	(--(p)->p_lock);						\ 	if (((p)->p_flag& P_WEXIT)&& (p)->p_lock == 0)		\ 		wakeup(&(p)->p_lock);					\ } while (0)
 end_define
 
 begin_comment

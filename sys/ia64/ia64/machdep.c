@@ -4691,6 +4691,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|PHOLD
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|)
+expr_stmt|;
 name|iov
 operator|.
 name|iov_base
@@ -4787,6 +4794,13 @@ condition|)
 name|error
 operator|=
 name|ENOSPC
+expr_stmt|;
+name|PRELE
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|)
 expr_stmt|;
 block|}
 name|r
