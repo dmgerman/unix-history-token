@@ -1231,6 +1231,11 @@ return|;
 block|}
 name|t
 operator|->
+name|depth
+operator|++
+expr_stmt|;
+name|t
+operator|->
 name|d
 operator|=
 name|opendir
@@ -1247,6 +1252,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|tree_ascend
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
+comment|/* Undo "chdir" */
 name|tree_pop
 argument_list|(
 name|t
@@ -1268,11 +1279,6 @@ name|TREE_ERROR_DIR
 operator|)
 return|;
 block|}
-name|t
-operator|->
-name|depth
-operator|++
-expr_stmt|;
 name|t
 operator|->
 name|flags
