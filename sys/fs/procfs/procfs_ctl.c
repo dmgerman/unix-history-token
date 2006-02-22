@@ -855,11 +855,6 @@ comment|/* 	 * Step.  Let the target process execute a single instruction. 	 * W
 case|case
 name|PROCFS_CTL_STEP
 case|:
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|proc_sstep
@@ -871,7 +866,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
-name|PRELE
+name|PROC_UNLOCK
 argument_list|(
 name|p
 argument_list|)
