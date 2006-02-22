@@ -8134,14 +8134,6 @@ decl_stmt|;
 name|device_t
 name|ppbus
 decl_stmt|;
-name|device_t
-name|parent
-init|=
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
 name|device_printf
 argument_list|(
 name|dev
