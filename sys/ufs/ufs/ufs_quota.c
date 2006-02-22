@@ -3917,8 +3917,6 @@ name|vp
 argument_list|,
 name|LK_EXCLUSIVE
 operator||
-name|LK_NOWAIT
-operator||
 name|LK_INTERLOCK
 argument_list|,
 name|td
