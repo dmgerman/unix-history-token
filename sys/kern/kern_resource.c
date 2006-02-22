@@ -3027,7 +3027,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Transform the running time and tick information for childern of proc p  * into user, system, and interrupt time usage.  */
+comment|/*  * Transform the running time and tick information for children of proc p  * into user and system time usage.  */
 end_comment
 
 begin_function
@@ -3081,7 +3081,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Transform the running time and tick information in proc p into user,  * system, and interrupt time usage.  If appropriate, include the current  * time slice on this CPU.  */
+comment|/*  * Transform the running time and tick information in proc p into user  * and system time usage.  If appropriate, include the current time slice  * on this CPU.  */
 end_comment
 
 begin_function
@@ -3105,13 +3105,13 @@ name|sp
 parameter_list|)
 block|{
 name|struct
+name|rusage_ext
+name|rux
+decl_stmt|;
+name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
-name|struct
-name|rusage_ext
-name|rux
 decl_stmt|;
 name|uint64_t
 name|u
@@ -3545,7 +3545,7 @@ if|#
 directive|if
 literal|0
 comment|/* Enforce monotonicity. */
-block|if (uu< ruxp->rux_uu || su< ruxp->rux_su || iu< ruxp->rux_iu) { 		if (uu< ruxp->rux_uu) 			uu = ruxp->rux_uu; 		else if (uu + ruxp->rux_su + ruxp->rux_iu> tu) 			uu = tu - ruxp->rux_su - ruxp->rux_iu; 		if (st == 0) 			su = ruxp->rux_su; 		else { 			su = ((tu - uu) * st) / (st + it); 			if (su< ruxp->rux_su) 				su = ruxp->rux_su; 			else if (uu + su + ruxp->rux_iu> tu) 				su = tu - uu - ruxp->rux_iu; 		} 		KASSERT(uu + su + ruxp->rux_iu<= tu, 		    ("calcru: monotonisation botch 1")); 		iu = tu - uu - su; 		KASSERT(iu>= ruxp->rux_iu, 		    ("calcru: monotonisation botch 2")); 	} 	KASSERT(uu + su + iu<= tu, 	    ("calcru: monotisation botch 3"));
+block|if (uu< ruxp->rux_uu || su< ruxp->rux_su || iu< ruxp->rux_iu) { 		if (uu< ruxp->rux_uu) 			uu = ruxp->rux_uu; 		else if (uu + ruxp->rux_su + ruxp->rux_iu> tu) 			uu = tu - ruxp->rux_su - ruxp->rux_iu; 		if (st == 0) 			su = ruxp->rux_su; 		else { 			su = ((tu - uu) * st) / (st + it); 			if (su< ruxp->rux_su) 				su = ruxp->rux_su; 			else if (uu + su + ruxp->rux_iu> tu) 				su = tu - uu - ruxp->rux_iu; 		} 		KASSERT(uu + su + ruxp->rux_iu<= tu, 		    ("calcru: monotonisation botch 1")); 		iu = tu - uu - su; 		KASSERT(iu>= ruxp->rux_iu, 		    ("calcru: monotonisation botch 2")); 	} 	KASSERT(uu + su + iu<= tu, ("calcru: monotisation botch 3"));
 endif|#
 directive|endif
 name|ruxp
