@@ -1300,6 +1300,7 @@ name|PATH_MAX
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|strlcpy
 argument_list|(
 name|tmp
@@ -1339,6 +1340,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
