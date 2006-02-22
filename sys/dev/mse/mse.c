@@ -328,13 +328,8 @@ return|;
 block|}
 if|if
 condition|(
-name|BUS_SETUP_INTR
+name|bus_setup_intr
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
 name|dev
 argument_list|,
 name|sc

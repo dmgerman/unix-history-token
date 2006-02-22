@@ -1443,10 +1443,8 @@ condition|(
 operator|(
 name|error
 operator|=
-name|BUS_SETUP_INTR
+name|bus_setup_intr
 argument_list|(
-name|ppbus
-argument_list|,
 name|dev
 argument_list|,
 name|sc

@@ -1177,7 +1177,8 @@ name|parent
 argument_list|,
 name|LPT_NAME
 argument_list|,
-literal|0
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -2975,10 +2976,8 @@ block|{
 comment|/* register our interrupt handler */
 name|err
 operator|=
-name|BUS_SETUP_INTR
+name|bus_setup_intr
 argument_list|(
-name|ppbus
-argument_list|,
 name|lptdev
 argument_list|,
 name|sc

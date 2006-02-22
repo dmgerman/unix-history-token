@@ -440,7 +440,8 @@ name|parent
 argument_list|,
 literal|"ppi"
 argument_list|,
-literal|0
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -949,13 +950,8 @@ name|intr_resource
 condition|)
 block|{
 comment|/* register our interrupt handler */
-name|BUS_SETUP_INTR
+name|bus_setup_intr
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|ppidev
-argument_list|)
-argument_list|,
 name|ppidev
 argument_list|,
 name|ppi
