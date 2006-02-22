@@ -323,11 +323,6 @@ operator|->
 name|ps_mtx
 argument_list|)
 expr_stmt|;
-name|_PHOLD
-argument_list|(
-name|p2
-argument_list|)
-expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p2
