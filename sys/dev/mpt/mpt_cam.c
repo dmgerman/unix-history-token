@@ -1476,12 +1476,21 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* if (error != EFBIG) */
+if|if
+condition|(
+name|error
+operator|!=
+name|EFBIG
+operator|&&
+name|error
+operator|!=
+name|ENOMEM
+condition|)
 name|mpt_prt
 argument_list|(
 name|mpt
 argument_list|,
-literal|"bus_dmamap_load returned %d\n"
+literal|"mpt_execute_req: err %d\n"
 argument_list|,
 name|error
 argument_list|)
