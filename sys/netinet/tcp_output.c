@@ -1216,6 +1216,14 @@ name|snd_una
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|tp
+operator|->
+name|t_state
+operator|!=
+name|TCPS_SYN_RECEIVED
+condition|)
 name|flags
 operator|&=
 operator|~

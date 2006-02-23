@@ -5919,7 +5919,11 @@ name|tp
 operator|->
 name|t_flags
 operator||=
+operator|(
 name|TF_ACKNOW
+operator||
+name|TF_NEEDSYN
+operator|)
 expr_stmt|;
 name|callout_stop
 argument_list|(
