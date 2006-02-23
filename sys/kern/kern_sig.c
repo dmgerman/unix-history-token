@@ -12756,15 +12756,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|struct
-name|proc
-modifier|*
-name|p1
-init|=
-name|curthread
-operator|->
-name|td_proc
-decl_stmt|;
 name|int
 name|n
 decl_stmt|;
@@ -12793,7 +12784,7 @@ if|if
 condition|(
 name|p
 operator|==
-name|p1
+name|curproc
 condition|)
 name|n
 operator|++
