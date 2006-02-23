@@ -1398,27 +1398,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Set the wakeup time: */
-name|curthread
-operator|->
-name|wakeup_time
-operator|.
-name|tv_sec
-operator|=
-name|abstime
-operator|->
-name|tv_sec
-expr_stmt|;
-name|curthread
-operator|->
-name|wakeup_time
-operator|.
-name|tv_nsec
-operator|=
-name|abstime
-operator|->
-name|tv_nsec
-expr_stmt|;
 comment|/* Reset the timeout and interrupted flags: */
 name|curthread
 operator|->
@@ -1495,6 +1474,27 @@ name|curthread
 argument_list|,
 name|curthread
 argument_list|)
+expr_stmt|;
+comment|/* Set the wakeup time: */
+name|curthread
+operator|->
+name|wakeup_time
+operator|.
+name|tv_sec
+operator|=
+name|abstime
+operator|->
+name|tv_sec
+expr_stmt|;
+name|curthread
+operator|->
+name|wakeup_time
+operator|.
+name|tv_nsec
+operator|=
+name|abstime
+operator|->
+name|tv_nsec
 expr_stmt|;
 name|THR_SET_STATE
 argument_list|(
