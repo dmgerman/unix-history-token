@@ -3603,19 +3603,6 @@ name|v_pollinfo
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|vp
-operator|->
-name|v_mount
-condition|)
-name|vfs_rel
-argument_list|(
-name|vp
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INVARIANTS
@@ -4264,6 +4251,12 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
+name|vp
+operator|->
+name|v_mount
+operator|=
+name|NULL
+expr_stmt|;
 name|VNASSERT
 argument_list|(
 name|mp
@@ -4296,7 +4289,11 @@ operator|->
 name|mnt_nvnodelistsize
 operator|--
 expr_stmt|;
-comment|/* mnt ref is released in vdestroy. */
+name|MNT_REL
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 name|MNT_IUNLOCK
 argument_list|(
 name|mp
