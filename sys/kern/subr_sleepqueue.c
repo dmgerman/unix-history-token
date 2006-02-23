@@ -1586,7 +1586,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If there were pending signals and this thread is still 		 * on the sleep queue, remove it from the sleep queue. 		 */
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1596,6 +1595,7 @@ name|sc_lock
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * There were pending signals and this thread is still 	 * on the sleep queue, remove it from the sleep queue. 	 */
 name|sq
 operator|=
 name|sleepq_lookup
