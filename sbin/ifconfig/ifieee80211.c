@@ -148,6 +148,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ifconfig.h"
 end_include
 
@@ -7287,38 +7293,150 @@ value|78
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|col
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|spacer
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_function
+specifier|static
+name|void
 name|LINE_BREAK
-parameter_list|()
-value|do {			\ 	if (spacer != '\t') {			\ 		printf("\n");			\ 		spacer = '\t';			\ 	}					\ 	col = 8;
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|spacer
+operator|!=
+literal|'\t'
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|spacer
+operator|=
+literal|'\t'
+expr_stmt|;
+block|}
+name|col
+operator|=
+literal|8
+expr_stmt|;
 comment|/* 8-col tab */
-value|\ } while (0)
-end_define
+block|}
+end_function
 
-begin_define
-define|#
-directive|define
+begin_function
+specifier|static
+name|void
 name|LINE_CHECK
 parameter_list|(
+specifier|const
+name|char
+modifier|*
 name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {		\ 	col += sizeof(fmt)-2;			\ 	if (col> MAXCOL) {			\ 		LINE_BREAK();			\ 		col += sizeof(fmt)-2;		\ 	}					\ 	printf(fmt, __VA_ARGS__);		\ 	spacer = ' ';				\ } while (0)
-end_define
+block|{
+name|char
+name|buf
+index|[
+literal|80
+index|]
+decl_stmt|;
+name|va_list
+name|ap
+decl_stmt|;
+name|int
+name|n
+decl_stmt|;
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+name|n
+operator|=
+name|vsnprintf
+argument_list|(
+name|buf
+operator|+
+literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+name|col
+operator|+=
+literal|1
+operator|+
+name|n
+expr_stmt|;
+if|if
+condition|(
+name|col
+operator|>
+name|MAXCOL
+condition|)
+block|{
+name|LINE_BREAK
+argument_list|()
+expr_stmt|;
+name|col
+operator|+=
+name|n
+expr_stmt|;
+block|}
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+name|spacer
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+name|spacer
+operator|=
+literal|' '
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -7391,9 +7509,7 @@ case|:
 comment|/* compatibility */
 name|LINE_CHECK
 argument_list|(
-literal|"%cwepkey %u:%s"
-argument_list|,
-name|spacer
+literal|"wepkey %u:%s"
 argument_list|,
 name|ik
 operator|->
@@ -7437,9 +7553,7 @@ expr_stmt|;
 comment|/* ignore MIC for now */
 name|LINE_CHECK
 argument_list|(
-literal|"%cTKIP %u:%u-bit"
-argument_list|,
-name|spacer
+literal|"TKIP %u:%u-bit"
 argument_list|,
 name|ik
 operator|->
@@ -7458,9 +7572,7 @@ name|IEEE80211_CIPHER_AES_OCB
 case|:
 name|LINE_CHECK
 argument_list|(
-literal|"%cAES-OCB %u:%u-bit"
-argument_list|,
-name|spacer
+literal|"AES-OCB %u:%u-bit"
 argument_list|,
 name|ik
 operator|->
@@ -7479,9 +7591,7 @@ name|IEEE80211_CIPHER_AES_CCM
 case|:
 name|LINE_CHECK
 argument_list|(
-literal|"%cAES-CCM %u:%u-bit"
-argument_list|,
-name|spacer
+literal|"AES-CCM %u:%u-bit"
 argument_list|,
 name|ik
 operator|->
@@ -7500,9 +7610,7 @@ name|IEEE80211_CIPHER_CKIP
 case|:
 name|LINE_CHECK
 argument_list|(
-literal|"%cCKIP %u:%u-bit"
-argument_list|,
-name|spacer
+literal|"CKIP %u:%u-bit"
 argument_list|,
 name|ik
 operator|->
@@ -7521,9 +7629,7 @@ name|IEEE80211_CIPHER_NONE
 case|:
 name|LINE_CHECK
 argument_list|(
-literal|"%cNULL %u:%u-bit"
-argument_list|,
-name|spacer
+literal|"NULL %u:%u-bit"
 argument_list|,
 name|ik
 operator|->
@@ -7540,9 +7646,7 @@ break|break;
 default|default:
 name|LINE_CHECK
 argument_list|(
-literal|"%cUNKNOWN (0x%x) %u:%u-bit"
-argument_list|,
-name|spacer
+literal|"UNKNOWN (0x%x) %u:%u-bit"
 argument_list|,
 name|ik
 operator|->
@@ -8212,9 +8316,7 @@ name|IEEE80211_AUTH_NONE
 case|:
 name|LINE_CHECK
 argument_list|(
-literal|"%cauthmode NONE"
-argument_list|,
-name|spacer
+literal|"authmode NONE"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -8223,9 +8325,7 @@ name|IEEE80211_AUTH_OPEN
 case|:
 name|LINE_CHECK
 argument_list|(
-literal|"%cauthmode OPEN"
-argument_list|,
-name|spacer
+literal|"authmode OPEN"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -8234,9 +8334,7 @@ name|IEEE80211_AUTH_SHARED
 case|:
 name|LINE_CHECK
 argument_list|(
-literal|"%cauthmode SHARED"
-argument_list|,
-name|spacer
+literal|"authmode SHARED"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -8245,9 +8343,7 @@ name|IEEE80211_AUTH_8021X
 case|:
 name|LINE_CHECK
 argument_list|(
-literal|"%cauthmode 802.1x"
-argument_list|,
-name|spacer
+literal|"authmode 802.1x"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -8301,9 +8397,7 @@ literal|2
 case|:
 name|LINE_CHECK
 argument_list|(
-literal|"%cauthmode WPA2/802.11i"
-argument_list|,
-name|spacer
+literal|"authmode WPA2/802.11i"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -8312,18 +8406,14 @@ literal|3
 case|:
 name|LINE_CHECK
 argument_list|(
-literal|"%cauthmode WPA1+WPA2/802.11i"
-argument_list|,
-name|spacer
+literal|"authmode WPA1+WPA2/802.11i"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|LINE_CHECK
 argument_list|(
-literal|"%cauthmode WPA"
-argument_list|,
-name|spacer
+literal|"authmode WPA"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -8334,18 +8424,14 @@ name|IEEE80211_AUTH_AUTO
 case|:
 name|LINE_CHECK
 argument_list|(
-literal|"%cauthmode AUTO"
-argument_list|,
-name|spacer
+literal|"authmode AUTO"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|LINE_CHECK
 argument_list|(
-literal|"%cauthmode UNKNOWN (0x%x)"
-argument_list|,
-name|spacer
+literal|"authmode UNKNOWN (0x%x)"
 argument_list|,
 name|ireq
 operator|.
@@ -8404,9 +8490,7 @@ name|IEEE80211_WEP_OFF
 case|:
 name|LINE_CHECK
 argument_list|(
-literal|"%cprivacy OFF"
-argument_list|,
-name|spacer
+literal|"privacy OFF"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -8415,9 +8499,7 @@ name|IEEE80211_WEP_ON
 case|:
 name|LINE_CHECK
 argument_list|(
-literal|"%cprivacy ON"
-argument_list|,
-name|spacer
+literal|"privacy ON"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -8426,18 +8508,14 @@ name|IEEE80211_WEP_MIXED
 case|:
 name|LINE_CHECK
 argument_list|(
-literal|"%cprivacy MIXED"
-argument_list|,
-name|spacer
+literal|"privacy MIXED"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|LINE_CHECK
 argument_list|(
-literal|"%cprivacy UNKNOWN (0x%x)"
-argument_list|,
-name|spacer
+literal|"privacy UNKNOWN (0x%x)"
 argument_list|,
 name|wepmode
 argument_list|)
@@ -8486,9 +8564,7 @@ literal|1
 condition|)
 name|LINE_CHECK
 argument_list|(
-literal|"%cdeftxkey %d"
-argument_list|,
-name|spacer
+literal|"deftxkey %d"
 argument_list|,
 name|ireq
 operator|.
@@ -8508,9 +8584,7 @@ name|verbose
 condition|)
 name|LINE_CHECK
 argument_list|(
-literal|"%cdeftxkey UNDEF"
-argument_list|,
-name|spacer
+literal|"deftxkey UNDEF"
 argument_list|)
 expr_stmt|;
 name|ireq
@@ -8716,9 +8790,7 @@ name|IEEE80211_POWERSAVE_OFF
 case|:
 name|LINE_CHECK
 argument_list|(
-literal|"%cpowersavemode OFF"
-argument_list|,
-name|spacer
+literal|"powersavemode OFF"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -8727,9 +8799,7 @@ name|IEEE80211_POWERSAVE_CAM
 case|:
 name|LINE_CHECK
 argument_list|(
-literal|"%cpowersavemode CAM"
-argument_list|,
-name|spacer
+literal|"powersavemode CAM"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -8738,9 +8808,7 @@ name|IEEE80211_POWERSAVE_PSP
 case|:
 name|LINE_CHECK
 argument_list|(
-literal|"%cpowersavemode PSP"
-argument_list|,
-name|spacer
+literal|"powersavemode PSP"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -8749,9 +8817,7 @@ name|IEEE80211_POWERSAVE_PSP_CAM
 case|:
 name|LINE_CHECK
 argument_list|(
-literal|"%cpowersavemode PSP-CAM"
-argument_list|,
-name|spacer
+literal|"powersavemode PSP-CAM"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -8779,9 +8845,7 @@ literal|1
 condition|)
 name|LINE_CHECK
 argument_list|(
-literal|"%cpowersavesleep %d"
-argument_list|,
-name|spacer
+literal|"powersavesleep %d"
 argument_list|,
 name|ireq
 operator|.
@@ -8813,9 +8877,7 @@ literal|1
 condition|)
 name|LINE_CHECK
 argument_list|(
-literal|"%ctxpowmax %d"
-argument_list|,
-name|spacer
+literal|"txpowmax %d"
 argument_list|,
 name|ireq
 operator|.
@@ -8850,9 +8912,7 @@ literal|1
 condition|)
 name|LINE_CHECK
 argument_list|(
-literal|"%ctxpower %d"
-argument_list|,
-name|spacer
+literal|"txpower %d"
 argument_list|,
 name|ireq
 operator|.
@@ -8894,9 +8954,7 @@ name|verbose
 condition|)
 name|LINE_CHECK
 argument_list|(
-literal|"%crtsthreshold %d"
-argument_list|,
-name|spacer
+literal|"rtsthreshold %d"
 argument_list|,
 name|ireq
 operator|.
@@ -8949,17 +9007,13 @@ literal|11
 condition|)
 name|LINE_CHECK
 argument_list|(
-literal|"%cmcastrate 5.5"
-argument_list|,
-name|spacer
+literal|"mcastrate 5.5"
 argument_list|)
 expr_stmt|;
 else|else
 name|LINE_CHECK
 argument_list|(
-literal|"%cmcastrate %d"
-argument_list|,
-name|spacer
+literal|"mcastrate %d"
 argument_list|,
 name|ireq
 operator|.
@@ -9004,9 +9058,7 @@ name|verbose
 condition|)
 name|LINE_CHECK
 argument_list|(
-literal|"%cfragthreshold %d"
-argument_list|,
-name|spacer
+literal|"fragthreshold %d"
 argument_list|,
 name|ireq
 operator|.
@@ -9059,9 +9111,7 @@ name|i_val
 condition|)
 name|LINE_CHECK
 argument_list|(
-literal|"%cpureg"
-argument_list|,
-name|spacer
+literal|"pureg"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -9071,9 +9121,7 @@ name|verbose
 condition|)
 name|LINE_CHECK
 argument_list|(
-literal|"%c-pureg"
-argument_list|,
-name|spacer
+literal|"-pureg"
 argument_list|)
 expr_stmt|;
 block|}
@@ -9111,9 +9159,7 @@ name|IEEE80211_PROTMODE_OFF
 case|:
 name|LINE_CHECK
 argument_list|(
-literal|"%cprotmode OFF"
-argument_list|,
-name|spacer
+literal|"protmode OFF"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9122,9 +9168,7 @@ name|IEEE80211_PROTMODE_CTS
 case|:
 name|LINE_CHECK
 argument_list|(
-literal|"%cprotmode CTS"
-argument_list|,
-name|spacer
+literal|"protmode CTS"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9133,18 +9177,14 @@ name|IEEE80211_PROTMODE_RTSCTS
 case|:
 name|LINE_CHECK
 argument_list|(
-literal|"%cprotmode RTSCTS"
-argument_list|,
-name|spacer
+literal|"protmode RTSCTS"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|LINE_CHECK
 argument_list|(
-literal|"%cprotmode UNKNOWN (0x%x)"
-argument_list|,
-name|spacer
+literal|"protmode UNKNOWN (0x%x)"
 argument_list|,
 name|ireq
 operator|.
@@ -9189,9 +9229,7 @@ name|wme
 condition|)
 name|LINE_CHECK
 argument_list|(
-literal|"%cwme"
-argument_list|,
-name|spacer
+literal|"wme"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -9201,9 +9239,7 @@ name|verbose
 condition|)
 name|LINE_CHECK
 argument_list|(
-literal|"%c-wme"
-argument_list|,
-name|spacer
+literal|"-wme"
 argument_list|)
 expr_stmt|;
 block|}
@@ -9242,9 +9278,7 @@ name|i_val
 condition|)
 name|LINE_CHECK
 argument_list|(
-literal|"%cburst"
-argument_list|,
-name|spacer
+literal|"burst"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -9254,9 +9288,7 @@ name|verbose
 condition|)
 name|LINE_CHECK
 argument_list|(
-literal|"%c-burst"
-argument_list|,
-name|spacer
+literal|"-burst"
 argument_list|)
 expr_stmt|;
 block|}
@@ -9297,9 +9329,7 @@ name|i_val
 condition|)
 name|LINE_CHECK
 argument_list|(
-literal|"%cssid HIDE"
-argument_list|,
-name|spacer
+literal|"ssid HIDE"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -9309,9 +9339,7 @@ name|verbose
 condition|)
 name|LINE_CHECK
 argument_list|(
-literal|"%cssid SHOW"
-argument_list|,
-name|spacer
+literal|"ssid SHOW"
 argument_list|)
 expr_stmt|;
 block|}
@@ -9346,9 +9374,7 @@ name|i_val
 condition|)
 name|LINE_CHECK
 argument_list|(
-literal|"%c-apbridge"
-argument_list|,
-name|spacer
+literal|"-apbridge"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -9358,9 +9384,7 @@ name|verbose
 condition|)
 name|LINE_CHECK
 argument_list|(
-literal|"%capbridge"
-argument_list|,
-name|spacer
+literal|"apbridge"
 argument_list|)
 expr_stmt|;
 block|}
@@ -9387,9 +9411,7 @@ literal|1
 condition|)
 name|LINE_CHECK
 argument_list|(
-literal|"%cdtimperiod %u"
-argument_list|,
-name|spacer
+literal|"dtimperiod %u"
 argument_list|,
 name|ireq
 operator|.
@@ -9444,9 +9466,7 @@ name|IEEE80211_ROAMING_DEVICE
 case|:
 name|LINE_CHECK
 argument_list|(
-literal|"%croaming DEVICE"
-argument_list|,
-name|spacer
+literal|"roaming DEVICE"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9455,9 +9475,7 @@ name|IEEE80211_ROAMING_AUTO
 case|:
 name|LINE_CHECK
 argument_list|(
-literal|"%croaming AUTO"
-argument_list|,
-name|spacer
+literal|"roaming AUTO"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9466,18 +9484,14 @@ name|IEEE80211_ROAMING_MANUAL
 case|:
 name|LINE_CHECK
 argument_list|(
-literal|"%croaming MANUAL"
-argument_list|,
-name|spacer
+literal|"roaming MANUAL"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|LINE_CHECK
 argument_list|(
-literal|"%croaming UNKNOWN (0x%x)"
-argument_list|,
-name|spacer
+literal|"roaming UNKNOWN (0x%x)"
 argument_list|,
 name|ireq
 operator|.
@@ -9519,9 +9533,7 @@ name|i_val
 condition|)
 name|LINE_CHECK
 argument_list|(
-literal|"%cbintval %u"
-argument_list|,
-name|spacer
+literal|"bintval %u"
 argument_list|,
 name|ireq
 operator|.
@@ -9535,9 +9547,7 @@ name|verbose
 condition|)
 name|LINE_CHECK
 argument_list|(
-literal|"%cbintval %u"
-argument_list|,
-name|spacer
+literal|"bintval %u"
 argument_list|,
 name|ireq
 operator|.
@@ -9596,9 +9606,7 @@ name|i_val
 condition|)
 name|LINE_CHECK
 argument_list|(
-literal|"%ccountermeasures"
-argument_list|,
-name|spacer
+literal|"countermeasures"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -9608,9 +9616,7 @@ name|verbose
 condition|)
 name|LINE_CHECK
 argument_list|(
-literal|"%c-countermeasures"
-argument_list|,
-name|spacer
+literal|"-countermeasures"
 argument_list|)
 expr_stmt|;
 block|}
@@ -9618,7 +9624,7 @@ if|#
 directive|if
 literal|0
 comment|/* XXX not interesting with WPA done in user space */
-block|ireq.i_type = IEEE80211_IOC_KEYMGTALGS; 		if (ioctl(s, SIOCG80211,&ireq) != -1) { 		}  		ireq.i_type = IEEE80211_IOC_MCASTCIPHER; 		if (ioctl(s, SIOCG80211,&ireq) != -1) { 			printf("%cmcastcipher ", spacer); 			printcipher(s,&ireq, IEEE80211_IOC_MCASTKEYLEN); 			spacer = ' '; 		}  		ireq.i_type = IEEE80211_IOC_UCASTCIPHER; 		if (ioctl(s, SIOCG80211,&ireq) != -1) { 			printf("%cucastcipher ", spacer); 			printcipher(s,&ireq, IEEE80211_IOC_UCASTKEYLEN); 		}  		if (wpa& 2) { 			ireq.i_type = IEEE80211_IOC_RSNCAPS; 			if (ioctl(s, SIOCG80211,&ireq) != -1) { 				printf("%cRSN caps 0x%x", spacer, ireq.i_val); 				spacer = ' '; 			} 		}  		ireq.i_type = IEEE80211_IOC_UCASTCIPHERS; 		if (ioctl(s, SIOCG80211,&ireq) != -1) { 		}
+block|ireq.i_type = IEEE80211_IOC_KEYMGTALGS; 		if (ioctl(s, SIOCG80211,&ireq) != -1) { 		}  		ireq.i_type = IEEE80211_IOC_MCASTCIPHER; 		if (ioctl(s, SIOCG80211,&ireq) != -1) { 			LINE_CHECK("mcastcipher "); 			printcipher(s,&ireq, IEEE80211_IOC_MCASTKEYLEN); 			spacer = ' '; 		}  		ireq.i_type = IEEE80211_IOC_UCASTCIPHER; 		if (ioctl(s, SIOCG80211,&ireq) != -1) { 			LINE_CHECK("ucastcipher "); 			printcipher(s,&ireq, IEEE80211_IOC_UCASTKEYLEN); 		}  		if (wpa& 2) { 			ireq.i_type = IEEE80211_IOC_RSNCAPS; 			if (ioctl(s, SIOCG80211,&ireq) != -1) { 				LINE_CHECK("RSN caps 0x%x", ireq.i_val); 				spacer = ' '; 			} 		}  		ireq.i_type = IEEE80211_IOC_UCASTCIPHERS; 		if (ioctl(s, SIOCG80211,&ireq) != -1) { 		}
 endif|#
 directive|endif
 name|LINE_BREAK
