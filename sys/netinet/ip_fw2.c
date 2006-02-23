@@ -5325,6 +5325,9 @@ argument_list|(
 literal|"ipfw: add parent failed\n"
 argument_list|)
 expr_stmt|;
+name|IPFW_DYN_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 literal|1
 return|;
