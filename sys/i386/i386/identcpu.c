@@ -2919,10 +2919,9 @@ literal|"\004MON"
 comment|/* MONITOR/MWAIT Instructions */
 literal|"\005DS_CPL"
 comment|/* CPL Qualified Debug Store */
-literal|"\006<b5>"
-comment|/* Machine specific registers */
+literal|"\006VMX"
+comment|/* Virtual Machine Extensions */
 literal|"\007<b6>"
-comment|/* Physical address extension */
 literal|"\010EST"
 comment|/* Enhanced SpeedStep */
 literal|"\011TM2"
