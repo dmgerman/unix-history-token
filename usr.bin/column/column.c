@@ -611,6 +611,8 @@ operator|=
 name|roundup
 argument_list|(
 name|maxlength
+operator|+
+name|TAB
 argument_list|,
 name|TAB
 argument_list|)
@@ -759,6 +761,8 @@ operator|=
 name|roundup
 argument_list|(
 name|chcnt
+operator|+
+name|TAB
 argument_list|,
 name|TAB
 argument_list|)
@@ -920,6 +924,8 @@ operator|=
 name|roundup
 argument_list|(
 name|chcnt
+operator|+
+name|TAB
 argument_list|,
 name|TAB
 argument_list|)
