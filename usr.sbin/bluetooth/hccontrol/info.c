@@ -178,7 +178,14 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"LMP version: %#02x\n"
+literal|"LMP version: %s [%#02x]\n"
+argument_list|,
+name|hci_lmpver2str
+argument_list|(
+name|rp
+operator|.
+name|lmp_version
+argument_list|)
 argument_list|,
 name|rp
 operator|.
