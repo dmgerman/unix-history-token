@@ -2073,6 +2073,10 @@ name|device_t
 name|dev
 decl_stmt|;
 comment|/* device handle */
+name|device_t
+name|parent
+decl_stmt|;
+comment|/* channel handle */
 union|union
 block|{
 struct|struct
