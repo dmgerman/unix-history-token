@@ -261,7 +261,7 @@ comment|/* Next callout to be checked. */
 end_comment
 
 begin_comment
-comment|/**  * Locked by callout_lock:  *   curr_callout    - If a callout is in progress, it is curr_callout.  *                     If curr_callout is non-NULL, threads waiting on  *                     callout_wait will be woken up as soon as the   *                     relevant callout completes.  *   curr_cancelled  - Changing to 1 with both callout_lock and c_mtx held  *                     guarantees that the current callout will not run.  *                     The softclock() function sets this to 0 before it  *                     drops callout_lock to acquire c_mtx, and it calls  *                     the handler only if curr_cancelled still 0 when  *                     c_mtx is successfully acquired.  *   wakeup_ctr      - Incremented every time a thread wants to wait  *                     for a callout to complete.  Modified only when  *                     curr_callout is non-NULL.  *   wakeup_needed   - If a thread is waiting on callout_wait, then  *                     wakeup_needed is nonzero.  Increased only when  *                     cutt_callout is non-NULL.  */
+comment|/**  * Locked by callout_lock:  *   curr_callout    - If a callout is in progress, it is curr_callout.  *                     If curr_callout is non-NULL, threads waiting in  *                     callout_drain() will be woken up as soon as the   *                     relevant callout completes.  *   curr_cancelled  - Changing to 1 with both callout_lock and c_mtx held  *                     guarantees that the current callout will not run.  *                     The softclock() function sets this to 0 before it  *                     drops callout_lock to acquire c_mtx, and it calls  *                     the handler only if curr_cancelled is still 0 after  *                     c_mtx is successfully acquired.  *   callout_wait    - If a thread is waiting in callout_drain(), then  *                     callout_wait is nonzero.  Set only when  *                     curr_callout is non-NULL.  */
 end_comment
 
 begin_decl_stmt
@@ -283,41 +283,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|wakeup_ctr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|wakeup_needed
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/**  * Locked by callout_wait_lock:  *   callout_wait    - If wakeup_needed is set, callout_wait will be  *                     triggered after the current callout finishes.  *   wakeup_done_ctr - Set to the current value of wakeup_ctr after  *                     callout_wait is triggered.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|mtx
-name|callout_wait_lock
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|cv
 name|callout_wait
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|wakeup_done_ctr
 decl_stmt|;
 end_decl_stmt
 
@@ -519,26 +485,6 @@ operator||
 name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|callout_wait_lock
-argument_list|,
-literal|"callout_wait_lock"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
-name|cv_init
-argument_list|(
-operator|&
-name|callout_wait
-argument_list|,
-literal|"callout_wait"
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -587,9 +533,6 @@ name|mtxcalls
 decl_stmt|;
 name|int
 name|gcalls
-decl_stmt|;
-name|int
-name|wakeup_cookie
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -915,14 +858,8 @@ argument_list|(
 name|c_mtx
 argument_list|)
 expr_stmt|;
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|callout_lock
-argument_list|)
-expr_stmt|;
 goto|goto
-name|done_locked
+name|skip
 goto|;
 block|}
 comment|/* The callout cannot be stopped now. */
@@ -1104,63 +1041,31 @@ argument_list|(
 name|c_mtx
 argument_list|)
 expr_stmt|;
+name|skip
+label|:
 name|mtx_lock_spin
 argument_list|(
 operator|&
 name|callout_lock
 argument_list|)
 expr_stmt|;
-name|done_locked
-label|:
 name|curr_callout
 operator|=
 name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|wakeup_needed
+name|callout_wait
 condition|)
 block|{
-comment|/* 					 * There might be someone waiting 					 * for the callout to complete. 					 */
-name|wakeup_cookie
-operator|=
-name|wakeup_ctr
-expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|callout_lock
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|callout_wait_lock
-argument_list|)
-expr_stmt|;
-name|cv_broadcast
+comment|/* 					 * There is someone waiting 					 * for the callout to complete. 					 */
+name|wakeup
 argument_list|(
 operator|&
 name|callout_wait
 argument_list|)
 expr_stmt|;
-name|wakeup_done_ctr
-operator|=
-name|wakeup_cookie
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|callout_wait_lock
-argument_list|)
-expr_stmt|;
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|callout_lock
-argument_list|)
-expr_stmt|;
-name|wakeup_needed
+name|callout_wait
 operator|=
 literal|0
 expr_stmt|;
@@ -1545,7 +1450,7 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|wakeup_needed
+name|callout_wait
 condition|)
 block|{
 comment|/* 			 * Someone has called callout_drain to kill this 			 * callout.  Don't reschedule. 			 */
@@ -1708,8 +1613,6 @@ decl_stmt|;
 block|{
 name|int
 name|use_mtx
-decl_stmt|,
-name|wakeup_cookie
 decl_stmt|;
 if|if
 condition|(
@@ -1767,7 +1670,7 @@ operator|&
 name|callout_lock
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Don't attempt to delete a callout that's not on the queue. 	 */
+comment|/* 	 * If the callout isn't pending, it's not on the queue, so 	 * don't attempt to remove it from the queue.  We can try to 	 * stop it by other means however. 	 */
 if|if
 condition|(
 operator|!
@@ -1787,6 +1690,7 @@ operator|&=
 operator|~
 name|CALLOUT_ACTIVE
 expr_stmt|;
+comment|/* 		 * If it wasn't on the queue and it isn't the current 		 * callout, then we can't stop it, so just bail. 		 */
 if|if
 condition|(
 name|c
@@ -1811,52 +1715,32 @@ condition|(
 name|safe
 condition|)
 block|{
-comment|/* We need to wait until the callout is finished. */
-name|wakeup_needed
+comment|/* 			 * The current callout is running (or just 			 * about to run) and blocking is allowed, so 			 * just wait for the current invocation to 			 * finish. 			 */
+while|while
+condition|(
+name|c
+operator|==
+name|curr_callout
+condition|)
+block|{
+name|callout_wait
 operator|=
 literal|1
 expr_stmt|;
-name|wakeup_cookie
-operator|=
-name|wakeup_ctr
-operator|++
-expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|callout_lock
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|callout_wait_lock
-argument_list|)
-expr_stmt|;
-comment|/* 			 * Check to make sure that softclock() didn't 			 * do the wakeup in between our dropping 			 * callout_lock and picking up callout_wait_lock 			 */
-if|if
-condition|(
-name|wakeup_cookie
-operator|-
-name|wakeup_done_ctr
-operator|>
-literal|0
-condition|)
-name|cv_wait
+name|msleep_spin
 argument_list|(
 operator|&
 name|callout_wait
 argument_list|,
 operator|&
-name|callout_wait_lock
+name|callout_lock
+argument_list|,
+literal|"codrain"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|callout_wait_lock
-argument_list|)
-expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -1867,7 +1751,7 @@ operator|!
 name|curr_cancelled
 condition|)
 block|{
-comment|/* We can stop the callout before it runs. */
+comment|/* 			 * The current callout is waiting for it's 			 * mutex which we hold.  Cancel the callout 			 * and return.  After our caller drops the 			 * mutex, the callout will be skipped in 			 * softclock(). 			 */
 name|curr_cancelled
 operator|=
 literal|1
@@ -1884,7 +1768,6 @@ literal|1
 operator|)
 return|;
 block|}
-else|else
 name|mtx_unlock_spin
 argument_list|(
 operator|&
