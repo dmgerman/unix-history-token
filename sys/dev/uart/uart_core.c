@@ -300,7 +300,7 @@ name|sc
 operator|->
 name|sc_ttypend
 argument_list|,
-name|UART_IPEND_BREAK
+name|SER_INT_BREAK
 argument_list|)
 expr_stmt|;
 block|}
@@ -360,7 +360,7 @@ name|sc
 operator|->
 name|sc_ttypend
 argument_list|,
-name|UART_IPEND_RXREADY
+name|SER_INT_RXREADY
 argument_list|)
 expr_stmt|;
 block|}
@@ -492,7 +492,7 @@ name|sc
 operator|->
 name|sc_ttypend
 argument_list|,
-name|UART_IPEND_RXREADY
+name|SER_INT_RXREADY
 argument_list|)
 expr_stmt|;
 else|else
@@ -604,11 +604,11 @@ name|new
 operator||=
 name|sig
 operator|&
-name|UART_IPEND_SIGMASK
+name|SER_INT_SIGMASK
 expr_stmt|;
 name|new
 operator||=
-name|UART_IPEND_SIGCHG
+name|SER_INT_SIGCHG
 expr_stmt|;
 block|}
 do|while
@@ -665,7 +665,7 @@ name|sc
 operator|->
 name|sc_ttypend
 argument_list|,
-name|UART_IPEND_TXIDLE
+name|SER_INT_TXIDLE
 argument_list|)
 expr_stmt|;
 block|}
@@ -719,7 +719,7 @@ if|if
 condition|(
 name|ipend
 operator|&
-name|UART_IPEND_OVERRUN
+name|SER_INT_OVERRUN
 condition|)
 name|uart_intr_overrun
 argument_list|(
@@ -730,7 +730,7 @@ if|if
 condition|(
 name|ipend
 operator|&
-name|UART_IPEND_BREAK
+name|SER_INT_BREAK
 condition|)
 name|uart_intr_break
 argument_list|(
@@ -741,7 +741,7 @@ if|if
 condition|(
 name|ipend
 operator|&
-name|UART_IPEND_RXREADY
+name|SER_INT_RXREADY
 condition|)
 name|uart_intr_rxready
 argument_list|(
@@ -752,7 +752,7 @@ if|if
 condition|(
 name|ipend
 operator|&
-name|UART_IPEND_SIGCHG
+name|SER_INT_SIGCHG
 condition|)
 name|uart_intr_sigchg
 argument_list|(
@@ -763,7 +763,7 @@ if|if
 condition|(
 name|ipend
 operator|&
-name|UART_IPEND_TXIDLE
+name|SER_INT_TXIDLE
 condition|)
 name|uart_intr_txidle
 argument_list|(

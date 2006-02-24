@@ -2648,7 +2648,7 @@ name|LSR_OE
 condition|)
 name|ipend
 operator||=
-name|UART_IPEND_OVERRUN
+name|SER_INT_OVERRUN
 expr_stmt|;
 if|if
 condition|(
@@ -2658,7 +2658,7 @@ name|LSR_BI
 condition|)
 name|ipend
 operator||=
-name|UART_IPEND_BREAK
+name|SER_INT_BREAK
 expr_stmt|;
 if|if
 condition|(
@@ -2668,7 +2668,7 @@ name|LSR_RXRDY
 condition|)
 name|ipend
 operator||=
-name|UART_IPEND_RXREADY
+name|SER_INT_RXREADY
 expr_stmt|;
 block|}
 else|else
@@ -2689,12 +2689,12 @@ name|IIR_TXRDY
 condition|)
 name|ipend
 operator||=
-name|UART_IPEND_TXIDLE
+name|SER_INT_TXIDLE
 expr_stmt|;
 else|else
 name|ipend
 operator||=
-name|UART_IPEND_SIGCHG
+name|SER_INT_SIGCHG
 expr_stmt|;
 block|}
 return|return

@@ -2663,7 +2663,7 @@ name|SAB_ISR1_BRKT
 condition|)
 name|ipend
 operator||=
-name|UART_IPEND_BREAK
+name|SER_INT_BREAK
 expr_stmt|;
 if|if
 condition|(
@@ -2673,7 +2673,7 @@ name|SAB_ISR0_RFO
 condition|)
 name|ipend
 operator||=
-name|UART_IPEND_OVERRUN
+name|SER_INT_OVERRUN
 expr_stmt|;
 if|if
 condition|(
@@ -2687,7 +2687,7 @@ operator|)
 condition|)
 name|ipend
 operator||=
-name|UART_IPEND_RXREADY
+name|SER_INT_RXREADY
 expr_stmt|;
 if|if
 condition|(
@@ -2705,7 +2705,7 @@ operator|)
 condition|)
 name|ipend
 operator||=
-name|UART_IPEND_SIGCHG
+name|SER_INT_SIGCHG
 expr_stmt|;
 if|if
 condition|(
@@ -2715,7 +2715,7 @@ name|SAB_ISR1_ALLS
 condition|)
 name|ipend
 operator||=
-name|UART_IPEND_TXIDLE
+name|SER_INT_TXIDLE
 expr_stmt|;
 return|return
 operator|(

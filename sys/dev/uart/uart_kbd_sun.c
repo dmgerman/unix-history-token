@@ -1741,7 +1741,7 @@ operator|!
 operator|(
 name|pend
 operator|&
-name|UART_IPEND_MASK
+name|SER_INT_MASK
 operator|)
 condition|)
 return|return;
@@ -1749,7 +1749,7 @@ if|if
 condition|(
 name|pend
 operator|&
-name|UART_IPEND_RXREADY
+name|SER_INT_RXREADY
 condition|)
 block|{
 if|if

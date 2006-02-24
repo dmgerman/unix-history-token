@@ -1501,7 +1501,7 @@ name|txidle
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Report UART_IPEND_TXIDLE. */
+comment|/* Report SER_INT_TXIDLE. */
 name|sc
 operator|->
 name|sc_rxfifosz
@@ -2056,7 +2056,7 @@ name|IP_RIA
 condition|)
 name|ipend
 operator||=
-name|UART_IPEND_RXREADY
+name|SER_INT_RXREADY
 expr_stmt|;
 if|if
 condition|(
@@ -2088,7 +2088,7 @@ condition|)
 block|{
 name|ipend
 operator||=
-name|UART_IPEND_TXIDLE
+name|SER_INT_TXIDLE
 expr_stmt|;
 name|z8530
 operator|->
@@ -2096,7 +2096,7 @@ name|txidle
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Mask UART_IPEND_TXIDLE. */
+comment|/* Mask SER_INT_TXIDLE. */
 block|}
 block|}
 if|if
@@ -2137,7 +2137,7 @@ name|BES_BRK
 condition|)
 name|ipend
 operator||=
-name|UART_IPEND_BREAK
+name|SER_INT_BREAK
 expr_stmt|;
 name|sig
 operator|=
@@ -2192,7 +2192,7 @@ name|UART_SIGMASK_DELTA
 condition|)
 name|ipend
 operator||=
-name|UART_IPEND_SIGCHG
+name|SER_INT_SIGCHG
 expr_stmt|;
 name|src
 operator|=
@@ -2226,7 +2226,7 @@ argument_list|)
 expr_stmt|;
 name|ipend
 operator||=
-name|UART_IPEND_OVERRUN
+name|SER_INT_OVERRUN
 expr_stmt|;
 block|}
 block|}
@@ -2979,7 +2979,7 @@ name|txidle
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Report UART_IPEND_TXIDLE again. */
+comment|/* Report SER_INT_TXIDLE again. */
 name|mtx_unlock_spin
 argument_list|(
 operator|&
