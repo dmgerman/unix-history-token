@@ -16,8 +16,26 @@ name|_DEV_IC_Z8530_H_
 end_define
 
 begin_comment
-comment|/*  * Channel B control:	0  * Channel B data:	1  * Channel A control:	2  * Channel A data:	3  *  * We expect a seperate subregion for each channel.  */
+comment|/*  * Channel B control:	0  * Channel B data:	1  * Channel A control:	2  * Channel A data:	3  */
 end_comment
+
+begin_comment
+comment|/* The following apply when using a device-scoped bus handle */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHAN_A
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHAN_B
+value|0
+end_define
 
 begin_define
 define|#
@@ -335,7 +353,7 @@ value|9
 end_define
 
 begin_comment
-comment|/* Receive Parameters and Contro. */
+comment|/* Receive Parameters and Control. */
 end_comment
 
 begin_define
