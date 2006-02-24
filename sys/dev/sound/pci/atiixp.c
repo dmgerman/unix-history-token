@@ -2654,9 +2654,6 @@ literal|0
 operator|)
 condition|?
 name|ptr
-operator|&
-operator|~
-name|align
 else|:
 literal|0
 return|;
