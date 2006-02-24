@@ -2356,6 +2356,24 @@ name|port_used
 operator|=
 name|n
 expr_stmt|;
+name|sc
+operator|->
+name|port_bst
+operator|=
+name|rman_get_bustag
+argument_list|(
+name|res
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|port_bsh
+operator|=
+name|rman_get_bushandle
+argument_list|(
+name|res
+argument_list|)
+expr_stmt|;
 comment|/* Re-map i/o table if needed */
 switch|switch
 condition|(
