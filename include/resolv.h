@@ -149,7 +149,7 @@ begin_define
 define|#
 directive|define
 name|RES_DFLRETRY
-value|4
+value|2
 end_define
 
 begin_comment
