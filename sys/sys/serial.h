@@ -107,6 +107,13 @@ begin_comment
 comment|/* data set ready */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SER_MASK_STATE
+value|0x00ff
+end_define
+
 begin_comment
 comment|/* Delta bits, used to indicate which signals should/was affected */
 end_comment
@@ -175,6 +182,66 @@ define|#
 directive|define
 name|SER_DDSR
 value|SER_DELTA(SER_DSR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SER_MASK_DELTA
+value|SER_DELTA(SER_MASK_STATE)
+end_define
+
+begin_comment
+comment|/*  * Specification of interrupt sources typical for serial ports. These are  * useful when some umbrella driver like scc(4) has enough knowledge of  * the hardware to obtain the set of pending interrupts but does not itself  * handle the interrupt. Each interrupt source can be given an interrupt  * resource for which inferior drivers can install handlers. The lower 16  * bits are kept free for the signals above.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SER_INT_OVERRUN
+value|0x010000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SER_INT_BREAK
+value|0x020000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SER_INT_RXREADY
+value|0x040000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SER_INT_SIGCHG
+value|0x080000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SER_INT_TXIDLE
+value|0x100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SER_INT_MASK
+value|0xff0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SER_INT_SIGMASK
+value|(SER_MASK_DELTA | SER_MASK_STATE)
 end_define
 
 begin_endif
