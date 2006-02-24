@@ -598,7 +598,7 @@ operator|=
 name|old
 operator|&
 operator|~
-name|UART_SIGMASK_STATE
+name|SER_MASK_STATE
 expr_stmt|;
 name|new
 operator||=

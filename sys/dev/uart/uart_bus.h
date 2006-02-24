@@ -108,34 +108,6 @@ name|UART_STAT_PARERR
 value|0x0800
 end_define
 
-begin_define
-define|#
-directive|define
-name|UART_SIGMASK_DTE
-value|(SER_DTR | SER_RTS)
-end_define
-
-begin_define
-define|#
-directive|define
-name|UART_SIGMASK_DCE
-value|(SER_DSR | SER_CTS | SER_DCD | SER_RI)
-end_define
-
-begin_define
-define|#
-directive|define
-name|UART_SIGMASK_STATE
-value|(UART_SIGMASK_DTE | UART_SIGMASK_DCE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|UART_SIGMASK_DELTA
-value|(UART_SIGMASK_STATE<< 8)
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef

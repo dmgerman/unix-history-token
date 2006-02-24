@@ -2133,7 +2133,7 @@ operator|=
 name|sig
 operator|&
 operator|~
-name|UART_SIGMASK_DELTA
+name|SER_MASK_DELTA
 expr_stmt|;
 block|}
 do|while
