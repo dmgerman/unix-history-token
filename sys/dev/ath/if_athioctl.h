@@ -36,6 +36,10 @@ name|ast_bmiss
 decl_stmt|;
 comment|/* beacon miss interrupts */
 name|u_int32_t
+name|ast_bmiss_phantom
+decl_stmt|;
+comment|/* beacon miss interrupts */
+name|u_int32_t
 name|ast_bstuck
 decl_stmt|;
 comment|/* beacon stuck interrupts */
@@ -278,6 +282,12 @@ literal|8
 index|]
 decl_stmt|;
 comment|/* tx frames with antenna */
+name|u_int32_t
+name|ast_pad
+index|[
+literal|32
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct

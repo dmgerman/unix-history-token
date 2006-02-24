@@ -56,6 +56,12 @@ name|ATH_TIMEOUT
 value|1000
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATH_RXBUF
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -67,6 +73,17 @@ begin_comment
 comment|/* number of RX buffers */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATH_TXBUF
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -77,6 +94,11 @@ end_define
 begin_comment
 comment|/* number of TX buffers */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -98,6 +120,17 @@ end_define
 
 begin_comment
 comment|/* max number of transmit attempts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_TXMGTTRY
+value|4
+end_define
+
+begin_comment
+comment|/* xmit attempts for mgt/ctl frames */
 end_comment
 
 begin_define
@@ -183,22 +216,10 @@ name|ieee80211_node
 name|an_node
 decl_stmt|;
 comment|/* base class */
-name|u_int8_t
-name|an_tx_mgtrate
-decl_stmt|;
-comment|/* h/w rate for management/ctl frames */
-name|u_int8_t
-name|an_tx_mgtratesp
-decl_stmt|;
-comment|/* short preamble h/w rate for " " */
 name|u_int32_t
 name|an_avgrssi
 decl_stmt|;
 comment|/* average rssi over all rx frames */
-name|HAL_NODE_STATS
-name|an_halstats
-decl_stmt|;
-comment|/* rssi statistics used by hal */
 comment|/* variable-length rate control state follows */
 block|}
 struct|;
@@ -445,6 +466,13 @@ name|mtx
 name|axq_lock
 decl_stmt|;
 comment|/* lock on q and link */
+name|char
+name|axq_name
+index|[
+literal|12
+index|]
+decl_stmt|;
+comment|/* e.g. "ath0_txq4" */
 block|}
 struct|;
 end_struct
@@ -458,8 +486,7 @@ name|_sc
 parameter_list|,
 name|_tq
 parameter_list|)
-define|\
-value|mtx_init(&(_tq)->axq_lock, \ 		device_get_nameunit((_sc)->sc_dev), "xmit q", MTX_DEF)
+value|do { \ 	snprintf((_tq)->axq_name, sizeof((_tq)->axq_name), "%s_txq%u", \ 		device_get_nameunit((_sc)->sc_dev), (_tq)->axq_qnum); \ 	mtx_init(&(_tq)->axq_lock, (_tq)->axq_name, "ath_txq", MTX_DEF); \ } while (0);
 end_define
 
 begin_define
@@ -528,6 +555,18 @@ parameter_list|)
 value|do { \ 	STAILQ_REMOVE_HEAD(&(_tq)->axq_q, _field); \ 	(_tq)->axq_depth--; \ } while (0)
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|taskqueue
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ath_tx99
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|ath_softc
@@ -548,9 +587,6 @@ name|ieee80211com
 name|sc_ic
 decl_stmt|;
 comment|/* IEEE 802.11 common */
-name|int
-name|sc_regdomain
-decl_stmt|;
 name|int
 name|sc_countrycode
 decl_stmt|;
@@ -630,6 +666,17 @@ name|sc_mtx
 decl_stmt|;
 comment|/* master lock (recursive) */
 name|struct
+name|taskqueue
+modifier|*
+name|sc_tq
+decl_stmt|;
+comment|/* private task queue */
+name|struct
+name|proc
+modifier|*
+name|sc_tqproc
+decl_stmt|;
+name|struct
 name|ath_hal
 modifier|*
 name|sc_ah
@@ -641,6 +688,12 @@ modifier|*
 name|sc_rc
 decl_stmt|;
 comment|/* tx rate control support */
+name|struct
+name|ath_tx99
+modifier|*
+name|sc_tx99
+decl_stmt|;
+comment|/* tx99 adjunct state */
 name|void
 function_decl|(
 modifier|*
@@ -706,6 +759,11 @@ range|:
 literal|1
 decl_stmt|,
 comment|/* mcast key cache search */
+name|sc_syncbeacon
+range|:
+literal|1
+decl_stmt|,
+comment|/* sync/resync beacon timers */
 name|sc_hasclrkey
 range|:
 literal|1
@@ -731,6 +789,10 @@ name|ieee80211_phymode
 name|sc_curmode
 decl_stmt|;
 comment|/* current phy mode */
+name|HAL_OPMODE
+name|sc_opmode
+decl_stmt|;
+comment|/* current operating mode */
 name|u_int16_t
 name|sc_curtxpow
 decl_stmt|;
@@ -776,9 +838,21 @@ index|]
 struct|;
 comment|/* h/w rate ix mappings */
 name|u_int8_t
+name|sc_minrateix
+decl_stmt|;
+comment|/* min h/w rate index */
+name|u_int8_t
+name|sc_mcastrix
+decl_stmt|;
+comment|/* mcast h/w rate index */
+name|u_int8_t
 name|sc_protrix
 decl_stmt|;
 comment|/* protection rate index */
+name|u_int
+name|sc_mcastrate
+decl_stmt|;
+comment|/* ieee rate for mcastrateix */
 name|u_int
 name|sc_txantenna
 decl_stmt|;
@@ -831,6 +905,14 @@ name|callout
 name|sc_ledtimer
 decl_stmt|;
 comment|/* led off timer */
+name|u_int
+name|sc_rfsilentpin
+decl_stmt|;
+comment|/* GPIO pin for rfkill int */
+name|u_int
+name|sc_rfsilentpol
+decl_stmt|;
+comment|/* pin setting for rfkill on */
 name|struct
 name|bpf_if
 modifier|*
@@ -905,6 +987,11 @@ name|task
 name|sc_rxorntask
 decl_stmt|;
 comment|/* rxorn int processing */
+name|struct
+name|task
+name|sc_radartask
+decl_stmt|;
+comment|/* radar processing */
 name|u_int8_t
 name|sc_defant
 decl_stmt|;
@@ -913,6 +1000,10 @@ name|u_int8_t
 name|sc_rxotherant
 decl_stmt|;
 comment|/* rx's on non-default antenna*/
+name|u_int64_t
+name|sc_lastrx
+decl_stmt|;
+comment|/* tsf at last rx'd frame */
 name|struct
 name|ath_descdma
 name|sc_txdma
@@ -927,6 +1018,13 @@ name|mtx
 name|sc_txbuflock
 decl_stmt|;
 comment|/* txbuf lock */
+name|char
+name|sc_txname
+index|[
+literal|12
+index|]
+decl_stmt|;
+comment|/* e.g. "ath0_buf" */
 name|int
 name|sc_tx_timer
 decl_stmt|;
@@ -1024,11 +1122,28 @@ name|callout
 name|sc_cal_ch
 decl_stmt|;
 comment|/* callout handle for cals */
+name|int
+name|sc_calinterval
+decl_stmt|;
+comment|/* current polling interval */
+name|int
+name|sc_caltries
+decl_stmt|;
+comment|/* cals at current interval */
+name|HAL_NODE_STATS
+name|sc_halstats
+decl_stmt|;
+comment|/* station-mode rssi stats */
 name|struct
 name|callout
 name|sc_scan_ch
 decl_stmt|;
 comment|/* callout handle for scan */
+name|struct
+name|callout
+name|sc_dfs_ch
+decl_stmt|;
+comment|/* callout handle for dfs */
 block|}
 struct|;
 end_struct
@@ -1117,8 +1232,7 @@ name|ATH_TXBUF_LOCK_INIT
 parameter_list|(
 name|_sc
 parameter_list|)
-define|\
-value|mtx_init(&(_sc)->sc_txbuflock, \ 		device_get_nameunit((_sc)->sc_dev), "xmit buf q", MTX_DEF)
+value|do { \ 	snprintf((_sc)->sc_txname, sizeof((_sc)->sc_txname), "%s_buf", \ 		device_get_nameunit((_sc)->sc_dev)); \ 	mtx_init(&(_sc)->sc_txbuflock, (_sc)->sc_txname, "ath_buf", MTX_DEF); \ } while (0)
 end_define
 
 begin_define
@@ -1371,11 +1485,9 @@ parameter_list|(
 name|_ah
 parameter_list|,
 name|_mode
-parameter_list|,
-name|_sleepduration
 parameter_list|)
 define|\
-value|((*(_ah)->ah_setPowerMode)((_ah), (_mode), AH_TRUE, (_sleepduration)))
+value|((*(_ah)->ah_setPowerMode)((_ah), (_mode), AH_TRUE))
 end_define
 
 begin_define
@@ -1642,9 +1754,11 @@ parameter_list|(
 name|_ah
 parameter_list|,
 name|_chan
+parameter_list|,
+name|_iqcal
 parameter_list|)
 define|\
-value|((*(_ah)->ah_perCalibration)((_ah), (_chan)))
+value|((*(_ah)->ah_perCalibration)((_ah), (_chan), (_iqcal)))
 end_define
 
 begin_define
@@ -1917,9 +2031,11 @@ parameter_list|(
 name|_ah
 parameter_list|,
 name|_arg
+parameter_list|,
+name|_chan
 parameter_list|)
 define|\
-value|((*(_ah)->ah_rxMonitor)((_ah), (_arg)))
+value|((*(_ah)->ah_rxMonitor)((_ah), (_arg), (_chan)))
 end_define
 
 begin_define
@@ -2066,7 +2182,20 @@ parameter_list|,
 name|_prd
 parameter_list|)
 define|\
-value|ath_hal_getcapability(_ah, HAL_CAP_REG_DMN, 0, (_prd))
+value|(ath_hal_getcapability(_ah, HAL_CAP_REG_DMN, 0, (_prd)) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_setregdomain
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_rd
+parameter_list|)
+define|\
+value|((*(_ah)->ah_setRegulatoryDomain)((_ah), (_rd), NULL))
 end_define
 
 begin_define
@@ -2359,6 +2488,119 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|ath_hal_hasrfsilent
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_RFSILENT, 0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getrfkill
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_RFSILENT, 1, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_setrfkill
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_onoff
+parameter_list|)
+define|\
+value|ath_hal_setcapability(_ah, HAL_CAP_RFSILENT, 1, _onoff, NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getrfsilent
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_prfsilent
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_RFSILENT, 2, _prfsilent) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_setrfsilent
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_rfsilent
+parameter_list|)
+define|\
+value|ath_hal_setcapability(_ah, HAL_CAP_RFSILENT, 2, _rfsilent, NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_gettpack
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_ptpack
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_TPC_ACK, 0, _ptpack) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_settpack
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_tpack
+parameter_list|)
+define|\
+value|ath_hal_setcapability(_ah, HAL_CAP_TPC_ACK, 0, _tpack, NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_gettpcts
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_ptpcts
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_TPC_CTS, 0, _ptpcts) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_settpcts
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_tpcts
+parameter_list|)
+define|\
+value|ath_hal_setcapability(_ah, HAL_CAP_TPC_CTS, 0, _tpcts, NULL)
+end_define
+
 begin_if
 if|#
 directive|if
@@ -2425,6 +2667,54 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|HAL_ABI_VERSION
+operator|<
+literal|0x05122200
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAL_TXQ_TXOKINT_ENABLE
+value|TXQ_FLAG_TXOKINT_ENABLE
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_TXQ_TXERRINT_ENABLE
+value|TXQ_FLAG_TXERRINT_ENABLE
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_TXQ_TXDESCINT_ENABLE
+value|TXQ_FLAG_TXDESCINT_ENABLE
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_TXQ_TXEOLINT_ENABLE
+value|TXQ_FLAG_TXEOLINT_ENABLE
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_TXQ_TXURNINT_ENABLE
+value|TXQ_FLAG_TXURNINT_ENABLE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -2456,7 +2746,7 @@ parameter_list|,
 name|_dsnext
 parameter_list|)
 define|\
-value|((*(_ah)->ah_procRxDesc)((_ah), (_ds), (_dspa), (_dsnext)))
+value|((*(_ah)->ah_procRxDesc)((_ah), (_ds), (_dspa), (_dsnext), 0))
 end_define
 
 begin_define
@@ -2491,7 +2781,7 @@ parameter_list|,
 name|_rtsdura
 parameter_list|)
 define|\
-value|((*(_ah)->ah_setupTxDesc)((_ah), (_ds), (_plen), (_hlen), (_atype), \ 		(_txpow), (_txr0), (_txtr0), (_keyix), (_ant), \ 		(_flags), (_rtsrate), (_rtsdura)))
+value|((*(_ah)->ah_setupTxDesc)((_ah), (_ds), (_plen), (_hlen), (_atype), \ 		(_txpow), (_txr0), (_txtr0), (_keyix), (_ant), \ 		(_flags), (_rtsrate), (_rtsdura), 0, 0, 0))
 end_define
 
 begin_define
@@ -2556,6 +2846,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|ath_hal_gettxintrtxqs
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_txqs
+parameter_list|)
+define|\
+value|((*(_ah)->ah_getTxIntrQueue)((_ah), (_txqs)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ath_hal_gpioCfgOutput
 parameter_list|(
 name|_ah
@@ -2579,6 +2882,86 @@ name|_b
 parameter_list|)
 define|\
 value|((*(_ah)->ah_gpioSet)((_ah), (_gpio), (_b)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_gpioget
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_gpio
+parameter_list|)
+define|\
+value|((*(_ah)->ah_gpioGet)((_ah), (_gpio)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_gpiosetintr
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_gpio
+parameter_list|,
+name|_b
+parameter_list|)
+define|\
+value|((*(_ah)->ah_gpioSetIntr)((_ah), (_gpio), (_b)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_radar_event
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((*(_ah)->ah_radarHaveEvent)((_ah)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_procdfs
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_chan
+parameter_list|)
+define|\
+value|((*(_ah)->ah_processDfs)((_ah), (_chan)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_checknol
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_chan
+parameter_list|,
+name|_nchans
+parameter_list|)
+define|\
+value|((*(_ah)->ah_dfsNolCheck)((_ah), (_chan), (_nchans)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_radar_wait
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_chan
+parameter_list|)
+define|\
+value|((*(_ah)->ah_radarWait)((_ah), (_chan)))
 end_define
 
 begin_endif
