@@ -3421,6 +3421,11 @@ name|ic
 operator|->
 name|ic_ifp
 decl_stmt|;
+name|ral_stop
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|callout_stop
 argument_list|(
 operator|&
