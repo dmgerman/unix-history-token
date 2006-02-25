@@ -897,7 +897,7 @@ name|c
 operator|==
 name|NOKEY
 condition|)
-continue|continue;
+break|break;
 if|if
 condition|(
 name|c
