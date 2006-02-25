@@ -885,7 +885,7 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
-literal|"lp"
+literal|"plip"
 block|,
 literal|"Parallel Port IP (PLIP) peer connection"
 block|}
