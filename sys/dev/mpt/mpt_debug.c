@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Debug routines for LSI '909 FC  adapters.  * FreeBSD Version.  *  * Copyright (c)  2000, 2001 by Greg Ansley  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Additional Copyright (c) 2002 by Matthew Jacob under same license.  */
+comment|/*-  * Debug routines for LSI '909 FC  adapters.  * FreeBSD Version.  *  * Copyright (c)  2000, 2001 by Greg Ansley  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+end_comment
+
+begin_comment
+comment|/*-  * Copyright (c) 2002, 2006 by Matthew Jacob  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon including  *    a substantially similar Disclaimer requirement for further binary  *    redistribution.  * 3. Neither the names of the above listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF THE COPYRIGHT  * OWNER OR CONTRIBUTOR IS ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Support from Chris Ellsworth in order to make SAS adapters work  * is gratefully acknowledged.  */
 end_comment
 
 begin_include
@@ -1599,7 +1603,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tIOCLogInfo    0x%08x\n"
+literal|"\tIOCLogInfo    0x%08lx\n"
 argument_list|,
 name|msg
 operator|->
@@ -1626,7 +1630,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tMsgContext    0x%08x\n"
+literal|"\tMsgContext    0x%08lx\n"
 argument_list|,
 name|msg
 operator|->
@@ -1775,7 +1779,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tFW Version    0x%08x\n"
+literal|"\tFW Version    0x%08lx\n"
 argument_list|,
 name|msg
 operator|->
@@ -1822,7 +1826,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tHostMFA_HA    0x%08x\n"
+literal|"\tHostMFA_HA    0x%08lx\n"
 argument_list|,
 name|msg
 operator|->
@@ -1831,7 +1835,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tSenseBuf_HA   0x%08x\n"
+literal|"\tSenseBuf_HA   0x%08lx\n"
 argument_list|,
 name|msg
 operator|->
@@ -1867,7 +1871,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tFWImageSize   0x%04x\n"
+literal|"\tFWImageSize   0x%04lx\n"
 argument_list|,
 name|msg
 operator|->
@@ -1980,7 +1984,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tTransferCnt   0x%04x\n"
+literal|"\tTransferCnt   0x%04lx\n"
 argument_list|,
 name|msg
 operator|->
@@ -1989,7 +1993,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tSenseCnt      0x%04x\n"
+literal|"\tSenseCnt      0x%04lx\n"
 argument_list|,
 name|msg
 operator|->
@@ -1998,7 +2002,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tResponseInfo  0x%08x\n"
+literal|"\tResponseInfo  0x%08lx\n"
 argument_list|,
 name|msg
 operator|->
@@ -2041,7 +2045,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tEventContext  0x%04x\n"
+literal|"\tEventContext  0x%04lx\n"
 argument_list|,
 name|msg
 operator|->
@@ -2089,7 +2093,7 @@ name|MPI_EVENT_LOG_DATA
 case|:
 name|printf
 argument_list|(
-literal|"\tEvtLogData:   0x%04x\n"
+literal|"\tEvtLogData:   0x%04lx\n"
 argument_list|,
 name|msg
 operator|->
@@ -2105,7 +2109,7 @@ name|MPI_EVENT_UNIT_ATTENTION
 case|:
 name|printf
 argument_list|(
-literal|"\tTargetID:     0x%04x\n"
+literal|"\tTargetID:     0x%04lx\n"
 argument_list|,
 name|msg
 operator|->
@@ -2119,7 +2123,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tBus:          0x%04x\n"
+literal|"\tBus:          0x%04lx\n"
 argument_list|,
 operator|(
 name|msg
@@ -2147,7 +2151,7 @@ name|MPI_EVENT_RESCAN
 case|:
 name|printf
 argument_list|(
-literal|"\tPort:           %d\n"
+literal|"\tPort:           %ld\n"
 argument_list|,
 operator|(
 name|msg
@@ -2169,7 +2173,7 @@ name|MPI_EVENT_LINK_STATUS_CHANGE
 case|:
 name|printf
 argument_list|(
-literal|"\tLinkState:    %d\n"
+literal|"\tLinkState:    %ld\n"
 argument_list|,
 name|msg
 operator|->
@@ -2183,7 +2187,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tPort:         %d\n"
+literal|"\tPort:         %ld\n"
 argument_list|,
 operator|(
 name|msg
@@ -2205,7 +2209,7 @@ name|MPI_EVENT_LOOP_STATE_CHANGE
 case|:
 name|printf
 argument_list|(
-literal|"\tType:         %d\n"
+literal|"\tType:         %ld\n"
 argument_list|,
 operator|(
 name|msg
@@ -2223,7 +2227,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tChar3:      0x%02x\n"
+literal|"\tChar3:      0x%02lx\n"
 argument_list|,
 operator|(
 name|msg
@@ -2241,7 +2245,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tChar4:      0x%02x\n"
+literal|"\tChar4:      0x%02lx\n"
 argument_list|,
 operator|(
 name|msg
@@ -2257,7 +2261,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tPort:         %d\n"
+literal|"\tPort:         %ld\n"
 argument_list|,
 operator|(
 name|msg
@@ -2279,7 +2283,7 @@ name|MPI_EVENT_LOGOUT
 case|:
 name|printf
 argument_list|(
-literal|"\tN_PortId:   0x%04x\n"
+literal|"\tN_PortId:   0x%04lx\n"
 argument_list|,
 name|msg
 operator|->
@@ -2291,7 +2295,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tPort:         %d\n"
+literal|"\tPort:         %ld\n"
 argument_list|,
 operator|(
 name|msg
@@ -2470,7 +2474,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tMsgContext    0x%08x\n"
+literal|"\tMsgContext    0x%08lx\n"
 argument_list|,
 name|req
 operator|->
@@ -2563,7 +2567,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tControl           0x%08x "
+literal|"\tControl           0x%08lx "
 argument_list|,
 name|msg
 operator|->
@@ -2667,7 +2671,7 @@ directive|undef
 name|MPI_PRINT_FIELD
 name|printf
 argument_list|(
-literal|"\tDataLength\t0x%08x\n"
+literal|"\tDataLength\t0x%08lx\n"
 argument_list|,
 name|msg
 operator|->
@@ -2676,7 +2680,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tSenseBufAddr\t0x%08x\n"
+literal|"\tSenseBufAddr\t0x%08lx\n"
 argument_list|,
 name|msg
 operator|->
@@ -2811,7 +2815,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tTaskMsgContext  0x%08x\n"
+literal|"\tTaskMsgContext  0x%08lx\n"
 argument_list|,
 name|msg
 operator|->
@@ -3397,8 +3401,8 @@ name|se
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"SE64 %p: Addr=0x%08x%08x FlagsLength"
-literal|"=0x%0x\n"
+literal|"SE64 %p: Addr=0x%08lx%08lx FlagsLength"
+literal|"=0x%lx\n"
 argument_list|,
 name|se64
 argument_list|,
@@ -3430,7 +3434,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"SE32 %p: Addr=0x%0x FlagsLength=0x%0x"
+literal|"SE32 %p: Addr=0x%08lx FlagsLength=0x%lx"
 literal|"\n"
 argument_list|,
 name|se
@@ -3473,8 +3477,8 @@ name|se
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"CE64 %p: Addr=0x%08x%08x NxtChnO=0x%x "
-literal|"Flgs=0x%x Len=0x%0x\n"
+literal|"CE64 %p: Addr=0x%08lx%08lx NxtChnO="
+literal|"0x%x Flgs=0x%x Len=0x%x\n"
 argument_list|,
 name|ce64
 argument_list|,
@@ -3524,8 +3528,8 @@ name|se
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"CE32 %p: Addr=0x%0x NxtChnO=0x%x "
-literal|" Flgs=0x%x Len=0x%0x\n"
+literal|"CE32 %p: Addr=0x%08lx NxtChnO=0x%x "
+literal|" Flgs=0x%x Len=0x%x\n"
 argument_list|,
 name|ce
 argument_list|,
