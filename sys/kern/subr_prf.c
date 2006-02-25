@@ -4659,10 +4659,15 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"|\n"
+literal|"|"
 argument_list|)
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
