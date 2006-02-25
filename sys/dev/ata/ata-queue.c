@@ -247,7 +247,7 @@ argument_list|,
 literal|"ATA request done"
 argument_list|)
 expr_stmt|;
-comment|/* in ATA_STALL_QUEUE state we call HW directly (used only during reinit) */
+comment|/* in ATA_STALL_QUEUE state we call HW directly */
 if|if
 condition|(
 operator|(
@@ -2704,12 +2704,6 @@ name|running
 operator|=
 name|NULL
 expr_stmt|;
-name|ch
-operator|->
-name|state
-operator|=
-name|ATA_IDLE
-expr_stmt|;
 name|request
 operator|->
 name|result
@@ -2825,14 +2819,6 @@ name|request
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* we might have work for the other device on this channel */
-name|ata_start
-argument_list|(
-name|ch
-operator|->
-name|dev
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
