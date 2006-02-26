@@ -3932,7 +3932,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"Device %02lx doesn't like "
+literal|"Device %02x doesn't like "
 literal|"FC performance\n"
 argument_list|,
 name|msg
@@ -3978,7 +3978,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"Device %02lx detected loop "
+literal|"Device %02x detected loop "
 literal|"failure at its receiver\n"
 argument_list|,
 name|msg
@@ -3996,8 +3996,8 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"Device %02lx requests that device "
-literal|"%02lx reset itself\n"
+literal|"Device %02x requests that device "
+literal|"%02x reset itself\n"
 argument_list|,
 name|msg
 operator|->

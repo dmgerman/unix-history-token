@@ -77,6 +77,31 @@ name|U16
 typedef|;
 end_typedef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|int32_t
+name|S32
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|uint32_t
+name|U32
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_if
 if|#
 directive|if
@@ -142,6 +167,11 @@ name|long
 name|U32
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

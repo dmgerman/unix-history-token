@@ -1603,7 +1603,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tIOCLogInfo    0x%08lx\n"
+literal|"\tIOCLogInfo    0x%08x\n"
 argument_list|,
 name|msg
 operator|->
@@ -1630,7 +1630,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tMsgContext    0x%08lx\n"
+literal|"\tMsgContext    0x%08x\n"
 argument_list|,
 name|msg
 operator|->
@@ -1779,7 +1779,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tFW Version    0x%08lx\n"
+literal|"\tFW Version    0x%08x\n"
 argument_list|,
 name|msg
 operator|->
@@ -1826,7 +1826,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tHostMFA_HA    0x%08lx\n"
+literal|"\tHostMFA_HA    0x%08x\n"
 argument_list|,
 name|msg
 operator|->
@@ -1835,7 +1835,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tSenseBuf_HA   0x%08lx\n"
+literal|"\tSenseBuf_HA   0x%08x\n"
 argument_list|,
 name|msg
 operator|->
@@ -1871,7 +1871,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tFWImageSize   0x%04lx\n"
+literal|"\tFWImageSize   0x%04x\n"
 argument_list|,
 name|msg
 operator|->
@@ -1984,7 +1984,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tTransferCnt   0x%04lx\n"
+literal|"\tTransferCnt   0x%04x\n"
 argument_list|,
 name|msg
 operator|->
@@ -1993,7 +1993,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tSenseCnt      0x%04lx\n"
+literal|"\tSenseCnt      0x%04x\n"
 argument_list|,
 name|msg
 operator|->
@@ -2002,7 +2002,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tResponseInfo  0x%08lx\n"
+literal|"\tResponseInfo  0x%08x\n"
 argument_list|,
 name|msg
 operator|->
@@ -2045,7 +2045,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tEventContext  0x%04lx\n"
+literal|"\tEventContext  0x%04x\n"
 argument_list|,
 name|msg
 operator|->
@@ -2093,7 +2093,7 @@ name|MPI_EVENT_LOG_DATA
 case|:
 name|printf
 argument_list|(
-literal|"\tEvtLogData:   0x%04lx\n"
+literal|"\tEvtLogData:   0x%04x\n"
 argument_list|,
 name|msg
 operator|->
@@ -2109,7 +2109,7 @@ name|MPI_EVENT_UNIT_ATTENTION
 case|:
 name|printf
 argument_list|(
-literal|"\tTargetID:     0x%04lx\n"
+literal|"\tTargetID:     0x%04x\n"
 argument_list|,
 name|msg
 operator|->
@@ -2123,7 +2123,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tBus:          0x%04lx\n"
+literal|"\tBus:          0x%04x\n"
 argument_list|,
 operator|(
 name|msg
@@ -2151,7 +2151,7 @@ name|MPI_EVENT_RESCAN
 case|:
 name|printf
 argument_list|(
-literal|"\tPort:           %ld\n"
+literal|"\tPort:           %d\n"
 argument_list|,
 operator|(
 name|msg
@@ -2173,7 +2173,7 @@ name|MPI_EVENT_LINK_STATUS_CHANGE
 case|:
 name|printf
 argument_list|(
-literal|"\tLinkState:    %ld\n"
+literal|"\tLinkState:    %d\n"
 argument_list|,
 name|msg
 operator|->
@@ -2187,7 +2187,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tPort:         %ld\n"
+literal|"\tPort:         %d\n"
 argument_list|,
 operator|(
 name|msg
@@ -2209,7 +2209,7 @@ name|MPI_EVENT_LOOP_STATE_CHANGE
 case|:
 name|printf
 argument_list|(
-literal|"\tType:         %ld\n"
+literal|"\tType:         %d\n"
 argument_list|,
 operator|(
 name|msg
@@ -2227,7 +2227,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tChar3:      0x%02lx\n"
+literal|"\tChar3:      0x%02x\n"
 argument_list|,
 operator|(
 name|msg
@@ -2245,7 +2245,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tChar4:      0x%02lx\n"
+literal|"\tChar4:      0x%02x\n"
 argument_list|,
 operator|(
 name|msg
@@ -2261,7 +2261,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tPort:         %ld\n"
+literal|"\tPort:         %d\n"
 argument_list|,
 operator|(
 name|msg
@@ -2283,7 +2283,7 @@ name|MPI_EVENT_LOGOUT
 case|:
 name|printf
 argument_list|(
-literal|"\tN_PortId:   0x%04lx\n"
+literal|"\tN_PortId:   0x%04x\n"
 argument_list|,
 name|msg
 operator|->
@@ -2295,7 +2295,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tPort:         %ld\n"
+literal|"\tPort:         %d\n"
 argument_list|,
 operator|(
 name|msg
@@ -2474,7 +2474,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tMsgContext    0x%08lx\n"
+literal|"\tMsgContext    0x%08x\n"
 argument_list|,
 name|req
 operator|->
@@ -2567,7 +2567,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tControl           0x%08lx "
+literal|"\tControl           0x%08x "
 argument_list|,
 name|msg
 operator|->
@@ -2671,7 +2671,7 @@ directive|undef
 name|MPI_PRINT_FIELD
 name|printf
 argument_list|(
-literal|"\tDataLength\t0x%08lx\n"
+literal|"\tDataLength\t0x%08x\n"
 argument_list|,
 name|msg
 operator|->
@@ -2680,7 +2680,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tSenseBufAddr\t0x%08lx\n"
+literal|"\tSenseBufAddr\t0x%08x\n"
 argument_list|,
 name|msg
 operator|->
@@ -2815,7 +2815,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tTaskMsgContext  0x%08lx\n"
+literal|"\tTaskMsgContext  0x%08x\n"
 argument_list|,
 name|msg
 operator|->
@@ -3401,8 +3401,8 @@ name|se
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"SE64 %p: Addr=0x%08lx%08lx FlagsLength"
-literal|"=0x%lx\n"
+literal|"SE64 %p: Addr=0x%08x%08x FlagsLength"
+literal|"=0x%0x\n"
 argument_list|,
 name|se64
 argument_list|,
@@ -3434,7 +3434,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"SE32 %p: Addr=0x%08lx FlagsLength=0x%lx"
+literal|"SE32 %p: Addr=0x%0x FlagsLength=0x%0x"
 literal|"\n"
 argument_list|,
 name|se
@@ -3477,8 +3477,8 @@ name|se
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"CE64 %p: Addr=0x%08lx%08lx NxtChnO="
-literal|"0x%x Flgs=0x%x Len=0x%x\n"
+literal|"CE64 %p: Addr=0x%08x%08x NxtChnO=0x%x "
+literal|"Flgs=0x%x Len=0x%0x\n"
 argument_list|,
 name|ce64
 argument_list|,
@@ -3528,8 +3528,8 @@ name|se
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"CE32 %p: Addr=0x%08lx NxtChnO=0x%x "
-literal|" Flgs=0x%x Len=0x%x\n"
+literal|"CE32 %p: Addr=0x%0x NxtChnO=0x%x "
+literal|" Flgs=0x%x Len=0x%0x\n"
 argument_list|,
 name|ce
 argument_list|,
