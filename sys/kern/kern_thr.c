@@ -1365,6 +1365,11 @@ operator|!=
 literal|1
 condition|)
 block|{
+name|thread_stopped
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|thread_exit
 argument_list|()
 expr_stmt|;
