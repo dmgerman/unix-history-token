@@ -1664,6 +1664,14 @@ condition|)
 block|{
 name|ifc
 operator|->
+name|role
+operator|=
+name|lp
+operator|->
+name|roles
+expr_stmt|;
+name|ifc
+operator|->
 name|loopid
 operator|=
 name|lp
