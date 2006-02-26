@@ -2632,6 +2632,17 @@ name|refcnt
 operator|=
 literal|0
 expr_stmt|;
+name|ifc
+operator|->
+name|endpoints
+index|[
+name|endpt
+index|]
+operator|.
+name|savedtoggle
+operator|=
+literal|0
+expr_stmt|;
 name|p
 operator|+=
 name|ed

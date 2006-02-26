@@ -10174,6 +10174,16 @@ operator|.
 name|sqh
 argument_list|)
 expr_stmt|;
+name|pipe
+operator|->
+name|endpoint
+operator|->
+name|savedtoggle
+operator|=
+name|upipe
+operator|->
+name|nexttoggle
+expr_stmt|;
 block|}
 end_function
 
@@ -14958,7 +14968,11 @@ name|upipe
 operator|->
 name|nexttoggle
 operator|=
-literal|0
+name|pipe
+operator|->
+name|endpoint
+operator|->
+name|savedtoggle
 expr_stmt|;
 if|if
 condition|(
