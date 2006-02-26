@@ -8726,7 +8726,35 @@ argument_list|(
 name|mpt
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Flush any commands whose completion coincides 	 * with their timeout. 	 */
+if|if
+condition|(
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|mpt
+operator|->
+name|request_timeout_list
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 		 * No work to do- leave. 		 */
+name|mpt_prt
+argument_list|(
+name|mpt
+argument_list|,
+literal|"mpt_recover_commands: no requests.\n"
+argument_list|)
+expr_stmt|;
+name|MPT_UNLOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* 	 * Flush any commands whose completion coincides with their timeout. 	 */
 name|mpt_intr
 argument_list|(
 name|mpt
@@ -8872,7 +8900,7 @@ comment|/*sleep_ok*/
 name|TRUE
 argument_list|,
 comment|/*time_ms*/
-literal|5000
+literal|500
 argument_list|)
 expr_stmt|;
 name|status
@@ -8895,7 +8923,7 @@ name|mpt_prt
 argument_list|(
 name|mpt
 argument_list|,
-literal|"mpt_recover_commands: Abort timed-out."
+literal|"mpt_recover_commands: Abort timed-out. "
 literal|"Resetting controller\n"
 argument_list|)
 expr_stmt|;
