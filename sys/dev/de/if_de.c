@@ -231,7 +231,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pci/dc21040reg.h>
+file|<dev/de/dc21040reg.h>
 end_include
 
 begin_ifdef
@@ -357,7 +357,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<pci/if_devar.h>
+file|<dev/de/if_devar.h>
 end_include
 
 begin_define

@@ -14,13 +14,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_DEVAR_H
+name|DEV_DE_IF_DEVAR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_DEVAR_H
+name|DEV_DE_IF_DEVAR_H
 end_define
 
 begin_typedef
@@ -3233,7 +3233,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _DEVAR_H */
+comment|/* DEV_DE_IF_DEVAR_H */
 end_comment
 
 end_unit
