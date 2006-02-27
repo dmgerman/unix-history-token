@@ -558,10 +558,16 @@ index|[]
 init|=
 block|{
 comment|/* 0x00 */
-literal|"v1.0B"
+literal|"Bluetooth HCI Specification 1.0B"
 block|,
 comment|/* 0x01 */
-literal|"v1.1"
+literal|"Bluetooth HCI Specification 1.1"
+block|,
+comment|/* 0x02 */
+literal|"Bluetooth HCI Specification 1.2"
+block|,
+comment|/* 0x03 */
+literal|"Bluetooth HCI Specification 2.0"
 block|}
 decl_stmt|;
 return|return
@@ -593,6 +599,63 @@ name|char
 specifier|const
 modifier|*
 specifier|const
+name|hci_lmpver2str
+parameter_list|(
+name|int
+name|ver
+parameter_list|)
+block|{
+specifier|static
+name|char
+specifier|const
+modifier|*
+specifier|const
+name|t
+index|[]
+init|=
+block|{
+comment|/* 0x00 */
+literal|"Bluetooth LMP 1.0"
+block|,
+comment|/* 0x01 */
+literal|"Bluetooth LMP 1.1"
+block|,
+comment|/* 0x02 */
+literal|"Bluetooth LMP 1.2"
+block|,
+comment|/* 0x03 */
+literal|"Bluetooth LMP 2.0"
+block|}
+decl_stmt|;
+return|return
+operator|(
+name|ver
+operator|>=
+name|SIZE
+argument_list|(
+name|t
+argument_list|)
+condition|?
+literal|"?"
+else|:
+name|t
+index|[
+name|ver
+index|]
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* hci_lmpver2str */
+end_comment
+
+begin_function
+name|char
+specifier|const
+modifier|*
+specifier|const
 name|hci_manufacturer2str
 parameter_list|(
 name|int
@@ -609,7 +672,7 @@ index|[]
 init|=
 block|{
 comment|/* 0000 */
-literal|"Ericsson Mobile Communications"
+literal|"Ericsson Technology Licensing"
 block|,
 comment|/* 0001 */
 literal|"Nokia Mobile Phones"
@@ -663,7 +726,7 @@ comment|/* 0017 */
 literal|"Widcomm, Inc."
 block|,
 comment|/* 0018 */
-literal|"Telencomm Inc."
+literal|"Zeevo, Inc."
 block|,
 comment|/* 0019 */
 literal|"Atmel Corporation"
@@ -751,6 +814,57 @@ literal|"Norwood Systems"
 block|,
 comment|/* 0047 */
 literal|"MewTel Technology Inc."
+block|,
+comment|/* 0048 */
+literal|"ST Microelectronics"
+block|,
+comment|/* 0049 */
+literal|"Synopsys"
+block|,
+comment|/* 0050 */
+literal|"Red-M (Communications) Ltd"
+block|,
+comment|/* 0051 */
+literal|"Commil Ltd"
+block|,
+comment|/* 0052 */
+literal|"Computer Access Technology Corporation (CATC)"
+block|,
+comment|/* 0053 */
+literal|"Eclipse (HQ Espana) S.L."
+block|,
+comment|/* 0054 */
+literal|"Renesas Technology Corp."
+block|,
+comment|/* 0055 */
+literal|"Mobilian Corporation"
+block|,
+comment|/* 0056 */
+literal|"Terax"
+block|,
+comment|/* 0057 */
+literal|"Integrated System Solution Corp."
+block|,
+comment|/* 0058 */
+literal|"Matsushita Electric Industrial Co., Ltd."
+block|,
+comment|/* 0059 */
+literal|"Gennum Corporation"
+block|,
+comment|/* 0060 */
+literal|"Research In Motion"
+block|,
+comment|/* 0061 */
+literal|"IPextreme, Inc."
+block|,
+comment|/* 0062 */
+literal|"Systems and Chips, Inc"
+block|,
+comment|/* 0063 */
+literal|"Bluetooth SIG, Inc"
+block|,
+comment|/* 0064 */
+literal|"Seiko Epson Corporation"
 block|}
 decl_stmt|;
 return|return
