@@ -1571,6 +1571,7 @@ comment|/*  * Names of message sections.  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|struct
 name|res_sym
@@ -1616,6 +1617,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|struct
 name|res_sym

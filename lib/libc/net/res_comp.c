@@ -816,7 +816,7 @@ name|BIND_4_COMPAT
 end_ifdef
 
 begin_comment
-comment|/*  * This module must export the following externally-visible symbols:  *    ___putlong  *    ___putshort  *    __getlong  *    __getshort  * Note that one _ comes from C and the others come from us.  */
+comment|/*  * This module must export the following externally-visible symbols:  *    __putlong  *    __putshort  *    _getlong  *    _getshort  * Note that one _ comes from C and the others come from us.  */
 end_comment
 
 begin_function
