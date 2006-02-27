@@ -643,6 +643,10 @@ operator|&
 name|dmamap_freelist
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|map
+condition|)
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
