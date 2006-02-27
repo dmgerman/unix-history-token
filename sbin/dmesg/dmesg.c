@@ -81,6 +81,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -880,6 +886,16 @@ operator|*
 name|p
 operator|==
 literal|'<'
+operator|&&
+name|isdigit
+argument_list|(
+operator|*
+operator|(
+name|p
+operator|+
+literal|1
+operator|)
+argument_list|)
 condition|)
 block|{
 name|errno
