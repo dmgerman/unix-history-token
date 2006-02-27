@@ -1897,7 +1897,7 @@ define|#
 directive|define
 name|USB_ATTACH_SETUP
 define|\
-value|do { \ 		sc->sc_dev = self; \ 		device_set_desc_copy(self, devinfo); \ 		device_printf(self, "%s\n", devinfo); \ 	} while (0);
+value|do { \ 		sc->sc_dev = self; \ 		device_set_desc_copy(self, devinfo); \ 	} while (0);
 end_define
 
 begin_define
