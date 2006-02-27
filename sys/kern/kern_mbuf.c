@@ -1097,7 +1097,7 @@ name|args
 operator|->
 name|type
 expr_stmt|;
-comment|/* 	 * The mbuf is initialized later.  The caller has the 	 * responsibility to setup any MAC labels too. 	 */
+comment|/* 	 * The mbuf is initialized later.  The caller has the 	 * responsibility to set up any MAC labels too. 	 */
 if|if
 condition|(
 name|type
