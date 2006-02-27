@@ -321,14 +321,10 @@ expr_stmt|;
 name|int
 name|bf_nseg
 decl_stmt|;
-name|u_int16_t
-name|bf_txflags
-decl_stmt|;
-comment|/* tx descriptor flags */
-name|u_int16_t
+name|int
 name|bf_flags
 decl_stmt|;
-comment|/* see below */
+comment|/* tx descriptor flags */
 name|struct
 name|ath_desc
 modifier|*
@@ -383,17 +379,6 @@ argument_list|)
 name|ath_bufhead
 expr_stmt|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|ATH_FLAG_BUSY
-value|0x0001
-end_define
-
-begin_comment
-comment|/* tx descriptor owned by h/w */
-end_comment
 
 begin_comment
 comment|/*  * DMA state for tx/rx descriptors.  */
@@ -455,7 +440,7 @@ name|u_int
 name|axq_qnum
 decl_stmt|;
 comment|/* hardware q number */
-name|int
+name|u_int
 name|axq_depth
 decl_stmt|;
 comment|/* queue depth (stat only) */

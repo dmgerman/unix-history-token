@@ -5608,20 +5608,6 @@ name|bf
 operator|!=
 name|NULL
 condition|)
-block|{
-if|if
-condition|(
-name|bf
-operator|->
-name|bf_flags
-operator|&
-name|ATH_FLAG_BUSY
-condition|)
-name|bf
-operator|=
-name|NULL
-expr_stmt|;
-else|else
 name|STAILQ_REMOVE_HEAD
 argument_list|(
 operator|&
@@ -5632,7 +5618,6 @@ argument_list|,
 name|bf_list
 argument_list|)
 expr_stmt|;
-block|}
 name|ATH_TXBUF_UNLOCK
 argument_list|(
 name|sc
@@ -5651,7 +5636,7 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_XMIT
 argument_list|,
-literal|"%s: no available xmit buffers\n"
+literal|"%s: out of xmit buffers\n"
 argument_list|,
 name|__func__
 argument_list|)
@@ -5729,7 +5714,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|STAILQ_INSERT_HEAD
+name|STAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|sc
@@ -5771,7 +5756,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|STAILQ_INSERT_HEAD
+name|STAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|sc
@@ -6142,7 +6127,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|STAILQ_INSERT_HEAD
+name|STAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|sc
@@ -11230,7 +11215,7 @@ operator|->
 name|dd_desc_len
 argument_list|)
 expr_stmt|;
-comment|/* allocate buffers */
+comment|/* allocate rx buffers */
 name|bsize
 operator|=
 sizeof|sizeof
@@ -17005,7 +16990,7 @@ argument_list|)
 expr_stmt|;
 name|bf
 operator|->
-name|bf_txflags
+name|bf_flags
 operator|=
 name|flags
 expr_stmt|;
@@ -17383,9 +17368,6 @@ name|struct
 name|ath_buf
 modifier|*
 name|bf
-decl_stmt|,
-modifier|*
-name|last
 decl_stmt|;
 name|struct
 name|ath_desc
@@ -17586,19 +17568,9 @@ condition|(
 name|txq
 operator|->
 name|axq_depth
-operator|>
+operator|==
 literal|0
 condition|)
-block|{
-comment|/* 			 * More frames follow.  Mark the buffer busy 			 * so it's not re-used while the hardware may 			 * still re-read the link field. 			 */
-name|bf
-operator|->
-name|bf_flags
-operator||=
-name|ATH_FLAG_BUSY
-expr_stmt|;
-block|}
-else|else
 name|txq
 operator|->
 name|axq_link
@@ -17847,7 +17819,7 @@ operator|&&
 operator|(
 name|bf
 operator|->
-name|bf_txflags
+name|bf_flags
 operator|&
 name|HAL_TXDESC_NOACK
 operator|)
@@ -17935,33 +17907,6 @@ name|ATH_TXBUF_LOCK
 argument_list|(
 name|sc
 argument_list|)
-expr_stmt|;
-name|last
-operator|=
-name|STAILQ_LAST
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_txbuf
-argument_list|,
-name|ath_buf
-argument_list|,
-name|bf_list
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|last
-operator|!=
-name|NULL
-condition|)
-name|last
-operator|->
-name|bf_flags
-operator|&=
-operator|~
-name|ATH_FLAG_BUSY
 expr_stmt|;
 name|STAILQ_INSERT_TAIL
 argument_list|(
@@ -18556,7 +18501,7 @@ decl_stmt|;
 name|u_int
 name|ix
 decl_stmt|;
-comment|/* 	 * NB: this assumes output has been stopped and 	 *     we do not need to block ath_tx_proc 	 */
+comment|/* 	 * NB: this assumes output has been stopped and 	 *     we do not need to block ath_tx_tasklet 	 */
 for|for
 control|(
 name|ix
@@ -18590,6 +18535,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|txq
+operator|->
+name|axq_link
+operator|=
+name|NULL
+expr_stmt|;
 name|ATH_TXQ_UNLOCK
 argument_list|(
 name|txq
@@ -18603,20 +18554,6 @@ name|txq
 argument_list|,
 name|bf_list
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|txq
-operator|->
-name|axq_depth
-operator|==
-literal|0
-condition|)
-name|txq
-operator|->
-name|axq_link
-operator|=
-name|NULL
 expr_stmt|;
 name|ATH_TXQ_UNLOCK
 argument_list|(
@@ -18709,13 +18646,6 @@ name|ni
 argument_list|)
 expr_stmt|;
 block|}
-name|bf
-operator|->
-name|bf_flags
-operator|&=
-operator|~
-name|ATH_FLAG_BUSY
-expr_stmt|;
 name|ATH_TXBUF_LOCK
 argument_list|(
 name|sc
@@ -18739,39 +18669,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-name|ATH_TXBUF_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|bf
-operator|=
-name|STAILQ_FIRST
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_txbuf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bf
-operator|!=
-name|NULL
-condition|)
-name|bf
-operator|->
-name|bf_flags
-operator|&=
-operator|~
-name|ATH_FLAG_BUSY
-expr_stmt|;
-name|ATH_TXBUF_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -23022,7 +22919,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|" (DS.V:%p DS.P:%p) L:%08x D:%08x F:%x TF:%04x%s\n"
+literal|" (DS.V:%p DS.P:%p) L:%08x D:%08x F:04%x%s\n"
 literal|"        %08x %08x %08x %08x %08x %08x\n"
 argument_list|,
 name|ds
@@ -23049,10 +22946,6 @@ argument_list|,
 name|bf
 operator|->
 name|bf_flags
-argument_list|,
-name|bf
-operator|->
-name|bf_txflags
 argument_list|,
 operator|!
 name|done
