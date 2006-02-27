@@ -1911,9 +1911,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|pkt
-operator|->
-name|flags
+name|IP_FORWARDING
 argument_list|,
 name|NULL
 argument_list|,
@@ -5209,7 +5207,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/*  * dummynet hook for packets. Below 'pipe' is a pipe or a queue  * depending on whether WF2Q or fixed bw is used.  *  * pipe_nr	pipe or queue the packet is destined for.  * dir		where shall we send the packet after dummynet.  * m		the mbuf with the packet  * ifp		the 'ifp' parameter from the caller.  *		NULL in ip_input, destination interface in ip_output,  *		real_dst in bdg_forward  * rule		matching rule, in case of multiple passes  * flags	flags from the caller, only used in ip_output  *  */
+comment|/*  * dummynet hook for packets. Below 'pipe' is a pipe or a queue  * depending on whether WF2Q or fixed bw is used.  *  * pipe_nr	pipe or queue the packet is destined for.  * dir		where shall we send the packet after dummynet.  * m		the mbuf with the packet  * ifp		the 'ifp' parameter from the caller.  *		NULL in ip_input, destination interface in ip_output,  *		real_dst in bdg_forward  * rule		matching rule, in case of multiple passes  *  */
 end_comment
 
 begin_function
@@ -5637,20 +5635,6 @@ operator|=
 name|fwa
 operator|->
 name|oif
-expr_stmt|;
-if|if
-condition|(
-name|dir
-operator|==
-name|DN_TO_IP_OUT
-condition|)
-name|pkt
-operator|->
-name|flags
-operator|=
-name|fwa
-operator|->
-name|flags
 expr_stmt|;
 if|if
 condition|(

@@ -240,10 +240,6 @@ modifier|*
 name|ifp
 decl_stmt|;
 comment|/* interface, for ip_output		*/
-name|int
-name|flags
-decl_stmt|;
-comment|/* flags, for ip_output (IPv6 ?)	*/
 block|}
 struct|;
 end_struct
