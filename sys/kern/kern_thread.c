@@ -2631,6 +2631,8 @@ condition|)
 name|sleepq_abort
 argument_list|(
 name|td2
+argument_list|,
+name|EINTR
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2676,6 +2678,8 @@ condition|)
 name|sleepq_abort
 argument_list|(
 name|td2
+argument_list|,
+name|ERESTART
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2719,6 +2723,30 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|SMP
+elseif|else
+if|if
+condition|(
+name|TD_IS_RUNNING
+argument_list|(
+name|td2
+argument_list|)
+operator|&&
+name|td
+operator|!=
+name|td2
+condition|)
+block|{
+name|forward_signal
+argument_list|(
+name|td2
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -3015,7 +3043,7 @@ name|return_instead
 condition|)
 return|return
 operator|(
-literal|1
+name|EINTR
 operator|)
 return|;
 comment|/* Should we goto user boundary if we didn't come from there? */
@@ -3040,7 +3068,7 @@ name|return_instead
 condition|)
 return|return
 operator|(
-literal|1
+name|ERESTART
 operator|)
 return|;
 name|mtx_lock_spin

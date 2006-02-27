@@ -1024,6 +1024,10 @@ condition|)
 name|sleepq_abort
 argument_list|(
 name|td2
+argument_list|,
+name|td2
+operator|->
+name|td_intrval
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin
