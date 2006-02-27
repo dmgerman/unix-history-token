@@ -165,6 +165,12 @@ directive|include
 file|"rpc_com.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"mt_misc.h"
+end_include
+
 begin_struct
 struct|struct
 name|handle
@@ -775,10 +781,6 @@ name|thread_key_t
 name|tcp_key
 decl_stmt|,
 name|udp_key
-decl_stmt|;
-specifier|extern
-name|mutex_t
-name|tsd_lock
 decl_stmt|;
 if|if
 condition|(

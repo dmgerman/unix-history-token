@@ -160,6 +160,12 @@ directive|include
 file|"rpc_com.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"mt_misc.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1723,10 +1729,6 @@ name|struct
 name|xp_ops2
 name|ops2
 decl_stmt|;
-specifier|extern
-name|mutex_t
-name|ops_lock
-decl_stmt|;
 comment|/* VARIABLES PROTECTED BY ops_lock: ops */
 name|mutex_lock
 argument_list|(
@@ -1979,13 +1981,6 @@ parameter_list|)
 define|\
 value|(xid % (SPARSENESS * ((struct cl_cache *) \ 		su_data(transp)->su_cache)->uc_size))
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|mutex_t
-name|dupreq_lock
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Enable use of the cache. Returns 1 on success, 0 on failure.  * Note: there is no disable.  */

@@ -119,12 +119,11 @@ directive|include
 file|"un-namespace.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|mutex_t
-name|clntraw_lock
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"mt_misc.h"
+end_include
 
 begin_define
 define|#
@@ -1203,10 +1202,6 @@ specifier|static
 name|struct
 name|clnt_ops
 name|ops
-decl_stmt|;
-specifier|extern
-name|mutex_t
-name|ops_lock
 decl_stmt|;
 comment|/* VARIABLES PROTECTED BY ops_lock: ops */
 name|mutex_lock

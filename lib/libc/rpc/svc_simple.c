@@ -103,6 +103,12 @@ directive|include
 file|"rpc_com.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"mt_misc.h"
+end_include
+
 begin_function_decl
 specifier|static
 name|void
@@ -330,10 +336,6 @@ decl_stmt|;
 name|void
 modifier|*
 name|handle
-decl_stmt|;
-specifier|extern
-name|mutex_t
-name|proglst_lock
 decl_stmt|;
 if|if
 condition|(
@@ -1021,10 +1023,6 @@ name|struct
 name|proglst
 modifier|*
 name|pl
-decl_stmt|;
-specifier|extern
-name|mutex_t
-name|proglst_lock
 decl_stmt|;
 comment|/* 	 * enforce "procnum 0 is echo" convention 	 */
 if|if

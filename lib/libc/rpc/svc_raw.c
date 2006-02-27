@@ -105,6 +105,12 @@ directive|include
 file|"un-namespace.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"mt_misc.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -154,13 +160,6 @@ modifier|*
 name|svc_raw_private
 struct|;
 end_struct
-
-begin_decl_stmt
-specifier|extern
-name|mutex_t
-name|svcraw_lock
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -987,10 +986,6 @@ specifier|static
 name|struct
 name|xp_ops2
 name|ops2
-decl_stmt|;
-specifier|extern
-name|mutex_t
-name|ops_lock
 decl_stmt|;
 comment|/* VARIABLES PROTECTED BY ops_lock: ops */
 name|mutex_lock

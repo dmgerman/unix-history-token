@@ -152,6 +152,12 @@ directive|include
 file|"rpc_com.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"mt_misc.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -239,20 +245,6 @@ modifier|*
 name|svc_head
 struct|;
 end_struct
-
-begin_decl_stmt
-specifier|extern
-name|rwlock_t
-name|svc_lock
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|rwlock_t
-name|svc_fd_lock
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 specifier|static

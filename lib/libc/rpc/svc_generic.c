@@ -153,6 +153,12 @@ directive|include
 file|"rpc_com.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"mt_misc.h"
+end_include
+
 begin_function_decl
 specifier|extern
 name|int
@@ -274,10 +280,6 @@ decl_stmt|;
 name|void
 modifier|*
 name|handle
-decl_stmt|;
-specifier|extern
-name|mutex_t
-name|xprtlist_lock
 decl_stmt|;
 comment|/* VARIABLES PROTECTED BY xprtlist_lock: xprtlist */
 if|if

@@ -208,6 +208,12 @@ directive|include
 file|"rpc_com.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"mt_misc.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -555,13 +561,6 @@ end_comment
 begin_comment
 comment|/*  * As it turns out, if the cache lock is *not* a reader/writer lock, we will  * block all clnt_create's if we are trying to connect to a host that's down,  * since the lock will be held all during that time.  */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|rwlock_t
-name|rpcbaddr_cache_lock
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * The routines check_cache(), add_cache(), delete_cache() manage the  * cache of rpcbind addresses for (host, netid).  */
@@ -1996,10 +1995,6 @@ name|char
 modifier|*
 name|hostname
 decl_stmt|;
-specifier|extern
-name|mutex_t
-name|loopnconf_lock
-decl_stmt|;
 name|int
 name|sock
 decl_stmt|;
@@ -3053,6 +3048,7 @@ comment|/*  * Quick check to see if rpcbind is up.  Tries to connect over  * loc
 end_comment
 
 begin_function
+specifier|static
 name|bool_t
 name|__rpcbind_is_up
 parameter_list|()

@@ -194,15 +194,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|"un-namespace.h"
+file|"mt_misc.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|rwlock_t
-name|svc_fd_lock
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
+end_include
 
 begin_function_decl
 specifier|static
@@ -3318,10 +3317,6 @@ name|struct
 name|xp_ops2
 name|ops2
 decl_stmt|;
-specifier|extern
-name|mutex_t
-name|ops_lock
-decl_stmt|;
 comment|/* VARIABLES PROTECTED BY ops_lock: ops, ops2 */
 name|mutex_lock
 argument_list|(
@@ -3425,10 +3420,6 @@ specifier|static
 name|struct
 name|xp_ops2
 name|ops2
-decl_stmt|;
-specifier|extern
-name|mutex_t
-name|ops_lock
 decl_stmt|;
 name|mutex_lock
 argument_list|(

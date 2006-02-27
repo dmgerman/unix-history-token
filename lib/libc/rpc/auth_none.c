@@ -113,6 +113,12 @@ directive|include
 file|"un-namespace.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"mt_misc.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -249,10 +255,6 @@ decl_stmt|;
 name|XDR
 modifier|*
 name|xdrs
-decl_stmt|;
-specifier|extern
-name|mutex_t
-name|authnone_lock
 decl_stmt|;
 name|mutex_lock
 argument_list|(
@@ -449,10 +451,6 @@ decl_stmt|;
 name|bool_t
 name|dummy
 decl_stmt|;
-specifier|extern
-name|mutex_t
-name|authnone_lock
-decl_stmt|;
 name|assert
 argument_list|(
 name|xdrs
@@ -620,10 +618,6 @@ specifier|static
 name|struct
 name|auth_ops
 name|ops
-decl_stmt|;
-specifier|extern
-name|mutex_t
-name|ops_lock
 decl_stmt|;
 comment|/* VARIABLES PROTECTED BY ops_lock: ops */
 name|mutex_lock

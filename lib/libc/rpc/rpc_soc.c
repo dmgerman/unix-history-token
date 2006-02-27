@@ -183,12 +183,11 @@ directive|include
 file|"rpc_com.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|mutex_t
-name|rpcsoc_lock
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"mt_misc.h"
+end_include
 
 begin_function_decl
 specifier|static
@@ -1724,10 +1723,6 @@ name|eachresult
 decl_stmt|;
 comment|/* call with each result obtained */
 block|{
-specifier|extern
-name|mutex_t
-name|tsd_lock
-decl_stmt|;
 if|if
 condition|(
 name|thr_main

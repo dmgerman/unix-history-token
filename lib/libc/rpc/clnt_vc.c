@@ -201,6 +201,12 @@ directive|include
 file|"rpc_com.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"mt_misc.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -472,13 +478,6 @@ specifier|static
 name|int
 modifier|*
 name|vc_fd_locks
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|mutex_t
-name|clnt_fd_lock
 decl_stmt|;
 end_decl_stmt
 
@@ -3916,10 +3915,6 @@ specifier|static
 name|struct
 name|clnt_ops
 name|ops
-decl_stmt|;
-specifier|extern
-name|mutex_t
-name|ops_lock
 decl_stmt|;
 name|sigset_t
 name|mask

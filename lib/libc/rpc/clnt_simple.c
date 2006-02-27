@@ -135,6 +135,12 @@ directive|include
 file|"un-namespace.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"mt_misc.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -376,10 +382,6 @@ decl_stmt|;
 specifier|static
 name|thread_key_t
 name|rpc_call_key
-decl_stmt|;
-specifier|extern
-name|mutex_t
-name|tsd_lock
 decl_stmt|;
 name|int
 name|main_thread

@@ -143,6 +143,7 @@ comment|/*  * Get somebody's public key  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|__getpublickey_real
 parameter_list|(

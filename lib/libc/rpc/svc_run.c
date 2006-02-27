@@ -131,6 +131,12 @@ directive|include
 file|"rpc_com.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"mt_misc.h"
+end_include
+
 begin_function
 name|void
 name|svc_run
@@ -144,10 +150,6 @@ decl_stmt|;
 name|struct
 name|timeval
 name|timeout
-decl_stmt|;
-specifier|extern
-name|rwlock_t
-name|svc_fd_lock
 decl_stmt|;
 name|timeout
 operator|.
@@ -267,10 +269,6 @@ name|void
 name|svc_exit
 parameter_list|()
 block|{
-specifier|extern
-name|rwlock_t
-name|svc_fd_lock
-decl_stmt|;
 name|rwlock_wrlock
 argument_list|(
 operator|&

@@ -99,6 +99,12 @@ directive|include
 file|"un-namespace.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"mt_misc.h"
+end_include
+
 begin_comment
 comment|/*  * svcauthsw is the bdevsw of server side authentication.  *  * Server side authenticators are called from authenticate by  * using the client auth struct flavor field to index into svcauthsw.  * The server auth flavors must implement a routine that looks  * like:  *  *	enum auth_stat  *	flavorx_auth(rqst, msg)  *		struct svc_req *rqst;  *		struct rpc_msg *msg;  *  */
 end_comment
@@ -185,10 +191,6 @@ decl_stmt|;
 name|enum
 name|auth_stat
 name|dummy
-decl_stmt|;
-specifier|extern
-name|mutex_t
-name|authsvc_lock
 decl_stmt|;
 comment|/* VARIABLES PROTECTED BY authsvc_lock: asp, Auths */
 name|rqst
@@ -462,10 +464,6 @@ name|struct
 name|authsvc
 modifier|*
 name|asp
-decl_stmt|;
-specifier|extern
-name|mutex_t
-name|authsvc_lock
 decl_stmt|;
 switch|switch
 condition|(
