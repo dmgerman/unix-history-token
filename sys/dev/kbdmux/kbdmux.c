@@ -873,7 +873,7 @@ argument_list|(
 name|state
 argument_list|)
 expr_stmt|;
-comment|/* read all chars from the keyboard */
+comment|/* 		 * Read all chars from the keyboard 		 * 		 * Turns out that atkbd(4) check_char() method may return 		 * "true" while read_char() method returns NOKEY. If this 		 * happens we could stuck in the loop below. Avoid this 		 * by breaking out of the loop if read_char() method returns 		 * NOKEY. 		 */
 while|while
 condition|(
 name|KBDMUX_CHECK_CHAR
@@ -897,7 +897,7 @@ name|c
 operator|==
 name|NOKEY
 condition|)
-continue|continue;
+break|break;
 if|if
 condition|(
 name|c
