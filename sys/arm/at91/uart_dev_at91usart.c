@@ -1445,7 +1445,7 @@ name|sc_txbusy
 condition|)
 name|ipend
 operator||=
-name|UART_IPEND_TXIDLE
+name|SER_INT_TXIDLE
 expr_stmt|;
 if|if
 condition|(
@@ -1455,7 +1455,7 @@ name|USART_CSR_RXRDY
 condition|)
 name|ipend
 operator||=
-name|UART_IPEND_RXREADY
+name|SER_INT_RXREADY
 expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
@@ -1583,7 +1583,7 @@ operator|=
 name|sig
 operator|&
 operator|~
-name|UART_SIGMASK_DELTA
+name|SER_MASK_DELTA
 expr_stmt|;
 name|sc
 operator|->
