@@ -534,15 +534,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|ioapic_next_logical_cluster
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|ioapic_register
 parameter_list|(
