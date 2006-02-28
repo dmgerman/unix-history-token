@@ -3502,34 +3502,6 @@ condition|)
 goto|goto
 name|drop
 goto|;
-comment|/* Unscale the window into a 32-bit value. */
-if|if
-condition|(
-operator|(
-name|thflags
-operator|&
-name|TH_SYN
-operator|)
-operator|==
-literal|0
-condition|)
-name|tiwin
-operator|=
-name|th
-operator|->
-name|th_win
-operator|<<
-name|tp
-operator|->
-name|snd_scale
-expr_stmt|;
-else|else
-name|tiwin
-operator|=
-name|th
-operator|->
-name|th_win
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
@@ -3785,7 +3757,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 					 * Could not complete 3-way handshake, 					 * connection is being closed down, and 					 * syncache will free mbuf. 					 */
+comment|/* 					 * Could not complete 3-way handshake, 					 * connection is being closed down, and 					 * syncache has free'd mbuf. 					 */
 name|INP_UNLOCK
 argument_list|(
 name|inp
@@ -3855,14 +3827,6 @@ name|tp
 operator|->
 name|rcv_nxt
 expr_stmt|;
-comment|/* 				 * RFC1323: The window in SYN& SYN/ACK 				 * segments is never scaled. 				 */
-name|tp
-operator|->
-name|snd_wnd
-operator|=
-name|tiwin
-expr_stmt|;
-comment|/* unscaled */
 goto|goto
 name|after_listen
 goto|;
@@ -4239,7 +4203,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 			 * Segment passed TAO tests. 			 */
+comment|/* 			 * Segment passed TAO tests. 			 * XXX: Can't happen at the moment. 			 */
 name|INP_UNLOCK
 argument_list|(
 name|inp
@@ -4263,12 +4227,6 @@ name|intotcpcb
 argument_list|(
 name|inp
 argument_list|)
-expr_stmt|;
-name|tp
-operator|->
-name|snd_wnd
-operator|=
-name|tiwin
 expr_stmt|;
 name|tp
 operator|->
@@ -4313,6 +4271,16 @@ name|TF_ACKNOW
 operator||
 name|TF_NEEDSYN
 operator|)
+expr_stmt|;
+name|tiwin
+operator|=
+name|th
+operator|->
+name|th_win
+operator|<<
+name|tp
+operator|->
+name|snd_scale
 expr_stmt|;
 name|tcpstat
 operator|.
@@ -4567,6 +4535,17 @@ argument_list|,
 name|tp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Unscale the window into a 32-bit value. 	 * This value is bogus for the TCPS_SYN_SENT state 	 * and is overwritten later. 	 */
+name|tiwin
+operator|=
+name|th
+operator|->
+name|th_win
+operator|<<
+name|tp
+operator|->
+name|snd_scale
+expr_stmt|;
 comment|/* 	 * Process options only when we get SYN/ACK back. The SYN case 	 * for incoming connections is handled in tcp_syncache. 	 * XXX this is traditional behavior, may need to be cleaned up. 	 */
 name|tcp_dooptions
 argument_list|(
@@ -4599,11 +4578,21 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|to
 operator|.
 name|to_flags
 operator|&
 name|TOF_SCALE
+operator|)
+operator|&&
+operator|(
+name|tp
+operator|->
+name|t_flags
+operator|&
+name|TF_REQ_SCALE
+operator|)
 condition|)
 block|{
 name|tp
@@ -4614,11 +4603,29 @@ name|TF_RCVD_SCALE
 expr_stmt|;
 name|tp
 operator|->
-name|requested_s_scale
+name|snd_scale
 operator|=
 name|to
 operator|.
 name|to_requested_s_scale
+expr_stmt|;
+name|tp
+operator|->
+name|snd_wnd
+operator|=
+name|th
+operator|->
+name|th_win
+operator|<<
+name|tp
+operator|->
+name|snd_scale
+expr_stmt|;
+name|tiwin
+operator|=
+name|tp
+operator|->
+name|snd_wnd
 expr_stmt|;
 block|}
 if|if
@@ -5708,6 +5715,7 @@ condition|)
 goto|goto
 name|drop
 goto|;
+comment|/* Initial send window, already scaled. */
 name|tp
 operator|->
 name|snd_wnd
@@ -5716,7 +5724,6 @@ name|th
 operator|->
 name|th_win
 expr_stmt|;
-comment|/* initial send window */
 name|tp
 operator|->
 name|irs
@@ -5791,14 +5798,6 @@ name|TF_REQ_SCALE
 operator|)
 condition|)
 block|{
-name|tp
-operator|->
-name|snd_scale
-operator|=
-name|tp
-operator|->
-name|requested_s_scale
-expr_stmt|;
 name|tp
 operator|->
 name|rcv_scale
@@ -6944,19 +6943,17 @@ condition|)
 block|{
 name|tp
 operator|->
-name|snd_scale
-operator|=
-name|tp
-operator|->
-name|requested_s_scale
-expr_stmt|;
-name|tp
-operator|->
 name|rcv_scale
 operator|=
 name|tp
 operator|->
 name|request_r_scale
+expr_stmt|;
+name|tp
+operator|->
+name|snd_wnd
+operator|=
+name|tiwin
 expr_stmt|;
 block|}
 comment|/* 		 * Make transitions: 		 *      SYN-RECEIVED  -> ESTABLISHED 		 *      SYN-RECEIVED* -> FIN-WAIT-1 		 */
@@ -7973,20 +7970,13 @@ condition|)
 block|{
 name|tp
 operator|->
-name|snd_scale
-operator|=
-name|tp
-operator|->
-name|requested_s_scale
-expr_stmt|;
-name|tp
-operator|->
 name|rcv_scale
 operator|=
 name|tp
 operator|->
 name|request_r_scale
 expr_stmt|;
+comment|/* Send window already scaled. */
 block|}
 block|}
 name|process_ACK

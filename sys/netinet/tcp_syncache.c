@@ -3080,7 +3080,7 @@ name|TF_RCVD_SCALE
 expr_stmt|;
 name|tp
 operator|->
-name|requested_s_scale
+name|snd_scale
 operator|=
 name|sc
 operator|->

@@ -523,6 +523,7 @@ comment|/* pending window scaling */
 name|u_char
 name|requested_s_scale
 decl_stmt|;
+comment|/* unused, to be reused later */
 name|u_long
 name|ts_recent
 decl_stmt|;
