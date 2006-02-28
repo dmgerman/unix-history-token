@@ -502,6 +502,16 @@ name|status
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Get user's country and keymap */
+if|if
+condition|(
+name|RunningAsInit
+condition|)
+name|configCountry
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* Begin user dialog at outer menu */
 name|dialog_clear
 argument_list|()
