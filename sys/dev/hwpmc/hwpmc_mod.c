@@ -5934,7 +5934,7 @@ name|po
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * If this process is the target of a PMC, check if the new 		 * credentials are compatible with the owner's permissions. 		 */
+comment|/* 		 * If the process being exec'ed is not the target of any 		 * PMC, we are done. 		 */
 if|if
 condition|(
 operator|(
@@ -5950,8 +5950,21 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|freepath
+condition|)
+name|FREE
+argument_list|(
+name|freepath
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 break|break;
-comment|/* 		 * Log the exec event to all monitoring owners.  Skip 		 * owners who have already recieved the event because 		 * the have system sampling PMCs active. 		 */
+block|}
+comment|/* 		 * Log the exec event to all monitoring owners.  Skip 		 * owners who have already recieved the event because 		 * they had system sampling PMCs active. 		 */
 for|for
 control|(
 name|ri
@@ -15531,6 +15544,71 @@ name|__LINE__
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* free the per-cpu sample buffers */
+for|for
+control|(
+name|cpu
+operator|=
+literal|0
+init|;
+name|cpu
+operator|<
+name|mp_ncpus
+condition|;
+name|cpu
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|pmc_cpu_is_disabled
+argument_list|(
+name|cpu
+argument_list|)
+condition|)
+continue|continue;
+name|KASSERT
+argument_list|(
+name|pmc_pcpu
+index|[
+name|cpu
+index|]
+operator|->
+name|pc_sb
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"[pmc,%d] Null cpu sample buffer cpu=%d"
+operator|,
+name|__LINE__
+operator|,
+name|cpu
+operator|)
+argument_list|)
+expr_stmt|;
+name|FREE
+argument_list|(
+name|pmc_pcpu
+index|[
+name|cpu
+index|]
+operator|->
+name|pc_sb
+argument_list|,
+name|M_PMC
+argument_list|)
+expr_stmt|;
+name|pmc_pcpu
+index|[
+name|cpu
+index|]
+operator|->
+name|pc_sb
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 comment|/* do processor dependent cleanup */
 name|PMCDBG
 argument_list|(
