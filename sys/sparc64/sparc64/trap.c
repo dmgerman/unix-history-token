@@ -2565,7 +2565,7 @@ argument_list|)
 expr_stmt|;
 name|AUDIT_SYSCALL_EXIT
 argument_list|(
-name|code
+name|error
 argument_list|,
 name|td
 argument_list|)
