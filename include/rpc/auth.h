@@ -1012,6 +1012,7 @@ specifier|extern
 name|int
 name|getpublicandprivatekey
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,

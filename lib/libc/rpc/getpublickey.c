@@ -151,6 +151,7 @@ name|netname
 parameter_list|,
 name|publickey
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|netname
@@ -264,6 +265,7 @@ name|key
 parameter_list|,
 name|ret
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|key
