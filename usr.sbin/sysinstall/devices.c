@@ -93,17 +93,6 @@ directive|include
 file|<libdisk.h>
 end_include
 
-begin_comment
-comment|/* how much to bias minor number for a given /dev/<ct#><un#>s<s#> slice */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SLICE_DELTA
-value|(0x10000)
-end_define
-
 begin_decl_stmt
 specifier|static
 name|Device
@@ -139,12 +128,6 @@ modifier|*
 name|description
 decl_stmt|;
 name|int
-name|major
-decl_stmt|,
-name|minor
-decl_stmt|,
-name|delta
-decl_stmt|,
 name|max
 decl_stmt|;
 block|}
@@ -159,12 +142,6 @@ literal|"cd%d"
 block|,
 literal|"SCSI CDROM drive"
 block|,
-literal|15
-block|,
-literal|2
-block|,
-literal|8
-block|,
 literal|4
 block|}
 block|,
@@ -175,12 +152,6 @@ literal|"mcd%d"
 block|,
 literal|"Mitsumi (old model) CDROM drive"
 block|,
-literal|29
-block|,
-literal|0
-block|,
-literal|8
-block|,
 literal|4
 block|}
 block|,
@@ -190,12 +161,6 @@ block|,
 literal|"scd%d"
 block|,
 literal|"Sony CDROM drive - CDU31/33A type"
-block|,
-literal|45
-block|,
-literal|0
-block|,
-literal|8
 block|,
 literal|4
 block|}
@@ -210,12 +175,6 @@ literal|"matcd%d"
 block|,
 literal|"Matsushita CDROM ('sound blaster' type)"
 block|,
-literal|46
-block|,
-literal|0
-block|,
-literal|8
-block|,
 literal|4
 block|}
 block|,
@@ -228,12 +187,6 @@ literal|"acd%d"
 block|,
 literal|"ATAPI/IDE CDROM"
 block|,
-literal|117
-block|,
-literal|0
-block|,
-literal|8
-block|,
 literal|4
 block|}
 block|,
@@ -243,12 +196,6 @@ block|,
 literal|"sa%d"
 block|,
 literal|"SCSI tape drive"
-block|,
-literal|14
-block|,
-literal|0
-block|,
-literal|16
 block|,
 literal|4
 block|}
@@ -260,12 +207,6 @@ literal|"rwt%d"
 block|,
 literal|"Wangtek tape drive"
 block|,
-literal|10
-block|,
-literal|0
-block|,
-literal|1
-block|,
 literal|4
 block|}
 block|,
@@ -275,12 +216,6 @@ block|,
 literal|"da%d"
 block|,
 literal|"SCSI disk device"
-block|,
-literal|13
-block|,
-literal|65538
-block|,
-literal|8
 block|,
 literal|16
 block|}
@@ -292,12 +227,6 @@ literal|"ad%d"
 block|,
 literal|"ATA/IDE disk device"
 block|,
-literal|116
-block|,
-literal|65538
-block|,
-literal|8
-block|,
 literal|16
 block|}
 block|,
@@ -307,12 +236,6 @@ block|,
 literal|"ar%d"
 block|,
 literal|"ATA/IDE RAID device"
-block|,
-literal|157
-block|,
-literal|65538
-block|,
-literal|8
 block|,
 literal|16
 block|}
@@ -324,12 +247,6 @@ literal|"afd%d"
 block|,
 literal|"ATAPI/IDE floppy device"
 block|,
-literal|118
-block|,
-literal|65538
-block|,
-literal|8
-block|,
 literal|4
 block|}
 block|,
@@ -339,12 +256,6 @@ block|,
 literal|"mlxd%d"
 block|,
 literal|"Mylex RAID disk"
-block|,
-literal|131
-block|,
-literal|65538
-block|,
-literal|8
 block|,
 literal|4
 block|}
@@ -356,12 +267,6 @@ literal|"amrd%d"
 block|,
 literal|"AMI MegaRAID drive"
 block|,
-literal|133
-block|,
-literal|65538
-block|,
-literal|8
-block|,
 literal|4
 block|}
 block|,
@@ -371,12 +276,6 @@ block|,
 literal|"idad%d"
 block|,
 literal|"Compaq RAID array"
-block|,
-literal|109
-block|,
-literal|65538
-block|,
-literal|8
 block|,
 literal|4
 block|}
@@ -388,12 +287,6 @@ literal|"twed%d"
 block|,
 literal|"3ware ATA RAID array"
 block|,
-literal|147
-block|,
-literal|65538
-block|,
-literal|8
-block|,
 literal|4
 block|}
 block|,
@@ -403,12 +296,6 @@ block|,
 literal|"aacd%d"
 block|,
 literal|"Adaptec FSA RAID array"
-block|,
-literal|151
-block|,
-literal|65538
-block|,
-literal|8
 block|,
 literal|4
 block|}
@@ -420,12 +307,6 @@ literal|"ipsd%d"
 block|,
 literal|"IBM ServeRAID RAID array"
 block|,
-literal|176
-block|,
-literal|65538
-block|,
-literal|8
-block|,
 literal|4
 block|}
 block|,
@@ -435,12 +316,6 @@ block|,
 literal|"fd%d"
 block|,
 literal|"floppy drive unit A"
-block|,
-literal|9
-block|,
-literal|0
-block|,
-literal|64
 block|,
 literal|4
 block|}
@@ -864,12 +739,6 @@ block|,
 literal|"cuad%d"
 block|,
 literal|"%s on device %s (COM%d)"
-block|,
-literal|28
-block|,
-literal|128
-block|,
-literal|1
 block|,
 literal|16
 block|}
