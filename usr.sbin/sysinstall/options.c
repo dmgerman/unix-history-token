@@ -44,6 +44,7 @@ modifier|*
 name|varCheck
 parameter_list|(
 name|Option
+modifier|*
 name|opt
 parameter_list|)
 block|{
@@ -56,7 +57,7 @@ decl_stmt|;
 if|if
 condition|(
 name|opt
-operator|.
+operator|->
 name|aux
 condition|)
 name|cp
@@ -68,7 +69,7 @@ name|char
 operator|*
 operator|)
 name|opt
-operator|.
+operator|->
 name|aux
 argument_list|)
 expr_stmt|;
@@ -96,9 +97,9 @@ name|char
 modifier|*
 name|resetLogo
 parameter_list|(
-name|char
+name|Option
 modifier|*
-name|str
+name|opt
 parameter_list|)
 block|{
 return|return
@@ -114,6 +115,7 @@ modifier|*
 name|mediaCheck
 parameter_list|(
 name|Option
+modifier|*
 name|opt
 parameter_list|)
 block|{
@@ -595,6 +597,10 @@ block|,
 name|OPT_IS_FUNC
 block|,
 name|deviceRescan
+block|,
+name|NULL
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -606,12 +612,22 @@ name|OPT_IS_FUNC
 block|,
 name|installVarDefaults
 block|,
-literal|0
+name|NULL
 block|,
 name|resetLogo
 block|}
 block|,
 block|{
+name|NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
 name|NULL
 block|}
 block|, }
@@ -726,6 +742,7 @@ name|opt
 operator|.
 name|check
 argument_list|(
+operator|&
 name|opt
 argument_list|)
 return|;
@@ -901,6 +918,7 @@ name|opt
 operator|.
 name|check
 argument_list|(
+operator|&
 name|opt
 argument_list|)
 expr_stmt|;

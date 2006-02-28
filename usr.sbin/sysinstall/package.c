@@ -330,13 +330,14 @@ literal|".tgz"
 block|}
 decl_stmt|;
 name|int
-name|ext
-decl_stmt|,
 name|last_msg
 decl_stmt|,
 name|pathend
 decl_stmt|,
 name|ret
+decl_stmt|;
+name|size_t
+name|ext
 decl_stmt|;
 name|FILE
 modifier|*

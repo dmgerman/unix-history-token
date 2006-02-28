@@ -399,9 +399,7 @@ block|,
 name|NULL
 block|}
 block|,
-block|{
-literal|0
-block|}
+name|LAYOUT_END
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -820,7 +818,6 @@ name|unsigned
 name|long
 name|mask
 decl_stmt|;
-name|unsigned
 name|long
 name|tmp
 decl_stmt|;
@@ -881,7 +878,7 @@ block|}
 else|else
 block|{
 comment|/* Parse out quad decimal mask */
-name|mask
+name|tmp
 operator|=
 name|strtoul
 argument_list|(
@@ -898,7 +895,7 @@ condition|(
 operator|!
 name|_validByte
 argument_list|(
-name|mask
+name|tmp
 argument_list|)
 operator|||
 operator|*
@@ -910,6 +907,10 @@ condition|)
 return|return
 literal|0
 return|;
+name|mask
+operator|=
+name|tmp
+expr_stmt|;
 name|tmp
 operator|=
 name|strtoul

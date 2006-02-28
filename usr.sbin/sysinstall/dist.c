@@ -192,6 +192,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DTE_END
+value|{ NULL, NULL, 0, 0, { NULL } }
+end_define
+
+begin_define
+define|#
+directive|define
 name|BASE_DIST
 value|(&DistTable[0])
 end_define
@@ -368,9 +375,7 @@ argument_list|,
 name|XOrgDistTable
 argument_list|)
 block|,
-block|{
-name|NULL
-block|}
+name|DTE_END
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -626,9 +631,7 @@ argument_list|,
 literal|"/usr/src"
 argument_list|)
 block|,
-block|{
-name|NULL
-block|}
+name|DTE_END
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -836,9 +839,7 @@ argument_list|,
 literal|"xorg-fontserver"
 argument_list|)
 block|,
-block|{
-name|NULL
-block|}
+name|DTE_END
 block|, }
 decl_stmt|;
 end_decl_stmt

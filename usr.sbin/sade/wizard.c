@@ -28,6 +28,7 @@ file|<libdisk.h>
 end_include
 
 begin_function
+specifier|static
 name|int
 name|scan_block
 parameter_list|(
@@ -90,6 +91,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|Scan_Disk
 parameter_list|(

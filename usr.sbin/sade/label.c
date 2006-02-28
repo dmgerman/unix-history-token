@@ -4194,11 +4194,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|extern
-name|void
-name|print_label_chunks
-parameter_list|()
-function_decl|;
 name|clear
 argument_list|()
 expr_stmt|;

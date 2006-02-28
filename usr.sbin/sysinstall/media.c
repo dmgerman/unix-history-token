@@ -1155,7 +1155,8 @@ name|res
 decl_stmt|;
 name|int
 name|af
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|urllen
 decl_stmt|;
 specifier|extern
@@ -2388,7 +2389,7 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
-name|int
+name|size_t
 name|pathlen
 decl_stmt|;
 name|mediaClose

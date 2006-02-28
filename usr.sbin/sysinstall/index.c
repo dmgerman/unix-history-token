@@ -130,6 +130,7 @@ comment|/* Smarter strdup */
 end_comment
 
 begin_function
+specifier|static
 specifier|inline
 name|char
 modifier|*
@@ -1186,6 +1187,7 @@ comment|/*  * XXX - this function should do error checking, and skip corrupted I
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|index_parse
 parameter_list|(
@@ -2207,6 +2209,7 @@ comment|/* Delete an entry out of the list it's in (only the plist, at present) 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|index_delete
 parameter_list|(
@@ -2411,6 +2414,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|pkg_checked
 parameter_list|(
@@ -2527,6 +2531,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|pkg_fire
 parameter_list|(
@@ -2867,6 +2872,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pkg_selected
 parameter_list|(
@@ -2935,12 +2941,13 @@ name|struct
 name|ListPtrs
 name|lists
 decl_stmt|;
+name|size_t
+name|maxname
+decl_stmt|;
 name|int
 name|n
 decl_stmt|,
 name|rval
-decl_stmt|,
-name|maxname
 decl_stmt|;
 name|int
 name|curr
@@ -3015,7 +3022,7 @@ operator|->
 name|next
 control|)
 block|{
-name|int
+name|size_t
 name|len
 decl_stmt|;
 operator|++

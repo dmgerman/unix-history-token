@@ -875,7 +875,9 @@ block|}
 specifier|static
 name|void
 name|print_command_summary
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|mvprintw
 argument_list|(

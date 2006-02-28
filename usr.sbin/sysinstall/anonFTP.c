@@ -430,9 +430,7 @@ block|,
 name|NULL
 block|}
 block|,
-block|{
-literal|0
-block|}
+name|LAYOUT_END
 block|, }
 decl_stmt|;
 end_decl_stmt

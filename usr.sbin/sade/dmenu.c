@@ -1113,7 +1113,6 @@ operator|(
 operator|*
 operator|(
 operator|(
-name|unsigned
 name|int
 operator|*
 operator|)

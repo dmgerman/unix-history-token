@@ -785,12 +785,19 @@ block|}
 block|,
 block|{
 literal|0
+block|,
+name|NULL
+block|,
+name|FALSE
+block|,
+name|NULL
 block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|traverseHitlist
 parameter_list|(

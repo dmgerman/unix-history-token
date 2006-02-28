@@ -54,6 +54,7 @@ comment|/* defined in ftp.c */
 end_comment
 
 begin_function
+specifier|static
 name|Boolean
 name|checkAccess
 parameter_list|(

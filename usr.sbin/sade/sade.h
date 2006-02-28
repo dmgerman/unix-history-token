@@ -1384,6 +1384,17 @@ name|Layout
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* Layout array terminator. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LAYOUT_END
+value|{ 0, 0, 0, 0, NULL, NULL, NULL, 0, NULL }
+end_define
+
 begin_typedef
 typedef|typedef
 enum|enum
@@ -1728,7 +1739,11 @@ function_decl|(
 modifier|*
 name|check
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|struct
+name|_opt
+modifier|*
+parameter_list|)
 function_decl|;
 block|}
 name|Option
