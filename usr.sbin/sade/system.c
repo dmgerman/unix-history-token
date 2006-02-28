@@ -348,45 +348,21 @@ expr_stmt|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_comment
 comment|/*  * Harvest children if we are init.  */
 end_comment
 
-begin_function
-specifier|static
-name|void
-name|reap_children
-parameter_list|(
-name|int
-name|sig
-parameter_list|)
-block|{
-name|int
-name|errbak
-init|=
-name|errno
-decl_stmt|;
-while|while
-condition|(
-name|waitpid
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-name|NULL
-argument_list|,
-name|WNOHANG
-argument_list|)
-operator|>
-literal|0
-condition|)
-empty_stmt|;
-name|errno
-operator|=
-name|errbak
-expr_stmt|;
-block|}
-end_function
+begin_endif
+unit|static void reap_children(int sig) {     int errbak = errno;      while (waitpid(-1, NULL, WNOHANG)> 0) 	;     errno = errbak; }
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Expand a file into a convenient location, nuking it each time */
