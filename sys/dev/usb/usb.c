@@ -4457,6 +4457,9 @@ name|usb_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|KASSERT
 argument_list|(
 name|cold
@@ -4500,7 +4503,18 @@ argument_list|,
 name|sc_coldexplist
 argument_list|)
 expr_stmt|;
-comment|/* 		sc->sc_bus->use_polling++; */
+name|s
+operator|=
+name|splusb
+argument_list|()
+expr_stmt|;
+name|sc
+operator|->
+name|sc_bus
+operator|->
+name|use_polling
+operator|++
+expr_stmt|;
 name|sc
 operator|->
 name|sc_port
@@ -4518,7 +4532,18 @@ operator|->
 name|root_hub
 argument_list|)
 expr_stmt|;
-comment|/* 		sc->sc_bus->use_polling--; */
+name|sc
+operator|->
+name|sc_bus
+operator|->
+name|use_polling
+operator|--
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -4582,9 +4607,9 @@ name|SYSINIT
 argument_list|(
 name|usb_cold_explore
 argument_list|,
-name|SI_SUB_INT_CONFIG_HOOKS
+name|SI_SUB_CONFIGURE
 argument_list|,
-name|SI_ORDER_FIRST
+name|SI_ORDER_MIDDLE
 argument_list|,
 name|usb_cold_explore
 argument_list|,
