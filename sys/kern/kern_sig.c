@@ -8976,12 +8976,6 @@ name|p_xstat
 operator|=
 name|sig
 expr_stmt|;
-name|p
-operator|->
-name|p_xthread
-operator|=
-name|td
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -10150,12 +10144,6 @@ operator|->
 name|p_xstat
 operator|=
 name|sig
-expr_stmt|;
-name|p
-operator|->
-name|p_xthread
-operator|=
-name|td
 expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
