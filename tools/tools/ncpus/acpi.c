@@ -1526,6 +1526,12 @@ expr_stmt|;
 return|return
 operator|(
 name|ncpu
+operator|==
+literal|0
+condition|?
+literal|1
+else|:
+name|ncpu
 operator|)
 return|;
 block|}
