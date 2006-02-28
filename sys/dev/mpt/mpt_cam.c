@@ -8782,6 +8782,11 @@ literal|"Timedout requests already complete. "
 literal|"Interrupts may not be functioning.\n"
 argument_list|)
 expr_stmt|;
+name|mpt_enable_ints
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 name|MPT_UNLOCK
 argument_list|(
 name|mpt

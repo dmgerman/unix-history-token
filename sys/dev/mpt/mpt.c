@@ -4,11 +4,11 @@ comment|/*-  * Generic routines for LSI Fusion adapters.  * FreeBSD Version.  * 
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2002, 2006 by Matthew Jacob  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon including  *    a substantially similar Disclaimer requirement for further binary  *    redistribution.  * 3. Neither the names of the above listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF THE COPYRIGHT  * OWNER OR CONTRIBUTOR IS ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Support from Chris Ellsworth in order to make SAS adapters work  * is gratefully acknowledged.  */
+comment|/*-  * Copyright (c) 2002, 2006 by Matthew Jacob  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon including  *    a substantially similar Disclaimer requirement for further binary  *    redistribution.  * 3. Neither the names of the above listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF THE COPYRIGHT  * OWNER OR CONTRIBUTOR IS ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Support from Chris Ellsworth in order to make SAS adapters work  * is gratefully acknowledged.  */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2004, Avid Technology, Inc. and its contributors.  * Copyright (c) 2005, WHEEL Sp. z o.o.  * Copyright (c) 2004, 2005 Justin T. Gibbs  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon including  *    a substantially similar Disclaimer requirement for further binary  *    redistribution.  * 3. Neither the names of the above listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF THE COPYRIGHT  * OWNER OR CONTRIBUTOR IS ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2004, Avid Technology, Inc. and its contributors.  * Copyright (c) 2005, WHEEL Sp. z o.o.  * Copyright (c) 2004, 2005 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon including  *    a substantially similar Disclaimer requirement for further binary  *    redistribution.  * 3. Neither the names of the above listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF THE COPYRIGHT  * OWNER OR CONTRIBUTOR IS ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -3296,7 +3296,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This is a magic diagnostic reset that resets all the ARM  * processors in the chip.   */
+comment|/* This is a magic diagnostic reset that resets all the ARM  * processors in the chip.  */
 end_comment
 
 begin_function
@@ -3547,7 +3547,14 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-comment|/* Try a soft reset */
+name|int
+name|retry_cnt
+init|=
+literal|0
+decl_stmt|;
+comment|/* 	 * Try a soft reset. If that fails, get out the big hammer. 	 */
+name|again
+label|:
 if|if
 condition|(
 operator|(
@@ -3562,13 +3569,30 @@ operator|!=
 name|MPT_OK
 condition|)
 block|{
+name|int
+name|cnt
+decl_stmt|;
+for|for
+control|(
+name|cnt
+operator|=
+literal|0
+init|;
+name|cnt
+operator|<
+literal|5
+condition|;
+name|cnt
+operator|++
+control|)
+block|{
 comment|/* Failed; do a hard reset */
 name|mpt_hard_reset
 argument_list|(
 name|mpt
 argument_list|)
 expr_stmt|;
-comment|/* Wait for the IOC to reload and come out of reset state */
+comment|/* 			 * Wait for the IOC to reload 			 * and come out of reset state 			 */
 name|ret
 operator|=
 name|mpt_wait_state
@@ -3581,18 +3605,52 @@ expr_stmt|;
 if|if
 condition|(
 name|ret
-operator|!=
+operator|==
 name|MPT_OK
 condition|)
+block|{
+break|break;
+block|}
+comment|/* 			 * Okay- try to check again... 			 */
+name|ret
+operator|=
+name|mpt_wait_state
+argument_list|(
+name|mpt
+argument_list|,
+name|MPT_DB_STATE_READY
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+name|MPT_OK
+condition|)
+block|{
+break|break;
+block|}
 name|mpt_prt
 argument_list|(
 name|mpt
 argument_list|,
-literal|"failed to reset device\n"
+literal|"mpt_reset: failed hard reset (%d:%d)\n"
+argument_list|,
+name|retry_cnt
+argument_list|,
+name|cnt
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Invoke reset handlers.  We bump the reset count so 	 * that mpt_wait_req() understands that regardless of 	 * the specified wait condition, it should stop its wait. 	 */
+block|}
+if|if
+condition|(
+name|retry_cnt
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 		 * Invoke reset handlers.  We bump the reset count so 		 * that mpt_wait_req() understands that regardless of 		 * the specified wait condition, it should stop its wait. 		 */
 name|mpt
 operator|->
 name|reset_cnt
@@ -3613,17 +3671,51 @@ argument_list|,
 name|ret
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|reinit
 operator|!=
 literal|0
 condition|)
+block|{
+name|ret
+operator|=
 name|mpt_enable_ioc
 argument_list|(
 name|mpt
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+name|MPT_OK
+condition|)
+block|{
+name|mpt_enable_ints
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|ret
+operator|!=
+name|MPT_OK
+operator|&&
+name|retry_cnt
+operator|++
+operator|<
+literal|2
+condition|)
+block|{
+goto|goto
+name|again
+goto|;
+block|}
 return|return
 name|ret
 return|;
@@ -5562,6 +5654,10 @@ name|request_t
 modifier|*
 name|req
 decl_stmt|;
+name|MSG_CONFIG
+modifier|*
+name|cfgp
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -5590,8 +5686,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|ENOMEM
 operator|)
 return|;
 block|}
@@ -5635,6 +5730,13 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|mpt_free_request
+argument_list|(
+name|mpt
+argument_list|,
+name|req
+argument_list|)
+expr_stmt|;
 name|mpt_prt
 argument_list|(
 name|mpt
@@ -5644,47 +5746,22 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|ETIMEDOUT
 operator|)
 return|;
 block|}
-if|if
+switch|switch
 condition|(
-operator|(
 name|req
 operator|->
 name|IOCStatus
 operator|&
 name|MPI_IOCSTATUS_MASK
-operator|)
-operator|!=
-name|MPI_IOCSTATUS_SUCCESS
 condition|)
 block|{
-name|mpt_prt
-argument_list|(
-name|mpt
-argument_list|,
-literal|"mpt_read_cfg_header: Config Info Status %x\n"
-argument_list|,
-name|req
-operator|->
-name|IOCStatus
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
-else|else
-block|{
-name|MSG_CONFIG
-modifier|*
-name|cfgp
-decl_stmt|;
+case|case
+name|MPI_IOCSTATUS_SUCCESS
+case|:
 name|cfgp
 operator|=
 name|req
@@ -5711,6 +5788,47 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+break|break;
+case|case
+name|MPI_IOCSTATUS_CONFIG_INVALID_PAGE
+case|:
+name|mpt_lprt
+argument_list|(
+name|mpt
+argument_list|,
+name|MPT_PRT_DEBUG
+argument_list|,
+literal|"Invalid Page Type %d Number %d Addr 0x%0x\n"
+argument_list|,
+name|PageType
+argument_list|,
+name|PageNumber
+argument_list|,
+name|PageAddress
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+break|break;
+default|default:
+name|mpt_prt
+argument_list|(
+name|mpt
+argument_list|,
+literal|"mpt_read_cfg_header: Config Info Status %x\n"
+argument_list|,
+name|req
+operator|->
+name|IOCStatus
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EIO
+expr_stmt|;
+break|break;
 block|}
 name|mpt_free_request
 argument_list|(
@@ -6254,13 +6372,25 @@ comment|/*timeout_ms*/
 literal|5000
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If it's an invalid page, so what? Not a supported function.... 	 */
+if|if
+condition|(
+name|rv
+operator|==
+name|EINVAL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|rv
 condition|)
 return|return
 operator|(
-name|EIO
+name|rv
 operator|)
 return|;
 name|mpt_lprt
@@ -9803,7 +9933,7 @@ name|try
 operator|++
 control|)
 block|{
-comment|/* 		 * No need to reset if the IOC is already in the READY state. 		 * 		 * Force reset if initialization failed previously. 		 * Note that a hard_reset of the second channel of a '929 		 * will stop operation of the first channel.  Hopefully, if the 		 * first channel is ok, the second will not require a hard  		 * reset. 		 */
+comment|/* 		 * No need to reset if the IOC is already in the READY state. 		 * 		 * Force reset if initialization failed previously. 		 * Note that a hard_reset of the second channel of a '929 		 * will stop operation of the first channel.  Hopefully, if the 		 * first channel is ok, the second will not require a hard 		 * reset. 		 */
 if|if
 condition|(
 name|needreset
@@ -10866,7 +10996,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|MPT_OK
 operator|)
 return|;
 block|}
