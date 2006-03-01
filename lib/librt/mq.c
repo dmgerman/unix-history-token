@@ -1110,9 +1110,11 @@ name|mqd
 parameter_list|)
 block|{
 return|return
+operator|(
 name|mqd
 operator|->
 name|oshandle
+operator|)
 return|;
 block|}
 end_function
