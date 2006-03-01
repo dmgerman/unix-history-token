@@ -108,6 +108,11 @@ parameter_list|,
 name|int
 parameter_list|,
 name|mode_t
+parameter_list|,
+specifier|const
+name|struct
+name|mq_attr
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -435,6 +440,12 @@ name|oflag
 parameter_list|,
 name|mode_t
 name|mode
+parameter_list|,
+specifier|const
+name|struct
+name|mq_attr
+modifier|*
+name|attr
 parameter_list|)
 block|{
 name|struct
@@ -478,6 +489,8 @@ argument_list|,
 name|oflag
 argument_list|,
 name|mode
+argument_list|,
+name|attr
 argument_list|)
 expr_stmt|;
 if|if
