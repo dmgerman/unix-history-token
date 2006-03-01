@@ -964,6 +964,8 @@ operator|(
 name|long
 operator|)
 name|physsz
+operator|/
+name|PAGE_SIZE
 expr_stmt|;
 name|vm_ksubmap_init
 argument_list|(

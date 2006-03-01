@@ -1124,10 +1124,7 @@ argument_list|)
 expr_stmt|;
 name|realmem
 operator|=
-name|ia64_ptob
-argument_list|(
 name|Maxmem
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Display any holes after the first chunk of extended memory. 	 */
 if|if
