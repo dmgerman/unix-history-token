@@ -2073,6 +2073,10 @@ name|device_t
 name|dev
 decl_stmt|;
 comment|/* device handle */
+name|device_t
+name|parent
+decl_stmt|;
+comment|/* channel handle */
 union|union
 block|{
 struct|struct
@@ -2191,6 +2195,14 @@ define|#
 directive|define
 name|ATA_R_DEBUG
 value|0x10000000
+define|#
+directive|define
+name|ATA_R_DANGER1
+value|0x20000000
+define|#
+directive|define
+name|ATA_R_DANGER2
+value|0x40000000
 name|u_int8_t
 name|status
 decl_stmt|;
@@ -3332,7 +3344,7 @@ name|ata_free_request
 parameter_list|(
 name|request
 parameter_list|)
-value|uma_zfree(ata_request_zone, request)
+value|{ \ 	if (!(request->flags& ATA_R_DANGER2)) \ 	    uma_zfree(ata_request_zone, request); \ 	}
 end_define
 
 begin_comment

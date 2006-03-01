@@ -26690,11 +26690,6 @@ condition|)
 return|return
 name|ENXIO
 return|;
-name|ata_pci_allocate
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ctlr
