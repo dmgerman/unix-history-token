@@ -2594,6 +2594,12 @@ operator|->
 name|ns_reclen
 operator|>
 name|NFS_MAXPACKET
+operator|||
+name|slp
+operator|->
+name|ns_reclen
+operator|<=
+literal|0
 condition|)
 block|{
 name|slp
