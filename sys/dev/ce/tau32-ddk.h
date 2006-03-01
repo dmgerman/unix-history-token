@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * DDK (Driver Development Kit) for Cronyx Tau32-PCI adapter.  *  * Copyright (C) 2003-2005 Cronyx Engineering, http://www.cronyx.ru  * All rights reserved.  *  * Author: Leo Yuriev<ly@cronyx.ru>, http://leo.yuriev.ru  *  * $Cronyx: tau32-ddk.h,v 1.6 2005/07/15 15:01:26 rik Exp $  * $FreeBSD$  */
+comment|/*  * DDK (Driver Development Kit) for Cronyx Tau32-PCI adapter.  *  * Copyright (C) 2003-2006 Cronyx Engineering, http://www.cronyx.ru  * All rights reserved.  *  * Author: Leo Yuriev<ly@cronyx.ru>, http://leo.yuriev.ru  *  * $Cronyx: tau32-ddk.h,v 1.2 2006/02/01 09:14:40 ly Exp $  * $Rik: tau32-ddk.h,v 1.7 2006/02/28 22:33:29 rik Exp $  * $FreeBSD$  */
 end_comment
 
 begin_if
@@ -1283,8 +1283,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|TAU32_framed_cas_cross
+name|TAU32_framed_cas_pass
 value|(8ul<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAU32_framed_cas_cross
+value|(9ul<< 4)
 end_define
 
 begin_define
@@ -1430,14 +1437,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|TAU32_crc4_mf_tx_only
+name|TAU32_crc4_mf_tx
 value|0x08000000ul
 end_define
 
 begin_define
 define|#
 directive|define
-name|TAU32_crc4_mf_rx_only
+name|TAU32_crc4_mf_rx
 value|0x10000000ul
 end_define
 
@@ -1445,7 +1452,7 @@ begin_define
 define|#
 directive|define
 name|TAU32_crc4_mf
-value|(TAU32_crc4_mf_rx_only | TAU32_crc4_mf_tx_only)
+value|(TAU32_crc4_mf_rx | TAU32_crc4_mf_tx)
 end_define
 
 begin_comment
@@ -1736,7 +1743,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TAU32_FRCAS
+name|TAU32_FRLOFM
 value|0x0001u
 end_define
 
@@ -1774,7 +1781,7 @@ value|0x0008u
 end_define
 
 begin_comment
-comment|/* Let status (on/off) */
+comment|/* Led status (on/off) */
 end_comment
 
 begin_typedef
