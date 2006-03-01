@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/conf.h>
 end_include
 
@@ -1358,6 +1364,20 @@ name|int
 name|flags
 parameter_list|)
 block|{
+if|if
+condition|(
+name|resource_disabled
+argument_list|(
+name|KEYBOARD_NAME
+argument_list|,
+name|unit
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 return|return
 operator|(
 literal|0
