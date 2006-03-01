@@ -133,6 +133,17 @@ begin_comment
 comment|/* max probes before drop */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TCPTV_INFLIGHT_RTTTHRESH
+value|(10*hz/1000)
+end_define
+
+begin_comment
+comment|/* below which inflight 						   disengages, in msec */
+end_comment
+
 begin_comment
 comment|/*  * Minimum retransmit timer is 3 ticks, for algorithmic stability.  * TCPT_RANGESET() will add another TCPTV_CPU_VAR to deal with  * the expected worst-case processing variances by the kernels  * representing the end points.  Such variances do not always show  * up in the srtt because the timestamp is often calculated at  * the interface rather then at the TCP layer.  This value is  * typically 50ms.  However, it is also possible that delayed  * acks (typically 100ms) could create issues so we set the slop  * to 200ms to try to cover it.  Note that, properly speaking,  * delayed-acks should not create a major issue for interactive  * environments which 'P'ush the last segment, at least as  * long as implementations do the required 'at least one ack  * for every two packets' for the non-interactive streaming case.  * (maybe the RTO calculation should use 2*RTT instead of RTT  * to handle the ack-every-other-packet case).  *  * The prior minimum of 1*hz (1 second) badly breaks throughput on any  * networks faster then a modem that has minor (e.g. 1%) packet loss.  */
 end_comment
