@@ -361,7 +361,7 @@ name|proc
 modifier|*
 name|p
 parameter_list|,
-name|timer_t
+name|int
 name|tid
 parameter_list|,
 name|ksiginfo_t
