@@ -193,6 +193,22 @@ modifier|*
 name|bio_task_arg
 decl_stmt|;
 comment|/* Argument to above */
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+name|void
+modifier|*
+name|_bio_caller1
+decl_stmt|;
+name|void
+modifier|*
+name|_bio_caller2
+decl_stmt|;
+name|uint8_t
+name|_bio_cflags
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* XXX: these go away when bio chaining is introduced */
 name|daddr_t
 name|bio_pblkno
