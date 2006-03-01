@@ -3610,7 +3610,7 @@ operator|==
 name|NULL
 argument_list|,
 operator|(
-literal|"lol"
+literal|"returning from syscall with td_ar set!"
 operator|)
 argument_list|)
 expr_stmt|;
