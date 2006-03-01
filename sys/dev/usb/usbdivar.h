@@ -63,6 +63,9 @@ decl_stmt|;
 name|int
 name|refcnt
 decl_stmt|;
+name|int
+name|savedtoggle
+decl_stmt|;
 block|}
 struct|;
 end_struct
