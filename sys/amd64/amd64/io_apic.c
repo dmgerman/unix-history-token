@@ -1394,7 +1394,7 @@ break|break;
 default|default:
 name|low
 operator||=
-name|IOART_DELLOPRI
+name|IOART_DELFIXED
 operator||
 name|apic_irq_to_idt
 argument_list|(
