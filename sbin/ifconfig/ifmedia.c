@@ -915,6 +915,14 @@ operator|!
 name|did_it
 condition|)
 block|{
+name|ifr
+operator|.
+name|ifr_media
+operator|=
+name|ifmr
+operator|->
+name|ifm_current
+expr_stmt|;
 if|if
 condition|(
 name|ioctl
