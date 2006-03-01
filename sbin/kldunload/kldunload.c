@@ -20,6 +20,18 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/linker.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -39,18 +51,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/linker.h>
 end_include
 
 begin_function
@@ -96,6 +96,10 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
+name|struct
+name|kld_file_stat
+name|stat
+decl_stmt|;
 name|int
 name|c
 decl_stmt|;
@@ -138,6 +142,7 @@ operator|!=
 operator|-
 literal|1
 condition|)
+block|{
 switch|switch
 condition|(
 name|c
@@ -196,6 +201,7 @@ default|default:
 name|usage
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 name|argc
 operator|-=
@@ -298,10 +304,6 @@ condition|(
 name|verbose
 condition|)
 block|{
-name|struct
-name|kld_file_stat
-name|stat
-decl_stmt|;
 name|stat
 operator|.
 name|version
