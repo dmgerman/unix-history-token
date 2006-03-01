@@ -599,6 +599,19 @@ name|MHLEN
 operator|-
 name|max_hdr
 expr_stmt|;
+if|if
+condition|(
+name|max_datalen
+operator|<
+literal|1
+condition|)
+name|panic
+argument_list|(
+literal|"%s: max_datalen< 1"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

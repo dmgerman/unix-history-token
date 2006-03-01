@@ -193,14 +193,14 @@ name|KIPC_MAX_LINKHDR
 argument_list|,
 name|max_linkhdr
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|max_linkhdr
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Size of largest link layer header"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -214,14 +214,14 @@ name|KIPC_MAX_PROTOHDR
 argument_list|,
 name|max_protohdr
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|max_protohdr
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Size of largest protocol layer header"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -235,14 +235,14 @@ name|KIPC_MAX_HDR
 argument_list|,
 name|max_hdr
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|max_hdr
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Size of largest link plus protocol header"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -256,14 +256,14 @@ name|KIPC_MAX_DATALEN
 argument_list|,
 name|max_datalen
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|max_datalen
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Minimum space left in mbuf after max_hdr"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
