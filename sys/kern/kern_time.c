@@ -303,7 +303,7 @@ name|struct
 name|proc
 modifier|*
 parameter_list|,
-name|timer_t
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -458,10 +458,10 @@ name|struct
 name|sigevent
 modifier|*
 parameter_list|,
-name|timer_t
+name|int
 modifier|*
 parameter_list|,
-name|timer_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -475,7 +475,7 @@ name|struct
 name|thread
 modifier|*
 parameter_list|,
-name|timer_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4351,7 +4351,7 @@ end_ifndef
 
 begin_struct
 struct|struct
-name|timer_create_args
+name|ktimer_create_args
 block|{
 name|clockid_t
 name|clock_id
@@ -4361,7 +4361,7 @@ name|sigevent
 modifier|*
 name|evp
 decl_stmt|;
-name|timer_t
+name|int
 modifier|*
 name|timerid
 decl_stmt|;
@@ -4376,7 +4376,7 @@ end_endif
 
 begin_function
 name|int
-name|timer_create
+name|ktimer_create
 parameter_list|(
 name|struct
 name|thread
@@ -4384,7 +4384,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|timer_create_args
+name|ktimer_create_args
 modifier|*
 name|uap
 parameter_list|)
@@ -4396,7 +4396,7 @@ name|evp1
 decl_stmt|,
 name|ev
 decl_stmt|;
-name|timer_t
+name|int
 name|id
 decl_stmt|;
 name|int
@@ -4489,7 +4489,7 @@ name|timerid
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|timer_t
+name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4533,11 +4533,11 @@ name|sigevent
 modifier|*
 name|evp
 parameter_list|,
-name|timer_t
+name|int
 modifier|*
 name|timerid
 parameter_list|,
-name|timer_t
+name|int
 name|preset_id
 parameter_list|)
 block|{
@@ -5113,9 +5113,9 @@ end_ifndef
 
 begin_struct
 struct|struct
-name|timer_delete_args
+name|ktimer_delete_args
 block|{
-name|timer_t
+name|int
 name|timerid
 decl_stmt|;
 block|}
@@ -5129,7 +5129,7 @@ end_endif
 
 begin_function
 name|int
-name|timer_delete
+name|ktimer_delete
 parameter_list|(
 name|struct
 name|thread
@@ -5137,7 +5137,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|timer_delete_args
+name|ktimer_delete_args
 modifier|*
 name|uap
 parameter_list|)
@@ -5169,7 +5169,7 @@ name|proc
 modifier|*
 name|p
 parameter_list|,
-name|timer_t
+name|int
 name|timerid
 parameter_list|,
 name|int
@@ -5275,7 +5275,7 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-name|timer_t
+name|int
 name|timerid
 parameter_list|)
 block|{
@@ -5457,9 +5457,9 @@ end_ifndef
 
 begin_struct
 struct|struct
-name|timer_settime_args
+name|ktimer_settime_args
 block|{
-name|timer_t
+name|int
 name|timerid
 decl_stmt|;
 name|int
@@ -5487,7 +5487,7 @@ end_endif
 
 begin_function
 name|int
-name|timer_settime
+name|ktimer_settime
 parameter_list|(
 name|struct
 name|thread
@@ -5495,7 +5495,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|timer_settime_args
+name|ktimer_settime_args
 modifier|*
 name|uap
 parameter_list|)
@@ -5705,9 +5705,9 @@ end_ifndef
 
 begin_struct
 struct|struct
-name|timer_gettime_args
+name|ktimer_gettime_args
 block|{
-name|timer_t
+name|int
 name|timerid
 decl_stmt|;
 name|struct
@@ -5726,7 +5726,7 @@ end_endif
 
 begin_function
 name|int
-name|timer_gettime
+name|ktimer_gettime
 parameter_list|(
 name|struct
 name|thread
@@ -5734,7 +5734,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|timer_gettime_args
+name|ktimer_gettime_args
 modifier|*
 name|uap
 parameter_list|)
@@ -5883,7 +5883,7 @@ begin_struct
 struct|struct
 name|timer_getoverrun_args
 block|{
-name|timer_t
+name|int
 name|timerid
 decl_stmt|;
 block|}
@@ -5897,7 +5897,7 @@ end_endif
 
 begin_function
 name|int
-name|timer_getoverrun
+name|ktimer_getoverrun
 parameter_list|(
 name|struct
 name|thread
@@ -5905,7 +5905,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|timer_getoverrun_args
+name|ktimer_getoverrun_args
 modifier|*
 name|uap
 parameter_list|)
@@ -6489,7 +6489,7 @@ name|proc
 modifier|*
 name|p
 parameter_list|,
-name|timer_t
+name|int
 name|timerid
 parameter_list|,
 name|ksiginfo_t

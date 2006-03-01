@@ -9052,7 +9052,7 @@ end_comment
 
 begin_function
 name|int
-name|mq_open
+name|kmq_open
 parameter_list|(
 name|struct
 name|thread
@@ -9060,7 +9060,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|mq_open_args
+name|kmq_open_args
 modifier|*
 name|uap
 parameter_list|)
@@ -9712,7 +9712,7 @@ end_comment
 
 begin_function
 name|int
-name|mq_unlink
+name|kmq_unlink
 parameter_list|(
 name|struct
 name|thread
@@ -9720,7 +9720,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|mq_unlink_args
+name|kmq_unlink_args
 modifier|*
 name|uap
 parameter_list|)
@@ -10183,7 +10183,7 @@ end_comment
 
 begin_function
 name|int
-name|mq_setattr
+name|kmq_setattr
 parameter_list|(
 name|struct
 name|thread
@@ -10191,7 +10191,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|mq_setattr_args
+name|kmq_setattr_args
 modifier|*
 name|uap
 parameter_list|)
@@ -10408,7 +10408,7 @@ end_comment
 
 begin_function
 name|int
-name|mq_timedreceive
+name|kmq_timedreceive
 parameter_list|(
 name|struct
 name|thread
@@ -10416,7 +10416,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|mq_timedreceive_args
+name|kmq_timedreceive_args
 modifier|*
 name|uap
 parameter_list|)
@@ -10522,7 +10522,7 @@ end_comment
 
 begin_function
 name|int
-name|mq_timedsend
+name|kmq_timedsend
 parameter_list|(
 name|struct
 name|thread
@@ -10530,7 +10530,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|mq_timedsend_args
+name|kmq_timedsend_args
 modifier|*
 name|uap
 parameter_list|)
@@ -10635,7 +10635,7 @@ end_comment
 
 begin_function
 name|int
-name|mq_notify
+name|kmq_notify
 parameter_list|(
 name|struct
 name|thread
@@ -10643,7 +10643,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|mq_notify_args
+name|kmq_notify_args
 modifier|*
 name|uap
 parameter_list|)
@@ -12330,7 +12330,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCALL_MODULE_HELPER
 argument_list|(
-name|mq_open
+name|kmq_open
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12338,7 +12338,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCALL_MODULE_HELPER
 argument_list|(
-name|mq_setattr
+name|kmq_setattr
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12346,7 +12346,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCALL_MODULE_HELPER
 argument_list|(
-name|mq_timedsend
+name|kmq_timedsend
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12354,7 +12354,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCALL_MODULE_HELPER
 argument_list|(
-name|mq_timedreceive
+name|kmq_timedreceive
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12362,7 +12362,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCALL_MODULE_HELPER
 argument_list|(
-name|mq_notify
+name|kmq_notify
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12370,7 +12370,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCALL_MODULE_HELPER
 argument_list|(
-name|mq_unlink
+name|kmq_unlink
 argument_list|)
 expr_stmt|;
 end_expr_stmt

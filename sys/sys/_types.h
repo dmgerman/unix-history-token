@@ -237,7 +237,9 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|__int32_t
+name|struct
+name|__timer
+modifier|*
 name|__timer_t
 typedef|;
 end_typedef
@@ -248,7 +250,9 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|__int32_t
+name|struct
+name|__mq
+modifier|*
 name|__mqd_t
 typedef|;
 end_typedef
