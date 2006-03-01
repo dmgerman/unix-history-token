@@ -1836,6 +1836,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|tn
 operator|->
 name|tn_cur
@@ -1845,6 +1846,7 @@ expr_stmt|;
 name|__sigev_list_unlock
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 name|pthread_cleanup_pop
 argument_list|(
