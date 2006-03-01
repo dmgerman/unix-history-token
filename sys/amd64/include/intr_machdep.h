@@ -22,22 +22,49 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/* With I/O APIC's we can have up to 191 interrupts. */
+comment|/*  * The maximum number of I/O interrupts we allow.  This number is rather  * arbitrary as it is just the maximum IRQ resource value.  The interrupt  * source for a given IRQ maps that I/O interrupt to device interrupt  * source whether it be a pin on an interrupt controller or an MSI interrupt.  * The 16 ISA IRQs are assigned fixed IDT vectors, but all other device  * interrupts allocate IDT vectors on demand.  Currently we have 191 IDT  * vectors available for device interrupts.  On many systems with I/O APICs,  * a lot of the IRQs are not used, so this number can be much larger than  * 191 and still be safe since only interrupt sources in actual use will  * allocate IDT vectors.  *  * For now we stick with 255 as ISA IRQs and PCI intline IRQs only allow  * for IRQs in the range 0 - 254.  When MSI support is added this number  * will likely increase.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NUM_IO_INTS
-value|191
+value|255
 end_define
+
+begin_comment
+comment|/*  * - 1 ??? dummy counter.  * - 2 counters for each I/O interrupt.  * - 1 counter for each CPU for lapic timer.  * - 7 counters for each CPU for IPI counters for SMP.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
 
 begin_define
 define|#
 directive|define
 name|INTRCNT_COUNT
-value|(1 + NUM_IO_INTS * 2)
+value|(1 + NUM_IO_INTS * 2 + 1)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|INTRCNT_COUNT
+value|(1 + NUM_IO_INTS * 2 + (1 + 7) * MAXCPU)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
