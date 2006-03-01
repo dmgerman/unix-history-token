@@ -452,7 +452,7 @@ define|#
 directive|define
 name|DEFAULT_FLAGS
 define|\
-value|((u_int32_t)		\ 	 (IOART_INTMSET |	\ 	  IOART_DESTPHY |	\ 	  IOART_DELLOPRI))
+value|((u_int32_t)		\ 	 (IOART_INTMSET |	\ 	  IOART_DESTPHY |	\ 	  IOART_DELFIXED))
 end_define
 
 begin_define
@@ -460,7 +460,7 @@ define|#
 directive|define
 name|DEFAULT_ISA_FLAGS
 define|\
-value|((u_int32_t)		\ 	 (IOART_INTMSET |	\ 	  IOART_TRGREDG |	\ 	  IOART_INTAHI |	\ 	  IOART_DESTPHY |	\ 	  IOART_DELLOPRI))
+value|((u_int32_t)		\ 	 (IOART_INTMSET |	\ 	  IOART_TRGREDG |	\ 	  IOART_INTAHI |	\ 	  IOART_DESTPHY |	\ 	  IOART_DELFIXED))
 end_define
 
 begin_function
@@ -1047,7 +1047,7 @@ define|#
 directive|define
 name|DEFAULT_EXTINT_FLAGS
 define|\
-value|((u_int32_t)		\ 	 (IOART_INTMSET |	\ 	  IOART_TRGREDG |	\ 	  IOART_INTAHI |	\ 	  IOART_DESTPHY |	\ 	  IOART_DELLOPRI))
+value|((u_int32_t)		\ 	 (IOART_INTMSET |	\ 	  IOART_TRGREDG |	\ 	  IOART_INTAHI |	\ 	  IOART_DESTPHY |	\ 	  IOART_DELFIXED))
 end_define
 
 begin_comment
