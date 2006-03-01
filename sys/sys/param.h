@@ -537,8 +537,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MJUM4BYTES
-value|(4 * 1024)
+name|MJUMPAGESIZE
+value|PAGE_SIZE
 end_define
 
 begin_comment

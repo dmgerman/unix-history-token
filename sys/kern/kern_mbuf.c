@@ -141,12 +141,12 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|nmbjumbo4
+name|nmbjumbop
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* limits number of 4k jumbo clusters */
+comment|/* limits number of page size jumbo clusters */
 end_comment
 
 begin_decl_stmt
@@ -258,16 +258,16 @@ name|_kern_ipc
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|nmbjumbo4
+name|nmbjumbop
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|nmbjumbo4
+name|nmbjumbop
 argument_list|,
 literal|0
 argument_list|,
-literal|"Maximum number of mbuf 4k jumbo clusters allowed"
+literal|"Maximum number of mbuf page size jumbo clusters allowed"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -359,7 +359,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|uma_zone_t
-name|zone_jumbo4
+name|zone_jumbop
 decl_stmt|;
 end_decl_stmt
 
@@ -686,13 +686,13 @@ name|zone_mbuf
 argument_list|)
 expr_stmt|;
 comment|/* Make jumbo frame zone too. 4k, 9k and 16k. */
-name|zone_jumbo4
+name|zone_jumbop
 operator|=
 name|uma_zcreate
 argument_list|(
-name|MBUF_JUMBO4_MEM_NAME
+name|MBUF_JUMBOP_MEM_NAME
 argument_list|,
-name|MJUM4BYTES
+name|MJUMPAGESIZE
 argument_list|,
 name|mb_ctor_clust
 argument_list|,
@@ -720,15 +720,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|nmbjumbo4
+name|nmbjumbop
 operator|>
 literal|0
 condition|)
 name|uma_zone_set_max
 argument_list|(
-name|zone_jumbo4
+name|zone_jumbop
 argument_list|,
-name|nmbjumbo4
+name|nmbjumbop
 argument_list|)
 expr_stmt|;
 name|zone_jumbo9
@@ -1441,7 +1441,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The Cluster and Jumbo[9|16] zone constructor.  *  * Here the 'arg' pointer points to the Mbuf which we  * are configuring cluster storage for.  If 'arg' is  * empty we allocate just the cluster without setting  * the mbuf to it.  See mbuf.h.  */
+comment|/*  * The Cluster and Jumbo[PAGESIZE|9|16] zone constructor.  *  * Here the 'arg' pointer points to the Mbuf which we  * are configuring cluster storage for.  If 'arg' is  * empty we allocate just the cluster without setting  * the mbuf to it.  See mbuf.h.  */
 end_comment
 
 begin_function
@@ -1521,15 +1521,15 @@ expr_stmt|;
 break|break;
 if|#
 directive|if
-name|MJUM4BYTES
+name|MJUMPAGESIZE
 operator|!=
 name|MCLBYTES
 case|case
-name|MJUM4BYTES
+name|MJUMPAGESIZE
 case|:
 name|type
 operator|=
-name|EXT_JUMBO4
+name|EXT_JUMBOP
 expr_stmt|;
 break|break;
 endif|#

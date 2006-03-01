@@ -717,7 +717,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EXT_JUMBO4
+name|EXT_JUMBOP
 value|4
 end_define
 
@@ -1272,8 +1272,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|MBUF_JUMBO4_MEM_NAME
-value|"mbuf_jumbo_4k"
+name|MBUF_JUMBOP_MEM_NAME
+value|"mbuf_jumbo_pagesize"
 end_define
 
 begin_define
@@ -1407,7 +1407,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|uma_zone_t
-name|zone_jumbo4
+name|zone_jumbop
 decl_stmt|;
 end_decl_stmt
 
@@ -1801,7 +1801,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/*  * m_getjcl() returns an mbuf with a cluster of the specified size attached.  * For size it takes MCLBYTES, MJUM4BYTES, MJUM9BYTES, MJUM16BYTES.  */
+comment|/*  * m_getjcl() returns an mbuf with a cluster of the specified size attached.  * For size it takes MCLBYTES, MJUMPAGESIZE, MJUM9BYTES, MJUM16BYTES.  */
 end_comment
 
 begin_expr_stmt
@@ -1886,15 +1886,15 @@ expr_stmt|;
 break|break;
 if|#
 directive|if
-name|MJUM4BYTES
+name|MJUMPAGESIZE
 operator|!=
 name|MCLBYTES
 case|case
-name|MJUM4BYTES
+name|MJUMPAGESIZE
 case|:
 name|zone
 operator|=
-name|zone_jumbo4
+name|zone_jumbop
 expr_stmt|;
 break|break;
 endif|#
@@ -2064,7 +2064,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * m_cljget() is different from m_clget() as it can allocate clusters  * without attaching them to an mbuf.  In that case the return value  * is the pointer to the cluster of the requested size.  If an mbuf was  * specified, it gets the cluster attached to it and the return value  * can be safely ignored.  * For size it takes MCLBYTES, MJUM4BYTES, MJUM9BYTES, MJUM16BYTES.  */
+comment|/*  * m_cljget() is different from m_clget() as it can allocate clusters  * without attaching them to an mbuf.  In that case the return value  * is the pointer to the cluster of the requested size.  If an mbuf was  * specified, it gets the cluster attached to it and the return value  * can be safely ignored.  * For size it takes MCLBYTES, MJUMPAGESIZE, MJUM9BYTES, MJUM16BYTES.  */
 end_comment
 
 begin_function
@@ -2137,15 +2137,15 @@ expr_stmt|;
 break|break;
 if|#
 directive|if
-name|MJUM4BYTES
+name|MJUMPAGESIZE
 operator|!=
 name|MCLBYTES
 case|case
-name|MJUM4BYTES
+name|MJUMPAGESIZE
 case|:
 name|zone
 operator|=
-name|zone_jumbo4
+name|zone_jumbop
 expr_stmt|;
 break|break;
 endif|#
