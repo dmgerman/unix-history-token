@@ -261,6 +261,11 @@ name|object
 operator|->
 name|handle
 expr_stmt|;
+name|vm_object_reference_locked
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|VM_OBJECT_UNLOCK
 argument_list|(
 name|object
@@ -305,6 +310,11 @@ argument_list|,
 literal|0
 argument_list|,
 name|curthread
+argument_list|)
+expr_stmt|;
+name|vm_object_deallocate
+argument_list|(
+name|object
 argument_list|)
 expr_stmt|;
 name|vm_page_lock_queues
