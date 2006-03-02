@@ -11200,6 +11200,12 @@ argument_list|)
 block|{
 if|if
 condition|(
+name|vp
+operator|->
+name|v_type
+operator|!=
+name|VMARKER
+operator|&&
 name|VOP_ISLOCKED
 argument_list|(
 name|vp
