@@ -1658,6 +1658,13 @@ parameter_list|)
 block|{ }
 end_function
 
+begin_define
+define|#
+directive|define
+name|BITS_PER_INT
+value|(8 * sizeof(int))
+end_define
+
 begin_decl_stmt
 name|vm_offset_t
 name|arm_nocache_startaddr
@@ -1674,7 +1681,7 @@ operator|/
 operator|(
 name|PAGE_SIZE
 operator|*
-literal|32
+name|BITS_PER_INT
 operator|)
 index|]
 decl_stmt|;
@@ -1724,7 +1731,7 @@ operator|/
 operator|(
 name|PAGE_SIZE
 operator|*
-literal|32
+name|BITS_PER_INT
 operator|)
 argument_list|,
 name|ARM_TP_ADDRESS
@@ -1742,7 +1749,7 @@ name|arm_nocache_allocated
 index|[
 name|i
 operator|/
-literal|32
+name|BITS_PER_INT
 index|]
 operator|&
 operator|(
@@ -1751,7 +1758,7 @@ operator|<<
 operator|(
 name|i
 operator|%
-literal|32
+name|BITS_PER_INT
 operator|)
 operator|)
 operator|)
@@ -1784,7 +1791,7 @@ name|arm_nocache_allocated
 index|[
 name|j
 operator|/
-literal|32
+name|BITS_PER_INT
 index|]
 operator|&
 operator|(
@@ -1793,7 +1800,7 @@ operator|<<
 operator|(
 name|j
 operator|%
-literal|32
+name|BITS_PER_INT
 operator|)
 operator|)
 condition|)
@@ -1826,7 +1833,7 @@ operator|/
 operator|(
 name|PAGE_SIZE
 operator|*
-literal|32
+name|BITS_PER_INT
 operator|)
 argument_list|,
 name|ARM_TP_ADDRESS
@@ -1898,7 +1905,7 @@ name|arm_nocache_allocated
 index|[
 name|i
 operator|/
-literal|32
+name|BITS_PER_INT
 index|]
 operator||=
 literal|1
@@ -1906,7 +1913,7 @@ operator|<<
 operator|(
 name|i
 operator|%
-literal|32
+name|BITS_PER_INT
 operator|)
 expr_stmt|;
 block|}
@@ -1984,7 +1991,7 @@ name|arm_nocache_allocated
 index|[
 name|i
 operator|/
-literal|32
+name|BITS_PER_INT
 index|]
 operator|&=
 operator|~
@@ -1994,7 +2001,7 @@ operator|<<
 operator|(
 name|i
 operator|%
-literal|32
+name|BITS_PER_INT
 operator|)
 operator|)
 expr_stmt|;
