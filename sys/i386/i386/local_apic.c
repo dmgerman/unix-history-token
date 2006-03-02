@@ -3472,18 +3472,12 @@ argument_list|,
 name|irq
 argument_list|)
 expr_stmt|;
-else|else
-name|db_dump_intr_event
-argument_list|(
-name|isrc
-operator|->
-name|is_event
-argument_list|,
-name|verbose
-operator|==
-literal|2
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|else 					db_dump_intr_event(isrc->is_event, 					    verbose == 2);
+endif|#
+directive|endif
 block|}
 else|else
 name|db_printf
