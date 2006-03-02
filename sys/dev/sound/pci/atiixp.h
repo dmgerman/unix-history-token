@@ -73,11 +73,11 @@ begin_define
 define|#
 directive|define
 name|ATI_IXP_DEFAULT_BUFSZ
-value|(1<< 12)
+value|(1<< 13)
 end_define
 
 begin_comment
-comment|/* 4096 */
+comment|/* 8192 */
 end_comment
 
 begin_define
