@@ -515,6 +515,8 @@ operator|&
 name|aaudescs
 argument_list|,
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_COHERENT
 argument_list|,
 operator|&
 name|softc
