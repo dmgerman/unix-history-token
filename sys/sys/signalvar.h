@@ -856,6 +856,11 @@ block|{
 name|sigset_t
 name|sq_signals
 decl_stmt|;
+comment|/* All pending signals. */
+name|sigset_t
+name|sq_kill
+decl_stmt|;
+comment|/* Legacy depth 1 queue. */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -863,6 +868,7 @@ argument|ksiginfo
 argument_list|)
 name|sq_list
 expr_stmt|;
+comment|/* Queued signal info. */
 name|struct
 name|proc
 modifier|*
