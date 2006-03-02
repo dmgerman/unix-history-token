@@ -15,6 +15,16 @@ directive|define
 name|_UFS_UFS_UFSMOUNT_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/buf.h>
+end_include
+
+begin_comment
+comment|/* XXX For struct workhead. */
+end_comment
+
 begin_comment
 comment|/*  * Arguments to mount UFS-based filesystems  */
 end_comment
@@ -183,6 +193,29 @@ name|long
 name|um_numindirdeps
 decl_stmt|;
 comment|/* outstanding indirdeps */
+name|struct
+name|workhead
+name|softdep_workitem_pending
+decl_stmt|;
+comment|/* softdep work queue */
+name|struct
+name|worklist
+modifier|*
+name|softdep_worklist_tail
+decl_stmt|;
+comment|/* Tail pointer for above */
+name|int
+name|softdep_on_worklist
+decl_stmt|;
+comment|/* Items on the worklist */
+name|int
+name|softdep_deps
+decl_stmt|;
+comment|/* Total dependency count */
+name|int
+name|softdep_req
+decl_stmt|;
+comment|/* Wakeup when deps hits 0. */
 name|struct
 name|vnode
 modifier|*
@@ -560,6 +593,16 @@ parameter_list|(
 name|mp
 parameter_list|)
 value|((struct ufsmount *)((mp)->mnt_data))
+end_define
+
+begin_define
+define|#
+directive|define
+name|UFSTOVFS
+parameter_list|(
+name|ump
+parameter_list|)
+value|(ump)->um_mountp
 end_define
 
 begin_comment

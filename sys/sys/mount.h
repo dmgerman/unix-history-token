@@ -3460,32 +3460,6 @@ name|vfs_stdsysctl
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX - these should be indirect functions!!! */
-end_comment
-
-begin_function_decl
-name|int
-name|softdep_fsync
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|softdep_process_worklist
-parameter_list|(
-name|struct
-name|mount
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_else
 else|#
 directive|else

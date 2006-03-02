@@ -1245,24 +1245,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Hook for calling soft updates. */
-end_comment
-
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
-name|softdep_process_worklist_hook
-function_decl|)
-parameter_list|(
-name|struct
-name|mount
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * Macros to control when a vnode is freed and recycled.  All require  * the vnode interlock.  */
 end_comment
 
@@ -7777,21 +7759,6 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|sync_mtx
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Do soft update processing. 		 */
-if|if
-condition|(
-name|softdep_process_worklist_hook
-operator|!=
-name|NULL
-condition|)
-call|(
-modifier|*
-name|softdep_process_worklist_hook
-call|)
-argument_list|(
-name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 		 * The variable rushjob allows the kernel to speed up the 		 * processing of the filesystem syncer process. A rushjob 		 * value of N tells the filesystem syncer to process the next 		 * N seconds worth of work on its queue ASAP. Currently rushjob 		 * is used by the soft update code to speed up the filesystem 		 * syncer process when the incore state is getting so far 		 * ahead of the disk that the kernel memory pool is being 		 * threatened with exhaustion. 		 */

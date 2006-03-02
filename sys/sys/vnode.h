@@ -2343,21 +2343,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|int
-function_decl|(
-modifier|*
-name|softdep_process_worklist_hook
-function_decl|)
-parameter_list|(
-name|struct
-name|mount
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* cache_* may belong in namei.h. */
 end_comment
