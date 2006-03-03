@@ -5068,7 +5068,7 @@ literal|0x1
 case|:
 name|printf
 argument_list|(
-literal|"\nInstruction TLB: 4-KBPages, 4-way set associative, 32 entries"
+literal|"\nInstruction TLB: 4 KB pages, 4-way set associative, 32 entries"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5077,7 +5077,7 @@ literal|0x2
 case|:
 name|printf
 argument_list|(
-literal|"\nInstruction TLB: 4-MB Pages, fully associative, 2 entries"
+literal|"\nInstruction TLB: 4 MB pages, fully associative, 2 entries"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5086,7 +5086,7 @@ literal|0x3
 case|:
 name|printf
 argument_list|(
-literal|"\nData TLB: 4-KB Pages, 4-way set associative, 64 entries"
+literal|"\nData TLB: 4 KB pages, 4-way set associative, 64 entries"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5095,7 +5095,7 @@ literal|0x4
 case|:
 name|printf
 argument_list|(
-literal|"\nData TLB: 4-MB Pages, 4-way set associative, 8 entries"
+literal|"\nData TLB: 4 MB Pages, 4-way set associative, 8 entries"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5104,7 +5104,7 @@ literal|0x6
 case|:
 name|printf
 argument_list|(
-literal|"\n1st-level instruction cache: 8-KB, 4-way set associative, 32-byte line size"
+literal|"\n1st-level instruction cache: 8 KB, 4-way set associative, 32 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5113,7 +5113,7 @@ literal|0x8
 case|:
 name|printf
 argument_list|(
-literal|"\n1st-level instruction cache: 16-KB, 4-way set associative, 32-byte line size"
+literal|"\n1st-level instruction cache: 16 KB, 4-way set associative, 32 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5122,7 +5122,7 @@ literal|0xa
 case|:
 name|printf
 argument_list|(
-literal|"\n1st-level data cache: 8-KB, 2-way set associative, 32-byte line size"
+literal|"\n1st-level data cache: 8 KB, 2-way set associative, 32 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5131,7 +5131,7 @@ literal|0xc
 case|:
 name|printf
 argument_list|(
-literal|"\n1st-level data cache: 16-KB, 4-way set associative, 32-byte line size"
+literal|"\n1st-level data cache: 16 KB, 4-way set associative, 32 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5140,7 +5140,7 @@ literal|0x22
 case|:
 name|printf
 argument_list|(
-literal|"\n3rd-level cache: 512 KB, 4-way set associative, sectored cache, 64-byte line size"
+literal|"\n3rd-level cache: 512 KB, 4-way set associative, sectored cache, 64 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5149,7 +5149,7 @@ literal|0x23
 case|:
 name|printf
 argument_list|(
-literal|"\n3rd-level cache: 1-MB, 8-way set associative, sectored cache, 64-byte line size"
+literal|"\n3rd-level cache: 1 MB, 8-way set associative, sectored cache, 64 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5158,7 +5158,7 @@ literal|0x25
 case|:
 name|printf
 argument_list|(
-literal|"\n3rd-level cache: 2-MB, 8-way set associative, sectored cache, 64-byte line size"
+literal|"\n3rd-level cache: 2 MB, 8-way set associative, sectored cache, 64 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5167,7 +5167,7 @@ literal|0x29
 case|:
 name|printf
 argument_list|(
-literal|"\n3rd-level cache: 4-MB, 8-way set associative, sectored cache, 64-byte line size"
+literal|"\n3rd-level cache: 4 MB, 8-way set associative, sectored cache, 64 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5176,7 +5176,7 @@ literal|0x2c
 case|:
 name|printf
 argument_list|(
-literal|"\n1st-level data cache: 32-KB, 8-way set associative, 64-byte line size"
+literal|"\n1st-level data cache: 32 KB, 8-way set associative, 64 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5185,7 +5185,7 @@ literal|0x30
 case|:
 name|printf
 argument_list|(
-literal|"\n1st-level instruction cache: 32-KB, 8-way set associative, 64-byte line size"
+literal|"\n1st-level instruction cache: 32 KB, 8-way set associative, 64 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5194,7 +5194,7 @@ literal|0x39
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 128-KB, 4-way set associative, sectored cache, 64-byte line size"
+literal|"\n2nd-level cache: 128 KB, 4-way set associative, sectored cache, 64 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5203,7 +5203,7 @@ literal|0x3b
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 128-KB, 2-way set associative, sectored cache, 64-byte line size"
+literal|"\n2nd-level cache: 128 KB, 2-way set associative, sectored cache, 64 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5212,7 +5212,7 @@ literal|0x3c
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 256-KB, 4-way set associative, sectored cache, 64-byte line size"
+literal|"\n2nd-level cache: 256 KB, 4-way set associative, sectored cache, 64 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5221,7 +5221,7 @@ literal|0x41
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 128-KB, 4-way set associative, 32-byte line size"
+literal|"\n2nd-level cache: 128 KB, 4-way set associative, 32 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5230,7 +5230,7 @@ literal|0x42
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 256-KB, 4-way set associative, 32-byte line size"
+literal|"\n2nd-level cache: 256 KB, 4-way set associative, 32 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5239,7 +5239,7 @@ literal|0x43
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 512-KB, 4-way set associative, 32 byte line size"
+literal|"\n2nd-level cache: 512 KB, 4-way set associative, 32 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5248,7 +5248,7 @@ literal|0x44
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 1-MB, 4-way set associative, 32 byte line size"
+literal|"\n2nd-level cache: 1 MB, 4-way set associative, 32 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5257,7 +5257,25 @@ literal|0x45
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 2-MB, 4-way set associative, 32 byte line size"
+literal|"\n2nd-level cache: 2 MB, 4-way set associative, 32 byte line size"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x46
+case|:
+name|printf
+argument_list|(
+literal|"\n3rd-level cache: 4 MB, 4-way set associative, 64 byte line size"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x47
+case|:
+name|printf
+argument_list|(
+literal|"\n3rd-level cache: 8 MB, 8-way set associative, 64 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5266,7 +5284,7 @@ literal|0x50
 case|:
 name|printf
 argument_list|(
-literal|"\nInstruction TLB: 4-KB, 2-MB or 4-MB pages, fully associative, 64 entries"
+literal|"\nInstruction TLB: 4 KB, 2 MB or 4 MB pages, fully associative, 64 entries"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5275,7 +5293,7 @@ literal|0x51
 case|:
 name|printf
 argument_list|(
-literal|"\nInstruction TLB: 4-KB, 2-MB or 4-MB pages, fully associative, 128 entries"
+literal|"\nInstruction TLB: 4 KB, 2 MB or 4 MB pages, fully associative, 128 entries"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5284,7 +5302,7 @@ literal|0x52
 case|:
 name|printf
 argument_list|(
-literal|"\nInstruction TLB: 4-KB, 2-MB or 4-MB pages, fully associative, 256 entries"
+literal|"\nInstruction TLB: 4 KB, 2 MB or 4 MB pages, fully associative, 256 entries"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5293,7 +5311,7 @@ literal|0x5b
 case|:
 name|printf
 argument_list|(
-literal|"\nData TLB: 4-KB or 4-MB pages, fully associative, 64 entries"
+literal|"\nData TLB: 4 KB or 4 MB pages, fully associative, 64 entries"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5302,7 +5320,7 @@ literal|0x5c
 case|:
 name|printf
 argument_list|(
-literal|"\nData TLB: 4-KB or 4-MB pages, fully associative, 128 entries"
+literal|"\nData TLB: 4 KB or 4 MB pages, fully associative, 128 entries"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5311,7 +5329,7 @@ literal|0x5d
 case|:
 name|printf
 argument_list|(
-literal|"\nData TLB: 4-KB or 4-MB pages, fully associative, 256 entries"
+literal|"\nData TLB: 4 KB or 4 MB pages, fully associative, 256 entries"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5320,7 +5338,7 @@ literal|0x60
 case|:
 name|printf
 argument_list|(
-literal|"\n1st-level data cache: 16-KB, 8-way set associative, sectored cache, 64-byte line size"
+literal|"\n1st-level data cache: 16 KB, 8-way set associative, sectored cache, 64 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5329,7 +5347,7 @@ literal|0x66
 case|:
 name|printf
 argument_list|(
-literal|"\n1st-level data cache: 8-KB, 4-way set associative, sectored cache, 64-byte line size"
+literal|"\n1st-level data cache: 8 KB, 4-way set associative, sectored cache, 64 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5338,7 +5356,7 @@ literal|0x67
 case|:
 name|printf
 argument_list|(
-literal|"\n1st-level data cache: 16-KB, 4-way set associative, sectored cache, 64-byte line size"
+literal|"\n1st-level data cache: 16 KB, 4-way set associative, sectored cache, 64 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5347,7 +5365,7 @@ literal|0x68
 case|:
 name|printf
 argument_list|(
-literal|"\n1st-level data cache: 32-KB, 4 way set associative, sectored cache, 64-byte line size"
+literal|"\n1st-level data cache: 32 KB, 4 way set associative, sectored cache, 64 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5379,11 +5397,20 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|0x78
+case|:
+name|printf
+argument_list|(
+literal|"\n2nd-level cache: 1 MB, 4-way set associative, 64-byte line size"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|0x79
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 128-KB, 8-way set associative, sectored cache, 64-byte line size"
+literal|"\n2nd-level cache: 128 KB, 8-way set associative, sectored cache, 64 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5392,7 +5419,7 @@ literal|0x7a
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 256-KB, 8-way set associative, sectored cache, 64-byte line size"
+literal|"\n2nd-level cache: 256 KB, 8-way set associative, sectored cache, 64 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5401,7 +5428,7 @@ literal|0x7b
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 512-KB, 8-way set associative, sectored cache, 64-byte line size"
+literal|"\n2nd-level cache: 512 KB, 8-way set associative, sectored cache, 64 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5410,7 +5437,25 @@ literal|0x7c
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 1-MB, 8-way set associative, sectored cache, 64-byte line size"
+literal|"\n2nd-level cache: 1 MB, 8-way set associative, sectored cache, 64 byte line size"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x7d
+case|:
+name|printf
+argument_list|(
+literal|"\n2nd-level cache: 2-MB, 8-way set associative, 64-byte line size"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x7f
+case|:
+name|printf
+argument_list|(
+literal|"\n2nd-level cache: 512-KB, 2-way set associative, 64-byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5419,7 +5464,7 @@ literal|0x82
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 256-KB, 8-way set associative, 32 byte line size"
+literal|"\n2nd-level cache: 256 KB, 8-way set associative, 32 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5428,7 +5473,7 @@ literal|0x83
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 512-KB, 8-way set associative, 32 byte line size"
+literal|"\n2nd-level cache: 512 KB, 8-way set associative, 32 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5437,7 +5482,7 @@ literal|0x84
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 1-MB, 8-way set associative, 32 byte line size"
+literal|"\n2nd-level cache: 1 MB, 8-way set associative, 32 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5446,7 +5491,7 @@ literal|0x85
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 2-MB, 8-way set associative, 32 byte line size"
+literal|"\n2nd-level cache: 2 MB, 8-way set associative, 32 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5455,7 +5500,7 @@ literal|0x86
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 512-KB, 4-way set associative, 64 byte line size"
+literal|"\n2nd-level cache: 512 KB, 4-way set associative, 64 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5464,7 +5509,7 @@ literal|0x87
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 1-MB, 8-way set associative, 64 byte line size"
+literal|"\n2nd-level cache: 1 MB, 8-way set associative, 64 byte line size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5473,7 +5518,7 @@ literal|0xb0
 case|:
 name|printf
 argument_list|(
-literal|"\nInstruction TLB: 4-KB Pages, 4-way set associative, 128 entries"
+literal|"\nInstruction TLB: 4 KB Pages, 4-way set associative, 128 entries"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5482,7 +5527,7 @@ literal|0xb3
 case|:
 name|printf
 argument_list|(
-literal|"\nData TLB: 4-KB Pages, 4-way set associative, 128 entries"
+literal|"\nData TLB: 4 KB Pages, 4-way set associative, 128 entries"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5861,7 +5906,7 @@ break|break;
 case|case
 literal|0x22
 case|:
-comment|/* 3rd-level cache: 512 KB, 4-way set associative, 		 * sectored cache, 64-byte line size */
+comment|/* 3rd-level cache: 512 KB, 4-way set associative, 		 * sectored cache, 64 byte line size */
 if|if
 condition|(
 operator|*
@@ -5885,7 +5930,7 @@ break|break;
 case|case
 literal|0x23
 case|:
-comment|/* 3rd-level cache: 1-MB, 8-way set associative, 		 * sectored cache, 64-byte line size */
+comment|/* 3rd-level cache: 1 MB, 8-way set associative, 		 * sectored cache, 64 byte line size */
 if|if
 condition|(
 operator|*
@@ -5909,7 +5954,7 @@ break|break;
 case|case
 literal|0x25
 case|:
-comment|/* 3rd-level cache: 2-MB, 8-way set associative, 		 * sectored cache, 64-byte line size */
+comment|/* 3rd-level cache: 2 MB, 8-way set associative, 		 * sectored cache, 64 byte line size */
 if|if
 condition|(
 operator|*
@@ -5933,7 +5978,7 @@ break|break;
 case|case
 literal|0x29
 case|:
-comment|/* 3rd-level cache: 4-MB, 8-way set associative, 		 * sectored cache, 64-byte line size */
+comment|/* 3rd-level cache: 4 MB, 8-way set associative, 		 * sectored cache, 64 byte line size */
 if|if
 condition|(
 operator|*
@@ -5957,7 +6002,7 @@ break|break;
 case|case
 literal|0x39
 case|:
-comment|/* 2nd-level cache: 128-KB, 4-way set associative, 		 * sectored cache, 64-byte line size */
+comment|/* 2nd-level cache: 128 KB, 4-way set associative, 		 * sectored cache, 64 byte line size */
 if|if
 condition|(
 operator|*
@@ -5981,7 +6026,7 @@ break|break;
 case|case
 literal|0x3b
 case|:
-comment|/* 2nd-level cache: 128-KB, 2-way set associative, 		 * sectored cache, 64-byte line size */
+comment|/* 2nd-level cache: 128 KB, 2-way set associative, 		 * sectored cache, 64 byte line size */
 if|if
 condition|(
 operator|*
@@ -6005,7 +6050,7 @@ break|break;
 case|case
 literal|0x3c
 case|:
-comment|/* 2nd-level cache: 256-KB, 4-way set associative, 		 * sectored cache, 64-byte line size */
+comment|/* 2nd-level cache: 256 KB, 4-way set associative, 		 * sectored cache, 64 byte line size */
 if|if
 condition|(
 operator|*
@@ -6029,7 +6074,7 @@ break|break;
 case|case
 literal|0x41
 case|:
-comment|/* 2nd-level cache: 128-KB, 4-way set associative, 		 * 32-byte line size */
+comment|/* 2nd-level cache: 128 KB, 4-way set associative, 		 * 32 byte line size */
 if|if
 condition|(
 operator|*
@@ -6053,7 +6098,7 @@ break|break;
 case|case
 literal|0x42
 case|:
-comment|/* 2nd-level cache: 256-KB, 4-way set associative, 		 * 32-byte line size */
+comment|/* 2nd-level cache: 256 KB, 4-way set associative, 		 * 32 byte line size */
 if|if
 condition|(
 operator|*
@@ -6077,7 +6122,7 @@ break|break;
 case|case
 literal|0x43
 case|:
-comment|/* 2nd-level cache: 512-KB, 4-way set associative, 		 * 32 byte line size */
+comment|/* 2nd-level cache: 512 KB, 4-way set associative, 		 * 32 byte line size */
 if|if
 condition|(
 operator|*
@@ -6101,7 +6146,7 @@ break|break;
 case|case
 literal|0x44
 case|:
-comment|/* 2nd-level cache: 1-MB, 4-way set associative, 		 * 32 byte line size */
+comment|/* 2nd-level cache: 1 MB, 4-way set associative, 		 * 32 byte line size */
 if|if
 condition|(
 operator|*
@@ -6125,7 +6170,7 @@ break|break;
 case|case
 literal|0x45
 case|:
-comment|/* 2nd-level cache: 2-MB, 4-way set associative, 		 * 32 byte line size */
+comment|/* 2nd-level cache: 2 MB, 4-way set associative, 		 * 32 byte line size */
 if|if
 condition|(
 operator|*
@@ -6147,9 +6192,81 @@ expr_stmt|;
 block|}
 break|break;
 case|case
+literal|0x46
+case|:
+comment|/* 3rd-level cache: 4 MB, 4-way set associative, 		 * 64 byte line size */
+if|if
+condition|(
+operator|*
+name|size
+operator|<
+literal|4096
+condition|)
+block|{
+operator|*
+name|size
+operator|=
+literal|4096
+expr_stmt|;
+operator|*
+name|ways
+operator|=
+literal|4
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|0x47
+case|:
+comment|/* 3rd-level cache: 8 MB, 8-way set associative, 		 * 64 byte line size */
+if|if
+condition|(
+operator|*
+name|size
+operator|<
+literal|8192
+condition|)
+block|{
+operator|*
+name|size
+operator|=
+literal|8192
+expr_stmt|;
+operator|*
+name|ways
+operator|=
+literal|8
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|0x78
+case|:
+comment|/* 2nd-level cache: 1 MB, 4-way set associative, 		 * 64-byte line size */
+if|if
+condition|(
+operator|*
+name|size
+operator|<
+literal|1024
+condition|)
+block|{
+operator|*
+name|size
+operator|=
+literal|1024
+expr_stmt|;
+operator|*
+name|ways
+operator|=
+literal|4
+expr_stmt|;
+block|}
+break|break;
+case|case
 literal|0x79
 case|:
-comment|/* 2nd-level cache: 128-KB, 8-way set associative, 		 * sectored cache, 64-byte line size */
+comment|/* 2nd-level cache: 128 KB, 8-way set associative, 		 * sectored cache, 64 byte line size */
 if|if
 condition|(
 operator|*
@@ -6173,7 +6290,7 @@ break|break;
 case|case
 literal|0x7a
 case|:
-comment|/* 2nd-level cache: 256-KB, 8-way set associative, 		 * sectored cache, 64-byte line size */
+comment|/* 2nd-level cache: 256 KB, 8-way set associative, 		 * sectored cache, 64 byte line size */
 if|if
 condition|(
 operator|*
@@ -6197,7 +6314,7 @@ break|break;
 case|case
 literal|0x7b
 case|:
-comment|/* 2nd-level cache: 512-KB, 8-way set associative, 		 * sectored cache, 64-byte line size */
+comment|/* 2nd-level cache: 512 KB, 8-way set associative, 		 * sectored cache, 64 byte line size */
 if|if
 condition|(
 operator|*
@@ -6221,7 +6338,7 @@ break|break;
 case|case
 literal|0x7c
 case|:
-comment|/* 2nd-level cache: 1-MB, 8-way set associative, 		 * sectored cache, 64-byte line size */
+comment|/* 2nd-level cache: 1 MB, 8-way set associative, 		 * sectored cache, 64 byte line size */
 if|if
 condition|(
 operator|*
@@ -6243,9 +6360,57 @@ expr_stmt|;
 block|}
 break|break;
 case|case
+literal|0x7d
+case|:
+comment|/* 2nd-level cache: 2 MB, 8-way set associative, 		 * 64-byte line size */
+if|if
+condition|(
+operator|*
+name|size
+operator|<
+literal|2048
+condition|)
+block|{
+operator|*
+name|size
+operator|=
+literal|2048
+expr_stmt|;
+operator|*
+name|ways
+operator|=
+literal|8
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|0x7f
+case|:
+comment|/* 2nd-level cache: 512 KB, 2-way set associative, 		 * 64-byte line size */
+if|if
+condition|(
+operator|*
+name|size
+operator|<
+literal|512
+condition|)
+block|{
+operator|*
+name|size
+operator|=
+literal|512
+expr_stmt|;
+operator|*
+name|ways
+operator|=
+literal|2
+expr_stmt|;
+block|}
+break|break;
+case|case
 literal|0x82
 case|:
-comment|/* 2nd-level cache: 256-KB, 8-way set associative, 		 * 32 byte line size */
+comment|/* 2nd-level cache: 256 KB, 8-way set associative, 		 * 32 byte line size */
 if|if
 condition|(
 operator|*
@@ -6269,7 +6434,7 @@ break|break;
 case|case
 literal|0x83
 case|:
-comment|/* 2nd-level cache: 512-KB, 8-way set associative, 		 * 32 byte line size */
+comment|/* 2nd-level cache: 512 KB, 8-way set associative, 		 * 32 byte line size */
 if|if
 condition|(
 operator|*
@@ -6293,7 +6458,7 @@ break|break;
 case|case
 literal|0x84
 case|:
-comment|/* 2nd-level cache: 1-MB, 8-way set associative, 		 * 32 byte line size */
+comment|/* 2nd-level cache: 1 MB, 8-way set associative, 		 * 32 byte line size */
 if|if
 condition|(
 operator|*
@@ -6317,7 +6482,7 @@ break|break;
 case|case
 literal|0x85
 case|:
-comment|/* 2nd-level cache: 2-MB, 8-way set associative, 		 * 32 byte line size */
+comment|/* 2nd-level cache: 2 MB, 8-way set associative, 		 * 32 byte line size */
 if|if
 condition|(
 operator|*
@@ -6341,7 +6506,7 @@ break|break;
 case|case
 literal|0x86
 case|:
-comment|/* 2nd-level cache: 512-KB, 4-way set associative, 		 * 64 byte line size */
+comment|/* 2nd-level cache: 512 KB, 4-way set associative, 		 * 64 byte line size */
 if|if
 condition|(
 operator|*
@@ -6365,7 +6530,7 @@ break|break;
 case|case
 literal|0x87
 case|:
-comment|/* 2nd-level cache: 1-MB, 8-way set associative, 		 * 64 byte line size */
+comment|/* 2nd-level cache: 1 MB, 8-way set associative, 		 * 64 byte line size */
 if|if
 condition|(
 operator|*
