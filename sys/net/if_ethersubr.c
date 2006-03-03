@@ -2654,23 +2654,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_MONITOR
-condition|)
-block|{
-comment|/* 		 * Interface marked for monitoring; discard packet. 		 */
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 comment|/* If the CRC is still on the packet, trim it off. */
 if|if
 condition|(
@@ -2707,6 +2690,23 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_MONITOR
+condition|)
+block|{
+comment|/* 		 * Interface marked for monitoring; discard packet. 		 */
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* Handle ng_ether(4) processing, if any */
 if|if
 condition|(
