@@ -26,8 +26,38 @@ file|"opt_coda.h"
 end_include
 
 begin_comment
-comment|/* for COMPAT_CODA_5 option */
+comment|/* for CODA_COMPAT_5 option */
 end_comment
+
+begin_comment
+comment|/* Avoid CODA_COMPAT_5 redefinition in coda5 module */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CODA5_MODULE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|CODA_COMPAT_5
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|CODA_COMPAT_5
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Catch new _KERNEL defn for NetBSD */
