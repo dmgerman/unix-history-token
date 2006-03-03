@@ -3317,7 +3317,7 @@ name|f_mntonname
 argument_list|,
 name|MIN
 argument_list|(
-name|MFSNAMELEN
+name|MNAMELEN
 argument_list|,
 name|OMNAMELEN
 argument_list|)
@@ -3335,7 +3335,7 @@ name|f_mntfromname
 argument_list|,
 name|MIN
 argument_list|(
-name|MFSNAMELEN
+name|MNAMELEN
 argument_list|,
 name|OMNAMELEN
 argument_list|)
