@@ -4314,7 +4314,7 @@ expr_stmt|;
 operator|*
 operator|(
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|arg
@@ -4344,7 +4344,7 @@ condition|(
 operator|*
 operator|(
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|arg
@@ -4397,7 +4397,7 @@ operator|!=
 operator|*
 operator|(
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|arg
@@ -4416,7 +4416,7 @@ operator|=
 operator|*
 operator|(
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|arg
@@ -4449,7 +4449,7 @@ expr_stmt|;
 operator|*
 operator|(
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|arg
@@ -4481,7 +4481,7 @@ condition|(
 operator|*
 operator|(
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|arg
@@ -4510,7 +4510,7 @@ operator|=
 operator|*
 operator|(
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|arg
@@ -4554,7 +4554,7 @@ expr_stmt|;
 operator|*
 operator|(
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|arg
@@ -4586,7 +4586,7 @@ condition|(
 operator|*
 operator|(
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|arg
@@ -4621,7 +4621,7 @@ operator||=
 operator|*
 operator|(
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|arg
@@ -4719,7 +4719,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|arg
@@ -4771,7 +4771,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|arg
@@ -4797,7 +4797,7 @@ operator|=
 operator|*
 operator|(
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|arg
