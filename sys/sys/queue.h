@@ -514,7 +514,7 @@ parameter_list|,
 name|field
 parameter_list|)
 define|\
-value|(STAILQ_EMPTY((head)) ?						\ 		NULL :							\ 	        ((struct type *)					\ 		((char *)((head)->stqh_last) - __offsetof(struct type, field))))
+value|(STAILQ_EMPTY((head)) ?						\ 		NULL :							\ 	        ((struct type *)(void *)				\ 		((char *)((head)->stqh_last) - __offsetof(struct type, field))))
 end_define
 
 begin_define
