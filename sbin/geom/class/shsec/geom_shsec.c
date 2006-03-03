@@ -182,7 +182,7 @@ name|shsec_main
 block|,
 name|G_NULL_OPTS
 block|,
-literal|"clear [-v] prov ..."
+literal|"[-v] prov ..."
 block|}
 block|,
 block|{
@@ -194,7 +194,7 @@ name|shsec_main
 block|,
 name|G_NULL_OPTS
 block|,
-literal|"dump prov ..."
+literal|"prov ..."
 block|}
 block|,
 block|{
