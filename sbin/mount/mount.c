@@ -3903,6 +3903,7 @@ operator|->
 name|f_flags
 argument_list|)
 expr_stmt|;
+comment|/* 	 * "rw" is not a real mount option; this is why we print NULL as "rw" 	 * if opts is still NULL here. 	 */
 name|printf
 argument_list|(
 literal|"%s\t%s\t%s %s"
@@ -3920,6 +3921,10 @@ operator|->
 name|f_fstypename
 argument_list|,
 name|opts
+condition|?
+name|opts
+else|:
+literal|"rw"
 argument_list|)
 expr_stmt|;
 name|free
