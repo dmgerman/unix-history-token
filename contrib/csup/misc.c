@@ -827,7 +827,7 @@ expr_stmt|;
 if|if
 condition|(
 name|len
-operator|==
+operator|>=
 literal|4
 condition|)
 name|cp
