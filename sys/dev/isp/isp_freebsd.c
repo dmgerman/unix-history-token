@@ -1150,7 +1150,7 @@ modifier|*
 name|dev
 parameter_list|,
 name|u_long
-name|cmd
+name|c
 parameter_list|,
 name|caddr_t
 name|addr
@@ -1224,7 +1224,7 @@ operator|)
 return|;
 switch|switch
 condition|(
-name|cmd
+name|c
 condition|)
 block|{
 ifdef|#
@@ -6257,8 +6257,10 @@ condition|(
 name|found
 condition|)
 block|{
+operator|(
 operator|*
 name|ctr
+operator|)
 operator|--
 expr_stmt|;
 name|accb
