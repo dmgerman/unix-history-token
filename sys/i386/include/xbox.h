@@ -54,7 +54,7 @@ begin_define
 define|#
 directive|define
 name|XBOX_FB_SIZE
-value|(0x400000)
+value|(0x130000)
 end_define
 
 begin_define
