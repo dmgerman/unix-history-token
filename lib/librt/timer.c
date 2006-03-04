@@ -594,6 +594,12 @@ name|timer
 operator|->
 name|oshandle
 expr_stmt|;
+name|timer
+operator|->
+name|node
+operator|=
+name|sn
+expr_stmt|;
 name|__sigev_list_lock
 argument_list|()
 expr_stmt|;
