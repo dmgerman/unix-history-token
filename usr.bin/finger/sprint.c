@@ -181,7 +181,7 @@ comment|/* 	 * short format -- 	 *	login name 	 *	real name 	 *	terminal name (t
 define|#
 directive|define
 name|MAXREALNAME
-value|20
+value|16
 define|#
 directive|define
 name|MAXHOSTNAME
@@ -192,7 +192,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-*s %-*s%s  %s\n"
+literal|"%-*s %-*s%s %s\n"
 argument_list|,
 name|UT_NAMESIZE
 argument_list|,
@@ -202,7 +202,7 @@ name|MAXREALNAME
 argument_list|,
 literal|"Name"
 argument_list|,
-literal|" TTY  Idle  Login  Time "
+literal|" TTY      Idle  Login  Time  "
 argument_list|,
 operator|(
 name|gflag
@@ -410,7 +410,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-3.3s "
+literal|"%-7.7s "
 argument_list|,
 operator|(
 name|strncmp
@@ -453,7 +453,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"    "
+literal|"        "
 argument_list|)
 expr_stmt|;
 if|if
