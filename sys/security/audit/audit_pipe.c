@@ -577,6 +577,9 @@ operator|->
 name|ap_drops
 operator|++
 expr_stmt|;
+name|audit_pipe_drops
+operator|++
+expr_stmt|;
 return|return;
 block|}
 name|ape
