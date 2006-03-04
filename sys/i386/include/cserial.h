@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Ioctl interface to Cronyx serial drivers.  *  * Copyright (C) 1997-2002 Cronyx Engineering.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Copyright (C) 2001-2003 Cronyx Engineering.  * Author: Roman Kurakin,<rik@cronyx.ru>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * Cronyx Id: cserial.h,v 1.1.2.4 2003/11/12 17:11:08 rik Exp $  * $FreeBSD$  */
+comment|/*  * Ioctl interface to Cronyx serial drivers.  *  * Copyright (C) 1997-2002 Cronyx Engineering.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Copyright (C) 2001-2005 Cronyx Engineering.  * Author: Roman Kurakin,<rik@FreeBSD.org>  *  * Copyright (C) 2004-2005 Cronyx Engineering.  * Author: Leo Yuriev,<ly@cronyx.ru>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * Cronyx Id: cserial.h,v 1.4.2.2 2005/11/09 13:01:35 rik Exp $  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -347,6 +347,28 @@ begin_comment
 comment|/* subchannel receiver overrun */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ER_SCC_UNDERRUN
+value|10
+end_define
+
+begin_comment
+comment|/* subchannel transmiter underrun */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ER_BUS
+value|11
+end_define
+
+begin_comment
+comment|/* system bus is too busy (e.g PCI) */
+end_comment
+
 begin_comment
 comment|/*  * E1 channel status.  */
 end_comment
@@ -371,6 +393,17 @@ end_define
 
 begin_comment
 comment|/* receiving far loss of framing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1_CRC4E
+value|0x0004
+end_define
+
+begin_comment
+comment|/* crc4 errors */
 end_comment
 
 begin_define
@@ -544,6 +577,13 @@ name|SERIAL_HDLC
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|SERIAL_RAW
+value|3
+end_define
+
 begin_comment
 comment|/*  * Get/clear the channel statistics.  */
 end_comment
@@ -682,6 +722,13 @@ define|#
 directive|define
 name|SERIAL_SETCLK
 value|_IOW ('x', 9, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1CLK_RECOVERY
+value|-1
 end_define
 
 begin_define
@@ -1218,14 +1265,222 @@ value|_IOW ('x', 39, int)
 end_define
 
 begin_comment
-comment|/*  * Dynamic binder interface.  */
+comment|/*  * G.703 line code  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SERIAL_GETLCODE
+value|_IOR ('x', 40, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SERIAL_SETLCODE
+value|_IOW ('x', 40, int)
+end_define
+
+begin_comment
+comment|/*  * MTU  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SERIAL_GETMTU
+value|_IOR ('x', 41, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SERIAL_SETMTU
+value|_IOW ('x', 41, int)
+end_define
+
+begin_comment
+comment|/*  * Receive Queue Length  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SERIAL_GETRQLEN
+value|_IOR ('x', 42, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SERIAL_SETRQLEN
+value|_IOW ('x', 42, int)
+end_define
 
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|__KERNEL__
 end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CRONYX_LYSAP
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LYSAP_PEER_ADD
+value|_IOWR('x', 101, lysap_peer_config_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LYSAP_PEER_REMOVE
+value|_IOW('x', 102, unsigned)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LYSAP_PEER_INFO
+value|_IOWR('x', 103, lysap_peer_info_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LYSAP_PEER_COUNT
+value|_IOR('x', 104, unsigned)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LYSAP_PEER_ENUM
+value|_IOWR('x', 105, unsigned)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LYSAP_PEER_CLEAR
+value|_IOW('x', 106, unsigned)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LYSAP_CHAN_ADD
+value|_IOWR('x', 111, lysap_channel_config_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LYSAP_CHAN_REMOVE
+value|_IO('x', 112)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LYSAP_CHAN_INFO
+value|_IOR('x', 113, lysap_channel_info_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LYSAP_CHAN_COUNT
+value|_IOR('x', 114, unsigned)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LYSAP_CHAN_ENUM
+value|_IOWR('x', 115, unsigned)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LYSAP_CHAN_CLEAR
+value|_IO('x', 116)
+end_define
+
+begin_include
+include|#
+directive|include
+file|"lysap-linux.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* CRONYX_LYSAP */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
+name|_lysap_channel_t
+name|lysap_channel_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|_lysap_channel_config_t
+name|lysap_channel_config_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|_LYSAP_DeviceInterfaceConfig
+name|LYSAP_DeviceInterfaceConfig
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|_LYSAP_ChannelConfig
+name|LYSAP_ChannelConfig
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|_lysap_buf_t
+name|lysap_buf_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !CRONYX_LYSAP */
+end_comment
+
+begin_comment
+comment|/*  * Dynamic binder interface.  */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -1611,6 +1866,136 @@ name|long
 name|arg
 parameter_list|)
 function_decl|;
+comment|/* LYSAP interface */
+struct|struct
+name|lysap_t
+block|{
+name|lysap_channel_t
+modifier|*
+name|link
+decl_stmt|;
+name|int
+function_decl|(
+modifier|*
+name|inspect_config
+function_decl|)
+parameter_list|(
+name|chan_t
+modifier|*
+name|h
+parameter_list|,
+name|lysap_channel_config_t
+modifier|*
+parameter_list|,
+name|LYSAP_DeviceInterfaceConfig
+modifier|*
+parameter_list|,
+name|LYSAP_ChannelConfig
+modifier|*
+parameter_list|)
+function_decl|;
+name|unsigned
+name|long
+function_decl|(
+modifier|*
+name|probe_freq
+function_decl|)
+parameter_list|(
+name|chan_t
+modifier|*
+name|h
+parameter_list|,
+name|unsigned
+name|long
+name|freq
+parameter_list|)
+function_decl|;
+name|unsigned
+name|long
+function_decl|(
+modifier|*
+name|set_freq
+function_decl|)
+parameter_list|(
+name|chan_t
+modifier|*
+name|h
+parameter_list|,
+name|unsigned
+name|long
+name|freq
+parameter_list|)
+function_decl|;
+name|unsigned
+function_decl|(
+modifier|*
+name|get_status
+function_decl|)
+parameter_list|(
+name|chan_t
+modifier|*
+name|h
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|transmit
+function_decl|)
+parameter_list|(
+name|chan_t
+modifier|*
+name|h
+parameter_list|,
+name|lysap_buf_t
+modifier|*
+name|b
+parameter_list|)
+function_decl|;
+name|lysap_buf_t
+modifier|*
+function_decl|(
+modifier|*
+name|alloc_buf
+function_decl|)
+parameter_list|(
+name|chan_t
+modifier|*
+name|h
+parameter_list|,
+name|unsigned
+name|len
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|set_clock_master
+function_decl|)
+parameter_list|(
+name|chan_t
+modifier|*
+name|h
+parameter_list|,
+name|int
+name|enable
+parameter_list|)
+function_decl|;
+name|unsigned
+name|long
+function_decl|(
+modifier|*
+name|get_master_freq
+function_decl|)
+parameter_list|(
+name|chan_t
+modifier|*
+name|h
+parameter_list|)
+function_decl|;
+block|}
+name|lysap
+struct|;
 block|}
 struct|;
 end_struct
@@ -1821,6 +2206,59 @@ parameter_list|,
 name|unsigned
 name|long
 name|arg
+parameter_list|)
+function_decl|;
+comment|/* LYSAP interface */
+name|void
+function_decl|(
+modifier|*
+name|transmit_error
+function_decl|)
+parameter_list|(
+name|chan_t
+modifier|*
+name|h
+parameter_list|,
+name|int
+name|errcode
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|lysap_notify_receive
+function_decl|)
+parameter_list|(
+name|chan_t
+modifier|*
+name|h
+parameter_list|,
+name|lysap_buf_t
+modifier|*
+name|b
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|lysap_notify_transmit
+function_decl|)
+parameter_list|(
+name|chan_t
+modifier|*
+name|h
+parameter_list|)
+function_decl|;
+name|lysap_buf_t
+modifier|*
+function_decl|(
+modifier|*
+name|lysap_get_data
+function_decl|)
+parameter_list|(
+name|chan_t
+modifier|*
+name|h
 parameter_list|)
 function_decl|;
 block|}
