@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/conf.h>
 end_include
 
@@ -1358,6 +1364,20 @@ name|int
 name|flags
 parameter_list|)
 block|{
+if|if
+condition|(
+name|resource_disabled
+argument_list|(
+name|KEYBOARD_NAME
+argument_list|,
+name|unit
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 return|return
 operator|(
 literal|0
@@ -4294,7 +4314,7 @@ expr_stmt|;
 operator|*
 operator|(
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|arg
@@ -4324,7 +4344,7 @@ condition|(
 operator|*
 operator|(
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|arg
@@ -4377,7 +4397,7 @@ operator|!=
 operator|*
 operator|(
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|arg
@@ -4396,7 +4416,7 @@ operator|=
 operator|*
 operator|(
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|arg
@@ -4429,7 +4449,7 @@ expr_stmt|;
 operator|*
 operator|(
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|arg
@@ -4461,7 +4481,7 @@ condition|(
 operator|*
 operator|(
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|arg
@@ -4490,7 +4510,7 @@ operator|=
 operator|*
 operator|(
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|arg
@@ -4534,7 +4554,7 @@ expr_stmt|;
 operator|*
 operator|(
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|arg
@@ -4566,7 +4586,7 @@ condition|(
 operator|*
 operator|(
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|arg
@@ -4601,7 +4621,7 @@ operator||=
 operator|*
 operator|(
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|arg
@@ -4699,7 +4719,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|arg
@@ -4751,7 +4771,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|arg
@@ -4777,7 +4797,7 @@ operator|=
 operator|*
 operator|(
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|arg
