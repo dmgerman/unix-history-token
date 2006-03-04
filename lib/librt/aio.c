@@ -255,10 +255,6 @@ name|struct
 name|sigev_node
 modifier|*
 name|sn
-parameter_list|,
-name|siginfo_t
-modifier|*
-name|si
 parameter_list|)
 block|{
 name|aio_func
@@ -376,6 +372,10 @@ operator|&
 name|iocb
 operator|->
 name|aio_sigevent
+argument_list|,
+name|NULL
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if

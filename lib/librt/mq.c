@@ -620,10 +620,6 @@ name|struct
 name|sigev_node
 modifier|*
 name|sn
-parameter_list|,
-name|siginfo_t
-modifier|*
-name|si
 parameter_list|)
 block|{
 name|mq_func
@@ -640,8 +636,10 @@ name|sn
 operator|->
 name|sn_gen
 operator|==
-name|si
+name|sn
 operator|->
+name|sn_info
+operator|.
 name|si_value
 operator|.
 name|sival_int
@@ -760,6 +758,12 @@ argument_list|(
 name|SI_MESGQ
 argument_list|,
 name|evp
+argument_list|,
+name|mqd
+operator|->
+name|node
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if

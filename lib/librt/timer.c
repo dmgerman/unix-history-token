@@ -286,9 +286,6 @@ name|sigval
 name|val
 parameter_list|,
 name|int
-name|timerid
-parameter_list|,
-name|int
 name|overrun
 parameter_list|)
 function_decl|;
@@ -303,10 +300,6 @@ name|struct
 name|sigev_node
 modifier|*
 name|sn
-parameter_list|,
-name|siginfo_t
-modifier|*
-name|si
 parameter_list|)
 block|{
 name|timer_func
@@ -319,8 +312,10 @@ decl_stmt|;
 comment|/* I want to avoid expired notification. */
 if|if
 condition|(
-name|si
+name|sn
 operator|->
+name|sn_info
+operator|.
 name|si_value
 operator|.
 name|sival_int
@@ -335,12 +330,10 @@ name|sn
 operator|->
 name|sn_value
 argument_list|,
-name|si
+name|sn
 operator|->
-name|si_timerid
-argument_list|,
-name|si
-operator|->
+name|sn_info
+operator|.
 name|si_overrun
 argument_list|)
 expr_stmt|;
@@ -501,6 +494,10 @@ argument_list|(
 name|SI_TIMER
 argument_list|,
 name|evp
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
