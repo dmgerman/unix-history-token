@@ -1592,11 +1592,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 block|}
 comment|/* Update the media status. */
 name|brgphy_status
