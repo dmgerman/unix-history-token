@@ -11096,6 +11096,13 @@ operator|=
 operator|&
 name|eh2
 expr_stmt|;
+name|args
+operator|.
+name|inp
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* used by ipfw uid/gid/jail rules */
 name|i
 operator|=
 name|ip_fw_chk_ptr
