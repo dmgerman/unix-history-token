@@ -168,6 +168,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<bsm/audit_internal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<bsm/audit_kevents.h>
 end_include
 

@@ -674,6 +674,12 @@ begin_comment
 comment|/*  * Functions relating to the conversion of internal kernel audit records to  * the BSM file format.  */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|au_record
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|kaudit_to_bsm
@@ -787,12 +793,6 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<security/audit/audit.h>
 end_include
 
 begin_comment
