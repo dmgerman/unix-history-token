@@ -3872,6 +3872,9 @@ name|last
 condition|)
 name|base
 operator|+=
+operator|(
+name|uint64_t
+operator|)
 name|tc
 operator|->
 name|tc_counter_mask
