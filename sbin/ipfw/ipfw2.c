@@ -18526,7 +18526,7 @@ argument_list|,
 operator|&
 name|ep
 argument_list|,
-literal|0
+literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -18537,7 +18537,7 @@ operator|!=
 literal|'\0'
 operator|||
 name|proto
-operator|<
+operator|<=
 literal|0
 condition|)
 block|{
@@ -18617,6 +18617,15 @@ argument_list|(
 name|av
 argument_list|,
 literal|"all"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|av
+argument_list|,
+literal|"ip"
 argument_list|)
 operator|==
 literal|0
