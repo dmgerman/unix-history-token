@@ -3670,6 +3670,14 @@ literal|"SEND_CUE_SHEET"
 operator|)
 return|;
 case|case
+literal|0x96
+case|:
+return|return
+operator|(
+literal|"SERVICE_ACTION_IN"
+operator|)
+return|;
+case|case
 literal|0xa1
 case|:
 return|return

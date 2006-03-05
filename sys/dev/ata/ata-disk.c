@@ -2006,7 +2006,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"%lluMB<%s%s %.8s> at ata%d-%s %s%s\n"
+literal|"%juMB<%s%s %.8s> at ata%d-%s %s%s\n"
 argument_list|,
 call|(
 name|unsigned
@@ -2083,7 +2083,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"%llu sectors [%lldC/%dH/%dS] "
+literal|"%ju sectors [%juC/%dH/%dS] "
 literal|"%d sectors/interrupt %d depth queue\n"
 argument_list|,
 operator|(
