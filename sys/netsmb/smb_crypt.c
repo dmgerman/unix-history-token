@@ -146,19 +146,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_netsmb.h"
+file|<crypto/des/des.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NETSMBCRYPTO
-end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<crypto/des/des.h>
+file|"opt_netsmb.h"
 end_include
 
 begin_decl_stmt
@@ -434,11 +428,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|int
 name|smb_encrypt
@@ -457,9 +446,6 @@ modifier|*
 name|RN
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|NETSMBCRYPTO
 name|u_char
 modifier|*
 name|p
@@ -587,25 +573,6 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-else|#
-directive|else
-name|SMBERROR
-argument_list|(
-literal|"password encryption is not available\n"
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|RN
-argument_list|,
-literal|24
-argument_list|)
-expr_stmt|;
-return|return
-name|EAUTH
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -627,9 +594,6 @@ modifier|*
 name|RN
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|NETSMBCRYPTO
 name|u_char
 name|S21
 index|[
@@ -785,25 +749,6 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-else|#
-directive|else
-name|SMBERROR
-argument_list|(
-literal|"password encryption is not available\n"
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|RN
-argument_list|,
-literal|24
-argument_list|)
-expr_stmt|;
-return|return
-name|EAUTH
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -821,9 +766,6 @@ modifier|*
 name|vcp
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|NETSMBCRYPTO
 specifier|const
 name|char
 modifier|*
@@ -1103,21 +1045,6 @@ operator|(
 literal|0
 operator|)
 return|;
-else|#
-directive|else
-name|panic
-argument_list|(
-literal|"smb_calcmackey: encryption not available"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-endif|#
-directive|endif
-comment|/* NETSMBCRYPTO */
 block|}
 end_function
 
@@ -1135,9 +1062,6 @@ modifier|*
 name|rqp
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|NETSMBCRYPTO
 name|struct
 name|smb_vc
 modifier|*
@@ -1392,21 +1316,6 @@ operator|(
 literal|0
 operator|)
 return|;
-else|#
-directive|else
-name|panic
-argument_list|(
-literal|"smb_rq_sign: encryption not available"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-endif|#
-directive|endif
-comment|/* NETSMBCRYPTO */
 block|}
 end_function
 
@@ -1424,9 +1333,6 @@ modifier|*
 name|rqp
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|NETSMBCRYPTO
 name|struct
 name|smb_vc
 modifier|*
@@ -1689,21 +1595,6 @@ operator|(
 literal|0
 operator|)
 return|;
-else|#
-directive|else
-name|panic
-argument_list|(
-literal|"smb_rq_verify: encryption not available"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-endif|#
-directive|endif
-comment|/* NETSMBCRYPTO */
 block|}
 end_function
 

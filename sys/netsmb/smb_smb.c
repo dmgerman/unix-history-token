@@ -919,9 +919,6 @@ operator||=
 name|SMBV_ENCRYPT
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|NETSMBCRYPTO
 if|if
 condition|(
 name|sp
@@ -936,8 +933,6 @@ name|vc_hflags2
 operator||=
 name|SMB_FLAGS2_SECURITY_SIGNATURE
 expr_stmt|;
-endif|#
-directive|endif
 name|vcp
 operator|->
 name|vc_hflags2
