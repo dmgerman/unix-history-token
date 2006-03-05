@@ -1492,6 +1492,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATAPI_INQUIRY
+value|0x12
+end_define
+
+begin_comment
+comment|/* get inquiry data */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATAPI_MODE_SELECT
 value|0x15
 end_define
@@ -1849,6 +1860,17 @@ end_define
 
 begin_comment
 comment|/* send CUE sheet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_SERVICE_ACTION_IN
+value|0x96
+end_define
+
+begin_comment
+comment|/* get service data */
 end_comment
 
 begin_define
