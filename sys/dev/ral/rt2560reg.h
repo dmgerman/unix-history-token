@@ -10,56 +10,56 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_TX_RING_COUNT
+name|RT2560_TX_RING_COUNT
 value|48
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_ATIM_RING_COUNT
+name|RT2560_ATIM_RING_COUNT
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_PRIO_RING_COUNT
+name|RT2560_PRIO_RING_COUNT
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_BEACON_RING_COUNT
+name|RT2560_BEACON_RING_COUNT
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_RX_RING_COUNT
+name|RT2560_RX_RING_COUNT
 value|32
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_TX_DESC_SIZE
-value|(sizeof (struct ral_tx_desc))
+name|RT2560_TX_DESC_SIZE
+value|(sizeof (struct rt2560_tx_desc))
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_RX_DESC_SIZE
-value|(sizeof (struct ral_rx_desc))
+name|RT2560_RX_DESC_SIZE
+value|(sizeof (struct rt2560_rx_desc))
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_MAX_SCATTER
+name|RT2560_MAX_SCATTER
 value|1
 end_define
 
@@ -70,7 +70,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_CSR0
+name|RT2560_CSR0
 value|0x0000
 end_define
 
@@ -81,7 +81,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_CSR1
+name|RT2560_CSR1
 value|0x0004
 end_define
 
@@ -92,7 +92,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_CSR3
+name|RT2560_CSR3
 value|0x000c
 end_define
 
@@ -103,7 +103,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_CSR4
+name|RT2560_CSR4
 value|0x0010
 end_define
 
@@ -114,7 +114,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_CSR5
+name|RT2560_CSR5
 value|0x0014
 end_define
 
@@ -125,7 +125,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_CSR6
+name|RT2560_CSR6
 value|0x0018
 end_define
 
@@ -136,7 +136,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_CSR7
+name|RT2560_CSR7
 value|0x001c
 end_define
 
@@ -147,7 +147,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_CSR8
+name|RT2560_CSR8
 value|0x0020
 end_define
 
@@ -158,7 +158,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_CSR9
+name|RT2560_CSR9
 value|0x0024
 end_define
 
@@ -169,7 +169,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_SECCSR0
+name|RT2560_SECCSR0
 value|0x0028
 end_define
 
@@ -180,7 +180,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_CSR11
+name|RT2560_CSR11
 value|0x002c
 end_define
 
@@ -191,7 +191,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_CSR12
+name|RT2560_CSR12
 value|0x0030
 end_define
 
@@ -202,7 +202,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_CSR13
+name|RT2560_CSR13
 value|0x0034
 end_define
 
@@ -213,7 +213,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_CSR14
+name|RT2560_CSR14
 value|0x0038
 end_define
 
@@ -224,7 +224,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_CSR15
+name|RT2560_CSR15
 value|0x003c
 end_define
 
@@ -235,7 +235,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_CSR16
+name|RT2560_CSR16
 value|0x0040
 end_define
 
@@ -246,7 +246,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_CSR17
+name|RT2560_CSR17
 value|0x0044
 end_define
 
@@ -257,7 +257,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_CSR18
+name|RT2560_CSR18
 value|0x0048
 end_define
 
@@ -268,7 +268,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_CSR19
+name|RT2560_CSR19
 value|0x004c
 end_define
 
@@ -279,7 +279,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_CSR20
+name|RT2560_CSR20
 value|0x0050
 end_define
 
@@ -290,7 +290,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_CSR21
+name|RT2560_CSR21
 value|0x0054
 end_define
 
@@ -301,7 +301,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_CSR22
+name|RT2560_CSR22
 value|0x0058
 end_define
 
@@ -312,7 +312,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_TXCSR0
+name|RT2560_TXCSR0
 value|0x0060
 end_define
 
@@ -323,7 +323,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_TXCSR1
+name|RT2560_TXCSR1
 value|0x0064
 end_define
 
@@ -334,7 +334,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_TXCSR2
+name|RT2560_TXCSR2
 value|0x0068
 end_define
 
@@ -345,7 +345,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_TXCSR3
+name|RT2560_TXCSR3
 value|0x006c
 end_define
 
@@ -356,7 +356,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_TXCSR4
+name|RT2560_TXCSR4
 value|0x0070
 end_define
 
@@ -367,7 +367,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_TXCSR5
+name|RT2560_TXCSR5
 value|0x0074
 end_define
 
@@ -378,7 +378,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_TXCSR6
+name|RT2560_TXCSR6
 value|0x0078
 end_define
 
@@ -389,7 +389,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_TXCSR7
+name|RT2560_TXCSR7
 value|0x007c
 end_define
 
@@ -400,7 +400,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_RXCSR0
+name|RT2560_RXCSR0
 value|0x0080
 end_define
 
@@ -411,7 +411,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_RXCSR1
+name|RT2560_RXCSR1
 value|0x0084
 end_define
 
@@ -422,7 +422,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_RXCSR2
+name|RT2560_RXCSR2
 value|0x0088
 end_define
 
@@ -433,7 +433,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_PCICSR
+name|RT2560_PCICSR
 value|0x008c
 end_define
 
@@ -444,7 +444,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_RXCSR3
+name|RT2560_RXCSR3
 value|0x0090
 end_define
 
@@ -455,7 +455,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_TXCSR9
+name|RT2560_TXCSR9
 value|0x0094
 end_define
 
@@ -466,7 +466,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_ARSP_PLCP_0
+name|RT2560_ARSP_PLCP_0
 value|0x0098
 end_define
 
@@ -477,18 +477,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_ARSP_PLCP_1
+name|RT2560_ARSP_PLCP_1
 value|0x009c
 end_define
 
 begin_comment
-comment|/* Auto Responder PLCP Basic Rate bit mask */
+comment|/* Auto Responder Basic Rate mask */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|RAL_CNT0
+name|RT2560_CNT0
 value|0x00a0
 end_define
 
@@ -499,7 +499,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_CNT1
+name|RT2560_CNT1
 value|0x00ac
 end_define
 
@@ -510,7 +510,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_CNT2
+name|RT2560_CNT2
 value|0x00b0
 end_define
 
@@ -521,7 +521,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_CNT3
+name|RT2560_CNT3
 value|0x00b8
 end_define
 
@@ -532,7 +532,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_CNT4
+name|RT2560_CNT4
 value|0x00bc
 end_define
 
@@ -543,7 +543,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_CNT5
+name|RT2560_CNT5
 value|0x00c0
 end_define
 
@@ -554,7 +554,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_PWRCSR0
+name|RT2560_PWRCSR0
 value|0x00c4
 end_define
 
@@ -565,7 +565,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_PSCSR0
+name|RT2560_PSCSR0
 value|0x00c8
 end_define
 
@@ -576,7 +576,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_PSCSR1
+name|RT2560_PSCSR1
 value|0x00cc
 end_define
 
@@ -587,7 +587,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_PSCSR2
+name|RT2560_PSCSR2
 value|0x00d0
 end_define
 
@@ -598,7 +598,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_PSCSR3
+name|RT2560_PSCSR3
 value|0x00d4
 end_define
 
@@ -609,7 +609,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_PWRCSR1
+name|RT2560_PWRCSR1
 value|0x00d8
 end_define
 
@@ -620,7 +620,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_TIMECSR
+name|RT2560_TIMECSR
 value|0x00dc
 end_define
 
@@ -631,7 +631,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_MACCSR0
+name|RT2560_MACCSR0
 value|0x00e0
 end_define
 
@@ -642,7 +642,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_MACCSR1
+name|RT2560_MACCSR1
 value|0x00e4
 end_define
 
@@ -653,7 +653,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_RALINKCSR
+name|RT2560_RALINKCSR
 value|0x00e8
 end_define
 
@@ -664,7 +664,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_BCNCSR
+name|RT2560_BCNCSR
 value|0x00ec
 end_define
 
@@ -675,7 +675,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_BBPCSR
+name|RT2560_BBPCSR
 value|0x00f0
 end_define
 
@@ -686,7 +686,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_RFCSR
+name|RT2560_RFCSR
 value|0x00f4
 end_define
 
@@ -697,7 +697,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_LEDCSR
+name|RT2560_LEDCSR
 value|0x00f8
 end_define
 
@@ -708,7 +708,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_SECCSR3
+name|RT2560_SECCSR3
 value|0x00fc
 end_define
 
@@ -719,7 +719,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_DMACSR0
+name|RT2560_DMACSR0
 value|0x0100
 end_define
 
@@ -730,7 +730,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_DMACSR1
+name|RT2560_DMACSR1
 value|0x0104
 end_define
 
@@ -741,7 +741,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_DMACSR2
+name|RT2560_DMACSR2
 value|0x0104
 end_define
 
@@ -752,7 +752,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_DMACSR3
+name|RT2560_DMACSR3
 value|0x0104
 end_define
 
@@ -763,7 +763,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_TXACKCSR0
+name|RT2560_TXACKCSR0
 value|0x0110
 end_define
 
@@ -774,7 +774,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_GPIOCSR
+name|RT2560_GPIOCSR
 value|0x0120
 end_define
 
@@ -785,7 +785,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_BBBPPCSR
+name|RT2560_BBBPPCSR
 value|0x0124
 end_define
 
@@ -796,7 +796,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_FIFOCSR0
+name|RT2560_FIFOCSR0
 value|0x0128
 end_define
 
@@ -807,7 +807,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_FIFOCSR1
+name|RT2560_FIFOCSR1
 value|0x012c
 end_define
 
@@ -818,7 +818,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_BCNOCSR
+name|RT2560_BCNOCSR
 value|0x0130
 end_define
 
@@ -829,7 +829,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_RLPWCSR
+name|RT2560_RLPWCSR
 value|0x0134
 end_define
 
@@ -840,7 +840,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_TESTCSR
+name|RT2560_TESTCSR
 value|0x0138
 end_define
 
@@ -851,51 +851,51 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_PLCP1MCSR
+name|RT2560_PLCP1MCSR
 value|0x013c
 end_define
 
 begin_comment
-comment|/* Signal/Service/Length of ACK/CTS @1M */
+comment|/* Signal/Service/Length of ACK @1M */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|RAL_PLCP2MCSR
+name|RT2560_PLCP2MCSR
 value|0x0140
 end_define
 
 begin_comment
-comment|/* Signal/Service/Length of ACK/CTS @2M */
+comment|/* Signal/Service/Length of ACK @2M */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|RAL_PLCP5p5MCSR
+name|RT2560_PLCP5p5MCSR
 value|0x0144
 end_define
 
 begin_comment
-comment|/* Signal/Service/Length of ACK/CTS @5.5M */
+comment|/* Signal/Service/Length of ACK @5.5M */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|RAL_PLCP11MCSR
+name|RT2560_PLCP11MCSR
 value|0x0148
 end_define
 
 begin_comment
-comment|/* Signal/Service/Length of ACK/CTS @11M */
+comment|/* Signal/Service/Length of ACK @11M */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|RAL_ACKPCTCSR
+name|RT2560_ACKPCTCSR
 value|0x014c
 end_define
 
@@ -906,7 +906,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_ARTCSR1
+name|RT2560_ARTCSR1
 value|0x0150
 end_define
 
@@ -917,7 +917,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_ARTCSR2
+name|RT2560_ARTCSR2
 value|0x0154
 end_define
 
@@ -928,7 +928,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_SECCSR1
+name|RT2560_SECCSR1
 value|0x0158
 end_define
 
@@ -939,7 +939,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_BBPCSR1
+name|RT2560_BBPCSR1
 value|0x015c
 end_define
 
@@ -954,49 +954,49 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_DISABLE_RX
+name|RT2560_DISABLE_RX
 value|(1<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_DROP_CRC_ERROR
+name|RT2560_DROP_CRC_ERROR
 value|(1<< 1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_DROP_PHY_ERROR
+name|RT2560_DROP_PHY_ERROR
 value|(1<< 2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_DROP_CTL
+name|RT2560_DROP_CTL
 value|(1<< 3)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_DROP_NOT_TO_ME
+name|RT2560_DROP_NOT_TO_ME
 value|(1<< 4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_DROP_TODS
+name|RT2560_DROP_TODS
 value|(1<< 5)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_DROP_VERSION_ERROR
+name|RT2560_DROP_VERSION_ERROR
 value|(1<< 6)
 end_define
 
@@ -1007,21 +1007,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_RESET_ASIC
+name|RT2560_RESET_ASIC
 value|(1<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_RESET_BBP
+name|RT2560_RESET_BBP
 value|(1<< 1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_HOST_READY
+name|RT2560_HOST_READY
 value|(1<< 2)
 end_define
 
@@ -1032,14 +1032,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_ENABLE_TSF
+name|RT2560_ENABLE_TSF
 value|(1<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_ENABLE_TSF_SYNC
+name|RT2560_ENABLE_TSF_SYNC
 parameter_list|(
 name|x
 parameter_list|)
@@ -1049,14 +1049,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|RAL_ENABLE_TBCN
+name|RT2560_ENABLE_TBCN
 value|(1<< 3)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_ENABLE_BEACON_GENERATOR
+name|RT2560_ENABLE_BEACON_GENERATOR
 value|(1<< 6)
 end_define
 
@@ -1067,49 +1067,49 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_EEPROM_C
+name|RT2560_C
 value|(1<< 1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_EEPROM_S
+name|RT2560_S
 value|(1<< 2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_EEPROM_D
+name|RT2560_D
 value|(1<< 3)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_EEPROM_Q
+name|RT2560_Q
 value|(1<< 4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_EEPROM_93C46
+name|RT2560_93C46
 value|(1<< 5)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_EEPROM_SHIFT_D
+name|RT2560_SHIFT_D
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_EEPROM_SHIFT_Q
+name|RT2560_SHIFT_Q
 value|4
 end_define
 
@@ -1120,28 +1120,28 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_KICK_TX
+name|RT2560_KICK_TX
 value|(1<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_KICK_ATIM
+name|RT2560_KICK_ATIM
 value|(1<< 1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_KICK_PRIO
+name|RT2560_KICK_PRIO
 value|(1<< 2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_ABORT_TX
+name|RT2560_ABORT_TX
 value|(1<< 3)
 end_define
 
@@ -1152,7 +1152,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_KICK_DECRYPT
+name|RT2560_KICK_DECRYPT
 value|(1<< 0)
 end_define
 
@@ -1163,7 +1163,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_KICK_ENCRYPT
+name|RT2560_KICK_ENCRYPT
 value|(1<< 0)
 end_define
 
@@ -1174,72 +1174,72 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_BEACON_EXPIRE
+name|RT2560_BEACON_EXPIRE
 value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_WAKEUP_EXPIRE
+name|RT2560_WAKEUP_EXPIRE
 value|0x00000002
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_ATIM_EXPIRE
+name|RT2560_ATIM_EXPIRE
 value|0x00000004
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_TX_DONE
+name|RT2560_TX_DONE
 value|0x00000008
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_ATIM_DONE
+name|RT2560_ATIM_DONE
 value|0x00000010
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_PRIO_DONE
+name|RT2560_PRIO_DONE
 value|0x00000020
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_RX_DONE
+name|RT2560_RX_DONE
 value|0x00000040
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_DECRYPTION_DONE
+name|RT2560_DECRYPTION_DONE
 value|0x00000080
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_ENCRYPTION_DONE
+name|RT2560_ENCRYPTION_DONE
 value|0x00000100
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_INTR_MASK
+name|RT2560_INTR_MASK
 define|\
-value|(~(RAL_BEACON_EXPIRE | RAL_WAKEUP_EXPIRE | RAL_TX_DONE |	\ 	   RAL_PRIO_DONE | RAL_RX_DONE | RAL_DECRYPTION_DONE |		\ 	   RAL_ENCRYPTION_DONE))
+value|(~(RT2560_BEACON_EXPIRE | RT2560_WAKEUP_EXPIRE | RT2560_TX_DONE |	\ 	   RT2560_PRIO_DONE | RT2560_RX_DONE | RT2560_DECRYPTION_DONE |		\ 	   RT2560_ENCRYPTION_DONE))
 end_define
 
 begin_comment
@@ -1248,110 +1248,110 @@ end_comment
 
 begin_struct
 struct|struct
-name|ral_tx_desc
+name|rt2560_tx_desc
 block|{
 name|uint32_t
 name|flags
 decl_stmt|;
 define|#
 directive|define
-name|RAL_TX_BUSY
+name|RT2560_TX_BUSY
 value|(1<< 0)
 define|#
 directive|define
-name|RAL_TX_VALID
+name|RT2560_TX_VALID
 value|(1<< 1)
 define|#
 directive|define
-name|RAL_TX_RESULT_MASK
+name|RT2560_TX_RESULT_MASK
 value|0x0000001c
 define|#
 directive|define
-name|RAL_TX_SUCCESS
+name|RT2560_TX_SUCCESS
 value|(0<< 2)
 define|#
 directive|define
-name|RAL_TX_SUCCESS_RETRY
+name|RT2560_TX_SUCCESS_RETRY
 value|(1<< 2)
 define|#
 directive|define
-name|RAL_TX_FAIL_RETRY
+name|RT2560_TX_FAIL_RETRY
 value|(2<< 2)
 define|#
 directive|define
-name|RAL_TX_FAIL_INVALID
+name|RT2560_TX_FAIL_INVALID
 value|(3<< 2)
 define|#
 directive|define
-name|RAL_TX_FAIL_OTHER
+name|RT2560_TX_FAIL_OTHER
 value|(4<< 2)
 define|#
 directive|define
-name|RAL_TX_MORE_FRAG
+name|RT2560_TX_MORE_FRAG
 value|(1<< 8)
 define|#
 directive|define
-name|RAL_TX_ACK
+name|RT2560_TX_ACK
 value|(1<< 9)
 define|#
 directive|define
-name|RAL_TX_TIMESTAMP
+name|RT2560_TX_TIMESTAMP
 value|(1<< 10)
 define|#
 directive|define
-name|RAL_TX_OFDM
+name|RT2560_TX_OFDM
 value|(1<< 11)
 define|#
 directive|define
-name|RAL_TX_CIPHER_BUSY
+name|RT2560_TX_CIPHER_BUSY
 value|(1<< 12)
 define|#
 directive|define
-name|RAL_TX_IFS_MASK
+name|RT2560_TX_IFS_MASK
 value|0x00006000
 define|#
 directive|define
-name|RAL_TX_IFS_BACKOFF
+name|RT2560_TX_IFS_BACKOFF
 value|(0<< 13)
 define|#
 directive|define
-name|RAL_TX_IFS_SIFS
+name|RT2560_TX_IFS_SIFS
 value|(1<< 13)
 define|#
 directive|define
-name|RAL_TX_IFS_NEWBACKOFF
+name|RT2560_TX_IFS_NEWBACKOFF
 value|(2<< 13)
 define|#
 directive|define
-name|RAL_TX_IFS_NONE
+name|RT2560_TX_IFS_NONE
 value|(3<< 13)
 define|#
 directive|define
-name|RAL_TX_LONG_RETRY
+name|RT2560_TX_LONG_RETRY
 value|(1<< 15)
 define|#
 directive|define
-name|RAL_TX_CIPHER_MASK
+name|RT2560_TX_CIPHER_MASK
 value|0xe0000000
 define|#
 directive|define
-name|RAL_TX_CIPHER_NONE
+name|RT2560_TX_CIPHER_NONE
 value|(0<< 29)
 define|#
 directive|define
-name|RAL_TX_CIPHER_WEP40
+name|RT2560_TX_CIPHER_WEP40
 value|(1<< 29)
 define|#
 directive|define
-name|RAL_TX_CIPHER_WEP104
+name|RT2560_TX_CIPHER_WEP104
 value|(2<< 29)
 define|#
 directive|define
-name|RAL_TX_CIPHER_TKIP
+name|RT2560_TX_CIPHER_TKIP
 value|(3<< 29)
 define|#
 directive|define
-name|RAL_TX_CIPHER_AES
+name|RT2560_TX_CIPHER_AES
 value|(4<< 29)
 name|uint32_t
 name|physaddr
@@ -1361,28 +1361,28 @@ name|wme
 decl_stmt|;
 define|#
 directive|define
-name|RAL_LOGCWMAX
+name|RT2560_LOGCWMAX
 parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0xf)<< 12)
 define|#
 directive|define
-name|RAL_LOGCWMIN
+name|RT2560_LOGCWMIN
 parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0xf)<< 8)
 define|#
 directive|define
-name|RAL_AIFSN
+name|RT2560_AIFSN
 parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x3)<< 6)
 define|#
 directive|define
-name|RAL_IVOFFSET
+name|RT2560_IVOFFSET
 parameter_list|(
 name|x
 parameter_list|)
@@ -1398,7 +1398,7 @@ name|plcp_service
 decl_stmt|;
 define|#
 directive|define
-name|RAL_PLCP_LENGEXT
+name|RT2560_PLCP_LENGEXT
 value|0x80
 name|uint8_t
 name|plcp_length_lo
@@ -1435,58 +1435,58 @@ end_comment
 
 begin_struct
 struct|struct
-name|ral_rx_desc
+name|rt2560_rx_desc
 block|{
 name|uint32_t
 name|flags
 decl_stmt|;
 define|#
 directive|define
-name|RAL_RX_BUSY
+name|RT2560_RX_BUSY
 value|(1<< 0)
 define|#
 directive|define
-name|RAL_RX_CRC_ERROR
+name|RT2560_RX_CRC_ERROR
 value|(1<< 5)
 define|#
 directive|define
-name|RAL_RX_OFDM
+name|RT2560_RX_OFDM
 value|(1<< 6)
 define|#
 directive|define
-name|RAL_RX_PHY_ERROR
+name|RT2560_RX_PHY_ERROR
 value|(1<< 7)
 define|#
 directive|define
-name|RAL_RX_CIPHER_BUSY
+name|RT2560_RX_CIPHER_BUSY
 value|(1<< 8)
 define|#
 directive|define
-name|RAL_RX_ICV_ERROR
+name|RT2560_RX_ICV_ERROR
 value|(1<< 9)
 define|#
 directive|define
-name|RAL_RX_CIPHER_MASK
+name|RT2560_RX_CIPHER_MASK
 value|0xe0000000
 define|#
 directive|define
-name|RAL_RX_CIPHER_NONE
+name|RT2560_RX_CIPHER_NONE
 value|(0<< 29)
 define|#
 directive|define
-name|RAL_RX_CIPHER_WEP40
+name|RT2560_RX_CIPHER_WEP40
 value|(1<< 29)
 define|#
 directive|define
-name|RAL_RX_CIPHER_WEP104
+name|RT2560_RX_CIPHER_WEP104
 value|(2<< 29)
 define|#
 directive|define
-name|RAL_RX_CIPHER_TKIP
+name|RT2560_RX_CIPHER_TKIP
 value|(3<< 29)
 define|#
 directive|define
-name|RAL_RX_CIPHER_AES
+name|RT2560_RX_CIPHER_AES
 value|(4<< 29)
 name|uint32_t
 name|physaddr
@@ -1557,84 +1557,84 @@ end_define
 begin_define
 define|#
 directive|define
-name|RAL_RF1_AUTOTUNE
+name|RT2560_RF1_AUTOTUNE
 value|0x08000
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_RF3_AUTOTUNE
+name|RT2560_RF3_AUTOTUNE
 value|0x00040
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_BBP_BUSY
+name|RT2560_BBP_BUSY
 value|(1<< 15)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_BBP_WRITE
+name|RT2560_BBP_WRITE
 value|(1<< 16)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_RF_20BIT
+name|RT2560_RF_20BIT
 value|(20<< 24)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_RF_BUSY
+name|RT2560_RF_BUSY
 value|(1<< 31)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_RF_2522
+name|RT2560_RF_2522
 value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_RF_2523
+name|RT2560_RF_2523
 value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_RF_2524
+name|RT2560_RF_2524
 value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_RF_2525
+name|RT2560_RF_2525
 value|0x03
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_RF_2525E
+name|RT2560_RF_2525E
 value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_RF_2526
+name|RT2560_RF_2526
 value|0x05
 end_define
 
@@ -1645,105 +1645,105 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_RF_5222
+name|RT2560_RF_5222
 value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_BBP_VERSION
+name|RT2560_BBP_VERSION
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_BBP_TX
+name|RT2560_BBP_TX
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_BBP_RX
+name|RT2560_BBP_RX
 value|14
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_BBP_ANTA
+name|RT2560_BBP_ANTA
 value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_BBP_DIVERSITY
+name|RT2560_BBP_DIVERSITY
 value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_BBP_ANTB
+name|RT2560_BBP_ANTB
 value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_BBP_ANTMASK
+name|RT2560_BBP_ANTMASK
 value|0x03
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_BBP_FLIPIQ
+name|RT2560_BBP_FLIPIQ
 value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_LED_MODE_DEFAULT
+name|RT2560_LED_MODE_DEFAULT
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_LED_MODE_TXRX_ACTIVITY
+name|RT2560_LED_MODE_TXRX_ACTIVITY
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_LED_MODE_SINGLE
+name|RT2560_LED_MODE_SINGLE
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_LED_MODE_ASUS
+name|RT2560_LED_MODE_ASUS
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_JAPAN_FILTER
+name|RT2560_JAPAN_FILTER
 value|0x8
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_EEPROM_DELAY
+name|RT2560_EEPROM_DELAY
 value|1
 end_define
 
@@ -1754,21 +1754,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_EEPROM_CONFIG0
+name|RT2560_EEPROM_CONFIG0
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_EEPROM_BBP_BASE
+name|RT2560_EEPROM_BBP_BASE
 value|19
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAL_EEPROM_TXPOWER
+name|RT2560_EEPROM_TXPOWER
 value|35
 end_define
 
@@ -1811,15 +1811,119 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAL_EEPROM_CTL
+name|RT2560_EEPROM_CTL
 parameter_list|(
 name|sc
 parameter_list|,
 name|val
 parameter_list|)
-value|do {					\ 	RAL_WRITE((sc), RAL_CSR21, (val));				\ 	DELAY(RAL_EEPROM_DELAY);					\ } while (
+value|do {					\ 	RAL_WRITE((sc), RT2560_CSR21, (val));				\ 	DELAY(RT2560_EEPROM_DELAY);					\ } while (
 comment|/* CONSTCOND */
 value|0)
+end_define
+
+begin_comment
+comment|/*  * Default values for MAC registers; values taken from the reference driver.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT2560_DEF_MAC
+define|\
+value|{ RT2560_PSCSR0,      0x00020002 },	\ 	{ RT2560_PSCSR1,      0x00000002 },	\ 	{ RT2560_PSCSR2,      0x00020002 },	\ 	{ RT2560_PSCSR3,      0x00000002 },	\ 	{ RT2560_TIMECSR,     0x00003f21 },	\ 	{ RT2560_CSR9,        0x00000780 },	\ 	{ RT2560_CSR11,       0x07041483 },	\ 	{ RT2560_CNT3,        0x00000000 },	\ 	{ RT2560_TXCSR1,      0x07614562 },	\ 	{ RT2560_ARSP_PLCP_0, 0x8c8d8b8a },	\ 	{ RT2560_ACKPCTCSR,   0x7038140a },	\ 	{ RT2560_ARTCSR1,     0x1d21252d },	\ 	{ RT2560_ARTCSR2,     0x1919191d },	\ 	{ RT2560_RXCSR0,      0xffffffff },	\ 	{ RT2560_RXCSR3,      0xb3aab3af },	\ 	{ RT2560_PCICSR,      0x000003b8 },	\ 	{ RT2560_PWRCSR0,     0x3f3b3100 },	\ 	{ RT2560_GPIOCSR,     0x0000ff00 },	\ 	{ RT2560_TESTCSR,     0x000000f0 },	\ 	{ RT2560_PWRCSR1,     0x000001ff },	\ 	{ RT2560_MACCSR0,     0x00213223 },	\ 	{ RT2560_MACCSR1,     0x00235518 },	\ 	{ RT2560_RLPWCSR,     0x00000040 },	\ 	{ RT2560_RALINKCSR,   0x9a009a11 },	\ 	{ RT2560_CSR7,        0xffffffff },	\ 	{ RT2560_BBPCSR1,     0x82188200 },	\ 	{ RT2560_TXACKCSR0,   0x00000020 },	\ 	{ RT2560_SECCSR3,     0x0000e78f }
+end_define
+
+begin_comment
+comment|/*  * Default values for BBP registers; values taken from the reference driver.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT2560_DEF_BBP
+define|\
+value|{  3, 0x02 },	\ 	{  4, 0x19 },	\ 	{ 14, 0x1c },	\ 	{ 15, 0x30 },	\ 	{ 16, 0xac },	\ 	{ 17, 0x48 },	\ 	{ 18, 0x18 },	\ 	{ 19, 0xff },	\ 	{ 20, 0x1e },	\ 	{ 21, 0x08 },	\ 	{ 22, 0x08 },	\ 	{ 23, 0x08 },	\ 	{ 24, 0x80 },	\ 	{ 25, 0x50 },	\ 	{ 26, 0x08 },	\ 	{ 27, 0x23 },	\ 	{ 30, 0x10 },	\ 	{ 31, 0x2b },	\ 	{ 32, 0xb9 },	\ 	{ 34, 0x12 },	\ 	{ 35, 0x50 },	\ 	{ 39, 0xc4 },	\ 	{ 40, 0x02 },	\ 	{ 41, 0x60 },	\ 	{ 53, 0x10 },	\ 	{ 54, 0x18 },	\ 	{ 56, 0x08 },	\ 	{ 57, 0x10 },	\ 	{ 58, 0x08 },	\ 	{ 61, 0x60 },	\ 	{ 62, 0x10 },	\ 	{ 75, 0xff }
+end_define
+
+begin_comment
+comment|/*  * Default values for RF register R2 indexed by channel numbers; values taken  * from the reference driver.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT2560_RF2522_R2
+define|\
+value|{									\ 	0x307f6, 0x307fb, 0x30800, 0x30805, 0x3080a, 0x3080f, 0x30814,	\ 	0x30819, 0x3081e, 0x30823, 0x30828, 0x3082d, 0x30832, 0x3083e	\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2560_RF2523_R2
+define|\
+value|{									\ 	0x00327, 0x00328, 0x00329, 0x0032a, 0x0032b, 0x0032c, 0x0032d,	\ 	0x0032e, 0x0032f, 0x00340, 0x00341, 0x00342, 0x00343, 0x00346	\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2560_RF2524_R2
+define|\
+value|{									\ 	0x00327, 0x00328, 0x00329, 0x0032a, 0x0032b, 0x0032c, 0x0032d,	\ 	0x0032e, 0x0032f, 0x00340, 0x00341, 0x00342, 0x00343, 0x00346	\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2560_RF2525_R2
+define|\
+value|{									\ 	0x20327, 0x20328, 0x20329, 0x2032a, 0x2032b, 0x2032c, 0x2032d,	\ 	0x2032e, 0x2032f, 0x20340, 0x20341, 0x20342, 0x20343, 0x20346	\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2560_RF2525_HI_R2
+define|\
+value|{									\ 	0x2032f, 0x20340, 0x20341, 0x20342, 0x20343, 0x20344, 0x20345,	\ 	0x20346, 0x20347, 0x20348, 0x20349, 0x2034a, 0x2034b, 0x2034e	\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2560_RF2525E_R2
+define|\
+value|{									\ 	0x2044d, 0x2044e, 0x2044f, 0x20460, 0x20461, 0x20462, 0x20463,	\ 	0x20464, 0x20465, 0x20466, 0x20467, 0x20468, 0x20469, 0x2046b	\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2560_RF2526_HI_R2
+define|\
+value|{									\ 	0x0022a, 0x0022b, 0x0022b, 0x0022c, 0x0022c, 0x0022d, 0x0022d,	\ 	0x0022e, 0x0022e, 0x0022f, 0x0022d, 0x00240, 0x00240, 0x00241	\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2560_RF2526_R2
+define|\
+value|{									\ 	0x00226, 0x00227, 0x00227, 0x00228, 0x00228, 0x00229, 0x00229,	\ 	0x0022a, 0x0022a, 0x0022b, 0x0022b, 0x0022c, 0x0022c, 0x0022d	\ }
+end_define
+
+begin_comment
+comment|/*  * For dual-band RF, RF registers R1 and R4 also depend on channel number;  * values taken from the reference driver.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT2560_RF5222
+define|\
+value|{   1, 0x08808, 0x0044d, 0x00282 },	\ 	{   2, 0x08808, 0x0044e, 0x00282 },	\ 	{   3, 0x08808, 0x0044f, 0x00282 },	\ 	{   4, 0x08808, 0x00460, 0x00282 },	\ 	{   5, 0x08808, 0x00461, 0x00282 },	\ 	{   6, 0x08808, 0x00462, 0x00282 },	\ 	{   7, 0x08808, 0x00463, 0x00282 },	\ 	{   8, 0x08808, 0x00464, 0x00282 },	\ 	{   9, 0x08808, 0x00465, 0x00282 },	\ 	{  10, 0x08808, 0x00466, 0x00282 },	\ 	{  11, 0x08808, 0x00467, 0x00282 },	\ 	{  12, 0x08808, 0x00468, 0x00282 },	\ 	{  13, 0x08808, 0x00469, 0x00282 },	\ 	{  14, 0x08808, 0x0046b, 0x00286 },	\ 						\ 	{  36, 0x08804, 0x06225, 0x00287 },	\ 	{  40, 0x08804, 0x06226, 0x00287 },	\ 	{  44, 0x08804, 0x06227, 0x00287 },	\ 	{  48, 0x08804, 0x06228, 0x00287 },	\ 	{  52, 0x08804, 0x06229, 0x00287 },	\ 	{  56, 0x08804, 0x0622a, 0x00287 },	\ 	{  60, 0x08804, 0x0622b, 0x00287 },	\ 	{  64, 0x08804, 0x0622c, 0x00287 },	\ 						\ 	{ 100, 0x08804, 0x02200, 0x00283 },	\ 	{ 104, 0x08804, 0x02201, 0x00283 },	\ 	{ 108, 0x08804, 0x02202, 0x00283 },	\ 	{ 112, 0x08804, 0x02203, 0x00283 },	\ 	{ 116, 0x08804, 0x02204, 0x00283 },	\ 	{ 120, 0x08804, 0x02205, 0x00283 },	\ 	{ 124, 0x08804, 0x02206, 0x00283 },	\ 	{ 128, 0x08804, 0x02207, 0x00283 },	\ 	{ 132, 0x08804, 0x02208, 0x00283 },	\ 	{ 136, 0x08804, 0x02209, 0x00283 },	\ 	{ 140, 0x08804, 0x0220a, 0x00283 },	\ 						\ 	{ 149, 0x08808, 0x02429, 0x00281 },	\ 	{ 153, 0x08808, 0x0242b, 0x00281 },	\ 	{ 157, 0x08808, 0x0242d, 0x00281 },	\ 	{ 161, 0x08808, 0x0242f, 0x00281 }
 end_define
 
 end_unit
