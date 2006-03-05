@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"libc_private.h"
 end_include
 
@@ -101,6 +107,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|stub_true
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|stub_exit
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -120,6 +146,182 @@ name|PJT_MAX
 index|]
 init|=
 block|{
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATFORK */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_DESTROY */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_GETDETACHSTATE */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_GETGUARDSIZE */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_GETINHERITSCHED */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_GETSCHEDPARAM */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_GETSCHEDPOLICY */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_GETSCOPE */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_GETSTACKADDR */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_GETSTACKSIZE */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_INIT */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_SETDETACHSTATE */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_SETGUARDSIZE */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_SETINHERITSCHED */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_SETSCHEDPARAM */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_SETSCHEDPOLICY */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_SETSCOPE */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_SETSTACKADDR */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_SETSTACKSIZE */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_CANCEL */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_CLEANUP_POP */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_CLEANUP_PUSH */
 block|{
 name|PJT_DUAL_ENTRY
 argument_list|(
@@ -159,7 +361,39 @@ argument|stub_zero
 argument_list|)
 block|}
 block|,
+comment|/* PJT_COND_TIMEDWAIT */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
 comment|/* PJT_COND_WAIT */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_DETACH */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_true
+argument_list|)
+block|}
+block|,
+comment|/* PJT_EQUAL */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_exit
+argument_list|)
+block|}
+block|,
+comment|/* PJT_EXIT */
 block|{
 name|PJT_DUAL_ENTRY
 argument_list|(
@@ -168,6 +402,14 @@ argument_list|)
 block|}
 block|,
 comment|/* PJT_GETSPECIFIC */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_JOIN */
 block|{
 name|PJT_DUAL_ENTRY
 argument_list|(
@@ -187,11 +429,43 @@ comment|/* PJT_KEY_DELETE */
 block|{
 name|PJT_DUAL_ENTRY
 argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_KILL */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
 argument|stub_main
 argument_list|)
 block|}
 block|,
 comment|/* PJT_MAIN_NP */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_MUTEXATTR_DESTROY */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_MUTEXATTR_INIT */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_MUTEXATTR_SETTYPE */
 block|{
 name|PJT_DUAL_ENTRY
 argument_list|(
@@ -232,30 +506,6 @@ argument_list|)
 block|}
 block|,
 comment|/* PJT_MUTEX_UNLOCK */
-block|{
-name|PJT_DUAL_ENTRY
-argument_list|(
-argument|stub_zero
-argument_list|)
-block|}
-block|,
-comment|/* PJT_MUTEXATTR_DESTROY */
-block|{
-name|PJT_DUAL_ENTRY
-argument_list|(
-argument|stub_zero
-argument_list|)
-block|}
-block|,
-comment|/* PJT_MUTEXATTR_INIT */
-block|{
-name|PJT_DUAL_ENTRY
-argument_list|(
-argument|stub_zero
-argument_list|)
-block|}
-block|,
-comment|/* PJT_MUTEXATTR_SETTYPE */
 block|{
 name|PJT_DUAL_ENTRY
 argument_list|(
@@ -335,6 +585,22 @@ argument|stub_zero
 argument_list|)
 block|}
 block|,
+comment|/* PJT_SETCANCELSTATE */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_SETCANCELTYPE */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
 comment|/* PJT_SETSPECIFIC */
 block|{
 name|PJT_DUAL_ENTRY
@@ -342,7 +608,16 @@ argument_list|(
 argument|stub_zero
 argument_list|)
 block|}
+block|,
 comment|/* PJT_SIGMASK */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_TESTCANCEL */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -843,6 +1118,461 @@ argument|void *
 argument_list|)
 end_macro
 
+begin_macro
+name|STUB_FUNC3
+argument_list|(
+argument|pthread_atfork
+argument_list|,
+argument|PJT_ATFORK
+argument_list|,
+argument|int
+argument_list|,
+argument|void *
+argument_list|,
+argument|void *
+argument_list|,
+argument|void*
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|STUB_FUNC1
+argument_list|(
+name|pthread_attr_destroy
+argument_list|,
+name|PJT_ATTR_DESTROY
+argument_list|,
+name|int
+argument_list|,
+name|void
+operator|*
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|STUB_FUNC2
+argument_list|(
+argument|pthread_attr_getdetachstate
+argument_list|,
+argument|PJT_ATTR_GETDETACHSTATE
+argument_list|,
+argument|int
+argument_list|,
+argument|void *
+argument_list|,
+argument|void *
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC2
+argument_list|(
+argument|pthread_attr_getguardsize
+argument_list|,
+argument|PJT_ATTR_GETGUARDSIZE
+argument_list|,
+argument|int
+argument_list|,
+argument|void *
+argument_list|,
+argument|void *
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC2
+argument_list|(
+argument|pthread_attr_getstackaddr
+argument_list|,
+argument|PJT_ATTR_GETSTACKADDR
+argument_list|,
+argument|int
+argument_list|,
+argument|void *
+argument_list|,
+argument|void *
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC2
+argument_list|(
+argument|pthread_attr_getstacksize
+argument_list|,
+argument|PJT_ATTR_GETSTACKSIZE
+argument_list|,
+argument|int
+argument_list|,
+argument|void *
+argument_list|,
+argument|void *
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC2
+argument_list|(
+argument|pthread_attr_getinheritsched
+argument_list|,
+argument|PJT_ATTR_GETINHERITSCHED
+argument_list|,
+argument|int
+argument_list|,
+argument|void *
+argument_list|,
+argument|void *
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC2
+argument_list|(
+argument|pthread_attr_getschedparam
+argument_list|,
+argument|PJT_ATTR_GETSCHEDPARAM
+argument_list|,
+argument|int
+argument_list|,
+argument|void *
+argument_list|,
+argument|void *
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC2
+argument_list|(
+argument|pthread_attr_getschedpolicy
+argument_list|,
+argument|PJT_ATTR_GETSCHEDPOLICY
+argument_list|,
+argument|int
+argument_list|,
+argument|void *
+argument_list|,
+argument|void *
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC2
+argument_list|(
+argument|pthread_attr_getscope
+argument_list|,
+argument|PJT_ATTR_GETSCOPE
+argument_list|,
+argument|int
+argument_list|,
+argument|void *
+argument_list|,
+argument|void *
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC1
+argument_list|(
+argument|pthread_attr_init
+argument_list|,
+argument|PJT_ATTR_INIT
+argument_list|,
+argument|int
+argument_list|,
+argument|void *
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC2
+argument_list|(
+argument|pthread_attr_setdetachstate
+argument_list|,
+argument|PJT_ATTR_SETDETACHSTATE
+argument_list|,
+argument|int
+argument_list|,
+argument|void *
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC2
+argument_list|(
+argument|pthread_attr_setguardsize
+argument_list|,
+argument|PJT_ATTR_SETGUARDSIZE
+argument_list|,
+argument|int
+argument_list|,
+argument|void *
+argument_list|,
+argument|size_t
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC2
+argument_list|(
+argument|pthread_attr_setstackaddr
+argument_list|,
+argument|PJT_ATTR_SETSTACKADDR
+argument_list|,
+argument|int
+argument_list|,
+argument|void *
+argument_list|,
+argument|void *
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC2
+argument_list|(
+argument|pthread_attr_setstacksize
+argument_list|,
+argument|PJT_ATTR_SETSTACKSIZE
+argument_list|,
+argument|int
+argument_list|,
+argument|void *
+argument_list|,
+argument|size_t
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC2
+argument_list|(
+argument|pthread_attr_setinheritsched
+argument_list|,
+argument|PJT_ATTR_SETINHERITSCHED
+argument_list|,
+argument|int
+argument_list|,
+argument|void *
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC2
+argument_list|(
+argument|pthread_attr_setschedparam
+argument_list|,
+argument|PJT_ATTR_SETSCHEDPARAM
+argument_list|,
+argument|int
+argument_list|,
+argument|void *
+argument_list|,
+argument|void *
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC2
+argument_list|(
+argument|pthread_attr_setschedpolicy
+argument_list|,
+argument|PJT_ATTR_SETSCHEDPOLICY
+argument_list|,
+argument|int
+argument_list|,
+argument|void *
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC2
+argument_list|(
+argument|pthread_attr_setscope
+argument_list|,
+argument|PJT_ATTR_SETSCOPE
+argument_list|,
+argument|int
+argument_list|,
+argument|void *
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC1
+argument_list|(
+argument|pthread_cancel
+argument_list|,
+argument|PJT_CANCEL
+argument_list|,
+argument|int
+argument_list|,
+argument|void *
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC1
+argument_list|(
+argument|pthread_cleanup_pop
+argument_list|,
+argument|PJT_CLEANUP_POP
+argument_list|,
+argument|int
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC2
+argument_list|(
+argument|pthread_cleanup_push
+argument_list|,
+argument|PJT_CLEANUP_PUSH
+argument_list|,
+argument|void
+argument_list|,
+argument|void *
+argument_list|,
+argument|void *
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC3
+argument_list|(
+argument|pthread_cond_timedwait
+argument_list|,
+argument|PJT_COND_TIMEDWAIT
+argument_list|,
+argument|int
+argument_list|,
+argument|void *
+argument_list|,
+argument|void *
+argument_list|,
+argument|void *
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC1
+argument_list|(
+argument|pthread_detach
+argument_list|,
+argument|PJT_DETACH
+argument_list|,
+argument|int
+argument_list|,
+argument|void *
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC2
+argument_list|(
+argument|pthread_equal
+argument_list|,
+argument|PJT_EQUAL
+argument_list|,
+argument|int
+argument_list|,
+argument|void *
+argument_list|,
+argument|void *
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC1
+argument_list|(
+argument|pthread_exit
+argument_list|,
+argument|PJT_EXIT
+argument_list|,
+argument|void
+argument_list|,
+argument|void *
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC2
+argument_list|(
+argument|pthread_join
+argument_list|,
+argument|PJT_JOIN
+argument_list|,
+argument|int
+argument_list|,
+argument|void *
+argument_list|,
+argument|void *
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC2
+argument_list|(
+argument|pthread_kill
+argument_list|,
+argument|PJT_KILL
+argument_list|,
+argument|int
+argument_list|,
+argument|void *
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC2
+argument_list|(
+argument|pthread_setcancelstate
+argument_list|,
+argument|PJT_SETCANCELSTATE
+argument_list|,
+argument|int
+argument_list|,
+argument|int
+argument_list|,
+argument|void *
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC2
+argument_list|(
+argument|pthread_setcanceltype
+argument_list|,
+argument|PJT_SETCANCELTYPE
+argument_list|,
+argument|int
+argument_list|,
+argument|int
+argument_list|,
+argument|void *
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC
+argument_list|(
+argument|pthread_testcancel
+argument_list|,
+argument|PJT_TESTCANCEL
+argument_list|,
+argument|void
+argument_list|)
+end_macro
+
 begin_function
 specifier|static
 name|int
@@ -909,6 +1639,38 @@ operator|-
 literal|1
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|stub_true
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|stub_exit
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

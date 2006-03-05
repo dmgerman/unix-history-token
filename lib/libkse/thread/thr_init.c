@@ -511,6 +511,182 @@ block|{
 block|{
 name|DUAL_ENTRY
 argument_list|(
+argument|_pthread_atfork
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATFORK */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_attr_destroy
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_DESTROY */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_attr_getdetachstate
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_GETDETACHSTATE */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_attr_getguardsize
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_GETGUARDSIZE */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_attr_getinheritsched
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_GETINHERITSCHED */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_attr_getschedparam
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_GETSCHEDPARAM */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_attr_getschedpolicy
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_GETSCHEDPOLICY */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_attr_getscope
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_GETSCOPE */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_attr_getstackaddr
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_GETSTACKADDR */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_attr_getstacksize
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_GETSTACKSIZE */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_attr_init
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_INIT */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_attr_setdetachstate
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_SETDETACHSTATE */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_attr_setguardsize
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_SETGUARDSIZE */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_attr_setinheritsched
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_SETINHERITSCHED */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_attr_setschedparam
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_SETSCHEDPARAM */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_attr_setschedpolicy
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_SETSCHEDPOLICY */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_attr_setscope
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_SETSCOPE */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_attr_setstackaddr
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_SETSTACKADDR */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_attr_setstacksize
+argument_list|)
+block|}
+block|,
+comment|/* PJT_ATTR_SETSTACKSIZE */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_cancel
+argument_list|)
+block|}
+block|,
+comment|/* PJT_CANCEL */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_cleanup_pop
+argument_list|)
+block|}
+block|,
+comment|/* PJT_CLEANUP_POP */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_cleanup_push
+argument_list|)
+block|}
+block|,
+comment|/* PJT_CLEANUP_PUSH */
+block|{
+name|DUAL_ENTRY
+argument_list|(
 argument|_pthread_cond_broadcast
 argument_list|)
 block|}
@@ -541,6 +717,14 @@ block|}
 block|,
 comment|/* PJT_COND_SIGNAL */
 block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_cond_timedwait
+argument_list|)
+block|}
+block|,
+comment|/* PJT_COND_TIMEDWAIT */
+block|{
 operator|(
 name|pthread_func_t
 operator|)
@@ -556,11 +740,43 @@ comment|/* PJT_COND_WAIT */
 block|{
 name|DUAL_ENTRY
 argument_list|(
+argument|_pthread_detach
+argument_list|)
+block|}
+block|,
+comment|/* PJT_DETACH */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_equal
+argument_list|)
+block|}
+block|,
+comment|/* PJT_EQUAL */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_exit
+argument_list|)
+block|}
+block|,
+comment|/* PJT_EXIT */
+block|{
+name|DUAL_ENTRY
+argument_list|(
 argument|_pthread_getspecific
 argument_list|)
 block|}
 block|,
 comment|/* PJT_GETSPECIFIC */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_join
+argument_list|)
+block|}
+block|,
+comment|/* PJT_JOIN */
 block|{
 name|DUAL_ENTRY
 argument_list|(
@@ -580,11 +796,43 @@ comment|/* PJT_KEY_DELETE*/
 block|{
 name|DUAL_ENTRY
 argument_list|(
+argument|_pthread_kill
+argument_list|)
+block|}
+block|,
+comment|/* PJT_KILL */
+block|{
+name|DUAL_ENTRY
+argument_list|(
 argument|_pthread_main_np
 argument_list|)
 block|}
 block|,
 comment|/* PJT_MAIN_NP */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_mutexattr_destroy
+argument_list|)
+block|}
+block|,
+comment|/* PJT_MUTEXATTR_DESTROY */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_mutexattr_init
+argument_list|)
+block|}
+block|,
+comment|/* PJT_MUTEXATTR_INIT */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_mutexattr_settype
+argument_list|)
+block|}
+block|,
+comment|/* PJT_MUTEXATTR_SETTYPE */
 block|{
 name|DUAL_ENTRY
 argument_list|(
@@ -635,30 +883,6 @@ argument_list|)
 block|}
 block|,
 comment|/* PJT_MUTEX_UNLOCK */
-block|{
-name|DUAL_ENTRY
-argument_list|(
-argument|_pthread_mutexattr_destroy
-argument_list|)
-block|}
-block|,
-comment|/* PJT_MUTEXATTR_DESTROY */
-block|{
-name|DUAL_ENTRY
-argument_list|(
-argument|_pthread_mutexattr_init
-argument_list|)
-block|}
-block|,
-comment|/* PJT_MUTEXATTR_INIT */
-block|{
-name|DUAL_ENTRY
-argument_list|(
-argument|_pthread_mutexattr_settype
-argument_list|)
-block|}
-block|,
-comment|/* PJT_MUTEXATTR_SETTYPE */
 block|{
 name|DUAL_ENTRY
 argument_list|(
@@ -734,6 +958,22 @@ comment|/* PJT_SELF */
 block|{
 name|DUAL_ENTRY
 argument_list|(
+argument|_pthread_setcancelstate
+argument_list|)
+block|}
+block|,
+comment|/* PJT_SETCANCELSTATE */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_setcanceltype
+argument_list|)
+block|}
+block|,
+comment|/* PJT_SETCANCELTYPE */
+block|{
+name|DUAL_ENTRY
+argument_list|(
 argument|_pthread_setspecific
 argument_list|)
 block|}
@@ -745,7 +985,15 @@ argument_list|(
 argument|_pthread_sigmask
 argument_list|)
 block|}
+block|,
 comment|/* PJT_SIGMASK */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_testcancel
+argument_list|)
+block|}
+comment|/* PJT_TESTCANCEL */
 block|}
 decl_stmt|;
 end_decl_stmt
