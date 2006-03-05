@@ -4239,6 +4239,10 @@ literal|0x8144104d
 case|:
 comment|/* Sony VAIO PCG-TR* */
 case|case
+literal|0x81c0104d
+case|:
+comment|/* Sony VAIO type T */
+case|case
 literal|0x8197104d
 case|:
 comment|/* Sony S1XP */
