@@ -1074,6 +1074,10 @@ name|error
 decl_stmt|,
 name|i
 decl_stmt|;
+specifier|static
+name|int
+name|once
+decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -1107,11 +1111,30 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|once
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"cpufreq: frequency change with timecounter"
+literal|" TSC not allowed, see cpufreq(4)\n"
+argument_list|)
+expr_stmt|;
+name|once
+operator|=
+literal|1
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|EBUSY
 operator|)
 return|;
+block|}
 name|CF_MTX_LOCK
 argument_list|(
 operator|&
