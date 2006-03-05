@@ -202,25 +202,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/rt61/if_ralrate.h>
+file|<dev/ral/if_ralrate.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/rt61/rt2661reg.h>
+file|<dev/ral/rt2661reg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/rt61/rt2661var.h>
+file|<dev/ral/rt2661var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/rt61/rt2661_ucode.h>
+file|<dev/ral/rt2661_ucode.h>
 end_include
 
 begin_ifdef

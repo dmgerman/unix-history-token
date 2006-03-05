@@ -184,19 +184,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/rt61/if_ralrate.h>
+file|<dev/ral/if_ralrate.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/rt61/rt2560var.h>
+file|<dev/ral/rt2560var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/rt61/rt2661var.h>
+file|<dev/ral/rt2661var.h>
 end_include
 
 begin_expr_stmt
