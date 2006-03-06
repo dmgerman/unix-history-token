@@ -24,19 +24,13 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<paths.h>
+file|<machine/mptable.h>
 end_include
 
 begin_include
@@ -48,7 +42,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/mptable.h>
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_define
@@ -130,6 +154,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|biosmptable_detect
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|biosmptable_detect
@@ -142,12 +175,6 @@ name|mpfps
 decl_stmt|;
 name|mpcth_t
 name|mpcth
-decl_stmt|;
-name|char
-name|buf
-index|[
-literal|16
-index|]
 decl_stmt|;
 name|char
 modifier|*
@@ -511,6 +538,9 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|pread
 argument_list|(
 name|pfd
@@ -527,10 +557,13 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"pread (%lu @ 0x%lx)"
+literal|"pread (%zu @ 0x%jx)"
 argument_list|,
 name|size
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|addr
 argument_list|)
 expr_stmt|;
@@ -886,8 +919,11 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"bad mpcth address (0x%lx)\n"
+literal|"bad mpcth address (0x%jx)\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|addr
 argument_list|)
 expr_stmt|;
@@ -982,9 +1018,6 @@ name|base_table_length
 expr_stmt|;
 name|mpcth
 operator|=
-operator|(
-name|mpcth_t
-operator|)
 name|realloc
 argument_list|(
 name|mpcth
