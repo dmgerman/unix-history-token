@@ -3971,12 +3971,16 @@ operator|==
 literal|1
 operator|&&
 operator|(
+operator|(
 name|cpu_feature
 operator|&
 name|CPUID_TSC
 operator|)
 operator|==
 literal|0
+operator|||
+name|tsc_is_broken
+operator|)
 condition|)
 name|machclk_usepcc
 operator|=
