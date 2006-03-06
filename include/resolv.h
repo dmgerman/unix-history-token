@@ -148,6 +148,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RES_DFLRETRY
+value|2
+end_define
+
+begin_comment
+comment|/* retries per each name server */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MAXRESOLVSORT
 value|10
 end_define
