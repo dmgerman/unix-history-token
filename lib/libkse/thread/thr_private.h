@@ -228,6 +228,13 @@ name|DBG_SIG
 value|0x0002
 end_define
 
+begin_define
+define|#
+directive|define
+name|DBG_INFO_DUMP
+value|0x0004
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef

@@ -2099,6 +2099,19 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|getenv
+argument_list|(
+literal|"LIBPTHREAD_DEBUG"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|_thr_debug_flags
+operator||=
+name|DBG_INFO_DUMP
+expr_stmt|;
 comment|/* 	 * _thread_list_lock and _kse_count are initialized 	 * by _kse_init() 	 */
 block|}
 end_function
