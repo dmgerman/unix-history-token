@@ -1634,11 +1634,7 @@ expr|struct
 name|uma_zone
 argument_list|)
 operator|+
-operator|(
 name|mp_maxid
-operator|-
-literal|1
-operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
