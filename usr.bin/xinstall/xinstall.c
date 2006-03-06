@@ -757,6 +757,26 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|getenv
+argument_list|(
+literal|"DONTSTRIP"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"DONTSTRIP set - will not strip installed binaries"
+argument_list|)
+expr_stmt|;
+name|dostrip
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* must have at least two arguments, except when creating directories */
 if|if
 condition|(
