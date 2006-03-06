@@ -1223,6 +1223,21 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|int
+name|logflags
+init|=
+name|O_WRONLY
+operator||
+name|O_APPEND
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* flags used to open log files */
+end_comment
+
+begin_decl_stmt
+specifier|static
 name|char
 name|bootfile
 index|[
@@ -1827,7 +1842,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"46Aa:b:cdf:kl:m:nop:P:sS:uv"
+literal|"46Aa:b:cCdf:kl:m:nop:P:sS:uv"
 argument_list|)
 operator|)
 operator|!=
@@ -1898,6 +1913,14 @@ literal|'c'
 case|:
 name|no_compress
 operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'C'
+case|:
+name|logflags
+operator||=
+name|O_CREAT
 expr_stmt|;
 break|break;
 case|case
@@ -3764,7 +3787,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: syslogd [-46Acdknosuv] [-a allowed_peer]"
+literal|"usage: syslogd [-46ACcdknosuv] [-a allowed_peer]"
 argument_list|,
 literal|"               [-b bind address] [-f config_file]"
 argument_list|,
@@ -10140,11 +10163,9 @@ name|open
 argument_list|(
 name|p
 argument_list|,
-name|O_WRONLY
-operator||
-name|O_APPEND
+name|logflags
 argument_list|,
-literal|0
+literal|0600
 argument_list|)
 operator|)
 operator|<
