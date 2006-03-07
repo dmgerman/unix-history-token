@@ -1613,7 +1613,18 @@ name|EIO
 expr_stmt|;
 block|}
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+operator|(
+name|request
+operator|->
+name|flags
+operator|&
+name|ATA_R_ATAPI
+operator|)
+condition|)
 block|{
 comment|/* if this is a soft ECC error warn about it */
 comment|/* XXX SOS we could do WARF here */
