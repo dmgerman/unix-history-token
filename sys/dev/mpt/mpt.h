@@ -956,6 +956,10 @@ name|uint16_t
 name|IOCStatus
 decl_stmt|;
 comment|/* Completion status */
+name|uint32_t
+name|serno
+decl_stmt|;
+comment|/* serial number */
 name|union
 name|ccb
 modifier|*
@@ -1433,6 +1437,9 @@ expr_stmt|;
 comment|/* FC929/1030 have two busses */
 name|u_int
 name|verbose
+decl_stmt|;
+name|uint32_t
+name|cmd_serno
 decl_stmt|;
 comment|/* 	 * IOC Facts 	 */
 name|uint16_t

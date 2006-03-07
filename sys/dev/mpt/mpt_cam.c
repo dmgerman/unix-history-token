@@ -1274,9 +1274,13 @@ name|mpt_prt
 argument_list|(
 name|mpt
 argument_list|,
-literal|"Request %p Timed out.\n"
+literal|"Request %p:serno Timed out.\n"
 argument_list|,
 name|req
+argument_list|,
+name|req
+operator|->
+name|serno
 argument_list|)
 expr_stmt|;
 if|if
@@ -4714,9 +4718,13 @@ name|mpt
 argument_list|,
 name|MPT_PRT_DEBUG
 argument_list|,
-literal|"TMF Complete: req %p, reply %p\n"
+literal|"TMF Complete: req %p:serno, reply %p\n"
 argument_list|,
 name|req
+argument_list|,
+name|req
+operator|->
+name|serno
 argument_list|,
 name|reply_frame
 argument_list|)
@@ -8815,13 +8823,22 @@ block|{
 name|u_int
 name|status
 decl_stmt|;
+name|u_int32_t
+name|serno
+init|=
+name|req
+operator|->
+name|serno
+decl_stmt|;
 name|mpt_prt
 argument_list|(
 name|mpt
 argument_list|,
-literal|"Attempting to Abort Req %p\n"
+literal|"Attempting to Abort Req %p:%u\n"
 argument_list|,
 name|req
+argument_list|,
+name|serno
 argument_list|)
 expr_stmt|;
 name|ccb
@@ -8884,6 +8901,17 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|mpt_prt
+argument_list|(
+name|mpt
+argument_list|,
+literal|"Abort Req %p:%u failed to start TMF\n"
+argument_list|,
+name|req
+argument_list|,
+name|serno
+argument_list|)
+expr_stmt|;
 comment|/* 			 * mpt_scsi_send_tmf hard resets on failure, so no 			 * need to do so here.  Our queue should be emptied 			 * by the hard reset. 			 */
 continue|continue;
 block|}
@@ -8928,8 +8956,12 @@ name|mpt_prt
 argument_list|(
 name|mpt
 argument_list|,
-literal|"mpt_recover_commands: Abort timed-out. "
+literal|"Abort Req %p:%d timed-out. "
 literal|"Resetting controller\n"
+argument_list|,
+name|req
+argument_list|,
+name|serno
 argument_list|)
 expr_stmt|;
 name|mpt_reset
@@ -8968,8 +9000,12 @@ name|mpt
 argument_list|,
 name|MPT_PRT_DEBUG
 argument_list|,
-literal|"mpt_recover_commands: Abort Failed "
-literal|"with status 0x%x\n.  Resetting bus"
+literal|"Abort Req %p: %u Failed "
+literal|"with status 0x%x\n.  Resetting bus."
+argument_list|,
+name|req
+argument_list|,
+name|serno
 argument_list|,
 name|status
 argument_list|)
