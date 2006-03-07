@@ -127,6 +127,12 @@ directive|include
 file|"sta_info.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"hostap_common.h"
+end_include
+
 begin_define
 define|#
 directive|define

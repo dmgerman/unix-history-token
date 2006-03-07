@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * WPA Supplicant/hostapd / Shared EAP definitions  * Copyright (c) 2004-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -28,7 +32,7 @@ decl_stmt|;
 name|u16
 name|length
 decl_stmt|;
-comment|/* including code and identifier */
+comment|/* including code and identifier; network byte order */
 comment|/* followed by length-4 octets of data */
 block|}
 name|__attribute__
@@ -77,30 +81,33 @@ block|,
 name|EAP_TYPE_IDENTITY
 init|=
 literal|1
+comment|/* RFC 3748 */
 block|,
 name|EAP_TYPE_NOTIFICATION
 init|=
 literal|2
+comment|/* RFC 3748 */
 block|,
 name|EAP_TYPE_NAK
 init|=
 literal|3
-comment|/* Response only */
+comment|/* Response only, RFC 3748 */
 block|,
 name|EAP_TYPE_MD5
 init|=
 literal|4
 block|,
+comment|/* RFC 3748 */
 name|EAP_TYPE_OTP
 init|=
 literal|5
-comment|/* RFC 2284 */
+comment|/* RFC 3748 */
 block|,
 name|EAP_TYPE_GTC
 init|=
 literal|6
 block|,
-comment|/* RFC 2284 */
+comment|/* RFC 3748 */
 name|EAP_TYPE_TLS
 init|=
 literal|13
@@ -146,6 +153,11 @@ init|=
 literal|43
 comment|/* draft-cam-winget-eap-fast-00.txt */
 block|,
+name|EAP_TYPE_PAX
+init|=
+literal|46
+block|,
+comment|/* draft-clancy-eap-pax-04.txt */
 name|EAP_TYPE_EXPANDED_NAK
 init|=
 literal|254
@@ -154,7 +166,7 @@ block|,
 name|EAP_TYPE_PSK
 init|=
 literal|255
-comment|/* EXPERIMENTAL - type not yet allocated 			    * draft-bersani-eap-psk-03 */
+comment|/* EXPERIMENTAL - type not yet allocated 			    * draft-bersani-eap-psk-09 */
 block|}
 name|EapType
 typedef|;

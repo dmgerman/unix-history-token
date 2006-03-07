@@ -141,8 +141,6 @@ operator|->
 name|conn
 argument_list|,
 name|verify_peer
-argument_list|,
-name|NULL
 argument_list|)
 condition|)
 block|{
@@ -885,6 +883,33 @@ name|tls_out
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|tls_connection_get_read_alerts
+argument_list|(
+name|sm
+operator|->
+name|ssl_ctx
+argument_list|,
+name|data
+operator|->
+name|conn
+argument_list|)
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"SSL: Remote end sent a fatal "
+literal|"alert - abort handshake"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 return|return
 literal|1
 return|;

@@ -434,6 +434,9 @@ decl_stmt|;
 name|Boolean
 name|update_user
 decl_stmt|;
+name|int
+name|num_rounds
+decl_stmt|;
 block|}
 struct|;
 end_struct

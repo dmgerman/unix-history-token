@@ -11,6 +11,12 @@ directive|define
 name|CONFIG_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"config_types.h"
+end_include
+
 begin_typedef
 typedef|typedef
 name|u8
@@ -21,84 +27,11 @@ index|]
 typedef|;
 end_typedef
 
-begin_struct
-struct|struct
-name|hostapd_radius_server
-block|{
-comment|/* MIB prefix for shared variables: 	 * @ = radiusAuth or radiusAcc depending on the type of the server */
-name|struct
-name|in_addr
-name|addr
-decl_stmt|;
-comment|/* @ServerAddress */
-name|int
-name|port
-decl_stmt|;
-comment|/* @ClientServerPortNumber */
-name|u8
-modifier|*
-name|shared_secret
-decl_stmt|;
-name|size_t
-name|shared_secret_len
-decl_stmt|;
-comment|/* Dynamic (not from configuration file) MIB data */
-name|int
-name|index
-decl_stmt|;
-comment|/* @ServerIndex */
-name|int
-name|round_trip_time
-decl_stmt|;
-comment|/* @ClientRoundTripTime; in hundredths of a 			      * second */
-name|u32
-name|requests
-decl_stmt|;
-comment|/* @Client{Access,}Requests */
-name|u32
-name|retransmissions
-decl_stmt|;
-comment|/* @Client{Access,}Retransmissions */
-name|u32
-name|access_accepts
-decl_stmt|;
-comment|/* radiusAuthClientAccessAccepts */
-name|u32
-name|access_rejects
-decl_stmt|;
-comment|/* radiusAuthClientAccessRejects */
-name|u32
-name|access_challenges
-decl_stmt|;
-comment|/* radiusAuthClientAccessChallenges */
-name|u32
-name|responses
-decl_stmt|;
-comment|/* radiusAccClientResponses */
-name|u32
-name|malformed_responses
-decl_stmt|;
-comment|/* @ClientMalformed{Access,}Responses */
-name|u32
-name|bad_authenticators
-decl_stmt|;
-comment|/* @ClientBadAuthenticators */
-name|u32
-name|timeouts
-decl_stmt|;
-comment|/* @ClientTimeouts */
-name|u32
-name|unknown_types
-decl_stmt|;
-comment|/* @ClientUnknownTypes */
-name|u32
-name|packets_dropped
-decl_stmt|;
-comment|/* @ClientPacketsDropped */
-comment|/* @ClientPendingRequests: length of hapd->radius->msgs for matching 	 * msg_type */
-block|}
-struct|;
-end_struct
+begin_struct_decl
+struct_decl|struct
+name|hostapd_radius_servers
+struct_decl|;
+end_struct_decl
 
 begin_define
 define|#
@@ -302,9 +235,9 @@ name|ieee802_1x
 decl_stmt|;
 comment|/* use IEEE 802.1X */
 name|int
-name|eap_authenticator
+name|eap_server
 decl_stmt|;
-comment|/* Use internal EAP authenticator instead of 				* external RADIUS server */
+comment|/* Use internal EAP server instead of external 			 * RADIUS server */
 name|struct
 name|hostapd_eap_user
 modifier|*
@@ -315,41 +248,17 @@ modifier|*
 name|eap_sim_db
 decl_stmt|;
 name|struct
-name|in_addr
+name|hostapd_ip_addr
 name|own_ip_addr
 decl_stmt|;
 name|char
 modifier|*
 name|nas_identifier
 decl_stmt|;
-comment|/* RADIUS Authentication and Accounting servers in priority order */
 name|struct
-name|hostapd_radius_server
+name|hostapd_radius_servers
 modifier|*
-name|auth_servers
-decl_stmt|,
-modifier|*
-name|auth_server
-decl_stmt|;
-name|int
-name|num_auth_servers
-decl_stmt|;
-name|struct
-name|hostapd_radius_server
-modifier|*
-name|acct_servers
-decl_stmt|,
-modifier|*
-name|acct_server
-decl_stmt|;
-name|int
-name|num_acct_servers
-decl_stmt|;
-name|int
-name|radius_retry_primary_interval
-decl_stmt|;
-name|int
-name|radius_acct_interim_interval
+name|radius
 decl_stmt|;
 define|#
 directive|define
@@ -374,6 +283,9 @@ modifier|*
 name|eap_req_id_text
 decl_stmt|;
 comment|/* optional displayable message sent with 				* EAP Request-Identity */
+name|size_t
+name|eap_req_id_text_len
+decl_stmt|;
 name|int
 name|eapol_key_index_workaround
 decl_stmt|;
@@ -539,6 +451,9 @@ comment|/* directory for UNIX domain sockets */
 name|gid_t
 name|ctrl_interface_gid
 decl_stmt|;
+name|int
+name|ctrl_interface_gid_set
+decl_stmt|;
 name|char
 modifier|*
 name|ca_cert
@@ -555,6 +470,9 @@ name|char
 modifier|*
 name|private_key_passwd
 decl_stmt|;
+name|int
+name|check_crl
+decl_stmt|;
 name|char
 modifier|*
 name|radius_server_clients
@@ -562,6 +480,18 @@ decl_stmt|;
 name|int
 name|radius_server_auth_port
 decl_stmt|;
+name|int
+name|radius_server_ipv6
+decl_stmt|;
+name|char
+modifier|*
+name|test_socket
+decl_stmt|;
+comment|/* UNIX domain socket path for driver_test */
+name|int
+name|use_pae_group_addr
+decl_stmt|;
+comment|/* Whether to send EAPOL frames to PAE group 				 * address instead of individual address 				 * (for driver_wired.c). 				 */
 block|}
 struct|;
 end_struct

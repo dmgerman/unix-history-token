@@ -366,6 +366,37 @@ end_struct_decl
 
 begin_struct
 struct|struct
+name|radius_attr_data
+block|{
+name|u8
+modifier|*
+name|data
+decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|radius_class_data
+block|{
+name|struct
+name|radius_attr_data
+modifier|*
+name|attr
+decl_stmt|;
+name|size_t
+name|count
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|eapol_state_machine
 block|{
 comment|/* timers */
@@ -544,12 +575,9 @@ decl_stmt|;
 name|size_t
 name|identity_len
 decl_stmt|;
-name|u8
-modifier|*
+name|struct
+name|radius_class_data
 name|radius_class
-decl_stmt|;
-name|size_t
-name|radius_class_len
 decl_stmt|;
 comment|/* Keys for encrypting and signing EAPOL-Key frames */
 name|u8
