@@ -4235,6 +4235,10 @@ literal|0x203a161f
 case|:
 comment|/* Gateway 4028GZ */
 case|case
+literal|0x204c161f
+case|:
+comment|/* Kvazar-Micro Senator 3592XT */
+case|case
 literal|0x8144104d
 case|:
 comment|/* Sony VAIO PCG-TR* */
