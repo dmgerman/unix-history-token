@@ -677,6 +677,8 @@ name|ali
 decl_stmt|;
 name|int
 name|adapter
+decl_stmt|,
+name|error
 decl_stmt|;
 name|devclass
 operator|=
@@ -696,6 +698,8 @@ operator|(
 name|ENOENT
 operator|)
 return|;
+name|error
+operator|=
 name|copyin
 argument_list|(
 operator|(
@@ -714,6 +718,15 @@ name|ali
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 if|if
 condition|(
 name|ali
