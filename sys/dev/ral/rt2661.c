@@ -1145,12 +1145,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|devclass_t
-name|rt2661_devclass
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Supported rates for 802.11a/b/g modes (in 500Kbps unit).  */
 end_comment
@@ -1881,9 +1875,14 @@ comment|/* short preamble supported */
 name|IEEE80211_C_SHSLOT
 operator||
 comment|/* short slot time supported */
+ifdef|#
+directive|ifdef
+name|notyet
 name|IEEE80211_C_WME
 operator||
 comment|/* 802.11e */
+endif|#
+directive|endif
 name|IEEE80211_C_WPA
 expr_stmt|;
 comment|/* 802.11i */
