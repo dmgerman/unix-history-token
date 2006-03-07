@@ -611,6 +611,16 @@ block|,
 name|installCustomCommit
 block|}
 block|,
+block|{
+literal|" Country"
+block|,
+literal|"Set the system's country"
+block|,
+name|NULL
+block|,
+name|configCountry
+block|}
+block|,
 ifdef|#
 directive|ifdef
 name|WITH_SYSCONS
@@ -1368,12 +1378,7 @@ literal|"The console keymap configuration menu."
 block|,
 name|NULL
 block|,
-name|dmenuSubmenu
-block|,
-name|NULL
-block|,
-operator|&
-name|MenuSysconsKeymap
+name|keymapMenuSelect
 block|}
 block|,
 block|{
@@ -1550,6 +1555,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* The country menu */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"countries.h"
+end_include
+
+begin_comment
 comment|/* The initial installation menu */
 end_comment
 
@@ -1679,12 +1694,7 @@ literal|"Select keyboard type"
 block|,
 name|NULL
 block|,
-name|dmenuSubmenu
-block|,
-name|NULL
-block|,
-operator|&
-name|MenuSysconsKeymap
+name|keymapMenuSelect
 block|}
 block|,
 endif|#
