@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * WPA Supplicant / EAPOL state machines  * Copyright (c) 2004-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -43,10 +47,15 @@ name|PortControl
 typedef|;
 end_typedef
 
+begin_comment
+comment|/**  * struct eapol_config - Per network configuration for EAPOL state machines  */
+end_comment
+
 begin_struct
 struct|struct
 name|eapol_config
 block|{
+comment|/** 	 * accept_802_1x_keys - Accept IEEE 802.1X (non-WPA) EAPOL-Key frames 	 * 	 * This variable should be set to 1 when using EAPOL state machines 	 * with non-WPA security policy to generate dynamic WEP keys. When 	 * using WPA, this should be set to 0 so that WPA state machine can 	 * process the EAPOL-Key frames. 	 */
 name|int
 name|accept_802_1x_keys
 decl_stmt|;
@@ -58,18 +67,23 @@ define|#
 directive|define
 name|EAPOL_REQUIRE_KEY_BROADCAST
 value|BIT(1)
+comment|/** 	 * required_keys - Which EAPOL-Key packets are required 	 * 	 * This variable determines which EAPOL-Key packets are required before 	 * marking connection authenticated. This is a bit field of 	 * EAPOL_REQUIRE_KEY_UNICAST and EAPOL_REQUIRE_KEY_BROADCAST flags. 	 */
 name|int
 name|required_keys
 decl_stmt|;
-comment|/* which EAPOL-Key packets are required before 			    * marking connection authenticated */
+comment|/** 	 * fast_reauth - Whether fast EAP reauthentication is enabled 	 */
 name|int
 name|fast_reauth
 decl_stmt|;
-comment|/* whether fast EAP reauthentication is enabled */
+comment|/** 	 * workaround - Whether EAP workarounds are enabled 	 */
+name|unsigned
 name|int
 name|workaround
 decl_stmt|;
-comment|/* whether EAP workarounds are enabled */
+comment|/** 	 * eap_disabled - Whether EAP is disabled 	 */
+name|int
+name|eap_disabled
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -80,19 +94,30 @@ name|eapol_sm
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|wpa_config_blob
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/**  * struct eapol_ctx - Global (for all networks) EAPOL state machine context  */
+end_comment
+
 begin_struct
 struct|struct
 name|eapol_ctx
 block|{
+comment|/** 	 * ctx - Pointer to arbitrary upper level context 	 */
 name|void
 modifier|*
 name|ctx
 decl_stmt|;
-comment|/* pointer to arbitrary upper level context */
+comment|/** 	 * preauth - IEEE 802.11i/RSN pre-authentication 	 * 	 * This EAPOL state machine is used for IEEE 802.11i/RSN 	 * pre-authentication 	 */
 name|int
 name|preauth
 decl_stmt|;
-comment|/* This EAPOL state machine is used for IEEE 802.11i/RSN 		      * pre-authentication */
+comment|/** 	 * cb - Function to be called when EAPOL negotiation has been completed 	 * @eapol: Pointer to EAPOL state machine data 	 * @success: Whether the authentication was completed successfully 	 * @ctx: Pointer to context data (cb_ctx) 	 * 	 * This optional callback function will be called when the EAPOL 	 * authentication has been completed. This allows the owner of the 	 * EAPOL state machine to process the key and terminate the EAPOL state 	 * machine. Currently, this is used only in RSN pre-authentication. 	 */
 name|void
 function_decl|(
 modifier|*
@@ -112,16 +137,27 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
+comment|/** 	 * cb_ctx - Callback context for cb() 	 */
 name|void
 modifier|*
 name|cb_ctx
-decl_stmt|,
+decl_stmt|;
+comment|/** 	 * msg_ctx - Callback context for wpa_msg() calls 	 */
+name|void
 modifier|*
 name|msg_ctx
-decl_stmt|,
+decl_stmt|;
+comment|/** 	 * scard_ctx - Callback context for PC/SC scard_*() function calls 	 * 	 * This context can be updated with eapol_sm_register_scard_ctx(). 	 */
+name|void
 modifier|*
 name|scard_ctx
 decl_stmt|;
+comment|/** 	 * eapol_send_ctx - Callback context for eapol_send() calls 	 */
+name|void
+modifier|*
+name|eapol_send_ctx
+decl_stmt|;
+comment|/** 	 * eapol_done_cb - Function to be called at successful completion 	 * @ctx: Callback context (ctx) 	 * 	 * This function is called at the successful completion of EAPOL 	 * authentication. If dynamic WEP keys are used, this is called only 	 * after all the expected keys have been received. 	 */
 name|void
 function_decl|(
 modifier|*
@@ -133,6 +169,7 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
+comment|/** 	 * eapol_send - Send EAPOL packets 	 * @ctx: Callback context (eapol_send_ctx) 	 * @type: EAPOL type (IEEE802_1X_TYPE_*) 	 * @buf: Pointer to EAPOL payload 	 * @len: Length of the EAPOL payload 	 * Returns: 0 on success, -1 on failure 	 */
 name|int
 function_decl|(
 modifier|*
@@ -146,6 +183,7 @@ parameter_list|,
 name|int
 name|type
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 name|buf
@@ -154,6 +192,7 @@ name|size_t
 name|len
 parameter_list|)
 function_decl|;
+comment|/** 	 * set_wep_key - Configure WEP keys 	 * @ctx: Callback context (ctx) 	 * @unicast: Non-zero = unicast, 0 = multicast/broadcast key 	 * @keyidx: Key index (0..3) 	 * @key: WEP key 	 * @keylen: Length of the WEP key 	 * Returns: 0 on success, -1 on failure 	 */
 name|int
 function_decl|(
 modifier|*
@@ -170,6 +209,7 @@ parameter_list|,
 name|int
 name|keyidx
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 name|key
@@ -178,6 +218,61 @@ name|size_t
 name|keylen
 parameter_list|)
 function_decl|;
+comment|/** 	 * set_config_blob - Set or add a named configuration blob 	 * @ctx: Callback context (ctx) 	 * @blob: New value for the blob 	 * 	 * Adds a new configuration blob or replaces the current value of an 	 * existing blob. 	 */
+name|void
+function_decl|(
+modifier|*
+name|set_config_blob
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|ctx
+parameter_list|,
+name|struct
+name|wpa_config_blob
+modifier|*
+name|blob
+parameter_list|)
+function_decl|;
+comment|/** 	 * get_config_blob - Get a named configuration blob 	 * @ctx: Callback context (ctx) 	 * @name: Name of the blob 	 * Returns: Pointer to blob data or %NULL if not found 	 */
+specifier|const
+name|struct
+name|wpa_config_blob
+modifier|*
+function_decl|(
+modifier|*
+name|get_config_blob
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|ctx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+comment|/** 	 * opensc_engine_path - Path to the OpenSSL engine for opensc 	 * 	 * This is an OpenSSL specific configuration option for loading OpenSC 	 * engine (engine_opensc.so); if %NULL, this engine is not loaded. 	 */
+specifier|const
+name|char
+modifier|*
+name|opensc_engine_path
+decl_stmt|;
+comment|/** 	 * pkcs11_engine_path - Path to the OpenSSL engine for PKCS#11 	 * 	 * This is an OpenSSL specific configuration option for loading PKCS#11 	 * engine (engine_pkcs11.so); if %NULL, this engine is not loaded. 	 */
+specifier|const
+name|char
+modifier|*
+name|pkcs11_engine_path
+decl_stmt|;
+comment|/** 	 * pkcs11_module_path - Path to the OpenSSL OpenSC/PKCS#11 module 	 * 	 * This is an OpenSSL specific configuration option for configuring 	 * path to OpenSC/PKCS#11 engine (opensc-pkcs11.so); if %NULL, this 	 * module is not loaded. 	 */
+specifier|const
+name|char
+modifier|*
+name|pkcs11_module_path
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -298,7 +393,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|eapol_sm_rx_eapol
 parameter_list|(
 name|struct
@@ -306,10 +401,12 @@ name|eapol_sm
 modifier|*
 name|sm
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 name|src
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 name|buf
@@ -406,6 +503,7 @@ name|wpa_ssid
 modifier|*
 name|config
 parameter_list|,
+specifier|const
 name|struct
 name|eapol_config
 modifier|*
@@ -530,6 +628,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|eapol_sm_request_reauth
+parameter_list|(
+name|struct
+name|eapol_sm
+modifier|*
+name|sm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|eapol_sm_notify_lower_layer_success
+parameter_list|(
+name|struct
+name|eapol_sm
+modifier|*
+name|sm
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_else
 else|#
 directive|else
@@ -553,6 +675,11 @@ modifier|*
 name|ctx
 parameter_list|)
 block|{
+name|free
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 expr|struct
@@ -674,7 +801,7 @@ end_function
 begin_function
 specifier|static
 specifier|inline
-name|void
+name|int
 name|eapol_sm_rx_eapol
 parameter_list|(
 name|struct
@@ -682,10 +809,12 @@ name|eapol_sm
 modifier|*
 name|sm
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 name|src
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 name|buf
@@ -693,7 +822,11 @@ parameter_list|,
 name|size_t
 name|len
 parameter_list|)
-block|{ }
+block|{
+return|return
+literal|0
+return|;
+block|}
 end_function
 
 begin_function
@@ -919,6 +1052,34 @@ specifier|static
 specifier|inline
 name|void
 name|eapol_sm_notify_ctrl_response
+parameter_list|(
+name|struct
+name|eapol_sm
+modifier|*
+name|sm
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|eapol_sm_request_reauth
+parameter_list|(
+name|struct
+name|eapol_sm
+modifier|*
+name|sm
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|eapol_sm_notify_lower_layer_success
 parameter_list|(
 name|struct
 name|eapol_sm
