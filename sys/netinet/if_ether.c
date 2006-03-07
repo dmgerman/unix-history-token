@@ -3023,9 +3023,9 @@ name|ia
 operator|->
 name|ia_ifp
 operator|->
-name|if_type
+name|if_bridge
 operator|!=
-name|IFT_BRIDGE
+name|NULL
 operator|)
 operator|||
 operator|(
@@ -3120,9 +3120,9 @@ name|ia
 operator|->
 name|ia_ifp
 operator|->
-name|if_type
+name|if_bridge
 operator|!=
-name|IFT_BRIDGE
+name|NULL
 operator|)
 operator|||
 operator|(
