@@ -7869,7 +7869,7 @@ block|}
 end_block
 
 begin_macro
-name|DB_SET
+name|DB_FUNC
 argument_list|(
 argument|ahd_out
 argument_list|,

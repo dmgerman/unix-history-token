@@ -130,7 +130,7 @@ parameter_list|,
 name|func_name
 parameter_list|)
 define|\
-value|DB_SET(cmd_name, func_name, db_cmd_set, 0, NULL)
+value|DB_FUNC(cmd_name, func_name, db_cmd_set, 0, NULL)
 end_define
 
 begin_define
@@ -143,7 +143,7 @@ parameter_list|,
 name|func_name
 parameter_list|)
 define|\
-value|DB_SET(cmd_name, func_name, db_show_cmd_set, 0, NULL)
+value|DB_FUNC(cmd_name, func_name, db_show_cmd_set, 0, NULL)
 end_define
 
 begin_define
@@ -162,7 +162,26 @@ parameter_list|,
 name|more
 parameter_list|)
 define|\
-value|static db_cmdfcn_t	func_name;				\ 								\ static const struct command __CONCAT(func_name,_cmd) = {	\ 	__STRING(cmd_name),					\ 	func_name,						\ 	flag,							\ 	more							\ };								\ TEXT_SET(set, __CONCAT(func_name,_cmd));			\ 								\ static void							\ func_name(addr, have_addr, count, modif)			\ 	db_expr_t addr;						\ 	boolean_t have_addr;					\ 	db_expr_t count;					\ 	char *modif;
+value|static const struct command __CONCAT(cmd_name,_cmd) = {		\ 	__STRING(cmd_name),					\ 	func_name,						\ 	flag,							\ 	more							\ };								\ TEXT_SET(set, __CONCAT(cmd_name,_cmd))
+end_define
+
+begin_define
+define|#
+directive|define
+name|DB_FUNC
+parameter_list|(
+name|cmd_name
+parameter_list|,
+name|func_name
+parameter_list|,
+name|set
+parameter_list|,
+name|flag
+parameter_list|,
+name|more
+parameter_list|)
+define|\
+value|static db_cmdfcn_t	func_name;				\ 								\ DB_SET(cmd_name, func_name, set, flag, more);			\ 								\ static void							\ func_name(addr, have_addr, count, modif)			\ 	db_expr_t addr;						\ 	boolean_t have_addr;					\ 	db_expr_t count;					\ 	char *modif;
 end_define
 
 begin_decl_stmt
@@ -739,6 +758,37 @@ begin_comment
 comment|/*  * Command table.  */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|command
+struct_decl|;
+end_struct_decl
+
+begin_struct
+struct|struct
+name|command_table
+block|{
+name|struct
+name|command
+modifier|*
+name|table
+decl_stmt|;
+name|struct
+name|command
+modifier|*
+modifier|*
+name|aux_tablep
+decl_stmt|;
+name|struct
+name|command
+modifier|*
+modifier|*
+name|aux_tablep_end
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|command
@@ -773,7 +823,7 @@ name|CS_SET_DOT
 value|0x100
 comment|/* set dot after command */
 name|struct
-name|command
+name|command_table
 modifier|*
 name|more
 decl_stmt|;
