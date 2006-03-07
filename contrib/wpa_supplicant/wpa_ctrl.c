@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant - wpa_supplicant control interface library  * Copyright (c) 2004-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * wpa_supplicant/hostapd control interface library  * Copyright (c) 2004-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_include
@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/un.h>
 end_include
 
@@ -91,6 +97,10 @@ end_endif
 
 begin_comment
 comment|/* CONFIG_NATIVE_WINDOWS */
+end_comment
+
+begin_comment
+comment|/**  * struct wpa_ctrl - Internal structure for control interface library  *  * This structure is used by the wpa_supplicant/hostapd control interface  * library to store internal data. Programs using the library should not touch  * this data directly. They can only use the pointer to the data structure as  * an identifier for the control interface connection and use this as one of  * the arguments for most of the control interface library functions.  */
 end_comment
 
 begin_struct
@@ -337,7 +347,7 @@ name|sin_port
 operator|=
 name|htons
 argument_list|(
-literal|9877
+name|WPA_CTRL_IFACE_PORT
 argument_list|)
 expr_stmt|;
 if|if
@@ -645,6 +655,7 @@ name|wpa_ctrl
 modifier|*
 name|ctrl
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|cmd
@@ -822,6 +833,9 @@ block|{
 comment|/* Make sure the message is nul 					 * terminated. */
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|res
 operator|==
 operator|*

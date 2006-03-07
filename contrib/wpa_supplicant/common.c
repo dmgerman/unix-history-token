@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Host AP (software wireless LAN access point) user space daemon for  * Host AP kernel driver / common helper functions, etc.  * Copyright (c) 2002-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * wpa_supplicant/hostapd / common helper functions, etc.  * Copyright (c) 2002-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_include
@@ -57,6 +57,33 @@ directive|include
 file|<sys/time.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_NATIVE_WINDOWS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<winsock2.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<wincrypt.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_NATIVE_WINDOWS */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -102,35 +129,58 @@ block|{
 ifdef|#
 directive|ifdef
 name|CONFIG_NATIVE_WINDOWS
-name|int
-name|i
+name|HCRYPTPROV
+name|prov
 decl_stmt|;
-comment|/* FIX: use more secure pseudo random number generator */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|len
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|buf
-index|[
-name|i
-index|]
-operator|=
-name|rand
-argument_list|()
-expr_stmt|;
-block|}
+name|BOOL
+name|ret
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|CryptAcquireContext
+argument_list|(
+operator|&
+name|prov
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|PROV_RSA_FULL
+argument_list|,
+name|CRYPT_VERIFYCONTEXT
+argument_list|)
+condition|)
 return|return
+operator|-
+literal|1
+return|;
+name|ret
+operator|=
+name|CryptGenRandom
+argument_list|(
+name|prov
+argument_list|,
+name|len
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+name|CryptReleaseContext
+argument_list|(
+name|prov
+argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
+condition|?
+literal|0
+else|:
+operator|-
+literal|1
 return|;
 else|#
 directive|else
@@ -398,6 +448,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * hwaddr_aton - Convert ASCII string to MAC address  * @txt: MAC address as a string (e.g., "00:11:22:33:44:55")  * @addr: Buffer for the MAC address (ETH_ALEN = 6 bytes)  * Returns: 0 on success, -1 on failure (e.g., string not a MAC address)  */
+end_comment
+
 begin_function
 name|int
 name|hwaddr_aton
@@ -506,6 +560,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * hexstr2bin - Convert ASCII hex string into binary data  * @hex: ASCII hex string (e.g., "01ab")  * @buf: Buffer for the binary data  * @len: Length of the text to convert in bytes (of buf); hex will be double  * this size  * Returns: 0 on success, -1 on failure (invalid hex string)  */
+end_comment
 
 begin_function
 name|int
@@ -789,6 +847,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * inc_byte_array - Increment arbitrary length byte array by one  * @counter: Pointer to byte array  * @len: Length of the counter in bytes  *  * This function increments the last byte of the counter by one and continues  * rolling over to more significant bytes if the byte was incremented from  * 0xff to 0x00.  */
+end_comment
+
 begin_function
 name|void
 name|inc_byte_array
@@ -918,8 +980,13 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CONFIG_NO_STDOUT_DEBUG
+end_ifndef
+
 begin_function
-specifier|static
 name|void
 name|wpa_debug_print_timestamp
 parameter_list|(
@@ -1017,6 +1084,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * wpa_printf - conditional printf  * @level: priority level (MSG_*) of the message  * @fmt: printf format string, followed by optional arguments  *  * This function is used to print conditional debugging and error messages. The  * output may be directed to stdout, stderr, and/or syslog based on  * configuration.  *  * Note: New line '\n' is added to the end of the text when printing to stdout.  */
+end_comment
 
 begin_function
 name|void
@@ -1124,6 +1195,20 @@ operator|)
 name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|buf
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" [NULL]"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|show
@@ -1305,6 +1390,28 @@ block|{
 name|printf
 argument_list|(
 literal|"%s - hexdump_ascii(len=%lu): [REMOVED]\n"
+argument_list|,
+name|title
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|len
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|buf
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s - hexdump_ascii(len=%lu): [NULL]\n"
 argument_list|,
 name|title
 argument_list|,
@@ -1545,6 +1652,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_NO_STDOUT_DEBUG */
+end_comment
 
 begin_ifdef
 ifdef|#

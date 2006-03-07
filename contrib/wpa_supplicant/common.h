@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * wpa_supplicant/hostapd / common helper functions, etc.  * Copyright (c) 2002-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -34,11 +38,23 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_comment
+comment|/* __linux__ */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -99,17 +115,15 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* defined(__FreeBSD__) || defined(__NetBSD__) */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|CONFIG_NATIVE_WINDOWS
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<winsock.h>
-end_include
 
 begin_include
 include|#
@@ -238,6 +252,59 @@ name|tz
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function
+specifier|static
+specifier|inline
+name|long
+name|int
+name|random
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+name|rand
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_typedef
+typedef|typedef
+name|int
+name|gid_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|socklen_t
+typedef|;
+end_typedef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MSG_DONTWAIT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MSG_DONTWAIT
+value|0
+end_define
+
+begin_comment
+comment|/* not supported */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -623,6 +690,56 @@ begin_comment
 comment|/* __CYGWIN__ */
 end_comment
 
+begin_comment
+comment|/* Macros for handling unaligned 16-bit variables */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WPA_GET_BE16
+parameter_list|(
+name|a
+parameter_list|)
+value|((u16) (((a)[0]<< 8) | (a)[1]))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPA_PUT_BE16
+parameter_list|(
+name|a
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|do {					\ 		(a)[0] = ((u16) (val))>> 8;	\ 		(a)[1] = ((u16) (val))& 0xff;	\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPA_GET_LE16
+parameter_list|(
+name|a
+parameter_list|)
+value|((u16) (((a)[1]<< 8) | (a)[0]))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPA_PUT_LE16
+parameter_list|(
+name|a
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|do {					\ 		(a)[1] = ((u16) (val))>> 8;	\ 		(a)[0] = ((u16) (val))& 0xff;	\ 	} while (0)
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -843,6 +960,97 @@ block|}
 enum|;
 end_enum
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_NO_STDOUT_DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|wpa_debug_print_timestamp
+parameter_list|()
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|wpa_printf
+parameter_list|(
+name|args
+modifier|...
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|wpa_hexdump
+parameter_list|(
+name|args
+modifier|...
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|wpa_hexdump_key
+parameter_list|(
+name|args
+modifier|...
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|wpa_hexdump_ascii
+parameter_list|(
+name|args
+modifier|...
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|wpa_hexdump_ascii_key
+parameter_list|(
+name|args
+modifier|...
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* CONFIG_NO_STDOUT_DEBUG */
+end_comment
+
+begin_comment
+comment|/**  * wpa_debug_printf_timestamp - Print timestamp for debug output  *  * This function prints a timestamp in<seconds from 1970>.<microsoconds>  * format if debug output has been configured to include timestamps in debug  * messages.  */
+end_comment
+
+begin_function_decl
+name|void
+name|wpa_debug_print_timestamp
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/**  * wpa_printf - conditional printf  * @level: priority level (MSG_*) of the message  * @fmt: printf format string, followed by optional arguments  *  * This function is used to print conditional debugging and error messages. The  * output may be directed to stdout, stderr, and/or syslog based on  * configuration.  *  * Note: New line '\n' is added to the end of the text when printing to stdout.  */
 end_comment
@@ -877,7 +1085,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/**  * wpa_hexdump - conditional hex dump  * @level: priority level (MSG_*) of the message  * @title: title of for the message  * @buf: data buffer to be dumped  * @len: length of the @buf  *  * This function is used to print conditional debugging and error messages. The  * output may be directed to stdout, stderr, and/or syslog based on  * configuration. The contents of @buf is printed out has hex dump.  */
+comment|/**  * wpa_hexdump - conditional hex dump  * @level: priority level (MSG_*) of the message  * @title: title of for the message  * @buf: data buffer to be dumped  * @len: length of the buf  *  * This function is used to print conditional debugging and error messages. The  * output may be directed to stdout, stderr, and/or syslog based on  * configuration. The contents of buf is printed out has hex dump.  */
 end_comment
 
 begin_function_decl
@@ -904,7 +1112,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * wpa_hexdump_key - conditional hex dump, hide keys  * @level: priority level (MSG_*) of the message  * @title: title of for the message  * @buf: data buffer to be dumped  * @len: length of the @buf  *  * This function is used to print conditional debugging and error messages. The  * output may be directed to stdout, stderr, and/or syslog based on  * configuration. The contents of @buf is printed out has hex dump. This works  * like wpa_hexdump(), but by default, does not include secret keys (passwords,  * etc.) in debug output.  */
+comment|/**  * wpa_hexdump_key - conditional hex dump, hide keys  * @level: priority level (MSG_*) of the message  * @title: title of for the message  * @buf: data buffer to be dumped  * @len: length of the buf  *  * This function is used to print conditional debugging and error messages. The  * output may be directed to stdout, stderr, and/or syslog based on  * configuration. The contents of buf is printed out has hex dump. This works  * like wpa_hexdump(), but by default, does not include secret keys (passwords,  * etc.) in debug output.  */
 end_comment
 
 begin_function_decl
@@ -931,7 +1139,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * wpa_hexdump_ascii - conditional hex dump  * @level: priority level (MSG_*) of the message  * @title: title of for the message  * @buf: data buffer to be dumped  * @len: length of the @buf  *  * This function is used to print conditional debugging and error messages. The  * output may be directed to stdout, stderr, and/or syslog based on  * configuration. The contents of @buf is printed out has hex dump with both  * the hex numbers and ASCII characters (for printable range) are shown. 16  * bytes per line will be shown.  */
+comment|/**  * wpa_hexdump_ascii - conditional hex dump  * @level: priority level (MSG_*) of the message  * @title: title of for the message  * @buf: data buffer to be dumped  * @len: length of the buf  *  * This function is used to print conditional debugging and error messages. The  * output may be directed to stdout, stderr, and/or syslog based on  * configuration. The contents of buf is printed out has hex dump with both  * the hex numbers and ASCII characters (for printable range) are shown. 16  * bytes per line will be shown.  */
 end_comment
 
 begin_function_decl
@@ -958,7 +1166,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * wpa_hexdump_ascii_key - conditional hex dump, hide keys  * @level: priority level (MSG_*) of the message  * @title: title of for the message  * @buf: data buffer to be dumped  * @len: length of the @buf  *  * This function is used to print conditional debugging and error messages. The  * output may be directed to stdout, stderr, and/or syslog based on  * configuration. The contents of @buf is printed out has hex dump with both  * the hex numbers and ASCII characters (for printable range) are shown. 16  * bytes per line will be shown. This works like wpa_hexdump_ascii(), but by  * default, does not include secret keys (passwords, etc.) in debug output.  */
+comment|/**  * wpa_hexdump_ascii_key - conditional hex dump, hide keys  * @level: priority level (MSG_*) of the message  * @title: title of for the message  * @buf: data buffer to be dumped  * @len: length of the buf  *  * This function is used to print conditional debugging and error messages. The  * output may be directed to stdout, stderr, and/or syslog based on  * configuration. The contents of buf is printed out has hex dump with both  * the hex numbers and ASCII characters (for printable range) are shown. 16  * bytes per line will be shown. This works like wpa_hexdump_ascii(), but by  * default, does not include secret keys (passwords, etc.) in debug output.  */
 end_comment
 
 begin_function_decl
@@ -983,6 +1191,15 @@ name|len
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_NO_STDOUT_DEBUG */
+end_comment
 
 begin_ifdef
 ifdef|#
