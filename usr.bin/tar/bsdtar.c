@@ -3110,22 +3110,12 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"bsdtar %s, "
+literal|"bsdtar %s - %s\n"
 argument_list|,
 name|PACKAGE_VERSION
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s\n"
 argument_list|,
 name|archive_version
 argument_list|()
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Copyright (C) 2003-2005 Tim Kientzle\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3299,26 +3289,8 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-name|fprintf
-argument_list|(
-name|stdout
-argument_list|,
-literal|"\n%s %s\n"
-argument_list|,
-name|PACKAGE_NAME
-argument_list|,
-name|PACKAGE_VERSION
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stdout
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|archive_version
+name|version
 argument_list|()
-argument_list|)
 expr_stmt|;
 block|}
 end_function
