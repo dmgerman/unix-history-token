@@ -1577,7 +1577,6 @@ expr_stmt|;
 name|__sigev_list_unlock
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Service thread should not be killed by callback, if user 	 * attempts to do so, the thread will be restarted. 	 */
 name|sigemptyset
 argument_list|(
 operator|&
