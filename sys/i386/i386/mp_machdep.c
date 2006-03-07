@@ -928,7 +928,7 @@ end_decl_stmt
 begin_function_decl
 specifier|static
 name|void
-name|set_logical_apic_ids
+name|set_interrupt_apic_ids
 parameter_list|(
 name|void
 parameter_list|)
@@ -1830,7 +1830,7 @@ operator|=
 name|logical_cpus
 expr_stmt|;
 block|}
-name|set_logical_apic_ids
+name|set_interrupt_apic_ids
 argument_list|()
 expr_stmt|;
 block|}
@@ -2645,34 +2645,20 @@ comment|/*******************************************************************  * 
 end_comment
 
 begin_comment
-comment|/*  * Set the APIC logical IDs.  *  * We want to cluster logical CPU's within the same APIC ID cluster.  * Since logical CPU's are aligned simply filling in the clusters in  * APIC ID order works fine.  Note that this does not try to balance  * the number of CPU's in each cluster. (XXX?)  */
+comment|/*  * We tell the I/O APIC code about all the CPUs we want to receive  * interrupts.  If we don't want certain CPUs to receive IRQs we  * can simply not tell the I/O APIC code about them in this function.  * We also do not tell it about the BSP since it tells itself about  * the BSP internally to work with UP kernels and on UP machines.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|set_logical_apic_ids
+name|set_interrupt_apic_ids
 parameter_list|(
 name|void
 parameter_list|)
 block|{
 name|u_int
 name|apic_id
-decl_stmt|,
-name|cluster
-decl_stmt|,
-name|cluster_id
 decl_stmt|;
-comment|/* Force us to allocate cluster 0 at the start. */
-name|cluster
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|cluster_id
-operator|=
-name|APIC_MAX_INTRACLUSTER_ID
-expr_stmt|;
 for|for
 control|(
 name|apic_id
@@ -2700,47 +2686,24 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|cluster_id
-operator|==
-name|APIC_MAX_INTRACLUSTER_ID
+name|cpu_info
+index|[
+name|apic_id
+index|]
+operator|.
+name|cpu_bsp
 condition|)
-block|{
-name|cluster
-operator|=
-name|ioapic_next_logical_cluster
-argument_list|()
-expr_stmt|;
-name|cluster_id
-operator|=
+continue|continue;
+if|#
+directive|if
 literal|0
-expr_stmt|;
-block|}
-else|else
-name|cluster_id
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"APIC ID: physical %u, logical %u:%u\n"
-argument_list|,
-name|apic_id
-argument_list|,
-name|cluster
-argument_list|,
-name|cluster_id
-argument_list|)
-expr_stmt|;
-name|lapic_set_logical_id
+comment|/* Don't let hyperthreads service interrupts. */
+block|if (hyperthreading_cpus> 1&& 		    apic_id % hyperthreading_cpus != 0) 			continue;
+endif|#
+directive|endif
+name|intr_add_cpu
 argument_list|(
 name|apic_id
-argument_list|,
-name|cluster
-argument_list|,
-name|cluster_id
 argument_list|)
 expr_stmt|;
 block|}

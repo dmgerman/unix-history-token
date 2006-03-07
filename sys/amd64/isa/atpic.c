@@ -414,7 +414,7 @@ parameter_list|,
 name|imenptr
 parameter_list|)
 define|\
-value|{ { atpic_enable_source, atpic_disable_source, (eoi),		\ 	    atpic_enable_intr, atpic_vector, atpic_source_pending, NULL, \ 	    atpic_resume, atpic_config_intr }, (io), (base),		\ 	    IDT_IO_INTS + (base), (imenptr) }
+value|{ { atpic_enable_source, atpic_disable_source, (eoi),		\ 	    atpic_enable_intr, atpic_vector, atpic_source_pending, NULL, \ 	    atpic_resume, atpic_config_intr, atpic_assign_cpu }, (io),  \ 	    (base), IDT_IO_INTS + (base), (imenptr) }
 end_define
 
 begin_define
@@ -607,6 +607,22 @@ parameter_list|,
 name|enum
 name|intr_polarity
 name|pol
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|atpic_assign_cpu
+parameter_list|(
+name|struct
+name|intsrc
+modifier|*
+name|isrc
+parameter_list|,
+name|u_int
+name|apic_id
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1641,6 +1657,31 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|atpic_assign_cpu
+parameter_list|(
+name|struct
+name|intsrc
+modifier|*
+name|isrc
+parameter_list|,
+name|u_int
+name|apic_id
+parameter_list|)
+block|{
+comment|/* 	 * 8259A's are only used in UP in which case all interrupts always 	 * go to the sole CPU and this function shouldn't even be called. 	 */
+name|panic
+argument_list|(
+literal|"%s: bad cookie"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
