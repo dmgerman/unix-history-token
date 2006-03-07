@@ -63,6 +63,13 @@ directive|include
 file|"eap_i.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|EAP_MAX_AUTH_ROUNDS
+value|50
+end_define
+
 begin_decl_stmt
 specifier|extern
 specifier|const
@@ -262,6 +269,54 @@ end_endif
 
 begin_comment
 comment|/* EAP_SIM */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EAP_PAX
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|eap_method
+name|eap_method_pax
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* EAP_PAX */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EAP_PSK
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|eap_method
+name|eap_method_psk
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* EAP_PSK */
 end_comment
 
 begin_decl_stmt
@@ -349,6 +404,24 @@ block|,
 endif|#
 directive|endif
 comment|/* EAP_SIM */
+ifdef|#
+directive|ifdef
+name|EAP_PAX
+operator|&
+name|eap_method_pax
+block|,
+endif|#
+directive|endif
+comment|/* EAP_PAX */
+ifdef|#
+directive|ifdef
+name|EAP_PSK
+operator|&
+name|eap_method_psk
+block|,
+endif|#
+directive|endif
+comment|/* EAP_PSK */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1010,6 +1083,12 @@ argument_list|,
 name|DISABLED
 argument_list|)
 expr_stmt|;
+name|sm
+operator|->
+name|num_rounds
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_block
 
@@ -1182,6 +1261,12 @@ name|respId
 expr_stmt|;
 block|}
 block|}
+name|sm
+operator|->
+name|num_rounds
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_block
 
@@ -1444,6 +1529,11 @@ name|sm
 operator|->
 name|eapRespDataLen
 argument_list|)
+expr_stmt|;
+name|sm
+operator|->
+name|num_rounds
+operator|++
 expr_stmt|;
 block|}
 end_block
@@ -2638,6 +2728,51 @@ argument_list|,
 name|DISABLED
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|sm
+operator|->
+name|num_rounds
+operator|>
+name|EAP_MAX_AUTH_ROUNDS
+condition|)
+block|{
+if|if
+condition|(
+name|sm
+operator|->
+name|num_rounds
+operator|==
+name|EAP_MAX_AUTH_ROUNDS
+operator|+
+literal|1
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"EAP: more than %d "
+literal|"authentication rounds - abort"
+argument_list|,
+name|EAP_MAX_AUTH_ROUNDS
+argument_list|)
+expr_stmt|;
+name|sm
+operator|->
+name|num_rounds
+operator|++
+expr_stmt|;
+name|SM_ENTER_GLOBAL
+argument_list|(
+name|EAP
+argument_list|,
+name|FAILURE
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 else|else
 switch|switch
 condition|(
