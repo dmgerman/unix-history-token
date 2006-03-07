@@ -42,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"hostapd_ctrl.h"
+file|"wpa_ctrl.h"
 end_include
 
 begin_include
@@ -140,22 +140,22 @@ name|char
 modifier|*
 name|commands_help
 init|=
-literal|"commands:\n"
-literal|"  mib = get MIB variables (dot1x, dot11, radius)\n"
-literal|"  sta<addr> = get MIB vatiables for one station\n"
-literal|"  all_sta = get MIB variables for all stations\n"
-literal|"  help = show this usage help\n"
-literal|"  interface [ifname] = show interfaces/select interface\n"
-literal|"  level<debug level> = change debug level\n"
-literal|"  license = show full hostapd_cli license\n"
-literal|"  quit = exit hostapd_cli\n"
+literal|"Commands:\n"
+literal|"   mib                  get MIB variables (dot1x, dot11, radius)\n"
+literal|"   sta<addr>           get MIB vatiables for one station\n"
+literal|"   all_sta              get MIB variables for all stations\n"
+literal|"   help                 show this usage help\n"
+literal|"   interface [ifname]   show interfaces/select interface\n"
+literal|"   level<debug level>  change debug level\n"
+literal|"   license              show full hostapd_cli license\n"
+literal|"   quit                 exit hostapd_cli\n"
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|struct
-name|hostapd_ctrl
+name|wpa_ctrl
 modifier|*
 name|ctrl_conn
 decl_stmt|;
@@ -208,14 +208,31 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"hostapd_cli [-p<path to ctrl sockets>] [-i<ifname>] [-hv] "
+name|stderr
+argument_list|,
+literal|"%s\n"
+argument_list|,
+name|hostapd_cli_version
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
+literal|"usage: hostapd_cli [-p<path>] [-i<ifname>] [-hv] "
 literal|"[command..]\n"
-literal|"  -h = help (show this usage text)\n"
-literal|"  -v = shown version information\n"
-literal|"  default path: /var/run/hostapd\n"
-literal|"  default interface: first interface found in socket path\n"
+literal|"\n"
+literal|"Options:\n"
+literal|"   -h           help (show this usage text)\n"
+literal|"   -v           shown version information\n"
+literal|"   -p<path>     path to find control sockets (default: "
+literal|"/var/run/hostapd)\n"
+literal|"   -i<ifname>   Interface to listen on (default: first "
+literal|"interface found in the\n"
+literal|"                socket path)\n\n"
 literal|"%s"
 argument_list|,
 name|commands_help
@@ -227,7 +244,7 @@ end_function
 begin_function
 specifier|static
 name|struct
-name|hostapd_ctrl
+name|wpa_ctrl
 modifier|*
 name|hostapd_cli_open_connection
 parameter_list|(
@@ -298,7 +315,7 @@ argument_list|)
 expr_stmt|;
 name|ctrl_conn
 operator|=
-name|hostapd_ctrl_open
+name|wpa_ctrl_open
 argument_list|(
 name|cfile
 argument_list|)
@@ -334,7 +351,7 @@ condition|(
 name|hostapd_cli_attached
 condition|)
 block|{
-name|hostapd_ctrl_detach
+name|wpa_ctrl_detach
 argument_list|(
 name|ctrl_conn
 argument_list|)
@@ -344,7 +361,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|hostapd_ctrl_close
+name|wpa_ctrl_close
 argument_list|(
 name|ctrl_conn
 argument_list|)
@@ -382,10 +399,10 @@ end_function
 begin_function
 specifier|static
 name|int
-name|_hostapd_ctrl_command
+name|_wpa_ctrl_command
 parameter_list|(
 name|struct
-name|hostapd_ctrl
+name|wpa_ctrl
 modifier|*
 name|ctrl
 parameter_list|,
@@ -437,7 +454,7 @@ literal|1
 expr_stmt|;
 name|ret
 operator|=
-name|hostapd_ctrl_request
+name|wpa_ctrl_request
 argument_list|(
 name|ctrl
 argument_list|,
@@ -526,10 +543,10 @@ begin_function
 specifier|static
 specifier|inline
 name|int
-name|hostapd_ctrl_command
+name|wpa_ctrl_command
 parameter_list|(
 name|struct
-name|hostapd_ctrl
+name|wpa_ctrl
 modifier|*
 name|ctrl
 parameter_list|,
@@ -539,7 +556,7 @@ name|cmd
 parameter_list|)
 block|{
 return|return
-name|_hostapd_ctrl_command
+name|_wpa_ctrl_command
 argument_list|(
 name|ctrl
 argument_list|,
@@ -557,7 +574,7 @@ name|int
 name|hostapd_cli_cmd_ping
 parameter_list|(
 name|struct
-name|hostapd_ctrl
+name|wpa_ctrl
 modifier|*
 name|ctrl
 parameter_list|,
@@ -571,7 +588,7 @@ index|[]
 parameter_list|)
 block|{
 return|return
-name|hostapd_ctrl_command
+name|wpa_ctrl_command
 argument_list|(
 name|ctrl
 argument_list|,
@@ -587,7 +604,7 @@ name|int
 name|hostapd_cli_cmd_mib
 parameter_list|(
 name|struct
-name|hostapd_ctrl
+name|wpa_ctrl
 modifier|*
 name|ctrl
 parameter_list|,
@@ -601,7 +618,7 @@ index|[]
 parameter_list|)
 block|{
 return|return
-name|hostapd_ctrl_command
+name|wpa_ctrl_command
 argument_list|(
 name|ctrl
 argument_list|,
@@ -617,7 +634,7 @@ name|int
 name|hostapd_cli_cmd_sta
 parameter_list|(
 name|struct
-name|hostapd_ctrl
+name|wpa_ctrl
 modifier|*
 name|ctrl
 parameter_list|,
@@ -672,7 +689,7 @@ index|]
 argument_list|)
 expr_stmt|;
 return|return
-name|hostapd_ctrl_command
+name|wpa_ctrl_command
 argument_list|(
 name|ctrl
 argument_list|,
@@ -685,10 +702,10 @@ end_function
 begin_function
 specifier|static
 name|int
-name|hostapd_ctrl_command_sta
+name|wpa_ctrl_command_sta
 parameter_list|(
 name|struct
-name|hostapd_ctrl
+name|wpa_ctrl
 modifier|*
 name|ctrl
 parameter_list|,
@@ -747,7 +764,7 @@ literal|1
 expr_stmt|;
 name|ret
 operator|=
-name|hostapd_ctrl_request
+name|wpa_ctrl_request
 argument_list|(
 name|ctrl
 argument_list|,
@@ -884,7 +901,7 @@ name|int
 name|hostapd_cli_cmd_all_sta
 parameter_list|(
 name|struct
-name|hostapd_ctrl
+name|wpa_ctrl
 modifier|*
 name|ctrl
 parameter_list|,
@@ -910,7 +927,7 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|hostapd_ctrl_command_sta
+name|wpa_ctrl_command_sta
 argument_list|(
 name|ctrl
 argument_list|,
@@ -946,7 +963,7 @@ expr_stmt|;
 block|}
 do|while
 condition|(
-name|hostapd_ctrl_command_sta
+name|wpa_ctrl_command_sta
 argument_list|(
 name|ctrl
 argument_list|,
@@ -976,7 +993,7 @@ name|int
 name|hostapd_cli_cmd_help
 parameter_list|(
 name|struct
-name|hostapd_ctrl
+name|wpa_ctrl
 modifier|*
 name|ctrl
 parameter_list|,
@@ -1008,7 +1025,7 @@ name|int
 name|hostapd_cli_cmd_license
 parameter_list|(
 name|struct
-name|hostapd_ctrl
+name|wpa_ctrl
 modifier|*
 name|ctrl
 parameter_list|,
@@ -1042,7 +1059,7 @@ name|int
 name|hostapd_cli_cmd_quit
 parameter_list|(
 name|struct
-name|hostapd_ctrl
+name|wpa_ctrl
 modifier|*
 name|ctrl
 parameter_list|,
@@ -1071,7 +1088,7 @@ name|int
 name|hostapd_cli_cmd_level
 parameter_list|(
 name|struct
-name|hostapd_ctrl
+name|wpa_ctrl
 modifier|*
 name|ctrl
 parameter_list|,
@@ -1125,7 +1142,7 @@ index|]
 argument_list|)
 expr_stmt|;
 return|return
-name|hostapd_ctrl_command
+name|wpa_ctrl_command
 argument_list|(
 name|ctrl
 argument_list|,
@@ -1141,7 +1158,7 @@ name|void
 name|hostapd_cli_list_interfaces
 parameter_list|(
 name|struct
-name|hostapd_ctrl
+name|wpa_ctrl
 modifier|*
 name|ctrl
 parameter_list|)
@@ -1245,7 +1262,7 @@ name|int
 name|hostapd_cli_cmd_interface
 parameter_list|(
 name|struct
-name|hostapd_ctrl
+name|wpa_ctrl
 modifier|*
 name|ctrl
 parameter_list|,
@@ -1309,7 +1326,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|hostapd_ctrl_attach
+name|wpa_ctrl_attach
 argument_list|(
 name|ctrl_conn
 argument_list|)
@@ -1364,7 +1381,7 @@ name|handler
 function_decl|)
 parameter_list|(
 name|struct
-name|hostapd_ctrl
+name|wpa_ctrl
 modifier|*
 name|ctrl
 parameter_list|,
@@ -1458,7 +1475,7 @@ name|void
 name|wpa_request
 parameter_list|(
 name|struct
-name|hostapd_ctrl
+name|wpa_ctrl
 modifier|*
 name|ctrl
 parameter_list|,
@@ -1657,7 +1674,7 @@ name|void
 name|hostapd_cli_recv_pending
 parameter_list|(
 name|struct
-name|hostapd_ctrl
+name|wpa_ctrl
 modifier|*
 name|ctrl
 parameter_list|,
@@ -1679,7 +1696,7 @@ condition|)
 return|return;
 while|while
 condition|(
-name|hostapd_ctrl_pending
+name|wpa_ctrl_pending
 argument_list|(
 name|ctrl
 argument_list|)
@@ -1703,7 +1720,7 @@ literal|1
 decl_stmt|;
 if|if
 condition|(
-name|hostapd_ctrl_recv
+name|wpa_ctrl_recv
 argument_list|(
 name|ctrl
 argument_list|,
@@ -2009,7 +2026,7 @@ if|if
 condition|(
 name|ctrl_conn
 operator|&&
-name|_hostapd_ctrl_command
+name|_wpa_ctrl_command
 argument_list|(
 name|ctrl_conn
 argument_list|,
@@ -2053,7 +2070,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|hostapd_ctrl_attach
+name|wpa_ctrl_attach
 argument_list|(
 name|ctrl_conn
 argument_list|)
@@ -2349,7 +2366,7 @@ block|{
 name|perror
 argument_list|(
 literal|"Failed to connect to hostapd - "
-literal|"hostapd_ctrl_open"
+literal|"wpa_ctrl_open"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2408,7 +2425,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|hostapd_ctrl_attach
+name|wpa_ctrl_attach
 argument_list|(
 name|ctrl_conn
 argument_list|)

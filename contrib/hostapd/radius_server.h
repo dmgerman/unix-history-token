@@ -40,6 +40,9 @@ name|void
 modifier|*
 name|ssl_ctx
 decl_stmt|;
+name|int
+name|ipv6
+decl_stmt|;
 block|}
 struct|;
 end_struct

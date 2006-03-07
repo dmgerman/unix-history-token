@@ -327,6 +327,11 @@ argument_list|,
 name|identity_len
 argument_list|)
 expr_stmt|;
+name|fclose
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1

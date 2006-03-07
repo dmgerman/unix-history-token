@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * AES-based functions  *  * - AES Key Wrap Algorithm (128-bit KEK) (RFC3394)  * - One-Key CBC MAC (OMAC1) hash with AES-128  * - AES-128 CTR mode encryption  * - AES-128 EAX mode encryption/decryption  * - AES-128 CBC  *  * Copyright (c) 2003-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -12,9 +16,10 @@ name|AES_WRAP_H
 end_define
 
 begin_function_decl
-name|void
+name|int
 name|aes_wrap
 parameter_list|(
+specifier|const
 name|u8
 modifier|*
 name|kek
@@ -22,6 +27,7 @@ parameter_list|,
 name|int
 name|n
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 name|plain
@@ -37,6 +43,7 @@ begin_function_decl
 name|int
 name|aes_unwrap
 parameter_list|(
+specifier|const
 name|u8
 modifier|*
 name|kek
@@ -44,6 +51,7 @@ parameter_list|,
 name|int
 name|n
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 name|cipher
@@ -56,7 +64,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|omac1_aes_128
 parameter_list|(
 specifier|const
@@ -80,7 +88,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|aes_128_encrypt_block
 parameter_list|(
 specifier|const
@@ -101,7 +109,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|aes_128_ctr_encrypt
 parameter_list|(
 specifier|const
@@ -204,7 +212,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|aes_128_cbc_encrypt
 parameter_list|(
 specifier|const
@@ -228,7 +236,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|aes_128_cbc_decrypt
 parameter_list|(
 specifier|const

@@ -105,6 +105,12 @@ directive|include
 file|"driver.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"hostap_common.h"
+end_include
+
 begin_function
 name|int
 name|ap_for_each_sta
@@ -189,10 +195,12 @@ name|sta_info
 modifier|*
 name|ap_get_sta
 parameter_list|(
-name|hostapd
+name|struct
+name|hostapd_data
 modifier|*
 name|hapd
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 name|sta
@@ -1540,6 +1548,7 @@ name|hostapd_data
 modifier|*
 name|hapd
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 name|addr
@@ -1651,7 +1660,9 @@ name|hapd
 operator|->
 name|conf
 operator|->
-name|radius_acct_interim_interval
+name|radius
+operator|->
+name|acct_interim_interval
 expr_stmt|;
 comment|/* initialize STA info data */
 name|eloop_register_timeout

@@ -3281,6 +3281,40 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|tls_connection_get_write_alerts
+argument_list|(
+name|sm
+operator|->
+name|ssl_ctx
+argument_list|,
+name|data
+operator|->
+name|ssl
+operator|.
+name|conn
+argument_list|)
+operator|>
+literal|1
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_INFO
+argument_list|,
+literal|"EAP-PEAP: Locally detected fatal error "
+literal|"in TLS processing"
+argument_list|)
+expr_stmt|;
+name|eap_peap_state
+argument_list|(
+name|data
+argument_list|,
+name|FAILURE
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
