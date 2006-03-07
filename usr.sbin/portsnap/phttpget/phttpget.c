@@ -620,13 +620,7 @@ argument_list|)
 expr_stmt|;
 name|proxy_auth_pass
 operator|=
-name|strsep
-argument_list|(
-operator|&
 name|env_HTTP_PROXY_AUTH
-argument_list|,
-literal|":"
-argument_list|)
 expr_stmt|;
 block|}
 if|if
