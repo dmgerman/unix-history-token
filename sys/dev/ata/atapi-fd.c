@@ -850,7 +850,7 @@ operator|->
 name|mediasize
 condition|)
 return|return
-name|EIO
+name|ENXIO
 return|;
 name|fdp
 operator|->
@@ -1631,18 +1631,28 @@ literal|0
 block|}
 decl_stmt|;
 name|int
+name|timeout
+init|=
+literal|20
+decl_stmt|;
+name|int
 name|count
 decl_stmt|;
+comment|/* wait for device to get ready */
+while|while
+condition|(
 name|afd_test_ready
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
-name|fdp
-operator|->
-name|mediasize
-operator|=
-literal|0
+operator|&&
+name|timeout
+operator|--
+condition|)
+name|DELAY
+argument_list|(
+literal|100000
+argument_list|)
 expr_stmt|;
 comment|/* The IOMEGA Clik! doesn't support reading the cap page, fake it */
 if|if
@@ -1968,6 +1978,12 @@ literal|0
 return|;
 block|}
 block|}
+name|fdp
+operator|->
+name|mediasize
+operator|=
+literal|0
+expr_stmt|;
 return|return
 literal|1
 return|;
