@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pthread.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stddef.h>
 end_include
 
@@ -55,12 +49,6 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
 end_include
 
 begin_include
@@ -410,12 +398,6 @@ operator|(
 name|sigev_id_t
 operator|)
 name|iocb
-expr_stmt|;
-name|sn
-operator|->
-name|sn_flags
-operator||=
-name|SNF_ONESHOT
 expr_stmt|;
 name|__sigev_get_sigevent
 argument_list|(
