@@ -36,11 +36,15 @@ value|\ 	u_int64_t	pc_pending_ipis;
 comment|/* pending IPI's */
 value|\ 	u_int32_t	pc_next_asn;
 comment|/* next ASN to alloc */
-value|\ 	u_int32_t	pc_current_asngen
+value|\ 	u_int32_t	pc_current_asngen;
+comment|/* ASN rollover check */
+value|\ 	u_int32_t	pc_last_pcc_cnt;
+comment|/* Previous PCC_CNT value */
+value|\ 	u_int32_t	pc_pcc_base
 end_define
 
 begin_comment
-comment|/* ASN rollover check */
+comment|/* Hi word of cycle count. */
 end_comment
 
 begin_struct_decl
