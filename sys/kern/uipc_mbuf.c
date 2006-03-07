@@ -593,7 +593,7 @@ name|mb
 operator|=
 operator|(
 name|rem
-operator|>
+operator|>=
 name|MINCLSIZE
 operator|)
 condition|?
