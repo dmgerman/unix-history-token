@@ -1534,14 +1534,6 @@ argument_list|,
 name|DIRBLKSIZ
 argument_list|)
 expr_stmt|;
-name|dp
-operator|->
-name|i_flag
-operator||=
-name|IN_CHANGE
-operator||
-name|IN_UPDATE
-expr_stmt|;
 comment|/* 		 * We return with the directory locked, so that 		 * the parameters we set up above will still be 		 * valid if we actually decide to do a direnter(). 		 * We return ni_vp == NULL to indicate that the entry 		 * does not currently exist; we leave a pointer to 		 * the (locked) directory inode in ndp->ni_dvp. 		 * The pathname buffer is saved so that the name 		 * can be obtained later. 		 * 		 * NB - if the directory is unlocked, then this 		 * information cannot be used. 		 */
 name|cnp
 operator|->
