@@ -59,7 +59,7 @@ name|DDB
 end_ifdef
 
 begin_macro
-name|DB_SET
+name|DB_FUNC
 argument_list|(
 argument|xfs
 argument_list|,
