@@ -3151,6 +3151,19 @@ operator|->
 name|ns_rec
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|rec
+operator|->
+name|nr_packet
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"nfsrv_dorec: missing mbuf"
+operator|)
+argument_list|)
+expr_stmt|;
 name|STAILQ_REMOVE_HEAD
 argument_list|(
 operator|&
