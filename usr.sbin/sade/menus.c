@@ -91,6 +91,59 @@ end_function
 begin_function
 specifier|static
 name|int
+name|setKernel
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|Dists
+operator||=
+name|DIST_KERNEL
+expr_stmt|;
+name|KernelDists
+operator|=
+name|DIST_KERNEL_ALL
+expr_stmt|;
+return|return
+name|DITEM_SUCCESS
+operator||
+name|DITEM_REDRAW
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|clearKernel
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|Dists
+operator|&=
+operator|~
+name|DIST_KERNEL
+expr_stmt|;
+name|KernelDists
+operator|=
+literal|0
+expr_stmt|;
+return|return
+name|DITEM_SUCCESS
+operator||
+name|DITEM_REDRAW
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
 name|setX11Misc
 parameter_list|(
 name|dialogMenuItem
@@ -495,6 +548,13 @@ name|XOrgDists
 argument_list|,
 name|DIST_XORG_ALL
 argument_list|)
+operator|&&
+name|_IS_SET
+argument_list|(
+name|KernelDists
+argument_list|,
+name|DIST_KERNEL_ALL
+argument_list|)
 return|;
 block|}
 end_function
@@ -545,6 +605,22 @@ return|return
 name|Dists
 operator|&
 name|DIST_XORG
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|kernelFlagCheck
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|item
+parameter_list|)
+block|{
+return|return
+name|KernelDists
 return|;
 block|}
 end_function
@@ -5207,6 +5283,16 @@ name|DIST_BASE
 block|}
 block|,
 block|{
+literal|" kernels"
+block|,
+literal|"Binary kernel distributions (required)"
+block|,
+name|kernelFlagCheck
+block|,
+name|distSetKernel
+block|}
+block|,
+block|{
 literal|" dict"
 block|,
 literal|"Spelling checker dictionary files"
@@ -5461,6 +5547,140 @@ block|,
 name|distSetXOrg
 block|}
 block|,
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+block|;
+name|DMenu
+name|MenuKernelDistributions
+operator|=
+block|{
+name|DMENU_CHECKLIST_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"Select the operating system kernels you wish to install."
+block|,
+literal|"Please check off those kernels you wish to install.\n"
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+block|{
+block|{
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|checkTrue
+block|,
+name|dmenuExit
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|}
+block|,
+block|{
+literal|"All"
+block|,
+literal|"Select all of the below"
+block|,
+name|NULL
+block|,
+name|setKernel
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+literal|"Reset"
+block|,
+literal|"Reset all of the below"
+block|,
+name|NULL
+block|,
+name|clearKernel
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+literal|" GENERIC"
+block|,
+literal|"GENERIC kernel configuration"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|KernelDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_KERNEL_GENERIC
+block|}
+block|,
+ifdef|#
+directive|ifdef
+name|WITH_SMP
+block|{
+literal|" SMP"
+block|,
+literal|"GENERIC symmetric multiprocessor kernel configuration"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|KernelDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_KERNEL_SMP
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 name|NULL
 block|}

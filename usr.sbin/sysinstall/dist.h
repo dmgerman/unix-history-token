@@ -124,6 +124,13 @@ end_endif
 begin_define
 define|#
 directive|define
+name|DIST_KERNEL
+value|0x02000
+end_define
+
+begin_define
+define|#
+directive|define
 name|DIST_ALL
 value|0xFFFFF
 end_define
@@ -425,6 +432,31 @@ value|(DIST_XORG_MISC_ALL | DIST_XORG_SERVER_ALL | DIST_XORG_FONTS_ALL)
 end_define
 
 begin_comment
+comment|/* Subtypes for KERNEL distribution */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DIST_KERNEL_GENERIC
+value|0x00001
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_KERNEL_SMP
+value|0x00002
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_KERNEL_ALL
+value|0xFFFFF
+end_define
+
+begin_comment
 comment|/* Canned distribution sets */
 end_comment
 
@@ -441,7 +473,7 @@ define|#
 directive|define
 name|_DIST_USER
 define|\
-value|( DIST_BASE | DIST_DOC | DIST_MANPAGES | DIST_DICT )
+value|( DIST_BASE | DIST_KERNEL | DIST_DOC | DIST_MANPAGES | DIST_DICT )
 end_define
 
 begin_define
