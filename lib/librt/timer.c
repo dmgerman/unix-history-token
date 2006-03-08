@@ -567,6 +567,12 @@ return|;
 block|}
 name|sn
 operator|->
+name|sn_flags
+operator||=
+name|SNF_SYNC
+expr_stmt|;
+name|sn
+operator|->
 name|sn_dispatch
 operator|=
 name|timer_dispatch
