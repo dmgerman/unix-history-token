@@ -321,7 +321,7 @@ end_struct
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|void
 name|release_page
 parameter_list|(
@@ -362,7 +362,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|void
 name|unlock_map
 parameter_list|(

@@ -3175,7 +3175,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|void
 name|vm_page_free_wakeup
 parameter_list|(
@@ -3844,7 +3844,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|void
 name|_vm_page_deactivate
 parameter_list|(
@@ -4692,7 +4692,7 @@ comment|/*  * Mapping function for valid bits or for dirty bits in  * a page.  M
 end_comment
 
 begin_function
-name|__inline
+specifier|inline
 name|int
 name|vm_page_bits
 parameter_list|(

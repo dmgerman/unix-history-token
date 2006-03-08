@@ -1239,7 +1239,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|vm_page_t
 name|_vm_pageq_find
 parameter_list|(

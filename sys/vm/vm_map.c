@@ -1054,7 +1054,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|void
 name|vmspace_dofree
 parameter_list|(
@@ -2166,7 +2166,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|void
 name|vm_map_entry_set_behavior
 parameter_list|(
@@ -2205,7 +2205,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|void
 name|vm_map_entry_set_max_free
 parameter_list|(

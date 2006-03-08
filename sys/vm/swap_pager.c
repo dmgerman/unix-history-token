@@ -4764,7 +4764,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|void
 name|swp_pager_force_pagein
 parameter_list|(
