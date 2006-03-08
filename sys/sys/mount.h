@@ -584,6 +584,14 @@ name|int
 name|mnt_holdcntwaiters
 decl_stmt|;
 comment|/* waits on hold count */
+name|int
+name|mnt_secondary_writes
+decl_stmt|;
+comment|/* (i) # of secondary writes */
+name|int
+name|mnt_secondary_accwrites
+decl_stmt|;
+comment|/* (i) secondary wr. starts */
 block|}
 struct|;
 end_struct
@@ -695,6 +703,16 @@ parameter_list|(
 name|mp
 parameter_list|)
 value|mtx_lock(&(mp)->mnt_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MNT_ITRYLOCK
+parameter_list|(
+name|mp
+parameter_list|)
+value|mtx_trylock(&(mp)->mnt_mtx)
 end_define
 
 begin_define
@@ -1318,6 +1336,17 @@ end_define
 
 begin_comment
 comment|/* push data not written by filesystem syncer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNT_SUSPEND
+value|4
+end_define
+
+begin_comment
+comment|/* Suspend file system after sync */
 end_comment
 
 begin_comment

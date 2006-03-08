@@ -213,6 +213,10 @@ name|softdep_deps
 decl_stmt|;
 comment|/* Total dependency count */
 name|int
+name|softdep_accdeps
+decl_stmt|;
+comment|/* accumulated dep count */
+name|int
 name|softdep_req
 decl_stmt|;
 comment|/* Wakeup when deps hits 0. */
