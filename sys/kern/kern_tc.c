@@ -3991,31 +3991,6 @@ operator|&
 name|t_last
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%ju.%016jx "
-argument_list|,
-operator|(
-name|uintmax_t
-operator|)
-name|t_delta
-operator|.
-name|sec
-argument_list|,
-operator|(
-name|uintmax_t
-operator|)
-name|t_delta
-operator|.
-name|frac
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 		 * Validate that 16 +/- 1/256 seconds passed.  		 * After division by 16 this gives us a precision of 		 * roughly 250PPM which is sufficient 		 */
 if|if
 condition|(
@@ -4051,7 +4026,21 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"\ttoo long\n"
+literal|"%ju.%016jx too long\n"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|t_delta
+operator|.
+name|sec
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|t_delta
+operator|.
+name|frac
 argument_list|)
 expr_stmt|;
 block|}
@@ -4090,7 +4079,21 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"\ttoo short\n"
+literal|"%ju.%016jx too short\n"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|t_delta
+operator|.
+name|sec
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|t_delta
+operator|.
+name|frac
 argument_list|)
 expr_stmt|;
 block|}
@@ -4122,39 +4125,9 @@ name|c_delta
 operator|<<=
 literal|20
 expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|" %ju / %ju"
-argument_list|,
-operator|(
-name|uintmax_t
-operator|)
-name|c_delta
-argument_list|,
-operator|(
-name|uintmax_t
-operator|)
-name|divi
-argument_list|)
-expr_stmt|;
 name|c_delta
 operator|/=
 name|divi
-expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|" = %ju"
-argument_list|,
-name|c_delta
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4169,24 +4142,14 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"\thigher\n"
+literal|"cpu_tick increased to %ju Hz"
+argument_list|,
+name|c_delta
 argument_list|)
 expr_stmt|;
 name|cpu_tick_frequency
 operator|=
 name|c_delta
-expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"\tlower\n"
-argument_list|)
 expr_stmt|;
 block|}
 block|}
