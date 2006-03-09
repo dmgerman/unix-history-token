@@ -3462,9 +3462,29 @@ expr_stmt|;
 if|if
 condition|(
 name|tu
-operator|<
+operator|+
+literal|3
+operator|>
 name|ptu
 condition|)
+block|{
+comment|/* Numeric slop for low counts */
+block|}
+elseif|else
+if|if
+condition|(
+literal|101
+operator|*
+name|tu
+operator|>
+literal|100
+operator|*
+name|ptu
+condition|)
+block|{
+comment|/* 1% slop for large counts */
+block|}
+else|else
 block|{
 name|printf
 argument_list|(
