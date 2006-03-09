@@ -4142,7 +4142,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"cpu_tick increased to %ju Hz"
+literal|"cpu_tick increased to %ju Hz\n"
 argument_list|,
 name|c_delta
 argument_list|)
