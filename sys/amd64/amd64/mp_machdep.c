@@ -2392,13 +2392,20 @@ operator|.
 name|cpu_bsp
 condition|)
 continue|continue;
-if|#
-directive|if
-literal|0
 comment|/* Don't let hyperthreads service interrupts. */
-block|if (hyperthreading_cpus> 1&& 		    apic_id % hyperthreading_cpus != 0) 			continue;
-endif|#
-directive|endif
+if|if
+condition|(
+name|hyperthreading_cpus
+operator|>
+literal|1
+operator|&&
+name|apic_id
+operator|%
+name|hyperthreading_cpus
+operator|!=
+literal|0
+condition|)
+continue|continue;
 name|intr_add_cpu
 argument_list|(
 name|apic_id
