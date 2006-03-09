@@ -873,6 +873,12 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+name|KENV_SIZE
+condition|)
 name|strcpy
 argument_list|(
 name|kenvp
@@ -880,6 +886,14 @@ index|[
 name|i
 operator|++
 index|]
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"WARNING: too many kenv strings, ignoring %s\n"
 argument_list|,
 name|cp
 argument_list|)
