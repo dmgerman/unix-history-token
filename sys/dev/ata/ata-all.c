@@ -1606,7 +1606,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * we have the HW locks, so end the tranaction for this request 	 * if it finishes immediately otherwise wait for next interrupt 	 */
+comment|/* 	 * we have the HW locks, so end the transaction for this request 	 * if it finishes immediately otherwise wait for next interrupt 	 */
 if|if
 condition|(
 name|ch
