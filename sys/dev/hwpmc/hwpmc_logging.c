@@ -2674,18 +2674,21 @@ condition|)
 return|return
 name|EINVAL
 return|;
-comment|/* remove this owner from the global SS pmc owner list */
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|po
 operator|->
 name|po_sscount
-condition|)
-name|LIST_REMOVE
-argument_list|(
-name|po
+operator|==
+literal|0
 argument_list|,
-name|po_ssnext
+operator|(
+literal|"[pmc,%d] po=%p still owning SS PMCs"
+operator|,
+name|__LINE__
+operator|,
+name|po
+operator|)
 argument_list|)
 expr_stmt|;
 name|KASSERT
