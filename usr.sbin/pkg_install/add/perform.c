@@ -1036,16 +1036,24 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"package '%s' or its older version already installed"
+literal|"package '%s' or its older version already installed%s"
 argument_list|,
 name|Plist
 operator|.
 name|name
+argument_list|,
+name|FailOnAlreadyInstalled
+condition|?
+literal|""
+else|:
+literal|" (ignored)"
 argument_list|)
 expr_stmt|;
 name|code
 operator|=
-literal|1
+name|FailOnAlreadyInstalled
+operator|!=
+name|FALSE
 expr_stmt|;
 goto|goto
 name|success
