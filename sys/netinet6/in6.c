@@ -2009,7 +2009,7 @@ name|ifr
 operator|->
 name|ifr_ifru
 operator|.
-name|ifru_stat
+name|ifru_icmp6stat
 argument_list|,
 sizeof|sizeof
 argument_list|(
