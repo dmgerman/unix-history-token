@@ -4090,19 +4090,6 @@ name|mp
 operator|=
 name|NULL
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|vn_start_write
-argument_list|(
-name|vp
-argument_list|,
-operator|&
-name|mp
-argument_list|,
-name|V_WAIT
-argument_list|)
-expr_stmt|;
 name|rtval
 operator|=
 name|VOP_PUTPAGES
@@ -4129,11 +4116,6 @@ argument_list|,
 operator|(
 literal|"vnode_pager: stale FS putpages\n"
 operator|)
-argument_list|)
-expr_stmt|;
-name|vn_finished_write
-argument_list|(
-name|mp
 argument_list|)
 expr_stmt|;
 name|VM_OBJECT_LOCK
