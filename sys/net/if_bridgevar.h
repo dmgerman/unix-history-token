@@ -1069,6 +1069,10 @@ argument_list|)
 name|sc_spanlist
 expr_stmt|;
 comment|/* span ports list */
+name|struct
+name|bridge_timer
+name|sc_link_timer
+decl_stmt|;
 block|}
 struct|;
 end_struct

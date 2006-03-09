@@ -219,6 +219,13 @@ begin_comment
 comment|/* in 256ths of a second */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|BSTP_LINK_TIMER
+value|(BSTP_TICK_VAL * 15)
+end_define
+
 begin_comment
 comment|/*  * Because BPDU's do not make nicely aligned structures, two different  * declarations are used: bstp_?bpdu (wire representation, packed) and  * bstp_*_unit (internal, nicely aligned version).  */
 end_comment
@@ -5137,6 +5144,16 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|bstp_timer_start
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_link_timer
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -6100,14 +6117,61 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+comment|/* slow timer to catch missed link events */
+if|if
+condition|(
+name|bstp_timer_expired
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_link_timer
+argument_list|,
+name|BSTP_LINK_TIMER
+argument_list|)
+condition|)
+block|{
+name|LIST_FOREACH
+argument_list|(
+argument|bif
+argument_list|,
+argument|&sc->sc_iflist
+argument_list|,
+argument|bif_next
+argument_list|)
+block|{
+if|if
+condition|(
+operator|(
+name|bif
+operator|->
+name|bif_flags
+operator|&
+name|IFBIF_STP
+operator|)
+operator|==
 literal|0
-block|LIST_FOREACH(bif,&sc->sc_iflist, bif_next) { 		if ((bif->bif_flags& IFBIF_STP) == 0) 			continue;
-comment|/* 		 * XXX This can cause a lag in "link does away" 		 * XXX and "spanning tree gets updated".  We need 		 * XXX come sort of callback from the link state 		 * XXX update code to kick spanning tree. 		 * XXX --thorpej@NetBSD.org 		 */
-block|bstp_ifupdstatus(sc, bif); 	}
-endif|#
-directive|endif
+condition|)
+continue|continue;
+name|bstp_ifupdstatus
+argument_list|(
+name|sc
+argument_list|,
+name|bif
+argument_list|)
+expr_stmt|;
+block|}
+name|bstp_timer_start
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_link_timer
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|bstp_timer_expired
