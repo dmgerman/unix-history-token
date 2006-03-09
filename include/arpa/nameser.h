@@ -1660,6 +1660,13 @@ name|ns_name_uncompress
 value|__ns_name_uncompress
 end_define
 
+begin_define
+define|#
+directive|define
+name|ns_name_skip
+value|__ns_name_skip
+end_define
+
 begin_function_decl
 name|__BEGIN_DECLS
 name|u_int
