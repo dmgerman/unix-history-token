@@ -3601,6 +3601,9 @@ argument_list|(
 literal|"rm -rf /boot/kernel"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|WITH_SMP
 if|if
 condition|(
 name|dists
@@ -3613,6 +3616,8 @@ literal|"mv /boot/SMP /boot/kernel"
 argument_list|)
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 name|vsystem
 argument_list|(
 literal|"mv /boot/GENERIC /boot/kernel"
