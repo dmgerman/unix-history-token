@@ -165,6 +165,16 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|void
+name|vlan_set
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 name|void
@@ -332,6 +342,12 @@ name|__have_tag
 operator|=
 literal|1
 expr_stmt|;
+name|vlan_set
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+comment|/* try setting vlan params in kernel */
 block|}
 end_function
 
@@ -378,6 +394,12 @@ name|__have_dev
 operator|=
 literal|1
 expr_stmt|;
+name|vlan_set
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+comment|/* try setting vlan params in kernel */
 block|}
 end_function
 
@@ -508,6 +530,18 @@ argument_list|,
 literal|"both vlan and vlandev must be specified"
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|vlan_set
+parameter_list|(
+name|int
+name|s
+parameter_list|)
+block|{
 if|if
 condition|(
 name|__have_tag
