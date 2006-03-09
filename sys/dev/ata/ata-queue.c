@@ -1383,9 +1383,11 @@ operator|&
 name|ATA_R_TIMEOUT
 condition|)
 block|{
-comment|/* 	 * if reinit succeeds and the device doesn't get detached and 	 * there are retries left we reinject this request 	 */
+comment|/* 	 * if the channel is still present and 	 * reinit succeeds and 	 * the device doesn't get detached and 	 * there are retries left we reinject this request 	 */
 if|if
 condition|(
+name|ch
+operator|&&
 operator|!
 name|ata_reinit
 argument_list|(
@@ -2560,6 +2562,11 @@ operator|->
 name|done
 argument_list|)
 expr_stmt|;
+comment|/* only call ata_start if channel is present */
+if|if
+condition|(
+name|ch
+condition|)
 name|ata_start
 argument_list|(
 name|ch
