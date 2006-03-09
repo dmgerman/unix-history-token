@@ -2008,10 +2008,6 @@ name|dev
 argument_list|,
 literal|"%juMB<%s%s %.8s> at ata%d-%s %s%s\n"
 argument_list|,
-call|(
-name|uintmax_t
-call|)
-argument_list|(
 name|adp
 operator|->
 name|total_secs
@@ -2021,7 +2017,6 @@ literal|1048576
 operator|/
 name|DEV_BSIZE
 operator|)
-argument_list|)
 argument_list|,
 name|vendor
 argument_list|,
@@ -2084,17 +2079,10 @@ argument_list|,
 literal|"%ju sectors [%juC/%dH/%dS] "
 literal|"%d sectors/interrupt %d depth queue\n"
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
 name|adp
 operator|->
 name|total_secs
 argument_list|,
-call|(
-name|uintmax_t
-call|)
-argument_list|(
 name|adp
 operator|->
 name|total_secs
@@ -2108,7 +2096,6 @@ name|adp
 operator|->
 name|sectors
 operator|)
-argument_list|)
 argument_list|,
 name|adp
 operator|->

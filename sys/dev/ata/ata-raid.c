@@ -1183,18 +1183,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ar%d: %lluMB<%s %s%s> status: %s\n"
+literal|"ar%d: %juMB<%s %s%s> status: %s\n"
 argument_list|,
 name|rdp
 operator|->
 name|lun
 argument_list|,
-call|(
-name|unsigned
-name|long
-name|long
-call|)
-argument_list|(
 name|rdp
 operator|->
 name|total_sectors
@@ -1208,7 +1202,6 @@ operator|)
 operator|/
 name|DEV_BSIZE
 operator|)
-argument_list|)
 argument_list|,
 name|ata_raid_format
 argument_list|(
@@ -1236,17 +1229,12 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ar%d: %llu sectors [%dC/%dH/%dS]<%s> subdisks defined as:\n"
+literal|"ar%d: %ju sectors [%dC/%dH/%dS]<%s> subdisks defined as:\n"
 argument_list|,
 name|rdp
 operator|->
 name|lun
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 name|rdp
 operator|->
 name|total_sectors
@@ -25124,13 +25112,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"magic_0             0x%016llx\n"
+literal|"magic_0             0x%016jx\n"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 name|raid
 operator|->
 name|magic_0
@@ -25138,13 +25121,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"magic_1             0x%016llx\n"
+literal|"magic_1             0x%016jx\n"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 name|raid
 operator|->
 name|magic_1
@@ -25161,13 +25139,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"total_sectors       %llu\n"
+literal|"total_sectors       %ju\n"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 name|raid
 operator|->
 name|total_sectors
@@ -25175,13 +25148,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"offset_sectors      %llu\n"
+literal|"offset_sectors      %ju\n"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 name|raid
 operator|->
 name|offset_sectors
@@ -25312,12 +25280,8 @@ index|]
 operator|.
 name|dev
 argument_list|,
-literal|" sectors %lld\n"
+literal|" sectors %jd\n"
 argument_list|,
-operator|(
-name|long
-name|long
-operator|)
 name|raid
 operator|->
 name|disks
@@ -26644,14 +26608,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    total_sectors       %llu\n"
+literal|"    total_sectors       %ju\n"
 argument_list|,
-call|(
-name|unsigned
-name|long
-name|long
-call|)
-argument_list|(
 name|meta
 operator|->
 name|configs
@@ -26676,7 +26634,6 @@ name|total_sectors
 operator|<<
 literal|32
 operator|)
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -26770,14 +26727,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    rebuild_lba         %llu\n"
+literal|"    rebuild_lba         %ju\n"
 argument_list|,
-call|(
-name|unsigned
-name|long
-name|long
-call|)
-argument_list|(
 name|meta
 operator|->
 name|configs_high
@@ -26802,7 +26753,6 @@ name|rebuild_lba
 operator|<<
 literal|32
 operator|)
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -27152,13 +27102,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"total_sectors       %llu\n"
+literal|"total_sectors       %ju\n"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 name|map
 operator|->
 name|total_sectors
@@ -27489,13 +27434,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"total_sectors       %lld\n"
+literal|"total_sectors       %jd\n"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 name|meta
 operator|->
 name|total_sectors
@@ -28811,13 +28751,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"magic_1             0x%016llx\n"
+literal|"magic_1             0x%016jx\n"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 name|meta
 operator|->
 name|magic_1
@@ -28825,13 +28760,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"magic_2             0x%016llx\n"
+literal|"magic_2             0x%016jx\n"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 name|meta
 operator|->
 name|magic_2
@@ -29100,13 +29030,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"magic_0             0x%016llx\n"
+literal|"magic_0             0x%016jx\n"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 name|meta
 operator|->
 name|magic_0
@@ -29204,13 +29129,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"magic_0             0x%016llx\n"
+literal|"magic_0             0x%016jx\n"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 name|meta
 operator|->
 name|raid
@@ -29385,13 +29305,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"magic_1             0x%016llx\n"
+literal|"magic_1             0x%016jx\n"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 name|meta
 operator|->
 name|raid
@@ -29474,13 +29389,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"0x%016llx\n"
+literal|"0x%016jx\n"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 name|meta
 operator|->
 name|raid
@@ -29592,13 +29502,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"total_sectors       %llu\n"
+literal|"total_sectors       %ju\n"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 name|meta
 operator|->
 name|total_sectors
@@ -29773,13 +29678,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"rebuild_lba         %llu\n"
+literal|"rebuild_lba         %ju\n"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 name|meta
 operator|->
 name|rebuild_lba
@@ -30285,13 +30185,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"disk_sectors        %llu\n"
+literal|"disk_sectors        %ju\n"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 name|meta
 operator|->
 name|disk_sectors
