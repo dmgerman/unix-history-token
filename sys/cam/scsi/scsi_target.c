@@ -2078,9 +2078,28 @@ operator|==
 literal|0
 condition|)
 block|{
+name|cpi
+operator|.
+name|dev_name
+index|[
+name|DEV_IDLEN
+operator|-
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"controller does not support target mode\n"
+literal|"controller %s%d does not support target mode\n"
+argument_list|,
+name|cpi
+operator|.
+name|dev_name
+argument_list|,
+name|cpi
+operator|.
+name|unit_number
 argument_list|)
 expr_stmt|;
 name|status
