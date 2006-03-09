@@ -5967,9 +5967,6 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|VLAN_LOCK
-argument_list|()
-expr_stmt|;
 name|vlan_unconfig
 argument_list|(
 name|ifp
@@ -5981,9 +5978,6 @@ name|if_drv_flags
 operator|&=
 operator|~
 name|IFF_DRV_RUNNING
-expr_stmt|;
-name|VLAN_UNLOCK
-argument_list|()
 expr_stmt|;
 break|break;
 block|}
