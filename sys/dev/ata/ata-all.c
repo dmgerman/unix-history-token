@@ -3431,9 +3431,12 @@ name|printf
 argument_list|(
 literal|"ata%d-%s: pio=%s wdma=%s udma=%s cable=%s wire\n"
 argument_list|,
+name|device_get_unit
+argument_list|(
 name|ch
 operator|->
-name|unit
+name|dev
+argument_list|)
 argument_list|,
 name|atadev
 operator|->
