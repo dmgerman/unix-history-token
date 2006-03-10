@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -183,29 +189,14 @@ name|ncpu
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-specifier|static
+begin_function_decl
 name|int
-name|max
+name|acpi_detect
 parameter_list|(
-name|int
-name|a
-parameter_list|,
-name|int
-name|b
+name|void
 parameter_list|)
-block|{
-return|return
-name|a
-operator|<
-name|b
-condition|?
-name|b
-else|:
-name|a
-return|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static

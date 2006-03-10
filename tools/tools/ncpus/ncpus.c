@@ -33,13 +33,7 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
+name|void
 parameter_list|)
 block|{
 name|printf
@@ -50,6 +44,17 @@ name|acpi_detect
 argument_list|()
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
 name|printf
 argument_list|(
 literal|"mptable: %d\n"
@@ -58,6 +63,8 @@ name|biosmptable_detect
 argument_list|()
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
