@@ -3765,7 +3765,7 @@ name|wme_flags
 operator|&
 name|WME_F_AGGRMODE
 operator|)
-operator|==
+operator|!=
 literal|0
 operator|)
 operator|||
@@ -3961,7 +3961,7 @@ name|wme_flags
 operator|&
 name|WME_F_AGGRMODE
 operator|)
-operator|==
+operator|!=
 literal|0
 condition|)
 block|{
