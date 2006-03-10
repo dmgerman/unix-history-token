@@ -590,7 +590,7 @@ name|uint32_t
 name|ucodesz
 decl_stmt|;
 name|uint32_t
-name|fwsz
+name|mainsz
 decl_stmt|;
 block|}
 name|__packed

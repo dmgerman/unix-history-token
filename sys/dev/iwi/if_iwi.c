@@ -2465,7 +2465,7 @@ name|sc
 operator|->
 name|antenna
 operator|=
-literal|0
+literal|2
 expr_stmt|;
 name|SYSCTL_ADD_PROC
 argument_list|(
@@ -2625,7 +2625,7 @@ name|antenna
 argument_list|,
 literal|0
 argument_list|,
-literal|"antenna (0=auto)"
+literal|"antenna (0=auto,1=A,3=B,2=diversity)"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Hook our interrupt after all initialization is complete. 	 */
@@ -7771,6 +7771,16 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* acknowledge interrupts */
+name|CSR_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|IWI_CSR_INTR
+argument_list|,
+name|r
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|r
@@ -7807,6 +7817,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|r
+operator|=
+literal|0
+expr_stmt|;
+comment|/* don't process more interrupts */
 block|}
 if|if
 condition|(
@@ -7864,6 +7879,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|r
+operator|=
+literal|0
+expr_stmt|;
+comment|/* don't process more interrupts */
 block|}
 if|if
 condition|(
@@ -7961,16 +7981,6 @@ condition|)
 name|iwi_rx_intr
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-comment|/* acknowledge interrupts */
-name|CSR_WRITE_4
-argument_list|(
-name|sc
-argument_list|,
-name|IWI_CSR_INTR
-argument_list|,
-name|r
 argument_list|)
 expr_stmt|;
 comment|/* re-enable interrupts */
@@ -13523,7 +13533,7 @@ name|le32toh
 argument_list|(
 name|hdr
 operator|->
-name|fwsz
+name|mainsz
 argument_list|)
 condition|)
 block|{
@@ -13981,7 +13991,7 @@ name|le32toh
 argument_list|(
 name|hdr
 operator|->
-name|fwsz
+name|mainsz
 argument_list|)
 argument_list|)
 operator|!=
