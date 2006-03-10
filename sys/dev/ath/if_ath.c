@@ -1810,12 +1810,15 @@ define|#
 directive|define
 name|DPRINTF
 parameter_list|(
+name|sc
+parameter_list|,
 name|m
 parameter_list|,
 name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
+value|do {				\ 	(void) sc;						\ } while (0)
 end_define
 
 begin_define
@@ -1831,6 +1834,7 @@ name|ix
 parameter_list|,
 name|mac
 parameter_list|)
+value|do {				\ 	(void) sc;						\ } while (0)
 end_define
 
 begin_endif
@@ -18425,6 +18429,9 @@ modifier|*
 name|txq
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|AR_DEBUG
 name|struct
 name|ath_hal
 modifier|*
@@ -18434,6 +18441,8 @@ name|sc
 operator|->
 name|sc_ah
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|ieee80211_node
 modifier|*
@@ -24914,6 +24923,9 @@ argument_list|,
 literal|"EEPROM regdomain code"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AR_DEBUG
 name|sc
 operator|->
 name|sc_debug
@@ -24945,6 +24957,8 @@ argument_list|,
 literal|"control debugging printfs"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|ctx
