@@ -584,7 +584,13 @@ name|uint32_t
 name|version
 decl_stmt|;
 name|uint32_t
-name|mode
+name|bootsz
+decl_stmt|;
+name|uint32_t
+name|ucodesz
+decl_stmt|;
+name|uint32_t
+name|fwsz
 decl_stmt|;
 block|}
 name|__packed
