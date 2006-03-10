@@ -6061,11 +6061,6 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-name|MNT_REF
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 name|loop
 label|:
 comment|/* Grab snapshot of secondary write counts */
@@ -6269,11 +6264,6 @@ name|mp
 argument_list|)
 expr_stmt|;
 block|}
-name|MNT_REL
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 name|MNT_IUNLOCK
 argument_list|(
 name|mp
