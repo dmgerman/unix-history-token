@@ -2320,6 +2320,14 @@ name|md_provider
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|md
+operator|.
+name|md_provsize
+operator|=
+name|pp
+operator|->
+name|mediasize
+expr_stmt|;
 name|sector
 operator|=
 name|g_malloc
