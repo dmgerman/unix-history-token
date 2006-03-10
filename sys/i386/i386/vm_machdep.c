@@ -642,9 +642,6 @@ block|}
 return|return;
 block|}
 comment|/* Ensure that p1's pcb is up to date. */
-ifdef|#
-directive|ifdef
-name|DEV_NPX
 if|if
 condition|(
 name|td1
@@ -660,6 +657,9 @@ operator|=
 name|rgs
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_NPX
 name|savecrit
 operator|=
 name|intr_disable
@@ -953,13 +953,6 @@ operator|=
 name|PSL_KERNEL
 expr_stmt|;
 comment|/* ints disabled */
-name|pcb2
-operator|->
-name|pcb_gs
-operator|=
-name|rgs
-argument_list|()
-expr_stmt|;
 comment|/*- 	 * pcb2->pcb_dr*:	cloned above. 	 * pcb2->pcb_savefpu:	cloned above. 	 * pcb2->pcb_flags:	cloned above. 	 * pcb2->pcb_onfault:	cloned above (always NULL here?). 	 * pcb2->pcb_gs:	cloned above. 	 * pcb2->pcb_ext:	cleared below. 	 */
 comment|/* 	 * XXX don't copy the i/o pages.  this should probably be fixed. 	 */
 name|pcb2
