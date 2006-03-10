@@ -2416,7 +2416,7 @@ condition|(
 name|swi_add
 argument_list|(
 operator|&
-name|tty_ithd
+name|tty_intr_event
 argument_list|,
 name|device_get_nameunit
 argument_list|(
@@ -2629,7 +2629,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|ithread_remove_handler
+name|swi_remove
 argument_list|(
 name|sc
 operator|->
@@ -2799,7 +2799,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|ithread_remove_handler
+name|swi_remove
 argument_list|(
 name|sc
 operator|->

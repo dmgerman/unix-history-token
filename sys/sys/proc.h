@@ -300,12 +300,6 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
-name|ithd
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
 name|kg_sched
 struct_decl|;
 end_struct_decl
@@ -527,12 +521,11 @@ modifier|*
 name|td_blocked
 decl_stmt|;
 comment|/* (j) Lock process is blocked on. */
-name|struct
-name|ithd
+name|void
 modifier|*
 name|td_ithd
 decl_stmt|;
-comment|/* (b) For interrupt threads only. */
+comment|/* (n) Unused, kept to preserve ABI. */
 specifier|const
 name|char
 modifier|*
@@ -1166,12 +1159,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDP_UNUSED10
+name|TDP_ITHREAD
 value|0x00000400
 end_define
 
 begin_comment
-comment|/* --available -- */
+comment|/* Thread is an interrupt thread. */
 end_comment
 
 begin_define

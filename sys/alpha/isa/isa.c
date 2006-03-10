@@ -1734,7 +1734,7 @@ init|=
 name|cookie
 decl_stmt|;
 name|struct
-name|intrhand
+name|intr_handler
 modifier|*
 name|ih
 decl_stmt|,
@@ -1743,7 +1743,7 @@ name|handler
 init|=
 operator|(
 expr|struct
-name|intrhand
+name|intr_handler
 operator|*
 operator|)
 name|ii
@@ -1751,13 +1751,13 @@ operator|->
 name|ih
 decl_stmt|;
 name|struct
-name|ithd
+name|intr_event
 modifier|*
-name|ithread
+name|ie
 init|=
 name|handler
 operator|->
-name|ih_ithread
+name|ih_event
 decl_stmt|;
 name|int
 name|num_handlers
@@ -1767,16 +1767,16 @@ decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|ithread
+name|ie
 operator|->
-name|it_lock
+name|ie_lock
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ih
 argument_list|,
-argument|&ithread->it_handlers
+argument|&ie->ie_handlers
 argument_list|,
 argument|ih_next
 argument_list|)
@@ -1786,9 +1786,9 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|ithread
+name|ie
 operator|->
-name|it_lock
+name|ie_lock
 argument_list|)
 expr_stmt|;
 comment|/*  	 * Only disable the interrupt in hardware if there are no 	 * other handlers sharing it. 	 */

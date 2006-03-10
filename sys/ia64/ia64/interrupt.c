@@ -1289,11 +1289,11 @@ struct|struct
 name|ia64_intr
 block|{
 name|struct
-name|ithd
+name|intr_event
 modifier|*
-name|ithd
+name|event
 decl_stmt|;
-comment|/* interrupt thread */
+comment|/* interrupt event */
 specifier|volatile
 name|long
 modifier|*
@@ -1356,7 +1356,7 @@ argument_list|(
 operator|&
 name|ia64_intrs_lock
 argument_list|,
-literal|"ithread table lock"
+literal|"intr table"
 argument_list|,
 name|NULL
 argument_list|,
@@ -1493,7 +1493,7 @@ decl_stmt|;
 name|int
 name|errcode
 decl_stmt|;
-name|int
+name|intptr_t
 name|vector
 init|=
 name|irq
@@ -1631,19 +1631,31 @@ expr_stmt|;
 block|}
 name|errcode
 operator|=
-name|ithread_create
+name|intr_event_create
 argument_list|(
 operator|&
 name|i
 operator|->
-name|ithd
+name|event
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|vector
 argument_list|,
 literal|0
 argument_list|,
-literal|0
-argument_list|,
+operator|(
+name|void
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
+name|void
+operator|*
+argument_list|)
+operator|)
 name|ia64_send_eoi
 argument_list|,
 literal|"intr:"
@@ -1688,11 +1700,11 @@ block|}
 comment|/* Second, add this handler. */
 name|errcode
 operator|=
-name|ithread_add_handler
+name|intr_event_add_handler
 argument_list|(
 name|i
 operator|->
-name|ithd
+name|event
 argument_list|,
 name|name
 argument_list|,
@@ -1700,7 +1712,7 @@ name|handler
 argument_list|,
 name|arg
 argument_list|,
-name|ithread_priority
+name|intr_priority
 argument_list|(
 name|flags
 argument_list|)
@@ -1741,7 +1753,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|ithread_remove_handler
+name|intr_event_remove_handler
 argument_list|(
 name|cookie
 argument_list|)
@@ -1769,18 +1781,20 @@ modifier|*
 name|i
 decl_stmt|;
 name|struct
-name|ithd
+name|intr_event
 modifier|*
-name|ithd
+name|ie
 decl_stmt|;
-comment|/* our interrupt thread */
+comment|/* our interrupt event */
 name|struct
-name|intrhand
+name|intr_handler
 modifier|*
 name|ih
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|thread
 decl_stmt|;
 comment|/* 	 * Find the interrupt thread for this vector. 	 */
 name|i
@@ -1797,7 +1811,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* no ithread for this vector */
+comment|/* no event for this vector */
 if|if
 condition|(
 name|i
@@ -1813,48 +1827,55 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|ithd
+name|ie
 operator|=
 name|i
 operator|->
-name|ithd
+name|event
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|ithd
+name|ie
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"interrupt vector without a thread"
+literal|"interrupt vector without an event"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * As an optimization, if an ithread has no handlers, don't 	 * schedule it to run. 	 */
+comment|/* 	 * As an optimization, if an event has no handlers, don't 	 * schedule it to run. 	 */
 if|if
 condition|(
 name|TAILQ_EMPTY
 argument_list|(
 operator|&
-name|ithd
+name|ie
 operator|->
-name|it_handlers
+name|ie_handlers
 argument_list|)
 condition|)
 return|return;
-comment|/* 	 * Handle a fast interrupt if there is no actual thread for this 	 * interrupt by calling the handler directly without Giant.  Note 	 * that this means that any fast interrupt handler must be MP safe. 	 */
-name|ih
+comment|/* 	 * Execute all fast interrupt handlers directly without Giant.  Note 	 * that this means that any fast interrupt handler must be MP safe. 	 */
+name|thread
 operator|=
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|ithd
-operator|->
-name|it_handlers
-argument_list|)
+literal|0
 expr_stmt|;
+name|critical_enter
+argument_list|()
+expr_stmt|;
+name|TAILQ_FOREACH
+argument_list|(
+argument|ih
+argument_list|,
+argument|&ie->ie_handlers
+argument_list|,
+argument|ih_next
+argument_list|)
+block|{
 if|if
 condition|(
+operator|!
 operator|(
 name|ih
 operator|->
@@ -1862,12 +1883,34 @@ name|ih_flags
 operator|&
 name|IH_FAST
 operator|)
-operator|!=
-literal|0
 condition|)
 block|{
-name|critical_enter
-argument_list|()
+name|thread
+operator|=
+literal|1
+expr_stmt|;
+continue|continue;
+block|}
+name|CTR4
+argument_list|(
+name|KTR_INTR
+argument_list|,
+literal|"%s: exec %p(%p) for %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|ih
+operator|->
+name|ih_handler
+argument_list|,
+name|ih
+operator|->
+name|ih_argument
+argument_list|,
+name|ih
+operator|->
+name|ih_name
+argument_list|)
 expr_stmt|;
 name|ih
 operator|->
@@ -1878,21 +1921,20 @@ operator|->
 name|ih_argument
 argument_list|)
 expr_stmt|;
-name|ia64_send_eoi
-argument_list|(
-name|vector
-argument_list|)
-expr_stmt|;
+block|}
 name|critical_exit
 argument_list|()
 expr_stmt|;
-return|return;
-block|}
+if|if
+condition|(
+name|thread
+condition|)
+block|{
 name|error
 operator|=
-name|ithread_schedule
+name|intr_event_schedule_thread
 argument_list|(
-name|ithd
+name|ie
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -1904,6 +1946,13 @@ argument_list|,
 operator|(
 literal|"got an impossible stray interrupt"
 operator|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|ia64_send_eoi
+argument_list|(
+name|vector
 argument_list|)
 expr_stmt|;
 block|}

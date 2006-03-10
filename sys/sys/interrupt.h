@@ -28,12 +28,49 @@ file|<sys/_mutex.h>
 end_include
 
 begin_comment
-comment|/*  * Describe a hardware interrupt handler.  *  * Multiple interrupt handlers for a specific vector can be chained  * together.  */
+comment|/* Compatibility shims */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|tty_intr_event
+value|tty_ithd
+end_define
+
+begin_define
+define|#
+directive|define
+name|clk_intr_event
+value|clk_ithd
+end_define
+
+begin_define
+define|#
+directive|define
+name|ithd
+value|intr_event
+end_define
+
+begin_struct_decl
+struct_decl|struct
+name|intr_event
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|intr_thread
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/*  * Describe a hardware interrupt handler.  *  * Multiple interrupt handlers for a specific event can be chained  * together.  */
 end_comment
 
 begin_struct
 struct|struct
-name|intrhand
+name|intr_handler
 block|{
 name|driver_intr_t
 modifier|*
@@ -55,22 +92,22 @@ name|ih_name
 decl_stmt|;
 comment|/* Name of handler. */
 name|struct
-name|ithd
+name|intr_event
 modifier|*
-name|ih_ithread
+name|ih_event
 decl_stmt|;
-comment|/* Ithread we are connected to. */
+comment|/* Event we are connected to. */
 name|int
 name|ih_need
 decl_stmt|;
 comment|/* Needs service. */
 name|TAILQ_ENTRY
 argument_list|(
-argument|intrhand
+argument|intr_handler
 argument_list|)
 name|ih_next
 expr_stmt|;
-comment|/* Next handler for this vector. */
+comment|/* Next handler for this event. */
 name|u_char
 name|ih_pri
 decl_stmt|;
@@ -139,100 +176,88 @@ comment|/* Handler does not need Giant. */
 end_comment
 
 begin_comment
-comment|/*  * Describe an interrupt thread.  There is one of these per interrupt vector.  * Note that this actually describes an interrupt source.  There may or may  * not be an actual kernel thread attached to a given source.  */
+comment|/*  * Describe an interrupt event.  An event holds a list of handlers.  */
 end_comment
 
 begin_struct
 struct|struct
-name|ithd
+name|intr_event
 block|{
-name|struct
-name|mtx
-name|it_lock
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|it_td
-decl_stmt|;
-comment|/* Interrupt process. */
-name|LIST_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
-argument|ithd
+argument|intr_event
 argument_list|)
-name|it_list
+name|ie_list
 expr_stmt|;
-comment|/* All interrupt threads. */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|intrhand
+argument|intr_handler
 argument_list|)
-name|it_handlers
+name|ie_handlers
 expr_stmt|;
 comment|/* Interrupt handlers. */
-name|struct
-name|ithd
-modifier|*
-name|it_interrupted
-decl_stmt|;
-comment|/* Who we interrupted. */
-name|void
-function_decl|(
-modifier|*
-name|it_disable
-function_decl|)
-parameter_list|(
-name|uintptr_t
-parameter_list|)
-function_decl|;
-comment|/* Enable interrupt source. */
-name|void
-function_decl|(
-modifier|*
-name|it_enable
-function_decl|)
-parameter_list|(
-name|uintptr_t
-parameter_list|)
-function_decl|;
-comment|/* Disable interrupt source. */
-name|void
-modifier|*
-name|it_md
-decl_stmt|;
-comment|/* Hook for MD interrupt code. */
-name|int
-name|it_flags
-decl_stmt|;
-comment|/* Interrupt-specific flags. */
-name|int
-name|it_need
-decl_stmt|;
-comment|/* Needs service. */
-name|uintptr_t
-name|it_vector
-decl_stmt|;
 name|char
-name|it_name
+name|ie_name
 index|[
 name|MAXCOMLEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
+comment|/* Individual event name. */
+name|char
+name|ie_fullname
+index|[
+name|MAXCOMLEN
+index|]
+decl_stmt|;
+name|struct
+name|mtx
+name|ie_lock
+decl_stmt|;
+name|void
+modifier|*
+name|ie_source
+decl_stmt|;
+comment|/* Cookie used by MD code. */
+name|struct
+name|intr_thread
+modifier|*
+name|ie_thread
+decl_stmt|;
+comment|/* Thread we are connected to. */
+name|void
+function_decl|(
+modifier|*
+name|ie_enable
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+name|ie_flags
+decl_stmt|;
+name|int
+name|ie_count
+decl_stmt|;
+comment|/* Loop counter. */
+name|int
+name|ie_warned
+decl_stmt|;
+comment|/* Warned about interrupt storm. */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/* Interrupt thread flags kept in it_flags */
+comment|/* Interrupt event flags kept in ie_flags. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IT_SOFT
+name|IE_SOFT
 value|0x000001
 end_define
 
@@ -243,7 +268,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IT_ENTROPY
+name|IE_ENTROPY
 value|0x000002
 end_define
 
@@ -254,12 +279,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IT_DEAD
+name|IE_ADDING_THREAD
 value|0x000004
 end_define
 
 begin_comment
-comment|/* Thread is waiting to exit. */
+comment|/* Currently building an ithread. */
 end_comment
 
 begin_comment
@@ -336,26 +361,18 @@ end_define
 begin_decl_stmt
 specifier|extern
 name|struct
-name|ithd
+name|intr_event
 modifier|*
-name|tty_ithd
+name|tty_intr_event
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|struct
-name|ithd
+name|intr_event
 modifier|*
-name|clk_ithd
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-modifier|*
-name|net_ih
+name|clk_intr_event
 decl_stmt|;
 end_decl_stmt
 
@@ -435,12 +452,12 @@ end_ifdef
 
 begin_function_decl
 name|void
-name|db_dump_ithread
+name|db_dump_intr_event
 parameter_list|(
 name|struct
-name|ithd
+name|intr_event
 modifier|*
-name|ithd
+name|ie
 parameter_list|,
 name|int
 name|handlers
@@ -454,73 +471,8 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|int
-name|ithread_create
-parameter_list|(
-name|struct
-name|ithd
-modifier|*
-modifier|*
-name|ithread
-parameter_list|,
-name|uintptr_t
-name|vector
-parameter_list|,
-name|int
-name|flags
-parameter_list|,
-name|void
-function_decl|(
-modifier|*
-name|disable
-function_decl|)
-parameter_list|(
-name|uintptr_t
-parameter_list|)
-parameter_list|,
-name|void
-function_decl|(
-modifier|*
-name|enable
-function_decl|)
-parameter_list|(
-name|uintptr_t
-parameter_list|)
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|__printflike
-parameter_list|(
-function_decl|6
-operator|,
-function_decl|7
-end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
-name|int
-name|ithread_destroy
-parameter_list|(
-name|struct
-name|ithd
-modifier|*
-name|ithread
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|u_char
-name|ithread_priority
+name|intr_priority
 parameter_list|(
 name|enum
 name|intr_type
@@ -531,12 +483,12 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ithread_add_handler
+name|intr_event_add_handler
 parameter_list|(
 name|struct
-name|ithd
+name|intr_event
 modifier|*
-name|ithread
+name|ie
 parameter_list|,
 specifier|const
 name|char
@@ -567,7 +519,65 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ithread_remove_handler
+name|intr_event_create
+parameter_list|(
+name|struct
+name|intr_event
+modifier|*
+modifier|*
+name|event
+parameter_list|,
+name|void
+modifier|*
+name|source
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|enable
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__printflike
+parameter_list|(
+function_decl|5
+operator|,
+function_decl|6
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|int
+name|intr_event_destroy
+parameter_list|(
+name|struct
+name|intr_event
+modifier|*
+name|ie
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|intr_event_remove_handler
 parameter_list|(
 name|void
 modifier|*
@@ -578,12 +588,12 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ithread_schedule
+name|intr_event_schedule_thread
 parameter_list|(
 name|struct
-name|ithd
+name|intr_event
 modifier|*
-name|ithread
+name|ie
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -593,10 +603,10 @@ name|int
 name|swi_add
 parameter_list|(
 name|struct
-name|ithd
+name|intr_event
 modifier|*
 modifier|*
-name|ithdp
+name|eventp
 parameter_list|,
 specifier|const
 name|char
@@ -635,6 +645,17 @@ name|cookie
 parameter_list|,
 name|int
 name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|swi_remove
+parameter_list|(
+name|void
+modifier|*
+name|cookie
 parameter_list|)
 function_decl|;
 end_function_decl

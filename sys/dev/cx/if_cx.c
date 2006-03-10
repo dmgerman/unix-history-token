@@ -14284,7 +14284,7 @@ comment|/* Software interrupt. */
 name|swi_add
 argument_list|(
 operator|&
-name|tty_ithd
+name|tty_intr_event
 argument_list|,
 literal|"cx"
 argument_list|,
@@ -14350,7 +14350,7 @@ operator|&
 name|timeout_handle
 argument_list|)
 expr_stmt|;
-name|ithread_remove_handler
+name|swi_remove
 argument_list|(
 name|cx_fast_ih
 argument_list|)

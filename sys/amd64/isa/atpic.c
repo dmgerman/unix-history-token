@@ -2219,12 +2219,12 @@ index|]
 operator|.
 name|at_intsrc
 expr_stmt|;
-comment|/* 	 * If we don't have an ithread, see if this is a spurious 	 * interrupt. 	 */
+comment|/* 	 * If we don't have an event, see if this is a spurious 	 * interrupt. 	 */
 if|if
 condition|(
 name|isrc
 operator|->
-name|is_ithread
+name|is_event
 operator|==
 name|NULL
 operator|&&

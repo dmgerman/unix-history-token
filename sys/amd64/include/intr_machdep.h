@@ -269,9 +269,9 @@ modifier|*
 name|is_pic
 decl_stmt|;
 name|struct
-name|ithd
+name|intr_event
 modifier|*
-name|is_ithread
+name|is_event
 decl_stmt|;
 name|u_long
 modifier|*
