@@ -303,6 +303,10 @@ define|#
 directive|define
 name|IWI_FLAG_SCANNING
 value|(1<< 1)
+define|#
+directive|define
+name|IWI_FLAG_INIT_LOCKED
+value|(1<< 2)
 name|struct
 name|iwi_cmd_ring
 name|cmdq
@@ -408,26 +412,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|IWI_LOCK
-parameter_list|(
-name|sc
-parameter_list|)
-value|mtx_lock(&(sc)->sc_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWI_UNLOCK
-parameter_list|(
-name|sc
-parameter_list|)
-value|mtx_unlock(&(sc)->sc_mtx)
-end_define
 
 end_unit
 
