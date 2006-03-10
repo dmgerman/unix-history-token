@@ -1266,13 +1266,8 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|" LBA=%llu"
+literal|" LBA=%ju"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 name|request
 operator|->
 name|u
@@ -1612,7 +1607,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * we have the HW locks, so end the tranaction for this request 	 * if it finishes immediately otherwise wait for next interrupt 	 */
+comment|/* 	 * we have the HW locks, so end the transaction for this request 	 * if it finishes immediately otherwise wait for next interrupt 	 */
 if|if
 condition|(
 name|ch
@@ -3437,9 +3432,12 @@ name|printf
 argument_list|(
 literal|"ata%d-%s: pio=%s wdma=%s udma=%s cable=%s wire\n"
 argument_list|,
+name|device_get_unit
+argument_list|(
 name|ch
 operator|->
-name|unit
+name|dev
+argument_list|)
 argument_list|,
 name|atadev
 operator|->
@@ -4765,6 +4763,24 @@ name|ATA_SA300
 case|:
 return|return
 literal|"SATA300"
+return|;
+case|case
+name|ATA_USB
+case|:
+return|return
+literal|"USB"
+return|;
+case|case
+name|ATA_USB1
+case|:
+return|return
+literal|"USB1"
+return|;
+case|case
+name|ATA_USB2
+case|:
+return|return
+literal|"USB2"
 return|;
 default|default:
 if|if

@@ -2006,14 +2006,8 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"%lluMB<%s%s %.8s> at ata%d-%s %s%s\n"
+literal|"%juMB<%s%s %.8s> at ata%d-%s %s%s\n"
 argument_list|,
-call|(
-name|unsigned
-name|long
-name|long
-call|)
-argument_list|(
 name|adp
 operator|->
 name|total_secs
@@ -2023,7 +2017,6 @@ literal|1048576
 operator|/
 name|DEV_BSIZE
 operator|)
-argument_list|)
 argument_list|,
 name|vendor
 argument_list|,
@@ -2083,24 +2076,13 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"%llu sectors [%lldC/%dH/%dS] "
+literal|"%ju sectors [%juC/%dH/%dS] "
 literal|"%d sectors/interrupt %d depth queue\n"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 name|adp
 operator|->
 name|total_secs
 argument_list|,
-call|(
-name|unsigned
-name|long
-name|long
-call|)
-argument_list|(
 name|adp
 operator|->
 name|total_secs
@@ -2114,7 +2096,6 @@ name|adp
 operator|->
 name|sectors
 operator|)
-argument_list|)
 argument_list|,
 name|adp
 operator|->

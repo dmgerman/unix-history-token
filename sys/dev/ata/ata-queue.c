@@ -1383,9 +1383,11 @@ operator|&
 name|ATA_R_TIMEOUT
 condition|)
 block|{
-comment|/* 	 * if reinit succeeds and the device doesn't get detached and 	 * there are retries left we reinject this request 	 */
+comment|/* 	 * if the channel is still present and 	 * reinit succeeds and 	 * the device doesn't get detached and 	 * there are retries left we reinject this request 	 */
 if|if
 condition|(
+name|ch
+operator|&&
 operator|!
 name|ata_reinit
 argument_list|(
@@ -1466,13 +1468,8 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|" LBA=%llu"
+literal|" LBA=%ju"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 name|request
 operator|->
 name|u
@@ -1582,13 +1579,8 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|" LBA=%llu"
+literal|" LBA=%ju"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 name|request
 operator|->
 name|u
@@ -1613,7 +1605,18 @@ name|EIO
 expr_stmt|;
 block|}
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+operator|(
+name|request
+operator|->
+name|flags
+operator|&
+name|ATA_R_ATAPI
+operator|)
+condition|)
 block|{
 comment|/* if this is a soft ECC error warn about it */
 comment|/* XXX SOS we could do WARF here */
@@ -1665,13 +1668,8 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|" LBA=%llu"
+literal|" LBA=%ju"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 name|request
 operator|->
 name|u
@@ -1744,13 +1742,8 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|" LBA=%llu"
+literal|" LBA=%ju"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 name|request
 operator|->
 name|u
@@ -1895,13 +1888,8 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|" LBA=%llu"
+literal|" LBA=%ju"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 name|request
 operator|->
 name|u
@@ -2574,6 +2562,11 @@ operator|->
 name|done
 argument_list|)
 expr_stmt|;
+comment|/* only call ata_start if channel is present */
+if|if
+condition|(
+name|ch
+condition|)
 name|ata_start
 argument_list|(
 name|ch
@@ -3667,6 +3660,14 @@ case|:
 return|return
 operator|(
 literal|"SEND_CUE_SHEET"
+operator|)
+return|;
+case|case
+literal|0x96
+case|:
+return|return
+operator|(
+literal|"SERVICE_ACTION_IN"
 operator|)
 return|;
 case|case

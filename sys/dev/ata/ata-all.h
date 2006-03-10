@@ -2918,6 +2918,15 @@ end_function_decl
 
 begin_decl_stmt
 specifier|extern
+name|struct
+name|intr_config_hook
+modifier|*
+name|ata_delayed_attach
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|devclass_t
 name|ata_devclass
 decl_stmt|;
