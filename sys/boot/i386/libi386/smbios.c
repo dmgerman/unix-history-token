@@ -996,6 +996,7 @@ condition|)
 name|f
 operator|++
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|idp
@@ -1008,6 +1009,8 @@ condition|)
 name|z
 operator|++
 expr_stmt|;
+else|else
+break|break;
 block|}
 if|if
 condition|(
