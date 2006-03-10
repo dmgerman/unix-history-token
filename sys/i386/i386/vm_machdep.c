@@ -1661,6 +1661,8 @@ operator|->
 name|tf_esp
 operator|=
 operator|(
+operator|(
+operator|(
 name|int
 operator|)
 name|stack
@@ -1671,7 +1673,14 @@ name|stack
 operator|->
 name|ss_size
 operator|-
-literal|16
+literal|4
+operator|)
+operator|&
+operator|~
+literal|0x0f
+operator|)
+operator|-
+literal|4
 expr_stmt|;
 name|td
 operator|->
