@@ -13482,7 +13482,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"firmware image too short: %d bytes\n"
+literal|"firmware image too short: %zu bytes\n"
 argument_list|,
 name|fp
 operator|->
@@ -13543,7 +13543,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"firmware image too short: %d bytes\n"
+literal|"firmware image too short: %zu bytes\n"
 argument_list|,
 name|fp
 operator|->
