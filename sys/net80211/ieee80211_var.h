@@ -248,6 +248,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_HWBMISS_DEFAULT
+value|7
+end_define
+
+begin_comment
+comment|/* h/w bmiss threshold (beacons) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_PS_SLEEP
 value|0x1
 end_define

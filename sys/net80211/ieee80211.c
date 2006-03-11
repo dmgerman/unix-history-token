@@ -759,14 +759,6 @@ operator|->
 name|ic_curmode
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ic
-operator|->
-name|ic_bintval
-operator|==
-literal|0
-condition|)
 name|ic
 operator|->
 name|ic_bintval
@@ -777,9 +769,8 @@ name|ic
 operator|->
 name|ic_bmissthreshold
 operator|=
-literal|7
+name|IEEE80211_HWBMISS_DEFAULT
 expr_stmt|;
-comment|/* default 7 beacons */
 name|ic
 operator|->
 name|ic_dtim_period
@@ -793,14 +784,6 @@ argument_list|,
 literal|"beacon"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ic
-operator|->
-name|ic_lintval
-operator|==
-literal|0
-condition|)
 name|ic
 operator|->
 name|ic_lintval
