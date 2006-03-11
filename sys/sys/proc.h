@@ -1903,9 +1903,9 @@ name|rux_su
 decl_stmt|;
 comment|/* (c) Previous sys time in usec. */
 name|u_int64_t
-name|rux_iu
+name|rux_tu
 decl_stmt|;
-comment|/* (c) Previous intr time in usec. */
+comment|/* (c) Previous total time in usec. */
 block|}
 struct|;
 end_struct
