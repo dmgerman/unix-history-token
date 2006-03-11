@@ -404,6 +404,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VAR_DIST_KERNEL
+value|"distKernel"
+end_define
+
+begin_define
+define|#
+directive|define
 name|VAR_DEDICATE_DISK
 value|"dedicateDisk"
 end_define
@@ -679,6 +686,13 @@ define|#
 directive|define
 name|VAR_NAMESERVER
 value|"nameserver"
+end_define
+
+begin_define
+define|#
+directive|define
+name|VAR_NCPUS
+value|"ncpus"
 end_define
 
 begin_define
@@ -2130,6 +2144,18 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|unsigned
+name|int
+name|KernelDists
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Which kernel dists we want			*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|BootMgr
 decl_stmt|;
@@ -2628,6 +2654,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|DMenu
+name|MenuKernelDistributions
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Kernel distribution menu			*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
 name|MenuXOrg
 decl_stmt|;
 end_decl_stmt
@@ -2759,6 +2796,17 @@ begin_comment
 comment|/* Which name we were started as */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|NCpus
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* # cpus on machine */
+end_comment
+
 begin_comment
 comment|/* Important chunks. */
 end_comment
@@ -2865,6 +2913,20 @@ end_function_decl
 begin_comment
 comment|/*** Prototypes ***/
 end_comment
+
+begin_comment
+comment|/* acpi.c */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|acpi_detect
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* anonFTP.c */
@@ -3981,6 +4043,18 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
+name|distSetKernel
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
 name|distExtractAll
 parameter_list|(
 name|dialogMenuItem
@@ -4851,6 +4925,21 @@ parameter_list|(
 name|dialogMenuItem
 modifier|*
 name|self
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|installFixupKernel
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|,
+name|int
+name|dists
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5969,6 +6058,20 @@ parameter_list|(
 name|dialogMenuItem
 modifier|*
 name|self
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* mptable.c */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|biosmptable_detect
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
