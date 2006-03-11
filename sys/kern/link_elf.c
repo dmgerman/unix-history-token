@@ -4970,6 +4970,31 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* If we don't have a hash, bail. */
+if|if
+condition|(
+name|ef
+operator|->
+name|buckets
+operator|==
+name|NULL
+operator|||
+name|ef
+operator|->
+name|nbuckets
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"link_elf_lookup_symbol: missing symbol hash table\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|ENOENT
+return|;
+block|}
 comment|/* First, search hashed global symbols */
 name|hash
 operator|=
