@@ -48,26 +48,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_struct_decl
-struct_decl|struct
-name|disk
-struct_decl|;
-end_struct_decl
-
-begin_function_decl
-name|struct
-name|disk
-modifier|*
-name|disk_enumerate
-parameter_list|(
-name|struct
-name|disk
-modifier|*
-name|disk
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function_decl
 name|void
 name|disk_err
