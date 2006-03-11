@@ -6479,6 +6479,8 @@ name|mp
 operator|->
 name|mnt_kern_flag
 operator||=
+name|MNTK_SUSPEND2
+operator||
 name|MNTK_SUSPENDED
 expr_stmt|;
 name|MNT_IUNLOCK

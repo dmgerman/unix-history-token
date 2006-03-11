@@ -1219,6 +1219,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MNTK_SUSPEND2
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* block secondary writes */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MNTK_SUSPENDED
 value|0x10000000
 end_define

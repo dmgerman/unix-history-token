@@ -4410,7 +4410,11 @@ name|mp
 operator|->
 name|mnt_kern_flag
 operator|&
+operator|(
 name|MNTK_SUSPENDED
+operator||
+name|MNTK_SUSPEND2
+operator|)
 operator|)
 operator|==
 literal|0
@@ -4850,6 +4854,8 @@ operator|&=
 operator|~
 operator|(
 name|MNTK_SUSPEND
+operator||
+name|MNTK_SUSPEND2
 operator||
 name|MNTK_SUSPENDED
 operator|)
