@@ -3656,6 +3656,9 @@ decl_stmt|;
 name|int
 name|remaining
 decl_stmt|;
+name|int
+name|vfslocked
+decl_stmt|;
 name|td
 operator|=
 name|curthread
@@ -3798,6 +3801,13 @@ name|td
 argument_list|)
 condition|)
 continue|continue;
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 name|softdep_process_worklist
 argument_list|(
 name|mp
@@ -3813,6 +3823,11 @@ name|mp
 argument_list|)
 operator|->
 name|softdep_on_worklist
+expr_stmt|;
+name|VFS_UNLOCK_GIANT
+argument_list|(
+name|vfslocked
+argument_list|)
 expr_stmt|;
 name|mtx_lock
 argument_list|(
