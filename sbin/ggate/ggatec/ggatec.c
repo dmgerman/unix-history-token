@@ -2092,6 +2092,7 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"%s%u\n"
@@ -2103,6 +2104,12 @@ operator|.
 name|gctl_unit
 argument_list|)
 expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+block|}
 name|unit
 operator|=
 name|ggioc
