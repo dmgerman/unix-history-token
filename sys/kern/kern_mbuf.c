@@ -1721,6 +1721,8 @@ operator|*
 operator|)
 name|mem
 expr_stmt|;
+if|if
+condition|(
 name|uma_zalloc_arg
 argument_list|(
 name|zone_clust
@@ -1729,9 +1731,9 @@ name|m
 argument_list|,
 name|how
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|==
+name|NULL
+operator|||
 name|m
 operator|->
 name|m_ext
