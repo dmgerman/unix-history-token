@@ -2131,16 +2131,6 @@ name|V_WAIT
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Wait for all dependency processing to finish after the sync 	 * triggered by vfs_write_suspend(). 	 */
-name|error
-operator|=
-name|softdep_waitidle
-argument_list|(
-name|vp
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
 name|vn_lock
 argument_list|(
 name|vp
@@ -2152,13 +2142,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-goto|goto
-name|out1
-goto|;
 if|if
 condition|(
 name|collectsnapstats
