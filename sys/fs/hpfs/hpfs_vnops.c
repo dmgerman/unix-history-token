@@ -2875,6 +2875,12 @@ name|h_no
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Destroy the vm object and flush associated pages. 	 */
+name|vnode_destroy_vobject
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|vfs_hash_remove
 argument_list|(
 name|vp
@@ -2893,11 +2899,6 @@ operator|->
 name|v_data
 operator|=
 name|NULL
-expr_stmt|;
-name|vnode_destroy_vobject
-argument_list|(
-name|vp
-argument_list|)
 expr_stmt|;
 name|FREE
 argument_list|(

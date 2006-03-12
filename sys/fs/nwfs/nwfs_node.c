@@ -1236,6 +1236,12 @@ name|vp
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Destroy the vm object and flush associated pages. 	 */
+name|vnode_destroy_vobject
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|np
@@ -1343,11 +1349,6 @@ operator|->
 name|v_data
 operator|=
 name|NULL
-expr_stmt|;
-name|vnode_destroy_vobject
-argument_list|(
-name|vp
-argument_list|)
 expr_stmt|;
 name|FREE
 argument_list|(
