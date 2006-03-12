@@ -22,10 +22,6 @@ file|<sys/types.h>
 end_include
 
 begin_comment
-comment|/*  * Note: SMALL_KERNEL might be used to shrink these, right now I  * do not see the point, as my kernel did not grow appreciably when  * I switched to these from other inline code.  This may have to be  * revisited when/if these functions become more prevalent in the  * kernel.  */
-end_comment
-
-begin_comment
 comment|/* Convenience */
 end_comment
 
