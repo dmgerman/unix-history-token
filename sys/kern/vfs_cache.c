@@ -3938,9 +3938,9 @@ if|if
 condition|(
 name|vp
 operator|->
-name|v_mount
-operator|==
-name|NULL
+name|v_iflag
+operator|&
+name|VI_DOOMED
 condition|)
 block|{
 comment|/* forced unmount */
