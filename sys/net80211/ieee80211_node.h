@@ -663,6 +663,19 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ieee80211_probe_curchan
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ieee80211_create_ibss
 parameter_list|(
 name|struct

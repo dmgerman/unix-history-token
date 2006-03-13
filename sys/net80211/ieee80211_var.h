@@ -1308,6 +1308,17 @@ begin_comment
 comment|/* CONF: do bmiss in s/w */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_FEXT_PROBECHAN
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* CONF: probe passive channel*/
+end_comment
+
 begin_comment
 comment|/* ic_caps */
 end_comment
