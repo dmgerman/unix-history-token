@@ -99,6 +99,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|vop_getwritemount_t
+name|dead_getwritemount
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|vop_vector
 name|dead_vnodeops
@@ -134,6 +141,11 @@ operator|.
 name|vop_getattr
 operator|=
 name|VOP_EBADF
+block|,
+operator|.
+name|vop_getwritemount
+operator|=
+name|dead_getwritemount
 block|,
 operator|.
 name|vop_inactive
@@ -233,6 +245,41 @@ name|dead_write
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|dead_getwritemount
+parameter_list|(
+name|ap
+parameter_list|)
+name|struct
+name|vop_getwritemount_args
+comment|/* { 		struct vnode *a_vp; 		struct mount **a_mpp; 	} */
+modifier|*
+name|ap
+decl_stmt|;
+block|{
+operator|*
+operator|(
+name|ap
+operator|->
+name|a_mpp
+operator|)
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Trivial lookup routine that always fails.  */
