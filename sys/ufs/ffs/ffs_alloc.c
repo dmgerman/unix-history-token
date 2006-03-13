@@ -7172,7 +7172,10 @@ name|softdep_setup_blkmapdep
 argument_list|(
 name|bp
 argument_list|,
-name|fs
+name|UFSTOVFS
+argument_list|(
+name|ump
+argument_list|)
 argument_list|,
 name|bprev
 argument_list|)
@@ -7798,7 +7801,10 @@ name|softdep_setup_blkmapdep
 argument_list|(
 name|bp
 argument_list|,
-name|fs
+name|UFSTOVFS
+argument_list|(
+name|ump
+argument_list|)
 argument_list|,
 name|blkno
 argument_list|)
@@ -8133,7 +8139,10 @@ name|softdep_setup_blkmapdep
 argument_list|(
 name|bp
 argument_list|,
-name|fs
+name|UFSTOVFS
+argument_list|(
+name|ump
+argument_list|)
 argument_list|,
 name|blkno
 argument_list|)
