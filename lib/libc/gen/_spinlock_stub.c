@@ -56,7 +56,7 @@ end_expr_stmt
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|_spinlock_stub
+name|_spinunlock_stub
 argument_list|,
 name|_spinunlock
 argument_list|)
