@@ -447,6 +447,9 @@ modifier|*
 name|bo
 decl_stmt|;
 name|int
+name|vfslocked
+decl_stmt|;
+name|int
 name|error
 decl_stmt|;
 name|g_topology_assert
@@ -538,6 +541,15 @@ name|error
 operator|)
 return|;
 block|}
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
+argument_list|(
+name|vp
+operator|->
+name|v_mount
+argument_list|)
+expr_stmt|;
 name|vnode_create_vobject_off
 argument_list|(
 name|vp
@@ -547,6 +559,11 @@ operator|->
 name|mediasize
 argument_list|,
 name|curthread
+argument_list|)
+expr_stmt|;
+name|VFS_UNLOCK_GIANT
+argument_list|(
+name|vfslocked
 argument_list|)
 expr_stmt|;
 operator|*
