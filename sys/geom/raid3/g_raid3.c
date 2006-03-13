@@ -8598,6 +8598,9 @@ operator|=
 operator|(
 name|int
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|bp
 operator|->
 name|bio_caller1
@@ -11237,6 +11240,9 @@ operator|=
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|n
 expr_stmt|;
