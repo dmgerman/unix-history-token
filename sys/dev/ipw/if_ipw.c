@@ -1749,31 +1749,7 @@ index|]
 operator|=
 name|ipw_rateset_11b
 expr_stmt|;
-comment|/* set supported .11b channels (read from EEPROM) */
-if|if
-condition|(
-operator|(
-name|val
-operator|=
-name|ipw_read_prom_word
-argument_list|(
-name|sc
-argument_list|,
-name|IPW_EEPROM_CHANNEL_LIST
-argument_list|)
-operator|)
-operator|==
-literal|0
-condition|)
-name|val
-operator|=
-literal|0x7ff
-expr_stmt|;
-comment|/* default to channels 1-11 */
-name|val
-operator|<<=
-literal|1
-expr_stmt|;
+comment|/* set supported .11b channels */
 for|for
 control|(
 name|i
@@ -1782,22 +1758,11 @@ literal|1
 init|;
 name|i
 operator|<
-literal|16
+literal|14
 condition|;
 name|i
 operator|++
 control|)
-block|{
-if|if
-condition|(
-name|val
-operator|&
-operator|(
-literal|1
-operator|<<
-name|i
-operator|)
-condition|)
 block|{
 name|ic
 operator|->
@@ -1826,7 +1791,6 @@ name|ic_flags
 operator|=
 name|IEEE80211_CHAN_B
 expr_stmt|;
-block|}
 block|}
 comment|/* check support for radio transmitter switch in EEPROM */
 if|if
