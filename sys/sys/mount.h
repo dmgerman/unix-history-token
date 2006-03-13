@@ -437,7 +437,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * Structure per mounted filesystem.  Each mounted filesystem has an  * array of operations and an instance record.  The filesystems are  * put on a doubly linked list.  *  */
+comment|/*  * Structure per mounted filesystem.  Each mounted filesystem has an  * array of operations and an instance record.  The filesystems are  * put on a doubly linked list.  *  * Lock reference:  * 	m - mountlist_mtx  *	i - interlock  *	l - mnt_lock  *  * Unmarked fields are considered stable as long as a ref is held.  *  */
 end_comment
 
 begin_struct
@@ -450,7 +450,7 @@ argument|mount
 argument_list|)
 name|mnt_list
 expr_stmt|;
-comment|/* mount list */
+comment|/* (m) mount list */
 name|struct
 name|vfsops
 modifier|*
@@ -479,7 +479,7 @@ name|struct
 name|vnodelst
 name|mnt_nvnodelist
 decl_stmt|;
-comment|/* list of vnodes this mount */
+comment|/* (i) list of vnodes */
 name|struct
 name|lock
 name|mnt_lock
@@ -493,7 +493,7 @@ comment|/* mount structure interlock */
 name|int
 name|mnt_writeopcount
 decl_stmt|;
-comment|/* write syscalls in progress */
+comment|/* (i) write syscalls pending */
 name|u_int
 name|mnt_flag
 decl_stmt|;
@@ -513,7 +513,7 @@ comment|/* new options passed to fs */
 name|int
 name|mnt_kern_flag
 decl_stmt|;
-comment|/* kernel only flags */
+comment|/* (i) kernel only flags */
 name|int
 name|mnt_maxsymlinklen
 decl_stmt|;
@@ -563,7 +563,7 @@ comment|/* MAC label for the fs */
 name|int
 name|mnt_nvnodelistsize
 decl_stmt|;
-comment|/* # of vnodes on this mount */
+comment|/* (i) # of vnodes */
 name|u_int
 name|mnt_hashseed
 decl_stmt|;
@@ -580,6 +580,18 @@ name|int
 name|mnt_holdcntwaiters
 decl_stmt|;
 comment|/* waits on hold count */
+name|int
+name|mnt_secondary_writes
+decl_stmt|;
+comment|/* (i) # of secondary writes */
+name|int
+name|mnt_secondary_accwrites
+decl_stmt|;
+comment|/* (i) secondary wr. starts */
+name|int
+name|mnt_ref
+decl_stmt|;
+comment|/* (i) Reference count */
 block|}
 struct|;
 end_struct
@@ -696,6 +708,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|MNT_ITRYLOCK
+parameter_list|(
+name|mp
+parameter_list|)
+value|mtx_trylock(&(mp)->mnt_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MNT_IUNLOCK
 parameter_list|(
 name|mp
@@ -711,6 +733,26 @@ parameter_list|(
 name|mp
 parameter_list|)
 value|(&(mp)->mnt_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MNT_REF
+parameter_list|(
+name|mp
+parameter_list|)
+value|(mp)->mnt_ref++
+end_define
+
+begin_define
+define|#
+directive|define
+name|MNT_REL
+parameter_list|(
+name|mp
+parameter_list|)
+value|do {						\ 	(mp)->mnt_ref--;						\ 	if ((mp)->mnt_ref == 0)						\ 		wakeup((mp));						\ } while (0)
 end_define
 
 begin_endif
@@ -1181,6 +1223,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MNTK_SUSPEND2
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* block secondary writes */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MNTK_SUSPENDED
 value|0x10000000
 end_define
@@ -1298,6 +1351,17 @@ end_define
 
 begin_comment
 comment|/* push data not written by filesystem syncer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNT_SUSPEND
+value|4
+end_define
+
+begin_comment
+comment|/* Suspend file system after sync */
 end_comment
 
 begin_comment
@@ -3104,21 +3168,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|vfs_lock
-parameter_list|(
-name|struct
-name|mount
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* lock a vfs */
-end_comment
-
-begin_function_decl
 name|void
 name|vfs_msync
 parameter_list|(
@@ -3130,21 +3179,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function_decl
-name|void
-name|vfs_unlock
-parameter_list|(
-name|struct
-name|mount
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* unlock a vfs */
-end_comment
 
 begin_function_decl
 name|int
@@ -3273,6 +3307,28 @@ specifier|const
 name|char
 modifier|*
 name|from
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vfs_ref
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vfs_rel
+parameter_list|(
+name|struct
+name|mount
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3429,32 +3485,6 @@ name|vfs_sysctl_t
 name|vfs_stdsysctl
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX - these should be indirect functions!!! */
-end_comment
-
-begin_function_decl
-name|int
-name|softdep_fsync
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|softdep_process_worklist
-parameter_list|(
-name|struct
-name|mount
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_else
 else|#
