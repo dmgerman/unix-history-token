@@ -1659,6 +1659,36 @@ define|\
 value|__asm__(".section .gnu.warning." #sym);	\ 	__asm__(".asciz \"" msg "\"");	\ 	__asm__(".previous")
 end_define
 
+begin_define
+define|#
+directive|define
+name|__sym_compat
+parameter_list|(
+name|sym
+parameter_list|,
+name|impl
+parameter_list|,
+name|verid
+parameter_list|)
+define|\
+value|__asm__(".symver " #impl ", " #sym "@" #verid)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__sym_default
+parameter_list|(
+name|sym
+parameter_list|,
+name|impl
+parameter_list|,
+name|verid
+parameter_list|)
+define|\
+value|__asm__(".symver " #impl ", " #sym "@@" #verid)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1688,6 +1718,36 @@ name|msg
 parameter_list|)
 define|\
 value|__asm__(".section .gnu.warning.sym"); \ 	__asm__(".asciz \"msg\"");	\ 	__asm__(".previous")
+end_define
+
+begin_define
+define|#
+directive|define
+name|__sym_compat
+parameter_list|(
+name|sym
+parameter_list|,
+name|impl
+parameter_list|,
+name|verid
+parameter_list|)
+define|\
+value|__asm__(".symver impl, sym@verid")
+end_define
+
+begin_define
+define|#
+directive|define
+name|__sym_default
+parameter_list|(
+name|impl
+parameter_list|,
+name|sym
+parameter_list|,
+name|verid
+parameter_list|)
+define|\
+value|__asm__(".symver impl, sym@@verid")
 end_define
 
 begin_endif
