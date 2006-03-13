@@ -1057,7 +1057,7 @@ literal|0x68
 expr_stmt|;
 break|break;
 case|case
-literal|0227
+literal|0x227
 case|:
 comment|/* WWW Refresh */
 name|val
