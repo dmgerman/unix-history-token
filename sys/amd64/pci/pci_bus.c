@@ -1239,7 +1239,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|devclass_t
-name|pcib_devclass
+name|hostb_devclass
 decl_stmt|;
 end_decl_stmt
 
@@ -1266,7 +1266,7 @@ name|legacy
 argument_list|,
 name|legacy_pcib_driver
 argument_list|,
-name|pcib_devclass
+name|hostb_devclass
 argument_list|,
 literal|0
 argument_list|,
