@@ -123,6 +123,30 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|LT10_COMPAT_PRIVATE
+argument_list|(
+name|_spinlock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LT10_COMPAT_PRIVATE
+argument_list|(
+name|_spinlock_debug
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LT10_COMPAT_PRIVATE
+argument_list|(
+name|_spinunlock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * These are for compatability only.  Spinlocks of this type  * are deprecated.  */
 end_comment

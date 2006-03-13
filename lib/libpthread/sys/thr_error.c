@@ -34,6 +34,14 @@ name|errno
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|LT10_COMPAT_DEFAULT
+argument_list|(
+name|__error
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|int
 modifier|*

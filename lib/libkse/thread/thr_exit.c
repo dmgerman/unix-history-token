@@ -51,6 +51,22 @@ directive|include
 file|"thr_private.h"
 end_include
 
+begin_expr_stmt
+name|LT10_COMPAT_PRIVATE
+argument_list|(
+name|_pthread_exit
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LT10_COMPAT_DEFAULT
+argument_list|(
+name|pthread_exit
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function_decl
 name|void
 name|_pthread_exit

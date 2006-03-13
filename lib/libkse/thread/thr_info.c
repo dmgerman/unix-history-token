@@ -72,6 +72,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_expr_stmt
+name|LT10_COMPAT_PRIVATE
+argument_list|(
+name|_pthread_set_name_np
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LT10_COMPAT_DEFAULT
+argument_list|(
+name|pthread_set_name_np
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function_decl
 specifier|static
 name|void
