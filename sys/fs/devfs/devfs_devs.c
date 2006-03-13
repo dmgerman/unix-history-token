@@ -1159,6 +1159,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|vhold
+argument_list|(
+name|de
+operator|->
+name|de_vnode
+argument_list|)
+expr_stmt|;
 name|de
 operator|->
 name|de_vnode
@@ -1168,6 +1175,13 @@ operator|=
 name|NULL
 expr_stmt|;
 name|vgone
+argument_list|(
+name|de
+operator|->
+name|de_vnode
+argument_list|)
+expr_stmt|;
+name|vdrop
 argument_list|(
 name|de
 operator|->
