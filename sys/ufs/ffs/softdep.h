@@ -192,6 +192,12 @@ begin_struct
 struct|struct
 name|worklist
 block|{
+name|struct
+name|mount
+modifier|*
+name|wk_mp
+decl_stmt|;
+comment|/* Mount we live in */
 name|LIST_ENTRY
 argument_list|(
 argument|worklist
@@ -241,16 +247,6 @@ parameter_list|(
 name|wk
 parameter_list|)
 value|((struct inodedep *)(wk))
-end_define
-
-begin_define
-define|#
-directive|define
-name|WK_NEWBLK
-parameter_list|(
-name|wk
-parameter_list|)
-value|((struct newblk *)(wk))
 end_define
 
 begin_define
@@ -479,12 +475,6 @@ argument_list|)
 name|pd_hash
 expr_stmt|;
 comment|/* hashed lookup */
-name|struct
-name|mount
-modifier|*
-name|pd_mnt
-decl_stmt|;
-comment|/* associated mount point */
 name|ino_t
 name|pd_ino
 decl_stmt|;
@@ -939,12 +929,6 @@ directive|define
 name|ff_state
 value|ff_list.wk_state
 comment|/* owning user; should be uid_t */
-name|struct
-name|mount
-modifier|*
-name|ff_mnt
-decl_stmt|;
-comment|/* associated mount point */
 name|ufs2_daddr_t
 name|ff_blkno
 decl_stmt|;
@@ -993,12 +977,6 @@ modifier|*
 name|fb_devvp
 decl_stmt|;
 comment|/* filesystem device vnode */
-name|struct
-name|mount
-modifier|*
-name|fb_mnt
-decl_stmt|;
-comment|/* associated mount point */
 name|long
 name|fb_oldextsize
 decl_stmt|;
@@ -1063,12 +1041,6 @@ modifier|*
 name|fx_devvp
 decl_stmt|;
 comment|/* filesystem device vnode */
-name|struct
-name|mount
-modifier|*
-name|fx_mnt
-decl_stmt|;
-comment|/* associated mount point */
 block|}
 struct|;
 end_struct
@@ -1221,12 +1193,6 @@ argument_list|)
 name|dm_next
 expr_stmt|;
 comment|/* pagedep's list of dirrem's */
-name|struct
-name|mount
-modifier|*
-name|dm_mnt
-decl_stmt|;
-comment|/* associated mount point */
 name|ino_t
 name|dm_oldinum
 decl_stmt|;
