@@ -1047,10 +1047,10 @@ modifier|*
 name|regs
 decl_stmt|;
 name|int
-name|oonstack
+name|sig
 decl_stmt|;
 name|int
-name|sig
+name|oonstack
 decl_stmt|;
 name|td
 operator|=

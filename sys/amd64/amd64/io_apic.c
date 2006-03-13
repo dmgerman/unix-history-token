@@ -202,7 +202,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * I/O APIC interrupt source driver.  Each pin is assigned an IRQ cookie  * as laid out in the ACPI System Interrupt number model where each I/O  * APIC has a contiguous chunk of the System Interrupt address space.  * We assume that IRQs 1 - 15 behave like ISA IRQs and that all other  * IRQs behave as PCI IRQs by default.  We also assume that the pin for  * IRQ 0 is actually an ExtINT pin.  The apic enumerators override the  * configuration of individual pins as indicated by their tables.  */
+comment|/*  * I/O APIC interrupt source driver.  Each pin is assigned an IRQ cookie  * as laid out in the ACPI System Interrupt number model where each I/O  * APIC has a contiguous chunk of the System Interrupt address space.  * We assume that IRQs 1 - 15 behave like ISA IRQs and that all other  * IRQs behave as PCI IRQs by default.  We also assume that the pin for  * IRQ 0 is actually an ExtINT pin.  The apic enumerators override the  * configuration of individual pins as indicated by their tables.  *  * Documentation for the I/O APIC: "82093AA I/O Advanced Programmable  * Interrupt Controller (IOAPIC)", May 1996, Intel Corp.  * ftp://download.intel.com/design/chipsets/datashts/29056601.pdf  */
 end_comment
 
 begin_struct
