@@ -320,6 +320,16 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+name|ASSERT_VOP_LOCKED
+argument_list|(
+name|lowervp
+argument_list|,
+literal|"null_hashget"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Find hash base, and then search the (two-way) linked 	 * list looking for a null_node structure which is referencing 	 * the lower vnode.  If found, the increment the null_node 	 * reference count (but NOT the lower vnode's VREF counter). 	 */
 name|hd
 operator|=
@@ -328,8 +338,6 @@ argument_list|(
 name|lowervp
 argument_list|)
 expr_stmt|;
-name|loop
-label|:
 name|mtx_lock
 argument_list|(
 operator|&
@@ -375,51 +383,12 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/* 			 * If the nullfs node is being recycled we have 			 * to wait until it finishes prior to scanning 			 * again. 			 */
 name|mtx_unlock
 argument_list|(
 operator|&
 name|null_hashmtx
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|vp
-operator|->
-name|v_iflag
-operator|&
-name|VI_DOOMED
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* Wait for recycling to finish. */
-name|VOP_LOCK
-argument_list|(
-name|vp
-argument_list|,
-name|LK_EXCLUSIVE
-operator||
-name|LK_INTERLOCK
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
-name|VOP_UNLOCK
-argument_list|(
-name|vp
-argument_list|,
-literal|0
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
-goto|goto
-name|loop
-goto|;
-block|}
 comment|/* 			 * We need to clear the OWEINACT flag here as this 			 * may lead vget() to try to lock our vnode which 			 * is already locked via lowervp. 			 */
 name|vp
 operator|->
@@ -428,6 +397,8 @@ operator|&=
 operator|~
 name|VI_OWEINACT
 expr_stmt|;
+name|error
+operator|=
 name|vget
 argument_list|(
 name|vp
@@ -435,6 +406,18 @@ argument_list|,
 name|LK_INTERLOCK
 argument_list|,
 name|td
+argument_list|)
+expr_stmt|;
+comment|/* 			 * Since we have the lower node locked the nullfs 			 * node can not be in the process of recycling.  If 			 * it had been recycled before we grabed the lower 			 * lock it would not have been found on the hash. 			 */
+if|if
+condition|(
+name|error
+condition|)
+name|panic
+argument_list|(
+literal|"null_hashget: vget error %d"
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 return|return
@@ -507,6 +490,9 @@ name|vnode
 modifier|*
 name|ovp
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|hd
 operator|=
 name|NULL_NHASH
@@ -516,8 +502,6 @@ operator|->
 name|null_lowervp
 argument_list|)
 expr_stmt|;
-name|loop
-label|:
 name|mtx_lock
 argument_list|(
 operator|&
@@ -553,6 +537,7 @@ operator|==
 name|mp
 condition|)
 block|{
+comment|/* 			 * See null_hashget for a description of this 			 * operation. 			 */
 name|ovp
 operator|=
 name|NULLTOV
@@ -565,50 +550,12 @@ argument_list|(
 name|ovp
 argument_list|)
 expr_stmt|;
-comment|/* 			 * If the nullfs node is being recycled we have 			 * to wait until it finishes prior to scanning 			 * again. 			 */
 name|mtx_unlock
 argument_list|(
 operator|&
 name|null_hashmtx
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|ovp
-operator|->
-name|v_iflag
-operator|&
-name|VI_DOOMED
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|VOP_LOCK
-argument_list|(
-name|ovp
-argument_list|,
-name|LK_EXCLUSIVE
-operator||
-name|LK_INTERLOCK
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
-name|VOP_UNLOCK
-argument_list|(
-name|ovp
-argument_list|,
-literal|0
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
-goto|goto
-name|loop
-goto|;
-block|}
 name|ovp
 operator|->
 name|v_iflag
@@ -616,7 +563,8 @@ operator|&=
 operator|~
 name|VI_OWEINACT
 expr_stmt|;
-comment|/* see hashget comment */
+name|error
+operator|=
 name|vget
 argument_list|(
 name|ovp
@@ -624,6 +572,17 @@ argument_list|,
 name|LK_INTERLOCK
 argument_list|,
 name|td
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|panic
+argument_list|(
+literal|"null_hashins: vget error %d"
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 return|return
