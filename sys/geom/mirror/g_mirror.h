@@ -239,18 +239,21 @@ name|off_t
 name|ds_offset_done
 decl_stmt|;
 comment|/* Offset of already synchronized 					   region. */
-name|off_t
-name|ds_resync
-decl_stmt|;
-comment|/* Resynchronize from this offset. */
 name|u_int
 name|ds_syncid
 decl_stmt|;
 comment|/* Disk's synchronization ID. */
-name|u_char
-modifier|*
-name|ds_data
+name|u_int
+name|ds_inflight
 decl_stmt|;
+comment|/* Number of in-flight sync requests. */
+name|struct
+name|bio
+modifier|*
+modifier|*
+name|ds_bios
+decl_stmt|;
+comment|/* BIOs for synchronization I/O. */
 block|}
 struct|;
 end_struct
@@ -543,6 +546,10 @@ name|sc_id
 decl_stmt|;
 comment|/* Mirror unique ID. */
 name|struct
+name|sx
+name|sc_lock
+decl_stmt|;
+name|struct
 name|bio_queue_head
 name|sc_queue
 decl_stmt|;
@@ -555,6 +562,21 @@ name|proc
 modifier|*
 name|sc_worker
 decl_stmt|;
+name|struct
+name|bio_queue_head
+name|sc_regular_delayed
+decl_stmt|;
+comment|/* Delayed I/O requests due 						     collision with sync 						     requests. */
+name|struct
+name|bio_queue_head
+name|sc_inflight
+decl_stmt|;
+comment|/* In-flight regular write 					      requests. */
+name|struct
+name|bio_queue_head
+name|sc_sync_delayed
+decl_stmt|;
+comment|/* Delayed sync requests due 						  collision with regular 						  requests. */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
