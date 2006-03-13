@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mutex.h>
 end_include
 
@@ -3653,10 +3659,16 @@ condition|(
 name|vp
 condition|)
 block|{
-name|mtx_lock
+name|int
+name|vfslocked
+decl_stmt|;
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -3664,10 +3676,9 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
 block|}
