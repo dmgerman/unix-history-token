@@ -641,7 +641,7 @@ name|CTR2
 argument_list|(
 name|KTR_GEOM
 argument_list|,
-literal|"g_close_bio(%p): %p"
+literal|"g_clone_bio(%p): %p"
 argument_list|,
 name|bp
 argument_list|,
