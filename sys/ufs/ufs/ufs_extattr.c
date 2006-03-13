@@ -1959,14 +1959,14 @@ name|attr_dvp
 condition|)
 block|{
 comment|/* Should never happen. */
-name|vrele
-argument_list|(
-name|attr_dvp
-argument_list|)
-expr_stmt|;
 name|vput
 argument_list|(
 name|rvp
+argument_list|)
+expr_stmt|;
+name|vrele
+argument_list|(
+name|attr_dvp
 argument_list|)
 expr_stmt|;
 return|return
