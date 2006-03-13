@@ -716,15 +716,7 @@ case|case
 name|ISO_SUSP_CFLAG_ROOT
 case|:
 comment|/* Inserting slash for ROOT */
-comment|/* start over from beginning(?) */
-name|outbuf
-operator|-=
-name|len
-expr_stmt|;
-name|len
-operator|=
-literal|0
-expr_stmt|;
+comment|/* Double slash, nothing really to do here. */
 break|break;
 case|case
 name|ISO_SUSP_CFLAG_VOLROOT
