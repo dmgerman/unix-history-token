@@ -339,7 +339,7 @@ name|LOCORE
 end_ifdef
 
 begin_comment
-comment|/*  * Convenience macros for declaring interrupt entry points.  */
+comment|/*  * Convenience macro for declaring interrupt entry points.  */
 end_comment
 
 begin_define
