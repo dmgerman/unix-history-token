@@ -7271,9 +7271,7 @@ name|printf
 argument_list|(
 literal|", %*D\n"
 argument_list|,
-name|m2
-operator|->
-name|m_len
+name|pdata
 argument_list|,
 operator|(
 name|u_char
