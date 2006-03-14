@@ -1835,6 +1835,29 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|long
+name|long
+name|strtonum
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|long
+name|long
+parameter_list|,
+name|long
+name|long
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Deprecated interfaces, to be removed in FreeBSD 6.0. */
 end_comment
