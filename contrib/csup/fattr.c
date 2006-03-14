@@ -36,18 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<grp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -73,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|"fattr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"idcache.h"
 end_include
 
 begin_include
@@ -417,6 +411,10 @@ operator|=
 name|fa
 expr_stmt|;
 block|}
+comment|/* Initialize the uid/gid lookup cache. */
+name|idcache_init
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -430,6 +428,9 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|idcache_fini
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1640,22 +1641,18 @@ struct|,
 modifier|*
 name|piece
 struct|;
-name|struct
-name|passwd
-modifier|*
-name|pw
-decl_stmt|;
-name|struct
-name|group
-modifier|*
-name|gr
-decl_stmt|;
 name|char
 modifier|*
 name|cp
 decl_stmt|,
 modifier|*
 name|s
+decl_stmt|,
+modifier|*
+name|username
+decl_stmt|,
+modifier|*
+name|groupname
 decl_stmt|;
 name|size_t
 name|len
@@ -1674,11 +1671,11 @@ name|n
 decl_stmt|,
 name|i
 decl_stmt|;
-name|pw
+name|username
 operator|=
 name|NULL
 expr_stmt|;
-name|gr
+name|groupname
 operator|=
 name|NULL
 expr_stmt|;
@@ -1713,7 +1710,6 @@ operator|&=
 operator|~
 name|ignore
 expr_stmt|;
-comment|/* XXX - Use getpwuid_r() and getgrgid_r(). */
 if|if
 condition|(
 name|fa
@@ -1723,9 +1719,9 @@ operator|&
 name|FA_OWNER
 condition|)
 block|{
-name|pw
+name|username
 operator|=
-name|getpwuid
+name|getuserbyid
 argument_list|(
 name|fa
 operator|->
@@ -1734,7 +1730,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pw
+name|username
 operator|==
 name|NULL
 condition|)
@@ -1753,9 +1749,9 @@ operator|&
 name|FA_GROUP
 condition|)
 block|{
-name|gr
+name|groupname
 operator|=
-name|getgrgid
+name|getgroupbyid
 argument_list|(
 name|fa
 operator|->
@@ -1764,7 +1760,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|gr
+name|groupname
 operator|==
 name|NULL
 condition|)
@@ -2196,9 +2192,7 @@ name|vallen
 operator|=
 name|strlen
 argument_list|(
-name|pw
-operator|->
-name|pw_name
+name|username
 argument_list|)
 expr_stmt|;
 name|piece
@@ -2211,9 +2205,7 @@ name|piece
 operator|->
 name|ext
 operator|=
-name|pw
-operator|->
-name|pw_name
+name|username
 expr_stmt|;
 name|len
 operator|+=
@@ -2258,9 +2250,7 @@ name|vallen
 operator|=
 name|strlen
 argument_list|(
-name|gr
-operator|->
-name|gr_name
+name|groupname
 argument_list|)
 expr_stmt|;
 name|piece
@@ -2273,9 +2263,7 @@ name|piece
 operator|->
 name|ext
 operator|=
-name|gr
-operator|->
-name|gr_name
+name|groupname
 expr_stmt|;
 name|len
 operator|+=
@@ -2988,16 +2976,6 @@ modifier|*
 name|attr
 parameter_list|)
 block|{
-name|struct
-name|passwd
-modifier|*
-name|pw
-decl_stmt|;
-name|struct
-name|group
-modifier|*
-name|gr
-decl_stmt|;
 name|char
 modifier|*
 name|attrend
@@ -3014,6 +2992,9 @@ decl_stmt|;
 name|unsigned
 name|long
 name|attrlen
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|mode_t
 name|modemask
@@ -3293,29 +3274,22 @@ break|break;
 case|case
 name|FA_OWNER
 case|:
-comment|/* 		 * XXX - We need to use getpwnam_r() since getpwnam() 		 * is not thread-safe, and we also need to use a cache. 		 */
-name|pw
+name|error
 operator|=
-name|getpwnam
+name|getuidbyname
 argument_list|(
 name|attrstart
+argument_list|,
+operator|&
+name|fa
+operator|->
+name|uid
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pw
-operator|!=
-name|NULL
+name|error
 condition|)
-name|fa
-operator|->
-name|uid
-operator|=
-name|pw
-operator|->
-name|pw_uid
-expr_stmt|;
-else|else
 name|fa
 operator|->
 name|mask
@@ -3327,28 +3301,22 @@ break|break;
 case|case
 name|FA_GROUP
 case|:
-name|gr
+name|error
 operator|=
-name|getgrnam
+name|getgidbyname
 argument_list|(
 name|attrstart
+argument_list|,
+operator|&
+name|fa
+operator|->
+name|gid
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|gr
-operator|!=
-name|NULL
+name|error
 condition|)
-name|fa
-operator|->
-name|gid
-operator|=
-name|gr
-operator|->
-name|gr_gid
-expr_stmt|;
-else|else
 name|fa
 operator|->
 name|mask
@@ -4134,6 +4102,9 @@ literal|1
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|HAVE_FFLAGS
 comment|/* Clear flags. */
 if|if
 condition|(
@@ -4169,6 +4140,8 @@ name|flags
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|fa
@@ -4326,15 +4299,10 @@ expr_stmt|;
 if|if
 condition|(
 name|old
-operator|==
+operator|!=
 name|NULL
 condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+block|{
 if|if
 condition|(
 name|inplace
@@ -4361,7 +4329,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|HAVE_FFLAGS
-comment|/* 	 * Determine whether we need to clear the flags of the target. 	 * This is bogus in that it assumes a value of 0 is safe and 	 * that non-zero is unsafe.  I'm not really worried by that 	 * since as far as I know that's the way things are. 	 */
+comment|/* 		 * Determine whether we need to clear the flags of the target. 		 * This is bogus in that it assumes a value of 0 is safe and 		 * that non-zero is unsafe.  I'm not really worried by that 		 * since as far as I know that's the way things are. 		 */
 if|if
 condition|(
 operator|(
@@ -4451,6 +4419,7 @@ condition|)
 goto|goto
 name|bad
 goto|;
+block|}
 block|}
 comment|/* Change those attributes that we can before moving the file 	 * into place.  That makes installation atomic in most cases. */
 if|if
@@ -4585,9 +4554,13 @@ name|mode
 operator|&
 name|modemask
 expr_stmt|;
-comment|/* Merge in set*id bits from the old attribute.  XXX - Why? */
+comment|/* Merge in set*id bits from the old attribute. */
 if|if
 condition|(
+name|old
+operator|!=
+name|NULL
+operator|&&
 name|old
 operator|->
 name|mask

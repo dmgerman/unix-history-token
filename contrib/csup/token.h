@@ -125,6 +125,13 @@ name|PT_LIST
 value|10
 end_define
 
+begin_define
+define|#
+directive|define
+name|PT_NORSYNC
+value|11
+end_define
+
 begin_endif
 endif|#
 directive|endif

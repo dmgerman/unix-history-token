@@ -307,6 +307,11 @@ name|globtree
 modifier|*
 name|co_filefilter
 decl_stmt|;
+name|struct
+name|globtree
+modifier|*
+name|co_norsync
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -368,6 +373,9 @@ name|laddr
 decl_stmt|;
 name|socklen_t
 name|laddrlen
+decl_stmt|;
+name|int
+name|deletelim
 decl_stmt|;
 name|int
 name|socket
