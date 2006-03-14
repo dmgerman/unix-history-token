@@ -144,6 +144,17 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|sighup
+parameter_list|(
+name|int
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|usage
 parameter_list|(
 name|void
@@ -166,6 +177,19 @@ end_decl_stmt
 
 begin_comment
 comment|/* are we done? */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|reload
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* reload config file */
 end_comment
 
 begin_function
@@ -568,7 +592,7 @@ literal|0
 operator|||
 name|sigaction
 argument_list|(
-name|SIGHUP
+name|SIGINT
 argument_list|,
 operator|&
 name|sa
@@ -577,10 +601,39 @@ name|NULL
 argument_list|)
 operator|<
 literal|0
-operator|||
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_CRIT
+argument_list|,
+literal|"Could not install signal handlers. %s (%d)"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|sa
+operator|.
+name|sa_handler
+operator|=
+name|sighup
+expr_stmt|;
+if|if
+condition|(
 name|sigaction
 argument_list|(
-name|SIGINT
+name|SIGHUP
 argument_list|,
 operator|&
 name|sa
@@ -768,6 +821,34 @@ operator|<
 literal|0
 condition|)
 break|break;
+if|if
+condition|(
+name|reload
+condition|)
+block|{
+if|if
+condition|(
+name|write_hids_file
+argument_list|()
+operator|<
+literal|0
+operator|||
+name|read_config_file
+argument_list|()
+operator|<
+literal|0
+operator|||
+name|read_hids_file
+argument_list|()
+operator|<
+literal|0
+condition|)
+break|break;
+name|reload
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 name|server_shutdown
 argument_list|(
@@ -1013,7 +1094,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Signal handler  */
+comment|/*  * Signal handlers  */
 end_comment
 
 begin_function
@@ -1036,6 +1117,29 @@ argument_list|,
 operator|++
 name|done
 argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|sighup
+parameter_list|(
+name|int
+name|s
+parameter_list|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"Got SIGHUP: reload config"
+argument_list|)
+expr_stmt|;
+name|reload
+operator|=
+literal|1
 expr_stmt|;
 block|}
 end_function
