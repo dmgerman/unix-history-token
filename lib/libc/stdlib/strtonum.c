@@ -178,6 +178,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|errno
+operator|==
+name|EINVAL
+operator|||
 name|numstr
 operator|==
 name|ep
