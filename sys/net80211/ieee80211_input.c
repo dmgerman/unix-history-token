@@ -3068,7 +3068,7 @@ condition|)
 block|{
 name|m1
 operator|=
-name|m_copypacket
+name|m_dup
 argument_list|(
 name|m
 argument_list|,
