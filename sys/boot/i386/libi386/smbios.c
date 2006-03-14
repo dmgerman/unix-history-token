@@ -174,7 +174,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SHOW_SENSITIVE_INFO
+name|SMBIOS_SERIAL_NUMBERS
 end_ifdef
 
 begin_function_decl
@@ -462,7 +462,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|SHOW_SENSITIVE_INFO
+name|SMBIOS_SERIAL_NUMBERS
 name|smbios_setenv
 argument_list|(
 literal|"smbios.system.serial"
@@ -517,7 +517,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|SHOW_SENSITIVE_INFO
+name|SMBIOS_SERIAL_NUMBERS
 name|smbios_setenv
 argument_list|(
 literal|"smbios.planar.serial"
@@ -554,7 +554,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|SHOW_SENSITIVE_INFO
+name|SMBIOS_SERIAL_NUMBERS
 name|smbios_setenv
 argument_list|(
 literal|"smbios.chassis.serial"
@@ -921,7 +921,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SHOW_SENSITIVE_INFO
+name|SMBIOS_SERIAL_NUMBERS
 end_ifdef
 
 begin_function
