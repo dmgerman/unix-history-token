@@ -665,7 +665,7 @@ begin_define
 define|#
 directive|define
 name|SS_PROTOREF
-value|0x400
+value|0x4000
 end_define
 
 begin_comment
