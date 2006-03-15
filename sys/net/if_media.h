@@ -1407,6 +1407,28 @@ comment|/* Interface attached to working net */
 end_comment
 
 begin_comment
+comment|/* Mask of "status valid" bits, for ifconfig(8). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_STATUS_VALID
+value|IFM_AVALID
+end_define
+
+begin_comment
+comment|/* List of "status valid" bits, for ifconfig(8). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_STATUS_VALID_LIST
+value|{						\         IFM_AVALID,							\         0								\ }
+end_define
+
+begin_comment
 comment|/*  * Macros to extract various bits of information from the media word.  */
 end_comment
 
@@ -1703,6 +1725,55 @@ define|#
 directive|define
 name|IFM_BAUDRATE_DESCRIPTIONS
 value|{					\ 	{ IFM_ETHER | IFM_10_T,		IF_Mbps(10) },			\ 	{ IFM_ETHER | IFM_10_2,		IF_Mbps(10) },			\ 	{ IFM_ETHER | IFM_10_5,		IF_Mbps(10) },			\ 	{ IFM_ETHER | IFM_100_TX,	IF_Mbps(100) },			\ 	{ IFM_ETHER | IFM_100_FX,	IF_Mbps(100) },			\ 	{ IFM_ETHER | IFM_100_T4,	IF_Mbps(100) },			\ 	{ IFM_ETHER | IFM_100_VG,	IF_Mbps(100) },			\ 	{ IFM_ETHER | IFM_100_T2,	IF_Mbps(100) },			\ 	{ IFM_ETHER | IFM_1000_SX,	IF_Mbps(1000) },		\ 	{ IFM_ETHER | IFM_10_STP,	IF_Mbps(10) },			\ 	{ IFM_ETHER | IFM_10_FL,	IF_Mbps(10) },			\ 	{ IFM_ETHER | IFM_1000_LX,	IF_Mbps(1000) },		\ 	{ IFM_ETHER | IFM_1000_CX,	IF_Mbps(1000) },		\ 	{ IFM_ETHER | IFM_1000_T,	IF_Mbps(1000) },		\ 	{ IFM_ETHER | IFM_HPNA_1,	IF_Mbps(1) },			\ 	{ IFM_ETHER | IFM_10G_LR,	IF_Gbps(10ULL) },		\ 									\ 	{ IFM_TOKEN | IFM_TOK_STP4,	IF_Mbps(4) },			\ 	{ IFM_TOKEN | IFM_TOK_STP16,	IF_Mbps(16) },			\ 	{ IFM_TOKEN | IFM_TOK_UTP4,	IF_Mbps(4) },			\ 	{ IFM_TOKEN | IFM_TOK_UTP16,	IF_Mbps(16) },			\ 									\ 	{ IFM_FDDI | IFM_FDDI_SMF,	IF_Mbps(100) },			\ 	{ IFM_FDDI | IFM_FDDI_MMF,	IF_Mbps(100) },			\ 	{ IFM_FDDI | IFM_FDDI_UTP,	IF_Mbps(100) },			\ 									\ 	{ IFM_IEEE80211 | IFM_IEEE80211_FH1,	IF_Mbps(1) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_FH2,	IF_Mbps(2) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_DS2,	IF_Mbps(2) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_DS5,	IF_Kbps(5500) },	\ 	{ IFM_IEEE80211 | IFM_IEEE80211_DS11,	IF_Mbps(11) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_DS1,	IF_Mbps(1) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_DS22,	IF_Mbps(22) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM6,	IF_Mbps(6) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM9,	IF_Mbps(9) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM12,	IF_Mbps(12) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM18,	IF_Mbps(18) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM24,	IF_Mbps(24) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM36,	IF_Mbps(36) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM48,	IF_Mbps(48) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM54,	IF_Mbps(54) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM72,	IF_Mbps(72) },		\ 									\ 	{ 0, 0 },							\ }
+end_define
+
+begin_comment
+comment|/*  * Status descriptions for the various media types.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ifmedia_status_description
+block|{
+name|int
+name|ifms_type
+decl_stmt|;
+name|int
+name|ifms_valid
+decl_stmt|;
+name|int
+name|ifms_bit
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|ifms_string
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|IFM_STATUS_DESC
+parameter_list|(
+name|ifms
+parameter_list|,
+name|bit
+parameter_list|)
+define|\
+value|(ifms)->ifms_string[((ifms)->ifms_bit& (bit)) ? 1 : 0]
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFM_STATUS_DESCRIPTIONS
+value|{					\ 	{ IFM_ETHER,		IFM_AVALID,	IFM_ACTIVE,		\ 	    { "no carrier", "active" } },				\ 	{ IFM_FDDI,		IFM_AVALID,	IFM_ACTIVE,		\ 	    { "no ring", "inserted" } },				\ 	{ IFM_TOKEN,		IFM_AVALID,	IFM_ACTIVE,		\ 	    { "no ring", "inserted" } },				\ 	{ IFM_IEEE80211,	IFM_AVALID,	IFM_ACTIVE,		\ 	    { "no network", "active" } },				\ 	{ IFM_ATM,		IFM_AVALID,	IFM_ACTIVE,		\ 	    { "no network", "active" } },				\ 	{ IFM_CARP,		IFM_AVALID,	IFM_ACTIVE,		\ 	    { "backup", "master" } },					\ 	{ 0,			0,		0,			\ 	    { NULL, NULL } }						\ }
 end_define
 
 begin_endif
