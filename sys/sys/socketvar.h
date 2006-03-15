@@ -661,6 +661,17 @@ begin_comment
 comment|/* socket disconnected from peer */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SS_PROTOREF
+value|0x400
+end_define
+
+begin_comment
+comment|/* strong protocol reference */
+end_comment
+
 begin_comment
 comment|/*  * Socket state bits now stored in the socket buffer state field.  */
 end_comment
