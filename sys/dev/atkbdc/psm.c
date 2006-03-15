@@ -16915,6 +16915,20 @@ block|}
 block|,
 comment|/* PNP0F03 */
 block|{
+literal|0x0e0fd041
+block|,
+literal|"PS/2 mouse port"
+block|}
+block|,
+comment|/* PNP0F0E */
+block|{
+literal|0x120fd041
+block|,
+literal|"PS/2 mouse port"
+block|}
+block|,
+comment|/* PNP0F12 */
+block|{
 literal|0x130fd041
 block|,
 literal|"PS/2 mouse port"
@@ -16935,6 +16949,13 @@ literal|"Dell PS/2 mouse port"
 block|}
 block|,
 comment|/* Lat. X200, Dell */
+block|{
+literal|0x0002a906
+block|,
+literal|"ALPS Glide Point"
+block|}
+block|,
+comment|/* ALPS Glide Point */
 block|{
 literal|0x80374d24
 block|,
