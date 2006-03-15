@@ -841,7 +841,7 @@ block|{
 name|double
 name|__Break_the_struct_layout_for_now
 decl_stmt|;
-name|void
+name|int
 function_decl|(
 modifier|*
 name|pru_abort
@@ -1297,7 +1297,7 @@ comment|/*  * All nonvoid pru_*() functions below return EOPNOTSUPP.  */
 end_comment
 
 begin_function_decl
-name|void
+name|int
 name|pru_abort_notsupp
 parameter_list|(
 name|struct
