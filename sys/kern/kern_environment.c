@@ -859,6 +859,13 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+name|KENV_SIZE
+condition|)
+block|{
 name|kenvp
 index|[
 name|i
@@ -873,12 +880,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|i
-operator|<
-name|KENV_SIZE
-condition|)
 name|strcpy
 argument_list|(
 name|kenvp
@@ -890,6 +891,7 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|printf
 argument_list|(
