@@ -2558,6 +2558,7 @@ name|phandler
 init|=
 name|dump_packet
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|errstr
