@@ -478,7 +478,22 @@ break|break;
 default|default:
 name|warnx
 argument_list|(
-literal|"Uknown certificate type"
+literal|"Unknown certificate type: %d"
+argument_list|,
+name|EVP_PKEY_type
+argument_list|(
+name|X509_get_pubkey
+argument_list|(
+name|x509
+argument_list|)
+operator|->
+name|type
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|fp
 argument_list|)
 expr_stmt|;
 return|return
@@ -751,10 +766,34 @@ name|dsa_ctx
 expr_stmt|;
 break|break;
 default|default:
+name|warnx
+argument_list|(
+literal|"Unknown public key type: %d"
+argument_list|,
+name|EVP_PKEY_type
+argument_list|(
+name|pkey
+operator|->
+name|type
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|md_ctx
+operator|=
+name|NULL
+expr_stmt|;
 break|break;
 block|}
 name|status
 operator|=
+operator|(
+name|md_ctx
+operator|==
+name|NULL
+operator|)
+condition|?
+literal|0
+else|:
 name|EVP_VerifyFinal
 argument_list|(
 name|md_ctx
@@ -948,11 +987,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|free
-argument_list|(
-name|n
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -982,11 +1016,6 @@ expr_stmt|;
 name|fclose
 argument_list|(
 name|f
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|n
 argument_list|)
 expr_stmt|;
 return|return
@@ -1019,6 +1048,11 @@ argument_list|(
 literal|"Cannot open private key %s."
 argument_list|,
 name|keyfile
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|f
 argument_list|)
 expr_stmt|;
 return|return
@@ -1085,11 +1119,6 @@ operator|=
 name|EVP_sha1
 argument_list|()
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"*** It's an RSA key.\n"
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|EVP_PKEY_DSA
@@ -1099,16 +1128,16 @@ operator|=
 name|EVP_dss1
 argument_list|()
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"@@@ It's a DSA key, yippee!\n"
-argument_list|)
-expr_stmt|;
 break|break;
 default|default:
 name|warnx
 argument_list|(
-literal|"Uknown key type"
+literal|"Unknown key type"
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|f
 argument_list|)
 expr_stmt|;
 return|return
@@ -1151,6 +1180,11 @@ argument_list|,
 name|buffer
 argument_list|,
 name|length
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|f
 argument_list|)
 expr_stmt|;
 name|sig_buf
