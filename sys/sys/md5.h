@@ -19,6 +19,27 @@ directive|define
 name|_SYS_MD5_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|MD5_BLOCK_LENGTH
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|MD5_DIGEST_LENGTH
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|MD5_DIGEST_STRING_LENGTH
+value|(MD5_DIGEST_LENGTH * 2 + 1)
+end_define
+
 begin_comment
 comment|/* MD5 context. */
 end_comment
