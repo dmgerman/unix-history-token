@@ -3407,9 +3407,11 @@ name|skip
 expr_stmt|;
 name|m
 operator|=
-name|m_clone
+name|m_unshare
 argument_list|(
 name|m
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
