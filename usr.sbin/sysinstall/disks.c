@@ -4190,7 +4190,7 @@ name|d
 operator|->
 name|bios_hd
 operator|>
-literal|256
+literal|16
 operator|||
 name|d
 operator|->
