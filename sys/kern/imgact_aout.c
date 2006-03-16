@@ -759,6 +759,11 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
+name|vm_object_deallocate
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -820,6 +825,11 @@ block|{
 name|vm_map_unlock
 argument_list|(
 name|map
+argument_list|)
+expr_stmt|;
+name|vm_object_deallocate
+argument_list|(
+name|object
 argument_list|)
 expr_stmt|;
 return|return
