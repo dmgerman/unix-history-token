@@ -12247,7 +12247,15 @@ argument_list|,
 name|oldvalue
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|prw
+operator|.
+name|pm_flags
+operator|&
+name|PMC_F_OLDVALUE
+condition|)
 name|PMCDBG
 argument_list|(
 name|PMC
