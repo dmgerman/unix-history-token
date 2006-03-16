@@ -529,6 +529,14 @@ literal|"Xircom X3201 10/100BaseTX"
 block|}
 block|,
 block|{
+name|DC_VENDORID_DLINK
+block|,
+name|DC_DEVICEID_DRP32TXD
+block|,
+literal|"Neteasy DRP-32TXD Cardbus 10/100"
+block|}
+block|,
+block|{
 name|DC_VENDORID_ABOCOM
 block|,
 name|DC_DEVICEID_FE2500
@@ -9112,6 +9120,9 @@ name|DC_DEVICEID_ADM9511
 case|:
 case|case
 name|DC_DEVICEID_ADM9513
+case|:
+case|case
+name|DC_DEVICEID_DRP32TXD
 case|:
 case|case
 name|DC_DEVICEID_FA511
