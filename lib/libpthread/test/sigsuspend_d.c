@@ -881,7 +881,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|_LIBC_R
+name|_LIBC_R_
 argument_list|)
 name|pthread_set_name_np
 argument_list|(

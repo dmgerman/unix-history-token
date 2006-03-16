@@ -6,13 +6,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -24,7 +24,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<atomic_ops.h>
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"atomic_ops.h"
 end_include
 
 begin_include

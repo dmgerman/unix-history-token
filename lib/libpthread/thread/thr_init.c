@@ -1656,6 +1656,12 @@ name|stacksize_attr
 operator|=
 name|_thr_stack_default
 expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|_thr_atfork_list
+argument_list|)
+expr_stmt|;
 name|init_once
 operator|=
 literal|1
@@ -1701,12 +1707,6 @@ name|TAILQ_INIT
 argument_list|(
 operator|&
 name|_thread_gc_list
-argument_list|)
-expr_stmt|;
-name|TAILQ_INIT
-argument_list|(
-operator|&
-name|_thr_atfork_list
 argument_list|)
 expr_stmt|;
 name|_pthread_mutex_init
@@ -1851,6 +1851,19 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|getenv
+argument_list|(
+literal|"LIBPTHREAD_DEBUG"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|_thr_debug_flags
+operator||=
+name|DBG_INFO_DUMP
+expr_stmt|;
 comment|/* 	 * _thread_list_lock and _kse_count are initialized 	 * by _kse_init() 	 */
 block|}
 end_function

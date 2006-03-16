@@ -6,6 +6,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -18,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<assert.h>
 end_include
 
@@ -31,12 +37,6 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pthread.h"
 end_include
 
 begin_include
@@ -73,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pthread.h"
 end_include
 
 begin_if
@@ -567,11 +573,19 @@ begin_comment
 comment|/*------------------------------------------------------------  * Functions  *----------------------------------------------------------*/
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_LIBC_R_
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
 name|DEBUG
-end_ifdef
+argument_list|)
+end_if
 
 begin_function
 specifier|static
@@ -593,10 +607,10 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|"Swapping out thread 0x%x, "
+literal|"Swapping out thread 0x%lx, "
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|pthread_out
 argument_list|)
@@ -615,10 +629,10 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|"swapping in thread 0x%x\n"
+literal|"swapping in thread 0x%lx\n"
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|pthread_in
 argument_list|)
@@ -1969,17 +1983,17 @@ expr_stmt|;
 block|}
 name|log_trace
 argument_list|(
-literal|"Thread %d: Exiting thread 0x%x\n"
+literal|"Thread %ld: Exiting thread 0x%lx\n"
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|statep
 operator|->
 name|id
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|pthread_self
 argument_list|()
@@ -2198,17 +2212,17 @@ argument_list|)
 expr_stmt|;
 name|log_trace
 argument_list|(
-literal|"Thread %d: Exiting thread 0x%x\n"
+literal|"Thread %ld: Exiting thread 0x%lx\n"
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|statep
 operator|->
 name|id
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|pthread_self
 argument_list|()
@@ -2238,12 +2252,12 @@ parameter_list|)
 block|{
 name|log
 argument_list|(
-literal|"Signal handler caught signal %d, thread id 0x%x\n"
+literal|"Signal handler caught signal %d, thread id 0x%lx\n"
 argument_list|,
 name|signo
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|pthread_self
 argument_list|()
@@ -6301,9 +6315,17 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_LIBC_R_
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
 name|DEBUG
+argument_list|)
 name|assert
 argument_list|(
 name|pthread_switch_add_np

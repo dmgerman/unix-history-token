@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -171,25 +177,35 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Stack size (%d) != expected (%d), frame %d\n"
+literal|"Stack size (%ld) != expected (%ld), frame %ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|parms
 operator|->
 name|top
 operator|-
 operator|(
-name|void
-operator|*
+name|long
 operator|)
 operator|&
 name|top
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|FRAME_SIZE
 operator|*
 name|parms
 operator|->
 name|cur
+argument_list|)
 argument_list|,
+operator|(
+name|long
+operator|)
 name|parms
 operator|->
 name|cur
