@@ -5052,8 +5052,14 @@ name|channel
 operator|->
 name|flags
 operator|&
+operator|(
+name|CHN_F_BUSY
+operator||
 name|CHN_F_VIRTUAL
 operator|)
+operator|)
+operator|==
+name|CHN_F_VIRTUAL
 condition|)
 name|c
 operator|=
