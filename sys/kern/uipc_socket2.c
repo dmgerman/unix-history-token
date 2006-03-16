@@ -1084,9 +1084,6 @@ expr_stmt|;
 name|ACCEPT_UNLOCK
 argument_list|()
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|soabort
 argument_list|(
 name|sp

@@ -1970,9 +1970,6 @@ expr_stmt|;
 name|ACCEPT_UNLOCK
 argument_list|()
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|soabort
 argument_list|(
 name|sp
@@ -2032,9 +2029,6 @@ expr_stmt|;
 name|ACCEPT_UNLOCK
 argument_list|()
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|soabort
 argument_list|(
 name|sp
@@ -2255,7 +2249,7 @@ comment|/*  * soabort() must not be called with any socket locks held, as it cal
 end_comment
 
 begin_function
-name|int
+name|void
 name|soabort
 parameter_list|(
 name|so
@@ -2304,17 +2298,7 @@ name|so
 argument_list|)
 expr_stmt|;
 comment|/* note: does not decrement the ref count */
-return|return
-operator|(
-name|error
-operator|)
-return|;
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 

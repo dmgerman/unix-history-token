@@ -3238,9 +3238,6 @@ name|so
 operator|!=
 name|NULL
 condition|)
-operator|(
-name|void
-operator|)
 name|soabort
 argument_list|(
 name|so
