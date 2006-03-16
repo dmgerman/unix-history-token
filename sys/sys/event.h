@@ -15,6 +15,12 @@ directive|define
 name|_SYS_EVENT_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -526,28 +532,6 @@ end_define
 begin_comment
 comment|/* link state is invalid */
 end_comment
-
-begin_comment
-comment|/*  * This is currently visible to userland to work around broken  * programs which pull in<sys/proc.h>.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/_lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/_mutex.h>
-end_include
 
 begin_struct_decl
 struct_decl|struct
