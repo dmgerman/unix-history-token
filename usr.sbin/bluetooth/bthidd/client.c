@@ -1000,7 +1000,10 @@ name|l2addr
 operator|.
 name|l2cap_psm
 operator|=
+name|htole16
+argument_list|(
 name|psm
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

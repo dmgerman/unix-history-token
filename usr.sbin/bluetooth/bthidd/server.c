@@ -504,7 +504,10 @@ name|l2addr
 operator|.
 name|l2cap_psm
 operator|=
+name|htole16
+argument_list|(
 literal|0x11
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -725,7 +728,10 @@ name|l2addr
 operator|.
 name|l2cap_psm
 operator|=
+name|htole16
+argument_list|(
 literal|0x13
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
