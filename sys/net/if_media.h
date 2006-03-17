@@ -292,6 +292,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Compute baudrate for a given media. */
+end_comment
+
+begin_function_decl
+name|uint64_t
+name|ifmedia_baudrate
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -484,23 +497,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IFM_10GBASE_SR
+name|IFM_10G_LR
 value|18
 end_define
 
 begin_comment
-comment|/* 10GBASE-SR 850nm Multi-mode Fiber */
+comment|/* 10GBase-LR 1310nm Single-mode */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IFM_10GBASE_LR
+name|IFM_10G_SR
 value|19
 end_define
 
 begin_comment
-comment|/* 10GBASE-LR 1310nm Single-mode Fiber */
+comment|/* 10GBase-SR 850nm Multi-mode */
 end_comment
 
 begin_comment
@@ -1529,7 +1542,7 @@ begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_ETHERNET_DESCRIPTIONS
-value|{				\ 	{ IFM_10_T,	"10baseT/UTP" },				\ 	{ IFM_10_2,	"10base2/BNC" },				\ 	{ IFM_10_5,	"10base5/AUI" },				\ 	{ IFM_100_TX,	"100baseTX" },					\ 	{ IFM_100_FX,	"100baseFX" },					\ 	{ IFM_100_T4,	"100baseT4" },					\ 	{ IFM_100_VG,	"100baseVG" },					\ 	{ IFM_100_T2,	"100baseT2" },					\ 	{ IFM_10_STP,	"10baseSTP" },					\ 	{ IFM_10_FL,	"10baseFL" },					\ 	{ IFM_1000_SX,	"1000baseSX" },					\ 	{ IFM_1000_LX,	"1000baseLX" },					\ 	{ IFM_1000_CX,	"1000baseCX" },					\ 	{ IFM_1000_T,	"1000baseTX" },					\ 	{ IFM_1000_T,	"1000baseT" },					\ 	{ IFM_HPNA_1,	"homePNA" },					\ 	{ IFM_10GBASE_SR, "10GBASE-SR" },				\ 	{ IFM_10GBASE_LR, "10GBASE-LR" },				\ 	{ 0, NULL },							\ }
+value|{				\ 	{ IFM_10_T,	"10baseT/UTP" },				\ 	{ IFM_10_2,	"10base2/BNC" },				\ 	{ IFM_10_5,	"10base5/AUI" },				\ 	{ IFM_100_TX,	"100baseTX" },					\ 	{ IFM_100_FX,	"100baseFX" },					\ 	{ IFM_100_T4,	"100baseT4" },					\ 	{ IFM_100_VG,	"100baseVG" },					\ 	{ IFM_100_T2,	"100baseT2" },					\ 	{ IFM_10_STP,	"10baseSTP" },					\ 	{ IFM_10_FL,	"10baseFL" },					\ 	{ IFM_1000_SX,	"1000baseSX" },					\ 	{ IFM_1000_LX,	"1000baseLX" },					\ 	{ IFM_1000_CX,	"1000baseCX" },					\ 	{ IFM_1000_T,	"1000baseTX" },					\ 	{ IFM_1000_T,	"1000baseT" },					\ 	{ IFM_HPNA_1,	"homePNA" },					\ 	{ IFM_10G_LR,	"10Gbase-LR" },					\ 	{ IFM_10G_SR,	"10Gbase-SR" },					\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
@@ -1663,6 +1676,33 @@ define|#
 directive|define
 name|IFM_SHARED_OPTION_DESCRIPTIONS
 value|{				\ 	{ IFM_FDX,	"full-duplex" },				\ 	{ IFM_HDX,	"half-duplex" },				\ 	{ IFM_FLAG0,	"flag0" },					\ 	{ IFM_FLAG1,	"flag1" },					\ 	{ IFM_FLAG2,	"flag2" },					\ 	{ IFM_LOOP,	"hw-loopback" },				\ 	{ 0, NULL },							\ }
+end_define
+
+begin_comment
+comment|/*  * Baudrate descriptions for the various media types.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ifmedia_baudrate
+block|{
+name|int
+name|ifmb_word
+decl_stmt|;
+comment|/* media word */
+name|uint64_t
+name|ifmb_baudrate
+decl_stmt|;
+comment|/* corresponding baudrate */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|IFM_BAUDRATE_DESCRIPTIONS
+value|{					\ 	{ IFM_ETHER | IFM_10_T,		IF_Mbps(10) },			\ 	{ IFM_ETHER | IFM_10_2,		IF_Mbps(10) },			\ 	{ IFM_ETHER | IFM_10_5,		IF_Mbps(10) },			\ 	{ IFM_ETHER | IFM_100_TX,	IF_Mbps(100) },			\ 	{ IFM_ETHER | IFM_100_FX,	IF_Mbps(100) },			\ 	{ IFM_ETHER | IFM_100_T4,	IF_Mbps(100) },			\ 	{ IFM_ETHER | IFM_100_VG,	IF_Mbps(100) },			\ 	{ IFM_ETHER | IFM_100_T2,	IF_Mbps(100) },			\ 	{ IFM_ETHER | IFM_1000_SX,	IF_Mbps(1000) },		\ 	{ IFM_ETHER | IFM_10_STP,	IF_Mbps(10) },			\ 	{ IFM_ETHER | IFM_10_FL,	IF_Mbps(10) },			\ 	{ IFM_ETHER | IFM_1000_LX,	IF_Mbps(1000) },		\ 	{ IFM_ETHER | IFM_1000_CX,	IF_Mbps(1000) },		\ 	{ IFM_ETHER | IFM_1000_T,	IF_Mbps(1000) },		\ 	{ IFM_ETHER | IFM_HPNA_1,	IF_Mbps(1) },			\ 	{ IFM_ETHER | IFM_10G_LR,	IF_Gbps(10ULL) },		\ 									\ 	{ IFM_TOKEN | IFM_TOK_STP4,	IF_Mbps(4) },			\ 	{ IFM_TOKEN | IFM_TOK_STP16,	IF_Mbps(16) },			\ 	{ IFM_TOKEN | IFM_TOK_UTP4,	IF_Mbps(4) },			\ 	{ IFM_TOKEN | IFM_TOK_UTP16,	IF_Mbps(16) },			\ 									\ 	{ IFM_FDDI | IFM_FDDI_SMF,	IF_Mbps(100) },			\ 	{ IFM_FDDI | IFM_FDDI_MMF,	IF_Mbps(100) },			\ 	{ IFM_FDDI | IFM_FDDI_UTP,	IF_Mbps(100) },			\ 									\ 	{ IFM_IEEE80211 | IFM_IEEE80211_FH1,	IF_Mbps(1) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_FH2,	IF_Mbps(2) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_DS2,	IF_Mbps(2) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_DS5,	IF_Kbps(5500) },	\ 	{ IFM_IEEE80211 | IFM_IEEE80211_DS11,	IF_Mbps(11) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_DS1,	IF_Mbps(1) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_DS22,	IF_Mbps(22) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM6,	IF_Mbps(6) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM9,	IF_Mbps(9) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM12,	IF_Mbps(12) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM18,	IF_Mbps(18) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM24,	IF_Mbps(24) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM36,	IF_Mbps(36) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM48,	IF_Mbps(48) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM54,	IF_Mbps(54) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM72,	IF_Mbps(72) },		\ 									\ 	{ 0, 0 },							\ }
 end_define
 
 begin_endif
