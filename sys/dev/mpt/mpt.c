@@ -2561,6 +2561,15 @@ decl_stmt|;
 name|u_int
 name|cb_index
 decl_stmt|;
+name|TAILQ_REMOVE
+argument_list|(
+name|chain
+argument_list|,
+name|req
+argument_list|,
+name|links
+argument_list|)
+expr_stmt|;
 name|msg_hdr
 operator|=
 operator|(
