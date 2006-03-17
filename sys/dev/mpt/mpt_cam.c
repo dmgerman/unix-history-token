@@ -4709,26 +4709,9 @@ name|MSG_SCSI_TASK_MGMT_REPLY
 modifier|*
 name|tmf_reply
 decl_stmt|;
-name|u_int
+name|uint16_t
 name|status
 decl_stmt|;
-name|mpt_lprt
-argument_list|(
-name|mpt
-argument_list|,
-name|MPT_PRT_DEBUG
-argument_list|,
-literal|"TMF Complete: req %p:serno, reply %p\n"
-argument_list|,
-name|req
-argument_list|,
-name|req
-operator|->
-name|serno
-argument_list|,
-name|reply_frame
-argument_list|)
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|req
@@ -4772,9 +4755,23 @@ name|mpt_lprt
 argument_list|(
 name|mpt
 argument_list|,
+operator|(
+name|status
+operator|==
+name|MPI_IOCSTATUS_SUCCESS
+operator|)
+condition|?
 name|MPT_PRT_DEBUG
+else|:
+name|MPT_PRT_ERROR
 argument_list|,
-literal|"TMF Complete: status 0x%x\n"
+literal|"TMF Complete: req %p:%u status 0x%x\n"
+argument_list|,
+name|req
+argument_list|,
+name|req
+operator|->
+name|serno
 argument_list|,
 name|status
 argument_list|)
@@ -8641,7 +8638,7 @@ name|mpt_lprt
 argument_list|(
 name|mpt
 argument_list|,
-name|MPT_PRT_DEBUG
+name|MPT_PRT_INFO
 argument_list|,
 literal|"Issuing TMF %p with MsgContext of 0x%x\n"
 argument_list|,
@@ -8975,6 +8972,18 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* 		 * TMF is complete. 		 */
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|mpt
+operator|->
+name|request_timeout_list
+argument_list|,
+name|req
+argument_list|,
+name|links
+argument_list|)
+expr_stmt|;
 name|mpt
 operator|->
 name|tmf_req
