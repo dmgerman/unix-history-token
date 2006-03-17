@@ -2871,6 +2871,12 @@ begin_comment
 comment|/* ABI compatibility shim. */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|ithread_remove_handler
+end_undef
+
 begin_function_decl
 name|int
 name|ithread_remove_handler

@@ -52,6 +52,13 @@ name|ithd
 value|intr_event
 end_define
 
+begin_define
+define|#
+directive|define
+name|ithread_remove_handler
+value|intr_event_remove_handler
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|intr_event
