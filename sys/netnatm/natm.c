@@ -4,7 +4,7 @@ comment|/*	$NetBSD: natm.c,v 1.5 1996/11/09 03:26:26 chuck Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  *  * Copyright (c) 1996 Charles D. Cranor and Washington University.  * Copyright (c) 2005 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Charles D. Cranor and  *      Washington University.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  *  * Copyright (c) 1996 Charles D. Cranor and Washington University.  * Copyright (c) 2005-2006 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Charles D. Cranor and  *      Washington University.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -541,11 +541,6 @@ name|natmpcb
 modifier|*
 name|npcb
 decl_stmt|;
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
 name|NATM_LOCK
 argument_list|()
 expr_stmt|;
@@ -560,23 +555,17 @@ name|so
 operator|->
 name|so_pcb
 expr_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|npcb
-operator|==
+operator|!=
 name|NULL
-condition|)
-block|{
-comment|/* XXXRW: Does this case ever actually happen? */
-name|error
-operator|=
-name|EINVAL
+argument_list|,
+operator|(
+literal|"natm_usr_detach: npcb == NULL"
+operator|)
+argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-comment|/*      * we turn on 'drain' *before* we sofree.      */
 name|npcb_free
 argument_list|(
 name|npcb
@@ -585,33 +574,18 @@ name|NPCB_DESTROY
 argument_list|)
 expr_stmt|;
 comment|/* drain */
-name|ACCEPT_LOCK
-argument_list|()
-expr_stmt|;
-name|SOCK_LOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 name|so
 operator|->
 name|so_pcb
 operator|=
 name|NULL
 expr_stmt|;
-name|sotryfree
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-name|out
-label|:
 name|NATM_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
@@ -684,22 +658,17 @@ name|so
 operator|->
 name|so_pcb
 expr_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|npcb
-operator|==
+operator|!=
 name|NULL
-condition|)
-block|{
-comment|/* XXXRW: Does this case ever actually happen? */
-name|error
-operator|=
-name|EINVAL
+argument_list|,
+operator|(
+literal|"natm_usr_connect: npcb == NULL"
+operator|)
+argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 comment|/*      * validate nam and npcb      */
 name|snatm
 operator|=
@@ -976,16 +945,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|NATM_LOCK
-argument_list|()
-expr_stmt|;
-name|npcb_free
-argument_list|(
-name|npcb
-argument_list|,
-name|NPCB_REMOVE
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|EIO
@@ -999,9 +958,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|NATM_LOCK
-argument_list|()
-expr_stmt|;
 name|soisconnected
 argument_list|(
 name|so
@@ -1009,9 +965,6 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|NATM_UNLOCK
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1064,22 +1017,17 @@ name|so
 operator|->
 name|so_pcb
 expr_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|npcb
-operator|==
+operator|!=
 name|NULL
-condition|)
-block|{
-comment|/* XXXRW: Does this case ever actually happen? */
-name|error
-operator|=
-name|EINVAL
+argument_list|,
+operator|(
+literal|"natm_usr_disconnect: npcb == NULL"
+operator|)
+argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 if|if
 condition|(
 operator|(
@@ -1169,13 +1117,6 @@ expr_stmt|;
 block|}
 name|NATM_LOCK
 argument_list|()
-expr_stmt|;
-name|npcb_free
-argument_list|(
-name|npcb
-argument_list|,
-name|NPCB_REMOVE
-argument_list|)
 expr_stmt|;
 name|soisdisconnected
 argument_list|(
@@ -1290,22 +1231,17 @@ name|so
 operator|->
 name|so_pcb
 expr_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|npcb
-operator|==
+operator|!=
 name|NULL
-condition|)
-block|{
-comment|/* XXXRW: Does this case ever actually happen? */
-name|error
-operator|=
-name|EINVAL
+argument_list|,
+operator|(
+literal|"natm_usr_send: npcb == NULL"
+operator|)
+argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 if|if
 condition|(
 name|control
@@ -1477,23 +1413,17 @@ name|so
 operator|->
 name|so_pcb
 expr_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|npcb
-operator|==
+operator|!=
 name|NULL
-condition|)
-block|{
-comment|/* XXXRW: Does this case ever actually happen? */
-name|NATM_UNLOCK
-argument_list|()
-expr_stmt|;
-return|return
+argument_list|,
 operator|(
-name|EINVAL
+literal|"natm_usr_peeraddr: npcb == NULL"
 operator|)
-return|;
-block|}
+argument_list|)
+expr_stmt|;
 name|snatm
 operator|=
 operator|&
@@ -1622,7 +1552,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/*      * XXXRW: Does this case ever actually happen?  And does it even matter      * given that npcb is unused?      */
 name|npcb
 operator|=
 operator|(
@@ -1634,17 +1563,17 @@ name|so
 operator|->
 name|so_pcb
 expr_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|npcb
-operator|==
+operator|!=
 name|NULL
-condition|)
-return|return
+argument_list|,
 operator|(
-name|EINVAL
+literal|"natm_usr_control: npcb == NULL"
 operator|)
-return|;
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -1709,12 +1638,27 @@ modifier|*
 name|so
 parameter_list|)
 block|{
-return|return
-operator|(
 name|natm_usr_shutdown
 argument_list|(
 name|so
 argument_list|)
+expr_stmt|;
+name|ACCEPT_LOCK
+argument_list|()
+expr_stmt|;
+name|SOCK_LOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
+name|sotryfree
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
