@@ -1417,15 +1417,21 @@ argument_list|(
 name|ddp
 argument_list|)
 expr_stmt|;
-name|soisdisconnected
+name|KASSERT
 argument_list|(
 name|so
+operator|->
+name|so_pcb
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"at_pcbdetach: so_pcb == NULL"
+operator|)
 argument_list|)
 expr_stmt|;
-name|ACCEPT_LOCK
-argument_list|()
-expr_stmt|;
-name|SOCK_LOCK
+comment|/* XXXRW: Why bother to disconnect it now? */
+name|soisdisconnected
 argument_list|(
 name|so
 argument_list|)
@@ -1435,11 +1441,6 @@ operator|->
 name|so_pcb
 operator|=
 name|NULL
-expr_stmt|;
-name|sotryfree
-argument_list|(
-name|so
-argument_list|)
 expr_stmt|;
 comment|/* remove ddp from ddp_ports list */
 if|if
