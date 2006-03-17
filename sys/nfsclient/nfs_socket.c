@@ -345,6 +345,15 @@ name|nfs_reconnects
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs3_jukebox_delay
+init|=
+literal|10
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
@@ -433,6 +442,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"number of times the nfs client has had to reconnect"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_nfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|nfs3_jukebox_delay
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|nfs3_jukebox_delay
+argument_list|,
+literal|0
+argument_list|,
+literal|"number of seconds to delay a retry after receiving EJUKEBOX"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4156,21 +4186,6 @@ begin_comment
 comment|/*  * nfs_request - goes something like this  *	- fill in request struct  *	- links it into list  *	- calls nfs_send() for first transmit  *	- calls nfs_receive() to get reply  *	- break down rpc header and return with nfs reply pointed to  *	  by mrep or error  * nb: always frees up mreq mbuf list  */
 end_comment
 
-begin_comment
-comment|/* XXX overloaded before */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NQ_TRYLATERDEL
-value|15
-end_define
-
-begin_comment
-comment|/* Initial try later delay (sec) */
-end_comment
-
 begin_function
 name|int
 name|nfs_request
@@ -4269,15 +4284,6 @@ decl_stmt|,
 name|auth_len
 decl_stmt|,
 name|auth_type
-decl_stmt|;
-name|int
-name|trylater_delay
-init|=
-name|NQ_TRYLATERDEL
-decl_stmt|,
-name|trylater_cnt
-init|=
-literal|0
 decl_stmt|;
 name|struct
 name|timeval
@@ -5262,7 +5268,7 @@ name|waituntil
 operator|=
 name|time_second
 operator|+
-name|trylater_delay
+name|nfs3_jukebox_delay
 expr_stmt|;
 while|while
 condition|(
@@ -5284,24 +5290,6 @@ literal|"nqnfstry"
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-name|trylater_delay
-operator|*=
-name|nfs_backoff
-index|[
-name|trylater_cnt
-index|]
-expr_stmt|;
-if|if
-condition|(
-name|trylater_cnt
-operator|<
-name|NFS_NBACKOFF
-operator|-
-literal|1
-condition|)
-name|trylater_cnt
-operator|++
 expr_stmt|;
 if|if
 condition|(
