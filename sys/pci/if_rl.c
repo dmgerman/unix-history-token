@@ -4073,12 +4073,6 @@ name|rl_init
 expr_stmt|;
 name|ifp
 operator|->
-name|if_baudrate
-operator|=
-literal|10000000
-expr_stmt|;
-name|ifp
-operator|->
 name|if_capabilities
 operator|=
 name|IFCAP_VLAN_MTU

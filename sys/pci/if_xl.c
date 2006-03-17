@@ -6548,12 +6548,6 @@ name|if_init
 operator|=
 name|xl_init
 expr_stmt|;
-name|ifp
-operator|->
-name|if_baudrate
-operator|=
-literal|10000000
-expr_stmt|;
 name|IFQ_SET_MAXLEN
 argument_list|(
 operator|&
@@ -7026,12 +7020,6 @@ name|dev
 argument_list|,
 literal|"found 100baseFX\n"
 argument_list|)
-expr_stmt|;
-name|ifp
-operator|->
-name|if_baudrate
-operator|=
-literal|100000000
 expr_stmt|;
 name|ifmedia_add
 argument_list|(
