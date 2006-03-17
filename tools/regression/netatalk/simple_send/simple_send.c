@@ -504,7 +504,7 @@ name|sat_to
 operator|.
 name|sat_addr
 operator|.
-name|s_net
+name|s_node
 argument_list|,
 name|sat_to
 operator|.
