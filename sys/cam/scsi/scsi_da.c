@@ -1111,6 +1111,24 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
+comment|/* 		 * TOSHIBA TransMemory USB sticks 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"TOSHIBA"
+block|,
+literal|"TransMemory"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
 comment|/* 		 * PNY USB Flash keys 		 * PR: usb/75578, usb/72344, usb/65436  		 */
 block|{
 name|T_DIRECT
