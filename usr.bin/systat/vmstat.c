@@ -2000,7 +2000,7 @@ name|VMSTATCOL
 operator|-
 literal|6
 argument_list|,
-literal|"ofod"
+literal|"ozfod"
 argument_list|)
 expr_stmt|;
 name|mvprintw
