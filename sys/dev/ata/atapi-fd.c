@@ -1672,7 +1672,7 @@ if|if
 condition|(
 name|error
 operator|==
-name|ENODEV
+name|EBUSY
 condition|)
 return|return
 literal|1

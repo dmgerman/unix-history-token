@@ -4062,6 +4062,15 @@ comment|/* XXX SOS convert the request from the format used, only BBB for now*/
 comment|/* ATA/ATAPI IDENTIFY needs special treatment */
 if|if
 condition|(
+operator|(
+name|request
+operator|->
+name|flags
+operator|&
+name|ATA_R_ATAPI
+operator|)
+operator|&&
+operator|(
 name|request
 operator|->
 name|u
@@ -4074,6 +4083,7 @@ literal|0
 index|]
 operator|==
 name|ATAPI_INQUIRY
+operator|)
 condition|)
 block|{
 name|struct
@@ -4310,6 +4320,15 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
+name|request
+operator|->
+name|flags
+operator|&
+name|ATA_R_ATAPI
+operator|)
+operator|&&
+operator|(
 name|request
 operator|->
 name|u
@@ -4322,6 +4341,7 @@ literal|0
 index|]
 operator|==
 name|ATAPI_REQUEST_SENSE
+operator|)
 condition|)
 name|request
 operator|->
