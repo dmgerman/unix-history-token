@@ -1271,6 +1271,16 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|FREE
+argument_list|(
+name|NG_HOOK_PRIVATE
+argument_list|(
+name|hook
+argument_list|)
+argument_list|,
+name|M_NETGRAPH
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|NG_NODE_NUMHOOKS
