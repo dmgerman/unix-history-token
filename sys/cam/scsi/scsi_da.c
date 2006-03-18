@@ -1108,7 +1108,7 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
-comment|/* 		 * TOSHIBA TransMemory USB sticks 		 */
+comment|/* 		 * TOSHIBA TransMemory USB sticks 		 * PR: kern/94660 		 */
 block|{
 name|T_DIRECT
 block|,
