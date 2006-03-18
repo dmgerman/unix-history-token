@@ -1144,7 +1144,7 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
-comment|/* 		 * Genesys 6-in-1 Card Reader 		 * No PR, reported by anders 		 */
+comment|/* 		 * Genesys 6-in-1 Card Reader 		 * PR: usb/94647 		 */
 block|{
 name|T_DIRECT
 block|,
