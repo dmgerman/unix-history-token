@@ -540,7 +540,7 @@ init|=
 block|{
 comment|/*  	 * Map the on-board devices VA == PA so that we can access them 	 * with the MMU on or off. 	 */
 block|{
-comment|/* 		     * This at least maps the interrupt controller, the UART 		     * and the timer. Other devices should use newbus to 		     * map their memory anyway. 		     */
+comment|/* 		 * This at least maps the interrupt controller, the UART 		 * and the timer. Other devices should use newbus to 		 * map their memory anyway. 		 */
 literal|0xfff00000
 block|,
 literal|0xfff00000
@@ -552,7 +552,22 @@ operator||
 name|VM_PROT_WRITE
 block|,
 name|PTE_NOCACHE
-block|, 	    }
+block|, 	}
+block|,
+block|{
+comment|/* 		 * Add the ohci controller, and anything else that might be 		 * on this chip select for a VA/PA mapping. 		 */
+name|AT91RM92_OHCI_BASE
+block|,
+name|AT91RM92_OHCI_BASE
+block|,
+name|AT91RM92_OHCI_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, 	}
 block|,
 block|{
 literal|0
@@ -564,7 +579,7 @@ block|,
 literal|0
 block|,
 literal|0
-block|, 	    }
+block|, 	}
 block|}
 decl_stmt|;
 end_decl_stmt
