@@ -360,6 +360,14 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* Disable all interrupts */
+name|WR4
+argument_list|(
+name|ST_IDR
+argument_list|,
+literal|0xffffffff
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -670,7 +678,7 @@ operator|=
 operator|(
 name|n
 operator|*
-literal|1000000
+literal|1000
 operator|)
 operator|/
 literal|32768
