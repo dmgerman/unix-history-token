@@ -1032,6 +1032,9 @@ operator|<
 name|AUDIT_HARD_LIMIT_FREE_BLOCKS
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|send_trigger
 argument_list|(
 name|AUDIT_TRIGGER_NO_SPACE
@@ -1095,6 +1098,9 @@ name|f_bfree
 operator|<
 name|temp
 condition|)
+operator|(
+name|void
+operator|)
 name|send_trigger
 argument_list|(
 name|AUDIT_TRIGGER_LOW_SPACE
@@ -1133,6 +1139,9 @@ name|audit_file_rotate_wait
 operator|=
 literal|1
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|send_trigger
 argument_list|(
 name|AUDIT_TRIGGER_OPEN_NEW

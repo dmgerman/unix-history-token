@@ -1183,13 +1183,16 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+return|return
+operator|(
 name|send_trigger
 argument_list|(
 name|udata
 operator|.
 name|au_trigger
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 break|break;
 block|}
 comment|/* Copy data back to userspace for the GET comands */

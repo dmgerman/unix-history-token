@@ -455,7 +455,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|send_trigger
 parameter_list|(
 name|unsigned
@@ -474,7 +474,11 @@ condition|(
 operator|!
 name|audit_isopen
 condition|)
-return|return;
+return|return
+operator|(
+name|ENODEV
+operator|)
+return|;
 comment|/* 	 * XXXAUDIT: Use a condition variable instead of msleep/wakeup? 	 */
 name|ti
 operator|=
@@ -523,6 +527,11 @@ operator|&
 name|audit_trigger_mtx
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
