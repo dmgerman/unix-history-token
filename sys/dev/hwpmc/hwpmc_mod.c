@@ -9211,6 +9211,12 @@ operator|->
 name|pm_flags
 operator|&
 name|PMC_F_NEEDS_LOGFILE
+operator|&&
+name|pm
+operator|->
+name|pm_state
+operator|==
+name|PMC_STATE_RUNNING
 condition|)
 name|pmc_stop
 argument_list|(
