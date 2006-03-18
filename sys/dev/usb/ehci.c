@@ -3889,6 +3889,9 @@ name|ex
 operator|->
 name|xfer
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USB_DEBUG
 name|struct
 name|ehci_pipe
 modifier|*
@@ -3903,6 +3906,8 @@ name|xfer
 operator|->
 name|pipe
 decl_stmt|;
+endif|#
+directive|endif
 name|ehci_soft_qtd_t
 modifier|*
 name|sqtd
