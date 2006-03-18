@@ -1186,7 +1186,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"audit_worker: free space below size of audit queue, failing stop\n"
+literal|"audit_record_write: free space below size of audit "
+literal|"queue, failing stop\n"
 argument_list|)
 expr_stmt|;
 name|audit_in_failure
