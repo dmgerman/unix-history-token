@@ -126,7 +126,7 @@ file|<vm/uma_dbg.h>
 end_include
 
 begin_comment
-comment|/*  * In FreeBSD, Mbufs and Mbuf Clusters are allocated from UMA  * Zones.  *  * Mbuf Clusters (2K, contiguous) are allocated from the Cluster  * Zone.  The Zone can be capped at kern.ipc.nmbclusters, if the  * administrator so desires.  *  * Mbufs are allocated from a UMA Master Zone called the Mbuf  * Zone.  *  * Additionally, FreeBSD provides a Packet Zone, which it  * configures as a Secondary Zone to the Mbuf Master Zone,  * thus sharing backend Slab kegs with the Mbuf Master Zone.  *  * Thus common-case allocations and locking are simplified:  *  *  m_clget()                m_getcl()  *    |                         |  *    |   .------------>[(Packet Cache)]    m_get(), m_gethdr()  *    |   |             [     Packet   ]            |  *  [(Cluster Cache)]   [    Secondary ]   [ (Mbuf Cache)     ]  *  [ Cluster Zone  ]   [     Zone     ]   [ Mbuf Master Zone ]  *        |                       \________         |  *  [ Cluster Keg   ]                      \       /  *        |    	                         [ Mbuf Keg   ]   *  [ Cluster Slabs ]                         |  *        |                              [ Mbuf Slabs ]  *         \____________(VM)_________________/  *  *  * Whenever a object is allocated with uma_zalloc() out of the  * one of the Zones its _ctor_ function is executed.  The same  * for any deallocation through uma_zfree() the _dror_ function  * is executed.  *   * Caches are per-CPU and are filled from the Master Zone.  *  * Whenever a object is allocated from the underlying global  * memory pool it gets pre-initialized with the _zinit_ functions.  * When the Keg's are overfull objects get decomissioned with  * _zfini_ functions and free'd back to the global memory pool.  *  */
+comment|/*  * In FreeBSD, Mbufs and Mbuf Clusters are allocated from UMA  * Zones.  *  * Mbuf Clusters (2K, contiguous) are allocated from the Cluster  * Zone.  The Zone can be capped at kern.ipc.nmbclusters, if the  * administrator so desires.  *  * Mbufs are allocated from a UMA Master Zone called the Mbuf  * Zone.  *  * Additionally, FreeBSD provides a Packet Zone, which it  * configures as a Secondary Zone to the Mbuf Master Zone,  * thus sharing backend Slab kegs with the Mbuf Master Zone.  *  * Thus common-case allocations and locking are simplified:  *  *  m_clget()                m_getcl()  *    |                         |  *    |   .------------>[(Packet Cache)]    m_get(), m_gethdr()  *    |   |             [     Packet   ]            |  *  [(Cluster Cache)]   [    Secondary ]   [ (Mbuf Cache)     ]  *  [ Cluster Zone  ]   [     Zone     ]   [ Mbuf Master Zone ]  *        |                       \________         |  *  [ Cluster Keg   ]                      \       /  *        |    	                         [ Mbuf Keg   ]  *  [ Cluster Slabs ]                         |  *        |                              [ Mbuf Slabs ]  *         \____________(VM)_________________/  *  *  * Whenever an object is allocated with uma_zalloc() out of  * one of the Zones its _ctor_ function is executed.  The same  * for any deallocation through uma_zfree() the _dtor_ function  * is executed.  *  * Caches are per-CPU and are filled from the Master Zone.  *  * Whenever an object is allocated from the underlying global  * memory pool it gets pre-initialized with the _zinit_ functions.  * When the Keg's are overfull objects get decomissioned with  * _zfini_ functions and free'd back to the global memory pool.  *  */
 end_comment
 
 begin_decl_stmt
@@ -685,7 +685,7 @@ argument_list|,
 name|zone_mbuf
 argument_list|)
 expr_stmt|;
-comment|/* Make jumbo frame zone too. 4k, 9k and 16k. */
+comment|/* Make jumbo frame zone too. Page size, 9k and 16k. */
 name|zone_jumbop
 operator|=
 name|uma_zcreate
@@ -1012,7 +1012,7 @@ name|args
 operator|->
 name|type
 expr_stmt|;
-comment|/* 	 * The mbuf is initialized later.  The caller has the 	 * responseability to setup any MAC labels too. 	 */
+comment|/* 	 * The mbuf is initialized later.  The caller has the 	 * responsibility to set up any MAC labels too. 	 */
 if|if
 condition|(
 name|type
