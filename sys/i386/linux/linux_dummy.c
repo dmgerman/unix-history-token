@@ -56,14 +56,6 @@ end_include
 begin_expr_stmt
 name|DUMMY
 argument_list|(
-name|stat
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|DUMMY
-argument_list|(
 name|stime
 argument_list|)
 expr_stmt|;
