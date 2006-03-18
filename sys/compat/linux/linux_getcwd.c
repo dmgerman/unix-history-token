@@ -28,12 +28,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_compat.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_mac.h"
 end_include
 
