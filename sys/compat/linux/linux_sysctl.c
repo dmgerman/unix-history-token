@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_compat.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -63,12 +69,6 @@ begin_include
 include|#
 directive|include
 file|<sys/sbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_compat.h"
 end_include
 
 begin_ifdef
