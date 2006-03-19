@@ -8776,16 +8776,11 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SOFTUPDATES
 name|struct
 name|buf
 modifier|*
 name|tbp
 decl_stmt|;
-endif|#
-directive|endif
 name|vp
 operator|=
 name|bo
