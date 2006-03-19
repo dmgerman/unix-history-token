@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_BSM_AUDIT_KERNEL_H
+name|_SECURITY_AUDIT_KERNEL_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_BSM_AUDIT_KERNEL_H
+name|_SEUCRITY_AUDIT_KERNEL_H_
 end_define
 
 begin_ifndef
@@ -1213,7 +1213,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_BSM_AUDIT_KERNEL_H */
+comment|/* !_SECURITY_AUDIT_KERNEL_H_ */
 end_comment
 
 end_unit
