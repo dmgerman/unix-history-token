@@ -15093,6 +15093,14 @@ operator|!=
 name|a
 operator|->
 name|a_fdvp
+operator|&&
+name|a
+operator|->
+name|a_tvp
+operator|!=
+name|a
+operator|->
+name|a_fdvp
 condition|)
 name|ASSERT_VOP_UNLOCKED
 argument_list|(
