@@ -98,6 +98,49 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * The AUDIT_EXCESSIVELY_VERBOSE define enables a number of gratuitously  * noisy printf's to the console.  Due to the volume, it should be left off  * unless you want your system to churn a lot whenever the audit record flow  * gets high.  */
+end_comment
+
+begin_comment
+comment|//#define	AUDIT_EXCESSIVELY_VERBOSE
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AUDIT_EXCESSIVELY_VERBOSE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|AUDIT_PRINTF
+parameter_list|(
+name|x
+parameter_list|)
+value|printf x
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|AUDIT_PRINTF
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Audit control variables that are usually set/read via system calls  * and used to control various aspects of auditing.  */
 end_comment
 
@@ -619,6 +662,16 @@ block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|kaudit_queue
+argument_list|,
+name|kaudit_record
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Functions to manage the allocation, release, and commit of kernel audit  * records.  */
 end_comment
@@ -760,7 +813,64 @@ value|(AU_PRS_SUCCESS|AU_PRS_FAILURE)
 end_define
 
 begin_comment
-comment|/*   * Flags to use on audit files when opening and closing.  */
+comment|/*  * Data structures relating to the kernel audit queue.  Ideally, these might  * be abstracted so that only accessor methods are exposed.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|audit_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|cv
+name|audit_commit_cv
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|cv
+name|audit_cv
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|kaudit_queue
+name|audit_q
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|audit_q_len
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|audit_pre_q_len
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|audit_in_failure
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Flags to use on audit files when opening and closing.  */
 end_comment
 
 begin_define
@@ -983,6 +1093,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|audit_free
+parameter_list|(
+name|struct
+name|kaudit_record
+modifier|*
+name|ar
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|audit_shutdown
 parameter_list|(
 name|void
@@ -1008,6 +1130,15 @@ name|struct
 name|vnode
 modifier|*
 name|vp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|audit_worker_init
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
