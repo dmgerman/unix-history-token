@@ -326,7 +326,7 @@ specifier|static
 name|u_int
 name|g_mirror_syncreqs
 init|=
-literal|4
+literal|2
 decl_stmt|;
 end_decl_stmt
 
