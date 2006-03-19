@@ -71,6 +71,12 @@ directive|include
 file|<sys/shm.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_compat.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
