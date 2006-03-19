@@ -451,7 +451,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * The remaining kernel functions are conditionally compiled in as they  * are wrapped by a macro, and the macro should be the only place in   * the source tree where these functions are referenced.  */
+comment|/*  * The remaining kernel functions are conditionally compiled in as they  * are wrapped by a macro, and the macro should be the only place in  * the source tree where these functions are referenced.  */
 end_comment
 
 begin_ifdef
@@ -1052,7 +1052,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {					\ 	if (audit_enabled)						\ 		audit_arg_ ## op (args);				\ 	} while (0)
+value|do {					\ 	if (audit_enabled)						\ 		audit_arg_ ## op (args);				\ } while (0)
 end_define
 
 begin_define
@@ -1064,11 +1064,11 @@ name|code
 parameter_list|,
 name|td
 parameter_list|)
-value|do {				\ 	if (audit_enabled) {						\ 		audit_syscall_enter(code, td);				\ 	}								\ 	} while (0)
+value|do {				\ 	if (audit_enabled) {						\ 		audit_syscall_enter(code, td);				\ 	}								\ } while (0)
 end_define
 
 begin_comment
-comment|/*  * Wrap the audit_syscall_exit() function so that it is called only when  * auditing is enabled, or we have a audit record on the thread. It is   * possible that an audit record was begun before auditing was turned off.  */
+comment|/*  * Wrap the audit_syscall_exit() function so that it is called only when  * auditing is enabled, or we have a audit record on the thread. It is  * possible that an audit record was begun before auditing was turned off.  */
 end_comment
 
 begin_define
@@ -1080,7 +1080,7 @@ name|error
 parameter_list|,
 name|td
 parameter_list|)
-value|do {				\ 	if (audit_enabled | (td->td_ar != NULL))			\ 		audit_syscall_exit(error, td);				\ 	} while (0)
+value|do {				\ 	if (audit_enabled | (td->td_ar != NULL))			\ 		audit_syscall_exit(error, td);				\ } while (0)
 end_define
 
 begin_comment
@@ -1096,7 +1096,7 @@ name|td
 parameter_list|,
 name|fd
 parameter_list|)
-value|do {					\ 	if (audit_enabled)						\ 		audit_sysclose(td, fd);					\ 	} while (0)
+value|do {					\ 	if (audit_enabled)						\ 		audit_sysclose(td, fd);					\ } while (0)
 end_define
 
 begin_else
@@ -1159,7 +1159,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {					\ 	} while (0)
+value|do {					\ } while (0)
 end_define
 
 begin_define
@@ -1171,7 +1171,7 @@ name|code
 parameter_list|,
 name|td
 parameter_list|)
-value|do {				\ 	} while (0)
+value|do {				\ } while (0)
 end_define
 
 begin_define
@@ -1183,7 +1183,7 @@ name|error
 parameter_list|,
 name|td
 parameter_list|)
-value|do {				\ 	} while (0)
+value|do {				\ } while (0)
 end_define
 
 begin_define
@@ -1195,7 +1195,7 @@ name|p
 parameter_list|,
 name|fd
 parameter_list|)
-value|do {					\ 	} while (0)
+value|do {					\ } while (0)
 end_define
 
 begin_endif

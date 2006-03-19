@@ -268,7 +268,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Insert a event to class mapping. If the event already exists in the  * mapping, then replace the mapping with the new one.  * XXX There is currently no constraints placed on the number of mappings.  *     May want to either limit to a number, or in terms of memory usage.  */
+comment|/*  * Insert a event to class mapping. If the event already exists in the  * mapping, then replace the mapping with the new one.  *  * XXX There is currently no constraints placed on the number of mappings.  * May want to either limit to a number, or in terms of memory usage.  */
 end_comment
 
 begin_function
@@ -538,7 +538,7 @@ argument_list|(
 name|event
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Perform the actual check of the masks against the event. 	 */
+comment|/* 	 * Perform the actual check of the masks against the event. 	 */
 if|if
 condition|(
 name|sorf
@@ -590,7 +590,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert sysctl names and present arguments to events  */
+comment|/*  * Convert sysctl names and present arguments to events.  */
 end_comment
 
 begin_function
@@ -777,7 +777,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert an open flags specifier into a specific type of open event for   * auditing purposes.  */
+comment|/*  * Convert an open flags specifier into a specific type of open event for  * auditing purposes.  */
 end_comment
 
 begin_function
@@ -794,7 +794,7 @@ block|{
 name|au_event_t
 name|aevent
 decl_stmt|;
-comment|/* Need to check only those flags we care about. */
+comment|/* 	 * Need to check only those flags we care about. 	 */
 name|oflags
 operator|=
 name|oflags
@@ -965,7 +965,7 @@ block|}
 if|#
 directive|if
 literal|0
-comment|/*  	 * Convert chatty errors to better matching events. 	 * Failures to find a file are really just attribute 	 * events - so recast them as such. 	 * 	 * XXXAUDIT: Solaris defines that AUE_OPEN will never be returned, it 	 * is just a placeholder.  However, in Darwin we return that in 	 * preference to other events.  For now, comment this out as we don't 	 * have a BSM conversion routine for AUE_OPEN. 	 */
+comment|/* 	 * Convert chatty errors to better matching events. 	 * Failures to find a file are really just attribute 	 * events - so recast them as such. 	 * 	 * XXXAUDIT: Solaris defines that AUE_OPEN will never be returned, it 	 * is just a placeholder.  However, in Darwin we return that in 	 * preference to other events.  For now, comment this out as we don't 	 * have a BSM conversion routine for AUE_OPEN. 	 */
 block|switch (aevent) { 	case AUE_OPEN_R: 	case AUE_OPEN_RT: 	case AUE_OPEN_RW: 	case AUE_OPEN_RWT: 	case AUE_OPEN_W: 	case AUE_OPEN_WT: 		if (error == ENOENT) 			aevent = AUE_OPEN; 	}
 endif|#
 directive|endif
@@ -1315,7 +1315,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Create a canonical path from given path by prefixing either the  * root directory, or the current working directory.  * If the process working directory is NULL, we could use 'rootvnode'  * to obtain the root directoty, but this results in a volfs name  * written to the audit log. So we will leave the filename starting  * with '/' in the audit log in this case.  *  * XXXRW: Since we combine two paths here, ideally a buffer of size  * MAXPATHLEN * 2 would be passed in.  */
+comment|/*  * Create a canonical path from given path by prefixing either the root  * directory, or the current working directory.  If the process working  * directory is NULL, we could use 'rootvnode' to obtain the root directoty,  * but this results in a volfs name written to the audit log. So we will  * leave the filename starting with '/' in the audit log in this case.  *  * XXXRW: Since we combine two paths here, ideally a buffer of size  * MAXPATHLEN * 2 would be passed in.  */
 end_comment
 
 begin_function
@@ -1401,8 +1401,8 @@ condition|)
 name|bufp
 operator|++
 expr_stmt|;
-comment|/* skip leading '/'s	     */
-comment|/* If no process root, or it is the same as the system root, 		 * audit the path as passed in with a single '/'. 		 */
+comment|/* Skip leading '/'s. */
+comment|/* 		 * If no process root, or it is the same as the system root, 		 * audit the path as passed in with a single '/'. 		 */
 if|if
 condition|(
 operator|(
@@ -1429,7 +1429,7 @@ expr_stmt|;
 name|bufp
 operator|--
 expr_stmt|;
-comment|/* restore one '/'	     */
+comment|/* Restore one '/'. */
 block|}
 else|else
 block|{
@@ -1439,7 +1439,7 @@ name|fdp
 operator|->
 name|fd_rdir
 expr_stmt|;
-comment|/* use process root	     */
+comment|/* Use process root. */
 name|vref
 argument_list|(
 name|vnp
@@ -1455,7 +1455,7 @@ name|fdp
 operator|->
 name|fd_cdir
 expr_stmt|;
-comment|/* prepend the current dir  */
+comment|/* Prepend the current dir. */
 name|vref
 argument_list|(
 name|vnp
@@ -1478,7 +1478,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * XXX: vn_fullpath() on FreeBSD is "less reliable" 		 * than vn_getpath() on Darwin, so this will need more 		 * attention in the future.  Also, the question and 		 * string bounding here seems a bit questionable and 		 * will also require attention. 		 */
+comment|/* 		 * XXX: vn_fullpath() on FreeBSD is "less reliable" than 		 * vn_getpath() on Darwin, so this will need more attention 		 * in the future.  Also, the question and string bounding 		 * here seems a bit questionable and will also require 		 * attention. 		 */
 name|vfslocked
 operator|=
 name|VFS_LOCK_GIANT
@@ -1521,7 +1521,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Copy and free buffer allocated by vn_fullpath() */
+comment|/* Copy and free buffer allocated by vn_fullpath(). */
 name|snprintf
 argument_list|(
 name|cpath
@@ -1544,7 +1544,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|cpath
 index|[
 literal|0
@@ -1552,7 +1551,6 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-block|}
 name|vput
 argument_list|(
 name|vnp

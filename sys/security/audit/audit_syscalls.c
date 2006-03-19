@@ -70,7 +70,7 @@ name|AUDIT
 end_ifdef
 
 begin_comment
-comment|/*  * MPSAFE  *  * System call to allow a user space application to submit a BSM audit  * record to the kernel for inclusion in the audit log. This function  * does little verification on the audit record that is submitted.  *  * XXXAUDIT: Audit preselection for user records does not currently  * work, since we pre-select only based on the AUE_audit event type,  * not the event type submitted as part of the user audit data.  */
+comment|/*  * MPSAFE  *  * System call to allow a user space application to submit a BSM audit record  * to the kernel for inclusion in the audit log. This function does little  * verification on the audit record that is submitted.  *  * XXXAUDIT: Audit preselection for user records does not currently work,  * since we pre-select only based on the AUE_audit event type, not the event  * type submitted as part of the user audit data.  */
 end_comment
 
 begin_comment
@@ -150,7 +150,7 @@ operator|=
 name|currecord
 argument_list|()
 expr_stmt|;
-comment|/* If there's no current audit record (audit() itself not audited) 	 * commit the user audit record. 	 */
+comment|/* 	 * If there's no current audit record (audit() itself not audited) 	 * commit the user audit record. 	 */
 if|if
 condition|(
 name|ar
@@ -158,7 +158,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* This is not very efficient; we're required to allocate 		 * a complete kernel audit record just so the user record 		 * can tag along. 		 * 		 * XXXAUDIT: Maybe AUE_AUDIT in the system call context and 		 * special pre-select handling? 		 */
+comment|/* 		 * This is not very efficient; we're required to allocate a 		 * complete kernel audit record just so the user record can 		 * tag along. 		 * 		 * XXXAUDIT: Maybe AUE_AUDIT in the system call context and 		 * special pre-select handling? 		 */
 name|td
 operator|->
 name|td_ar
@@ -238,7 +238,7 @@ condition|)
 goto|goto
 name|free_out
 goto|;
-comment|/* Verify the record */
+comment|/* Verify the record. */
 if|if
 condition|(
 name|bsm_rec_verify
@@ -257,7 +257,7 @@ goto|goto
 name|free_out
 goto|;
 block|}
-comment|/* Attach the user audit record to the kernel audit record. Because 	 * this system call is an auditable event, we will write the user 	 * record along with the record for this audit event. 	 * 	 * XXXAUDIT: KASSERT appropriate starting values of k_udata, k_ulen, 	 * k_ar_commit& AR_COMMIT_USER? 	 */
+comment|/* 	 * Attach the user audit record to the kernel audit record. Because 	 * this system call is an auditable event, we will write the user 	 * record along with the record for this audit event. 	 * 	 * XXXAUDIT: KASSERT appropriate starting values of k_udata, k_ulen, 	 * k_ar_commit& AR_COMMIT_USER? 	 */
 name|ar
 operator|->
 name|k_udata
@@ -285,7 +285,7 @@ operator|)
 return|;
 name|free_out
 label|:
-comment|/* audit_syscall_exit() will free the audit record on the thread 	 * even if we allocated it above. 	 */
+comment|/* 	 * audit_syscall_exit() will free the audit record on the thread even 	 * if we allocated it above. 	 */
 name|free
 argument_list|(
 name|rec
@@ -405,6 +405,7 @@ name|udata
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Some of the GET commands use the arguments too. 	 */
 switch|switch
 condition|(
 name|uap
@@ -412,7 +413,6 @@ operator|->
 name|cmd
 condition|)
 block|{
-comment|/* Some of the GET commands use the arguments too */
 case|case
 name|A_SETPOLICY
 case|:
@@ -497,7 +497,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* XXX Need to implement these commands by accessing the global 	 * values associated with the commands. 	 * 	 * XXXAUDIT: Locking? 	 */
+comment|/* 	 * XXX Need to implement these commands by accessing the global 	 * values associated with the commands. 	 * 	 * XXXAUDIT: Locking? 	 */
 switch|switch
 condition|(
 name|uap
@@ -1193,9 +1193,8 @@ name|au_trigger
 argument_list|)
 operator|)
 return|;
-break|break;
 block|}
-comment|/* Copy data back to userspace for the GET comands */
+comment|/* 	 * Copy data back to userspace for the GET comands. 	 */
 switch|switch
 condition|(
 name|uap
@@ -1279,7 +1278,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * MPSAFE  *  * System calls to manage the user audit information.  */
+comment|/*  * MPSAFE  *  * System calls to manage the user audit information.  */
 end_comment
 
 begin_comment
@@ -1323,7 +1322,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * XXX: 	 * Integer read on static pointer dereference: doesn't need locking? 	 */
+comment|/* 	 * XXX: Integer read on static pointer dereference: doesn't need 	 * locking? 	 */
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -1443,7 +1442,7 @@ argument_list|(
 name|id
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX: 	 * Integer write on static pointer dereference: doesn't need locking? 	 * 	 * XXXAUDIT: Might need locking to serialize audit events in the same 	 * order as change events?  Or maybe that's an under-solveable 	 * problem. 	 * 	 * XXXRW: Test privilege while holding the proc lock? 	 */
+comment|/* 	 * XXX: Integer write on static pointer dereference: doesn't need 	 * locking? 	 * 	 * XXXAUDIT: Might need locking to serialize audit events in the same 	 * order as change events?  Or maybe that's an under-solveable 	 * problem. 	 * 	 * XXXRW: Test privilege while holding the proc lock? 	 */
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -1477,7 +1476,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * MPSAFE  *  System calls to get and set process audit information.  */
+comment|/*  * MPSAFE  * System calls to get and set process audit information.  */
 end_comment
 
 begin_comment

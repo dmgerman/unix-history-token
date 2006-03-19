@@ -141,7 +141,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Audit control variables that are usually set/read via system calls  * and used to control various aspects of auditing.  */
+comment|/*  * Audit control variables that are usually set/read via system calls and  * used to control various aspects of auditing.  */
 end_comment
 
 begin_decl_stmt
@@ -291,19 +291,19 @@ decl_stmt|;
 name|in_addr_t
 name|so_raddr
 decl_stmt|;
-comment|/* remote address if INET socket */
+comment|/* Remote address if INET socket. */
 name|in_addr_t
 name|so_laddr
 decl_stmt|;
-comment|/* local address if INET socket */
+comment|/* Local address if INET socket. */
 name|u_short
 name|so_rport
 decl_stmt|;
-comment|/* remote port */
+comment|/* Remote port. */
 name|u_short
 name|so_lport
 decl_stmt|;
-comment|/* local port */
+comment|/* Local port. */
 block|}
 struct|;
 end_struct
@@ -623,7 +623,7 @@ value|do {					\ 	(kar)->k_ar.ar_valid_arg |= (arg);				\ } while (0)
 end_define
 
 begin_comment
-comment|/*  * In-kernel version of audit record; the basic record plus queue meta-data.  * This record can also have a pointer set to some opaque data that will  * be passed through to the audit writing mechanism.  */
+comment|/*  * In-kernel version of audit record; the basic record plus queue meta-data.  * This record can also have a pointer set to some opaque data that will be  * passed through to the audit writing mechanism.  */
 end_comment
 
 begin_struct
@@ -641,17 +641,17 @@ name|void
 modifier|*
 name|k_udata
 decl_stmt|;
-comment|/* user data */
+comment|/* User data. */
 name|u_int
 name|k_ulen
 decl_stmt|;
-comment|/* user data length */
+comment|/* User data length. */
 name|struct
 name|uthread
 modifier|*
 name|k_uthread
 decl_stmt|;
-comment|/* thread we are auditing */
+comment|/* Audited thread. */
 name|TAILQ_ENTRY
 argument_list|(
 argument|kaudit_record
@@ -906,7 +906,7 @@ file|<sys/malloc.h>
 end_include
 
 begin_comment
-comment|/*  * Some of the BSM tokenizer functions take different parameters in the  * kernel implementations in order to save the copying of large kernel  * data structures. The prototypes of these functions are declared here.  */
+comment|/*  * Some of the BSM tokenizer functions take different parameters in the  * kernel implementations in order to save the copying of large kernel data  * structures. The prototypes of these functions are declared here.  */
 end_comment
 
 begin_function_decl

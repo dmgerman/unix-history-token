@@ -221,7 +221,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * When an audit log is rotated, the actual rotation must be performed  * by the audit worker thread, as it may have outstanding writes on the  * current audit log.  audit_replacement_vp holds the vnode replacing  * the current vnode.  We can't let more than one replacement occur  * at a time, so if more than one thread requests a replacement, only  * one can have the replacement "in progress" at any given moment.  If  * a thread tries to replace the audit vnode and discovers a replacement  * is already in progress (i.e., audit_replacement_flag != 0), then it  * will sleep on audit_replacement_cv waiting its turn to perform a  * replacement.  When a replacement is completed, this cv is signalled  * by the worker thread so a waiting thread can start another replacement.  * We also store a credential to perform audit log write operations with.  *  * The current credential and vnode are thread-local to audit_worker.  */
+comment|/*  * When an audit log is rotated, the actual rotation must be performed by the  * audit worker thread, as it may have outstanding writes on the current  * audit log.  audit_replacement_vp holds the vnode replacing the current  * vnode.  We can't let more than one replacement occur at a time, so if more  * than one thread requests a replacement, only one can have the replacement  * "in progress" at any given moment.  If a thread tries to replace the audit  * vnode and discovers a replacement is already in progress (i.e.,  * audit_replacement_flag != 0), then it will sleep on audit_replacement_cv  * waiting its turn to perform a replacement.  When a replacement is  * completed, this cv is signalled by the worker thread so a waiting thread  * can start another replacement.  We also store a credential to perform  * audit log write operations with.  *  * The current credential and vnode are thread-local to audit_worker.  */
 end_comment
 
 begin_decl_stmt
@@ -269,7 +269,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * XXXAUDIT: Should adjust comments below to make it clear that we get to  * this point only if we believe we have storage, so not having space here  * is a violation of invariants derived from administrative procedures.  * I.e., someone else has written to the audit partition, leaving less space  * than we accounted for.  */
+comment|/*  * XXXAUDIT: Should adjust comments below to make it clear that we get to  * this point only if we believe we have storage, so not having space here is  * a violation of invariants derived from administrative procedures. I.e.,  * someone else has written to the audit partition, leaving less space than  * we accounted for.  */
 end_comment
 
 begin_function
@@ -337,7 +337,7 @@ operator|->
 name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* 	 * First, gather statistics on the audit log file and file system 	 * so that we know how we're doing on space.  In both cases, 	 * if we're unable to perform the operation, we drop the record 	 * and return.  However, this is arguably an assertion failure. 	 * XXX Need a FreeBSD equivalent. 	 */
+comment|/* 	 * First, gather statistics on the audit log file and file system so 	 * that we know how we're doing on space.  In both cases, if we're 	 * unable to perform the operation, we drop the record and return. 	 * However, this is arguably an assertion failure. 	 * XXX Need a FreeBSD equivalent. 	 */
 name|ret
 operator|=
 name|VFS_STATFS
@@ -409,7 +409,7 @@ operator|.
 name|va_size
 expr_stmt|;
 comment|/* 	 * XXX Need to decide what to do if the trigger to the audit daemon 	 * fails. 	 */
-comment|/*  	 * If we fall below minimum free blocks (hard limit), tell the audit 	 * daemon to force a rotation off of the file system. We also stop 	 * writing, which means this audit record is probably lost. 	 * If we fall below the minimum percent free blocks (soft limit),  	 * then kindly suggest to the audit daemon to do something. 	 */
+comment|/* 	 * If we fall below minimum free blocks (hard limit), tell the audit 	 * daemon to force a rotation off of the file system. We also stop 	 * writing, which means this audit record is probably lost.  If we 	 * fall below the minimum percent free blocks (soft limit), then 	 * kindly suggest to the audit daemon to do something. 	 */
 if|if
 condition|(
 name|mnt_stat
@@ -427,7 +427,7 @@ argument_list|(
 name|AUDIT_TRIGGER_NO_SPACE
 argument_list|)
 expr_stmt|;
-comment|/* Hopefully userspace did something about all the previous 		 * triggers that were sent prior to this critical condition. 		 * If fail-stop is set, then we're done; goodnight Gracie. 		 */
+comment|/* 		 * Hopefully userspace did something about all the previous 		 * triggers that were sent prior to this critical condition. 		 * If fail-stop is set, then we're done; goodnight Gracie. 		 */
 if|if
 condition|(
 name|audit_fail_stop
@@ -453,7 +453,7 @@ goto|;
 block|}
 block|}
 elseif|else
-comment|/*  		 * Send a message to the audit daemon that disk space  		 * is getting low. 		 * 		 * XXXAUDIT: Check math and block size calculation here. 		 */
+comment|/* 		 * Send a message to the audit daemon that disk space is 		 * getting low. 		 * 		 * XXXAUDIT: Check math and block size calculation here. 		 */
 if|if
 condition|(
 name|audit_qctrl
@@ -494,7 +494,7 @@ name|AUDIT_TRIGGER_LOW_SPACE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Check if the current log file is full; if so, call for 	 * a log rotate. This is not an exact comparison; we may 	 * write some records over the limit. If that's not 	 * acceptable, then add a fudge factor here. 	 */
+comment|/* 	 * Check if the current log file is full; if so, call for a log 	 * rotate. This is not an exact comparison; we may write some records 	 * over the limit. If that's not acceptable, then add a fudge factor 	 * here. 	 */
 if|if
 condition|(
 operator|(
@@ -535,7 +535,7 @@ name|AUDIT_TRIGGER_OPEN_NEW
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If the estimated amount of audit data in the audit event queue 	 * (plus records allocated but not yet queued) has reached the 	 * amount of free space on the disk, then we need to go into an 	 * audit fail stop state, in which we do not permit the 	 * allocation/committing of any new audit records.  We continue to 	 * process packets but don't allow any activities that might 	 * generate new records.  In the future, we might want to detect 	 * when space is available again and allow operation to continue, 	 * but this behavior is sufficient to meet fail stop requirements 	 * in CAPP. 	 */
+comment|/* 	 * If the estimated amount of audit data in the audit event queue 	 * (plus records allocated but not yet queued) has reached the amount 	 * of free space on the disk, then we need to go into an audit fail 	 * stop state, in which we do not permit the allocation/committing of 	 * any new audit records.  We continue to process packets but don't 	 * allow any activities that might generate new records.  In the 	 * future, we might want to detect when space is available again and 	 * allow operation to continue, but this behavior is sufficient to 	 * meet fail stop requirements in CAPP. 	 */
 if|if
 condition|(
 name|audit_fail_stop
@@ -582,8 +582,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/*  	 * If there is a user audit record attached to the kernel record, 	 * then write the user record. 	 */
-comment|/* XXX Need to decide a few things here: IF the user audit  	 * record is written, but the write of the kernel record fails, 	 * what to do? Should the kernel record come before or after the 	 * user record? For now, we write the user record first, and 	 * we ignore errors. 	 */
+comment|/* 	 * If there is a user audit record attached to the kernel record, 	 * then write the user record. 	 * 	 * XXX Need to decide a few things here: IF the user audit record is 	 * written, but the write of the kernel record fails, what to do? 	 * Should the kernel record come before or after the user record? 	 * For now, we write the user record first, and we ignore errors. 	 */
 if|if
 condition|(
 name|ar
@@ -658,7 +657,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/*  	 * Convert the internal kernel record to BSM format and write it 	 * out if everything's OK. 	 */
+comment|/* 	 * Convert the internal kernel record to BSM format and write it out 	 * if everything's OK. 	 */
 if|if
 condition|(
 operator|!
@@ -705,7 +704,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 	 * XXX: We drop the record on BSM conversion failure, but really 	 * this is an assertion failure. 	 */
+comment|/* 	 * XXX: We drop the record on BSM conversion failure, but really this 	 * is an assertion failure. 	 */
 if|if
 condition|(
 name|ret
@@ -744,7 +743,7 @@ operator|->
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX 	 * We should break the write functionality away from the BSM record 	 * generation and have the BSM generation done before this function 	 * is called. This function will then take the BSM record as a 	 * parameter. 	 */
+comment|/* 	 * XXX We should break the write functionality away from the BSM 	 * record generation and have the BSM generation done before this 	 * function is called. This function will then take the BSM record as 	 * a parameter. 	 */
 name|ret
 operator|=
 operator|(
@@ -794,7 +793,7 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-comment|/* 	 * When we're done processing the current record, we have to 	 * check to see if we're in a failure mode, and if so, whether 	 * this was the last record left to be drained.  If we're done 	 * draining, then we fsync the vnode and panic. 	 */
+comment|/* 	 * When we're done processing the current record, we have to check to 	 * see if we're in a failure mode, and if so, whether this was the 	 * last record left to be drained.  If we're done draining, then we 	 * fsync the vnode and panic. 	 */
 if|if
 condition|(
 name|audit_in_failure

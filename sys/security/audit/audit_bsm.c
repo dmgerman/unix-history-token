@@ -130,7 +130,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*   * Forward declares.  */
+comment|/*  * Forward declares.  */
 end_comment
 
 begin_function_decl
@@ -174,7 +174,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This call reserves memory for the audit record.   * Memory must be guaranteed before any auditable event can be  * generated.   * The au_record structure maintains a reference to the  * memory allocated above and also the list of tokens associated   * with this record  */
+comment|/*  * This call reserves memory for the audit record.  Memory must be guaranteed  * before any auditable event can be generated.  The au_record structure  * maintains a reference to the memory allocated above and also the list of  * tokens associated with this record  */
 end_comment
 
 begin_function
@@ -480,7 +480,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free a BSM audit record by releasing all the tokens and clearing the  * audit record information.  */
+comment|/*  * Free a BSM audit record by releasing all the tokens and clearing the audit  * record information.  */
 end_comment
 
 begin_function
@@ -498,7 +498,7 @@ name|au_token
 modifier|*
 name|tok
 decl_stmt|;
-comment|/* Free the token list */
+comment|/* Free the token list. */
 while|while
 condition|(
 operator|(
@@ -617,7 +617,7 @@ begin_define
 define|#
 directive|define
 name|FD_VNODE1_TOKENS
-value|do {					\ 	if (ARG_IS_VALID(kar, ARG_VNODE1)) {				\ 		if (ARG_IS_VALID(kar, ARG_FD)) {			\ 			tok = au_to_arg32(1, "fd", ar->ar_arg_fd);	\ 			kau_write(rec, tok);				\ 		}							\ 		tok = au_to_attr32(&ar->ar_arg_vnode1);			\ 		kau_write(rec, tok);					\ 	} else {							\ 		if (ARG_IS_VALID(kar, ARG_FD)) {			\ 			tok = au_to_arg32(1, "non-file: fd", ar->ar_arg_fd);\ 			kau_write(rec, tok);				\ 		}							\ 	}								\ } while (0)
+value|do {					\ 	if (ARG_IS_VALID(kar, ARG_VNODE1)) {				\ 		if (ARG_IS_VALID(kar, ARG_FD)) {			\ 			tok = au_to_arg32(1, "fd", ar->ar_arg_fd);	\ 			kau_write(rec, tok);				\ 		}							\ 		tok = au_to_attr32(&ar->ar_arg_vnode1);			\ 		kau_write(rec, tok);					\ 	} else {							\ 		if (ARG_IS_VALID(kar, ARG_FD)) {			\ 			tok = au_to_arg32(1, "non-file: fd",		\ 			    ar->ar_arg_fd);				\ 			kau_write(rec, tok);				\ 		}							\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -1206,7 +1206,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert an internal kernel audit record to a BSM record and return   * a success/failure indicator. The BSM record is passed as an out  * parameter to this function.   * Return conditions:  *   BSM_SUCCESS: The BSM record is valid  *   BSM_FAILURE: Failure; the BSM record is NULL.  *   BSM_NOAUDIT: The event is not auditable for BSM; the BSM record is NULL.   */
+comment|/*  * Convert an internal kernel audit record to a BSM record and return a  * success/failure indicator. The BSM record is passed as an out parameter to  * this function.  *  * Return conditions:  *   BSM_SUCCESS: The BSM record is valid  *   BSM_FAILURE: Failure; the BSM record is NULL.  *   BSM_NOAUDIT: The event is not auditable for BSM; the BSM record is NULL.  */
 end_comment
 
 begin_function
@@ -1343,7 +1343,7 @@ operator|&
 name|tid
 argument_list|)
 expr_stmt|;
-comment|/* The logic inside each case fills in the tokens required for the 	 * event, except for the header, trailer, and return tokens. The  	 * header and trailer tokens are added by the kau_close() function. 	 * The return token is added outside of the switch statement. 	 */
+comment|/* 	 * The logic inside each case fills in the tokens required for the 	 * event, except for the header, trailer, and return tokens.  The 	 * header and trailer tokens are added by the kau_close() function. 	 * The return token is added outside of the switch statement. 	 */
 switch|switch
 condition|(
 name|ar
@@ -1351,7 +1351,6 @@ operator|->
 name|ar_event
 condition|)
 block|{
-comment|/*  	 * Socket-related events.  	 */
 case|case
 name|AUE_ACCEPT
 case|:
@@ -1373,6 +1372,7 @@ case|:
 case|case
 name|AUE_SENDTO
 case|:
+comment|/* 		 * Socket-related events. 		 */
 if|if
 condition|(
 name|ARG_IS_VALID
@@ -1820,7 +1820,7 @@ comment|/* XXX need to add arguments */
 case|case
 name|AUE_AUDITON
 case|:
-comment|/* For AUDITON commands without own event, audit the cmd */
+comment|/* 		 * For AUDITON commands without own event, audit the cmd. 		 */
 if|if
 condition|(
 name|ARG_IS_VALID
@@ -1910,7 +1910,6 @@ argument_list|,
 name|ARG_AUDITON
 argument_list|)
 condition|)
-block|{
 name|audit_sys_auditon
 argument_list|(
 name|ar
@@ -1918,7 +1917,6 @@ argument_list|,
 name|rec
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|AUE_AUDITCTL
@@ -1997,7 +1995,7 @@ case|:
 case|case
 name|AUE_NEWSYSTEMSHREG
 case|:
-comment|/* Header, subject, and return tokens added at end */
+comment|/* 		 * Header, subject, and return tokens added at end. 		 */
 break|break;
 case|case
 name|AUE_ACCESS
@@ -2683,10 +2681,8 @@ argument_list|,
 name|ARG_VNODE1
 argument_list|)
 condition|)
-block|{
 name|FD_VNODE1_TOKENS
 expr_stmt|;
-block|}
 else|else
 block|{
 if|if
@@ -4917,7 +4913,7 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
-comment|/* AUE_SHMOPEN, AUE_SHMUNLINK, AUE_SEMOPEN, AUE_SEMCLOSE  	 * and AUE_SEMUNLINK are Posix IPC */
+comment|/* AUE_SHMOPEN, AUE_SHMUNLINK, AUE_SEMOPEN, AUE_SEMCLOSE 	 * and AUE_SEMUNLINK are Posix IPC */
 case|case
 name|AUE_SHMOPEN
 case|:
@@ -5602,7 +5598,6 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-comment|/* We shouldn't fall through to here. */
 name|printf
 argument_list|(
 literal|"BSM conversion requested for unknown event %d\n"
@@ -5690,7 +5685,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Verify that a record is a valid BSM record. This verification is  * simple now, but may be expanded on sometime in the future.  * Return 1 if the record is good, 0 otherwise.  *  */
+comment|/*  * Verify that a record is a valid BSM record. This verification is simple  * now, but may be expanded on sometime in the future.  Return 1 if the  * record is good, 0 otherwise.  */
 end_comment
 
 begin_function
@@ -5712,8 +5707,7 @@ operator|*
 operator|)
 name|rec
 decl_stmt|;
-comment|/*  	 * Check the token ID of the first token; it has to be a header 	 * token. 	 */
-comment|/* XXXAUDIT There needs to be a token structure to map a token.  	 * XXXAUDIT 'Shouldn't be simply looking at the first char. 	 */
+comment|/* 	 * Check the token ID of the first token; it has to be a header 	 * token. 	 * 	 * XXXAUDIT There needs to be a token structure to map a token. 	 * XXXAUDIT 'Shouldn't be simply looking at the first char. 	 */
 if|if
 condition|(
 operator|(
@@ -5740,13 +5734,11 @@ operator|!=
 name|AUT_HEADER64_EX
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 return|return
 operator|(
 literal|1

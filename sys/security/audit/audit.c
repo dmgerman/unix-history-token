@@ -264,11 +264,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Audit control settings that are set/read by system calls and are   * hence non-static.  */
+comment|/*  * Audit control settings that are set/read by system calls and are  * hence non-static.  */
 end_comment
 
 begin_comment
-comment|/*   * Define the audit control flags.  */
+comment|/*  * Define the audit control flags.  */
 end_comment
 
 begin_decl_stmt
@@ -310,7 +310,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Global audit statistiscs.   */
+comment|/*  * Global audit statistiscs.  */
 end_comment
 
 begin_decl_stmt
@@ -399,7 +399,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   * Condition variable for  auditing threads wait on when in fail-stop mode.   * Threads wait on this CV forever (and ever), never seeing the light of   * day again.  */
+comment|/*  * Condition variable for  auditing threads wait on when in fail-stop mode.  * Threads wait on this CV forever (and ever), never seeing the light of  * day again.  */
 end_comment
 
 begin_decl_stmt
@@ -1225,7 +1225,7 @@ block|{
 case|case
 name|AUE_OPEN_RWTC
 case|:
-comment|/* The open syscall always writes a AUE_OPEN_RWTC event; change 		 * it to the proper type of event based on the flags and the  		 * error value. 		 */
+comment|/* The open syscall always writes a AUE_OPEN_RWTC event; change 		 * it to the proper type of event based on the flags and the 		 * error value. 		 */
 name|ar
 operator|->
 name|k_ar
@@ -1588,7 +1588,7 @@ name|p_au
 operator|->
 name|ai_mask
 expr_stmt|;
-comment|/* 	 * Allocate an audit record, if preselection allows it, and store  	 * in the thread for later use. 	 */
+comment|/* 	 * Allocate an audit record, if preselection allows it, and store 	 * in the thread for later use. 	 */
 if|if
 condition|(
 name|au_preselect
@@ -1845,7 +1845,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Initialize the audit information for the a process, presumably the first   * process in the system.  * XXX It is not clear what the initial values should be for audit ID,   * session ID, etc.   */
+comment|/*  * Initialize the audit information for the a process, presumably the first  * process in the system.  * XXX It is not clear what the initial values should be for audit ID,  * session ID, etc.  */
 end_comment
 
 begin_function
@@ -1953,7 +1953,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Copy the audit info from the parent process to the child process when  * a fork takes place.  */
+comment|/*  * Copy the audit info from the parent process to the child process when  * a fork takes place.  */
 end_comment
 
 begin_function
@@ -2047,7 +2047,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free the auditing structure for the process.   */
+comment|/*  * Free the auditing structure for the process.  */
 end_comment
 
 begin_function

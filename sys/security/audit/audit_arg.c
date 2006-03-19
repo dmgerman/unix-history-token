@@ -2423,7 +2423,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Store a path as given by the user process for auditing into the audit   * record stored on the user thread. This function will allocate the memory to   * store the path info if not already available. This memory will be   * freed when the audit record is freed.  *  * XXXAUDIT: Possibly assert that the memory isn't already allocated?  */
+comment|/*  * Store a path as given by the user process for auditing into the audit  * record stored on the user thread. This function will allocate the memory  * to store the path info if not already available. This memory will be freed  * when the audit record is freed.  *  * XXXAUDIT: Possibly assert that the memory isn't already allocated?  */
 end_comment
 
 begin_function
@@ -2595,7 +2595,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Function to save the path and vnode attr information into the audit   * record.   *  * It is assumed that the caller will hold any vnode locks necessary to  * perform a VOP_GETATTR() on the passed vnode.  *  * XXX: The attr code is very similar to vfs_vnops.c:vn_stat(), but  * always provides access to the generation number as we need that  * to construct the BSM file ID.  * XXX: We should accept the process argument from the caller, since  * it's very likely they already have a reference.  * XXX: Error handling in this function is poor.  *  * XXXAUDIT: Possibly KASSERT the path pointer is NULL?  */
+comment|/*  * Function to save the path and vnode attr information into the audit  * record.  *  * It is assumed that the caller will hold any vnode locks necessary to  * perform a VOP_GETATTR() on the passed vnode.  *  * XXX: The attr code is very similar to vfs_vnops.c:vn_stat(), but  * always provides access to the generation number as we need that  * to construct the BSM file ID.  * XXX: We should accept the process argument from the caller, since  * it's very likely they already have a reference.  * XXX: Error handling in this function is poor.  *  * XXXAUDIT: Possibly KASSERT the path pointer is NULL?  */
 end_comment
 
 begin_function
@@ -2667,7 +2667,6 @@ name|ar
 operator|==
 name|NULL
 condition|)
-comment|/* This will be the case for unaudited system calls */
 return|return;
 comment|/* 	 * XXXAUDIT: KASSERT argument validity instead? 	 * 	 * XXXAUDIT: The below clears, and then resets the flags for valid 	 * arguments.  Ideally, either the new vnode is used, or the old one 	 * would be. 	 */
 if|if
@@ -2847,7 +2846,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The close() system call uses it's own audit call to capture the   * path/vnode information because those pieces are not easily obtained  * within the system call itself.  */
+comment|/*  * The close() system call uses it's own audit call to capture the path/vnode  * information because those pieces are not easily obtained within the system  * call itself.  */
 end_comment
 
 begin_function
