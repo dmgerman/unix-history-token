@@ -171,7 +171,7 @@ begin_define
 define|#
 directive|define
 name|AUDIT_PIPE_QLIMIT_DEFAULT
-value|(32)
+value|(128)
 end_define
 
 begin_define
