@@ -547,6 +547,8 @@ argument_list|,
 name|O_CREAT
 operator||
 name|O_WRONLY
+operator||
+name|O_NONBLOCK
 argument_list|,
 name|DEFFILEMODE
 argument_list|)
@@ -587,6 +589,27 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"refuse to append to %s not owned by you"
+argument_list|,
+name|tracefile
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|S_ISREG
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+operator|)
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s not regular file"
 argument_list|,
 name|tracefile
 argument_list|)
