@@ -13181,17 +13181,7 @@ name|td
 operator|->
 name|td_pcb
 expr_stmt|;
-comment|/* 		 * Don't let a process set a breakpoint that is not within the 		 * process's address space.  If a process could do this, it 		 * could halt the system by setting a breakpoint in the kernel 		 * (if ddb was enabled).  Thus, we need to check to make sure 		 * that no breakpoints are being enabled for addresses outside 		 * process's address space, unless, perhaps, we were called by 		 * uid 0. 		 * 		 * XXX - what about when the watched area of the user's 		 * address space is written into from within the kernel 		 * ... wouldn't that still cause a breakpoint to be generated 		 * from within kernel mode? 		 */
-if|if
-condition|(
-name|suser
-argument_list|(
-name|td
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
+comment|/* 		 * Don't let a process set a breakpoint that is not within the 		 * process's address space.  If a process could do this, it 		 * could halt the system by setting a breakpoint in the kernel 		 * (if ddb was enabled).  Thus, we need to check to make sure 		 * that no breakpoints are being enabled for addresses outside 		 * process's address space. 		 * 		 * XXX - what about when the watched area of the user's 		 * address space is written into from within the kernel 		 * ... wouldn't that still cause a breakpoint to be generated 		 * from within kernel mode? 		 */
 if|if
 condition|(
 name|dbregs
@@ -13323,7 +13313,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
 block|}
 name|pcb
 operator|->
