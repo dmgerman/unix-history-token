@@ -307,7 +307,7 @@ name|strcmp
 argument_list|(
 name|o
 argument_list|,
-literal|"lockd"
+literal|"nolockd"
 argument_list|)
 operator|==
 literal|0
