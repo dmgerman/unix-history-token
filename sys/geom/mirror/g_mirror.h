@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2004-2005 Pawel Jakub Dawidek<pjd@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2004-2006 Pawel Jakub Dawidek<pjd@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -139,6 +139,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|G_MIRROR_DISK_FLAG_BROKEN
+value|0x0000000000000020ULL
+end_define
+
+begin_define
+define|#
+directive|define
 name|G_MIRROR_DISK_FLAG_MASK
 value|(G_MIRROR_DISK_FLAG_DIRTY |	\ 					 G_MIRROR_DISK_FLAG_SYNCHRONIZING | \ 					 G_MIRROR_DISK_FLAG_FORCE_SYNC | \ 					 G_MIRROR_DISK_FLAG_INACTIVE)
 end_define
@@ -232,18 +239,21 @@ name|off_t
 name|ds_offset_done
 decl_stmt|;
 comment|/* Offset of already synchronized 					   region. */
-name|off_t
-name|ds_resync
-decl_stmt|;
-comment|/* Resynchronize from this offset. */
 name|u_int
 name|ds_syncid
 decl_stmt|;
 comment|/* Disk's synchronization ID. */
-name|u_char
-modifier|*
-name|ds_data
+name|u_int
+name|ds_inflight
 decl_stmt|;
+comment|/* Number of in-flight sync requests. */
+name|struct
+name|bio
+modifier|*
+modifier|*
+name|ds_bios
+decl_stmt|;
+comment|/* BIOs for synchronization I/O. */
 block|}
 struct|;
 end_struct
@@ -536,6 +546,10 @@ name|sc_id
 decl_stmt|;
 comment|/* Mirror unique ID. */
 name|struct
+name|sx
+name|sc_lock
+decl_stmt|;
+name|struct
 name|bio_queue_head
 name|sc_queue
 decl_stmt|;
@@ -548,6 +562,21 @@ name|proc
 modifier|*
 name|sc_worker
 decl_stmt|;
+name|struct
+name|bio_queue_head
+name|sc_regular_delayed
+decl_stmt|;
+comment|/* Delayed I/O requests due 						     collision with sync 						     requests. */
+name|struct
+name|bio_queue_head
+name|sc_inflight
+decl_stmt|;
+comment|/* In-flight regular write 					      requests. */
+name|struct
+name|bio_queue_head
+name|sc_sync_delayed
+decl_stmt|;
+comment|/* Delayed sync requests due 						  collision with regular 						  requests. */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -583,6 +612,12 @@ name|int
 name|sc_idle
 decl_stmt|;
 comment|/* DIRTY flags removed. */
+name|time_t
+name|sc_last_write
+decl_stmt|;
+name|u_int
+name|sc_writes
+decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
