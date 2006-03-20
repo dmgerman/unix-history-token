@@ -349,8 +349,6 @@ argument_list|,
 literal|"%s"
 argument_list|,
 name|mtmp
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|free
