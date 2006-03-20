@@ -2010,10 +2010,6 @@ decl_stmt|;
 comment|/* Map the register window so we can access the device. */
 name|apic
 operator|=
-operator|(
-name|ioapic_t
-operator|*
-operator|)
 name|pmap_mapdev
 argument_list|(
 name|addr

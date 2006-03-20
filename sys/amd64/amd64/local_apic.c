@@ -890,10 +890,6 @@ argument_list|)
 expr_stmt|;
 name|lapic
 operator|=
-operator|(
-name|lapic_t
-operator|*
-operator|)
 name|pmap_mapdev
 argument_list|(
 name|addr
