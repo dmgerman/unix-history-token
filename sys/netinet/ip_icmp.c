@@ -334,7 +334,7 @@ name|drop_redirect
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Ignore ICMP redirects"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -364,7 +364,7 @@ name|log_redirect
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Log ICMP redirects to the console"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -394,7 +394,7 @@ name|icmplim
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Maximum number of ICMP responses per second"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -424,7 +424,7 @@ name|icmplim_output
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Enable rate limiting of ICMP responses"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
