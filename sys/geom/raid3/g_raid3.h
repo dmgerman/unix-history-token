@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2004-2005 Pawel Jakub Dawidek<pjd@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2004-2006 Pawel Jakub Dawidek<pjd@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -78,6 +78,13 @@ define|#
 directive|define
 name|G_RAID3_DISK_FLAG_HARDCODED
 value|0x0000000000000008ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_RAID3_DISK_FLAG_BROKEN
+value|0x0000000000000010ULL
 end_define
 
 begin_define
@@ -254,10 +261,17 @@ name|u_int
 name|ds_syncid
 decl_stmt|;
 comment|/* Disk's synchronization ID. */
-name|u_char
-modifier|*
-name|ds_data
+name|u_int
+name|ds_inflight
 decl_stmt|;
+comment|/* Number of in-flight sync requests. */
+name|struct
+name|bio
+modifier|*
+modifier|*
+name|ds_bios
+decl_stmt|;
+comment|/* BIOs for synchronization I/O. */
 block|}
 struct|;
 end_struct
@@ -503,6 +517,68 @@ name|G_RAID3_BUMP_GENID
 value|0x2
 end_define
 
+begin_enum
+enum|enum
+name|g_raid3_zones
+block|{
+name|G_RAID3_ZONE_64K
+block|,
+name|G_RAID3_ZONE_16K
+block|,
+name|G_RAID3_ZONE_4K
+block|,
+name|G_RAID3_NUM_ZONES
+block|}
+enum|;
+end_enum
+
+begin_function
+specifier|static
+name|__inline
+name|enum
+name|g_raid3_zones
+name|g_raid3_zone
+parameter_list|(
+name|size_t
+name|nbytes
+parameter_list|)
+block|{
+if|if
+condition|(
+name|nbytes
+operator|>
+literal|16384
+condition|)
+return|return
+operator|(
+name|G_RAID3_ZONE_64K
+operator|)
+return|;
+elseif|else
+if|if
+condition|(
+name|nbytes
+operator|>
+literal|4096
+condition|)
+return|return
+operator|(
+name|G_RAID3_ZONE_16K
+operator|)
+return|;
+else|else
+return|return
+operator|(
+name|G_RAID3_ZONE_4K
+operator|)
+return|;
+block|}
+end_function
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_struct
 struct|struct
 name|g_raid3_softc
@@ -538,6 +614,10 @@ name|sc_id
 decl_stmt|;
 comment|/* Device unique ID. */
 name|struct
+name|sx
+name|sc_lock
+decl_stmt|;
+name|struct
 name|bio_queue_head
 name|sc_queue
 decl_stmt|;
@@ -550,6 +630,21 @@ name|proc
 modifier|*
 name|sc_worker
 decl_stmt|;
+name|struct
+name|bio_queue_head
+name|sc_regular_delayed
+decl_stmt|;
+comment|/* Delayed I/O requests due 						     collision with sync 						     requests. */
+name|struct
+name|bio_queue_head
+name|sc_inflight
+decl_stmt|;
+comment|/* In-flight regular write 					      requests. */
+name|struct
+name|bio_queue_head
+name|sc_sync_delayed
+decl_stmt|;
+comment|/* Delayed sync requests due 						  collision with regular 						  requests. */
 name|struct
 name|g_raid3_disk
 modifier|*
@@ -567,15 +662,30 @@ name|g_raid3_disk
 modifier|*
 name|sc_syncdisk
 decl_stmt|;
+struct|struct
+name|g_raid3_zone
+block|{
 name|uma_zone_t
-name|sc_zone_64k
+name|sz_zone
 decl_stmt|;
-name|uma_zone_t
-name|sc_zone_16k
+name|size_t
+name|sz_inuse
 decl_stmt|;
-name|uma_zone_t
-name|sc_zone_4k
+name|size_t
+name|sz_max
 decl_stmt|;
+name|u_int
+name|sz_requested
+decl_stmt|;
+name|u_int
+name|sz_failed
+decl_stmt|;
+block|}
+name|sc_zones
+index|[
+name|G_RAID3_NUM_ZONES
+index|]
+struct|;
 name|u_int
 name|sc_genid
 decl_stmt|;
@@ -595,6 +705,12 @@ name|int
 name|sc_idle
 decl_stmt|;
 comment|/* DIRTY flags removed. */
+name|time_t
+name|sc_last_write
+decl_stmt|;
+name|u_int
+name|sc_writes
+decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
