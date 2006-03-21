@@ -890,15 +890,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|pcm_channel
-modifier|*
+name|int
 name|pcm_chnalloc
 parameter_list|(
 name|struct
 name|snddev_info
 modifier|*
 name|d
+parameter_list|,
+name|struct
+name|pcm_channel
+modifier|*
+modifier|*
+name|ch
 parameter_list|,
 name|int
 name|direction
