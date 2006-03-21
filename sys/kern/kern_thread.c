@@ -2775,6 +2775,18 @@ operator|!=
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|P_SHOULDSTOP
+argument_list|(
+name|p
+argument_list|)
+operator|!=
+name|P_STOPPED_SINGLE
+condition|)
+goto|goto
+name|stopme
+goto|;
 name|FOREACH_THREAD_IN_PROC
 argument_list|(
 argument|p
@@ -3021,6 +3033,8 @@ operator|==
 literal|1
 condition|)
 break|break;
+name|stopme
+label|:
 comment|/* 		 * Wake us up when everyone else has suspended. 		 * In the mean time we suspend as well. 		 */
 name|thread_stopped
 argument_list|(
