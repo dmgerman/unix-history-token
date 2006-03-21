@@ -36,6 +36,13 @@ name|HAVE_SIN6_SCOPE_ID
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|HAVE_TIME_R
+value|1
+end_define
+
 begin_endif
 endif|#
 directive|endif
