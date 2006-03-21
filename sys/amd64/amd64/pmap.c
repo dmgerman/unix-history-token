@@ -12339,15 +12339,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|td
-operator|->
-name|td_proc
-decl_stmt|;
 name|pmap_t
 name|pmap
 decl_stmt|,
@@ -12448,25 +12439,6 @@ operator|->
 name|pm_pml4
 argument_list|)
 expr_stmt|;
-comment|/* XXXKSE this is wrong. 	 * pmap_activate is for the current thread on the current cpu 	 */
-if|if
-condition|(
-name|p
-operator|->
-name|p_flag
-operator|&
-name|P_SA
-condition|)
-block|{
-comment|/* Make sure all other cr3 entries are updated. */
-comment|/* what if they are running?  XXXKSE (maybe abort them) */
-name|FOREACH_THREAD_IN_PROC
-argument_list|(
-argument|p
-argument_list|,
-argument|td
-argument_list|)
-block|{
 name|td
 operator|->
 name|td_pcb
@@ -12475,19 +12447,6 @@ name|pcb_cr3
 operator|=
 name|cr3
 expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-name|td
-operator|->
-name|td_pcb
-operator|->
-name|pcb_cr3
-operator|=
-name|cr3
-expr_stmt|;
-block|}
 name|load_cr3
 argument_list|(
 name|cr3
