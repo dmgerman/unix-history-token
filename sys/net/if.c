@@ -3074,23 +3074,6 @@ operator|->
 name|if_linktask
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEV_CARP
-comment|/* Maybe hook to the generalized departure handler above?!? */
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_carp
-condition|)
-name|carp_ifdetach
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Remove routes and flush queues. 	 */
 name|s
 operator|=
