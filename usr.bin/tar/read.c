@@ -38,18 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<archive.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<archive_entry.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 

@@ -516,17 +516,48 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_LIBARCHIVE
-end_ifndef
+end_ifdef
 
-begin_error
-error|#
-directive|error
-error|Configuration error: did not find libarchive.
-end_error
+begin_comment
+comment|/* If we're using the platform libarchive, include system headers. */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<archive.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<archive_entry.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* Otherwise, include user headers. */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"archive.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"archive_entry.h"
+end_include
 
 begin_endif
 endif|#

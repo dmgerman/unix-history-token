@@ -322,7 +322,7 @@ file|<stdio.h>
 end_include
 
 begin_endif
-unit|void tree_dump(struct tree *t, FILE *out) { 	struct tree_entry *te;  	fprintf(out, "\tdepth: %d\n", t->depth); 	fprintf(out, "\tbuff: %s\n", t->buff); 	fprintf(out, "\tpwd: "); fflush(stdout); system("pwd"); 	fprintf(out, "\taccess: %s\n", t->basename); 	fprintf(out, "\tstack:\n"); 	for(te = t->stack; te != NULL; te = te->next) { 		fprintf(out, "\t\tte->name: %s%s%s\n", te->name, 		    te->flags& needsPreVisit ? "" : " *", 		    t->current == te ? " (current)" : ""); 	} }
+unit|void tree_dump(struct tree *t, FILE *out) { 	struct tree_entry *te;  	fprintf(out, "\tdepth: %d\n", t->depth); 	fprintf(out, "\tbuff: %s\n", t->buff); 	fprintf(out, "\tpwd: "); fflush(stdout); system("pwd"); 	fprintf(out, "\taccess: %s\n", t->basename); 	fprintf(out, "\tstack:\n"); 	for (te = t->stack; te != NULL; te = te->next) { 		fprintf(out, "\t\tte->name: %s%s%s\n", te->name, 		    te->flags& needsPreVisit ? "" : " *", 		    t->current == te ? " (current)" : ""); 	} }
 endif|#
 directive|endif
 end_endif

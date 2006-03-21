@@ -32,18 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<archive.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<archive_entry.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -1871,6 +1859,12 @@ operator|->
 name|extract_flags
 operator||=
 name|ARCHIVE_EXTRACT_ACL
+expr_stmt|;
+name|bsdtar
+operator|->
+name|extract_flags
+operator||=
+name|ARCHIVE_EXTRACT_XATTR
 expr_stmt|;
 name|bsdtar
 operator|->
