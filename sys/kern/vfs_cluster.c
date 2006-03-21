@@ -113,17 +113,6 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
-begin_function_decl
-name|int
-name|softdep_wantrollbacks
-parameter_list|(
-name|struct
-name|buf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_if
 if|#
 directive|if
