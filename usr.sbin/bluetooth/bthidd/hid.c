@@ -133,6 +133,22 @@ parameter_list|)
 value|(sizeof(a)/sizeof(a[0]))
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|HID_BUT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|HID_BUT
+parameter_list|(
+name|i
+parameter_list|)
+value|((i)< 3 ? (((i) ^ 3) % 3) : (i))
+end_define
+
 begin_comment
 comment|/*  * Process data from control channel  */
 end_comment
@@ -887,11 +903,12 @@ operator||=
 operator|(
 name|val
 operator|<<
-operator|(
+name|HID_BUT
+argument_list|(
 name|usage
 operator|-
 literal|1
-operator|)
+argument_list|)
 operator|)
 expr_stmt|;
 name|mevents
