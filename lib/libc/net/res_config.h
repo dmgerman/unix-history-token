@@ -24,26 +24,6 @@ begin_comment
 comment|/* allow sorting of addresses in gethostbyname */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|RFC1535
-end_define
-
-begin_comment
-comment|/* comply with RFC1535 (STRONGLY reccomended by vixie)*/
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|USELOOPBACK
-end_undef
-
-begin_comment
-comment|/* res_init() bind to localhost */
-end_comment
-
 begin_undef
 undef|#
 directive|undef
@@ -63,28 +43,6 @@ end_define
 
 begin_comment
 comment|/* fold multiple PTR records into aliases */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHECK_SRVR_ADDR
-value|1
-end_define
-
-begin_comment
-comment|/* confirm that the server requested sent the reply */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BIND_UPDATE
-value|1
-end_define
-
-begin_comment
-comment|/* update support */
 end_comment
 
 end_unit

@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<resolv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -382,9 +388,13 @@ operator|<
 name|len
 condition|)
 block|{
-name|h_errno
-operator|=
+name|RES_SET_H_ERRNO
+argument_list|(
+name|__res_state
+argument_list|()
+argument_list|,
 name|NO_RECOVERY
+argument_list|)
 expr_stmt|;
 return|return
 operator|-

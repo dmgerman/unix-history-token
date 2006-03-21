@@ -60,6 +60,12 @@ name|_NETBUFSIZE
 value|1025
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|__res_state
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|hostent_data
@@ -99,6 +105,11 @@ name|hostf
 decl_stmt|;
 name|int
 name|stayopen
+decl_stmt|;
+name|struct
+name|__res_state
+modifier|*
+name|res
 decl_stmt|;
 ifdef|#
 directive|ifdef

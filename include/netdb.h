@@ -153,7 +153,7 @@ begin_define
 define|#
 directive|define
 name|h_errno
-value|(*__h_error())
+value|(*__h_errno())
 end_define
 
 begin_comment
@@ -1250,7 +1250,7 @@ end_comment
 begin_function_decl
 name|int
 modifier|*
-name|__h_error
+name|__h_errno
 parameter_list|(
 name|void
 parameter_list|)

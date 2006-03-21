@@ -93,6 +93,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"res_update.h"
+end_include
+
 begin_comment
 comment|/*  * Separate a linked list of records into groups so that all records  * in a group will belong to a single zone on the nameserver.  * Create a dynamic update packet for each zone and send it to the  * nameservers for that zone, and await answer.  * Abort if error occurs in updating any zone.  * Return the number of zones updated on success,< 0 on error.  *  * On error, caller must deal with the unsynchronized zones  * eg. an A record might have been successfully added to the forward  * zone but the corresponding PTR record would be missing if error  * was encountered while updating the reverse zone.  */
 end_comment
@@ -349,9 +355,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|h_errno
-operator|=
+name|RES_SET_H_ERRNO
+argument_list|(
+operator|&
+name|_res
+argument_list|,
 name|NETDB_INTERNAL
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

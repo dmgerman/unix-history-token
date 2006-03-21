@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"res_update.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"res_config.h"
 end_include
 
@@ -272,9 +278,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|h_errno
-operator|=
+name|RES_SET_H_ERRNO
+argument_list|(
+operator|&
+name|_res
+argument_list|,
 name|NETDB_INTERNAL
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
