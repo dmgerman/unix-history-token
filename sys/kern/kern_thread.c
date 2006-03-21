@@ -3022,6 +3022,11 @@ literal|1
 condition|)
 break|break;
 comment|/* 		 * Wake us up when everyone else has suspended. 		 * In the mean time we suspend as well. 		 */
+name|thread_stopped
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|thread_suspend_one
 argument_list|(
 name|td
