@@ -4550,6 +4550,28 @@ value|0x0003
 end_define
 
 begin_comment
+comment|/*  * D-Link vendor ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_VENDORID_DLINK
+value|0x1186
+end_define
+
+begin_comment
+comment|/*  * D-Link device IDs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_DEVICEID_DRP32TXD
+value|0x1561
+end_define
+
+begin_comment
 comment|/*  * Abocom vendor ID  */
 end_comment
 
