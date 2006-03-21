@@ -39,6 +39,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Import. */
 end_comment
@@ -49,11 +63,22 @@ directive|include
 file|"port_before.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_LIBC
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|"fd_setsize.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -61,11 +86,22 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_LIBC
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<isc/assertions.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -106,6 +142,24 @@ end_define
 begin_comment
 comment|/* Forward. */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_LIBC
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|__evOptMonoTime
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_function_decl
 specifier|static
@@ -212,6 +266,11 @@ block|}
 name|idle_timer
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Public. */
@@ -629,6 +688,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_LIBC
+end_ifndef
+
 begin_function
 name|struct
 name|timespec
@@ -655,6 +720,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|struct
@@ -696,6 +766,22 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|USE_KQUEUE
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|_LIBC
+argument_list|)
+end_if
+
 begin_function
 name|struct
 name|timeval
@@ -735,6 +821,17 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_LIBC
+end_ifndef
 
 begin_function
 name|int
@@ -2321,6 +2418,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

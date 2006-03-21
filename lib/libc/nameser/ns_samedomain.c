@@ -28,6 +28,20 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|"port_before.h"
 end_include
 
@@ -60,6 +74,12 @@ include|#
 directive|include
 file|"port_after.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_LIBC
+end_ifndef
 
 begin_comment
 comment|/*  * int  * ns_samedomain(a, b)  *	Check whether a name belongs to a domain.  * Inputs:  *	a - the domain whose ancestory is being verified  *	b - the potential ancestor we're checking against  * Return:  *	boolean - is a at or below b?  * Notes:  *	Trailing dots are first removed from name and domain.  *	Always compare complete subdomains, not only whether the  *	domain name is the trailing string of the given name.  *  *	"host.foobar.top" lies in "foobar.top" and in "top" and in ""  *	but NOT in "bar.top"  */
@@ -455,6 +475,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * int  * ns_makecanon(src, dst, dstsize)  *	make a canonical copy of domain name "src"  * notes:  *	foo -> foo.  *	foo. -> foo.  *	foo.. -> foo.  *	foo\. -> foo\..  *	foo\\. -> foo\\.  */

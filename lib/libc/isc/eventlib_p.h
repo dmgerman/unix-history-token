@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2005 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/* eventlib_p.h - private interfaces for eventlib  * vix 09sep95 [initial]  *  * $Id: eventlib_p.h,v 1.3.2.1.4.3 2005/07/28 07:43:20 marka Exp $  */
+comment|/* eventlib_p.h - private interfaces for eventlib  * vix 09sep95 [initial]  *  * $Id: eventlib_p.h,v 1.3.2.1.4.3 2005/07/28 07:43:20 marka Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -86,11 +86,11 @@ directive|include
 file|<string.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<isc/heap.h>
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_LIBC
+end_ifndef
 
 begin_include
 include|#
@@ -101,8 +101,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<isc/heap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<isc/memcluster.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -284,6 +295,12 @@ block|}
 name|evConn
 typedef|;
 end_typedef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_LIBC
+end_ifndef
 
 begin_typedef
 typedef|typedef
@@ -671,6 +688,11 @@ name|evEvent_p
 typedef|;
 end_typedef
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -854,6 +876,12 @@ end_endif
 begin_comment
 comment|/* USE_POLL */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_LIBC
+end_ifndef
 
 begin_typedef
 typedef|typedef
@@ -1168,6 +1196,11 @@ name|old
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Global options */

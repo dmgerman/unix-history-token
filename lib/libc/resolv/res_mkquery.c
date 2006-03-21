@@ -60,6 +60,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|"port_before.h"
 end_include
 
@@ -191,12 +205,10 @@ name|buflen
 parameter_list|)
 comment|/* size of buffer */
 block|{
-specifier|register
 name|HEADER
 modifier|*
 name|hp
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|cp
@@ -204,7 +216,6 @@ decl_stmt|,
 modifier|*
 name|ep
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;
@@ -768,12 +779,10 @@ name|anslen
 parameter_list|)
 comment|/* UDP answer buffer size */
 block|{
-specifier|register
 name|HEADER
 modifier|*
 name|hp
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|cp
@@ -865,6 +874,17 @@ name|cp
 operator|+=
 name|INT16SZ
 expr_stmt|;
+if|if
+condition|(
+name|anslen
+operator|>
+literal|0xffff
+condition|)
+name|anslen
+operator|=
+literal|0xffff
+expr_stmt|;
+comment|/* limit to 16bit value */
 name|ns_put16
 argument_list|(
 name|anslen

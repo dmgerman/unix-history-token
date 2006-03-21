@@ -37,6 +37,20 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|"port_before.h"
 end_include
 
@@ -127,7 +141,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * char *  * inet_neta(src, dst, size)  *	format a u_long network number into presentation format.  * return:  *	pointer to dst, or NULL if an error occurred (check errno).  * note:  *	format of ``src'' is as for inet_network().  * author:  *	Paul Vixie (ISC), July 1996  */
+comment|/*  * char *  * inet_neta(src, dst, size)  *	format an in_addr_t network number into presentation format.  * return:  *	pointer to dst, or NULL if an error occurred (check errno).  * note:  *	format of ``src'' is as for inet_network().  * author:  *	Paul Vixie (ISC), July 1996  */
 end_comment
 
 begin_function
@@ -141,7 +155,7 @@ name|dst
 parameter_list|,
 name|size
 parameter_list|)
-name|u_long
+name|in_addr_t
 name|src
 decl_stmt|;
 name|char
@@ -291,6 +305,26 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Weak aliases for applications that use certain private entry points,  * and fail to include<arpa/inet.h>.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|inet_neta
+end_undef
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__inet_neta
+argument_list|,
+name|inet_neta
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

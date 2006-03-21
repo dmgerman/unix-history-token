@@ -37,6 +37,20 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|"port_before.h"
 end_include
 
@@ -73,7 +87,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<isc/assertions.h>
+file|<assert.h>
 end_include
 
 begin_include
@@ -386,7 +400,7 @@ argument_list|)
 operator|-
 name|digits
 expr_stmt|;
-name|INSIST
+name|assert
 argument_list|(
 name|n
 operator|>=

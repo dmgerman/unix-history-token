@@ -56,7 +56,27 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|"port_before.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"namespace.h"
 end_include
 
 begin_include
@@ -116,7 +136,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<irs.h>
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -152,6 +172,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|int
 name|h_nerr
 init|=
@@ -168,25 +189,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-operator|!
-operator|(
-name|__GLIBC__
-operator|>
-literal|2
-operator|||
-name|__GLIBC__
-operator|==
-literal|2
-operator|&&
-name|__GLIBC_MINOR__
-operator|>=
-literal|3
-operator|)
-end_if
-
 begin_undef
 undef|#
 directive|undef
@@ -198,11 +200,6 @@ name|int
 name|h_errno
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * herror --  *	print the error indicated by the h_errno value.  */
@@ -345,7 +342,7 @@ name|iov_len
 operator|=
 literal|1
 expr_stmt|;
-name|writev
+name|_writev
 argument_list|(
 name|STDERR_FILENO
 argument_list|,

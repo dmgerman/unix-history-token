@@ -25,6 +25,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Import. */
 end_comment
@@ -65,6 +79,33 @@ directive|include
 file|<arpa/inet.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_LIBC
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|INSIST
+parameter_list|(
+name|cond
+parameter_list|)
+value|assert(cond)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -76,6 +117,11 @@ include|#
 directive|include
 file|<isc/dst.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -2728,6 +2774,9 @@ goto|goto
 name|formerr
 goto|;
 comment|/* Key flags, Protocol, Algorithm. */
+ifndef|#
+directive|ifndef
+name|_LIBC
 name|key_id
 operator|=
 name|dst_s_dns_key_id
@@ -2739,6 +2788,14 @@ operator|-
 name|rdata
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|key_id
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|keyflags
 operator|=
 name|ns_get16

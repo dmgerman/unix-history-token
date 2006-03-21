@@ -37,6 +37,20 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|"port_before.h"
 end_include
 
@@ -132,59 +146,53 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|char
 modifier|*
 name|inet_net_ntop_ipv4
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|u_char
-operator|*
+modifier|*
 name|src
-operator|,
+parameter_list|,
 name|int
 name|bits
-operator|,
+parameter_list|,
 name|char
-operator|*
+modifier|*
 name|dst
-operator|,
+parameter_list|,
 name|size_t
 name|size
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|char
 modifier|*
 name|inet_net_ntop_ipv6
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|u_char
-operator|*
+modifier|*
 name|src
-operator|,
+parameter_list|,
 name|int
 name|bits
-operator|,
+parameter_list|,
 name|char
-operator|*
+modifier|*
 name|dst
-operator|,
+parameter_list|,
 name|size_t
 name|size
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * char *  * inet_net_ntop(af, src, bits, dst, size)  *	convert network number from network to presentation format.  *	generates CIDR style result always.  * return:  *	pointer to dst, or NULL if an error occurred (check errno).  * author:  *	Paul Vixie (ISC), July 1996  */
@@ -587,7 +595,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static char *  * inet_net_ntop_ipv6(src, bits, fakebits, dst, size)  *	convert IPv6 network number from network to presentation format.  *	generates CIDR style result always. Picks the shortest representation  *	unless the IP is really IPv4.  *	always prints specified number of bits (bits).  * return:  *	pointer to dst, or NULL if an error occurred (check errno).  * note:  *	network byte order assumed.  this means 192.5.5.240/28 has  *	0x11110000 in its fourth octet.  * author:  *	Vadim Kogan (UCB), June 2001  *  Original version (IPv4) by Paul Vixie (ISC), July 1996  */
+comment|/*  * static char *  * inet_net_ntop_ipv6(src, bits, fakebits, dst, size)  *	convert IPv6 network number from network to presentation format.  *	generates CIDR style result always. Picks the shortest representation  *	unless the IP is really IPv4.  *	always prints specified number of bits (bits).  * return:  *	pointer to dst, or NULL if an error occurred (check errno).  * note:  *	network byte order assumed.  this means 192.5.5.240/28 has  *	0b11110000 in its fourth octet.  * author:  *	Vadim Kogan (UCB), June 2001  *  Original version (IPv4) by Paul Vixie (ISC), July 1996  */
 end_comment
 
 begin_function
@@ -1217,6 +1225,26 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Weak aliases for applications that use certain private entry points,  * and fail to include<arpa/inet.h>.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|inet_net_ntop
+end_undef
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__inet_net_ntop
+argument_list|,
+name|inet_net_ntop
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

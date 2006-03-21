@@ -2,6 +2,20 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<port_before.h>
 end_include
 
@@ -16,6 +30,23 @@ include|#
 directive|include
 file|<pthread.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_LIBC
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<pthread_np.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -50,12 +81,6 @@ begin_include
 include|#
 directive|include
 file|<resolv_mt.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<irs.h>
 end_include
 
 begin_include
@@ -197,6 +222,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_LIBC
+end_ifndef
+
 begin_comment
 comment|/*  * To support binaries that used the private MT-safe interface in  * Solaris 8, we still need to provide the __res_enable_mt()  * and __res_disable_mt() entry points. They're do-nothing routines.  */
 end_comment
@@ -231,6 +262,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -404,6 +440,24 @@ name|mtctxres_t
 modifier|*
 name|mt
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|_LIBC
+if|if
+condition|(
+name|pthread_main_np
+argument_list|()
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+operator|&
+name|sharedctx
+operator|)
+return|;
+endif|#
+directive|endif
 comment|/* 	 * This if clause should only be executed if we are linking 	 * statically.  When linked dynamically _mtctxres_init() should 	 * be called at binding time due the #pragma above. 	 */
 if|if
 condition|(

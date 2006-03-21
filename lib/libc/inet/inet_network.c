@@ -41,6 +41,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|"port_before.h"
 end_include
 
@@ -79,33 +93,28 @@ comment|/*  * Internet network address interpretation routine.  * The library ro
 end_comment
 
 begin_function
-name|u_long
+name|in_addr_t
 name|inet_network
 parameter_list|(
 name|cp
 parameter_list|)
-specifier|register
 specifier|const
 name|char
 modifier|*
 name|cp
 decl_stmt|;
 block|{
-specifier|register
-name|u_long
+name|in_addr_t
 name|val
 decl_stmt|,
 name|base
 decl_stmt|,
 name|n
-decl_stmt|,
-name|i
 decl_stmt|;
-specifier|register
 name|char
 name|c
 decl_stmt|;
-name|u_long
+name|in_addr_t
 name|parts
 index|[
 literal|4
@@ -117,6 +126,8 @@ init|=
 name|parts
 decl_stmt|;
 name|int
+name|i
+decl_stmt|,
 name|digit
 decl_stmt|;
 name|again
@@ -423,6 +434,26 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Weak aliases for applications that use certain private entry points,  * and fail to include<arpa/inet.h>.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|inet_network
+end_undef
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__inet_network
+argument_list|,
+name|inet_network
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

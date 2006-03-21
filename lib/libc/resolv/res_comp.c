@@ -60,6 +60,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|"port_before.h"
 end_include
 
@@ -981,6 +995,42 @@ end_endif
 begin_comment
 comment|/*BIND_4_COMPAT*/
 end_comment
+
+begin_comment
+comment|/*  * Weak aliases for applications that use certain private entry points,  * and fail to include<resolv.h>.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|dn_comp
+end_undef
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__dn_comp
+argument_list|,
+name|dn_comp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_undef
+undef|#
+directive|undef
+name|dn_expand
+end_undef
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__dn_expand
+argument_list|,
+name|dn_expand
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

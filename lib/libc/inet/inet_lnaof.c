@@ -41,6 +41,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|"port_before.h"
 end_include
 
@@ -73,7 +87,7 @@ comment|/*  * Return the local network address portion of an  * internet address
 end_comment
 
 begin_function
-name|u_long
+name|in_addr_t
 name|inet_lnaof
 parameter_list|(
 name|in
@@ -83,8 +97,7 @@ name|in_addr
 name|in
 decl_stmt|;
 block|{
-specifier|register
-name|u_long
+name|in_addr_t
 name|i
 init|=
 name|ntohl
@@ -139,6 +152,26 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Weak aliases for applications that use certain private entry points,  * and fail to include<arpa/inet.h>.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|inet_lnaof
+end_undef
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__inet_lnaof
+argument_list|,
+name|inet_lnaof
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

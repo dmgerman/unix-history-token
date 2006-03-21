@@ -41,6 +41,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|"port_before.h"
 end_include
 
@@ -81,7 +95,7 @@ name|net
 parameter_list|,
 name|host
 parameter_list|)
-name|u_long
+name|in_addr_t
 name|net
 decl_stmt|,
 name|host
@@ -186,6 +200,26 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Weak aliases for applications that use certain private entry points,  * and fail to include<arpa/inet.h>.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|inet_makeaddr
+end_undef
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__inet_makeaddr
+argument_list|,
+name|inet_makeaddr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

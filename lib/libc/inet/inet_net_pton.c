@@ -37,6 +37,20 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|"port_before.h"
 end_include
 
@@ -73,7 +87,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<isc/assertions.h>
+file|<assert.h>
 end_include
 
 begin_include
@@ -331,7 +345,7 @@ argument_list|)
 operator|-
 name|xdigits
 expr_stmt|;
-name|INSIST
+name|assert
 argument_list|(
 name|n
 operator|>=
@@ -465,7 +479,7 @@ argument_list|)
 operator|-
 name|digits
 expr_stmt|;
-name|INSIST
+name|assert
 argument_list|(
 name|n
 operator|>=
@@ -654,7 +668,7 @@ argument_list|)
 operator|-
 name|digits
 expr_stmt|;
-name|INSIST
+name|assert
 argument_list|(
 name|n
 operator|>=
@@ -1975,6 +1989,26 @@ return|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*  * Weak aliases for applications that use certain private entry points,  * and fail to include<arpa/inet.h>.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|inet_net_pton
+end_undef
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__inet_net_pton
+argument_list|,
+name|inet_net_pton
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

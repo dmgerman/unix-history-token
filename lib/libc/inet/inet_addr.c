@@ -60,6 +60,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|"port_before.h"
 end_include
 
@@ -104,7 +118,8 @@ comment|/*  * Ascii internet address interpretation routine.  * The value return
 end_comment
 
 begin_function
-name|u_long
+name|in_addr_t
+comment|/* XXX should be struct in_addr :( */
 name|inet_addr
 parameter_list|(
 specifier|const
@@ -637,6 +652,42 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Weak aliases for applications that use certain private entry points,  * and fail to include<arpa/inet.h>.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|inet_addr
+end_undef
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__inet_addr
+argument_list|,
+name|inet_addr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_undef
+undef|#
+directive|undef
+name|inet_aton
+end_undef
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__inet_aton
+argument_list|,
+name|inet_aton
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 
