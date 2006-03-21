@@ -4552,7 +4552,7 @@ argument_list|,
 name|TX
 argument_list|,
 operator|(
-literal|"tx%zu: packet larger than xmit buffer "
+literal|"tx%td: packet larger than xmit buffer "
 literal|"(%d> %d)\n"
 operator|,
 name|tx
@@ -4619,7 +4619,7 @@ argument_list|,
 name|TX
 argument_list|,
 operator|(
-literal|"tx%d: buffer space shortage"
+literal|"tx%td: buffer space shortage"
 operator|,
 name|tx
 operator|-
@@ -4668,7 +4668,7 @@ argument_list|,
 name|TX
 argument_list|,
 operator|(
-literal|"tx%zu: VCI=%d, speed=0x%x, buflen=%d, mbsize=%d"
+literal|"tx%td: VCI=%d, speed=0x%x, buflen=%d, mbsize=%d"
 operator|,
 name|tx
 operator|-
@@ -4890,7 +4890,7 @@ argument_list|,
 name|VC
 argument_list|,
 operator|(
-literal|"rx%d: assigned to VCI %d"
+literal|"rx%td: assigned to VCI %d"
 operator|,
 name|vc
 operator|->
@@ -5194,7 +5194,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"en_rxctl: left over mbufs on enable slot=%tu"
+literal|"en_rxctl: left over mbufs on enable slot=%td"
 operator|,
 name|vc
 operator|->
@@ -8079,7 +8079,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"drqsync: %s: lost mbuf in slot %zu!"
+literal|"drqsync: %s: lost mbuf in slot %td!"
 operator|,
 name|sc
 operator|->
@@ -8298,7 +8298,7 @@ argument_list|,
 name|INTR
 argument_list|,
 operator|(
-literal|"rx%zu: rxvci%d: atm_input, mbuf %p, len %d, "
+literal|"rx%td: rxvci%d: atm_input, mbuf %p, len %d, "
 literal|"hand %p"
 operator|,
 name|slot
@@ -14843,7 +14843,7 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|"  %d->%zu"
+literal|"  %d->%td"
 argument_list|,
 name|cnt
 argument_list|,
@@ -15087,7 +15087,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"rx%zu: start/stop/cur=0x%x/0x%x/0x%x mode=0x%x "
+literal|"rx%td: start/stop/cur=0x%x/0x%x/0x%x mode=0x%x "
 argument_list|,
 name|slot
 operator|-
