@@ -9210,7 +9210,7 @@ literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|q2
+name|q
 argument_list|)
 argument_list|)
 expr_stmt|;
