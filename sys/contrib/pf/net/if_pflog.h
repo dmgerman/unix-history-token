@@ -179,15 +179,23 @@ directive|ifdef
 name|__FreeBSD__
 end_ifdef
 
-begin_comment
-comment|/* XXX */
-end_comment
+begin_struct_decl
+struct_decl|struct
+name|pf_rule
+struct_decl|;
+end_struct_decl
 
-begin_include
-include|#
-directive|include
-file|<net/pfvar.h>
-end_include
+begin_struct_decl
+struct_decl|struct
+name|pf_ruleset
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|pfi_kif
+struct_decl|;
+end_struct_decl
 
 begin_typedef
 typedef|typedef
