@@ -12578,6 +12578,10 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+condition|)
 name|pmap_vac_me_harder
 argument_list|(
 name|m
