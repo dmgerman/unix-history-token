@@ -58,7 +58,7 @@ begin_define
 define|#
 directive|define
 name|__KAME_VERSION
-value|"20010528/FreeBSD"
+value|"FreeBSD"
 end_define
 
 begin_comment
