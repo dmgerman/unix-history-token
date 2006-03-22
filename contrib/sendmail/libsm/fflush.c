@@ -433,6 +433,10 @@ operator|*
 name|timeout
 argument_list|)
 expr_stmt|;
+name|t
+operator|=
+literal|0
+expr_stmt|;
 block|}
 block|}
 return|return
