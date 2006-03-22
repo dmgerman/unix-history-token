@@ -3442,6 +3442,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|#
+directive|if
+literal|0
+block|ich_wr(sc, ICH_REG_GLOB_CNT, ICH_GLOB_CTL_COLD | ICH_GLOB_CTL_PRES, 4);
+else|#
+directive|else
 name|ich_wr
 argument_list|(
 name|sc
@@ -3449,12 +3455,12 @@ argument_list|,
 name|ICH_REG_GLOB_CNT
 argument_list|,
 name|ICH_GLOB_CTL_COLD
-operator||
-name|ICH_GLOB_CTL_PRES
 argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ich_resetchan
