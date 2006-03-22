@@ -993,7 +993,7 @@ name|time
 parameter_list|)
 value|{ \ 	if (((fd) = sm_io_getinfo(fp, SM_IO_WHAT_FD, NULL)) == -1) \ 	{ \
 comment|/* can't get an fd, likely internal 'fake' fp */
-value|\ 		errno = 0; \ 	} \ 	if ((val) == SM_TIME_DEFAULT) \ 		(val) = (fp)->f_timeout; \ 	if ((val) == SM_TIME_IMMEDIATE || (val) == SM_TIME_FOREVER) \ 	{ \ 		(time)->tv_sec = 0; \ 		(time)->tv_usec = 0; \ 	} \ 	else \ 	{ \ 		(time)->tv_sec = (val) / 1000; \ 		(time)->tv_usec = ((val) - ((time)->tv_sec * 1000)) * 10; \ 	} \ 	if ((val) == SM_TIME_FOREVER) \ 	{ \ 		if ((fp)->f_timeoutstate == SM_TIME_NONBLOCK&& (fd) != -1) \ 		{ \ 			int ret; \ 			ret = fcntl((fd), F_GETFL, 0); \ 			if (ret == -1 || fcntl((fd), F_SETFL, \ 					       ret& ~O_NONBLOCK) == -1) \ 			{ \
+value|\ 		errno = 0; \ 	} \ 	if ((val) == SM_TIME_DEFAULT) \ 		(val) = (fp)->f_timeout; \ 	if ((val) == SM_TIME_IMMEDIATE || (val) == SM_TIME_FOREVER) \ 	{ \ 		(time)->tv_sec = 0; \ 		(time)->tv_usec = 0; \ 	} \ 	else \ 	{ \ 		(time)->tv_sec = (val) / 1000; \ 		(time)->tv_usec = ((val) - ((time)->tv_sec * 1000)) * 1000; \ 	} \ 	if ((val) == SM_TIME_FOREVER) \ 	{ \ 		if ((fp)->f_timeoutstate == SM_TIME_NONBLOCK&& (fd) != -1) \ 		{ \ 			int ret; \ 			ret = fcntl((fd), F_GETFL, 0); \ 			if (ret == -1 || fcntl((fd), F_SETFL, \ 					       ret& ~O_NONBLOCK) == -1) \ 			{ \
 comment|/* errno should be set */
 value|\ 				return SM_IO_EOF; \ 			} \ 			(fp)->f_timeoutstate = SM_TIME_BLOCK; \ 			if ((fp)->f_modefp != NULL) \ 				(fp)->f_modefp->f_timeoutstate = SM_TIME_BLOCK; \ 		} \ 	} \ 	else { \ 		if ((fp)->f_timeoutstate == SM_TIME_BLOCK&& (fd) != -1) \ 		{ \ 			int ret; \ 			ret = fcntl((fd), F_GETFL, 0); \ 			if (ret == -1 || fcntl((fd), F_SETFL, \ 					       ret | O_NONBLOCK) == -1) \ 			{ \
 comment|/* errno should be set */
@@ -1015,13 +1015,13 @@ name|fd
 parameter_list|,
 name|to
 parameter_list|)
-value|{ \ 	struct timeval sm_io_to_before, sm_io_to_after, sm_io_to_diff; \ 	struct timeval sm_io_to; \ 	int sm_io_to_sel; \ 	fd_set sm_io_to_mask, sm_io_x_mask; \ 	errno = 0; \ 	if ((to) == SM_TIME_DEFAULT) \ 		(to) = (fp)->f_timeout; \ 	if ((to) == SM_TIME_IMMEDIATE) \ 	{ \ 		errno = EAGAIN; \ 		return SM_IO_EOF; \ 	} \ 	else if ((to) == SM_TIME_FOREVER) \ 	{ \ 		errno = EINVAL; \ 		return SM_IO_EOF; \ 	} \ 	else \ 	{ \ 		sm_io_to.tv_sec = (to) / 1000; \ 		sm_io_to.tv_usec = ((to) - (sm_io_to.tv_sec * 1000)) * 10; \ 	} \ 	if (FD_SETSIZE> 0&& (fd)>= FD_SETSIZE) \ 	{ \ 		errno = EINVAL; \ 		return SM_IO_EOF; \ 	} \ 	FD_ZERO(&sm_io_to_mask); \ 	FD_SET((fd),&sm_io_to_mask); \ 	FD_ZERO(&sm_io_x_mask); \ 	FD_SET((fd),&sm_io_x_mask); \ 	if (gettimeofday(&sm_io_to_before, NULL)< 0) \ 		return SM_IO_EOF; \ 	sm_io_to_sel = select((fd) + 1, NULL,&sm_io_to_mask,&sm_io_x_mask, \&sm_io_to); \ 	if (sm_io_to_sel< 0) \ 	{ \
+value|{ \ 	struct timeval sm_io_to_before, sm_io_to_after, sm_io_to_diff; \ 	struct timeval sm_io_to; \ 	int sm_io_to_sel; \ 	fd_set sm_io_to_mask, sm_io_x_mask; \ 	errno = 0; \ 	if ((to) == SM_TIME_DEFAULT) \ 		(to) = (fp)->f_timeout; \ 	if ((to) == SM_TIME_IMMEDIATE) \ 	{ \ 		errno = EAGAIN; \ 		return SM_IO_EOF; \ 	} \ 	else if ((to) == SM_TIME_FOREVER) \ 	{ \ 		errno = EINVAL; \ 		return SM_IO_EOF; \ 	} \ 	else \ 	{ \ 		sm_io_to.tv_sec = (to) / 1000; \ 		sm_io_to.tv_usec = ((to) - (sm_io_to.tv_sec * 1000)) * 1000; \ 	} \ 	if (FD_SETSIZE> 0&& (fd)>= FD_SETSIZE) \ 	{ \ 		errno = EINVAL; \ 		return SM_IO_EOF; \ 	} \ 	FD_ZERO(&sm_io_to_mask); \ 	FD_SET((fd),&sm_io_to_mask); \ 	FD_ZERO(&sm_io_x_mask); \ 	FD_SET((fd),&sm_io_x_mask); \ 	if (gettimeofday(&sm_io_to_before, NULL)< 0) \ 		return SM_IO_EOF; \ 	do \ 	{	\ 		sm_io_to_sel = select((fd) + 1, NULL,&sm_io_to_mask, \&sm_io_x_mask,&sm_io_to); \ 	} while (sm_io_to_sel< 0&& errno == EINTR); \ 	if (sm_io_to_sel< 0) \ 	{ \
 comment|/* something went wrong, errno set */
 value|\ 		return SM_IO_EOF; \ 	} \ 	else if (sm_io_to_sel == 0) \ 	{ \
 comment|/* timeout */
 value|\ 		errno = EAGAIN; \ 		return SM_IO_EOF; \ 	} \
 comment|/* else loop again */
-value|\ 	if (gettimeofday(&sm_io_to_after, NULL)< 0) \ 		return SM_IO_EOF; \ 	timersub(&sm_io_to_before,&sm_io_to_after,&sm_io_to_diff); \ 	timersub(&sm_io_to,&sm_io_to_diff,&sm_io_to); \ 	(to) -= (sm_io_to.tv_sec * 1000); \ 	(to) -= (sm_io_to.tv_usec / 10); \ 	if ((to)< 0) \ 		(to) = 0; \ }
+value|\ 	if (gettimeofday(&sm_io_to_after, NULL)< 0) \ 		return SM_IO_EOF; \ 	timersub(&sm_io_to_after,&sm_io_to_before,&sm_io_to_diff); \ 	(to) -= (sm_io_to_diff.tv_sec * 1000); \ 	(to) -= (sm_io_to_diff.tv_usec / 1000); \ 	if ((to)< 0) \ 		(to) = 0; \ }
 end_define
 
 begin_comment

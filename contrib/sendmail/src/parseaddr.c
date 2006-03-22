@@ -6098,7 +6098,7 @@ modifier|*
 modifier|*
 name|xpvp
 decl_stmt|;
-name|int
+name|size_t
 name|trsize
 init|=
 literal|0
@@ -6188,9 +6188,6 @@ name|xpvp
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|size_t
-operator|)
 name|trsize
 operator|>
 name|pvpb1_size
@@ -6396,7 +6393,7 @@ modifier|*
 modifier|*
 name|xpvp
 decl_stmt|;
-name|int
+name|size_t
 name|trsize
 decl_stmt|;
 name|char
@@ -6820,16 +6817,13 @@ expr_stmt|;
 comment|/* save the remainder of the input string */
 name|trsize
 operator|=
-call|(
-name|int
-call|)
-argument_list|(
+operator|(
 name|avp
 operator|-
 name|rvp
 operator|+
 literal|1
-argument_list|)
+operator|)
 operator|*
 sizeof|sizeof
 expr|*
@@ -12514,7 +12508,7 @@ modifier|*
 specifier|volatile
 name|buf
 decl_stmt|;
-name|int
+name|size_t
 name|bufsize
 decl_stmt|;
 name|int
@@ -13500,7 +13494,7 @@ modifier|*
 specifier|volatile
 name|buf
 decl_stmt|;
-name|int
+name|size_t
 name|bufsize
 decl_stmt|;
 name|int

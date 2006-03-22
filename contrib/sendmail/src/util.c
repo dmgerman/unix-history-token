@@ -2795,11 +2795,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  PUTLINE -- put a line like fputs obeying SMTP conventions ** **	This routine always guarantees outputing a newline (or CRLF, **	as appropriate) at the end of the string. ** **	Parameters: **		l -- line to put. **		mci -- the mailer connection information. ** **	Returns: **		none ** **	Side Effects: **		output of l to mci->mci_out. */
+comment|/* **  PUTLINE -- put a line like fputs obeying SMTP conventions ** **	This routine always guarantees outputing a newline (or CRLF, **	as appropriate) at the end of the string. ** **	Parameters: **		l -- line to put. **		mci -- the mailer connection information. ** **	Returns: **		true iff line was written successfully ** **	Side Effects: **		output of l to mci->mci_out. */
 end_comment
 
 begin_function
-name|void
+name|bool
 name|putline
 parameter_list|(
 name|l
@@ -2817,6 +2817,7 @@ modifier|*
 name|mci
 decl_stmt|;
 block|{
+return|return
 name|putxline
 argument_list|(
 name|l
@@ -2830,16 +2831,16 @@ name|mci
 argument_list|,
 name|PXLF_MAPFROM
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/* **  PUTXLINE -- putline with flags bits. ** **	This routine always guarantees outputing a newline (or CRLF, **	as appropriate) at the end of the string. ** **	Parameters: **		l -- line to put. **		len -- the length of the line. **		mci -- the mailer connection information. **		pxflags -- flag bits: **		    PXLF_MAPFROM -- map From_ to>From_. **		    PXLF_STRIP8BIT -- strip 8th bit. **		    PXLF_HEADER -- map bare newline in header to newline space. **		    PXLF_NOADDEOL -- don't add an EOL if one wasn't present. ** **	Returns: **		none ** **	Side Effects: **		output of l to mci->mci_out. */
+comment|/* **  PUTXLINE -- putline with flags bits. ** **	This routine always guarantees outputing a newline (or CRLF, **	as appropriate) at the end of the string. ** **	Parameters: **		l -- line to put. **		len -- the length of the line. **		mci -- the mailer connection information. **		pxflags -- flag bits: **		    PXLF_MAPFROM -- map From_ to>From_. **		    PXLF_STRIP8BIT -- strip 8th bit. **		    PXLF_HEADER -- map bare newline in header to newline space. **		    PXLF_NOADDEOL -- don't add an EOL if one wasn't present. ** **	Returns: **		true iff line was written successfully ** **	Side Effects: **		output of l to mci->mci_out. */
 end_comment
 
 begin_function
-name|void
+name|bool
 name|putxline
 parameter_list|(
 name|l
@@ -3106,14 +3107,6 @@ name|dead
 operator|=
 name|true
 expr_stmt|;
-else|else
-block|{
-comment|/* record progress for DATA timeout */
-name|DataProgress
-operator|=
-name|true
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|TrafficLogFile
@@ -3196,14 +3189,6 @@ name|dead
 operator|=
 name|true
 expr_stmt|;
-else|else
-block|{
-comment|/* record progress for DATA timeout */
-name|DataProgress
-operator|=
-name|true
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|TrafficLogFile
@@ -3263,14 +3248,6 @@ name|true
 expr_stmt|;
 break|break;
 block|}
-else|else
-block|{
-comment|/* record progress for DATA timeout */
-name|DataProgress
-operator|=
-name|true
-expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -3328,14 +3305,6 @@ operator|=
 name|true
 expr_stmt|;
 break|break;
-block|}
-else|else
-block|{
-comment|/* record progress for DATA timeout */
-name|DataProgress
-operator|=
-name|true
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -3443,14 +3412,12 @@ argument_list|)
 operator|==
 name|SM_IO_EOF
 condition|)
-break|break;
-else|else
 block|{
-comment|/* record progress for DATA timeout */
-name|DataProgress
+name|dead
 operator|=
 name|true
 expr_stmt|;
+break|break;
 block|}
 if|if
 condition|(
@@ -3530,14 +3497,12 @@ argument_list|)
 operator|==
 name|SM_IO_EOF
 condition|)
-break|break;
-else|else
 block|{
-comment|/* record progress for DATA timeout */
-name|DataProgress
+name|dead
 operator|=
 name|true
 expr_stmt|;
+break|break;
 block|}
 if|if
 condition|(
@@ -3619,14 +3584,6 @@ name|true
 expr_stmt|;
 break|break;
 block|}
-else|else
-block|{
-comment|/* record progress for DATA timeout */
-name|DataProgress
-operator|=
-name|true
-expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -3683,14 +3640,12 @@ argument_list|)
 operator|==
 name|SM_IO_EOF
 condition|)
-break|break;
-else|else
 block|{
-comment|/* record progress for DATA timeout */
-name|DataProgress
+name|dead
 operator|=
 name|true
 expr_stmt|;
+break|break;
 block|}
 if|if
 condition|(
@@ -3745,14 +3700,12 @@ argument_list|)
 operator|==
 name|SM_IO_EOF
 condition|)
-break|break;
-else|else
 block|{
-comment|/* record progress for DATA timeout */
-name|DataProgress
+name|dead
 operator|=
 name|true
 expr_stmt|;
+break|break;
 block|}
 if|if
 condition|(
@@ -3774,11 +3727,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* record progress for DATA timeout */
-name|DataProgress
-operator|=
-name|true
-expr_stmt|;
 block|}
 do|while
 condition|(
@@ -3787,6 +3735,10 @@ operator|<
 name|end
 condition|)
 do|;
+return|return
+operator|!
+name|dead
+return|;
 block|}
 end_function
 

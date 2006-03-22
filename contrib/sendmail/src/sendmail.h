@@ -5267,7 +5267,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|bool
 name|commaize
 name|__P
 argument_list|(
@@ -5360,7 +5360,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|bool
 name|putfromline
 name|__P
 argument_list|(
@@ -5534,7 +5534,7 @@ name|short
 name|e_timeoutclass
 decl_stmt|;
 comment|/* message timeout class */
-name|void
+name|bool
 argument_list|(
 argument|*e_puthdr
 argument_list|)
@@ -5555,7 +5555,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* function to put header of message */
-name|void
+name|bool
 argument_list|(
 argument|*e_putbody
 argument_list|)
@@ -6253,7 +6253,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|bool
 name|putbody
 name|__P
 argument_list|(
@@ -6273,7 +6273,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|bool
 name|putheader
 name|__P
 argument_list|(
@@ -9993,7 +9993,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|bool
 name|mime7to8
 name|__P
 argument_list|(
@@ -13346,18 +13346,6 @@ end_endif
 
 begin_comment
 comment|/* !defined(_USE_SUN_NSSWITCH_)&& !defined(_USE_DEC_SVC_CONF_) */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
-specifier|volatile
-name|DataProgress
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* have we sent anything since last check */
 end_comment
 
 begin_decl_stmt
@@ -17908,7 +17896,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|bool
 name|putline
 name|__P
 argument_list|(
@@ -17925,7 +17913,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|bool
 name|putxline
 name|__P
 argument_list|(

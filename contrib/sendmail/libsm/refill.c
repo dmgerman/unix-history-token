@@ -125,13 +125,13 @@ parameter_list|,
 name|sel_ret
 parameter_list|)
 define|\
-value|{									\ 	struct timeval sm_io_to_before, sm_io_to_after, sm_io_to_diff;	\ 	fd_set sm_io_to_mask, sm_io_x_mask;				\ 	errno = 0;							\ 	if (timeout == SM_TIME_IMMEDIATE)				\ 	{								\ 		errno = EAGAIN;						\ 		return SM_IO_EOF;					\ 	}								\ 	if (FD_SETSIZE> 0&& (fd)>= FD_SETSIZE)			\ 	{								\ 		errno = EINVAL;						\ 		return SM_IO_EOF;					\ 	}								\ 	FD_ZERO(&sm_io_to_mask);					\ 	FD_SET((fd),&sm_io_to_mask);					\ 	FD_ZERO(&sm_io_x_mask);						\ 	FD_SET((fd),&sm_io_x_mask);					\ 	if (gettimeofday(&sm_io_to_before, NULL)< 0)			\ 		return SM_IO_EOF;					\ 	(sel_ret) = select((fd) + 1,&sm_io_to_mask, NULL,		\&sm_io_x_mask, (to));			\ 	if ((sel_ret)< 0)						\ 	{								\
+value|{									\ 	struct timeval sm_io_to_before, sm_io_to_after, sm_io_to_diff;	\ 	fd_set sm_io_to_mask, sm_io_x_mask;				\ 	errno = 0;							\ 	if (timeout == SM_TIME_IMMEDIATE)				\ 	{								\ 		errno = EAGAIN;						\ 		return SM_IO_EOF;					\ 	}								\ 	if (FD_SETSIZE> 0&& (fd)>= FD_SETSIZE)			\ 	{								\ 		errno = EINVAL;						\ 		return SM_IO_EOF;					\ 	}								\ 	FD_ZERO(&sm_io_to_mask);					\ 	FD_SET((fd),&sm_io_to_mask);					\ 	FD_ZERO(&sm_io_x_mask);						\ 	FD_SET((fd),&sm_io_x_mask);					\ 	if (gettimeofday(&sm_io_to_before, NULL)< 0)			\ 		return SM_IO_EOF;					\ 	do								\ 	{								\ 		(sel_ret) = select((fd) + 1,&sm_io_to_mask, NULL,	\&sm_io_x_mask, (to));			\ 	} while ((sel_ret)< 0&& errno == EINTR);			\ 	if ((sel_ret)< 0)						\ 	{								\
 comment|/* something went wrong, errno set */
 value|\ 		fp->f_r = 0;						\ 		fp->f_flags |= SMERR;					\ 		return SM_IO_EOF;					\ 	}								\ 	else if ((sel_ret) == 0)					\ 	{								\
 comment|/* timeout */
 value|\ 		errno = EAGAIN;						\ 		return SM_IO_EOF;					\ 	}								\
 comment|/* calulate wall-clock time used */
-value|\ 	if (gettimeofday(&sm_io_to_after, NULL)< 0)			\ 		return SM_IO_EOF;					\ 	timersub(&sm_io_to_before,&sm_io_to_after,&sm_io_to_diff);	\ 	timersub((to),&sm_io_to_diff, (to));				\ }
+value|\ 	if (gettimeofday(&sm_io_to_after, NULL)< 0)			\ 		return SM_IO_EOF;					\ 	timersub(&sm_io_to_after,&sm_io_to_before,&sm_io_to_diff);	\ 	timersub((to),&sm_io_to_diff, (to));				\ }
 end_define
 
 begin_comment
