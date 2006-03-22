@@ -6905,14 +6905,16 @@ operator|)
 name|fd
 expr_stmt|;
 comment|/* UNUSED */
-operator|(
-name|void
-operator|)
-name|entry
-expr_stmt|;
-comment|/* UNUSED */
+comment|/* If there aren't any extended attributes, then it's okay not 	 * to extract them, otherwise, issue a single warning. */
 if|if
 condition|(
+name|archive_entry_xattr_count
+argument_list|(
+name|entry
+argument_list|)
+operator|!=
+literal|0
+operator|&&
 operator|!
 name|warning_done
 condition|)
