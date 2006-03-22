@@ -1440,7 +1440,7 @@ argument|); 		return (NULL); 	} 	num_ctios++;
 comment|/* Initialize CTIO, CTIO descr, and AIO */
 argument|ctio->ccb_h.func_code = XPT_CONT_TARGET_IO; 	ctio->ccb_h.retry_count =
 literal|2
-argument|; 	ctio->ccb_h.timeout = CAM_TIME_INFINITY; 	ctio->data_ptr = c_descr->buf; 	ctio->ccb_h.targ_descr = c_descr; 	c_descr->aiocb.aio_buf = c_descr->buf; 	c_descr->aiocb.aio_fildes = file_fd; 	se =&c_descr->aiocb.aio_sigevent; 	se->sigev_notify = SIGEV_KEVENT; 	se->sigev_notify_kqueue = kq_fd; 	se->sigev_value.sigval_ptr = ctio;  	return (ctio); }  void free_ccb(union ccb *ccb) { 	switch (ccb->ccb_h.func_code) { 	case XPT_CONT_TARGET_IO: 	{ 		struct ctio_descr *c_descr;  		c_descr = (struct ctio_descr *)ccb->ccb_h.targ_descr; 		free(c_descr->buf); 		num_ctios--;
+argument|; 	ctio->ccb_h.timeout = CAM_TIME_INFINITY; 	ctio->data_ptr = c_descr->buf; 	ctio->ccb_h.targ_descr = c_descr; 	c_descr->aiocb.aio_buf = c_descr->buf; 	c_descr->aiocb.aio_fildes = file_fd; 	se =&c_descr->aiocb.aio_sigevent; 	se->sigev_notify = SIGEV_KEVENT; 	se->sigev_notify_kqueue = kq_fd; 	se->sigev_value.sival_ptr = ctio;  	return (ctio); }  void free_ccb(union ccb *ccb) { 	switch (ccb->ccb_h.func_code) { 	case XPT_CONT_TARGET_IO: 	{ 		struct ctio_descr *c_descr;  		c_descr = (struct ctio_descr *)ccb->ccb_h.targ_descr; 		free(c_descr->buf); 		num_ctios--;
 comment|/* FALLTHROUGH */
 argument|} 	case XPT_ACCEPT_TARGET_IO: 		free(ccb->ccb_h.targ_descr);
 comment|/* FALLTHROUGH */
