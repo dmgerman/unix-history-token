@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sftp-server.c,v 1.48 2005/06/17 02:44:33 djm Exp $"
+literal|"$OpenBSD: sftp-server.c,v 1.50 2006/01/02 01:20:31 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -45,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|"xmalloc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"misc.h"
 end_include
 
 begin_include
@@ -1960,7 +1966,9 @@ argument_list|,
 name|handle
 argument_list|,
 operator|(
-name|u_int64_t
+name|unsigned
+name|long
+name|long
 operator|)
 name|off
 argument_list|,
@@ -2168,7 +2176,9 @@ argument_list|,
 name|handle
 argument_list|,
 operator|(
-name|u_int64_t
+name|unsigned
+name|long
+name|long
 operator|)
 name|off
 argument_list|,
@@ -4647,9 +4657,7 @@ if|if
 condition|(
 name|msg_len
 operator|>
-literal|256
-operator|*
-literal|1024
+name|SFTP_MAX_MSG_LENGTH
 condition|)
 block|{
 name|error
@@ -4941,6 +4949,10 @@ name|olen
 decl_stmt|,
 name|set_size
 decl_stmt|;
+comment|/* Ensure that fds 0, 1 and 2 are open or directed to /dev/null */
+name|sanitise_stdfd
+argument_list|()
+expr_stmt|;
 comment|/* XXX should use getopt */
 name|__progname
 operator|=

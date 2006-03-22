@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-keygen.c,v 1.128 2005/07/17 07:17:55 djm Exp $"
+literal|"$OpenBSD: ssh-keygen.c,v 1.135 2005/11/29 02:04:55 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -125,14 +125,28 @@ file|"dns.h"
 end_include
 
 begin_comment
-comment|/* Number of bits in the RSA/DSA key.  This value can be changed on the command line. */
+comment|/* Number of bits in the RSA/DSA key.  This value can be set on the command line. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_BITS
+value|2048
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_BITS_DSA
+value|1024
+end_define
 
 begin_decl_stmt
 name|u_int32_t
 name|bits
 init|=
-literal|2048
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -5629,6 +5643,10 @@ name|char
 modifier|*
 name|optarg
 decl_stmt|;
+comment|/* Ensure that fds 0, 1 and 2 are open or directed to /dev/null */
+name|sanitise_stdfd
+argument_list|()
+expr_stmt|;
 name|__progname
 operator|=
 name|ssh_get_progname
@@ -5747,7 +5765,7 @@ name|strtonum
 argument_list|(
 name|optarg
 argument_list|,
-literal|512
+literal|768
 argument_list|,
 literal|32768
 argument_list|,
@@ -6413,6 +6431,16 @@ return|;
 block|}
 if|if
 condition|(
+name|bits
+operator|==
+literal|0
+condition|)
+name|bits
+operator|=
+name|DEFAULT_BITS
+expr_stmt|;
+if|if
+condition|(
 name|gen_candidates
 argument_list|(
 name|out
@@ -6428,7 +6456,7 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"modulus candidate generation failed\n"
+literal|"modulus candidate generation failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6544,7 +6572,7 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"modulus screening failed\n"
+literal|"modulus screening failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6562,16 +6590,10 @@ name|key_type_name
 operator|==
 name|NULL
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"You must specify a key type (-t).\n"
-argument_list|)
+name|key_type_name
+operator|=
+literal|"rsa"
 expr_stmt|;
-name|usage
-argument_list|()
-expr_stmt|;
-block|}
 name|type
 operator|=
 name|key_type_from_name
@@ -6601,6 +6623,39 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|bits
+operator|==
+literal|0
+condition|)
+name|bits
+operator|=
+operator|(
+name|type
+operator|==
+name|KEY_DSA
+operator|)
+condition|?
+name|DEFAULT_BITS_DSA
+else|:
+name|DEFAULT_BITS
+expr_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+name|KEY_DSA
+operator|&&
+name|bits
+operator|!=
+literal|1024
+condition|)
+name|fatal
+argument_list|(
+literal|"DSA keys must be 1024 bits"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -6661,7 +6716,7 @@ argument_list|,
 literal|"Enter file in which to save the key"
 argument_list|)
 expr_stmt|;
-comment|/* Create ~/.ssh directory if it doesn\'t already exist. */
+comment|/* Create ~/.ssh directory if it doesn't already exist. */
 name|snprintf
 argument_list|(
 name|dotsshdir

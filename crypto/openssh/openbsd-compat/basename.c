@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$OpenBSD: basename.c,v 1.14 2005/08/08 08:05:33 espie Exp $	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (c) 1997, 2004 Todd C. Miller<Todd.Miller@courtesan.com>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+end_comment
+
+begin_comment
 comment|/* OPENBSD ORIGINAL: lib/libc/gen/basename.c */
-end_comment
-
-begin_comment
-comment|/*	$OpenBSD: basename.c,v 1.11 2003/06/17 21:56:23 millert Exp $	*/
-end_comment
-
-begin_comment
-comment|/*  * Copyright (c) 1997 Todd C. Miller<Todd.Miller@courtesan.com>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_include
@@ -22,31 +22,6 @@ ifndef|#
 directive|ifndef
 name|HAVE_BASENAME
 end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$OpenBSD: basename.c,v 1.11 2003/06/17 21:56:23 millert Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
 
 begin_function
 name|char
@@ -66,7 +41,9 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
-specifier|register
+name|size_t
+name|len
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -88,18 +65,19 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|strlcpy
-argument_list|(
 name|bname
-argument_list|,
-literal|"."
-argument_list|,
-sizeof|sizeof
+index|[
+literal|0
+index|]
+operator|=
+literal|'.'
+expr_stmt|;
 name|bname
-argument_list|)
+index|[
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 return|return
 operator|(
@@ -107,7 +85,7 @@ name|bname
 operator|)
 return|;
 block|}
-comment|/* Strip trailing slashes */
+comment|/* Strip any trailing slashes */
 name|endp
 operator|=
 name|path
@@ -133,7 +111,7 @@ condition|)
 name|endp
 operator|--
 expr_stmt|;
-comment|/* All slashes become "/" */
+comment|/* All slashes becomes "/" */
 if|if
 condition|(
 name|endp
@@ -146,18 +124,19 @@ operator|==
 literal|'/'
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|strlcpy
-argument_list|(
 name|bname
-argument_list|,
-literal|"/"
-argument_list|,
-sizeof|sizeof
+index|[
+literal|0
+index|]
+operator|=
+literal|'/'
+expr_stmt|;
 name|bname
-argument_list|)
+index|[
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 return|return
 operator|(
@@ -188,14 +167,18 @@ condition|)
 name|startp
 operator|--
 expr_stmt|;
-if|if
-condition|(
+name|len
+operator|=
 name|endp
 operator|-
 name|startp
 operator|+
-literal|2
-operator|>
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|>=
 sizeof|sizeof
 argument_list|(
 name|bname
@@ -212,18 +195,21 @@ name|NULL
 operator|)
 return|;
 block|}
-name|strlcpy
+name|memcpy
 argument_list|(
 name|bname
 argument_list|,
 name|startp
 argument_list|,
-name|endp
-operator|-
-name|startp
-operator|+
-literal|2
+name|len
 argument_list|)
+expr_stmt|;
+name|bname
+index|[
+name|len
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 return|return
 operator|(

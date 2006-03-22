@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: kex.c,v 1.64 2005/07/25 11:59:39 markus Exp $"
+literal|"$OpenBSD: kex.c,v 1.65 2005/11/04 05:15:59 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1467,6 +1467,13 @@ name|kex_type
 operator|=
 name|KEX_DH_GRP1_SHA1
 expr_stmt|;
+name|k
+operator|->
+name|evp_md
+operator|=
+name|EVP_sha1
+argument_list|()
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1489,6 +1496,13 @@ name|kex_type
 operator|=
 name|KEX_DH_GRP14_SHA1
 expr_stmt|;
+name|k
+operator|->
+name|evp_md
+operator|=
+name|EVP_sha1
+argument_list|()
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1499,7 +1513,7 @@ name|k
 operator|->
 name|name
 argument_list|,
-name|KEX_DHGEX
+name|KEX_DHGEX_SHA1
 argument_list|)
 operator|==
 literal|0
@@ -1510,6 +1524,13 @@ operator|->
 name|kex_type
 operator|=
 name|KEX_DH_GEX_SHA1
+expr_stmt|;
+name|k
+operator|->
+name|evp_md
+operator|=
+name|EVP_sha1
+argument_list|()
 expr_stmt|;
 block|}
 else|else
@@ -2234,6 +2255,9 @@ name|u_char
 modifier|*
 name|hash
 parameter_list|,
+name|u_int
+name|hashlen
+parameter_list|,
 name|BIGNUM
 modifier|*
 name|shared_secret
@@ -2241,14 +2265,6 @@ parameter_list|)
 block|{
 name|Buffer
 name|b
-decl_stmt|;
-specifier|const
-name|EVP_MD
-modifier|*
-name|evp_md
-init|=
-name|EVP_sha1
-argument_list|()
 decl_stmt|;
 name|EVP_MD_CTX
 name|md
@@ -2263,11 +2279,6 @@ name|have
 decl_stmt|;
 name|int
 name|mdsz
-init|=
-name|EVP_MD_size
-argument_list|(
-name|evp_md
-argument_list|)
 decl_stmt|;
 name|u_char
 modifier|*
@@ -2275,13 +2286,24 @@ name|digest
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|mdsz
-operator|<
+operator|=
+name|EVP_MD_size
+argument_list|(
+name|kex
+operator|->
+name|evp_md
+argument_list|)
+operator|)
+operator|<=
 literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"derive_key: mdsz< 0"
+literal|"bad kex md size %d"
+argument_list|,
+name|mdsz
 argument_list|)
 expr_stmt|;
 name|digest
@@ -2316,6 +2338,8 @@ argument_list|(
 operator|&
 name|md
 argument_list|,
+name|kex
+operator|->
 name|evp_md
 argument_list|)
 expr_stmt|;
@@ -2353,7 +2377,7 @@ name|md
 argument_list|,
 name|hash
 argument_list|,
-name|mdsz
+name|hashlen
 argument_list|)
 expr_stmt|;
 name|EVP_DigestUpdate
@@ -2412,6 +2436,8 @@ argument_list|(
 operator|&
 name|md
 argument_list|,
+name|kex
+operator|->
 name|evp_md
 argument_list|)
 expr_stmt|;
@@ -2449,7 +2475,7 @@ name|md
 argument_list|,
 name|hash
 argument_list|,
-name|mdsz
+name|hashlen
 argument_list|)
 expr_stmt|;
 name|EVP_DigestUpdate
@@ -2539,6 +2565,9 @@ name|u_char
 modifier|*
 name|hash
 parameter_list|,
+name|u_int
+name|hashlen
+parameter_list|,
 name|BIGNUM
 modifier|*
 name|shared_secret
@@ -2571,6 +2600,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 name|keys
 index|[
 name|i
@@ -2590,9 +2620,12 @@ name|we_need
 argument_list|,
 name|hash
 argument_list|,
+name|hashlen
+argument_list|,
 name|shared_secret
 argument_list|)
 expr_stmt|;
+block|}
 name|debug2
 argument_list|(
 literal|"kex_derive_keys"

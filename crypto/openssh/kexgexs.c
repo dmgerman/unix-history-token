@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: kexgexs.c,v 1.1 2003/02/16 17:09:57 markus Exp $"
+literal|"$OpenBSD: kexgexs.c,v 1.2 2005/11/04 05:15:59 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -124,6 +124,8 @@ decl_stmt|,
 name|kout
 decl_stmt|,
 name|slen
+decl_stmt|,
+name|hashlen
 decl_stmt|;
 name|int
 name|min
@@ -587,11 +589,12 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* calc H */
-comment|/* XXX depends on 'kex' */
-name|hash
-operator|=
 name|kexgex_hash
 argument_list|(
+name|kex
+operator|->
+name|evp_md
+argument_list|,
 name|kex
 operator|->
 name|client_version_string
@@ -657,6 +660,12 @@ operator|->
 name|pub_key
 argument_list|,
 name|shared_secret
+argument_list|,
+operator|&
+name|hash
+argument_list|,
+operator|&
+name|hashlen
 argument_list|)
 expr_stmt|;
 name|BN_clear_free
@@ -665,7 +674,6 @@ name|dh_client_pub
 argument_list|)
 expr_stmt|;
 comment|/* save session id := H */
-comment|/* XXX hashlen depends on KEX */
 if|if
 condition|(
 name|kex
@@ -679,7 +687,7 @@ name|kex
 operator|->
 name|session_id_len
 operator|=
-literal|20
+name|hashlen
 expr_stmt|;
 name|kex
 operator|->
@@ -707,7 +715,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* sign H */
-comment|/* XXX hashlen depends on KEX */
 name|PRIVSEP
 argument_list|(
 name|key_sign
@@ -722,7 +729,7 @@ name|slen
 argument_list|,
 name|hash
 argument_list|,
-literal|20
+name|hashlen
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -784,6 +791,8 @@ argument_list|(
 name|kex
 argument_list|,
 name|hash
+argument_list|,
+name|hashlen
 argument_list|,
 name|shared_secret
 argument_list|)

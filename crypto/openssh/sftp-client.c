@@ -28,7 +28,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sftp-client.c,v 1.57 2005/07/27 10:39:03 dtucker Exp $"
+literal|"$OpenBSD: sftp-client.c,v 1.58 2006/01/02 01:20:31 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -125,17 +125,6 @@ name|MIN_READ_SIZE
 value|512
 end_define
 
-begin_comment
-comment|/* Maximum packet size */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX_MSG_LENGTH
-value|(256 * 1024)
-end_define
-
 begin_struct
 struct|struct
 name|sftp_conn
@@ -188,7 +177,7 @@ argument_list|(
 name|m
 argument_list|)
 operator|>
-name|MAX_MSG_LENGTH
+name|SFTP_MAX_MSG_LENGTH
 condition|)
 name|fatal
 argument_list|(
@@ -360,7 +349,7 @@ if|if
 condition|(
 name|msg_len
 operator|>
-name|MAX_MSG_LENGTH
+name|SFTP_MAX_MSG_LENGTH
 condition|)
 name|fatal
 argument_list|(

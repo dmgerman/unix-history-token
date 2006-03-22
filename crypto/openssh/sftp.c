@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sftp.c,v 1.66 2005/08/08 13:22:48 jaredy Exp $"
+literal|"$OpenBSD: sftp.c,v 1.70 2006/01/31 10:19:02 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3659,6 +3659,24 @@ operator|&
 name|SORT_FLAGS
 condition|)
 block|{
+for|for
+control|(
+name|n
+operator|=
+literal|0
+init|;
+name|d
+index|[
+name|n
+index|]
+operator|!=
+name|NULL
+condition|;
+name|n
+operator|++
+control|)
+empty_stmt|;
+comment|/* count entries */
 name|sort_flag
 operator|=
 name|lflag
@@ -7617,6 +7635,10 @@ name|char
 modifier|*
 name|optarg
 decl_stmt|;
+comment|/* Ensure that fds 0, 1 and 2 are open or directed to /dev/null */
+name|sanitise_stdfd
+argument_list|()
+expr_stmt|;
 name|__progname
 operator|=
 name|ssh_get_progname
@@ -7625,6 +7647,19 @@ name|argv
 index|[
 literal|0
 index|]
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|args
+argument_list|,
+literal|'\0'
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|args
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|args
@@ -7638,10 +7673,9 @@ argument_list|(
 operator|&
 name|args
 argument_list|,
-literal|"ssh"
+name|ssh_program
 argument_list|)
 expr_stmt|;
-comment|/* overwritten with ssh_program */
 name|addargs
 argument_list|(
 operator|&
@@ -7656,6 +7690,14 @@ operator|&
 name|args
 argument_list|,
 literal|"-oForwardAgent no"
+argument_list|)
+expr_stmt|;
+name|addargs
+argument_list|(
+operator|&
+name|args
+argument_list|,
+literal|"-oPermitLocalCommand no"
 argument_list|)
 expr_stmt|;
 name|addargs
@@ -7790,6 +7832,18 @@ case|:
 name|ssh_program
 operator|=
 name|optarg
+expr_stmt|;
+name|replacearg
+argument_list|(
+operator|&
+name|args
+argument_list|,
+literal|0
+argument_list|,
+literal|"%s"
+argument_list|,
+name|ssh_program
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -8182,15 +8236,6 @@ literal|"sftp"
 operator|)
 argument_list|)
 expr_stmt|;
-name|args
-operator|.
-name|list
-index|[
-literal|0
-index|]
-operator|=
-name|ssh_program
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -8267,6 +8312,12 @@ name|out
 argument_list|)
 expr_stmt|;
 block|}
+name|freeargs
+argument_list|(
+operator|&
+name|args
+argument_list|)
+expr_stmt|;
 name|err
 operator|=
 name|interactive_loop

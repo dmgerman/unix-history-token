@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: bsd-misc.c,v 1.27 2005/05/27 11:13:41 dtucker Exp $"
+literal|"$Id: bsd-misc.c,v 1.28 2005/11/01 22:07:31 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1109,9 +1109,9 @@ name|cp
 operator|!=
 name|NULL
 condition|)
-if|if
-condition|(
-name|strlcpy
+return|return
+operator|(
+name|memcpy
 argument_list|(
 name|cp
 argument_list|,
@@ -1119,21 +1119,10 @@ name|str
 argument_list|,
 name|len
 argument_list|)
-operator|!=
-name|len
-condition|)
-block|{
-name|free
-argument_list|(
-name|cp
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 return|return
 name|NULL
-return|;
-block|}
-return|return
-name|cp
 return|;
 block|}
 end_function

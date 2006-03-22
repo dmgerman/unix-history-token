@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1999-2000 Damien Miller.  All rights reserved.  *  *
 end_comment
 
 begin_comment
-comment|/* $Id: entropy.h,v 1.4 2001/02/09 01:55:36 djm Exp $ */
+comment|/* $Id: entropy.h,v 1.5 2005/09/27 12:46:32 dtucker Exp $ */
 end_comment
 
 begin_ifndef
@@ -18,6 +18,12 @@ define|#
 directive|define
 name|_RANDOMS_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"buffer.h"
+end_include
 
 begin_function_decl
 name|void
@@ -33,6 +39,26 @@ name|void
 name|init_rng
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|rexec_send_rng_seed
+parameter_list|(
+name|Buffer
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|rexec_recv_rng_seed
+parameter_list|(
+name|Buffer
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: packet.c,v 1.119 2005/07/28 17:36:22 markus Exp $"
+literal|"$OpenBSD: packet.c,v 1.120 2005/10/30 08:52:17 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2268,7 +2268,7 @@ operator|&
 name|outgoing_packet
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Note that the packet is now only buffered in output.  It won\'t be 	 * actually sent until packet_write_wait or packet_write_poll is 	 * called. 	 */
+comment|/* 	 * Note that the packet is now only buffered in output.  It won't be 	 * actually sent until packet_write_wait or packet_write_poll is 	 * called. 	 */
 block|}
 end_function
 

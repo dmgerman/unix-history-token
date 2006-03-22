@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-keysign.c,v 1.18 2004/08/23 14:29:23 dtucker Exp $"
+literal|"$OpenBSD: ssh-keysign.c,v 1.19 2005/09/13 23:40:07 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -636,6 +636,39 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+comment|/* Ensure that stdin and stdout are connected */
+if|if
+condition|(
+operator|(
+name|fd
+operator|=
+name|open
+argument_list|(
+name|_PATH_DEVNULL
+argument_list|,
+name|O_RDWR
+argument_list|)
+operator|)
+operator|<
+literal|2
+condition|)
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Leave /dev/null fd iff it is attached to stderr */
+if|if
+condition|(
+name|fd
+operator|>
+literal|2
+condition|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 name|key_fd
 index|[
 literal|0

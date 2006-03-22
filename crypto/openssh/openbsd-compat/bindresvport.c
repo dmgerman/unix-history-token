@@ -4,11 +4,15 @@ comment|/* This file has be substantially modified from the original OpenBSD sou
 end_comment
 
 begin_comment
-comment|/*	$OpenBSD: bindresvport.c,v 1.15 2003/05/20 22:42:35 deraadt Exp $	*/
+comment|/*	$OpenBSD: bindresvport.c,v 1.16 2005/04/01 07:44:03 otto Exp $	*/
 end_comment
 
 begin_comment
 comment|/*  * Copyright 1996, Jason Downs.  All rights reserved.  * Copyright 1998, Theo de Raadt.  All rights reserved.  * Copyright 2000, Damien Miller.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+end_comment
+
+begin_comment
+comment|/* OPENBSD ORIGINAL: lib/libc/rpc/bindresvport.c */
 end_comment
 
 begin_include
@@ -58,18 +62,14 @@ begin_function
 name|int
 name|bindresvport_sa
 parameter_list|(
-name|sd
-parameter_list|,
-name|sa
-parameter_list|)
 name|int
 name|sd
-decl_stmt|;
+parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
 name|sa
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|error

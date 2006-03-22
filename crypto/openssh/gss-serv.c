@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: gss-serv.c,v 1.8 2005/08/30 22:08:05 djm Exp $	*/
+comment|/*	$OpenBSD: gss-serv.c,v 1.13 2005/10/13 22:24:31 stevesk Exp $	*/
 end_comment
 
 begin_comment
@@ -23,12 +23,6 @@ begin_include
 include|#
 directive|include
 file|"bufaux.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"compat.h"
 end_include
 
 begin_include
@@ -64,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"monitor_wrap.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"xmalloc.h"
 end_include
 
@@ -84,13 +72,6 @@ include|#
 directive|include
 file|"ssh-gss.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|ServerOptions
-name|options
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -183,7 +164,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Unpriviledged */
+comment|/* Unprivileged */
 end_comment
 
 begin_function
@@ -298,7 +279,7 @@ comment|/* Wrapper around accept_sec_context  * Requires that the context contai
 end_comment
 
 begin_comment
-comment|/* Priviledged */
+comment|/* Privileged */
 end_comment
 
 begin_function
@@ -691,7 +672,7 @@ comment|/* Extract the client details from a given context. This can only reliab
 end_comment
 
 begin_comment
-comment|/* Priviledged (called from accept_secure_ctx) */
+comment|/* Privileged (called from accept_secure_ctx) */
 end_comment
 
 begin_function
@@ -1112,7 +1093,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Priviledged */
+comment|/* Privileged */
 end_comment
 
 begin_function
@@ -1255,7 +1236,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Priviledged */
+comment|/* Privileged */
 end_comment
 
 begin_function

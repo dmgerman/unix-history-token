@@ -16,7 +16,7 @@ name|_DEFINES_H
 end_define
 
 begin_comment
-comment|/* $Id: defines.h,v 1.127 2005/08/31 16:59:49 tim Exp $ */
+comment|/* $Id: defines.h,v 1.130 2005/12/17 11:04:09 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -2344,6 +2344,40 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HAVE_ATTRIBUTE__BOUNDED__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__bounded__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__bounded__
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|z
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* *-*-nto-qnx doesn't define this macro in the system headers */
 end_comment
@@ -3748,20 +3782,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_LIBIAF
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|BROKEN_LIBIAF
-argument_list|)
-end_if
+end_ifdef
 
 begin_define
 define|#
@@ -3867,6 +3892,44 @@ begin_undef
 undef|#
 directive|undef
 name|HAVE_MMAP
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* some system headers on HP-UX define YES/NO */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|YES
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|YES
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NO
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|NO
 end_undef
 
 begin_endif
