@@ -6783,6 +6783,15 @@ condition|)
 goto|goto
 name|out
 goto|;
+if|if
+condition|(
+name|va
+operator|==
+name|vector_page
+condition|)
+goto|goto
+name|out
+goto|;
 name|pa
 operator|=
 name|l2pte_pa
