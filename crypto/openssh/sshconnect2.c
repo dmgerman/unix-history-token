@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshconnect2.c,v 1.142 2005/08/30 22:08:05 djm Exp $"
+literal|"$OpenBSD: sshconnect2.c,v 1.143 2005/10/14 02:17:59 stevesk Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3255,7 +3255,7 @@ argument_list|()
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"Server GSSAPI Error:\n%s\n"
+literal|"Server GSSAPI Error:\n%s"
 argument_list|,
 name|msg
 argument_list|)

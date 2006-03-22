@@ -112,7 +112,7 @@ end_endif
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: loginrec.c,v 1.70 2005/07/17 07:26:44 djm Exp $"
+literal|"$Id: loginrec.c,v 1.71 2005/11/22 08:55:13 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6209,6 +6209,9 @@ name|__func__
 argument_list|,
 name|LASTLOG_FILE
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|last
@@ -6282,7 +6285,7 @@ name|struct
 name|sockaddr_storage
 name|from
 decl_stmt|;
-name|size_t
+name|socklen_t
 name|fromlen
 init|=
 sizeof|sizeof

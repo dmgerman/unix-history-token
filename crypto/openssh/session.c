@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: session.c,v 1.186 2005/07/25 11:59:40 markus Exp $"
+literal|"$OpenBSD: session.c,v 1.191 2005/12/24 02:27:41 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -988,31 +988,6 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Cancel the alarm we set to limit the time taken for 	 * authentication. 	 */
-name|alarm
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|startup_pipe
-operator|!=
-operator|-
-literal|1
-condition|)
-block|{
-name|close
-argument_list|(
-name|startup_pipe
-argument_list|)
-expr_stmt|;
-name|startup_pipe
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
 comment|/* setup the channel layer */
 if|if
 condition|(
@@ -6652,7 +6627,7 @@ comment|/* 	 * Close any extra file descriptors.  Note that there may still be 	
 name|endpwent
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Close any extra open file descriptors so that we don\'t have them 	 * hanging around in clients.  Note that we want to do this after 	 * initgroups, because at least on Solaris 2.3 it leaves file 	 * descriptors open. 	 */
+comment|/* 	 * Close any extra open file descriptors so that we don't have them 	 * hanging around in clients.  Note that we want to do this after 	 * initgroups, because at least on Solaris 2.3 it leaves file 	 * descriptors open. 	 */
 for|for
 control|(
 name|i
@@ -6855,6 +6830,14 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* HAVE_OSF_SIA */
+comment|/* When PAM is enabled we rely on it to do the nologin check */
+if|if
+condition|(
+operator|!
+name|options
+operator|.
+name|use_pam
+condition|)
 name|do_nologin
 argument_list|(
 name|pw
@@ -7131,7 +7114,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* Change current directory to the user\'s home directory. */
+comment|/* Change current directory to the user's home directory. */
 if|if
 condition|(
 name|chdir
@@ -8669,7 +8652,7 @@ block|{
 name|error
 argument_list|(
 literal|"session_x11_req: session %d: "
-literal|"x11 fowarding already active"
+literal|"x11 forwarding already active"
 argument_list|,
 name|s
 operator|->
@@ -9739,7 +9722,7 @@ condition|(
 operator|(
 name|c
 operator|=
-name|channel_lookup
+name|channel_by_id
 argument_list|(
 name|id
 argument_list|)
@@ -10017,9 +10000,6 @@ name|Channel
 modifier|*
 name|c
 decl_stmt|;
-name|u_int
-name|i
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -10187,11 +10167,22 @@ operator|->
 name|chanid
 argument_list|)
 expr_stmt|;
-name|channel_cancel_cleanup
-argument_list|(
 name|s
 operator|->
-name|chanid
+name|pid
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 	 * Adjust cleanup callback attachment to send close messages when 	 * the channel gets EOF. The session will be then be closed  	 * by session_close_by_channel when the childs close their fds. 	 */
+name|channel_register_cleanup
+argument_list|(
+name|c
+operator|->
+name|self
+argument_list|,
+name|session_close_by_channel
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * emulate a write failure with 'chan_write_failed', nobody will be 	 * interested in data we write. 	 * Note that we must not call 'chan_read_failed', since there could 	 * be some more data waiting in the pipe. 	 */
@@ -10208,65 +10199,6 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
-name|s
-operator|->
-name|chanid
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-comment|/* Close any X11 listeners associated with this session */
-if|if
-condition|(
-name|s
-operator|->
-name|x11_chanids
-operator|!=
-name|NULL
-condition|)
-block|{
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|s
-operator|->
-name|x11_chanids
-index|[
-name|i
-index|]
-operator|!=
-operator|-
-literal|1
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|session_close_x11
-argument_list|(
-name|s
-operator|->
-name|x11_chanids
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-name|s
-operator|->
-name|x11_chanids
-index|[
-name|i
-index|]
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
-block|}
 block|}
 end_function
 
@@ -10515,7 +10447,16 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
-name|session_close
+if|if
+condition|(
+name|s
+operator|->
+name|ttyfd
+operator|!=
+operator|-
+literal|1
+condition|)
+name|session_pty_cleanup
 argument_list|(
 name|s
 argument_list|)
@@ -10547,6 +10488,9 @@ name|session_by_channel
 argument_list|(
 name|id
 argument_list|)
+decl_stmt|;
+name|u_int
+name|i
 decl_stmt|;
 if|if
 condition|(
@@ -10619,6 +10563,58 @@ operator|->
 name|chanid
 argument_list|)
 expr_stmt|;
+comment|/* Close any X11 listeners associated with this session */
+if|if
+condition|(
+name|s
+operator|->
+name|x11_chanids
+operator|!=
+name|NULL
+condition|)
+block|{
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|s
+operator|->
+name|x11_chanids
+index|[
+name|i
+index|]
+operator|!=
+operator|-
+literal|1
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|session_close_x11
+argument_list|(
+name|s
+operator|->
+name|x11_chanids
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|s
+operator|->
+name|x11_chanids
+index|[
+name|i
+index|]
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+block|}
 name|s
 operator|->
 name|chanid
@@ -11127,6 +11123,8 @@ name|i
 index|]
 argument_list|,
 name|session_close_single_x11
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

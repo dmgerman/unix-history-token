@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: hostfile.c,v 1.35 2005/07/27 10:39:03 dtucker Exp $"
+literal|"$OpenBSD: hostfile.c,v 1.36 2005/11/22 03:36:03 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -310,9 +310,9 @@ condition|)
 block|{
 name|debug2
 argument_list|(
-literal|"extract_salt: expected salt len %u, got %u"
+literal|"extract_salt: expected salt len %d, got %d"
 argument_list|,
-name|salt_len
+name|SHA_DIGEST_LENGTH
 argument_list|,
 name|ret
 argument_list|)

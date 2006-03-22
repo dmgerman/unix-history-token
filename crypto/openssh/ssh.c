@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh.c,v 1.249 2005/07/30 01:26:16 djm Exp $"
+literal|"$OpenBSD: ssh.c,v 1.257 2005/12/20 04:41:07 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -482,16 +482,16 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: ssh [-1246AaCfgkMNnqsTtVvXxY] [-b bind_address] [-c cipher_spec]\n"
-literal|"           [-D port] [-e escape_char] [-F configfile]\n"
+literal|"           [-D [bind_address:]port] [-e escape_char] [-F configfile]\n"
 literal|"           [-i identity_file] [-L [bind_address:]port:host:hostport]\n"
 literal|"           [-l login_name] [-m mac_spec] [-O ctl_cmd] [-o option] [-p port]\n"
 literal|"           [-R [bind_address:]port:host:hostport] [-S ctl_path]\n"
-literal|"           [user@]hostname [command]\n"
+literal|"           [-w tunnel:tunnel] [user@]hostname [command]\n"
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|255
 argument_list|)
 expr_stmt|;
 block|}
@@ -610,6 +610,10 @@ decl_stmt|;
 name|Forward
 name|fwd
 decl_stmt|;
+comment|/* Ensure that fds 0, 1 and 2 are open or directed to /dev/null */
+name|sanitise_stdfd
+argument_list|()
+expr_stmt|;
 name|__progname
 operator|=
 name|ssh_get_progname
@@ -708,7 +712,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|255
 argument_list|)
 expr_stmt|;
 block|}
@@ -751,7 +755,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"1246ab:c:e:fgi:kl:m:no:p:qstvxACD:F:I:L:MNO:PR:S:TVXY"
+literal|"1246ab:c:e:fgi:kl:m:no:p:qstvxACD:F:I:L:MNO:PR:S:TVw:XY"
 argument_list|)
 operator|)
 operator|!=
@@ -1129,6 +1133,63 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'w'
+case|:
+if|if
+condition|(
+name|options
+operator|.
+name|tun_open
+operator|==
+operator|-
+literal|1
+condition|)
+name|options
+operator|.
+name|tun_open
+operator|=
+name|SSH_TUNMODE_DEFAULT
+expr_stmt|;
+name|options
+operator|.
+name|tun_local
+operator|=
+name|a2tun
+argument_list|(
+name|optarg
+argument_list|,
+operator|&
+name|options
+operator|.
+name|tun_remote
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|options
+operator|.
+name|tun_local
+operator|==
+name|SSH_TUNID_ERR
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Bad tun device '%s'\n"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|255
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
 literal|'q'
 case|:
 name|options
@@ -1244,7 +1305,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|255
 argument_list|)
 expr_stmt|;
 block|}
@@ -1310,7 +1371,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|255
 argument_list|)
 expr_stmt|;
 block|}
@@ -1389,7 +1450,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|255
 argument_list|)
 expr_stmt|;
 block|}
@@ -1451,7 +1512,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|255
 argument_list|)
 expr_stmt|;
 block|}
@@ -1501,7 +1562,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|255
 argument_list|)
 expr_stmt|;
 block|}
@@ -1544,7 +1605,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|255
 argument_list|)
 expr_stmt|;
 block|}
@@ -1609,7 +1670,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|255
 argument_list|)
 expr_stmt|;
 block|}
@@ -1681,7 +1742,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|255
 argument_list|)
 expr_stmt|;
 block|}
@@ -1771,7 +1832,7 @@ literal|0
 condition|)
 name|exit
 argument_list|(
-literal|1
+literal|255
 argument_list|)
 expr_stmt|;
 name|xfree
@@ -2700,7 +2761,7 @@ literal|0
 condition|)
 name|exit
 argument_list|(
-literal|1
+literal|255
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If we successfully made the connection, load the host private key 	 * in case we will need it later for combined rsa-rhosts 	 * authentication. This must be done before releasing extra 	 * privileges, because the file is only readable by root. 	 * If we cannot access the private keys, load the public keys 	 * instead and try to execute the ssh-keysign helper instead. 	 */
@@ -2901,7 +2962,7 @@ name|pw
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Now that we are back to our own permissions, create ~/.ssh 	 * directory if it doesn\'t already exist. 	 */
+comment|/* 	 * Now that we are back to our own permissions, create ~/.ssh 	 * directory if it doesn't already exist. 	 */
 name|snprintf
 argument_list|(
 name|buf
@@ -3445,15 +3506,7 @@ operator|==
 name|NULL
 operator|)
 condition|?
-operator|(
-name|options
-operator|.
-name|gateway_ports
-condition|?
-literal|"*"
-else|:
 literal|"LOCALHOST"
-operator|)
 else|:
 name|options
 operator|.
@@ -3550,7 +3603,7 @@ operator|.
 name|forward_agent
 condition|)
 block|{
-comment|/* Clear agent forwarding if we don\'t have an agent. */
+comment|/* Clear agent forwarding if we don't have an agent. */
 if|if
 condition|(
 operator|!
@@ -4442,7 +4495,7 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"%s socket(): %s\n"
+literal|"%s socket(): %s"
 argument_list|,
 name|__func__
 argument_list|,
@@ -4507,7 +4560,7 @@ expr_stmt|;
 else|else
 name|fatal
 argument_list|(
-literal|"%s bind(): %s\n"
+literal|"%s bind(): %s"
 argument_list|,
 name|__func__
 argument_list|,
@@ -4537,7 +4590,7 @@ literal|1
 condition|)
 name|fatal
 argument_list|(
-literal|"%s listen(): %s\n"
+literal|"%s listen(): %s"
 argument_list|,
 name|__func__
 argument_list|,
@@ -4683,6 +4736,156 @@ expr_stmt|;
 name|packet_send
 argument_list|()
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|options
+operator|.
+name|tun_open
+operator|!=
+name|SSH_TUNMODE_NO
+condition|)
+block|{
+name|Channel
+modifier|*
+name|c
+decl_stmt|;
+name|int
+name|fd
+decl_stmt|;
+name|debug
+argument_list|(
+literal|"Requesting tun."
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|fd
+operator|=
+name|tun_open
+argument_list|(
+name|options
+operator|.
+name|tun_local
+argument_list|,
+name|options
+operator|.
+name|tun_open
+argument_list|)
+operator|)
+operator|>=
+literal|0
+condition|)
+block|{
+name|c
+operator|=
+name|channel_new
+argument_list|(
+literal|"tun"
+argument_list|,
+name|SSH_CHANNEL_OPENING
+argument_list|,
+name|fd
+argument_list|,
+name|fd
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+name|CHAN_TCP_WINDOW_DEFAULT
+argument_list|,
+name|CHAN_TCP_PACKET_DEFAULT
+argument_list|,
+literal|0
+argument_list|,
+literal|"tun"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|c
+operator|->
+name|datagram
+operator|=
+literal|1
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SSH_TUN_FILTER
+argument_list|)
+if|if
+condition|(
+name|options
+operator|.
+name|tun_open
+operator|==
+name|SSH_TUNMODE_POINTOPOINT
+condition|)
+name|channel_register_filter
+argument_list|(
+name|c
+operator|->
+name|self
+argument_list|,
+name|sys_tun_infilter
+argument_list|,
+name|sys_tun_outfilter
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|packet_start
+argument_list|(
+name|SSH2_MSG_CHANNEL_OPEN
+argument_list|)
+expr_stmt|;
+name|packet_put_cstring
+argument_list|(
+literal|"tun@openssh.com"
+argument_list|)
+expr_stmt|;
+name|packet_put_int
+argument_list|(
+name|c
+operator|->
+name|self
+argument_list|)
+expr_stmt|;
+name|packet_put_int
+argument_list|(
+name|c
+operator|->
+name|local_window_max
+argument_list|)
+expr_stmt|;
+name|packet_put_int
+argument_list|(
+name|c
+operator|->
+name|local_maxpacket
+argument_list|)
+expr_stmt|;
+name|packet_put_int
+argument_list|(
+name|options
+operator|.
+name|tun_open
+argument_list|)
+expr_stmt|;
+name|packet_put_int
+argument_list|(
+name|options
+operator|.
+name|tun_remote
+argument_list|)
+expr_stmt|;
+name|packet_send
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 name|client_session2_setup
 argument_list|(
@@ -4970,6 +5173,26 @@ name|id
 operator|=
 name|ssh_session2_open
 argument_list|()
+expr_stmt|;
+comment|/* Execute a local command */
+if|if
+condition|(
+name|options
+operator|.
+name|local_command
+operator|!=
+name|NULL
+operator|&&
+name|options
+operator|.
+name|permit_local_command
+condition|)
+name|ssh_local_cmd
+argument_list|(
+name|options
+operator|.
+name|local_command
+argument_list|)
 expr_stmt|;
 comment|/* If requested, let ssh continue in the background. */
 if|if

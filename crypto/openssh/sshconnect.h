@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: sshconnect.h,v 1.17 2002/06/19 00:27:55 deraadt Exp $	*/
+comment|/*	$OpenBSD: sshconnect.h,v 1.18 2005/12/06 22:38:28 reyk Exp $	*/
 end_comment
 
 begin_comment
@@ -186,6 +186,17 @@ begin_function_decl
 name|void
 name|ssh_put_password
 parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ssh_local_cmd
+parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)

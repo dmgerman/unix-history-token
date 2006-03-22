@@ -285,13 +285,6 @@ name|options
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|Buffer
-name|loginmsg
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|mm_is_monitor

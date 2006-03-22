@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-agent.c,v 1.122 2004/10/29 22:53:56 djm Exp $"
+literal|"$OpenBSD: ssh-agent.c,v 1.124 2005/10/30 08:52:18 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1765,7 +1765,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 			 * We have this key.  Free the old key.  Since we 			 * don\'t want to leave empty slots in the middle of 			 * the array, we actually free the key there and move 			 * all the entries between the empty slot and the end 			 * of the array. 			 */
+comment|/* 			 * We have this key.  Free the old key.  Since we 			 * don't want to leave empty slots in the middle of 			 * the array, we actually free the key there and move 			 * all the entries between the empty slot and the end 			 * of the array. 			 */
 name|Idtab
 modifier|*
 name|tab
@@ -5321,6 +5321,10 @@ sizeof|sizeof
 name|pid
 index|]
 decl_stmt|;
+comment|/* Ensure that fds 0, 1 and 2 are open or directed to /dev/null */
+name|sanitise_stdfd
+argument_list|()
+expr_stmt|;
 comment|/* drop */
 name|setegid
 argument_list|(

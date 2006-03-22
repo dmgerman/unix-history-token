@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-add.c,v 1.72 2005/07/17 07:17:55 djm Exp $"
+literal|"$OpenBSD: ssh-add.c,v 1.74 2005/11/12 18:37:59 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1408,6 +1408,10 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
+comment|/* Ensure that fds 0, 1 and 2 are open or directed to /dev/null */
+name|sanitise_stdfd
+argument_list|()
+expr_stmt|;
 name|__progname
 operator|=
 name|ssh_get_progname
