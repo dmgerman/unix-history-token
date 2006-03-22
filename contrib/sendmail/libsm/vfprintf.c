@@ -14,7 +14,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: vfprintf.c,v 1.53 2004/08/03 20:54:49 ca Exp $"
+literal|"@(#)$Id: vfprintf.c,v 1.54 2005/05/16 03:52:00 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1761,6 +1761,30 @@ name|prec
 operator|>=
 literal|0
 condition|)
+if|#
+directive|if
+name|HASSNPRINTF
+name|snprintf
+argument_list|(
+name|out
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|out
+argument_list|)
+argument_list|,
+name|fmt
+argument_list|,
+name|width
+argument_list|,
+name|prec
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* HASSNPRINTF */
 name|sprintf
 argument_list|(
 name|out
@@ -1774,7 +1798,32 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* HASSNPRINTF */
 else|else
+if|#
+directive|if
+name|HASSNPRINTF
+name|snprintf
+argument_list|(
+name|out
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|out
+argument_list|)
+argument_list|,
+name|fmt
+argument_list|,
+name|width
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* HASSNPRINTF */
 name|sprintf
 argument_list|(
 name|out
@@ -1786,6 +1835,9 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* HASSNPRINTF */
 name|len
 operator|=
 name|strlen

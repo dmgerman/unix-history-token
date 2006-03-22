@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: b-strcmp.c,v 1.13 2004/08/03 20:07:59 ca Exp $"
+literal|"@(#)$Id: b-strcmp.c,v 1.14 2005/06/14 23:07:20 ca Exp $"
 argument_list|)
 end_macro
 
@@ -43,7 +43,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<sm/time.h>
 end_include
 
 begin_include

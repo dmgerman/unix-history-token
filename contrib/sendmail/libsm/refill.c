@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2001 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2000-2001, 2005-2006 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: refill.c,v 1.50 2002/09/09 21:50:10 gshapiro Exp $"
+literal|"@(#)$Id: refill.c,v 1.53 2006/02/28 18:48:25 ca Exp $"
 argument_list|)
 end_macro
 
@@ -49,7 +49,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<sm/time.h>
 end_include
 
 begin_include
@@ -125,13 +125,13 @@ parameter_list|,
 name|sel_ret
 parameter_list|)
 define|\
-value|{									\ 	struct timeval sm_io_to_before, sm_io_to_after, sm_io_to_diff;	\ 	fd_set sm_io_to_mask, sm_io_x_mask;				\ 	errno = 0;							\ 	if (timeout == SM_TIME_IMMEDIATE)				\ 	{								\ 		errno = EAGAIN;						\ 		return SM_IO_EOF;					\ 	}								\ 	if (FD_SETSIZE> 0&& (fd)>= FD_SETSIZE)			\ 	{								\ 		errno = EINVAL;						\ 		return SM_IO_EOF;					\ 	}								\ 	FD_ZERO(&sm_io_to_mask);					\ 	FD_SET((fd),&sm_io_to_mask);					\ 	FD_ZERO(&sm_io_x_mask);						\ 	FD_SET((fd),&sm_io_x_mask);					\ 	if (gettimeofday(&sm_io_to_before, NULL)< 0)			\ 		return SM_IO_EOF;					\ 	(sel_ret) = select((fd) + 1,&sm_io_to_mask, NULL,		\&sm_io_x_mask, (to));			\ 	if ((sel_ret)< 0)						\ 	{								\
+value|{									\ 	struct timeval sm_io_to_before, sm_io_to_after, sm_io_to_diff;	\ 	fd_set sm_io_to_mask, sm_io_x_mask;				\ 	errno = 0;							\ 	if (timeout == SM_TIME_IMMEDIATE)				\ 	{								\ 		errno = EAGAIN;						\ 		return SM_IO_EOF;					\ 	}								\ 	if (FD_SETSIZE> 0&& (fd)>= FD_SETSIZE)			\ 	{								\ 		errno = EINVAL;						\ 		return SM_IO_EOF;					\ 	}								\ 	FD_ZERO(&sm_io_to_mask);					\ 	FD_SET((fd),&sm_io_to_mask);					\ 	FD_ZERO(&sm_io_x_mask);						\ 	FD_SET((fd),&sm_io_x_mask);					\ 	if (gettimeofday(&sm_io_to_before, NULL)< 0)			\ 		return SM_IO_EOF;					\ 	do								\ 	{								\ 		(sel_ret) = select((fd) + 1,&sm_io_to_mask, NULL,	\&sm_io_x_mask, (to));			\ 	} while ((sel_ret)< 0&& errno == EINTR);			\ 	if ((sel_ret)< 0)						\ 	{								\
 comment|/* something went wrong, errno set */
 value|\ 		fp->f_r = 0;						\ 		fp->f_flags |= SMERR;					\ 		return SM_IO_EOF;					\ 	}								\ 	else if ((sel_ret) == 0)					\ 	{								\
 comment|/* timeout */
 value|\ 		errno = EAGAIN;						\ 		return SM_IO_EOF;					\ 	}								\
 comment|/* calulate wall-clock time used */
-value|\ 	if (gettimeofday(&sm_io_to_after, NULL)< 0)			\ 		return SM_IO_EOF;					\ 	timersub(&sm_io_to_before,&sm_io_to_after,&sm_io_to_diff);	\ 	timersub((to),&sm_io_to_diff, (to));				\ }
+value|\ 	if (gettimeofday(&sm_io_to_after, NULL)< 0)			\ 		return SM_IO_EOF;					\ 	timersub(&sm_io_to_after,&sm_io_to_before,&sm_io_to_diff);	\ 	timersub((to),&sm_io_to_diff, (to));				\ }
 end_define
 
 begin_comment

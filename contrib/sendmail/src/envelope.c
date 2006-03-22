@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: envelope.c,v 8.294 2005/02/16 23:38:51 ca Exp $"
+literal|"@(#)$Id: envelope.c,v 8.295 2005/06/15 20:32:18 ca Exp $"
 argument_list|)
 end_macro
 
@@ -303,7 +303,39 @@ modifier|*
 name|rpool
 decl_stmt|;
 block|{
+if|#
+directive|if
+name|_FFR_DM_PER_DAEMON
+name|int
+name|sendmode
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_DM_PER_DAEMON */
 comment|/* 	**  This code used to read: 	**	if (e == parent&& e->e_parent != NULL) 	**		parent = e->e_parent; 	**  So if e == parent&& e->e_parent == NULL then we would 	**  set e->e_parent = e, which creates a loop in the e_parent chain. 	**  This meant macvalue() could go into an infinite loop. 	*/
+if|#
+directive|if
+name|_FFR_DM_PER_DAEMON
+if|if
+condition|(
+name|parent
+operator|!=
+name|NULL
+condition|)
+name|sendmode
+operator|=
+name|parent
+operator|->
+name|e_sendmode
+expr_stmt|;
+else|else
+name|sendmode
+operator|=
+name|DM_NOTSET
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_DM_PER_DAEMON */
 if|if
 condition|(
 name|e
@@ -516,6 +548,24 @@ argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_DM_PER_DAEMON
+if|if
+condition|(
+name|sendmode
+operator|!=
+name|DM_NOTSET
+condition|)
+name|e
+operator|->
+name|e_sendmode
+operator|=
+name|sendmode
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_DM_PER_DAEMON */
 return|return
 name|e
 return|;

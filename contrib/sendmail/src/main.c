@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2005 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_define
@@ -58,7 +58,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: main.c,v 8.939 2004/06/17 16:39:21 ca Exp $"
+literal|"@(#)$Id: main.c,v 8.942 2005/12/26 04:39:13 ca Exp $"
 argument_list|)
 end_macro
 
@@ -2529,7 +2529,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* prime the child environment */
-name|setuserenv
+name|sm_setuserenv
 argument_list|(
 literal|"AGENT"
 argument_list|,
@@ -5501,7 +5501,7 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
-name|setuserenv
+name|sm_setuserenv
 argument_list|(
 literal|"TZ"
 argument_list|,
@@ -5509,7 +5509,7 @@ name|TimeZoneSpec
 argument_list|)
 expr_stmt|;
 else|else
-name|setuserenv
+name|sm_setuserenv
 argument_list|(
 literal|"TZ"
 argument_list|,
@@ -6126,6 +6126,50 @@ literal|"Warning: HostStatusDirectory required for SingleThreadDelivery\n"
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|_FFR_MEMSTAT
+name|j
+operator|=
+name|sm_memstat_open
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|j
+operator|<
+literal|0
+operator|&&
+operator|(
+name|RefuseLowMem
+operator|>
+literal|0
+operator|||
+name|QueueLowMem
+operator|>
+literal|0
+operator|)
+operator|&&
+name|LogLevel
+operator|>
+literal|4
+condition|)
+block|{
+name|sm_syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"cannot get memory statistics, settings ignored, error=%d"
+argument_list|,
+name|j
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* _FFR_MEMSTAT */
 comment|/* check for permissions */
 if|if
 condition|(
@@ -11482,6 +11526,18 @@ expr_stmt|;
 name|sm_mbdb_terminate
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_MEMSTAT
+operator|(
+name|void
+operator|)
+name|sm_memstat_close
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_MEMSTAT */
 operator|(
 name|void
 operator|)
@@ -13051,12 +13107,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  SETUSERENV -- set an environment in the propagated environment ** **	Parameters: **		envar -- the name of the environment variable. **		value -- the value to which it should be set.  If **			null, this is extracted from the incoming **			environment.  If that is not set, the call **			to setuserenv is ignored. ** **	Returns: **		none. */
+comment|/* **  SM_SETUSERENV -- set an environment variable in the propagated environment ** **	Parameters: **		envar -- the name of the environment variable. **		value -- the value to which it should be set.  If **			null, this is extracted from the incoming **			environment.  If that is not set, the call **			to sm_setuserenv is ignored. ** **	Returns: **		none. */
 end_comment
 
 begin_function
 name|void
-name|setuserenv
+name|sm_setuserenv
 parameter_list|(
 name|envar
 parameter_list|,
@@ -13234,7 +13290,7 @@ literal|0
 condition|)
 name|syserr
 argument_list|(
-literal|"setuserenv: putenv(%s) failed"
+literal|"sm_setuserenv: putenv(%s) failed"
 argument_list|,
 name|p
 argument_list|)
