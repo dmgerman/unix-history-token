@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: auth2-gss.c,v 1.10 2005/07/17 07:17:54 djm Exp $	*/
+comment|/*	$OpenBSD: auth2-gss.c,v 1.12 2005/10/13 22:24:31 stevesk Exp $	*/
 end_comment
 
 begin_comment
@@ -53,12 +53,6 @@ begin_include
 include|#
 directive|include
 file|"servconf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"compat.h"
 end_include
 
 begin_include
@@ -156,7 +150,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * We only support those mechanisms that we know about (ie ones that we know  * how to check local user kuserok and the like  */
+comment|/*  * We only support those mechanisms that we know about (ie ones that we know  * how to check local user kuserok and the like)  */
 end_comment
 
 begin_function

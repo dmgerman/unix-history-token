@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: kexgex.c,v 1.23 2003/02/16 17:09:57 markus Exp $"
+literal|"$OpenBSD: kexgex.c,v 1.24 2005/11/04 05:15:59 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -48,10 +48,14 @@ file|"ssh2.h"
 end_include
 
 begin_function
-name|u_char
-modifier|*
+name|void
 name|kexgex_hash
 parameter_list|(
+specifier|const
+name|EVP_MD
+modifier|*
+name|evp_md
+parameter_list|,
 name|char
 modifier|*
 name|client_version_string
@@ -109,6 +113,15 @@ parameter_list|,
 name|BIGNUM
 modifier|*
 name|shared_secret
+parameter_list|,
+name|u_char
+modifier|*
+modifier|*
+name|hash
+parameter_list|,
+name|u_int
+modifier|*
+name|hashlen
 parameter_list|)
 block|{
 name|Buffer
@@ -120,14 +133,6 @@ name|digest
 index|[
 name|EVP_MAX_MD_SIZE
 index|]
-decl_stmt|;
-specifier|const
-name|EVP_MD
-modifier|*
-name|evp_md
-init|=
-name|EVP_sha1
-argument_list|()
 decl_stmt|;
 name|EVP_MD_CTX
 name|md
@@ -361,6 +366,19 @@ operator|&
 name|b
 argument_list|)
 expr_stmt|;
+operator|*
+name|hash
+operator|=
+name|digest
+expr_stmt|;
+operator|*
+name|hashlen
+operator|=
+name|EVP_MD_size
+argument_list|(
+name|evp_md
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG_KEXDH
@@ -370,17 +388,12 @@ literal|"hash"
 argument_list|,
 name|digest
 argument_list|,
-name|EVP_MD_size
-argument_list|(
-name|evp_md
-argument_list|)
+operator|*
+name|hashlen
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-return|return
-name|digest
-return|;
 block|}
 end_function
 

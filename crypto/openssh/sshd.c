@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshd.c,v 1.312 2005/07/25 11:59:40 markus Exp $"
+literal|"$OpenBSD: sshd.c,v 1.318 2005/12/24 02:27:41 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2527,41 +2527,13 @@ block|{
 endif|#
 directive|endif
 comment|/* File descriptor passing is broken or root login */
-name|monitor_apply_keystate
-argument_list|(
-name|pmonitor
-argument_list|)
-expr_stmt|;
 name|use_privsep
 operator|=
 literal|0
 expr_stmt|;
-return|return;
-block|}
-comment|/* Authentication complete */
-name|alarm
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|startup_pipe
-operator|!=
-operator|-
-literal|1
-condition|)
-block|{
-name|close
-argument_list|(
-name|startup_pipe
-argument_list|)
-expr_stmt|;
-name|startup_pipe
-operator|=
-operator|-
-literal|1
-expr_stmt|;
+goto|goto
+name|skip
+goto|;
 block|}
 comment|/* New socket pair */
 name|monitor_reinit
@@ -2656,6 +2628,8 @@ operator|->
 name|pw
 argument_list|)
 expr_stmt|;
+name|skip
+label|:
 comment|/* It is safe now to apply the key state */
 name|monitor_apply_keystate
 argument_list|(
@@ -3140,7 +3114,7 @@ name|conf
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Protocol from reexec master to child: 	 *	string	configuration 	 *	u_int	ephemeral_key_follows 	 *	bignum	e		(only if ephemeral_key_follows == 1) 	 *	bignum	n			" 	 *	bignum	d			" 	 *	bignum	iqmp			" 	 *	bignum	p			" 	 *	bignum	q			" 	 */
+comment|/* 	 * Protocol from reexec master to child: 	 *	string	configuration 	 *	u_int	ephemeral_key_follows 	 *	bignum	e		(only if ephemeral_key_follows == 1) 	 *	bignum	n			" 	 *	bignum	d			" 	 *	bignum	iqmp			" 	 *	bignum	p			" 	 *	bignum	q			" 	 *	string rngseed		(only if OpenSSL is not self-seeded) 	 */
 name|buffer_init
 argument_list|(
 operator|&
@@ -3277,6 +3251,17 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_PRNG_ONLY
+name|rexec_send_rng_seed
+argument_list|(
+operator|&
+name|m
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ssh_msg_send
@@ -3547,6 +3532,17 @@ name|rsa
 argument_list|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_PRNG_ONLY
+name|rexec_recv_rng_seed
+argument_list|(
+operator|&
+name|m
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|buffer_free
 argument_list|(
 operator|&
@@ -3843,6 +3839,10 @@ argument_list|(
 name|errno
 argument_list|)
 argument_list|)
+expr_stmt|;
+comment|/* Ensure that fds 0, 1 and 2 are open or directed to /dev/null */
+name|sanitise_stdfd
+argument_list|()
 expr_stmt|;
 comment|/* Initialize configuration options to their default values. */
 name|initialize_server_options
@@ -4393,9 +4393,6 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-name|seed_rng
-argument_list|()
-expr_stmt|;
 name|sensitive_data
 operator|.
 name|server_key
@@ -4473,6 +4470,9 @@ argument_list|(
 operator|&
 name|cfg
 argument_list|)
+expr_stmt|;
+name|seed_rng
+argument_list|()
 expr_stmt|;
 comment|/* Fill in default values for those options not explicitly set. */
 name|fill_default_server_options
@@ -7096,10 +7096,13 @@ literal|255
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * We use get_canonical_hostname with usedns = 0 instead of 	 * get_remote_ipaddr here so IP options will be checked. 	 */
 name|remote_ip
 operator|=
-name|get_remote_ipaddr
-argument_list|()
+name|get_canonical_hostname
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -7191,7 +7194,7 @@ argument_list|,
 name|remote_port
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We don\'t want to listen forever unless the other side 	 * successfully authenticates itself.  So we set up an alarm which is 	 * cleared after successful authentication.  A limit of zero 	 * indicates no limit. Note that we don\'t set the alarm in debugging 	 * mode; it is just annoying to have the server exit just when you 	 * are about to discover the bug. 	 */
+comment|/* 	 * We don't want to listen forever unless the other side 	 * successfully authenticates itself.  So we set up an alarm which is 	 * cleared after successful authentication.  A limit of zero 	 * indicates no limit. Note that we don't set the alarm in debugging 	 * mode; it is just annoying to have the server exit just when you 	 * are about to discover the bug. 	 */
 name|signal
 argument_list|(
 name|SIGALRM
@@ -7327,6 +7330,38 @@ expr_stmt|;
 block|}
 name|authenticated
 label|:
+comment|/* 	 * Cancel the alarm we set to limit the time taken for 	 * authentication. 	 */
+name|alarm
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|startup_pipe
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|close
+argument_list|(
+name|startup_pipe
+argument_list|)
+expr_stmt|;
+name|startup_pipe
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|SSH_AUDIT_EVENTS

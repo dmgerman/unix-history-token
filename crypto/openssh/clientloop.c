@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: clientloop.c,v 1.141 2005/07/16 01:35:24 djm Exp $"
+literal|"$OpenBSD: clientloop.c,v 1.149 2005/12/30 15:56:37 reyk Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -111,6 +111,12 @@ begin_include
 include|#
 directive|include
 file|"clientloop.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sshconnect.h"
 end_include
 
 begin_include
@@ -236,7 +242,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Flag indicating whether the user\'s terminal is in non-blocking mode. */
+comment|/* Flag indicating whether the user's terminal is in non-blocking mode. */
 end_comment
 
 begin_decl_stmt
@@ -974,7 +980,7 @@ argument_list|(
 name|cmd
 argument_list|)
 argument_list|,
-literal|"%s %s%s list %s . 2>"
+literal|"%s %s%s list %s 2>"
 name|_PATH_DEVNULL
 argument_list|,
 name|xauth_path
@@ -4011,6 +4017,45 @@ argument_list|(
 literal|"      -KRhostport             Cancel remote forward"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|options
+operator|.
+name|permit_local_command
+condition|)
+goto|goto
+name|out
+goto|;
+name|logit
+argument_list|(
+literal|"      !args                   Execute local command"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+if|if
+condition|(
+operator|*
+name|s
+operator|==
+literal|'!'
+operator|&&
+name|options
+operator|.
+name|permit_local_command
+condition|)
+block|{
+name|s
+operator|++
+expr_stmt|;
+name|ssh_local_cmd
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -5789,6 +5834,8 @@ argument_list|(
 name|session_ident
 argument_list|,
 name|simple_escape_filter
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -5803,6 +5850,8 @@ argument_list|(
 name|session_ident
 argument_list|,
 name|client_channel_closed
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -6886,7 +6935,7 @@ argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
-literal|"Warning: this is probably a break in attempt by a malicious server."
+literal|"Warning: this is probably a break-in attempt by a malicious server."
 argument_list|)
 expr_stmt|;
 return|return
@@ -7034,7 +7083,7 @@ argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
-literal|"Warning: this is probably a break in attempt by a malicious server."
+literal|"Warning: this is probably a break-in attempt by a malicious server."
 argument_list|)
 expr_stmt|;
 return|return
@@ -7941,7 +7990,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|free
+name|xfree
 argument_list|(
 name|name
 argument_list|)
@@ -8009,7 +8058,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|free
+name|xfree
 argument_list|(
 name|name
 argument_list|)
@@ -8047,7 +8096,7 @@ expr_stmt|;
 name|packet_send
 argument_list|()
 expr_stmt|;
-name|free
+name|xfree
 argument_list|(
 name|name
 argument_list|)

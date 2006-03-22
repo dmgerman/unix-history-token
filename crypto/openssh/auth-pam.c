@@ -20,7 +20,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: auth-pam.c,v 1.126 2005/07/17 07:18:50 djm Exp $"
+literal|"$Id: auth-pam.c,v 1.128 2006/01/29 05:46:13 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3513,10 +3513,69 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|PAM_SUCCESS
-case|:
-case|case
 name|PAM_AUTH_ERR
+case|:
+name|debug3
+argument_list|(
+literal|"PAM: PAM_AUTH_ERR"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+operator|*
+name|prompts
+operator|!=
+name|NULL
+operator|&&
+name|strlen
+argument_list|(
+operator|*
+operator|*
+name|prompts
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+operator|*
+name|info
+operator|=
+operator|*
+operator|*
+name|prompts
+expr_stmt|;
+operator|*
+operator|*
+name|prompts
+operator|=
+name|NULL
+expr_stmt|;
+operator|*
+name|num
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+operator|*
+name|echo_on
+operator|=
+literal|0
+expr_stmt|;
+name|ctxt
+operator|->
+name|pam_done
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+comment|/* FALLTHROUGH */
+case|case
+name|PAM_SUCCESS
 case|:
 if|if
 condition|(
@@ -3743,7 +3802,7 @@ name|ctx
 decl_stmt|;
 name|debug2
 argument_list|(
-literal|"PAM: %s entering, %d responses"
+literal|"PAM: %s entering, %u responses"
 argument_list|,
 name|__func__
 argument_list|,

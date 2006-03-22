@@ -417,7 +417,8 @@ argument_list|,
 literal|"%3lld.%1lld%c%s"
 argument_list|,
 call|(
-name|int64_t
+name|long
+name|long
 call|)
 argument_list|(
 name|bytes
@@ -428,7 +429,8 @@ operator|/
 literal|100
 argument_list|,
 call|(
-name|int64_t
+name|long
+name|long
 call|)
 argument_list|(
 name|bytes
@@ -513,7 +515,8 @@ argument_list|,
 literal|"%4lld%c%s"
 argument_list|,
 operator|(
-name|int64_t
+name|long
+name|long
 operator|)
 name|bytes
 argument_list|,

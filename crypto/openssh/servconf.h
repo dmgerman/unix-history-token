@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: servconf.h,v 1.71 2004/12/23 23:11:00 djm Exp $	*/
+comment|/*	$OpenBSD: servconf.h,v 1.72 2005/12/06 22:38:27 reyk Exp $	*/
 end_comment
 
 begin_comment
@@ -477,6 +477,9 @@ name|int
 name|use_pam
 decl_stmt|;
 comment|/* Enable auth via PAM */
+name|int
+name|permit_tun
+decl_stmt|;
 block|}
 name|ServerOptions
 typedef|;

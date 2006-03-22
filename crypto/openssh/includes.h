@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: includes.h,v 1.19 2005/05/19 02:42:26 djm Exp $	*/
+comment|/*	$OpenBSD: includes.h,v 1.22 2006/01/01 08:59:27 stevesk Exp $	*/
 end_comment
 
 begin_comment
@@ -37,6 +37,16 @@ include|#
 directive|include
 file|"config.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|_GNU_SOURCE
+end_define
+
+begin_comment
+comment|/* activate extra prototypes for glibc */
+end_comment
 
 begin_include
 include|#
@@ -317,16 +327,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|__USE_GNU
-end_define
-
-begin_comment
-comment|/* before unistd.h, activate extra prototypes for glibc */
-end_comment
 
 begin_include
 include|#

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: kexgexc.c,v 1.2 2003/12/08 11:00:47 markus Exp $"
+literal|"$OpenBSD: kexgexc.c,v 1.3 2005/11/04 05:15:59 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -125,6 +125,8 @@ decl_stmt|,
 name|slen
 decl_stmt|,
 name|sbloblen
+decl_stmt|,
+name|hashlen
 decl_stmt|;
 name|int
 name|min
@@ -668,10 +670,12 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* calc and verify H */
-name|hash
-operator|=
 name|kexgex_hash
 argument_list|(
+name|kex
+operator|->
+name|evp_md
+argument_list|,
 name|kex
 operator|->
 name|client_version_string
@@ -737,6 +741,12 @@ argument_list|,
 name|dh_server_pub
 argument_list|,
 name|shared_secret
+argument_list|,
+operator|&
+name|hash
+argument_list|,
+operator|&
+name|hashlen
 argument_list|)
 expr_stmt|;
 comment|/* have keys, free DH */
@@ -767,7 +777,7 @@ name|slen
 argument_list|,
 name|hash
 argument_list|,
-literal|20
+name|hashlen
 argument_list|)
 operator|!=
 literal|1
@@ -801,7 +811,7 @@ name|kex
 operator|->
 name|session_id_len
 operator|=
-literal|20
+name|hashlen
 expr_stmt|;
 name|kex
 operator|->
@@ -833,6 +843,8 @@ argument_list|(
 name|kex
 argument_list|,
 name|hash
+argument_list|,
+name|hashlen
 argument_list|,
 name|shared_secret
 argument_list|)

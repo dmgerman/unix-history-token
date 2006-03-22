@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: readconf.h,v 1.67 2005/06/08 11:25:09 djm Exp $	*/
+comment|/*	$OpenBSD: readconf.h,v 1.68 2005/12/06 22:38:27 reyk Exp $	*/
 end_comment
 
 begin_comment
@@ -345,6 +345,25 @@ name|control_master
 decl_stmt|;
 name|int
 name|hash_known_hosts
+decl_stmt|;
+name|int
+name|tun_open
+decl_stmt|;
+comment|/* tun(4) */
+name|int
+name|tun_local
+decl_stmt|;
+comment|/* force tun device (optional) */
+name|int
+name|tun_remote
+decl_stmt|;
+comment|/* force tun device (optional) */
+name|char
+modifier|*
+name|local_command
+decl_stmt|;
+name|int
+name|permit_local_command
 decl_stmt|;
 block|}
 name|Options

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: kexdh.c,v 1.19 2003/02/16 17:09:57 markus Exp $"
+literal|"$OpenBSD: kexdh.c,v 1.20 2005/11/04 05:15:59 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -48,8 +48,7 @@ file|"kex.h"
 end_include
 
 begin_function
-name|u_char
-modifier|*
+name|void
 name|kex_dh_hash
 parameter_list|(
 name|char
@@ -92,6 +91,15 @@ parameter_list|,
 name|BIGNUM
 modifier|*
 name|shared_secret
+parameter_list|,
+name|u_char
+modifier|*
+modifier|*
+name|hash
+parameter_list|,
+name|u_int
+modifier|*
+name|hashlen
 parameter_list|)
 block|{
 name|Buffer
@@ -298,9 +306,19 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-return|return
+operator|*
+name|hash
+operator|=
 name|digest
-return|;
+expr_stmt|;
+operator|*
+name|hashlen
+operator|=
+name|EVP_MD_size
+argument_list|(
+name|evp_md
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

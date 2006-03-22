@@ -178,7 +178,7 @@ end_endif
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: bsd-closefrom.c,v 1.1 2004/08/15 08:41:00 djm Exp $"
+literal|"$Id: bsd-closefrom.c,v 1.2 2005/11/10 08:29:13 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -282,10 +282,12 @@ expr_stmt|;
 if|if
 condition|(
 name|len
-operator|!=
-operator|-
-literal|1
+operator|>=
+literal|0
 operator|&&
+operator|(
+name|u_int
+operator|)
 name|len
 operator|<=
 sizeof|sizeof

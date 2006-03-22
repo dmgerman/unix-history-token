@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: bufaux.c,v 1.36 2005/06/17 02:44:32 djm Exp $"
+literal|"$OpenBSD: bufaux.c,v 1.37 2005/11/05 05:01:15 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -126,6 +126,11 @@ argument_list|,
 name|oi
 argument_list|,
 name|bin_size
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|buf
 argument_list|)
 expr_stmt|;
 return|return
@@ -748,6 +753,11 @@ argument_list|(
 literal|"buffer_get_bignum2_ret: negative numbers not supported"
 argument_list|)
 expr_stmt|;
+name|xfree
+argument_list|(
+name|bin
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -769,6 +779,11 @@ argument_list|(
 literal|"buffer_get_bignum2_ret: cannot handle BN of size %d"
 argument_list|,
 name|len
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|bin
 argument_list|)
 expr_stmt|;
 return|return

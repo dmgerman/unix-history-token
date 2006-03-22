@@ -35,32 +35,21 @@ directive|include
 file|"xmalloc.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|OPENSSL_VERSION_NUMBER
-operator|<
-literal|0x00906000L
-end_if
+begin_comment
+comment|/* compatibility with old or broken OpenSSL versions */
+end_comment
 
-begin_define
-define|#
-directive|define
-name|SSH_OLD_EVP
-end_define
+begin_include
+include|#
+directive|include
+file|"openbsd-compat/openssl-compat.h"
+end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|OPENSSL_VERSION_NUMBER
-operator|<
-literal|0x00907000L
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_BUILTIN_RIJNDAEL
+end_ifdef
 
 begin_include
 include|#

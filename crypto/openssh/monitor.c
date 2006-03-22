@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: monitor.c,v 1.63 2005/03/10 22:01:05 deraadt Exp $"
+literal|"$OpenBSD: monitor.c,v 1.64 2005/10/13 22:24:31 stevesk Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4083,17 +4083,7 @@ argument_list|,
 name|ret
 argument_list|)
 expr_stmt|;
-name|buffer_append
-argument_list|(
-operator|&
-name|loginmsg
-argument_list|,
-literal|"\0"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|buffer_put_cstring
+name|buffer_put_string
 argument_list|(
 name|m
 argument_list|,
@@ -4102,12 +4092,12 @@ argument_list|(
 operator|&
 name|loginmsg
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|buffer_clear
+argument_list|,
+name|buffer_len
 argument_list|(
 operator|&
 name|loginmsg
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mm_request_send

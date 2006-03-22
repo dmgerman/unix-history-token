@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-krb5.c,v 1.15 2003/11/21 11:57:02 djm Exp $"
+literal|"$OpenBSD: auth-krb5.c,v 1.16 2005/11/21 09:42:10 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -184,18 +184,6 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|authctxt
-operator|->
-name|valid
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|temporarily_use_uid
 argument_list|(
 name|authctxt
@@ -758,7 +746,13 @@ return|;
 block|}
 return|return
 operator|(
+name|authctxt
+operator|->
+name|valid
+condition|?
 literal|1
+else|:
+literal|0
 operator|)
 return|;
 block|}
@@ -904,10 +898,12 @@ expr_stmt|;
 if|if
 condition|(
 name|ret
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 operator|||
+operator|(
+name|size_t
+operator|)
 name|ret
 operator|>=
 sizeof|sizeof

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-keyscan.c,v 1.55 2005/06/17 02:44:33 djm Exp $"
+literal|"$OpenBSD: ssh-keyscan.c,v 1.57 2005/10/30 04:01:03 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2598,6 +2598,24 @@ index|[
 name|s
 index|]
 decl_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+name|memset
+argument_list|(
+name|buf
+argument_list|,
+literal|'\0'
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|bufsiz
 operator|=
 sizeof|sizeof
@@ -2652,6 +2670,25 @@ expr_stmt|;
 name|cp
 operator|++
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|n
+operator|!=
+literal|1
+operator|||
+name|strncmp
+argument_list|(
+name|buf
+argument_list|,
+literal|"SSH-"
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
+condition|)
+break|break;
 block|}
 if|if
 condition|(
@@ -3765,6 +3802,10 @@ argument_list|(
 operator|&
 name|tq
 argument_list|)
+expr_stmt|;
+comment|/* Ensure that fds 0, 1 and 2 are open or directed to /dev/null */
+name|sanitise_stdfd
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

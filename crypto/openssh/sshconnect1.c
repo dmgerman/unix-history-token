@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshconnect1.c,v 1.61 2005/06/17 02:44:33 djm Exp $"
+literal|"$OpenBSD: sshconnect1.c,v 1.62 2005/10/30 08:52:18 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -315,7 +315,7 @@ operator|=
 name|packet_read
 argument_list|()
 expr_stmt|;
-comment|/* The server sends failure if it doesn\'t like our key or 		   does not support RSA authentication. */
+comment|/* The server sends failure if it doesn't like our key or 		   does not support RSA authentication. */
 if|if
 condition|(
 name|type
@@ -845,7 +845,7 @@ operator|=
 name|packet_read
 argument_list|()
 expr_stmt|;
-comment|/* 	 * The server responds with failure if it doesn\'t like our key or 	 * doesn\'t support RSA authentication. 	 */
+comment|/* 	 * The server responds with failure if it doesn't like our key or 	 * doesn't support RSA authentication. 	 */
 if|if
 condition|(
 name|type

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: kex.h,v 1.37 2005/07/25 11:59:39 markus Exp $	*/
+comment|/*	$OpenBSD: kex.h,v 1.38 2005/11/04 05:15:59 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|KEX_DHGEX
+name|KEX_DHGEX_SHA1
 value|"diffie-hellman-group-exchange-sha1"
 end_define
 
@@ -333,6 +333,11 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
+specifier|const
+name|EVP_MD
+modifier|*
+name|evp_md
+decl_stmt|;
 name|char
 modifier|*
 name|client_version_string
@@ -446,6 +451,8 @@ parameter_list|,
 name|u_char
 modifier|*
 parameter_list|,
+name|u_int
+parameter_list|,
 name|BIGNUM
 modifier|*
 parameter_list|)
@@ -503,8 +510,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_char
-modifier|*
+name|void
 name|kex_dh_hash
 parameter_list|(
 name|char
@@ -536,15 +542,25 @@ modifier|*
 parameter_list|,
 name|BIGNUM
 modifier|*
+parameter_list|,
+name|u_char
+modifier|*
+modifier|*
+parameter_list|,
+name|u_int
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_char
-modifier|*
+name|void
 name|kexgex_hash
 parameter_list|(
+specifier|const
+name|EVP_MD
+modifier|*
+parameter_list|,
 name|char
 modifier|*
 parameter_list|,
@@ -585,6 +601,13 @@ name|BIGNUM
 modifier|*
 parameter_list|,
 name|BIGNUM
+modifier|*
+parameter_list|,
+name|u_char
+modifier|*
+modifier|*
+parameter_list|,
+name|u_int
 modifier|*
 parameter_list|)
 function_decl|;

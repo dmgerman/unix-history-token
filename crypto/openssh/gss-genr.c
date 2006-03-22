@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: gss-genr.c,v 1.4 2005/07/17 07:17:55 djm Exp $	*/
+comment|/*	$OpenBSD: gss-genr.c,v 1.6 2005/10/13 22:24:31 stevesk Exp $	*/
 end_comment
 
 begin_comment
@@ -34,19 +34,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"compat.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"log.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"monitor_wrap.h"
 end_include
 
 begin_include
