@@ -665,7 +665,7 @@ name|rt
 operator|->
 name|rt_expire
 operator|<=
-name|time_uptime
+name|time_second
 condition|)
 block|{
 name|struct
@@ -995,7 +995,7 @@ name|rt
 operator|->
 name|rt_expire
 operator|=
-name|time_uptime
+name|time_second
 expr_stmt|;
 break|break;
 block|}
@@ -2172,7 +2172,7 @@ name|rt
 operator|->
 name|rt_expire
 operator|>
-name|time_uptime
+name|time_second
 operator|)
 operator|&&
 name|sdl
@@ -2214,7 +2214,7 @@ literal|0
 operator|)
 operator|&&
 operator|(
-name|time_uptime
+name|time_second
 operator|+
 name|la
 operator|->
@@ -2392,7 +2392,7 @@ name|rt
 operator|->
 name|rt_expire
 operator|!=
-name|time_uptime
+name|time_second
 condition|)
 block|{
 name|struct
@@ -2414,7 +2414,7 @@ name|rt
 operator|->
 name|rt_expire
 operator|=
-name|time_uptime
+name|time_second
 expr_stmt|;
 name|RT_UNLOCK
 argument_list|(
@@ -3951,7 +3951,7 @@ name|rt
 operator|->
 name|rt_expire
 operator|=
-name|time_uptime
+name|time_second
 operator|+
 name|arpt_keep
 expr_stmt|;
