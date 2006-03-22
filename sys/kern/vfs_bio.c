@@ -11638,6 +11638,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|g_destroy_bio
+argument_list|(
+name|bip
+argument_list|)
+expr_stmt|;
 name|bp
 operator|->
 name|b_error
