@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2004, 2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: headers.c,v 8.287 2004/12/03 18:29:51 ca Exp $"
+literal|"@(#)$Id: headers.c,v 8.290 2006/02/25 02:16:52 ca Exp $"
 argument_list|)
 end_macro
 
@@ -72,7 +72,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|void
+name|bool
 name|put_vanilla_header
 name|__P
 argument_list|(
@@ -4153,9 +4153,6 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|int
-name|l
-decl_stmt|;
 name|char
 name|hbuf
 index|[
@@ -4189,6 +4186,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|size_t
+name|l
+decl_stmt|;
 name|l
 operator|=
 name|strlen
@@ -6164,11 +6164,11 @@ block|}
 end_block
 
 begin_comment
-comment|/* **  PUTHEADER -- put the header part of a message from the in-core copy ** **	Parameters: **		mci -- the connection information. **		hdr -- the header to put. **		e -- envelope to use. **		flags -- MIME conversion flags. ** **	Returns: **		none. ** **	Side Effects: **		none. */
+comment|/* **  PUTHEADER -- put the header part of a message from the in-core copy ** **	Parameters: **		mci -- the connection information. **		hdr -- the header to put. **		e -- envelope to use. **		flags -- MIME conversion flags. ** **	Returns: **		success ** **	Side Effects: **		none. */
 end_comment
 
 begin_function
-name|void
+name|bool
 name|putheader
 parameter_list|(
 name|mci
@@ -6723,6 +6723,9 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|put_vanilla_header
 argument_list|(
 name|h
@@ -6731,7 +6734,10 @@ name|p
 argument_list|,
 name|mci
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|writeerr
+goto|;
 continue|continue;
 block|}
 if|if
@@ -7015,13 +7021,19 @@ argument_list|,
 literal|":"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|putline
 argument_list|(
 name|obuf
 argument_list|,
 name|mci
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|writeerr
+goto|;
 block|}
 continue|continue;
 block|}
@@ -7097,6 +7109,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+operator|!
 name|put_vanilla_header
 argument_list|(
 name|h
@@ -7105,7 +7120,10 @@ name|p
 argument_list|,
 name|mci
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|writeerr
+goto|;
 block|}
 block|}
 comment|/* 	**  If we are converting this to a MIME message, add the 	**  MIME headers (but not in MIME mode!). 	*/
@@ -7178,13 +7196,19 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|putline
 argument_list|(
 literal|"MIME-Version: 1.0"
 argument_list|,
 name|mci
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|writeerr
+goto|;
 if|if
 condition|(
 name|hvalue
@@ -7217,13 +7241,19 @@ name|e
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|putline
 argument_list|(
 name|obuf
 argument_list|,
 name|mci
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|writeerr
+goto|;
 block|}
 if|if
 condition|(
@@ -7237,28 +7267,40 @@ name|e_header
 argument_list|)
 operator|==
 name|NULL
-condition|)
+operator|&&
+operator|!
 name|putline
 argument_list|(
 literal|"Content-Transfer-Encoding: 8bit"
 argument_list|,
 name|mci
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|writeerr
+goto|;
 block|}
 endif|#
 directive|endif
 comment|/* MIME8TO7 */
+return|return
+name|true
+return|;
+name|writeerr
+label|:
+return|return
+name|false
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/* **  PUT_VANILLA_HEADER -- output a fairly ordinary header ** **	Parameters: **		h -- the structure describing this header **		v -- the value of this header **		mci -- the connection info for output ** **	Returns: **		none. */
+comment|/* **  PUT_VANILLA_HEADER -- output a fairly ordinary header ** **	Parameters: **		h -- the structure describing this header **		v -- the value of this header **		mci -- the connection info for output ** **	Returns: **		success */
 end_comment
 
 begin_function
 specifier|static
-name|void
+name|bool
 name|put_vanilla_header
 parameter_list|(
 name|h
@@ -7423,6 +7465,9 @@ argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|putxline
 argument_list|(
 name|obuf
@@ -7436,7 +7481,10 @@ name|mci
 argument_list|,
 name|putflags
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|writeerr
+goto|;
 name|v
 operator|+=
 name|l
@@ -7500,6 +7548,7 @@ argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
+return|return
 name|putxline
 argument_list|(
 name|obuf
@@ -7513,16 +7562,21 @@ name|mci
 argument_list|,
 name|putflags
 argument_list|)
-expr_stmt|;
+return|;
+name|writeerr
+label|:
+return|return
+name|false
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/* **  COMMAIZE -- output a header field, making a comma-translated list. ** **	Parameters: **		h -- the header field to output. **		p -- the value to put in it. **		oldstyle -- true if this is an old style header. **		mci -- the connection information. **		e -- the envelope containing the message. ** **	Returns: **		none. ** **	Side Effects: **		outputs "p" to file "fp". */
+comment|/* **  COMMAIZE -- output a header field, making a comma-translated list. ** **	Parameters: **		h -- the header field to output. **		p -- the value to put in it. **		oldstyle -- true if this is an old style header. **		mci -- the connection information. **		e -- the envelope containing the message. ** **	Returns: **		success ** **	Side Effects: **		outputs "p" to file "fp". */
 end_comment
 
 begin_function
-name|void
+name|bool
 name|commaize
 parameter_list|(
 name|h
@@ -8120,11 +8174,6 @@ argument_list|,
 name|true
 argument_list|)
 expr_stmt|;
-comment|/* 		**  record data progress so DNS timeouts 		**  don't cause DATA timeouts 		*/
-name|DataProgress
-operator|=
-name|true
-expr_stmt|;
 comment|/* output the name with nice formatting */
 name|opos
 operator|+=
@@ -8169,6 +8218,9 @@ name|obp
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|putxline
 argument_list|(
 name|obuf
@@ -8182,7 +8234,10 @@ name|mci
 argument_list|,
 name|putflags
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|writeerr
+goto|;
 name|obp
 operator|=
 name|obuf
@@ -8311,6 +8366,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+return|return
 name|putxline
 argument_list|(
 name|obuf
@@ -8324,7 +8380,12 @@ name|mci
 argument_list|,
 name|putflags
 argument_list|)
-expr_stmt|;
+return|;
+name|writeerr
+label|:
+return|return
+name|false
+return|;
 block|}
 end_function
 

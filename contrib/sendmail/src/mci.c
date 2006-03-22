@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: mci.c,v 8.214 2005/02/04 22:01:45 ca Exp $"
+literal|"@(#)$Id: mci.c,v 8.216 2005/07/12 22:27:44 ca Exp $"
 argument_list|)
 end_macro
 
@@ -130,7 +130,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  Mail Connection Information (MCI) Caching Module. ** **	There are actually two separate things cached.  The first is **	the set of all open connections -- these are stored in a **	(small) list.  The second is stored in the symbol table; it **	has the overall status for all hosts, whether or not there **	is a connection open currently. ** **	There should never be too many connections open (since this **	could flood the socket table), nor should a connection be **	allowed to sit idly for too long. ** **	MaxMciCache is the maximum number of open connections that **	will be supported. ** **	MciCacheTimeout is the time (in seconds) that a connection **	is permitted to survive without activity. ** **	We actually try any cached connections by sending a NOOP **	before we use them; if the NOOP fails we close down the **	connection and reopen it.  Note that this means that a **	server SMTP that doesn't support NOOP will hose the **	algorithm -- but that doesn't seem too likely. ** **	The persistent MCI code is donated by Mark Lovell and Paul **	Vixie.  It is based on the long term host status code in KJS **	written by Paul but has been adapted by Mark to fit into the **	MCI structure. */
+comment|/* **  Mail Connection Information (MCI) Caching Module. ** **	There are actually two separate things cached.  The first is **	the set of all open connections -- these are stored in a **	(small) list.  The second is stored in the symbol table; it **	has the overall status for all hosts, whether or not there **	is a connection open currently. ** **	There should never be too many connections open (since this **	could flood the socket table), nor should a connection be **	allowed to sit idly for too long. ** **	MaxMciCache is the maximum number of open connections that **	will be supported. ** **	MciCacheTimeout is the time (in seconds) that a connection **	is permitted to survive without activity. ** **	We actually try any cached connections by sending a RSET **	before we use them; if the RSET fails we close down the **	connection and reopen it (see smtpprobe()). ** **	The persistent MCI code is donated by Mark Lovell and Paul **	Vixie.  It is based on the long term host status code in KJS **	written by Paul but has been adapted by Mark to fit into the **	MCI structure. */
 end_comment
 
 begin_decl_stmt
@@ -4133,6 +4133,18 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
+if|#
+directive|if
+name|MAXPATHLEN
+operator|<=
+name|MAXNAMLEN
+operator|-
+literal|3
+name|ERROR
+literal|"MAXPATHLEN<= MAXNAMLEN - 3"
+endif|#
+directive|endif
+comment|/* MAXPATHLEN<= MAXNAMLEN - 3 */
 if|if
 condition|(
 operator|(

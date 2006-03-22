@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 8.567 2004/07/23 20:45:01 gshapiro Exp $  */
+comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 8.570 2005/12/09 18:37:27 ca Exp $  */
 end_comment
 
 begin_comment
@@ -320,18 +320,64 @@ value|990
 end_define
 
 begin_comment
-comment|/* maximum SMTP line length */
+comment|/* max SMTP line length */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXUDBKEY
+value|128
+end_define
+
+begin_comment
+comment|/* max size of a database key (udb only) */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_MAXKEY
+end_if
+
+begin_define
+define|#
+directive|define
+name|MAXKEY
+value|1024
+end_define
+
+begin_comment
+comment|/* max size of a database key */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* _FFR_MAXKEY */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MAXKEY
-value|128
+value|(MAXNAME + 1)
 end_define
 
 begin_comment
-comment|/* maximum size of a database key */
+comment|/* max size of a database key */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_MAXKEY */
 end_comment
 
 begin_define
@@ -468,6 +514,32 @@ end_define
 
 begin_comment
 comment|/* increment for queue size */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXNOOPCOMMANDS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAXNOOPCOMMANDS
+value|20
+end_define
+
+begin_comment
+comment|/* max "noise" commands before slowdown */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! MAXNOOPCOMMANDS */
 end_comment
 
 begin_comment

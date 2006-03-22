@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,22 +12,9 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: collect.c,v 8.261 2005/02/16 23:38:51 ca Exp $"
+literal|"@(#)$Id: collect.c,v 8.272 2006/03/02 19:09:26 ca Exp $"
 argument_list|)
 end_macro
-
-begin_decl_stmt
-specifier|static
-name|void
-name|collecttimeout
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -732,32 +719,6 @@ begin_comment
 comment|/* **  COLLECT -- read& parse message header& make temp file. ** **	Creates a temporary file name and copies the standard **	input to that file.  Leading UNIX-style "From" lines are **	stripped off (after important information is extracted). ** **	Parameters: **		fp -- file to read. **		smtpmode -- if set, we are running SMTP: give an RFC821 **			style message to say we are ready to collect **			input, and never ignore a single dot to mean **			end of message. **		hdrp -- the location to stash the header. **		e -- the current envelope. **		rsetsize -- reset e_msgsize? ** **	Returns: **		none. ** **	Side Effects: **		If successful, **		- Data file is created and filled, and e->e_dfp is set. **		- The from person may be set. **		If the "enough disk space" check fails, **		- syserr is called. **		- e->e_dfp is NULL. **		- e->e_flags& EF_FATALERRS is set. **		- collect() returns. **		If data file cannot be created, the process is terminated. */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|jmp_buf
-name|CtxCollectTimeout
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bool
-specifier|volatile
-name|CollectProgress
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|SM_EVENT
-modifier|*
-specifier|volatile
-name|CollectTimeout
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* values for input state machine */
 end_comment
@@ -903,28 +864,22 @@ block|{
 specifier|register
 name|SM_FILE_T
 modifier|*
-specifier|volatile
 name|df
 decl_stmt|;
-specifier|volatile
 name|bool
 name|ignrdot
 decl_stmt|;
-specifier|volatile
 name|int
 name|dbto
 decl_stmt|;
 specifier|register
 name|char
 modifier|*
-specifier|volatile
 name|bp
 decl_stmt|;
-specifier|volatile
 name|int
 name|c
 decl_stmt|;
-specifier|volatile
 name|bool
 name|inputerr
 decl_stmt|;
@@ -933,37 +888,29 @@ name|headeronly
 decl_stmt|;
 name|char
 modifier|*
-specifier|volatile
 name|buf
 decl_stmt|;
-specifier|volatile
 name|int
 name|buflen
 decl_stmt|;
-specifier|volatile
 name|int
 name|istate
 decl_stmt|;
-specifier|volatile
 name|int
 name|mstate
 decl_stmt|;
-specifier|volatile
 name|int
 name|hdrslen
 decl_stmt|;
-specifier|volatile
 name|int
 name|numhdrs
 decl_stmt|;
-specifier|volatile
 name|int
 name|afd
 decl_stmt|;
 name|unsigned
 name|char
 modifier|*
-specifier|volatile
 name|pbp
 decl_stmt|;
 name|unsigned
@@ -991,18 +938,33 @@ name|false
 else|:
 name|IgnrDot
 expr_stmt|;
+comment|/* timeout for I/O functions is in milliseconds */
 name|dbto
 operator|=
 name|smtpmode
 condition|?
+operator|(
 operator|(
 name|int
 operator|)
 name|TimeOuts
 operator|.
 name|to_datablock
+operator|*
+literal|1000
+operator|)
 else|:
-literal|0
+name|SM_TIME_FOREVER
+expr_stmt|;
+name|sm_io_setinfo
+argument_list|(
+name|fp
+argument_list|,
+name|SM_IO_WHAT_TIMEOUT
+argument_list|,
+operator|&
+name|dbto
+argument_list|)
 expr_stmt|;
 name|c
 operator|=
@@ -1057,10 +1019,6 @@ name|MS_HEADER
 else|:
 name|MS_UFROM
 expr_stmt|;
-name|CollectProgress
-operator|=
-name|false
-expr_stmt|;
 comment|/* 	**  Tell ARPANET to go ahead. 	*/
 if|if
 condition|(
@@ -1069,6 +1027,21 @@ condition|)
 name|message
 argument_list|(
 literal|"354 Enter mail, end with \".\" on a line by itself"
+argument_list|)
+expr_stmt|;
+comment|/* simulate an I/O timeout when used as sink */
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|83
+argument_list|,
+literal|101
+argument_list|)
+condition|)
+name|sleep
+argument_list|(
+literal|319
 argument_list|)
 expr_stmt|;
 if|if
@@ -1086,81 +1059,6 @@ literal|"collect\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Read the message. 	** 	**	This is done using two interleaved state machines. 	**	The input state machine is looking for things like 	**	hidden dots; the message state machine is handling 	**	the larger picture (e.g., header versus body). 	*/
-if|if
-condition|(
-name|dbto
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* handle possible input timeout */
-if|if
-condition|(
-name|setjmp
-argument_list|(
-name|CtxCollectTimeout
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|LogLevel
-operator|>
-literal|2
-condition|)
-name|sm_syslog
-argument_list|(
-name|LOG_NOTICE
-argument_list|,
-name|e
-operator|->
-name|e_id
-argument_list|,
-literal|"timeout waiting for input from %s during message collect"
-argument_list|,
-name|CURHOSTNAME
-argument_list|)
-expr_stmt|;
-name|errno
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|smtpmode
-condition|)
-block|{
-comment|/* 				**  Override e_message in usrerr() as this 				**  is the reason for failure that should 				**  be logged for undelivered recipients. 				*/
-name|e
-operator|->
-name|e_message
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-name|usrerr
-argument_list|(
-literal|"451 4.4.1 timeout waiting for input during message collect"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|readerr
-goto|;
-block|}
-name|CollectTimeout
-operator|=
-name|sm_setevent
-argument_list|(
-name|dbto
-argument_list|,
-name|collecttimeout
-argument_list|,
-name|dbto
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|rsetsize
@@ -1262,12 +1160,41 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-break|break;
-block|}
-name|CollectProgress
+comment|/* timeout? */
+if|if
+condition|(
+name|c
+operator|==
+name|SM_IO_EOF
+operator|&&
+name|errno
+operator|==
+name|EAGAIN
+operator|&&
+name|smtpmode
+condition|)
+block|{
+comment|/* 						**  Override e_message in 						**  usrerr() as this is the 						**  reason for failure that 						**  should be logged for 						**  undelivered recipients. 						*/
+name|e
+operator|->
+name|e_message
+operator|=
+name|NULL
+expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+name|inputerr
 operator|=
 name|true
 expr_stmt|;
+goto|goto
+name|readabort
+goto|;
+block|}
+break|break;
+block|}
 if|if
 condition|(
 name|TrafficLogFile
@@ -1814,6 +1741,55 @@ name|buflen
 operator|+=
 name|MEMCHUNKSIZE
 expr_stmt|;
+if|if
+condition|(
+name|buflen
+operator|<=
+literal|0
+condition|)
+block|{
+name|sm_syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"header overflow from %s during message collect"
+argument_list|,
+name|CURHOSTNAME
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_CLRQUEUE
+expr_stmt|;
+name|e
+operator|->
+name|e_status
+operator|=
+literal|"5.6.0"
+expr_stmt|;
+name|usrerrenh
+argument_list|(
+name|e
+operator|->
+name|e_status
+argument_list|,
+literal|"552 Headers too large"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|discard
+goto|;
+block|}
 name|buf
 operator|=
 name|xalloc
@@ -1953,6 +1929,8 @@ argument_list|,
 name|MaxHeadersLength
 argument_list|)
 expr_stmt|;
+name|discard
+label|:
 name|mstate
 operator|=
 name|MS_DISCARD
@@ -2081,6 +2059,39 @@ argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
+comment|/* timeout? */
+if|if
+condition|(
+name|c
+operator|==
+name|SM_IO_EOF
+operator|&&
+name|errno
+operator|==
+name|EAGAIN
+operator|&&
+name|smtpmode
+condition|)
+block|{
+comment|/* 					**  Override e_message in 					**  usrerr() as this is the 					**  reason for failure that 					**  should be logged for 					**  undelivered recipients. 					*/
+name|e
+operator|->
+name|e_message
+operator|=
+name|NULL
+expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+name|inputerr
+operator|=
+name|true
+expr_stmt|;
+goto|goto
+name|readabort
+goto|;
+block|}
 block|}
 do|while
 condition|(
@@ -2125,7 +2136,6 @@ block|{
 comment|/* yep -- defer this */
 continue|continue;
 block|}
-comment|/* trim off trailing CRLF or NL */
 name|SM_ASSERT
 argument_list|(
 name|bp
@@ -2133,6 +2143,26 @@ operator|>
 name|buf
 argument_list|)
 expr_stmt|;
+comment|/* guaranteed by isheader(buf) */
+name|SM_ASSERT
+argument_list|(
+operator|*
+operator|(
+name|bp
+operator|-
+literal|1
+operator|)
+operator|!=
+literal|'\n'
+operator|||
+name|bp
+operator|>
+name|buf
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* trim off trailing CRLF or NL */
 if|if
 condition|(
 operator|*
@@ -2416,18 +2446,6 @@ operator|=
 name|true
 expr_stmt|;
 block|}
-comment|/* reset global timer */
-if|if
-condition|(
-name|CollectTimeout
-operator|!=
-name|NULL
-condition|)
-name|sm_clrevent
-argument_list|(
-name|CollectTimeout
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|headeronly
@@ -2821,6 +2839,8 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* An EOF when running SMTP is an error */
+name|readabort
+label|:
 if|if
 condition|(
 name|inputerr
@@ -2936,7 +2956,7 @@ argument_list|)
 condition|)
 name|usrerr
 argument_list|(
-literal|"451 4.4.1 collect: %s on connection from %s, from=%s"
+literal|"421 4.4.1 collect: %s on connection from %s, from=%s"
 argument_list|,
 name|problem
 argument_list|,
@@ -2957,7 +2977,7 @@ expr_stmt|;
 else|else
 name|syserr
 argument_list|(
-literal|"451 4.4.1 collect: %s on connection from %s, from=%s"
+literal|"421 4.4.1 collect: %s on connection from %s, from=%s"
 argument_list|,
 name|problem
 argument_list|,
@@ -2973,6 +2993,11 @@ name|q_paddr
 argument_list|,
 name|MAXSHORTSTR
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|flush_errors
+argument_list|(
+name|true
 argument_list|)
 expr_stmt|;
 comment|/* don't return an error indication */
@@ -3356,80 +3381,6 @@ name|STATS_NORMAL
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|collecttimeout
-parameter_list|(
-name|timeout
-parameter_list|)
-name|int
-name|timeout
-decl_stmt|;
-block|{
-name|int
-name|save_errno
-init|=
-name|errno
-decl_stmt|;
-comment|/* 	**  NOTE: THIS CAN BE CALLED FROM A SIGNAL HANDLER.  DO NOT ADD 	**	ANYTHING TO THIS ROUTINE UNLESS YOU KNOW WHAT YOU ARE 	**	DOING. 	*/
-if|if
-condition|(
-name|CollectProgress
-condition|)
-block|{
-comment|/* reset the timeout */
-name|CollectTimeout
-operator|=
-name|sm_sigsafe_setevent
-argument_list|(
-name|timeout
-argument_list|,
-name|collecttimeout
-argument_list|,
-name|timeout
-argument_list|)
-expr_stmt|;
-name|CollectProgress
-operator|=
-name|false
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* event is done */
-name|CollectTimeout
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-comment|/* if no progress was made or problem resetting event, die now */
-if|if
-condition|(
-name|CollectTimeout
-operator|==
-name|NULL
-condition|)
-block|{
-name|errno
-operator|=
-name|ETIMEDOUT
-expr_stmt|;
-name|longjmp
-argument_list|(
-name|CtxCollectTimeout
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-name|errno
-operator|=
-name|save_errno
-expr_stmt|;
 block|}
 end_function
 

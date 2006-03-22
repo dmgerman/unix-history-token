@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: map.c,v 8.669 2005/02/09 01:46:35 ca Exp $"
+literal|"@(#)$Id: map.c,v 8.671 2005/10/25 17:55:50 ca Exp $"
 argument_list|)
 end_macro
 
@@ -15328,9 +15328,7 @@ decl_stmt|;
 name|char
 name|keybuf
 index|[
-name|MAXNAME
-operator|+
-literal|1
+name|MAXKEY
 index|]
 decl_stmt|;
 if|if
@@ -15585,6 +15583,27 @@ name|flags
 operator||=
 name|SM_LDAP_MATCHONLY
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_LDAP_SINGLEDN
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|MF_SINGLEDN
+argument_list|,
+name|map
+operator|->
+name|map_mflags
+argument_list|)
+condition|)
+name|flags
+operator||=
+name|SM_LDAP_SINGLEDN
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_LDAP_SINGLEDN */
 comment|/* Create an rpool for search related memory usage */
 name|rpool
 operator|=
@@ -16980,6 +16999,22 @@ operator||=
 name|MF_SINGLEMATCH
 expr_stmt|;
 break|break;
+if|#
+directive|if
+name|_FFR_LDAP_SINGLEDN
+case|case
+literal|'2'
+case|:
+name|map
+operator|->
+name|map_mflags
+operator||=
+name|MF_SINGLEDN
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* _FFR_LDAP_SINGLEDN */
 comment|/* args stolen from ldapsearch.c */
 case|case
 literal|'R'
