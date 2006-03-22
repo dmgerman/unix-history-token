@@ -4049,6 +4049,8 @@ name|mixer_uninit
 argument_list|(
 name|dev
 argument_list|)
+operator|==
+name|EBUSY
 condition|)
 block|{
 name|device_printf
