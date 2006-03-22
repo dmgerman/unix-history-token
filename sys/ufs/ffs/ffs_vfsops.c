@@ -5298,6 +5298,10 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
+name|flags
+operator||=
+name|FORCECLOSE
+expr_stmt|;
 comment|/* 		 * Here we fall through to vflush again to ensure 		 * that we have gotten rid of all the system vnodes. 		 */
 block|}
 comment|/* 	 * Flush all the files. 	 */
