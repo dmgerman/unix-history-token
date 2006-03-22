@@ -2157,6 +2157,15 @@ literal|1
 expr_stmt|;
 comment|/* historic */
 block|}
+comment|/* 	 * Enable global pages TLB extension 	 * This also implicitly flushes the TLB  	 */
+name|load_cr4
+argument_list|(
+name|rcr4
+argument_list|()
+operator||
+name|CR4_PGE
+argument_list|)
+expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
