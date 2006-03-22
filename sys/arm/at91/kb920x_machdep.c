@@ -685,9 +685,6 @@ expr_stmt|;
 name|set_cpufuncs
 argument_list|()
 expr_stmt|;
-name|cninit
-argument_list|()
-expr_stmt|;
 name|fake_preload
 index|[
 name|i
@@ -1624,6 +1621,9 @@ literal|2
 operator|)
 argument_list|)
 expr_stmt|;
+name|cninit
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Pages were allocated during the secondary bootstrap for the 	 * stacks for different CPU modes. 	 * We must now set the r13 registers in the different CPU modes to 	 * point to these stacks. 	 * Since the ARM stacks use STMFD etc. we must set r13 to the top end 	 * of the stack memory. 	 */
 name|cpu_control
 argument_list|(
@@ -1906,10 +1906,6 @@ literal|1
 expr_stmt|;
 name|kdb_init
 argument_list|()
-expr_stmt|;
-name|boothowto
-operator|=
-name|RB_SINGLE
 expr_stmt|;
 return|return
 operator|(
