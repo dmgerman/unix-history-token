@@ -127,6 +127,24 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|REPORT_LUNS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|REPORT_LUNS
+value|0xa0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|targ_cdb_handlers
@@ -395,7 +413,14 @@ block|,
 name|NULL
 block|}
 block|,
-comment|/* XXX REPORT_LUNS should be handled here. */
+block|{
+name|REPORT_LUNS
+block|,
+name|tcmd_illegal_req
+block|,
+name|NULL
+block|}
+block|,
 ifdef|#
 directive|ifdef
 name|READ_16
