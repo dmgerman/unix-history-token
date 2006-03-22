@@ -4329,6 +4329,7 @@ name|error
 operator|==
 literal|0
 condition|)
+block|{
 name|error
 operator|=
 name|vn_setlabel
@@ -4349,6 +4350,7 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|NDFREE
 argument_list|(
@@ -4610,6 +4612,7 @@ name|error
 operator|==
 literal|0
 condition|)
+block|{
 name|error
 operator|=
 name|vn_setlabel
@@ -4630,6 +4633,7 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|NDFREE
 argument_list|(
