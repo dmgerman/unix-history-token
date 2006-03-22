@@ -980,6 +980,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RL_HWREV_8111B
+value|0x30000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|RL_TXDMA_16BYTES
 value|0x00000000
 end_define
@@ -3840,6 +3847,13 @@ define|#
 directive|define
 name|RT_DEVICEID_8139
 value|0x8139
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT_DEVICEID_8111B
+value|0x8168
 end_define
 
 begin_define
