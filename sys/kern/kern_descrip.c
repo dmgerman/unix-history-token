@@ -868,7 +868,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|size
+name|low
 operator|-
 literal|1
 operator|)
@@ -6477,6 +6477,15 @@ operator|=
 name|newfdp
 operator|->
 name|fd_dmap
+expr_stmt|;
+name|newfdp
+operator|->
+name|fd_fd
+operator|.
+name|fd_lastfile
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 return|return
 operator|(
