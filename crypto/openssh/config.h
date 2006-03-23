@@ -1152,9 +1152,12 @@ begin_comment
 comment|/* Define if you have ut_host in utmp.h */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_HOST_IN_UTMP */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_HOST_IN_UTMP
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have ut_host in utmpx.h */
@@ -2802,9 +2805,12 @@ begin_comment
 comment|/* Define if you have ut_time in utmp.h */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_TIME_IN_UTMP */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_TIME_IN_UTMP
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have ut_time in utmpx.h */
