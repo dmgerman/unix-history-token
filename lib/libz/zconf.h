@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* zconf.h -- configuration of the zlib compression library  * Copyright (C) 1995-2004 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* zconf.h -- configuration of the zlib compression library  * Copyright (C) 1995-2005 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -235,6 +235,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|alloc_func
+value|z_alloc_func
+end_define
+
+begin_define
+define|#
+directive|define
+name|free_func
+value|z_free_func
+end_define
+
+begin_define
+define|#
+directive|define
+name|in_func
+value|z_in_func
+end_define
+
+begin_define
+define|#
+directive|define
+name|out_func
+value|z_out_func
+end_define
+
+begin_define
+define|#
+directive|define
 name|Byte
 value|z_Byte
 end_define
@@ -395,7 +423,6 @@ end_endif
 begin_if
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
 name|_WIN32
@@ -403,22 +430,31 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__WIN32__
+name|_WIN32_WCE
 argument_list|)
-operator|)
-operator|&&
-operator|!
+operator|||
 name|defined
 argument_list|(
-name|WIN32
+name|__WIN32__
 argument_list|)
 end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WIN32
+end_ifndef
 
 begin_define
 define|#
 directive|define
 name|WIN32
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
