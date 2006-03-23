@@ -214,6 +214,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|gvinum_resetconfig
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|gvinum_rm
 parameter_list|(
 name|int
@@ -1631,6 +1640,8 @@ literal|"rename [-r] [drive | subdisk | plex | volume] newname\n"
 literal|"        Change the name of the specified object.\n"
 literal|"rebuildparity plex [-f]\n"
 literal|"        Rebuild the parity blocks of a RAID-5 plex.\n"
+literal|"resetconfig\n"
+literal|"        Reset the complete gvinum configuration\n"
 literal|"rm [-r] volume | plex | subdisk | drive\n"
 literal|"        Remove an object.\n"
 literal|"saveconfig\n"
@@ -3432,6 +3443,161 @@ end_function
 
 begin_function
 name|void
+name|gvinum_resetconfig
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|struct
+name|gctl_req
+modifier|*
+name|req
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|errstr
+decl_stmt|;
+name|char
+name|reply
+index|[
+literal|32
+index|]
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|isatty
+argument_list|(
+name|STDIN_FILENO
+argument_list|)
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"Please enter this command from a tty device\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|printf
+argument_list|(
+literal|" WARNING!  This command will completely wipe out your gvinum"
+literal|"configuration.\n"
+literal|" All data will be lost.  If you really want to do this,"
+literal|" enter the text\n\n"
+literal|" NO FUTURE\n"
+literal|" Enter text -> "
+argument_list|)
+expr_stmt|;
+name|fgets
+argument_list|(
+name|reply
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|reply
+argument_list|)
+argument_list|,
+name|stdin
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|reply
+argument_list|,
+literal|"NO FUTURE\n"
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\n No change\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|req
+operator|=
+name|gctl_get_handle
+argument_list|()
+expr_stmt|;
+name|gctl_ro_param
+argument_list|(
+name|req
+argument_list|,
+literal|"class"
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|"VINUM"
+argument_list|)
+expr_stmt|;
+name|gctl_ro_param
+argument_list|(
+name|req
+argument_list|,
+literal|"verb"
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|"resetconfig"
+argument_list|)
+expr_stmt|;
+name|errstr
+operator|=
+name|gctl_issue
+argument_list|(
+name|req
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errstr
+operator|!=
+name|NULL
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"can't reset config: %s"
+argument_list|,
+name|errstr
+argument_list|)
+expr_stmt|;
+name|gctl_free
+argument_list|(
+name|req
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|gctl_free
+argument_list|(
+name|req
+argument_list|)
+expr_stmt|;
+name|gvinum_list
+argument_list|(
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"gvinum configuration obliterated\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
 name|gvinum_saveconfig
 parameter_list|(
 name|void
@@ -4128,6 +4294,23 @@ name|argc
 argument_list|,
 name|argv
 argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|"resetconfig"
+argument_list|)
+condition|)
+name|gvinum_resetconfig
+argument_list|()
 expr_stmt|;
 elseif|else
 if|if

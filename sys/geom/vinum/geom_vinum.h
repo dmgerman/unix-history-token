@@ -266,6 +266,21 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|gv_resetconfig
+parameter_list|(
+name|struct
+name|g_geom
+modifier|*
+parameter_list|,
+name|struct
+name|gctl_req
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|gv_rm_sd
 parameter_list|(
 name|struct
