@@ -1506,6 +1506,60 @@ operator|->
 name|ic_header
 expr_stmt|;
 comment|/* XXX frags */
+comment|/* 		 * When crypto is being done in the host we must insure 		 * the data are writable for the cipher routines; clone 		 * a writable mbuf chain. 		 * XXX handle SWMIC specially 		 */
+if|if
+condition|(
+name|key
+operator|->
+name|wk_flags
+operator|&
+operator|(
+name|IEEE80211_KEY_SWCRYPT
+operator||
+name|IEEE80211_KEY_SWMIC
+operator|)
+condition|)
+block|{
+name|m
+operator|=
+name|m_unshare
+argument_list|(
+name|m
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+block|{
+name|IEEE80211_DPRINTF
+argument_list|(
+name|ic
+argument_list|,
+name|IEEE80211_MSG_OUTPUT
+argument_list|,
+literal|"%s: cannot get writable mbuf\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|ic
+operator|->
+name|ic_stats
+operator|.
+name|is_tx_nobuf
+operator|++
+expr_stmt|;
+comment|/* XXX new stat */
+return|return
+name|NULL
+return|;
+block|}
+block|}
 block|}
 comment|/* 	 * We know we are called just before stripping an Ethernet 	 * header and prepending an LLC header.  This means we know 	 * there will be 	 *	sizeof(struct ether_header) - sizeof(struct llc) 	 * bytes recovered to which we need additional space for the 	 * 802.11 header and any crypto header. 	 */
 comment|/* XXX check trailing space and copy instead? */
