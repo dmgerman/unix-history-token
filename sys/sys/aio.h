@@ -83,6 +83,24 @@ name|LIO_READ
 value|0x2
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LIO_SYNC
+value|0x3
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * LIO modes  */
 end_comment
@@ -345,6 +363,21 @@ parameter_list|,
 name|struct
 name|timespec
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|aio_fsync
+parameter_list|(
+name|int
+name|op
+parameter_list|,
+name|struct
+name|aiocb
+modifier|*
+name|aiocbp
 parameter_list|)
 function_decl|;
 end_function_decl
