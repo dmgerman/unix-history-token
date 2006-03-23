@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* inftrees.c -- generate Huffman trees for efficient decoding  * Copyright (C) 1995-2004 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* inftrees.c -- generate Huffman trees for efficient decoding  * Copyright (C) 1995-2005 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_include
@@ -28,7 +28,7 @@ name|char
 name|inflate_copyright
 index|[]
 init|=
-literal|" inflate 1.2.2 Copyright 1995-2004 Mark Adler "
+literal|" inflate 1.2.3 Copyright 1995-2005 Mark Adler "
 decl_stmt|;
 end_decl_stmt
 
@@ -334,9 +334,9 @@ literal|21
 block|,
 literal|16
 block|,
-literal|199
+literal|201
 block|,
-literal|198
+literal|196
 block|}
 decl_stmt|;
 specifier|static
@@ -728,16 +728,9 @@ name|type
 operator|==
 name|CODES
 operator|||
-operator|(
-name|codes
-operator|-
-name|count
-index|[
-literal|0
-index|]
+name|max
 operator|!=
 literal|1
-operator|)
 operator|)
 condition|)
 return|return
@@ -1104,6 +1097,11 @@ literal|1U
 operator|<<
 name|curr
 expr_stmt|;
+name|min
+operator|=
+name|fill
+expr_stmt|;
+comment|/* save offset to next table */
 do|do
 block|{
 name|fill
@@ -1240,10 +1238,9 @@ expr_stmt|;
 comment|/* increment past last table */
 name|next
 operator|+=
-literal|1U
-operator|<<
-name|curr
+name|min
 expr_stmt|;
+comment|/* here min is 1<< curr */
 comment|/* determine length of next table */
 name|curr
 operator|=

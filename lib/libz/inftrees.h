@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* inftrees.h -- header to use inftrees.c  * Copyright (C) 1995-2003 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* inftrees.h -- header to use inftrees.c  * Copyright (C) 1995-2005 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -40,21 +40,21 @@ comment|/* op values as set by inflate_table():     00000000 - literal     0000t
 end_comment
 
 begin_comment
-comment|/* Maximum size of dynamic tree.  The maximum found in a long but non-    exhaustive search was 1004 code structures (850 for length/literals    and 154 for distances, the latter actually the result of an    exhaustive search).  The true maximum is not known, but the value    below is more than safe. */
+comment|/* Maximum size of dynamic tree.  The maximum found in a long but non-    exhaustive search was 1444 code structures (852 for length/literals    and 592 for distances, the latter actually the result of an    exhaustive search).  The true maximum is not known, but the value    below is more than safe. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ENOUGH
-value|1440
+value|2048
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAXD
-value|154
+value|592
 end_define
 
 begin_comment

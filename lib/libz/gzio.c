@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* gzio.c -- IO on .gz files  * Copyright (C) 1995-2003 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  *  * Compile this file with -DNO_GZCOMPRESS to avoid the compression code.  */
+comment|/* gzio.c -- IO on .gz files  * Copyright (C) 1995-2005 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  *  * Compile this file with -DNO_GZCOMPRESS to avoid the compression code.  */
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ name|NO_DEFLATE
 end_ifdef
 
 begin_comment
-comment|/* for compatiblity with old definition */
+comment|/* for compatibility with old definition */
 end_comment
 
 begin_define
@@ -1311,9 +1311,10 @@ block|{
 name|char
 name|name
 index|[
-literal|20
+literal|46
 index|]
 decl_stmt|;
+comment|/* allow for up to 128-bit integers */
 if|if
 condition|(
 name|fd
@@ -1521,6 +1522,9 @@ name|stream
 operator|.
 name|avail_in
 operator|=
+operator|(
+name|uInt
+operator|)
 name|fread
 argument_list|(
 name|s
@@ -1676,6 +1680,9 @@ literal|0
 expr_stmt|;
 name|len
 operator|=
+operator|(
+name|uInt
+operator|)
 name|fread
 argument_list|(
 name|s
@@ -2391,6 +2398,9 @@ operator|->
 name|out
 operator|++
 expr_stmt|;
+name|start
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|s
@@ -2533,6 +2543,9 @@ name|stream
 operator|.
 name|avail_out
 operator|-=
+operator|(
+name|uInt
+operator|)
 name|fread
 argument_list|(
 name|next_out
@@ -2616,6 +2629,9 @@ name|stream
 operator|.
 name|avail_in
 operator|=
+operator|(
+name|uInt
+operator|)
 name|fread
 argument_list|(
 name|s
@@ -2663,25 +2679,6 @@ operator|->
 name|z_err
 operator|=
 name|Z_ERRNO
-expr_stmt|;
-break|break;
-block|}
-if|if
-condition|(
-name|feof
-argument_list|(
-name|s
-operator|->
-name|file
-argument_list|)
-condition|)
-block|{
-comment|/* avoid error for empty file */
-name|s
-operator|->
-name|z_err
-operator|=
-name|Z_STREAM_END
 expr_stmt|;
 break|break;
 block|}
@@ -2907,6 +2904,34 @@ name|start
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|==
+name|s
+operator|->
+name|stream
+operator|.
+name|avail_out
+operator|&&
+operator|(
+name|s
+operator|->
+name|z_err
+operator|==
+name|Z_DATA_ERROR
+operator|||
+name|s
+operator|->
+name|z_err
+operator|==
+name|Z_ERRNO
+operator|)
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 return|return
 call|(
 name|int
@@ -5205,6 +5230,54 @@ block|}
 end_function
 
 begin_comment
+comment|/* ===========================================================================      Returns 1 if reading and doing so transparently, otherwise zero. */
+end_comment
+
+begin_function
+name|int
+name|ZEXPORT
+name|gzdirect
+parameter_list|(
+name|file
+parameter_list|)
+name|gzFile
+name|file
+decl_stmt|;
+block|{
+name|gz_stream
+modifier|*
+name|s
+init|=
+operator|(
+name|gz_stream
+operator|*
+operator|)
+name|file
+decl_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+operator|||
+name|s
+operator|->
+name|mode
+operator|!=
+literal|'r'
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|s
+operator|->
+name|transparent
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* ===========================================================================    Outputs a long in LSB order to the given file */
 end_comment
 
@@ -5373,9 +5446,6 @@ name|gzFile
 name|file
 decl_stmt|;
 block|{
-name|int
-name|err
-decl_stmt|;
 name|gz_stream
 modifier|*
 name|s
@@ -5412,18 +5482,14 @@ name|Z_STREAM_ERROR
 return|;
 else|#
 directive|else
-name|err
-operator|=
+if|if
+condition|(
 name|do_flush
 argument_list|(
 name|file
 argument_list|,
 name|Z_FINISH
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
 operator|!=
 name|Z_OK
 condition|)
@@ -5482,8 +5548,44 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|STDC
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|zstrerror
+parameter_list|(
+name|errnum
+parameter_list|)
+value|strerror(errnum)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|zstrerror
+parameter_list|(
+name|errnum
+parameter_list|)
+value|""
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* ===========================================================================      Returns the error message for the last error which occured on the    given compressed file. errnum is set to zlib error number. If an    error occured in the file system and not in the compression library,    errnum is set to Z_ERRNO and the application may consult errno    to get the exact error code. */
+comment|/* ===========================================================================      Returns the error message for the last error which occurred on the    given compressed file. errnum is set to zlib error number. If an    error occurred in the file system and not in the compression library,    errnum is set to Z_ERRNO and the application may consult errno    to get the exact error code. */
 end_comment
 
 begin_function

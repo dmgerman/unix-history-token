@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* minigzip.c -- simulate gzip using the zlib compression library  * Copyright (C) 1995-2002 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* minigzip.c -- simulate gzip using the zlib compression library  * Copyright (C) 1995-2005 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -40,24 +40,6 @@ include|#
 directive|include
 file|<stdlib.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|exit
-name|OF
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#
@@ -1526,6 +1508,22 @@ name|argv
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|outmode
+index|[
+literal|3
+index|]
+operator|==
+literal|' '
+condition|)
+name|outmode
+index|[
+literal|3
+index|]
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|argc

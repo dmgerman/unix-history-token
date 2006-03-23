@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* infback.c -- inflate using a call-back interface  * Copyright (C) 1995-2003 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* infback.c -- inflate using a call-back interface  * Copyright (C) 1995-2005 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -71,9 +71,7 @@ name|version
 parameter_list|,
 name|stream_size
 parameter_list|)
-name|z_stream
-name|FAR
-modifier|*
+name|z_streamp
 name|strm
 decl_stmt|;
 name|int
@@ -248,9 +246,18 @@ operator|->
 name|state
 operator|=
 operator|(
-name|voidpf
+expr|struct
+name|internal_state
+name|FAR
+operator|*
 operator|)
 name|state
+expr_stmt|;
+name|state
+operator|->
+name|dmax
+operator|=
+literal|32768U
 expr_stmt|;
 name|state
 operator|->
@@ -709,9 +716,7 @@ name|out
 parameter_list|,
 name|out_desc
 parameter_list|)
-name|z_stream
-name|FAR
-modifier|*
+name|z_streamp
 name|strm
 decl_stmt|;
 name|in_func
@@ -2912,9 +2917,7 @@ name|inflateBackEnd
 parameter_list|(
 name|strm
 parameter_list|)
-name|z_stream
-name|FAR
-modifier|*
+name|z_streamp
 name|strm
 decl_stmt|;
 block|{
