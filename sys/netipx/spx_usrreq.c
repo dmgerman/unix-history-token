@@ -192,14 +192,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|spx
-name|spx_savesi
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
 name|spx_istat
 name|spx_istat
 decl_stmt|;
@@ -884,6 +876,10 @@ name|struct
 name|socket
 modifier|*
 name|so
+decl_stmt|;
+name|struct
+name|spx
+name|spx_savesi
 decl_stmt|;
 name|int
 name|dropsocket
