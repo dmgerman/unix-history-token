@@ -152,6 +152,14 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|gdb_listening
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -327,6 +335,7 @@ name|gdb_cur
 operator|!=
 name|NULL
 condition|)
+block|{
 name|cur_pri
 operator|=
 operator|(
@@ -339,6 +348,10 @@ literal|2
 else|:
 literal|0
 expr_stmt|;
+name|gdb_consinit
+argument_list|()
+expr_stmt|;
+block|}
 else|else
 name|cur_pri
 operator|=
@@ -370,6 +383,10 @@ name|thread
 modifier|*
 name|thr_iter
 decl_stmt|;
+name|gdb_listening
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Send a T packet. We currently do not support watchpoints (the 	 * awatch, rwatch or watch elements). 	 */
 name|gdb_tx_begin
 argument_list|(
@@ -513,6 +530,10 @@ block|}
 name|kdb_cpu_clear_singlestep
 argument_list|()
 expr_stmt|;
+name|gdb_listening
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -569,6 +590,10 @@ expr_stmt|;
 block|}
 name|kdb_cpu_clear_singlestep
 argument_list|()
+expr_stmt|;
+name|gdb_listening
+operator|=
+literal|1
 expr_stmt|;
 return|return
 operator|(
@@ -699,6 +724,10 @@ case|:
 comment|/* Kill request. */
 name|kdb_cpu_clear_singlestep
 argument_list|()
+expr_stmt|;
+name|gdb_listening
+operator|=
+literal|1
 expr_stmt|;
 return|return
 operator|(
@@ -1061,6 +1090,10 @@ block|}
 name|kdb_cpu_set_singlestep
 argument_list|()
 expr_stmt|;
+name|gdb_listening
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -1117,6 +1150,10 @@ expr_stmt|;
 block|}
 name|kdb_cpu_set_singlestep
 argument_list|()
+expr_stmt|;
+name|gdb_listening
+operator|=
+literal|1
 expr_stmt|;
 return|return
 operator|(

@@ -26,6 +26,22 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|gdb_listening
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|void
+name|gdb_consinit
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|gdb_rxp
