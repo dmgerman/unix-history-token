@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * WPA Supplicant / EAP-SIM/AKA shared routines  * Copyright (c) 2004-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -116,8 +120,7 @@ begin_function_decl
 name|void
 name|eap_sim_derive_keys_reauth
 parameter_list|(
-name|unsigned
-name|int
+name|u16
 name|_counter
 parameter_list|,
 specifier|const
@@ -154,6 +157,7 @@ name|u8
 modifier|*
 name|k_aut
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 name|req
@@ -161,10 +165,12 @@ parameter_list|,
 name|size_t
 name|req_len
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 name|mac
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 name|extra
@@ -496,6 +502,7 @@ begin_struct
 struct|struct
 name|eap_sim_attrs
 block|{
+specifier|const
 name|u8
 modifier|*
 name|rand
@@ -518,6 +525,7 @@ decl_stmt|,
 modifier|*
 name|nonce_s
 decl_stmt|;
+specifier|const
 name|u8
 modifier|*
 name|next_pseudonym
@@ -525,6 +533,7 @@ decl_stmt|,
 modifier|*
 name|next_reauth_id
 decl_stmt|;
+specifier|const
 name|u8
 modifier|*
 name|nonce_mt
@@ -567,10 +576,12 @@ begin_function_decl
 name|int
 name|eap_sim_parse_attr
 parameter_list|(
+specifier|const
 name|u8
 modifier|*
 name|start
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 name|end
@@ -590,7 +601,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|u8
+modifier|*
 name|eap_sim_parse_encr
 parameter_list|(
 specifier|const
@@ -598,6 +610,7 @@ name|u8
 modifier|*
 name|k_encr
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 name|encr_data

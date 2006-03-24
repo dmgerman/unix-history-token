@@ -54,10 +54,12 @@ name|sta_info
 modifier|*
 name|ap_get_sta
 parameter_list|(
-name|hostapd
+name|struct
+name|hostapd_data
 modifier|*
 name|hapd
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 name|sta
@@ -185,6 +187,7 @@ name|hostapd_data
 modifier|*
 name|hapd
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 name|addr

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Event loop  * Copyright (c) 2002-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * Event loop based on select() loop  * Copyright (c) 2002-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_include
@@ -1379,6 +1379,7 @@ name|void
 parameter_list|)
 block|{
 name|fd_set
+modifier|*
 name|rfds
 decl_stmt|;
 name|int
@@ -1392,6 +1393,31 @@ name|tv
 decl_stmt|,
 name|now
 decl_stmt|;
+name|rfds
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|rfds
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rfds
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"eloop_run - malloc failed\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 while|while
 condition|(
 operator|!
@@ -1480,7 +1506,6 @@ directive|endif
 block|}
 name|FD_ZERO
 argument_list|(
-operator|&
 name|rfds
 argument_list|)
 expr_stmt|;
@@ -1510,7 +1535,6 @@ index|]
 operator|.
 name|sock
 argument_list|,
-operator|&
 name|rfds
 argument_list|)
 expr_stmt|;
@@ -1524,7 +1548,6 @@ name|max_sock
 operator|+
 literal|1
 argument_list|,
-operator|&
 name|rfds
 argument_list|,
 name|NULL
@@ -1555,6 +1578,11 @@ block|{
 name|perror
 argument_list|(
 literal|"select"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|rfds
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1674,7 +1702,6 @@ index|]
 operator|.
 name|sock
 argument_list|,
-operator|&
 name|rfds
 argument_list|)
 condition|)
@@ -1719,6 +1746,11 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|free
+argument_list|(
+name|rfds
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

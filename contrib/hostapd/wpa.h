@@ -97,6 +97,17 @@ index|[
 name|ETH_ALEN
 index|]
 decl_stmt|;
+name|u8
+modifier|*
+name|identity
+decl_stmt|;
+name|size_t
+name|identity_len
+decl_stmt|;
+name|struct
+name|radius_class_data
+name|radius_class
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -729,6 +740,7 @@ name|sta_info
 modifier|*
 name|sta
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 name|wpa_ie

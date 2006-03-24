@@ -42,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sha1.h"
+file|"crypto.h"
 end_include
 
 begin_include

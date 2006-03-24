@@ -196,6 +196,9 @@ name|int
 name|dhcp_sock
 decl_stmt|;
 comment|/* socket for dhcp packets */
+name|int
+name|use_pae_group_addr
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -356,6 +359,8 @@ argument_list|(
 name|hapd
 argument_list|,
 name|sta
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|accounting_sta_get_id
@@ -1508,6 +1513,14 @@ name|drv
 init|=
 name|priv
 decl_stmt|;
+name|u8
+name|pae_group_addr
+index|[
+name|ETH_ALEN
+index|]
+init|=
+name|WIRED_EAPOL_MULTICAST_GROUP
+decl_stmt|;
 name|struct
 name|ieee8023_hdr
 modifier|*
@@ -1578,6 +1591,12 @@ name|hdr
 operator|->
 name|dest
 argument_list|,
+name|drv
+operator|->
+name|use_pae_group_addr
+condition|?
+name|pae_group_addr
+else|:
 name|addr
 argument_list|,
 name|ETH_ALEN
@@ -1750,6 +1769,16 @@ operator|->
 name|hapd
 operator|=
 name|hapd
+expr_stmt|;
+name|drv
+operator|->
+name|use_pae_group_addr
+operator|=
+name|hapd
+operator|->
+name|conf
+operator|->
+name|use_pae_group_addr
 expr_stmt|;
 if|if
 condition|(

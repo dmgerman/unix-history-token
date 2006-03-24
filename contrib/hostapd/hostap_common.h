@@ -2691,6 +2691,10 @@ block|,
 name|PRISM2_PARAM_DROP_UNENCRYPTED
 init|=
 literal|39
+block|,
+name|PRISM2_PARAM_SCAN_CHANNEL_MASK
+init|=
+literal|40
 block|, }
 enum|;
 end_enum

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Host AP (software wireless LAN access point) user space daemon for  * Host AP kernel driver / RC4  * Copyright (c) 2002-2004, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * RC4 stream cipher  * Copyright (c) 2002-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_include
@@ -33,10 +33,15 @@ parameter_list|)
 value|do { u8 t = S[a]; S[a] = S[b]; S[b] = t; } while(0)
 end_define
 
+begin_comment
+comment|/**  * rc4 - XOR RC4 stream to given data with skip-stream-start  * @key: RC4 key  * @keylen: RC4 key length  * @skip: number of bytes to skip from the beginning of the RC4 stream  * @data: data to be XOR'ed with RC4 stream  * @data_len: buf length  *  * Generate RC4 pseudo random stream for the given key, skip beginning of the  * stream, and XOR the end result with the data buffer to perform RC4  * encryption/decryption.  */
+end_comment
+
 begin_function
 name|void
 name|rc4_skip
 parameter_list|(
+specifier|const
 name|u8
 modifier|*
 name|key
@@ -282,6 +287,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/**  * rc4 - XOR RC4 stream to given data  * @buf: data to be XOR'ed with RC4 stream  * @len: buf length  * @key: RC4 key  * @key_len: RC4 key length  *  * Generate RC4 pseudo random stream for the given key and XOR this with the  * data buffer to perform RC4 encryption/decryption.  */
+end_comment
+
 begin_function
 name|void
 name|rc4
@@ -293,6 +302,7 @@ parameter_list|,
 name|size_t
 name|len
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 name|key

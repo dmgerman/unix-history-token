@@ -192,6 +192,23 @@ modifier|*
 name|user
 parameter_list|)
 function_decl|;
+specifier|const
+name|char
+modifier|*
+function_decl|(
+modifier|*
+name|get_eap_req_id_text
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|ctx
+parameter_list|,
+name|size_t
+modifier|*
+name|len
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -218,7 +235,7 @@ end_struct
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|EAP_AUTHENTICATOR
+name|EAP_SERVER
 end_ifdef
 
 begin_function_decl
@@ -318,7 +335,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* EAP_AUTHENTICATOR */
+comment|/* EAP_SERVER */
 end_comment
 
 begin_function
@@ -442,7 +459,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EAP_AUTHENTICATOR */
+comment|/* EAP_SERVER */
 end_comment
 
 begin_endif

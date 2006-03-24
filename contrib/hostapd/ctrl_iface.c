@@ -1662,6 +1662,12 @@ block|}
 block|}
 if|if
 condition|(
+name|hapd
+operator|->
+name|conf
+operator|->
+name|ctrl_interface_gid_set
+operator|&&
 name|chown
 argument_list|(
 name|hapd
@@ -1836,6 +1842,12 @@ goto|;
 block|}
 if|if
 condition|(
+name|hapd
+operator|->
+name|conf
+operator|->
+name|ctrl_interface_gid_set
+operator|&&
 name|chown
 argument_list|(
 name|fname
