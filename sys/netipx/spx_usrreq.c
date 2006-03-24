@@ -944,7 +944,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"spx_input: NULL ipxpcb"
+literal|"spx_input: ipxpcb == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1072,6 +1072,17 @@ name|ipxp
 operator|->
 name|ipxp_socket
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|so
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"spx_input: so == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|so
@@ -1126,12 +1137,10 @@ name|so
 operator|==
 name|NULL
 condition|)
-block|{
 goto|goto
 name|drop
 goto|;
-block|}
-comment|/* 		 * This is ugly, but .... 		 * 		 * Mark socket as temporary until we're 		 * committed to keeping it.  The code at 		 * ``drop'' and ``dropwithreset'' check the 		 * flag dropsocket to see if the temporary 		 * socket created here should be discarded. 		 * We mark the socket as discardable until 		 * we're committed to it below in TCPS_LISTEN. 		 */
+comment|/* 		 * This is ugly, but .... 		 * 		 * Mark socket as temporary until we're committed to keeping 		 * it.  The code at ``drop'' and ``dropwithreset'' check the 		 * flag dropsocket to see if the temporary socket created 		 * here should be discarded.  We mark the socket as 		 * discardable until we're committed to it below in 		 * TCPS_LISTEN. 		 */
 name|dropsocket
 operator|++
 expr_stmt|;
@@ -1205,7 +1214,12 @@ operator|=
 name|TCPS_LISTEN
 expr_stmt|;
 block|}
-comment|/* 	 * Packet received on connection. 	 * reset idle time and keep-alive timer; 	 */
+name|IPX_LOCK_ASSERT
+argument_list|(
+name|ipxp
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Packet received on connection.  Reset idle time and keep-alive 	 * timer. 	 */
 name|cb
 operator|->
 name|s_idle
@@ -1243,7 +1257,7 @@ name|struct
 name|ipx_addr
 name|laddr
 decl_stmt|;
-comment|/* 		 * If somebody here was carying on a conversation 		 * and went away, and his pen pal thinks he can 		 * still talk, we get the misdirected packet. 		 */
+comment|/* 		 * If somebody here was carying on a conversation and went 		 * away, and his pen pal thinks he can still talk, we get the 		 * misdirected packet. 		 */
 if|if
 condition|(
 name|spx_hardnosed
@@ -1434,11 +1448,11 @@ name|SPXTV_KEEP
 expr_stmt|;
 block|}
 break|break;
-comment|/* 	 * This state means that we have heard a response 	 * to our acceptance of their connection 	 * It is probably logically unnecessary in this 	 * implementation. 	 */
 case|case
 name|TCPS_SYN_RECEIVED
 case|:
 block|{
+comment|/* 		 * This state means that we have heard a response to our 		 * acceptance of their connection.  It is probably logically 		 * unnecessary in this implementation. 		 */
 if|if
 condition|(
 name|si
@@ -1505,10 +1519,10 @@ operator|++
 expr_stmt|;
 block|}
 break|break;
-comment|/* 	 * This state means that we have gotten a response 	 * to our attempt to establish a connection. 	 * We fill in the data from the other side, 	 * telling us which port to respond to, instead of the well- 	 * known one we might have sent to in the first place. 	 * We also require that this is a response to our 	 * connection id. 	 */
 case|case
 name|TCPS_SYN_SENT
 case|:
+comment|/* 		 * This state means that we have gotten a response to our 		 * attempt to establish a connection.  We fill in the data 		 * from the other side, telling us which port to respond to, 		 * instead of the well-known one we might have sent to in the 		 * first place.  We also require that this is a response to 		 * our connection id. 		 */
 if|if
 condition|(
 name|si
@@ -1596,7 +1610,7 @@ name|s_state
 operator|=
 name|TCPS_ESTABLISHED
 expr_stmt|;
-comment|/* Use roundtrip time of connection request for initial rtt */
+comment|/* 		 * Use roundtrip time of connection request for initial rtt. 		 */
 if|if
 condition|(
 name|cb
@@ -1727,13 +1741,11 @@ argument_list|,
 name|si
 argument_list|)
 condition|)
-block|{
 name|m_freem
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|cb
@@ -1783,6 +1795,11 @@ expr_stmt|;
 return|return;
 name|dropwithreset
 label|:
+name|IPX_LOCK_ASSERT
+argument_list|(
+name|ipxp
+argument_list|)
+expr_stmt|;
 name|IPX_UNLOCK
 argument_list|(
 name|ipxp
@@ -1951,6 +1968,11 @@ name|drop
 label|:
 name|bad
 label|:
+name|IPX_LOCK_ASSERT
+argument_list|(
+name|ipxp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cb
@@ -2003,7 +2025,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is structurally similar to the tcp reassembly routine  * but its function is somewhat different:  It merely queues  * packets up, and suppresses duplicates.  */
+comment|/*  * This is structurally similar to the tcp reassembly routine but its  * function is somewhat different:  It merely queues packets up, and  * suppresses duplicates.  */
 end_comment
 
 begin_function
@@ -2161,7 +2183,7 @@ operator|.
 name|spxs_rcvdupack
 operator|++
 expr_stmt|;
-comment|/* 			 * If this is a completely duplicate ack 			 * and other conditions hold, we assume 			 * a packet has been dropped and retransmit 			 * it exactly as in tcp_input(). 			 */
+comment|/* 			 * If this is a completely duplicate ack and other 			 * conditions hold, we assume a packet has been 			 * dropped and retransmit it exactly as in 			 * tcp_input(). 			 */
 if|if
 condition|(
 name|si
@@ -2314,7 +2336,7 @@ name|s_dupacks
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * If our correspondent acknowledges data we haven't sent 	 * TCP would drop the packet after acking.  We'll be a little 	 * more permissive 	 */
+comment|/* 	 * If our correspondent acknowledges data we haven't sent TCP would 	 * drop the packet after acking.  We'll be a little more permissive. 	 */
 if|if
 condition|(
 name|SSEQ_GT
@@ -2354,7 +2376,7 @@ operator|.
 name|spxs_rcvackpack
 operator|++
 expr_stmt|;
-comment|/* 	 * If transmit timer is running and timed sequence 	 * number was acked, update smoothed round trip time. 	 * See discussion of algorithm in tcp_input.c 	 */
+comment|/* 	 * If transmit timer is running and timed sequence number was acked, 	 * update smoothed round trip time.  See discussion of algorithm in 	 * tcp_input.c 	 */
 if|if
 condition|(
 name|cb
@@ -2464,7 +2486,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * No rtt measurement yet 			 */
+comment|/* 			 * No rtt measurement yet. 			 */
 name|cb
 operator|->
 name|s_srtt
@@ -2526,7 +2548,7 @@ name|SPXTV_REXMTMAX
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If all outstanding data is acked, stop retransmit 	 * timer and remember to restart (more output or persist). 	 * If there is more data to be acked, restart retransmit 	 * timer, using current (possibly backed-off) value; 	 */
+comment|/* 	 * If all outstanding data is acked, stop retransmit timer and 	 * remember to restart (more output or persist).  If there is more 	 * data to be acked, restart retransmit timer, using current 	 * (possibly backed-off) value; 	 */
 if|if
 condition|(
 name|si
@@ -2579,7 +2601,7 @@ name|cb
 operator|->
 name|s_rxtcur
 expr_stmt|;
-comment|/* 	 * When new data is acked, open the congestion window. 	 * If the window gives us less than ssthresh packets 	 * in flight, open exponentially (maxseg at a time). 	 * Otherwise open linearly (maxseg^2 / cwnd at a time). 	 */
+comment|/* 	 * When new data is acked, open the congestion window.  If the window 	 * gives us less than ssthresh packets in flight, open exponentially 	 * (maxseg at a time).  Otherwise open linearly (maxseg^2 / cwnd at a 	 * time). 	 */
 name|incr
 operator|=
 name|CUNIT
@@ -2886,7 +2908,7 @@ operator||=
 name|SF_WIN
 expr_stmt|;
 block|}
-comment|/* 	 * If this packet number is higher than that which 	 * we have allocated refuse it, unless urgent 	 */
+comment|/* 	 * If this packet number is higher than that which we have allocated 	 * refuse it, unless urgent. 	 */
 if|if
 condition|(
 name|SSEQ_GT
@@ -2997,7 +3019,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * If this is a system packet, we don't need to 	 * queue it up, and won't update acknowledge # 	 */
+comment|/* 	 * If this is a system packet, we don't need to queue it up, and 	 * won't update acknowledge #. 	 */
 if|if
 condition|(
 name|si
@@ -3061,7 +3083,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * Loop through all packets queued up to insert in 	 * appropriate sequence. 	 */
+comment|/* 	 * Loop through all packets queued up to insert in appropriate 	 * sequence. 	 */
 for|for
 control|(
 name|q
@@ -3202,7 +3224,7 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Loop through all packets queued up to update acknowledge 	 * number, and present all acknowledged data to user; 	 * If in packet interface mode, show packet headers. 	 */
+comment|/* 	 * Loop through all packets queued up to update acknowledge number, 	 * and present all acknowledged data to user; if in packet interface 	 * mode, show packet headers. 	 */
 for|for
 control|(
 name|q
@@ -3917,7 +3939,7 @@ operator|>
 name|mtu
 condition|)
 block|{
-comment|/* 					 * Here we are only being called 					 * from usrreq(), so it is OK to 					 * block. 					 */
+comment|/* 					 * Here we are only being called from 					 * usrreq(), so it is OK to block. 					 */
 name|m
 operator|=
 name|m_copym
@@ -4138,7 +4160,7 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
-comment|/* 		 * Fill in mbuf with extended SP header 		 * and addresses and length put into network format. 		 */
+comment|/* 		 * Fill in mbuf with extended SP header and addresses and 		 * length put into network format. 		 */
 name|MH_ALIGN
 argument_list|(
 name|m
@@ -4375,7 +4397,7 @@ operator|&
 name|SF_SOOB
 condition|)
 block|{
-comment|/* 			 * Per jqj@cornell: 			 * make sure OB packets convey exactly 1 byte. 			 * If the packet is 1 byte or larger, we 			 * have already guaranted there to be at least 			 * one garbage byte for the checksum, and 			 * extra bytes shouldn't hurt! 			 */
+comment|/* 			 * Per jqj@cornell: Make sure OB packets convey 			 * exactly 1 byte.  If the packet is 1 byte or 			 * larger, we have already guaranted there to be at 			 * least one garbage byte for the checksum, and extra 			 * bytes shouldn't hurt! 			 */
 if|if
 condition|(
 name|len
@@ -4437,7 +4459,7 @@ operator|)
 operator|+
 literal|1
 expr_stmt|;
-comment|/* 		 * queue stuff up for output 		 */
+comment|/* 		 * Queue stuff up for output. 		 */
 name|sbappendrecord
 argument_list|(
 name|sb
@@ -4505,7 +4527,7 @@ name|CUNIT
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If in persist timeout with window of 0, send a probe. 	 * Otherwise, if window is small but nonzero 	 * and timer expired, send what we can and go into 	 * transmit state. 	 */
+comment|/* 	 * If in persist timeout with window of 0, send a probe.  Otherwise, 	 * if window is small but nonzero and timer expired, send what we can 	 * and go into transmit state. 	 */
 if|if
 condition|(
 name|cb
@@ -4569,7 +4591,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* 		 * Window shrank after we went into it. 		 * If window shrank to 0, cancel pending 		 * restransmission and pull s_snxt back 		 * to (closed) window.  We will enter persist 		 * state below.  If the widndow didn't close completely, 		 * just wait for an ACK. 		 */
+comment|/* 		 * Window shrank after we went into it.  If window shrank to 		 * 0, cancel pending restransmission and pull s_snxt back to 		 * (closed) window.  We will enter persist state below.  If 		 * the widndow didn't close completely, just wait for an ACK. 		 */
 name|len
 operator|=
 literal|0
@@ -4630,7 +4652,7 @@ operator|&
 name|SF_SOOB
 condition|)
 block|{
-comment|/* 		 * must transmit this out of band packet 		 */
+comment|/* 		 * Must transmit this out of band packet. 		 */
 name|cb
 operator|->
 name|s_oobflags
@@ -4673,7 +4695,7 @@ condition|)
 goto|goto
 name|send
 goto|;
-comment|/* 	 * Silly window can't happen in spx. 	 * Code from tcp deleted. 	 */
+comment|/* 	 * Silly window can't happen in spx.  Code from TCP deleted. 	 */
 if|if
 condition|(
 name|len
@@ -4681,7 +4703,7 @@ condition|)
 goto|goto
 name|send
 goto|;
-comment|/* 	 * Compare available window to amount of window 	 * known to peer (as advertised window less 	 * next expected input.)  If the difference is at least two 	 * packets or at least 35% of the mximum possible window, 	 * then want to send a window update to peer. 	 */
+comment|/* 	 * Compare available window to amount of window known to peer (as 	 * advertised window less next expected input.)  If the difference is 	 * at least two packets or at least 35% of the mximum possible 	 * window, then want to send a window update to peer. 	 */
 if|if
 condition|(
 name|rcv_win
@@ -4768,7 +4790,7 @@ name|send
 goto|;
 block|}
 block|}
-comment|/* 	 * Many comments from tcp_output.c are appropriate here 	 * including . . . 	 * If send window is too small, there is data to transmit, and no 	 * retransmit or persist is pending, then go to persist state. 	 * If nothing happens soon, send when timer expires: 	 * if window is nonzero, transmit what we can, 	 * otherwise send a probe. 	 */
+comment|/* 	 * Many comments from tcp_output.c are appropriate here including ... 	 * If send window is too small, there is data to transmit, and no 	 * retransmit or persist is pending, then go to persist state.  If 	 * nothing happens soon, send when timer expires: if window is 	 * nonzero, transmit what we can, otherwise send a probe. 	 */
 if|if
 condition|(
 name|so
@@ -4923,7 +4945,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * update window 	 */
+comment|/* 	 * Update window. 	 */
 if|if
 condition|(
 name|rcv_win
@@ -4979,7 +5001,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * must make a copy of this packet for 		 * ipx_output to monkey with 		 */
+comment|/* 		 * Must make a copy of this packet for ipx_output to monkey 		 * with. 		 */
 name|m
 operator|=
 name|m_copy
@@ -5003,13 +5025,11 @@ name|m
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 name|ENOBUFS
 operator|)
 return|;
-block|}
 name|si
 operator|=
 name|mtod
@@ -5060,7 +5080,7 @@ operator|&
 name|SF_ACKNOW
 condition|)
 block|{
-comment|/* 		 * Must send an acknowledgement or a probe 		 */
+comment|/* 		 * Must send an acknowledgement or a probe. 		 */
 if|if
 condition|(
 name|cb
@@ -5105,7 +5125,7 @@ operator|(
 name|ENOBUFS
 operator|)
 return|;
-comment|/* 		 * Fill in mbuf with extended SP header 		 * and addresses and length put into network format. 		 */
+comment|/* 		 * Fill in mbuf with extended SP header and addresses and 		 * length put into network format. 		 */
 name|MH_ALIGN
 argument_list|(
 name|m
@@ -5325,7 +5345,7 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-comment|/* 			 * Set rexmt timer if not currently set, 			 * Initial value for retransmit timer is smoothed 			 * round-trip time + 2 * round-trip time variance. 			 * Initialize shift counter which is used for backoff 			 * of retransmit time. 			 */
+comment|/* 			 * Set rexmt timer if not currently set, initial 			 * value for retransmit timer is smoothed round-trip 			 * time + 2 * round-trip time variance.  Initialize 			 * shift counter which is used for backoff of 			 * retransmit time. 			 */
 if|if
 condition|(
 name|cb
@@ -5399,7 +5419,6 @@ operator|->
 name|si_seq
 argument_list|)
 condition|)
-block|{
 name|cb
 operator|->
 name|s_smax
@@ -5408,7 +5427,6 @@ name|si
 operator|->
 name|si_seq
 expr_stmt|;
-block|}
 block|}
 elseif|else
 if|if
@@ -5458,8 +5476,7 @@ operator|->
 name|s_rxtcur
 expr_stmt|;
 block|}
-block|{
-comment|/* 		 * Do not request acks when we ack their data packets or 		 * when we do a gratuitous window update. 		 */
+comment|/* 	 * Do not request acks when we ack their data packets or when we do a 	 * gratuitous window update. 	 */
 if|if
 condition|(
 operator|(
@@ -5519,7 +5536,6 @@ if|if
 condition|(
 name|ipxcksum
 condition|)
-block|{
 name|si
 operator|->
 name|si_sum
@@ -5536,7 +5552,6 @@ name|si_len
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 name|si
 operator|->
@@ -5611,24 +5626,21 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|error
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 name|spxstat
 operator|.
 name|spxs_sndtotal
 operator|++
 expr_stmt|;
-comment|/* 	 * Data sent (as far as we can tell). 	 * If this advertises a larger window than any other segment, 	 * then remember the size of the advertized window. 	 * Any pending ACK has now been sent. 	 */
+comment|/* 	 * Data sent (as far as we can tell).  If this advertises a larger 	 * window than any other segment, then remember the size of the 	 * advertized window.  Any pending ACK has now been sent. 	 */
 name|cb
 operator|->
 name|s_force
@@ -5834,6 +5846,7 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * This will have to be changed when we do more general stacking of 	 * protocols. 	 */
 if|if
 condition|(
 name|sopt
@@ -5842,8 +5855,6 @@ name|sopt_level
 operator|!=
 name|IPXPROTO_SPX
 condition|)
-block|{
-comment|/* This will have to be changed when we do more general 		   stacking of protocols */
 return|return
 operator|(
 name|ipx_ctloutput
@@ -5854,7 +5865,6 @@ name|sopt
 argument_list|)
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|ipxp
@@ -5872,6 +5882,17 @@ operator|=
 name|ipxtospxpcb
 argument_list|(
 name|ipxp
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|cb
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"spx_ctloutput: cb == NULL"
+operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -6011,6 +6032,7 @@ break|break;
 case|case
 name|SOPT_SET
 case|:
+comment|/* 		 * XXX Why are these shorts on get and ints on set?  That 		 * doesn't make any sense... 		 */
 switch|switch
 condition|(
 name|sopt
@@ -6018,7 +6040,6 @@ operator|->
 name|sopt_name
 condition|)
 block|{
-comment|/* XXX why are these shorts on get and ints on set? 			   that doesn't make any sense... */
 case|case
 name|SO_HEADERS_ON_INPUT
 case|:
@@ -6312,11 +6333,33 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ipxp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"spx_usr_abort: ipxp == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 name|cb
 operator|=
 name|ipxtospxpcb
 argument_list|(
 name|ipxp
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|cb
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"spx_usr_abort: cb == NULL"
+operator|)
 argument_list|)
 expr_stmt|;
 name|IPX_LIST_LOCK
@@ -6346,7 +6389,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Accept a connection.  Essentially all the work is  * done at higher levels; just return the address  * of the peer, storing through addr.  */
+comment|/*  * Accept a connection.  Essentially all the work is done at higher levels;  * just return the address of the peer, storing through addr.  */
 end_comment
 
 begin_function
@@ -6383,6 +6426,17 @@ operator|=
 name|sotoipxpcb
 argument_list|(
 name|so
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ipxp
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"spx_accept: ipxp == NULL"
+operator|)
 argument_list|)
 expr_stmt|;
 name|sipx
@@ -6503,11 +6557,15 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|cb
-operator|=
-name|ipxtospxpcb
+name|KASSERT
 argument_list|(
 name|ipxp
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"spx_attach: ipxp != NULL"
+operator|)
 argument_list|)
 expr_stmt|;
 name|IPX_LIST_LOCK
@@ -6617,13 +6675,6 @@ goto|goto
 name|spx_attach_end
 goto|;
 block|}
-name|sb
-operator|=
-operator|&
-name|so
-operator|->
-name|so_snd
-expr_stmt|;
 name|mm
 operator|=
 name|m_getclr
@@ -6723,6 +6774,13 @@ expr|struct
 name|spx
 argument_list|)
 expr_stmt|;
+name|sb
+operator|=
+operator|&
+name|so
+operator|->
+name|so_snd
+expr_stmt|;
 name|cb
 operator|->
 name|s_cwnd
@@ -6767,7 +6825,7 @@ name|spx
 argument_list|)
 operator|)
 expr_stmt|;
-comment|/* Above is recomputed when connecting to account 	   for changed buffering or mtu's */
+comment|/* 	 * Above is recomputed when connecting to account for changed 	 * buffering or mtu's. 	 */
 name|cb
 operator|->
 name|s_rtt
@@ -6867,6 +6925,17 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ipxp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"spx_bind: ipxp == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 name|IPX_LIST_LOCK
 argument_list|()
 expr_stmt|;
@@ -6903,7 +6972,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initiate connection to peer.  * Enter SYN_SENT state, and mark socket as connecting.  * Start keep-alive timer, setup prototype header,  * Send initial system packet requesting connection.  */
+comment|/*  * Initiate connection to peer.  Enter SYN_SENT state, and mark socket as  * connecting.  Start keep-alive timer, setup prototype header, send initial  * system packet requesting connection.  */
 end_comment
 
 begin_function
@@ -6947,11 +7016,33 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ipxp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"spx_connect: ipxp == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 name|cb
 operator|=
 name|ipxtospxpcb
 argument_list|(
 name|ipxp
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|cb
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"spx_connect: cb == NULL"
+operator|)
 argument_list|)
 expr_stmt|;
 name|IPX_LIST_LOCK
@@ -7052,7 +7143,7 @@ literal|1
 operator|+
 name|SPXTV_KEEP
 expr_stmt|;
-comment|/* 	 * Other party is required to respond to 	 * the port I send from, but he is not 	 * required to answer from where I am sending to, 	 * so allow wildcarding. 	 * original port I am sending to is still saved in 	 * cb->s_dport. 	 */
+comment|/* 	 * Other party is required to respond to the port I send from, but he 	 * is not required to answer from where I am sending to, so allow 	 * wildcarding.  Original port I am sending to is still saved in 	 * cb->s_dport. 	 */
 name|ipxp
 operator|->
 name|ipxp_fport
@@ -7114,11 +7205,33 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ipxp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"spx_detach: ipxp == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 name|cb
 operator|=
 name|ipxtospxpcb
 argument_list|(
 name|ipxp
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|cb
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"spx_detach: cb == NULL"
+operator|)
 argument_list|)
 expr_stmt|;
 name|IPX_LIST_LOCK
@@ -7160,7 +7273,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * We may decide later to implement connection closing  * handshaking at the spx level optionally.  * here is the hook to do it:  */
+comment|/*  * We may decide later to implement connection closing handshaking at the spx  * level optionally.  Here is the hook to do it:  */
 end_comment
 
 begin_function
@@ -7191,11 +7304,33 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ipxp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"spx_usr_disconnect: ipxp == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 name|cb
 operator|=
 name|ipxtospxpcb
 argument_list|(
 name|ipxp
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|cb
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"spx_usr_disconnect: cb == NULL"
+operator|)
 argument_list|)
 expr_stmt|;
 name|IPX_LIST_LOCK
@@ -7265,11 +7400,33 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ipxp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"spx_listen: ipxp == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 name|cb
 operator|=
 name|ipxtospxpcb
 argument_list|(
 name|ipxp
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|cb
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"spx_listen: cb == NULL"
+operator|)
 argument_list|)
 expr_stmt|;
 name|IPX_LIST_LOCK
@@ -7358,7 +7515,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * After a receive, possibly send acknowledgment  * updating allocation.  */
+comment|/*  * After a receive, possibly send acknowledgment updating allocation.  */
 end_comment
 
 begin_function
@@ -7392,11 +7549,33 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ipxp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"spx_rcvd: ipxp == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 name|cb
 operator|=
 name|ipxtospxpcb
 argument_list|(
 name|ipxp
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|cb
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"spx_rcvd: cb == NULL"
+operator|)
 argument_list|)
 expr_stmt|;
 name|IPX_LOCK
@@ -7473,11 +7652,33 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ipxp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"spx_rcvoob: ipxp == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 name|cb
 operator|=
 name|ipxtospxpcb
 argument_list|(
 name|ipxp
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|cb
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"spx_rcvoob: cb == NULL"
+operator|)
 argument_list|)
 expr_stmt|;
 name|SOCKBUF_LOCK
@@ -7609,15 +7810,22 @@ name|spxpcb
 modifier|*
 name|cb
 decl_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
 name|ipxp
 operator|=
 name|sotoipxpcb
 argument_list|(
 name|so
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ipxp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"spx_send: ipxp == NULL"
+operator|)
 argument_list|)
 expr_stmt|;
 name|cb
@@ -7626,6 +7834,21 @@ name|ipxtospxpcb
 argument_list|(
 name|ipxp
 argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|cb
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"spx_send: cb == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+literal|0
 expr_stmt|;
 name|IPX_LOCK
 argument_list|(
@@ -7829,11 +8052,33 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ipxp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"spx_shutdown: ipxp == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 name|cb
 operator|=
 name|ipxtospxpcb
 argument_list|(
 name|ipxp
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|cb
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"spx_shutdown: cb == NULL"
+operator|)
 argument_list|)
 expr_stmt|;
 name|socantsendmore
@@ -7948,7 +8193,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create template to be used to send spx packets on a connection.  * Called after host entry created, fills  * in a skeletal spx header (choosing connection id),  * minimizing the amount of work necessary when the connection is used.  */
+comment|/*  * Create template to be used to send spx packets on a connection.  Called  * after host entry created, fills in a skeletal spx header (choosing  * connection id), minimizing the amount of work necessary when the  * connection is used.  */
 end_comment
 
 begin_function
@@ -8065,6 +8310,7 @@ name|cb
 operator|->
 name|s_mtu
 expr_stmt|;
+comment|/* Try to expand fast to full complement of large packets. */
 name|cb
 operator|->
 name|s_ssthresh
@@ -8073,7 +8319,6 @@ name|cb
 operator|->
 name|s_cwnd
 expr_stmt|;
-comment|/* Try to expand fast to full complement 					of large packets */
 name|cb
 operator|->
 name|s_cwmx
@@ -8097,6 +8342,7 @@ name|spx
 argument_list|)
 operator|)
 expr_stmt|;
+comment|/* But allow for lots of little packets as well. */
 name|cb
 operator|->
 name|s_cwmx
@@ -8112,7 +8358,6 @@ operator|->
 name|s_cwnd
 argument_list|)
 expr_stmt|;
-comment|/* But allow for lots of little packets as well */
 block|}
 end_function
 
@@ -8158,6 +8403,17 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|ipxp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"spx_close: ipxp == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 name|IPX_LIST_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -8256,7 +8512,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	Someday we may do level 3 handshaking  *	to close a connection or send a xerox style error.  *	For now, just close.  * cb will always be invalid after this call.  */
+comment|/*  * Someday we may do level 3 handshaking to close a connection or send a  * xerox style error.  For now, just close.  cb will always be invalid after  * this call.  */
 end_comment
 
 begin_function
@@ -8322,7 +8578,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Drop connection, reporting  * the specified error.  * cb will always be invalid after this call.  */
+comment|/*  * Drop connection, reporting the specified error.  cb will always be invalid  * after this call.  */
 end_comment
 
 begin_function
@@ -8360,7 +8616,7 @@ operator|->
 name|s_ipxpcb
 argument_list|)
 expr_stmt|;
-comment|/* 	 * someday, in the xerox world 	 * we will generate error protocol packets 	 * announcing that the socket has gone away. 	 */
+comment|/* 	 * Someday, in the xerox world we will generate error protocol 	 * packets announcing that the socket has gone away. 	 */
 if|if
 condition|(
 name|TCPS_HAVERCVDSYN
@@ -8405,7 +8661,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Fast timeout routine for processing delayed acks  */
+comment|/*  * Fast timeout routine for processing delayed acks.  */
 end_comment
 
 begin_function
@@ -8507,7 +8763,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * spx protocol timeout routine called every 500 ms.  * Updates the timers in all active pcb's and  * causes finite state machine actions if timers expire.  */
+comment|/*  * spx protocol timeout routine called every 500 ms.  Updates the timers in  * all active pcb's and causes finite state machine actions if timers expire.  */
 end_comment
 
 begin_function
@@ -8741,7 +8997,7 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
-comment|/* 	 * Retransmission timer went off.  Message has not 	 * been acked within retransmit interval.  Back off 	 * to a longer retransmit interval and retransmit one packet. 	 */
+comment|/* 	 * Retransmission timer went off.  Message has not been acked within 	 * retransmit interval.  Back off to a longer retransmit interval and 	 * retransmit one packet. 	 */
 case|case
 name|SPXT_REXMT
 case|:
@@ -8835,7 +9091,7 @@ name|cb
 operator|->
 name|s_rxtcur
 expr_stmt|;
-comment|/* 		 * If we have backed off fairly far, our srtt 		 * estimate is probably bogus.  Clobber it 		 * so we'll take the next rtt measurement as our srtt; 		 * move the current srtt into rttvar to keep the current 		 * retransmit times until then. 		 */
+comment|/* 		 * If we have backed off fairly far, our srtt estimate is 		 * probably bogus.  Clobber it so we'll take the next rtt 		 * measurement as our srtt; move the current srtt into rttvar 		 * to keep the current retransmit times until then. 		 */
 if|if
 condition|(
 name|cb
@@ -8881,7 +9137,7 @@ name|s_rtt
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * See very long discussion in tcp_timer.c about congestion 		 * window and sstrhesh 		 */
+comment|/* 		 * See very long discussion in tcp_timer.c about congestion 		 * window and sstrhesh. 		 */
 name|win
 operator|=
 name|min
@@ -8933,10 +9189,10 @@ name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 	 * Persistance timer into zero window. 	 * Force a probe to be sent. 	 */
 case|case
 name|SPXT_PERSIST
 case|:
+comment|/* 		 * Persistance timer into zero window.  Force a probe to be 		 * sent. 		 */
 name|spxstat
 operator|.
 name|spxs_persisttimeo
@@ -8955,10 +9211,10 @@ name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 	 * Keep-alive timer went off; send something 	 * or drop connection if idle for too long. 	 */
 case|case
 name|SPXT_KEEP
 case|:
+comment|/* 		 * Keep-alive timer went off; send something or drop 		 * connection if idle for too long. 		 */
 name|spxstat
 operator|.
 name|spxs_keeptimeo
