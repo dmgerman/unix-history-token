@@ -35,6 +35,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|f_birthtime
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* use time of file creation */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|f_flags
 decl_stmt|;
 end_decl_stmt
