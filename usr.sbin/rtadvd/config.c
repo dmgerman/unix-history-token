@@ -3302,6 +3302,10 @@ condition|(
 name|m
 operator|<
 name|lim
+operator|&&
+name|p
+operator|<
+name|ep
 condition|)
 operator|*
 name|p
