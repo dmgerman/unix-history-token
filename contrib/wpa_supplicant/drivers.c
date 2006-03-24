@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant / driver interface list  * Copyright (c) 2004, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant / driver interface list  * Copyright (c) 2004-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_include
@@ -309,6 +309,33 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|CONFIG_DRIVER_WIRED
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|wpa_driver_ops
+name|wpa_driver_wired_ops
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* driver_wired.c */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_DRIVER_WIRED */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|CONFIG_DRIVER_TEST
 end_ifdef
 
@@ -440,6 +467,15 @@ block|,
 endif|#
 directive|endif
 comment|/* CONFIG_DRIVER_NDIS */
+ifdef|#
+directive|ifdef
+name|CONFIG_DRIVER_WIRED
+operator|&
+name|wpa_driver_wired_ops
+block|,
+endif|#
+directive|endif
+comment|/* CONFIG_DRIVER_WIRED */
 ifdef|#
 directive|ifdef
 name|CONFIG_DRIVER_TEST

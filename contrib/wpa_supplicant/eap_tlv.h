@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * WPA Supplicant / EAP-TLV (draft-josefsson-pppext-eap-tls-eap-07.txt)  * Copyright (c) 2004-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -299,7 +303,7 @@ parameter_list|(
 name|int
 name|id
 parameter_list|,
-name|int
+name|u16
 name|nak_type
 parameter_list|,
 name|size_t
@@ -317,7 +321,7 @@ parameter_list|(
 name|int
 name|id
 parameter_list|,
-name|int
+name|u16
 name|status
 parameter_list|,
 name|size_t
@@ -341,6 +345,7 @@ name|eap_method_ret
 modifier|*
 name|ret
 parameter_list|,
+specifier|const
 name|struct
 name|eap_hdr
 modifier|*

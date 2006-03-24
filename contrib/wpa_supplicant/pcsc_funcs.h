@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * WPA Supplicant / PC/SC smartcard interface for USIM, GSM SIM  * Copyright (c) 2004-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -106,10 +110,6 @@ name|scard_init
 parameter_list|(
 name|scard_sim_type
 name|sim_type
-parameter_list|,
-name|char
-modifier|*
-name|pin
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -122,6 +122,23 @@ name|struct
 name|scard_data
 modifier|*
 name|scard
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|scard_set_pin
+parameter_list|(
+name|struct
+name|scard_data
+modifier|*
+name|scard
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|pin
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -234,8 +251,6 @@ directive|define
 name|scard_init
 parameter_list|(
 name|s
-parameter_list|,
-name|p
 parameter_list|)
 value|NULL
 end_define
@@ -248,6 +263,18 @@ parameter_list|(
 name|s
 parameter_list|)
 value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|scard_set_pin
+parameter_list|(
+name|s
+parameter_list|,
+name|p
+parameter_list|)
+value|-1
 end_define
 
 begin_define
