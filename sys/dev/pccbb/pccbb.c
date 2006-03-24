@@ -2823,6 +2823,10 @@ condition|(
 name|psr
 operator|&
 name|CBB_STATE_5VCARD
+operator|&&
+name|psr
+operator|&
+name|CBB_STATE_5VSOCK
 condition|)
 name|vol
 operator||=
@@ -2833,6 +2837,10 @@ condition|(
 name|psr
 operator|&
 name|CBB_STATE_3VCARD
+operator|&&
+name|psr
+operator|&
+name|CBB_STATE_3VSOCK
 condition|)
 name|vol
 operator||=
@@ -2843,6 +2851,10 @@ condition|(
 name|psr
 operator|&
 name|CBB_STATE_XVCARD
+operator|&&
+name|psr
+operator|&
+name|CBB_STATE_XVSOCK
 condition|)
 name|vol
 operator||=
@@ -2853,6 +2865,10 @@ condition|(
 name|psr
 operator|&
 name|CBB_STATE_YVCARD
+operator|&&
+name|psr
+operator|&
+name|CBB_STATE_YVSOCK
 condition|)
 name|vol
 operator||=
