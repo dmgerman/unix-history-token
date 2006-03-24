@@ -3403,6 +3403,11 @@ name|ic
 operator|->
 name|ic_ifp
 decl_stmt|;
+name|ural_stop
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|usb_rem_task
 argument_list|(
 name|sc
