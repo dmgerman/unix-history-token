@@ -365,9 +365,20 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
-literal|"ioctl[SIOCG80211]"
+name|stderr
+argument_list|,
+literal|"ioctl[SIOCG80211, op %u, len %u]: %s\n"
+argument_list|,
+name|op
+argument_list|,
+name|arg_len
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
