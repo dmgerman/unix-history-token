@@ -197,6 +197,15 @@ name|spx_istat
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|spxrexmtthresh
+init|=
+literal|3
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Following was struct spxstat spxstat; */
 end_comment
@@ -1953,15 +1962,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_decl_stmt
-specifier|static
-name|int
-name|spxrexmtthresh
-init|=
-literal|3
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * This is structurally similar to the tcp reassembly routine  * but its function is somewhat different:  It merely queues  * packets up, and suppresses duplicates.  */
