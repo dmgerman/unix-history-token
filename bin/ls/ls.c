@@ -1701,6 +1701,15 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|f_sizesort
+condition|)
+name|sortfcn
+operator|=
+name|revsizecmp
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|f_accesstime
 condition|)
 name|sortfcn
@@ -1725,15 +1734,6 @@ name|sortfcn
 operator|=
 name|revstatcmp
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|f_sizesort
-condition|)
-name|sortfcn
-operator|=
-name|revsizecmp
-expr_stmt|;
 else|else
 comment|/* Use modification time. */
 name|sortfcn
@@ -1754,6 +1754,15 @@ condition|)
 name|sortfcn
 operator|=
 name|namecmp
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|f_sizesort
+condition|)
+name|sortfcn
+operator|=
+name|sizecmp
 expr_stmt|;
 elseif|else
 if|if
@@ -1781,15 +1790,6 @@ condition|)
 name|sortfcn
 operator|=
 name|statcmp
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|f_sizesort
-condition|)
-name|sortfcn
-operator|=
-name|sizecmp
 expr_stmt|;
 else|else
 comment|/* Use modification time. */
