@@ -11464,10 +11464,6 @@ directive|endif
 if|if
 condition|(
 name|n
-operator|<
-literal|0
-operator|||
-name|n
 operator|>
 name|anslen
 condition|)
@@ -11480,6 +11476,10 @@ expr_stmt|;
 comment|/* XXX not very informative */
 if|if
 condition|(
+name|n
+operator|<
+literal|0
+operator|||
 name|hp
 operator|->
 name|rcode
