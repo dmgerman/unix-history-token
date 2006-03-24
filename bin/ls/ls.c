@@ -1308,12 +1308,17 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+comment|/* The -t and -S options override each other. */
 case|case
 literal|'t'
 case|:
 name|f_timesort
 operator|=
 literal|1
+expr_stmt|;
+name|f_sizesort
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -1322,6 +1327,10 @@ case|:
 name|f_sizesort
 operator|=
 literal|1
+expr_stmt|;
+name|f_timesort
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
