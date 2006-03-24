@@ -6328,15 +6328,12 @@ return|return;
 block|}
 name|cksum
 operator|=
-name|htons
-argument_list|(
 operator|~
 operator|(
 name|flags
 operator|&
 name|HME_XD_RXCKSUM
 operator|)
-argument_list|)
 expr_stmt|;
 comment|/* checksum fixup for IP options */
 name|len
