@@ -26,7 +26,7 @@ block|{
 name|int
 name|year
 decl_stmt|;
-comment|/* year - 1900 */
+comment|/* year (4 digit year) */
 name|int
 name|mon
 decl_stmt|;
