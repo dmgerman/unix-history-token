@@ -169,6 +169,25 @@ directive|include
 file|<machine/resource.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<machine/bus.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -311,6 +330,41 @@ parameter_list|)
 value|(sizeof(array) / sizeof(*array))
 end_define
 
+begin_define
+define|#
+directive|define
+name|MPT_ROLE_NONE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPT_ROLE_INITIATOR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPT_ROLE_TARGET
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPT_ROLE_BOTH
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPT_ROLE_DEFAULT
+value|MPT_ROLE_INITIATOR
+end_define
+
 begin_comment
 comment|/**************************** Forward Declarations ****************************/
 end_comment
@@ -367,6 +421,18 @@ begin_typedef
 typedef|typedef
 name|int
 name|mpt_attach_handler_t
+parameter_list|(
+name|struct
+name|mpt_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|mpt_enable_handler_t
 parameter_list|(
 name|struct
 name|mpt_softc
@@ -487,6 +553,11 @@ modifier|*
 name|attach
 decl_stmt|;
 comment|/* initialize device instance */
+name|mpt_enable_handler_t
+modifier|*
+name|enable
+decl_stmt|;
+comment|/* enable device */
 name|mpt_event_handler_t
 modifier|*
 name|event
@@ -956,7 +1027,7 @@ name|uint16_t
 name|IOCStatus
 decl_stmt|;
 comment|/* Completion status */
-name|uint32_t
+name|uint16_t
 name|serno
 decl_stmt|;
 comment|/* serial number */
@@ -999,6 +1070,185 @@ struct|;
 end_struct
 
 begin_comment
+comment|/**************************** MPI Target State Info ***************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|uint32_t
+name|reply_desc
+decl_stmt|;
+comment|/* current reply descriptor */
+name|uint32_t
+name|resid
+decl_stmt|;
+comment|/* current data residual */
+name|uint32_t
+name|bytes_xfered
+decl_stmt|;
+comment|/* current relative offset */
+name|union
+name|ccb
+modifier|*
+name|ccb
+decl_stmt|;
+comment|/* pointer to currently active ccb */
+name|request_t
+modifier|*
+name|req
+decl_stmt|;
+comment|/* pointer to currently active assist request */
+name|int
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|BOGUS_JO
+value|0x01
+name|int
+name|nxfers
+decl_stmt|;
+enum|enum
+block|{
+name|TGT_STATE_NIL
+block|,
+name|TGT_STATE_LOADED
+block|,
+name|TGT_STATE_IN_CAM
+block|,
+name|TGT_STATE_SETTING_UP_FOR_DATA
+block|,
+name|TGT_STATE_MOVING_DATA
+block|,
+name|TGT_STATE_MOVING_DATA_AND_STATUS
+block|,
+name|TGT_STATE_SENDING_STATUS
+block|}
+name|state
+enum|;
+block|}
+name|mpt_tgt_state_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * When we get an incoming command it has its own tag which is called the  * IoIndex. This is the value we gave that particular command buffer when  * we originally assigned it. It's just a number, really. The FC card uses  * it as an RX_ID. We can use it to index into mpt->tgt_cmd_ptrs, which  * contains pointers the request_t structures related to that IoIndex.  *  * What *we* do is construct a tag out of the index for the target command  * which owns the incoming ATIO plus a rolling sequence number.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPT_MAKE_TAGID
+parameter_list|(
+name|mpt
+parameter_list|,
+name|req
+parameter_list|,
+name|ioindex
+parameter_list|)
+define|\
+value|((ioindex<< 16) | (mpt->sequence++))
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MPT_TAG_2_REQ
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|mpt_tag_2_req(a, (uint32_t) b)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MPT_TAG_2_REQ
+parameter_list|(
+name|mpt
+parameter_list|,
+name|tag
+parameter_list|)
+value|mpt->tgt_cmd_ptrs[tag>> 16]
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|MPT_TGT_STATE
+parameter_list|(
+name|mpt
+parameter_list|,
+name|req
+parameter_list|)
+value|((mpt_tgt_state_t *) \     (&((uint8_t *)req->req_vbuf)[MPT_RQSL(mpt) - sizeof (mpt_tgt_state_t)]))
+end_define
+
+begin_expr_stmt
+name|STAILQ_HEAD
+argument_list|(
+name|mpt_hdr_stailq
+argument_list|,
+name|ccb_hdr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|MPT_MAX_LUNS
+value|256
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|struct
+name|mpt_hdr_stailq
+name|atios
+decl_stmt|;
+name|struct
+name|mpt_hdr_stailq
+name|inots
+decl_stmt|;
+name|int
+name|enabled
+decl_stmt|;
+block|}
+name|tgt_resource_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|MPT_MAX_ELS
+value|8
+end_define
+
+begin_comment
 comment|/**************************** Handler Registration ****************************/
 end_comment
 
@@ -1010,7 +1260,7 @@ begin_define
 define|#
 directive|define
 name|MPT_NUM_REPLY_HANDLERS
-value|(16)
+value|(32)
 end_define
 
 begin_define
@@ -1047,6 +1297,9 @@ parameter_list|,
 name|request_t
 modifier|*
 name|request
+parameter_list|,
+name|uint32_t
+name|reply_desc
 parameter_list|,
 name|MSG_DEFAULT_REPLY
 modifier|*
@@ -1388,12 +1641,33 @@ name|mpt_pers_mask
 decl_stmt|;
 name|uint32_t
 label|:
-literal|14
+literal|8
 operator|,
-name|is_sas
+name|unit
+operator|:
+literal|8
+operator|,
 operator|:
 literal|1
 operator|,
+name|twildcard
+operator|:
+literal|1
+operator|,
+name|tenabled
+operator|:
+literal|1
+operator|,
+name|cap
+operator|:
+literal|2
+operator|,
+comment|/* none, ini, target, both */
+name|role
+operator|:
+literal|2
+operator|,
+comment|/* none, ini, target, both */
 name|raid_mwce_set
 operator|:
 literal|1
@@ -1410,10 +1684,6 @@ name|shutdwn_recovery
 operator|:
 literal|1
 operator|,
-name|unit
-operator|:
-literal|8
-operator|,
 name|outofbeer
 operator|:
 literal|1
@@ -1426,20 +1696,16 @@ name|disabled
 operator|:
 literal|1
 operator|,
-name|is_fc
+name|is_sas
 operator|:
 literal|1
 operator|,
-name|bus
+name|is_fc
 operator|:
 literal|1
 expr_stmt|;
-comment|/* FC929/1030 have two busses */
 name|u_int
 name|verbose
-decl_stmt|;
-name|uint32_t
-name|cmd_serno
 decl_stmt|;
 comment|/* 	 * IOC Facts 	 */
 name|uint16_t
@@ -1466,6 +1732,9 @@ name|mpt_port_type
 decl_stmt|;
 name|uint16_t
 name|mpt_proto_flags
+decl_stmt|;
+name|uint16_t
+name|mpt_max_tgtcmds
 decl_stmt|;
 comment|/* 	 * Device Configuration Information 	 */
 union|union
@@ -1548,9 +1817,13 @@ value|cfg.spi._update_params1
 struct|struct
 name|mpi_fc_cfg
 block|{
-name|uint8_t
-name|nada
+name|CONFIG_PAGE_FC_PORT_0
+name|_port_page0
 decl_stmt|;
+define|#
+directive|define
+name|mpt_fcport_page0
+value|cfg.fc._port_page0
 block|}
 name|fc
 struct|;
@@ -1705,7 +1978,7 @@ comment|/* KVA of Request memory */
 name|bus_addr_t
 name|request_phys
 decl_stmt|;
-comment|/* BusADdr of request memory */
+comment|/* BusAddr of request memory */
 name|uint32_t
 name|max_seg_cnt
 decl_stmt|;
@@ -1765,15 +2038,39 @@ name|request_t
 modifier|*
 name|tmf_req
 decl_stmt|;
+comment|/* 	 * Target Mode Support 	 */
 name|uint32_t
+name|scsi_tgt_handler_id
+decl_stmt|;
+name|request_t
+modifier|*
+modifier|*
+name|tgt_cmd_ptrs
+decl_stmt|;
+comment|/* 	 * *snork*- this is chosen to be here *just in case* somebody 	 * forgets to point to it exactly and we index off of trt with 	 * CAM_LUN_WILDCARD. 	 */
+name|tgt_resource_t
+name|trt_wildcard
+decl_stmt|;
+comment|/* wildcard luns */
+name|tgt_resource_t
+name|trt
+index|[
+name|MPT_MAX_LUNS
+index|]
+decl_stmt|;
+name|uint16_t
+name|tgt_cmds_allocated
+decl_stmt|;
+comment|/* 	 * Stuff.. 	 */
+name|uint16_t
 name|sequence
 decl_stmt|;
 comment|/* Sequence Number */
-name|uint32_t
+name|uint16_t
 name|timeouts
 decl_stmt|;
 comment|/* timeout count */
-name|uint32_t
+name|uint16_t
 name|success
 decl_stmt|;
 comment|/* successes afer timeout */
@@ -1818,7 +2115,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/***************************** Locking Primatives *****************************/
+comment|/***************************** Locking Primitives *****************************/
 end_comment
 
 begin_if
@@ -2103,7 +2400,7 @@ argument_list|(
 name|mpt
 operator|->
 name|mpt_islocked
-operator|=
+operator|==
 literal|0
 argument_list|,
 operator|(
@@ -2566,6 +2863,10 @@ name|MPT_REPLY_SIZE
 value|256
 end_define
 
+begin_comment
+comment|/*  * Must be less than 16384 in order for target mode to work  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2604,11 +2905,15 @@ parameter_list|)
 value|(MPT_MAX_REQUESTS(mpt) * MPT_REQUEST_AREA)
 end_define
 
+begin_comment
+comment|/*  * Currently we try to pack both callbacks and request indices into 14 bits  * so that we don't have to get fancy when we get a target mode context  * reply (which only has 14 bits of IoIndex value) or a normal scsi  * initiator context reply (where we get bits 28..0 of context).  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MPT_CONTEXT_CB_SHIFT
-value|(16)
+value|(14)
 end_define
 
 begin_define
@@ -2646,7 +2951,7 @@ begin_define
 define|#
 directive|define
 name|MPT_CONTEXT_REQI_MASK
-value|0xFFFF
+value|0x3FFF
 end_define
 
 begin_define
@@ -2656,7 +2961,6 @@ name|MPT_CONTEXT_TO_REQI
 parameter_list|(
 name|x
 parameter_list|)
-define|\
 value|((x)& MPT_CONTEXT_REQI_MASK)
 end_define
 
@@ -2890,7 +3194,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/****************************** Debugging/Logging *****************************/
+comment|/****************************** Debugging ************************************/
 end_comment
 
 begin_typedef
@@ -2957,6 +3261,12 @@ name|MPT_PRT_INFO
 block|,
 name|MPT_PRT_DEBUG
 block|,
+name|MPT_PRT_DEBUG1
+block|,
+name|MPT_PRT_DEBUG2
+block|,
+name|MPT_PRT_DEBUG3
+block|,
 name|MPT_PRT_TRACE
 block|,
 name|MPT_PRT_NONE
@@ -2965,6 +3275,14 @@ literal|100
 block|}
 enum|;
 end_enum
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>
+literal|500000
+end_if
 
 begin_define
 define|#
@@ -2996,6 +3314,72 @@ define|\
 value|do {						 \ 	if (level<= (mpt)->debug_level)	 \ 		mpt_prtc(mpt, __VA_ARGS__);	 \ } while (0)
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+name|void
+name|mpt_lprt
+parameter_list|(
+name|struct
+name|mpt_softc
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__printflike
+parameter_list|(
+function_decl|3
+operator|,
+function_decl|4
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|void
+name|mpt_lprtc
+parameter_list|(
+name|struct
+name|mpt_softc
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__printflike
+parameter_list|(
+function_decl|3
+operator|,
+function_decl|4
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|void
 name|mpt_prt
@@ -3010,8 +3394,17 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|__printflike
+parameter_list|(
+function_decl|2
+operator|,
+function_decl|3
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
@@ -3027,8 +3420,225 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
+function_decl|__printflike
+parameter_list|(
+function_decl|2
+operator|,
+function_decl|3
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/**************************** Target Mode Related ***************************/
+end_comment
+
+begin_function_decl
+specifier|static
+name|__inline
+name|int
+name|mpt_cdblen
+parameter_list|(
+name|uint8_t
+parameter_list|,
+name|int
+parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|mpt_cdblen
+parameter_list|(
+name|uint8_t
+name|cdb0
+parameter_list|,
+name|int
+name|maxlen
+parameter_list|)
+block|{
+name|int
+name|group
+init|=
+name|cdb0
+operator|>>
+literal|5
+decl_stmt|;
+switch|switch
+condition|(
+name|group
+condition|)
+block|{
+case|case
+literal|0
+case|:
+return|return
+operator|(
+literal|6
+operator|)
+return|;
+case|case
+literal|1
+case|:
+return|return
+operator|(
+literal|10
+operator|)
+return|;
+case|case
+literal|4
+case|:
+case|case
+literal|5
+case|:
+return|return
+operator|(
+literal|12
+operator|)
+return|;
+default|default:
+return|return
+operator|(
+literal|16
+operator|)
+return|;
+block|}
+block|}
+end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+end_ifdef
+
+begin_function_decl
+specifier|static
+name|__inline
+name|request_t
+modifier|*
+name|mpt_tag_2_req
+parameter_list|(
+name|struct
+name|mpt_softc
+modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+specifier|static
+name|__inline
+name|request_t
+modifier|*
+name|mpt_tag_2_req
+parameter_list|(
+name|struct
+name|mpt_softc
+modifier|*
+name|mpt
+parameter_list|,
+name|uint32_t
+name|tag
+parameter_list|)
+block|{
+name|uint16_t
+name|rtg
+init|=
+operator|(
+name|tag
+operator|>>
+literal|16
+operator|)
+decl_stmt|;
+name|KASSERT
+argument_list|(
+name|rtg
+operator|<
+name|mpt
+operator|->
+name|tgt_cmds_allocated
+argument_list|,
+operator|(
+literal|"bad tag %d\n"
+operator|,
+name|tag
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|mpt
+operator|->
+name|tgt_cmd_ptrs
+argument_list|,
+operator|(
+literal|"no cmd backpointer array"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|mpt
+operator|->
+name|tgt_cmd_ptrs
+index|[
+name|rtg
+index|]
+argument_list|,
+operator|(
+literal|"no cmd backpointer"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|mpt
+operator|->
+name|tgt_cmd_ptrs
+index|[
+name|rtg
+index|]
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|MPT_ABORT_TASK_SET
+init|=
+literal|1234
+block|,
+name|MPT_CLEAR_TASK_SET
+block|,
+name|MPT_TARGET_RESET
+block|,
+name|MPT_CLEAR_ACA
+block|,
+name|MPT_TERMINATE_TASK
+block|,
+name|MPT_NIL_TMT_VALUE
+init|=
+literal|5678
+block|}
+name|mpt_task_mgmt_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/**************************** Unclassified Routines ***************************/

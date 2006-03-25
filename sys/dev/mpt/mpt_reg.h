@@ -321,7 +321,7 @@ value|(((v)& MPT_INTR_REPLY_READY) != 0)
 end_define
 
 begin_comment
-comment|/* Function Maps for INTERRUPT make register */
+comment|/* Function Maps for INTERRUPT mask register */
 end_comment
 
 begin_enum

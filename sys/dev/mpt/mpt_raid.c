@@ -69,6 +69,31 @@ directive|include
 file|<cam/cam_xpt_sim.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/devicestat.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|GIANT_REQUIRED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -984,11 +1009,13 @@ name|MaxPhysDisks
 operator|==
 literal|0
 condition|)
+block|{
 return|return
 operator|(
 name|ENODEV
 operator|)
 return|;
+block|}
 return|return
 operator|(
 literal|0
@@ -1853,13 +1880,25 @@ argument_list|(
 name|mpt
 argument_list|,
 literal|"Volume(%d:%d:%d: "
+argument_list|,
+name|raid_event
+operator|->
+name|VolumeBus
+argument_list|,
+name|raid_event
+operator|->
+name|VolumeID
+argument_list|,
+name|raid_event
+operator|->
+name|PhysDiskNum
 argument_list|)
 expr_stmt|;
 name|mpt_prtc
 argument_list|(
 name|mpt
 argument_list|,
-literal|"ASC 0x%x, ASCQ 0x%x\n"
+literal|"ASC 0x%x, ASCQ 0x%x)\n"
 argument_list|,
 name|raid_event
 operator|->
@@ -1909,7 +1948,9 @@ name|raid_mwce_setting
 operator|!=
 name|MPT_RAID_MWCE_REBUILD_ONLY
 condition|)
+block|{
 return|return;
+block|}
 name|mpt
 operator|->
 name|raid_mwce_setting
@@ -1947,6 +1988,9 @@ parameter_list|,
 name|request_t
 modifier|*
 name|req
+parameter_list|,
+name|uint32_t
+name|reply_desc
 parameter_list|,
 name|MSG_DEFAULT_REPLY
 modifier|*
@@ -2519,10 +2563,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Lock is not held on entry.  */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -2534,11 +2574,6 @@ modifier|*
 name|mpt
 parameter_list|)
 block|{
-name|MPT_LOCK
-argument_list|(
-name|mpt
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|mpt
@@ -2548,11 +2583,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|MPT_UNLOCK
-argument_list|(
-name|mpt
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 name|mpt
@@ -2583,11 +2613,6 @@ argument_list|,
 literal|"thtrm"
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|MPT_UNLOCK
-argument_list|(
-name|mpt
 argument_list|)
 expr_stmt|;
 block|}
@@ -3333,7 +3358,9 @@ operator|!
 name|mwce
 operator|)
 condition|)
+block|{
 return|return;
+block|}
 name|mpt_vol
 operator|->
 name|flags
@@ -5173,8 +5200,10 @@ name|ioc_page3
 operator|==
 name|NULL
 condition|)
+block|{
 return|return;
-comment|/* 	 * Mark all items as unreferrened by the configuration. 	 * This allows us to find, report, and discard stale 	 * entries. 	 */
+block|}
+comment|/* 	 * Mark all items as unreferenced by the configuration. 	 * This allows us to find, report, and discard stale 	 * entries. 	 */
 for|for
 control|(
 name|i
@@ -5192,6 +5221,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 name|mpt
 operator|->
 name|raid_disks
@@ -5204,6 +5234,7 @@ operator|&=
 operator|~
 name|MPT_RDF_REFERENCED
 expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -5221,6 +5252,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 name|mpt
 operator|->
 name|raid_volumes
@@ -5233,6 +5265,7 @@ operator|&=
 operator|~
 name|MPT_RVF_REFERENCED
 expr_stmt|;
+block|}
 comment|/* 	 * Get Physical Disk information. 	 */
 name|len
 operator|=
@@ -5955,6 +5988,11 @@ literal|"Low"
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
 name|mpt_vol_prt
 argument_list|(
 name|mpt
@@ -5975,6 +6013,30 @@ operator|)
 name|total
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|mpt_vol_prt
+argument_list|(
+name|mpt
+argument_list|,
+name|mpt_vol
+argument_list|,
+literal|"%llu of %llu "
+literal|"blocks remaining\n"
+argument_list|,
+operator|(
+name|uint64_t
+operator|)
+name|left
+argument_list|,
+operator|(
+name|uint64_t
+operator|)
+name|total
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Periodically report on sync progress. */
 name|mpt_schedule_raid_refresh
 argument_list|(
@@ -6384,7 +6446,9 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 continue|continue;
+block|}
 name|mpt_verify_resync_rate
 argument_list|(
 name|mpt
@@ -7105,6 +7169,11 @@ modifier|*
 name|mpt
 parameter_list|)
 block|{
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
 name|struct
 name|sysctl_ctx_list
 modifier|*
@@ -7238,6 +7307,8 @@ argument_list|,
 literal|"number of nonoptimal volumes"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
