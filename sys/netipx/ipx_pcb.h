@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1984, 1985, 1986, 1987, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1995, Mike Mitchell  * Copyright (c) 2004-2005 Robert N. M. Watson  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ipx_pcb.h  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1984, 1985, 1986, 1987, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1995, Mike Mitchell  * Copyright (c) 2004-2006 Robert N. M. Watson  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ipx_pcb.h  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -128,7 +128,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* possible flags */
+comment|/*  * IPX/SPX PCB flags.  */
 end_comment
 
 begin_define
@@ -139,7 +139,7 @@ value|0x1
 end_define
 
 begin_comment
-comment|/* calling abort through socket */
+comment|/* Calling abort through socket. */
 end_comment
 
 begin_define
@@ -150,7 +150,7 @@ value|0x2
 end_define
 
 begin_comment
-comment|/* show headers on input */
+comment|/* Show headers on input. */
 end_comment
 
 begin_define
@@ -161,7 +161,7 @@ value|0x4
 end_define
 
 begin_comment
-comment|/* show header on output */
+comment|/* Show header on output. */
 end_comment
 
 begin_define
@@ -172,7 +172,7 @@ value|0x8
 end_define
 
 begin_comment
-comment|/* Turn off higher proto processing */
+comment|/* Turn off higher proto processing. */
 end_comment
 
 begin_define
@@ -183,7 +183,18 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* use checksum on this socket */
+comment|/* Use checksum on this socket. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPXP_DROPPED
+value|0x20
+end_define
+
+begin_comment
+comment|/* Connection dropped. */
 end_comment
 
 begin_define
@@ -322,6 +333,18 @@ end_function_decl
 begin_function_decl
 name|void
 name|ipx_pcbdisconnect
+parameter_list|(
+name|struct
+name|ipxpcb
+modifier|*
+name|ipxp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ipx_pcbfree
 parameter_list|(
 name|struct
 name|ipxpcb
