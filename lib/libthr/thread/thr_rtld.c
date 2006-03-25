@@ -633,6 +633,12 @@ if|if
 condition|(
 name|l
 operator|->
+name|lock
+operator|==
+literal|0
+operator|&&
+name|l
+operator|->
 name|wr_waiters
 condition|)
 block|{
@@ -680,6 +686,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|l
+operator|->
+name|lock
+operator|==
+literal|0
+operator|&&
 name|l
 operator|->
 name|wr_waiters
