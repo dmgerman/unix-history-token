@@ -120,6 +120,67 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*   * In order to split out the keydb implementation from that of the  * PF_KEY sockets we need to define a few structures that while they  * may seem common are likely to diverge over time.   */
+end_comment
+
+begin_comment
+comment|/* sadb_identity */
+end_comment
+
+begin_struct
+struct|struct
+name|secident
+block|{
+name|u_int16_t
+name|type
+decl_stmt|;
+name|u_int64_t
+name|id
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* sadb_key */
+end_comment
+
+begin_struct
+struct|struct
+name|seckey
+block|{
+name|u_int16_t
+name|bits
+decl_stmt|;
+name|char
+modifier|*
+name|key_data
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|seclifetime
+block|{
+name|u_int32_t
+name|allocations
+decl_stmt|;
+name|u_int64_t
+name|bytes
+decl_stmt|;
+name|u_int64_t
+name|addtime
+decl_stmt|;
+name|u_int64_t
+name|usetime
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/* Security Association Data Base */
 end_comment
 
@@ -138,13 +199,13 @@ name|secasindex
 name|saidx
 decl_stmt|;
 name|struct
-name|sadb_ident
+name|secident
 modifier|*
 name|idents
 decl_stmt|;
 comment|/* source identity */
 name|struct
-name|sadb_ident
+name|secident
 modifier|*
 name|identd
 decl_stmt|;
@@ -250,13 +311,13 @@ name|flags
 decl_stmt|;
 comment|/* holder for SADB_KEY_FLAGS */
 name|struct
-name|sadb_key
+name|seckey
 modifier|*
 name|key_auth
 decl_stmt|;
 comment|/* Key for Authentication */
 name|struct
-name|sadb_key
+name|seckey
 modifier|*
 name|key_enc
 decl_stmt|;
@@ -288,19 +349,19 @@ name|created
 decl_stmt|;
 comment|/* for lifetime */
 name|struct
-name|sadb_lifetime
+name|seclifetime
 modifier|*
 name|lft_c
 decl_stmt|;
 comment|/* CURRENT lifetime, it's constant. */
 name|struct
-name|sadb_lifetime
+name|seclifetime
 modifier|*
 name|lft_h
 decl_stmt|;
 comment|/* HARD lifetime */
 name|struct
-name|sadb_lifetime
+name|seclifetime
 modifier|*
 name|lft_s
 decl_stmt|;

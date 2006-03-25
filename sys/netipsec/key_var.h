@@ -148,7 +148,7 @@ name|_KEYLEN
 parameter_list|(
 name|key
 parameter_list|)
-value|((u_int)((key)->sadb_key_bits>> 3))
+value|((u_int)((key)->bits>> 3))
 end_define
 
 begin_define
@@ -158,7 +158,7 @@ name|_KEYBITS
 parameter_list|(
 name|key
 parameter_list|)
-value|((u_int)((key)->sadb_key_bits))
+value|((u_int)((key)->bits))
 end_define
 
 begin_define
