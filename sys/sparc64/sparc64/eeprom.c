@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/ver.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/rman.h>
 end_include
 
@@ -463,7 +469,7 @@ goto|goto
 name|fail_res
 goto|;
 block|}
-comment|/* Our TOD clock year 0 is 1968 */
+comment|/* Our TOD clock year 0 is 1968. */
 name|sc
 operator|->
 name|sc_year0
@@ -476,6 +482,50 @@ operator|->
 name|sc_flag
 operator|=
 literal|0
+expr_stmt|;
+comment|/* 	 * Generally, if the `eeprom' node has a `watchdog-enable' property 	 * this indicates that the watchdog part of the MK48T59 is usable, 	 * i.e. its RST pin is connected to the WDR input of the CPUs or 	 * something. The `eeprom' nodes of E250, E450 and the clock board 	 * variant in Exx00 have such properties. For E250 and E450 the 	 * watchdog just works, for Exx00 the delivery of the reset signal 	 * apparently has to be additionally enabled elsewhere... 	 * The OFW environment variable `watchdog-reboot?' is ignored for 	 * these watchdogs as they always trigger a system reset when they 	 * time out and can't be made to issue a break to the boot monitor 	 * instead. 	 */
+if|if
+condition|(
+name|OF_getproplen
+argument_list|(
+name|ofw_bus_get_node
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+literal|"watchdog-enable"
+argument_list|)
+operator|!=
+operator|-
+literal|1
+operator|&&
+operator|(
+name|strcmp
+argument_list|(
+name|sparc64_model
+argument_list|,
+literal|"SUNW,Ultra-250"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|sparc64_model
+argument_list|,
+literal|"SUNW,Ultra-4"
+argument_list|)
+operator|==
+literal|0
+operator|)
+condition|)
+name|sc
+operator|->
+name|sc_flag
+operator||=
+name|MK48TXX_WDOG_REGISTER
+operator||
+name|MK48TXX_WDOG_ENABLE_WDS
 expr_stmt|;
 if|if
 condition|(
