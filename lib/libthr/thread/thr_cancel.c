@@ -246,6 +246,12 @@ name|SHOULD_CANCEL
 argument_list|(
 name|newval
 argument_list|)
+operator|&&
+operator|!
+name|THR_IN_CRITICAL
+argument_list|(
+name|curthread
+argument_list|)
 condition|)
 name|pthread_exit
 argument_list|(
