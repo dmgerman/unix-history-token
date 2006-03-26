@@ -878,6 +878,8 @@ name|TCPDEBUG
 if|if
 condition|(
 name|tp
+operator|!=
+name|NULL
 operator|&&
 operator|(
 name|tp
@@ -920,6 +922,8 @@ directive|endif
 if|if
 condition|(
 name|tp
+operator|!=
+name|NULL
 condition|)
 name|INP_UNLOCK
 argument_list|(
@@ -1646,6 +1650,8 @@ name|TCPDEBUG
 if|if
 condition|(
 name|tp
+operator|!=
+name|NULL
 operator|&&
 operator|(
 name|tp
@@ -1688,6 +1694,8 @@ directive|endif
 if|if
 condition|(
 name|tp
+operator|!=
+name|NULL
 condition|)
 name|INP_UNLOCK
 argument_list|(
@@ -1906,6 +1914,8 @@ name|TCPDEBUG
 if|if
 condition|(
 name|tp
+operator|!=
+name|NULL
 operator|&&
 name|tp
 operator|->
@@ -1946,6 +1956,8 @@ directive|endif
 if|if
 condition|(
 name|tp
+operator|!=
+name|NULL
 condition|)
 name|INP_UNLOCK
 argument_list|(
@@ -2462,6 +2474,8 @@ name|TCPDEBUG
 if|if
 condition|(
 name|tp
+operator|!=
+name|NULL
 operator|&&
 operator|(
 name|tp
@@ -2504,6 +2518,8 @@ directive|endif
 if|if
 condition|(
 name|tp
+operator|!=
+name|NULL
 condition|)
 name|INP_UNLOCK
 argument_list|(
