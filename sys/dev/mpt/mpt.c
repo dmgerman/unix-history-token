@@ -5293,7 +5293,7 @@ argument_list|(
 name|mpt
 argument_list|,
 literal|"reply length does not match message length: "
-literal|"got 0x%02x, expected 0x%02x\n"
+literal|"got 0x%02x, expected 0x%02zx\n"
 argument_list|,
 name|hdr
 operator|->
@@ -6834,7 +6834,7 @@ name|mpt
 argument_list|,
 name|MPT_PRT_DEBUG
 argument_list|,
-literal|"IOC Page 2 Header: ver %x, len %x, "
+literal|"IOC Page 2 Header: ver %x, len %zx, "
 literal|"num %x, type %x\n"
 argument_list|,
 name|hdr
