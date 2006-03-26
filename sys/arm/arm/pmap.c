@@ -10784,9 +10784,24 @@ name|vm_size_t
 name|size
 parameter_list|)
 block|{
-name|printf
+name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
-literal|"pmap_object_init_pt()\n"
+name|object
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|object
+operator|->
+name|type
+operator|==
+name|OBJT_DEVICE
+argument_list|,
+operator|(
+literal|"pmap_object_init_pt: non-device object"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
