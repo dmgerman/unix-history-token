@@ -200,6 +200,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IPXP_SPX
+value|0x40
+end_define
+
+begin_comment
+comment|/* SPX PCB. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IPX_WILDCARD
 value|1
 end_define
