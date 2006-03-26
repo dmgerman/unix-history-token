@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2005, Joseph Koshy  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2005-2006, Joseph Koshy  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -380,6 +380,10 @@ name|int
 name|pa_required
 decl_stmt|;
 comment|/* required features */
+name|int
+name|pa_verbosity
+decl_stmt|;
+comment|/* verbosity level */
 name|pid_t
 name|pa_pid
 decl_stmt|;
@@ -411,6 +415,11 @@ comment|/* log file parser */
 specifier|const
 name|char
 modifier|*
+name|pa_fsroot
+decl_stmt|;
+comment|/* FS root where executables reside */
+name|char
+modifier|*
 name|pa_kernel
 decl_stmt|;
 comment|/* pathname of the kernel */
@@ -420,6 +429,12 @@ modifier|*
 name|pa_samplesdir
 decl_stmt|;
 comment|/* directory for profile files */
+specifier|const
+name|char
+modifier|*
+name|pa_mapfilename
+decl_stmt|;
+comment|/* mapfile name */
 name|double
 name|pa_interval
 decl_stmt|;
@@ -486,7 +501,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|pmcstat_open
+name|pmcstat_open_log
 parameter_list|(
 specifier|const
 name|char
@@ -560,7 +575,10 @@ begin_function_decl
 name|void
 name|pmcstat_shutdown_logging
 parameter_list|(
-name|void
+name|struct
+name|pmcstat_args
+modifier|*
+name|_a
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -592,30 +610,6 @@ end_function_decl
 begin_function_decl
 name|int
 name|pmcstat_process_log
-parameter_list|(
-name|struct
-name|pmcstat_args
-modifier|*
-name|_a
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|pmcstat_print_log
-parameter_list|(
-name|struct
-name|pmcstat_args
-modifier|*
-name|_a
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|pmcstat_convert_log
 parameter_list|(
 name|struct
 name|pmcstat_args

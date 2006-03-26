@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2005 Joseph Koshy  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2005-2006, Joseph Koshy  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -25,6 +25,7 @@ begin_enum
 enum|enum
 name|pmclog_type
 block|{
+comment|/* V1 ABI */
 name|PMCLOG_TYPE_CLOSELOG
 block|,
 name|PMCLOG_TYPE_DROPNOTIFY
@@ -33,6 +34,7 @@ name|PMCLOG_TYPE_INITIALIZE
 block|,
 name|PMCLOG_TYPE_MAPPINGCHANGE
 block|,
+comment|/* unused in v1 */
 name|PMCLOG_TYPE_PCSAMPLE
 block|,
 name|PMCLOG_TYPE_PMCALLOCATE
@@ -52,6 +54,11 @@ block|,
 name|PMCLOG_TYPE_SYSEXIT
 block|,
 name|PMCLOG_TYPE_USERDATA
+block|,
+comment|/* 	 * V2 ABI 	 * 	 * The MAP_{IN,OUT} event types obsolete the MAPPING_CHANGE 	 * event type of the older (V1) ABI. 	 */
+name|PMCLOG_TYPE_MAP_IN
+block|,
+name|PMCLOG_TYPE_MAP_OUT
 block|}
 enum|;
 end_enum
@@ -63,12 +70,20 @@ name|PMCLOG_MAPPING_INSERT
 value|0x01
 end_define
 
+begin_comment
+comment|/* obsolete */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|PMCLOG_MAPPING_DELETE
 value|0x02
 end_define
+
+begin_comment
+comment|/* obsolete */
+end_comment
 
 begin_comment
 comment|/*  * A log entry descriptor comprises of a 32 bit header and a 64 bit  * time stamp followed by as many 32 bit words are required to record  * the event.  *  * Header field format:  *  *  31           24           16                                   0  *   +------------+------------+-----------------------------------+  *   |    MAGIC   |    TYPE    |               LENGTH              |  *   +------------+------------+-----------------------------------+  *  * MAGIC 	is the constant PMCLOG_HEADER_MAGIC.  * TYPE  	contains a value of type enum pmclog_type.  * LENGTH	contains the length of the event record, in bytes.  */
@@ -124,11 +139,34 @@ end_struct
 
 begin_struct
 struct|struct
-name|pmclog_mappingchange
+name|pmclog_map_in
 block|{
 name|PMCLOG_ENTRY_HEADER
 name|uint32_t
-name|pl_type
+name|pl_pid
+decl_stmt|;
+name|uintfptr_t
+name|pl_start
+decl_stmt|;
+comment|/* 8 byte aligned */
+name|char
+name|pl_pathname
+index|[
+name|PATH_MAX
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|pmclog_map_out
+block|{
+name|PMCLOG_ENTRY_HEADER
+name|uint32_t
+name|pl_pid
 decl_stmt|;
 name|uintfptr_t
 name|pl_start
@@ -136,15 +174,6 @@ decl_stmt|;
 comment|/* 8 byte aligned */
 name|uintfptr_t
 name|pl_end
-decl_stmt|;
-name|uint32_t
-name|pl_pid
-decl_stmt|;
-name|char
-name|pl_pathname
-index|[
-name|PATH_MAX
-index|]
 decl_stmt|;
 block|}
 name|__packed
@@ -357,6 +386,14 @@ name|pmclog_initialize
 name|pl_i
 decl_stmt|;
 name|struct
+name|pmclog_map_in
+name|pl_mi
+decl_stmt|;
+name|struct
+name|pmclog_map_out
+name|pl_mo
+decl_stmt|;
+name|struct
 name|pmclog_pcsample
 name|pl_s
 decl_stmt|;
@@ -535,7 +572,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|pmclog_process_mappingchange
+name|pmclog_process_map_in
 parameter_list|(
 name|struct
 name|pmc_owner
@@ -545,18 +582,34 @@ parameter_list|,
 name|pid_t
 name|pid
 parameter_list|,
-name|int
-name|type
+name|uintfptr_t
+name|start
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pmclog_process_map_out
+parameter_list|(
+name|struct
+name|pmc_owner
+modifier|*
+name|po
+parameter_list|,
+name|pid_t
+name|pid
 parameter_list|,
 name|uintfptr_t
 name|start
 parameter_list|,
 name|uintfptr_t
 name|end
-parameter_list|,
-name|char
-modifier|*
-name|path
 parameter_list|)
 function_decl|;
 end_function_decl

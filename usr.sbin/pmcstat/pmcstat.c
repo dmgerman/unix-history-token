@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003-2005, Joseph Koshy  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2003-2006, Joseph Koshy  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -87,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libgen.h>
 end_include
 
 begin_include
@@ -365,7 +371,9 @@ name|FLAG_HAS_OUTPUT_LOGFILE
 operator|)
 condition|)
 name|pmcstat_shutdown_logging
-argument_list|()
+argument_list|(
+name|a
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1214,6 +1222,7 @@ literal|"\t Options include:\n"
 literal|"\t -C\t\t (toggle) show cumulative counts\n"
 literal|"\t -D path\t create profiles in directory \"path\"\n"
 literal|"\t -E\t\t (toggle) show counts at process exit\n"
+literal|"\t -M file\t print executable/gmon file map to \"file\"\n"
 literal|"\t -O file\t send log output to \"file\"\n"
 literal|"\t -P spec\t allocate a process-private sampling PMC\n"
 literal|"\t -R file\t read events from \"file\"\n"
@@ -1222,12 +1231,15 @@ literal|"\t -W\t\t (toggle) show counts per context switch\n"
 literal|"\t -c cpu\t\t set cpu for subsequent system-wide PMCs\n"
 literal|"\t -d\t\t (toggle) track descendants\n"
 literal|"\t -g\t\t produce gprof(1) compatible profiles\n"
-literal|"\t -k file\t set the path to the kernel\n"
+literal|"\t -k dir\t set the path to the kernel\n"
 literal|"\t -n rate\t set sampling rate\n"
 literal|"\t -o file\t send print output to \"file\"\n"
 literal|"\t -p spec\t allocate a process-private counting PMC\n"
+literal|"\t -q\t\t suppress verbosity\n"
+literal|"\t -r fsroot\t specify FS root directory\n"
 literal|"\t -s spec\t allocate a system-wide counting PMC\n"
 literal|"\t -t pid\t\t attach to running process with pid \"pid\"\n"
+literal|"\t -v\t\t increase verbosity\n"
 literal|"\t -w secs\t set printing time interval"
 argument_list|)
 expr_stmt|;
@@ -1295,6 +1307,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|end
+decl_stmt|,
+modifier|*
+name|tmp
 decl_stmt|;
 specifier|const
 name|char
@@ -1331,6 +1346,12 @@ decl_stmt|;
 name|struct
 name|stat
 name|sb
+decl_stmt|;
+name|char
+name|buffer
+index|[
+name|PATH_MAX
+index|]
 decl_stmt|;
 name|check_driver_stats
 operator|=
@@ -1374,6 +1395,12 @@ literal|0
 expr_stmt|;
 name|args
 operator|.
+name|pa_verbosity
+operator|=
+literal|1
+expr_stmt|;
+name|args
+operator|.
 name|pa_pid
 operator|=
 operator|(
@@ -1391,15 +1418,24 @@ literal|1
 expr_stmt|;
 name|args
 operator|.
-name|pa_samplesdir
+name|pa_fsroot
 operator|=
-literal|"."
+literal|""
 expr_stmt|;
 name|args
 operator|.
 name|pa_kernel
 operator|=
-literal|"/boot/kernel/kernel"
+name|strdup
+argument_list|(
+literal|"/boot/kernel"
+argument_list|)
+expr_stmt|;
+name|args
+operator|.
+name|pa_samplesdir
+operator|=
+literal|"."
 expr_stmt|;
 name|args
 operator|.
@@ -1412,6 +1448,12 @@ operator|.
 name|pa_interval
 operator|=
 name|DEFAULT_WAIT_INTERVAL
+expr_stmt|;
+name|args
+operator|.
+name|pa_mapfilename
+operator|=
+name|NULL
 expr_stmt|;
 name|STAILQ_INIT
 argument_list|(
@@ -1458,7 +1500,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"CD:EO:P:R:S:Wc:dgk:n:o:p:s:t:w:"
+literal|"CD:EM:O:P:R:S:Wc:dgk:n:o:p:qr:s:t:vw:"
 argument_list|)
 operator|)
 operator|!=
@@ -1623,11 +1665,21 @@ case|case
 literal|'k'
 case|:
 comment|/* pathname to the kernel */
+name|free
+argument_list|(
+name|args
+operator|.
+name|pa_kernel
+argument_list|)
+expr_stmt|;
 name|args
 operator|.
 name|pa_kernel
 operator|=
+name|strdup
+argument_list|(
 name|optarg
+argument_list|)
 expr_stmt|;
 name|args
 operator|.
@@ -1662,6 +1714,17 @@ name|FLAG_HAS_COUNTING_PMCS
 operator||
 name|FLAG_HAS_OUTPUT_LOGFILE
 operator|)
+expr_stmt|;
+break|break;
+case|case
+literal|'M'
+case|:
+comment|/* mapfile */
+name|args
+operator|.
+name|pa_mapfilename
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -2138,6 +2201,28 @@ name|FLAG_HAS_OUTPUT_LOGFILE
 expr_stmt|;
 break|break;
 case|case
+literal|'q'
+case|:
+comment|/* quiet mode */
+name|args
+operator|.
+name|pa_verbosity
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'r'
+case|:
+comment|/* root FS path */
+name|args
+operator|.
+name|pa_fsroot
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
 literal|'R'
 case|:
 comment|/* read an existing log file */
@@ -2238,6 +2323,16 @@ operator|.
 name|pa_pid
 operator|=
 name|pid
+expr_stmt|;
+break|break;
+case|case
+literal|'v'
+case|:
+comment|/* verbose */
+name|args
+operator|.
+name|pa_verbosity
+operator|++
 expr_stmt|;
 break|break;
 case|case
@@ -2764,7 +2859,7 @@ literal|"ERROR: option -O is used only with options "
 literal|"-E, -P, -S and -W."
 argument_list|)
 expr_stmt|;
-comment|/* -D dir and -k kernel path require -g */
+comment|/* -D dir and -k kernel path require -g or -R */
 if|if
 condition|(
 operator|(
@@ -2776,7 +2871,6 @@ name|FLAG_HAS_KERNELPATH
 operator|)
 operator|&&
 operator|(
-operator|(
 name|args
 operator|.
 name|pa_flags
@@ -2785,13 +2879,22 @@ name|FLAG_DO_GPROF
 operator|)
 operator|==
 literal|0
+operator|&&
+operator|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_READ_LOGFILE
 operator|)
+operator|==
+literal|0
 condition|)
 name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: option -k is only used with -g."
+literal|"ERROR: option -k is only used with -g/-R."
 argument_list|)
 expr_stmt|;
 if|if
@@ -2805,6 +2908,41 @@ name|FLAG_HAS_SAMPLESDIR
 operator|)
 operator|&&
 operator|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_DO_GPROF
+operator|)
+operator|==
+literal|0
+operator|&&
+operator|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_READ_LOGFILE
+operator|)
+operator|==
+literal|0
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"ERROR: option -D is only used with -g/-R."
+argument_list|)
+expr_stmt|;
+comment|/* -M mapfile requires -g or -R */
+if|if
+condition|(
+name|args
+operator|.
+name|pa_mapfilename
+operator|!=
+name|NULL
+operator|&&
 operator|(
 name|args
 operator|.
@@ -2814,13 +2952,22 @@ name|FLAG_DO_GPROF
 operator|)
 operator|==
 literal|0
+operator|&&
+operator|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_READ_LOGFILE
 operator|)
+operator|==
+literal|0
 condition|)
 name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: option -D is only used with -g."
+literal|"ERROR: option -M is only used with -g/-R."
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Disallow textual output of sampling PMCs if counting PMCs 	 * have also been asked for, mostly because the combined output 	 * is difficult to make sense of. 	 */
@@ -2862,6 +3009,189 @@ literal|"ERROR: option -O is required if counting and "
 literal|"sampling PMCs are specified together."
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Check if "-k kerneldir" was specified, and if whether 'kerneldir' 	 * actually refers to a a file.  If so, use `dirname path` to determine 	 * the kernel directory. 	 */
+if|if
+condition|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_HAS_KERNELPATH
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|snprintf
+argument_list|(
+name|buffer
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buffer
+argument_list|)
+argument_list|,
+literal|"%s%s"
+argument_list|,
+name|args
+operator|.
+name|pa_fsroot
+argument_list|,
+name|args
+operator|.
+name|pa_kernel
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|stat
+argument_list|(
+name|buffer
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"ERROR: Cannot locate kernel \"%s\""
+argument_list|,
+name|buffer
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|S_ISREG
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+operator|&&
+operator|!
+name|S_ISDIR
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"ERROR: \"%s\": Unsupported file type."
+argument_list|,
+name|buffer
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|S_ISDIR
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+block|{
+name|tmp
+operator|=
+name|args
+operator|.
+name|pa_kernel
+expr_stmt|;
+name|args
+operator|.
+name|pa_kernel
+operator|=
+name|strdup
+argument_list|(
+name|dirname
+argument_list|(
+name|args
+operator|.
+name|pa_kernel
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|tmp
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|snprintf
+argument_list|(
+name|buffer
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buffer
+argument_list|)
+argument_list|,
+literal|"%s%s"
+argument_list|,
+name|args
+operator|.
+name|pa_fsroot
+argument_list|,
+name|args
+operator|.
+name|pa_kernel
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|stat
+argument_list|(
+name|buffer
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"ERROR: Cannot stat \"%s\""
+argument_list|,
+name|buffer
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|S_ISDIR
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"ERROR: \"%s\" is not a "
+literal|"directory."
+argument_list|,
+name|buffer
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* if we've been asked to process a log file, do that and exit */
 if|if
 condition|(
@@ -2904,7 +3234,7 @@ name|args
 operator|.
 name|pa_logfd
 operator|=
-name|pmcstat_open
+name|pmcstat_open_log
 argument_list|(
 name|args
 operator|.
@@ -2953,6 +3283,12 @@ literal|"ERROR: Cannot create parser"
 argument_list|)
 expr_stmt|;
 name|pmcstat_process_log
+argument_list|(
+operator|&
+name|args
+argument_list|)
+expr_stmt|;
+name|pmcstat_shutdown_logging
 argument_list|(
 operator|&
 name|args
@@ -3065,7 +3401,7 @@ name|args
 operator|.
 name|pa_logfd
 operator|=
-name|pmcstat_open
+name|pmcstat_open_log
 argument_list|(
 name|args
 operator|.
@@ -4286,6 +4622,13 @@ operator|&
 name|args
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|args
+operator|.
+name|pa_kernel
+argument_list|)
+expr_stmt|;
 comment|/* check if the driver lost any samples or events */
 if|if
 condition|(
@@ -4319,6 +4662,12 @@ operator|!=
 name|ds_end
 operator|.
 name|pm_intr_bufferfull
+operator|&&
+name|args
+operator|.
+name|pa_verbosity
+operator|>
+literal|0
 condition|)
 name|warnx
 argument_list|(
@@ -4336,6 +4685,12 @@ operator|!=
 name|ds_end
 operator|.
 name|pm_buffer_requests_failed
+operator|&&
+name|args
+operator|.
+name|pa_verbosity
+operator|>
+literal|0
 condition|)
 name|warnx
 argument_list|(
