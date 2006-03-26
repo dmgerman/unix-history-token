@@ -357,6 +357,16 @@ directive|define
 name|INP_ONESBCAST
 value|0x10
 comment|/* send all-ones broadcast */
+define|#
+directive|define
+name|INP_DROPPED
+value|0x20
+comment|/* protocol drop flag */
+define|#
+directive|define
+name|INP_SOCKREF
+value|0x40
+comment|/* strong socket reference */
 name|u_char
 name|inp_ip_ttl
 decl_stmt|;
