@@ -156,11 +156,12 @@ if|if
 condition|(
 name|__predict_false
 argument_list|(
+name|SHOULD_ASYNC_CANCEL
+argument_list|(
 name|curthread
 operator|->
 name|cancelflags
-operator|&
-name|THR_CANCEL_AT_POINT
+argument_list|)
 argument_list|)
 condition|)
 name|_pthread_testcancel
@@ -207,6 +208,13 @@ block|{
 name|umtx_t
 name|cycle
 decl_stmt|;
+name|int
+name|err
+decl_stmt|;
+name|err
+operator|=
+name|errno
+expr_stmt|;
 comment|/*  	 * Blocks SIGCANCEL which other threads must send. 	 */
 name|_thr_signal_block
 argument_list|(
@@ -352,6 +360,10 @@ name|_thr_signal_unblock
 argument_list|(
 name|curthread
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|err
 expr_stmt|;
 block|}
 end_function
