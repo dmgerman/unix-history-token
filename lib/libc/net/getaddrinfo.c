@@ -832,6 +832,10 @@ expr|struct
 name|addrinfo
 operator|*
 operator|*
+operator|,
+specifier|const
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3619,6 +3623,8 @@ parameter_list|,
 name|servname
 parameter_list|,
 name|res
+parameter_list|,
+name|canonname
 parameter_list|)
 specifier|const
 name|struct
@@ -3641,6 +3647,11 @@ name|addrinfo
 modifier|*
 modifier|*
 name|res
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|canonname
 decl_stmt|;
 block|{
 specifier|const
@@ -3785,6 +3796,28 @@ argument_list|,
 name|servname
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|pai
+operator|->
+name|ai_flags
+operator|&
+name|AI_CANONNAME
+operator|)
+condition|)
+block|{
+comment|/* 					 * Set the numeric address itself as 					 * the canonical name, based on a 					 * clarification in rfc3493. 					 */
+name|GET_CANONNAME
+argument_list|(
+name|cur
+operator|->
+name|ai_next
+argument_list|,
+name|canonname
+argument_list|)
+expr_stmt|;
+block|}
 while|while
 condition|(
 name|cur
@@ -3866,6 +3899,28 @@ argument_list|,
 name|servname
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|pai
+operator|->
+name|ai_flags
+operator|&
+name|AI_CANONNAME
+operator|)
+condition|)
+block|{
+comment|/* 					 * Set the numeric address itself as 					 * the canonical name, based on a 					 * clarification in rfc3493. 					 */
+name|GET_CANONNAME
+argument_list|(
+name|cur
+operator|->
+name|ai_next
+argument_list|,
+name|canonname
+argument_list|)
+expr_stmt|;
+block|}
 while|while
 condition|(
 name|cur
@@ -3987,6 +4042,8 @@ argument_list|,
 name|servname
 argument_list|,
 name|res
+argument_list|,
+name|hostname
 argument_list|)
 return|;
 else|#
@@ -4075,6 +4132,8 @@ argument_list|,
 name|servname
 argument_list|,
 name|res
+argument_list|,
+name|hostname
 argument_list|)
 return|;
 name|cp
@@ -4102,6 +4161,8 @@ argument_list|,
 name|servname
 argument_list|,
 name|res
+argument_list|,
+name|hostname
 argument_list|)
 return|;
 comment|/* 	 * Handle special case of<scoped_address><delimiter><scope id> 	 */
@@ -4152,6 +4213,8 @@ argument_list|,
 name|servname
 argument_list|,
 name|res
+argument_list|,
+name|hostname
 argument_list|)
 expr_stmt|;
 if|if
