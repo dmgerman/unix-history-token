@@ -8,7 +8,7 @@ comment|/* util.c -- readline utility functions */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1987, 1989, 1992 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
+comment|/* Copyright (C) 1987-2005 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
 end_comment
 
 begin_define
@@ -140,6 +140,12 @@ directive|include
 file|"rldefs.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"rlmbutil.h"
+end_include
+
 begin_if
 if|#
 directive|if
@@ -268,6 +274,68 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HANDLE_MULTIBYTE
+argument_list|)
+end_if
+
+begin_function
+name|int
+name|_rl_walphabetic
+parameter_list|(
+name|wc
+parameter_list|)
+name|wchar_t
+name|wc
+decl_stmt|;
+block|{
+name|int
+name|c
+decl_stmt|;
+if|if
+condition|(
+name|iswalnum
+argument_list|(
+name|wc
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+name|c
+operator|=
+name|wc
+operator|&
+literal|0177
+expr_stmt|;
+return|return
+operator|(
+name|_rl_allow_pathname_alphabetic_chars
+operator|&&
+name|strchr
+argument_list|(
+name|pathname_alphabetic_chars
+argument_list|,
+name|c
+argument_list|)
+operator|!=
+name|NULL
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* How to abort things. */
 end_comment
@@ -283,7 +351,7 @@ expr_stmt|;
 name|rl_clear_message
 argument_list|()
 expr_stmt|;
-name|_rl_init_argument
+name|_rl_reset_argument
 argument_list|()
 expr_stmt|;
 name|rl_clear_pending_input

@@ -8,7 +8,7 @@ comment|/* terminal.c -- controlling the terminal with termcap. */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1996 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
+comment|/* Copyright (C) 1996-2005 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
 end_comment
 
 begin_define
@@ -265,6 +265,12 @@ name|CUSTOM_INPUT_FUNC
 parameter_list|()
 value|(rl_getc_function != rl_getc)
 end_define
+
+begin_decl_stmt
+name|int
+name|rl_prefer_env_winsize
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* **************************************************************** */
@@ -663,6 +669,18 @@ comment|/* @7 */
 end_comment
 
 begin_comment
+comment|/* Delete key */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|_rl_term_kD
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Insert key */
 end_comment
 
@@ -858,6 +876,18 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* TIOCGWINSZ */
+name|int
+name|wr
+decl_stmt|,
+name|wc
+decl_stmt|;
+name|wr
+operator|=
+name|wc
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -879,7 +909,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|_rl_screenwidth
+name|wc
 operator|=
 operator|(
 name|int
@@ -888,7 +918,7 @@ name|window_size
 operator|.
 name|ws_col
 expr_stmt|;
-name|_rl_screenheight
+name|wr
 operator|=
 operator|(
 name|int
@@ -918,7 +948,33 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Environment variable COLUMNS overrides setting of "co" if IGNORE_ENV      is unset. */
+if|if
+condition|(
+name|ignore_env
+operator|||
+name|rl_prefer_env_winsize
+operator|==
+literal|0
+condition|)
+block|{
+name|_rl_screenwidth
+operator|=
+name|wc
+expr_stmt|;
+name|_rl_screenheight
+operator|=
+name|wr
+expr_stmt|;
+block|}
+else|else
+name|_rl_screenwidth
+operator|=
+name|_rl_screenheight
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* Environment variable COLUMNS overrides setting of "co" if IGNORE_ENV      is unset.  If we prefer the environment, check it first before      assigning the value returned by the kernel. */
 if|if
 condition|(
 name|_rl_screenwidth
@@ -947,6 +1003,16 @@ name|atoi
 argument_list|(
 name|ss
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|_rl_screenwidth
+operator|<=
+literal|0
+condition|)
+name|_rl_screenwidth
+operator|=
+name|wc
 expr_stmt|;
 if|#
 directive|if
@@ -1002,6 +1068,16 @@ name|atoi
 argument_list|(
 name|ss
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|_rl_screenheight
+operator|<=
+literal|0
+condition|)
+name|_rl_screenheight
+operator|=
+name|wr
 expr_stmt|;
 if|#
 directive|if
@@ -1092,18 +1168,20 @@ block|{
 if|if
 condition|(
 name|rows
-operator|==
-literal|0
-operator|||
-name|cols
-operator|==
+operator|>
 literal|0
 condition|)
-return|return;
 name|_rl_screenheight
 operator|=
 name|rows
 expr_stmt|;
+if|if
+condition|(
+name|cols
+operator|>
+literal|0
+condition|)
+block|{
 name|_rl_screenwidth
 operator|=
 name|cols
@@ -1117,6 +1195,17 @@ condition|)
 name|_rl_screenwidth
 operator|--
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|rows
+operator|>
+literal|0
+operator|||
+name|cols
+operator|>
+literal|0
+condition|)
 name|_rl_screenchars
 operator|=
 name|_rl_screenwidth
@@ -1189,6 +1278,24 @@ name|_rl_screenwidth
 expr_stmt|;
 block|}
 end_block
+
+begin_function
+name|void
+name|rl_reset_screen_size
+parameter_list|()
+block|{
+name|_rl_get_screen_size
+argument_list|(
+name|fileno
+argument_list|(
+name|rl_instream
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|void
@@ -1326,6 +1433,14 @@ operator|&
 name|_rl_term_im
 block|}
 block|,
+block|{
+literal|"kD"
+block|,
+operator|&
+name|_rl_term_kD
+block|}
+block|,
+comment|/* delete */
 block|{
 literal|"kH"
 block|,
@@ -1612,12 +1727,6 @@ argument_list|)
 else|:
 literal|0
 expr_stmt|;
-name|_rl_screenwidth
-operator|=
-name|_rl_screenheight
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|term
@@ -1725,6 +1834,18 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* used by _rl_get_screen_size */
+comment|/* Allow calling application to set default height and width, using 	 rl_set_screen_size */
+if|if
+condition|(
+name|_rl_screenwidth
+operator|<=
+literal|0
+operator|||
+name|_rl_screenheight
+operator|<=
+literal|0
+condition|)
+block|{
 if|#
 directive|if
 name|defined
@@ -1756,6 +1877,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* !__EMX__ */
+block|}
 comment|/* Defaults. */
 if|if
 condition|(
@@ -1835,6 +1957,8 @@ operator|=
 name|_rl_term_kH
 operator|=
 name|_rl_term_kI
+operator|=
+name|_rl_term_kD
 operator|=
 operator|(
 name|char
@@ -1960,6 +2084,17 @@ argument_list|(
 literal|"xn"
 argument_list|)
 expr_stmt|;
+comment|/* Allow calling application to set default height and width, using      rl_set_screen_size */
+if|if
+condition|(
+name|_rl_screenwidth
+operator|<=
+literal|0
+operator|||
+name|_rl_screenheight
+operator|<=
+literal|0
+condition|)
 name|_rl_get_screen_size
 argument_list|(
 name|tty
@@ -2109,6 +2244,13 @@ name|rl_end_of_line
 argument_list|)
 expr_stmt|;
 comment|/* End */
+name|rl_bind_keyseq_if_unbound
+argument_list|(
+name|_rl_term_kD
+argument_list|,
+name|rl_delete
+argument_list|)
+expr_stmt|;
 name|_rl_keymap
 operator|=
 name|xkeymap
@@ -2233,6 +2375,12 @@ modifier|*
 name|terminal_name
 decl_stmt|;
 block|{
+name|_rl_screenwidth
+operator|=
+name|_rl_screenheight
+operator|=
+literal|0
+expr_stmt|;
 name|_rl_init_terminal_io
 argument_list|(
 name|terminal_name
