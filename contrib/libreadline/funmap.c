@@ -911,6 +911,12 @@ name|rl_vi_replace
 block|}
 block|,
 block|{
+literal|"vi-rubout"
+block|,
+name|rl_vi_rubout
+block|}
+block|,
+block|{
 literal|"vi-search"
 block|,
 name|rl_vi_search

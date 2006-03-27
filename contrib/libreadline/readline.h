@@ -4,7 +4,7 @@ comment|/* Readline.h -- the names of functions callable from within readline. *
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1987-2004 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
+comment|/* Copyright (C) 1987-2005 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
 end_comment
 
 begin_if
@@ -73,8 +73,8 @@ comment|/* Hex-encoded Readline version number. */
 define|#
 directive|define
 name|RL_READLINE_VERSION
-value|0x0500
-comment|/* Readline 5.0 */
+value|0x0501
+comment|/* Readline 5.1 */
 define|#
 directive|define
 name|RL_VERSION_MAJOR
@@ -82,7 +82,7 @@ value|5
 define|#
 directive|define
 name|RL_VERSION_MINOR
-value|0
+value|1
 comment|/* Readline data structures. */
 comment|/* Maintaining the state of undo.  We remember individual deletes and inserts    on a chain of things to do. */
 comment|/* The actions that undo knows how to undo.  Notice that UNDO_DELETE means    to insert some text, and UNDO_INSERT means to delete some text.   I.e.,    the code tells undo what to undo, not how to undo it. */
@@ -1548,6 +1548,18 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|int
+name|rl_vi_rubout
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
 name|rl_vi_delete
 name|PARAMS
 argument_list|(
@@ -2078,6 +2090,19 @@ name|char
 operator|*
 operator|,
 name|Keymap
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|rl_variable_value
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2904,6 +2929,19 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|void
+name|rl_reset_screen_size
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|rl_get_termcap
@@ -3550,6 +3588,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* If non-zero, Readline gives values of LINES and COLUMNS from the environment    greater precedence than values fetched from the kernel when computing the    screen dimensions. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|rl_prefer_env_winsize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* If non-zero, then this is the address of a function to call just    before readline_internal () prints the first prompt. */
 end_comment
 
@@ -4121,7 +4170,7 @@ begin_define
 define|#
 directive|define
 name|RL_STATE_NONE
-value|0x00000
+value|0x000000
 end_define
 
 begin_comment
@@ -4132,7 +4181,7 @@ begin_define
 define|#
 directive|define
 name|RL_STATE_INITIALIZING
-value|0x00001
+value|0x000001
 end_define
 
 begin_comment
@@ -4143,7 +4192,7 @@ begin_define
 define|#
 directive|define
 name|RL_STATE_INITIALIZED
-value|0x00002
+value|0x000002
 end_define
 
 begin_comment
@@ -4154,7 +4203,7 @@ begin_define
 define|#
 directive|define
 name|RL_STATE_TERMPREPPED
-value|0x00004
+value|0x000004
 end_define
 
 begin_comment
@@ -4165,7 +4214,7 @@ begin_define
 define|#
 directive|define
 name|RL_STATE_READCMD
-value|0x00008
+value|0x000008
 end_define
 
 begin_comment
@@ -4176,7 +4225,7 @@ begin_define
 define|#
 directive|define
 name|RL_STATE_METANEXT
-value|0x00010
+value|0x000010
 end_define
 
 begin_comment
@@ -4187,7 +4236,7 @@ begin_define
 define|#
 directive|define
 name|RL_STATE_DISPATCHING
-value|0x00020
+value|0x000020
 end_define
 
 begin_comment
@@ -4198,7 +4247,7 @@ begin_define
 define|#
 directive|define
 name|RL_STATE_MOREINPUT
-value|0x00040
+value|0x000040
 end_define
 
 begin_comment
@@ -4209,7 +4258,7 @@ begin_define
 define|#
 directive|define
 name|RL_STATE_ISEARCH
-value|0x00080
+value|0x000080
 end_define
 
 begin_comment
@@ -4220,7 +4269,7 @@ begin_define
 define|#
 directive|define
 name|RL_STATE_NSEARCH
-value|0x00100
+value|0x000100
 end_define
 
 begin_comment
@@ -4231,7 +4280,7 @@ begin_define
 define|#
 directive|define
 name|RL_STATE_SEARCH
-value|0x00200
+value|0x000200
 end_define
 
 begin_comment
@@ -4242,7 +4291,7 @@ begin_define
 define|#
 directive|define
 name|RL_STATE_NUMERICARG
-value|0x00400
+value|0x000400
 end_define
 
 begin_comment
@@ -4253,7 +4302,7 @@ begin_define
 define|#
 directive|define
 name|RL_STATE_MACROINPUT
-value|0x00800
+value|0x000800
 end_define
 
 begin_comment
@@ -4264,7 +4313,7 @@ begin_define
 define|#
 directive|define
 name|RL_STATE_MACRODEF
-value|0x01000
+value|0x001000
 end_define
 
 begin_comment
@@ -4275,7 +4324,7 @@ begin_define
 define|#
 directive|define
 name|RL_STATE_OVERWRITE
-value|0x02000
+value|0x002000
 end_define
 
 begin_comment
@@ -4286,7 +4335,7 @@ begin_define
 define|#
 directive|define
 name|RL_STATE_COMPLETING
-value|0x04000
+value|0x004000
 end_define
 
 begin_comment
@@ -4297,7 +4346,7 @@ begin_define
 define|#
 directive|define
 name|RL_STATE_SIGHANDLER
-value|0x08000
+value|0x008000
 end_define
 
 begin_comment
@@ -4308,7 +4357,7 @@ begin_define
 define|#
 directive|define
 name|RL_STATE_UNDOING
-value|0x10000
+value|0x010000
 end_define
 
 begin_comment
@@ -4319,7 +4368,7 @@ begin_define
 define|#
 directive|define
 name|RL_STATE_INPUTPENDING
-value|0x20000
+value|0x020000
 end_define
 
 begin_comment
@@ -4330,7 +4379,7 @@ begin_define
 define|#
 directive|define
 name|RL_STATE_TTYCSAVED
-value|0x40000
+value|0x040000
 end_define
 
 begin_comment
@@ -4340,8 +4389,52 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RL_STATE_CALLBACK
+value|0x080000
+end_define
+
+begin_comment
+comment|/* using the callback interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RL_STATE_VIMOTION
+value|0x100000
+end_define
+
+begin_comment
+comment|/* reading vi motion arg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RL_STATE_MULTIKEY
+value|0x200000
+end_define
+
+begin_comment
+comment|/* reading multiple-key command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RL_STATE_VICMDONCE
+value|0x400000
+end_define
+
+begin_comment
+comment|/* entered vi command mode at least once */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RL_STATE_DONE
-value|0x80000
+value|0x800000
 end_define
 
 begin_comment

@@ -719,6 +719,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 if|#
 directive|if
 name|defined
@@ -755,7 +756,7 @@ name|mbstate_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* These produce warnings because we're passing a const string to a 	   function that takes a non-const string. */
+comment|/* These produce warnings because we're passing a const string to a 	     function that takes a non-const string. */
 name|_rl_adjust_point
 argument_list|(
 operator|(
@@ -802,7 +803,6 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-elseif|else
 endif|#
 directive|endif
 comment|/* HANDLE_MULTIBYTE */
@@ -861,6 +861,7 @@ literal|'?'
 operator|)
 condition|)
 break|break;
+block|}
 name|which
 operator|=
 name|i

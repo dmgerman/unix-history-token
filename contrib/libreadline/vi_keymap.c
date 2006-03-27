@@ -804,7 +804,7 @@ comment|/* W */
 block|{
 name|ISFUNC
 block|,
-name|rl_rubout
+name|rl_vi_rubout
 block|}
 block|,
 comment|/* X */
