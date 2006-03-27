@@ -9633,7 +9633,11 @@ name|hdr
 operator|->
 name|version
 operator|=
-name|EAPOL_VERSION
+name|hapd
+operator|->
+name|conf
+operator|->
+name|eapol_version
 expr_stmt|;
 name|hdr
 operator|->
