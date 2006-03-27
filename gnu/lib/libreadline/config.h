@@ -81,6 +81,50 @@ comment|/* #undef STAT_MACROS_BROKEN */
 end_comment
 
 begin_comment
+comment|/* Define if you have the fcntl function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FCNTL
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the getpwent function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETPWENT
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the getpwnam function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETPWNAM
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the getpwuid function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETPWUID
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the isascii function. */
 end_comment
 
@@ -99,6 +143,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_ISXDIGIT
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the kill function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_KILL
 value|1
 end_define
 
@@ -301,6 +356,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<fcntl.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FCNTL_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the<langinfo.h> header file.  */
 end_comment
 
@@ -351,6 +417,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_NDIR_H */
 end_comment
+
+begin_comment
+comment|/* Define if you have the<pwd.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_PWD_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the<stdarg.h> header file.  */
