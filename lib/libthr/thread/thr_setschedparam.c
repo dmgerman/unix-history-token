@@ -37,6 +37,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * Set a thread's scheduling parameters, this should be done  * in kernel, doing it in userland is no-op.  */
+end_comment
+
 begin_function
 name|int
 name|_pthread_setschedparam
@@ -61,17 +65,6 @@ name|curthread
 init|=
 name|_get_curthread
 argument_list|()
-decl_stmt|;
-name|int
-name|in_syncq
-decl_stmt|;
-name|int
-name|in_readyq
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|old_prio
 decl_stmt|;
 name|int
 name|ret
@@ -99,7 +92,6 @@ name|SCHED_RR
 operator|)
 condition|)
 block|{
-comment|/* Return an invalid argument error: */
 name|ret
 operator|=
 name|EINVAL
@@ -125,12 +117,10 @@ name|THR_MAX_PRIORITY
 operator|)
 condition|)
 block|{
-comment|/* Return an unsupported value error. */
 name|ret
 operator|=
 name|ENOTSUP
 expr_stmt|;
-comment|/* Find the thread in the list of active threads: */
 block|}
 elseif|else
 if|if
@@ -189,14 +179,6 @@ name|ESRCH
 operator|)
 return|;
 block|}
-name|in_syncq
-operator|=
-name|pthread
-operator|->
-name|sflags
-operator|&
-name|THR_FLAGS_IN_SYNCQ
-expr_stmt|;
 comment|/* Set the scheduling policy: */
 name|pthread
 operator|->
@@ -229,32 +211,6 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-comment|/* 			 * Remove the thread from its current priority 			 * queue before any adjustments are made to its 			 * active priority: 			 */
-name|old_prio
-operator|=
-name|pthread
-operator|->
-name|active_priority
-expr_stmt|;
-comment|/* if ((pthread->flags& THR_FLAGS_IN_RUNQ) != 0) */
-block|{
-name|in_readyq
-operator|=
-literal|1
-expr_stmt|;
-comment|/* THR_RUNQ_REMOVE(pthread); */
-block|}
-comment|/* Set the thread base priority: */
-name|pthread
-operator|->
-name|base_priority
-operator|&=
-operator|(
-name|THR_SIGNAL_PRIORITY
-operator||
-name|THR_RT_PRIORITY
-operator|)
-expr_stmt|;
 name|pthread
 operator|->
 name|base_priority
@@ -279,53 +235,11 @@ operator|->
 name|inherited_priority
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|in_readyq
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|pthread
-operator|->
-name|priority_mutex_count
-operator|>
-literal|0
-operator|)
-operator|&&
-operator|(
-name|old_prio
-operator|>
-name|pthread
-operator|->
-name|active_priority
-operator|)
-condition|)
-block|{
-comment|/* 					 * POSIX states that if the priority is 					 * being lowered, the thread must be 					 * inserted at the head of the queue for 					 * its priority if it owns any priority 					 * protection or inheritence mutexes. 					 */
-comment|/* THR_RUNQ_INSERT_HEAD(pthread); */
-block|}
-else|else
-comment|/* THR_RUNQ_INSERT_TAIL(pthread)*/
-empty_stmt|;
-block|}
-comment|/* Unlock the threads scheduling queue: */
 name|THR_THREAD_UNLOCK
 argument_list|(
 name|curthread
 argument_list|,
 name|pthread
-argument_list|)
-expr_stmt|;
-comment|/* 			 * Check for any mutex priority adjustments.  This 			 * includes checking for a priority mutex on which 			 * this thread is waiting. 			 */
-name|_mutex_notify_priochange
-argument_list|(
-name|curthread
-argument_list|,
-name|pthread
-argument_list|,
-name|in_syncq
 argument_list|)
 expr_stmt|;
 block|}

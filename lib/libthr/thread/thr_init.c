@@ -220,7 +220,7 @@ block|{
 operator|.
 name|sched_policy
 operator|=
-name|SCHED_RR
+name|SCHED_OTHER
 block|,
 operator|.
 name|sched_inherit
@@ -2021,14 +2021,6 @@ operator|&
 name|thread
 operator|->
 name|mutexq
-argument_list|)
-expr_stmt|;
-name|TAILQ_INIT
-argument_list|(
-operator|&
-name|thread
-operator|->
-name|pri_mutexq
 argument_list|)
 expr_stmt|;
 name|thread

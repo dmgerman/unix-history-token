@@ -880,17 +880,6 @@ block|}
 enum|;
 end_enum
 
-begin_union
-union|union
-name|pthread_wait_data
-block|{
-name|pthread_mutex_t
-name|mutex
-decl_stmt|;
-block|}
-union|;
-end_union
-
 begin_struct
 struct|struct
 name|pthread_specific_elem
@@ -944,18 +933,6 @@ begin_struct
 struct|struct
 name|pthread
 block|{
-comment|/* 	 * Magic value to help recognize a valid thread structure 	 * from an invalid one: 	 */
-define|#
-directive|define
-name|THR_MAGIC
-value|((u_int32_t) 0xd09ba115)
-name|u_int32_t
-name|magic
-decl_stmt|;
-comment|/* 	 * Lock for accesses to this thread structure. 	 */
-name|umtx_t
-name|lock
-decl_stmt|;
 comment|/* Kernel thread id. */
 name|long
 name|tid
@@ -964,6 +941,10 @@ define|#
 directive|define
 name|TID_TERMINATED
 value|1
+comment|/* 	 * Lock for accesses to this thread structure. 	 */
+name|umtx_t
+name|lock
+decl_stmt|;
 comment|/* Internal condition variable cycle number. */
 name|umtx_t
 name|cycle
@@ -1087,18 +1068,6 @@ argument|pthread
 argument_list|)
 name|sqe
 expr_stmt|;
-comment|/* Wait data. */
-name|union
-name|pthread_wait_data
-name|data
-decl_stmt|;
-name|int
-name|sflags
-decl_stmt|;
-define|#
-directive|define
-name|THR_FLAGS_IN_SYNCQ
-value|0x0001
 comment|/* Miscellaneous flags; only set with scheduling lock held. */
 name|int
 name|flags
@@ -1153,10 +1122,6 @@ comment|/* 	 * Active priority is always the maximum of the threads base 	 * pri
 name|char
 name|active_priority
 decl_stmt|;
-comment|/* Number of priority ceiling or protection mutexes owned. */
-name|int
-name|priority_mutex_count
-decl_stmt|;
 comment|/* Queue of currently owned simple type mutexes. */
 name|TAILQ_HEAD
 argument_list|(
@@ -1164,14 +1129,6 @@ argument_list|,
 argument|pthread_mutex
 argument_list|)
 name|mutexq
-expr_stmt|;
-comment|/* Queue of currently owned priority type mutexs. */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|pthread_mutex
-argument_list|)
-name|pri_mutexq
 expr_stmt|;
 name|void
 modifier|*
@@ -1204,6 +1161,14 @@ name|struct
 name|pthread_cleanup
 modifier|*
 name|cleanup
+decl_stmt|;
+comment|/* 	 * Magic value to help recognize a valid thread structure 	 * from an invalid one: 	 */
+define|#
+directive|define
+name|THR_MAGIC
+value|((u_int32_t) 0xd09ba115)
+name|u_int32_t
+name|magic
 decl_stmt|;
 comment|/* Enable event reporting */
 name|int
@@ -1486,16 +1451,6 @@ directive|define
 name|GC_NEEDED
 parameter_list|()
 value|(_gc_count>= 5)
-end_define
-
-begin_define
-define|#
-directive|define
-name|THR_IN_SYNCQ
-parameter_list|(
-name|thrd
-parameter_list|)
-value|(((thrd)->sflags& THR_FLAGS_IN_SYNCQ) != 0)
 end_define
 
 begin_define
@@ -1793,24 +1748,6 @@ name|_mutex_cv_unlock
 argument_list|(
 name|pthread_mutex_t
 operator|*
-argument_list|)
-name|__hidden
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|_mutex_notify_priochange
-argument_list|(
-expr|struct
-name|pthread
-operator|*
-argument_list|,
-expr|struct
-name|pthread
-operator|*
-argument_list|,
-name|int
 argument_list|)
 name|__hidden
 decl_stmt|;
@@ -2631,16 +2568,6 @@ argument_list|(
 expr|struct
 name|pthread
 operator|*
-argument_list|)
-name|__hidden
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|_thr_timer_init
-argument_list|(
-name|void
 argument_list|)
 name|__hidden
 decl_stmt|;
