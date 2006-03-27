@@ -1073,7 +1073,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/* 	 * For ACPI< 2.0, use the RSDT.  For ACPI>= 2.0, use the XSDT. 	 * We map the XSDT and RSDT at page 1 in the crashdump area. 	 * Page 0 is used to map in the headers of candidate ACPI tables. 	 */
+comment|/* 	 * For ACPI>= 2.0, use the XSDT if it is available. 	 * Otherwise, use the RSDT.  We map the XSDT or RSDT at page 1 	 * in the crashdump area.  Page 0 is used to map in the 	 * headers of candidate ACPI tables. 	 */
 if|if
 condition|(
 name|rsdp
@@ -1081,6 +1081,12 @@ operator|->
 name|Revision
 operator|>=
 literal|2
+operator|&&
+name|rsdp
+operator|->
+name|XsdtPhysicalAddress
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* 		 * AcpiOsGetRootPointer only verifies the checksum for 		 * the version 1.0 portion of the RSDP.  Version 2.0 has 		 * an additional checksum that we verify first. 		 */
