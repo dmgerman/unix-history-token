@@ -806,6 +806,27 @@ condition|)
 name|rl_do_undo
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VI_MODE
+argument_list|)
+if|if
+condition|(
+name|rl_editing_mode
+operator|==
+name|vi_mode
+condition|)
+name|rl_point
+operator|=
+name|rl_mark
+operator|=
+literal|0
+expr_stmt|;
+comment|/* rl_end should be set correctly */
+endif|#
+directive|endif
 block|}
 return|return
 literal|0

@@ -4,7 +4,7 @@ comment|/* history.c -- standalone history library */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1989-2003 Free Software Foundation, Inc.     This file contains the GNU History Library (the Library), a set of    routines for managing the text of previously typed lines.     The Library is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     The Library is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
+comment|/* Copyright (C) 1989-2005 Free Software Foundation, Inc.     This file contains the GNU History Library (the Library), a set of    routines for managing the text of previously typed lines.     The Library is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     The Library is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
 end_comment
 
 begin_comment
@@ -680,8 +680,9 @@ name|local_index
 operator|<
 literal|0
 operator|||
-operator|!
 name|the_history
+operator|==
+literal|0
 operator|)
 condition|?
 operator|(
@@ -1249,6 +1250,10 @@ decl_stmt|;
 if|if
 condition|(
 name|which
+operator|<
+literal|0
+operator|||
+name|which
 operator|>=
 name|history_length
 condition|)
@@ -1349,22 +1354,30 @@ decl_stmt|;
 if|if
 condition|(
 name|which
+operator|<
+literal|0
+operator|||
+name|which
 operator|>=
 name|history_length
 operator|||
-operator|!
 name|history_length
+operator|==
+literal|0
+operator|||
+name|the_history
+operator|==
+literal|0
 condition|)
-name|return_value
-operator|=
+return|return
+operator|(
 operator|(
 name|HIST_ENTRY
 operator|*
 operator|)
 name|NULL
-expr_stmt|;
-else|else
-block|{
+operator|)
+return|;
 name|return_value
 operator|=
 name|the_history
@@ -1400,7 +1413,6 @@ expr_stmt|;
 name|history_length
 operator|--
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|return_value

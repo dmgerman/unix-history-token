@@ -4,7 +4,7 @@ comment|/* input.c -- character input functions for readline. */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1994 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
+comment|/* Copyright (C) 1994-2005 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
 end_comment
 
 begin_define
@@ -1685,6 +1685,30 @@ condition|(
 literal|1
 condition|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__MINGW32__
+argument_list|)
+if|if
+condition|(
+name|isatty
+argument_list|(
+name|fileno
+argument_list|(
+name|stream
+argument_list|)
+argument_list|)
+condition|)
+return|return
+operator|(
+name|getch
+argument_list|()
+operator|)
+return|;
+endif|#
+directive|endif
 name|result
 operator|=
 name|read
@@ -1980,6 +2004,28 @@ operator|=
 name|ps_back
 expr_stmt|;
 continue|continue;
+block|}
+elseif|else
+if|if
+condition|(
+name|mbchar_bytes_length
+operator|==
+literal|0
+condition|)
+block|{
+name|mbchar
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* null wide character */
+name|mb_len
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 block|}
 elseif|else
 if|if

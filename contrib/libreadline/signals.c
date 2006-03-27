@@ -4,7 +4,7 @@ comment|/* signals.c -- signal handling support for readline. */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1987, 1989, 1992 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
+comment|/* Copyright (C) 1987-2005 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
 end_comment
 
 begin_define
@@ -591,6 +591,12 @@ argument_list|(
 name|HAVE_POSIX_SIGNALS
 argument_list|)
 comment|/* Since the signal will not be blocked while we are in the signal      handler, ignore it until rl_clear_signals resets the catcher. */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SIGALRM
+argument_list|)
 if|if
 condition|(
 name|sig
@@ -601,6 +607,16 @@ name|sig
 operator|==
 name|SIGALRM
 condition|)
+else|#
+directive|else
+if|if
+condition|(
+name|sig
+operator|==
+name|SIGINT
+condition|)
+endif|#
+directive|endif
 name|rl_set_sighandler
 argument_list|(
 name|sig
@@ -626,6 +642,9 @@ name|rl_free_line_state
 argument_list|()
 expr_stmt|;
 comment|/* FALLTHROUGH */
+case|case
+name|SIGTERM
+case|:
 if|#
 directive|if
 name|defined
@@ -644,15 +663,28 @@ case|:
 endif|#
 directive|endif
 comment|/* SIGTSTP */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SIGALRM
+argument_list|)
 case|case
 name|SIGALRM
 case|:
-case|case
-name|SIGTERM
-case|:
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SIGQUIT
+argument_list|)
 case|case
 name|SIGQUIT
 case|:
+endif|#
+directive|endif
 name|rl_cleanup_after_signal
 argument_list|()
 expr_stmt|;
@@ -721,6 +753,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_KILL
+argument_list|)
 name|kill
 argument_list|(
 name|getpid
@@ -729,6 +767,16 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|raise
+argument_list|(
+name|sig
+argument_list|)
+expr_stmt|;
+comment|/* assume we have raise */
+endif|#
+directive|endif
 comment|/* Let the signal that we just sent through.  */
 if|#
 directive|if
@@ -1229,6 +1277,12 @@ operator|&
 name|old_term
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SIGQUIT
+argument_list|)
 name|rl_maybe_set_sighandler
 argument_list|(
 name|SIGQUIT
@@ -1239,6 +1293,14 @@ operator|&
 name|old_quit
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SIGALRM
+argument_list|)
 name|oh
 operator|=
 name|rl_set_sighandler
@@ -1316,6 +1378,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* HAVE_POSIX_SIGNALS */
+endif|#
+directive|endif
+comment|/* SIGALRM */
 if|#
 directive|if
 name|defined
@@ -1464,6 +1529,12 @@ operator|&
 name|dummy
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SIGQUIT
+argument_list|)
 name|rl_sigaction
 argument_list|(
 name|SIGQUIT
@@ -1475,6 +1546,14 @@ operator|&
 name|dummy
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SIGALRM
+argument_list|)
 name|rl_sigaction
 argument_list|(
 name|SIGALRM
@@ -1486,6 +1565,8 @@ operator|&
 name|dummy
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined
@@ -1610,6 +1691,10 @@ block|{
 name|_rl_clean_up_for_exit
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|rl_deprep_term_function
+condition|)
 call|(
 modifier|*
 name|rl_deprep_term_function
@@ -1634,6 +1719,10 @@ name|void
 name|rl_reset_after_signal
 parameter_list|()
 block|{
+if|if
+condition|(
+name|rl_prep_term_function
+condition|)
 call|(
 modifier|*
 name|rl_prep_term_function
@@ -1690,7 +1779,7 @@ expr_stmt|;
 name|rl_clear_message
 argument_list|()
 expr_stmt|;
-name|_rl_init_argument
+name|_rl_reset_argument
 argument_list|()
 expr_stmt|;
 block|}

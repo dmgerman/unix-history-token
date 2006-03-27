@@ -142,6 +142,25 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
+comment|/* Find the portion of the string beginning with ~ that should be expanded. */
+specifier|extern
+name|char
+modifier|*
+name|tilde_find_word
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|__cplusplus
