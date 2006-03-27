@@ -1829,7 +1829,7 @@ condition|(
 name|cb
 operator|==
 name|NULL
-operator|&&
+operator|||
 operator|(
 name|cb
 operator|->
