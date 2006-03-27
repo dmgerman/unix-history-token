@@ -1130,6 +1130,14 @@ operator|*
 operator|)
 name|NULL
 expr_stmt|;
+name|rl_display_prompt
+operator|=
+name|rl_prompt
+condition|?
+name|rl_prompt
+else|:
+literal|""
+expr_stmt|;
 name|rl_visible_prompt_length
 operator|=
 name|rl_expand_prompt
@@ -2608,8 +2616,6 @@ argument_list|(
 name|RL_STATE_DISPATCHING
 argument_list|)
 expr_stmt|;
-name|r
-operator|=
 operator|(
 operator|*
 name|map

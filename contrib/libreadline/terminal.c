@@ -542,6 +542,9 @@ end_comment
 begin_decl_stmt
 name|int
 name|_rl_term_autowrap
+init|=
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1161,6 +1164,18 @@ decl_stmt|,
 name|cols
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|_rl_term_autowrap
+operator|==
+operator|-
+literal|1
+condition|)
+name|_rl_init_terminal_io
+argument_list|(
+name|rl_terminal_name
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rows
