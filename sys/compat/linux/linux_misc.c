@@ -6840,9 +6840,9 @@ name|error
 operator|=
 name|suser_cred
 argument_list|(
-name|p
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)
