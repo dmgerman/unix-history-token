@@ -3854,9 +3854,6 @@ decl_stmt|,
 name|key
 decl_stmt|;
 block|{
-name|int
-name|r
-decl_stmt|;
 if|if
 condition|(
 name|count
@@ -3928,8 +3925,6 @@ argument_list|,
 name|key
 argument_list|)
 expr_stmt|;
-name|r
-operator|=
 name|rl_kill_text
 argument_list|(
 name|orig_point
@@ -3941,9 +3936,6 @@ name|rl_point
 operator|=
 name|orig_point
 expr_stmt|;
-return|return
-name|r
-return|;
 block|}
 else|else
 block|{
@@ -3963,17 +3955,17 @@ argument_list|,
 name|MB_FIND_NONZERO
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
 name|rl_delete_text
 argument_list|(
 name|rl_point
 argument_list|,
 name|new_point
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
