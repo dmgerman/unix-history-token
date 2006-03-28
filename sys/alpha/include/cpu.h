@@ -233,7 +233,8 @@ begin_define
 define|#
 directive|define
 name|get_cyclecount
-value|alpha_rpcc
+parameter_list|()
+value|read_cycle_count()
 end_define
 
 begin_function_decl
@@ -266,6 +267,15 @@ end_function_decl
 begin_comment
 comment|/* MAGIC */
 end_comment
+
+begin_function_decl
+name|uint64_t
+name|read_cycle_count
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
