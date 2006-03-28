@@ -893,6 +893,7 @@ modifier|*
 name|__restrict
 name|sem
 parameter_list|,
+specifier|const
 name|struct
 name|timespec
 modifier|*
