@@ -990,6 +990,12 @@ if|if
 condition|(
 name|sz
 operator|->
+name|sz_max
+operator|>
+literal|0
+operator|&&
+name|sz
+operator|->
 name|sz_inuse
 operator|==
 name|sz
