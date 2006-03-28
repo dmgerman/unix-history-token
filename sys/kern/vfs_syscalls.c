@@ -4899,6 +4899,8 @@ argument_list|,
 name|FOLLOW
 operator||
 name|AUDITVNODE1
+operator||
+name|MPSAFE
 argument_list|,
 name|pathseg
 argument_list|,
