@@ -14518,6 +14518,59 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
+comment|/*  * Begin non-standard functions.  */
+end_comment
+
+begin_function
+name|size_t
+name|malloc_usable_size
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|ptr
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|ptr
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ptr
+operator|==
+operator|&
+name|nil
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+else|else
+return|return
+operator|(
+name|isalloc
+argument_list|(
+name|ptr
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * End non-standard functions.  */
+end_comment
+
+begin_comment
+comment|/******************************************************************************/
+end_comment
+
+begin_comment
 comment|/*  * Begin library-private functions, used by threading libraries for protection  * of malloc during fork().  These functions are only called if the program is  * running in threaded mode, so there is no need to check whether the program  * is threaded here.  */
 end_comment
 
