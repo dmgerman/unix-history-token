@@ -1668,126 +1668,236 @@ begin_define
 define|#
 directive|define
 name|atomic_set_ptr
-value|atomic_set_int
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|atomic_set_int((volatile u_int *)(p), (u_int)(v))
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_set_acq_ptr
-value|atomic_set_acq_int
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|atomic_set_acq_int((volatile u_int *)(p), (u_int)(v))
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_set_rel_ptr
-value|atomic_set_rel_int
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|atomic_set_rel_int((volatile u_int *)(p), (u_int)(v))
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_clear_ptr
-value|atomic_clear_int
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|atomic_clear_int((volatile u_int *)(p), (u_int)(v))
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_clear_acq_ptr
-value|atomic_clear_acq_int
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|atomic_clear_acq_int((volatile u_int *)(p), (u_int)(v))
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_clear_rel_ptr
-value|atomic_clear_rel_int
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|atomic_clear_rel_int((volatile u_int *)(p), (u_int)(v))
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_add_ptr
-value|atomic_add_int
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|atomic_add_int((volatile u_int *)(p), (u_int)(v))
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_add_acq_ptr
-value|atomic_add_acq_int
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|atomic_add_acq_int((volatile u_int *)(p), (u_int)(v))
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_add_rel_ptr
-value|atomic_add_rel_int
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|atomic_add_rel_int((volatile u_int *)(p), (u_int)(v))
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_subtract_ptr
-value|atomic_subtract_int
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|atomic_subtract_int((volatile u_int *)(p), (u_int)(v))
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_subtract_acq_ptr
-value|atomic_subtract_acq_int
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|atomic_subtract_acq_int((volatile u_int *)(p), (u_int)(v))
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_subtract_rel_ptr
-value|atomic_subtract_rel_int
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|atomic_subtract_rel_int((volatile u_int *)(p), (u_int)(v))
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_load_acq_ptr
-value|atomic_load_acq_int
+parameter_list|(
+name|p
+parameter_list|)
+define|\
+value|atomic_load_acq_int((volatile u_int *)(p))
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_store_rel_ptr
-value|atomic_store_rel_int
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|atomic_store_rel_int((volatile u_int *)(p), (v))
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_cmpset_ptr
-value|atomic_cmpset_int
+parameter_list|(
+name|dst
+parameter_list|,
+name|old
+parameter_list|,
+name|new
+parameter_list|)
+define|\
+value|atomic_cmpset_int((volatile u_int *)(dst), (u_int)(old), (u_int)(new))
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_cmpset_acq_ptr
-value|atomic_cmpset_acq_int
+parameter_list|(
+name|dst
+parameter_list|,
+name|old
+parameter_list|,
+name|new
+parameter_list|)
+define|\
+value|atomic_cmpset_acq_int((volatile u_int *)(dst), (u_int)(old), (u_int)(new))
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_cmpset_rel_ptr
-value|atomic_cmpset_rel_int
+parameter_list|(
+name|dst
+parameter_list|,
+name|old
+parameter_list|,
+name|new
+parameter_list|)
+define|\
+value|atomic_cmpset_rel_int((volatile u_int *)(dst), (u_int)(old), (u_int)(new))
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_readandclear_ptr
-value|atomic_readandclear_int
+parameter_list|(
+name|p
+parameter_list|)
+define|\
+value|atomic_readandclear_int((volatile u_int *)(p))
 end_define
 
 begin_endif
