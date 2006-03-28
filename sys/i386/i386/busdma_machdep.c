@@ -4558,7 +4558,7 @@ name|total_bpages
 argument_list|,
 literal|0
 argument_list|,
-literal|"Totoal bounce pages"
+literal|"Total bounce pages"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_INT
