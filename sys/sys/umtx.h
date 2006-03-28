@@ -91,40 +91,8 @@ name|_KERNEL
 end_ifndef
 
 begin_comment
-comment|/*  * System calls for acquiring and releasing contested mutexes.  */
+comment|/*  * System call for userland mutex operations.  */
 end_comment
-
-begin_comment
-comment|/* deprecated becaues it can only use thread id */
-end_comment
-
-begin_function_decl
-name|int
-name|_umtx_lock
-parameter_list|(
-name|struct
-name|umtx
-modifier|*
-name|mtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* deprecated becaues it can only use thread id */
-end_comment
-
-begin_function_decl
-name|int
-name|_umtx_unlock
-parameter_list|(
-name|struct
-name|umtx
-modifier|*
-name|mtx
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|int
@@ -145,10 +113,37 @@ name|void
 modifier|*
 name|uaddr
 parameter_list|,
-specifier|const
 name|void
 modifier|*
 name|uaddr2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Old (deprecated) userland mutex system calls.  */
+end_comment
+
+begin_function_decl
+name|int
+name|_umtx_lock
+parameter_list|(
+name|struct
+name|umtx
+modifier|*
+name|mtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_umtx_unlock
+parameter_list|(
+name|struct
+name|umtx
+modifier|*
+name|mtx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -377,7 +372,13 @@ name|id
 argument_list|,
 literal|0
 argument_list|,
+name|__DECONST
+argument_list|(
+name|void
+operator|*
+argument_list|,
 name|timeout
+argument_list|)
 argument_list|)
 operator|==
 operator|-
@@ -491,7 +492,13 @@ name|id
 argument_list|,
 literal|0
 argument_list|,
+name|__DECONST
+argument_list|(
+name|void
+operator|*
+argument_list|,
 name|timeout
+argument_list|)
 argument_list|)
 operator|==
 operator|-
