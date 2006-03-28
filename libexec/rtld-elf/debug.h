@@ -96,12 +96,9 @@ define|#
 directive|define
 name|dbg
 parameter_list|(
-name|format
-parameter_list|,
-name|args
 modifier|...
 parameter_list|)
-value|debug_printf(format , ## args)
+value|debug_printf(__VA_ARGS__)
 end_define
 
 begin_else
@@ -114,9 +111,6 @@ define|#
 directive|define
 name|dbg
 parameter_list|(
-name|format
-parameter_list|,
-name|args
 modifier|...
 parameter_list|)
 value|((void) 0)
