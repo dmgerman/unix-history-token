@@ -13094,8 +13094,10 @@ argument_list|)
 expr_stmt|;
 name|tls
 operator|=
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 name|size
 operator|+
 name|tcbsize
