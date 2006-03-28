@@ -1602,7 +1602,7 @@ name|objs
 argument_list|,
 literal|0
 argument_list|,
-literal|2
+literal|3
 operator|*
 sizeof|sizeof
 argument_list|(

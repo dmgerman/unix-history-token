@@ -12580,8 +12580,10 @@ name|tls_static_space
 expr_stmt|;
 name|tls
 operator|=
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 name|size
 argument_list|)
 expr_stmt|;

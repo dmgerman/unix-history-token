@@ -503,8 +503,10 @@ name|tcbsize
 expr_stmt|;
 name|tls
 operator|=
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
@@ -793,8 +795,10 @@ argument_list|)
 expr_stmt|;
 name|tls
 operator|=
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 name|size
 operator|+
 name|tcbsize
@@ -1342,7 +1346,7 @@ name|_rtld_allocate_tls
 argument_list|(
 name|NULL
 argument_list|,
-literal|2
+literal|3
 operator|*
 sizeof|sizeof
 argument_list|(

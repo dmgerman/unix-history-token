@@ -1394,7 +1394,7 @@ name|objs
 argument_list|,
 name|NULL
 argument_list|,
-literal|2
+literal|3
 operator|*
 sizeof|sizeof
 argument_list|(
