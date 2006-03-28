@@ -19216,6 +19216,7 @@ operator|*
 argument_list|)
 index|]
 decl_stmt|;
+specifier|const
 name|void
 modifier|*
 name|uaddr2

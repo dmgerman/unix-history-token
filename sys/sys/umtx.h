@@ -145,6 +145,7 @@ name|void
 modifier|*
 name|uaddr
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|uaddr2
@@ -376,10 +377,6 @@ name|id
 argument_list|,
 literal|0
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|timeout
 argument_list|)
 operator|==
@@ -494,10 +491,6 @@ name|id
 argument_list|,
 literal|0
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|timeout
 argument_list|)
 operator|==
