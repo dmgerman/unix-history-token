@@ -223,7 +223,7 @@ name|pthread_barrierattr_t
 modifier|*
 name|attr
 parameter_list|,
-name|int
+name|unsigned
 name|count
 parameter_list|)
 block|{
