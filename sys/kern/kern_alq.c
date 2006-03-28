@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mutex.h>
 end_include
 
@@ -694,12 +700,6 @@ name|alq
 modifier|*
 name|alq
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|ald_thread
 operator|=
 name|FIRST_THREAD_IN_PROC
@@ -1014,6 +1014,9 @@ decl_stmt|;
 name|int
 name|iov
 decl_stmt|;
+name|int
+name|vfslocked
+decl_stmt|;
 name|vp
 operator|=
 name|alq
@@ -1230,6 +1233,15 @@ operator|=
 name|td
 expr_stmt|;
 comment|/* 	 * Do all of the junk required to write now. 	 */
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
+argument_list|(
+name|vp
+operator|->
+name|v_mount
+argument_list|)
+expr_stmt|;
 name|vn_start_write
 argument_list|(
 name|vp
@@ -1313,6 +1325,11 @@ expr_stmt|;
 name|vn_finished_write
 argument_list|(
 name|mp
+argument_list|)
+expr_stmt|;
+name|VFS_UNLOCK_GIANT
+argument_list|(
+name|vfslocked
 argument_list|)
 expr_stmt|;
 name|ALQ_LOCK
@@ -1492,6 +1509,8 @@ name|error
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|vfslocked
 decl_stmt|;
 operator|*
 name|alqp
@@ -1510,6 +1529,8 @@ argument_list|,
 name|LOOKUP
 argument_list|,
 name|NOFOLLOW
+operator||
+name|MPSAFE
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
@@ -1553,6 +1574,14 @@ operator|(
 name|error
 operator|)
 return|;
+name|vfslocked
+operator|=
+name|NDHASGIANT
+argument_list|(
+operator|&
+name|nd
+argument_list|)
+expr_stmt|;
 name|NDFREE
 argument_list|(
 operator|&
@@ -1571,6 +1600,11 @@ argument_list|,
 literal|0
 argument_list|,
 name|td
+argument_list|)
+expr_stmt|;
+name|VFS_UNLOCK_GIANT
+argument_list|(
+name|vfslocked
 argument_list|)
 expr_stmt|;
 name|alq
