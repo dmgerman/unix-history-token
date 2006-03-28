@@ -534,11 +534,11 @@ switch|switch
 condition|(
 name|r
 operator|&
-literal|0xc0
+name|CLK_STS1_SLOTS_MASK
 condition|)
 block|{
 case|case
-literal|0x40
+name|CLK_STS1_SLOTS_16
 case|:
 name|slots
 operator|=
@@ -546,7 +546,7 @@ literal|16
 expr_stmt|;
 break|break;
 case|case
-literal|0xc0
+name|CLK_STS1_SLOTS_8
 case|:
 name|slots
 operator|=
@@ -554,7 +554,7 @@ literal|8
 expr_stmt|;
 break|break;
 case|case
-literal|0x80
+name|CLK_STS1_SLOTS_4
 case|:
 if|if
 condition|(
@@ -583,7 +583,7 @@ index|[
 name|CLKBRD_CLKVER
 index|]
 argument_list|,
-literal|0
+name|CLKVER_SLOTS
 argument_list|)
 expr_stmt|;
 if|if
@@ -595,10 +595,10 @@ operator|&&
 operator|(
 name|r
 operator|&
-literal|0x80
+name|CLKVER_SLOTS_MASK
 operator|)
 operator|==
-literal|0
+name|CLKVER_SLOTS_PLUS
 condition|)
 name|slots
 operator|=
