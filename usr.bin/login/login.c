@@ -1544,6 +1544,10 @@ expr_stmt|;
 name|failures
 operator|++
 expr_stmt|;
+name|pwd
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* 		 * Allow up to 'retry' (10) attempts, but start 		 * backing off after 'backoff' (3) attempts. 		 */
 if|if
 condition|(
@@ -4104,6 +4108,12 @@ block|{
 name|pam_cleanup
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|pwd
+operator|!=
+name|NULL
+condition|)
 name|audit_logout
 argument_list|()
 expr_stmt|;
