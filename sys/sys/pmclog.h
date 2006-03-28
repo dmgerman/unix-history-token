@@ -63,28 +63,6 @@ block|}
 enum|;
 end_enum
 
-begin_define
-define|#
-directive|define
-name|PMCLOG_MAPPING_INSERT
-value|0x01
-end_define
-
-begin_comment
-comment|/* obsolete */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PMCLOG_MAPPING_DELETE
-value|0x02
-end_define
-
-begin_comment
-comment|/* obsolete */
-end_comment
-
 begin_comment
 comment|/*  * A log entry descriptor comprises of a 32 bit header and a 64 bit  * time stamp followed by as many 32 bit words are required to record  * the event.  *  * Header field format:  *  *  31           24           16                                   0  *   +------------+------------+-----------------------------------+  *   |    MAGIC   |    TYPE    |               LENGTH              |  *   +------------+------------+-----------------------------------+  *  * MAGIC 	is the constant PMCLOG_HEADER_MAGIC.  * TYPE  	contains a value of type enum pmclog_type.  * LENGTH	contains the length of the event record, in bytes.  */
 end_comment

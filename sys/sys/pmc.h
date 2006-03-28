@@ -1177,13 +1177,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|PMC_REQUEST_POOL_SIZE
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
 name|PMC_HASH_SIZE
 value|16
 end_define
