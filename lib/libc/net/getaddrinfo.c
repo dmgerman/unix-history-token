@@ -11541,10 +11541,6 @@ directive|endif
 if|if
 condition|(
 name|n
-operator|<
-literal|0
-operator|||
-name|n
 operator|>
 name|anslen
 condition|)
@@ -11557,6 +11553,10 @@ expr_stmt|;
 comment|/* XXX not very informative */
 if|if
 condition|(
+name|n
+operator|<
+literal|0
+operator|||
 name|hp
 operator|->
 name|rcode
@@ -11978,6 +11978,19 @@ case|case
 name|HOST_NOT_FOUND
 case|:
 break|break;
+case|case
+name|TRY_AGAIN
+case|:
+if|if
+condition|(
+name|hp
+operator|->
+name|rcode
+operator|==
+name|SERVFAIL
+condition|)
+break|break;
+comment|/* FALLTHROUGH */
 default|default:
 return|return
 operator|(
@@ -12166,6 +12179,9 @@ break|break;
 case|case
 name|TRY_AGAIN
 case|:
+name|got_servfail
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|hp
@@ -12176,9 +12192,6 @@ name|SERVFAIL
 condition|)
 block|{
 comment|/* try next search element, if any */
-name|got_servfail
-operator|++
-expr_stmt|;
 break|break;
 block|}
 comment|/* FALLTHROUGH */
@@ -12217,6 +12230,19 @@ case|case
 name|HOST_NOT_FOUND
 case|:
 break|break;
+case|case
+name|TRY_AGAIN
+case|:
+if|if
+condition|(
+name|hp
+operator|->
+name|rcode
+operator|==
+name|SERVFAIL
+condition|)
+break|break;
+comment|/* FALLTHROUGH */
 default|default:
 goto|goto
 name|giveup
