@@ -400,6 +400,9 @@ name|printf
 argument_list|(
 literal|"acpi: bad read from port 0x%03x (%d)\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|InPort
 argument_list|,
 name|Width
@@ -532,6 +535,9 @@ name|printf
 argument_list|(
 literal|"acpi: bad write to port 0x%03x (%d), val %#x\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|OutPort
 argument_list|,
 name|Width
