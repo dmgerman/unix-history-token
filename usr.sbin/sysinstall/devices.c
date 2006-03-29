@@ -383,6 +383,15 @@ argument_list|,
 literal|4
 argument_list|)
 block|,
+name|DISK
+argument_list|(
+literal|"mfid%d"
+argument_list|,
+literal|"LSI MegaRAID SAS array"
+argument_list|,
+literal|4
+argument_list|)
+block|,
 name|FLOPPY
 argument_list|(
 literal|"fd%d"
