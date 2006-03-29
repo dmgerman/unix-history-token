@@ -433,19 +433,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GUPROF
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|CALIB_SCALE
-value|1000
-end_define
-
 begin_define
 define|#
 directive|define
@@ -469,6 +456,19 @@ parameter_list|,
 name|pc
 parameter_list|)
 value|((uintfptr_t)(pc) - (uintfptr_t)(p)->lowpc)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GUPROF
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CALIB_SCALE
+value|1000
 end_define
 
 begin_decl_stmt
