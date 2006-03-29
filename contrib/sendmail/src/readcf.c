@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: readcf.c,v 8.642 2004/08/04 21:17:57 ca Exp $"
+literal|"@(#)$Id: readcf.c,v 8.651 2006/03/02 19:17:09 ca Exp $"
 argument_list|)
 end_macro
 
@@ -2593,7 +2593,7 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
-name|setuserenv
+name|sm_setuserenv
 argument_list|(
 operator|&
 name|bp
@@ -9198,6 +9198,102 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_HELONAME */
+if|#
+directive|if
+name|_FFR_MEMSTAT
+define|#
+directive|define
+name|O_REFUSELOWMEM
+value|0xd9
+block|{
+literal|"RefuseLowMem"
+block|,
+name|O_REFUSELOWMEM
+block|,
+name|OI_NONE
+block|}
+block|,
+define|#
+directive|define
+name|O_QUEUELOWMEM
+value|0xda
+block|{
+literal|"QueueLowMem"
+block|,
+name|O_QUEUELOWMEM
+block|,
+name|OI_NONE
+block|}
+block|,
+define|#
+directive|define
+name|O_MEMRESOURCE
+value|0xdb
+block|{
+literal|"MemoryResource"
+block|,
+name|O_MEMRESOURCE
+block|,
+name|OI_NONE
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_MEMSTAT */
+if|#
+directive|if
+name|_FFR_MAXNOOPCOMMANDS
+define|#
+directive|define
+name|O_MAXNOOPCOMMANDS
+value|0xdc
+block|{
+literal|"MaxNOOPCommands"
+block|,
+name|O_MAXNOOPCOMMANDS
+block|,
+name|OI_NONE
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_MAXNOOPCOMMANDS */
+if|#
+directive|if
+name|_FFR_MSG_ACCEPT
+define|#
+directive|define
+name|O_MSG_ACCEPT
+value|0xdd
+block|{
+literal|"MessageAccept"
+block|,
+name|O_MSG_ACCEPT
+block|,
+name|OI_NONE
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_MSG_ACCEPT */
+if|#
+directive|if
+name|_FFR_QUEUE_RUN_PARANOIA
+define|#
+directive|define
+name|O_CHK_Q_RUNNERS
+value|0xde
+block|{
+literal|"CheckQueueRunners"
+block|,
+name|O_CHK_Q_RUNNERS
+block|,
+name|OI_NONE
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_QUEUE_RUN_PARANOIA */
 block|{
 name|NULL
 block|,
@@ -9343,6 +9439,12 @@ comment|/* _FFR_ALLOW_SASLINFO */
 if|#
 directive|if
 name|STARTTLS
+operator|||
+operator|(
+name|_FFR_SELECT_SHM
+operator|&&
+name|SM_CONF_SHM
+operator|)
 name|char
 modifier|*
 name|newval
@@ -9355,7 +9457,7 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* STARTTLS */
+comment|/* STARTTLS || (_FFR_SELECT_SHM&& SM_CONF_SHM) */
 name|errno
 operator|=
 literal|0
@@ -10261,6 +10363,16 @@ case|case
 name|SM_FORK
 case|:
 comment|/* fork after verification */
+if|#
+directive|if
+name|_FFR_DM_ONE
+comment|/* deliver first TA in background, then queue */
+case|case
+name|SM_DM_ONE
+case|:
+endif|#
+directive|endif
+comment|/* _FFR_DM_ONE */
 name|set_delivery_mode
 argument_list|(
 operator|*
@@ -14765,6 +14877,96 @@ break|break;
 endif|#
 directive|endif
 comment|/* _FFR_HELONAME */
+if|#
+directive|if
+name|_FFR_MEMSTAT
+case|case
+name|O_REFUSELOWMEM
+case|:
+name|RefuseLowMem
+operator|=
+name|atoi
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|O_QUEUELOWMEM
+case|:
+name|QueueLowMem
+operator|=
+name|atoi
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|O_MEMRESOURCE
+case|:
+name|MemoryResource
+operator|=
+name|newstr
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* _FFR_MEMSTAT */
+if|#
+directive|if
+name|_FFR_MAXNOOPCOMMANDS
+case|case
+name|O_MAXNOOPCOMMANDS
+case|:
+name|MaxNOOPCommands
+operator|=
+name|atoi
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* _FFR_MAXNOOPCOMMANDS */
+if|#
+directive|if
+name|_FFR_MSG_ACCEPT
+case|case
+name|O_MSG_ACCEPT
+case|:
+name|MessageAccept
+operator|=
+name|newstr
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* _FFR_MSG_ACCEPT */
+if|#
+directive|if
+name|_FFR_QUEUE_RUN_PARANOIA
+case|case
+name|O_CHK_Q_RUNNERS
+case|:
+name|CheckQueueRunners
+operator|=
+name|atoi
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* _FFR_QUEUE_RUN_PARANOIA */
 default|default:
 if|if
 condition|(

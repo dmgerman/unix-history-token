@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1999-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  *  Copyright (c) 1999-2004, 2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: signal.c,v 8.42 2004/08/20 21:10:30 ca Exp $"
+literal|"@(#)$Id: signal.c,v 8.44 2006/03/03 03:42:04 ca Exp $"
 argument_list|)
 end_macro
 
@@ -177,6 +177,8 @@ name|int
 name|sig
 decl_stmt|,
 name|errs
+decl_stmt|,
+name|sigerr
 decl_stmt|;
 name|sigset_t
 name|set
@@ -234,6 +236,8 @@ init|;
 condition|;
 control|)
 block|{
+name|sigerr
+operator|=
 name|sig
 operator|=
 literal|0
@@ -268,6 +272,9 @@ directive|else
 comment|/* defined(SOLARIS) || defined(__svr5__) */
 if|if
 condition|(
+operator|(
+name|sigerr
+operator|=
 name|sigwait
 argument_list|(
 operator|&
@@ -276,6 +283,7 @@ argument_list|,
 operator|&
 name|sig
 argument_list|)
+operator|)
 operator|!=
 literal|0
 condition|)
@@ -283,10 +291,21 @@ endif|#
 directive|endif
 comment|/* defined(SOLARIS) || defined(__svr5__) */
 block|{
+comment|/* some OS return -1 and set errno: copy it */
+if|if
+condition|(
+name|sigerr
+operator|<=
+literal|0
+condition|)
+name|sigerr
+operator|=
+name|errno
+expr_stmt|;
 comment|/* this can happen on OSF/1 (at least) */
 if|if
 condition|(
-name|errno
+name|sigerr
 operator|==
 name|EINTR
 condition|)
@@ -303,7 +322,7 @@ operator|*
 operator|)
 name|name
 argument_list|,
-name|errno
+name|sigerr
 argument_list|)
 expr_stmt|;
 if|if

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: parseaddr.c,v 8.381 2005/02/04 22:01:45 ca Exp $"
+literal|"@(#)$Id: parseaddr.c,v 8.383 2006/02/01 19:46:11 ca Exp $"
 argument_list|)
 end_macro
 
@@ -6501,9 +6501,7 @@ decl_stmt|;
 name|char
 name|cbuf
 index|[
-name|MAXNAME
-operator|+
-literal|1
+name|MAXKEY
 index|]
 decl_stmt|;
 name|char

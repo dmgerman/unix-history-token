@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: shm.c,v 1.18 2005/02/09 01:54:51 ca Exp $"
+literal|"@(#)$Id: shm.c,v 1.19 2005/07/14 22:34:28 ca Exp $"
 argument_list|)
 end_macro
 
@@ -38,6 +38,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sm/string.h>
 end_include
 
 begin_include

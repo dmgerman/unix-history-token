@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2005 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: usersmtp.c,v 8.463 2005/03/16 00:36:09 ca Exp $"
+literal|"@(#)$Id: usersmtp.c,v 8.467 2006/03/19 06:07:56 ca Exp $"
 argument_list|)
 end_macro
 
@@ -141,20 +141,6 @@ end_comment
 
 begin_comment
 comment|/* **  USERSMTP -- run SMTP protocol from the user end. ** **	This protocol is described in RFC821. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REPLYTYPE
-parameter_list|(
-name|r
-parameter_list|)
-value|((r) / 100)
-end_define
-
-begin_comment
-comment|/* first digit of reply code */
 end_comment
 
 begin_define
@@ -10479,7 +10465,7 @@ decl_stmt|;
 name|int
 name|xstat
 decl_stmt|;
-name|time_t
+name|int
 name|timeout
 decl_stmt|;
 name|char
@@ -12298,6 +12284,26 @@ operator|->
 name|mci_state
 operator|=
 name|MCIS_OPEN
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|mci
+operator|->
+name|mci_exitstat
+operator|==
+name|EX_OK
+condition|)
+name|mci_setstat
+argument_list|(
+name|mci
+argument_list|,
+name|EX_TEMPFAIL
+argument_list|,
+literal|"4.5.0"
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 block|}
 end_function

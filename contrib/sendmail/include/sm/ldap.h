@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001-2002 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: ldap.h,v 1.27 2003/12/20 09:23:47 gshapiro Exp $  */
+comment|/*  * Copyright (c) 2001-2003, 2005 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: ldap.h,v 1.28 2005/06/23 23:11:21 ca Exp $  */
 end_comment
 
 begin_ifndef
@@ -172,6 +172,13 @@ define|#
 directive|define
 name|SM_LDAP_USE_ALLATTR
 value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|SM_LDAP_SINGLEDN
+value|0x0008
 end_define
 
 begin_struct

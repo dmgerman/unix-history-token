@@ -14,7 +14,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: vfscanf.c,v 1.52 2004/08/03 20:56:32 ca Exp $"
+literal|"@(#)$Id: vfscanf.c,v 1.53 2005/06/14 23:07:20 ca Exp $"
 argument_list|)
 end_macro
 
@@ -45,7 +45,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<sm/time.h>
 end_include
 
 begin_include

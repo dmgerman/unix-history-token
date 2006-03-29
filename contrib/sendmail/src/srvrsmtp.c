@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2005 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -39,14 +39,14 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: srvrsmtp.c,v 8.906 2005/03/16 00:36:09 ca Exp $"
+literal|"@(#)$Id: srvrsmtp.c,v 8.922 2006/02/28 00:42:13 ca Exp $"
 argument_list|)
 end_macro
 
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<sm/time.h>
 end_include
 
 begin_include
@@ -169,6 +169,30 @@ init|=
 name|false
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|_FFR_DM_ONE
+end_if
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|NotFirstDelivery
+init|=
+name|false
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_DM_ONE */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -1196,32 +1220,6 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MAXNOOPCOMMANDS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MAXNOOPCOMMANDS
-value|20
-end_define
-
-begin_comment
-comment|/* max "noise" commands before slowdown */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! MAXNOOPCOMMANDS */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|MAXHELOCOMMANDS
 end_ifndef
 
@@ -1504,7 +1502,7 @@ parameter_list|(
 name|str
 parameter_list|)
 define|\
-value|{								\ 		int savelogusrerrs = LogUsrErrs;			\ 									\ 		switch (state)						\ 		{							\ 		  case SMFIR_REPLYCODE:					\ 			if (MilterLogLevel> 3)				\ 			{						\ 				sm_syslog(LOG_INFO, e->e_id,		\ 					  "Milter: %s=%s, reject=%s",	\ 					  str, addr, response);		\ 				LogUsrErrs = false;			\ 			}						\ 			if (strncmp(response, "421 ", 4) == 0)		\ 			{						\ 				bool tsave = QuickAbort;		\ 									\ 				QuickAbort = false;			\ 				usrerr(response);			\ 				QuickAbort = tsave;			\ 				e->e_sendqueue = NULL;			\ 				goto doquit;				\ 			}						\ 			else						\ 				usrerr(response);			\ 			break;						\ 									\ 		  case SMFIR_REJECT:					\ 			if (MilterLogLevel> 3)				\ 			{						\ 				sm_syslog(LOG_INFO, e->e_id,		\ 					  "Milter: %s=%s, reject=550 5.7.1 Command rejected", \ 					  str, addr);			\ 				LogUsrErrs = false;			\ 			}						\ 			usrerr("550 5.7.1 Command rejected");		\ 			break;						\ 									\ 		  case SMFIR_DISCARD:					\ 			if (MilterLogLevel> 3)				\ 				sm_syslog(LOG_INFO, e->e_id,		\ 					  "Milter: %s=%s, discard",	\ 					  str, addr);			\ 			e->e_flags |= EF_DISCARD;			\ 			break;						\ 									\ 		  case SMFIR_TEMPFAIL:					\ 			if (MilterLogLevel> 3)				\ 			{						\ 				sm_syslog(LOG_INFO, e->e_id,		\ 					  "Milter: %s=%s, reject=%s",	\ 					  str, addr, MSG_TEMPFAIL);	\ 				LogUsrErrs = false;			\ 			}						\ 			usrerr(MSG_TEMPFAIL);				\ 			break;						\ 		}							\ 		LogUsrErrs = savelogusrerrs;				\ 		if (response != NULL)					\ 			sm_free(response);
+value|{								\ 		int savelogusrerrs = LogUsrErrs;			\ 									\ 		switch (state)						\ 		{							\ 		  case SMFIR_SHUTDOWN:					\ 			if (MilterLogLevel> 3)				\ 			{						\ 				sm_syslog(LOG_INFO, e->e_id,		\ 					  "Milter: %s=%s, reject=421, errormode=4",	\ 					  str, addr);			\ 				LogUsrErrs = false;			\ 			}						\ 			{						\ 				bool tsave = QuickAbort;		\ 									\ 				QuickAbort = false;			\ 				usrerr("421 4.3.0 closing connection");	\ 				QuickAbort = tsave;			\ 				e->e_sendqueue = NULL;			\ 				goto doquit;				\ 			}						\ 			break;						\ 		  case SMFIR_REPLYCODE:					\ 			if (MilterLogLevel> 3)				\ 			{						\ 				sm_syslog(LOG_INFO, e->e_id,		\ 					  "Milter: %s=%s, reject=%s",	\ 					  str, addr, response);		\ 				LogUsrErrs = false;			\ 			}						\ 			if (strncmp(response, "421 ", 4) == 0		\ 			    || strncmp(response, "421-", 4) == 0)	\ 			{						\ 				bool tsave = QuickAbort;		\ 									\ 				QuickAbort = false;			\ 				usrerr(response);			\ 				QuickAbort = tsave;			\ 				e->e_sendqueue = NULL;			\ 				goto doquit;				\ 			}						\ 			else						\ 				usrerr(response);			\ 			break;						\ 									\ 		  case SMFIR_REJECT:					\ 			if (MilterLogLevel> 3)				\ 			{						\ 				sm_syslog(LOG_INFO, e->e_id,		\ 					  "Milter: %s=%s, reject=550 5.7.1 Command rejected", \ 					  str, addr);			\ 				LogUsrErrs = false;			\ 			}						\ 			usrerr("550 5.7.1 Command rejected");		\ 			break;						\ 									\ 		  case SMFIR_DISCARD:					\ 			if (MilterLogLevel> 3)				\ 				sm_syslog(LOG_INFO, e->e_id,		\ 					  "Milter: %s=%s, discard",	\ 					  str, addr);			\ 			e->e_flags |= EF_DISCARD;			\ 			break;						\ 									\ 		  case SMFIR_TEMPFAIL:					\ 			if (MilterLogLevel> 3)				\ 			{						\ 				sm_syslog(LOG_INFO, e->e_id,		\ 					  "Milter: %s=%s, reject=%s",	\ 					  str, addr, MSG_TEMPFAIL);	\ 				LogUsrErrs = false;			\ 			}						\ 			usrerr(MSG_TEMPFAIL);				\ 			break;						\ 		}							\ 		LogUsrErrs = savelogusrerrs;				\ 		if (response != NULL)					\ 			sm_free(response);
 comment|/* XXX */
 value|\ 	}
 end_define
@@ -3246,6 +3244,53 @@ operator|=
 name|false
 expr_stmt|;
 break|break;
+case|case
+name|SMFIR_SHUTDOWN
+case|:
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|3
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter: initialization failed, closing connection"
+argument_list|)
+expr_stmt|;
+name|tempfail
+operator|=
+name|true
+expr_stmt|;
+name|smtp
+operator|.
+name|sm_milterize
+operator|=
+name|false
+expr_stmt|;
+name|message
+argument_list|(
+literal|"421 4.7.0 %s closing connection"
+argument_list|,
+name|MyHostName
+argument_list|)
+expr_stmt|;
+comment|/* arrange to ignore send list */
+name|e
+operator|->
+name|e_sendqueue
+operator|=
+name|NULL
+expr_stmt|;
+goto|goto
+name|doquit
+goto|;
 block|}
 block|}
 if|if
@@ -3590,6 +3635,21 @@ name|struct
 name|timeval
 name|timeout
 decl_stmt|;
+if|#
+directive|if
+name|_FFR_LOG_GREET_PAUSE
+name|struct
+name|timeval
+name|bp
+decl_stmt|,
+name|ep
+decl_stmt|,
+name|tp
+decl_stmt|;
+comment|/* {begin,end,total}pause */
+endif|#
+directive|endif
+comment|/* _FFR_LOG_GREET_PAUSE */
 comment|/* pause for a moment */
 name|timeout
 operator|.
@@ -3660,6 +3720,20 @@ operator|&
 name|readfds
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_LOG_GREET_PAUSE
+name|gettimeofday
+argument_list|(
+operator|&
+name|bp
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_LOG_GREET_PAUSE */
 if|if
 condition|(
 name|select
@@ -3691,6 +3765,32 @@ name|readfds
 argument_list|)
 condition|)
 block|{
+if|#
+directive|if
+name|_FFR_LOG_GREET_PAUSE
+name|gettimeofday
+argument_list|(
+operator|&
+name|ep
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|timersub
+argument_list|(
+operator|&
+name|ep
+argument_list|,
+operator|&
+name|bp
+argument_list|,
+operator|&
+name|tp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_LOG_GREET_PAUSE */
 name|greetcode
 operator|=
 literal|"554"
@@ -3707,8 +3807,19 @@ name|e
 operator|->
 name|e_id
 argument_list|,
+if|#
+directive|if
+name|_FFR_LOG_GREET_PAUSE
+literal|"rejecting commands from %s [%s] after %d seconds due to pre-greeting traffic"
+argument_list|,
+else|#
+directive|else
+comment|/* _FFR_LOG_GREET_PAUSE */
 literal|"rejecting commands from %s [%s] due to pre-greeting traffic"
 argument_list|,
+endif|#
+directive|endif
+comment|/* _FFR_LOG_GREET_PAUSE */
 name|peerhostname
 argument_list|,
 name|anynet_ntoa
@@ -3716,6 +3827,31 @@ argument_list|(
 operator|&
 name|RealHostAddr
 argument_list|)
+if|#
+directive|if
+name|_FFR_LOG_GREET_PAUSE
+argument_list|,
+operator|(
+name|int
+operator|)
+name|tp
+operator|.
+name|tv_sec
+operator|+
+operator|(
+name|tp
+operator|.
+name|tv_usec
+operator|>=
+literal|500000
+condition|?
+literal|1
+else|:
+literal|0
+operator|)
+endif|#
+directive|endif
+comment|/* _FFR_LOG_GREET_PAUSE */
 argument_list|)
 expr_stmt|;
 block|}
@@ -7448,14 +7584,16 @@ block|}
 if|if
 condition|(
 name|gothello
+operator|||
+name|smtp
+operator|.
+name|sm_gotmail
 condition|)
-block|{
 name|CLEAR_STATE
 argument_list|(
 name|cmdbuf
 argument_list|)
 expr_stmt|;
-block|}
 if|#
 directive|if
 name|MILTER
@@ -7610,6 +7748,57 @@ operator|=
 name|false
 expr_stmt|;
 break|break;
+case|case
+name|SMFIR_SHUTDOWN
+case|:
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|3
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter: Milter: helo=%s, reject=421 4.7.0 %s closing connection"
+argument_list|,
+name|p
+argument_list|,
+name|MyHostName
+argument_list|)
+expr_stmt|;
+name|tempfail
+operator|=
+name|true
+expr_stmt|;
+name|smtp
+operator|.
+name|sm_milterize
+operator|=
+name|false
+expr_stmt|;
+name|message
+argument_list|(
+literal|"421 4.7.0 %s closing connection"
+argument_list|,
+name|MyHostName
+argument_list|)
+expr_stmt|;
+comment|/* arrange to ignore send list */
+name|e
+operator|->
+name|e_sendqueue
+operator|=
+name|NULL
+expr_stmt|;
+goto|goto
+name|doquit
+goto|;
 block|}
 if|if
 condition|(
@@ -9347,6 +9536,22 @@ operator|->
 name|e_sendmode
 operator|!=
 name|SM_DELIVER
+if|#
+directive|if
+name|_FFR_DM_ONE
+operator|&&
+operator|(
+name|NotFirstDelivery
+operator|||
+name|SM_DM_ONE
+operator|!=
+name|e
+operator|->
+name|e_sendmode
+operator|)
+endif|#
+directive|endif
+comment|/* _FFR_DM_ONE */
 condition|)
 name|e
 operator|->
@@ -11242,7 +11447,7 @@ argument_list|(
 operator|&
 name|n_noop
 argument_list|,
-name|MAXNOOPCOMMANDS
+name|MaxNOOPCommands
 argument_list|,
 name|true
 argument_list|,
@@ -11493,6 +11698,12 @@ name|ExitStat
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
+comment|/* just to avoid bogus warning from some compilers */
+name|exit
+argument_list|(
+name|EX_OSERR
+argument_list|)
+expr_stmt|;
 case|case
 name|CMDVERB
 case|:
@@ -11536,7 +11747,7 @@ argument_list|(
 operator|&
 name|n_noop
 argument_list|,
-name|MAXNOOPCOMMANDS
+name|MaxNOOPCommands
 argument_list|,
 name|true
 argument_list|,
@@ -11796,6 +12007,10 @@ operator|||
 name|state
 operator|==
 name|SMFIR_TEMPFAIL
+operator|||
+name|state
+operator|==
+name|SMFIR_SHUTDOWN
 condition|)
 block|{
 comment|/* MILTER_REPLY already gave an error */
@@ -11948,6 +12163,11 @@ name|buf
 index|[
 literal|32
 index|]
+decl_stmt|;
+name|bool
+name|rv
+init|=
+name|true
 decl_stmt|;
 name|SmtpPhase
 operator|=
@@ -12138,6 +12358,17 @@ literal|4
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strncmp
+argument_list|(
+name|response
+argument_list|,
+literal|"421-"
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|e
@@ -12249,6 +12480,50 @@ argument_list|)
 expr_stmt|;
 return|return
 name|true
+return|;
+case|case
+name|SMFIR_SHUTDOWN
+case|:
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|3
+condition|)
+block|{
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter: cmd=data, reject=421 4.7.0 %s closing connection"
+argument_list|,
+name|MyHostName
+argument_list|)
+expr_stmt|;
+name|LogUsrErrs
+operator|=
+name|false
+expr_stmt|;
+block|}
+name|usrerr
+argument_list|(
+literal|"421 4.7.0 %s closing connection"
+argument_list|,
+name|MyHostName
+argument_list|)
+expr_stmt|;
+name|e
+operator|->
+name|e_sendqueue
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+name|false
 return|;
 block|}
 name|LogUsrErrs
@@ -12620,6 +12895,44 @@ name|usrerr
 argument_list|(
 name|MSG_TEMPFAIL
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|SMFIR_SHUTDOWN
+case|:
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|3
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter: data, reject=421 4.7.0 %s closing connection"
+argument_list|,
+name|MyHostName
+argument_list|)
+expr_stmt|;
+name|milteraccept
+operator|=
+name|false
+expr_stmt|;
+name|usrerr
+argument_list|(
+literal|"421 4.7.0 %s closing connection"
+argument_list|,
+name|MyHostName
+argument_list|)
+expr_stmt|;
+name|rv
+operator|=
+name|false
 expr_stmt|;
 break|break;
 block|}
@@ -13276,12 +13589,62 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|int
+name|mode
+decl_stmt|;
 comment|/* send to all recipients */
+name|mode
+operator|=
+name|SM_DEFAULT
+expr_stmt|;
+if|#
+directive|if
+name|_FFR_DM_ONE
+if|if
+condition|(
+name|SM_DM_ONE
+operator|==
+name|e
+operator|->
+name|e_sendmode
+condition|)
+block|{
+if|if
+condition|(
+name|NotFirstDelivery
+condition|)
+block|{
+name|mode
+operator|=
+name|SM_QUEUE
+expr_stmt|;
+name|e
+operator|->
+name|e_sendmode
+operator|=
+name|SM_QUEUE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|mode
+operator|=
+name|SM_FORK
+expr_stmt|;
+name|NotFirstDelivery
+operator|=
+name|true
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
+comment|/* _FFR_DM_ONE */
 name|sendall
 argument_list|(
 name|ee
 argument_list|,
-name|SM_DEFAULT
+name|mode
 argument_list|)
 expr_stmt|;
 block|}
@@ -13306,6 +13669,51 @@ operator|=
 name|id
 expr_stmt|;
 comment|/* issue success message */
+if|#
+directive|if
+name|_FFR_MSG_ACCEPT
+if|if
+condition|(
+name|MessageAccept
+operator|!=
+name|NULL
+operator|&&
+operator|*
+name|MessageAccept
+operator|!=
+literal|'\0'
+condition|)
+block|{
+name|char
+name|msg
+index|[
+name|MAXLINE
+index|]
+decl_stmt|;
+name|expand
+argument_list|(
+name|MessageAccept
+argument_list|,
+name|msg
+argument_list|,
+sizeof|sizeof
+name|msg
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|message
+argument_list|(
+literal|"250 2.0.0 %s"
+argument_list|,
+name|msg
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+endif|#
+directive|endif
+comment|/* _FFR_MSG_ACCEPT */
 name|message
 argument_list|(
 literal|"250 2.0.0 %s Message accepted for delivery"
@@ -13715,7 +14123,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-name|true
+name|rv
 return|;
 block|}
 end_function

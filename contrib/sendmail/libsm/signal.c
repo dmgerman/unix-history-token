@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: signal.c,v 1.16 2001/09/11 04:04:49 gshapiro Exp $"
+literal|"@(#)$Id: signal.c,v 1.17 2005/06/14 23:07:20 ca Exp $"
 argument_list|)
 end_macro
 
@@ -25,7 +25,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<sm/time.h>
 end_include
 
 begin_endif

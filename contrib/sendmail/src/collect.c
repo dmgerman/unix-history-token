@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: collect.c,v 8.261 2005/02/16 23:38:51 ca Exp $"
+literal|"@(#)$Id: collect.c,v 8.272 2006/03/02 19:09:26 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1027,6 +1027,21 @@ condition|)
 name|message
 argument_list|(
 literal|"354 Enter mail, end with \".\" on a line by itself"
+argument_list|)
+expr_stmt|;
+comment|/* simulate an I/O timeout when used as sink */
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|83
+argument_list|,
+literal|101
+argument_list|)
+condition|)
+name|sleep
+argument_list|(
+literal|319
 argument_list|)
 expr_stmt|;
 if|if

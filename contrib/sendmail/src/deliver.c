@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2005 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,13 +12,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<sm/time.h>
 end_include
 
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: deliver.c,v 8.986 2005/03/05 02:28:50 ca Exp $"
+literal|"@(#)$Id: deliver.c,v 8.1000 2006/03/02 01:37:39 ca Exp $"
 argument_list|)
 end_macro
 
@@ -4636,12 +4636,18 @@ name|int
 name|status
 decl_stmt|;
 block|{
-comment|/* 	**  If the host was not found and a FallbackSmartHost is defined 	**  (and we have not yet tried it), then make one last try with 	**  it as the host. 	*/
+comment|/* 	**  If the host was not found or a temporary failure occurred 	**  and a FallbackSmartHost is defined (and we have not yet 	**  tried it), then make one last try with it as the host. 	*/
 if|if
 condition|(
+operator|(
 name|status
 operator|==
 name|EX_NOHOST
+operator|||
+name|status
+operator|==
+name|EX_TEMPFAIL
+operator|)
 operator|&&
 name|FallbackSmartHost
 operator|!=
@@ -11946,6 +11952,14 @@ operator|=
 literal|"SOFTWARE"
 expr_stmt|;
 break|break;
+case|case
+name|EX_UNAVAILABLE
+case|:
+name|s
+operator|=
+literal|"NONE"
+expr_stmt|;
+break|break;
 comment|/* everything else is a failure */
 default|default:
 name|s
@@ -18289,7 +18303,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OS_HEAD
+name|OSTATE_HEAD
 value|0
 end_define
 
@@ -18300,7 +18314,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OS_CR
+name|OSTATE_CR
 value|1
 end_define
 
@@ -18311,7 +18325,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OS_INLINE
+name|OSTATE_INLINE
 value|2
 end_define
 
@@ -18600,6 +18614,21 @@ argument_list|(
 name|e
 operator|->
 name|e_dfp
+argument_list|)
+expr_stmt|;
+comment|/* simulate an I/O timeout when used as source */
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|84
+argument_list|,
+literal|101
+argument_list|)
+condition|)
+name|sleep
+argument_list|(
+literal|319
 argument_list|)
 expr_stmt|;
 if|#
@@ -18968,7 +18997,7 @@ expr_stmt|;
 comment|/* copy temp file to output with mapping */
 name|ostate
 operator|=
-name|OS_HEAD
+name|OSTATE_HEAD
 expr_stmt|;
 name|bp
 operator|=
@@ -19044,7 +19073,7 @@ name|ostate
 condition|)
 block|{
 case|case
-name|OS_HEAD
+name|OSTATE_HEAD
 case|:
 if|if
 condition|(
@@ -19472,7 +19501,7 @@ literal|'\n'
 condition|)
 name|ostate
 operator|=
-name|OS_HEAD
+name|OSTATE_HEAD
 expr_stmt|;
 elseif|else
 if|if
@@ -19483,16 +19512,16 @@ literal|'\r'
 condition|)
 name|ostate
 operator|=
-name|OS_CR
+name|OSTATE_CR
 expr_stmt|;
 else|else
 name|ostate
 operator|=
-name|OS_INLINE
+name|OSTATE_INLINE
 expr_stmt|;
 continue|continue;
 case|case
-name|OS_CR
+name|OSTATE_CR
 case|:
 if|if
 condition|(
@@ -19548,7 +19577,7 @@ expr_stmt|;
 block|}
 name|ostate
 operator|=
-name|OS_HEAD
+name|OSTATE_HEAD
 expr_stmt|;
 continue|continue;
 block|}
@@ -19577,13 +19606,13 @@ literal|'\r'
 expr_stmt|;
 name|ostate
 operator|=
-name|OS_INLINE
+name|OSTATE_INLINE
 expr_stmt|;
 goto|goto
 name|putch
 goto|;
 case|case
-name|OS_INLINE
+name|OSTATE_INLINE
 case|:
 if|if
 condition|(
@@ -19594,7 +19623,7 @@ condition|)
 block|{
 name|ostate
 operator|=
-name|OS_CR
+name|OSTATE_CR
 expr_stmt|;
 continue|continue;
 block|}
@@ -19831,7 +19860,7 @@ expr_stmt|;
 block|}
 name|ostate
 operator|=
-name|OS_HEAD
+name|OSTATE_HEAD
 expr_stmt|;
 name|SM_ASSERT
 argument_list|(
@@ -19908,7 +19937,7 @@ literal|0
 expr_stmt|;
 name|ostate
 operator|=
-name|OS_HEAD
+name|OSTATE_HEAD
 expr_stmt|;
 block|}
 else|else
@@ -19966,7 +19995,7 @@ operator|++
 expr_stmt|;
 name|ostate
 operator|=
-name|OS_INLINE
+name|OSTATE_INLINE
 expr_stmt|;
 block|}
 break|break;
@@ -24539,9 +24568,12 @@ expr_stmt|;
 comment|/* check return code from server */
 if|if
 condition|(
+name|REPLYTYPE
+argument_list|(
 name|smtpresult
+argument_list|)
 operator|==
-literal|454
+literal|4
 condition|)
 return|return
 name|EX_TEMPFAIL
@@ -24564,6 +24596,19 @@ literal|1
 condition|)
 return|return
 name|smtpresult
+return|;
+comment|/* not an expected reply but we have to deal with it */
+if|if
+condition|(
+name|REPLYTYPE
+argument_list|(
+name|smtpresult
+argument_list|)
+operator|==
+literal|5
+condition|)
+return|return
+name|EX_UNAVAILABLE
 return|;
 if|if
 condition|(

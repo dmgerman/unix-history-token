@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: tls.c,v 8.97 2005/03/08 22:20:52 ca Exp $"
+literal|"@(#)$Id: tls.c,v 8.102 2006/03/02 19:18:27 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1941,6 +1941,20 @@ end_define
 begin_comment
 comment|/* **  INITTLS -- initialize TLS ** **	Parameters: **		ctx -- pointer to context **		req -- requirements for initialization (see sendmail.h) **		srv -- server side? **		certfile -- filename of certificate **		keyfile -- filename of private key **		cacertpath -- path to CAs **		cacertfile -- file with CA(s) **		dhparam -- parameters for DH ** **	Returns: **		succeeded? */
 end_comment
+
+begin_comment
+comment|/* **  The session_id_context identifies the service that created a session. **  This information is used to distinguish between multiple TLS-based **  servers running on the same server. We use the name of the mail system. **  Note: the session cache is not persistent. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+name|server_session_id_context
+index|[]
+init|=
+literal|"sendmail8"
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|bool
@@ -3893,15 +3907,67 @@ argument_list|,
 name|req
 argument_list|)
 condition|)
+block|{
 name|SSL_CTX_sess_set_cache_size
 argument_list|(
 operator|*
 name|ctx
 argument_list|,
-literal|128
+literal|1
 argument_list|)
 expr_stmt|;
-comment|/* timeout? SSL_CTX_set_timeout(*ctx, TimeOut...); */
+name|SSL_CTX_set_timeout
+argument_list|(
+operator|*
+name|ctx
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|SSL_CTX_set_session_id_context
+argument_list|(
+operator|*
+name|ctx
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|server_session_id_context
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|server_session_id_context
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|SSL_CTX_set_session_cache_mode
+argument_list|(
+operator|*
+name|ctx
+argument_list|,
+name|SSL_SESS_CACHE_SERVER
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+operator|(
+name|void
+operator|)
+name|SSL_CTX_set_session_cache_mode
+argument_list|(
+operator|*
+name|ctx
+argument_list|,
+name|SSL_SESS_CACHE_OFF
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* load certificate locations and default CA paths */
 if|if
 condition|(
@@ -5980,6 +6046,7 @@ name|tlslogerr
 parameter_list|(
 name|who
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|who
