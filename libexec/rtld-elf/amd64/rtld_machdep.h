@@ -91,6 +91,9 @@ modifier|*
 name|rel
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|dbg
 name|dbg
 argument_list|(
 literal|"reloc_jmpslot: *%p = %p"
@@ -112,6 +115,8 @@ name|target
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 operator|(
 operator|*
 operator|(
