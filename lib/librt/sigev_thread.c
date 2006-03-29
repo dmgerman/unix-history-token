@@ -283,7 +283,7 @@ begin_pragma
 pragma|#
 directive|pragma
 name|weak
-name|pthread_create
+name|_pthread_create
 end_pragma
 
 begin_function
@@ -435,7 +435,7 @@ block|{
 return|return
 operator|(
 operator|&
-name|pthread_create
+name|_pthread_create
 operator|!=
 name|NULL
 operator|)
@@ -1451,7 +1451,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|pthread_create
+name|_pthread_create
 argument_list|(
 operator|&
 name|tn
@@ -1755,7 +1755,7 @@ argument_list|()
 expr_stmt|;
 name|ret
 operator|=
-name|pthread_create
+name|_pthread_create
 argument_list|(
 operator|&
 name|td
