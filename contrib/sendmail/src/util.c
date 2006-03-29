@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: util.c,v 8.383 2004/08/02 18:50:59 ca Exp $"
+literal|"@(#)$Id: util.c,v 8.392 2006/03/09 19:49:35 ca Exp $"
 argument_list|)
 end_macro
 
@@ -7119,6 +7119,18 @@ expr_stmt|;
 name|sm_mbdb_terminate
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_MEMSTAT
+operator|(
+name|void
+operator|)
+name|sm_memstat_close
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_MEMSTAT */
 if|if
 condition|(
 name|setgid
@@ -9214,9 +9226,6 @@ index|]
 operator|.
 name|proc_other
 expr_stmt|;
-break|break;
-block|}
-block|}
 if|if
 condition|(
 name|CurChildren
@@ -9226,6 +9235,9 @@ condition|)
 name|CurChildren
 operator|--
 expr_stmt|;
+break|break;
+block|}
+block|}
 if|if
 condition|(
 name|type
@@ -9377,7 +9389,26 @@ parameter_list|()
 block|{
 name|int
 name|i
+decl_stmt|,
+name|children
 decl_stmt|;
+name|int
+name|chldwasblocked
+decl_stmt|;
+name|pid_t
+name|pid
+decl_stmt|;
+name|children
+operator|=
+literal|0
+expr_stmt|;
+name|chldwasblocked
+operator|=
+name|sm_blocksignal
+argument_list|(
+name|SIGCHLD
+argument_list|)
+expr_stmt|;
 comment|/* start from 1 since 0 is the daemon itself */
 for|for
 control|(
@@ -9393,28 +9424,31 @@ name|i
 operator|++
 control|)
 block|{
-if|if
-condition|(
+name|pid
+operator|=
 name|ProcListVec
 index|[
 name|i
 index|]
 operator|.
 name|proc_pid
+expr_stmt|;
+if|if
+condition|(
+name|pid
 operator|==
 name|NO_PID
+operator|||
+name|pid
+operator|==
+name|CurrentPid
 condition|)
 continue|continue;
 if|if
 condition|(
 name|kill
 argument_list|(
-name|ProcListVec
-index|[
-name|i
-index|]
-operator|.
-name|proc_pid
+name|pid
 argument_list|,
 literal|0
 argument_list|)
@@ -9472,6 +9506,12 @@ name|CurChildren
 operator|--
 expr_stmt|;
 block|}
+else|else
+block|{
+operator|++
+name|children
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -9483,6 +9523,45 @@ name|CurChildren
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|chldwasblocked
+operator|==
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|sm_releasesignal
+argument_list|(
+name|SIGCHLD
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|10
+operator|&&
+name|children
+operator|!=
+name|CurChildren
+condition|)
+block|{
+name|sm_syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"proc_list_probe: found %d children, expected %d"
+argument_list|,
+name|children
+argument_list|,
+name|CurChildren
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

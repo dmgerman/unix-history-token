@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: ldap.c,v 1.62 2005/02/24 00:30:01 ca Exp $"
+literal|"@(#)$Id: ldap.c,v 1.67 2005/12/14 00:08:03 ca Exp $"
 argument_list|)
 end_macro
 
@@ -199,16 +199,76 @@ begin_comment
 comment|/* **  SM_LDAP_CLEAR -- set default values for SM_LDAP_STRUCT ** **	Parameters: **		lmap -- pointer to SM_LDAP_STRUCT to clear ** **	Returns: **		None. ** */
 end_comment
 
-begin_function
+begin_if
+if|#
+directive|if
+name|_FFR_LDAP_VERSION
+end_if
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LDAP_VERSION_MAX
+argument_list|)
+operator|&&
+name|_FFR_LDAP_VERSION
+operator|>
+name|LDAP_VERSION_MAX
+end_if
+
+begin_expr_stmt
+name|ERROR
+name|FFR_LDAP_VERSION
+operator|>
+name|_LDAP_VERSION_MAX
+endif|#
+directive|endif
+comment|/* defined(LDAP_VERSION_MAX)&& _FFR_LDAP_VERSION> LDAP_VERSION_MAX */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LDAP_VERSION_MIN
+argument_list|)
+operator|&&
+name|_FFR_LDAP_VERSION
+operator|<
+name|LDAP_VERSION_MIN
+name|ERROR
+name|FFR_LDAP_VERSION
+operator|<
+name|_LDAP_VERSION_MIN
+endif|#
+directive|endif
+comment|/* defined(LDAP_VERSION_MIN)&& _FFR_LDAP_VERSION< LDAP_VERSION_MIN */
+define|#
+directive|define
+name|SM_LDAP_VERSION_DEFAULT
+value|_FFR_LDAP_VERSION
+else|#
+directive|else
+comment|/* _FFR_LDAP_VERSION */
+define|#
+directive|define
+name|SM_LDAP_VERSION_DEFAULT
+value|0
+endif|#
+directive|endif
+comment|/* _FFR_LDAP_VERSION */
 name|void
 name|sm_ldap_clear
-parameter_list|(
-name|lmap
-parameter_list|)
+argument_list|(
+argument|lmap
+argument_list|)
 name|SM_LDAP_STRUCT
-modifier|*
+operator|*
 name|lmap
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_block
 block|{
 if|if
 condition|(
@@ -239,7 +299,7 @@ name|lmap
 operator|->
 name|ldap_version
 operator|=
-literal|0
+name|SM_LDAP_VERSION_DEFAULT
 expr_stmt|;
 name|lmap
 operator|->
@@ -396,7 +456,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/* **  SM_LDAP_START -- actually connect to an LDAP server ** **	Parameters: **		name -- name of map for debug output. **		lmap -- the LDAP map being opened. ** **	Returns: **		true if connection is successful, false otherwise. ** **	Side Effects: **		Populates lmap->ldap_ld. */
@@ -2383,6 +2443,39 @@ name|EX_OK
 expr_stmt|;
 continue|continue;
 block|}
+if|#
+directive|if
+name|_FFR_LDAP_SINGLEDN
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|SM_LDAP_SINGLEDN
+argument_list|,
+name|flags
+argument_list|)
+operator|&&
+operator|*
+name|result
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* only wanted one match */
+name|SM_LDAP_ERROR_CLEANUP
+argument_list|()
+expr_stmt|;
+name|errno
+operator|=
+name|ENOENT
+expr_stmt|;
+return|return
+name|EX_NOTFOUND
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* _FFR_LDAP_SINGLEDN */
 comment|/* record completed DN's to prevent loops */
 name|dn
 operator|=

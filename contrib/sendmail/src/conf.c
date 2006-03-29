@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2005 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1998-2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: conf.c,v 8.1061 2005/03/07 17:18:44 ca Exp $"
+literal|"@(#)$Id: conf.c,v 8.1081 2006/02/24 02:21:53 ca Exp $"
 argument_list|)
 end_macro
 
@@ -41,6 +41,52 @@ end_endif
 
 begin_comment
 comment|/* NEWDB */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEC
+end_ifdef
+
+begin_if
+if|#
+directive|if
+name|NETINET6
+end_if
+
+begin_comment
+comment|/* for the IPv6 device lookup */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_SOCKADDR_LEN
+end_define
+
+begin_include
+include|#
+directive|include
+file|<macros.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NETINET6 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DEC */
 end_comment
 
 begin_include
@@ -1552,6 +1598,10 @@ expr_stmt|;
 name|FastSplit
 operator|=
 literal|1
+expr_stmt|;
+name|MaxNOOPCommands
+operator|=
+name|MAXNOOPCOMMANDS
 expr_stmt|;
 if|#
 directive|if
@@ -9055,6 +9105,15 @@ block|{
 name|bool
 name|rval
 decl_stmt|;
+if|#
+directive|if
+name|_FFR_MEMSTAT
+name|long
+name|memfree
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_MEMSTAT */
 if|if
 condition|(
 name|tTd
@@ -9073,6 +9132,55 @@ argument_list|,
 name|pri
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_MEMSTAT
+if|if
+condition|(
+name|QueueLowMem
+operator|>
+literal|0
+operator|&&
+name|sm_memstat_get
+argument_list|(
+name|MemoryResource
+argument_list|,
+operator|&
+name|memfree
+argument_list|)
+operator|>=
+literal|0
+operator|&&
+name|memfree
+operator|<
+name|QueueLowMem
+condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|3
+argument_list|,
+literal|30
+argument_list|)
+condition|)
+name|sm_dprintf
+argument_list|(
+literal|"true (memfree=%ld< QueueLowMem)\n"
+argument_list|,
+name|memfree
+argument_list|,
+name|QueueLowMem
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* _FFR_MEMSTAT */
 if|if
 condition|(
 name|CurrentLA
@@ -9207,6 +9315,15 @@ index|[
 name|MAXDAEMONS
 index|]
 decl_stmt|;
+if|#
+directive|if
+name|_FFR_MEMSTAT
+name|long
+name|memfree
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_MEMSTAT */
 if|#
 directive|if
 name|XLA
@@ -9358,6 +9475,73 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|_FFR_MEMSTAT
+if|if
+condition|(
+name|RefuseLowMem
+operator|>
+literal|0
+operator|&&
+name|sm_memstat_get
+argument_list|(
+name|MemoryResource
+argument_list|,
+operator|&
+name|memfree
+argument_list|)
+operator|>=
+literal|0
+operator|&&
+name|memfree
+operator|<
+name|RefuseLowMem
+condition|)
+block|{
+define|#
+directive|define
+name|R_MSG_LM
+value|"rejecting connections on daemon %s: free memory: %ld"
+name|sm_setproctitle
+argument_list|(
+name|true
+argument_list|,
+name|e
+argument_list|,
+name|R_MSG_LM
+argument_list|,
+name|name
+argument_list|,
+name|memfree
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|8
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+name|NOQID
+argument_list|,
+name|R_MSG_LM
+argument_list|,
+name|name
+argument_list|,
+name|memfree
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* _FFR_MEMSTAT */
 name|sm_getla
 argument_list|()
 expr_stmt|;
@@ -14620,7 +14804,7 @@ directive|ifdef
 name|RLIMIT_NEEDS_SYS_TIME_H
 include|#
 directive|include
-file|<sys/time.h>
+file|<sm/time.h>
 endif|#
 directive|endif
 comment|/* RLIMIT_NEEDS_SYS_TIME_H */
@@ -14795,6 +14979,32 @@ block|}
 endif|#
 directive|endif
 comment|/* SUN_EXTENSIONS */
+ifdef|#
+directive|ifdef
+name|DEC
+if|if
+condition|(
+name|sm_strcasecmp
+argument_list|(
+name|vendor
+argument_list|,
+literal|"Digital"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|VendorCode
+operator|=
+name|VENDOR_DEC
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* DEC */
 if|#
 directive|if
 name|defined
@@ -14964,14 +15174,14 @@ ifdef|#
 directive|ifdef
 name|apollo
 comment|/* 	**  stupid domain/os can't even open 	**  /etc/mail/sendmail.cf without this 	*/
-name|setuserenv
+name|sm_setuserenv
 argument_list|(
 literal|"ISP"
 argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|setuserenv
+name|sm_setuserenv
 argument_list|(
 literal|"SYSTYPE"
 argument_list|,
@@ -15009,7 +15219,7 @@ argument_list|(
 literal|"SOCK"
 argument_list|)
 condition|)
-name|setuserenv
+name|sm_setuserenv
 argument_list|(
 literal|"SOCK"
 argument_list|,
@@ -17847,7 +18057,7 @@ directive|ifndef
 name|SUNOS403
 include|#
 directive|include
-file|<sys/time.h>
+file|<sm/time.h>
 endif|#
 directive|endif
 comment|/* ! SUNOS403 */
@@ -18429,12 +18639,45 @@ else|else
 endif|#
 directive|endif
 comment|/* BSD4_4_SOCKADDR */
+ifdef|#
+directive|ifdef
+name|DEC
+comment|/* fix for IPv6  size differences */
+name|i
+operator|+=
+sizeof|sizeof
+name|ifr
+operator|->
+name|ifr_name
+operator|+
+name|max
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|ifr
+operator|->
+name|ifr_addr
+argument_list|)
+argument_list|,
+name|ifr
+operator|->
+name|ifr_addr
+operator|.
+name|sa_len
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* DEC */
 name|i
 operator|+=
 sizeof|sizeof
 expr|*
 name|ifr
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEC */
 if|if
 condition|(
 name|tTd
@@ -21659,6 +21902,14 @@ directive|endif
 comment|/* LDAPMAP */
 if|#
 directive|if
+name|LDAP_REFERRALS
+literal|"LDAP_REFERRALS"
+block|,
+endif|#
+directive|endif
+comment|/* LDAP_REFERRALS */
+if|#
+directive|if
 name|LOG
 literal|"LOG"
 block|,
@@ -22645,6 +22896,15 @@ directive|endif
 comment|/* _FFR_DEPRECATE_MAILER_FLAG_I */
 if|#
 directive|if
+name|_FFR_DM_ONE
+comment|/* deliver first TA in background, then queue */
+literal|"_FFR_DM_ONE"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_DM_ONE */
+if|#
+directive|if
 name|_FFR_DIGUNIX_SAFECHOWN
 comment|/* Properly set SAFECHOWN (include/sm/conf.h) for Digital UNIX */
 comment|/* Problem noted by Anne Bennett of Concordia University */
@@ -22764,6 +23024,15 @@ directive|endif
 comment|/* _FFR_GEN_ORCPT */
 if|#
 directive|if
+name|_FFR_LOG_GREET_PAUSE
+comment|/* log time for greet_pause delay; from Nik Clayton */
+literal|"_FFR_LOG_GREET_PAUSE"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_LOG_GREET_PAUSE */
+if|#
+directive|if
 name|_FFR_GROUPREADABLEAUTHINFOFILE
 comment|/* Allow group readable DefaultAuthInfo file. */
 literal|"_FFR_GROUPREADABLEAUTHINFOFILE"
@@ -22848,6 +23117,24 @@ directive|endif
 comment|/* _FFR_MAX_FORWARD_ENTRIES */
 if|#
 directive|if
+name|_FFR_MAXKEY
+comment|/* increase key size for LDAP lookups, see conf.h */
+literal|"_FFR_MAXKEY"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_MAXKEY */
+if|#
+directive|if
+name|_FFR_MAXNOOPCOMMANDS
+comment|/* runtime option for "MaxNOOPCommands" */
+literal|"_FFR_MAXNOOPCOMMANDS"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_MAXNOOPCOMMANDS */
+if|#
+directive|if
 name|_FFR_MAX_SLEEP_TIME
 comment|/* Limit sleep(2) time in libsm/clock.c */
 literal|"_FFR_MAX_SLEEP_TIME"
@@ -22855,6 +23142,15 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_MAX_SLEEP_TIME */
+if|#
+directive|if
+name|_FFR_MEMSTAT
+comment|/* Check free memory */
+literal|"_FFR_MEMSTAT"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_MEMSTAT */
 if|#
 directive|if
 name|_FFR_MILTER_NAGLE
@@ -22886,6 +23182,15 @@ directive|endif
 comment|/* _FFR_MAX_SLEEP_TIME */
 if|#
 directive|if
+name|_FFR_MSG_ACCEPT
+comment|/* allow to override "Message accepted for delivery" */
+literal|"_FFR_MSG_ACCEPT"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_MSG_ACCEPT */
+if|#
+directive|if
 name|_FFR_NODELAYDSN_ON_HOLD
 comment|/* Do not issue a DELAY DSN for mailers that use the hold flag. */
 comment|/* Steven Pitzl */
@@ -22915,7 +23220,7 @@ comment|/* _FFR_LOG_NTRIES */
 if|#
 directive|if
 name|_FFR_PRIV_NOACTUALRECIPIENT
-comment|/* 	** PrivacyOptions=noactualrecipient stops sendmail from putting  	** X-Actual-Recipient lines in DSNs revealing the actual  	** account that addresses map to.  Patch from Dan Harkless. 	*/
+comment|/* 	**  PrivacyOptions=noactualrecipient stops sendmail from putting 	**  X-Actual-Recipient lines in DSNs revealing the actual 	**  account that addresses map to.  Patch from Dan Harkless. 	*/
 literal|"_FFR_PRIV_NOACTUALRECIPIENT"
 block|,
 endif|#
@@ -22952,7 +23257,7 @@ comment|/* _FFR_QUEUE_MACRO */
 if|#
 directive|if
 name|_FFR_QUEUE_RUN_PARANOIA
-comment|/* Additional checks when doing queue runs. */
+comment|/* Additional checks when doing queue runs; interval of checks */
 literal|"_FFR_QUEUE_RUN_PARANOIA"
 block|,
 endif|#
@@ -23012,6 +23317,15 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_SHM_STATUS */
+if|#
+directive|if
+name|_FFR_LDAP_SINGLEDN
+comment|/* 	**  The LDAP database map code in Sendmail 8.12.10, when 	**  given the -1 switch, would match only a single DN, 	**  but was able to return multiple attributes for that 	**  DN.  In Sendmail 8.13 this "bug" was corrected to 	**  only return if exactly one attribute matched. 	** 	**  Unfortunately, our configuration uses the former 	**  behaviour.  Attached is a relatively simple patch 	**  to 8.13.4 which adds a -2 switch (for lack of a 	**  better option) which returns the single dn/multiple 	**  attributes. 	** 	** Jeffrey T. Eaton, Carnegie-Mellon University 	*/
+literal|"_FFR_LDAP_SINGLEDN"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_LDAP_SINGLEDN */
 if|#
 directive|if
 name|_FFR_SKIP_DOMAINS

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2001 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2000-2001, 2005-2006 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: t-sem.c,v 1.14 2005/03/25 21:27:41 ca Exp $"
+literal|"@(#)$Id: t-sem.c,v 1.15 2006/03/13 20:40:43 msk Exp $"
 argument_list|)
 end_macro
 
@@ -1088,7 +1088,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"If it takes longer than 30 second, please interrupt it\n"
+literal|"If it takes longer than 30 seconds, please interrupt it\n"
 argument_list|)
 expr_stmt|;
 name|printf

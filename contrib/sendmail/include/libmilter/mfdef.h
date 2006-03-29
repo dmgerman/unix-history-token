@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: mfdef.h,v 8.21 2004/07/07 21:41:31 ca Exp $  */
+comment|/*  * Copyright (c) 1999-2005 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: mfdef.h,v 8.22 2005/08/05 21:49:04 ca Exp $  */
 end_comment
 
 begin_comment
@@ -418,6 +418,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SMFIR_CONN_FAIL
+value|'f'
+end_define
+
+begin_comment
+comment|/* cause a connection failure */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SMFIR_CHGHEADER
 value|'m'
 end_define
@@ -624,6 +635,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SMFIP_NOUNKNOWN
+value|0x00000100L
+end_define
+
+begin_comment
+comment|/* MTA should not send unknown command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFIP_NODATA
+value|0x00000200L
+end_define
+
+begin_comment
+comment|/* MTA should not send DATA */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SMFI_V1_PROT
 value|0x0000003FL
 end_define
@@ -643,6 +676,10 @@ begin_comment
 comment|/* The protocol of V2 filter */
 end_comment
 
+begin_comment
+comment|/* Note: the "current" version is now determined dynamically in milter.c */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -655,10 +692,6 @@ directive|define
 name|SMFI_CURR_PROT
 value|0x000000FFL
 end_define
-
-begin_comment
-comment|/* The current version */
-end_comment
 
 begin_else
 else|#
@@ -675,10 +708,6 @@ directive|define
 name|SMFI_CURR_PROT
 value|SMFI_V2_PROT
 end_define
-
-begin_comment
-comment|/* The current version */
-end_comment
 
 begin_endif
 endif|#

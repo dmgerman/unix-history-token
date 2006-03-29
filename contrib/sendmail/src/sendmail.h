@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2005 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 1998-2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_comment
@@ -230,7 +230,7 @@ end_macro
 
 begin_expr_stmt
 operator|=
-literal|"@(#)$Id: sendmail.h,v 8.993 2005/03/07 18:03:17 ca Exp $"
+literal|"@(#)$Id: sendmail.h,v 8.1006 2006/02/27 17:49:09 ca Exp $"
 expr_stmt|;
 end_expr_stmt
 
@@ -7689,8 +7689,15 @@ begin_comment
 comment|/* successful only if match one key */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MF_SINGLEDN
+value|0x00200000
+end_define
+
 begin_comment
-comment|/*			0x00200000	   available for use */
+comment|/* only one match, but multi values */
 end_comment
 
 begin_define
@@ -9716,6 +9723,32 @@ begin_comment
 comment|/* deliver in background */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|_FFR_DM_ONE
+end_if
+
+begin_define
+define|#
+directive|define
+name|SM_DM_ONE
+value|'o'
+end_define
+
+begin_comment
+comment|/* deliver first TA in background, then queue */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_DM_ONE */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -9747,6 +9780,17 @@ end_define
 
 begin_comment
 comment|/* verify only (used internally) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DM_NOTSET
+value|(-1)
+end_define
+
+begin_comment
+comment|/* DeliveryMode (per daemon) option not set */
 end_comment
 
 begin_define
@@ -11430,7 +11474,7 @@ begin_define
 define|#
 directive|define
 name|TLS_I_SRV_CERT
-value|(TLS_I_CERT_EX | TLS_I_KEY_EX | \ 			  TLS_I_KEY_UNR | TLS_I_KEY_OUNR | \ 			  TLS_I_CERTP_EX | TLS_I_CERTF_EX | \ 			  TLS_I_USE_KEY | TLS_I_USE_CERT)
+value|(TLS_I_CERT_EX | TLS_I_KEY_EX | \ 			  TLS_I_KEY_UNR | TLS_I_KEY_OUNR | \ 			  TLS_I_CERTP_EX | TLS_I_CERTF_EX | \ 			  TLS_I_USE_KEY | TLS_I_USE_CERT | TLS_I_CACHE)
 end_define
 
 begin_comment
@@ -11441,7 +11485,7 @@ begin_define
 define|#
 directive|define
 name|TLS_I_SRV
-value|(TLS_I_SRV_CERT | TLS_I_RSA_TMP | TLS_I_VRFY_PATH | \ 			 TLS_I_VRFY_LOC | TLS_I_TRY_DH | TLS_I_DH512)
+value|(TLS_I_SRV_CERT | TLS_I_RSA_TMP | TLS_I_VRFY_PATH | \ 			 TLS_I_VRFY_LOC | TLS_I_TRY_DH | TLS_I_DH512 | \ 			 TLS_I_CACHE)
 end_define
 
 begin_comment
@@ -11615,6 +11659,7 @@ name|tlslogerr
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -13336,6 +13381,32 @@ begin_comment
 comment|/* parse addresses during newaliases */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|_FFR_QUEUE_RUN_PARANOIA
+end_if
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|CheckQueueRunners
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* check whether queue runners are OK */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_QUEUE_RUN_PARANOIA */
+end_comment
+
 begin_decl_stmt
 name|EXTERN
 name|bool
@@ -14101,6 +14172,17 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|int
+name|MaxNOOPCommands
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max "noise" commands before slowdown */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
 name|MaxRcptPerMsg
 decl_stmt|;
 end_decl_stmt
@@ -14118,6 +14200,29 @@ end_decl_stmt
 
 begin_comment
 comment|/* maximum depth of ruleset recursion */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_MSG_ACCEPT
+end_if
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|MessageAccept
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_MSG_ACCEPT */
 end_comment
 
 begin_decl_stmt
@@ -14230,6 +14335,55 @@ end_decl_stmt
 
 begin_comment
 comment|/* time btwn log msgs while refusing */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_MEMSTAT
+end_if
+
+begin_decl_stmt
+name|EXTERN
+name|long
+name|QueueLowMem
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* low memory starting forced queueing */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|long
+name|RefuseLowMem
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* low memory refusing connections */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|MemoryResource
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* memory resource to look up */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_MEMSTAT */
 end_comment
 
 begin_decl_stmt
@@ -16005,6 +16159,20 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|REPLYTYPE
+parameter_list|(
+name|r
+parameter_list|)
+value|((r) / 100)
+end_define
+
+begin_comment
+comment|/* first digit of reply code */
+end_comment
 
 begin_define
 define|#
@@ -18439,7 +18607,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|setuserenv
+name|sm_setuserenv
 name|__P
 argument_list|(
 operator|(

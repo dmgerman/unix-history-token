@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: timers.c,v 8.24 2001/09/11 04:05:17 gshapiro Exp $"
+literal|"@(#)$Id: timers.c,v 8.25 2005/06/14 23:07:23 ca Exp $"
 argument_list|)
 end_macro
 
@@ -31,7 +31,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<sm/time.h>
 end_include
 
 begin_include

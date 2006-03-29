@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1999-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  *  Copyright (c) 1999-2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: listener.c,v 8.111 2004/09/20 21:11:15 msk Exp $"
+literal|"@(#)$Id: listener.c,v 8.115 2006/01/24 00:48:39 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1713,6 +1713,20 @@ return|;
 block|}
 if|if
 condition|(
+if|#
+directive|if
+name|NETUNIX
+name|addr
+operator|.
+name|sa
+operator|.
+name|sa_family
+operator|!=
+name|AF_UNIX
+operator|&&
+endif|#
+directive|endif
+comment|/* NETUNIX */
 name|setsockopt
 argument_list|(
 name|sock
@@ -1742,7 +1756,7 @@ name|smi_log
 argument_list|(
 name|SMI_LOG_ERR
 argument_list|,
-literal|"%s: Unable to setsockopt: %s"
+literal|"%s: set reuseaddr failed (%s)"
 argument_list|,
 name|name
 argument_list|,
@@ -2124,7 +2138,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  MI_CLOSENER -- close listen socket ** **	NOTE: It is assumed that this function is called from a **	      function that has a mutex lock (currently mi_stop_milters()). ** **	Parameters: **		none. ** **	Returns: **		none. */
+comment|/* **  MI_CLOSENER -- close listen socket ** **	Parameters: **		none. ** **	Returns: **		none. */
 end_comment
 
 begin_function
@@ -3128,7 +3142,7 @@ name|smi_log
 argument_list|(
 name|SMI_LOG_WARN
 argument_list|,
-literal|"%s: setsockopt() failed (%s)"
+literal|"%s: set keepalive failed (%s)"
 argument_list|,
 name|smfi
 operator|->

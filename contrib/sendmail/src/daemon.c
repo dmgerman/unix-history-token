@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2005 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: daemon.c,v 8.658 2005/02/02 18:19:28 ca Exp $"
+literal|"@(#)$Id: daemon.c,v 8.665 2006/03/02 19:12:00 ca Exp $"
 argument_list|)
 end_macro
 
@@ -148,7 +148,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<sm/time.h>
 end_include
 
 begin_if
@@ -412,21 +412,6 @@ end_comment
 
 begin_comment
 comment|/* see also sendmail.h: SuperSafe values */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DM_NOTSET
-value|(-1)
-end_define
-
-begin_comment
-comment|/* DeliveryMode (per daemon) option not set */
-end_comment
-
-begin_comment
-comment|/* see also sendmail.h: values for e_sendmode -- send modes */
 end_comment
 
 begin_decl_stmt
@@ -1579,6 +1564,10 @@ name|_FFR_QUEUE_RUN_PARANOIA
 elseif|else
 if|if
 condition|(
+name|CheckQueueRunners
+operator|>
+literal|0
+operator|&&
 name|QueueIntvl
 operator|>
 literal|0
@@ -1587,7 +1576,7 @@ name|lastrun
 operator|+
 name|QueueIntvl
 operator|+
-literal|60
+name|CheckQueueRunners
 operator|<
 name|now
 condition|)
@@ -5588,6 +5577,30 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* NETINET */
+if|#
+directive|if
+name|_FFR_SS_PER_DAEMON
+name|d
+operator|->
+name|d_supersafe
+operator|=
+name|SAFE_NOTSET
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_SS_PER_DAEMON */
+if|#
+directive|if
+name|_FFR_DM_PER_DAEMON
+name|d
+operator|->
+name|d_dm
+operator|=
+name|DM_NOTSET
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_DM_PER_DAEMON */
 while|while
 condition|(
 name|p
@@ -5710,30 +5723,6 @@ operator|*
 name|f
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_SS_PER_DAEMON
-name|d
-operator|->
-name|d_supersafe
-operator|=
-name|SAFE_NOTSET
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_SS_PER_DAEMON */
-if|#
-directive|if
-name|_FFR_DM_PER_DAEMON
-name|d
-operator|->
-name|d_dm
-operator|=
-name|DM_NOTSET
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_DM_PER_DAEMON */
 switch|switch
 condition|(
 operator|*

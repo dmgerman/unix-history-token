@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: milter.c,v 8.229 2005/03/02 02:32:34 ca Exp $"
+literal|"@(#)$Id: milter.c,v 8.232 2005/08/05 21:49:04 ca Exp $"
 argument_list|)
 end_macro
 
@@ -43,7 +43,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<sm/time.h>
 end_include
 
 begin_include
@@ -7347,6 +7347,10 @@ literal|2
 case|case
 name|SMFIC_UNKNOWN
 case|:
+name|skipflag
+operator|=
+name|SMFIP_NOUNKNOWN
+expr_stmt|;
 name|action
 operator|=
 literal|"unknown"
@@ -7359,6 +7363,30 @@ break|break;
 endif|#
 directive|endif
 comment|/* SMFI_VERSION> 2 */
+if|#
+directive|if
+name|SMFI_VERSION
+operator|>
+literal|3
+case|case
+name|SMFIC_DATA
+case|:
+name|skipflag
+operator|=
+name|SMFIP_NODATA
+expr_stmt|;
+name|action
+operator|=
+literal|"data"
+expr_stmt|;
+name|defresponse
+operator|=
+literal|"550 5.7.1 Command rejected"
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* SMFI_VERSION> 3 */
 case|case
 name|SMFIC_BODYEOB
 case|:
@@ -8159,12 +8187,15 @@ decl_stmt|;
 name|mi_int32
 name|pflags
 decl_stmt|;
-name|char
-modifier|*
-name|response
+name|mi_int32
+name|curr_prot
 decl_stmt|;
 name|ssize_t
 name|rlen
+decl_stmt|;
+name|char
+modifier|*
+name|response
 decl_stmt|;
 name|char
 name|data
@@ -8235,11 +8266,43 @@ argument_list|(
 name|SMFI_CURR_ACTS
 argument_list|)
 expr_stmt|;
+name|curr_prot
+operator|=
+name|SMFI_V2_PROT
+if|#
+directive|if
+name|_FFR_MILTER_NOHDR_RESP
+operator||
+name|SMFIP_NOHREPL
+endif|#
+directive|endif
+comment|/* _FFR_MILTER_NOHDR_RESP */
+if|#
+directive|if
+name|SMFI_VERSION
+operator|>=
+literal|3
+operator||
+name|SMFIP_NOUNKNOWN
+if|#
+directive|if
+name|SMFI_VERSION
+operator|>=
+literal|4
+operator||
+name|SMFIP_NODATA
+endif|#
+directive|endif
+comment|/* SMFI_VERSION>= 4 */
+endif|#
+directive|endif
+comment|/* SMFI_VERSION>= 3 */
+expr_stmt|;
 name|pflags
 operator|=
 name|htonl
 argument_list|(
-name|SMFI_CURR_PROT
+name|curr_prot
 argument_list|)
 expr_stmt|;
 operator|(
@@ -8862,7 +8925,7 @@ name|m
 operator|->
 name|mf_pflags
 operator|&
-name|SMFI_CURR_PROT
+name|curr_prot
 operator|)
 operator|!=
 name|m
@@ -8895,7 +8958,7 @@ operator|(
 name|unsigned
 name|long
 operator|)
-name|SMFI_CURR_PROT
+name|curr_prot
 argument_list|)
 expr_stmt|;
 if|if
@@ -8926,7 +8989,7 @@ operator|(
 name|unsigned
 name|long
 operator|)
-name|SMFI_CURR_PROT
+name|curr_prot
 argument_list|)
 expr_stmt|;
 name|milter_error
@@ -8941,6 +9004,34 @@ operator|-
 literal|1
 return|;
 block|}
+if|if
+condition|(
+name|m
+operator|->
+name|mf_fvers
+operator|<=
+literal|2
+condition|)
+name|m
+operator|->
+name|mf_pflags
+operator||=
+name|SMFIP_NOUNKNOWN
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|mf_fvers
+operator|<=
+literal|3
+condition|)
+name|m
+operator|->
+name|mf_pflags
+operator||=
+name|SMFIP_NODATA
+expr_stmt|;
 if|if
 condition|(
 name|tTd
@@ -10275,7 +10366,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  MILTER_INSHEADER -- Insert the supplied header ** **	Parameters: **		response -- encoded form of header/value. **		rlen -- length of response. **		e -- current envelope. ** **	Returns: **		none ** **  	Notes: **  		Unlike milter_addheader(), this does not attempt to determine **  		if the header already exists in the envelope, even a **  		deleted version.  It just blindly inserts. */
+comment|/* **  MILTER_INSHEADER -- Insert the supplied header ** **	Parameters: **		response -- encoded form of header/value. **		rlen -- length of response. **		e -- current envelope. ** **	Returns: **		none ** **	Notes: **		Unlike milter_addheader(), this does not attempt to determine **		if the header already exists in the envelope, even a **		deleted version.  It just blindly inserts. */
 end_comment
 
 begin_function

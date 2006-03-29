@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1999-2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: sfsasl.c,v 8.101 2004/12/15 22:45:55 ca Exp $"
+literal|"@(#)$Id: sfsasl.c,v 8.113 2006/03/02 19:18:27 ca Exp $"
 argument_list|)
 end_macro
 
@@ -703,6 +703,23 @@ operator|!=
 name|SASL_OK
 condition|)
 block|{
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|7
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"AUTH: sasl_decode error=%d"
+argument_list|,
+name|result
+argument_list|)
+expr_stmt|;
 name|outbuf
 operator|=
 name|NULL
@@ -999,10 +1016,29 @@ name|result
 operator|!=
 name|SASL_OK
 condition|)
+block|{
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|7
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"AUTH: sasl_encode error=%d"
+argument_list|,
+name|result
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
 if|if
 condition|(
 name|outbuf

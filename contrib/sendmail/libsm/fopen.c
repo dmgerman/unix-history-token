@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: fopen.c,v 1.61 2004/08/03 20:17:38 ca Exp $"
+literal|"@(#)$Id: fopen.c,v 1.62 2005/06/14 23:07:20 ca Exp $"
 argument_list|)
 end_macro
 
@@ -31,7 +31,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<sm/time.h>
 end_include
 
 begin_include
