@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2002, 2004 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: local.h,v 1.53 2004/01/09 18:34:22 ca Exp $  */
+comment|/*  * Copyright (c) 2000-2002, 2004-2006 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: local.h,v 1.57 2006/02/28 18:48:25 ca Exp $  */
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<sm/time.h>
 end_include
 
 begin_if
@@ -772,100 +772,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* should be defined in sys/time.h */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|timersub
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|timersub
-parameter_list|(
-name|tvp
-parameter_list|,
-name|uvp
-parameter_list|,
-name|vvp
-parameter_list|)
-define|\
-value|do								\ 	{								\ 		(vvp)->tv_sec = (tvp)->tv_sec - (uvp)->tv_sec;		\ 		(vvp)->tv_usec = (tvp)->tv_usec - (uvp)->tv_usec;	\ 		if ((vvp)->tv_usec< 0)					\ 		{							\ 			(vvp)->tv_sec--;				\ 			(vvp)->tv_usec += 1000000;			\ 		}							\ 	} while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !timersub */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|timeradd
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|timeradd
-parameter_list|(
-name|tvp
-parameter_list|,
-name|uvp
-parameter_list|,
-name|vvp
-parameter_list|)
-define|\
-value|do								\ 	{								\ 		(vvp)->tv_sec = (tvp)->tv_sec + (uvp)->tv_sec;		\ 		(vvp)->tv_usec = (tvp)->tv_usec + (uvp)->tv_usec;	\ 		if ((vvp)->tv_usec>= 1000000)				\ 		{							\ 			(vvp)->tv_sec++;				\ 			(vvp)->tv_usec -= 1000000;			\ 		}							\ 	} while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !timeradd */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|timercmp
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|timercmp
-parameter_list|(
-name|tvp
-parameter_list|,
-name|uvp
-parameter_list|,
-name|cmp
-parameter_list|)
-define|\
-value|(((tvp)->tv_sec == (uvp)->tv_sec) ?				\ 	    ((tvp)->tv_usec cmp (uvp)->tv_usec) :			\ 	    ((tvp)->tv_sec cmp (uvp)->tv_sec))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !timercmp */
-end_comment
 
 begin_decl_stmt
 specifier|extern

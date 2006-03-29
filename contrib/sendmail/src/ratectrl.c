@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: ratectrl.c,v 8.9 2004/07/07 21:23:57 ca Exp $"
+literal|"@(#)$Id: ratectrl.c,v 8.10 2005/06/14 23:07:23 ca Exp $"
 argument_list|)
 end_macro
 
@@ -54,7 +54,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<sm/time.h>
 end_include
 
 begin_ifndef

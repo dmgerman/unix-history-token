@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2005 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.120 2005/03/22 22:07:53 ca Exp $  */
+comment|/*  * Copyright (c) 1998-2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.128 2006/01/27 18:43:44 ca Exp $  */
 end_comment
 
 begin_comment
@@ -2570,6 +2570,44 @@ begin_if
 if|#
 directive|if
 name|SOLARIS
+operator|>=
+literal|20600
+operator|||
+operator|(
+name|SOLARIS
+operator|<
+literal|10000
+operator|&&
+name|SOLARIS
+operator|>=
+literal|206
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HASSNPRINTF
+value|1
+end_define
+
+begin_comment
+comment|/* has snprintf(3c) starting in 2.6 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SOLARIS>= 20600 || (SOLARIS< 10000&& SOLARIS>= 206) */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|SOLARIS
 operator|<
 literal|207
 operator|||
@@ -5082,6 +5120,60 @@ begin_comment
 comment|/* use<sys/mount.h> statfs() impl */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|DARWIN
+operator|>=
+literal|70000
+end_if
+
+begin_define
+define|#
+directive|define
+name|SOCKADDR_LEN_T
+value|socklen_t
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|DARWIN
+operator|>=
+literal|80000
+end_if
+
+begin_define
+define|#
+directive|define
+name|SPT_TYPE
+value|SPT_REUSEARGV
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPT_PADCHAR
+value|'\0'
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOCKOPT_LEN_T
+value|socklen_t
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -5092,6 +5184,11 @@ end_define
 begin_comment
 comment|/* use magic PS_STRINGS pointer for setproctitle */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -5211,6 +5308,12 @@ operator|!
 name|defined
 argument_list|(
 name|__GNU__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|DARWIN
 argument_list|)
 end_if
 
@@ -5384,7 +5487,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(BSD4_4)&& !defined(__bsdi__)&& !defined(__GNU__) */
+comment|/* defined(BSD4_4)&& !defined(__bsdi__)&& !defined(__GNU__)&& !defined(DARWIN)*/
 end_comment
 
 begin_comment
@@ -6183,6 +6286,17 @@ name|QUAD_T
 value|unsigned long long
 end_define
 
+begin_define
+define|#
+directive|define
+name|HASSNPRINTF
+value|1
+end_define
+
+begin_comment
+comment|/* has snprintf(3) (all versions?) */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -6218,9 +6332,25 @@ argument_list|(
 name|__NetBSD_Version__
 argument_list|)
 operator|&&
+expr|\
+operator|(
+operator|(
 name|__NetBSD_Version__
 operator|>=
 literal|200040000
+operator|&&
+name|__NetBSD_Version__
+operator|<
+literal|200090000
+operator|)
+operator|||
+expr|\
+operator|(
+name|__NetBSD_Version__
+operator|>=
+literal|299000900
+operator|)
+operator|)
 end_if
 
 begin_undef
@@ -6402,9 +6532,25 @@ argument_list|(
 name|__NetBSD_Version__
 argument_list|)
 operator|&&
+expr|\
+operator|(
+operator|(
 name|__NetBSD_Version__
 operator|>=
 literal|200060000
+operator|&&
+name|__NetBSD_Version__
+operator|<
+literal|200090000
+operator|)
+operator|||
+expr|\
+operator|(
+name|__NetBSD_Version__
+operator|>=
+literal|299000900
+operator|)
+operator|)
 end_if
 
 begin_define
@@ -7049,6 +7195,33 @@ end_endif
 
 begin_comment
 comment|/* OpenBSD>= 200405 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|OpenBSD
+operator|>=
+literal|200505
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|NETISO
+end_undef
+
+begin_comment
+comment|/* iso.h removed in 3.7 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* OpenBSD>= 200505 */
 end_comment
 
 begin_endif

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: sem.c,v 1.12 2005/03/25 21:27:02 ca Exp $"
+literal|"@(#)$Id: sem.c,v 1.13 2005/08/12 20:39:59 ca Exp $"
 argument_list|)
 end_macro
 
@@ -44,6 +44,12 @@ begin_include
 include|#
 directive|include
 file|<sm/heap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_comment
@@ -79,6 +85,8 @@ name|int
 name|semid
 decl_stmt|,
 name|i
+decl_stmt|,
+name|err
 decl_stmt|;
 name|unsigned
 name|short
@@ -227,6 +235,10 @@ name|semid
 return|;
 name|error
 label|:
+name|err
+operator|=
+name|errno
+expr_stmt|;
 if|if
 condition|(
 name|semvals
@@ -250,6 +262,18 @@ name|semid
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
+name|err
+operator|>
+literal|0
+operator|)
+condition|?
+operator|(
+literal|0
+operator|-
+name|err
+operator|)
+else|:
 operator|-
 literal|1
 return|;

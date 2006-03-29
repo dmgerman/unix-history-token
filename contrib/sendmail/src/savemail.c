@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$FreeBSD$  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: savemail.c,v 8.304 2004/10/06 21:36:06 ca Exp $"
+literal|"@(#)$Id: savemail.c,v 8.306 2006/02/25 02:16:53 ca Exp $"
 argument_list|)
 end_macro
 
@@ -6263,11 +6263,10 @@ return|;
 block|}
 if|if
 condition|(
-operator|(
+name|REPLYTYPE
+argument_list|(
 name|smtpstat
-operator|/
-literal|100
-operator|)
+argument_list|)
 operator|==
 literal|2
 condition|)
@@ -6276,11 +6275,10 @@ literal|"2.0.0"
 return|;
 if|if
 condition|(
-operator|(
+name|REPLYTYPE
+argument_list|(
 name|smtpstat
-operator|/
-literal|100
-operator|)
+argument_list|)
 operator|==
 literal|4
 condition|)
