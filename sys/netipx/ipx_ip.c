@@ -65,6 +65,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -181,6 +187,14 @@ include|#
 directive|include
 file|<netipx/ipx_var.h>
 end_include
+
+begin_expr_stmt
+name|NET_NEEDS_GIANT
+argument_list|(
+literal|"ipx_ip"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static
