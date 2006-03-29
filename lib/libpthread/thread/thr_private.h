@@ -334,34 +334,54 @@ name|PANIC
 parameter_list|(
 name|string
 parameter_list|)
-value|_thr_exit(__FILE__,__LINE__,string)
+value|_thr_exit(__FILE__, __LINE__, string)
 end_define
 
 begin_comment
 comment|/* Output debug messages like this: */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|STDOUT_FILENO
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|stdout_debug
 parameter_list|(
-name|args
 modifier|...
 parameter_list|)
-value|_thread_printf(STDOUT_FILENO, ##args)
+value|_thread_printf(STDOUT_FILENO, __VA_ARGS__)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|STDERR_FILENO
+end_ifdef
 
 begin_define
 define|#
 directive|define
 name|stderr_debug
 parameter_list|(
-name|args
 modifier|...
 parameter_list|)
-value|_thread_printf(STDOUT_FILENO, ##args)
+value|_thread_printf(STDERR_FILENO, __VA_ARGS__)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1300,7 +1320,10 @@ function_decl|(
 modifier|*
 name|routine
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
 function_decl|;
 name|void
 modifier|*
@@ -1422,7 +1445,10 @@ function_decl|(
 modifier|*
 name|cleanup_attr
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
 function_decl|;
 name|void
 modifier|*
@@ -3101,7 +3127,9 @@ end_function_decl
 begin_function_decl
 name|void
 name|_kse_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
