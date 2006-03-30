@@ -2634,6 +2634,7 @@ decl_stmt|;
 name|uint32_t
 name|sockevent
 decl_stmt|;
+comment|/* 	 * Read the socket event.  Sometimes, the theory goes, the PCI 	 * bus is so loaded that it cannot satisfy the read request, so 	 * we get garbage back from the following read.  We have to filter 	 * out the garbage so that we don't spontaneously reset the card 	 * under high load.  PCI isn't supposed to act like this.  No doubt 	 * this is a bug in the PCI bridge chipset (or cbb brige) that's being 	 * used in certain amd64 laptops today.  Work around the issue by 	 * assuming that any bits we don't know about being set means that 	 * we got garbage. 	 */
 name|sockevent
 operator|=
 name|cbb_get
@@ -2647,6 +2648,14 @@ if|if
 condition|(
 name|sockevent
 operator|!=
+literal|0
+operator|&&
+operator|(
+name|sockevent
+operator|&
+name|CBB_SOCKET_EVENT_VALID_MASK
+operator|)
+operator|==
 literal|0
 condition|)
 block|{
@@ -2753,7 +2762,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Some chips also require us to read the old ExCA registe for 	 * card status change when we route CSC vis PCI.  This isn't supposed 	 * to be required, but it clears the interrupt state on some chipsets. 	 * Maybe there's a setting that would obviate its need.  Maybe we 	 * should test the status bits and deal with them, but so far we've 	 * not found any machines that don't also give us the socket status 	 * indication above. 	 * 	 * We have to call this unconditionally because some bridges deliver 	 * the even independent of the CBB_SOCKET_EVENT_CD above. 	 */
+comment|/* 	 * Some chips also require us to read the old ExCA registe for 	 * card status change when we route CSC vis PCI.  This isn't supposed 	 * to be required, but it clears the interrupt state on some chipsets. 	 * Maybe there's a setting that would obviate its need.  Maybe we 	 * should test the status bits and deal with them, but so far we've 	 * not found any machines that don't also give us the socket status 	 * indication above. 	 * 	 * We have to call this unconditionally because some bridges deliver 	 * the event independent of the CBB_SOCKET_EVENT_CD above. 	 */
 name|exca_getb
 argument_list|(
 operator|&
