@@ -183,7 +183,7 @@ argument_list|(
 operator|&
 name|taskqueue_acpi
 argument_list|,
-literal|3
+name|acpi_max_threads
 argument_list|,
 name|PWAIT
 argument_list|,
