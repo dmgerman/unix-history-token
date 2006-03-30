@@ -165,6 +165,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|printf
+argument_list|(
+literal|"NOTICE: Please configure device scc(1) into the kernel.\n"
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
