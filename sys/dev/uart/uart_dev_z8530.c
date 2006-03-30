@@ -1686,9 +1686,8 @@ name|sig
 operator|=
 name|old
 expr_stmt|;
-name|mtx_lock_spin
+name|uart_lock
 argument_list|(
-operator|&
 name|sc
 operator|->
 name|sc_hwmtx
@@ -1706,9 +1705,8 @@ argument_list|,
 name|RR_BES
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|uart_unlock
 argument_list|(
-operator|&
 name|sc
 operator|->
 name|sc_hwmtx
@@ -1833,9 +1831,8 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-name|mtx_lock_spin
+name|uart_lock
 argument_list|(
-operator|&
 name|sc
 operator|->
 name|sc_hwmtx
@@ -1891,9 +1888,8 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-name|mtx_unlock_spin
+name|uart_unlock
 argument_list|(
-operator|&
 name|sc
 operator|->
 name|sc_hwmtx
@@ -1961,9 +1957,8 @@ name|ipend
 operator|=
 literal|0
 expr_stmt|;
-name|mtx_lock_spin
+name|uart_lock
 argument_list|(
-operator|&
 name|sc
 operator|->
 name|sc_hwmtx
@@ -2250,9 +2245,8 @@ name|bas
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock_spin
+name|uart_unlock
 argument_list|(
-operator|&
 name|sc
 operator|->
 name|sc_hwmtx
@@ -2304,9 +2298,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|mtx_lock_spin
+name|uart_lock
 argument_list|(
-operator|&
 name|sc
 operator|->
 name|sc_hwmtx
@@ -2335,9 +2328,8 @@ operator|->
 name|tpc
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|uart_unlock
 argument_list|(
-operator|&
 name|sc
 operator|->
 name|sc_hwmtx
@@ -2467,9 +2459,8 @@ name|sc
 operator|->
 name|sc_bas
 expr_stmt|;
-name|mtx_lock_spin
+name|uart_lock
 argument_list|(
-operator|&
 name|sc
 operator|->
 name|sc_hwmtx
@@ -2680,9 +2671,8 @@ name|RR_BES
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock_spin
+name|uart_unlock
 argument_list|(
-operator|&
 name|sc
 operator|->
 name|sc_hwmtx
@@ -2810,9 +2800,8 @@ name|new
 argument_list|)
 condition|)
 do|;
-name|mtx_lock_spin
+name|uart_lock
 argument_list|(
-operator|&
 name|sc
 operator|->
 name|sc_hwmtx
@@ -2874,9 +2863,8 @@ argument_list|(
 name|bas
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|uart_unlock
 argument_list|(
-operator|&
 name|sc
 operator|->
 name|sc_hwmtx
@@ -2925,9 +2913,8 @@ name|sc
 operator|->
 name|sc_bas
 expr_stmt|;
-name|mtx_lock_spin
+name|uart_lock
 argument_list|(
-operator|&
 name|sc
 operator|->
 name|sc_hwmtx
@@ -2980,9 +2967,8 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Report SER_INT_TXIDLE again. */
-name|mtx_unlock_spin
+name|uart_unlock
 argument_list|(
-operator|&
 name|sc
 operator|->
 name|sc_hwmtx

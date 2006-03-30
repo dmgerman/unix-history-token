@@ -250,9 +250,14 @@ name|sc_dev
 decl_stmt|;
 name|struct
 name|mtx
-name|sc_hwmtx
+name|sc_hwmtx_s
 decl_stmt|;
 comment|/* Spinlock protecting hardware. */
+name|struct
+name|mtx
+modifier|*
+name|sc_hwmtx
+decl_stmt|;
 name|struct
 name|resource
 modifier|*
@@ -451,6 +456,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|serdev_intr_t
+modifier|*
+name|uart_bus_ihand
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|int
+name|ipend
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|uart_bus_probe
 parameter_list|(
@@ -468,6 +487,16 @@ name|rid
 parameter_list|,
 name|int
 name|chan
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|uart_bus_sysdev
+parameter_list|(
+name|device_t
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
