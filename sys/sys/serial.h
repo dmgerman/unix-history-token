@@ -191,6 +191,12 @@ name|SER_MASK_DELTA
 value|SER_DELTA(SER_MASK_STATE)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_comment
 comment|/*  * Specification of interrupt sources typical for serial ports. These are  * useful when some umbrella driver like scc(4) has enough knowledge of  * the hardware to obtain the set of pending interrupts but does not itself  * handle the interrupt. Each interrupt source can be given an interrupt  * resource for which inferior drivers can install handlers. The lower 16  * bits are kept free for the signals above.  */
 end_comment
@@ -243,6 +249,37 @@ directive|define
 name|SER_INT_SIGMASK
 value|(SER_MASK_DELTA | SER_MASK_STATE)
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|int
+name|serdev_intr_t
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#
