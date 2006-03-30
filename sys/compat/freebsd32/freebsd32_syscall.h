@@ -1209,7 +1209,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|FREEBSD32_SYS_shmctl
+name|FREEBSD32_SYS_freebsd32_shmctl
 value|229
 end_define
 

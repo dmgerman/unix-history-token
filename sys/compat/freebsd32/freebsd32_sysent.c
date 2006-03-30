@@ -3845,19 +3845,19 @@ name|SYF_MPSAFE
 operator||
 name|AS
 argument_list|(
-name|shmctl_args
+name|freebsd32_shmctl_args
 argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|shmctl
+name|freebsd32_shmctl
 block|,
 name|AUE_SHMCTL
 block|}
 block|,
-comment|/* 229 = shmctl */
+comment|/* 229 = freebsd32_shmctl */
 block|{
 name|SYF_MPSAFE
 operator||

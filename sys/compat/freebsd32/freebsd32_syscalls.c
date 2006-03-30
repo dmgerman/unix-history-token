@@ -698,9 +698,9 @@ comment|/* 227 = msgrcv */
 literal|"shmat"
 block|,
 comment|/* 228 = shmat */
-literal|"shmctl"
+literal|"freebsd32_shmctl"
 block|,
-comment|/* 229 = shmctl */
+comment|/* 229 = freebsd32_shmctl */
 literal|"shmdt"
 block|,
 comment|/* 230 = shmdt */
