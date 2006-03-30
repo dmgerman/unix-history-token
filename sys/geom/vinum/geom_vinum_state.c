@@ -1224,6 +1224,24 @@ literal|"gv_update_vol_state: NULL v"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* The volume can't be up without plexes. */
+if|if
+condition|(
+name|v
+operator|->
+name|plexcount
+operator|==
+literal|0
+condition|)
+block|{
+name|v
+operator|->
+name|state
+operator|=
+name|GV_VOL_DOWN
+expr_stmt|;
+return|return;
+block|}
 name|LIST_FOREACH
 argument_list|(
 argument|p

@@ -415,6 +415,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|gv_free_sd
+parameter_list|(
+name|struct
+name|gv_sd
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|g_geom
 modifier|*
