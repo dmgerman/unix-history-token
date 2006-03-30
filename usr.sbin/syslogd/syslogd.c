@@ -6557,6 +6557,14 @@ operator|<
 literal|0
 condition|)
 block|{
+comment|/* 			 * If writev(2) fails for potentially transient errors 			 * like the * filesystem being full, ignore it. 			 * Otherwise remove * this logfile from the list. 			 */
+if|if
+condition|(
+name|errno
+operator|!=
+name|ENOSPC
+condition|)
+block|{
 name|int
 name|e
 init|=
@@ -6591,6 +6599,7 @@ operator|.
 name|f_fname
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
