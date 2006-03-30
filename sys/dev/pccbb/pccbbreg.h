@@ -821,6 +821,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CBB_SOCKET_EVENT_VALID_MASK
+value|0x0f
+end_define
+
+begin_comment
+comment|/* All socket events */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CBB_SOCKET_MASK_CSTS
 value|0x01
 end_define
