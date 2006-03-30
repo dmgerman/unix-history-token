@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<res_update.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -97,12 +103,6 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"res_update.h"
 end_include
 
 begin_include
@@ -162,8 +162,11 @@ end_comment
 
 begin_function
 name|int
-name|res_mkupdate
+name|res_nmkupdate
 parameter_list|(
+name|res_state
+name|statp
+parameter_list|,
 name|ns_updrec
 modifier|*
 name|rrecp_in
@@ -259,40 +262,6 @@ modifier|*
 modifier|*
 name|lastdnptr
 decl_stmt|;
-if|if
-condition|(
-operator|(
-name|_res
-operator|.
-name|options
-operator|&
-name|RES_INIT
-operator|)
-operator|==
-literal|0
-operator|&&
-name|res_init
-argument_list|()
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|RES_SET_H_ERRNO
-argument_list|(
-operator|&
-name|_res
-argument_list|,
-name|NETDB_INTERNAL
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
 comment|/* 	 * Initialize header fields. 	 */
 if|if
 condition|(
@@ -338,8 +307,8 @@ operator|=
 name|htons
 argument_list|(
 operator|++
-name|_res
-operator|.
+name|statp
+operator|->
 name|id
 argument_list|)
 expr_stmt|;
@@ -613,7 +582,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"res_mkupdate: incorrect opcode: %d\n"
+literal|"res_nmkupdate: incorrect opcode: %d\n"
 argument_list|,
 name|rrecp
 operator|->
@@ -673,7 +642,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"res_mkupdate: incorrect opcode: %d\n"
+literal|"res_nmkupdate: incorrect opcode: %d\n"
 argument_list|,
 name|rrecp
 operator|->

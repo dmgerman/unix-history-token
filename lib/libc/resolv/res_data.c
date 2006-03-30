@@ -118,22 +118,11 @@ directive|include
 file|<resolv.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_LIBC
-end_ifndef
-
 begin_include
 include|#
 directive|include
 file|<res_update.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -562,12 +551,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_LIBC
-end_ifndef
-
 begin_function
 name|int
 name|res_mkupdate
@@ -635,11 +618,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|int
@@ -961,12 +939,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_LIBC
-end_ifndef
-
 begin_function
 name|int
 name|res_update
@@ -1025,11 +997,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|int
