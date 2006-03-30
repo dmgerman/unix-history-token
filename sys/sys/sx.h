@@ -444,8 +444,7 @@ name|sx_unlock
 parameter_list|(
 name|sx
 parameter_list|)
-define|\
-value|do { \ 			if ((sx)->sx_cnt< 0) \ 				sx_xunlock(sx); \ 			else \ 				sx_sunlock(sx); \ 		} while (0)
+value|do {						\ 	if ((sx)->sx_cnt< 0)						\ 		sx_xunlock(sx);						\ 	else								\ 		sx_sunlock(sx);						\ } while (0)
 end_define
 
 begin_if
