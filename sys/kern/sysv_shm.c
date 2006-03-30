@@ -247,6 +247,27 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|&&
+operator|(
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_43
+argument_list|)
+operator|)
+end_if
+
 begin_struct_decl
 struct_decl|struct
 name|oshmctl_args
@@ -270,6 +291,11 @@ name|uap
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -316,6 +342,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|&&
+operator|(
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_43
+argument_list|)
+operator|)
+end_if
+
 begin_comment
 comment|/* XXX casting to (sy_call_t *) is bogus, as usual. */
 end_comment
@@ -360,6 +407,11 @@ name|shmctl
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -2358,6 +2410,27 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|&&
+operator|(
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_43
+argument_list|)
+operator|)
+end_if
+
 begin_struct
 struct|struct
 name|oshmid_ds
@@ -2740,6 +2813,11 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -4486,6 +4564,24 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|&&
+operator|(
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_43
+argument_list|)
+operator|)
 name|int
 name|error
 decl_stmt|;
@@ -4573,6 +4669,20 @@ operator|(
 name|error
 operator|)
 return|;
+else|#
+directive|else
+return|return
+operator|(
+name|nosys
+argument_list|(
+name|td
+argument_list|,
+name|NULL
+argument_list|)
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
