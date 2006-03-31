@@ -1314,6 +1314,11 @@ argument_list|(
 literal|"ffs_snapshot: mount mismatch"
 argument_list|)
 expr_stmt|;
+name|vfs_rel
+argument_list|(
+name|wrtmp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vn_start_write

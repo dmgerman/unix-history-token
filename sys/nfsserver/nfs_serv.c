@@ -1606,6 +1606,12 @@ argument_list|,
 name|V_WAIT
 argument_list|)
 expr_stmt|;
+name|vfs_rel
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+comment|/* The write holds a ref. */
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -5633,6 +5639,12 @@ argument_list|,
 name|V_WAIT
 argument_list|)
 expr_stmt|;
+name|vfs_rel
+argument_list|(
+name|mntp
+argument_list|)
+expr_stmt|;
+comment|/* The write holds a ref. */
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -9144,6 +9156,12 @@ argument_list|,
 name|V_WAIT
 argument_list|)
 expr_stmt|;
+name|vfs_rel
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+comment|/* The write holds a ref. */
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -10660,6 +10678,12 @@ argument_list|,
 name|V_WAIT
 argument_list|)
 expr_stmt|;
+name|vfs_rel
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+comment|/* The write holds a ref. */
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -11804,6 +11828,12 @@ argument_list|,
 name|V_WAIT
 argument_list|)
 expr_stmt|;
+name|vfs_rel
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+comment|/* The write holds a ref. */
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -12551,6 +12581,12 @@ argument_list|,
 name|V_WAIT
 argument_list|)
 expr_stmt|;
+name|vfs_rel
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+comment|/* The write holds a ref. */
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -13857,6 +13893,12 @@ argument_list|,
 name|V_WAIT
 argument_list|)
 expr_stmt|;
+name|vfs_rel
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+comment|/* The write holds a ref. */
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -14805,6 +14847,12 @@ argument_list|,
 name|V_WAIT
 argument_list|)
 expr_stmt|;
+name|vfs_rel
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+comment|/* The write holds a ref. */
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -15842,6 +15890,12 @@ argument_list|,
 name|V_WAIT
 argument_list|)
 expr_stmt|;
+name|vfs_rel
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+comment|/* The write holds a ref. */
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -16807,6 +16861,12 @@ argument_list|,
 name|V_WAIT
 argument_list|)
 expr_stmt|;
+name|vfs_rel
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+comment|/* The write holds a ref. */
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -21135,6 +21195,12 @@ argument_list|,
 name|V_WAIT
 argument_list|)
 expr_stmt|;
+name|vfs_rel
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+comment|/* The write holds a ref. */
 name|mtx_unlock
 argument_list|(
 operator|&
