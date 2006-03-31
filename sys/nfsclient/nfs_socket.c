@@ -5763,6 +5763,12 @@ argument_list|(
 name|rep
 argument_list|)
 expr_stmt|;
+name|rep
+operator|->
+name|r_rtt
+operator|=
+literal|0
+expr_stmt|;
 continue|continue;
 block|}
 if|if
