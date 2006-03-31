@@ -2081,6 +2081,175 @@ name|IOCATADEVICES
 value|_IOWR('a',  5, struct ata_ioc_devices)
 end_define
 
+begin_comment
+comment|/* ATAPI request sense structure */
+end_comment
+
+begin_struct
+struct|struct
+name|atapi_sense
+block|{
+name|u_int8_t
+name|error
+decl_stmt|;
+comment|/* current or deferred errors */
+define|#
+directive|define
+name|ATA_SENSE_VALID
+value|0x80
+name|u_int8_t
+name|segment
+decl_stmt|;
+comment|/* segment number */
+name|u_int8_t
+name|key
+decl_stmt|;
+comment|/* sense key */
+define|#
+directive|define
+name|ATA_SENSE_KEY_MASK
+value|0x0f
+comment|/* sense key mask */
+define|#
+directive|define
+name|ATA_SENSE_NO_SENSE
+value|0x00
+comment|/* no specific sense key info */
+define|#
+directive|define
+name|ATA_SENSE_RECOVERED_ERROR
+value|0x01
+comment|/* command OK, data recovered */
+define|#
+directive|define
+name|ATA_SENSE_NOT_READY
+value|0x02
+comment|/* no access to drive */
+define|#
+directive|define
+name|ATA_SENSE_MEDIUM_ERROR
+value|0x03
+comment|/* non-recovered data error */
+define|#
+directive|define
+name|ATA_SENSE_HARDWARE_ERROR
+value|0x04
+comment|/* non-recoverable HW failure */
+define|#
+directive|define
+name|ATA_SENSE_ILLEGAL_REQUEST
+value|0x05
+comment|/* invalid command param(s) */
+define|#
+directive|define
+name|ATA_SENSE_UNIT_ATTENTION
+value|0x06
+comment|/* media changed */
+define|#
+directive|define
+name|ATA_SENSE_DATA_PROTECT
+value|0x07
+comment|/* write protect */
+define|#
+directive|define
+name|ATA_SENSE_BLANK_CHECK
+value|0x08
+comment|/* blank check */
+define|#
+directive|define
+name|ATA_SENSE_VENDOR_SPECIFIC
+value|0x09
+comment|/* vendor specific skey */
+define|#
+directive|define
+name|ATA_SENSE_COPY_ABORTED
+value|0x0a
+comment|/* copy aborted */
+define|#
+directive|define
+name|ATA_SENSE_ABORTED_COMMAND
+value|0x0b
+comment|/* command aborted, try again */
+define|#
+directive|define
+name|ATA_SENSE_EQUAL
+value|0x0c
+comment|/* equal */
+define|#
+directive|define
+name|ATA_SENSE_VOLUME_OVERFLOW
+value|0x0d
+comment|/* volume overflow */
+define|#
+directive|define
+name|ATA_SENSE_MISCOMPARE
+value|0x0e
+comment|/* data dont match the medium */
+define|#
+directive|define
+name|ATA_SENSE_RESERVED
+value|0x0f
+define|#
+directive|define
+name|ATA_SENSE_ILI
+value|0x20;
+define|#
+directive|define
+name|ATA_SENSE_EOM
+value|0x40;
+define|#
+directive|define
+name|ATA_SENSE_FILEMARK
+value|0x80;
+name|u_int32_t
+name|cmd_info
+decl_stmt|;
+comment|/* cmd information */
+name|u_int8_t
+name|sense_length
+decl_stmt|;
+comment|/* additional sense len (n-7) */
+name|u_int32_t
+name|cmd_specific_info
+decl_stmt|;
+comment|/* additional cmd spec info */
+name|u_int8_t
+name|asc
+decl_stmt|;
+comment|/* additional sense code */
+name|u_int8_t
+name|ascq
+decl_stmt|;
+comment|/* additional sense code qual */
+name|u_int8_t
+name|replaceable_unit_code
+decl_stmt|;
+comment|/* replaceable unit code */
+name|u_int8_t
+name|specific
+decl_stmt|;
+comment|/* sense key specific */
+define|#
+directive|define
+name|ATA_SENSE_SPEC_VALID
+value|0x80
+define|#
+directive|define
+name|ATA_SENSE_SPEC_MASK
+value|0x7f
+name|u_int8_t
+name|specific1
+decl_stmt|;
+comment|/* sense key specific */
+name|u_int8_t
+name|specific2
+decl_stmt|;
+comment|/* sense key specific */
+block|}
+name|__packed
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|ata_ioc_request
@@ -2111,6 +2280,10 @@ name|ccb
 index|[
 literal|16
 index|]
+decl_stmt|;
+name|struct
+name|atapi_sense
+name|sense
 decl_stmt|;
 block|}
 name|atapi
