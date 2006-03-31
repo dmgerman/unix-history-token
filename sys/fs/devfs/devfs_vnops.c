@@ -4653,7 +4653,18 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* XXX */
+name|vhold
+argument_list|(
+name|vp2
+argument_list|)
+expr_stmt|;
 name|vgone
+argument_list|(
+name|vp2
+argument_list|)
+expr_stmt|;
+name|vdrop
 argument_list|(
 name|vp2
 argument_list|)
