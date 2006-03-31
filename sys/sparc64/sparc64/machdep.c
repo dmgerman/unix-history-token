@@ -1485,6 +1485,7 @@ literal|0
 condition|)
 break|break;
 block|}
+comment|/* 	 * Initialize the tick counter.  Must be before the console is inited 	 * in order to provide the low-level console drivers with a working 	 * DELAY(). 	 */
 name|OF_getprop
 argument_list|(
 name|child
@@ -1509,7 +1510,7 @@ comment|/* 	 * Initialize the console before printing anything. 	 */
 name|cninit
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Panic is there is no metadata.  Most likely the kernel was booted 	 * directly, instead of through loader(8). 	 */
+comment|/* 	 * Panic if there is no metadata.  Most likely the kernel was booted 	 * directly, instead of through loader(8). 	 */
 if|if
 condition|(
 name|mdp
