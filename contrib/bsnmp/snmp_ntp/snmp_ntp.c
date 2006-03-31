@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2005  *	Hartmut Brandt.  *	All rights reserved.  *  * Author: Harti Brandt<harti@freebsd.org>  *  * Redistribution of this software and documentation and use in source and  * binary forms, with or without modification, are permitted provided that  * the following conditions are met:  *  * 1. Redistributions of source code or documentation must retain the above  *    copyright notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE AND DOCUMENTATION IS PROVIDED BY FRAUNHOFER FOKUS  * AND ITS CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL  * FRAUNHOFER FOKUS OR ITS CONTRIBUTORS  BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Begemot: bsnmp/snmp_ntp/snmp_ntp.c,v 1.4 2005/05/23 09:03:48 brandt_h Exp $  *  * NTP interface for SNMPd.  */
+comment|/*  * Copyright (c) 2005  *	Hartmut Brandt.  *	All rights reserved.  *  * Author: Harti Brandt<harti@freebsd.org>  *  * Redistribution of this software and documentation and use in source and  * binary forms, with or without modification, are permitted provided that  * the following conditions are met:  *  * 1. Redistributions of source code or documentation must retain the above  *    copyright notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE AND DOCUMENTATION IS PROVIDED BY FRAUNHOFER FOKUS  * AND ITS CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL  * FRAUNHOFER FOKUS OR ITS CONTRIBUTORS  BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Begemot: bsnmp/snmp_ntp/snmp_ntp.c,v 1.9 2005/10/06 07:15:01 brandt_h Exp $  *  * NTP interface for SNMPd.  */
 end_comment
 
 begin_include
@@ -51,11 +51,37 @@ directive|include
 file|<netdb.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDINT_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<stdint.h>
 end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|HAVE_INTTYPES_H
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -85,6 +111,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"support.h"
 end_include
 
 begin_include
@@ -740,7 +772,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* the initialisation function */
+comment|/* the initialization function */
 end_comment
 
 begin_function
@@ -1605,6 +1637,11 @@ literal|1
 operator|)
 return|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1971,8 +2008,12 @@ name|pkt
 expr_stmt|;
 if|if
 condition|(
+operator|(
 operator|*
 name|ptr
+operator|&
+literal|0x3f
+operator|)
 operator|!=
 operator|(
 operator|(
@@ -3416,7 +3457,7 @@ decl_stmt|;
 name|struct
 name|sockaddr_in
 modifier|*
-name|sin
+name|sin_local
 decl_stmt|;
 name|r
 operator|=
@@ -3573,7 +3614,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|sin
+name|sin_local
 operator|=
 operator|(
 expr|struct
@@ -3593,7 +3634,7 @@ index|[
 literal|3
 index|]
 operator|=
-name|sin
+name|sin_local
 operator|->
 name|sin_addr
 operator|.
@@ -3606,7 +3647,7 @@ index|[
 literal|2
 index|]
 operator|=
-name|sin
+name|sin_local
 operator|->
 name|sin_addr
 operator|.
@@ -3619,7 +3660,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|sin
+name|sin_local
 operator|->
 name|sin_addr
 operator|.
@@ -3632,7 +3673,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|sin
+name|sin_local
 operator|->
 name|sin_addr
 operator|.
@@ -7731,7 +7772,7 @@ block|{
 case|case
 name|LEAF_begemotNtpHost
 case|:
-comment|/* only at initialisation */
+comment|/* only at initialization */
 if|if
 condition|(
 name|community
@@ -7777,7 +7818,7 @@ return|;
 case|case
 name|LEAF_begemotNtpPort
 case|:
-comment|/* only at initialisation */
+comment|/* only at initialization */
 if|if
 condition|(
 name|community

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001-2003  *	Fraunhofer Institute for Open Communication Systems (FhG Fokus).  *	All rights reserved.  *  * Author: Harti Brandt<harti@freebsd.org>  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Begemot: bsnmp/snmp_mibII/mibII.h,v 1.15 2005/06/09 12:36:53 brandt_h Exp $  *  * Implementation of the interfaces and IP groups of MIB-II.  */
+comment|/*  * Copyright (c) 2001-2003  *	Fraunhofer Institute for Open Communication Systems (FhG Fokus).  *	All rights reserved.  *  * Author: Harti Brandt<harti@freebsd.org>  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Begemot: bsnmp/snmp_mibII/mibII.h,v 1.16 2006/02/14 09:04:19 brandt_h Exp $  *  * Implementation of the interfaces and IP groups of MIB-II.  */
 end_comment
 
 begin_include
@@ -179,46 +179,44 @@ block|, }
 enum|;
 end_enum
 
-begin_define
-define|#
-directive|define
+begin_comment
+comment|/*  * Private mibif data - hang off from the mibif.  */
+end_comment
+
+begin_struct
+struct|struct
+name|mibif_private
+block|{
+name|uint64_t
 name|hc_inoctets
-value|mib.ifmd_data.ifi_ibytes
-end_define
-
-begin_define
-define|#
-directive|define
+decl_stmt|;
+name|uint64_t
 name|hc_outoctets
-value|mib.ifmd_data.ifi_obytes
-end_define
-
-begin_define
-define|#
-directive|define
+decl_stmt|;
+name|uint64_t
 name|hc_omcasts
-value|mib.ifmd_data.ifi_omcasts
-end_define
-
-begin_define
-define|#
-directive|define
+decl_stmt|;
+name|uint64_t
 name|hc_opackets
-value|mib.ifmd_data.ifi_opackets
-end_define
-
-begin_define
-define|#
-directive|define
+decl_stmt|;
+name|uint64_t
 name|hc_imcasts
-value|mib.ifmd_data.ifi_imcasts
-end_define
+decl_stmt|;
+name|uint64_t
+name|hc_ipackets
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_define
 define|#
 directive|define
-name|hc_ipackets
-value|mib.ifmd_data.ifi_ipackets
+name|MIBIF_PRIV
+parameter_list|(
+name|IFP
+parameter_list|)
+value|((struct mibif_private *)((IFP)->private))
 end_define
 
 begin_comment
@@ -637,6 +635,52 @@ name|clockinfo
 name|clockinfo
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* baud rate of fastest interface */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|uint64_t
+name|mibif_maxspeed
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* user-forced update interval */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|mibif_force_hc_update_interval
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current update interval */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|mibif_hc_update_interval
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* re-compute update interval */
+end_comment
+
+begin_function_decl
+name|void
+name|mibif_reset_hc_timer
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* get interfaces and interface addresses. */
