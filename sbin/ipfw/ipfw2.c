@@ -24272,6 +24272,7 @@ if|if
 condition|(
 name|do_add
 condition|)
+block|{
 name|do_cmd
 argument_list|(
 name|IP_FW_TABLE_DEL
@@ -24309,6 +24310,7 @@ argument_list|,
 literal|"setsockopt(IP_FW_TABLE_ADD)"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
