@@ -10616,13 +10616,21 @@ argument_list|,
 literal|"vgonel"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* XXX Need to fix ttyvp before I enable this. */
-block|VNASSERT(vp->v_holdcnt, vp, 	    ("vgonel: vp %p has no reference.", vp));
-endif|#
-directive|endif
+name|VNASSERT
+argument_list|(
+name|vp
+operator|->
+name|v_holdcnt
+argument_list|,
+name|vp
+argument_list|,
+operator|(
+literal|"vgonel: vp %p has no reference."
+operator|,
+name|vp
+operator|)
+argument_list|)
+expr_stmt|;
 name|td
 operator|=
 name|curthread
