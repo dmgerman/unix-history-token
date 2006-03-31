@@ -274,13 +274,13 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|puc
+name|scc
 argument_list|,
 name|fhc
 argument_list|,
-name|puc_sbus_driver
+name|scc_sbus_driver
 argument_list|,
-name|puc_devclass
+name|scc_devclass
 argument_list|,
 literal|0
 argument_list|,
