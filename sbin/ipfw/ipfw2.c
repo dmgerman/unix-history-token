@@ -24234,6 +24234,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
 comment|/* If running silent, don't bomb out on these errors. */
 if|if
 condition|(
@@ -24310,6 +24311,7 @@ argument_list|,
 literal|"setsockopt(IP_FW_TABLE_ADD)"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 elseif|else
