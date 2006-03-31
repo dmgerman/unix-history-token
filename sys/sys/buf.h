@@ -675,12 +675,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_02000000
+name|B_NEEDSGIANT
 value|0x02000000
 end_define
 
 begin_comment
-comment|/* Available flag. */
+comment|/* Buffer's vnode needs giant. */
 end_comment
 
 begin_define
