@@ -529,24 +529,6 @@ name|clock
 operator|/
 name|hz
 expr_stmt|;
-comment|/* 	 * Avoid stopping of hardclock in terms of a lost tick interrupt 	 * by ensuring that the tick period is at least TICK_GRACE ticks. 	 */
-if|if
-condition|(
-name|tick_increment
-operator|<
-name|TICK_GRACE
-condition|)
-name|panic
-argument_list|(
-literal|"%s: HZ to high, decrease to at least %ld"
-argument_list|,
-name|__func__
-argument_list|,
-name|clock
-operator|/
-name|TICK_GRACE
-argument_list|)
-expr_stmt|;
 comment|/* 	 * UltraSparc II[e,i] based systems come up with the tick interrupt 	 * enabled and a handler that resets the tick counter, causing DELAY() 	 * to not work properly when used early in boot. 	 * UltraSPARC III based systems come up with the system tick interrupt 	 * enabled, causing an interrupt storm on startup since they are not 	 * handled. 	 */
 name|tick_stop
 argument_list|()
@@ -566,6 +548,24 @@ name|base
 decl_stmt|,
 name|s
 decl_stmt|;
+comment|/* 	 * Avoid stopping of hardclock in terms of a lost tick interrupt 	 * by ensuring that the tick period is at least TICK_GRACE ticks. 	 * This check would be better placed in tick_init(), however we 	 * have to call tick_init() before cninit() in order to provide 	 * the low-level console drivers with a working DELAY() which in 	 * turn means we cannot use panic() in tick_init(). 	 */
+if|if
+condition|(
+name|tick_increment
+operator|<
+name|TICK_GRACE
+condition|)
+name|panic
+argument_list|(
+literal|"%s: HZ too high, decrease to at least %ld"
+argument_list|,
+name|__func__
+argument_list|,
+name|tick_freq
+operator|/
+name|TICK_GRACE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|PCPU_GET
