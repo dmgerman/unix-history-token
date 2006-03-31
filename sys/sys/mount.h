@@ -444,6 +444,20 @@ begin_struct
 struct|struct
 name|mount
 block|{
+name|struct
+name|lock
+name|mnt_lock
+decl_stmt|;
+comment|/* mount structure lock */
+name|struct
+name|mtx
+name|mnt_mtx
+decl_stmt|;
+comment|/* mount structure interlock */
+define|#
+directive|define
+name|mnt_startzero
+value|mnt_list
 name|TAILQ_ENTRY
 argument_list|(
 argument|mount
@@ -475,16 +489,6 @@ modifier|*
 name|mnt_syncer
 decl_stmt|;
 comment|/* syncer vnode */
-name|struct
-name|lock
-name|mnt_lock
-decl_stmt|;
-comment|/* mount structure lock */
-name|struct
-name|mtx
-name|mnt_mtx
-decl_stmt|;
-comment|/* mount structure interlock */
 name|int
 name|mnt_ref
 decl_stmt|;
@@ -588,6 +592,10 @@ name|int
 name|mnt_secondary_writes
 decl_stmt|;
 comment|/* (i) # of secondary writes */
+define|#
+directive|define
+name|mnt_endzero
+value|mnt_secondary_accwrites
 name|int
 name|mnt_secondary_accwrites
 decl_stmt|;
