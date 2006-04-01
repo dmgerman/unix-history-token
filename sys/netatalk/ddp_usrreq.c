@@ -698,13 +698,11 @@ name|control
 operator|->
 name|m_len
 condition|)
-block|{
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|addr
