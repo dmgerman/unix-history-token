@@ -1214,7 +1214,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * accept1()  * MPSAFE  */
+comment|/*  * accept1()  * MPSAFE  *  * XXXRW: Use getsock() instead of fgetsock() here to avoid additional mutex  * operations due to soref()/sorele().  */
 end_comment
 
 begin_function
