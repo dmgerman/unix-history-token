@@ -5395,7 +5395,7 @@ argument_list|(
 name|mpt
 argument_list|,
 literal|"reply length does not match message length: "
-literal|"got %x; expected %x for function %x\n"
+literal|"got %x; expected %zx for function %x\n"
 argument_list|,
 name|hdr
 operator|->
@@ -5419,7 +5419,7 @@ argument_list|(
 name|mpt
 argument_list|,
 literal|"reply length does not match message length: "
-literal|"got %x; expected %zx for function %x\n"
+literal|"got %x; expected %x for function %x\n"
 argument_list|,
 name|hdr
 operator|->
