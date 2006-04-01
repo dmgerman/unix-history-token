@@ -972,30 +972,39 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
-name|REQ_STATE_FREE
+name|REQ_STATE_NIL
 init|=
 literal|0x00
 block|,
-name|REQ_STATE_ALLOCATED
+name|REQ_STATE_FREE
 init|=
 literal|0x01
 block|,
-name|REQ_STATE_QUEUED
+name|REQ_STATE_ALLOCATED
 init|=
 literal|0x02
 block|,
-name|REQ_STATE_DONE
+name|REQ_STATE_QUEUED
 init|=
 literal|0x04
 block|,
-name|REQ_STATE_TIMEDOUT
+name|REQ_STATE_DONE
 init|=
 literal|0x08
 block|,
-name|REQ_STATE_NEED_WAKEUP
+name|REQ_STATE_TIMEDOUT
 init|=
 literal|0x10
 block|,
+name|REQ_STATE_NEED_WAKEUP
+init|=
+literal|0x20
+block|,
+name|REQ_STATE_LOCKED
+init|=
+literal|0x80
+block|,
+comment|/* can't be freed */
 name|REQ_STATE_MASK
 init|=
 literal|0xFF
@@ -1027,7 +1036,7 @@ name|uint16_t
 name|IOCStatus
 decl_stmt|;
 comment|/* Completion status */
-name|uint16_t
+name|uint32_t
 name|serno
 decl_stmt|;
 comment|/* serial number */
@@ -1101,18 +1110,16 @@ name|req
 decl_stmt|;
 comment|/* pointer to currently active assist request */
 name|int
-name|flags
-decl_stmt|;
-define|#
-directive|define
-name|BOGUS_JO
-value|0x01
-name|int
 name|nxfers
+decl_stmt|;
+name|uint32_t
+name|tag_id
 decl_stmt|;
 enum|enum
 block|{
 name|TGT_STATE_NIL
+block|,
+name|TGT_STATE_LOADING
 block|,
 name|TGT_STATE_LOADED
 block|,
@@ -1149,7 +1156,7 @@ parameter_list|,
 name|ioindex
 parameter_list|)
 define|\
-value|((ioindex<< 16) | (mpt->sequence++))
+value|((ioindex<< 18) | (((mpt->sequence++)& 0x3f)<< 12) | (req->index& 0xfff))
 end_define
 
 begin_ifdef
@@ -1184,7 +1191,7 @@ name|mpt
 parameter_list|,
 name|tag
 parameter_list|)
-value|mpt->tgt_cmd_ptrs[tag>> 16]
+value|mpt->tgt_cmd_ptrs[tag>> 18]
 end_define
 
 begin_endif
@@ -1723,6 +1730,9 @@ decl_stmt|;
 name|uint8_t
 name|ioc_facts_flags
 decl_stmt|;
+name|uint8_t
+name|padding0
+decl_stmt|;
 comment|/* 	 * Port Facts 	 * XXX - Add multi-port support!. 	 */
 name|uint16_t
 name|mpt_ini_id
@@ -2004,11 +2014,6 @@ name|struct
 name|req_queue
 name|request_timeout_list
 decl_stmt|;
-comment|/* 	 * Deferred frame acks due to resource shortage. 	 */
-name|struct
-name|mpt_evtf_list
-name|ack_frames
-decl_stmt|;
 name|struct
 name|cam_sim
 modifier|*
@@ -2038,6 +2043,11 @@ name|request_t
 modifier|*
 name|tmf_req
 decl_stmt|;
+comment|/* 	 * Deferred frame acks due to resource shortage. 	 */
+name|struct
+name|mpt_evtf_list
+name|ack_frames
+decl_stmt|;
 comment|/* 	 * Target Mode Support 	 */
 name|uint32_t
 name|scsi_tgt_handler_id
@@ -2061,11 +2071,9 @@ decl_stmt|;
 name|uint16_t
 name|tgt_cmds_allocated
 decl_stmt|;
-comment|/* 	 * Stuff.. 	 */
 name|uint16_t
-name|sequence
+name|padding1
 decl_stmt|;
-comment|/* Sequence Number */
 name|uint16_t
 name|timeouts
 decl_stmt|;
@@ -2074,6 +2082,10 @@ name|uint16_t
 name|success
 decl_stmt|;
 comment|/* successes afer timeout */
+name|uint32_t
+name|sequence
+decl_stmt|;
+comment|/* Sequence Number */
 comment|/* Opposing port in a 929 or 1030, or NULL */
 name|struct
 name|mpt_softc
@@ -2905,15 +2917,11 @@ parameter_list|)
 value|(MPT_MAX_REQUESTS(mpt) * MPT_REQUEST_AREA)
 end_define
 
-begin_comment
-comment|/*  * Currently we try to pack both callbacks and request indices into 14 bits  * so that we don't have to get fancy when we get a target mode context  * reply (which only has 14 bits of IoIndex value) or a normal scsi  * initiator context reply (where we get bits 28..0 of context).  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|MPT_CONTEXT_CB_SHIFT
-value|(14)
+value|(16)
 end_define
 
 begin_define
@@ -2951,7 +2959,7 @@ begin_define
 define|#
 directive|define
 name|MPT_CONTEXT_REQI_MASK
-value|0x3FFF
+value|0xFFFF
 end_define
 
 begin_define
@@ -3101,15 +3109,12 @@ parameter_list|(
 name|struct
 name|mpt_softc
 modifier|*
-name|mpt
 parameter_list|,
 name|struct
 name|req_queue
 modifier|*
-name|chain
 parameter_list|,
 name|u_int
-name|iocstatus
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3555,7 +3560,7 @@ init|=
 operator|(
 name|tag
 operator|>>
-literal|16
+literal|18
 operator|)
 decl_stmt|;
 name|KASSERT

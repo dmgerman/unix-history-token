@@ -1233,9 +1233,11 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-name|bzero
+name|memset
 argument_list|(
 name|mpt
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2608,11 +2610,13 @@ literal|1
 operator|)
 return|;
 block|}
-name|bzero
+name|memset
 argument_list|(
 name|mpt
 operator|->
 name|request_pool
+argument_list|,
+literal|0
 argument_list|,
 name|len
 argument_list|)
