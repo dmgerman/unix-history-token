@@ -6322,12 +6322,12 @@ operator|*
 argument_list|)
 expr_stmt|;
 break|break;
-ifndef|#
-directive|ifndef
-name|NO_FLOATING_POINT
 case|case
 name|T_DOUBLE
 case|:
+ifndef|#
+directive|ifndef
+name|NO_FLOATING_POINT
 operator|(
 operator|*
 name|argtable
@@ -6345,10 +6345,15 @@ argument_list|,
 name|double
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|T_LONG_DOUBLE
 case|:
+ifndef|#
+directive|ifndef
+name|NO_FLOATING_POINT
 operator|(
 operator|*
 name|argtable
@@ -6366,9 +6371,9 @@ argument_list|,
 argument|long double
 argument_list|)
 expr_stmt|;
-break|break;
 endif|#
 directive|endif
+break|break;
 case|case
 name|TP_CHAR
 case|:

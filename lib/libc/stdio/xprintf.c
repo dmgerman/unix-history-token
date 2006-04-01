@@ -2565,6 +2565,9 @@ break|break;
 case|case
 name|PA_DOUBLE
 case|:
+ifndef|#
+directive|ifndef
+name|NO_FLOATING_POINT
 name|args
 index|[
 name|ch
@@ -2579,12 +2582,17 @@ argument_list|,
 name|double
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|PA_DOUBLE
 operator||
 name|PA_FLAG_LONG_DOUBLE
 case|:
+ifndef|#
+directive|ifndef
+name|NO_FLOATING_POINT
 name|args
 index|[
 name|ch
@@ -2599,6 +2607,8 @@ argument_list|,
 argument|long double
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 default|default:
 name|errx
