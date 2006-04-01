@@ -1207,6 +1207,19 @@ name|so_count
 operator|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|so
+operator|->
+name|so_pcb
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"sodealloc(): so_pcb != NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
