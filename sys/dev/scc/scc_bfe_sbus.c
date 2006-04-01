@@ -83,6 +83,20 @@ directive|include
 file|<dev/scc/scc_bfe.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|SBUS_REGSHFT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SBUS_RCLK
+value|307200
+end_define
+
 begin_function
 specifier|static
 name|int
@@ -146,6 +160,10 @@ operator|(
 name|scc_bfe_probe
 argument_list|(
 name|dev
+argument_list|,
+name|SBUS_REGSHFT
+argument_list|,
+name|SBUS_RCLK
 argument_list|)
 operator|)
 return|;

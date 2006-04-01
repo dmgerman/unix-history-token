@@ -83,13 +83,6 @@ directive|include
 file|"scc_if.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|DEFAULT_RCLK
-value|307200
-end_define
-
 begin_function_decl
 specifier|static
 name|int
@@ -232,16 +225,6 @@ operator|-
 name|CHAN_A
 operator|)
 operator|<<
-literal|1
-block|,
-operator|.
-name|cl_rclk
-operator|=
-name|DEFAULT_RCLK
-block|,
-operator|.
-name|cl_regshft
-operator|=
 literal|1
 block|, }
 decl_stmt|;

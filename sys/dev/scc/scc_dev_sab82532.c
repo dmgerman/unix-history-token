@@ -83,13 +83,6 @@ directive|include
 file|"scc_if.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|DEFAULT_RCLK
-value|29491200
-end_define
-
 begin_function_decl
 specifier|static
 name|int
@@ -227,17 +220,7 @@ operator|.
 name|cl_range
 operator|=
 name|SAB_CHANLEN
-block|,
-operator|.
-name|cl_rclk
-operator|=
-name|DEFAULT_RCLK
-block|,
-operator|.
-name|cl_regshft
-operator|=
-literal|0
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

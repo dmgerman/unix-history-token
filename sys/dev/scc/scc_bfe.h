@@ -244,12 +244,6 @@ comment|/* Supported modes (bitset). */
 name|int
 name|cl_range
 decl_stmt|;
-name|u_int
-name|cl_rclk
-decl_stmt|;
-name|u_int
-name|cl_regshft
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -388,6 +382,10 @@ name|scc_bfe_probe
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
