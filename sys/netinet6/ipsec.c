@@ -16184,21 +16184,6 @@ condition|)
 goto|goto
 name|fail
 goto|;
-name|mnew
-operator|->
-name|m_pkthdr
-operator|=
-name|n
-operator|->
-name|m_pkthdr
-expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* XXX: convert to m_tag or delete? */
-block|if (n->m_pkthdr.aux) { 						mnew->m_pkthdr.aux = 						    m_copym(n->m_pkthdr.aux, 						    0, M_COPYALL, M_DONTWAIT); 					}
-endif|#
-directive|endif
 name|M_MOVE_PKTHDR
 argument_list|(
 name|mnew
