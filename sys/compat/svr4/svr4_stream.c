@@ -917,6 +917,7 @@ name|NULL
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * XXXRW: Instead of using fgetsock(), just rely on the file 	 * descriptor reference. 	 */
 if|if
 condition|(
 operator|(
@@ -1457,6 +1458,7 @@ name|NULL
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * XXXRW: Instead of using fgetsock(), just rely on the file 	 * descriptor reference. 	 */
 if|if
 condition|(
 operator|(
