@@ -661,6 +661,10 @@ begin_comment
 comment|/* socket disconnected from peer */
 end_comment
 
+begin_comment
+comment|/*  * Protocols can mark a socket as SS_PROTOREF to indicate that, following  * pru_detach, they still want the socket to persist, and will free it  * themselves when they are done.  Protocols should only ever call sofree()  * following setting this flag in pru_detach(), and never otherwise, as  * sofree() bypasses socket reference counting.  */
+end_comment
+
 begin_define
 define|#
 directive|define
