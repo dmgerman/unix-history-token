@@ -699,7 +699,7 @@ operator|&
 name|INP_DROPPED
 condition|)
 block|{
-comment|/* 			 * Connection was in time wait and has been dropped; 			 * the calling path is via tcp_twclose(), which will 			 * free the tcptw, so we can discard the remainder. 			 * 			 * XXXRW: Would it be cleaner to free the tcptw 			 * here? 			 */
+comment|/* 			 * Connection was in time wait and has been dropped; 			 * the calling path is either via tcp_twclose(), or 			 * as a result of an eventual soclose() after 			 * tcp_twclose() has been called.  In either case, 			 * tcp_twclose() has detached the tcptw from the 			 * inpcb, so we just detach and free the inpcb. 			 * 			 * XXXRW: Would it be cleaner to free the tcptw 			 * here? 			 */
 ifdef|#
 directive|ifdef
 name|INET6

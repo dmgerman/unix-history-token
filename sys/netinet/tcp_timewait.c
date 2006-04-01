@@ -8553,7 +8553,7 @@ name|inpcb
 modifier|*
 name|inp
 decl_stmt|;
-comment|/* 	 * At this point, we should have an inpcb<->twtcp pair, with no 	 * associated socket.  Validate that this is the case. 	 * 	 * XXXRW: This comment stale -- could still have socket ...? 	 */
+comment|/* 	 * At this point, we are in one of two situations: 	 * 	 * (1) We have no socket, just an inpcb<->twtcp pair.  Release it all 	 * after validating. 	 * 	 * (2) We have a socket, which we may or may now own the reference 	 * for.  If we own the reference, release all the state after 	 * validating.  If not, leave it for the socket close to clean up. 	 */
 name|inp
 operator|=
 name|tw
@@ -8638,7 +8638,10 @@ condition|(
 name|so
 operator|!=
 name|NULL
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|inp
 operator|->
 name|inp_vflag
@@ -8646,19 +8649,7 @@ operator|&
 name|INP_SOCKREF
 condition|)
 block|{
-name|KASSERT
-argument_list|(
-name|so
-operator|->
-name|so_state
-operator|&
-name|SS_PROTOREF
-argument_list|,
-operator|(
-literal|"tcp_twclose: !SS_PROTOREF"
-operator|)
-argument_list|)
-expr_stmt|;
+comment|/* 			 * If a socket is present, and we own the only 			 * reference, we need to tear down the socket and the 			 * inpcb. 			 */
 name|inp
 operator|->
 name|inp_vflag
@@ -8712,6 +8703,19 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|so
+operator|->
+name|so_state
+operator|&
+name|SS_PROTOREF
+argument_list|,
+operator|(
+literal|"tcp_twclose: INP_SOCKREF&& !SS_PROTOREF"
+operator|)
+argument_list|)
+expr_stmt|;
 name|so
 operator|->
 name|so_state
@@ -8725,13 +8729,17 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|so
-operator|==
-name|NULL
-condition|)
+else|else
+block|{
+comment|/* 			 * If we don't own the only reference, the socket and 			 * inpcb need to be left around to be handled by 			 * tcp_usr_detach() later. 			 */
+name|INP_UNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
 block|{
 ifdef|#
 directive|ifdef
@@ -8758,12 +8766,6 @@ name|inp
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|printf
-argument_list|(
-literal|"tcp_twclose: so != NULL but !INP_SOCKREF"
-argument_list|)
-expr_stmt|;
 name|tcpstat
 operator|.
 name|tcps_closed
