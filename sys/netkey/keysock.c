@@ -1197,19 +1197,20 @@ name|s
 decl_stmt|,
 name|error
 decl_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|sotorawcb
 argument_list|(
 name|so
 argument_list|)
-operator|!=
-literal|0
-condition|)
-return|return
-name|EISCONN
-return|;
-comment|/* XXX panic? */
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"key_attach: so_pcb != NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 name|kp
 operator|=
 operator|(
