@@ -751,19 +751,19 @@ name|s
 decl_stmt|,
 name|error
 decl_stmt|;
-if|if
-condition|(
-name|sotorawcb
+name|KASSERT
 argument_list|(
 name|so
-argument_list|)
-operator|!=
+operator|->
+name|so_pcb
+operator|==
 name|NULL
-condition|)
-return|return
-name|EISCONN
-return|;
-comment|/* XXX panic? */
+argument_list|,
+operator|(
+literal|"rts_attach: so_pcb != NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* XXX */
 name|MALLOC
 argument_list|(
@@ -1016,7 +1016,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|rts_detach
 parameter_list|(
 name|struct
@@ -1035,23 +1035,17 @@ argument_list|(
 name|so
 argument_list|)
 decl_stmt|;
-name|int
-name|s
-decl_stmt|,
-name|error
-decl_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|rp
 operator|!=
 name|NULL
-condition|)
-block|{
+argument_list|,
+operator|(
+literal|"rts_detach: rp == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 name|RTSOCK_LOCK
 argument_list|()
 expr_stmt|;
@@ -1100,9 +1094,6 @@ expr_stmt|;
 name|RTSOCK_UNLOCK
 argument_list|()
 expr_stmt|;
-block|}
-name|error
-operator|=
 name|raw_usrreqs
 operator|.
 name|pru_detach
@@ -1110,14 +1101,6 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return
-name|error
-return|;
 block|}
 end_function
 

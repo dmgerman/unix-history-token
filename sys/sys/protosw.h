@@ -980,7 +980,7 @@ modifier|*
 name|td
 parameter_list|)
 function_decl|;
-name|int
+name|void
 function_decl|(
 modifier|*
 name|pru_detach
@@ -1436,7 +1436,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|pru_detach_notsupp
 parameter_list|(
 name|struct

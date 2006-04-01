@@ -218,7 +218,7 @@ block|,
 operator|.
 name|pru_detach
 operator|=
-name|atm_proto_notsupp1
+name|atm_proto_notsupp5
 block|,
 operator|.
 name|pru_disconnect

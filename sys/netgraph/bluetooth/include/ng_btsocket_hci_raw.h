@@ -247,7 +247,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|ng_btsocket_hci_raw_detach
 parameter_list|(
 name|struct

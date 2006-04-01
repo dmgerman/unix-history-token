@@ -228,7 +228,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|ddp_detach
 parameter_list|(
 name|struct
@@ -278,11 +278,6 @@ expr_stmt|;
 name|DDP_LIST_XUNLOCK
 argument_list|()
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 

@@ -1652,7 +1652,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|div_detach
 parameter_list|(
 name|struct
@@ -1692,9 +1692,7 @@ operator|&
 name|divcbinfo
 argument_list|)
 expr_stmt|;
-return|return
-name|EINVAL
-return|;
+return|return;
 block|}
 name|INP_LOCK
 argument_list|(
@@ -1712,9 +1710,6 @@ operator|&
 name|divcbinfo
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 end_function
 

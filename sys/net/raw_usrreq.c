@@ -629,7 +629,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|raw_udetach
 parameter_list|(
 name|struct
@@ -654,17 +654,12 @@ name|rp
 operator|==
 literal|0
 condition|)
-return|return
-name|EINVAL
-return|;
+return|return;
 name|raw_detach
 argument_list|(
 name|rp
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 end_function
 

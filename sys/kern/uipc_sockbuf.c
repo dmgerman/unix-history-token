@@ -5458,7 +5458,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|pru_detach_notsupp
 parameter_list|(
 name|struct
@@ -5466,11 +5466,7 @@ name|socket
 modifier|*
 name|so
 parameter_list|)
-block|{
-return|return
-name|EOPNOTSUPP
-return|;
-block|}
+block|{  }
 end_function
 
 begin_function

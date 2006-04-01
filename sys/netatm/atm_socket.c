@@ -364,11 +364,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Detach from socket and free resources  *  * Called at splnet.  *  * Arguments:  *	so	pointer to socket  *  * Returns:  *	0	detach successful  *	errno	detach failed - reason indicated  *  */
+comment|/*  * Detach from socket and free resources  *  * Called at splnet.  *  * Arguments:  *	so	pointer to socket  *  */
 end_comment
 
 begin_function
-name|int
+name|void
 name|atm_sock_detach
 parameter_list|(
 name|so
@@ -389,17 +389,17 @@ name|so
 argument_list|)
 decl_stmt|;
 comment|/* 	 * Make sure we're still attached 	 */
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|atp
-operator|==
+operator|!=
 name|NULL
-condition|)
-return|return
+argument_list|,
 operator|(
-name|ENOTCONN
+literal|"atm_sock_detach: atp == NULL"
 operator|)
-return|;
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Terminate any (possibly pending) connection 	 */
 if|if
 condition|(
@@ -417,25 +417,11 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Break links and free control blocks 	 */
-name|ACCEPT_LOCK
-argument_list|()
-expr_stmt|;
-name|SOCK_LOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 name|so
 operator|->
 name|so_pcb
 operator|=
 name|NULL
-expr_stmt|;
-name|sotryfree
-argument_list|(
-name|so
-argument_list|)
 expr_stmt|;
 name|uma_zfree
 argument_list|(
@@ -444,11 +430,6 @@ argument_list|,
 name|atp
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 

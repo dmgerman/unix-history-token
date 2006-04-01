@@ -198,7 +198,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|atm_aal5_detach
 parameter_list|(
 name|struct
@@ -894,7 +894,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|atm_aal5_detach
 parameter_list|(
 name|so
@@ -905,19 +905,17 @@ modifier|*
 name|so
 decl_stmt|;
 block|{
-name|ATM_INTRO
+name|ATM_INTRO_NOERR
 argument_list|(
 literal|"detach"
 argument_list|)
 expr_stmt|;
-name|err
-operator|=
 name|atm_sock_detach
 argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|ATM_OUTRO
+name|ATM_OUTRO_NOERR
 argument_list|()
 expr_stmt|;
 block|}

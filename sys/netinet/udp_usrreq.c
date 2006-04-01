@@ -559,7 +559,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|udp_detach
 parameter_list|(
 name|struct
@@ -5028,7 +5028,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|udp_detach
 parameter_list|(
 name|struct
@@ -5068,9 +5068,6 @@ operator|&
 name|udbinfo
 argument_list|)
 expr_stmt|;
-return|return
-name|EINVAL
-return|;
 block|}
 name|INP_LOCK
 argument_list|(
@@ -5088,9 +5085,6 @@ operator|&
 name|udbinfo
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 end_function
 

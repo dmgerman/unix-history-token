@@ -2795,7 +2795,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|rip_detach
 parameter_list|(
 name|struct
@@ -2836,9 +2836,7 @@ operator|&
 name|ripcbinfo
 argument_list|)
 expr_stmt|;
-return|return
-name|EINVAL
-return|;
+return|return;
 block|}
 name|INP_LOCK
 argument_list|(
@@ -2858,9 +2856,6 @@ operator|&
 name|ripcbinfo
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 end_function
 

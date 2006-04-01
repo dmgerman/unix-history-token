@@ -1894,7 +1894,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|key_detach
 parameter_list|(
 name|struct
@@ -1923,18 +1923,17 @@ name|s
 decl_stmt|,
 name|error
 decl_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|kp
 operator|!=
-literal|0
-condition|)
-block|{
+name|NULL
+argument_list|,
+operator|(
+literal|"key_detach: kp == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|kp
@@ -1963,9 +1962,6 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-block|}
-name|error
-operator|=
 name|raw_usrreqs
 operator|.
 name|pru_detach
@@ -1973,14 +1969,6 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return
-name|error
-return|;
 block|}
 end_function
 

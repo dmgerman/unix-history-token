@@ -983,7 +983,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|atm_sock_detach
 parameter_list|(
 name|struct

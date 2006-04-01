@@ -1528,7 +1528,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Attempt to free a socket.  This should really be sotryfree().  *  * We free the socket if the protocol is no longer interested in the socket,  * there's no file descriptor reference, and the refcount is 0.  While the  * calling macro sotryfree() tests the refcount, sofree() has to test it  * again as it's possible to race with an accept()ing thread if the socket is  * in an listen queue of a listen socket, as being in the listen queue  * doesn't elevate the reference count.  sofree() acquires the accept mutex  * early for this test in order to avoid that race.  */
+comment|/*  * Attempt to free a socket.  This should really be sotryfree().  *  * sofree() will succeed if:  *  * - There are no outstanding file descriptor references or related consumers  *   (so_count == 0).  *  * - The socket has been closed by user space, if ever open (SS_NOFDREF).  *  * - The protocol does not have an outstanding strong reference on the socket  *   (SS_PROTOREF).  *  * Otherwise, it will quietly abort so that a future call to sofree(), when  * conditions are right, can succeed.  */
 end_comment
 
 begin_function
@@ -1558,12 +1558,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|so
-operator|->
-name|so_pcb
-operator|!=
-name|NULL
-operator|||
 operator|(
 name|so
 operator|->
@@ -2063,17 +2057,6 @@ if|if
 condition|(
 name|so
 operator|->
-name|so_pcb
-operator|==
-name|NULL
-condition|)
-goto|goto
-name|discard
-goto|;
-if|if
-condition|(
-name|so
-operator|->
 name|so_state
 operator|&
 name|SS_ISCONNECTED
@@ -2178,18 +2161,6 @@ block|}
 block|}
 name|drop
 label|:
-if|if
-condition|(
-name|so
-operator|->
-name|so_pcb
-operator|!=
-name|NULL
-condition|)
-block|{
-name|int
-name|error2
-init|=
 call|(
 modifier|*
 name|so
@@ -2203,20 +2174,7 @@ call|)
 argument_list|(
 name|so
 argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-condition|)
-name|error
-operator|=
-name|error2
 expr_stmt|;
-block|}
-name|discard
-label|:
 name|ACCEPT_LOCK
 argument_list|()
 expr_stmt|;
@@ -7122,12 +7080,6 @@ operator|->
 name|pr_flags
 operator|&
 name|PR_WANTRCVD
-operator|&&
-name|so
-operator|->
-name|so_pcb
-operator|!=
-name|NULL
 condition|)
 block|{
 name|SOCKBUF_UNLOCK
@@ -7369,10 +7321,6 @@ name|pr_flags
 operator|&
 name|PR_WANTRCVD
 operator|)
-operator|&&
-name|so
-operator|->
-name|so_pcb
 condition|)
 block|{
 name|SOCKBUF_UNLOCK

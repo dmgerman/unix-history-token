@@ -1019,7 +1019,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|uipc_detach
 parameter_list|(
 name|struct
@@ -1062,11 +1062,6 @@ expr_stmt|;
 name|UNP_UNLOCK_ASSERT
 argument_list|()
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 

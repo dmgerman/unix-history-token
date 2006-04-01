@@ -597,7 +597,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|tcp_usr_detach
 parameter_list|(
 name|struct
@@ -606,11 +606,6 @@ modifier|*
 name|so
 parameter_list|)
 block|{
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
 name|struct
 name|inpcb
 modifier|*
@@ -649,9 +644,7 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-return|return
-name|error
-return|;
+return|return;
 block|}
 name|INP_LOCK
 argument_list|(
@@ -695,9 +688,6 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-return|return
-name|error
-return|;
 block|}
 end_function
 

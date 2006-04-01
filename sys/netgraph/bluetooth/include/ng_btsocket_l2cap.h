@@ -292,7 +292,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|ng_btsocket_l2cap_raw_detach
 parameter_list|(
 name|struct
@@ -728,7 +728,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|ng_btsocket_l2cap_detach
 parameter_list|(
 name|struct

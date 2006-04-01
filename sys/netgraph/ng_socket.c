@@ -717,7 +717,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|ngc_detach
 parameter_list|(
 name|struct
@@ -737,17 +737,17 @@ argument_list|(
 name|so
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|pcbp
-operator|==
+operator|!=
 name|NULL
-condition|)
-return|return
+argument_list|,
 operator|(
-name|EINVAL
+literal|"ngc_detach: pcbp == NULL"
 operator|)
-return|;
+argument_list|)
+expr_stmt|;
 name|ng_detach_common
 argument_list|(
 name|pcbp
@@ -755,11 +755,6 @@ argument_list|,
 name|NG_CONTROL
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -1699,7 +1694,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|ngd_detach
 parameter_list|(
 name|struct
@@ -1719,17 +1714,17 @@ argument_list|(
 name|so
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|pcbp
 operator|==
 name|NULL
-condition|)
-return|return
+argument_list|,
 operator|(
-name|EINVAL
+literal|"ngd_detach: pcbp == NULL"
 operator|)
-return|;
+argument_list|)
+expr_stmt|;
 name|ng_detach_common
 argument_list|(
 name|pcbp
@@ -1737,11 +1732,6 @@ argument_list|,
 name|NG_DATA
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
