@@ -594,6 +594,34 @@ begin_comment
 comment|/* sum of tcp_backoff[] */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|tcp_timer_race
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_tcp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|timer_race
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|tcp_timer_race
+argument_list|,
+literal|0
+argument_list|,
+literal|"Count of t_inpcb races on tcp_discardcb"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * TCP timer processing.  */
 end_comment
@@ -633,6 +661,7 @@ name|tp
 operator|->
 name|t_inpcb
 expr_stmt|;
+comment|/* 	 * XXXRW: While this assert is in fact correct, bugs in the tcpcb 	 * tear-down mean we need it as a work-around for races between 	 * timers and tcp_discardcb(). 	 * 	 * KASSERT(inp != NULL, ("tcp_timer_delack: inp == NULL")); 	 */
 if|if
 condition|(
 name|inp
@@ -640,6 +669,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|tcp_timer_race
+operator|++
+expr_stmt|;
 name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
@@ -755,6 +787,7 @@ name|t_state
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * XXXRW: Does this actually happen? 	 */
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
@@ -767,6 +800,7 @@ name|tp
 operator|->
 name|t_inpcb
 expr_stmt|;
+comment|/* 	 * XXXRW: While this assert is in fact correct, bugs in the tcpcb 	 * tear-down mean we need it as a work-around for races between 	 * timers and tcp_discardcb(). 	 * 	 * KASSERT(inp != NULL, ("tcp_timer_2msl: inp == NULL")); 	 */
 if|if
 condition|(
 name|inp
@@ -774,7 +808,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|INP_INFO_WUNLOCK
+name|tcp_timer_race
+operator|++
+expr_stmt|;
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|tcbinfo
@@ -1253,12 +1290,6 @@ name|twl
 operator|->
 name|tw_tail
 expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
 name|tw
 operator|=
 name|LIST_FIRST
@@ -1286,7 +1317,7 @@ operator|>
 name|ticks
 operator|)
 condition|)
-break|break;
+continue|continue;
 name|INP_LOCK
 argument_list|(
 name|tw
@@ -1294,23 +1325,18 @@ operator|->
 name|tw_inpcb
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|tcp_twclose
 argument_list|(
 name|tw
 argument_list|,
 name|reuse
 argument_list|)
-operator|!=
-name|NULL
-condition|)
+expr_stmt|;
 return|return
 operator|(
 name|tw
 operator|)
 return|;
-block|}
 block|}
 return|return
 operator|(
@@ -1374,13 +1400,18 @@ name|tp
 operator|->
 name|t_inpcb
 expr_stmt|;
+comment|/* 	 * XXXRW: While this assert is in fact correct, bugs in the tcpcb 	 * tear-down mean we need it as a work-around for races between 	 * timers and tcp_discardcb(). 	 * 	 * KASSERT(inp != NULL, ("tcp_timer_keep: inp == NULL")); 	 */
 if|if
 condition|(
-operator|!
 name|inp
+operator|==
+name|NULL
 condition|)
 block|{
-name|INP_INFO_WUNLOCK
+name|tcp_timer_race
+operator|++
+expr_stmt|;
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|tcbinfo
@@ -1762,13 +1793,18 @@ name|tp
 operator|->
 name|t_inpcb
 expr_stmt|;
+comment|/* 	 * XXXRW: While this assert is in fact correct, bugs in the tcpcb 	 * tear-down mean we need it as a work-around for races between 	 * timers and tcp_discardcb(). 	 * 	 * KASSERT(inp != NULL, ("tcp_timer_persist: inp == NULL")); 	 */
 if|if
 condition|(
-operator|!
 name|inp
+operator|==
+name|NULL
 condition|)
 block|{
-name|INP_INFO_WUNLOCK
+name|tcp_timer_race
+operator|++
+expr_stmt|;
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|tcbinfo
@@ -1914,10 +1950,6 @@ name|TCPDEBUG
 if|if
 condition|(
 name|tp
-operator|!=
-name|NULL
-operator|&&
-name|tp
 operator|->
 name|t_inpcb
 operator|->
@@ -2032,13 +2064,18 @@ name|tp
 operator|->
 name|t_inpcb
 expr_stmt|;
+comment|/* 	 * XXXRW: While this assert is in fact correct, bugs in the tcpcb 	 * tear-down mean we need it as a work-around for races between 	 * timers and tcp_discardcb(). 	 * 	 * KASSERT(inp != NULL, ("tcp_timer_rexmt: inp == NULL")); 	 */
 if|if
 condition|(
-operator|!
 name|inp
+operator|==
+name|NULL
 condition|)
 block|{
-name|INP_INFO_WUNLOCK
+name|tcp_timer_race
+operator|++
+expr_stmt|;
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|tcbinfo

@@ -1868,6 +1868,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|tcp_discardcb
+parameter_list|(
+name|struct
+name|tcpcb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|tcp_twstart
 parameter_list|(
 name|struct
@@ -1890,9 +1901,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|tcptw
-modifier|*
+name|void
 name|tcp_twclose
 parameter_list|(
 name|struct
