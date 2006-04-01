@@ -5295,7 +5295,7 @@ comment|/*  * Some routines that return EOPNOTSUPP for entry points that are not
 end_comment
 
 begin_function
-name|int
+name|void
 name|pru_abort_notsupp
 parameter_list|(
 name|struct
@@ -5303,11 +5303,7 @@ name|socket
 modifier|*
 name|so
 parameter_list|)
-block|{
-return|return
-name|EOPNOTSUPP
-return|;
-block|}
+block|{  }
 end_function
 
 begin_function

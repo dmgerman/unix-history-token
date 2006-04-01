@@ -4540,7 +4540,7 @@ end_expr_stmt
 
 begin_function
 specifier|static
-name|int
+name|void
 name|udp_abort
 parameter_list|(
 name|struct
@@ -4580,9 +4580,7 @@ operator|&
 name|udbinfo
 argument_list|)
 expr_stmt|;
-return|return
-name|EINVAL
-return|;
+return|return;
 comment|/* ??? possible? panic instead? */
 block|}
 name|INP_LOCK
@@ -4606,9 +4604,6 @@ operator|&
 name|udbinfo
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 end_function
 

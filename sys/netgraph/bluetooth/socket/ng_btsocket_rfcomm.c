@@ -1810,7 +1810,7 @@ comment|/*  * Abort connection on socket  */
 end_comment
 
 begin_function
-name|int
+name|void
 name|ng_btsocket_rfcomm_abort
 parameter_list|(
 name|struct
@@ -1825,14 +1825,11 @@ name|so_error
 operator|=
 name|ECONNABORTED
 expr_stmt|;
-return|return
-operator|(
 name|ng_btsocket_rfcomm_detach
 argument_list|(
 name|so
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 

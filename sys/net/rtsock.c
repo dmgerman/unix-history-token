@@ -699,7 +699,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|rts_abort
 parameter_list|(
 name|struct
@@ -708,16 +708,13 @@ modifier|*
 name|so
 parameter_list|)
 block|{
-return|return
-operator|(
 name|raw_usrreqs
 operator|.
 name|pru_abort
 argument_list|(
 name|so
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 

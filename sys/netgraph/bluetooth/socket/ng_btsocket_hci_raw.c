@@ -3630,7 +3630,7 @@ comment|/*  * Abort connection on socket  */
 end_comment
 
 begin_function
-name|int
+name|void
 name|ng_btsocket_hci_raw_abort
 parameter_list|(
 name|struct
@@ -3639,14 +3639,11 @@ modifier|*
 name|so
 parameter_list|)
 block|{
-return|return
-operator|(
 name|ng_btsocket_hci_raw_detach
 argument_list|(
 name|so
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 

@@ -1530,7 +1530,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|key_abort
 parameter_list|(
 name|struct
@@ -1539,18 +1539,6 @@ modifier|*
 name|so
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|,
-name|error
-decl_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
-name|error
-operator|=
 name|raw_usrreqs
 operator|.
 name|pru_abort
@@ -1558,14 +1546,6 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return
-name|error
-return|;
 block|}
 end_function
 

@@ -504,5 +504,23 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Protocol request not supported  *  * Arguments:  *	so	pointer to socket  *  */
+end_comment
+
+begin_function
+name|void
+name|atm_proto_notsupp5
+parameter_list|(
+name|so
+parameter_list|)
+name|struct
+name|socket
+modifier|*
+name|so
+decl_stmt|;
+block|{  }
+end_function
+
 end_unit
 

@@ -448,7 +448,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|raw_uabort
 parameter_list|(
 name|struct
@@ -467,15 +467,17 @@ argument_list|(
 name|so
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|rp
-operator|==
-literal|0
-condition|)
-return|return
-name|EINVAL
-return|;
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"raw_uabort: rp == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 name|raw_disconnect
 argument_list|(
 name|rp
@@ -486,22 +488,6 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|ACCEPT_LOCK
-argument_list|()
-expr_stmt|;
-name|SOCK_LOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-name|sotryfree
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 end_function
 

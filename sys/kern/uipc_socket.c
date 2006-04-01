@@ -2262,7 +2262,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * soabort() must not be called with any socket locks held, as it calls  * into the protocol, which will call back into the socket code causing  * it to acquire additional socket locks that may cause recursion or lock  * order reversals.  */
+comment|/*  * soabort() allows the socket code or protocol code to detach a socket that  * has been in an incomplete or completed listen queue, but has not yet been  * accepted.  *  * This interface is tricky, because it is called on an unreferenced socket,  * and must be called only by a thread that has actually removed the socket  * from the listen queue it was on, or races with other threads are risked.  *  * This interface will call into the protocol code, so must not be called  * with any socket locks held.  Protocols do call it while holding their own  * recursible protocol mutexes, but this is something that should be subject  * to review in the future.  *  * XXXRW: Why do we maintain a distinction between pru_abort() and  * pru_detach()?  */
 end_comment
 
 begin_function
@@ -2277,11 +2277,49 @@ modifier|*
 name|so
 decl_stmt|;
 block|{
-name|int
-name|error
-decl_stmt|;
-name|error
-operator|=
+comment|/* 	 * In as much as is possible, assert that no references to this 	 * socket are held.  This is not quite the same as asserting that the 	 * current thread is responsible for arranging for no references, but 	 * is as close as we can get for now. 	 */
+name|KASSERT
+argument_list|(
+name|so
+operator|->
+name|so_count
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"soabort: so_count"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|!
+operator|(
+name|so
+operator|->
+name|so_state
+operator|&
+name|SS_PROTOREF
+operator|)
+argument_list|,
+operator|(
+literal|"soabort: SS_PROTOREF"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|so
+operator|->
+name|so_state
+operator|&
+name|SS_NOFDREF
+argument_list|,
+operator|(
+literal|"soabort: !SS_NOFDREF"
+operator|)
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|so
@@ -2296,11 +2334,6 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-block|{
 name|ACCEPT_LOCK
 argument_list|()
 expr_stmt|;
@@ -2309,13 +2342,11 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|sotryfree
+name|sofree
 argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-comment|/* note: does not decrement the ref count */
-block|}
 block|}
 end_function
 

@@ -342,7 +342,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|atm_aal5_abort
 parameter_list|(
 name|struct
@@ -749,12 +749,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATM_INTRO_NOERR
+parameter_list|(
+name|f
+parameter_list|)
+define|\
+value|int		s;					\ 	s = splnet();						\ 	;
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATM_OUTRO
 parameter_list|()
 define|\
 comment|/*							\ 	 * Drain any deferred calls				\ 	 */
 define|\
 value|STACK_DRAIN();						\ 	(void) splx(s);						\ 	return (err);						\ 	;
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATM_OUTRO_NOERR
+parameter_list|()
+define|\
+comment|/*							\ 	 * Drain any deferred calls				\ 	 */
+define|\
+value|STACK_DRAIN();						\ 	(void) splx(s);						\ 	;
 end_define
 
 begin_define
@@ -1417,7 +1439,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|atm_aal5_abort
 parameter_list|(
 name|so
@@ -1428,7 +1450,7 @@ modifier|*
 name|so
 decl_stmt|;
 block|{
-name|ATM_INTRO
+name|ATM_INTRO_NOERR
 argument_list|(
 literal|"abort"
 argument_list|)
@@ -1439,14 +1461,12 @@ name|so_error
 operator|=
 name|ECONNABORTED
 expr_stmt|;
-name|err
-operator|=
 name|atm_sock_detach
 argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|ATM_OUTRO
+name|ATM_OUTRO_NOERR
 argument_list|()
 expr_stmt|;
 block|}

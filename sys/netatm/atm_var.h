@@ -842,6 +842,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|atm_proto_notsupp5
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* atm_signal.c */
 end_comment

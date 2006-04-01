@@ -2690,7 +2690,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|rip6_abort
 parameter_list|(
 name|struct
@@ -2704,12 +2704,11 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-return|return
 name|rip6_detach
 argument_list|(
 name|so
 argument_list|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
@@ -2755,11 +2754,13 @@ name|in6p_faddr
 operator|=
 name|in6addr_any
 expr_stmt|;
-return|return
 name|rip6_abort
 argument_list|(
 name|so
 argument_list|)
+expr_stmt|;
+return|return
+literal|0
 return|;
 block|}
 end_function

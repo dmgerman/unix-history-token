@@ -2866,7 +2866,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|rip_abort
 parameter_list|(
 name|struct
@@ -2906,9 +2906,7 @@ operator|&
 name|ripcbinfo
 argument_list|)
 expr_stmt|;
-return|return
-name|EINVAL
-return|;
+return|return;
 comment|/* ??? possible? panic instead? */
 block|}
 name|INP_LOCK
@@ -2948,9 +2946,6 @@ operator|&
 name|ripcbinfo
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 end_function
 
@@ -2980,11 +2975,13 @@ condition|)
 return|return
 name|ENOTCONN
 return|;
-return|return
 name|rip_abort
 argument_list|(
 name|so
 argument_list|)
+expr_stmt|;
+return|return
+literal|0
 return|;
 block|}
 end_function
