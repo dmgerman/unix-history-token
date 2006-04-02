@@ -8952,8 +8952,8 @@ condition|)
 block|{
 name|sc
 operator|->
-name|sc_ifp
-operator|->
+name|sc_if
+operator|.
 name|if_oerrors
 operator|++
 expr_stmt|;
