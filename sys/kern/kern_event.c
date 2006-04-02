@@ -4299,11 +4299,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|KN_LIST_UNLOCK
-argument_list|(
-name|kn
-argument_list|)
-expr_stmt|;
 name|KQ_LOCK
 argument_list|(
 name|kq
@@ -4326,6 +4321,11 @@ name|kn_status
 operator|&=
 operator|~
 name|KN_INFLUX
+expr_stmt|;
+name|KN_LIST_UNLOCK
+argument_list|(
+name|kn
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
