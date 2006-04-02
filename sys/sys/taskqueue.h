@@ -106,41 +106,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|taskqueue_start_threads
-parameter_list|(
-name|struct
-name|taskqueue
-modifier|*
-modifier|*
-name|tqp
-parameter_list|,
-name|int
-name|count
-parameter_list|,
-name|int
-name|pri
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|__printflike
-parameter_list|(
-function_decl|4
-operator|,
-function_decl|5
-end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
-name|int
 name|taskqueue_enqueue
 parameter_list|(
 name|struct
@@ -273,7 +238,7 @@ value|extern struct taskqueue *taskqueue_##name
 end_define
 
 begin_comment
-comment|/*  * Define and initialise a global taskqueue that uses sleep mutexes.  */
+comment|/*  * Define and initialise a taskqueue.  */
 end_comment
 
 begin_define
@@ -290,7 +255,7 @@ parameter_list|,
 name|init
 parameter_list|)
 define|\ 									\
-value|struct taskqueue *taskqueue_##name;					\ 									\ static void								\ taskqueue_define_##name(void *arg)					\ {									\ 	taskqueue_##name =						\ 	    taskqueue_create(#name, M_NOWAIT, (enqueue), (context), NULL);\ 	init;								\ }									\ 									\ SYSINIT(taskqueue_##name, SI_SUB_CONFIGURE, SI_ORDER_SECOND,		\ 	taskqueue_define_##name, NULL)					\ 									\ struct __hack
+value|struct taskqueue *taskqueue_##name;					\ 									\ static void								\ taskqueue_define_##name(void *arg)					\ {									\ 	static struct proc *taskqueue_##name##_proc;			\ 	taskqueue_##name =						\ 	    taskqueue_create(#name, M_NOWAIT, (enqueue), (context),	\&taskqueue_##name##_proc);					\ 	init;								\ }									\ 									\ SYSINIT(taskqueue_##name, SI_SUB_CONFIGURE, SI_ORDER_SECOND,		\ 	taskqueue_define_##name, NULL)					\ 									\ struct __hack
 end_define
 
 begin_define
@@ -301,39 +266,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|TASKQUEUE_DEFINE(name, taskqueue_thread_enqueue,&taskqueue_##name,	\ 	taskqueue_start_threads(&taskqueue_##name, 1, PWAIT,		\ 	"%s taskq", #name))
-end_define
-
-begin_comment
-comment|/*  * Define and initialise a global taskqueue that uses spin mutexes.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TASKQUEUE_FAST_DEFINE
-parameter_list|(
-name|name
-parameter_list|,
-name|enqueue
-parameter_list|,
-name|context
-parameter_list|,
-name|init
-parameter_list|)
-define|\ 									\
-value|struct taskqueue *taskqueue_##name;					\ 									\ static void								\ taskqueue_define_##name(void *arg)					\ {									\ 	taskqueue_##name =						\ 	    taskqueue_create_fast(#name, M_NOWAIT, (enqueue),		\ 	    (context));							\ 	init;								\ }									\ 									\ SYSINIT(taskqueue_##name, SI_SUB_CONFIGURE, SI_ORDER_SECOND,		\ 	taskqueue_define_##name, NULL)					\ 									\ struct __hack
-end_define
-
-begin_define
-define|#
-directive|define
-name|TASKQUEUE_FAST_DEFINE_THREAD
-parameter_list|(
-name|name
-parameter_list|)
-define|\
-value|TASKQUEUE_FAST_DEFINE(name, taskqueue_thread_enqueue,			\&taskqueue_##name, taskqueue_start_threads(&taskqueue_##name	\ 	1, PWAIT, "%s taskq", #name))
+value|TASKQUEUE_DEFINE(name, taskqueue_thread_enqueue,&taskqueue_##name,	\ 	kthread_create(taskqueue_thread_loop,&taskqueue_##name,	\&taskqueue_##name##_proc, 0, 0, #name " taskq"))
 end_define
 
 begin_comment
@@ -393,30 +326,6 @@ name|struct
 name|task
 modifier|*
 name|task
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|taskqueue
-modifier|*
-name|taskqueue_create_fast
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|int
-name|mflags
-parameter_list|,
-name|taskqueue_enqueue_fn
-name|enqueue
-parameter_list|,
-name|void
-modifier|*
-name|context
 parameter_list|)
 function_decl|;
 end_function_decl
