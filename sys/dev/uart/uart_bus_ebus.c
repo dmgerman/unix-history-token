@@ -189,9 +189,6 @@ name|struct
 name|uart_devinfo
 name|dummy
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
