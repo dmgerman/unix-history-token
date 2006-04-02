@@ -672,14 +672,14 @@ argument_list|()
 expr_stmt|;
 name|tcp_server
 argument_list|(
-name|child_pid
+name|parent_pid
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 name|tcp_client
 argument_list|(
-name|parent_pid
+name|child_pid
 argument_list|,
 literal|800
 argument_list|)
