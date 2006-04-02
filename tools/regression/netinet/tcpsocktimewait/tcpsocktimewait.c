@@ -117,7 +117,7 @@ name|kill
 argument_list|(
 name|partner
 argument_list|,
-name|SIGKILL
+name|SIGTERM
 argument_list|)
 expr_stmt|;
 name|errno
@@ -213,7 +213,7 @@ name|kill
 argument_list|(
 name|partner
 argument_list|,
-name|SIGKILL
+name|SIGTERM
 argument_list|)
 expr_stmt|;
 name|errno
@@ -253,7 +253,7 @@ name|kill
 argument_list|(
 name|partner
 argument_list|,
-name|SIGKILL
+name|SIGTERM
 argument_list|)
 expr_stmt|;
 name|errno
@@ -298,7 +298,7 @@ name|kill
 argument_list|(
 name|partner
 argument_list|,
-name|SIGKILL
+name|SIGTERM
 argument_list|)
 expr_stmt|;
 name|errno
@@ -382,7 +382,7 @@ name|kill
 argument_list|(
 name|partner
 argument_list|,
-name|SIGKILL
+name|SIGTERM
 argument_list|)
 expr_stmt|;
 name|errno
@@ -478,7 +478,7 @@ name|kill
 argument_list|(
 name|partner
 argument_list|,
-name|SIGKILL
+name|SIGTERM
 argument_list|)
 expr_stmt|;
 name|errno
@@ -517,7 +517,7 @@ name|kill
 argument_list|(
 name|partner
 argument_list|,
-name|SIGKILL
+name|SIGTERM
 argument_list|)
 expr_stmt|;
 name|errno
@@ -625,6 +625,11 @@ argument_list|(
 name|child_pid
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 name|tcp_client
@@ -632,6 +637,21 @@ argument_list|(
 name|parent_pid
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|kill
+argument_list|(
+name|child_pid
+argument_list|,
+name|SIGTERM
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|5
 argument_list|)
 expr_stmt|;
 name|parent_pid
