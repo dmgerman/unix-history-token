@@ -674,6 +674,28 @@ expr_stmt|;
 name|TCPDEBUG1
 argument_list|()
 expr_stmt|;
+comment|/* 	 * First, if we still have full TCP state, and we're not dropped, 	 * initiate a disconnect. 	 */
+if|if
+condition|(
+operator|!
+operator|(
+name|inp
+operator|->
+name|inp_vflag
+operator|&
+name|INP_TIMEWAIT
+operator|)
+operator|&&
+operator|!
+operator|(
+name|inp
+operator|->
+name|inp_vflag
+operator|&
+name|INP_DROPPED
+operator|)
+condition|)
+block|{
 name|tp
 operator|=
 name|intotcpcb
@@ -681,6 +703,13 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+name|tcp_disconnect
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * Second, release any protocol state that we can reasonably release. 	 * Note that the call to tcp_disconnect() may actually have changed 	 * the TCP state, so we have to re-evaluate INP_TIMEWAIT and 	 * INP_DROPPED. 	 */
 if|if
 condition|(
 name|inp
@@ -842,7 +871,6 @@ directive|endif
 block|}
 else|else
 block|{
-comment|/* 			 * Connection state still required, as is socket, so 			 * mark socket for TCP to free later. 			 */
 name|SOCK_LOCK
 argument_list|(
 name|so
@@ -6186,6 +6214,17 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|inp
+operator|->
+name|inp_vflag
+operator|&
+name|INP_DROPPED
+operator|)
+condition|)
 name|tcp_output
 argument_list|(
 name|tp
