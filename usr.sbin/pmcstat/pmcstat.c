@@ -3227,9 +3227,6 @@ operator|&
 name|args
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|args
 operator|.
 name|pa_logfd
@@ -3241,21 +3238,6 @@ operator|.
 name|pa_inputpath
 argument_list|,
 name|PMCSTAT_OPEN_FOR_READ
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-name|err
-argument_list|(
-name|EX_OSERR
-argument_list|,
-literal|"ERROR: Cannot open \"%s\" for "
-literal|"reading"
-argument_list|,
-name|args
-operator|.
-name|pa_inputpath
 argument_list|)
 expr_stmt|;
 if|if
@@ -3393,10 +3375,6 @@ name|args
 operator|.
 name|pa_outputpath
 condition|)
-block|{
-if|if
-condition|(
-operator|(
 name|args
 operator|.
 name|pa_logfd
@@ -3409,23 +3387,7 @@ name|pa_outputpath
 argument_list|,
 name|PMCSTAT_OPEN_FOR_WRITE
 argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-name|err
-argument_list|(
-name|EX_OSERR
-argument_list|,
-literal|"ERROR: Cannot open \"%s\" for "
-literal|"writing"
-argument_list|,
-name|args
-operator|.
-name|pa_outputpath
-argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 comment|/* 			 * process the log on the fly by reading it in 			 * through a pipe. 			 */
