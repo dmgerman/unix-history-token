@@ -2222,8 +2222,6 @@ name|sizestring
 index|[
 literal|16
 index|]
-init|=
-literal|""
 decl_stmt|;
 if|if
 condition|(
