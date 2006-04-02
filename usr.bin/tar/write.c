@@ -2906,20 +2906,13 @@ block|{
 case|case
 literal|'H'
 case|:
-comment|/* 'H': First item (from command line) like 'L'. */
-name|lst
-operator|=
-name|tree_current_stat
-argument_list|(
-name|tree
-argument_list|)
-expr_stmt|;
 comment|/* 'H': After the first item, rest like 'P'. */
 name|symlink_mode
 operator|=
 literal|'P'
 expr_stmt|;
-break|break;
+comment|/* 'H': First item (from command line) like 'L'. */
+comment|/* FALLTHROUGH */
 case|case
 literal|'L'
 case|:
@@ -2928,6 +2921,20 @@ comment|/* 'L': Archive symlink to file as file. */
 name|lst
 operator|=
 name|tree_current_stat
+argument_list|(
+name|tree
+argument_list|)
+expr_stmt|;
+comment|/* If stat fails, we have a broken symlink; 			 * in that case, archive the link as such. */
+if|if
+condition|(
+name|lst
+operator|==
+name|NULL
+condition|)
+name|lst
+operator|=
+name|tree_current_lstat
 argument_list|(
 name|tree
 argument_list|)
