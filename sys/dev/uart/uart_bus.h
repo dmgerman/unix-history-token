@@ -297,12 +297,6 @@ literal|1
 decl_stmt|;
 comment|/* This UART uses fast interrupts. */
 name|int
-name|sc_hasfifo
-range|:
-literal|1
-decl_stmt|;
-comment|/* This UART has FIFOs. */
-name|int
 name|sc_hwiflow
 range|:
 literal|1
