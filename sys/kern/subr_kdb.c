@@ -1982,6 +1982,8 @@ endif|#
 directive|endif
 name|int
 name|handled
+decl_stmt|,
+name|intr
 decl_stmt|;
 if|if
 condition|(
@@ -2010,7 +2012,9 @@ operator|(
 literal|0
 operator|)
 return|;
-name|critical_enter
+name|intr
+operator|=
+name|intr_disable
 argument_list|()
 expr_stmt|;
 name|kdb_active
@@ -2092,8 +2096,10 @@ directive|endif
 name|kdb_active
 operator|--
 expr_stmt|;
-name|critical_exit
-argument_list|()
+name|intr_restore
+argument_list|(
+name|intr
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
