@@ -801,6 +801,7 @@ block|}
 block|}
 else|else
 block|{
+comment|/* 		 * If not in timewait, there are two possible paths.  First, 		 * the TCP connection is either embryonic or done, in which 		 * case we tear down all state.  Second, it may still be 		 * active, in which case we acquire a reference to the socket 		 * and will free it later when TCP is done. 		 */
 name|tp
 operator|=
 name|intotcpcb
@@ -823,7 +824,6 @@ operator|<
 name|TCPS_SYN_SENT
 condition|)
 block|{
-comment|/* 			 * Connection has been dropped or is a listen socket, 			 * tear down all pcb state and allow socket to be 			 * freed. 			 */
 name|tcp_discardcb
 argument_list|(
 name|tp
