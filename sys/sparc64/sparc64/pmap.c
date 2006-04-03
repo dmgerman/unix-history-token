@@ -8173,12 +8173,6 @@ name|pmap_remove_pages
 parameter_list|(
 name|pmap_t
 name|pm
-parameter_list|,
-name|vm_offset_t
-name|sva
-parameter_list|,
-name|vm_offset_t
-name|eva
 parameter_list|)
 block|{ }
 end_function

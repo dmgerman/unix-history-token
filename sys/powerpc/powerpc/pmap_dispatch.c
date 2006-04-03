@@ -871,12 +871,6 @@ name|pmap_remove_pages
 parameter_list|(
 name|pmap_t
 name|pmap
-parameter_list|,
-name|vm_offset_t
-name|start
-parameter_list|,
-name|vm_offset_t
-name|end
 parameter_list|)
 block|{
 name|MMU_REMOVE_PAGES
@@ -884,10 +878,6 @@ argument_list|(
 name|mmu_obj
 argument_list|,
 name|pmap
-argument_list|,
-name|start
-argument_list|,
-name|end
 argument_list|)
 expr_stmt|;
 block|}

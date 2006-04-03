@@ -3590,16 +3590,6 @@ name|vmspace_pmap
 argument_list|(
 name|vmspace
 argument_list|)
-argument_list|,
-name|vm_map_min
-argument_list|(
-name|map
-argument_list|)
-argument_list|,
-name|vm_map_max
-argument_list|(
-name|map
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|vm_map_remove
