@@ -27,6 +27,16 @@ directive|include
 file|<machine/psl.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|KDB_STOPPEDPCB
+parameter_list|(
+name|pc
+parameter_list|)
+value|&stoppcbs[pc->pc_cpuid]
+end_define
+
 begin_function
 specifier|static
 name|__inline

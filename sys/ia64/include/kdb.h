@@ -33,6 +33,16 @@ directive|include
 file|<machine/ia64_cpu.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|KDB_STOPPEDPCB
+parameter_list|(
+name|pc
+parameter_list|)
+value|(pc)->pc_pcb
+end_define
+
 begin_function
 specifier|static
 name|__inline
