@@ -1969,9 +1969,6 @@ decl_stmt|;
 name|int
 name|sig
 decl_stmt|;
-name|int
-name|code
-decl_stmt|;
 name|oonstack
 operator|=
 literal|0
@@ -1998,12 +1995,6 @@ operator|=
 name|ksi
 operator|->
 name|ksi_signo
-expr_stmt|;
-name|code
-operator|=
-name|ksi
-operator|->
-name|ksi_code
 expr_stmt|;
 name|psp
 operator|=
@@ -2071,7 +2062,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * No signal tramoline... kill the process. 		 */
+comment|/* 		 * No signal trampoline... kill the process. 		 */
 name|CTR0
 argument_list|(
 name|KTR_SIG
@@ -2305,21 +2296,6 @@ name|tf
 operator|->
 name|tf_out
 index|[
-literal|1
-index|]
-operator|=
-operator|(
-name|register_t
-operator|)
-operator|&
-name|sfp
-operator|->
-name|sf_si
-expr_stmt|;
-name|tf
-operator|->
-name|tf_out
-index|[
 literal|2
 index|]
 operator|=
@@ -2343,7 +2319,35 @@ name|register_t
 operator|)
 name|catcher
 expr_stmt|;
-comment|/* Fill siginfo structure. */
+if|if
+condition|(
+name|SIGISMEMBER
+argument_list|(
+name|psp
+operator|->
+name|ps_siginfo
+argument_list|,
+name|sig
+argument_list|)
+condition|)
+block|{
+comment|/* Signal handler installed with SA_SIGINFO. */
+name|tf
+operator|->
+name|tf_out
+index|[
+literal|1
+index|]
+operator|=
+operator|(
+name|register_t
+operator|)
+operator|&
+name|sfp
+operator|->
+name|sf_si
+expr_stmt|;
+comment|/* Fill in POSIX parts. */
 name|sf
 operator|.
 name|sf_si
@@ -2356,17 +2360,41 @@ name|sf
 operator|.
 name|sf_si
 operator|.
-name|si_addr
+name|si_signo
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
+name|sig
+expr_stmt|;
+comment|/* maybe a translated signal */
+block|}
+else|else
+block|{
+comment|/* Old FreeBSD-style arguments. */
 name|tf
 operator|->
-name|tf_sfar
+name|tf_out
+index|[
+literal|1
+index|]
+operator|=
+name|ksi
+operator|->
+name|ksi_code
 expr_stmt|;
-comment|/* XXX */
+name|tf
+operator|->
+name|tf_out
+index|[
+literal|3
+index|]
+operator|=
+operator|(
+name|register_t
+operator|)
+name|ksi
+operator|->
+name|ksi_addr
+expr_stmt|;
+block|}
 comment|/* Copy the sigframe out to the user's stack. */
 if|if
 condition|(
