@@ -209,6 +209,10 @@ name|softdep_on_worklist
 decl_stmt|;
 comment|/* Items on the worklist */
 name|int
+name|softdep_on_worklist_inprogress
+decl_stmt|;
+comment|/* Busy items on worklist */
+name|int
 name|softdep_deps
 decl_stmt|;
 comment|/* Total dependency count */
