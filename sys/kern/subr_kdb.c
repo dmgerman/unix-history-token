@@ -1972,6 +1972,9 @@ modifier|*
 name|tf
 parameter_list|)
 block|{
+name|register_t
+name|intr
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
@@ -1982,8 +1985,6 @@ endif|#
 directive|endif
 name|int
 name|handled
-decl_stmt|,
-name|intr
 decl_stmt|;
 if|if
 condition|(
