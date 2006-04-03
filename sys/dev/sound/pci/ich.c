@@ -251,6 +251,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NVIDIA_NFORCE_410_MCP
+value|0x026b
+end_define
+
+begin_define
+define|#
+directive|define
 name|AMD_768
 value|0x7445
 end_define
@@ -488,6 +495,16 @@ block|,
 literal|0
 block|,
 literal|"nVidia nForce4"
+block|}
+block|,
+block|{
+name|NVIDIA_VENDORID
+block|,
+name|NVIDIA_NFORCE_410_MCP
+block|,
+literal|0
+block|,
+literal|"nVidia nForce 410 MCP"
 block|}
 block|,
 block|{
