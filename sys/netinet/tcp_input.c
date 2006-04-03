@@ -3433,14 +3433,10 @@ if|if
 condition|(
 name|tcp_timewait
 argument_list|(
-operator|(
-expr|struct
-name|tcptw
-operator|*
-operator|)
+name|intotw
+argument_list|(
 name|inp
-operator|->
-name|inp_ppcb
+argument_list|)
 argument_list|,
 operator|&
 name|to

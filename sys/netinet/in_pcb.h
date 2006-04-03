@@ -297,7 +297,8 @@ name|struct
 name|in_conninfo
 name|inp_inc
 decl_stmt|;
-name|caddr_t
+name|void
+modifier|*
 name|inp_ppcb
 decl_stmt|;
 comment|/* pointer to per-protocol pcb */
