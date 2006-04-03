@@ -3660,7 +3660,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Close a TCP control block:  *    discard all space held by the tcp  *    discard internet protocol block  *    wake up any sleepers  */
+comment|/*  * Attempt to close a TCP control block, marking it as dropped, and freeing  * the socket if we hold the only reference.  */
 end_comment
 
 begin_function
