@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_ath.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -205,12 +211,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|AR_DEBUG
-end_define
 
 begin_include
 include|#
@@ -1543,7 +1543,7 @@ end_expr_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|AR_DEBUG
+name|ATH_DEBUG
 end_ifdef
 
 begin_decl_stmt
@@ -6286,7 +6286,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|AR_DEBUG
+name|ATH_DEBUG
 end_ifdef
 
 begin_function
@@ -13232,7 +13232,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|AR_DEBUG
+name|ATH_DEBUG
 if|if
 condition|(
 name|sc
@@ -17516,7 +17516,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|AR_DEBUG
+name|ATH_DEBUG
 if|if
 condition|(
 name|sc
@@ -18476,7 +18476,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|AR_DEBUG
+name|ATH_DEBUG
 name|struct
 name|ath_hal
 modifier|*
@@ -18562,7 +18562,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|AR_DEBUG
+name|ATH_DEBUG
 if|if
 condition|(
 name|sc
@@ -18595,7 +18595,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* AR_DEBUG */
+comment|/* ATH_DEBUG */
 name|bus_dmamap_unload
 argument_list|(
 name|sc
@@ -18979,7 +18979,7 @@ expr_stmt|;
 comment|/* 3ms is long enough for 1 frame */
 ifdef|#
 directive|ifdef
-name|AR_DEBUG
+name|ATH_DEBUG
 if|if
 condition|(
 name|sc
@@ -22728,7 +22728,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|AR_DEBUG
+name|ATH_DEBUG
 end_ifdef
 
 begin_function
@@ -23013,7 +23013,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* AR_DEBUG */
+comment|/* ATH_DEBUG */
 end_comment
 
 begin_function
@@ -23126,6 +23126,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATH_DIAGAPI
+end_ifdef
 
 begin_comment
 comment|/*  * Diagnostic interface to the HAL.  This is used by various  * tools to do things like retrieve register contents for  * debugging.  The mechanism is intentionally opaque so that  * it can change frequently w/o concern for compatiblity.  */
@@ -23403,6 +23409,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ATH_DIAGAPI */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -23612,6 +23627,9 @@ name|sc_stats
 argument_list|)
 argument_list|)
 return|;
+ifdef|#
+directive|ifdef
+name|ATH_DIAGAPI
 case|case
 name|SIOCGATHDIAG
 case|:
@@ -23640,6 +23658,8 @@ name|sc
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 default|default:
 name|error
 operator|=
@@ -24980,7 +25000,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|AR_DEBUG
+name|ATH_DEBUG
 name|sc
 operator|->
 name|sc_debug
