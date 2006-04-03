@@ -876,7 +876,7 @@ comment|/* nextarg() */
 end_comment
 
 begin_comment
-comment|/*  * The value of n for the inode times (atime, ctime, and mtime) is a range,  * i.e. n matches from (n - 1) to n 24 hour periods.  This interacts with  * -n, such that "-mtime -1" would be less than 0 days, which isn't what the  * user wanted.  Correct so that -1 is "less than 1".  */
+comment|/*  * The value of n for the inode times (atime, birthtime, ctime, mtime) is a  * range, i.e. n matches from (n - 1) to n 24 hour periods.  This interacts  * with -n, such that "-mtime -1" would be less than 0 days, which isn't what  * the user wanted.  Correct so that -1 is "less than 1".  */
 end_comment
 
 begin_define
@@ -891,7 +891,7 @@ value|if (((p)->flags& F_ELG_MASK) == F_LESSTHAN) \ 		++((p)->t_data);
 end_define
 
 begin_comment
-comment|/*  * -[acm]min n functions --  *  *    True if the difference between the  *		file access time (-amin)  *		last change of file status information (-cmin)  *		file modification time (-mmin)  *    and the current time is n min periods.  */
+comment|/*  * -[acm]min n functions --  *  *    True if the difference between the  *		file access time (-amin)  *		file birth time (-Bmin)  *		last change of file status information (-cmin)  *		file modification time (-mmin)  *    and the current time is n min periods.  */
 end_comment
 
 begin_function
@@ -960,6 +960,40 @@ operator|->
 name|fts_statp
 operator|->
 name|st_atime
+operator|+
+literal|60
+operator|-
+literal|1
+operator|)
+operator|/
+literal|60
+argument_list|,
+name|plan
+operator|->
+name|t_data
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|plan
+operator|->
+name|flags
+operator|&
+name|F_TIME_B
+condition|)
+block|{
+name|COMPARE
+argument_list|(
+operator|(
+name|now
+operator|-
+name|entry
+operator|->
+name|fts_statp
+operator|->
+name|st_birthtime
 operator|+
 literal|60
 operator|-
@@ -1077,7 +1111,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * -[acm]time n functions --  *  *	True if the difference between the  *		file access time (-atime)  *		last change of file status information (-ctime)  *		file modification time (-mtime)  *	and the current time is n 24 hour periods.  */
+comment|/*  * -[acm]time n functions --  *  *	True if the difference between the  *		file access time (-atime)  *		file birth time (-Btime)  *		last change of file status information (-ctime)  *		file modification time (-mtime)  *	and the current time is n 24 hour periods.  */
 end_comment
 
 begin_function
@@ -1111,6 +1145,23 @@ operator|->
 name|fts_statp
 operator|->
 name|st_atime
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|plan
+operator|->
+name|flags
+operator|&
+name|F_TIME_B
+condition|)
+name|xtime
+operator|=
+name|entry
+operator|->
+name|fts_statp
+operator|->
+name|st_birthtime
 expr_stmt|;
 elseif|else
 if|if
@@ -4707,6 +4758,26 @@ operator|->
 name|fts_statp
 operator|->
 name|st_atime
+operator|>
+name|plan
+operator|->
+name|t_data
+return|;
+elseif|else
+if|if
+condition|(
+name|plan
+operator|->
+name|flags
+operator|&
+name|F_TIME_B
+condition|)
+return|return
+name|entry
+operator|->
+name|fts_statp
+operator|->
+name|st_birthtime
 operator|>
 name|plan
 operator|->
