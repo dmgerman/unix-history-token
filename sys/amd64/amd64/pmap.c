@@ -6435,11 +6435,16 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|long
 name|pv_entry_frees
 decl_stmt|,
 name|pv_entry_allocs
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|pv_entry_spare
 decl_stmt|;
 end_decl_stmt
@@ -6466,7 +6471,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_LONG
 argument_list|(
 name|_vm_pmap
 argument_list|,
@@ -6487,7 +6492,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_LONG
 argument_list|(
 name|_vm_pmap
 argument_list|,
