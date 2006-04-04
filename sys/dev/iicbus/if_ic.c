@@ -457,13 +457,11 @@ name|ifp
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 name|ENOSPC
 operator|)
 return|;
-block|}
 name|sc
 operator|->
 name|ic_addr
@@ -679,7 +677,9 @@ operator|!=
 name|AF_INET
 condition|)
 return|return
+operator|(
 name|EAFNOSUPPORT
+operator|)
 return|;
 name|ifp
 operator|->
@@ -812,7 +812,9 @@ name|icdev
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 block|}
 name|sc
@@ -850,7 +852,9 @@ name|icdev
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 block|}
 name|iicbus_reset
@@ -927,7 +931,9 @@ operator|=
 name|optr
 expr_stmt|;
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 block|}
 comment|/* allocate output buffer */
@@ -978,7 +984,9 @@ operator|=
 name|optr
 expr_stmt|;
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 block|}
 if|if
@@ -1040,12 +1048,12 @@ name|ifr
 operator|==
 literal|0
 condition|)
-block|{
 return|return
+operator|(
 name|EAFNOSUPPORT
+operator|)
 return|;
 comment|/* XXX */
-block|}
 switch|switch
 condition|(
 name|ifr
@@ -1061,17 +1069,23 @@ case|:
 break|break;
 default|default:
 return|return
+operator|(
 name|EAFNOSUPPORT
+operator|)
 return|;
 block|}
 break|break;
 default|default:
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1163,7 +1177,7 @@ break|break;
 case|case
 name|INTR_STOP
 case|:
-comment|/* if any error occured during transfert, 	   * drop the packet */
+comment|/* if any error occured during transfert, 		 * drop the packet */
 if|if
 condition|(
 name|sc
