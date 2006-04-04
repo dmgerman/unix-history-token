@@ -1987,9 +1987,6 @@ operator|=
 name|intr_disable
 argument_list|()
 expr_stmt|;
-name|kdb_active
-operator|++
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
@@ -2013,6 +2010,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|kdb_active
+operator|++
+expr_stmt|;
 name|kdb_frame
 operator|=
 name|tf
@@ -2049,6 +2049,9 @@ argument_list|,
 name|code
 argument_list|)
 expr_stmt|;
+name|kdb_active
+operator|--
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
@@ -2063,9 +2066,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|kdb_active
-operator|--
-expr_stmt|;
 name|intr_restore
 argument_list|(
 name|intr
