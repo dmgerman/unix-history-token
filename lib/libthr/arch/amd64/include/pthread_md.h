@@ -216,10 +216,6 @@ argument_list|(
 argument|void
 argument_list|)
 block|{
-if|if
-condition|(
-name|_thr_initial
-condition|)
 return|return
 operator|(
 name|TCB_GET64
@@ -228,18 +224,10 @@ name|tcb_thread
 argument_list|)
 operator|)
 return|;
+block|}
 end_expr_stmt
 
-begin_return
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-end_return
-
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif

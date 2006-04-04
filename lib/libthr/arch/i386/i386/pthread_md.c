@@ -59,25 +59,17 @@ name|tcb
 modifier|*
 name|tcb
 decl_stmt|;
-name|void
-modifier|*
-name|oldtls
-decl_stmt|;
 if|if
 condition|(
 name|initial
 condition|)
-asm|__asm __volatile("movl %%gs:0, %0" : "=r" (oldtls));
+asm|__asm __volatile("movl %%gs:0, %0" : "=r" (tcb));
 else|else
-name|oldtls
-operator|=
-name|NULL
-expr_stmt|;
 name|tcb
 operator|=
 name|_rtld_allocate_tls
 argument_list|(
-name|oldtls
+name|NULL
 argument_list|,
 sizeof|sizeof
 argument_list|(
