@@ -430,6 +430,22 @@ literal|4
 block|}
 block|,
 block|{
+name|DEVICE_TYPE_DISK
+block|,
+literal|"mfid%d"
+block|,
+literal|"LSI MegaRAID SAS"
+block|,
+literal|254
+block|,
+literal|65538
+block|,
+literal|8
+block|,
+literal|4
+block|}
+block|,
+block|{
 name|DEVICE_TYPE_FLOPPY
 block|,
 literal|"fd%d"
