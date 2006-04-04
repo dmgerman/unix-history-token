@@ -4414,6 +4414,16 @@ name|inp_vflag
 operator|&
 name|INP_TIMEWAIT
 condition|)
+block|{
+if|if
+condition|(
+name|intotw
+argument_list|(
+name|inp
+argument_list|)
+operator|!=
+name|NULL
+condition|)
 name|error
 operator|=
 name|cr_cansee
@@ -4432,6 +4442,13 @@ operator|->
 name|tw_cred
 argument_list|)
 expr_stmt|;
+else|else
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+comment|/* Skip this inp. */
+block|}
 else|else
 name|error
 operator|=
@@ -10708,6 +10725,7 @@ operator|&
 name|INP_TIMEWAIT
 condition|)
 block|{
+comment|/* 			 * XXXRW: There currently exists a state where an 			 * inpcb is present, but its timewait state has been 			 * discarded.  For now, don't allow dropping of this 			 * type of inpcb. 			 */
 name|tw
 operator|=
 name|intotw
@@ -10715,6 +10733,12 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tw
+operator|!=
+name|NULL
+condition|)
 name|tcp_twclose
 argument_list|(
 name|tw

@@ -1710,6 +1710,11 @@ name|inpcb
 modifier|*
 name|t
 decl_stmt|;
+name|struct
+name|tcptw
+modifier|*
+name|tw
+decl_stmt|;
 comment|/* GROSS */
 if|if
 condition|(
@@ -1944,15 +1949,24 @@ name|INP_TIMEWAIT
 operator|)
 condition|)
 block|{
+comment|/* 				 * XXXRW: If an incpb has had its timewait 				 * state recycled, we treat the address as 				 * being in use (for now).  This is better 				 * than a panic, but not desirable. 				 */
+name|tw
+operator|=
+name|intotw
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
+name|tw
+operator|==
+name|NULL
+operator|||
 operator|(
 name|reuseport
 operator|&
-name|intotw
-argument_list|(
-name|t
-argument_list|)
+name|tw
 operator|->
 name|tw_so_options
 operator|)
@@ -4553,6 +4567,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|tw
+operator|!=
+name|NULL
+operator|&&
 name|tcp_twrecycleable
 argument_list|(
 name|tw

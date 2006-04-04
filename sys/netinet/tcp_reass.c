@@ -12359,6 +12359,16 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * XXXRW: Time wait state for inpcb has been recycled, but inpcb is 	 * still present.  This is undesirable, but temporarily necessary 	 * until we work out how to handle inpcb's who's timewait state has 	 * been removed. 	 */
+if|if
+condition|(
+name|tw
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|drop
+goto|;
 comment|/* tcbinfo lock required for tcp_twclose(), tcp_2msl_reset. */
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
