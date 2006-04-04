@@ -241,196 +241,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATA_E_MASK
-value|0x0f
-end_define
-
-begin_comment
-comment|/* error mask */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_SK_MASK
+name|ATA_E_ATAPI_SENSE_MASK
 value|0xf0
 end_define
 
 begin_comment
-comment|/* sense key mask */
+comment|/* ATAPI sense key mask */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_SK_NO_SENSE
-value|0x00
-end_define
-
-begin_comment
-comment|/* no specific sense key info */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_SK_RECOVERED_ERROR
-value|0x10
-end_define
-
-begin_comment
-comment|/* command OK, data recovered */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_SK_NOT_READY
-value|0x20
-end_define
-
-begin_comment
-comment|/* no access to drive */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_SK_MEDIUM_ERROR
-value|0x30
-end_define
-
-begin_comment
-comment|/* non-recovered data error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_SK_HARDWARE_ERROR
-value|0x40
-end_define
-
-begin_comment
-comment|/* non-recoverable HW failure */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_SK_ILLEGAL_REQUEST
-value|0x50
-end_define
-
-begin_comment
-comment|/* invalid command param(s) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_SK_UNIT_ATTENTION
-value|0x60
-end_define
-
-begin_comment
-comment|/* media changed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_SK_DATA_PROTECT
-value|0x70
-end_define
-
-begin_comment
-comment|/* write protect */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_SK_BLANK_CHECK
-value|0x80
-end_define
-
-begin_comment
-comment|/* blank check */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_SK_VENDOR_SPECIFIC
-value|0x90
-end_define
-
-begin_comment
-comment|/* vendor specific skey */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_SK_COPY_ABORTED
-value|0xa0
-end_define
-
-begin_comment
-comment|/* copy aborted */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_SK_ABORTED_COMMAND
-value|0xb0
-end_define
-
-begin_comment
-comment|/* command aborted, try again */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_SK_EQUAL
-value|0xc0
-end_define
-
-begin_comment
-comment|/* equal */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_SK_VOLUME_OVERFLOW
-value|0xd0
-end_define
-
-begin_comment
-comment|/* volume overflow */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_SK_MISCOMPARE
-value|0xe0
-end_define
-
-begin_comment
-comment|/* data dont match the medium */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_SK_RESERVED
-value|0xf0
-end_define
 
 begin_define
 define|#
@@ -1803,7 +1620,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATA_CFA_MAGIC
+name|ATA_CFA_MAGIC1
+value|0x844A
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_CFA_MAGIC2
 value|0x848A
 end_define
 
@@ -1890,110 +1714,6 @@ directive|define
 name|ATA_MAX_28BIT_LBA
 value|268435455UL
 end_define
-
-begin_comment
-comment|/* ATAPI request sense structure */
-end_comment
-
-begin_struct
-struct|struct
-name|atapi_sense
-block|{
-name|u_int8_t
-name|error_code
-range|:
-literal|7
-decl_stmt|;
-comment|/* current or deferred errors */
-name|u_int8_t
-name|valid
-range|:
-literal|1
-decl_stmt|;
-comment|/* follows ATAPI spec */
-name|u_int8_t
-name|segment
-decl_stmt|;
-comment|/* Segment number */
-name|u_int8_t
-name|sense_key
-range|:
-literal|4
-decl_stmt|;
-comment|/* sense key */
-name|u_int8_t
-name|reserved2_4
-range|:
-literal|1
-decl_stmt|;
-comment|/* reserved */
-name|u_int8_t
-name|ili
-range|:
-literal|1
-decl_stmt|;
-comment|/* incorrect length indicator */
-name|u_int8_t
-name|eom
-range|:
-literal|1
-decl_stmt|;
-comment|/* end of medium */
-name|u_int8_t
-name|filemark
-range|:
-literal|1
-decl_stmt|;
-comment|/* filemark */
-name|u_int32_t
-name|cmd_info
-name|__packed
-decl_stmt|;
-comment|/* cmd information */
-name|u_int8_t
-name|sense_length
-decl_stmt|;
-comment|/* additional sense len (n-7) */
-name|u_int32_t
-name|cmd_specific_info
-name|__packed
-decl_stmt|;
-comment|/* additional cmd spec info */
-name|u_int8_t
-name|asc
-decl_stmt|;
-comment|/* additional sense code */
-name|u_int8_t
-name|ascq
-decl_stmt|;
-comment|/* additional sense code qual */
-name|u_int8_t
-name|replaceable_unit_code
-decl_stmt|;
-comment|/* replaceable unit code */
-name|u_int8_t
-name|sk_specific
-range|:
-literal|7
-decl_stmt|;
-comment|/* sense key specific */
-name|u_int8_t
-name|sksv
-range|:
-literal|1
-decl_stmt|;
-comment|/* sense key specific info OK */
-name|u_int8_t
-name|sk_specific1
-decl_stmt|;
-comment|/* sense key specific */
-name|u_int8_t
-name|sk_specific2
-decl_stmt|;
-comment|/* sense key specific */
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/* structure used for composite atomic operations */
@@ -2111,15 +1831,11 @@ decl_stmt|;
 comment|/* ATAPI command block */
 name|struct
 name|atapi_sense
-name|sense_data
+name|sense
 decl_stmt|;
 comment|/* ATAPI request sense data */
 name|u_int8_t
-name|sense_key
-decl_stmt|;
-comment|/* ATAPI request sense key */
-name|u_int8_t
-name|sense_cmd
+name|saved_cmd
 decl_stmt|;
 comment|/* ATAPI saved command */
 block|}

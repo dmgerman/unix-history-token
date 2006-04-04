@@ -569,7 +569,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_ATACAM
 argument_list|,
-literal|"ATA CAM transport"
+literal|"ata_cam"
 argument_list|,
 literal|"ATA driver CAM-XPT layer"
 argument_list|)
@@ -3451,7 +3451,7 @@ name|CAMDEBUG
 define|#
 directive|define
 name|err
-value|(request->u.atapi.sense_key)
+value|(request->u.atapi.sense.key)
 if|if
 condition|(
 name|CAM_DEBUGGED
@@ -3640,7 +3640,7 @@ name|u
 operator|.
 name|atapi
 operator|.
-name|sense_data
+name|sense
 argument_list|,
 operator|&
 name|csio
