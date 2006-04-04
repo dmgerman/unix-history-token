@@ -428,5 +428,168 @@ block|}
 block|}
 end_function
 
+begin_function
+name|int
+name|gdb_cpu_signal
+parameter_list|(
+name|int
+name|type
+parameter_list|,
+name|int
+name|code
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|type
+operator|&
+operator|~
+name|T_USER
+condition|)
+block|{
+case|case
+literal|0
+case|:
+return|return
+operator|(
+name|SIGFPE
+operator|)
+return|;
+comment|/* Divide by zero. */
+case|case
+literal|1
+case|:
+return|return
+operator|(
+name|SIGTRAP
+operator|)
+return|;
+comment|/* Debug exception. */
+case|case
+literal|3
+case|:
+return|return
+operator|(
+name|SIGTRAP
+operator|)
+return|;
+comment|/* Breakpoint. */
+case|case
+literal|4
+case|:
+return|return
+operator|(
+name|SIGSEGV
+operator|)
+return|;
+comment|/* into instr. (overflow). */
+case|case
+literal|5
+case|:
+return|return
+operator|(
+name|SIGURG
+operator|)
+return|;
+comment|/* bound instruction. */
+case|case
+literal|6
+case|:
+return|return
+operator|(
+name|SIGILL
+operator|)
+return|;
+comment|/* Invalid opcode. */
+case|case
+literal|7
+case|:
+return|return
+operator|(
+name|SIGFPE
+operator|)
+return|;
+comment|/* Coprocessor not present. */
+case|case
+literal|8
+case|:
+return|return
+operator|(
+name|SIGEMT
+operator|)
+return|;
+comment|/* Double fault. */
+case|case
+literal|9
+case|:
+return|return
+operator|(
+name|SIGSEGV
+operator|)
+return|;
+comment|/* Coprocessor segment overrun. */
+case|case
+literal|10
+case|:
+return|return
+operator|(
+name|SIGTRAP
+operator|)
+return|;
+comment|/* Invalid TSS (also single-step). */
+case|case
+literal|11
+case|:
+return|return
+operator|(
+name|SIGSEGV
+operator|)
+return|;
+comment|/* Segment not present. */
+case|case
+literal|12
+case|:
+return|return
+operator|(
+name|SIGSEGV
+operator|)
+return|;
+comment|/* Stack exception. */
+case|case
+literal|13
+case|:
+return|return
+operator|(
+name|SIGSEGV
+operator|)
+return|;
+comment|/* General protection. */
+case|case
+literal|14
+case|:
+return|return
+operator|(
+name|SIGSEGV
+operator|)
+return|;
+comment|/* Page fault. */
+case|case
+literal|16
+case|:
+return|return
+operator|(
+name|SIGEMT
+operator|)
+return|;
+comment|/* Coprocessor error. */
+block|}
+return|return
+operator|(
+name|SIGEMT
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 
