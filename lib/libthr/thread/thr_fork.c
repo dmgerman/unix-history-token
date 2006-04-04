@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -41,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<spinlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -198,6 +210,15 @@ name|fork
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function_decl
+name|pid_t
+name|_fork
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|pid_t

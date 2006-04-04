@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pthread.h>
 end_include
 
@@ -13,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<pthread_np.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_expr_stmt
@@ -31,7 +43,7 @@ name|_pthread_single_np
 parameter_list|()
 block|{
 comment|/* Enter single-threaded (non-POSIX) scheduling mode: */
-name|pthread_suspend_all_np
+name|_pthread_suspend_all_np
 argument_list|()
 expr_stmt|;
 comment|/* 	 * XXX - Do we want to do this? 	 * __is_threaded = 0; 	 */

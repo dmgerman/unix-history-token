@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -19,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|<pthread_np.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -53,6 +65,7 @@ name|_pthread_switch_add_np
 parameter_list|(
 name|pthread_switch_routine_t
 name|routine
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -69,6 +82,7 @@ name|_pthread_switch_delete_np
 parameter_list|(
 name|pthread_switch_routine_t
 name|routine
+name|__unused
 parameter_list|)
 block|{
 return|return

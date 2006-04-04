@@ -6,7 +6,19 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -54,20 +66,6 @@ name|pthread_testcancel
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_function_decl
-name|int
-name|_pthread_setcanceltype
-parameter_list|(
-name|int
-name|type
-parameter_list|,
-name|int
-modifier|*
-name|oldtype
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 name|int
@@ -253,7 +251,7 @@ argument_list|(
 name|curthread
 argument_list|)
 condition|)
-name|pthread_exit
+name|_pthread_exit
 argument_list|(
 name|PTHREAD_CANCELED
 argument_list|)

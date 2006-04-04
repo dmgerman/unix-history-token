@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -13,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -53,7 +65,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|pthread_getschedparam
+name|_pthread_getschedparam
 argument_list|(
 name|pthread
 argument_list|,

@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pthread.h>
 end_include
 
@@ -13,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<pthread_np.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_expr_stmt
@@ -32,7 +44,7 @@ parameter_list|()
 block|{
 comment|/* Return to multi-threaded scheduling mode: */
 comment|/* 	 * XXX - Do we want to do this? 	 * __is_threaded = 1; 	 */
-name|pthread_resume_all_np
+name|_pthread_resume_all_np
 argument_list|()
 expr_stmt|;
 return|return

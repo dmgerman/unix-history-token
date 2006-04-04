@@ -1226,6 +1226,7 @@ name|struct
 name|pthread
 modifier|*
 name|curthread
+name|__unused
 parameter_list|,
 name|struct
 name|pthread
@@ -1288,6 +1289,7 @@ name|struct
 name|pthread
 modifier|*
 name|curthread
+name|__unused
 parameter_list|,
 name|struct
 name|pthread

@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -36,12 +42,54 @@ end_include
 begin_include
 include|#
 directive|include
+file|"un-namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"thr_private.h"
 end_include
 
 begin_comment
 comment|/*  * Prototypes  */
 end_comment
+
+begin_function_decl
+name|int
+name|__pthread_cond_wait
+parameter_list|(
+name|pthread_cond_t
+modifier|*
+name|cond
+parameter_list|,
+name|pthread_mutex_t
+modifier|*
+name|mutex
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|__pthread_cond_timedwait
+parameter_list|(
+name|pthread_cond_t
+modifier|*
+name|cond
+parameter_list|,
+name|pthread_mutex_t
+modifier|*
+name|mutex
+parameter_list|,
+specifier|const
+name|struct
+name|timespec
+modifier|*
+name|abstime
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static

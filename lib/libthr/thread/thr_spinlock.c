@@ -119,6 +119,7 @@ name|_get_curthread
 argument_list|()
 argument_list|,
 operator|(
+specifier|volatile
 name|umtx_t
 operator|*
 operator|)
@@ -179,6 +180,7 @@ name|_get_curthread
 argument_list|()
 argument_list|,
 operator|(
+specifier|volatile
 name|umtx_t
 operator|*
 operator|)
@@ -202,9 +204,11 @@ parameter_list|,
 name|char
 modifier|*
 name|fname
+name|__unused
 parameter_list|,
 name|int
 name|lineno
+name|__unused
 parameter_list|)
 block|{
 name|_spinlock
@@ -354,6 +358,7 @@ control|)
 name|_thr_umtx_init
 argument_list|(
 operator|(
+specifier|volatile
 name|umtx_t
 operator|*
 operator|)

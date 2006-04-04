@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -31,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -334,6 +346,7 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
+specifier|const
 name|void
 modifier|*
 name|data
@@ -460,10 +473,6 @@ condition|)
 block|{
 name|data
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|curthread
 operator|->
 name|specific
@@ -519,7 +528,13 @@ argument_list|)
 expr_stmt|;
 name|destructor
 argument_list|(
+name|__DECONST
+argument_list|(
+name|void
+operator|*
+argument_list|,
 name|data
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|THR_LOCK_ACQUIRE
@@ -821,6 +836,7 @@ name|pthread
 modifier|*
 name|pthread
 decl_stmt|;
+specifier|const
 name|void
 modifier|*
 name|data
@@ -881,10 +897,6 @@ block|{
 comment|/* Return the value: */
 name|data
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|pthread
 operator|->
 name|specific
@@ -912,7 +924,13 @@ name|NULL
 expr_stmt|;
 return|return
 operator|(
+name|__DECONST
+argument_list|(
+name|void
+operator|*
+argument_list|,
 name|data
+argument_list|)
 operator|)
 return|;
 block|}

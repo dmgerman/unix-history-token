@@ -117,7 +117,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|void
+name|char
 modifier|*
 name|last_stack
 init|=
@@ -545,6 +545,15 @@ block|{
 name|spare_stack
 operator|=
 operator|(
+expr|struct
+name|stack
+operator|*
+operator|)
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|attr
 operator|->
 name|stackaddr_attr

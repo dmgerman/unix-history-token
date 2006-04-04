@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pthread.h>
 end_include
 
@@ -13,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<pthread_np.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -54,9 +66,9 @@ return|;
 else|else
 return|return
 operator|(
-name|pthread_equal
+name|_pthread_equal
 argument_list|(
-name|pthread_self
+name|_pthread_self
 argument_list|()
 argument_list|,
 name|_thr_initial

@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -19,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -134,13 +146,18 @@ name|pthread_barrierattr_t
 modifier|*
 name|attr
 parameter_list|,
-name|int
+name|unsigned
 name|count
 parameter_list|)
 block|{
 name|pthread_barrier_t
 name|bar
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|attr
+expr_stmt|;
 if|if
 condition|(
 name|barrier

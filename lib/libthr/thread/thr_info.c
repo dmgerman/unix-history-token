@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"namespace.h"
 end_include
 
 begin_include
@@ -19,6 +19,24 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pthread_np.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -48,6 +66,7 @@ parameter_list|(
 name|pthread_t
 name|thread
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name

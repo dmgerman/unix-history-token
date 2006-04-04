@@ -163,6 +163,7 @@ specifier|const
 name|pthread_rwlockattr_t
 modifier|*
 name|attr
+name|__unused
 parameter_list|)
 block|{
 name|pthread_rwlock_t
