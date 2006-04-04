@@ -767,7 +767,6 @@ name|_thr_rtld_set_flag
 parameter_list|(
 name|int
 name|mask
-name|__unused
 parameter_list|)
 block|{
 comment|/* 	 * The caller's code in rtld-elf is broken, it is not signal safe, 	 * just return zero to fool it. 	 */
@@ -786,7 +785,6 @@ name|_thr_rtld_clr_flag
 parameter_list|(
 name|int
 name|mask
-name|__unused
 parameter_list|)
 block|{
 return|return
