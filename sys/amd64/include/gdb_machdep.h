@@ -33,7 +33,7 @@ begin_define
 define|#
 directive|define
 name|GDB_REG_PC
-value|18
+value|16
 end_define
 
 begin_function
