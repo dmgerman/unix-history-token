@@ -1918,11 +1918,6 @@ argument_list|(
 name|so
 argument_list|)
 decl_stmt|;
-name|int
-name|s
-decl_stmt|,
-name|error
-decl_stmt|;
 name|KASSERT
 argument_list|(
 name|kp
