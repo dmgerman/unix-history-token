@@ -1403,11 +1403,7 @@ break|break;
 case|case
 name|T_DATA_ERROR
 case|:
-comment|/* 			 * handle PCI poke/peek as per UltraSPARC IIi 			 * User's Manual 16.2.1. 			 */
-define|#
-directive|define
-name|MEMBARSYNC_INST
-value|((u_int32_t)0x8143e040)
+comment|/* 			 * Handle PCI poke/peek as per UltraSPARC IIi 			 * User's Manual 16.2.1, modulo checking the 			 * TPC as USIII CPUs generate a precise trap 			 * instead of a special deferred one. 			 */
 if|if
 condition|(
 name|tf
@@ -1427,33 +1423,6 @@ operator|(
 name|u_long
 operator|)
 name|fas_nofault_end
-operator|&&
-operator|*
-operator|(
-name|u_int32_t
-operator|*
-operator|)
-name|tf
-operator|->
-name|tf_tpc
-operator|==
-name|MEMBARSYNC_INST
-operator|&&
-operator|(
-operator|(
-name|u_int32_t
-operator|*
-operator|)
-name|tf
-operator|->
-name|tf_tpc
-operator|)
-index|[
-operator|-
-literal|2
-index|]
-operator|==
-name|MEMBARSYNC_INST
 condition|)
 block|{
 name|cache_flush
@@ -1487,9 +1456,6 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-undef|#
-directive|undef
-name|MEMBARSYNC_INST
 name|error
 operator|=
 literal|1
