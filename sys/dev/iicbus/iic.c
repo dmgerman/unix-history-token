@@ -1229,7 +1229,7 @@ name|iicbus_reset
 argument_list|(
 name|parent
 argument_list|,
-literal|0
+name|IIC_UNKNOWN
 argument_list|,
 literal|0
 argument_list|,
