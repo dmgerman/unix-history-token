@@ -223,6 +223,10 @@ expr_stmt|;
 if|if
 condition|(
 name|divisor
+operator|<
+literal|0
+operator|||
+name|divisor
 operator|>=
 literal|65536
 condition|)
