@@ -580,6 +580,18 @@ comment|/* 0x1000000 and up unassigned */
 end_comment
 
 begin_comment
+comment|/* Mask of RTF flags that are allowed to be modified by RTM_CHANGE. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTF_FMASK
+define|\
+value|(RTF_PROTO1 | RTF_PROTO2 | RTF_PROTO3 | RTF_BLACKHOLE | \ 	 RTF_REJECT | RTF_STATIC)
+end_define
+
+begin_comment
 comment|/*  * Routing statistics.  */
 end_comment
 
@@ -656,9 +668,14 @@ name|rtm_errno
 decl_stmt|;
 comment|/* why failed */
 name|int
-name|rtm_use
+name|rtm_fmask
 decl_stmt|;
-comment|/* from rtentry */
+comment|/* bitmask used in RTM_CHANGE message */
+define|#
+directive|define
+name|rtm_use
+value|rtm_fmask
+comment|/* deprecated, use rtm_rmx->rmx_pksent */
 name|u_long
 name|rtm_inits
 decl_stmt|;
