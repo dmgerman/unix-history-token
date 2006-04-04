@@ -1917,11 +1917,6 @@ operator|->
 name|bfe_unit
 argument_list|)
 expr_stmt|;
-name|bfe_release_resources
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|ENXIO
@@ -2180,11 +2175,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|bfe_release_resources
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"bfe%d: couldn't set up irq\n"
