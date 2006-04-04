@@ -24714,6 +24714,25 @@ argument_list|,
 literal|"\n\t"
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|c
+operator|->
+name|bufhard
+operator|!=
+name|NULL
+operator|&&
+name|c
+operator|->
+name|bufsoft
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"hosed pcm channel setup"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* it would be better to indent child channels */
 name|sbuf_printf
 argument_list|(
@@ -24856,21 +24875,6 @@ argument_list|,
 literal|"\n\t"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|c
-operator|->
-name|bufhard
-operator|!=
-name|NULL
-operator|&&
-name|c
-operator|->
-name|bufsoft
-operator|!=
-name|NULL
-condition|)
-block|{
 name|sbuf_printf
 argument_list|(
 name|s
@@ -24941,7 +24945,6 @@ argument_list|,
 literal|"\n\t"
 argument_list|)
 expr_stmt|;
-block|}
 name|sbuf_printf
 argument_list|(
 name|s
