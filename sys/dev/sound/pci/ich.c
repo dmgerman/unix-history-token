@@ -251,6 +251,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NVIDIA_NFORCE_410_MCP
+value|0x026b
+end_define
+
+begin_define
+define|#
+directive|define
 name|AMD_768
 value|0x7445
 end_define
@@ -488,6 +495,16 @@ block|,
 literal|0
 block|,
 literal|"nVidia nForce4"
+block|}
+block|,
+block|{
+name|NVIDIA_VENDORID
+block|,
+name|NVIDIA_NFORCE_410_MCP
+block|,
+literal|0
+block|,
+literal|"nVidia nForce 410 MCP"
 block|}
 block|,
 block|{
@@ -3442,6 +3459,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|#
+directive|if
+literal|0
+block|ich_wr(sc, ICH_REG_GLOB_CNT, ICH_GLOB_CTL_COLD | ICH_GLOB_CTL_PRES, 4);
+else|#
+directive|else
 name|ich_wr
 argument_list|(
 name|sc
@@ -3449,12 +3472,12 @@ argument_list|,
 name|ICH_REG_GLOB_CNT
 argument_list|,
 name|ICH_GLOB_CTL_COLD
-operator||
-name|ICH_GLOB_CTL_PRES
 argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ich_resetchan
