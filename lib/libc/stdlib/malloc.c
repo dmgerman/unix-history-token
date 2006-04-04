@@ -874,12 +874,31 @@ name|malloc_mutex_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* Set to true once the allocator has been initialized. */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|bool
 name|malloc_initialized
 init|=
 name|false
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Used to avoid initialization races. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|malloc_mutex_t
+name|init_lock
+init|=
+block|{
+name|_SPINLOCK_INITIALIZER
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -12434,16 +12453,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* 	 * We always initialize before threads are created, since any thread 	 * creation first triggers allocations. 	 */
-name|assert
-argument_list|(
-name|__isthreaded
-operator|==
-literal|0
-operator|||
-name|malloc_initialized
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|malloc_initialized
@@ -12493,6 +12502,30 @@ name|char
 modifier|*
 name|opts
 decl_stmt|;
+name|malloc_mutex_lock
+argument_list|(
+operator|&
+name|init_lock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|malloc_initialized
+condition|)
+block|{
+comment|/* 		 * Another thread initialized the allocator before this one 		 * acquired init_lock. 		 */
+name|malloc_mutex_unlock
+argument_list|(
+operator|&
+name|init_lock
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|false
+operator|)
+return|;
+block|}
 comment|/* Get number of CPUs. */
 block|{
 name|int
@@ -13844,11 +13877,19 @@ name|arenas
 operator|==
 name|NULL
 condition|)
+block|{
+name|malloc_mutex_unlock
+argument_list|(
+operator|&
+name|init_lock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|true
 operator|)
 return|;
+block|}
 comment|/* 	 * Zero the array.  In practice, this should always be pre-zeroed, 	 * since it was just mmap()ed, but let's be sure. 	 */
 name|memset
 argument_list|(
@@ -13880,11 +13921,19 @@ index|]
 operator|==
 name|NULL
 condition|)
+block|{
+name|malloc_mutex_unlock
+argument_list|(
+operator|&
+name|init_lock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|true
 operator|)
 return|;
+block|}
 name|malloc_mutex_init
 argument_list|(
 operator|&
@@ -13894,6 +13943,12 @@ expr_stmt|;
 name|malloc_initialized
 operator|=
 name|true
+expr_stmt|;
+name|malloc_mutex_unlock
+argument_list|(
+operator|&
+name|init_lock
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
