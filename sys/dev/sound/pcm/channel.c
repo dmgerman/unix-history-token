@@ -68,16 +68,6 @@ end_endif
 begin_define
 define|#
 directive|define
-name|DMA_ALIGN_MASK
-parameter_list|(
-name|bps
-parameter_list|)
-value|(~((bps) - 1))
-end_define
-
-begin_define
-define|#
-directive|define
 name|CANCHANGE
 parameter_list|(
 name|c
@@ -5688,21 +5678,25 @@ modifier|*
 name|c
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|0
+block|int hwptr; 	int a = (1<< c->align) - 1;  	CHN_LOCKASSERT(c); 	hwptr = (c->flags& CHN_F_TRIGGERED)? CHANNEL_GETPTR(c->methods, c->devinfo) : 0;
+comment|/* don't allow unaligned values in the hwa ptr */
+if|#
+directive|if
+literal|1
+block|hwptr&= ~a ;
+comment|/* Apply channel align mask */
+endif|#
+directive|endif
+block|hwptr&= DMA_ALIGN_MASK;
+comment|/* Apply DMA align mask */
+block|return hwptr;
+endif|#
+directive|endif
 name|int
 name|hwptr
-decl_stmt|;
-name|int
-name|a
-init|=
-operator|(
-literal|1
-operator|<<
-name|c
-operator|->
-name|align
-operator|)
-operator|-
-literal|1
 decl_stmt|;
 name|CHN_LOCKASSERT
 argument_list|(
@@ -5732,39 +5726,21 @@ argument_list|)
 else|:
 literal|0
 expr_stmt|;
-comment|/* don't allow unaligned values in the hwa ptr */
-if|#
-directive|if
-literal|1
+return|return
+operator|(
 name|hwptr
-operator|&=
-operator|~
-name|a
-expr_stmt|;
-comment|/* Apply channel align mask */
-endif|#
-directive|endif
-if|#
-directive|if
-literal|0
-block|hwptr&= DMA_ALIGN_MASK;
-comment|/* Apply DMA align mask */
-endif|#
-directive|endif
+operator|-
+operator|(
 name|hwptr
-operator|&=
-name|DMA_ALIGN_MASK
-argument_list|(
+operator|%
 name|sndbuf_getbps
 argument_list|(
 name|c
 operator|->
 name|bufhard
 argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|hwptr
+operator|)
+operator|)
 return|;
 block|}
 end_function
