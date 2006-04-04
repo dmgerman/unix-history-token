@@ -1261,12 +1261,22 @@ name|SND_DYNSYSCTL
 end_ifdef
 
 begin_comment
-unit|static int sysctl_hw_snd_vchanrate(SYSCTL_HANDLER_ARGS) { 	struct snddev_info *d;     	struct snddev_channel *sce; 	struct pcm_channel *c, *ch = NULL, *fake; 	struct pcmchan_caps *caps; 	int err = 0; 	int newspd = 0;  	d = oidp->oid_arg1; 	if (!(d->flags& SD_F_AUTOVCHAN) || d->vchancount< 1) 		return EINVAL; 	SLIST_FOREACH(sce,&d->channels, link) { 		c = sce->channel; 		CHN_LOCK(c); 		if (c->direction == PCMDIR_PLAY) { 			if (c->flags& CHN_F_VIRTUAL) { 				if (req->newptr != NULL&& 						(c->flags& CHN_F_BUSY)) { 					CHN_UNLOCK(c); 					return EBUSY; 				} 				if (ch == NULL) 					ch = c->parentchannel; 			} 		} 		CHN_UNLOCK(c); 	} 	if (ch != NULL) { 		CHN_LOCK(ch); 		newspd = ch->speed; 		CHN_UNLOCK(ch); 	} 	err = sysctl_handle_int(oidp,&newspd, sizeof(newspd), req); 	if (err == 0&& req->newptr != NULL) { 		if (ch == NULL || newspd< 1 || 				newspd< feeder_rate_ratemin || 				newspd> feeder_rate_ratemax) 			return EINVAL; 		if (pcm_inprog(d, 1) != 1) { 			pcm_inprog(d, -1); 			return EINPROGRESS; 		} 		CHN_LOCK(ch); 		caps = chn_getcaps(ch); 		if (caps == NULL || newspd< caps->minspeed || 				newspd> caps->maxspeed) { 			CHN_UNLOCK(ch); 			pcm_inprog(d, -1); 			return EINVAL; 		} 		if (newspd != ch->speed) { 			err = chn_setspeed(ch, newspd);
+unit|static int sysctl_hw_snd_vchanrate(SYSCTL_HANDLER_ARGS) { 	struct snddev_info *d;     	struct snddev_channel *sce; 	struct pcm_channel *c, *ch = NULL, *fake; 	struct pcmchan_caps *caps; 	int err = 0; 	int newspd = 0;  	d = oidp->oid_arg1; 	if (!(d->flags& SD_F_AUTOVCHAN) || d->vchancount< 1) 		return EINVAL; 	if (pcm_inprog(d, 1) != 1&& req->newptr != NULL) { 		pcm_inprog(d, -1); 		return EINPROGRESS; 	} 	SLIST_FOREACH(sce,&d->channels, link) { 		c = sce->channel; 		CHN_LOCK(c); 		if (c->direction == PCMDIR_PLAY) { 			if (c->flags& CHN_F_VIRTUAL) {
+comment|/* Sanity check */
+end_comment
+
+begin_comment
+unit|if (ch != NULL&& ch != c->parentchannel) { 					CHN_UNLOCK(c); 					pcm_inprog(d, -1); 					return EINVAL; 				} 				if (req->newptr != NULL&& 						(c->flags& CHN_F_BUSY)) { 					CHN_UNLOCK(c); 					pcm_inprog(d, -1); 					return EBUSY; 				} 			} else if (c->flags& CHN_F_HAS_VCHAN) {
+comment|/* No way!! */
+end_comment
+
+begin_comment
+unit|if (ch != NULL) { 					CHN_UNLOCK(c); 					pcm_inprog(d, -1); 					return EINVAL; 				} 				ch = c; 				newspd = ch->speed; 			} 		} 		CHN_UNLOCK(c); 	} 	if (ch == NULL) { 		pcm_inprog(d, -1); 		return EINVAL; 	} 	err = sysctl_handle_int(oidp,&newspd, sizeof(newspd), req); 	if (err == 0&& req->newptr != NULL) { 		if (newspd< 1 || newspd< feeder_rate_ratemin || 				newspd> feeder_rate_ratemax) { 			pcm_inprog(d, -1); 			return EINVAL; 		} 		CHN_LOCK(ch); 		caps = chn_getcaps(ch); 		if (caps == NULL || newspd< caps->minspeed || 				newspd> caps->maxspeed) { 			CHN_UNLOCK(ch); 			pcm_inprog(d, -1); 			return EINVAL; 		} 		if (newspd != ch->speed) { 			err = chn_setspeed(ch, newspd);
 comment|/* 			 * Try to avoid FEEDER_RATE on parent channel if the 			 * requested value is not supported by the hardware. 			 */
 end_comment
 
 begin_endif
-unit|if (!err&& (ch->feederflags& (1<< FEEDER_RATE))) { 				newspd = sndbuf_getspd(ch->bufhard); 				err = chn_setspeed(ch, newspd); 			} 			CHN_UNLOCK(ch); 			if (err == 0) { 				fake = pcm_getfakechan(d); 				if (fake != NULL) { 					CHN_LOCK(fake); 					fake->speed = newspd; 					CHN_UNLOCK(fake); 				} 			} 		} else 			CHN_UNLOCK(ch); 		pcm_inprog(d, -1); 	} 	return err; }
+unit|if (!err&& (ch->feederflags& (1<< FEEDER_RATE))) { 				newspd = sndbuf_getspd(ch->bufhard); 				err = chn_setspeed(ch, newspd); 			} 			CHN_UNLOCK(ch); 			if (err == 0) { 				fake = pcm_getfakechan(d); 				if (fake != NULL) { 					CHN_LOCK(fake); 					fake->speed = newspd; 					CHN_UNLOCK(fake); 				} 			} 		} else 			CHN_UNLOCK(ch); 	} 	pcm_inprog(d, -1); 	return err; }
 endif|#
 directive|endif
 end_endif
@@ -1833,13 +1843,17 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|pcm_chn_remove
 argument_list|(
 name|d
 argument_list|,
 name|child
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
 name|pcm_chn_destroy
 argument_list|(
 name|child
@@ -1899,10 +1913,11 @@ name|snddev_channel
 modifier|*
 name|sce
 decl_stmt|;
+name|uint32_t
+name|spd
+decl_stmt|;
 name|int
 name|err
-decl_stmt|,
-name|last
 decl_stmt|;
 name|CHN_LOCK
 argument_list|(
@@ -2006,6 +2021,7 @@ name|sce
 operator|->
 name|dsp_devt
 condition|)
+block|{
 name|destroy_dev
 argument_list|(
 name|sce
@@ -2013,12 +2029,20 @@ operator|->
 name|dsp_devt
 argument_list|)
 expr_stmt|;
+name|sce
+operator|->
+name|dsp_devt
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|sce
 operator|->
 name|dspW_devt
 condition|)
+block|{
 name|destroy_dev
 argument_list|(
 name|sce
@@ -2026,12 +2050,20 @@ operator|->
 name|dspW_devt
 argument_list|)
 expr_stmt|;
+name|sce
+operator|->
+name|dspW_devt
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|sce
 operator|->
 name|audio_devt
 condition|)
+block|{
 name|destroy_dev
 argument_list|(
 name|sce
@@ -2039,18 +2071,38 @@ operator|->
 name|audio_devt
 argument_list|)
 expr_stmt|;
+name|sce
+operator|->
+name|audio_devt
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|sce
 operator|->
 name|dspr_devt
 condition|)
+block|{
 name|destroy_dev
 argument_list|(
 name|sce
 operator|->
 name|dspr_devt
 argument_list|)
+expr_stmt|;
+name|sce
+operator|->
+name|dspr_devt
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+name|d
+operator|->
+name|devcount
+operator|--
 expr_stmt|;
 break|break;
 block|}
@@ -2076,8 +2128,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-name|last
-operator|=
+if|if
+condition|(
 name|SLIST_EMPTY
 argument_list|(
 operator|&
@@ -2085,10 +2137,6 @@ name|parent
 operator|->
 name|children
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|last
 condition|)
 block|{
 name|parent
@@ -2096,14 +2144,37 @@ operator|->
 name|flags
 operator|&=
 operator|~
+operator|(
 name|CHN_F_BUSY
+operator||
+name|CHN_F_HAS_VCHAN
+operator|)
 expr_stmt|;
+name|spd
+operator|=
 name|parent
 operator|->
-name|flags
-operator|&=
-operator|~
-name|CHN_F_HAS_VCHAN
+name|speed
+expr_stmt|;
+if|if
+condition|(
+name|chn_reset
+argument_list|(
+name|parent
+argument_list|,
+name|parent
+operator|->
+name|format
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|chn_setspeed
+argument_list|(
+name|parent
+argument_list|,
+name|spd
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* remove us from our grandparent's channel list */
@@ -2134,12 +2205,6 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (!err&& last) { 		CHN_LOCK(parent); 		chn_reset(parent, chn_getcaps(parent)->fmtlist[0]); 		chn_setspeed(parent, chn_getcaps(parent)->minspeed); 		CHN_UNLOCK(parent); 	}
-endif|#
-directive|endif
 return|return
 name|err
 return|;

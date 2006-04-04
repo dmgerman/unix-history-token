@@ -397,6 +397,27 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCMMAXCHAN
+value|0xff
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMMAXDEV
+value|0x0f
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMMAXUNIT
+value|0x0f
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCMMINOR
 parameter_list|(
 name|x
@@ -411,7 +432,7 @@ name|PCMCHAN
 parameter_list|(
 name|x
 parameter_list|)
-value|((PCMMINOR(x)& 0x00ff0000)>> 16)
+value|((PCMMINOR(x)>> 16)& PCMMAXCHAN)
 end_define
 
 begin_define
@@ -421,7 +442,7 @@ name|PCMUNIT
 parameter_list|(
 name|x
 parameter_list|)
-value|((PCMMINOR(x)& 0x000000f0)>> 4)
+value|((PCMMINOR(x)>> 4)& PCMMAXUNIT)
 end_define
 
 begin_define
@@ -431,7 +452,7 @@ name|PCMDEV
 parameter_list|(
 name|x
 parameter_list|)
-value|(PCMMINOR(x)& 0x0000000f)
+value|(PCMMINOR(x)& PCMMAXDEV)
 end_define
 
 begin_define
@@ -445,7 +466,7 @@ name|d
 parameter_list|,
 name|c
 parameter_list|)
-value|((((c)& 0xff)<< 16) | (((u)& 0x0f)<< 4) | ((d)& 0x0f))
+value|((((c)& PCMMAXCHAN)<< 16) | \ 				(((u)& PCMMAXUNIT)<< 4) | ((d)& PCMMAXDEV))
 end_define
 
 begin_define
@@ -599,11 +620,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* XXX Flawed definition. I'll fix it someday. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SND_MAXVCHANS
-value|255
+value|PCMMAXCHAN
 end_define
 
 begin_comment
@@ -865,15 +890,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|pcm_channel
-modifier|*
+name|int
 name|pcm_chnalloc
 parameter_list|(
 name|struct
 name|snddev_info
 modifier|*
 name|d
+parameter_list|,
+name|struct
+name|pcm_channel
+modifier|*
+modifier|*
+name|ch
 parameter_list|,
 name|int
 name|direction
