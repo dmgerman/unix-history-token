@@ -2864,6 +2864,15 @@ operator|=
 literal|"AD1816"
 expr_stmt|;
 break|break;
+case|case
+literal|0x50719304
+case|:
+comment|/* ADS7150 */
+name|s
+operator|=
+literal|"AD1815"
+expr_stmt|;
+break|break;
 block|}
 if|if
 condition|(
