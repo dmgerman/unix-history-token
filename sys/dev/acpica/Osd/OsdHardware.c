@@ -52,7 +52,7 @@ file|<dev/pci/pcireg.h>
 end_include
 
 begin_comment
-comment|/*  * ACPICA's rather gung-ho approach to hardware resource ownership is a little  * troublesome insofar as there is no easy way for us to know in advance   * exactly which I/O resources it's going to want to use.  *   * In order to deal with this, we ignore resource ownership entirely, and simply  * use the native I/O space accessor functionality.  This is Evil, but it works.  *  * XXX use an intermediate #define for the tag/handle  */
+comment|/*  * ACPICA's rather gung-ho approach to hardware resource ownership is a little  * troublesome insofar as there is no easy way for us to know in advance  * exactly which I/O resources it's going to want to use.  *  * In order to deal with this, we ignore resource ownership entirely, and simply  * use the native I/O space accessor functionality.  This is Evil, but it works.  *  * XXX use an intermediate #define for the tag/handle  */
 end_comment
 
 begin_ifdef
@@ -329,7 +329,7 @@ name|width
 operator|/
 literal|8
 operator|)
-operator|>=
+operator|>
 name|port
 index|[
 literal|0
