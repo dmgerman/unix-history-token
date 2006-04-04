@@ -245,7 +245,7 @@ block|,
 operator|.
 name|flags
 operator|=
-literal|0
+name|PTHREAD_SCOPE_SYSTEM
 block|,
 operator|.
 name|arg_attr
