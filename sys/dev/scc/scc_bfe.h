@@ -195,6 +195,19 @@ name|resource_list
 name|ch_rlist
 decl_stmt|;
 name|struct
+name|resource
+modifier|*
+name|ch_ires
+decl_stmt|;
+comment|/* Interrupt resource. */
+name|void
+modifier|*
+name|ch_icookie
+decl_stmt|;
+name|int
+name|ch_irid
+decl_stmt|;
+name|struct
 name|scc_mode
 name|ch_mode
 index|[
@@ -300,19 +313,6 @@ name|int
 name|sc_rtype
 decl_stmt|;
 comment|/* SYS_RES_{IOPORT|MEMORY}. */
-name|struct
-name|resource
-modifier|*
-name|sc_ires
-decl_stmt|;
-comment|/* Interrupt resource. */
-name|void
-modifier|*
-name|sc_icookie
-decl_stmt|;
-name|int
-name|sc_irid
-decl_stmt|;
 name|struct
 name|scc_chan
 modifier|*
