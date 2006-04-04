@@ -3115,6 +3115,17 @@ name|csa_res
 modifier|*
 name|resp
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|csa
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"called with bogus resource structure"
+operator|)
+argument_list|)
+expr_stmt|;
 name|resp
 operator|=
 operator|&
@@ -3257,13 +3268,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|csa
-operator|!=
-name|NULL
-condition|)
-block|{
 name|free
 argument_list|(
 name|csa
@@ -3271,11 +3275,6 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-name|csa
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 block|}
 end_function
 
