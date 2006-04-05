@@ -528,24 +528,49 @@ operator|==
 name|P_MAGIC
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX: The owner of a turnstile can be stale if it is the 		 * first thread to grab a slock of a sx lock.  In that case 		 * it is possible for us to be at SSLEEP or some other 		 * weird state.  We should probably just return if the state 		 * isn't SRUN or SLOCK. 		 */
-name|KASSERT
-argument_list|(
-operator|!
+comment|/* 		 * If the thread is asleep, then we are probably about 		 * to deadlock.  To make debugging this easier, just 		 * panic and tell the user which thread misbehaved so 		 * they can hopefully get a stack trace from the truly 		 * misbehaving thread. 		 */
+if|if
+condition|(
 name|TD_IS_SLEEPING
 argument_list|(
 name|td
 argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Sleeping thread (tid %d, pid %d) owns a non-sleepable lock\n"
 argument_list|,
-operator|(
-literal|"sleeping thread (tid %d) owns a non-sleepable lock"
-operator|,
 name|td
 operator|->
 name|td_tid
-operator|)
+argument_list|,
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_pid
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DDB
+name|db_trace_thread
+argument_list|(
+name|td
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|panic
+argument_list|(
+literal|"sleeping thread"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 		 * If this thread already has higher priority than the 		 * thread that is being blocked, we are finished. 		 */
 if|if
 condition|(
