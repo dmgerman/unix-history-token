@@ -12763,6 +12763,12 @@ operator|)
 return|;
 name|drop
 label|:
+if|if
+condition|(
+name|tw
+operator|!=
+name|NULL
+condition|)
 name|INP_UNLOCK
 argument_list|(
 name|tw
