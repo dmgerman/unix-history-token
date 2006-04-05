@@ -294,6 +294,11 @@ name|size_t
 name|pgf_nbuckets
 decl_stmt|;
 comment|/* #buckets in this gmon.out */
+name|unsigned
+name|int
+name|pgf_nsamples
+decl_stmt|;
+comment|/* #samples in this gmon.out */
 name|pmcstat_interned_string
 name|pgf_name
 decl_stmt|;
@@ -3529,6 +3534,12 @@ argument_list|(
 name|HISTCOUNTER
 argument_list|)
 expr_stmt|;
+name|pgf
+operator|->
+name|pgf_nsamples
+operator|=
+literal|0
+expr_stmt|;
 name|pmcstat_gmon_create_file
 argument_list|(
 name|pgf
@@ -3639,6 +3650,11 @@ operator|->
 name|pgf_overflow
 operator|=
 literal|1
+expr_stmt|;
+name|pgf
+operator|->
+name|pgf_nsamples
+operator|++
 expr_stmt|;
 block|}
 end_function
@@ -7134,6 +7150,34 @@ argument_list|,
 argument|pitmp
 argument_list|)
 block|{
+if|if
+condition|(
+name|mf
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|mf
+argument_list|,
+literal|" \"%s\" => \"%s\""
+argument_list|,
+name|pmcstat_string_unintern
+argument_list|(
+name|pi
+operator|->
+name|pi_execpath
+argument_list|)
+argument_list|,
+name|pmcstat_string_unintern
+argument_list|(
+name|pi
+operator|->
+name|pi_samplename
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* flush gmon.out data to disk */
 name|LIST_FOREACH_SAFE
 argument_list|(
@@ -7156,6 +7200,31 @@ argument_list|(
 name|pgf
 argument_list|,
 name|pgf_next
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mf
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|mf
+argument_list|,
+literal|" %s/%d"
+argument_list|,
+name|pmcstat_pmcid_to_name
+argument_list|(
+name|pgf
+operator|->
+name|pgf_pmcid
+argument_list|)
+argument_list|,
+name|pgf
+operator|->
+name|pgf_nsamples
 argument_list|)
 expr_stmt|;
 if|if
@@ -7200,21 +7269,7 @@ name|fprintf
 argument_list|(
 name|mf
 argument_list|,
-literal|" \"%s\" -> \"%s\"\n"
-argument_list|,
-name|pmcstat_string_unintern
-argument_list|(
-name|pi
-operator|->
-name|pi_execpath
-argument_list|)
-argument_list|,
-name|pmcstat_string_unintern
-argument_list|(
-name|pi
-operator|->
-name|pi_samplename
-argument_list|)
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|LIST_REMOVE
