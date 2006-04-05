@@ -990,6 +990,12 @@ if|if
 condition|(
 name|sz
 operator|->
+name|sz_max
+operator|>
+literal|0
+operator|&&
+name|sz
+operator|->
 name|sz_inuse
 operator|==
 name|sz
@@ -10461,7 +10467,7 @@ name|TDP_GEOM
 expr_stmt|;
 name|G_RAID3_DEBUG
 argument_list|(
-literal|0
+literal|1
 argument_list|,
 literal|"Thread exiting."
 argument_list|)
