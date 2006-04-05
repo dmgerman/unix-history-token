@@ -2143,7 +2143,7 @@ name|bio_length
 operator|/
 name|secsize
 expr_stmt|;
-comment|/* 	 * Calculate how much memory do we need. 	 * We need separate crypto operation for every single sector. 	 * It is much faster to calculate total amount of needed memory here and 	 * do the allocation once insteaf of allocate memory in pieces (many, 	 * many pieces). 	 */
+comment|/* 	 * Calculate how much memory do we need. 	 * We need separate crypto operation for every single sector. 	 * It is much faster to calculate total amount of needed memory here and 	 * do the allocation once instead of allocating memory in pieces (many, 	 * many pieces). 	 */
 name|size
 operator|=
 sizeof|sizeof
