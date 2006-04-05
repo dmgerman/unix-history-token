@@ -293,11 +293,11 @@ begin_define
 define|#
 directive|define
 name|MAXWAIT
-value|10
+value|10000
 end_define
 
 begin_comment
-comment|/* max seconds to wait for response */
+comment|/* max ms to wait for response */
 end_comment
 
 begin_define
@@ -582,6 +582,13 @@ define|#
 directive|define
 name|F_SWEEP
 value|0x200000
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_WAITTIME
+value|0x400000
 end_define
 
 begin_comment
@@ -885,6 +892,30 @@ end_decl_stmt
 
 begin_comment
 comment|/* interval between packets, ms */
+end_comment
+
+begin_decl_stmt
+name|int
+name|waittime
+init|=
+name|MAXWAIT
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* timeout for each packet */
+end_comment
+
+begin_decl_stmt
+name|long
+name|nrcvtimeout
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* # of packets we got back after waittime */
 end_comment
 
 begin_comment
@@ -1401,7 +1432,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Aac:DdfG:g:h:I:i:Ll:M:m:nop:QqRrS:s:T:t:vz:"
+literal|"Aac:DdfG:g:h:I:i:Ll:M:m:nop:QqRrS:s:T:t:vW:z:"
 ifdef|#
 directive|ifdef
 name|IPSEC
@@ -2348,6 +2379,57 @@ case|:
 name|options
 operator||=
 name|F_VERBOSE
+expr_stmt|;
+break|break;
+case|case
+literal|'W'
+case|:
+comment|/* wait ms for answer */
+name|t
+operator|=
+name|strtod
+argument_list|(
+name|optarg
+argument_list|,
+operator|&
+name|ep
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|ep
+operator|||
+name|ep
+operator|==
+name|optarg
+operator|||
+name|t
+operator|>
+operator|(
+name|double
+operator|)
+name|INT_MAX
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"invalid timing interval: `%s'"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|options
+operator||=
+name|F_WAITTIME
+expr_stmt|;
+name|waittime
+operator|=
+operator|(
+name|int
+operator|)
+name|t
 expr_stmt|;
 break|break;
 case|case
@@ -4800,12 +4882,26 @@ literal|1
 expr_stmt|;
 block|}
 else|else
+block|{
 name|intvl
 operator|.
 name|tv_sec
 operator|=
-name|MAXWAIT
+name|waittime
+operator|/
+literal|1000
 expr_stmt|;
+name|intvl
+operator|.
+name|tv_usec
+operator|=
+name|waittime
+operator|%
+literal|1000
+operator|*
+literal|1000
+expr_stmt|;
+block|}
 block|}
 operator|(
 name|void
@@ -5714,6 +5810,22 @@ operator|&
 name|F_QUIET
 condition|)
 return|return;
+if|if
+condition|(
+name|options
+operator|&
+name|F_WAITTIME
+operator|&&
+name|triptime
+operator|>
+name|waittime
+condition|)
+block|{
+operator|++
+name|nrcvtimeout
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|options
@@ -7274,6 +7386,20 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|nrcvtimeout
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|", %ld packets out of wait time"
+argument_list|,
+name|nrcvtimeout
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -8896,7 +9022,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
+literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: ping [-AaDdfnoQqRrv] [-c count] [-G sweepmaxsize] [-g sweepminsize]"
 argument_list|,
@@ -8906,7 +9032,7 @@ literal|"           "
 name|SECOPT
 literal|" [-p pattern] [-S src_addr] [-s packetsize] [-t timeout]"
 argument_list|,
-literal|"            [-z tos] host"
+literal|"            [-W waittime] [-z tos] host"
 argument_list|,
 literal|"       ping [-AaDdfLnoQqRrv] [-c count] [-I iface] [-i wait] [-l preload]"
 argument_list|,
@@ -8914,7 +9040,9 @@ literal|"            [-M mask | time] [-m ttl]"
 name|SECOPT
 literal|" [-p pattern] [-S src_addr]"
 argument_list|,
-literal|"            [-s packetsize] [-T ttl] [-t timeout] [-z tos] mcast-group"
+literal|"            [-s packetsize] [-T ttl] [-t timeout] [-W waittime]"
+argument_list|,
+literal|"            [-z tos] mcast-group"
 argument_list|)
 expr_stmt|;
 name|exit
