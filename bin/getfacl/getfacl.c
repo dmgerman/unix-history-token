@@ -101,7 +101,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"getfacl [-dh] [file ...]\n"
+literal|"getfacl [-dhq] [file ...]\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -609,6 +609,9 @@ name|type
 parameter_list|,
 name|int
 name|hflag
+parameter_list|,
+name|int
+name|qflag
 parameter_list|)
 block|{
 name|struct
@@ -685,6 +688,11 @@ else|else
 name|more_than_one
 operator|++
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|qflag
+condition|)
 name|printf
 argument_list|(
 literal|"#file:%s\n#owner:%d\n#group:%d\n"
@@ -861,6 +869,9 @@ name|type
 parameter_list|,
 name|int
 name|hflag
+parameter_list|,
+name|int
+name|qflag
 parameter_list|)
 block|{
 name|char
@@ -924,6 +935,8 @@ argument_list|,
 name|type
 argument_list|,
 name|hflag
+argument_list|,
+name|qflag
 argument_list|)
 operator|==
 operator|-
@@ -977,8 +990,14 @@ name|i
 decl_stmt|;
 name|int
 name|hflag
+decl_stmt|,
+name|qflag
 decl_stmt|;
 name|hflag
+operator|=
+literal|0
+expr_stmt|;
+name|qflag
 operator|=
 literal|0
 expr_stmt|;
@@ -993,7 +1012,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dh"
+literal|"dhq"
 argument_list|)
 operator|)
 operator|!=
@@ -1017,6 +1036,14 @@ case|case
 literal|'h'
 case|:
 name|hflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'q'
+case|:
+name|qflag
 operator|=
 literal|1
 expr_stmt|;
@@ -1054,6 +1081,8 @@ argument_list|(
 name|type
 argument_list|,
 name|hflag
+argument_list|,
+name|qflag
 argument_list|)
 expr_stmt|;
 return|return
@@ -1101,6 +1130,8 @@ argument_list|(
 name|type
 argument_list|,
 name|hflag
+argument_list|,
+name|qflag
 argument_list|)
 expr_stmt|;
 if|if
@@ -1130,6 +1161,8 @@ argument_list|,
 name|type
 argument_list|,
 name|hflag
+argument_list|,
+name|qflag
 argument_list|)
 expr_stmt|;
 if|if
