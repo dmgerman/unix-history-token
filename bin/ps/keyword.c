@@ -3005,6 +3005,11 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
+else|else
+name|hp
+operator|=
+name|p
+expr_stmt|;
 name|key
 operator|.
 name|name
