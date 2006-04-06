@@ -3,11 +3,9 @@ begin_comment
 comment|/* Internal interfaces for the GNU/Linux specific target code for gdbserver.    Copyright 2002, 2004 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_LINUX_REGSETS
-end_ifdef
+begin_comment
+comment|/*  * $FreeBSD$  */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -86,14 +84,9 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_struct
 struct|struct
-name|linux_target_ops
+name|fbsd_target_ops
 block|{
 name|int
 name|num_regs
@@ -177,7 +170,7 @@ end_struct
 begin_decl_stmt
 specifier|extern
 name|struct
-name|linux_target_ops
+name|fbsd_target_ops
 name|the_low_target
 decl_stmt|;
 end_decl_stmt
@@ -269,7 +262,7 @@ name|pending_signals
 modifier|*
 name|pending_signals
 decl_stmt|;
-comment|/* A link used when resuming.  It is initialized from the resume request,      and then processed and cleared in linux_resume_one_process.  */
+comment|/* A link used when resuming.  It is initialized from the resume request,      and then processed and cleared in fbsd_resume_one_process.  */
 name|struct
 name|thread_resume
 modifier|*
@@ -289,7 +282,7 @@ end_decl_stmt
 
 begin_function_decl
 name|void
-name|linux_attach_lwp
+name|fbsd_attach_lwp
 parameter_list|(
 name|int
 name|pid
