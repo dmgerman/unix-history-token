@@ -1717,7 +1717,7 @@ decl_stmt|;
 name|KASSERT
 argument_list|(
 name|pcbp
-operator|==
+operator|!=
 name|NULL
 argument_list|,
 operator|(
