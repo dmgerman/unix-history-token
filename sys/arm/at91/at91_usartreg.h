@@ -34,7 +34,7 @@ begin_define
 define|#
 directive|define
 name|USART_CR_RSTRX
-value|(1<< 2)
+value|(1UL<< 2)
 end_define
 
 begin_comment
@@ -45,7 +45,7 @@ begin_define
 define|#
 directive|define
 name|USART_CR_RSTTX
-value|(1<< 3)
+value|(1UL<< 3)
 end_define
 
 begin_comment
@@ -56,7 +56,7 @@ begin_define
 define|#
 directive|define
 name|USART_CR_RXEN
-value|(1<< 4)
+value|(1UL<< 4)
 end_define
 
 begin_comment
@@ -67,7 +67,7 @@ begin_define
 define|#
 directive|define
 name|USART_CR_RXDIS
-value|(1<< 5)
+value|(1UL<< 5)
 end_define
 
 begin_comment
@@ -78,7 +78,7 @@ begin_define
 define|#
 directive|define
 name|USART_CR_TXEN
-value|(1<< 6)
+value|(1UL<< 6)
 end_define
 
 begin_comment
@@ -89,7 +89,7 @@ begin_define
 define|#
 directive|define
 name|USART_CR_TXDIS
-value|(1<< 7)
+value|(1UL<< 7)
 end_define
 
 begin_comment
@@ -100,7 +100,7 @@ begin_define
 define|#
 directive|define
 name|USART_CR_RSTSTA
-value|(1<< 8)
+value|(1UL<< 8)
 end_define
 
 begin_comment
@@ -111,7 +111,7 @@ begin_define
 define|#
 directive|define
 name|USART_CR_STTBRK
-value|(1<< 9)
+value|(1UL<< 9)
 end_define
 
 begin_comment
@@ -122,7 +122,7 @@ begin_define
 define|#
 directive|define
 name|USART_CR_STPBRK
-value|(1<< 10)
+value|(1UL<< 10)
 end_define
 
 begin_comment
@@ -133,7 +133,7 @@ begin_define
 define|#
 directive|define
 name|USART_CR_STTTO
-value|(1<< 11)
+value|(1UL<< 11)
 end_define
 
 begin_comment
@@ -144,7 +144,7 @@ begin_define
 define|#
 directive|define
 name|USART_CR_SENDA
-value|(1<< 12)
+value|(1UL<< 12)
 end_define
 
 begin_comment
@@ -155,7 +155,7 @@ begin_define
 define|#
 directive|define
 name|USART_CR_RSTIT
-value|(1<< 13)
+value|(1UL<< 13)
 end_define
 
 begin_comment
@@ -166,7 +166,7 @@ begin_define
 define|#
 directive|define
 name|USART_CR_RSTNACK
-value|(1<< 14)
+value|(1UL<< 14)
 end_define
 
 begin_comment
@@ -177,7 +177,7 @@ begin_define
 define|#
 directive|define
 name|USART_CR_RETTO
-value|(1<< 15)
+value|(1UL<< 15)
 end_define
 
 begin_comment
@@ -188,7 +188,7 @@ begin_define
 define|#
 directive|define
 name|USART_CR_DTREN
-value|(1<< 16)
+value|(1UL<< 16)
 end_define
 
 begin_comment
@@ -199,7 +199,7 @@ begin_define
 define|#
 directive|define
 name|USART_CR_DTRDIS
-value|(1<< 17)
+value|(1UL<< 17)
 end_define
 
 begin_comment
@@ -210,7 +210,7 @@ begin_define
 define|#
 directive|define
 name|USART_CR_RTSEN
-value|(1<< 18)
+value|(1UL<< 18)
 end_define
 
 begin_comment
@@ -221,7 +221,7 @@ begin_define
 define|#
 directive|define
 name|USART_CR_RTSDIS
-value|(1<< 19)
+value|(1UL<< 19)
 end_define
 
 begin_comment
@@ -605,7 +605,7 @@ begin_define
 define|#
 directive|define
 name|USART_CSR_RXRDY
-value|(1U<< 0)
+value|(1UL<< 0)
 end_define
 
 begin_comment
@@ -616,7 +616,7 @@ begin_define
 define|#
 directive|define
 name|USART_CSR_TXRDY
-value|(1U<< 1)
+value|(1UL<< 1)
 end_define
 
 begin_comment
@@ -627,7 +627,7 @@ begin_define
 define|#
 directive|define
 name|USART_CSR_RXBRK
-value|(1U<< 2)
+value|(1UL<< 2)
 end_define
 
 begin_comment
@@ -638,7 +638,7 @@ begin_define
 define|#
 directive|define
 name|USART_CSR_ENDRX
-value|(1U<< 3)
+value|(1UL<< 3)
 end_define
 
 begin_comment
@@ -649,7 +649,7 @@ begin_define
 define|#
 directive|define
 name|USART_CSR_ENDTX
-value|(1U<< 4)
+value|(1UL<< 4)
 end_define
 
 begin_comment
@@ -660,7 +660,7 @@ begin_define
 define|#
 directive|define
 name|USART_CSR_OVRE
-value|(1U<< 5)
+value|(1UL<< 5)
 end_define
 
 begin_comment
@@ -671,7 +671,7 @@ begin_define
 define|#
 directive|define
 name|USART_CSR_FRAME
-value|(1U<< 6)
+value|(1UL<< 6)
 end_define
 
 begin_comment
@@ -682,7 +682,7 @@ begin_define
 define|#
 directive|define
 name|USART_CSR_PARE
-value|(1U<< 7)
+value|(1UL<< 7)
 end_define
 
 begin_comment
@@ -693,7 +693,7 @@ begin_define
 define|#
 directive|define
 name|USART_CSR_TIMEOUT
-value|(1U<< 8)
+value|(1UL<< 8)
 end_define
 
 begin_comment
@@ -704,7 +704,7 @@ begin_define
 define|#
 directive|define
 name|USART_CSR_TXEMPTY
-value|(1U<< 9)
+value|(1UL<< 9)
 end_define
 
 begin_comment
@@ -715,7 +715,7 @@ begin_define
 define|#
 directive|define
 name|USART_CSR_ITERATION
-value|(1U<< 10)
+value|(1UL<< 10)
 end_define
 
 begin_comment
@@ -726,7 +726,7 @@ begin_define
 define|#
 directive|define
 name|USART_CSR_TXBUFE
-value|(1U<< 11)
+value|(1UL<< 11)
 end_define
 
 begin_comment
@@ -737,7 +737,7 @@ begin_define
 define|#
 directive|define
 name|USART_CSR_RXBUFF
-value|(1U<< 12)
+value|(1UL<< 12)
 end_define
 
 begin_comment
@@ -748,7 +748,7 @@ begin_define
 define|#
 directive|define
 name|USART_CSR_NACK
-value|(1U<< 13)
+value|(1UL<< 13)
 end_define
 
 begin_comment
@@ -759,7 +759,7 @@ begin_define
 define|#
 directive|define
 name|USART_CSR_RIIC
-value|(1U<< 16)
+value|(1UL<< 16)
 end_define
 
 begin_comment
@@ -770,7 +770,7 @@ begin_define
 define|#
 directive|define
 name|USART_CSR_DSRIC
-value|(1U<< 17)
+value|(1UL<< 17)
 end_define
 
 begin_comment
@@ -781,7 +781,7 @@ begin_define
 define|#
 directive|define
 name|USART_CSR_DCDIC
-value|(1U<< 18)
+value|(1UL<< 18)
 end_define
 
 begin_comment
@@ -792,7 +792,7 @@ begin_define
 define|#
 directive|define
 name|USART_CSR_CTSIC
-value|(1U<< 19)
+value|(1UL<< 19)
 end_define
 
 begin_comment
@@ -803,7 +803,7 @@ begin_define
 define|#
 directive|define
 name|USART_CSR_RI
-value|(1U<< 20)
+value|(1UL<< 20)
 end_define
 
 begin_comment
@@ -814,7 +814,7 @@ begin_define
 define|#
 directive|define
 name|USART_CSR_DSR
-value|(1U<< 21)
+value|(1UL<< 21)
 end_define
 
 begin_comment
@@ -825,7 +825,7 @@ begin_define
 define|#
 directive|define
 name|USART_CSR_DCD
-value|(1U<< 22)
+value|(1UL<< 22)
 end_define
 
 begin_comment
@@ -836,7 +836,7 @@ begin_define
 define|#
 directive|define
 name|USART_CSR_CTS
-value|(1U<< 23)
+value|(1UL<< 23)
 end_define
 
 begin_comment
@@ -937,204 +937,6 @@ end_define
 
 begin_comment
 comment|/* IrDA filter register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UART_RXRDY
-value|(0x1<< 0)
-end_define
-
-begin_comment
-comment|/* RXRDY Interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UART_TXRDY
-value|(0x1<< 1)
-end_define
-
-begin_comment
-comment|/* TXRDY Interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UART_RXBRK
-value|(0x1<< 2)
-end_define
-
-begin_comment
-comment|/* Break Received/End of Break */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UART_ENDRX
-value|(0x1<< 3)
-end_define
-
-begin_comment
-comment|/* End of Receive Transfer Interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UART_ENDTX
-value|(0x1<< 4)
-end_define
-
-begin_comment
-comment|/* End of Transmit Interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UART_OVRE
-value|(0x1<< 5)
-end_define
-
-begin_comment
-comment|/* Overrun Interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UART_FRAME
-value|(0x1<< 6)
-end_define
-
-begin_comment
-comment|/* Framing Error Interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UART_PARE
-value|(0x1<< 7)
-end_define
-
-begin_comment
-comment|/* Parity Error Interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UART_TIMEOUT
-value|( 0x1<< 8)
-end_define
-
-begin_comment
-comment|/* (USART) Receiver Time-out */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UART_TXEMPTY
-value|( 0x1<< 9)
-end_define
-
-begin_comment
-comment|/* (USART) TXEMPTY Interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UART_ITERATION
-value|( 0x1<< 10)
-end_define
-
-begin_comment
-comment|/* (USART) Max number of Repetitions Reached */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UART_TXBUFE
-value|( 0x1<< 11)
-end_define
-
-begin_comment
-comment|/* (USART) TXBUFE Interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UART_RXBUFF
-value|( 0x1<< 12)
-end_define
-
-begin_comment
-comment|/* (USART) RXBUFF Interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UART_NACK
-value|( 0x1<< 13)
-end_define
-
-begin_comment
-comment|/* (USART) Non Acknowledge */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UART_RIIC
-value|( 0x1<< 16)
-end_define
-
-begin_comment
-comment|/* (USART) Ring INdicator Input Change Flag */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AT91RM92_US_DSRIC
-value|( 0x1<< 17)
-end_define
-
-begin_comment
-comment|/* (USART) Data Set Ready Input Change Flag */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AT91RM92_US_DCDIC
-value|( 0x1<< 18)
-end_define
-
-begin_comment
-comment|/* (USART) Data Carrier Flag */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AT91RM92_US_CTSIC
-value|( 0x1<< 19)
-end_define
-
-begin_comment
-comment|/* (USART) Clear To Send Input Change Flag */
 end_comment
 
 begin_endif
