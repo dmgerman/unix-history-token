@@ -93,6 +93,8 @@ name|em_82572
 block|,
 name|em_82573
 block|,
+name|em_80003es2lan
+block|,
 name|em_num_macs
 block|}
 name|em_mac_type
@@ -311,6 +313,30 @@ init|=
 literal|0xFF
 block|}
 name|em_cable_length
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|em_gg_cable_length_60
+init|=
+literal|0
+block|,
+name|em_gg_cable_length_60_115
+init|=
+literal|1
+block|,
+name|em_gg_cable_length_115_150
+init|=
+literal|2
+block|,
+name|em_gg_cable_length_150
+init|=
+literal|4
+block|}
+name|em_gg_cable_length
 typedef|;
 end_typedef
 
@@ -537,6 +563,8 @@ block|,
 name|em_phy_igp
 block|,
 name|em_phy_igp_2
+block|,
+name|em_phy_gg82563
 block|,
 name|em_phy_undefined
 init|=
@@ -788,6 +816,13 @@ define|#
 directive|define
 name|E1000_BLK_PHY_RESET
 value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_ERR_SWFW_SYNC
+value|13
 end_define
 
 begin_comment
@@ -1154,6 +1189,55 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int32_t
+name|em_read_kmrn_reg
+parameter_list|(
+name|struct
+name|em_hw
+modifier|*
+name|hw
+parameter_list|,
+name|uint32_t
+name|reg_addr
+parameter_list|,
+name|uint16_t
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int32_t
+name|em_write_kmrn_reg
+parameter_list|(
+name|struct
+name|em_hw
+modifier|*
+name|hw
+parameter_list|,
+name|uint32_t
+name|reg_addr
+parameter_list|,
+name|uint16_t
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int32_t
+name|em_duplex_reversal
+parameter_list|(
+name|struct
+name|em_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* EEPROM Functions */
 end_comment
@@ -1412,49 +1496,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__BIG_ENDIAN
-end_ifdef
-
-begin_struct
-struct|struct
-name|em_host_mng_dhcp_cookie
-block|{
-name|uint32_t
-name|signature
-decl_stmt|;
-name|uint16_t
-name|vlan_id
-decl_stmt|;
-name|uint8_t
-name|reserved0
-decl_stmt|;
-name|uint8_t
-name|status
-decl_stmt|;
-name|uint32_t
-name|reserved1
-decl_stmt|;
-name|uint8_t
-name|checksum
-decl_stmt|;
-name|uint8_t
-name|reserved3
-decl_stmt|;
-name|uint16_t
-name|reserved2
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_struct
 struct|struct
 name|em_host_mng_dhcp_cookie
@@ -1486,11 +1527,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|int32_t
@@ -2269,6 +2305,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int32_t
+name|em_set_pci_ex_no_snoop
+parameter_list|(
+name|struct
+name|em_hw
+modifier|*
+name|hw
+parameter_list|,
+name|uint32_t
+name|no_snoop
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -2331,6 +2382,12 @@ name|E1000_BAR_MEM_TYPE_64BIT
 value|0x00000004
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|E1000_READ_REG_IO
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -2358,6 +2415,11 @@ parameter_list|)
 define|\
 value|em_write_reg_io((a), E1000_##reg, val)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* PCI Device IDs */
@@ -2590,6 +2652,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_DEV_ID_82546GB_QUAD_COPPER
+value|0x1099
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_DEV_ID_82547EI
 value|0x1019
 end_define
@@ -2646,6 +2715,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_DEV_ID_82572EI
+value|0x10B9
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_DEV_ID_82573E
 value|0x108B
 end_define
@@ -2667,8 +2743,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_DEV_ID_82546GB_QUAD_COPPER
-value|0x1099
+name|E1000_DEV_ID_82546GB_QUAD_COPPER_KSP3
+value|0x10B5
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_80003ES2LAN_COPPER_DPT
+value|0x1096
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_80003ES2LAN_SERDES_DPT
+value|0x1098
 end_define
 
 begin_define
@@ -4550,6 +4640,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_TCTL_EXT
+value|0x00404
+end_define
+
+begin_comment
+comment|/* Extended TX Control - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_TIPG
 value|0x00410
 end_define
@@ -6141,6 +6242,50 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_KUMCTRLSTA
+value|0x00034
+end_define
+
+begin_comment
+comment|/* MAC-PHY interface - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MDPHYA
+value|0x0003C
+end_define
+
+begin_comment
+comment|/* PHY address - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MANC2H
+value|0x05860
+end_define
+
+begin_comment
+comment|/* Managment Control To Host - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_SW_FW_SYNC
+value|0x05B5C
+end_define
+
+begin_comment
+comment|/* Software-Firmware Synchronization - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_GCR
 value|0x05B00
 end_define
@@ -6635,6 +6780,13 @@ define|#
 directive|define
 name|E1000_82542_TCTL
 value|E1000_TCTL
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_TCTL_EXT
+value|E1000_TCTL_EXT
 end_define
 
 begin_define
@@ -7659,6 +7811,20 @@ name|E1000_82542_RSSIR
 value|E1000_RSSIR
 end_define
 
+begin_define
+define|#
+directive|define
+name|E1000_82542_KUMCTRLSTA
+value|E1000_KUMCTRLSTA
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_SW_FW_SYNC
+value|E1000_SW_FW_SYNC
+end_define
+
 begin_comment
 comment|/* Statistics counters collected by the MAC */
 end_comment
@@ -7935,6 +8101,9 @@ decl_stmt|;
 name|uint32_t
 name|eeprom_semaphore_present
 decl_stmt|;
+name|uint32_t
+name|swfw_sync_present
+decl_stmt|;
 name|unsigned
 name|long
 name|io_base
@@ -8116,6 +8285,9 @@ name|in_ifs_mode
 decl_stmt|;
 name|boolean_t
 name|mng_reg_access_disabled
+decl_stmt|;
+name|boolean_t
+name|leave_av_bit_off
 decl_stmt|;
 block|}
 struct|;
@@ -8424,6 +8596,28 @@ end_define
 
 begin_comment
 comment|/* Defined polarity of Dock/Undock indication in SDP[0] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_CTRL_FORCE_PHY_RESET
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* Reset both PHY ports, through PHYRST_N pin */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_CTRL_EXT_LINK_EN
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* enable link status from external LINK_0 and LINK_1 pins */
 end_comment
 
 begin_define
@@ -8794,6 +8988,108 @@ end_define
 
 begin_comment
 comment|/* PCI-X bus speed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_STATUS_BMC_SKU_0
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* BMC USB redirect disabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_STATUS_BMC_SKU_1
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* BMC SRAM disabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_STATUS_BMC_SKU_2
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* BMC SDRAM disabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_STATUS_BMC_CRYPTO
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* BMC crypto disabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_STATUS_BMC_LITE
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* BMC external code execution disabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_STATUS_RGMII_ENABLE
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* RGMII disabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_STATUS_FUSE_8
+value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_STATUS_FUSE_9
+value|0x08000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_STATUS_SERDES0_DIS
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* SERDES disabled on port 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_STATUS_SERDES1_DIS
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* SERDES disabled on port 1 */
 end_comment
 
 begin_comment
@@ -9430,6 +9726,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_CTRL_EXT_RO_DIS
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* Relaxed Ordering disable */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_CTRL_EXT_LINK_MODE_MASK
 value|0x00C00000
 end_define
@@ -9445,6 +9752,20 @@ begin_define
 define|#
 directive|define
 name|E1000_CTRL_EXT_LINK_MODE_TBI
+value|0x00C00000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_CTRL_EXT_LINK_MODE_KMRN
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_CTRL_EXT_LINK_MODE_SERDES
 value|0x00C00000
 end_define
 
@@ -9527,6 +9848,35 @@ begin_comment
 comment|/* Clear Interrupt timers after IMS clear */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|E1000_CRTL_EXT_PB_PAREN
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* packet buffer parity error detection enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_CTRL_EXT_DF_PAREN
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* descriptor FIFO parity error detection enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_CTRL_EXT_GHOST_PAREN
+value|0x40000000
+end_define
+
 begin_comment
 comment|/* MDI Control */
 end_comment
@@ -9599,6 +9949,144 @@ define|#
 directive|define
 name|E1000_MDIC_ERROR
 value|0x40000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_KUMCTRLSTA_MASK
+value|0x0000FFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_KUMCTRLSTA_OFFSET
+value|0x001F0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_KUMCTRLSTA_OFFSET_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_KUMCTRLSTA_REN
+value|0x00200000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_KUMCTRLSTA_OFFSET_FIFO_CTRL
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_KUMCTRLSTA_OFFSET_CTRL
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_KUMCTRLSTA_OFFSET_INB_CTRL
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_KUMCTRLSTA_OFFSET_DIAG
+value|0x00000003
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_KUMCTRLSTA_OFFSET_TIMEOUTS
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_KUMCTRLSTA_OFFSET_INB_PARAM
+value|0x00000009
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_KUMCTRLSTA_OFFSET_HD_CTRL
+value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_KUMCTRLSTA_OFFSET_M2P_SERDES
+value|0x0000001E
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_KUMCTRLSTA_OFFSET_M2P_MODES
+value|0x0000001F
+end_define
+
+begin_comment
+comment|/* FIFO Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_KUMCTRLSTA_FIFO_CTRL_RX_BYPASS
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_KUMCTRLSTA_FIFO_CTRL_TX_BYPASS
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* In-Band Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_KUMCTRLSTA_INB_CTRL_DIS_PADDING
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* Half-Duplex Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_KUMCTRLSTA_HD_CTRL_10_100_DEFAULT
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_KUMCTRLSTA_HD_CTRL_1000_DEFAULT
+value|0x00000000
 end_define
 
 begin_comment
@@ -10077,6 +10565,83 @@ begin_comment
 comment|/* If this bit asserted, the driver should claim the interrupt */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|E1000_ICR_RXD_FIFO_PAR0
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* queue 0 Rx descriptor FIFO parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_ICR_TXD_FIFO_PAR0
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* queue 0 Tx descriptor FIFO parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_ICR_HOST_ARB_PAR
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* host arb read buffer parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_ICR_PB_PAR
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* packet buffer parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_ICR_RXD_FIFO_PAR1
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* queue 1 Rx descriptor FIFO parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_ICR_TXD_FIFO_PAR1
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* queue 1 Tx descriptor FIFO parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_ICR_ALL_PARITY
+value|0x03F00000
+end_define
+
+begin_comment
+comment|/* all parity error bits */
+end_comment
+
 begin_comment
 comment|/* Interrupt Cause Set */
 end_comment
@@ -10269,6 +10834,72 @@ end_define
 
 begin_comment
 comment|/* Dock/Undock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_ICS_RXD_FIFO_PAR0
+value|E1000_ICR_RXD_FIFO_PAR0
+end_define
+
+begin_comment
+comment|/* queue 0 Rx descriptor FIFO parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_ICS_TXD_FIFO_PAR0
+value|E1000_ICR_TXD_FIFO_PAR0
+end_define
+
+begin_comment
+comment|/* queue 0 Tx descriptor FIFO parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_ICS_HOST_ARB_PAR
+value|E1000_ICR_HOST_ARB_PAR
+end_define
+
+begin_comment
+comment|/* host arb read buffer parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_ICS_PB_PAR
+value|E1000_ICR_PB_PAR
+end_define
+
+begin_comment
+comment|/* packet buffer parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_ICS_RXD_FIFO_PAR1
+value|E1000_ICR_RXD_FIFO_PAR1
+end_define
+
+begin_comment
+comment|/* queue 1 Rx descriptor FIFO parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_ICS_TXD_FIFO_PAR1
+value|E1000_ICR_TXD_FIFO_PAR1
+end_define
+
+begin_comment
+comment|/* queue 1 Tx descriptor FIFO parity error */
 end_comment
 
 begin_comment
@@ -10465,6 +11096,72 @@ begin_comment
 comment|/* Dock/Undock */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|E1000_IMS_RXD_FIFO_PAR0
+value|E1000_ICR_RXD_FIFO_PAR0
+end_define
+
+begin_comment
+comment|/* queue 0 Rx descriptor FIFO parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_IMS_TXD_FIFO_PAR0
+value|E1000_ICR_TXD_FIFO_PAR0
+end_define
+
+begin_comment
+comment|/* queue 0 Tx descriptor FIFO parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_IMS_HOST_ARB_PAR
+value|E1000_ICR_HOST_ARB_PAR
+end_define
+
+begin_comment
+comment|/* host arb read buffer parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_IMS_PB_PAR
+value|E1000_ICR_PB_PAR
+end_define
+
+begin_comment
+comment|/* packet buffer parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_IMS_RXD_FIFO_PAR1
+value|E1000_ICR_RXD_FIFO_PAR1
+end_define
+
+begin_comment
+comment|/* queue 1 Rx descriptor FIFO parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_IMS_TXD_FIFO_PAR1
+value|E1000_ICR_TXD_FIFO_PAR1
+end_define
+
+begin_comment
+comment|/* queue 1 Tx descriptor FIFO parity error */
+end_comment
+
 begin_comment
 comment|/* Interrupt Mask Clear */
 end_comment
@@ -10657,6 +11354,72 @@ end_define
 
 begin_comment
 comment|/* Dock/Undock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_IMC_RXD_FIFO_PAR0
+value|E1000_ICR_RXD_FIFO_PAR0
+end_define
+
+begin_comment
+comment|/* queue 0 Rx descriptor FIFO parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_IMC_TXD_FIFO_PAR0
+value|E1000_ICR_TXD_FIFO_PAR0
+end_define
+
+begin_comment
+comment|/* queue 0 Tx descriptor FIFO parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_IMC_HOST_ARB_PAR
+value|E1000_ICR_HOST_ARB_PAR
+end_define
+
+begin_comment
+comment|/* host arb read buffer parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_IMC_PB_PAR
+value|E1000_ICR_PB_PAR
+end_define
+
+begin_comment
+comment|/* packet buffer parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_IMC_RXD_FIFO_PAR1
+value|E1000_ICR_RXD_FIFO_PAR1
+end_define
+
+begin_comment
+comment|/* queue 1 Rx descriptor FIFO parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_IMC_TXD_FIFO_PAR1
+value|E1000_ICR_TXD_FIFO_PAR1
+end_define
+
+begin_comment
+comment|/* queue 1 Tx descriptor FIFO parity error */
 end_comment
 
 begin_comment
@@ -11164,6 +11927,38 @@ end_define
 begin_comment
 comment|/* Shift _left_ 14 */
 end_comment
+
+begin_comment
+comment|/* SW_W_SYNC definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_SWFW_EEP_SM
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SWFW_PHY0_SM
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SWFW_PHY1_SM
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SWFW_MAC_CSR_SM
+value|0x0008
+end_define
 
 begin_comment
 comment|/* Receive Descriptor */
@@ -11829,6 +12624,39 @@ end_define
 begin_comment
 comment|/* Multiple request support */
 end_comment
+
+begin_comment
+comment|/* Extended Transmit Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TCTL_EXT_BST_MASK
+value|0x000003FF
+end_define
+
+begin_comment
+comment|/* Backoff Slot Time */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TCTL_EXT_GCEX_MASK
+value|0x000FFC00
+end_define
+
+begin_comment
+comment|/* Gigabit Carry Extend Padding */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_80003ES2LAN_TCTL_EXT_GCEX
+value|0x00010000
+end_define
 
 begin_comment
 comment|/* Receive Checksum Control */
@@ -12518,6 +13346,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_MANC_RCV_ALL
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* Receive All Enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_MANC_BLK_PHY_RST_ON_IDE
 value|0x00040000
 end_define
@@ -13039,6 +13878,63 @@ name|E1000_MDALIGN
 value|4096
 end_define
 
+begin_comment
+comment|/* PCI-Ex registers*/
+end_comment
+
+begin_comment
+comment|/* PCI-Ex Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_GCR_RXD_NO_SNOOP
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_GCR_RXDSCW_NO_SNOOP
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_GCR_RXDSCR_NO_SNOOP
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_GCR_TXD_NO_SNOOP
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_GCR_TXDSCW_NO_SNOOP
+value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_GCR_TXDSCR_NO_SNOOP
+value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_EX_NO_SNOOP_ALL
+value|(E1000_GCR_RXD_NO_SNOOP         | \                              E1000_GCR_RXDSCW_NO_SNOOP      | \                              E1000_GCR_RXDSCR_NO_SNOOP      | \                              E1000_GCR_TXD_NO_SNOOP         | \                              E1000_GCR_TXDSCW_NO_SNOOP      | \                              E1000_GCR_TXDSCR_NO_SNOOP)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -13480,6 +14376,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|EEPROM_INIT_3GIO_3
+value|0x001A
+end_define
+
+begin_define
+define|#
+directive|define
 name|EEPROM_INIT_CONTROL3_PORT_A
 value|0x0024
 end_define
@@ -13514,6 +14417,17 @@ end_define
 
 begin_comment
 comment|/* MNG config cycle done */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EEPROM_CFG_DONE_PORT_1
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* ...for second port */
 end_comment
 
 begin_comment
@@ -13726,6 +14640,17 @@ value|0x00F0
 end_define
 
 begin_comment
+comment|/* Mask bits for fields in Word 0x1a of the EEPROM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_WORD1A_ASPM_MASK
+value|0x000C
+end_define
+
+begin_comment
 comment|/* For checksumming, the sum of all words in the EEPROM should equal 0xBABA. */
 end_comment
 
@@ -13790,10 +14715,21 @@ name|E1000_CT_SHIFT
 value|4
 end_define
 
+begin_comment
+comment|/* Collision distance is a 0-based value that applies to  * half-duplex-capable hardware only. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|E1000_COLLISION_DISTANCE
+value|63
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_COLLISION_DISTANCE_82542
 value|64
 end_define
 
@@ -13920,8 +14856,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|DEFAULT_80003ES2LAN_TIPG_IPGR2
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_TIPG_IPGR2_SHIFT
 value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_80003ES2LAN_TIPG_IPGT_10_100
+value|0x00000009
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_80003ES2LAN_TIPG_IPGT_1000
+value|0x00000008
 end_define
 
 begin_define
@@ -15101,6 +16058,385 @@ directive|define
 name|IGP01E1000_ANALOG_REGS_PAGE
 value|0x20C0
 end_define
+
+begin_comment
+comment|/* Bits...  * 15-5: page  * 4-0: register offset  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PAGE_SHIFT
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|GG82563_REG
+parameter_list|(
+name|page
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|(((page)<< GG82563_PAGE_SHIFT) | ((reg)& MAX_PHY_REG_ADDRESS))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GG82563_MIN_ALT_REG
+value|30
+end_define
+
+begin_comment
+comment|/* GG82563 Specific Registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PHY_SPEC_CTRL
+define|\
+value|GG82563_REG(0, 16)
+end_define
+
+begin_comment
+comment|/* PHY Specific Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PHY_SPEC_STATUS
+define|\
+value|GG82563_REG(0, 17)
+end_define
+
+begin_comment
+comment|/* PHY Specific Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PHY_INT_ENABLE
+define|\
+value|GG82563_REG(0, 18)
+end_define
+
+begin_comment
+comment|/* Interrupt Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PHY_SPEC_STATUS_2
+define|\
+value|GG82563_REG(0, 19)
+end_define
+
+begin_comment
+comment|/* PHY Specific Status 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PHY_RX_ERR_CNTR
+define|\
+value|GG82563_REG(0, 21)
+end_define
+
+begin_comment
+comment|/* Receive Error Counter */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PHY_PAGE_SELECT
+define|\
+value|GG82563_REG(0, 22)
+end_define
+
+begin_comment
+comment|/* Page Select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PHY_SPEC_CTRL_2
+define|\
+value|GG82563_REG(0, 26)
+end_define
+
+begin_comment
+comment|/* PHY Specific Control 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PHY_PAGE_SELECT_ALT
+define|\
+value|GG82563_REG(0, 29)
+end_define
+
+begin_comment
+comment|/* Alternate Page Select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PHY_TEST_CLK_CTRL
+define|\
+value|GG82563_REG(0, 30)
+end_define
+
+begin_comment
+comment|/* Test Clock Control (use reg. 29 to select) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PHY_MAC_SPEC_CTRL
+define|\
+value|GG82563_REG(2, 21)
+end_define
+
+begin_comment
+comment|/* MAC Specific Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PHY_MAC_SPEC_CTRL_2
+define|\
+value|GG82563_REG(2, 26)
+end_define
+
+begin_comment
+comment|/* MAC Specific Control 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PHY_DSP_DISTANCE
+define|\
+value|GG82563_REG(5, 26)
+end_define
+
+begin_comment
+comment|/* DSP Distance */
+end_comment
+
+begin_comment
+comment|/* Page 193 - Port Control Registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PHY_KMRN_MODE_CTRL
+define|\
+value|GG82563_REG(193, 16)
+end_define
+
+begin_comment
+comment|/* Kumeran Mode Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PHY_PORT_RESET
+define|\
+value|GG82563_REG(193, 17)
+end_define
+
+begin_comment
+comment|/* Port Reset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PHY_REVISION_ID
+define|\
+value|GG82563_REG(193, 18)
+end_define
+
+begin_comment
+comment|/* Revision ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PHY_DEVICE_ID
+define|\
+value|GG82563_REG(193, 19)
+end_define
+
+begin_comment
+comment|/* Device ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PHY_PWR_MGMT_CTRL
+define|\
+value|GG82563_REG(193, 20)
+end_define
+
+begin_comment
+comment|/* Power Management Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PHY_RATE_ADAPT_CTRL
+define|\
+value|GG82563_REG(193, 25)
+end_define
+
+begin_comment
+comment|/* Rate Adaptation Control */
+end_comment
+
+begin_comment
+comment|/* Page 194 - KMRN Registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PHY_KMRN_FIFO_CTRL_STAT
+define|\
+value|GG82563_REG(194, 16)
+end_define
+
+begin_comment
+comment|/* FIFO's Control/Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PHY_KMRN_CTRL
+define|\
+value|GG82563_REG(194, 17)
+end_define
+
+begin_comment
+comment|/* Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PHY_INBAND_CTRL
+define|\
+value|GG82563_REG(194, 18)
+end_define
+
+begin_comment
+comment|/* Inband Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PHY_KMRN_DIAGNOSTIC
+define|\
+value|GG82563_REG(194, 19)
+end_define
+
+begin_comment
+comment|/* Diagnostic */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PHY_ACK_TIMEOUTS
+define|\
+value|GG82563_REG(194, 20)
+end_define
+
+begin_comment
+comment|/* Acknowledge Timeouts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PHY_ADV_ABILITY
+define|\
+value|GG82563_REG(194, 21)
+end_define
+
+begin_comment
+comment|/* Advertised Ability */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PHY_LINK_PARTNER_ADV_ABILITY
+define|\
+value|GG82563_REG(194, 23)
+end_define
+
+begin_comment
+comment|/* Link Partner Advertised Ability */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PHY_ADV_NEXT_PAGE
+define|\
+value|GG82563_REG(194, 24)
+end_define
+
+begin_comment
+comment|/* Advertised Next Page */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PHY_LINK_PARTNER_ADV_NEXT_PAGE
+define|\
+value|GG82563_REG(194, 25)
+end_define
+
+begin_comment
+comment|/* Link Partner Advertised Next page */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PHY_KMRN_MISC
+define|\
+value|GG82563_REG(194, 26)
+end_define
+
+begin_comment
+comment|/* Misc. */
+end_comment
 
 begin_comment
 comment|/* PHY Control Register */
@@ -17259,6 +18595,895 @@ value|0x0500
 end_define
 
 begin_comment
+comment|/* GG82563 PHY Specific Status Register (Page 0, Register 16 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSCR_DISABLE_JABBER
+value|0x0001
+end_define
+
+begin_comment
+comment|/* 1=Disable Jabber */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSCR_POLARITY_REVERSAL_DISABLE
+value|0x0002
+end_define
+
+begin_comment
+comment|/* 1=Polarity Reversal Disabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSCR_POWER_DOWN
+value|0x0004
+end_define
+
+begin_comment
+comment|/* 1=Power Down */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSCR_COPPER_TRANSMITER_DISABLE
+value|0x0008
+end_define
+
+begin_comment
+comment|/* 1=Transmitter Disabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSCR_CROSSOVER_MODE_MASK
+value|0x0060
+end_define
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSCR_CROSSOVER_MODE_MDI
+value|0x0000
+end_define
+
+begin_comment
+comment|/* 00=Manual MDI configuration */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSCR_CROSSOVER_MODE_MDIX
+value|0x0020
+end_define
+
+begin_comment
+comment|/* 01=Manual MDIX configuration */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSCR_CROSSOVER_MODE_AUTO
+value|0x0060
+end_define
+
+begin_comment
+comment|/* 11=Automatic crossover */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSCR_ENALBE_EXTENDED_DISTANCE
+value|0x0080
+end_define
+
+begin_comment
+comment|/* 1=Enable Extended Distance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSCR_ENERGY_DETECT_MASK
+value|0x0300
+end_define
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSCR_ENERGY_DETECT_OFF
+value|0x0000
+end_define
+
+begin_comment
+comment|/* 00,01=Off */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSCR_ENERGY_DETECT_RX
+value|0x0200
+end_define
+
+begin_comment
+comment|/* 10=Sense on Rx only (Energy Detect) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSCR_ENERGY_DETECT_RX_TM
+value|0x0300
+end_define
+
+begin_comment
+comment|/* 11=Sense and Tx NLP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSCR_FORCE_LINK_GOOD
+value|0x0400
+end_define
+
+begin_comment
+comment|/* 1=Force Link Good */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSCR_DOWNSHIFT_ENABLE
+value|0x0800
+end_define
+
+begin_comment
+comment|/* 1=Enable Downshift */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSCR_DOWNSHIFT_COUNTER_MASK
+value|0x7000
+end_define
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSCR_DOWNSHIFT_COUNTER_SHIFT
+value|12
+end_define
+
+begin_comment
+comment|/* PHY Specific Status Register (Page 0, Register 17) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSSR_JABBER
+value|0x0001
+end_define
+
+begin_comment
+comment|/* 1=Jabber */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSSR_POLARITY
+value|0x0002
+end_define
+
+begin_comment
+comment|/* 1=Polarity Reversed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSSR_LINK
+value|0x0008
+end_define
+
+begin_comment
+comment|/* 1=Link is Up */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSSR_ENERGY_DETECT
+value|0x0010
+end_define
+
+begin_comment
+comment|/* 1=Sleep, 0=Active */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSSR_DOWNSHIFT
+value|0x0020
+end_define
+
+begin_comment
+comment|/* 1=Downshift */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSSR_CROSSOVER_STATUS
+value|0x0040
+end_define
+
+begin_comment
+comment|/* 1=MDIX, 0=MDI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSSR_RX_PAUSE_ENABLED
+value|0x0100
+end_define
+
+begin_comment
+comment|/* 1=Receive Pause Enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSSR_TX_PAUSE_ENABLED
+value|0x0200
+end_define
+
+begin_comment
+comment|/* 1=Transmit Pause Enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSSR_LINK_UP
+value|0x0400
+end_define
+
+begin_comment
+comment|/* 1=Link Up */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSSR_SPEED_DUPLEX_RESOLVED
+value|0x0800
+end_define
+
+begin_comment
+comment|/* 1=Resolved */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSSR_PAGE_RECEIVED
+value|0x1000
+end_define
+
+begin_comment
+comment|/* 1=Page Received */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSSR_DUPLEX
+value|0x2000
+end_define
+
+begin_comment
+comment|/* 1-Full-Duplex */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSSR_SPEED_MASK
+value|0xC000
+end_define
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSSR_SPEED_10MBPS
+value|0x0000
+end_define
+
+begin_comment
+comment|/* 00=10Mbps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSSR_SPEED_100MBPS
+value|0x4000
+end_define
+
+begin_comment
+comment|/* 01=100Mbps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSSR_SPEED_1000MBPS
+value|0x8000
+end_define
+
+begin_comment
+comment|/* 10=1000Mbps */
+end_comment
+
+begin_comment
+comment|/* PHY Specific Status Register 2 (Page 0, Register 19) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSSR2_JABBER
+value|0x0001
+end_define
+
+begin_comment
+comment|/* 1=Jabber */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSSR2_POLARITY_CHANGED
+value|0x0002
+end_define
+
+begin_comment
+comment|/* 1=Polarity Changed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSSR2_ENERGY_DETECT_CHANGED
+value|0x0010
+end_define
+
+begin_comment
+comment|/* 1=Energy Detect Changed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSSR2_DOWNSHIFT_INTERRUPT
+value|0x0020
+end_define
+
+begin_comment
+comment|/* 1=Downshift Detected */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSSR2_MDI_CROSSOVER_CHANGE
+value|0x0040
+end_define
+
+begin_comment
+comment|/* 1=Crossover Changed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSSR2_FALSE_CARRIER
+value|0x0100
+end_define
+
+begin_comment
+comment|/* 1=False Carrier */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSSR2_SYMBOL_ERROR
+value|0x0200
+end_define
+
+begin_comment
+comment|/* 1=Symbol Error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSSR2_LINK_STATUS_CHANGED
+value|0x0400
+end_define
+
+begin_comment
+comment|/* 1=Link Status Changed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSSR2_AUTO_NEG_COMPLETED
+value|0x0800
+end_define
+
+begin_comment
+comment|/* 1=Auto-Neg Completed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSSR2_PAGE_RECEIVED
+value|0x1000
+end_define
+
+begin_comment
+comment|/* 1=Page Received */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSSR2_DUPLEX_CHANGED
+value|0x2000
+end_define
+
+begin_comment
+comment|/* 1=Duplex Changed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSSR2_SPEED_CHANGED
+value|0x4000
+end_define
+
+begin_comment
+comment|/* 1=Speed Changed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSSR2_AUTO_NEG_ERROR
+value|0x8000
+end_define
+
+begin_comment
+comment|/* 1=Auto-Neg Error */
+end_comment
+
+begin_comment
+comment|/* PHY Specific Control Register 2 (Page 0, Register 26) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSCR2_10BT_POLARITY_FORCE
+value|0x0002
+end_define
+
+begin_comment
+comment|/* 1=Force Negative Polarity */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSCR2_1000MB_TEST_SELECT_MASK
+value|0x000C
+end_define
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSCR2_1000MB_TEST_SELECT_NORMAL
+value|0x0000
+end_define
+
+begin_comment
+comment|/* 00,01=Normal Operation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSCR2_1000MB_TEST_SELECT_112NS
+value|0x0008
+end_define
+
+begin_comment
+comment|/* 10=Select 112ns Sequence */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSCR2_1000MB_TEST_SELECT_16NS
+value|0x000C
+end_define
+
+begin_comment
+comment|/* 11=Select 16ns Sequence */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSCR2_REVERSE_AUTO_NEG
+value|0x2000
+end_define
+
+begin_comment
+comment|/* 1=Reverse Auto-Negotiation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSCR2_1000BT_DISABLE
+value|0x4000
+end_define
+
+begin_comment
+comment|/* 1=Disable 1000BASE-T */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSCR2_TRANSMITER_TYPE_MASK
+value|0x8000
+end_define
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSCR2_TRANSMITTER_TYPE_CLASS_B
+value|0x0000
+end_define
+
+begin_comment
+comment|/* 0=Class B */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PSCR2_TRANSMITTER_TYPE_CLASS_A
+value|0x8000
+end_define
+
+begin_comment
+comment|/* 1=Class A */
+end_comment
+
+begin_comment
+comment|/* MAC Specific Control Register (Page 2, Register 21) */
+end_comment
+
+begin_comment
+comment|/* Tx clock speed for Link Down and 1000BASE-T for the following speeds */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_MSCR_TX_CLK_MASK
+value|0x0007
+end_define
+
+begin_define
+define|#
+directive|define
+name|GG82563_MSCR_TX_CLK_10MBPS_2_5MHZ
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|GG82563_MSCR_TX_CLK_100MBPS_25MHZ
+value|0x0005
+end_define
+
+begin_define
+define|#
+directive|define
+name|GG82563_MSCR_TX_CLK_1000MBPS_2_5MHZ
+value|0x0006
+end_define
+
+begin_define
+define|#
+directive|define
+name|GG82563_MSCR_TX_CLK_1000MBPS_25MHZ
+value|0x0007
+end_define
+
+begin_define
+define|#
+directive|define
+name|GG82563_MSCR_ASSERT_CRS_ON_TX
+value|0x0010
+end_define
+
+begin_comment
+comment|/* 1=Assert */
+end_comment
+
+begin_comment
+comment|/* DSP Distance Register (Page 5, Register 26) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_DSPD_CABLE_LENGTH
+value|0x0007
+end_define
+
+begin_comment
+comment|/* 0 =<50M; 							      1 = 50-80M; 							      2 = 80-110M; 							      3 = 110-140M; 							      4 =>140M */
+end_comment
+
+begin_comment
+comment|/* Kumeran Mode Control Register (Page 193, Register 16) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_KMCR_PHY_LEDS_EN
+value|0x0020
+end_define
+
+begin_comment
+comment|/* 1=PHY LEDs, 0=Kumeran Inband LEDs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_KMCR_FORCE_LINK_UP
+value|0x0040
+end_define
+
+begin_comment
+comment|/* 1=Force Link Up */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_KMCR_SUPPRESS_SGMII_EPD_EXT
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|GG82563_KMCR_MDIO_BUS_SPEED_SELECT_MASK
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|GG82563_KMCR_MDIO_BUS_SPEED_SELECT
+value|0x0400
+end_define
+
+begin_comment
+comment|/* 1=6.25MHz, 0=0.8MHz */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_KMCR_PASS_FALSE_CARRIER
+value|0x0800
+end_define
+
+begin_comment
+comment|/* Power Management Control Register (Page 193, Register 20) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PMCR_ENABLE_ELECTRICAL_IDLE
+value|0x0001
+end_define
+
+begin_comment
+comment|/* 1=Enalbe SERDES Electrical Idle */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PMCR_DISABLE_PORT
+value|0x0002
+end_define
+
+begin_comment
+comment|/* 1=Disable Port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PMCR_DISABLE_SERDES
+value|0x0004
+end_define
+
+begin_comment
+comment|/* 1=Disable SERDES */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PMCR_REVERSE_AUTO_NEG
+value|0x0008
+end_define
+
+begin_comment
+comment|/* 1=Enable Reverse Auto-Negotiation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PMCR_DISABLE_1000_NON_D0
+value|0x0010
+end_define
+
+begin_comment
+comment|/* 1=Disable 1000Mbps Auto-Neg in non D0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PMCR_DISABLE_1000
+value|0x0020
+end_define
+
+begin_comment
+comment|/* 1=Disable 1000Mbps Auto-Neg Always */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PMCR_REVERSE_AUTO_NEG_D0A
+value|0x0040
+end_define
+
+begin_comment
+comment|/* 1=Enable D0a Reverse Auto-Negotiation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PMCR_FORCE_POWER_STATE
+value|0x0080
+end_define
+
+begin_comment
+comment|/* 1=Force Power State */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PMCR_PROGRAMMED_POWER_STATE_MASK
+value|0x0300
+end_define
+
+begin_define
+define|#
+directive|define
+name|GG82563_PMCR_PROGRAMMED_POWER_STATE_DR
+value|0x0000
+end_define
+
+begin_comment
+comment|/* 00=Dr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PMCR_PROGRAMMED_POWER_STATE_D0U
+value|0x0100
+end_define
+
+begin_comment
+comment|/* 01=D0u */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PMCR_PROGRAMMED_POWER_STATE_D0A
+value|0x0200
+end_define
+
+begin_comment
+comment|/* 10=D0a */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_PMCR_PROGRAMMED_POWER_STATE_D3
+value|0x0300
+end_define
+
+begin_comment
+comment|/* 11=D3 */
+end_comment
+
+begin_comment
+comment|/* In-Band Control Register (Page 194, Register 18) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_ICR_DIS_PADDING
+value|0x0010
+end_define
+
+begin_comment
+comment|/* Disable Padding Use */
+end_comment
+
+begin_comment
 comment|/* Bit definitions for valid PHY IDs. */
 end_comment
 
@@ -17327,6 +19552,13 @@ define|#
 directive|define
 name|L1LXT971A_PHY_ID
 value|0x001378E0
+end_define
+
+begin_define
+define|#
+directive|define
+name|GG82563_E_PHY_ID
+value|0x01410CA0
 end_define
 
 begin_comment
