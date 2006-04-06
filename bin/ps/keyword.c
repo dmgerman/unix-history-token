@@ -3005,11 +3005,6 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
-else|else
-name|hp
-operator|=
-name|p
-expr_stmt|;
 name|key
 operator|.
 name|name
@@ -3054,7 +3049,25 @@ operator|->
 name|alias
 condition|)
 block|{
-comment|/* 		 * XXX - This processing will not be correct for any alias 		 * which expands into a list of format keywords.  Presently 		 * there are no aliases which do that. 		 */
+comment|/* 		 * If the user specified an alternate-header for this 		 * (aliased) format-name, then we need to copy that 		 * alternate-header when making the recursive call to 		 * process the alias. 		 */
+if|if
+condition|(
+name|hp
+operator|==
+name|NULL
+condition|)
+name|parsefmt
+argument_list|(
+name|v
+operator|->
+name|alias
+argument_list|,
+name|user
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+comment|/* 			 * XXX - This processing will not be correct for 			 * any alias which expands into a list of format 			 * keywords.  Presently there are no aliases 			 * which do that. 			 */
 name|rflen
 operator|=
 name|strlen
@@ -3100,6 +3113,7 @@ argument_list|,
 name|user
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 operator|(
