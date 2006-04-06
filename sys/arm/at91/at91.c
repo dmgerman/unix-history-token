@@ -597,7 +597,18 @@ name|kid
 operator|==
 name|NULL
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Can't add child %s%d ordered\n"
+argument_list|,
+name|name
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|ivar
 operator|=
 name|malloc
@@ -627,6 +638,11 @@ argument_list|(
 name|dev
 argument_list|,
 name|kid
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Can't add alloc ivar\n"
 argument_list|)
 expr_stmt|;
 return|return;
