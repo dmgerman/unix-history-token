@@ -191,6 +191,11 @@ name|struct
 name|uart_bas
 modifier|*
 name|bas
+parameter_list|,
+name|struct
+name|mtx
+modifier|*
+name|mtx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -549,6 +554,11 @@ name|struct
 name|uart_bas
 modifier|*
 name|bas
+parameter_list|,
+name|struct
+name|mtx
+modifier|*
+name|mtx
 parameter_list|)
 block|{
 name|int
