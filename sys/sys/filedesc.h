@@ -243,6 +243,12 @@ define|\
 value|do {										\ 		mtx_lock(&(fd)->fd_mtx);						\ 		KASSERT((fd)->fd_locked == 2,						\ 		    ("fdesc locking mistake %d should be %d", (fd)->fd_locked, 2));	\ 		(fd)->fd_locked = 0;							\ 		if ((fd)->fd_wanted)							\ 			wakeup(&(fd)->fd_locked);					\ 		mtx_unlock(&(fd)->fd_mtx);						\ 	} while (0)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -264,6 +270,40 @@ parameter_list|)
 define|\
 value|do {										\ 		KASSERT((fd)->fd_locked == 1,						\ 		    ("fdesc locking mistake %d should be %d", (fd)->fd_locked, 1));	\ 		(fd)->fd_locked = 0;							\ 		if ((fd)->fd_wanted)							\ 			wakeup(&(fd)->fd_locked);					\ 		mtx_unlock(&(fd)->fd_mtx);						\ 	} while (0)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|FILEDESC_LOCK_FAST
+parameter_list|(
+name|fdp
+parameter_list|)
+value|critical_enter()
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILEDESC_UNLOCK_FAST
+parameter_list|(
+name|fdp
+parameter_list|)
+value|critical_exit()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SMP */
+end_comment
 
 begin_ifdef
 ifdef|#
