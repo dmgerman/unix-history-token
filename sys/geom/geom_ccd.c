@@ -3063,7 +3063,7 @@ argument_list|(
 name|sb
 argument_list|)
 expr_stmt|;
-name|gctl_set_param
+name|gctl_set_param_err
 argument_list|(
 name|req
 argument_list|,
@@ -3413,7 +3413,7 @@ argument_list|(
 name|sb
 argument_list|)
 expr_stmt|;
-name|gctl_set_param
+name|gctl_set_param_err
 argument_list|(
 name|req
 argument_list|,

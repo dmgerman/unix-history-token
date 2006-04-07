@@ -2644,7 +2644,7 @@ literal|"read mbroffset"
 argument_list|)
 condition|)
 block|{
-name|gctl_set_param
+name|gctl_set_param_err
 argument_list|(
 name|req
 argument_list|,
