@@ -1743,6 +1743,13 @@ block|,
 endif|#
 directive|endif
 block|{
+literal|"scc_hwmtx"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
+block|{
 literal|"uart_hwmtx"
 block|,
 operator|&
