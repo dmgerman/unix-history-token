@@ -8063,7 +8063,7 @@ name|kl_lock
 expr_stmt|;
 if|if
 condition|(
-name|kl_lock
+name|kl_unlock
 operator|==
 name|NULL
 condition|)
