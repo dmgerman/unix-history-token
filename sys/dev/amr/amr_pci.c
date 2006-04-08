@@ -1404,20 +1404,6 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|amr_wait_lock
-argument_list|,
-literal|"AMR Wait Lock"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(

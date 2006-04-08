@@ -683,10 +683,6 @@ name|struct
 name|mtx
 name|amr_hw_lock
 decl_stmt|;
-name|struct
-name|mtx
-name|amr_wait_lock
-decl_stmt|;
 block|}
 struct|;
 end_struct
