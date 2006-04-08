@@ -108,9 +108,13 @@ if|if
 condition|(
 name|statp
 operator|->
-name|options
-operator|&
-name|RES_INIT
+name|_u
+operator|.
+name|_ext
+operator|.
+name|ext
+operator|!=
+name|NULL
 condition|)
 name|res_ndestroy
 argument_list|(
