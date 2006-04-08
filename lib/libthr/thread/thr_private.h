@@ -1728,6 +1728,9 @@ name|_mutex_cv_lock
 argument_list|(
 name|pthread_mutex_t
 operator|*
+argument_list|,
+name|int
+name|count
 argument_list|)
 name|__hidden
 decl_stmt|;
@@ -1739,6 +1742,10 @@ name|_mutex_cv_unlock
 argument_list|(
 name|pthread_mutex_t
 operator|*
+argument_list|,
+name|int
+operator|*
+name|count
 argument_list|)
 name|__hidden
 decl_stmt|;
