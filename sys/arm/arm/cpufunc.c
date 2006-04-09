@@ -5425,6 +5425,8 @@ operator||
 name|CPU_CONTROL_WBUF_ENABLE
 operator||
 name|CPU_CONTROL_LABT_ENABLE
+operator||
+name|CPU_CONTROL_ROUNDROBIN
 expr_stmt|;
 name|cpuctrlmask
 operator|=
