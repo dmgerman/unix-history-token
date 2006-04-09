@@ -655,6 +655,8 @@ condition|)
 name|enable_interrupts
 argument_list|(
 name|I32_bit
+operator||
+name|F32_bit
 argument_list|)
 expr_stmt|;
 name|frame
