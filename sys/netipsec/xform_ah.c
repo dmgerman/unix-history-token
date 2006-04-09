@@ -4438,6 +4438,12 @@ goto|goto
 name|bad
 goto|;
 block|}
+comment|/* Emulate replay attack when ipsec_replay is TRUE. */
+if|if
+condition|(
+operator|!
+name|ipsec_replay
+condition|)
 name|sav
 operator|->
 name|replay
@@ -5369,6 +5375,41 @@ argument_list|(
 name|crp
 argument_list|)
 expr_stmt|;
+comment|/* Emulate man-in-the-middle attack when ipsec_integrity is TRUE. */
+if|if
+condition|(
+name|ipsec_integrity
+condition|)
+block|{
+name|int
+name|alen
+decl_stmt|;
+comment|/* 		 * Corrupt HMAC if we want to test integrity verification of 		 * the other side. 		 */
+name|alen
+operator|=
+name|AUTHSIZE
+argument_list|(
+name|sav
+argument_list|)
+expr_stmt|;
+name|m_copyback
+argument_list|(
+name|m
+argument_list|,
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|-
+name|alen
+argument_list|,
+name|alen
+argument_list|,
+name|ipseczeroes
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* NB: m is reclaimed by ipsec_process_done. */
 name|err
 operator|=

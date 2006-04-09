@@ -1078,6 +1078,20 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|ipsec_replay
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipsec_integrity
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|struct
 name|newipsecstat
 name|newipsecstat
