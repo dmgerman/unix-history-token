@@ -2131,7 +2131,7 @@ operator|==
 name|NULL
 argument_list|,
 operator|(
-literal|"udp6_attach: inp == NULL"
+literal|"udp6_attach: inp != NULL"
 operator|)
 argument_list|)
 expr_stmt|;
