@@ -517,17 +517,18 @@ block|{
 name|int
 name|error
 decl_stmt|;
+comment|/* 	 * Implementors of raw sockets will already have allocated the PCB, 	 * so it must be non-NULL here. 	 */
 name|KASSERT
 argument_list|(
 name|sotorawcb
 argument_list|(
 name|so
 argument_list|)
-operator|==
+operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"raw_uattach: rp != NULL"
+literal|"raw_uattach: so_pcb == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
