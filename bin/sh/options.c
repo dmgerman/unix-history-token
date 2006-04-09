@@ -1550,11 +1550,9 @@ name|shellparam
 operator|.
 name|nparam
 condition|)
-name|error
-argument_list|(
-literal|"can't shift that many"
-argument_list|)
-expr_stmt|;
+return|return
+literal|1
+return|;
 name|INTOFF
 expr_stmt|;
 name|shellparam

@@ -91,6 +91,9 @@ decl_stmt|;
 block|}
 name|u
 union|;
+name|int
+name|special
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -190,6 +193,9 @@ name|int
 name|find_builtin
 parameter_list|(
 name|char
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|)
 function_decl|;
