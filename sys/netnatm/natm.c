@@ -1633,7 +1633,7 @@ modifier|*
 name|so
 parameter_list|)
 block|{
-name|natm_usr_shutdown
+name|natm_usr_detach
 argument_list|(
 name|so
 argument_list|)
