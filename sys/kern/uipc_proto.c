@@ -144,25 +144,7 @@ operator|=
 operator|&
 name|uipc_usrreqs
 block|}
-block|,
-block|{
-operator|.
-name|pr_ctlinput
-operator|=
-name|raw_ctlinput
-block|,
-operator|.
-name|pr_init
-operator|=
-name|raw_init
-block|,
-operator|.
-name|pr_usrreqs
-operator|=
-operator|&
-name|raw_usrreqs
-block|}
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
