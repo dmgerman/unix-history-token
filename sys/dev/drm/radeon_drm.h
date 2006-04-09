@@ -1429,6 +1429,13 @@ name|R300_WAIT_3D_CLEAN
 value|0x4
 end_define
 
+begin_define
+define|#
+directive|define
+name|R300_CMD_SCRATCH
+value|8
+end_define
+
 begin_typedef
 typedef|typedef
 union|union
@@ -1542,6 +1549,21 @@ name|pad1
 decl_stmt|;
 block|}
 name|wait
+struct|;
+struct|struct
+block|{
+name|unsigned
+name|char
+name|cmd_type
+decl_stmt|,
+name|reg
+decl_stmt|,
+name|n_bufs
+decl_stmt|,
+name|flags
+decl_stmt|;
+block|}
+name|scratch
 struct|;
 block|}
 name|drm_r300_cmd_header_t
@@ -3019,6 +3041,31 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* enum for card type parameters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADEON_CARD_PCI
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_CARD_AGP
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_CARD_PCIE
+value|2
+end_define
+
+begin_comment
 comment|/* 1.3: An ioctl to get parameters that aren't available to the 3d  * client any other way.  */
 end_comment
 
@@ -3117,6 +3164,13 @@ define|#
 directive|define
 name|RADEON_PARAM_SCRATCH_OFFSET
 value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_PARAM_CARD_TYPE
+value|12
 end_define
 
 begin_typedef
@@ -3299,6 +3353,17 @@ end_define
 
 begin_comment
 comment|/* PCI Gart Location */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADEON_SETPARAM_NEW_MEMMAP
+value|4
+end_define
+
+begin_comment
+comment|/* Use new memory map */
 end_comment
 
 begin_comment

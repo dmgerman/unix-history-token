@@ -494,7 +494,7 @@ begin_define
 define|#
 directive|define
 name|DRM_MAX_MINOR
-value|255
+value|15
 end_define
 
 begin_endif

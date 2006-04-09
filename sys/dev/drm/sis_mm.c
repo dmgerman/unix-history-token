@@ -368,7 +368,7 @@ modifier|*
 name|argp
 init|=
 operator|(
-name|void
+name|drm_sis_mem_t
 name|__user
 operator|*
 operator|)
@@ -768,7 +768,7 @@ modifier|*
 name|argp
 init|=
 operator|(
-name|void
+name|drm_sis_mem_t
 name|__user
 operator|*
 operator|)

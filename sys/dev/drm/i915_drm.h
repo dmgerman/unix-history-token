@@ -197,6 +197,72 @@ name|int
 name|perf_boxes
 decl_stmt|;
 comment|/* performance boxes to be displayed */
+name|int
+name|width
+decl_stmt|,
+name|height
+decl_stmt|;
+comment|/* screen size in pixels */
+name|drm_handle_t
+name|front_handle
+decl_stmt|;
+name|int
+name|front_offset
+decl_stmt|;
+name|int
+name|front_size
+decl_stmt|;
+name|drm_handle_t
+name|back_handle
+decl_stmt|;
+name|int
+name|back_offset
+decl_stmt|;
+name|int
+name|back_size
+decl_stmt|;
+name|drm_handle_t
+name|depth_handle
+decl_stmt|;
+name|int
+name|depth_offset
+decl_stmt|;
+name|int
+name|depth_size
+decl_stmt|;
+name|drm_handle_t
+name|tex_handle
+decl_stmt|;
+name|int
+name|tex_offset
+decl_stmt|;
+name|int
+name|tex_size
+decl_stmt|;
+name|int
+name|log_tex_granularity
+decl_stmt|;
+name|int
+name|pitch
+decl_stmt|;
+name|int
+name|rotation
+decl_stmt|;
+comment|/* 0, 90, 180 or 270 */
+name|int
+name|rotated_offset
+decl_stmt|;
+name|int
+name|rotated_size
+decl_stmt|;
+name|int
+name|rotated_pitch
+decl_stmt|;
+name|int
+name|virtualX
+decl_stmt|,
+name|virtualY
+decl_stmt|;
 block|}
 name|drm_i915_sarea_t
 typedef|;
@@ -332,6 +398,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DRM_I915_DESTROY_HEAP
+value|0x0c
+end_define
+
+begin_define
+define|#
+directive|define
 name|DRM_IOCTL_I915_INIT
 value|DRM_IOW( DRM_COMMAND_BASE + DRM_I915_INIT, drm_i915_init_t)
 end_define
@@ -411,6 +484,13 @@ define|#
 directive|define
 name|DRM_IOCTL_I915_CMDBUFFER
 value|DRM_IOW( DRM_COMMAND_BASE + DRM_I915_CMDBUFFER, drm_i915_cmdbuffer_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_I915_DESTROY_HEAP
+value|DRM_IOW( DRM_COMMAND_BASE + DRM_I915_DESTROY_HEAP, drm_i915_mem_destroy_heap_t)
 end_define
 
 begin_comment
@@ -545,6 +625,13 @@ name|I915_PARAM_ALLOW_BATCHBUFFER
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|I915_PARAM_LAST_DISPATCH
+value|3
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -672,6 +759,23 @@ name|start
 decl_stmt|;
 block|}
 name|drm_i915_mem_init_heap_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Allow memory manager to be torn down and re-initialized (eg on  * rotate):  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|drm_i915_mem_destroy_heap
+block|{
+name|int
+name|region
+decl_stmt|;
+block|}
+name|drm_i915_mem_destroy_heap_t
 typedef|;
 end_typedef
 
