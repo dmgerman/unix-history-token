@@ -1396,11 +1396,13 @@ name|m_pkthdr
 operator|.
 name|len
 operator|-
+operator|(
 name|skip
-operator|-
+operator|+
 name|hlen
-operator|-
+operator|+
 name|alen
+operator|)
 expr_stmt|;
 comment|/* Find out if we've already done crypto */
 for|for
