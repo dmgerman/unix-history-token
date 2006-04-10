@@ -1309,8 +1309,6 @@ argument_list|,
 name|MTX_NETWORK_LOCK
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -2209,6 +2207,8 @@ name|ic
 operator|->
 name|ic_ifp
 decl_stmt|;
+name|IPW_LOCK_DECL
+expr_stmt|;
 name|IPW_LOCK
 argument_list|(
 name|sc
@@ -4067,6 +4067,8 @@ name|sc_ic
 operator|.
 name|ic_ifp
 decl_stmt|;
+name|IPW_LOCK_DECL
+expr_stmt|;
 name|IPW_LOCK
 argument_list|(
 name|sc
@@ -4151,6 +4153,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|IPW_LOCK_DECL
+expr_stmt|;
 name|IPW_LOCK
 argument_list|(
 name|sc
@@ -6434,6 +6438,8 @@ decl_stmt|;
 name|uint32_t
 name|r
 decl_stmt|;
+name|IPW_LOCK_DECL
+expr_stmt|;
 name|IPW_LOCK
 argument_list|(
 name|sc
@@ -7970,6 +7976,8 @@ name|ieee80211_node
 modifier|*
 name|ni
 decl_stmt|;
+name|IPW_LOCK_DECL
+expr_stmt|;
 name|IPW_LOCK
 argument_list|(
 name|sc
@@ -8348,6 +8356,8 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|IPW_LOCK_DECL
+expr_stmt|;
 name|IPW_LOCK
 argument_list|(
 name|sc
@@ -9298,6 +9308,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|IPW_LOCK_DECL
+expr_stmt|;
 name|ipw_free_firmware
 argument_list|(
 name|sc
