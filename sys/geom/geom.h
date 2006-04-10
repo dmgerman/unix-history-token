@@ -1322,6 +1322,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|g_wither_provider
+parameter_list|(
+name|struct
+name|g_provider
+modifier|*
+name|pp
+parameter_list|,
+name|int
+name|error
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef

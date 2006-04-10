@@ -1466,6 +1466,50 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Convenience function to destroy a particular provider.  */
+end_comment
+
+begin_function
+name|void
+name|g_wither_provider
+parameter_list|(
+name|struct
+name|g_provider
+modifier|*
+name|pp
+parameter_list|,
+name|int
+name|error
+parameter_list|)
+block|{
+name|pp
+operator|->
+name|flags
+operator||=
+name|G_PF_WITHER
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|pp
+operator|->
+name|flags
+operator|&
+name|G_PF_ORPHAN
+operator|)
+condition|)
+name|g_orphan_provider
+argument_list|(
+name|pp
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * This function is called (repeatedly) until the has withered away.  */
 end_comment
 
