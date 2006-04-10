@@ -736,6 +736,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|REGRESSION
+end_ifdef
+
 begin_comment
 comment|/*  * When set to 1, IPsec will send packets with the same sequence number.  * This allows to verify if the other side has proper replay attacks detection.  */
 end_comment
@@ -801,6 +807,11 @@ literal|"Emulate man-in-the-middle attack"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

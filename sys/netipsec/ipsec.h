@@ -1076,6 +1076,12 @@ name|ipsec_debug
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|REGRESSION
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -1089,6 +1095,11 @@ name|int
 name|ipsec_integrity
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern

@@ -4438,12 +4438,17 @@ goto|goto
 name|bad
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|REGRESSION
 comment|/* Emulate replay attack when ipsec_replay is TRUE. */
 if|if
 condition|(
 operator|!
 name|ipsec_replay
 condition|)
+endif|#
+directive|endif
 name|sav
 operator|->
 name|replay
@@ -5375,6 +5380,9 @@ argument_list|(
 name|crp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|REGRESSION
 comment|/* Emulate man-in-the-middle attack when ipsec_integrity is TRUE. */
 if|if
 condition|(
@@ -5410,6 +5418,8 @@ name|ipseczeroes
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* NB: m is reclaimed by ipsec_process_done. */
 name|err
 operator|=
