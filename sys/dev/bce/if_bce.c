@@ -24,6 +24,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_bce.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/bce/if_bcereg.h>
 end_include
 
