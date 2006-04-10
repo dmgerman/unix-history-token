@@ -470,11 +470,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|IPW_LOCK_DECL
+value|int     __waslocked = 0
+end_define
+
+begin_define
+define|#
+directive|define
 name|IPW_LOCK
 parameter_list|(
 name|sc
 parameter_list|)
-value|mtx_lock(&(sc)->sc_mtx)
+value|do {				\ 	if (!(__waslocked = mtx_owned(&(sc)->sc_mtx)))	\ 		mtx_lock(&(sc)->sc_mtx);		\ } while (0)
 end_define
 
 begin_define
@@ -484,7 +491,7 @@ name|IPW_UNLOCK
 parameter_list|(
 name|sc
 parameter_list|)
-value|mtx_unlock(&(sc)->sc_mtx)
+value|do {			\ 	if (!__waslocked)			\ 		mtx_unlock(&(sc)->sc_mtx);	\ } while (0)
 end_define
 
 end_unit
