@@ -827,25 +827,12 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Reset any sigio structures pointing to us as a result of 	 * F_SETOWN with our pid. 	 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* XXX: not sure if needed */
 name|funsetownlst
 argument_list|(
 operator|&
 name|p
 operator|->
 name|p_sigiolst
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If this process has an nlminfo data area (for lockd), release it 	 */
