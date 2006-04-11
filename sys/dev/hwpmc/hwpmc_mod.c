@@ -6172,7 +6172,9 @@ argument_list|)
 condition|)
 name|pmclog_process_map_out
 argument_list|(
-name|po
+name|pm
+operator|->
+name|pm_owner
 argument_list|,
 name|pid
 argument_list|,
