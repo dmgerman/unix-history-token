@@ -2746,9 +2746,25 @@ argument|); 		} else {
 comment|/* Use work function to send final status */
 argument|if (a_descr->init_req == a_descr->total_len) 				work_atio(atio); 			if (debug) 				warnx(
 literal|"AIO done freeing CTIO"
-argument|); 			free_ccb((union ccb *)ctio); 		} 		break; 	case CTIO_DONE: 		if (ctio->ccb_h.status != CAM_REQ_CMP) {
+argument|); 			free_ccb((union ccb *)ctio); 		} 		break; 	case CTIO_DONE: 		switch (ctio->ccb_h.status& CAM_STATUS_MASK) { 		case CAM_REQ_CMP: 			break; 		case CAM_REQUEUE_REQ: 			warnx(
+literal|"requeueing request"
+argument|); 			if ((a_descr->flags& CAM_DIR_MASK) == CAM_DIR_OUT) { 				if (aio_write(&c_descr->aiocb)<
+literal|0
+argument|) { 					err(
+literal|1
+argument|,
+literal|"aio_write"
+argument|);
 comment|/* XXX */
-argument|errx(
+argument|} 			} else { 				if (aio_read(&c_descr->aiocb)<
+literal|0
+argument|) { 					err(
+literal|1
+argument|,
+literal|"aio_read"
+argument|);
+comment|/* XXX */
+argument|} 			} 			return; 		default: 			errx(
 literal|1
 argument|,
 literal|"CTIO failed, status %#x"
