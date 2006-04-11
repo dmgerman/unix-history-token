@@ -1147,6 +1147,11 @@ name|callback_arg
 operator|=
 name|mpt
 expr_stmt|;
+name|MPTLOCK_2_CAMLOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 name|xpt_action
 argument_list|(
 operator|(
@@ -1156,6 +1161,11 @@ operator|*
 operator|)
 operator|&
 name|csa
+argument_list|)
+expr_stmt|;
+name|CAMLOCK_2_MPTLOCK
+argument_list|(
+name|mpt
 argument_list|)
 expr_stmt|;
 if|if
@@ -1291,6 +1301,11 @@ name|callback_arg
 operator|=
 name|mpt
 expr_stmt|;
+name|MPTLOCK_2_CAMLOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 name|xpt_action
 argument_list|(
 operator|(
@@ -1300,6 +1315,11 @@ operator|*
 operator|)
 operator|&
 name|csa
+argument_list|)
+expr_stmt|;
+name|CAMLOCK_2_MPTLOCK
+argument_list|(
+name|mpt
 argument_list|)
 expr_stmt|;
 block|}
