@@ -2573,12 +2573,6 @@ name|ip6q
 modifier|*
 name|q6
 decl_stmt|;
-name|int
-name|s
-init|=
-name|splnet
-argument_list|()
-decl_stmt|;
 name|IP6Q_LOCK
 argument_list|()
 expr_stmt|;
@@ -2676,11 +2670,6 @@ comment|/* 	 * Routing changes might produce a better route than we last used; 	
 block|if (ip6_forward_rt.ro_rt) { 		RTFREE(ip6_forward_rt.ro_rt); 		ip6_forward_rt.ro_rt = 0; 	} 	if (ipsrcchk_rt.ro_rt) { 		RTFREE(ipsrcchk_rt.ro_rt); 		ipsrcchk_rt.ro_rt = 0; 	}
 endif|#
 directive|endif
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
