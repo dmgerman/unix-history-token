@@ -2344,8 +2344,6 @@ name|filter
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|s
 decl_stmt|;
 name|inp
 operator|=
@@ -2435,11 +2433,6 @@ operator|&
 name|ripcbinfo
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|error
 operator|=
 name|in_pcballoc
@@ -2450,11 +2443,6 @@ operator|&
 name|ripcbinfo
 argument_list|,
 literal|"raw6inp"
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 if|if
