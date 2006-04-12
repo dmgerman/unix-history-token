@@ -774,6 +774,11 @@ argument_list|,
 name|MII_STR_xxBROADCOM_BCM5780
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 if|if
 condition|(
