@@ -417,6 +417,11 @@ name|struct
 name|sockaddr_in6
 name|tmp
 decl_stmt|;
+name|INP_LOCK_ASSERT
+argument_list|(
+name|in6p
+argument_list|)
+expr_stmt|;
 name|priv
 operator|=
 literal|0
