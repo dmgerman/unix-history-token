@@ -636,7 +636,7 @@ operator|->
 name|uh_sport
 expr_stmt|;
 comment|/* 		 * KAME note: traditionally we dropped udpiphdr from mbuf here. 		 * We need udphdr for IPsec processing so we do that later. 		 */
-comment|/* 		 * Locate pcb(s) for datagram. 		 * (Algorithm copied from raw_intr().) 		 */
+comment|/* 		 * Locate pcb(s) for datagram. 		 * (Algorithm copied from raw_intr().) 		 * 		 * XXXRW: The individual inpcbs need to be locked in the 		 * style of udp_input(). 		 */
 name|last
 operator|=
 name|NULL
@@ -1130,7 +1130,7 @@ if|if
 condition|(
 name|in6p
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -1238,6 +1238,11 @@ return|return
 name|IPPROTO_DONE
 return|;
 block|}
+name|INP_LOCK
+argument_list|(
+name|in6p
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -1260,6 +1265,11 @@ name|in6p
 argument_list|)
 condition|)
 block|{
+name|INP_UNLOCK
+argument_list|(
+name|in6p
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|IPSEC
@@ -1361,6 +1371,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|INP_UNLOCK
+argument_list|(
+name|in6p
+argument_list|)
+expr_stmt|;
 name|udpstat
 operator|.
 name|udps_fullsock
@@ -1375,6 +1390,11 @@ argument_list|(
 name|in6p
 operator|->
 name|in6p_socket
+argument_list|)
+expr_stmt|;
+name|INP_UNLOCK
+argument_list|(
+name|in6p
 argument_list|)
 expr_stmt|;
 name|INP_INFO_RUNLOCK
