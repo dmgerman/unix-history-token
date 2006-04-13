@@ -55,6 +55,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ithread_destroy
+value|intr_event_destroy
+end_define
+
+begin_define
+define|#
+directive|define
 name|ithread_remove_handler
 value|intr_event_remove_handler
 end_define
