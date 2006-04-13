@@ -18196,7 +18196,7 @@ condition|)
 break|break;
 name|sc
 operator|->
-name|rxcycles
+name|bce_rxcycles
 operator|--
 expr_stmt|;
 block|}
@@ -21580,6 +21580,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
+name|bce_ioctl_exit
+label|:
+endif|#
+directive|endif
 name|DBPRINT
 argument_list|(
 name|sc
