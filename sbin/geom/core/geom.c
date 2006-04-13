@@ -2630,6 +2630,8 @@ name|strlen
 argument_list|(
 name|class_name
 argument_list|)
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
