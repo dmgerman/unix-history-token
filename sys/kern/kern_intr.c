@@ -380,12 +380,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
-
 begin_function_decl
 specifier|static
 name|void
@@ -398,11 +392,6 @@ name|ithread
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -1255,6 +1244,34 @@ operator|&
 name|event_list
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|notyet
+if|if
+condition|(
+name|ie
+operator|->
+name|ie_thread
+operator|!=
+name|NULL
+condition|)
+block|{
+name|ithread_destroy
+argument_list|(
+name|ie
+operator|->
+name|ie_thread
+argument_list|)
+expr_stmt|;
+name|ie
+operator|->
+name|ie_thread
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -1431,12 +1448,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
-
 begin_function
 specifier|static
 name|void
@@ -1453,6 +1464,19 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_INTR
+argument_list|,
+literal|"%s: killing %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|ithread
+operator|->
+name|it_name
+argument_list|)
+expr_stmt|;
 name|td
 operator|=
 name|ithread
@@ -1498,26 +1522,8 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-name|CTR2
-argument_list|(
-name|KTR_INTR
-argument_list|,
-literal|"%s: killing %s"
-argument_list|,
-name|__func__
-argument_list|,
-name|ithread
-operator|->
-name|it_name
-argument_list|)
-expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|int
