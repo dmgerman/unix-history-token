@@ -13724,11 +13724,9 @@ operator|->
 name|ring_rptr_offset
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|BITS_PER_LONG
-operator|==
-literal|32
+ifndef|#
+directive|ifndef
+name|__LP64__
 comment|/* 		 * This ioctl() doesn't work on 64-bit platforms because hw_lock is a 		 * pointer which can't fit into an int-sized variable.  According to 		 * Michel DÃ¤nzer, the ioctl() is only used on embedded platforms, so 		 * not supporting it shouldn't be a problem.  If the same functionality 		 * is needed on 64-bit platforms, a new ioctl() would have to be added, 		 * so backwards-compatibility for the embedded platforms can be 		 * maintained.  --davidm 4-Feb-2004. 		 */
 case|case
 name|RADEON_PARAM_SAREA_HANDLE
