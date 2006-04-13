@@ -15,6 +15,12 @@ directive|include
 file|"lib.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"at91rm9200_lowlevel.h"
+end_include
+
 begin_typedef
 typedef|typedef
 name|void
