@@ -1707,6 +1707,12 @@ operator|!=
 name|SYS_RES_IRQ
 condition|)
 block|{
+if|if
+condition|(
+name|type
+operator|==
+name|SYS_RES_MEMORY
+condition|)
 name|bh
 operator|+=
 operator|(
