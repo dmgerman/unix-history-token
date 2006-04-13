@@ -1105,7 +1105,7 @@ expr_stmt|;
 comment|/* Check for no more waiters: */
 if|if
 condition|(
-name|TAILQ_FIRST
+name|TAILQ_EMPTY
 argument_list|(
 operator|&
 operator|(
@@ -1115,8 +1115,6 @@ operator|)
 operator|->
 name|c_queue
 argument_list|)
-operator|==
-name|NULL
 condition|)
 operator|(
 operator|*
@@ -1777,7 +1775,7 @@ expr_stmt|;
 comment|/* Check for no more waiters: */
 if|if
 condition|(
-name|TAILQ_FIRST
+name|TAILQ_EMPTY
 argument_list|(
 operator|&
 operator|(
@@ -1787,8 +1785,6 @@ operator|)
 operator|->
 name|c_queue
 argument_list|)
-operator|==
-name|NULL
 condition|)
 operator|(
 operator|*
@@ -2165,7 +2161,7 @@ block|}
 comment|/* Check for no more waiters: */
 if|if
 condition|(
-name|TAILQ_FIRST
+name|TAILQ_EMPTY
 argument_list|(
 operator|&
 operator|(
@@ -2175,8 +2171,6 @@ operator|)
 operator|->
 name|c_queue
 argument_list|)
-operator|==
-name|NULL
 condition|)
 operator|(
 operator|*
@@ -2657,15 +2651,13 @@ expr_stmt|;
 comment|/* Check for no more waiters: */
 if|if
 condition|(
-name|TAILQ_FIRST
+name|TAILQ_EMPTY
 argument_list|(
 operator|&
 name|cond
 operator|->
 name|c_queue
 argument_list|)
-operator|==
-name|NULL
 condition|)
 name|cond
 operator|->

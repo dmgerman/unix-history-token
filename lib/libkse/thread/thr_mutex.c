@@ -1162,7 +1162,8 @@ name|NULL
 operator|)
 operator|||
 operator|(
-name|TAILQ_FIRST
+operator|!
+name|TAILQ_EMPTY
 argument_list|(
 operator|&
 operator|(
@@ -1172,8 +1173,6 @@ operator|)
 operator|->
 name|m_queue
 argument_list|)
-operator|!=
-name|NULL
 operator|)
 operator|||
 operator|(
