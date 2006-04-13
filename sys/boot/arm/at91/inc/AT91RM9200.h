@@ -1447,7 +1447,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_RCB
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -1462,7 +1462,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_UNDADD
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -1473,7 +1473,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_MISADD
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -1484,7 +1484,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_MPU
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -1495,7 +1495,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_ABTSZ
-value|((unsigned int) 0x3<<  8)
+value|(0x3u<<  8)
 end_define
 
 begin_comment
@@ -1506,7 +1506,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_ABTSZ_BYTE
-value|((unsigned int) 0x0<<  8)
+value|(0x0u<<  8)
 end_define
 
 begin_comment
@@ -1517,7 +1517,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_ABTSZ_HWORD
-value|((unsigned int) 0x1<<  8)
+value|(0x1u<<  8)
 end_define
 
 begin_comment
@@ -1528,7 +1528,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_ABTSZ_WORD
-value|((unsigned int) 0x2<<  8)
+value|(0x2u<<  8)
 end_define
 
 begin_comment
@@ -1539,7 +1539,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_ABTTYP
-value|((unsigned int) 0x3<< 10)
+value|(0x3u<< 10)
 end_define
 
 begin_comment
@@ -1550,7 +1550,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_ABTTYP_DATAR
-value|((unsigned int) 0x0<< 10)
+value|(0x0u<< 10)
 end_define
 
 begin_comment
@@ -1561,7 +1561,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_ABTTYP_DATAW
-value|((unsigned int) 0x1<< 10)
+value|(0x1u<< 10)
 end_define
 
 begin_comment
@@ -1572,7 +1572,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_ABTTYP_FETCH
-value|((unsigned int) 0x2<< 10)
+value|(0x2u<< 10)
 end_define
 
 begin_comment
@@ -1583,7 +1583,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_MST0
-value|((unsigned int) 0x1<< 16)
+value|(0x1u<< 16)
 end_define
 
 begin_comment
@@ -1594,7 +1594,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_MST1
-value|((unsigned int) 0x1<< 17)
+value|(0x1u<< 17)
 end_define
 
 begin_comment
@@ -1605,7 +1605,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_SVMST0
-value|((unsigned int) 0x1<< 24)
+value|(0x1u<< 24)
 end_define
 
 begin_comment
@@ -1616,7 +1616,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_SVMST1
-value|((unsigned int) 0x1<< 25)
+value|(0x1u<< 25)
 end_define
 
 begin_comment
@@ -1631,7 +1631,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_PROT
-value|((unsigned int) 0x3<<  0)
+value|(0x3u<<  0)
 end_define
 
 begin_comment
@@ -1642,7 +1642,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_PROT_PNAUNA
-value|((unsigned int) 0x0)
+value|0x0u
 end_define
 
 begin_comment
@@ -1653,7 +1653,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_PROT_PRWUNA
-value|((unsigned int) 0x1)
+value|0x1u
 end_define
 
 begin_comment
@@ -1664,7 +1664,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_PROT_PRWURO
-value|((unsigned int) 0x2)
+value|0x2u
 end_define
 
 begin_comment
@@ -1675,7 +1675,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_PROT_PRWURW
-value|((unsigned int) 0x3)
+value|0x3u
 end_define
 
 begin_comment
@@ -1686,7 +1686,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_SIZE
-value|((unsigned int) 0xF<<  4)
+value|(0xFu<<  4)
 end_define
 
 begin_comment
@@ -1697,7 +1697,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_SIZE_1KB
-value|((unsigned int) 0x0<<  4)
+value|(0x0u<<  4)
 end_define
 
 begin_comment
@@ -1708,7 +1708,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_SIZE_2KB
-value|((unsigned int) 0x1<<  4)
+value|(0x1u<<  4)
 end_define
 
 begin_comment
@@ -1719,7 +1719,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_SIZE_4KB
-value|((unsigned int) 0x2<<  4)
+value|(0x2u<<  4)
 end_define
 
 begin_comment
@@ -1730,7 +1730,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_SIZE_8KB
-value|((unsigned int) 0x3<<  4)
+value|(0x3u<<  4)
 end_define
 
 begin_comment
@@ -1741,7 +1741,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_SIZE_16KB
-value|((unsigned int) 0x4<<  4)
+value|(0x4u<<  4)
 end_define
 
 begin_comment
@@ -1752,7 +1752,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_SIZE_32KB
-value|((unsigned int) 0x5<<  4)
+value|(0x5u<<  4)
 end_define
 
 begin_comment
@@ -1763,7 +1763,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_SIZE_64KB
-value|((unsigned int) 0x6<<  4)
+value|(0x6u<<  4)
 end_define
 
 begin_comment
@@ -1774,7 +1774,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_SIZE_128KB
-value|((unsigned int) 0x7<<  4)
+value|(0x7u<<  4)
 end_define
 
 begin_comment
@@ -1785,7 +1785,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_SIZE_256KB
-value|((unsigned int) 0x8<<  4)
+value|(0x8u<<  4)
 end_define
 
 begin_comment
@@ -1796,7 +1796,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_SIZE_512KB
-value|((unsigned int) 0x9<<  4)
+value|(0x9u<<  4)
 end_define
 
 begin_comment
@@ -1807,7 +1807,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_SIZE_1MB
-value|((unsigned int) 0xA<<  4)
+value|(0xAu<<  4)
 end_define
 
 begin_comment
@@ -1818,7 +1818,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_SIZE_2MB
-value|((unsigned int) 0xB<<  4)
+value|(0xBu<<  4)
 end_define
 
 begin_comment
@@ -1829,7 +1829,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_SIZE_4MB
-value|((unsigned int) 0xC<<  4)
+value|(0xCu<<  4)
 end_define
 
 begin_comment
@@ -1840,7 +1840,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_SIZE_8MB
-value|((unsigned int) 0xD<<  4)
+value|(0xDu<<  4)
 end_define
 
 begin_comment
@@ -1851,7 +1851,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_SIZE_16MB
-value|((unsigned int) 0xE<<  4)
+value|(0xEu<<  4)
 end_define
 
 begin_comment
@@ -1862,7 +1862,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_SIZE_64MB
-value|((unsigned int) 0xF<<  4)
+value|(0xFu<<  4)
 end_define
 
 begin_comment
@@ -1873,7 +1873,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_BA
-value|((unsigned int) 0x3FFFF<< 10)
+value|(0x3FFFFu<< 10)
 end_define
 
 begin_comment
@@ -1892,7 +1892,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MC_PUEB
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -1980,7 +1980,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_UPDTIM
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -1991,7 +1991,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_UPDCAL
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -2002,7 +2002,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_TIMEVSEL
-value|((unsigned int) 0x3<<  8)
+value|(0x3u<<  8)
 end_define
 
 begin_comment
@@ -2013,7 +2013,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_TIMEVSEL_MINUTE
-value|((unsigned int) 0x0<<  8)
+value|(0x0u<<  8)
 end_define
 
 begin_comment
@@ -2024,7 +2024,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_TIMEVSEL_HOUR
-value|((unsigned int) 0x1<<  8)
+value|(0x1u<<  8)
 end_define
 
 begin_comment
@@ -2035,7 +2035,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_TIMEVSEL_DAY24
-value|((unsigned int) 0x2<<  8)
+value|(0x2u<<  8)
 end_define
 
 begin_comment
@@ -2046,7 +2046,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_TIMEVSEL_DAY12
-value|((unsigned int) 0x3<<  8)
+value|(0x3u<<  8)
 end_define
 
 begin_comment
@@ -2057,7 +2057,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_CALEVSEL
-value|((unsigned int) 0x3<< 16)
+value|(0x3u<< 16)
 end_define
 
 begin_comment
@@ -2068,7 +2068,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_CALEVSEL_WEEK
-value|((unsigned int) 0x0<< 16)
+value|(0x0u<< 16)
 end_define
 
 begin_comment
@@ -2079,7 +2079,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_CALEVSEL_MONTH
-value|((unsigned int) 0x1<< 16)
+value|(0x1u<< 16)
 end_define
 
 begin_comment
@@ -2090,7 +2090,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_CALEVSEL_YEAR
-value|((unsigned int) 0x2<< 16)
+value|(0x2u<< 16)
 end_define
 
 begin_comment
@@ -2105,7 +2105,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_HRMOD
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -2120,7 +2120,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_SEC
-value|((unsigned int) 0x7F<<  0)
+value|(0x7Fu<<  0)
 end_define
 
 begin_comment
@@ -2131,7 +2131,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_MIN
-value|((unsigned int) 0x7F<<  8)
+value|(0x7Fu<<  8)
 end_define
 
 begin_comment
@@ -2142,7 +2142,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_HOUR
-value|((unsigned int) 0x1F<< 16)
+value|(0x1Fu<< 16)
 end_define
 
 begin_comment
@@ -2153,7 +2153,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_AMPM
-value|((unsigned int) 0x1<< 22)
+value|(0x1u<< 22)
 end_define
 
 begin_comment
@@ -2168,7 +2168,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_CENT
-value|((unsigned int) 0x3F<<  0)
+value|(0x3Fu<<  0)
 end_define
 
 begin_comment
@@ -2179,7 +2179,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_YEAR
-value|((unsigned int) 0xFF<<  8)
+value|(0xFFu<<  8)
 end_define
 
 begin_comment
@@ -2190,7 +2190,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_MONTH
-value|((unsigned int) 0x1F<< 16)
+value|(0x1Fu<< 16)
 end_define
 
 begin_comment
@@ -2201,7 +2201,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_DAY
-value|((unsigned int) 0x7<< 21)
+value|(0x7u<< 21)
 end_define
 
 begin_comment
@@ -2212,7 +2212,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_DATE
-value|((unsigned int) 0x3F<< 24)
+value|(0x3Fu<< 24)
 end_define
 
 begin_comment
@@ -2227,7 +2227,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_SECEN
-value|((unsigned int) 0x1<<  7)
+value|(0x1u<<  7)
 end_define
 
 begin_comment
@@ -2238,7 +2238,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_MINEN
-value|((unsigned int) 0x1<< 15)
+value|(0x1u<< 15)
 end_define
 
 begin_comment
@@ -2249,7 +2249,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_HOUREN
-value|((unsigned int) 0x1<< 23)
+value|(0x1u<< 23)
 end_define
 
 begin_comment
@@ -2264,7 +2264,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_MONTHEN
-value|((unsigned int) 0x1<< 23)
+value|(0x1u<< 23)
 end_define
 
 begin_comment
@@ -2275,7 +2275,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_DATEEN
-value|((unsigned int) 0x1<< 31)
+value|(0x1u<< 31)
 end_define
 
 begin_comment
@@ -2290,7 +2290,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_ACKUPD
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -2301,7 +2301,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_ALARM
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -2312,7 +2312,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_SECEV
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -2323,7 +2323,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_TIMEV
-value|((unsigned int) 0x1<<  3)
+value|(0x1u<<  3)
 end_define
 
 begin_comment
@@ -2334,7 +2334,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_CALEV
-value|((unsigned int) 0x1<<  4)
+value|(0x1u<<  4)
 end_define
 
 begin_comment
@@ -2365,7 +2365,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_NVTIM
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -2376,7 +2376,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_NVCAL
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -2387,7 +2387,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_NVTIMALR
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -2398,7 +2398,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_RTC_NVCALALR
-value|((unsigned int) 0x1<<  3)
+value|(0x1u<<  3)
 end_define
 
 begin_comment
@@ -2478,7 +2478,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ST_WDRST
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -2493,7 +2493,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ST_PIV
-value|((unsigned int) 0xFFFF<<  0)
+value|(0xFFFFu<<  0)
 end_define
 
 begin_comment
@@ -2508,7 +2508,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ST_WDV
-value|((unsigned int) 0xFFFF<<  0)
+value|(0xFFFFu<<  0)
 end_define
 
 begin_comment
@@ -2519,7 +2519,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ST_RSTEN
-value|((unsigned int) 0x1<< 16)
+value|(0x1u<< 16)
 end_define
 
 begin_comment
@@ -2530,7 +2530,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ST_EXTEN
-value|((unsigned int) 0x1<< 17)
+value|(0x1u<< 17)
 end_define
 
 begin_comment
@@ -2545,7 +2545,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ST_RTPRES
-value|((unsigned int) 0xFFFF<<  0)
+value|(0xFFFFu<<  0)
 end_define
 
 begin_comment
@@ -2560,7 +2560,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ST_PITS
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -2571,7 +2571,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ST_WDOVF
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -2582,7 +2582,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ST_RTTINC
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -2593,7 +2593,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ST_ALMS
-value|((unsigned int) 0x1<<  3)
+value|(0x1u<<  3)
 end_define
 
 begin_comment
@@ -2620,7 +2620,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ST_ALMV
-value|((unsigned int) 0xFFFFF<<  0)
+value|(0xFFFFFu<<  0)
 end_define
 
 begin_comment
@@ -2635,7 +2635,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ST_CRTV
-value|((unsigned int) 0xFFFFF<<  0)
+value|(0xFFFFFu<<  0)
 end_define
 
 begin_comment
@@ -2747,7 +2747,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_PCK
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -2758,7 +2758,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_UDP
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -2769,7 +2769,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_MCKUDP
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -2780,7 +2780,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_UHP
-value|((unsigned int) 0x1<<  4)
+value|(0x1u<<  4)
 end_define
 
 begin_comment
@@ -2791,7 +2791,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_PCK0
-value|((unsigned int) 0x1<<  8)
+value|(0x1u<<  8)
 end_define
 
 begin_comment
@@ -2802,7 +2802,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_PCK1
-value|((unsigned int) 0x1<<  9)
+value|(0x1u<<  9)
 end_define
 
 begin_comment
@@ -2813,7 +2813,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_PCK2
-value|((unsigned int) 0x1<< 10)
+value|(0x1u<< 10)
 end_define
 
 begin_comment
@@ -2824,7 +2824,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_PCK3
-value|((unsigned int) 0x1<< 11)
+value|(0x1u<< 11)
 end_define
 
 begin_comment
@@ -2835,7 +2835,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_PCK4
-value|((unsigned int) 0x1<< 12)
+value|(0x1u<< 12)
 end_define
 
 begin_comment
@@ -2846,7 +2846,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_PCK5
-value|((unsigned int) 0x1<< 13)
+value|(0x1u<< 13)
 end_define
 
 begin_comment
@@ -2857,7 +2857,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_PCK6
-value|((unsigned int) 0x1<< 14)
+value|(0x1u<< 14)
 end_define
 
 begin_comment
@@ -2868,7 +2868,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_PCK7
-value|((unsigned int) 0x1<< 15)
+value|(0x1u<< 15)
 end_define
 
 begin_comment
@@ -2891,7 +2891,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_CSS
-value|((unsigned int) 0x3<<  0)
+value|(0x3u<<  0)
 end_define
 
 begin_comment
@@ -2902,7 +2902,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_CSS_SLOW_CLK
-value|((unsigned int) 0x0)
+value|0x0u
 end_define
 
 begin_comment
@@ -2913,7 +2913,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_CSS_MAIN_CLK
-value|((unsigned int) 0x1)
+value|0x1u
 end_define
 
 begin_comment
@@ -2924,7 +2924,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_CSS_PLLA_CLK
-value|((unsigned int) 0x2)
+value|0x2u
 end_define
 
 begin_comment
@@ -2935,7 +2935,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_CSS_PLLB_CLK
-value|((unsigned int) 0x3)
+value|0x3u
 end_define
 
 begin_comment
@@ -2946,7 +2946,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_PRES
-value|((unsigned int) 0x7<<  2)
+value|(0x7u<<  2)
 end_define
 
 begin_comment
@@ -2957,7 +2957,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_PRES_CLK
-value|((unsigned int) 0x0<<  2)
+value|(0x0u<<  2)
 end_define
 
 begin_comment
@@ -2968,7 +2968,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_PRES_CLK_2
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -2979,7 +2979,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_PRES_CLK_4
-value|((unsigned int) 0x2<<  2)
+value|(0x2u<<  2)
 end_define
 
 begin_comment
@@ -2990,7 +2990,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_PRES_CLK_8
-value|((unsigned int) 0x3<<  2)
+value|(0x3u<<  2)
 end_define
 
 begin_comment
@@ -3001,7 +3001,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_PRES_CLK_16
-value|((unsigned int) 0x4<<  2)
+value|(0x4u<<  2)
 end_define
 
 begin_comment
@@ -3012,7 +3012,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_PRES_CLK_32
-value|((unsigned int) 0x5<<  2)
+value|(0x5u<<  2)
 end_define
 
 begin_comment
@@ -3023,7 +3023,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_PRES_CLK_64
-value|((unsigned int) 0x6<<  2)
+value|(0x6u<<  2)
 end_define
 
 begin_comment
@@ -3034,7 +3034,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_MDIV
-value|((unsigned int) 0x3<<  8)
+value|(0x3u<<  8)
 end_define
 
 begin_comment
@@ -3045,7 +3045,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_MDIV_1
-value|((unsigned int) 0x0<<  8)
+value|(0x0u<<  8)
 end_define
 
 begin_comment
@@ -3056,7 +3056,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_MDIV_2
-value|((unsigned int) 0x1<<  8)
+value|(0x1u<<  8)
 end_define
 
 begin_comment
@@ -3067,7 +3067,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_MDIV_3
-value|((unsigned int) 0x2<<  8)
+value|(0x2u<<  8)
 end_define
 
 begin_comment
@@ -3078,7 +3078,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_MDIV_4
-value|((unsigned int) 0x3<<  8)
+value|(0x3u<<  8)
 end_define
 
 begin_comment
@@ -3097,7 +3097,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_MOSCS
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -3108,7 +3108,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_LOCKA
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -3119,7 +3119,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_LOCKB
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -3130,7 +3130,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_MCKRDY
-value|((unsigned int) 0x1<<  3)
+value|(0x1u<<  3)
 end_define
 
 begin_comment
@@ -3141,7 +3141,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_PCK0RDY
-value|((unsigned int) 0x1<<  8)
+value|(0x1u<<  8)
 end_define
 
 begin_comment
@@ -3152,7 +3152,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_PCK1RDY
-value|((unsigned int) 0x1<<  9)
+value|(0x1u<<  9)
 end_define
 
 begin_comment
@@ -3163,7 +3163,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_PCK2RDY
-value|((unsigned int) 0x1<< 10)
+value|(0x1u<< 10)
 end_define
 
 begin_comment
@@ -3174,7 +3174,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_PCK3RDY
-value|((unsigned int) 0x1<< 11)
+value|(0x1u<< 11)
 end_define
 
 begin_comment
@@ -3185,7 +3185,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_PCK4RDY
-value|((unsigned int) 0x1<< 12)
+value|(0x1u<< 12)
 end_define
 
 begin_comment
@@ -3196,7 +3196,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_PCK5RDY
-value|((unsigned int) 0x1<< 13)
+value|(0x1u<< 13)
 end_define
 
 begin_comment
@@ -3207,7 +3207,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_PCK6RDY
-value|((unsigned int) 0x1<< 14)
+value|(0x1u<< 14)
 end_define
 
 begin_comment
@@ -3218,7 +3218,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PMC_PCK7RDY
-value|((unsigned int) 0x1<< 15)
+value|(0x1u<< 15)
 end_define
 
 begin_comment
@@ -3286,7 +3286,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_CKGR_MOSCEN
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -3297,7 +3297,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_CKGR_OSCTEST
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -3308,7 +3308,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_CKGR_OSCOUNT
-value|((unsigned int) 0xFF<<  8)
+value|(0xFFu<<  8)
 end_define
 
 begin_comment
@@ -3323,7 +3323,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_CKGR_MAINF
-value|((unsigned int) 0xFFFF<<  0)
+value|(0xFFFFu<<  0)
 end_define
 
 begin_comment
@@ -3334,7 +3334,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_CKGR_MAINRDY
-value|((unsigned int) 0x1<< 16)
+value|(0x1u<< 16)
 end_define
 
 begin_comment
@@ -3349,7 +3349,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_CKGR_DIVA
-value|((unsigned int) 0xFF<<  0)
+value|(0xFFu<<  0)
 end_define
 
 begin_comment
@@ -3360,7 +3360,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_CKGR_DIVA_0
-value|((unsigned int) 0x0)
+value|0x0u
 end_define
 
 begin_comment
@@ -3371,7 +3371,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_CKGR_DIVA_BYPASS
-value|((unsigned int) 0x1)
+value|0x1u
 end_define
 
 begin_comment
@@ -3382,7 +3382,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_CKGR_PLLACOUNT
-value|((unsigned int) 0x3F<<  8)
+value|(0x3Fu<<  8)
 end_define
 
 begin_comment
@@ -3393,7 +3393,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_CKGR_OUTA
-value|((unsigned int) 0x3<< 14)
+value|(0x3u<< 14)
 end_define
 
 begin_comment
@@ -3404,7 +3404,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_CKGR_OUTA_0
-value|((unsigned int) 0x0<< 14)
+value|(0x0u<< 14)
 end_define
 
 begin_comment
@@ -3415,7 +3415,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_CKGR_OUTA_1
-value|((unsigned int) 0x1<< 14)
+value|(0x1u<< 14)
 end_define
 
 begin_comment
@@ -3426,7 +3426,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_CKGR_OUTA_2
-value|((unsigned int) 0x2<< 14)
+value|(0x2u<< 14)
 end_define
 
 begin_comment
@@ -3437,7 +3437,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_CKGR_OUTA_3
-value|((unsigned int) 0x3<< 14)
+value|(0x3u<< 14)
 end_define
 
 begin_comment
@@ -3448,7 +3448,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_CKGR_MULA
-value|((unsigned int) 0x7FF<< 16)
+value|(0x7FFu<< 16)
 end_define
 
 begin_comment
@@ -3459,7 +3459,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_CKGR_SRCA
-value|((unsigned int) 0x1<< 29)
+value|(0x1u<< 29)
 end_define
 
 begin_comment
@@ -3474,7 +3474,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_CKGR_DIVB
-value|((unsigned int) 0xFF<<  0)
+value|(0xFFu<<  0)
 end_define
 
 begin_comment
@@ -3485,7 +3485,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_CKGR_DIVB_0
-value|((unsigned int) 0x0)
+value|0x0u
 end_define
 
 begin_comment
@@ -3496,7 +3496,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_CKGR_DIVB_BYPASS
-value|((unsigned int) 0x1)
+value|0x1u
 end_define
 
 begin_comment
@@ -3507,7 +3507,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_CKGR_PLLBCOUNT
-value|((unsigned int) 0x3F<<  8)
+value|(0x3Fu<<  8)
 end_define
 
 begin_comment
@@ -3518,7 +3518,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_CKGR_OUTB
-value|((unsigned int) 0x3<< 14)
+value|(0x3u<< 14)
 end_define
 
 begin_comment
@@ -3529,7 +3529,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_CKGR_OUTB_0
-value|((unsigned int) 0x0<< 14)
+value|(0x0u<< 14)
 end_define
 
 begin_comment
@@ -3540,7 +3540,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_CKGR_OUTB_1
-value|((unsigned int) 0x1<< 14)
+value|(0x1u<< 14)
 end_define
 
 begin_comment
@@ -3551,7 +3551,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_CKGR_OUTB_2
-value|((unsigned int) 0x2<< 14)
+value|(0x2u<< 14)
 end_define
 
 begin_comment
@@ -3562,7 +3562,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_CKGR_OUTB_3
-value|((unsigned int) 0x3<< 14)
+value|(0x3u<< 14)
 end_define
 
 begin_comment
@@ -3573,7 +3573,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_CKGR_MULB
-value|((unsigned int) 0x7FF<< 16)
+value|(0x7FFu<< 16)
 end_define
 
 begin_comment
@@ -3584,7 +3584,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_CKGR_USB_96M
-value|((unsigned int) 0x1<< 28)
+value|(0x1u<< 28)
 end_define
 
 begin_comment
@@ -3595,7 +3595,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_CKGR_USB_PLL
-value|((unsigned int) 0x1<< 29)
+value|(0x1u<< 29)
 end_define
 
 begin_comment
@@ -3920,7 +3920,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_RSTRX
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -3931,7 +3931,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_RSTTX
-value|((unsigned int) 0x1<<  3)
+value|(0x1u<<  3)
 end_define
 
 begin_comment
@@ -3942,7 +3942,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_RXEN
-value|((unsigned int) 0x1<<  4)
+value|(0x1u<<  4)
 end_define
 
 begin_comment
@@ -3953,7 +3953,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_RXDIS
-value|((unsigned int) 0x1<<  5)
+value|(0x1u<<  5)
 end_define
 
 begin_comment
@@ -3964,7 +3964,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_TXEN
-value|((unsigned int) 0x1<<  6)
+value|(0x1u<<  6)
 end_define
 
 begin_comment
@@ -3975,7 +3975,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_TXDIS
-value|((unsigned int) 0x1<<  7)
+value|(0x1u<<  7)
 end_define
 
 begin_comment
@@ -3990,7 +3990,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_PAR
-value|((unsigned int) 0x7<<  9)
+value|(0x7u<<  9)
 end_define
 
 begin_comment
@@ -4001,7 +4001,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_PAR_EVEN
-value|((unsigned int) 0x0<<  9)
+value|(0x0u<<  9)
 end_define
 
 begin_comment
@@ -4012,7 +4012,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_PAR_ODD
-value|((unsigned int) 0x1<<  9)
+value|(0x1u<<  9)
 end_define
 
 begin_comment
@@ -4023,7 +4023,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_PAR_SPACE
-value|((unsigned int) 0x2<<  9)
+value|(0x2u<<  9)
 end_define
 
 begin_comment
@@ -4034,7 +4034,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_PAR_MARK
-value|((unsigned int) 0x3<<  9)
+value|(0x3u<<  9)
 end_define
 
 begin_comment
@@ -4045,7 +4045,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_PAR_NONE
-value|((unsigned int) 0x4<<  9)
+value|(0x4u<<  9)
 end_define
 
 begin_comment
@@ -4056,7 +4056,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_PAR_MULTI_DROP
-value|((unsigned int) 0x6<<  9)
+value|(0x6u<<  9)
 end_define
 
 begin_comment
@@ -4067,7 +4067,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_CHMODE
-value|((unsigned int) 0x3<< 14)
+value|(0x3u<< 14)
 end_define
 
 begin_comment
@@ -4078,7 +4078,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_CHMODE_NORMAL
-value|((unsigned int) 0x0<< 14)
+value|(0x0u<< 14)
 end_define
 
 begin_comment
@@ -4089,7 +4089,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_CHMODE_AUTO
-value|((unsigned int) 0x1<< 14)
+value|(0x1u<< 14)
 end_define
 
 begin_comment
@@ -4100,7 +4100,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_CHMODE_LOCAL
-value|((unsigned int) 0x2<< 14)
+value|(0x2u<< 14)
 end_define
 
 begin_comment
@@ -4111,7 +4111,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_CHMODE_REMOTE
-value|((unsigned int) 0x3<< 14)
+value|(0x3u<< 14)
 end_define
 
 begin_comment
@@ -4126,7 +4126,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_RXRDY
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -4137,7 +4137,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_TXRDY
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -4148,7 +4148,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_ENDRX
-value|((unsigned int) 0x1<<  3)
+value|(0x1u<<  3)
 end_define
 
 begin_comment
@@ -4159,7 +4159,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_ENDTX
-value|((unsigned int) 0x1<<  4)
+value|(0x1u<<  4)
 end_define
 
 begin_comment
@@ -4170,7 +4170,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_OVRE
-value|((unsigned int) 0x1<<  5)
+value|(0x1u<<  5)
 end_define
 
 begin_comment
@@ -4181,7 +4181,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_FRAME
-value|((unsigned int) 0x1<<  6)
+value|(0x1u<<  6)
 end_define
 
 begin_comment
@@ -4192,7 +4192,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_PARE
-value|((unsigned int) 0x1<<  7)
+value|(0x1u<<  7)
 end_define
 
 begin_comment
@@ -4203,7 +4203,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_TXEMPTY
-value|((unsigned int) 0x1<<  9)
+value|(0x1u<<  9)
 end_define
 
 begin_comment
@@ -4214,7 +4214,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_TXBUFE
-value|((unsigned int) 0x1<< 11)
+value|(0x1u<< 11)
 end_define
 
 begin_comment
@@ -4225,7 +4225,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_RXBUFF
-value|((unsigned int) 0x1<< 12)
+value|(0x1u<< 12)
 end_define
 
 begin_comment
@@ -4236,7 +4236,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_COMM_TX
-value|((unsigned int) 0x1<< 30)
+value|(0x1u<< 30)
 end_define
 
 begin_comment
@@ -4247,7 +4247,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_COMM_RX
-value|((unsigned int) 0x1<< 31)
+value|(0x1u<< 31)
 end_define
 
 begin_comment
@@ -4274,7 +4274,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_FORCE_NTRST
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -4354,7 +4354,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PDC_RXTEN
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -4365,7 +4365,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PDC_RXTDIS
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -4376,7 +4376,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PDC_TXTEN
-value|((unsigned int) 0x1<<  8)
+value|(0x1u<<  8)
 end_define
 
 begin_comment
@@ -4387,7 +4387,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PDC_TXTDIS
-value|((unsigned int) 0x1<<  9)
+value|(0x1u<<  9)
 end_define
 
 begin_comment
@@ -4523,7 +4523,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_AIC_PRIOR
-value|((unsigned int) 0x7<<  0)
+value|(0x7u<<  0)
 end_define
 
 begin_comment
@@ -4534,7 +4534,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_AIC_PRIOR_LOWEST
-value|((unsigned int) 0x0)
+value|0x0u
 end_define
 
 begin_comment
@@ -4545,7 +4545,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_AIC_PRIOR_HIGHEST
-value|((unsigned int) 0x7)
+value|0x7u
 end_define
 
 begin_comment
@@ -4556,7 +4556,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_AIC_SRCTYPE
-value|((unsigned int) 0x3<<  5)
+value|(0x3u<<  5)
 end_define
 
 begin_comment
@@ -4567,7 +4567,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_AIC_SRCTYPE_INT_LEVEL_SENSITIVE
-value|((unsigned int) 0x0<<  5)
+value|(0x0u<<  5)
 end_define
 
 begin_comment
@@ -4578,7 +4578,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_AIC_SRCTYPE_INT_EDGE_TRIGGERED
-value|((unsigned int) 0x1<<  5)
+value|(0x1u<<  5)
 end_define
 
 begin_comment
@@ -4589,7 +4589,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_AIC_SRCTYPE_EXT_HIGH_LEVEL
-value|((unsigned int) 0x2<<  5)
+value|(0x2u<<  5)
 end_define
 
 begin_comment
@@ -4600,7 +4600,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_AIC_SRCTYPE_EXT_POSITIVE_EDGE
-value|((unsigned int) 0x3<<  5)
+value|(0x3u<<  5)
 end_define
 
 begin_comment
@@ -4615,7 +4615,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_AIC_NFIQ
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -4626,7 +4626,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_AIC_NIRQ
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -4641,7 +4641,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_AIC_DCR_PROT
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -4652,7 +4652,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_AIC_DCR_GMSK
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -4785,7 +4785,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_SPIEN
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -4796,7 +4796,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_SPIDIS
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -4807,7 +4807,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_SWRST
-value|((unsigned int) 0x1<<  7)
+value|(0x1u<<  7)
 end_define
 
 begin_comment
@@ -4822,7 +4822,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_MSTR
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -4833,7 +4833,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_PS
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -4844,7 +4844,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_PS_FIXED
-value|((unsigned int) 0x0<<  1)
+value|(0x0u<<  1)
 end_define
 
 begin_comment
@@ -4855,7 +4855,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_PS_VARIABLE
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -4866,7 +4866,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_PCSDEC
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -4877,7 +4877,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_DIV32
-value|((unsigned int) 0x1<<  3)
+value|(0x1u<<  3)
 end_define
 
 begin_comment
@@ -4888,7 +4888,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_MODFDIS
-value|((unsigned int) 0x1<<  4)
+value|(0x1u<<  4)
 end_define
 
 begin_comment
@@ -4899,7 +4899,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_LLB
-value|((unsigned int) 0x1<<  7)
+value|(0x1u<<  7)
 end_define
 
 begin_comment
@@ -4910,7 +4910,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_PCS
-value|((unsigned int) 0xF<< 16)
+value|(0xFu<< 16)
 end_define
 
 begin_comment
@@ -4921,7 +4921,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_DLYBCS
-value|((unsigned int) 0xFF<< 24)
+value|(0xFFu<< 24)
 end_define
 
 begin_comment
@@ -4936,7 +4936,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_RD
-value|((unsigned int) 0xFFFF<<  0)
+value|(0xFFFFu<<  0)
 end_define
 
 begin_comment
@@ -4947,7 +4947,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_RPCS
-value|((unsigned int) 0xF<< 16)
+value|(0xFu<< 16)
 end_define
 
 begin_comment
@@ -4962,7 +4962,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_TD
-value|((unsigned int) 0xFFFF<<  0)
+value|(0xFFFFu<<  0)
 end_define
 
 begin_comment
@@ -4973,7 +4973,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_TPCS
-value|((unsigned int) 0xF<< 16)
+value|(0xFu<< 16)
 end_define
 
 begin_comment
@@ -4988,7 +4988,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_RDRF
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -4999,7 +4999,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_TDRE
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -5010,7 +5010,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_MODF
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -5021,7 +5021,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_OVRES
-value|((unsigned int) 0x1<<  3)
+value|(0x1u<<  3)
 end_define
 
 begin_comment
@@ -5032,7 +5032,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_SPENDRX
-value|((unsigned int) 0x1<<  4)
+value|(0x1u<<  4)
 end_define
 
 begin_comment
@@ -5043,7 +5043,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_SPENDTX
-value|((unsigned int) 0x1<<  5)
+value|(0x1u<<  5)
 end_define
 
 begin_comment
@@ -5054,7 +5054,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_RXBUFF
-value|((unsigned int) 0x1<<  6)
+value|(0x1u<<  6)
 end_define
 
 begin_comment
@@ -5065,7 +5065,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_TXBUFE
-value|((unsigned int) 0x1<<  7)
+value|(0x1u<<  7)
 end_define
 
 begin_comment
@@ -5076,7 +5076,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_SPIENS
-value|((unsigned int) 0x1<< 16)
+value|(0x1u<< 16)
 end_define
 
 begin_comment
@@ -5103,7 +5103,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_CPOL
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -5114,7 +5114,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_NCPHA
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -5125,7 +5125,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_BITS
-value|((unsigned int) 0xF<<  4)
+value|(0xFu<<  4)
 end_define
 
 begin_comment
@@ -5136,7 +5136,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_BITS_8
-value|((unsigned int) 0x0<<  4)
+value|(0x0u<<  4)
 end_define
 
 begin_comment
@@ -5147,7 +5147,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_BITS_9
-value|((unsigned int) 0x1<<  4)
+value|(0x1u<<  4)
 end_define
 
 begin_comment
@@ -5158,7 +5158,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_BITS_10
-value|((unsigned int) 0x2<<  4)
+value|(0x2u<<  4)
 end_define
 
 begin_comment
@@ -5169,7 +5169,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_BITS_11
-value|((unsigned int) 0x3<<  4)
+value|(0x3u<<  4)
 end_define
 
 begin_comment
@@ -5180,7 +5180,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_BITS_12
-value|((unsigned int) 0x4<<  4)
+value|(0x4u<<  4)
 end_define
 
 begin_comment
@@ -5191,7 +5191,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_BITS_13
-value|((unsigned int) 0x5<<  4)
+value|(0x5u<<  4)
 end_define
 
 begin_comment
@@ -5202,7 +5202,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_BITS_14
-value|((unsigned int) 0x6<<  4)
+value|(0x6u<<  4)
 end_define
 
 begin_comment
@@ -5213,7 +5213,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_BITS_15
-value|((unsigned int) 0x7<<  4)
+value|(0x7u<<  4)
 end_define
 
 begin_comment
@@ -5224,7 +5224,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_BITS_16
-value|((unsigned int) 0x8<<  4)
+value|(0x8u<<  4)
 end_define
 
 begin_comment
@@ -5235,7 +5235,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_SCBR
-value|((unsigned int) 0xFF<<  8)
+value|(0xFFu<<  8)
 end_define
 
 begin_comment
@@ -5246,7 +5246,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_DLYBS
-value|((unsigned int) 0xFF<< 16)
+value|(0xFFu<< 16)
 end_define
 
 begin_comment
@@ -5257,7 +5257,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SPI_DLYBCT
-value|((unsigned int) 0xFF<< 24)
+value|(0xFFu<< 24)
 end_define
 
 begin_comment
@@ -5422,7 +5422,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_RXEN
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -5433,7 +5433,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_RXDIS
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -5444,7 +5444,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_TXEN
-value|((unsigned int) 0x1<<  8)
+value|(0x1u<<  8)
 end_define
 
 begin_comment
@@ -5455,7 +5455,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_TXDIS
-value|((unsigned int) 0x1<<  9)
+value|(0x1u<<  9)
 end_define
 
 begin_comment
@@ -5466,7 +5466,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_SWRST
-value|((unsigned int) 0x1<< 15)
+value|(0x1u<< 15)
 end_define
 
 begin_comment
@@ -5481,7 +5481,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_CKS
-value|((unsigned int) 0x3<<  0)
+value|(0x3u<<  0)
 end_define
 
 begin_comment
@@ -5492,7 +5492,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_CKS_DIV
-value|((unsigned int) 0x0)
+value|0x0u
 end_define
 
 begin_comment
@@ -5503,7 +5503,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_CKS_TK
-value|((unsigned int) 0x1)
+value|0x1u
 end_define
 
 begin_comment
@@ -5514,7 +5514,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_CKS_RK
-value|((unsigned int) 0x2)
+value|0x2u
 end_define
 
 begin_comment
@@ -5525,7 +5525,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_CKO
-value|((unsigned int) 0x7<<  2)
+value|(0x7u<<  2)
 end_define
 
 begin_comment
@@ -5536,7 +5536,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_CKO_NONE
-value|((unsigned int) 0x0<<  2)
+value|(0x0u<<  2)
 end_define
 
 begin_comment
@@ -5547,7 +5547,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_CKO_CONTINOUS
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -5558,7 +5558,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_CKO_DATA_TX
-value|((unsigned int) 0x2<<  2)
+value|(0x2u<<  2)
 end_define
 
 begin_comment
@@ -5569,7 +5569,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_CKI
-value|((unsigned int) 0x1<<  5)
+value|(0x1u<<  5)
 end_define
 
 begin_comment
@@ -5580,7 +5580,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_CKG
-value|((unsigned int) 0x3<<  6)
+value|(0x3u<<  6)
 end_define
 
 begin_comment
@@ -5591,7 +5591,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_CKG_NONE
-value|((unsigned int) 0x0<<  6)
+value|(0x0u<<  6)
 end_define
 
 begin_comment
@@ -5602,7 +5602,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_CKG_LOW
-value|((unsigned int) 0x1<<  6)
+value|(0x1u<<  6)
 end_define
 
 begin_comment
@@ -5613,7 +5613,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_CKG_HIGH
-value|((unsigned int) 0x2<<  6)
+value|(0x2u<<  6)
 end_define
 
 begin_comment
@@ -5624,7 +5624,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_START
-value|((unsigned int) 0xF<<  8)
+value|(0xFu<<  8)
 end_define
 
 begin_comment
@@ -5635,7 +5635,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_START_CONTINOUS
-value|((unsigned int) 0x0<<  8)
+value|(0x0u<<  8)
 end_define
 
 begin_comment
@@ -5646,7 +5646,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_START_TX
-value|((unsigned int) 0x1<<  8)
+value|(0x1u<<  8)
 end_define
 
 begin_comment
@@ -5657,7 +5657,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_START_LOW_RF
-value|((unsigned int) 0x2<<  8)
+value|(0x2u<<  8)
 end_define
 
 begin_comment
@@ -5668,7 +5668,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_START_HIGH_RF
-value|((unsigned int) 0x3<<  8)
+value|(0x3u<<  8)
 end_define
 
 begin_comment
@@ -5679,7 +5679,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_START_FALL_RF
-value|((unsigned int) 0x4<<  8)
+value|(0x4u<<  8)
 end_define
 
 begin_comment
@@ -5690,7 +5690,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_START_RISE_RF
-value|((unsigned int) 0x5<<  8)
+value|(0x5u<<  8)
 end_define
 
 begin_comment
@@ -5701,7 +5701,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_START_LEVEL_RF
-value|((unsigned int) 0x6<<  8)
+value|(0x6u<<  8)
 end_define
 
 begin_comment
@@ -5712,7 +5712,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_START_EDGE_RF
-value|((unsigned int) 0x7<<  8)
+value|(0x7u<<  8)
 end_define
 
 begin_comment
@@ -5723,7 +5723,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_START_0
-value|((unsigned int) 0x8<<  8)
+value|(0x8u<<  8)
 end_define
 
 begin_comment
@@ -5734,7 +5734,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_STOP
-value|((unsigned int) 0x1<< 12)
+value|(0x1u<< 12)
 end_define
 
 begin_comment
@@ -5745,7 +5745,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_STTOUT
-value|((unsigned int) 0x1<< 15)
+value|(0x1u<< 15)
 end_define
 
 begin_comment
@@ -5756,7 +5756,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_STTDLY
-value|((unsigned int) 0xFF<< 16)
+value|(0xFFu<< 16)
 end_define
 
 begin_comment
@@ -5767,7 +5767,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_PERIOD
-value|((unsigned int) 0xFF<< 24)
+value|(0xFFu<< 24)
 end_define
 
 begin_comment
@@ -5782,7 +5782,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_DATLEN
-value|((unsigned int) 0x1F<<  0)
+value|(0x1Fu<<  0)
 end_define
 
 begin_comment
@@ -5793,7 +5793,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_LOOP
-value|((unsigned int) 0x1<<  5)
+value|(0x1u<<  5)
 end_define
 
 begin_comment
@@ -5804,7 +5804,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_MSBF
-value|((unsigned int) 0x1<<  7)
+value|(0x1u<<  7)
 end_define
 
 begin_comment
@@ -5815,7 +5815,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_DATNB
-value|((unsigned int) 0xF<<  8)
+value|(0xFu<<  8)
 end_define
 
 begin_comment
@@ -5826,7 +5826,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_FSLEN
-value|((unsigned int) 0xF<< 16)
+value|(0xFu<< 16)
 end_define
 
 begin_comment
@@ -5837,7 +5837,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_FSOS
-value|((unsigned int) 0x7<< 20)
+value|(0x7u<< 20)
 end_define
 
 begin_comment
@@ -5848,7 +5848,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_FSOS_NONE
-value|((unsigned int) 0x0<< 20)
+value|(0x0u<< 20)
 end_define
 
 begin_comment
@@ -5859,7 +5859,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_FSOS_NEGATIVE
-value|((unsigned int) 0x1<< 20)
+value|(0x1u<< 20)
 end_define
 
 begin_comment
@@ -5870,7 +5870,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_FSOS_POSITIVE
-value|((unsigned int) 0x2<< 20)
+value|(0x2u<< 20)
 end_define
 
 begin_comment
@@ -5881,7 +5881,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_FSOS_LOW
-value|((unsigned int) 0x3<< 20)
+value|(0x3u<< 20)
 end_define
 
 begin_comment
@@ -5892,7 +5892,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_FSOS_HIGH
-value|((unsigned int) 0x4<< 20)
+value|(0x4u<< 20)
 end_define
 
 begin_comment
@@ -5903,7 +5903,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_FSOS_TOGGLE
-value|((unsigned int) 0x5<< 20)
+value|(0x5u<< 20)
 end_define
 
 begin_comment
@@ -5914,7 +5914,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_FSEDGE
-value|((unsigned int) 0x1<< 24)
+value|(0x1u<< 24)
 end_define
 
 begin_comment
@@ -5933,7 +5933,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_DATDEF
-value|((unsigned int) 0x1<<  5)
+value|(0x1u<<  5)
 end_define
 
 begin_comment
@@ -5944,7 +5944,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_FSDEN
-value|((unsigned int) 0x1<< 23)
+value|(0x1u<< 23)
 end_define
 
 begin_comment
@@ -5959,7 +5959,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_TXRDY
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -5970,7 +5970,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_TXEMPTY
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -5981,7 +5981,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_ENDTX
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -5992,7 +5992,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_TXBUFE
-value|((unsigned int) 0x1<<  3)
+value|(0x1u<<  3)
 end_define
 
 begin_comment
@@ -6003,7 +6003,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_RXRDY
-value|((unsigned int) 0x1<<  4)
+value|(0x1u<<  4)
 end_define
 
 begin_comment
@@ -6014,7 +6014,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_OVRUN
-value|((unsigned int) 0x1<<  5)
+value|(0x1u<<  5)
 end_define
 
 begin_comment
@@ -6025,7 +6025,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_ENDRX
-value|((unsigned int) 0x1<<  6)
+value|(0x1u<<  6)
 end_define
 
 begin_comment
@@ -6036,7 +6036,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_RXBUFF
-value|((unsigned int) 0x1<<  7)
+value|(0x1u<<  7)
 end_define
 
 begin_comment
@@ -6047,7 +6047,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_CP0
-value|((unsigned int) 0x1<<  8)
+value|(0x1u<<  8)
 end_define
 
 begin_comment
@@ -6058,7 +6058,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_CP1
-value|((unsigned int) 0x1<<  9)
+value|(0x1u<<  9)
 end_define
 
 begin_comment
@@ -6069,7 +6069,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_TXSYN
-value|((unsigned int) 0x1<< 10)
+value|(0x1u<< 10)
 end_define
 
 begin_comment
@@ -6080,7 +6080,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_RXSYN
-value|((unsigned int) 0x1<< 11)
+value|(0x1u<< 11)
 end_define
 
 begin_comment
@@ -6091,7 +6091,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_TXENA
-value|((unsigned int) 0x1<< 16)
+value|(0x1u<< 16)
 end_define
 
 begin_comment
@@ -6102,7 +6102,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SSC_RXENA
-value|((unsigned int) 0x1<< 17)
+value|(0x1u<< 17)
 end_define
 
 begin_comment
@@ -6268,7 +6268,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_RSTSTA
-value|((unsigned int) 0x1<<  8)
+value|(0x1u<<  8)
 end_define
 
 begin_comment
@@ -6279,7 +6279,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_STTBRK
-value|((unsigned int) 0x1<<  9)
+value|(0x1u<<  9)
 end_define
 
 begin_comment
@@ -6290,7 +6290,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_STPBRK
-value|((unsigned int) 0x1<< 10)
+value|(0x1u<< 10)
 end_define
 
 begin_comment
@@ -6301,7 +6301,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_STTTO
-value|((unsigned int) 0x1<< 11)
+value|(0x1u<< 11)
 end_define
 
 begin_comment
@@ -6312,7 +6312,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_SENDA
-value|((unsigned int) 0x1<< 12)
+value|(0x1u<< 12)
 end_define
 
 begin_comment
@@ -6323,7 +6323,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_RSTIT
-value|((unsigned int) 0x1<< 13)
+value|(0x1u<< 13)
 end_define
 
 begin_comment
@@ -6334,7 +6334,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_RSTNACK
-value|((unsigned int) 0x1<< 14)
+value|(0x1u<< 14)
 end_define
 
 begin_comment
@@ -6345,7 +6345,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_RETTO
-value|((unsigned int) 0x1<< 15)
+value|(0x1u<< 15)
 end_define
 
 begin_comment
@@ -6356,7 +6356,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_DTREN
-value|((unsigned int) 0x1<< 16)
+value|(0x1u<< 16)
 end_define
 
 begin_comment
@@ -6367,7 +6367,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_DTRDIS
-value|((unsigned int) 0x1<< 17)
+value|(0x1u<< 17)
 end_define
 
 begin_comment
@@ -6378,7 +6378,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_RTSEN
-value|((unsigned int) 0x1<< 18)
+value|(0x1u<< 18)
 end_define
 
 begin_comment
@@ -6389,7 +6389,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_RTSDIS
-value|((unsigned int) 0x1<< 19)
+value|(0x1u<< 19)
 end_define
 
 begin_comment
@@ -6404,7 +6404,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_USMODE
-value|((unsigned int) 0xF<<  0)
+value|(0xFu<<  0)
 end_define
 
 begin_comment
@@ -6415,7 +6415,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_USMODE_NORMAL
-value|((unsigned int) 0x0)
+value|0x0u
 end_define
 
 begin_comment
@@ -6426,7 +6426,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_USMODE_RS485
-value|((unsigned int) 0x1)
+value|0x1u
 end_define
 
 begin_comment
@@ -6437,7 +6437,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_USMODE_HWHSH
-value|((unsigned int) 0x2)
+value|0x2u
 end_define
 
 begin_comment
@@ -6448,7 +6448,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_USMODE_MODEM
-value|((unsigned int) 0x3)
+value|0x3u
 end_define
 
 begin_comment
@@ -6459,7 +6459,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_USMODE_ISO7816_0
-value|((unsigned int) 0x4)
+value|0x4u
 end_define
 
 begin_comment
@@ -6470,7 +6470,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_USMODE_ISO7816_1
-value|((unsigned int) 0x6)
+value|0x6u
 end_define
 
 begin_comment
@@ -6481,7 +6481,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_USMODE_IRDA
-value|((unsigned int) 0x8)
+value|0x8u
 end_define
 
 begin_comment
@@ -6492,7 +6492,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_USMODE_SWHSH
-value|((unsigned int) 0xC)
+value|0xCu
 end_define
 
 begin_comment
@@ -6503,7 +6503,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_CLKS
-value|((unsigned int) 0x3<<  4)
+value|(0x3u<<  4)
 end_define
 
 begin_comment
@@ -6514,7 +6514,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_CLKS_CLOCK
-value|((unsigned int) 0x0<<  4)
+value|(0x0u<<  4)
 end_define
 
 begin_comment
@@ -6525,7 +6525,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_CLKS_FDIV1
-value|((unsigned int) 0x1<<  4)
+value|(0x1u<<  4)
 end_define
 
 begin_comment
@@ -6536,7 +6536,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_CLKS_SLOW
-value|((unsigned int) 0x2<<  4)
+value|(0x2u<<  4)
 end_define
 
 begin_comment
@@ -6547,7 +6547,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_CLKS_EXT
-value|((unsigned int) 0x3<<  4)
+value|(0x3u<<  4)
 end_define
 
 begin_comment
@@ -6558,7 +6558,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_CHRL
-value|((unsigned int) 0x3<<  6)
+value|(0x3u<<  6)
 end_define
 
 begin_comment
@@ -6569,7 +6569,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_CHRL_5_BITS
-value|((unsigned int) 0x0<<  6)
+value|(0x0u<<  6)
 end_define
 
 begin_comment
@@ -6580,7 +6580,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_CHRL_6_BITS
-value|((unsigned int) 0x1<<  6)
+value|(0x1u<<  6)
 end_define
 
 begin_comment
@@ -6591,7 +6591,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_CHRL_7_BITS
-value|((unsigned int) 0x2<<  6)
+value|(0x2u<<  6)
 end_define
 
 begin_comment
@@ -6602,7 +6602,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_CHRL_8_BITS
-value|((unsigned int) 0x3<<  6)
+value|(0x3u<<  6)
 end_define
 
 begin_comment
@@ -6613,7 +6613,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_SYNC
-value|((unsigned int) 0x1<<  8)
+value|(0x1u<<  8)
 end_define
 
 begin_comment
@@ -6624,7 +6624,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_NBSTOP
-value|((unsigned int) 0x3<< 12)
+value|(0x3u<< 12)
 end_define
 
 begin_comment
@@ -6635,7 +6635,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_NBSTOP_1_BIT
-value|((unsigned int) 0x0<< 12)
+value|(0x0u<< 12)
 end_define
 
 begin_comment
@@ -6646,7 +6646,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_NBSTOP_15_BIT
-value|((unsigned int) 0x1<< 12)
+value|(0x1u<< 12)
 end_define
 
 begin_comment
@@ -6657,7 +6657,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_NBSTOP_2_BIT
-value|((unsigned int) 0x2<< 12)
+value|(0x2u<< 12)
 end_define
 
 begin_comment
@@ -6668,7 +6668,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_MSBF
-value|((unsigned int) 0x1<< 16)
+value|(0x1u<< 16)
 end_define
 
 begin_comment
@@ -6679,7 +6679,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_MODE9
-value|((unsigned int) 0x1<< 17)
+value|(0x1u<< 17)
 end_define
 
 begin_comment
@@ -6690,7 +6690,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_CKLO
-value|((unsigned int) 0x1<< 18)
+value|(0x1u<< 18)
 end_define
 
 begin_comment
@@ -6701,7 +6701,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_OVER
-value|((unsigned int) 0x1<< 19)
+value|(0x1u<< 19)
 end_define
 
 begin_comment
@@ -6712,7 +6712,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_INACK
-value|((unsigned int) 0x1<< 20)
+value|(0x1u<< 20)
 end_define
 
 begin_comment
@@ -6723,7 +6723,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_DSNACK
-value|((unsigned int) 0x1<< 21)
+value|(0x1u<< 21)
 end_define
 
 begin_comment
@@ -6734,7 +6734,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_MAX_ITER
-value|((unsigned int) 0x1<< 24)
+value|(0x1u<< 24)
 end_define
 
 begin_comment
@@ -6745,7 +6745,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_FILTER
-value|((unsigned int) 0x1<< 28)
+value|(0x1u<< 28)
 end_define
 
 begin_comment
@@ -6760,7 +6760,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_RXBRK
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -6771,7 +6771,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_TIMEOUT
-value|((unsigned int) 0x1<<  8)
+value|(0x1u<<  8)
 end_define
 
 begin_comment
@@ -6782,7 +6782,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_ITERATION
-value|((unsigned int) 0x1<< 10)
+value|(0x1u<< 10)
 end_define
 
 begin_comment
@@ -6793,7 +6793,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_NACK
-value|((unsigned int) 0x1<< 13)
+value|(0x1u<< 13)
 end_define
 
 begin_comment
@@ -6804,7 +6804,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_RIIC
-value|((unsigned int) 0x1<< 16)
+value|(0x1u<< 16)
 end_define
 
 begin_comment
@@ -6815,7 +6815,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_DSRIC
-value|((unsigned int) 0x1<< 17)
+value|(0x1u<< 17)
 end_define
 
 begin_comment
@@ -6826,7 +6826,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_DCDIC
-value|((unsigned int) 0x1<< 18)
+value|(0x1u<< 18)
 end_define
 
 begin_comment
@@ -6837,7 +6837,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_CTSIC
-value|((unsigned int) 0x1<< 19)
+value|(0x1u<< 19)
 end_define
 
 begin_comment
@@ -6860,7 +6860,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_RI
-value|((unsigned int) 0x1<< 20)
+value|(0x1u<< 20)
 end_define
 
 begin_comment
@@ -6871,7 +6871,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_DSR
-value|((unsigned int) 0x1<< 21)
+value|(0x1u<< 21)
 end_define
 
 begin_comment
@@ -6882,7 +6882,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_DCD
-value|((unsigned int) 0x1<< 22)
+value|(0x1u<< 22)
 end_define
 
 begin_comment
@@ -6893,7 +6893,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_US_CTS
-value|((unsigned int) 0x1<< 23)
+value|(0x1u<< 23)
 end_define
 
 begin_comment
@@ -6984,7 +6984,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TWI_START
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -6995,7 +6995,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TWI_STOP
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -7006,7 +7006,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TWI_MSEN
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -7017,7 +7017,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TWI_MSDIS
-value|((unsigned int) 0x1<<  3)
+value|(0x1u<<  3)
 end_define
 
 begin_comment
@@ -7028,7 +7028,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TWI_SVEN
-value|((unsigned int) 0x1<<  4)
+value|(0x1u<<  4)
 end_define
 
 begin_comment
@@ -7039,7 +7039,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TWI_SVDIS
-value|((unsigned int) 0x1<<  5)
+value|(0x1u<<  5)
 end_define
 
 begin_comment
@@ -7050,7 +7050,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TWI_SWRST
-value|((unsigned int) 0x1<<  7)
+value|(0x1u<<  7)
 end_define
 
 begin_comment
@@ -7065,7 +7065,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TWI_IADRSZ
-value|((unsigned int) 0x3<<  8)
+value|(0x3u<<  8)
 end_define
 
 begin_comment
@@ -7076,7 +7076,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TWI_IADRSZ_NO
-value|((unsigned int) 0x0<<  8)
+value|(0x0u<<  8)
 end_define
 
 begin_comment
@@ -7087,7 +7087,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TWI_IADRSZ_1_BYTE
-value|((unsigned int) 0x1<<  8)
+value|(0x1u<<  8)
 end_define
 
 begin_comment
@@ -7098,7 +7098,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TWI_IADRSZ_2_BYTE
-value|((unsigned int) 0x2<<  8)
+value|(0x2u<<  8)
 end_define
 
 begin_comment
@@ -7109,7 +7109,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TWI_IADRSZ_3_BYTE
-value|((unsigned int) 0x3<<  8)
+value|(0x3u<<  8)
 end_define
 
 begin_comment
@@ -7120,7 +7120,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TWI_MREAD
-value|((unsigned int) 0x1<< 12)
+value|(0x1u<< 12)
 end_define
 
 begin_comment
@@ -7131,7 +7131,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TWI_DADR
-value|((unsigned int) 0x7F<< 16)
+value|(0x7Fu<< 16)
 end_define
 
 begin_comment
@@ -7146,7 +7146,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TWI_SADR
-value|((unsigned int) 0x7F<< 16)
+value|(0x7Fu<< 16)
 end_define
 
 begin_comment
@@ -7161,7 +7161,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TWI_CLDIV
-value|((unsigned int) 0xFF<<  0)
+value|(0xFFu<<  0)
 end_define
 
 begin_comment
@@ -7172,7 +7172,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TWI_CHDIV
-value|((unsigned int) 0xFF<<  8)
+value|(0xFFu<<  8)
 end_define
 
 begin_comment
@@ -7183,7 +7183,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TWI_CKDIV
-value|((unsigned int) 0x7<< 16)
+value|(0x7u<< 16)
 end_define
 
 begin_comment
@@ -7198,7 +7198,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TWI_TXCOMP
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -7209,7 +7209,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TWI_RXRDY
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -7220,7 +7220,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TWI_TXRDY
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -7231,7 +7231,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TWI_SVREAD
-value|((unsigned int) 0x1<<  3)
+value|(0x1u<<  3)
 end_define
 
 begin_comment
@@ -7242,7 +7242,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TWI_SVACC
-value|((unsigned int) 0x1<<  4)
+value|(0x1u<<  4)
 end_define
 
 begin_comment
@@ -7253,7 +7253,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TWI_GCACC
-value|((unsigned int) 0x1<<  5)
+value|(0x1u<<  5)
 end_define
 
 begin_comment
@@ -7264,7 +7264,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TWI_OVRE
-value|((unsigned int) 0x1<<  6)
+value|(0x1u<<  6)
 end_define
 
 begin_comment
@@ -7275,7 +7275,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TWI_UNRE
-value|((unsigned int) 0x1<<  7)
+value|(0x1u<<  7)
 end_define
 
 begin_comment
@@ -7286,7 +7286,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TWI_NACK
-value|((unsigned int) 0x1<<  8)
+value|(0x1u<<  8)
 end_define
 
 begin_comment
@@ -7297,7 +7297,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TWI_ARBLST
-value|((unsigned int) 0x1<<  9)
+value|(0x1u<<  9)
 end_define
 
 begin_comment
@@ -7465,7 +7465,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_MCIEN
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -7476,7 +7476,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_MCIDIS
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -7487,7 +7487,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_PWSEN
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -7498,7 +7498,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_PWSDIS
-value|((unsigned int) 0x1<<  3)
+value|(0x1u<<  3)
 end_define
 
 begin_comment
@@ -7513,7 +7513,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_CLKDIV
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -7524,7 +7524,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_PWSDIV
-value|((unsigned int) 0x1<<  8)
+value|(0x1u<<  8)
 end_define
 
 begin_comment
@@ -7535,7 +7535,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_PDCPADV
-value|((unsigned int) 0x1<< 14)
+value|(0x1u<< 14)
 end_define
 
 begin_comment
@@ -7546,7 +7546,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_PDCMODE
-value|((unsigned int) 0x1<< 15)
+value|(0x1u<< 15)
 end_define
 
 begin_comment
@@ -7557,7 +7557,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_BLKLEN
-value|((unsigned int) 0x1<< 18)
+value|(0x1u<< 18)
 end_define
 
 begin_comment
@@ -7572,7 +7572,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_DTOCYC
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -7583,7 +7583,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_DTOMUL
-value|((unsigned int) 0x7<<  4)
+value|(0x7u<<  4)
 end_define
 
 begin_comment
@@ -7594,7 +7594,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_DTOMUL_1
-value|((unsigned int) 0x0<<  4)
+value|(0x0u<<  4)
 end_define
 
 begin_comment
@@ -7605,7 +7605,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_DTOMUL_16
-value|((unsigned int) 0x1<<  4)
+value|(0x1u<<  4)
 end_define
 
 begin_comment
@@ -7616,7 +7616,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_DTOMUL_128
-value|((unsigned int) 0x2<<  4)
+value|(0x2u<<  4)
 end_define
 
 begin_comment
@@ -7627,7 +7627,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_DTOMUL_256
-value|((unsigned int) 0x3<<  4)
+value|(0x3u<<  4)
 end_define
 
 begin_comment
@@ -7638,7 +7638,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_DTOMUL_1024
-value|((unsigned int) 0x4<<  4)
+value|(0x4u<<  4)
 end_define
 
 begin_comment
@@ -7649,7 +7649,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_DTOMUL_4096
-value|((unsigned int) 0x5<<  4)
+value|(0x5u<<  4)
 end_define
 
 begin_comment
@@ -7660,7 +7660,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_DTOMUL_65536
-value|((unsigned int) 0x6<<  4)
+value|(0x6u<<  4)
 end_define
 
 begin_comment
@@ -7671,7 +7671,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_DTOMUL_1048576
-value|((unsigned int) 0x7<<  4)
+value|(0x7u<<  4)
 end_define
 
 begin_comment
@@ -7686,7 +7686,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_SCDSEL
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -7697,7 +7697,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_SCDBUS
-value|((unsigned int) 0x1<<  7)
+value|(0x1u<<  7)
 end_define
 
 begin_comment
@@ -7712,7 +7712,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_CMDNB
-value|((unsigned int) 0x1F<<  0)
+value|(0x1Fu<<  0)
 end_define
 
 begin_comment
@@ -7723,7 +7723,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_RSPTYP
-value|((unsigned int) 0x3<<  6)
+value|(0x3u<<  6)
 end_define
 
 begin_comment
@@ -7734,7 +7734,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_RSPTYP_NO
-value|((unsigned int) 0x0<<  6)
+value|(0x0u<<  6)
 end_define
 
 begin_comment
@@ -7745,7 +7745,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_RSPTYP_48
-value|((unsigned int) 0x1<<  6)
+value|(0x1u<<  6)
 end_define
 
 begin_comment
@@ -7756,7 +7756,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_RSPTYP_136
-value|((unsigned int) 0x2<<  6)
+value|(0x2u<<  6)
 end_define
 
 begin_comment
@@ -7767,7 +7767,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_SPCMD
-value|((unsigned int) 0x7<<  8)
+value|(0x7u<<  8)
 end_define
 
 begin_comment
@@ -7778,7 +7778,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_SPCMD_NONE
-value|((unsigned int) 0x0<<  8)
+value|(0x0u<<  8)
 end_define
 
 begin_comment
@@ -7789,7 +7789,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_SPCMD_INIT
-value|((unsigned int) 0x1<<  8)
+value|(0x1u<<  8)
 end_define
 
 begin_comment
@@ -7800,7 +7800,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_SPCMD_SYNC
-value|((unsigned int) 0x2<<  8)
+value|(0x2u<<  8)
 end_define
 
 begin_comment
@@ -7811,7 +7811,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_SPCMD_IT_CMD
-value|((unsigned int) 0x4<<  8)
+value|(0x4u<<  8)
 end_define
 
 begin_comment
@@ -7822,7 +7822,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_SPCMD_IT_REP
-value|((unsigned int) 0x5<<  8)
+value|(0x5u<<  8)
 end_define
 
 begin_comment
@@ -7833,7 +7833,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_OPDCMD
-value|((unsigned int) 0x1<< 11)
+value|(0x1u<< 11)
 end_define
 
 begin_comment
@@ -7844,7 +7844,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_MAXLAT
-value|((unsigned int) 0x1<< 12)
+value|(0x1u<< 12)
 end_define
 
 begin_comment
@@ -7855,7 +7855,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_TRCMD
-value|((unsigned int) 0x3<< 16)
+value|(0x3u<< 16)
 end_define
 
 begin_comment
@@ -7866,7 +7866,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_TRCMD_NO
-value|((unsigned int) 0x0<< 16)
+value|(0x0u<< 16)
 end_define
 
 begin_comment
@@ -7877,7 +7877,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_TRCMD_START
-value|((unsigned int) 0x1<< 16)
+value|(0x1u<< 16)
 end_define
 
 begin_comment
@@ -7888,7 +7888,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_TRCMD_STOP
-value|((unsigned int) 0x2<< 16)
+value|(0x2u<< 16)
 end_define
 
 begin_comment
@@ -7899,7 +7899,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_TRDIR
-value|((unsigned int) 0x1<< 18)
+value|(0x1u<< 18)
 end_define
 
 begin_comment
@@ -7910,7 +7910,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_TRTYP
-value|((unsigned int) 0x3<< 19)
+value|(0x3u<< 19)
 end_define
 
 begin_comment
@@ -7921,7 +7921,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_TRTYP_BLOCK
-value|((unsigned int) 0x0<< 19)
+value|(0x0u<< 19)
 end_define
 
 begin_comment
@@ -7932,7 +7932,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_TRTYP_MULTIPLE
-value|((unsigned int) 0x1<< 19)
+value|(0x1u<< 19)
 end_define
 
 begin_comment
@@ -7943,7 +7943,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_TRTYP_STREAM
-value|((unsigned int) 0x2<< 19)
+value|(0x2u<< 19)
 end_define
 
 begin_comment
@@ -7958,7 +7958,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_CMDRDY
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -7969,7 +7969,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_RXRDY
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -7980,7 +7980,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_TXRDY
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -7991,7 +7991,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_BLKE
-value|((unsigned int) 0x1<<  3)
+value|(0x1u<<  3)
 end_define
 
 begin_comment
@@ -8002,7 +8002,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_DTIP
-value|((unsigned int) 0x1<<  4)
+value|(0x1u<<  4)
 end_define
 
 begin_comment
@@ -8013,7 +8013,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_NOTBUSY
-value|((unsigned int) 0x1<<  5)
+value|(0x1u<<  5)
 end_define
 
 begin_comment
@@ -8024,7 +8024,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_ENDRX
-value|((unsigned int) 0x1<<  6)
+value|(0x1u<<  6)
 end_define
 
 begin_comment
@@ -8035,7 +8035,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_ENDTX
-value|((unsigned int) 0x1<<  7)
+value|(0x1u<<  7)
 end_define
 
 begin_comment
@@ -8046,7 +8046,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_RXBUFF
-value|((unsigned int) 0x1<< 14)
+value|(0x1u<< 14)
 end_define
 
 begin_comment
@@ -8057,7 +8057,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_TXBUFE
-value|((unsigned int) 0x1<< 15)
+value|(0x1u<< 15)
 end_define
 
 begin_comment
@@ -8068,7 +8068,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_RINDE
-value|((unsigned int) 0x1<< 16)
+value|(0x1u<< 16)
 end_define
 
 begin_comment
@@ -8079,7 +8079,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_RDIRE
-value|((unsigned int) 0x1<< 17)
+value|(0x1u<< 17)
 end_define
 
 begin_comment
@@ -8090,7 +8090,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_RCRCE
-value|((unsigned int) 0x1<< 18)
+value|(0x1u<< 18)
 end_define
 
 begin_comment
@@ -8101,7 +8101,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_RENDE
-value|((unsigned int) 0x1<< 19)
+value|(0x1u<< 19)
 end_define
 
 begin_comment
@@ -8112,7 +8112,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_RTOE
-value|((unsigned int) 0x1<< 20)
+value|(0x1u<< 20)
 end_define
 
 begin_comment
@@ -8123,7 +8123,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_DCRCE
-value|((unsigned int) 0x1<< 21)
+value|(0x1u<< 21)
 end_define
 
 begin_comment
@@ -8134,7 +8134,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_DTOE
-value|((unsigned int) 0x1<< 22)
+value|(0x1u<< 22)
 end_define
 
 begin_comment
@@ -8145,7 +8145,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_OVRE
-value|((unsigned int) 0x1<< 30)
+value|(0x1u<< 30)
 end_define
 
 begin_comment
@@ -8156,7 +8156,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_MCI_UNRE
-value|((unsigned int) 0x1<< 31)
+value|(0x1u<< 31)
 end_define
 
 begin_comment
@@ -8279,7 +8279,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_FRM_NUM
-value|((unsigned int) 0x7FF<<  0)
+value|(0x7FFu<<  0)
 end_define
 
 begin_comment
@@ -8290,7 +8290,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_FRM_ERR
-value|((unsigned int) 0x1<< 16)
+value|(0x1u<< 16)
 end_define
 
 begin_comment
@@ -8301,7 +8301,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_FRM_OK
-value|((unsigned int) 0x1<< 17)
+value|(0x1u<< 17)
 end_define
 
 begin_comment
@@ -8316,7 +8316,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_FADDEN
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -8327,7 +8327,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_CONFG
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -8338,7 +8338,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_RMWUPE
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -8349,7 +8349,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_RSMINPR
-value|((unsigned int) 0x1<<  3)
+value|(0x1u<<  3)
 end_define
 
 begin_comment
@@ -8364,7 +8364,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_FADD
-value|((unsigned int) 0xFF<<  0)
+value|(0xFFu<<  0)
 end_define
 
 begin_comment
@@ -8375,7 +8375,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_FEN
-value|((unsigned int) 0x1<<  8)
+value|(0x1u<<  8)
 end_define
 
 begin_comment
@@ -8390,7 +8390,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_EPINT0
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -8401,7 +8401,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_EPINT1
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -8412,7 +8412,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_EPINT2
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -8423,7 +8423,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_EPINT3
-value|((unsigned int) 0x1<<  3)
+value|(0x1u<<  3)
 end_define
 
 begin_comment
@@ -8434,7 +8434,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_EPINT4
-value|((unsigned int) 0x1<<  4)
+value|(0x1u<<  4)
 end_define
 
 begin_comment
@@ -8445,7 +8445,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_EPINT5
-value|((unsigned int) 0x1<<  5)
+value|(0x1u<<  5)
 end_define
 
 begin_comment
@@ -8456,7 +8456,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_EPINT6
-value|((unsigned int) 0x1<<  6)
+value|(0x1u<<  6)
 end_define
 
 begin_comment
@@ -8467,7 +8467,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_EPINT7
-value|((unsigned int) 0x1<<  7)
+value|(0x1u<<  7)
 end_define
 
 begin_comment
@@ -8478,7 +8478,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_RXSUSP
-value|((unsigned int) 0x1<<  8)
+value|(0x1u<<  8)
 end_define
 
 begin_comment
@@ -8489,7 +8489,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_RXRSM
-value|((unsigned int) 0x1<<  9)
+value|(0x1u<<  9)
 end_define
 
 begin_comment
@@ -8500,7 +8500,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_EXTRSM
-value|((unsigned int) 0x1<< 10)
+value|(0x1u<< 10)
 end_define
 
 begin_comment
@@ -8511,7 +8511,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_SOFINT
-value|((unsigned int) 0x1<< 11)
+value|(0x1u<< 11)
 end_define
 
 begin_comment
@@ -8522,7 +8522,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_WAKEUP
-value|((unsigned int) 0x1<< 13)
+value|(0x1u<< 13)
 end_define
 
 begin_comment
@@ -8545,7 +8545,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_ENDBUSRES
-value|((unsigned int) 0x1<< 12)
+value|(0x1u<< 12)
 end_define
 
 begin_comment
@@ -8564,7 +8564,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_EP0
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -8575,7 +8575,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_EP1
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -8586,7 +8586,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_EP2
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -8597,7 +8597,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_EP3
-value|((unsigned int) 0x1<<  3)
+value|(0x1u<<  3)
 end_define
 
 begin_comment
@@ -8608,7 +8608,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_EP4
-value|((unsigned int) 0x1<<  4)
+value|(0x1u<<  4)
 end_define
 
 begin_comment
@@ -8619,7 +8619,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_EP5
-value|((unsigned int) 0x1<<  5)
+value|(0x1u<<  5)
 end_define
 
 begin_comment
@@ -8630,7 +8630,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_EP6
-value|((unsigned int) 0x1<<  6)
+value|(0x1u<<  6)
 end_define
 
 begin_comment
@@ -8641,7 +8641,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_EP7
-value|((unsigned int) 0x1<<  7)
+value|(0x1u<<  7)
 end_define
 
 begin_comment
@@ -8656,7 +8656,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_TXCOMP
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -8667,7 +8667,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_RX_DATA_BK0
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -8678,7 +8678,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_RXSETUP
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -8689,7 +8689,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_ISOERROR
-value|((unsigned int) 0x1<<  3)
+value|(0x1u<<  3)
 end_define
 
 begin_comment
@@ -8700,7 +8700,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_TXPKTRDY
-value|((unsigned int) 0x1<<  4)
+value|(0x1u<<  4)
 end_define
 
 begin_comment
@@ -8711,7 +8711,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_FORCESTALL
-value|((unsigned int) 0x1<<  5)
+value|(0x1u<<  5)
 end_define
 
 begin_comment
@@ -8722,7 +8722,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_RX_DATA_BK1
-value|((unsigned int) 0x1<<  6)
+value|(0x1u<<  6)
 end_define
 
 begin_comment
@@ -8733,7 +8733,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_DIR
-value|((unsigned int) 0x1<<  7)
+value|(0x1u<<  7)
 end_define
 
 begin_comment
@@ -8744,7 +8744,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_EPTYPE
-value|((unsigned int) 0x7<<  8)
+value|(0x7u<<  8)
 end_define
 
 begin_comment
@@ -8755,7 +8755,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_EPTYPE_CTRL
-value|((unsigned int) 0x0<<  8)
+value|(0x0u<<  8)
 end_define
 
 begin_comment
@@ -8766,7 +8766,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_EPTYPE_ISO_OUT
-value|((unsigned int) 0x1<<  8)
+value|(0x1u<<  8)
 end_define
 
 begin_comment
@@ -8777,7 +8777,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_EPTYPE_BULK_OUT
-value|((unsigned int) 0x2<<  8)
+value|(0x2u<<  8)
 end_define
 
 begin_comment
@@ -8788,7 +8788,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_EPTYPE_INT_OUT
-value|((unsigned int) 0x3<<  8)
+value|(0x3u<<  8)
 end_define
 
 begin_comment
@@ -8799,7 +8799,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_EPTYPE_ISO_IN
-value|((unsigned int) 0x5<<  8)
+value|(0x5u<<  8)
 end_define
 
 begin_comment
@@ -8810,7 +8810,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_EPTYPE_BULK_IN
-value|((unsigned int) 0x6<<  8)
+value|(0x6u<<  8)
 end_define
 
 begin_comment
@@ -8821,7 +8821,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_EPTYPE_INT_IN
-value|((unsigned int) 0x7<<  8)
+value|(0x7u<<  8)
 end_define
 
 begin_comment
@@ -8832,7 +8832,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_DTGLE
-value|((unsigned int) 0x1<< 11)
+value|(0x1u<< 11)
 end_define
 
 begin_comment
@@ -8843,7 +8843,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_EPEDS
-value|((unsigned int) 0x1<< 15)
+value|(0x1u<< 15)
 end_define
 
 begin_comment
@@ -8854,7 +8854,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_UDP_RXBYTECNT
-value|((unsigned int) 0x7FF<< 16)
+value|(0x7FFu<< 16)
 end_define
 
 begin_comment
@@ -8941,7 +8941,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_CLKEN
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -8952,7 +8952,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_CLKDIS
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -8963,7 +8963,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_SWTRG
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -8978,7 +8978,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_CPCSTOP
-value|((unsigned int) 0x1<<  6)
+value|(0x1u<<  6)
 end_define
 
 begin_comment
@@ -8989,7 +8989,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_CPCDIS
-value|((unsigned int) 0x1<<  7)
+value|(0x1u<<  7)
 end_define
 
 begin_comment
@@ -9000,7 +9000,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_EEVTEDG
-value|((unsigned int) 0x3<<  8)
+value|(0x3u<<  8)
 end_define
 
 begin_comment
@@ -9011,7 +9011,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_EEVTEDG_NONE
-value|((unsigned int) 0x0<<  8)
+value|(0x0u<<  8)
 end_define
 
 begin_comment
@@ -9022,7 +9022,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_EEVTEDG_RISING
-value|((unsigned int) 0x1<<  8)
+value|(0x1u<<  8)
 end_define
 
 begin_comment
@@ -9033,7 +9033,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_EEVTEDG_FALLING
-value|((unsigned int) 0x2<<  8)
+value|(0x2u<<  8)
 end_define
 
 begin_comment
@@ -9044,7 +9044,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_EEVTEDG_BOTH
-value|((unsigned int) 0x3<<  8)
+value|(0x3u<<  8)
 end_define
 
 begin_comment
@@ -9055,7 +9055,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_EEVT
-value|((unsigned int) 0x3<< 10)
+value|(0x3u<< 10)
 end_define
 
 begin_comment
@@ -9066,7 +9066,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_EEVT_NONE
-value|((unsigned int) 0x0<< 10)
+value|(0x0u<< 10)
 end_define
 
 begin_comment
@@ -9077,7 +9077,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_EEVT_RISING
-value|((unsigned int) 0x1<< 10)
+value|(0x1u<< 10)
 end_define
 
 begin_comment
@@ -9088,7 +9088,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_EEVT_FALLING
-value|((unsigned int) 0x2<< 10)
+value|(0x2u<< 10)
 end_define
 
 begin_comment
@@ -9099,7 +9099,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_EEVT_BOTH
-value|((unsigned int) 0x3<< 10)
+value|(0x3u<< 10)
 end_define
 
 begin_comment
@@ -9110,7 +9110,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_ENETRG
-value|((unsigned int) 0x1<< 12)
+value|(0x1u<< 12)
 end_define
 
 begin_comment
@@ -9121,7 +9121,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_WAVESEL
-value|((unsigned int) 0x3<< 13)
+value|(0x3u<< 13)
 end_define
 
 begin_comment
@@ -9132,7 +9132,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_WAVESEL_UP
-value|((unsigned int) 0x0<< 13)
+value|(0x0u<< 13)
 end_define
 
 begin_comment
@@ -9143,7 +9143,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_WAVESEL_UP_AUTO
-value|((unsigned int) 0x1<< 13)
+value|(0x1u<< 13)
 end_define
 
 begin_comment
@@ -9154,7 +9154,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_WAVESEL_UPDOWN
-value|((unsigned int) 0x2<< 13)
+value|(0x2u<< 13)
 end_define
 
 begin_comment
@@ -9165,7 +9165,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_WAVESEL_UPDOWN_AUTO
-value|((unsigned int) 0x3<< 13)
+value|(0x3u<< 13)
 end_define
 
 begin_comment
@@ -9176,7 +9176,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_CPCTRG
-value|((unsigned int) 0x1<< 14)
+value|(0x1u<< 14)
 end_define
 
 begin_comment
@@ -9187,7 +9187,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_WAVE
-value|((unsigned int) 0x1<< 15)
+value|(0x1u<< 15)
 end_define
 
 begin_comment
@@ -9198,7 +9198,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_ACPA
-value|((unsigned int) 0x3<< 16)
+value|(0x3u<< 16)
 end_define
 
 begin_comment
@@ -9209,7 +9209,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_ACPA_NONE
-value|((unsigned int) 0x0<< 16)
+value|(0x0u<< 16)
 end_define
 
 begin_comment
@@ -9220,7 +9220,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_ACPA_SET
-value|((unsigned int) 0x1<< 16)
+value|(0x1u<< 16)
 end_define
 
 begin_comment
@@ -9231,7 +9231,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_ACPA_CLEAR
-value|((unsigned int) 0x2<< 16)
+value|(0x2u<< 16)
 end_define
 
 begin_comment
@@ -9242,7 +9242,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_ACPA_TOGGLE
-value|((unsigned int) 0x3<< 16)
+value|(0x3u<< 16)
 end_define
 
 begin_comment
@@ -9253,7 +9253,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_ACPC
-value|((unsigned int) 0x3<< 18)
+value|(0x3u<< 18)
 end_define
 
 begin_comment
@@ -9264,7 +9264,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_ACPC_NONE
-value|((unsigned int) 0x0<< 18)
+value|(0x0u<< 18)
 end_define
 
 begin_comment
@@ -9275,7 +9275,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_ACPC_SET
-value|((unsigned int) 0x1<< 18)
+value|(0x1u<< 18)
 end_define
 
 begin_comment
@@ -9286,7 +9286,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_ACPC_CLEAR
-value|((unsigned int) 0x2<< 18)
+value|(0x2u<< 18)
 end_define
 
 begin_comment
@@ -9297,7 +9297,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_ACPC_TOGGLE
-value|((unsigned int) 0x3<< 18)
+value|(0x3u<< 18)
 end_define
 
 begin_comment
@@ -9308,7 +9308,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_AEEVT
-value|((unsigned int) 0x3<< 20)
+value|(0x3u<< 20)
 end_define
 
 begin_comment
@@ -9319,7 +9319,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_AEEVT_NONE
-value|((unsigned int) 0x0<< 20)
+value|(0x0u<< 20)
 end_define
 
 begin_comment
@@ -9330,7 +9330,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_AEEVT_SET
-value|((unsigned int) 0x1<< 20)
+value|(0x1u<< 20)
 end_define
 
 begin_comment
@@ -9341,7 +9341,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_AEEVT_CLEAR
-value|((unsigned int) 0x2<< 20)
+value|(0x2u<< 20)
 end_define
 
 begin_comment
@@ -9352,7 +9352,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_AEEVT_TOGGLE
-value|((unsigned int) 0x3<< 20)
+value|(0x3u<< 20)
 end_define
 
 begin_comment
@@ -9363,7 +9363,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_ASWTRG
-value|((unsigned int) 0x3<< 22)
+value|(0x3u<< 22)
 end_define
 
 begin_comment
@@ -9374,7 +9374,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_ASWTRG_NONE
-value|((unsigned int) 0x0<< 22)
+value|(0x0u<< 22)
 end_define
 
 begin_comment
@@ -9385,7 +9385,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_ASWTRG_SET
-value|((unsigned int) 0x1<< 22)
+value|(0x1u<< 22)
 end_define
 
 begin_comment
@@ -9396,7 +9396,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_ASWTRG_CLEAR
-value|((unsigned int) 0x2<< 22)
+value|(0x2u<< 22)
 end_define
 
 begin_comment
@@ -9407,7 +9407,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_ASWTRG_TOGGLE
-value|((unsigned int) 0x3<< 22)
+value|(0x3u<< 22)
 end_define
 
 begin_comment
@@ -9418,7 +9418,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_BCPB
-value|((unsigned int) 0x3<< 24)
+value|(0x3u<< 24)
 end_define
 
 begin_comment
@@ -9429,7 +9429,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_BCPB_NONE
-value|((unsigned int) 0x0<< 24)
+value|(0x0u<< 24)
 end_define
 
 begin_comment
@@ -9440,7 +9440,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_BCPB_SET
-value|((unsigned int) 0x1<< 24)
+value|(0x1u<< 24)
 end_define
 
 begin_comment
@@ -9451,7 +9451,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_BCPB_CLEAR
-value|((unsigned int) 0x2<< 24)
+value|(0x2u<< 24)
 end_define
 
 begin_comment
@@ -9462,7 +9462,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_BCPB_TOGGLE
-value|((unsigned int) 0x3<< 24)
+value|(0x3u<< 24)
 end_define
 
 begin_comment
@@ -9473,7 +9473,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_BCPC
-value|((unsigned int) 0x3<< 26)
+value|(0x3u<< 26)
 end_define
 
 begin_comment
@@ -9484,7 +9484,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_BCPC_NONE
-value|((unsigned int) 0x0<< 26)
+value|(0x0u<< 26)
 end_define
 
 begin_comment
@@ -9495,7 +9495,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_BCPC_SET
-value|((unsigned int) 0x1<< 26)
+value|(0x1u<< 26)
 end_define
 
 begin_comment
@@ -9506,7 +9506,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_BCPC_CLEAR
-value|((unsigned int) 0x2<< 26)
+value|(0x2u<< 26)
 end_define
 
 begin_comment
@@ -9517,7 +9517,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_BCPC_TOGGLE
-value|((unsigned int) 0x3<< 26)
+value|(0x3u<< 26)
 end_define
 
 begin_comment
@@ -9528,7 +9528,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_BEEVT
-value|((unsigned int) 0x3<< 28)
+value|(0x3u<< 28)
 end_define
 
 begin_comment
@@ -9539,7 +9539,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_BEEVT_NONE
-value|((unsigned int) 0x0<< 28)
+value|(0x0u<< 28)
 end_define
 
 begin_comment
@@ -9550,7 +9550,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_BEEVT_SET
-value|((unsigned int) 0x1<< 28)
+value|(0x1u<< 28)
 end_define
 
 begin_comment
@@ -9561,7 +9561,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_BEEVT_CLEAR
-value|((unsigned int) 0x2<< 28)
+value|(0x2u<< 28)
 end_define
 
 begin_comment
@@ -9572,7 +9572,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_BEEVT_TOGGLE
-value|((unsigned int) 0x3<< 28)
+value|(0x3u<< 28)
 end_define
 
 begin_comment
@@ -9583,7 +9583,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_BSWTRG
-value|((unsigned int) 0x3<< 30)
+value|(0x3u<< 30)
 end_define
 
 begin_comment
@@ -9594,7 +9594,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_BSWTRG_NONE
-value|((unsigned int) 0x0<< 30)
+value|(0x0u<< 30)
 end_define
 
 begin_comment
@@ -9605,7 +9605,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_BSWTRG_SET
-value|((unsigned int) 0x1<< 30)
+value|(0x1u<< 30)
 end_define
 
 begin_comment
@@ -9616,7 +9616,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_BSWTRG_CLEAR
-value|((unsigned int) 0x2<< 30)
+value|(0x2u<< 30)
 end_define
 
 begin_comment
@@ -9627,7 +9627,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_BSWTRG_TOGGLE
-value|((unsigned int) 0x3<< 30)
+value|(0x3u<< 30)
 end_define
 
 begin_comment
@@ -9642,7 +9642,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_COVFS
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -9653,7 +9653,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_LOVRS
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -9664,7 +9664,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_CPAS
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -9675,7 +9675,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_CPBS
-value|((unsigned int) 0x1<<  3)
+value|(0x1u<<  3)
 end_define
 
 begin_comment
@@ -9686,7 +9686,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_CPCS
-value|((unsigned int) 0x1<<  4)
+value|(0x1u<<  4)
 end_define
 
 begin_comment
@@ -9697,7 +9697,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_LDRAS
-value|((unsigned int) 0x1<<  5)
+value|(0x1u<<  5)
 end_define
 
 begin_comment
@@ -9708,7 +9708,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_LDRBS
-value|((unsigned int) 0x1<<  6)
+value|(0x1u<<  6)
 end_define
 
 begin_comment
@@ -9719,7 +9719,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_ETRCS
-value|((unsigned int) 0x1<<  7)
+value|(0x1u<<  7)
 end_define
 
 begin_comment
@@ -9730,7 +9730,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_ETRGS
-value|((unsigned int) 0x1<< 16)
+value|(0x1u<< 16)
 end_define
 
 begin_comment
@@ -9741,7 +9741,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_MTIOA
-value|((unsigned int) 0x1<< 17)
+value|(0x1u<< 17)
 end_define
 
 begin_comment
@@ -9752,7 +9752,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TC_MTIOB
-value|((unsigned int) 0x1<< 18)
+value|(0x1u<< 18)
 end_define
 
 begin_comment
@@ -9845,7 +9845,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TCB_SYNC
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -9860,7 +9860,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TCB_TC0XC0S
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -9871,7 +9871,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TCB_TC0XC0S_TCLK0
-value|((unsigned int) 0x0)
+value|0x0u
 end_define
 
 begin_comment
@@ -9882,7 +9882,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TCB_TC0XC0S_NONE
-value|((unsigned int) 0x1)
+value|0x1u
 end_define
 
 begin_comment
@@ -9893,7 +9893,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TCB_TC0XC0S_TIOA1
-value|((unsigned int) 0x2)
+value|0x2u
 end_define
 
 begin_comment
@@ -9904,7 +9904,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TCB_TC0XC0S_TIOA2
-value|((unsigned int) 0x3)
+value|0x3u
 end_define
 
 begin_comment
@@ -9915,7 +9915,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TCB_TC1XC1S
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -9926,7 +9926,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TCB_TC1XC1S_TCLK1
-value|((unsigned int) 0x0<<  2)
+value|(0x0u<<  2)
 end_define
 
 begin_comment
@@ -9937,7 +9937,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TCB_TC1XC1S_NONE
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -9948,7 +9948,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TCB_TC1XC1S_TIOA0
-value|((unsigned int) 0x2<<  2)
+value|(0x2u<<  2)
 end_define
 
 begin_comment
@@ -9959,7 +9959,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TCB_TC1XC1S_TIOA2
-value|((unsigned int) 0x3<<  2)
+value|(0x3u<<  2)
 end_define
 
 begin_comment
@@ -9970,7 +9970,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TCB_TC2XC2S
-value|((unsigned int) 0x1<<  4)
+value|(0x1u<<  4)
 end_define
 
 begin_comment
@@ -9981,7 +9981,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TCB_TC2XC2S_TCLK2
-value|((unsigned int) 0x0<<  4)
+value|(0x0u<<  4)
 end_define
 
 begin_comment
@@ -9992,7 +9992,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TCB_TC2XC2S_NONE
-value|((unsigned int) 0x1<<  4)
+value|(0x1u<<  4)
 end_define
 
 begin_comment
@@ -10003,7 +10003,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TCB_TC2XC2S_TIOA0
-value|((unsigned int) 0x2<<  4)
+value|(0x2u<<  4)
 end_define
 
 begin_comment
@@ -10014,7 +10014,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_TCB_TC2XC2S_TIOA2
-value|((unsigned int) 0x3<<  4)
+value|(0x3u<<  4)
 end_define
 
 begin_comment
@@ -10351,7 +10351,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_LB
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -10362,7 +10362,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_LBL
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -10373,7 +10373,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_RE
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -10384,7 +10384,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_TE
-value|((unsigned int) 0x1<<  3)
+value|(0x1u<<  3)
 end_define
 
 begin_comment
@@ -10395,7 +10395,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_MPE
-value|((unsigned int) 0x1<<  4)
+value|(0x1u<<  4)
 end_define
 
 begin_comment
@@ -10406,7 +10406,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_CSR
-value|((unsigned int) 0x1<<  5)
+value|(0x1u<<  5)
 end_define
 
 begin_comment
@@ -10417,7 +10417,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_ISR
-value|((unsigned int) 0x1<<  6)
+value|(0x1u<<  6)
 end_define
 
 begin_comment
@@ -10428,7 +10428,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_WES
-value|((unsigned int) 0x1<<  7)
+value|(0x1u<<  7)
 end_define
 
 begin_comment
@@ -10439,7 +10439,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_BP
-value|((unsigned int) 0x1<<  8)
+value|(0x1u<<  8)
 end_define
 
 begin_comment
@@ -10454,7 +10454,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_SPD
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -10465,7 +10465,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_FD
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -10476,7 +10476,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_BR
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -10487,7 +10487,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_CAF
-value|((unsigned int) 0x1<<  4)
+value|(0x1u<<  4)
 end_define
 
 begin_comment
@@ -10498,7 +10498,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_NBC
-value|((unsigned int) 0x1<<  5)
+value|(0x1u<<  5)
 end_define
 
 begin_comment
@@ -10509,7 +10509,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_MTI
-value|((unsigned int) 0x1<<  6)
+value|(0x1u<<  6)
 end_define
 
 begin_comment
@@ -10520,7 +10520,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_UNI
-value|((unsigned int) 0x1<<  7)
+value|(0x1u<<  7)
 end_define
 
 begin_comment
@@ -10531,7 +10531,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_BIG
-value|((unsigned int) 0x1<<  8)
+value|(0x1u<<  8)
 end_define
 
 begin_comment
@@ -10542,7 +10542,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_EAE
-value|((unsigned int) 0x1<<  9)
+value|(0x1u<<  9)
 end_define
 
 begin_comment
@@ -10553,7 +10553,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_CLK
-value|((unsigned int) 0x3<< 10)
+value|(0x3u<< 10)
 end_define
 
 begin_comment
@@ -10564,7 +10564,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_CLK_HCLK_8
-value|((unsigned int) 0x0<< 10)
+value|(0x0u<< 10)
 end_define
 
 begin_comment
@@ -10575,7 +10575,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_CLK_HCLK_16
-value|((unsigned int) 0x1<< 10)
+value|(0x1u<< 10)
 end_define
 
 begin_comment
@@ -10586,7 +10586,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_CLK_HCLK_32
-value|((unsigned int) 0x2<< 10)
+value|(0x2u<< 10)
 end_define
 
 begin_comment
@@ -10597,7 +10597,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_CLK_HCLK_64
-value|((unsigned int) 0x3<< 10)
+value|(0x3u<< 10)
 end_define
 
 begin_comment
@@ -10608,7 +10608,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_RTY
-value|((unsigned int) 0x1<< 12)
+value|(0x1u<< 12)
 end_define
 
 begin_comment
@@ -10619,7 +10619,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_RMII
-value|((unsigned int) 0x1<< 13)
+value|(0x1u<< 13)
 end_define
 
 begin_comment
@@ -10634,7 +10634,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_MDIO
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -10645,7 +10645,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_IDLE
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -10660,7 +10660,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_LEN
-value|((unsigned int) 0x7FF<<  0)
+value|(0x7FFu<<  0)
 end_define
 
 begin_comment
@@ -10671,7 +10671,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_NCRC
-value|((unsigned int) 0x1<< 15)
+value|(0x1u<< 15)
 end_define
 
 begin_comment
@@ -10686,7 +10686,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_OVR
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -10697,7 +10697,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_COL
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -10708,7 +10708,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_RLE
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -10719,7 +10719,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_TXIDLE
-value|((unsigned int) 0x1<<  3)
+value|(0x1u<<  3)
 end_define
 
 begin_comment
@@ -10730,7 +10730,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_BNQ
-value|((unsigned int) 0x1<<  4)
+value|(0x1u<<  4)
 end_define
 
 begin_comment
@@ -10741,7 +10741,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_COMP
-value|((unsigned int) 0x1<<  5)
+value|(0x1u<<  5)
 end_define
 
 begin_comment
@@ -10752,7 +10752,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_UND
-value|((unsigned int) 0x1<<  6)
+value|(0x1u<<  6)
 end_define
 
 begin_comment
@@ -10767,7 +10767,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_BNA
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -10778,7 +10778,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_REC
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -10793,7 +10793,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_DONE
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -10804,7 +10804,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_RCOM
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -10815,7 +10815,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_RBNA
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -10826,7 +10826,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_TOVR
-value|((unsigned int) 0x1<<  3)
+value|(0x1u<<  3)
 end_define
 
 begin_comment
@@ -10837,7 +10837,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_TUND
-value|((unsigned int) 0x1<<  4)
+value|(0x1u<<  4)
 end_define
 
 begin_comment
@@ -10848,7 +10848,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_RTRY
-value|((unsigned int) 0x1<<  5)
+value|(0x1u<<  5)
 end_define
 
 begin_comment
@@ -10859,7 +10859,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_TBRE
-value|((unsigned int) 0x1<<  6)
+value|(0x1u<<  6)
 end_define
 
 begin_comment
@@ -10870,7 +10870,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_TCOM
-value|((unsigned int) 0x1<<  7)
+value|(0x1u<<  7)
 end_define
 
 begin_comment
@@ -10881,7 +10881,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_TIDLE
-value|((unsigned int) 0x1<<  8)
+value|(0x1u<<  8)
 end_define
 
 begin_comment
@@ -10892,7 +10892,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_LINK
-value|((unsigned int) 0x1<<  9)
+value|(0x1u<<  9)
 end_define
 
 begin_comment
@@ -10903,7 +10903,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_ROVR
-value|((unsigned int) 0x1<< 10)
+value|(0x1u<< 10)
 end_define
 
 begin_comment
@@ -10914,7 +10914,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_HRESP
-value|((unsigned int) 0x1<< 11)
+value|(0x1u<< 11)
 end_define
 
 begin_comment
@@ -10941,7 +10941,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_DATA
-value|((unsigned int) 0xFFFF<<  0)
+value|(0xFFFFu<<  0)
 end_define
 
 begin_comment
@@ -10952,7 +10952,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_CODE
-value|((unsigned int) 0x3<< 16)
+value|(0x3u<< 16)
 end_define
 
 begin_comment
@@ -10963,7 +10963,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_REGA
-value|((unsigned int) 0x1F<< 18)
+value|(0x1Fu<< 18)
 end_define
 
 begin_comment
@@ -10974,7 +10974,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_PHYA
-value|((unsigned int) 0x1F<< 23)
+value|(0x1Fu<< 23)
 end_define
 
 begin_comment
@@ -10985,7 +10985,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_RW
-value|((unsigned int) 0x3<< 28)
+value|(0x3u<< 28)
 end_define
 
 begin_comment
@@ -10996,7 +10996,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_HIGH
-value|((unsigned int) 0x1<< 30)
+value|(0x1u<< 30)
 end_define
 
 begin_comment
@@ -11007,7 +11007,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EMAC_LOW
-value|((unsigned int) 0x1<< 31)
+value|(0x1u<< 31)
 end_define
 
 begin_comment
@@ -11055,7 +11055,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EBI_CS0A
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -11066,7 +11066,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EBI_CS0A_SMC
-value|((unsigned int) 0x0)
+value|0x0u
 end_define
 
 begin_comment
@@ -11077,7 +11077,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EBI_CS0A_BFC
-value|((unsigned int) 0x1)
+value|0x1u
 end_define
 
 begin_comment
@@ -11088,7 +11088,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EBI_CS1A
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -11099,7 +11099,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EBI_CS1A_SMC
-value|((unsigned int) 0x0<<  1)
+value|(0x0u<<  1)
 end_define
 
 begin_comment
@@ -11110,7 +11110,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EBI_CS1A_SDRAMC
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -11121,7 +11121,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EBI_CS3A
-value|((unsigned int) 0x1<<  3)
+value|(0x1u<<  3)
 end_define
 
 begin_comment
@@ -11132,7 +11132,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EBI_CS3A_SMC
-value|((unsigned int) 0x0<<  3)
+value|(0x0u<<  3)
 end_define
 
 begin_comment
@@ -11143,7 +11143,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EBI_CS3A_SMC_SmartMedia
-value|((unsigned int) 0x1<<  3)
+value|(0x1u<<  3)
 end_define
 
 begin_comment
@@ -11154,7 +11154,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EBI_CS4A
-value|((unsigned int) 0x1<<  4)
+value|(0x1u<<  4)
 end_define
 
 begin_comment
@@ -11165,7 +11165,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EBI_CS4A_SMC
-value|((unsigned int) 0x0<<  4)
+value|(0x0u<<  4)
 end_define
 
 begin_comment
@@ -11176,7 +11176,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EBI_CS4A_SMC_CompactFlash
-value|((unsigned int) 0x1<<  4)
+value|(0x1u<<  4)
 end_define
 
 begin_comment
@@ -11191,7 +11191,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EBI_DBPUC
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -11202,7 +11202,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_EBI_EBSEN
-value|((unsigned int) 0x1<<  1)
+value|(0x1u<<  1)
 end_define
 
 begin_comment
@@ -11249,7 +11249,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SMC2_NWS
-value|((unsigned int) 0x7F<<  0)
+value|(0x7Fu<<  0)
 end_define
 
 begin_comment
@@ -11260,7 +11260,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SMC2_WSEN
-value|((unsigned int) 0x1<<  7)
+value|(0x1u<<  7)
 end_define
 
 begin_comment
@@ -11271,7 +11271,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SMC2_TDF
-value|((unsigned int) 0xF<<  8)
+value|(0xFu<<  8)
 end_define
 
 begin_comment
@@ -11282,7 +11282,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SMC2_BAT
-value|((unsigned int) 0x1<< 12)
+value|(0x1u<< 12)
 end_define
 
 begin_comment
@@ -11293,7 +11293,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SMC2_DBW
-value|((unsigned int) 0x1<< 13)
+value|(0x1u<< 13)
 end_define
 
 begin_comment
@@ -11304,7 +11304,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SMC2_DBW_16
-value|((unsigned int) 0x1<< 13)
+value|(0x1u<< 13)
 end_define
 
 begin_comment
@@ -11315,7 +11315,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SMC2_DBW_8
-value|((unsigned int) 0x2<< 13)
+value|(0x2u<< 13)
 end_define
 
 begin_comment
@@ -11326,7 +11326,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SMC2_DRP
-value|((unsigned int) 0x1<< 15)
+value|(0x1u<< 15)
 end_define
 
 begin_comment
@@ -11337,7 +11337,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SMC2_ACSS
-value|((unsigned int) 0x3<< 16)
+value|(0x3u<< 16)
 end_define
 
 begin_comment
@@ -11348,7 +11348,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SMC2_ACSS_STANDARD
-value|((unsigned int) 0x0<< 16)
+value|(0x0u<< 16)
 end_define
 
 begin_comment
@@ -11359,7 +11359,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SMC2_ACSS_1_CYCLE
-value|((unsigned int) 0x1<< 16)
+value|(0x1u<< 16)
 end_define
 
 begin_comment
@@ -11370,7 +11370,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SMC2_ACSS_2_CYCLES
-value|((unsigned int) 0x2<< 16)
+value|(0x2u<< 16)
 end_define
 
 begin_comment
@@ -11381,7 +11381,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SMC2_ACSS_3_CYCLES
-value|((unsigned int) 0x3<< 16)
+value|(0x3u<< 16)
 end_define
 
 begin_comment
@@ -11392,7 +11392,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SMC2_RWSETUP
-value|((unsigned int) 0x7<< 24)
+value|(0x7u<< 24)
 end_define
 
 begin_comment
@@ -11403,7 +11403,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SMC2_RWHOLD
-value|((unsigned int) 0x7<< 29)
+value|(0x7u<< 29)
 end_define
 
 begin_comment
@@ -11479,7 +11479,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_MODE
-value|((unsigned int) 0xF<<  0)
+value|(0xFu<<  0)
 end_define
 
 begin_comment
@@ -11490,7 +11490,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_MODE_NORMAL_CMD
-value|((unsigned int) 0x0)
+value|0x0u
 end_define
 
 begin_comment
@@ -11501,7 +11501,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_MODE_NOP_CMD
-value|((unsigned int) 0x1)
+value|0x1u
 end_define
 
 begin_comment
@@ -11512,7 +11512,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_MODE_PRCGALL_CMD
-value|((unsigned int) 0x2)
+value|0x2u
 end_define
 
 begin_comment
@@ -11523,7 +11523,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_MODE_LMR_CMD
-value|((unsigned int) 0x3)
+value|0x3u
 end_define
 
 begin_comment
@@ -11534,7 +11534,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_MODE_RFSH_CMD
-value|((unsigned int) 0x4)
+value|0x4u
 end_define
 
 begin_comment
@@ -11545,7 +11545,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_DBW
-value|((unsigned int) 0x1<<  4)
+value|(0x1u<<  4)
 end_define
 
 begin_comment
@@ -11556,7 +11556,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_DBW_32_BITS
-value|((unsigned int) 0x0<<  4)
+value|(0x0u<<  4)
 end_define
 
 begin_comment
@@ -11567,7 +11567,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_DBW_16_BITS
-value|((unsigned int) 0x1<<  4)
+value|(0x1u<<  4)
 end_define
 
 begin_comment
@@ -11582,7 +11582,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_COUNT
-value|((unsigned int) 0xFFF<<  0)
+value|(0xFFFu<<  0)
 end_define
 
 begin_comment
@@ -11597,7 +11597,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_NC
-value|((unsigned int) 0x3<<  0)
+value|(0x3u<<  0)
 end_define
 
 begin_comment
@@ -11608,7 +11608,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_NC_8
-value|((unsigned int) 0x0)
+value|0x0u
 end_define
 
 begin_comment
@@ -11619,7 +11619,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_NC_9
-value|((unsigned int) 0x1)
+value|0x1u
 end_define
 
 begin_comment
@@ -11630,7 +11630,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_NC_10
-value|((unsigned int) 0x2)
+value|0x2u
 end_define
 
 begin_comment
@@ -11641,7 +11641,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_NC_11
-value|((unsigned int) 0x3)
+value|0x3u
 end_define
 
 begin_comment
@@ -11652,7 +11652,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_NR
-value|((unsigned int) 0x3<<  2)
+value|(0x3u<<  2)
 end_define
 
 begin_comment
@@ -11663,7 +11663,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_NR_11
-value|((unsigned int) 0x0<<  2)
+value|(0x0u<<  2)
 end_define
 
 begin_comment
@@ -11674,7 +11674,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_NR_12
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -11685,7 +11685,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_NR_13
-value|((unsigned int) 0x2<<  2)
+value|(0x2u<<  2)
 end_define
 
 begin_comment
@@ -11696,7 +11696,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_NB
-value|((unsigned int) 0x1<<  4)
+value|(0x1u<<  4)
 end_define
 
 begin_comment
@@ -11707,7 +11707,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_NB_2_BANKS
-value|((unsigned int) 0x0<<  4)
+value|(0x0u<<  4)
 end_define
 
 begin_comment
@@ -11718,7 +11718,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_NB_4_BANKS
-value|((unsigned int) 0x1<<  4)
+value|(0x1u<<  4)
 end_define
 
 begin_comment
@@ -11729,7 +11729,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_CAS
-value|((unsigned int) 0x3<<  5)
+value|(0x3u<<  5)
 end_define
 
 begin_comment
@@ -11740,7 +11740,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_CAS_2
-value|((unsigned int) 0x2<<  5)
+value|(0x2u<<  5)
 end_define
 
 begin_comment
@@ -11751,7 +11751,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_TWR
-value|((unsigned int) 0xF<<  7)
+value|(0xFu<<  7)
 end_define
 
 begin_comment
@@ -11762,7 +11762,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_TRC
-value|((unsigned int) 0xF<< 11)
+value|(0xFu<< 11)
 end_define
 
 begin_comment
@@ -11773,7 +11773,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_TRP
-value|((unsigned int) 0xF<< 15)
+value|(0xFu<< 15)
 end_define
 
 begin_comment
@@ -11784,7 +11784,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_TRCD
-value|((unsigned int) 0xF<< 19)
+value|(0xFu<< 19)
 end_define
 
 begin_comment
@@ -11795,7 +11795,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_TRAS
-value|((unsigned int) 0xF<< 23)
+value|(0xFu<< 23)
 end_define
 
 begin_comment
@@ -11806,7 +11806,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_TXSR
-value|((unsigned int) 0xF<< 27)
+value|(0xFu<< 27)
 end_define
 
 begin_comment
@@ -11821,7 +11821,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_SRCB
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -11836,7 +11836,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_LPCB
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -11851,7 +11851,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_SDRC_RES
-value|((unsigned int) 0x1<<  0)
+value|(0x1u<<  0)
 end_define
 
 begin_comment
@@ -11907,7 +11907,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_BFC_BFCOM
-value|((unsigned int) 0x3<<  0)
+value|(0x3u<<  0)
 end_define
 
 begin_comment
@@ -11918,7 +11918,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_BFC_BFCOM_DISABLED
-value|((unsigned int) 0x0)
+value|0x0u
 end_define
 
 begin_comment
@@ -11929,7 +11929,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_BFC_BFCOM_ASYNC
-value|((unsigned int) 0x1)
+value|0x1u
 end_define
 
 begin_comment
@@ -11940,7 +11940,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_BFC_BFCOM_BURST_READ
-value|((unsigned int) 0x2)
+value|0x2u
 end_define
 
 begin_comment
@@ -11951,7 +11951,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_BFC_BFCC
-value|((unsigned int) 0x3<<  2)
+value|(0x3u<<  2)
 end_define
 
 begin_comment
@@ -11962,7 +11962,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_BFC_BFCC_MCK
-value|((unsigned int) 0x1<<  2)
+value|(0x1u<<  2)
 end_define
 
 begin_comment
@@ -11973,7 +11973,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_BFC_BFCC_MCK_DIV_2
-value|((unsigned int) 0x2<<  2)
+value|(0x2u<<  2)
 end_define
 
 begin_comment
@@ -11984,7 +11984,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_BFC_BFCC_MCK_DIV_4
-value|((unsigned int) 0x3<<  2)
+value|(0x3u<<  2)
 end_define
 
 begin_comment
@@ -11995,7 +11995,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_BFC_AVL
-value|((unsigned int) 0xF<<  4)
+value|(0xFu<<  4)
 end_define
 
 begin_comment
@@ -12006,7 +12006,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_BFC_PAGES
-value|((unsigned int) 0x7<<  8)
+value|(0x7u<<  8)
 end_define
 
 begin_comment
@@ -12017,7 +12017,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_BFC_PAGES_NO_PAGE
-value|((unsigned int) 0x0<<  8)
+value|(0x0u<<  8)
 end_define
 
 begin_comment
@@ -12028,7 +12028,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_BFC_PAGES_16
-value|((unsigned int) 0x1<<  8)
+value|(0x1u<<  8)
 end_define
 
 begin_comment
@@ -12039,7 +12039,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_BFC_PAGES_32
-value|((unsigned int) 0x2<<  8)
+value|(0x2u<<  8)
 end_define
 
 begin_comment
@@ -12050,7 +12050,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_BFC_PAGES_64
-value|((unsigned int) 0x3<<  8)
+value|(0x3u<<  8)
 end_define
 
 begin_comment
@@ -12061,7 +12061,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_BFC_PAGES_128
-value|((unsigned int) 0x4<<  8)
+value|(0x4u<<  8)
 end_define
 
 begin_comment
@@ -12072,7 +12072,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_BFC_PAGES_256
-value|((unsigned int) 0x5<<  8)
+value|(0x5u<<  8)
 end_define
 
 begin_comment
@@ -12083,7 +12083,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_BFC_PAGES_512
-value|((unsigned int) 0x6<<  8)
+value|(0x6u<<  8)
 end_define
 
 begin_comment
@@ -12094,7 +12094,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_BFC_PAGES_1024
-value|((unsigned int) 0x7<<  8)
+value|(0x7u<<  8)
 end_define
 
 begin_comment
@@ -12105,7 +12105,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_BFC_OEL
-value|((unsigned int) 0x3<< 12)
+value|(0x3u<< 12)
 end_define
 
 begin_comment
@@ -12116,7 +12116,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_BFC_BAAEN
-value|((unsigned int) 0x1<< 16)
+value|(0x1u<< 16)
 end_define
 
 begin_comment
@@ -12127,7 +12127,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_BFC_BFOEH
-value|((unsigned int) 0x1<< 17)
+value|(0x1u<< 17)
 end_define
 
 begin_comment
@@ -12138,7 +12138,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_BFC_MUXEN
-value|((unsigned int) 0x1<< 18)
+value|(0x1u<< 18)
 end_define
 
 begin_comment
@@ -12149,7 +12149,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_BFC_RDYEN
-value|((unsigned int) 0x1<< 19)
+value|(0x1u<< 19)
 end_define
 
 begin_comment
@@ -18752,7 +18752,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA0
-value|((unsigned int) 1<<  0)
+value|(1u<<  0)
 end_define
 
 begin_comment
@@ -18763,7 +18763,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA0_MISO
-value|((unsigned int) AT91C_PIO_PA0)
+value|(AT91C_PIO_PA0)
 end_define
 
 begin_comment
@@ -18774,7 +18774,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA0_PCK3
-value|((unsigned int) AT91C_PIO_PA0)
+value|(AT91C_PIO_PA0)
 end_define
 
 begin_comment
@@ -18785,7 +18785,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA1
-value|((unsigned int) 1<<  1)
+value|(1u<<  1)
 end_define
 
 begin_comment
@@ -18796,7 +18796,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA1_MOSI
-value|((unsigned int) AT91C_PIO_PA1)
+value|(AT91C_PIO_PA1)
 end_define
 
 begin_comment
@@ -18807,7 +18807,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA1_PCK0
-value|((unsigned int) AT91C_PIO_PA1)
+value|(AT91C_PIO_PA1)
 end_define
 
 begin_comment
@@ -18818,7 +18818,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA10
-value|((unsigned int) 1<< 10)
+value|(1u<< 10)
 end_define
 
 begin_comment
@@ -18829,7 +18829,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA10_ETX1
-value|((unsigned int) AT91C_PIO_PA10)
+value|(AT91C_PIO_PA10)
 end_define
 
 begin_comment
@@ -18840,7 +18840,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA10_MCDB1
-value|((unsigned int) AT91C_PIO_PA10)
+value|(AT91C_PIO_PA10)
 end_define
 
 begin_comment
@@ -18851,7 +18851,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA11
-value|((unsigned int) 1<< 11)
+value|(1u<< 11)
 end_define
 
 begin_comment
@@ -18862,7 +18862,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA11_ECRS_ECRSDV
-value|((unsigned int) AT91C_PIO_PA11)
+value|(AT91C_PIO_PA11)
 end_define
 
 begin_comment
@@ -18873,7 +18873,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA11_MCDB2
-value|((unsigned int) AT91C_PIO_PA11)
+value|(AT91C_PIO_PA11)
 end_define
 
 begin_comment
@@ -18884,7 +18884,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA12
-value|((unsigned int) 1<< 12)
+value|(1u<< 12)
 end_define
 
 begin_comment
@@ -18895,7 +18895,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA12_ERX0
-value|((unsigned int) AT91C_PIO_PA12)
+value|(AT91C_PIO_PA12)
 end_define
 
 begin_comment
@@ -18906,7 +18906,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA12_MCDB3
-value|((unsigned int) AT91C_PIO_PA12)
+value|(AT91C_PIO_PA12)
 end_define
 
 begin_comment
@@ -18917,7 +18917,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA13
-value|((unsigned int) 1<< 13)
+value|(1u<< 13)
 end_define
 
 begin_comment
@@ -18928,7 +18928,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA13_ERX1
-value|((unsigned int) AT91C_PIO_PA13)
+value|(AT91C_PIO_PA13)
 end_define
 
 begin_comment
@@ -18939,7 +18939,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA13_TCLK0
-value|((unsigned int) AT91C_PIO_PA13)
+value|(AT91C_PIO_PA13)
 end_define
 
 begin_comment
@@ -18950,7 +18950,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA14
-value|((unsigned int) 1<< 14)
+value|(1u<< 14)
 end_define
 
 begin_comment
@@ -18961,7 +18961,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA14_ERXER
-value|((unsigned int) AT91C_PIO_PA14)
+value|(AT91C_PIO_PA14)
 end_define
 
 begin_comment
@@ -18972,7 +18972,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA14_TCLK1
-value|((unsigned int) AT91C_PIO_PA14)
+value|(AT91C_PIO_PA14)
 end_define
 
 begin_comment
@@ -18983,7 +18983,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA15
-value|((unsigned int) 1<< 15)
+value|(1u<< 15)
 end_define
 
 begin_comment
@@ -18994,7 +18994,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA15_EMDC
-value|((unsigned int) AT91C_PIO_PA15)
+value|(AT91C_PIO_PA15)
 end_define
 
 begin_comment
@@ -19005,7 +19005,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA15_TCLK2
-value|((unsigned int) AT91C_PIO_PA15)
+value|(AT91C_PIO_PA15)
 end_define
 
 begin_comment
@@ -19016,7 +19016,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA16
-value|((unsigned int) 1<< 16)
+value|(1u<< 16)
 end_define
 
 begin_comment
@@ -19027,7 +19027,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA16_EMDIO
-value|((unsigned int) AT91C_PIO_PA16)
+value|(AT91C_PIO_PA16)
 end_define
 
 begin_comment
@@ -19038,7 +19038,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA16_IRQ6
-value|((unsigned int) AT91C_PIO_PA16)
+value|(AT91C_PIO_PA16)
 end_define
 
 begin_comment
@@ -19049,7 +19049,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA17
-value|((unsigned int) 1<< 17)
+value|(1u<< 17)
 end_define
 
 begin_comment
@@ -19060,7 +19060,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA17_TXD0
-value|((unsigned int) AT91C_PIO_PA17)
+value|(AT91C_PIO_PA17)
 end_define
 
 begin_comment
@@ -19071,7 +19071,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA17_TIOA0
-value|((unsigned int) AT91C_PIO_PA17)
+value|(AT91C_PIO_PA17)
 end_define
 
 begin_comment
@@ -19082,7 +19082,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA18
-value|((unsigned int) 1<< 18)
+value|(1u<< 18)
 end_define
 
 begin_comment
@@ -19093,7 +19093,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA18_RXD0
-value|((unsigned int) AT91C_PIO_PA18)
+value|(AT91C_PIO_PA18)
 end_define
 
 begin_comment
@@ -19104,7 +19104,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA18_TIOB0
-value|((unsigned int) AT91C_PIO_PA18)
+value|(AT91C_PIO_PA18)
 end_define
 
 begin_comment
@@ -19115,7 +19115,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA19
-value|((unsigned int) 1<< 19)
+value|(1u<< 19)
 end_define
 
 begin_comment
@@ -19126,7 +19126,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA19_SCK0
-value|((unsigned int) AT91C_PIO_PA19)
+value|(AT91C_PIO_PA19)
 end_define
 
 begin_comment
@@ -19137,7 +19137,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA19_TIOA1
-value|((unsigned int) AT91C_PIO_PA19)
+value|(AT91C_PIO_PA19)
 end_define
 
 begin_comment
@@ -19148,7 +19148,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA2
-value|((unsigned int) 1<<  2)
+value|(1u<<  2)
 end_define
 
 begin_comment
@@ -19159,7 +19159,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA2_SPCK
-value|((unsigned int) AT91C_PIO_PA2)
+value|(AT91C_PIO_PA2)
 end_define
 
 begin_comment
@@ -19170,7 +19170,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA2_IRQ4
-value|((unsigned int) AT91C_PIO_PA2)
+value|(AT91C_PIO_PA2)
 end_define
 
 begin_comment
@@ -19181,7 +19181,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA20
-value|((unsigned int) 1<< 20)
+value|(1u<< 20)
 end_define
 
 begin_comment
@@ -19192,7 +19192,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA20_CTS0
-value|((unsigned int) AT91C_PIO_PA20)
+value|(AT91C_PIO_PA20)
 end_define
 
 begin_comment
@@ -19203,7 +19203,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA20_TIOB1
-value|((unsigned int) AT91C_PIO_PA20)
+value|(AT91C_PIO_PA20)
 end_define
 
 begin_comment
@@ -19214,7 +19214,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA21
-value|((unsigned int) 1<< 21)
+value|(1u<< 21)
 end_define
 
 begin_comment
@@ -19225,7 +19225,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA21_RTS0
-value|((unsigned int) AT91C_PIO_PA21)
+value|(AT91C_PIO_PA21)
 end_define
 
 begin_comment
@@ -19236,7 +19236,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA21_TIOA2
-value|((unsigned int) AT91C_PIO_PA21)
+value|(AT91C_PIO_PA21)
 end_define
 
 begin_comment
@@ -19247,7 +19247,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA22
-value|((unsigned int) 1<< 22)
+value|(1u<< 22)
 end_define
 
 begin_comment
@@ -19258,7 +19258,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA22_RXD2
-value|((unsigned int) AT91C_PIO_PA22)
+value|(AT91C_PIO_PA22)
 end_define
 
 begin_comment
@@ -19269,7 +19269,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA22_TIOB2
-value|((unsigned int) AT91C_PIO_PA22)
+value|(AT91C_PIO_PA22)
 end_define
 
 begin_comment
@@ -19280,7 +19280,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA23
-value|((unsigned int) 1<< 23)
+value|(1u<< 23)
 end_define
 
 begin_comment
@@ -19291,7 +19291,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA23_TXD2
-value|((unsigned int) AT91C_PIO_PA23)
+value|(AT91C_PIO_PA23)
 end_define
 
 begin_comment
@@ -19302,7 +19302,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA23_IRQ3
-value|((unsigned int) AT91C_PIO_PA23)
+value|(AT91C_PIO_PA23)
 end_define
 
 begin_comment
@@ -19313,7 +19313,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA24
-value|((unsigned int) 1<< 24)
+value|(1u<< 24)
 end_define
 
 begin_comment
@@ -19324,7 +19324,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA24_SCK2
-value|((unsigned int) AT91C_PIO_PA24)
+value|(AT91C_PIO_PA24)
 end_define
 
 begin_comment
@@ -19335,7 +19335,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA24_PCK1
-value|((unsigned int) AT91C_PIO_PA24)
+value|(AT91C_PIO_PA24)
 end_define
 
 begin_comment
@@ -19346,7 +19346,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA25
-value|((unsigned int) 1<< 25)
+value|(1u<< 25)
 end_define
 
 begin_comment
@@ -19357,7 +19357,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA25_TWD
-value|((unsigned int) AT91C_PIO_PA25)
+value|(AT91C_PIO_PA25)
 end_define
 
 begin_comment
@@ -19368,7 +19368,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA25_IRQ2
-value|((unsigned int) AT91C_PIO_PA25)
+value|(AT91C_PIO_PA25)
 end_define
 
 begin_comment
@@ -19379,7 +19379,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA26
-value|((unsigned int) 1<< 26)
+value|(1u<< 26)
 end_define
 
 begin_comment
@@ -19390,7 +19390,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA26_TWCK
-value|((unsigned int) AT91C_PIO_PA26)
+value|(AT91C_PIO_PA26)
 end_define
 
 begin_comment
@@ -19401,7 +19401,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA26_IRQ1
-value|((unsigned int) AT91C_PIO_PA26)
+value|(AT91C_PIO_PA26)
 end_define
 
 begin_comment
@@ -19412,7 +19412,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA27
-value|((unsigned int) 1<< 27)
+value|(1u<< 27)
 end_define
 
 begin_comment
@@ -19423,7 +19423,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA27_MCCK
-value|((unsigned int) AT91C_PIO_PA27)
+value|(AT91C_PIO_PA27)
 end_define
 
 begin_comment
@@ -19434,7 +19434,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA27_TCLK3
-value|((unsigned int) AT91C_PIO_PA27)
+value|(AT91C_PIO_PA27)
 end_define
 
 begin_comment
@@ -19445,7 +19445,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA28
-value|((unsigned int) 1<< 28)
+value|(1u<< 28)
 end_define
 
 begin_comment
@@ -19456,7 +19456,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA28_MCCDA
-value|((unsigned int) AT91C_PIO_PA28)
+value|(AT91C_PIO_PA28)
 end_define
 
 begin_comment
@@ -19467,7 +19467,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA28_TCLK4
-value|((unsigned int) AT91C_PIO_PA28)
+value|(AT91C_PIO_PA28)
 end_define
 
 begin_comment
@@ -19478,7 +19478,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA29
-value|((unsigned int) 1<< 29)
+value|(1u<< 29)
 end_define
 
 begin_comment
@@ -19489,7 +19489,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA29_MCDA0
-value|((unsigned int) AT91C_PIO_PA29)
+value|(AT91C_PIO_PA29)
 end_define
 
 begin_comment
@@ -19500,7 +19500,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA29_TCLK5
-value|((unsigned int) AT91C_PIO_PA29)
+value|(AT91C_PIO_PA29)
 end_define
 
 begin_comment
@@ -19511,7 +19511,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA3
-value|((unsigned int) 1<<  3)
+value|(1u<<  3)
 end_define
 
 begin_comment
@@ -19522,7 +19522,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA3_NPCS0
-value|((unsigned int) AT91C_PIO_PA3)
+value|(AT91C_PIO_PA3)
 end_define
 
 begin_comment
@@ -19533,7 +19533,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA3_IRQ5
-value|((unsigned int) AT91C_PIO_PA3)
+value|(AT91C_PIO_PA3)
 end_define
 
 begin_comment
@@ -19544,7 +19544,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA30
-value|((unsigned int) 1<< 30)
+value|(1u<< 30)
 end_define
 
 begin_comment
@@ -19555,7 +19555,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA30_DRXD
-value|((unsigned int) AT91C_PIO_PA30)
+value|(AT91C_PIO_PA30)
 end_define
 
 begin_comment
@@ -19566,7 +19566,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA30_CTS2
-value|((unsigned int) AT91C_PIO_PA30)
+value|(AT91C_PIO_PA30)
 end_define
 
 begin_comment
@@ -19577,7 +19577,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA31
-value|((unsigned int) 1<< 31)
+value|(1u<< 31)
 end_define
 
 begin_comment
@@ -19588,7 +19588,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA31_DTXD
-value|((unsigned int) AT91C_PIO_PA31)
+value|(AT91C_PIO_PA31)
 end_define
 
 begin_comment
@@ -19599,7 +19599,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA31_RTS2
-value|((unsigned int) AT91C_PIO_PA31)
+value|(AT91C_PIO_PA31)
 end_define
 
 begin_comment
@@ -19610,7 +19610,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA4
-value|((unsigned int) 1<<  4)
+value|(1u<<  4)
 end_define
 
 begin_comment
@@ -19621,7 +19621,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA4_NPCS1
-value|((unsigned int) AT91C_PIO_PA4)
+value|(AT91C_PIO_PA4)
 end_define
 
 begin_comment
@@ -19632,7 +19632,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA4_PCK1
-value|((unsigned int) AT91C_PIO_PA4)
+value|(AT91C_PIO_PA4)
 end_define
 
 begin_comment
@@ -19643,7 +19643,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA5
-value|((unsigned int) 1<<  5)
+value|(1u<<  5)
 end_define
 
 begin_comment
@@ -19654,7 +19654,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA5_NPCS2
-value|((unsigned int) AT91C_PIO_PA5)
+value|(AT91C_PIO_PA5)
 end_define
 
 begin_comment
@@ -19665,7 +19665,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA5_TXD3
-value|((unsigned int) AT91C_PIO_PA5)
+value|(AT91C_PIO_PA5)
 end_define
 
 begin_comment
@@ -19676,7 +19676,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA6
-value|((unsigned int) 1<<  6)
+value|(1u<<  6)
 end_define
 
 begin_comment
@@ -19687,7 +19687,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA6_NPCS3
-value|((unsigned int) AT91C_PIO_PA6)
+value|(AT91C_PIO_PA6)
 end_define
 
 begin_comment
@@ -19698,7 +19698,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA6_RXD3
-value|((unsigned int) AT91C_PIO_PA6)
+value|(AT91C_PIO_PA6)
 end_define
 
 begin_comment
@@ -19709,7 +19709,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA7
-value|((unsigned int) 1<<  7)
+value|(1u<<  7)
 end_define
 
 begin_comment
@@ -19720,7 +19720,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA7_ETXCK_EREFCK
-value|((unsigned int) AT91C_PIO_PA7)
+value|(AT91C_PIO_PA7)
 end_define
 
 begin_comment
@@ -19731,7 +19731,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA7_PCK2
-value|((unsigned int) AT91C_PIO_PA7)
+value|(AT91C_PIO_PA7)
 end_define
 
 begin_comment
@@ -19742,7 +19742,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA8
-value|((unsigned int) 1<<  8)
+value|(1u<<  8)
 end_define
 
 begin_comment
@@ -19753,7 +19753,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA8_ETXEN
-value|((unsigned int) AT91C_PIO_PA8)
+value|(AT91C_PIO_PA8)
 end_define
 
 begin_comment
@@ -19764,7 +19764,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA8_MCCDB
-value|((unsigned int) AT91C_PIO_PA8)
+value|(AT91C_PIO_PA8)
 end_define
 
 begin_comment
@@ -19775,7 +19775,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PA9
-value|((unsigned int) 1<<  9)
+value|(1u<<  9)
 end_define
 
 begin_comment
@@ -19786,7 +19786,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA9_ETX0
-value|((unsigned int) AT91C_PIO_PA9)
+value|(AT91C_PIO_PA9)
 end_define
 
 begin_comment
@@ -19797,7 +19797,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PA9_MCDB0
-value|((unsigned int) AT91C_PIO_PA9)
+value|(AT91C_PIO_PA9)
 end_define
 
 begin_comment
@@ -19808,7 +19808,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PB0
-value|((unsigned int) 1<<  0)
+value|(1u<<  0)
 end_define
 
 begin_comment
@@ -19819,7 +19819,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB0_TF0
-value|((unsigned int) AT91C_PIO_PB0)
+value|(AT91C_PIO_PB0)
 end_define
 
 begin_comment
@@ -19830,7 +19830,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB0_TIOB3
-value|((unsigned int) AT91C_PIO_PB0)
+value|(AT91C_PIO_PB0)
 end_define
 
 begin_comment
@@ -19841,7 +19841,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PB1
-value|((unsigned int) 1<<  1)
+value|(1u<<  1)
 end_define
 
 begin_comment
@@ -19852,7 +19852,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB1_TK0
-value|((unsigned int) AT91C_PIO_PB1)
+value|(AT91C_PIO_PB1)
 end_define
 
 begin_comment
@@ -19863,7 +19863,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB1_CTS3
-value|((unsigned int) AT91C_PIO_PB1)
+value|(AT91C_PIO_PB1)
 end_define
 
 begin_comment
@@ -19874,7 +19874,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PB10
-value|((unsigned int) 1<< 10)
+value|(1u<< 10)
 end_define
 
 begin_comment
@@ -19885,7 +19885,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB10_RK1
-value|((unsigned int) AT91C_PIO_PB10)
+value|(AT91C_PIO_PB10)
 end_define
 
 begin_comment
@@ -19896,7 +19896,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB10_TIOA5
-value|((unsigned int) AT91C_PIO_PB10)
+value|(AT91C_PIO_PB10)
 end_define
 
 begin_comment
@@ -19907,7 +19907,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PB11
-value|((unsigned int) 1<< 11)
+value|(1u<< 11)
 end_define
 
 begin_comment
@@ -19918,7 +19918,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB11_RF1
-value|((unsigned int) AT91C_PIO_PB11)
+value|(AT91C_PIO_PB11)
 end_define
 
 begin_comment
@@ -19929,7 +19929,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB11_TIOB5
-value|((unsigned int) AT91C_PIO_PB11)
+value|(AT91C_PIO_PB11)
 end_define
 
 begin_comment
@@ -19940,7 +19940,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PB12
-value|((unsigned int) 1<< 12)
+value|(1u<< 12)
 end_define
 
 begin_comment
@@ -19951,7 +19951,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB12_TF2
-value|((unsigned int) AT91C_PIO_PB12)
+value|(AT91C_PIO_PB12)
 end_define
 
 begin_comment
@@ -19962,7 +19962,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB12_ETX2
-value|((unsigned int) AT91C_PIO_PB12)
+value|(AT91C_PIO_PB12)
 end_define
 
 begin_comment
@@ -19973,7 +19973,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PB13
-value|((unsigned int) 1<< 13)
+value|(1u<< 13)
 end_define
 
 begin_comment
@@ -19984,7 +19984,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB13_TK2
-value|((unsigned int) AT91C_PIO_PB13)
+value|(AT91C_PIO_PB13)
 end_define
 
 begin_comment
@@ -19995,7 +19995,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB13_ETX3
-value|((unsigned int) AT91C_PIO_PB13)
+value|(AT91C_PIO_PB13)
 end_define
 
 begin_comment
@@ -20006,7 +20006,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PB14
-value|((unsigned int) 1<< 14)
+value|(1u<< 14)
 end_define
 
 begin_comment
@@ -20017,7 +20017,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB14_TD2
-value|((unsigned int) AT91C_PIO_PB14)
+value|(AT91C_PIO_PB14)
 end_define
 
 begin_comment
@@ -20028,7 +20028,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB14_ETXER
-value|((unsigned int) AT91C_PIO_PB14)
+value|(AT91C_PIO_PB14)
 end_define
 
 begin_comment
@@ -20039,7 +20039,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PB15
-value|((unsigned int) 1<< 15)
+value|(1u<< 15)
 end_define
 
 begin_comment
@@ -20050,7 +20050,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB15_RD2
-value|((unsigned int) AT91C_PIO_PB15)
+value|(AT91C_PIO_PB15)
 end_define
 
 begin_comment
@@ -20061,7 +20061,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB15_ERX2
-value|((unsigned int) AT91C_PIO_PB15)
+value|(AT91C_PIO_PB15)
 end_define
 
 begin_comment
@@ -20072,7 +20072,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PB16
-value|((unsigned int) 1<< 16)
+value|(1u<< 16)
 end_define
 
 begin_comment
@@ -20083,7 +20083,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB16_RK2
-value|((unsigned int) AT91C_PIO_PB16)
+value|(AT91C_PIO_PB16)
 end_define
 
 begin_comment
@@ -20094,7 +20094,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB16_ERX3
-value|((unsigned int) AT91C_PIO_PB16)
+value|(AT91C_PIO_PB16)
 end_define
 
 begin_comment
@@ -20105,7 +20105,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PB17
-value|((unsigned int) 1<< 17)
+value|(1u<< 17)
 end_define
 
 begin_comment
@@ -20116,7 +20116,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB17_RF2
-value|((unsigned int) AT91C_PIO_PB17)
+value|(AT91C_PIO_PB17)
 end_define
 
 begin_comment
@@ -20127,7 +20127,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB17_ERXDV
-value|((unsigned int) AT91C_PIO_PB17)
+value|(AT91C_PIO_PB17)
 end_define
 
 begin_comment
@@ -20138,7 +20138,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PB18
-value|((unsigned int) 1<< 18)
+value|(1u<< 18)
 end_define
 
 begin_comment
@@ -20149,7 +20149,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB18_RI1
-value|((unsigned int) AT91C_PIO_PB18)
+value|(AT91C_PIO_PB18)
 end_define
 
 begin_comment
@@ -20160,7 +20160,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB18_ECOL
-value|((unsigned int) AT91C_PIO_PB18)
+value|(AT91C_PIO_PB18)
 end_define
 
 begin_comment
@@ -20171,7 +20171,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PB19
-value|((unsigned int) 1<< 19)
+value|(1u<< 19)
 end_define
 
 begin_comment
@@ -20182,7 +20182,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB19_DTR1
-value|((unsigned int) AT91C_PIO_PB19)
+value|(AT91C_PIO_PB19)
 end_define
 
 begin_comment
@@ -20193,7 +20193,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB19_ERXCK
-value|((unsigned int) AT91C_PIO_PB19)
+value|(AT91C_PIO_PB19)
 end_define
 
 begin_comment
@@ -20204,7 +20204,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PB2
-value|((unsigned int) 1<<  2)
+value|(1u<<  2)
 end_define
 
 begin_comment
@@ -20215,7 +20215,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB2_TD0
-value|((unsigned int) AT91C_PIO_PB2)
+value|(AT91C_PIO_PB2)
 end_define
 
 begin_comment
@@ -20226,7 +20226,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB2_SCK3
-value|((unsigned int) AT91C_PIO_PB2)
+value|(AT91C_PIO_PB2)
 end_define
 
 begin_comment
@@ -20237,7 +20237,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PB20
-value|((unsigned int) 1<< 20)
+value|(1u<< 20)
 end_define
 
 begin_comment
@@ -20248,7 +20248,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB20_TXD1
-value|((unsigned int) AT91C_PIO_PB20)
+value|(AT91C_PIO_PB20)
 end_define
 
 begin_comment
@@ -20259,7 +20259,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PB21
-value|((unsigned int) 1<< 21)
+value|(1u<< 21)
 end_define
 
 begin_comment
@@ -20270,7 +20270,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB21_RXD1
-value|((unsigned int) AT91C_PIO_PB21)
+value|(AT91C_PIO_PB21)
 end_define
 
 begin_comment
@@ -20281,7 +20281,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PB22
-value|((unsigned int) 1<< 22)
+value|(1u<< 22)
 end_define
 
 begin_comment
@@ -20292,7 +20292,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB22_SCK1
-value|((unsigned int) AT91C_PIO_PB22)
+value|(AT91C_PIO_PB22)
 end_define
 
 begin_comment
@@ -20303,7 +20303,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PB23
-value|((unsigned int) 1<< 23)
+value|(1u<< 23)
 end_define
 
 begin_comment
@@ -20314,7 +20314,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB23_DCD1
-value|((unsigned int) AT91C_PIO_PB23)
+value|(AT91C_PIO_PB23)
 end_define
 
 begin_comment
@@ -20325,7 +20325,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PB24
-value|((unsigned int) 1<< 24)
+value|(1u<< 24)
 end_define
 
 begin_comment
@@ -20336,7 +20336,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB24_CTS1
-value|((unsigned int) AT91C_PIO_PB24)
+value|(AT91C_PIO_PB24)
 end_define
 
 begin_comment
@@ -20347,7 +20347,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PB25
-value|((unsigned int) 1<< 25)
+value|(1u<< 25)
 end_define
 
 begin_comment
@@ -20358,7 +20358,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB25_DSR1
-value|((unsigned int) AT91C_PIO_PB25)
+value|(AT91C_PIO_PB25)
 end_define
 
 begin_comment
@@ -20369,7 +20369,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB25_EF100
-value|((unsigned int) AT91C_PIO_PB25)
+value|(AT91C_PIO_PB25)
 end_define
 
 begin_comment
@@ -20380,7 +20380,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PB26
-value|((unsigned int) 1<< 26)
+value|(1u<< 26)
 end_define
 
 begin_comment
@@ -20391,7 +20391,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB26_RTS1
-value|((unsigned int) AT91C_PIO_PB26)
+value|(AT91C_PIO_PB26)
 end_define
 
 begin_comment
@@ -20402,7 +20402,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PB27
-value|((unsigned int) 1<< 27)
+value|(1u<< 27)
 end_define
 
 begin_comment
@@ -20413,7 +20413,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB27_PCK0
-value|((unsigned int) AT91C_PIO_PB27)
+value|(AT91C_PIO_PB27)
 end_define
 
 begin_comment
@@ -20424,7 +20424,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PB28
-value|((unsigned int) 1<< 28)
+value|(1u<< 28)
 end_define
 
 begin_comment
@@ -20435,7 +20435,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB28_FIQ
-value|((unsigned int) AT91C_PIO_PB28)
+value|(AT91C_PIO_PB28)
 end_define
 
 begin_comment
@@ -20446,7 +20446,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PB29
-value|((unsigned int) 1<< 29)
+value|(1u<< 29)
 end_define
 
 begin_comment
@@ -20457,7 +20457,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB29_IRQ0
-value|((unsigned int) AT91C_PIO_PB29)
+value|(AT91C_PIO_PB29)
 end_define
 
 begin_comment
@@ -20468,7 +20468,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PB3
-value|((unsigned int) 1<<  3)
+value|(1u<<  3)
 end_define
 
 begin_comment
@@ -20479,7 +20479,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB3_RD0
-value|((unsigned int) AT91C_PIO_PB3)
+value|(AT91C_PIO_PB3)
 end_define
 
 begin_comment
@@ -20490,7 +20490,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB3_MCDA1
-value|((unsigned int) AT91C_PIO_PB3)
+value|(AT91C_PIO_PB3)
 end_define
 
 begin_comment
@@ -20501,7 +20501,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PB4
-value|((unsigned int) 1<<  4)
+value|(1u<<  4)
 end_define
 
 begin_comment
@@ -20512,7 +20512,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB4_RK0
-value|((unsigned int) AT91C_PIO_PB4)
+value|(AT91C_PIO_PB4)
 end_define
 
 begin_comment
@@ -20523,7 +20523,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB4_MCDA2
-value|((unsigned int) AT91C_PIO_PB4)
+value|(AT91C_PIO_PB4)
 end_define
 
 begin_comment
@@ -20534,7 +20534,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PB5
-value|((unsigned int) 1<<  5)
+value|(1u<<  5)
 end_define
 
 begin_comment
@@ -20545,7 +20545,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB5_RF0
-value|((unsigned int) AT91C_PIO_PB5)
+value|(AT91C_PIO_PB5)
 end_define
 
 begin_comment
@@ -20556,7 +20556,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB5_MCDA3
-value|((unsigned int) AT91C_PIO_PB5)
+value|(AT91C_PIO_PB5)
 end_define
 
 begin_comment
@@ -20567,7 +20567,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PB6
-value|((unsigned int) 1<<  6)
+value|(1u<<  6)
 end_define
 
 begin_comment
@@ -20578,7 +20578,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB6_TF1
-value|((unsigned int) AT91C_PIO_PB6)
+value|(AT91C_PIO_PB6)
 end_define
 
 begin_comment
@@ -20589,7 +20589,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB6_TIOA3
-value|((unsigned int) AT91C_PIO_PB6)
+value|(AT91C_PIO_PB6)
 end_define
 
 begin_comment
@@ -20600,7 +20600,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PB7
-value|((unsigned int) 1<<  7)
+value|(1u<<  7)
 end_define
 
 begin_comment
@@ -20611,7 +20611,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB7_TK1
-value|((unsigned int) AT91C_PIO_PB7)
+value|(AT91C_PIO_PB7)
 end_define
 
 begin_comment
@@ -20622,7 +20622,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB7_TIOB3
-value|((unsigned int) AT91C_PIO_PB7)
+value|(AT91C_PIO_PB7)
 end_define
 
 begin_comment
@@ -20633,7 +20633,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PB8
-value|((unsigned int) 1<<  8)
+value|(1u<<  8)
 end_define
 
 begin_comment
@@ -20644,7 +20644,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB8_TD1
-value|((unsigned int) AT91C_PIO_PB8)
+value|(AT91C_PIO_PB8)
 end_define
 
 begin_comment
@@ -20655,7 +20655,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB8_TIOA4
-value|((unsigned int) AT91C_PIO_PB8)
+value|(AT91C_PIO_PB8)
 end_define
 
 begin_comment
@@ -20666,7 +20666,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PB9
-value|((unsigned int) 1<<  9)
+value|(1u<<  9)
 end_define
 
 begin_comment
@@ -20677,7 +20677,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB9_RD1
-value|((unsigned int) AT91C_PIO_PB9)
+value|(AT91C_PIO_PB9)
 end_define
 
 begin_comment
@@ -20688,7 +20688,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PB9_TIOB4
-value|((unsigned int) AT91C_PIO_PB9)
+value|(AT91C_PIO_PB9)
 end_define
 
 begin_comment
@@ -20699,7 +20699,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC0
-value|((unsigned int) 1<<  0)
+value|(1u<<  0)
 end_define
 
 begin_comment
@@ -20710,7 +20710,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PC0_BFCK
-value|((unsigned int) AT91C_PIO_PC0)
+value|(AT91C_PIO_PC0)
 end_define
 
 begin_comment
@@ -20721,7 +20721,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC1
-value|((unsigned int) 1<<  1)
+value|(1u<<  1)
 end_define
 
 begin_comment
@@ -20732,7 +20732,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PC1_BFRDY_SMOE
-value|((unsigned int) AT91C_PIO_PC1)
+value|(AT91C_PIO_PC1)
 end_define
 
 begin_comment
@@ -20743,7 +20743,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC10
-value|((unsigned int) 1<< 10)
+value|(1u<< 10)
 end_define
 
 begin_comment
@@ -20754,7 +20754,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PC10_NCS4_CFCS
-value|((unsigned int) AT91C_PIO_PC10)
+value|(AT91C_PIO_PC10)
 end_define
 
 begin_comment
@@ -20765,7 +20765,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC11
-value|((unsigned int) 1<< 11)
+value|(1u<< 11)
 end_define
 
 begin_comment
@@ -20776,7 +20776,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PC11_NCS5_CFCE1
-value|((unsigned int) AT91C_PIO_PC11)
+value|(AT91C_PIO_PC11)
 end_define
 
 begin_comment
@@ -20787,7 +20787,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC12
-value|((unsigned int) 1<< 12)
+value|(1u<< 12)
 end_define
 
 begin_comment
@@ -20798,7 +20798,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PC12_NCS6_CFCE2
-value|((unsigned int) AT91C_PIO_PC12)
+value|(AT91C_PIO_PC12)
 end_define
 
 begin_comment
@@ -20809,7 +20809,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC13
-value|((unsigned int) 1<< 13)
+value|(1u<< 13)
 end_define
 
 begin_comment
@@ -20820,7 +20820,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PC13_NCS7
-value|((unsigned int) AT91C_PIO_PC13)
+value|(AT91C_PIO_PC13)
 end_define
 
 begin_comment
@@ -20831,7 +20831,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC14
-value|((unsigned int) 1<< 14)
+value|(1u<< 14)
 end_define
 
 begin_comment
@@ -20842,7 +20842,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC15
-value|((unsigned int) 1<< 15)
+value|(1u<< 15)
 end_define
 
 begin_comment
@@ -20853,7 +20853,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC16
-value|((unsigned int) 1<< 16)
+value|(1u<< 16)
 end_define
 
 begin_comment
@@ -20864,7 +20864,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PC16_D16
-value|((unsigned int) AT91C_PIO_PC16)
+value|(AT91C_PIO_PC16)
 end_define
 
 begin_comment
@@ -20875,7 +20875,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC17
-value|((unsigned int) 1<< 17)
+value|(1u<< 17)
 end_define
 
 begin_comment
@@ -20886,7 +20886,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PC17_D17
-value|((unsigned int) AT91C_PIO_PC17)
+value|(AT91C_PIO_PC17)
 end_define
 
 begin_comment
@@ -20897,7 +20897,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC18
-value|((unsigned int) 1<< 18)
+value|(1u<< 18)
 end_define
 
 begin_comment
@@ -20908,7 +20908,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PC18_D18
-value|((unsigned int) AT91C_PIO_PC18)
+value|(AT91C_PIO_PC18)
 end_define
 
 begin_comment
@@ -20919,7 +20919,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC19
-value|((unsigned int) 1<< 19)
+value|(1u<< 19)
 end_define
 
 begin_comment
@@ -20930,7 +20930,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PC19_D19
-value|((unsigned int) AT91C_PIO_PC19)
+value|(AT91C_PIO_PC19)
 end_define
 
 begin_comment
@@ -20941,7 +20941,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC2
-value|((unsigned int) 1<<  2)
+value|(1u<<  2)
 end_define
 
 begin_comment
@@ -20952,7 +20952,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PC2_BFAVD
-value|((unsigned int) AT91C_PIO_PC2)
+value|(AT91C_PIO_PC2)u
 end_define
 
 begin_comment
@@ -20963,7 +20963,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC20
-value|((unsigned int) 1<< 20)
+value|(1u<< 20)
 end_define
 
 begin_comment
@@ -20974,7 +20974,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PC20_D20
-value|((unsigned int) AT91C_PIO_PC20)
+value|(AT91C_PIO_PC20)
 end_define
 
 begin_comment
@@ -20985,7 +20985,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC21
-value|((unsigned int) 1<< 21)
+value|(1u<< 21)
 end_define
 
 begin_comment
@@ -20996,7 +20996,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PC21_D21
-value|((unsigned int) AT91C_PIO_PC21)
+value|(AT91C_PIO_PC21)
 end_define
 
 begin_comment
@@ -21007,7 +21007,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC22
-value|((unsigned int) 1<< 22)
+value|(1u<< 22)
 end_define
 
 begin_comment
@@ -21018,7 +21018,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PC22_D22
-value|((unsigned int) AT91C_PIO_PC22)
+value|(AT91C_PIO_PC22)
 end_define
 
 begin_comment
@@ -21029,7 +21029,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC23
-value|((unsigned int) 1<< 23)
+value|(1u<< 23)
 end_define
 
 begin_comment
@@ -21040,7 +21040,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PC23_D23
-value|((unsigned int) AT91C_PIO_PC23)
+value|(AT91C_PIO_PC23)
 end_define
 
 begin_comment
@@ -21051,7 +21051,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC24
-value|((unsigned int) 1<< 24)
+value|(1u<< 24)
 end_define
 
 begin_comment
@@ -21062,7 +21062,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PC24_D24
-value|((unsigned int) AT91C_PIO_PC24)
+value|(AT91C_PIO_PC24)
 end_define
 
 begin_comment
@@ -21073,7 +21073,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC25
-value|((unsigned int) 1<< 25)
+value|(1u<< 25)
 end_define
 
 begin_comment
@@ -21084,7 +21084,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PC25_D25
-value|((unsigned int) AT91C_PIO_PC25)
+value|(AT91C_PIO_PC25)
 end_define
 
 begin_comment
@@ -21095,7 +21095,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC26
-value|((unsigned int) 1<< 26)
+value|(1u<< 26)
 end_define
 
 begin_comment
@@ -21106,7 +21106,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PC26_D26
-value|((unsigned int) AT91C_PIO_PC26)
+value|(AT91C_PIO_PC26)
 end_define
 
 begin_comment
@@ -21117,7 +21117,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC27
-value|((unsigned int) 1<< 27)
+value|(1u<< 27)
 end_define
 
 begin_comment
@@ -21128,7 +21128,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PC27_D27
-value|((unsigned int) AT91C_PIO_PC27)
+value|(AT91C_PIO_PC27)
 end_define
 
 begin_comment
@@ -21139,7 +21139,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC28
-value|((unsigned int) 1<< 28)
+value|(1u<< 28)
 end_define
 
 begin_comment
@@ -21150,7 +21150,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PC28_D28
-value|((unsigned int) AT91C_PIO_PC28)
+value|(AT91C_PIO_PC28)
 end_define
 
 begin_comment
@@ -21161,7 +21161,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC29
-value|((unsigned int) 1<< 29)
+value|(1u<< 29)
 end_define
 
 begin_comment
@@ -21172,7 +21172,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PC29_D29
-value|((unsigned int) AT91C_PIO_PC29)
+value|(AT91C_PIO_PC29)
 end_define
 
 begin_comment
@@ -21183,7 +21183,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC3
-value|((unsigned int) 1<<  3)
+value|(1u<<  3)
 end_define
 
 begin_comment
@@ -21194,7 +21194,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PC3_BFBAA_SMWE
-value|((unsigned int) AT91C_PIO_PC3)
+value|(AT91C_PIO_PC3)
 end_define
 
 begin_comment
@@ -21205,7 +21205,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC30
-value|((unsigned int) 1<< 30)
+value|(1u<< 30)
 end_define
 
 begin_comment
@@ -21216,7 +21216,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PC30_D30
-value|((unsigned int) AT91C_PIO_PC30)
+value|(AT91C_PIO_PC30)
 end_define
 
 begin_comment
@@ -21227,7 +21227,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC31
-value|((unsigned int) 1<< 31)
+value|(1u<< 31)
 end_define
 
 begin_comment
@@ -21238,7 +21238,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PC31_D31
-value|((unsigned int) AT91C_PIO_PC31)
+value|(AT91C_PIO_PC31)
 end_define
 
 begin_comment
@@ -21249,7 +21249,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC4
-value|((unsigned int) 1<<  4)
+value|(1u<<  4)
 end_define
 
 begin_comment
@@ -21260,7 +21260,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PC4_BFOE
-value|((unsigned int) AT91C_PIO_PC4)
+value|(AT91C_PIO_PC4)
 end_define
 
 begin_comment
@@ -21271,7 +21271,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC5
-value|((unsigned int) 1<<  5)
+value|(1u<<  5)
 end_define
 
 begin_comment
@@ -21282,7 +21282,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PC5_BFWE
-value|((unsigned int) AT91C_PIO_PC5)
+value|(AT91C_PIO_PC5)
 end_define
 
 begin_comment
@@ -21293,7 +21293,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC6
-value|((unsigned int) 1<<  6)
+value|(1u<<  6)
 end_define
 
 begin_comment
@@ -21304,7 +21304,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PC6_NWAIT
-value|((unsigned int) AT91C_PIO_PC6)
+value|(AT91C_PIO_PC6)
 end_define
 
 begin_comment
@@ -21315,7 +21315,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC7
-value|((unsigned int) 1<<  7)
+value|(1u<<  7)
 end_define
 
 begin_comment
@@ -21326,7 +21326,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PC7_A23
-value|((unsigned int) AT91C_PIO_PC7)
+value|(AT91C_PIO_PC7)
 end_define
 
 begin_comment
@@ -21337,7 +21337,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC8
-value|((unsigned int) 1<<  8)
+value|(1u<<  8)
 end_define
 
 begin_comment
@@ -21348,7 +21348,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PC8_A24
-value|((unsigned int) AT91C_PIO_PC8)
+value|(AT91C_PIO_PC8)
 end_define
 
 begin_comment
@@ -21359,7 +21359,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PC9
-value|((unsigned int) 1<<  9)
+value|(1u<<  9)
 end_define
 
 begin_comment
@@ -21370,7 +21370,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PC9_A25_CFRNW
-value|((unsigned int) AT91C_PIO_PC9)
+value|(AT91C_PIO_PC9)
 end_define
 
 begin_comment
@@ -21381,7 +21381,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PD0
-value|((unsigned int) 1<<  0)
+value|(1u<<  0)
 end_define
 
 begin_comment
@@ -21392,7 +21392,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD0_ETX0
-value|((unsigned int) AT91C_PIO_PD0)
+value|(AT91C_PIO_PD0)
 end_define
 
 begin_comment
@@ -21403,7 +21403,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PD1
-value|((unsigned int) 1<<  1)
+value|(1u<<  1)
 end_define
 
 begin_comment
@@ -21414,7 +21414,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD1_ETX1
-value|((unsigned int) AT91C_PIO_PD1)
+value|(AT91C_PIO_PD1)
 end_define
 
 begin_comment
@@ -21425,7 +21425,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PD10
-value|((unsigned int) 1<< 10)
+value|(1u<< 10)
 end_define
 
 begin_comment
@@ -21436,7 +21436,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD10_PCK3
-value|((unsigned int) AT91C_PIO_PD10)
+value|(AT91C_PIO_PD10)
 end_define
 
 begin_comment
@@ -21447,7 +21447,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD10_TPS1
-value|((unsigned int) AT91C_PIO_PD10)
+value|(AT91C_PIO_PD10)
 end_define
 
 begin_comment
@@ -21458,7 +21458,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PD11
-value|((unsigned int) 1<< 11)
+value|(1u<< 11)
 end_define
 
 begin_comment
@@ -21469,7 +21469,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD11_
-value|((unsigned int) AT91C_PIO_PD11)
+value|(AT91C_PIO_PD11)
 end_define
 
 begin_comment
@@ -21480,7 +21480,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD11_TPS2
-value|((unsigned int) AT91C_PIO_PD11)
+value|(AT91C_PIO_PD11)
 end_define
 
 begin_comment
@@ -21491,7 +21491,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PD12
-value|((unsigned int) 1<< 12)
+value|(1u<< 12)
 end_define
 
 begin_comment
@@ -21502,7 +21502,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD12_
-value|((unsigned int) AT91C_PIO_PD12)
+value|(AT91C_PIO_PD12)
 end_define
 
 begin_comment
@@ -21513,7 +21513,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD12_TPK0
-value|((unsigned int) AT91C_PIO_PD12)
+value|(AT91C_PIO_PD12)
 end_define
 
 begin_comment
@@ -21524,7 +21524,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PD13
-value|((unsigned int) 1<< 13)
+value|(1u<< 13)
 end_define
 
 begin_comment
@@ -21535,7 +21535,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD13_
-value|((unsigned int) AT91C_PIO_PD13)
+value|(AT91C_PIO_PD13)
 end_define
 
 begin_comment
@@ -21546,7 +21546,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD13_TPK1
-value|((unsigned int) AT91C_PIO_PD13)
+value|(AT91C_PIO_PD13)
 end_define
 
 begin_comment
@@ -21557,7 +21557,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PD14
-value|((unsigned int) 1<< 14)
+value|(1u<< 14)
 end_define
 
 begin_comment
@@ -21568,7 +21568,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD14_
-value|((unsigned int) AT91C_PIO_PD14)
+value|(AT91C_PIO_PD14)
 end_define
 
 begin_comment
@@ -21579,7 +21579,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD14_TPK2
-value|((unsigned int) AT91C_PIO_PD14)
+value|(AT91C_PIO_PD14)
 end_define
 
 begin_comment
@@ -21590,7 +21590,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PD15
-value|((unsigned int) 1<< 15)
+value|(1u<< 15)
 end_define
 
 begin_comment
@@ -21601,7 +21601,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD15_TD0
-value|((unsigned int) AT91C_PIO_PD15)
+value|(AT91C_PIO_PD15)
 end_define
 
 begin_comment
@@ -21612,7 +21612,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD15_TPK3
-value|((unsigned int) AT91C_PIO_PD15)
+value|(AT91C_PIO_PD15)
 end_define
 
 begin_comment
@@ -21623,7 +21623,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PD16
-value|((unsigned int) 1<< 16)
+value|(1u<< 16)
 end_define
 
 begin_comment
@@ -21634,7 +21634,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD16_TD1
-value|((unsigned int) AT91C_PIO_PD16)
+value|(AT91C_PIO_PD16)
 end_define
 
 begin_comment
@@ -21645,7 +21645,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD16_TPK4
-value|((unsigned int) AT91C_PIO_PD16)
+value|(AT91C_PIO_PD16)
 end_define
 
 begin_comment
@@ -21656,7 +21656,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PD17
-value|((unsigned int) 1<< 17)
+value|(1u<< 17)
 end_define
 
 begin_comment
@@ -21667,7 +21667,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD17_TD2
-value|((unsigned int) AT91C_PIO_PD17)
+value|(AT91C_PIO_PD17)
 end_define
 
 begin_comment
@@ -21678,7 +21678,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD17_TPK5
-value|((unsigned int) AT91C_PIO_PD17)
+value|(AT91C_PIO_PD17)
 end_define
 
 begin_comment
@@ -21689,7 +21689,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PD18
-value|((unsigned int) 1<< 18)
+value|(1u<< 18)
 end_define
 
 begin_comment
@@ -21700,7 +21700,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD18_NPCS1
-value|((unsigned int) AT91C_PIO_PD18)
+value|(AT91C_PIO_PD18)
 end_define
 
 begin_comment
@@ -21711,7 +21711,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD18_TPK6
-value|((unsigned int) AT91C_PIO_PD18)
+value|(AT91C_PIO_PD18)
 end_define
 
 begin_comment
@@ -21722,7 +21722,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PD19
-value|((unsigned int) 1<< 19)
+value|(1u<< 19)
 end_define
 
 begin_comment
@@ -21733,7 +21733,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD19_NPCS2
-value|((unsigned int) AT91C_PIO_PD19)
+value|(AT91C_PIO_PD19)
 end_define
 
 begin_comment
@@ -21744,7 +21744,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD19_TPK7
-value|((unsigned int) AT91C_PIO_PD19)
+value|(AT91C_PIO_PD19)
 end_define
 
 begin_comment
@@ -21755,7 +21755,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PD2
-value|((unsigned int) 1<<  2)
+value|(1u<<  2)
 end_define
 
 begin_comment
@@ -21766,7 +21766,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD2_ETX2
-value|((unsigned int) AT91C_PIO_PD2)
+value|(AT91C_PIO_PD2)
 end_define
 
 begin_comment
@@ -21777,7 +21777,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PD20
-value|((unsigned int) 1<< 20)
+value|(1u<< 20)
 end_define
 
 begin_comment
@@ -21788,7 +21788,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD20_NPCS3
-value|((unsigned int) AT91C_PIO_PD20)
+value|(AT91C_PIO_PD20)
 end_define
 
 begin_comment
@@ -21799,7 +21799,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD20_TPK8
-value|((unsigned int) AT91C_PIO_PD20)
+value|(AT91C_PIO_PD20)
 end_define
 
 begin_comment
@@ -21810,7 +21810,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PD21
-value|((unsigned int) 1<< 21)
+value|(1u<< 21)
 end_define
 
 begin_comment
@@ -21821,7 +21821,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD21_RTS0
-value|((unsigned int) AT91C_PIO_PD21)
+value|(AT91C_PIO_PD21)
 end_define
 
 begin_comment
@@ -21832,7 +21832,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD21_TPK9
-value|((unsigned int) AT91C_PIO_PD21)
+value|(AT91C_PIO_PD21)
 end_define
 
 begin_comment
@@ -21843,7 +21843,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PD22
-value|((unsigned int) 1<< 22)
+value|(1u<< 22)
 end_define
 
 begin_comment
@@ -21854,7 +21854,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD22_RTS1
-value|((unsigned int) AT91C_PIO_PD22)
+value|(AT91C_PIO_PD22)
 end_define
 
 begin_comment
@@ -21865,7 +21865,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD22_TPK10
-value|((unsigned int) AT91C_PIO_PD22)
+value|(AT91C_PIO_PD22)
 end_define
 
 begin_comment
@@ -21876,7 +21876,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PD23
-value|((unsigned int) 1<< 23)
+value|(1u<< 23)
 end_define
 
 begin_comment
@@ -21887,7 +21887,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD23_RTS2
-value|((unsigned int) AT91C_PIO_PD23)
+value|(AT91C_PIO_PD23)
 end_define
 
 begin_comment
@@ -21898,7 +21898,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD23_TPK11
-value|((unsigned int) AT91C_PIO_PD23)
+value|(AT91C_PIO_PD23)
 end_define
 
 begin_comment
@@ -21909,7 +21909,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PD24
-value|((unsigned int) 1<< 24)
+value|(1u<< 24)
 end_define
 
 begin_comment
@@ -21920,7 +21920,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD24_RTS3
-value|((unsigned int) AT91C_PIO_PD24)
+value|(AT91C_PIO_PD24)
 end_define
 
 begin_comment
@@ -21931,7 +21931,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD24_TPK12
-value|((unsigned int) AT91C_PIO_PD24)
+value|(AT91C_PIO_PD24)
 end_define
 
 begin_comment
@@ -21942,7 +21942,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PD25
-value|((unsigned int) 1<< 25)
+value|(1u<< 25)
 end_define
 
 begin_comment
@@ -21953,7 +21953,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD25_DTR1
-value|((unsigned int) AT91C_PIO_PD25)
+value|(AT91C_PIO_PD25)
 end_define
 
 begin_comment
@@ -21964,7 +21964,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD25_TPK13
-value|((unsigned int) AT91C_PIO_PD25)
+value|(AT91C_PIO_PD25)
 end_define
 
 begin_comment
@@ -21975,7 +21975,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PD26
-value|((unsigned int) 1<< 26)
+value|(1u<< 26)
 end_define
 
 begin_comment
@@ -21986,7 +21986,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD26_TPK14
-value|((unsigned int) AT91C_PIO_PD26)
+value|(AT91C_PIO_PD26)
 end_define
 
 begin_comment
@@ -21997,7 +21997,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PD27
-value|((unsigned int) 1<< 27)
+value|(1u<< 27)
 end_define
 
 begin_comment
@@ -22008,7 +22008,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD27_TPK15
-value|((unsigned int) AT91C_PIO_PD27)
+value|(AT91C_PIO_PD27)
 end_define
 
 begin_comment
@@ -22019,7 +22019,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PD3
-value|((unsigned int) 1<<  3)
+value|(1u<<  3)
 end_define
 
 begin_comment
@@ -22030,7 +22030,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD3_ETX3
-value|((unsigned int) AT91C_PIO_PD3)
+value|(AT91C_PIO_PD3)
 end_define
 
 begin_comment
@@ -22041,7 +22041,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PD4
-value|((unsigned int) 1<<  4)
+value|(1u<<  4)
 end_define
 
 begin_comment
@@ -22052,7 +22052,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD4_ETXEN
-value|((unsigned int) AT91C_PIO_PD4)
+value|(AT91C_PIO_PD4)
 end_define
 
 begin_comment
@@ -22063,7 +22063,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PD5
-value|((unsigned int) 1<<  5)
+value|(1u<<  5)
 end_define
 
 begin_comment
@@ -22074,7 +22074,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD5_ETXER
-value|((unsigned int) AT91C_PIO_PD5)
+value|(AT91C_PIO_PD5)
 end_define
 
 begin_comment
@@ -22085,7 +22085,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PD6
-value|((unsigned int) 1<<  6)
+value|(1u<<  6)
 end_define
 
 begin_comment
@@ -22096,7 +22096,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD6_DTXD
-value|((unsigned int) AT91C_PIO_PD6)
+value|(AT91C_PIO_PD6)
 end_define
 
 begin_comment
@@ -22107,7 +22107,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PD7
-value|((unsigned int) 1<<  7)
+value|(1u<<  7)
 end_define
 
 begin_comment
@@ -22118,7 +22118,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD7_PCK0
-value|((unsigned int) AT91C_PIO_PD7)
+value|(AT91C_PIO_PD7)
 end_define
 
 begin_comment
@@ -22129,7 +22129,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD7_TSYNC
-value|((unsigned int) AT91C_PIO_PD7)
+value|(AT91C_PIO_PD7)
 end_define
 
 begin_comment
@@ -22140,7 +22140,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PD8
-value|((unsigned int) 1<<  8)
+value|(1u<<  8)
 end_define
 
 begin_comment
@@ -22151,7 +22151,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD8_PCK1
-value|((unsigned int) AT91C_PIO_PD8)
+value|(AT91C_PIO_PD8)
 end_define
 
 begin_comment
@@ -22162,7 +22162,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD8_TCLK
-value|((unsigned int) AT91C_PIO_PD8)
+value|(AT91C_PIO_PD8)
 end_define
 
 begin_comment
@@ -22173,7 +22173,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PIO_PD9
-value|((unsigned int) 1<<  9)
+value|(1u<<  9)
 end_define
 
 begin_comment
@@ -22184,7 +22184,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD9_PCK2
-value|((unsigned int) AT91C_PIO_PD9)
+value|(AT91C_PIO_PD9)
 end_define
 
 begin_comment
@@ -22195,7 +22195,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_PD9_TPS0
-value|((unsigned int) AT91C_PIO_PD9)
+value|(AT91C_PIO_PD9)
 end_define
 
 begin_comment
@@ -22218,7 +22218,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_FIQ
-value|((unsigned int)  0)
+value|0u
 end_define
 
 begin_comment
@@ -22229,7 +22229,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_SYS
-value|((unsigned int)  1)
+value|1u
 end_define
 
 begin_comment
@@ -22240,7 +22240,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_PIOA
-value|((unsigned int)  2)
+value|2u
 end_define
 
 begin_comment
@@ -22251,7 +22251,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_PIOB
-value|((unsigned int)  3)
+value|3u
 end_define
 
 begin_comment
@@ -22262,7 +22262,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_PIOC
-value|((unsigned int)  4)
+value|4u
 end_define
 
 begin_comment
@@ -22273,7 +22273,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_PIOD
-value|((unsigned int)  5)
+value|5u
 end_define
 
 begin_comment
@@ -22284,7 +22284,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_US0
-value|((unsigned int)  6)
+value|6u
 end_define
 
 begin_comment
@@ -22295,7 +22295,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_US1
-value|((unsigned int)  7)
+value|7u
 end_define
 
 begin_comment
@@ -22306,7 +22306,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_US2
-value|((unsigned int)  8)
+value|8u
 end_define
 
 begin_comment
@@ -22317,7 +22317,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_US3
-value|((unsigned int)  9)
+value|9u
 end_define
 
 begin_comment
@@ -22328,7 +22328,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_MCI
-value|((unsigned int) 10)
+value|10u
 end_define
 
 begin_comment
@@ -22339,7 +22339,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_UDP
-value|((unsigned int) 11)
+value|11u
 end_define
 
 begin_comment
@@ -22350,7 +22350,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_TWI
-value|((unsigned int) 12)
+value|12u
 end_define
 
 begin_comment
@@ -22361,7 +22361,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_SPI
-value|((unsigned int) 13)
+value|13u
 end_define
 
 begin_comment
@@ -22372,7 +22372,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_SSC0
-value|((unsigned int) 14)
+value|14u
 end_define
 
 begin_comment
@@ -22383,7 +22383,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_SSC1
-value|((unsigned int) 15)
+value|15u
 end_define
 
 begin_comment
@@ -22394,7 +22394,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_SSC2
-value|((unsigned int) 16)
+value|16u
 end_define
 
 begin_comment
@@ -22405,7 +22405,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_TC0
-value|((unsigned int) 17)
+value|17u
 end_define
 
 begin_comment
@@ -22416,7 +22416,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_TC1
-value|((unsigned int) 18)
+value|18u
 end_define
 
 begin_comment
@@ -22427,7 +22427,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_TC2
-value|((unsigned int) 19)
+value|19u
 end_define
 
 begin_comment
@@ -22438,7 +22438,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_TC3
-value|((unsigned int) 20)
+value|20u
 end_define
 
 begin_comment
@@ -22449,7 +22449,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_TC4
-value|((unsigned int) 21)
+value|21u
 end_define
 
 begin_comment
@@ -22460,7 +22460,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_TC5
-value|((unsigned int) 22)
+value|22u
 end_define
 
 begin_comment
@@ -22471,7 +22471,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_UHP
-value|((unsigned int) 23)
+value|23u
 end_define
 
 begin_comment
@@ -22482,7 +22482,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_EMAC
-value|((unsigned int) 24)
+value|24u
 end_define
 
 begin_comment
@@ -22493,7 +22493,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_IRQ0
-value|((unsigned int) 25)
+value|25u
 end_define
 
 begin_comment
@@ -22504,7 +22504,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_IRQ1
-value|((unsigned int) 26)
+value|26u
 end_define
 
 begin_comment
@@ -22515,7 +22515,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_IRQ2
-value|((unsigned int) 27)
+value|27u
 end_define
 
 begin_comment
@@ -22526,7 +22526,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_IRQ3
-value|((unsigned int) 28)
+value|28u
 end_define
 
 begin_comment
@@ -22537,7 +22537,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_IRQ4
-value|((unsigned int) 29)
+value|29u
 end_define
 
 begin_comment
@@ -22548,7 +22548,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_IRQ5
-value|((unsigned int) 30)
+value|30u
 end_define
 
 begin_comment
@@ -22559,7 +22559,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ID_IRQ6
-value|((unsigned int) 31)
+value|31u
 end_define
 
 begin_comment
@@ -23111,7 +23111,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ISRAM
-value|((char *) 	0x00200000)
+value|((char *) 0x00200000)
 end_define
 
 begin_comment
@@ -23122,7 +23122,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_ISRAM_SIZE
-value|((unsigned int) 0x00004000)
+value|0x00004000u
 end_define
 
 begin_comment
@@ -23133,7 +23133,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_IROM
-value|((char *) 	0x00100000)
+value|((char *) 0x00100000)
 end_define
 
 begin_comment
@@ -23144,7 +23144,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_IROM_SIZE
-value|((unsigned int) 0x00020000)
+value|0x00020000u
 end_define
 
 begin_comment
