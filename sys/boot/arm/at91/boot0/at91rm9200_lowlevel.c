@@ -61,11 +61,6 @@ operator|->
 name|US_RPR
 operator|)
 decl_stmt|;
-name|AT91PS_PIO
-name|pPio
-init|=
-name|AT91C_BASE_PIOA
-decl_stmt|;
 specifier|register
 name|unsigned
 name|value
@@ -459,8 +454,28 @@ name|p
 operator|=
 literal|0
 expr_stmt|;
+if|#
+directive|if
+name|SDRAM_WIDTH
+operator|==
+name|AT91C_SDRC_DBW_32_BITS
+comment|// Turn on the upper 16 bits on the SDRAM bus.
+name|AT91C_BASE_PIOC
+operator|->
+name|PIO_ASR
+operator|=
+literal|0xffff0000
+expr_stmt|;
+name|AT91C_BASE_PIOC
+operator|->
+name|PIO_PDR
+operator|=
+literal|0xffff0000
+expr_stmt|;
+endif|#
+directive|endif
 comment|// Configure DBGU -use local routine optimized for space
-name|pPio
+name|AT91C_BASE_PIOA
 operator|->
 name|PIO_ASR
 operator|=
@@ -468,13 +483,7 @@ name|AT91C_PA31_DTXD
 operator||
 name|AT91C_PA30_DRXD
 expr_stmt|;
-name|pPio
-operator|->
-name|PIO_BSR
-operator|=
-literal|0
-expr_stmt|;
-name|pPio
+name|AT91C_BASE_PIOA
 operator|->
 name|PIO_PDR
 operator|=
