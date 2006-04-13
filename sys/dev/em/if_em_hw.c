@@ -2312,9 +2312,14 @@ case|:
 case|case
 name|em_82545
 case|:
+ifndef|#
+directive|ifndef
+name|__arm__
 case|case
 name|em_82546
 case|:
+endif|#
+directive|endif
 case|case
 name|em_82541
 case|:
