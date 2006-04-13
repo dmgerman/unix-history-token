@@ -1006,7 +1006,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|EIO
+name|FALSE
 operator|)
 return|;
 name|buf
@@ -1024,7 +1024,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|ENOMEM
+name|FALSE
 operator|)
 return|;
 if|if
@@ -1055,7 +1055,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EIO
+name|FALSE
 operator|)
 return|;
 block|}
@@ -1145,7 +1145,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ENOSPC
+name|FALSE
 operator|)
 return|;
 block|}
@@ -1281,7 +1281,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ENOSPC
+name|FALSE
 operator|)
 return|;
 block|}
@@ -1344,7 +1344,7 @@ literal|1
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|TRUE
 operator|)
 return|;
 block|}
