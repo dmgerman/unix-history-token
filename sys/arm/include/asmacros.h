@@ -199,19 +199,19 @@ value|ldr	r0, [sp]
 comment|/* Get the SPSR from stack */
 value|;\ 	mrs	r4, cpsr
 comment|/* save CPSR */
-value|;\ 	orr	r1, r4, #(I32_bit)					;\ 	msr	cpsr_c, r1
+value|;\ 	orr	r1, r4, #(I32_bit|F32_bit)				;\ 	msr	cpsr_c, r1
 comment|/* Disable interrupts */
 value|;\ 	and	r0, r0, #(PSR_MODE)
 comment|/* Returning to USR mode? */
 value|;\ 	teq	r0, #(PSR_USR32_MODE)					;\ 	bne	2f
 comment|/* Nope, get out now */
-value|;\ 	bic	r4, r4, #(I32_bit)					;\ 1:	ldr	r5, .Lcurthread						;\ 	ldr	r5, [r5]						;\ 	ldr	r1, [r5, #(TD_FLAGS)]					;\ 	and	r1, r1, #(TDF_ASTPENDING|TDF_NEEDRESCHED)		;\ 	teq	r1, #0x00000000						;\ 	beq	2f
+value|;\ 	bic	r4, r4, #(I32_bit|F32_bit)				;\ 1:	ldr	r5, .Lcurthread						;\ 	ldr	r5, [r5]						;\ 	ldr	r1, [r5, #(TD_FLAGS)]					;\ 	and	r1, r1, #(TDF_ASTPENDING|TDF_NEEDRESCHED)		;\ 	teq	r1, #0x00000000						;\ 	beq	2f
 comment|/* Nope. Just bail */
 value|;\ 	msr	cpsr_c, r4
 comment|/* Restore interrupts */
 value|;\ 	mov	r0, sp							;\ 	bl	_C_LABEL(ast)
 comment|/* ast(frame) */
-value|;\ 	orr	r0, r4, #(I32_bit)					;\ 	msr	cpsr_c, r0						;\ 	b	1b							;\ 2:
+value|;\ 	orr	r0, r4, #(I32_bit|F32_bit)				;\ 	msr	cpsr_c, r0						;\ 	b	1b							;\ 2:
 end_define
 
 begin_define
