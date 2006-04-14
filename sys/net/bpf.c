@@ -5493,11 +5493,19 @@ block|}
 comment|/* Interface wasn't attached */
 if|if
 condition|(
+operator|(
+name|bp
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
 name|bp
 operator|->
 name|bif_ifp
 operator|==
 name|NULL
+operator|)
 condition|)
 block|{
 name|splx
