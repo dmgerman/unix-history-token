@@ -93,6 +93,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -216,6 +222,16 @@ expr_stmt|;
 name|unique_output
 operator|=
 literal|1
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
 expr_stmt|;
 while|while
 condition|(

@@ -302,9 +302,6 @@ block|{
 name|u_char
 modifier|*
 name|buf
-decl_stmt|,
-modifier|*
-name|p
 decl_stmt|;
 name|u_int
 name|numnode
@@ -631,7 +628,11 @@ block|}
 block|}
 else|else
 block|{
-name|p
+name|buflen
+operator|*=
+literal|2
+expr_stmt|;
+name|buf
 operator|=
 operator|(
 name|u_char
@@ -642,13 +643,11 @@ argument_list|(
 name|buf
 argument_list|,
 name|buflen
-operator|*
-literal|2
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|p
+name|buf
 operator|==
 name|NULL
 condition|)
@@ -658,10 +657,6 @@ literal|1
 argument_list|,
 literal|"realloc"
 argument_list|)
-expr_stmt|;
-name|buf
-operator|=
-name|p
 expr_stmt|;
 if|if
 condition|(
@@ -682,6 +677,8 @@ name|i
 index|]
 argument_list|,
 name|buflen
+operator|-
+name|i
 argument_list|)
 expr_stmt|;
 if|if
@@ -727,6 +724,8 @@ argument_list|)
 condition|)
 name|buflen
 operator|=
+name|i
+operator|+
 operator|(
 name|size_t
 operator|)
@@ -740,10 +739,6 @@ operator|)
 name|len
 expr_stmt|;
 block|}
-name|buflen
-operator|*=
-literal|2
-expr_stmt|;
 block|}
 block|}
 if|if
@@ -768,9 +763,6 @@ name|RANDOM_TYPE_WORDS
 operator|&&
 name|isspace
 argument_list|(
-operator|(
-name|int
-operator|)
 name|buf
 index|[
 name|i
