@@ -2333,6 +2333,7 @@ name|defined
 argument_list|(
 name|NO_ADAPTIVE_MUTEXES
 argument_list|)
+specifier|volatile
 name|struct
 name|thread
 modifier|*
