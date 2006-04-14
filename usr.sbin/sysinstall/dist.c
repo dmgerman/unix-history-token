@@ -4377,7 +4377,7 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
-comment|/* Only do base fixup if base dist was successfully extracted */
+comment|/* Only do kernel fixup if kernel dist was successfully extracted */
 if|if
 condition|(
 operator|(
