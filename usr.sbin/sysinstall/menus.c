@@ -515,6 +515,8 @@ name|Dists
 operator|==
 operator|(
 name|DIST_BASE
+operator||
+name|DIST_KERNEL
 operator|)
 return|;
 block|}
