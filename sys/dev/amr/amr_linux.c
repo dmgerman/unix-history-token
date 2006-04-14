@@ -144,14 +144,14 @@ begin_define
 define|#
 directive|define
 name|AMR_LINUX_IOCTL_MIN
-value|0x00000
+value|0x6d00
 end_define
 
 begin_define
 define|#
 directive|define
 name|AMR_LINUX_IOCTL_MAX
-value|0x50000
+value|0x6d01
 end_define
 
 begin_decl_stmt
