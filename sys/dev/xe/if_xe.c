@@ -1304,7 +1304,7 @@ argument_list|,
 operator|(
 name|dev
 operator|,
-literal|"CE2 version = 0x%#02x\n"
+literal|"CE2 version = 0x%02x\n"
 operator|,
 name|XE_INB
 argument_list|(
