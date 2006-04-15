@@ -659,6 +659,15 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|AcpiRemoveNotifyHandler
+argument_list|(
+name|handle
+argument_list|,
+name|ACPI_ALL_NOTIFY
+argument_list|,
+name|acpi_cmbat_notify_handler
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2081,6 +2090,16 @@ literal|10000
 argument_list|)
 control|)
 block|{
+comment|/* batteries on DOCK can be ejected w/ DOCK during retrying */
+if|if
+condition|(
+operator|!
+name|device_is_attached
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return;
 if|if
 condition|(
 operator|!

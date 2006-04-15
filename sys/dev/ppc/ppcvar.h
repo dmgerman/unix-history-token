@@ -25,6 +25,16 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ppc_detach
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ppc_read_ivar
 parameter_list|(
 name|device_t

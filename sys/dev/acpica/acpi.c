@@ -7018,6 +7018,9 @@ block|{
 name|ACPI_OBJECT_TYPE
 name|type
 decl_stmt|;
+name|ACPI_HANDLE
+name|h
+decl_stmt|;
 name|device_t
 name|bus
 decl_stmt|,
@@ -7252,8 +7255,11 @@ name|acpi_DeviceIsPresent
 argument_list|(
 name|child
 argument_list|)
-operator|&&
-operator|!
+condition|)
+block|{
+comment|/* Never disable PCI link devices. */
+if|if
+condition|(
 name|acpi_MatchHid
 argument_list|(
 name|handle
@@ -7261,7 +7267,24 @@ argument_list|,
 literal|"PNP0C0F"
 argument_list|)
 condition|)
-block|{
+break|break;
+comment|/* 		 * Docking stations should remain enabled since the system 		 * may be undocked at boot. 		 */
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|AcpiGetHandle
+argument_list|(
+name|handle
+argument_list|,
+literal|"_DCK"
+argument_list|,
+operator|&
+name|h
+argument_list|)
+argument_list|)
+condition|)
+break|break;
 name|device_disable
 argument_list|(
 name|child
