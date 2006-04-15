@@ -1474,9 +1474,9 @@ name|__func__
 argument_list|,
 name|ithread
 operator|->
-name|it_thread
+name|it_event
 operator|->
-name|td_name
+name|ie_name
 argument_list|)
 expr_stmt|;
 name|td
