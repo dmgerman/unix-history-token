@@ -2258,6 +2258,11 @@ literal|"in6_setsockaddr: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
+name|INP_LOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 name|port
 operator|=
 name|inp
@@ -2269,6 +2274,11 @@ operator|=
 name|inp
 operator|->
 name|in6p_laddr
+expr_stmt|;
+name|INP_UNLOCK
+argument_list|(
+name|inp
+argument_list|)
 expr_stmt|;
 operator|*
 name|nam
@@ -2337,6 +2347,11 @@ literal|"in6_setpeeraddr: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
+name|INP_LOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 name|port
 operator|=
 name|inp
@@ -2348,6 +2363,11 @@ operator|=
 name|inp
 operator|->
 name|in6p_faddr
+expr_stmt|;
+name|INP_UNLOCK
+argument_list|(
+name|inp
+argument_list|)
 expr_stmt|;
 operator|*
 name|nam
