@@ -654,7 +654,12 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|acpi_battery_remove
+name|ACPI_HANDLE
+name|handle
+decl_stmt|;
+name|handle
+operator|=
+name|acpi_get_handle
 argument_list|(
 name|dev
 argument_list|)
@@ -666,6 +671,11 @@ argument_list|,
 name|ACPI_ALL_NOTIFY
 argument_list|,
 name|acpi_cmbat_notify_handler
+argument_list|)
+expr_stmt|;
+name|acpi_battery_remove
+argument_list|(
+name|dev
 argument_list|)
 expr_stmt|;
 return|return
