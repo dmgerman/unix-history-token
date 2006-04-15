@@ -282,6 +282,94 @@ name|CLOCK_MONOTONIC
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|CLOCK_UPTIME
+value|5
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLOCK_UPTIME_PRECISE
+value|7
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLOCK_UPTIME_FAST
+value|8
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLOCK_REALTIME_PRECISE
+value|9
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLOCK_REALTIME_FAST
+value|10
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLOCK_MONOTONIC_PRECISE
+value|11
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLOCK_MONOTONIC_FAST
+value|12
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLOCK_SECOND
+value|13
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
