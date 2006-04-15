@@ -1650,7 +1650,7 @@ name|G_ELI_LOGREQ
 argument_list|(
 literal|2
 argument_list|,
-name|bp
+name|cbp
 argument_list|,
 literal|"Sending request."
 argument_list|)
@@ -1738,7 +1738,7 @@ name|G_ELI_LOGREQ
 argument_list|(
 literal|2
 argument_list|,
-name|bp
+name|cbp
 argument_list|,
 literal|"Sending request."
 argument_list|)
