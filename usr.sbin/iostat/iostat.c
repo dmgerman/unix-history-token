@@ -367,9 +367,7 @@ parameter_list|)
 block|{
 name|int
 name|c
-decl_stmt|;
-specifier|register
-name|int
+decl_stmt|,
 name|i
 decl_stmt|;
 name|int
@@ -2044,11 +2042,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
-decl_stmt|;
-name|int
+decl_stmt|,
 name|printed
 decl_stmt|;
 comment|/* 	 * If xflag is set, we need a per-loop header, not a page header, so 	 * just return.  We'll print the header in devstats(). 	 */
@@ -2388,7 +2384,6 @@ name|int
 name|havelast
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|dn
 decl_stmt|;
@@ -3108,7 +3103,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|state
 decl_stmt|;
