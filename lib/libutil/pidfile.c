@@ -712,7 +712,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|write
+name|pwrite
 argument_list|(
 name|fd
 argument_list|,
@@ -722,6 +722,8 @@ name|strlen
 argument_list|(
 name|pidstr
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 operator|!=
 operator|(
