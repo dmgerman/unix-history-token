@@ -775,7 +775,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Make sure that the userland devstat version matches the kernel 	 * devstat version.  If not, exit and print a message informing  	 * the user of his mistake. 	 */
+comment|/* 	 * Make sure that the userland devstat version matches the kernel 	 * devstat version.  If not, exit and print a message informing 	 * the user of his mistake. 	 */
 if|if
 condition|(
 name|devstat_checkversion
@@ -1398,7 +1398,7 @@ name|tk_nin
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Set the snap time to the system boot time (ie: zero), so the  	 * stats are calculated since system boot. 	 */
+comment|/* 	 * Set the snap time to the system boot time (ie: zero), so the 	 * stats are calculated since system boot. 	 */
 name|cur
 operator|.
 name|snap_time
