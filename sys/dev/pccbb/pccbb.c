@@ -2653,6 +2653,7 @@ operator|&&
 operator|(
 name|sockevent
 operator|&
+operator|~
 name|CBB_SOCKET_EVENT_VALID_MASK
 operator|)
 operator|==
