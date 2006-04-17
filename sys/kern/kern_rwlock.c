@@ -134,6 +134,25 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Return a pointer to the owning thread if the lock is write-locked or  * NULL if the lock is unlocked or read-locked.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|rw_wowner
+parameter_list|(
+name|rw
+parameter_list|)
+define|\
+value|((rw)->rw_lock& RW_LOCK_READ ? NULL :				\ 	    (struct thread *)RW_OWNER((rw)->rw_lock))
+end_define
+
+begin_comment
+comment|/*  * Return a pointer to the owning thread for this lock who should receive  * any priority lent by threads that block on this lock.  Currently this  * is identical to rw_wowner().  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -141,8 +160,7 @@ name|rw_owner
 parameter_list|(
 name|rw
 parameter_list|)
-define|\
-value|((rw)->rw_lock& RW_LOCK_READ ? NULL :				\ 	    (struct thread *)RW_OWNER((rw)->rw_lock))
+value|rw_wowner(rw)
 end_define
 
 begin_ifndef
@@ -306,7 +324,7 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|rw_owner
+name|rw_wowner
 argument_list|(
 name|rw
 argument_list|)
@@ -497,7 +515,7 @@ name|x
 decl_stmt|;
 name|KASSERT
 argument_list|(
-name|rw_owner
+name|rw_wowner
 argument_list|(
 name|rw
 argument_list|)
@@ -670,7 +688,10 @@ name|x
 operator|&
 name|RW_LOCK_READ_WAITERS
 operator|)
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 name|atomic_cmpset_ptr
 argument_list|(
@@ -695,17 +716,13 @@ operator|->
 name|rw_object
 argument_list|)
 expr_stmt|;
+name|cpu_spinwait
+argument_list|()
+expr_stmt|;
 continue|continue;
 block|}
 if|if
 condition|(
-operator|!
-operator|(
-name|x
-operator|&
-name|RW_LOCK_READ_WAITERS
-operator|)
-operator|&&
 name|LOCK_LOG_TEST
 argument_list|(
 operator|&
@@ -727,6 +744,7 @@ argument_list|,
 name|rw
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 		 * We were unable to acquire the lock and the read waiters 		 * flag is set, so we must block on the turnstile. 		 */
 if|if
 condition|(
@@ -1359,7 +1377,10 @@ name|v
 operator|&
 name|RW_LOCK_WRITE_WAITERS
 operator|)
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 name|atomic_cmpset_ptr
 argument_list|(
@@ -1391,13 +1412,6 @@ continue|continue;
 block|}
 if|if
 condition|(
-operator|!
-operator|(
-name|v
-operator|&
-name|RW_LOCK_WRITE_WAITERS
-operator|)
-operator|&&
 name|LOCK_LOG_TEST
 argument_list|(
 operator|&
@@ -1419,6 +1433,7 @@ argument_list|,
 name|rw
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* XXX: Adaptively spin if current wlock owner on another CPU? */
 comment|/* 		 * We were unable to acquire the lock and the write waiters 		 * flag is set, so we must block on the turnstile. 		 */
 if|if
@@ -1796,7 +1811,7 @@ name|what
 operator|==
 name|RA_RLOCKED
 operator|||
-name|rw_owner
+name|rw_wowner
 argument_list|(
 name|rw
 argument_list|)
@@ -1838,7 +1853,7 @@ name|RA_WLOCKED
 case|:
 if|if
 condition|(
-name|rw_owner
+name|rw_wowner
 argument_list|(
 name|rw
 argument_list|)
@@ -1886,7 +1901,7 @@ directive|else
 comment|/* 		 * If we hold a write lock fail.  We can't reliably check 		 * to see if we hold a read lock or not. 		 */
 if|if
 condition|(
-name|rw_owner
+name|rw_wowner
 argument_list|(
 name|rw
 argument_list|)
@@ -2019,7 +2034,7 @@ else|else
 block|{
 name|td
 operator|=
-name|rw_owner
+name|rw_wowner
 argument_list|(
 name|rw
 argument_list|)
