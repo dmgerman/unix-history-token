@@ -426,7 +426,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Lock instances.  A lock instance is the data associated with a lock while  * it is held by witness.  For example, a lock instance will hold the  * recursion count of a lock.  Lock instances are held in lists.  Spin locks  * are held in a per-cpu list while sleep locks are held in per-process list.  */
+comment|/*  * Lock instances.  A lock instance is the data associated with a lock while  * it is held by witness.  For example, a lock instance will hold the  * recursion count of a lock.  Lock instances are held in lists.  Spin locks  * are held in a per-cpu list while sleep locks are held in per-thread list.  */
 end_comment
 
 begin_struct
@@ -456,7 +456,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * A simple list type used to build the list of locks held by a process  * or CPU.  We can't simply embed the list in struct lock_object since a  * lock may be held by more than one process if it is a shared lock.  Locks  * are added to the head of the list, so we fill up each list entry from  * "the back" logically.  To ease some of the arithmetic, we actually fill  * in each list entry the normal way (childer[0] then children[1], etc.) but  * when we traverse the list we read children[count-1] as the first entry  * down to children[0] as the final entry.  */
+comment|/*  * A simple list type used to build the list of locks held by a thread  * or CPU.  We can't simply embed the list in struct lock_object since a  * lock may be held by more than one thread if it is a shared lock.  Locks  * are added to the head of the list, so we fill up each list entry from  * "the back" logically.  To ease some of the arithmetic, we actually fill  * in each list entry the normal way (childer[0] then children[1], etc.) but  * when we traverse the list we read children[count-1] as the first entry  * down to children[0] as the final entry.  */
 end_comment
 
 begin_define
