@@ -1538,7 +1538,7 @@ name|breakwaitcmd
 operator|=
 literal|1
 expr_stmt|;
-comment|/*  	 * If a trap is set, not ignored and not the null command, we need  	 * to make sure traps are executed even when a child blocks signals. 	 */
+comment|/* 	 * If a trap is set, not ignored and not the null command, we need 	 * to make sure traps are executed even when a child blocks signals. 	 */
 if|if
 condition|(
 name|Tflag
