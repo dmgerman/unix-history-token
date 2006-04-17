@@ -482,7 +482,7 @@ decl_stmt|;
 block|{
 name|panic
 argument_list|(
-literal|"softdep_setup_allocdirect called"
+literal|"softdep_setup_allocext called"
 argument_list|)
 expr_stmt|;
 block|}
