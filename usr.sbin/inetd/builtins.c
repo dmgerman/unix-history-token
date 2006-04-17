@@ -308,8 +308,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|unsigned
-name|long
+name|uint32_t
 name|machtime
 parameter_list|(
 name|void
@@ -3427,8 +3426,7 @@ comment|/*  * RFC738 Time Server.  * Return a machine readable date and time, in
 end_comment
 
 begin_function
-name|unsigned
-name|long
+name|uint32_t
 name|machtime
 parameter_list|(
 name|void
@@ -3474,13 +3472,13 @@ block|}
 define|#
 directive|define
 name|OFFSET
-value|((u_long)25567 * 24*60*60)
+value|((uint32_t)25567 * 24*60*60)
 return|return
 operator|(
 name|htonl
 argument_list|(
 call|(
-name|long
+name|uint32_t
 call|)
 argument_list|(
 name|tv
@@ -3515,8 +3513,7 @@ modifier|*
 name|sep
 parameter_list|)
 block|{
-name|unsigned
-name|long
+name|uint32_t
 name|result
 decl_stmt|;
 name|struct
@@ -3642,8 +3639,7 @@ name|sep
 name|__unused
 parameter_list|)
 block|{
-name|unsigned
-name|long
+name|uint32_t
 name|result
 decl_stmt|;
 name|result
