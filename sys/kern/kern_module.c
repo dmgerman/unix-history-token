@@ -1064,6 +1064,24 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|linker_file_t
+name|module_file
+parameter_list|(
+name|module_t
+name|mod
+parameter_list|)
+block|{
+return|return
+operator|(
+name|mod
+operator|->
+name|file
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Syscalls.  */
 end_comment

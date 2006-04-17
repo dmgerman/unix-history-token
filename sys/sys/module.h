@@ -474,6 +474,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|struct
+name|linker_file
+modifier|*
+name|module_file
+parameter_list|(
+name|module_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
