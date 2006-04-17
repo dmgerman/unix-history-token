@@ -1845,9 +1845,7 @@ name|ie
 operator|->
 name|ie_lock
 argument_list|,
-name|curthread
-operator|->
-name|td_priority
+literal|0
 argument_list|,
 literal|"ithread"
 argument_list|,
@@ -2224,9 +2222,7 @@ name|ie
 operator|->
 name|ie_lock
 argument_list|,
-name|curthread
-operator|->
-name|td_priority
+literal|0
 argument_list|,
 literal|"iev_rmh"
 argument_list|,
@@ -3155,9 +3151,7 @@ name|ie
 operator|->
 name|ie_count
 argument_list|,
-name|curthread
-operator|->
-name|td_priority
+literal|0
 argument_list|,
 literal|"istorm"
 argument_list|,

@@ -1802,10 +1802,6 @@ name|td_proc
 operator|->
 name|p_mtx
 argument_list|,
-name|td
-operator|->
-name|td_priority
-operator||
 name|PCATCH
 argument_list|,
 literal|"lthr"

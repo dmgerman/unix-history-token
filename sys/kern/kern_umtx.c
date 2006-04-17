@@ -885,9 +885,7 @@ argument_list|(
 name|chain
 argument_list|)
 argument_list|,
-name|curthread
-operator|->
-name|td_priority
+literal|0
 argument_list|,
 literal|"umtxq_busy"
 argument_list|,
@@ -2152,10 +2150,6 @@ name|uq
 operator|->
 name|uq_key
 argument_list|,
-name|td
-operator|->
-name|td_priority
-operator||
 name|PCATCH
 argument_list|,
 literal|"umtx"
@@ -2771,10 +2765,6 @@ name|uq
 operator|->
 name|uq_key
 argument_list|,
-name|td
-operator|->
-name|td_priority
-operator||
 name|PCATCH
 argument_list|,
 literal|"ucond"
@@ -2870,10 +2860,6 @@ name|uq
 operator|->
 name|uq_key
 argument_list|,
-name|td
-operator|->
-name|td_priority
-operator||
 name|PCATCH
 argument_list|,
 literal|"ucond"

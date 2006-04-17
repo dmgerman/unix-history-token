@@ -7806,10 +7806,6 @@ name|mq
 operator|->
 name|mq_mutex
 argument_list|,
-name|curthread
-operator|->
-name|td_priority
-operator||
 name|PCATCH
 argument_list|,
 literal|"mqsend"
@@ -8625,10 +8621,6 @@ name|mq
 operator|->
 name|mq_mutex
 argument_list|,
-name|curthread
-operator|->
-name|td_priority
-operator||
 name|PCATCH
 argument_list|,
 literal|"mqrecv"

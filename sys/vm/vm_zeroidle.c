@@ -523,15 +523,6 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
-name|td
-operator|=
-name|curthread
-expr_stmt|;
 name|idlezero_enable
 operator|=
 name|idlezero_enable_default
@@ -601,10 +592,6 @@ operator|&
 name|vm_page_queue_mtx
 argument_list|,
 name|PDROP
-operator||
-name|td
-operator|->
-name|td_priority
 argument_list|,
 literal|"pgzero"
 argument_list|,
