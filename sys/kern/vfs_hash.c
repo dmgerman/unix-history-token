@@ -175,6 +175,7 @@ name|vfs_hash_head
 modifier|*
 name|vfs_hash_index
 parameter_list|(
+specifier|const
 name|struct
 name|mount
 modifier|*
@@ -208,6 +209,7 @@ begin_function
 name|int
 name|vfs_hash_get
 parameter_list|(
+specifier|const
 name|struct
 name|mount
 modifier|*

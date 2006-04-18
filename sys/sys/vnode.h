@@ -4066,6 +4066,7 @@ begin_function_decl
 name|int
 name|vfs_hash_get
 parameter_list|(
+specifier|const
 name|struct
 name|mount
 modifier|*
