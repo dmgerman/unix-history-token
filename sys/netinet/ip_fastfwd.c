@@ -1543,6 +1543,9 @@ condition|(
 name|fwd_tag
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|IPFIREWALL_FORWARD_EXTENDED
 if|if
 condition|(
 operator|!
@@ -1561,6 +1564,8 @@ operator|->
 name|ip_dst
 argument_list|)
 condition|)
+endif|#
+directive|endif
 name|dest
 operator|.
 name|s_addr
