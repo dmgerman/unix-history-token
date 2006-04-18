@@ -7311,6 +7311,9 @@ condition|(
 name|try
 condition|)
 block|{
+name|pv_entry_count
+operator|--
+expr_stmt|;
 name|PV_STAT
 argument_list|(
 name|pc_chunk_tryfail
