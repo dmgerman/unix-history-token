@@ -20542,17 +20542,6 @@ name|resid
 argument_list|)
 expr_stmt|;
 block|}
-name|tgt
-operator|->
-name|ccb
-operator|=
-operator|(
-expr|union
-name|ccb
-operator|*
-operator|)
-name|atiop
-expr_stmt|;
 name|MPTLOCK_2_CAMLOCK
 argument_list|(
 name|mpt
