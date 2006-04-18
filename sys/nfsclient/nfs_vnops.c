@@ -4729,6 +4729,11 @@ condition|(
 name|error
 condition|)
 block|{
+if|if
+condition|(
+name|v3
+condition|)
+block|{
 name|nfsm_postop_attr
 argument_list|(
 name|dvp
@@ -4741,6 +4746,7 @@ argument_list|(
 name|mrep
 argument_list|)
 expr_stmt|;
+block|}
 goto|goto
 name|nfsmout
 goto|;
