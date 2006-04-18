@@ -7322,6 +7322,10 @@ name|error
 operator|==
 name|EIO
 operator|||
+name|error
+operator|==
+name|ETIMEDOUT
+operator|||
 operator|(
 operator|!
 name|error
