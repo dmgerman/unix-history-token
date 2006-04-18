@@ -6880,11 +6880,8 @@ name|pv_entry_spare
 operator|++
 argument_list|)
 expr_stmt|;
-name|PV_STAT
-argument_list|(
 name|pv_entry_count
 operator|--
-argument_list|)
 expr_stmt|;
 name|pc
 operator|=
@@ -7116,11 +7113,8 @@ name|pv_entry_allocs
 operator|++
 argument_list|)
 expr_stmt|;
-name|PV_STAT
-argument_list|(
 name|pv_entry_count
 operator|++
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -11951,11 +11945,8 @@ name|pv_entry_spare
 operator|++
 argument_list|)
 expr_stmt|;
-name|PV_STAT
-argument_list|(
 name|pv_entry_count
 operator|--
-argument_list|)
 expr_stmt|;
 name|pc
 operator|->
