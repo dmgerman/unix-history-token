@@ -320,7 +320,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-name|putc
+name|putchar
 argument_list|(
 name|ACK
 argument_list|)
@@ -333,7 +333,7 @@ return|;
 name|err
 label|:
 empty_stmt|;
-name|putc
+name|putchar
 argument_list|(
 name|CAN
 argument_list|)
@@ -390,7 +390,7 @@ if|if
 condition|(
 name|starting
 condition|)
-name|putc
+name|putchar
 argument_list|(
 literal|'C'
 argument_list|)
@@ -429,7 +429,7 @@ operator|==
 name|EOT
 condition|)
 block|{
-name|putc
+name|putchar
 argument_list|(
 name|ACK
 argument_list|)

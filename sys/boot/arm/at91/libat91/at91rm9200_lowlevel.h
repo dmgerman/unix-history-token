@@ -29,7 +29,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|BOOT0_KB9202
+name|BOOT_KB9202
 end_ifdef
 
 begin_comment
@@ -77,7 +77,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|BOOT0_TSC
+name|BOOT_TSC
 end_ifdef
 
 begin_comment
@@ -144,7 +144,7 @@ end_define
 begin_function_decl
 specifier|extern
 name|void
-name|DefaultSystemInit
+name|_init
 parameter_list|(
 name|void
 parameter_list|)

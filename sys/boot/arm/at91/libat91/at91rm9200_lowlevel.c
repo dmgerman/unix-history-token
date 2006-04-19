@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"AT91RM9200.h"
+file|"at91rm9200.h"
 end_include
 
 begin_include
@@ -65,9 +65,6 @@ specifier|register
 name|unsigned
 name|value
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 specifier|volatile
 name|sdram_size_t
 modifier|*
@@ -81,7 +78,7 @@ name|SDRAM_BASE
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|BOOT0_TSC
+name|BOOT_TSC
 comment|// For the TSC board, we turn ON the one LED we have while
 comment|// early in boot.
 name|AT91C_BASE_PIOC

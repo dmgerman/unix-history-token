@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"AT91RM9200.h"
+file|"at91rm9200.h"
 end_include
 
 begin_include
@@ -63,8 +63,17 @@ operator|(
 name|fn_t
 operator|*
 operator|)
-name|addr
+operator|(
+name|SDRAM_BASE
+operator|+
+operator|(
+literal|1
+operator|<<
+literal|20
+operator|)
+operator|)
 decl_stmt|;
+comment|/* Load to base + 1MB */
 while|while
 condition|(
 name|xmodem_rx
