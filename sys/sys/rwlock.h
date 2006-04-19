@@ -386,6 +386,46 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|_rw_try_upgrade
+parameter_list|(
+name|struct
+name|rwlock
+modifier|*
+name|rw
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_rw_downgrade
+parameter_list|(
+name|struct
+name|rwlock
+modifier|*
+name|rw
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_if
 if|#
 directive|if
@@ -429,7 +469,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Public interface for lock operations.  *  * XXX: Missing try and upgrade/downgrade.  */
+comment|/*  * Public interface for lock operations.  *  * XXX: Missing try locks.  */
 end_comment
 
 begin_ifndef
@@ -532,6 +572,26 @@ parameter_list|(
 name|rw
 parameter_list|)
 value|_rw_runlock((rw), LOCK_FILE, LOCK_LINE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|rw_try_upgrade
+parameter_list|(
+name|rw
+parameter_list|)
+value|_rw_try_upgrade((rw), LOCK_FILE, LOCK_LINE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|rw_downgrade
+parameter_list|(
+name|rw
+parameter_list|)
+value|_rw_downgrade((rw), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
