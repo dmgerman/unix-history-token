@@ -144,16 +144,6 @@ modifier|*
 name|r_rm
 decl_stmt|;
 comment|/* resource manager from whence this came */
-name|void
-modifier|*
-name|r_spare1
-decl_stmt|;
-comment|/* Spare pointer 1 */
-name|void
-modifier|*
-name|r_spare2
-decl_stmt|;
-comment|/* Spare pointer 2 */
 name|int
 name|r_rid
 decl_stmt|;
