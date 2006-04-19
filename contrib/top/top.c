@@ -1568,7 +1568,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"Top version %s\n"
-literal|"Usage: %s [-bHIinqStuv] [-d count] [-m io | cpu] [-o field] [-s time]\n"
+literal|"Usage: %s [-bCHIinqStuv] [-d count] [-m io | cpu] [-o field] [-s time]\n"
 literal|"       [-U username] [number]\n"
 argument_list|,
 name|version_string
