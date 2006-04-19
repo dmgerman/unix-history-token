@@ -403,6 +403,16 @@ name|bool_t
 typedef|;
 end_typedef
 
+begin_function_decl
+specifier|static
+name|void
+name|fpu_clean_state
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|int
 name|hw_float
@@ -1252,6 +1262,9 @@ argument_list|(
 name|curpcb
 argument_list|)
 expr_stmt|;
+name|fpu_clean_state
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1518,6 +1531,9 @@ name|fpcurthread
 argument_list|)
 condition|)
 block|{
+name|fpu_clean_state
+argument_list|()
+expr_stmt|;
 name|fxrstor
 argument_list|(
 name|addr
@@ -1563,6 +1579,51 @@ name|pcb_flags
 operator||=
 name|PCB_FPUINITDONE
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * On AuthenticAMD processors, the fxrstor instruction does not restore  * the x87's stored last instruction pointer, last data pointer, and last  * opcode values, except in the rare case in which the exception summary  * (ES) bit in the x87 status word is set to 1.  *  * In order to avoid leaking this information across processes, we clean  * these values by performing a dummy load before executing fxrstor().  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|double
+name|dummy_variable
+init|=
+literal|0.0
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|fpu_clean_state
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_short
+name|status
+decl_stmt|;
+comment|/* 	 * Clear the ES bit in the x87 status word if it is currently 	 * set, in order to avoid causing a fault in the upcoming load. 	 */
+name|fnstsw
+argument_list|(
+operator|&
+name|status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|status
+operator|&
+literal|0x80
+condition|)
+name|fnclex
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Load the dummy variable into the x87 stack.  This mangles 	 * the x87 stack, but we don't care since we're about to call 	 * fxrstor() anyway. 	 */
+asm|__asm __volatile("ffree %%st(7); fld %0" : : "m" (dummy_variable));
 block|}
 end_function
 
