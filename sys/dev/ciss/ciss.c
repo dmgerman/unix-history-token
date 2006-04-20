@@ -15871,6 +15871,8 @@ name|struct
 name|ciss_lun_report
 modifier|*
 name|cll
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|bus
@@ -16025,6 +16027,19 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|cll
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|cll
+argument_list|,
+name|CISS_MALLOC_CLASS
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
