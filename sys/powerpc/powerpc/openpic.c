@@ -903,6 +903,14 @@ name|NULL
 operator|)
 return|;
 block|}
+name|rman_set_rid
+argument_list|(
+name|rv
+argument_list|,
+operator|*
+name|rid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|needactivate
