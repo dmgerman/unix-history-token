@@ -11803,6 +11803,7 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
+specifier|const
 name|struct
 name|resource_spec
 modifier|*
@@ -11846,6 +11847,7 @@ index|]
 operator|!=
 name|NULL
 condition|)
+block|{
 name|bus_release_resource
 argument_list|(
 name|dev
@@ -11870,6 +11872,14 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+name|res
+index|[
+name|i
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 end_function
 

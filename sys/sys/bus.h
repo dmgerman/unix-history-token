@@ -1189,6 +1189,7 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
+specifier|const
 name|struct
 name|resource_spec
 modifier|*
