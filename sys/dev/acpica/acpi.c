@@ -4918,6 +4918,14 @@ goto|goto
 name|out
 goto|;
 comment|/* Copy the bus tag and handle from the pre-allocated resource. */
+name|rman_set_rid
+argument_list|(
+name|res
+argument_list|,
+operator|*
+name|rid
+argument_list|)
+expr_stmt|;
 name|rman_set_bustag
 argument_list|(
 name|res
