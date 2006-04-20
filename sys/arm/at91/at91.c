@@ -1967,6 +1967,16 @@ name|count
 operator|=
 name|count
 expr_stmt|;
+name|rman_set_rid
+argument_list|(
+name|rle
+operator|->
+name|res
+argument_list|,
+operator|*
+name|rid
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
