@@ -2547,8 +2547,6 @@ operator|=
 name|CRD_F_IV_EXPLICIT
 operator||
 name|CRD_F_IV_PRESENT
-operator||
-name|CRD_F_KEY_EXPLICIT
 expr_stmt|;
 if|if
 condition|(
