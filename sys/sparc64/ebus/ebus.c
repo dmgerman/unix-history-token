@@ -1472,6 +1472,14 @@ operator|(
 name|NULL
 operator|)
 return|;
+name|rman_set_rid
+argument_list|(
+name|res
+argument_list|,
+operator|*
+name|rid
+argument_list|)
+expr_stmt|;
 name|bt
 operator|=
 name|rman_get_bustag
