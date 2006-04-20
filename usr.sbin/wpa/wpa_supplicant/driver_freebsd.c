@@ -2218,6 +2218,19 @@ name|authmode
 operator|=
 name|IEEE80211_AUTH_OPEN
 expr_stmt|;
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"%s alg 0x%x authmode %u"
+argument_list|,
+name|__func__
+argument_list|,
+name|auth_alg
+argument_list|,
+name|authmode
+argument_list|)
+expr_stmt|;
 return|return
 name|set80211param
 argument_list|(
