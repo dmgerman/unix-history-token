@@ -991,6 +991,14 @@ argument_list|,
 name|child
 argument_list|)
 expr_stmt|;
+name|rman_set_rid
+argument_list|(
+name|res
+argument_list|,
+operator|*
+name|rid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|res
