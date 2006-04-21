@@ -893,12 +893,8 @@ operator|)
 return|;
 name|tptr
 operator|=
-name|tval
-condition|?
 operator|&
 name|tval
-else|:
-name|NULL
 expr_stmt|;
 if|if
 condition|(

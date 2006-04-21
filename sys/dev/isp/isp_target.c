@@ -832,6 +832,9 @@ break|break;
 case|case
 name|IN_RESET
 case|:
+operator|(
+name|void
+operator|)
 name|isp_target_async
 argument_list|(
 name|isp
