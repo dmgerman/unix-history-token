@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mbuf.h>
 end_include
 
@@ -746,6 +752,26 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|socket_zone_change
+parameter_list|(
+name|void
+modifier|*
+name|tag
+parameter_list|)
+block|{
+name|uma_zone_set_max
+argument_list|(
+name|socket_zone
+argument_list|,
+name|maxsockets
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/* ARGSUSED*/
 end_comment
@@ -791,6 +817,17 @@ argument_list|(
 name|socket_zone
 argument_list|,
 name|maxsockets
+argument_list|)
+expr_stmt|;
+name|EVENTHANDLER_REGISTER
+argument_list|(
+name|maxsockets_change
+argument_list|,
+name|socket_zone_change
+argument_list|,
+name|NULL
+argument_list|,
+name|EVENTHANDLER_PRI_FIRST
 argument_list|)
 expr_stmt|;
 if|if
