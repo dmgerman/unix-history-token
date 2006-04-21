@@ -142,6 +142,11 @@ directive|define
 name|FL_WR
 value|0x0001
 comment|/* wants to write */
+define|#
+directive|define
+name|FL_ST
+value|0x0002
+comment|/* resplit final string if argc> maxargc */
 name|int
 function_decl|(
 modifier|*

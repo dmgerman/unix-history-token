@@ -463,6 +463,8 @@ operator|-
 literal|1
 argument_list|,
 name|argc
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 else|else

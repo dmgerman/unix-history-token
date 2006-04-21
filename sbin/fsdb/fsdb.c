@@ -763,6 +763,8 @@ block|,
 literal|2
 block|,
 name|FL_RO
+operator||
+name|FL_ST
 block|,
 name|focusname
 block|}
@@ -777,6 +779,8 @@ block|,
 literal|2
 block|,
 name|FL_RO
+operator||
+name|FL_ST
 block|,
 name|focusname
 block|}
@@ -903,6 +907,8 @@ block|,
 literal|2
 block|,
 name|FL_WR
+operator||
+name|FL_ST
 block|,
 name|rm
 block|}
@@ -917,6 +923,8 @@ block|,
 literal|2
 block|,
 name|FL_WR
+operator||
+name|FL_ST
 block|,
 name|rm
 block|}
@@ -931,6 +939,8 @@ block|,
 literal|3
 block|,
 name|FL_WR
+operator||
+name|FL_ST
 block|,
 name|ln
 block|}
@@ -959,6 +969,8 @@ block|,
 literal|3
 block|,
 name|FL_WR
+operator||
+name|FL_ST
 block|,
 name|chname
 block|}
@@ -1186,9 +1198,9 @@ literal|"Commands are:\n%-10s %5s %5s   %s\n"
 argument_list|,
 literal|"command"
 argument_list|,
-literal|"min argc"
+literal|"min args"
 argument_list|,
-literal|"max argc"
+literal|"max args"
 argument_list|,
 literal|"what"
 argument_list|)
@@ -1217,10 +1229,14 @@ argument_list|,
 name|cmdtp
 operator|->
 name|minargc
+operator|-
+literal|1
 argument_list|,
 name|cmdtp
 operator|->
 name|maxargc
+operator|-
+literal|1
 argument_list|,
 name|cmdtp
 operator|->
@@ -1590,6 +1606,16 @@ operator|>=
 name|cmdp
 operator|->
 name|minargc
+operator|&&
+operator|(
+name|cmdp
+operator|->
+name|flags
+operator|&
+name|FL_ST
+operator|)
+operator|==
+name|FL_ST
 condition|)
 block|{
 name|strcpy
