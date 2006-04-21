@@ -455,7 +455,6 @@ comment|/* phys addr of kernel level 2 */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|u_int64_t
 name|KPDPphys
 decl_stmt|;
