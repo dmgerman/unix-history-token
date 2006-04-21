@@ -8636,6 +8636,12 @@ operator|==
 name|td
 operator|->
 name|td_proc
+operator|||
+name|p
+operator|->
+name|p_state
+operator|==
+name|PRS_NEW
 condition|)
 block|{
 name|PROC_UNLOCK
@@ -8779,6 +8785,12 @@ operator|->
 name|p_flag
 operator|&
 name|P_SYSTEM
+operator|||
+name|p
+operator|->
+name|p_state
+operator|==
+name|PRS_NEW
 condition|)
 block|{
 name|PROC_UNLOCK
