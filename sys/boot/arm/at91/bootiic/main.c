@@ -33,6 +33,12 @@ directive|include
 file|"lib.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"eeprom.h"
+end_include
+
 begin_comment
 comment|/*  * .KB_C_FN_DEFINITION_START  * int main(void)  *  This global function waits at least one second, but not more than two   * seconds, for input from the serial port.  If no response is recognized,  * it acts according to the parameters specified by the environment.  For   * example, the function might boot an operating system.  Do not return  * from this function.  * .KB_C_FN_DEFINITION_END  */
 end_comment
@@ -44,6 +50,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|InitEEPROM
+argument_list|()
+expr_stmt|;
 name|EMAC_Init
 argument_list|()
 expr_stmt|;
