@@ -32,10 +32,20 @@ name|u8
 value|unsigned char
 end_define
 
+begin_comment
+comment|// #include "/usr/src/arm/linux/include/asm/setup.h"
+end_comment
+
 begin_include
 include|#
 directive|include
-file|"/usr/src/arm/linux/include/asm/setup.h"
+file|<linux/asm/setup.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tag_list.h"
 end_include
 
 begin_define
