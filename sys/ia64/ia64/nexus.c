@@ -2215,24 +2215,21 @@ parameter_list|,
 name|struct
 name|resource
 modifier|*
-name|r
+name|ires
 parameter_list|,
 name|void
 modifier|*
-name|ih
+name|cookie
 parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-block|return (inthand_remove(ih));
-else|#
-directive|else
 return|return
-literal|0
+operator|(
+name|ia64_teardown_intr
+argument_list|(
+name|cookie
+argument_list|)
+operator|)
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 
