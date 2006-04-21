@@ -1284,9 +1284,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|ch
-operator|>=
-literal|0
+literal|1
 condition|)
 if|if
 condition|(
