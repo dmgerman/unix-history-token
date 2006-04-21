@@ -55,12 +55,7 @@ name|thisSecond
 operator|+
 name|seconds
 expr_stmt|;
-while|while
-condition|(
-name|thisSecond
-operator|<=
-name|seconds
-condition|)
+do|do
 block|{
 if|if
 condition|(
@@ -87,6 +82,13 @@ name|GetSeconds
 argument_list|()
 expr_stmt|;
 block|}
+do|while
+condition|(
+name|thisSecond
+operator|<
+name|seconds
+condition|)
+do|;
 return|return
 operator|(
 operator|-
