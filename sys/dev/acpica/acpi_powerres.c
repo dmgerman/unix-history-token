@@ -979,14 +979,10 @@ expr_stmt|;
 comment|/* Check to see whether we know about this consumer already */
 if|if
 condition|(
-operator|(
-name|pc
-operator|=
 name|acpi_pwr_find_consumer
 argument_list|(
 name|consumer
 argument_list|)
-operator|)
 operator|!=
 name|NULL
 condition|)
