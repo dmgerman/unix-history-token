@@ -1075,7 +1075,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|EINVAL
+name|ENODEV
 expr_stmt|;
 goto|goto
 name|done
