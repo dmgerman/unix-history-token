@@ -18995,6 +18995,11 @@ argument_list|(
 name|MPT_SENSE_SIZE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sense_data
+condition|)
+block|{
 name|memcpy
 argument_list|(
 operator|&
@@ -19008,6 +19013,28 @@ argument_list|,
 name|MPT_SENSE_SIZE
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|mpt_prt
+argument_list|(
+name|mpt
+argument_list|,
+literal|"mpt_scsi_tgt_status: CHECK CONDI"
+literal|"TION but no sense data?\n"
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|rsp
+argument_list|,
+literal|0
+argument_list|,
+name|MPT_SENSE_SIZE
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -19677,6 +19704,8 @@ decl_stmt|;
 name|tgt_resource_t
 modifier|*
 name|trtp
+init|=
+name|NULL
 decl_stmt|;
 name|U8
 modifier|*
@@ -19900,8 +19929,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-return|return;
 block|}
+else|else
+block|{
 switch|switch
 condition|(
 name|fc
@@ -19937,12 +19967,13 @@ name|MSG_ORDERED_Q_TAG
 expr_stmt|;
 break|break;
 default|default:
-comment|/* 			 * Bah. Ignore Untagged Queing and ACA 			 */
+comment|/* 				 * Bah. Ignore Untagged Queing and ACA 				 */
 name|tag_action
 operator|=
 name|MSG_SIMPLE_Q_TAG
 expr_stmt|;
 break|break;
+block|}
 block|}
 name|tgt
 operator|->
@@ -20147,7 +20178,13 @@ operator|->
 name|trt_wildcard
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|fct
+operator|!=
+name|MPT_NIL_TMT_VALUE
+condition|)
 block|{
 specifier|const
 name|uint8_t
@@ -20213,6 +20250,7 @@ name|lun
 index|]
 expr_stmt|;
 block|}
+comment|/* 	 * Deal with any task management 	 */
 if|if
 condition|(
 name|fct
@@ -20220,13 +20258,38 @@ operator|!=
 name|MPT_NIL_TMT_VALUE
 condition|)
 block|{
-comment|/* undo any tgt residual settings */
-name|tgt
-operator|->
-name|resid
-operator|=
-literal|0
+if|if
+condition|(
+name|trtp
+operator|==
+name|NULL
+condition|)
+block|{
+name|mpt_prt
+argument_list|(
+name|mpt
+argument_list|,
+literal|"task mgmt function %x but no listener\n"
+argument_list|,
+name|fct
+argument_list|)
 expr_stmt|;
+name|mpt_scsi_tgt_status
+argument_list|(
+name|mpt
+argument_list|,
+literal|0
+argument_list|,
+name|req
+argument_list|,
+name|SCSI_STATUS_OK
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|mpt_scsi_tgt_tsk_mgmt
 argument_list|(
 name|mpt
@@ -20243,6 +20306,7 @@ name|reply_desc
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 block|}
 name|atiop
