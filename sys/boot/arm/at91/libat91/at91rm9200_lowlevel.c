@@ -233,6 +233,65 @@ name|AT91C_PMC_MCKRDY
 operator|)
 condition|)
 continue|continue;
+ifdef|#
+directive|ifdef
+name|BOOT_KB9202
+comment|// setup flash access (allow ample margin)
+comment|// 9 wait states, 1 setup, 1 hold, 1 float for 8-bit device
+operator|(
+operator|(
+name|AT91PS_SMC2
+operator|)
+name|AT91C_BASE_SMC2
+operator|)
+operator|->
+name|SMC2_CSR
+index|[
+literal|0
+index|]
+operator|=
+name|AT91C_SMC2_WSEN
+operator||
+operator|(
+literal|9
+operator|&
+name|AT91C_SMC2_NWS
+operator|)
+operator||
+operator|(
+operator|(
+literal|1
+operator|<<
+literal|8
+operator|)
+operator|&
+name|AT91C_SMC2_TDF
+operator|)
+operator||
+name|AT91C_SMC2_DBW_8
+operator||
+operator|(
+operator|(
+literal|1
+operator|<<
+literal|24
+operator|)
+operator|&
+name|AT91C_SMC2_RWSETUP
+operator|)
+operator||
+operator|(
+operator|(
+literal|1
+operator|<<
+literal|29
+operator|)
+operator|&
+name|AT91C_SMC2_RWHOLD
+operator|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|// setup SDRAM access
 comment|// EBI chip-select register (CS1 = SDRAM controller)
 comment|// 9 col, 13row, 4 bank, CAS2
