@@ -1579,10 +1579,10 @@ name|tid
 parameter_list|,
 name|inst
 parameter_list|,
-name|inp
+name|seqid
 parameter_list|)
 define|\
-value|tid = inp->in_seqid;						\ 	tid |= (inst<< 16)
+value|tid = seqid;							\ 	tid |= (inst<< 16)
 end_define
 
 begin_define
@@ -2664,8 +2664,12 @@ begin_define
 define|#
 directive|define
 name|DFLT_INOT_CNT
-value|16
+value|0xfe
 end_define
+
+begin_comment
+comment|/* unmonitored */
+end_comment
 
 begin_function_decl
 name|int

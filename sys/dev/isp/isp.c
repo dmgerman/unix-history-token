@@ -409,8 +409,7 @@ specifier|static
 name|int
 name|isp_parse_async
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|uint16_t
@@ -423,8 +422,7 @@ specifier|static
 name|int
 name|isp_handle_other_response
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|int
@@ -443,8 +441,7 @@ specifier|static
 name|void
 name|isp_parse_status
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|ispstatusreq_t
@@ -461,8 +458,7 @@ specifier|static
 name|void
 name|isp_fastpost_complete
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|uint16_t
@@ -475,8 +471,7 @@ specifier|static
 name|int
 name|isp_mbox_continue
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -487,8 +482,7 @@ specifier|static
 name|void
 name|isp_scsi_init
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -499,8 +493,7 @@ specifier|static
 name|void
 name|isp_scsi_channel_init
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|int
@@ -513,8 +506,7 @@ specifier|static
 name|void
 name|isp_fibre_init
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -525,8 +517,7 @@ specifier|static
 name|void
 name|isp_mark_getpdb_all
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -537,8 +528,7 @@ specifier|static
 name|int
 name|isp_getmap
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|fcpos_map_t
@@ -552,8 +542,7 @@ specifier|static
 name|int
 name|isp_getpdb
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|int
@@ -569,8 +558,7 @@ specifier|static
 name|uint64_t
 name|isp_get_portname
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|int
@@ -585,8 +573,7 @@ specifier|static
 name|int
 name|isp_fclink_test
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|int
@@ -610,8 +597,7 @@ specifier|static
 name|int
 name|isp_pdb_sync
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -622,8 +608,7 @@ specifier|static
 name|int
 name|isp_scan_loop
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -634,8 +619,7 @@ specifier|static
 name|int
 name|isp_fabric_mbox_cmd
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|mbreg_t
@@ -649,8 +633,7 @@ specifier|static
 name|int
 name|isp_scan_fabric
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|int
@@ -663,8 +646,7 @@ specifier|static
 name|void
 name|isp_register_fc4_type
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -675,8 +657,7 @@ specifier|static
 name|void
 name|isp_fw_state
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -687,8 +668,7 @@ specifier|static
 name|void
 name|isp_mboxcmd_qnw
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|mbreg_t
@@ -704,8 +684,7 @@ specifier|static
 name|void
 name|isp_mboxcmd
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|mbreg_t
@@ -721,8 +700,7 @@ specifier|static
 name|void
 name|isp_update
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -733,8 +711,7 @@ specifier|static
 name|void
 name|isp_update_bus
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|int
@@ -747,8 +724,7 @@ specifier|static
 name|void
 name|isp_setdfltparm
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|int
@@ -761,8 +737,7 @@ specifier|static
 name|int
 name|isp_read_nvram
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -773,8 +748,7 @@ specifier|static
 name|void
 name|isp_rdnvram_word
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|int
@@ -790,8 +764,7 @@ specifier|static
 name|void
 name|isp_parse_nvram_1020
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -805,8 +778,7 @@ specifier|static
 name|void
 name|isp_parse_nvram_1080
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|int
@@ -822,8 +794,7 @@ specifier|static
 name|void
 name|isp_parse_nvram_12160
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|int
@@ -839,8 +810,7 @@ specifier|static
 name|void
 name|isp_parse_nvram_2100
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -857,8 +827,7 @@ begin_function
 name|void
 name|isp_reset
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -3525,8 +3494,7 @@ begin_function
 name|void
 name|isp_init
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -3585,8 +3553,7 @@ specifier|static
 name|void
 name|isp_scsi_init
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -4670,8 +4637,7 @@ specifier|static
 name|void
 name|isp_scsi_channel_init
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -5269,8 +5235,7 @@ specifier|static
 name|void
 name|isp_fibre_init
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -5635,7 +5600,7 @@ operator|->
 name|icb_hardaddr
 operator|!=
 literal|0xff
-operator|||
+operator|&&
 name|icbp
 operator|->
 name|icb_hardaddr
@@ -5921,9 +5886,14 @@ name|icbp
 operator|->
 name|icb_logintime
 operator|=
-literal|30
+name|ICB_LOGIN_TOV
 expr_stmt|;
-comment|/* 30 second login timeout */
+name|icbp
+operator|->
+name|icb_lunetimeout
+operator|=
+name|ICB_LUN_ENABLE_TOV
+expr_stmt|;
 if|if
 condition|(
 name|IS_23XX
@@ -6471,8 +6441,7 @@ specifier|static
 name|int
 name|isp_getmap
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -6659,8 +6628,7 @@ specifier|static
 name|void
 name|isp_mark_getpdb_all
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -6723,8 +6691,7 @@ specifier|static
 name|int
 name|isp_getpdb
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -6945,8 +6912,7 @@ specifier|static
 name|uint64_t
 name|isp_get_portname
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -7256,8 +7222,7 @@ specifier|static
 name|int
 name|isp_fclink_test
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -8735,8 +8700,7 @@ specifier|static
 name|int
 name|isp_pdb_sync
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -10606,8 +10570,7 @@ specifier|static
 name|int
 name|isp_scan_loop
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -11882,8 +11845,7 @@ specifier|static
 name|int
 name|isp_fabric_mbox_cmd
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -12105,8 +12067,7 @@ specifier|static
 name|int
 name|isp_scan_fabric
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -13192,8 +13153,7 @@ specifier|static
 name|int
 name|isp_scan_fabric
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -14964,8 +14924,7 @@ specifier|static
 name|void
 name|isp_register_fc4_type
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -15306,8 +15265,7 @@ modifier|*
 name|xs
 parameter_list|)
 block|{
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 decl_stmt|;
@@ -16758,8 +16716,7 @@ begin_function
 name|int
 name|isp_control
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -17806,8 +17763,7 @@ begin_function
 name|void
 name|isp_intr
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -19891,8 +19847,7 @@ specifier|static
 name|int
 name|isp_parse_async
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -21383,8 +21338,7 @@ specifier|static
 name|int
 name|isp_handle_other_response
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -21572,8 +21526,7 @@ specifier|static
 name|void
 name|isp_parse_status
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -23642,8 +23595,7 @@ specifier|static
 name|void
 name|isp_fastpost_complete
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -23772,8 +23724,7 @@ specifier|static
 name|int
 name|isp_mbox_continue
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -26294,8 +26245,7 @@ specifier|static
 name|void
 name|isp_mboxcmd_qnw
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -26519,8 +26469,7 @@ specifier|static
 name|void
 name|isp_mboxcmd
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -27188,8 +27137,7 @@ specifier|static
 name|void
 name|isp_fw_state
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -27276,8 +27224,7 @@ specifier|static
 name|void
 name|isp_update
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -27344,8 +27291,7 @@ specifier|static
 name|void
 name|isp_update_bus
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -28011,8 +27957,7 @@ specifier|static
 name|void
 name|isp_setdfltparm
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -29064,8 +29009,7 @@ begin_function
 name|void
 name|isp_reinit
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -29286,8 +29230,7 @@ specifier|static
 name|int
 name|isp_read_nvram
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -29720,8 +29663,7 @@ specifier|static
 name|void
 name|isp_rdnvram_word
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -30090,8 +30032,7 @@ specifier|static
 name|void
 name|isp_parse_nvram_1020
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -30809,8 +30750,7 @@ specifier|static
 name|void
 name|isp_parse_nvram_1080
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -31407,8 +31347,7 @@ specifier|static
 name|void
 name|isp_parse_nvram_12160
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -32005,8 +31944,7 @@ specifier|static
 name|void
 name|isp_parse_nvram_2100
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -32500,8 +32438,7 @@ specifier|static
 name|void
 name|isp2200_fw_dump
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -32512,8 +32449,7 @@ specifier|static
 name|void
 name|isp2300_fw_dump
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -32524,8 +32460,7 @@ specifier|static
 name|void
 name|isp2200_fw_dump
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -33358,8 +33293,7 @@ specifier|static
 name|void
 name|isp2300_fw_dump
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -34268,8 +34202,7 @@ begin_function
 name|void
 name|isp_fw_dump
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)

@@ -139,8 +139,7 @@ specifier|static
 name|void
 name|isp_got_msg
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|in_entry_t
@@ -154,8 +153,7 @@ specifier|static
 name|void
 name|isp_got_msg_fc
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|in_fcentry_t
@@ -169,8 +167,7 @@ specifier|static
 name|void
 name|isp_handle_atio
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|at_entry_t
@@ -184,8 +181,7 @@ specifier|static
 name|void
 name|isp_handle_atio2
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|at2_entry_t
@@ -199,8 +195,7 @@ specifier|static
 name|void
 name|isp_handle_ctio
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|ct_entry_t
@@ -214,8 +209,7 @@ specifier|static
 name|void
 name|isp_handle_ctio2
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|ct2_entry_t
@@ -236,8 +230,7 @@ begin_function
 name|int
 name|isp_target_notify
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -1091,8 +1084,7 @@ begin_function
 name|int
 name|isp_lun_cmd
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -1337,12 +1329,6 @@ operator|=
 name|lun
 expr_stmt|;
 block|}
-name|el
-operator|.
-name|le_timeout
-operator|=
-literal|2
-expr_stmt|;
 if|if
 condition|(
 name|isp_getrqentry
@@ -1420,8 +1406,7 @@ begin_function
 name|int
 name|isp_target_put_entry
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -1626,8 +1611,7 @@ begin_function
 name|int
 name|isp_target_put_atio
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -1925,8 +1909,7 @@ begin_function
 name|int
 name|isp_endcmd
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -2411,12 +2394,15 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * These are either broadcast events or specifically CTIO fast completion  */
+end_comment
+
 begin_function
 name|int
 name|isp_target_async
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -2447,7 +2433,6 @@ name|nt_hba
 operator|=
 name|isp
 expr_stmt|;
-comment|/* nt_str set in outer layers */
 name|notify
 operator|.
 name|nt_iid
@@ -2789,8 +2774,7 @@ specifier|static
 name|void
 name|isp_got_msg
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -2829,7 +2813,6 @@ name|nt_hba
 operator|=
 name|isp
 expr_stmt|;
-comment|/* nt_str set in outer layers */
 name|nt
 operator|.
 name|nt_iid
@@ -3040,8 +3023,7 @@ specifier|static
 name|void
 name|isp_got_msg_fc
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -3069,6 +3051,9 @@ index|[]
 init|=
 literal|"unknown %s 0x%x lun %d iid 0x%08x%08x task flags 0x%x seq 0x%x\n"
 decl_stmt|;
+name|uint16_t
+name|seqid
+decl_stmt|;
 name|MEMZERO
 argument_list|(
 operator|&
@@ -3086,7 +3071,6 @@ name|nt_hba
 operator|=
 name|isp
 expr_stmt|;
-comment|/* 	 * XXX: LOOK UP TRANSLATION IN CURRENT LPORTDB 	 */
 if|if
 condition|(
 name|IS_2KLOGIN
@@ -3109,6 +3093,18 @@ operator|)
 operator|->
 name|in_iid
 expr_stmt|;
+name|seqid
+operator|=
+operator|(
+operator|(
+name|in_fcentry_e_t
+operator|*
+operator|)
+name|inp
+operator|)
+operator|->
+name|in_seqid
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -3120,7 +3116,12 @@ name|inp
 operator|->
 name|in_iid
 expr_stmt|;
-comment|/* possibly reset in outer layer */
+name|seqid
+operator|=
+name|inp
+operator|->
+name|in_seqid
+expr_stmt|;
 block|}
 comment|/* nt_tgt set in outer layers */
 if|if
@@ -3163,7 +3164,7 @@ name|nt_tagval
 argument_list|,
 literal|0
 argument_list|,
-name|inp
+name|seqid
 argument_list|)
 expr_stmt|;
 name|nt
@@ -3580,8 +3581,7 @@ begin_function
 name|void
 name|isp_notify_ack
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -4020,8 +4020,7 @@ specifier|static
 name|void
 name|isp_handle_atio
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -4198,8 +4197,7 @@ specifier|static
 name|void
 name|isp_handle_atio2
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -4408,8 +4406,7 @@ specifier|static
 name|void
 name|isp_handle_ctio
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -4887,8 +4884,7 @@ specifier|static
 name|void
 name|isp_handle_ctio2
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -5025,9 +5021,13 @@ name|isp
 argument_list|,
 name|ISP_LOGERR
 argument_list|,
-literal|"CTIO2 destroyed by %s"
+literal|"CTIO2 destroyed by %s: RX_ID=0x%x"
 argument_list|,
 name|fmsg
+argument_list|,
+name|ct
+operator|->
+name|ct_rxid
 argument_list|)
 expr_stmt|;
 break|break;

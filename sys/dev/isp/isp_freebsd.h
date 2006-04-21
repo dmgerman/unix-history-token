@@ -19,6 +19,33 @@ directive|define
 name|_ISP_FREEBSD_H
 end_define
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500000
+end_if
+
+begin_define
+define|#
+directive|define
+name|ISP_PLATFORM_VERSION_MAJOR
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_PLATFORM_VERSION_MINOR
+value|17
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -32,6 +59,11 @@ directive|define
 name|ISP_PLATFORM_VERSION_MINOR
 value|9
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -51,6 +83,14 @@ directive|include
 file|<sys/endian.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500000
+end_if
+
 begin_include
 include|#
 directive|include
@@ -66,7 +106,30 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
 end_include
 
 begin_include
@@ -86,6 +149,11 @@ include|#
 directive|include
 file|<sys/condvar.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -228,6 +296,26 @@ begin_comment
 comment|/* #define	ISP_SMPLOCK			1 */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500000
+end_if
+
+begin_define
+define|#
+directive|define
+name|ISP_IFLAGS
+value|INTR_TYPE_CAM
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -252,6 +340,11 @@ directive|define
 name|ISP_IFLAGS
 value|INTR_TYPE_CAM | INTR_ENTROPY
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -486,29 +579,35 @@ name|intr_config_hook
 name|ehook
 decl_stmt|;
 name|uint8_t
-label|:
+name|disabled
+range|:
 literal|1
-operator|,
+decl_stmt|,
 name|fcbsy
-operator|:
+range|:
 literal|1
-operator|,
+decl_stmt|,
 name|ktmature
-operator|:
+range|:
 literal|1
-operator|,
+decl_stmt|,
 name|mboxwaiting
-operator|:
+range|:
 literal|1
-operator|,
+decl_stmt|,
 name|intsok
-operator|:
+range|:
 literal|1
-operator|,
+decl_stmt|,
 name|simqfrozen
-operator|:
+range|:
 literal|3
-expr_stmt|;
+decl_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
 name|struct
 name|mtx
 name|lock
@@ -517,6 +616,8 @@ name|struct
 name|cv
 name|kthread_cv
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|proc
 modifier|*
@@ -968,7 +1069,7 @@ name|XS_ISP
 parameter_list|(
 name|ccb
 parameter_list|)
-value|((struct ispsoftc *) (ccb)->ccb_h.spriv_ptr1)
+value|((ispsoftc_t *) (ccb)->ccb_h.spriv_ptr1)
 end_define
 
 begin_define
@@ -1664,8 +1765,7 @@ begin_function_decl
 name|void
 name|isp_prt
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|int
@@ -1758,8 +1858,7 @@ specifier|extern
 name|void
 name|isp_attach
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1770,8 +1869,7 @@ specifier|extern
 name|void
 name|isp_uninit
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1930,8 +2028,7 @@ name|__inline
 name|void
 name|isp_mbox_wait_complete
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1943,8 +2040,7 @@ name|__inline
 name|void
 name|isp_mbox_wait_complete
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)

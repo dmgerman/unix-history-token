@@ -94,8 +94,7 @@ specifier|static
 name|uint16_t
 name|isp_sbus_rd_reg
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|int
@@ -108,8 +107,7 @@ specifier|static
 name|void
 name|isp_sbus_wr_reg
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|int
@@ -124,8 +122,7 @@ specifier|static
 name|int
 name|isp_sbus_rd_isr
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|uint16_t
@@ -145,8 +142,7 @@ specifier|static
 name|int
 name|isp_sbus_mbxdma
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -157,8 +153,7 @@ specifier|static
 name|int
 name|isp_sbus_dmasetup
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|XS_T
@@ -180,8 +175,7 @@ specifier|static
 name|void
 name|isp_sbus_dmateardown
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|XS_T
@@ -197,8 +191,7 @@ specifier|static
 name|void
 name|isp_sbus_reset1
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -209,8 +202,7 @@ specifier|static
 name|void
 name|isp_sbus_dumpregs
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 specifier|const
@@ -278,8 +270,7 @@ begin_struct
 struct|struct
 name|isp_sbussoftc
 block|{
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 name|sbus_isp
 decl_stmt|;
 name|device_t
@@ -567,8 +558,7 @@ name|isp_sbussoftc
 modifier|*
 name|sbs
 decl_stmt|;
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 init|=
@@ -1633,8 +1623,7 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 init|=
@@ -1760,8 +1749,7 @@ specifier|static
 name|int
 name|isp_sbus_rd_isr
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -1910,8 +1898,7 @@ specifier|static
 name|uint16_t
 name|isp_sbus_rd_reg
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -1999,8 +1986,7 @@ specifier|static
 name|void
 name|isp_sbus_wr_reg
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -2082,8 +2068,7 @@ begin_struct
 struct|struct
 name|imush
 block|{
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 decl_stmt|;
@@ -2158,8 +2143,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 init|=
@@ -2216,8 +2200,7 @@ specifier|static
 name|int
 name|isp_sbus_mbxdma
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -2875,8 +2858,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 decl_stmt|;
@@ -2952,8 +2934,7 @@ name|mush_t
 modifier|*
 name|mp
 decl_stmt|;
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 decl_stmt|;
@@ -3478,8 +3459,7 @@ specifier|static
 name|int
 name|isp_sbus_dmasetup
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -4078,8 +4058,7 @@ specifier|static
 name|void
 name|isp_sbus_dmateardown
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -4179,8 +4158,7 @@ specifier|static
 name|void
 name|isp_sbus_reset1
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -4199,8 +4177,7 @@ specifier|static
 name|void
 name|isp_sbus_dumpregs
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,

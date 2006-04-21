@@ -45,7 +45,7 @@ value|_IO(ISP_IOC, 2)
 end_define
 
 begin_comment
-comment|/*  * This ioctl performs a fibre chanel rescan.  */
+comment|/*  * This ioctl performs a fibre channel rescan.  */
 end_comment
 
 begin_define
