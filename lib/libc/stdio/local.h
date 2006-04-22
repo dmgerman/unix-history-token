@@ -128,6 +128,16 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|void
+name|__fcloseall
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|wint_t
 name|__fgetwc
 parameter_list|(
