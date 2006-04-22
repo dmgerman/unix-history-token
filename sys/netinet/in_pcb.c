@@ -3738,11 +3738,6 @@ decl_stmt|;
 name|in_port_t
 name|port
 decl_stmt|;
-name|INP_INFO_RLOCK
-argument_list|(
-name|pcbinfo
-argument_list|)
-expr_stmt|;
 name|inp
 operator|=
 name|sotoinpcb
@@ -3757,7 +3752,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"in_setsockaddr: so_pcb == NULL"
+literal|"in_setsockaddr: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3781,11 +3776,6 @@ expr_stmt|;
 name|INP_UNLOCK
 argument_list|(
 name|inp
-argument_list|)
-expr_stmt|;
-name|INP_INFO_RUNLOCK
-argument_list|(
-name|pcbinfo
 argument_list|)
 expr_stmt|;
 operator|*
@@ -3842,11 +3832,6 @@ decl_stmt|;
 name|in_port_t
 name|port
 decl_stmt|;
-name|INP_INFO_RLOCK
-argument_list|(
-name|pcbinfo
-argument_list|)
-expr_stmt|;
 name|inp
 operator|=
 name|sotoinpcb
@@ -3861,7 +3846,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"in_setpeeraddr: so_pcb == NULL"
+literal|"in_setpeeraddr: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3885,11 +3870,6 @@ expr_stmt|;
 name|INP_UNLOCK
 argument_list|(
 name|inp
-argument_list|)
-expr_stmt|;
-name|INP_INFO_RUNLOCK
-argument_list|(
-name|pcbinfo
 argument_list|)
 expr_stmt|;
 operator|*
