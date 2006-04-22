@@ -1113,6 +1113,14 @@ name|isn_callout
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|isn_mtx
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * TCP initialization.  */
 end_comment
@@ -1463,6 +1471,18 @@ argument_list|()
 expr_stmt|;
 name|tcp_reass_init
 argument_list|()
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|isn_mtx
+argument_list|,
+literal|"isn_mtx"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
 expr_stmt|;
 name|callout_init
 argument_list|(
@@ -6663,17 +6683,17 @@ decl_stmt|;
 name|tcp_seq
 name|new_isn
 decl_stmt|;
-name|INP_INFO_WLOCK_ASSERT
-argument_list|(
-operator|&
-name|tcbinfo
-argument_list|)
-expr_stmt|;
 name|INP_LOCK_ASSERT
 argument_list|(
 name|tp
 operator|->
 name|t_inpcb
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|isn_mtx
 argument_list|)
 expr_stmt|;
 comment|/* Seed if this is the first use, reseed if requested. */
@@ -6954,6 +6974,12 @@ name|new_isn
 operator|+=
 name|isn_offset
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|isn_mtx
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|new_isn
@@ -6979,10 +7005,10 @@ block|{
 name|u_int32_t
 name|projected_offset
 decl_stmt|;
-name|INP_INFO_WLOCK
+name|mtx_lock
 argument_list|(
 operator|&
-name|tcbinfo
+name|isn_mtx
 argument_list|)
 expr_stmt|;
 name|projected_offset
@@ -7021,10 +7047,10 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|mtx_unlock
 argument_list|(
 operator|&
-name|tcbinfo
+name|isn_mtx
 argument_list|)
 expr_stmt|;
 block|}
