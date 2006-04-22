@@ -34,7 +34,7 @@ name|__weak_reference
 argument_list|(
 name|__fcloseall
 argument_list|,
-name|fclose
+name|fcloseall
 argument_list|)
 expr_stmt|;
 end_expr_stmt
