@@ -14,6 +14,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ddb.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -34,13 +40,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -71,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|<netnatm/natm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ddb/ddb.h>
 end_include
 
 begin_decl_stmt
@@ -116,26 +134,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-if|if
-condition|(
-name|wait
-operator|==
-name|M_WAITOK
-operator|&&
-name|npcb
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"npcb_alloc: malloc didn't wait"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|npcb
@@ -415,19 +413,23 @@ directive|ifdef
 name|DDB
 end_ifdef
 
-begin_function
-name|int
-name|npcb_dump
-parameter_list|(
-name|void
-parameter_list|)
+begin_macro
+name|DB_SHOW_COMMAND
+argument_list|(
+argument|natm
+argument_list|,
+argument|db_show_natm
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|struct
 name|natmpcb
 modifier|*
 name|cpcb
 decl_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"npcb dump:\n"
 argument_list|)
@@ -441,10 +443,10 @@ argument_list|,
 argument|pcblist
 argument_list|)
 block|{
-name|printf
+name|db_printf
 argument_list|(
-literal|"if=%s, vci=%d, vpi=%d, IP=0x%x, sock=%p, flags=0x%x, "
-literal|"inq=%d\n"
+literal|"if=%s, vci=%d, vpi=%d, IP=0x%x, sock=%p, "
+literal|"flags=0x%x, inq=%d\n"
 argument_list|,
 name|cpcb
 operator|->
@@ -480,18 +482,8 @@ name|npcb_inq
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"done\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
-end_function
+end_block
 
 begin_endif
 endif|#
