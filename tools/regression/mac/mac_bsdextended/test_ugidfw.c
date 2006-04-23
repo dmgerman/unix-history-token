@@ -6,13 +6,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/mac.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mount.h>
 end_include
 
 begin_include
@@ -229,6 +235,77 @@ block|,
 literal|"subject uid bin object not uid operator mode n"
 block|,
 literal|"subject not uid daemon object not uid operator mode n"
+block|,
+comment|/* Ranges */
+literal|"subject uid root:operator object gid wheel:bin mode n"
+block|,
+comment|/* Jail ID */
+literal|"subject jailid 1 object uid root mode n"
+block|,
+comment|/* Filesys */
+literal|"subject uid root object filesys / mode n"
+block|,
+literal|"subject uid root object filesys /dev mode n"
+block|,
+comment|/* S/UGID */
+literal|"subject not uid root object sgid mode n"
+block|,
+literal|"subject not uid root object sgid mode n"
+block|,
+comment|/* Matching uid/gid */
+literal|"subject not uid root:operator object not uid_of_subject mode n"
+block|,
+literal|"subject not gid wheel:bin object not gid_of_subject mode n"
+block|,
+comment|/* Object types */
+literal|"subject uid root object type a mode a"
+block|,
+literal|"subject uid root object type r mode a"
+block|,
+literal|"subject uid root object type d mode a"
+block|,
+literal|"subject uid root object type b mode a"
+block|,
+literal|"subject uid root object type c mode a"
+block|,
+literal|"subject uid root object type l mode a"
+block|,
+literal|"subject uid root object type s mode a"
+block|,
+literal|"subject uid root object type rbc mode a"
+block|,
+literal|"subject uid root object type dls mode a"
+block|,
+comment|/* Empty rules always match */
+literal|"subject object mode a"
+block|,
+comment|/* Partial negations */
+literal|"subject ! uid root object mode n"
+block|,
+literal|"subject ! gid wheel object mode n"
+block|,
+literal|"subject ! jailid 2 object mode n"
+block|,
+literal|"subject object ! uid root mode n"
+block|,
+literal|"subject object ! gid wheel mode n"
+block|,
+literal|"subject object ! filesys / mode n"
+block|,
+literal|"subject object ! suid mode n"
+block|,
+literal|"subject object ! sgid mode n"
+block|,
+literal|"subject object ! uid_of_subject mode n"
+block|,
+literal|"subject object ! gid_of_subject mode n"
+block|,
+literal|"subject object ! type d mode n"
+block|,
+comment|/* All out nonsense */
+literal|"subject uid root ! gid wheel:bin ! jailid 1 "
+literal|"object ! uid root:daemon gid daemon filesys / suid sgid uid_of_subject gid_of_subject ! type r "
+literal|"mode rsx"
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -267,13 +344,13 @@ decl_stmt|;
 name|char
 name|errorstr
 index|[
-literal|128
+literal|256
 index|]
 decl_stmt|;
 name|char
 name|rulestr
 index|[
-literal|128
+literal|256
 index|]
 decl_stmt|;
 name|int
@@ -387,7 +464,10 @@ argument_list|,
 operator|&
 name|rule
 argument_list|,
-literal|128
+sizeof|sizeof
+argument_list|(
+name|errorstr
+argument_list|)
 argument_list|,
 name|errorstr
 argument_list|)
@@ -425,7 +505,10 @@ name|rule
 argument_list|,
 name|rulestr
 argument_list|,
-literal|128
+sizeof|sizeof
+argument_list|(
+name|rulestr
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -499,7 +582,7 @@ block|{
 name|char
 name|errorstr
 index|[
-literal|128
+literal|256
 index|]
 decl_stmt|;
 name|int
@@ -584,7 +667,10 @@ name|count
 operator|=
 name|bsde_get_rule_count
 argument_list|(
-literal|128
+sizeof|sizeof
+argument_list|(
+name|errorstr
+argument_list|)
 argument_list|,
 name|errorstr
 argument_list|)
@@ -626,7 +712,10 @@ name|slots
 operator|=
 name|bsde_get_rule_slots
 argument_list|(
-literal|128
+sizeof|sizeof
+argument_list|(
+name|errorstr
+argument_list|)
 argument_list|,
 name|errorstr
 argument_list|)
