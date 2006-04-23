@@ -8,7 +8,7 @@ comment|/*-  *  * Copyright (c) 1996 Charles D. Cranor and Washington University
 end_comment
 
 begin_comment
-comment|/*  * natm.c: native mode ATM access (both aal0 and aal5).  */
+comment|/*  * natm.c: Native mode ATM access (both aal0 and aal5).  */
 end_comment
 
 begin_include
@@ -187,6 +187,10 @@ literal|1024
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * netnatm global subsystem lock, protects all global data structures in  * netnatm.  */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|mtx
@@ -195,7 +199,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * user requests  */
+comment|/*  * User socket requests.  */
 end_comment
 
 begin_function_decl
@@ -656,7 +660,7 @@ literal|"natm_usr_connect: npcb == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * validate nam and npcb      */
+comment|/* 	 * Validate nam and npcb. 	 */
 name|NATM_LOCK
 argument_list|()
 expr_stmt|;
@@ -731,7 +735,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* XXX ensure null termination 						   since ifunit() uses strcmp */
-comment|/*      * convert interface string to ifp, validate.      */
+comment|/* 	 * Convert interface string to ifp, validate. 	 */
 name|ifp
 operator|=
 name|ifunit
@@ -785,7 +789,7 @@ name|EAFNOSUPPORT
 operator|)
 return|;
 block|}
-comment|/*      * register us with the NATM PCB layer      */
+comment|/* 	 * Register us with the NATM PCB layer. 	 */
 if|if
 condition|(
 name|npcb_add
@@ -815,7 +819,7 @@ name|EADDRINUSE
 operator|)
 return|;
 block|}
-comment|/*      * Open the channel.      *      * XXXRW: Eventually desirable to hold mutex over ioctl?      */
+comment|/* 	 * Open the channel. 	 * 	 * XXXRW: Eventually desirable to hold mutex over ioctl? 	 */
 name|bzero
 argument_list|(
 operator|&
@@ -1052,7 +1056,7 @@ name|npcb
 operator|->
 name|npcb_ifp
 expr_stmt|;
-comment|/*      * Disable rx.      *      * XXXRW: Eventually desirable to hold mutex over ioctl?      */
+comment|/* 	 * Disable rx. 	 * 	 * XXXRW: Eventually desirable to hold mutex over ioctl? 	 */
 name|cl
 operator|.
 name|vpi
@@ -1254,7 +1258,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-comment|/*      * send the data.   we must put an atm_pseudohdr on first      */
+comment|/* 	 * Send the data.  We must put an atm_pseudohdr on first. 	 */
 name|M_PREPEND
 argument_list|(
 name|m
@@ -1757,7 +1761,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * natmintr: interrupt  *  * note: we expect a socket pointer in rcvif rather than an interface  * pointer.    we can get the interface pointer from the so's PCB if  * we really need it.  */
+comment|/*  * natmintr: interrupt  *  * Note: we expect a socket pointer in rcvif rather than an interface  * pointer.  We can get the interface pointer from the so's PCB if we really  * need it.  */
 end_comment
 
 begin_function
