@@ -1528,7 +1528,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Attempt to free a socket.  This should really be sotryfree().  *  * sofree() will succeed if:  *  * - There are no outstanding file descriptor references or related consumers  *   (so_count == 0).  *  * - The socket has been closed by user space, if ever open (SS_NOFDREF).  *  * - The protocol does not have an outstanding strong reference on the socket  *   (SS_PROTOREF).  *  * Otherwise, it will quietly abort so that a future call to sofree(), when  * conditions are right, can succeed.  */
+comment|/*  * Attempt to free a socket.  This should really be sotryfree().  *  * sofree() will succeed if:  *  * - There are no outstanding file descriptor references or related consumers  *   (so_count == 0).  *  * - The socket has been closed by user space, if ever open (SS_NOFDREF).  *  * - The protocol does not have an outstanding strong reference on the socket  *   (SS_PROTOREF).  *  * - The socket is in a completed connection queue, so a process has been  *   notified that it is present.  If it is removed, the user process may  *   block in accept() despite select() saying the socket was ready.  *  * Otherwise, it will quietly abort so that a future call to sofree(), when  * conditions are right, can succeed.  */
 end_comment
 
 begin_function
@@ -1580,6 +1580,14 @@ operator|->
 name|so_state
 operator|&
 name|SS_PROTOREF
+operator|)
+operator|||
+operator|(
+name|so
+operator|->
+name|so_qstate
+operator|&
+name|SQ_COMP
 operator|)
 condition|)
 block|{
@@ -1661,30 +1669,6 @@ literal|"sofree: so->so_qstate is SQ_COMP and also SQ_INCOMP"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * accept(2) is responsible draining the completed 		 * connection queue and freeing those sockets, so 		 * we just return here if this socket is currently 		 * on the completed connection queue.  Otherwise, 		 * accept(2) may hang after select(2) has indicating 		 * that a listening socket was ready.  If it's an 		 * incomplete connection, we remove it from the queue 		 * and free it; otherwise, it won't be released until 		 * the listening socket is closed. 		 */
-if|if
-condition|(
-operator|(
-name|so
-operator|->
-name|so_qstate
-operator|&
-name|SQ_COMP
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|SOCK_UNLOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-name|ACCEPT_UNLOCK
-argument_list|()
-expr_stmt|;
-return|return;
-block|}
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
