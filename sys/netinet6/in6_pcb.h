@@ -70,7 +70,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|in6pcb
+name|inpcbinfo
 operator|*
 operator|,
 expr|struct
