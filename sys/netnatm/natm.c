@@ -541,9 +541,6 @@ name|natmpcb
 modifier|*
 name|npcb
 decl_stmt|;
-name|NATM_LOCK
-argument_list|()
-expr_stmt|;
 name|npcb
 operator|=
 operator|(
@@ -565,6 +562,9 @@ operator|(
 literal|"natm_usr_detach: npcb == NULL"
 operator|)
 argument_list|)
+expr_stmt|;
+name|NATM_LOCK
+argument_list|()
 expr_stmt|;
 name|npcb_free
 argument_list|(
@@ -639,9 +639,6 @@ name|so_proto
 operator|->
 name|pr_protocol
 decl_stmt|;
-name|NATM_LOCK
-argument_list|()
-expr_stmt|;
 name|npcb
 operator|=
 operator|(
@@ -665,6 +662,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/*      * validate nam and npcb      */
+name|NATM_LOCK
+argument_list|()
+expr_stmt|;
 name|snatm
 operator|=
 operator|(
@@ -998,9 +998,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|NATM_LOCK
-argument_list|()
-expr_stmt|;
 name|npcb
 operator|=
 operator|(
@@ -1022,6 +1019,9 @@ operator|(
 literal|"natm_usr_disconnect: npcb == NULL"
 operator|)
 argument_list|)
+expr_stmt|;
+name|NATM_LOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1212,9 +1212,6 @@ name|so_proto
 operator|->
 name|pr_protocol
 decl_stmt|;
-name|NATM_LOCK
-argument_list|()
-expr_stmt|;
 name|npcb
 operator|=
 operator|(
@@ -1236,6 +1233,9 @@ operator|(
 literal|"natm_usr_send: npcb == NULL"
 operator|)
 argument_list|)
+expr_stmt|;
+name|NATM_LOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1285,6 +1285,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|m_freem
+argument_list|(
+name|control
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|ENOBUFS
@@ -1394,9 +1399,6 @@ name|snatm
 decl_stmt|,
 name|ssnatm
 decl_stmt|;
-name|NATM_LOCK
-argument_list|()
-expr_stmt|;
 name|npcb
 operator|=
 operator|(
@@ -1418,6 +1420,9 @@ operator|(
 literal|"natm_usr_peeraddr: npcb == NULL"
 operator|)
 argument_list|)
+expr_stmt|;
+name|NATM_LOCK
+argument_list|()
 expr_stmt|;
 name|snatm
 operator|=
