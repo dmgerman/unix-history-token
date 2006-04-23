@@ -633,11 +633,6 @@ name|EAGAIN
 operator|)
 return|;
 block|}
-name|curthread
-operator|=
-name|_get_curthread
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -911,11 +906,6 @@ operator|(
 name|ret
 operator|)
 return|;
-name|curthread
-operator|=
-name|_get_curthread
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|prwlock
@@ -1155,6 +1145,9 @@ name|struct
 name|pthread
 modifier|*
 name|curthread
+init|=
+name|_get_curthread
+argument_list|()
 decl_stmt|;
 name|pthread_rwlock_t
 name|prwlock
@@ -1211,11 +1204,6 @@ operator|(
 name|ret
 operator|)
 return|;
-name|curthread
-operator|=
-name|_get_curthread
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|prwlock
