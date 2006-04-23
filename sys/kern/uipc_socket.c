@@ -2235,7 +2235,6 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-operator|!
 operator|(
 name|so
 operator|->
@@ -2243,6 +2242,8 @@ name|so_state
 operator|&
 name|SS_PROTOREF
 operator|)
+operator|==
+literal|0
 argument_list|,
 operator|(
 literal|"soabort: SS_PROTOREF"
@@ -2259,6 +2260,40 @@ name|SS_NOFDREF
 argument_list|,
 operator|(
 literal|"soabort: !SS_NOFDREF"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|so
+operator|->
+name|so_state
+operator|&
+name|SQ_COMP
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"soabort: SQ_COMP"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|so
+operator|->
+name|so_state
+operator|&
+name|SQ_INCOMP
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"soabort: SQ_INCOMP"
 operator|)
 argument_list|)
 expr_stmt|;
