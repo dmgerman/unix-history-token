@@ -830,11 +830,6 @@ block|}
 comment|/* Detect AMD features (PTE no-execute bit, 3dnow, 64 bit mode etc) */
 if|if
 condition|(
-name|cpu_exthigh
-operator|>=
-literal|0x80000001
-operator|&&
-operator|(
 name|strcmp
 argument_list|(
 name|cpu_vendor
@@ -852,7 +847,13 @@ literal|"AuthenticAMD"
 argument_list|)
 operator|==
 literal|0
-operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|cpu_exthigh
+operator|>=
+literal|0x80000001
 condition|)
 block|{
 name|do_cpuid
@@ -876,6 +877,36 @@ operator|&
 literal|0x0183f3ff
 operator|)
 expr_stmt|;
+name|amd_feature2
+operator|=
+name|regs
+index|[
+literal|2
+index|]
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|cpu_exthigh
+operator|>=
+literal|0x80000008
+condition|)
+block|{
+name|do_cpuid
+argument_list|(
+literal|0x80000008
+argument_list|,
+name|regs
+argument_list|)
+expr_stmt|;
+name|cpu_procinfo2
+operator|=
+name|regs
+index|[
+literal|2
+index|]
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -2823,6 +2854,15 @@ operator|>
 literal|0
 condition|)
 block|{
+name|u_int
+name|cmp
+init|=
+literal|1
+decl_stmt|,
+name|htt
+init|=
+literal|1
+decl_stmt|;
 comment|/* 			 * Here we should probably set up flags indicating 			 * whether or not various features are available. 			 * The interesting ones are probably VME, PSE, PAE, 			 * and PGE.  The code already assumes without bothering 			 * to check that all CPUs>= Pentium have a TSC and 			 * MSRs. 			 */
 name|printf
 argument_list|(
@@ -2954,6 +2994,7 @@ literal|"\040<b31>"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 			 * AMD64 Architecture Programmer's Manual Volume 3: 			 * General-Purpose and System Instructions 			 * http://www.amd.com/us-en/assets/content_type/white_papers_and_tech_docs/24594.pdf 			 * 			 * IA-32 Intel Architecture Software Developer's Manual, 			 * Volume 2A: Instruction Set Reference, A-M 			 * ftp://download.intel.com/design/Pentium4/manuals/25366617.pdf 			 */
 if|if
 condition|(
 name|amd_feature
@@ -3019,12 +3060,12 @@ literal|"\030<s23>"
 comment|/* Same */
 literal|"\031<s24>"
 comment|/* Same */
-literal|"\032<b25>"
-comment|/* Undefined */
+literal|"\032FFXSR"
+comment|/* Fast FXSAVE/FXRSTOR */
 literal|"\033<b26>"
 comment|/* Undefined */
-literal|"\034<b27>"
-comment|/* Undefined */
+literal|"\034RDTSCP"
+comment|/* RDTSCP */
 literal|"\035<b28>"
 comment|/* Undefined */
 literal|"\036LM"
@@ -3033,6 +3074,58 @@ literal|"\0373DNow+"
 comment|/* AMD 3DNow! Extensions */
 literal|"\0403DNow"
 comment|/* AMD 3DNow! */
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|amd_feature2
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\n  AMD Features2=0x%b"
+argument_list|,
+name|amd_feature2
+argument_list|,
+literal|"\020"
+literal|"\001LAHF"
+comment|/* LAHF/SAHF in long mode */
+literal|"\002CMP"
+comment|/* CMP legacy */
+literal|"\003<b2>"
+literal|"\004<b3>"
+literal|"\005CR8"
+comment|/* CR8 in legacy mode */
+literal|"\006<b5>"
+literal|"\007<b6>"
+literal|"\010<b7>"
+literal|"\011<b8>"
+literal|"\012<b9>"
+literal|"\013<b10>"
+literal|"\014<b11>"
+literal|"\015<b12>"
+literal|"\016<b13>"
+literal|"\017<b14>"
+literal|"\020<b15>"
+literal|"\021<b16>"
+literal|"\022<b17>"
+literal|"\023<b18>"
+literal|"\024<b19>"
+literal|"\025<b20>"
+literal|"\026<b21>"
+literal|"\027<b22>"
+literal|"\030<b23>"
+literal|"\031<b24>"
+literal|"\032<b25>"
+literal|"\033<b26>"
+literal|"\034<b27>"
+literal|"\035<b28>"
+literal|"\036<b29>"
+literal|"\037<b30>"
+literal|"\040<b31>"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3064,18 +3157,20 @@ condition|)
 name|printf
 argument_list|(
 literal|"\n    HTT bit cleared - FreeBSD"
-literal|" does not have licenseing issues"
+literal|" does not have licensing issues"
 literal|" requiring it.\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * If this CPU supports hyperthreading then mention 			 * the number of logical CPU's it contains. 			 */
+comment|/* 			 * If this CPU supports HTT or CMP then mention the 			 * number of physical/logical cores it contains. 			 */
 if|if
 condition|(
 name|cpu_feature
 operator|&
 name|CPUID_HTT
-operator|&&
+condition|)
+name|htt
+operator|=
 operator|(
 name|cpu_procinfo
 operator|&
@@ -3083,20 +3178,110 @@ name|CPUID_HTT_CORES
 operator|)
 operator|>>
 literal|16
+expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|cpu_vendor
+argument_list|,
+literal|"AuthenticAMD"
+argument_list|)
+operator|==
+literal|0
+operator|&&
+operator|(
+name|amd_feature2
+operator|&
+name|AMDID2_CMP
+operator|)
+condition|)
+name|cmp
+operator|=
+operator|(
+name|cpu_procinfo2
+operator|&
+name|AMDID_CMP_CORES
+operator|)
+operator|+
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|cpu_vendor
+argument_list|,
+literal|"GenuineIntel"
+argument_list|)
+operator|==
+literal|0
+operator|&&
+operator|(
+name|cpu_high
+operator|>=
+literal|4
+operator|)
+condition|)
+block|{
+name|cpuid_count
+argument_list|(
+literal|4
+argument_list|,
+literal|0
+argument_list|,
+name|regs
+argument_list|)
+expr_stmt|;
+name|cmp
+operator|=
+operator|(
+operator|(
+name|regs
+index|[
+literal|0
+index|]
+operator|&
+literal|0xfc000000
+operator|)
+operator|>>
+literal|26
+operator|)
+operator|+
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|cmp
 operator|>
 literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"\n  Hyperthreading: %d logical CPUs"
+literal|"\n  Cores per package: %d"
 argument_list|,
+name|cmp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
-name|cpu_procinfo
-operator|&
-name|CPUID_HTT_CORES
+name|htt
+operator|/
+name|cmp
 operator|)
-operator|>>
-literal|16
+operator|>
+literal|1
+condition|)
+name|printf
+argument_list|(
+literal|"\n  Logical CPUs per core: %d"
+argument_list|,
+name|htt
+operator|/
+name|cmp
 argument_list|)
 expr_stmt|;
 block|}

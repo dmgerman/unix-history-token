@@ -618,8 +618,64 @@ end_define
 begin_define
 define|#
 directive|define
+name|AMDID_EXT_MMX
+value|0x00400000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDID_FFXSR
+value|0x01000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDID_RDTSCP
+value|0x08000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|AMDID_LM
 value|0x20000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDID_EXT_3DNOW
+value|0x40000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDID_3DNOW
+value|0x80000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDID2_LAHF
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDID2_CMP
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDID2_CR8
+value|0x00000010
 end_define
 
 begin_comment
@@ -652,6 +708,17 @@ define|#
 directive|define
 name|CPUID_LOCAL_APIC_ID
 value|0xff000000
+end_define
+
+begin_comment
+comment|/*  * AMD extended function 8000_0008h ecx info  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AMDID_CMP_CORES
+value|0x000000ff
 end_define
 
 begin_comment
@@ -1074,56 +1141,56 @@ end_define
 begin_define
 define|#
 directive|define
-name|MSR_MC4_CTL
+name|MSR_MC3_CTL
 value|0x40c
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_MC4_STATUS
+name|MSR_MC3_STATUS
 value|0x40d
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_MC4_ADDR
+name|MSR_MC3_ADDR
 value|0x40e
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_MC4_MISC
+name|MSR_MC3_MISC
 value|0x40f
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_MC3_CTL
+name|MSR_MC4_CTL
 value|0x410
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_MC3_STATUS
+name|MSR_MC4_STATUS
 value|0x411
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_MC3_ADDR
+name|MSR_MC4_ADDR
 value|0x412
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_MC3_MISC
+name|MSR_MC4_MISC
 value|0x413
 end_define
 
