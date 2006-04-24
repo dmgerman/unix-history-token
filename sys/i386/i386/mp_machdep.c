@@ -1730,7 +1730,7 @@ operator|>=
 literal|4
 condition|)
 block|{
-comment|/* Ask the processor about up to 32 caches. */
+comment|/* Ask the processor about the L1 cache. */
 for|for
 control|(
 name|i
@@ -1739,7 +1739,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|32
+literal|1
 condition|;
 name|i
 operator|++
