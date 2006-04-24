@@ -3038,7 +3038,8 @@ literal|"\014<b11>"
 literal|"\015<b12>"
 literal|"\016CX16"
 comment|/* CMPXCHG16B Instruction */
-literal|"\017<b14>"
+literal|"\017XTPR"
+comment|/* Send Task Priority Messages*/
 literal|"\020<b15>"
 literal|"\021<b16>"
 literal|"\022<b17>"
