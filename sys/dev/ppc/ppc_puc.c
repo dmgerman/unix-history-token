@@ -190,7 +190,7 @@ name|driver_t
 name|ppc_puc_driver
 init|=
 block|{
-literal|"ppc"
+name|ppc_driver_name
 block|,
 name|ppc_puc_methods
 block|,
@@ -226,6 +226,8 @@ operator|(
 name|ppc_probe
 argument_list|(
 name|dev
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 return|;

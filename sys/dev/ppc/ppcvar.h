@@ -9,6 +9,9 @@ name|ppc_probe
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|,
+name|int
+name|rid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -201,6 +204,15 @@ begin_decl_stmt
 specifier|extern
 name|devclass_t
 name|ppc_devclass
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+name|ppc_driver_name
+index|[]
 decl_stmt|;
 end_decl_stmt
 

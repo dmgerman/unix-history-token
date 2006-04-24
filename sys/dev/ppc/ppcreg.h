@@ -227,6 +227,17 @@ name|u_int
 name|ppc_dmacnt
 decl_stmt|;
 comment|/* count of bytes sent with dma */
+name|void
+function_decl|(
+modifier|*
+name|ppc_dmadone
+function_decl|)
+parameter_list|(
+name|struct
+name|ppc_data
+modifier|*
+parameter_list|)
+function_decl|;
 define|#
 directive|define
 name|PPC_PWORD_MASK
@@ -393,6 +404,80 @@ begin_comment
 comment|/* EPP data register (8, 16 or 32 bit) */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|PC98
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|PPC_1284_ENABLE
+value|0x09
+end_define
+
+begin_comment
+comment|/* IEEE STD 1284 Enable register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPC_ECP_D_FIFO
+value|0x0c
+end_define
+
+begin_comment
+comment|/* ECP Data fifo register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPC_ECP_CNFGA
+value|0x0c
+end_define
+
+begin_comment
+comment|/* Configuration register A */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPC_ECP_CNFGB
+value|0x0d
+end_define
+
+begin_comment
+comment|/* Configuration register B */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPC_ECP_ECR
+value|0x0e
+end_define
+
+begin_comment
+comment|/* ECP extended control register */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -436,6 +521,11 @@ end_define
 begin_comment
 comment|/* ECP extended control register */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
