@@ -142,7 +142,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Feature flags */
+comment|/* AMD feature flags */
+end_comment
+
+begin_decl_stmt
+name|u_int
+name|amd_feature2
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* AMD feature flags */
 end_comment
 
 begin_decl_stmt
@@ -183,6 +193,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* HyperThreading Info / Brand Index / CLFUSH */
+end_comment
+
+begin_decl_stmt
+name|u_int
+name|cpu_procinfo2
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Multicore info */
 end_comment
 
 begin_decl_stmt
