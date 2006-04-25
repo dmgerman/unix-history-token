@@ -1978,7 +1978,7 @@ specifier|static
 name|void
 name|udp_append
 parameter_list|(
-name|last
+name|inp
 parameter_list|,
 name|ip
 parameter_list|,
@@ -1991,7 +1991,7 @@ parameter_list|)
 name|struct
 name|inpcb
 modifier|*
-name|last
+name|inp
 decl_stmt|;
 name|struct
 name|ip
@@ -2040,7 +2040,7 @@ endif|#
 directive|endif
 name|INP_LOCK_ASSERT
 argument_list|(
-name|last
+name|inp
 argument_list|)
 expr_stmt|;
 if|#
@@ -2061,7 +2061,7 @@ name|ipsec4_in_reject
 argument_list|(
 name|n
 argument_list|,
-name|last
+name|inp
 argument_list|)
 condition|)
 block|{
@@ -2093,7 +2093,7 @@ if|if
 condition|(
 name|mac_check_inpcb_deliver
 argument_list|(
-name|last
+name|inp
 argument_list|,
 name|n
 argument_list|)
@@ -2112,13 +2112,13 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|last
+name|inp
 operator|->
 name|inp_flags
 operator|&
 name|INP_CONTROLOPTS
 operator|||
-name|last
+name|inp
 operator|->
 name|inp_socket
 operator|->
@@ -2136,7 +2136,7 @@ directive|ifdef
 name|INET6
 if|if
 condition|(
-name|last
+name|inp
 operator|->
 name|inp_vflag
 operator|&
@@ -2148,11 +2148,11 @@ name|savedflags
 decl_stmt|;
 name|savedflags
 operator|=
-name|last
+name|inp
 operator|->
 name|inp_flags
 expr_stmt|;
-name|last
+name|inp
 operator|->
 name|inp_flags
 operator|&=
@@ -2161,7 +2161,7 @@ name|INP_UNMAPPABLEOPTS
 expr_stmt|;
 name|ip6_savecontrol
 argument_list|(
-name|last
+name|inp
 argument_list|,
 name|n
 argument_list|,
@@ -2169,7 +2169,7 @@ operator|&
 name|opts
 argument_list|)
 expr_stmt|;
-name|last
+name|inp
 operator|->
 name|inp_flags
 operator|=
@@ -2181,7 +2181,7 @@ endif|#
 directive|endif
 name|ip_savecontrol
 argument_list|(
-name|last
+name|inp
 argument_list|,
 operator|&
 name|opts
@@ -2197,7 +2197,7 @@ directive|ifdef
 name|INET6
 if|if
 condition|(
-name|last
+name|inp
 operator|->
 name|inp_vflag
 operator|&
@@ -2270,7 +2270,7 @@ argument_list|)
 expr_stmt|;
 name|so
 operator|=
-name|last
+name|inp
 operator|->
 name|inp_socket
 expr_stmt|;
