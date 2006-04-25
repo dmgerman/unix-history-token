@@ -1509,6 +1509,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|in_pcbdrop
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|in_pcbfree
 parameter_list|(
 name|struct
