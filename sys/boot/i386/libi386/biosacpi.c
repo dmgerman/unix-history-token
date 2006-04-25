@@ -38,6 +38,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<btxv86.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libi386.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"acfreebsd.h"
 end_include
 
@@ -319,7 +331,10 @@ operator|(
 name|uint16_t
 operator|*
 operator|)
+name|PTOV
+argument_list|(
 literal|0x40E
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -434,11 +449,12 @@ operator|(
 name|RSDP_DESCRIPTOR
 operator|*
 operator|)
-operator|(
+name|PTOV
+argument_list|(
 name|base
 operator|+
 name|ofs
-operator|)
+argument_list|)
 expr_stmt|;
 comment|/* compare signature, validate checksum */
 if|if
