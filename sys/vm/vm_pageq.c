@@ -875,8 +875,6 @@ decl_stmt|,
 modifier|*
 name|pos
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 comment|/* 	 * See if a physical address in this page has been listed 	 * in the blacklist tunable.  Entries in the tunable are 	 * separated by spaces or commas.  If an invalid integer is 	 * encountered then the rest of the string is skipped. 	 */
 if|if
 condition|(
@@ -994,10 +992,15 @@ name|list
 argument_list|)
 expr_stmt|;
 block|}
-operator|++
+name|atomic_add_int
+argument_list|(
+operator|&
 name|cnt
 operator|.
 name|v_page_count
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|m
 operator|=
@@ -1035,6 +1038,12 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|vm_page_queue_free_mtx
+argument_list|)
+expr_stmt|;
 name|vm_pageq_enqueue
 argument_list|(
 name|m
@@ -1044,6 +1053,12 @@ operator|+
 name|PQ_FREE
 argument_list|,
 name|m
+argument_list|)
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|vm_page_queue_free_mtx
 argument_list|)
 expr_stmt|;
 return|return
