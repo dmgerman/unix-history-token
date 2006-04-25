@@ -465,7 +465,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Convert a user file descriptor to a kernel file entry.  A reference on the  * file entry is held upon returning.  This is lighter weight than  * fgetsock(), which bumps the socket reference drops the file reference  * count instead, as this approach avoids several additional mutex operations  * associated with the additional reference count.  */
+comment|/*  * Convert a user file descriptor to a kernel file entry.  A reference on the  * file entry is held upon returning.  This is lighter weight than  * fgetsock(), which bumps the socket reference drops the file reference  * count instead, as this approach avoids several additional mutex operations  * associated with the additional reference count.  If requested, return the  * open file flags.  */
 end_comment
 
 begin_function
@@ -486,6 +486,10 @@ name|file
 modifier|*
 modifier|*
 name|fpp
+parameter_list|,
+name|u_int
+modifier|*
+name|fflagp
 parameter_list|)
 block|{
 name|struct
@@ -561,6 +565,19 @@ name|fhold
 argument_list|(
 name|fp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fflagp
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|fflagp
+operator|=
+name|fp
+operator|->
+name|f_flag
 expr_stmt|;
 name|error
 operator|=
@@ -970,6 +987,8 @@ name|fd
 argument_list|,
 operator|&
 name|fp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1126,6 +1145,8 @@ name|s
 argument_list|,
 operator|&
 name|fp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1214,7 +1235,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * accept1()  * MPSAFE  *  * XXXRW: Use getsock() instead of fgetsock() here to avoid additional mutex  * operations due to soref()/sorele().  */
+comment|/*  * accept1()  * MPSAFE  */
 end_comment
 
 begin_function
@@ -1251,6 +1272,9 @@ name|fdp
 decl_stmt|;
 name|struct
 name|file
+modifier|*
+name|headfp
+decl_stmt|,
 modifier|*
 name|nfp
 init|=
@@ -1347,16 +1371,16 @@ argument_list|()
 expr_stmt|;
 name|error
 operator|=
-name|fgetsock
+name|getsock
 argument_list|(
-name|td
+name|fdp
 argument_list|,
 name|uap
 operator|->
 name|s
 argument_list|,
 operator|&
-name|head
+name|headfp
 argument_list|,
 operator|&
 name|fflag
@@ -1369,6 +1393,12 @@ condition|)
 goto|goto
 name|done2
 goto|;
+name|head
+operator|=
+name|headfp
+operator|->
+name|f_data
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2036,9 +2066,11 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|fputsock
+name|fdrop
 argument_list|(
-name|head
+name|headfp
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 name|done2
@@ -2283,6 +2315,8 @@ name|fd
 argument_list|,
 operator|&
 name|fp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3384,6 +3418,8 @@ name|s
 argument_list|,
 operator|&
 name|fp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -4401,6 +4437,8 @@ name|s
 argument_list|,
 operator|&
 name|fp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -5965,6 +6003,8 @@ name|s
 argument_list|,
 operator|&
 name|fp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -6238,6 +6278,8 @@ name|s
 argument_list|,
 operator|&
 name|fp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -6583,6 +6625,8 @@ name|s
 argument_list|,
 operator|&
 name|fp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -6709,6 +6753,8 @@ name|fdes
 argument_list|,
 operator|&
 name|fp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -7085,6 +7131,8 @@ name|fdes
 argument_list|,
 operator|&
 name|fp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
