@@ -1496,6 +1496,26 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|bge_fake_autoneg
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.bge.fake_autoneg"
+argument_list|,
+operator|&
+name|bge_fake_autoneg
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|u_int32_t
@@ -15282,12 +15302,13 @@ block|{
 case|case
 name|IFM_AUTO
 case|:
-ifndef|#
-directive|ifndef
-name|BGE_FAKE_AUTONEG
 comment|/* 			 * The BCM5704 ASIC appears to have a special 			 * mechanism for programming the autoneg 			 * advertisement registers in TBI mode. 			 */
 if|if
 condition|(
+name|bge_fake_autoneg
+operator|==
+literal|0
+operator|&&
 name|sc
 operator|->
 name|bge_asicrev
@@ -15350,8 +15371,6 @@ name|sgdig
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 break|break;
 case|case
 name|IFM_1000_SX
