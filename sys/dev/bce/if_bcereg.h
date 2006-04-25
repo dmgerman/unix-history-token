@@ -26938,7 +26938,7 @@ define|#
 directive|define
 name|BCE_PHY_INT_MODE_LINK_READY_FLAG
 value|0x200
-name|bus_size_t
+name|bus_addr_t
 name|max_bus_addr
 decl_stmt|;
 name|u16
