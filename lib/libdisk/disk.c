@@ -1798,6 +1798,30 @@ return|return
 literal|"Compaq Diagnostic"
 return|;
 case|case
+literal|57
+case|:
+return|return
+literal|"Plan 9"
+return|;
+case|case
+literal|77
+case|:
+return|return
+literal|"QNX 4.X"
+return|;
+case|case
+literal|78
+case|:
+return|return
+literal|"QNX 4.X 2nd part"
+return|;
+case|case
+literal|79
+case|:
+return|return
+literal|"QNX 4.X 3rd part"
+return|;
+case|case
 literal|84
 case|:
 return|return
@@ -1846,6 +1870,12 @@ return|return
 literal|"ext2fs"
 return|;
 case|case
+literal|133
+case|:
+return|return
+literal|"linux extended"
+return|;
+case|case
 literal|166
 case|:
 return|return
@@ -1853,12 +1883,24 @@ literal|"OpenBSD FFS"
 return|;
 comment|/* 0xA6 */
 case|case
+literal|168
+case|:
+return|return
+literal|"Mac OS-X"
+return|;
+case|case
 literal|169
 case|:
 return|return
 literal|"NetBSD FFS"
 return|;
 comment|/* 0xA9 */
+case|case
+literal|171
+case|:
+return|return
+literal|"Mac OS-X Boot"
+return|;
 case|case
 literal|182
 case|:
