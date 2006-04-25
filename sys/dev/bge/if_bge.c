@@ -234,12 +234,6 @@ directive|include
 file|<dev/bge/if_bgereg.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_bge.h"
-end_include
-
 begin_define
 define|#
 directive|define
