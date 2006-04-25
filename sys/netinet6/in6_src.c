@@ -3109,6 +3109,16 @@ name|inp
 operator|->
 name|inp_pcbinfo
 decl_stmt|;
+name|INP_INFO_WLOCK_ASSERT
+argument_list|(
+name|pcbinfo
+argument_list|)
+expr_stmt|;
+name|INP_LOCK_ASSERT
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 comment|/* XXX: this is redundant when called from in6_pcbbind */
 if|if
 condition|(
