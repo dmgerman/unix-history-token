@@ -1757,13 +1757,6 @@ name|lock_class_mtx_spin
 block|}
 block|,
 block|{
-literal|"sabtty"
-block|,
-operator|&
-name|lock_class_mtx_spin
-block|}
-block|,
-block|{
 literal|"zstty"
 block|,
 operator|&
