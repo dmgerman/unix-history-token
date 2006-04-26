@@ -3813,6 +3813,16 @@ parameter_list|)
 value|pci_write_config(dev, reg, (pci_read_config(dev, reg, s)& ~(x)), s)
 end_define
 
+begin_define
+define|#
+directive|define
+name|BCE_STATS
+parameter_list|(
+name|x
+parameter_list|)
+value|(u_long) stats->stat_ ## x ## _lo
+end_define
+
 begin_if
 if|#
 directive|if
@@ -3822,16 +3832,6 @@ operator|>
 literal|0xFFFFFFFF
 operator|)
 end_if
-
-begin_define
-define|#
-directive|define
-name|BCE_STATS
-parameter_list|(
-name|x
-parameter_list|)
-value|((u_long) stats->stat_ ## x ## _hi<< 32) + \ 					    (u_long) stats->stat_ ## x ## _lo
-end_define
 
 begin_define
 define|#
@@ -3857,16 +3857,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_define
-define|#
-directive|define
-name|BCE_STATS
-parameter_list|(
-name|x
-parameter_list|)
-value|(u_long) stats->stat_ ## x ## _lo
-end_define
 
 begin_define
 define|#
