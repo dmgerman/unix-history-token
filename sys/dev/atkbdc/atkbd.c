@@ -1096,13 +1096,14 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* probe the keyboard controller */
-name|atkbdc_configure
-argument_list|()
-expr_stmt|;
-comment|/* if the driver is disabled, unregister the keyboard if any */
+comment|/* 	 * Probe the keyboard controller, if not present or if the driver 	 * is disabled, unregister the keyboard if any. 	 */
 if|if
 condition|(
+name|atkbdc_configure
+argument_list|()
+operator|!=
+literal|0
+operator|||
 name|resource_disabled
 argument_list|(
 literal|"atkbd"
