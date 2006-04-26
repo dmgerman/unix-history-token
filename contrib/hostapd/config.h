@@ -289,6 +289,9 @@ decl_stmt|;
 name|int
 name|eapol_key_index_workaround
 decl_stmt|;
+name|int
+name|eapol_version
+decl_stmt|;
 name|size_t
 name|default_wep_key_len
 decl_stmt|;
