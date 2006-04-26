@@ -17543,6 +17543,18 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
+comment|/* Skip synchronization geom. */
+if|if
+condition|(
+name|gp
+operator|==
+name|sc
+operator|->
+name|sc_sync
+operator|.
+name|ds_geom
+condition|)
+continue|continue;
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
@@ -17653,6 +17665,18 @@ name|softc
 operator|)
 operator|==
 name|NULL
+condition|)
+continue|continue;
+comment|/* Skip synchronization geom. */
+if|if
+condition|(
+name|gp
+operator|==
+name|sc
+operator|->
+name|sc_sync
+operator|.
+name|ds_geom
 condition|)
 continue|continue;
 name|g_topology_unlock
