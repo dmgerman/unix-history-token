@@ -21280,6 +21280,14 @@ define|#
 directive|define
 name|COMPAT
 value|(CHANNEL_ALL_NOTURBO|CHANNEL_PASSIVE)
+define|#
+directive|define
+name|IS_CHAN_PUBLIC_SAFETY
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->channelFlags& CHANNEL_5GHZ)&& \ 	 ((_c)->channel> 4940&& (_c)->channel< 4990))
 name|struct
 name|ieee80211com
 modifier|*
@@ -21445,6 +21453,27 @@ decl_stmt|;
 name|u_int16_t
 name|flags
 decl_stmt|;
+comment|/* 		 * XXX we're not ready to handle the ieee number mapping 		 * for public safety channels as they overlap with any 		 * 2GHz channels; for now use the non-public safety 		 * numbering which is non-overlapping. 		 */
+if|if
+condition|(
+name|IS_CHAN_PUBLIC_SAFETY
+argument_list|(
+name|c
+argument_list|)
+condition|)
+name|ix
+operator|=
+operator|(
+name|c
+operator|->
+name|channel
+operator|-
+literal|4000
+operator|)
+operator|/
+literal|5
+expr_stmt|;
+else|else
 name|ix
 operator|=
 name|ath_hal_mhz2ieee
@@ -21604,6 +21633,9 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+undef|#
+directive|undef
+name|IS_CHAN_PUBLIC_SAFETY
 undef|#
 directive|undef
 name|COMPAT
