@@ -6293,6 +6293,27 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vm_pmap
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|pv_entry_count
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|pv_entry_count
+argument_list|,
+literal|0
+argument_list|,
+literal|"Current number of pv entries"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -6411,27 +6432,6 @@ name|int
 name|pv_entry_spare
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_vm_pmap
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|pv_entry_count
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|pv_entry_count
-argument_list|,
-literal|0
-argument_list|,
-literal|"Current number of pv entries"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_LONG
