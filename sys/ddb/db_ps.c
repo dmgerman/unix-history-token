@@ -50,18 +50,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/proc.h>
 end_include
 
@@ -287,7 +275,6 @@ name|quit
 operator|=
 literal|0
 expr_stmt|;
-comment|/* sx_slock(&allproc_lock); */
 if|if
 condition|(
 operator|!
@@ -363,7 +350,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* PROC_LOCK(p); */
 name|pp
 operator|=
 name|p
@@ -898,7 +884,6 @@ name|quit
 condition|)
 break|break;
 block|}
-comment|/* PROC_UNLOCK(p); */
 name|p
 operator|=
 name|LIST_NEXT
@@ -927,7 +912,6 @@ name|zombproc
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* sx_sunlock(&allproc_lock); */
 block|}
 end_function
 
