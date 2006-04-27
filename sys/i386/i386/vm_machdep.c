@@ -2141,6 +2141,12 @@ name|void
 name|cpu_reset_real
 parameter_list|()
 block|{
+name|int
+name|b
+decl_stmt|;
+name|disable_intr
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CPU_ELAN
@@ -2185,9 +2191,6 @@ ifdef|#
 directive|ifdef
 name|PC98
 comment|/* 	 * Attempt to do a CPU reset via CPU reset port. 	 */
-name|disable_intr
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2252,9 +2255,86 @@ literal|500000
 argument_list|)
 expr_stmt|;
 comment|/* wait 0.5 sec to see if that did it */
+endif|#
+directive|endif
+comment|/* Try the PCI reset */
+name|outb
+argument_list|(
+literal|0xcf9
+argument_list|,
+literal|0x2
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+literal|0xcf9
+argument_list|,
+literal|0x6
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|500000
+argument_list|)
+expr_stmt|;
+comment|/* wait 0.5 sec to see if that did it */
+comment|/* Try port 0x92 fast reset */
+name|b
+operator|=
+name|inb
+argument_list|(
+literal|0x92
+argument_list|)
+expr_stmt|;
+comment|/* Check the the hardware actually has the port in question */
+if|if
+condition|(
+name|b
+operator|!=
+literal|0xff
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|b
+operator|&
+literal|0x1
+operator|)
+operator|!=
+literal|0
+condition|)
+name|outb
+argument_list|(
+literal|0x92
+argument_list|,
+name|b
+operator|&
+literal|0xfe
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+literal|0x92
+argument_list|,
+name|b
+operator||
+literal|0x1
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|500000
+argument_list|)
+expr_stmt|;
+comment|/* wait 0.5 sec to see if that did it */
+block|}
+endif|#
+directive|endif
+comment|/* PC98 */
 name|printf
 argument_list|(
-literal|"Keyboard reset did not work, attempting CPU shutdown\n"
+literal|"No known reset method did work, attempting CPU shutdown\n"
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -2263,11 +2343,6 @@ literal|1000000
 argument_list|)
 expr_stmt|;
 comment|/* wait 1 sec for printf to complete */
-endif|#
-directive|endif
-endif|#
-directive|endif
-comment|/* PC98 */
 comment|/* Force a shutdown by unmapping entire address space. */
 name|bzero
 argument_list|(
