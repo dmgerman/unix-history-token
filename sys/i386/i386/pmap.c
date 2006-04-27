@@ -925,7 +925,6 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|PMAP_INLINE
 name|void
 name|free_pv_entry
 parameter_list|(
@@ -6677,7 +6676,6 @@ end_comment
 
 begin_function
 specifier|static
-name|PMAP_INLINE
 name|void
 name|free_pv_entry
 parameter_list|(
