@@ -211,6 +211,50 @@ name|_thr_atfork_lock
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * XXX these values should be updated from kernel at startup,  * but current they are same.  */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|pthread_prio
+name|_thr_priorities
+index|[
+literal|3
+index|]
+init|=
+block|{
+block|{
+literal|0
+block|,
+literal|31
+block|,
+literal|0
+block|}
+block|,
+comment|/* FIF0 */
+block|{
+operator|-
+literal|20
+block|,
+literal|20
+block|,
+literal|0
+block|}
+block|,
+comment|/* OTHER */
+block|{
+literal|0
+block|,
+literal|31
+block|,
+literal|0
+block|}
+comment|/* RR */
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|struct
 name|pthread_attr
@@ -228,14 +272,9 @@ operator|=
 literal|0
 block|,
 operator|.
-name|sched_interval
-operator|=
-name|TIMESLICE_USEC
-block|,
-operator|.
 name|prio
 operator|=
-name|THR_DEFAULT_PRIORITY
+literal|0
 block|,
 operator|.
 name|suspend
@@ -246,11 +285,6 @@ operator|.
 name|flags
 operator|=
 name|PTHREAD_SCOPE_SYSTEM
-block|,
-operator|.
-name|arg_attr
-operator|=
-name|NULL
 block|,
 operator|.
 name|stackaddr_attr
@@ -1851,13 +1885,13 @@ name|thread
 operator|->
 name|base_priority
 operator|=
-name|THR_DEFAULT_PRIORITY
+name|THR_DEF_PRIORITY
 expr_stmt|;
 name|thread
 operator|->
 name|active_priority
 operator|=
-name|THR_DEFAULT_PRIORITY
+name|THR_DEF_PRIORITY
 expr_stmt|;
 name|thread
 operator|->

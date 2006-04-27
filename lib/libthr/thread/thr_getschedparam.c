@@ -112,12 +112,9 @@ name|param
 operator|->
 name|sched_priority
 operator|=
-name|THR_BASE_PRIORITY
-argument_list|(
 name|pthread
 operator|->
 name|base_priority
-argument_list|)
 expr_stmt|;
 name|tmp
 operator|=
@@ -176,12 +173,9 @@ name|param
 operator|->
 name|sched_priority
 operator|=
-name|THR_BASE_PRIORITY
-argument_list|(
 name|pthread
 operator|->
 name|base_priority
-argument_list|)
 expr_stmt|;
 name|tmp
 operator|=

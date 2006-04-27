@@ -659,9 +659,6 @@ name|int
 name|sched_inherit
 decl_stmt|;
 name|int
-name|sched_interval
-decl_stmt|;
-name|int
 name|prio
 decl_stmt|;
 name|int
@@ -674,10 +671,6 @@ value|0x100
 comment|/* 0xFF reserved for<pthread.h> */
 name|int
 name|flags
-decl_stmt|;
-name|void
-modifier|*
-name|arg_attr
 decl_stmt|;
 name|void
 modifier|*
@@ -734,91 +727,92 @@ value|(THR_STACK_DEFAULT * 2)
 end_define
 
 begin_comment
-comment|/*  * Define the different priority ranges.  All applications have thread  * priorities constrained within 0-31.  The threads library raises the  * priority when delivering signals in order to ensure that signal  * delivery happens (from the POSIX spec) "as soon as possible".  * In the future, the threads library will also be able to map specific  * threads into real-time (cooperating) processes or kernel threads.  * The RT and SIGNAL priorities will be used internally and added to  * thread base priorities so that the scheduling queue can handle both  * normal and RT priority threads with and without signal handling.  *  * The approach taken is that, within each class, signal delivery  * always has priority over thread execution.  */
+comment|/*  * Define priorities returned by kernel.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|THR_DEFAULT_PRIORITY
-value|15
-end_define
-
-begin_define
-define|#
-directive|define
 name|THR_MIN_PRIORITY
-value|0
+value|(_thr_priorities[SCHED_OTHER-1].pri_min)
 end_define
 
 begin_define
 define|#
 directive|define
 name|THR_MAX_PRIORITY
-value|31
+value|(_thr_priorities[SCHED_OTHER-1].pri_min)
+end_define
+
+begin_define
+define|#
+directive|define
+name|THR_DEF_PRIORITY
+value|(_thr_priorities[SCHED_OTHER-1].pri_default)
+end_define
+
+begin_define
+define|#
+directive|define
+name|THR_MIN_RR_PRIORITY
+value|(_thr_priorities[SCHED_RR-1].pri_min)
+end_define
+
+begin_define
+define|#
+directive|define
+name|THR_MAX_RR_PRIORITY
+value|(_thr_priorities[SCHED_RR-1].pri_max)
+end_define
+
+begin_define
+define|#
+directive|define
+name|THR_DEF_RR_PRIORITY
+value|(_thr_priorities[SCHED_RR-1].pri_default)
 end_define
 
 begin_comment
-comment|/* 0x1F */
+comment|/* XXX The SCHED_FIFO should have same priority range as SCHED_RR */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|THR_SIGNAL_PRIORITY
-value|32
-end_define
-
-begin_comment
-comment|/* 0x20 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|THR_RT_PRIORITY
-value|64
-end_define
-
-begin_comment
-comment|/* 0x40 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|THR_FIRST_PRIORITY
-value|THR_MIN_PRIORITY
+name|THR_MIN_FIFO_PRIORITY
+value|(_thr_priorities[SCHED_FIFO_1].pri_min)
 end_define
 
 begin_define
 define|#
 directive|define
-name|THR_LAST_PRIORITY
-define|\
-value|(THR_MAX_PRIORITY + THR_SIGNAL_PRIORITY + THR_RT_PRIORITY)
+name|THR_MAX_FIFO_PRIORITY
+value|(_thr_priorities[SCHED_FIFO-1].pri_min)
 end_define
 
 begin_define
 define|#
 directive|define
-name|THR_BASE_PRIORITY
-parameter_list|(
-name|prio
-parameter_list|)
-value|((prio)& THR_MAX_PRIORITY)
+name|THR_DEF_FIFO_PRIORITY
+value|(_thr_priorities[SCHED_FIFO-1].pri_default)
 end_define
 
-begin_comment
-comment|/*  * Time slice period in microseconds.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIMESLICE_USEC
-value|20000
-end_define
+begin_struct
+struct|struct
+name|pthread_prio
+block|{
+name|int
+name|pri_min
+decl_stmt|;
+name|int
+name|pri_max
+decl_stmt|;
+name|int
+name|pri_default
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -1603,6 +1597,16 @@ specifier|extern
 name|struct
 name|pthread_cond_attr
 name|_pthread_condattr_default
+name|__hidden
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pthread_prio
+name|_thr_priorities
+index|[]
 name|__hidden
 decl_stmt|;
 end_decl_stmt

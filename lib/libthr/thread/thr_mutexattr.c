@@ -754,7 +754,7 @@ operator|)
 operator|->
 name|m_ceiling
 operator|=
-name|THR_MAX_PRIORITY
+name|THR_MAX_RR_PRIORITY
 expr_stmt|;
 block|}
 return|return
