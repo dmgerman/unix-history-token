@@ -1767,6 +1767,23 @@ name|XM_RXSTAT_LEN
 value|0xFFFC0000
 end_define
 
+begin_define
+define|#
+directive|define
+name|XM_RXSTAT_LENSHIFT
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|XM_RXSTAT_BYTES
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)>> XM_RXSTAT_LENSHIFT)
+end_define
+
 begin_comment
 comment|/*  * XMAC PHY registers, indirectly accessed through  * XM_PHY_ADDR and XM_PHY_REG.  */
 end_comment

@@ -48,7 +48,7 @@ value|0x2000
 end_define
 
 begin_comment
-comment|/* flow control */
+comment|/* Tx flow control, 1 - disabled */
 end_comment
 
 begin_define
@@ -147,7 +147,7 @@ value|0x0004
 end_define
 
 begin_comment
-comment|/* flow control enable/disable */
+comment|/* Rx flow control, 1 - disabled */
 end_comment
 
 begin_define
@@ -158,7 +158,7 @@ value|0x0002
 end_define
 
 begin_comment
-comment|/* promiscuous mode enable/disable */
+comment|/* promiscuous mode, 1 - enabled */
 end_comment
 
 begin_comment
@@ -175,12 +175,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|YU_GPCR_FCTL_TX
+name|YU_GPCR_FCTL_TX_DIS
 value|0x2000
 end_define
 
 begin_comment
-comment|/* Transmit flow control 802.3x */
+comment|/* Disable Tx flow control 802.3x */
 end_comment
 
 begin_define
@@ -208,12 +208,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|YU_GPCR_BURSTEN
+value|0x0400
+end_define
+
+begin_comment
+comment|/* Burst Mode Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|YU_GPCR_LPBK
 value|0x0200
 end_define
 
 begin_comment
-comment|/* Loopback Enable */
+comment|/* MAC Loopback Enable */
 end_comment
 
 begin_define
@@ -235,7 +246,7 @@ value|0x0080
 end_define
 
 begin_comment
-comment|/* Gigabit Speed */
+comment|/* Gigabit Speed 1000Mbps */
 end_comment
 
 begin_define
@@ -263,12 +274,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|YU_GPCR_FCTL_RX
+name|YU_GPCR_FCTL_RX_DIS
 value|0x0010
 end_define
 
 begin_comment
-comment|/* Receive flow control 802.3x */
+comment|/* Disable Rx flow control 802.3x */
 end_comment
 
 begin_define
@@ -279,40 +290,40 @@ value|0x0008
 end_define
 
 begin_comment
-comment|/* Port Speed */
+comment|/* Port Speed 100Mbps */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|YU_GPCR_DPLX_EN
+name|YU_GPCR_DPLX_DIS
 value|0x0004
 end_define
 
 begin_comment
-comment|/* Enable Auto-Update for duplex */
+comment|/* Disable Auto-Update for duplex */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|YU_GPCR_FCTL_EN
+name|YU_GPCR_FCTL_DIS
 value|0x0002
 end_define
 
 begin_comment
-comment|/* Enabel Auto-Update for 802.3x */
+comment|/* Disable Auto-Update for 802.3x */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|YU_GPCR_SPEED_EN
+name|YU_GPCR_SPEED_DIS
 value|0x0001
 end_define
 
 begin_comment
-comment|/* Enable Auto-Update for speed */
+comment|/* Disable Auto-Update for speed */
 end_comment
 
 begin_comment
@@ -1039,6 +1050,170 @@ end_define
 begin_comment
 comment|/* Load count 0xfffffff0 into cntr */
 end_comment
+
+begin_comment
+comment|/* Receive status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|YU_RXSTAT_FOFL
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Rx FIFO overflow */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|YU_RXSTAT_CRCERR
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* CRC error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|YU_RXSTAT_FRAGMENT
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* fragment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|YU_RXSTAT_LONGERR
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* too long packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|YU_RXSTAT_MIIERR
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* MII error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|YU_RXSTAT_BADFC
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* bad flow-control packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|YU_RXSTAT_GOODFC
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* good flow-control packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|YU_RXSTAT_RXOK
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* receice OK (Good packet) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|YU_RXSTAT_BROADCAST
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* broadcast packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|YU_RXSTAT_MULTICAST
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* multicast packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|YU_RXSTAT_RUNT
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* undersize packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|YU_RXSTAT_JABBER
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* jabber packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|YU_RXSTAT_VLAN
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* VLAN packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|YU_RXSTAT_LENSHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|YU_RXSTAT_BYTES
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)>> YU_RXSTAT_LENSHIFT)
+end_define
 
 end_unit
 
