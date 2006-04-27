@@ -1482,7 +1482,7 @@ end_comment
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_kern_sched
+name|_kern
 argument_list|,
 name|OID_AUTO
 argument_list|,
