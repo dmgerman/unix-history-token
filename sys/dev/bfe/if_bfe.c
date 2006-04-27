@@ -1219,9 +1219,9 @@ name|sc
 operator|->
 name|bfe_parent_tag
 argument_list|,
-name|BFE_TX_LIST_SIZE
+literal|1
 argument_list|,
-name|BFE_TX_LIST_SIZE
+literal|0
 argument_list|,
 name|BUS_SPACE_MAXADDR
 argument_list|,
@@ -1276,9 +1276,9 @@ name|sc
 operator|->
 name|bfe_parent_tag
 argument_list|,
-name|BFE_RX_LIST_SIZE
+literal|1
 argument_list|,
-name|BFE_RX_LIST_SIZE
+literal|0
 argument_list|,
 name|BUS_SPACE_MAXADDR
 argument_list|,
