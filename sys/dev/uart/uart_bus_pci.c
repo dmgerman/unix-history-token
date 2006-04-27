@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001 M. Warner Losh.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2006 Marcel Moolenaar  * Copyright (c) 2001 M. Warner Losh  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -230,7 +230,7 @@ literal|0xffff
 block|,
 literal|0
 block|,
-literal|"Dell Remote Access Card 4 Daughter Card Virtual UART"
+literal|"Dell RAC 4 Daughter Card Virtual UART"
 block|,
 literal|0x14
 block|,
@@ -276,11 +276,9 @@ literal|0x103c
 block|,
 literal|0x1227
 block|,
-literal|"HP Diva Serial [GSP] Multiport UART - Powerbar SP2"
+literal|"HP Diva Serial [GSP] UART - Powerbar SP2"
 block|,
 literal|0x10
-block|,
-name|DEFAULT_RCLK
 block|}
 block|,
 block|{
@@ -295,8 +293,6 @@ block|,
 literal|"HP Auxiliary Diva Serial Port"
 block|,
 literal|0x18
-block|,
-name|DEFAULT_RCLK
 block|}
 block|,
 block|{
@@ -496,6 +492,96 @@ literal|0x10
 block|}
 block|,
 block|{
+literal|0x1409
+block|,
+literal|0x7168
+block|,
+literal|0x1409
+block|,
+literal|0x4025
+block|,
+literal|"Timedia Technology Serial Port"
+block|,
+literal|0x10
+block|,
+literal|8
+operator|*
+name|DEFAULT_RCLK
+block|}
+block|,
+block|{
+literal|0x1409
+block|,
+literal|0x7168
+block|,
+literal|0x1409
+block|,
+literal|0x4027
+block|,
+literal|"Timedia Technology Serial Port"
+block|,
+literal|0x10
+block|,
+literal|8
+operator|*
+name|DEFAULT_RCLK
+block|}
+block|,
+block|{
+literal|0x1409
+block|,
+literal|0x7168
+block|,
+literal|0x1409
+block|,
+literal|0x4028
+block|,
+literal|"Timedia Technology Serial Port"
+block|,
+literal|0x10
+block|,
+literal|8
+operator|*
+name|DEFAULT_RCLK
+block|}
+block|,
+block|{
+literal|0x1409
+block|,
+literal|0x7168
+block|,
+literal|0x1409
+block|,
+literal|0x5025
+block|,
+literal|"Timedia Technology Serial Port"
+block|,
+literal|0x10
+block|,
+literal|8
+operator|*
+name|DEFAULT_RCLK
+block|}
+block|,
+block|{
+literal|0x1409
+block|,
+literal|0x7168
+block|,
+literal|0x1409
+block|,
+literal|0x5027
+block|,
+literal|"Timedia Technology Serial Port"
+block|,
+literal|0x10
+block|,
+literal|8
+operator|*
+name|DEFAULT_RCLK
+block|}
+block|,
+block|{
 literal|0x1415
 block|,
 literal|0x950b
@@ -520,7 +606,7 @@ literal|0xffff
 block|,
 literal|0
 block|,
-literal|"TOPIC Semiconductor TP560 Data/Fax/Voice 56k modem"
+literal|"TOPIC Semiconductor TP560 56k modem"
 block|,
 literal|0x10
 block|}
