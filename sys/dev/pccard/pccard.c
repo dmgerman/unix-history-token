@@ -5328,6 +5328,10 @@ condition|)
 return|return;
 while|while
 condition|(
+name|src
+operator|!=
+name|NULL
+operator|&&
 name|walker
 operator|<
 name|ep
