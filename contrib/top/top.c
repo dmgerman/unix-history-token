@@ -1567,7 +1567,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\ Top version %s\n\ Usage: %s [-CHISbinqut] [-d x] [-s x] [-o field] [-U username] [number]\n"
+literal|"Top version %s\n"
+literal|"Usage: %s [-bCHIinqStuv] [-d count] [-m io | cpu] [-o field] [-s time]\n"
+literal|"       [-U username] [number]\n"
 argument_list|,
 name|version_string
 argument_list|()
