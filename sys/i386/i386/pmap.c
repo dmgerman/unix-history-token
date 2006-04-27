@@ -8950,6 +8950,10 @@ block|{
 name|vm_paddr_t
 name|pa
 decl_stmt|;
+name|pd_entry_t
+modifier|*
+name|pde
+decl_stmt|;
 specifier|register
 name|pt_entry_t
 modifier|*
@@ -9058,6 +9062,31 @@ argument_list|)
 block|else { 		pd_entry_t *pdeaddr = pmap_pde(pmap, va); 		origpte = *pdeaddr; 		if ((origpte& PG_V) == 0) {  			panic("pmap_enter: invalid kernel page table page, pdir=%p, pde=%p, va=%p\n", 				pmap->pm_pdir[PTDPTDI], origpte, va); 		} 	}
 endif|#
 directive|endif
+name|pde
+operator|=
+name|pmap_pde
+argument_list|(
+name|pmap
+argument_list|,
+name|va
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|*
+name|pde
+operator|&
+name|PG_PS
+operator|)
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"pmap_enter: attempted pmap_enter on 4MB page"
+argument_list|)
+expr_stmt|;
 name|pte
 operator|=
 name|pmap_pte_quick
@@ -9115,46 +9144,6 @@ name|origpte
 operator|&
 name|PG_FRAME
 expr_stmt|;
-if|if
-condition|(
-name|origpte
-operator|&
-name|PG_PS
-condition|)
-block|{
-comment|/* 		 * Yes, I know this will truncate upper address bits for PAE, 		 * but I'm actually more interested in the lower bits 		 */
-name|printf
-argument_list|(
-literal|"pmap_enter: va %p, pte %p, origpte %p\n"
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|va
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|pte
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|uintptr_t
-operator|)
-name|origpte
-argument_list|)
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"pmap_enter: attempted pmap_enter on 4MB page"
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Mapping has not changed, must be protection or wiring change. 	 */
 if|if
 condition|(

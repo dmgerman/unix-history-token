@@ -9159,6 +9159,10 @@ block|{
 name|vm_paddr_t
 name|pa
 decl_stmt|;
+name|pd_entry_t
+modifier|*
+name|pde
+decl_stmt|;
 specifier|register
 name|pt_entry_t
 modifier|*
@@ -9267,14 +9271,52 @@ argument_list|)
 block|else { 		pd_entry_t *pdeaddr = pmap_pde(pmap, va); 		origpte = *pdeaddr; 		if ((origpte& PG_V) == 0) {  			panic("pmap_enter: invalid kernel page table page, pde=%p, va=%p\n", 				origpte, va); 		} 	}
 endif|#
 directive|endif
-name|pte
+name|pde
 operator|=
-name|pmap_pte
+name|pmap_pde
 argument_list|(
 name|pmap
 argument_list|,
 name|va
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pde
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+operator|*
+name|pde
+operator|&
+name|PG_PS
+operator|)
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"pmap_enter: attempted pmap_enter on 2MB page"
+argument_list|)
+expr_stmt|;
+name|pte
+operator|=
+name|pmap_pde_to_pte
+argument_list|(
+name|pde
+argument_list|,
+name|va
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|pte
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* 	 * Page Directory table entry not valid, we need a new PT page 	 */
 if|if
@@ -9311,17 +9353,6 @@ operator|=
 name|origpte
 operator|&
 name|PG_FRAME
-expr_stmt|;
-if|if
-condition|(
-name|origpte
-operator|&
-name|PG_PS
-condition|)
-name|panic
-argument_list|(
-literal|"pmap_enter: attempted pmap_enter on 2MB page"
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Mapping has not changed, must be protection or wiring change. 	 */
 if|if
