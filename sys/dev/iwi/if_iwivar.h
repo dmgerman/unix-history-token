@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2004-2006  *      Damien Bergamini<damien.bergamini@free.fr>. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2004, 2005  *      Damien Bergamini<damien.bergamini@free.fr>. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_struct
@@ -242,6 +242,36 @@ end_struct
 
 begin_struct
 struct|struct
+name|iwi_fw
+block|{
+name|struct
+name|firmware
+modifier|*
+name|fp
+decl_stmt|;
+comment|/* image handle */
+specifier|const
+name|char
+modifier|*
+name|data
+decl_stmt|;
+comment|/* firmware image data */
+name|size_t
+name|size
+decl_stmt|;
+comment|/* firmware image size */
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* associated image name */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|iwi_softc
 block|{
 name|struct
@@ -287,15 +317,35 @@ name|struct
 name|mtx
 name|sc_mtx
 decl_stmt|;
+name|uint8_t
+name|sc_mcast
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
 name|struct
 name|unrhdr
 modifier|*
 name|sc_unr
 decl_stmt|;
 name|struct
-name|task
-name|sc_init_task
+name|taskqueue
+modifier|*
+name|sc_tq
 decl_stmt|;
+comment|/* private task queue */
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|700000
+name|struct
+name|proc
+modifier|*
+name|sc_tqproc
+decl_stmt|;
+endif|#
+directive|endif
 name|uint32_t
 name|flags
 decl_stmt|;
@@ -309,8 +359,18 @@ name|IWI_FLAG_SCANNING
 value|(1<< 1)
 define|#
 directive|define
-name|IWI_FLAG_INIT_LOCKED
+name|IWI_FLAG_FW_LOADING
 value|(1<< 2)
+define|#
+directive|define
+name|IWI_FLAG_BUSY
+value|(1<< 3)
+comment|/* busy sending a command */
+define|#
+directive|define
+name|IWI_FLAG_ASSOCIATED
+value|(1<< 4)
+comment|/* currently associated  */
 name|struct
 name|iwi_cmd_ring
 name|cmdq
@@ -353,6 +413,46 @@ name|int
 name|irq_rid
 decl_stmt|;
 name|int
+name|fw_dma_size
+decl_stmt|;
+name|bus_dma_tag_t
+name|fw_dmat
+decl_stmt|;
+name|bus_dmamap_t
+name|fw_map
+decl_stmt|;
+name|bus_addr_t
+name|fw_physaddr
+decl_stmt|;
+name|void
+modifier|*
+name|fw_virtaddr
+decl_stmt|;
+name|enum
+name|ieee80211_opmode
+name|fw_mode
+decl_stmt|;
+comment|/* mode of current firmware */
+name|struct
+name|iwi_fw
+name|fw_boot
+decl_stmt|;
+comment|/* boot firmware */
+name|struct
+name|iwi_fw
+name|fw_uc
+decl_stmt|;
+comment|/* microcode */
+name|struct
+name|iwi_fw
+name|fw_fw
+decl_stmt|;
+comment|/* operating mode support */
+name|int
+name|curchan
+decl_stmt|;
+comment|/* current h/w channel # */
+name|int
 name|antenna
 decl_stmt|;
 name|int
@@ -361,9 +461,129 @@ decl_stmt|;
 name|int
 name|bluetooth
 decl_stmt|;
+name|struct
+name|iwi_associate
+name|assoc
+decl_stmt|;
+name|struct
+name|iwi_wme_params
+name|wme
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|struct
+name|task
+name|sc_radiontask
+decl_stmt|;
+comment|/* radio on processing */
+name|struct
+name|task
+name|sc_radiofftask
+decl_stmt|;
+comment|/* radio off processing */
+name|struct
+name|task
+name|sc_scanstarttask
+decl_stmt|;
+comment|/* scan start processing */
+name|struct
+name|task
+name|sc_scanaborttask
+decl_stmt|;
+comment|/* scan abort processing */
+name|struct
+name|task
+name|sc_scandonetask
+decl_stmt|;
+comment|/* scan completed processing */
+name|struct
+name|task
+name|sc_scantask
+decl_stmt|;
+comment|/* scan channel processing */
+name|struct
+name|task
+name|sc_setwmetask
+decl_stmt|;
+comment|/* set wme params processing */
+name|struct
+name|task
+name|sc_downtask
+decl_stmt|;
+comment|/* disassociate processing */
+name|struct
+name|task
+name|sc_restarttask
+decl_stmt|;
+comment|/* restart adapter processing */
+name|unsigned
+name|int
+name|sc_softled
+range|:
+literal|1
+decl_stmt|,
+comment|/* enable LED gpio status */
+name|sc_ledstate
+range|:
+literal|1
+decl_stmt|,
+comment|/* LED on/off state */
+name|sc_blinking
+range|:
+literal|1
+decl_stmt|;
+comment|/* LED blink operation active */
+name|u_int
+name|sc_nictype
+decl_stmt|;
+comment|/* NIC type from EEPROM */
+name|u_int
+name|sc_ledpin
+decl_stmt|;
+comment|/* mask for activity LED */
+name|u_int
+name|sc_ledidle
+decl_stmt|;
+comment|/* idle polling interval */
+name|int
+name|sc_ledevent
+decl_stmt|;
+comment|/* time of last LED event */
+name|u_int8_t
+name|sc_rxrate
+decl_stmt|;
+comment|/* current rx rate for LED */
+name|u_int8_t
+name|sc_rxrix
+decl_stmt|;
+name|u_int8_t
+name|sc_txrate
+decl_stmt|;
+comment|/* current tx rate for LED */
+name|u_int8_t
+name|sc_txrix
+decl_stmt|;
+name|u_int16_t
+name|sc_ledoff
+decl_stmt|;
+comment|/* off time for current blink */
+name|struct
+name|callout
+name|sc_ledtimer
+decl_stmt|;
+comment|/* led off timer */
 name|int
 name|sc_tx_timer
 decl_stmt|;
+name|int
+name|sc_rfkill_timer
+decl_stmt|;
+comment|/* poll for rfkill change */
+name|int
+name|sc_scan_timer
+decl_stmt|;
+comment|/* scan request timeout */
 name|struct
 name|bpf_if
 modifier|*
@@ -416,6 +636,37 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * NB.: This models the only instance of async locking in iwi_init_locked  *	and must be kept in sync.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWI_LOCK_DECL
+value|int	__waslocked = 0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWI_LOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|do {				\ 	if (!(__waslocked = mtx_owned(&(sc)->sc_mtx)))	\ 		mtx_lock(&(sc)->sc_mtx);		\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWI_UNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|do {			\ 	if (!__waslocked)			\ 		mtx_unlock(&(sc)->sc_mtx);	\ } while (0)
+end_define
 
 end_unit
 

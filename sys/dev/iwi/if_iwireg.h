@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2004-2006  *      Damien Bergamini<damien.bergamini@free.fr>. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2004, 2005  *      Damien Bergamini<damien.bergamini@free.fr>. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_define
@@ -401,6 +401,46 @@ end_define
 begin_define
 define|#
 directive|define
+name|IWI_RST_STANDBY
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWI_RST_LED_ACTIVITY
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* tx/rx traffic led */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWI_RST_LED_ASSOCIATED
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* station associated led */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWI_RST_LED_OFDM
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* ofdm/cck led */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IWI_RST_SOFT_RESET
 value|0x00000080
 end_define
@@ -417,6 +457,27 @@ define|#
 directive|define
 name|IWI_RST_STOP_MASTER
 value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWI_RST_GATE_ODMA
+value|0x02000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWI_RST_GATE_IDMA
+value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWI_RST_GATE_ADMA
+value|0x20000000
 end_define
 
 begin_comment
@@ -573,8 +634,91 @@ value|3
 end_define
 
 begin_comment
-comment|/* firmware binary image header */
+comment|/* firmware binary image header, fields in little endian */
 end_comment
+
+begin_struct
+struct|struct
+name|iwi_firmware_ohdr
+block|{
+name|uint32_t
+name|version
+decl_stmt|;
+name|uint32_t
+name|mode
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|IWI_FW_REQ_MAJOR
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWI_FW_REQ_MINOR
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWI_FW_GET_MAJOR
+parameter_list|(
+name|ver
+parameter_list|)
+value|((ver)& 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWI_FW_GET_MINOR
+parameter_list|(
+name|ver
+parameter_list|)
+value|(((ver)& 0xff00)>> 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWI_FW_MODE_UCODE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWI_FW_MODE_BOOT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWI_FW_MODE_BSS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWI_FW_MODE_IBSS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWI_FW_MODE_MONITOR
+value|2
+end_define
 
 begin_struct
 struct|struct
@@ -583,17 +727,20 @@ block|{
 name|uint32_t
 name|version
 decl_stmt|;
+comment|/* version stamp */
 name|uint32_t
-name|bootsz
+name|bsize
 decl_stmt|;
+comment|/* size of boot image */
 name|uint32_t
-name|ucodesz
+name|usize
 decl_stmt|;
+comment|/* size of ucode image */
 name|uint32_t
-name|mainsz
+name|fsize
 decl_stmt|;
+comment|/* size of firmware image */
 block|}
-name|__packed
 struct|;
 end_struct
 
@@ -653,6 +800,15 @@ name|type
 decl_stmt|;
 define|#
 directive|define
+name|IWI_NOTIF_TYPE_SUCCESS
+value|0
+define|#
+directive|define
+name|IWI_NOTIF_TYPE_UNSPECIFIED
+value|1
+comment|/* unspecified failure */
+define|#
+directive|define
 name|IWI_NOTIF_TYPE_ASSOCIATION
 value|10
 define|#
@@ -669,8 +825,23 @@ name|IWI_NOTIF_TYPE_SCAN_COMPLETE
 value|13
 define|#
 directive|define
+name|IWI_NOTIF_TYPE_FRAG_LENGTH
+value|14
+define|#
+directive|define
+name|IWI_NOTIF_TYPE_LINK_QUALITY
+value|15
+comment|/* "link deterioration" */
+define|#
+directive|define
 name|IWI_NOTIF_TYPE_BEACON
 value|17
+comment|/* beacon state, e.g. miss */
+define|#
+directive|define
+name|IWI_NOTIF_TYPE_TGI_TX_KEY
+value|18
+comment|/* WPA transmit key */
 define|#
 directive|define
 name|IWI_NOTIF_TYPE_CALIBRATION
@@ -703,11 +874,31 @@ name|state
 decl_stmt|;
 define|#
 directive|define
-name|IWI_DEAUTHENTICATED
+name|IWI_AUTH_FAIL
 value|0
 define|#
 directive|define
-name|IWI_AUTHENTICATED
+name|IWI_AUTH_SENT_1
+value|1
+comment|/* tx first frame */
+define|#
+directive|define
+name|IWI_AUTH_RECV_2
+value|2
+comment|/* rx second frame */
+define|#
+directive|define
+name|IWI_AUTH_SEQ1_PASS
+value|3
+comment|/* 1st exchange passed */
+define|#
+directive|define
+name|IWI_AUTH_SEQ1_FAIL
+value|4
+comment|/* 1st exchange failed */
+define|#
+directive|define
+name|IWI_AUTH_SUCCESS
 value|9
 block|}
 name|__packed
@@ -727,24 +918,17 @@ name|state
 decl_stmt|;
 define|#
 directive|define
-name|IWI_DEASSOCIATED
+name|IWI_ASSOC_FAIL
 value|0
 define|#
 directive|define
-name|IWI_ASSOCIATED
+name|IWI_ASSOC_SUCCESS
 value|12
-name|struct
-name|ieee80211_frame
-name|frame
-decl_stmt|;
-name|uint16_t
-name|capinfo
-decl_stmt|;
-name|uint16_t
-name|status
-decl_stmt|;
-name|uint16_t
-name|associd
+name|uint8_t
+name|pad
+index|[
+literal|11
+index|]
 decl_stmt|;
 block|}
 name|__packed
@@ -792,6 +976,29 @@ name|status
 decl_stmt|;
 name|uint8_t
 name|reserved
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
+comment|/* structure for notification IWI_NOTIF_TYPE_BEACON */
+end_comment
+
+begin_struct
+struct|struct
+name|iwi_notif_beacon_state
+block|{
+name|uint32_t
+name|state
+decl_stmt|;
+define|#
+directive|define
+name|IWI_BEACON_MISS
+value|1
+name|uint32_t
+name|number
 decl_stmt|;
 block|}
 name|__packed
@@ -874,6 +1081,7 @@ decl_stmt|;
 name|uint8_t
 name|station
 decl_stmt|;
+comment|/* adhoc sta #, 0 for bss */
 name|uint8_t
 name|reserved2
 index|[
@@ -919,7 +1127,7 @@ directive|define
 name|IWI_DATA_XFLAG_QOS
 value|0x10
 name|uint8_t
-name|weptxkey
+name|wep_txkey
 decl_stmt|;
 name|uint8_t
 name|wepkey
@@ -1022,6 +1230,10 @@ name|IWI_CMD_SET_WEP_KEY
 value|18
 define|#
 directive|define
+name|IWI_CMD_SCAN
+value|20
+define|#
+directive|define
 name|IWI_CMD_ASSOCIATE
 value|21
 define|#
@@ -1038,7 +1250,7 @@ name|IWI_CMD_SET_WME_PARAMS
 value|25
 define|#
 directive|define
-name|IWI_CMD_SCAN
+name|IWI_CMD_SCAN_EXT
 value|26
 define|#
 directive|define
@@ -1143,6 +1355,28 @@ value|0
 end_define
 
 begin_comment
+comment|/* no power save */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWI_POWER_MODE_PSP
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWI_POWER_MODE_MAX
+value|5
+end_define
+
+begin_comment
+comment|/* max power save operation */
+end_comment
+
+begin_comment
 comment|/* structure for command IWI_CMD_SET_RATES */
 end_comment
 
@@ -1234,9 +1468,11 @@ block|{
 name|uint8_t
 name|chan
 decl_stmt|;
+comment|/* channel # */
 name|uint8_t
 name|auth
 decl_stmt|;
+comment|/* type and key */
 define|#
 directive|define
 name|IWI_AUTH_OPEN
@@ -1252,8 +1488,33 @@ value|3
 name|uint8_t
 name|type
 decl_stmt|;
+comment|/* request */
+define|#
+directive|define
+name|IWI_HC_ASSOC
+value|0
+define|#
+directive|define
+name|IWI_HC_REASSOC
+value|1
+define|#
+directive|define
+name|IWI_HC_DISASSOC
+value|2
+define|#
+directive|define
+name|IWI_HC_IBSS_START
+value|3
+define|#
+directive|define
+name|IWI_HC_IBSS_RECONF
+value|4
+define|#
+directive|define
+name|IWI_HC_DISASSOC_QUIET
+value|5
 name|uint8_t
-name|reserved1
+name|reserved
 decl_stmt|;
 name|uint16_t
 name|policy
@@ -1269,9 +1530,11 @@ value|2
 name|uint8_t
 name|plen
 decl_stmt|;
+comment|/* preamble length */
 name|uint8_t
 name|mode
 decl_stmt|;
+comment|/* 11a, 11b, or 11g */
 name|uint8_t
 name|bssid
 index|[
@@ -1284,31 +1547,47 @@ index|[
 literal|8
 index|]
 decl_stmt|;
+comment|/* tsf for beacon sync */
 name|uint16_t
 name|capinfo
 decl_stmt|;
 name|uint16_t
 name|lintval
 decl_stmt|;
+comment|/* listen interval */
 name|uint16_t
 name|intval
 decl_stmt|;
+comment|/* beacon interval */
 name|uint8_t
 name|dst
 index|[
 name|IEEE80211_ADDR_LEN
 index|]
 decl_stmt|;
-name|uint32_t
-name|reserved3
+name|uint16_t
+name|atim_window
+decl_stmt|;
+name|uint8_t
+name|smr
+decl_stmt|;
+name|uint8_t
+name|reserved1
 decl_stmt|;
 name|uint16_t
-name|reserved4
+name|reserved2
 decl_stmt|;
 block|}
 name|__packed
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|IWI_SCAN_CHANNELS
+value|54
+end_define
 
 begin_comment
 comment|/* structure for command IWI_CMD_SCAN */
@@ -1318,13 +1597,17 @@ begin_struct
 struct|struct
 name|iwi_scan
 block|{
-name|uint32_t
-name|index
+name|uint8_t
+name|type
 decl_stmt|;
+name|uint16_t
+name|dwelltime
+decl_stmt|;
+comment|/* channel dwell time (ms) */
 name|uint8_t
 name|channels
 index|[
-literal|54
+name|IWI_SCAN_CHANNELS
 index|]
 decl_stmt|;
 define|#
@@ -1336,49 +1619,116 @@ directive|define
 name|IWI_CHAN_2GHZ
 value|(1<< 6)
 name|uint8_t
-name|type
+name|reserved
 index|[
-literal|27
+literal|3
 index|]
 decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
+comment|/* scan type codes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWI_SCAN_TYPE_PASSIVE_STOP
+value|0
+end_define
+
+begin_comment
+comment|/* passive, stop on first beacon */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|IWI_SCAN_TYPE_PASSIVE
-value|0x11
+value|1
+end_define
+
+begin_comment
+comment|/* passive, full dwell on channel */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|IWI_SCAN_TYPE_DIRECTED
-value|0x22
+value|2
+end_define
+
+begin_comment
+comment|/* active, directed probe req */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|IWI_SCAN_TYPE_BROADCAST
-value|0x33
+value|3
+end_define
+
+begin_comment
+comment|/* active, bcast probe req */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|IWI_SCAN_TYPE_BDIRECTED
-value|0x44
+value|4
+end_define
+
+begin_comment
+comment|/* active, directed+bcast probe */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWI_SCAN_TYPES
+value|5
+end_define
+
+begin_comment
+comment|/* structure for command IWI_CMD_SCAN_EXT */
+end_comment
+
+begin_struct
+struct|struct
+name|iwi_scan_ext
+block|{
+name|uint32_t
+name|full_scan_index
+decl_stmt|;
 name|uint8_t
-name|reserved1
+name|channels
+index|[
+name|IWI_SCAN_CHANNELS
+index|]
+decl_stmt|;
+name|uint8_t
+name|scan_type
+index|[
+name|IWI_SCAN_CHANNELS
+operator|/
+literal|2
+index|]
+decl_stmt|;
+name|uint8_t
+name|reserved
 decl_stmt|;
 name|uint16_t
-name|reserved2
+name|dwell_time
+index|[
+name|IWI_SCAN_TYPES
+index|]
 decl_stmt|;
-name|uint16_t
-name|passive
-decl_stmt|;
-comment|/* dwell time */
-name|uint16_t
-name|directed
-decl_stmt|;
-comment|/* dwell time */
-name|uint16_t
-name|broadcast
-decl_stmt|;
-comment|/* dwell time */
-name|uint16_t
-name|bdirected
-decl_stmt|;
-comment|/* dwell time */
 block|}
 name|__packed
 struct|;
@@ -1401,12 +1751,15 @@ decl_stmt|;
 name|uint8_t
 name|answer_pbreq
 decl_stmt|;
+comment|/* answer bcast ssid probe req frames */
 name|uint8_t
 name|allow_invalid_frames
 decl_stmt|;
+comment|/* accept data frames w/ errors */
 name|uint8_t
 name|multicast_enabled
 decl_stmt|;
+comment|/* accept frames w/ any bssid */
 name|uint8_t
 name|drop_unicast_unencrypted
 decl_stmt|;
@@ -1422,33 +1775,62 @@ decl_stmt|;
 name|uint8_t
 name|antenna
 decl_stmt|;
+comment|/* antenna diversity */
+define|#
+directive|define
+name|IWI_ANTENNA_AUTO
+value|0
+comment|/* firmware selects best antenna */
+define|#
+directive|define
+name|IWI_ANTENNA_A
+value|1
+comment|/* use antenna A only */
+define|#
+directive|define
+name|IWI_ANTENNA_B
+value|3
+comment|/* use antenna B only */
+define|#
+directive|define
+name|IWI_ANTENNA_SLOWDIV
+value|2
+comment|/* slow diversity algorithm */
 name|uint8_t
-name|reserved2
+name|include_crc
 decl_stmt|;
+comment|/* include crc in rx'd frames */
 name|uint8_t
 name|use_protection
 decl_stmt|;
+comment|/* auto-detect 11g operation */
 name|uint8_t
 name|protection_ctsonly
 decl_stmt|;
+comment|/* use CTS-to-self protection */
 name|uint8_t
 name|enable_multicast_filtering
 decl_stmt|;
 name|uint8_t
 name|bluetooth_threshold
 decl_stmt|;
+comment|/* collision threshold */
 name|uint8_t
-name|reserved4
+name|silence_threshold
 decl_stmt|;
+comment|/* silence over/under threshold */
 name|uint8_t
 name|allow_beacon_and_probe_resp
 decl_stmt|;
+comment|/* accept frames w/ any bssid */
 name|uint8_t
 name|allow_mgt
 decl_stmt|;
+comment|/* accept frames w/ any bssid */
 name|uint8_t
 name|noise_reported
 decl_stmt|;
+comment|/* report noise stats to host */
 name|uint8_t
 name|reserved5
 decl_stmt|;
@@ -1535,10 +1917,34 @@ name|__packed
 struct|;
 end_struct
 
+begin_comment
+comment|/* structure for command IWI_CMD_SET_SENSITIVTY */
+end_comment
+
+begin_struct
+struct|struct
+name|iwi_sensitivity
+block|{
+name|uint16_t
+name|rssi
+decl_stmt|;
+comment|/* beacon rssi in dBm */
+define|#
+directive|define
+name|IWI_RSSI_TO_DBM
+value|112
+name|uint16_t
+name|reserved
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
-name|IWI_MEM_EVENT_CTL
+name|IWI_MEM_EEPROM_EVENT
 value|0x00300004
 end_define
 
@@ -1549,30 +1955,34 @@ name|IWI_MEM_EEPROM_CTL
 value|0x00300040
 end_define
 
-begin_comment
-comment|/* possible flags for register IWI_MEM_EVENT */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWI_LED_ASSOC
-value|(1<< 5)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWI_LED_MASK
-value|0xd9fffffb
-end_define
-
 begin_define
 define|#
 directive|define
 name|IWI_EEPROM_MAC
 value|0x21
 end_define
+
+begin_define
+define|#
+directive|define
+name|IWI_EEPROM_NIC
+value|0x25
+end_define
+
+begin_comment
+comment|/* nic type (lsb) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWI_EEPROM_SKU
+value|0x25
+end_define
+
+begin_comment
+comment|/* nic type (msb) */
+end_comment
 
 begin_define
 define|#
@@ -1768,32 +2178,6 @@ end_define
 begin_comment
 comment|/*  * indirect memory space access macros  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|MEM_READ_1
-parameter_list|(
-name|sc
-parameter_list|,
-name|addr
-parameter_list|)
-define|\
-value|(CSR_WRITE_4((sc), IWI_CSR_INDIRECT_ADDR, (addr)),		\ 	 CSR_READ_1((sc), IWI_CSR_INDIRECT_DATA))
-end_define
-
-begin_define
-define|#
-directive|define
-name|MEM_READ_4
-parameter_list|(
-name|sc
-parameter_list|,
-name|addr
-parameter_list|)
-define|\
-value|(CSR_WRITE_4((sc), IWI_CSR_INDIRECT_ADDR, (addr)),		\ 	 CSR_READ_4((sc), IWI_CSR_INDIRECT_DATA))
-end_define
 
 begin_define
 define|#
