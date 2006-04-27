@@ -229,19 +229,19 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<pci/if_skreg.h>
+file|<dev/sk/if_skreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<pci/xmaciireg.h>
+file|<dev/sk/xmaciireg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<pci/yukonreg.h>
+file|<dev/sk/yukonreg.h>
 end_include
 
 begin_expr_stmt
