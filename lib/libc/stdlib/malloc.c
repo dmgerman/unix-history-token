@@ -1697,7 +1697,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Upper limit on brk addresses (may be an over-estimate). */
+comment|/* Current upper limit on brk addresses. */
 end_comment
 
 begin_decl_stmt
@@ -3951,13 +3951,6 @@ name|void
 modifier|*
 name|ret
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_BRK
-name|AGAIN
-label|:
-endif|#
-directive|endif
 comment|/* 	 * We don't use MAP_FIXED here, because it can cause the *replacement* 	 * of existing mappings, and we only want to create new mappings. 	 */
 name|ret
 operator|=
@@ -4065,47 +4058,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|USE_BRK
-elseif|else
-if|if
-condition|(
-operator|(
-name|uintptr_t
-operator|)
-name|ret
-operator|>=
-operator|(
-name|uintptr_t
-operator|)
-name|brk_base
-operator|&&
-operator|(
-name|uintptr_t
-operator|)
-name|ret
-operator|<
-operator|(
-name|uintptr_t
-operator|)
-name|brk_max
-condition|)
-block|{
-comment|/* 		 * We succeeded in mapping memory, but at a location that could 		 * be confused with brk.  Leave the mapping intact so that this 		 * won't ever happen again, then try again. 		 */
-name|assert
-argument_list|(
-name|addr
-operator|==
-name|NULL
-argument_list|)
-expr_stmt|;
-goto|goto
-name|AGAIN
-goto|;
-block|}
-endif|#
-directive|endif
 name|assert
 argument_list|(
 name|ret
@@ -4375,10 +4327,11 @@ name|RETURN
 goto|;
 block|}
 block|}
+block|}
 ifdef|#
 directive|ifdef
 name|USE_BRK
-comment|/* 		 * Try to create chunk-size allocations in brk, in order to 		 * make full use of limited address space. 		 */
+comment|/* 	 * Try to create allocations in brk, in order to make full use of 	 * limited address space. 	 */
 if|if
 condition|(
 name|brk_prev
@@ -4398,7 +4351,7 @@ decl_stmt|;
 name|intptr_t
 name|incr
 decl_stmt|;
-comment|/* 			 * The loop is necessary to recover from races with 			 * other threads that are using brk for something other 			 * than malloc. 			 */
+comment|/* 		 * The loop is necessary to recover from races with other 		 * threads that are using brk for something other than malloc. 		 */
 do|do
 block|{
 comment|/* Get the current end of brk. */
@@ -4409,13 +4362,13 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Calculate how much padding is necessary to 				 * chunk-align the end of brk. 				 */
+comment|/* 			 * Calculate how much padding is necessary to 			 * chunk-align the end of brk. 			 */
 name|incr
 operator|=
 operator|(
 name|intptr_t
 operator|)
-name|chunk_size
+name|size
 operator|-
 operator|(
 name|intptr_t
@@ -4429,7 +4382,7 @@ if|if
 condition|(
 name|incr
 operator|==
-name|chunk_size
+name|size
 condition|)
 block|{
 name|ret
@@ -4454,7 +4407,7 @@ name|incr
 expr_stmt|;
 name|incr
 operator|+=
-name|chunk_size
+name|size
 expr_stmt|;
 block|}
 name|brk_prev
@@ -4472,6 +4425,19 @@ name|brk_cur
 condition|)
 block|{
 comment|/* Success. */
+name|brk_max
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|intptr_t
+operator|)
+name|ret
+operator|+
+name|size
+expr_stmt|;
 goto|goto
 name|RETURN
 goto|;
@@ -4492,7 +4458,6 @@ do|;
 block|}
 endif|#
 directive|endif
-block|}
 comment|/* 	 * Try to over-allocate, but allow the OS to place the allocation 	 * anywhere.  Beware of size_t wrap-around. 	 */
 if|if
 condition|(
@@ -4754,6 +4719,131 @@ operator|&
 name|chunks_mtx
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_BRK
+if|if
+condition|(
+operator|(
+name|uintptr_t
+operator|)
+name|chunk
+operator|>=
+operator|(
+name|uintptr_t
+operator|)
+name|brk_base
+operator|&&
+operator|(
+name|uintptr_t
+operator|)
+name|chunk
+operator|<
+operator|(
+name|uintptr_t
+operator|)
+name|brk_max
+condition|)
+block|{
+name|void
+modifier|*
+name|brk_cur
+decl_stmt|;
+comment|/* Get the current end of brk. */
+name|brk_cur
+operator|=
+name|sbrk
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Try to shrink the data segment if this chunk is at the end 		 * of the data segment.  The sbrk() call here is subject to a 		 * race condition with threads that use brk(2) or sbrk(2) 		 * directly, but the alternative would be to leak memory for 		 * the sake of poorly designed multi-threaded programs. 		 */
+if|if
+condition|(
+name|brk_cur
+operator|==
+name|brk_max
+operator|&&
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|uintptr_t
+operator|)
+name|chunk
+operator|+
+name|size
+operator|==
+name|brk_max
+operator|&&
+name|sbrk
+argument_list|(
+operator|-
+operator|(
+name|intptr_t
+operator|)
+name|size
+argument_list|)
+operator|==
+name|brk_max
+condition|)
+block|{
+if|if
+condition|(
+name|brk_prev
+operator|==
+name|brk_max
+condition|)
+block|{
+comment|/* Success. */
+name|brk_prev
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|intptr_t
+operator|)
+name|brk_max
+operator|-
+operator|(
+name|intptr_t
+operator|)
+name|size
+expr_stmt|;
+name|brk_max
+operator|=
+name|brk_prev
+expr_stmt|;
+block|}
+goto|goto
+name|RETURN
+goto|;
+block|}
+else|else
+name|madvise
+argument_list|(
+name|chunk
+argument_list|,
+name|size
+argument_list|,
+name|MADV_FREE
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+endif|#
+directive|endif
+name|pages_unmap
+argument_list|(
+name|chunk
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Iteratively create records of each chunk-sized memory region that 	 * 'chunk' is comprised of, so that the address range can be recycled 	 * if memory usage increases later on. 	 */
 for|for
 control|(
 name|offset
@@ -4781,7 +4871,6 @@ operator|==
 name|NULL
 condition|)
 break|break;
-comment|/* 		 * Create a record of this chunk before deallocating it, so 		 * that the address range can be recycled if memory usage 		 * increases later on. 		 */
 name|node
 operator|->
 name|chunk
@@ -4822,47 +4911,10 @@ block|}
 ifdef|#
 directive|ifdef
 name|USE_BRK
-if|if
-condition|(
-operator|(
-name|uintptr_t
-operator|)
-name|chunk
-operator|>=
-operator|(
-name|uintptr_t
-operator|)
-name|brk_base
-operator|&&
-operator|(
-name|uintptr_t
-operator|)
-name|chunk
-operator|<
-operator|(
-name|uintptr_t
-operator|)
-name|brk_max
-condition|)
-name|madvise
-argument_list|(
-name|chunk
-argument_list|,
-name|size
-argument_list|,
-name|MADV_FREE
-argument_list|)
-expr_stmt|;
-else|else
+name|RETURN
+label|:
 endif|#
 directive|endif
-name|pages_unmap
-argument_list|(
-name|chunk
-argument_list|,
-name|size
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MALLOC_STATS
@@ -4964,7 +5016,7 @@ name|unsigned
 name|long
 name|ind
 decl_stmt|;
-comment|/* 		 * Hash _pthread_self() to one of the arenas.  There is a prime 		 * number of arenas, so this has a reasonable chance of 		 * working.  Even so, the hashing can be easily thwarted by 		 * inconvenient _pthread_self() values.  Without specific 		 * knowledge of how _pthread_self() calculates values, we can't 		 * do much better than this. 		 */
+comment|/* 		 * Hash _pthread_self() to one of the arenas.  There is a prime 		 * number of arenas, so this has a reasonable chance of 		 * working.  Even so, the hashing can be easily thwarted by 		 * inconvenient _pthread_self() values.  Without specific 		 * knowledge of how _pthread_self() calculates values, we can't 		 * easily do much better than this. 		 */
 name|ind
 operator|=
 operator|(
@@ -10555,14 +10607,14 @@ modifier|*
 name|ret
 decl_stmt|;
 name|size_t
-name|chunk_size
+name|csize
 decl_stmt|;
 name|chunk_node_t
 modifier|*
 name|node
 decl_stmt|;
-comment|/* Allocate a chunk for this request. */
-name|chunk_size
+comment|/* Allocate one or more contiguous chunks for this request. */
+name|csize
 operator|=
 name|CHUNK_CEILING
 argument_list|(
@@ -10571,7 +10623,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|chunk_size
+name|csize
 operator|==
 literal|0
 condition|)
@@ -10604,7 +10656,7 @@ name|ret
 operator|=
 name|chunk_alloc
 argument_list|(
-name|chunk_size
+name|csize
 argument_list|)
 expr_stmt|;
 if|if
@@ -10636,7 +10688,7 @@ name|node
 operator|->
 name|size
 operator|=
-name|chunk_size
+name|csize
 expr_stmt|;
 name|malloc_mutex_lock
 argument_list|(
@@ -10662,7 +10714,7 @@ operator|++
 expr_stmt|;
 name|huge_allocated
 operator|+=
-name|chunk_size
+name|csize
 expr_stmt|;
 endif|#
 directive|endif
@@ -10686,7 +10738,7 @@ name|ret
 argument_list|,
 literal|0xa5
 argument_list|,
-name|chunk_size
+name|csize
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -10704,7 +10756,7 @@ name|ret
 argument_list|,
 literal|0
 argument_list|,
-name|chunk_size
+name|csize
 argument_list|)
 expr_stmt|;
 return|return
@@ -13165,18 +13217,7 @@ name|brk_base
 expr_stmt|;
 name|brk_max
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-operator|(
-name|uintptr_t
-operator|)
 name|brk_base
-operator|+
-name|MAXDSIZ
-operator|)
 expr_stmt|;
 endif|#
 directive|endif
