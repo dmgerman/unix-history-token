@@ -2888,7 +2888,7 @@ name|ns8250_init
 argument_list|(
 name|bas
 argument_list|,
-literal|9600
+literal|115200
 argument_list|,
 literal|8
 argument_list|,
