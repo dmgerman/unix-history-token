@@ -347,7 +347,7 @@ name|pthread
 modifier|*
 name|m_owner
 decl_stmt|;
-name|long
+name|int
 name|m_flags
 decl_stmt|;
 name|int
@@ -413,7 +413,7 @@ decl_stmt|;
 name|int
 name|m_ceiling
 decl_stmt|;
-name|long
+name|int
 name|m_flags
 decl_stmt|;
 block|}
