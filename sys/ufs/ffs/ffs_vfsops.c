@@ -4496,7 +4496,7 @@ name|devvp
 operator|->
 name|v_bufobj
 operator|.
-name|bo_flags
+name|bo_flag
 operator||=
 name|BO_NEEDSGIANT
 expr_stmt|;
