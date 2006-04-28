@@ -6813,6 +6813,14 @@ name|vp
 operator|->
 name|v_mount
 argument_list|)
+operator|||
+name|vp
+operator|->
+name|v_bufobj
+operator|.
+name|bo_flag
+operator|&
+name|BO_NEEDSGIANT
 condition|)
 name|bp
 operator|->

@@ -4488,9 +4488,20 @@ comment|/* !UFS_EXTATTR_AUTOSTART */
 endif|#
 directive|endif
 comment|/* !UFS_EXTATTR */
-ifndef|#
-directive|ifndef
+ifdef|#
+directive|ifdef
 name|QUOTA
+comment|/* 	 * Our bufobj must require giant for snapshots when quotas are 	 * enabled. 	 */
+name|devvp
+operator|->
+name|v_bufobj
+operator|.
+name|bo_flags
+operator||=
+name|BO_NEEDSGIANT
+expr_stmt|;
+else|#
+directive|else
 name|mp
 operator|->
 name|mnt_kern_flag
