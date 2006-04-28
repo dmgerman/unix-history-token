@@ -3973,6 +3973,12 @@ name|devc
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|use_pts
+condition|)
+return|return;
+if|if
+condition|(
 operator|*
 name|dev
 operator|!=
