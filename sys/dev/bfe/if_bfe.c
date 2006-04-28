@@ -1176,7 +1176,7 @@ argument_list|,
 literal|0
 argument_list|,
 comment|/* alignment, boundary */
-literal|0x40000000
+literal|0x3FFFFFFF
 argument_list|,
 comment|/* lowaddr */
 name|BUS_SPACE_MAXADDR
