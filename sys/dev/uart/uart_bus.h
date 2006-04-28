@@ -465,6 +465,16 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|uart_bus_ipend
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|uart_bus_probe
 parameter_list|(
 name|device_t
