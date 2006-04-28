@@ -212,6 +212,17 @@ begin_comment
 comment|/* passwd,group in YP compat mode */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NSSRC_CACHE
+value|"cache"
+end_define
+
+begin_comment
+comment|/* cache daemon */
+end_comment
+
 begin_comment
 comment|/*  * currently implemented databases  */
 end_comment
@@ -270,6 +281,41 @@ define|#
 directive|define
 name|NSDB_SHELLS
 value|"shells"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NSDB_SERVICES
+value|"services"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NSDB_SERVICES_COMPAT
+value|"services_compat"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NSDB_SSH_HOSTKEYS
+value|"ssh_hostkeys"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NSDB_PROTOCOLS
+value|"protocols"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NSDB_RPC
+value|"rpc"
 end_define
 
 begin_comment
@@ -342,13 +388,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NSDB_PROTOCOLS
-value|"protocols"
-end_define
-
-begin_define
-define|#
-directive|define
 name|NSDB_REMOTE
 value|"remote"
 end_define
@@ -356,22 +395,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|NSDB_RPC
-value|"rpc"
-end_define
-
-begin_define
-define|#
-directive|define
 name|NSDB_SENDMAILVARS
 value|"sendmailvars"
-end_define
-
-begin_define
-define|#
-directive|define
-name|NSDB_SERVICES
-value|"services"
 end_define
 
 begin_define
