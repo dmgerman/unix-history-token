@@ -1586,7 +1586,7 @@ name|sc
 operator|->
 name|bfe_rx_map
 argument_list|,
-name|BUS_DMASYNC_PREREAD
+name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 name|error
@@ -1683,7 +1683,7 @@ name|sc
 operator|->
 name|bfe_tx_map
 argument_list|,
-name|BUS_DMASYNC_PREREAD
+name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 return|return
@@ -2609,7 +2609,7 @@ name|sc
 operator|->
 name|bfe_tx_map
 argument_list|,
-name|BUS_DMASYNC_PREREAD
+name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2717,7 +2717,7 @@ name|sc
 operator|->
 name|bfe_rx_map
 argument_list|,
-name|BUS_DMASYNC_PREREAD
+name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2780,7 +2780,7 @@ name|sc
 operator|->
 name|bfe_rx_map
 argument_list|,
-name|BUS_DMASYNC_PREREAD
+name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 name|CSR_WRITE_4
@@ -3010,7 +3010,7 @@ name|r
 operator|->
 name|bfe_map
 argument_list|,
-name|BUS_DMASYNC_PREREAD
+name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 name|ctrl
@@ -3053,7 +3053,7 @@ name|sc
 operator|->
 name|bfe_rx_map
 argument_list|,
-name|BUS_DMASYNC_PREREAD
+name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 return|return
@@ -5833,7 +5833,7 @@ name|r
 operator|->
 name|bfe_map
 argument_list|,
-name|BUS_DMASYNC_POSTWRITE
+name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
 name|len
@@ -6549,7 +6549,7 @@ name|r
 operator|->
 name|bfe_map
 argument_list|,
-name|BUS_DMASYNC_PREREAD
+name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 name|frag
@@ -6611,7 +6611,7 @@ name|sc
 operator|->
 name|bfe_tx_map
 argument_list|,
-name|BUS_DMASYNC_PREREAD
+name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 operator|*
