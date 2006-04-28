@@ -1163,7 +1163,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* parent tag */
+comment|/* 	 * parent tag.  Apparently the chip cannot handle any DMA address 	 * greater than 1GB. 	 */
 name|error
 operator|=
 name|bus_dma_tag_create
@@ -1176,10 +1176,10 @@ argument_list|,
 literal|0
 argument_list|,
 comment|/* alignment, boundary */
-name|BUS_SPACE_MAXADDR
+literal|0x3FFFFFFF
 argument_list|,
 comment|/* lowaddr */
-name|BUS_SPACE_MAXADDR_32BIT
+name|BUS_SPACE_MAXADDR
 argument_list|,
 comment|/* highaddr */
 name|NULL
@@ -1196,7 +1196,7 @@ comment|/* num of segments */
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* max segment size */
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 comment|/* flags */
 name|NULL
@@ -1219,9 +1219,9 @@ name|sc
 operator|->
 name|bfe_parent_tag
 argument_list|,
-name|BFE_TX_LIST_SIZE
+literal|1
 argument_list|,
-name|BFE_TX_LIST_SIZE
+literal|0
 argument_list|,
 name|BUS_SPACE_MAXADDR
 argument_list|,
@@ -1276,9 +1276,9 @@ name|sc
 operator|->
 name|bfe_parent_tag
 argument_list|,
-name|BFE_RX_LIST_SIZE
+literal|1
 argument_list|,
-name|BFE_RX_LIST_SIZE
+literal|0
 argument_list|,
 name|BUS_SPACE_MAXADDR
 argument_list|,
@@ -1351,7 +1351,7 @@ literal|1
 argument_list|,
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
-literal|0
+name|BUS_DMA_ALLOCNOW
 argument_list|,
 name|NULL
 argument_list|,
@@ -1586,7 +1586,7 @@ name|sc
 operator|->
 name|bfe_rx_map
 argument_list|,
-name|BUS_DMASYNC_PREREAD
+name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 name|error
@@ -1683,7 +1683,7 @@ name|sc
 operator|->
 name|bfe_tx_map
 argument_list|,
-name|BUS_DMASYNC_PREREAD
+name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 return|return
@@ -2619,7 +2619,7 @@ name|sc
 operator|->
 name|bfe_tx_map
 argument_list|,
-name|BUS_DMASYNC_PREREAD
+name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2727,7 +2727,7 @@ name|sc
 operator|->
 name|bfe_rx_map
 argument_list|,
-name|BUS_DMASYNC_PREREAD
+name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2790,7 +2790,7 @@ name|sc
 operator|->
 name|bfe_rx_map
 argument_list|,
-name|BUS_DMASYNC_PREREAD
+name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 name|CSR_WRITE_4
@@ -3020,7 +3020,7 @@ name|r
 operator|->
 name|bfe_map
 argument_list|,
-name|BUS_DMASYNC_PREREAD
+name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 name|ctrl
@@ -3063,7 +3063,7 @@ name|sc
 operator|->
 name|bfe_rx_map
 argument_list|,
-name|BUS_DMASYNC_PREREAD
+name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 return|return
@@ -5843,7 +5843,7 @@ name|r
 operator|->
 name|bfe_map
 argument_list|,
-name|BUS_DMASYNC_POSTWRITE
+name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
 name|len
@@ -6559,7 +6559,7 @@ name|r
 operator|->
 name|bfe_map
 argument_list|,
-name|BUS_DMASYNC_PREREAD
+name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 name|frag
@@ -6621,7 +6621,7 @@ name|sc
 operator|->
 name|bfe_tx_map
 argument_list|,
-name|BUS_DMASYNC_PREREAD
+name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 operator|*
