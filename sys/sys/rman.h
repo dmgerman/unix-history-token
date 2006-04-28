@@ -788,34 +788,6 @@ name|rman_head
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * XXX: puc.c is a big hack.  * XXX: it should be rewritten to act like a bridge and offer  * XXX: its own resource manager.  * XXX: until somebody has time, help it out with these two functions  */
-end_comment
-
-begin_function_decl
-name|struct
-name|resource
-modifier|*
-name|rman_secret_puc_alloc_resource
-parameter_list|(
-name|int
-name|malloc_flag
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|rman_secret_puc_free_resource
-parameter_list|(
-name|struct
-name|resource
-modifier|*
-name|r
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
