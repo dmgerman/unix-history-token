@@ -2141,9 +2141,14 @@ name|void
 name|cpu_reset_real
 parameter_list|()
 block|{
+ifndef|#
+directive|ifndef
+name|PC98
 name|int
 name|b
 decl_stmt|;
+endif|#
+directive|endif
 name|disable_intr
 argument_list|()
 expr_stmt|;
