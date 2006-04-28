@@ -8954,24 +8954,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|ep
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* 				 * We have a pending even, try to serve it 				 * again. 				 */
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_queue_mtx
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
-if|if
-condition|(
 operator|(
 name|sc
 operator|->
@@ -9036,6 +9018,7 @@ operator|->
 name|sc_lock
 argument_list|)
 expr_stmt|;
+comment|/* 			 * XXX: We can miss an event here, because an event 			 *      can be added without sx-device-lock and without 			 *      mtx-queue-lock. Maybe I should just stop using 			 *      dedicated mutex for events synchronization and 			 *      stick with the queue lock? 			 *      The event will hang here until next I/O request 			 *      or next event is received. 			 */
 name|MSLEEP
 argument_list|(
 name|sc
