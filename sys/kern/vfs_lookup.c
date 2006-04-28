@@ -1465,14 +1465,16 @@ decl_stmt|;
 name|int
 name|vfslocked
 decl_stmt|;
-name|int
-name|tvfslocked
-decl_stmt|;
+comment|/* VFS Giant state for child */
 name|int
 name|dvfslocked
 decl_stmt|;
+comment|/* VFS Giant state for parent */
+name|int
+name|tvfslocked
+decl_stmt|;
 comment|/* 	 * Setup: break out flag bits into variables. 	 */
-name|vfslocked
+name|dvfslocked
 operator|=
 operator|(
 name|ndp
@@ -1486,7 +1488,7 @@ operator|)
 operator|!=
 literal|0
 expr_stmt|;
-name|dvfslocked
+name|vfslocked
 operator|=
 literal|0
 expr_stmt|;
@@ -2177,9 +2179,9 @@ name|mnt_vnodecovered
 expr_stmt|;
 name|tvfslocked
 operator|=
-name|vfslocked
+name|dvfslocked
 expr_stmt|;
-name|vfslocked
+name|dvfslocked
 operator|=
 name|VFS_LOCK_GIANT
 argument_list|(
@@ -2277,6 +2279,21 @@ argument_list|(
 name|dp
 argument_list|,
 literal|"lookup"
+argument_list|)
+expr_stmt|;
+name|VNASSERT
+argument_list|(
+name|vfslocked
+operator|==
+literal|0
+argument_list|,
+name|dp
+argument_list|,
+operator|(
+literal|"lookup: vfslocked %d"
+operator|,
+name|vfslocked
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If we have a shared lock we may need to upgrade the lock for the 	 * last operation. 	 */
@@ -2452,9 +2469,9 @@ name|mnt_vnodecovered
 expr_stmt|;
 name|tvfslocked
 operator|=
-name|vfslocked
+name|dvfslocked
 expr_stmt|;
-name|vfslocked
+name|dvfslocked
 operator|=
 name|VFS_LOCK_GIANT
 argument_list|(
@@ -2675,6 +2692,15 @@ name|ndp
 operator|->
 name|ni_vp
 expr_stmt|;
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
+argument_list|(
+name|dp
+operator|->
+name|v_mount
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Check to see if the vnode has been mounted on; 	 * if so find the root of the mounted filesystem. 	 */
 while|while
 condition|(
@@ -2703,19 +2729,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|KASSERT
-argument_list|(
-name|dp
-operator|!=
-name|ndp
-operator|->
-name|ni_dvp
-argument_list|,
-operator|(
-literal|"XXX"
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|vfs_busy
@@ -2737,12 +2750,8 @@ argument_list|)
 expr_stmt|;
 name|VFS_UNLOCK_GIANT
 argument_list|(
-name|dvfslocked
-argument_list|)
-expr_stmt|;
-name|dvfslocked
-operator|=
 name|vfslocked
+argument_list|)
 expr_stmt|;
 name|vfslocked
 operator|=
@@ -2751,6 +2760,14 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dp
+operator|!=
+name|ndp
+operator|->
+name|ni_dvp
+condition|)
 name|VOP_UNLOCK
 argument_list|(
 name|ndp
@@ -3035,6 +3052,11 @@ name|dvfslocked
 argument_list|)
 expr_stmt|;
 name|dvfslocked
+operator|=
+name|vfslocked
+expr_stmt|;
+comment|/* dp becomes dvp in dirloop */
+name|vfslocked
 operator|=
 literal|0
 expr_stmt|;
