@@ -2117,6 +2117,15 @@ name|ni_vp
 operator|=
 name|dp
 expr_stmt|;
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
+argument_list|(
+name|dp
+operator|->
+name|v_mount
+argument_list|)
+expr_stmt|;
 name|VREF
 argument_list|(
 name|dp
