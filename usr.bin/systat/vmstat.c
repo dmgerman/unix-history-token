@@ -1724,7 +1724,7 @@ name|VMSTATCOL
 operator|+
 literal|10
 argument_list|,
-literal|"dirtybuf"
+literal|"dtbuf"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -1737,7 +1737,7 @@ name|VMSTATCOL
 operator|+
 literal|10
 argument_list|,
-literal|"desiredvnodes"
+literal|"desvn"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -1750,7 +1750,7 @@ name|VMSTATCOL
 operator|+
 literal|10
 argument_list|,
-literal|"numvnodes"
+literal|"numvn"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -1763,7 +1763,7 @@ name|VMSTATCOL
 operator|+
 literal|10
 argument_list|,
-literal|"freevnodes"
+literal|"frevn"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -2013,7 +2013,7 @@ name|VMSTATCOL
 operator|-
 literal|6
 argument_list|,
-literal|"%%slo-z"
+literal|"%%sloz"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -2026,7 +2026,7 @@ name|VMSTATCOL
 operator|-
 literal|6
 argument_list|,
-literal|"tfree"
+literal|"totfr"
 argument_list|)
 expr_stmt|;
 name|extended_vm_stats
