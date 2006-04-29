@@ -64,7 +64,7 @@ end_struct
 
 begin_expr_stmt
 name|__BEGIN_DECLS
-comment|/* These interfaces are currently implemented through nsswitch and MT-safe */
+comment|/*  * These interfaces are currently implemented through nsswitch and are  * MT-safe.  */
 specifier|extern
 expr|struct
 name|rpcent
