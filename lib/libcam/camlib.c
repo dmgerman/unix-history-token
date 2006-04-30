@@ -1877,8 +1877,6 @@ parameter_list|)
 block|{
 name|int
 name|fd
-decl_stmt|,
-name|rc
 decl_stmt|;
 name|union
 name|ccb
@@ -1978,8 +1976,8 @@ operator|=
 name|unit
 expr_stmt|;
 comment|/* 	 * Attempt to get the passthrough device.  This ioctl will fail if  	 * the device name is null, if the device doesn't exist, or if the 	 * passthrough driver isn't in the kernel. 	 */
-name|rc
-operator|=
+if|if
+condition|(
 name|ioctl
 argument_list|(
 name|fd
@@ -1989,15 +1987,6 @@ argument_list|,
 operator|&
 name|ccb
 argument_list|)
-expr_stmt|;
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rc
 operator|==
 operator|-
 literal|1
@@ -2071,12 +2060,22 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
 block|}
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If the ioctl returned the right status, but we got an error back 	 * in the ccb, that means that the kernel found the device the user 	 * passed in, but was unable to find the passthrough device for 	 * the device the user gave us. 	 */
 if|if
 condition|(
