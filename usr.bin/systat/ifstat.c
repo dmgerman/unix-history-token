@@ -897,7 +897,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/*  		 * Initially, we only display interfaces that have 		 * received some traffic. 		 */
+comment|/* 		 * Initially, we only display interfaces that have 		 * received some traffic. 		 */
 if|if
 condition|(
 name|p
@@ -978,7 +978,7 @@ argument_list|,
 argument|link
 argument_list|)
 block|{
-comment|/*  		 * Grab a copy of the old input/output values before we 		 * call getifmibdata(). 		 */
+comment|/* 		 * Grab a copy of the old input/output values before we 		 * call getifmibdata(). 		 */
 name|old_inb
 operator|=
 name|ifp
@@ -1223,7 +1223,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * We want to right justify our interface names against the first column  * (first sixteen or so characters), so we need to do some alignment.  */
+comment|/*  * We want to right justify our interface names against the first column  * (first sixteen or so characters), so we need to do some alignment.  */
 end_comment
 
 begin_function

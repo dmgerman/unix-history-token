@@ -1231,7 +1231,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/*  		 * We currently do no require a consistent pcb list. 		 * Try to be robust in case of struct size changes  		 */
+comment|/* 		 * We currently do no require a consistent pcb list. 		 * Try to be robust in case of struct size changes 		 */
 name|cur
 operator|=
 operator|(

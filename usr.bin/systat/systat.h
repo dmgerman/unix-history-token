@@ -116,7 +116,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*   * If we are started with privileges, use a kmem interface for netstat handling,  * otherwise use sysctl.  * In case of many open sockets, the sysctl handling might become slow.  */
+comment|/*  * If we are started with privileges, use a kmem interface for netstat handling,  * otherwise use sysctl.  * In case of many open sockets, the sysctl handling might become slow.  */
 end_comment
 
 begin_decl_stmt
