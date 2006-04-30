@@ -5875,7 +5875,7 @@ operator|=
 name|rcr0
 argument_list|()
 expr_stmt|;
-comment|/* 	 * CR0_MP, CR0_NE and CR0_TS are also set by npx_probe() for the 	 * BSP.  See the comments there about why we set them. 	 */
+comment|/* 	 * CR0_MP, CR0_NE and CR0_TS are set for NPX (FPU) support: 	 * 	 * Prepare to trap all ESC (i.e., NPX) instructions and all WAIT 	 * instructions.  We must set the CR0_MP bit and use the CR0_TS 	 * bit to control the trap, because setting the CR0_EM bit does 	 * not cause WAIT instructions to trap.  It's important to trap 	 * WAIT instructions - otherwise the "wait" variants of no-wait 	 * control instructions would degenerate to the "no-wait" variants 	 * after FP context switches but work correctly otherwise.  It's 	 * particularly important to trap WAITs when there is no NPX - 	 * otherwise the "wait" variants would always degenerate. 	 * 	 * Try setting CR0_NE to get correct error reporting on 486DX's. 	 * Setting it should fail or do nothing on lesser processors. 	 */
 name|cr0
 operator||=
 name|CR0_MP

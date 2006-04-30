@@ -1008,7 +1008,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Probe routine.  Initialize cr0 to give correct behaviour for [f]wait  * whether the device exists or not (XXX should be elsewhere).  Set flags  * to tell npxattach() what to do.  Modify device struct if npx doesn't  * need to use interrupts.  Return 0 if device exists.  */
+comment|/*  * Probe routine.  Set flags to tell npxattach() what to do.  Set up an  * interrupt handler if npx needs to use interrupts.  */
 end_comment
 
 begin_function
@@ -1051,6 +1051,42 @@ decl_stmt|;
 name|u_short
 name|status
 decl_stmt|;
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"math processor"
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Modern CPUs all have an FPU that uses the INT16 interface 	 * and provide a simple way to verify that, so handle the 	 * common case right away. 	 */
+if|if
+condition|(
+name|cpu_feature
+operator|&
+name|CPUID_FPU
+condition|)
+block|{
+name|hw_float
+operator|=
+name|npx_exists
+operator|=
+literal|1
+expr_stmt|;
+name|npx_ex16
+operator|=
+literal|1
+expr_stmt|;
+name|device_quiet
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|save_idt_npxtrap
 operator|=
 name|idt
@@ -1205,31 +1241,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Prepare to trap all ESC (i.e., NPX) instructions and all WAIT 	 * instructions.  We must set the CR0_MP bit and use the CR0_TS 	 * bit to control the trap, because setting the CR0_EM bit does 	 * not cause WAIT instructions to trap.  It's important to trap 	 * WAIT instructions - otherwise the "wait" variants of no-wait 	 * control instructions would degenerate to the "no-wait" variants 	 * after FP context switches but work correctly otherwise.  It's 	 * particularly important to trap WAITs when there is no NPX - 	 * otherwise the "wait" variants would always degenerate. 	 * 	 * Try setting CR0_NE to get correct error reporting on 486DX's. 	 * Setting it should fail or do nothing on lesser processors. 	 */
-name|load_cr0
-argument_list|(
-name|rcr0
-argument_list|()
-operator||
-name|CR0_MP
-operator||
-name|CR0_NE
-argument_list|)
-expr_stmt|;
-comment|/* 	 * But don't trap while we're probing. 	 */
+comment|/* 	 * Don't trap while we're probing. 	 */
 name|stop_emulating
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Finish resetting the coprocessor, if any.  If there is an error 	 * pending, then we may get a bogus IRQ13, but npx_intr() will handle 	 * it OK.  Bogus halts have never been observed, but we enabled 	 * IRQ13 and cleared the BUSY# latch early to handle them anyway. 	 */
 name|fninit
 argument_list|()
-expr_stmt|;
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"math processor"
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Don't use fwait here because it might hang. 	 * Don't use fnop here because it usually hangs if there is no FPU. 	 */
 name|DELAY
@@ -1542,21 +1560,32 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|!
 name|npx_ex16
 condition|)
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"INT 16 interface\n"
+literal|"WARNING: no FPU!\n"
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+name|device_is_quiet
+argument_list|(
+name|dev
+argument_list|)
+operator|||
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"WARNING: no FPU!\n"
+literal|"INT 16 interface\n"
 argument_list|)
 expr_stmt|;
 name|npxinit
