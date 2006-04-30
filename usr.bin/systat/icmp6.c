@@ -133,7 +133,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*- --0         1         2         3         4         5         6         7 --0123456789012345678901234567890123456789012345678901234567890123456789012345 01          ICMPv6 Input                       ICMPv6 Output 02999999999 total messages           999999999 total messages 03999999999 with bad code            999999999 errors generated 04999999999 with bad length          999999999 suppressed - original too short 05999999999 with bad checksum        999999999 suppressed - original was ICMP 06999999999 with insufficient data   999999999 responses sent 07 08          Input Histogram                    Output Histogram 09999999999 echo response            999999999 echo response 10999999999 echo request             999999999 echo request 11999999999 destination unreachable  999999999 destination unreachable 12999999999 redirect                 999999999 redirect 13999999999 time-to-live exceeded    999999999 time-to-line exceeded 14999999999 parameter problem        999999999 parameter problem 15999999999 neighbor solicitation    999999999 neighbor solicitation 16999999999 neighbor advertisment    999999999 neighbor advertisment 17999999999 router advertisement     999999999 router solicitation 18 19 --0123456789012345678901234567890123456789012345678901234567890123456789012345 --0         1         2         3         4         5         6         7 */
+comment|/*- --0         1         2         3         4         5         6         7 --0123456789012345678901234567890123456789012345678901234567890123456789012345 00          ICMPv6 Input                       ICMPv6 Output 01999999999 total messages           999999999 total messages 02999999999 with bad code            999999999 errors generated 03999999999 with bad length          999999999 suppressed - original too short 04999999999 with bad checksum        999999999 suppressed - original was ICMP 05999999999 with insufficient data   999999999 responses sent 06 07          Input Histogram                    Output Histogram 08999999999 echo response            999999999 echo response 09999999999 echo request             999999999 echo request 10999999999 destination unreachable  999999999 destination unreachable 11999999999 redirect                 999999999 redirect 12999999999 time-to-live exceeded    999999999 time-to-line exceeded 13999999999 parameter problem        999999999 parameter problem 14999999999 neighbor solicitation    999999999 neighbor solicitation 15999999999 neighbor advertisment    999999999 neighbor advertisment 16999999999 router advertisement     999999999 router solicitation 17 18 --0123456789012345678901234567890123456789012345678901234567890123456789012345 --0         1         2         3         4         5         6         7 */
 end_comment
 
 begin_function
@@ -152,13 +152,13 @@ name|stdscr
 argument_list|,
 name|LINES
 operator|-
-literal|5
+literal|3
 operator|-
 literal|1
 argument_list|,
 literal|0
 argument_list|,
-literal|5
+name|MAINWIN_ROW
 argument_list|,
 literal|0
 argument_list|)
@@ -244,98 +244,98 @@ parameter_list|)
 value|mvwprintw(wnd, row, 45, str);
 name|L
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 literal|"ICMPv6 Input"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 literal|"ICMPv6 Output"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|2
+literal|1
 argument_list|,
 literal|"total messages"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|2
+literal|1
 argument_list|,
 literal|"total messages"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|3
+literal|2
 argument_list|,
 literal|"with bad code"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|3
+literal|2
 argument_list|,
 literal|"errors generated"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|4
+literal|3
 argument_list|,
 literal|"with bad length"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|4
+literal|3
 argument_list|,
 literal|"suppressed - original too short"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|5
+literal|4
 argument_list|,
 literal|"with bad checksum"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|5
+literal|4
 argument_list|,
 literal|"suppressed - original was ICMP"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|6
+literal|5
 argument_list|,
 literal|"with insufficient data"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|6
+literal|5
 argument_list|,
 literal|"responses sent"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|8
+literal|7
 argument_list|,
 literal|"Input Histogram"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|8
+literal|7
 argument_list|,
 literal|"Output Histogram"
 argument_list|)
@@ -351,70 +351,70 @@ parameter_list|)
 value|L(row, str); R(row, str)
 name|B
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"echo response"
 argument_list|)
 expr_stmt|;
 name|B
 argument_list|(
-literal|10
+literal|9
 argument_list|,
 literal|"echo request"
 argument_list|)
 expr_stmt|;
 name|B
 argument_list|(
-literal|11
+literal|10
 argument_list|,
 literal|"destination unreachable"
 argument_list|)
 expr_stmt|;
 name|B
 argument_list|(
-literal|12
+literal|11
 argument_list|,
 literal|"redirect"
 argument_list|)
 expr_stmt|;
 name|B
 argument_list|(
-literal|13
+literal|12
 argument_list|,
 literal|"time-to-live exceeded"
 argument_list|)
 expr_stmt|;
 name|B
 argument_list|(
-literal|14
+literal|13
 argument_list|,
 literal|"parameter problem"
 argument_list|)
 expr_stmt|;
 name|B
 argument_list|(
-literal|15
+literal|14
 argument_list|,
 literal|"neighbor solicitation"
 argument_list|)
 expr_stmt|;
 name|B
 argument_list|(
-literal|16
+literal|15
 argument_list|,
 literal|"neighbor advertisment"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|17
+literal|16
 argument_list|,
 literal|"router advertisement"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|17
+literal|16
 argument_list|,
 literal|"router solicitation"
 argument_list|)
@@ -693,7 +693,7 @@ name|mvwprintw
 argument_list|(
 name|wnd
 argument_list|,
-literal|2
+literal|1
 argument_list|,
 literal|0
 argument_list|,
@@ -706,7 +706,7 @@ name|mvwprintw
 argument_list|(
 name|wnd
 argument_list|,
-literal|2
+literal|1
 argument_list|,
 literal|35
 argument_list|,
@@ -731,7 +731,7 @@ name|DO
 argument_list|(
 name|icp6s_badcode
 argument_list|,
-literal|3
+literal|2
 argument_list|,
 literal|0
 argument_list|)
@@ -740,7 +740,7 @@ name|DO
 argument_list|(
 name|icp6s_badlen
 argument_list|,
-literal|4
+literal|3
 argument_list|,
 literal|0
 argument_list|)
@@ -749,7 +749,7 @@ name|DO
 argument_list|(
 name|icp6s_checksum
 argument_list|,
-literal|5
+literal|4
 argument_list|,
 literal|0
 argument_list|)
@@ -758,7 +758,7 @@ name|DO
 argument_list|(
 name|icp6s_tooshort
 argument_list|,
-literal|6
+literal|5
 argument_list|,
 literal|0
 argument_list|)
@@ -767,7 +767,7 @@ name|DO
 argument_list|(
 name|icp6s_error
 argument_list|,
-literal|3
+literal|2
 argument_list|,
 literal|35
 argument_list|)
@@ -776,7 +776,7 @@ name|DO
 argument_list|(
 name|icp6s_tooshort
 argument_list|,
-literal|4
+literal|3
 argument_list|,
 literal|35
 argument_list|)
@@ -785,7 +785,7 @@ name|DO
 argument_list|(
 name|icp6s_canterror
 argument_list|,
-literal|5
+literal|4
 argument_list|,
 literal|35
 argument_list|)
@@ -794,7 +794,7 @@ name|DO
 argument_list|(
 name|icp6s_reflect
 argument_list|,
-literal|6
+literal|5
 argument_list|,
 literal|35
 argument_list|)
@@ -812,56 +812,56 @@ name|DO2
 argument_list|(
 name|ICMP6_ECHO_REPLY
 argument_list|,
-literal|9
+literal|8
 argument_list|)
 expr_stmt|;
 name|DO2
 argument_list|(
 name|ICMP6_ECHO_REQUEST
 argument_list|,
-literal|10
+literal|9
 argument_list|)
 expr_stmt|;
 name|DO2
 argument_list|(
 name|ICMP6_DST_UNREACH
 argument_list|,
-literal|11
+literal|10
 argument_list|)
 expr_stmt|;
 name|DO2
 argument_list|(
 name|ND_REDIRECT
 argument_list|,
-literal|12
+literal|11
 argument_list|)
 expr_stmt|;
 name|DO2
 argument_list|(
 name|ICMP6_TIME_EXCEEDED
 argument_list|,
-literal|13
+literal|12
 argument_list|)
 expr_stmt|;
 name|DO2
 argument_list|(
 name|ICMP6_PARAM_PROB
 argument_list|,
-literal|14
+literal|13
 argument_list|)
 expr_stmt|;
 name|DO2
 argument_list|(
 name|ND_NEIGHBOR_SOLICIT
 argument_list|,
-literal|15
+literal|14
 argument_list|)
 expr_stmt|;
 name|DO2
 argument_list|(
 name|ND_NEIGHBOR_ADVERT
 argument_list|,
-literal|16
+literal|15
 argument_list|)
 expr_stmt|;
 name|DO
@@ -871,7 +871,7 @@ index|[
 name|ND_ROUTER_SOLICIT
 index|]
 argument_list|,
-literal|17
+literal|16
 argument_list|,
 literal|0
 argument_list|)
@@ -883,7 +883,7 @@ index|[
 name|ND_ROUTER_ADVERT
 index|]
 argument_list|,
-literal|17
+literal|16
 argument_list|,
 literal|35
 argument_list|)

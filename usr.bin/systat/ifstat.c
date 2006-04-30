@@ -386,22 +386,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|STARTING_ROW
-value|(8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ROW_SPACING
-value|(3)
-end_define
-
-begin_define
-define|#
-directive|define
 name|TOPLINE
-value|5
+value|3
 end_define
 
 begin_define
@@ -410,6 +396,20 @@ directive|define
 name|TOPLABEL
 define|\
 value|"      Interface           Traffic               Peak                Total"
+end_define
+
+begin_define
+define|#
+directive|define
+name|STARTING_ROW
+value|(TOPLINE + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ROW_SPACING
+value|(3)
 end_define
 
 begin_define
@@ -563,13 +563,13 @@ name|stdscr
 argument_list|,
 name|LINES
 operator|-
-literal|1
+literal|3
 operator|-
-literal|5
+literal|1
 argument_list|,
 literal|0
 argument_list|,
-literal|5
+name|MAINWIN_ROW
 argument_list|,
 literal|0
 argument_list|)

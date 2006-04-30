@@ -308,7 +308,7 @@ name|cmdmode
 block|,
 name|resettcp
 block|,
-literal|0
+name|CF_LOADAV
 block|}
 block|,
 block|{

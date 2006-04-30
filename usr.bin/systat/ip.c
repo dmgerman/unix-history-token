@@ -168,7 +168,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*- --0         1         2         3         4         5         6         7 --0123456789012345678901234567890123456789012345678901234567890123456789012345 01          IP Input                           IP Output 02999999999 total packets received   999999999 total packets sent 03999999999 - with bad checksums     999999999 - generated locally 04999999999 - too short for header   999999999 - output drops 05999999999 - too short for data     999999999 output fragments generated 06999999999 - with invalid hlen      999999999 - fragmentation failed 07999999999 - with invalid length    999999999 destinations unreachable 08999999999 - with invalid version   999999999 packets output via raw IP 09999999999 - jumbograms 10999999999 total fragments received           UDP Statistics 11999999999 - fragments dropped      999999999 total input packets 12999999999 - fragments timed out    999999999 - too short for header 13999999999 - packets reassembled ok 999999999 - invalid checksum 14999999999 packets forwarded        999999999 - no checksum 15999999999 - unreachable dests      999999999 - invalid length 16999999999 - redirects generated    999999999 - no socket for dest port 17999999999 option errors            999999999 - no socket for broadcast 18999999999 unwanted multicasts      999999999 - socket buffer full 19999999999 delivered to upper layer 999999999 total output packets --0123456789012345678901234567890123456789012345678901234567890123456789012345 --0         1         2         3         4         5         6         7 */
+comment|/*- --0         1         2         3         4         5         6         7 --0123456789012345678901234567890123456789012345678901234567890123456789012345 00          IP Input                           IP Output 01999999999 total packets received   999999999 total packets sent 02999999999 - with bad checksums     999999999 - generated locally 03999999999 - too short for header   999999999 - output drops 04999999999 - too short for data     999999999 output fragments generated 05999999999 - with invalid hlen      999999999 - fragmentation failed 06999999999 - with invalid length    999999999 destinations unreachable 07999999999 - with invalid version   999999999 packets output via raw IP 08999999999 - jumbograms 09999999999 total fragments received           UDP Statistics 10999999999 - fragments dropped      999999999 total input packets 11999999999 - fragments timed out    999999999 - too short for header 12999999999 - packets reassembled ok 999999999 - invalid checksum 13999999999 packets forwarded        999999999 - no checksum 14999999999 - unreachable dests      999999999 - invalid length 15999999999 - redirects generated    999999999 - no socket for dest port 16999999999 option errors            999999999 - no socket for broadcast 17999999999 unwanted multicasts      999999999 - socket buffer full 18999999999 delivered to upper layer 999999999 total output packets --0123456789012345678901234567890123456789012345678901234567890123456789012345 --0         1         2         3         4         5         6         7 */
 end_comment
 
 begin_function
@@ -187,13 +187,13 @@ name|stdscr
 argument_list|,
 name|LINES
 operator|-
-literal|4
+literal|3
 operator|-
 literal|1
 argument_list|,
 literal|0
 argument_list|,
-literal|4
+name|MAINWIN_ROW
 argument_list|,
 literal|0
 argument_list|)
@@ -279,259 +279,259 @@ parameter_list|)
 value|mvwprintw(wnd, row, 45, str);
 name|L
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 literal|"IP Input"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 literal|"IP Output"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|2
+literal|1
 argument_list|,
 literal|"total packets received"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|2
+literal|1
 argument_list|,
 literal|"total packets sent"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|3
+literal|2
 argument_list|,
 literal|"- with bad checksums"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|3
+literal|2
 argument_list|,
 literal|"- generated locally"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|4
+literal|3
 argument_list|,
 literal|"- too short for header"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|4
+literal|3
 argument_list|,
 literal|"- output drops"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|5
+literal|4
 argument_list|,
 literal|"- too short for data"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|5
+literal|4
 argument_list|,
 literal|"output fragments generated"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|6
+literal|5
 argument_list|,
 literal|"- with invalid hlen"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|6
+literal|5
 argument_list|,
 literal|"- fragmentation failed"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|7
+literal|6
 argument_list|,
 literal|"- with invalid length"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|7
+literal|6
 argument_list|,
 literal|"destinations unreachable"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|8
+literal|7
 argument_list|,
 literal|"- with invalid version"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|8
+literal|7
 argument_list|,
 literal|"packets output via raw IP"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"- jumbograms"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|10
+literal|9
 argument_list|,
 literal|"total fragments received"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|10
+literal|9
 argument_list|,
 literal|"UDP Statistics"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|11
+literal|10
 argument_list|,
 literal|"- fragments dropped"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|11
+literal|10
 argument_list|,
 literal|"total input packets"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|12
+literal|11
 argument_list|,
 literal|"- fragments timed out"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|12
+literal|11
 argument_list|,
 literal|"- too short for header"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|13
+literal|12
 argument_list|,
 literal|"- packets reassembled ok"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|13
+literal|12
 argument_list|,
 literal|"- invalid checksum"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|14
+literal|13
 argument_list|,
 literal|"packets forwarded"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|14
+literal|13
 argument_list|,
 literal|"- no checksum"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|15
+literal|14
 argument_list|,
 literal|"- unreachable dests"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|15
+literal|14
 argument_list|,
 literal|"- invalid length"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|16
+literal|15
 argument_list|,
 literal|"- redirects generated"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|16
+literal|15
 argument_list|,
 literal|"- no socket for dest port"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|17
+literal|16
 argument_list|,
 literal|"option errors"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|17
+literal|16
 argument_list|,
 literal|"- no socket for broadcast"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|18
+literal|17
 argument_list|,
 literal|"unwanted multicasts"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|18
+literal|17
 argument_list|,
 literal|"- socket buffer full"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|19
+literal|18
 argument_list|,
 literal|"delivered to upper layer"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|19
+literal|18
 argument_list|,
 literal|"total output packets"
 argument_list|)
@@ -921,7 +921,7 @@ name|i
 operator|.
 name|ips_total
 argument_list|,
-literal|2
+literal|1
 argument_list|,
 literal|0
 argument_list|)
@@ -930,7 +930,7 @@ name|mvwprintw
 argument_list|(
 name|wnd
 argument_list|,
-literal|2
+literal|1
 argument_list|,
 literal|35
 argument_list|,
@@ -945,7 +945,7 @@ name|i
 operator|.
 name|ips_badsum
 argument_list|,
-literal|3
+literal|2
 argument_list|,
 literal|0
 argument_list|)
@@ -956,7 +956,7 @@ name|i
 operator|.
 name|ips_localout
 argument_list|,
-literal|3
+literal|2
 argument_list|,
 literal|35
 argument_list|)
@@ -967,7 +967,7 @@ name|i
 operator|.
 name|ips_tooshort
 argument_list|,
-literal|4
+literal|3
 argument_list|,
 literal|0
 argument_list|)
@@ -978,7 +978,7 @@ name|i
 operator|.
 name|ips_odropped
 argument_list|,
-literal|4
+literal|3
 argument_list|,
 literal|35
 argument_list|)
@@ -989,7 +989,7 @@ name|i
 operator|.
 name|ips_toosmall
 argument_list|,
-literal|5
+literal|4
 argument_list|,
 literal|0
 argument_list|)
@@ -1000,7 +1000,7 @@ name|i
 operator|.
 name|ips_ofragments
 argument_list|,
-literal|5
+literal|4
 argument_list|,
 literal|35
 argument_list|)
@@ -1011,7 +1011,7 @@ name|i
 operator|.
 name|ips_badhlen
 argument_list|,
-literal|6
+literal|5
 argument_list|,
 literal|0
 argument_list|)
@@ -1022,7 +1022,7 @@ name|i
 operator|.
 name|ips_cantfrag
 argument_list|,
-literal|6
+literal|5
 argument_list|,
 literal|35
 argument_list|)
@@ -1033,7 +1033,7 @@ name|i
 operator|.
 name|ips_badlen
 argument_list|,
-literal|7
+literal|6
 argument_list|,
 literal|0
 argument_list|)
@@ -1044,7 +1044,7 @@ name|i
 operator|.
 name|ips_noroute
 argument_list|,
-literal|7
+literal|6
 argument_list|,
 literal|35
 argument_list|)
@@ -1055,7 +1055,7 @@ name|i
 operator|.
 name|ips_badvers
 argument_list|,
-literal|8
+literal|7
 argument_list|,
 literal|0
 argument_list|)
@@ -1066,7 +1066,7 @@ name|i
 operator|.
 name|ips_rawout
 argument_list|,
-literal|8
+literal|7
 argument_list|,
 literal|35
 argument_list|)
@@ -1077,7 +1077,7 @@ name|i
 operator|.
 name|ips_toolong
 argument_list|,
-literal|9
+literal|8
 argument_list|,
 literal|0
 argument_list|)
@@ -1088,7 +1088,7 @@ name|i
 operator|.
 name|ips_fragments
 argument_list|,
-literal|10
+literal|9
 argument_list|,
 literal|0
 argument_list|)
@@ -1099,7 +1099,7 @@ name|i
 operator|.
 name|ips_fragdropped
 argument_list|,
-literal|11
+literal|10
 argument_list|,
 literal|0
 argument_list|)
@@ -1110,7 +1110,7 @@ name|u
 operator|.
 name|udps_ipackets
 argument_list|,
-literal|11
+literal|10
 argument_list|,
 literal|35
 argument_list|)
@@ -1121,7 +1121,7 @@ name|i
 operator|.
 name|ips_fragtimeout
 argument_list|,
-literal|12
+literal|11
 argument_list|,
 literal|0
 argument_list|)
@@ -1132,7 +1132,7 @@ name|u
 operator|.
 name|udps_hdrops
 argument_list|,
-literal|12
+literal|11
 argument_list|,
 literal|35
 argument_list|)
@@ -1143,7 +1143,7 @@ name|i
 operator|.
 name|ips_reassembled
 argument_list|,
-literal|13
+literal|12
 argument_list|,
 literal|0
 argument_list|)
@@ -1154,7 +1154,7 @@ name|u
 operator|.
 name|udps_badsum
 argument_list|,
-literal|13
+literal|12
 argument_list|,
 literal|35
 argument_list|)
@@ -1165,7 +1165,7 @@ name|i
 operator|.
 name|ips_forward
 argument_list|,
-literal|14
+literal|13
 argument_list|,
 literal|0
 argument_list|)
@@ -1176,7 +1176,7 @@ name|u
 operator|.
 name|udps_nosum
 argument_list|,
-literal|14
+literal|13
 argument_list|,
 literal|35
 argument_list|)
@@ -1187,7 +1187,7 @@ name|i
 operator|.
 name|ips_cantforward
 argument_list|,
-literal|15
+literal|14
 argument_list|,
 literal|0
 argument_list|)
@@ -1198,7 +1198,7 @@ name|u
 operator|.
 name|udps_badlen
 argument_list|,
-literal|15
+literal|14
 argument_list|,
 literal|35
 argument_list|)
@@ -1209,7 +1209,7 @@ name|i
 operator|.
 name|ips_redirectsent
 argument_list|,
-literal|16
+literal|15
 argument_list|,
 literal|0
 argument_list|)
@@ -1220,7 +1220,7 @@ name|u
 operator|.
 name|udps_noport
 argument_list|,
-literal|16
+literal|15
 argument_list|,
 literal|35
 argument_list|)
@@ -1231,7 +1231,7 @@ name|i
 operator|.
 name|ips_badoptions
 argument_list|,
-literal|17
+literal|16
 argument_list|,
 literal|0
 argument_list|)
@@ -1242,7 +1242,7 @@ name|u
 operator|.
 name|udps_noportbcast
 argument_list|,
-literal|17
+literal|16
 argument_list|,
 literal|35
 argument_list|)
@@ -1253,7 +1253,7 @@ name|i
 operator|.
 name|ips_notmember
 argument_list|,
-literal|18
+literal|17
 argument_list|,
 literal|0
 argument_list|)
@@ -1264,7 +1264,7 @@ name|u
 operator|.
 name|udps_fullsock
 argument_list|,
-literal|18
+literal|17
 argument_list|,
 literal|35
 argument_list|)
@@ -1275,7 +1275,7 @@ name|i
 operator|.
 name|ips_delivered
 argument_list|,
-literal|19
+literal|18
 argument_list|,
 literal|0
 argument_list|)
@@ -1286,7 +1286,7 @@ name|u
 operator|.
 name|udps_opackets
 argument_list|,
-literal|19
+literal|18
 argument_list|,
 literal|35
 argument_list|)

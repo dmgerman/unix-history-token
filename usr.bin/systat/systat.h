@@ -165,6 +165,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|MAINWIN_ROW
+value|3
+end_define
+
+begin_comment
+comment|/* top row for the main/lower window */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|GETSYSCTL
 parameter_list|(
 name|name

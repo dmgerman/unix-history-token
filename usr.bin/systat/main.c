@@ -632,7 +632,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-literal|3
+literal|1
 argument_list|,
 literal|20
 argument_list|)
@@ -779,7 +779,7 @@ condition|)
 block|{
 name|mvaddstr
 argument_list|(
-literal|2
+literal|0
 argument_list|,
 literal|20
 argument_list|,
@@ -788,7 +788,7 @@ argument_list|)
 expr_stmt|;
 name|mvaddstr
 argument_list|(
-literal|3
+literal|1
 argument_list|,
 literal|5
 argument_list|,
