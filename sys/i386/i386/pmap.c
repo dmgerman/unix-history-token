@@ -7216,6 +7216,8 @@ argument_list|,
 name|VM_ALLOC_SYSTEM
 operator||
 name|VM_ALLOC_NOOBJ
+operator||
+name|VM_ALLOC_WIRED
 argument_list|)
 expr_stmt|;
 if|if
@@ -7253,6 +7255,8 @@ argument_list|,
 name|VM_ALLOC_SYSTEM
 operator||
 name|VM_ALLOC_NOOBJ
+operator||
+name|VM_ALLOC_WIRED
 argument_list|)
 expr_stmt|;
 if|if
