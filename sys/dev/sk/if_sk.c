@@ -372,6 +372,9 @@ block|,
 literal|"Marvell Gigabit Ethernet"
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|not_yet
 block|{
 name|VENDORID_MARVELL
 block|,
@@ -396,6 +399,8 @@ block|,
 literal|"Marvell 88E8053 Gigabit Ethernet Controller"
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 name|VENDORID_MARVELL
 block|,
