@@ -26,7 +26,7 @@ value|15
 end_define
 
 begin_comment
-comment|/* More info can be found in these two Cisco documents:  * http://www.cisco.com/warp/public/cc/pd/iosw/ioft/neflct/tech/napps_wp.htm  * http://www.cisco.com/en/US/products/sw/netmgtsw/ps1964/prod_installation_guide09186a00800fea56.html#wp1006186  * However, they say quite different things.  */
+comment|/*  * More info can be found in these Cisco documents:  *  * Cisco IOS NetFlow, White Papers.  * http://www.cisco.com/en/US/products/ps6601/prod_white_papers_list.html  *  * Cisco CNS NetFlow Collection Engine User Guide, 5.0.2, NetFlow Export  * Datagram Formats.  * http://www.cisco.com/en/US/products/sw/netmgtsw/ps1964/products_user_guide_chapter09186a00803f3147.html#wp26453  *  */
 end_comment
 
 begin_define
@@ -194,7 +194,7 @@ comment|/* Cumulative OR of tcp flags */
 name|uint8_t
 name|pad2
 decl_stmt|;
-comment|/* pad to word boundary */
+comment|/* Pad to word boundary */
 name|uint16_t
 name|pad3
 decl_stmt|;
@@ -267,7 +267,7 @@ comment|/* Destination port */
 name|uint8_t
 name|pad1
 decl_stmt|;
-comment|/* pad to word boundary */
+comment|/* Pad to word boundary */
 name|uint8_t
 name|flags
 decl_stmt|;
