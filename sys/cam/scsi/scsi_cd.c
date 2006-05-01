@@ -6647,11 +6647,7 @@ name|biofinish
 argument_list|(
 name|bp
 argument_list|,
-name|softc
-operator|->
-name|disk
-operator|->
-name|d_devstat
+name|NULL
 argument_list|,
 literal|0
 argument_list|)
