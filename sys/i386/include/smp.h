@@ -159,6 +159,17 @@ begin_decl_stmt
 specifier|extern
 name|u_long
 modifier|*
+name|ipi_invlcache_counts
+index|[
+name|MAXCPU
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+modifier|*
 name|ipi_rendezvous_counts
 index|[
 name|MAXCPU
@@ -206,6 +217,12 @@ name|invlrng
 argument_list|)
 decl_stmt|,
 comment|/* TLB shootdowns - page range */
+name|IDTVEC
+argument_list|(
+name|invlcache
+argument_list|)
+decl_stmt|,
+comment|/* Write back and invalidate cache */
 name|IDTVEC
 argument_list|(
 name|ipi_intr_bitmap_handler
@@ -345,6 +362,15 @@ end_function_decl
 begin_function_decl
 name|void
 name|mp_topology
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|smp_cache_flush
 parameter_list|(
 name|void
 parameter_list|)

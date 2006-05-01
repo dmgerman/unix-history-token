@@ -137,6 +137,13 @@ name|IPI_INVLRNG
 value|(APIC_IPI_INTS + 3)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IPI_INVLCACHE
+value|(APIC_IPI_INTS + 4)
+end_define
+
 begin_comment
 comment|/* Vector to handle bitmap based IPIs */
 end_comment
@@ -145,7 +152,7 @@ begin_define
 define|#
 directive|define
 name|IPI_BITMAP_VECTOR
-value|(APIC_IPI_INTS + 5)
+value|(APIC_IPI_INTS + 6)
 end_define
 
 begin_comment
@@ -191,7 +198,7 @@ begin_define
 define|#
 directive|define
 name|IPI_STOP
-value|(APIC_IPI_INTS + 6)
+value|(APIC_IPI_INTS + 7)
 end_define
 
 begin_comment
