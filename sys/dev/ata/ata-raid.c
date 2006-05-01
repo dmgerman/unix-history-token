@@ -5926,7 +5926,7 @@ comment|/* XXX SOS 		 * right, so here we are, we have an ATA chip and we want 	
 name|printf
 argument_list|(
 literal|"WARNING!! - not able to determine metadata format\n"
-literal|"WARNING!! - Using FreeBSD PsuedoRAID metadata\n"
+literal|"WARNING!! - Using FreeBSD PseudoRAID metadata\n"
 literal|"If that is not what you want, use the BIOS to "
 literal|"create the array\n"
 argument_list|)
