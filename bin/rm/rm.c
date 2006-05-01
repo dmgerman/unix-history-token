@@ -1254,6 +1254,11 @@ argument_list|,
 literal|"fts_read"
 argument_list|)
 expr_stmt|;
+name|fts_close
+argument_list|(
+name|fts
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
