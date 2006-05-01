@@ -121,6 +121,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* Good enough for equality testing, which is all we need. */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -153,6 +157,74 @@ name|s1
 operator|&&
 name|diff
 operator|==
+literal|0
+condition|)
+name|diff
+operator|=
+operator|(
+name|int
+operator|)
+operator|*
+operator|++
+name|s1
+operator|-
+operator|(
+name|int
+operator|)
+operator|*
+operator|++
+name|s2
+expr_stmt|;
+return|return
+name|diff
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Good enough for equality testing, which is all we need. */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|wcsncmp
+parameter_list|(
+specifier|const
+name|wchar_t
+modifier|*
+name|s1
+parameter_list|,
+specifier|const
+name|wchar_t
+modifier|*
+name|s2
+parameter_list|,
+name|size_t
+name|n
+parameter_list|)
+block|{
+name|int
+name|diff
+init|=
+operator|*
+name|s1
+operator|-
+operator|*
+name|s2
+decl_stmt|;
+while|while
+condition|(
+operator|*
+name|s1
+operator|&&
+name|diff
+operator|==
+literal|0
+operator|&&
+name|n
+operator|--
+operator|>
 literal|0
 condition|)
 name|diff
@@ -8068,29 +8140,6 @@ operator|==
 literal|0
 condition|)
 break|break;
-if|if
-condition|(
-name|n
-operator|>
-literal|8
-condition|)
-block|{
-comment|/* Invalid byte encountered; try to keep going. */
-operator|*
-name|dest
-operator|=
-literal|L'
-expr|?'
-expr_stmt|;
-name|n
-operator|=
-literal|1
-expr_stmt|;
-name|err
-operator|=
-literal|1
-expr_stmt|;
-block|}
 name|dest
 operator|++
 expr_stmt|;
@@ -8119,7 +8168,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Copied from FreeBSD libc/locale.  */
+comment|/*  * Copied and simplified from FreeBSD libc/locale.  */
 end_comment
 
 begin_function
@@ -8151,8 +8200,6 @@ name|mask
 decl_stmt|;
 name|unsigned
 name|long
-name|lbound
-decl_stmt|,
 name|wch
 decl_stmt|;
 if|if
@@ -8160,30 +8207,21 @@ condition|(
 name|s
 operator|==
 name|NULL
-condition|)
-comment|/* Reset to initial shift state (no-op) */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-if|if
-condition|(
+operator|||
 name|n
 operator|==
 literal|0
+operator|||
+name|pwc
+operator|==
+name|NULL
 condition|)
-comment|/* Incomplete multibyte sequence */
 return|return
 operator|(
-operator|(
-name|size_t
-operator|)
-operator|-
-literal|2
+literal|0
 operator|)
 return|;
-comment|/*          * Determine the number of octets that make up this character from          * the first octet, and a mask that extracts the interesting bits of          * the first octet.          *          * We also specify a lower bound for the character code to detect          * redundant, non-"shortest form" encodings. For example, the          * sequence C0 80 is _not_ a legal representation of the null          * character. This enforces a 1-to-1 mapping between character          * codes and their multibyte representations.          */
+comment|/*          * Determine the number of octets that make up this character from          * the first octet, and a mask that extracts the interesting bits of          * the first octet.          */
 name|ch
 operator|=
 operator|(
@@ -8212,10 +8250,6 @@ name|len
 operator|=
 literal|1
 expr_stmt|;
-name|lbound
-operator|=
-literal|0
-expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -8236,10 +8270,6 @@ expr_stmt|;
 name|len
 operator|=
 literal|2
-expr_stmt|;
-name|lbound
-operator|=
-literal|0x80
 expr_stmt|;
 block|}
 elseif|else
@@ -8262,10 +8292,6 @@ name|len
 operator|=
 literal|3
 expr_stmt|;
-name|lbound
-operator|=
-literal|0x800
-expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -8286,10 +8312,6 @@ expr_stmt|;
 name|len
 operator|=
 literal|4
-expr_stmt|;
-name|lbound
-operator|=
-literal|0x10000
 expr_stmt|;
 block|}
 elseif|else
@@ -8312,10 +8334,6 @@ name|len
 operator|=
 literal|5
 expr_stmt|;
-name|lbound
-operator|=
-literal|0x200000
-expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -8323,7 +8341,7 @@ condition|(
 operator|(
 name|ch
 operator|&
-literal|0xfc
+literal|0xfe
 operator|)
 operator|==
 literal|0xfc
@@ -8337,24 +8355,17 @@ name|len
 operator|=
 literal|6
 expr_stmt|;
-name|lbound
-operator|=
-literal|0x4000000
-expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*                  * Malformed input; input is not UTF-8.                  */
-name|errno
+comment|/* Invalid first byte; convert to '?' */
+operator|*
+name|pwc
 operator|=
-name|EILSEQ
+literal|'?'
 expr_stmt|;
 return|return
 operator|(
-operator|(
-name|size_t
-operator|)
-operator|-
 literal|1
 operator|)
 return|;
@@ -8368,16 +8379,19 @@ name|size_t
 operator|)
 name|len
 condition|)
-comment|/* Incomplete multibyte sequence */
+block|{
+comment|/* Invalid first byte; convert to '?' */
+operator|*
+name|pwc
+operator|=
+literal|'?'
+expr_stmt|;
 return|return
 operator|(
-operator|(
-name|size_t
-operator|)
-operator|-
-literal|2
+literal|1
 operator|)
 return|;
+block|}
 comment|/*          * Decode the octet sequence representing the character in chunks          * of 6 bits, most significant first.          */
 name|wch
 operator|=
@@ -8415,17 +8429,14 @@ operator|!=
 literal|0x80
 condition|)
 block|{
-comment|/*                          * Malformed input; bad characters in the middle                          * of a character.                          */
-name|errno
+comment|/* Invalid intermediate byte; consume one byte and 			 * emit '?' */
+operator|*
+name|pwc
 operator|=
-name|EILSEQ
+literal|'?'
 expr_stmt|;
 return|return
 operator|(
-operator|(
-name|size_t
-operator|)
-operator|-
 literal|1
 operator|)
 return|;
@@ -8443,36 +8454,7 @@ operator|&
 literal|0x3f
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|wch
-operator|<
-name|lbound
-condition|)
-block|{
-comment|/*                  * Malformed input; redundant encoding.                  */
-name|errno
-operator|=
-name|EILSEQ
-expr_stmt|;
-return|return
-operator|(
-operator|(
-name|size_t
-operator|)
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-if|if
-condition|(
-name|pwc
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* Assign the value to the output; out-of-range values 		 * just get truncated. */
+comment|/* Assign the value to the output; out-of-range values 	 * just get truncated. */
 operator|*
 name|pwc
 operator|=
@@ -8484,7 +8466,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|WCHAR_MAX
-comment|/* 		 * If platform has WCHAR_MAX, we can do something 		 * more sensible with out-of-range values. 		 */
+comment|/* 	 * If platform has WCHAR_MAX, we can do something 	 * more sensible with out-of-range values. 	 */
 if|if
 condition|(
 name|wch
@@ -8498,7 +8480,7 @@ literal|'?'
 expr_stmt|;
 endif|#
 directive|endif
-block|}
+comment|/* Return number of bytes input consumed: 0 for end-of-string. */
 return|return
 operator|(
 name|wch

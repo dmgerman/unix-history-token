@@ -6799,7 +6799,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|err
+name|errno
 operator|==
 name|ENOTSUP
 condition|)
@@ -6818,7 +6818,7 @@ name|archive_set_error
 argument_list|(
 name|a
 argument_list|,
-name|err
+name|errno
 argument_list|,
 literal|"Cannot restore extended "
 literal|"attributes on this file "
@@ -6832,7 +6832,7 @@ name|archive_set_error
 argument_list|(
 name|a
 argument_list|,
-name|err
+name|errno
 argument_list|,
 literal|"Failed to set extended attribute"
 argument_list|)
