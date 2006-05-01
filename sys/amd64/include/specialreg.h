@@ -1227,6 +1227,74 @@ value|0xfffff000
 end_define
 
 begin_comment
+comment|/*  * PAT modes.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PAT_UNCACHEABLE
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAT_WRITE_COMBINING
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAT_WRITE_THROUGH
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAT_WRITE_PROTECTED
+value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAT_WRITE_BACK
+value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAT_UNCACHED
+value|0x07
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAT_VALUE
+parameter_list|(
+name|i
+parameter_list|,
+name|m
+parameter_list|)
+value|((long)(m)<< (8 * (i)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAT_MASK
+parameter_list|(
+name|i
+parameter_list|)
+value|PAT_VALUE(i, 0xff)
+end_define
+
+begin_comment
 comment|/*  * Constants related to MTRRs  */
 end_comment
 

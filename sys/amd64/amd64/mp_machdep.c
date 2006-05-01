@@ -2112,6 +2112,10 @@ condition|)
 name|ia32_pause
 argument_list|()
 expr_stmt|;
+comment|/* Initialize the PAT MSR. */
+name|pmap_init_pat
+argument_list|()
+expr_stmt|;
 comment|/* set up CPU registers and state */
 name|cpu_setregs
 argument_list|()
