@@ -234,6 +234,9 @@ name|tapesize
 operator|,
 name|int
 name|nodump
+operator|,
+name|ino_t
+name|maxino
 operator|)
 argument_list|)
 decl_stmt|;
@@ -288,6 +291,9 @@ name|tapesize
 operator|,
 name|int
 name|nodump
+operator|,
+name|ino_t
+name|maxino
 operator|)
 argument_list|)
 decl_stmt|;
@@ -528,6 +534,24 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+if|if
+condition|(
+name|ino
+operator|>=
+name|maxino
+condition|)
+block|{
+name|msg
+argument_list|(
+literal|"Skipping inode %d>= maxino %d\n"
+argument_list|,
+name|ino
+argument_list|,
+name|maxino
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 comment|/* 		 * Everything must go in usedinomap so that a check 		 * for "in dumpdirmap but not in usedinomap" to detect 		 * dirs with nodump set has a chance of succeeding 		 * (this is used in mapdirs()). 		 */
 name|SETINO
 argument_list|(
@@ -872,6 +896,8 @@ argument_list|,
 name|tapesize
 argument_list|,
 name|nodump
+argument_list|,
+name|maxino
 argument_list|)
 expr_stmt|;
 if|if
@@ -943,6 +969,8 @@ argument_list|,
 name|tapesize
 argument_list|,
 name|nodump
+argument_list|,
+name|maxino
 argument_list|)
 expr_stmt|;
 block|}
@@ -1062,6 +1090,8 @@ parameter_list|,
 name|tapesize
 parameter_list|,
 name|nodump
+parameter_list|,
+name|maxino
 parameter_list|)
 name|ino_t
 name|ino
@@ -1082,6 +1112,9 @@ name|tapesize
 decl_stmt|;
 name|int
 name|nodump
+decl_stmt|;
+name|ino_t
+name|maxino
 decl_stmt|;
 block|{
 name|int
@@ -1182,6 +1215,8 @@ argument_list|,
 name|tapesize
 argument_list|,
 name|nodump
+argument_list|,
+name|maxino
 argument_list|)
 expr_stmt|;
 if|if
@@ -1263,6 +1298,8 @@ argument_list|,
 name|tapesize
 argument_list|,
 name|nodump
+argument_list|,
+name|maxino
 argument_list|)
 expr_stmt|;
 block|}
@@ -1294,6 +1331,8 @@ parameter_list|,
 name|tapesize
 parameter_list|,
 name|nodump
+parameter_list|,
+name|maxino
 parameter_list|)
 name|ino_t
 name|ino
@@ -1314,6 +1353,9 @@ name|tapesize
 decl_stmt|;
 name|int
 name|nodump
+decl_stmt|;
+name|ino_t
+name|maxino
 decl_stmt|;
 block|{
 specifier|register
@@ -1427,6 +1469,28 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+if|if
+condition|(
+name|dp
+operator|->
+name|d_ino
+operator|>=
+name|maxino
+condition|)
+block|{
+name|msg
+argument_list|(
+literal|"corrupted directory entry, d_ino %d>= %d\n"
+argument_list|,
+name|dp
+operator|->
+name|d_ino
+argument_list|,
+name|maxino
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|dp
