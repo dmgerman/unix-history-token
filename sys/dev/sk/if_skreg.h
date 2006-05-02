@@ -4832,7 +4832,7 @@ value|0x0C78
 end_define
 
 begin_comment
-comment|/* Receive MAC FIFO 1 Contro/Test */
+comment|/* Receive MAC FIFO 1 Control/Test */
 end_comment
 
 begin_define
