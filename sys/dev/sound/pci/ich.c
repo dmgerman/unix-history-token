@@ -4266,13 +4266,17 @@ literal|0x8144104d
 case|:
 comment|/* Sony VAIO PCG-TR* */
 case|case
+literal|0x8197104d
+case|:
+comment|/* Sony S1XP */
+case|case
 literal|0x81c0104d
 case|:
 comment|/* Sony VAIO type T */
 case|case
-literal|0x8197104d
+literal|0x81c5104d
 case|:
-comment|/* Sony S1XP */
+comment|/* Sony VAIO VGN B1VP/B1XP */
 name|ac97_setflags
 argument_list|(
 name|sc
