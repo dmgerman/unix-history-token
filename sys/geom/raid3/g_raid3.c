@@ -9755,16 +9755,10 @@ operator|&=
 operator|~
 name|G_RAID3_BUMP_SYNCID
 expr_stmt|;
-name|g_topology_lock
-argument_list|()
-expr_stmt|;
 name|g_raid3_bump_syncid
 argument_list|(
 name|sc
 argument_list|)
-expr_stmt|;
-name|g_topology_unlock
-argument_list|()
 expr_stmt|;
 block|}
 name|g_raid3_scatter
