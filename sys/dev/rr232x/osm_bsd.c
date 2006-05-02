@@ -6405,6 +6405,10 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|os_printk
 argument_list|(
 literal|"%s %s"
