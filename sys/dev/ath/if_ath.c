@@ -9159,6 +9159,16 @@ expr_stmt|;
 comment|/* 		 * Switch antenna every 4 beacons. 		 * XXX assumes two antenna 		 */
 name|antenna
 operator|=
+name|sc
+operator|->
+name|sc_txantenna
+operator|!=
+literal|0
+condition|?
+name|sc
+operator|->
+name|sc_txantenna
+else|:
 operator|(
 name|sc
 operator|->
