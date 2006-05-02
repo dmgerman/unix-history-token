@@ -330,8 +330,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|long
+name|uint32_t
 name|machtime
 name|__P
 argument_list|(
@@ -616,6 +615,10 @@ name|i
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* Character generator  * The RFC says that we should send back a random number of  * characters chosen from the range 0 to 512. We send LINESIZ+2.  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -3458,12 +3461,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * RFC738 Time Server.  * Return a machine readable date and time, in the form of the  * number of seconds since midnight, Jan 1, 1900.  Since gettimeofday  * returns the number of seconds since midnight, Jan 1, 1970,  * we must add 2208988800 seconds to this figure to make up for  * some seventy years Bell Labs was asleep.  */
+comment|/*  * RFC738/868 Time Server.  * Return a machine readable date and time, in the form of the  * number of seconds since midnight, Jan 1, 1900.  Since gettimeofday  * returns the number of seconds since midnight, Jan 1, 1970,  * we must add 2208988800 seconds to this figure to make up for  * some seventy years Bell Labs was asleep.  */
 end_comment
 
 begin_function
-name|unsigned
-name|long
+name|uint32_t
 name|machtime
 parameter_list|()
 block|{
@@ -3507,13 +3509,13 @@ block|}
 define|#
 directive|define
 name|OFFSET
-value|((u_long)25567 * 24*60*60)
+value|((uint32_t)25567 * 24*60*60)
 return|return
 operator|(
 name|htonl
 argument_list|(
 call|(
-name|long
+name|uint32_t
 call|)
 argument_list|(
 name|tv
@@ -3552,8 +3554,7 @@ modifier|*
 name|sep
 decl_stmt|;
 block|{
-name|unsigned
-name|long
+name|uint32_t
 name|result
 decl_stmt|;
 name|struct
@@ -3683,8 +3684,7 @@ name|sep
 name|__unused
 decl_stmt|;
 block|{
-name|unsigned
-name|long
+name|uint32_t
 name|result
 decl_stmt|;
 name|result
