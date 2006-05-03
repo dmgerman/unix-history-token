@@ -7859,6 +7859,15 @@ argument_list|,
 name|ptepindex
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mpte
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|retry
+goto|;
 block|}
 block|}
 block|}
