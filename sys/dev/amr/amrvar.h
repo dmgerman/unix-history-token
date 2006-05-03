@@ -756,32 +756,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|int
-name|amr_linux_ioctl_int
-parameter_list|(
-name|struct
-name|cdev
-modifier|*
-name|dev
-parameter_list|,
-name|u_long
-name|cmd
-parameter_list|,
-name|caddr_t
-name|addr
-parameter_list|,
-name|int32_t
-name|flag
-parameter_list|,
-name|d_thread_t
-modifier|*
-name|td
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Command buffer allocation.  */
 end_comment
