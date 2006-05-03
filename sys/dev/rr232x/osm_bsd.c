@@ -5734,6 +5734,10 @@ operator|!
 name|i
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|os_printk
 argument_list|(
 literal|"no controller detected."
