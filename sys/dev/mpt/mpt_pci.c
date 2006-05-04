@@ -154,6 +154,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|PCI_PRODUCT_LSI_FC7X04X
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT_LSI_FC7X04X
+value|0x0640
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|PCI_PRODUCT_LSI_1030
 end_ifndef
 
@@ -624,7 +642,15 @@ name|PCI_PRODUCT_LSI_FC929X
 case|:
 name|desc
 operator|=
-literal|"LSILogic FC929X FC Adapter"
+literal|"LSILogic FC929X 2Gb/s FC Adapter"
+expr_stmt|;
+break|break;
+case|case
+name|PCI_PRODUCT_LSI_FC7X04X
+case|:
+name|desc
+operator|=
+literal|"LSILogic FC7X04X 4Gb/s FC Adapter"
 expr_stmt|;
 break|break;
 case|case
@@ -1303,6 +1329,9 @@ case|:
 case|case
 name|PCI_PRODUCT_LSI_FC929
 case|:
+case|case
+name|PCI_PRODUCT_LSI_FC7X04X
+case|:
 name|mpt
 operator|->
 name|is_fc
@@ -1525,6 +1554,18 @@ literal|1
 operator|)
 operator|==
 name|PCI_PRODUCT_LSI_FC929
+operator|||
+operator|(
+name|pci_get_device
+argument_list|(
+name|dev
+argument_list|)
+operator|&
+operator|~
+literal|1
+operator|)
+operator|==
+name|PCI_PRODUCT_LSI_FC7X04X
 operator|||
 operator|(
 name|pci_get_device
