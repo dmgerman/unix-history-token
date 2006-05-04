@@ -2807,6 +2807,9 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
+name|int
+name|vfslocked
+decl_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
@@ -2928,9 +2931,23 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
+argument_list|(
+name|vp
+operator|->
+name|v_mount
+argument_list|)
+expr_stmt|;
 name|vtryrecycle
 argument_list|(
 name|vp
+argument_list|)
+expr_stmt|;
+name|VFS_UNLOCK_GIANT
+argument_list|(
+name|vfslocked
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If the recycled succeeded this vdrop will actually free 		 * the vnode.  If not it will simply place it back on 		 * the free list. 		 */
