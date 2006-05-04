@@ -2609,6 +2609,13 @@ name|ip6q
 modifier|*
 name|q6
 decl_stmt|;
+if|#
+directive|if
+literal|0
+block|GIANT_REQUIRED;
+comment|/* XXX bz: ip6_forward_rt */
+endif|#
+directive|endif
 name|IP6Q_LOCK
 argument_list|()
 expr_stmt|;

@@ -406,6 +406,9 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
+name|GIANT_REQUIRED
+expr_stmt|;
+comment|/* XXX bz: ip6_forward_rt */
 ifdef|#
 directive|ifdef
 name|IPSEC
