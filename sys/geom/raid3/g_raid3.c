@@ -5594,6 +5594,9 @@ name|bp
 decl_stmt|,
 modifier|*
 name|cbp
+decl_stmt|,
+modifier|*
+name|tmpbp
 decl_stmt|;
 name|off_t
 name|atom
@@ -5764,11 +5767,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|struct
-name|bio
-modifier|*
-name|tmpbp
-decl_stmt|;
 comment|/* 		 * Calculate parity. 		 */
 name|bzero
 argument_list|(
@@ -5837,11 +5835,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|G_RAID3_FOREACH_BIO
+name|G_RAID3_FOREACH_SAFE_BIO
 argument_list|(
 argument|pbp
 argument_list|,
 argument|cbp
+argument_list|,
+argument|tmpbp
 argument_list|)
 block|{
 name|struct
@@ -8965,6 +8965,9 @@ name|struct
 name|bio
 modifier|*
 name|cbp
+decl_stmt|,
+modifier|*
+name|tmpbp
 decl_stmt|;
 name|off_t
 name|offset
@@ -9604,11 +9607,13 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|G_RAID3_FOREACH_BIO
+name|G_RAID3_FOREACH_SAFE_BIO
 argument_list|(
 argument|pbp
 argument_list|,
 argument|cbp
+argument_list|,
+argument|tmpbp
 argument_list|)
 block|{
 name|disk
