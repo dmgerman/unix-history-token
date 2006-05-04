@@ -9866,7 +9866,7 @@ name|mpt_lprt
 argument_list|(
 name|mpt
 argument_list|,
-name|MPT_PRT_INVARIANT
+name|MPT_PRT_DEBUG
 argument_list|,
 literal|"FC_ELS Complete: req %p:%u, reply %p function %x\n"
 argument_list|,
@@ -10177,7 +10177,7 @@ name|mpt_lprt
 argument_list|(
 name|mpt
 argument_list|,
-name|MPT_PRT_INVARIANT
+name|MPT_PRT_DEBUG
 argument_list|,
 literal|"RECV'd ACK of FC_ELS buf post %p:%u\n"
 argument_list|,
@@ -16128,7 +16128,7 @@ name|mpt_lprt
 argument_list|(
 name|mpt
 argument_list|,
-name|MPT_PRT_INVARIANT
+name|MPT_PRT_DEBUG
 argument_list|,
 literal|"add ELS index %d ioindex %d for %p:%u\n"
 argument_list|,
