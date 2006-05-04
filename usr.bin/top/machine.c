@@ -663,7 +663,6 @@ name|memorynames
 index|[]
 init|=
 block|{
-comment|/* 0             1            2            3            4          5 */
 literal|"K Active, "
 block|,
 literal|"K Inact, "
@@ -697,7 +696,6 @@ name|swapnames
 index|[]
 init|=
 block|{
-comment|/* 0            1           2           3            4         5 */
 literal|"K Total, "
 block|,
 literal|"K Used, "
@@ -960,7 +958,7 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
-operator|<
+operator|!=
 literal|0
 operator|&&
 name|sysctlbyname
@@ -977,7 +975,7 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
-operator|<
+operator|!=
 literal|0
 operator|)
 operator|||
@@ -1110,7 +1108,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/* get the page size with "getpagesize" and calculate pageshift from it */
+comment|/* get the page size and calculate pageshift from it */
 name|pagesize
 operator|=
 name|getpagesize
@@ -2883,7 +2881,7 @@ name|sel
 operator|->
 name|uid
 condition|)
-comment|/* skip processes which don't belong to the selected UID */
+comment|/* skip proc. that don't belong to the selected UID */
 continue|continue;
 comment|/* 		 * When not showing threads, take the first thread 		 * for output and add the fields that we can from 		 * the rest of the process's threads rather than 		 * using the system's mostly-broken KERN_PROC_PROC. 		 */
 if|if
@@ -3120,14 +3118,16 @@ block|{
 comment|/* 		 * Print swapped processes as<pname> 		 */
 name|size_t
 name|len
-init|=
+decl_stmt|;
+name|len
+operator|=
 name|strlen
 argument_list|(
 name|pp
 operator|->
 name|ki_comm
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|len
@@ -4036,7 +4036,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|do { \ 	long diff; \ 	if (ps.wcpu) \ 		diff = floor(1.0E6 * weighted_cpu(pctdouble((b)->ki_pctcpu), (b))) - \ 		    floor(1.0E6 * weighted_cpu(pctdouble((a)->ki_pctcpu), (a))); \ 	else \ 		diff = (long)(b)->ki_pctcpu - (long)(a)->ki_pctcpu; \ 	if (diff != 0) \ 		return (diff> 0 ? 1 : -1); \ } while (0)
+value|do { \ 	long diff; \ 	if (ps.wcpu) \ 		diff = floor(1.0E6 * weighted_cpu(pctdouble((b)->ki_pctcpu), \ 		    (b))) - \ 		    floor(1.0E6 * weighted_cpu(pctdouble((a)->ki_pctcpu), \ 		    (a))); \ 	else \ 		diff = (long)(b)->ki_pctcpu - (long)(a)->ki_pctcpu; \ 	if (diff != 0) \ 		return (diff> 0 ? 1 : -1); \ } while (0)
 end_define
 
 begin_define
@@ -4230,7 +4230,7 @@ name|ORDER
 end_ifdef
 
 begin_comment
-comment|/* compare routines */
+comment|/* "cpu" compare routines */
 end_comment
 
 begin_decl_stmt
@@ -4253,7 +4253,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* io compare routines */
+comment|/*  * "io" compare routines.  Context switches aren't i/o, but are displayed  * on the "io" display.  */
 end_comment
 
 begin_decl_stmt
@@ -4804,7 +4804,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* compare_io - the comparison function for sorting by total io */
+comment|/* ORDER */
+end_comment
+
+begin_comment
+comment|/* assorted comparison functions for sorting by i/o */
 end_comment
 
 begin_function
