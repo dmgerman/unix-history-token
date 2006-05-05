@@ -1334,7 +1334,11 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|reuse
+condition|?
 name|tw
+else|:
+name|NULL
 operator|)
 return|;
 block|}
