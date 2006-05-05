@@ -3,6 +3,12 @@ begin_comment
 comment|/*  * This program, created 2002-10-03 by Garrett A. Wollman  *<wollman@FreeBSD.org>, is in the public domain.  Use at your own risk.  *  * $FreeBSD$  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -20,6 +26,22 @@ include|#
 directive|include
 file|<ufs/ffs/fs.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"mini_ufs.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -364,7 +386,7 @@ name|fsbegin
 init|=
 name|offset
 operator|-
-name|SBLOCK_UFS1
+name|SBLOCK_UFS2
 decl_stmt|;
 name|printf
 argument_list|(
