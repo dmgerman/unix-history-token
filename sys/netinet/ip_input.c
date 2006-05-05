@@ -3433,6 +3433,10 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
+name|fp
+operator|=
+name|NULL
+expr_stmt|;
 goto|goto
 name|dropfrag
 goto|;
