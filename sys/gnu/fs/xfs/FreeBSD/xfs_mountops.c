@@ -1176,6 +1176,11 @@ name|mnt_vfc
 operator|->
 name|vfc_typenum
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|error
+operator|=
 name|VFS_STATFS
 argument_list|(
 name|mp
@@ -1187,10 +1192,9 @@ name|mnt_stat
 argument_list|,
 name|td
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|fail_unmount
