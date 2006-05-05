@@ -403,7 +403,7 @@ name|bus_addr_t
 name|dd_desc_paddr
 decl_stmt|;
 comment|/* physical addr of dd_desc */
-name|bus_addr_t
+name|bus_size_t
 name|dd_desc_len
 decl_stmt|;
 comment|/* size of dd_desc */
