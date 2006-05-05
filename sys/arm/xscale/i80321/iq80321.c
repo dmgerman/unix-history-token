@@ -1271,6 +1271,11 @@ operator|*
 name|rid
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rv
+operator|)
+return|;
 block|}
 return|return
 operator|(
