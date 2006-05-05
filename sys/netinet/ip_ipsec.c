@@ -1559,6 +1559,18 @@ name|rt_ifp
 expr_stmt|;
 block|}
 block|}
+name|ip
+operator|=
+name|mtod
+argument_list|(
+operator|*
+name|m
+argument_list|,
+expr|struct
+name|ip
+operator|*
+argument_list|)
+expr_stmt|;
 comment|/* make it flipped, again. */
 name|ip
 operator|->
