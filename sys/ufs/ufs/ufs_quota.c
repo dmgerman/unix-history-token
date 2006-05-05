@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_ffs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -81,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -353,6 +365,29 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_FFS_SNAPSHOT
+comment|/* 	 * Disk quotas must be turned off for snapshot files. 	 */
+if|if
+condition|(
+operator|(
+name|ip
+operator|->
+name|i_flags
+operator|&
+name|SF_SNAPSHOT
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+endif|#
+directive|endif
 name|ump
 operator|=
 name|VFSTOUFS
@@ -1853,6 +1888,25 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_FFS_SNAPSHOT
+comment|/* 	 * Disk quotas must be turned off for snapshot files. 	 */
+if|if
+condition|(
+operator|(
+name|ip
+operator|->
+name|i_flags
+operator|&
+name|SF_SNAPSHOT
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return;
+endif|#
+directive|endif
 for|for
 control|(
 name|i
