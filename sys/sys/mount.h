@@ -2733,7 +2733,7 @@ name|VFS_LOCK_GIANT
 parameter_list|(
 name|MP
 parameter_list|)
-value|__extension__				\ ({									\ 	int _locked;							\ 	if (VFS_NEEDSGIANT((MP))) {					\ 		mtx_lock(&Giant);					\ 		_locked = 1;						\ 	} else								\ 		_locked = 0;						\ 	_locked;							\ })
+value|__extension__				\ ({									\ 	int _locked;							\ 	struct mount *_MP;						\ 	_MP = (MP);							\ 	if (VFS_NEEDSGIANT(_MP)) {					\ 		mtx_lock(&Giant);					\ 		_locked = 1;						\ 	} else								\ 		_locked = 0;						\ 	_locked;							\ })
 end_define
 
 begin_define
