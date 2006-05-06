@@ -252,6 +252,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|int
+name|nodumpflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -379,7 +387,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"HI:LPasd:chkmrx"
+literal|"HI:LPasd:chkmnrx"
 argument_list|)
 operator|)
 operator|!=
@@ -540,6 +548,14 @@ name|putenv
 argument_list|(
 literal|"BLOCKSIZE=1048576"
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+name|nodumpflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1862,7 +1878,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: du [-H | -L | -P] [-a | -s | -d depth] [-c] [-h | -k | -m] [-x] [-I mask] [file ...]\n"
+literal|"usage: du [-H | -L | -P] [-a | -s | -d depth] [-c] [-h | -k | -m] [-n] [-x] [-I mask] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2019,6 +2035,23 @@ name|ignentry
 modifier|*
 name|ign
 decl_stmt|;
+if|if
+condition|(
+name|nodumpflag
+operator|&&
+operator|(
+name|ent
+operator|->
+name|fts_statp
+operator|->
+name|st_flags
+operator|&
+name|UF_NODUMP
+operator|)
+condition|)
+return|return
+literal|1
+return|;
 name|SLIST_FOREACH
 argument_list|(
 argument|ign
