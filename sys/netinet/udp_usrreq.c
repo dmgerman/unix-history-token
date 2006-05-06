@@ -5474,6 +5474,11 @@ operator|=
 name|udp_send
 block|,
 operator|.
+name|pru_sosend
+operator|=
+name|sosend_dgram
+block|,
+operator|.
 name|pru_shutdown
 operator|=
 name|udp_shutdown
