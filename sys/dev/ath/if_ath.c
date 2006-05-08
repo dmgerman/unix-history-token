@@ -10984,7 +10984,9 @@ comment|/* maxsize */
 literal|1
 argument_list|,
 comment|/* nsegments */
-name|BUS_SPACE_MAXADDR
+name|dd
+operator|->
+name|dd_desc_len
 argument_list|,
 comment|/* maxsegsize */
 name|BUS_DMA_ALLOCNOW

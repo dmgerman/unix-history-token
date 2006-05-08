@@ -588,9 +588,9 @@ comment|/* maxsize XXX */
 name|ATH_MAX_SCATTER
 argument_list|,
 comment|/* nsegments */
-name|BUS_SPACE_MAXADDR
+literal|0x3ffff
 argument_list|,
-comment|/* maxsegsize */
+comment|/* maxsegsize XXX */
 name|BUS_DMA_ALLOCNOW
 argument_list|,
 comment|/* flags */
