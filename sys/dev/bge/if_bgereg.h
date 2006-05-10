@@ -6585,7 +6585,7 @@ begin_define
 define|#
 directive|define
 name|BGE_HCCMODE_MSI_BITS
-value|0x0x000070
+value|0x00000070
 end_define
 
 begin_define
