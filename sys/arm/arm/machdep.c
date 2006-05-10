@@ -961,6 +961,11 @@ name|m
 decl_stmt|;
 endif|#
 directive|endif
+name|cpu_setup
+argument_list|(
+literal|""
+argument_list|)
+expr_stmt|;
 name|vm_ksubmap_init
 argument_list|(
 operator|&
@@ -1014,11 +1019,6 @@ name|pmap_kernel
 argument_list|()
 argument_list|,
 name|pcb
-argument_list|)
-expr_stmt|;
-name|cpu_setup
-argument_list|(
-literal|""
 argument_list|)
 expr_stmt|;
 name|identify_arm_cpu
