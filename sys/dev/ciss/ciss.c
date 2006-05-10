@@ -1523,6 +1523,56 @@ block|,
 block|{
 literal|0x103C
 block|,
+literal|0x3211
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array E200i"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x3212
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array E200"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x3213
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array E200i"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x3214
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array E200i"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x3215
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array E200i"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
 literal|0x3220
 block|,
 name|CISS_BOARD_SA5
@@ -1577,7 +1627,7 @@ literal|0x3231
 block|,
 name|CISS_BOARD_SA5
 block|,
-literal|"HP Smart Array E400"
+literal|"HP Smart Array"
 block|}
 block|,
 block|{
@@ -1607,7 +1657,7 @@ literal|0x3234
 block|,
 name|CISS_BOARD_SA5
 block|,
-literal|"HP Smart Array"
+literal|"HP Smart Array P400"
 block|}
 block|,
 block|{
@@ -1617,7 +1667,7 @@ literal|0x3235
 block|,
 name|CISS_BOARD_SA5
 block|,
-literal|"HP Smart Array"
+literal|"HP Smart Array P400i"
 block|}
 block|,
 block|{
@@ -7411,6 +7461,8 @@ name|cr
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|j
 decl_stmt|;
 name|debug_called
 argument_list|(
@@ -7834,7 +7886,7 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
+operator|<=
 name|sc
 operator|->
 name|ciss_max_logical_bus
@@ -7842,6 +7894,84 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
+name|CISS_MAX_LOGICAL
+condition|;
+name|j
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|ciss_logical
+index|[
+name|i
+index|]
+index|[
+name|j
+index|]
+operator|.
+name|cl_ldrive
+condition|)
+name|free
+argument_list|(
+name|sc
+operator|->
+name|ciss_logical
+index|[
+name|i
+index|]
+index|[
+name|j
+index|]
+operator|.
+name|cl_ldrive
+argument_list|,
+name|CISS_MALLOC_CLASS
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|ciss_logical
+index|[
+name|i
+index|]
+index|[
+name|j
+index|]
+operator|.
+name|cl_lstatus
+condition|)
+name|free
+argument_list|(
+name|sc
+operator|->
+name|ciss_logical
+index|[
+name|i
+index|]
+index|[
+name|j
+index|]
+operator|.
+name|cl_lstatus
+argument_list|,
+name|CISS_MALLOC_CLASS
+argument_list|)
+expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|sc
@@ -7854,6 +7984,7 @@ argument_list|,
 name|CISS_MALLOC_CLASS
 argument_list|)
 expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|sc
@@ -15740,6 +15871,8 @@ name|struct
 name|ciss_lun_report
 modifier|*
 name|cll
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|bus
@@ -15894,6 +16027,19 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|cll
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|cll
+argument_list|,
+name|CISS_MALLOC_CLASS
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
