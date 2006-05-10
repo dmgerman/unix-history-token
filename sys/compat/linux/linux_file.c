@@ -195,12 +195,6 @@ directive|include
 file|<compat/linux/linux_util.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
-
 begin_function
 name|int
 name|linux_creat
@@ -296,15 +290,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*!__alpha__*/
-end_comment
 
 begin_function
 name|int
@@ -813,12 +798,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
-
 begin_function
 name|int
 name|linux_llseek
@@ -982,21 +961,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*!__alpha__*/
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
-
 begin_function
 name|int
 name|linux_readdir
@@ -1049,15 +1013,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*!__alpha__*/
-end_comment
 
 begin_comment
 comment|/*  * Note that linux_getdents(2) and linux_getdents64(2) have the same  * arguments. They only differ in the definition of struct dirent they  * operate on. We use this to common the code, with the exception of  * accessing struct dirent. Note that linux_readdir(2) is implemented  * by means of linux_getdents(2). In this case we never operate on  * struct dirent64 and thus don't need to handle it...  */
@@ -3393,12 +3348,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
-
 begin_function
 name|int
 name|linux_fdatasync
@@ -3441,15 +3390,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*!__alpha__*/
-end_comment
 
 begin_function
 name|int
@@ -4553,27 +4493,6 @@ end_endif
 begin_comment
 comment|/* __i386__ || (__amd64__&& COMPAT_LINUX32) */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|linux_fcntl64_args
-value|linux_fcntl_args
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static

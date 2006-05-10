@@ -54,11 +54,6 @@ name|defined
 argument_list|(
 name|__i386__
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
 end_if
 
 begin_include
@@ -333,27 +328,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__alpha__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|BSD_TO_LINUX_SIGNAL
-parameter_list|(
-name|sig
-parameter_list|)
-value|(sig)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -364,17 +338,6 @@ parameter_list|)
 define|\
 value|(((sig)<= LINUX_SIGTBLSZ) ? bsd_to_linux_signal[_SIG_IDX(sig)] : sig)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
 
 begin_decl_stmt
 specifier|static
@@ -409,15 +372,6 @@ literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*!__alpha__*/
-end_comment
 
 begin_struct
 struct|struct
@@ -485,12 +439,6 @@ comment|/* Pads structure to 64 bytes */
 block|}
 struct|;
 end_struct
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
 
 begin_function
 name|int
@@ -733,21 +681,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*!__alpha__*/
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
-
 begin_function
 name|int
 name|linux_alarm
@@ -922,15 +855,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*!__alpha__*/
-end_comment
-
 begin_function
 name|int
 name|linux_brk
@@ -1095,12 +1019,11 @@ name|defined
 argument_list|(
 name|__i386__
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
 end_if
+
+begin_comment
+comment|/* XXX: what about amd64/linux32? */
+end_comment
 
 begin_function
 name|int
@@ -2102,7 +2025,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __i386__ || __alpha__ */
+comment|/* __i386__ */
 end_comment
 
 begin_function
@@ -2881,12 +2804,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
-
 begin_function
 name|int
 name|linux_time
@@ -2989,15 +2906,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*!__alpha__*/
-end_comment
-
 begin_struct
 struct|struct
 name|l_times_argv
@@ -3018,28 +2926,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__alpha__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|CLK_TCK
-value|1024
-end_define
-
-begin_comment
-comment|/* Linux uses 1024 on alpha */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -3050,11 +2936,6 @@ end_define
 begin_comment
 comment|/* Linux uses 100 */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -3790,12 +3671,6 @@ name|__WCLONE
 value|0x80000000
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
-
 begin_function
 name|int
 name|linux_waitpid
@@ -3992,15 +3867,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*!__alpha__*/
-end_comment
 
 begin_function
 name|int
@@ -4466,9 +4332,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
-name|__alpha__
 if|if
 condition|(
 name|args
@@ -4480,8 +4343,6 @@ condition|)
 return|return
 name|EINVAL
 return|;
-endif|#
-directive|endif
 comment|/* Yes Jim, it's still a Linux... */
 name|td
 operator|->
@@ -4890,12 +4751,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
-
 begin_function
 name|int
 name|linux_nice
@@ -4947,15 +4802,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*!__alpha__*/
-end_comment
 
 begin_function
 name|int
@@ -5361,12 +5207,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
 
 begin_function
 name|int
@@ -5950,15 +5790,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*!__alpha__*/
-end_comment
-
 begin_function
 name|int
 name|linux_sched_setscheduler
@@ -6527,12 +6358,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
-
 begin_comment
 comment|/*  * The FreeBSD native getpid(2), getgid(2) and getuid(2) also modify  * td->td_retval[1] when COMPAT_43 is defined. This  * globbers registers that are assumed to be preserved. The following  * lightweight syscalls fixes this. See also linux_getgid16() and  * linux_getuid16() in linux_uid16.c.  *  * linux_getpid() - MP SAFE  * linux_getgid() - MP SAFE  * linux_getuid() - MP SAFE  */
 end_comment
@@ -6644,15 +6469,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*!__alpha__*/
-end_comment
 
 begin_function
 name|int

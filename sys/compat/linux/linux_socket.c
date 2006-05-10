@@ -257,35 +257,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__alpha__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|STATIC
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|STATIC
-value|static
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Reads a linux sockaddr and does any necessary translation.  * Linux sockaddrs don't have a length field, only a family.  */
 end_comment
@@ -918,12 +889,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
-
 begin_function
 specifier|static
 name|int
@@ -1131,15 +1096,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !__alpha__*/
-end_comment
 
 begin_function
 specifier|static
@@ -1752,12 +1708,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
 
 begin_comment
 comment|/* Return 0 if IP_HDRINCL is set for the given socket. */
@@ -2466,18 +2416,9 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !__alpha__*/
-end_comment
-
 begin_struct
 struct|struct
-name|l_connect_args
+name|linux_connect_args
 block|{
 name|int
 name|s
@@ -2491,19 +2432,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|linux_connect_args
-value|l_connect_args
-end_define
 
 begin_function_decl
 name|int
@@ -2519,15 +2447,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !__alpha__*/
-end_comment
 
 begin_function
 name|int
@@ -2545,7 +2464,7 @@ name|args
 parameter_list|)
 block|{
 name|struct
-name|l_connect_args
+name|linux_connect_args
 name|linux_args
 decl_stmt|;
 name|struct
@@ -2564,24 +2483,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__alpha__
-name|bcopy
-argument_list|(
-name|args
-argument_list|,
-operator|&
-name|linux_args
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|linux_args
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 if|if
 condition|(
 operator|(
@@ -2606,9 +2507,6 @@ operator|(
 name|error
 operator|)
 return|;
-endif|#
-directive|endif
-comment|/* __alpha__ */
 name|error
 operator|=
 name|linux_getsockaddr
@@ -2757,12 +2655,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
-
 begin_struct
 struct|struct
 name|linux_listen_args
@@ -2859,18 +2751,9 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !__alpha__*/
-end_comment
-
 begin_struct
 struct|struct
-name|l_accept_args
+name|linux_accept_args
 block|{
 name|int
 name|s
@@ -2885,26 +2768,8 @@ block|}
 struct|;
 end_struct
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|linux_accept_args
-value|l_accept_args
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|linux_accept
 parameter_list|(
@@ -2920,7 +2785,7 @@ name|args
 parameter_list|)
 block|{
 name|struct
-name|l_accept_args
+name|linux_accept_args
 name|linux_args
 decl_stmt|;
 name|struct
@@ -3127,7 +2992,7 @@ end_function
 
 begin_struct
 struct|struct
-name|l_getsockname_args
+name|linux_getsockname_args
 block|{
 name|int
 name|s
@@ -3142,26 +3007,8 @@ block|}
 struct|;
 end_struct
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|linux_getsockname_args
-value|l_getsockname_args
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|linux_getsockname
 parameter_list|(
@@ -3177,7 +3024,7 @@ name|args
 parameter_list|)
 block|{
 name|struct
-name|l_getsockname_args
+name|linux_getsockname_args
 name|linux_args
 decl_stmt|;
 name|struct
@@ -3312,7 +3159,7 @@ end_function
 
 begin_struct
 struct|struct
-name|l_getpeername_args
+name|linux_getpeername_args
 block|{
 name|int
 name|s
@@ -3327,26 +3174,8 @@ block|}
 struct|;
 end_struct
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|linux_getpeername_args
-value|l_getpeername_args
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|linux_getpeername
 parameter_list|(
@@ -3362,7 +3191,7 @@ name|args
 parameter_list|)
 block|{
 name|struct
-name|l_getpeername_args
+name|linux_getpeername_args
 name|linux_args
 decl_stmt|;
 name|struct
@@ -3498,7 +3327,7 @@ end_function
 
 begin_struct
 struct|struct
-name|l_socketpair_args
+name|linux_socketpair_args
 block|{
 name|int
 name|domain
@@ -3516,26 +3345,8 @@ block|}
 struct|;
 end_struct
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|linux_socketpair_args
-value|l_socketpair_args
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|linux_socketpair
 parameter_list|(
@@ -3551,7 +3362,7 @@ name|args
 parameter_list|)
 block|{
 name|struct
-name|l_socketpair_args
+name|linux_socketpair_args
 name|linux_args
 decl_stmt|;
 name|struct
@@ -3658,7 +3469,7 @@ end_function
 
 begin_struct
 struct|struct
-name|l_send_args
+name|linux_send_args
 block|{
 name|int
 name|s
@@ -3676,26 +3487,8 @@ block|}
 struct|;
 end_struct
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|linux_send_args
-value|l_send_args
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|linux_send
 parameter_list|(
@@ -3711,7 +3504,7 @@ name|args
 parameter_list|)
 block|{
 name|struct
-name|l_send_args
+name|linux_send_args
 name|linux_args
 decl_stmt|;
 name|struct
@@ -3810,7 +3603,7 @@ end_function
 
 begin_struct
 struct|struct
-name|l_recv_args
+name|linux_recv_args
 block|{
 name|int
 name|s
@@ -3828,26 +3621,8 @@ block|}
 struct|;
 end_struct
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|linux_recv_args
-value|l_recv_args
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|linux_recv
 parameter_list|(
@@ -3863,7 +3638,7 @@ name|args
 parameter_list|)
 block|{
 name|struct
-name|l_recv_args
+name|linux_recv_args
 name|linux_args
 decl_stmt|;
 name|struct
@@ -3961,12 +3736,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
 
 begin_function
 specifier|static
@@ -4139,18 +3908,9 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !__alpha__*/
-end_comment
-
 begin_struct
 struct|struct
-name|l_recvfrom_args
+name|linux_recvfrom_args
 block|{
 name|int
 name|s
@@ -4174,26 +3934,8 @@ block|}
 struct|;
 end_struct
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|linux_recvfrom_args
-value|l_recvfrom_args
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|linux_recvfrom
 parameter_list|(
@@ -4209,7 +3951,7 @@ name|args
 parameter_list|)
 block|{
 name|struct
-name|l_recvfrom_args
+name|linux_recvfrom_args
 name|linux_args
 decl_stmt|;
 name|struct
@@ -4433,7 +4175,7 @@ end_function
 
 begin_struct
 struct|struct
-name|l_sendmsg_args
+name|linux_sendmsg_args
 block|{
 name|int
 name|s
@@ -4448,26 +4190,8 @@ block|}
 struct|;
 end_struct
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|linux_sendmsg_args
-value|l_sendmsg_args
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|linux_sendmsg
 parameter_list|(
@@ -4483,7 +4207,7 @@ name|args
 parameter_list|)
 block|{
 name|struct
-name|l_sendmsg_args
+name|linux_sendmsg_args
 name|linux_args
 decl_stmt|;
 name|struct
@@ -4628,7 +4352,7 @@ end_function
 
 begin_struct
 struct|struct
-name|l_recvmsg_args
+name|linux_recvmsg_args
 block|{
 name|int
 name|s
@@ -4643,26 +4367,8 @@ block|}
 struct|;
 end_struct
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|linux_recvmsg_args
-value|l_recvmsg_args
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|linux_recvmsg
 parameter_list|(
@@ -4678,7 +4384,7 @@ name|args
 parameter_list|)
 block|{
 name|struct
-name|l_recvmsg_args
+name|linux_recvmsg_args
 name|linux_args
 decl_stmt|;
 name|struct
@@ -4920,12 +4626,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
 
 begin_struct
 struct|struct
@@ -5785,15 +5485,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*!__alpha__*/
-end_comment
 
 end_unit
 

@@ -997,12 +997,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
-
 begin_function
 specifier|static
 name|int
@@ -1394,11 +1388,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* XXX - All fields of type l_int are defined as l_long on i386 */
