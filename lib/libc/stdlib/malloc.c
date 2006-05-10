@@ -1278,12 +1278,6 @@ decl_stmt|;
 comment|/* Number of free regions in run. */
 name|unsigned
 name|nfree
-range|:
-operator|(
-name|RUN_MIN_REGS_2POW
-operator|+
-literal|2
-operator|)
 decl_stmt|;
 comment|/* 	 * Current quartile for this run, one of: {RUN_QINIT, RUN_Q0, RUN_25, 	 * RUN_Q50, RUN_Q75, RUN_Q100}. 	 */
 define|#
@@ -12761,7 +12755,7 @@ name|opt_chunk_2pow
 operator|>
 name|pagesize_2pow
 operator|+
-literal|3
+literal|4
 condition|)
 name|opt_chunk_2pow
 operator|--
