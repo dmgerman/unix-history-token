@@ -2615,7 +2615,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"Too few arguments."
+literal|"Invalid number of arguments."
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3192,7 +3192,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"Too few arguments."
+literal|"Invalid number of arguments."
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3918,7 +3918,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"Too few arguments."
+literal|"Invalid number of arguments."
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4284,7 +4284,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"Too few arguments."
+literal|"Invalid number of arguments."
 argument_list|)
 expr_stmt|;
 return|return;
