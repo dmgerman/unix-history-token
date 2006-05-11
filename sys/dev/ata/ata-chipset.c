@@ -9053,6 +9053,13 @@ name|strcpy
 argument_list|(
 name|buffer
 argument_list|,
+literal|"HighPoint "
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|buffer
+argument_list|,
 name|idx
 operator|->
 name|text
@@ -9083,7 +9090,6 @@ argument_list|,
 literal|" (channel 0+1)"
 argument_list|)
 expr_stmt|;
-elseif|else
 if|if
 condition|(
 name|pci_get_function
@@ -9105,7 +9111,7 @@ name|sprintf
 argument_list|(
 name|buffer
 argument_list|,
-literal|"HighPoint %s %s controller"
+literal|"%s %s controller"
 argument_list|,
 name|buffer
 argument_list|,
@@ -19426,12 +19432,6 @@ name|start
 argument_list|,
 name|end
 argument_list|)
-expr_stmt|;
-name|start
-operator|=
-name|end
-operator|=
-literal|0
 expr_stmt|;
 name|strcat
 argument_list|(
