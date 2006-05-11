@@ -42,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
+file|<sys/ktr.h>
 end_include
 
 begin_include
@@ -61,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -2112,6 +2118,17 @@ define|#
 directive|define
 name|ACPI_MAX_THREADS
 value|3
+end_define
+
+begin_comment
+comment|/* Use the device logging level for ktr(4). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KTR_ACPI
+value|KTR_DEV
 end_define
 
 begin_endif
