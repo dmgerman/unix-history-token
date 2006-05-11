@@ -5856,7 +5856,7 @@ block|{
 name|int
 name|busno
 decl_stmt|;
-comment|/* 	 * Since there can be multiple independantly numbered PCI 	 * busses on some large alpha systems, we can't use the unit 	 * number to decide what bus we are probing. We ask the parent  	 * pcib what our bus number is. 	 */
+comment|/* 	 * Since there can be multiple independantly numbered PCI 	 * busses on systems with multiple PCI domains, we can't use 	 * the unit number to decide which bus we are probing. We ask 	 * the parent pcib what our bus number is. 	 */
 name|busno
 operator|=
 name|pcib_get_bus
