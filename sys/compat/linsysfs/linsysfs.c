@@ -253,12 +253,6 @@ directive|include
 file|<fs/pseudofs/pseudofs.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<fs/procfs/procfs.h>
-end_include
-
 begin_struct
 struct|struct
 name|scsi_host_queue
@@ -1332,22 +1326,6 @@ argument_list|(
 name|linsysfs
 argument_list|,
 name|linux
-argument_list|,
-literal|1
-argument_list|,
-literal|1
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MODULE_DEPEND
-argument_list|(
-name|linsysfs
-argument_list|,
-name|procfs
 argument_list|,
 literal|1
 argument_list|,
