@@ -2580,6 +2580,15 @@ operator|==
 literal|0
 condition|)
 block|{
+name|CTR1
+argument_list|(
+name|KTR_ACPI
+argument_list|,
+literal|"ec event was not SCI, status %#x"
+argument_list|,
+name|EcStatus
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|ec_csrvalue
@@ -2664,6 +2673,21 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Ignore the value for "no outstanding event". (13.3.5) */
+name|CTR2
+argument_list|(
+name|KTR_ACPI
+argument_list|,
+literal|"ec query ok,%s running _Q%02x"
+argument_list|,
+name|Data
+condition|?
+literal|""
+else|:
+literal|" not"
+argument_list|,
+name|Data
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|Data
@@ -3246,10 +3270,6 @@ name|retval
 decl_stmt|,
 name|slp_ival
 decl_stmt|;
-specifier|static
-name|int
-name|EcDbgMaxDelay
-decl_stmt|;
 name|ACPI_SERIAL_ASSERT
 argument_list|(
 name|ec
@@ -3444,7 +3464,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Calculate new delay and print it if it exceeds the max. */
+comment|/* Calculate new delay and log it. */
 if|if
 condition|(
 name|slp_ival
@@ -3457,36 +3477,17 @@ name|i
 operator|*
 literal|10000
 expr_stmt|;
-if|if
-condition|(
-name|period
-operator|>
-name|EcDbgMaxDelay
-condition|)
-block|{
-name|EcDbgMaxDelay
-operator|=
-name|period
-expr_stmt|;
-name|ACPI_VPRINT
+name|CTR2
 argument_list|(
-name|sc
-operator|->
-name|ec_dev
+name|KTR_ACPI
 argument_list|,
-name|acpi_device_get_parent_softc
-argument_list|(
-name|sc
-operator|->
-name|ec_dev
-argument_list|)
+literal|"ec got event %#x after %d us"
 argument_list|,
-literal|"info: new max delay is %d us\n"
+name|EcStatus
 argument_list|,
 name|period
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|Status
@@ -3654,6 +3655,15 @@ argument_list|(
 name|ec
 argument_list|)
 expr_stmt|;
+name|CTR1
+argument_list|(
+name|KTR_ACPI
+argument_list|,
+literal|"ec read from %#x"
+argument_list|,
+name|Address
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|notyet
@@ -3808,6 +3818,18 @@ decl_stmt|;
 name|ACPI_SERIAL_ASSERT
 argument_list|(
 name|ec
+argument_list|)
+expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_ACPI
+argument_list|,
+literal|"ec write to %#x, data %#x"
+argument_list|,
+name|Address
+argument_list|,
+operator|*
+name|Data
 argument_list|)
 expr_stmt|;
 ifdef|#
