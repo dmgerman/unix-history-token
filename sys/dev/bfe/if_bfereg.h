@@ -3433,14 +3433,14 @@ begin_define
 define|#
 directive|define
 name|BFE_TX_LIST_CNT
-value|128
+value|511
 end_define
 
 begin_define
 define|#
 directive|define
 name|BFE_RX_LIST_CNT
-value|128
+value|511
 end_define
 
 begin_define
