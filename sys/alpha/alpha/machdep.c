@@ -10329,7 +10329,7 @@ name|SYSCTL_PROC
 argument_list|(
 name|_machdep
 argument_list|,
-name|CPU_ADJKERNTZ
+name|OID_AUTO
 argument_list|,
 name|adjkerntz
 argument_list|,
@@ -10356,7 +10356,7 @@ name|SYSCTL_INT
 argument_list|(
 name|_machdep
 argument_list|,
-name|CPU_DISRTCSET
+name|OID_AUTO
 argument_list|,
 name|disable_rtc_set
 argument_list|,
@@ -10377,7 +10377,7 @@ name|SYSCTL_INT
 argument_list|(
 name|_machdep
 argument_list|,
-name|CPU_WALLCLOCK
+name|OID_AUTO
 argument_list|,
 name|wall_cmos_clock
 argument_list|,

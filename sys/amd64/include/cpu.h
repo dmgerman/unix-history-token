@@ -128,65 +128,6 @@ parameter_list|)
 value|((framep)->tf_rip)
 end_define
 
-begin_comment
-comment|/*  * CTL_MACHDEP definitions.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_CONSDEV
-value|1
-end_define
-
-begin_comment
-comment|/* dev_t: console terminal device */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_ADJKERNTZ
-value|2
-end_define
-
-begin_comment
-comment|/* int:	timezone offset	(seconds) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_DISRTCSET
-value|3
-end_define
-
-begin_comment
-comment|/* int: disable resettodr() call */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_WALLCLOCK
-value|5
-end_define
-
-begin_comment
-comment|/* int:	indicates wall CMOS clock */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_MAXID
-value|6
-end_define
-
-begin_comment
-comment|/* number of valid machdep ids */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef

@@ -61,17 +61,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CPU_CONSDEV
-value|1
-end_define
-
-begin_comment
-comment|/* dev_t: console terminal device */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CPU_ROOT_DEVICE
 value|2
 end_define
@@ -123,57 +112,6 @@ end_define
 begin_comment
 comment|/* string: booted kernel name */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_ADJKERNTZ
-value|7
-end_define
-
-begin_comment
-comment|/* int:	timezone offset	(seconds) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_DISRTCSET
-value|8
-end_define
-
-begin_comment
-comment|/* int: disable resettodr() call */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_WALLCLOCK
-value|9
-end_define
-
-begin_comment
-comment|/* int:	indicates wall CMOS clock */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_MAXID
-value|10
-end_define
-
-begin_comment
-comment|/* valid machdep IDs */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CTL_MACHDEP_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "console_device", CTLTYPE_STRUCT }, \ 	{ "root_device", CTLTYPE_STRING }, \ 	{ "unaligned_print", CTLTYPE_INT }, \ 	{ "unaligned_fix", CTLTYPE_INT }, \ 	{ "unaligned_sigbus", CTLTYPE_INT }, \ 	{ "booted_kernel", CTLTYPE_STRING }, \ 	{ "adjkerntz", CTLTYPE_INT }, \ 	{ "disable_rtc_set", CTLTYPE_INT }, \ 	{ "wall_cmos_clock", CTLTYPE_INT }, \ }
-end_define
 
 begin_ifdef
 ifdef|#
