@@ -606,6 +606,10 @@ operator||
 name|LOG_FACMASK
 expr_stmt|;
 block|}
+name|saved_errno
+operator|=
+name|errno
+expr_stmt|;
 name|THREAD_LOCK
 argument_list|()
 expr_stmt|;
@@ -631,10 +635,6 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
-name|saved_errno
-operator|=
-name|errno
-expr_stmt|;
 comment|/* Set default facility if none specified. */
 if|if
 condition|(
