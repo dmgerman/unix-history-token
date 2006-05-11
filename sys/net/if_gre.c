@@ -1262,15 +1262,15 @@ expr_stmt|;
 comment|/* 			 * RFC2004 specifies that fragmented diagrams shouldn't 			 * be encapsulated. 			 */
 if|if
 condition|(
-operator|(
 name|ip
 operator|->
 name|ip_off
 operator|&
+operator|(
 name|IP_MF
+operator||
+name|IP_OFFMASK
 operator|)
-operator|!=
-literal|0
 condition|)
 block|{
 name|_IF_DROP
