@@ -59,21 +59,6 @@ parameter_list|)
 value|(TRAPF_CPL(tf) != IA64_PSR_CPL_KERN)
 end_define
 
-begin_comment
-comment|/*  * CTL_MACHDEP definitions.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OID_AUTO
-value|3
-end_define
-
-begin_comment
-comment|/* int: disable resettodr() call */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
