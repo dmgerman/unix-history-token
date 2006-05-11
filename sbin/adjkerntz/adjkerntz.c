@@ -215,12 +215,6 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
-name|int
-name|mib
-index|[
-literal|2
-index|]
-decl_stmt|;
 comment|/* Avoid time_t here, can be unsigned long or worse */
 name|long
 name|offset
@@ -513,20 +507,6 @@ block|}
 name|tzset
 argument_list|()
 expr_stmt|;
-name|mib
-index|[
-literal|0
-index|]
-operator|=
-name|CTL_MACHDEP
-expr_stmt|;
-name|mib
-index|[
-literal|1
-index|]
-operator|=
-name|CPU_ADJKERNTZ
-expr_stmt|;
 name|len
 operator|=
 sizeof|sizeof
@@ -536,11 +516,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sysctl
+name|sysctlbyname
 argument_list|(
-name|mib
-argument_list|,
-literal|2
+literal|"machdep.adjkerntz"
 argument_list|,
 operator|&
 name|kern_offset
@@ -561,7 +539,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"sysctl(get_offset): %m"
+literal|"sysctl(\"machdep.adjkerntz\"): %m"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1076,20 +1054,6 @@ name|offset
 operator|)
 condition|)
 block|{
-name|mib
-index|[
-literal|0
-index|]
-operator|=
-name|CTL_MACHDEP
-expr_stmt|;
-name|mib
-index|[
-literal|1
-index|]
-operator|=
-name|CPU_DISRTCSET
-expr_stmt|;
 name|len
 operator|=
 sizeof|sizeof
@@ -1099,11 +1063,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sysctl
+name|sysctlbyname
 argument_list|(
-name|mib
-argument_list|,
-literal|2
+literal|"machdep.disable_rtc_set"
 argument_list|,
 operator|&
 name|disrtcset
@@ -1124,7 +1086,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"sysctl(get_disrtcset): %m"
+literal|"sysctl(get: \"disable_rtc_set\"): %m"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1148,11 +1110,9 @@ name|True
 expr_stmt|;
 if|if
 condition|(
-name|sysctl
+name|sysctlbyname
 argument_list|(
-name|mib
-argument_list|,
-literal|2
+literal|"disable_rtc_set"
 argument_list|,
 name|NULL
 argument_list|,
@@ -1172,7 +1132,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"sysctl(set_disrtcset): %m"
+literal|"sysctl(set: \"disable_rtc_set\"): %m"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1277,8 +1237,8 @@ literal|1
 return|;
 block|}
 block|}
-comment|/* setting CPU_ADJKERNTZ have a side effect: resettodr(), which */
-comment|/* can be disabled by CPU_DISRTCSET, so if init or UTC clock    */
+comment|/* setting machdep.adjkerntz have a side effect: resettodr(), which */
+comment|/* can be disabled by machdep.disable_rtc_set, so if init or UTC clock    */
 comment|/* -- don't write RTC, else write RTC.                          */
 if|if
 condition|(
@@ -1291,20 +1251,6 @@ name|kern_offset
 operator|=
 name|offset
 expr_stmt|;
-name|mib
-index|[
-literal|0
-index|]
-operator|=
-name|CTL_MACHDEP
-expr_stmt|;
-name|mib
-index|[
-literal|1
-index|]
-operator|=
-name|CPU_ADJKERNTZ
-expr_stmt|;
 name|len
 operator|=
 sizeof|sizeof
@@ -1314,11 +1260,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sysctl
+name|sysctlbyname
 argument_list|(
-name|mib
-argument_list|,
-literal|2
+literal|"machdep.adjkerntz"
 argument_list|,
 name|NULL
 argument_list|,
@@ -1338,7 +1282,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"sysctl(update_offset): %m"
+literal|"sysctl(set: \"disable_rtc_set\"): %m"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1346,20 +1290,6 @@ literal|1
 return|;
 block|}
 block|}
-name|mib
-index|[
-literal|0
-index|]
-operator|=
-name|CTL_MACHDEP
-expr_stmt|;
-name|mib
-index|[
-literal|1
-index|]
-operator|=
-name|CPU_WALLCLOCK
-expr_stmt|;
 name|len
 operator|=
 sizeof|sizeof
@@ -1369,11 +1299,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sysctl
+name|sysctlbyname
 argument_list|(
-name|mib
-argument_list|,
-literal|2
+literal|"machdep.wall_cmos_clock"
 argument_list|,
 name|NULL
 argument_list|,
@@ -1393,7 +1321,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"sysctl(put_wallclock): %m"
+literal|"sysctl(set: \"machdep.wall_cmos_clock\"): %m"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1409,20 +1337,6 @@ name|need_restore
 operator|=
 name|False
 expr_stmt|;
-name|mib
-index|[
-literal|0
-index|]
-operator|=
-name|CTL_MACHDEP
-expr_stmt|;
-name|mib
-index|[
-literal|1
-index|]
-operator|=
-name|CPU_DISRTCSET
-expr_stmt|;
 name|disrtcset
 operator|=
 literal|0
@@ -1436,11 +1350,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sysctl
+name|sysctlbyname
 argument_list|(
-name|mib
-argument_list|,
-literal|2
+literal|"machdep.disable_rtc_set"
 argument_list|,
 name|NULL
 argument_list|,
@@ -1460,7 +1372,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"sysctl(restore_disrtcset): %m"
+literal|"sysctl(set: \"machdep.disable_rtc_set\"): %m"
 argument_list|)
 expr_stmt|;
 return|return
