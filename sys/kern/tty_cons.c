@@ -338,7 +338,7 @@ name|SYSCTL_OPAQUE
 argument_list|(
 name|_machdep
 argument_list|,
-name|CPU_CONSDEV
+name|OID_AUTO
 argument_list|,
 name|consdev
 argument_list|,
