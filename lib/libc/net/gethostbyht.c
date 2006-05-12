@@ -1446,13 +1446,14 @@ name|ap
 parameter_list|)
 block|{
 specifier|const
-name|char
+name|void
 modifier|*
 name|addr
 decl_stmt|;
-name|int
+name|socklen_t
 name|len
-decl_stmt|,
+decl_stmt|;
+name|int
 name|af
 decl_stmt|;
 name|char
@@ -1494,7 +1495,7 @@ argument_list|(
 name|ap
 argument_list|,
 specifier|const
-name|char
+name|void
 operator|*
 argument_list|)
 expr_stmt|;
@@ -1504,7 +1505,7 @@ name|va_arg
 argument_list|(
 name|ap
 argument_list|,
-name|int
+name|socklen_t
 argument_list|)
 expr_stmt|;
 name|af

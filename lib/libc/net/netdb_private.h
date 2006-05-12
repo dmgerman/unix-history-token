@@ -480,10 +480,10 @@ modifier|*
 name|_gethostbynisaddr
 parameter_list|(
 specifier|const
-name|char
+name|void
 modifier|*
 parameter_list|,
-name|int
+name|socklen_t
 parameter_list|,
 name|int
 parameter_list|)
