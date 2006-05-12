@@ -5992,6 +5992,8 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
+name|error
+operator|=
 name|sc_clean_up
 argument_list|(
 name|sc
@@ -6004,6 +6006,13 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+name|error
+return|;
 return|return
 name|sc_switch_scr
 argument_list|(
