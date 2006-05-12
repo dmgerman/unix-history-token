@@ -14,12 +14,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_ip6fw.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_inet.h"
 end_include
 
@@ -279,12 +273,6 @@ end_endif
 begin_comment
 comment|/* FAST_IPSEC */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<netinet6/ip6_fw.h>
-end_include
 
 begin_include
 include|#
@@ -1882,60 +1870,6 @@ name|type
 operator|=
 name|ND_REDIRECT
 expr_stmt|;
-block|}
-comment|/* 	 * Check with the firewall... 	 */
-if|if
-condition|(
-name|ip6_fw_enable
-operator|&&
-name|ip6_fw_chk_ptr
-condition|)
-block|{
-name|u_short
-name|port
-init|=
-literal|0
-decl_stmt|;
-comment|/* If ipfw says divert, we have to just drop packet */
-if|if
-condition|(
-call|(
-modifier|*
-name|ip6_fw_chk_ptr
-call|)
-argument_list|(
-operator|&
-name|ip6
-argument_list|,
-name|rt
-operator|->
-name|rt_ifp
-argument_list|,
-operator|&
-name|port
-argument_list|,
-operator|&
-name|m
-argument_list|)
-condition|)
-block|{
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-goto|goto
-name|freecopy
-goto|;
-block|}
-if|if
-condition|(
-operator|!
-name|m
-condition|)
-goto|goto
-name|freecopy
-goto|;
 block|}
 comment|/* 	 * Fake scoped addresses. Note that even link-local source or 	 * destinaion can appear, if the originating node just sends the 	 * packet to us (without address resolution for the destination). 	 * Since both icmp6_error and icmp6_redirect_output fill the embedded 	 * link identifiers, we can do this stuff after making a copy for 	 * returning an error. 	 */
 if|if

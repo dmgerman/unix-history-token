@@ -18,12 +18,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_ip6fw.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_inet.h"
 end_include
 
@@ -310,12 +304,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<netinet6/ip6_fw.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet6/ip6protosw.h>
 end_include
 
@@ -415,32 +403,6 @@ begin_decl_stmt
 name|struct
 name|pfil_head
 name|inet6_pfil_hook
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* firewall hooks */
-end_comment
-
-begin_decl_stmt
-name|ip6_fw_chk_t
-modifier|*
-name|ip6_fw_chk_ptr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ip6_fw_ctl_t
-modifier|*
-name|ip6_fw_ctl_ptr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ip6_fw_enable
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1653,58 +1615,6 @@ argument_list|)
 expr_stmt|;
 name|passin
 label|:
-comment|/* 	 * Check with the firewall... 	 */
-if|if
-condition|(
-name|ip6_fw_enable
-operator|&&
-name|ip6_fw_chk_ptr
-condition|)
-block|{
-name|u_short
-name|port
-init|=
-literal|0
-decl_stmt|;
-comment|/* If ipfw says divert, we have to just drop packet */
-comment|/* use port as a dummy argument */
-if|if
-condition|(
-call|(
-modifier|*
-name|ip6_fw_chk_ptr
-call|)
-argument_list|(
-operator|&
-name|ip6
-argument_list|,
-name|NULL
-argument_list|,
-operator|&
-name|port
-argument_list|,
-operator|&
-name|m
-argument_list|)
-condition|)
-block|{
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-name|m
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|!
-name|m
-condition|)
-return|return;
-block|}
 comment|/* 	 * Disambiguate address scope zones (if there is ambiguity). 	 * We first make sure that the original source or destination address 	 * is not in our internal form for scoped addresses.  Such addresses 	 * are not necessarily invalid spec-wise, but we cannot accept them due 	 * to the usage conflict. 	 * in6_setscope() then also checks and rejects the cases where src or 	 * dst are the loopback address and the receiving interface 	 * is not loopback. 	 */
 if|if
 condition|(
