@@ -7964,16 +7964,22 @@ operator|.
 name|ticket
 condition|)
 block|{
-name|printf
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|DPFPRINTF
 argument_list|(
-literal|"ticket: %d != [%d]%d\n"
+name|PF_DEBUG_MISC
 argument_list|,
+operator|(
+literal|"ticket: %d != [%d]%d\n"
+operator|,
 name|pr
 operator|->
 name|ticket
-argument_list|,
+operator|,
 name|rs_num
-argument_list|,
+operator|,
 name|ruleset
 operator|->
 name|rules
@@ -7984,8 +7990,11 @@ operator|.
 name|inactive
 operator|.
 name|ticket
+operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|error
 operator|=
 name|EBUSY
@@ -8001,17 +8010,26 @@ operator|!=
 name|ticket_pabuf
 condition|)
 block|{
-name|printf
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|DPFPRINTF
 argument_list|(
-literal|"pool_ticket: %d != %d\n"
+name|PF_DEBUG_MISC
 argument_list|,
+operator|(
+literal|"pool_ticket: %d != %d\n"
+operator|,
 name|pr
 operator|->
 name|pool_ticket
-argument_list|,
+operator|,
 name|ticket_pabuf
+operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|error
 operator|=
 name|EBUSY
