@@ -311,21 +311,6 @@ begin_elif
 elif|#
 directive|elif
 name|defined
-name|__alpha__
-end_elif
-
-begin_define
-define|#
-directive|define
-name|MEMORY_BARRIER
-parameter_list|()
-value|alpha_mb()
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
 name|__powerpc__
 end_elif
 

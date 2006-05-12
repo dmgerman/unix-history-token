@@ -696,29 +696,6 @@ parameter_list|)
 value|DELAY(n)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__alpha__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|PDQ_OS_VA_TO_BUSPA
-parameter_list|(
-name|pdq
-parameter_list|,
-name|p
-parameter_list|)
-value|alpha_XXX_dmamap((vm_offset_t)p)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -730,11 +707,6 @@ name|p
 parameter_list|)
 value|vtophys(p)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

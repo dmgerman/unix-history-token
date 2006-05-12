@@ -4653,32 +4653,5 @@ name|SF_TIMEOUT
 value|1000
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__alpha__
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|vtophys
-end_undef
-
-begin_define
-define|#
-directive|define
-name|vtophys
-parameter_list|(
-name|va
-parameter_list|)
-value|alpha_XXX_dmamap((vm_offset_t)va)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 end_unit
 

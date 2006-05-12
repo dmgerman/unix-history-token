@@ -5940,17 +5940,6 @@ operator|(
 name|ENOBUFS
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|__alpha__
-name|m_new
-operator|->
-name|m_data
-operator|+=
-literal|2
-expr_stmt|;
-endif|#
-directive|endif
 name|c
 operator|->
 name|tl_mbuf

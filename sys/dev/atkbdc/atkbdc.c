@@ -734,16 +734,6 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|__alpha__
-argument_list|)
-name|tag
-operator|=
-name|busspace_isa_io
-expr_stmt|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
 name|__ia64__
 argument_list|)
 name|tag

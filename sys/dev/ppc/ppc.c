@@ -7017,31 +7017,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|__alpha__
-comment|/* 	 * There isn't a bios list on alpha. Put it in the usual place. 	 */
-if|if
-condition|(
-name|error
-condition|)
-block|{
-name|bus_set_resource
-argument_list|(
-name|dev
-argument_list|,
-name|SYS_RES_IOPORT
-argument_list|,
-name|rid
-argument_list|,
-literal|0x3bc
-argument_list|,
-name|IO_LPTSIZE_NORMAL
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 comment|/* IO port is mandatory */
 comment|/* Try "extended" IO port range...*/
 name|ppc

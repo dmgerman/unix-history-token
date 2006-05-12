@@ -211,21 +211,6 @@ begin_comment
 comment|/* !BURN_BRIDGES */
 end_comment
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-end_elif
-
-begin_include
-include|#
-directive|include
-file|<alpha/include/pmap.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -17093,18 +17078,6 @@ name|PROC_SEXIUM
 expr_stmt|;
 break|break;
 block|}
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-name|Info
-operator|.
-name|processorType
-operator|=
-name|PROC_ALPHA
-expr_stmt|;
 endif|#
 directive|endif
 name|Info

@@ -2007,12 +2007,6 @@ name|defined
 argument_list|(
 name|__i386__
 argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
 struct|struct
 name|osigcontext
 block|{

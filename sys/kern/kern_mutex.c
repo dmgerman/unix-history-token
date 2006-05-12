@@ -3728,10 +3728,6 @@ comment|/*  * XXX: When kernacc() does not require Giant we can reenable this ch
 ifdef|#
 directive|ifdef
 name|notyet
-comment|/*  * XXX - When kernacc() is fixed on the alpha to handle K0_SEG memory properly  * we can re-enable the kernacc() checks.  */
-ifndef|#
-directive|ifndef
-name|__alpha__
 comment|/* 	 * Can't call kernacc() from early init386(), especially when 	 * initializing Giant mutex, because some stuff in kernacc() 	 * requires Giant itself. 	 */
 if|if
 condition|(
@@ -3765,8 +3761,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 block|}

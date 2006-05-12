@@ -320,15 +320,6 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|__alpha__
-comment|/* FIXME: This is most likely not correct as it doesn't flush CPU  	 * write caches, but we don't have a facility to do that and  	 * this is all linux does, too */
-name|alpha_mb
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -2263,7 +2254,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* 	 * Bind the individual pages and flush the chipset's 	 * TLB. 	 * 	 * XXX Presumably, this needs to be the pci address on alpha 	 * (i.e. use alpha_XXX_dmamap()). I don't have access to any 	 * alpha AGP hardware to check. 	 */
+comment|/* 	 * Bind the individual pages and flush the chipset's 	 * TLB. 	 */
 name|VM_OBJECT_LOCK
 argument_list|(
 name|mem

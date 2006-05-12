@@ -91,27 +91,6 @@ directive|include
 file|<isa/isa_common.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__alpha__
-end_ifdef
-
-begin_comment
-comment|/* XXX workaround a stupid warning */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<alpha/isa/isavar.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|static
 name|int

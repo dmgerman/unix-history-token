@@ -196,24 +196,6 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__alpha__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|KINFO_PROC_SIZE
-value|1088
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|__amd64__
 end_ifdef
 

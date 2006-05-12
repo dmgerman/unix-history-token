@@ -44,19 +44,6 @@ begin_comment
 comment|/* nothing for the moment */
 end_comment
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-end_elif
-
-begin_comment
-comment|/* nothing for the moment */
-end_comment
-
 begin_endif
 endif|#
 directive|endif

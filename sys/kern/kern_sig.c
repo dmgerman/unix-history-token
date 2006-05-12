@@ -257,32 +257,6 @@ directive|include
 file|<security/audit/audit.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|COMPAT_43
-argument_list|)
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"You *really* need COMPAT_43 on the alpha for longjmp(3)"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -4895,12 +4869,6 @@ operator|!
 name|defined
 argument_list|(
 name|__i386__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__alpha__
 argument_list|)
 end_if
 
