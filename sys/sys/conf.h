@@ -648,17 +648,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|D_MEMDISK
-value|0x00010000
-end_define
-
-begin_comment
-comment|/* memory type disk */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|D_TRACKCLOSE
 value|0x00080000
 end_define
