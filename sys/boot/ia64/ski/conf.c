@@ -108,7 +108,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   * Consoles   *  * We don't prototype these in libalpha.h because they require  * data structures from bootstrap.h as well.  */
+comment|/*   * Consoles   *  * We don't prototype these in libski.h because they require  * data structures from bootstrap.h as well.  */
 end_comment
 
 begin_decl_stmt

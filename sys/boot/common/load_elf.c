@@ -1206,7 +1206,7 @@ name|off
 operator|=
 literal|0
 expr_stmt|;
-comment|/* alpha is direct mapped for kernels */
+comment|/* other archs use direct mapped kernels */
 endif|#
 directive|endif
 block|}

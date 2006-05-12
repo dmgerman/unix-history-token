@@ -868,7 +868,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Load the information expected by an alpha kernel.  *  * - The kernel environment is copied into kernel space.  * - Module metadata are formatted and placed in kernel space.  */
+comment|/*  * Load the information expected by the kernel.  *  * - The kernel environment is copied into kernel space.  * - Module metadata are formatted and placed in kernel space.  */
 end_comment
 
 begin_function
