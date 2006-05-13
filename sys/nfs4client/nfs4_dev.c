@@ -607,8 +607,14 @@ condition|(
 name|m
 operator|->
 name|msg_len
-operator|==
-literal|0
+operator|<
+sizeof|sizeof
+argument_list|(
+operator|*
+name|m
+argument_list|)
+operator|-
+name|NFS4DEV_MSG_MAX_DATALEN
 operator|||
 name|m
 operator|->
@@ -801,6 +807,11 @@ literal|0
 return|;
 name|bad
 label|:
+if|if
+condition|(
+name|u
+condition|)
+block|{
 name|u
 operator|->
 name|up_error
@@ -812,6 +823,7 @@ argument_list|(
 name|u
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|error
 return|;
