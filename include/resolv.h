@@ -1921,6 +1921,12 @@ name|res_getservers
 value|__res_getservers
 end_define
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -1941,12 +1947,6 @@ directive|define
 name|res_destroyservicelist
 value|__res_destroyservicelist
 end_define
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
 
 begin_define
 define|#
@@ -1974,6 +1974,12 @@ name|res_ourserver_p
 value|__res_ourserver_p
 end_define
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -1987,6 +1993,11 @@ directive|define
 name|res_protocolnumber
 value|__res_protocolnumber
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -2002,6 +2013,12 @@ name|res_send_setrhook
 value|__res_send_setrhook
 end_define
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -2015,6 +2032,11 @@ directive|define
 name|res_servicenumber
 value|__res_servicenumber
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|__BEGIN_DECLS
@@ -2822,59 +2844,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|res_destroyservicelist
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|const
-name|char
-modifier|*
-name|res_servicename
-parameter_list|(
-name|u_int16_t
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|const
-name|char
-modifier|*
-name|res_protocolname
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|res_destroyprotolist
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|res_buildprotolist
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_if
 if|#
 directive|if
@@ -2882,7 +2851,7 @@ literal|0
 end_if
 
 begin_endif
-unit|const char *	res_get_nibblesuffix(res_state); const char *	res_get_nibblesuffix2(res_state);
+unit|void		res_destroyservicelist(void); const char *	res_servicename(u_int16_t, const char *); const char *	res_protocolname(int); void		res_destroyprotolist(void); void		res_buildprotolist(void); const char *	res_get_nibblesuffix(res_state); const char *	res_get_nibblesuffix2(res_state);
 endif|#
 directive|endif
 end_endif
