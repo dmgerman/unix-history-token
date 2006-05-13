@@ -4,7 +4,7 @@ comment|/*-  *   Copyright (c) 2000, 2001 Sergio Prallon. All rights reserved.  
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------  *  *	i4b_itjc_pci.c: NetJet-S hardware driver  *	----------------------------------------  *      last edit-date: [Thu Jan 11 11:29:38 2001]  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------  *  *	i4b_itjc_pci.c: NetJet-S hardware driver  *	----------------------------------------  *      last edit-date: [Sat May 13 15:25:47 2006]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -676,11 +676,11 @@ literal|0x00
 block|,
 name|TIGER_PIB_5_CYCLES
 init|=
-literal|0x01
+literal|0x10
 block|,
 name|TIGER_PIB_12_CYCLES
 init|=
-literal|0x10
+literal|0x20
 block|,
 name|TIGER_RESET_MASK
 init|=
@@ -717,7 +717,7 @@ literal|0x00
 block|,
 name|TIGER_RESTART_DMA
 init|=
-literal|0x00
+literal|0x02
 block|,
 name|TIGER_DMA_ENABLE_MASK
 init|=
@@ -807,7 +807,7 @@ literal|0x00
 block|,
 name|TIGER_AUX_3_IS_OUTPUT
 init|=
-literal|0x80
+literal|0x08
 block|,
 name|TIGER_AUX_2_IS_INPUT
 init|=
@@ -815,7 +815,7 @@ literal|0x00
 block|,
 name|TIGER_AUX_2_IS_OUTPUT
 init|=
-literal|0x40
+literal|0x04
 block|,
 name|TIGER_AUX_1_IS_INPUT
 init|=
@@ -823,7 +823,7 @@ literal|0x00
 block|,
 name|TIGER_AUX_1_IS_OUTPUT
 init|=
-literal|0x20
+literal|0x02
 block|,
 name|TIGER_AUX_0_IS_INPUT
 init|=
@@ -831,7 +831,7 @@ literal|0x00
 block|,
 name|TIGER_AUX_0_IS_OUTPUT
 init|=
-literal|0x10
+literal|0x01
 block|,
 name|TIGER_AUX_NJ_DEFAULT
 init|=
