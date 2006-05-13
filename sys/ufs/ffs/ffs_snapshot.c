@@ -11891,6 +11891,9 @@ name|launched_async_io
 decl_stmt|,
 name|prev_norunningbuf
 decl_stmt|;
+name|long
+name|saved_runningbufspace
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -12101,6 +12104,18 @@ operator|&
 name|TDP_NORUNNINGBUF
 expr_stmt|;
 comment|/* 	 * Since I/O on bp isn't yet in progress and it may be blocked 	 * for a long time waiting on snaplk, back it out of 	 * runningbufspace, possibly waking other threads waiting for space. 	 */
+name|saved_runningbufspace
+operator|=
+name|bp
+operator|->
+name|b_runningbufspace
+expr_stmt|;
+if|if
+condition|(
+name|saved_runningbufspace
+operator|!=
+literal|0
+condition|)
 name|runningbufwakeup
 argument_list|(
 name|bp
@@ -12170,10 +12185,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|saved_runningbufspace
+operator|!=
+literal|0
+condition|)
+block|{
 name|bp
 operator|->
 name|b_runningbufspace
-condition|)
+operator|=
+name|saved_runningbufspace
+expr_stmt|;
 name|atomic_add_int
 argument_list|(
 operator|&
@@ -12184,6 +12206,7 @@ operator|->
 name|b_runningbufspace
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -12719,10 +12742,17 @@ expr_stmt|;
 comment|/* 	 * I/O on bp will now be started, so count it in runningbufspace. 	 */
 if|if
 condition|(
+name|saved_runningbufspace
+operator|!=
+literal|0
+condition|)
+block|{
 name|bp
 operator|->
 name|b_runningbufspace
-condition|)
+operator|=
+name|saved_runningbufspace
+expr_stmt|;
 name|atomic_add_int
 argument_list|(
 operator|&
@@ -12733,6 +12763,7 @@ operator|->
 name|b_runningbufspace
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|error
