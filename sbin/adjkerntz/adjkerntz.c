@@ -1086,7 +1086,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"sysctl(get: \"disable_rtc_set\"): %m"
+literal|"sysctl(get: \"machdep.disable_rtc_set\"): %m"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1112,7 +1112,7 @@ if|if
 condition|(
 name|sysctlbyname
 argument_list|(
-literal|"disable_rtc_set"
+literal|"machdep.disable_rtc_set"
 argument_list|,
 name|NULL
 argument_list|,
@@ -1132,7 +1132,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"sysctl(set: \"disable_rtc_set\"): %m"
+literal|"sysctl(set: \"machdep.disable_rtc_set\"): %m"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1282,7 +1282,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"sysctl(set: \"disable_rtc_set\"): %m"
+literal|"sysctl(set: \"machdep.adjkerntz\"): %m"
 argument_list|)
 expr_stmt|;
 return|return
