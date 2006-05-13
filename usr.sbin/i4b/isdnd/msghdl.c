@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 2002 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - message from kernel handling routines  *	--------------------------------------------------  *  * $FreeBSD$  *  *      last edit-date: [Sun Aug 11 12:37:16 2002]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 2002 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - message from kernel handling routines  *	--------------------------------------------------  *  * $FreeBSD$  *  *      last edit-date: [Sat May 13 13:09:33 2006]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -328,7 +328,7 @@ operator|==
 name|DIR_OUTONLY
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -407,7 +407,7 @@ block|{
 case|case
 name|REACT_ACCEPT
 case|:
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -446,7 +446,7 @@ break|break;
 case|case
 name|REACT_REJECT
 case|:
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -498,7 +498,7 @@ break|break;
 case|case
 name|REACT_IGNORE
 case|:
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -565,7 +565,7 @@ operator|->
 name|display
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -593,7 +593,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -632,7 +632,7 @@ operator|->
 name|display
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -660,7 +660,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -716,7 +716,7 @@ operator|==
 name|CDID_RESERVED
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -830,7 +830,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -874,7 +874,7 @@ name|BUDGET_TYPE_CBACK
 expr_stmt|;
 block|}
 block|}
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -920,7 +920,7 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-name|log
+name|llog
 argument_list|(
 name|LL_WRN
 argument_list|,
@@ -1011,7 +1011,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_WRN
 argument_list|,
@@ -1118,7 +1118,7 @@ operator|)
 operator|==
 name|ERROR
 condition|)
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -1134,7 +1134,7 @@ operator|==
 name|DIR_OUT
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -1199,7 +1199,7 @@ argument_list|(
 name|DL_BDGT
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -1261,7 +1261,7 @@ argument_list|(
 name|DL_BDGT
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -1308,7 +1308,7 @@ block|}
 block|}
 else|else
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -1389,7 +1389,7 @@ literal|'\0'
 operator|)
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_DMN
 argument_list|,
@@ -1446,7 +1446,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_WRN
 argument_list|,
@@ -1489,14 +1489,14 @@ operator|)
 operator|==
 name|ERROR
 condition|)
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
 literal|"msg_proceeding_ind: set_channel_busy failed!"
 argument_list|)
 expr_stmt|;
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -1557,7 +1557,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_WRN
 argument_list|,
@@ -1569,7 +1569,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|NOTDEF
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -1621,7 +1621,7 @@ name|ncontroller
 operator|)
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -1689,7 +1689,7 @@ argument_list|(
 name|DL_CNST
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -1801,7 +1801,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -1848,7 +1848,7 @@ name|ncontroller
 operator|)
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -1908,7 +1908,7 @@ argument_list|(
 name|DL_CNST
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -2049,7 +2049,7 @@ argument_list|(
 name|DL_CNST
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -2200,7 +2200,7 @@ operator|==
 name|DIR_OUT
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -2218,7 +2218,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -2234,7 +2234,7 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -2329,7 +2329,7 @@ operator|==
 name|DIR_OUT
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -2366,7 +2366,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -2439,7 +2439,7 @@ name|inbytes
 operator|)
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -2473,7 +2473,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -2651,7 +2651,7 @@ operator|)
 operator|==
 name|ERROR
 condition|)
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -2717,7 +2717,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_WRN
 argument_list|,
@@ -2785,7 +2785,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_WRN
 argument_list|,
@@ -2803,7 +2803,7 @@ operator|->
 name|usrdevicename
 argument_list|)
 expr_stmt|;
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -2858,7 +2858,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_WRN
 argument_list|,
@@ -2888,7 +2888,7 @@ argument_list|(
 name|DL_CNST
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -2963,7 +2963,7 @@ operator|==
 name|DIR_OUT
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -2991,7 +2991,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -3017,7 +3017,7 @@ literal|"(remote)"
 argument_list|)
 expr_stmt|;
 block|}
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -3112,7 +3112,7 @@ operator|==
 name|DIR_OUT
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -3149,7 +3149,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -3222,7 +3222,7 @@ name|inbytes
 operator|)
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -3256,7 +3256,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -3479,7 +3479,7 @@ argument_list|(
 name|DL_DRVR
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -3524,7 +3524,7 @@ argument_list|(
 name|DL_DRVR
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -3584,7 +3584,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -3640,7 +3640,7 @@ argument_list|(
 name|DL_DRVR
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -3701,7 +3701,7 @@ argument_list|(
 name|DL_DRVR
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -3740,7 +3740,7 @@ argument_list|(
 name|DL_DRVR
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -3800,7 +3800,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -3856,7 +3856,7 @@ argument_list|(
 name|DL_DRVR
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -3926,7 +3926,7 @@ argument_list|(
 name|DL_DRVR
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -3979,7 +3979,7 @@ argument_list|(
 name|DL_DRVR
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -4039,7 +4039,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -4095,7 +4095,7 @@ argument_list|(
 name|DL_DRVR
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -4156,7 +4156,7 @@ argument_list|(
 name|DL_DRVR
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -4201,7 +4201,7 @@ argument_list|(
 name|DL_DRVR
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -4259,7 +4259,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_WRN
 argument_list|,
@@ -4410,7 +4410,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_WRN
 argument_list|,
@@ -4434,7 +4434,7 @@ operator|>
 name|CHARGE_CALC
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -4462,7 +4462,7 @@ argument_list|(
 name|DL_DRVR
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -4619,7 +4619,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_WRN
 argument_list|,
@@ -4639,7 +4639,7 @@ argument_list|(
 name|DL_DRVR
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -5305,7 +5305,7 @@ name|s_addr
 argument_list|)
 expr_stmt|;
 block|}
-name|log
+name|llog
 argument_list|(
 name|LL_PKT
 argument_list|,
@@ -5371,7 +5371,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -5663,7 +5663,7 @@ argument_list|(
 name|DL_CNST
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -5699,7 +5699,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -5731,7 +5731,7 @@ operator|->
 name|isdncontrollerused
 argument_list|)
 expr_stmt|;
-name|log
+name|llog
 argument_list|(
 name|LL_CHD
 argument_list|,
@@ -5846,7 +5846,7 @@ argument_list|(
 name|DL_DRVR
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -5925,7 +5925,7 @@ argument_list|(
 name|DL_DRVR
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -5954,7 +5954,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -6050,7 +6050,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -6070,7 +6070,7 @@ argument_list|(
 name|DL_DRVR
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -6134,7 +6134,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -6166,7 +6166,7 @@ argument_list|(
 name|DL_DRVR
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,

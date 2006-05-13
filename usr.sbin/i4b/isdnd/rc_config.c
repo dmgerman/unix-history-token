@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 2002 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - config file processing  *	-----------------------------------  *  * $FreeBSD$  *  *      last edit-date: [Sun Aug 11 12:30:49 2002]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 2002 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - config file processing  *	-----------------------------------  *  * $FreeBSD$  *  *      last edit-date: [Sat May 13 13:11:48 2006]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -209,7 +209,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -260,7 +260,7 @@ condition|(
 name|config_error_flag
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -301,7 +301,7 @@ modifier|*
 name|msg
 parameter_list|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -710,7 +710,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -946,7 +946,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -995,7 +995,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -1341,7 +1341,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -1400,7 +1400,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -1431,7 +1431,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -1459,7 +1459,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -1496,7 +1496,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -1535,7 +1535,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -1558,7 +1558,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -1593,7 +1593,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -1630,7 +1630,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -1673,7 +1673,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -1707,7 +1707,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -1731,7 +1731,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -1795,7 +1795,7 @@ name|BPROT_RHDLC
 expr_stmt|;
 else|else
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -1817,7 +1817,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -1879,7 +1879,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -1901,7 +1901,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -1936,7 +1936,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -1971,7 +1971,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -2006,7 +2006,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -2052,7 +2052,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -2089,7 +2089,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -2158,7 +2158,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -2236,7 +2236,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -2376,7 +2376,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -2410,7 +2410,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -2453,7 +2453,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -2490,7 +2490,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -2559,7 +2559,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -2637,7 +2637,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -2777,7 +2777,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -2811,7 +2811,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -2858,7 +2858,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -2881,7 +2881,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -2931,7 +2931,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -2954,7 +2954,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -3023,7 +3023,7 @@ operator|==
 name|entrycount
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -3047,7 +3047,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -3245,7 +3245,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -3279,7 +3279,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -3303,7 +3303,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -3367,7 +3367,7 @@ name|DIALOUT_CALLEDBACK
 expr_stmt|;
 else|else
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -3389,7 +3389,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -3424,7 +3424,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -3459,7 +3459,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -3547,7 +3547,7 @@ name|DIR_OUTONLY
 expr_stmt|;
 else|else
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -3590,7 +3590,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -3624,7 +3624,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -3677,7 +3677,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -3741,7 +3741,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -3776,7 +3776,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -3811,7 +3811,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -3839,7 +3839,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -3886,7 +3886,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -3908,7 +3908,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -3976,7 +3976,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -3998,7 +3998,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -4033,7 +4033,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -4079,7 +4079,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -4128,7 +4128,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -4150,7 +4150,7 @@ operator|>
 name|MAX_BCHAN
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -4183,7 +4183,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -4208,7 +4208,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -4247,7 +4247,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -4282,7 +4282,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -4306,7 +4306,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -4346,7 +4346,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -4386,7 +4386,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -4426,7 +4426,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -4475,7 +4475,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -4506,7 +4506,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -4528,7 +4528,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -4569,7 +4569,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -4604,7 +4604,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -4627,7 +4627,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -4650,7 +4650,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -4688,7 +4688,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -4743,7 +4743,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -4798,7 +4798,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -4886,7 +4886,7 @@ name|AUTH_CHAP
 expr_stmt|;
 else|else
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -4914,7 +4914,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -4969,7 +4969,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -5024,7 +5024,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -5112,7 +5112,7 @@ name|AUTH_CHAP
 expr_stmt|;
 else|else
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -5140,7 +5140,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -5195,7 +5195,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -5266,7 +5266,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -5302,7 +5302,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -5322,7 +5322,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -5386,7 +5386,7 @@ name|PROTOCOL_D64S
 expr_stmt|;
 else|else
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -5408,7 +5408,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -5544,7 +5544,7 @@ name|REACT_CALLBACK
 expr_stmt|;
 else|else
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -5573,7 +5573,7 @@ operator|>=
 name|MAXRNUMBERS
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -5592,7 +5592,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -5681,7 +5681,7 @@ operator|>=
 name|MAXRNUMBERS
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -5700,7 +5700,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -5755,7 +5755,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -5843,7 +5843,7 @@ name|RNH_FIRST
 expr_stmt|;
 else|else
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -5880,7 +5880,7 @@ operator|>=
 name|MAX_INCOMING
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -5899,7 +5899,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -5968,7 +5968,7 @@ operator|>=
 name|MAX_INCOMING
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -5987,7 +5987,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -6042,7 +6042,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -6064,7 +6064,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -6114,7 +6114,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -6137,7 +6137,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -6174,7 +6174,7 @@ operator|>=
 name|MAX_RE
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -6246,7 +6246,7 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -6292,7 +6292,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -6327,7 +6327,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -6377,7 +6377,7 @@ operator|>=
 name|MAX_RE
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -6417,7 +6417,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -6452,7 +6452,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -6508,7 +6508,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -6548,7 +6548,7 @@ block|{
 name|config_error_flag
 operator|++
 expr_stmt|;
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -6567,7 +6567,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -6607,7 +6607,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -6629,7 +6629,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -6664,7 +6664,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -6800,7 +6800,7 @@ name|ULSRC_DYN
 expr_stmt|;
 else|else
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -6822,7 +6822,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -6975,7 +6975,7 @@ name|BDRV_ING
 expr_stmt|;
 else|else
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -6997,7 +6997,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -7038,7 +7038,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -7071,7 +7071,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -7095,7 +7095,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -7130,7 +7130,7 @@ argument_list|(
 name|DL_RCCF
 argument_list|,
 operator|(
-name|log
+name|llog
 argument_list|(
 name|LL_DBG
 argument_list|,
@@ -7156,7 +7156,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -7339,7 +7339,7 @@ operator|!=
 literal|4
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -7391,7 +7391,7 @@ operator|>
 literal|59
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -7475,7 +7475,7 @@ block|}
 else|else
 block|{
 comment|/* dt points to illegal character */
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -7615,7 +7615,7 @@ name|NULL
 operator|)
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -7653,7 +7653,7 @@ name|NULL
 operator|)
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -7710,7 +7710,7 @@ operator|)
 operator|)
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -7749,7 +7749,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -7776,7 +7776,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -7814,7 +7814,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -7836,7 +7836,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -7869,7 +7869,7 @@ name|BPROT_NONE
 operator|)
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -7913,7 +7913,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -7938,7 +7938,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -7983,7 +7983,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -8008,7 +8008,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
@@ -8028,7 +8028,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|log
+name|llog
 argument_list|(
 name|LL_ERR
 argument_list|,
