@@ -1208,6 +1208,30 @@ begin_comment
 comment|/* ARM_NMMUS> 1 */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SKYEYE_WORKAROUNDS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PMAP_NEEDS_PTE_SYNC
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMAP_INCLUDE_PTE_SYNC
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_if
 if|#
 directive|if
@@ -1253,6 +1277,11 @@ directive|define
 name|PMAP_NEEDS_PTE_SYNC
 value|0
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

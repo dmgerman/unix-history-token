@@ -204,7 +204,7 @@ begin_define
 define|#
 directive|define
 name|ATE_MAX_TX_BUFFERS
-value|2
+value|64
 end_define
 
 begin_comment

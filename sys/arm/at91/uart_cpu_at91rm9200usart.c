@@ -181,7 +181,7 @@ expr_stmt|;
 comment|/*  	 * XXX: Not pretty, but will work because we map VA == PA early 	 * for the last 1MB of memory. 	 */
 ifdef|#
 directive|ifdef
-name|USART0_CONSOLE
+name|SKYEYE_WORKAROUNDS
 name|di
 operator|->
 name|bas
@@ -191,14 +191,6 @@ operator|=
 name|AT91RM92_BASE
 operator|+
 name|AT91RM92_USART0_BASE
-expr_stmt|;
-name|di
-operator|->
-name|bas
-operator|.
-name|chan
-operator|=
-literal|1
 expr_stmt|;
 name|di
 operator|->
@@ -219,14 +211,6 @@ operator|+
 name|AT91RM92_SYS_BASE
 operator|+
 name|DBGU
-expr_stmt|;
-name|di
-operator|->
-name|bas
-operator|.
-name|chan
-operator|=
-literal|0
 expr_stmt|;
 name|di
 operator|->
@@ -270,6 +254,15 @@ name|parity
 operator|=
 name|UART_PARITY_NONE
 expr_stmt|;
+name|uart_bus_space_io
+operator|=
+operator|&
+name|at91_bs_tag
+expr_stmt|;
+name|uart_bus_space_mem
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* Check the environment for overrides */
 if|if
 condition|(
@@ -287,15 +280,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|uart_bus_space_io
-operator|=
-operator|&
-name|at91_bs_tag
-expr_stmt|;
-name|uart_bus_space_mem
-operator|=
-name|NULL
-expr_stmt|;
 return|return
 operator|(
 literal|0

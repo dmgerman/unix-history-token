@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2005 M. Warner Losh  * Copyright (c) 2005 cognet  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2005 M. Warner Losh  * Copyright (c) 2005 Olivier Houchard  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -1225,6 +1225,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SKYEYE_WORKAROUNDS
+end_ifndef
+
 begin_function
 specifier|static
 name|void
@@ -1269,6 +1275,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|int
@@ -1280,9 +1291,14 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|SKYEYE_WORKAROUNDS
 name|bus_addr_t
 name|addr
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|at91_usart_softc
 modifier|*
@@ -1297,6 +1313,9 @@ operator|*
 operator|)
 name|sc
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SKYEYE_WORKAROUNDS
 if|if
 condition|(
 name|bus_dmamap_load
@@ -1345,6 +1364,8 @@ argument_list|,
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|uart_lock
 argument_list|(
 name|sc
@@ -1358,6 +1379,9 @@ name|sc_txbusy
 operator|=
 literal|1
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SKYEYE_WORKAROUNDS
 comment|/* 	 * Setup the PDC to transfer the data and interrupt us when it 	 * is done.  We've already requested the interrupt. 	 */
 name|WR4
 argument_list|(
@@ -1404,9 +1428,39 @@ operator|->
 name|sc_hwmtx
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USART0_CONSOLE
+else|#
+directive|else
+for|for
+control|(
+name|int
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|<
+name|sc
+operator|->
+name|sc_txdatasz
+condition|;
+name|i
+operator|++
+control|)
+name|at91_usart_putc
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_bas
+argument_list|,
+name|sc
+operator|->
+name|sc_txbuf
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
 comment|/* 	 * XXX: Gross hack : Skyeye doesn't raise an interrupt once the 	 * transfer is done, so simulate it. 	 */
 name|WR4
 argument_list|(
@@ -1749,27 +1803,6 @@ operator|*
 operator|)
 name|sc
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USART0_CONSOLE
-comment|/*  	 * XXX: We have to cheat for skyeye, as it will return 0xff for all 	 * the devices it doesn't emulate. 	 */
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_bas
-operator|.
-name|chan
-operator|!=
-literal|1
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|csr
