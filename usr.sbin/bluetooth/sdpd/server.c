@@ -2468,6 +2468,7 @@ argument_list|,
 name|fd
 argument_list|)
 expr_stmt|;
+break|break;
 default|default:
 name|error
 operator|=
