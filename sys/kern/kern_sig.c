@@ -12176,6 +12176,11 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+name|vn_finished_write
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -12244,11 +12249,6 @@ name|F_FLOCK
 argument_list|)
 expr_stmt|;
 block|}
-name|vn_finished_write
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 name|out
 label|:
 name|error1
