@@ -2159,6 +2159,28 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ip
+operator|->
+name|i_effnlink
+operator|==
+literal|0
+condition|)
+block|{
+name|error
+operator|=
+name|ENOENT
+expr_stmt|;
+comment|/* Snapshot file unlinked */
+name|sn
+operator|=
+name|NULL
+expr_stmt|;
+goto|goto
+name|out1
+goto|;
+block|}
+if|if
+condition|(
 name|collectsnapstats
 condition|)
 name|nanotime
@@ -4327,6 +4349,12 @@ name|M_UFSMNT
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If another process is currently writing the buffer containing 	 * the inode for this snapshot then a deadlock can occur. Drop 	 * the snapshot lock until the buffer has been written. 	 */
+name|VREF
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+comment|/* Protect against ffs_snapgone() */
 name|VOP_UNLOCK
 argument_list|(
 name|vp
@@ -4388,6 +4416,26 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ip
+operator|->
+name|i_effnlink
+operator|==
+literal|0
+condition|)
+name|error
+operator|=
+name|ENOENT
+expr_stmt|;
+comment|/* Snapshot file unlinked */
+else|else
+name|vrele
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+comment|/* Drop extra reference */
 name|done
 label|:
 name|FREE
