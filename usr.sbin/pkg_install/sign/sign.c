@@ -443,6 +443,20 @@ name|userid
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+name|success
+operator|=
+literal|0
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Unknown type %d\n"
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
