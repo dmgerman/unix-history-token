@@ -53,7 +53,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"hvIRfnrp:P:SMt:C:K"
+literal|"hvIRfFnrp:P:SMt:C:K"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,6 +112,14 @@ name|Boolean
 name|KeepPackage
 init|=
 name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Boolean
+name|FailOnAlreadyInstalled
+init|=
+name|TRUE
 decl_stmt|;
 end_decl_stmt
 
@@ -667,6 +675,14 @@ case|:
 name|Force
 operator|=
 name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'F'
+case|:
+name|FailOnAlreadyInstalled
+operator|=
+name|FALSE
 expr_stmt|;
 break|break;
 case|case
