@@ -293,6 +293,28 @@ begin_comment
 comment|/* -exec ... {} + */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|F_TIME_B
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* one of -Btime, -Bnewer, -newerB* */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_TIME2_B
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* one of -newer?B */
+end_comment
+
 begin_comment
 comment|/* node definition */
 end_comment
