@@ -2544,16 +2544,23 @@ begin_comment
 comment|/* normally hear sends if a member  */
 end_comment
 
+begin_comment
+comment|/*  * The imo_membership vector for each socket is now dynamically allocated at  * run-time, bounded by USHRT_MAX, and is reallocated when needed, sized  * according to a power-of-two increment.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_MIN_MEMBERSHIPS
+value|31
+end_define
+
 begin_define
 define|#
 directive|define
 name|IP_MAX_MEMBERSHIPS
-value|20
+value|4095
 end_define
-
-begin_comment
-comment|/* per socket */
-end_comment
 
 begin_comment
 comment|/*  * Argument structure for IP_ADD_MEMBERSHIP and IP_DROP_MEMBERSHIP.  */

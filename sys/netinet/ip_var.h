@@ -176,6 +176,10 @@ name|in_addr
 name|imo_multicast_addr
 decl_stmt|;
 comment|/* ifindex/addr on MULTICAST_IF */
+name|u_long
+name|imo_multicast_vif
+decl_stmt|;
+comment|/* vif num outgoing multicasts */
 name|u_char
 name|imo_multicast_ttl
 decl_stmt|;
@@ -188,18 +192,17 @@ name|u_short
 name|imo_num_memberships
 decl_stmt|;
 comment|/* no. memberships this socket */
+name|u_short
+name|imo_max_memberships
+decl_stmt|;
+comment|/* max memberships this socket */
 name|struct
 name|in_multi
 modifier|*
+modifier|*
 name|imo_membership
-index|[
-name|IP_MAX_MEMBERSHIPS
-index|]
 decl_stmt|;
-name|u_long
-name|imo_multicast_vif
-decl_stmt|;
-comment|/* vif num outgoing multicasts */
+comment|/* group memberships */
 block|}
 struct|;
 end_struct
