@@ -1280,6 +1280,9 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
+ifndef|#
+directive|ifndef
+name|NO_FFS_SNAPSHOT
 name|struct
 name|vnode
 modifier|*
@@ -1456,6 +1459,21 @@ operator|(
 name|result
 operator|)
 return|;
+else|#
+directive|else
+return|return
+operator|(
+name|VOP_LOCK_APV
+argument_list|(
+operator|&
+name|ufs_vnodeops
+argument_list|,
+name|ap
+argument_list|)
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
