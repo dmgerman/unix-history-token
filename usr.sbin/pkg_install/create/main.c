@@ -248,6 +248,33 @@ name|FALSE
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD_version
+argument_list|)
+operator|&&
+name|__FreeBSD_version
+operator|>=
+literal|500039
+end_if
+
+begin_decl_stmt
+name|enum
+name|zipper
+name|Zipper
+init|=
+name|BZIP2
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 name|enum
 name|zipper
@@ -256,6 +283,11 @@ init|=
 name|GZIP
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
