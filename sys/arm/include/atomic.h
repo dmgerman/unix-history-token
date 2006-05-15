@@ -937,6 +937,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|atomic_subtract_rel_32
+value|atomic_subtract_32
+end_define
+
+begin_define
+define|#
+directive|define
 name|atomic_subtract_acq_int
 value|atomic_subtract_32
 end_define
@@ -959,6 +966,13 @@ begin_define
 define|#
 directive|define
 name|atomic_add_rel_int
+value|atomic_add_32
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_add_rel_32
 value|atomic_add_32
 end_define
 
@@ -1043,6 +1057,13 @@ begin_define
 define|#
 directive|define
 name|atomic_load_acq_int
+value|atomic_load_32
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_load_acq_32
 value|atomic_load_32
 end_define
 
