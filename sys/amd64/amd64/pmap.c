@@ -5679,7 +5679,7 @@ literal|0
 argument_list|,
 name|kvm_size
 argument_list|,
-literal|"IU"
+literal|"LU"
 argument_list|,
 literal|"Size of KVM"
 argument_list|)
@@ -5737,7 +5737,7 @@ literal|0
 argument_list|,
 name|kvm_free
 argument_list|,
-literal|"IU"
+literal|"LU"
 argument_list|,
 literal|"Amount of KVM free"
 argument_list|)
