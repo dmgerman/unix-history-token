@@ -942,7 +942,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"0x%x%s"
+literal|"0x%lx%s"
 argument_list|,
 name|sc
 condition|?
