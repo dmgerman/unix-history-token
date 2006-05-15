@@ -1579,9 +1579,6 @@ name|IN_CHANGE
 operator||
 name|IN_UPDATE
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|error
 operator|=
 name|readblock
@@ -1594,18 +1591,21 @@ name|numblks
 operator|-
 literal|1
 argument_list|)
-operator|)
+expr_stmt|;
+name|bawrite
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)
 goto|goto
 name|out
 goto|;
-name|bawrite
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Preallocate critical data structures so that we can copy 	 * them in without further allocation after we suspend all 	 * operations on the filesystem. We would like to just release 	 * the allocated buffers without writing them since they will 	 * be filled in below once we are ready to go, but this upsets 	 * the soft update code, so we go ahead and write the new buffers. 	 * 	 * Allocate all indirect blocks and mark all of them as not 	 * needing to be copied. 	 */
 for|for
 control|(
