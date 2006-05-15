@@ -221,12 +221,8 @@ begin_define
 define|#
 directive|define
 name|KINFO_PROC_SIZE
-value|768
+value|792
 end_define
-
-begin_comment
-comment|/* value has not been tested... */
-end_comment
 
 begin_endif
 endif|#
