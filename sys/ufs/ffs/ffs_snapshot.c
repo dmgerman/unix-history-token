@@ -1111,14 +1111,9 @@ name|ump
 operator|->
 name|um_fs
 expr_stmt|;
-comment|/* 	 * XXX: make sure we don't go to out1 before we setup sn 	 */
 name|sn
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
-literal|0xdeadbeef
+name|NULL
 expr_stmt|;
 comment|/* 	 * Need to serialize access to snapshot code per filesystem. 	 */
 comment|/* 	 * Assign a snapshot slot in the superblock. 	 */
@@ -2257,10 +2252,6 @@ operator|=
 name|ENOENT
 expr_stmt|;
 comment|/* Snapshot file unlinked */
-name|sn
-operator|=
-name|NULL
-expr_stmt|;
 goto|goto
 name|out1
 goto|;
@@ -3844,13 +3835,33 @@ name|out1
 label|:
 name|KASSERT
 argument_list|(
+operator|(
 name|sn
 operator|!=
-operator|(
-name|void
-operator|*
+name|NULL
+operator|&&
+name|sbp
+operator|!=
+name|NULL
+operator|&&
+name|error
+operator|==
+literal|0
 operator|)
-literal|0xdeadbeef
+operator|||
+operator|(
+name|sn
+operator|==
+name|NULL
+operator|&&
+name|sbp
+operator|==
+name|NULL
+operator|&&
+name|error
+operator|!=
+literal|0
+operator|)
 argument_list|,
 operator|(
 literal|"email phk@ and mckusick@"
