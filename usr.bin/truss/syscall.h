@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * See i386-fbsd.c for copyright and license terms.  *  * System call arguments come in several flavours:  * Hex -- values that should be printed in hex (addresses)  * Octal -- Same as above, but octal  * Int -- normal integer values (file descriptors, for example)  * String -- pointers to sensible data.  Note that we treat read() and  *	write() arguments as such, even though they may *not* be  *	printable data.  * Ptr -- pointer to some specific structure.  Just print as hex for now.  * Stat -- a pointer to a stat buffer.  Currently unused.  * Ioctl -- an ioctl command.  Woefully limited.  * Quad -- a double-word value.  e.g., lseek(int, offset_t, int)  * Signal -- a signal number.  Prints the signal name (SIGxxx)  * Sockaddr -- a pointer to a struct sockaddr.  Prints symbolic AF, and IP:Port  * StringArray -- a pointer to an array of string pointers.  * Timespec -- a pointer to a struct timespec.  Prints both elements.  * Timeval -- a pointer to a struct timeval.  Prints both elements.  * Itimerval -- a pointer to a struct itimerval.  Prints all elements.  * Pollfd -- a pointer to an array of struct pollfd.  Prints .fd and .events.  * Fd_set -- a pointer to an array of fd_set.  Prints the fds that are set.  * Sigaction -- a pointer to a struct sigaction.  Prints all elements.  *  * In addition, the pointer types (String, Ptr) may have OUT masked in --  * this means that the data is set on *return* from the system call -- or  * IN (meaning that the data is passed *into* the system call).  */
+comment|/*  * See i386-fbsd.c for copyright and license terms.  *  * System call arguments come in several flavours:  * Hex -- values that should be printed in hex (addresses)  * Octal -- Same as above, but octal  * Int -- normal integer values (file descriptors, for example)  * Name -- pointer to a NULL-terminated string.  * BinString -- pointer to an array of chars, printed via strvisx().  * Ptr -- pointer to some unspecified structure.  Just print as hex for now.  * Stat -- a pointer to a stat buffer.  Prints a couple fields.  * Ioctl -- an ioctl command.  Woefully limited.  * Quad -- a double-word value.  e.g., lseek(int, offset_t, int)  * Signal -- a signal number.  Prints the signal name (SIGxxx)  * Sockaddr -- a pointer to a struct sockaddr.  Prints symbolic AF, and IP:Port  * StringArray -- a pointer to an array of string pointers.  * Timespec -- a pointer to a struct timespec.  Prints both elements.  * Timeval -- a pointer to a struct timeval.  Prints both elements.  * Timeval2 -- a pointer to two struct timevals.  Prints both elements of both.  * Itimerval -- a pointer to a struct itimerval.  Prints all elements.  * Pollfd -- a pointer to an array of struct pollfd.  Prints .fd and .events.  * Fd_set -- a pointer to an array of fd_set.  Prints the fds that are set.  * Sigaction -- a pointer to a struct sigaction.  Prints all elements.  * Umtx -- a pointer to a struct umtx.  Prints the value of owner.  * Sigset -- a pointer to a sigset_t.  Prints the signals that are set.  * Sigprocmask -- the first argument to sigprocmask().  Prints the name.  * Kevent -- a pointer to an array of struct kevents.  Prints all elements.  * Pathconf -- the 2nd argument of patchconf().  *  * In addition, the pointer types (String, Ptr) may have OUT masked in --  * this means that the data is set on *return* from the system call -- or  * IN (meaning that the data is passed *into* the system call).  */
 end_comment
 
 begin_comment
@@ -22,8 +22,6 @@ block|,
 name|Int
 block|,
 name|Name
-block|,
-name|String
 block|,
 name|Ptr
 block|,
@@ -60,6 +58,36 @@ block|,
 name|Whence
 block|,
 name|Readlinkres
+block|,
+name|Umtx
+block|,
+name|Sigset
+block|,
+name|Sigprocmask
+block|,
+name|Kevent
+block|,
+name|Sockdomain
+block|,
+name|Socktype
+block|,
+name|Open
+block|,
+name|Fcntlflag
+block|,
+name|Rusage
+block|,
+name|BinString
+block|,
+name|Shutdown
+block|,
+name|Resource
+block|,
+name|Rlimit
+block|,
+name|Timeval2
+block|,
+name|Pathconf
 block|}
 enum|;
 end_enum
