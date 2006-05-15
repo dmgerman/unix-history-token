@@ -21,6 +21,12 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
+name|mntarg
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|mount
 struct_decl|;
 end_struct_decl
@@ -662,6 +668,30 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|pfs_cmount
+parameter_list|(
+name|struct
+name|mntarg
+modifier|*
+name|ma
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|pfs_unmount
 parameter_list|(
 name|struct
@@ -925,7 +955,7 @@ parameter_list|,
 name|version
 parameter_list|)
 define|\ 									\
-value|static struct pfs_info name##_info = {					\ 	#name,								\ 	name##_init,							\ 	name##_uninit,							\ };									\ 									\ static int								\ _##name##_mount(struct mount *mp, struct thread *td) {			\ 	return pfs_mount(&name##_info, mp, td);				\ }									\ 									\ static int								\ _##name##_init(struct vfsconf *vfc) {					\ 	return pfs_init(&name##_info, vfc);				\ }									\ 									\ static int								\ _##name##_uninit(struct vfsconf *vfc) {					\ 	return pfs_uninit(&name##_info, vfc);				\ }									\ 									\ static struct vfsops name##_vfsops = {					\ 	.vfs_init =		_##name##_init,				\ 	.vfs_mount =		_##name##_mount,			\ 	.vfs_root =		pfs_root,				\ 	.vfs_statfs =		pfs_statfs,				\ 	.vfs_uninit =		_##name##_uninit,			\ 	.vfs_unmount =		pfs_unmount,				\ };									\ VFS_SET(name##_vfsops, name, VFCF_SYNTHETIC);				\ MODULE_VERSION(name, version);						\ MODULE_DEPEND(name, pseudofs, 1, 1, 1);
+value|static struct pfs_info name##_info = {					\ 	#name,								\ 	name##_init,							\ 	name##_uninit,							\ };									\ 									\ static int								\ _##name##_mount(struct mount *mp, struct thread *td) {			\ 	return pfs_mount(&name##_info, mp, td);				\ }									\ 									\ static int								\ _##name##_init(struct vfsconf *vfc) {					\ 	return pfs_init(&name##_info, vfc);				\ }									\ 									\ static int								\ _##name##_uninit(struct vfsconf *vfc) {					\ 	return pfs_uninit(&name##_info, vfc);				\ }									\ 									\ static struct vfsops name##_vfsops = {					\ 	.vfs_cmount =		pfs_cmount,				\ 	.vfs_init =		_##name##_init,				\ 	.vfs_mount =		_##name##_mount,			\ 	.vfs_root =		pfs_root,				\ 	.vfs_statfs =		pfs_statfs,				\ 	.vfs_uninit =		_##name##_uninit,			\ 	.vfs_unmount =		pfs_unmount,				\ };									\ VFS_SET(name##_vfsops, name, VFCF_SYNTHETIC);				\ MODULE_VERSION(name, version);						\ MODULE_DEPEND(name, pseudofs, 1, 1, 1);
 end_define
 
 begin_endif

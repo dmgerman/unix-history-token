@@ -1273,6 +1273,43 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Compatibility shim for old mount(2) system call.  */
+end_comment
+
+begin_function
+name|int
+name|pfs_cmount
+parameter_list|(
+name|struct
+name|mntarg
+modifier|*
+name|ma
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+block|{
+return|return
+name|kernel_mount
+argument_list|(
+name|ma
+argument_list|,
+name|flags
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Unmount a pseudofs instance  */
 end_comment
 

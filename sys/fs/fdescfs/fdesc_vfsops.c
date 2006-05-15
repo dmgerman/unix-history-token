@@ -94,6 +94,13 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
+name|vfs_cmount_t
+name|fdesc_cmount
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|vfs_mount_t
 name|fdesc_mount
 decl_stmt|;
@@ -119,6 +126,43 @@ name|vfs_root_t
 name|fdesc_root
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Compatibility shim for old mount(2) system call.  */
+end_comment
+
+begin_function
+name|int
+name|fdesc_cmount
+parameter_list|(
+name|struct
+name|mntarg
+modifier|*
+name|ma
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+block|{
+return|return
+name|kernel_mount
+argument_list|(
+name|ma
+argument_list|,
+name|flags
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Mount the per-process file descriptors (/dev/fd)  */
@@ -656,6 +700,11 @@ name|vfsops
 name|fdesc_vfsops
 init|=
 block|{
+operator|.
+name|vfs_cmount
+operator|=
+name|fdesc_cmount
+block|,
 operator|.
 name|vfs_init
 operator|=
