@@ -870,6 +870,13 @@ directive|endif
 comment|/*    * Some system calls should be printed out before they are done --    * execve() and exit(), for example, never return.  Possibly change    * this to work for any system call that doesn't have an OUT    * parameter?    */
 if|if
 condition|(
+name|fsc
+operator|.
+name|name
+operator|!=
+name|NULL
+operator|&&
+operator|(
 operator|!
 name|strcmp
 argument_list|(
@@ -877,7 +884,7 @@ name|fsc
 operator|.
 name|name
 argument_list|,
-literal|"linux_execve"
+literal|"execve"
 argument_list|)
 operator|||
 operator|!
@@ -889,6 +896,7 @@ name|name
 argument_list|,
 literal|"exit"
 argument_list|)
+operator|)
 condition|)
 block|{
 comment|/* XXX      * This could be done in a more general      * manner but it still wouldn't be very pretty.      */
