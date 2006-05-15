@@ -58,6 +58,9 @@ decl_stmt|;
 name|int
 name|in_fork
 decl_stmt|;
+name|int
+name|strsize
+decl_stmt|;
 name|FILE
 modifier|*
 name|outfile

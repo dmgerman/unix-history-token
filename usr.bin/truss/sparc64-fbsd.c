@@ -1111,6 +1111,8 @@ operator|.
 name|args
 argument_list|,
 literal|0
+argument_list|,
+name|trussinfo
 argument_list|)
 expr_stmt|;
 block|}
@@ -1603,6 +1605,8 @@ operator|.
 name|args
 argument_list|,
 name|retval
+argument_list|,
+name|trussinfo
 argument_list|)
 expr_stmt|;
 name|fsc

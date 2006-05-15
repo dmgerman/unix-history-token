@@ -153,9 +153,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: truss [-faedDS] [-o file] -p pid"
+literal|"usage: truss [-faedDS] [-o file] [-s strsize] -p pid"
 argument_list|,
-literal|"       truss [-faedDS] [-o file] command [args]"
+literal|"       truss [-faedDS] [-o file] [-s strsize] command [args]"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -687,6 +687,12 @@ name|outfile
 operator|=
 name|stderr
 expr_stmt|;
+name|trussinfo
+operator|->
+name|strsize
+operator|=
+literal|32
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -698,7 +704,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"p:o:faedDS"
+literal|"p:o:faedDs:S"
 argument_list|)
 operator|)
 operator|!=
@@ -787,6 +793,20 @@ comment|/* Specified output file */
 name|fname
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+comment|/* Specified string size */
+name|trussinfo
+operator|->
+name|strsize
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
