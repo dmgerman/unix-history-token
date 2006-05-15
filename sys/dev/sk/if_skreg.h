@@ -8314,6 +8314,9 @@ name|sk_pmd
 decl_stmt|;
 comment|/* physical media type */
 name|u_int32_t
+name|sk_coppertype
+decl_stmt|;
+name|u_int32_t
 name|sk_intrmask
 decl_stmt|;
 name|int
