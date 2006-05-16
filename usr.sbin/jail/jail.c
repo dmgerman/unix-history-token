@@ -694,6 +694,9 @@ name|LOGIN_SETALL
 operator|&
 operator|~
 name|LOGIN_SETGROUP
+operator|&
+operator|~
+name|LOGIN_SETLOGIN
 argument_list|)
 operator|!=
 literal|0
