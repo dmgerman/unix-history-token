@@ -1088,6 +1088,13 @@ operator|!=
 name|NG_VERSION
 condition|)
 block|{
+name|FREE
+argument_list|(
+name|msg
+argument_list|,
+name|M_NETGRAPH_MSG
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|EINVAL
