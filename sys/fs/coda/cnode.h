@@ -35,12 +35,6 @@ directive|include
 file|<sys/lock.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/clock.h>
-end_include
-
 begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(

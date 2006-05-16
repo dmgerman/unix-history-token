@@ -16,35 +16,6 @@ name|_CAM_CAM_DEBUG_H
 value|1
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CAMDEBUG
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<machine/clock.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CAMDEBUG&& _KERNEL */
-end_comment
-
 begin_comment
 comment|/*  * Debugging flags.  */
 end_comment

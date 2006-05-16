@@ -87,12 +87,6 @@ directive|include
 file|<machine/pmap.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/clock.h>
-end_include
-
 begin_decl_stmt
 name|int
 name|boot_cpu_id
