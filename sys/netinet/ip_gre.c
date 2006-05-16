@@ -282,7 +282,9 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|struct
+name|mbuf
+modifier|*
 name|gre_input2
 parameter_list|(
 name|struct
@@ -314,8 +316,6 @@ name|off
 parameter_list|)
 block|{
 name|int
-name|ret
-decl_stmt|,
 name|proto
 decl_stmt|;
 name|proto
@@ -333,7 +333,7 @@ operator|)
 operator|->
 name|ip_p
 expr_stmt|;
-name|ret
+name|m
 operator|=
 name|gre_input2
 argument_list|(
@@ -344,12 +344,12 @@ argument_list|,
 name|proto
 argument_list|)
 expr_stmt|;
-comment|/* 	 * ret == 0 : packet not processed, meaning that 	 * no matching tunnel that is up is found. 	 * we inject it to raw ip socket to see if anyone picks it up. 	 */
+comment|/* 	 * If no matching tunnel that is up is found. We inject 	 * the mbuf to raw ip socket to see if anyone picks it up. 	 */
 if|if
 condition|(
-name|ret
-operator|==
-literal|0
+name|m
+operator|!=
+name|NULL
 condition|)
 name|rip_input
 argument_list|(
@@ -362,12 +362,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * decapsulate.  * Does the real work and is called from gre_input() (above)  * returns 0 if packet is not yet processed  * and 1 if it needs no further processing  * proto is the protocol number of the "calling" foo_input()  * routine.  */
+comment|/*  * Decapsulate. Does the real work and is called from gre_input()  * (above). Returns an mbuf back if packet is not yet processed,  * and NULL if it needs no further processing. proto is the protocol  * number of the "calling" foo_input() routine.  */
 end_comment
 
 begin_function
 specifier|static
-name|int
+name|struct
+name|mbuf
+modifier|*
 name|gre_input2
 parameter_list|(
 name|struct
@@ -420,7 +422,7 @@ block|{
 comment|/* No matching tunnel or tunnel is down. */
 return|return
 operator|(
-literal|0
+name|m
 operator|)
 return|;
 block|}
@@ -458,7 +460,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|ENOBUFS
+name|NULL
 operator|)
 return|;
 block|}
@@ -548,7 +550,7 @@ name|GRE_RP
 condition|)
 return|return
 operator|(
-literal|0
+name|m
 operator|)
 return|;
 if|if
@@ -647,19 +649,19 @@ break|break;
 endif|#
 directive|endif
 default|default:
-comment|/* others not yet supported */
+comment|/* Others not yet supported. */
 return|return
 operator|(
-literal|0
+name|m
 operator|)
 return|;
 block|}
 break|break;
 default|default:
-comment|/* others not yet supported */
+comment|/* Others not yet supported. */
 return|return
 operator|(
-literal|0
+name|m
 operator|)
 return|;
 block|}
@@ -681,7 +683,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EINVAL
+name|NULL
 operator|)
 return|;
 block|}
@@ -742,12 +744,12 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+comment|/* Packet is done, no further processing needed. */
 return|return
 operator|(
-literal|1
+name|NULL
 operator|)
 return|;
-comment|/* packet is done, no further processing needed */
 block|}
 end_function
 
