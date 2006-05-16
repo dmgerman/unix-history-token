@@ -11043,6 +11043,11 @@ modifier|*
 name|vp
 decl_stmt|;
 name|struct
+name|vnode
+modifier|*
+name|lastvp
+decl_stmt|;
+name|struct
 name|inode
 modifier|*
 name|ip
@@ -11086,6 +11091,10 @@ name|fs_bsize
 expr_stmt|;
 comment|/* 	 * Process each snapshot listed in the superblock. 	 */
 name|vp
+operator|=
+name|NULL
+expr_stmt|;
+name|lastvp
 operator|=
 name|NULL
 expr_stmt|;
@@ -11532,7 +11541,15 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+name|lastvp
+operator|=
+name|vp
+expr_stmt|;
 block|}
+name|vp
+operator|=
+name|lastvp
+expr_stmt|;
 comment|/* 	 * No usable snapshots found. 	 */
 if|if
 condition|(
