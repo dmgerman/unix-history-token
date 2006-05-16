@@ -176,7 +176,7 @@ begin_define
 define|#
 directive|define
 name|PCNET_MEMSIZE
-value|16384
+value|(32*1024)
 end_define
 
 begin_define
@@ -382,7 +382,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|le_DRIVER_NAME
+name|le
 argument_list|,
 name|ether
 argument_list|,
@@ -1151,14 +1151,14 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-comment|/* Chip is stopped. Set "software style" to 32-bit. */
+comment|/* Chip is stopped. Set software style to ILACC (32-bit). */
 name|le_pci_wrbcr
 argument_list|(
 name|sc
 argument_list|,
 name|LE_BCR20
 argument_list|,
-name|LE_B20_SSTYLE_PCNETPCI2
+name|LE_B20_SSTYLE_ILACC
 argument_list|)
 expr_stmt|;
 block|}
@@ -1264,6 +1264,19 @@ block|{
 case|case
 name|AMD_PCNET_PCI
 case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"AMD PCnet-PCI"
+argument_list|)
+expr_stmt|;
+comment|/* Let pcn(4) win. */
+return|return
+operator|(
+name|BUS_PROBE_LOW_PRIORITY
+operator|)
+return|;
 case|case
 name|AMD_PCNET_HOME
 case|:
@@ -1271,12 +1284,13 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"AMD PCnet Ethernet"
+literal|"AMD PCnet-Home"
 argument_list|)
 expr_stmt|;
+comment|/* Let pcn(4) win. */
 return|return
 operator|(
-name|BUS_PROBE_DEFAULT
+name|BUS_PROBE_LOW_PRIORITY
 operator|)
 return|;
 default|default:
@@ -1479,7 +1493,7 @@ argument_list|(
 name|NULL
 argument_list|,
 comment|/* parent */
-name|PAGE_SIZE
+literal|1
 argument_list|,
 literal|0
 argument_list|,
@@ -1542,6 +1556,7 @@ name|sc_memsize
 operator|=
 name|PCNET_MEMSIZE
 expr_stmt|;
+comment|/* 	 * For Am79C970A, Am79C971 and Am79C978 the init block must be 2-byte 	 * aligned and the ring descriptors must be 16-byte aligned when using 	 * a 32-bit software style. 	 */
 name|error
 operator|=
 name|bus_dma_tag_create
@@ -1551,7 +1566,7 @@ operator|->
 name|sc_pdmat
 argument_list|,
 comment|/* parent */
-literal|1
+literal|16
 argument_list|,
 literal|0
 argument_list|,
@@ -1727,6 +1742,12 @@ name|sc_conf3
 operator|=
 literal|0
 expr_stmt|;
+name|sc
+operator|->
+name|sc_mediastatus
+operator|=
+name|NULL
+expr_stmt|;
 switch|switch
 condition|(
 name|pci_get_device
@@ -1898,6 +1919,24 @@ name|sc_hwreset
 operator|=
 name|le_pci_hwreset
 expr_stmt|;
+name|sc
+operator|->
+name|sc_hwinit
+operator|=
+name|NULL
+expr_stmt|;
+name|sc
+operator|->
+name|sc_hwintr
+operator|=
+name|NULL
+expr_stmt|;
+name|sc
+operator|->
+name|sc_nocarrier
+operator|=
+name|NULL
+expr_stmt|;
 name|error
 operator|=
 name|am79900_config
@@ -1929,7 +1968,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"cannot attach AM79900\n"
+literal|"cannot attach Am79900\n"
 argument_list|)
 expr_stmt|;
 goto|goto

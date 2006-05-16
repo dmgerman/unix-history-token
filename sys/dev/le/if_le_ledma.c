@@ -162,6 +162,17 @@ end_include
 begin_define
 define|#
 directive|define
+name|LEDMA_ALIGNMENT
+value|8
+end_define
+
+begin_comment
+comment|/* ring desc. alignmet for NCR92C990 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LEDMA_BOUNDARY
 value|(16*1024*1024)
 end_define
@@ -1586,11 +1597,12 @@ operator|->
 name|sc_parent_dmat
 argument_list|,
 comment|/* parent */
-literal|1
+name|LEDMA_ALIGNMENT
 argument_list|,
+comment|/* alignment */
 name|LEDMA_BOUNDARY
 argument_list|,
-comment|/* alignment, boundary */
+comment|/* boundary */
 name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
 comment|/* lowaddr */
@@ -1873,12 +1885,6 @@ name|le_dma_wrcsr
 expr_stmt|;
 name|sc
 operator|->
-name|sc_nocarrier
-operator|=
-name|le_dma_nocarrier
-expr_stmt|;
-name|sc
-operator|->
 name|sc_hwreset
 operator|=
 name|le_dma_hwreset
@@ -1888,6 +1894,12 @@ operator|->
 name|sc_hwintr
 operator|=
 name|le_dma_hwintr
+expr_stmt|;
+name|sc
+operator|->
+name|sc_nocarrier
+operator|=
+name|le_dma_nocarrier
 expr_stmt|;
 name|error
 operator|=
@@ -1920,7 +1932,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"cannot attach AM7990\n"
+literal|"cannot attach Am7990\n"
 argument_list|)
 expr_stmt|;
 goto|goto
