@@ -3997,6 +3997,9 @@ name|error
 decl_stmt|,
 name|count
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|debug_called
 argument_list|(
 literal|1
@@ -4037,6 +4040,11 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* XXX better timeout? */
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -4068,6 +4076,11 @@ name|hz
 argument_list|)
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
