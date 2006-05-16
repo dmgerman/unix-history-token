@@ -1274,10 +1274,9 @@ argument_list|,
 literal|"AMD PCnet Ethernet"
 argument_list|)
 expr_stmt|;
-comment|/* Let lnc(4) win for now. */
 return|return
 operator|(
-name|BUS_PROBE_LOW_PRIORITY
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 default|default:
