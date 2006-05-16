@@ -463,6 +463,15 @@ case|case
 literal|0
 case|:
 comment|/* child */
+if|if
+condition|(
+name|ofn
+condition|)
+name|fclose
+argument_list|(
+name|out
+argument_list|)
+expr_stmt|;
 name|execvp
 argument_list|(
 operator|*
