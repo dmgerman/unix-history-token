@@ -497,6 +497,18 @@ comment|/* DFLAG_SEEKABLE specific fields */
 name|off_t
 name|f_offset
 decl_stmt|;
+name|short
+name|f_vnread_flags
+decl_stmt|;
+comment|/*  				   * (f) home grown sleep lock for f_offset 				   * Used only for shared vnode locking in 				   * vnread() 				   */
+define|#
+directive|define
+name|FOFFSET_LOCKED
+value|0x1
+define|#
+directive|define
+name|FOFFSET_LOCK_WAITING
+value|0x2
 comment|/* DTYPE_SOCKET specific fields */
 name|short
 name|f_gcflag
