@@ -141,11 +141,11 @@ operator|==
 literal|0x0021
 condition|)
 return|return
-literal|0
+name|DRM_IS_NOT_AGP
 return|;
 else|else
 return|return
-literal|2
+name|DRM_MIGHT_BE_AGP
 return|;
 block|}
 end_function
