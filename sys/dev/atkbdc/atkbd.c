@@ -621,7 +621,6 @@ name|KBDC
 name|kbdc
 decl_stmt|;
 comment|/* keyboard controller */
-comment|/* XXX: don't move this field; pcvt 					 * expects `kbdc' to be the first 					 * field in this structure. */
 name|int
 name|ks_mode
 decl_stmt|;

@@ -425,7 +425,6 @@ operator|)
 operator|+
 name|M_VESA_BASE
 expr_stmt|;
-comment|/* Only set graphics mode in non-pcvt case */
 if|if
 condition|(
 operator|(
