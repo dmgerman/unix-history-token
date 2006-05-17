@@ -284,6 +284,9 @@ block|{
 name|int
 name|hs_used
 decl_stmt|;
+name|int
+name|hs_mlen
+decl_stmt|;
 name|u_int8_t
 name|hs_iv
 index|[

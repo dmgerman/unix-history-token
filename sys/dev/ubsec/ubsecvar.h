@@ -900,6 +900,10 @@ index|]
 decl_stmt|;
 comment|/* 3DES key */
 name|u_int32_t
+name|ses_mlen
+decl_stmt|;
+comment|/* hmac length */
+name|u_int32_t
 name|ses_hminner
 index|[
 literal|5

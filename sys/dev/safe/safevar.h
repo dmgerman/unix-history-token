@@ -442,6 +442,10 @@ index|]
 decl_stmt|;
 comment|/* DES/3DES/AES key */
 name|u_int32_t
+name|ses_mlen
+decl_stmt|;
+comment|/* hmac length in bytes */
+name|u_int32_t
 name|ses_hminner
 index|[
 literal|5
