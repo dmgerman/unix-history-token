@@ -7076,6 +7076,11 @@ argument_list|,
 argument|bif_next
 argument_list|)
 block|{
+name|BPFIF_LOCK
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|bd
@@ -7112,6 +7117,11 @@ name|bd
 argument_list|)
 expr_stmt|;
 block|}
+name|BPFIF_UNLOCK
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 block|}
 name|mtx_unlock
 argument_list|(
