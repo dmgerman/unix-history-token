@@ -1061,6 +1061,9 @@ block|{
 name|u_int32_t
 name|cc_sessions
 decl_stmt|;
+name|u_int32_t
+name|cc_koperations
+decl_stmt|;
 comment|/* 	 * Largest possible operator length (in bits) for each type of 	 * encryption algorithm. 	 */
 name|u_int16_t
 name|cc_max_op_len
