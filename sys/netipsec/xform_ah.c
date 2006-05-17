@@ -194,7 +194,7 @@ value|(((sav)->flags& SADB_X_EXT_OLD) ? \ 		sizeof (struct ah) : sizeof (struct 
 end_define
 
 begin_comment
-comment|/*   * Return authenticator size in bytes.  The old protocol is known  * to use a fixed 16-byte authenticator.  The new algorithm gets  * this size from the xform but is (currently) always 12.  */
+comment|/*   * Return authenticator size in bytes.  The old protocol is known  * to use a fixed 16-byte authenticator.  The new algorithm use 12-byte  * authenticator.  */
 end_comment
 
 begin_define
@@ -205,7 +205,7 @@ parameter_list|(
 name|sav
 parameter_list|)
 define|\
-value|((sav->flags& SADB_X_EXT_OLD) ? 16 : (sav)->tdb_authalgxform->authsize)
+value|((sav->flags& SADB_X_EXT_OLD) ? 16 : AH_HMAC_HASHLEN)
 end_define
 
 begin_decl_stmt
@@ -389,21 +389,21 @@ name|SADB_AALG_MD5HMAC
 case|:
 return|return
 operator|&
-name|auth_hash_hmac_md5_96
+name|auth_hash_hmac_md5
 return|;
 case|case
 name|SADB_AALG_SHA1HMAC
 case|:
 return|return
 operator|&
-name|auth_hash_hmac_sha1_96
+name|auth_hash_hmac_sha1
 return|;
 case|case
 name|SADB_X_AALG_RIPEMD160HMAC
 case|:
 return|return
 operator|&
-name|auth_hash_hmac_ripemd_160_96
+name|auth_hash_hmac_ripemd_160
 return|;
 case|case
 name|SADB_X_AALG_MD5
@@ -788,6 +788,15 @@ operator|->
 name|key_auth
 operator|->
 name|key_data
+expr_stmt|;
+name|cria
+operator|->
+name|cri_mlen
+operator|=
+name|AUTHSIZE
+argument_list|(
+name|sav
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
