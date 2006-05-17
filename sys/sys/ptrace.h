@@ -15,6 +15,12 @@ directive|define
 name|_SYS_PTRACE_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/_sigset.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -441,6 +447,14 @@ directive|define
 name|PL_FLAG_BOUND
 value|0x02
 comment|/* M:N bound thread */
+name|sigset_t
+name|pl_sigmask
+decl_stmt|;
+comment|/* LWP signal mask */
+name|sigset_t
+name|pl_siglist
+decl_stmt|;
+comment|/* LWP pending signal */
 block|}
 struct|;
 end_struct
