@@ -2471,6 +2471,12 @@ operator|.
 name|pl_siglist
 expr_stmt|;
 block|}
+else|else
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 if|if
 condition|(
 name|state
