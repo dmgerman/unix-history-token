@@ -577,7 +577,7 @@ condition|(
 operator|(
 name|ch
 operator|&
-literal|0xfc
+literal|0xfe
 operator|)
 operator|==
 literal|0xfc
