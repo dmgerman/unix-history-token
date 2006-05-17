@@ -739,10 +739,6 @@ name|int
 name|cri_klen
 decl_stmt|;
 comment|/* Key length, in bits */
-name|int
-name|cri_rnd
-decl_stmt|;
-comment|/* Algorithm rounds, where relevant */
 name|caddr_t
 name|cri_key
 decl_stmt|;
@@ -829,10 +825,6 @@ define|#
 directive|define
 name|crd_key
 value|CRD_INI.cri_key
-define|#
-directive|define
-name|crd_rnd
-value|CRD_INI.cri_rnd
 define|#
 directive|define
 name|crd_alg
