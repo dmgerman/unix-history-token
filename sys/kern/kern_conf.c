@@ -2981,20 +2981,6 @@ operator|->
 name|si_threadcount
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"Purging %lu threads from %s\n"
-argument_list|,
-name|dev
-operator|->
-name|si_threadcount
-argument_list|,
-name|devtoname
-argument_list|(
-name|dev
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|csw
 operator|->
 name|d_purge
@@ -3018,22 +3004,19 @@ operator|/
 literal|10
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
-name|csw
-operator|!=
-name|NULL
-operator|&&
-name|csw
+name|dev
 operator|->
-name|d_purge
-operator|!=
-name|NULL
+name|si_threadcount
 condition|)
 name|printf
 argument_list|(
-literal|"All threads purged from %s\n"
+literal|"Still %lu threads in %s\n"
+argument_list|,
+name|dev
+operator|->
+name|si_threadcount
 argument_list|,
 name|devtoname
 argument_list|(
@@ -3041,6 +3024,7 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|dev
 operator|->
 name|si_drv1
