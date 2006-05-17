@@ -2777,6 +2777,17 @@ name|ng_hci_node_role_switch_ep
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|NGM_HCI_NODE_LIST_NAMES
+value|200
+end_define
+
+begin_comment
+comment|/* HCI -> User */
+end_comment
+
 begin_comment
 comment|/**************************************************************************  **************************************************************************  **             Link control commands and return parameters  **************************************************************************  **************************************************************************/
 end_comment
