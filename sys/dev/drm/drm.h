@@ -186,6 +186,11 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
+name|__FreeBSD_kernel__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|__NetBSD__
 argument_list|)
 operator|||
@@ -203,10 +208,17 @@ end_elif
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD_kernel__
+argument_list|)
+operator|)
 operator|&&
 name|defined
 argument_list|(
@@ -494,7 +506,7 @@ begin_define
 define|#
 directive|define
 name|DRM_MAX_MINOR
-value|255
+value|15
 end_define
 
 begin_endif

@@ -58,7 +58,7 @@ begin_define
 define|#
 directive|define
 name|DRIVER_DATE
-value|"20051102"
+value|"20060319"
 end_define
 
 begin_define
@@ -79,7 +79,7 @@ begin_define
 define|#
 directive|define
 name|DRIVER_PATCHLEVEL
-value|1
+value|2
 end_define
 
 begin_typedef

@@ -1196,9 +1196,9 @@ enum|enum
 block|{
 name|DRM_IS_NOT_AGP
 block|,
-name|DRM_MIGHT_BE_AGP
-block|,
 name|DRM_IS_AGP
+block|,
+name|DRM_MIGHT_BE_AGP
 block|}
 enum|;
 end_enum

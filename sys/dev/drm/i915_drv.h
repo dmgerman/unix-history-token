@@ -62,11 +62,11 @@ begin_define
 define|#
 directive|define
 name|DRIVER_DATE
-value|"20041217"
+value|"20060119"
 end_define
 
 begin_comment
-comment|/* Interface history:  *  * 1.1: Original.  * 1.2: Add Power Management  */
+comment|/* Interface history:  *  * 1.1: Original.  * 1.2: Add Power Management  * 1.3: Add vblank support  * 1.4: Fix cmdbuffer path, add heap destroy  */
 end_comment
 
 begin_define
@@ -80,7 +80,7 @@ begin_define
 define|#
 directive|define
 name|DRIVER_MINOR
-value|2
+value|4
 end_define
 
 begin_define
@@ -381,6 +381,23 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|int
+name|i915_driver_vblank_wait
+parameter_list|(
+name|drm_device_t
+modifier|*
+name|dev
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|sequence
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|irqreturn_t
 name|i915_driver_irq_handler
 parameter_list|(
@@ -453,6 +470,16 @@ begin_function_decl
 specifier|extern
 name|int
 name|i915_mem_init_heap
+parameter_list|(
+name|DRM_IOCTL_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|i915_mem_destroy_heap
 parameter_list|(
 name|DRM_IOCTL_ARGS
 parameter_list|)
@@ -1164,6 +1191,16 @@ define|#
 directive|define
 name|CMD_OP_DESTBUFFER_INFO
 value|((0x3<<29)|(0x1d<<24)|(0x8e<<16)|1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|READ_BREADCRUMB
+parameter_list|(
+name|dev_priv
+parameter_list|)
+value|(((u32*)(dev_priv->hw_status_page))[5])
 end_define
 
 begin_endif

@@ -2174,6 +2174,17 @@ comment|/* gap */
 end_comment
 
 begin_comment
+comment|/* Zero to flush caches. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R300_TX_CNTL
+value|0x4100
+end_define
+
+begin_comment
 comment|/* The upper enable bits are guessed, based on fglrx reported limits. */
 end_comment
 
@@ -3500,8 +3511,43 @@ end_define
 begin_define
 define|#
 directive|define
-name|R300_TX_UNK1_0
+name|R300_TX_FILTER1_0
 value|0x4440
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_CHROMA_KEY_MODE_DISABLE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_CHROMA_KEY_FORCE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_CHROMA_KEY_BLEND
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_MC_ROUND_NORMAL
+value|(0<<2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_MC_ROUND_MPEG4
+value|(1<<2)
 end_define
 
 begin_define
@@ -3509,6 +3555,69 @@ define|#
 directive|define
 name|R300_LOD_BIAS_MASK
 value|0x1fff
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_EDGE_ANISO_EDGE_DIAG
+value|(0<<13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_EDGE_ANISO_EDGE_ONLY
+value|(1<<13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_MC_COORD_TRUNCATE_DISABLE
+value|(0<<14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_MC_COORD_TRUNCATE_MPEG
+value|(1<<14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_TX_TRI_PERF_0_8
+value|(0<<15)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_TX_TRI_PERF_1_8
+value|(1<<15)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_TX_TRI_PERF_1_4
+value|(2<<15)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_TX_TRI_PERF_3_8
+value|(3<<15)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_ANISO_THRESHOLD_MASK
+value|(7<<17)
 end_define
 
 begin_define
@@ -3569,6 +3678,20 @@ define|#
 directive|define
 name|R300_TX_SIZE_MASK
 value|(15<< 26)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_TX_SIZE_PROJECTED
+value|(1<<30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_TX_SIZE_TXPITCH_EN
+value|(1<<31)
 end_define
 
 begin_define
@@ -3770,6 +3893,13 @@ end_define
 begin_comment
 comment|/* no swizzle */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|R300_TX_FORMAT_CUBIC_MAP
+value|(1<< 26)
+end_define
 
 begin_comment
 comment|/* gap */
@@ -4029,6 +4159,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|R300_TX_PITCH_0
+value|0x4500
+end_define
+
+begin_comment
+comment|/* obvious missing in gap */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|R300_TX_OFFSET_0
 value|0x4540
 end_define
@@ -4068,6 +4209,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|R300_TXO_MACRO_TILE
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_TXO_MICRO_TILE
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
 name|R300_TXO_OFFSET_MASK
 value|0xffffffe0
 end_define
@@ -4086,9 +4241,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R300_TX_UNK4_0
+name|R300_TX_CHROMA_KEY_0
 value|0x4580
 end_define
+
+begin_comment
+comment|/* 32 bit chroma key */
+end_comment
 
 begin_define
 define|#
@@ -4311,11 +4470,22 @@ name|R300_PFS_NODE_TEX_END_MASK
 value|(31<< 17)
 end_define
 
+begin_comment
+comment|/*#       define R300_PFS_NODE_LAST_NODE           (1<< 22) */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|R300_PFS_NODE_LAST_NODE
+name|R300_PFS_NODE_OUTPUT_COLOR
 value|(1<< 22)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_PFS_NODE_OUTPUT_DEPTH
+value|(1<< 23)
 end_define
 
 begin_comment
@@ -4402,6 +4572,13 @@ define|#
 directive|define
 name|R300_FPITX_OP_TEX
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_FPITX_OP_KIL
+value|2
 end_define
 
 begin_define
@@ -4509,6 +4686,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|R300_FPI1_DSTC_REG_MASK_SHIFT
+value|23
+end_define
+
+begin_define
+define|#
+directive|define
 name|R300_FPI1_DSTC_REG_X
 value|(1<< 23)
 end_define
@@ -4525,6 +4709,13 @@ define|#
 directive|define
 name|R300_FPI1_DSTC_REG_Z
 value|(1<< 25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_FPI1_DSTC_OUTPUT_MASK_SHIFT
+value|26
 end_define
 
 begin_define
@@ -4644,6 +4835,13 @@ define|#
 directive|define
 name|R300_FPI3_DSTA_OUTPUT
 value|(1<< 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_FPI3_DSTA_DEPTH
+value|(1<< 27)
 end_define
 
 begin_define
@@ -5010,7 +5208,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|R300_FPI0_UNKNOWN_31
+name|R300_FPI0_INSERT_NOP
 value|(1<< 31)
 end_define
 
