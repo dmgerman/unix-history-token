@@ -21521,6 +21521,8 @@ decl_stmt|,
 name|min_agc
 init|=
 name|IGP01E1000_AGC_LENGTH_TABLE_SIZE
+operator|-
+literal|1
 decl_stmt|;
 name|uint16_t
 name|max_agc
