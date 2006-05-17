@@ -967,9 +967,9 @@ literal|"NULL-HMAC"
 block|,
 literal|0
 block|,
-literal|0
+literal|16
 block|,
-literal|12
+literal|64
 block|,
 sizeof|sizeof
 argument_list|(
@@ -989,7 +989,7 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|auth_hash
-name|auth_hash_hmac_md5_96
+name|auth_hash_hmac_md5
 init|=
 block|{
 name|CRYPTO_MD5_HMAC
@@ -1000,7 +1000,7 @@ literal|16
 block|,
 literal|16
 block|,
-literal|12
+literal|64
 block|,
 sizeof|sizeof
 argument_list|(
@@ -1042,7 +1042,7 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|auth_hash
-name|auth_hash_hmac_sha1_96
+name|auth_hash_hmac_sha1
 init|=
 block|{
 name|CRYPTO_SHA1_HMAC
@@ -1053,7 +1053,7 @@ literal|20
 block|,
 literal|20
 block|,
-literal|12
+literal|64
 block|,
 sizeof|sizeof
 argument_list|(
@@ -1072,7 +1072,7 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|auth_hash
-name|auth_hash_hmac_ripemd_160_96
+name|auth_hash_hmac_ripemd_160
 init|=
 block|{
 name|CRYPTO_RIPEMD160_HMAC
@@ -1083,7 +1083,7 @@ literal|20
 block|,
 literal|20
 block|,
-literal|12
+literal|64
 block|,
 sizeof|sizeof
 argument_list|(
@@ -1136,7 +1136,7 @@ literal|0
 block|,
 literal|16
 block|,
-literal|12
+literal|0
 block|,
 sizeof|sizeof
 argument_list|(
@@ -1189,7 +1189,7 @@ literal|0
 block|,
 literal|20
 block|,
-literal|12
+literal|0
 block|,
 sizeof|sizeof
 argument_list|(
@@ -1211,15 +1211,15 @@ name|auth_hash
 name|auth_hash_hmac_sha2_256
 init|=
 block|{
-name|CRYPTO_SHA2_HMAC
+name|CRYPTO_SHA2_256_HMAC
 block|,
-literal|"HMAC-SHA2"
-block|,
-literal|32
+literal|"HMAC-SHA2-256"
 block|,
 literal|32
 block|,
-literal|12
+literal|32
+block|,
+literal|64
 block|,
 sizeof|sizeof
 argument_list|(
@@ -1264,7 +1264,7 @@ name|auth_hash
 name|auth_hash_hmac_sha2_384
 init|=
 block|{
-name|CRYPTO_SHA2_HMAC
+name|CRYPTO_SHA2_384_HMAC
 block|,
 literal|"HMAC-SHA2-384"
 block|,
@@ -1272,7 +1272,7 @@ literal|48
 block|,
 literal|48
 block|,
-literal|12
+literal|128
 block|,
 sizeof|sizeof
 argument_list|(
@@ -1317,7 +1317,7 @@ name|auth_hash
 name|auth_hash_hmac_sha2_512
 init|=
 block|{
-name|CRYPTO_SHA2_HMAC
+name|CRYPTO_SHA2_512_HMAC
 block|,
 literal|"HMAC-SHA2-512"
 block|,
@@ -1325,7 +1325,7 @@ literal|64
 block|,
 literal|64
 block|,
-literal|12
+literal|128
 block|,
 sizeof|sizeof
 argument_list|(

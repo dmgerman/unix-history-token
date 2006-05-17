@@ -61,6 +61,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HMAC_BLOCK_MAXLEN
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
 name|HMAC_IPAD_VAL
 value|0x36
 end_define
@@ -267,29 +274,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|CRYPTO_SHA2_HMAC
+name|CRYPTO_NULL_HMAC
 value|15
 end_define
 
 begin_define
 define|#
 directive|define
-name|CRYPTO_NULL_HMAC
+name|CRYPTO_NULL_CBC
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|CRYPTO_NULL_CBC
-value|17
-end_define
-
-begin_define
-define|#
-directive|define
 name|CRYPTO_DEFLATE_COMP
-value|18
+value|17
 end_define
 
 begin_comment
@@ -299,8 +299,29 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CRYPTO_ALGORITHM_MAX
+name|CRYPTO_SHA2_256_HMAC
 value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_SHA2_384_HMAC
+value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_SHA2_512_HMAC
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_ALGORITHM_MAX
+value|20
 end_define
 
 begin_comment
@@ -739,6 +760,10 @@ name|int
 name|cri_klen
 decl_stmt|;
 comment|/* Key length, in bits */
+name|int
+name|cri_mlen
+decl_stmt|;
+comment|/* Number of bytes we want from the 					   entire hash. 0 means all. */
 name|caddr_t
 name|cri_key
 decl_stmt|;
