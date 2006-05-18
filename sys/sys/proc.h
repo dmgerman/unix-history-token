@@ -1000,7 +1000,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_UMTXQ
+name|TDF_UNUSED19
 value|0x00080000
 end_define
 
