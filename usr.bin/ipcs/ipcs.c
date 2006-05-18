@@ -3109,7 +3109,7 @@ argument_list|,
 name|symn
 argument_list|)
 expr_stmt|;
-comment|/* 		 * For some symbols, the value we retreieve is 		 * actually a pointer; since we want the actual value, 		 * we have to manually dereference it. 		 */
+comment|/* 		 * For some symbols, the value we retrieve is 		 * actually a pointer; since we want the actual value, 		 * we have to manually dereference it. 		 */
 switch|switch
 condition|(
 name|idx
