@@ -363,6 +363,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|f_birthtime
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* use time of birth */
+end_comment
+
+begin_decl_stmt
+name|int
 name|f_flags
 decl_stmt|;
 end_decl_stmt
@@ -925,7 +935,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"1ABCFGHILPRSTWZabcdfghiklmnopqrstuwx"
+literal|"1ABCFGHILPRSTUWZabcdfghiklmnopqrstuwx"
 argument_list|)
 operator|)
 operator|!=
@@ -1015,7 +1025,7 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
-comment|/* The -c and -u options override each other. */
+comment|/* The -c, -u, and -U options override each other. */
 case|case
 literal|'c'
 case|:
@@ -1027,6 +1037,10 @@ name|f_accesstime
 operator|=
 literal|0
 expr_stmt|;
+name|f_birthtime
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 case|case
 literal|'u'
@@ -1034,6 +1048,26 @@ case|:
 name|f_accesstime
 operator|=
 literal|1
+expr_stmt|;
+name|f_statustime
+operator|=
+literal|0
+expr_stmt|;
+name|f_birthtime
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'U'
+case|:
+name|f_birthtime
+operator|=
+literal|1
+expr_stmt|;
+name|f_accesstime
+operator|=
+literal|0
 expr_stmt|;
 name|f_statustime
 operator|=
@@ -1676,6 +1710,15 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|f_birthtime
+condition|)
+name|sortfcn
+operator|=
+name|revbirthcmp
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|f_statustime
 condition|)
 name|sortfcn
@@ -1720,6 +1763,15 @@ condition|)
 name|sortfcn
 operator|=
 name|acccmp
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|f_birthtime
+condition|)
+name|sortfcn
+operator|=
+name|birthcmp
 expr_stmt|;
 elseif|else
 if|if
