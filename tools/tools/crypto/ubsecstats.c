@@ -127,6 +127,10 @@ literal|"nodesc %u badalg %u nomem %u queuefull %u\n"
 argument_list|,
 name|stats
 operator|.
+name|hst_nodesc
+argument_list|,
+name|stats
+operator|.
 name|hst_badalg
 argument_list|,
 name|stats
