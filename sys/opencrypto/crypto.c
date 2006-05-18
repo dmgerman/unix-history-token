@@ -4235,9 +4235,11 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"%s: Driver disappeared."
+literal|"%s:%u Driver disappeared."
 operator|,
 name|__func__
+operator|,
+name|__LINE__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4357,6 +4359,21 @@ operator|=
 name|crypto_checkdriver
 argument_list|(
 name|hid
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|cap
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"%s:%u Driver disappeared."
+operator|,
+name|__func__
+operator|,
+name|__LINE__
+operator|)
 argument_list|)
 expr_stmt|;
 name|result
