@@ -1321,7 +1321,7 @@ name|CR3_TIE
 condition|)
 name|ipend
 operator||=
-name|UART_IPEND_TXIDLE
+name|SER_INT_TXIDLE
 expr_stmt|;
 name|mask
 operator|&=
@@ -1352,7 +1352,7 @@ name|CR3_RIE
 condition|)
 name|ipend
 operator||=
-name|UART_IPEND_RXREADY
+name|SER_INT_RXREADY
 expr_stmt|;
 name|mask
 operator|&=
