@@ -80,7 +80,7 @@ begin_define
 define|#
 directive|define
 name|ASLASH
-value|ADOT + 1
+value|47
 end_define
 
 begin_comment
