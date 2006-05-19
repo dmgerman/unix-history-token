@@ -193,7 +193,7 @@ block|,
 name|NULL
 block|,
 comment|/* read region */
-name|NULL
+name|generic_bs_rr_1
 block|,
 name|generic_armv4_bs_rr_2
 block|,
