@@ -102,6 +102,14 @@ name|wall_cmos_clock
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|clock_lock
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Driver to clock driver interface.  */
 end_comment

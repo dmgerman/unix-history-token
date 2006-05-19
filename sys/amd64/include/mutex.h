@@ -15,48 +15,6 @@ directive|define
 name|_MACHINE_MUTEX_H_
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCORE
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_comment
-comment|/* Global locks */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mtx
-name|clock_lock
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !LOCORE */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
