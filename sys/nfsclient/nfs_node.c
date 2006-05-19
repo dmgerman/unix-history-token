@@ -647,6 +647,20 @@ name|n_fhsize
 operator|=
 name|fhsize
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|np
+operator|->
+name|n_mtx
+argument_list|,
+literal|"NFSnode lock"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 operator|*
 name|npp
 operator|=
@@ -960,6 +974,14 @@ name|M_NFSBIGFH
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_destroy
+argument_list|(
+operator|&
+name|np
+operator|->
+name|n_mtx
+argument_list|)
+expr_stmt|;
 name|uma_zfree
 argument_list|(
 name|nfsnode_zone

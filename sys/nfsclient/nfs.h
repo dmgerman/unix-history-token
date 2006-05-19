@@ -572,6 +572,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|struct
+name|mtx
+name|nfs_iod_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|nfs_numasync
 decl_stmt|;
@@ -770,6 +778,11 @@ modifier|*
 name|r_td
 decl_stmt|;
 comment|/* Proc that did I/O system call */
+name|struct
+name|mtx
+name|r_mtx
+decl_stmt|;
+comment|/* Protects nfsreq fields */
 block|}
 struct|;
 end_struct
@@ -1907,35 +1920,6 @@ operator|,
 name|sigset_t
 operator|*
 name|set
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|nfs_tsleep
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|thread
-operator|*
-name|td
-operator|,
-name|void
-operator|*
-name|ident
-operator|,
-name|int
-name|priority
-operator|,
-name|char
-operator|*
-name|wmesg
-operator|,
-name|int
-name|timo
 operator|)
 argument_list|)
 decl_stmt|;

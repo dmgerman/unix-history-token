@@ -152,6 +152,11 @@ begin_struct
 struct|struct
 name|nfsnode
 block|{
+name|struct
+name|mtx
+name|n_mtx
+decl_stmt|;
+comment|/* Protects all of these members */
 name|u_quad_t
 name|n_size
 decl_stmt|;
@@ -305,9 +310,6 @@ comment|/* leaf name, for v4 OPEN op */
 name|uint32_t
 name|n_namelen
 decl_stmt|;
-name|daddr_t
-name|ra_expect_lbn
-decl_stmt|;
 name|int
 name|n_directio_opens
 decl_stmt|;
@@ -369,6 +371,17 @@ end_define
 
 begin_comment
 comment|/*  * Flags for n_flag  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSYNCWAIT
+value|0x0002
+end_define
+
+begin_comment
+comment|/* fsync waiting for all directio async writes 				  to drain */
 end_comment
 
 begin_define
@@ -477,12 +490,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NFSYNCWAIT
+name|NDIRCOOKIELK
 value|0x8000
 end_define
 
 begin_comment
-comment|/* fsync waiting for all directio async writes  				   to drain */
+comment|/* Lock to serialize access to directory cookies */
 end_comment
 
 begin_comment
@@ -766,6 +779,81 @@ parameter_list|(
 name|struct
 name|vnode
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|nfs_upgrade_vnlock
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nfs_downgrade_vnlock
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|old_lock
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nfs_printf
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nfs_dircookie_lock
+parameter_list|(
+name|struct
+name|nfsnode
+modifier|*
+name|np
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nfs_dircookie_unlock
+parameter_list|(
+name|struct
+name|nfsnode
+modifier|*
+name|np
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -35,10 +35,6 @@ comment|/* Force a TCP reconnect */
 name|int
 name|flags
 decl_stmt|;
-name|struct
-name|mtx
-name|mtx
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -51,6 +47,10 @@ begin_struct
 struct|struct
 name|nfsmount
 block|{
+name|struct
+name|mtx
+name|nm_mtx
+decl_stmt|;
 name|int
 name|nm_flag
 decl_stmt|;
