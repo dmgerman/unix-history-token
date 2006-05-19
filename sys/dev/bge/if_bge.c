@@ -13043,6 +13043,29 @@ return|return;
 block|}
 endif|#
 directive|endif
+comment|/* 	 * Do the mandatory PCI flush as well as get the link status. 	 */
+name|statusword
+operator|=
+name|CSR_READ_4
+argument_list|(
+name|sc
+argument_list|,
+name|BGE_MAC_STS
+argument_list|)
+operator|&
+name|BGE_MACSTAT_LINK_CHANGED
+expr_stmt|;
+comment|/* Ack interrupt and stop others from occuring. */
+name|CSR_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|BGE_MBX_IRQ0_LO
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Make sure the descriptor ring indexes are coherent. */
 name|bus_dmamap_sync
 argument_list|(
 name|sc
@@ -13058,20 +13081,6 @@ operator|.
 name|bge_status_map
 argument_list|,
 name|BUS_DMASYNC_POSTREAD
-argument_list|)
-expr_stmt|;
-name|statusword
-operator|=
-name|atomic_readandclear_32
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|bge_ldata
-operator|.
-name|bge_status_block
-operator|->
-name|bge_status
 argument_list|)
 expr_stmt|;
 name|bus_dmamap_sync
@@ -13091,38 +13100,6 @@ argument_list|,
 name|BUS_DMASYNC_PREREAD
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* Avoid this for now -- checking this register is expensive. */
-comment|/* Make sure this is really our interrupt. */
-if|if
-condition|(
-operator|!
-operator|(
-name|CSR_READ_4
-argument_list|(
-name|sc
-argument_list|,
-name|BGE_MISC_LOCAL_CTL
-argument_list|)
-operator|&
-name|BGE_MLC_INTR_STATE
-operator|)
-condition|)
-return|return;
-endif|#
-directive|endif
-comment|/* Ack interrupt and stop others from occuring. */
-name|CSR_WRITE_4
-argument_list|(
-name|sc
-argument_list|,
-name|BGE_MBX_IRQ0_LO
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -13140,8 +13117,6 @@ name|BGE_CHIPID_BCM5700_B1
 operator|)
 operator|||
 name|statusword
-operator|&
-name|BGE_STATFLAG_LINKSTATE_CHANGED
 operator|||
 name|sc
 operator|->
