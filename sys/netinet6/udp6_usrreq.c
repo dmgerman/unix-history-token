@@ -2501,9 +2501,15 @@ name|s_addr
 operator|!=
 name|INADDR_ANY
 condition|)
-return|return
+block|{
+name|error
+operator|=
 name|EISCONN
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 name|in6_sin6_2_sin
 argument_list|(
 operator|&
