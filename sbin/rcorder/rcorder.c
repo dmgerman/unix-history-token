@@ -2963,7 +2963,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * given a filenode, we ensure we are not a cyclic graph.  if this  * is ok, we loop over the filenodes requirements, calling satisfy_req()  * for each of them.. once we have done this, remove this filenode  * from each provision table, as we are now done.  */
+comment|/*  * given a filenode, we ensure we are not a cyclic graph.  if this  * is ok, we loop over the filenodes requirements, calling satisfy_req()  * for each of them.. once we have done this, remove this filenode  * from each provision table, as we are now done.  *  * NOTE: do_file() is called recursively from several places and cannot  * safely free() anything related to items that may be recursed on.  * Circular dependancies will cause problems if we do.  */
 end_comment
 
 begin_function
@@ -3082,17 +3082,12 @@ name|r
 operator|->
 name|next
 expr_stmt|;
-if|if
-condition|(
-name|was_set
-operator|==
+if|#
+directive|if
 literal|0
-condition|)
-name|free
-argument_list|(
-name|r_tmp
-argument_list|)
-expr_stmt|;
+block|if (was_set == 0) 			free(r_tmp);
+endif|#
+directive|endif
 block|}
 name|fnode
 operator|->
@@ -3276,26 +3271,12 @@ name|filename
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|was_set
-operator|==
+if|#
+directive|if
 literal|0
-condition|)
-block|{
-name|free
-argument_list|(
-name|fnode
-operator|->
-name|filename
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|fnode
-argument_list|)
-expr_stmt|;
-block|}
+block|if (was_set == 0) {    		free(fnode->filename);    		free(fnode); 	}
+endif|#
+directive|endif
 block|}
 end_function
 
