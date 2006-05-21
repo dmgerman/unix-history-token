@@ -9511,8 +9511,6 @@ name|udata
 argument_list|,
 name|SKIP_DTOR
 argument_list|,
-name|ZFREE_STATFAIL
-operator||
 name|ZFREE_STATFREE
 argument_list|)
 expr_stmt|;
