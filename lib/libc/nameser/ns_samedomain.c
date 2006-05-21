@@ -75,12 +75,6 @@ directive|include
 file|"port_after.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_LIBC
-end_ifndef
-
 begin_comment
 comment|/*  * int  * ns_samedomain(a, b)  *	Check whether a name belongs to a domain.  * Inputs:  *	a - the domain whose ancestory is being verified  *	b - the potential ancestor we're checking against  * Return:  *	boolean - is a at or below b?  * Notes:  *	Trailing dots are first removed from name and domain.  *	Always compare complete subdomains, not only whether the  *	domain name is the trailing string of the given name.  *  *	"host.foobar.top" lies in "foobar.top" and in "top" and in ""  *	but NOT in "bar.top"  */
 end_comment
@@ -434,6 +428,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_LIBC
+end_ifndef
 
 begin_comment
 comment|/*  * int  * ns_subdomain(a, b)  *	is "a" a subdomain of "b"?  */

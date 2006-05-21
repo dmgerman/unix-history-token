@@ -1716,17 +1716,17 @@ name|res_findzonecut
 value|__res_findzonecut
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|res_findzonecut2
 value|__res_findzonecut2
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -2783,10 +2783,38 @@ literal|0
 end_if
 
 begin_endif
-unit|int		res_nsendsigned(res_state, const u_char *, int, 				ns_tsig_key *, u_char *, int); int		res_findzonecut(res_state, const char *, ns_class, int, 				char *, size_t, struct in_addr *, int); int		res_findzonecut2(res_state, const char *, ns_class, int, 				 char *, size_t, 				 union res_sockaddr_union *, int);
+unit|int		res_nsendsigned(res_state, const u_char *, int, 				ns_tsig_key *, u_char *, int); int		res_findzonecut(res_state, const char *, ns_class, int, 				char *, size_t, struct in_addr *, int);
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+name|int
+name|res_findzonecut2
+parameter_list|(
+name|res_state
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|ns_class
+parameter_list|,
+name|int
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|union
+name|res_sockaddr_union
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

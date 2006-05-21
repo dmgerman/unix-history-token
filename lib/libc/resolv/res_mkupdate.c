@@ -46,6 +46,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|"port_before.h"
 end_include
 
@@ -138,6 +152,23 @@ include|#
 directive|include
 file|<ctype.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_LIBC
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<isc/list.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -246,7 +277,16 @@ begin_comment
 comment|/* Forward. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_LIBC
+end_ifdef
+
 begin_function_decl
+specifier|static
+endif|#
+directive|endif
 name|int
 name|res_protocolnumber
 parameter_list|(
@@ -257,7 +297,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_LIBC
+end_ifdef
+
 begin_function_decl
+specifier|static
+endif|#
+directive|endif
 name|int
 name|res_servicenumber
 parameter_list|(
@@ -384,9 +433,15 @@ modifier|*
 modifier|*
 name|lastdnptr
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|_LIBC
 name|int
 name|siglen
-decl_stmt|,
+decl_stmt|;
+endif|#
+directive|endif
+name|int
 name|keylen
 decl_stmt|,
 name|certlen
@@ -2463,6 +2518,17 @@ break|break;
 case|case
 name|ns_t_sig
 case|:
+ifdef|#
+directive|ifdef
+name|_LIBC
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+else|#
+directive|else
 block|{
 name|int
 name|sig_type
@@ -3010,6 +3076,8 @@ name|siglen
 expr_stmt|;
 break|break;
 block|}
+endif|#
+directive|endif
 case|case
 name|ns_t_key
 case|:
@@ -5385,6 +5453,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_LIBC
+end_ifndef
+
 begin_function
 name|void
 name|res_destroyservicelist
@@ -5451,7 +5525,21 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_LIBC
+end_ifdef
+
 begin_function
+specifier|static
+endif|#
+directive|endif
 name|void
 name|res_buildprotolist
 parameter_list|(
@@ -5588,6 +5676,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_LIBC
+end_ifndef
+
 begin_function
 name|void
 name|res_destroyprotolist
@@ -5648,6 +5742,11 @@ literal|0
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -5804,7 +5903,16 @@ begin_comment
 comment|/*  * Convert service name or (ascii) number to int.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_LIBC
+end_ifdef
+
 begin_function
+specifier|static
+endif|#
+directive|endif
 name|int
 name|res_servicenumber
 parameter_list|(
@@ -5846,7 +5954,16 @@ begin_comment
 comment|/*  * Convert protocol name or (ascii) number to int.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_LIBC
+end_ifdef
+
 begin_function
+specifier|static
+endif|#
+directive|endif
 name|int
 name|res_protocolnumber
 parameter_list|(
@@ -5883,6 +6000,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_LIBC
+end_ifndef
 
 begin_function
 specifier|static
@@ -6384,6 +6507,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -2190,12 +2190,23 @@ name|ns_verify_tcp_init
 value|__ns_verify_tcp_init
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|ns_samedomain
 value|__ns_samedomain
 end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_define
 define|#
@@ -2635,7 +2646,34 @@ literal|0
 end_if
 
 begin_endif
-unit|int		ns_sign(u_char *, int *, int, int, void *, 			const u_char *, int, u_char *, int *, time_t); int		ns_sign2(u_char *, int *, int, int, void *, 			 const u_char *, int, u_char *, int *, time_t, 			 u_char **, u_char **); int		ns_sign_tcp(u_char *, int *, int, int, 			    ns_tcp_tsig_state *, int); int		ns_sign_tcp2(u_char *, int *, int, int, 			     ns_tcp_tsig_state *, int, 			     u_char **, u_char **); int		ns_sign_tcp_init(void *, const u_char *, int, 				 ns_tcp_tsig_state *); u_char		*ns_find_tsig(u_char *, u_char *); int		ns_verify(u_char *, int *, void *, 			  const u_char *, int, u_char *, int *, 			  time_t *, int); int		ns_verify_tcp(u_char *, int *, ns_tcp_tsig_state *, int); int		ns_verify_tcp_init(void *, const u_char *, int, 				   ns_tcp_tsig_state *); int		ns_samedomain(const char *, const char *); int		ns_subdomain(const char *, const char *);
+unit|int		ns_sign(u_char *, int *, int, int, void *, 			const u_char *, int, u_char *, int *, time_t); int		ns_sign2(u_char *, int *, int, int, void *, 			 const u_char *, int, u_char *, int *, time_t, 			 u_char **, u_char **); int		ns_sign_tcp(u_char *, int *, int, int, 			    ns_tcp_tsig_state *, int); int		ns_sign_tcp2(u_char *, int *, int, int, 			     ns_tcp_tsig_state *, int, 			     u_char **, u_char **); int		ns_sign_tcp_init(void *, const u_char *, int, 				 ns_tcp_tsig_state *); u_char		*ns_find_tsig(u_char *, u_char *); int		ns_verify(u_char *, int *, void *, 			  const u_char *, int, u_char *, int *, 			  time_t *, int); int		ns_verify_tcp(u_char *, int *, ns_tcp_tsig_state *, int); int		ns_verify_tcp_init(void *, const u_char *, int, 				   ns_tcp_tsig_state *);
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+name|int
+name|ns_samedomain
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|int		ns_subdomain(const char *, const char *);
 endif|#
 directive|endif
 end_endif

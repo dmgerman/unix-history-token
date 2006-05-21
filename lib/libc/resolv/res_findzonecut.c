@@ -39,6 +39,20 @@ begin_comment
 comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  * Copyright (c) 1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT  * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Import. */
 end_comment
@@ -508,6 +522,12 @@ begin_comment
 comment|/*  * int  * res_findzonecut(res, dname, class, zname, zsize, addrs, naddrs)  *	find enclosing zone for a<dname,class>, and some server addresses  * parameters:  *	res - resolver context to work within (is modified)  *	dname - domain name whose enclosing zone is desired  *	class - class of dname (and its enclosing zone)  *	zname - found zone name  *	zsize - allocated size of zname  *	addrs - found server addresses  *	naddrs - max number of addrs  * return values:  *< 0 - an error occurred (check errno)  *	= 0 - zname is now valid, but addrs[] wasn't changed  *> 0 - zname is now valid, and return value is number of addrs[] found  * notes:  *	this function calls res_nsend() which means it depends on correctly  *	functioning recursive nameservers (usually defined in /etc/resolv.conf  *	or its local equivilent).  *  *	we start by asking for an SOA<dname,class>.  if we get one as an  *	answer, that just means<dname,class> is a zone top, which is fine.  *	more than likely we'll be told to go pound sand, in the form of a  *	negative answer.  *  *	note that we are not prepared to deal with referrals since that would  *	only come from authority servers and our correctly functioning local  *	recursive server would have followed the referral and got us something  *	more definite.  *  *	if the authority section contains an SOA, this SOA should also be the  *	closest enclosing zone, since any intermediary zone cuts would've been  *	returned as referrals and dealt with by our correctly functioning local  *	recursive name server.  but an SOA in the authority section should NOT  *	match our dname (since that would have been returned in the answer  *	section).  an authority section SOA has to be "above" our dname.  *  *	however, since authority section SOA's were once optional, it's  *	possible that we'll have to go hunting for the enclosing SOA by  *	ripping labels off the front of our dname -- this is known as "doing  *	it the hard way."  *  *	ultimately we want some server addresses, which are ideally the ones  *	pertaining to the SOA.MNAME, but only if there is a matching NS RR.  *	so the second phase (after we find an SOA) is to go looking for the  *	NS RRset for that SOA's zone.  *  *	no answer section processed by this code is allowed to contain CNAME  *	or DNAME RR's.  for the SOA query this means we strip a label and  *	keep going.  for the NS and A queries this means we just give up.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_LIBC
+end_ifndef
+
 begin_function
 name|int
 name|res_findzonecut
@@ -648,6 +668,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
