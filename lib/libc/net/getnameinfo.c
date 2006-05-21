@@ -1095,7 +1095,7 @@ name|hostlen
 condition|)
 comment|/* don't forget terminator */
 return|return
-name|EAI_MEMORY
+name|EAI_OVERFLOW
 return|;
 name|strlcpy
 argument_list|(
@@ -1164,7 +1164,7 @@ operator|<
 literal|0
 condition|)
 return|return
-name|EAI_MEMORY
+name|EAI_OVERFLOW
 return|;
 if|if
 condition|(
@@ -1179,7 +1179,7 @@ operator|>
 name|hostlen
 condition|)
 return|return
-name|EAI_MEMORY
+name|EAI_OVERFLOW
 return|;
 comment|/* construct<numeric-addr><delim><zoneid> */
 name|memcpy

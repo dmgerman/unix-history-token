@@ -570,6 +570,10 @@ name|EAI_BADHINTS
 value|12
 end_define
 
+begin_comment
+comment|/* invalid value for hints */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -577,11 +581,26 @@ name|EAI_PROTOCOL
 value|13
 end_define
 
+begin_comment
+comment|/* resolved protocol is unknown */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EAI_OVERFLOW
+value|14
+end_define
+
+begin_comment
+comment|/* argument buffer overflow */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|EAI_MAX
-value|14
+value|15
 end_define
 
 begin_comment

@@ -80,7 +80,10 @@ literal|"Invalid value for hints"
 block|,
 comment|/* EAI_BADHINTS */
 literal|"Resolved protocol is unknown"
+block|,
 comment|/* EAI_PROTOCOL */
+literal|"Argument buffer overflow"
+comment|/* EAI_OVERFLOW */
 block|}
 decl_stmt|;
 end_decl_stmt
