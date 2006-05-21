@@ -166,6 +166,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|finish_execplus
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|creat_f
 name|c_Xmin

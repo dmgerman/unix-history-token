@@ -441,6 +441,12 @@ name|int
 name|_e_psizemax
 decl_stmt|;
 comment|/* max num. of bytes of args */
+name|struct
+name|_plandata
+modifier|*
+name|_e_next
+decl_stmt|;
+comment|/* next F_EXECPLUS in tree */
 block|}
 name|ex
 struct|;
@@ -636,6 +642,13 @@ define|#
 directive|define
 name|e_psizemax
 value|p_un.ex._e_psizemax
+end_define
+
+begin_define
+define|#
+directive|define
+name|e_next
+value|p_un.ex._e_next
 end_define
 
 begin_typedef
