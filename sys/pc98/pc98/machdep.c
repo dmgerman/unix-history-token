@@ -372,12 +372,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pc98/cbus/cbus.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/netisr.h>
 end_include
 

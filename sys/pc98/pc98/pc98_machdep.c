@@ -33,23 +33,6 @@ directive|include
 file|<cam/cam_ccb.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|EPSON_MEMWIN
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<pc98/cbus/cbus.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include

@@ -138,12 +138,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pc98/cbus/cbus.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pc98/cbus/fdcreg.h>
 end_include
 
