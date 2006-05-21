@@ -694,6 +694,21 @@ name|proc
 modifier|*
 name|targetp
 decl_stmt|;
+comment|/* Don't allow non root user to set a scheduler policy */
+if|if
+condition|(
+name|suser
+argument_list|(
+name|td
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
 name|e
 operator|=
 name|copyin
