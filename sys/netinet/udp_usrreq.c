@@ -5195,6 +5195,24 @@ name|s_addr
 operator|=
 name|INADDR_ANY
 expr_stmt|;
+name|SOCK_LOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
+name|so
+operator|->
+name|so_state
+operator|&=
+operator|~
+name|SS_ISCONNECTED
+expr_stmt|;
+comment|/* XXX */
+name|SOCK_UNLOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|INP_UNLOCK
 argument_list|(
 name|inp
@@ -5206,14 +5224,6 @@ operator|&
 name|udbinfo
 argument_list|)
 expr_stmt|;
-name|so
-operator|->
-name|so_state
-operator|&=
-operator|~
-name|SS_ISCONNECTED
-expr_stmt|;
-comment|/* XXX */
 return|return
 literal|0
 return|;
