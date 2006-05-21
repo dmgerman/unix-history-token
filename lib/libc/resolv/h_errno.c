@@ -82,19 +82,5 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* binary backward compatibility for FreeBSD 5.x and 6.x */
-end_comment
-
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|__h_errno
-argument_list|,
-name|__h_error
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 end_unit
 

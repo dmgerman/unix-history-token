@@ -281,43 +281,5 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* binary backward compatibility for FreeBSD 5.x and 6.x */
-end_comment
-
-begin_function
-name|struct
-name|__res_state_ext
-modifier|*
-name|___res_ext
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-name|__res_state
-argument_list|()
-operator|->
-name|_u
-operator|.
-name|_ext
-operator|.
-name|ext
-operator|)
-return|;
-block|}
-end_function
-
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|__res_state
-argument_list|,
-name|___res
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 end_unit
 
