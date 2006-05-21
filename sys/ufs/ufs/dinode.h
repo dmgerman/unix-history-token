@@ -310,7 +310,7 @@ comment|/*  16: File byte count. */
 name|u_int64_t
 name|di_blocks
 decl_stmt|;
-comment|/*  24: Bytes actually held. */
+comment|/*  24: Blocks actually held. */
 name|ufs_time_t
 name|di_atime
 decl_stmt|;
