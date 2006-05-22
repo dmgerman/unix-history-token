@@ -287,6 +287,14 @@ parameter_list|()
 value|mtx_unlock(&crypto_ret_q_mtx)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CRYPTO_RETQ_EMPTY
+parameter_list|()
+value|(TAILQ_EMPTY(&crp_ret_q)&& TAILQ_EMPTY(&crp_ret_kq))
+end_define
+
 begin_decl_stmt
 specifier|static
 name|uma_zone_t
@@ -3804,11 +3812,8 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|TAILQ_EMPTY
-argument_list|(
-operator|&
-name|crp_ret_q
-argument_list|)
+name|CRYPTO_RETQ_EMPTY
+argument_list|()
 condition|)
 name|wakeup_one
 argument_list|(
@@ -3929,11 +3934,8 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|TAILQ_EMPTY
-argument_list|(
-operator|&
-name|crp_ret_kq
-argument_list|)
+name|CRYPTO_RETQ_EMPTY
+argument_list|()
 condition|)
 name|wakeup_one
 argument_list|(
