@@ -97,14 +97,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* Kluge to avoid ABI breakage. */
-name|namelen
-operator|=
-operator|(
-name|int
-operator|)
-name|namelen
-expr_stmt|;
 name|mib
 index|[
 literal|0
