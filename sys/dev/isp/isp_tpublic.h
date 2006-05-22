@@ -8,7 +8,7 @@ comment|/*-  * Qlogic ISP Host Adapter Public Target Interface Structures&& Rout
 end_comment
 
 begin_comment
-comment|/*  * Qlogic ISP Host Adapter Public Target Interface Structures&& Routines  */
+comment|/*  * Host Adapter Public Target Interface Structures&& Routines  */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * Action codes set by the Qlogic MD target driver for  * the external layer to figure out what to do with.  */
+comment|/*  * Action codes set by the MD target driver for  * the external layer to figure out what to do with.  */
 end_comment
 
 begin_typedef
@@ -60,7 +60,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Action codes set by the external layer for the  * MD Qlogic driver to figure out what to do with.  */
+comment|/*  * Action codes set by the external layer for the  * MD driver to figure out what to do with.  */
 end_comment
 
 begin_typedef
@@ -103,7 +103,7 @@ begin_define
 define|#
 directive|define
 name|QR_VERSION
-value|2
+value|10
 end_define
 
 begin_typedef
@@ -246,6 +246,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|TGT_ANY
+value|((uint64_t) -1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|INI_ANY
 value|((uint64_t) -1)
 end_define
@@ -275,7 +282,7 @@ value|(                                                   \         (tmd)&&     
 end_define
 
 begin_comment
-comment|/*  * A word about ENABLE/DISABLE: the argument is a pointer to a enadis_t  * with cd_hba, cd_iid, cd_chan, cd_tgt and cd_lun filled out.  *  * If an error occurs in either enabling or disabling the described lun  * cd_error is set with an appropriate non-zero value.  *  * Logical unit zero must be the first enabled and the last disabled.  */
+comment|/*  * A word about ENABLE/DISABLE: the argument is a pointer to a enadis_t  * with en_hba, en_iid, en_chan, en_tgt and en_lun filled out.  *  * If an error occurs in either enabling or disabling the described lun  * cd_error is set with an appropriate non-zero value.  */
 end_comment
 
 begin_typedef
@@ -292,23 +299,23 @@ modifier|*
 name|en_hba
 decl_stmt|;
 comment|/* HBA tag */
-name|u_int64_t
+name|uint64_t
 name|en_iid
 decl_stmt|;
 comment|/* initiator ID */
-name|u_int64_t
+name|uint64_t
 name|en_tgt
 decl_stmt|;
 comment|/* target id */
-name|u_int64_t
+name|uint16_t
 name|en_lun
 decl_stmt|;
 comment|/* logical unit */
-name|u_int8_t
+name|uint16_t
 name|en_chan
 decl_stmt|;
 comment|/* channel on card */
-name|int32_t
+name|int
 name|en_error
 decl_stmt|;
 block|}
@@ -317,7 +324,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Suggested Software Target Mode Command Handling structure.  *  * A note about terminology:  *  *   MD stands for "Machine Dependent".  *  *    This driver is structured in three layers: Outer MD, core, and inner MD.  *    The latter also is bus dependent (i.e., is cognizant of PCI bus issues  *    as well as platform issues).  *  *  *   "Outer Layer" means "Other Module"  *  *    Some additional module that actually implements SCSI target command  *    policy is the recipient of incoming commands and the source of the  *    disposition for them.  *  * The command structure below is one suggested possible MD command structure,  * but since the handling of thbis is entirely in the MD layer, there is  * no explicit or implicit requirement that it be used.  *  * The cd_private tag should be used by the MD layer to keep a free list  * of these structures. Code outside of this driver can then use this  * to identify it's own unit structures. That is, when not on the MD  * layer's freelist, the MD layer should shove into it the identifier  * that the outer layer has for it- passed in on an initial QIN_HBA_REG  * call (see below).  *  * The cd_hba tag is a tag that uniquely identifies the HBA this target  * mode command is coming from. The outer layer has to pass this back  * unchanged to avoid chaos.  *  * The cd_iid, cd_tgt, cd_lun and cd_bus tags are used to identify the  * id of the initiator who sent us a command, the target claim to be, the  * lun on the target we claim to be, and the bus instance (for multiple  * bus host adapters) that this applies to (consider it an extra Port  * parameter). The iid, tgt and lun values are deliberately chosen to be  * fat so that, for example, World Wide Names can be used instead of  * the units that the Qlogic firmware uses (in the case where the MD  * layer maintains a port database, for example).  *  * The cd_tagtype field specifies what kind of command tag has been  * sent with the command. The cd_tagval is the tag's value (low 16  * bits). It also contains (in the upper 16 bits) any command handle.  *  *  * N.B.: when the MD layer sends this command to outside software  * the outside software likely *MUST* return the same cd_tagval that  * was in place because this value is likely what the Qlogic f/w uses  * to identify a command.  *  * The cd_cdb contains storage for the passed in command descriptor block.  * This is the maximum size we can get out of the Qlogic f/w. There's no  * passed in length because whoever decodes the command to act upon it  * will know what the appropriate length is.  *  * The tag cd_lflags are the flags set by the MD driver when it gets  * command incoming or when it needs to inform any outside entities  * that the last requested action failed.  *  * The tag cd_hflags should be set by any outside software to indicate  * the validity of sense and status fields (defined below) and to indicate  * the direction data is expected to move. It is an error to have both  * CDFH_DATA_IN and CDFH_DATA_OUT set.  *  * If the CDFH_STSVALID flag is set, the command should be completed (after  * sending any data and/or status). If CDFH_SNSVALID is set and the MD layer  * can also handle sending the associated sense data (either back with an  * FCP RESPONSE IU for Fibre Channel or otherwise automatically handling a  * REQUEST SENSE from the initator for this target/lun), the MD layer will  * set the CDFL_SENTSENSE flag on successful transmission of the sense data.  * It is an error for the CDFH_SNSVALID bit to be set and CDFH_STSVALID not  * to be set. It is an error for the CDFH_SNSVALID be set and the associated  * SCSI status (cd_scsi_status) not be set to CHECK CONDITON.  *   * The tag cd_data points to a data segment to either be filled or  * read from depending on the direction of data movement. The tag  * is undefined if no data direction is set. The MD layer and outer  * layers must agree on the meaning of cd_data.  *  * The tag cd_totlen is the total data amount expected to be moved  * over the life of the command. It *may* be set by the MD layer, possibly  * from the datalen field of an FCP CMND IU unit. If it shows up in the outer  * layers set to zero and the CDB indicates data should be moved, the outer  * layer should set it to the amount expected to be moved.  *  * The tag cd_resid should be the total residual of data not transferred.  * The outer layers need to set this at the begining of command processing  * to equal cd_totlen. As data is successfully moved, this value is decreased.  * At the end of a command, any nonzero residual indicates the number of bytes  * requested but not moved. XXXXXXXXXXXXXXXXXXXXXXX TOO VAGUE!!!   *  * The tag cd_xfrlen is the length of the currently active data transfer.  * This allows several interations between any outside software and the  * MD layer to move data.  *  * The reason that total length and total residual have to be tracked  * is that fibre channel FCP DATA IU units have to have a relative  * offset field.  *  * N.B.: there is no necessary 1-to-1 correspondence between any one  * data transfer segment and the number of CTIOs that will be generated  * satisfy the current data transfer segment. It's not also possible to  * predict how big a transfer can be before it will be 'too big'. Be  * reasonable- a 64KB transfer is 'reasonable'. A 1MB transfer may not  * be. A 32MB transfer is unreasonable. The problem here has to do with  * how CTIOs can be used to map passed data pointers. In systems which  * have page based scatter-gather requirements, each PAGESIZEd chunk will  * consume one data segment descriptor- you get 3 or 4 of them per CTIO.  * The size of the REQUEST QUEUE you drop a CTIO onto is finite (typically  * it's 256, but on some systems it's even smaller, and note you have to  * sure this queue with the initiator side of this driver).  *  * The tags cd_sense and cd_scsi_status are pretty obvious.  *  * The tag cd_error is to communicate between the MD layer and outer software  * the current error conditions.  *  * The tag cd_lreserved, cd_hreserved are scratch areas for use for the MD  * and outer layers respectively.  *   */
+comment|/*  * Suggested Software Target Mode Command Handling structure.  *  * A note about terminology:  *  *   MD stands for "Machine Dependent".  *  *    This driver is structured in three layers: Outer MD, core, and inner MD.  *    The latter also is bus dependent (i.e., is cognizant of PCI bus issues  *    as well as platform issues).  *  *  *   "Outer Layer" means "Other Module"  *  *    Some additional module that actually implements SCSI target command  *    policy is the recipient of incoming commands and the source of the  *    disposition for them.  *  * The command structure below is one suggested possible MD command structure,  * but since the handling of thbis is entirely in the MD layer, there is  * no explicit or implicit requirement that it be used.  *  * The cd_private tag should be used by the MD layer to keep a free list  * of these structures. Code outside of this driver can then use this  * to identify it's own unit structures. That is, when not on the MD  * layer's freelist, the MD layer should shove into it the identifier  * that the outer layer has for it- passed in on an initial QIN_HBA_REG  * call (see below).  *  * The cd_hba tag is a tag that uniquely identifies the HBA this target  * mode command is coming from. The outer layer has to pass this back  * unchanged to avoid chaos.  *  * The cd_iid, cd_tgt, cd_lun and cd_port tags are used to identify the  * id of the initiator who sent us a command, the target claim to be, the  * lun on the target we claim to be, and the port instance (for multiple  * port host adapters) that this applies to (consider it an extra port  * parameter). The iid, tgt and lun values are deliberately chosen to be  * fat so that, for example, World Wide Names can be used instead of  * the units that the firmware uses (in the case where the MD  * layer maintains a port database, for example).  *  * The cd_tagtype field specifies what kind of command tag type, if  * any, has been sent with the command. Note that the Outer Layer  * still needs to pass the tag handle through unchanged even  * if the tag type is CD_UNTAGGED.  *  * The cd_cdb contains storage for the passed in command descriptor block.  * There is no need to define length as the callee should be able to  * figure this out.  *  * The tag cd_lflags are the flags set by the MD driver when it gets  * command incoming or when it needs to inform any outside entities  * that the last requested action failed.  *  * The tag cd_hflags should be set by any outside software to indicate  * the validity of sense and status fields (defined below) and to indicate  * the direction data is expected to move. It is an error to have both  * CDFH_DATA_IN and CDFH_DATA_OUT set.  *  * If the CDFH_STSVALID flag is set, the command should be completed (after  * sending any data and/or status). If CDFH_SNSVALID is set and the MD layer  * can also handle sending the associated sense data (either back with an  * FCP RESPONSE IU for Fibre Channel or otherwise automatically handling a  * REQUEST SENSE from the initator for this target/lun), the MD layer will  * set the CDFL_SENTSENSE flag on successful transmission of the sense data.  * It is an error for the CDFH_SNSVALID bit to be set and CDFH_STSVALID not  * to be set. It is an error for the CDFH_SNSVALID be set and the associated  * SCSI status (cd_scsi_status) not be set to CHECK CONDITON.  *   * The tag cd_data points to a data segment to either be filled or  * read from depending on the direction of data movement. The tag  * is undefined if no data direction is set. The MD layer and outer  * layers must agree on the meaning of cd_data and it is specifically  * not defined here.  *  * The tag cd_totlen is the total data amount expected to be moved  * over the life of the command. It may be set by the MD layer, possibly  * from the datalen field of an FCP CMND IU unit. If it shows up in the outer  * layers set to zero and the CDB indicates data should be moved, the outer  * layer should set it to the amount expected to be moved.  *  * The tag cd_resid should be the total residual of data not transferred.  * The outer layers need to set this at the begining of command processing  * to equal cd_totlen. As data is successfully moved, this value is decreased.  * At the end of a command, any nonzero residual indicates the number of bytes  * requested by the command but not moved.  *  * The tag cd_xfrlen is the length of the currently active data transfer.  * This allows several interations between any outside software and the  * MD layer to move data.  *  * The reason that total length and total residual have to be tracked  * is to keep track of relative offset.  *  * The tags cd_sense and cd_scsi_status are pretty obvious.  *  * The tag cd_error is to communicate between the MD layer and outer software  * the current error conditions.  *  * The tag cd_lreserved, cd_hreserved are scratch areas for use for the MD  * and outer layers respectively.  *   */
 end_comment
 
 begin_ifndef
@@ -348,7 +355,7 @@ begin_define
 define|#
 directive|define
 name|TMD_SENSELEN
-value|24
+value|18
 end_define
 
 begin_endif
@@ -394,87 +401,71 @@ modifier|*
 name|cd_data
 decl_stmt|;
 comment|/* 'pointer' to data */
-name|u_int64_t
+name|uint64_t
 name|cd_iid
 decl_stmt|;
 comment|/* initiator ID */
-name|u_int64_t
+name|uint64_t
 name|cd_tgt
 decl_stmt|;
 comment|/* target id */
-name|u_int64_t
+name|uint64_t
 name|cd_lun
 decl_stmt|;
 comment|/* logical unit */
-name|u_int32_t
+name|uint32_t
 name|cd_tagval
 decl_stmt|;
 comment|/* tag value */
-name|u_int32_t
+name|uint32_t
 name|cd_lflags
 decl_stmt|;
 comment|/* flags lower level sets */
-name|u_int32_t
+name|uint32_t
 name|cd_hflags
 decl_stmt|;
 comment|/* flags higher level sets */
-name|u_int32_t
+name|uint32_t
 name|cd_totlen
 decl_stmt|;
-comment|/* total data requirement */
-name|u_int32_t
+comment|/* total data load */
+name|uint32_t
 name|cd_resid
 decl_stmt|;
 comment|/* total data residual */
-name|u_int32_t
+name|uint32_t
 name|cd_xfrlen
 decl_stmt|;
-comment|/* current data requirement */
+comment|/* current data load */
 name|int32_t
 name|cd_error
 decl_stmt|;
 comment|/* current error */
-name|u_int32_t
-name|cd_scsi_status
-range|:
-literal|16
-decl_stmt|,
-comment|/* closing SCSI status */
-range|:
-literal|7
-decl_stmt|,
-name|cd_chan
-range|:
-literal|1
-decl_stmt|,
-comment|/* channel on card */
-range|:
-literal|2
-decl_stmt|,
+name|uint8_t
 name|cd_tagtype
 range|:
-literal|6
+literal|4
+decl_stmt|,
+name|cd_port
+range|:
+literal|4
 decl_stmt|;
-comment|/* tag type */
-name|u_int8_t
-name|cd_senselen
+comment|/* port number on HBA */
+name|uint8_t
+name|cd_scsi_status
 decl_stmt|;
-name|u_int8_t
-name|cd_cdblen
-decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|cd_sense
 index|[
 name|TMD_SENSELEN
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|cd_cdb
 index|[
 name|TMD_CDBLEN
 index|]
 decl_stmt|;
-comment|/* Command */
 union|union
 block|{
 name|void
@@ -490,40 +481,40 @@ operator|*
 argument_list|)
 index|]
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|llongs
 index|[
 name|QCDS
 operator|/
 sizeof|sizeof
 argument_list|(
-name|u_int64_t
+name|uint64_t
 argument_list|)
 index|]
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|longs
 index|[
 name|QCDS
 operator|/
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 index|]
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|shorts
 index|[
 name|QCDS
 operator|/
 sizeof|sizeof
 argument_list|(
-name|u_int16_t
+name|uint16_t
 argument_list|)
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|bytes
 index|[
 name|QCDS
@@ -544,6 +535,45 @@ block|}
 name|tmd_cmd_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* defined tags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CD_UNTAGGED
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CD_SIMPLE_TAG
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CD_ORDERED_TAG
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|CD_HEAD_TAG
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|CD_ACA_TAG
+value|4
+end_define
 
 begin_ifndef
 ifndef|#
@@ -744,11 +774,11 @@ comment|/* private layer flags */
 end_comment
 
 begin_comment
-comment|/*  * A word about the START/CONT/DONE/FIN dance:  *  *	When the HBA is enabled for receiving commands, one may	show up  *	without notice. When that happens, the Qlogic target mode driver  *	gets a tmd_cmd_t, fills it with the info that just arrived, and  *	calls the outer layer with a QOUT_TMD_START code and pointer to  *	the tmd_cmd_t.  *  *	The outer layer decodes the command, fetches data, prepares stuff,  *	whatever, and starts by passing back the pointer with a QIN_TMD_CONT  *	code which causes the Qlogic target mode driver to generate CTIOs to  *	satisfy whatever action needs to be taken. When those CTIOs complete,  *	the Qlogic target driver sends the pointer to the cmd_tmd_t back with  *	a QOUT_TMD_DONE code. This repeats for as long as necessary.  *  *	The outer layer signals it wants to end the command by settings within  *	the tmd_cmd_t itself. When the final QIN_TMD_CONT is reported completed,  *	the outer layer frees the tmd_cmd_t by sending the pointer to it  *	back with a QIN_TMD_FIN code.  *  *	The graph looks like:  *  *	QOUT_TMD_START -> [ QIN_TMD_CONT -> QOUT_TMD_DONE ] * -> QIN_TMD_FIN.  *  */
+comment|/*  * A word about the START/CONT/DONE/FIN dance:  *  *    When the HBA is enabled for receiving commands, one may show up  *    without notice. When that happens, the MD target mode driver  *    gets a tmd_cmd_t, fills it with the info that just arrived, and  *    calls the outer layer with a QOUT_TMD_START code and pointer to  *    the tmd_cmd_t.  *  *    The outer layer decodes the command, fetches data, prepares stuff,  *    whatever, and starts by passing back the pointer with a QIN_TMD_CONT  *    code which causes the MD target mode driver to generate CTIOs to  *    satisfy whatever action needs to be taken. When those CTIOs complete,  *    the MD target driver sends the pointer to the cmd_tmd_t back with  *    a QOUT_TMD_DONE code. This repeats for as long as necessary. These  *    may not be done in parallel- they are sequential operations.  *  *    The outer layer signals it wants to end the command by settings within  *    the tmd_cmd_t itself. When the final QIN_TMD_CONT is reported completed,  *    the outer layer frees the tmd_cmd_t by sending the pointer to it  *    back with a QIN_TMD_FIN code.  *  *    The graph looks like:  *  *    QOUT_TMD_START -> [ QIN_TMD_CONT -> QOUT_TMD_DONE ] * -> QIN_TMD_FIN.  *  */
 end_comment
 
 begin_comment
-comment|/*  * Target handler functions.  *  * The MD target handler function (the outer layer calls this)  * should be be prototyped like:  *  *	void target_action(qact_e, void *arg)  *  * The outer layer target handler function (the MD layer calls this)  * should be be prototyped like:  *  *	void system_target_handler(tact_e, void *arg)  */
+comment|/*  * Target handler functions.  *  * The MD target handler function (the outer layer calls this)  * should be be prototyped like:  *  *    void target_action(qact_e, void *arg)  *  * The outer layer target handler function (the MD layer calls this)  * should be be prototyped like:  *  *    void scsi_target_handler(tact_e, void *arg)  */
 end_comment
 
 begin_endif
@@ -758,6 +788,10 @@ end_endif
 
 begin_comment
 comment|/* _ISP_TPUBLIC_H */
+end_comment
+
+begin_comment
+comment|/*  * vim:ts=4:sw=4:expandtab  */
 end_comment
 
 end_unit
