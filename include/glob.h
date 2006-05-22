@@ -31,7 +31,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|int
+name|size_t
 name|gl_pathc
 decl_stmt|;
 comment|/* Count of total paths so far. */
