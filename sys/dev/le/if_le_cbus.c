@@ -345,7 +345,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|le
 argument_list|,
-name|cbus
+name|isa
 argument_list|,
 name|le_cbus_driver
 argument_list|,
@@ -1086,6 +1086,19 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/* 	 * Skip PnP devices as some wedge when trying to probe them as 	 * C-NET(98)S. 	 */
+if|if
+condition|(
+name|isa_get_vendorid
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|lesc
 operator|=
 name|device_get_softc
