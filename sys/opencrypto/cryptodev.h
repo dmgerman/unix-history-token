@@ -961,9 +961,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|/* Callback function */
-name|caddr_t
-name|crp_mac
-decl_stmt|;
 name|struct
 name|bintime
 name|crp_tstamp
