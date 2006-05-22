@@ -2739,21 +2739,7 @@ operator|(
 name|result
 operator|)
 return|;
-else|else
-block|{
-comment|/* 				 * The driver ran out of resources, mark the 				 * driver ``blocked'' for cryptop's and put 				 * the request on the queue. 				 * 				 * XXX ops are placed at the tail so their 				 * order is preserved but this can place them 				 * behind batch'd ops. 				 */
-name|cap
-operator|->
-name|cc_qblocked
-operator|=
-literal|1
-expr_stmt|;
-name|cryptostats
-operator|.
-name|cs_blocks
-operator|++
-expr_stmt|;
-block|}
+comment|/* 			 * The driver ran out of resources, put the request on 			 * the queue. 			 */
 block|}
 block|}
 name|CRYPTO_Q_LOCK
@@ -4342,9 +4328,6 @@ argument_list|,
 name|crp_next
 argument_list|)
 expr_stmt|;
-name|CRYPTO_Q_UNLOCK
-argument_list|()
-expr_stmt|;
 name|hid
 operator|=
 name|CRYPTO_SESID2HID
@@ -4386,9 +4369,6 @@ name|submit
 argument_list|,
 name|hint
 argument_list|)
-expr_stmt|;
-name|CRYPTO_Q_LOCK
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -4491,18 +4471,12 @@ argument_list|,
 name|krp_next
 argument_list|)
 expr_stmt|;
-name|CRYPTO_Q_UNLOCK
-argument_list|()
-expr_stmt|;
 name|result
 operator|=
 name|crypto_kinvoke
 argument_list|(
 name|krp
 argument_list|)
-expr_stmt|;
-name|CRYPTO_Q_LOCK
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
