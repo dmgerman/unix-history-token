@@ -246,6 +246,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|TGT_ANY
+value|((uint64_t) -1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|INI_ANY
 value|((uint64_t) -1)
 end_define
