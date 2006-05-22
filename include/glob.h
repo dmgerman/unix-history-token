@@ -35,11 +35,11 @@ name|size_t
 name|gl_pathc
 decl_stmt|;
 comment|/* Count of total paths so far. */
-name|int
+name|size_t
 name|gl_matchc
 decl_stmt|;
 comment|/* Count of paths matching pattern. */
-name|int
+name|size_t
 name|gl_offs
 decl_stmt|;
 comment|/* Reserved at beginning of gl_pathv. */
