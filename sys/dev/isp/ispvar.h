@@ -1094,7 +1094,7 @@ name|uint16_t
 name|isp_fwattr
 decl_stmt|;
 comment|/* firmware attributes */
-name|uint8_t
+name|uint16_t
 name|isp_execthrottle
 decl_stmt|;
 name|uint8_t
