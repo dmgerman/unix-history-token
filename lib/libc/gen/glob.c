@@ -454,7 +454,7 @@ parameter_list|,
 name|char
 modifier|*
 parameter_list|,
-name|u_int
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -563,7 +563,7 @@ parameter_list|,
 name|glob_t
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -580,7 +580,7 @@ parameter_list|,
 name|glob_t
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -606,7 +606,7 @@ parameter_list|,
 name|glob_t
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -635,7 +635,7 @@ parameter_list|,
 name|glob_t
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -653,7 +653,7 @@ parameter_list|,
 name|glob_t
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -693,7 +693,7 @@ parameter_list|,
 name|glob_t
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -718,7 +718,7 @@ parameter_list|,
 name|int
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -818,7 +818,7 @@ name|u_char
 modifier|*
 name|patnext
 decl_stmt|;
-name|int
+name|size_t
 name|limit
 decl_stmt|;
 name|Char
@@ -1222,7 +1222,7 @@ name|glob_t
 modifier|*
 name|pglob
 decl_stmt|;
-name|int
+name|size_t
 modifier|*
 name|limit
 decl_stmt|;
@@ -1368,7 +1368,11 @@ begin_decl_stmt
 name|int
 modifier|*
 name|rv
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|size_t
 modifier|*
 name|limit
 decl_stmt|;
@@ -2082,7 +2086,7 @@ name|glob_t
 modifier|*
 name|pglob
 decl_stmt|;
-name|int
+name|size_t
 modifier|*
 name|limit
 decl_stmt|;
@@ -2096,7 +2100,8 @@ name|int
 name|c
 decl_stmt|,
 name|err
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|oldpathc
 decl_stmt|;
 name|Char
@@ -2578,7 +2583,7 @@ name|glob_t
 modifier|*
 name|pglob
 decl_stmt|;
-name|int
+name|size_t
 modifier|*
 name|limit
 decl_stmt|;
@@ -2671,7 +2676,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|size_t
 modifier|*
 name|limit
 decl_stmt|;
@@ -3011,7 +3016,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|size_t
 modifier|*
 name|limit
 decl_stmt|;
@@ -3422,7 +3427,7 @@ name|glob_t
 modifier|*
 name|pglob
 decl_stmt|;
-name|int
+name|size_t
 modifier|*
 name|limit
 decl_stmt|;
@@ -3432,10 +3437,9 @@ modifier|*
 modifier|*
 name|pathv
 decl_stmt|;
-name|int
+name|size_t
 name|i
-decl_stmt|;
-name|u_int
+decl_stmt|,
 name|newsize
 decl_stmt|,
 name|len
@@ -3579,10 +3583,12 @@ operator|=
 name|pglob
 operator|->
 name|gl_offs
+operator|+
+literal|1
 init|;
 operator|--
 name|i
-operator|>=
+operator|>
 literal|0
 condition|;
 control|)
@@ -4034,7 +4040,7 @@ modifier|*
 name|pglob
 decl_stmt|;
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|char
@@ -4449,7 +4455,7 @@ name|char
 modifier|*
 name|buf
 decl_stmt|;
-name|u_int
+name|size_t
 name|len
 decl_stmt|;
 block|{
