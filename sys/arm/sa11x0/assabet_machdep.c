@@ -267,6 +267,12 @@ directive|include
 file|<sys/reboot.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<arm/sa11x0/sa11x0_reg.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1705,14 +1711,14 @@ argument_list|,
 name|PTE_CACHE
 argument_list|)
 expr_stmt|;
-comment|/* Map SACOM3. */
+comment|/* Map SACOM1. */
 name|pmap_map_entry
 argument_list|(
 name|l1pagetable
 argument_list|,
-literal|0xd000d000
+name|SACOM1_VBASE
 argument_list|,
-literal|0x80010000
+name|SACOM1_BASE
 argument_list|,
 name|VM_PROT_READ
 operator||

@@ -184,7 +184,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SACOM3_BASE
+name|SACOM1_VBASE
 value|0xd000d000
 end_define
 

@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arm/sa11x0/sa11x0_reg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/sa11x0/uart_dev_sa1110.h>
 end_include
 
@@ -293,7 +299,7 @@ name|bas
 operator|->
 name|bsh
 operator|=
-literal|0xd000d000
+name|SACOM1_VBASE
 expr_stmt|;
 name|did_mmu
 operator|=
