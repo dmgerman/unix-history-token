@@ -1076,7 +1076,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Crypto capabilities structure */
+comment|/*  * Crypto capabilities structure.  *  * Synchronization:  * (d) - protected by CRYPTO_DRIVER_LOCK()  * (q) - protected by CRYPTO_Q_LOCK()  * Not tagged fields are read-only.  */
 end_comment
 
 begin_struct
@@ -1086,9 +1086,11 @@ block|{
 name|u_int32_t
 name|cc_sessions
 decl_stmt|;
+comment|/* (d) number of sessions */
 name|u_int32_t
 name|cc_koperations
 decl_stmt|;
+comment|/* (d) number os asym operations */
 comment|/* 	 * Largest possible operator length (in bits) for each type of 	 * encryption algorithm. 	 */
 name|u_int16_t
 name|cc_max_op_len
@@ -1117,14 +1119,7 @@ decl_stmt|;
 name|u_int8_t
 name|cc_flags
 decl_stmt|;
-name|u_int8_t
-name|cc_qblocked
-decl_stmt|;
-comment|/* symmetric q blocked */
-name|u_int8_t
-name|cc_kqblocked
-decl_stmt|;
-comment|/* asymmetric q blocked */
+comment|/* (d) flags */
 define|#
 directive|define
 name|CRYPTOCAP_F_CLEANUP
@@ -1140,6 +1135,14 @@ directive|define
 name|CRYPTOCAP_F_SYNC
 value|0x04
 comment|/* operates synchronously */
+name|u_int8_t
+name|cc_qblocked
+decl_stmt|;
+comment|/* (q) symmetric q blocked */
+name|u_int8_t
+name|cc_kqblocked
+decl_stmt|;
+comment|/* (q) asymmetric q blocked */
 name|void
 modifier|*
 name|cc_arg
