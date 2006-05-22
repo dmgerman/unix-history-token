@@ -16299,6 +16299,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|RQSTYPE_CTIO3
+case|:
+case|case
 name|RQSTYPE_CTIO2
 case|:
 case|case
