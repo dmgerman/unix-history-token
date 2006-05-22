@@ -811,21 +811,19 @@ begin_define
 define|#
 directive|define
 name|MEMZERO
-value|bzero
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|memset(a, 0, b)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MEMCPY
-parameter_list|(
-name|dst
-parameter_list|,
-name|src
-parameter_list|,
-name|amt
-parameter_list|)
-value|bcopy((src), (dst), (amt))
+value|memcpy
 end_define
 
 begin_define
@@ -1327,7 +1325,7 @@ parameter_list|,
 name|sp
 parameter_list|)
 define|\
-value|(xs)->ccb_h.status |= CAM_AUTOSNS_VALID,	\ 	bcopy(sp->req_sense_data,&(xs)->sense_data,	\ 	    imin(XS_SNSLEN(xs), sp->req_sense_len))
+value|(xs)->ccb_h.status |= CAM_AUTOSNS_VALID,	\ 	memcpy(&(xs)->sense_data, sp->req_sense_data,	\ 	    imin(XS_SNSLEN(xs), sp->req_sense_len))
 end_define
 
 begin_define
