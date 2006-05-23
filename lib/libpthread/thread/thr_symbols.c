@@ -255,5 +255,33 @@ name|PS_DEAD
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|_thread_off_sigmask
+init|=
+name|offsetof
+argument_list|(
+expr|struct
+name|pthread
+argument_list|,
+name|sigmask
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|_thread_off_sigpend
+init|=
+name|offsetof
+argument_list|(
+expr|struct
+name|pthread
+argument_list|,
+name|sigpend
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 
