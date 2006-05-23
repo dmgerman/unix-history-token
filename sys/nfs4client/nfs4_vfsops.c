@@ -945,7 +945,7 @@ operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Silently clear NFSMNT_NOCONN if it's a TCP mount, it makes 	 * no sense in that context. 	 */
+comment|/* 	 * Silently clear NFSMNT_NOCONN if it's a TCP mount, it makes 	 * no sense in that context.  Also, set appropriate retransmit 	 * and soft timeout behavior. 	 */
 if|if
 condition|(
 name|argp
@@ -954,6 +954,7 @@ name|sotype
 operator|==
 name|SOCK_STREAM
 condition|)
+block|{
 name|nmp
 operator|->
 name|nm_flag
@@ -961,6 +962,25 @@ operator|&=
 operator|~
 name|NFSMNT_NOCONN
 expr_stmt|;
+name|nmp
+operator|->
+name|nm_flag
+operator||=
+name|NFSMNT_DUMBTIMR
+expr_stmt|;
+name|nmp
+operator|->
+name|nm_timeo
+operator|=
+name|NFS_MAXTIMEO
+expr_stmt|;
+name|nmp
+operator|->
+name|nm_retry
+operator|=
+name|NFS_RETRANS_TCP
+expr_stmt|;
+block|}
 name|nmp
 operator|->
 name|nm_flag
