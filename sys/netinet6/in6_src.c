@@ -2655,6 +2655,11 @@ condition|)
 block|{
 if|if
 condition|(
+name|ro
+operator|==
+operator|&
+name|sro
+operator|&&
 name|rt
 operator|&&
 name|rt
@@ -2709,6 +2714,11 @@ operator|)
 decl_stmt|;
 if|if
 condition|(
+name|ro
+operator|==
+operator|&
+name|sro
+operator|&&
 name|rt
 operator|&&
 name|rt
@@ -2754,6 +2764,11 @@ name|ifa_ifp
 expr_stmt|;
 if|if
 condition|(
+name|ro
+operator|==
+operator|&
+name|sro
+operator|&&
 name|rt
 operator|&&
 name|rt
