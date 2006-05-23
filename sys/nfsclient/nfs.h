@@ -1201,6 +1201,59 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * On fast networks, the estimator will try to reduce the  * timeout lower than the latency of the server's disks,  * which results in too many timeouts, so cap the lower  * bound.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFS_MINRTO
+value|(NFS_HZ>> 2)
+end_define
+
+begin_comment
+comment|/*  * Keep the RTO from increasing to unreasonably large values  * when a server is not responding.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFS_MAXRTO
+value|(20 * NFS_HZ)
+end_define
+
+begin_enum
+enum|enum
+name|nfs_rto_timer_t
+block|{
+name|NFS_DEFAULT_TIMER
+block|,
+name|NFS_GETATTR_TIMER
+block|,
+name|NFS_LOOKUP_TIMER
+block|,
+name|NFS_READ_TIMER
+block|,
+name|NFS_WRITE_TIMER
+block|, }
+enum|;
+end_enum
+
+begin_define
+define|#
+directive|define
+name|NFS_MAX_TIMER
+value|(NFS_WRITE_TIMER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFS_INITRTT
+value|(NFS_HZ<< 3)
+end_define
+
 begin_decl_stmt
 name|vfs_init_t
 name|nfs_init
