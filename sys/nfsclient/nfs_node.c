@@ -533,6 +533,24 @@ name|n_vnode
 operator|=
 name|vp
 expr_stmt|;
+comment|/* 	 * NFS supports recursive and shared locking. 	 */
+name|vp
+operator|->
+name|v_vnlock
+operator|->
+name|lk_flags
+operator||=
+name|LK_CANRECURSE
+expr_stmt|;
+name|vp
+operator|->
+name|v_vnlock
+operator|->
+name|lk_flags
+operator|&=
+operator|~
+name|LK_NOSHARE
+expr_stmt|;
 name|error
 operator|=
 name|vfs_hash_insert
