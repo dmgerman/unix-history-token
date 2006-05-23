@@ -7781,10 +7781,7 @@ expr_stmt|;
 name|pin
 operator|=
 operator|(
-name|pci_get_slot
-argument_list|(
-name|pcib
-argument_list|)
+name|device
 operator|+
 operator|(
 name|pin
