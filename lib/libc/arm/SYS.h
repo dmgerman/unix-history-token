@@ -25,12 +25,6 @@ directive|include
 file|<machine/swi.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -40,34 +34,6 @@ name|x
 parameter_list|)
 value|swi 0 | SYS_ ## x
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SYSTRAP
-parameter_list|(
-name|x
-parameter_list|)
-value|swi 0 | SYS_
-comment|/**/
-value|x
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__ELF__
-end_ifdef
 
 begin_define
 define|#
@@ -82,30 +48,6 @@ directive|define
 name|CURBRK
 value|_C_LABEL(curbrk)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CERROR
-value|_ASM_LABEL(cerror)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CURBRK
-value|_ASM_LABEL(curbrk)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
