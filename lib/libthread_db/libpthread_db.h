@@ -139,6 +139,12 @@ decl_stmt|;
 name|int
 name|thread_state_running
 decl_stmt|;
+name|int
+name|thread_off_sigmask
+decl_stmt|;
+name|int
+name|thread_off_sigpend
+decl_stmt|;
 name|struct
 name|pt_map
 modifier|*
