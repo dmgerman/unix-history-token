@@ -1484,7 +1484,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * This is a gross hack.  We should be scanning the entire pci 	 * tree, assigning bus numbers in a way such that we (1) can 	 * reserve 1 extra bus just in case and (2) all sub busses  	 * are in an appropriate range. 	 */
+comment|/* 	 * This is a gross hack.  We should be scanning the entire pci 	 * tree, assigning bus numbers in a way such that we (1) can 	 * reserve 1 extra bus just in case and (2) all sub busses 	 * are in an appropriate range. 	 */
 name|bus
 operator|=
 name|pci_read_config
