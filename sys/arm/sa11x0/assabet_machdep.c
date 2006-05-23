@@ -641,6 +641,63 @@ name|proc0_tf
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Static device mappings. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|pmap_devmap
+name|assabet_devmap
+index|[]
+init|=
+block|{
+comment|/* 	 * Map the on-board devices VA == PA so that we can access them 	 * with the MMU on or off. 	 */
+block|{
+name|SACOM1_VBASE
+block|,
+name|SACOM1_BASE
+block|,
+name|SACOM1_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, 	}
+block|,
+block|{
+name|SAIPIC_BASE
+block|,
+name|SAIPIC_BASE
+block|,
+name|SAIPIC_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, 	}
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|, 	}
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|struct
 name|arm32_dma_range
@@ -1711,35 +1768,12 @@ argument_list|,
 name|PTE_CACHE
 argument_list|)
 expr_stmt|;
-comment|/* Map SACOM1. */
-name|pmap_map_entry
+comment|/* Map the statically mapped devices. */
+name|pmap_devmap_bootstrap
 argument_list|(
 name|l1pagetable
 argument_list|,
-name|SACOM1_VBASE
-argument_list|,
-name|SACOM1_BASE
-argument_list|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-argument_list|,
-name|PTE_NOCACHE
-argument_list|)
-expr_stmt|;
-name|pmap_map_entry
-argument_list|(
-name|l1pagetable
-argument_list|,
-literal|0x90050000
-argument_list|,
-literal|0x90050000
-argument_list|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-argument_list|,
-name|PTE_NOCACHE
+name|assabet_devmap
 argument_list|)
 expr_stmt|;
 name|pmap_map_chunk

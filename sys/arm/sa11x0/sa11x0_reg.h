@@ -92,6 +92,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SAIPIC_SIZE
+value|0x24
+end_define
+
+begin_define
+define|#
+directive|define
 name|SAPPC_BASE
 value|0x90060000
 end_define
@@ -121,6 +128,13 @@ end_define
 begin_comment
 comment|/* GPCLK/UART 1 */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SACOM1_SIZE
+value|0x24
+end_define
 
 begin_define
 define|#
