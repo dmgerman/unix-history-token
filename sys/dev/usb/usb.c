@@ -1847,6 +1847,10 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+specifier|static
+name|int
+name|newthread_wchan
+decl_stmt|;
 name|struct
 name|usb_softc
 modifier|*
@@ -1879,16 +1883,39 @@ literal|"usb_event_thread: start\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * In case this controller is a companion controller to an 	 * EHCI controller we need to wait until the EHCI controller 	 * has grabbed the port. 	 * XXX It would be nicer to do this with a tsleep(), but I don't 	 * know how to synchronize the creation of the threads so it 	 * will work. 	 */
-name|usb_delay_ms
+comment|/* 	 * In case this controller is a companion controller to an 	 * EHCI controller we need to wait until the EHCI controller 	 * has grabbed the port. What we do here is wait until no new 	 * USB threads have been created in a while. XXX we actually 	 * just want to wait for the PCI slot to be fully scanned. 	 * 	 * Note that when you `kldload usb' it actually attaches the 	 * devices in order that the drivers appear in the kld, not the 	 * normal PCI order, since the addition of each driver within 	 * usb.ko (ohci, ehci etc.) causes a separate PCI bus re-scan. 	 */
+name|wakeup
 argument_list|(
-name|sc
-operator|->
-name|sc_bus
-argument_list|,
-literal|500
+operator|&
+name|newthread_wchan
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+if|if
+condition|(
+name|tsleep
+argument_list|(
+operator|&
+name|newthread_wchan
+argument_list|,
+name|PWAIT
+argument_list|,
+literal|"usbets"
+argument_list|,
+name|hz
+operator|*
+literal|4
+argument_list|)
+operator|!=
+literal|0
+condition|)
+break|break;
+block|}
 comment|/* Make sure first discover does something. */
 name|sc
 operator|->
