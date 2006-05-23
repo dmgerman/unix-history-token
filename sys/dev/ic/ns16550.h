@@ -651,8 +651,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|REG_DL
+name|REG_DLL
 value|com_dll
+end_define
+
+begin_define
+define|#
+directive|define
+name|REG_DLH
+value|com_dlm
 end_define
 
 begin_comment
