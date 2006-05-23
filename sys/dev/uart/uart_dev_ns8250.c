@@ -961,8 +961,6 @@ name|bas
 parameter_list|)
 block|{
 name|u_char
-name|lcr
-decl_stmt|,
 name|val
 decl_stmt|;
 comment|/* Check known 0 bits that don't depend on DLAB. */
