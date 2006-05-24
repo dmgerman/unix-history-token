@@ -378,7 +378,7 @@ literal|32
 block|,
 literal|32
 block|,
-name|CRYPTO_SHA2_HMAC
+name|CRYPTO_SHA2_256_HMAC
 block|}
 block|,
 block|{
@@ -392,7 +392,7 @@ literal|48
 block|,
 literal|48
 block|,
-name|CRYPTO_SHA2_HMAC
+name|CRYPTO_SHA2_384_HMAC
 block|}
 block|,
 block|{
@@ -406,7 +406,7 @@ literal|64
 block|,
 literal|64
 block|,
-name|CRYPTO_SHA2_HMAC
+name|CRYPTO_SHA2_512_HMAC
 block|}
 block|, }
 struct|;
