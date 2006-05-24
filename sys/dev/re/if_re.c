@@ -308,11 +308,11 @@ block|,
 block|{
 name|RT_VENDORID
 block|,
-name|RT_DEVICEID_8111B
+name|RT_DEVICEID_8168
 block|,
-name|RL_HWREV_8111B
+name|RL_HWREV_8168
 block|,
-literal|"Realtek 8111B Single-Chip Gigabit Ethernet"
+literal|"Realtek 8168B/8111B Gigabit Ethernet"
 block|}
 block|,
 block|{
@@ -509,11 +509,11 @@ literal|"8101"
 block|}
 block|,
 block|{
-name|RL_HWREV_8111B
+name|RL_HWREV_8168
 block|,
 name|RL_8169
 block|,
-literal|"8111B"
+literal|"8168/8111B"
 block|}
 block|,
 block|{

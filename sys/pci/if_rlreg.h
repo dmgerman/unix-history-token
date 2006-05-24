@@ -980,7 +980,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|RL_HWREV_8111B
+name|RL_HWREV_8168
 value|0x30000000
 end_define
 
@@ -3852,7 +3852,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|RT_DEVICEID_8111B
+name|RT_DEVICEID_8168
 value|0x8168
 end_define
 
