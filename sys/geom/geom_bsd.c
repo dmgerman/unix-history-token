@@ -1970,7 +1970,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The taste function is called from the event-handler, with the topology  * lock already held and a provider to examine.  The flags are unused.  *  * If flags == G_TF_NORMAL, the idea is to take a bite of the provider and  * if we find valid, consistent magic on it, build a geom on it.  * any magic bits which indicate that we should automatically put a BSD  * geom on it.  *  * There may be cases where the operator would like to put a BSD-geom on  * providers which do not meet all of the requirements.  This can be done  * by instead passing the G_TF_INSIST flag, which will override these  * checks.  *  * The final flags value is G_TF_TRANSPARENT, which instructs the method  * to put a geom on top of the provider and configure it to be as transparent  * as possible.  This is not really relevant to the BSD method and therefore  * not implemented here.  */
+comment|/*  * The taste function is called from the event-handler, with the topology  * lock already held and a provider to examine.  The flags are unused.  *  * If flags == G_TF_NORMAL, the idea is to take a bite of the provider and  * if we find valid, consistent magic on it, build a geom on it.  *  * There may be cases where the operator would like to put a BSD-geom on  * providers which do not meet all of the requirements.  This can be done  * by instead passing the G_TF_INSIST flag, which will override these  * checks.  *  * The final flags value is G_TF_TRANSPARENT, which instructs the method  * to put a geom on top of the provider and configure it to be as transparent  * as possible.  This is not really relevant to the BSD method and therefore  * not implemented here.  */
 end_comment
 
 begin_function
