@@ -255,6 +255,12 @@ block|,
 name|O_UNREACH6
 block|,
 comment|/* arg1=icmpv6 code arg (deny)  */
+name|O_TAG
+block|,
+comment|/* arg1=tag number */
+name|O_TAGGED
+block|,
+comment|/* arg1=tag number */
 name|O_LAST_OPCODE
 comment|/* not an opcode!		*/
 block|}
@@ -367,6 +373,17 @@ name|t
 parameter_list|)
 value|((sizeof (t))/sizeof(u_int32_t))
 end_define
+
+begin_define
+define|#
+directive|define
+name|MTAG_IPFW
+value|1148380143
+end_define
+
+begin_comment
+comment|/* IPFW-tagged cookie */
+end_comment
 
 begin_comment
 comment|/*  * This is used to store an array of 16-bit entries (ports etc.)  */
@@ -683,7 +700,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Here we have the structure representing an ipfw rule.  *  * It starts with a general area (with link fields and counters)  * followed by an array of one or more instructions, which the code  * accesses as an array of 32-bit values.  *  * Given a rule pointer  r:  *  *  r->cmd		is the start of the first instruction.  *  ACTION_PTR(r)	is the start of the first action (things to do  *			once a rule matched).  *  * When assembling instruction, remember the following:  *  *  + if a rule has a "keep-state" (or "limit") option, then the  *	first instruction (at r->cmd) MUST BE an O_PROBE_STATE  *  + if a rule has a "log" option, then the first action  *	(at ACTION_PTR(r)) MUST be O_LOG  *  + if a rule has an "altq" option, it comes after "log"  *  * NOTE: we use a simple linked list of rules because we never need  * 	to delete a rule without scanning the list. We do not use  *	queue(3) macros for portability and readability.  */
+comment|/*  * Here we have the structure representing an ipfw rule.  *  * It starts with a general area (with link fields and counters)  * followed by an array of one or more instructions, which the code  * accesses as an array of 32-bit values.  *  * Given a rule pointer  r:  *  *  r->cmd		is the start of the first instruction.  *  ACTION_PTR(r)	is the start of the first action (things to do  *			once a rule matched).  *  * When assembling instruction, remember the following:  *  *  + if a rule has a "keep-state" (or "limit") option, then the  *	first instruction (at r->cmd) MUST BE an O_PROBE_STATE  *  + if a rule has a "log" option, then the first action  *	(at ACTION_PTR(r)) MUST be O_LOG  *  + if a rule has an "altq" option, it comes after "log"  *  + if a rule has an O_TAG option, it comes after "log" and "altq"  *  * NOTE: we use a simple linked list of rules because we never need  * 	to delete a rule without scanning the list. We do not use  *	queue(3) macros for portability and readability.  */
 end_comment
 
 begin_struct
