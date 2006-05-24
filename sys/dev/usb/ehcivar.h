@@ -82,6 +82,11 @@ name|ehci_soft_qtd
 modifier|*
 name|sqtd
 decl_stmt|;
+name|struct
+name|ehci_soft_qtd
+modifier|*
+name|inactivesqtd
+decl_stmt|;
 name|ehci_physaddr_t
 name|physaddr
 decl_stmt|;
