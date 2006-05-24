@@ -1293,6 +1293,8 @@ expr_stmt|;
 name|SrcDists
 operator|=
 name|DIST_SRC_SYS
+operator||
+name|DIST_SRC_BASE
 expr_stmt|;
 name|KernelDists
 operator|=
