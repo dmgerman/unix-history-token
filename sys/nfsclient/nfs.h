@@ -374,6 +374,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|NFS_ISV4
+parameter_list|(
+name|v
+parameter_list|)
+value|(VFSTONFS((v)->v_mount)->nm_flag& NFSMNT_NFSV4)
+end_define
+
+begin_define
+define|#
+directive|define
 name|NFSSTA_HASWRITEVERF
 value|0x00040000
 end_define
