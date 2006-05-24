@@ -534,8 +534,6 @@ literal|"clusterw"
 block|,
 literal|"exec"
 block|,
-literal|"errmsg"
-block|,
 literal|"export"
 block|,
 literal|"force"
