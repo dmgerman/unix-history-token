@@ -500,6 +500,34 @@ value|_IOWR('b', NGM_HCI_NODE_SET_ROLE_SWITCH, \ 		struct ng_btsocket_hci_raw_no
 end_define
 
 begin_comment
+comment|/* Get list of HCI node names */
+end_comment
+
+begin_struct
+struct|struct
+name|ng_btsocket_hci_raw_node_list_names
+block|{
+name|u_int32_t
+name|num_names
+decl_stmt|;
+name|struct
+name|nodeinfo
+modifier|*
+name|names
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|SIOC_HCI_RAW_NODE_LIST_NAMES
+define|\
+value|_IOWR('b', NGM_HCI_NODE_LIST_NAMES, \ 		struct ng_btsocket_hci_raw_node_list_names)
+end_define
+
+begin_comment
 comment|/*  * XXX FIXME: probably does not belong here  * Bluetooth version of struct sockaddr for L2CAP sockets (RAW and SEQPACKET)  */
 end_comment
 
