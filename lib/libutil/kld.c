@@ -27,6 +27,18 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<libutil.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_function
 name|int
 name|kld_isloaded
@@ -140,11 +152,16 @@ argument_list|(
 name|name
 argument_list|)
 operator|==
+call|(
+name|size_t
+call|)
+argument_list|(
 name|ko
 operator|-
 name|fstat
 operator|.
 name|name
+argument_list|)
 operator|&&
 name|strncmp
 argument_list|(
