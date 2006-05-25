@@ -5166,8 +5166,6 @@ operator||=
 operator|(
 name|B_INVAL
 operator||
-name|B_NOCACHE
-operator||
 name|B_RELBUF
 operator|)
 expr_stmt|;
