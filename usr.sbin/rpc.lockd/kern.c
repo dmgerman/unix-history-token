@@ -566,6 +566,13 @@ operator|)
 name|client_cleanup
 argument_list|)
 expr_stmt|;
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
 comment|/* Setup. */
 operator|(
 name|void
