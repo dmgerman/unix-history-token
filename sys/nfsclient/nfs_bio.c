@@ -6002,6 +6002,15 @@ name|NULL
 operator|)
 condition|)
 block|{
+name|VM_OBJECT_LOCK
+argument_list|(
+name|vp
+operator|->
+name|v_bufobj
+operator|.
+name|bo_object
+argument_list|)
+expr_stmt|;
 name|vm_object_page_clean
 argument_list|(
 name|vp
@@ -6015,6 +6024,15 @@ argument_list|,
 literal|0
 argument_list|,
 name|OBJPC_SYNC
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|vp
+operator|->
+name|v_bufobj
+operator|.
+name|bo_object
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If the page clean was interrupted, fail the invalidation. 		 * Not doing so, we run the risk of losing dirty pages in the  		 * vinvalbuf() call below. 		 */
