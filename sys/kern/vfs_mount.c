@@ -537,6 +537,8 @@ literal|"suid"
 block|,
 literal|"exec"
 block|,
+literal|"update"
+block|,
 name|NULL
 block|}
 decl_stmt|;
