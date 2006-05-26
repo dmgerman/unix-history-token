@@ -261,8 +261,21 @@ end_function
 
 begin_function
 specifier|static
+name|void
+name|gdb_cnterm
+parameter_list|(
+name|struct
+name|consdev
+modifier|*
+name|cp
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
 name|int
-name|gdb_nogetc
+name|gdb_cngetc
 parameter_list|(
 name|struct
 name|consdev
@@ -558,28 +571,10 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/* NB: no get interface, we supply nogetc for checkc too */
-end_comment
-
 begin_expr_stmt
-name|CONS_DRIVER
+name|CONSOLE_DRIVER
 argument_list|(
 name|gdb
-argument_list|,
-name|gdb_cnprobe
-argument_list|,
-name|gdb_cninit
-argument_list|,
-name|NULL
-argument_list|,
-name|gdb_nogetc
-argument_list|,
-name|gdb_nogetc
-argument_list|,
-name|gdb_cnputc
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
