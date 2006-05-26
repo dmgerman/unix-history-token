@@ -281,6 +281,17 @@ define|\
 value|static struct consdev name##_consdev = {			\ 		probe, init, term, getc, checkc, putc			\ 	};								\ 	DATA_SET(cons_set, name##_consdev)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CONSOLE_DRIVER
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|static struct consdev name##_consdev = {			\ 		.cn_probe = name##_cnprobe,				\ 		.cn_init = name##_cninit,				\ 		.cn_term = name##_cnterm,				\ 		.cn_getc = name##_cngetc,				\ 		.cn_putc = name##_cnputc,				\ 	};								\ 	DATA_SET(cons_set, name##_consdev)
+end_define
+
 begin_comment
 comment|/* Other kernel entry points. */
 end_comment
