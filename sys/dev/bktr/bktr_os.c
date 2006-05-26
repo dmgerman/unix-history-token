@@ -701,6 +701,16 @@ directive|include
 file|<vm/vm.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/bktr/ioctl_bt848.h>
+end_include
+
+begin_comment
+comment|/* extensions to ioctl_meteor.h */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -3483,6 +3493,41 @@ name|ENXIO
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|BKTR_GPIO_ACCESS
+if|if
+condition|(
+name|bktr
+operator|->
+name|bigbuf
+operator|==
+literal|0
+operator|&&
+name|cmd
+operator|!=
+name|BT848_GPIO_GET_EN
+operator|&&
+name|cmd
+operator|!=
+name|BT848_GPIO_SET_EN
+operator|&&
+name|cmd
+operator|!=
+name|BT848_GPIO_GET_DATA
+operator|&&
+name|cmd
+operator|!=
+name|BT848_GPIO_SET_DATA
+condition|)
+comment|/* no frame buffer allocated (ioctl failed) */
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+else|#
+directive|else
 if|if
 condition|(
 name|bktr
@@ -3497,6 +3542,8 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|FUNCTION
