@@ -898,6 +898,128 @@ begin_comment
 comment|/*  * Tail queue functions.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|INVARIANTS
+argument_list|)
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|QMD_TAILQ_CHECK_HEAD
+parameter_list|(
+name|head
+parameter_list|,
+name|field
+parameter_list|)
+value|do {				\ 	if (!TAILQ_EMPTY(head)&&					\ 	    TAILQ_FIRST((head))->field.tqe_prev !=			\&TAILQ_FIRST((head)))					\ 		panic("Bad tailq head %p first->prev != head", (head));	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|QMD_TAILQ_CHECK_TAIL
+parameter_list|(
+name|head
+parameter_list|,
+name|field
+parameter_list|)
+value|do {				\ 	if (*(head)->tqh_last != NULL)					\ 	    	panic("Bad tailq NEXT(%p->tqh_last) != NULL", (head)); 	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|QMD_TAILQ_CHECK_NEXT
+parameter_list|(
+name|elm
+parameter_list|,
+name|field
+parameter_list|)
+value|do {				\ 	if (TAILQ_NEXT((elm), field) != NULL&&				\ 	    TAILQ_NEXT((elm), field)->field.tqe_prev !=			\&((elm)->field.tqe_next))					\ 		panic("Bad link elm %p next->prev != elm", (elm));	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|QMD_TAILQ_CHECK_PREV
+parameter_list|(
+name|elm
+parameter_list|,
+name|field
+parameter_list|)
+value|do {				\ 	if (*(elm)->field.tqe_prev != (elm))				\ 		panic("Bad link elm %p prev->next != elm", (elm));	\ } while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|QMD_TAILQ_CHECK_HEAD
+parameter_list|(
+name|head
+parameter_list|,
+name|field
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|QMD_TAILQ_CHECK_TAIL
+parameter_list|(
+name|head
+parameter_list|,
+name|headname
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|QMD_TAILQ_CHECK_NEXT
+parameter_list|(
+name|elm
+parameter_list|,
+name|field
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|QMD_TAILQ_CHECK_PREV
+parameter_list|(
+name|elm
+parameter_list|,
+name|field
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* (_KERNEL&& INVARIANTS) */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1023,7 +1145,7 @@ name|elm
 parameter_list|,
 name|field
 parameter_list|)
-value|do {		\ 	if ((TAILQ_NEXT((elm), field) = TAILQ_NEXT((listelm), field)) != NULL)\ 		TAILQ_NEXT((elm), field)->field.tqe_prev = 		\&TAILQ_NEXT((elm), field);				\ 	else {								\ 		(head)->tqh_last =&TAILQ_NEXT((elm), field);		\ 		QMD_TRACE_HEAD(head);					\ 	}								\ 	TAILQ_NEXT((listelm), field) = (elm);				\ 	(elm)->field.tqe_prev =&TAILQ_NEXT((listelm), field);		\ 	QMD_TRACE_ELEM(&(elm)->field);					\ 	QMD_TRACE_ELEM(&listelm->field);				\ } while (0)
+value|do {		\ 	QMD_TAILQ_CHECK_NEXT(listelm, field);				\ 	if ((TAILQ_NEXT((elm), field) = TAILQ_NEXT((listelm), field)) != NULL)\ 		TAILQ_NEXT((elm), field)->field.tqe_prev = 		\&TAILQ_NEXT((elm), field);				\ 	else {								\ 		(head)->tqh_last =&TAILQ_NEXT((elm), field);		\ 		QMD_TRACE_HEAD(head);					\ 	}								\ 	TAILQ_NEXT((listelm), field) = (elm);				\ 	(elm)->field.tqe_prev =&TAILQ_NEXT((listelm), field);		\ 	QMD_TRACE_ELEM(&(elm)->field);					\ 	QMD_TRACE_ELEM(&listelm->field);				\ } while (0)
 end_define
 
 begin_define
@@ -1037,7 +1159,7 @@ name|elm
 parameter_list|,
 name|field
 parameter_list|)
-value|do {			\ 	(elm)->field.tqe_prev = (listelm)->field.tqe_prev;		\ 	TAILQ_NEXT((elm), field) = (listelm);				\ 	*(listelm)->field.tqe_prev = (elm);				\ 	(listelm)->field.tqe_prev =&TAILQ_NEXT((elm), field);		\ 	QMD_TRACE_ELEM(&(elm)->field);					\ 	QMD_TRACE_ELEM(&listelm->field);				\ } while (0)
+value|do {			\ 	QMD_TAILQ_CHECK_PREV(listelm, field);				\ 	(elm)->field.tqe_prev = (listelm)->field.tqe_prev;		\ 	TAILQ_NEXT((elm), field) = (listelm);				\ 	*(listelm)->field.tqe_prev = (elm);				\ 	(listelm)->field.tqe_prev =&TAILQ_NEXT((elm), field);		\ 	QMD_TRACE_ELEM(&(elm)->field);					\ 	QMD_TRACE_ELEM(&listelm->field);				\ } while (0)
 end_define
 
 begin_define
@@ -1051,7 +1173,7 @@ name|elm
 parameter_list|,
 name|field
 parameter_list|)
-value|do {			\ 	if ((TAILQ_NEXT((elm), field) = TAILQ_FIRST((head))) != NULL)	\ 		TAILQ_FIRST((head))->field.tqe_prev =			\&TAILQ_NEXT((elm), field);				\ 	else								\ 		(head)->tqh_last =&TAILQ_NEXT((elm), field);		\ 	TAILQ_FIRST((head)) = (elm);					\ 	(elm)->field.tqe_prev =&TAILQ_FIRST((head));			\ 	QMD_TRACE_HEAD(head);						\ 	QMD_TRACE_ELEM(&(elm)->field);					\ } while (0)
+value|do {			\ 	QMD_TAILQ_CHECK_HEAD(head, field);				\ 	if ((TAILQ_NEXT((elm), field) = TAILQ_FIRST((head))) != NULL)	\ 		TAILQ_FIRST((head))->field.tqe_prev =			\&TAILQ_NEXT((elm), field);				\ 	else								\ 		(head)->tqh_last =&TAILQ_NEXT((elm), field);		\ 	TAILQ_FIRST((head)) = (elm);					\ 	(elm)->field.tqe_prev =&TAILQ_FIRST((head));			\ 	QMD_TRACE_HEAD(head);						\ 	QMD_TRACE_ELEM(&(elm)->field);					\ } while (0)
 end_define
 
 begin_define
@@ -1065,7 +1187,7 @@ name|elm
 parameter_list|,
 name|field
 parameter_list|)
-value|do {			\ 	TAILQ_NEXT((elm), field) = NULL;				\ 	(elm)->field.tqe_prev = (head)->tqh_last;			\ 	*(head)->tqh_last = (elm);					\ 	(head)->tqh_last =&TAILQ_NEXT((elm), field);			\ 	QMD_TRACE_HEAD(head);						\ 	QMD_TRACE_ELEM(&(elm)->field);					\ } while (0)
+value|do {			\ 	QMD_TAILQ_CHECK_TAIL(head, field);				\ 	TAILQ_NEXT((elm), field) = NULL;				\ 	(elm)->field.tqe_prev = (head)->tqh_last;			\ 	*(head)->tqh_last = (elm);					\ 	(head)->tqh_last =&TAILQ_NEXT((elm), field);			\ 	QMD_TRACE_HEAD(head);						\ 	QMD_TRACE_ELEM(&(elm)->field);					\ } while (0)
 end_define
 
 begin_define
@@ -1119,7 +1241,7 @@ name|elm
 parameter_list|,
 name|field
 parameter_list|)
-value|do {				\ 	if ((TAILQ_NEXT((elm), field)) != NULL)				\ 		TAILQ_NEXT((elm), field)->field.tqe_prev = 		\ 		    (elm)->field.tqe_prev;				\ 	else {								\ 		(head)->tqh_last = (elm)->field.tqe_prev;		\ 		QMD_TRACE_HEAD(head);					\ 	}								\ 	*(elm)->field.tqe_prev = TAILQ_NEXT((elm), field);		\ 	TRASHIT((elm)->field.tqe_next);					\ 	TRASHIT((elm)->field.tqe_prev);					\ 	QMD_TRACE_ELEM(&(elm)->field);					\ } while (0)
+value|do {				\ 	QMD_TAILQ_CHECK_NEXT(elm, field);				\ 	QMD_TAILQ_CHECK_PREV(elm, field);				\ 	if ((TAILQ_NEXT((elm), field)) != NULL)				\ 		TAILQ_NEXT((elm), field)->field.tqe_prev = 		\ 		    (elm)->field.tqe_prev;				\ 	else {								\ 		(head)->tqh_last = (elm)->field.tqe_prev;		\ 		QMD_TRACE_HEAD(head);					\ 	}								\ 	*(elm)->field.tqe_prev = TAILQ_NEXT((elm), field);		\ 	TRASHIT((elm)->field.tqe_next);					\ 	TRASHIT((elm)->field.tqe_prev);					\ 	QMD_TRACE_ELEM(&(elm)->field);					\ } while (0)
 end_define
 
 begin_ifdef
