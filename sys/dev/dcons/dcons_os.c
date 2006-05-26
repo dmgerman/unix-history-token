@@ -747,15 +747,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|cn_getc_t
-name|dcons_cngetc
+name|cn_term_t
+name|dcons_cnterm
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|cn_checkc_t
-name|dcons_cncheckc
+name|cn_getc_t
+name|dcons_cngetc
 decl_stmt|;
 end_decl_stmt
 
@@ -767,23 +767,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|CONS_DRIVER
+name|CONSOLE_DRIVER
 argument_list|(
 name|dcons
-argument_list|,
-name|dcons_cnprobe
-argument_list|,
-name|dcons_cninit
-argument_list|,
-name|NULL
-argument_list|,
-name|dcons_cngetc
-argument_list|,
-name|dcons_cncheckc
-argument_list|,
-name|dcons_cnputc
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2138,6 +2124,19 @@ comment|/* share port0 with unit0 */
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|dcons_cnterm
+parameter_list|(
+name|struct
+name|consdev
+modifier|*
+name|cp
+parameter_list|)
+block|{ }
+end_function
+
 begin_if
 if|#
 directive|if
@@ -2148,42 +2147,6 @@ begin_function
 specifier|static
 name|int
 name|dcons_cngetc
-parameter_list|(
-name|struct
-name|consdev
-modifier|*
-name|cp
-parameter_list|)
-block|{
-name|struct
-name|dcons_softc
-modifier|*
-name|dc
-init|=
-operator|(
-expr|struct
-name|dcons_softc
-operator|*
-operator|)
-name|cp
-operator|->
-name|cn_arg
-decl_stmt|;
-return|return
-operator|(
-name|dcons_os_getc
-argument_list|(
-name|dc
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|dcons_cncheckc
 parameter_list|(
 name|struct
 name|consdev
