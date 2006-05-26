@@ -1234,10 +1234,6 @@ modifier|*
 name|devvp
 decl_stmt|;
 comment|/* vnode for blk device to mount */
-name|struct
-name|export_args
-name|export
-decl_stmt|;
 comment|/* msdosfs specific mount control block */
 name|struct
 name|msdosfsmount
@@ -1295,9 +1291,9 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
-name|vfs_copyopt
+if|if
+condition|(
+name|vfs_flagopt
 argument_list|(
 name|mp
 operator|->
@@ -1305,39 +1301,15 @@ name|mnt_optnew
 argument_list|,
 literal|"export"
 argument_list|,
-operator|&
-name|export
+name|NULL
 argument_list|,
-sizeof|sizeof
-name|export
+literal|0
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-operator|&&
-name|export
-operator|.
-name|ex_flags
-operator|!=
-literal|0
 condition|)
 block|{
-comment|/* 			 * Process export requests. 			 */
+comment|/* Process export requests. */
 if|if
 condition|(
-operator|(
-name|export
-operator|.
-name|ex_flags
-operator|&
-name|MNT_EXPORTED
-operator|)
-operator|!=
-literal|0
-operator|&&
 operator|(
 name|pmp
 operator|->
@@ -1353,15 +1325,10 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
+else|else
 return|return
 operator|(
-name|vfs_export
-argument_list|(
-name|mp
-argument_list|,
-operator|&
-name|export
-argument_list|)
+literal|0
 operator|)
 return|;
 block|}
