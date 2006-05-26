@@ -84,10 +84,6 @@ name|char
 modifier|*
 name|gdb_name
 decl_stmt|;
-name|gdb_checkc_f
-modifier|*
-name|gdb_checkc
-decl_stmt|;
 name|gdb_getc_f
 modifier|*
 name|gdb_getc
@@ -128,14 +124,12 @@ name|init
 parameter_list|,
 name|term
 parameter_list|,
-name|checkc
-parameter_list|,
 name|getc
 parameter_list|,
 name|putc
 parameter_list|)
 define|\
-value|static struct gdb_dbgport name##_gdb_dbgport = {		\ 		.gdb_name = #name,					\ 		.gdb_checkc = checkc,					\ 		.gdb_getc = getc,					\ 		.gdb_init = init,					\ 		.gdb_probe = probe,					\ 		.gdb_putc = putc,					\ 		.gdb_term = term					\ 	};								\ 	DATA_SET(gdb_dbgport_set, name##_gdb_dbgport)
+value|static struct gdb_dbgport name##_gdb_dbgport = {		\ 		.gdb_name = #name,					\ 		.gdb_probe = probe,					\ 		.gdb_init = init,					\ 		.gdb_term = term,					\ 		.gdb_getc = getc,					\ 		.gdb_putc = putc,					\ 	};								\ 	DATA_SET(gdb_dbgport_set, name##_gdb_dbgport)
 end_define
 
 begin_endif
