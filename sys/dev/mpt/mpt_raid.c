@@ -185,6 +185,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|mpt_enable_handler_t
+name|mpt_raid_enable
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|mpt_event_handler_t
 name|mpt_raid_event
 decl_stmt|;
@@ -232,6 +239,11 @@ operator|.
 name|attach
 operator|=
 name|mpt_raid_attach
+block|,
+operator|.
+name|enable
+operator|=
+name|mpt_raid_enable
 block|,
 operator|.
 name|event
@@ -913,7 +925,9 @@ name|cgd
 operator|==
 name|NULL
 condition|)
+block|{
 break|break;
+block|}
 name|mpt_lprt
 argument_list|(
 name|mpt
@@ -1078,9 +1092,18 @@ name|error
 operator|!=
 literal|0
 condition|)
+block|{
+name|mpt_prt
+argument_list|(
+name|mpt
+argument_list|,
+literal|"Unable to register RAID haandler!\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|cleanup
 goto|;
+block|}
 name|error
 operator|=
 name|mpt_spawn_raid_thread
@@ -1117,7 +1140,6 @@ name|mpt
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
 literal|5
 argument_list|)
 expr_stmt|;
@@ -1208,6 +1230,24 @@ expr_stmt|;
 return|return
 operator|(
 name|error
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|mpt_raid_enable
+parameter_list|(
+name|struct
+name|mpt_softc
+modifier|*
+name|mpt
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
@@ -1430,12 +1470,13 @@ name|Event
 operator|!=
 name|MPI_EVENT_INTEGRATED_RAID
 condition|)
+block|{
 return|return
 operator|(
-comment|/*handled*/
 literal|0
 operator|)
 return|;
+block|}
 name|raid_event
 operator|=
 operator|(
@@ -1599,10 +1640,12 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 name|mpt_disk
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 block|}
 name|print_event
 operator|=
@@ -1680,6 +1723,7 @@ name|mpt_vol
 operator|!=
 name|NULL
 condition|)
+block|{
 name|mpt_vol
 operator|->
 name|flags
@@ -1691,6 +1735,7 @@ operator||
 name|MPT_RVF_ANNOUNCED
 operator|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|MPI_EVENT_RAID_RC_PHYSDISK_CREATED
@@ -1721,6 +1766,7 @@ name|mpt_disk
 operator|!=
 name|NULL
 condition|)
+block|{
 name|mpt_disk
 operator|->
 name|flags
@@ -1728,6 +1774,7 @@ operator|&=
 operator|~
 name|MPT_RDF_UP2DATE
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|MPI_EVENT_RAID_RC_DOMAIN_VAL_NEEDED
@@ -1937,7 +1984,6 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-comment|/*handled*/
 literal|1
 operator|)
 return|;
@@ -2028,7 +2074,6 @@ name|NULL
 condition|)
 return|return
 operator|(
-comment|/*free_reply*/
 name|TRUE
 operator|)
 return|;
@@ -2130,7 +2175,6 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-comment|/*free_reply*/
 name|TRUE
 operator|)
 return|;
@@ -2212,14 +2256,28 @@ block|{
 case|case
 name|MPI_RAID_ACTION_QUIESCE_PHYS_IO
 case|:
-comment|/* 		 * Parse result, call mpt_start with ccb, 		 * release device queue. 		 * COWWWWW 		 */
+name|mpt_prt
+argument_list|(
+name|mpt
+argument_list|,
+literal|"QUIESCE PHYSIO DONE\n"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|MPI_RAID_ACTION_ENABLE_PHYS_IO
 case|:
-comment|/* 		 * Need additional state for transition to enabled to 		 * protect against attempts to disable?? 		 */
+name|mpt_prt
+argument_list|(
+name|mpt
+argument_list|,
+literal|"ENABLY PHYSIO DONE\n"
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
+break|break;
+block|}
 name|action_result
 operator|=
 name|REQ_TO_RAID_ACTION_RESULT
@@ -2255,11 +2313,8 @@ name|reply
 operator|->
 name|ActionStatus
 expr_stmt|;
-break|break;
-block|}
 return|return
 operator|(
-comment|/*Free Request*/
 name|TRUE
 operator|)
 return|;
@@ -2764,11 +2819,22 @@ name|raid_wakeup
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
 name|mpt_refresh_raid_data
 argument_list|(
 name|mpt
 argument_list|)
+condition|)
+block|{
+name|mpt_schedule_raid_refresh
+argument_list|(
+name|mpt
+argument_list|)
 expr_stmt|;
+comment|/* XX NOT QUITE RIGHT */
+continue|continue;
+block|}
 comment|/* 		 * Now that we have our first snapshot of RAID data, 		 * allow CAM to access our physical disk bus. 		 */
 if|if
 condition|(
@@ -2779,14 +2845,23 @@ name|firstrun
 operator|=
 literal|0
 expr_stmt|;
+name|MPTLOCK_2_CAMLOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 name|xpt_release_simq
 argument_list|(
 name|mpt
 operator|->
 name|phydisk_sim
 argument_list|,
-comment|/*run_queue*/
 name|TRUE
+argument_list|)
+expr_stmt|;
+name|CAMLOCK_2_MPTLOCK
+argument_list|(
+name|mpt
 argument_list|)
 expr_stmt|;
 block|}
@@ -2887,7 +2962,6 @@ name|ccb_h
 argument_list|,
 name|path
 argument_list|,
-comment|/*priority*/
 literal|5
 argument_list|)
 expr_stmt|;
@@ -2915,9 +2989,19 @@ name|flags
 operator|=
 name|CAM_FLAG_NONE
 expr_stmt|;
+name|MPTLOCK_2_CAMLOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 name|xpt_action
 argument_list|(
 name|ccb
+argument_list|)
+expr_stmt|;
+name|CAMLOCK_2_MPTLOCK
+argument_list|(
+name|mpt
 argument_list|)
 expr_stmt|;
 block|}
@@ -5165,7 +5249,7 @@ comment|/*  * Update in-core information about RAID support.  We update any entr
 end_comment
 
 begin_function
-name|void
+name|int
 name|mpt_refresh_raid_data
 parameter_list|(
 name|struct
@@ -5221,7 +5305,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 comment|/* 	 * Mark all items as unreferenced by the configuration. 	 * This allows us to find, report, and discard stale 	 * entries. 	 */
 for|for
@@ -5336,11 +5424,15 @@ name|mpt_prt
 argument_list|(
 name|mpt
 argument_list|,
-literal|"mpt_refresh_raid_data: "
-literal|"Failed to read IOC Page 3\n"
+literal|"mpt_refresh_raid_data: Failed to read IOC Page 3\n"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 name|ioc_disk
 operator|=
@@ -5489,7 +5581,12 @@ literal|"mpt_refresh_raid_data: "
 literal|"Failed to read IOC Page 2\n"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 name|ioc_vol
 operator|=
@@ -6309,6 +6406,11 @@ name|raid_nonopt_volumes
 operator|=
 name|nonopt_volumes
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -6922,11 +7024,13 @@ name|req
 operator|->
 name|newptr
 condition|)
+block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 name|size
 operator|=
 name|req
@@ -6946,11 +7050,13 @@ argument_list|(
 name|inbuf
 argument_list|)
 condition|)
+block|{
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 name|error
 operator|=
 name|SYSCTL_IN
@@ -6966,11 +7072,13 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 name|inbuf
 index|[
 name|size
@@ -7009,6 +7117,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 return|return
 operator|(
 name|mpt_raid_set_vol_mwce
@@ -7019,6 +7128,7 @@ name|i
 argument_list|)
 operator|)
 return|;
+block|}
 block|}
 return|return
 operator|(
@@ -7087,9 +7197,11 @@ name|req
 operator|->
 name|newptr
 condition|)
+block|{
 return|return
 name|error
 return|;
+block|}
 return|return
 operator|(
 name|mpt_raid_set_vol_resync_rate
@@ -7162,9 +7274,11 @@ name|req
 operator|->
 name|newptr
 condition|)
+block|{
 return|return
 name|error
 return|;
+block|}
 return|return
 operator|(
 name|mpt_raid_set_vol_queue_depth

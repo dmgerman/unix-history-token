@@ -1672,11 +1672,7 @@ literal|2
 operator|,
 comment|/* none, ini, target, both */
 operator|:
-literal|1
-operator|,
-name|raid_enabled
-operator|:
-literal|1
+literal|2
 operator|,
 name|raid_mwce_set
 operator|:
