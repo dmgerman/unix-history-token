@@ -191,7 +191,7 @@ comment|/* _KERNEL */
 end_comment
 
 begin_comment
-comment|/*  * Enumerated types for known system startup interfaces.  *  * Startup occurs in ascending numeric order; the list entries are  * sorted prior to attempting startup to guarantee order.  Items  * of the same level are arbitrated for order based on the 'order'  * element.  *  * These numbers are arbitrary and are chosen ONLY for ordering; the  * enumeration values are explicit rather than implicit to provide  * for binary compatibility with inserted elements.  *  * The SI_SUB_RUN_SCHEDULER value must have the highest lexical value.  *  * The SI_SUB_CONSOLE and SI_SUB_SWAP values represent values used by  * the BSD 4.4Lite but not by FreeBSD; they are maintained in dependent  * order to support porting.  *  * The SI_SUB_PROTO_BEGIN and SI_SUB_PROTO_END bracket a range of  * initializations to take place at splimp().  This is a historical  * wart that should be removed -- probably running everything at  * splimp() until the first init that doesn't want it is the correct  * fix.  They are currently present to ensure historical behavior.  */
+comment|/*  * Enumerated types for known system startup interfaces.  *  * Startup occurs in ascending numeric order; the list entries are  * sorted prior to attempting startup to guarantee order.  Items  * of the same level are arbitrated for order based on the 'order'  * element.  *  * These numbers are arbitrary and are chosen ONLY for ordering; the  * enumeration values are explicit rather than implicit to provide  * for binary compatibility with inserted elements.  *  * The SI_SUB_RUN_SCHEDULER value must have the highest lexical value.  *  * The SI_SUB_SWAP values represent a value used by  * the BSD 4.4Lite but not by FreeBSD; it are maintained in dependent  * order to support porting.  *  * The SI_SUB_PROTO_BEGIN and SI_SUB_PROTO_END bracket a range of  * initializations to take place at splimp().  This is a historical  * wart that should be removed -- probably running everything at  * splimp() until the first init that doesn't want it is the correct  * fix.  They are currently present to ensure historical behavior.  */
 end_comment
 
 begin_enum
@@ -213,11 +213,6 @@ init|=
 literal|0x0700000
 block|,
 comment|/* establish tunable values */
-name|SI_SUB_CONSOLE
-init|=
-literal|0x0800000
-block|,
-comment|/* console*/
 name|SI_SUB_COPYRIGHT
 init|=
 literal|0x0800001
