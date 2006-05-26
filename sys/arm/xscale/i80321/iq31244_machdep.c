@@ -562,15 +562,6 @@ name|minidataclean
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|void
-name|enable_mmu
-parameter_list|(
-name|vm_offset_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|struct
