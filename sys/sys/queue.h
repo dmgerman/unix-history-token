@@ -634,11 +634,6 @@ argument_list|(
 name|INVARIANTS
 argument_list|)
 operator|)
-operator|||
-name|defined
-argument_list|(
-name|QUEUE_MACRO_DEBUG
-argument_list|)
 end_if
 
 begin_define
@@ -721,7 +716,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* (_KERNEL&& INVARIANTS) || QUEUE_MACRO_DEBUG */
+comment|/* (_KERNEL&& INVARIANTS) */
 end_comment
 
 begin_define
