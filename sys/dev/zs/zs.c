@@ -387,13 +387,6 @@ name|zs_cnputc
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|cn_dbctl_t
-name|zs_cndbctl
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|int
@@ -595,7 +588,7 @@ name|zs_cncheckc
 argument_list|,
 name|zs_cnputc
 argument_list|,
-name|zs_cndbctl
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3904,22 +3897,6 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|zs_cndbctl
-parameter_list|(
-name|struct
-name|consdev
-modifier|*
-name|cn
-parameter_list|,
-name|int
-name|c
-parameter_list|)
-block|{ }
 end_function
 
 begin_function

@@ -95,20 +95,6 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|void
-name|cn_dbctl_t
-parameter_list|(
-name|struct
-name|consdev
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_typedef
-
 begin_struct
 struct|struct
 name|consdev
@@ -143,11 +129,6 @@ modifier|*
 name|cn_putc
 decl_stmt|;
 comment|/* kernel putchar interface */
-name|cn_dbctl_t
-modifier|*
-name|cn_dbctl
-decl_stmt|;
-comment|/* debugger control interface */
 name|struct
 name|tty
 modifier|*
@@ -297,7 +278,7 @@ parameter_list|,
 name|dbctl
 parameter_list|)
 define|\
-value|static struct consdev name##_consdev = {			\ 		probe, init, term, getc, checkc, putc, dbctl		\ 	};								\ 	DATA_SET(cons_set, name##_consdev)
+value|static struct consdev name##_consdev = {			\ 		probe, init, term, getc, checkc, putc			\ 	};								\ 	DATA_SET(cons_set, name##_consdev)
 end_define
 
 begin_comment
@@ -382,15 +363,6 @@ name|int
 name|cngetc
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|cndbctl
-parameter_list|(
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
