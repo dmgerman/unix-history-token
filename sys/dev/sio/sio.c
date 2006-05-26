@@ -10305,42 +10305,42 @@ end_function_decl
 begin_decl_stmt
 specifier|static
 name|cn_probe_t
-name|siocnprobe
+name|sio_cnprobe
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|cn_init_t
-name|siocninit
+name|sio_cninit
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|cn_term_t
-name|siocnterm
+name|sio_cnterm
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|cn_checkc_t
-name|siocncheckc
+name|sio_cncheckc
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|cn_getc_t
-name|siocngetc
+name|sio_cngetc
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|cn_putc_t
-name|siocnputc
+name|sio_cnputc
 decl_stmt|;
 end_decl_stmt
 
@@ -10349,17 +10349,17 @@ name|CONS_DRIVER
 argument_list|(
 name|sio
 argument_list|,
-name|siocnprobe
+name|sio_cnprobe
 argument_list|,
-name|siocninit
+name|sio_cninit
 argument_list|,
-name|siocnterm
+name|sio_cnterm
 argument_list|,
-name|siocngetc
+name|sio_cngetc
 argument_list|,
-name|siocncheckc
+name|sio_cncheckc
 argument_list|,
-name|siocnputc
+name|sio_cnputc
 argument_list|,
 name|NULL
 argument_list|)
@@ -10859,7 +10859,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|siocnprobe
+name|sio_cnprobe
 parameter_list|(
 name|cp
 parameter_list|)
@@ -11152,7 +11152,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|siocninit
+name|sio_cninit
 parameter_list|(
 name|cp
 parameter_list|)
@@ -11174,7 +11174,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|siocnterm
+name|sio_cnterm
 parameter_list|(
 name|cp
 parameter_list|)
@@ -11195,7 +11195,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|siocncheckc
+name|sio_cncheckc
 parameter_list|(
 name|struct
 name|consdev
@@ -11330,7 +11330,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|siocngetc
+name|sio_cngetc
 parameter_list|(
 name|struct
 name|consdev
@@ -11463,7 +11463,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|siocnputc
+name|sio_cnputc
 parameter_list|(
 name|struct
 name|consdev
@@ -11753,7 +11753,7 @@ name|int
 name|c
 parameter_list|)
 block|{
-name|siocnputc
+name|sio_cnputc
 argument_list|(
 name|NULL
 argument_list|,
@@ -11773,7 +11773,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|siocncheckc
+name|sio_cncheckc
 argument_list|(
 name|NULL
 argument_list|)
@@ -11792,7 +11792,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|siocngetc
+name|sio_cngetc
 argument_list|(
 name|NULL
 argument_list|)
