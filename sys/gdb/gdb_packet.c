@@ -130,6 +130,45 @@ value|(((n)< 10) ? (n) + '0' : (n) + 'a' - 10)
 end_define
 
 begin_comment
+comment|/*  * Get a single character  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|gdb_getc
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|c
+decl_stmt|;
+do|do
+name|c
+operator|=
+name|gdb_cur
+operator|->
+name|gdb_getc
+argument_list|()
+expr_stmt|;
+do|while
+condition|(
+name|c
+operator|==
+operator|-
+literal|1
+condition|)
+do|;
+return|return
+operator|(
+name|c
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Functions to receive and extract from a packet.  */
 end_comment
 
@@ -157,8 +196,6 @@ condition|(
 operator|(
 name|c
 operator|=
-name|gdb_cur
-operator|->
 name|gdb_getc
 argument_list|()
 operator|)
@@ -189,8 +226,6 @@ condition|)
 block|{
 name|c
 operator|=
-name|gdb_cur
-operator|->
 name|gdb_getc
 argument_list|()
 expr_stmt|;
@@ -248,8 +283,6 @@ return|;
 block|}
 name|c
 operator|=
-name|gdb_cur
-operator|->
 name|gdb_getc
 argument_list|()
 expr_stmt|;
@@ -268,8 +301,6 @@ literal|0xf0
 expr_stmt|;
 name|c
 operator|=
-name|gdb_cur
-operator|->
 name|gdb_getc
 argument_list|()
 expr_stmt|;
@@ -1015,8 +1046,6 @@ argument_list|)
 expr_stmt|;
 name|c
 operator|=
-name|gdb_cur
-operator|->
 name|gdb_getc
 argument_list|()
 expr_stmt|;
