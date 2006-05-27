@@ -765,7 +765,7 @@ name|dev
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {					\ 	if (hme_nerr++< HME_MAXERR)					\ 		device_printf(dev, __VA_ARGS__);			\ 	if (hme_nerr == HME_MAXERR) {					\ 		device_printf(dev, "too may errors; not reporting any "	\ 		    "more\n");						\ 	}								\ } while(0)
+value|do {					\ 	if (hme_nerr++< HME_MAXERR)					\ 		device_printf(dev, __VA_ARGS__);			\ 	if (hme_nerr == HME_MAXERR) {					\ 		device_printf(dev, "too many errors; not reporting "	\ 		    "any more\n");					\ 	}								\ } while(0)
 end_define
 
 begin_comment
