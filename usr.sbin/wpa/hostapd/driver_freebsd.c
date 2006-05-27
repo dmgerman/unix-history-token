@@ -627,6 +627,8 @@ literal|"AES-OCB"
 block|,
 literal|"AES-CCM"
 block|,
+literal|"*BAD*"
+block|,
 literal|"CKIP"
 block|,
 literal|"NONE"
