@@ -18172,7 +18172,7 @@ name|int
 name|c
 parameter_list|)
 block|{
-name|sio__cnputc
+name|sio_cnputc
 argument_list|(
 name|NULL
 argument_list|,
@@ -18192,7 +18192,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|sio__cngetc
+name|sio_cngetc
 argument_list|(
 name|NULL
 argument_list|)
