@@ -476,19 +476,9 @@ index|[
 literal|0
 index|]
 operator|&&
-operator|(
 name|endch
 operator|==
 name|NULL
-operator|||
-name|endchar
-index|[
-literal|0
-index|]
-operator|!=
-operator|*
-name|endch
-operator|)
 condition|)
 name|errx
 argument_list|(
@@ -5982,7 +5972,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * -size n[c] functions --  *  *	True if the file size in bytes, divided by an implementation defined  *	value and rounded up to the next integer, is n.  If n is followed by  *	a c, the size is in bytes.  */
+comment|/*  * -size n[c] functions --  *  *	True if the file size in bytes, divided by an implementation defined  *	value and rounded up to the next integer, is n.  If n is followed by  *      one of c k M G T P, the size is in bytes, kilobytes,  *      megabytes, gigabytes, terabytes or petabytes respectively.  */
 end_comment
 
 begin_define
@@ -6080,6 +6070,9 @@ decl_stmt|;
 name|char
 name|endch
 decl_stmt|;
+name|off_t
+name|scale
+decl_stmt|;
 name|size_str
 operator|=
 name|nextarg
@@ -6126,13 +6119,119 @@ expr_stmt|;
 if|if
 condition|(
 name|endch
-operator|==
-literal|'c'
+operator|!=
+literal|'\0'
 condition|)
+block|{
 name|divsize
 operator|=
 literal|0
 expr_stmt|;
+switch|switch
+condition|(
+name|endch
+condition|)
+block|{
+case|case
+literal|'c'
+case|:
+comment|/* characters */
+name|scale
+operator|=
+literal|0x1LL
+expr_stmt|;
+break|break;
+case|case
+literal|'k'
+case|:
+comment|/* kilobytes 1<<10 */
+name|scale
+operator|=
+literal|0x400LL
+expr_stmt|;
+break|break;
+case|case
+literal|'M'
+case|:
+comment|/* megabytes 1<<20 */
+name|scale
+operator|=
+literal|0x100000LL
+expr_stmt|;
+break|break;
+case|case
+literal|'G'
+case|:
+comment|/* gigabytes 1<<30 */
+name|scale
+operator|=
+literal|0x40000000LL
+expr_stmt|;
+break|break;
+case|case
+literal|'T'
+case|:
+comment|/* terabytes 1<<40 */
+name|scale
+operator|=
+literal|0x1000000000LL
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+comment|/* petabytes 1<<50 */
+name|scale
+operator|=
+literal|0x4000000000000LL
+expr_stmt|;
+break|break;
+default|default:
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: %s: illegal trailing character"
+argument_list|,
+name|option
+operator|->
+name|name
+argument_list|,
+name|size_str
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|new
+operator|->
+name|o_data
+operator|>
+name|QUAD_MAX
+operator|/
+name|scale
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: %s: value too large"
+argument_list|,
+name|option
+operator|->
+name|name
+argument_list|,
+name|size_str
+argument_list|)
+expr_stmt|;
+name|new
+operator|->
+name|o_data
+operator|*=
+name|scale
+expr_stmt|;
+block|}
 return|return
 name|new
 return|;
