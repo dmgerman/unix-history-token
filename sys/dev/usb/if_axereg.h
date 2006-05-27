@@ -534,6 +534,10 @@ name|struct
 name|usb_qdat
 name|axe_qdat
 decl_stmt|;
+name|struct
+name|usb_task
+name|axe_tick_task
+decl_stmt|;
 block|}
 struct|;
 end_struct
