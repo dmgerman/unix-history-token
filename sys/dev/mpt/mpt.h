@@ -1672,7 +1672,11 @@ literal|2
 operator|,
 comment|/* none, ini, target, both */
 operator|:
-literal|2
+literal|1
+operator|,
+name|raid_enabled
+operator|:
+literal|1
 operator|,
 name|raid_mwce_set
 operator|:
@@ -1824,7 +1828,7 @@ struct|;
 block|}
 name|cfg
 union|;
-comment|/* Controller Info */
+comment|/* Controller Info for RAID information */
 name|CONFIG_PAGE_IOC_2
 modifier|*
 name|ioc_page2
@@ -3201,7 +3205,7 @@ parameter_list|,
 name|reply_frame
 parameter_list|)
 define|\
-value|do {							\ 	if (mpt->verbose>= MPT_PRT_DEBUG)		\ 		mpt_dump_reply_frame(mpt, reply_frame);	\ } while(0)
+value|do {							\ 	if (mpt->verbose> MPT_PRT_DEBUG)		\ 		mpt_dump_reply_frame(mpt, reply_frame);	\ } while(0)
 end_define
 
 begin_function_decl

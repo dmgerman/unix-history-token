@@ -175,7 +175,7 @@ name|union
 name|ccb
 modifier|*
 parameter_list|,
-name|u_int
+name|target_id_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -213,6 +213,17 @@ end_function_decl
 begin_function_decl
 name|void
 name|mpt_schedule_raid_refresh
+parameter_list|(
+name|struct
+name|mpt_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mpt_raid_free_mem
 parameter_list|(
 name|struct
 name|mpt_softc
