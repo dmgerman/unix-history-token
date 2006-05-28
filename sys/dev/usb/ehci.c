@@ -11783,11 +11783,17 @@ expr_stmt|;
 name|forceshort
 operator|=
 operator|(
+operator|(
 name|xfer
 operator|->
 name|flags
 operator|&
 name|USBD_FORCE_SHORT_XFER
+operator|)
+operator|||
+name|len
+operator|==
+literal|0
 operator|)
 operator|&&
 name|len
