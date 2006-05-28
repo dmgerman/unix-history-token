@@ -1014,7 +1014,7 @@ name|tag
 init|=
 name|bus
 operator|->
-name|dmatag
+name|parent_dmatag
 decl_stmt|;
 name|usbd_status
 name|err

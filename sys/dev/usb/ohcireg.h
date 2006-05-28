@@ -1199,9 +1199,12 @@ define|#
 directive|define
 name|OHCI_ITD_MK_OFFS
 parameter_list|(
-name|len
+name|page
+parameter_list|,
+name|off
 parameter_list|)
-value|(0xe000 | ((len)& 0x1fff))
+define|\
+value|(0xe000 | ((page) ? OHCI_ITD_PAGE_SELECT : 0) | ((off)& 0xfff))
 define|#
 directive|define
 name|OHCI_ITD_PSW_LENGTH

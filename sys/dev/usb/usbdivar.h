@@ -438,9 +438,13 @@ directive|endif
 endif|#
 directive|endif
 name|bus_dma_tag_t
-name|dmatag
+name|parent_dmatag
 decl_stmt|;
-comment|/* DMA tag */
+comment|/* Base DMA tag */
+name|bus_dma_tag_t
+name|buffer_dmatag
+decl_stmt|;
+comment|/* Tag for transfer buffers */
 block|}
 struct|;
 end_struct
@@ -666,6 +670,40 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|USB_DMA_NSEG
+value|(btoc(MAXPHYS) + 1)
+end_define
+
+begin_comment
+comment|/* DMA-capable memory buffer. */
+end_comment
+
+begin_struct
+struct|struct
+name|usb_dma_mapping
+block|{
+name|bus_dma_segment_t
+name|segs
+index|[
+name|USB_DMA_NSEG
+index|]
+decl_stmt|;
+comment|/* The physical segments. */
+name|int
+name|nsegs
+decl_stmt|;
+comment|/* Number of segments. */
+name|bus_dmamap_t
+name|map
+decl_stmt|;
+comment|/* DMA mapping. */
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|usbd_xfer
@@ -743,8 +781,13 @@ name|usbd_device
 modifier|*
 name|device
 decl_stmt|;
-name|usb_dma_t
-name|dmabuf
+name|struct
+name|usb_dma_mapping
+name|dmamap
+decl_stmt|;
+name|void
+modifier|*
+name|allocbuf
 decl_stmt|;
 name|int
 name|rqflags

@@ -178,6 +178,19 @@ name|uhci_physaddr_t
 name|physaddr
 decl_stmt|;
 comment|/* TD's physical address. */
+name|usb_dma_t
+name|aux_dma
+decl_stmt|;
+comment|/* Auxillary storage if needed. */
+name|void
+modifier|*
+name|aux_data
+decl_stmt|;
+comment|/* Original aux data virtual address. */
+name|int
+name|aux_len
+decl_stmt|;
+comment|/* Auxillary storage size. */
 block|}
 struct|;
 end_struct

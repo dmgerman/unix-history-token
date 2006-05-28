@@ -92,9 +92,6 @@ decl_stmt|;
 name|bus_space_handle_t
 name|sc_ioh
 decl_stmt|;
-name|bus_dma_tag_t
-name|sc_dmat
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__

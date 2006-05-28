@@ -455,15 +455,8 @@ end_struct
 begin_define
 define|#
 directive|define
-name|OHCI_ISOC_DIRTY
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
 name|OHCI_XFER_ABORTING
-value|0x02
+value|0x01
 end_define
 
 begin_comment
@@ -474,7 +467,7 @@ begin_define
 define|#
 directive|define
 name|OHCI_XFER_ABORTWAIT
-value|0x04
+value|0x02
 end_define
 
 begin_comment
