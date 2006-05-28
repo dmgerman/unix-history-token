@@ -1161,7 +1161,7 @@ argument_list|(
 name|NULL
 argument_list|,
 comment|/* parent */
-name|PAGE_SIZE
+literal|4096
 argument_list|,
 literal|0
 argument_list|,
@@ -1186,7 +1186,7 @@ comment|/* num of segments */
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* max segment size */
-literal|0
+name|BUS_DMA_ALLOCNOW
 argument_list|,
 comment|/* flags */
 name|NULL
@@ -1209,7 +1209,7 @@ name|sc
 operator|->
 name|bfe_parent_tag
 argument_list|,
-literal|1
+literal|4096
 argument_list|,
 literal|0
 argument_list|,
@@ -1227,7 +1227,7 @@ literal|1
 argument_list|,
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
-literal|0
+name|BUS_DMA_ALLOCNOW
 argument_list|,
 name|NULL
 argument_list|,
@@ -1266,7 +1266,7 @@ name|sc
 operator|->
 name|bfe_parent_tag
 argument_list|,
-literal|1
+literal|4096
 argument_list|,
 literal|0
 argument_list|,
@@ -1284,7 +1284,7 @@ literal|1
 argument_list|,
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
-literal|0
+name|BUS_DMA_ALLOCNOW
 argument_list|,
 name|NULL
 argument_list|,
@@ -6138,6 +6138,54 @@ operator|&
 name|BFE_ISTAT_ERRORS
 condition|)
 block|{
+if|if
+condition|(
+name|istat
+operator|&
+name|BFE_ISTAT_DSCE
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"if_bfe Descriptor Error\n"
+argument_list|)
+expr_stmt|;
+name|bfe_stop
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|BFE_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|istat
+operator|&
+name|BFE_ISTAT_DPE
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"if_bfe Descriptor Protocol Error\n"
+argument_list|)
+expr_stmt|;
+name|bfe_stop
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|BFE_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|flag
 operator|=
 name|CSR_READ_4
