@@ -5300,7 +5300,7 @@ literal|5
 argument_list|,
 name|printf
 argument_list|(
-literal|"midi_synth: resid %d len %jd avail %jd\n"
+literal|"midi_synth: resid %zu len %jd avail %jd\n"
 argument_list|,
 name|len
 argument_list|,
