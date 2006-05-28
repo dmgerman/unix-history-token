@@ -1433,6 +1433,13 @@ operator||
 name|PCB_NPXINITDONE
 operator|)
 expr_stmt|;
+name|npx_fork_thread
+argument_list|(
+name|td0
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Create a new fresh stack for the new thread. 	 * The -16 is so we can expand the trapframe if we go to vm86. 	 * Don't forget to set this stack value into whatever supplies 	 * the address for the fault handlers. 	 * The contexts are filled in at the time we actually DO the 	 * upcall as only then do we know which KSE we got. 	 */
 name|bcopy
 argument_list|(
