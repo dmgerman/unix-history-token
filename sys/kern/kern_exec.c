@@ -1486,6 +1486,8 @@ operator||
 name|SAVENAME
 operator||
 name|MPSAFE
+operator||
+name|AUDITVNODE1
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
