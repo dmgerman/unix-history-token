@@ -2563,7 +2563,7 @@ name|clsqh
 operator|->
 name|hlink
 operator|=
-name|bsqh
+name|chsqh
 expr_stmt|;
 name|clsqh
 operator|->
