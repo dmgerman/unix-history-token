@@ -1427,11 +1427,7 @@ operator|->
 name|pcb_flags
 operator|&=
 operator|~
-operator|(
 name|PCB_NPXTRAP
-operator||
-name|PCB_NPXINITDONE
-operator|)
 expr_stmt|;
 name|npx_fork_thread
 argument_list|(
