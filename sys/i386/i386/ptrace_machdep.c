@@ -187,6 +187,21 @@ name|sv_xmm
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* clear high 16 bits of mxcsr to avoid security problem. */
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_save
+operator|.
+name|sv_xmm
+operator|.
+name|sv_env
+operator|.
+name|en_mxcsr
+operator|&=
+literal|0xFFFF
+expr_stmt|;
 break|break;
 default|default:
 return|return
