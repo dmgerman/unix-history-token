@@ -292,7 +292,7 @@ operator|<=
 name|STACK_MAX
 argument_list|,
 operator|(
-literal|"bogous stack"
+literal|"bogus stack"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -389,7 +389,7 @@ operator|<=
 name|STACK_MAX
 argument_list|,
 operator|(
-literal|"bogous stack"
+literal|"bogus stack"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -506,7 +506,7 @@ operator|<=
 name|STACK_MAX
 argument_list|,
 operator|(
-literal|"bogous stack"
+literal|"bogus stack"
 operator|)
 argument_list|)
 expr_stmt|;
