@@ -5657,6 +5657,10 @@ operator|&&
 name|errno
 operator|!=
 name|ENOENT
+operator|&&
+name|errno
+operator|!=
+name|ENOTSUP
 condition|)
 block|{
 name|syslog
