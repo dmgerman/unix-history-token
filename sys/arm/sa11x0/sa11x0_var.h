@@ -99,34 +99,6 @@ name|sa11x0_bs_tag
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|sa11x0_attach_args
-block|{
-name|sa11x0_chipset_tag_t
-name|sa_sc
-decl_stmt|;
-name|bus_space_tag_t
-name|sa_iot
-decl_stmt|;
-comment|/* Bus tag */
-name|bus_addr_t
-name|sa_addr
-decl_stmt|;
-comment|/* i/o address  */
-name|bus_size_t
-name|sa_size
-decl_stmt|;
-name|int
-name|sa_intr
-decl_stmt|;
-name|int
-name|sa_gpio
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_function_decl
 name|void
 modifier|*
