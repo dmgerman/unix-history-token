@@ -311,12 +311,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_struct_decl
-struct_decl|struct
-name|thread
-struct_decl|;
-end_struct_decl
-
 begin_define
 define|#
 directive|define
@@ -458,23 +452,6 @@ name|int
 name|npxtrap
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|npx_fork_thread
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|newtd
 parameter_list|)
 function_decl|;
 end_function_decl
