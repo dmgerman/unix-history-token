@@ -1016,7 +1016,7 @@ block|{
 name|mpt
 operator|->
 name|verbose
-operator|+=
+operator|=
 name|tval
 expr_stmt|;
 block|}
