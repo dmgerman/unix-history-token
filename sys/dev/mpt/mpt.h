@@ -3473,6 +3473,8 @@ name|MPT_PRT_WARN
 block|,
 name|MPT_PRT_INFO
 block|,
+name|MPT_PRT_NEGOTIATION
+block|,
 name|MPT_PRT_DEBUG
 block|,
 name|MPT_PRT_DEBUG1
