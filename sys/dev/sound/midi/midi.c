@@ -1777,11 +1777,11 @@ begin_comment
 comment|/*  * midi_in: process all data until the queue is full, then discards the rest.  * Since midi_in is a state machine, data discards can cause it to get out of  * whack.  Process as much as possible.  It calls, wakeup, selnotify and  * psignal at most once.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|notdef
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -4365,11 +4365,11 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|notdef
-end_if
+end_ifdef
 
 begin_comment
 comment|/*  * Convert IOCTL command to string for debugging  */

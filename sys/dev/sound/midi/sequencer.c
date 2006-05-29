@@ -5065,8 +5065,8 @@ operator|->
 name|music
 condition|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|not_ever_ever
 if|if
 condition|(
@@ -7188,8 +7188,8 @@ operator|+=
 literal|4
 expr_stmt|;
 break|break;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|notyet
 case|case
 name|SEQ_ECHO
