@@ -654,10 +654,6 @@ name|vm_maxsaddr
 decl_stmt|;
 comment|/* user VA at max stack growth */
 name|int
-name|vm_exitingcnt
-decl_stmt|;
-comment|/* several processes zombied in exit1  */
-name|int
 name|vm_refcnt
 decl_stmt|;
 comment|/* number of references */
