@@ -2236,11 +2236,15 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
+operator|(
 name|EOPNOTSUPP
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2350,7 +2354,9 @@ expr_stmt|;
 block|}
 block|}
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -3217,7 +3223,9 @@ operator|&
 name|args
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|args
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3465,7 +3473,9 @@ operator|&
 name|ifr
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|ifr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ifr
@@ -4774,7 +4784,9 @@ operator|&
 name|breq
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|breq
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -5104,7 +5116,9 @@ operator|&
 name|bareq
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|bareq
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -6645,7 +6659,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7586,7 +7599,6 @@ operator|&=
 operator|~
 name|IFF_DRV_OACTIVE
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8399,7 +8411,6 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * If the packet is for us, set the packets source as the 		 * bridge, and return the packet back to ether_input for 		 * local processing. 		 */
-comment|/* XXX Do we tap the packet for the member interface too? 		 * BPF_MTAP(&m->m_pkthdr.rcvif, m); 		 */
 comment|/* Mark the packet as arriving on the bridge interface */
 name|m
 operator|->
@@ -10964,7 +10975,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/* filtering is disabled */
 name|i
@@ -11022,8 +11035,10 @@ name|__func__
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 block|}
@@ -11136,7 +11151,9 @@ case|case
 name|ETHERTYPE_REVARP
 case|:
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/* Automatically pass */
 case|case
@@ -11383,7 +11400,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 if|if
 condition|(
@@ -11415,7 +11434,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|bcopy
 argument_list|(
@@ -11452,7 +11473,9 @@ name|args
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 if|if
@@ -11959,7 +11982,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-default|default :
+default|default:
 name|error
 operator|=
 literal|0
@@ -11974,7 +11997,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 if|if
 condition|(
@@ -12018,7 +12043,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|bcopy
 argument_list|(
@@ -12059,7 +12086,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|bcopy
 argument_list|(
@@ -12078,7 +12107,9 @@ name|ETHER_HDR_LEN
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|bad
 label|:
@@ -12094,7 +12125,9 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -12144,8 +12177,10 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -12499,7 +12534,9 @@ operator|=
 name|m
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|bad
 label|:
@@ -12509,8 +12546,10 @@ operator|=
 name|m
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -12740,7 +12779,9 @@ operator|=
 name|m
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|bad
 label|:
@@ -12750,8 +12791,10 @@ operator|=
 name|m
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 end_function
