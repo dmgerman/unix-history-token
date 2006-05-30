@@ -583,6 +583,14 @@ name|cdstp
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|cmtx
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -8762,6 +8770,18 @@ name|arm_nocache_startaddr
 operator|=
 name|lastaddr
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|cmtx
+argument_list|,
+literal|"TMP mappings mtx"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ARM_USE_SMALL_ALLOC
@@ -12162,6 +12182,19 @@ if|if
 condition|(
 operator|!
 name|pve
+operator|&&
+operator|!
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+operator|(
+name|PG_UNMANAGED
+operator||
+name|PG_FICTITIOUS
+operator|)
+operator|)
 condition|)
 name|pve
 operator|=
@@ -14232,6 +14265,12 @@ operator|==
 literal|0
 condition|)
 return|return;
+name|mtx_lock
+argument_list|(
+operator|&
+name|cmtx
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Hook in the page, zero it, and purge the cache for that 	 * zeroed page. Invalidate the TLB as needed. 	 */
 operator|*
 name|cdst_pte
@@ -14289,6 +14328,12 @@ else|else
 name|bzero_page
 argument_list|(
 name|cdstp
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|cmtx
 argument_list|)
 expr_stmt|;
 name|cpu_dcache_wbinv_range
@@ -14356,6 +14401,12 @@ operator|==
 literal|0
 condition|)
 return|return;
+name|mtx_lock
+argument_list|(
+operator|&
+name|cmtx
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Hook in the page, zero it, and purge the cache for that 	 * zeroed page. Invalidate the TLB as needed. 	 */
 operator|*
 name|cdst_pte
@@ -14419,6 +14470,12 @@ else|else
 name|bzero_page
 argument_list|(
 name|cdstp
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|cmtx
 argument_list|)
 expr_stmt|;
 name|xscale_cache_clean_minidata
@@ -14818,6 +14875,12 @@ block|(void) pmap_clean_page(TAILQ_FIRST(&src_pg->md.pv_list), TRUE);
 endif|#
 directive|endif
 comment|/* 	 * Map the pages into the page hook points, copy them, and purge 	 * the cache for the appropriate page. Invalidate the TLB 	 * as required. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|cmtx
+argument_list|)
+expr_stmt|;
 operator|*
 name|csrc_pte
 operator|=
@@ -14878,6 +14941,12 @@ argument_list|(
 name|csrcp
 argument_list|,
 name|cdstp
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|cmtx
 argument_list|)
 expr_stmt|;
 name|cpu_dcache_inv_range
@@ -14977,6 +15046,12 @@ block|(void) pmap_clean_page(TAILQ_FIRST(&src_pg->md.pv_list), TRUE);
 endif|#
 directive|endif
 comment|/* 	 * Map the pages into the page hook points, copy them, and purge 	 * the cache for the appropriate page. Invalidate the TLB 	 * as required. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|cmtx
+argument_list|)
+expr_stmt|;
 operator|*
 name|csrc_pte
 operator|=
@@ -15049,6 +15124,12 @@ argument_list|(
 name|csrcp
 argument_list|,
 name|cdstp
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|cmtx
 argument_list|)
 expr_stmt|;
 name|xscale_cache_clean_minidata
