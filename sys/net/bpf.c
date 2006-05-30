@@ -3828,8 +3828,8 @@ name|flen
 decl_stmt|,
 name|size
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|BPF_JITTER
 name|bpf_jit_filter
 modifier|*
@@ -3854,8 +3854,8 @@ name|wfilter
 operator|=
 literal|1
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|BPF_JITTER
 name|ofunc
 operator|=
@@ -3876,8 +3876,8 @@ name|d
 operator|->
 name|bd_rfilter
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|BPF_JITTER
 name|ofunc
 operator|=
@@ -3933,8 +3933,8 @@ name|bd_rfilter
 operator|=
 name|NULL
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|BPF_JITTER
 name|d
 operator|->
@@ -3971,8 +3971,8 @@ argument_list|,
 name|M_BPF
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|BPF_JITTER
 if|if
 condition|(
@@ -4093,8 +4093,8 @@ name|bd_rfilter
 operator|=
 name|fcode
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|BPF_JITTER
 name|d
 operator|->
@@ -4136,8 +4136,8 @@ argument_list|,
 name|M_BPF
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|BPF_JITTER
 if|if
 condition|(
