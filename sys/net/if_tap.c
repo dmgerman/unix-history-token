@@ -2940,7 +2940,7 @@ name|tapdebug
 operator|=
 operator|*
 operator|(
-name|intptr_t
+name|int
 operator|*
 operator|)
 name|data
@@ -2951,7 +2951,7 @@ name|TAPGDEBUG
 case|:
 operator|*
 operator|(
-name|intptr_t
+name|int
 operator|*
 operator|)
 name|data
@@ -2983,7 +2983,7 @@ if|if
 condition|(
 operator|*
 operator|(
-name|intptr_t
+name|int
 operator|*
 operator|)
 name|data
@@ -3048,7 +3048,7 @@ for|for
 control|(
 operator|*
 operator|(
-name|intptr_t
+name|int
 operator|*
 operator|)
 name|data
@@ -3067,7 +3067,7 @@ name|m_next
 control|)
 operator|*
 operator|(
-name|intptr_t
+name|int
 operator|*
 operator|)
 name|data
@@ -3080,7 +3080,7 @@ block|}
 else|else
 operator|*
 operator|(
-name|intptr_t
+name|int
 operator|*
 operator|)
 name|data
@@ -3102,7 +3102,7 @@ name|fsetown
 argument_list|(
 operator|*
 operator|(
-name|intptr_t
+name|int
 operator|*
 operator|)
 name|data
@@ -3119,7 +3119,7 @@ name|FIOGETOWN
 case|:
 operator|*
 operator|(
-name|intptr_t
+name|int
 operator|*
 operator|)
 name|data
@@ -3149,7 +3149,7 @@ operator|-
 operator|(
 operator|*
 operator|(
-name|intptr_t
+name|int
 operator|*
 operator|)
 name|data
@@ -3168,7 +3168,7 @@ name|TIOCGPGRP
 case|:
 operator|*
 operator|(
-name|intptr_t
+name|int
 operator|*
 operator|)
 name|data
