@@ -1832,6 +1832,23 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|day
+operator|>
+name|cumdays
+index|[
+name|month
+operator|+
+literal|1
+index|]
+condition|)
+comment|/* off end of month */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* if today or today + offset days */
 if|if
 condition|(
