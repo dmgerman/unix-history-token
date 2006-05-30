@@ -1414,6 +1414,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCIS_BASEPERIPH_SDHC
+value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIS_BASEPERIPH_OTHER
 value|0x80
 end_define
