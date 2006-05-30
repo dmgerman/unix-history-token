@@ -342,14 +342,6 @@ operator|(
 literal|"SiS 746 host to AGP bridge"
 operator|)
 return|;
-case|case
-literal|0x07601039
-case|:
-return|return
-operator|(
-literal|"SiS 760 host to AGP bridge"
-operator|)
-return|;
 block|}
 empty_stmt|;
 return|return
