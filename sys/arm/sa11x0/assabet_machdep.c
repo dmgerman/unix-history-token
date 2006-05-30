@@ -1885,7 +1885,9 @@ name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We must now clean the cache again.... 	 * Cleaning may be done by reading new data to displace any 	 * dirty data in the cache. This will have happened in setttb() 	 * but since we are boot strapping the addresses used for the read 	 * may have just been remapped and thus the cache could be out 	 * of sync. A re-clean after the switch will cure this. 	 * After booting there are no gross reloations of the kernel thus 	 * this problem will not occur after initarm(). 	 */
-comment|/*	cpu_idcache_wbinv_all();*/
+name|cpu_idcache_wbinv_all
+argument_list|()
+expr_stmt|;
 name|bootverbose
 operator|=
 literal|1
