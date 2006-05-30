@@ -12946,11 +12946,9 @@ block|}
 ifdef|#
 directive|ifdef
 name|DEV_NPX
-comment|/* clear high 16 bits of mxcsr to avoid security problem. */
-if|if
-condition|(
-name|cpu_fxsr
-condition|)
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
 name|addr
 operator|->
 name|sv_xmm
@@ -12959,8 +12957,10 @@ name|sv_env
 operator|.
 name|en_mxcsr
 operator|&=
-literal|0xFFFF
+name|cpu_mxcsr_mask
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 		 * XXX we violate the dubious requirement that npxsetregs() 		 * be called with interrupts disabled. 		 */
 name|npxsetregs
 argument_list|(
