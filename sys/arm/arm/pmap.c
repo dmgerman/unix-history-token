@@ -15503,6 +15503,8 @@ operator|*
 operator|)
 operator|(
 name|va
+operator|+
+name|offset
 operator|)
 operator|)
 return|;
