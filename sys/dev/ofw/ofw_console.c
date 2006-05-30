@@ -325,25 +325,13 @@ name|ofw_cnputc
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|CONSOLE_DRIVER
 argument_list|(
-argument|ofw
+name|ofw
 argument_list|)
-end_macro
-
-begin_expr_stmt
-name|ofw_cons_checkc
-operator|,
-name|ofw_cons_putc
-operator|,
-name|NULL
+expr_stmt|;
 end_expr_stmt
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function
 specifier|static
@@ -975,7 +963,7 @@ condition|(
 operator|(
 name|c
 operator|=
-name|ofw_cons_checkc
+name|ofw_cngetc
 argument_list|(
 name|NULL
 argument_list|)
@@ -1020,7 +1008,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|ofw_cons_probe
+name|ofw_cnprobe
 parameter_list|(
 name|struct
 name|consdev
@@ -1154,7 +1142,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|ofw_cneterm
+name|ofw_cnterm
 parameter_list|(
 name|struct
 name|consdev
