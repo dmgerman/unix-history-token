@@ -127,7 +127,18 @@ value|10
 end_define
 
 begin_comment
-comment|/* Num of retrans for soft mounts */
+comment|/* Num of retrans for UDP soft mounts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFS_RETRANS_TCP
+value|2
+end_define
+
+begin_comment
+comment|/* Num of retrans for TCP soft mounts */
 end_comment
 
 begin_define
