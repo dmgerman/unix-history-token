@@ -120,14 +120,13 @@ comment|/* Max retries */
 name|int
 name|nm_srtt
 index|[
-literal|4
+name|NFS_MAX_TIMER
 index|]
-decl_stmt|;
-comment|/* Timers for rpcs */
-name|int
+decl_stmt|,
+comment|/* RTT Timers for rpcs */
 name|nm_sdrtt
 index|[
-literal|4
+name|NFS_MAX_TIMER
 index|]
 decl_stmt|;
 name|int
