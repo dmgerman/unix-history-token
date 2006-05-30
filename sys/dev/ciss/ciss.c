@@ -9796,11 +9796,8 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/*      * Get a request.      */
-if|if
+while|while
 condition|(
-operator|(
-name|error
-operator|=
 name|ciss_get_request
 argument_list|(
 name|sc
@@ -9808,13 +9805,20 @@ argument_list|,
 operator|&
 name|cr
 argument_list|)
-operator|)
 operator|!=
 literal|0
 condition|)
-goto|goto
-name|out
-goto|;
+name|tsleep
+argument_list|(
+name|sc
+argument_list|,
+name|PPAUSE
+argument_list|,
+literal|"cissREQ"
+argument_list|,
+name|hz
+argument_list|)
+expr_stmt|;
 name|cc
 operator|=
 name|CISS_FIND_COMMAND
