@@ -1098,6 +1098,9 @@ name|lp
 operator|->
 name|len
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|bigsize
 argument_list|)
 expr_stmt|;
@@ -1117,6 +1120,9 @@ name|lp
 operator|->
 name|len
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|medsize
 argument_list|)
 expr_stmt|;
@@ -1136,6 +1142,9 @@ name|lp
 operator|->
 name|len
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|minsize
 argument_list|)
 expr_stmt|;
@@ -1155,6 +1164,9 @@ name|lp
 operator|->
 name|len
 operator|<
+operator|(
+name|off_t
+operator|)
 name|bigsize
 condition|)
 block|{
