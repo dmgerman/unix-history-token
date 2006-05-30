@@ -10750,6 +10750,17 @@ operator|(
 name|FALSE
 operator|)
 return|;
+name|KASSERT
+argument_list|(
+name|pte
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"Valid mapping but no pte ?"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|*
