@@ -5038,7 +5038,7 @@ name|char
 modifier|*
 name|badchars
 init|=
-literal|"*/\\:<>;?"
+literal|"*/:<>;?"
 decl_stmt|;
 specifier|static
 specifier|const
@@ -5058,6 +5058,21 @@ name|i
 decl_stmt|,
 name|error
 decl_stmt|;
+comment|/* 	 * Backslash characters, being a path delimiter, are prohibited 	 * within a path component even for LOOKUP operations. 	 */
+if|if
+condition|(
+name|index
+argument_list|(
+name|name
+argument_list|,
+literal|'\\'
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+return|return
+name|ENOENT
+return|;
 if|if
 condition|(
 name|nameiop
