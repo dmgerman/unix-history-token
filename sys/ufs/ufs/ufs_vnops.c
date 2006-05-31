@@ -2509,7 +2509,7 @@ operator|!=
 name|VNOVAL
 condition|)
 block|{
-comment|/* 		 * XXX most of this checking should be in callers instead 		 * of in N filesystems.  The VDIR check mostly already is. 		 */
+comment|/* 		 * XXX most of the following special cases should be in 		 * callers instead of in N filesystems.  The VDIR check 		 * mostly already is. 		 */
 switch|switch
 condition|(
 name|vp
@@ -2531,7 +2531,7 @@ case|:
 case|case
 name|VREG
 case|:
-comment|/* 			 * Truncation should have an effect in these cases. 			 * Disallow it if the filesystem is read-only or 			 * the file is being snapshotted. 			 * 			 * XXX unfortunately the snapshot check can't be 			 * more global since we want to check other things 			 * first so as to return better error codes.  But 			 * we miss several cases (file flags and ownership 			 * changes at least) by not doing a central check. 			 */
+comment|/* 			 * Truncation should have an effect in these cases. 			 * Disallow it if the filesystem is read-only or 			 * the file is being snapshotted. 			 */
 if|if
 condition|(
 name|vp
