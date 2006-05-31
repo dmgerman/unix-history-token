@@ -2387,10 +2387,7 @@ name|ha_inq_data
 operator|->
 name|scsi_data
 operator|.
-name|reserved
-index|[
-literal|1
-index|]
+name|spc2_flags
 argument_list|)
 expr_stmt|;
 name|printf
