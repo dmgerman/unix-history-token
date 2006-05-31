@@ -210,26 +210,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TCP_WRAPPER
-end_ifdef
-
-begin_function
-name|void
-name|load_securenets
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
-end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_struct
 struct|struct
 name|securenet
@@ -608,11 +588,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Access control functions.  *  * yp_access() checks the mapname and client host address and watches for  * the following things:  *  * - If the client is referencing one of the master.passwd.* maps, it must  *   be using a privileged port to make its RPC to us. If it is, then we can  *   assume that the caller is root and allow the RPC to succeed. If it  *   isn't access is denied.  *  * - The client's IP address is checked against the securenets rules.  *   There are two kinds of securenets support: the built-in support,  *   which is very simple and depends on the presence of a  *   /var/yp/securenets file, and tcp-wrapper support, which requires  *   Wietse Venema's libwrap.a and tcpd.h. (Since the tcp-wrapper  *   package does not ship with FreeBSD, we use the built-in support  *   by default. Users can recompile the server with the tcp-wrapper library  *   if they already have it installed and want to use hosts.allow and  *   hosts.deny to control access instead of having a separate securenets  *   file.)  *  *   If no /var/yp/securenets file is present, the host access checks  *   are bypassed and all hosts are allowed to connect.  *  * The yp_validdomain() function checks the domain specified by the caller  * to make sure it's actually served by this server. This is more a sanity  * check than an a security check, but this seems to be the best place for  * it.  */
 end_comment
@@ -668,10 +643,18 @@ modifier|*
 name|rqhost
 decl_stmt|;
 name|int
-name|status
+name|status_securenets
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|TCP_WRAPPER
+name|int
+name|status_tcpwrap
+decl_stmt|;
+endif|#
+directive|endif
 specifier|static
 name|unsigned
 name|long
@@ -679,16 +662,11 @@ name|oldaddr
 init|=
 literal|0
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|TCP_WRAPPER
 name|struct
 name|securenet
 modifier|*
 name|tmp
 decl_stmt|;
-endif|#
-directive|endif
 specifier|const
 name|char
 modifier|*
@@ -988,7 +966,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|TCP_WRAPPER
-name|status
+name|status_tcpwrap
 operator|=
 name|hosts_ctl
 argument_list|(
@@ -1006,8 +984,8 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+endif|#
+directive|endif
 name|tmp
 operator|=
 name|securenets
@@ -1049,7 +1027,7 @@ operator|.
 name|s_addr
 condition|)
 block|{
-name|status
+name|status_securenets
 operator|=
 literal|1
 expr_stmt|;
@@ -1062,14 +1040,32 @@ operator|->
 name|next
 expr_stmt|;
 block|}
-endif|#
-directive|endif
+ifdef|#
+directive|ifdef
+name|TCP_WRAPPER
 if|if
 condition|(
-operator|!
-name|status
+name|status_securenets
+operator|==
+literal|0
+operator|||
+name|status_tcpwrap
+operator|==
+literal|0
 condition|)
 block|{
+else|#
+directive|else
+if|if
+condition|(
+name|status_securenets
+operator|==
+literal|0
+condition|)
+block|{
+endif|#
+directive|endif
+comment|/* 	 * One of the following two events occured: 	 * 	 * (1) The /var/yp/securenets exists and the remote host does not 	 *     match any of the networks specified in it. 	 * (2) The hosts.allow file has denied access and TCP_WRAPPER is 	 *     defined. 	 * 	 * In either case deny access. 	 */
 if|if
 condition|(
 name|rqhost
@@ -1123,9 +1119,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_decl_stmt
-
-begin_function
 name|int
 name|yp_validdomain
 parameter_list|(
@@ -1242,7 +1235,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 end_unit
 
