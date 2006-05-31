@@ -46,7 +46,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Indexes into the e_ident array.  Keep synced with     http://www.sco.com/developer/gabi/ch4.eheader.html */
+comment|/* Indexes into the e_ident array.  Keep synced with    http://www.sco.com/developers/gabi/latest/ch4.eheader.html */
 end_comment
 
 begin_define
