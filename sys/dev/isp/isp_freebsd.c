@@ -9963,8 +9963,6 @@ operator|.
 name|status
 operator|=
 name|CAM_MESSAGE_RECV
-operator||
-name|CAM_DEV_QFRZN
 expr_stmt|;
 name|xpt_done
 argument_list|(
