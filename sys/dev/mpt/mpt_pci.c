@@ -1914,9 +1914,9 @@ name|mpt
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
-name|dev
+name|mpt
 argument_list|,
 literal|"Could not allocate DMA memory\n"
 argument_list|)
@@ -2447,13 +2447,6 @@ name|struct
 name|mpt_map_info
 name|mi
 decl_stmt|;
-name|device_t
-name|dev
-init|=
-name|mpt
-operator|->
-name|dev
-decl_stmt|;
 comment|/* Check if we alreay have allocated the reply memory */
 if|if
 condition|(
@@ -2509,9 +2502,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
-name|dev
+name|mpt
 argument_list|,
 literal|"cannot allocate request pool\n"
 argument_list|)
@@ -2563,9 +2556,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
-name|dev
+name|mpt
 argument_list|,
 literal|"cannot allocate request pool\n"
 argument_list|)
@@ -2578,7 +2571,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * Create a parent dma tag for this device. 	 * 	 * Align at byte boundaries, limit to 32-bit addressing for 	 * request/reply queues. 	 */
+comment|/* 	 * Create a parent dma tag for this device. 	 * 	 * Align at byte boundaries, 	 * Limit to 32-bit addressing for request/reply queues. 	 */
 if|if
 condition|(
 name|mpt_dma_tag_create
@@ -2627,9 +2620,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
-name|dev
+name|mpt
 argument_list|,
 literal|"cannot create parent dma tag\n"
 argument_list|)
@@ -2651,8 +2644,6 @@ name|mpt
 operator|->
 name|parent_dmat
 argument_list|,
-literal|2
-operator|*
 name|PAGE_SIZE
 argument_list|,
 literal|0
@@ -2684,9 +2675,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
-name|dev
+name|mpt
 argument_list|,
 literal|"cannot create a dma tag for replies\n"
 argument_list|)
@@ -2727,9 +2718,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
-name|dev
+name|mpt
 argument_list|,
 literal|"cannot allocate %lu bytes of reply memory\n"
 argument_list|,
@@ -2795,9 +2786,9 @@ operator|.
 name|error
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
-name|dev
+name|mpt
 argument_list|,
 literal|"error %d loading dma map for DMA reply queue\n"
 argument_list|,
@@ -2871,9 +2862,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
-name|dev
+name|mpt
 argument_list|,
 literal|"cannot create a dma tag for data buffers\n"
 argument_list|)
@@ -2927,9 +2918,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
-name|dev
+name|mpt
 argument_list|,
 literal|"cannot create a dma tag for requests\n"
 argument_list|)
@@ -2970,9 +2961,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
-name|dev
+name|mpt
 argument_list|,
 literal|"cannot allocate %d bytes of request memory\n"
 argument_list|,
@@ -3035,9 +3026,9 @@ operator|.
 name|error
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
-name|dev
+name|mpt
 argument_list|,
 literal|"error %d loading dma map for DMA request queue\n"
 argument_list|,
@@ -3060,6 +3051,7 @@ name|mi
 operator|.
 name|phys
 expr_stmt|;
+comment|/* 	 * Now create per-request dma maps 	 */
 name|i
 operator|=
 literal|0
@@ -3173,9 +3165,9 @@ condition|(
 name|error
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
-name|dev
+name|mpt
 argument_list|,
 literal|"error %d creating per-cmd DMA maps\n"
 argument_list|,
@@ -3225,21 +3217,13 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|mpt
-operator|->
-name|verbose
-operator|>=
-name|MPT_PRT_DEBUG
-condition|)
-name|device_printf
+name|mpt_lprt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"Already released dma memory\n"
+name|MPT_PRT_DEBUG
+argument_list|,
+literal|"already released dma memory\n"
 argument_list|)
 expr_stmt|;
 return|return;
