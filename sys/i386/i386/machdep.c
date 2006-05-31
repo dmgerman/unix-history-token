@@ -12949,6 +12949,10 @@ name|DEV_NPX
 ifdef|#
 directive|ifdef
 name|CPU_ENABLE_SSE
+if|if
+condition|(
+name|cpu_fxsr
+condition|)
 name|addr
 operator|->
 name|sv_xmm
