@@ -5231,22 +5231,6 @@ operator|*
 name|BIOSDISK_SECSIZE
 argument_list|)
 expr_stmt|;
-name|p
-operator|+=
-operator|(
-name|x
-operator|*
-name|BIOSDISK_SECSIZE
-operator|)
-expr_stmt|;
-name|dblk
-operator|+=
-name|x
-expr_stmt|;
-name|resid
-operator|-=
-name|x
-expr_stmt|;
 comment|/* Loop retrying the operation a couple of times.  The BIOS may also retry. */
 for|for
 control|(
@@ -5661,6 +5645,22 @@ literal|1
 operator|)
 return|;
 block|}
+name|p
+operator|+=
+operator|(
+name|x
+operator|*
+name|BIOSDISK_SECSIZE
+operator|)
+expr_stmt|;
+name|dblk
+operator|+=
+name|x
+expr_stmt|;
+name|resid
+operator|-=
+name|x
+expr_stmt|;
 block|}
 comment|/*    hexdump(dest, (blks * BIOSDISK_SECSIZE)); */
 return|return
