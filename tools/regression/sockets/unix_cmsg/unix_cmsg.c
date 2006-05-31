@@ -673,7 +673,8 @@ specifier|static
 name|void
 name|usage
 parameter_list|(
-name|void
+name|int
+name|quick
 parameter_list|)
 block|{
 specifier|const
@@ -686,16 +687,21 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-dhz] [-t<socktype>] [testno]\n\n"
+literal|"Usage: %s [-dhz] [-t<socktype>] [testno]\n"
 argument_list|,
 name|__progname
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|quick
+condition|)
+return|return;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" Options are:\n\   -d\t\t\tOutput debugging information\n\   -h\t\t\tOutput this help message and exit\n\   -t<socktype>\t\tRun test only for the given socket type:\n\ \t\t\tstream or dgram\n\   -z\t\t\tDo not send real control data if possible\n\n"
+literal|"\n Options are:\n\   -d\t\t\tOutput debugging information\n\   -h\t\t\tOutput this help message and exit\n\   -t<socktype>\t\tRun test only for the given socket type:\n\ \t\t\tstream or dgram\n\   -z\t\t\tDo not send real control data if possible\n\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1358,10 +1364,6 @@ name|testno1
 decl_stmt|,
 name|testno2
 decl_stmt|;
-name|opterr
-operator|=
-literal|0
-expr_stmt|;
 name|dgramflag
 operator|=
 name|streamflag
@@ -1379,7 +1381,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|":dht:z"
+literal|"dht:z"
 argument_list|)
 operator|)
 operator|!=
@@ -1403,7 +1405,9 @@ case|case
 literal|'h'
 case|:
 name|usage
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1462,41 +1466,19 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|':'
-case|:
-name|errx
-argument_list|(
-name|EX_USAGE
-argument_list|,
-literal|"option -%c requires an argument"
-argument_list|,
-name|optopt
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
-case|case
 literal|'?'
 case|:
-name|errx
-argument_list|(
-name|EX_USAGE
-argument_list|,
-literal|"invalid switch -%c"
-argument_list|,
-name|optopt
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
 default|default:
-name|errx
+name|usage
 argument_list|(
-name|EX_SOFTWARE
-argument_list|,
-literal|"unexpected option -%c"
-argument_list|,
-name|optopt
+literal|1
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|EX_USAGE
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -1547,7 +1529,9 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"wrong test number"
+literal|"wrong test number: %s"
+argument_list|,
+name|errstr
 argument_list|)
 expr_stmt|;
 block|}
