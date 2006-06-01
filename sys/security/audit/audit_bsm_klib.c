@@ -1358,6 +1358,8 @@ modifier|*
 name|fdp
 decl_stmt|;
 name|int
+name|cisr
+decl_stmt|,
 name|error
 decl_stmt|,
 name|vfslocked
@@ -1373,6 +1375,10 @@ expr_stmt|;
 name|bufp
 operator|=
 name|path
+expr_stmt|;
+name|cisr
+operator|=
+literal|0
 expr_stmt|;
 name|FILEDESC_LOCK
 argument_list|(
@@ -1456,6 +1462,18 @@ operator|->
 name|fd_cdir
 expr_stmt|;
 comment|/* Prepend the current dir. */
+name|cisr
+operator|=
+operator|(
+name|fdp
+operator|->
+name|fd_rdir
+operator|==
+name|fdp
+operator|->
+name|fd_cdir
+operator|)
+expr_stmt|;
 name|vref
 argument_list|(
 name|vnp
@@ -1521,16 +1539,22 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Copy and free buffer allocated by vn_fullpath(). */
+comment|/* Copy and free buffer allocated by vn_fullpath(). 			 * If the current working directory was the same as 			 * the root directory, and the path was a relative 			 * pathname, do not separate the two components with 			 * the '/' character. 			 */
 name|snprintf
 argument_list|(
 name|cpath
 argument_list|,
 name|MAXPATHLEN
 argument_list|,
-literal|"%s/%s"
+literal|"%s%s%s"
 argument_list|,
 name|retbuf
+argument_list|,
+name|cisr
+condition|?
+literal|""
+else|:
+literal|"/"
 argument_list|,
 name|bufp
 argument_list|)
