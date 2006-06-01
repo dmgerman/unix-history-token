@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Machine Independent (well, as best as possible) register  * definitions for Qlogic ISP SCSI adapters.  *  * Copyright (c) 1997, 1998, 1999, 2000 by Matthew Jacob  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Machine Independent (well, as best as possible) register  * definitions for Qlogic ISP SCSI adapters.  *  * Copyright (c) 1997-2006 by Matthew Jacob  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -2081,6 +2081,10 @@ name|OUTMAILBOX7
 value|(MBOX_BLOCK+0xE)
 end_define
 
+begin_comment
+comment|/*  * Strictly speaking, it's   *  SCSI&& 2100 : 8 MBOX registers  *  2200: 24 MBOX registers  *  2300: 32 MBOX registers  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2099,7 +2103,7 @@ parameter_list|(
 name|isp
 parameter_list|)
 define|\
-value|(((((isp)->isp_type& ISP_HA_SCSI)>= ISP_HA_SCSI_1040A) || \ 	 ((isp)->isp_type& ISP_HA_FC))? 8 : 6)
+value|(((((isp)->isp_type& ISP_HA_SCSI)>= ISP_HA_SCSI_1040A) || \ 	 ((isp)->isp_type& ISP_HA_FC))? 12 : 6)
 end_define
 
 begin_define
@@ -2110,15 +2114,45 @@ parameter_list|(
 name|isp
 parameter_list|)
 define|\
-value|(((((isp)->isp_type& ISP_HA_SCSI)>= ISP_HA_SCSI_1040A) || \ 	 ((isp)->isp_type& ISP_HA_FC))? 0xff : 0x3f)
+value|(((((isp)->isp_type& ISP_HA_SCSI)>= ISP_HA_SCSI_1040A) || \ 	 ((isp)->isp_type& ISP_HA_FC))? 0xfff : 0x3f)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAX_MAILBOX
-value|8
+parameter_list|(
+name|isp
+parameter_list|)
+value|((IS_FC(isp))? 12 : 8)
 end_define
+
+begin_define
+define|#
+directive|define
+name|MAILBOX_STORAGE
+value|12
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|uint16_t
+name|param
+index|[
+name|MAILBOX_STORAGE
+index|]
+decl_stmt|;
+name|uint16_t
+name|ibits
+decl_stmt|,
+name|obits
+decl_stmt|;
+block|}
+name|mbreg_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * Fibre Protocol Module and Frame Buffer Register Offsets/Definitions (2X00).  * NB: The RISC processor must be paused and the appropriate register  * bank selected via BIU2100_CSR bits.  */
@@ -4968,7 +5002,7 @@ comment|/* Offset 5 */
 end_comment
 
 begin_comment
-comment|/* 	u_int8_t bios_configuration_mode     :2; 	u_int8_t bios_disable                :1; 	u_int8_t selectable_scsi_boot_enable :1; 	u_int8_t cd_rom_boot_enable          :1; 	u_int8_t disable_loading_risc_code   :1; 	u_int8_t enable_64bit_addressing     :1; 	u_int8_t unused_7                    :1;  */
+comment|/* 	uint8_t bios_configuration_mode     :2; 	uint8_t bios_disable                :1; 	uint8_t selectable_scsi_boot_enable :1; 	uint8_t cd_rom_boot_enable          :1; 	uint8_t disable_loading_risc_code   :1; 	uint8_t enable_64bit_addressing     :1; 	uint8_t unused_7                    :1;  */
 end_comment
 
 begin_comment
@@ -4976,7 +5010,7 @@ comment|/* Offsets 6, 7 */
 end_comment
 
 begin_comment
-comment|/*         u_int8_t boot_lun_number    :5;         u_int8_t scsi_bus_number    :1;         u_int8_t unused_6           :1;         u_int8_t unused_7           :1;         u_int8_t boot_target_number :4;         u_int8_t unused_12          :1;         u_int8_t unused_13          :1;         u_int8_t unused_14          :1;         u_int8_t unused_15          :1;  */
+comment|/*         uint8_t boot_lun_number    :5;         uint8_t scsi_bus_number    :1;         uint8_t unused_6           :1;         uint8_t unused_7           :1;         uint8_t boot_target_number :4;         uint8_t unused_12          :1;         uint8_t unused_13          :1;         uint8_t unused_14          :1;         uint8_t unused_15          :1;  */
 end_comment
 
 begin_define
@@ -5921,7 +5955,7 @@ name|ISP2100_NVRAM_PORT_NAME
 parameter_list|(
 name|c
 parameter_list|)
-value|(\ 		(((u_int64_t)(c)[18])<< 56) | \ 		(((u_int64_t)(c)[19])<< 48) | \ 		(((u_int64_t)(c)[20])<< 40) | \ 		(((u_int64_t)(c)[21])<< 32) | \ 		(((u_int64_t)(c)[22])<< 24) | \ 		(((u_int64_t)(c)[23])<< 16) | \ 		(((u_int64_t)(c)[24])<<  8) | \ 		(((u_int64_t)(c)[25])<<  0))
+value|(\ 		(((uint64_t)(c)[18])<< 56) | \ 		(((uint64_t)(c)[19])<< 48) | \ 		(((uint64_t)(c)[20])<< 40) | \ 		(((uint64_t)(c)[21])<< 32) | \ 		(((uint64_t)(c)[22])<< 24) | \ 		(((uint64_t)(c)[23])<< 16) | \ 		(((uint64_t)(c)[24])<<  8) | \ 		(((uint64_t)(c)[25])<<  0))
 end_define
 
 begin_define
@@ -5941,7 +5975,7 @@ name|ISP2200_NVRAM_NODE_NAME
 parameter_list|(
 name|c
 parameter_list|)
-value|(\ 		(((u_int64_t)(c)[30])<< 56) | \ 		(((u_int64_t)(c)[31])<< 48) | \ 		(((u_int64_t)(c)[32])<< 40) | \ 		(((u_int64_t)(c)[33])<< 32) | \ 		(((u_int64_t)(c)[34])<< 24) | \ 		(((u_int64_t)(c)[35])<< 16) | \ 		(((u_int64_t)(c)[36])<<  8) | \ 		(((u_int64_t)(c)[37])<<  0))
+value|(\ 		(((uint64_t)(c)[30])<< 56) | \ 		(((uint64_t)(c)[31])<< 48) | \ 		(((uint64_t)(c)[32])<< 40) | \ 		(((uint64_t)(c)[33])<< 32) | \ 		(((uint64_t)(c)[34])<< 24) | \ 		(((uint64_t)(c)[35])<< 16) | \ 		(((uint64_t)(c)[36])<<  8) | \ 		(((uint64_t)(c)[37])<<  0))
 end_define
 
 begin_define
@@ -6021,7 +6055,7 @@ name|ISP2100_NVRAM_BOOT_NODE_NAME
 parameter_list|(
 name|c
 parameter_list|)
-value|(\ 		(((u_int64_t)(c)[72])<< 56) | \ 		(((u_int64_t)(c)[73])<< 48) | \ 		(((u_int64_t)(c)[74])<< 40) | \ 		(((u_int64_t)(c)[75])<< 32) | \ 		(((u_int64_t)(c)[76])<< 24) | \ 		(((u_int64_t)(c)[77])<< 16) | \ 		(((u_int64_t)(c)[78])<<  8) | \ 		(((u_int64_t)(c)[79])<<  0))
+value|(\ 		(((uint64_t)(c)[72])<< 56) | \ 		(((uint64_t)(c)[73])<< 48) | \ 		(((uint64_t)(c)[74])<< 40) | \ 		(((uint64_t)(c)[75])<< 32) | \ 		(((uint64_t)(c)[76])<< 24) | \ 		(((uint64_t)(c)[77])<< 16) | \ 		(((uint64_t)(c)[78])<<  8) | \ 		(((uint64_t)(c)[79])<<  0))
 end_define
 
 begin_define
@@ -6053,11 +6087,11 @@ define|#
 directive|define
 name|QLA2200_RISC_IMAGE_DUMP_SIZE
 define|\
-value|(1 * sizeof (u_int16_t)) +
+value|(1 * sizeof (uint16_t)) +
 comment|/* 'used' flag (also HBA type) */
-value|\ 	(352 * sizeof (u_int16_t)) +
+value|\ 	(352 * sizeof (uint16_t)) +
 comment|/* RISC registers */
-value|\  	(61440 * sizeof (u_int16_t))
+value|\  	(61440 * sizeof (uint16_t))
 end_define
 
 begin_comment
@@ -6069,15 +6103,15 @@ define|#
 directive|define
 name|QLA2300_RISC_IMAGE_DUMP_SIZE
 define|\
-value|(1 * sizeof (u_int16_t)) +
+value|(1 * sizeof (uint16_t)) +
 comment|/* 'used' flag (also HBA type) */
-value|\ 	(464 * sizeof (u_int16_t)) +
+value|\ 	(464 * sizeof (uint16_t)) +
 comment|/* RISC registers */
-value|\  	(63488 * sizeof (u_int16_t)) +
+value|\  	(63488 * sizeof (uint16_t)) +
 comment|/* RISC SRAM (0x0800..0xffff) */
-value|\ 	(4096 * sizeof (u_int16_t)) +
+value|\ 	(4096 * sizeof (uint16_t)) +
 comment|/* RISC SRAM (0x10000..0x10FFF) */
-value|\ 	(61440 * sizeof (u_int16_t))
+value|\ 	(61440 * sizeof (uint16_t))
 end_define
 
 begin_comment

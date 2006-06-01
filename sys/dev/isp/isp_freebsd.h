@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Qlogic ISP SCSI Host Adapter FreeBSD Wrapper Definitions  * Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002 by Matthew Jacob  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Qlogic ISP SCSI Host Adapter FreeBSD Wrapper Definitions  *  * Copyright (c) 1997-2006 by Matthew Jacob  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -19,20 +19,6 @@ directive|define
 name|_ISP_FREEBSD_H
 end_define
 
-begin_define
-define|#
-directive|define
-name|ISP_PLATFORM_VERSION_MAJOR
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_PLATFORM_VERSION_MINOR
-value|16
-end_define
-
 begin_include
 include|#
 directive|include
@@ -43,6 +29,49 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/endian.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -66,6 +95,23 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/condvar.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -78,25 +124,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/bus_memio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/bus_pio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/clock.h>
 end_include
 
 begin_include
@@ -171,25 +199,61 @@ directive|include
 file|"opt_isp.h"
 end_include
 
-begin_comment
-comment|/*  * Not quite yet  */
-end_comment
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500000
+end_if
 
-begin_comment
-comment|/* #define	ISP_DAC_SUPPORTED	1 */
-end_comment
+begin_define
+define|#
+directive|define
+name|ISP_PLATFORM_VERSION_MAJOR
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_PLATFORM_VERSION_MINOR
+value|17
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ISP_PLATFORM_VERSION_MAJOR
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_PLATFORM_VERSION_MINOR
+value|9
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Efficiency- get rid of SBus code&& tests unless we need them.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|_MACHINE_ARCH
-operator|==
-name|sparc64
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sparc64__
+end_ifdef
 
 begin_define
 define|#
@@ -222,6 +286,65 @@ name|HANDLE_LOOPSTATE_IN_OUTER_LAYERS
 value|1
 end_define
 
+begin_comment
+comment|/* #define	ISP_SMPLOCK			1 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500000
+end_if
+
+begin_define
+define|#
+directive|define
+name|ISP_IFLAGS
+value|INTR_TYPE_CAM
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISP_SMPLOCK
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ISP_IFLAGS
+value|INTR_TYPE_CAM | INTR_ENTROPY | INTR_MPSAFE
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ISP_IFLAGS
+value|INTR_TYPE_CAM | INTR_ENTROPY
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 name|void
@@ -233,7 +356,7 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 modifier|*
 parameter_list|)
@@ -264,16 +387,16 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_int32_t
+name|uint32_t
 name|orig_datalen
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|bytes_xfered
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|last_xframt
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|tag
 range|:
 literal|16
@@ -363,11 +486,14 @@ decl_stmt|;
 name|int
 name|bus
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|hold
 decl_stmt|;
 name|int
 name|atio_count
+decl_stmt|;
+name|int
+name|inot_count
 decl_stmt|;
 block|}
 name|tstate_t
@@ -410,13 +536,13 @@ name|ispsoftc
 modifier|*
 name|next
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|default_port_wwn
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|default_node_wwn
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|default_id
 decl_stmt|;
 name|device_t
@@ -446,36 +572,46 @@ name|struct
 name|intr_config_hook
 name|ehook
 decl_stmt|;
-name|u_int8_t
-label|:
+name|uint8_t
+name|disabled
+range|:
 literal|1
-operator|,
+decl_stmt|,
 name|fcbsy
-operator|:
+range|:
 literal|1
-operator|,
+decl_stmt|,
 name|ktmature
-operator|:
+range|:
 literal|1
-operator|,
+decl_stmt|,
 name|mboxwaiting
-operator|:
+range|:
 literal|1
-operator|,
+decl_stmt|,
 name|intsok
-operator|:
+range|:
 literal|1
-operator|,
+decl_stmt|,
 name|simqfrozen
-operator|:
+range|:
 literal|3
-expr_stmt|;
-name|int
-name|islocked
 decl_stmt|;
-name|int
-name|splsaved
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+name|struct
+name|mtx
+name|lock
 decl_stmt|;
+name|struct
+name|cv
+name|kthread_cv
+decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|proc
 modifier|*
@@ -500,36 +636,30 @@ directive|ifdef
 name|ISP_TARGET_MODE
 define|#
 directive|define
-name|TM_WANTED
-value|0x80
-define|#
-directive|define
-name|TM_BUSY
-value|0x40
-define|#
-directive|define
 name|TM_WILDCARD_ENABLED
 value|0x02
 define|#
 directive|define
 name|TM_TMODE_ENABLED
 value|0x01
-name|u_int8_t
+name|uint8_t
 name|tmflags
 index|[
 literal|2
 index|]
 decl_stmt|;
 comment|/* two busses */
-name|u_int8_t
-name|rstatus
+define|#
+directive|define
+name|NLEACT
+value|4
+name|union
+name|ccb
+modifier|*
+name|leact
 index|[
-literal|2
+name|NLEACT
 index|]
-decl_stmt|;
-comment|/* two bussed */
-name|u_int16_t
-name|rollinfo
 decl_stmt|;
 name|tstate_t
 name|tsdflt
@@ -568,18 +698,30 @@ begin_comment
 comment|/*  * Locking macros...  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISP_SMPLOCK
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|ISP_LOCK
-value|isp_lockspl
+parameter_list|(
+name|x
+parameter_list|)
+value|mtx_lock(&(x)->isp_lock)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ISP_UNLOCK
-value|isp_unlockspl
+parameter_list|(
+name|x
+parameter_list|)
+value|mtx_unlock(&(x)->isp_lock)
 end_define
 
 begin_define
@@ -587,8 +729,10 @@ define|#
 directive|define
 name|ISPLOCK_2_CAMLOCK
 parameter_list|(
-name|x
+name|isp
 parameter_list|)
+define|\
+value|mtx_unlock(&(isp)->isp_lock); mtx_lock(&Giant)
 end_define
 
 begin_define
@@ -596,20 +740,65 @@ define|#
 directive|define
 name|CAMLOCK_2_ISPLOCK
 parameter_list|(
-name|x
+name|isp
 parameter_list|)
+define|\
+value|mtx_unlock(&Giant); mtx_lock(&(isp)->isp_lock)
 end_define
 
-begin_comment
-comment|/*  * Required Macros/Defines  */
-end_comment
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
 directive|define
-name|INLINE
-value|__inline
+name|ISP_LOCK
+parameter_list|(
+name|x
+parameter_list|)
+value|do { } while (0)
 end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_UNLOCK
+parameter_list|(
+name|x
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISPLOCK_2_CAMLOCK
+parameter_list|(
+name|isp
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAMLOCK_2_ISPLOCK
+parameter_list|(
+name|isp
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Required Macros/Defines  */
+end_comment
 
 begin_define
 define|#
@@ -622,21 +811,19 @@ begin_define
 define|#
 directive|define
 name|MEMZERO
-value|bzero
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|memset(a, 0, b)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MEMCPY
-parameter_list|(
-name|dst
-parameter_list|,
-name|src
-parameter_list|,
-name|amt
-parameter_list|)
-value|bcopy((src), (dst), (amt))
+value|memcpy
 end_define
 
 begin_define
@@ -863,11 +1050,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|XS_DMA_ADDR_T
+value|bus_addr_t
+end_define
+
+begin_define
+define|#
+directive|define
 name|XS_ISP
 parameter_list|(
 name|ccb
 parameter_list|)
-value|((struct ispsoftc *) (ccb)->ccb_h.spriv_ptr1)
+value|((ispsoftc_t *) (ccb)->ccb_h.spriv_ptr1)
 end_define
 
 begin_define
@@ -1131,7 +1325,7 @@ parameter_list|,
 name|sp
 parameter_list|)
 define|\
-value|(xs)->ccb_h.status |= CAM_AUTOSNS_VALID,	\ 	bcopy(sp->req_sense_data,&(xs)->sense_data,	\ 	    imin(XS_SNSLEN(xs), sp->req_sense_len))
+value|(xs)->ccb_h.status |= CAM_AUTOSNS_VALID,	\ 	memcpy(&(xs)->sense_data, sp->req_sense_data,	\ 	    imin(XS_SNSLEN(xs), sp->req_sense_len))
 end_define
 
 begin_define
@@ -1276,7 +1470,7 @@ name|s
 parameter_list|,
 name|d
 parameter_list|)
-value|d = (*((u_int8_t *)s))
+value|d = (*((uint8_t *)s))
 end_define
 
 begin_define
@@ -1291,7 +1485,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|d = (isp->isp_bustype == ISP_BT_SBUS)?			\ 	*((u_int16_t *)s) : bswap16(*((u_int16_t *)s))
+value|d = (isp->isp_bustype == ISP_BT_SBUS)?			\ 	*((uint16_t *)s) : bswap16(*((uint16_t *)s))
 end_define
 
 begin_define
@@ -1306,7 +1500,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|d = (isp->isp_bustype == ISP_BT_SBUS)?			\ 	*((u_int32_t *)s) : bswap32(*((u_int32_t *)s))
+value|d = (isp->isp_bustype == ISP_BT_SBUS)?			\ 	*((uint32_t *)s) : bswap32(*((uint32_t *)s))
 end_define
 
 begin_else
@@ -1367,7 +1561,7 @@ name|s
 parameter_list|,
 name|d
 parameter_list|)
-value|d = (*((u_int8_t *)s))
+value|d = (*((uint8_t *)s))
 end_define
 
 begin_define
@@ -1381,7 +1575,7 @@ name|s
 parameter_list|,
 name|d
 parameter_list|)
-value|d = bswap16(*((u_int16_t *)s))
+value|d = bswap16(*((uint16_t *)s))
 end_define
 
 begin_define
@@ -1395,7 +1589,7 @@ name|s
 parameter_list|,
 name|d
 parameter_list|)
-value|d = bswap32(*((u_int32_t *)s))
+value|d = bswap32(*((uint32_t *)s))
 end_define
 
 begin_endif
@@ -1542,6 +1736,51 @@ directive|include
 file|<dev/isp/ispmbox.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISP_TARGET_MODE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dev/isp/isp_tpublic.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+name|void
+name|isp_prt
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|,
+name|int
+name|level
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__printflike
+parameter_list|(
+function_decl|3
+operator|,
+function_decl|4
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
 comment|/*  * isp_osinfo definiitions&& shorthand  */
 end_comment
@@ -1611,8 +1850,7 @@ specifier|extern
 name|void
 name|isp_attach
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1623,12 +1861,22 @@ specifier|extern
 name|void
 name|isp_uninit
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * driver global data  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|isp_announced
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Platform private flags  */
@@ -1768,135 +2016,11 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|INLINE
-name|void
-name|isp_lockspl
-parameter_list|(
-name|struct
-name|ispsoftc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
-specifier|static
-name|INLINE
-name|void
-name|isp_lockspl
-parameter_list|(
-name|struct
-name|ispsoftc
-modifier|*
-name|isp
-parameter_list|)
-block|{
-name|int
-name|s
-init|=
-name|splcam
-argument_list|()
-decl_stmt|;
-if|if
-condition|(
-name|isp
-operator|->
-name|isp_osinfo
-operator|.
-name|islocked
-operator|++
-operator|==
-literal|0
-condition|)
-block|{
-name|isp
-operator|->
-name|isp_osinfo
-operator|.
-name|splsaved
-operator|=
-name|s
-expr_stmt|;
-block|}
-else|else
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_function_decl
-specifier|static
-name|INLINE
-name|void
-name|isp_unlockspl
-parameter_list|(
-name|struct
-name|ispsoftc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
-specifier|static
-name|INLINE
-name|void
-name|isp_unlockspl
-parameter_list|(
-name|struct
-name|ispsoftc
-modifier|*
-name|isp
-parameter_list|)
-block|{
-if|if
-condition|(
-name|isp
-operator|->
-name|isp_osinfo
-operator|.
-name|islocked
-condition|)
-block|{
-if|if
-condition|(
-operator|--
-name|isp
-operator|->
-name|isp_osinfo
-operator|.
-name|islocked
-operator|==
-literal|0
-condition|)
-block|{
-name|splx
-argument_list|(
-name|isp
-operator|->
-name|isp_osinfo
-operator|.
-name|splsaved
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-block|}
-end_function
-
-begin_function_decl
-specifier|static
-name|INLINE
+name|__inline
 name|void
 name|isp_mbox_wait_complete
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1904,12 +2028,11 @@ end_function_decl
 
 begin_function
 specifier|static
-name|INLINE
+name|__inline
 name|void
 name|isp_mbox_wait_complete
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -1948,6 +2071,33 @@ name|mboxwaiting
 operator|=
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ISP_SMPLOCK
+operator|(
+name|void
+operator|)
+name|msleep
+argument_list|(
+operator|&
+name|isp
+operator|->
+name|isp_mbxworkp
+argument_list|,
+operator|&
+name|isp
+operator|->
+name|isp_lock
+argument_list|,
+name|PRIBIO
+argument_list|,
+literal|"isp_mboxwaiting"
+argument_list|,
+name|lim
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 operator|(
 name|void
 operator|)
@@ -1965,6 +2115,8 @@ argument_list|,
 name|lim
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|isp
@@ -2039,7 +2191,7 @@ name|j
 operator|++
 control|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|isr
 decl_stmt|,
 name|sema
@@ -2132,8 +2284,8 @@ end_function
 
 begin_function_decl
 specifier|static
-name|INLINE
-name|u_int64_t
+name|__inline
+name|uint64_t
 name|nanotime_sub
 parameter_list|(
 name|struct
@@ -2149,8 +2301,8 @@ end_function_decl
 
 begin_function
 specifier|static
-name|INLINE
-name|u_int64_t
+name|__inline
+name|uint64_t
 name|nanotime_sub
 parameter_list|(
 name|struct
@@ -2164,7 +2316,7 @@ modifier|*
 name|a
 parameter_list|)
 block|{
-name|u_int64_t
+name|uint64_t
 name|elapsed
 decl_stmt|;
 name|struct
@@ -2209,7 +2361,7 @@ end_function
 
 begin_function_decl
 specifier|static
-name|INLINE
+name|__inline
 name|char
 modifier|*
 name|strncat
@@ -2228,7 +2380,7 @@ end_function_decl
 
 begin_function
 specifier|static
-name|INLINE
+name|__inline
 name|char
 modifier|*
 name|strncat
@@ -2304,13 +2456,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Common inline functions  */
+comment|/*  * ISP Library functions  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<dev/isp/isp_inline.h>
+file|<dev/isp/isp_library.h>
 end_include
 
 begin_endif

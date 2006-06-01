@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2001 by Matthew Jacob  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * Alternatively, this software may be distributed under the terms of the  * the GNU Public License ("GPL", Library, Version 2).  *  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Matthew Jacob<mjacob@feral.com)  *  */
+comment|/*-  *  * Copyright (c) 1997-2006 by Matthew Jacob  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -45,7 +45,7 @@ value|_IO(ISP_IOC, 2)
 end_define
 
 begin_comment
-comment|/*  * This ioctl performs a fibre chanel rescan.  */
+comment|/*  * This ioctl performs a fibre channel rescan.  */
 end_comment
 
 begin_define
@@ -76,14 +76,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|ISP_ROLE_INITIATOR
+name|ISP_ROLE_TARGET
 value|0x1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISP_ROLE_TARGET
+name|ISP_ROLE_INITIATOR
 value|0x2
 end_define
 
@@ -138,21 +138,21 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_int8_t
+name|uint8_t
 name|isp_stat_version
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|isp_type
 decl_stmt|;
 comment|/* (ro) reflects chip type */
-name|u_int8_t
+name|uint8_t
 name|isp_revision
 decl_stmt|;
 comment|/* (ro) reflects chip version */
-name|u_int8_t
+name|uint8_t
 name|unused1
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|unused2
 decl_stmt|;
 comment|/* 	 * Statistics Counters 	 */
@@ -192,7 +192,7 @@ define|#
 directive|define
 name|ISP_FPCCHIWAT
 value|7
-name|u_int64_t
+name|uint64_t
 name|isp_stats
 index|[
 name|ISP_NSTATS
@@ -236,18 +236,27 @@ begin_struct
 struct|struct
 name|isp_fc_device
 block|{
-name|u_int32_t
+name|uint32_t
 name|loopid
 decl_stmt|;
 comment|/* 0..255 */
-name|u_int32_t
+name|uint32_t
+label|:
+literal|6
+operator|,
+name|role
+operator|:
+literal|2
+operator|,
 name|portid
-decl_stmt|;
+operator|:
+literal|24
+expr_stmt|;
 comment|/* 24 bit Port ID */
-name|u_int64_t
+name|uint64_t
 name|node_wwn
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|port_wwn
 decl_stmt|;
 block|}
@@ -287,7 +296,7 @@ begin_struct
 struct|struct
 name|isp_hba_device
 block|{
-name|u_int32_t
+name|uint32_t
 label|:
 literal|8
 operator|,
@@ -322,28 +331,28 @@ name|fc_loopid
 operator|:
 literal|8
 expr_stmt|;
-name|u_int8_t
+name|uint8_t
 name|fc_fw_major
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|fc_fw_minor
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|fc_fw_micro
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|reserved
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|nvram_node_wwn
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|nvram_port_wwn
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|active_node_wwn
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|active_port_wwn
 decl_stmt|;
 block|}
@@ -427,7 +436,7 @@ literal|16
 index|]
 decl_stmt|;
 comment|/* null terminated */
-name|u_int32_t
+name|uint32_t
 name|parameter
 decl_stmt|;
 block|}
@@ -446,6 +455,46 @@ define|#
 directive|define
 name|ISP_SET_FC_PARAM
 value|_IOWR(ISP_IOC, 99, struct isp_fc_param)
+end_define
+
+begin_comment
+comment|/*  * Various Reset Goodies  */
+end_comment
+
+begin_struct
+struct|struct
+name|isp_fc_tsk_mgmt
+block|{
+name|uint32_t
+name|loopid
+decl_stmt|;
+comment|/* 0..255 */
+name|uint32_t
+name|lun
+decl_stmt|;
+enum|enum
+block|{
+name|CLEAR_ACA
+block|,
+name|TARGET_RESET
+block|,
+name|LUN_RESET
+block|,
+name|CLEAR_TASK_SET
+block|,
+name|ABORT_TASK_SET
+block|}
+name|action
+enum|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|ISP_TSK_MGMT
+value|_IOWR(ISP_IOC, 97, struct isp_fc_tsk_mgmt)
 end_define
 
 end_unit
