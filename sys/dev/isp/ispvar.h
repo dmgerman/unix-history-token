@@ -39,29 +39,6 @@ directive|include
 file|<dev/ic/ispmbox.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ISP_TARGET_MODE
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<dev/ic/isp_target.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/ic/isp_tpublic.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_endif
 endif|#
 directive|endif
@@ -78,29 +55,6 @@ include|#
 directive|include
 file|<dev/isp/ispmbox.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ISP_TARGET_MODE
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<dev/isp/isp_target.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/isp/isp_tpublic.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -119,28 +73,22 @@ directive|include
 file|"ispmbox.h"
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ISP_TARGET_MODE
+name|__svr4__
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|"isp_target.h"
+file|"ispmbox.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|"isp_tpublic.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -158,18 +106,20 @@ begin_define
 define|#
 directive|define
 name|ISP_CORE_VERSION_MINOR
-value|10
+value|11
 end_define
 
 begin_comment
 comment|/*  * Vector for bus specific code to provide specific services.  */
 end_comment
 
-begin_struct_decl
-struct_decl|struct
+begin_typedef
+typedef|typedef
+name|struct
 name|ispsoftc
-struct_decl|;
-end_struct_decl
+name|ispsoftc_t
+typedef|;
+end_typedef
 
 begin_struct
 struct|struct
@@ -181,28 +131,26 @@ modifier|*
 name|dv_rd_isr
 function_decl|)
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|u_int16_t
+name|uint16_t
 function_decl|(
 modifier|*
 name|dv_rd_reg
 function_decl|)
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|int
@@ -214,13 +162,12 @@ modifier|*
 name|dv_wr_reg
 function_decl|)
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 parameter_list|)
 function_decl|;
 name|int
@@ -229,8 +176,7 @@ modifier|*
 name|dv_mbxdma
 function_decl|)
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -240,8 +186,7 @@ modifier|*
 name|dv_dmaset
 function_decl|)
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|XS_T
@@ -250,10 +195,10 @@ parameter_list|,
 name|ispreq_t
 modifier|*
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 parameter_list|)
 function_decl|;
 name|void
@@ -262,14 +207,13 @@ modifier|*
 name|dv_dmaclr
 function_decl|)
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|XS_T
 modifier|*
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 parameter_list|)
 function_decl|;
 name|void
@@ -278,8 +222,7 @@ modifier|*
 name|dv_reset0
 function_decl|)
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -289,8 +232,7 @@ modifier|*
 name|dv_reset1
 function_decl|)
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -300,8 +242,7 @@ modifier|*
 name|dv_dregs
 function_decl|)
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 specifier|const
@@ -309,15 +250,15 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|dv_ispfw
 decl_stmt|;
 comment|/* ptr to f/w */
-name|u_int16_t
+name|uint16_t
 name|dv_conf1
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|dv_clock
 decl_stmt|;
 comment|/* clock frequency */
@@ -362,40 +303,6 @@ name|isp
 parameter_list|)
 value|(isp)->isp_maxluns
 end_define
-
-begin_comment
-comment|/*  * 'Types'  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ISP_DAC_SUPPORTED
-end_ifdef
-
-begin_typedef
-typedef|typedef
-name|u_int64_t
-name|isp_dma_addr_t
-typedef|;
-end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-name|u_int32_t
-name|isp_dma_addr_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Macros to access ISP registers through bus specific layers-  * mostly wrappers to vector through the mdvec structure.  */
@@ -488,7 +395,7 @@ parameter_list|,
 name|hndl
 parameter_list|)
 define|\
-value|if ((isp)->isp_mdvec->dv_dmaclr) \ 	    (*(isp)->isp_mdvec->dv_dmaclr)((isp), (xs), (hndl))
+value|if ((isp)->isp_mdvec->dv_dmaclr)	\ 	    (*(isp)->isp_mdvec->dv_dmaclr)((isp), (xs), (hndl))
 end_define
 
 begin_define
@@ -690,7 +597,7 @@ name|q
 parameter_list|,
 name|idx
 parameter_list|)
-value|((q) + ((idx) * QENTRY_LEN))
+value|(((uint8_t *)q) + ((idx) * QENTRY_LEN))
 end_define
 
 begin_define
@@ -762,7 +669,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_int
+name|uint32_t
 name|isp_gotdparms
 range|:
 literal|1
@@ -812,27 +719,27 @@ name|isp_async_data_setup
 range|:
 literal|4
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|isp_selection_timeout
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|isp_max_queue_depth
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|isp_tag_aging
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|isp_bus_reset_delay
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|isp_retry_count
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|isp_retry_delay
 decl_stmt|;
 struct|struct
 block|{
-name|u_int32_t
+name|uint32_t
 name|exc_throttle
 range|:
 literal|8
@@ -865,27 +772,27 @@ name|nvrm_offset
 range|:
 literal|4
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|actv_period
 decl_stmt|;
 comment|/* current sync period */
-name|u_int8_t
+name|uint8_t
 name|goal_period
 decl_stmt|;
 comment|/* goal sync period */
-name|u_int8_t
+name|uint8_t
 name|nvrm_period
 decl_stmt|;
 comment|/* nvram sync period */
-name|u_int16_t
+name|uint16_t
 name|actv_flags
 decl_stmt|;
 comment|/* current device flags */
-name|u_int16_t
+name|uint16_t
 name|goal_flags
 decl_stmt|;
 comment|/* goal device flags */
-name|u_int16_t
+name|uint16_t
 name|nvrm_flags
 decl_stmt|;
 comment|/* nvram device flags */
@@ -1122,7 +1029,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_int32_t
+name|uint32_t
 label|:
 literal|13
 operator|,
@@ -1163,7 +1070,7 @@ name|isp_onfabric
 operator|:
 literal|1
 expr_stmt|;
-name|u_int32_t
+name|uint32_t
 label|:
 literal|8
 operator|,
@@ -1172,50 +1079,50 @@ operator|:
 literal|24
 expr_stmt|;
 comment|/* S_ID */
-name|u_int16_t
+name|uint16_t
 name|isp_fwoptions
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|isp_iid
 decl_stmt|;
 comment|/* 'initiator' id */
-name|u_int16_t
+name|uint16_t
 name|isp_loopid
 decl_stmt|;
 comment|/* hard loop id */
-name|u_int16_t
+name|uint16_t
 name|isp_fwattr
 decl_stmt|;
 comment|/* firmware attributes */
-name|u_int8_t
+name|uint16_t
 name|isp_execthrottle
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|isp_retry_delay
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|isp_retry_count
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|isp_reserved
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|isp_maxalloc
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|isp_maxfrmlen
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|isp_nodewwn
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|isp_portwwn
 decl_stmt|;
 comment|/* 	 * Port Data Base. This is indexed by 'target', which is invariate. 	 * However, elements within can move around due to loop changes, 	 * so the actual loop ID passed to the F/W is in this structure. 	 * The first time the loop is seen up, loopid will match the index 	 * (except for fabric nodes which are above mapped above FC_SNS_ID 	 * and are completely virtual), but subsequent LIPs can cause things 	 * to move around. 	 */
 struct|struct
 name|lportdb
 block|{
-name|u_int32_t
+name|uint32_t
 name|loopid
 range|:
 literal|16
@@ -1263,7 +1170,7 @@ name|valid
 range|:
 literal|1
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|port_type
 range|:
 literal|8
@@ -1272,10 +1179,10 @@ name|portid
 range|:
 literal|24
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|node_wwn
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|port_wwn
 decl_stmt|;
 block|}
@@ -1290,16 +1197,17 @@ name|FC_PORT_ID
 index|]
 struct|;
 comment|/* 	 * Scratch DMA mapped in area to fetch Port Database stuff, etc. 	 */
-name|caddr_t
+name|void
+modifier|*
 name|isp_scratch
 decl_stmt|;
-name|isp_dma_addr_t
+name|XS_DMA_ADDR_T
 name|isp_scdma
 decl_stmt|;
 ifdef|#
 directive|ifdef
 name|ISP_FW_CRASH_DUMP
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|isp_dump_data
 decl_stmt|;
@@ -1468,8 +1376,7 @@ begin_comment
 comment|/*  * Soft Structure per host adapter  */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
 name|ispsoftc
 block|{
@@ -1490,37 +1397,37 @@ modifier|*
 name|isp_param
 decl_stmt|;
 comment|/* type specific */
-name|u_int16_t
+name|uint16_t
 name|isp_fwrev
 index|[
 literal|3
 index|]
 decl_stmt|;
 comment|/* Loaded F/W revision */
-name|u_int16_t
+name|uint16_t
 name|isp_romfw_rev
 index|[
 literal|3
 index|]
 decl_stmt|;
 comment|/* PROM F/W revision */
-name|u_int16_t
+name|uint16_t
 name|isp_maxcmds
 decl_stmt|;
 comment|/* max possible I/O cmds */
-name|u_int8_t
+name|uint8_t
 name|isp_type
 decl_stmt|;
 comment|/* HBA Chip Type */
-name|u_int8_t
+name|uint8_t
 name|isp_revision
 decl_stmt|;
 comment|/* HBA Chip H/W Revision */
-name|u_int32_t
+name|uint32_t
 name|isp_maxluns
 decl_stmt|;
 comment|/* maximum luns supported */
-name|u_int32_t
+name|uint32_t
 name|isp_clock
 range|:
 literal|8
@@ -1569,60 +1476,60 @@ range|:
 literal|12
 decl_stmt|;
 comment|/* debug log mask */
-name|u_int32_t
+name|uint32_t
 name|isp_confopts
 decl_stmt|;
 comment|/* config options */
-name|u_int16_t
+name|uint16_t
 name|isp_rqstinrp
 decl_stmt|;
 comment|/* register for REQINP */
-name|u_int16_t
+name|uint16_t
 name|isp_rqstoutrp
 decl_stmt|;
 comment|/* register for REQOUTP */
-name|u_int16_t
+name|uint16_t
 name|isp_respinrp
 decl_stmt|;
 comment|/* register for RESINP */
-name|u_int16_t
+name|uint16_t
 name|isp_respoutrp
 decl_stmt|;
 comment|/* register for RESOUTP */
 comment|/* 	 * Instrumentation 	 */
-name|u_int64_t
+name|uint64_t
 name|isp_intcnt
 decl_stmt|;
 comment|/* total int count */
-name|u_int64_t
+name|uint64_t
 name|isp_intbogus
 decl_stmt|;
 comment|/* spurious int count */
-name|u_int64_t
+name|uint64_t
 name|isp_intmboxc
 decl_stmt|;
 comment|/* mbox completions */
-name|u_int64_t
+name|uint64_t
 name|isp_intoasync
 decl_stmt|;
 comment|/* other async */
-name|u_int64_t
+name|uint64_t
 name|isp_rsltccmplt
 decl_stmt|;
 comment|/* CMDs on result q */
-name|u_int64_t
+name|uint64_t
 name|isp_fphccmplt
 decl_stmt|;
 comment|/* CMDs via fastpost */
-name|u_int16_t
+name|uint16_t
 name|isp_rscchiwater
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|isp_fpcchiwater
 decl_stmt|;
 comment|/* 	 * Volatile state 	 */
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 name|isp_obits
 range|:
 literal|8
@@ -1653,56 +1560,56 @@ literal|16
 decl_stmt|;
 comment|/* how many commands active */
 specifier|volatile
-name|u_int16_t
+name|uint16_t
 name|isp_reqodx
 decl_stmt|;
 comment|/* index of last ISP pickup */
 specifier|volatile
-name|u_int16_t
+name|uint16_t
 name|isp_reqidx
 decl_stmt|;
 comment|/* index of next request */
 specifier|volatile
-name|u_int16_t
+name|uint16_t
 name|isp_residx
 decl_stmt|;
 comment|/* index of next result */
 specifier|volatile
-name|u_int16_t
+name|uint16_t
 name|isp_resodx
 decl_stmt|;
 comment|/* index of next result */
 specifier|volatile
-name|u_int16_t
+name|uint16_t
 name|isp_rspbsy
 decl_stmt|;
 specifier|volatile
-name|u_int16_t
+name|uint16_t
 name|isp_lasthdls
 decl_stmt|;
 comment|/* last handle seed */
 specifier|volatile
-name|u_int16_t
+name|uint16_t
 name|isp_mboxtmp
 index|[
 name|MAILBOX_STORAGE
 index|]
 decl_stmt|;
 specifier|volatile
-name|u_int16_t
+name|uint16_t
 name|isp_lastmbxcmd
 decl_stmt|;
 comment|/* last mbox command sent */
 specifier|volatile
-name|u_int16_t
+name|uint16_t
 name|isp_mbxwrk0
 decl_stmt|;
 specifier|volatile
-name|u_int16_t
+name|uint16_t
 name|isp_mbxwrk1
 decl_stmt|;
 specifier|volatile
-name|u_int16_t
+name|uint16_t
 name|isp_mbxwrk2
 decl_stmt|;
 name|void
@@ -1727,22 +1634,23 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * request/result queue pointers and DMA handles for them. 	 */
-name|caddr_t
+name|void
+modifier|*
 name|isp_rquest
 decl_stmt|;
-name|caddr_t
+name|void
+modifier|*
 name|isp_result
 decl_stmt|;
-name|isp_dma_addr_t
+name|XS_DMA_ADDR_T
 name|isp_rquest_dma
 decl_stmt|;
-name|isp_dma_addr_t
+name|XS_DMA_ADDR_T
 name|isp_result_dma
 decl_stmt|;
 block|}
-name|ispsoftc_t
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -2539,15 +2447,9 @@ value|((isp)->isp_type>= ISP_HA_FC_2400)
 end_define
 
 begin_comment
-comment|/*  * DMA cookie macros  */
+comment|/*  * DMA related macros  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ISP_DAC_SUPPORTRED
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -2555,7 +2457,7 @@ name|DMA_WD3
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)>> 48)& 0xffff)
+value|((((uint64_t)x)>> 48)& 0xffff)
 end_define
 
 begin_define
@@ -2565,38 +2467,8 @@ name|DMA_WD2
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)>> 32)& 0xffff)
+value|((((uint64_t)x)>> 32)& 0xffff)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|DMA_WD3
-parameter_list|(
-name|x
-parameter_list|)
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|DMA_WD2
-parameter_list|(
-name|x
-parameter_list|)
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -2618,6 +2490,26 @@ parameter_list|)
 value|(((x)& 0xffff))
 end_define
 
+begin_define
+define|#
+directive|define
+name|DMA_LO32
+parameter_list|(
+name|x
+parameter_list|)
+value|((uint32_t) (x))
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMA_HI32
+parameter_list|(
+name|x
+parameter_list|)
+value|((uint32_t)(((uint64_t)x)>> 32))
+end_define
+
 begin_comment
 comment|/*  * Core System Function Prototypes  */
 end_comment
@@ -2630,8 +2522,7 @@ begin_function_decl
 name|void
 name|isp_reset
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2645,8 +2536,7 @@ begin_function_decl
 name|void
 name|isp_init
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2660,8 +2550,7 @@ begin_function_decl
 name|void
 name|isp_reinit
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2681,8 +2570,7 @@ begin_function_decl
 name|void
 name|isp_fw_dump
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -2702,15 +2590,14 @@ begin_function_decl
 name|void
 name|isp_intr
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2846,8 +2733,7 @@ begin_function_decl
 name|int
 name|isp_control
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|ispctl_t
@@ -2922,8 +2808,7 @@ begin_function_decl
 name|int
 name|isp_async
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|ispasync_t
@@ -2956,7 +2841,7 @@ value|((void *) 2)
 end_define
 
 begin_comment
-comment|/*  * Platform Dependent Error and Debug Printout  *  * Generally this is:  *  *    void isp_prt(struct ispsoftc *, int level, const char *, ...)  *  * but due to compiler differences on different platforms this won't be  * formally done here. Instead, it goes in each platform definition file.  */
+comment|/*  * Platform Dependent Error and Debug Printout  *  * Generally this is:  *  *    void isp_prt(ispsoftc_t *, int level, const char *, ...)  *  * but due to compiler differences on different platforms this won't be  * formally done here. Instead, it goes in each platform definition file.  */
 end_comment
 
 begin_define
@@ -3103,7 +2988,7 @@ comment|/* log all debug messages (target) */
 end_comment
 
 begin_comment
-comment|/*  * Each Platform provides it's own isposinfo substructure of the ispsoftc  * defined above.  *  * Each platform must also provide the following macros/defines:  *  *  *	ISP_DAC_SUPPORTED -	Is DAC (Dual Address Cycle) is supported?  *				Basically means whether or not DMA for PCI  *				PCI cards (Ultra2 or better or FC) works  *				above 4GB.  *  *	ISP2100_SCRLEN	-	length for the Fibre Channel scratch DMA area  *  *	MEMZERO(dst, src)			platform zeroing function  *	MEMCPY(dst, src, count)			platform copying function  *	SNPRINTF(buf, bufsize, fmt, ...)	snprintf  *	USEC_DELAY(usecs)			microsecond spindelay function  *	USEC_SLEEP(isp, usecs)			microsecond sleep function  *  *	NANOTIME_T				nanosecond time type  *  *	GET_NANOTIME(NANOTIME_T *)		get current nanotime.  *  *	GET_NANOSEC(NANOTIME_T *)		get u_int64_t from NANOTIME_T  *  *	NANOTIME_SUB(NANOTIME_T *, NANOTIME_T *)  *						subtract two NANOTIME_T values  *  *  *	MAXISPREQUEST(struct ispsoftc *)	maximum request queue size  *						for this particular board type  *  *	MEMORYBARRIER(struct ispsoftc *, barrier_type, offset, size)  *  *		Function/Macro the provides memory synchronization on  *		various objects so that the ISP's and the system's view  *		of the same object is consistent.  *  *	MBOX_ACQUIRE(struct ispsoftc *)		acquire lock on mailbox regs  *	MBOX_WAIT_COMPLETE(struct ispsoftc *)	wait for mailbox cmd to be done  *	MBOX_NOTIFY_COMPLETE(struct ispsoftc *)	notification of mbox cmd donee  *	MBOX_RELEASE(struct ispsoftc *)		release lock on mailbox regs  *  *	FC_SCRATCH_ACQUIRE(struct ispsoftc *)	acquire lock on FC scratch area  *	FC_SCRATCH_RELEASE(struct ispsoftc *)	acquire lock on FC scratch area  *  *	SCSI_GOOD	SCSI 'Good' Status  *	SCSI_CHECK	SCSI 'Check Condition' Status  *	SCSI_BUSY	SCSI 'Busy' Status  *	SCSI_QFULL	SCSI 'Queue Full' Status  *  *	XS_T		Platform SCSI transaction type (i.e., command for HBA)  *	XS_ISP(xs)	gets an instance out of an XS_T  *	XS_CHANNEL(xs)	gets the channel (bus # for DUALBUS cards) ""  *	XS_TGT(xs)	gets the target ""  *	XS_LUN(xs)	gets the lun ""  *	XS_CDBP(xs)	gets a pointer to the scsi CDB ""  *	XS_CDBLEN(xs)	gets the CDB's length ""  *	XS_XFRLEN(xs)	gets the associated data transfer length ""  *	XS_TIME(xs)	gets the time (in milliseconds) for this command  *	XS_RESID(xs)	gets the current residual count  *	XS_STSP(xs)	gets a pointer to the SCSI status byte ""  *	XS_SNSP(xs)	gets a pointer to the associate sense data  *	XS_SNSLEN(xs)	gets the length of sense data storage  *	XS_SNSKEY(xs)	dereferences XS_SNSP to get the current stored Sense Key  *	XS_TAG_P(xs)	predicate of whether this command should be tagged  *	XS_TAG_TYPE(xs)	which type of tag to use  *	XS_SETERR(xs)	set error state  *  *		HBA_NOERROR	command has no erros  *		HBA_BOTCH	hba botched something  *		HBA_CMDTIMEOUT	command timed out  *		HBA_SELTIMEOUT	selection timed out (also port logouts for FC)  *		HBA_TGTBSY	target returned a BUSY status  *		HBA_BUSRESET	bus reset destroyed command  *		HBA_ABORTED	command was aborted (by request)  *		HBA_DATAOVR	a data overrun was detected  *		HBA_ARQFAIL	Automatic Request Sense failed  *  *	XS_ERR(xs)	return current error state  *	XS_NOERR(xs)	there is no error currently set  *	XS_INITERR(xs)	initialize error state  *  *	XS_SAVE_SENSE(xs, sp)		save sense data  *  *	XS_SET_STATE_STAT(isp, sp, xs)	platform dependent interpreter of  *					response queue entry status bits  *  *  *	DEFAULT_IID(struct ispsoftc *)		Default SCSI initiator ID  *	DEFAULT_LOOPID(struct ispsoftc *)	Default FC Loop ID  *	DEFAULT_NODEWWN(struct ispsoftc *)	Default Node WWN  *	DEFAULT_PORTWWN(struct ispsoftc *)	Default Port WWN  *	DEFAULT_FRAMESIZE(struct ispsoftc *)	Default Frame Size  *	DEFAULT_EXEC_THROTTLE(struct ispsoftc *) Default Execution Throttle  *		These establish reasonable defaults for each platform.  * 		These must be available independent of card NVRAM and are  *		to be used should NVRAM not be readable.  *  *	ISP_NODEWWN(struct ispsoftc *)	FC Node WWN to use  *	ISP_PORTWWN(struct ispsoftc *)	FC Port WWN to use  *  *		These are to be used after NVRAM is read. The tags  *		in fcparam.isp_{node,port}wwn reflect the values  *		read from NVRAM (possibly corrected for card botches).  *		Each platform can take that information and override  *		it or ignore and return the Node and Port WWNs to be  * 		used when sending the Qlogic f/w the Initialization Control  *		Block.  *  *	(XXX these do endian specific transformations- in transition XXX)  *  *	ISP_IOXPUT_8(struct ispsoftc *, u_int8_t srcval, u_int8_t *dstptr)  *	ISP_IOXPUT_16(struct ispsoftc *, u_int16_t srcval, u_int16_t *dstptr)  *	ISP_IOXPUT_32(struct ispsoftc *, u_int32_t srcval, u_int32_t *dstptr)  *  *	ISP_IOXGET_8(struct ispsoftc *, u_int8_t *srcptr, u_int8_t dstrval)  *	ISP_IOXGET_16(struct ispsoftc *, u_int16_t *srcptr, u_int16_t dstrval)  *	ISP_IOXGET_32(struct ispsoftc *, u_int32_t *srcptr, u_int32_t dstrval)  *  *	ISP_SWIZZLE_NVRAM_WORD(struct ispsoftc *, u_int16_t *)  */
+comment|/*  * Each Platform provides it's own isposinfo substructure of the ispsoftc  * defined above.  *  * Each platform must also provide the following macros/defines:  *  *  *	ISP2100_SCRLEN	-	length for the Fibre Channel scratch DMA area  *  *	MEMZERO(dst, src)			platform zeroing function  *	MEMCPY(dst, src, count)			platform copying function  *	SNPRINTF(buf, bufsize, fmt, ...)	snprintf  *	USEC_DELAY(usecs)			microsecond spindelay function  *	USEC_SLEEP(isp, usecs)			microsecond sleep function  *  *	NANOTIME_T				nanosecond time type  *  *	GET_NANOTIME(NANOTIME_T *)		get current nanotime.  *  *	GET_NANOSEC(NANOTIME_T *)		get uint64_t from NANOTIME_T  *  *	NANOTIME_SUB(NANOTIME_T *, NANOTIME_T *)  *						subtract two NANOTIME_T values  *  *  *	MAXISPREQUEST(ispsoftc_t *)	maximum request queue size  *						for this particular board type  *  *	MEMORYBARRIER(ispsoftc_t *, barrier_type, offset, size)  *  *		Function/Macro the provides memory synchronization on  *		various objects so that the ISP's and the system's view  *		of the same object is consistent.  *  *	MBOX_ACQUIRE(ispsoftc_t *)		acquire lock on mailbox regs  *	MBOX_WAIT_COMPLETE(ispsoftc_t *)	wait for mailbox cmd to be done  *	MBOX_NOTIFY_COMPLETE(ispsoftc_t *)	notification of mbox cmd donee  *	MBOX_RELEASE(ispsoftc_t *)		release lock on mailbox regs  *  *	FC_SCRATCH_ACQUIRE(ispsoftc_t *)	acquire lock on FC scratch area  *	FC_SCRATCH_RELEASE(ispsoftc_t *)	acquire lock on FC scratch area  *  *	SCSI_GOOD	SCSI 'Good' Status  *	SCSI_CHECK	SCSI 'Check Condition' Status  *	SCSI_BUSY	SCSI 'Busy' Status  *	SCSI_QFULL	SCSI 'Queue Full' Status  *  *	XS_T		Platform SCSI transaction type (i.e., command for HBA)  *	XS_DMA_ADDR_T	Platform PCI DMA Address Type  *	XS_ISP(xs)	gets an instance out of an XS_T  *	XS_CHANNEL(xs)	gets the channel (bus # for DUALBUS cards) ""  *	XS_TGT(xs)	gets the target ""  *	XS_LUN(xs)	gets the lun ""  *	XS_CDBP(xs)	gets a pointer to the scsi CDB ""  *	XS_CDBLEN(xs)	gets the CDB's length ""  *	XS_XFRLEN(xs)	gets the associated data transfer length ""  *	XS_TIME(xs)	gets the time (in milliseconds) for this command  *	XS_RESID(xs)	gets the current residual count  *	XS_STSP(xs)	gets a pointer to the SCSI status byte ""  *	XS_SNSP(xs)	gets a pointer to the associate sense data  *	XS_SNSLEN(xs)	gets the length of sense data storage  *	XS_SNSKEY(xs)	dereferences XS_SNSP to get the current stored Sense Key  *	XS_TAG_P(xs)	predicate of whether this command should be tagged  *	XS_TAG_TYPE(xs)	which type of tag to use  *	XS_SETERR(xs)	set error state  *  *		HBA_NOERROR	command has no erros  *		HBA_BOTCH	hba botched something  *		HBA_CMDTIMEOUT	command timed out  *		HBA_SELTIMEOUT	selection timed out (also port logouts for FC)  *		HBA_TGTBSY	target returned a BUSY status  *		HBA_BUSRESET	bus reset destroyed command  *		HBA_ABORTED	command was aborted (by request)  *		HBA_DATAOVR	a data overrun was detected  *		HBA_ARQFAIL	Automatic Request Sense failed  *  *	XS_ERR(xs)	return current error state  *	XS_NOERR(xs)	there is no error currently set  *	XS_INITERR(xs)	initialize error state  *  *	XS_SAVE_SENSE(xs, sp)		save sense data  *  *	XS_SET_STATE_STAT(isp, sp, xs)	platform dependent interpreter of  *					response queue entry status bits  *  *  *	DEFAULT_IID(ispsoftc_t *)		Default SCSI initiator ID  *	DEFAULT_LOOPID(ispsoftc_t *)	Default FC Loop ID  *	DEFAULT_NODEWWN(ispsoftc_t *)	Default Node WWN  *	DEFAULT_PORTWWN(ispsoftc_t *)	Default Port WWN  *	DEFAULT_FRAMESIZE(ispsoftc_t *)	Default Frame Size  *	DEFAULT_EXEC_THROTTLE(ispsoftc_t *) Default Execution Throttle  *		These establish reasonable defaults for each platform.  * 		These must be available independent of card NVRAM and are  *		to be used should NVRAM not be readable.  *  *	ISP_NODEWWN(ispsoftc_t *)	FC Node WWN to use  *	ISP_PORTWWN(ispsoftc_t *)	FC Port WWN to use  *  *		These are to be used after NVRAM is read. The tags  *		in fcparam.isp_{node,port}wwn reflect the values  *		read from NVRAM (possibly corrected for card botches).  *		Each platform can take that information and override  *		it or ignore and return the Node and Port WWNs to be  * 		used when sending the Qlogic f/w the Initialization Control  *		Block.  *  *	(XXX these do endian specific transformations- in transition XXX)  *  *	ISP_IOXPUT_8(ispsoftc_t *, uint8_t srcval, uint8_t *dstptr)  *	ISP_IOXPUT_16(ispsoftc_t *, uint16_t srcval, uint16_t *dstptr)  *	ISP_IOXPUT_32(ispsoftc_t *, uint32_t srcval, uint32_t *dstptr)  *  *	ISP_IOXGET_8(ispsoftc_t *, uint8_t *srcptr, uint8_t dstrval)  *	ISP_IOXGET_16(ispsoftc_t *, uint16_t *srcptr, uint16_t dstrval)  *	ISP_IOXGET_32(ispsoftc_t *, uint32_t *srcptr, uint32_t dstrval)  *  *	ISP_SWIZZLE_NVRAM_WORD(ispsoftc_t *, uint16_t *)  */
 end_comment
 
 begin_endif

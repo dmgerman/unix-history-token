@@ -7,6 +7,31 @@ begin_comment
 comment|/*  * Inspiration and ideas about this driver are from Erik Moe's Linux driver  * (qlogicisp.c) and Dave Miller's SBus version of same (qlogicisp.c). Some  * ideas dredged from the Solaris driver.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Include header file appropriate for platform we're building on.  */
 end_comment
@@ -33,20 +58,6 @@ ifdef|#
 directive|ifdef
 name|__FreeBSD__
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_include
 include|#
@@ -398,11 +409,10 @@ specifier|static
 name|int
 name|isp_parse_async
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -412,8 +422,7 @@ specifier|static
 name|int
 name|isp_handle_other_response
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|int
@@ -421,7 +430,7 @@ parameter_list|,
 name|isphdr_t
 modifier|*
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -432,8 +441,7 @@ specifier|static
 name|void
 name|isp_parse_status
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|ispstatusreq_t
@@ -450,11 +458,10 @@ specifier|static
 name|void
 name|isp_fastpost_complete
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -464,8 +471,7 @@ specifier|static
 name|int
 name|isp_mbox_continue
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -476,8 +482,7 @@ specifier|static
 name|void
 name|isp_scsi_init
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -488,8 +493,7 @@ specifier|static
 name|void
 name|isp_scsi_channel_init
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|int
@@ -502,8 +506,7 @@ specifier|static
 name|void
 name|isp_fibre_init
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -514,8 +517,7 @@ specifier|static
 name|void
 name|isp_mark_getpdb_all
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -526,8 +528,7 @@ specifier|static
 name|int
 name|isp_getmap
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|fcpos_map_t
@@ -541,8 +542,7 @@ specifier|static
 name|int
 name|isp_getpdb
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|int
@@ -555,11 +555,10 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_int64_t
+name|uint64_t
 name|isp_get_portname
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|int
@@ -574,8 +573,7 @@ specifier|static
 name|int
 name|isp_fclink_test
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|int
@@ -599,8 +597,7 @@ specifier|static
 name|int
 name|isp_pdb_sync
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -611,8 +608,7 @@ specifier|static
 name|int
 name|isp_scan_loop
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -623,8 +619,7 @@ specifier|static
 name|int
 name|isp_fabric_mbox_cmd
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|mbreg_t
@@ -638,8 +633,7 @@ specifier|static
 name|int
 name|isp_scan_fabric
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|int
@@ -652,8 +646,7 @@ specifier|static
 name|void
 name|isp_register_fc4_type
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -664,8 +657,7 @@ specifier|static
 name|void
 name|isp_fw_state
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -676,8 +668,7 @@ specifier|static
 name|void
 name|isp_mboxcmd_qnw
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|mbreg_t
@@ -693,8 +684,7 @@ specifier|static
 name|void
 name|isp_mboxcmd
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|mbreg_t
@@ -710,8 +700,7 @@ specifier|static
 name|void
 name|isp_update
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -722,8 +711,7 @@ specifier|static
 name|void
 name|isp_update_bus
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|int
@@ -736,8 +724,7 @@ specifier|static
 name|void
 name|isp_setdfltparm
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|int
@@ -750,8 +737,7 @@ specifier|static
 name|int
 name|isp_read_nvram
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -762,13 +748,12 @@ specifier|static
 name|void
 name|isp_rdnvram_word
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -779,11 +764,10 @@ specifier|static
 name|void
 name|isp_parse_nvram_1020
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -794,13 +778,12 @@ specifier|static
 name|void
 name|isp_parse_nvram_1080
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -811,13 +794,12 @@ specifier|static
 name|void
 name|isp_parse_nvram_12160
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -828,11 +810,10 @@ specifier|static
 name|void
 name|isp_parse_nvram_2100
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -846,8 +827,7 @@ begin_function
 name|void
 name|isp_reset
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -855,7 +835,7 @@ block|{
 name|mbreg_t
 name|mbs
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|code_org
 decl_stmt|;
 name|int
@@ -1274,7 +1254,7 @@ index|[]
 init|=
 literal|"bus %d is in %s Mode"
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|l
 decl_stmt|;
 name|sdparam
@@ -2127,7 +2107,7 @@ name|isp
 argument_list|)
 condition|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|tmp
 init|=
 name|isp
@@ -3514,8 +3494,7 @@ begin_function
 name|void
 name|isp_init
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -3574,8 +3553,7 @@ specifier|static
 name|void
 name|isp_scsi_init
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -4599,7 +4577,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|sfeat
 init|=
 name|mbs
@@ -4659,8 +4637,7 @@ specifier|static
 name|void
 name|isp_scsi_channel_init
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -4783,7 +4760,7 @@ block|{
 name|int
 name|lun
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|sdf
 decl_stmt|;
 if|if
@@ -5258,8 +5235,7 @@ specifier|static
 name|void
 name|isp_fibre_init
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -5283,7 +5259,7 @@ decl_stmt|;
 name|int
 name|loopid
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|nwwn
 decl_stmt|,
 name|pwwn
@@ -5624,7 +5600,7 @@ operator|->
 name|icb_hardaddr
 operator|!=
 literal|0xff
-operator|||
+operator|&&
 name|icbp
 operator|->
 name|icb_hardaddr
@@ -5910,9 +5886,14 @@ name|icbp
 operator|->
 name|icb_logintime
 operator|=
-literal|30
+name|ICB_LOGIN_TOV
 expr_stmt|;
-comment|/* 30 second login timeout */
+name|icbp
+operator|->
+name|icb_lunetimeout
+operator|=
+name|ICB_LUN_ENABLE_TOV
+expr_stmt|;
 if|if
 condition|(
 name|IS_23XX
@@ -6021,7 +6002,7 @@ literal|"Setting ICB Node 0x%08x%08x Port 0x%08x%08x"
 argument_list|,
 operator|(
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|nwwn
@@ -6032,7 +6013,7 @@ operator|)
 argument_list|,
 operator|(
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|nwwn
@@ -6043,7 +6024,7 @@ operator|)
 argument_list|,
 operator|(
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|pwwn
@@ -6054,7 +6035,7 @@ operator|)
 argument_list|,
 operator|(
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|pwwn
@@ -6460,8 +6441,7 @@ specifier|static
 name|int
 name|isp_getmap
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -6648,8 +6628,7 @@ specifier|static
 name|void
 name|isp_mark_getpdb_all
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -6712,8 +6691,7 @@ specifier|static
 name|int
 name|isp_getpdb
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -6931,11 +6909,10 @@ end_function
 
 begin_function
 specifier|static
-name|u_int64_t
+name|uint64_t
 name|isp_get_portname
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -6946,7 +6923,7 @@ name|int
 name|nodename
 parameter_list|)
 block|{
-name|u_int64_t
+name|uint64_t
 name|wwn
 init|=
 literal|0
@@ -7072,7 +7049,7 @@ operator|=
 operator|(
 operator|(
 call|(
-name|u_int64_t
+name|uint64_t
 call|)
 argument_list|(
 name|mbs
@@ -7092,7 +7069,7 @@ operator||
 operator|(
 operator|(
 call|(
-name|u_int64_t
+name|uint64_t
 call|)
 argument_list|(
 name|mbs
@@ -7112,7 +7089,7 @@ operator||
 operator|(
 operator|(
 call|(
-name|u_int64_t
+name|uint64_t
 call|)
 argument_list|(
 name|mbs
@@ -7132,7 +7109,7 @@ operator||
 operator|(
 operator|(
 call|(
-name|u_int64_t
+name|uint64_t
 call|)
 argument_list|(
 name|mbs
@@ -7152,7 +7129,7 @@ operator||
 operator|(
 operator|(
 call|(
-name|u_int64_t
+name|uint64_t
 call|)
 argument_list|(
 name|mbs
@@ -7172,7 +7149,7 @@ operator||
 operator|(
 operator|(
 call|(
-name|u_int64_t
+name|uint64_t
 call|)
 argument_list|(
 name|mbs
@@ -7192,7 +7169,7 @@ operator||
 operator|(
 operator|(
 call|(
-name|u_int64_t
+name|uint64_t
 call|)
 argument_list|(
 name|mbs
@@ -7212,7 +7189,7 @@ operator||
 operator|(
 operator|(
 call|(
-name|u_int64_t
+name|uint64_t
 call|)
 argument_list|(
 name|mbs
@@ -7245,8 +7222,7 @@ specifier|static
 name|int
 name|isp_fclink_test
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -7280,7 +7256,7 @@ name|count
 decl_stmt|,
 name|check_for_fabric
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|lwfs
 decl_stmt|;
 name|fcparam
@@ -7318,10 +7294,10 @@ operator|<
 name|usdelay
 condition|)
 block|{
-name|u_int64_t
+name|uint64_t
 name|enano
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|wrk
 decl_stmt|;
 name|NANOTIME_T
@@ -7441,7 +7417,7 @@ name|hrb
 argument_list|)
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|enano
@@ -7450,7 +7426,7 @@ literal|32
 argument_list|)
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|enano
@@ -7459,7 +7435,7 @@ literal|0xffffffff
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If the elapsed time is less than 1 millisecond, 		 * delay a period of time up to that millisecond of 		 * waiting. 		 * 		 * This peculiar code is an attempt to try and avoid 		 * invoking u_int64_t math support functions for some 		 * platforms where linkage is a problem. 		 */
+comment|/* 		 * If the elapsed time is less than 1 millisecond, 		 * delay a period of time up to that millisecond of 		 * waiting. 		 * 		 * This peculiar code is an attempt to try and avoid 		 * invoking uint64_t math support functions for some 		 * platforms where linkage is a problem. 		 */
 if|if
 condition|(
 name|enano
@@ -7490,7 +7466,7 @@ condition|(
 name|enano
 operator|>
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 literal|4000000000U
 condition|)
@@ -7505,7 +7481,7 @@ expr_stmt|;
 name|enano
 operator|-=
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 literal|4000000000U
 expr_stmt|;
@@ -7533,7 +7509,7 @@ condition|(
 name|enano
 operator|>
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 literal|4000000000U
 condition|)
@@ -7545,7 +7521,7 @@ expr_stmt|;
 name|enano
 operator|-=
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 literal|4000000000U
 expr_stmt|;
@@ -7944,7 +7920,7 @@ operator|=
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -7960,7 +7936,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -7976,7 +7952,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -7992,7 +7968,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -8008,7 +7984,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -8024,7 +8000,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -8040,7 +8016,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -8056,7 +8032,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -8074,7 +8050,7 @@ operator|=
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -8090,7 +8066,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -8106,7 +8082,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -8122,7 +8098,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -8138,7 +8114,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -8154,7 +8130,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -8170,7 +8146,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -8186,7 +8162,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -8724,8 +8700,7 @@ specifier|static
 name|int
 name|isp_pdb_sync
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -9022,7 +8997,7 @@ name|lp
 operator|++
 control|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|portid
 decl_stmt|;
 name|mbreg_t
@@ -9110,7 +9085,7 @@ block|{
 name|int
 name|nrole
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|nwwnn
 decl_stmt|,
 name|nwwpn
@@ -9120,7 +9095,7 @@ operator|=
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -9136,7 +9111,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -9152,7 +9127,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -9168,7 +9143,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -9184,7 +9159,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -9200,7 +9175,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -9216,7 +9191,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -9232,7 +9207,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -9248,7 +9223,7 @@ operator|=
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -9264,7 +9239,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -9280,7 +9255,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -9296,7 +9271,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -9312,7 +9287,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -9328,7 +9303,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -9344,7 +9319,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -9360,7 +9335,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -9398,7 +9373,7 @@ operator|->
 name|portid
 operator|==
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|BITS2WORD
 argument_list|(
@@ -10094,7 +10069,7 @@ operator|->
 name|portid
 operator|!=
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|BITS2WORD
 argument_list|(
@@ -10149,7 +10124,7 @@ operator|=
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -10165,7 +10140,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -10181,7 +10156,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -10197,7 +10172,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -10213,7 +10188,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -10229,7 +10204,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -10245,7 +10220,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -10261,7 +10236,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -10279,7 +10254,7 @@ operator|=
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -10295,7 +10270,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -10311,7 +10286,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -10327,7 +10302,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -10343,7 +10318,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -10359,7 +10334,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -10375,7 +10350,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -10391,7 +10366,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -10595,8 +10570,7 @@ specifier|static
 name|int
 name|isp_scan_loop
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -10906,7 +10880,7 @@ operator|=
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -10922,7 +10896,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -10938,7 +10912,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -10954,7 +10928,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -10970,7 +10944,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -10986,7 +10960,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -11002,7 +10976,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -11018,7 +10992,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -11036,7 +11010,7 @@ operator|=
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -11052,7 +11026,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -11068,7 +11042,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -11084,7 +11058,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -11100,7 +11074,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -11116,7 +11090,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -11132,7 +11106,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -11148,7 +11122,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|pdb
 operator|.
@@ -11871,8 +11845,7 @@ specifier|static
 name|int
 name|isp_fabric_mbox_cmd
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -12094,8 +12067,7 @@ specifier|static
 name|int
 name|isp_scan_fabric
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -12111,7 +12083,7 @@ name|isp
 operator|->
 name|isp_param
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|portid
 decl_stmt|,
 name|first_portid
@@ -12205,7 +12177,7 @@ name|struct
 name|lportdb
 name|lcl
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|sc
 index|[
 name|SNS_GA_NXT_RESP_SIZE
@@ -12523,7 +12495,7 @@ operator|*
 operator|)
 operator|(
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 name|fcp
@@ -12630,7 +12602,7 @@ operator|=
 operator|(
 operator|(
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|rs1
 operator|->
@@ -12646,7 +12618,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|rs1
 operator|->
@@ -12662,7 +12634,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|rs1
 operator|->
@@ -12713,7 +12685,7 @@ operator|=
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|rs1
 operator|->
@@ -12729,7 +12701,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|rs1
 operator|->
@@ -12745,7 +12717,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|rs1
 operator|->
@@ -12761,7 +12733,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|rs1
 operator|->
@@ -12777,7 +12749,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|rs1
 operator|->
@@ -12793,7 +12765,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|rs1
 operator|->
@@ -12809,7 +12781,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|rs1
 operator|->
@@ -12825,7 +12797,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|rs1
 operator|->
@@ -12843,7 +12815,7 @@ operator|=
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|rs1
 operator|->
@@ -12859,7 +12831,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|rs1
 operator|->
@@ -12875,7 +12847,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|rs1
 operator|->
@@ -12891,7 +12863,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|rs1
 operator|->
@@ -12907,7 +12879,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|rs1
 operator|->
@@ -12923,7 +12895,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|rs1
 operator|->
@@ -12939,7 +12911,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|rs1
 operator|->
@@ -12955,7 +12927,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|rs1
 operator|->
@@ -13181,8 +13153,7 @@ specifier|static
 name|int
 name|isp_scan_fabric
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -13568,7 +13539,7 @@ operator|*
 operator|)
 operator|(
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 name|fcp
@@ -13738,7 +13709,7 @@ operator|=
 operator|(
 operator|(
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|rs1
 operator|->
@@ -13759,7 +13730,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|rs1
 operator|->
@@ -13780,7 +13751,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|rs1
 operator|->
@@ -14095,7 +14066,7 @@ operator|*
 operator|)
 operator|(
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 name|fcp
@@ -14182,7 +14153,7 @@ operator|=
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|gs1
 operator|->
@@ -14198,7 +14169,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|gs1
 operator|->
@@ -14214,7 +14185,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|gs1
 operator|->
@@ -14230,7 +14201,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|gs1
 operator|->
@@ -14246,7 +14217,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|gs1
 operator|->
@@ -14262,7 +14233,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|gs1
 operator|->
@@ -14278,7 +14249,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|gs1
 operator|->
@@ -14294,7 +14265,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|gs1
 operator|->
@@ -14604,7 +14575,7 @@ operator|*
 operator|)
 operator|(
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 name|fcp
@@ -14691,7 +14662,7 @@ operator|=
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|gs1
 operator|->
@@ -14707,7 +14678,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|gs1
 operator|->
@@ -14723,7 +14694,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|gs1
 operator|->
@@ -14739,7 +14710,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|gs1
 operator|->
@@ -14755,7 +14726,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|gs1
 operator|->
@@ -14771,7 +14742,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|gs1
 operator|->
@@ -14787,7 +14758,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|gs1
 operator|->
@@ -14803,7 +14774,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|gs1
 operator|->
@@ -14821,7 +14792,7 @@ literal|0
 comment|/* 		 * Try and get FC4 Features (FC-GS-3 only). 		 * We can use the sns_gxn_id_req_t for this request. 		 */
 block|MEMZERO((void *) gq, sizeof (sns_gxn_id_req_t)); 		gq->snscb_rblen = SNS_GFF_ID_RESP_SIZE>> 1; 		gq->snscb_addr[RQRSP_ADDR0015] = DMA_WD0(fcp->isp_scdma+GXOFF); 		gq->snscb_addr[RQRSP_ADDR1631] = DMA_WD1(fcp->isp_scdma+GXOFF); 		gq->snscb_addr[RQRSP_ADDR3247] = DMA_WD2(fcp->isp_scdma+GXOFF); 		gq->snscb_addr[RQRSP_ADDR4863] = DMA_WD3(fcp->isp_scdma+GXOFF); 		gq->snscb_sblen = 6; 		gq->snscb_cmd = SNS_GFF_ID; 		gq->snscb_portid = lcl.portid; 		isp_put_gxn_id_request(isp, gq, 		    (sns_gxn_id_req_t *) fcp->isp_scratch); 		MEMORYBARRIER(isp, SYNC_SFORDEV, 0, SNS_GXN_ID_REQ_SIZE); 		MEMZERO(&mbs, sizeof (mbs)); 		mbs.param[0] = MBOX_SEND_SNS; 		mbs.param[1] = SNS_GXN_ID_REQ_SIZE>> 1; 		mbs.param[2] = DMA_WD1(fcp->isp_scdma); 		mbs.param[3] = DMA_WD0(fcp->isp_scdma);
 comment|/* 		 * Leave 4 and 5 alone 		 */
-block|mbs.param[6] = DMA_WD3(fcp->isp_scdma); 		mbs.param[7] = DMA_WD2(fcp->isp_scdma); 		if (isp_fabric_mbox_cmd(isp,&mbs)) { 			if (fcp->isp_loopstate>= LOOP_SCANNING_FABRIC) { 				fcp->isp_loopstate = LOOP_PDB_RCVD; 			} 			FC_SCRATCH_RELEASE(isp); 			return (-1); 		} 		if (fcp->isp_loopstate != LOOP_SCANNING_FABRIC) { 			FC_SCRATCH_RELEASE(isp); 			return (-1); 		} 		MEMORYBARRIER(isp, SYNC_SFORCPU, GXOFF, SNS_GFF_ID_RESP_SIZE); 		fs0 = (sns_gff_id_rsp_t *) ((u_int8_t *)fcp->isp_scratch+GXOFF); 		isp_get_gff_id_response(isp, fs0, fs1); 		if (fs1->snscb_cthdr.ct_response != FS_ACC) { 			isp_prt(isp,
+block|mbs.param[6] = DMA_WD3(fcp->isp_scdma); 		mbs.param[7] = DMA_WD2(fcp->isp_scdma); 		if (isp_fabric_mbox_cmd(isp,&mbs)) { 			if (fcp->isp_loopstate>= LOOP_SCANNING_FABRIC) { 				fcp->isp_loopstate = LOOP_PDB_RCVD; 			} 			FC_SCRATCH_RELEASE(isp); 			return (-1); 		} 		if (fcp->isp_loopstate != LOOP_SCANNING_FABRIC) { 			FC_SCRATCH_RELEASE(isp); 			return (-1); 		} 		MEMORYBARRIER(isp, SYNC_SFORCPU, GXOFF, SNS_GFF_ID_RESP_SIZE); 		fs0 = (sns_gff_id_rsp_t *) ((uint8_t *)fcp->isp_scratch+GXOFF); 		isp_get_gff_id_response(isp, fs0, fs1); 		if (fs1->snscb_cthdr.ct_response != FS_ACC) { 			isp_prt(isp,
 comment|/* ISP_LOGDEBUG0 */
 block|ISP_LOGWARN, 			    swrej, "GFF_ID", 			    fs1->snscb_cthdr.ct_reason, 			    fs1->snscb_cthdr.ct_explanation, lcl.portid); 			if (fcp->isp_loopstate != LOOP_SCANNING_FABRIC) { 				FC_SCRATCH_RELEASE(isp); 				return (-1); 			} 		} else { 			int index = (ftype>> 3); 			int bshft = (ftype& 0x7) * 4; 			int fc4_fval = 			    (fs1->snscb_fc4_features[index]>> bshft)& 0xf; 			if (fc4_fval& 0x1) { 				lcl.roles |= 				    (SVC3_INI_ROLE>> SVC3_ROLE_SHIFT); 			} 			if (fc4_fval& 0x2) { 				lcl.roles |= 				    (SVC3_TGT_ROLE>> SVC3_ROLE_SHIFT); 			} 		}
 endif|#
@@ -14953,8 +14924,7 @@ specifier|static
 name|void
 name|isp_register_fc4_type
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -14967,7 +14937,7 @@ name|isp
 operator|->
 name|isp_param
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|local
 index|[
 name|SNS_RFT_ID_REQ_SIZE
@@ -15295,19 +15265,18 @@ modifier|*
 name|xs
 parameter_list|)
 block|{
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|nxti
 decl_stmt|,
 name|optr
 decl_stmt|,
 name|handle
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|local
 index|[
 name|QENTRY_LEN
@@ -16034,7 +16003,7 @@ operator|->
 name|isp_sendmarker
 condition|)
 block|{
-name|u_int8_t
+name|uint8_t
 name|n
 init|=
 operator|(
@@ -16747,8 +16716,7 @@ begin_function
 name|int
 name|isp_control
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -16772,7 +16740,7 @@ name|bus
 decl_stmt|,
 name|tgt
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|handle
 decl_stmt|;
 name|MEMZERO
@@ -17418,10 +17386,6 @@ block|{
 name|int
 name|usdelay
 init|=
-operator|(
-name|arg
-operator|)
-condition|?
 operator|*
 operator|(
 operator|(
@@ -17430,9 +17394,19 @@ operator|*
 operator|)
 name|arg
 operator|)
-else|:
-literal|250000
 decl_stmt|;
+if|if
+condition|(
+name|usdelay
+operator|==
+literal|0
+condition|)
+block|{
+name|usdelay
+operator|=
+literal|250000
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|isp_fclink_test
@@ -17795,18 +17769,17 @@ begin_function
 name|void
 name|isp_intr
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|isr
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|sema
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|mbox
 parameter_list|)
 block|{
@@ -17820,7 +17793,7 @@ decl_stmt|,
 modifier|*
 name|xs
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|iptr
 decl_stmt|,
 name|optr
@@ -18445,7 +18418,7 @@ decl_stmt|;
 name|int
 name|type
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|oop
 decl_stmt|;
 name|int
@@ -18981,7 +18954,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|u_int8_t
+name|uint8_t
 name|ts
 init|=
 name|sp
@@ -19880,12 +19853,11 @@ specifier|static
 name|int
 name|isp_parse_async
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|mbox
 parameter_list|)
 block|{
@@ -21232,7 +21204,7 @@ name|i
 decl_stmt|,
 name|nh
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|handles
 index|[
 literal|16
@@ -21372,8 +21344,7 @@ specifier|static
 name|int
 name|isp_handle_other_response
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -21384,7 +21355,7 @@ name|isphdr_t
 modifier|*
 name|hp
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|optrp
 parameter_list|)
@@ -21561,8 +21532,7 @@ specifier|static
 name|void
 name|isp_parse_status
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -23631,12 +23601,11 @@ specifier|static
 name|void
 name|isp_fastpost_complete
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|fph
 parameter_list|)
 block|{
@@ -23761,8 +23730,7 @@ specifier|static
 name|int
 name|isp_mbox_continue
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -23770,7 +23738,7 @@ block|{
 name|mbreg_t
 name|mbs
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|ptr
 decl_stmt|;
@@ -24001,7 +23969,7 @@ end_define
 begin_decl_stmt
 specifier|static
 specifier|const
-name|u_int32_t
+name|uint32_t
 name|mbpscsi
 index|[]
 init|=
@@ -24974,7 +24942,7 @@ end_endif
 begin_decl_stmt
 specifier|static
 specifier|const
-name|u_int32_t
+name|uint32_t
 name|mbpfc
 index|[]
 init|=
@@ -26283,8 +26251,7 @@ specifier|static
 name|void
 name|isp_mboxcmd_qnw
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -26307,7 +26274,7 @@ decl_stmt|,
 name|opcode
 decl_stmt|;
 specifier|const
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|mcp
 decl_stmt|;
@@ -26508,8 +26475,7 @@ specifier|static
 name|void
 name|isp_mboxcmd
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -26551,7 +26517,7 @@ decl_stmt|,
 name|opcode
 decl_stmt|;
 specifier|const
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|mcp
 decl_stmt|;
@@ -27177,8 +27143,7 @@ specifier|static
 name|void
 name|isp_fw_state
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -27265,8 +27230,7 @@ specifier|static
 name|void
 name|isp_update
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -27333,8 +27297,7 @@ specifier|static
 name|void
 name|isp_update_bus
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -27409,7 +27372,7 @@ name|tgt
 operator|++
 control|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|flags
 decl_stmt|,
 name|period
@@ -28000,8 +27963,7 @@ specifier|static
 name|void
 name|isp_setdfltparm
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -28265,7 +28227,7 @@ argument_list|,
 literal|"Using Node WWN 0x%08x%08x"
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|DEFAULT_NODEWWN
@@ -28277,7 +28239,7 @@ literal|32
 argument_list|)
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|DEFAULT_NODEWWN
@@ -28331,7 +28293,7 @@ argument_list|,
 literal|"Using Port WWN 0x%08x%08x"
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|DEFAULT_PORTWWN
@@ -28343,7 +28305,7 @@ literal|32
 argument_list|)
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|DEFAULT_PORTWWN
@@ -28755,7 +28717,7 @@ name|tgt
 operator|++
 control|)
 block|{
-name|u_int8_t
+name|uint8_t
 name|off
 decl_stmt|,
 name|per
@@ -29053,8 +29015,7 @@ begin_function
 name|void
 name|isp_reinit
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -29177,7 +29138,7 @@ name|i
 operator|++
 control|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|handle
 decl_stmt|;
 name|xs
@@ -29275,8 +29236,7 @@ specifier|static
 name|int
 name|isp_read_nvram
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -29286,20 +29246,20 @@ name|i
 decl_stmt|,
 name|amt
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|csum
 decl_stmt|,
 name|minversion
 decl_stmt|;
 union|union
 block|{
-name|u_int8_t
+name|uint8_t
 name|_x
 index|[
 name|ISP2100_NVRAM_SIZE
 index|]
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|_s
 index|[
 name|ISP2100_NVRAM_SIZE
@@ -29709,15 +29669,14 @@ specifier|static
 name|void
 name|isp_rdnvram_word
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
 name|int
 name|wo
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|rp
 parameter_list|)
@@ -29727,7 +29686,7 @@ name|i
 decl_stmt|,
 name|cbits
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|bit
 decl_stmt|,
 name|rqst
@@ -29984,7 +29943,7 @@ name|i
 operator|++
 control|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|rv
 decl_stmt|;
 operator|*
@@ -30079,12 +30038,11 @@ specifier|static
 name|void
 name|isp_parse_nvram_1020
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|nvram_data
 parameter_list|)
@@ -30798,15 +30756,14 @@ specifier|static
 name|void
 name|isp_parse_nvram_1080
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
 name|int
 name|bus
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|nvram_data
 parameter_list|)
@@ -31396,15 +31353,14 @@ specifier|static
 name|void
 name|isp_parse_nvram_12160
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
 name|int
 name|bus
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|nvram_data
 parameter_list|)
@@ -31994,12 +31950,11 @@ specifier|static
 name|void
 name|isp_parse_nvram_2100
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|nvram_data
 parameter_list|)
@@ -32016,7 +31971,7 @@ name|isp
 operator|->
 name|isp_param
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|wwn
 decl_stmt|;
 comment|/* 	 * There is NVRAM storage for both Port and Node entities- 	 * but the Node entity appears to be unused on all the cards 	 * I can find. However, we should account for this being set 	 * at some point in the future. 	 * 	 * Qlogic WWNs have an NAA of 2, but usually nothing shows up in 	 * bits 48..60. In the case of the 2202, it appears that they do 	 * use bit 48 to distinguish between the two instances on the card. 	 * The 2204, which I've never seen, *probably* extends this method. 	 */
@@ -32041,7 +31996,7 @@ argument_list|,
 literal|"NVRAM Port WWN 0x%08x%08x"
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|wwn
@@ -32050,7 +32005,7 @@ literal|32
 argument_list|)
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|wwn
@@ -32075,7 +32030,7 @@ operator||=
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 literal|2
 operator|)
@@ -32125,7 +32080,7 @@ argument_list|,
 literal|"NVRAM Node WWN 0x%08x%08x"
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|wwn
@@ -32134,7 +32089,7 @@ literal|32
 argument_list|)
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|wwn
@@ -32159,7 +32114,7 @@ operator||=
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 literal|2
 operator|)
@@ -32177,7 +32132,7 @@ operator|&=
 operator|~
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 literal|0xfff
 operator|<<
@@ -32263,7 +32218,7 @@ operator|&
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 literal|0xfff
 operator|)
@@ -32292,7 +32247,7 @@ operator|&=
 operator|~
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 literal|0xfff
 operator|<<
@@ -32310,7 +32265,7 @@ operator|&
 operator|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 literal|0xfff
 operator|)
@@ -32338,7 +32293,7 @@ name|isp_portwwn
 operator||=
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 literal|1
 operator|<<
@@ -32489,8 +32444,7 @@ specifier|static
 name|void
 name|isp2200_fw_dump
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -32501,8 +32455,7 @@ specifier|static
 name|void
 name|isp2300_fw_dump
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -32513,8 +32466,7 @@ specifier|static
 name|void
 name|isp2200_fw_dump
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -32527,7 +32479,7 @@ decl_stmt|;
 name|mbreg_t
 name|mbs
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|ptr
 decl_stmt|;
@@ -33347,8 +33299,7 @@ specifier|static
 name|void
 name|isp2300_fw_dump
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)
@@ -33361,7 +33312,7 @@ decl_stmt|;
 name|mbreg_t
 name|mbs
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|ptr
 decl_stmt|;
@@ -34257,8 +34208,7 @@ begin_function
 name|void
 name|isp_fw_dump
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|)

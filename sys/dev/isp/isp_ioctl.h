@@ -45,7 +45,7 @@ value|_IO(ISP_IOC, 2)
 end_define
 
 begin_comment
-comment|/*  * This ioctl performs a fibre chanel rescan.  */
+comment|/*  * This ioctl performs a fibre channel rescan.  */
 end_comment
 
 begin_define
@@ -138,21 +138,21 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_int8_t
+name|uint8_t
 name|isp_stat_version
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|isp_type
 decl_stmt|;
 comment|/* (ro) reflects chip type */
-name|u_int8_t
+name|uint8_t
 name|isp_revision
 decl_stmt|;
 comment|/* (ro) reflects chip version */
-name|u_int8_t
+name|uint8_t
 name|unused1
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|unused2
 decl_stmt|;
 comment|/* 	 * Statistics Counters 	 */
@@ -192,7 +192,7 @@ define|#
 directive|define
 name|ISP_FPCCHIWAT
 value|7
-name|u_int64_t
+name|uint64_t
 name|isp_stats
 index|[
 name|ISP_NSTATS
@@ -236,11 +236,11 @@ begin_struct
 struct|struct
 name|isp_fc_device
 block|{
-name|u_int32_t
+name|uint32_t
 name|loopid
 decl_stmt|;
 comment|/* 0..255 */
-name|u_int32_t
+name|uint32_t
 label|:
 literal|6
 operator|,
@@ -253,10 +253,10 @@ operator|:
 literal|24
 expr_stmt|;
 comment|/* 24 bit Port ID */
-name|u_int64_t
+name|uint64_t
 name|node_wwn
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|port_wwn
 decl_stmt|;
 block|}
@@ -296,7 +296,7 @@ begin_struct
 struct|struct
 name|isp_hba_device
 block|{
-name|u_int32_t
+name|uint32_t
 label|:
 literal|8
 operator|,
@@ -331,28 +331,28 @@ name|fc_loopid
 operator|:
 literal|8
 expr_stmt|;
-name|u_int8_t
+name|uint8_t
 name|fc_fw_major
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|fc_fw_minor
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|fc_fw_micro
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|reserved
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|nvram_node_wwn
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|nvram_port_wwn
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|active_node_wwn
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|active_port_wwn
 decl_stmt|;
 block|}
@@ -436,7 +436,7 @@ literal|16
 index|]
 decl_stmt|;
 comment|/* null terminated */
-name|u_int32_t
+name|uint32_t
 name|parameter
 decl_stmt|;
 block|}
@@ -465,11 +465,11 @@ begin_struct
 struct|struct
 name|isp_fc_tsk_mgmt
 block|{
-name|u_int32_t
+name|uint32_t
 name|loopid
 decl_stmt|;
 comment|/* 0..255 */
-name|u_int32_t
+name|uint32_t
 name|lun
 decl_stmt|;
 enum|enum

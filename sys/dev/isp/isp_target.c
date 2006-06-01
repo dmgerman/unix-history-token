@@ -3,6 +3,31 @@ begin_comment
 comment|/*-  * Machine and OS Independent Target Mode Code for the Qlogic SCSI/FC adapters.  *  * Copyright (c) 1997-2006 by Matthew Jacob  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Bug fixes gratefully acknowledged from:  *	Oded Kedem<oded@kashya.com>  */
 end_comment
@@ -33,20 +58,6 @@ ifdef|#
 directive|ifdef
 name|__FreeBSD__
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_include
 include|#
@@ -128,8 +139,7 @@ specifier|static
 name|void
 name|isp_got_msg
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|in_entry_t
@@ -143,8 +153,7 @@ specifier|static
 name|void
 name|isp_got_msg_fc
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|in_fcentry_t
@@ -158,8 +167,7 @@ specifier|static
 name|void
 name|isp_handle_atio
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|at_entry_t
@@ -173,8 +181,7 @@ specifier|static
 name|void
 name|isp_handle_atio2
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|at2_entry_t
@@ -188,8 +195,7 @@ specifier|static
 name|void
 name|isp_handle_ctio
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|ct_entry_t
@@ -203,8 +209,7 @@ specifier|static
 name|void
 name|isp_handle_ctio2
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|ct2_entry_t
@@ -225,8 +230,7 @@ begin_function
 name|int
 name|isp_target_notify
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -234,12 +238,12 @@ name|void
 modifier|*
 name|vptr
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|optrp
 parameter_list|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|status
 decl_stmt|,
 name|seqid
@@ -366,7 +370,7 @@ value|unp.hp
 block|}
 name|unp
 union|;
-name|u_int8_t
+name|uint8_t
 name|local
 index|[
 name|QENTRY_LEN
@@ -828,6 +832,9 @@ break|break;
 case|case
 name|IN_RESET
 case|:
+operator|(
+name|void
+operator|)
 name|isp_target_async
 argument_list|(
 name|isp
@@ -1080,8 +1087,7 @@ begin_function
 name|int
 name|isp_lun_cmd
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -1103,14 +1109,14 @@ parameter_list|,
 name|int
 name|inot_cnt
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|opaque
 parameter_list|)
 block|{
 name|lun_entry_t
 name|el
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|nxti
 decl_stmt|,
 name|optr
@@ -1326,12 +1332,6 @@ operator|=
 name|lun
 expr_stmt|;
 block|}
-name|el
-operator|.
-name|le_timeout
-operator|=
-literal|2
-expr_stmt|;
 if|if
 condition|(
 name|isp_getrqentry
@@ -1409,8 +1409,7 @@ begin_function
 name|int
 name|isp_target_put_entry
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -1423,12 +1422,12 @@ name|void
 modifier|*
 name|outp
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|nxti
 decl_stmt|,
 name|optr
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|etype
 init|=
 operator|(
@@ -1615,8 +1614,7 @@ begin_function
 name|int
 name|isp_target_put_atio
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -1701,7 +1699,7 @@ operator|.
 name|at_scclun
 operator|=
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|)
 name|aep
 operator|->
@@ -1717,7 +1715,7 @@ operator|.
 name|at_lun
 operator|=
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|)
 name|aep
 operator|->
@@ -1914,8 +1912,7 @@ begin_function
 name|int
 name|isp_endcmd
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -1923,10 +1920,10 @@ name|void
 modifier|*
 name|arg
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|code
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|hdl
 parameter_list|)
 block|{
@@ -2400,12 +2397,15 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * These are either broadcast events or specifically CTIO fast completion  */
+end_comment
+
 begin_function
 name|int
 name|isp_target_async
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -2436,7 +2436,6 @@ name|nt_hba
 operator|=
 name|isp
 expr_stmt|;
-comment|/* nt_str set in outer layers */
 name|notify
 operator|.
 name|nt_iid
@@ -2778,8 +2777,7 @@ specifier|static
 name|void
 name|isp_got_msg
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -2791,7 +2789,7 @@ block|{
 name|tmd_notify_t
 name|nt
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|status
 init|=
 name|inp
@@ -2818,7 +2816,6 @@ name|nt_hba
 operator|=
 name|isp
 expr_stmt|;
-comment|/* nt_str set in outer layers */
 name|nt
 operator|.
 name|nt_iid
@@ -3029,8 +3026,7 @@ specifier|static
 name|void
 name|isp_got_msg_fc
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -3058,6 +3054,9 @@ index|[]
 init|=
 literal|"unknown %s 0x%x lun %d iid 0x%08x%08x task flags 0x%x seq 0x%x\n"
 decl_stmt|;
+name|uint16_t
+name|seqid
+decl_stmt|;
 name|MEMZERO
 argument_list|(
 operator|&
@@ -3075,7 +3074,6 @@ name|nt_hba
 operator|=
 name|isp
 expr_stmt|;
-comment|/* 	 * XXX: LOOK UP TRANSLATION IN CURRENT LPORTDB 	 */
 if|if
 condition|(
 name|IS_2KLOGIN
@@ -3098,6 +3096,18 @@ operator|)
 operator|->
 name|in_iid
 expr_stmt|;
+name|seqid
+operator|=
+operator|(
+operator|(
+name|in_fcentry_e_t
+operator|*
+operator|)
+name|inp
+operator|)
+operator|->
+name|in_seqid
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -3109,7 +3119,12 @@ name|inp
 operator|->
 name|in_iid
 expr_stmt|;
-comment|/* possibly reset in outer layer */
+name|seqid
+operator|=
+name|inp
+operator|->
+name|in_seqid
+expr_stmt|;
 block|}
 comment|/* nt_tgt set in outer layers */
 if|if
@@ -3152,7 +3167,7 @@ name|nt_tagval
 argument_list|,
 literal|0
 argument_list|,
-name|inp
+name|seqid
 argument_list|)
 expr_stmt|;
 name|nt
@@ -3189,7 +3204,7 @@ operator|.
 name|nt_lun
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|nt
@@ -3200,7 +3215,7 @@ literal|32
 argument_list|)
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|nt
 operator|.
@@ -3244,7 +3259,7 @@ argument_list|,
 literal|"ABORT TASK SET"
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|nt
@@ -3255,7 +3270,7 @@ literal|32
 argument_list|)
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|nt
 operator|.
@@ -3298,7 +3313,7 @@ argument_list|,
 literal|"CLEAR TASK SET"
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|nt
@@ -3309,7 +3324,7 @@ literal|32
 argument_list|)
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|nt
 operator|.
@@ -3352,7 +3367,7 @@ argument_list|,
 literal|"LUN RESET"
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|nt
@@ -3363,7 +3378,7 @@ literal|32
 argument_list|)
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|nt
 operator|.
@@ -3406,7 +3421,7 @@ argument_list|,
 literal|"TARGET RESET"
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|nt
@@ -3417,7 +3432,7 @@ literal|32
 argument_list|)
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|nt
 operator|.
@@ -3460,7 +3475,7 @@ argument_list|,
 literal|"CLEAR ACA"
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|nt
@@ -3471,7 +3486,7 @@ literal|32
 argument_list|)
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|nt
 operator|.
@@ -3514,7 +3529,7 @@ operator|.
 name|nt_lun
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|nt
@@ -3525,7 +3540,7 @@ literal|32
 argument_list|)
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|nt
 operator|.
@@ -3569,8 +3584,7 @@ begin_function
 name|void
 name|isp_notify_ack
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -3585,7 +3599,7 @@ index|[
 name|QENTRY_LEN
 index|]
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|nxti
 decl_stmt|,
 name|optr
@@ -4009,8 +4023,7 @@ specifier|static
 name|void
 name|isp_handle_atio
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -4187,8 +4200,7 @@ specifier|static
 name|void
 name|isp_handle_atio2
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -4397,8 +4409,7 @@ specifier|static
 name|void
 name|isp_handle_ctio
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -4876,8 +4887,7 @@ specifier|static
 name|void
 name|isp_handle_ctio2
 parameter_list|(
-name|struct
-name|ispsoftc
+name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
@@ -5014,9 +5024,13 @@ name|isp
 argument_list|,
 name|ISP_LOGERR
 argument_list|,
-literal|"CTIO2 destroyed by %s"
+literal|"CTIO2 destroyed by %s: RX_ID=0x%x"
 argument_list|,
 name|fmsg
+argument_list|,
+name|ct
+operator|->
+name|ct_rxid
 argument_list|)
 expr_stmt|;
 break|break;
