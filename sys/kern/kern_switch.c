@@ -811,12 +811,6 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-name|ke
-operator|->
-name|ke_state
-operator|=
-name|KES_THREAD
-expr_stmt|;
 return|return;
 block|}
 name|td3
@@ -856,12 +850,6 @@ name|sched_rem
 argument_list|(
 name|td
 argument_list|)
-expr_stmt|;
-name|ke
-operator|->
-name|ke_state
-operator|=
-name|KES_THREAD
 expr_stmt|;
 name|td2
 operator|=
