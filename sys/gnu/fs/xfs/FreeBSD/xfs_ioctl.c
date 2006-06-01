@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"xfs_macros.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"xfs_fs.h"
 end_include
 
@@ -213,11 +219,11 @@ directive|include
 file|"xfs_fsops.h"
 end_include
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|XXXKAN
-end_if
+end_ifdef
 
 begin_comment
 comment|/*  * ioctl commands that are used by Linux filesystems  */

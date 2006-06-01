@@ -1632,8 +1632,8 @@ operator|->
 name|v_number
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|XXXKAN
 name|init_waitqueue_head
 argument_list|(
@@ -2388,8 +2388,8 @@ name|iq
 expr_stmt|;
 block|}
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|XXXKAN
 comment|/* 	 * Not sure if while i_reclaim crap is needed on 	 * FreeBSD, will revisit this later. 	 */
 comment|/* Deal with the deleted inodes list */

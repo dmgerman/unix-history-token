@@ -76,8 +76,8 @@ name|int
 name|fiopt
 parameter_list|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|XXXKAN
 name|vnode_t
 modifier|*
@@ -141,8 +141,8 @@ name|int
 name|fiopt
 parameter_list|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|XXXKAN
 name|vnode_t
 modifier|*
@@ -230,8 +230,8 @@ name|int
 name|fiopt
 parameter_list|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|XXXKAN
 name|vnode_t
 modifier|*

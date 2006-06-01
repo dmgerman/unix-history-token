@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"xfs_macros.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"xfs_types.h"
 end_include
 

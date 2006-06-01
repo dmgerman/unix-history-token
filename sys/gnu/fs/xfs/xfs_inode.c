@@ -11492,8 +11492,8 @@ name|i_pincount
 argument_list|)
 condition|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|XXXKAN
 comment|/* 		 * Should I mark FreeBSD vnode as dirty here? 		 */
 name|printf
@@ -14819,8 +14819,8 @@ argument_list|(
 name|EROFS
 argument_list|)
 return|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|XXXKAN
 if|if
 condition|(
@@ -15227,8 +15227,8 @@ name|i_update_core
 operator|=
 literal|1
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|XXXKAN
 if|if
 condition|(

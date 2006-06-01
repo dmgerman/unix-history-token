@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"xfs_macros.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"xfs_fs.h"
 end_include
 
@@ -773,8 +779,8 @@ name|end_size
 parameter_list|)
 comment|/* max file size to set */
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|XXXKAN
 name|unsigned
 name|bytes
@@ -1444,8 +1450,8 @@ argument_list|,
 name|XFS_IOLOCK_SHARED
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|XXXKAN
 if|if
 condition|(
@@ -2544,8 +2550,8 @@ modifier|*
 name|credp
 parameter_list|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|XXXKAN
 name|xfs_inode_t
 modifier|*

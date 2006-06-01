@@ -1541,8 +1541,8 @@ name|XFS_ILOG_DBROOT
 expr_stmt|;
 break|break;
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|XXXKAN
 comment|/* Not necessary, vnodes are vrefed already by fgetvp */
 comment|/* 	 * Increment vnode ref counts since xfs_trans_commit& 	 * xfs_trans_cancel will both unlock the inodes and 	 * decrement the associated ref counts. 	 */

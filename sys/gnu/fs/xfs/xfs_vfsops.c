@@ -3313,8 +3313,8 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|XXXKAN
 comment|/* not defined for FreeBSD */
 name|statp

@@ -11217,8 +11217,8 @@ modifier|*
 name|cred
 parameter_list|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|XXXKAN
 name|struct
 name|inode
@@ -11335,8 +11335,8 @@ modifier|*
 name|cred
 parameter_list|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|XXXKAN
 name|struct
 name|inode
@@ -11485,8 +11485,8 @@ argument_list|,
 name|xflags
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|XXXKAN
 if|if
 condition|(

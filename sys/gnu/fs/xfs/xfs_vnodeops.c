@@ -13040,8 +13040,8 @@ name|gdqp
 operator|=
 name|NULL
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|XXXKAN
 if|if
 condition|(

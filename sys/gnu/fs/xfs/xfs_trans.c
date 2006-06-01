@@ -2190,8 +2190,8 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|XXXKAN
 name|XFS_MTOVFS
 argument_list|(
