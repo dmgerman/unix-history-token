@@ -2503,7 +2503,7 @@ parameter_list|(
 name|mask
 parameter_list|)
 define|\
-value|(__set_cpsr_c((mask | F32_bit)& (I32_bit | F32_bit), 0))
+value|(__set_cpsr_c((mask)& (I32_bit | F32_bit), 0))
 end_define
 
 begin_define
