@@ -2079,7 +2079,6 @@ argument_list|(
 name|Maxmem
 argument_list|)
 condition|)
-block|{
 name|free
 argument_list|(
 name|vaddr
@@ -2102,7 +2101,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * Utility function to load a linear buffer.  lastaddrp holds state  * between invocations (for multiple-buffer loads).  segp contains  * the starting segment on entrace, and the ending segment on exit.  * first indicates if this is the first invocation of this function.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|_bus_dmamap_load_buffer
@@ -2738,7 +2743,13 @@ operator|)
 return|;
 comment|/* XXX better return value here? */
 block|}
+end_function
+
+begin_comment
 comment|/*  * Map the buffer buf into bus space using the dmamap map.  */
+end_comment
+
+begin_function
 name|int
 name|bus_dmamap_load
 parameter_list|(
@@ -2888,7 +2899,13 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Like _bus_dmamap_load(), but for mbufs.  */
+end_comment
+
+begin_function
 name|int
 name|bus_dmamap_load_mbuf
 parameter_list|(
@@ -3100,6 +3117,9 @@ name|error
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|int
 name|bus_dmamap_load_mbuf_sg
 parameter_list|(
@@ -3259,7 +3279,13 @@ name|error
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Like _bus_dmamap_load(), but for uios.  */
+end_comment
+
+begin_function
 name|int
 name|bus_dmamap_load_uio
 parameter_list|(
@@ -3528,7 +3554,13 @@ name|error
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Release the mapping held by map.  */
+end_comment
+
+begin_function
 name|void
 name|_bus_dmamap_unload
 parameter_list|(
@@ -3580,6 +3612,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 name|void
 name|_bus_dmamap_sync
 parameter_list|(
@@ -3717,6 +3752,9 @@ block|}
 block|}
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|init_bounce_pages
@@ -3774,6 +3812,9 @@ name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
 name|bpages
@@ -3787,6 +3828,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_function
 specifier|static
 name|int
 name|alloc_bounce_pages
@@ -3944,6 +3988,9 @@ name|count
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|reserve_bounce_pages
@@ -4047,6 +4094,9 @@ name|pages
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bus_addr_t
 name|add_bounce_page
@@ -4202,6 +4252,9 @@ name|busaddr
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|free_bounce_page
@@ -4326,6 +4379,9 @@ name|bounce_lock
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|busdma_swi
 parameter_list|(
