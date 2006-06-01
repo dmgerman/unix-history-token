@@ -180,6 +180,10 @@ literal|"from"
 block|,
 literal|"export"
 block|,
+literal|"force"
+block|,
+literal|"sync"
+block|,
 literal|"uid"
 block|,
 literal|"gid"
