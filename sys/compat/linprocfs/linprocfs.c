@@ -826,10 +826,11 @@ expr_stmt|;
 break|break;
 else|#
 directive|else
+comment|/* __amd64__ */
 default|default:
 name|class
 operator|=
-literal|6
+literal|15
 expr_stmt|;
 break|break;
 endif|#
