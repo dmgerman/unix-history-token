@@ -515,6 +515,13 @@ goto|goto
 name|err
 goto|;
 block|}
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Create a separate process, the client code is really a separate 	 * daemon that shares a lot of code. 	 */
 switch|switch
 condition|(
