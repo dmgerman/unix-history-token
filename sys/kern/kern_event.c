@@ -4194,6 +4194,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|KQ_UNLOCK
+argument_list|(
+name|kq
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|ENOMEM
