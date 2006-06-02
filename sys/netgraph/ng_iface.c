@@ -1621,11 +1621,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|ifp
 operator|->
 name|if_bpf
-operator|!=
-name|NULL
+argument_list|)
 condition|)
 block|{
 name|int32_t

@@ -10612,11 +10612,12 @@ continue|continue;
 block|}
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|ic
 operator|->
 name|ic_rawbpf
-operator|!=
-name|NULL
+argument_list|)
 condition|)
 name|bpf_mtap
 argument_list|(

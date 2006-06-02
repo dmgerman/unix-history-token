@@ -8277,7 +8277,7 @@ name|LMC_BPF_MTAP
 parameter_list|(
 name|mbuf
 parameter_list|)
-value|if (sc->ifp->if_bpf) bpf_mtap(sc->ifp->if_bpf, mbuf)
+value|BPF_MTAP(sc->ifp, mbuf)
 end_define
 
 begin_else
