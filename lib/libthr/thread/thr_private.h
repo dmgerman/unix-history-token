@@ -334,14 +334,6 @@ decl_stmt|;
 name|int
 name|m_protocol
 decl_stmt|;
-name|TAILQ_HEAD
-argument_list|(
-argument|mutex_head
-argument_list|,
-argument|pthread
-argument_list|)
-name|m_queue
-expr_stmt|;
 name|struct
 name|pthread
 modifier|*
