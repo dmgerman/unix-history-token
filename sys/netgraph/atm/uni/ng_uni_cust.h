@@ -381,7 +381,7 @@ define|#
 directive|define
 name|UNICORE
 define|\
-value|size_t unimem_sizes[UNIMEM_TYPES] = {					\ 	[UNIMEM_INS]	sizeof(struct uni),				\ 	[UNIMEM_ALL]	sizeof(struct uni_all),				\ 	[UNIMEM_SIG]	sizeof(struct sig),				\ 	[UNIMEM_CALL]	sizeof(struct call),				\ 	[UNIMEM_PARTY]	sizeof(struct party)				\ };
+value|size_t unimem_sizes[UNIMEM_TYPES] = {					\ 	[UNIMEM_INS]	= sizeof(struct uni),				\ 	[UNIMEM_ALL]	= sizeof(struct uni_all),			\ 	[UNIMEM_SIG]	= sizeof(struct sig),				\ 	[UNIMEM_CALL]	= sizeof(struct call),				\ 	[UNIMEM_PARTY]	= sizeof(struct party)				\ };
 end_define
 
 begin_define
