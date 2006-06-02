@@ -334,7 +334,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Disconnect and possibly release resources.  */
+comment|/*  * Disconnect raw socket.  */
 end_comment
 
 begin_function
@@ -376,21 +376,6 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|rp
-operator|->
-name|rcb_socket
-operator|->
-name|so_state
-operator|&
-name|SS_NOFDREF
-condition|)
-name|raw_detach
-argument_list|(
-name|rp
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

@@ -488,6 +488,11 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+name|raw_detach
+argument_list|(
+name|rp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
