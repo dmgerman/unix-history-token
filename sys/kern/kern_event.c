@@ -8188,6 +8188,9 @@ name|struct
 name|knote
 modifier|*
 name|kn
+decl_stmt|,
+modifier|*
+name|kn2
 decl_stmt|;
 name|struct
 name|kqueue
@@ -8223,13 +8226,15 @@ name|kl_lockarg
 argument_list|)
 expr_stmt|;
 block|}
-name|SLIST_FOREACH
+name|SLIST_FOREACH_SAFE
 argument_list|(
 argument|kn
 argument_list|,
 argument|&knl->kl_list
 argument_list|,
 argument|kn_selnext
+argument_list|,
+argument|kn2
 argument_list|)
 block|{
 name|kq
