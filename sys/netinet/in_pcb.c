@@ -5713,7 +5713,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ipport_tick runs once per second, determining if random port  * allocation should be continued.  If more than ipport_randomcps  * ports have been allocated in the last second, then we return to  * sequential port allocation. We return to random allocation only  * once we drop below ipport_randomcps for at least ipport_randomtime  * seconds.  */
+comment|/*  * ipport_tick runs once per second, determining if random port allocation  * should be continued.  If more than ipport_randomcps ports have been  * allocated in the last second, then we return to sequential port  * allocation. We return to random allocation only once we drop below  * ipport_randomcps for at least ipport_randomtime seconds.  */
 end_comment
 
 begin_function
@@ -5728,18 +5728,11 @@ block|{
 if|if
 condition|(
 name|ipport_tcpallocs
-operator|>
+operator|<=
 name|ipport_tcplastcount
 operator|+
 name|ipport_randomcps
 condition|)
-block|{
-name|ipport_stoprandom
-operator|=
-name|ipport_randomtime
-expr_stmt|;
-block|}
-else|else
 block|{
 if|if
 condition|(
@@ -5751,6 +5744,11 @@ name|ipport_stoprandom
 operator|--
 expr_stmt|;
 block|}
+else|else
+name|ipport_stoprandom
+operator|=
+name|ipport_randomtime
+expr_stmt|;
 name|ipport_tcplastcount
 operator|=
 name|ipport_tcpallocs
