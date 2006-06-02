@@ -9953,7 +9953,9 @@ operator|=
 operator|(
 name|uintptr_t
 operator|)
-name|lj
+name|uap
+operator|->
+name|acb_list
 expr_stmt|;
 comment|/* something unique */
 name|kev
