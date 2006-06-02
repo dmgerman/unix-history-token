@@ -1698,10 +1698,11 @@ name|outofbeer
 operator|:
 literal|1
 operator|,
+name|disabled
 operator|:
 literal|1
 operator|,
-name|disabled
+name|is_spi
 operator|:
 literal|1
 operator|,
@@ -1781,6 +1782,23 @@ decl_stmt|;
 name|uint16_t
 name|_disc_enable
 decl_stmt|;
+struct|struct
+block|{
+name|uint8_t
+name|inqdata
+index|[
+literal|39
+index|]
+decl_stmt|;
+name|uint8_t
+name|state
+decl_stmt|;
+block|}
+name|_dv
+index|[
+literal|16
+index|]
+struct|;
 block|}
 name|spi
 struct|;
@@ -1812,6 +1830,22 @@ define|#
 directive|define
 name|mpt_disc_enable
 value|cfg.spi._disc_enable
+define|#
+directive|define
+name|mpt_dv
+value|cfg.spi._dv
+define|#
+directive|define
+name|DV_STATE_0
+value|0
+define|#
+directive|define
+name|DV_STATE_1
+value|1
+define|#
+directive|define
+name|DV_STATE_DONE
+value|0xff
 struct|struct
 name|mpi_fc_cfg
 block|{
@@ -2109,7 +2143,7 @@ comment|/* DMA map for firmware image */
 name|bus_addr_t
 name|fw_phys
 decl_stmt|;
-comment|/* BusAddr of request memory */
+comment|/* BusAddr of firmware image */
 comment|/* Shutdown Event Handler. */
 name|eventhandler_tag
 name|eh

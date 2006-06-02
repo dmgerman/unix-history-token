@@ -1371,6 +1371,12 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
+name|mpt
+operator|->
+name|is_spi
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 block|}
 name|mpt
