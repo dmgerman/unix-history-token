@@ -1769,11 +1769,51 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_struct_decl
-struct_decl|struct
+begin_comment
+comment|/*  * Descriptor associated with each attached hardware interface.  */
+end_comment
+
+begin_struct
+struct|struct
 name|bpf_if
-struct_decl|;
-end_struct_decl
+block|{
+name|LIST_ENTRY
+argument_list|(
+argument|bpf_if
+argument_list|)
+name|bif_next
+expr_stmt|;
+comment|/* list of all interfaces */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|bpf_d
+argument_list|)
+name|bif_dlist
+expr_stmt|;
+comment|/* descriptor list */
+name|u_int
+name|bif_dlt
+decl_stmt|;
+comment|/* link layer type */
+name|u_int
+name|bif_hdrlen
+decl_stmt|;
+comment|/* length of header (with padding) */
+name|struct
+name|ifnet
+modifier|*
+name|bif_ifp
+decl_stmt|;
+comment|/* corresponding interface */
+name|struct
+name|mtx
+name|bif_mtx
+decl_stmt|;
+comment|/* mutex for interface */
+block|}
+struct|;
+end_struct
 
 begin_function_decl
 name|int
@@ -1914,6 +1954,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function
+specifier|static
+name|__inline
+name|int
+name|bpf_peers_present
+parameter_list|(
+name|struct
+name|bpf_if
+modifier|*
+name|bpf
+parameter_list|)
+block|{
+return|return
+operator|!
+name|LIST_EMPTY
+argument_list|(
+operator|&
+name|bpf
+operator|->
+name|bif_dlist
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_define
 define|#
 directive|define
@@ -1925,7 +1990,7 @@ name|_pkt
 parameter_list|,
 name|_pktlen
 parameter_list|)
-value|do {				\ 	if ((_ifp)->if_bpf)					\ 		bpf_tap((_ifp)->if_bpf, (_pkt), (_pktlen));	\ } while (0)
+value|do {				\ 	if (bpf_peers_present((_ifp)->if_bpf))			\ 		bpf_tap((_ifp)->if_bpf, (_pkt), (_pktlen));	\ } while (0)
 end_define
 
 begin_define
@@ -1937,7 +2002,7 @@ name|_ifp
 parameter_list|,
 name|_m
 parameter_list|)
-value|do {					\ 	if ((_ifp)->if_bpf) {					\ 		M_ASSERTVALID(_m);				\ 		bpf_mtap((_ifp)->if_bpf, (_m));			\ 	}							\ } while (0)
+value|do {					\ 	if (bpf_peers_present((_ifp)->if_bpf)) {		\ 		M_ASSERTVALID(_m);				\ 		bpf_mtap((_ifp)->if_bpf, (_m));			\ 	}							\ } while (0)
 end_define
 
 begin_define
@@ -1953,7 +2018,7 @@ name|_dlen
 parameter_list|,
 name|_m
 parameter_list|)
-value|do {			\ 	if ((_ifp)->if_bpf) {					\ 		M_ASSERTVALID(_m);				\ 		bpf_mtap2((_ifp)->if_bpf,(_data),(_dlen),(_m));	\ 	}							\ } while (0)
+value|do {			\ 	if (bpf_peers_present((_ifp)->if_bpf)) {		\ 		M_ASSERTVALID(_m);				\ 		bpf_mtap2((_ifp)->if_bpf,(_data),(_dlen),(_m));	\ 	}							\ } while (0)
 end_define
 
 begin_endif

@@ -5033,9 +5033,12 @@ operator|>
 literal|0
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|ic
 operator|->
 name|ic_rawbpf
+argument_list|)
 condition|)
 name|bpf_mtap
 argument_list|(
@@ -5140,9 +5143,12 @@ operator|>
 literal|0
 if|if
 condition|(
-name|sc
+name|bpf_peers_present
+argument_list|(
+name|ic
 operator|->
-name|sc_drvbpf
+name|ic_rawbpf
+argument_list|)
 condition|)
 block|{
 name|sc
@@ -7892,9 +7898,12 @@ operator|>
 literal|0
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|sc
 operator|->
 name|sc_drvbpf
+argument_list|)
 condition|)
 block|{
 comment|/* XXX replace divide by table */

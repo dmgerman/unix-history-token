@@ -2771,12 +2771,15 @@ return|;
 comment|/* 		 * We do the header compression here rather than in sloutput 		 * because the packets will be out of order if we are using TOS 		 * queueing, and the connection id compression will get 		 * munged when this happens. 		 */
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|SL2IFP
 argument_list|(
 name|sc
 argument_list|)
 operator|->
 name|if_bpf
+argument_list|)
 condition|)
 block|{
 comment|/* 			 * We need to save the TCP/IP header before it's 			 * compressed.  To avoid complicated code, we just 			 * copy the entire packet into a stack buffer (since 			 * this is a serial line, packets should be short 			 * and/or the copy should be negligible cost compared 			 * to the packet transmission time). 			 */
@@ -2949,12 +2952,15 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|SL2IFP
 argument_list|(
 name|sc
 argument_list|)
 operator|->
 name|if_bpf
+argument_list|)
 operator|&&
 name|sc
 operator|->
@@ -3821,12 +3827,15 @@ name|newpack
 goto|;
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|SL2IFP
 argument_list|(
 name|sc
 argument_list|)
 operator|->
 name|if_bpf
+argument_list|)
 condition|)
 block|{
 comment|/* 			 * Save the compressed header, so we 			 * can tack it on later.  Note that we 			 * will end up copying garbage in some 			 * cases but this is okay.  We remember 			 * where the buffer started so we can 			 * compute the new header length. 			 */
@@ -4005,12 +4014,15 @@ goto|;
 block|}
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|SL2IFP
 argument_list|(
 name|sc
 argument_list|)
 operator|->
 name|if_bpf
+argument_list|)
 condition|)
 block|{
 comment|/* 			 * Put the SLIP pseudo-"link header" in place. 			 * We couldn't do this any earlier since 			 * decompression probably moved the buffer 			 * pointer.  Then, invoke BPF. 			 */

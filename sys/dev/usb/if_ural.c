@@ -5309,11 +5309,12 @@ expr_stmt|;
 comment|/* h/w leaves FCS */
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|sc
 operator|->
 name|sc_drvbpf
-operator|!=
-name|NULL
+argument_list|)
 condition|)
 block|{
 name|struct
@@ -6538,11 +6539,12 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|sc
 operator|->
 name|sc_drvbpf
-operator|!=
-name|NULL
+argument_list|)
 condition|)
 block|{
 name|struct
@@ -7028,11 +7030,12 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|sc
 operator|->
 name|sc_drvbpf
-operator|!=
-name|NULL
+argument_list|)
 condition|)
 block|{
 name|struct
