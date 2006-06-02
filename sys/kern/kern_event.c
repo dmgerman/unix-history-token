@@ -3906,7 +3906,7 @@ operator|=
 name|EINVAL
 expr_stmt|;
 goto|goto
-name|done_noglobal
+name|done
 goto|;
 block|}
 name|KQ_GLOBAL_LOCK
@@ -4593,8 +4593,6 @@ argument_list|,
 name|haskqglobal
 argument_list|)
 expr_stmt|;
-name|done_noglobal
-label|:
 if|if
 condition|(
 name|fp
