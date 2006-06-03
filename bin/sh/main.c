@@ -1133,6 +1133,21 @@ name|strlist
 modifier|*
 name|sp
 decl_stmt|;
+name|char
+modifier|*
+name|fullname
+decl_stmt|;
+if|if
+condition|(
+name|argc
+operator|<
+literal|2
+condition|)
+name|error
+argument_list|(
+literal|"missing filename"
+argument_list|)
+expr_stmt|;
 name|exitstatus
 operator|=
 literal|0
@@ -1165,18 +1180,8 @@ operator||
 name|VTEXTFIXED
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|argc
-operator|>=
-literal|2
-condition|)
-block|{
-comment|/* That's what SVR2 does */
-name|char
-modifier|*
 name|fullname
-init|=
+operator|=
 name|find_dot_file
 argument_list|(
 name|argv
@@ -1184,7 +1189,7 @@ index|[
 literal|1
 index|]
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|setinputfile
 argument_list|(
 name|fullname
@@ -1204,7 +1209,6 @@ expr_stmt|;
 name|popfile
 argument_list|()
 expr_stmt|;
-block|}
 return|return
 name|exitstatus
 return|;

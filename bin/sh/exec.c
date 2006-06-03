@@ -241,6 +241,10 @@ name|param
 name|param
 decl_stmt|;
 comment|/* definition of builtin function */
+name|int
+name|special
+decl_stmt|;
+comment|/* flag for special builtin commands */
 name|short
 name|cmdtype
 decl_stmt|;
@@ -1372,6 +1376,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|int
+name|spec
+decl_stmt|;
 comment|/* If name contains a slash, don't use the hash table */
 if|if
 condition|(
@@ -1439,6 +1446,9 @@ operator|=
 name|find_builtin
 argument_list|(
 name|name
+argument_list|,
+operator|&
+name|spec
 argument_list|)
 operator|)
 operator|>=
@@ -1469,6 +1479,12 @@ operator|.
 name|index
 operator|=
 name|i
+expr_stmt|;
+name|cmdp
+operator|->
+name|special
+operator|=
+name|spec
 expr_stmt|;
 name|INTON
 expr_stmt|;
@@ -1570,6 +1586,9 @@ operator|=
 name|find_builtin
 argument_list|(
 name|name
+argument_list|,
+operator|&
+name|spec
 argument_list|)
 operator|)
 operator|<
@@ -1602,6 +1621,12 @@ operator|.
 name|index
 operator|=
 name|i
+expr_stmt|;
+name|cmdp
+operator|->
+name|special
+operator|=
+name|spec
 expr_stmt|;
 name|INTON
 expr_stmt|;
@@ -1973,6 +1998,14 @@ name|cmdp
 operator|->
 name|param
 expr_stmt|;
+name|entry
+operator|->
+name|special
+operator|=
+name|cmdp
+operator|->
+name|special
+expr_stmt|;
 block|}
 end_function
 
@@ -1987,6 +2020,10 @@ parameter_list|(
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|int
+modifier|*
+name|special
 parameter_list|)
 block|{
 specifier|const
@@ -2028,11 +2065,20 @@ argument_list|,
 name|name
 argument_list|)
 condition|)
+block|{
+operator|*
+name|special
+operator|=
+name|bp
+operator|->
+name|special
+expr_stmt|;
 return|return
 name|bp
 operator|->
 name|code
 return|;
+block|}
 block|}
 return|return
 operator|-
