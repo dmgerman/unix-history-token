@@ -6848,7 +6848,11 @@ name|secbus
 operator|=
 name|value
 expr_stmt|;
-break|break;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 return|return
 operator|(
