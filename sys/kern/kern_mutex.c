@@ -2897,14 +2897,9 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-if|if
+while|while
 condition|(
+operator|!
 name|_obtain_lock
 argument_list|(
 name|m
@@ -2912,7 +2907,7 @@ argument_list|,
 name|tid
 argument_list|)
 condition|)
-break|break;
+block|{
 comment|/* Give interrupts a chance while we spin. */
 name|spinlock_exit
 argument_list|()
