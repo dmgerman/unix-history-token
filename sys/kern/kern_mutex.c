@@ -237,7 +237,7 @@ name|mtx_owner
 parameter_list|(
 name|m
 parameter_list|)
-value|((struct thread *)((m)->mtx_lock& (MTX_FLAGMASK|MTX_UNOWNED)))
+value|((struct thread *)((m)->mtx_lock& ~MTX_FLAGMASK))
 end_define
 
 begin_ifdef
@@ -2645,6 +2645,7 @@ operator|)
 operator|(
 name|v
 operator|&
+operator|~
 name|MTX_FLAGMASK
 operator|)
 expr_stmt|;

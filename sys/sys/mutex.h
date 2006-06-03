@@ -208,7 +208,7 @@ begin_define
 define|#
 directive|define
 name|MTX_FLAGMASK
-value|~(MTX_RECURSED | MTX_CONTESTED)
+value|(MTX_RECURSED | MTX_CONTESTED | MTX_UNOWNED)
 end_define
 
 begin_endif
@@ -1239,7 +1239,7 @@ name|mtx_owned
 parameter_list|(
 name|m
 parameter_list|)
-value|(((m)->mtx_lock& MTX_FLAGMASK) == (uintptr_t)curthread)
+value|(((m)->mtx_lock& ~MTX_FLAGMASK) == (uintptr_t)curthread)
 end_define
 
 begin_define
