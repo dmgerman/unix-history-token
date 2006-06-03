@@ -237,7 +237,7 @@ name|mtx_owner
 parameter_list|(
 name|m
 parameter_list|)
-value|(mtx_unowned((m)) ? NULL \ 	: (struct thread *)((m)->mtx_lock& MTX_FLAGMASK))
+value|((struct thread *)((m)->mtx_lock& (MTX_FLAGMASK|MTX_UNOWNED)))
 end_define
 
 begin_ifdef
