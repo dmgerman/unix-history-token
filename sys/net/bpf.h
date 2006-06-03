@@ -1769,6 +1769,18 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|"opt_bpf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_netgraph.h"
+end_include
+
 begin_comment
 comment|/*  * Descriptor associated with each attached hardware interface.  */
 end_comment
