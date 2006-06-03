@@ -845,13 +845,6 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|device_shutdown
-argument_list|,
-name|cbb_shutdown
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
 name|device_suspend
 argument_list|,
 name|cbb_suspend
