@@ -1769,18 +1769,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|"opt_bpf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_netgraph.h"
-end_include
-
 begin_comment
 comment|/*  * Descriptor associated with each attached hardware interface.  */
 end_comment
@@ -1978,19 +1966,10 @@ modifier|*
 name|bpf
 parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|DEV_BPF
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|NETGRAPH_BPF
-argument_list|)
-return|return
-operator|(
+if|if
+condition|(
+name|bpf
+operator|&&
 operator|!
 name|LIST_EMPTY
 argument_list|(
@@ -1999,18 +1978,17 @@ name|bpf
 operator|->
 name|bif_dlist
 argument_list|)
+condition|)
+return|return
+operator|(
+literal|1
 operator|)
 return|;
-else|#
-directive|else
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-endif|#
-directive|endif
-comment|/* DEV_BPF || NETGRAPH_BPF */
 block|}
 end_function
 
