@@ -1369,6 +1369,32 @@ literal|"mi_switch: preempting back to ourself"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Don't perform context switches from the debugger. 	 */
+if|if
+condition|(
+name|kdb_active
+condition|)
+block|{
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
+name|kdb_backtrace
+argument_list|()
+expr_stmt|;
+name|kdb_reenter
+argument_list|()
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"%s: did not reenter debugger"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|flags
@@ -1469,32 +1495,6 @@ name|td_generation
 operator|++
 expr_stmt|;
 comment|/* bump preempt-detect counter */
-comment|/* 	 * Don't perform context switches from the debugger. 	 */
-if|if
-condition|(
-name|kdb_active
-condition|)
-block|{
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
-name|kdb_backtrace
-argument_list|()
-expr_stmt|;
-name|kdb_reenter
-argument_list|()
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"%s: did not reenter debugger"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Check if the process exceeds its cpu resource allocation.  If 	 * it reaches the max, arrange to kill the process in ast(). 	 */
 if|if
 condition|(
