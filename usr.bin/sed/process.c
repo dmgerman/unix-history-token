@@ -905,10 +905,6 @@ condition|)
 break|break;
 if|if
 condition|(
-name|psl
-operator|!=
-literal|0
-operator|&&
 operator|(
 name|p
 operator|=
