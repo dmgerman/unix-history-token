@@ -881,10 +881,6 @@ specifier|volatile
 name|int
 name|allocated
 decl_stmt|;
-specifier|volatile
-name|int
-name|count
-decl_stmt|;
 name|int
 name|seqno
 decl_stmt|;
