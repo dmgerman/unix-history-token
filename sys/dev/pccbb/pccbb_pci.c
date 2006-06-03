@@ -1885,9 +1885,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"cbb: Unable to map IRQ...\n"
+name|brdev
+argument_list|,
+literal|"Unable to map IRQ...\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1923,7 +1925,7 @@ name|device_printf
 argument_list|(
 name|brdev
 argument_list|,
-literal|"couldn't establish interrupt"
+literal|"couldn't establish interrupt\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2006,7 +2008,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"%s"
+literal|"%s event thread"
 argument_list|,
 name|device_get_nameunit
 argument_list|(
