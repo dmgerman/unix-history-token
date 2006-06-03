@@ -2868,7 +2868,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%4lu "
+literal|"%5lu "
 argument_list|,
 operator|(
 name|unsigned
@@ -2980,7 +2980,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%3lu "
+literal|"%5lu "
 argument_list|,
 operator|(
 name|unsigned
@@ -3029,7 +3029,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%4lu %4lu %3lu "
+literal|"%4lu %4lu %4lu "
 argument_list|,
 operator|(
 name|unsigned
@@ -3237,7 +3237,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" r b w     avm    fre  flt  re  pi  po  fr  sr "
+literal|" r b w     avm    fre   flt  re  pi  po    fr  sr "
 argument_list|)
 expr_stmt|;
 for|for
@@ -3315,7 +3315,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"  in   sy  cs us sy id\n"
+literal|"  in   sy   cs us sy id\n"
 argument_list|)
 expr_stmt|;
 name|hdrcnt
