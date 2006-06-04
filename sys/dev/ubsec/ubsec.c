@@ -2819,6 +2819,14 @@ operator|->
 name|sc_mcr1lock
 argument_list|)
 expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_freeqlock
+argument_list|)
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|UBSEC_NO_RNG
