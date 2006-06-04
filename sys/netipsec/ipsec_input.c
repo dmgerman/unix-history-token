@@ -1535,6 +1535,9 @@ name|ip
 operator|->
 name|ip_p
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
 comment|/* IP-in-IP encapsulation */
 if|if
 condition|(
@@ -1613,9 +1616,6 @@ operator|&
 name|ipn
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 comment|/* XXX PROXY address isn't recorded in SAH */
 comment|/* 		 * Check that the inner source address is the same as 		 * the proxy address, if available. 		 */
 if|if
@@ -1750,9 +1750,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-endif|#
-directive|endif
-comment|/*XXX*/
 block|}
 if|#
 directive|if
@@ -1835,9 +1832,6 @@ operator|&
 name|ip6n
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 comment|/* 		 * Check that the inner source address is the same as 		 * the proxy address, if available. 		 */
 if|if
 condition|(
@@ -1977,13 +1971,13 @@ goto|goto
 name|bad
 goto|;
 block|}
-endif|#
-directive|endif
-comment|/*XXX*/
 block|}
 endif|#
 directive|endif
 comment|/* INET6 */
+endif|#
+directive|endif
+comment|/*XXX*/
 comment|/* 	 * Record what we've done to the packet (under what SA it was 	 * processed). If we've been passed an mtag, it means the packet 	 * was already processed by an ethernet/crypto combo card and 	 * thus has a tag attached with all the right information, but 	 * with a PACKET_TAG_IPSEC_IN_CRYPTO_DONE as opposed to 	 * PACKET_TAG_IPSEC_IN_DONE type; in that case, just change the type. 	 */
 if|if
 condition|(
@@ -2841,6 +2835,9 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
+name|notyet
+ifdef|#
+directive|ifdef
 name|INET
 comment|/* IP-in-IP encapsulation */
 if|if
@@ -2916,9 +2913,6 @@ operator|&
 name|ipn
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 comment|/* 		 * Check that the inner source address is the same as 		 * the proxy address, if available. 		 */
 if|if
 condition|(
@@ -3053,9 +3047,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-endif|#
-directive|endif
-comment|/*XXX*/
 block|}
 endif|#
 directive|endif
@@ -3134,9 +3125,6 @@ operator|&
 name|ip6n
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 comment|/* 		 * Check that the inner source address is the same as 		 * the proxy address, if available. 		 */
 if|if
 condition|(
@@ -3276,10 +3264,10 @@ goto|goto
 name|bad
 goto|;
 block|}
+block|}
 endif|#
 directive|endif
 comment|/*XXX*/
-block|}
 comment|/* 	 * Record what we've done to the packet (under what SA it was 	 * processed). If we've been passed an mtag, it means the packet 	 * was already processed by an ethernet/crypto combo card and 	 * thus has a tag attached with all the right information, but 	 * with a PACKET_TAG_IPSEC_IN_CRYPTO_DONE as opposed to 	 * PACKET_TAG_IPSEC_IN_DONE type; in that case, just change the type. 	 */
 if|if
 condition|(
