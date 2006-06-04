@@ -182,13 +182,6 @@ name|SHA2_512_HMAC_BLOCK_LEN
 value|128
 end_define
 
-begin_define
-define|#
-directive|define
-name|HMAC_BLOCK_LEN
-value|64
-end_define
-
 begin_comment
 comment|/* Maximum HMAC block length */
 end_comment

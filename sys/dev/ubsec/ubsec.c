@@ -4531,7 +4531,7 @@ name|md5ctx
 argument_list|,
 name|hmac_ipad_buffer
 argument_list|,
-name|HMAC_BLOCK_LEN
+name|MD5_HMAC_BLOCK_LEN
 operator|-
 name|klen
 argument_list|)
@@ -4580,7 +4580,7 @@ name|sha1ctx
 argument_list|,
 name|hmac_ipad_buffer
 argument_list|,
-name|HMAC_BLOCK_LEN
+name|SHA1_HMAC_BLOCK_LEN
 operator|-
 name|klen
 argument_list|)
@@ -4662,7 +4662,7 @@ name|md5ctx
 argument_list|,
 name|hmac_opad_buffer
 argument_list|,
-name|HMAC_BLOCK_LEN
+name|MD5_HMAC_BLOCK_LEN
 operator|-
 name|klen
 argument_list|)
@@ -4711,7 +4711,7 @@ name|sha1ctx
 argument_list|,
 name|hmac_opad_buffer
 argument_list|,
-name|HMAC_BLOCK_LEN
+name|SHA1_HMAC_BLOCK_LEN
 operator|-
 name|klen
 argument_list|)
