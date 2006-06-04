@@ -282,7 +282,7 @@ begin_define
 define|#
 directive|define
 name|EALG_MAX_BLOCK_LEN
-value|16
+value|AES_BLOCK_LEN
 end_define
 
 begin_comment
@@ -583,13 +583,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|CRYPTO_MAX_MAC_LEN
-value|20
-end_define
 
 begin_comment
 comment|/* bignum parameter, in packed bytes, ... */
