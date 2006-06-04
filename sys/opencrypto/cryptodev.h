@@ -189,12 +189,20 @@ name|HMAC_BLOCK_LEN
 value|64
 end_define
 
+begin_comment
+comment|/* Maximum HMAC block length */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|HMAC_BLOCK_MAXLEN
-value|128
+name|HMAC_MAX_BLOCK_LEN
+value|SHA2_512_HMAC_BLOCK_LEN
 end_define
+
+begin_comment
+comment|/* Keep this updated */
+end_comment
 
 begin_define
 define|#

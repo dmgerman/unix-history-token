@@ -4587,7 +4587,7 @@ name|hmac_ipad_buffer
 operator|=
 name|malloc
 argument_list|(
-name|HMAC_BLOCK_MAXLEN
+name|HMAC_MAX_BLOCK_LEN
 argument_list|,
 name|M_CRYPTO_DATA
 argument_list|,
@@ -4602,7 +4602,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|HMAC_BLOCK_MAXLEN
+name|HMAC_MAX_BLOCK_LEN
 condition|;
 name|i
 operator|++
@@ -4618,7 +4618,7 @@ name|hmac_opad_buffer
 operator|=
 name|malloc
 argument_list|(
-name|HMAC_BLOCK_MAXLEN
+name|HMAC_MAX_BLOCK_LEN
 argument_list|,
 name|M_CRYPTO_DATA
 argument_list|,
@@ -4633,7 +4633,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|HMAC_BLOCK_MAXLEN
+name|HMAC_MAX_BLOCK_LEN
 condition|;
 name|i
 operator|++
