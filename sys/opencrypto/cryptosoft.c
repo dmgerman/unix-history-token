@@ -171,42 +171,6 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|COPYBACK
-parameter_list|(
-name|type
-parameter_list|,
-name|buf
-parameter_list|,
-name|off
-parameter_list|,
-name|size
-parameter_list|,
-name|in
-parameter_list|)
-value|do {			\ 	switch (type) {							\ 	case CRYPTO_BUF_CONTIG:						\ 		bcopy(in, (u_char *)(buf) + (off), size);		\ 		break;							\ 	case CRYPTO_BUF_MBUF:						\ 		m_copyback((struct mbuf *)(buf), off, size, in);	\ 		break;							\ 	case CRYPTO_BUF_IOV:						\ 		cuio_copyback((struct uio *)(buf), off, size, in);	\ 		break;							\ 	}								\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|COPYDATA
-parameter_list|(
-name|type
-parameter_list|,
-name|buf
-parameter_list|,
-name|off
-parameter_list|,
-name|size
-parameter_list|,
-name|out
-parameter_list|)
-value|do {			\ 	switch (type) {							\ 	case CRYPTO_BUF_CONTIG:						\ 		bcopy((u_char *)(buf) + (off), out, size);		\ 		break;							\ 	case CRYPTO_BUF_MBUF:						\ 		m_copydata((struct mbuf *)(buf), off, size, out);	\ 		break;							\ 	case CRYPTO_BUF_IOV:						\ 		cuio_copydata((struct uio *)(buf), off, size, out);	\ 		break;							\ 	}								\ } while (0)
-end_define
-
 begin_function_decl
 specifier|static
 name|int
