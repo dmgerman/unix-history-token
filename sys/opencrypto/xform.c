@@ -743,7 +743,7 @@ block|,
 literal|"NULL"
 block|,
 comment|/* NB: blocksize of 4 is to generate a properly aligned ESP header */
-literal|4
+name|NULL_BLOCK_LEN
 block|,
 literal|0
 block|,
@@ -771,7 +771,7 @@ name|CRYPTO_DES_CBC
 block|,
 literal|"DES"
 block|,
-literal|8
+name|DES_BLOCK_LEN
 block|,
 literal|8
 block|,
@@ -798,7 +798,7 @@ name|CRYPTO_3DES_CBC
 block|,
 literal|"3DES"
 block|,
-literal|8
+name|DES3_BLOCK_LEN
 block|,
 literal|24
 block|,
@@ -825,7 +825,7 @@ name|CRYPTO_BLF_CBC
 block|,
 literal|"Blowfish"
 block|,
-literal|8
+name|BLOWFISH_BLOCK_LEN
 block|,
 literal|5
 block|,
@@ -853,7 +853,7 @@ name|CRYPTO_CAST_CBC
 block|,
 literal|"CAST-128"
 block|,
-literal|8
+name|CAST128_BLOCK_LEN
 block|,
 literal|5
 block|,
@@ -880,7 +880,7 @@ name|CRYPTO_SKIPJACK_CBC
 block|,
 literal|"Skipjack"
 block|,
-literal|8
+name|SKIPJACK_BLOCK_LEN
 block|,
 literal|10
 block|,
@@ -907,7 +907,7 @@ name|CRYPTO_RIJNDAEL128_CBC
 block|,
 literal|"Rijndael-128/AES"
 block|,
-literal|16
+name|RIJNDAEL128_BLOCK_LEN
 block|,
 literal|8
 block|,
@@ -967,9 +967,9 @@ literal|"NULL-HMAC"
 block|,
 literal|0
 block|,
-literal|16
+name|NULL_HASH_LEN
 block|,
-literal|64
+name|NULL_HMAC_BLOCK_LEN
 block|,
 sizeof|sizeof
 argument_list|(
@@ -998,9 +998,9 @@ literal|"HMAC-MD5"
 block|,
 literal|16
 block|,
-literal|16
+name|MD5_HASH_LEN
 block|,
-literal|64
+name|MD5_HMAC_BLOCK_LEN
 block|,
 sizeof|sizeof
 argument_list|(
@@ -1051,9 +1051,9 @@ literal|"HMAC-SHA1"
 block|,
 literal|20
 block|,
-literal|20
+name|SHA1_HASH_LEN
 block|,
-literal|64
+name|SHA1_HMAC_BLOCK_LEN
 block|,
 sizeof|sizeof
 argument_list|(
@@ -1081,9 +1081,9 @@ literal|"HMAC-RIPEMD-160"
 block|,
 literal|20
 block|,
-literal|20
+name|RIPEMD160_HASH_LEN
 block|,
-literal|64
+name|RIPEMD160_HMAC_BLOCK_LEN
 block|,
 sizeof|sizeof
 argument_list|(
@@ -1134,7 +1134,7 @@ literal|"Keyed MD5"
 block|,
 literal|0
 block|,
-literal|16
+name|MD5_KPDK_HASH_LEN
 block|,
 literal|0
 block|,
@@ -1187,7 +1187,7 @@ literal|"Keyed SHA1"
 block|,
 literal|0
 block|,
-literal|20
+name|SHA1_KPDK_HASH_LEN
 block|,
 literal|0
 block|,
@@ -1217,9 +1217,9 @@ literal|"HMAC-SHA2-256"
 block|,
 literal|32
 block|,
-literal|32
+name|SHA2_256_HASH_LEN
 block|,
-literal|64
+name|SHA2_256_HMAC_BLOCK_LEN
 block|,
 sizeof|sizeof
 argument_list|(
@@ -1270,9 +1270,9 @@ literal|"HMAC-SHA2-384"
 block|,
 literal|48
 block|,
-literal|48
+name|SHA2_384_HASH_LEN
 block|,
-literal|128
+name|SHA2_384_HMAC_BLOCK_LEN
 block|,
 sizeof|sizeof
 argument_list|(
@@ -1323,9 +1323,9 @@ literal|"HMAC-SHA2-512"
 block|,
 literal|64
 block|,
-literal|64
+name|SHA2_512_HASH_LEN
 block|,
-literal|128
+name|SHA2_512_HMAC_BLOCK_LEN
 block|,
 sizeof|sizeof
 argument_list|(
