@@ -4299,14 +4299,14 @@ name|ses
 operator|->
 name|ses_mlen
 operator|=
-name|MD5_DIGEST_LENGTH
+name|MD5_HASH_LEN
 expr_stmt|;
 else|else
 name|ses
 operator|->
 name|ses_mlen
 operator|=
-name|SHA1_RESULTLEN
+name|SHA1_HASH_LEN
 expr_stmt|;
 block|}
 if|if
