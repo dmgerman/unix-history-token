@@ -8761,8 +8761,8 @@ operator|.
 name|sa_family
 condition|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|INET
 case|case
 name|AF_INET
@@ -8780,8 +8780,8 @@ return|;
 endif|#
 directive|endif
 comment|/* INET */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|INET6
 case|case
 name|AF_INET6

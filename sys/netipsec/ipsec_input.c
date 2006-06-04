@@ -1751,8 +1751,8 @@ name|bad
 goto|;
 block|}
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|INET6
 comment|/* IPv6-in-IP encapsulation. */
 if|if
