@@ -2103,7 +2103,7 @@ name|unsigned
 name|char
 name|aalg
 index|[
-name|AALG_MAX_RESULT_LEN
+name|HASH_MAX_LEN
 index|]
 decl_stmt|;
 name|struct

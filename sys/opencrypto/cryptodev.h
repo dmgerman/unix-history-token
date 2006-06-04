@@ -115,6 +115,21 @@ value|20
 end_define
 
 begin_comment
+comment|/* Maximum hash algorithm result length */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASH_MAX_LEN
+value|SHA2_512_HASH_LEN
+end_define
+
+begin_comment
+comment|/* Keep this updated */
+end_comment
+
+begin_comment
 comment|/* HMAC values */
 end_comment
 
@@ -260,21 +275,6 @@ define|#
 directive|define
 name|EALG_MAX_BLOCK_LEN
 value|16
-end_define
-
-begin_comment
-comment|/* Keep this updated */
-end_comment
-
-begin_comment
-comment|/* Maximum hash algorithm result length */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AALG_MAX_RESULT_LEN
-value|64
 end_define
 
 begin_comment
