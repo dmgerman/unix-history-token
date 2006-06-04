@@ -233,11 +233,6 @@ name|int
 name|swcr_authcompute
 parameter_list|(
 name|struct
-name|cryptop
-modifier|*
-name|crp
-parameter_list|,
-name|struct
 name|cryptodesc
 modifier|*
 name|crd
@@ -2087,11 +2082,6 @@ specifier|static
 name|int
 name|swcr_authcompute
 parameter_list|(
-name|struct
-name|cryptop
-modifier|*
-name|crp
-parameter_list|,
 name|struct
 name|cryptodesc
 modifier|*
@@ -4492,8 +4482,6 @@ name|crp_etype
 operator|=
 name|swcr_authcompute
 argument_list|(
-name|crp
-argument_list|,
 name|crd
 argument_list|,
 name|sw
