@@ -506,6 +506,10 @@ name|axe_mtx
 decl_stmt|;
 endif|#
 directive|endif
+name|struct
+name|sx
+name|axe_sleeplock
+decl_stmt|;
 name|char
 name|axe_dying
 decl_stmt|;
@@ -595,6 +599,36 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|AXE_SLEEPLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|sx_xlock(&(_sc)->axe_sleeplock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AXE_SLEEPUNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|sx_xunlock(&(_sc)->axe_sleeplock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AXE_SLEEPLOCKASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|sx_assert(&(_sc)->axe_sleeplock, SX_XLOCKED)
+end_define
 
 end_unit
 
