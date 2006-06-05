@@ -1821,6 +1821,11 @@ name|UINT32
 name|key
 parameter_list|)
 block|{
+name|struct
+name|acpi_softc
+modifier|*
+name|acpi_sc
+decl_stmt|;
 name|int
 name|arg
 decl_stmt|,
@@ -1828,6 +1833,15 @@ name|max
 decl_stmt|,
 name|min
 decl_stmt|;
+name|acpi_sc
+operator|=
+name|acpi_device_get_parent_softc
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
+expr_stmt|;
 name|ACPI_SERIAL_ASSERT
 argument_list|(
 name|panasonic
@@ -2017,6 +2031,18 @@ name|HKEY_SET
 argument_list|,
 operator|&
 name|arg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|7
+case|:
+comment|/* Suspend. */
+name|acpi_SetSleepState
+argument_list|(
+name|acpi_sc
+argument_list|,
+name|ACPI_STATE_S3
 argument_list|)
 expr_stmt|;
 break|break;
