@@ -8,11 +8,7 @@ comment|/* config/config.h.in.  Generated from configure.ac by autoheader.  */
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `alarm' function. */
+comment|/* $FreeBSD$  /* Define to 1 if you have the `alarm' function. */
 end_comment
 
 begin_define
@@ -152,14 +148,6 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_IPC_PERM___SEQ */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `bsm' library (-lbsm). */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBBSM */
 end_comment
 
 begin_comment
@@ -510,7 +498,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"OpenBSM 1.0a5"
+value|"OpenBSM 1.0a6"
 end_define
 
 begin_comment
@@ -532,7 +520,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"1.0a5"
+value|"1.0a6"
 end_define
 
 begin_comment
@@ -584,7 +572,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"1.0a5"
+value|"1.0a6"
 end_define
 
 begin_comment
