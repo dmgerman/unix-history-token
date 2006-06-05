@@ -5301,6 +5301,14 @@ name|data
 operator|->
 name|ni
 expr_stmt|;
+comment|/* if no frame has been sent, ignore */
+if|if
+condition|(
+name|rn
+operator|==
+name|NULL
+condition|)
+continue|continue;
 switch|switch
 condition|(
 name|RT2661_TX_RESULT
