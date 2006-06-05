@@ -627,9 +627,9 @@ name|PROCESS_PID_TOKENS
 parameter_list|(
 name|argn
 parameter_list|)
-value|do {					\ 	if (ARG_IS_VALID(kar, ARG_PID)) {				\ 		if ((ar->ar_arg_pid> 0)
-comment|/* Kill a single process */
-value|\&& (ARG_IS_VALID(kar, ARG_PROCESS))) {		\ 			tok = au_to_process(ar->ar_arg_auid,		\ 			    ar->ar_arg_euid, ar->ar_arg_egid,		\ 			    ar->ar_arg_ruid, ar->ar_arg_rgid,		\ 			    ar->ar_arg_pid, ar->ar_arg_asid,		\&ar->ar_arg_termid);			\ 			kau_write(rec, tok);				\ 		} else {						\ 			tok = au_to_arg32(argn, "process",		\ 			    ar->ar_arg_pid);				\ 			kau_write(rec, tok);				\ 		}							\ 	}								\ } while (0)
+value|do {					\ 	if ((ar->ar_arg_pid> 0)
+comment|/* Reference a single process */
+value|\&& (ARG_IS_VALID(kar, ARG_PROCESS))) {			\ 		tok = au_to_process(ar->ar_arg_auid,			\ 		    ar->ar_arg_euid, ar->ar_arg_egid,			\ 		    ar->ar_arg_ruid, ar->ar_arg_rgid,			\ 		    ar->ar_arg_pid, ar->ar_arg_asid,			\&ar->ar_arg_termid);				\ 		kau_write(rec, tok);					\ 	} else if (ARG_IS_VALID(kar, ARG_PID)) {			\ 		tok = au_to_arg32(argn, "process", ar->ar_arg_pid);	\ 		kau_write(rec, tok);					\ 	}								\ } while (0)
 end_define
 
 begin_comment

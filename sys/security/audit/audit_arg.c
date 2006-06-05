@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -1266,6 +1272,16 @@ name|p_au
 operator|->
 name|ai_termid
 expr_stmt|;
+name|ar
+operator|->
+name|k_ar
+operator|.
+name|ar_arg_pid
+operator|=
+name|p
+operator|->
+name|p_pid
+expr_stmt|;
 name|ARG_SET_VALID
 argument_list|(
 name|ar
@@ -1283,6 +1299,8 @@ operator||
 name|ARG_ASID
 operator||
 name|ARG_TERMID
+operator||
+name|ARG_PID
 operator||
 name|ARG_PROCESS
 argument_list|)
