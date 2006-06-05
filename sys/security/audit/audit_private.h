@@ -828,7 +828,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|cv
-name|audit_commit_cv
+name|audit_watermark_cv
 decl_stmt|;
 end_decl_stmt
 
@@ -836,7 +836,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|cv
-name|audit_cv
+name|audit_worker_cv
 decl_stmt|;
 end_decl_stmt
 

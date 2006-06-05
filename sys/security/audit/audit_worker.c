@@ -1234,7 +1234,7 @@ expr_stmt|;
 name|cv_wait
 argument_list|(
 operator|&
-name|audit_cv
+name|audit_worker_cv
 argument_list|,
 operator|&
 name|audit_mtx
@@ -1345,7 +1345,7 @@ condition|)
 name|cv_broadcast
 argument_list|(
 operator|&
-name|audit_commit_cv
+name|audit_watermark_cv
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -1515,7 +1515,7 @@ comment|/* 	 * Wake up the audit worker to perform the exchange once we 	 * rele
 name|cv_signal
 argument_list|(
 operator|&
-name|audit_cv
+name|audit_worker_cv
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Wait for the audit_worker to broadcast that a replacement has 	 * taken place; we know that once this has happened, our vnode 	 * has been replaced in, so we can return successfully. 	 */

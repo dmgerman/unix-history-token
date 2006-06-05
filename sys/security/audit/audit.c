@@ -383,18 +383,18 @@ end_comment
 begin_decl_stmt
 name|struct
 name|cv
-name|audit_cv
+name|audit_worker_cv
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Condition variable to signal to the worker that it has work to do:  * either new records are in the queue, or a log replacement is taking  * place.  *  * XXXRW: This description is incorrect.  */
+comment|/*  * Condition variable to flag when crossing the low watermark, meaning that  * threads blocked due to hitting the high watermark can wake up and continue  * to commit records.  */
 end_comment
 
 begin_decl_stmt
 name|struct
 name|cv
-name|audit_commit_cv
+name|audit_watermark_cv
 decl_stmt|;
 end_decl_stmt
 
@@ -882,17 +882,17 @@ expr_stmt|;
 name|cv_init
 argument_list|(
 operator|&
-name|audit_cv
+name|audit_worker_cv
 argument_list|,
-literal|"audit_cv"
+literal|"audit_worker_cv"
 argument_list|)
 expr_stmt|;
 name|cv_init
 argument_list|(
 operator|&
-name|audit_commit_cv
+name|audit_watermark_cv
 argument_list|,
-literal|"audit_commit_cv"
+literal|"audit_watermark_cv"
 argument_list|)
 expr_stmt|;
 name|cv_init
@@ -1437,7 +1437,7 @@ expr_stmt|;
 name|cv_wait
 argument_list|(
 operator|&
-name|audit_commit_cv
+name|audit_watermark_cv
 argument_list|,
 operator|&
 name|audit_mtx
@@ -1471,7 +1471,7 @@ expr_stmt|;
 name|cv_signal
 argument_list|(
 operator|&
-name|audit_cv
+name|audit_worker_cv
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
