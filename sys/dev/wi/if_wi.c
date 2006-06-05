@@ -5145,9 +5145,9 @@ if|if
 condition|(
 name|bpf_peers_present
 argument_list|(
-name|ic
+name|sc
 operator|->
-name|ic_drvbpf
+name|sc_drvbpf
 argument_list|)
 condition|)
 block|{
