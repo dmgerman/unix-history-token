@@ -7015,6 +7015,14 @@ name|field
 decl_stmt|,
 name|bit
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|PV_STAT
 argument_list|(
 name|pv_entry_frees
@@ -7180,9 +7188,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_unwire
 argument_list|(
 name|m
@@ -7194,9 +7199,6 @@ name|vm_page_free
 argument_list|(
 name|m
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 name|pmap_ptelist_free
 argument_list|(
@@ -12286,9 +12288,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_unwire
 argument_list|(
 name|m
@@ -12300,9 +12299,6 @@ name|vm_page_free
 argument_list|(
 name|m
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 name|pmap_ptelist_free
 argument_list|(
@@ -12320,6 +12316,9 @@ block|}
 name|sched_unpin
 argument_list|()
 expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|pmap_invalidate_all
 argument_list|(
 name|pmap
@@ -12329,9 +12328,6 @@ name|PMAP_UNLOCK
 argument_list|(
 name|pmap
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 block|}
 end_function
