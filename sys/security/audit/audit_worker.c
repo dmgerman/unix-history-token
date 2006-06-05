@@ -900,66 +900,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Drain the audit commit queue and free the records.  Used if there are  * records present, but no audit log target.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|audit_worker_drain
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|struct
-name|kaudit_record
-modifier|*
-name|ar
-decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|audit_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-operator|(
-name|ar
-operator|=
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|audit_q
-argument_list|)
-operator|)
-condition|)
-block|{
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|audit_q
-argument_list|,
-name|ar
-argument_list|,
-name|k_q
-argument_list|)
-expr_stmt|;
-name|audit_free
-argument_list|(
-name|ar
-argument_list|)
-expr_stmt|;
-name|audit_q_len
-operator|--
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_comment
 comment|/*  * Given a kernel audit record, process as required.  Kernel audit records  * are converted to one, or possibly two, BSM records, depending on whether  * there is a user audit record present also.  Kernel records need be  * converted to BSM before they can be written out.  Both types will be  * written to disk, and audit pipes.  */
 end_comment
 
@@ -1325,20 +1265,7 @@ argument_list|,
 name|audit_td
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If we have records, but there's no active vnode to write 		 * to, drain the record queue.  Generally, we prevent the 		 * unnecessary allocation of records elsewhere, but we need 		 * to allow for races between conditional allocation and 		 * queueing.  Go back to waiting when we're done. 		 */
-if|if
-condition|(
-name|audit_vp
-operator|==
-name|NULL
-condition|)
-block|{
-name|audit_worker_drain
-argument_list|()
-expr_stmt|;
-continue|continue;
-block|}
-comment|/* 		 * We have both records to write and an active vnode to write 		 * to.  Dequeue a record, and start the write.  Eventually, 		 * it might make sense to dequeue several records and perform 		 * our own clustering, if the lower layers aren't doing it 		 * automatically enough. 		 */
+comment|/* 		 * If there are records in the global audit record queue, 		 * transfer them to a thread-local queue and process them 		 * one by one.  If we cross the low watermark threshold, 		 * signal any waiting processes that they may wake up and 		 * continue generating records. 		 */
 name|lowater_signal
 operator|=
 literal|0
