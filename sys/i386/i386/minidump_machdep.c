@@ -1400,7 +1400,7 @@ argument_list|(
 operator|&
 name|kdh
 argument_list|,
-name|KERNELDUMP_AMD64_VERSION
+name|KERNELDUMP_I386_VERSION
 argument_list|,
 name|dumpsize
 argument_list|,
