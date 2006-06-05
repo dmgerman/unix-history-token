@@ -12293,6 +12293,25 @@ block|}
 ifdef|#
 directive|ifdef
 name|DEV_NPX
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
+if|if
+condition|(
+name|cpu_fxsr
+condition|)
+name|addr
+operator|->
+name|sv_xmm
+operator|.
+name|sv_env
+operator|.
+name|en_mxcsr
+operator|&=
+name|cpu_mxcsr_mask
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 		 * XXX we violate the dubious requirement that npxsetregs() 		 * be called with interrupts disabled. 		 */
 name|npxsetregs
 argument_list|(
