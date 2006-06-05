@@ -584,6 +584,8 @@ argument_list|,
 name|NOFOLLOW
 operator||
 name|MPSAFE
+operator||
+name|AUDITVNODE1
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
