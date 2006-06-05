@@ -648,11 +648,11 @@ function_decl|;
 name|device_t
 name|sc_dev
 decl_stmt|;
-name|bus_space_tag_t
+name|HAL_BUS_TAG
 name|sc_st
 decl_stmt|;
 comment|/* bus space tag */
-name|bus_space_handle_t
+name|HAL_BUS_HANDLE
 name|sc_sh
 decl_stmt|;
 comment|/* bus space handle */

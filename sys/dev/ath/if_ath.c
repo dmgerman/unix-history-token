@@ -1975,16 +1975,10 @@ name|devid
 argument_list|,
 name|sc
 argument_list|,
-operator|(
-name|HAL_BUS_TAG
-operator|)
 name|sc
 operator|->
 name|sc_st
 argument_list|,
-operator|(
-name|HAL_BUS_HANDLE
-operator|)
 name|sc
 operator|->
 name|sc_sh

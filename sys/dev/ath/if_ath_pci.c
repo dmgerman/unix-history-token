@@ -450,10 +450,14 @@ goto|goto
 name|bad
 goto|;
 block|}
+comment|/* NB: these casts are known to be safe */
 name|sc
 operator|->
 name|sc_st
 operator|=
+operator|(
+name|HAL_BUS_TAG
+operator|)
 name|rman_get_bustag
 argument_list|(
 name|psc
@@ -465,6 +469,9 @@ name|sc
 operator|->
 name|sc_sh
 operator|=
+operator|(
+name|HAL_BUS_HANDLE
+operator|)
 name|rman_get_bushandle
 argument_list|(
 name|psc
