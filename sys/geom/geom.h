@@ -1481,6 +1481,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|bio
+modifier|*
+name|g_duplicate_bio
+parameter_list|(
+name|struct
+name|bio
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|g_destroy_bio
 parameter_list|(
