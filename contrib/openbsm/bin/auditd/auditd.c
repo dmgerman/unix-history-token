@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2004 Apple Computer, Inc.  * All rights reserved.  *  * @APPLE_BSD_LICENSE_HEADER_START@  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * @APPLE_BSD_LICENSE_HEADER_END@  *  * $P4: //depot/projects/trustedbsd/openbsm/bin/auditd/auditd.c#13 $  */
+comment|/*  * Copyright (c) 2004 Apple Computer, Inc.  * All rights reserved.  *  * @APPLE_BSD_LICENSE_HEADER_START@  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * @APPLE_BSD_LICENSE_HEADER_END@  *  * $P4: //depot/projects/trustedbsd/openbsm/bin/auditd/auditd.c#16 $  */
 end_comment
 
 begin_include
@@ -55,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<bsm/libbsm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -164,6 +170,15 @@ name|int
 name|triggerfd
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|sigchlds
+decl_stmt|,
+name|sigchlds_handled
 decl_stmt|;
 end_decl_stmt
 
@@ -421,9 +436,9 @@ name|dirname
 expr_stmt|;
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_DEBUG
 argument_list|,
-literal|"dir = %s\n"
+literal|"dir = %s"
 argument_list|,
 name|dirent
 operator|->
@@ -603,7 +618,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Could not rename %s to %s \n"
+literal|"Could not rename %s to %s"
 argument_list|,
 name|oldname
 argument_list|,
@@ -615,7 +630,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"renamed %s to %s \n"
+literal|"renamed %s to %s"
 argument_list|,
 name|oldname
 argument_list|,
@@ -936,7 +951,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"Failed to swap log  at time %s\n"
+literal|"Failed to swap log at time %s"
 argument_list|,
 name|timestr
 argument_list|)
@@ -953,7 +968,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"New audit file is %s\n"
+literal|"New audit file is %s"
 argument_list|,
 name|fn
 argument_list|)
@@ -1019,7 +1034,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"auditctl failed setting log file! : %s\n"
+literal|"auditctl failed setting log file! : %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1091,7 +1106,7 @@ expr_stmt|;
 block|}
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_ERR
 argument_list|,
 literal|"Log directories exhausted\n"
 argument_list|)
@@ -1256,7 +1271,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Could not swap audit file\n"
+literal|"Could not swap audit file"
 argument_list|)
 expr_stmt|;
 comment|/* 		 * XXX Faulty directory listing? - user should be given 		 * XXX an opportunity to change the audit_control file 		 * XXX switch to a reduced mode of auditing? 		 */
@@ -1285,7 +1300,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_DEBUG
 argument_list|,
 literal|"min free = %d\n"
 argument_list|,
@@ -1314,7 +1329,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"could not get audit queue settings\n"
+literal|"could not get audit queue settings"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1352,7 +1367,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"could not set audit queue settings\n"
+literal|"could not set audit queue settings"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1421,7 +1436,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Could not create audit shutdown event.\n"
+literal|"Could not create audit shutdown event."
 argument_list|)
 expr_stmt|;
 else|else
@@ -1464,7 +1479,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Could not close audit shutdown event.\n"
+literal|"Could not close audit shutdown event."
 argument_list|)
 expr_stmt|;
 block|}
@@ -1499,7 +1514,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Disabling audit failed! : %s\n"
+literal|"Disabling audit failed! : %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1561,7 +1576,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Could not unregister\n"
+literal|"Could not unregister"
 argument_list|)
 expr_stmt|;
 name|audit_warn_postsigterm
@@ -1589,14 +1604,14 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Error closing control file\n"
+literal|"Error closing control file"
 argument_list|)
 expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"Finished.\n"
+literal|"Finished"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1636,6 +1651,15 @@ operator|==
 name|SIGTERM
 condition|)
 name|sigterms
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|signal
+operator|==
+name|SIGCHLD
+condition|)
+name|sigchlds
 operator|++
 expr_stmt|;
 block|}
@@ -1680,7 +1704,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Could not set signal handler for SIGTERM\n"
+literal|"Could not set signal handler for SIGTERM"
 argument_list|)
 expr_stmt|;
 name|fail_exit
@@ -1703,7 +1727,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Could not set signal handler for SIGCHLD\n"
+literal|"Could not set signal handler for SIGCHLD"
 argument_list|)
 expr_stmt|;
 name|fail_exit
@@ -1726,7 +1750,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Could not set signal handler for SIGHUP\n"
+literal|"Could not set signal handler for SIGHUP"
 argument_list|)
 expr_stmt|;
 name|fail_exit
@@ -1753,7 +1777,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Could not open PID file\n"
+literal|"Could not open PID file"
 argument_list|)
 expr_stmt|;
 name|audit_warn_tmpfile
@@ -1792,7 +1816,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"PID file is locked (is another auditd running?).\n"
+literal|"PID file is locked (is another auditd running?)."
 argument_list|)
 expr_stmt|;
 name|audit_warn_ebusy
@@ -1882,9 +1906,6 @@ name|dir_ent
 modifier|*
 name|dirent
 decl_stmt|;
-name|int
-name|rc
-decl_stmt|;
 comment|/* 	 * Suppres duplicate messages from the kernel within the specified 	 * interval. 	 */
 name|struct
 name|timeval
@@ -1969,7 +1990,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"Got low space trigger\n"
+literal|"Got low space trigger"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2044,7 +2065,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Error swapping audit file\n"
+literal|"Error swapping audit file"
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Check if the next dir has already reached its soft 			 * limit. 			 */
@@ -2086,7 +2107,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"Got no space trigger\n"
+literal|"Got no space trigger"
 argument_list|)
 expr_stmt|;
 comment|/* Delete current dir, go on to next. */
@@ -2131,7 +2152,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Error swapping audit file\n"
+literal|"Error swapping audit file"
 argument_list|)
 expr_stmt|;
 comment|/* We are out of log directories. */
@@ -2150,7 +2171,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"Got open new trigger\n"
+literal|"Got open new trigger"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2165,7 +2186,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Error swapping audit file\n"
+literal|"Error swapping audit file"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2176,7 +2197,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"Got read file trigger\n"
+literal|"Got read file trigger"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2191,7 +2212,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Error in audit control file\n"
+literal|"Error in audit control file"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2206,7 +2227,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Error setting audit controls\n"
+literal|"Error setting audit controls"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2215,7 +2236,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Got unknown trigger %d\n"
+literal|"Got unknown trigger %d"
 argument_list|,
 name|trigger
 argument_list|)
@@ -2244,13 +2265,120 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read the control file for triggers and handle appropriately.  */
+comment|/*  * Reap our children.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|reap_children
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|pid_t
+name|child
+decl_stmt|;
+name|int
+name|wstatus
+decl_stmt|;
+while|while
+condition|(
+operator|(
+name|child
+operator|=
+name|waitpid
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+operator|&
+name|wstatus
+argument_list|,
+name|WNOHANG
+argument_list|)
+operator|)
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|wstatus
+condition|)
+continue|continue;
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"warn process [pid=%d] %s %d."
+argument_list|,
+name|child
+argument_list|,
+operator|(
+operator|(
+name|WIFEXITED
+argument_list|(
+name|wstatus
+argument_list|)
+operator|)
+condition|?
+literal|"exited with non-zero status"
+else|:
+literal|"exited as a result of signal"
+operator|)
+argument_list|,
+operator|(
+operator|(
+name|WIFEXITED
+argument_list|(
+name|wstatus
+argument_list|)
+operator|)
+condition|?
+name|WEXITSTATUS
+argument_list|(
+name|wstatus
+argument_list|)
+else|:
+name|WTERMSIG
+argument_list|(
+name|wstatus
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|handle_sigchld
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|sigchlds_handled
+operator|=
+name|sigchlds
+expr_stmt|;
+name|reap_children
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Read the control file for triggers/signals and handle appropriately.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|wait_for_triggers
+name|wait_for_events
 parameter_list|(
 name|void
 parameter_list|)
@@ -2303,7 +2431,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: error %d\n"
+literal|"%s: error %d"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -2326,7 +2454,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_DEBUG
 argument_list|,
 literal|"%s: SIGTERM"
 argument_list|,
@@ -2337,6 +2465,26 @@ break|break;
 block|}
 if|if
 condition|(
+name|sigchlds
+operator|!=
+name|sigchlds_handled
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"%s: SIGCHLD"
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
+name|handle_sigchld
+argument_list|()
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|sighups
 operator|!=
 name|sighups_handled
@@ -2344,7 +2492,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_DEBUG
 argument_list|,
 literal|"%s: SIGHUP"
 argument_list|,
@@ -2380,9 +2528,9 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_ERR
 argument_list|,
-literal|"%s: read EOF\n"
+literal|"%s: read EOF"
 argument_list|,
 name|__FUNCTION__
 argument_list|)
@@ -2396,9 +2544,9 @@ return|;
 block|}
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_DEBUG
 argument_list|,
-literal|"%s: read %d\n"
+literal|"%s: read %d"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -2425,95 +2573,6 @@ name|close_all
 argument_list|()
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Reap our children.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|reap_children
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|pid_t
-name|child
-decl_stmt|;
-name|int
-name|wstatus
-decl_stmt|;
-while|while
-condition|(
-operator|(
-name|child
-operator|=
-name|waitpid
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-operator|&
-name|wstatus
-argument_list|,
-name|WNOHANG
-argument_list|)
-operator|)
-operator|>
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|wstatus
-condition|)
-continue|continue;
-name|syslog
-argument_list|(
-name|LOG_INFO
-argument_list|,
-literal|"warn process [pid=%d] %s %d.\n"
-argument_list|,
-name|child
-argument_list|,
-operator|(
-operator|(
-name|WIFEXITED
-argument_list|(
-name|wstatus
-argument_list|)
-operator|)
-condition|?
-literal|"exited with non-zero status"
-else|:
-literal|"exited as a result of signal"
-operator|)
-argument_list|,
-operator|(
-operator|(
-name|WIFEXITED
-argument_list|(
-name|wstatus
-argument_list|)
-operator|)
-condition|?
-name|WEXITSTATUS
-argument_list|(
-name|wstatus
-argument_list|)
-else|:
-name|WTERMSIG
-argument_list|(
-name|wstatus
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -2716,7 +2775,7 @@ expr_stmt|;
 else|else
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_DEBUG
 argument_list|,
 literal|"Registered %d event to class mappings."
 argument_list|,
@@ -2775,7 +2834,7 @@ expr_stmt|;
 else|else
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_DEBUG
 argument_list|,
 literal|"Registered non-attributable event mask."
 argument_list|)
@@ -2828,6 +2887,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|auditinfo_t
+name|auinfo
+decl_stmt|;
 name|int
 name|aufd
 decl_stmt|;
@@ -2857,7 +2919,49 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Error opening trigger file\n"
+literal|"Error opening trigger file"
+argument_list|)
+expr_stmt|;
+name|fail_exit
+argument_list|()
+expr_stmt|;
+block|}
+comment|/* 	 * To provide event feedback cycles and avoid auditd becoming 	 * stalled if auditing is suspended, auditd and its children run 	 * without their events being audited.  We allow the uid, tid, and 	 * mask fields to be implicitly set to zero, but do set the pid.  We 	 * run this after opening the trigger device to avoid configuring 	 * audit state without audit present in the system. 	 * 	 * XXXRW: Is there more to it than this? 	 */
+name|bzero
+argument_list|(
+operator|&
+name|auinfo
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|auinfo
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|auinfo
+operator|.
+name|ai_asid
+operator|=
+name|getpid
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|setaudit
+argument_list|(
+operator|&
+name|auinfo
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Error setting audit stat"
 argument_list|)
 expr_stmt|;
 name|fail_exit
@@ -2883,7 +2987,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Error reading control file\n"
+literal|"Error reading control file"
 argument_list|)
 expr_stmt|;
 name|fail_exit
@@ -2907,7 +3011,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Could not create audit startup event.\n"
+literal|"Could not create audit startup event."
 argument_list|)
 expr_stmt|;
 else|else
@@ -2950,7 +3054,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Could not close audit startup event.\n"
+literal|"Could not close audit startup event."
 argument_list|)
 expr_stmt|;
 block|}
@@ -2965,15 +3069,15 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"Audit controls init successful\n"
+literal|"Audit controls init successful"
 argument_list|)
 expr_stmt|;
 else|else
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_ERR
 argument_list|,
-literal|"Audit controls init failed\n"
+literal|"Audit controls init failed"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3115,7 +3219,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"starting...\n"
+literal|"starting..."
 argument_list|)
 expr_stmt|;
 if|if
@@ -3139,7 +3243,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Failed to daemonize\n"
+literal|"Failed to daemonize"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3161,7 +3265,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Could not register as daemon\n"
+literal|"Could not register as daemon"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3175,14 +3279,14 @@ argument_list|()
 expr_stmt|;
 name|rc
 operator|=
-name|wait_for_triggers
+name|wait_for_events
 argument_list|()
 expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"auditd exiting.\n"
+literal|"auditd exiting."
 argument_list|)
 expr_stmt|;
 name|exit

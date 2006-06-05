@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2005 Apple Computer, Inc.  * All rights reserved.  *  * @APPLE_BSD_LICENSE_HEADER_START@  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * @APPLE_BSD_LICENSE_HEADER_END@  *  * $P4: //depot/projects/trustedbsd/openbsm/bsm/audit_record.h#14 $  */
+comment|/*  * Copyright (c) 2005 Apple Computer, Inc.  * All rights reserved.  *  * @APPLE_BSD_LICENSE_HEADER_START@  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * @APPLE_BSD_LICENSE_HEADER_END@  *  * $P4: //depot/projects/trustedbsd/openbsm/bsm/audit_record.h#17 $  */
 end_comment
 
 begin_ifndef
@@ -16,15 +16,7 @@ name|_BSM_AUDIT_RECORD_H_
 end_define
 
 begin_comment
-comment|/* Various token id types */
-end_comment
-
-begin_comment
-comment|/*  * Values inside the comments are not documented in the BSM pages and  * have been picked up from the header files  */
-end_comment
-
-begin_comment
-comment|/*  * Values marked as XXX do not have a value defined in the BSM header files  */
+comment|/*  * Token type identifiers.  */
 end_comment
 
 begin_define
@@ -879,6 +871,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AUR_CHAR
+value|AUR_BYTE
+end_define
+
+begin_define
+define|#
+directive|define
 name|AUR_SHORT
 value|1
 end_define
@@ -886,8 +885,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|AUR_LONG
+name|AUR_INT32
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUR_INT
+value|AUR_INT
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUR_INT64
+value|3
 end_define
 
 begin_comment
@@ -904,6 +917,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AUR_CHAR_SIZE
+value|AUR_BYTE_SIZE
+end_define
+
+begin_define
+define|#
+directive|define
 name|AUR_SHORT_SIZE
 value|sizeof(uint16_t)
 end_define
@@ -911,8 +931,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|AUR_LONG_SIZE
+name|AUR_INT32_SIZE
 value|sizeof(uint32_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUR_INT_SIZE
+value|AUR_INT32_SIZE
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUR_INT64_SIZE
+value|sizeof(uint64_t)
 end_define
 
 begin_comment
@@ -1114,19 +1148,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|KERNEL
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-end_if
+begin_function_decl
+name|int
+name|au_close_token
+parameter_list|(
+name|token_t
+modifier|*
+name|tok
+parameter_list|,
+name|u_char
+modifier|*
+name|buffer
+parameter_list|,
+name|size_t
+modifier|*
+name|buflen
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|token_t
@@ -1144,88 +1183,42 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_else
-else|#
-directive|else
-end_else
-
 begin_function_decl
 name|token_t
 modifier|*
-name|au_to_file
+name|au_to_header32_tm
 parameter_list|(
-name|char
-modifier|*
-name|file
+name|int
+name|rec_size
+parameter_list|,
+name|au_event_t
+name|e_type
+parameter_list|,
+name|au_emod_t
+name|e_mod
+parameter_list|,
+name|struct
+name|timeval
+name|tm
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_if
 if|#
 directive|if
+operator|!
 name|defined
 argument_list|(
 name|KERNEL
 argument_list|)
-operator|||
+operator|&&
+operator|!
 name|defined
 argument_list|(
 name|_KERNEL
 argument_list|)
 end_if
-
-begin_function_decl
-name|token_t
-modifier|*
-name|au_to_header
-parameter_list|(
-name|int
-name|rec_size
-parameter_list|,
-name|au_event_t
-name|e_type
-parameter_list|,
-name|au_emod_t
-name|e_mod
-parameter_list|,
-name|struct
-name|timeval
-name|tm
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|token_t
-modifier|*
-name|au_to_header32
-parameter_list|(
-name|int
-name|rec_size
-parameter_list|,
-name|au_event_t
-name|e_type
-parameter_list|,
-name|au_emod_t
-name|e_mod
-parameter_list|,
-name|struct
-name|timeval
-name|tm
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_function_decl
 name|token_t
@@ -1260,11 +1253,6 @@ name|e_mod
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|token_t
@@ -1282,6 +1270,11 @@ name|e_mod
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|token_t
