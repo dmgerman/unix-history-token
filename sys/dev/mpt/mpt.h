@@ -1071,7 +1071,7 @@ comment|/* Physical Address of sense data */
 name|bus_dmamap_t
 name|dmap
 decl_stmt|;
-comment|/* DMA map for data buffer */
+comment|/* DMA map for data buffers */
 name|struct
 name|req_entry
 modifier|*
@@ -1788,23 +1788,6 @@ decl_stmt|;
 name|uint16_t
 name|_disc_enable
 decl_stmt|;
-struct|struct
-block|{
-name|uint8_t
-name|inqdata
-index|[
-literal|39
-index|]
-decl_stmt|;
-name|uint8_t
-name|state
-decl_stmt|;
-block|}
-name|_dv
-index|[
-literal|16
-index|]
-struct|;
 block|}
 name|spi
 struct|;
@@ -1836,22 +1819,6 @@ define|#
 directive|define
 name|mpt_disc_enable
 value|cfg.spi._disc_enable
-define|#
-directive|define
-name|mpt_dv
-value|cfg.spi._dv
-define|#
-directive|define
-name|DV_STATE_0
-value|0
-define|#
-directive|define
-name|DV_STATE_1
-value|1
-define|#
-directive|define
-name|DV_STATE_DONE
-value|0xff
 struct|struct
 name|mpi_fc_cfg
 block|{
@@ -2124,7 +2091,7 @@ comment|/* Sequence Number */
 name|uint16_t
 name|pad3
 decl_stmt|;
-comment|/* Opposing port in a 929 or 1030, or NULL */
+comment|/* Paired port in some dual adapters configurations */
 name|struct
 name|mpt_softc
 modifier|*
