@@ -972,6 +972,18 @@ block|,
 name|TYPE_PL2303
 block|}
 block|,
+comment|/* Tripp-Lite U209-000-R */
+block|{
+name|USB_VENDOR_TRIPPLITE
+block|,
+name|USB_PRODUCT_TRIPPLITE_U209
+block|,
+operator|-
+literal|1
+block|,
+name|TYPE_PL2303X
+block|}
+block|,
 block|{
 literal|0
 block|,
