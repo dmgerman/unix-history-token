@@ -1408,10 +1408,8 @@ operator|&
 name|audit_mtx
 argument_list|)
 expr_stmt|;
-name|uma_zfree
+name|audit_free
 argument_list|(
-name|audit_record_zone
-argument_list|,
 name|ar
 argument_list|)
 expr_stmt|;
@@ -1469,10 +1467,8 @@ operator|&
 name|audit_mtx
 argument_list|)
 expr_stmt|;
-name|uma_zfree
+name|audit_free
 argument_list|(
-name|audit_record_zone
-argument_list|,
 name|ar
 argument_list|)
 expr_stmt|;
