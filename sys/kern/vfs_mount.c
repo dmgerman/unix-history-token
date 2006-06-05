@@ -158,6 +158,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<security/audit/audit.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_rootdevname.h"
 end_include
 
@@ -1662,6 +1668,15 @@ decl_stmt|;
 name|u_int
 name|iovcnt
 decl_stmt|;
+name|AUDIT_ARG
+argument_list|(
+name|fflags
+argument_list|,
+name|uap
+operator|->
+name|flags
+argument_list|)
+expr_stmt|;
 comment|/* Kick out MNT_ROOTFS early as it is legal internally */
 if|if
 condition|(
@@ -3578,6 +3593,15 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|AUDIT_ARG
+argument_list|(
+name|fflags
+argument_list|,
+name|uap
+operator|->
+name|flags
+argument_list|)
+expr_stmt|;
 comment|/* Kick out MNT_ROOTFS early as it is legal internally */
 name|uap
 operator|->
@@ -3618,6 +3642,13 @@ operator|!
 name|error
 condition|)
 block|{
+name|AUDIT_ARG
+argument_list|(
+name|text
+argument_list|,
+name|fstype
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -4053,6 +4084,8 @@ argument_list|,
 name|FOLLOW
 operator||
 name|LOCKLEAF
+operator||
+name|AUDITVNODE1
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
@@ -5169,6 +5202,17 @@ name|error
 operator|)
 return|;
 block|}
+name|AUDIT_ARG
+argument_list|(
+name|upath
+argument_list|,
+name|td
+argument_list|,
+name|pathbuf
+argument_list|,
+name|ARG_UPATH1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|uap
