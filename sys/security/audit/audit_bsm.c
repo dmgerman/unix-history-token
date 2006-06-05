@@ -391,7 +391,7 @@ name|tv_sec
 expr_stmt|;
 name|hdr
 operator|=
-name|au_to_header32
+name|au_to_header32_tm
 argument_list|(
 name|tot_rec_size
 argument_list|,
