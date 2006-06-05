@@ -572,6 +572,7 @@ end_function
 
 begin_struct
 specifier|static
+specifier|const
 struct|struct
 block|{
 specifier|const
@@ -636,6 +637,20 @@ literal|0x0105d041
 block|}
 block|,
 comment|/* PNP0501 */
+block|{
+literal|"i2c"
+block|,
+literal|0x0200ae4e
+block|}
+block|,
+comment|/* SUN0002 */
+block|{
+literal|"rmc-comm"
+block|,
+literal|0x0300ae4e
+block|}
+block|,
+comment|/* SUN0003 */
 block|{
 literal|"kb_ps2"
 block|,
@@ -866,6 +881,13 @@ operator|)
 name|node
 argument_list|,
 name|name
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|name
+argument_list|,
+name|M_OFWPROP
 argument_list|)
 expr_stmt|;
 continue|continue;
