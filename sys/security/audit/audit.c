@@ -907,7 +907,7 @@ name|audit_record_zone
 operator|=
 name|uma_zcreate
 argument_list|(
-literal|"audit_record_zone"
+literal|"audit_record"
 argument_list|,
 sizeof|sizeof
 argument_list|(
