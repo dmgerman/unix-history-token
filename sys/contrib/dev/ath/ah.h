@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002-2006 Sam Leffler, Errno Consulting, Atheros  * Communications, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the following conditions are met:  * 1. The materials contained herein are unmodified and are used  *    unmodified.  * 2. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following NO  *    ''WARRANTY'' disclaimer below (''Disclaimer''), without  *    modification.  * 3. Redistributions in binary form must reproduce at minimum a  *    disclaimer similar to the Disclaimer below and any redistribution  *    must be conditioned upon including a substantially similar  *    Disclaimer requirement for further binary redistribution.  * 4. Neither the names of the above-listed copyright holders nor the  *    names of any contributors may be used to endorse or promote  *    product derived from this software without specific prior written  *    permission.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT,  * MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE  * FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGES.  *  * $Id: //depot/sw/linuxsrc/src/802_11/madwifi/hal/main/ah.h#134 $  */
+comment|/*-  * Copyright (c) 2002-2006 Sam Leffler, Errno Consulting, Atheros  * Communications, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the following conditions are met:  * 1. The materials contained herein are unmodified and are used  *    unmodified.  * 2. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following NO  *    ''WARRANTY'' disclaimer below (''Disclaimer''), without  *    modification.  * 3. Redistributions in binary form must reproduce at minimum a  *    disclaimer similar to the Disclaimer below and any redistribution  *    must be conditioned upon including a substantially similar  *    Disclaimer requirement for further binary redistribution.  * 4. Neither the names of the above-listed copyright holders nor the  *    names of any contributors may be used to endorse or promote  *    product derived from this software without specific prior written  *    permission.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT,  * MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE  * FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGES.  *  * $Id: //depot/sw/branches/sam_hal/ah.h#10 $  */
 end_comment
 
 begin_ifndef
@@ -17,6 +17,46 @@ end_define
 
 begin_comment
 comment|/*  * Atheros Hardware Access Layer  *  * Clients of the HAL call ath_hal_attach to obtain a reference to an ath_hal  * structure for use with the device.  Hardware-related operations that  * follow must call back into the HAL through interface, supplying the  * reference as the first parameter.  */
+end_comment
+
+begin_comment
+comment|/*  * Bus i/o type definitions.  We define a platform-independent  * set of types that are mapped to platform-dependent data for  * register read/write operations.  We use types that are large  * enough to hold a pointer; smaller data should fit and only  * require type coercion to work.  Larger data can be stored  * elsewhere and a reference passed for the bus tag and/or handle.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+modifier|*
+name|HAL_SOFTC
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* pointer to driver/OS state */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+modifier|*
+name|HAL_BUS_TAG
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* opaque bus i/o id tag */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+modifier|*
+name|HAL_BUS_HANDLE
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* opaque bus i/o handle */
 end_comment
 
 begin_include
@@ -300,6 +340,11 @@ init|=
 literal|28
 block|,
 comment|/* 11d beacon support for changing cc */
+name|HAL_CAP_INTMIT
+init|=
+literal|29
+block|,
+comment|/* interference mitigation */
 block|}
 name|HAL_CAPABILITY_TYPE
 typedef|;
@@ -960,11 +1005,11 @@ comment|/* max regulatory tx power in dBm */
 name|int8_t
 name|maxTxPower
 decl_stmt|;
-comment|/* max true tx power in 0.25 dBm */
+comment|/* max true tx power in 0.5 dBm */
 name|int8_t
 name|minTxPower
 decl_stmt|;
-comment|/* min true tx power in 0.25 dBm */
+comment|/* min true tx power in 0.5 dBm */
 block|}
 name|HAL_CHANNEL
 typedef|;
@@ -1501,6 +1546,10 @@ name|HAL_RATE_SET
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*  * Antenna switch control.  By default antenna selection  * enables multiple (2) antenna use.  To force use of the  * A or B antenna only specify a fixed setting.  Fixing  * the antenna will also disable any diversity support.  */
+end_comment
+
 begin_typedef
 typedef|typedef
 enum|enum
@@ -1514,12 +1563,12 @@ name|HAL_ANT_FIXED_A
 init|=
 literal|1
 block|,
-comment|/* fixed to 11a frequencies */
+comment|/* fixed antenna A */
 name|HAL_ANT_FIXED_B
 init|=
 literal|2
 block|,
-comment|/* fixed to 11b frequencies */
+comment|/* fixed antenna B */
 block|}
 name|HAL_ANT_SETTING
 typedef|;
@@ -1628,6 +1677,11 @@ end_typedef
 begin_enum
 enum|enum
 block|{
+name|HAL_SLOT_TIME_6
+init|=
+literal|6
+block|,
+comment|/* NB: for turbo mode */
 name|HAL_SLOT_TIME_9
 init|=
 literal|9
@@ -1707,6 +1761,39 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * Like HAL_BEACON_STATE but for non-station mode setup.  * NB: see above flag definitions   */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|u_int32_t
+name|bt_intval
+decl_stmt|;
+comment|/* beacon interval+flags */
+name|u_int32_t
+name|bt_nexttbtt
+decl_stmt|;
+comment|/* next beacon in TU */
+name|u_int32_t
+name|bt_nextatim
+decl_stmt|;
+comment|/* next ATIM in TU */
+name|u_int32_t
+name|bt_nextdba
+decl_stmt|;
+comment|/* next DBA in 1/8th TU */
+name|u_int32_t
+name|bt_nextswba
+decl_stmt|;
+comment|/* next SWBA in 1/8th TU */
+block|}
+name|HAL_BEACON_TIMERS
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Per-node statistics maintained by the driver for use in  * optimizing signal quality and other operational aspects.  */
 end_comment
 
@@ -1767,7 +1854,7 @@ comment|/* HAL ABI version */
 define|#
 directive|define
 name|HAL_ABI_VERSION
-value|0x05122200
+value|0x06052200
 comment|/* YYMMDDnn */
 name|u_int16_t
 name|ah_devid
@@ -1878,6 +1965,18 @@ name|__ahdecl
 function_decl|(
 modifier|*
 name|ah_phyDisable
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|)
+function_decl|;
+name|HAL_BOOL
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_disable
 function_decl|)
 parameter_list|(
 name|struct
@@ -2977,6 +3076,32 @@ parameter_list|,
 name|u_int
 parameter_list|)
 function_decl|;
+name|HAL_ANT_SETTING
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_getAntennaSwitch
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|)
+function_decl|;
+name|HAL_BOOL
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_setAntennaSwitch
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|HAL_ANT_SETTING
+parameter_list|)
+function_decl|;
 name|HAL_BOOL
 name|__ahdecl
 function_decl|(
@@ -3022,6 +3147,32 @@ name|__ahdecl
 function_decl|(
 modifier|*
 name|ah_getAckTimeout
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|)
+function_decl|;
+name|HAL_BOOL
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_setAckCTSRate
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+name|u_int
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_getAckCTSRate
 function_decl|)
 parameter_list|(
 name|struct
@@ -3221,6 +3372,23 @@ name|void
 name|__ahdecl
 function_decl|(
 modifier|*
+name|ah_setBeaconTimers
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+specifier|const
+name|HAL_BEACON_TIMERS
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* NB: deprecated, use ah_setBeaconTimers instead */
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
 name|ah_beaconInit
 function_decl|)
 parameter_list|(
@@ -3261,20 +3429,6 @@ parameter_list|(
 name|struct
 name|ath_hal
 modifier|*
-parameter_list|)
-function_decl|;
-name|HAL_BOOL
-name|__ahdecl
-function_decl|(
-modifier|*
-name|ah_waitForBeaconDone
-function_decl|)
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-parameter_list|,
-name|HAL_BUS_ADDR
 parameter_list|)
 function_decl|;
 comment|/* Interrupt functions */
