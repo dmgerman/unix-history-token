@@ -1134,13 +1134,10 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|kaudit_record
-argument_list|)
+name|struct
+name|kaudit_queue
 name|ar_worklist
-expr_stmt|;
+decl_stmt|;
 name|struct
 name|kaudit_record
 modifier|*
