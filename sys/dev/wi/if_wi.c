@@ -5147,7 +5147,7 @@ name|bpf_peers_present
 argument_list|(
 name|ic
 operator|->
-name|ic_rawbpf
+name|ic_drvbpf
 argument_list|)
 condition|)
 block|{
