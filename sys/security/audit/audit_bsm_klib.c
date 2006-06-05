@@ -503,6 +503,9 @@ parameter_list|(
 name|au_event_t
 name|event
 parameter_list|,
+name|au_class_t
+name|class
+parameter_list|,
 name|au_mask_t
 modifier|*
 name|mask_p
@@ -516,9 +519,6 @@ name|effmask
 init|=
 literal|0
 decl_stmt|;
-name|au_class_t
-name|ae_class
-decl_stmt|;
 if|if
 condition|(
 name|mask_p
@@ -531,13 +531,6 @@ operator|-
 literal|1
 operator|)
 return|;
-name|ae_class
-operator|=
-name|au_event_class
-argument_list|(
-name|event
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Perform the actual check of the masks against the event. 	 */
 if|if
 condition|(
@@ -552,7 +545,7 @@ name|mask_p
 operator|->
 name|am_success
 operator|&
-name|ae_class
+name|class
 operator|)
 expr_stmt|;
 if|if
@@ -568,7 +561,7 @@ name|mask_p
 operator|->
 name|am_failure
 operator|&
-name|ae_class
+name|class
 operator|)
 expr_stmt|;
 if|if

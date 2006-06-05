@@ -208,7 +208,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * Defines for the kernel audit record k_ar_commit field.  */
+comment|/*  * Defines for the kernel audit record k_ar_commit field.  Flags are set to  * indicate what sort of record it is, and which preselection mechanism  * selected it.  */
 end_comment
 
 begin_define
@@ -223,6 +223,20 @@ define|#
 directive|define
 name|AR_COMMIT_USER
 value|0x00000010U
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PRESELECT_TRAIL
+value|0x00001000U
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PRESELECT_PIPE
+value|0x00002000U
 end_define
 
 begin_comment
@@ -933,6 +947,9 @@ parameter_list|(
 name|au_event_t
 name|event
 parameter_list|,
+name|au_class_t
+name|class
+parameter_list|,
 name|au_mask_t
 modifier|*
 name|mask_p
@@ -1148,8 +1165,59 @@ comment|/*  * Audit pipe functions.  */
 end_comment
 
 begin_function_decl
+name|int
+name|audit_pipe_preselect
+parameter_list|(
+name|au_id_t
+name|auid
+parameter_list|,
+name|au_event_t
+name|event
+parameter_list|,
+name|au_class_t
+name|class
+parameter_list|,
+name|int
+name|sorf
+parameter_list|,
+name|int
+name|trail_select
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|audit_pipe_submit
+parameter_list|(
+name|au_id_t
+name|auid
+parameter_list|,
+name|au_event_t
+name|event
+parameter_list|,
+name|au_class_t
+name|class
+parameter_list|,
+name|int
+name|sorf
+parameter_list|,
+name|int
+name|trail_select
+parameter_list|,
+name|void
+modifier|*
+name|record
+parameter_list|,
+name|u_int
+name|record_len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|audit_pipe_submit_user
 parameter_list|(
 name|void
 modifier|*
