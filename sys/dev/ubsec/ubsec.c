@@ -8972,23 +8972,6 @@ operator|->
 name|q_dst_m
 expr_stmt|;
 block|}
-name|ubsecstats
-operator|.
-name|hst_obytes
-operator|+=
-operator|(
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|)
-name|crp
-operator|->
-name|crp_buf
-operator|)
-operator|->
-name|m_len
-expr_stmt|;
 comment|/* copy out IV for future use */
 if|if
 condition|(
