@@ -2038,11 +2038,9 @@ case|case
 literal|7
 case|:
 comment|/* Suspend. */
-name|acpi_SetSleepState
+name|acpi_event_sleep_button_sleep
 argument_list|(
 name|acpi_sc
-argument_list|,
-name|ACPI_STATE_S3
 argument_list|)
 expr_stmt|;
 break|break;
