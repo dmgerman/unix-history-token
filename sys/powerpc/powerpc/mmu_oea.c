@@ -5297,7 +5297,7 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
-name|pmap_enter_locked
+name|moea_enter_locked
 argument_list|(
 name|pmap
 argument_list|,
