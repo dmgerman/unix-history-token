@@ -222,7 +222,7 @@ name|fixpt_t
 name|ke_pctcpu
 decl_stmt|;
 comment|/* (j) %cpu during p_swtime. */
-name|char
+name|u_char
 name|ke_rqindex
 decl_stmt|;
 comment|/* (j) Run queue index. */
