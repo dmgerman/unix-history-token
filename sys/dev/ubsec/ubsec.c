@@ -5460,7 +5460,7 @@ name|ubsec_debug
 condition|)
 name|printf
 argument_list|(
-literal|"ubsec_op_cb: mapsize %u nsegs %d\n"
+literal|"ubsec_op_cb: mapsize %u nsegs %d error %d\n"
 argument_list|,
 operator|(
 name|u_int
@@ -5468,10 +5468,19 @@ operator|)
 name|mapsize
 argument_list|,
 name|nsegs
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return;
 name|op
 operator|->
 name|mapsize
