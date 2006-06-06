@@ -530,7 +530,7 @@ name|_QP_CMP
 argument_list|(
 argument|fge
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 argument|FCC_GE
 argument_list|)
@@ -541,7 +541,7 @@ name|_QP_CMP
 argument_list|(
 argument|fgt
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 argument|FCC_GT
 argument_list|)
@@ -552,7 +552,7 @@ name|_QP_CMP
 argument_list|(
 argument|fle
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 argument|FCC_LE
 argument_list|)
@@ -563,7 +563,7 @@ name|_QP_CMP
 argument_list|(
 argument|flt
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 argument|FCC_LT
 argument_list|)
