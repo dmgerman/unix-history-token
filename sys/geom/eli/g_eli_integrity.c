@@ -1832,6 +1832,11 @@ name|sc
 operator|->
 name|sc_bytes_per_sector
 expr_stmt|;
+name|auth
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* Silence compiler warning. */
 name|plaindata
 operator|=
 name|bp
@@ -2234,13 +2239,9 @@ name|crp
 operator|->
 name|crp_ilen
 operator|=
-name|data_secsize
-expr_stmt|;
-name|crp
+name|uio
 operator|->
-name|crp_olen
-operator|=
-name|data_secsize
+name|uio_resid
 expr_stmt|;
 name|crp
 operator|->
