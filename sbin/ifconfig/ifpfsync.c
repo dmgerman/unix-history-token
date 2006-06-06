@@ -1027,11 +1027,34 @@ literal|0
 index|]
 operator|!=
 literal|'\0'
+operator|||
+name|preq
+operator|.
+name|pfsyncr_syncpeer
+operator|.
+name|s_addr
+operator|!=
+name|INADDR_PFSYNC_GROUP
 condition|)
-block|{
 name|printf
 argument_list|(
-literal|"\tpfsync: syncdev: %s "
+literal|"\t"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|preq
+operator|.
+name|pfsyncr_syncdev
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+name|printf
+argument_list|(
+literal|"pfsync: syncdev: %s "
 argument_list|,
 name|preq
 operator|.
@@ -1060,6 +1083,25 @@ name|pfsyncr_syncpeer
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|preq
+operator|.
+name|pfsyncr_syncdev
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+operator|||
+name|preq
+operator|.
+name|pfsyncr_syncpeer
+operator|.
+name|s_addr
+operator|!=
+name|INADDR_PFSYNC_GROUP
+condition|)
 name|printf
 argument_list|(
 literal|"maxupd: %d\n"
@@ -1069,7 +1111,6 @@ operator|.
 name|pfsyncr_maxupdates
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
