@@ -5726,7 +5726,7 @@ name|ng_callout_init
 parameter_list|(
 name|c
 parameter_list|)
-value|callout_init(c, CALLOUT_MPSAFE)
+value|callout_init(c, NET_CALLOUT_MPSAFE)
 end_define
 
 begin_comment
