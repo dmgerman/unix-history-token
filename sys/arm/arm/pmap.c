@@ -16527,7 +16527,7 @@ directive|ifdef
 name|VERBOSE_INIT_ARM
 name|printf
 argument_list|(
-literal|"pmap_map_chunk: pa=0x%lx va=0x%lx size=0x%lx resid=0x%lx "
+literal|"pmap_map_chunk: pa=0x%x va=0x%x size=0x%x resid=0x%x "
 literal|"prot=0x%x cache=%d\n"
 argument_list|,
 name|pa
@@ -17114,7 +17114,7 @@ directive|ifdef
 name|VERBOSE_INIT_ARM
 name|printf
 argument_list|(
-literal|"devmap: %08lx -> %08lx @ %08lx\n"
+literal|"devmap: %08x -> %08x @ %08x\n"
 argument_list|,
 name|pmap_devmap_table
 index|[
