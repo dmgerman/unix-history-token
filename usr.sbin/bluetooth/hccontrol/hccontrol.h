@@ -59,6 +59,17 @@ begin_comment
 comment|/* invalid parameters */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAX_NODE_NUM
+value|16
+end_define
+
+begin_comment
+comment|/* max number of nodes */
+end_comment
+
 begin_struct
 struct|struct
 name|hci_command
