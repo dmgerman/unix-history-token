@@ -477,10 +477,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|got_mmu
-init|=
-literal|0
+specifier|extern
+name|vm_offset_t
+name|sa1110_uart_vaddr
 decl_stmt|;
 end_decl_stmt
 
@@ -815,6 +814,10 @@ literal|1024
 operator|*
 literal|1024
 decl_stmt|;
+name|sa1110_uart_vaddr
+operator|=
+name|SACOM1_VBASE
+expr_stmt|;
 name|boothowto
 operator|=
 name|RB_VERBOSE
@@ -2014,10 +2017,6 @@ literal|0x337f
 argument_list|,
 literal|0x107d
 argument_list|)
-expr_stmt|;
-name|got_mmu
-operator|=
-literal|1
 expr_stmt|;
 name|arm_vector_init
 argument_list|(

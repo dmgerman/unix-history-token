@@ -102,13 +102,6 @@ name|DEFAULT_RCLK
 value|3686400
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|got_mmu
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Low-level UART interface.  */
 end_comment
@@ -206,14 +199,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|int
-name|did_mmu
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_extern
 extern|extern SLIST_HEAD(uart_devinfo_list
 operator|,
@@ -287,30 +272,6 @@ end_function
 begin_function
 specifier|static
 name|void
-name|sa1110_addr_change
-parameter_list|(
-name|struct
-name|uart_bas
-modifier|*
-name|bas
-parameter_list|)
-block|{
-name|bas
-operator|->
-name|bsh
-operator|=
-name|SACOM1_VBASE
-expr_stmt|;
-name|did_mmu
-operator|=
-literal|1
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
 name|sa1110_init
 parameter_list|(
 name|struct
@@ -334,19 +295,6 @@ block|{
 name|int
 name|brd
 decl_stmt|;
-comment|/* XXX: sigh. */
-if|if
-condition|(
-operator|!
-name|did_mmu
-operator|&&
-name|got_mmu
-condition|)
-name|sa1110_addr_change
-argument_list|(
-name|bas
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|bas
@@ -454,19 +402,6 @@ name|int
 name|c
 parameter_list|)
 block|{
-comment|/* XXX: sigh. */
-if|if
-condition|(
-operator|!
-name|did_mmu
-operator|&&
-name|got_mmu
-condition|)
-name|sa1110_addr_change
-argument_list|(
-name|bas
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 operator|!
@@ -503,19 +438,6 @@ modifier|*
 name|bas
 parameter_list|)
 block|{
-comment|/* XXX: sigh. */
-if|if
-condition|(
-operator|!
-name|did_mmu
-operator|&&
-name|got_mmu
-condition|)
-name|sa1110_addr_change
-argument_list|(
-name|bas
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -570,19 +492,6 @@ block|{
 name|int
 name|c
 decl_stmt|;
-comment|/* XXX: sigh. */
-if|if
-condition|(
-operator|!
-name|did_mmu
-operator|&&
-name|got_mmu
-condition|)
-name|sa1110_addr_change
-argument_list|(
-name|bas
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 operator|!

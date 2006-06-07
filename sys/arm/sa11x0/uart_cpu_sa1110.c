@@ -134,13 +134,6 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|got_mmu
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|uart_cpu_getdev
@@ -183,7 +176,7 @@ name|bas
 operator|.
 name|bsh
 operator|=
-name|SACOM1_BASE
+name|sa1110_uart_vaddr
 expr_stmt|;
 name|di
 operator|->
