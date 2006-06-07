@@ -3920,6 +3920,14 @@ block|{
 name|int
 name|nattr
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|nattr
 operator|=
 name|pmap_get_vac_flags
@@ -6748,17 +6756,19 @@ name|rv
 init|=
 literal|0
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|PMAP_MAP_TO_HEAD_LOCK(); 	pmap_acquire_pmap_lock(pm);
-endif|#
-directive|endif
 name|l1idx
 operator|=
 name|L1_IDX
 argument_list|(
 name|va
+argument_list|)
+expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
+name|PMAP_LOCK
+argument_list|(
+name|pm
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If there is no l2_dtable for this address, then the process 	 * has no business accessing it. 	 * 	 * Note: This will catch userland processes trying to access 	 * kernel addresses. 	 */
@@ -7028,9 +7038,6 @@ modifier|*
 name|pg
 decl_stmt|;
 comment|/* Extract the physical address of the page */
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -7044,14 +7051,9 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 goto|goto
 name|out
 goto|;
-block|}
 comment|/* Get the current flags for this page. */
 name|pv
 operator|=
@@ -7070,14 +7072,9 @@ name|pv
 operator|==
 name|NULL
 condition|)
-block|{
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 goto|goto
 name|out
 goto|;
-block|}
 name|pg
 operator|->
 name|md
@@ -7112,9 +7109,6 @@ expr_stmt|;
 name|rv
 operator|=
 literal|1
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 block|}
 comment|/* 	 * We know there is a valid mapping here, so simply 	 * fix up the L1 if necessary. 	 */
@@ -7364,12 +7358,14 @@ literal|1
 expr_stmt|;
 name|out
 label|:
-if|#
-directive|if
-literal|0
-block|pmap_release_pmap_lock(pm); 	PMAP_MAP_TO_HEAD_UNLOCK();
-endif|#
-directive|endif
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
+name|PMAP_UNLOCK
+argument_list|(
+name|pm
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|rv
