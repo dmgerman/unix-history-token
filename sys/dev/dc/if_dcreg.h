@@ -4695,6 +4695,28 @@ name|DC_DEVICEID_MSMN130
 value|0x0002
 end_define
 
+begin_comment
+comment|/*  * Linksys vendor ID.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_VENDORID_LINKSYS
+value|0x1737
+end_define
+
+begin_comment
+comment|/*  * Linksys device IDs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_DEVICEID_PCMPC200
+value|0xab08
+end_define
+
 begin_define
 define|#
 directive|define

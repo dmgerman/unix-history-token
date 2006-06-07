@@ -759,6 +759,19 @@ literal|"Microsoft MN-130 10/100"
 block|}
 block|,
 block|{
+name|DC_DEVID
+argument_list|(
+name|DC_VENDORID_LINKSYS
+argument_list|,
+name|DC_DEVICEID_PCMPC200
+argument_list|)
+block|,
+literal|0
+block|,
+literal|"Linksys PCMPC200 10/100"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
