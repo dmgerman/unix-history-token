@@ -79,6 +79,47 @@ directive|include
 file|<contrib/dev/ath/ah.h>
 end_include
 
+begin_comment
+comment|/*  * WiSoC boards overload the bus tag with information about the  * board layout.  We must extract the bus space tag from that  * indirect structure.  For everyone else the tag is passed in  * directly.  * XXX cache indirect ref privately  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AH_SUPPORT_AR5312
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|BUSTAG
+parameter_list|(
+name|ah
+parameter_list|)
+define|\
+value|((bus_space_tag_t) ((struct ar531x_config *)((ah)->ah_st))->tag)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|BUSTAG
+parameter_list|(
+name|ah
+parameter_list|)
+value|((bus_space_tag_t) (ah)->ah_st)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|extern
 name|void
@@ -1173,47 +1214,6 @@ name|ale
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * WiSoC boards overload the bus tag with information about the  * board layout.  We must extract the bus space tag from that  * indirect structure.  For everyone else the tag is passed in  * directly.  * XXX cache indirect ref privately  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR5312
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|BUSTAG
-parameter_list|(
-name|ah
-parameter_list|)
-define|\
-value|((bus_space_tag_t) ((struct ar531x_config *)((ah)->ah_st))->tag)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|BUSTAG
-parameter_list|(
-name|ah
-parameter_list|)
-value|((bus_space_tag_t) (ah)->ah_st)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void
