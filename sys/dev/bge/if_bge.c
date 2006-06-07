@@ -760,7 +760,7 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -904,7 +904,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_int8_t
+name|uint8_t
 name|bge_eeprom_getbyte
 parameter_list|(
 name|struct
@@ -913,7 +913,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1089,7 +1089,7 @@ end_ifdef
 
 begin_function_decl
 specifier|static
-name|u_int8_t
+name|uint8_t
 name|bge_vpd_readbyte
 parameter_list|(
 name|struct
@@ -1138,7 +1138,7 @@ end_endif
 
 begin_function_decl
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|bge_readmem_ind
 parameter_list|(
 name|struct
@@ -1174,7 +1174,7 @@ end_ifdef
 
 begin_function_decl
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|bge_readreg_ind
 parameter_list|(
 name|struct
@@ -1257,26 +1257,6 @@ begin_function_decl
 specifier|static
 name|void
 name|bge_poll
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|,
-name|enum
-name|poll_cmd
-name|cmd
-parameter_list|,
-name|int
-name|count
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|bge_poll_locked
 parameter_list|(
 name|struct
 name|ifnet
@@ -1502,21 +1482,17 @@ end_expr_stmt
 
 begin_function
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|bge_readmem_ind
 parameter_list|(
-name|sc
-parameter_list|,
-name|off
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|int
 name|off
-decl_stmt|;
+parameter_list|)
 block|{
 name|device_t
 name|dev
@@ -1558,22 +1534,17 @@ specifier|static
 name|void
 name|bge_writemem_ind
 parameter_list|(
-name|sc
-parameter_list|,
-name|off
-parameter_list|,
-name|val
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|int
 name|off
-decl_stmt|,
+parameter_list|,
+name|int
 name|val
-decl_stmt|;
+parameter_list|)
 block|{
 name|device_t
 name|dev
@@ -1606,7 +1577,6 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1618,21 +1588,17 @@ end_ifdef
 
 begin_function
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|bge_readreg_ind
 parameter_list|(
-name|sc
-parameter_list|,
-name|off
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|int
 name|off
-decl_stmt|;
+parameter_list|)
 block|{
 name|device_t
 name|dev
@@ -1679,22 +1645,17 @@ specifier|static
 name|void
 name|bge_writereg_ind
 parameter_list|(
-name|sc
-parameter_list|,
-name|off
-parameter_list|,
-name|val
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|int
 name|off
-decl_stmt|,
+parameter_list|,
+name|int
 name|val
-decl_stmt|;
+parameter_list|)
 block|{
 name|device_t
 name|dev
@@ -1727,7 +1688,6 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1740,28 +1700,20 @@ specifier|static
 name|void
 name|bge_dma_map_addr
 parameter_list|(
-name|arg
-parameter_list|,
-name|segs
-parameter_list|,
-name|nseg
-parameter_list|,
-name|error
-parameter_list|)
 name|void
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|,
 name|bus_dma_segment_t
 modifier|*
 name|segs
-decl_stmt|;
+parameter_list|,
 name|int
 name|nseg
-decl_stmt|;
+parameter_list|,
 name|int
 name|error
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|bge_dmamap_arg
@@ -1802,7 +1754,6 @@ name|segs
 operator|->
 name|ds_addr
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1814,21 +1765,17 @@ end_ifdef
 
 begin_function
 specifier|static
-name|u_int8_t
+name|uint8_t
 name|bge_vpd_readbyte
 parameter_list|(
-name|sc
-parameter_list|,
-name|addr
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|int
 name|addr
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1836,7 +1783,7 @@ decl_stmt|;
 name|device_t
 name|dev
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|val
 decl_stmt|;
 name|dev
@@ -1952,37 +1899,31 @@ specifier|static
 name|void
 name|bge_vpd_read_res
 parameter_list|(
-name|sc
-parameter_list|,
-name|res
-parameter_list|,
-name|addr
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|struct
 name|vpd_res
 modifier|*
 name|res
-decl_stmt|;
+parameter_list|,
 name|int
 name|addr
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|ptr
 decl_stmt|;
 name|ptr
 operator|=
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 name|res
@@ -2018,7 +1959,6 @@ operator|+
 name|addr
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2027,24 +1967,22 @@ specifier|static
 name|void
 name|bge_vpd_read
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
-name|int
-name|pos
-init|=
-literal|0
-decl_stmt|,
-name|i
-decl_stmt|;
 name|struct
 name|vpd_res
 name|res
+decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|pos
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -2287,7 +2225,6 @@ operator|+
 name|pos
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2302,32 +2239,26 @@ end_comment
 
 begin_function
 specifier|static
-name|u_int8_t
+name|uint8_t
 name|bge_eeprom_getbyte
 parameter_list|(
-name|sc
-parameter_list|,
-name|addr
-parameter_list|,
-name|dest
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|int
 name|addr
-decl_stmt|;
-name|u_int8_t
+parameter_list|,
+name|uint8_t
 modifier|*
 name|dest
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|byte
 init|=
 literal|0
@@ -2477,37 +2408,29 @@ specifier|static
 name|int
 name|bge_read_eeprom
 parameter_list|(
-name|sc
-parameter_list|,
-name|dest
-parameter_list|,
-name|off
-parameter_list|,
-name|cnt
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|caddr_t
 name|dest
-decl_stmt|;
+parameter_list|,
 name|int
 name|off
-decl_stmt|;
+parameter_list|,
 name|int
 name|cnt
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
-name|err
+name|i
+decl_stmt|,
+name|error
 init|=
 literal|0
-decl_stmt|,
-name|i
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|byte
 init|=
 literal|0
@@ -2526,7 +2449,7 @@ name|i
 operator|++
 control|)
 block|{
-name|err
+name|error
 operator|=
 name|bge_eeprom_getbyte
 argument_list|(
@@ -2542,7 +2465,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|err
+name|error
 condition|)
 break|break;
 operator|*
@@ -2557,7 +2480,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|err
+name|error
 condition|?
 literal|1
 else|:
@@ -2572,27 +2495,22 @@ specifier|static
 name|int
 name|bge_miibus_readreg
 parameter_list|(
-name|dev
-parameter_list|,
-name|phy
-parameter_list|,
-name|reg
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|,
 name|int
 name|phy
-decl_stmt|,
+parameter_list|,
+name|int
 name|reg
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|bge_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|val
 decl_stmt|,
 name|autopoll
@@ -2789,31 +2707,25 @@ specifier|static
 name|int
 name|bge_miibus_writereg
 parameter_list|(
-name|dev
-parameter_list|,
-name|phy
-parameter_list|,
-name|reg
-parameter_list|,
-name|val
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|,
 name|int
 name|phy
-decl_stmt|,
+parameter_list|,
+name|int
 name|reg
-decl_stmt|,
+parameter_list|,
+name|int
 name|val
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|bge_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|autopoll
 decl_stmt|;
 name|int
@@ -2968,11 +2880,9 @@ specifier|static
 name|void
 name|bge_miibus_statchg
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|bge_softc
@@ -3020,7 +2930,6 @@ argument_list|)
 operator|==
 name|IFM_1000_T
 condition|)
-block|{
 name|BGE_SETBIT
 argument_list|(
 name|sc
@@ -3030,9 +2939,7 @@ argument_list|,
 name|BGE_PORTMODE_GMII
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|BGE_SETBIT
 argument_list|(
 name|sc
@@ -3042,7 +2949,6 @@ argument_list|,
 name|BGE_PORTMODE_MII
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -3055,7 +2961,6 @@ operator|)
 operator|==
 name|IFM_FDX
 condition|)
-block|{
 name|BGE_CLRBIT
 argument_list|(
 name|sc
@@ -3065,9 +2970,7 @@ argument_list|,
 name|BGE_MACMODE_HALF_DUPLEX
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|BGE_SETBIT
 argument_list|(
 name|sc
@@ -3077,8 +2980,6 @@ argument_list|,
 name|BGE_MACMODE_HALF_DUPLEX
 argument_list|)
 expr_stmt|;
-block|}
-return|return;
 block|}
 end_function
 
@@ -3091,25 +2992,19 @@ specifier|static
 name|int
 name|bge_newbuf_std
 parameter_list|(
-name|sc
-parameter_list|,
-name|i
-parameter_list|,
-name|m
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|int
 name|i
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|mbuf
@@ -3413,25 +3308,19 @@ specifier|static
 name|int
 name|bge_newbuf_jumbo
 parameter_list|(
-name|sc
-parameter_list|,
-name|i
-parameter_list|,
-name|m
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|int
 name|i
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|)
 block|{
 name|bus_dma_segment_t
 name|segs
@@ -3913,13 +3802,11 @@ specifier|static
 name|int
 name|bge_init_rx_ring_std
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -4009,13 +3896,11 @@ specifier|static
 name|void
 name|bge_free_rx_ring_std
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -4134,7 +4019,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4143,13 +4027,11 @@ specifier|static
 name|int
 name|bge_init_rx_ring_jumbo
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|bge_rcb
@@ -4277,13 +4159,11 @@ specifier|static
 name|void
 name|bge_free_rx_ring_jumbo
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -4402,7 +4282,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4411,13 +4290,11 @@ specifier|static
 name|void
 name|bge_free_tx_ring
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -4547,7 +4424,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4556,13 +4432,11 @@ specifier|static
 name|int
 name|bge_init_tx_ring
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|sc
 operator|->
@@ -4655,13 +4529,11 @@ specifier|static
 name|void
 name|bge_setmulti
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ifnet
@@ -4673,7 +4545,7 @@ name|ifmultiaddr
 modifier|*
 name|ifma
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|hashes
 index|[
 literal|4
@@ -4882,7 +4754,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4895,19 +4766,17 @@ specifier|static
 name|int
 name|bge_chipinit
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
+name|uint32_t
+name|dma_rw_ctl
+decl_stmt|;
 name|int
 name|i
-decl_stmt|;
-name|u_int32_t
-name|dma_rw_ctl
 decl_stmt|;
 comment|/* Set endian type before we access any non-PCI registers. */
 name|pci_write_config
@@ -4978,7 +4847,7 @@ name|i
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 control|)
 name|BGE_MEMWIN_WRITE
@@ -5006,7 +4875,7 @@ name|i
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 control|)
 name|BGE_MEMWIN_WRITE
@@ -5155,7 +5024,7 @@ operator|==
 name|BGE_ASICREV_BCM5704
 condition|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|tmp
 decl_stmt|;
 name|tmp
@@ -5304,13 +5173,11 @@ specifier|static
 name|int
 name|bge_blockinit
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|bge_rcb
@@ -6311,7 +6178,7 @@ operator|*
 operator|(
 sizeof|sizeof
 argument_list|(
-name|u_int64_t
+name|uint64_t
 argument_list|)
 operator|)
 operator|)
@@ -7285,11 +7152,9 @@ specifier|static
 name|int
 name|bge_probe
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|bge_type
@@ -7484,18 +7349,16 @@ specifier|static
 name|void
 name|bge_dma_free
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
 decl_stmt|;
-comment|/* Destroy DMA maps for RX buffers */
+comment|/* Destroy DMA maps for RX buffers. */
 for|for
 control|(
 name|i
@@ -7540,7 +7403,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Destroy DMA maps for jumbo RX buffers */
+comment|/* Destroy DMA maps for jumbo RX buffers. */
 for|for
 control|(
 name|i
@@ -7585,7 +7448,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Destroy DMA maps for TX buffers */
+comment|/* Destroy DMA maps for TX buffers. */
 for|for
 control|(
 name|i
@@ -7647,7 +7510,7 @@ operator|.
 name|bge_mtag
 argument_list|)
 expr_stmt|;
-comment|/* Destroy standard RX ring */
+comment|/* Destroy standard RX ring. */
 if|if
 condition|(
 name|sc
@@ -7723,7 +7586,7 @@ operator|.
 name|bge_rx_std_ring_tag
 argument_list|)
 expr_stmt|;
-comment|/* Destroy jumbo RX ring */
+comment|/* Destroy jumbo RX ring. */
 if|if
 condition|(
 name|sc
@@ -7799,7 +7662,7 @@ operator|.
 name|bge_rx_jumbo_ring_tag
 argument_list|)
 expr_stmt|;
-comment|/* Destroy RX return ring */
+comment|/* Destroy RX return ring. */
 if|if
 condition|(
 name|sc
@@ -7875,7 +7738,7 @@ operator|.
 name|bge_rx_return_ring_tag
 argument_list|)
 expr_stmt|;
-comment|/* Destroy TX ring */
+comment|/* Destroy TX ring. */
 if|if
 condition|(
 name|sc
@@ -7951,7 +7814,7 @@ operator|.
 name|bge_tx_ring_tag
 argument_list|)
 expr_stmt|;
-comment|/* Destroy status block */
+comment|/* Destroy status block. */
 if|if
 condition|(
 name|sc
@@ -8027,7 +7890,7 @@ operator|.
 name|bge_status_tag
 argument_list|)
 expr_stmt|;
-comment|/* Destroy statistics block */
+comment|/* Destroy statistics block. */
 if|if
 condition|(
 name|sc
@@ -8103,7 +7966,7 @@ operator|.
 name|bge_stats_tag
 argument_list|)
 expr_stmt|;
-comment|/* Destroy the parent tag */
+comment|/* Destroy the parent tag. */
 if|if
 condition|(
 name|sc
@@ -8121,7 +7984,6 @@ operator|.
 name|bge_parent_tag
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8130,12 +7992,14 @@ specifier|static
 name|int
 name|bge_dma_alloc
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
+name|struct
+name|bge_dmamap_arg
+name|ctx
+decl_stmt|;
 name|struct
 name|bge_softc
 modifier|*
@@ -8145,10 +8009,6 @@ name|int
 name|i
 decl_stmt|,
 name|error
-decl_stmt|;
-name|struct
-name|bge_dmamap_arg
-name|ctx
 decl_stmt|;
 name|sc
 operator|=
@@ -8292,7 +8152,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/* Create DMA maps for RX buffers */
+comment|/* Create DMA maps for RX buffers. */
 for|for
 control|(
 name|i
@@ -8351,7 +8211,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* Create DMA maps for TX buffers */
+comment|/* Create DMA maps for TX buffers. */
 for|for
 control|(
 name|i
@@ -8410,7 +8270,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* Create tag for standard RX ring */
+comment|/* Create tag for standard RX ring. */
 name|error
 operator|=
 name|bus_dma_tag_create
@@ -8473,7 +8333,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/* Allocate DMA'able memory for standard RX ring */
+comment|/* Allocate DMA'able memory for standard RX ring. */
 name|error
 operator|=
 name|bus_dmamem_alloc
@@ -8530,7 +8390,7 @@ argument_list|,
 name|BGE_STD_RX_RING_SZ
 argument_list|)
 expr_stmt|;
-comment|/* Load the address of the standard RX ring */
+comment|/* Load the address of the standard RX ring. */
 name|ctx
 operator|.
 name|bge_maxsegs
@@ -8594,6 +8454,7 @@ name|ctx
 operator|.
 name|bge_busaddr
 expr_stmt|;
+comment|/* Create tags for jumbo mbufs. */
 if|if
 condition|(
 name|sc
@@ -8609,7 +8470,6 @@ operator|!=
 name|BGE_ASICREV_BCM5750
 condition|)
 block|{
-comment|/* 		 * Create tag for jumbo mbufs. 		 * This is really a bit of a kludge. We allocate a special 		 * jumbo buffer pool which (thanks to the way our DMA 		 * memory allocation works) will consist of contiguous 		 * pages. This means that even though a jumbo buffer might 		 * be larger than a page size, we don't really need to 		 * map it into more than one DMA segment. However, the 		 * default mbuf tag will result in multi-segment mappings, 		 * so we have to create a special jumbo mbuf tag that 		 * lets us get away with mapping the jumbo buffers as 		 * a single segment. I think eventually the driver should 		 * be changed so that it uses ordinary mbufs and cluster 		 * buffers, i.e. jumbo frames can span multiple DMA 		 * descriptors. But that's a project for another day. 		 */
 name|error
 operator|=
 name|bus_dma_tag_create
@@ -8663,7 +8523,7 @@ name|sc
 operator|->
 name|bge_dev
 argument_list|,
-literal|"could not allocate dma tag\n"
+literal|"could not allocate jumbo dma tag\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -8672,7 +8532,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/* Create tag for jumbo RX ring */
+comment|/* Create tag for jumbo RX ring. */
 name|error
 operator|=
 name|bus_dma_tag_create
@@ -8726,7 +8586,7 @@ name|sc
 operator|->
 name|bge_dev
 argument_list|,
-literal|"could not allocate dma tag\n"
+literal|"could not allocate jumbo ring dma tag\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -8735,7 +8595,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/* Allocate DMA'able memory for jumbo RX ring */
+comment|/* Allocate DMA'able memory for jumbo RX ring. */
 name|error
 operator|=
 name|bus_dmamem_alloc
@@ -8779,7 +8639,7 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-comment|/* Load the address of the jumbo RX ring */
+comment|/* Load the address of the jumbo RX ring. */
 name|ctx
 operator|.
 name|bge_maxsegs
@@ -8843,7 +8703,7 @@ name|ctx
 operator|.
 name|bge_busaddr
 expr_stmt|;
-comment|/* Create DMA maps for jumbo RX buffers */
+comment|/* Create DMA maps for jumbo RX buffers. */
 for|for
 control|(
 name|i
@@ -8892,7 +8752,7 @@ name|sc
 operator|->
 name|bge_dev
 argument_list|,
-literal|"can't create DMA map for RX\n"
+literal|"can't create DMA map for jumbo RX\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -8903,7 +8763,7 @@ return|;
 block|}
 block|}
 block|}
-comment|/* Create tag for RX return ring */
+comment|/* Create tag for RX return ring. */
 name|error
 operator|=
 name|bus_dma_tag_create
@@ -8972,7 +8832,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/* Allocate DMA'able memory for RX return ring */
+comment|/* Allocate DMA'able memory for RX return ring. */
 name|error
 operator|=
 name|bus_dmamem_alloc
@@ -9032,7 +8892,7 @@ name|sc
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Load the address of the RX return ring */
+comment|/* Load the address of the RX return ring. */
 name|ctx
 operator|.
 name|bge_maxsegs
@@ -9099,7 +8959,7 @@ name|ctx
 operator|.
 name|bge_busaddr
 expr_stmt|;
-comment|/* Create tag for TX ring */
+comment|/* Create tag for TX ring. */
 name|error
 operator|=
 name|bus_dma_tag_create
@@ -9162,7 +9022,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/* Allocate DMA'able memory for TX ring */
+comment|/* Allocate DMA'able memory for TX ring. */
 name|error
 operator|=
 name|bus_dmamem_alloc
@@ -9219,7 +9079,7 @@ argument_list|,
 name|BGE_TX_RING_SZ
 argument_list|)
 expr_stmt|;
-comment|/* Load the address of the TX ring */
+comment|/* Load the address of the TX ring. */
 name|ctx
 operator|.
 name|bge_maxsegs
@@ -9283,7 +9143,7 @@ name|ctx
 operator|.
 name|bge_busaddr
 expr_stmt|;
-comment|/* Create tag for status block */
+comment|/* Create tag for status block. */
 name|error
 operator|=
 name|bus_dma_tag_create
@@ -9346,7 +9206,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/* Allocate DMA'able memory for status block */
+comment|/* Allocate DMA'able memory for status block. */
 name|error
 operator|=
 name|bus_dmamem_alloc
@@ -9403,7 +9263,7 @@ argument_list|,
 name|BGE_STATUS_BLK_SZ
 argument_list|)
 expr_stmt|;
-comment|/* Load the address of the status block */
+comment|/* Load the address of the status block. */
 name|ctx
 operator|.
 name|sc
@@ -9467,7 +9327,7 @@ name|ctx
 operator|.
 name|bge_busaddr
 expr_stmt|;
-comment|/* Create tag for statistics block */
+comment|/* Create tag for statistics block. */
 name|error
 operator|=
 name|bus_dma_tag_create
@@ -9530,7 +9390,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/* Allocate DMA'able memory for statistics block */
+comment|/* Allocate DMA'able memory for statistics block. */
 name|error
 operator|=
 name|bus_dmamem_alloc
@@ -9587,7 +9447,7 @@ argument_list|,
 name|BGE_STATS_SZ
 argument_list|)
 expr_stmt|;
-comment|/* Load the address of the statstics block */
+comment|/* Load the address of the statstics block. */
 name|ctx
 operator|.
 name|sc
@@ -9664,11 +9524,9 @@ specifier|static
 name|int
 name|bge_attach
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ifnet
@@ -9680,12 +9538,12 @@ name|bge_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|hwcfg
 init|=
 literal|0
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|mac_tmp
 init|=
 literal|0
@@ -9792,7 +9650,7 @@ operator|->
 name|bge_res
 argument_list|)
 expr_stmt|;
-comment|/* Allocate interrupt */
+comment|/* Allocate interrupt. */
 name|rid
 operator|=
 literal|0
@@ -9920,7 +9778,7 @@ operator|==
 name|BGE_ASICREV_BCM5750
 condition|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|v
 decl_stmt|;
 name|v
@@ -10833,11 +10691,9 @@ specifier|static
 name|int
 name|bge_detach
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|bge_softc
@@ -10956,13 +10812,11 @@ specifier|static
 name|void
 name|bge_release_resources
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|device_t
 name|dev
@@ -11106,7 +10960,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -11115,18 +10968,16 @@ specifier|static
 name|void
 name|bge_reset
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|device_t
 name|dev
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|cachesize
 decl_stmt|,
 name|command
@@ -11354,7 +11205,7 @@ literal|4
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Reset some of the PCI state that got zapped by reset */
+comment|/* Reset some of the PCI state that got zapped by reset. */
 name|pci_write_config
 argument_list|(
 name|dev
@@ -11532,7 +11383,7 @@ literal|10
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Fix up byte swapping */
+comment|/* Fix up byte swapping. */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -11647,7 +11498,6 @@ argument_list|(
 literal|10000
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -11660,13 +11510,11 @@ specifier|static
 name|void
 name|bge_rxeof
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ifnet
@@ -11687,7 +11535,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Nothing to do */
+comment|/* Nothing to do. */
 if|if
 condition|(
 name|sc
@@ -11806,7 +11654,7 @@ name|bge_rx_bd
 modifier|*
 name|cur_rx
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|rxidx
 decl_stmt|;
 name|struct
@@ -11816,7 +11664,7 @@ name|m
 init|=
 name|NULL
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|vlan_tag
 init|=
 literal|0
@@ -12494,13 +12342,11 @@ specifier|static
 name|void
 name|bge_txeof
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|bge_tx_bd
@@ -12519,7 +12365,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Nothing to do */
+comment|/* Nothing to do. */
 if|if
 condition|(
 name|sc
@@ -12586,7 +12432,7 @@ operator|.
 name|bge_tx_cons_idx
 condition|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|idx
 init|=
 literal|0
@@ -12768,6 +12614,9 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
+name|uint32_t
+name|statusword
+decl_stmt|;
 name|BGE_LOCK
 argument_list|(
 name|sc
@@ -12775,64 +12624,23 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
 name|ifp
 operator|->
 name|if_drv_flags
 operator|&
 name|IFF_DRV_RUNNING
+operator|)
 condition|)
-name|bge_poll_locked
-argument_list|(
-name|ifp
-argument_list|,
-name|cmd
-argument_list|,
-name|count
-argument_list|)
-expr_stmt|;
+block|{
 name|BGE_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|bge_poll_locked
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|,
-name|enum
-name|poll_cmd
-name|cmd
-parameter_list|,
-name|int
-name|count
-parameter_list|)
-block|{
-name|struct
-name|bge_softc
-modifier|*
-name|sc
-init|=
-name|ifp
-operator|->
-name|if_softc
-decl_stmt|;
-name|uint32_t
-name|statusword
-decl_stmt|;
-name|BGE_LOCK_ASSERT
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
 name|sc
@@ -12960,6 +12768,11 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+name|BGE_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -12977,12 +12790,10 @@ specifier|static
 name|void
 name|bge_intr
 parameter_list|(
-name|xsc
-parameter_list|)
 name|void
 modifier|*
 name|xsc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|bge_softc
@@ -13126,13 +12937,13 @@ operator|&
 name|IFF_DRV_RUNNING
 condition|)
 block|{
-comment|/* Check RX return ring producer/consumer */
+comment|/* Check RX return ring producer/consumer. */
 name|bge_rxeof
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Check TX ring producer/consumer */
+comment|/* Check TX ring producer/consumer. */
 name|bge_txeof
 argument_list|(
 name|sc
@@ -13176,7 +12987,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -13185,13 +12995,11 @@ specifier|static
 name|void
 name|bge_tick_locked
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|mii_data
@@ -13259,7 +13067,7 @@ comment|/* 		 * Since in TBI mode auto-polling can't be used we should poll 		 *
 ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
-comment|/* In polling mode we poll link state in bge_poll_locked() */
+comment|/* In polling mode we poll link state in bge_poll(). */
 if|if
 condition|(
 operator|!
@@ -13314,12 +13122,10 @@ specifier|static
 name|void
 name|bge_tick
 parameter_list|(
-name|xsc
-parameter_list|)
 name|void
 modifier|*
 name|xsc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|bge_softc
@@ -13353,24 +13159,22 @@ specifier|static
 name|void
 name|bge_stats_update_regs
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
+name|struct
+name|bge_mac_stats_regs
+name|stats
+decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|struct
-name|bge_mac_stats_regs
-name|stats
-decl_stmt|;
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|s
 decl_stmt|;
@@ -13390,7 +13194,7 @@ expr_stmt|;
 name|s
 operator|=
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|&
@@ -13481,13 +13285,11 @@ specifier|static
 name|void
 name|bge_stats_update
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ifnet
@@ -13888,26 +13690,20 @@ specifier|static
 name|int
 name|bge_encap
 parameter_list|(
-name|sc
-parameter_list|,
-name|m_head
-parameter_list|,
-name|txidx
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|m_head
-decl_stmt|;
+parameter_list|,
 name|uint32_t
 modifier|*
 name|txidx
-decl_stmt|;
+parameter_list|)
 block|{
 name|bus_dma_segment_t
 name|segs
@@ -14420,13 +14216,11 @@ specifier|static
 name|void
 name|bge_start_locked
 parameter_list|(
-name|ifp
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|bge_softc
@@ -14615,11 +14409,9 @@ name|count
 operator|==
 literal|0
 condition|)
-block|{
-comment|/* no packets were dequeued */
+comment|/* No packets were dequeued. */
 return|return;
-block|}
-comment|/* Transmit */
+comment|/* Transmit. */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -14660,7 +14452,6 @@ name|if_timer
 operator|=
 literal|5
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -14673,13 +14464,11 @@ specifier|static
 name|void
 name|bge_start
 parameter_list|(
-name|ifp
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|bge_softc
@@ -14715,20 +14504,18 @@ specifier|static
 name|void
 name|bge_init_locked
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|m
 decl_stmt|;
@@ -14816,7 +14603,7 @@ comment|/* Load our MAC address. */
 name|m
 operator|=
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 name|IF_LLADDR
@@ -14922,7 +14709,7 @@ operator|==
 name|BGE_CHIPID_BCM5705_A0
 condition|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|v
 decl_stmt|,
 name|i
@@ -15005,7 +14792,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Init our RX return ring index */
+comment|/* Init our RX return ring index. */
 name|sc
 operator|->
 name|bge_rx_saved_considx
@@ -15018,7 +14805,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Turn on transmitter */
+comment|/* Turn on transmitter. */
 name|BGE_SETBIT
 argument_list|(
 name|sc
@@ -15028,7 +14815,7 @@ argument_list|,
 name|BGE_TXMODE_ENABLE
 argument_list|)
 expr_stmt|;
-comment|/* Turn on receiver */
+comment|/* Turn on receiver. */
 name|BGE_SETBIT
 argument_list|(
 name|sc
@@ -15171,12 +14958,10 @@ specifier|static
 name|void
 name|bge_init
 parameter_list|(
-name|xsc
-parameter_list|)
 name|void
 modifier|*
 name|xsc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|bge_softc
@@ -15200,7 +14985,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -15213,13 +14997,11 @@ specifier|static
 name|int
 name|bge_ifmedia_upd
 parameter_list|(
-name|ifp
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|bge_softc
@@ -15487,20 +15269,16 @@ specifier|static
 name|void
 name|bge_ifmedia_sts
 parameter_list|(
-name|ifp
-parameter_list|,
-name|ifmr
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ifmediareq
 modifier|*
 name|ifmr
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|bge_softc
@@ -15616,7 +15394,6 @@ name|mii
 operator|->
 name|mii_media_status
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -15625,23 +15402,17 @@ specifier|static
 name|int
 name|bge_ioctl
 parameter_list|(
-name|ifp
-parameter_list|,
-name|command
-parameter_list|,
-name|data
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|,
 name|u_long
 name|command
-decl_stmt|;
+parameter_list|,
 name|caddr_t
 name|data
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|bge_softc
@@ -15664,17 +15435,17 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
+name|struct
+name|mii_data
+modifier|*
+name|mii
+decl_stmt|;
 name|int
 name|mask
 decl_stmt|,
 name|error
 init|=
 literal|0
-decl_stmt|;
-name|struct
-name|mii_data
-modifier|*
-name|mii
 decl_stmt|;
 switch|switch
 condition|(
@@ -16240,13 +16011,11 @@ specifier|static
 name|void
 name|bge_watchdog
 parameter_list|(
-name|ifp
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|bge_softc
@@ -16283,7 +16052,6 @@ operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -16296,13 +16064,11 @@ specifier|static
 name|void
 name|bge_stop
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ifnet
@@ -16361,7 +16127,7 @@ operator|->
 name|bge_stat_ch
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Disable all of the receiver blocks 	 */
+comment|/* 	 * Disable all of the receiver blocks. 	 */
 name|BGE_CLRBIT
 argument_list|(
 name|sc
@@ -16439,7 +16205,7 @@ argument_list|,
 name|BGE_RBDCMODE_ENABLE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Disable all of the transmit blocks 	 */
+comment|/* 	 * Disable all of the transmit blocks. 	 */
 name|BGE_CLRBIT
 argument_list|(
 name|sc
@@ -16795,11 +16561,9 @@ specifier|static
 name|void
 name|bge_shutdown
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|bge_softc
@@ -16833,7 +16597,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -16964,13 +16727,11 @@ specifier|static
 name|void
 name|bge_link_upd
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|mii_data
@@ -16987,7 +16748,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Clear 'pending link event' flag */
+comment|/* Clear 'pending link event' flag. */
 name|sc
 operator|->
 name|bge_link_evt
@@ -17138,7 +16899,7 @@ literal|"link DOWN\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Clear the interrupt */
+comment|/* Clear the interrupt. */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -17460,7 +17221,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* Clear the attention */
+comment|/* Clear the attention. */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
