@@ -1940,6 +1940,9 @@ modifier|*
 name|td
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 name|struct
 name|ipxpcb
 modifier|*
@@ -1950,6 +1953,8 @@ argument_list|(
 name|so
 argument_list|)
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|error
 decl_stmt|;
