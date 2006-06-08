@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2000, 2001 by LSI Logic Corporation  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  *           Name:  MPI_FC.H  *          Title:  MPI Fibre Channel messages and structures  *  Creation Date:  June 12, 2000  *  *    MPI Version:  01.02.02  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  05-08-00  00.10.01  Original release for 0.10 spec dated 4/26/2000.  *  06-06-00  01.00.01  Update version number for 1.0 release.  *  06-12-00  01.00.02  Added _MSG_FC_ABORT_REPLY structure.  *  11-02-00  01.01.01  Original release for post 1.0 work  *  12-04-00  01.01.02  Added messages for Common Transport Send and  *                      Primitive Send.  *  01-09-01  01.01.03  Modifed some of the new flags to have an MPI prefix  *                      and modified the FcPrimitiveSend flags.  *  01-25-01  01.01.04  Move InitiatorIndex in LinkServiceRsp reply to a larger  *                      field.  *                      Added FC_ABORT_TYPE_CT_SEND_REQUEST and  *                      FC_ABORT_TYPE_EXLINKSEND_REQUEST for FcAbort request.  *                      Added MPI_FC_PRIM_SEND_FLAGS_STOP_SEND.  *  02-20-01  01.01.05  Started using MPI_POINTER.  *  03-27-01  01.01.06  Added Flags field to MSG_LINK_SERVICE_BUFFER_POST_REPLY  *                      and defined MPI_LS_BUF_POST_REPLY_FLAG_NO_RSP_NEEDED.  *                      Added MPI_FC_PRIM_SEND_FLAGS_RESET_LINK define.  *                      Added structure offset comments.  *  04-09-01  01.01.07  Added RspLength field to MSG_LINK_SERVICE_RSP_REQUEST.  *  08-08-01  01.02.01  Original release for v1.2 work.  *  09-28-01  01.02.02  Change name of reserved field in  *                      MSG_LINK_SERVICE_RSP_REPLY.  *  --------------------------------------------------------------------------  */
+comment|/*-  * Copyright (c) 2000-2005, LSI Logic Corporation and its contributors.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon including  *    a substantially similar Disclaimer requirement for further binary  *    redistribution.  * 3. Neither the name of the LSI Logic Corporation nor the names of its  *    contributors may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF THE COPYRIGHT  * OWNER OR CONTRIBUTOR IS ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *   *   *           Name:  mpi_fc.h  *          Title:  MPI Fibre Channel messages and structures  *  Creation Date:  June 12, 2000  *  *    mpi_fc.h Version:  01.05.01  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  05-08-00  00.10.01  Original release for 0.10 spec dated 4/26/2000.  *  06-06-00  01.00.01  Update version number for 1.0 release.  *  06-12-00  01.00.02  Added _MSG_FC_ABORT_REPLY structure.  *  11-02-00  01.01.01  Original release for post 1.0 work  *  12-04-00  01.01.02  Added messages for Common Transport Send and  *                      Primitive Send.  *  01-09-01  01.01.03  Modifed some of the new flags to have an MPI prefix  *                      and modified the FcPrimitiveSend flags.  *  01-25-01  01.01.04  Move InitiatorIndex in LinkServiceRsp reply to a larger  *                      field.  *                      Added FC_ABORT_TYPE_CT_SEND_REQUEST and  *                      FC_ABORT_TYPE_EXLINKSEND_REQUEST for FcAbort request.  *                      Added MPI_FC_PRIM_SEND_FLAGS_STOP_SEND.  *  02-20-01  01.01.05  Started using MPI_POINTER.  *  03-27-01  01.01.06  Added Flags field to MSG_LINK_SERVICE_BUFFER_POST_REPLY  *                      and defined MPI_LS_BUF_POST_REPLY_FLAG_NO_RSP_NEEDED.  *                      Added MPI_FC_PRIM_SEND_FLAGS_RESET_LINK define.  *                      Added structure offset comments.  *  04-09-01  01.01.07  Added RspLength field to MSG_LINK_SERVICE_RSP_REQUEST.  *  08-08-01  01.02.01  Original release for v1.2 work.  *  09-28-01  01.02.02  Change name of reserved field in  *                      MSG_LINK_SERVICE_RSP_REPLY.  *  05-31-02  01.02.03  Adding AliasIndex to FC Direct Access requests.  *  01-16-04  01.02.04  Added define for MPI_FC_PRIM_SEND_FLAGS_ML_RESET_LINK.  *  05-11-04  01.03.01  Original release for MPI v1.3.  *  08-19-04  01.05.01  Original release for MPI v1.5.  *  --------------------------------------------------------------------------  */
 end_comment
 
 begin_ifndef
@@ -20,7 +20,7 @@ name|MPI_FC_H
 end_define
 
 begin_comment
-comment|/***************************************************************************** * *        F C    T a r g e t    M o d e    M e s s a g e s * *****************************************************************************/
+comment|/***************************************************************************** * *        F C    D i r e c t    A c c e s s     M e s s a g e s * *****************************************************************************/
 end_comment
 
 begin_comment
@@ -621,7 +621,7 @@ name|SendFlags
 decl_stmt|;
 comment|/* 00h */
 name|U8
-name|Reserved
+name|AliasIndex
 decl_stmt|;
 comment|/* 01h */
 name|U8
@@ -698,10 +698,14 @@ typedef|typedef
 struct|struct
 name|_MSG_EXLINK_SERVICE_SEND_REPLY
 block|{
-name|U16
+name|U8
 name|Reserved
 decl_stmt|;
 comment|/* 00h */
+name|U8
+name|AliasIndex
+decl_stmt|;
+comment|/* 01h */
 name|U8
 name|MsgLength
 decl_stmt|;
@@ -940,7 +944,7 @@ name|SendFlags
 decl_stmt|;
 comment|/* 00h */
 name|U8
-name|Reserved
+name|AliasIndex
 decl_stmt|;
 comment|/* 01h */
 name|U8
@@ -1025,10 +1029,14 @@ typedef|typedef
 struct|struct
 name|_MSG_FC_COMMON_TRANSPORT_SEND_REPLY
 block|{
-name|U16
+name|U8
 name|Reserved
 decl_stmt|;
 comment|/* 00h */
+name|U8
+name|AliasIndex
+decl_stmt|;
+comment|/* 01h */
 name|U8
 name|MsgLength
 decl_stmt|;
@@ -1156,6 +1164,13 @@ define|#
 directive|define
 name|MPI_FC_PRIM_SEND_FLAGS_PORT_MASK
 value|(0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_FC_PRIM_SEND_FLAGS_ML_RESET_LINK
+value|(0x02)
 end_define
 
 begin_define
