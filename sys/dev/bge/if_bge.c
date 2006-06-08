@@ -17074,7 +17074,7 @@ operator|&
 name|BGE_MIMODE_AUTOPOLL
 condition|)
 block|{
-comment|/*  		 * Some broken BCM chips have BGE_STATFLAG_LINKSTATE_CHANGED bit 		 * in status word always set. Workaround this bug by reading 		 * PHY link status directly. 		 */
+comment|/* 		 * Some broken BCM chips have BGE_STATFLAG_LINKSTATE_CHANGED bit 		 * in status word always set. Workaround this bug by reading 		 * PHY link status directly. 		 */
 name|link
 operator|=
 operator|(
