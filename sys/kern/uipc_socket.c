@@ -687,10 +687,14 @@ expr_stmt|;
 if|if
 condition|(
 name|so
-operator|!=
+operator|==
 name|NULL
 condition|)
-block|{
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 ifdef|#
 directive|ifdef
 name|MAC
@@ -771,7 +775,6 @@ operator|&
 name|so_global_mtx
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|so
