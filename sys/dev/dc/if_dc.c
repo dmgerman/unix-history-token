@@ -763,12 +763,25 @@ name|DC_DEVID
 argument_list|(
 name|DC_VENDORID_LINKSYS
 argument_list|,
-name|DC_DEVICEID_PCMPC200
+name|DC_DEVICEID_PCMPC200_AB08
 argument_list|)
 block|,
 literal|0
 block|,
-literal|"Linksys PCMPC200 10/100"
+literal|"Linksys PCMPC200 CardBus 10/100"
+block|}
+block|,
+block|{
+name|DC_DEVID
+argument_list|(
+name|DC_VENDORID_LINKSYS
+argument_list|,
+name|DC_DEVICEID_PCMPC200_AB09
+argument_list|)
+block|,
+literal|0
+block|,
+literal|"Linksys PCMPC200 CardBus 10/100"
 block|}
 block|,
 block|{
@@ -9249,6 +9262,22 @@ argument_list|(
 name|DC_VENDORID_MICROSOFT
 argument_list|,
 name|DC_DEVICEID_MSMN130
+argument_list|)
+case|:
+case|case
+name|DC_DEVID
+argument_list|(
+name|DC_VENDORID_LINKSYS
+argument_list|,
+name|DC_DEVICEID_PCMPC200_AB08
+argument_list|)
+case|:
+case|case
+name|DC_DEVID
+argument_list|(
+name|DC_VENDORID_LINKSYS
+argument_list|,
+name|DC_DEVICEID_PCMPC200_AB09
 argument_list|)
 case|:
 name|sc
