@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2004-2005 Robert N. M. Watson  * Copyright (c) 1995, Mike Mitchell  * Copyright (c) 1984, 1985, 1986, 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ipx_usrreq.c  */
+comment|/*-  * Copyright (c) 1984, 1985, 1986, 1987, 1993  *	The Regents of the University of California.  * Copyright (c) 1995, Mike Mitchell  * Copyright (c) 2004-2006 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ipx_usrreq.c  */
 end_comment
 
 begin_include
@@ -1469,21 +1469,21 @@ decl_stmt|;
 name|long
 name|seq
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|ipxp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"ipx_ctloutput: ipxp == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|ipxp
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 switch|switch
 condition|(
 name|sopt
@@ -1857,6 +1857,17 @@ argument_list|(
 name|so
 argument_list|)
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|ipxp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"ipx_usr_abort: ipxp == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 name|IPX_LIST_LOCK
 argument_list|()
 expr_stmt|;
@@ -1866,6 +1877,11 @@ name|ipxp
 argument_list|)
 expr_stmt|;
 name|ipx_pcbdetach
+argument_list|(
+name|ipxp
+argument_list|)
+expr_stmt|;
+name|ipx_pcbfree
 argument_list|(
 name|ipxp
 argument_list|)
@@ -1937,15 +1953,37 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|ipxp
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"ipx_attach: ipxp != NULL"
+operator|)
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|soreserve
+argument_list|(
+name|so
+argument_list|,
+name|ipxsendspace
+argument_list|,
+name|ipxrecvspace
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|ipxp
+name|error
 operator|!=
-name|NULL
+literal|0
 condition|)
 return|return
 operator|(
-name|EINVAL
+name|error
 operator|)
 return|;
 name|IPX_LIST_LOCK
@@ -1965,23 +2003,6 @@ argument_list|)
 expr_stmt|;
 name|IPX_LIST_UNLOCK
 argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-condition|)
-name|error
-operator|=
-name|soreserve
-argument_list|(
-name|so
-argument_list|,
-name|ipxsendspace
-argument_list|,
-name|ipxrecvspace
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -2031,6 +2052,17 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|ipxp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"ipx_bind: ipxp == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 name|IPX_LIST_LOCK
 argument_list|()
 expr_stmt|;
@@ -2106,6 +2138,17 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|ipxp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"ipx_connect: ipxp == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 name|IPX_LIST_LOCK
 argument_list|()
 expr_stmt|;
@@ -2196,17 +2239,17 @@ argument_list|(
 name|so
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|ipxp
-operator|==
+operator|!=
 name|NULL
-condition|)
-return|return
+argument_list|,
 operator|(
-name|ENOTCONN
+literal|"ipx_detach: ipxp == NULL"
 operator|)
-return|;
+argument_list|)
+expr_stmt|;
 name|IPX_LIST_LOCK
 argument_list|()
 expr_stmt|;
@@ -2216,6 +2259,11 @@ name|ipxp
 argument_list|)
 expr_stmt|;
 name|ipx_pcbdetach
+argument_list|(
+name|ipxp
+argument_list|)
+expr_stmt|;
+name|ipx_pcbfree
 argument_list|(
 name|ipxp
 argument_list|)
@@ -2257,6 +2305,17 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|ipxp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"ipx_disconnect: ipxp == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 name|IPX_LIST_LOCK
 argument_list|()
 expr_stmt|;
@@ -2345,6 +2404,17 @@ argument_list|(
 name|so
 argument_list|)
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|ipxp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"ipx_peeraddr: ipxp == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 name|ipx_setpeeraddr
 argument_list|(
 name|ipxp
@@ -2423,6 +2493,17 @@ name|struct
 name|ipx_addr
 name|laddr
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|ipxp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"ipxp_send: ipxp == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Attempt to only acquire the necessary locks: if the socket is 	 * already connected, we don't need to hold the IPX list lock to be 	 * used by ipx_pcbconnect() and ipx_pcbdisconnect(), just the IPX 	 * pcb lock. 	 */
 if|if
 condition|(
@@ -2613,6 +2694,19 @@ modifier|*
 name|so
 decl_stmt|;
 block|{
+name|KASSERT
+argument_list|(
+name|so
+operator|->
+name|so_pcb
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"ipx_shutdown: so_pcb == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 name|socantsendmore
 argument_list|(
 name|so
@@ -2656,6 +2750,17 @@ argument_list|(
 name|so
 argument_list|)
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|ipxp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"ipx_sockaddr: ipxp == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 name|ipx_setsockaddr
 argument_list|(
 name|ipxp
@@ -2711,6 +2816,17 @@ argument_list|(
 name|so
 argument_list|)
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|ipxp
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"ripx_attach: ipxp != NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|td
