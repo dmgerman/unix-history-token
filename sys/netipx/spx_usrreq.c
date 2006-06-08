@@ -6514,7 +6514,7 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 name|ipxp
-operator|==
+operator|!=
 name|NULL
 argument_list|,
 operator|(
