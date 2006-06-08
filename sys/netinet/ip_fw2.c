@@ -6858,6 +6858,16 @@ name|f_id
 operator|.
 name|proto
 expr_stmt|;
+name|id
+operator|.
+name|addr_type
+operator|=
+name|args
+operator|->
+name|f_id
+operator|.
+name|addr_type
+expr_stmt|;
 if|if
 condition|(
 name|IS_IP6_FLOW_ID
