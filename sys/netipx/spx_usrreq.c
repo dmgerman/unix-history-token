@@ -8970,10 +8970,10 @@ condition|(
 name|timer
 condition|)
 block|{
-comment|/* 	 * 2 MSL timeout in shutdown went off.  TCP deletes connection 	 * control block. 	 */
 case|case
 name|SPXT_2MSL
 case|:
+comment|/* 		 * 2 MSL timeout in shutdown went off.  TCP deletes 		 * connection control block. 		 */
 name|printf
 argument_list|(
 literal|"spx: SPXT_2MSL went off for no reason\n"
@@ -8989,10 +8989,10 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
-comment|/* 	 * Retransmission timer went off.  Message has not been acked within 	 * retransmit interval.  Back off to a longer retransmit interval and 	 * retransmit one packet. 	 */
 case|case
 name|SPXT_REXMT
 case|:
+comment|/* 		 * Retransmission timer went off.  Message has not been acked 		 * within retransmit interval.  Back off to a longer 		 * retransmit interval and retransmit one packet. 		 */
 if|if
 condition|(
 operator|++
@@ -9296,6 +9296,14 @@ operator|=
 name|NULL
 expr_stmt|;
 break|break;
+default|default:
+name|panic
+argument_list|(
+literal|"spx_timers: unknown timer %d"
+argument_list|,
+name|timer
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
