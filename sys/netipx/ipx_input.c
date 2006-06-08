@@ -1862,6 +1862,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * XXXRW: This code should be run in its own netisr dispatch to avoid a call  * back into the socket code from the IPX output path.  */
+end_comment
+
 begin_function
 name|void
 name|ipx_watch_output
