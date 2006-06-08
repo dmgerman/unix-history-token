@@ -149,6 +149,18 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|struct
+name|mtx
+name|spx_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Protects only spx_iss. */
+end_comment
+
+begin_decl_stmt
+specifier|static
 name|u_short
 name|spx_iss
 decl_stmt|;
@@ -205,6 +217,30 @@ init|=
 literal|3
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|SPX_LOCK_INIT
+parameter_list|()
+value|mtx_init(&spx_mtx, "spx_mtx", NULL, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPX_LOCK
+parameter_list|()
+value|mtx_lock(&spx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPX_UNLOCK
+parameter_list|()
+value|mtx_unlock(&spx_mtx)
+end_define
 
 begin_comment
 comment|/* Following was struct spxstat spxstat; */
@@ -829,6 +865,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|SPX_LOCK_INIT
+argument_list|()
+expr_stmt|;
 name|spx_iss
 operator|=
 literal|1
@@ -7974,6 +8013,9 @@ name|ipxp
 operator|->
 name|ipxp_faddr
 expr_stmt|;
+name|SPX_LOCK
+argument_list|()
+expr_stmt|;
 name|cb
 operator|->
 name|s_sid
@@ -7988,6 +8030,9 @@ operator|+=
 name|SPX_ISSINCR
 operator|/
 literal|2
+expr_stmt|;
+name|SPX_UNLOCK
+argument_list|()
 expr_stmt|;
 name|cb
 operator|->
@@ -8601,6 +8646,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|IPX_LIST_UNLOCK
+argument_list|()
+expr_stmt|;
+name|SPX_LOCK
+argument_list|()
+expr_stmt|;
 name|spx_iss
 operator|+=
 name|SPX_ISSINCR
@@ -8608,7 +8659,7 @@ operator|/
 name|PR_SLOWHZ
 expr_stmt|;
 comment|/* increment iss */
-name|IPX_LIST_UNLOCK
+name|SPX_UNLOCK
 argument_list|()
 expr_stmt|;
 block|}
