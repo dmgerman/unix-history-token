@@ -160,7 +160,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-comment|// Only one process may open the device at a time
+comment|/* Only one process may open the device at a time. */
 name|mtx_lock
 argument_list|(
 operator|&
