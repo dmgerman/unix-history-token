@@ -1755,7 +1755,12 @@ comment|/* User has disabled initial BUS RESET */
 name|PIM_NO_6_BYTE
 init|=
 literal|0x08
+block|,
 comment|/* Do not send 6-byte commands */
+name|PIM_SEQSCAN
+init|=
+literal|0x04
+comment|/* Do bus scans sequentially, not in parallel */
 block|}
 name|pi_miscflag
 typedef|;
