@@ -496,7 +496,7 @@ operator|.
 name|ar_starttime
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Export the subject credential. 	 * 	 * XXXAUDIT: td_ucred access is OK without proc lock, but some other 	 * fields here may require the proc lock. 	 */
+comment|/* 	 * Export the subject credential. 	 */
 name|cru2x
 argument_list|(
 name|td
@@ -549,6 +549,13 @@ name|cr_groups
 index|[
 literal|0
 index|]
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|)
 expr_stmt|;
 name|ar
 operator|->
@@ -633,6 +640,13 @@ operator|.
 name|ar_subj_comm
 argument_list|,
 name|MAXCOMLEN
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 return|return
