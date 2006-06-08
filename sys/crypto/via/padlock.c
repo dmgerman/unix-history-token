@@ -2677,6 +2677,12 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|enccrd
+operator|=
+name|maccrd
+operator|=
+name|NULL
+expr_stmt|;
 name|buf
 operator|=
 name|NULL
@@ -2708,12 +2714,6 @@ goto|goto
 name|out
 goto|;
 block|}
-name|enccrd
-operator|=
-name|maccrd
-operator|=
-name|NULL
-expr_stmt|;
 for|for
 control|(
 name|crd
