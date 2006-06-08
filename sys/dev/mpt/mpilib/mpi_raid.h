@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2000-2005, LSI Logic Corporation and its contributors.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon including  *    a substantially similar Disclaimer requirement for further binary  *    redistribution.  * 3. Neither the name of the LSI Logic Corporation nor the names of its  *    contributors may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF THE COPYRIGHT  * OWNER OR CONTRIBUTOR IS ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  *           Name:  MPI_RAID.H  *          Title:  MPI RAID message and structures  *  Creation Date:  February 27, 2001  *  *    MPI_RAID.H Version:  01.02.09  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  02-27-01  01.01.01  Original release for this file.  *  03-27-01  01.01.02  Added structure offset comments.  *  08-08-01  01.02.01  Original release for v1.2 work.  *  09-28-01  01.02.02  Major rework for MPI v1.2 Integrated RAID changes.  *  10-04-01  01.02.03  Added ActionData defines for  *                      MPI_RAID_ACTION_DELETE_VOLUME action.  *  11-01-01  01.02.04  Added define for MPI_RAID_ACTION_ADATA_DO_NOT_SYNC.  *  03-14-02  01.02.05  Added define for MPI_RAID_ACTION_ADATA_LOW_LEVEL_INIT.  *  05-07-02  01.02.06  Added define for MPI_RAID_ACTION_ACTIVATE_VOLUME,  *                      MPI_RAID_ACTION_INACTIVATE_VOLUME, and  *                      MPI_RAID_ACTION_ADATA_INACTIVATE_ALL.  *  07-12-02  01.02.07  Added structures for Mailbox request and reply.  *  11-15-02  01.02.08  Added missing MsgContext field to MSG_MAILBOX_REQUEST.  *  04-01-03  01.02.09  New action data option flag for  *                      MPI_RAID_ACTION_DELETE_VOLUME.  *  --------------------------------------------------------------------------  */
+comment|/*-  * Copyright (c) 2000-2005, LSI Logic Corporation and its contributors.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon including  *    a substantially similar Disclaimer requirement for further binary  *    redistribution.  * 3. Neither the name of the LSI Logic Corporation nor the names of its  *    contributors may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF THE COPYRIGHT  * OWNER OR CONTRIBUTOR IS ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *   *   *           Name:  mpi_raid.h  *          Title:  MPI RAID message and structures  *  Creation Date:  February 27, 2001  *  *    mpi_raid.h Version:  01.05.02  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  02-27-01  01.01.01  Original release for this file.  *  03-27-01  01.01.02  Added structure offset comments.  *  08-08-01  01.02.01  Original release for v1.2 work.  *  09-28-01  01.02.02  Major rework for MPI v1.2 Integrated RAID changes.  *  10-04-01  01.02.03  Added ActionData defines for  *                      MPI_RAID_ACTION_DELETE_VOLUME action.  *  11-01-01  01.02.04  Added define for MPI_RAID_ACTION_ADATA_DO_NOT_SYNC.  *  03-14-02  01.02.05  Added define for MPI_RAID_ACTION_ADATA_LOW_LEVEL_INIT.  *  05-07-02  01.02.06  Added define for MPI_RAID_ACTION_ACTIVATE_VOLUME,  *                      MPI_RAID_ACTION_INACTIVATE_VOLUME, and  *                      MPI_RAID_ACTION_ADATA_INACTIVATE_ALL.  *  07-12-02  01.02.07  Added structures for Mailbox request and reply.  *  11-15-02  01.02.08  Added missing MsgContext field to MSG_MAILBOX_REQUEST.  *  04-01-03  01.02.09  New action data option flag for  *                      MPI_RAID_ACTION_DELETE_VOLUME.  *  05-11-04  01.03.01  Original release for MPI v1.3.  *  08-19-04  01.05.01  Original release for MPI v1.5.  *  01-15-05  01.05.02  Added defines for the two new RAID Actions for  *                      _SET_RESYNC_RATE and _SET_DATA_SCRUB_RATE.  *  --------------------------------------------------------------------------  */
 end_comment
 
 begin_ifndef
@@ -28,7 +28,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* RAID Volume Request                                                      */
+comment|/* RAID Action Request                                                      */
 end_comment
 
 begin_comment
@@ -304,6 +304,28 @@ define|#
 directive|define
 name|MPI_RAID_ACTION_ADATA_INACTIVATE_ALL
 value|(0x00000001)
+end_define
+
+begin_comment
+comment|/* ActionDataWord defines for use with MPI_RAID_ACTION_SET_RESYNC_RATE action */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI_RAID_ACTION_ADATA_RESYNC_RATE_MASK
+value|(0x000000FF)
+end_define
+
+begin_comment
+comment|/* ActionDataWord defines for use with MPI_RAID_ACTION_SET_DATA_SCRUB_RATE action */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI_RAID_ACTION_ADATA_DATA_SCRUB_RATE_MASK
+value|(0x000000FF)
 end_define
 
 begin_comment
