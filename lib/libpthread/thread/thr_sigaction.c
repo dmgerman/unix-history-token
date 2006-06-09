@@ -184,10 +184,6 @@ condition|(
 name|act
 operator|!=
 name|NULL
-operator|&&
-name|sig
-operator|!=
-name|SIGINFO
 condition|)
 block|{
 name|newact
@@ -213,6 +209,31 @@ name|SIG_IGN
 condition|)
 block|{
 comment|/* 				 * Specify the thread kernel signal 				 * handler: 				 */
+name|newact
+operator|.
+name|sa_handler
+operator|=
+operator|(
+name|void
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
+name|_thr_sig_handler
+expr_stmt|;
+block|}
+comment|/* 			 * Install libpthread signal handler wrapper 			 * for SIGINFO signal if threads dump enabled 			 * even if a user set the signal handler to 			 * SIG_DFL or SIG_IGN. 			 */
+if|if
+condition|(
+name|sig
+operator|==
+name|SIGINFO
+operator|&&
+name|_thr_dump_enabled
+argument_list|()
+condition|)
+block|{
 name|newact
 operator|.
 name|sa_handler
