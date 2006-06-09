@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2003 Silicon Graphics, Inc.  All Rights Reserved.  *  * This program is free software; you can redistribute it and/or modify it  * under the terms of version 2 of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful, but  * WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Further, this software is distributed without any warranty that it is  * free of the rightful claim of any third person regarding infringement  * or the like.  Any license provided herein, whether implied or  * otherwise, applies only to this software file.  Patent licenses, if  * any, provided herein do not apply to combinations of this program with  * other software, or any other product whatsoever.  *  * You should have received a copy of the GNU General Public License along  * with this program; if not, write the Free Software Foundation, Inc., 59  * Temple Place - Suite 330, Boston MA 02111-1307, USA.  *  * Contact information: Silicon Graphics, Inc., 1600 Amphitheatre Pkwy,  * Mountain View, CA  94043, or:  *  * http://www.sgi.com  *  * For further information regarding this notice, see:  *  * http://oss.sgi.com/projects/GenInfo/SGIGPLNoticeExplan/  */
+comment|/*  * Copyright (c) 2000-2003,2005 Silicon Graphics, Inc.  * All Rights Reserved.  *  * This program is free software; you can redistribute it and/or  * modify it under the terms of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, write the Free Software Foundation,  * Inc.,  51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_macros.h"
+file|"xfs_fs.h"
 end_include
 
 begin_include
@@ -24,13 +24,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_inum.h"
+file|"xfs_bit.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"xfs_log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xfs_inum.h"
 end_include
 
 begin_include
@@ -66,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"xfs_dfrag.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"xfs_dmapi.h"
 end_include
 
@@ -78,19 +90,55 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_alloc_btree.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"xfs_bmap_btree.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"xfs_alloc_btree.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"xfs_ialloc_btree.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xfs_dir_sf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xfs_dir2_sf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xfs_attr_sf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xfs_dinode.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xfs_inode.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xfs_inode_item.h"
 end_include
 
 begin_include
@@ -120,42 +168,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_attr_sf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xfs_dir_sf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xfs_dir2_sf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xfs_dinode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xfs_inode_item.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xfs_inode.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"xfs_bmap.h"
 end_include
 
@@ -163,12 +175,6 @@ begin_include
 include|#
 directive|include
 file|"xfs_error.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xfs_bit.h"
 end_include
 
 begin_include
@@ -274,6 +280,14 @@ operator|)
 name|xfs_bmapi
 block|,
 operator|.
+name|xfs_bunmapi_func
+operator|=
+operator|(
+name|xfs_bunmapi_t
+operator|)
+name|xfs_bunmapi
+block|,
+operator|.
 name|xfs_bmap_eof_func
 operator|=
 operator|(
@@ -368,6 +382,14 @@ operator|(
 name|xfs_iodone_t
 operator|)
 name|fs_noerr
+block|,
+operator|.
+name|xfs_swap_extents_func
+operator|=
+operator|(
+name|xfs_swap_extents_t
+operator|)
+name|xfs_swap_extents
 block|, }
 decl_stmt|;
 end_decl_stmt

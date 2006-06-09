@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2003 Silicon Graphics, Inc.  All Rights Reserved.  *  * This program is free software; you can redistribute it and/or modify it  * under the terms of version 2 of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful, but  * WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Further, this software is distributed without any warranty that it is  * free of the rightful claim of any third person regarding infringement  * or the like.  Any license provided herein, whether implied or  * otherwise, applies only to this software file.  Patent licenses, if  * any, provided herein do not apply to combinations of this program with  * other software, or any other product whatsoever.  *  * You should have received a copy of the GNU General Public License along  * with this program; if not, write the Free Software Foundation, Inc., 59  * Temple Place - Suite 330, Boston MA 02111-1307, USA.  *  * Contact information: Silicon Graphics, Inc., 1600 Amphitheatre Pkwy,  * Mountain View, CA  94043, or:  *  * http://www.sgi.com  *  * For further information regarding this notice, see:  *  * http://oss.sgi.com/projects/GenInfo/SGIGPLNoticeExplan/  */
+comment|/*  * Copyright (c) 2000-2003,2005 Silicon Graphics, Inc.  * All Rights Reserved.  *  * This program is free software; you can redistribute it and/or  * modify it under the terms of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, write the Free Software Foundation,  * Inc.,  51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  */
 end_comment
 
 begin_ifndef
@@ -98,52 +98,6 @@ begin_comment
 comment|/*  * Convert the given file system block to a disk block.  * We have to treat it differently based on whether the  * file is a real time file or not, because the bmap code  * does.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|XFS_WANT_FUNCS
-operator|||
-name|XFS_WANT_FUNCS_C
-operator|||
-operator|(
-name|XFS_WANT_SPACE
-operator|&&
-name|XFSSO_XFS_FSB_TO_DB
-operator|)
-end_if
-
-begin_function_decl
-name|xfs_daddr_t
-name|xfs_fsb_to_db
-parameter_list|(
-name|struct
-name|xfs_inode
-modifier|*
-name|ip
-parameter_list|,
-name|xfs_fsblock_t
-name|fsb
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|XFS_WANT_FUNCS
-operator|||
-operator|(
-name|XFS_WANT_SPACE
-operator|&&
-name|XFSSO_XFS_FSB_TO_DB
-operator|)
-end_if
-
 begin_define
 define|#
 directive|define
@@ -156,28 +110,68 @@ parameter_list|)
 value|xfs_fsb_to_db(ip,fsb)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|XFS_FSB_TO_DB
+begin_function
+specifier|static
+specifier|inline
+name|xfs_daddr_t
+name|xfs_fsb_to_db
 parameter_list|(
+name|struct
+name|xfs_inode
+modifier|*
 name|ip
 parameter_list|,
+name|xfs_fsblock_t
 name|fsb
 parameter_list|)
-define|\
-value|(((ip)->i_d.di_flags& XFS_DIFLAG_REALTIME) ? \ 		 (xfs_daddr_t)XFS_FSB_TO_BB((ip)->i_mount, (fsb)) : \ 		 XFS_FSB_TO_DADDR((ip)->i_mount, (fsb)))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+block|{
+return|return
+operator|(
+operator|(
+operator|(
+name|ip
+operator|)
+operator|->
+name|i_d
+operator|.
+name|di_flags
+operator|&
+name|XFS_DIFLAG_REALTIME
+operator|)
+condition|?
+then|\
+operator|(
+name|xfs_daddr_t
+operator|)
+name|XFS_FSB_TO_BB
+argument_list|(
+operator|(
+name|ip
+operator|)
+operator|->
+name|i_mount
+argument_list|,
+operator|(
+name|fsb
+operator|)
+argument_list|)
+else|: \
+name|XFS_FSB_TO_DADDR
+argument_list|(
+operator|(
+name|ip
+operator|)
+operator|->
+name|i_mount
+argument_list|,
+operator|(
+name|fsb
+operator|)
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_define
 define|#
@@ -188,15 +182,73 @@ name|io
 parameter_list|,
 name|fsb
 parameter_list|)
-define|\
-value|(((io)->io_flags& XFS_IOCORE_RT) ? \ 		 XFS_FSB_TO_BB((io)->io_mount, (fsb)) : \ 		 XFS_FSB_TO_DADDR((io)->io_mount, (fsb)))
+value|xfs_fsb_to_db_io(io,fsb)
 end_define
+
+begin_function
+specifier|static
+specifier|inline
+name|xfs_daddr_t
+name|xfs_fsb_to_db_io
+parameter_list|(
+name|struct
+name|xfs_iocore
+modifier|*
+name|io
+parameter_list|,
+name|xfs_fsblock_t
+name|fsb
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+operator|(
+name|io
+operator|)
+operator|->
+name|io_flags
+operator|&
+name|XFS_IOCORE_RT
+operator|)
+condition|?
+then|\
+name|XFS_FSB_TO_BB
+argument_list|(
+operator|(
+name|io
+operator|)
+operator|->
+name|io_mount
+argument_list|,
+operator|(
+name|fsb
+operator|)
+argument_list|)
+else|: \
+name|XFS_FSB_TO_DADDR
+argument_list|(
+operator|(
+name|io
+operator|)
+operator|->
+name|io_mount
+argument_list|,
+operator|(
+name|fsb
+operator|)
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Prototypes for functions in xfs_rw.c.  */
 end_comment
 
 begin_function_decl
+specifier|extern
 name|int
 name|xfs_write_clear_setuid
 parameter_list|(
@@ -209,6 +261,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|int
 name|xfs_bwrite
 parameter_list|(
@@ -226,30 +279,33 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|int
 name|xfs_bioerror
 parameter_list|(
 name|struct
 name|xfs_buf
 modifier|*
-name|b
+name|bp
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|int
 name|xfs_bioerror_relse
 parameter_list|(
 name|struct
 name|xfs_buf
 modifier|*
-name|b
+name|bp
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|int
 name|xfs_read_buf
 parameter_list|(
@@ -260,7 +316,7 @@ name|mp
 parameter_list|,
 name|xfs_buftarg_t
 modifier|*
-name|target
+name|btp
 parameter_list|,
 name|xfs_daddr_t
 name|blkno
@@ -281,6 +337,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|void
 name|xfs_ioerror_alert
 parameter_list|(
@@ -308,6 +365,7 @@ comment|/*  * Prototypes for functions in xfs_vnodeops.c.  */
 end_comment
 
 begin_function_decl
+specifier|extern
 name|int
 name|xfs_rwlock
 parameter_list|(
@@ -322,6 +380,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|void
 name|xfs_rwunlock
 parameter_list|(
@@ -336,6 +395,30 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
+name|int
+name|xfs_setattr
+parameter_list|(
+name|bhv_desc_t
+modifier|*
+name|bdp
+parameter_list|,
+name|xfs_vattr_t
+modifier|*
+name|vap
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|cred_t
+modifier|*
+name|credp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|xfs_change_file_space
 parameter_list|(
@@ -364,6 +447,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|int
 name|xfs_set_dmattrs
 parameter_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2002 Silicon Graphics, Inc.  All Rights Reserved.  *  * This program is free software; you can redistribute it and/or modify it  * under the terms of version 2 of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful, but  * WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Further, this software is distributed without any warranty that it is  * free of the rightful claim of any third person regarding infringement  * or the like.  Any license provided herein, whether implied or  * otherwise, applies only to this software file.  Patent licenses, if  * any, provided herein do not apply to combinations of this program with  * other software, or any other product whatsoever.  *  * You should have received a copy of the GNU General Public License along  * with this program; if not, write the Free Software Foundation, Inc., 59  * Temple Place - Suite 330, Boston MA 02111-1307, USA.  *  * Contact information: Silicon Graphics, Inc., 1600 Amphitheatre Pkwy,  * Mountain View, CA  94043, or:  *  * http://www.sgi.com  *  * For further information regarding this notice, see:  *  * http://oss.sgi.com/projects/GenInfo/SGIGPLNoticeExplan/  */
+comment|/*  * Copyright (c) 2000-2002,2005 Silicon Graphics, Inc.  * All Rights Reserved.  *  * This program is free software; you can redistribute it and/or  * modify it under the terms of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, write the Free Software Foundation,  * Inc.,  51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  */
 end_comment
 
 begin_ifndef
@@ -13,22 +13,6 @@ begin_define
 define|#
 directive|define
 name|__XFS_ERROR_H__
-end_define
-
-begin_define
-define|#
-directive|define
-name|prdev
-parameter_list|(
-name|fmt
-parameter_list|,
-name|targ
-parameter_list|,
-name|args
-modifier|...
-parameter_list|)
-define|\
-value|printk("XFS: device %s- " fmt "\n", XFS_BUFTARG_NAME(targ), ## args)
 end_define
 
 begin_define
@@ -239,21 +223,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|void
-name|xfs_hex_dump
-parameter_list|(
-name|void
-modifier|*
-name|p
-parameter_list|,
-name|int
-name|length
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -305,6 +274,34 @@ define|#
 directive|define
 name|XFS_ERRLEVEL_HIGH
 value|5
+end_define
+
+begin_comment
+comment|/*  * Macros to set EFSCORRUPTED& return/branch.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFS_WANT_CORRUPTED_GOTO
+parameter_list|(
+name|x
+parameter_list|,
+name|l
+parameter_list|)
+define|\
+value|{ \ 		int fs_is_ok = (x); \ 		ASSERT(fs_is_ok); \ 		if (unlikely(!fs_is_ok)) { \ 			XFS_ERROR_REPORT("XFS_WANT_CORRUPTED_GOTO", \ 					 XFS_ERRLEVEL_LOW, NULL); \ 			error = XFS_ERROR(EFSCORRUPTED); \ 			goto l; \ 		} \ 	}
+end_define
+
+begin_define
+define|#
+directive|define
+name|XFS_WANT_CORRUPTED_RETURN
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|{ \ 		int fs_is_ok = (x); \ 		ASSERT(fs_is_ok); \ 		if (unlikely(!fs_is_ok)) { \ 			XFS_ERROR_REPORT("XFS_WANT_CORRUPTED_RETURN", \ 					 XFS_ERRLEVEL_LOW, NULL); \ 			return XFS_ERROR(EFSCORRUPTED); \ 		} \ 	}
 end_define
 
 begin_comment
@@ -671,6 +668,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|void
 name|xfs_error_test_init
 parameter_list|(
@@ -741,6 +739,7 @@ comment|/* __ANSI_CPP__ */
 end_comment
 
 begin_function_decl
+specifier|extern
 name|int
 name|xfs_errortag_add
 parameter_list|(
@@ -755,6 +754,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|int
 name|xfs_errortag_clear
 parameter_list|(
@@ -769,6 +769,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|int
 name|xfs_errortag_clearall
 parameter_list|(
@@ -780,6 +781,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|int
 name|xfs_errortag_clearall_umount
 parameter_list|(
@@ -919,6 +921,7 @@ comment|/* PRINTFLIKE4 */
 end_comment
 
 begin_function_decl
+specifier|extern
 name|void
 name|xfs_cmn_err
 parameter_list|(
@@ -947,6 +950,7 @@ comment|/* PRINTFLIKE3 */
 end_comment
 
 begin_function_decl
+specifier|extern
 name|void
 name|xfs_fs_cmn_err
 parameter_list|(
@@ -966,6 +970,40 @@ modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|xfs_fs_repair_cmn_err
+parameter_list|(
+name|level
+parameter_list|,
+name|mp
+parameter_list|,
+name|fmt
+parameter_list|,
+name|args
+modifier|...
+parameter_list|)
+define|\
+value|xfs_fs_cmn_err(level, mp, fmt "  Unmount and run xfs_repair.", ## args)
+end_define
+
+begin_define
+define|#
+directive|define
+name|xfs_fs_mount_cmn_err
+parameter_list|(
+name|f
+parameter_list|,
+name|fmt
+parameter_list|,
+name|args
+modifier|...
+parameter_list|)
+define|\
+value|((f& XFS_MFSI_QUIET)? cmn_err(CE_WARN, "XFS: " fmt, ## args) : (void)0)
+end_define
 
 begin_endif
 endif|#

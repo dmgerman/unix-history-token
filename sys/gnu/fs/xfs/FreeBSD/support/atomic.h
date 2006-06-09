@@ -100,18 +100,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|atomic_sub_and_test
-parameter_list|(
-name|i
-parameter_list|,
-name|v
-parameter_list|)
-value|(atomic_fetchadd_int(&(v)->val, (-i) == i)
-end_define
-
-begin_define
-define|#
-directive|define
 name|atomic_dec_and_test
 parameter_list|(
 name|v

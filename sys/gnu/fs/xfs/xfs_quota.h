@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2003 Silicon Graphics, Inc.  All Rights Reserved.  *  * This program is free software; you can redistribute it and/or modify it  * under the terms of version 2 of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful, but  * WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Further, this software is distributed without any warranty that it is  * free of the rightful claim of any third person regarding infringement  * or the like.  Any license provided herein, whether implied or  * otherwise, applies only to this software file.  Patent licenses, if  * any, provided herein do not apply to combinations of this program with  * other software, or any other product whatsoever.  *  * You should have received a copy of the GNU General Public License along  * with this program; if not, write the Free Software Foundation, Inc., 59  * Temple Place - Suite 330, Boston MA 02111-1307, USA.  *  * Contact information: Silicon Graphics, Inc., 1600 Amphitheatre Pkwy,  * Mountain View, CA  94043, or:  *  * http://www.sgi.com  *  * For further information regarding this notice, see:  *  * http://oss.sgi.com/projects/GenInfo/SGIGPLNoticeExplan/  */
+comment|/*  * Copyright (c) 2000-2005 Silicon Graphics, Inc.  * All Rights Reserved.  *  * This program is free software; you can redistribute it and/or  * modify it under the terms of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, write the Free Software Foundation,  * Inc.,  51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  */
 end_comment
 
 begin_ifndef
@@ -47,13 +47,13 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|__int32_t
+name|__uint32_t
 name|xfs_dqid_t
 typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Eventhough users may not have quota limits occupying all 64-bits,  * they may need 64-bit accounting. Hence, 64-bit quota-counters,  * and quota-limits. This is a waste in the common case, but hey ...  */
+comment|/*  * Even though users may not have quota limits occupying all 64-bits,  * they may need 64-bit accounting. Hence, 64-bit quota-counters,  * and quota-limits. This is a waste in the common case, but hey ...  */
 end_comment
 
 begin_typedef
@@ -79,108 +79,87 @@ typedef|typedef
 struct|struct
 name|xfs_disk_dquot
 block|{
-comment|/*16*/
-name|u_int16_t
+name|__be16
 name|d_magic
 decl_stmt|;
 comment|/* dquot magic = XFS_DQUOT_MAGIC */
-comment|/*8 */
-name|u_int8_t
+name|__u8
 name|d_version
 decl_stmt|;
 comment|/* dquot version */
-comment|/*8 */
-name|u_int8_t
+name|__u8
 name|d_flags
 decl_stmt|;
 comment|/* XFS_DQ_USER/PROJ/GROUP */
-comment|/*32*/
-name|xfs_dqid_t
+name|__be32
 name|d_id
 decl_stmt|;
 comment|/* user,project,group id */
-comment|/*64*/
-name|xfs_qcnt_t
+name|__be64
 name|d_blk_hardlimit
 decl_stmt|;
 comment|/* absolute limit on disk blks */
-comment|/*64*/
-name|xfs_qcnt_t
+name|__be64
 name|d_blk_softlimit
 decl_stmt|;
 comment|/* preferred limit on disk blks */
-comment|/*64*/
-name|xfs_qcnt_t
+name|__be64
 name|d_ino_hardlimit
 decl_stmt|;
 comment|/* maximum # allocated inodes */
-comment|/*64*/
-name|xfs_qcnt_t
+name|__be64
 name|d_ino_softlimit
 decl_stmt|;
 comment|/* preferred inode limit */
-comment|/*64*/
-name|xfs_qcnt_t
+name|__be64
 name|d_bcount
 decl_stmt|;
 comment|/* disk blocks owned by the user */
-comment|/*64*/
-name|xfs_qcnt_t
+name|__be64
 name|d_icount
 decl_stmt|;
 comment|/* inodes owned by the user */
-comment|/*32*/
-name|__int32_t
+name|__be32
 name|d_itimer
 decl_stmt|;
 comment|/* zero if within inode limits if not, 					   this is when we refuse service */
-comment|/*32*/
-name|__int32_t
+name|__be32
 name|d_btimer
 decl_stmt|;
 comment|/* similar to above; for disk blocks */
-comment|/*16*/
-name|xfs_qwarncnt_t
+name|__be16
 name|d_iwarns
 decl_stmt|;
 comment|/* warnings issued wrt num inodes */
-comment|/*16*/
-name|xfs_qwarncnt_t
+name|__be16
 name|d_bwarns
 decl_stmt|;
 comment|/* warnings issued wrt disk blocks */
-comment|/*32*/
-name|__int32_t
+name|__be32
 name|d_pad0
 decl_stmt|;
 comment|/* 64 bit align */
-comment|/*64*/
-name|xfs_qcnt_t
+name|__be64
 name|d_rtb_hardlimit
 decl_stmt|;
 comment|/* absolute limit on realtime blks */
-comment|/*64*/
-name|xfs_qcnt_t
+name|__be64
 name|d_rtb_softlimit
 decl_stmt|;
 comment|/* preferred limit on RT disk blks */
-comment|/*64*/
-name|xfs_qcnt_t
+name|__be64
 name|d_rtbcount
 decl_stmt|;
 comment|/* realtime blocks owned */
-comment|/*32*/
-name|__int32_t
+name|__be32
 name|d_rtbtimer
 decl_stmt|;
 comment|/* similar to above; for RT disk blocks */
-comment|/*16*/
-name|xfs_qwarncnt_t
+name|__be16
 name|d_rtbwarns
 decl_stmt|;
 comment|/* warnings issued wrt RT disk blocks */
-comment|/*16*/
-name|__uint16_t
+name|__be16
 name|d_pad
 decl_stmt|;
 block|}
@@ -228,8 +207,15 @@ begin_comment
 comment|/* a user quota */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|XFS_DQ_PROJ
+value|0x0002
+end_define
+
 begin_comment
-comment|/* #define XFS_DQ_PROJ		0x0002		-- project quota (IRIX) */
+comment|/* project quota */
 end_comment
 
 begin_define
@@ -298,6 +284,13 @@ begin_comment
 comment|/* sentinel */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|XFS_DQ_ALLTYPES
+value|(XFS_DQ_USER|XFS_DQ_PROJ|XFS_DQ_GROUP)
+end_define
+
 begin_comment
 comment|/*  * In the worst case, when both user and group quotas are on,  * we can have a max of three dquots changing in a single transaction.  */
 end_comment
@@ -336,7 +329,7 @@ comment|/* size of this item */
 name|xfs_dqid_t
 name|qlf_id
 decl_stmt|;
-comment|/* usr/grp id number : 32 bits */
+comment|/* usr/grp/proj id : 32 bits */
 name|__int64_t
 name|qlf_blkno
 decl_stmt|;
@@ -435,29 +428,29 @@ value|0x0008
 end_define
 
 begin_comment
-comment|/* (IRIX) project quota accounting ON */
+comment|/* project quota accounting ON */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|XFS_GQUOTA_ENFD
+name|XFS_OQUOTA_ENFD
 value|0x0010
 end_define
 
 begin_comment
-comment|/* group quota limits enforced */
+comment|/* other (grp/prj) quota limits enforced */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|XFS_GQUOTA_CHKD
+name|XFS_OQUOTA_CHKD
 value|0x0020
 end_define
 
 begin_comment
-comment|/* quotacheck run on grp quotas */
+comment|/* quotacheck run on other (grp/prj) quotas */
 end_comment
 
 begin_define
@@ -472,6 +465,82 @@ comment|/* group quota accounting ON */
 end_comment
 
 begin_comment
+comment|/*  * Quota Accounting/Enforcement flags  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFS_ALL_QUOTA_ACCT
+define|\
+value|(XFS_UQUOTA_ACCT | XFS_GQUOTA_ACCT | XFS_PQUOTA_ACCT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XFS_ALL_QUOTA_ENFD
+value|(XFS_UQUOTA_ENFD | XFS_OQUOTA_ENFD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XFS_ALL_QUOTA_CHKD
+value|(XFS_UQUOTA_CHKD | XFS_OQUOTA_CHKD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XFS_IS_QUOTA_RUNNING
+parameter_list|(
+name|mp
+parameter_list|)
+value|((mp)->m_qflags& XFS_ALL_QUOTA_ACCT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XFS_IS_QUOTA_ENFORCED
+parameter_list|(
+name|mp
+parameter_list|)
+value|((mp)->m_qflags& XFS_ALL_QUOTA_ENFD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XFS_IS_UQUOTA_RUNNING
+parameter_list|(
+name|mp
+parameter_list|)
+value|((mp)->m_qflags& XFS_UQUOTA_ACCT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XFS_IS_PQUOTA_RUNNING
+parameter_list|(
+name|mp
+parameter_list|)
+value|((mp)->m_qflags& XFS_PQUOTA_ACCT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XFS_IS_GQUOTA_RUNNING
+parameter_list|(
+name|mp
+parameter_list|)
+value|((mp)->m_qflags& XFS_GQUOTA_ACCT)
+end_define
+
+begin_comment
 comment|/*  * Incore only flags for quotaoff - these bits get cleared when quota(s)  * are in the process of getting turned off. These flags are in m_qflags but  * never in sb_qflags.  */
 end_comment
 
@@ -479,7 +548,7 @@ begin_define
 define|#
 directive|define
 name|XFS_UQUOTA_ACTIVE
-value|0x0080
+value|0x0100
 end_define
 
 begin_comment
@@ -489,8 +558,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|XFS_PQUOTA_ACTIVE
+value|0x0200
+end_define
+
+begin_comment
+comment|/* pquotas are being turned off */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|XFS_GQUOTA_ACTIVE
-value|0x0100
+value|0x0400
 end_define
 
 begin_comment
@@ -508,7 +588,17 @@ name|XFS_IS_QUOTA_ON
 parameter_list|(
 name|mp
 parameter_list|)
-value|((mp)->m_qflags& (XFS_UQUOTA_ACTIVE | \ 						   XFS_GQUOTA_ACTIVE))
+value|((mp)->m_qflags& (XFS_UQUOTA_ACTIVE | \ 						   XFS_GQUOTA_ACTIVE | \ 						   XFS_PQUOTA_ACTIVE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|XFS_IS_OQUOTA_ON
+parameter_list|(
+name|mp
+parameter_list|)
+value|((mp)->m_qflags& (XFS_GQUOTA_ACTIVE | \ 						   XFS_PQUOTA_ACTIVE))
 end_define
 
 begin_define
@@ -529,6 +619,16 @@ parameter_list|(
 name|mp
 parameter_list|)
 value|((mp)->m_qflags& XFS_GQUOTA_ACTIVE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XFS_IS_PQUOTA_ON
+parameter_list|(
+name|mp
+parameter_list|)
+value|((mp)->m_qflags& XFS_PQUOTA_ACTIVE)
 end_define
 
 begin_comment
@@ -571,12 +671,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XFS_QMOPT_GQUOTA
+name|XFS_QMOPT_PQUOTA
 value|0x0000008
 end_define
 
 begin_comment
-comment|/* group dquot requested */
+comment|/* project dquot requested */
 end_comment
 
 begin_define
@@ -653,7 +753,7 @@ value|0x0000400
 end_define
 
 begin_comment
-comment|/* increase warning cnt if necessary */
+comment|/* increase warning cnt if needed */
 end_comment
 
 begin_define
@@ -675,7 +775,29 @@ value|0x0001000
 end_define
 
 begin_comment
-comment|/* repair dquot, if damaged. */
+comment|/* repair dquot if damaged */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFS_QMOPT_GQUOTA
+value|0x0002000
+end_define
+
+begin_comment
+comment|/* group dquot requested */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFS_QMOPT_ENOSPC
+value|0x0004000
+end_define
+
+begin_comment
+comment|/* enospc instead of edquot (prj) */
 end_comment
 
 begin_comment
@@ -838,7 +960,8 @@ begin_define
 define|#
 directive|define
 name|XFS_QMOPT_QUOTALL
-value|(XFS_QMOPT_UQUOTA|XFS_QMOPT_GQUOTA)
+define|\
+value|(XFS_QMOPT_UQUOTA | XFS_QMOPT_PQUOTA | XFS_QMOPT_GQUOTA)
 end_define
 
 begin_define
@@ -855,7 +978,7 @@ name|__KERNEL__
 end_ifdef
 
 begin_comment
-comment|/*  * This check is done typically without holding the inode lock;  * that may seem racey, but it is harmless in the context that it is used.  * The inode cannot go inactive as long a reference is kept, and  * therefore if dquot(s) were attached, they'll stay consistent.  * If, for example, the ownership of the inode changes while  * we didn't have the inode locked, the appropriate dquot(s) will be  * attached atomically.  */
+comment|/*  * This check is done typically without holding the inode lock;  * that may seem racy, but it is harmless in the context that it is used.  * The inode cannot go inactive as long a reference is kept, and  * therefore if dquot(s) were attached, they'll stay consistent.  * If, for example, the ownership of the inode changes while  * we didn't have the inode locked, the appropriate dquot(s) will be  * attached atomically.  */
 end_comment
 
 begin_define
@@ -867,7 +990,7 @@ name|mp
 parameter_list|,
 name|ip
 parameter_list|)
-value|((XFS_IS_UQUOTA_ON(mp)&&\ 				     (ip)->i_udquot == NULL) || \ 				    (XFS_IS_GQUOTA_ON(mp)&& \ 				     (ip)->i_gdquot == NULL))
+value|((XFS_IS_UQUOTA_ON(mp)&&\ 				     (ip)->i_udquot == NULL) || \ 				    (XFS_IS_OQUOTA_ON(mp)&& \ 				     (ip)->i_gdquot == NULL))
 end_define
 
 begin_define
@@ -877,21 +1000,36 @@ name|XFS_QM_NEED_QUOTACHECK
 parameter_list|(
 name|mp
 parameter_list|)
-value|((XFS_IS_UQUOTA_ON(mp)&& \ 				     (mp->m_sb.sb_qflags& \ 				      XFS_UQUOTA_CHKD) == 0) || \ 				    (XFS_IS_GQUOTA_ON(mp)&& \ 				     (mp->m_sb.sb_qflags& \ 				      XFS_GQUOTA_CHKD) == 0))
+define|\
+value|((XFS_IS_UQUOTA_ON(mp)&& \ 		(mp->m_sb.sb_qflags& XFS_UQUOTA_CHKD) == 0) || \ 	 (XFS_IS_GQUOTA_ON(mp)&& \ 		((mp->m_sb.sb_qflags& XFS_OQUOTA_CHKD) == 0 || \ 		 (mp->m_sb.sb_qflags& XFS_PQUOTA_ACCT))) || \ 	 (XFS_IS_PQUOTA_ON(mp)&& \ 		((mp->m_sb.sb_qflags& XFS_OQUOTA_CHKD) == 0 || \ 		 (mp->m_sb.sb_qflags& XFS_GQUOTA_ACCT))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|XFS_MOUNT_QUOTA_SET1
+value|(XFS_UQUOTA_ACCT|XFS_UQUOTA_ENFD|\ 				 XFS_UQUOTA_CHKD|XFS_PQUOTA_ACCT|\ 				 XFS_OQUOTA_ENFD|XFS_OQUOTA_CHKD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XFS_MOUNT_QUOTA_SET2
+value|(XFS_UQUOTA_ACCT|XFS_UQUOTA_ENFD|\ 				 XFS_UQUOTA_CHKD|XFS_GQUOTA_ACCT|\ 				 XFS_OQUOTA_ENFD|XFS_OQUOTA_CHKD)
 end_define
 
 begin_define
 define|#
 directive|define
 name|XFS_MOUNT_QUOTA_ALL
-value|(XFS_UQUOTA_ACCT|XFS_UQUOTA_ENFD|\ 				 XFS_UQUOTA_CHKD|XFS_GQUOTA_ACCT|\ 				 XFS_GQUOTA_ENFD|XFS_GQUOTA_CHKD)
+value|(XFS_UQUOTA_ACCT|XFS_UQUOTA_ENFD|\ 				 XFS_UQUOTA_CHKD|XFS_PQUOTA_ACCT|\ 				 XFS_OQUOTA_ENFD|XFS_OQUOTA_CHKD|\ 				 XFS_GQUOTA_ACCT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|XFS_MOUNT_QUOTA_MASK
-value|(XFS_MOUNT_QUOTA_ALL | XFS_UQUOTA_ACTIVE | \ 				 XFS_GQUOTA_ACTIVE)
+value|(XFS_MOUNT_QUOTA_ALL | XFS_UQUOTA_ACTIVE | \ 				 XFS_GQUOTA_ACTIVE | XFS_PQUOTA_ACTIVE)
 end_define
 
 begin_comment
@@ -1157,7 +1295,25 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|((mp)->m_qm_ops.xfs_dqtrxops ? \ 			((mp)->m_qm_ops.xfs_dqtrxops->op)(tp, ## args) : 0)
+value|((mp)->m_qm_ops.xfs_dqtrxops ? \ 		((mp)->m_qm_ops.xfs_dqtrxops->op)(tp, ## args) : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XFS_DQTRXOP_VOID
+parameter_list|(
+name|mp
+parameter_list|,
+name|tp
+parameter_list|,
+name|op
+parameter_list|,
+name|args
+modifier|...
+parameter_list|)
+define|\
+value|((mp)->m_qm_ops.xfs_dqtrxops ? \ 		((mp)->m_qm_ops.xfs_dqtrxops->op)(tp, ## args) : (void)0)
 end_define
 
 begin_define
@@ -1172,7 +1328,7 @@ parameter_list|,
 name|ntp
 parameter_list|)
 define|\
-value|XFS_DQTRXOP(mp, otp, qo_dup_dqinfo, ntp)
+value|XFS_DQTRXOP_VOID(mp, otp, qo_dup_dqinfo, ntp)
 end_define
 
 begin_define
@@ -1185,7 +1341,7 @@ parameter_list|,
 name|tp
 parameter_list|)
 define|\
-value|XFS_DQTRXOP(mp, tp, qo_free_dqinfo)
+value|XFS_DQTRXOP_VOID(mp, tp, qo_free_dqinfo)
 end_define
 
 begin_define
@@ -1204,7 +1360,7 @@ parameter_list|,
 name|delta
 parameter_list|)
 define|\
-value|XFS_DQTRXOP(mp, tp, qo_mod_dquot_byino, ip, field, delta)
+value|XFS_DQTRXOP_VOID(mp, tp, qo_mod_dquot_byino, ip, field, delta)
 end_define
 
 begin_define
@@ -1217,7 +1373,7 @@ parameter_list|,
 name|tp
 parameter_list|)
 define|\
-value|XFS_DQTRXOP(mp, tp, qo_apply_dquot_deltas)
+value|XFS_DQTRXOP_VOID(mp, tp, qo_apply_dquot_deltas)
 end_define
 
 begin_define
@@ -1274,13 +1430,13 @@ parameter_list|,
 name|tp
 parameter_list|)
 define|\
-value|XFS_DQTRXOP(mp, tp, qo_unreserve_and_mod_dquots)
+value|XFS_DQTRXOP_VOID(mp, tp, qo_unreserve_and_mod_dquots)
 end_define
 
 begin_define
 define|#
 directive|define
-name|XFS_TRANS_RESERVE_BLKQUOTA
+name|XFS_TRANS_UNRESERVE_QUOTA_NBLKS
 parameter_list|(
 name|mp
 parameter_list|,
@@ -1289,43 +1445,13 @@ parameter_list|,
 name|ip
 parameter_list|,
 name|nblks
+parameter_list|,
+name|ninos
+parameter_list|,
+name|flags
 parameter_list|)
 define|\
-value|XFS_TRANS_RESERVE_QUOTA_NBLKS(mp, tp, ip, nblks, 0, \ 				XFS_QMOPT_RES_REGBLKS)
-end_define
-
-begin_define
-define|#
-directive|define
-name|XFS_TRANS_RESERVE_BLKQUOTA_FORCE
-parameter_list|(
-name|mp
-parameter_list|,
-name|tp
-parameter_list|,
-name|ip
-parameter_list|,
-name|nblks
-parameter_list|)
-define|\
-value|XFS_TRANS_RESERVE_QUOTA_NBLKS(mp, tp, ip, nblks, 0, \ 				XFS_QMOPT_RES_REGBLKS | XFS_QMOPT_FORCE_RES)
-end_define
-
-begin_define
-define|#
-directive|define
-name|XFS_TRANS_UNRESERVE_BLKQUOTA
-parameter_list|(
-name|mp
-parameter_list|,
-name|tp
-parameter_list|,
-name|ip
-parameter_list|,
-name|nblks
-parameter_list|)
-define|\
-value|XFS_TRANS_RESERVE_QUOTA_NBLKS(mp, tp, ip, -(nblks), 0, \ 				XFS_QMOPT_RES_REGBLKS)
+value|XFS_TRANS_RESERVE_QUOTA_NBLKS(mp, tp, ip, -(nblks), -(ninos), flags)
 end_define
 
 begin_define
@@ -1389,6 +1515,18 @@ parameter_list|,
 name|uint
 parameter_list|,
 name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|xfs_mount_reset_sbqflags
+parameter_list|(
+name|struct
+name|xfs_mount
 modifier|*
 parameter_list|)
 function_decl|;

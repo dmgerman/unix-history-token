@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2001 Silicon Graphics, Inc.  All Rights Reserved.  *  * This program is free software; you can redistribute it and/or modify it  * under the terms of version 2 of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful, but  * WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Further, this software is distributed without any warranty that it is  * free of the rightful claim of any third person regarding infringement  * or the like.  Any license provided herein, whether implied or  * otherwise, applies only to this software file.  Patent licenses, if  * any, provided herein do not apply to combinations of this program with  * other software, or any other product whatsoever.  *  * You should have received a copy of the GNU General Public License along  * with this program; if not, write the Free Software Foundation, Inc., 59  * Temple Place - Suite 330, Boston MA 02111-1307, USA.  *  * Contact information: Silicon Graphics, Inc., 1600 Amphitheatre Pkwy,  * Mountain View, CA  94043, or:  *  * http://www.sgi.com  *  * For further information regarding this notice, see:  *  * http://oss.sgi.com/projects/GenInfo/SGIGPLNoticeExplan/  */
+comment|/*  * Copyright (c) 2000-2001 Silicon Graphics, Inc.  All Rights Reserved.  *  * This program is free software; you can redistribute it and/or  * modify it under the terms of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, write the Free Software Foundation,  * Inc.,  51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  */
 end_comment
 
 begin_ifndef
@@ -32,15 +32,11 @@ name|xfs_mount
 modifier|*
 name|mp
 parameter_list|,
-name|struct
-name|xfs_trans
-modifier|*
-name|tp
-parameter_list|,
 name|xfs_ino_t
 name|ino
 parameter_list|,
 name|void
+name|__user
 modifier|*
 name|buffer
 parameter_list|,
@@ -145,11 +141,6 @@ modifier|*
 name|mp
 parameter_list|,
 comment|/* mount point for filesystem */
-name|xfs_trans_t
-modifier|*
-name|tp
-parameter_list|,
-comment|/* transaction pointer */
 name|xfs_ino_t
 modifier|*
 name|lastino
@@ -173,7 +164,9 @@ name|size_t
 name|statstruct_size
 parameter_list|,
 comment|/* sizeof struct that we're filling */
-name|xfs_caddr_t
+name|char
+name|__user
+modifier|*
 name|ubuffer
 parameter_list|,
 comment|/* buffer with inode stats */
@@ -189,7 +182,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* 1 if there're more stats to get */
+comment|/* 1 if there are more stats to get */
 end_comment
 
 begin_function_decl
@@ -204,7 +197,9 @@ name|xfs_ino_t
 modifier|*
 name|lastinop
 parameter_list|,
-name|xfs_caddr_t
+name|char
+name|__user
+modifier|*
 name|buffer
 parameter_list|,
 name|int
@@ -222,14 +217,11 @@ name|xfs_mount_t
 modifier|*
 name|mp
 parameter_list|,
-name|xfs_trans_t
-modifier|*
-name|tp
-parameter_list|,
 name|xfs_ino_t
 name|ino
 parameter_list|,
 name|void
+name|__user
 modifier|*
 name|buffer
 parameter_list|,
@@ -268,11 +260,6 @@ modifier|*
 name|mp
 parameter_list|,
 comment|/* mount point for filesystem */
-name|xfs_trans_t
-modifier|*
-name|tp
-parameter_list|,
-comment|/* transaction pointer */
 name|xfs_ino_t
 modifier|*
 name|last
@@ -283,14 +270,16 @@ modifier|*
 name|count
 parameter_list|,
 comment|/* size of buffer/count returned */
-name|xfs_caddr_t
+name|xfs_inogrp_t
+name|__user
+modifier|*
 name|buffer
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* buffer with inode descriptions */
+comment|/* buffer with inode info */
 end_comment
 
 begin_endif

@@ -230,6 +230,31 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* linus now has sparse which expects big endian or little endian */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|__u16
+name|__be16
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__u32
+name|__be32
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__u64
+name|__be64
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Linux types with direct FreeBSD conterparts  */
 end_comment
 
@@ -334,6 +359,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|rol32
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|(((x)<<(y))|((x)>>(32-(y))))
+end_define
 
 begin_comment
 comment|/*  * boolean_t is enum on Linux, int on FreeBSD.  * Provide value defines.  */
@@ -693,6 +730,14 @@ parameter_list|)
 value|MAX((x),(y))
 end_define
 
+begin_typedef
+typedef|typedef
+name|struct
+name|mtx
+name|xfs_mutex_t
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*  * Cedentials manipulation.  */
 end_comment
@@ -716,6 +761,45 @@ name|credp
 parameter_list|)
 value|(credp)->cr_groups[0]
 end_define
+
+begin_define
+define|#
+directive|define
+name|PAGE_CACHE_SIZE
+value|PAGE_SIZE
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_ERR
+parameter_list|(
+name|err
+parameter_list|)
+value|(err)
+end_define
+
+begin_function
+specifier|static
+specifier|inline
+name|unsigned
+name|long
+name|ffz
+parameter_list|(
+name|unsigned
+name|long
+name|val
+parameter_list|)
+block|{
+return|return
+name|ffsl
+argument_list|(
+operator|~
+name|val
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_endif
 endif|#

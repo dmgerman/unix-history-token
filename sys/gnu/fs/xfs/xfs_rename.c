@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2003 Silicon Graphics, Inc.  All Rights Reserved.  *  * This program is free software; you can redistribute it and/or modify it  * under the terms of version 2 of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful, but  * WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Further, this software is distributed without any warranty that it is  * free of the rightful claim of any third person regarding infringement  * or the like.  Any license provided herein, whether implied or  * otherwise, applies only to this software file.  Patent licenses, if  * any, provided herein do not apply to combinations of this program with  * other software, or any other product whatsoever.  *  * You should have received a copy of the GNU General Public License along  * with this program; if not, write the Free Software Foundation, Inc., 59  * Temple Place - Suite 330, Boston MA 02111-1307, USA.  *  * Contact information: Silicon Graphics, Inc., 1600 Amphitheatre Pkwy,  * Mountain View, CA  94043, or:  *  * http://www.sgi.com  *  * For further information regarding this notice, see:  *  * http://oss.sgi.com/projects/GenInfo/SGIGPLNoticeExplan/  */
+comment|/*  * Copyright (c) 2000-2003,2005 Silicon Graphics, Inc.  * All Rights Reserved.  *  * This program is free software; you can redistribute it and/or  * modify it under the terms of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, write the Free Software Foundation,  * Inc.,  51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_macros.h"
+file|"xfs_fs.h"
 end_include
 
 begin_include
@@ -24,13 +24,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_inum.h"
+file|"xfs_log.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"xfs_log.h"
+file|"xfs_inum.h"
 end_include
 
 begin_include
@@ -72,13 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_bmap_btree.h"
+file|"xfs_da_btree.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"xfs_attr_sf.h"
+file|"xfs_bmap_btree.h"
 end_include
 
 begin_include
@@ -96,19 +96,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"xfs_attr_sf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"xfs_dinode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"xfs_inode_item.h"
+file|"xfs_inode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"xfs_inode.h"
+file|"xfs_inode_item.h"
 end_include
 
 begin_include
@@ -145,12 +151,6 @@ begin_include
 include|#
 directive|include
 file|"xfs_trans_space.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xfs_da_btree.h"
 end_include
 
 begin_include
@@ -789,14 +789,6 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-name|int
-name|rename_which_error_return
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * xfs_rename  */
 end_comment
@@ -887,10 +879,6 @@ name|xfs_vnode_t
 modifier|*
 name|src_dir_vp
 decl_stmt|;
-name|bhv_desc_t
-modifier|*
-name|target_dir_bdp
-decl_stmt|;
 name|int
 name|spaceres
 decl_stmt|;
@@ -970,22 +958,16 @@ name|__return_address
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Find the XFS behavior descriptor for the target directory 	 * vnode since it was not handed to us. 	 */
-name|target_dir_bdp
+name|target_dp
 operator|=
-name|vn_bhv_lookup_unlocked
-argument_list|(
-name|VN_BHV_HEAD
+name|xfs_vtoi
 argument_list|(
 name|target_dir_vp
-argument_list|)
-argument_list|,
-operator|&
-name|xfs_vnodeops
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|target_dir_bdp
+name|target_dp
 operator|==
 name|NULL
 condition|)
@@ -1002,13 +984,6 @@ operator|=
 name|XFS_BHVTOI
 argument_list|(
 name|src_dir_bdp
-argument_list|)
-expr_stmt|;
-name|target_dp
-operator|=
-name|XFS_BHVTOI
-argument_list|(
-name|target_dir_bdp
 argument_list|)
 expr_stmt|;
 name|mp
@@ -1114,10 +1089,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|rename_which_error_return
-operator|=
-name|__LINE__
-expr_stmt|;
 comment|/* 		 * We have nothing locked, no inode references, and 		 * no transaction, so just get out. 		 */
 goto|goto
 name|std_return
@@ -1167,10 +1138,6 @@ operator|>=
 name|XFS_MAXLINK
 condition|)
 block|{
-name|rename_which_error_return
-operator|=
-name|__LINE__
-expr_stmt|;
 name|error
 operator|=
 name|XFS_ERROR
@@ -1310,10 +1277,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|rename_which_error_return
-operator|=
-name|__LINE__
-expr_stmt|;
 name|xfs_trans_cancel
 argument_list|(
 name|tp
@@ -1346,10 +1309,6 @@ name|tp
 argument_list|,
 name|cancel_flags
 argument_list|)
-expr_stmt|;
-name|rename_which_error_return
-operator|=
-name|__LINE__
 expr_stmt|;
 goto|goto
 name|rele_return
@@ -1497,10 +1456,6 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|rename_which_error_return
-operator|=
-name|__LINE__
-expr_stmt|;
 goto|goto
 name|error_return
 goto|;
@@ -1540,10 +1495,6 @@ operator|==
 name|ENOSPC
 condition|)
 block|{
-name|rename_which_error_return
-operator|=
-name|__LINE__
-expr_stmt|;
 goto|goto
 name|error_return
 goto|;
@@ -1553,10 +1504,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|rename_which_error_return
-operator|=
-name|__LINE__
-expr_stmt|;
 goto|goto
 name|abort_return
 goto|;
@@ -1591,10 +1538,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|rename_which_error_return
-operator|=
-name|__LINE__
-expr_stmt|;
 goto|goto
 name|abort_return
 goto|;
@@ -1653,10 +1596,6 @@ argument_list|(
 name|EEXIST
 argument_list|)
 expr_stmt|;
-name|rename_which_error_return
-operator|=
-name|__LINE__
-expr_stmt|;
 goto|goto
 name|error_return
 goto|;
@@ -1695,10 +1634,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|rename_which_error_return
-operator|=
-name|__LINE__
-expr_stmt|;
 goto|goto
 name|abort_return
 goto|;
@@ -1727,10 +1662,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|rename_which_error_return
-operator|=
-name|__LINE__
-expr_stmt|;
 goto|goto
 name|abort_return
 goto|;
@@ -1759,10 +1690,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|rename_which_error_return
-operator|=
-name|__LINE__
-expr_stmt|;
 goto|goto
 name|abort_return
 goto|;
@@ -1831,10 +1758,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|rename_which_error_return
-operator|=
-name|__LINE__
-expr_stmt|;
 goto|goto
 name|abort_return
 goto|;
@@ -1889,10 +1812,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|rename_which_error_return
-operator|=
-name|__LINE__
-expr_stmt|;
 goto|goto
 name|abort_return
 goto|;
@@ -1930,10 +1849,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|rename_which_error_return
-operator|=
-name|__LINE__
-expr_stmt|;
 goto|goto
 name|abort_return
 goto|;
@@ -2003,7 +1918,11 @@ name|mp
 operator|->
 name|m_flags
 operator|&
+operator|(
 name|XFS_MOUNT_WSYNC
+operator||
+name|XFS_MOUNT_DIRSYNC
+operator|)
 condition|)
 block|{
 name|xfs_trans_set_sync
@@ -2152,14 +2071,6 @@ name|target_ip
 argument_list|)
 expr_stmt|;
 block|}
-name|FSC_NOTIFY_NAME_CHANGED
-argument_list|(
-name|XFS_ITOV
-argument_list|(
-name|src_ip
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|IRELE
 argument_list|(
 name|src_ip

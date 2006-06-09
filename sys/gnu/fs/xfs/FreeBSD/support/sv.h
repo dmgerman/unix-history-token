@@ -18,7 +18,7 @@ file|<sys/condvar.h>
 end_include
 
 begin_comment
-comment|/*  * Synchronisation variables  *  * parameters "pri", "svf" and "rts" are not (yet?) implemented  *  */
+comment|/*   * Synchronisation variables   *  * parameters "pri", "svf" and "rts" are not (yet?) implemented  *  */
 end_comment
 
 begin_typedef
@@ -42,7 +42,6 @@ name|name
 parameter_list|,
 name|flag
 parameter_list|)
-define|\
 value|cv_init(sv, name)
 end_define
 
@@ -57,9 +56,12 @@ name|flag
 parameter_list|,
 name|name
 parameter_list|)
-define|\
 value|cv_init(sv, name)
 end_define
+
+begin_comment
+comment|/* sv_wait should exit with lock unlocked */
+end_comment
 
 begin_define
 define|#
@@ -74,8 +76,23 @@ name|lock
 parameter_list|,
 name|spl
 parameter_list|)
-define|\
 value|cv_wait_unlock(sv, lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sv_wait_sig
+parameter_list|(
+name|sv
+parameter_list|,
+name|pri
+parameter_list|,
+name|lock
+parameter_list|,
+name|spl
+parameter_list|)
+value|cv_wait_sig_nolock(sv, lock)
 end_define
 
 begin_define
@@ -85,7 +102,6 @@ name|sv_signal
 parameter_list|(
 name|sv
 parameter_list|)
-define|\
 value|cv_signal(sv)
 end_define
 
@@ -96,7 +112,6 @@ name|sv_broadcast
 parameter_list|(
 name|sv
 parameter_list|)
-define|\
 value|cv_broadcast(sv)
 end_define
 
@@ -107,7 +122,6 @@ name|sv_destroy
 parameter_list|(
 name|sv
 parameter_list|)
-define|\
 value|cv_destroy(sv)
 end_define
 

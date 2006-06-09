@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001-2002 Silicon Graphics, Inc.  All Rights Reserved.  *  * This program is free software; you can redistribute it and/or modify it  * under the terms of version 2 of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful, but  * WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Further, this software is distributed without any warranty that it is  * free of the rightful claim of any third person regarding infringement  * or the like.  Any license provided herein, whether implied or  * otherwise, applies only to this software file.  Patent licenses, if  * any, provided herein do not apply to combinations of this program with  * other software, or any other product whatsoever.  *  * You should have received a copy of the GNU General Public License along  * with this program; if not, write the Free Software Foundation, Inc., 59  * Temple Place - Suite 330, Boston MA 02111-1307, USA.  *  * Contact information: Silicon Graphics, Inc., 1600 Amphitheatre Pkwy,  * Mountain View, CA  94043, or:  *  * http://www.sgi.com  *  * For further information regarding this notice, see:  *  * http://oss.sgi.com/projects/GenInfo/SGIGPLNoticeExplan/  */
+comment|/*  * Copyright (c) 2001-2005 Silicon Graphics, Inc.  * All Rights Reserved.  *  * This program is free software; you can redistribute it and/or  * modify it under the terms of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, write the Free Software Foundation,  * Inc.,  51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  */
 end_comment
 
 begin_ifndef
@@ -58,7 +58,7 @@ comment|/* Root/non-root can give away files.*/
 name|xfs_sysctl_val_t
 name|sgid_inherit
 decl_stmt|;
-comment|/* Inherit S_ISGID bit if process' GID  					 * is not a member of the parent dir 					 * GID */
+comment|/* Inherit S_ISGID if process' GID is 					 * not a member of parent dir GID. */
 name|xfs_sysctl_val_t
 name|symlink_mode
 decl_stmt|;
@@ -72,9 +72,9 @@ name|error_level
 decl_stmt|;
 comment|/* Degree of reporting for problems  */
 name|xfs_sysctl_val_t
-name|sync_interval
+name|syncd_timer
 decl_stmt|;
-comment|/* time between sync calls           */
+comment|/* Interval between xfssyncd wakeups */
 name|xfs_sysctl_val_t
 name|stats_clear
 decl_stmt|;
@@ -104,17 +104,21 @@ name|inherit_noatim
 decl_stmt|;
 comment|/* Inherit the "noatime" inode flag. */
 name|xfs_sysctl_val_t
-name|flush_interval
+name|xfs_buf_timer
 decl_stmt|;
-comment|/* interval between runs of the 					 * delwri flush daemon.  */
+comment|/* Interval between xfsbufd wakeups. */
 name|xfs_sysctl_val_t
-name|age_buffer
+name|xfs_buf_age
 decl_stmt|;
-comment|/* time for buffer to age before 					 * we flush it.  */
+comment|/* Metadata buffer age before flush. */
 name|xfs_sysctl_val_t
-name|io_bypass
+name|inherit_nosym
 decl_stmt|;
-comment|/* toggle for directio io bypass */
+comment|/* Inherit the "nosymlinks" flag. */
+name|xfs_sysctl_val_t
+name|rotorstep
+decl_stmt|;
+comment|/* inode32 AG rotoring control knob */
 block|}
 name|xfs_param_t
 typedef|;
@@ -127,14 +131,8 @@ end_comment
 begin_enum
 enum|enum
 block|{
-name|XFS_REFCACHE_SIZE
-init|=
-literal|1
-block|,
-name|XFS_REFCACHE_PURGE
-init|=
-literal|2
-block|,
+comment|/* XFS_REFCACHE_SIZE = 1 */
+comment|/* XFS_REFCACHE_PURGE = 2 */
 name|XFS_RESTRICT_CHOWN
 init|=
 literal|3
@@ -155,7 +153,7 @@ name|XFS_ERRLEVEL
 init|=
 literal|7
 block|,
-name|XFS_SYNC_INTERVAL
+name|XFS_SYNCD_TIMER
 init|=
 literal|8
 block|,
@@ -187,17 +185,22 @@ name|XFS_INHERIT_NOATIME
 init|=
 literal|15
 block|,
-name|XFS_FLUSH_INTERVAL
+name|XFS_BUF_TIMER
 init|=
 literal|16
 block|,
-name|XFS_AGE_BUFFER
+name|XFS_BUF_AGE
 init|=
 literal|17
 block|,
-name|XFS_IO_BYPASS
+comment|/* XFS_IO_BYPASS = 18 */
+name|XFS_INHERIT_NOSYM
 init|=
-literal|18
+literal|19
+block|,
+name|XFS_ROTORSTEP
+init|=
+literal|20
 block|, }
 enum|;
 end_enum

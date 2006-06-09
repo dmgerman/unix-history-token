@@ -207,12 +207,6 @@ directive|include
 file|<xfs_frw.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<xfs_log.h>
-end_include
-
 begin_comment
 comment|/*  * Feature macros (disable/enable)  */
 end_comment
@@ -258,20 +252,6 @@ end_endif
 begin_define
 define|#
 directive|define
-name|xfs_refcache_size
-value|xfs_params.refcache_size.val
-end_define
-
-begin_define
-define|#
-directive|define
-name|xfs_refcache_purge_count
-value|xfs_params.refcache_purge.val
-end_define
-
-begin_define
-define|#
-directive|define
 name|restricted_chown
 value|xfs_params.restrict_chown.val
 end_define
@@ -307,8 +287,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|xfs_syncd_interval
-value|xfs_params.sync_interval.val
+name|xfs_syncd_centisecs
+value|xfs_params.syncd_timer.val
 end_define
 
 begin_define
@@ -363,22 +343,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|xfs_flush_interval
-value|xfs_params.flush_interval.val
+name|xfs_buf_timer_centisecs
+value|xfs_params.xfs_buf_timer.val
 end_define
 
 begin_define
 define|#
 directive|define
-name|xfs_age_buffer
-value|xfs_params.age_buffer.val
+name|xfs_buf_age_centisecs
+value|xfs_params.xfs_buf_age.val
 end_define
 
 begin_define
 define|#
 directive|define
-name|xfs_io_bypass
-value|xfs_params.io_bypass.val
+name|xfs_inherit_nosymlinks
+value|xfs_params.inherit_nosym.val
+end_define
+
+begin_define
+define|#
+directive|define
+name|xfs_rotorstep
+value|xfs_params.rotorstep.val
 end_define
 
 begin_define
@@ -480,6 +467,59 @@ end_define
 begin_comment
 comment|/* LOG2(NBPC) if exact */
 end_comment
+
+begin_comment
+comment|/*  * Size of block device i/o is parameterized here.  * Currently the system supports page-sized i/o.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BLKDEV_IOSHIFT
+value|BPCSHIFT
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BLKDEV_IOSIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|BLKDEV_IOSIZE
+value|(1<<BLKDEV_IOSHIFT)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|NBPC
+operator|!=
+name|BLKDEV_IOSIZE
+end_if
+
+begin_error
+error|#
+directive|error
+error|Wrong BLKDEV_IOSIZE
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* number of BB's per block device block */
@@ -825,22 +865,46 @@ parameter_list|)
 value|((((x)+((y)-1))/(y))*(y))
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__user
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|__user
+name|xfs_sort
+parameter_list|(
+name|a
+parameter_list|,
+name|n
+parameter_list|,
+name|s
+parameter_list|,
+name|fn
+parameter_list|)
+value|qsort(a,n,s,fn)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|xfs_itruncate_data
+parameter_list|(
+name|void
+modifier|*
+name|ip
+parameter_list|,
+name|xfs_off_t
+name|off
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"xfs_itruncate_data NI\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Juggle IRIX device numbers - still used in ondisk structures  */
@@ -934,6 +998,21 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
+
+begin_define
+define|#
+directive|define
+name|xfs_statvfs_fsid
+parameter_list|(
+name|statp
+parameter_list|,
+name|mp
+parameter_list|)
+define|\
+value|({				   \ 		(statp)->f_fsid.val[0] =
+comment|/*dev2udev(mp->m_dev) */
+value|1;	\ 		(statp)->f_fsid.val[1] = 0;			\ 	})
+end_define
 
 begin_comment
 comment|/* Move the kernel do_div definition off to one side */
@@ -1440,32 +1519,6 @@ name|x
 operator|*
 name|y
 operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|unsigned
-name|long
-name|ffz
-parameter_list|(
-name|unsigned
-name|long
-name|val
-parameter_list|)
-block|{
-name|val
-operator|=
-name|ffsl
-argument_list|(
-operator|~
-name|val
-argument_list|)
-expr_stmt|;
-return|return
-name|val
 return|;
 block|}
 end_function

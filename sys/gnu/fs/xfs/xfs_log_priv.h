@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2003 Silicon Graphics, Inc.  All Rights Reserved.  *  * This program is free software; you can redistribute it and/or modify it  * under the terms of version 2 of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful, but  * WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Further, this software is distributed without any warranty that it is  * free of the rightful claim of any third person regarding infringement  * or the like.  Any license provided herein, whether implied or  * otherwise, applies only to this software file.  Patent licenses, if  * any, provided herein do not apply to combinations of this program with  * other software, or any other product whatsoever.  *  * You should have received a copy of the GNU General Public License along  * with this program; if not, write the Free Software Foundation, Inc., 59  * Temple Place - Suite 330, Boston MA 02111-1307, USA.  *  * Contact information: Silicon Graphics, Inc., 1600 Amphitheatre Pkwy,  * Mountain View, CA  94043, or:  *  * http://www.sgi.com  *  * For further information regarding this notice, see:  *  * http://oss.sgi.com/projects/GenInfo/SGIGPLNoticeExplan/  */
+comment|/*  * Copyright (c) 2000-2003,2005 Silicon Graphics, Inc.  * All Rights Reserved.  *  * This program is free software; you can redistribute it and/or  * modify it under the terms of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, write the Free Software Foundation,  * Inc.,  51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  */
 end_comment
 
 begin_ifndef
@@ -30,6 +30,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|log
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|xlog_ticket
 struct_decl|;
 end_struct_decl
 
@@ -186,77 +192,6 @@ begin_comment
 comment|/* 256k == 1<< 18 */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|XFS_WANT_FUNCS
-operator|||
-name|XFS_WANT_FUNCS_C
-operator|||
-operator|(
-name|XFS_WANT_SPACE
-operator|&&
-name|XFSSO_XLOG_BTOLRBB
-operator|)
-end_if
-
-begin_function_decl
-name|int
-name|xlog_btolrbb
-parameter_list|(
-name|int
-name|b
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|XFS_WANT_FUNCS
-operator|||
-operator|(
-name|XFS_WANT_SPACE
-operator|&&
-name|XFSSO_XLOG_BTOLRBB
-operator|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|XLOG_BTOLRBB
-parameter_list|(
-name|b
-parameter_list|)
-value|xlog_btolrbb(b)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|XLOG_BTOLRBB
-parameter_list|(
-name|b
-parameter_list|)
-value|(((b)+XLOG_RECORD_BSIZE-1)>> XLOG_RECORD_BSHIFT)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -317,48 +252,31 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ASSIGN_LSN_CYCLE
-parameter_list|(
-name|lsn
-parameter_list|,
-name|cycle
-parameter_list|,
-name|arch
-parameter_list|)
-define|\
-value|INT_SET(((uint *)&(lsn))[LSN_FIELD_CYCLE(arch)], arch, (cycle));
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASSIGN_LSN_BLOCK
-parameter_list|(
-name|lsn
-parameter_list|,
-name|block
-parameter_list|,
-name|arch
-parameter_list|)
-define|\
-value|INT_SET(((uint *)&(lsn))[LSN_FIELD_BLOCK(arch)], arch, (block));
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASSIGN_ANY_LSN
+name|ASSIGN_ANY_LSN_HOST
 parameter_list|(
 name|lsn
 parameter_list|,
 name|cycle
 parameter_list|,
 name|block
-parameter_list|,
-name|arch
 parameter_list|)
 define|\
-value|{ \ 	ASSIGN_LSN_CYCLE(lsn,cycle,arch); \ 	ASSIGN_LSN_BLOCK(lsn,block,arch); \     }
+value|{ \ 	(lsn) = ((xfs_lsn_t)(cycle)<<32)|(block); \     }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASSIGN_ANY_LSN_DISK
+parameter_list|(
+name|lsn
+parameter_list|,
+name|cycle
+parameter_list|,
+name|block
+parameter_list|)
+define|\
+value|{ \ 	INT_SET(((uint *)&(lsn))[0], ARCH_CONVERT, (cycle)); \ 	INT_SET(((uint *)&(lsn))[1], ARCH_CONVERT, (block)); \     }
 end_define
 
 begin_define
@@ -369,11 +287,9 @@ parameter_list|(
 name|lsn
 parameter_list|,
 name|log
-parameter_list|,
-name|arch
 parameter_list|)
 define|\
-value|ASSIGN_ANY_LSN(lsn,(log)->l_curr_cycle,(log)->l_curr_block,arch);
+value|ASSIGN_ANY_LSN_DISK(lsn,(log)->l_curr_cycle,(log)->l_curr_block);
 end_define
 
 begin_define
@@ -423,13 +339,11 @@ begin_comment
 comment|/*  * get client id from packed copy.  *  * this hack is here because the xlog_pack code copies four bytes  * of xlog_op_header containing the fields oh_clientid, oh_flags  * and oh_res2 into the packed copy.  *  * later on this four byte chunk is treated as an int and the  * client id is pulled out.  *  * this has endian issues, of course.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__LITTLE_ENDIAN
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|XFS_NATIVE_HOST
+end_ifndef
 
 begin_define
 define|#
@@ -466,210 +380,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_if
-if|#
-directive|if
-name|XFS_WANT_FUNCS
-operator|||
-name|XFS_WANT_FUNCS_C
-operator|||
-operator|(
-name|XFS_WANT_SPACE
-operator|&&
-name|XFSSO_XLOG_GRANT_SUB_SPACE
-operator|)
-end_if
-
-begin_function_decl
-name|void
-name|xlog_grant_sub_space
-parameter_list|(
-name|struct
-name|log
-modifier|*
-name|log
-parameter_list|,
-name|int
-name|bytes
-parameter_list|,
-name|int
-name|type
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|XFS_WANT_FUNCS
-operator|||
-operator|(
-name|XFS_WANT_SPACE
-operator|&&
-name|XFSSO_XLOG_GRANT_SUB_SPACE
-operator|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|XLOG_GRANT_SUB_SPACE
-parameter_list|(
-name|log
-parameter_list|,
-name|bytes
-parameter_list|,
-name|type
-parameter_list|)
-define|\
-value|xlog_grant_sub_space(log,bytes,type)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|XLOG_GRANT_SUB_SPACE
-parameter_list|(
-name|log
-parameter_list|,
-name|bytes
-parameter_list|,
-name|type
-parameter_list|)
-define|\
-value|{									\ 	if (type == 'w') {						\ 		(log)->l_grant_write_bytes -= (bytes);			\ 		if ((log)->l_grant_write_bytes< 0) {			\ 			(log)->l_grant_write_bytes += (log)->l_logsize;	\ 			(log)->l_grant_write_cycle--;			\ 		}							\ 	} else {							\ 		(log)->l_grant_reserve_bytes -= (bytes);		\ 		if ((log)->l_grant_reserve_bytes< 0) {			\ 			(log)->l_grant_reserve_bytes += (log)->l_logsize;\ 			(log)->l_grant_reserve_cycle--;			\ 		}							\ 	 }								\     }
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|XFS_WANT_FUNCS
-operator|||
-name|XFS_WANT_FUNCS_C
-operator|||
-operator|(
-name|XFS_WANT_SPACE
-operator|&&
-name|XFSSO_XLOG_GRANT_ADD_SPACE
-operator|)
-end_if
-
-begin_function_decl
-name|void
-name|xlog_grant_add_space
-parameter_list|(
-name|struct
-name|log
-modifier|*
-name|log
-parameter_list|,
-name|int
-name|bytes
-parameter_list|,
-name|int
-name|type
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|XFS_WANT_FUNCS
-operator|||
-operator|(
-name|XFS_WANT_SPACE
-operator|&&
-name|XFSSO_XLOG_GRANT_ADD_SPACE
-operator|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|XLOG_GRANT_ADD_SPACE
-parameter_list|(
-name|log
-parameter_list|,
-name|bytes
-parameter_list|,
-name|type
-parameter_list|)
-define|\
-value|xlog_grant_add_space(log,bytes,type)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|XLOG_GRANT_ADD_SPACE
-parameter_list|(
-name|log
-parameter_list|,
-name|bytes
-parameter_list|,
-name|type
-parameter_list|)
-define|\
-value|{									\ 	if (type == 'w') {						\ 		(log)->l_grant_write_bytes += (bytes);			\ 		if ((log)->l_grant_write_bytes> (log)->l_logsize) {	\ 			(log)->l_grant_write_bytes -= (log)->l_logsize;	\ 			(log)->l_grant_write_cycle++;			\ 		}							\ 	} else {							\ 		(log)->l_grant_reserve_bytes += (bytes);		\ 		if ((log)->l_grant_reserve_bytes> (log)->l_logsize) {	\ 			(log)->l_grant_reserve_bytes -= (log)->l_logsize;\ 			(log)->l_grant_reserve_cycle++;			\ 		}							\ 	 }								\     }
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|XLOG_INS_TICKETQ
-parameter_list|(
-name|q
-parameter_list|,
-name|tic
-parameter_list|)
-define|\
-value|{							\ 	if (q) {					\ 		(tic)->t_next	    = (q);		\ 		(tic)->t_prev	    = (q)->t_prev;	\ 		(q)->t_prev->t_next = (tic);		\ 		(q)->t_prev	    = (tic);		\ 	} else {					\ 		(tic)->t_prev = (tic)->t_next = (tic);	\ 		(q) = (tic);				\ 	}						\ 	(tic)->t_flags |= XLOG_TIC_IN_Q;		\     }
-end_define
-
-begin_define
-define|#
-directive|define
-name|XLOG_DEL_TICKETQ
-parameter_list|(
-name|q
-parameter_list|,
-name|tic
-parameter_list|)
-define|\
-value|{							\ 	if ((tic) == (tic)->t_next) {			\ 		(q) = NULL;				\ 	} else {					\ 		(q) = (tic)->t_next;			\ 		(tic)->t_next->t_prev = (tic)->t_prev;	\ 		(tic)->t_prev->t_next = (tic)->t_next;	\ 	}						\ 	(tic)->t_next = (tic)->t_prev = NULL;		\ 	(tic)->t_flags&= ~XLOG_TIC_IN_Q;		\     }
-end_define
 
 begin_define
 define|#
@@ -1115,6 +825,76 @@ name|XLOG_COVER_OPS
 value|5
 end_define
 
+begin_comment
+comment|/* Ticket reservation region accounting */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XLOG_TIC_LEN_MAX
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|XLOG_TIC_RESET_RES
+parameter_list|(
+name|t
+parameter_list|)
+value|((t)->t_res_num = \ 				(t)->t_res_arr_sum = (t)->t_res_num_ophdrs = 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XLOG_TIC_ADD_OPHDR
+parameter_list|(
+name|t
+parameter_list|)
+value|((t)->t_res_num_ophdrs++)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XLOG_TIC_ADD_REGION
+parameter_list|(
+name|t
+parameter_list|,
+name|len
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|do {								\ 		if ((t)->t_res_num == XLOG_TIC_LEN_MAX) { 		\
+comment|/* add to overflow and start again */
+value|\ 			(t)->t_res_o_flow += (t)->t_res_arr_sum;	\ 			(t)->t_res_num = 0;				\ 			(t)->t_res_arr_sum = 0;				\ 		}							\ 		(t)->t_res_arr[(t)->t_res_num].r_len = (len);		\ 		(t)->t_res_arr[(t)->t_res_num].r_type = (type);		\ 		(t)->t_res_arr_sum += (len);				\ 		(t)->t_res_num++;					\ 	} while (0)
+end_define
+
+begin_comment
+comment|/*  * Reservation region  * As would be stored in xfs_log_iovec but without the i_addr which  * we don't care about.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|xlog_res
+block|{
+name|uint
+name|r_len
+decl_stmt|;
+comment|/* region length		:4 */
+name|uint
+name|r_type
+decl_stmt|;
+comment|/* region's transaction type	:4 */
+block|}
+name|xlog_res_t
+typedef|;
+end_typedef
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1123,47 +903,75 @@ block|{
 name|sv_t
 name|t_sema
 decl_stmt|;
-comment|/* sleep on this semaphore	 :20 */
+comment|/* sleep on this semaphore      : 20 */
 name|struct
 name|xlog_ticket
 modifier|*
 name|t_next
 decl_stmt|;
-comment|/*			         : 4 */
+comment|/*			         :4|8 */
 name|struct
 name|xlog_ticket
 modifier|*
 name|t_prev
 decl_stmt|;
-comment|/*				 : 4 */
+comment|/*				 :4|8 */
 name|xlog_tid_t
 name|t_tid
 decl_stmt|;
-comment|/* transaction identifier	 : 4 */
+comment|/* transaction identifier	 : 4  */
 name|int
 name|t_curr_res
 decl_stmt|;
-comment|/* current reservation in bytes : 4 */
+comment|/* current reservation in bytes : 4  */
 name|int
 name|t_unit_res
 decl_stmt|;
-comment|/* unit reservation in bytes    : 4 */
-name|__uint8_t
+comment|/* unit reservation in bytes    : 4  */
+name|char
 name|t_ocnt
 decl_stmt|;
-comment|/* original count		 : 1 */
-name|__uint8_t
+comment|/* original count		 : 1  */
+name|char
 name|t_cnt
 decl_stmt|;
-comment|/* current count		 : 1 */
-name|__uint8_t
+comment|/* current count		 : 1  */
+name|char
 name|t_clientid
 decl_stmt|;
-comment|/* who does this belong to;	 : 1 */
-name|__uint8_t
+comment|/* who does this belong to;	 : 1  */
+name|char
 name|t_flags
 decl_stmt|;
-comment|/* properties of reservation	 : 1 */
+comment|/* properties of reservation	 : 1  */
+name|uint
+name|t_trans_type
+decl_stmt|;
+comment|/* transaction type             : 4  */
+comment|/* reservation array fields */
+name|uint
+name|t_res_num
+decl_stmt|;
+comment|/* num in array : 4 */
+name|uint
+name|t_res_num_ophdrs
+decl_stmt|;
+comment|/* num op hdrs  : 4 */
+name|uint
+name|t_res_arr_sum
+decl_stmt|;
+comment|/* array sum    : 4 */
+name|uint
+name|t_res_o_flow
+decl_stmt|;
+comment|/* sum overflow : 4 */
+name|xlog_res_t
+name|t_res_arr
+index|[
+name|XLOG_TIC_LEN_MAX
+index|]
+decl_stmt|;
+comment|/* array of res : 8 * 15 */
 block|}
 name|xlog_ticket_t
 typedef|;
@@ -1240,33 +1048,11 @@ begin_comment
 comment|/* our fmt */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__LITTLE_ENDIAN
-end_if
-
-begin_define
-define|#
-directive|define
-name|XLOG_FMT
-value|XLOG_FMT_LINUX_LE
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XFS_NATIVE_HOST
+end_ifdef
 
 begin_define
 define|#
@@ -1280,16 +1066,12 @@ else|#
 directive|else
 end_else
 
-begin_error
-error|#
-directive|error
-error|unknown byte order
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|XLOG_FMT
+value|XLOG_FMT_LINUX_LE
+end_define
 
 begin_endif
 endif|#
@@ -1456,9 +1238,6 @@ name|int
 name|ic_refcnt
 decl_stmt|;
 name|int
-name|ic_roundoff
-decl_stmt|;
-name|int
 name|ic_bwritecnt
 decl_stmt|;
 name|ushort_t
@@ -1604,13 +1383,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ic_roundoff
-value|hic_fields.ic_roundoff
-end_define
-
-begin_define
-define|#
-directive|define
 name|ic_bwritecnt
 value|hic_fields.ic_bwritecnt
 end_define
@@ -1729,10 +1501,6 @@ name|l_logBBsize
 decl_stmt|;
 comment|/* size of log in BB chunks */
 name|int
-name|l_roundoff
-decl_stmt|;
-comment|/* round off error of iclogs */
-name|int
 name|l_curr_cycle
 decl_stmt|;
 comment|/* Cycle number of log writes */
@@ -1842,6 +1610,16 @@ name|xlog_t
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|XLOG_FORCED_SHUTDOWN
+parameter_list|(
+name|log
+parameter_list|)
+value|((log)->l_flags& XLOG_IO_ERROR)
+end_define
+
 begin_comment
 comment|/* common routines */
 end_comment
@@ -1862,22 +1640,6 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|xlog_find_head
-parameter_list|(
-name|xlog_t
-modifier|*
-name|log
-parameter_list|,
-name|xfs_daddr_t
-modifier|*
-name|head_blk
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
 name|xlog_find_tail
 parameter_list|(
 name|xlog_t
@@ -1891,25 +1653,6 @@ parameter_list|,
 name|xfs_daddr_t
 modifier|*
 name|tail_blk
-parameter_list|,
-name|int
-name|readonly
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|xlog_print_find_oldest
-parameter_list|(
-name|xlog_t
-modifier|*
-name|log
-parameter_list|,
-name|xfs_daddr_t
-modifier|*
-name|last_blk
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1922,9 +1665,6 @@ parameter_list|(
 name|xlog_t
 modifier|*
 name|log
-parameter_list|,
-name|int
-name|readonly
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1956,6 +1696,8 @@ parameter_list|,
 name|xlog_in_core_t
 modifier|*
 name|iclog
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2018,24 +1760,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|xfs_caddr_t
-name|xlog_align
-parameter_list|(
-name|xlog_t
-modifier|*
-parameter_list|,
-name|xfs_daddr_t
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|xfs_buf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* iclog tracing */
+end_comment
 
 begin_define
 define|#

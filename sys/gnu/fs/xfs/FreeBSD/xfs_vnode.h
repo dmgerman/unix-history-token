@@ -35,13 +35,6 @@ end_struct_decl
 
 begin_typedef
 typedef|typedef
-name|xfs_ino_t
-name|vnumber_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
 name|struct
 name|componentname
 name|vname_t
@@ -68,18 +61,13 @@ name|__u32
 name|v_flag
 decl_stmt|;
 comment|/* vnode flags (see below) */
-name|enum
-name|vtype
-name|v_type
-decl_stmt|;
-comment|/* vnode type */
 name|struct
 name|xfs_vfs
 modifier|*
 name|v_vfsp
 decl_stmt|;
 comment|/* ptr to containing VFS */
-name|vnumber_t
+name|xfs_ino_t
 name|v_number
 decl_stmt|;
 comment|/* in-core vnode number */
@@ -114,6 +102,70 @@ block|}
 name|xfs_vnode_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* vnode types */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VN_ISLNK
+parameter_list|(
+name|vp
+parameter_list|)
+value|((vp)->v_vnode->v_type& VLNK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VN_ISREG
+parameter_list|(
+name|vp
+parameter_list|)
+value|((vp)->v_vnode->v_type& VREG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VN_ISDIR
+parameter_list|(
+name|vp
+parameter_list|)
+value|((vp)->v_vnode->v_type& VDIR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VN_ISCHR
+parameter_list|(
+name|vp
+parameter_list|)
+value|((vp)->v_vnode->v_type& VCHR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VN_ISBLK
+parameter_list|(
+name|vp
+parameter_list|)
+value|((vp)->v_vnode->v_type& VBLK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VN_BAD
+parameter_list|(
+name|vp
+parameter_list|)
+value|((vp)->v_vnode->v_type& VBAD)
+end_define
 
 begin_define
 define|#
@@ -339,70 +391,6 @@ name|vp
 parameter_list|)
 value|((xfs_inode_t *)NULL)
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-end_ifndef
-
-begin_comment
-comment|/*  * Convert between vnode types and inode formats (since POSIX.1  * defines mode word of stat structure in terms of inode formats).  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|enum
-name|vtype
-name|iftovt_tab
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_short
-name|vttoif_tab
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|IFTOVT
-parameter_list|(
-name|mode
-parameter_list|)
-value|(iftovt_tab[((mode)& S_IFMT)>> 12])
-end_define
-
-begin_define
-define|#
-directive|define
-name|VTTOIF
-parameter_list|(
-name|indx
-parameter_list|)
-value|(vttoif_tab[(int)(indx)])
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAKEIMODE
-parameter_list|(
-name|indx
-parameter_list|,
-name|mode
-parameter_list|)
-value|(int)(VTTOIF(indx) | (mode))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Vnode flags.  */
@@ -644,8 +632,8 @@ parameter_list|,
 name|unsigned
 name|int
 parameter_list|,
-name|unsigned
-name|long
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_typedef
@@ -785,6 +773,9 @@ modifier|*
 name|xfs_vop_remove_t
 function_decl|)
 parameter_list|(
+name|bhv_desc_t
+modifier|*
+parameter_list|,
 name|bhv_desc_t
 modifier|*
 parameter_list|,
@@ -2241,15 +2232,8 @@ begin_comment
 comment|/* don't update inode timestamps */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IO_ISLOCKED
-value|0x04000
-end_define
-
 begin_comment
-comment|/* don't do inode locking */
+comment|/* #define IO_ISLOCKED	0x04000		don't do inode locking, strictly a CXFS thing */
 end_comment
 
 begin_comment
@@ -2339,11 +2323,6 @@ name|int
 name|va_mask
 decl_stmt|;
 comment|/* bit-mask of attributes present */
-name|enum
-name|vtype
-name|va_type
-decl_stmt|;
-comment|/* vnode type (for create) */
 name|mode_t
 name|va_mode
 decl_stmt|;
@@ -2768,7 +2747,7 @@ parameter_list|,
 name|mode
 parameter_list|)
 define|\
-value|((vp)->v_type == VREG&& ((mode)& (VSGID|(VEXEC>>3))) == VSGID)
+value|((vp)->v_vnode->v_type == VREG&& ((mode)& (VSGID|(VEXEC>>3))) == VSGID)
 end_define
 
 begin_function_decl
@@ -2785,6 +2764,18 @@ begin_function_decl
 specifier|extern
 name|int
 name|vn_wait
+parameter_list|(
+name|struct
+name|xfs_vnode
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|vn_iowait
 parameter_list|(
 name|struct
 name|xfs_vnode
@@ -2836,6 +2827,12 @@ name|vmap_t
 typedef|;
 end_typedef
 
+begin_if
+if|#
+directive|if
+literal|1
+end_if
+
 begin_define
 define|#
 directive|define
@@ -2848,6 +2845,11 @@ parameter_list|)
 value|{(vmap).v_vfsp	 = (vp)->v_vfsp;	\ 			 (vmap).v_vp     = (vp)->v_vnode;	\ 			 (vmap).v_ino	 = (vp)->v_inode->i_ino;\ 			 vhold((vp)->v_vnode);			\ 			}
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|extern
 name|void
@@ -2855,9 +2857,6 @@ name|vn_purge
 parameter_list|(
 name|struct
 name|xfs_vnode
-modifier|*
-parameter_list|,
-name|vmap_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2883,18 +2882,6 @@ begin_function_decl
 specifier|extern
 name|int
 name|vn_revalidate
-parameter_list|(
-name|struct
-name|xfs_vnode
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|vn_remove
 parameter_list|(
 name|struct
 name|xfs_vnode
@@ -3311,6 +3298,28 @@ begin_comment
 comment|/* return EAGAIN if operation would block */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ATTR_NOLOCK
+value|0x200
+end_define
+
+begin_comment
+comment|/* Don't grab any conflicting locks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATTR_NOSIZETOK
+value|0x400
+end_define
+
+begin_comment
+comment|/* Don't get the SIZE token */
+end_comment
+
 begin_comment
 comment|/*  * Flags to VOP_FSYNC and VOP_RECLAIM.  */
 end_comment
@@ -3358,6 +3367,82 @@ end_define
 begin_comment
 comment|/* synchronous fsync of data only */
 end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|struct
+name|xfs_vnode
+modifier|*
+name|vn_grab
+parameter_list|(
+name|struct
+name|xfs_vnode
+modifier|*
+name|vp
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"vn_grab NI\n"
+argument_list|)
+expr_stmt|;
+comment|//	struct inode *inode = igrab(vn_to_inode(vp));
+comment|//	return inode ? vn_from_inode(inode) : NULL;
+return|return
+name|NULL
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|vn_atime_to_bstime
+parameter_list|(
+name|struct
+name|xfs_vnode
+modifier|*
+name|vp
+parameter_list|,
+name|xfs_bstime_t
+modifier|*
+name|bs_atime
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"%s NI\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+comment|//        bs_atime->tv_sec = vp->v_inode.i_atime.tv_sec;
+comment|//        bs_atime->tv_nsec = vp->v_inode.i_atime.tv_nsec;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|vn_atime_to_timespec
+parameter_list|(
+name|struct
+name|xfs_vnode
+modifier|*
+name|vp
+parameter_list|,
+name|struct
+name|timespec
+modifier|*
+name|ts
+parameter_list|)
+block|{
+comment|//	*ts = vp->v_vnode->va_atime;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Tracking vnode activity.  */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2003 Silicon Graphics, Inc.  All Rights Reserved.  *  * This program is free software; you can redistribute it and/or modify it  * under the terms of version 2 of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful, but  * WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Further, this software is distributed without any warranty that it is  * free of the rightful claim of any third person regarding infringement  * or the like.  Any license provided herein, whether implied or  * otherwise, applies only to this software file.  Patent licenses, if  * any, provided herein do not apply to combinations of this program with  * other software, or any other product whatsoever.  *  * You should have received a copy of the GNU General Public License along  * with this program; if not, write the Free Software Foundation, Inc., 59  * Temple Place - Suite 330, Boston MA 02111-1307, USA.  *  * Contact information: Silicon Graphics, Inc., 1600 Amphitheatre Pkwy,  * Mountain View, CA  94043, or:  *  * http://www.sgi.com  *  * For further information regarding this notice, see:  *  * http://oss.sgi.com/projects/GenInfo/SGIGPLNoticeExplan/  */
+comment|/*  * Copyright (c) 2000-2005 Silicon Graphics, Inc.  * All Rights Reserved.  *  * This program is free software; you can redistribute it and/or  * modify it under the terms of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, write the Free Software Foundation,  * Inc.,  51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  */
 end_comment
 
 begin_ifndef
@@ -222,6 +222,30 @@ name|xfs_bmap_free
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|xfs_extdelta
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|xfs_swapext
+struct_decl|;
+end_struct_decl
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|xvfsops
+name|xfs_vfsops
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|//extern struct xvnodeops xfs_vnodeops;
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -347,6 +371,10 @@ name|xfs_send_namesp_t
 function_decl|)
 parameter_list|(
 name|dm_eventtype_t
+parameter_list|,
+name|struct
+name|xfs_vfs
+modifier|*
 parameter_list|,
 name|struct
 name|xfs_vnode
@@ -508,7 +536,38 @@ parameter_list|,
 name|fl
 parameter_list|)
 define|\
-value|(*(mp)->m_dm_ops.xfs_send_namesp)(ev,b1,r1,b2,r2,n1,n2,mode,rval,fl)
+value|(*(mp)->m_dm_ops.xfs_send_namesp)(ev,NULL,b1,r1,b2,r2,n1,n2,mode,rval,fl)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XFS_SEND_PREUNMOUNT
+parameter_list|(
+name|mp
+parameter_list|,
+name|vfs
+parameter_list|,
+name|b1
+parameter_list|,
+name|r1
+parameter_list|,
+name|b2
+parameter_list|,
+name|r2
+parameter_list|,
+name|n1
+parameter_list|,
+name|n2
+parameter_list|,
+name|mode
+parameter_list|,
+name|rval
+parameter_list|,
+name|fl
+parameter_list|)
+define|\
+value|(*(mp)->m_dm_ops.xfs_send_namesp)(DM_EVENT_PREUNMOUNT,vfs,b1,r1,b2,r2,n1,n2,mode,rval,fl)
 end_define
 
 begin_define
@@ -592,6 +651,8 @@ parameter_list|,
 name|uint
 parameter_list|,
 name|uint
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_typedef
@@ -709,6 +770,8 @@ parameter_list|,
 name|uid_t
 parameter_list|,
 name|gid_t
+parameter_list|,
+name|prid_t
 parameter_list|,
 name|uint
 parameter_list|,
@@ -906,9 +969,11 @@ parameter_list|,
 name|mnt
 parameter_list|,
 name|fl
+parameter_list|,
+name|mfsi_flags
 parameter_list|)
 define|\
-value|(*(mp)->m_qm_ops.xfs_qmmount)(mp, mnt, fl)
+value|(*(mp)->m_qm_ops.xfs_qmmount)(mp, mnt, fl, mfsi_flags)
 end_define
 
 begin_define
@@ -1000,6 +1065,8 @@ name|uid
 parameter_list|,
 name|gid
 parameter_list|,
+name|prid
+parameter_list|,
 name|fl
 parameter_list|,
 name|dq1
@@ -1007,7 +1074,7 @@ parameter_list|,
 name|dq2
 parameter_list|)
 define|\
-value|(*(mp)->m_qm_ops.xfs_dqvopalloc)(mp, ip, uid, gid, fl, dq1, dq2)
+value|(*(mp)->m_qm_ops.xfs_dqvopalloc)(mp, ip, uid, gid, prid, fl, dq1, dq2)
 end_define
 
 begin_define
@@ -1143,6 +1210,50 @@ parameter_list|,
 name|struct
 name|xfs_bmap_free
 modifier|*
+parameter_list|,
+name|struct
+name|xfs_extdelta
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|xfs_bunmapi_t
+function_decl|)
+parameter_list|(
+name|struct
+name|xfs_trans
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|xfs_fileoff_t
+parameter_list|,
+name|xfs_filblks_t
+parameter_list|,
+name|int
+parameter_list|,
+name|xfs_extnum_t
+parameter_list|,
+name|xfs_fsblock_t
+modifier|*
+parameter_list|,
+name|struct
+name|xfs_bmap_free
+modifier|*
+parameter_list|,
+name|struct
+name|xfs_extdelta
+modifier|*
+parameter_list|,
+name|int
+modifier|*
 parameter_list|)
 function_decl|;
 end_typedef
@@ -1179,7 +1290,7 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|loff_t
+name|xfs_off_t
 parameter_list|,
 name|size_t
 parameter_list|,
@@ -1208,7 +1319,7 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|loff_t
+name|xfs_off_t
 parameter_list|,
 name|size_t
 parameter_list|,
@@ -1235,6 +1346,10 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
+name|xfs_off_t
+parameter_list|,
+name|size_t
+parameter_list|,
 name|struct
 name|xfs_bmbt_irec
 modifier|*
@@ -1256,7 +1371,7 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|loff_t
+name|xfs_off_t
 parameter_list|,
 name|size_t
 parameter_list|)
@@ -1373,6 +1488,27 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|xfs_swap_extents_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|struct
+name|xfs_swapext
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 struct|struct
 name|xfs_ioops
 block|{
@@ -1381,6 +1517,9 @@ name|xfs_ioinit
 decl_stmt|;
 name|xfs_bmapi_t
 name|xfs_bmapi_func
+decl_stmt|;
+name|xfs_bunmapi_t
+name|xfs_bunmapi_func
 decl_stmt|;
 name|xfs_bmap_eof_t
 name|xfs_bmap_eof_func
@@ -1417,6 +1556,9 @@ name|xfs_size_func
 decl_stmt|;
 name|xfs_iodone_t
 name|xfs_iodone
+decl_stmt|;
+name|xfs_swap_extents_t
+name|xfs_swap_extents_func
 decl_stmt|;
 block|}
 name|xfs_ioops_t
@@ -1464,9 +1606,42 @@ parameter_list|,
 name|nmap
 parameter_list|,
 name|flist
+parameter_list|,
+name|delta
 parameter_list|)
 define|\
-value|(*(mp)->m_io_ops.xfs_bmapi_func) \ 		(trans,(io)->io_obj,bno,len,f,first,tot,mval,nmap,flist)
+value|(*(mp)->m_io_ops.xfs_bmapi_func) \ 		(trans,(io)->io_obj,bno,len,f,first,tot,mval,nmap,flist,delta)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XFS_BUNMAPI
+parameter_list|(
+name|mp
+parameter_list|,
+name|trans
+parameter_list|,
+name|io
+parameter_list|,
+name|bno
+parameter_list|,
+name|len
+parameter_list|,
+name|f
+parameter_list|,
+name|nexts
+parameter_list|,
+name|first
+parameter_list|,
+name|flist
+parameter_list|,
+name|delta
+parameter_list|,
+name|done
+parameter_list|)
+define|\
+value|(*(mp)->m_io_ops.xfs_bunmapi_func) \ 		(trans,(io)->io_obj,bno,len,f,nexts,first,flist,delta,done)
 end_define
 
 begin_define
@@ -1545,12 +1720,16 @@ name|mp
 parameter_list|,
 name|io
 parameter_list|,
+name|offset
+parameter_list|,
+name|count
+parameter_list|,
 name|mval
 parameter_list|,
 name|nmap
 parameter_list|)
 define|\
-value|(*(mp)->m_io_ops.xfs_iomap_write_allocate) \ 		((io)->io_obj, mval, nmap)
+value|(*(mp)->m_io_ops.xfs_iomap_write_allocate) \ 		((io)->io_obj, offset, count, mval, nmap)
 end_define
 
 begin_define
@@ -1667,6 +1846,143 @@ define|\
 value|(*(mp)->m_io_ops.xfs_iodone)(vfsp)
 end_define
 
+begin_define
+define|#
+directive|define
+name|XFS_SWAP_EXTENTS
+parameter_list|(
+name|mp
+parameter_list|,
+name|io
+parameter_list|,
+name|tio
+parameter_list|,
+name|sxp
+parameter_list|)
+define|\
+value|(*(mp)->m_io_ops.xfs_swap_extents_func) \ 		((io)->io_obj, (tio)->io_obj, sxp)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_PERCPU_SB
+end_ifdef
+
+begin_comment
+comment|/*  * Valid per-cpu incore superblock counters. Note that if you add new counters,  * you may need to define new counter disabled bit field descriptors as there  * are more possible fields in the superblock that can fit in a bitfield on a  * 32 bit platform. The XFS_SBS_* values for the current current counters just  * fit.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|xfs_icsb_cnts
+block|{
+name|uint64_t
+name|icsb_fdblocks
+decl_stmt|;
+name|uint64_t
+name|icsb_ifree
+decl_stmt|;
+name|uint64_t
+name|icsb_icount
+decl_stmt|;
+name|unsigned
+name|long
+name|icsb_flags
+decl_stmt|;
+block|}
+name|xfs_icsb_cnts_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|XFS_ICSB_FLAG_LOCK
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* counter lock bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFS_ICSB_SB_LOCKED
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* sb already locked */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFS_ICSB_LAZY_COUNT
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* accuracy not needed */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|xfs_icsb_init_counters
+parameter_list|(
+name|struct
+name|xfs_mount
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|xfs_icsb_sync_counters_lazy
+parameter_list|(
+name|struct
+name|xfs_mount
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|xfs_icsb_init_counters
+parameter_list|(
+name|mp
+parameter_list|)
+value|(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|xfs_icsb_sync_counters_lazy
+parameter_list|(
+name|mp
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1715,6 +2031,16 @@ name|int
 name|m_fsname_len
 decl_stmt|;
 comment|/* strlen of fs name */
+name|char
+modifier|*
+name|m_rtname
+decl_stmt|;
+comment|/* realtime device name */
+name|char
+modifier|*
+name|m_logname
+decl_stmt|;
+comment|/* external log device name */
 name|int
 name|m_bsize
 decl_stmt|;
@@ -1735,7 +2061,7 @@ name|xfs_agnumber_t
 name|m_maxagi
 decl_stmt|;
 comment|/* highest inode alloc group */
-name|int
+name|uint
 name|m_ihsize
 decl_stmt|;
 comment|/* size of next field */
@@ -1759,7 +2085,10 @@ argument_list|)
 name|m_del_inodes
 expr_stmt|;
 comment|/* inodes to reclaim */
-name|mutex_t
+comment|//	xfs_mutex_t		m_ilock;	/* inode list mutex */
+comment|/* FreeBSD specfic */
+name|struct
+name|sx
 name|m_ilock
 decl_stmt|;
 comment|/* inode list mutex */
@@ -1844,10 +2173,6 @@ modifier|*
 name|m_rtdev_targp
 decl_stmt|;
 comment|/* ptr to rt device */
-define|#
-directive|define
-name|m_dev
-value|m_ddev_targp->dev
 name|__uint8_t
 name|m_dircook_elog
 decl_stmt|;
@@ -1971,7 +2296,7 @@ name|uint
 name|m_dmevmask
 decl_stmt|;
 comment|/* DMI events for this FS */
-name|uint
+name|__uint64_t
 name|m_flags
 decl_stmt|;
 comment|/* global mount flags */
@@ -2047,7 +2372,7 @@ comment|/* stripe width */
 name|int
 name|m_sinoalign
 decl_stmt|;
-comment|/* stripe unit inode alignmnt */
+comment|/* stripe unit inode alignment */
 name|int
 name|m_attr_magicpct
 decl_stmt|;
@@ -2096,7 +2421,7 @@ name|xfs_dablk_t
 name|m_dirfreeblk
 decl_stmt|;
 comment|/* blockno of dirfreeindex v2 */
-name|int
+name|uint
 name|m_chsize
 decl_stmt|;
 comment|/* size of next field */
@@ -2121,22 +2446,30 @@ name|xfs_ioops
 name|m_io_ops
 decl_stmt|;
 comment|/* vector of I/O ops */
-name|lock_t
-name|m_freeze_lock
-decl_stmt|;
-comment|/* Lock for m_frozen */
-name|uint
-name|m_frozen
-decl_stmt|;
-comment|/* FS frozen for shutdown or 						 * snapshot */
-name|sv_t
-name|m_wait_unfreeze
-decl_stmt|;
-comment|/* waiting to unfreeze */
 name|atomic_t
 name|m_active_trans
 decl_stmt|;
 comment|/* number trans frozen */
+ifdef|#
+directive|ifdef
+name|HAVE_PERCPU_SB
+name|xfs_icsb_cnts_t
+modifier|*
+name|m_sb_cnts
+decl_stmt|;
+comment|/* per-cpu superblock counters */
+name|unsigned
+name|long
+name|m_icsb_counters
+decl_stmt|;
+comment|/* disabled per-cpu counters */
+name|struct
+name|notifier_block
+name|m_icsb_notifier
+decl_stmt|;
+comment|/* hotplug cpu notifier */
+endif|#
+directive|endif
 block|}
 name|xfs_mount_t
 typedef|;
@@ -2150,7 +2483,7 @@ begin_define
 define|#
 directive|define
 name|XFS_MOUNT_WSYNC
-value|0x00000001
+value|(1ULL<< 0)
 end_define
 
 begin_comment
@@ -2161,22 +2494,22 @@ begin_define
 define|#
 directive|define
 name|XFS_MOUNT_INO64
-value|0x00000002
+value|(1ULL<< 1)
 end_define
 
 begin_comment
-comment|/* 0x00000004	-- currently unused */
+comment|/* (1ULL<< 2)	-- currently unused */
 end_comment
 
 begin_comment
-comment|/* 0x00000008	-- currently unused */
+comment|/* (1ULL<< 3)	-- currently unused */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|XFS_MOUNT_FS_SHUTDOWN
-value|0x00000010
+value|(1ULL<< 4)
 end_define
 
 begin_comment
@@ -2186,19 +2519,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XFS_MOUNT_NOATIME
-value|0x00000020
-end_define
-
-begin_comment
-comment|/* don't modify inode access 						   times on reads */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|XFS_MOUNT_RETERR
-value|0x00000040
+value|(1ULL<< 6)
 end_define
 
 begin_comment
@@ -2209,26 +2531,33 @@ begin_define
 define|#
 directive|define
 name|XFS_MOUNT_NOALIGN
-value|0x00000080
+value|(1ULL<< 7)
 end_define
 
 begin_comment
 comment|/* turn off stripe alignment 						   allocations */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|XFS_MOUNT_ATTR2
+value|(1ULL<< 8)
+end_define
+
 begin_comment
-comment|/* 0x00000100	-- currently unused */
+comment|/* allow use of attr2 format */
 end_comment
 
 begin_comment
-comment|/*	0x00000200	-- currently unused */
+comment|/*	(1ULL<< 9)	-- currently unused */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|XFS_MOUNT_NORECOVERY
-value|0x00000400
+value|(1ULL<< 10)
 end_define
 
 begin_comment
@@ -2239,7 +2568,7 @@ begin_define
 define|#
 directive|define
 name|XFS_MOUNT_SHARED
-value|0x00000800
+value|(1ULL<< 11)
 end_define
 
 begin_comment
@@ -2250,7 +2579,7 @@ begin_define
 define|#
 directive|define
 name|XFS_MOUNT_DFLT_IOSIZE
-value|0x00001000
+value|(1ULL<< 12)
 end_define
 
 begin_comment
@@ -2261,7 +2590,7 @@ begin_define
 define|#
 directive|define
 name|XFS_MOUNT_OSYNCISOSYNC
-value|0x00002000
+value|(1ULL<< 13)
 end_define
 
 begin_comment
@@ -2276,29 +2605,22 @@ begin_define
 define|#
 directive|define
 name|XFS_MOUNT_32BITINODES
-value|0x00004000
+value|(1ULL<< 14)
 end_define
 
 begin_comment
 comment|/* do not create inodes above 						 * 32 bits in size */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|XFS_MOUNT_32BITINOOPT
-value|0x00008000
-end_define
-
 begin_comment
-comment|/* saved mount option state */
+comment|/* (1ULL<< 15)	-- currently unused */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|XFS_MOUNT_NOUUID
-value|0x00010000
+value|(1ULL<< 16)
 end_define
 
 begin_comment
@@ -2308,19 +2630,74 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XFS_MOUNT_NOLOGFLUSH
-value|0x00020000
+name|XFS_MOUNT_BARRIER
+value|(1ULL<< 17)
 end_define
 
 begin_define
 define|#
 directive|define
 name|XFS_MOUNT_IDELETE
-value|0x00040000
+value|(1ULL<< 18)
 end_define
 
 begin_comment
 comment|/* delete empty inode clusters*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFS_MOUNT_SWALLOC
+value|(1ULL<< 19)
+end_define
+
+begin_comment
+comment|/* turn on stripe width 						 * allocation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFS_MOUNT_IHASHSIZE
+value|(1ULL<< 20)
+end_define
+
+begin_comment
+comment|/* inode hash table size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFS_MOUNT_DIRSYNC
+value|(1ULL<< 21)
+end_define
+
+begin_comment
+comment|/* synchronous directory ops */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFS_MOUNT_COMPAT_IOSIZE
+value|(1ULL<< 22)
+end_define
+
+begin_comment
+comment|/* don't report large preferred 						 * I/O size in stat() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFS_MOUNT_NO_PERCPU_SB
+value|(1ULL<< 23)
+end_define
+
+begin_comment
+comment|/* don't use per-cpu superblock 						   counters */
 end_comment
 
 begin_comment
@@ -2342,29 +2719,18 @@ value|16
 end_define
 
 begin_comment
-comment|/*  * Default allocation size  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|XFS_WRITE_IO_LOG
-value|16
-end_define
-
-begin_comment
-comment|/*  * Max and min values for UIO and mount-option defined I/O sizes;  * min value can't be less than a page.  Currently unused.  */
+comment|/*  * Max and min values for mount-option defined I/O  * preallocation sizes.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|XFS_MAX_IO_LOG
-value|16
+value|30
 end_define
 
 begin_comment
-comment|/* 64K */
+comment|/* 1G */
 end_comment
 
 begin_define
@@ -2399,6 +2765,85 @@ end_define
 begin_comment
 comment|/* 16K */
 end_comment
+
+begin_comment
+comment|/*  * Allow large block sizes to be reported to userspace programs if the  * "largeio" mount option is used.   *  * If compatibility mode is specified, simply return the basic unit of caching  * so that we don't get inefficient read/modify/write I/O from user apps.  * Otherwise....  *  * If the underlying volume is a stripe, then return the stripe width in bytes  * as the recommended I/O size. It is not a stripe and we've set a default  * buffered I/O size, return that, otherwise return the compat default.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|unsigned
+name|long
+name|xfs_preferred_iosize
+parameter_list|(
+name|xfs_mount_t
+modifier|*
+name|mp
+parameter_list|)
+block|{
+if|if
+condition|(
+name|mp
+operator|->
+name|m_flags
+operator|&
+name|XFS_MOUNT_COMPAT_IOSIZE
+condition|)
+return|return
+name|PAGE_CACHE_SIZE
+return|;
+return|return
+operator|(
+name|mp
+operator|->
+name|m_swidth
+condition|?
+operator|(
+name|mp
+operator|->
+name|m_swidth
+operator|<<
+name|mp
+operator|->
+name|m_sb
+operator|.
+name|sb_blocklog
+operator|)
+else|:
+operator|(
+operator|(
+name|mp
+operator|->
+name|m_flags
+operator|&
+name|XFS_MOUNT_DFLT_IOSIZE
+operator|)
+condition|?
+operator|(
+literal|1
+operator|<<
+operator|(
+name|int
+operator|)
+name|MAX
+argument_list|(
+name|mp
+operator|->
+name|m_readio_log
+argument_list|,
+name|mp
+operator|->
+name|m_writeio_log
+argument_list|)
+operator|)
+else|:
+name|PAGE_CACHE_SIZE
+operator|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_define
 define|#
@@ -2481,17 +2926,6 @@ comment|/* Shutdown came from remote cell */
 end_comment
 
 begin_comment
-comment|/*  * xflags for xfs_syncsub  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|XFS_XSYNC_RELOC
-value|0x01
-end_define
-
-begin_comment
 comment|/*  * Flags for xfs_mountfs  */
 end_comment
 
@@ -2517,6 +2951,10 @@ begin_comment
 comment|/* Is a client -- skip lots of stuff */
 end_comment
 
+begin_comment
+comment|/*	XFS_MFSI_RRINODES	*/
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2532,52 +2970,35 @@ begin_comment
 comment|/* log recovery */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|XFS_MFSI_NO_QUOTACHECK
+value|0x10
+end_define
+
+begin_comment
+comment|/* Skip quotacheck processing */
+end_comment
+
+begin_comment
+comment|/*	XFS_MFSI_CONVERT_SUNIT	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFS_MFSI_QUIET
+value|0x40
+end_define
+
+begin_comment
+comment|/* Be silent if mount errors found */
+end_comment
+
 begin_comment
 comment|/*  * Macros for getting from mount to vfs and back.  */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|XFS_WANT_FUNCS
-operator|||
-name|XFS_WANT_FUNCS_C
-operator|||
-operator|(
-name|XFS_WANT_SPACE
-operator|&&
-name|XFSSO_XFS_MTOVFS
-operator|)
-end_if
-
-begin_function_decl
-name|xfs_vfs_t
-modifier|*
-name|xfs_mtovfs
-parameter_list|(
-name|xfs_mount_t
-modifier|*
-name|mp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|XFS_WANT_FUNCS
-operator|||
-operator|(
-name|XFS_WANT_SPACE
-operator|&&
-name|XFSSO_XFS_MTOVFS
-operator|)
-end_if
 
 begin_define
 define|#
@@ -2589,68 +3010,29 @@ parameter_list|)
 value|xfs_mtovfs(mp)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|XFS_MTOVFS
+begin_function
+specifier|static
+specifier|inline
+name|xfs_vfs_t
+modifier|*
+name|xfs_mtovfs
 parameter_list|(
-name|mp
-parameter_list|)
-value|(bhvtovfs(&(mp)->m_bhv))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|XFS_WANT_FUNCS
-operator|||
-name|XFS_WANT_FUNCS_C
-operator|||
-operator|(
-name|XFS_WANT_SPACE
-operator|&&
-name|XFSSO_XFS_BHVTOM
-operator|)
-end_if
-
-begin_function_decl
 name|xfs_mount_t
 modifier|*
-name|xfs_bhvtom
-parameter_list|(
-name|bhv_desc_t
-modifier|*
-name|bdp
+name|mp
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|XFS_WANT_FUNCS
-operator|||
-operator|(
-name|XFS_WANT_SPACE
-operator|&&
-name|XFSSO_XFS_BHVTOM
-operator|)
-end_if
+block|{
+return|return
+name|bhvtovfs
+argument_list|(
+operator|&
+name|mp
+operator|->
+name|m_bhv
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_define
 define|#
@@ -2662,68 +3044,30 @@ parameter_list|)
 value|xfs_bhvtom(bdp)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|XFS_BHVTOM
-parameter_list|(
-name|bdp
-parameter_list|)
-value|((xfs_mount_t *)BHV_PDATA(bdp))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|XFS_WANT_FUNCS
-operator|||
-name|XFS_WANT_FUNCS_C
-operator|||
-operator|(
-name|XFS_WANT_SPACE
-operator|&&
-name|XFSSO_XFS_VFSTOM
-operator|)
-end_if
-
-begin_function_decl
+begin_function
+specifier|static
+specifier|inline
 name|xfs_mount_t
 modifier|*
-name|xfs_vfstom
+name|xfs_bhvtom
 parameter_list|(
-name|xfs_vfs_t
+name|bhv_desc_t
 modifier|*
-name|vfs
+name|bdp
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|XFS_WANT_FUNCS
-operator|||
+block|{
+return|return
 operator|(
-name|XFS_WANT_SPACE
-operator|&&
-name|XFSSO_XFS_VFSTOM
+name|xfs_mount_t
+operator|*
 operator|)
-end_if
+name|BHV_PDATA
+argument_list|(
+name|bdp
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_define
 define|#
@@ -2735,76 +3079,35 @@ parameter_list|)
 value|xfs_vfstom(vfs)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|XFS_VFSTOM
+begin_function
+specifier|static
+specifier|inline
+name|xfs_mount_t
+modifier|*
+name|xfs_vfstom
 parameter_list|(
+name|xfs_vfs_t
+modifier|*
 name|vfs
 parameter_list|)
-define|\
-value|(XFS_BHVTOM(bhv_lookup(VFS_BHVHEAD(vfs),&xfs_vfsops)))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * Moved here from xfs_ag.h to avoid reordering header files  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|XFS_WANT_FUNCS
-operator|||
-name|XFS_WANT_FUNCS_C
-operator|||
-operator|(
-name|XFS_WANT_SPACE
-operator|&&
-name|XFSSO_XFS_DADDR_TO_AGNO
-operator|)
-end_if
-
-begin_function_decl
-name|xfs_agnumber_t
-name|xfs_daddr_to_agno
-parameter_list|(
-name|struct
-name|xfs_mount
-modifier|*
-name|mp
-parameter_list|,
-name|xfs_daddr_t
-name|d
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|XFS_WANT_FUNCS
-operator|||
-operator|(
-name|XFS_WANT_SPACE
-operator|&&
-name|XFSSO_XFS_DADDR_TO_AGNO
-operator|)
-end_if
+block|{
+return|return
+name|XFS_BHVTOM
+argument_list|(
+name|bhv_lookup
+argument_list|(
+name|VFS_BHVHEAD
+argument_list|(
+name|vfs
+argument_list|)
+argument_list|,
+operator|&
+name|xfs_vfsops
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_define
 define|#
@@ -2818,18 +3121,14 @@ parameter_list|)
 value|xfs_daddr_to_agno(mp,d)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
 begin_function
 specifier|static
 specifier|inline
 name|xfs_agnumber_t
-name|XFS_DADDR_TO_AGNO
+name|xfs_daddr_to_agno
 parameter_list|(
-name|xfs_mount_t
+name|struct
+name|xfs_mount
 modifier|*
 name|mp
 parameter_list|,
@@ -2837,18 +3136,19 @@ name|xfs_daddr_t
 name|d
 parameter_list|)
 block|{
-name|d
-operator|=
+name|xfs_daddr_t
+name|ld
+init|=
 name|XFS_BB_TO_FSBT
 argument_list|(
 name|mp
 argument_list|,
 name|d
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|do_div
 argument_list|(
-name|d
+name|ld
 argument_list|,
 name|mp
 operator|->
@@ -2861,61 +3161,10 @@ return|return
 operator|(
 name|xfs_agnumber_t
 operator|)
-name|d
+name|ld
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|XFS_WANT_FUNCS
-operator|||
-name|XFS_WANT_FUNCS_C
-operator|||
-operator|(
-name|XFS_WANT_SPACE
-operator|&&
-name|XFSSO_XFS_DADDR_TO_AGBNO
-operator|)
-end_if
-
-begin_function_decl
-name|xfs_agblock_t
-name|xfs_daddr_to_agbno
-parameter_list|(
-name|struct
-name|xfs_mount
-modifier|*
-name|mp
-parameter_list|,
-name|xfs_daddr_t
-name|d
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|XFS_WANT_FUNCS
-operator|||
-operator|(
-name|XFS_WANT_SPACE
-operator|&&
-name|XFSSO_XFS_DADDR_TO_AGBNO
-operator|)
-end_if
 
 begin_define
 define|#
@@ -2929,18 +3178,14 @@ parameter_list|)
 value|xfs_daddr_to_agbno(mp,d)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
 begin_function
 specifier|static
 specifier|inline
 name|xfs_agblock_t
-name|XFS_DADDR_TO_AGBNO
+name|xfs_daddr_to_agbno
 parameter_list|(
-name|xfs_mount_t
+name|struct
+name|xfs_mount
 modifier|*
 name|mp
 parameter_list|,
@@ -2948,22 +3193,23 @@ name|xfs_daddr_t
 name|d
 parameter_list|)
 block|{
-name|d
-operator|=
+name|xfs_daddr_t
+name|ld
+init|=
 name|XFS_BB_TO_FSBT
 argument_list|(
 name|mp
 argument_list|,
 name|d
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 return|return
 operator|(
 name|xfs_agblock_t
 operator|)
 name|do_div
 argument_list|(
-name|d
+name|ld
 argument_list|,
 name|mp
 operator|->
@@ -2974,11 +3220,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * This structure is for use by the xfs_mod_incore_sb_batch() routine.  */
@@ -3002,6 +3243,10 @@ name|xfs_mod_sb_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* FreeBSD specfic */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3009,7 +3254,7 @@ name|XFS_MOUNT_ILOCK
 parameter_list|(
 name|mp
 parameter_list|)
-value|mutex_lock(&((mp)->m_ilock), PINOD)
+value|sx_xlock(&((mp)->m_ilock))
 end_define
 
 begin_define
@@ -3019,7 +3264,7 @@ name|XFS_MOUNT_IUNLOCK
 parameter_list|(
 name|mp
 parameter_list|)
-value|mutex_unlock(&((mp)->m_ilock))
+value|sx_xunlock(&((mp)->m_ilock))
 end_define
 
 begin_define
@@ -3103,6 +3348,18 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|void
+name|xfs_mountfs_check_barriers
+parameter_list|(
+name|xfs_mount_t
+modifier|*
+name|mp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|xfs_unmountfs
 parameter_list|(
@@ -3175,6 +3432,23 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
+name|xfs_mod_incore_sb_unlocked
+parameter_list|(
+name|xfs_mount_t
+modifier|*
+parameter_list|,
+name|xfs_sb_field_t
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
 name|xfs_mod_incore_sb_batch
 parameter_list|(
 name|xfs_mount_t
@@ -3212,7 +3486,8 @@ name|xfs_readsb
 parameter_list|(
 name|xfs_mount_t
 modifier|*
-name|mp
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3266,13 +3541,35 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
-name|xfs_initialize_perag
+name|int
+name|xfs_sync_inodes
 parameter_list|(
 name|xfs_mount_t
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|xfs_agnumber_t
+name|xfs_initialize_perag
+parameter_list|(
+name|struct
+name|xfs_vfs
+modifier|*
+parameter_list|,
+name|xfs_mount_t
+modifier|*
+parameter_list|,
+name|xfs_agnumber_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3291,86 +3588,10 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|xfs_arch_t
-parameter_list|,
 name|__int64_t
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * Flags for freeze operations.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|XFS_FREEZE_WRITE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|XFS_FREEZE_TRANS
-value|2
-end_define
-
-begin_function_decl
-specifier|extern
-name|void
-name|xfs_start_freeze
-parameter_list|(
-name|xfs_mount_t
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|xfs_finish_freeze
-parameter_list|(
-name|xfs_mount_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|xfs_check_frozen
-parameter_list|(
-name|xfs_mount_t
-modifier|*
-parameter_list|,
-name|bhv_desc_t
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|xvfsops
-name|xfs_vfsops
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|xfs_vnodeops
-name|xfs_vnodeops
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2002 Silicon Graphics, Inc.  All Rights Reserved.  *  * This program is free software; you can redistribute it and/or modify it  * under the terms of version 2 of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful, but  * WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Further, this software is distributed without any warranty that it is  * free of the rightful claim of any third person regarding infringement  * or the like.  Any license provided herein, whether implied or  * otherwise, applies only to this software file.  Patent licenses, if  * any, provided herein do not apply to combinations of this program with  * other software, or any other product whatsoever.  *  * You should have received a copy of the GNU General Public License along  * with this program; if not, write the Free Software Foundation, Inc., 59  * Temple Place - Suite 330, Boston MA 02111-1307, USA.  *  * Contact information: Silicon Graphics, Inc., 1600 Amphitheatre Pkwy,  * Mountain View, CA  94043, or:  *  * http://www.sgi.com  *  * For further information regarding this notice, see:  *  * http://oss.sgi.com/projects/GenInfo/SGIGPLNoticeExplan/  */
+comment|/*  * Copyright (c) 2000-2002,2005 Silicon Graphics, Inc.  * All Rights Reserved.  *  * This program is free software; you can redistribute it and/or  * modify it under the terms of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, write the Free Software Foundation,  * Inc.,  51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_macros.h"
+file|"xfs_fs.h"
 end_include
 
 begin_include
@@ -24,13 +24,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_inum.h"
+file|"xfs_log.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"xfs_log.h"
+file|"xfs_inum.h"
 end_include
 
 begin_include
@@ -222,9 +222,7 @@ operator|->
 name|t_mountp
 expr_stmt|;
 return|return
-operator|(
 name|lidp
-operator|)
 return|;
 block|}
 comment|/* 	 * Find the free descriptor. It is somewhere in the chunklist 	 * of descriptors. 	 */
@@ -405,9 +403,7 @@ operator|->
 name|t_mountp
 expr_stmt|;
 return|return
-operator|(
 name|lidp
-operator|)
 return|;
 block|}
 end_function
@@ -594,11 +590,9 @@ name|NULL
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|lip
 operator|->
 name|li_desc
-operator|)
 return|;
 block|}
 end_function
@@ -686,14 +680,12 @@ block|{
 continue|continue;
 block|}
 return|return
-operator|(
 name|XFS_LIC_SLOT
 argument_list|(
 name|licp
 argument_list|,
 name|i
 argument_list|)
-operator|)
 return|;
 block|}
 name|cmn_err
@@ -704,9 +696,7 @@ literal|"xfs_trans_first_item() -- no first item"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|NULL
-operator|)
 return|;
 block|}
 end_function
@@ -785,14 +775,12 @@ block|{
 continue|continue;
 block|}
 return|return
-operator|(
 name|XFS_LIC_SLOT
 argument_list|(
 name|licp
 argument_list|,
 name|i
 argument_list|)
-operator|)
 return|;
 block|}
 comment|/* 	 * Now search the next chunk.  It must be there, because the 	 * next chunk would have been freed if it were empty. 	 * If there is no next chunk, return NULL. 	 */
@@ -806,9 +794,7 @@ name|NULL
 condition|)
 block|{
 return|return
-operator|(
 name|NULL
-operator|)
 return|;
 block|}
 name|licp
@@ -855,14 +841,12 @@ block|{
 continue|continue;
 block|}
 return|return
-operator|(
 name|XFS_LIC_SLOT
 argument_list|(
 name|licp
 argument_list|,
 name|i
 argument_list|)
-operator|)
 return|;
 block|}
 name|ASSERT
@@ -872,7 +856,7 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 return|return
-literal|0
+name|NULL
 return|;
 comment|/* keep gcc quite */
 block|}
@@ -1214,7 +1198,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Unlock each item pointed to by a descriptor in the given chunk.  * Stamp the commit lsn into each item if necessary.  * Free descriptors pointing to items which are not dirty if freeing_chunk  * is zero. If freeing_chunk is non-zero, then we need to unlock all  * items in the chunk including those with XFS_LID_SYNC_UNLOCK set.  * Return the number of descriptors freed.  */
+comment|/*  * Unlock each item pointed to by a descriptor in the given chunk.  * Stamp the commit lsn into each item if necessary.  * Free descriptors pointing to items which are not dirty if freeing_chunk  * is zero. If freeing_chunk is non-zero, then we need to unlock all  * items in the chunk.  *   * Return the number of descriptors freed.  */
 end_comment
 
 begin_function
@@ -1316,7 +1300,6 @@ argument_list|,
 name|commit_lsn
 argument_list|)
 expr_stmt|;
-comment|/* XXXsup */
 if|if
 condition|(
 name|abort
@@ -1327,29 +1310,11 @@ name|li_flags
 operator||=
 name|XFS_LI_ABORTED
 expr_stmt|;
-comment|/* if (abort) { 			IOP_ABORT(lip); 		} else */
-if|if
-condition|(
-operator|!
-operator|(
-name|lidp
-operator|->
-name|lid_flags
-operator|&
-name|XFS_LID_SYNC_UNLOCK
-operator|)
-operator|||
-name|freeing_chunk
-operator|||
-name|abort
-condition|)
-block|{
 name|IOP_UNLOCK
 argument_list|(
 name|lip
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 		 * Free the descriptor if the item is not dirty 		 * within this transaction and the caller is not 		 * going to just free the entire thing regardless. 		 */
 if|if
 condition|(
@@ -1385,9 +1350,7 @@ expr_stmt|;
 block|}
 block|}
 return|return
-operator|(
 name|freed
-operator|)
 return|;
 block|}
 end_function
@@ -1527,9 +1490,7 @@ operator|=
 name|idx
 expr_stmt|;
 return|return
-operator|(
 name|lbsp
-operator|)
 return|;
 block|}
 comment|/* 	 * Find the free descriptor. It is somewhere in the chunklist 	 * of descriptors. 	 */
@@ -1656,9 +1617,7 @@ operator|=
 name|idx
 expr_stmt|;
 return|return
-operator|(
 name|lbsp
-operator|)
 return|;
 block|}
 end_function

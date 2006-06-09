@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2002 Silicon Graphics, Inc.  All Rights Reserved.  *  * This program is free software; you can redistribute it and/or modify it  * under the terms of version 2 of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful, but  * WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Further, this software is distributed without any warranty that it is  * free of the rightful claim of any third person regarding infringement  * or the like.  Any license provided herein, whether implied or  * otherwise, applies only to this software file.  Patent licenses, if  * any, provided herein do not apply to combinations of this program with  * other software, or any other product whatsoever.  *  * You should have received a copy of the GNU General Public License along  * with this program; if not, write the Free Software Foundation, Inc., 59  * Temple Place - Suite 330, Boston MA 02111-1307, USA.  *  * Contact information: Silicon Graphics, Inc., 1600 Amphitheatre Pkwy,  * Mountain View, CA  94043, or:  *  * http://www.sgi.com  *  * For further information regarding this notice, see:  *  * http://oss.sgi.com/projects/GenInfo/SGIGPLNoticeExplan/  */
-end_comment
-
-begin_comment
-comment|/*  * This file contains the implementation of the xfs_inode_log_item.  * It contains the item operations used to manipulate the inode log  * items as well as utility routines used by the inode specific  * transaction routines.  */
+comment|/*  * Copyright (c) 2000-2002,2005 Silicon Graphics, Inc.  * All Rights Reserved.  *  * This program is free software; you can redistribute it and/or  * modify it under the terms of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, write the Free Software Foundation,  * Inc.,  51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  */
 end_comment
 
 begin_include
@@ -16,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_macros.h"
+file|"xfs_fs.h"
 end_include
 
 begin_include
@@ -28,13 +24,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_inum.h"
+file|"xfs_bit.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"xfs_log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xfs_inum.h"
 end_include
 
 begin_include
@@ -53,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|"xfs_sb.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xfs_ag.h"
 end_include
 
 begin_include
@@ -88,7 +96,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_ag.h"
+file|"xfs_bmap_btree.h"
 end_include
 
 begin_include
@@ -100,31 +108,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_bmap_btree.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"xfs_ialloc_btree.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xfs_btree.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xfs_ialloc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xfs_attr_sf.h"
 end_include
 
 begin_include
@@ -142,7 +126,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"xfs_attr_sf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"xfs_dinode.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xfs_inode.h"
 end_include
 
 begin_include
@@ -154,7 +150,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_inode.h"
+file|"xfs_btree.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xfs_ialloc.h"
 end_include
 
 begin_include
@@ -953,6 +955,13 @@ argument_list|(
 name|xfs_inode_log_format_t
 argument_list|)
 expr_stmt|;
+name|XLOG_VEC_SET_TYPE
+argument_list|(
+name|vecp
+argument_list|,
+name|XLOG_REG_TYPE_IFORMAT
+argument_list|)
+expr_stmt|;
 name|vecp
 operator|++
 expr_stmt|;
@@ -991,6 +1000,12 @@ name|i_update_size
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * Make sure to get the latest atime from the Linux inode. 	 */
+name|xfs_synchronize_atime
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
 name|vecp
 operator|->
 name|i_addr
@@ -1010,6 +1025,13 @@ operator|=
 sizeof|sizeof
 argument_list|(
 name|xfs_dinode_core_t
+argument_list|)
+expr_stmt|;
+name|XLOG_VEC_SET_TYPE
+argument_list|(
+name|vecp
+argument_list|,
+name|XLOG_REG_TYPE_ICORE
 argument_list|)
 expr_stmt|;
 name|vecp
@@ -1259,11 +1281,9 @@ operator|>
 literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|ARCH_CONVERT
-operator|==
-name|ARCH_NOCONVERT
+ifdef|#
+directive|ifdef
+name|XFS_NATIVE_HOST
 if|if
 condition|(
 name|nrecs
@@ -1303,6 +1323,13 @@ operator|->
 name|i_df
 operator|.
 name|if_bytes
+expr_stmt|;
+name|XLOG_VEC_SET_TYPE
+argument_list|(
+name|vecp
+argument_list|,
+name|XLOG_REG_TYPE_IEXT
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -1349,6 +1376,13 @@ argument_list|,
 name|ext_buffer
 argument_list|,
 name|XFS_DATA_FORK
+argument_list|)
+expr_stmt|;
+name|XLOG_VEC_SET_TYPE
+argument_list|(
+name|vecp
+argument_list|,
+name|XLOG_REG_TYPE_IEXT
 argument_list|)
 expr_stmt|;
 block|}
@@ -1463,6 +1497,13 @@ operator|->
 name|i_df
 operator|.
 name|if_broot_bytes
+expr_stmt|;
+name|XLOG_VEC_SET_TYPE
+argument_list|(
+name|vecp
+argument_list|,
+name|XLOG_REG_TYPE_IBROOT
+argument_list|)
 expr_stmt|;
 name|vecp
 operator|++
@@ -1615,6 +1656,13 @@ operator|(
 name|int
 operator|)
 name|data_bytes
+expr_stmt|;
+name|XLOG_VEC_SET_TYPE
+argument_list|(
+name|vecp
+argument_list|,
+name|XLOG_REG_TYPE_ILOCAL
+argument_list|)
 expr_stmt|;
 name|vecp
 operator|++
@@ -1919,11 +1967,9 @@ operator|.
 name|di_anextents
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|ARCH_CONVERT
-operator|==
-name|ARCH_NOCONVERT
+ifdef|#
+directive|ifdef
+name|XFS_NATIVE_HOST
 comment|/* 			 * There are not delayed allocation extents 			 * for attributes, so just point at the array. 			 */
 name|vecp
 operator|->
@@ -2008,6 +2054,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|XLOG_VEC_SET_TYPE
+argument_list|(
+name|vecp
+argument_list|,
+name|XLOG_REG_TYPE_IATTR_EXT
+argument_list|)
+expr_stmt|;
 name|iip
 operator|->
 name|ili_format
@@ -2102,6 +2155,13 @@ operator|->
 name|i_afp
 operator|->
 name|if_broot_bytes
+expr_stmt|;
+name|XLOG_VEC_SET_TYPE
+argument_list|(
+name|vecp
+argument_list|,
+name|XLOG_REG_TYPE_IATTR_BROOT
+argument_list|)
 expr_stmt|;
 name|vecp
 operator|++
@@ -2239,6 +2299,13 @@ operator|(
 name|int
 operator|)
 name|data_bytes
+expr_stmt|;
+name|XLOG_VEC_SET_TYPE
+argument_list|(
+name|vecp
+argument_list|,
+name|XLOG_REG_TYPE_IATTR_LOCAL
+argument_list|)
 expr_stmt|;
 name|vecp
 operator|++
@@ -2392,7 +2459,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is called to attempt to lock the inode associated with this  * inode log item, in preparation for the push routine which does the actual  * iflush.  Don't sleep on the inode lock or the flush lock.  *  * If the flush lock is already held, indicating that the inode has  * been or is in the process of being flushed, then (ideally) we'd like to  * see if the inode's buffer is still incore, and if so give it a nudge.  * We delay doing so until the pushbuf routine, though, to avoid holding  * the AIL lock across a call to the blackhole which is the buffercache.  * Also we don't want to sleep in any device strategy routines, which can happen  * if we do the subsequent bawrite in here.  */
+comment|/*  * This is called to attempt to lock the inode associated with this  * inode log item, in preparation for the push routine which does the actual  * iflush.  Don't sleep on the inode lock or the flush lock.  *  * If the flush lock is already held, indicating that the inode has  * been or is in the process of being flushed, then (ideally) we'd like to  * see if the inode's buffer is still incore, and if so give it a nudge.  * We delay doing so until the pushbuf routine, though, to avoid holding  * the AIL lock across a call to the blackhole which is the buffer cache.  * Also we don't want to sleep in any device strategy routines, which can happen  * if we do the subsequent bawrite in here.  */
 end_comment
 
 begin_function
@@ -2477,7 +2544,7 @@ name|iip
 operator|->
 name|ili_push_owner
 operator|=
-name|get_thread_id
+name|current_pid
 argument_list|()
 expr_stmt|;
 endif|#
@@ -3077,7 +3144,7 @@ name|iip
 operator|->
 name|ili_push_owner
 operator|==
-name|get_thread_id
+name|current_pid
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -3436,6 +3503,7 @@ comment|/*  * This is the ops vector shared by all buf log items.  */
 end_comment
 
 begin_decl_stmt
+name|STATIC
 name|struct
 name|xfs_item_ops
 name|xfs_inode_item_ops

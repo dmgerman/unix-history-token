@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2003 Silicon Graphics, Inc.  All Rights Reserved.  *  * This program is free software; you can redistribute it and/or modify it  * under the terms of version 2 of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful, but  * WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Further, this software is distributed without any warranty that it is  * free of the rightful claim of any third person regarding infringement  * or the like.  Any license provided herein, whether implied or  * otherwise, applies only to this software file.  Patent licenses, if  * any, provided herein do not apply to combinations of this program with  * other software, or any other product whatsoever.  *  * You should have received a copy of the GNU General Public License along  * with this program; if not, write the Free Software Foundation, Inc., 59  * Temple Place - Suite 330, Boston MA 02111-1307, USA.  *  * Contact information: Silicon Graphics, Inc., 1600 Amphitheatre Pkwy,  * Mountain View, CA  94043, or:  *  * http://www.sgi.com  *  * For further information regarding this notice, see:  *  * http://oss.sgi.com/projects/GenInfo/SGIGPLNoticeExplan/  */
+comment|/*  * Copyright (c) 2003-2005 Silicon Graphics, Inc.  * All Rights Reserved.  *  * This program is free software; you can redistribute it and/or  * modify it under the terms of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, write the Free Software Foundation,  * Inc.,  51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  */
 end_comment
 
 begin_ifndef
@@ -42,6 +42,11 @@ init|=
 literal|0x04
 block|,
 comment|/* mapping covers delalloc region  */
+name|IOMAP_REALTIME
+init|=
+literal|0x10
+block|,
+comment|/* mapping on the realtime device  */
 name|IOMAP_UNWRITTEN
 init|=
 literal|0x20
@@ -134,7 +139,7 @@ operator|<<
 literal|7
 operator|)
 block|,
-comment|/* sync write */
+comment|/* sync write to flush delalloc space */
 name|BMAPI_TRYLOCK
 init|=
 operator|(
@@ -159,7 +164,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * xfs_iomap_t:  File system I/O map  *  * The iomap_bn field is expressed in 512-byte blocks, and is where the   * mapping starts on disk.  *  * The iomap_offset, iomap_bsize and iomap_delta fields are in bytes.  * iomap_offset is the offset of the mapping in the file itself.  * iomap_bsize is the size of the mapping,  iomap_delta is the   * desired data's offset into the mapping, given the offset supplied   * to the file I/O map routine.  *  * When a request is made to read beyond the logical end of the object,  * iomap_size may be set to 0, but iomap_offset and iomap_length should be set  * to the actual amount of underlying storage that has been allocated, if any.  */
+comment|/*  * xfs_iomap_t:  File system I/O map  *  * The iomap_bn field is expressed in 512-byte blocks, and is where the  * mapping starts on disk.  *  * The iomap_offset, iomap_bsize and iomap_delta fields are in bytes.  * iomap_offset is the offset of the mapping in the file itself.  * iomap_bsize is the size of the mapping,  iomap_delta is the  * desired data's offset into the mapping, given the offset supplied  * to the file I/O map routine.  *  * When a request is made to read beyond the logical end of the object,  * iomap_size may be set to 0, but iomap_offset and iomap_length should be set  * to the actual amount of underlying storage that has been allocated, if any.  */
 end_comment
 
 begin_typedef
@@ -183,7 +188,7 @@ name|xfs_off_t
 name|iomap_bsize
 decl_stmt|;
 comment|/* size of mapping, bytes */
-name|size_t
+name|xfs_off_t
 name|iomap_delta
 decl_stmt|;
 comment|/* offset into mapping, bytes */
@@ -298,6 +303,10 @@ parameter_list|(
 name|struct
 name|xfs_inode
 modifier|*
+parameter_list|,
+name|xfs_off_t
+parameter_list|,
+name|size_t
 parameter_list|,
 name|struct
 name|xfs_bmbt_irec

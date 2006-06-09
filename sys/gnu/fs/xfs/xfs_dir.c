@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2001 Silicon Graphics, Inc.  All Rights Reserved.  *  * This program is free software; you can redistribute it and/or modify it  * under the terms of version 2 of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful, but  * WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Further, this software is distributed without any warranty that it is  * free of the rightful claim of any third person regarding infringement  * or the like.  Any license provided herein, whether implied or  * otherwise, applies only to this software file.  Patent licenses, if  * any, provided herein do not apply to combinations of this program with  * other software, or any other product whatsoever.  *  * You should have received a copy of the GNU General Public License along  * with this program; if not, write the Free Software Foundation, Inc., 59  * Temple Place - Suite 330, Boston MA 02111-1307, USA.  *  * Contact information: Silicon Graphics, Inc., 1600 Amphitheatre Pkwy,  * Mountain View, CA  94043, or:  *  * http://www.sgi.com  *  * For further information regarding this notice, see:  *  * http://oss.sgi.com/projects/GenInfo/SGIGPLNoticeExplan/  */
+comment|/*  * Copyright (c) 2000-2001,2005 Silicon Graphics, Inc.  * All Rights Reserved.  *  * This program is free software; you can redistribute it and/or  * modify it under the terms of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, write the Free Software Foundation,  * Inc.,  51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_macros.h"
+file|"xfs_fs.h"
 end_include
 
 begin_include
@@ -24,13 +24,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_inum.h"
+file|"xfs_log.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"xfs_log.h"
+file|"xfs_inum.h"
 end_include
 
 begin_include
@@ -72,13 +72,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_alloc_btree.h"
+file|"xfs_da_btree.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"xfs_bmap_btree.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xfs_alloc_btree.h"
 end_include
 
 begin_include
@@ -102,12 +108,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_attr_sf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"xfs_dir_sf.h"
 end_include
 
@@ -115,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|"xfs_dir2_sf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xfs_attr_sf.h"
 end_include
 
 begin_include
@@ -133,12 +139,6 @@ begin_include
 include|#
 directive|include
 file|"xfs_bmap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xfs_da_btree.h"
 end_include
 
 begin_include
@@ -745,6 +745,18 @@ name|m_dirversion
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|mp
+operator|->
+name|m_flags
+operator|&
+name|XFS_MOUNT_ATTR2
+operator|)
+condition|)
+block|{
 name|shortcount
 operator|=
 operator|(
@@ -804,6 +816,70 @@ name|xfs_dir_leaf_name_t
 argument_list|)
 operator|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|shortcount
+operator|=
+operator|(
+name|XFS_BMDR_SPACE_CALC
+argument_list|(
+name|MINABTPTRS
+argument_list|)
+operator|-
+operator|(
+name|uint
+operator|)
+sizeof|sizeof
+argument_list|(
+name|xfs_dir_sf_hdr_t
+argument_list|)
+operator|)
+operator|/
+operator|(
+name|uint
+operator|)
+sizeof|sizeof
+argument_list|(
+name|xfs_dir_sf_entry_t
+argument_list|)
+expr_stmt|;
+name|leafcount
+operator|=
+operator|(
+name|XFS_LBSIZE
+argument_list|(
+name|mp
+argument_list|)
+operator|-
+operator|(
+name|uint
+operator|)
+sizeof|sizeof
+argument_list|(
+name|xfs_dir_leaf_hdr_t
+argument_list|)
+operator|)
+operator|/
+operator|(
+operator|(
+name|uint
+operator|)
+sizeof|sizeof
+argument_list|(
+name|xfs_dir_leaf_entry_t
+argument_list|)
+operator|+
+operator|(
+name|uint
+operator|)
+sizeof|sizeof
+argument_list|(
+name|xfs_dir_leaf_name_t
+argument_list|)
+operator|)
+expr_stmt|;
+block|}
 name|count
 operator|=
 name|shortcount
@@ -2732,17 +2808,13 @@ operator|)
 expr_stmt|;
 name|ino
 operator|=
-name|XFS_GET_DIR_INO_ARCH
+name|XFS_GET_DIR_INO8
 argument_list|(
-name|mp
-argument_list|,
 name|sf
 operator|->
 name|hdr
 operator|.
 name|parent
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2851,15 +2923,11 @@ control|)
 block|{
 name|ino
 operator|=
-name|XFS_GET_DIR_INO_ARCH
+name|XFS_GET_DIR_INO8
 argument_list|(
-name|mp
-argument_list|,
 name|sfe
 operator|->
 name|inumber
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 name|xfs_dir_ino_validate
@@ -3130,7 +3198,7 @@ name|data
 expr_stmt|;
 name|ASSERT
 argument_list|(
-name|INT_GET
+name|be16_to_cpu
 argument_list|(
 name|leaf
 operator|->
@@ -3139,8 +3207,6 @@ operator|.
 name|info
 operator|.
 name|magic
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 operator|==
 name|XFS_DIR_LEAF_MAGIC
@@ -3577,7 +3643,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* XXX - replace assert? */
-name|XFS_DIR_SF_PUT_DIRINO_ARCH
+name|XFS_DIR_SF_PUT_DIRINO
 argument_list|(
 operator|&
 name|inum
@@ -3586,8 +3652,6 @@ operator|&
 name|namest
 operator|->
 name|inumber
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 name|xfs_da_log_buf
@@ -4384,7 +4448,7 @@ if|if
 condition|(
 name|bp
 operator|&&
-name|INT_GET
+name|be16_to_cpu
 argument_list|(
 name|leaf
 operator|->
@@ -4393,8 +4457,6 @@ operator|.
 name|info
 operator|.
 name|magic
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 operator|!=
 name|XFS_DIR_LEAF_MAGIC
@@ -4600,7 +4662,7 @@ name|data
 expr_stmt|;
 if|if
 condition|(
-name|INT_GET
+name|be16_to_cpu
 argument_list|(
 name|node
 operator|->
@@ -4609,8 +4671,6 @@ operator|.
 name|info
 operator|.
 name|magic
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 operator|!=
 name|XFS_DA_NODE_MAGIC
@@ -4645,15 +4705,13 @@ literal|0
 init|;
 name|i
 operator|<
-name|INT_GET
+name|be16_to_cpu
 argument_list|(
 name|node
 operator|->
 name|hdr
 operator|.
 name|count
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 condition|;
 name|btree
@@ -4665,13 +4723,11 @@ control|)
 block|{
 if|if
 condition|(
-name|INT_GET
+name|be32_to_cpu
 argument_list|(
 name|btree
 operator|->
 name|hashval
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 operator|>=
 name|cookhash
@@ -4679,13 +4735,11 @@ condition|)
 block|{
 name|bno
 operator|=
-name|INT_GET
+name|be32_to_cpu
 argument_list|(
 name|btree
 operator|->
 name|before
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4695,15 +4749,13 @@ if|if
 condition|(
 name|i
 operator|==
-name|INT_GET
+name|be16_to_cpu
 argument_list|(
 name|node
 operator|->
 name|hdr
 operator|.
 name|count
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 condition|)
 block|{
@@ -4793,7 +4845,7 @@ if|if
 condition|(
 name|unlikely
 argument_list|(
-name|INT_GET
+name|be16_to_cpu
 argument_list|(
 name|leaf
 operator|->
@@ -4802,8 +4854,6 @@ operator|.
 name|info
 operator|.
 name|magic
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 operator|!=
 name|XFS_DIR_LEAF_MAGIC
@@ -4862,7 +4912,7 @@ condition|(
 operator|(
 name|nextbno
 operator|=
-name|INT_GET
+name|be32_to_cpu
 argument_list|(
 name|leaf
 operator|->
@@ -4871,8 +4921,6 @@ operator|.
 name|info
 operator|.
 name|forw
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 operator|)
 condition|)
@@ -5235,7 +5283,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* XXX - replace assert ? */
-name|XFS_DIR_SF_PUT_DIRINO_ARCH
+name|XFS_DIR_SF_PUT_DIRINO
 argument_list|(
 operator|&
 name|inum
@@ -5244,8 +5292,6 @@ operator|&
 name|namest
 operator|->
 name|inumber
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 name|xfs_da_log_buf
@@ -5658,15 +5704,13 @@ block|{
 name|int
 name|last
 init|=
-name|INT_GET
+name|be16_to_cpu
 argument_list|(
 name|node
 operator|->
 name|hdr
 operator|.
 name|count
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 operator|-
 literal|1
@@ -5747,7 +5791,7 @@ operator|(
 name|unsigned
 name|long
 operator|)
-name|INT_GET
+name|be32_to_cpu
 argument_list|(
 name|node
 operator|->
@@ -5756,8 +5800,6 @@ operator|.
 name|info
 operator|.
 name|forw
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 argument_list|,
 operator|(
@@ -5768,15 +5810,13 @@ operator|(
 name|unsigned
 name|long
 operator|)
-name|INT_GET
+name|be16_to_cpu
 argument_list|(
 name|node
 operator|->
 name|hdr
 operator|.
 name|count
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 argument_list|,
 operator|(
@@ -5787,7 +5827,7 @@ operator|(
 name|unsigned
 name|long
 operator|)
-name|INT_GET
+name|be32_to_cpu
 argument_list|(
 name|node
 operator|->
@@ -5797,8 +5837,6 @@ literal|0
 index|]
 operator|.
 name|hashval
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 argument_list|,
 operator|(
@@ -5809,7 +5847,7 @@ operator|(
 name|unsigned
 name|long
 operator|)
-name|INT_GET
+name|be32_to_cpu
 argument_list|(
 name|node
 operator|->
@@ -5819,8 +5857,6 @@ name|last
 index|]
 operator|.
 name|hashval
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 argument_list|,
 name|NULL
@@ -5950,7 +5986,7 @@ operator|(
 name|unsigned
 name|long
 operator|)
-name|INT_GET
+name|be32_to_cpu
 argument_list|(
 name|leaf
 operator|->
@@ -5959,8 +5995,6 @@ operator|.
 name|info
 operator|.
 name|forw
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 argument_list|,
 operator|(

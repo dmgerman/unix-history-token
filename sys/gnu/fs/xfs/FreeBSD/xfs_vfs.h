@@ -306,12 +306,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VFS_UMOUNT
+name|VFS_32BITINODES
 value|0x0008
 end_define
 
 begin_comment
-comment|/* unmount in progress */
+comment|/* do not use inums above 32 bits */
 end_comment
 
 begin_define
@@ -411,6 +411,17 @@ end_define
 
 begin_comment
 comment|/* remount readonly, no dummy LRs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYNC_QUIESCE
+value|0x0100
+end_define
+
+begin_comment
+comment|/* quiesce filesystem for a snapshot */
 end_comment
 
 begin_define
@@ -713,6 +724,20 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|xvfs_freeze_t
+function_decl|)
+parameter_list|(
+name|bhv_desc_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 struct|struct
 name|xvfsops
 block|{
@@ -776,6 +801,10 @@ name|xvfs_force_shutdown_t
 name|xvfs_force_shutdown
 decl_stmt|;
 comment|/* crash and burn */
+name|xvfs_freeze_t
+name|xvfs_freeze
+decl_stmt|;
+comment|/* freeze fs for snapshot */
 block|}
 name|xvfsops_t
 typedef|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2004 Silicon Graphics, Inc.  All Rights Reserved.  *  * This program is free software; you can redistribute it and/or modify it  * under the terms of version 2 of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful, but  * WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Further, this software is distributed without any warranty that it is  * free of the rightful claim of any third person regarding infringement  * or the like.  Any license provided herein, whether implied or  * otherwise, applies only to this software file.  Patent licenses, if  * any, provided herein do not apply to combinations of this program with  * other software, or any other product whatsoever.  *  * You should have received a copy of the GNU General Public License along  * with this program; if not, write the Free Software Foundation, Inc., 59  * Temple Place - Suite 330, Boston MA 02111-1307, USA.  *  * Contact information: Silicon Graphics, Inc., 1600 Amphitheatre Pkwy,  * Mountain View, CA  94043, or:  *  * http://www.sgi.com  *  * For further information regarding this notice, see:  *  * http://oss.sgi.com/projects/GenInfo/SGIGPLNoticeExplan/  */
+comment|/*  * Copyright (c) 2000-2005 Silicon Graphics, Inc.  * All Rights Reserved.  *  * This program is free software; you can redistribute it and/or  * modify it under the terms of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, write the Free Software Foundation,  * Inc.,  51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  */
 end_comment
 
 begin_ifndef
@@ -27,6 +27,10 @@ name|int
 name|flags
 decl_stmt|;
 comment|/* flags -> see XFSMNT_... macros below */
+name|int
+name|flags2
+decl_stmt|;
+comment|/* flags -> see XFSMNT2_... macros below */
 name|int
 name|logbufs
 decl_stmt|;
@@ -83,23 +87,27 @@ name|uchar_t
 name|iosizelog
 decl_stmt|;
 comment|/* log2 of the preferred I/O size */
+name|int
+name|ihashsize
+decl_stmt|;
+comment|/* inode hash table size (buckets) */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * XFS mount option flags  */
+comment|/*  * XFS mount option flags -- args->flags1  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|XFSMNT_CHKLOG
+name|XFSMNT_ATTR2
 value|0x00000001
 end_define
 
 begin_comment
-comment|/* check log */
+comment|/* allow ATTR2 EA format */
 end_comment
 
 begin_define
@@ -171,12 +179,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XFSMNT_NOATIME
-value|0x00000100
+name|XFSMNT_QUIET
+value|0x00000080
 end_define
 
 begin_comment
-comment|/* don't modify access 						 * times on reads */
+comment|/* don't report mount errors */
 end_comment
 
 begin_define
@@ -246,7 +254,7 @@ comment|/* o_sync is REALLY o_sync */
 end_comment
 
 begin_comment
-comment|/* (osyncisdsync is now default) */
+comment|/* (osyncisdsync is default) */
 end_comment
 
 begin_define
@@ -307,12 +315,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XFSMNT_NOLOGFLUSH
+name|XFSMNT_BARRIER
 value|0x04000000
 end_define
 
 begin_comment
-comment|/* Don't flush for log blocks */
+comment|/* use write barriers */
 end_comment
 
 begin_define
@@ -324,6 +332,65 @@ end_define
 
 begin_comment
 comment|/* inode cluster delete */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFSMNT_SWALLOC
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* turn on stripe width 						 * allocation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFSMNT_IHASHSIZE
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* inode hash table size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFSMNT_DIRSYNC
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* sync creat,link,unlink,rename 						 * symlink,mkdir,rmdir,mknod */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFSMNT_FLAGS2
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* more flags set in flags2 */
+end_comment
+
+begin_comment
+comment|/*  * XFS mount option flags -- args->flags2  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFSMNT2_COMPAT_IOSIZE
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* don't report large preferred 						 * I/O size in stat(2) */
 end_comment
 
 begin_endif

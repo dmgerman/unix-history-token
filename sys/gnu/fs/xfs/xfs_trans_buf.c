@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2002 Silicon Graphics, Inc.  All Rights Reserved.  *  * This program is free software; you can redistribute it and/or modify it  * under the terms of version 2 of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful, but  * WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Further, this software is distributed without any warranty that it is  * free of the rightful claim of any third person regarding infringement  * or the like.  Any license provided herein, whether implied or  * otherwise, applies only to this software file.  Patent licenses, if  * any, provided herein do not apply to combinations of this program with  * other software, or any other product whatsoever.  *  * You should have received a copy of the GNU General Public License along  * with this program; if not, write the Free Software Foundation, Inc., 59  * Temple Place - Suite 330, Boston MA 02111-1307, USA.  *  * Contact information: Silicon Graphics, Inc., 1600 Amphitheatre Pkwy,  * Mountain View, CA  94043, or:  *  * http://www.sgi.com  *  * For further information regarding this notice, see:  *  * http://oss.sgi.com/projects/GenInfo/SGIGPLNoticeExplan/  */
+comment|/*  * Copyright (c) 2000-2002,2005 Silicon Graphics, Inc.  * All Rights Reserved.  *  * This program is free software; you can redistribute it and/or  * modify it under the terms of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, write the Free Software Foundation,  * Inc.,  51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_macros.h"
+file|"xfs_fs.h"
 end_include
 
 begin_include
@@ -24,7 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_inum.h"
+file|"xfs_bit.h"
 end_include
 
 begin_include
@@ -36,13 +36,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_trans.h"
+file|"xfs_inum.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"xfs_buf_item.h"
+file|"xfs_trans.h"
 end_include
 
 begin_include
@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"xfs_dir2.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"xfs_dmapi.h"
 end_include
 
@@ -73,6 +79,60 @@ begin_include
 include|#
 directive|include
 file|"xfs_mount.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xfs_bmap_btree.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xfs_alloc_btree.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xfs_ialloc_btree.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xfs_dir_sf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xfs_dir2_sf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xfs_attr_sf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xfs_dinode.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xfs_inode.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xfs_buf_item.h"
 end_include
 
 begin_include
@@ -2372,12 +2432,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function is used to indicate that the buffer should not be  * unlocked until the transaction is committed to disk.  Since we  * are going to keep the lock held, make the transaction synchronous  * so that the lock is not held too long.  *  * It uses the log item descriptor flag XFS_LID_SYNC_UNLOCK to  * delay the buf items's unlock call until the transaction is  * committed to disk or aborted.  */
+comment|/*  * Cancel the previous buffer hold request made on this buffer  * for this transaction.  */
 end_comment
 
 begin_function
 name|void
-name|xfs_trans_bhold_until_committed
+name|xfs_trans_bhold_release
 parameter_list|(
 name|xfs_trans_t
 modifier|*
@@ -2388,10 +2448,6 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-name|xfs_log_item_desc_t
-modifier|*
-name|lidp
-decl_stmt|;
 name|xfs_buf_log_item_t
 modifier|*
 name|bip
@@ -2479,42 +2535,27 @@ operator|>
 literal|0
 argument_list|)
 expr_stmt|;
-name|lidp
-operator|=
-name|xfs_trans_find_item
-argument_list|(
-name|tp
-argument_list|,
-operator|(
-name|xfs_log_item_t
-operator|*
-operator|)
-name|bip
-argument_list|)
-expr_stmt|;
 name|ASSERT
 argument_list|(
-name|lidp
-operator|!=
-name|NULL
+name|bip
+operator|->
+name|bli_flags
+operator|&
+name|XFS_BLI_HOLD
 argument_list|)
 expr_stmt|;
-name|lidp
+name|bip
 operator|->
-name|lid_flags
-operator||=
-name|XFS_LID_SYNC_UNLOCK
+name|bli_flags
+operator|&=
+operator|~
+name|XFS_BLI_HOLD
 expr_stmt|;
 name|xfs_buf_item_trace
 argument_list|(
-literal|"BHOLD UNTIL COMMIT"
+literal|"BHOLD RELEASE"
 argument_list|,
 name|bip
-argument_list|)
-expr_stmt|;
-name|xfs_trans_set_sync
-argument_list|(
-name|tp
 argument_list|)
 expr_stmt|;
 block|}
@@ -2710,7 +2751,6 @@ operator|&=
 operator|~
 name|XFS_BLI_STALE
 expr_stmt|;
-comment|/* note this will have to change for page_buf interface... unstale isn't really an option RMC */
 name|ASSERT
 argument_list|(
 name|XFS_BUF_ISSTALE
@@ -3469,6 +3509,10 @@ argument_list|(
 name|type
 operator|==
 name|XFS_BLI_UDQUOT_BUF
+operator|||
+name|type
+operator|==
+name|XFS_BLI_PDQUOT_BUF
 operator|||
 name|type
 operator|==

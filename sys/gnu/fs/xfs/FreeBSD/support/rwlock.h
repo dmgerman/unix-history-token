@@ -103,6 +103,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|write_trylock
+parameter_list|(
+name|lock
+parameter_list|)
+value|sx_try_xlock(lock)
+end_define
+
+begin_define
+define|#
+directive|define
 name|write_unlock
 parameter_list|(
 name|lock

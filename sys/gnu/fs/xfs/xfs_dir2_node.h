@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000 Silicon Graphics, Inc.  All Rights Reserved.  *  * This program is free software; you can redistribute it and/or modify it  * under the terms of version 2 of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful, but  * WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Further, this software is distributed without any warranty that it is  * free of the rightful claim of any third person regarding infringement  * or the like.  Any license provided herein, whether implied or  * otherwise, applies only to this software file.  Patent licenses, if  * any, provided herein do not apply to combinations of this program with  * other software, or any other product whatsoever.  *  * You should have received a copy of the GNU General Public License along  * with this program; if not, write the Free Software Foundation, Inc., 59  * Temple Place - Suite 330, Boston MA 02111-1307, USA.  *  * Contact information: Silicon Graphics, Inc., 1600 Amphitheatre Pkwy,  * Mountain View, CA  94043, or:  *  * http://www.sgi.com  *  * For further information regarding this notice, see:  *  * http://oss.sgi.com/projects/GenInfo/SGIGPLNoticeExplan/  */
+comment|/*  * Copyright (c) 2000,2005 Silicon Graphics, Inc.  * All Rights Reserved.  *  * This program is free software; you can redistribute it and/or  * modify it under the terms of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, write the Free Software Foundation,  * Inc.,  51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  */
 end_comment
 
 begin_ifndef
@@ -62,10 +62,6 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * Constants.  */
-end_comment
-
-begin_comment
 comment|/*  * Offset of the freespace index.  */
 end_comment
 
@@ -105,28 +101,24 @@ begin_comment
 comment|/* XD2F */
 end_comment
 
-begin_comment
-comment|/*  * Structures.  */
-end_comment
-
 begin_typedef
 typedef|typedef
 struct|struct
 name|xfs_dir2_free_hdr
 block|{
-name|__uint32_t
+name|__be32
 name|magic
 decl_stmt|;
 comment|/* XFS_DIR2_FREE_MAGIC */
-name|__int32_t
+name|__be32
 name|firstdb
 decl_stmt|;
 comment|/* db of first entry */
-name|__int32_t
+name|__be32
 name|nvalid
 decl_stmt|;
 comment|/* count of valid entries */
-name|__int32_t
+name|__be32
 name|nused
 decl_stmt|;
 comment|/* count of used entries */
@@ -144,7 +136,7 @@ name|xfs_dir2_free_hdr_t
 name|hdr
 decl_stmt|;
 comment|/* block header */
-name|xfs_dir2_data_off_t
+name|__be16
 name|bests
 index|[
 literal|1
@@ -169,58 +161,8 @@ value|(((mp)->m_dirblksize - (uint)sizeof(xfs_dir2_free_hdr_t)) / \ 	 (uint)size
 end_define
 
 begin_comment
-comment|/*  * Macros.  */
-end_comment
-
-begin_comment
 comment|/*  * Convert data space db to the corresponding free db.  */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|XFS_WANT_FUNCS
-operator|||
-name|XFS_WANT_FUNCS_C
-operator|||
-operator|(
-name|XFS_WANT_SPACE
-operator|&&
-name|XFSSO_XFS_DIR2_DB_TO_FDB
-operator|)
-end_if
-
-begin_function_decl
-name|xfs_dir2_db_t
-name|xfs_dir2_db_to_fdb
-parameter_list|(
-name|struct
-name|xfs_mount
-modifier|*
-name|mp
-parameter_list|,
-name|xfs_dir2_db_t
-name|db
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|XFS_WANT_FUNCS
-operator|||
-operator|(
-name|XFS_WANT_SPACE
-operator|&&
-name|XFSSO_XFS_DIR2_DB_TO_FDB
-operator|)
-end_if
 
 begin_define
 define|#
@@ -234,50 +176,11 @@ parameter_list|)
 value|xfs_dir2_db_to_fdb(mp, db)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|XFS_DIR2_DB_TO_FDB
-parameter_list|(
-name|mp
-parameter_list|,
-name|db
-parameter_list|)
-define|\
-value|(XFS_DIR2_FREE_FIRSTDB(mp) + (db) / XFS_DIR2_MAX_FREE_BESTS(mp))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * Convert data space db to the corresponding index in a free db.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|XFS_WANT_FUNCS
-operator|||
-name|XFS_WANT_FUNCS_C
-operator|||
-operator|(
-name|XFS_WANT_SPACE
-operator|&&
-name|XFSSO_XFS_DIR2_DB_TO_FDINDEX
-operator|)
-end_if
-
-begin_function_decl
-name|int
-name|xfs_dir2_db_to_fdindex
+begin_function
+specifier|static
+specifier|inline
+name|xfs_dir2_db_t
+name|xfs_dir2_db_to_fdb
 parameter_list|(
 name|struct
 name|xfs_mount
@@ -287,25 +190,30 @@ parameter_list|,
 name|xfs_dir2_db_t
 name|db
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|XFS_WANT_FUNCS
-operator|||
+block|{
+return|return
 operator|(
-name|XFS_WANT_SPACE
-operator|&&
-name|XFSSO_XFS_DIR2_DB_TO_FDINDEX
+name|XFS_DIR2_FREE_FIRSTDB
+argument_list|(
+name|mp
+argument_list|)
+operator|+
+operator|(
+name|db
 operator|)
-end_if
+operator|/
+name|XFS_DIR2_MAX_FREE_BESTS
+argument_list|(
+name|mp
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Convert data space db to the corresponding index in a free db.  */
+end_comment
 
 begin_define
 define|#
@@ -319,31 +227,35 @@ parameter_list|)
 value|xfs_dir2_db_to_fdindex(mp, db)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|XFS_DIR2_DB_TO_FDINDEX
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|xfs_dir2_db_to_fdindex
 parameter_list|(
+name|struct
+name|xfs_mount
+modifier|*
 name|mp
 parameter_list|,
+name|xfs_dir2_db_t
 name|db
 parameter_list|)
-value|((db) % XFS_DIR2_MAX_FREE_BESTS(mp))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * Functions.  */
-end_comment
+block|{
+return|return
+operator|(
+operator|(
+name|db
+operator|)
+operator|%
+name|XFS_DIR2_MAX_FREE_BESTS
+argument_list|(
+name|mp
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_function_decl
 specifier|extern

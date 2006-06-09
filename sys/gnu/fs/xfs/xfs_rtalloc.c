@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2002 Silicon Graphics, Inc.  All Rights Reserved.  *  * This program is free software; you can redistribute it and/or modify it  * under the terms of version 2 of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful, but  * WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Further, this software is distributed without any warranty that it is  * free of the rightful claim of any third person regarding infringement  * or the like.  Any license provided herein, whether implied or  * otherwise, applies only to this software file.  Patent licenses, if  * any, provided herein do not apply to combinations of this program with  * other software, or any other product whatsoever.  *  * You should have received a copy of the GNU General Public License along  * with this program; if not, write the Free Software Foundation, Inc., 59  * Temple Place - Suite 330, Boston MA 02111-1307, USA.  *  * Contact information: Silicon Graphics, Inc., 1600 Amphitheatre Pkwy,  * Mountain View, CA  94043, or:  *  * http://www.sgi.com  *  * For further information regarding this notice, see:  *  * http://oss.sgi.com/projects/GenInfo/SGIGPLNoticeExplan/  */
-end_comment
-
-begin_comment
-comment|/*  * Free realtime space allocation for XFS.  */
+comment|/*  * Copyright (c) 2000-2005 Silicon Graphics, Inc.  * All Rights Reserved.  *  * This program is free software; you can redistribute it and/or  * modify it under the terms of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, write the Free Software Foundation,  * Inc.,  51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  */
 end_comment
 
 begin_include
@@ -16,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_macros.h"
+file|"xfs_fs.h"
 end_include
 
 begin_include
@@ -28,13 +24,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_inum.h"
+file|"xfs_bit.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"xfs_log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xfs_inum.h"
 end_include
 
 begin_include
@@ -82,37 +84,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_alloc_btree.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"xfs_bmap_btree.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"xfs_alloc_btree.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"xfs_ialloc_btree.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xfs_btree.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xfs_ialloc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xfs_attr_sf.h"
 end_include
 
 begin_include
@@ -130,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"xfs_attr_sf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"xfs_dinode.h"
 end_include
 
@@ -142,6 +132,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"xfs_btree.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xfs_ialloc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"xfs_alloc.h"
 end_include
 
@@ -149,12 +151,6 @@ begin_include
 include|#
 directive|include
 file|"xfs_bmap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xfs_bit.h"
 end_include
 
 begin_include
@@ -412,11 +408,19 @@ name|__uint32_t
 name|v
 parameter_list|)
 block|{
+if|if
+condition|(
+name|v
+condition|)
 return|return
 name|ffs
 argument_list|(
 name|v
 argument_list|)
+operator|-
+literal|1
+return|;
+return|return
 operator|-
 literal|1
 return|;
@@ -588,6 +592,8 @@ name|tp
 argument_list|,
 name|ino
 argument_list|,
+literal|0
+argument_list|,
 name|XFS_ILOCK_EXCL
 argument_list|,
 operator|&
@@ -647,6 +653,8 @@ name|nmap
 argument_list|,
 operator|&
 name|flist
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -791,6 +799,8 @@ argument_list|,
 name|tp
 argument_list|,
 name|ino
+argument_list|,
+literal|0
 argument_list|,
 name|XFS_ILOCK_EXCL
 argument_list|,
@@ -7122,9 +7132,11 @@ expr_stmt|;
 comment|/* 	 * Calculate new parameters.  These are the final values to be reached. 	 */
 name|nrextents
 operator|=
+name|nrblocks
+expr_stmt|;
 name|do_div
 argument_list|(
-name|nrblocks
+name|nrextents
 argument_list|,
 name|in
 operator|->
@@ -7404,11 +7416,15 @@ name|nsbp
 operator|->
 name|sb_rextents
 operator|=
+name|nsbp
+operator|->
+name|sb_rblocks
+expr_stmt|;
 name|do_div
 argument_list|(
 name|nsbp
 operator|->
-name|sb_rblocks
+name|sb_rextents
 argument_list|,
 name|nsbp
 operator|->
@@ -7535,6 +7551,8 @@ name|m_sb
 operator|.
 name|sb_rbmino
 argument_list|,
+literal|0
+argument_list|,
 name|XFS_ILOCK_EXCL
 argument_list|,
 operator|&
@@ -7603,6 +7621,8 @@ operator|->
 name|m_sb
 operator|.
 name|sb_rsumino
+argument_list|,
+literal|0
 argument_list|,
 name|XFS_ILOCK_EXCL
 argument_list|,
@@ -8093,6 +8113,9 @@ return|;
 block|}
 block|}
 comment|/* 	 * Lock out other callers by grabbing the bitmap inode lock. 	 */
+if|if
+condition|(
+operator|(
 name|error
 operator|=
 name|xfs_trans_iget
@@ -8107,21 +8130,18 @@ name|m_sb
 operator|.
 name|sb_rbmino
 argument_list|,
+literal|0
+argument_list|,
 name|XFS_ILOCK_EXCL
 argument_list|,
 operator|&
 name|ip
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
+operator|)
 condition|)
-block|{
 return|return
 name|error
 return|;
-block|}
 name|sumbp
 operator|=
 name|NULL
@@ -8362,6 +8382,9 @@ operator|->
 name|t_mountp
 expr_stmt|;
 comment|/* 	 * Synchronize by locking the bitmap inode. 	 */
+if|if
+condition|(
+operator|(
 name|error
 operator|=
 name|xfs_trans_iget
@@ -8376,21 +8399,18 @@ name|m_sb
 operator|.
 name|sb_rbmino
 argument_list|,
+literal|0
+argument_list|,
 name|XFS_ILOCK_EXCL
 argument_list|,
 operator|&
 name|ip
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
+operator|)
 condition|)
-block|{
 return|return
 name|error
 return|;
-block|}
 if|#
 directive|if
 name|defined
@@ -8885,6 +8905,8 @@ name|sb_rbmino
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 operator|&
 name|mp
 operator|->
@@ -8932,6 +8954,8 @@ name|sb_rsumino
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 operator|&
 name|mp
 operator|->
@@ -8945,42 +8969,14 @@ condition|(
 name|error
 condition|)
 block|{
-name|xfs_vnode_t
-modifier|*
-name|rbmvp
-decl_stmt|;
-comment|/* vnode for bitmap file */
-name|vmap_t
-name|vmap
-decl_stmt|;
-comment|/* vmap to delete vnode */
-name|rbmvp
-operator|=
+name|VN_RELE
+argument_list|(
 name|XFS_ITOV
 argument_list|(
 name|mp
 operator|->
 name|m_rbmip
 argument_list|)
-expr_stmt|;
-name|VMAP
-argument_list|(
-name|rbmvp
-argument_list|,
-name|vmap
-argument_list|)
-expr_stmt|;
-name|VN_RELE
-argument_list|(
-name|rbmvp
-argument_list|)
-expr_stmt|;
-name|vn_purge
-argument_list|(
-name|rbmvp
-argument_list|,
-operator|&
-name|vmap
 argument_list|)
 expr_stmt|;
 return|return
@@ -9061,6 +9057,9 @@ modifier|*
 name|seqp
 decl_stmt|;
 comment|/* pointer to seqno in inode */
+if|if
+condition|(
+operator|(
 name|error
 operator|=
 name|xfs_trans_iget
@@ -9075,15 +9074,14 @@ name|m_sb
 operator|.
 name|sb_rbmino
 argument_list|,
+literal|0
+argument_list|,
 name|XFS_ILOCK_EXCL
 argument_list|,
 operator|&
 name|ip
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
+operator|)
 condition|)
 return|return
 name|error

@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2002 Silicon Graphics, Inc.  All Rights Reserved.  *  * This program is free software; you can redistribute it and/or modify it  * under the terms of version 2 of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful, but  * WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Further, this software is distributed without any warranty that it is  * free of the rightful claim of any third person regarding infringement  * or the like.  Any license provided herein, whether implied or  * otherwise, applies only to this software file.  Patent licenses, if  * any, provided herein do not apply to combinations of this program with  * other software, or any other product whatsoever.  *  * You should have received a copy of the GNU General Public License along  * with this program; if not, write the Free Software Foundation, Inc., 59  * Temple Place - Suite 330, Boston MA 02111-1307, USA.  *  * Contact information: Silicon Graphics, Inc., 1600 Amphitheatre Pkwy,  * Mountain View, CA  94043, or:  *  * http://www.sgi.com  *  * For further information regarding this notice, see:  *  * http://oss.sgi.com/projects/GenInfo/SGIGPLNoticeExplan/  */
-end_comment
-
-begin_comment
-comment|/*  * This file contains the implementation of the xfs_buf_log_item.  * It contains the item operations used to manipulate the buf log  * items as well as utility routines used by the buffer specific  * transaction routines.  */
+comment|/*  * Copyright (c) 2000-2005 Silicon Graphics, Inc.  * All Rights Reserved.  *  * This program is free software; you can redistribute it and/or  * modify it under the terms of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, write the Free Software Foundation,  * Inc.,  51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  */
 end_comment
 
 begin_include
@@ -16,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_macros.h"
+file|"xfs_fs.h"
 end_include
 
 begin_include
@@ -28,7 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_inum.h"
+file|"xfs_bit.h"
 end_include
 
 begin_include
@@ -40,13 +36,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_trans.h"
+file|"xfs_inum.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"xfs_buf_item.h"
+file|"xfs_trans.h"
 end_include
 
 begin_include
@@ -76,19 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
+file|"xfs_buf_item.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"xfs_trans_priv.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xfs_rw.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xfs_bit.h"
 end_include
 
 begin_include
@@ -96,16 +86,6 @@ include|#
 directive|include
 file|"xfs_error.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|ROUNDUPNBWORD
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x) + (NBWORD - 1))& ~(NBWORD - 1))
-end_define
 
 begin_decl_stmt
 name|kmem_zone_t
@@ -359,7 +339,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function is called to verify that our caller's have logged  * all the bytes that they changed.  *  * It does this by comparing the original copy of the buffer stored in  * the buf log item's bli_orig array to the current copy of the buffer  * and ensuring that all bytes which miscompare are set in the bli_logged  * array of the buf log item.  */
+comment|/*  * This function is called to verify that our callers have logged  * all the bytes that they changed.  *  * It does this by comparing the original copy of the buffer stored in  * the buf log item's bli_orig array to the current copy of the buffer  * and ensuring that all bytes which mismatch are set in the bli_logged  * array of the buf log item.  */
 end_comment
 
 begin_function
@@ -945,6 +925,13 @@ name|i_len
 operator|=
 name|base_size
 expr_stmt|;
+name|XLOG_VEC_SET_TYPE
+argument_list|(
+name|vecp
+argument_list|,
+name|XLOG_REG_TYPE_BFORMAT
+argument_list|)
+expr_stmt|;
 name|vecp
 operator|++
 expr_stmt|;
@@ -1091,6 +1078,13 @@ name|nbits
 operator|*
 name|XFS_BLI_CHUNK
 expr_stmt|;
+name|XLOG_VEC_SET_TYPE
+argument_list|(
+name|vecp
+argument_list|,
+name|XLOG_REG_TYPE_BCHUNK
+argument_list|)
+expr_stmt|;
 name|nvecs
 operator|++
 expr_stmt|;
@@ -1130,6 +1124,13 @@ operator|=
 name|nbits
 operator|*
 name|XFS_BLI_CHUNK
+expr_stmt|;
+name|XLOG_VEC_SET_TYPE
+argument_list|(
+name|vecp
+argument_list|,
+name|XLOG_REG_TYPE_BCHUNK
+argument_list|)
 expr_stmt|;
 name|nvecs
 operator|++
@@ -1200,6 +1201,13 @@ operator|=
 name|nbits
 operator|*
 name|XFS_BLI_CHUNK
+expr_stmt|;
+name|XLOG_VEC_SET_TYPE
+argument_list|(
+name|vecp
+argument_list|,
+name|XLOG_REG_TYPE_BCHUNK
+argument_list|)
 expr_stmt|;
 comment|/* You would think we need to bump the nvecs here too, but we do not  * this number is used by recovery, and it gets confused by the boundary  * split here  *			nvecs++;  */
 name|vecp
@@ -2231,6 +2239,7 @@ comment|/*  * This is the ops vector shared by all buf log items.  */
 end_comment
 
 begin_decl_stmt
+name|STATIC
 name|struct
 name|xfs_item_ops
 name|xfs_buf_item_ops

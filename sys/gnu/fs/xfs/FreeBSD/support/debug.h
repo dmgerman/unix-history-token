@@ -117,6 +117,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|prdev
+parameter_list|(
+name|fmt
+parameter_list|,
+name|targ
+parameter_list|,
+name|args
+modifier|...
+parameter_list|)
+define|\
+value|printf("Device %s - " fmt "\n", XFS_BUFTARG_NAME(targ), ## args)
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef

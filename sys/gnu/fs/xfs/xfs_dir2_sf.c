@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2003 Silicon Graphics, Inc.  All Rights Reserved.  *  * This program is free software; you can redistribute it and/or modify it  * under the terms of version 2 of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful, but  * WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Further, this software is distributed without any warranty that it is  * free of the rightful claim of any third person regarding infringement  * or the like.  Any license provided herein, whether implied or  * otherwise, applies only to this software file.  Patent licenses, if  * any, provided herein do not apply to combinations of this program with  * other software, or any other product whatsoever.  *  * You should have received a copy of the GNU General Public License along  * with this program; if not, write the Free Software Foundation, Inc., 59  * Temple Place - Suite 330, Boston MA 02111-1307, USA.  *  * Contact information: Silicon Graphics, Inc., 1600 Amphitheatre Pkwy,  * Mountain View, CA  94043, or:  *  * http://www.sgi.com  *  * For further information regarding this notice, see:  *  * http://oss.sgi.com/projects/GenInfo/SGIGPLNoticeExplan/  */
-end_comment
-
-begin_comment
-comment|/*  * xfs_dir2_sf.c  * Shortform directory implementation for v2 directories.  */
+comment|/*  * Copyright (c) 2000-2003,2005 Silicon Graphics, Inc.  * All Rights Reserved.  *  * This program is free software; you can redistribute it and/or  * modify it under the terms of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, write the Free Software Foundation,  * Inc.,  51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  */
 end_comment
 
 begin_include
@@ -16,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_macros.h"
+file|"xfs_fs.h"
 end_include
 
 begin_include
@@ -28,13 +24,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_inum.h"
+file|"xfs_log.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"xfs_log.h"
+file|"xfs_inum.h"
 end_include
 
 begin_include
@@ -76,13 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_bmap_btree.h"
+file|"xfs_da_btree.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"xfs_attr_sf.h"
+file|"xfs_bmap_btree.h"
 end_include
 
 begin_include
@@ -100,13 +96,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_dinode.h"
+file|"xfs_attr_sf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"xfs_inode_item.h"
+file|"xfs_dinode.h"
 end_include
 
 begin_include
@@ -118,7 +114,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_da_btree.h"
+file|"xfs_inode_item.h"
 end_include
 
 begin_include
@@ -380,6 +376,8 @@ decl_stmt|;
 comment|/* total name bytes */
 name|xfs_ino_t
 name|parent
+init|=
+literal|0
 decl_stmt|;
 comment|/* parent inode number */
 name|int
@@ -413,11 +411,9 @@ argument_list|)
 expr_stmt|;
 name|blp
 operator|=
-name|XFS_DIR2_BLOCK_LEAF_P_ARCH
+name|XFS_DIR2_BLOCK_LEAF_P
 argument_list|(
 name|btp
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Iterate over the block's data entries by using the leaf pointers. 	 */
@@ -429,13 +425,11 @@ literal|0
 init|;
 name|i
 operator|<
-name|INT_GET
+name|be32_to_cpu
 argument_list|(
 name|btp
 operator|->
 name|count
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 condition|;
 name|i
@@ -447,7 +441,7 @@ condition|(
 operator|(
 name|addr
 operator|=
-name|INT_GET
+name|be32_to_cpu
 argument_list|(
 name|blp
 index|[
@@ -455,8 +449,6 @@ name|i
 index|]
 operator|.
 name|address
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 operator|)
 operator|==
@@ -665,7 +657,7 @@ name|i8count
 operator|=
 name|i8count
 expr_stmt|;
-name|XFS_DIR2_SF_PUT_INUMBER_ARCH
+name|XFS_DIR2_SF_PUT_INUMBER
 argument_list|(
 operator|(
 name|xfs_dir2_sf_t
@@ -680,8 +672,6 @@ operator|&
 name|sfhp
 operator|->
 name|parent
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 return|return
@@ -974,11 +964,9 @@ operator|(
 name|char
 operator|*
 operator|)
-name|XFS_DIR2_BLOCK_LEAF_P_ARCH
+name|XFS_DIR2_BLOCK_LEAF_P
 argument_list|(
 name|btp
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 name|sfep
@@ -1007,13 +995,11 @@ name|ptr
 expr_stmt|;
 if|if
 condition|(
-name|INT_GET
+name|be16_to_cpu
 argument_list|(
 name|dup
 operator|->
 name|freetag
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 operator|==
 name|XFS_DIR2_DATA_FREE_TAG
@@ -1021,13 +1007,11 @@ condition|)
 block|{
 name|ptr
 operator|+=
-name|INT_GET
+name|be16_to_cpu
 argument_list|(
 name|dup
 operator|->
 name|length
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1113,7 +1097,7 @@ argument_list|,
 name|ARCH_CONVERT
 argument_list|)
 operator|==
-name|XFS_DIR2_SF_GET_INUMBER_ARCH
+name|XFS_DIR2_SF_GET_INUMBER
 argument_list|(
 name|sfp
 argument_list|,
@@ -1123,8 +1107,6 @@ operator|->
 name|hdr
 operator|.
 name|parent
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1139,7 +1121,7 @@ name|dep
 operator|->
 name|namelen
 expr_stmt|;
-name|XFS_DIR2_SF_PUT_OFFSET_ARCH
+name|XFS_DIR2_SF_PUT_OFFSET
 argument_list|(
 name|sfep
 argument_list|,
@@ -1159,8 +1141,6 @@ operator|*
 operator|)
 name|block
 argument_list|)
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -1189,7 +1169,7 @@ argument_list|,
 name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
-name|XFS_DIR2_SF_PUT_INUMBER_ARCH
+name|XFS_DIR2_SF_PUT_INUMBER
 argument_list|(
 name|sfp
 argument_list|,
@@ -1200,8 +1180,6 @@ name|XFS_DIR2_SF_INUMBERP
 argument_list|(
 name|sfep
 argument_list|)
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 name|sfep
@@ -1316,6 +1294,8 @@ decl_stmt|;
 comment|/* changing to 8-byte inodes */
 name|xfs_dir2_data_aoff_t
 name|offset
+init|=
+literal|0
 decl_stmt|;
 comment|/* offset for new entry */
 name|int
@@ -1334,6 +1314,8 @@ comment|/* shortform structure */
 name|xfs_dir2_sf_entry_t
 modifier|*
 name|sfep
+init|=
+name|NULL
 decl_stmt|;
 comment|/* shortform entry */
 name|xfs_dir2_trace_args
@@ -1868,13 +1850,11 @@ name|args
 operator|->
 name|namelen
 expr_stmt|;
-name|XFS_DIR2_SF_PUT_OFFSET_ARCH
+name|XFS_DIR2_SF_PUT_OFFSET
 argument_list|(
 name|sfep
 argument_list|,
 name|offset
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -1892,7 +1872,7 @@ operator|->
 name|namelen
 argument_list|)
 expr_stmt|;
-name|XFS_DIR2_SF_PUT_INUMBER_ARCH
+name|XFS_DIR2_SF_PUT_INUMBER
 argument_list|(
 name|sfp
 argument_list|,
@@ -1905,8 +1885,6 @@ name|XFS_DIR2_SF_INUMBERP
 argument_list|(
 name|sfep
 argument_list|)
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Update the header and inode. 	 */
@@ -2169,11 +2147,9 @@ control|)
 block|{
 name|new_offset
 operator|=
-name|XFS_DIR2_SF_GET_OFFSET_ARCH
+name|XFS_DIR2_SF_GET_OFFSET
 argument_list|(
 name|oldsfep
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2275,13 +2251,11 @@ name|args
 operator|->
 name|namelen
 expr_stmt|;
-name|XFS_DIR2_SF_PUT_OFFSET_ARCH
+name|XFS_DIR2_SF_PUT_OFFSET
 argument_list|(
 name|sfep
 argument_list|,
 name|offset
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -2299,7 +2273,7 @@ operator|->
 name|namelen
 argument_list|)
 expr_stmt|;
-name|XFS_DIR2_SF_PUT_INUMBER_ARCH
+name|XFS_DIR2_SF_PUT_INUMBER
 argument_list|(
 name|sfp
 argument_list|,
@@ -2312,8 +2286,6 @@ name|XFS_DIR2_SF_INUMBERP
 argument_list|(
 name|sfep
 argument_list|)
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 name|sfp
@@ -2552,20 +2524,16 @@ name|offset
 operator|+
 name|size
 operator|<=
-name|XFS_DIR2_SF_GET_OFFSET_ARCH
+name|XFS_DIR2_SF_GET_OFFSET
 argument_list|(
 name|sfep
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 name|offset
 operator|=
-name|XFS_DIR2_SF_GET_OFFSET_ARCH
+name|XFS_DIR2_SF_GET_OFFSET
 argument_list|(
 name|sfep
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 operator|+
 name|XFS_DIR2_DATA_ENTSIZE
@@ -2769,7 +2737,7 @@ name|XFS_DIR2_DATA_FIRST_OFFSET
 expr_stmt|;
 name|ino
 operator|=
-name|XFS_DIR2_SF_GET_INUMBER_ARCH
+name|XFS_DIR2_SF_GET_INUMBER
 argument_list|(
 name|sfp
 argument_list|,
@@ -2779,8 +2747,6 @@ operator|->
 name|hdr
 operator|.
 name|parent
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 name|i8count
@@ -2825,11 +2791,9 @@ control|)
 block|{
 name|ASSERT
 argument_list|(
-name|XFS_DIR2_SF_GET_OFFSET_ARCH
+name|XFS_DIR2_SF_GET_OFFSET
 argument_list|(
 name|sfep
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 operator|>=
 name|offset
@@ -2837,7 +2801,7 @@ argument_list|)
 expr_stmt|;
 name|ino
 operator|=
-name|XFS_DIR2_SF_GET_INUMBER_ARCH
+name|XFS_DIR2_SF_GET_INUMBER
 argument_list|(
 name|sfp
 argument_list|,
@@ -2845,8 +2809,6 @@ name|XFS_DIR2_SF_INUMBERP
 argument_list|(
 name|sfep
 argument_list|)
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 name|i8count
@@ -2857,11 +2819,9 @@ name|XFS_DIR2_MAX_SHORT_INUM
 expr_stmt|;
 name|offset
 operator|=
-name|XFS_DIR2_SF_GET_OFFSET_ARCH
+name|XFS_DIR2_SF_GET_OFFSET
 argument_list|(
 name|sfep
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 operator|+
 name|XFS_DIR2_DATA_ENTSIZE
@@ -3151,7 +3111,7 @@ operator|=
 name|i8count
 expr_stmt|;
 comment|/* 	 * Now can put in the inode number, since i8count is set. 	 */
-name|XFS_DIR2_SF_PUT_INUMBER_ARCH
+name|XFS_DIR2_SF_PUT_INUMBER
 argument_list|(
 name|sfp
 argument_list|,
@@ -3164,8 +3124,6 @@ operator|->
 name|hdr
 operator|.
 name|parent
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 name|sfp
@@ -3567,7 +3525,7 @@ name|p
 operator|.
 name|ino
 operator|=
-name|XFS_DIR2_SF_GET_INUMBER_ARCH
+name|XFS_DIR2_SF_GET_INUMBER
 argument_list|(
 name|sfp
 argument_list|,
@@ -3577,8 +3535,6 @@ operator|->
 name|hdr
 operator|.
 name|parent
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 if|#
@@ -3689,11 +3645,9 @@ name|mp
 operator|->
 name|m_dirdatablk
 argument_list|,
-name|XFS_DIR2_SF_GET_OFFSET_ARCH
+name|XFS_DIR2_SF_GET_OFFSET
 argument_list|(
 name|sfep
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3724,11 +3678,9 @@ name|mp
 operator|->
 name|m_dirdatablk
 argument_list|,
-name|XFS_DIR2_SF_GET_OFFSET_ARCH
+name|XFS_DIR2_SF_GET_OFFSET
 argument_list|(
 name|sfep
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 operator|+
 name|XFS_DIR2_DATA_ENTSIZE
@@ -3743,7 +3695,7 @@ name|p
 operator|.
 name|ino
 operator|=
-name|XFS_DIR2_SF_GET_INUMBER_ARCH
+name|XFS_DIR2_SF_GET_INUMBER
 argument_list|(
 name|sfp
 argument_list|,
@@ -3751,8 +3703,6 @@ name|XFS_DIR2_SF_INUMBERP
 argument_list|(
 name|sfep
 argument_list|)
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 if|#
@@ -4061,7 +4011,7 @@ name|args
 operator|->
 name|inumber
 operator|=
-name|XFS_DIR2_SF_GET_INUMBER_ARCH
+name|XFS_DIR2_SF_GET_INUMBER
 argument_list|(
 name|sfp
 argument_list|,
@@ -4071,8 +4021,6 @@ operator|->
 name|hdr
 operator|.
 name|parent
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 return|return
@@ -4163,7 +4111,7 @@ name|args
 operator|->
 name|inumber
 operator|=
-name|XFS_DIR2_SF_GET_INUMBER_ARCH
+name|XFS_DIR2_SF_GET_INUMBER
 argument_list|(
 name|sfp
 argument_list|,
@@ -4171,8 +4119,6 @@ name|XFS_DIR2_SF_INUMBERP
 argument_list|(
 name|sfep
 argument_list|)
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 return|return
@@ -4445,7 +4391,7 @@ condition|)
 block|{
 name|ASSERT
 argument_list|(
-name|XFS_DIR2_SF_GET_INUMBER_ARCH
+name|XFS_DIR2_SF_GET_INUMBER
 argument_list|(
 name|sfp
 argument_list|,
@@ -4453,8 +4399,6 @@ name|XFS_DIR2_SF_INUMBERP
 argument_list|(
 name|sfep
 argument_list|)
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 operator|==
 name|args
@@ -5028,7 +4972,7 @@ name|DEBUG
 argument_list|)
 name|ino
 operator|=
-name|XFS_DIR2_SF_GET_INUMBER_ARCH
+name|XFS_DIR2_SF_GET_INUMBER
 argument_list|(
 name|sfp
 argument_list|,
@@ -5038,8 +4982,6 @@ operator|->
 name|hdr
 operator|.
 name|parent
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 name|ASSERT
@@ -5053,7 +4995,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|XFS_DIR2_SF_PUT_INUMBER_ARCH
+name|XFS_DIR2_SF_PUT_INUMBER
 argument_list|(
 name|sfp
 argument_list|,
@@ -5068,8 +5010,6 @@ operator|->
 name|hdr
 operator|.
 name|parent
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 block|}
@@ -5162,7 +5102,7 @@ name|DEBUG
 argument_list|)
 name|ino
 operator|=
-name|XFS_DIR2_SF_GET_INUMBER_ARCH
+name|XFS_DIR2_SF_GET_INUMBER
 argument_list|(
 name|sfp
 argument_list|,
@@ -5170,8 +5110,6 @@ name|XFS_DIR2_SF_INUMBERP
 argument_list|(
 name|sfep
 argument_list|)
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 name|ASSERT
@@ -5185,7 +5123,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|XFS_DIR2_SF_PUT_INUMBER_ARCH
+name|XFS_DIR2_SF_PUT_INUMBER
 argument_list|(
 name|sfp
 argument_list|,
@@ -5198,8 +5136,6 @@ name|XFS_DIR2_SF_INUMBERP
 argument_list|(
 name|sfep
 argument_list|)
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5581,7 +5517,7 @@ literal|0
 expr_stmt|;
 name|ino
 operator|=
-name|XFS_DIR2_SF_GET_INUMBER_ARCH
+name|XFS_DIR2_SF_GET_INUMBER
 argument_list|(
 name|oldsfp
 argument_list|,
@@ -5591,11 +5527,9 @@ operator|->
 name|hdr
 operator|.
 name|parent
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
-name|XFS_DIR2_SF_PUT_INUMBER_ARCH
+name|XFS_DIR2_SF_PUT_INUMBER
 argument_list|(
 name|sfp
 argument_list|,
@@ -5608,8 +5542,6 @@ operator|->
 name|hdr
 operator|.
 name|parent
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Copy the entries field by field. 	 */
@@ -5696,7 +5628,7 @@ argument_list|)
 expr_stmt|;
 name|ino
 operator|=
-name|XFS_DIR2_SF_GET_INUMBER_ARCH
+name|XFS_DIR2_SF_GET_INUMBER
 argument_list|(
 name|oldsfp
 argument_list|,
@@ -5704,11 +5636,9 @@ name|XFS_DIR2_SF_INUMBERP
 argument_list|(
 name|oldsfep
 argument_list|)
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
-name|XFS_DIR2_SF_PUT_INUMBER_ARCH
+name|XFS_DIR2_SF_PUT_INUMBER
 argument_list|(
 name|sfp
 argument_list|,
@@ -5719,8 +5649,6 @@ name|XFS_DIR2_SF_INUMBERP
 argument_list|(
 name|sfep
 argument_list|)
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 block|}
@@ -5980,7 +5908,7 @@ literal|1
 expr_stmt|;
 name|ino
 operator|=
-name|XFS_DIR2_SF_GET_INUMBER_ARCH
+name|XFS_DIR2_SF_GET_INUMBER
 argument_list|(
 name|oldsfp
 argument_list|,
@@ -5990,11 +5918,9 @@ operator|->
 name|hdr
 operator|.
 name|parent
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
-name|XFS_DIR2_SF_PUT_INUMBER_ARCH
+name|XFS_DIR2_SF_PUT_INUMBER
 argument_list|(
 name|sfp
 argument_list|,
@@ -6007,8 +5933,6 @@ operator|->
 name|hdr
 operator|.
 name|parent
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Copy the entries field by field. 	 */
@@ -6095,7 +6019,7 @@ argument_list|)
 expr_stmt|;
 name|ino
 operator|=
-name|XFS_DIR2_SF_GET_INUMBER_ARCH
+name|XFS_DIR2_SF_GET_INUMBER
 argument_list|(
 name|oldsfp
 argument_list|,
@@ -6103,11 +6027,9 @@ name|XFS_DIR2_SF_INUMBERP
 argument_list|(
 name|oldsfep
 argument_list|)
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
-name|XFS_DIR2_SF_PUT_INUMBER_ARCH
+name|XFS_DIR2_SF_PUT_INUMBER
 argument_list|(
 name|sfp
 argument_list|,
@@ -6118,8 +6040,6 @@ name|XFS_DIR2_SF_INUMBERP
 argument_list|(
 name|sfep
 argument_list|)
-argument_list|,
-name|ARCH_CONVERT
 argument_list|)
 expr_stmt|;
 block|}

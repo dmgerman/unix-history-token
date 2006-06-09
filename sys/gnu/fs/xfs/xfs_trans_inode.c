@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000 Silicon Graphics, Inc.  All Rights Reserved.  *  * This program is free software; you can redistribute it and/or modify it  * under the terms of version 2 of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful, but  * WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Further, this software is distributed without any warranty that it is  * free of the rightful claim of any third person regarding infringement  * or the like.  Any license provided herein, whether implied or  * otherwise, applies only to this software file.  Patent licenses, if  * any, provided herein do not apply to combinations of this program with  * other software, or any other product whatsoever.  *  * You should have received a copy of the GNU General Public License along  * with this program; if not, write the Free Software Foundation, Inc., 59  * Temple Place - Suite 330, Boston MA 02111-1307, USA.  *  * Contact information: Silicon Graphics, Inc., 1600 Amphitheatre Pkwy,  * Mountain View, CA  94043, or:  *  * http://www.sgi.com  *  * For further information regarding this notice, see:  *  * http://oss.sgi.com/projects/GenInfo/SGIGPLNoticeExplan/  */
+comment|/*  * Copyright (c) 2000,2005 Silicon Graphics, Inc.  * All Rights Reserved.  *  * This program is free software; you can redistribute it and/or  * modify it under the terms of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, write the Free Software Foundation,  * Inc.,  51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_macros.h"
+file|"xfs_fs.h"
 end_include
 
 begin_include
@@ -24,13 +24,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_inum.h"
+file|"xfs_bit.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"xfs_log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xfs_inum.h"
 end_include
 
 begin_include
@@ -78,7 +84,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_trans_priv.h"
+file|"xfs_bmap_btree.h"
 end_include
 
 begin_include
@@ -90,31 +96,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_bmap_btree.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"xfs_ialloc_btree.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xfs_btree.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xfs_ialloc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xfs_attr_sf.h"
 end_include
 
 begin_include
@@ -132,19 +114,43 @@ end_include
 begin_include
 include|#
 directive|include
+file|"xfs_attr_sf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"xfs_dinode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"xfs_inode_item.h"
+file|"xfs_inode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"xfs_inode.h"
+file|"xfs_btree.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xfs_ialloc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xfs_trans_priv.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xfs_inode_item.h"
 end_include
 
 begin_ifdef
@@ -204,6 +210,9 @@ name|xfs_ino_t
 name|ino
 parameter_list|,
 name|uint
+name|flags
+parameter_list|,
+name|uint
 name|lock_flags
 parameter_list|,
 name|xfs_inode_t
@@ -230,9 +239,7 @@ name|tp
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
-operator|(
 name|xfs_iget
 argument_list|(
 name|mp
@@ -241,15 +248,15 @@ name|NULL
 argument_list|,
 name|ino
 argument_list|,
+name|flags
+argument_list|,
 name|lock_flags
 argument_list|,
 name|ipp
 argument_list|,
 literal|0
 argument_list|)
-operator|)
 return|;
-block|}
 comment|/* 	 * If we find the inode in core with this transaction 	 * pointer in its i_transp field, then we know we already 	 * have it locked.  In this case we just increment the lock 	 * recursion count and return the inode to the caller. 	 * Assert that the inode is already locked in the mode requested 	 * by the caller.  We cannot do lock promotions yet, so 	 * die if someone gets this wrong. 	 */
 if|if
 condition|(
@@ -454,6 +461,8 @@ argument_list|,
 name|tp
 argument_list|,
 name|ino
+argument_list|,
+name|flags
 argument_list|,
 name|lock_flags
 argument_list|,
@@ -808,81 +817,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Cancel the previous inode hold request made on this inode  * for this transaction.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
-begin_function
-name|void
-name|xfs_trans_ihold_release
-parameter_list|(
-name|xfs_trans_t
-modifier|*
-name|tp
-parameter_list|,
-name|xfs_inode_t
-modifier|*
-name|ip
-parameter_list|)
-block|{
-name|ASSERT
-argument_list|(
-name|ip
-operator|->
-name|i_transp
-operator|==
-name|tp
-argument_list|)
-expr_stmt|;
-name|ASSERT
-argument_list|(
-name|ip
-operator|->
-name|i_itemp
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
-name|ASSERT
-argument_list|(
-name|ismrlocked
-argument_list|(
-operator|&
-name|ip
-operator|->
-name|i_lock
-argument_list|,
-name|MR_UPDATE
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|ASSERT
-argument_list|(
-name|ip
-operator|->
-name|i_itemp
-operator|->
-name|ili_flags
-operator|&
-name|XFS_ILI_HOLD
-argument_list|)
-expr_stmt|;
-name|ip
-operator|->
-name|i_itemp
-operator|->
-name|ili_flags
-operator|&=
-operator|~
-name|XFS_ILI_HOLD
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * This is called to mark the fields indicated in fieldmask as needing  * to be logged when the transaction is committed.  The inode must  * already be associated with the given transaction.  *  * The values for fieldmask are defined in xfs_inode_item.h.  We always  * log all of the core inode if any of it has changed, and we always log  * all of the inline data/extents/b-tree root if any of them has changed.  */
 end_comment
 
@@ -973,7 +907,7 @@ name|lid_flags
 operator||=
 name|XFS_LID_DIRTY
 expr_stmt|;
-comment|/* 	 * Always OR in the bits from the ili_last_fields field. 	 * This is to coordinate with the xfs_iflush() and xfs_iflush_done() 	 * routines in the eventual clearing of the ilf_fields bits. 	 * See the big comment in xfs_iflush() for an explanation of 	 * this coorination mechanism. 	 */
+comment|/* 	 * Always OR in the bits from the ili_last_fields field. 	 * This is to coordinate with the xfs_iflush() and xfs_iflush_done() 	 * routines in the eventual clearing of the ilf_fields bits. 	 * See the big comment in xfs_iflush() for an explanation of 	 * this coordination mechanism. 	 */
 name|flags
 operator||=
 name|ip

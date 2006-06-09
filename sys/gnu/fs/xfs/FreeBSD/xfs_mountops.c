@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Copyright (c) 2001,2006 Alexander Kabaev, Russell Cattelan Digital Elves Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -68,13 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_macros.h"
+file|"xfs_types.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"xfs_types.h"
+file|"xfs_bit.h"
 end_include
 
 begin_include
@@ -158,12 +162,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_ialloc.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"xfs_attr_sf.h"
 end_include
 
@@ -183,6 +181,12 @@ begin_include
 include|#
 directive|include
 file|"xfs_dinode.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xfs_ialloc.h"
 end_include
 
 begin_include
@@ -213,12 +217,6 @@ begin_include
 include|#
 directive|include
 file|"xfs_error.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xfs_bit.h"
 end_include
 
 begin_include
@@ -316,13 +314,6 @@ begin_decl_stmt
 specifier|static
 name|vfs_fhtovp_t
 name|_xfs_fhtovp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|vfs_checkexp_t
-name|_xfs_checkexp
 decl_stmt|;
 end_decl_stmt
 
@@ -989,33 +980,11 @@ name|mnt_flag
 operator|&
 name|MNT_UPDATE
 condition|)
-block|{
-comment|/* 		 * XXX: Only support update mounts for NFS export. 		*/
-if|if
-condition|(
-name|vfs_flagopt
-argument_list|(
-name|mp
-operator|->
-name|mnt_optnew
-argument_list|,
-literal|"export"
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|)
-condition|)
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-else|else
-return|return
-name|EOPNOTSUPP
-return|;
-block|}
 name|xmp
 operator|=
 name|xfsmount_allocate
@@ -1052,22 +1021,6 @@ condition|)
 goto|goto
 name|fail
 goto|;
-comment|/* Force read-only mounts in this branch. */
-name|XFSTOVFS
-argument_list|(
-name|xmp
-argument_list|)
-operator|->
-name|vfs_flag
-operator||=
-name|VFS_RDONLY
-expr_stmt|;
-name|mp
-operator|->
-name|mnt_flag
-operator||=
-name|MNT_RDONLY
-expr_stmt|;
 name|curcred
 operator|=
 name|td
@@ -1128,7 +1081,9 @@ name|xmp
 argument_list|)
 argument_list|)
 operator|->
-name|m_dev
+name|m_ddev_targp
+operator|->
+name|dev
 expr_stmt|;
 if|if
 condition|(
@@ -1165,8 +1120,6 @@ operator|->
 name|mnt_flag
 operator||=
 name|MNT_LOCAL
-operator||
-name|MNT_RDONLY
 expr_stmt|;
 name|mp
 operator|->
@@ -1467,7 +1420,7 @@ literal|"xfs_quotactl\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|ENOSYS
+name|EOPNOTSUPP
 return|;
 block|}
 end_function
@@ -1732,51 +1685,6 @@ end_function
 begin_function
 specifier|static
 name|int
-name|_xfs_checkexp
-parameter_list|(
-name|mp
-parameter_list|,
-name|nam
-parameter_list|,
-name|extflagsp
-parameter_list|,
-name|credanonp
-parameter_list|)
-name|struct
-name|mount
-modifier|*
-name|mp
-decl_stmt|;
-name|struct
-name|sockaddr
-modifier|*
-name|nam
-decl_stmt|;
-name|int
-modifier|*
-name|extflagsp
-decl_stmt|;
-name|struct
-name|ucred
-modifier|*
-modifier|*
-name|credanonp
-decl_stmt|;
-block|{
-name|printf
-argument_list|(
-literal|"xfs_checkexp\n"
-argument_list|)
-expr_stmt|;
-return|return
-name|ENOSYS
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
 name|_xfs_vptofh
 parameter_list|(
 name|vp
@@ -1945,11 +1853,6 @@ operator|=
 name|_xfs_fhtovp
 block|,
 operator|.
-name|vfs_checkexp
-operator|=
-name|_xfs_checkexp
-block|,
-operator|.
 name|vfs_vptofh
 operator|=
 name|_xfs_vptofh
@@ -1972,10 +1875,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX: Read-only for now */
-end_comment
-
 begin_expr_stmt
 name|VFS_SET
 argument_list|(
@@ -1983,7 +1882,7 @@ name|xfs_fsops
 argument_list|,
 name|xfs
 argument_list|,
-name|VFCF_READONLY
+literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2222,10 +2121,42 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|xfs_geom_bufsync
+parameter_list|(
+name|struct
+name|bufobj
+modifier|*
+name|bo
+parameter_list|,
+name|int
+name|waitfor
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+block|{
+return|return
+name|bufsync
+argument_list|(
+name|bo
+argument_list|,
+name|waitfor
+argument_list|,
+name|td
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_decl_stmt
 name|struct
 name|buf_ops
-name|xfs_ops
+name|xfs_bo_ops
 init|=
 block|{
 operator|.
@@ -2246,7 +2177,7 @@ block|,
 operator|.
 name|bop_sync
 operator|=
-name|bufsync
+name|xfs_geom_bufsync
 block|, }
 decl_stmt|;
 end_decl_stmt

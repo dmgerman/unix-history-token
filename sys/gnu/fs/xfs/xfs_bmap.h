@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2003 Silicon Graphics, Inc.  All Rights Reserved.  *  * This program is free software; you can redistribute it and/or modify it  * under the terms of version 2 of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful, but  * WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Further, this software is distributed without any warranty that it is  * free of the rightful claim of any third person regarding infringement  * or the like.  Any license provided herein, whether implied or  * otherwise, applies only to this software file.  Patent licenses, if  * any, provided herein do not apply to combinations of this program with  * other software, or any other product whatsoever.  *  * You should have received a copy of the GNU General Public License along  * with this program; if not, write the Free Software Foundation, Inc., 59  * Temple Place - Suite 330, Boston MA 02111-1307, USA.  *  * Contact information: Silicon Graphics, Inc., 1600 Amphitheatre Pkwy,  * Mountain View, CA  94043, or:  *  * http://www.sgi.com  *  * For further information regarding this notice, see:  *  * http://oss.sgi.com/projects/GenInfo/SGIGPLNoticeExplan/  */
+comment|/*  * Copyright (c) 2000-2006 Silicon Graphics, Inc.  * All Rights Reserved.  *  * This program is free software; you can redistribute it and/or  * modify it under the terms of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, write the Free Software Foundation,  * Inc.,  51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  */
 end_comment
 
 begin_ifndef
@@ -29,6 +29,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|xfs_ifork
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|xfs_inode
 struct_decl|;
 end_struct_decl
@@ -44,6 +50,28 @@ struct_decl|struct
 name|xfs_trans
 struct_decl|;
 end_struct_decl
+
+begin_comment
+comment|/*  * DELTA: describe a change to the in-core extent list.  *  * Internally the use of xed_blockount is somewhat funky.  * xed_blockcount contains an offset much of the time because this  * makes merging changes easier.  (xfs_fileoff_t and xfs_filblks_t are  * the same underlying type).  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|xfs_extdelta
+block|{
+name|xfs_fileoff_t
+name|xed_startoff
+decl_stmt|;
+comment|/* offset of range */
+name|xfs_filblks_t
+name|xed_blockcount
+decl_stmt|;
+comment|/* blocks in range */
+block|}
+name|xfs_extdelta_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * List of extents to be free "later".  * The list is kept sorted on xbf_startblock.  */
@@ -236,46 +264,28 @@ begin_comment
 comment|/* must allocate only one extent */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|XFS_WANT_FUNCS
-operator|||
-name|XFS_WANT_FUNCS_C
-operator|||
-operator|(
-name|XFS_WANT_SPACE
-operator|&&
-name|XFSSO_XFS_BMAPI_AFLAG
-operator|)
-end_if
+begin_comment
+comment|/*	XFS_BMAPI_DIRECT_IO	0x800	*/
+end_comment
 
-begin_function_decl
-name|int
-name|xfs_bmapi_aflag
-parameter_list|(
-name|int
-name|w
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_define
+define|#
+directive|define
+name|XFS_BMAPI_CONVERT
+value|0x1000
+end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* unwritten extent conversion - */
+end_comment
 
-begin_if
-if|#
-directive|if
-name|XFS_WANT_FUNCS
-operator|||
-operator|(
-name|XFS_WANT_SPACE
-operator|&&
-name|XFSSO_XFS_BMAPI_AFLAG
-operator|)
-end_if
+begin_comment
+comment|/* need write cache flushing and no */
+end_comment
+
+begin_comment
+comment|/* additional allocation alignments */
+end_comment
 
 begin_define
 define|#
@@ -287,25 +297,29 @@ parameter_list|)
 value|xfs_bmapi_aflag(w)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|XFS_BMAPI_AFLAG
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|xfs_bmapi_aflag
 parameter_list|(
+name|int
 name|w
 parameter_list|)
-value|((w) == XFS_ATTR_FORK ? XFS_BMAPI_ATTRFORK : 0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+block|{
+return|return
+operator|(
+name|w
+operator|==
+name|XFS_ATTR_FORK
+condition|?
+name|XFS_BMAPI_ATTRFORK
+else|:
+literal|0
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Special values for xfs_bmbt_irec_t br_startblock field.  */
@@ -325,52 +339,6 @@ name|HOLESTARTBLOCK
 value|((xfs_fsblock_t)-2LL)
 end_define
 
-begin_if
-if|#
-directive|if
-name|XFS_WANT_FUNCS
-operator|||
-name|XFS_WANT_FUNCS_C
-operator|||
-operator|(
-name|XFS_WANT_SPACE
-operator|&&
-name|XFSSO_XFS_BMAP_INIT
-operator|)
-end_if
-
-begin_function_decl
-name|void
-name|xfs_bmap_init
-parameter_list|(
-name|xfs_bmap_free_t
-modifier|*
-name|flp
-parameter_list|,
-name|xfs_fsblock_t
-modifier|*
-name|fbp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|XFS_WANT_FUNCS
-operator|||
-operator|(
-name|XFS_WANT_SPACE
-operator|&&
-name|XFSSO_XFS_BMAP_INIT
-operator|)
-end_if
-
 begin_define
 define|#
 directive|define
@@ -383,28 +351,57 @@ parameter_list|)
 value|xfs_bmap_init(flp,fbp)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|XFS_BMAP_INIT
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|xfs_bmap_init
 parameter_list|(
+name|xfs_bmap_free_t
+modifier|*
 name|flp
 parameter_list|,
+name|xfs_fsblock_t
+modifier|*
 name|fbp
 parameter_list|)
-define|\
-value|((flp)->xbf_first = NULL, (flp)->xbf_count = 0, \ 	 (flp)->xbf_low = 0, *(fbp) = NULLFSBLOCK)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+block|{
+operator|(
+operator|(
+name|flp
+operator|)
+operator|->
+name|xbf_first
+operator|=
+name|NULL
+operator|,
+operator|(
+name|flp
+operator|)
+operator|->
+name|xbf_count
+operator|=
+literal|0
+operator|,
+expr|\
+operator|(
+name|flp
+operator|)
+operator|->
+name|xbf_low
+operator|=
+literal|0
+operator|,
+operator|*
+operator|(
+name|fbp
+operator|)
+operator|=
+name|NULLFSBLOCK
+operator|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Argument structure for xfs_bmap_alloc.  */
@@ -487,6 +484,10 @@ name|char
 name|aeof
 decl_stmt|;
 comment|/* allocated space at eof */
+name|char
+name|conv
+decl_stmt|;
+comment|/* overwriting unwritten extents */
 block|}
 name|xfs_bmalloca_t
 typedef|;
@@ -643,6 +644,10 @@ name|ip
 parameter_list|,
 comment|/* incore inode pointer */
 name|int
+name|size
+parameter_list|,
+comment|/* space needed for new attribute */
+name|int
 name|rsvd
 parameter_list|)
 function_decl|;
@@ -702,26 +707,6 @@ end_function_decl
 
 begin_comment
 comment|/* free list to clean up */
-end_comment
-
-begin_comment
-comment|/*  * Routine to check if a specified inode is swap capable.  */
-end_comment
-
-begin_function_decl
-name|int
-name|xfs_bmap_check_swappable
-parameter_list|(
-name|struct
-name|xfs_inode
-modifier|*
-name|ip
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* incore inode */
 end_comment
 
 begin_comment
@@ -1007,12 +992,17 @@ comment|/* i/o: mval size/count */
 name|xfs_bmap_free_t
 modifier|*
 name|flist
+parameter_list|,
+comment|/* i/o: list extents to free */
+name|xfs_extdelta_t
+modifier|*
+name|delta
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* i/o: list extents to free */
+comment|/* o: change made to incore 						   extents */
 end_comment
 
 begin_comment
@@ -1102,6 +1092,11 @@ modifier|*
 name|flist
 parameter_list|,
 comment|/* i/o: list extents to free */
+name|xfs_extdelta_t
+modifier|*
+name|delta
+parameter_list|,
+comment|/* o: change made to incore 						   extents */
 name|int
 modifier|*
 name|done
@@ -1134,6 +1129,7 @@ name|bmv
 parameter_list|,
 comment|/* user bmap structure */
 name|void
+name|__user
 modifier|*
 name|ap
 parameter_list|,
@@ -1147,32 +1143,6 @@ end_function_decl
 begin_comment
 comment|/* interface flags */
 end_comment
-
-begin_comment
-comment|/*  * Check the last inode extent to determine whether this allocation will result  * in blocks being allocated at the end of the file. When we allocate new data  * blocks at the end of the file which do not start at the previous data block,  * we will try to align the new blocks at stripe unit boundaries.  */
-end_comment
-
-begin_function_decl
-name|int
-name|xfs_bmap_isaeof
-parameter_list|(
-name|struct
-name|xfs_inode
-modifier|*
-name|ip
-parameter_list|,
-name|xfs_fileoff_t
-name|off
-parameter_list|,
-name|int
-name|whichfork
-parameter_list|,
-name|char
-modifier|*
-name|aeof
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  * Check if the endoff is outside the last extent. If so the caller will grow  * the allocation to a stripe unit boundary  */
@@ -1235,12 +1205,46 @@ begin_function_decl
 name|int
 name|xfs_check_nostate_extents
 parameter_list|(
-name|xfs_bmbt_rec_t
+name|struct
+name|xfs_ifork
 modifier|*
-name|ep
+name|ifp
+parameter_list|,
+name|xfs_extnum_t
+name|idx
 parameter_list|,
 name|xfs_extnum_t
 name|num
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Search the extent records for the entry containing block bno.  * If bno lies in a hole, point to the next entry.  If bno lies  * past eof, *eofp will be set, and *prevp will contain the last  * entry (null if none).  Else, *lastxp will be set to the index  * of the found entry; *gotp will contain the entry.  */
+end_comment
+
+begin_function_decl
+name|xfs_bmbt_rec_t
+modifier|*
+name|xfs_bmap_search_multi_extents
+parameter_list|(
+name|struct
+name|xfs_ifork
+modifier|*
+parameter_list|,
+name|xfs_fileoff_t
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|xfs_extnum_t
+modifier|*
+parameter_list|,
+name|xfs_bmbt_irec_t
+modifier|*
+parameter_list|,
+name|xfs_bmbt_irec_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

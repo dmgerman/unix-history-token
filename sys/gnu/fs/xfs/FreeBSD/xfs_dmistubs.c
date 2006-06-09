@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xfs_macros.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"xfs_types.h"
 end_include
 
@@ -100,6 +94,15 @@ return|;
 block|}
 end_function
 
+begin_function_decl
+name|int
+name|dmapi_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|dmapi_init
@@ -114,6 +117,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_function_decl
+name|void
+name|dmapi_uninit
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|void

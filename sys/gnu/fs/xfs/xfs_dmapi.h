@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2003 Silicon Graphics, Inc.  All Rights Reserved.  *  * This program is free software; you can redistribute it and/or modify it  * under the terms of version 2 of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful, but  * WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Further, this software is distributed without any warranty that it is  * free of the rightful claim of any third person regarding infringement  * or the like.  Any license provided herein, whether implied or  * otherwise, applies only to this software file.  Patent licenses, if  * any, provided herein do not apply to combinations of this program with  * other software, or any other product whatsoever.  *  * You should have received a copy of the GNU General Public License along  * with this program; if not, write the Free Software Foundation, Inc., 59  * Temple Place - Suite 330, Boston MA 02111-1307, USA.  *  * Contact information: Silicon Graphics, Inc., 1600 Amphitheatre Pkwy,  * Mountain View, CA  94043, or:  *  * http://www.sgi.com  *  * For further information regarding this notice, see:  *  * http://oss.sgi.com/projects/GenInfo/SGIGPLNoticeExplan/  */
+comment|/*  * Copyright (c) 2000-2005 Silicon Graphics, Inc.  * All Rights Reserved.  *  * This program is free software; you can redistribute it and/or  * modify it under the terms of the GNU General Public License as  * published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, write the Free Software Foundation,  * Inc.,  51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,10 @@ define|#
 directive|define
 name|__XFS_DMAPI_H__
 end_define
+
+begin_comment
+comment|//#include<linux/version.h>
+end_comment
 
 begin_comment
 comment|/*	Values used to define the on-disk version of dm_attrname_t. All  *	on-disk attribute names start with the 8-byte string "SGI_DMI_".  *  *      In the on-disk inode, DMAPI attribute names consist of the user-provided  *      name with the DMATTR_PREFIXSTRING pre-pended.  This string must NEVER be  *      changed.  */
@@ -272,12 +276,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DM_FLAGS_ISEM
+name|DM_FLAGS_IMUX
 value|0x004
 end_define
 
 begin_comment
-comment|/* thread holds i_sem */
+comment|/* thread holds i_mutex */
 end_comment
 
 begin_define
@@ -306,11 +310,26 @@ begin_comment
 comment|/*  *	Based on IO_ISDIRECT, decide which i_ flag is set.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DM_FLAGS_IALLOCSEM_RD
-end_ifdef
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_if
+if|#
+directive|if
+name|LINUX_VERSION_CODE
+operator|>
+name|KERNEL_VERSION
+argument_list|(
+literal|2
+operator|,
+literal|6
+operator|,
+literal|0
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -319,42 +338,126 @@ name|DM_SEM_FLAG_RD
 parameter_list|(
 name|ioflags
 parameter_list|)
-value|(((ioflags)& IO_ISDIRECT) ? \ 			      DM_FLAGS_IALLOCSEM_RD : DM_FLAGS_ISEM)
+value|(((ioflags)& IO_ISDIRECT) ? \ 			      DM_FLAGS_IMUX : 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DM_SEM_FLAG_WR
-value|(DM_FLAGS_IALLOCSEM_WR | DM_FLAGS_ISEM)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|DM_SEM_FLAG_RD
-parameter_list|(
-name|ioflags
-parameter_list|)
-value|(((ioflags)& IO_ISDIRECT) ? \ 			      0 : DM_FLAGS_ISEM)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DM_SEM_FLAG_WR
-value|(DM_FLAGS_ISEM)
+value|(DM_FLAGS_IALLOCSEM_WR | DM_FLAGS_IMUX)
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_if
+if|#
+directive|if
+operator|(
+name|LINUX_VERSION_CODE
+operator|<
+name|KERNEL_VERSION
+argument_list|(
+literal|2
+operator|,
+literal|6
+operator|,
+literal|0
+argument_list|)
+operator|)
+operator|&&
+expr|\
+operator|(
+name|LINUX_VERSION_CODE
+operator|>=
+name|KERNEL_VERSION
+argument_list|(
+literal|2
+operator|,
+literal|4
+operator|,
+literal|22
+argument_list|)
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|DM_SEM_FLAG_RD
+parameter_list|(
+name|ioflags
+parameter_list|)
+value|(((ioflags)& IO_ISDIRECT) ? \ 			      DM_FLAGS_IALLOCSEM_RD : DM_FLAGS_IMUX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DM_SEM_FLAG_WR
+value|(DM_FLAGS_IALLOCSEM_WR | DM_FLAGS_IMUX)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|LINUX_VERSION_CODE
+operator|<=
+name|KERNEL_VERSION
+argument_list|(
+literal|2
+operator|,
+literal|4
+operator|,
+literal|21
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|DM_SEM_FLAG_RD
+parameter_list|(
+name|ioflags
+parameter_list|)
+value|(((ioflags)& IO_ISDIRECT) ? \ 			      0 : DM_FLAGS_IMUX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DM_SEM_FLAG_WR
+value|(DM_FLAGS_IMUX)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|DM_SEM_FLAG_WR
+value|0
+end_define
+
+begin_comment
+comment|/* RMC */
+end_comment
 
 begin_comment
 comment|/*  *	Macros to turn caller specified delay/block flags into  *	dm_send_xxxx_event flag DM_FLAGS_NDELAY.  */
@@ -387,26 +490,6 @@ name|bhv_vfsops
 name|xfs_dmops
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|int
-name|dmapi_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|dmapi_uninit
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_endif
 endif|#

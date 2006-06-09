@@ -120,6 +120,20 @@ value|do { \ } while (0)
 end_define
 
 begin_comment
+comment|/* Restore the PF_FSTRANS state to what was saved in STATEP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFLAGS_RESTORE_FSTRANS
+parameter_list|(
+name|STATEP
+parameter_list|)
+value|do {     		\ } while (0)
+end_define
+
+begin_comment
 comment|/*  * memory management routines  */
 end_comment
 
@@ -133,8 +147,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|KM_SLEEP_IO
-value|M_WAITOK
+name|KM_NOSLEEP
+value|M_NOWAIT
 end_define
 
 begin_define
@@ -147,14 +161,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|KM_NOSLEEP
-value|M_NOWAIT
-end_define
-
-begin_define
-define|#
-directive|define
-name|KM_CACHEALIGN
+name|KM_MAYFAIL
 value|0
 end_define
 
@@ -184,6 +191,27 @@ end_typedef
 begin_define
 define|#
 directive|define
+name|KM_ZONE_HWALIGN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|KM_ZONE_RECLAIM
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|KM_ZONE_SPREAD
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|kmem_zone_init
 parameter_list|(
 name|len
@@ -193,6 +221,64 @@ parameter_list|)
 define|\
 value|uma_zcreate(name, len, NULL, NULL, NULL, NULL, 0, 0)
 end_define
+
+begin_function
+specifier|static
+specifier|inline
+name|kmem_zone_t
+modifier|*
+name|kmem_zone_init_flags
+parameter_list|(
+name|int
+name|size
+parameter_list|,
+name|char
+modifier|*
+name|zone_name
+parameter_list|,
+name|unsigned
+name|long
+name|flags
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|construct
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|kmem_zone_t
+modifier|*
+parameter_list|,
+name|unsigned
+name|long
+parameter_list|)
+parameter_list|)
+block|{
+return|return
+name|uma_zcreate
+argument_list|(
+name|zone_name
+argument_list|,
+name|size
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_define
 define|#
@@ -207,16 +293,24 @@ define|\
 value|uma_zfree(zone, ptr)
 end_define
 
-begin_define
-define|#
-directive|define
-name|kmem_cache_destroy
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|kmem_zone_destroy
 parameter_list|(
+name|kmem_zone_t
+modifier|*
 name|zone
 parameter_list|)
-define|\
-value|uma_zdestroy(zone)
-end_define
+block|{
+name|uma_zdestroy
+argument_list|(
+name|zone
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_define
 define|#

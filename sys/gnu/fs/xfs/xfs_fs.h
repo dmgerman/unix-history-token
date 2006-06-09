@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995-2003 Silicon Graphics, Inc.  All Rights Reserved.  *  * This program is free software; you can redistribute it and/or modify it  * under the terms of version 2.1 of the GNU Lesser General Public License  * as published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful, but  * WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Further, this software is distributed without any warranty that it is  * free of the rightful claim of any third person regarding infringement  * or the like.	 Any license provided herein, whether implied or  * otherwise, applies only to this software file.  Patent licenses, if  * any, provided herein do not apply to combinations of this program with  * other software, or any other product whatsoever.  *  * You should have received a copy of the GNU Lesser General Public  * License along with this program; if not, write the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston MA 02111-1307,  * USA.  *  * Contact information: Silicon Graphics, Inc., 1600 Amphitheatre Pkwy,  * Mountain View, CA  94043, or:  *  * http://www.sgi.com  *  * For further information regarding this notice, see:  *  * http://oss.sgi.com/projects/GenInfo/SGIGPLNoticeExplan/  */
+comment|/*  * Copyright (c) 1995-2005 Silicon Graphics, Inc.  * All Rights Reserved.  *  * This program is free software; you can redistribute it and/or  * modify it under the terms of the GNU Lesser General Public License  * as published by the Free Software Foundation.  *  * This program is distributed in the hope that it would be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU Lesser General Public License for more details.  *  * You should have received a copy of the GNU Lesser General Public License  * along with this program; if not, write the Free Software Foundation,  * Inc.,  51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  */
 end_comment
 
 begin_ifndef
@@ -87,11 +87,15 @@ name|__u32
 name|fsx_nextents
 decl_stmt|;
 comment|/* nextents field value (get)	*/
+name|__u32
+name|fsx_projid
+decl_stmt|;
+comment|/* project identifier (get/set) */
 name|unsigned
 name|char
 name|fsx_pad
 index|[
-literal|16
+literal|12
 index|]
 decl_stmt|;
 block|}
@@ -182,6 +186,61 @@ end_define
 
 begin_comment
 comment|/* do not include in backups */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFS_XFLAG_RTINHERIT
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* create with rt bit set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFS_XFLAG_PROJINHERIT
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* create with parents projid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFS_XFLAG_NOSYMLINKS
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* disallow symlink creation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFS_XFLAG_EXTSIZE
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* extent size allocator hint */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFS_XFLAG_EXTSZINHERIT
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* inherit inode extent size */
 end_comment
 
 begin_define
@@ -391,7 +450,7 @@ name|p1
 parameter_list|,
 name|p2
 parameter_list|)
-value|{	\ 	p2.bmv_offset = p1.bmv_offset;	\ 	p2.bmv_block = p1.bmv_block;	\ 	p2.bmv_length = p1.bmv_length;	\ 	p2.bmv_count = p1.bmv_count;	\ 	p2.bmv_entries = p1.bmv_entries;  }
+value|{	\ 	p2.bmv_offset = p1.bmv_offset;	\ 	p2.bmv_block = p1.bmv_block;	\ 	p2.bmv_length = p1.bmv_length;	\ 	p2.bmv_count = p1.bmv_count;	\ 	p2.bmv_entries = p1.bmv_entries; \ 	\ printf("offset 0x%llx block 0x%llx length 0x%llx count 0x%llx entries %d\n", \        (uint64_t)p2.bmv_offset, \        (uint64_t)p2.bmv_block, \        (uint64_t)p2.bmv_length, \        (uint64_t)p2.bmv_count, \        p2.bmv_entries); \   }
 end_define
 
 begin_comment
@@ -453,7 +512,7 @@ comment|/* len == 0 means until end of file */
 name|__s32
 name|l_sysid
 decl_stmt|;
-name|pid_t
+name|__u32
 name|l_pid
 decl_stmt|;
 name|__s32
@@ -835,6 +894,17 @@ begin_comment
 comment|/* sector sizes>1BB	*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|XFS_FSOP_GEOM_FLAGS_ATTR2
+value|0x0400
+end_define
+
+begin_comment
+comment|/* inline attributes rework */
+end_comment
+
 begin_comment
 comment|/*  * Minimum and maximum sizes need for growth checks  */
 end_comment
@@ -1062,6 +1132,7 @@ struct|struct
 name|xfs_fsop_bulkreq
 block|{
 name|__u64
+name|__user
 modifier|*
 name|lastip
 decl_stmt|;
@@ -1071,11 +1142,13 @@ name|icount
 decl_stmt|;
 comment|/* count of entries in buffer	*/
 name|void
+name|__user
 modifier|*
 name|ubuffer
 decl_stmt|;
 comment|/* user buffer for inode desc.	*/
 name|__s32
+name|__user
 modifier|*
 name|ocount
 decl_stmt|;
@@ -1145,6 +1218,7 @@ name|fd
 decl_stmt|;
 comment|/* fd for FD_TO_HANDLE		*/
 name|void
+name|__user
 modifier|*
 name|path
 decl_stmt|;
@@ -1154,6 +1228,7 @@ name|oflags
 decl_stmt|;
 comment|/* open flags			*/
 name|void
+name|__user
 modifier|*
 name|ihandle
 decl_stmt|;
@@ -1163,11 +1238,13 @@ name|ihandlen
 decl_stmt|;
 comment|/* user supplied length		*/
 name|void
+name|__user
 modifier|*
 name|ohandle
 decl_stmt|;
 comment|/* user buffer for handle	*/
 name|__u32
+name|__user
 modifier|*
 name|ohandlen
 decl_stmt|;
@@ -1190,13 +1267,14 @@ name|struct
 name|xfs_fsop_handlereq
 name|hreq
 decl_stmt|;
-comment|/* handle interface structure */
+comment|/* handle information	*/
 name|struct
 name|fsdmidata
+name|__user
 modifier|*
 name|data
 decl_stmt|;
-comment|/* DMAPI data to set	      */
+comment|/* DMAPI data	*/
 block|}
 name|xfs_fsop_setdm_handlereq_t
 typedef|;
@@ -1236,16 +1314,17 @@ comment|/* opaque cookie, list offset */
 name|__u32
 name|flags
 decl_stmt|;
-comment|/* flags, use ROOT/USER names */
+comment|/* which namespace to use */
 name|__u32
 name|buflen
 decl_stmt|;
-comment|/* length of buffer supplied  */
+comment|/* length of buffer supplied */
 name|void
+name|__user
 modifier|*
 name|buffer
 decl_stmt|;
-comment|/* attrlist data to return    */
+comment|/* returned names */
 block|}
 name|xfs_fsop_attrlist_handlereq_t
 typedef|;
@@ -1263,10 +1342,12 @@ name|__s32
 name|am_error
 decl_stmt|;
 name|void
+name|__user
 modifier|*
 name|am_attrname
 decl_stmt|;
 name|void
+name|__user
 modifier|*
 name|am_attrvalue
 decl_stmt|;
@@ -1297,10 +1378,11 @@ decl_stmt|;
 comment|/* count of following multiop */
 name|struct
 name|xfs_attr_multiop
+name|__user
 modifier|*
 name|ops
 decl_stmt|;
-comment|/* attr_multi data to get/set */
+comment|/* attr_multi data */
 block|}
 name|xfs_fsop_attrmulti_handlereq_t
 typedef|;
@@ -1521,6 +1603,31 @@ comment|/* don't flush log nor data */
 end_comment
 
 begin_comment
+comment|/*  * ioctl commands that are used by Linux filesystems  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFS_IOC_GETXFLAGS
+value|_IOR('f', 1, long)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XFS_IOC_SETXFLAGS
+value|_IOW('f', 2, long)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XFS_IOC_GETVERSION
+value|_IOR('v', 1, long)
+end_define
+
+begin_comment
 comment|/*  * ioctl commands that replace IRIX fcntl()'s  * For 'documentation' purposed more than anything else,  * the "cmd #" field reflects the IRIX fcntl number.  */
 end_comment
 
@@ -1637,11 +1744,15 @@ begin_comment
 comment|/*	XFS_IOC_GETBIOSIZE ---- deprecated 47	   */
 end_comment
 
+begin_comment
+comment|//#define XFS_IOC_GETBMAPX	_IOWR('X', 56, struct getbmapx)
+end_comment
+
 begin_define
 define|#
 directive|define
 name|XFS_IOC_GETBMAPX
-value|_IOWR('X', 56, struct getbmap)
+value|_IOC(IOC_INOUT, 'X', 56, (256 * sizeof(struct getbmapx)))
 end_define
 
 begin_comment
