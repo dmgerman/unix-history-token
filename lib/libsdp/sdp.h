@@ -1748,7 +1748,6 @@ begin_function_decl
 name|char
 specifier|const
 modifier|*
-specifier|const
 name|sdp_attr2desc
 parameter_list|(
 name|uint16_t
@@ -1761,7 +1760,6 @@ begin_function_decl
 name|char
 specifier|const
 modifier|*
-specifier|const
 name|sdp_uuid2desc
 parameter_list|(
 name|uint16_t
