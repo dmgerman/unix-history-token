@@ -469,59 +469,6 @@ comment|/* LOG2(NBPC) if exact */
 end_comment
 
 begin_comment
-comment|/*  * Size of block device i/o is parameterized here.  * Currently the system supports page-sized i/o.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BLKDEV_IOSHIFT
-value|BPCSHIFT
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BLKDEV_IOSIZE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|BLKDEV_IOSIZE
-value|(1<<BLKDEV_IOSHIFT)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
-name|NBPC
-operator|!=
-name|BLKDEV_IOSIZE
-end_if
-
-begin_error
-error|#
-directive|error
-error|Wrong BLKDEV_IOSIZE
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* number of BB's per block device block */
 end_comment
 
