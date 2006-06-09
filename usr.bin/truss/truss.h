@@ -81,5 +81,20 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|timespecsubt
+parameter_list|(
+name|tvp
+parameter_list|,
+name|uvp
+parameter_list|,
+name|vvp
+parameter_list|)
+define|\
+value|do {								\ 		(vvp)->tv_sec = (tvp)->tv_sec - (uvp)->tv_sec;		\ 		(vvp)->tv_nsec = (tvp)->tv_nsec - (uvp)->tv_nsec;	\ 		if ((vvp)->tv_nsec< 0) {				\ 			(vvp)->tv_sec--;				\ 			(vvp)->tv_nsec += 1000000000;			\ 		}							\ 	} while (0)
+end_define
+
 end_unit
 

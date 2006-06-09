@@ -942,7 +942,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"0x%x%s"
+literal|"0x%lx%s"
 argument_list|,
 name|sc
 condition|?
@@ -1063,6 +1063,13 @@ directive|endif
 comment|/*    * Some system calls should be printed out before they are done --    * execve() and exit(), for example, never return.  Possibly change    * this to work for any system call that doesn't have an OUT    * parameter?    */
 if|if
 condition|(
+name|fsc
+operator|.
+name|name
+operator|!=
+name|NULL
+operator|&&
+operator|(
 operator|!
 name|strcmp
 argument_list|(
@@ -1082,6 +1089,7 @@ name|name
 argument_list|,
 literal|"exit"
 argument_list|)
+operator|)
 condition|)
 block|{
 comment|/* XXX      * This could be done in a more general      * manner but it still wouldn't be very pretty.      */

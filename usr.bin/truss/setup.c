@@ -147,6 +147,9 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
+name|int
+name|loop
+decl_stmt|;
 name|pid
 operator|=
 name|fork
@@ -329,6 +332,29 @@ argument_list|,
 name|pid
 argument_list|)
 expr_stmt|;
+comment|/* Try 6 times to trace our child, waiting 1/2 second each time */
+for|for
+control|(
+name|loop
+operator|=
+literal|6
+init|;
+condition|;
+name|loop
+operator|--
+control|)
+block|{
+if|if
+condition|(
+name|loop
+operator|!=
+literal|6
+condition|)
+name|usleep
+argument_list|(
+literal|500000
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -345,15 +371,25 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+if|if
+condition|(
+name|loop
+operator|>
+literal|0
+condition|)
+continue|continue;
+else|else
 name|err
 argument_list|(
 literal|5
 argument_list|,
-literal|"cannot open %s"
+literal|"cannot open1 %s"
 argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ioctl
@@ -369,6 +405,15 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+if|if
+condition|(
+name|loop
+operator|>=
+literal|0
+condition|)
+continue|continue;
+else|else
 name|err
 argument_list|(
 literal|6
@@ -376,6 +421,7 @@ argument_list|,
 literal|"PIOCWAIT"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|pfs
@@ -409,6 +455,9 @@ argument_list|(
 literal|7
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+break|break;
 block|}
 name|close
 argument_list|(
@@ -466,6 +515,7 @@ argument_list|,
 name|pid
 argument_list|)
 expr_stmt|;
+comment|/* usleep(500000); */
 name|fd
 operator|=
 name|open
@@ -509,7 +559,7 @@ name|err
 argument_list|(
 literal|8
 argument_list|,
-literal|"cannot open %s"
+literal|"cannot open2 %s"
 argument_list|,
 name|buf
 argument_list|)
