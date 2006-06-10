@@ -1421,7 +1421,7 @@ name|OID_AUTO
 argument_list|,
 name|acpi
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RD
 argument_list|,
 name|NULL
 argument_list|,
@@ -2759,8 +2759,6 @@ name|OID_AUTO
 argument_list|,
 literal|"sleep_delay"
 argument_list|,
-name|CTLFLAG_RD
-operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -2791,8 +2789,6 @@ name|OID_AUTO
 argument_list|,
 literal|"s4bios"
 argument_list|,
-name|CTLFLAG_RD
-operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -2823,8 +2819,6 @@ name|OID_AUTO
 argument_list|,
 literal|"verbose"
 argument_list|,
-name|CTLFLAG_RD
-operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&

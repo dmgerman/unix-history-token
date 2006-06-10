@@ -1074,8 +1074,6 @@ name|OID_AUTO
 argument_list|,
 literal|"min_runtime"
 argument_list|,
-name|CTLFLAG_RD
-operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1100,8 +1098,6 @@ name|OID_AUTO
 argument_list|,
 literal|"polling_rate"
 argument_list|,
-name|CTLFLAG_RD
-operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
