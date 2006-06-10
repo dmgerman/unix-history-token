@@ -48,10 +48,6 @@ name|int
 name|refcnt
 decl_stmt|;
 comment|/* held references */
-name|int
-name|flags
-decl_stmt|;
-comment|/* FIRMWAREFLAG_ flags */
 name|struct
 name|firmware
 modifier|*
@@ -62,6 +58,10 @@ name|linker_file_t
 name|file
 decl_stmt|;
 comment|/* loadable module */
+name|int
+name|flags
+decl_stmt|;
+comment|/* FIRMWAREFLAG_ flags */
 block|}
 struct|;
 end_struct
