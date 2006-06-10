@@ -244,6 +244,11 @@ name|void
 modifier|*
 name|sc_ih
 decl_stmt|;
+name|struct
+name|firmware
+modifier|*
+name|sc_firmware
+decl_stmt|;
 name|int
 name|sc_tx_timer
 decl_stmt|;
