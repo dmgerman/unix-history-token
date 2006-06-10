@@ -15232,6 +15232,17 @@ name|xfs_sb_t
 modifier|*
 name|sbp
 decl_stmt|;
+comment|/* 	 * XXX: Disable log recovery for now, until we fix panics. 	 */
+name|printf
+argument_list|(
+literal|"XFS log recovery disabled.\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 comment|/* 	 * First replay the images in the log. 	 */
 name|error
 operator|=
