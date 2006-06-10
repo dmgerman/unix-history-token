@@ -131,6 +131,25 @@ directive|include
 file|"acpi_wakecode.h"
 end_include
 
+begin_comment
+comment|/* Make sure the code is less than one page and leave room for the stack. */
+end_comment
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|wakecode
+argument_list|)
+operator|<
+name|PAGE_SIZE
+operator|-
+literal|1024
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -246,8 +265,6 @@ begin_decl_stmt
 specifier|static
 name|uint32_t
 name|r_esp
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -965,8 +982,6 @@ begin_decl_stmt
 specifier|static
 name|vm_offset_t
 name|acpi_wakeaddr
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -988,32 +1003,37 @@ operator|!
 name|cold
 condition|)
 return|return;
+comment|/* 	 * Specify the region for our wakeup code.  We want it in the low 1 MB 	 * region, excluding video memory and above (0xa0000).  We ask for 	 * it to be page-aligned, just to be safe. 	 */
 if|if
 condition|(
 name|bus_dma_tag_create
 argument_list|(
-comment|/* parent */
+comment|/*parent*/
 name|NULL
 argument_list|,
-comment|/* alignment */
-literal|2
+comment|/*alignment*/
+name|PAGE_SIZE
 argument_list|,
+comment|/*no boundary*/
 literal|0
 argument_list|,
-comment|/* lowaddr below 1MB */
+comment|/*lowaddr*/
 literal|0x9ffff
 argument_list|,
-comment|/* highaddr */
+comment|/*highaddr*/
 name|BUS_SPACE_MAXADDR
 argument_list|,
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+comment|/*maxsize*/
 name|PAGE_SIZE
 argument_list|,
+comment|/*segments*/
 literal|1
 argument_list|,
+comment|/*maxsegsize*/
 name|PAGE_SIZE
 argument_list|,
 literal|0
@@ -1051,6 +1071,8 @@ argument_list|,
 operator|&
 name|acpi_wakemap
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|printf
@@ -1109,13 +1131,27 @@ name|struct
 name|acpi_softc
 modifier|*
 name|sc
-init|=
-name|arg
 decl_stmt|;
 name|uint32_t
 modifier|*
 name|addr
 decl_stmt|;
+comment|/* Overwrite the ljmp target with the real address */
+name|sc
+operator|=
+name|arg
+expr_stmt|;
+name|sc
+operator|->
+name|acpi_wakephys
+operator|=
+name|segs
+index|[
+literal|0
+index|]
+operator|.
+name|ds_addr
+expr_stmt|;
 name|addr
 operator|=
 operator|(
@@ -1133,15 +1169,13 @@ expr_stmt|;
 operator|*
 name|addr
 operator|=
-name|segs
-index|[
-literal|0
-index|]
-operator|.
-name|ds_addr
+name|sc
+operator|->
+name|acpi_wakephys
 operator|+
 name|wakeup_32
 expr_stmt|;
+comment|/* Copy the wake code into our low page and save its physical addr. */
 name|bcopy
 argument_list|(
 name|wakecode
@@ -1160,17 +1194,27 @@ name|wakecode
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|acpi_dev
+argument_list|,
+literal|"wakeup code va %#x pa %#x\n"
+argument_list|,
+name|acpi_wakeaddr
+argument_list|,
 name|sc
 operator|->
 name|acpi_wakephys
-operator|=
-name|segs
-index|[
-literal|0
-index|]
-operator|.
-name|ds_addr
+argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
