@@ -1898,18 +1898,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|socket
-modifier|*
-name|soalloc
-parameter_list|(
-name|int
-name|mflags
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|socheckuid
 parameter_list|(
@@ -2090,18 +2078,6 @@ name|struct
 name|thread
 modifier|*
 name|td
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|sodealloc
-parameter_list|(
-name|struct
-name|socket
-modifier|*
-name|so
 parameter_list|)
 function_decl|;
 end_function_decl

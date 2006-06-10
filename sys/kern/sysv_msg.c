@@ -5943,14 +5943,6 @@ block|}
 end_function
 
 begin_expr_stmt
-name|SYSCTL_DECL
-argument_list|(
-name|_kern_ipc
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_kern_ipc
