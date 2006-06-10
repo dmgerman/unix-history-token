@@ -6033,6 +6033,14 @@ name|pv_entry
 modifier|*
 name|pve
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|pve
 operator|=
 name|TAILQ_FIRST
@@ -12232,12 +12240,6 @@ name|opg
 condition|)
 block|{
 comment|/* 		 * We're changing the attrs of an existing mapping. 		 */
-if|#
-directive|if
-literal|0
-block|simple_lock(&pg->mdpage.pvh_slock);
-endif|#
-directive|endif
 name|oflags
 operator|=
 name|pmap_modify_pv
@@ -12261,12 +12263,6 @@ argument_list|,
 name|nflags
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|simple_unlock(&pg->mdpage.pvh_slock);
-endif|#
-directive|endif
 comment|/* 		 * We may need to flush the cache if we're 		 * doing rw-ro... 		 */
 if|if
 condition|(
@@ -12316,12 +12312,6 @@ name|opg
 condition|)
 block|{
 comment|/* 			 * Replacing an existing mapping with a new one. 			 * It is part of our managed memory so we 			 * must remove it from the PV list 			 */
-if|#
-directive|if
-literal|0
-block|simple_lock(&opg->mdpage.pvh_slock);
-endif|#
-directive|endif
 name|pve
 operator|=
 name|pmap_remove_pv
@@ -12391,12 +12381,6 @@ literal|"No pv"
 operator|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|simple_unlock(&opg->mdpage.pvh_slock);
-endif|#
-directive|endif
 name|oflags
 operator|=
 name|pve
@@ -13888,12 +13872,6 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* 	 * we lock in the pmap => pv_head direction 	 */
-if|#
-directive|if
-literal|0
-block|PMAP_MAP_TO_HEAD_LOCK(); 	pmap_acquire_pmap_lock(pm);
-endif|#
-directive|endif
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -14073,12 +14051,6 @@ name|pv_entry
 modifier|*
 name|pve
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|simple_lock(&pg->mdpage.pvh_slock);
-endif|#
-directive|endif
 name|pve
 operator|=
 name|pmap_remove_pv
@@ -14095,12 +14067,6 @@ condition|(
 name|pve
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|simple_unlock(&pg->mdpage.pvh_slock);
-endif|#
-directive|endif
 name|is_exec
 operator|=
 name|PV_BEEN_EXECD
@@ -14474,12 +14440,6 @@ argument_list|(
 name|pm
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|pmap_release_pmap_lock(pm); 	PMAP_MAP_TO_HEAD_UNLOCK();
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -15166,12 +15126,6 @@ comment|/* 	 * Clean the source page.  Hold the source page's lock for 	 * the d
 if|#
 directive|if
 literal|0
-block|mtx_lock(&src_pg->md.pvh_mtx);
-endif|#
-directive|endif
-if|#
-directive|if
-literal|0
 comment|/* 	 * XXX: Not needed while we call cpu_dcache_wbinv_all() in 	 * pmap_copy_page(). 	 */
 block|(void) pmap_clean_page(TAILQ_FIRST(&src_pg->md.pv_list), TRUE);
 endif|#
@@ -15258,12 +15212,6 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|mtx_lock(&src_pg->md.pvh_mtx);
-endif|#
-directive|endif
 name|cpu_dcache_wbinv_range
 argument_list|(
 name|cdstp
