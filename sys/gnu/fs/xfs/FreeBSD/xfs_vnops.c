@@ -3386,6 +3386,8 @@ operator|->
 name|a_vap
 operator|->
 name|va_mode
+operator||
+name|S_IFLNK
 expr_stmt|;
 name|va
 operator|.
@@ -3393,18 +3395,6 @@ name|va_mask
 operator||=
 name|XFS_AT_TYPE
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"_xfs_symlink need to implement inode type 0x%x\n"
-argument_list|,
-name|ap
-operator|->
-name|a_vap
-operator|->
-name|va_type
-argument_list|)
-expr_stmt|;
-comment|//va.va_type = ap->a_vap->va_type;
 name|XVOP_SYMLINK
 argument_list|(
 name|VPTOXFSVP
@@ -3560,6 +3550,8 @@ operator|=
 name|vap
 operator|->
 name|va_mode
+operator||
+name|S_IFIFO
 expr_stmt|;
 name|va
 operator|.
@@ -3567,16 +3559,6 @@ name|va_mask
 operator||=
 name|XFS_AT_TYPE
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"_xfs_mknod need to implement inode type 0x%x\n"
-argument_list|,
-name|vap
-operator|->
-name|va_type
-argument_list|)
-expr_stmt|;
-comment|//	va.va_type = vap->va_type;
 name|va
 operator|.
 name|va_mask
@@ -3742,6 +3724,8 @@ operator|=
 name|vap
 operator|->
 name|va_mode
+operator||
+name|S_IFDIR
 expr_stmt|;
 name|va
 operator|.
@@ -3749,16 +3733,6 @@ name|va_mask
 operator||=
 name|XFS_AT_TYPE
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"_xfs_mkdir need to implement inode type 0x%x\n"
-argument_list|,
-name|vap
-operator|->
-name|va_type
-argument_list|)
-expr_stmt|;
-comment|//	va.va_type = vap->va_type;
 name|xvp
 operator|=
 name|NULL
