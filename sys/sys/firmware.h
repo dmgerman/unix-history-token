@@ -48,6 +48,10 @@ name|int
 name|refcnt
 decl_stmt|;
 comment|/* held references */
+name|int
+name|flags
+decl_stmt|;
+comment|/* FIRMWAREFLAG_ flags */
 name|struct
 name|firmware
 modifier|*
@@ -61,6 +65,21 @@ comment|/* loadable module */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* "flags" field definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FIRMWAREFLAG_KEEPKLDREF
+value|0x0001
+end_define
+
+begin_comment
+comment|/* don't release KLD reference */
+end_comment
 
 begin_function_decl
 name|struct
