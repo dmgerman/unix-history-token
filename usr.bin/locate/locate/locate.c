@@ -1407,7 +1407,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: locate [-Scims] [-l limit] [-d database] pattern ...\n\n"
+literal|"usage: locate [-0Scims] [-l limit] [-d database] pattern ...\n\n"
 argument_list|)
 expr_stmt|;
 operator|(
