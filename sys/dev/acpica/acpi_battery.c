@@ -2079,8 +2079,6 @@ name|OID_AUTO
 argument_list|,
 literal|"info_expire"
 argument_list|,
-name|CTLFLAG_RD
-operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&

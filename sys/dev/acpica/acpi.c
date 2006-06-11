@@ -122,12 +122,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/clock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/resource.h>
 end_include
 
@@ -1427,7 +1421,7 @@ name|OID_AUTO
 argument_list|,
 name|acpi
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RD
 argument_list|,
 name|NULL
 argument_list|,
@@ -2765,8 +2759,6 @@ name|OID_AUTO
 argument_list|,
 literal|"sleep_delay"
 argument_list|,
-name|CTLFLAG_RD
-operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -2797,8 +2789,6 @@ name|OID_AUTO
 argument_list|,
 literal|"s4bios"
 argument_list|,
-name|CTLFLAG_RD
-operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -2829,8 +2819,6 @@ name|OID_AUTO
 argument_list|,
 literal|"verbose"
 argument_list|,
-name|CTLFLAG_RD
-operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -2841,6 +2829,36 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"verbose mode"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|acpi_sysctl_ctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|sc
+operator|->
+name|acpi_sysctl_tree
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"disable_on_reboot"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|acpi_do_disable
+argument_list|,
+literal|0
+argument_list|,
+literal|"Disable ACPI when rebooting/halting system"
 argument_list|)
 expr_stmt|;
 comment|/*      * Default to 1 second before sleeping to give some machines time to      * stabilize.      */
@@ -5007,6 +5025,14 @@ goto|goto
 name|out
 goto|;
 comment|/* Copy the bus tag and handle from the pre-allocated resource. */
+name|rman_set_rid
+argument_list|(
+name|res
+argument_list|,
+operator|*
+name|rid
+argument_list|)
+expr_stmt|;
 name|rman_set_bustag
 argument_list|(
 name|res
@@ -7082,6 +7108,9 @@ block|{
 name|ACPI_OBJECT_TYPE
 name|type
 decl_stmt|;
+name|ACPI_HANDLE
+name|h
+decl_stmt|;
 name|device_t
 name|bus
 decl_stmt|,
@@ -7312,8 +7341,11 @@ name|acpi_DeviceIsPresent
 argument_list|(
 name|child
 argument_list|)
-operator|&&
-operator|!
+condition|)
+block|{
+comment|/* Never disable PCI link devices. */
+if|if
+condition|(
 name|acpi_MatchHid
 argument_list|(
 name|handle
@@ -7321,7 +7353,24 @@ argument_list|,
 literal|"PNP0C0F"
 argument_list|)
 condition|)
-block|{
+break|break;
+comment|/* 		 * Docking stations should remain enabled since the system 		 * may be undocked at boot. 		 */
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|AcpiGetHandle
+argument_list|(
+name|handle
+argument_list|,
+literal|"_DCK"
+argument_list|,
+operator|&
+name|h
+argument_list|)
+argument_list|)
+condition|)
+break|break;
 name|device_disable
 argument_list|(
 name|child
@@ -7387,10 +7436,19 @@ name|int
 name|howto
 parameter_list|)
 block|{
+name|struct
+name|acpi_softc
+modifier|*
+name|sc
+decl_stmt|;
 name|ACPI_STATUS
 name|status
 decl_stmt|;
 comment|/*      * XXX Shutdown code should only run on the BSP (cpuid 0).      * Some chipsets do not power off the system correctly if called from      * an AP.      */
+name|sc
+operator|=
+name|arg
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -7483,9 +7541,9 @@ condition|(
 operator|(
 name|howto
 operator|&
-name|RB_AUTOBOOT
+name|RB_HALT
 operator|)
-operator|!=
+operator|==
 literal|0
 operator|&&
 name|AcpiGbl_FADT
@@ -7493,6 +7551,7 @@ operator|->
 name|ResetRegSup
 condition|)
 block|{
+comment|/* Reboot using the reset register. */
 name|status
 operator|=
 name|AcpiHwLowLevelWrite
@@ -7549,11 +7608,16 @@ block|}
 elseif|else
 if|if
 condition|(
+name|sc
+operator|->
+name|acpi_do_disable
+operator|&&
 name|panicstr
 operator|==
 name|NULL
 condition|)
 block|{
+comment|/* 	 * Only disable ACPI if the user requested.  On some systems, writing 	 * the disable value to SMI_CMD hangs the system. 	 */
 name|printf
 argument_list|(
 literal|"Shutting down ACPI\n"

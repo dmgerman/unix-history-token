@@ -145,7 +145,7 @@ name|int
 name|acpi_s4bios
 decl_stmt|;
 name|int
-name|acpi_disable_on_poweroff
+name|acpi_do_disable
 decl_stmt|;
 name|int
 name|acpi_verbose
