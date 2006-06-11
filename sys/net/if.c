@@ -10147,7 +10147,7 @@ name|if_com_alloc
 index|[
 name|type
 index|]
-operator|==
+operator|!=
 name|NULL
 argument_list|,
 operator|(
@@ -10163,7 +10163,7 @@ name|if_com_free
 index|[
 name|type
 index|]
-operator|==
+operator|!=
 name|NULL
 argument_list|,
 operator|(
