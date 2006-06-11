@@ -1080,19 +1080,17 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|ddp
-operator|==
+operator|!=
 name|NULL
-condition|)
-block|{
-return|return
+argument_list|,
 operator|(
-name|EINVAL
+literal|"at_setsockaddr: ddp == NULL"
 operator|)
-return|;
-block|}
+argument_list|)
+expr_stmt|;
 name|DDP_LOCK
 argument_list|(
 name|ddp
