@@ -43,6 +43,11 @@ modifier|*
 name|sc_ifp
 decl_stmt|;
 comment|/* Common arcnet structures */
+name|struct
+name|mtx
+name|sc_mtx
+decl_stmt|;
+comment|/* sc mutex */
 name|int
 name|port_rid
 decl_stmt|;
@@ -54,10 +59,6 @@ name|port_res
 decl_stmt|;
 comment|/* resource for port range */
 name|int
-name|port_used
-decl_stmt|;
-comment|/* ports used */
-name|int
 name|mem_rid
 decl_stmt|;
 comment|/* resource id for memory range */
@@ -67,10 +68,6 @@ modifier|*
 name|mem_res
 decl_stmt|;
 comment|/* resource for memory range */
-name|int
-name|mem_used
-decl_stmt|;
-comment|/* memory used */
 name|int
 name|irq_rid
 decl_stmt|;
@@ -175,68 +172,13 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|cm_probe
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
-name|cm_stop
+name|cm_stop_locked
 parameter_list|(
 name|struct
 name|cm_softc
 modifier|*
 name|sc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|cm_alloc_port
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|int
-name|rid
-parameter_list|,
-name|int
-name|size
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|cm_alloc_memory
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|int
-name|rid
-parameter_list|,
-name|int
-name|size
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|cm_alloc_irq
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|int
-name|rid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -257,6 +199,78 @@ name|devclass_t
 name|cm_devclass
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|CM_LOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_lock(&(sc)->sc_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CM_UNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_unlock(&(sc)->sc_mtx)
+end_define
+
+begin_comment
+comment|/* short notation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GETREG
+parameter_list|(
+name|off
+parameter_list|)
+define|\
+value|bus_space_read_1(rman_get_bustag((sc)->port_res),		\ 			 rman_get_bushandle((sc)->port_res),		\ 			 (off))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PUTREG
+parameter_list|(
+name|off
+parameter_list|,
+name|value
+parameter_list|)
+define|\
+value|bus_space_write_1(rman_get_bustag((sc)->port_res),		\ 			  rman_get_bushandle((sc)->port_res),		\ 			  (off), (value))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GETMEM
+parameter_list|(
+name|off
+parameter_list|)
+define|\
+value|bus_space_read_1(rman_get_bustag((sc)->mem_res),		\ 			 rman_get_bushandle((sc)->mem_res),		\ 			 (off))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PUTMEM
+parameter_list|(
+name|off
+parameter_list|,
+name|value
+parameter_list|)
+define|\
+value|bus_space_write_1(rman_get_bustag((sc)->mem_res),		\ 			  rman_get_bushandle((sc)->mem_res),		\ 			  (off), (value))
+end_define
 
 begin_endif
 endif|#

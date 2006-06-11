@@ -34,6 +34,13 @@ name|CM_IO_PORTS
 value|16
 end_define
 
+begin_define
+define|#
+directive|define
+name|CM_MEM_SIZE
+value|0x800
+end_define
+
 begin_comment
 comment|/* register offsets */
 end_comment
