@@ -49,10 +49,6 @@ begin_comment
 comment|/*  * Map the spinlocks from IRIX to FreeBSD  */
 end_comment
 
-begin_comment
-comment|/* These spin locks should map to mutex_spin locks? */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -62,9 +58,7 @@ name|lock
 parameter_list|,
 name|name
 parameter_list|)
-value|mtx_init(lock, name, NULL,
-comment|/*MTX_SPIN*/
-value|MTX_DEF)
+value|mtx_init(lock, name, NULL, MTX_DEF)
 end_define
 
 begin_define
@@ -126,7 +120,7 @@ name|spin_lock
 parameter_list|(
 name|lock
 parameter_list|)
-value|mtx_lock_spin(lock)
+value|mtx_lock(lock)
 end_define
 
 begin_define
@@ -136,14 +130,8 @@ name|spin_unlock
 parameter_list|(
 name|lock
 parameter_list|)
-value|mtx_unlock_spin(lock)
+value|mtx_unlock(lock)
 end_define
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
 
 begin_if
 if|#
@@ -168,26 +156,32 @@ else|#
 directive|else
 end_else
 
-begin_endif
-unit|static __inline register_t mutex_spinlock(lock_t *lock)		{ mtx_lock(lock); return 0; }
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
+begin_function
+specifier|static
+name|__inline
+name|register_t
 name|mutex_spinlock
 parameter_list|(
+name|lock_t
+modifier|*
 name|lock
 parameter_list|)
-value|(mtx_lock(lock),0)
-end_define
+block|{
+name|mtx_lock
+argument_list|(
+name|lock
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -198,16 +192,9 @@ name|lock
 parameter_list|,
 name|s
 parameter_list|)
-value|mtx_unlock(lock)
+define|\
+value|do { \ 		spin_unlock(lock); \ 		if (&s) {} \ 	} while (0)
 end_define
-
-begin_comment
-comment|//#define mutex_spinlock(lock)		(mtx_lock_spin(lock),0)
-end_comment
-
-begin_comment
-comment|//#define mutex_spinunlock(lock,s)	mtx_unlock_spin(lock)
-end_comment
 
 begin_endif
 endif|#
