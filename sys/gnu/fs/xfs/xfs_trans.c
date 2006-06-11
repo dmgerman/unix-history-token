@@ -2505,11 +2505,6 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
-name|printf
-argument_list|(
-literal|"XFS_MTOVFS(tp->t_mountp)->vfs_super->s_dirt = 1;"
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
