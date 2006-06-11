@@ -2831,6 +2831,36 @@ argument_list|,
 literal|"verbose mode"
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|acpi_sysctl_ctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|sc
+operator|->
+name|acpi_sysctl_tree
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"disable_on_reboot"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|acpi_do_disable
+argument_list|,
+literal|0
+argument_list|,
+literal|"Disable ACPI when rebooting/halting system"
+argument_list|)
+expr_stmt|;
 comment|/*      * Default to 1 second before sleeping to give some machines time to      * stabilize.      */
 name|sc
 operator|->
@@ -7406,10 +7436,19 @@ name|int
 name|howto
 parameter_list|)
 block|{
+name|struct
+name|acpi_softc
+modifier|*
+name|sc
+decl_stmt|;
 name|ACPI_STATUS
 name|status
 decl_stmt|;
 comment|/*      * XXX Shutdown code should only run on the BSP (cpuid 0).      * Some chipsets do not power off the system correctly if called from      * an AP.      */
+name|sc
+operator|=
+name|arg
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -7502,9 +7541,9 @@ condition|(
 operator|(
 name|howto
 operator|&
-name|RB_AUTOBOOT
+name|RB_HALT
 operator|)
-operator|!=
+operator|==
 literal|0
 operator|&&
 name|AcpiGbl_FADT
@@ -7512,6 +7551,7 @@ operator|->
 name|ResetRegSup
 condition|)
 block|{
+comment|/* Reboot using the reset register. */
 name|status
 operator|=
 name|AcpiHwLowLevelWrite
@@ -7568,11 +7608,16 @@ block|}
 elseif|else
 if|if
 condition|(
+name|sc
+operator|->
+name|acpi_do_disable
+operator|&&
 name|panicstr
 operator|==
 name|NULL
 condition|)
 block|{
+comment|/* 	 * Only disable ACPI if the user requested.  On some systems, writing 	 * the disable value to SMI_CMD hangs the system. 	 */
 name|printf
 argument_list|(
 literal|"Shutting down ACPI\n"
