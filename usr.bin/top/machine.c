@@ -2867,8 +2867,14 @@ operator|||
 name|pp
 operator|->
 name|ki_stat
-operator|!=
-name|SRUN
+operator|==
+name|SSTOP
+operator|||
+name|pp
+operator|->
+name|ki_stat
+operator|==
+name|SIDL
 operator|)
 condition|)
 comment|/* skip idle or non-running processes */
