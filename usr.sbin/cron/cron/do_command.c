@@ -810,7 +810,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* set our directory, uid and gid.  Set gid first, 			 * since once we set uid, we've lost root priviledges. 			 */
+comment|/* set our directory, uid and gid.  Set gid first, 			 * since once we set uid, we've lost root privileges. 			 */
 if|if
 condition|(
 name|setgid
