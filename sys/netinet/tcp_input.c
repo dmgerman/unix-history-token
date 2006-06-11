@@ -3589,6 +3589,17 @@ name|inp
 operator|->
 name|inp_socket
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|so
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"tcp_input: so == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TCPDEBUG
@@ -10058,6 +10069,8 @@ block|}
 if|if
 condition|(
 name|tp
+operator|!=
+name|NULL
 condition|)
 name|INP_UNLOCK
 argument_list|(
@@ -10085,7 +10098,7 @@ if|if
 condition|(
 name|tp
 operator|==
-literal|0
+name|NULL
 operator|||
 operator|(
 name|tp
@@ -10124,6 +10137,8 @@ directive|endif
 if|if
 condition|(
 name|tp
+operator|!=
+name|NULL
 condition|)
 name|INP_UNLOCK
 argument_list|(
