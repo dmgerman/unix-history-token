@@ -457,7 +457,7 @@ comment|/* enforce ipsec policy; last header */
 end_comment
 
 begin_comment
-comment|/*  * The arguments to usrreq are:  *	(*protosw[].pr_usrreq)(up, req, m, nam, opt);  * where up is a (struct socket *), req is one of these requests,  * m is an optional mbuf chain containing a message,  * nam is an optional mbuf chain containing an address,  * and opt is a pointer to a socketopt structure or nil.  * The protocol is responsible for disposal of the mbuf chain m,  * the caller is responsible for any space held by nam and opt.  * A non-zero return from usrreq gives an  * UNIX error number which should be passed to higher level software.  */
+comment|/*  * In earlier BSD network stacks, a single pr_usrreq() function pointer was  * invoked with an operation number indicating what operation was desired.  * We now provide individual function pointers which protocols can implement,  * which offers a number of benefits (such as type checking for arguments).  * These older constants are still present in order to support TCP debugging.  *  * The arguments to usrreq were:  *	(*protosw[].pr_usrreq)(up, req, m, nam, opt);  * where up is a (struct socket *), req is one of these requests,  * m is an optional mbuf chain containing a message,  * nam is an optional mbuf chain containing an address,  * and opt is a pointer to a socketopt structure or nil.  * The protocol is responsible for disposal of the mbuf chain m,  * the caller is responsible for any space held by nam and opt.  * A non-zero return from usrreq gives an  * UNIX error number which should be passed to higher level software.  */
 end_comment
 
 begin_define
@@ -831,7 +831,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * If the ordering here looks odd, that's because it's alphabetical.  * Having this structure separated out from the main protoswitch is allegedly  * a big (12 cycles per call) lose on high-end CPUs.  We will eventually  * migrate this stuff back into the main structure.  *  * Some fields initialized to defaults if they are NULL.  * See uipc_domain.c:net_init_domain()  */
+comment|/*  * If the ordering here looks odd, that's because it's alphabetical.  These  * should eventually be merged back into struct protosw.  *  * Some fields initialized to defaults if they are NULL.  * See uipc_domain.c:net_init_domain()  */
 end_comment
 
 begin_struct
@@ -1168,7 +1168,7 @@ modifier|*
 name|nam
 parameter_list|)
 function_decl|;
-comment|/* 	 * These three added later, so they are out of order.  They are used 	 * for shortcutting (fast path input/output) in some protocols. 	 * XXX - that's a lie, they are not implemented yet 	 * Rather than calling sosend() etc. directly, calls are made 	 * through these entry points.  For protocols which still use 	 * the generic code, these just point to those routines. 	 */
+comment|/* 	 * These four added later, so they are out of order.  They are used 	 * for shortcutting (fast path input/output) in some protocols. 	 * XXX - that's a lie, they are not implemented yet 	 * Rather than calling sosend() etc. directly, calls are made 	 * through these entry points.  For protocols which still use 	 * the generic code, these just point to those routines. 	 */
 name|int
 function_decl|(
 modifier|*
