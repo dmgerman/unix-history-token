@@ -7756,9 +7756,6 @@ name|pcb
 modifier|*
 name|pcb
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|pm
 operator|=
 name|vmspace_pmap
@@ -7864,11 +7861,6 @@ argument_list|(
 name|pcb
 operator|->
 name|pcb_pagedir
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -9625,9 +9617,6 @@ init|=
 name|pmap_kernel
 argument_list|()
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 if|if
 condition|(
 name|addr
@@ -9637,12 +9626,6 @@ condition|)
 return|return;
 comment|/* we are OK */
 comment|/* 	 * whoops!   we need to add kernel PTPs 	 */
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
-comment|/* to be safe */
 comment|/* Map 1MB at a time */
 for|for
 control|(
@@ -15482,9 +15465,6 @@ name|loops
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 if|if
 condition|(
 name|m
@@ -15498,11 +15478,6 @@ operator|(
 name|FALSE
 operator|)
 return|;
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Not found, check current mappings returning immediately 	 */
 for|for
 control|(
@@ -15539,11 +15514,6 @@ operator|==
 name|pmap
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|TRUE
@@ -15561,11 +15531,6 @@ literal|16
 condition|)
 break|break;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|FALSE
