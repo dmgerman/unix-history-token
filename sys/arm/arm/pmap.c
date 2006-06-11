@@ -1160,14 +1160,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|pmap_pagedaemon_waken
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * This list exists for the benefit of pmap_map_chunk().  It keeps track  * of the kernel L2 tables during bootstrap, so that pmap_map_chunk() can  * find them as necessary.  *  * Note that the data on this list MUST remain valid after initarm() returns,  * as pmap_bootstrap() uses it to contruct L2 table metadata.  */
 end_comment
@@ -13744,30 +13736,13 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|pv_entry_count
 operator|>
 name|pv_entry_high_water
-operator|)
-operator|&&
-operator|(
-name|pmap_pagedaemon_waken
-operator|==
-literal|0
-operator|)
 condition|)
-block|{
-name|pmap_pagedaemon_waken
-operator|=
-literal|1
+name|pagedaemon_wakeup
+argument_list|()
 expr_stmt|;
-name|wakeup
-argument_list|(
-operator|&
-name|vm_pages_needed
-argument_list|)
-expr_stmt|;
-block|}
 name|ret_value
 operator|=
 name|uma_zalloc
