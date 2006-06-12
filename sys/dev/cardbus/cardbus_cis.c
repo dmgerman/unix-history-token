@@ -3199,11 +3199,15 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|cardbus_cis_debug
+condition|)
 name|device_printf
 argument_list|(
 name|cbdev
 argument_list|,
-literal|"CIS pointer is 0!\n"
+literal|"Warning: CIS pointer 0 (no CIS present)\n"
 argument_list|)
 expr_stmt|;
 return|return
