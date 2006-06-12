@@ -2675,7 +2675,7 @@ name|if_hdrlen
 operator|=
 name|ETHER_HDR_LEN
 expr_stmt|;
-comment|/* 	 * Generate a random ethernet address and use the private AC:DE:48 	 * OUI code. 	 * 	 * Since we are using random ethernet addresses for the bridge, it is 	 * possible that we might have address collisions, so make sure that 	 * this hardware address isn't already in use on another bridge. 	 */
+comment|/* 	 * Generate a random ethernet address with a locally administered 	 * address. 	 * 	 * Since we are using random ethernet addresses for the bridge, it is 	 * possible that we might have address collisions, so make sure that 	 * this hardware address isn't already in use on another bridge. 	 */
 for|for
 control|(
 name|retry
@@ -2701,23 +2701,19 @@ name|eaddr
 index|[
 literal|0
 index|]
-operator|=
-literal|0xAC
-expr_stmt|;
-name|eaddr
-index|[
+operator|&=
+operator|~
 literal|1
-index|]
-operator|=
-literal|0xDE
 expr_stmt|;
+comment|/* clear multicast bit */
 name|eaddr
 index|[
-literal|2
+literal|0
 index|]
-operator|=
-literal|0x48
+operator||=
+literal|2
 expr_stmt|;
+comment|/* set the LAA bit */
 name|retry
 operator|=
 literal|0
