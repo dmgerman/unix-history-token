@@ -36,7 +36,7 @@ end_else
 begin_include
 include|#
 directive|include
-file|<machine/bus.h>
+file|<machine/_bus.h>
 end_include
 
 begin_include
@@ -546,6 +546,23 @@ name|struct
 name|rman
 modifier|*
 name|rm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|rman_init_from_resource
+parameter_list|(
+name|struct
+name|rman
+modifier|*
+name|rm
+parameter_list|,
+name|struct
+name|resource
+modifier|*
+name|r
 parameter_list|)
 function_decl|;
 end_function_decl
