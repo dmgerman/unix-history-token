@@ -274,8 +274,7 @@ case|case
 literal|'v'
 case|:
 name|Verbose
-operator|=
-name|TRUE
+operator|++
 expr_stmt|;
 comment|/* Reasonable definition of 'everything' */
 name|Flags

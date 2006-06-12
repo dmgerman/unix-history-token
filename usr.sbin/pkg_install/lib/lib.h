@@ -1578,13 +1578,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|Boolean
-name|Verbose
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|Boolean
 name|Fake
 decl_stmt|;
 end_decl_stmt
@@ -1600,6 +1593,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|AutoAnswer
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|Verbose
 decl_stmt|;
 end_decl_stmt
 

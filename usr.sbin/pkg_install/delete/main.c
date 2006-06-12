@@ -192,8 +192,7 @@ case|case
 literal|'v'
 case|:
 name|Verbose
-operator|=
-name|TRUE
+operator|++
 expr_stmt|;
 break|break;
 case|case
