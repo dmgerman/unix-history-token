@@ -28,6 +28,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_isa.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -2791,6 +2797,9 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ISAPNP
 if|if
 condition|(
 name|idev
@@ -2811,6 +2820,8 @@ name|id_vendorid
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|retval
@@ -4456,6 +4467,9 @@ name|size_t
 name|buflen
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|ISAPNP
 name|struct
 name|isa_device
 modifier|*
@@ -4488,6 +4502,8 @@ name|id_vendorid
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
