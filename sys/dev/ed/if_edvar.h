@@ -333,6 +333,14 @@ name|u_char
 name|next_packet
 decl_stmt|;
 comment|/* pointer to next unread RX packet */
+name|u_int
+name|tx_mem
+decl_stmt|;
+comment|/* Total amount of RAM for tx */
+name|u_int
+name|rx_mem
+decl_stmt|;
+comment|/* Total amount of RAM for rx */
 name|struct
 name|ifmib_iso_8802_3
 name|mibdata

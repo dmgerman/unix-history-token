@@ -1224,7 +1224,7 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-comment|/* 	 * Pull the MAC address out of the roms that are on the isa 	 * version of these cards. 	 */
+comment|/* 	 * Most ne1000/ne2000 compatible cards have their MAC address 	 * located in the first few words of the address space.  This seems 	 * universally true for ISA and PCI implementations, but PC Card 	 * devices seem to have more variance. 	 */
 name|ed_pio_readmem
 argument_list|(
 name|sc
