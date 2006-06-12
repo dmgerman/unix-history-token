@@ -1011,28 +1011,15 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
 name|DEVPRINTF
 argument_list|(
 operator|(
 name|cbdev
 operator|,
-literal|"Can't parse cis\n"
+literal|"Warning: Bogus CIS ignored\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|pci_freecfg
-argument_list|(
-operator|(
-expr|struct
-name|pci_devinfo
-operator|*
-operator|)
-name|dinfo
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
 name|pci_cfg_save
 argument_list|(
 name|dinfo
