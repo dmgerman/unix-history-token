@@ -3451,9 +3451,6 @@ name|device_t
 name|child
 parameter_list|)
 block|{
-name|int
-name|ret
-decl_stmt|;
 name|struct
 name|tuple_callbacks
 name|init_callbacks
@@ -3552,8 +3549,8 @@ name|generic
 argument_list|)
 block|, 	}
 decl_stmt|;
-name|ret
-operator|=
+return|return
+operator|(
 name|cardbus_parse_cis
 argument_list|(
 name|cbdev
@@ -3564,20 +3561,7 @@ name|init_callbacks
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|<
-literal|0
-condition|)
-return|return
-operator|(
-name|ret
 operator|)
-return|;
-return|return
-literal|0
 return|;
 block|}
 end_function
