@@ -718,7 +718,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Sony i.LINK (CXD1947) not supported"
+literal|"Sony i.LINK (CXD1947) not supported\n"
 argument_list|)
 expr_stmt|;
 return|return
