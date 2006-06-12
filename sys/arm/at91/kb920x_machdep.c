@@ -303,7 +303,7 @@ begin_define
 define|#
 directive|define
 name|KERNEL_PT_KERN_NUM
-value|8
+value|22
 end_define
 
 begin_define
