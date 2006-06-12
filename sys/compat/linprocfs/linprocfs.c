@@ -688,6 +688,21 @@ name|PFS_FILL_ARGS
 parameter_list|)
 block|{
 name|int
+name|hw_model
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|char
+name|model
+index|[
+literal|128
+index|]
+decl_stmt|;
+name|size_t
+name|size
+decl_stmt|;
+name|int
 name|class
 decl_stmt|,
 name|fqmhz
@@ -836,6 +851,68 @@ break|break;
 endif|#
 directive|endif
 block|}
+name|hw_model
+index|[
+literal|0
+index|]
+operator|=
+name|CTL_HW
+expr_stmt|;
+name|hw_model
+index|[
+literal|1
+index|]
+operator|=
+name|HW_MODEL
+expr_stmt|;
+name|model
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|size
+operator|=
+sizeof|sizeof
+argument_list|(
+name|model
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|kernel_sysctl
+argument_list|(
+name|td
+argument_list|,
+name|hw_model
+argument_list|,
+literal|2
+argument_list|,
+operator|&
+name|model
+argument_list|,
+operator|&
+name|size
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|strcpy
+argument_list|(
+name|model
+argument_list|,
+literal|"unknown"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -858,6 +935,7 @@ literal|"processor\t: %d\n"
 literal|"vendor_id\t: %.20s\n"
 literal|"cpu family\t: %d\n"
 literal|"model\t\t: %d\n"
+literal|"model name\t: %s\n"
 literal|"stepping\t: %d\n"
 argument_list|,
 name|i
@@ -868,12 +946,14 @@ name|class
 argument_list|,
 name|cpu
 argument_list|,
+name|model
+argument_list|,
 name|cpu_id
 operator|&
 literal|0xf
 argument_list|)
 expr_stmt|;
-comment|/* XXX per-cpu vendor / class / id? */
+comment|/* XXX per-cpu vendor / class / model / id? */
 block|}
 name|sbuf_cat
 argument_list|(
