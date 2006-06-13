@@ -346,6 +346,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|sched_tick
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Binding makes cpu affinity permanent while pinning is used to temporarily  * hold a thread on a particular CPU.  */
 end_comment

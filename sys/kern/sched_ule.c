@@ -8737,6 +8737,15 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|sched_tick
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
 begin_define
 define|#
 directive|define

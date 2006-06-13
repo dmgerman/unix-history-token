@@ -647,6 +647,9 @@ argument_list|,
 name|MTX_QUIET
 argument_list|)
 expr_stmt|;
+name|sched_tick
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|p
