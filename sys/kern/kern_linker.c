@@ -2046,10 +2046,6 @@ name|error
 decl_stmt|,
 name|i
 decl_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
 comment|/* Refuse to unload modules if securelevel raised. */
 if|if
 condition|(
@@ -2098,15 +2094,27 @@ name|refs
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Easy case of just dropping a reference. */
 if|if
 condition|(
 name|file
 operator|->
 name|refs
-operator|==
+operator|>
 literal|1
 condition|)
 block|{
+name|file
+operator|->
+name|refs
+operator|--
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|KLD_DPF
 argument_list|(
 name|FILE
@@ -2117,7 +2125,7 @@ literal|" informing modules\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Inform any modules associated with this file. 		 */
+comment|/* 	 * Inform any modules associated with this file. 	 */
 name|MOD_XLOCK
 expr_stmt|;
 for|for
@@ -2148,7 +2156,7 @@ argument_list|)
 expr_stmt|;
 name|MOD_XUNLOCK
 expr_stmt|;
-comment|/* 			 * Give the module a chance to veto the unload. 			 */
+comment|/* 		 * Give the module a chance to veto the unload. 		 */
 if|if
 condition|(
 operator|(
@@ -2177,11 +2185,12 @@ name|mod
 operator|)
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
-else|else
 name|MOD_XLOCK
 expr_stmt|;
 name|module_release
@@ -2192,25 +2201,6 @@ expr_stmt|;
 block|}
 name|MOD_XUNLOCK
 expr_stmt|;
-block|}
-name|file
-operator|->
-name|refs
-operator|--
-expr_stmt|;
-if|if
-condition|(
-name|file
-operator|->
-name|refs
-operator|>
-literal|0
-condition|)
-block|{
-goto|goto
-name|out
-goto|;
-block|}
 for|for
 control|(
 name|ml
@@ -2443,11 +2433,9 @@ argument_list|,
 name|M_LINKER
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
