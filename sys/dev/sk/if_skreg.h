@@ -46,50 +46,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|SK_YUKON_XL
-value|0xB3
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_YUKON_EC_U
-value|0xB4
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_YUKON_EC
-value|0xB6
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_YUKON_FE
-value|0xB7
-end_define
-
-begin_define
-define|#
-directive|define
 name|SK_YUKON_FAMILY
 parameter_list|(
 name|x
 parameter_list|)
 value|((x)& 0xB0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_IS_YUKON2
-parameter_list|(
-name|sc
-parameter_list|)
-define|\
-value|((sc)->sk_type>= SK_YUKON_XL&& (sc)->sk_type<= SK_YUKON_FE)
 end_define
 
 begin_comment
@@ -119,27 +80,6 @@ define|#
 directive|define
 name|SK_YUKON_LITE_REV_A3
 value|0x7
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_YUKON_EC_REV_A1
-value|0x0
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_YUKON_EC_REV_A2
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_YUKON_EC_REV_A3
-value|0x2
 end_define
 
 begin_comment
@@ -180,31 +120,6 @@ define|#
 directive|define
 name|DEVICEID_SK_V2
 value|0x4320
-end_define
-
-begin_comment
-comment|/*  * Marvell gigabit ethernet device IDs  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEVICEID_MRVL_4360
-value|0x4360
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEVICEID_MRVL_4361
-value|0x4361
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEVICEID_MRVL_4362
-value|0x4362
 end_define
 
 begin_comment
@@ -1491,42 +1406,12 @@ name|SK_EPROM1
 value|0x011D
 end_define
 
-begin_comment
-comment|/* yukon/genesis */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SK_Y2_CLKGATE
-value|0x011D
-end_define
-
-begin_comment
-comment|/* yukon 2 */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|SK_EPROM2
 value|0x011E
 end_define
-
-begin_comment
-comment|/* yukon/genesis */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SK_Y2_HWRES
-value|0x011E
-end_define
-
-begin_comment
-comment|/* yukon 2 */
-end_comment
 
 begin_define
 define|#
@@ -2124,45 +2009,6 @@ define|#
 directive|define
 name|SK_GPIO_DIR9
 value|0x02000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_Y2_CLKGATE_LINK2_INACTIVE
-value|0x80
-end_define
-
-begin_comment
-comment|/* port 2 inactive */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SK_Y2_HWRES_LINK_1
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_Y2_HWRES_LINK_2
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_Y2_HWRES_LINK_MASK
-value|(SK_Y2_HWRES_LINK_1 | SK_Y2_HWRES_LINK_2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_Y2_HWRES_LINK_DUAL
-value|(SK_Y2_HWRES_LINK_1 | SK_Y2_HWRES_LINK_2)
 end_define
 
 begin_comment
@@ -4214,7 +4060,7 @@ define|#
 directive|define
 name|SK_TXBMU_ONLINE
 define|\
-value|(SK_TXBMU_TRANSFER_SM_UNRESET|SK_TXBMU_DESCWR_SM_UNRESET|	\ 	SK_TXBMU_DESCRD_SM_UNRESET|SK_TXBMU_SUPERVISOR_SM_UNRESET|	\ 	SK_TXBMU_PFI_SM_UNRESET|SK_TXBMU_FIFO_UNRESET|			\ 	SK_TXBMU_DESC_UNRESET|SK_TXBMU_POLL_ON)
+value|(SK_TXBMU_TRANSFER_SM_UNRESET|SK_TXBMU_DESCWR_SM_UNRESET|	\ 	SK_TXBMU_DESCRD_SM_UNRESET|SK_TXBMU_SUPERVISOR_SM_UNRESET|	\ 	SK_TXBMU_PFI_SM_UNRESET|SK_TXBMU_FIFO_UNRESET|			\ 	SK_TXBMU_DESC_UNRESET)
 end_define
 
 begin_define
@@ -4222,7 +4068,7 @@ define|#
 directive|define
 name|SK_TXBMU_OFFLINE
 define|\
-value|(SK_TXBMU_TRANSFER_SM_RESET|SK_TXBMU_DESCWR_SM_RESET|	\ 	SK_TXBMU_DESCRD_SM_RESET|SK_TXBMU_SUPERVISOR_SM_RESET|	\ 	SK_TXBMU_PFI_SM_RESET|SK_TXBMU_FIFO_RESET|		\ 	SK_TXBMU_DESC_RESET|SK_TXBMU_POLL_OFF)
+value|(SK_TXBMU_TRANSFER_SM_RESET|SK_TXBMU_DESCWR_SM_RESET|	\ 	SK_TXBMU_DESCRD_SM_RESET|SK_TXBMU_SUPERVISOR_SM_RESET|	\ 	SK_TXBMU_PFI_SM_RESET|SK_TXBMU_FIFO_RESET|		\ 	SK_TXBMU_DESC_RESET)
 end_define
 
 begin_comment
@@ -4792,20 +4638,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SK_RXMF1_FLUSH_MASK
-value|0x0C4C
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_RXMF1_FLUSH_THRESHOLD
-value|0x0C50
-end_define
-
-begin_define
-define|#
-directive|define
 name|SK_RXMF1_WRITE_PTR
 value|0x0C60
 end_define
@@ -4830,10 +4662,6 @@ directive|define
 name|SK_RXMF1_READ_LEVEL
 value|0x0C78
 end_define
-
-begin_comment
-comment|/* Receive MAC FIFO 1 Control/Test */
-end_comment
 
 begin_define
 define|#
@@ -4904,30 +4732,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SK_RFCTL_FIFO_FLUSH_OFF
-value|0x00000080
-end_define
-
-begin_comment
-comment|/* RX FIFO Flsuh mode off */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SK_RFCTL_FIFO_FLUSH_ON
-value|0x00000040
-end_define
-
-begin_comment
-comment|/* RX FIFO Flush mode on */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SK_RFCTL_RX_FIFO_OVER
-value|0x00000020
+value|0x00000040
 end_define
 
 begin_comment
@@ -4987,17 +4793,6 @@ end_define
 
 begin_comment
 comment|/* MAC FIFO Reset Set */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SK_RFCTL_FIFO_THRESHOLD
-value|0x0a
-end_define
-
-begin_comment
-comment|/* flush threshold (default) */
 end_comment
 
 begin_comment
@@ -5373,7 +5168,7 @@ value|0x0D29
 end_define
 
 begin_comment
-comment|/* Transmit MAC FIFO 1 (Yukon Only) */
+comment|/* Receive MAC FIFO 1 (Yukon Only) */
 end_comment
 
 begin_define
@@ -5438,10 +5233,6 @@ directive|define
 name|SK_TXMF1_READ_LEVEL
 value|0x0D78
 end_define
-
-begin_comment
-comment|/* Transmit MAC FIFO Control/Test */
-end_comment
 
 begin_define
 define|#
@@ -5857,17 +5648,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SK_DPT_TIMER_MAX
-value|0x00ffffffff
-end_define
-
-begin_comment
-comment|/* 214.75ms at 78.125MHz */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SK_DPT_TIMER_CTRL
 value|0x0e08
 end_define
@@ -5987,7 +5767,7 @@ begin_define
 define|#
 directive|define
 name|SK_GMAC_IMR
-value|0x0f0c
+value|0x0f08
 end_define
 
 begin_comment
@@ -7547,33 +7327,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|SK_ADDR_LO
-parameter_list|(
-name|x
-parameter_list|)
-value|((u_int64_t) (x)& 0xffffffff)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_ADDR_HI
-parameter_list|(
-name|x
-parameter_list|)
-value|((u_int64_t) (x)>> 32)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_RING_ALIGN
-value|64
-end_define
-
 begin_comment
 comment|/* RX queue descriptor data structure */
 end_comment
@@ -7600,11 +7353,17 @@ decl_stmt|;
 name|u_int32_t
 name|sk_timestamp
 decl_stmt|;
-name|u_int32_t
-name|sk_csum
+name|u_int16_t
+name|sk_csum2
 decl_stmt|;
-name|u_int32_t
-name|sk_csum_start
+name|u_int16_t
+name|sk_csum1
+decl_stmt|;
+name|u_int16_t
+name|sk_csum2_start
+decl_stmt|;
+name|u_int16_t
+name|sk_csum1_start
 decl_stmt|;
 block|}
 struct|;
@@ -7699,7 +7458,7 @@ define|#
 directive|define
 name|SK_RXSTAT
 define|\
-value|(SK_RXCTL_EOF_INTR|SK_RXCTL_LASTFRAG|SK_RXCTL_FIRSTFRAG|SK_RXCTL_OWN)
+value|(SK_OPCODE_DEFAULT|SK_RXCTL_EOF_INTR|SK_RXCTL_LASTFRAG| \ 	 SK_RXCTL_FIRSTFRAG|SK_RXCTL_OWN)
 end_define
 
 begin_struct
@@ -7721,11 +7480,17 @@ decl_stmt|;
 name|u_int32_t
 name|sk_xmac_txstat
 decl_stmt|;
-name|u_int32_t
+name|u_int16_t
+name|sk_rsvd0
+decl_stmt|;
+name|u_int16_t
 name|sk_csum_startval
 decl_stmt|;
-name|u_int32_t
-name|sk_csum_start
+name|u_int16_t
+name|sk_csum_startpos
+decl_stmt|;
+name|u_int16_t
+name|sk_csum_writepos
 decl_stmt|;
 name|u_int32_t
 name|sk_rsvd1
@@ -7819,7 +7584,7 @@ name|SK_RXBYTES
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& 0x0000FFFF)
+value|(x)& 0x0000FFFF;
 end_define
 
 begin_define
@@ -7843,27 +7608,6 @@ name|SK_RX_RING_CNT
 value|256
 end_define
 
-begin_define
-define|#
-directive|define
-name|SK_JUMBO_RX_RING_CNT
-value|256
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_MAXTXSEGS
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_MAXRXSEGS
-value|32
-end_define
-
 begin_comment
 comment|/*  * Jumbo buffer stuff. Note that we must allocate more jumbo  * buffers than there are descriptors in the receive ring. This  * is because we don't know how long it will take for a packet  * to be released after we hand it off to the upper protocol  * layers. To be safe, we allocate 1.5 times the number of  * receive descriptors.  */
 end_comment
@@ -7880,21 +7624,6 @@ define|#
 directive|define
 name|SK_JUMBO_MTU
 value|(SK_JUMBO_FRAMELEN-ETHER_HDR_LEN-ETHER_CRC_LEN)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_MAX_FRAMELEN
-define|\
-value|(ETHER_MAX_LEN + ETHER_VLAN_ENCAP_LEN - ETHER_CRC_LEN)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_MIN_FRAMELEN
-value|(ETHER_MIN_LEN - ETHER_CRC_LEN)
 end_define
 
 begin_define
@@ -7958,47 +7687,21 @@ end_struct
 
 begin_struct
 struct|struct
-name|sk_txdesc
+name|sk_chain
 block|{
+name|void
+modifier|*
+name|sk_desc
+decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
-name|tx_m
+name|sk_mbuf
 decl_stmt|;
-name|bus_dmamap_t
-name|tx_dmamap
-decl_stmt|;
-name|STAILQ_ENTRY
-argument_list|(
-argument|sk_txdesc
-argument_list|)
-name|tx_q
-expr_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_expr_stmt
-name|STAILQ_HEAD
-argument_list|(
-name|sk_txdq
-argument_list|,
-name|sk_txdesc
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_struct
-struct|struct
-name|sk_rxdesc
-block|{
 name|struct
-name|mbuf
+name|sk_chain
 modifier|*
-name|rx_m
-decl_stmt|;
-name|bus_dmamap_t
-name|rx_dmamap
+name|sk_next
 decl_stmt|;
 block|}
 struct|;
@@ -8008,85 +7711,19 @@ begin_struct
 struct|struct
 name|sk_chain_data
 block|{
-name|bus_dma_tag_t
-name|sk_parent_tag
-decl_stmt|;
-name|bus_dma_tag_t
-name|sk_tx_tag
-decl_stmt|;
 name|struct
-name|sk_txdesc
-name|sk_txdesc
+name|sk_chain
+name|sk_tx_chain
 index|[
 name|SK_TX_RING_CNT
 index|]
 decl_stmt|;
 name|struct
-name|sk_txdq
-name|sk_txfreeq
-decl_stmt|;
-name|struct
-name|sk_txdq
-name|sk_txbusyq
-decl_stmt|;
-name|bus_dma_tag_t
-name|sk_rx_tag
-decl_stmt|;
-name|struct
-name|sk_rxdesc
-name|sk_rxdesc
+name|sk_chain
+name|sk_rx_chain
 index|[
 name|SK_RX_RING_CNT
 index|]
-decl_stmt|;
-name|bus_dma_tag_t
-name|sk_tx_ring_tag
-decl_stmt|;
-name|bus_dma_tag_t
-name|sk_rx_ring_tag
-decl_stmt|;
-name|bus_dmamap_t
-name|sk_tx_ring_map
-decl_stmt|;
-name|bus_dmamap_t
-name|sk_rx_ring_map
-decl_stmt|;
-name|bus_dmamap_t
-name|sk_rx_sparemap
-decl_stmt|;
-name|bus_dma_tag_t
-name|sk_jumbo_rx_tag
-decl_stmt|;
-name|bus_dma_tag_t
-name|sk_jumbo_tag
-decl_stmt|;
-name|bus_dmamap_t
-name|sk_jumbo_map
-decl_stmt|;
-name|bus_dma_tag_t
-name|sk_jumbo_mtag
-decl_stmt|;
-name|caddr_t
-name|sk_jslots
-index|[
-name|SK_JSLOTS
-index|]
-decl_stmt|;
-name|struct
-name|sk_rxdesc
-name|sk_jumbo_rxdesc
-index|[
-name|SK_JUMBO_RX_RING_CNT
-index|]
-decl_stmt|;
-name|bus_dma_tag_t
-name|sk_jumbo_rx_ring_tag
-decl_stmt|;
-name|bus_dmamap_t
-name|sk_jumbo_rx_ring_map
-decl_stmt|;
-name|bus_dmamap_t
-name|sk_jumbo_rx_sparemap
 decl_stmt|;
 name|int
 name|sk_tx_prod
@@ -8098,10 +7735,24 @@ name|int
 name|sk_tx_cnt
 decl_stmt|;
 name|int
+name|sk_rx_prod
+decl_stmt|;
+name|int
 name|sk_rx_cons
 decl_stmt|;
 name|int
-name|sk_jumbo_rx_cons
+name|sk_rx_cnt
+decl_stmt|;
+comment|/* Stick the jumbo mem management stuff here too. */
+name|caddr_t
+name|sk_jslots
+index|[
+name|SK_JSLOTS
+index|]
+decl_stmt|;
+name|void
+modifier|*
+name|sk_jumbo_buf
 decl_stmt|;
 block|}
 struct|;
@@ -8113,101 +7764,21 @@ name|sk_ring_data
 block|{
 name|struct
 name|sk_tx_desc
-modifier|*
 name|sk_tx_ring
-decl_stmt|;
-name|bus_addr_t
-name|sk_tx_ring_paddr
+index|[
+name|SK_TX_RING_CNT
+index|]
 decl_stmt|;
 name|struct
 name|sk_rx_desc
-modifier|*
 name|sk_rx_ring
-decl_stmt|;
-name|bus_addr_t
-name|sk_rx_ring_paddr
-decl_stmt|;
-name|struct
-name|sk_rx_desc
-modifier|*
-name|sk_jumbo_rx_ring
-decl_stmt|;
-name|bus_addr_t
-name|sk_jumbo_rx_ring_paddr
-decl_stmt|;
-name|void
-modifier|*
-name|sk_jumbo_buf
-decl_stmt|;
-name|bus_addr_t
-name|sk_jumbo_buf_paddr
+index|[
+name|SK_RX_RING_CNT
+index|]
 decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|SK_TX_RING_ADDR
-parameter_list|(
-name|sc
-parameter_list|,
-name|i
-parameter_list|)
-define|\
-value|((sc)->sk_rdata.sk_tx_ring_paddr + sizeof(struct sk_tx_desc) * (i))
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_RX_RING_ADDR
-parameter_list|(
-name|sc
-parameter_list|,
-name|i
-parameter_list|)
-define|\
-value|((sc)->sk_rdata.sk_rx_ring_paddr + sizeof(struct sk_rx_desc) * (i))
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_JUMBO_RX_RING_ADDR
-parameter_list|(
-name|sc
-parameter_list|,
-name|i
-parameter_list|)
-define|\
-value|((sc)->sk_rdata.sk_jumbo_rx_ring_paddr + sizeof(struct sk_rx_desc) * (i))
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_TX_RING_SZ
-define|\
-value|(sizeof(struct sk_tx_desc) * SK_TX_RING_CNT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_RX_RING_SZ
-define|\
-value|(sizeof(struct sk_rx_desc) * SK_RX_RING_CNT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_JUMBO_RX_RING_SZ
-define|\
-value|(sizeof(struct sk_rx_desc) * SK_JUMBO_RX_RING_CNT)
-end_define
 
 begin_struct
 struct|struct
@@ -8278,9 +7849,10 @@ modifier|*
 name|sk_res
 decl_stmt|;
 comment|/* I/O or shared mem handle */
-name|device_t
-name|sk_dev
+name|u_int8_t
+name|sk_unit
 decl_stmt|;
+comment|/* controller number */
 name|u_int8_t
 name|sk_type
 decl_stmt|;
@@ -8314,9 +7886,6 @@ name|sk_pmd
 decl_stmt|;
 comment|/* physical media type */
 name|u_int32_t
-name|sk_coppertype
-decl_stmt|;
-name|u_int32_t
 name|sk_intrmask
 decl_stmt|;
 name|int
@@ -8324,9 +7893,6 @@ name|sk_int_mod
 decl_stmt|;
 name|int
 name|sk_int_ticks
-decl_stmt|;
-name|int
-name|sk_suspended
 decl_stmt|;
 name|struct
 name|sk_if_softc
@@ -8341,10 +7907,6 @@ name|sk_devs
 index|[
 literal|2
 index|]
-decl_stmt|;
-name|struct
-name|mtx
-name|sk_mii_mtx
 decl_stmt|;
 name|struct
 name|mtx
@@ -8414,26 +7976,6 @@ parameter_list|)
 value|SK_LOCK_ASSERT((_sc)->sk_softc)
 end_define
 
-begin_define
-define|#
-directive|define
-name|SK_IF_MII_LOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_lock(&(_sc)->sk_softc->sk_mii_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_IF_MII_UNLOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_unlock(&(_sc)->sk_softc->sk_mii_mtx)
-end_define
-
 begin_comment
 comment|/* Softc for each logical interface */
 end_comment
@@ -8451,9 +7993,10 @@ comment|/* interface info */
 name|device_t
 name|sk_miibus
 decl_stmt|;
-name|device_t
-name|sk_if_dev
+name|u_int8_t
+name|sk_unit
 decl_stmt|;
+comment|/* interface number */
 name|u_int8_t
 name|sk_port
 decl_stmt|;
@@ -8480,11 +8023,17 @@ decl_stmt|;
 name|int
 name|sk_phyaddr
 decl_stmt|;
+name|device_t
+name|sk_dev
+decl_stmt|;
+name|int
+name|sk_cnt
+decl_stmt|;
 name|int
 name|sk_link
 decl_stmt|;
 name|struct
-name|callout
+name|callout_handle
 name|sk_tick_ch
 decl_stmt|;
 name|struct
@@ -8493,6 +8042,7 @@ name|sk_cdata
 decl_stmt|;
 name|struct
 name|sk_ring_data
+modifier|*
 name|sk_rdata
 decl_stmt|;
 name|struct
@@ -8555,9 +8105,50 @@ end_define
 begin_define
 define|#
 directive|define
+name|SK_MAXUNIT
+value|256
+end_define
+
+begin_define
+define|#
+directive|define
 name|SK_TIMEOUT
 value|1000
 end_define
+
+begin_define
+define|#
+directive|define
+name|ETHER_ALIGN
+value|2
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__alpha__
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|vtophys
+end_undef
+
+begin_define
+define|#
+directive|define
+name|vtophys
+parameter_list|(
+name|va
+parameter_list|)
+value|alpha_XXX_dmamap((vm_offset_t)va)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
