@@ -3612,7 +3612,7 @@ operator|(
 name|kg
 operator|->
 name|kg_pri_class
-operator|!=
+operator|==
 name|PRI_TIMESHARE
 operator|)
 return|;
