@@ -7517,11 +7517,15 @@ if|if
 condition|(
 name|__predict_false
 argument_list|(
+operator|(
 name|ke
 operator|->
 name|ke_flags
 operator|&
 name|KEF_MIGRATING
+operator|)
+operator|!=
+literal|0
 argument_list|)
 condition|)
 block|{
@@ -10478,13 +10482,6 @@ name|td
 operator|->
 name|td_kse
 expr_stmt|;
-name|SLOT_RELEASE
-argument_list|(
-name|td
-operator|->
-name|td_ksegrp
-argument_list|)
-expr_stmt|;
 name|ke
 operator|->
 name|ke_flags
@@ -10580,6 +10577,13 @@ argument_list|,
 operator|(
 literal|"sched_rem: KSE not on run queue"
 operator|)
+argument_list|)
+expr_stmt|;
+name|SLOT_RELEASE
+argument_list|(
+name|td
+operator|->
+name|td_ksegrp
 argument_list|)
 expr_stmt|;
 name|kseq_runq_rem
