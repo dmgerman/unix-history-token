@@ -1401,8 +1401,6 @@ name|int
 name|foundfile
 decl_stmt|,
 name|error
-init|=
-literal|0
 decl_stmt|;
 comment|/* Refuse to load modules if securelevel raised */
 if|if
@@ -1450,15 +1448,21 @@ operator|->
 name|refs
 operator|++
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|lf
 operator|=
 name|NULL
 expr_stmt|;
 name|foundfile
+operator|=
+literal|0
+expr_stmt|;
+name|error
 operator|=
 literal|0
 expr_stmt|;
@@ -1532,9 +1536,11 @@ argument_list|,
 name|LINKER_UNLOAD_FORCE
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 name|linker_file_register_sysctls
 argument_list|(
@@ -1557,13 +1563,11 @@ name|result
 operator|=
 name|lf
 expr_stmt|;
-name|error
-operator|=
+return|return
+operator|(
 literal|0
-expr_stmt|;
-goto|goto
-name|out
-goto|;
+operator|)
+return|;
 block|}
 block|}
 comment|/* 	 * Less than ideal, but tells the user whether it failed to load or 	 * the module was not found. 	 */
@@ -1590,8 +1594,6 @@ operator|=
 name|ENOENT
 expr_stmt|;
 comment|/* Nothing found */
-name|out
-label|:
 return|return
 operator|(
 name|error
@@ -1690,8 +1692,6 @@ parameter_list|)
 block|{
 name|linker_file_t
 name|lf
-init|=
-literal|0
 decl_stmt|;
 name|char
 modifier|*
@@ -1713,15 +1713,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|koname
-operator|==
-name|NULL
-condition|)
-goto|goto
-name|out
-goto|;
 name|sprintf
 argument_list|(
 name|koname
@@ -1781,12 +1772,6 @@ operator|&
 name|kld_mtx
 argument_list|)
 expr_stmt|;
-name|out
-label|:
-if|if
-condition|(
-name|koname
-condition|)
 name|free
 argument_list|(
 name|koname
@@ -1812,8 +1797,6 @@ parameter_list|)
 block|{
 name|linker_file_t
 name|lf
-init|=
-literal|0
 decl_stmt|;
 name|mtx_lock
 argument_list|(
@@ -1873,10 +1856,6 @@ name|char
 modifier|*
 name|filename
 decl_stmt|;
-name|lf
-operator|=
-name|NULL
-expr_stmt|;
 name|filename
 operator|=
 name|linker_basename
@@ -1918,9 +1897,11 @@ name|lf
 operator|==
 name|NULL
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|lf
 operator|->
 name|refs
@@ -2005,8 +1986,6 @@ operator|&
 name|kld_mtx
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 return|return
 operator|(
 name|lf
