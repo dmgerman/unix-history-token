@@ -15,24 +15,6 @@ directive|define
 name|SPARC64_INCLUDE__BUS_H
 end_define
 
-begin_comment
-comment|/*  * Bus address and size types  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|u_long
-name|bus_space_handle_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
-name|bus_type_t
-typedef|;
-end_typedef
-
 begin_typedef
 typedef|typedef
 name|u_long
@@ -44,6 +26,22 @@ begin_typedef
 typedef|typedef
 name|u_long
 name|bus_size_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|u_long
+name|bus_space_handle_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|bus_space_tag
+modifier|*
+name|bus_space_tag_t
 typedef|;
 end_typedef
 

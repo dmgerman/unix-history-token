@@ -172,19 +172,6 @@ name|BUS_SPACE_UNRESTRICTED
 value|(~0)
 end_define
 
-begin_comment
-comment|/*  * Access methods for bus resources and address space.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|struct
-name|bus_space_tag
-modifier|*
-name|bus_space_tag_t
-typedef|;
-end_typedef
-
 begin_struct
 struct|struct
 name|bus_space_tag
