@@ -224,6 +224,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NOTYET
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|int
@@ -237,6 +243,11 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -3187,10 +3198,35 @@ name|error
 operator|)
 return|;
 comment|/* 		 * Don't run them yet since we can't parse them. 		 * We can indirectly get the contents from 		 * the AEN mechanism via setting it lower then 		 * current.  The firmware will iterate through them. 		 */
-if|#
-directive|if
-literal|0
-block|for (seq = log_state.shutdown_seq_num; 		     seq<= log_state.newest_seq_num; seq++) { 			mfi_get_entry(sc, seq); 		}
+ifdef|#
+directive|ifdef
+name|NOTYET
+for|for
+control|(
+name|seq
+operator|=
+name|log_state
+operator|.
+name|shutdown_seq_num
+init|;
+name|seq
+operator|<=
+name|log_state
+operator|.
+name|newest_seq_num
+condition|;
+name|seq
+operator|++
+control|)
+block|{
+name|mfi_get_entry
+argument_list|(
+name|sc
+argument_list|,
+name|seq
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|seq
@@ -4877,11 +4913,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MFI_DECODE_LOG
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NOTYET
+end_ifdef
 
 begin_function
 specifier|static
@@ -4929,23 +4965,6 @@ block|}
 block|}
 end_function
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<dev/mfi/mfilog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/mfi/mfi_log.c>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -4977,14 +4996,21 @@ block|{
 case|case
 name|MR_EVT_ARGS_NONE
 case|:
-comment|/* Try to get info from log entry */
-name|mfi_get_entry
+name|device_printf
 argument_list|(
 name|sc
+operator|->
+name|mfi_dev
+argument_list|,
+literal|"%d - %s\n"
 argument_list|,
 name|detail
 operator|->
 name|seq
+argument_list|,
+name|detail
+operator|->
+name|description
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4998,7 +5024,7 @@ operator|->
 name|mfi_dev
 argument_list|,
 literal|"%d - PD %02d(e%d/s%d) CDB %*D"
-literal|"Sense %*D\n: %s"
+literal|"Sense %*D\n: %s\n"
 argument_list|,
 name|detail
 operator|->
@@ -6808,6 +6834,12 @@ block|}
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NOTYET
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -7228,6 +7260,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
