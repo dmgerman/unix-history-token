@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  Copyright (c) 2006, Myricom Inc. All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Redistributions in binary form must reproduce the above copyright     notice, this list of conditions and the following disclaimer in the     documentation and/or other materials provided with the distribution.   3. Neither the name of the Myricom Inc, nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  ***************************************************************************/
+comment|/******************************************************************************  Copyright (c) 2006, Myricom Inc. All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Redistributions in binary form must reproduce the above copyright     notice, this list of conditions and the following disclaimer in the     documentation and/or other materials provided with the distribution.   3. Neither the name of the Myricom Inc, nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  ***************************************************************************/
 end_comment
 
 begin_include
@@ -234,19 +234,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/myri10ge/myri10ge_mcp.h>
+file|<dev/mxge/mxge_mcp.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/myri10ge/mcp_gen_header.h>
+file|<dev/mxge/mcp_gen_header.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/myri10ge/if_myri10ge_var.h>
+file|<dev/mxge/if_mxge_var.h>
 end_include
 
 begin_comment
@@ -256,7 +256,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|myri10ge_nvidia_ecrc_enable
+name|mxge_nvidia_ecrc_enable
 init|=
 literal|1
 decl_stmt|;
@@ -265,7 +265,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|myri10ge_max_intr_slots
+name|mxge_max_intr_slots
 init|=
 literal|128
 decl_stmt|;
@@ -274,7 +274,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|myri10ge_intr_coal_delay
+name|mxge_intr_coal_delay
 init|=
 literal|30
 decl_stmt|;
@@ -283,7 +283,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|myri10ge_skip_pio_read
+name|mxge_skip_pio_read
 init|=
 literal|0
 decl_stmt|;
@@ -292,7 +292,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|myri10ge_flow_control
+name|mxge_flow_control
 init|=
 literal|1
 decl_stmt|;
@@ -302,9 +302,9 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|myri10ge_fw_unaligned
+name|mxge_fw_unaligned
 init|=
-literal|"myri10ge_ethp_z8e"
+literal|"mxge_ethp_z8e"
 decl_stmt|;
 end_decl_stmt
 
@@ -312,16 +312,16 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|myri10ge_fw_aligned
+name|mxge_fw_aligned
 init|=
-literal|"myri10ge_eth_z8e"
+literal|"mxge_eth_z8e"
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
 specifier|static
 name|int
-name|myri10ge_probe
+name|mxge_probe
 parameter_list|(
 name|device_t
 name|dev
@@ -332,7 +332,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|myri10ge_attach
+name|mxge_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -343,7 +343,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|myri10ge_detach
+name|mxge_detach
 parameter_list|(
 name|device_t
 name|dev
@@ -354,7 +354,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|myri10ge_shutdown
+name|mxge_shutdown
 parameter_list|(
 name|device_t
 name|dev
@@ -365,7 +365,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|myri10ge_intr
+name|mxge_intr
 parameter_list|(
 name|void
 modifier|*
@@ -377,7 +377,7 @@ end_function_decl
 begin_decl_stmt
 specifier|static
 name|device_method_t
-name|myri10ge_methods
+name|mxge_methods
 index|[]
 init|=
 block|{
@@ -386,28 +386,28 @@ name|DEVMETHOD
 argument_list|(
 name|device_probe
 argument_list|,
-name|myri10ge_probe
+name|mxge_probe
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_attach
 argument_list|,
-name|myri10ge_attach
+name|mxge_attach
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_detach
 argument_list|,
-name|myri10ge_detach
+name|mxge_detach
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_shutdown
 argument_list|,
-name|myri10ge_shutdown
+name|mxge_shutdown
 argument_list|)
 block|,
 block|{
@@ -422,16 +422,16 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|driver_t
-name|myri10ge_driver
+name|mxge_driver
 init|=
 block|{
-literal|"myri10ge"
+literal|"mxge"
 block|,
-name|myri10ge_methods
+name|mxge_methods
 block|,
 sizeof|sizeof
 argument_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 argument_list|)
 block|, }
 decl_stmt|;
@@ -440,7 +440,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|devclass_t
-name|myri10ge_devclass
+name|mxge_devclass
 decl_stmt|;
 end_decl_stmt
 
@@ -451,13 +451,13 @@ end_comment
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|myri10ge
+name|mxge
 argument_list|,
 name|pci
 argument_list|,
-name|myri10ge_driver
+name|mxge_driver
 argument_list|,
-name|myri10ge_devclass
+name|mxge_devclass
 argument_list|,
 literal|0
 argument_list|,
@@ -469,7 +469,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|myri10ge
+name|mxge
 argument_list|,
 name|firmware
 argument_list|,
@@ -485,7 +485,7 @@ end_expr_stmt
 begin_function
 specifier|static
 name|int
-name|myri10ge_probe
+name|mxge_probe
 parameter_list|(
 name|device_t
 name|dev
@@ -499,7 +499,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|==
-name|MYRI10GE_PCI_VENDOR_MYRICOM
+name|MXGE_PCI_VENDOR_MYRICOM
 operator|)
 operator|&&
 operator|(
@@ -508,7 +508,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|==
-name|MYRI10GE_PCI_DEVICE_Z8E
+name|MXGE_PCI_DEVICE_Z8E
 operator|)
 condition|)
 block|{
@@ -532,9 +532,9 @@ end_function
 begin_function
 specifier|static
 name|void
-name|myri10ge_enable_wc
+name|mxge_enable_wc
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|)
@@ -605,7 +605,7 @@ name|mrdesc
 operator|.
 name|mr_owner
 argument_list|,
-literal|"myri10ge"
+literal|"mxge"
 argument_list|)
 expr_stmt|;
 name|err
@@ -669,7 +669,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|myri10ge_dmamap_callback
+name|mxge_dmamap_callback
 parameter_list|(
 name|void
 modifier|*
@@ -711,13 +711,13 @@ end_function
 begin_function
 specifier|static
 name|int
-name|myri10ge_dma_alloc
+name|mxge_dma_alloc
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|,
-name|myri10ge_dma_t
+name|mxge_dma_t
 modifier|*
 name|dma
 parameter_list|,
@@ -876,7 +876,7 @@ name|addr
 argument_list|,
 name|bytes
 argument_list|,
-name|myri10ge_dmamap_callback
+name|mxge_dmamap_callback
 argument_list|,
 operator|(
 name|void
@@ -951,9 +951,9 @@ end_function
 begin_function
 specifier|static
 name|void
-name|myri10ge_dma_free
+name|mxge_dma_free
 parameter_list|(
-name|myri10ge_dma_t
+name|mxge_dma_t
 modifier|*
 name|dma
 parameter_list|)
@@ -1004,16 +1004,16 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|myri10ge_parse_strings
+name|mxge_parse_strings
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|)
 block|{
 define|#
 directive|define
-name|MYRI10GE_NEXT_STRING
+name|MXGE_NEXT_STRING
 parameter_list|(
 name|p
 parameter_list|)
@@ -1042,7 +1042,7 @@ name|sc
 operator|->
 name|eeprom_strings
 operator|+
-name|MYRI10GE_EEPROM_STRINGS_SIZE
+name|MXGE_EEPROM_STRINGS_SIZE
 expr_stmt|;
 name|found_mac
 operator|=
@@ -1159,7 +1159,7 @@ operator|=
 name|ptr
 expr_stmt|;
 block|}
-name|MYRI10GE_NEXT_STRING
+name|MXGE_NEXT_STRING
 argument_list|(
 name|ptr
 argument_list|)
@@ -1220,9 +1220,9 @@ end_if
 begin_function
 specifier|static
 name|int
-name|myri10ge_enable_nvidia_ecrc
+name|mxge_enable_nvidia_ecrc
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|,
@@ -1591,9 +1591,9 @@ end_else
 begin_function
 specifier|static
 name|int
-name|myri10ge_enable_nvidia_ecrc
+name|mxge_enable_nvidia_ecrc
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|,
@@ -1628,9 +1628,9 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|myri10ge_select_firmware
+name|mxge_select_firmware
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|)
@@ -1707,7 +1707,7 @@ expr_stmt|;
 comment|/* see if we can enable ECRC's on an upstream 	   Nvidia bridge */
 if|if
 condition|(
-name|myri10ge_nvidia_ecrc_enable
+name|mxge_nvidia_ecrc_enable
 operator|&&
 operator|(
 name|pvend
@@ -1722,7 +1722,7 @@ condition|)
 block|{
 name|err
 operator|=
-name|myri10ge_enable_nvidia_ecrc
+name|mxge_enable_nvidia_ecrc
 argument_list|(
 name|sc
 argument_list|,
@@ -1802,7 +1802,7 @@ name|sc
 operator|->
 name|fw_name
 operator|=
-name|myri10ge_fw_aligned
+name|mxge_fw_aligned
 expr_stmt|;
 name|sc
 operator|->
@@ -1819,7 +1819,7 @@ name|sc
 operator|->
 name|fw_name
 operator|=
-name|myri10ge_fw_unaligned
+name|mxge_fw_unaligned
 expr_stmt|;
 name|sc
 operator|->
@@ -1853,9 +1853,9 @@ end_union
 begin_function
 specifier|static
 name|int
-name|myri10ge_load_firmware_helper
+name|mxge_load_firmware_helper
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|,
@@ -2136,14 +2136,14 @@ operator|=
 name|fw_data
 expr_stmt|;
 comment|/* Copy the inflated firmware to NIC SRAM. */
-name|myri10ge_pio_copy
+name|mxge_pio_copy
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|sram
 index|[
-name|MYRI10GE_FW_OFFSET
+name|MXGE_FW_OFFSET
 index|]
 argument_list|,
 name|hack
@@ -2180,9 +2180,9 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|myri10ge_dummy_rdma
+name|mxge_dummy_rdma
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|,
@@ -2261,7 +2261,7 @@ expr_stmt|;
 comment|/* send an rdma command to the PCIe engine, and wait for the 	   response in the confirmation address.  The firmware should 	   write a -1 there to indicate it is alive and well 	*/
 name|dma_low
 operator|=
-name|MYRI10GE_LOWPART_TO_U32
+name|MXGE_LOWPART_TO_U32
 argument_list|(
 name|sc
 operator|->
@@ -2272,7 +2272,7 @@ argument_list|)
 expr_stmt|;
 name|dma_high
 operator|=
-name|MYRI10GE_HIGHPART_TO_U32
+name|MXGE_HIGHPART_TO_U32
 argument_list|(
 name|sc
 operator|->
@@ -2316,7 +2316,7 @@ expr_stmt|;
 comment|/* confirm data */
 name|dma_low
 operator|=
-name|MYRI10GE_LOWPART_TO_U32
+name|MXGE_LOWPART_TO_U32
 argument_list|(
 name|sc
 operator|->
@@ -2327,7 +2327,7 @@ argument_list|)
 expr_stmt|;
 name|dma_high
 operator|=
-name|MYRI10GE_HIGHPART_TO_U32
+name|MXGE_HIGHPART_TO_U32
 argument_list|(
 name|sc
 operator|->
@@ -2384,7 +2384,7 @@ operator|+
 literal|0xfc01c0
 operator|)
 expr_stmt|;
-name|myri10ge_pio_copy
+name|mxge_pio_copy
 argument_list|(
 name|submit
 argument_list|,
@@ -2467,16 +2467,16 @@ end_function
 begin_function
 specifier|static
 name|int
-name|myri10ge_send_cmd
+name|mxge_send_cmd
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|,
 name|uint32_t
 name|cmd
 parameter_list|,
-name|myri10ge_cmd_t
+name|mxge_cmd_t
 modifier|*
 name|data
 parameter_list|)
@@ -2515,7 +2515,7 @@ name|sc
 operator|->
 name|sram
 operator|+
-name|MYRI10GE_MCP_CMD_OFFSET
+name|MXGE_MCP_CMD_OFFSET
 decl_stmt|;
 name|uint32_t
 name|dma_low
@@ -2593,7 +2593,7 @@ argument_list|)
 expr_stmt|;
 name|dma_low
 operator|=
-name|MYRI10GE_LOWPART_TO_U32
+name|MXGE_LOWPART_TO_U32
 argument_list|(
 name|sc
 operator|->
@@ -2604,7 +2604,7 @@ argument_list|)
 expr_stmt|;
 name|dma_high
 operator|=
-name|MYRI10GE_HIGHPART_TO_U32
+name|MXGE_HIGHPART_TO_U32
 argument_list|(
 name|sc
 operator|->
@@ -2652,7 +2652,7 @@ expr_stmt|;
 name|mb
 argument_list|()
 expr_stmt|;
-name|myri10ge_pio_copy
+name|mxge_pio_copy
 argument_list|(
 operator|(
 specifier|volatile
@@ -2759,7 +2759,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"myri10ge: command %d "
+literal|"mxge: command %d "
 literal|"failed, result = %d\n"
 argument_list|,
 name|cmd
@@ -2807,7 +2807,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"myri10ge: command %d timed out"
+literal|"mxge: command %d timed out"
 literal|"result = %d\n"
 argument_list|,
 name|cmd
@@ -2829,9 +2829,9 @@ end_function
 begin_function
 specifier|static
 name|int
-name|myri10ge_load_firmware
+name|mxge_load_firmware
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|)
@@ -2896,7 +2896,7 @@ name|sram_size
 expr_stmt|;
 name|status
 operator|=
-name|myri10ge_load_firmware_helper
+name|mxge_load_firmware_helper
 argument_list|(
 name|sc
 argument_list|,
@@ -2945,7 +2945,7 @@ expr_stmt|;
 comment|/* send a reload command to the bootstrap MCP, and wait for the 	   response in the confirmation address.  The firmware should 	   write a -1 there to indicate it is alive and well 	*/
 name|dma_low
 operator|=
-name|MYRI10GE_LOWPART_TO_U32
+name|MXGE_LOWPART_TO_U32
 argument_list|(
 name|sc
 operator|->
@@ -2956,7 +2956,7 @@ argument_list|)
 expr_stmt|;
 name|dma_high
 operator|=
-name|MYRI10GE_HIGHPART_TO_U32
+name|MXGE_HIGHPART_TO_U32
 argument_list|(
 name|sc
 operator|->
@@ -3007,7 +3007,7 @@ index|]
 operator|=
 name|htobe32
 argument_list|(
-name|MYRI10GE_FW_OFFSET
+name|MXGE_FW_OFFSET
 operator|+
 literal|8
 argument_list|)
@@ -3062,7 +3062,7 @@ operator|+
 literal|0xfc0000
 operator|)
 expr_stmt|;
-name|myri10ge_pio_copy
+name|mxge_pio_copy
 argument_list|(
 name|submit
 argument_list|,
@@ -3152,7 +3152,7 @@ return|return
 name|ENXIO
 return|;
 block|}
-name|myri10ge_dummy_rdma
+name|mxge_dummy_rdma
 argument_list|(
 name|sc
 argument_list|,
@@ -3168,14 +3168,14 @@ end_function
 begin_function
 specifier|static
 name|int
-name|myri10ge_update_mac_address
+name|mxge_update_mac_address
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|)
 block|{
-name|myri10ge_cmd_t
+name|mxge_cmd_t
 name|cmd
 decl_stmt|;
 name|uint8_t
@@ -3251,11 +3251,11 @@ operator|)
 expr_stmt|;
 name|status
 operator|=
-name|myri10ge_send_cmd
+name|mxge_send_cmd
 argument_list|(
 name|sc
 argument_list|,
-name|MYRI10GE_MCP_SET_MAC_ADDRESS
+name|MXGE_MCP_SET_MAC_ADDRESS
 argument_list|,
 operator|&
 name|cmd
@@ -3270,9 +3270,9 @@ end_function
 begin_function
 specifier|static
 name|int
-name|myri10ge_change_pause
+name|mxge_change_pause
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|,
@@ -3280,7 +3280,7 @@ name|int
 name|pause
 parameter_list|)
 block|{
-name|myri10ge_cmd_t
+name|mxge_cmd_t
 name|cmd
 decl_stmt|;
 name|int
@@ -3292,11 +3292,11 @@ name|pause
 condition|)
 name|status
 operator|=
-name|myri10ge_send_cmd
+name|mxge_send_cmd
 argument_list|(
 name|sc
 argument_list|,
-name|MYRI10GE_MCP_ENABLE_FLOW_CONTROL
+name|MXGE_MCP_ENABLE_FLOW_CONTROL
 argument_list|,
 operator|&
 name|cmd
@@ -3305,11 +3305,11 @@ expr_stmt|;
 else|else
 name|status
 operator|=
-name|myri10ge_send_cmd
+name|mxge_send_cmd
 argument_list|(
 name|sc
 argument_list|,
-name|MYRI10GE_MCP_DISABLE_FLOW_CONTROL
+name|MXGE_MCP_DISABLE_FLOW_CONTROL
 argument_list|,
 operator|&
 name|cmd
@@ -3348,9 +3348,9 @@ end_function
 begin_function
 specifier|static
 name|void
-name|myri10ge_change_promisc
+name|mxge_change_promisc
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|,
@@ -3358,7 +3358,7 @@ name|int
 name|promisc
 parameter_list|)
 block|{
-name|myri10ge_cmd_t
+name|mxge_cmd_t
 name|cmd
 decl_stmt|;
 name|int
@@ -3370,11 +3370,11 @@ name|promisc
 condition|)
 name|status
 operator|=
-name|myri10ge_send_cmd
+name|mxge_send_cmd
 argument_list|(
 name|sc
 argument_list|,
-name|MYRI10GE_MCP_ENABLE_PROMISC
+name|MXGE_MCP_ENABLE_PROMISC
 argument_list|,
 operator|&
 name|cmd
@@ -3383,11 +3383,11 @@ expr_stmt|;
 else|else
 name|status
 operator|=
-name|myri10ge_send_cmd
+name|mxge_send_cmd
 argument_list|(
 name|sc
 argument_list|,
-name|MYRI10GE_MCP_DISABLE_PROMISC
+name|MXGE_MCP_DISABLE_PROMISC
 argument_list|,
 operator|&
 name|cmd
@@ -3414,14 +3414,14 @@ end_function
 begin_function
 specifier|static
 name|int
-name|myri10ge_reset
+name|mxge_reset
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|)
 block|{
-name|myri10ge_cmd_t
+name|mxge_cmd_t
 name|cmd
 decl_stmt|;
 name|int
@@ -3445,11 +3445,11 @@ argument_list|)
 expr_stmt|;
 name|status
 operator|=
-name|myri10ge_send_cmd
+name|mxge_send_cmd
 argument_list|(
 name|sc
 argument_list|,
-name|MYRI10GE_MCP_CMD_RESET
+name|MXGE_MCP_CMD_RESET
 argument_list|,
 operator|&
 name|cmd
@@ -3484,7 +3484,7 @@ call|(
 name|uint32_t
 call|)
 argument_list|(
-name|myri10ge_max_intr_slots
+name|mxge_max_intr_slots
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -3502,11 +3502,11 @@ argument_list|)
 expr_stmt|;
 name|status
 operator|=
-name|myri10ge_send_cmd
+name|mxge_send_cmd
 argument_list|(
 name|sc
 argument_list|,
-name|MYRI10GE_MCP_CMD_SET_INTRQ_SIZE
+name|MXGE_MCP_CMD_SET_INTRQ_SIZE
 argument_list|,
 operator|&
 name|cmd
@@ -3527,7 +3527,7 @@ operator|&&
 operator|(
 name|i
 operator|<
-name|MYRI10GE_NUM_INTRQS
+name|MXGE_NUM_INTRQS
 operator|)
 condition|;
 name|i
@@ -3538,7 +3538,7 @@ name|cmd
 operator|.
 name|data0
 operator|=
-name|MYRI10GE_LOWPART_TO_U32
+name|MXGE_LOWPART_TO_U32
 argument_list|(
 name|sc
 operator|->
@@ -3556,7 +3556,7 @@ name|cmd
 operator|.
 name|data1
 operator|=
-name|MYRI10GE_HIGHPART_TO_U32
+name|MXGE_HIGHPART_TO_U32
 argument_list|(
 name|sc
 operator|->
@@ -3572,14 +3572,14 @@ argument_list|)
 expr_stmt|;
 name|status
 operator||=
-name|myri10ge_send_cmd
+name|mxge_send_cmd
 argument_list|(
 name|sc
 argument_list|,
 operator|(
 name|i
 operator|+
-name|MYRI10GE_MCP_CMD_SET_INTRQ0_DMA
+name|MXGE_MCP_CMD_SET_INTRQ0_DMA
 operator|)
 argument_list|,
 operator|&
@@ -3595,15 +3595,15 @@ name|sc
 operator|->
 name|intr_coal_delay
 operator|=
-name|myri10ge_intr_coal_delay
+name|mxge_intr_coal_delay
 expr_stmt|;
 name|status
 operator||=
-name|myri10ge_send_cmd
+name|mxge_send_cmd
 argument_list|(
 name|sc
 argument_list|,
-name|MYRI10GE_MCP_CMD_SET_INTR_COAL_DELAY
+name|MXGE_MCP_CMD_SET_INTR_COAL_DELAY
 argument_list|,
 operator|&
 name|cmd
@@ -3618,11 +3618,11 @@ condition|)
 block|{
 name|status
 operator||=
-name|myri10ge_send_cmd
+name|mxge_send_cmd
 argument_list|(
 name|sc
 argument_list|,
-name|MYRI10GE_MCP_CMD_GET_IRQ_ACK_OFFSET
+name|MXGE_MCP_CMD_GET_IRQ_ACK_OFFSET
 argument_list|,
 operator|&
 name|cmd
@@ -3633,11 +3633,11 @@ else|else
 block|{
 name|status
 operator||=
-name|myri10ge_send_cmd
+name|mxge_send_cmd
 argument_list|(
 name|sc
 argument_list|,
-name|MYRI10GE_MCP_CMD_GET_IRQ_ACK_DEASSERT_OFFSET
+name|MXGE_MCP_CMD_GET_IRQ_ACK_DEASSERT_OFFSET
 argument_list|,
 operator|&
 name|cmd
@@ -3748,19 +3748,19 @@ literal|15
 expr_stmt|;
 name|status
 operator|=
-name|myri10ge_update_mac_address
+name|mxge_update_mac_address
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|myri10ge_change_promisc
+name|mxge_change_promisc
 argument_list|(
 name|sc
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|myri10ge_change_pause
+name|mxge_change_pause
 argument_list|(
 name|sc
 argument_list|,
@@ -3778,15 +3778,15 @@ end_function
 begin_function
 specifier|static
 name|int
-name|myri10ge_change_intr_coal
+name|mxge_change_intr_coal
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
-name|myri10ge_cmd_t
+name|mxge_cmd_t
 name|cmd
 decl_stmt|;
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 decl_stmt|;
@@ -3874,11 +3874,11 @@ name|intr_coal_delay
 expr_stmt|;
 name|err
 operator|=
-name|myri10ge_send_cmd
+name|mxge_send_cmd
 argument_list|(
 name|sc
 argument_list|,
-name|MYRI10GE_MCP_CMD_SET_INTR_COAL_DELAY
+name|MXGE_MCP_CMD_SET_INTR_COAL_DELAY
 argument_list|,
 operator|&
 name|cmd
@@ -3915,12 +3915,12 @@ end_function
 begin_function
 specifier|static
 name|int
-name|myri10ge_change_flow_control
+name|mxge_change_flow_control
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 decl_stmt|;
@@ -3987,7 +3987,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|myri10ge_change_pause
+name|mxge_change_pause
 argument_list|(
 name|sc
 argument_list|,
@@ -4011,7 +4011,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|myri10ge_handle_be32
+name|mxge_handle_be32
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
@@ -4066,9 +4066,9 @@ end_function
 begin_function
 specifier|static
 name|void
-name|myri10ge_add_sysctls
+name|mxge_add_sysctls
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|)
@@ -4132,7 +4132,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|myri10ge_change_intr_coal
+name|mxge_change_intr_coal
 argument_list|,
 literal|"I"
 argument_list|,
@@ -4157,7 +4157,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|myri10ge_change_flow_control
+name|mxge_change_flow_control
 argument_list|,
 literal|"I"
 argument_list|,
@@ -4177,7 +4177,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|myri10ge_skip_pio_read
+name|mxge_skip_pio_read
 argument_list|,
 literal|0
 argument_list|,
@@ -4206,7 +4206,7 @@ name|link_up
 argument_list|,
 literal|0
 argument_list|,
-name|myri10ge_handle_be32
+name|mxge_handle_be32
 argument_list|,
 literal|"I"
 argument_list|,
@@ -4234,7 +4234,7 @@ name|rdma_tags_available
 argument_list|,
 literal|0
 argument_list|,
-name|myri10ge_handle_be32
+name|mxge_handle_be32
 argument_list|,
 literal|"I"
 argument_list|,
@@ -4262,7 +4262,7 @@ name|dropped_link_overflow
 argument_list|,
 literal|0
 argument_list|,
-name|myri10ge_handle_be32
+name|mxge_handle_be32
 argument_list|,
 literal|"I"
 argument_list|,
@@ -4290,7 +4290,7 @@ name|dropped_link_error_or_filtered
 argument_list|,
 literal|0
 argument_list|,
-name|myri10ge_handle_be32
+name|mxge_handle_be32
 argument_list|,
 literal|"I"
 argument_list|,
@@ -4318,7 +4318,7 @@ name|dropped_runt
 argument_list|,
 literal|0
 argument_list|,
-name|myri10ge_handle_be32
+name|mxge_handle_be32
 argument_list|,
 literal|"I"
 argument_list|,
@@ -4346,7 +4346,7 @@ name|dropped_overrun
 argument_list|,
 literal|0
 argument_list|,
-name|myri10ge_handle_be32
+name|mxge_handle_be32
 argument_list|,
 literal|"I"
 argument_list|,
@@ -4374,7 +4374,7 @@ name|dropped_no_small_buffer
 argument_list|,
 literal|0
 argument_list|,
-name|myri10ge_handle_be32
+name|mxge_handle_be32
 argument_list|,
 literal|"I"
 argument_list|,
@@ -4402,7 +4402,7 @@ name|dropped_no_big_buffer
 argument_list|,
 literal|0
 argument_list|,
-name|myri10ge_handle_be32
+name|mxge_handle_be32
 argument_list|,
 literal|"I"
 argument_list|,
@@ -4430,7 +4430,7 @@ name|dropped_interrupt_busy
 argument_list|,
 literal|0
 argument_list|,
-name|myri10ge_handle_be32
+name|mxge_handle_be32
 argument_list|,
 literal|"I"
 argument_list|,
@@ -4545,9 +4545,9 @@ begin_function
 specifier|static
 specifier|inline
 name|void
-name|myri10ge_submit_req_backwards
+name|mxge_submit_req_backwards
 parameter_list|(
-name|myri10ge_tx_buf_t
+name|mxge_tx_buf_t
 modifier|*
 name|tx
 parameter_list|,
@@ -4592,7 +4592,7 @@ name|tx
 operator|->
 name|mask
 expr_stmt|;
-name|myri10ge_pio_copy
+name|mxge_pio_copy
 argument_list|(
 operator|&
 name|tx
@@ -4630,9 +4630,9 @@ begin_function
 specifier|static
 specifier|inline
 name|void
-name|myri10ge_submit_req
+name|mxge_submit_req
 parameter_list|(
-name|myri10ge_tx_buf_t
+name|mxge_tx_buf_t
 modifier|*
 name|tx
 parameter_list|,
@@ -4688,7 +4688,7 @@ operator|~
 operator|(
 name|htobe16
 argument_list|(
-name|MYRI10GE_MCP_ETHER_FLAGS_VALID
+name|MXGE_MCP_ETHER_FLAGS_VALID
 argument_list|)
 operator|)
 expr_stmt|;
@@ -4743,7 +4743,7 @@ operator|+=
 literal|2
 control|)
 block|{
-name|myri10ge_pio_copy
+name|mxge_pio_copy
 argument_list|(
 name|dstp
 argument_list|,
@@ -4775,7 +4775,7 @@ block|}
 else|else
 block|{
 comment|/* submit all but the first request, and ensure                     that it is submitted below */
-name|myri10ge_submit_req_backwards
+name|mxge_submit_req_backwards
 argument_list|(
 name|tx
 argument_list|,
@@ -4797,7 +4797,7 @@ name|cnt
 condition|)
 block|{
 comment|/* submit the first request */
-name|myri10ge_pio_copy
+name|mxge_pio_copy
 argument_list|(
 name|dstp
 argument_list|,
@@ -4822,7 +4822,7 @@ name|flags
 operator||=
 name|htobe16
 argument_list|(
-name|MYRI10GE_MCP_ETHER_FLAGS_VALID
+name|MXGE_MCP_ETHER_FLAGS_VALID
 argument_list|)
 expr_stmt|;
 name|src_ints
@@ -4872,9 +4872,9 @@ begin_function
 specifier|static
 specifier|inline
 name|void
-name|myri10ge_submit_req_wc
+name|mxge_submit_req_wc
 parameter_list|(
-name|myri10ge_tx_buf_t
+name|mxge_tx_buf_t
 modifier|*
 name|tx
 parameter_list|,
@@ -4902,7 +4902,7 @@ operator|>=
 literal|4
 condition|)
 block|{
-name|myri10ge_pio_copy
+name|mxge_pio_copy
 argument_list|(
 operator|(
 specifier|volatile
@@ -4938,7 +4938,7 @@ literal|0
 condition|)
 block|{
 comment|/* pad it to 64 bytes.  The src is 64 bytes bigger than it 	       needs to be so that we don't overrun it */
-name|myri10ge_pio_copy
+name|mxge_pio_copy
 argument_list|(
 name|tx
 operator|->
@@ -4965,9 +4965,9 @@ end_function
 begin_function
 specifier|static
 name|void
-name|myri10ge_encap
+name|mxge_encap
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|,
@@ -4984,7 +4984,7 @@ decl_stmt|;
 name|bus_dma_segment_t
 name|seg_list
 index|[
-name|MYRI10GE_MCP_ETHER_MAX_SEND_DESC
+name|MXGE_MCP_ETHER_MAX_SEND_DESC
 index|]
 decl_stmt|;
 name|bus_dma_segment_t
@@ -5001,7 +5001,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|myri10ge_tx_buf_t
+name|mxge_tx_buf_t
 modifier|*
 name|tx
 decl_stmt|;
@@ -5199,9 +5199,9 @@ name|flags
 operator|=
 name|htobe16
 argument_list|(
-name|MYRI10GE_MCP_ETHER_FLAGS_VALID
+name|MXGE_MCP_ETHER_FLAGS_VALID
 operator||
-name|MYRI10GE_MCP_ETHER_FLAGS_NOT_LAST
+name|MXGE_MCP_ETHER_FLAGS_NOT_LAST
 argument_list|)
 expr_stmt|;
 comment|/* checksum offloading? */
@@ -5287,7 +5287,7 @@ name|flags
 operator||=
 name|htobe16
 argument_list|(
-name|MYRI10GE_MCP_ETHER_FLAGS_CKSUM
+name|MXGE_MCP_ETHER_FLAGS_CKSUM
 argument_list|)
 expr_stmt|;
 block|}
@@ -5307,9 +5307,9 @@ name|flags
 operator|=
 name|htobe16
 argument_list|(
-name|MYRI10GE_MCP_ETHER_FLAGS_FIRST
+name|MXGE_MCP_ETHER_FLAGS_FIRST
 operator||
-name|MYRI10GE_MCP_ETHER_FLAGS_SMALL
+name|MXGE_MCP_ETHER_FLAGS_SMALL
 argument_list|)
 expr_stmt|;
 else|else
@@ -5319,7 +5319,7 @@ name|flags
 operator|=
 name|htobe16
 argument_list|(
-name|MYRI10GE_MCP_ETHER_FLAGS_FIRST
+name|MXGE_MCP_ETHER_FLAGS_FIRST
 argument_list|)
 expr_stmt|;
 comment|/* convert segments into a request list */
@@ -5351,7 +5351,7 @@ name|addr_low
 operator|=
 name|htobe32
 argument_list|(
-name|MYRI10GE_LOWPART_TO_U32
+name|MXGE_LOWPART_TO_U32
 argument_list|(
 name|seg
 operator|->
@@ -5365,7 +5365,7 @@ name|addr_high
 operator|=
 name|htobe32
 argument_list|(
-name|MYRI10GE_HIGHPART_TO_U32
+name|MXGE_HIGHPART_TO_U32
 argument_list|(
 name|seg
 operator|->
@@ -5424,7 +5424,7 @@ operator|)
 operator|*
 name|htobe16
 argument_list|(
-name|MYRI10GE_MCP_ETHER_FLAGS_ALIGN_ODD
+name|MXGE_MCP_ETHER_FLAGS_ALIGN_ODD
 argument_list|)
 operator|)
 expr_stmt|;
@@ -5467,7 +5467,7 @@ name|addr_low
 operator|=
 name|htobe32
 argument_list|(
-name|MYRI10GE_LOWPART_TO_U32
+name|MXGE_LOWPART_TO_U32
 argument_list|(
 name|sc
 operator|->
@@ -5483,7 +5483,7 @@ name|addr_high
 operator|=
 name|htobe32
 argument_list|(
-name|MYRI10GE_HIGHPART_TO_U32
+name|MXGE_HIGHPART_TO_U32
 argument_list|(
 name|sc
 operator|->
@@ -5525,7 +5525,7 @@ operator|)
 operator|*
 name|htobe16
 argument_list|(
-name|MYRI10GE_MCP_ETHER_FLAGS_ALIGN_ODD
+name|MXGE_MCP_ETHER_FLAGS_ALIGN_ODD
 argument_list|)
 operator|)
 expr_stmt|;
@@ -5541,7 +5541,7 @@ operator|~
 operator|(
 name|htobe16
 argument_list|(
-name|MYRI10GE_MCP_ETHER_FLAGS_NOT_LAST
+name|MXGE_MCP_ETHER_FLAGS_NOT_LAST
 argument_list|)
 operator|)
 expr_stmt|;
@@ -5564,7 +5564,7 @@ name|wc_fifo
 operator|==
 name|NULL
 condition|)
-name|myri10ge_submit_req
+name|mxge_submit_req
 argument_list|(
 name|tx
 argument_list|,
@@ -5576,7 +5576,7 @@ name|cnt
 argument_list|)
 expr_stmt|;
 else|else
-name|myri10ge_submit_req_wc
+name|mxge_submit_req_wc
 argument_list|(
 name|tx
 argument_list|,
@@ -5607,9 +5607,9 @@ end_function
 begin_function
 specifier|static
 name|void
-name|myri10ge_start_locked
+name|mxge_start_locked
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|)
@@ -5665,7 +5665,7 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|/* give it to the nic */
-name|myri10ge_encap
+name|mxge_encap
 argument_list|(
 name|sc
 argument_list|,
@@ -5699,7 +5699,7 @@ if|if
 condition|(
 name|avail
 operator|<
-name|MYRI10GE_MCP_ETHER_MAX_SEND_DESC
+name|MXGE_MCP_ETHER_MAX_SEND_DESC
 condition|)
 block|{
 name|sc
@@ -5719,7 +5719,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|myri10ge_start
+name|mxge_start
 parameter_list|(
 name|struct
 name|ifnet
@@ -5727,7 +5727,7 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 init|=
@@ -5743,7 +5743,7 @@ operator|->
 name|tx_lock
 argument_list|)
 expr_stmt|;
-name|myri10ge_start_locked
+name|mxge_start_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -5762,9 +5762,9 @@ end_function
 begin_function
 specifier|static
 name|int
-name|myri10ge_get_buf_small
+name|mxge_get_buf_small
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|,
@@ -5783,7 +5783,7 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|myri10ge_rx_buf_t
+name|mxge_rx_buf_t
 modifier|*
 name|rx
 init|=
@@ -5891,7 +5891,7 @@ name|addr_low
 operator|=
 name|htobe32
 argument_list|(
-name|MYRI10GE_LOWPART_TO_U32
+name|MXGE_LOWPART_TO_U32
 argument_list|(
 name|seg
 operator|.
@@ -5910,7 +5910,7 @@ name|addr_high
 operator|=
 name|htobe32
 argument_list|(
-name|MYRI10GE_HIGHPART_TO_U32
+name|MXGE_HIGHPART_TO_U32
 argument_list|(
 name|seg
 operator|.
@@ -5931,7 +5931,7 @@ operator|==
 literal|7
 condition|)
 block|{
-name|myri10ge_pio_copy
+name|mxge_pio_copy
 argument_list|(
 operator|&
 name|rx
@@ -5977,9 +5977,9 @@ end_function
 begin_function
 specifier|static
 name|int
-name|myri10ge_get_buf_big
+name|mxge_get_buf_big
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|,
@@ -5998,7 +5998,7 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|myri10ge_rx_buf_t
+name|mxge_rx_buf_t
 modifier|*
 name|rx
 init|=
@@ -6114,7 +6114,7 @@ name|addr_low
 operator|=
 name|htobe32
 argument_list|(
-name|MYRI10GE_LOWPART_TO_U32
+name|MXGE_LOWPART_TO_U32
 argument_list|(
 name|seg
 operator|.
@@ -6133,7 +6133,7 @@ name|addr_high
 operator|=
 name|htobe32
 argument_list|(
-name|MYRI10GE_HIGHPART_TO_U32
+name|MXGE_HIGHPART_TO_U32
 argument_list|(
 name|seg
 operator|.
@@ -6154,7 +6154,7 @@ operator|==
 literal|7
 condition|)
 block|{
-name|myri10ge_pio_copy
+name|mxge_pio_copy
 argument_list|(
 operator|&
 name|rx
@@ -6201,9 +6201,9 @@ begin_function
 specifier|static
 specifier|inline
 name|void
-name|myri10ge_rx_done_big
+name|mxge_rx_done_big
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|,
@@ -6248,7 +6248,7 @@ decl_stmt|;
 name|bus_dmamap_t
 name|old_map
 decl_stmt|;
-name|myri10ge_rx_buf_t
+name|mxge_rx_buf_t
 modifier|*
 name|rx
 decl_stmt|;
@@ -6305,7 +6305,7 @@ expr_stmt|;
 comment|/* try to replace the received mbuf */
 if|if
 condition|(
-name|myri10ge_get_buf_big
+name|mxge_get_buf_big
 argument_list|(
 name|sc
 argument_list|,
@@ -6389,7 +6389,7 @@ name|m
 operator|->
 name|m_data
 operator|+=
-name|MYRI10GE_MCP_ETHER_PAD
+name|MXGE_MCP_ETHER_PAD
 expr_stmt|;
 name|m
 operator|->
@@ -6407,7 +6407,7 @@ name|sc
 operator|->
 name|big_bytes
 operator|-
-name|MYRI10GE_MCP_ETHER_PAD
+name|MXGE_MCP_ETHER_PAD
 expr_stmt|;
 block|}
 else|else
@@ -6535,7 +6535,7 @@ name|sc
 operator|->
 name|big_bytes
 operator|+
-name|MYRI10GE_MCP_ETHER_PAD
+name|MXGE_MCP_ETHER_PAD
 operator|)
 expr_stmt|;
 block|}
@@ -6580,7 +6580,7 @@ condition|(
 literal|0
 operator|==
 operator|(
-name|myri10ge_get_buf_big
+name|mxge_get_buf_big
 argument_list|(
 name|sc
 argument_list|,
@@ -6670,9 +6670,9 @@ begin_function
 specifier|static
 specifier|inline
 name|void
-name|myri10ge_rx_done_small
+name|mxge_rx_done_small
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|,
@@ -6696,7 +6696,7 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|myri10ge_rx_buf_t
+name|mxge_rx_buf_t
 modifier|*
 name|rx
 decl_stmt|;
@@ -6749,7 +6749,7 @@ expr_stmt|;
 comment|/* try to replace the received mbuf */
 if|if
 condition|(
-name|myri10ge_get_buf_small
+name|mxge_get_buf_small
 argument_list|(
 name|sc
 argument_list|,
@@ -6826,7 +6826,7 @@ name|m
 operator|->
 name|m_data
 operator|+=
-name|MYRI10GE_MCP_ETHER_PAD
+name|MXGE_MCP_ETHER_PAD
 expr_stmt|;
 comment|/* if the checksum is valid, mark it in the mbuf header */
 if|if
@@ -6900,9 +6900,9 @@ begin_function
 specifier|static
 specifier|inline
 name|void
-name|myri10ge_tx_done
+name|mxge_tx_done
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|,
@@ -6915,7 +6915,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|myri10ge_tx_buf_t
+name|mxge_tx_buf_t
 modifier|*
 name|tx
 decl_stmt|;
@@ -7072,7 +7072,7 @@ operator|&=
 operator|~
 name|IFF_DRV_OACTIVE
 expr_stmt|;
-name|myri10ge_start_locked
+name|mxge_start_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -7092,9 +7092,9 @@ end_function
 begin_function
 specifier|static
 name|void
-name|myri10ge_dump_interrupt_queues
+name|mxge_dump_interrupt_queues
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|,
@@ -7401,9 +7401,9 @@ begin_function
 specifier|static
 specifier|inline
 name|void
-name|myri10ge_claim_irq
+name|mxge_claim_irq
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|)
@@ -7426,7 +7426,7 @@ comment|/* do a PIO read to ensure that PIO write to claim the irq has 	   hit t
 if|if
 condition|(
 operator|!
-name|myri10ge_skip_pio_read
+name|mxge_skip_pio_read
 condition|)
 block|{
 name|dontcare
@@ -7451,14 +7451,14 @@ end_function
 begin_function
 specifier|static
 name|void
-name|myri10ge_intr
+name|mxge_intr
 parameter_list|(
 name|void
 modifier|*
 name|arg
 parameter_list|)
 block|{
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 init|=
@@ -7532,7 +7532,7 @@ name|msi_enabled
 condition|)
 block|{
 comment|/* We know we can immediately claim the interrupt */
-name|myri10ge_claim_irq
+name|mxge_claim_irq
 argument_list|(
 name|sc
 argument_list|)
@@ -7570,7 +7570,7 @@ if|if
 condition|(
 name|slot
 operator|<
-name|myri10ge_max_intr_slots
+name|mxge_max_intr_slots
 operator|&&
 name|sc
 operator|->
@@ -7605,7 +7605,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|myri10ge_claim_irq
+name|mxge_claim_irq
 argument_list|(
 name|sc
 argument_list|)
@@ -7629,7 +7629,7 @@ name|slot
 init|;
 name|slot
 operator|<
-name|myri10ge_max_intr_slots
+name|mxge_max_intr_slots
 condition|;
 name|slot
 operator|++
@@ -7792,7 +7792,7 @@ argument_list|,
 name|slot
 argument_list|)
 expr_stmt|;
-name|myri10ge_dump_interrupt_queues
+name|mxge_dump_interrupt_queues
 argument_list|(
 name|sc
 argument_list|,
@@ -7837,9 +7837,9 @@ name|type
 condition|)
 block|{
 case|case
-name|MYRI10GE_MCP_INTR_ETHER_SEND_DONE
+name|MXGE_MCP_INTR_ETHER_SEND_DONE
 case|:
-name|myri10ge_tx_done
+name|mxge_tx_done
 argument_list|(
 name|sc
 argument_list|,
@@ -8001,7 +8001,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|MYRI10GE_MCP_INTR_ETHER_RECV_SMALL
+name|MXGE_MCP_INTR_ETHER_RECV_SMALL
 case|:
 name|raw
 operator|=
@@ -8065,7 +8065,7 @@ literal|0xffff
 operator|&
 name|raw
 expr_stmt|;
-name|myri10ge_rx_done_small
+name|mxge_rx_done_small
 argument_list|(
 name|sc
 argument_list|,
@@ -8078,7 +8078,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|MYRI10GE_MCP_INTR_ETHER_RECV_BIG
+name|MXGE_MCP_INTR_ETHER_RECV_BIG
 case|:
 name|raw
 operator|=
@@ -8142,7 +8142,7 @@ literal|0xffff
 operator|&
 name|raw
 expr_stmt|;
-name|myri10ge_rx_done_big
+name|mxge_rx_done_big
 argument_list|(
 name|sc
 argument_list|,
@@ -8155,12 +8155,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|MYRI10GE_MCP_INTR_LINK_CHANGE
+name|MXGE_MCP_INTR_LINK_CHANGE
 case|:
 comment|/* not yet implemented in firmware */
 break|break;
 case|case
-name|MYRI10GE_MCP_INTR_ETHER_DOWN
+name|MXGE_MCP_INTR_ETHER_DOWN
 case|:
 name|sc
 operator|->
@@ -8230,7 +8230,7 @@ operator|!
 name|claimed
 condition|)
 block|{
-name|myri10ge_claim_irq
+name|mxge_claim_irq
 argument_list|(
 name|sc
 argument_list|)
@@ -8287,7 +8287,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|myri10ge_watchdog
+name|mxge_watchdog
 parameter_list|(
 name|struct
 name|ifnet
@@ -8308,7 +8308,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|myri10ge_init
+name|mxge_init
 parameter_list|(
 name|void
 modifier|*
@@ -8320,9 +8320,9 @@ end_function
 begin_function
 specifier|static
 name|void
-name|myri10ge_free_mbufs
+name|mxge_free_mbufs
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|)
@@ -8582,9 +8582,9 @@ end_function
 begin_function
 specifier|static
 name|void
-name|myri10ge_free_rings
+name|mxge_free_rings
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|)
@@ -9001,14 +9001,14 @@ end_function
 begin_function
 specifier|static
 name|int
-name|myri10ge_alloc_rings
+name|mxge_alloc_rings
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|)
 block|{
-name|myri10ge_cmd_t
+name|mxge_cmd_t
 name|cmd
 decl_stmt|;
 name|int
@@ -9033,11 +9033,11 @@ decl_stmt|;
 comment|/* get ring sizes */
 name|err
 operator|=
-name|myri10ge_send_cmd
+name|mxge_send_cmd
 argument_list|(
 name|sc
 argument_list|,
-name|MYRI10GE_MCP_CMD_GET_SEND_RING_SIZE
+name|MXGE_MCP_CMD_GET_SEND_RING_SIZE
 argument_list|,
 operator|&
 name|cmd
@@ -9051,11 +9051,11 @@ name|data0
 expr_stmt|;
 name|err
 operator||=
-name|myri10ge_send_cmd
+name|mxge_send_cmd
 argument_list|(
 name|sc
 argument_list|,
-name|MYRI10GE_MCP_CMD_GET_RX_RING_SIZE
+name|MXGE_MCP_CMD_GET_RX_RING_SIZE
 argument_list|,
 operator|&
 name|cmd
@@ -9179,7 +9179,7 @@ name|req_list
 argument_list|)
 operator|*
 operator|(
-name|MYRI10GE_MCP_ETHER_MAX_SEND_DESC
+name|MXGE_MCP_ETHER_MAX_SEND_DESC
 operator|+
 literal|4
 operator|)
@@ -9495,10 +9495,10 @@ argument_list|,
 name|NULL
 argument_list|,
 comment|/* filter */
-name|MYRI10GE_MAX_ETHER_MTU
+name|MXGE_MAX_ETHER_MTU
 argument_list|,
 comment|/* maxsize */
-name|MYRI10GE_MCP_ETHER_MAX_SEND_DESC
+name|MXGE_MCP_ETHER_MAX_SEND_DESC
 argument_list|,
 comment|/* num segs */
 name|sc
@@ -9983,7 +9983,7 @@ literal|0
 return|;
 name|abort_with_alloc
 label|:
-name|myri10ge_free_rings
+name|mxge_free_rings
 argument_list|(
 name|sc
 argument_list|)
@@ -9999,14 +9999,14 @@ end_function
 begin_function
 specifier|static
 name|int
-name|myri10ge_open
+name|mxge_open
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|)
 block|{
-name|myri10ge_cmd_t
+name|mxge_cmd_t
 name|cmd
 decl_stmt|;
 name|int
@@ -10019,7 +10019,7 @@ name|map
 decl_stmt|;
 name|err
 operator|=
-name|myri10ge_reset
+name|mxge_reset
 argument_list|(
 name|sc
 argument_list|)
@@ -10056,7 +10056,7 @@ name|if_mtu
 operator|+
 name|ETHER_HDR_LEN
 operator|+
-name|MYRI10GE_MCP_ETHER_PAD
+name|MXGE_MCP_ETHER_PAD
 condition|)
 name|sc
 operator|->
@@ -10073,7 +10073,7 @@ name|MJUMPAGESIZE
 expr_stmt|;
 name|err
 operator|=
-name|myri10ge_alloc_rings
+name|mxge_alloc_rings
 argument_list|(
 name|sc
 argument_list|)
@@ -10114,7 +10114,7 @@ name|INTR_TYPE_NET
 operator||
 name|INTR_MPSAFE
 argument_list|,
-name|myri10ge_intr
+name|mxge_intr
 argument_list|,
 name|sc
 argument_list|,
@@ -10138,11 +10138,11 @@ block|}
 comment|/* get the lanai pointers to the send and receive rings */
 name|err
 operator|=
-name|myri10ge_send_cmd
+name|mxge_send_cmd
 argument_list|(
 name|sc
 argument_list|,
-name|MYRI10GE_MCP_CMD_GET_SEND_OFFSET
+name|MXGE_MCP_CMD_GET_SEND_OFFSET
 argument_list|,
 operator|&
 name|cmd
@@ -10171,11 +10171,11 @@ operator|)
 expr_stmt|;
 name|err
 operator||=
-name|myri10ge_send_cmd
+name|mxge_send_cmd
 argument_list|(
 name|sc
 argument_list|,
-name|MYRI10GE_MCP_CMD_GET_SMALL_RX_OFFSET
+name|MXGE_MCP_CMD_GET_SMALL_RX_OFFSET
 argument_list|,
 operator|&
 name|cmd
@@ -10204,11 +10204,11 @@ operator|)
 expr_stmt|;
 name|err
 operator||=
-name|myri10ge_send_cmd
+name|mxge_send_cmd
 argument_list|(
 name|sc
 argument_list|,
-name|MYRI10GE_MCP_CMD_GET_BIG_RX_OFFSET
+name|MXGE_MCP_CMD_GET_BIG_RX_OFFSET
 argument_list|,
 operator|&
 name|cmd
@@ -10364,7 +10364,7 @@ name|map
 expr_stmt|;
 name|err
 operator|=
-name|myri10ge_get_buf_small
+name|mxge_get_buf_small
 argument_list|(
 name|sc
 argument_list|,
@@ -10435,7 +10435,7 @@ name|map
 expr_stmt|;
 name|err
 operator|=
-name|myri10ge_get_buf_big
+name|mxge_get_buf_big
 argument_list|(
 name|sc
 argument_list|,
@@ -10488,11 +10488,11 @@ name|ETHER_HDR_LEN
 expr_stmt|;
 name|err
 operator|=
-name|myri10ge_send_cmd
+name|mxge_send_cmd
 argument_list|(
 name|sc
 argument_list|,
-name|MYRI10GE_MCP_CMD_SET_MTU
+name|MXGE_MCP_CMD_SET_MTU
 argument_list|,
 operator|&
 name|cmd
@@ -10506,11 +10506,11 @@ name|MHLEN
 expr_stmt|;
 name|err
 operator||=
-name|myri10ge_send_cmd
+name|mxge_send_cmd
 argument_list|(
 name|sc
 argument_list|,
-name|MYRI10GE_MCP_CMD_SET_SMALL_BUFFER_SIZE
+name|MXGE_MCP_CMD_SET_SMALL_BUFFER_SIZE
 argument_list|,
 operator|&
 name|cmd
@@ -10526,11 +10526,11 @@ name|big_bytes
 expr_stmt|;
 name|err
 operator||=
-name|myri10ge_send_cmd
+name|mxge_send_cmd
 argument_list|(
 name|sc
 argument_list|,
-name|MYRI10GE_MCP_CMD_SET_BIG_BUFFER_SIZE
+name|MXGE_MCP_CMD_SET_BIG_BUFFER_SIZE
 argument_list|,
 operator|&
 name|cmd
@@ -10541,7 +10541,7 @@ name|cmd
 operator|.
 name|data0
 operator|=
-name|MYRI10GE_LOWPART_TO_U32
+name|MXGE_LOWPART_TO_U32
 argument_list|(
 name|sc
 operator|->
@@ -10554,7 +10554,7 @@ name|cmd
 operator|.
 name|data1
 operator|=
-name|MYRI10GE_HIGHPART_TO_U32
+name|MXGE_HIGHPART_TO_U32
 argument_list|(
 name|sc
 operator|->
@@ -10565,11 +10565,11 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|myri10ge_send_cmd
+name|mxge_send_cmd
 argument_list|(
 name|sc
 argument_list|,
-name|MYRI10GE_MCP_CMD_SET_STATS_DMA
+name|MXGE_MCP_CMD_SET_STATS_DMA
 argument_list|,
 operator|&
 name|cmd
@@ -10598,11 +10598,11 @@ block|}
 comment|/* Finally, start the firmware running */
 name|err
 operator|=
-name|myri10ge_send_cmd
+name|mxge_send_cmd
 argument_list|(
 name|sc
 argument_list|,
-name|MYRI10GE_MCP_CMD_ETHERNET_UP
+name|MXGE_MCP_CMD_ETHERNET_UP
 argument_list|,
 operator|&
 name|cmd
@@ -10648,7 +10648,7 @@ literal|0
 return|;
 name|abort
 label|:
-name|myri10ge_free_mbufs
+name|mxge_free_mbufs
 argument_list|(
 name|sc
 argument_list|)
@@ -10672,7 +10672,7 @@ argument_list|)
 expr_stmt|;
 name|abort_with_rings
 label|:
-name|myri10ge_free_rings
+name|mxge_free_rings
 argument_list|(
 name|sc
 argument_list|)
@@ -10686,14 +10686,14 @@ end_function
 begin_function
 specifier|static
 name|int
-name|myri10ge_close
+name|mxge_close
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|)
 block|{
-name|myri10ge_cmd_t
+name|mxge_cmd_t
 name|cmd
 decl_stmt|;
 name|int
@@ -10721,11 +10721,11 @@ argument_list|()
 expr_stmt|;
 name|err
 operator|=
-name|myri10ge_send_cmd
+name|mxge_send_cmd
 argument_list|(
 name|sc
 argument_list|,
-name|MYRI10GE_MCP_CMD_ETHERNET_DOWN
+name|MXGE_MCP_CMD_ETHERNET_DOWN
 argument_list|,
 operator|&
 name|cmd
@@ -10768,7 +10768,7 @@ name|down_cnt
 argument_list|,
 name|PWAIT
 argument_list|,
-literal|"down myri10ge"
+literal|"down mxge"
 argument_list|,
 name|hz
 argument_list|)
@@ -10816,12 +10816,12 @@ operator|->
 name|ih
 argument_list|)
 expr_stmt|;
-name|myri10ge_free_mbufs
+name|mxge_free_mbufs
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|myri10ge_free_rings
+name|mxge_free_rings
 argument_list|(
 name|sc
 argument_list|)
@@ -10835,7 +10835,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|myri10ge_media_change
+name|mxge_media_change
 parameter_list|(
 name|struct
 name|ifnet
@@ -10852,9 +10852,9 @@ end_function
 begin_function
 specifier|static
 name|int
-name|myri10ge_change_mtu
+name|mxge_change_mtu
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|,
@@ -10892,7 +10892,7 @@ condition|(
 operator|(
 name|real_mtu
 operator|>
-name|MYRI10GE_MAX_ETHER_MTU
+name|MXGE_MAX_ETHER_MTU
 operator|)
 operator|||
 name|real_mtu
@@ -10931,14 +10931,14 @@ operator|&
 name|IFF_DRV_RUNNING
 condition|)
 block|{
-name|myri10ge_close
+name|mxge_close
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|myri10ge_open
+name|mxge_open
 argument_list|(
 name|sc
 argument_list|)
@@ -10956,7 +10956,7 @@ name|if_mtu
 operator|=
 name|old_mtu
 expr_stmt|;
-name|myri10ge_close
+name|mxge_close
 argument_list|(
 name|sc
 argument_list|)
@@ -10964,7 +10964,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|myri10ge_open
+name|mxge_open
 argument_list|(
 name|sc
 argument_list|)
@@ -10988,7 +10988,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|myri10ge_media_status
+name|mxge_media_status
 parameter_list|(
 name|struct
 name|ifnet
@@ -11001,7 +11001,7 @@ modifier|*
 name|ifmr
 parameter_list|)
 block|{
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 init|=
@@ -11064,7 +11064,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|myri10ge_ioctl
+name|mxge_ioctl
 parameter_list|(
 name|struct
 name|ifnet
@@ -11078,7 +11078,7 @@ name|caddr_t
 name|data
 parameter_list|)
 block|{
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 init|=
@@ -11135,7 +11135,7 @@ name|SIOCSIFMTU
 case|:
 name|err
 operator|=
-name|myri10ge_change_mtu
+name|mxge_change_mtu
 argument_list|(
 name|sc
 argument_list|,
@@ -11178,7 +11178,7 @@ operator|)
 condition|)
 name|err
 operator|=
-name|myri10ge_open
+name|mxge_open
 argument_list|(
 name|sc
 argument_list|)
@@ -11194,7 +11194,7 @@ name|if_drv_flags
 operator|&
 name|IFF_DRV_RUNNING
 condition|)
-name|myri10ge_close
+name|mxge_close
 argument_list|(
 name|sc
 argument_list|)
@@ -11325,7 +11325,7 @@ operator|->
 name|csum_flag
 operator|&=
 operator|~
-name|MYRI10GE_MCP_ETHER_FLAGS_CKSUM
+name|MXGE_MCP_ETHER_FLAGS_CKSUM
 expr_stmt|;
 block|}
 else|else
@@ -11340,7 +11340,7 @@ name|sc
 operator|->
 name|csum_flag
 operator||=
-name|MYRI10GE_MCP_ETHER_FLAGS_CKSUM
+name|MXGE_MCP_ETHER_FLAGS_CKSUM
 expr_stmt|;
 block|}
 block|}
@@ -11393,58 +11393,58 @@ end_function
 begin_function
 specifier|static
 name|void
-name|myri10ge_fetch_tunables
+name|mxge_fetch_tunables
 parameter_list|(
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 parameter_list|)
 block|{
 name|TUNABLE_INT_FETCH
 argument_list|(
-literal|"hw.myri10ge.flow_control_enabled"
+literal|"hw.mxge.flow_control_enabled"
 argument_list|,
 operator|&
-name|myri10ge_flow_control
+name|mxge_flow_control
 argument_list|)
 expr_stmt|;
 name|TUNABLE_INT_FETCH
 argument_list|(
-literal|"hw.myri10ge.intr_coal_delay"
+literal|"hw.mxge.intr_coal_delay"
 argument_list|,
 operator|&
-name|myri10ge_intr_coal_delay
+name|mxge_intr_coal_delay
 argument_list|)
 expr_stmt|;
 name|TUNABLE_INT_FETCH
 argument_list|(
-literal|"hw.myri10ge.nvidia_ecrc_enable"
+literal|"hw.mxge.nvidia_ecrc_enable"
 argument_list|,
 operator|&
-name|myri10ge_nvidia_ecrc_enable
+name|mxge_nvidia_ecrc_enable
 argument_list|)
 expr_stmt|;
 name|TUNABLE_INT_FETCH
 argument_list|(
-literal|"hw.myri10ge.skip_pio_read"
+literal|"hw.mxge.skip_pio_read"
 argument_list|,
 operator|&
-name|myri10ge_skip_pio_read
+name|mxge_skip_pio_read
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|myri10ge_intr_coal_delay
+name|mxge_intr_coal_delay
 operator|<
 literal|0
 operator|||
-name|myri10ge_intr_coal_delay
+name|mxge_intr_coal_delay
 operator|>
 literal|10
 operator|*
 literal|1000
 condition|)
-name|myri10ge_intr_coal_delay
+name|mxge_intr_coal_delay
 operator|=
 literal|30
 expr_stmt|;
@@ -11452,7 +11452,7 @@ name|sc
 operator|->
 name|pause
 operator|=
-name|myri10ge_flow_control
+name|mxge_flow_control
 expr_stmt|;
 block|}
 end_function
@@ -11460,13 +11460,13 @@ end_function
 begin_function
 specifier|static
 name|int
-name|myri10ge_attach
+name|mxge_attach
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|)
 block|{
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 init|=
@@ -11499,7 +11499,7 @@ name|dev
 operator|=
 name|dev
 expr_stmt|;
-name|myri10ge_fetch_tunables
+name|mxge_fetch_tunables
 argument_list|(
 name|sc
 argument_list|)
@@ -11528,10 +11528,10 @@ argument_list|,
 name|NULL
 argument_list|,
 comment|/* filter */
-name|MYRI10GE_MAX_ETHER_MTU
+name|MXGE_MAX_ETHER_MTU
 argument_list|,
 comment|/* maxsize */
-name|MYRI10GE_MCP_ETHER_MAX_SEND_DESC
+name|MXGE_MCP_ETHER_MAX_SEND_DESC
 argument_list|,
 comment|/* num segs */
 literal|4096
@@ -11817,7 +11817,7 @@ name|sc
 operator|->
 name|eeprom_strings
 argument_list|,
-name|MYRI10GE_EEPROM_STRINGS_SIZE
+name|MXGE_EEPROM_STRINGS_SIZE
 argument_list|)
 expr_stmt|;
 name|bus_space_read_region_1
@@ -11840,20 +11840,20 @@ name|sc
 operator|->
 name|sram_size
 operator|-
-name|MYRI10GE_EEPROM_STRINGS_SIZE
+name|MXGE_EEPROM_STRINGS_SIZE
 argument_list|,
 name|sc
 operator|->
 name|eeprom_strings
 argument_list|,
-name|MYRI10GE_EEPROM_STRINGS_SIZE
+name|MXGE_EEPROM_STRINGS_SIZE
 operator|-
 literal|2
 argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|myri10ge_parse_strings
+name|mxge_parse_strings
 argument_list|(
 name|sc
 argument_list|)
@@ -11868,7 +11868,7 @@ goto|goto
 name|abort_with_mem_res
 goto|;
 comment|/* Enable write combining for efficient use of PCIe bus */
-name|myri10ge_enable_wc
+name|mxge_enable_wc
 argument_list|(
 name|sc
 argument_list|)
@@ -11876,7 +11876,7 @@ expr_stmt|;
 comment|/* Allocate the out of band dma memory */
 name|err
 operator|=
-name|myri10ge_dma_alloc
+name|mxge_dma_alloc
 argument_list|(
 name|sc
 argument_list|,
@@ -11887,7 +11887,7 @@ name|cmd_dma
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|myri10ge_cmd_t
+name|mxge_cmd_t
 argument_list|)
 argument_list|,
 literal|64
@@ -11918,7 +11918,7 @@ name|addr
 expr_stmt|;
 name|err
 operator|=
-name|myri10ge_dma_alloc
+name|mxge_dma_alloc
 argument_list|(
 name|sc
 argument_list|,
@@ -11943,7 +11943,7 @@ name|abort_with_cmd_dma
 goto|;
 name|err
 operator|=
-name|myri10ge_dma_alloc
+name|mxge_dma_alloc
 argument_list|(
 name|sc
 argument_list|,
@@ -11989,7 +11989,7 @@ expr_stmt|;
 comment|/* allocate interrupt queues */
 name|bytes
 operator|=
-name|myri10ge_max_intr_slots
+name|mxge_max_intr_slots
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -12012,7 +12012,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|MYRI10GE_NUM_INTRQS
+name|MXGE_NUM_INTRQS
 condition|;
 name|i
 operator|++
@@ -12020,7 +12020,7 @@ control|)
 block|{
 name|err
 operator|=
-name|myri10ge_dma_alloc
+name|mxge_dma_alloc
 argument_list|(
 name|sc
 argument_list|,
@@ -12124,14 +12124,14 @@ name|abort_with_intrq
 goto|;
 block|}
 comment|/* load the firmware */
-name|myri10ge_select_firmware
+name|mxge_select_firmware
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|myri10ge_load_firmware
+name|mxge_load_firmware
 argument_list|(
 name|sc
 argument_list|)
@@ -12147,7 +12147,7 @@ name|abort_with_irq_res
 goto|;
 name|err
 operator|=
-name|myri10ge_reset
+name|mxge_reset
 argument_list|(
 name|sc
 argument_list|)
@@ -12211,13 +12211,13 @@ name|sc
 operator|->
 name|csum_flag
 operator||=
-name|MYRI10GE_MCP_ETHER_FLAGS_CKSUM
+name|MXGE_MCP_ETHER_FLAGS_CKSUM
 expr_stmt|;
 name|ifp
 operator|->
 name|if_init
 operator|=
-name|myri10ge_init
+name|mxge_init
 expr_stmt|;
 name|ifp
 operator|->
@@ -12239,19 +12239,19 @@ name|ifp
 operator|->
 name|if_ioctl
 operator|=
-name|myri10ge_ioctl
+name|mxge_ioctl
 expr_stmt|;
 name|ifp
 operator|->
 name|if_start
 operator|=
-name|myri10ge_start
+name|mxge_start
 expr_stmt|;
 name|ifp
 operator|->
 name|if_watchdog
 operator|=
-name|myri10ge_watchdog
+name|mxge_watchdog
 expr_stmt|;
 name|ether_ifattach
 argument_list|(
@@ -12267,7 +12267,7 @@ name|ifp
 operator|->
 name|if_mtu
 operator|=
-name|MYRI10GE_MAX_ETHER_MTU
+name|MXGE_MAX_ETHER_MTU
 operator|-
 name|ETHER_HDR_LEN
 expr_stmt|;
@@ -12281,9 +12281,9 @@ name|media
 argument_list|,
 literal|0
 argument_list|,
-name|myri10ge_media_change
+name|mxge_media_change
 argument_list|,
-name|myri10ge_media_status
+name|mxge_media_status
 argument_list|)
 expr_stmt|;
 name|ifmedia_add
@@ -12302,7 +12302,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|myri10ge_add_sysctls
+name|mxge_add_sysctls
 argument_list|(
 name|sc
 argument_list|)
@@ -12335,7 +12335,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|MYRI10GE_NUM_INTRQS
+name|MXGE_NUM_INTRQS
 condition|;
 name|i
 operator|++
@@ -12366,7 +12366,7 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-name|myri10ge_dma_free
+name|mxge_dma_free
 argument_list|(
 operator|&
 name|sc
@@ -12380,7 +12380,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|myri10ge_dma_free
+name|mxge_dma_free
 argument_list|(
 operator|&
 name|sc
@@ -12390,7 +12390,7 @@ argument_list|)
 expr_stmt|;
 name|abort_with_zeropad_dma
 label|:
-name|myri10ge_dma_free
+name|mxge_dma_free
 argument_list|(
 operator|&
 name|sc
@@ -12400,7 +12400,7 @@ argument_list|)
 expr_stmt|;
 name|abort_with_cmd_dma
 label|:
-name|myri10ge_dma_free
+name|mxge_dma_free
 argument_list|(
 operator|&
 name|sc
@@ -12479,13 +12479,13 @@ end_function
 begin_function
 specifier|static
 name|int
-name|myri10ge_detach
+name|mxge_detach
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|)
 block|{
-name|myri10ge_softc_t
+name|mxge_softc_t
 modifier|*
 name|sc
 init|=
@@ -12515,7 +12515,7 @@ name|if_drv_flags
 operator|&
 name|IFF_DRV_RUNNING
 condition|)
-name|myri10ge_close
+name|mxge_close
 argument_list|(
 name|sc
 argument_list|)
@@ -12556,7 +12556,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|MYRI10GE_NUM_INTRQS
+name|MXGE_NUM_INTRQS
 condition|;
 name|i
 operator|++
@@ -12587,7 +12587,7 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-name|myri10ge_dma_free
+name|mxge_dma_free
 argument_list|(
 operator|&
 name|sc
@@ -12601,7 +12601,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|myri10ge_dma_free
+name|mxge_dma_free
 argument_list|(
 operator|&
 name|sc
@@ -12609,7 +12609,7 @@ operator|->
 name|fw_stats_dma
 argument_list|)
 expr_stmt|;
-name|myri10ge_dma_free
+name|mxge_dma_free
 argument_list|(
 operator|&
 name|sc
@@ -12617,7 +12617,7 @@ operator|->
 name|zeropad_dma
 argument_list|)
 expr_stmt|;
-name|myri10ge_dma_free
+name|mxge_dma_free
 argument_list|(
 operator|&
 name|sc
@@ -12690,7 +12690,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|myri10ge_shutdown
+name|mxge_shutdown
 parameter_list|(
 name|device_t
 name|dev

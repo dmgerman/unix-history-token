@@ -6,63 +6,63 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MYRI10GE_MAX_ETHER_MTU
+name|MXGE_MAX_ETHER_MTU
 value|9014
 end_define
 
 begin_define
 define|#
 directive|define
-name|MYRI10GE_ETH_STOPPED
+name|MXGE_ETH_STOPPED
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MYRI10GE_ETH_STOPPING
+name|MXGE_ETH_STOPPING
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|MYRI10GE_ETH_STARTING
+name|MXGE_ETH_STARTING
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|MYRI10GE_ETH_RUNNING
+name|MXGE_ETH_RUNNING
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|MYRI10GE_ETH_OPEN_FAILED
+name|MXGE_ETH_OPEN_FAILED
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|MYRI10GE_FW_OFFSET
+name|MXGE_FW_OFFSET
 value|1024*1024
 end_define
 
 begin_define
 define|#
 directive|define
-name|MYRI10GE_EEPROM_STRINGS_SIZE
+name|MXGE_EEPROM_STRINGS_SIZE
 value|256
 end_define
 
 begin_define
 define|#
 directive|define
-name|MYRI10GE_NUM_INTRQS
+name|MXGE_NUM_INTRQS
 value|2
 end_define
 
@@ -84,20 +84,20 @@ name|bus_dmamap_t
 name|map
 decl_stmt|;
 block|}
-name|myri10ge_dma_t
+name|mxge_dma_t
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|myri10ge_intrq
+name|mxge_intrq
 block|{
 name|mcp_slot_t
 modifier|*
 name|q
 index|[
-name|MYRI10GE_NUM_INTRQS
+name|MXGE_NUM_INTRQS
 index|]
 decl_stmt|;
 name|int
@@ -118,14 +118,14 @@ decl_stmt|;
 name|uint32_t
 name|cnt
 decl_stmt|;
-name|myri10ge_dma_t
+name|mxge_dma_t
 name|dma
 index|[
-name|MYRI10GE_NUM_INTRQS
+name|MXGE_NUM_INTRQS
 index|]
 decl_stmt|;
 block|}
-name|myri10ge_intrq_t
+name|mxge_intrq_t
 typedef|;
 end_typedef
 
@@ -143,13 +143,13 @@ name|uint32_t
 name|data2
 decl_stmt|;
 block|}
-name|myri10ge_cmd_t
+name|mxge_cmd_t
 typedef|;
 end_typedef
 
 begin_struct
 struct|struct
-name|myri10ge_buffer_state
+name|mxge_buffer_state
 block|{
 name|struct
 name|mbuf
@@ -185,7 +185,7 @@ name|shadow
 decl_stmt|;
 comment|/* host shadow of recv ring */
 name|struct
-name|myri10ge_buffer_state
+name|mxge_buffer_state
 modifier|*
 name|info
 decl_stmt|;
@@ -206,7 +206,7 @@ name|mask
 decl_stmt|;
 comment|/* number of rx slots -1 */
 block|}
-name|myri10ge_rx_buf_t
+name|mxge_rx_buf_t
 typedef|;
 end_typedef
 
@@ -236,7 +236,7 @@ modifier|*
 name|req_bytes
 decl_stmt|;
 name|struct
-name|myri10ge_buffer_state
+name|mxge_buffer_state
 modifier|*
 name|info
 decl_stmt|;
@@ -260,7 +260,7 @@ name|boundary
 decl_stmt|;
 comment|/* boundary transmits cannot cross*/
 block|}
-name|myri10ge_tx_buf_t
+name|mxge_tx_buf_t
 typedef|;
 end_typedef
 
@@ -291,14 +291,14 @@ literal|6
 index|]
 decl_stmt|;
 comment|/* eeprom mac address */
-name|myri10ge_tx_buf_t
+name|mxge_tx_buf_t
 name|tx
 decl_stmt|;
 comment|/* transmit ring 	*/
-name|myri10ge_rx_buf_t
+name|mxge_rx_buf_t
 name|rx_small
 decl_stmt|;
-name|myri10ge_rx_buf_t
+name|mxge_rx_buf_t
 name|rx_big
 decl_stmt|;
 name|bus_dma_tag_t
@@ -329,17 +329,17 @@ name|mcp_cmd_response_t
 modifier|*
 name|cmd
 decl_stmt|;
-name|myri10ge_dma_t
+name|mxge_dma_t
 name|cmd_dma
 decl_stmt|;
-name|myri10ge_dma_t
+name|mxge_dma_t
 name|zeropad_dma
 decl_stmt|;
 name|mcp_stats_t
 modifier|*
 name|fw_stats
 decl_stmt|;
-name|myri10ge_dma_t
+name|mxge_dma_t
 name|fw_stats_dma
 decl_stmt|;
 name|struct
@@ -350,7 +350,7 @@ decl_stmt|;
 name|int
 name|msi_enabled
 decl_stmt|;
-name|myri10ge_intrq_t
+name|mxge_intrq_t
 name|intr
 decl_stmt|;
 name|int
@@ -413,7 +413,7 @@ decl_stmt|;
 name|char
 name|eeprom_strings
 index|[
-name|MYRI10GE_EEPROM_STRINGS_SIZE
+name|MXGE_EEPROM_STRINGS_SIZE
 index|]
 decl_stmt|;
 name|char
@@ -430,28 +430,28 @@ name|ifmedia
 name|media
 decl_stmt|;
 block|}
-name|myri10ge_softc_t
+name|mxge_softc_t
 typedef|;
 end_typedef
 
 begin_define
 define|#
 directive|define
-name|MYRI10GE_PCI_VENDOR_MYRICOM
+name|MXGE_PCI_VENDOR_MYRICOM
 value|0x14c1
 end_define
 
 begin_define
 define|#
 directive|define
-name|MYRI10GE_PCI_DEVICE_Z8E
+name|MXGE_PCI_DEVICE_Z8E
 value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
-name|MYRI10GE_HIGHPART_TO_U32
+name|MXGE_HIGHPART_TO_U32
 parameter_list|(
 name|X
 parameter_list|)
@@ -462,7 +462,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|MYRI10GE_LOWPART_TO_U32
+name|MXGE_LOWPART_TO_U32
 parameter_list|(
 name|X
 parameter_list|)
@@ -607,7 +607,7 @@ begin_function
 specifier|static
 specifier|inline
 name|void
-name|myri10ge_pio_copy
+name|mxge_pio_copy
 parameter_list|(
 specifier|volatile
 name|void
