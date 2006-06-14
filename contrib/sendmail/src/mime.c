@@ -235,7 +235,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  MIME8TO7 -- output 8 bit body in 7 bit format ** **	The header has already been output -- this has to do the **	8 to 7 bit conversion.  It would be easy if we didn't have **	to deal with nested formats (multipart/xxx and message/rfc822). ** **	We won't be called if we don't have to do a conversion, and **	appropriate MIME-Version: and Content-Type: fields have been **	output.  Any Content-Transfer-Encoding: field has not been **	output, and we can add it here. ** **	Parameters: **		mci -- mailer connection information. **		header -- the header for this body part. **		e -- envelope. **		boundaries -- the currently pending message boundaries. **			NULL if we are processing the outer portion. **		flags -- to tweak processing. ** **	Returns: **		An indicator of what terminated the message part: **		  MBT_FINAL -- the final boundary **		  MBT_INTERMED -- an intermediate boundary **		  MBT_NOTSEP -- an end of file **		  SM_IO_EOF -- I/O error occurred */
+comment|/* **  MIME8TO7 -- output 8 bit body in 7 bit format ** **	The header has already been output -- this has to do the **	8 to 7 bit conversion.  It would be easy if we didn't have **	to deal with nested formats (multipart/xxx and message/rfc822). ** **	We won't be called if we don't have to do a conversion, and **	appropriate MIME-Version: and Content-Type: fields have been **	output.  Any Content-Transfer-Encoding: field has not been **	output, and we can add it here. ** **	Parameters: **		mci -- mailer connection information. **		header -- the header for this body part. **		e -- envelope. **		boundaries -- the currently pending message boundaries. **			NULL if we are processing the outer portion. **		flags -- to tweak processing. **		level -- recursion level. ** **	Returns: **		An indicator of what terminated the message part: **		  MBT_FINAL -- the final boundary **		  MBT_INTERMED -- an intermediate boundary **		  MBT_NOTSEP -- an end of file **		  SM_IO_EOF -- I/O error occurred */
 end_comment
 
 begin_struct
@@ -269,6 +269,8 @@ parameter_list|,
 name|boundaries
 parameter_list|,
 name|flags
+parameter_list|,
+name|level
 parameter_list|)
 specifier|register
 name|MCI
@@ -291,6 +293,9 @@ name|boundaries
 decl_stmt|;
 name|int
 name|flags
+decl_stmt|;
+name|int
+name|level
 decl_stmt|;
 block|{
 specifier|register
@@ -379,6 +384,59 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|level
+operator|>
+name|MAXMIMENESTING
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|EF_TOODEEP
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|43
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+name|sm_dprintf
+argument_list|(
+literal|"mime8to7: too deep, level=%d\n"
+argument_list|,
+name|level
+argument_list|)
+expr_stmt|;
+name|usrerr
+argument_list|(
+literal|"mime8to7: recursion level %d exceeded"
+argument_list|,
+name|level
+argument_list|)
+expr_stmt|;
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_DONT_MIME
+operator||
+name|EF_TOODEEP
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|tTd
@@ -971,6 +1029,16 @@ argument_list|,
 name|flags
 argument_list|)
 operator|)
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|EF_TOODEEP
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
 condition|)
 block|{
 if|if
@@ -1159,6 +1227,34 @@ operator|>=
 name|MAXMIMENESTING
 condition|)
 block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|43
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+name|sm_dprintf
+argument_list|(
+literal|"mime8to7: too deep, i=%d\n"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|EF_TOODEEP
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
 name|usrerr
 argument_list|(
 literal|"mime8to7: multipart nesting boundary too deep"
@@ -1170,6 +1266,8 @@ operator|->
 name|e_flags
 operator||=
 name|EF_DONT_MIME
+operator||
+name|EF_TOODEEP
 expr_stmt|;
 block|}
 else|else
@@ -1447,6 +1545,10 @@ argument_list|,
 name|boundaries
 argument_list|,
 name|flags
+argument_list|,
+name|level
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1654,6 +1756,15 @@ name|subtype
 argument_list|,
 literal|'s'
 argument_list|)
+operator|||
+name|bitset
+argument_list|(
+name|EF_TOODEEP
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
 condition|)
 block|{
 name|flags
@@ -1797,6 +1908,10 @@ argument_list|,
 name|boundaries
 argument_list|,
 name|flags
+argument_list|,
+name|level
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|mci
