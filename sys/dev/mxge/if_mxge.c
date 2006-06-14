@@ -6232,6 +6232,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|inline
 name|void
 name|mxge_start_locked
 parameter_list|(
@@ -6240,9 +6241,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|int
-name|avail
-decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -6261,46 +6259,7 @@ name|ifp
 expr_stmt|;
 while|while
 condition|(
-operator|!
-name|IFQ_DRV_IS_EMPTY
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_snd
-argument_list|)
-condition|)
-block|{
-comment|/* dequeue the packet */
-name|IFQ_DRV_DEQUEUE
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_snd
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-comment|/* let BPF see it */
-name|BPF_MTAP
-argument_list|(
-name|ifp
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-comment|/* give it to the nic */
-name|mxge_encap
-argument_list|(
-name|sc
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-comment|/* leave an extra slot keep the ring from wrapping */
-name|avail
-operator|=
+operator|(
 name|sc
 operator|->
 name|tx
@@ -6320,14 +6279,48 @@ name|tx
 operator|.
 name|done
 operator|)
-expr_stmt|;
-if|if
-condition|(
-name|avail
-operator|<
+operator|)
+operator|>
 name|MXGE_MAX_SEND_DESC
 condition|)
 block|{
+name|IFQ_DRV_DEQUEUE
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_snd
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+block|{
+return|return;
+block|}
+comment|/* let BPF see it */
+name|BPF_MTAP
+argument_list|(
+name|ifp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+comment|/* give it to the nic */
+name|mxge_encap
+argument_list|(
+name|sc
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* ran out of transmit slots */
 name|sc
 operator|->
 name|ifp
@@ -6336,9 +6329,6 @@ name|if_drv_flags
 operator||=
 name|IFF_DRV_OACTIVE
 expr_stmt|;
-return|return;
-block|}
-block|}
 block|}
 end_function
 
