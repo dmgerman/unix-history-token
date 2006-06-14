@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2005 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: queue.c,v 8.951 2006/03/02 19:13:38 ca Exp $"
+literal|"@(#)$Id: queue.c,v 8.954 2006/04/22 01:07:00 ca Exp $"
 argument_list|)
 end_macro
 
@@ -14259,6 +14259,10 @@ name|MAXLINE
 index|]
 decl_stmt|;
 comment|/* 	**  Read and process the file. 	*/
+name|bp
+operator|=
+name|NULL
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -14819,6 +14823,10 @@ operator|*
 name|bp
 operator|=
 name|delim
+expr_stmt|;
+name|bp
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -16583,12 +16591,18 @@ name|bp
 operator|!=
 name|buf
 condition|)
+block|{
 name|sm_free
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
+name|bp
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 comment|/* 	**  If we haven't read any lines, this queue file is empty. 	**  Arrange to remove it without referencing any null pointers. 	*/
 if|if
@@ -16847,6 +16861,28 @@ return|;
 name|fail
 label|:
 comment|/* 	**  There was some error reading the qf file (reason is in err var.) 	**  Cleanup: 	**	close file; clear e_lockfp since it is the same as qfp, 	**	hence it is invalid (as file) after qfp is closed; 	**	the qf file is on disk, so set the flag to avoid calling 	**	queueup() with bogus data. 	*/
+if|if
+condition|(
+name|bp
+operator|!=
+name|NULL
+operator|&&
+name|bp
+operator|!=
+name|buf
+condition|)
+block|{
+name|sm_free
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
+name|bp
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|qfp
@@ -19448,6 +19484,9 @@ name|e_qdir
 operator|==
 name|NOQDIR
 condition|)
+operator|(
+name|void
+operator|)
 name|setnewqueue
 argument_list|(
 name|e
@@ -19492,11 +19531,15 @@ block|}
 comment|/* xf files always have a valid qd and qg picked above */
 if|if
 condition|(
-name|e
-operator|->
-name|e_qdir
+operator|(
+name|qd
 operator|==
 name|NOQDIR
+operator|||
+name|qg
+operator|==
+name|NOQGRP
+operator|)
 operator|&&
 name|type
 operator|!=
@@ -23978,9 +24021,9 @@ comment|/* only the daemon updates this structure */
 if|if
 condition|(
 name|ShmId
-operator|!=
+operator|==
 name|SM_SHM_NO_ID
-operator|&&
+operator|||
 name|DaemonPid
 operator|!=
 name|CurrentPid

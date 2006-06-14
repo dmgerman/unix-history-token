@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2005 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_define
@@ -58,7 +58,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: main.c,v 8.942 2005/12/26 04:39:13 ca Exp $"
+literal|"@(#)$Id: main.c,v 8.944 2006/04/21 23:56:42 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1938,6 +1938,17 @@ argument_list|(
 name|OpMode
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|OpMode
+operator|==
+name|MD_DAEMON
+condition|)
+name|DaemonPid
+operator|=
+name|CurrentPid
+expr_stmt|;
+comment|/* needed for finis() to work */
 name|pw
 operator|=
 name|sm_getpwuid
@@ -9274,7 +9285,6 @@ name|OpMode
 operator|==
 name|MD_DAEMON
 condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -9288,11 +9298,6 @@ sizeof|sizeof
 name|dtype
 argument_list|)
 expr_stmt|;
-name|DaemonPid
-operator|=
-name|CurrentPid
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|QueueIntvl
@@ -11265,6 +11270,9 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
+name|pid_t
+name|pid
+decl_stmt|;
 comment|/* Still want to process new timeouts added below */
 name|sm_clear_events
 argument_list|()
@@ -11466,6 +11474,11 @@ comment|/* XXX clean up queues and related data structures */
 name|cleanup_queues
 argument_list|()
 expr_stmt|;
+name|pid
+operator|=
+name|getpid
+argument_list|()
+expr_stmt|;
 if|#
 directive|if
 name|SM_CONF_SHM
@@ -11473,8 +11486,7 @@ name|cleanup_shm
 argument_list|(
 name|DaemonPid
 operator|==
-name|getpid
-argument_list|()
+name|pid
 argument_list|)
 expr_stmt|;
 endif|#
@@ -11488,13 +11500,11 @@ if|if
 condition|(
 name|DaemonPid
 operator|==
-name|getpid
-argument_list|()
+name|pid
 operator|||
 name|PidFilePid
 operator|==
-name|getpid
-argument_list|()
+name|pid
 condition|)
 block|{
 comment|/* blow away the pid file */
@@ -12279,6 +12289,7 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|sm_syslog
 argument_list|(
 name|LOG_ERR
@@ -12297,6 +12308,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -12307,6 +12319,13 @@ argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|>=
+literal|0
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -12335,6 +12354,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* drop our controlling TTY completely if possible */
 if|if

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: mci.c,v 8.216 2005/07/12 22:27:44 ca Exp $"
+literal|"@(#)$Id: mci.c,v 8.217 2006/04/18 01:27:36 ca Exp $"
 argument_list|)
 end_macro
 
@@ -3289,22 +3289,36 @@ name|fp
 operator|==
 name|NULL
 condition|)
+block|{
 name|syserr
 argument_list|(
 literal|"mci_read_persistent: NULL fp"
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|mci
 operator|==
 name|NULL
 condition|)
+block|{
 name|syserr
 argument_list|(
 literal|"mci_read_persistent: NULL mci"
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|tTd
