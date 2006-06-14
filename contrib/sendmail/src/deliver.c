@@ -18718,6 +18718,8 @@ argument_list|,
 name|boundaries
 argument_list|,
 name|M87F_OUTER
+argument_list|,
+literal|0
 argument_list|)
 operator|==
 name|SM_IO_EOF
@@ -18827,6 +18829,8 @@ argument_list|,
 name|M87F_OUTER
 operator||
 name|M87F_NO8TO7
+argument_list|,
+literal|0
 argument_list|)
 operator|==
 name|SM_IO_EOF
