@@ -7282,6 +7282,14 @@ begin_comment
 comment|/*  * NOP stubs to allow bpf-using drivers to load and function.  *  * A 'better' implementation would allow the core bpf functionality  * to be loaded at runtime.  */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|bpf_if
+name|bp_null
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|bpf_tap
@@ -7380,7 +7388,22 @@ name|dlt
 decl_stmt|,
 name|hdrlen
 decl_stmt|;
-block|{ }
+block|{
+name|bpfattach2
+argument_list|(
+name|ifp
+argument_list|,
+name|dlt
+argument_list|,
+name|hdrlen
+argument_list|,
+operator|&
+name|ifp
+operator|->
+name|if_bpf
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_function
@@ -7411,7 +7434,14 @@ modifier|*
 modifier|*
 name|driverp
 decl_stmt|;
-block|{ }
+block|{
+operator|*
+name|driverp
+operator|=
+operator|&
+name|bp_null
+expr_stmt|;
+block|}
 end_function
 
 begin_function

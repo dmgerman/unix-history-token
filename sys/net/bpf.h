@@ -1968,8 +1968,6 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|bpf
-operator|&&
 operator|!
 name|LIST_EMPTY
 argument_list|(
