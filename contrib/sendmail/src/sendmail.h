@@ -6125,6 +6125,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EF_TOODEEP
+value|0x10000000L
+end_define
+
+begin_comment
+comment|/* message is nested too deep */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DLVR_NOTIFY
 value|0x01
 end_define
@@ -10493,6 +10504,8 @@ operator|,
 name|char
 operator|*
 operator|*
+operator|,
+name|int
 operator|,
 name|int
 operator|)
