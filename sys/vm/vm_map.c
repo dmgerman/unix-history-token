@@ -5691,6 +5691,13 @@ operator|.
 name|v_free_reserved
 condition|)
 block|{
+name|size
+operator|=
+name|ptoa
+argument_list|(
+name|tmpidx
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 if|if
