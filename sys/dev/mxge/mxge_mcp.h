@@ -6,19 +6,33 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_mxge_mcp_h
+name|_myri10ge_mcp_h
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_mxge_mcp_h
+name|_myri10ge_mcp_h
+end_define
+
+begin_define
+define|#
+directive|define
+name|MXGEFW_VERSION_MAJOR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MXGEFW_VERSION_MINOR
+value|4
 end_define
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|MXGE_MCP
+name|MXGEFW
 end_ifdef
 
 begin_typedef
@@ -96,9 +110,9 @@ begin_comment
 comment|/* 8 Bytes */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|mcp_dma_addr
 block|{
 name|uint32_t
 name|high
@@ -107,37 +121,39 @@ name|uint32_t
 name|low
 decl_stmt|;
 block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|mcp_dma_addr
 name|mcp_dma_addr_t
 typedef|;
 end_typedef
 
 begin_comment
-comment|/* 16 Bytes */
+comment|/* 4 Bytes */
 end_comment
+
+begin_struct
+struct|struct
+name|mcp_slot
+block|{
+name|uint16_t
+name|checksum
+decl_stmt|;
+name|uint16_t
+name|length
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_typedef
 typedef|typedef
-struct|struct
-block|{
-name|uint32_t
-name|data0
-decl_stmt|;
-name|uint32_t
-name|data1
-decl_stmt|;
-name|uint32_t
-name|seqnum
-decl_stmt|;
-name|uint16_t
-name|index
-decl_stmt|;
-name|uint8_t
-name|flag
-decl_stmt|;
-name|uint8_t
-name|type
-decl_stmt|;
-block|}
+name|struct
+name|mcp_slot
 name|mcp_slot_t
 typedef|;
 end_typedef
@@ -146,9 +162,9 @@ begin_comment
 comment|/* 64 Bytes */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|mcp_cmd
 block|{
 name|uint32_t
 name|cmd
@@ -167,7 +183,8 @@ name|data2
 decl_stmt|;
 comment|/* currently unused.. */
 comment|/* 16 */
-name|mcp_dma_addr_t
+name|struct
+name|mcp_dma_addr
 name|response_addr
 decl_stmt|;
 comment|/* 24 */
@@ -178,6 +195,13 @@ literal|40
 index|]
 decl_stmt|;
 block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|mcp_cmd
 name|mcp_cmd_t
 typedef|;
 end_typedef
@@ -186,9 +210,9 @@ begin_comment
 comment|/* 8 Bytes */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|mcp_cmd_response
 block|{
 name|uint32_t
 name|data
@@ -197,86 +221,99 @@ name|uint32_t
 name|result
 decl_stmt|;
 block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|mcp_cmd_response
 name|mcp_cmd_response_t
 typedef|;
 end_typedef
 
 begin_comment
-comment|/*     flags used in mcp_kreq_ether_send_t:     The SMALL flag is only needed in the first segment. It is raised    for packets that are total less or equal 512 bytes.     The CKSUM flag must be set in all segments.     The PADDED flags is set if the packet needs to be padded, and it    must be set for all segments.     The  MXGE_MCP_ETHER_FLAGS_ALIGN_ODD must be set if the cumulative    length of all previous segments was odd. */
+comment|/*     flags used in mcp_kreq_ether_send_t:     The SMALL flag is only needed in the first segment. It is raised    for packets that are total less or equal 512 bytes.     The CKSUM flag must be set in all segments.     The PADDED flags is set if the packet needs to be padded, and it    must be set for all segments.     The  MXGEFW_FLAGS_ALIGN_ODD must be set if the cumulative    length of all previous segments was odd. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MXGE_MCP_ETHER_FLAGS_VALID
+name|MXGEFW_FLAGS_SMALL
 value|0x1
 end_define
 
 begin_define
 define|#
 directive|define
-name|MXGE_MCP_ETHER_FLAGS_FIRST
+name|MXGEFW_FLAGS_TSO_HDR
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MXGEFW_FLAGS_FIRST
 value|0x2
 end_define
 
 begin_define
 define|#
 directive|define
-name|MXGE_MCP_ETHER_FLAGS_ALIGN_ODD
+name|MXGEFW_FLAGS_ALIGN_ODD
 value|0x4
 end_define
 
 begin_define
 define|#
 directive|define
-name|MXGE_MCP_ETHER_FLAGS_CKSUM
+name|MXGEFW_FLAGS_CKSUM
 value|0x8
 end_define
 
 begin_define
 define|#
 directive|define
-name|MXGE_MCP_ETHER_FLAGS_SMALL
+name|MXGEFW_FLAGS_TSO_LAST
+value|0x8
+end_define
+
+begin_define
+define|#
+directive|define
+name|MXGEFW_FLAGS_NO_TSO
 value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|MXGE_MCP_ETHER_FLAGS_NOT_LAST
-value|0x100
+name|MXGEFW_FLAGS_TSO_CHOP
+value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|MXGE_MCP_ETHER_FLAGS_TSO_HDR
-value|0x200
+name|MXGEFW_FLAGS_TSO_PLD
+value|0x20
 end_define
 
 begin_define
 define|#
 directive|define
-name|MXGE_MCP_ETHER_FLAGS_TSO
-value|0x400
-end_define
-
-begin_define
-define|#
-directive|define
-name|MXGE_MCP_ETHER_SEND_SMALL_SIZE
+name|MXGEFW_SEND_SMALL_SIZE
 value|1520
 end_define
 
 begin_define
 define|#
 directive|define
-name|MXGE_MCP_ETHER_MAX_MTU
+name|MXGEFW_MAX_MTU
 value|9400
 end_define
 
-begin_typedef
-typedef|typedef
+begin_union
 union|union
 name|mcp_pso_or_cumlen
 block|{
@@ -287,6 +324,13 @@ name|uint16_t
 name|cum_len
 decl_stmt|;
 block|}
+union|;
+end_union
+
+begin_typedef
+typedef|typedef
+name|union
+name|mcp_pso_or_cumlen
 name|mcp_pso_or_cumlen_t
 typedef|;
 end_typedef
@@ -294,14 +338,14 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|MXGE_MCP_ETHER_MAX_SEND_DESC
+name|MXGEFW_MAX_SEND_DESC
 value|12
 end_define
 
 begin_define
 define|#
 directive|define
-name|MXGE_MCP_ETHER_PAD
+name|MXGEFW_PAD
 value|2
 end_define
 
@@ -309,15 +353,18 @@ begin_comment
 comment|/* 16 Bytes */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|mcp_kreq_ether_send
 block|{
 name|uint32_t
 name|addr_high
 decl_stmt|;
 name|uint32_t
 name|addr_low
+decl_stmt|;
+name|uint16_t
+name|pseudo_hdr_offset
 decl_stmt|;
 name|uint16_t
 name|length
@@ -326,17 +373,24 @@ name|uint8_t
 name|pad
 decl_stmt|;
 name|uint8_t
+name|rdma_count
+decl_stmt|;
+name|uint8_t
 name|cksum_offset
 decl_stmt|;
 comment|/* where to start computing cksum */
-name|uint16_t
-name|pseudo_hdr_offset
-decl_stmt|;
-name|uint16_t
+name|uint8_t
 name|flags
 decl_stmt|;
 comment|/* as defined above */
 block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|mcp_kreq_ether_send
 name|mcp_kreq_ether_send_t
 typedef|;
 end_typedef
@@ -345,9 +399,9 @@ begin_comment
 comment|/* 8 Bytes */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|mcp_kreq_ether_recv
 block|{
 name|uint32_t
 name|addr_high
@@ -356,6 +410,13 @@ name|uint32_t
 name|addr_low
 decl_stmt|;
 block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|mcp_kreq_ether_recv
 name|mcp_kreq_ether_recv_t
 typedef|;
 end_typedef
@@ -367,150 +428,142 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MXGE_MCP_CMD_OFFSET
+name|MXGEFW_CMD_OFFSET
 value|0xf80000
 end_define
 
-begin_typedef
-typedef|typedef
+begin_enum
 enum|enum
+name|myri10ge_mcp_cmd_type
 block|{
-name|MXGE_MCP_CMD_NONE
+name|MXGEFW_CMD_NONE
 init|=
 literal|0
 block|,
 comment|/* Reset the mcp, it is left in a safe state, waiting      for the driver to set all its parameters */
-name|MXGE_MCP_CMD_RESET
+name|MXGEFW_CMD_RESET
 block|,
 comment|/* get the version number of the current firmware..      (may be available in the eeprom strings..? */
-name|MXGE_MCP_GET_MCP_VERSION
+name|MXGEFW_GET_MCP_VERSION
 block|,
-comment|/* Parameters which must be set by the driver before it can      issue MXGE_MCP_CMD_ETHERNET_UP. They persist until the next      MXGE_MCP_CMD_RESET is issued */
-name|MXGE_MCP_CMD_SET_INTRQ0_DMA
+comment|/* Parameters which must be set by the driver before it can      issue MXGEFW_CMD_ETHERNET_UP. They persist until the next      MXGEFW_CMD_RESET is issued */
+name|MXGEFW_CMD_SET_INTRQ_DMA
 block|,
-name|MXGE_MCP_CMD_SET_INTRQ1_DMA
-block|,
-name|MXGE_MCP_CMD_SET_BIG_BUFFER_SIZE
+name|MXGEFW_CMD_SET_BIG_BUFFER_SIZE
 block|,
 comment|/* in bytes, power of 2 */
-name|MXGE_MCP_CMD_SET_SMALL_BUFFER_SIZE
+name|MXGEFW_CMD_SET_SMALL_BUFFER_SIZE
 block|,
 comment|/* in bytes */
 comment|/* Parameters which refer to lanai SRAM addresses where the       driver must issue PIO writes for various things */
-name|MXGE_MCP_CMD_GET_SEND_OFFSET
+name|MXGEFW_CMD_GET_SEND_OFFSET
 block|,
-name|MXGE_MCP_CMD_GET_SMALL_RX_OFFSET
+name|MXGEFW_CMD_GET_SMALL_RX_OFFSET
 block|,
-name|MXGE_MCP_CMD_GET_BIG_RX_OFFSET
+name|MXGEFW_CMD_GET_BIG_RX_OFFSET
 block|,
-name|MXGE_MCP_CMD_GET_IRQ_ACK_OFFSET
+name|MXGEFW_CMD_GET_IRQ_ACK_OFFSET
 block|,
-name|MXGE_MCP_CMD_GET_IRQ_DEASSERT_OFFSET
-block|,
-name|MXGE_MCP_CMD_GET_IRQ_ACK_DEASSERT_OFFSET
+name|MXGEFW_CMD_GET_IRQ_DEASSERT_OFFSET
 block|,
 comment|/* Parameters which refer to rings stored on the MCP,      and whose size is controlled by the mcp */
-name|MXGE_MCP_CMD_GET_SEND_RING_SIZE
+name|MXGEFW_CMD_GET_SEND_RING_SIZE
 block|,
 comment|/* in bytes */
-name|MXGE_MCP_CMD_GET_RX_RING_SIZE
+name|MXGEFW_CMD_GET_RX_RING_SIZE
 block|,
 comment|/* in bytes */
 comment|/* Parameters which refer to rings stored in the host,      and whose size is controlled by the host.  Note that      all must be physically contiguous and must contain       a power of 2 number of entries.  */
-name|MXGE_MCP_CMD_SET_INTRQ_SIZE
+name|MXGEFW_CMD_SET_INTRQ_SIZE
 block|,
 comment|/* in bytes */
 comment|/* command to bring ethernet interface up.  Above parameters      (plus mtu& mac address) must have been exchanged prior      to issuing this command  */
-name|MXGE_MCP_CMD_ETHERNET_UP
+name|MXGEFW_CMD_ETHERNET_UP
 block|,
-comment|/* command to bring ethernet interface down.  No further sends      or receives may be processed until an MXGE_MCP_CMD_ETHERNET_UP      is issued, and all interrupt queues must be flushed prior      to ack'ing this command */
-name|MXGE_MCP_CMD_ETHERNET_DOWN
+comment|/* command to bring ethernet interface down.  No further sends      or receives may be processed until an MXGEFW_CMD_ETHERNET_UP      is issued, and all interrupt queues must be flushed prior      to ack'ing this command */
+name|MXGEFW_CMD_ETHERNET_DOWN
 block|,
 comment|/* commands the driver may issue live, without resetting      the nic.  Note that increasing the mtu "live" should      only be done if the driver has already supplied buffers      sufficiently large to handle the new mtu.  Decreasing      the mtu live is safe */
-name|MXGE_MCP_CMD_SET_MTU
+name|MXGEFW_CMD_SET_MTU
 block|,
-name|MXGE_MCP_CMD_SET_INTR_COAL_DELAY
-block|,
-comment|/* in microseconds */
-name|MXGE_MCP_CMD_SET_STATS_INTERVAL
+name|MXGEFW_CMD_GET_INTR_COAL_DELAY_OFFSET
 block|,
 comment|/* in microseconds */
-name|MXGE_MCP_CMD_SET_STATS_DMA
+name|MXGEFW_CMD_SET_STATS_INTERVAL
 block|,
-name|MXGE_MCP_ENABLE_PROMISC
+comment|/* in microseconds */
+name|MXGEFW_CMD_SET_STATS_DMA
 block|,
-name|MXGE_MCP_DISABLE_PROMISC
+name|MXGEFW_ENABLE_PROMISC
 block|,
-name|MXGE_MCP_SET_MAC_ADDRESS
+name|MXGEFW_DISABLE_PROMISC
 block|,
-name|MXGE_MCP_ENABLE_FLOW_CONTROL
+name|MXGEFW_SET_MAC_ADDRESS
 block|,
-name|MXGE_MCP_DISABLE_FLOW_CONTROL
+name|MXGEFW_ENABLE_FLOW_CONTROL
+block|,
+name|MXGEFW_DISABLE_FLOW_CONTROL
+block|,
+comment|/* do a DMA test      data0,data1 = DMA address      data2       = RDMA length (MSH), WDMA length (LSH)      command return data = repetitions (MSH), 0.5-ms ticks (LSH)   */
+name|MXGEFW_DMA_TEST
 block|}
-name|mxge_mcp_cmd_type_t
-typedef|;
-end_typedef
+enum|;
+end_enum
 
 begin_typedef
 typedef|typedef
-enum|enum
-block|{
-name|MXGE_MCP_CMD_OK
-init|=
-literal|0
-block|,
-name|MXGE_MCP_CMD_UNKNOWN
-block|,
-name|MXGE_MCP_CMD_ERROR_RANGE
-block|,
-name|MXGE_MCP_CMD_ERROR_BUSY
-block|,
-name|MXGE_MCP_CMD_ERROR_EMPTY
-block|,
-name|MXGE_MCP_CMD_ERROR_CLOSED
-block|,
-name|MXGE_MCP_CMD_ERROR_HASH_ERROR
-block|,
-name|MXGE_MCP_CMD_ERROR_BAD_PORT
-block|,
-name|MXGE_MCP_CMD_ERROR_RESOURCES
-block|}
-name|mxge_mcp_cmd_status_t
+name|enum
+name|myri10ge_mcp_cmd_type
+name|myri10ge_mcp_cmd_type_t
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
+begin_enum
 enum|enum
+name|myri10ge_mcp_cmd_status
 block|{
-name|MXGE_MCP_INTR_NONE
+name|MXGEFW_CMD_OK
 init|=
 literal|0
 block|,
-name|MXGE_MCP_INTR_ETHER_SEND_DONE
+name|MXGEFW_CMD_UNKNOWN
 block|,
-name|MXGE_MCP_INTR_ETHER_RECV_SMALL
+name|MXGEFW_CMD_ERROR_RANGE
 block|,
-name|MXGE_MCP_INTR_ETHER_RECV_BIG
+name|MXGEFW_CMD_ERROR_BUSY
 block|,
-name|MXGE_MCP_INTR_LINK_CHANGE
+name|MXGEFW_CMD_ERROR_EMPTY
 block|,
-name|MXGE_MCP_INTR_STATS_UPDATE
+name|MXGEFW_CMD_ERROR_CLOSED
 block|,
-name|MXGE_MCP_INTR_ETHER_DOWN
+name|MXGEFW_CMD_ERROR_HASH_ERROR
+block|,
+name|MXGEFW_CMD_ERROR_BAD_PORT
+block|,
+name|MXGEFW_CMD_ERROR_RESOURCES
 block|}
-name|mxge_mcp_intr_type_t
+enum|;
+end_enum
+
+begin_typedef
+typedef|typedef
+name|enum
+name|myri10ge_mcp_cmd_status
+name|myri10ge_mcp_cmd_status_t
 typedef|;
 end_typedef
 
 begin_comment
-comment|/* 32 Bytes */
+comment|/* 40 Bytes */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|mcp_irq_data
 block|{
+name|uint32_t
+name|send_done_count
+decl_stmt|;
 name|uint32_t
 name|link_up
 decl_stmt|;
@@ -533,13 +586,29 @@ name|uint32_t
 name|dropped_no_big_buffer
 decl_stmt|;
 name|uint32_t
-name|dropped_interrupt_busy
-decl_stmt|;
-name|uint32_t
 name|rdma_tags_available
 decl_stmt|;
+name|uint8_t
+name|tx_stopped
+decl_stmt|;
+name|uint8_t
+name|link_down
+decl_stmt|;
+name|uint8_t
+name|stats_updated
+decl_stmt|;
+name|uint8_t
+name|valid
+decl_stmt|;
 block|}
-name|mcp_stats_t
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|mcp_irq_data
+name|mcp_irq_data_t
 typedef|;
 end_typedef
 
@@ -549,7 +618,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _mxge_mcp_h */
+comment|/* _myri10ge_mcp_h */
 end_comment
 
 end_unit
