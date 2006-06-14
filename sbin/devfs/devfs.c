@@ -611,9 +611,7 @@ argument_list|,
 literal|"cannot allocate memory"
 argument_list|)
 expr_stmt|;
-name|rv
-operator|=
-name|strlcpy
+name|memcpy
 argument_list|(
 operator|*
 name|line
@@ -621,9 +619,17 @@ argument_list|,
 name|cp
 argument_list|,
 name|rv
-operator|+
-literal|1
 argument_list|)
+expr_stmt|;
+operator|(
+operator|*
+name|line
+operator|)
+index|[
+name|rv
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 block|}
 name|assert
