@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: util.c,v 8.392 2006/03/09 19:49:35 ca Exp $"
+literal|"@(#)$Id: util.c,v 8.394 2006/05/03 23:55:29 ca Exp $"
 argument_list|)
 end_macro
 
@@ -7022,11 +7022,12 @@ name|e_lockfp
 operator|!=
 name|NULL
 condition|)
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|fd
+operator|=
 name|sm_io_getinfo
 argument_list|(
 name|e
@@ -7037,8 +7038,33 @@ name|SM_IO_WHAT_FD
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|>=
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
+else|else
+name|syserr
+argument_list|(
+literal|"%s: lockfp does not have a fd"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* chroot to the program mailer directory, if defined */
 if|if
 condition|(
@@ -9546,6 +9572,10 @@ operator|&&
 name|children
 operator|!=
 name|CurChildren
+operator|&&
+name|CurrentPid
+operator|==
+name|DaemonPid
 condition|)
 block|{
 name|sm_syslog

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: sfsasl.c,v 8.113 2006/03/02 19:18:27 ca Exp $"
+literal|"@(#)$Id: sfsasl.c,v 8.115 2006/04/18 21:34:07 ca Exp $"
 argument_list|)
 end_macro
 
@@ -26,6 +26,12 @@ begin_include
 include|#
 directive|include
 file|<sendmail.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sm/time.h>
 end_include
 
 begin_include
@@ -1053,6 +1059,10 @@ operator|>
 literal|0
 condition|)
 block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 comment|/* XXX result == 0? */
 name|ret
 operator|=
@@ -1112,7 +1122,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  SFDCSASL -- create sasl file type and open in and out file pointers **	       for sendmail to read from and write to. ** **	Parameters: **		fin -- the sm_io file encrypted data to be read from **		fout -- the sm_io file encrypted data to be writen to **		conn -- the sasl connection pointer ** **	Returns: **		-1 on error **		0 on success ** **	Side effects: **		The arguments "fin" and "fout" are replaced with the new **		SM_FILE_T pointers. */
+comment|/* **  SFDCSASL -- create sasl file type and open in and out file pointers **	       for sendmail to read from and write to. ** **	Parameters: **		fin -- the sm_io file encrypted data to be read from **		fout -- the sm_io file encrypted data to be written to **		conn -- the sasl connection pointer **		tmo -- timeout ** **	Returns: **		-1 on error **		0 on success ** **	Side effects: **		The arguments "fin" and "fout" are replaced with the new **		SM_FILE_T pointers. */
 end_comment
 
 begin_function
@@ -1124,6 +1134,8 @@ parameter_list|,
 name|fout
 parameter_list|,
 name|conn
+parameter_list|,
+name|tmo
 parameter_list|)
 name|SM_FILE_T
 modifier|*
@@ -1138,6 +1150,9 @@ decl_stmt|;
 name|sasl_conn_t
 modifier|*
 name|conn
+decl_stmt|;
+name|int
+name|tmo
 decl_stmt|;
 block|{
 name|SM_FILE_T
@@ -1168,7 +1183,7 @@ name|sasl_getinfo
 argument_list|,
 name|NULL
 argument_list|,
-name|SM_TIME_FOREVER
+name|SM_TIME_DEFAULT
 argument_list|)
 decl_stmt|;
 name|struct
@@ -1207,7 +1222,7 @@ name|sasl_getinfo
 argument_list|,
 name|NULL
 argument_list|,
-name|SM_TIME_FOREVER
+name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
 name|info
@@ -1307,6 +1322,28 @@ argument_list|(
 name|newin
 argument_list|,
 name|newout
+argument_list|)
+expr_stmt|;
+name|sm_io_setinfo
+argument_list|(
+operator|*
+name|fin
+argument_list|,
+name|SM_IO_WHAT_TIMEOUT
+argument_list|,
+operator|&
+name|tmo
+argument_list|)
+expr_stmt|;
+name|sm_io_setinfo
+argument_list|(
+operator|*
+name|fout
+argument_list|,
+name|SM_IO_WHAT_TIMEOUT
+argument_list|,
+operator|&
+name|tmo
 argument_list|)
 expr_stmt|;
 operator|*

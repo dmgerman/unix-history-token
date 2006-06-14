@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: map.c,v 8.671 2005/10/25 17:55:50 ca Exp $"
+literal|"@(#)$Id: map.c,v 8.672 2006/04/18 01:26:41 ca Exp $"
 argument_list|)
 end_macro
 
@@ -25545,6 +25545,23 @@ operator|.
 name|mbdb_shell
 expr_stmt|;
 break|break;
+default|default:
+name|syserr
+argument_list|(
+literal|"user_map %s: bogus field %d"
+argument_list|,
+name|map
+operator|->
+name|map_mname
+argument_list|,
+name|map
+operator|->
+name|map_valcolno
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
 block|}
 return|return
 name|map_rewrite

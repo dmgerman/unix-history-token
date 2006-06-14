@@ -230,7 +230,7 @@ end_macro
 
 begin_expr_stmt
 operator|=
-literal|"@(#)$Id: sendmail.h,v 8.1006 2006/02/27 17:49:09 ca Exp $"
+literal|"@(#)$Id: sendmail.h,v 8.1008.2.1 2006/05/23 01:32:07 ca Exp $"
 expr_stmt|;
 end_expr_stmt
 
@@ -6125,6 +6125,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EF_TOODEEP
+value|0x10000000L
+end_define
+
+begin_comment
+comment|/* message is nested too deep */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DLVR_NOTIFY
 value|0x01
 end_define
@@ -10495,6 +10506,8 @@ operator|*
 operator|*
 operator|,
 name|int
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -14215,6 +14228,10 @@ modifier|*
 name|MessageAccept
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* "Message accepted for delivery" reply text */
+end_comment
 
 begin_endif
 endif|#
