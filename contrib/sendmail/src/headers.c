@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: headers.c,v 8.290 2006/02/25 02:16:52 ca Exp $"
+literal|"@(#)$Id: headers.c,v 8.291 2006/03/24 01:01:56 ca Exp $"
 argument_list|)
 end_macro
 
@@ -6164,7 +6164,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* **  PUTHEADER -- put the header part of a message from the in-core copy ** **	Parameters: **		mci -- the connection information. **		hdr -- the header to put. **		e -- envelope to use. **		flags -- MIME conversion flags. ** **	Returns: **		success ** **	Side Effects: **		none. */
+comment|/* **  PUTHEADER -- put the header part of a message from the in-core copy ** **	Parameters: **		mci -- the connection information. **		hdr -- the header to put. **		e -- envelope to use. **		flags -- MIME conversion flags. ** **	Returns: **		true iff header part was written successfully ** **	Side Effects: **		none. */
 end_comment
 
 begin_function
@@ -7295,7 +7295,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  PUT_VANILLA_HEADER -- output a fairly ordinary header ** **	Parameters: **		h -- the structure describing this header **		v -- the value of this header **		mci -- the connection info for output ** **	Returns: **		success */
+comment|/* **  PUT_VANILLA_HEADER -- output a fairly ordinary header ** **	Parameters: **		h -- the structure describing this header **		v -- the value of this header **		mci -- the connection info for output ** **	Returns: **		true iff header was written successfully */
 end_comment
 
 begin_function
@@ -7572,7 +7572,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  COMMAIZE -- output a header field, making a comma-translated list. ** **	Parameters: **		h -- the header field to output. **		p -- the value to put in it. **		oldstyle -- true if this is an old style header. **		mci -- the connection information. **		e -- the envelope containing the message. ** **	Returns: **		success ** **	Side Effects: **		outputs "p" to file "fp". */
+comment|/* **  COMMAIZE -- output a header field, making a comma-translated list. ** **	Parameters: **		h -- the header field to output. **		p -- the value to put in it. **		oldstyle -- true if this is an old style header. **		mci -- the connection information. **		e -- the envelope containing the message. ** **	Returns: **		true iff header field was written successfully ** **	Side Effects: **		outputs "p" to file "fp". */
 end_comment
 
 begin_function
