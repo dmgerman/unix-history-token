@@ -2503,7 +2503,7 @@ operator|!=
 name|VNOVAL
 condition|)
 block|{
-comment|/* 		 * Disallow write attempts on read-only filesystems; 		 * unless the file is a socket, fifo, or a block or 		 * character device resident on the filesystem. 		 */
+comment|/* 		 * XXX most of the following special cases should be in 		 * callers instead of in N filesystems.  The VDIR check 		 * mostly already is. 		 */
 switch|switch
 condition|(
 name|vp
@@ -2525,6 +2525,7 @@ case|:
 case|case
 name|VREG
 case|:
+comment|/* 			 * Truncation should have an effect in these cases. 			 * Disallow it if the filesystem is read-only or 			 * the file is being snapshotted. 			 */
 if|if
 condition|(
 name|vp
@@ -2559,7 +2560,12 @@ operator|)
 return|;
 break|break;
 default|default:
-break|break;
+comment|/* 			 * According to POSIX, the result is unspecified 			 * for file types other than regular files, 			 * directories and shared memory objects.  We 			 * don't support shared memory objects in the file 			 * system, and have dubious support for truncating 			 * symlinks.  Just ignore the request in other cases. 			 */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 if|if
 condition|(
