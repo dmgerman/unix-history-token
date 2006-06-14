@@ -868,7 +868,8 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|TAILQ_FIRST
+operator|!
+name|TAILQ_EMPTY
 argument_list|(
 operator|&
 name|callwheel
@@ -878,8 +879,6 @@ operator|&
 name|callwheelmask
 index|]
 argument_list|)
-operator|!=
-name|NULL
 condition|)
 block|{
 name|need_softclock
