@@ -10218,6 +10218,12 @@ name|td_flags
 operator||=
 name|TDF_NEEDRESCHED
 expr_stmt|;
+name|ke
+operator|->
+name|ke_runq
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|preemptive
@@ -10228,6 +10234,14 @@ name|td
 argument_list|)
 condition|)
 return|return;
+name|ke
+operator|->
+name|ke_runq
+operator|=
+name|my_ksq
+operator|->
+name|ksq_curr
+expr_stmt|;
 if|if
 condition|(
 name|curthread
