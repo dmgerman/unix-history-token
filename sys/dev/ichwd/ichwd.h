@@ -159,6 +159,27 @@ name|DEVICEID_82801EBR
 value|0x24d0
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEVICEID_6300ESB
+value|0x25a1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICEID_82801FBR
+value|0x2640
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICEID_ICH5
+value|0x27b8
+end_define
+
 begin_comment
 comment|/* ICH LPC Interface Bridge Registers */
 end_comment
@@ -464,7 +485,7 @@ begin_define
 define|#
 directive|define
 name|ICHWD_TICK
-value|600000000
+value|1800000000
 end_define
 
 begin_comment
