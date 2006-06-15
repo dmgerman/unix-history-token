@@ -6674,8 +6674,8 @@ decl_stmt|;
 name|DEB
 argument_list|(
 argument|printf(
-literal|"ipfw: install state type %d 0x%08x %u -> 0x%08x %u\n"
-argument|, 	    cmd->o.opcode, 	    (args->f_id.src_ip), (args->f_id.src_port), 	    (args->f_id.dst_ip), (args->f_id.dst_port) );
+literal|"ipfw: %s: type %d 0x%08x %u -> 0x%08x %u\n"
+argument|, 	    __func__, cmd->o.opcode, 	    (args->f_id.src_ip), (args->f_id.src_port), 	    (args->f_id.dst_ip), (args->f_id.dst_port));
 argument_list|)
 name|IPFW_DYN_LOCK
 argument_list|()
@@ -6715,7 +6715,9 @@ name|time_uptime
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ipfw: install_state: entry already present, done\n"
+literal|"ipfw: %s: entry already present, done\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -6723,7 +6725,9 @@ name|IPFW_DYN_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -6732,7 +6736,7 @@ name|dyn_count
 operator|>=
 name|dyn_max
 condition|)
-comment|/* 		 * Run out of slots, try to remove any expired rule. 		 */
+comment|/* Run out of slots, try to remove any expired rule. */
 name|remove_dyn_rule
 argument_list|(
 name|NULL
@@ -6764,7 +6768,9 @@ name|time_uptime
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ipfw: install_state: Too many dynamic rules\n"
+literal|"ipfw: %s: Too many dynamic rules\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -6772,7 +6778,9 @@ name|IPFW_DYN_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 comment|/* cannot install, notify caller */
 block|}
@@ -6805,15 +6813,8 @@ break|break;
 case|case
 name|O_LIMIT
 case|:
-comment|/* limit number of sessions */
 block|{
-name|u_int16_t
-name|limit_mask
-init|=
-name|cmd
-operator|->
-name|limit_mask
-decl_stmt|;
+comment|/* limit number of sessions */
 name|struct
 name|ipfw_flow_id
 name|id
@@ -6822,11 +6823,18 @@ name|ipfw_dyn_rule
 modifier|*
 name|parent
 decl_stmt|;
+name|uint16_t
+name|limit_mask
+init|=
+name|cmd
+operator|->
+name|limit_mask
+decl_stmt|;
 name|DEB
 argument_list|(
 argument|printf(
-literal|"ipfw: installing dyn-limit rule %d\n"
-argument|, 		    cmd->conn_limit);
+literal|"ipfw: %s: O_LIMIT rule, conn_limit: %u\n"
+argument|, 		    __func__, cmd->conn_limit);
 argument_list|)
 name|id
 operator|.
@@ -6836,8 +6844,6 @@ name|id
 operator|.
 name|src_ip
 operator|=
-literal|0
-expr_stmt|;
 name|id
 operator|.
 name|dst_port
@@ -6981,6 +6987,9 @@ name|f_id
 operator|.
 name|dst_port
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|parent
 operator|=
 name|lookup_dyn_parent
@@ -6990,24 +6999,25 @@ name|id
 argument_list|,
 name|rule
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|parent
+operator|)
 operator|==
 name|NULL
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ipfw: add parent failed\n"
+literal|"ipfw: %s: add parent failed\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|IPFW_DYN_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -7021,7 +7031,7 @@ operator|->
 name|conn_limit
 condition|)
 block|{
-comment|/* 			 * See if we can remove some expired rule. 			 */
+comment|/* See if we can remove some expired rule. */
 name|remove_dyn_rule
 argument_list|(
 name|rule
@@ -7067,7 +7077,9 @@ name|IPFW_DYN_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 block|}
@@ -7088,12 +7100,14 @@ operator|)
 name|parent
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
+block|}
 default|default:
 name|printf
 argument_list|(
-literal|"ipfw: unknown dynamic rule type %u\n"
+literal|"ipfw: %s: unknown dynamic rule type %u\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|cmd
 operator|->
@@ -7106,9 +7120,12 @@ name|IPFW_DYN_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
+comment|/* XXX just set lifetime */
 name|lookup_dyn_rule_locked
 argument_list|(
 operator|&
@@ -7121,12 +7138,13 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* XXX just set lifetime */
 name|IPFW_DYN_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
