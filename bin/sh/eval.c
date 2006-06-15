@@ -4408,6 +4408,8 @@ decl_stmt|;
 if|if
 condition|(
 name|n
+operator|&&
+name|n
 operator|->
 name|type
 operator|==
