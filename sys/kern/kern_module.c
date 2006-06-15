@@ -511,7 +511,7 @@ decl_stmt|;
 name|module_t
 name|newmod
 decl_stmt|;
-name|MOD_SLOCK
+name|MOD_XLOCK
 expr_stmt|;
 name|newmod
 operator|=
@@ -529,7 +529,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|MOD_SUNLOCK
+name|MOD_XUNLOCK
 expr_stmt|;
 name|printf
 argument_list|(
@@ -546,8 +546,6 @@ name|EEXIST
 operator|)
 return|;
 block|}
-name|MOD_SUNLOCK
-expr_stmt|;
 name|namelen
 operator|=
 name|strlen
@@ -582,13 +580,15 @@ name|newmod
 operator|==
 name|NULL
 condition|)
+block|{
+name|MOD_XUNLOCK
+expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
 operator|)
 return|;
-name|MOD_XLOCK
-expr_stmt|;
+block|}
 name|newmod
 operator|->
 name|refs
