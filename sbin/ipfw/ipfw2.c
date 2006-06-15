@@ -299,13 +299,31 @@ end_define
 begin_define
 define|#
 directive|define
-name|NOT_NUMBER
+name|GET_UINT_ARG
+parameter_list|(
+name|arg
+parameter_list|,
+name|min
+parameter_list|,
+name|max
+parameter_list|,
+name|tok
+parameter_list|,
+name|s_x
+parameter_list|)
+value|do {			\ 	if (!ac)							\ 		errx(EX_USAGE, "%s: missing argument", match_value(s_x, tok)); \ 	if (_substrcmp(*av, "tablearg") == 0) {				\ 		arg = IP_FW_TABLEARG;					\ 		break;							\ 	}								\ 									\ 	{								\ 	long val;							\ 	char *end;							\ 									\ 	val = strtol(*av,&end, 10);					\ 									\ 	if (!isdigit(**av) || *end != '\0' || (val == 0&& errno == EINVAL)) \ 		errx(EX_DATAERR, "%s: invalid argument: %s",		\ 		    match_value(s_x, tok), *av);			\ 									\ 	if (errno == ERANGE || val< min || val> max)			\ 		errx(EX_DATAERR, "%s: argument is out of range (%u..%u): %s", \ 		    match_value(s_x, tok), min, max, *av);		\ 									\ 	if (val == IP_FW_TABLEARG)					\ 		errx(EX_DATAERR, "%s: illegal argument value: %s",	\ 		    match_value(s_x, tok), *av);			\ 	arg = val;							\ 	}								\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRINT_UINT_ARG
 parameter_list|(
 name|str
 parameter_list|,
-name|msg
+name|arg
 parameter_list|)
-value|do {		\ 	char *c;				\ 	for (c = str; *c != '\0'; c++) {	\ 		if (isdigit(*c))		\ 			continue;		\ 		errx(EX_DATAERR, msg);		\ 	}					\ } while (0)
+value|do {					\ 	if (str != NULL)						\ 		printf("%s",str);					\ 	if (arg == IP_FW_TABLEARG)					\ 		printf("tablearg");					\ 	else								\ 		printf("%u", (uint32_t)arg);				\ } while (0)
 end_define
 
 begin_comment
@@ -3433,16 +3451,21 @@ name|s
 operator|==
 name|av
 condition|)
-comment|/* no parameter */
-break|break;
-if|if
+comment|/* empty or invalid argument */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+switch|switch
 condition|(
 operator|*
 name|s
-operator|==
-literal|'-'
 condition|)
 block|{
+case|case
+literal|'-'
+case|:
 comment|/* a range */
 name|av
 operator|=
@@ -3464,14 +3487,30 @@ argument_list|,
 name|proto
 argument_list|)
 expr_stmt|;
+comment|/* Reject expressions like '1-abc' or '1-2-3'. */
 if|if
 condition|(
 name|s
 operator|==
 name|av
+operator|||
+operator|(
+operator|*
+name|s
+operator|!=
+literal|','
+operator|&&
+operator|*
+name|s
+operator|!=
+literal|'\0'
+operator|)
 condition|)
-comment|/* no parameter */
-break|break;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|p
 index|[
 literal|0
@@ -3486,20 +3525,14 @@ index|]
 operator|=
 name|b
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-operator|*
-name|s
-operator|==
+break|break;
+case|case
 literal|','
-operator|||
-operator|*
-name|s
-operator|==
+case|:
+comment|/* comma separated list */
+case|case
 literal|'\0'
-condition|)
+case|:
 name|p
 index|[
 literal|0
@@ -3512,13 +3545,11 @@ index|]
 operator|=
 name|a
 expr_stmt|;
-else|else
-comment|/* invalid separator */
-name|errx
+break|break;
+default|default:
+name|warnx
 argument_list|(
-name|EX_DATAERR
-argument_list|,
-literal|"invalid separator<%c> in<%s>\n"
+literal|"port list: invalid separator<%c> in<%s>"
 argument_list|,
 operator|*
 name|s
@@ -3526,6 +3557,12 @@ argument_list|,
 name|av
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|i
 operator|++
 expr_stmt|;
@@ -3575,7 +3612,9 @@ expr_stmt|;
 comment|/* leave F_NOT and F_OR untouched */
 block|}
 return|return
+operator|(
 name|i
+operator|)
 return|;
 block|}
 end_function
@@ -7018,73 +7057,97 @@ name|arg1
 argument_list|)
 expr_stmt|;
 break|break;
-define|#
-directive|define
-name|PRINT_WITH_ARG
-parameter_list|(
-name|o
-parameter_list|)
-define|\
-value|if (cmd->arg1 == IP_FW_TABLEARG)		\ 				printf("%s tablearg", (o));		\ 			else						\ 				printf("%s %u", (o), cmd->arg1);	\ 			break;
 case|case
 name|O_SKIPTO
 case|:
-name|PRINT_WITH_ARG
+name|PRINT_UINT_ARG
 argument_list|(
-literal|"skipto"
+literal|"skipto "
+argument_list|,
+name|cmd
+operator|->
+name|arg1
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 name|O_PIPE
 case|:
-name|PRINT_WITH_ARG
+name|PRINT_UINT_ARG
 argument_list|(
-literal|"pipe"
+literal|"pipe "
+argument_list|,
+name|cmd
+operator|->
+name|arg1
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 name|O_QUEUE
 case|:
-name|PRINT_WITH_ARG
+name|PRINT_UINT_ARG
 argument_list|(
-literal|"queue"
+literal|"queue "
+argument_list|,
+name|cmd
+operator|->
+name|arg1
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 name|O_DIVERT
 case|:
-name|PRINT_WITH_ARG
+name|PRINT_UINT_ARG
 argument_list|(
-literal|"divert"
+literal|"divert "
+argument_list|,
+name|cmd
+operator|->
+name|arg1
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 name|O_TEE
 case|:
-name|PRINT_WITH_ARG
+name|PRINT_UINT_ARG
 argument_list|(
-literal|"tee"
+literal|"tee "
+argument_list|,
+name|cmd
+operator|->
+name|arg1
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 name|O_NETGRAPH
 case|:
-name|PRINT_WITH_ARG
+name|PRINT_UINT_ARG
 argument_list|(
-literal|"netgraph"
+literal|"netgraph "
+argument_list|,
+name|cmd
+operator|->
+name|arg1
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 name|O_NGTEE
 case|:
-name|PRINT_WITH_ARG
+name|PRINT_UINT_ARG
 argument_list|(
-literal|"ngtee"
+literal|"ngtee "
+argument_list|,
+name|cmd
+operator|->
+name|arg1
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|PRINT_WITH_ARG
+break|break;
 case|case
 name|O_FORWARD_IP
 case|:
@@ -7269,9 +7332,9 @@ name|len
 operator|&
 name|F_NOT
 condition|)
-name|printf
+name|PRINT_UINT_ARG
 argument_list|(
-literal|" untag %hu"
+literal|" untag "
 argument_list|,
 name|tagptr
 operator|->
@@ -7279,9 +7342,9 @@ name|arg1
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|PRINT_UINT_ARG
 argument_list|(
-literal|" tag %hu"
+literal|" tag "
 argument_list|,
 name|tagptr
 operator|->
@@ -9046,17 +9109,17 @@ operator|=
 literal|","
 expr_stmt|;
 block|}
-name|printf
+name|PRINT_UINT_ARG
 argument_list|(
-literal|" %d"
+literal|" "
 argument_list|,
 name|c
 operator|->
 name|conn_limit
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
+block|}
 case|case
 name|O_IP6
 case|:
@@ -9113,9 +9176,9 @@ argument_list|)
 operator|==
 literal|1
 condition|)
-name|printf
+name|PRINT_UINT_ARG
 argument_list|(
-literal|" tagged %hu"
+literal|" tagged "
 argument_list|,
 name|cmd
 operator|->
@@ -20986,6 +21049,9 @@ case|case
 name|TOK_UNTAG
 case|:
 block|{
+name|uint16_t
+name|tag
+decl_stmt|;
 if|if
 condition|(
 name|have_tag
@@ -20994,20 +21060,21 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"tag and untag cannot be specified more than once"
+literal|"tag and untag cannot be "
+literal|"specified more than once"
 argument_list|)
 expr_stmt|;
-name|NEED1
+name|GET_UINT_ARG
 argument_list|(
-literal|"missing tag number"
-argument_list|)
-expr_stmt|;
-name|NOT_NUMBER
-argument_list|(
-operator|*
-name|av
+name|tag
 argument_list|,
-literal|"invalid tag number"
+literal|1
+argument_list|,
+literal|65534
+argument_list|,
+name|i
+argument_list|,
+name|rule_action_params
 argument_list|)
 expr_stmt|;
 name|have_tag
@@ -21030,15 +21097,7 @@ literal|0
 else|:
 name|F_NOT
 argument_list|,
-name|strtoul
-argument_list|(
-operator|*
-name|av
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|)
+name|tag
 argument_list|)
 expr_stmt|;
 name|ac
@@ -21047,8 +21106,8 @@ expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
-block|}
 break|break;
+block|}
 default|default:
 name|abort
 argument_list|()
@@ -22919,39 +22978,6 @@ break|break;
 case|case
 name|TOK_LIMIT
 case|:
-if|if
-condition|(
-name|open_par
-condition|)
-name|errx
-argument_list|(
-name|EX_USAGE
-argument_list|,
-literal|"limit cannot be part "
-literal|"of an or block"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|have_state
-condition|)
-name|errx
-argument_list|(
-name|EX_USAGE
-argument_list|,
-literal|"only one of keep-state "
-literal|"and limit is allowed"
-argument_list|)
-expr_stmt|;
-name|NEED1
-argument_list|(
-literal|"limit needs mask and # of connections"
-argument_list|)
-expr_stmt|;
-name|have_state
-operator|=
-name|cmd
-expr_stmt|;
 block|{
 name|ipfw_insn_limit
 modifier|*
@@ -22963,6 +22989,36 @@ operator|*
 operator|)
 name|cmd
 decl_stmt|;
+name|int
+name|val
+decl_stmt|;
+if|if
+condition|(
+name|open_par
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"limit cannot be part of an or block"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|have_state
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"only one of keep-state and"
+literal|"limit is allowed"
+argument_list|)
+expr_stmt|;
+name|have_state
+operator|=
+name|cmd
+expr_stmt|;
 name|cmd
 operator|->
 name|len
@@ -22982,26 +23038,22 @@ name|c
 operator|->
 name|limit_mask
 operator|=
-literal|0
-expr_stmt|;
 name|c
 operator|->
 name|conn_limit
 operator|=
 literal|0
 expr_stmt|;
-for|for
-control|(
-init|;
+while|while
+condition|(
 name|ac
 operator|>
-literal|1
-condition|;
-control|)
+literal|0
+condition|)
 block|{
-name|int
-name|val
-decl_stmt|;
+if|if
+condition|(
+operator|(
 name|val
 operator|=
 name|match_token
@@ -23011,10 +23063,7 @@ argument_list|,
 operator|*
 name|av
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|val
+operator|)
 operator|<=
 literal|0
 condition|)
@@ -23032,31 +23081,6 @@ name|av
 operator|++
 expr_stmt|;
 block|}
-name|c
-operator|->
-name|conn_limit
-operator|=
-name|atoi
-argument_list|(
-operator|*
-name|av
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|c
-operator|->
-name|conn_limit
-operator|==
-literal|0
-condition|)
-name|errx
-argument_list|(
-name|EX_USAGE
-argument_list|,
-literal|"limit: limit must be>0"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|c
@@ -23069,7 +23093,22 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"missing limit mask"
+literal|"limit: missing limit mask"
+argument_list|)
+expr_stmt|;
+name|GET_UINT_ARG
+argument_list|(
+name|c
+operator|->
+name|conn_limit
+argument_list|,
+literal|1
+argument_list|,
+literal|65534
+argument_list|,
+name|TOK_LIMIT
+argument_list|,
+name|rule_options
 argument_list|)
 expr_stmt|;
 name|ac
@@ -23078,8 +23117,8 @@ expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
-block|}
 break|break;
+block|}
 case|case
 name|TOK_PROTO
 case|:
@@ -23564,13 +23603,12 @@ break|break;
 case|case
 name|TOK_TAGGED
 case|:
-name|NEED1
-argument_list|(
-literal|"missing tag number"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
+name|ac
+operator|>
+literal|0
+operator|&&
 name|strpbrk
 argument_list|(
 operator|*
@@ -23599,7 +23637,8 @@ name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"invalid tag %s"
+literal|"tagged: invalid tag"
+literal|" list: %s"
 argument_list|,
 operator|*
 name|av
@@ -23608,12 +23647,20 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|NOT_NUMBER
+name|uint16_t
+name|tag
+decl_stmt|;
+name|GET_UINT_ARG
 argument_list|(
-operator|*
-name|av
+name|tag
 argument_list|,
-literal|"invalid tag number"
+literal|1
+argument_list|,
+literal|65534
+argument_list|,
+name|TOK_TAGGED
+argument_list|,
+name|rule_options
 argument_list|)
 expr_stmt|;
 name|fill_cmd
@@ -23624,15 +23671,7 @@ name|O_TAGGED
 argument_list|,
 literal|0
 argument_list|,
-name|strtoul
-argument_list|(
-operator|*
-name|av
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|)
+name|tag
 argument_list|)
 expr_stmt|;
 block|}
