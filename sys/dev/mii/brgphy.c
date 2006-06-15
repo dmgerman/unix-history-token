@@ -2827,7 +2827,7 @@ literal|1
 operator|<<
 literal|15
 operator|)
-operator|||
+operator||
 operator|(
 literal|1
 operator|<<
