@@ -3199,8 +3199,6 @@ name|pindex
 decl_stmt|;
 name|vm_page_t
 name|m
-decl_stmt|,
-name|mpte
 decl_stmt|;
 name|vm_object_t
 name|object
@@ -3264,10 +3262,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|mpte
-operator|=
-name|NULL
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -3496,8 +3490,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|mpte
-operator|=
 name|pmap_enter_quick
 argument_list|(
 name|pmap
@@ -3509,8 +3501,6 @@ argument_list|,
 name|entry
 operator|->
 name|protection
-argument_list|,
-name|mpte
 argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues

@@ -378,7 +378,7 @@ block|}
 end_function
 
 begin_function
-name|vm_page_t
+name|void
 name|pmap_enter_quick
 parameter_list|(
 name|pmap_t
@@ -392,13 +392,8 @@ name|m
 parameter_list|,
 name|vm_prot_t
 name|prot
-parameter_list|,
-name|vm_page_t
-name|mpte
 parameter_list|)
 block|{
-return|return
-operator|(
 name|MMU_ENTER_QUICK
 argument_list|(
 name|mmu_obj
@@ -410,11 +405,8 @@ argument_list|,
 name|m
 argument_list|,
 name|prot
-argument_list|,
-name|mpte
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
