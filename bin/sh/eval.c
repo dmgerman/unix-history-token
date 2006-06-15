@@ -3039,12 +3039,15 @@ condition|(
 name|xflag
 condition|)
 block|{
-name|outc
+name|char
+name|sep
+init|=
+literal|0
+decl_stmt|;
+name|out2str
 argument_list|(
-literal|'+'
-argument_list|,
-operator|&
-name|errout
+name|ps4val
+argument_list|()
 argument_list|)
 expr_stmt|;
 for|for
@@ -3064,6 +3067,12 @@ operator|->
 name|next
 control|)
 block|{
+if|if
+condition|(
+name|sep
+operator|!=
+literal|0
+condition|)
 name|outc
 argument_list|(
 literal|' '
@@ -3078,6 +3087,10 @@ name|sp
 operator|->
 name|text
 argument_list|)
+expr_stmt|;
+name|sep
+operator|=
+literal|' '
 expr_stmt|;
 block|}
 for|for
@@ -3097,6 +3110,12 @@ operator|->
 name|next
 control|)
 block|{
+if|if
+condition|(
+name|sep
+operator|!=
+literal|0
+condition|)
 name|outc
 argument_list|(
 literal|' '
@@ -3111,6 +3130,10 @@ name|sp
 operator|->
 name|text
 argument_list|)
+expr_stmt|;
+name|sep
+operator|=
+literal|' '
 expr_stmt|;
 block|}
 name|outc

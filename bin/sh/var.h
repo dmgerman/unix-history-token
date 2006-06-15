@@ -217,6 +217,14 @@ name|vps2
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|var
+name|vps4
+decl_stmt|;
+end_decl_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -294,6 +302,14 @@ directive|define
 name|ps2val
 parameter_list|()
 value|(vps2.text + 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ps4val
+parameter_list|()
+value|(vps4.text + 4)
 end_define
 
 begin_define
