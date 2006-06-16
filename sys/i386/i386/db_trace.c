@@ -1062,7 +1062,8 @@ condition|)
 block|{
 name|args
 operator|=
-literal|5
+operator|-
+literal|1
 expr_stmt|;
 block|}
 else|else
@@ -1148,7 +1149,8 @@ block|}
 else|else
 name|args
 operator|=
-literal|5
+operator|-
+literal|1
 expr_stmt|;
 block|}
 return|return
@@ -1195,6 +1197,17 @@ name|db_addr_t
 name|callpc
 decl_stmt|;
 block|{
+name|int
+name|n
+init|=
+name|narg
+operator|>=
+literal|0
+condition|?
+name|narg
+else|:
+literal|5
+decl_stmt|;
 name|db_printf
 argument_list|(
 literal|"%s("
@@ -1204,7 +1217,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|narg
+name|n
 condition|)
 block|{
 if|if
@@ -1243,7 +1256,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|--
-name|narg
+name|n
 operator|!=
 literal|0
 condition|)
@@ -1253,6 +1266,17 @@ literal|","
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|narg
+operator|<
+literal|0
+condition|)
+name|db_printf
+argument_list|(
+literal|",..."
+argument_list|)
+expr_stmt|;
 name|db_printf
 argument_list|(
 literal|") at "
