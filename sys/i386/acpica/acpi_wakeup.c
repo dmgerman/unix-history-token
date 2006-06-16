@@ -1205,10 +1205,13 @@ name|sc
 operator|->
 name|acpi_dev
 argument_list|,
-literal|"wakeup code va %#x pa %#x\n"
+literal|"wakeup code va %#x pa %#jx\n"
 argument_list|,
 name|acpi_wakeaddr
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sc
 operator|->
 name|acpi_wakephys
