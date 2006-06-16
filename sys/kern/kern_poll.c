@@ -2357,9 +2357,6 @@ name|struct
 name|rtprio
 name|rtp
 decl_stmt|;
-name|int
-name|pri
-decl_stmt|;
 name|rtp
 operator|.
 name|prio
@@ -2388,12 +2385,6 @@ name|td
 operator|->
 name|td_ksegrp
 argument_list|)
-expr_stmt|;
-name|pri
-operator|=
-name|td
-operator|->
-name|td_priority
 expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
@@ -2456,7 +2447,7 @@ argument_list|(
 operator|&
 name|idlepoll_sleeping
 argument_list|,
-name|pri
+literal|0
 argument_list|,
 literal|"pollid"
 argument_list|,

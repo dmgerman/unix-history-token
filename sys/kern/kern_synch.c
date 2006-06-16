@@ -671,6 +671,17 @@ name|timo
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Adjust this thread's priority. 	 */
+if|if
+condition|(
+operator|(
+name|priority
+operator|&
+name|PRIMASK
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -692,6 +703,7 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|timo
