@@ -409,6 +409,18 @@ name|NCARP
 value|1
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NCARP
+value|0
+end_define
+
 begin_endif
 endif|#
 directive|endif
