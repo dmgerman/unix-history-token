@@ -5068,7 +5068,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Wire the user space destination buffer.  If set to a value greater than  * zero, the len parameter limits the maximum amount of wired memory.  *  * XXX - The len parameter is currently ignored due to the lack of  * a place to save it in the sysctl_req structure so that the matching  * amount of memory can be unwired in the sysctl exit code.  */
+comment|/*  * Wire the user space destination buffer.  If set to a value greater than  * zero, the len parameter limits the maximum amount of wired memory.  */
 end_comment
 
 begin_function
