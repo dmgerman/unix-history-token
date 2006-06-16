@@ -824,10 +824,6 @@ operator|=
 operator|~
 literal|0
 expr_stmt|;
-name|db_last_symtab
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|i
