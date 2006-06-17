@@ -1584,9 +1584,8 @@ operator|.
 name|parent
 operator|->
 name|hz
-expr_stmt|;
-name|freq
-operator|/=
+operator|/
+operator|(
 literal|1
 operator|<<
 operator|(
@@ -1597,6 +1596,7 @@ literal|2
 operator|)
 operator|&
 literal|3
+operator|)
 operator|)
 expr_stmt|;
 name|mck
@@ -1625,7 +1625,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"main clock: %d Hz PLLA: %d MHz CPU: %d MHz main %d MHz\n"
+literal|"Primary: %d Hz PLLA: %d MHz CPU: %d MHz MCK: %d MHz\n"
 argument_list|,
 name|sc
 operator|->
