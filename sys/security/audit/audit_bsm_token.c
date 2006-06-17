@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2004 Apple Computer, Inc.  * Copyright (c) 2005 SPARTA, Inc.  * All rights reserved.  *  * This code was developed in part by Robert N. M. Watson, Senior Principal  * Scientist, SPARTA, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/audit3/sys/security/audit/audit_bsm_token.c#15 $  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2004 Apple Computer, Inc.  * Copyright (c) 2005 SPARTA, Inc.  * All rights reserved.  *  * This code was developed in part by Robert N. M. Watson, Senior Principal  * Scientist, SPARTA, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/audit3/sys/security/audit/audit_bsm_token.c#17 $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -2181,7 +2181,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * token ID                1 byte  * audit ID                4 bytes  * effective user ID       4 bytes  * effective group ID      4 bytes  * real user ID            4 bytes  * real group ID           4 bytes  * process ID              4 bytes  * session ID              4 bytes  * terminal ID  *   port ID               4 bytes/8 bytes (32-bit/64-bit value)  *   address type-len      4 bytes  *   machine address      16 bytes  */
+comment|/*  * token ID                1 byte  * audit ID                4 bytes  * effective user ID       4 bytes  * effective group ID      4 bytes  * real user ID            4 bytes  * real group ID           4 bytes  * process ID              4 bytes  * session ID              4 bytes  * terminal ID  *   port ID               4 bytes/8 bytes (32-bit/64-bit value)  *   address type-len      4 bytes  *   machine address    4/16 bytes  */
 end_comment
 
 begin_function
@@ -2225,6 +2225,14 @@ name|dptr
 init|=
 name|NULL
 decl_stmt|;
+if|if
+condition|(
+name|tid
+operator|->
+name|at_type
+operator|==
+name|AU_IPv6
+condition|)
 name|GET_TOKEN_AREA
 argument_list|(
 name|t
@@ -2237,6 +2245,26 @@ name|u_char
 argument_list|)
 operator|+
 literal|13
+operator|*
+sizeof|sizeof
+argument_list|(
+name|u_int32_t
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|GET_TOKEN_AREA
+argument_list|(
+name|t
+argument_list|,
+name|dptr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|u_char
+argument_list|)
+operator|+
+literal|10
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -2330,6 +2358,15 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tid
+operator|->
+name|at_type
+operator|==
+name|AU_IPv6
+condition|)
+block|{
 name|ADD_U_INT32
 argument_list|(
 name|dptr
@@ -2366,6 +2403,7 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|t
@@ -3508,7 +3546,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * token ID                1 byte  * audit ID                4 bytes  * effective user ID       4 bytes  * effective group ID      4 bytes  * real user ID            4 bytes  * real group ID           4 bytes  * process ID              4 bytes  * session ID              4 bytes  * terminal ID  *   port ID               4 bytes/8 bytes (32-bit/64-bit value)  *   address type/length   4 bytes  *   machine address      16 bytes  */
+comment|/*  * token ID                1 byte  * audit ID                4 bytes  * effective user ID       4 bytes  * effective group ID      4 bytes  * real user ID            4 bytes  * real group ID           4 bytes  * process ID              4 bytes  * session ID              4 bytes  * terminal ID  *   port ID               4 bytes/8 bytes (32-bit/64-bit value)  *   address type/length   4 bytes  *   machine address    4/16 bytes  */
 end_comment
 
 begin_function
@@ -3552,6 +3590,14 @@ name|dptr
 init|=
 name|NULL
 decl_stmt|;
+if|if
+condition|(
+name|tid
+operator|->
+name|at_type
+operator|==
+name|AU_IPv6
+condition|)
 name|GET_TOKEN_AREA
 argument_list|(
 name|t
@@ -3564,6 +3610,26 @@ name|u_char
 argument_list|)
 operator|+
 literal|13
+operator|*
+sizeof|sizeof
+argument_list|(
+name|u_int32_t
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|GET_TOKEN_AREA
+argument_list|(
+name|t
+argument_list|,
+name|dptr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|u_char
+argument_list|)
+operator|+
+literal|10
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -3657,6 +3723,15 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tid
+operator|->
+name|at_type
+operator|==
+name|AU_IPv6
+condition|)
+block|{
 name|ADD_U_INT32
 argument_list|(
 name|dptr
@@ -3693,6 +3768,7 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|t
