@@ -788,17 +788,25 @@ begin_struct
 struct|struct
 name|syncache
 block|{
-name|struct
-name|mbuf
-modifier|*
-name|sc_ipopts
-decl_stmt|;
-comment|/* source route */
+name|TAILQ_ENTRY
+argument_list|(
+argument|syncache
+argument_list|)
+name|sc_hash
+expr_stmt|;
 name|struct
 name|in_conninfo
 name|sc_inc
 decl_stmt|;
 comment|/* addresses */
+name|u_long
+name|sc_rxttime
+decl_stmt|;
+comment|/* retransmit time */
+name|u_int16_t
+name|sc_rxmits
+decl_stmt|;
+comment|/* retransmit counter */
 name|u_int32_t
 name|sc_tsrecent
 decl_stmt|;
@@ -814,14 +822,12 @@ name|tcp_seq
 name|sc_iss
 decl_stmt|;
 comment|/* our ISS */
-name|u_long
-name|sc_rxttime
+name|struct
+name|mbuf
+modifier|*
+name|sc_ipopts
 decl_stmt|;
-comment|/* retransmit time */
-name|u_int16_t
-name|sc_rxmits
-decl_stmt|;
-comment|/* retransmit counter */
+comment|/* source route */
 name|u_int16_t
 name|sc_peer_mss
 decl_stmt|;
@@ -880,12 +886,6 @@ directive|define
 name|SCF_SACK
 value|0x80
 comment|/* send SACK option */
-name|TAILQ_ENTRY
-argument_list|(
-argument|syncache
-argument_list|)
-name|sc_hash
-expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -894,6 +894,10 @@ begin_struct
 struct|struct
 name|syncache_head
 block|{
+name|struct
+name|mtx
+name|sch_mtx
+decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument|sch_head
@@ -902,10 +906,6 @@ argument|syncache
 argument_list|)
 name|sch_bucket
 expr_stmt|;
-name|struct
-name|mtx
-name|sch_mtx
-decl_stmt|;
 name|struct
 name|callout
 name|sch_timer
