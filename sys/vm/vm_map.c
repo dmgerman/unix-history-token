@@ -5691,12 +5691,9 @@ operator|.
 name|v_free_reserved
 condition|)
 block|{
-name|size
+name|psize
 operator|=
-name|ptoa
-argument_list|(
 name|tmpidx
-argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -5835,7 +5832,10 @@ name|start
 argument_list|,
 name|addr
 operator|+
-name|size
+name|ptoa
+argument_list|(
+name|psize
+argument_list|)
 argument_list|,
 name|p_start
 argument_list|,
