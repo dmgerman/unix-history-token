@@ -698,10 +698,6 @@ name|char
 modifier|*
 name|from
 decl_stmt|;
-name|struct
-name|export_args
-name|export
-decl_stmt|;
 if|if
 condition|(
 name|vfs_filteropt
@@ -751,9 +747,9 @@ operator|&
 name|MNT_UPDATE
 condition|)
 block|{
-name|error
-operator|=
-name|vfs_copyopt
+if|if
+condition|(
+name|vfs_flagopt
 argument_list|(
 name|mp
 operator|->
@@ -761,43 +757,19 @@ name|mnt_optnew
 argument_list|,
 literal|"export"
 argument_list|,
-operator|&
-name|export
+name|NULL
 argument_list|,
-sizeof|sizeof
-name|export
+literal|0
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|error
-operator|==
-literal|0
-operator|)
-operator|&&
-name|export
-operator|.
-name|ex_flags
-operator|!=
-literal|0
 condition|)
 block|{
-comment|/* 			 * Process export requests.  Jumping to "success" 			 * will return the vfs_export() error code. 			 */
-name|err
-operator|=
-name|vfs_export
-argument_list|(
-name|mp
-argument_list|,
-operator|&
-name|export
-argument_list|)
-expr_stmt|;
+comment|/* Process export requests in vfs_mount.c */
 goto|goto
 name|success
 goto|;
 block|}
+else|else
+block|{
 name|printf
 argument_list|(
 literal|"ntfs_mount(): MNT_UPDATE not supported\n"
@@ -810,6 +782,7 @@ expr_stmt|;
 goto|goto
 name|error_1
 goto|;
+block|}
 block|}
 comment|/* 	 * Not an update, or updating the name: look up the name 	 * and verify that it refers to a sensible block device. 	 */
 name|NDINIT
