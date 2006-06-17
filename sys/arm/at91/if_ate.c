@@ -319,6 +319,9 @@ name|eth_rx_desc_t
 modifier|*
 name|rx_descs
 decl_stmt|;
+name|int
+name|use_rmii
+decl_stmt|;
 name|struct
 name|ifmib_iso_8802_3
 name|mibdata
@@ -769,6 +772,23 @@ condition|)
 goto|goto
 name|out
 goto|;
+name|sc
+operator|->
+name|use_rmii
+operator|=
+operator|(
+name|RD4
+argument_list|(
+name|sc
+argument_list|,
+name|ETH_CFG
+argument_list|)
+operator|&
+name|ETH_CFG_RMII
+operator|)
+operator|==
+name|ETH_CFG_RMII
+expr_stmt|;
 comment|/* calling atestop before ifp is set is OK */
 name|atestop
 argument_list|(
@@ -3356,9 +3376,12 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX TODO(3) 	 * we need to turn on the EMAC clock in the pmc.  With the 	 * default boot loader, this is already turned on.  However, we 	 * need to think about how best to turn it on/off as the interface 	 * is brought up/down, as well as dealing with the mii bus... 	 * 	 * We also need to multiplex the pins correctly. 	 */
 comment|/* 	 * There are two different ways that the mii bus is connected 	 * to this chip.  Select the right one based on a compile-time 	 * option. 	 */
-ifdef|#
-directive|ifdef
-name|ATE_USE_RMII
+if|if
+condition|(
+name|sc
+operator|->
+name|use_rmii
+condition|)
 name|WR4
 argument_list|(
 name|sc
@@ -3375,8 +3398,7 @@ operator||
 name|ETH_CFG_RMII
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+else|else
 name|WR4
 argument_list|(
 name|sc
@@ -3394,8 +3416,6 @@ operator|~
 name|ETH_CFG_RMII
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Turn on the multicast hash, and write 0's to it. 	 */
 name|WR4
 argument_list|(
