@@ -430,7 +430,7 @@ name|kdb_stop_cpus
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"stop other CPUs when entering the debugger"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
