@@ -504,6 +504,10 @@ argument_list|(
 name|codec
 operator|->
 name|name
+argument_list|,
+name|codec
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 name|codec
@@ -729,7 +733,7 @@ argument_list|)
 expr_stmt|;
 name|codec
 operator|->
-name|type
+name|dvc
 operator|=
 name|dvc
 expr_stmt|;
@@ -1176,13 +1180,13 @@ name|MODULE_DEPEND
 argument_list|(
 name|snd_ak452x
 argument_list|,
-name|snd_pcm
+name|sound
 argument_list|,
-name|PCM_MINVER
+name|SOUND_MINVER
 argument_list|,
-name|PCM_PREFVER
+name|SOUND_PREFVER
 argument_list|,
-name|PCM_MAXVER
+name|SOUND_MAXVER
 argument_list|)
 expr_stmt|;
 end_expr_stmt
