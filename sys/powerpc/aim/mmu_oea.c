@@ -4276,6 +4276,12 @@ name|om_pa
 operator|+
 name|off
 expr_stmt|;
+name|PMAP_LOCK
+argument_list|(
+operator|&
+name|ofw_pmap
+argument_list|)
+expr_stmt|;
 name|moea_enter_locked
 argument_list|(
 operator|&
@@ -4296,6 +4302,12 @@ argument_list|,
 name|VM_PROT_ALL
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|PMAP_UNLOCK
+argument_list|(
+operator|&
+name|ofw_pmap
 argument_list|)
 expr_stmt|;
 name|ofw_mappings
