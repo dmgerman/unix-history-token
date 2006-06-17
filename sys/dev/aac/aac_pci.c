@@ -561,7 +561,7 @@ name|AAC_HWIF_I960RX
 block|,
 name|AAC_FLAGS_NO4GB
 block|,
-literal|"Adaptec SCSI RAID 2410SA"
+literal|"Adaptec SATA RAID 2410SA"
 block|}
 block|,
 block|{
@@ -593,7 +593,7 @@ name|AAC_HWIF_I960RX
 block|,
 name|AAC_FLAGS_NO4GB
 block|,
-literal|"Adaptec SCSI RAID 2810SA"
+literal|"Adaptec SATA RAID 2810SA"
 block|}
 block|,
 block|{
@@ -609,7 +609,7 @@ name|AAC_HWIF_I960RX
 block|,
 name|AAC_FLAGS_NO4GB
 block|,
-literal|"Adaptec SCSI RAID 21610SA"
+literal|"Adaptec SATA RAID 21610SA"
 block|}
 block|,
 block|{
@@ -839,7 +839,7 @@ name|AAC_HWIF_RKT
 block|,
 literal|0
 block|,
-literal|"ICP9024RO SATA RAID"
+literal|"ICP ICP9024RO SCSI RAID"
 block|}
 block|,
 block|{
@@ -855,7 +855,7 @@ name|AAC_HWIF_RKT
 block|,
 literal|0
 block|,
-literal|"ICP9014RO SATA RAID"
+literal|"ICP ICP9014RO SCSI RAID"
 block|}
 block|,
 block|{
@@ -1031,7 +1031,7 @@ name|AAC_HWIF_I960RX
 block|,
 literal|0
 block|,
-literal|"ICP 9085LI SAS RAID"
+literal|"ICP ICP9085LI SAS RAID"
 block|}
 block|,
 block|{
@@ -1047,7 +1047,7 @@ name|AAC_HWIF_I960RX
 block|,
 literal|0
 block|,
-literal|"ICP 5085BR SAS RAID"
+literal|"ICP ICP5085BR SAS RAID"
 block|}
 block|,
 block|{
@@ -1063,7 +1063,7 @@ name|AAC_HWIF_RKT
 block|,
 literal|0
 block|,
-literal|"ICP9047MA SATA RAID"
+literal|"ICP ICP9047MA SATA RAID"
 block|}
 block|,
 block|{
@@ -1079,7 +1079,7 @@ name|AAC_HWIF_RKT
 block|,
 literal|0
 block|,
-literal|"ICP9087MA SATA RAID"
+literal|"ICP ICP9087MA SATA RAID"
 block|}
 block|,
 block|{
