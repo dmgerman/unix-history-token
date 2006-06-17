@@ -788,16 +788,6 @@ begin_struct
 struct|struct
 name|syncache
 block|{
-name|inp_gen_t
-name|sc_inp_gencnt
-decl_stmt|;
-comment|/* pointer check */
-name|struct
-name|tcpcb
-modifier|*
-name|sc_tp
-decl_stmt|;
-comment|/* tcb for listening socket */
 name|struct
 name|mbuf
 modifier|*
@@ -829,7 +819,7 @@ name|sc_rxttime
 decl_stmt|;
 comment|/* retransmit time */
 name|u_int16_t
-name|sc_rxtslot
+name|sc_rxmits
 decl_stmt|;
 comment|/* retransmit counter */
 name|u_int16_t
@@ -840,6 +830,14 @@ name|u_int16_t
 name|sc_wnd
 decl_stmt|;
 comment|/* advertised window */
+name|u_int8_t
+name|sc_ip_ttl
+decl_stmt|;
+comment|/* IPv4 TTL */
+name|u_int8_t
+name|sc_ip_tos
+decl_stmt|;
+comment|/* IPv4 TOS */
 name|u_int8_t
 name|sc_requested_s_scale
 range|:
@@ -888,12 +886,6 @@ argument|syncache
 argument_list|)
 name|sc_hash
 expr_stmt|;
-name|TAILQ_ENTRY
-argument_list|(
-argument|syncache
-argument_list|)
-name|sc_timerq
-expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -904,11 +896,23 @@ name|syncache_head
 block|{
 name|TAILQ_HEAD
 argument_list|(
+argument|sch_head
 argument_list|,
 argument|syncache
 argument_list|)
 name|sch_bucket
 expr_stmt|;
+name|struct
+name|mtx
+name|sch_mtx
+decl_stmt|;
+name|struct
+name|callout
+name|sch_timer
+decl_stmt|;
+name|int
+name|sch_nextc
+decl_stmt|;
 name|u_int
 name|sch_length
 decl_stmt|;
@@ -2360,6 +2364,10 @@ modifier|*
 parameter_list|,
 name|struct
 name|tcphdr
+modifier|*
+parameter_list|,
+name|struct
+name|inpcb
 modifier|*
 parameter_list|,
 name|struct

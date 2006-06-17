@@ -4205,6 +4205,8 @@ name|to
 argument_list|,
 name|th
 argument_list|,
+name|inp
+argument_list|,
 operator|&
 name|so
 argument_list|,
@@ -4214,6 +4216,7 @@ condition|)
 goto|goto
 name|drop
 goto|;
+comment|/* XXX: does not happen */
 if|if
 condition|(
 name|so
@@ -4221,121 +4224,25 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 				 * Entry added to syncache, mbuf used to 				 * send SYN,ACK packet. 				 */
-name|KASSERT
-argument_list|(
-name|headlocked
-argument_list|,
-operator|(
-literal|"headlocked"
-operator|)
-argument_list|)
-expr_stmt|;
-name|INP_UNLOCK
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
-name|INP_INFO_WUNLOCK
-argument_list|(
-operator|&
-name|tcbinfo
-argument_list|)
-expr_stmt|;
+comment|/* 				 * Entry added to syncache, mbuf used to 				 * send SYN,ACK packet.  Everything unlocked 				 * already. 				 */
 return|return;
 block|}
-comment|/* 			 * Segment passed TAO tests. 			 * XXX: Can't happen at the moment. 			 */
-name|INP_UNLOCK
+name|panic
 argument_list|(
-name|inp
+literal|"T/TCP not supported at the moment"
 argument_list|)
 expr_stmt|;
-name|inp
-operator|=
-name|sotoinpcb
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-name|INP_LOCK
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
-name|tp
-operator|=
-name|intotcpcb
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
-name|tp
-operator|->
-name|t_starttime
-operator|=
-name|ticks
-expr_stmt|;
-name|tp
-operator|->
-name|t_state
-operator|=
-name|TCPS_ESTABLISHED
-expr_stmt|;
-comment|/* 			 * T/TCP logic: 			 * If there is a FIN or if there is data, then 			 * delay SYN,ACK(SYN) in the hope of piggy-backing 			 * it on a response segment.  Otherwise must send 			 * ACK now in case the other side is slow starting. 			 */
-if|if
-condition|(
-name|thflags
-operator|&
-name|TH_FIN
-operator|||
-name|tlen
-operator|!=
+if|#
+directive|if
 literal|0
-condition|)
-name|tp
-operator|->
-name|t_flags
-operator||=
-operator|(
-name|TF_DELACK
-operator||
-name|TF_NEEDSYN
-operator|)
-expr_stmt|;
-else|else
-name|tp
-operator|->
-name|t_flags
-operator||=
-operator|(
-name|TF_ACKNOW
-operator||
-name|TF_NEEDSYN
-operator|)
-expr_stmt|;
-name|tiwin
-operator|=
-name|th
-operator|->
-name|th_win
-operator|<<
-name|tp
-operator|->
-name|snd_scale
-expr_stmt|;
-name|tcpstat
-operator|.
-name|tcps_connects
-operator|++
-expr_stmt|;
-name|soisconnected
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-goto|goto
-name|trimthenstep6
-goto|;
+comment|/* T/TCP */
+comment|/* 			 * Segment passed TAO tests. 			 * XXX: Can't happen at the moment. 			 */
+block|INP_UNLOCK(inp); 			inp = sotoinpcb(so); 			INP_LOCK(inp); 			tp = intotcpcb(inp); 			tp->t_starttime = ticks; 			tp->t_state = TCPS_ESTABLISHED;
+comment|/* 			 * T/TCP logic: 			 * If there is a FIN or if there is data, then 			 * delay SYN,ACK(SYN) in the hope of piggy-backing 			 * it on a response segment.  Otherwise must send 			 * ACK now in case the other side is slow starting. 			 */
+block|if (thflags& TH_FIN || tlen != 0) 				tp->t_flags |= (TF_DELACK | TF_NEEDSYN); 			else 				tp->t_flags |= (TF_ACKNOW | TF_NEEDSYN); 			tiwin = th->th_win<< tp->snd_scale; 			tcpstat.tcps_connects++; 			soisconnected(so); 			goto trimthenstep6;
+endif|#
+directive|endif
+comment|/* T/TCP */
 block|}
 goto|goto
 name|drop
@@ -5979,8 +5886,13 @@ operator|=
 name|TCPS_SYN_RECEIVED
 expr_stmt|;
 block|}
-name|trimthenstep6
-label|:
+if|#
+directive|if
+literal|0
+comment|/* T/TCP */
+block|trimthenstep6:
+endif|#
+directive|endif
 name|KASSERT
 argument_list|(
 name|headlocked
