@@ -5451,6 +5451,14 @@ operator|=
 name|cmn
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_mb
+condition|)
 name|nextrecord
 operator|=
 name|so
@@ -5460,6 +5468,11 @@ operator|.
 name|sb_mb
 operator|->
 name|m_nextpkt
+expr_stmt|;
+else|else
+name|nextrecord
+operator|=
+name|NULL
 expr_stmt|;
 name|orig_resid
 operator|=
