@@ -1225,6 +1225,37 @@ operator|==
 name|UIPROTO_XBOX360_GAMEPAD
 condition|)
 block|{
+specifier|static
+name|uByte
+name|reportbuf
+index|[]
+init|=
+block|{
+literal|1
+block|,
+literal|3
+block|,
+literal|0
+block|}
+decl_stmt|;
+comment|/* The LEDs on the gamepad are blinking by default, turn off. */
+name|usbd_set_report
+argument_list|(
+name|uaa
+operator|->
+name|iface
+argument_list|,
+name|UHID_OUTPUT_REPORT
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|reportbuf
+argument_list|,
+sizeof|sizeof
+name|reportbuf
+argument_list|)
+expr_stmt|;
 comment|/* The Xbox 360 gamepad has no report descriptor. */
 name|size
 operator|=
