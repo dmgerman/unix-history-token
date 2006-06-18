@@ -259,12 +259,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KZIP
-end_ifdef
-
 begin_decl_stmt
 name|int
 name|arm_picache_size
@@ -392,11 +386,6 @@ name|arm9_dcache_index_inc
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|__inline
@@ -437,8 +426,6 @@ condition|)
 block|{
 if|if
 condition|(
-literal|0
-operator|&&
 name|len
 operator|>=
 literal|4
@@ -618,11 +605,18 @@ name|int
 name|sp
 init|=
 operator|(
+operator|(
 name|unsigned
 name|int
 operator|)
 operator|&
 name|_end
+operator|&
+operator|~
+literal|3
+operator|)
+operator|+
+literal|4
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -695,6 +689,55 @@ operator|)
 block|)
 function|;
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KZIP
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_ARM9
+end_ifdef
+
+begin_comment
+comment|/* So that idcache_wbinv works; */
+end_comment
+
+begin_if
+if|if
+condition|(
+operator|(
+name|cpufunc_id
+argument_list|()
+operator|&
+literal|0x0000f000
+operator|)
+operator|==
+literal|0x00009000
+condition|)
+name|arm9_setup
+argument_list|()
+expr_stmt|;
+end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_expr_stmt
+name|cpu_idcache_wbinv_all
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|__start
@@ -2431,6 +2474,26 @@ block|)
 function|;
 end_function
 
+begin_asm
+asm|__asm __volatile("mrc p15, 0, %0, c1, c0, 0\n"
+end_asm
+
+begin_expr_stmt
+literal|"bic %0, %0, #1\n"
+comment|/* MMU_ENABLE */
+literal|"mcr p15, 0, %0, c1, c0, 0\n"
+operator|:
+literal|"=r"
+operator|(
+name|ssym
+operator|)
+end_expr_stmt
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
 comment|/* Jump to the entry point. */
 end_comment
@@ -2512,6 +2575,9 @@ name|physstart
 parameter_list|,
 name|vm_paddr_t
 name|physend
+parameter_list|,
+name|int
+name|write_back
 parameter_list|)
 block|{
 name|unsigned
@@ -2568,6 +2634,7 @@ name|addr
 operator|+=
 name|L1_S_SIZE
 control|)
+block|{
 name|pd
 index|[
 name|addr
@@ -2591,6 +2658,20 @@ argument_list|)
 operator||
 name|addr
 expr_stmt|;
+if|if
+condition|(
+name|write_back
+condition|)
+name|pd
+index|[
+name|addr
+operator|>>
+name|L1_S_SHIFT
+index|]
+operator||=
+name|L1_S_B
+expr_stmt|;
+block|}
 comment|/* XXX: See below */
 if|if
 condition|(
@@ -2708,6 +2789,9 @@ decl_stmt|;
 name|int
 name|sp
 decl_stmt|;
+name|int
+name|pt_addr
+decl_stmt|;
 asm|__asm __volatile("mov %0, pc"  :
 literal|"=r"
 operator|(
@@ -2761,9 +2845,8 @@ operator|==
 literal|0x8b
 condition|)
 block|{
-name|int
 name|pt_addr
-init|=
+operator|=
 operator|(
 operator|(
 operator|(
@@ -2786,7 +2869,7 @@ operator|)
 operator|)
 operator|+
 name|L1_TABLE_SIZE
-decl_stmt|;
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CPU_ARM9
@@ -2822,6 +2905,8 @@ operator|)
 name|curaddr
 operator|+
 literal|0x10000000
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Gzipped kernel */
@@ -2937,14 +3022,88 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|sp
+name|dst
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+operator|(
 operator|(
 name|vm_offset_t
 operator|)
 name|dst
+operator|&
+operator|~
+literal|3
+operator|)
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|pt_addr
+operator|=
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|)
+name|dst
+operator|&
+operator|~
+operator|(
+name|L1_TABLE_SIZE
+operator|-
+literal|1
+operator|)
+operator|)
 operator|+
-literal|4096
+name|L1_TABLE_SIZE
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|setup_pagetables
+argument_list|(
+name|pt_addr
+argument_list|,
+operator|(
+name|vm_paddr_t
+operator|)
+name|curaddr
+argument_list|,
+operator|(
+name|vm_paddr_t
+operator|)
+name|curaddr
+operator|+
+literal|0x10000000
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|sp
+operator|=
+name|pt_addr
+operator|+
+name|L1_TABLE_SIZE
+operator|+
+literal|8192
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|sp
+operator|=
+name|sp
+operator|&
+operator|~
+literal|3
 expr_stmt|;
 end_expr_stmt
 
@@ -2955,7 +3114,11 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
 name|sp
+operator|+
+literal|4
+operator|)
 expr_stmt|;
 end_expr_stmt
 
