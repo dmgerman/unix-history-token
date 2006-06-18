@@ -9821,6 +9821,11 @@ goto|;
 case|case
 name|SO_ERROR
 case|:
+name|SOCK_LOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|optval
 operator|=
 name|so
@@ -9832,6 +9837,11 @@ operator|->
 name|so_error
 operator|=
 literal|0
+expr_stmt|;
+name|SOCK_UNLOCK
+argument_list|(
+name|so
+argument_list|)
 expr_stmt|;
 goto|goto
 name|integer
