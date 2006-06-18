@@ -22,7 +22,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * uvscom: SUNTAC Slipper U VS-10U driver.  * Slipper U is a PC card to USB converter for data communication card  * adapter.  It supports DDI Pocket's Air H" C@rd, C@rd H" 64, NTT's P-in,  * P-in m@ater and various data communication card adapters.  */
+comment|/*  * uvscom: SUNTAC Slipper U VS-10U driver.  * Slipper U is a PC Card to USB converter for data communication card  * adapter.  It supports DDI Pocket's Air H" C@rd, C@rd H" 64, NTT's P-in,  * P-in m@ater and various data communication card adapters.  */
 end_comment
 
 begin_include
@@ -953,31 +953,15 @@ end_function_decl
 begin_if
 if|#
 directive|if
-name|TODO
+literal|0
 end_if
 
-begin_function_decl
-name|Static
-name|int
-name|uvscom_ioctl
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|u_long
-parameter_list|,
-name|caddr_t
-parameter_list|,
-name|int
-parameter_list|,
-name|usb_proc_ptr
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* TODO */
+end_comment
 
 begin_endif
+unit|Static	int  uvscom_ioctl(void *, int, u_long, caddr_t, int, usb_proc_ptr);
 endif|#
 directive|endif
 end_endif
@@ -3964,7 +3948,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/* check PC card was inserted */
+comment|/* check PC Card was inserted */
 if|if
 condition|(
 name|ISSET
@@ -4504,106 +4488,15 @@ end_function
 begin_if
 if|#
 directive|if
-name|TODO
+literal|0
 end_if
 
-begin_function
-name|Static
-name|int
-name|uvscom_ioctl
-parameter_list|(
-name|void
-modifier|*
-name|addr
-parameter_list|,
-name|int
-name|portno
-parameter_list|,
-name|u_long
-name|cmd
-parameter_list|,
-name|caddr_t
-name|data
-parameter_list|,
-name|int
-name|flag
-parameter_list|,
-name|usb_proc_ptr
-name|p
-parameter_list|)
-block|{
-name|struct
-name|uvscom_softc
-modifier|*
-name|sc
-init|=
-name|addr
-decl_stmt|;
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_ucom
-operator|.
-name|sc_dying
-condition|)
-return|return
-operator|(
-name|EIO
-operator|)
-return|;
-name|DPRINTF
-argument_list|(
-operator|(
-literal|"uvscom_ioctl: cmd = 0x%08lx\n"
-operator|,
-name|cmd
-operator|)
-argument_list|)
-expr_stmt|;
-switch|switch
-condition|(
-name|cmd
-condition|)
-block|{
-case|case
-name|TIOCNOTTY
-case|:
-case|case
-name|TIOCMGET
-case|:
-case|case
-name|TIOCMSET
-case|:
-break|break;
-default|default:
-name|DPRINTF
-argument_list|(
-operator|(
-literal|"uvscom_ioctl: unknown\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|ENOTTY
-expr_stmt|;
-break|break;
-block|}
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
-end_function
+begin_comment
+comment|/* TODO */
+end_comment
 
 begin_endif
+unit|Static int uvscom_ioctl(void *addr, int portno, u_long cmd, caddr_t data, int flag, 	     usb_proc_ptr p) { 	struct uvscom_softc *sc = addr; 	int error = 0;  	if (sc->sc_ucom.sc_dying) 		return (EIO);  	DPRINTF(("uvscom_ioctl: cmd = 0x%08lx\n", cmd));  	switch (cmd) { 	case TIOCNOTTY: 	case TIOCMGET: 	case TIOCMSET: 		break;  	default: 		DPRINTF(("uvscom_ioctl: unknown\n")); 		error = ENOTTY; 		break; 	}  	return (error); }
 endif|#
 directive|endif
 end_endif

@@ -1191,7 +1191,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: Could not fint interrupt in\n"
+literal|"%s: Could not find interrupt in\n"
 argument_list|,
 name|devname
 argument_list|)
