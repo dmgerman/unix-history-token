@@ -1203,6 +1203,16 @@ block|{
 block|{
 name|USB_VENDOR_EPSON
 block|,
+name|USB_PRODUCT_EPSON_1270
+block|}
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|USB_VENDOR_EPSON
+block|,
 name|USB_PRODUCT_EPSON_RX425
 block|}
 block|,
