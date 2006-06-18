@@ -3345,7 +3345,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LE_B20_SSTYPE_ILACC
+name|LE_B20_SSTYLE_ILACC
 value|1
 end_define
 

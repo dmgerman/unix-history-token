@@ -23,13 +23,6 @@ directive|define
 name|_DEV_LE_LANCEVAR_H_
 end_define
 
-begin_define
-define|#
-directive|define
-name|LE_DRIVER_NAME
-value|"le"
-end_define
-
 begin_decl_stmt
 specifier|extern
 name|devclass_t
@@ -261,12 +254,12 @@ name|void
 modifier|*
 name|sc_mem
 decl_stmt|;
-comment|/* base address of RAM -- CPU's view */
-name|u_long
+comment|/* base address of RAM - CPU's view */
+name|bus_addr_t
 name|sc_addr
 decl_stmt|;
-comment|/* base address of RAM -- LANCE's view */
-name|u_long
+comment|/* base address of RAM - LANCE's view */
+name|bus_size_t
 name|sc_memsize
 decl_stmt|;
 comment|/* size of RAM */
@@ -425,6 +418,10 @@ parameter_list|)
 value|mtx_destroy(&(_sc)->sc_mtx)
 end_define
 
+begin_comment
+comment|/*  * Unfortunately, manual byte swapping is only necessary for the PCnet-PCI  * variants but not for the original LANCE or ILACC so we cannot do this  * with #ifdefs resolved at compile time.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -555,8 +552,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|lance_read
+name|struct
+name|mbuf
+modifier|*
+name|lance_get
 parameter_list|(
 name|struct
 name|lance_softc
@@ -657,6 +656,133 @@ end_endif
 begin_comment
 comment|/* Example only */
 end_comment
+
+begin_comment
+comment|/*  * Compare two Ether/802 addresses for equality, inlined and  * unrolled for speed.  Use this like memcmp().  *  * XXX: Add<machine/inlines.h> for stuff like this?  * XXX: or maybe add it to libkern.h instead?  *  * "I'd love to have an inline assembler version of this."  * XXX: Who wanted that? mycroft?  I wrote one, but this  * version in C is as good as hand-coded assembly. -gwr  *  * Please do NOT tweak this without looking at the actual  * assembly code generated before and after your tweaks!  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|uint16_t
+name|ether_cmp
+parameter_list|(
+name|void
+modifier|*
+name|one
+parameter_list|,
+name|void
+modifier|*
+name|two
+parameter_list|)
+block|{
+name|uint16_t
+modifier|*
+name|a
+init|=
+operator|(
+name|u_short
+operator|*
+operator|)
+name|one
+decl_stmt|;
+name|uint16_t
+modifier|*
+name|b
+init|=
+operator|(
+name|u_short
+operator|*
+operator|)
+name|two
+decl_stmt|;
+name|uint16_t
+name|diff
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|m68k
+comment|/* 	 * The post-increment-pointer form produces the best 	 * machine code for m68k.  This was carefully tuned 	 * so it compiles to just 8 short (2-byte) op-codes! 	 */
+name|diff
+operator|=
+operator|*
+name|a
+operator|++
+operator|-
+operator|*
+name|b
+operator|++
+expr_stmt|;
+name|diff
+operator||=
+operator|*
+name|a
+operator|++
+operator|-
+operator|*
+name|b
+operator|++
+expr_stmt|;
+name|diff
+operator||=
+operator|*
+name|a
+operator|++
+operator|-
+operator|*
+name|b
+operator|++
+expr_stmt|;
+else|#
+directive|else
+comment|/* 	 * Most modern CPUs do better with a single expresion. 	 * Note that short-cut evaluation is NOT helpful here, 	 * because it just makes the code longer, not faster! 	 */
+name|diff
+operator|=
+operator|(
+name|a
+index|[
+literal|0
+index|]
+operator|-
+name|b
+index|[
+literal|0
+index|]
+operator|)
+operator||
+operator|(
+name|a
+index|[
+literal|1
+index|]
+operator|-
+name|b
+index|[
+literal|1
+index|]
+operator|)
+operator||
+operator|(
+name|a
+index|[
+literal|2
+index|]
+operator|-
+name|b
+index|[
+literal|2
+index|]
+operator|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+operator|(
+name|diff
+operator|)
+return|;
+block|}
+end_function
 
 begin_endif
 endif|#
