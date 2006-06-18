@@ -72,7 +72,7 @@ end_decl_stmt
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
-literal|"hw.snd.unit"
+literal|"hw.snd.default_unit"
 argument_list|,
 operator|&
 name|snd_unit
@@ -89,9 +89,13 @@ begin_decl_stmt
 name|int
 name|snd_maxautovchans
 init|=
-literal|0
+literal|4
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX: a tunable implies that we may need more than one sound channel before    the system can change a sysctl (/etc/sysctl.conf), do we really need    this? */
+end_comment
 
 begin_expr_stmt
 name|TUNABLE_INT
@@ -1474,7 +1478,7 @@ end_ifdef
 begin_function
 specifier|static
 name|int
-name|sysctl_hw_snd_unit
+name|sysctl_hw_snd_default_unit
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
@@ -1578,6 +1582,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* XXX: do we need a way to let the user change the default unit? */
+end_comment
+
 begin_expr_stmt
 name|SYSCTL_PROC
 argument_list|(
@@ -1585,7 +1593,7 @@ name|_hw_snd
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|unit
+name|default_unit
 argument_list|,
 name|CTLTYPE_INT
 operator||
@@ -1598,7 +1606,7 @@ argument_list|(
 name|int
 argument_list|)
 argument_list|,
-name|sysctl_hw_snd_unit
+name|sysctl_hw_snd_default_unit
 argument_list|,
 literal|"I"
 argument_list|,
@@ -3754,6 +3762,7 @@ goto|goto
 name|no
 goto|;
 block|}
+comment|/* XXX: an user should be able to set this with a control tool, the 	   sysadmin then needs min+max sysctls for this */
 name|SYSCTL_ADD_INT
 argument_list|(
 name|snd_sysctl_tree
@@ -3771,7 +3780,7 @@ argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"buffersize"
+literal|"_buffersize"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,

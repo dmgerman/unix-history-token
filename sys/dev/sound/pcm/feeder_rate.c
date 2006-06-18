@@ -743,6 +743,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* XXX: this should be settable by an user via a control tool, the sysadmin    needs a max and min sysctl to limit what an user can do */
+end_comment
+
 begin_expr_stmt
 name|SYSCTL_PROC
 argument_list|(
@@ -750,7 +754,7 @@ name|_hw_snd
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|feeder_rate_buffersize
+name|_feeder_rate_buffersize
 argument_list|,
 name|CTLTYPE_INT
 operator||

@@ -856,6 +856,10 @@ name|midi_debug
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* XXX: should this be moved into debug.midi? */
+end_comment
+
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(

@@ -721,6 +721,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|SND_DYNSYSCTL
+comment|/* XXX: an user should be able to set this with a control tool, 	   if not done before 7.0-RELEASE, this needs to be converted to 	   a device specific sysctl "dev.pcm.X.yyy" via device_get_sysctl_*() 	   as discussed on multimedia@ in msg-id<861wujij2q.fsf@xps.des.no> */
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|snd_sysctl_tree
@@ -738,7 +739,7 @@ argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"spdif_enabled"
+literal|"_spdif_enabled"
 argument_list|,
 name|CTLTYPE_INT
 operator||
@@ -775,7 +776,7 @@ argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"via_dxs_src"
+literal|"_via_dxs_src"
 argument_list|,
 name|CTLTYPE_INT
 operator||

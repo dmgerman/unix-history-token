@@ -2857,6 +2857,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|SND_DYNSYSCTL
+comment|/* XXX: this should move to a device specific sysctl "dev.pcm.X.yyy" 	   via device_get_sysctl_*() as discussed on multimedia@ in msg-id<861wujij2q.fsf@xps.des.no> */
 name|SYSCTL_ADD_INT
 argument_list|(
 name|snd_sysctl_tree

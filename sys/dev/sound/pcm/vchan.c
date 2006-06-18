@@ -2712,6 +2712,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/* XXX: the user should be able to set this with a control tool, the 	   sysadmin needs a sysctl so set a max value for "vchan" and min+max 	   values for "vchanrate" to limit what an user can do */
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|snd_sysctl_tree
@@ -2729,7 +2730,7 @@ argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"vchans"
+literal|"_vchans"
 argument_list|,
 name|CTLTYPE_INT
 operator||
@@ -2766,7 +2767,7 @@ argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"vchanrate"
+literal|"_vchanrate"
 argument_list|,
 name|CTLTYPE_INT
 operator||

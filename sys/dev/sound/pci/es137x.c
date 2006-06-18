@@ -7962,6 +7962,7 @@ name|CT5880REV_CT5880_E
 operator|)
 condition|)
 block|{
+comment|/* XXX: an user should be able to set this with a control tool, 		   if not done before 7.0-RELEASE, this needs to be converted 		   to a device specific sysctl "dev.pcm.X.yyy" via 		   device_get_sysctl_*() as discussed on multimedia@ in msg-id<861wujij2q.fsf@xps.des.no> */
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|snd_sysctl_tree
@@ -7979,7 +7980,7 @@ argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"spdif_enabled"
+literal|"_spdif_enabled"
 argument_list|,
 name|CTLTYPE_INT
 operator||
@@ -8034,6 +8035,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* XXX: an user should be able to set this with a control tool, 		   if not done before 7.0-RELEASE, this needs to be converted 		   to a device specific sysctl "dev.pcm.X.yyy" via 		   device_get_sysctl_*() as discussed on multimedia@ in msg-id<861wujij2q.fsf@xps.des.no> */
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|snd_sysctl_tree
@@ -8051,7 +8053,7 @@ argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"fixed_rate"
+literal|"_fixed_rate"
 argument_list|,
 name|CTLTYPE_INT
 operator||
@@ -8098,6 +8100,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* XXX: an user should be able to set this with a control tool, 		   if not done before 7.0-RELEASE, this needs to be converted 		   to a device specific sysctl "dev.pcm.X.yyy" via 		   device_get_sysctl_*() as discussed on multimedia@ in msg-id<861wujij2q.fsf@xps.des.no> */
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|snd_sysctl_tree
@@ -8115,7 +8118,7 @@ argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"single_pcm_mixer"
+literal|"_single_pcm_mixer"
 argument_list|,
 name|CTLTYPE_INT
 operator||
@@ -8181,6 +8184,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* XXX: this needs to be converted to a device specific sysctl 	   "dev.pcm.X.yyy" via device_get_sysctl_*() as discussed on 	   multimedia@ in msg-id<861wujij2q.fsf@xps.des.no> */
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|snd_sysctl_tree
