@@ -140,16 +140,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/clock.h>
-end_include
-
-begin_comment
-comment|/* for DELAY */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<machine/bus.h>
 end_include
 
@@ -1171,7 +1161,7 @@ argument_list|(
 name|NULL
 argument_list|,
 comment|/* parent */
-name|PAGE_SIZE
+literal|4096
 argument_list|,
 literal|0
 argument_list|,
@@ -1219,7 +1209,7 @@ name|sc
 operator|->
 name|bfe_parent_tag
 argument_list|,
-literal|1
+literal|4096
 argument_list|,
 literal|0
 argument_list|,
@@ -1276,7 +1266,7 @@ name|sc
 operator|->
 name|bfe_parent_tag
 argument_list|,
-literal|1
+literal|4096
 argument_list|,
 literal|0
 argument_list|,
@@ -1564,7 +1554,7 @@ name|sc
 operator|->
 name|bfe_rx_dma
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1652,7 +1642,7 @@ name|sc
 operator|->
 name|bfe_tx_dma
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2861,6 +2851,9 @@ decl_stmt|;
 name|u_int32_t
 name|ctrl
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -2983,6 +2976,8 @@ index|[
 name|c
 index|]
 expr_stmt|;
+name|error
+operator|=
 name|bus_dmamap_load
 argument_list|(
 name|sc
@@ -3007,7 +3002,16 @@ name|bfe_dma_map_desc
 argument_list|,
 name|d
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|printf
+argument_list|(
+literal|"Serious error: bfe failed to map RX buffer\n"
 argument_list|)
 expr_stmt|;
 name|bus_dmamap_sync
@@ -5639,6 +5643,7 @@ name|bfe_mbuf
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 name|bus_dmamap_unload
 argument_list|(
 name|sc
@@ -5650,7 +5655,6 @@ operator|->
 name|bfe_map
 argument_list|)
 expr_stmt|;
-block|}
 name|sc
 operator|->
 name|bfe_tx_cnt
@@ -6144,6 +6148,54 @@ operator|&
 name|BFE_ISTAT_ERRORS
 condition|)
 block|{
+if|if
+condition|(
+name|istat
+operator|&
+name|BFE_ISTAT_DSCE
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"if_bfe Descriptor Error\n"
+argument_list|)
+expr_stmt|;
+name|bfe_stop
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|BFE_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|istat
+operator|&
+name|BFE_ISTAT_DPE
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"if_bfe Descriptor Protocol Error\n"
+argument_list|)
+expr_stmt|;
+name|bfe_stop
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|BFE_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|flag
 operator|=
 name|CSR_READ_4
@@ -6265,6 +6317,7 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
+modifier|*
 name|m_head
 parameter_list|,
 name|u_int32_t
@@ -6305,6 +6358,9 @@ name|chainlen
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|BFE_TX_LIST_CNT
@@ -6325,6 +6381,7 @@ for|for
 control|(
 name|m
 operator|=
+operator|*
 name|m_head
 init|;
 name|m
@@ -6371,6 +6428,7 @@ name|m
 operator|=
 name|m_defrag
 argument_list|(
+operator|*
 name|m_head
 argument_list|,
 name|M_DONTWAIT
@@ -6387,16 +6445,13 @@ operator|(
 name|ENOBUFS
 operator|)
 return|;
+operator|*
 name|m_head
 operator|=
 name|m
 expr_stmt|;
 block|}
 comment|/* 	 * Start packing the mbufs in this chain into 	 * the fragment pointers. Stop when we run out 	 * of fragments or hit the end of the mbuf chain. 	 */
-name|m
-operator|=
-name|m_head
-expr_stmt|;
 name|cur
 operator|=
 name|frag
@@ -6412,6 +6467,7 @@ for|for
 control|(
 name|m
 operator|=
+operator|*
 name|m_head
 init|;
 name|m
@@ -6520,6 +6576,8 @@ name|bfe_ctrl
 operator||=
 name|BFE_DESC_EOT
 expr_stmt|;
+name|error
+operator|=
 name|bus_dmamap_load
 argument_list|(
 name|sc
@@ -6546,9 +6604,18 @@ name|bfe_dma_map_desc
 argument_list|,
 name|d
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|ENOBUFS
+operator|)
+return|;
 name|bus_dmamap_sync
 argument_list|(
 name|sc
@@ -6609,6 +6676,7 @@ index|]
 operator|.
 name|bfe_mbuf
 operator|=
+operator|*
 name|m_head
 expr_stmt|;
 name|bus_dmamap_sync
@@ -6805,6 +6873,7 @@ name|bfe_encap
 argument_list|(
 name|sc
 argument_list|,
+operator|&
 name|m_head
 argument_list|,
 operator|&
