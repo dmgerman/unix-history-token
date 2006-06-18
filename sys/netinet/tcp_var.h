@@ -778,168 +778,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_NETINET_IN_PCB_H_
-end_ifdef
-
-begin_struct
-struct|struct
-name|syncache
-block|{
-name|TAILQ_ENTRY
-argument_list|(
-argument|syncache
-argument_list|)
-name|sc_hash
-expr_stmt|;
-name|struct
-name|in_conninfo
-name|sc_inc
-decl_stmt|;
-comment|/* addresses */
-name|u_long
-name|sc_rxttime
-decl_stmt|;
-comment|/* retransmit time */
-name|u_int16_t
-name|sc_rxmits
-decl_stmt|;
-comment|/* retransmit counter */
-name|u_int32_t
-name|sc_tsrecent
-decl_stmt|;
-name|u_int32_t
-name|sc_flowlabel
-decl_stmt|;
-comment|/* IPv6 flowlabel */
-name|tcp_seq
-name|sc_irs
-decl_stmt|;
-comment|/* seq from peer */
-name|tcp_seq
-name|sc_iss
-decl_stmt|;
-comment|/* our ISS */
-name|struct
-name|mbuf
-modifier|*
-name|sc_ipopts
-decl_stmt|;
-comment|/* source route */
-name|u_int16_t
-name|sc_peer_mss
-decl_stmt|;
-comment|/* peer's MSS */
-name|u_int16_t
-name|sc_wnd
-decl_stmt|;
-comment|/* advertised window */
-name|u_int8_t
-name|sc_ip_ttl
-decl_stmt|;
-comment|/* IPv4 TTL */
-name|u_int8_t
-name|sc_ip_tos
-decl_stmt|;
-comment|/* IPv4 TOS */
-name|u_int8_t
-name|sc_requested_s_scale
-range|:
-literal|4
-decl_stmt|,
-name|sc_request_r_scale
-range|:
-literal|4
-decl_stmt|;
-name|u_int8_t
-name|sc_flags
-decl_stmt|;
-define|#
-directive|define
-name|SCF_NOOPT
-value|0x01
-comment|/* no TCP options */
-define|#
-directive|define
-name|SCF_WINSCALE
-value|0x02
-comment|/* negotiated window scaling */
-define|#
-directive|define
-name|SCF_TIMESTAMP
-value|0x04
-comment|/* negotiated timestamps */
-define|#
-directive|define
-name|SCF_UNREACH
-value|0x10
-comment|/* icmp unreachable received */
-define|#
-directive|define
-name|SCF_SIGNATURE
-value|0x20
-comment|/* send MD5 digests */
-define|#
-directive|define
-name|SCF_SACK
-value|0x80
-comment|/* send SACK option */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|syncache_head
-block|{
-name|struct
-name|mtx
-name|sch_mtx
-decl_stmt|;
-name|TAILQ_HEAD
-argument_list|(
-argument|sch_head
-argument_list|,
-argument|syncache
-argument_list|)
-name|sch_bucket
-expr_stmt|;
-name|struct
-name|callout
-name|sch_timer
-decl_stmt|;
-name|int
-name|sch_nextc
-decl_stmt|;
-name|u_int
-name|sch_length
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_struct_decl
-struct_decl|struct
-name|in_conninfo
-struct_decl|;
-end_struct_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _NETINET_IN_PCB_H_ */
-end_comment
-
 begin_struct
 struct|struct
 name|hc_metrics_lite
@@ -980,6 +818,27 @@ comment|/* inbound delay-bandwidth product */
 block|}
 struct|;
 end_struct
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_NETINET_IN_PCB_H_
+end_ifndef
+
+begin_struct_decl
+struct_decl|struct
+name|in_conninfo
+struct_decl|;
+end_struct_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _NETINET_IN_PCB_H_ */
+end_comment
 
 begin_struct
 struct|struct
