@@ -1695,6 +1695,8 @@ argument_list|,
 literal|"cannot allocate buffer to determine disk sector size"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|read_disk
 argument_list|(
 literal|0
@@ -1702,6 +1704,16 @@ argument_list|,
 name|mboot
 operator|.
 name|bootinst
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"could not detect sector size"
 argument_list|)
 expr_stmt|;
 name|free
@@ -4343,6 +4355,11 @@ name|u
 operator|=
 literal|512
 expr_stmt|;
+else|else
+name|secsize
+operator|=
+name|u
+expr_stmt|;
 name|error
 operator|=
 name|ioctl
@@ -6831,7 +6848,7 @@ argument_list|(
 operator|&
 name|re
 argument_list|,
-literal|"^(/dev/[a-z]+[0-9]+)([sp][0-9]+)?[a-h]?$"
+literal|"^(/dev/[a-z/]+[0-9]+)([sp][0-9]+)?[a-h]?$"
 argument_list|,
 name|REG_EXTENDED
 argument_list|)
