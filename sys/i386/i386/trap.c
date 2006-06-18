@@ -3100,12 +3100,10 @@ condition|)
 block|{
 name|register_t
 name|eflags
-decl_stmt|;
-name|eflags
-operator|=
+init|=
 name|intr_disable
 argument_list|()
-expr_stmt|;
+decl_stmt|;
 name|frame
 operator|->
 name|tf_err
