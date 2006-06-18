@@ -718,6 +718,16 @@ init|=
 block|{
 block|{
 block|{
+name|USB_VENDOR_ACEECA
+block|,
+name|USB_PRODUCT_ACEECA_MEZ1000
+block|}
+block|,
+name|PALM4
+block|}
+block|,
+block|{
+block|{
 name|USB_VENDOR_HANDSPRING
 block|,
 name|USB_PRODUCT_HANDSPRING_VISOR
