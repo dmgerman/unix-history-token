@@ -3106,6 +3106,13 @@ operator|=
 name|intr_disable
 argument_list|()
 expr_stmt|;
+name|frame
+operator|->
+name|tf_err
+operator|=
+name|eva
+expr_stmt|;
+comment|/* smuggle fault address to ddb */
 if|if
 condition|(
 name|kdb_trap
@@ -3118,6 +3125,13 @@ name|frame
 argument_list|)
 condition|)
 block|{
+name|frame
+operator|->
+name|tf_err
+operator|=
+name|code
+expr_stmt|;
+comment|/* restore error code */
 name|intr_restore
 argument_list|(
 name|eflags
@@ -3125,6 +3139,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|frame
+operator|->
+name|tf_err
+operator|=
+name|code
+expr_stmt|;
+comment|/* restore error code */
 name|intr_restore
 argument_list|(
 name|eflags
