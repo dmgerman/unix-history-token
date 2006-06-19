@@ -6790,7 +6790,7 @@ name|m
 operator|->
 name|m_flags
 expr_stmt|;
-comment|/* We may be sending a framgment so traverse the mbuf */
+comment|/* We may be sending a fragment so traverse the mbuf */
 for|for
 control|(
 init|;
