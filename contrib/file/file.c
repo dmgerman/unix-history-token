@@ -65,16 +65,6 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_comment
-comment|/* for open() */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -252,7 +242,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: file.c,v 1.95 2004/09/27 15:28:37 christos Exp $"
+literal|"@(#)$Id: file.c,v 1.100 2005/10/17 18:41:44 christos Exp $"
 argument_list|)
 end_macro
 
@@ -275,7 +265,7 @@ begin_define
 define|#
 directive|define
 name|SYMLINKFLAG
-value|"L"
+value|"Lh"
 end_define
 
 begin_else
@@ -372,6 +362,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|private
+specifier|const
 name|char
 modifier|*
 name|separator
@@ -552,7 +543,7 @@ decl_stmt|;
 define|#
 directive|define
 name|OPTSTRING
-value|"bcCdf:F:ikLm:nNprsvz"
+value|"bcCdf:F:hikLm:nNprsvz"
 ifdef|#
 directive|ifdef
 name|HAVE_GETOPT_LONG
@@ -669,6 +660,16 @@ block|,
 literal|'L'
 block|}
 block|,
+block|{
+literal|"no-dereference"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|'h'
+block|}
+block|,
 endif|#
 directive|endif
 block|{
@@ -780,6 +781,10 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|LC_CTYPE
+comment|/* makes islower etc work for other langs */
+operator|(
+name|void
+operator|)
 name|setlocale
 argument_list|(
 name|LC_CTYPE
@@ -787,7 +792,6 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-comment|/* makes islower etc work for other langs */
 endif|#
 directive|endif
 ifdef|#
@@ -933,6 +937,22 @@ name|usermagic
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|S_IFLNK
+name|flags
+operator||=
+name|getenv
+argument_list|(
+literal|"POSIXLY_CORRECT"
+argument_list|)
+condition|?
+name|MAGIC_SYMLINK
+else|:
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|HAVE_GETOPT_LONG
@@ -1199,6 +1219,15 @@ operator||=
 name|MAGIC_SYMLINK
 expr_stmt|;
 break|break;
+case|case
+literal|'h'
+case|:
+name|flags
+operator|&=
+operator|~
+name|MAGIC_SYMLINK
+expr_stmt|;
+break|break;
 endif|#
 directive|endif
 case|case
@@ -1431,6 +1460,7 @@ end_function
 begin_function
 name|private
 name|void
+comment|/*ARGSUSED*/
 name|load
 parameter_list|(
 specifier|const
@@ -1554,6 +1584,9 @@ literal|0
 decl_stmt|,
 name|cwid
 decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -1632,14 +1665,43 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|>
+literal|0
+operator|&&
+name|buf
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|==
+literal|'\n'
+condition|)
+name|buf
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|cwid
 operator|=
 name|file_mbswidth
 argument_list|(
 name|buf
 argument_list|)
-operator|-
-literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -1672,12 +1734,31 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|buf
-index|[
-name|file_mbswidth
+name|len
+operator|=
+name|strlen
 argument_list|(
 name|buf
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|>
+literal|0
+operator|&&
+name|buf
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|==
+literal|'\n'
+condition|)
+name|buf
+index|[
+name|len
 operator|-
 literal|1
 index|]
@@ -1810,6 +1891,9 @@ name|type
 operator|==
 name|NULL
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"ERROR: %s\n"
@@ -1821,6 +1905,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%s\n"
@@ -2097,6 +2184,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
 name|puts
 argument_list|(
 literal|"Usage: file [OPTION]... [FILE]...\n"
