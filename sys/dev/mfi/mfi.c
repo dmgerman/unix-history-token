@@ -9636,17 +9636,6 @@ argument_list|,
 name|aen_link
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"REMOVED pid %d\n"
-argument_list|,
-name|mfi_aen_entry
-operator|->
-name|p
-operator|->
-name|p_pid
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|mfi_aen_entry
@@ -10917,11 +10906,6 @@ operator|=
 name|dev
 operator|->
 name|si_drv1
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"MFI POLL\n"
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
