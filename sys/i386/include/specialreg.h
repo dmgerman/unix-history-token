@@ -898,6 +898,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MSR_IA32_MISC_ENABLE
+value|0x1A0
+end_define
+
+begin_define
+define|#
+directive|define
 name|MSR_DEBUGCTLMSR
 value|0x1d9
 end_define
