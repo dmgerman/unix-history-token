@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) Ian F. Darwin 1986-1995.  * Software written by Ian 
 end_comment
 
 begin_comment
-comment|/*  * file.h - definitions for file(1) program  * @(#)$Id: file.h,v 1.64 2004/11/20 23:50:12 christos Exp $  */
+comment|/*  * file.h - definitions for file(1) program  * @(#)$Id: file.h,v 1.73 2005/10/20 14:59:01 christos Exp $  */
 end_comment
 
 begin_ifndef
@@ -51,6 +51,16 @@ include|#
 directive|include
 file|<errno.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_comment
+comment|/* For open and flags */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -184,7 +194,7 @@ begin_define
 define|#
 directive|define
 name|HOWMANY
-value|65536
+value|(256 * 1024)
 end_define
 
 begin_comment
@@ -200,7 +210,7 @@ begin_define
 define|#
 directive|define
 name|MAXMAGIS
-value|4096
+value|8192
 end_define
 
 begin_comment
@@ -302,6 +312,11 @@ directive|define
 name|OFFADD
 value|4
 comment|/* if '>&' appears,  */
+define|#
+directive|define
+name|INDIROFFADD
+value|8
+comment|/* if '>&(' appears,  */
 comment|/* Word 2 */
 name|uint8_t
 name|reln
@@ -393,6 +408,22 @@ name|FILE_LESTRING16
 value|19
 define|#
 directive|define
+name|FILE_SEARCH
+value|20
+define|#
+directive|define
+name|FILE_MEDATE
+value|21
+define|#
+directive|define
+name|FILE_MELDATE
+value|22
+define|#
+directive|define
+name|FILE_MELONG
+value|23
+define|#
+directive|define
 name|FILE_FORMAT_NAME
 define|\
 comment|/* 0 */
@@ -414,7 +445,7 @@ value|"beshort",		\
 comment|/* 8 */
 value|"belong",		\
 comment|/* 9 */
-value|"bedate"		\
+value|"bedate",		\
 comment|/* 10 */
 value|"leshort",		\
 comment|/* 11 */
@@ -434,7 +465,15 @@ value|"regex",		\
 comment|/* 18 */
 value|"bestring16",		\
 comment|/* 19 */
-value|"lestring16",
+value|"lestring16",		\
+comment|/* 20 */
+value|"search",		\
+comment|/* 21 */
+value|"medate",		\
+comment|/* 22 */
+value|"meldate",		\
+comment|/* 23 */
+value|"melong",
 define|#
 directive|define
 name|FILE_FMT_NUM
@@ -486,7 +525,15 @@ value|FILE_FMT_STR,		\
 comment|/* 18 */
 value|FILE_FMT_STR,		\
 comment|/* 19 */
-value|FILE_FMT_STR,
+value|FILE_FMT_STR,		\
+comment|/* 20 */
+value|FILE_FMT_STR,		\
+comment|/* 21 */
+value|FILE_FMT_STR,		\
+comment|/* 22 */
+value|FILE_FMT_STR,		\
+comment|/* 23 */
+value|FILE_FMT_NUM,
 comment|/* Word 3 */
 name|uint8_t
 name|in_op
@@ -541,6 +588,10 @@ value|7
 define|#
 directive|define
 name|FILE_OPINVERSE
+value|0x40
+define|#
+directive|define
+name|FILE_OPINDIRECT
 value|0x80
 comment|/* Word 4 */
 name|uint32_t
@@ -548,7 +599,7 @@ name|offset
 decl_stmt|;
 comment|/* offset to magic number */
 comment|/* Word 5 */
-name|uint32_t
+name|int32_t
 name|in_offset
 decl_stmt|;
 comment|/* offset from indirection */
@@ -584,10 +635,18 @@ index|[
 name|MAXstring
 index|]
 decl_stmt|;
+struct|struct
+block|{
 name|char
 modifier|*
 name|buf
 decl_stmt|;
+name|size_t
+name|buflen
+decl_stmt|;
+block|}
+name|search
+struct|;
 name|uint8_t
 name|hs
 index|[
@@ -784,6 +843,7 @@ end_struct_decl
 
 begin_function_decl
 name|protected
+specifier|const
 name|char
 modifier|*
 name|file_fmttime
@@ -803,6 +863,8 @@ parameter_list|(
 name|struct
 name|magic_set
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 specifier|const
 name|void
@@ -912,6 +974,8 @@ parameter_list|(
 name|struct
 name|magic_set
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 specifier|const
 name|unsigned
@@ -1228,6 +1292,35 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_SNPRINTF
+end_ifndef
+
+begin_function_decl
+name|int
+name|snprintf
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -1252,6 +1345,24 @@ begin_define
 define|#
 directive|define
 name|QUICK
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|O_BINARY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|O_BINARY
+value|0
 end_define
 
 begin_endif

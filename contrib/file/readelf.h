@@ -120,6 +120,12 @@ else|#
 directive|else
 end_else
 
+begin_undef
+undef|#
+directive|undef
+name|USE_ARRAY_FOR_64BIT_TYPES
+end_undef
+
 begin_typedef
 typedef|typedef
 name|uint64_t
@@ -860,6 +866,13 @@ begin_define
 define|#
 directive|define
 name|NT_OPENBSD_VERSION
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NT_DRAGONFLY_VERSION
 value|1
 end_define
 
