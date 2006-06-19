@@ -1286,6 +1286,9 @@ literal|"\t-x\tclear list of possible module file name suffixes\n"
 argument_list|,
 name|myname
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|myname
