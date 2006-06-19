@@ -860,6 +860,7 @@ literal|1
 block|,
 name|TYPE_PL2303X
 block|}
+block|,
 comment|/* TDK USB-PHS Adapter UHA6400 */
 block|{
 name|USB_VENDOR_TDK
