@@ -770,6 +770,50 @@ begin_comment
 comment|/* get cloners */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SIOCAIFGROUP
+value|_IOW('i', 135, struct ifgroupreq)
+end_define
+
+begin_comment
+comment|/* add an ifgroup */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGIFGROUP
+value|_IOWR('i', 136, struct ifgroupreq)
+end_define
+
+begin_comment
+comment|/* get ifgroups */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCDIFGROUP
+value|_IOW('i', 137, struct ifgroupreq)
+end_define
+
+begin_comment
+comment|/* delete ifgroup */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGIFGMEMB
+value|_IOWR('i', 138, struct ifgroupreq)
+end_define
+
+begin_comment
+comment|/* get members */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
