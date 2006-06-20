@@ -292,6 +292,23 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Function type used when iterating over the list of linker files.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|linker_predicate_t
+parameter_list|(
+name|linker_file_t
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
 comment|/*  * The "file" for the kernel.  */
 end_comment
 
@@ -337,6 +354,25 @@ parameter_list|,
 name|linker_file_t
 modifier|*
 name|_result
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Iterate over all of the currently loaded linker files calling the  * predicate function while the function returns 0.  Returns the value  * returned by the last predicate function.  */
+end_comment
+
+begin_function_decl
+name|int
+name|linker_file_foreach
+parameter_list|(
+name|linker_predicate_t
+modifier|*
+name|_predicate
+parameter_list|,
+name|void
+modifier|*
+name|_context
 parameter_list|)
 function_decl|;
 end_function_decl
