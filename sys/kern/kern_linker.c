@@ -1460,10 +1460,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|lf
-operator|=
-name|NULL
-expr_stmt|;
 name|foundfile
 operator|=
 literal|0
@@ -3924,8 +3920,6 @@ name|lf
 decl_stmt|;
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -4037,10 +4031,6 @@ name|ENOENT
 expr_stmt|;
 name|out
 label|:
-if|if
-condition|(
-name|pathname
-condition|)
 name|free
 argument_list|(
 name|pathname
@@ -8256,10 +8246,6 @@ condition|)
 do|;
 name|out
 label|:
-if|if
-condition|(
-name|pathname
-condition|)
 name|free
 argument_list|(
 name|pathname
