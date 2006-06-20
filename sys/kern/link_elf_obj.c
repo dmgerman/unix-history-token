@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -2081,6 +2087,9 @@ decl_stmt|;
 name|int
 name|alignmask
 decl_stmt|;
+name|int
+name|vfslocked
+decl_stmt|;
 name|GIANT_REQUIRED
 expr_stmt|;
 name|shdr
@@ -2107,6 +2116,8 @@ argument_list|,
 name|LOOKUP
 argument_list|,
 name|FOLLOW
+operator||
+name|MPSAFE
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
@@ -2142,6 +2153,14 @@ condition|)
 return|return
 name|error
 return|;
+name|vfslocked
+operator|=
+name|NDHASGIANT
+argument_list|(
+operator|&
+name|nd
+argument_list|)
+expr_stmt|;
 name|NDFREE
 argument_list|(
 operator|&
@@ -4345,6 +4364,11 @@ operator|->
 name|td_ucred
 argument_list|,
 name|td
+argument_list|)
+expr_stmt|;
+name|VFS_UNLOCK_GIANT
+argument_list|(
+name|vfslocked
 argument_list|)
 expr_stmt|;
 return|return
