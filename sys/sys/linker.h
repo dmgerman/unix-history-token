@@ -317,43 +317,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Load a kernel module.  */
-end_comment
-
-begin_function_decl
-name|int
-name|linker_load_module
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|_kldname
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|_modname
-parameter_list|,
-name|struct
-name|linker_file
-modifier|*
-name|_parent
-parameter_list|,
-name|struct
-name|mod_depend
-modifier|*
-name|_verinfo
-parameter_list|,
-name|struct
-name|linker_file
-modifier|*
-modifier|*
-name|_lfpp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * Obtain a reference to a module, loading it if required.  */
 end_comment
 
@@ -440,23 +403,6 @@ name|_file
 parameter_list|,
 name|int
 name|flags
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Add a dependency to a file.  */
-end_comment
-
-begin_function_decl
-name|int
-name|linker_file_add_dependency
-parameter_list|(
-name|linker_file_t
-name|_file
-parameter_list|,
-name|linker_file_t
-name|_dep
 parameter_list|)
 function_decl|;
 end_function_decl
