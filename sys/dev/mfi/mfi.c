@@ -2695,7 +2695,7 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"Controller info buffer map failed"
+literal|"Controller info buffer map failed\n"
 argument_list|)
 expr_stmt|;
 name|free
@@ -3013,7 +3013,7 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"Controller info buffer map failed"
+literal|"Log state buffer map failed\n"
 argument_list|)
 expr_stmt|;
 name|mfi_release_command
@@ -3027,7 +3027,6 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* It's ok if this fails, just use default info instead */
 if|if
 condition|(
 operator|(
@@ -3050,24 +3049,8 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"Failed to get controller state\n"
+literal|"Failed to get log state\n"
 argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|mfi_max_io
-operator|=
-operator|(
-name|sc
-operator|->
-name|mfi_total_sgl
-operator|-
-literal|1
-operator|)
-operator|*
-name|PAGE_SIZE
-operator|/
-name|MFI_SECTOR_LEN
 expr_stmt|;
 name|mfi_release_command
 argument_list|(
