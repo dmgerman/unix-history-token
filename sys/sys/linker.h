@@ -320,20 +320,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Add a new file class to the linker.  */
-end_comment
-
-begin_function_decl
-name|int
-name|linker_add_class
-parameter_list|(
-name|linker_class_t
-name|_cls
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * Obtain a reference to a module, loading it if required.  */
 end_comment
 
@@ -402,42 +388,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Called from a class handler when a file is laoded.  */
-end_comment
-
-begin_function_decl
-name|linker_file_t
-name|linker_make_file
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|_filename
-parameter_list|,
-name|linker_class_t
-name|_cls
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Unload a file, freeing up memory.  */
-end_comment
-
-begin_function_decl
-name|int
-name|linker_file_unload
-parameter_list|(
-name|linker_file_t
-name|_file
-parameter_list|,
-name|int
-name|flags
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * Lookup a symbol in a file.  If deps is TRUE, look in dependencies  * if not found in file.  */
 end_comment
 
@@ -491,8 +441,31 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * This routine is responsible for finding dependencies of userland  * initiated kldload(2)'s of files.  */
+comment|/*  * Functions soley for use by the linker class handlers.  */
 end_comment
+
+begin_function_decl
+name|int
+name|linker_add_class
+parameter_list|(
+name|linker_class_t
+name|_cls
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|linker_file_unload
+parameter_list|(
+name|linker_file_t
+name|_file
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
@@ -500,6 +473,21 @@ name|linker_load_dependencies
 parameter_list|(
 name|linker_file_t
 name|_lf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|linker_file_t
+name|linker_make_file
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|_filename
+parameter_list|,
+name|linker_class_t
+name|_cls
 parameter_list|)
 function_decl|;
 end_function_decl
