@@ -192,11 +192,10 @@ expr_stmt|;
 name|device_t
 name|ld_disk
 decl_stmt|;
-name|uint64_t
-name|ld_sectors
-decl_stmt|;
-name|uint32_t
-name|ld_secsize
+name|struct
+name|mfi_ld_info
+modifier|*
+name|ld_info
 decl_stmt|;
 name|int
 name|ld_id
@@ -380,9 +379,6 @@ name|mfi_ich
 decl_stmt|;
 name|eventhandler_tag
 name|eh
-decl_stmt|;
-name|int
-name|mfi_probe_count
 decl_stmt|;
 comment|/* 	 * Allocation for the command array.  Used as an indexable array to 	 * recover completed commands. 	 */
 name|struct

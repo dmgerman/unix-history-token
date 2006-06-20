@@ -959,6 +959,15 @@ expr_stmt|;
 name|free
 argument_list|(
 name|ld
+operator|->
+name|ld_info
+argument_list|,
+name|M_MFIBUF
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|ld
 argument_list|,
 name|M_MFIBUF
 argument_list|)
