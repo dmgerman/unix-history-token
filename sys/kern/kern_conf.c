@@ -1861,6 +1861,14 @@ argument_list|,
 name|devsw
 operator|->
 name|d_name
+operator|==
+name|NULL
+condition|?
+literal|"???"
+else|:
+name|devsw
+operator|->
+name|d_name
 argument_list|,
 literal|"and is disabled.  Recompile KLD module."
 argument_list|)
