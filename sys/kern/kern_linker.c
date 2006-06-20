@@ -211,6 +211,38 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Find a currently loaded file given its filename.  */
+end_comment
+
+begin_function_decl
+specifier|static
+name|linker_file_t
+name|linker_find_file_by_name
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|_filename
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Find a currently loaded file given its file id.  */
+end_comment
+
+begin_function_decl
+specifier|static
+name|linker_file_t
+name|linker_find_file_by_id
+parameter_list|(
+name|int
+name|_fileid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Metadata from the static kernel */
 end_comment
 
@@ -1731,6 +1763,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|linker_file_t
 name|linker_find_file_by_name
 parameter_list|(
@@ -1838,6 +1871,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|linker_file_t
 name|linker_find_file_by_id
 parameter_list|(
