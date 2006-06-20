@@ -4671,6 +4671,9 @@ name|size_t
 name|offset
 decl_stmt|;
 name|chunk_node_t
+name|key
+decl_stmt|;
+name|chunk_node_t
 modifier|*
 name|node
 decl_stmt|;
@@ -4853,20 +4856,9 @@ operator|+=
 name|chunk_size
 control|)
 block|{
-name|node
-operator|=
-name|base_chunk_node_alloc
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|node
-operator|==
-name|NULL
-condition|)
-break|break;
-name|node
-operator|->
+comment|/* 		 * It is possible for chunk to overlap existing entries in 		 * old_chunks if it is a huge allocation, so take care to not 		 * leak tree nodes. 		 */
+name|key
+operator|.
 name|chunk
 operator|=
 operator|(
@@ -4885,6 +4877,42 @@ operator|)
 name|offset
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|RB_FIND
+argument_list|(
+name|chunk_tree_s
+argument_list|,
+operator|&
+name|old_chunks
+argument_list|,
+operator|&
+name|key
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|node
+operator|=
+name|base_chunk_node_alloc
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|node
+operator|==
+name|NULL
+condition|)
+break|break;
+name|node
+operator|->
+name|chunk
+operator|=
+name|key
+operator|.
+name|chunk
+expr_stmt|;
 name|node
 operator|->
 name|size
@@ -4901,6 +4929,7 @@ argument_list|,
 name|node
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 ifdef|#
 directive|ifdef
@@ -5727,6 +5756,19 @@ name|QUANTUM_CASE
 argument_list|(
 literal|32
 argument_list|)
+if|#
+directive|if
+operator|(
+name|QUANTUM_2POW_MIN
+operator|<=
+literal|3
+operator|)
+name|POW2_CASE
+argument_list|(
+literal|9
+argument_list|)
+endif|#
+directive|endif
 name|POW2_CASE
 argument_list|(
 literal|10
@@ -10671,7 +10713,7 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/* Insert node into chunks. */
+comment|/* Insert node into huge. */
 name|node
 operator|->
 name|chunk
@@ -11396,7 +11438,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Insert node into chunks. */
+comment|/* Insert node into huge. */
 name|node
 operator|->
 name|chunk
