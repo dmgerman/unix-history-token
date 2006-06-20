@@ -3134,13 +3134,11 @@ name|out
 goto|;
 name|cm
 operator|->
-name|cm_len
+name|cm_flags
 operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|mfi_evt_log_state
-argument_list|)
+name|MFI_CMD_DATAIN
+operator||
+name|MFI_CMD_POLLED
 expr_stmt|;
 if|if
 condition|(
