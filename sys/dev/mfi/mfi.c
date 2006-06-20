@@ -3042,6 +3042,8 @@ name|struct
 name|mfi_command
 modifier|*
 name|cm
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|error
@@ -3179,6 +3181,10 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
+if|if
+condition|(
+name|cm
+condition|)
 name|mfi_release_command
 argument_list|(
 name|cm
@@ -4283,6 +4289,11 @@ literal|"Failed to shutdown controller\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|mfi_release_command
+argument_list|(
+name|cm
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
