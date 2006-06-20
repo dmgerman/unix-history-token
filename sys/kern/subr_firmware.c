@@ -763,13 +763,6 @@ return|return
 name|NULL
 return|;
 block|}
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 operator|(
 name|void
 operator|)
@@ -783,13 +776,6 @@ operator|&
 name|result
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 name|requested_load
 operator|=
 literal|1
@@ -922,11 +908,13 @@ operator|&
 name|firmware_mtx
 argument_list|)
 expr_stmt|;
-name|linker_file_unload
+name|linker_release_module
 argument_list|(
-name|file
+name|NULL
 argument_list|,
-name|LINKER_UNLOAD_NORMAL
+name|NULL
+argument_list|,
+name|file
 argument_list|)
 expr_stmt|;
 name|mtx_lock
