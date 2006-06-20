@@ -3098,12 +3098,6 @@ operator|||
 name|kdb_active
 condition|)
 block|{
-name|register_t
-name|eflags
-init|=
-name|intr_disable
-argument_list|()
-decl_stmt|;
 name|frame
 operator|->
 name|tf_err
@@ -3130,11 +3124,6 @@ operator|=
 name|code
 expr_stmt|;
 comment|/* restore error code */
-name|intr_restore
-argument_list|(
-name|eflags
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 name|frame
@@ -3144,11 +3133,6 @@ operator|=
 name|code
 expr_stmt|;
 comment|/* restore error code */
-name|intr_restore
-argument_list|(
-name|eflags
-argument_list|)
-expr_stmt|;
 block|}
 endif|#
 directive|endif
