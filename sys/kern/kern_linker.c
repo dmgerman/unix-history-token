@@ -8154,15 +8154,11 @@ argument_list|(
 name|filename
 argument_list|)
 condition|)
-block|{
 name|error
 operator|=
 name|EEXIST
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
+else|else
 do|do
 block|{
 name|error
@@ -8244,8 +8240,6 @@ condition|(
 literal|0
 condition|)
 do|;
-name|out
-label|:
 name|free
 argument_list|(
 name|pathname
