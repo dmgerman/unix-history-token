@@ -2090,8 +2090,6 @@ decl_stmt|;
 name|int
 name|vfslocked
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|shdr
 operator|=
 name|NULL

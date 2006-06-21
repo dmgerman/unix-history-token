@@ -2678,8 +2678,6 @@ decl_stmt|;
 name|int
 name|vfslocked
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|shdr
 operator|=
 name|NULL
@@ -3592,6 +3590,12 @@ ifdef|#
 directive|ifdef
 name|GPROF
 comment|/* Update profiling information with the new text segment. */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|kmupetext
 argument_list|(
 call|(
@@ -3616,6 +3620,12 @@ index|]
 operator|->
 name|p_memsz
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 endif|#
