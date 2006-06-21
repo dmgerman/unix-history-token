@@ -3704,6 +3704,65 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Call BUS_DRIVER_ADDED for any existing busses in this class.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|devclass_driver_added
+parameter_list|(
+name|devclass_t
+name|dc
+parameter_list|,
+name|driver_t
+modifier|*
+name|driver
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|dc
+operator|->
+name|maxunit
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|dc
+operator|->
+name|devices
+index|[
+name|i
+index|]
+condition|)
+name|BUS_DRIVER_ADDED
+argument_list|(
+name|dc
+operator|->
+name|devices
+index|[
+name|i
+index|]
+argument_list|,
+name|driver
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/**  * @brief Add a device driver to a device class  *  * Add a device driver to a devclass. This is normally called  * automatically by DRIVER_MODULE(). The BUS_DRIVER_ADDED() method of  * all devices in the devclass will be called to allow them to attempt  * to re-probe any unmatched children.  *  * @param dc		the devclass to edit  * @param driver	the driver to register  */
 end_comment
 
@@ -3721,9 +3780,6 @@ parameter_list|)
 block|{
 name|driverlink_t
 name|dl
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|PDEBUG
 argument_list|(
@@ -3807,39 +3863,9 @@ name|refs
 operator|++
 expr_stmt|;
 comment|/* XXX: kobj_mtx */
-comment|/* 	 * Call BUS_DRIVER_ADDED for any existing busses in this class. 	 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|dc
-operator|->
-name|maxunit
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-name|dc
-operator|->
-name|devices
-index|[
-name|i
-index|]
-condition|)
-name|BUS_DRIVER_ADDED
+name|devclass_driver_added
 argument_list|(
 name|dc
-operator|->
-name|devices
-index|[
-name|i
-index|]
 argument_list|,
 name|driver
 argument_list|)
@@ -13332,6 +13358,7 @@ condition|(
 name|error
 condition|)
 break|break;
+comment|/* 		 * XXX: Need to find all the device classes whose parent 		 * is bus_devclass.  Not only that, it has to be recursive. 		 */
 comment|/* 		 * If the driver has any base classes, make the 		 * devclass inherit from the devclass of the driver's 		 * first base class. This will allow the system to 		 * search for drivers in both devclasses for children 		 * of a device using this driver. 		 */
 if|if
 condition|(

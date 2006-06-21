@@ -1300,7 +1300,7 @@ argument_list|,
 operator|&
 name|stop
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 operator|!=
 literal|0
@@ -2828,7 +2828,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Locate a linker set and its contents.  This is a helper function to avoid  * linker_if.h exposure elsewhere.  Note: firstp and lastp are really void ***  */
+comment|/*  * Locate a linker set and its contents.  This is a helper function to avoid  * linker_if.h exposure elsewhere.  Note: firstp and lastp are really void **.  * This function is used in this file so we can avoid having lots of (void **)  * casts.  */
 end_comment
 
 begin_function
@@ -3599,7 +3599,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * If file does not contain qualified name or any dot in it 	 * (kldname.ko, or kldname.ver.ko) treat it as interface 	 * name. 	 */
+comment|/* 	 * If file does not contain a qualified name or any dot in it 	 * (kldname.ko, or kldname.ver.ko) treat it as an interface 	 * name. 	 */
 if|if
 condition|(
 name|index
