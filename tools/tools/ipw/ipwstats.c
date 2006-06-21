@@ -1444,7 +1444,7 @@ name|INT
 case|:
 name|printf
 argument_list|(
-literal|"%lu"
+literal|"%u"
 argument_list|,
 name|stats
 index|[
@@ -1478,7 +1478,7 @@ name|PERCENTAGE
 case|:
 name|printf
 argument_list|(
-literal|"%lu%%"
+literal|"%u%%"
 argument_list|,
 name|stats
 index|[
@@ -1495,7 +1495,7 @@ case|:
 default|default:
 name|printf
 argument_list|(
-literal|"0x%08lX"
+literal|"0x%08X"
 argument_list|,
 name|stats
 index|[
