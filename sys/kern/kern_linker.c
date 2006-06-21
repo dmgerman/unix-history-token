@@ -719,7 +719,7 @@ operator|!=
 literal|0
 condition|)
 return|return;
-comment|/* 	 * Perform a bubble sort of the system initialization objects by 	 * their subsystem (primary key) and order (secondary key). 	 *  	 * Since some things care about execution order, this is the operation 	 * which ensures continued function. 	 */
+comment|/* 	 * Perform a bubble sort of the system initialization objects by 	 * their subsystem (primary key) and order (secondary key). 	 * 	 * Since some things care about execution order, this is the operation 	 * which ensures continued function. 	 */
 for|for
 control|(
 name|sipp
@@ -932,7 +932,7 @@ operator|!=
 literal|0
 condition|)
 return|return;
-comment|/* 	 * Perform a reverse bubble sort of the system initialization objects 	 * by their subsystem (primary key) and order (secondary key). 	 *  	 * Since some things care about execution order, this is the operation 	 * which ensures continued function. 	 */
+comment|/* 	 * Perform a reverse bubble sort of the system initialization objects 	 * by their subsystem (primary key) and order (secondary key). 	 * 	 * Since some things care about execution order, this is the operation 	 * which ensures continued function. 	 */
 for|for
 control|(
 name|sipp
@@ -2523,7 +2523,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*  	 * Don't try to run SYSUNINITs if we are unloaded due to a  	 * link error. 	 */
+comment|/* 	 * Don't try to run SYSUNINITs if we are unloaded due to a 	 * link error. 	 */
 if|if
 condition|(
 name|file
@@ -3254,7 +3254,7 @@ name|DDB
 end_ifdef
 
 begin_comment
-comment|/*  * DDB Helpers.  DDB has to look across multiple files with their own symbol  * tables and string tables.  *   * Note that we do not obey list locking protocols here.  We really don't need  * DDB to hang because somebody's got the lock held.  We'll take the chance  * that the files list is inconsistant instead.  */
+comment|/*  * DDB Helpers.  DDB has to look across multiple files with their own symbol  * tables and string tables.  *  * Note that we do not obey list locking protocols here.  We really don't need  * DDB to hang because somebody's got the lock held.  We'll take the chance  * that the files list is inconsistant instead.  */
 end_comment
 
 begin_function
@@ -6552,7 +6552,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*  * Search for a not-loaded module by name.  *   * Modules may be found in the following locations:  *   * - preloaded (result is just the module name) - on disk (result is full path  * to module)  *   * If the module name is qualified in any way (contains path, etc.) the we  * simply return a copy of it.  *   * The search path can be manipulated via sysctl.  Note that we use the ';'  * character as a separator to be consistent with the bootloader.  */
+comment|/*  * Search for a not-loaded module by name.  *  * Modules may be found in the following locations:  *  * - preloaded (result is just the module name) - on disk (result is full path  * to module)  *  * If the module name is qualified in any way (contains path, etc.) the we  * simply return a copy of it.  *  * The search path can be manipulated via sysctl.  Note that we use the ';'  * character as a separator to be consistent with the bootloader.  */
 end_comment
 
 begin_decl_stmt
