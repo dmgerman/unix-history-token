@@ -621,8 +621,10 @@ argument_list|,
 name|rv
 argument_list|)
 expr_stmt|;
+operator|(
 operator|*
 name|line
+operator|)
 index|[
 name|rv
 index|]
