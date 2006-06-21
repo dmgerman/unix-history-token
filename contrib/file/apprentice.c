@@ -1867,10 +1867,10 @@ condition|(
 operator|(
 name|marray
 operator|=
-name|malloc
+name|calloc
 argument_list|(
 name|maxmagic
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -2476,8 +2476,6 @@ name|val
 decl_stmt|;
 name|uint32_t
 name|cont_level
-decl_stmt|,
-name|cont_count
 decl_stmt|;
 name|cont_level
 operator|=
