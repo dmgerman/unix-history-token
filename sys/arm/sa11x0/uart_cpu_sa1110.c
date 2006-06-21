@@ -91,6 +91,12 @@ name|uart_sa1110_ops
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|vm_offset_t
+name|sa1110_uart_vaddr
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|uart_cpu_eqres
