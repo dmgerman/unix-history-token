@@ -18,25 +18,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/kdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/bus.h>
+file|<sys/kernel.h>
 end_include
 
 begin_include
@@ -54,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<contrib/dev/acpica/acnamesp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/acpica/acpivar.h>
 end_include
 
@@ -61,12 +55,6 @@ begin_include
 include|#
 directive|include
 file|<dev/acpica/acpiio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<contrib/dev/acpica/acnamesp.h>
 end_include
 
 begin_comment
@@ -137,6 +125,24 @@ name|ACPI_DOCK_STATUS_DOCKED
 value|1
 end_define
 
+begin_comment
+comment|/* Prevent the device from being removed or not. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DOCK_UNLOCK
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DOCK_LOCK
+value|1
+end_define
+
 begin_struct
 struct|struct
 name|acpi_dock_softc
@@ -185,13 +191,13 @@ name|ACPI_SERIAL_DECL
 argument_list|(
 name|dock
 argument_list|,
-literal|"ACPI Dock Station"
+literal|"ACPI Docking Station"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Utility  */
+comment|/*  * Utility functions  */
 end_comment
 
 begin_function
@@ -242,29 +248,11 @@ name|_sta
 argument_list|)
 argument_list|)
 condition|)
-block|{
 name|sc
 operator|->
 name|_sta
 operator|=
 name|ACPI_DOCK_STATUS_UNKNOWN
-expr_stmt|;
-block|}
-name|ACPI_VPRINT
-argument_list|(
-name|dev
-argument_list|,
-name|acpi_device_get_parent_softc
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-literal|"_STA = %04x\n"
-argument_list|,
-name|sc
-operator|->
-name|_sta
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -283,29 +271,11 @@ name|_bdn
 argument_list|)
 argument_list|)
 condition|)
-block|{
 name|sc
 operator|->
 name|_bdn
 operator|=
 name|ACPI_DOCK_STATUS_UNKNOWN
-expr_stmt|;
-block|}
-name|ACPI_VPRINT
-argument_list|(
-name|dev
-argument_list|,
-name|acpi_device_get_parent_softc
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-literal|"_BDN = %04x\n"
-argument_list|,
-name|sc
-operator|->
-name|_bdn
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -324,14 +294,12 @@ name|_uid
 argument_list|)
 argument_list|)
 condition|)
-block|{
 name|sc
 operator|->
 name|_uid
 operator|=
 name|ACPI_DOCK_STATUS_UNKNOWN
 expr_stmt|;
-block|}
 name|ACPI_VPRINT
 argument_list|(
 name|dev
@@ -341,7 +309,15 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-literal|"_UID = %04x\n"
+literal|"_STA: %04x, _BDN: %04x, _UID: %04x\n"
+argument_list|,
+name|sc
+operator|->
+name|_sta
+argument_list|,
+name|sc
+operator|->
+name|_bdn
 argument_list|,
 name|sc
 operator|->
@@ -446,30 +422,26 @@ operator|&
 name|buf
 argument_list|)
 expr_stmt|;
+comment|/* 	 * When _DCK is called with 0, OSPM will ignore the return value. 	 */
 if|if
 condition|(
 name|dock
 operator|==
 name|ACPI_DOCK_STATUS_UNDOCKED
 condition|)
-block|{
-comment|/* 		 * When _DCK is called with 0, OSPM will ignore the return value. 		 */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
+comment|/* If _DCK returned 1, the request succeeded. */
 if|if
 condition|(
 name|ACPI_SUCCESS
 argument_list|(
 name|status
 argument_list|)
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|retobj
 operator|.
 name|Type
@@ -484,14 +456,11 @@ name|Value
 operator|==
 literal|1
 condition|)
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
-block|}
 return|return
 operator|(
 operator|-
@@ -500,6 +469,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* Lock devices while docked. */
+end_comment
 
 begin_function
 specifier|static
@@ -601,13 +574,11 @@ argument_list|(
 name|status
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 return|return
 operator|(
 operator|-
@@ -679,11 +650,9 @@ argument_list|(
 name|ret_status
 argument_list|)
 condition|)
-block|{
 goto|goto
 name|out
 goto|;
-block|}
 name|obj
 operator|=
 operator|(
@@ -697,7 +666,7 @@ expr_stmt|;
 if|if
 condition|(
 name|dock_handle
-operator|!=
+operator|==
 name|acpi_GetReference
 argument_list|(
 name|NULL
@@ -705,11 +674,6 @@ argument_list|,
 name|obj
 argument_list|)
 condition|)
-block|{
-goto|goto
-name|out
-goto|;
-block|}
 name|ret
 operator|=
 literal|1
@@ -740,7 +704,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Dock  */
+comment|/*  * Docking functions  */
 end_comment
 
 begin_function
@@ -771,13 +735,11 @@ argument_list|(
 name|dev
 argument_list|)
 condition|)
-block|{
 name|device_enable
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-block|}
 name|mtx_lock
 argument_list|(
 operator|&
@@ -851,11 +813,9 @@ argument_list|,
 name|handle
 argument_list|)
 condition|)
-block|{
 goto|goto
 name|out
 goto|;
-block|}
 name|ACPI_VPRINT
 argument_list|(
 name|dock_dev
@@ -894,16 +854,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ACPI_VPRINT
+name|device_printf
 argument_list|(
 name|dock_dev
 argument_list|,
-name|acpi_device_get_parent_softc
-argument_list|(
-name|dock_dev
-argument_list|)
-argument_list|,
-literal|"%s has no device, something wrong\n"
+literal|"error: %s has no associated device\n"
 argument_list|,
 name|acpi_name
 argument_list|(
@@ -943,13 +898,14 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|ACPI_STATUS
+name|status
+decl_stmt|;
 name|ACPI_HANDLE
 name|sb_handle
 decl_stmt|;
-if|if
-condition|(
-name|ACPI_SUCCESS
-argument_list|(
+name|status
+operator|=
 name|AcpiGetHandle
 argument_list|(
 name|ACPI_ROOT_OBJECT
@@ -959,6 +915,12 @@ argument_list|,
 operator|&
 name|sb_handle
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|status
 argument_list|)
 condition|)
 block|{
@@ -1032,7 +994,7 @@ name|acpi_dock_execute_lck
 argument_list|(
 name|dev
 argument_list|,
-literal|1
+name|ACPI_DOCK_LOCK
 argument_list|)
 expr_stmt|;
 if|if
@@ -1061,13 +1023,11 @@ condition|(
 operator|!
 name|cold
 condition|)
-block|{
 name|acpi_dock_insert_children
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-block|}
 name|sc
 operator|->
 name|status
@@ -1139,11 +1099,9 @@ argument_list|,
 name|handle
 argument_list|)
 condition|)
-block|{
 goto|goto
 name|out
 goto|;
-block|}
 name|ACPI_VPRINT
 argument_list|(
 name|dock_dev
@@ -1229,10 +1187,11 @@ block|{
 name|ACPI_HANDLE
 name|sb_handle
 decl_stmt|;
-if|if
-condition|(
-name|ACPI_SUCCESS
-argument_list|(
+name|ACPI_STATUS
+name|status
+decl_stmt|;
+name|status
+operator|=
 name|AcpiGetHandle
 argument_list|(
 name|ACPI_ROOT_OBJECT
@@ -1242,6 +1201,12 @@ argument_list|,
 operator|&
 name|sb_handle
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|status
 argument_list|)
 condition|)
 block|{
@@ -1318,14 +1283,12 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
 return|return;
-block|}
 name|acpi_dock_execute_lck
 argument_list|(
 name|dev
 argument_list|,
-literal|0
+name|ACPI_DOCK_UNLOCK
 argument_list|)
 expr_stmt|;
 if|if
@@ -1373,19 +1336,17 @@ name|_sta
 operator|!=
 literal|0
 condition|)
-block|{
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"mechanical failures (%#x).\n"
+literal|"mechanical failure (%#x).\n"
 argument_list|,
 name|sc
 operator|->
 name|_sta
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1434,28 +1395,24 @@ operator|->
 name|_sta
 argument_list|)
 condition|)
-block|{
 name|acpi_dock_insert
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|sc
 operator|->
 name|_sta
 operator|==
-literal|0x0
+literal|0
 condition|)
-block|{
 name|acpi_dock_removal
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1554,10 +1511,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Sysctl proc  */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -1634,11 +1587,9 @@ name|newptr
 operator|==
 name|NULL
 condition|)
-block|{
 goto|goto
 name|out
 goto|;
-block|}
 if|if
 condition|(
 name|status
@@ -1666,11 +1617,9 @@ name|sc
 operator|->
 name|status
 condition|)
-block|{
 goto|goto
 name|out
 goto|;
-block|}
 switch|switch
 condition|(
 name|status
@@ -1715,10 +1664,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * probe/attach  */
-end_comment
 
 begin_function
 specifier|static
@@ -1772,20 +1717,19 @@ name|acpi_dock_status
 operator|==
 name|ACPI_DOCK_STATUS_DOCKED
 condition|)
-block|{
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"ACPI Dock Station"
+literal|"ACPI Docking Station"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX Somewhere else in the kernel panics on "sysctl kern" if we 	 * return a negative value here (reprobe ok). 	 */
 return|return
 operator|(
 literal|0
@@ -1853,13 +1797,11 @@ name|acpi_dock_status
 operator|==
 name|ACPI_DOCK_STATUS_DOCKED
 condition|)
-block|{
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 name|sc
 operator|->
 name|status
