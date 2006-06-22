@@ -147,6 +147,12 @@ name|GPT_ENT_TYPE_FREEBSD
 decl_stmt|;
 specifier|static
 name|uuid_t
+name|hfs
+init|=
+name|GPT_ENT_TYPE_APPLE_HFS
+decl_stmt|;
+specifier|static
+name|uuid_t
 name|linuxswap
 init|=
 name|GPT_ENT_TYPE_LINUX_SWAP
@@ -327,6 +333,23 @@ condition|)
 return|return
 operator|(
 literal|"Windows reserved"
+operator|)
+return|;
+if|if
+condition|(
+name|uuid_equal
+argument_list|(
+name|t
+argument_list|,
+operator|&
+name|hfs
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|"Apple HFS"
 operator|)
 return|;
 name|unfriendly
