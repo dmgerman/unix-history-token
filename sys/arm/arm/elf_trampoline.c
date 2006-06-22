@@ -745,15 +745,8 @@ argument_list|()
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-unit|}
-ifdef|#
-directive|ifdef
-name|KZIP
-end_ifdef
-
 begin_function
-unit|static
+unit|}  static
 name|void
 name|get_cachetype_cp15
 parameter_list|()
@@ -1146,6 +1139,12 @@ name|arm9_dcache_index_inc
 expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KZIP
+end_ifdef
 
 begin_decl_stmt
 specifier|static
