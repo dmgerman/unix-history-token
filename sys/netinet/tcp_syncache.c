@@ -5649,13 +5649,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|MD5_CTX
-name|syn_ctx
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -5795,6 +5788,9 @@ decl_stmt|;
 name|struct
 name|md5_add
 name|add
+decl_stmt|;
+name|MD5_CTX
+name|syn_ctx
 decl_stmt|;
 name|idx
 operator|=
@@ -6202,6 +6198,9 @@ decl_stmt|;
 name|struct
 name|md5_add
 name|add
+decl_stmt|;
+name|MD5_CTX
+name|syn_ctx
 decl_stmt|;
 name|data
 operator|=
