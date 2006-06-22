@@ -10056,7 +10056,7 @@ expr|struct
 name|ip6_rthdr
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 operator|(
 operator|(
@@ -10068,10 +10068,13 @@ name|ulp
 operator|)
 operator|->
 name|ip6r_type
-operator|!=
-literal|0
 condition|)
 block|{
+case|case
+literal|0
+case|:
+break|break;
+default|default:
 name|printf
 argument_list|(
 literal|"IPFW2: IPV6 - Unknown Routing "
@@ -10421,6 +10424,36 @@ name|ip6_ext
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|IPPROTO_IPV6
+case|:
+comment|/* RFC 2893 */
+name|PULLUP_TO
+argument_list|(
+name|hlen
+argument_list|,
+name|ulp
+argument_list|,
+expr|struct
+name|ip6_hdr
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IPPROTO_IPV4
+case|:
+comment|/* RFC 2893 */
+name|PULLUP_TO
+argument_list|(
+name|hlen
+argument_list|,
+name|ulp
+argument_list|,
+expr|struct
+name|ip
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|printf
 argument_list|(
@@ -10441,6 +10474,16 @@ operator|(
 name|IP_FW_DENY
 operator|)
 return|;
+name|PULLUP_TO
+argument_list|(
+name|hlen
+argument_list|,
+name|ulp
+argument_list|,
+expr|struct
+name|ip6_ext
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 comment|/*switch */
