@@ -175,6 +175,10 @@ name|void
 modifier|*
 name|cm_private
 decl_stmt|;
+name|void
+modifier|*
+name|cm_private2
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -424,14 +428,8 @@ expr_stmt|;
 name|eventhandler_tag
 name|mfi_eh
 decl_stmt|;
-name|struct
-name|cdev
-modifier|*
+name|dev_t
 name|mfi_cdev
-decl_stmt|;
-name|struct
-name|mtx
-name|mfi_io_lock
 decl_stmt|;
 block|}
 struct|;
@@ -567,7 +565,7 @@ parameter_list|,
 name|index
 parameter_list|)
 define|\
-value|static __inline void						\ 	mfi_initq_ ## name (struct mfi_softc *sc)			\ 	{								\ 		TAILQ_INIT(&sc->mfi_ ## name);				\ 		MFIQ_INIT(sc, index);					\ 	}								\ 	static __inline void						\ 	mfi_enqueue_ ## name (struct mfi_command *cm)			\ 	{								\ 		if ((cm->cm_flags& MFI_ON_MFIQ_MASK) != 0) {		\ 			printf("command %p is on another queue, "	\ 			    "flags = %#x\n", cm, cm->cm_flags);		\ 			panic("command is on another queue");		\ 		}							\ 		TAILQ_INSERT_TAIL(&cm->cm_sc->mfi_ ## name, cm, cm_link); \ 		cm->cm_flags |= MFI_ON_ ## index;			\ 		MFIQ_ADD(cm->cm_sc, index);				\ 	}								\ 	static __inline void						\ 	mfi_requeue_ ## name (struct mfi_command *cm)			\ 	{								\ 		if ((cm->cm_flags& MFI_ON_MFIQ_MASK) != 0) {		\ 			printf("command %p is on another queue, "	\ 			    "flags = %#x\n", cm, cm->cm_flags);		\ 			panic("command is on another queue");		\ 		}							\ 		TAILQ_INSERT_HEAD(&cm->cm_sc->mfi_ ## name, cm, cm_link); \ 		cm->cm_flags |= MFI_ON_ ## index;			\ 		MFIQ_ADD(cm->cm_sc, index);				\ 	}								\ 	static __inline struct mfi_command *				\ 	mfi_dequeue_ ## name (struct mfi_softc *sc)			\ 	{								\ 		struct mfi_command *cm;					\ 									\ 		if ((cm = TAILQ_FIRST(&sc->mfi_ ## name)) != NULL) {	\ 			if ((cm->cm_flags& MFI_ON_ ## index) == 0) {	\ 				printf("command %p not in queue, "	\ 				    "flags = %#x, bit = %#x\n", cm,	\ 				    cm->cm_flags, MFI_ON_ ## index);	\ 				panic("command not in queue");		\ 			}						\ 			TAILQ_REMOVE(&sc->mfi_ ## name, cm, cm_link);	\ 			cm->cm_flags&= ~MFI_ON_ ## index;		\ 			MFIQ_REMOVE(sc, index);				\ 		}							\ 		return (cm);						\ 	}								\ 	static __inline void						\ 	mfi_remove_ ## name (struct mfi_command *cm)			\ 	{								\ 		if ((cm->cm_flags& MFI_ON_ ## index) == 0) {		\ 			printf("command %p not in queue, flags = %#x, " \ 			    "bit = %#x\n", cm, cm->cm_flags,		\ 			    MFI_ON_ ## index);				\ 			panic("command not in queue");			\ 		}							\ 		TAILQ_REMOVE(&cm->cm_sc->mfi_ ## name, cm, cm_link);	\ 		cm->cm_flags&= ~MFI_ON_ ## index;			\ 		MFIQ_REMOVE(cm->cm_sc, index);				\ 	}								\ struct hack
+value|static __inline void						\ 	mfi_initq_ ## name (struct mfi_softc *sc)			\ 	{								\ 		TAILQ_INIT(&sc->mfi_ ## name);				\ 		MFIQ_INIT(sc, index);					\ 	}								\ 	static __inline void						\ 	mfi_enqueue_ ## name (struct mfi_command *cm)			\ 	{								\ 		int s = splbio();					\ 		if ((cm->cm_flags& MFI_ON_MFIQ_MASK) != 0) {		\ 			printf("command %p is on another queue, "	\ 			    "flags = %#x\n", cm, cm->cm_flags);		\ 			panic("command is on another queue");		\ 		}							\ 		TAILQ_INSERT_TAIL(&cm->cm_sc->mfi_ ## name, cm, cm_link); \ 		cm->cm_flags |= MFI_ON_ ## index;			\ 		MFIQ_ADD(cm->cm_sc, index);				\ 		splx(s);						\ 	}								\ 	static __inline void						\ 	mfi_requeue_ ## name (struct mfi_command *cm)			\ 	{								\ 		int s = splbio();					\ 									\ 		if ((cm->cm_flags& MFI_ON_MFIQ_MASK) != 0) {		\ 			printf("command %p is on another queue, "	\ 			    "flags = %#x\n", cm, cm->cm_flags);		\ 			panic("command is on another queue");		\ 		}							\ 		TAILQ_INSERT_HEAD(&cm->cm_sc->mfi_ ## name, cm, cm_link); \ 		cm->cm_flags |= MFI_ON_ ## index;			\ 		MFIQ_ADD(cm->cm_sc, index);				\ 		splx(s);						\ 	}								\ 	static __inline struct mfi_command *				\ 	mfi_dequeue_ ## name (struct mfi_softc *sc)			\ 	{								\ 		struct mfi_command *cm;					\ 		int s = splbio();					\ 									\ 		if ((cm = TAILQ_FIRST(&sc->mfi_ ## name)) != NULL) {	\ 			if ((cm->cm_flags& MFI_ON_ ## index) == 0) {	\ 				printf("command %p not in queue, "	\ 				    "flags = %#x, bit = %#x\n", cm,	\ 				    cm->cm_flags, MFI_ON_ ## index);	\ 				panic("command not in queue");		\ 			}						\ 			TAILQ_REMOVE(&sc->mfi_ ## name, cm, cm_link);	\ 			cm->cm_flags&= ~MFI_ON_ ## index;		\ 			MFIQ_REMOVE(sc, index);				\ 		}							\ 		splx(s);						\ 		return (cm);						\ 	}								\ 	static __inline void						\ 	mfi_remove_ ## name (struct mfi_command *cm)			\ 	{								\ 		int s = splbio();					\ 									\ 		if ((cm->cm_flags& MFI_ON_ ## index) == 0) {		\ 			printf("command %p not in queue, flags = %#x, " \ 			    "bit = %#x\n", cm, cm->cm_flags,		\ 			    MFI_ON_ ## index);				\ 			panic("command not in queue");			\ 		}							\ 		TAILQ_REMOVE(&cm->cm_sc->mfi_ ## name, cm, cm_link);	\ 		cm->cm_flags&= ~MFI_ON_ ## index;			\ 		MFIQ_REMOVE(cm->cm_sc, index);				\ 		splx(s);						\ 	}								\ struct hack
 end_define
 
 begin_expr_stmt
@@ -647,6 +645,12 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
+name|int
+name|s
+init|=
+name|splbio
+argument_list|()
+decl_stmt|;
 name|bioq_insert_tail
 argument_list|(
 operator|&
@@ -662,6 +666,11 @@ argument_list|(
 name|sc
 argument_list|,
 name|MFIQ_BIO
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -681,6 +690,12 @@ block|{ 	struct
 name|bio
 operator|*
 name|bp
+block|;
+name|int
+name|s
+operator|=
+name|splbio
+argument_list|()
 block|;
 if|if
 condition|(
@@ -717,6 +732,11 @@ name|MFIQ_BIO
 argument_list|)
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 end_expr_stmt
 
 begin_return

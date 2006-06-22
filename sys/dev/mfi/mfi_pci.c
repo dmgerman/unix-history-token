@@ -48,7 +48,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/selinfo.h>
+file|<sys/select.h>
 end_include
 
 begin_include
@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -85,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/mfi/mfi_compat.h>
 end_include
 
 begin_include
@@ -108,13 +108,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/pci/pcireg.h>
+file|<pci/pcireg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/pci/pcivar.h>
+file|<pci/pcivar.h>
 end_include
 
 begin_include
@@ -790,11 +790,6 @@ comment|/* maxsegsize */
 literal|0
 argument_list|,
 comment|/* flags */
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-comment|/* lockfunc, lockarg */
 operator|&
 name|sc
 operator|->
