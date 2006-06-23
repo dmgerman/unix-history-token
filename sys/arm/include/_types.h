@@ -327,7 +327,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|__int32_t
+name|__int64_t
 name|__time_t
 typedef|;
 end_typedef
