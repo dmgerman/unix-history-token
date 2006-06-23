@@ -321,29 +321,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_function
-specifier|static
-name|__inline
-name|int
-name|_thr_dump_enabled
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-operator|(
-name|_thr_debug_flags
-operator|&
-name|DBG_INFO_DUMP
-operator|)
-operator|!=
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * Signal setup and delivery.  *  * 1) Delivering signals to threads in the same KSE.  *    These signals are sent by upcall events and are set in the  *    km_sigscaught field of the KSE mailbox.  Since these signals  *    are received while operating on the KSE stack, they can be  *    delivered either by using signalcontext() to add a stack frame  *    to the target thread's stack, or by adding them in the thread's  *    pending set and having the thread run them down after it   * 2) Delivering signals to threads in other KSEs/KSEGs.  * 3) Delivering signals to threads in critical regions.  * 4) Delivering signals to threads after they change their signal masks.  *  * Methods of delivering signals.  *  *   1) Add a signal frame to the thread's saved context.  *   2) Add the signal to the thread structure, mark the thread as  *  	having signals to handle, and let the thread run them down  *  	after it resumes from the KSE scheduler.  *  * Problem with 1).  You can't do this to a running thread or a  * thread in a critical region.  *  * Problem with 2).  You can't do this to a thread that doesn't  * yield in some way (explicitly enters the scheduler).  A thread  * blocked in the kernel or a CPU hungry thread will not see the  * signal without entering the scheduler.  *  * The solution is to use both 1) and 2) to deliver signals:  *  *   o Thread in critical region - use 2).  When the thread  *     leaves the critical region it will check to see if it  *     has pending signals and run them down.  *  *   o Thread enters scheduler explicitly - use 2).  The thread  *     can check for pending signals after it returns from the  *     the scheduler.  *  *   o Thread is running and not current thread - use 2).  When the  *     thread hits a condition specified by one of the other bullets,  *     the signal will be delivered.  *  *   o Thread is running and is current thread (e.g., the thread  *     has just changed its signal mask and now sees that it has  *     pending signals) - just run down the pending signals.  *  *   o Thread is swapped out due to quantum expiration - use 1)  *  *   o Thread is blocked in kernel - kse_thr_wakeup() and then  *     use 1)  */
 end_comment
