@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2005 Olivier Houchard.  All rights reserved.  *  * 
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/* $$FreeBSD$ */
 end_comment
 
 begin_ifndef

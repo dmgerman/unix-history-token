@@ -524,7 +524,7 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|trapframe
+name|clockframe
 modifier|*
 name|fp
 init|=
@@ -554,15 +554,7 @@ endif|#
 directive|endif
 name|hardclock
 argument_list|(
-name|TRAPF_USERMODE
-argument_list|(
 name|fp
-argument_list|)
-argument_list|,
-name|TRAPF_PC
-argument_list|(
-name|fp
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

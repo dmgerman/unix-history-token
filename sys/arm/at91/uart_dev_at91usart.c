@@ -101,6 +101,26 @@ directive|include
 file|"uart_if.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|uart_lock
+parameter_list|(
+name|x
+parameter_list|)
+value|mtx_lock_spin(&(x))
+end_define
+
+begin_define
+define|#
+directive|define
+name|uart_unlock
+parameter_list|(
+name|x
+parameter_list|)
+value|mtx_unlock_spin(&(x))
+end_define
+
 begin_comment
 comment|/*  * High-level UART interface.  */
 end_comment
@@ -274,11 +294,6 @@ name|struct
 name|uart_bas
 modifier|*
 name|bas
-parameter_list|,
-name|struct
-name|mtx
-modifier|*
-name|mtx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -783,11 +798,6 @@ name|struct
 name|uart_bas
 modifier|*
 name|bas
-parameter_list|,
-name|struct
-name|mtx
-modifier|*
-name|mtx
 parameter_list|)
 block|{
 name|int
@@ -1695,8 +1705,6 @@ operator|&
 name|sc
 operator|->
 name|sc_bas
-argument_list|,
-name|NULL
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1854,7 +1862,7 @@ name|sc_txbusy
 condition|)
 name|ipend
 operator||=
-name|SER_INT_TXIDLE
+name|UART_IPEND_TXIDLE
 expr_stmt|;
 if|if
 condition|(
@@ -1868,7 +1876,7 @@ name|sc_txbusy
 condition|)
 name|ipend
 operator||=
-name|SER_INT_TXIDLE
+name|UART_IPEND_TXIDLE
 expr_stmt|;
 if|if
 condition|(
@@ -1881,7 +1889,7 @@ operator|)
 condition|)
 name|ipend
 operator||=
-name|SER_INT_RXREADY
+name|UART_IPEND_RXREADY
 expr_stmt|;
 if|if
 condition|(
@@ -1898,7 +1906,7 @@ name|USART_CR_RSTSTA
 decl_stmt|;
 name|ipend
 operator||=
-name|SER_INT_BREAK
+name|UART_IPEND_BREAK
 expr_stmt|;
 name|WR4
 argument_list|(
@@ -2037,7 +2045,7 @@ operator|=
 name|sig
 operator|&
 operator|~
-name|SER_MASK_DELTA
+name|UART_SIGMASK_DELTA
 expr_stmt|;
 name|sc
 operator|->
