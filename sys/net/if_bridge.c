@@ -2695,7 +2695,7 @@ name|if_hdrlen
 operator|=
 name|ETHER_HDR_LEN
 expr_stmt|;
-comment|/* 	 * Generate a random ethernet address and use the private AC:DE:48 	 * OUI code. 	 * 	 * Since we are using random ethernet addresses for the bridge, it is 	 * possible that we might have address collisions, so make sure that 	 * this hardware address isn't already in use on another bridge. 	 */
+comment|/* 	 * Generate a random ethernet address with a locally administered 	 * address. 	 * 	 * Since we are using random ethernet addresses for the bridge, it is 	 * possible that we might have address collisions, so make sure that 	 * this hardware address isn't already in use on another bridge. 	 */
 for|for
 control|(
 name|retry
@@ -2721,23 +2721,19 @@ name|eaddr
 index|[
 literal|0
 index|]
-operator|=
-literal|0xAC
-expr_stmt|;
-name|eaddr
-index|[
+operator|&=
+operator|~
 literal|1
-index|]
-operator|=
-literal|0xDE
 expr_stmt|;
+comment|/* clear multicast bit */
 name|eaddr
 index|[
-literal|2
+literal|0
 index|]
-operator|=
-literal|0x48
+operator||=
+literal|2
 expr_stmt|;
+comment|/* set the LAA bit */
 name|retry
 operator|=
 literal|0
@@ -6291,6 +6287,9 @@ case|case
 name|IFT_ETHER
 case|:
 case|case
+name|IFT_GIF
+case|:
+case|case
 name|IFT_L2VLAN
 case|:
 break|break;
@@ -6814,7 +6813,7 @@ name|m
 operator|->
 name|m_flags
 expr_stmt|;
-comment|/* We may be sending a framgment so traverse the mbuf */
+comment|/* We may be sending a fragment so traverse the mbuf */
 for|for
 control|(
 init|;
