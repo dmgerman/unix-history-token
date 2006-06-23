@@ -283,9 +283,17 @@ index|]
 decl_stmt|;
 comment|/* tx frames with antenna */
 name|u_int32_t
+name|ast_cabq_xmit
+decl_stmt|;
+comment|/* cabq frames transmitted */
+name|u_int32_t
+name|ast_cabq_busy
+decl_stmt|;
+comment|/* cabq found busy */
+name|u_int32_t
 name|ast_pad
 index|[
-literal|32
+literal|30
 index|]
 decl_stmt|;
 block|}
