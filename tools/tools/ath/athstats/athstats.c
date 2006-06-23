@@ -687,6 +687,20 @@ argument_list|)
 expr_stmt|;
 name|STAT
 argument_list|(
+name|cabq_xmit
+argument_list|,
+literal|"cabq frames transmitted"
+argument_list|)
+expr_stmt|;
+name|STAT
+argument_list|(
+name|cabq_busy
+argument_list|,
+literal|"cabq xmit overflowed beacon interval"
+argument_list|)
+expr_stmt|;
+name|STAT
+argument_list|(
 name|per_cal
 argument_list|,
 literal|"periodic calibrations"
