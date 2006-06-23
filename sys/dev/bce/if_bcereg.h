@@ -167,6 +167,22 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/clock.h>
+end_include
+
+begin_comment
+comment|/* for DELAY */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<machine/bus_memio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -203,25 +219,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"miidevs.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/mii/brgphyreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/pci/pcireg.h>
+file|<pci/pcireg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/pci/pcivar.h>
+file|<pci/pcivar.h>
 end_include
 
 begin_include
@@ -1277,14 +1287,6 @@ begin_comment
 comment|/****************************************************************************/
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
-end_if
-
 begin_define
 define|#
 directive|define
@@ -1404,136 +1406,6 @@ name|x
 parameter_list|)
 value|le64toh(x)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|bce_htobe16
-parameter_list|(
-name|x
-parameter_list|)
-value|(x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|bce_htobe32
-parameter_list|(
-name|x
-parameter_list|)
-value|(x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|bce_htobe64
-parameter_list|(
-name|x
-parameter_list|)
-value|(x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|bce_htole16
-parameter_list|(
-name|x
-parameter_list|)
-value|(x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|bce_htole32
-parameter_list|(
-name|x
-parameter_list|)
-value|(x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|bce_htole64
-parameter_list|(
-name|x
-parameter_list|)
-value|(x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|bce_be16toh
-parameter_list|(
-name|x
-parameter_list|)
-value|(x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|bce_be32toh
-parameter_list|(
-name|x
-parameter_list|)
-value|(x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|bce_be64toh
-parameter_list|(
-name|x
-parameter_list|)
-value|(x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|bce_le16toh
-parameter_list|(
-name|x
-parameter_list|)
-value|(x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|bce_le32toh
-parameter_list|(
-name|x
-parameter_list|)
-value|(x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|bce_le64toh
-parameter_list|(
-name|x
-parameter_list|)
-value|(x)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/****************************************************************************/
@@ -3607,58 +3479,6 @@ name|args
 modifier|...
 parameter_list|)
 value|device_printf(sc->bce_dev, fmt, ##args)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCE_LOCK_INIT
-parameter_list|(
-name|_sc
-parameter_list|,
-name|_name
-parameter_list|)
-value|mtx_init(&(_sc)->bce_mtx, _name, MTX_NETWORK_LOCK, MTX_DEF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCE_LOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_lock(&(_sc)->bce_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCE_LOCK_ASSERT
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_assert(&(_sc)->bce_mtx, MA_OWNED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCE_UNLOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_unlock(&(_sc)->bce_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCE_LOCK_DESTROY
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_destroy(&(_sc)->bce_mtx)
 end_define
 
 begin_define
@@ -26612,37 +26432,12 @@ name|BCE_IF_HWASSIST
 value|(CSUM_IP | CSUM_TCP | CSUM_UDP)
 end_define
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|700000
-end_if
-
 begin_define
 define|#
 directive|define
 name|BCE_IF_CAPABILITIES
-value|(IFCAP_VLAN_MTU | IFCAP_VLAN_HWTAGGING | \ 							IFCAP_HWCSUM | IFCAP_JUMBO_MTU)
+value|(IFCAP_HWCSUM)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|BCE_IF_CAPABILITIES
-value|(IFCAP_VLAN_MTU | IFCAP_VLAN_HWTAGGING | \ 							IFCAP_HWCSUM | IFCAP_JUMBO_MTU | IFCAP_VLAN_HWCSUM)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -26700,9 +26495,27 @@ name|BCE_MAX_JUMBO_ETHER_MTU_VLAN
 value|9022
 end_define
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|BCE_MAX_MTU
+value|ETHER_MAX_LEN_JUMBO + ETHER_VLAN_ENCAP_LEN
+end_define
+
 begin_comment
-comment|// #define BCE_MAX_MTU		ETHER_MAX_LEN_JUMBO + ETHER_VLAN_ENCAP_LEN	/* 9022 */
+comment|/* 9022 */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/****************************************************************************/
@@ -26795,13 +26608,10 @@ begin_struct
 struct|struct
 name|bce_softc
 block|{
-comment|/* MUST start with ifnet pointer (see definition of miibus_statchg()) */
 name|struct
-name|ifnet
-modifier|*
-name|bce_ifp
+name|arpcom
+name|arpcom
 decl_stmt|;
-comment|/* Interface info */
 name|device_t
 name|bce_dev
 decl_stmt|;
@@ -26839,11 +26649,6 @@ modifier|*
 name|bce_irq
 decl_stmt|;
 comment|/* IRQ Resource Handle */
-name|struct
-name|mtx
-name|bce_mtx
-decl_stmt|;
-comment|/* Mutex */
 name|void
 modifier|*
 name|bce_intrhand
@@ -26963,13 +26768,6 @@ comment|/* the driver is still operating.  Without the pulse, management */
 comment|/* firmware such as IPMI or UMP will operate in OS absent state. */
 name|u16
 name|bce_fw_drv_pulse_wr_seq
-decl_stmt|;
-comment|/* Ethernet MAC address. */
-name|u_char
-name|eaddr
-index|[
-literal|6
-index|]
 decl_stmt|;
 comment|/* These setting are used by the host coalescing (HC) block to   */
 comment|/* to control how often the status block, statistics block and   */
@@ -27377,6 +27175,15 @@ name|stat_CatchupInMBUFDiscards
 decl_stmt|;
 name|u32
 name|stat_CatchupInRuleCheckerP4Hit
+decl_stmt|;
+name|struct
+name|sysctl_ctx_list
+name|sysctl_ctx
+decl_stmt|;
+name|struct
+name|sysctl_oid
+modifier|*
+name|sysctl_tree
 decl_stmt|;
 ifdef|#
 directive|ifdef
