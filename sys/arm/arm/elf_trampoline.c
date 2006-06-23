@@ -585,6 +585,16 @@ block|}
 block|}
 end_function
 
+begin_function_decl
+specifier|static
+name|void
+name|arm9_setup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|_start
