@@ -28,8 +28,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NFSRVCACHESIZ
+name|NFSRVCACHE_MAX_SIZE
 value|2048
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSRVCACHE_MIN_SIZE
+value|64
 end_define
 
 begin_struct

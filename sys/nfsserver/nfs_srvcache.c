@@ -82,6 +82,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -120,8 +126,6 @@ begin_decl_stmt
 specifier|static
 name|long
 name|desirednfsrvcache
-init|=
-name|NFSRVCACHESIZ
 decl_stmt|;
 end_decl_stmt
 
@@ -310,6 +314,49 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*   * Size the NFS server's duplicate request cache at 1/2 the nmbclsters, floating   * within a (64, 2048) range. This is to prevent all mbuf clusters being tied up   * in the NFS dupreq cache for small values of nmbclusters.   */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|nfsrvcache_size_change
+parameter_list|(
+name|void
+modifier|*
+name|tag
+parameter_list|)
+block|{
+name|desirednfsrvcache
+operator|=
+name|nmbclusters
+operator|/
+literal|2
+expr_stmt|;
+if|if
+condition|(
+name|desirednfsrvcache
+operator|>
+name|NFSRVCACHE_MAX_SIZE
+condition|)
+name|desirednfsrvcache
+operator|=
+name|NFSRVCACHE_MAX_SIZE
+expr_stmt|;
+if|if
+condition|(
+name|desirednfsrvcache
+operator|<
+name|NFSRVCACHE_MIN_SIZE
+condition|)
+name|desirednfsrvcache
+operator|=
+name|NFSRVCACHE_MIN_SIZE
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Initialize the server request cache list  */
 end_comment
 
@@ -320,6 +367,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|nfsrvcache_size_change
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 name|nfsrvhashtbl
 operator|=
 name|hashinit
@@ -336,6 +388,17 @@ name|TAILQ_INIT
 argument_list|(
 operator|&
 name|nfsrvlruhead
+argument_list|)
+expr_stmt|;
+name|EVENTHANDLER_REGISTER
+argument_list|(
+name|nmbclusters_change
+argument_list|,
+name|nfsrvcache_size_change
+argument_list|,
+name|NULL
+argument_list|,
+name|EVENTHANDLER_PRI_FIRST
 argument_list|)
 expr_stmt|;
 block|}
