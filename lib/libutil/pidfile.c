@@ -114,9 +114,6 @@ name|struct
 name|stat
 name|sb
 decl_stmt|;
-name|int
-name|fd
-decl_stmt|;
 if|if
 condition|(
 name|pfh
@@ -615,10 +612,6 @@ modifier|*
 name|pfh
 parameter_list|)
 block|{
-name|struct
-name|stat
-name|sb
-decl_stmt|;
 name|char
 name|pidstr
 index|[
