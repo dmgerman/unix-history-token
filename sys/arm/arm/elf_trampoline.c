@@ -585,6 +585,16 @@ block|}
 block|}
 end_function
 
+begin_function_decl
+specifier|static
+name|void
+name|arm9_setup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|_start
@@ -1535,7 +1545,7 @@ decl_stmt|;
 name|Elf32_Phdr
 name|phdr
 index|[
-literal|512
+literal|64
 index|]
 comment|/* XXX */
 decl_stmt|,
@@ -1545,7 +1555,7 @@ decl_stmt|;
 name|Elf32_Shdr
 name|shdr
 index|[
-literal|512
+literal|64
 index|]
 comment|/* XXX */
 decl_stmt|;
