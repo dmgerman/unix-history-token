@@ -634,7 +634,7 @@ parameter_list|,
 name|desc
 parameter_list|)
 define|\
-value|static struct rw_args name##_args = {				\ 		(rw),							\ 		(desc),							\ 	};								\ 	SYSINIT(name##_rw_sysinit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    rw_sysinit,&name##_args);					\ 	SYSUNINIT(name##_mtx_sysuninit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    rw_destroy, (rw))
+value|static struct rw_args name##_args = {				\ 		(rw),							\ 		(desc),							\ 	};								\ 	SYSINIT(name##_rw_sysinit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    rw_sysinit,&name##_args);					\ 	SYSUNINIT(name##_rw_sysuninit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    rw_destroy, (rw))
 end_define
 
 begin_comment
