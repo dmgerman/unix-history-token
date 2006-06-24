@@ -124,6 +124,8 @@ name|pprogramdef
 parameter_list|(
 name|definition
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -250,12 +252,13 @@ begin_function
 name|void
 name|print_datadef
 parameter_list|(
-name|def
-parameter_list|)
 name|definition
 modifier|*
 name|def
-decl_stmt|;
+parameter_list|,
+name|int
+name|headeronly
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -333,6 +336,8 @@ case|:
 name|pprogramdef
 argument_list|(
 name|def
+argument_list|,
+name|headeronly
 argument_list|)
 expr_stmt|;
 break|break;
@@ -402,12 +407,13 @@ begin_function
 name|void
 name|print_funcdef
 parameter_list|(
-name|def
-parameter_list|)
 name|definition
 modifier|*
 name|def
-decl_stmt|;
+parameter_list|,
+name|int
+name|headeronly
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -429,6 +435,8 @@ expr_stmt|;
 name|pprogramdef
 argument_list|(
 name|def
+argument_list|,
+name|headeronly
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1373,12 +1381,13 @@ specifier|static
 name|void
 name|pprogramdef
 parameter_list|(
-name|def
-parameter_list|)
 name|definition
 modifier|*
 name|def
-decl_stmt|;
+parameter_list|,
+name|int
+name|headeronly
+parameter_list|)
 block|{
 name|version_list
 modifier|*
@@ -1502,6 +1511,11 @@ name|ext
 operator|=
 literal|"extern  "
 expr_stmt|;
+if|if
+condition|(
+name|headeronly
+condition|)
+block|{
 name|f_print
 argument_list|(
 name|fout
@@ -1524,6 +1538,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+block|}
 for|for
 control|(
 name|proc
@@ -1686,6 +1701,11 @@ operator|=
 literal|"extern  "
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|headeronly
+condition|)
+block|{
 name|f_print
 argument_list|(
 name|fout
@@ -1708,6 +1728,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+block|}
 for|for
 control|(
 name|proc
