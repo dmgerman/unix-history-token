@@ -715,14 +715,36 @@ operator|&
 name|BMSR_LINK
 condition|)
 block|{
-comment|/* 		 * See above. 		 */
+name|sc
+operator|->
+name|mii_ticks
+operator|=
+literal|0
+expr_stmt|;
+comment|/* reset autonegotiation timer. */
+comment|/* See above. */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Only retry autonegotiation every N seconds. 	 */
+comment|/* Announce link loss right after it happens */
+if|if
+condition|(
+name|sc
+operator|->
+name|mii_ticks
+operator|++
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* XXX: use default value if phy driver did not set mii_anegticks */
 if|if
 condition|(
 name|sc
@@ -731,22 +753,15 @@ name|mii_anegticks
 operator|==
 literal|0
 condition|)
-block|{
 name|sc
 operator|->
 name|mii_anegticks
 operator|=
-literal|17
+name|MII_ANEGTICKS_GIGE
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
+comment|/* Only retry autonegotiation every mii_anegticks ticks. */
 if|if
 condition|(
-operator|++
 name|sc
 operator|->
 name|mii_ticks
@@ -1465,6 +1480,13 @@ name|sep
 init|=
 literal|""
 decl_stmt|;
+comment|/* Set aneg timer for 10/100 media. Gigabit media handled below. */
+name|sc
+operator|->
+name|mii_anegticks
+operator|=
+name|MII_ANEGTICKS
+expr_stmt|;
 define|#
 directive|define
 name|ADD
@@ -1730,7 +1752,7 @@ operator|&
 name|EXTSR_MEDIAMASK
 condition|)
 block|{
-comment|/* 		 * XXX Right now only handle 1000SX and 1000TX.  Need 		 * XXX to handle 1000LX and 1000CX some how. 		 * 		 * Note since it can take 5 seconds to auto-negotiate 		 * a gigabit link, we make anegticks 10 seconds for 		 * all the gigabit media types. 		 */
+comment|/* 		 * XXX Right now only handle 1000SX and 1000TX.  Need 		 * XXX to handle 1000LX and 1000CX some how. 		 */
 if|if
 condition|(
 name|sc
@@ -1744,7 +1766,7 @@ name|sc
 operator|->
 name|mii_anegticks
 operator|=
-literal|17
+name|MII_ANEGTICKS_GIGE
 expr_stmt|;
 name|sc
 operator|->
@@ -1789,7 +1811,7 @@ name|sc
 operator|->
 name|mii_anegticks
 operator|=
-literal|17
+name|MII_ANEGTICKS_GIGE
 expr_stmt|;
 name|sc
 operator|->
@@ -1835,7 +1857,7 @@ name|sc
 operator|->
 name|mii_anegticks
 operator|=
-literal|17
+name|MII_ANEGTICKS_GIGE
 expr_stmt|;
 name|sc
 operator|->
@@ -1888,7 +1910,7 @@ name|sc
 operator|->
 name|mii_anegticks
 operator|=
-literal|17
+name|MII_ANEGTICKS_GIGE
 expr_stmt|;
 name|sc
 operator|->
