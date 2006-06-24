@@ -396,6 +396,24 @@ begin_comment
 comment|/* is a HomePNA device */
 end_comment
 
+begin_comment
+comment|/* Default mii_anegticks values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MII_ANEGTICKS
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_ANEGTICKS_GIGE
+value|17
+end_define
+
 begin_define
 define|#
 directive|define
