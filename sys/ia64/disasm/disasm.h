@@ -965,6 +965,8 @@ name|ASM_FMT_F14
 block|,
 name|ASM_FMT_F15
 block|,
+name|ASM_FMT_F16
+block|,
 name|ASM_FMT_I
 init|=
 literal|0x0400
@@ -1002,6 +1004,8 @@ block|,
 name|ASM_FMT_I16
 block|,
 name|ASM_FMT_I17
+block|,
+name|ASM_FMT_I18
 block|,
 name|ASM_FMT_I19
 block|,
@@ -1121,6 +1125,10 @@ name|ASM_FMT_M45
 block|,
 name|ASM_FMT_M46
 block|,
+name|ASM_FMT_M47
+block|,
+name|ASM_FMT_M48
+block|,
 name|ASM_FMT_X
 init|=
 literal|0x0600
@@ -1132,6 +1140,8 @@ block|,
 name|ASM_FMT_X3
 block|,
 name|ASM_FMT_X4
+block|,
+name|ASM_FMT_X5
 block|}
 enum|;
 end_enum
@@ -1291,6 +1301,8 @@ block|,
 name|ASM_OP_ITC
 block|,
 name|ASM_OP_ITR
+block|,
+name|ASM_OP_HINT
 block|,
 name|ASM_OP_LD1
 block|,

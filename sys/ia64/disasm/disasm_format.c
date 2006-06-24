@@ -196,6 +196,8 @@ literal|"fxor"
 block|,
 literal|"getf"
 block|,
+literal|"hint"
+block|,
 literal|"invala"
 block|,
 literal|"itc"
