@@ -3283,6 +3283,11 @@ operator|->
 name|sch_length
 operator|--
 expr_stmt|;
+name|tcp_syncache
+operator|.
+name|cache_count
+operator|--
+expr_stmt|;
 name|SCH_UNLOCK
 argument_list|(
 name|sch
