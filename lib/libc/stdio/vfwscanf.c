@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -413,6 +419,12 @@ begin_comment
 comment|/* %[efgEFG] conversion */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_FLOATING_POINT
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|int
@@ -429,6 +441,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
