@@ -1219,6 +1219,29 @@ literal|0
 block|}
 block|,
 block|{
+comment|/* Does not support other than LUN 0 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"VMware*"
+block|,
+literal|"VMware Virtu*"
+block|,
+literal|"*"
+block|}
+block|,
+name|CAM_QUIRK_NOLUNS
+block|,
+comment|/*mintags*/
+literal|0
+block|,
+comment|/*maxtags*/
+literal|0
+block|}
+block|,
+block|{
 comment|/* 		 * Broken tagged queuing drive. 		 * Submitted by: 		 * NAKAJI Hiroyuki<nakaji@zeisei.dpri.kyoto-u.ac.jp> 		 * in PR kern/9535 		 */
 block|{
 name|T_DIRECT
