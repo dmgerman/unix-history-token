@@ -11334,7 +11334,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 				 * We have to check after allocpte for the 				 * pte still being around...  allocpte can 				 * block. 				 */
 name|dstmpte
 operator|=
 name|pmap_allocpte
