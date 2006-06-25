@@ -810,6 +810,8 @@ name|file
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|err
 decl_stmt|;
 name|mtx_lock
 argument_list|(
@@ -908,6 +910,8 @@ operator|&
 name|firmware_mtx
 argument_list|)
 expr_stmt|;
+name|err
+operator|=
 name|linker_release_module
 argument_list|(
 name|NULL
@@ -923,6 +927,32 @@ operator|&
 name|firmware_mtx
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+block|{
+comment|/* 			 * If linker_release_module() failed then we still 			 * hold a reference on the module so it should not be 			 * possible for it to go away or be re-registered. 			 */
+name|KASSERT
+argument_list|(
+name|fp
+operator|->
+name|file
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"firmware entry reused while referenced!"
+operator|)
+argument_list|)
+expr_stmt|;
+name|fp
+operator|->
+name|file
+operator|=
+name|file
+expr_stmt|;
+block|}
 block|}
 name|mtx_unlock
 argument_list|(
