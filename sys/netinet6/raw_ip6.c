@@ -1437,11 +1437,14 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+name|suser_cred
+argument_list|(
 name|so
 operator|->
 name|so_cred
-operator|->
-name|cr_uid
+argument_list|,
+name|SUSER_ALLOWJAIL
+argument_list|)
 operator|==
 literal|0
 condition|)
