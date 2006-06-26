@@ -891,11 +891,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|struct
-name|unpcb
-modifier|*
-name|unp
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -907,24 +902,6 @@ name|curthread
 argument_list|,
 operator|(
 literal|"uipc_connect: td != curthread"
-operator|)
-argument_list|)
-expr_stmt|;
-name|unp
-operator|=
-name|sotounpcb
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|unp
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"uipc_connect: unp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
