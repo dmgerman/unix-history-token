@@ -3350,6 +3350,8 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
+name|k
+decl_stmt|,
 name|ptype
 decl_stmt|,
 name|psize
@@ -3663,6 +3665,15 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|FREE
+argument_list|(
+name|udfmp
+operator|->
+name|s_table
+argument_list|,
+name|M_UDFMOUNT
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -3712,6 +3723,15 @@ argument_list|(
 literal|"Invalid sparing table found\n"
 argument_list|)
 expr_stmt|;
+name|FREE
+argument_list|(
+name|udfmp
+operator|->
+name|s_table
+argument_list|,
+name|M_UDFMOUNT
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
@@ -3721,11 +3741,11 @@ block|}
 comment|/* See how many valid entries there are here.  The list is 		 * supposed to be sorted. 0xfffffff0 and higher are not valid 		 */
 for|for
 control|(
-name|i
+name|k
 operator|=
 literal|0
 init|;
-name|i
+name|k
 operator|<
 name|le16toh
 argument_list|(
@@ -3736,7 +3756,7 @@ operator|->
 name|rt_l
 argument_list|)
 condition|;
-name|i
+name|k
 operator|++
 control|)
 block|{
@@ -3744,7 +3764,7 @@ name|udfmp
 operator|->
 name|s_table_entries
 operator|=
-name|i
+name|k
 expr_stmt|;
 if|if
 condition|(
@@ -3756,7 +3776,7 @@ name|s_table
 operator|->
 name|entries
 index|[
-name|i
+name|k
 index|]
 operator|.
 name|org
