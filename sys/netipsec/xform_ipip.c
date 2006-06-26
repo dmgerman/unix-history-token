@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_enc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -1253,6 +1259,25 @@ name|len
 operator|-
 name|iphlen
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_ENC
+comment|/* pass the mbuf to enc0 for packet filtering */
+if|if
+condition|(
+name|ipsec_filter
+argument_list|(
+operator|&
+name|m
+argument_list|,
+literal|1
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return;
+endif|#
+directive|endif
 comment|/* 	 * Interface pointer stays the same; if no IPsec processing has 	 * been done (or will be done), this will point to a normal 	 * interface. Otherwise, it'll point to an enc interface, which 	 * will allow a packet filter to distinguish between secure and 	 * untrusted packets. 	 */
 switch|switch
 condition|(
