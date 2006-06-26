@@ -670,6 +670,11 @@ name|ADD
 undef|#
 directive|undef
 name|PRINT
+name|rgephy_reset
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|MIIBUS_MEDIAINIT
 argument_list|(
 name|sc
@@ -1347,14 +1352,15 @@ if|if
 condition|(
 name|bmsr
 operator|&
-name|RL_GMEDIASTAT_10MBPS
+name|RL_GMEDIASTAT_1000MBPS
 condition|)
 name|mii
 operator|->
 name|mii_media_active
 operator||=
-name|IFM_10_T
+name|IFM_1000_T
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|bmsr
@@ -1367,17 +1373,25 @@ name|mii_media_active
 operator||=
 name|IFM_100_TX
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|bmsr
 operator|&
-name|RL_GMEDIASTAT_1000MBPS
+name|RL_GMEDIASTAT_10MBPS
 condition|)
 name|mii
 operator|->
 name|mii_media_active
 operator||=
-name|IFM_1000_T
+name|IFM_10_T
+expr_stmt|;
+else|else
+name|mii
+operator|->
+name|mii_media_active
+operator||=
+name|IFM_NONE
 expr_stmt|;
 if|if
 condition|(
@@ -1445,6 +1459,8 @@ name|mii
 argument_list|,
 name|RGEPHY_MII_1000CTL
 argument_list|,
+name|RGEPHY_1000CTL_AHD
+operator||
 name|RGEPHY_1000CTL_AFD
 argument_list|)
 expr_stmt|;
@@ -1589,7 +1605,7 @@ value|PHY_WRITE(x, y, (PHY_READ(x, y)& ~(z)))
 end_define
 
 begin_comment
-comment|/*  * Initialize RealTek PHY per the datasheet. The DSP in the PHYs of  * existing revisions of the 8169S/8110S chips need to be tuned in  * order to reliably negotiate a 1000Mbps link. Later revs of the  * chips may not require this software tuning.  */
+comment|/*  * Initialize RealTek PHY per the datasheet. The DSP in the PHYs of  * existing revisions of the 8169S/8110S chips need to be tuned in  * order to reliably negotiate a 1000Mbps link. This is only needed  * for rev 0 and rev 1 of the PHY. Later versions work without  * any fixups.  */
 end_comment
 
 begin_function
@@ -1606,6 +1622,28 @@ block|{
 name|int
 name|val
 decl_stmt|;
+name|uint16_t
+name|id2
+decl_stmt|;
+name|id2
+operator|=
+name|PHY_READ
+argument_list|(
+name|sc
+argument_list|,
+name|MII_PHYIDR2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|MII_REV
+argument_list|(
+name|id2
+argument_list|)
+operator|>
+literal|1
+condition|)
+return|return;
 name|PHY_WRITE
 argument_list|(
 name|sc
