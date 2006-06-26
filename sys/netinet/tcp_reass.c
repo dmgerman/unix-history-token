@@ -3657,6 +3657,17 @@ name|struct
 name|in_conninfo
 name|inc
 decl_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|inc
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|inc
+argument_list|)
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
