@@ -13527,6 +13527,25 @@ name|max_target
 operator|=
 literal|255
 expr_stmt|;
+comment|/* 		 * XXX: VMware ESX reports> 16 devices and then dies 		 * XXX: when we probe. 		 */
+if|if
+condition|(
+name|mpt
+operator|->
+name|is_spi
+operator|&&
+name|cpi
+operator|->
+name|max_target
+operator|>
+literal|15
+condition|)
+name|cpi
+operator|->
+name|max_target
+operator|=
+literal|15
+expr_stmt|;
 name|cpi
 operator|->
 name|max_lun
