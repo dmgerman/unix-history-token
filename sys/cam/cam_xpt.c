@@ -1227,7 +1227,7 @@ name|SIP_MEDIA_FIXED
 block|,
 literal|"VMware*"
 block|,
-literal|"VMware Virtu*"
+literal|"*"
 block|,
 literal|"*"
 block|}
