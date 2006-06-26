@@ -734,10 +734,12 @@ define|#
 directive|define
 name|TOF_MSS
 value|0x0010
+comment|/* maximum segment size */
 define|#
 directive|define
 name|TOF_SCALE
 value|0x0020
+comment|/* window scaling */
 define|#
 directive|define
 name|TOF_SIGNATURE
@@ -777,6 +779,21 @@ comment|/* pointer to the first SACK blocks */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Flags for tcp_dooptions.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TO_SYN
+value|0x01
+end_define
+
+begin_comment
+comment|/* parse SYN-only options */
+end_comment
 
 begin_struct
 struct|struct
