@@ -1825,10 +1825,17 @@ block|{
 name|CONFIG_PAGE_FC_PORT_0
 name|_port_page0
 decl_stmt|;
+name|uint32_t
+name|_port_speed
+decl_stmt|;
 define|#
 directive|define
 name|mpt_fcport_page0
 value|cfg.fc._port_page0
+define|#
+directive|define
+name|mpt_fcport_speed
+value|cfg.fc._port_speed
 block|}
 name|fc
 struct|;
