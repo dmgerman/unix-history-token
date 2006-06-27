@@ -790,6 +790,26 @@ begin_comment
 comment|/* The time to use for checking at-fields */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DAYTIME_LEN
+value|16
+end_define
+
+begin_decl_stmt
+name|char
+name|daytime
+index|[
+name|DAYTIME_LEN
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The current time in human readable form, 				 * used for rotation-tracking messages. */
+end_comment
+
 begin_decl_stmt
 name|char
 name|hostname
@@ -801,19 +821,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* hostname */
-end_comment
-
-begin_decl_stmt
-name|char
-name|daytime
-index|[
-literal|16
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The current time in human readable form, 				 * used for rotation-tracking messages. */
 end_comment
 
 begin_function_decl
@@ -2354,7 +2361,7 @@ name|flags
 operator|&
 name|CE_CREATE
 condition|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|temp_reason
 argument_list|,
@@ -2368,7 +2375,7 @@ if|if
 condition|(
 name|createlogs
 condition|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|temp_reason
 argument_list|,
@@ -2966,10 +2973,7 @@ name|NULL
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|daytime
 argument_list|,
@@ -2980,15 +2984,8 @@ argument_list|)
 operator|+
 literal|4
 argument_list|,
-literal|15
+name|DAYTIME_LEN
 argument_list|)
-expr_stmt|;
-name|daytime
-index|[
-literal|15
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 comment|/* Let's get our hostname */
 operator|(
