@@ -5879,28 +5879,6 @@ name|Function
 operator|=
 name|MPI_FUNCTION_IOC_INIT
 expr_stmt|;
-if|if
-condition|(
-name|mpt
-operator|->
-name|is_fc
-condition|)
-block|{
-name|init
-operator|.
-name|MaxDevices
-operator|=
-literal|255
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|mpt
-operator|->
-name|is_sas
-condition|)
-block|{
 name|init
 operator|.
 name|MaxDevices
@@ -5909,16 +5887,6 @@ name|mpt
 operator|->
 name|mpt_max_devices
 expr_stmt|;
-block|}
-else|else
-block|{
-name|init
-operator|.
-name|MaxDevices
-operator|=
-literal|16
-expr_stmt|;
-block|}
 name|init
 operator|.
 name|MaxBuses
@@ -9247,6 +9215,13 @@ operator|/
 literal|4
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|mpt
+operator|->
+name|is_sas
+condition|)
+block|{
 name|pci_enable_io
 argument_list|(
 name|mpt
@@ -9256,6 +9231,7 @@ argument_list|,
 name|SYS_RES_IOPORT
 argument_list|)
 expr_stmt|;
+block|}
 name|mpt_pio_write
 argument_list|(
 name|mpt
@@ -9286,6 +9262,13 @@ name|data
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|mpt
+operator|->
+name|is_sas
+condition|)
+block|{
 name|pci_disable_io
 argument_list|(
 name|mpt
@@ -9295,6 +9278,7 @@ argument_list|,
 name|SYS_RES_IOPORT
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -9458,6 +9442,13 @@ name|ImageSize
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|mpt
+operator|->
+name|is_sas
+condition|)
+block|{
 name|pci_enable_io
 argument_list|(
 name|mpt
@@ -9467,6 +9458,7 @@ argument_list|,
 name|SYS_RES_IOPORT
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Setup the address to jump to on reset. */
 name|mpt_pio_write
 argument_list|(
@@ -9529,6 +9521,13 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mpt
+operator|->
+name|is_sas
+condition|)
+block|{
 name|pci_disable_io
 argument_list|(
 name|mpt
@@ -9538,6 +9537,7 @@ argument_list|,
 name|SYS_RES_IOPORT
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Re-enable the processor and clear the boot halt flag. 	 */
 name|data
 operator|=
