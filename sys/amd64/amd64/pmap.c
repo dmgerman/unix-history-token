@@ -11586,6 +11586,9 @@ operator|*
 name|pde
 operator|=
 name|srcptepaddr
+operator|&
+operator|~
+name|PG_W
 expr_stmt|;
 name|dst_pmap
 operator|->
@@ -11741,7 +11744,7 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-comment|/* 					 * Clear the modified and 					 * accessed (referenced) bits 					 * during the copy. 					 */
+comment|/* 					 * Clear the wired, modified, and 					 * accessed (referenced) bits 					 * during the copy. 					 */
 operator|*
 name|dst_pte
 operator|=
@@ -11749,6 +11752,8 @@ name|ptetemp
 operator|&
 operator|~
 operator|(
+name|PG_W
+operator||
 name|PG_M
 operator||
 name|PG_A
