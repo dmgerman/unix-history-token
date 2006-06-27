@@ -400,7 +400,7 @@ block|,
 block|{
 literal|0x35828086
 block|,
-name|CHIP_I830
+name|CHIP_I855
 block|,
 literal|0x00020000
 block|,
@@ -410,7 +410,7 @@ block|,
 block|{
 literal|0x25728086
 block|,
-name|CHIP_I830
+name|CHIP_I855
 block|,
 literal|0x00020000
 block|,
@@ -859,6 +859,12 @@ operator|->
 name|chiptype
 operator|==
 name|CHIP_I830
+operator|||
+name|match
+operator|->
+name|chiptype
+operator|==
+name|CHIP_I855
 condition|)
 block|{
 name|unsigned
