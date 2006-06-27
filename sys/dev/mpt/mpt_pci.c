@@ -1967,6 +1967,13 @@ name|mpt
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Disable PIO until we need it 	 */
+if|if
+condition|(
+name|mpt
+operator|->
+name|is_sas
+condition|)
+block|{
 name|pci_disable_io
 argument_list|(
 name|dev
@@ -1974,6 +1981,7 @@ argument_list|,
 name|SYS_RES_IOPORT
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Initialize the hardware */
 if|if
 condition|(
