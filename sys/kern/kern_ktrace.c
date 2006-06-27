@@ -3669,11 +3669,14 @@ name|facs
 expr_stmt|;
 if|if
 condition|(
+name|suser_cred
+argument_list|(
 name|td
 operator|->
 name|td_ucred
-operator|->
-name|cr_uid
+argument_list|,
+name|SUSER_ALLOWJAIL
+argument_list|)
 operator|==
 literal|0
 condition|)
