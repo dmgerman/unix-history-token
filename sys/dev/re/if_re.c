@@ -340,7 +340,17 @@ name|RT_DEVICEID_8168
 block|,
 name|RL_HWREV_8168
 block|,
-literal|"RealTek 8168B/8111B PCIe Gigabit Ethernet"
+literal|"RealTek 8168B PCIe Gigabit Ethernet"
+block|}
+block|,
+block|{
+name|RT_VENDORID
+block|,
+name|RT_DEVICEID_8168
+block|,
+name|RL_HWREV_8111
+block|,
+literal|"RealTek 8111B PCIe Gigabit Ethernet"
 block|}
 block|,
 block|{
@@ -576,6 +586,14 @@ block|,
 name|RL_8169
 block|,
 literal|"8101E"
+block|}
+block|,
+block|{
+name|RL_HWREV_8111
+block|,
+name|RL_8169
+block|,
+literal|"8111"
 block|}
 block|,
 block|{
