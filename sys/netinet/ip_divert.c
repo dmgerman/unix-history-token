@@ -707,15 +707,6 @@ condition|(
 name|ifa
 operator|->
 name|ifa_addr
-operator|==
-name|NULL
-condition|)
-continue|continue;
-if|if
-condition|(
-name|ifa
-operator|->
-name|ifa_addr
 operator|->
 name|sa_family
 operator|!=

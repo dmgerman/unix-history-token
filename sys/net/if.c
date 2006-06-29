@@ -2945,10 +2945,6 @@ condition|(
 name|ifa
 operator|->
 name|ifa_addr
-operator|&&
-name|ifa
-operator|->
-name|ifa_addr
 operator|->
 name|sa_family
 operator|==
@@ -2961,10 +2957,6 @@ name|INET
 comment|/* XXX: Ugly!! ad hoc just for INET */
 if|if
 condition|(
-name|ifa
-operator|->
-name|ifa_addr
-operator|&&
 name|ifa
 operator|->
 name|ifa_addr
@@ -3044,10 +3036,6 @@ directive|ifdef
 name|INET6
 if|if
 condition|(
-name|ifa
-operator|->
-name|ifa_addr
-operator|&&
 name|ifa
 operator|->
 name|ifa_addr
@@ -10888,12 +10876,6 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|ifa
-operator|->
-name|ifa_addr
-operator|!=
-name|NULL
-operator|&&
 name|ifa
 operator|->
 name|ifa_addr

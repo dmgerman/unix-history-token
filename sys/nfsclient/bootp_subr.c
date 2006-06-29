@@ -4817,11 +4817,10 @@ operator|->
 name|sa_family
 operator|==
 name|AF_LINK
-operator|&&
-operator|(
+condition|)
+block|{
 name|sdl
 operator|=
-operator|(
 operator|(
 expr|struct
 name|sockaddr_dl
@@ -4830,11 +4829,9 @@ operator|)
 name|ifa
 operator|->
 name|ifa_addr
-operator|)
-operator|)
-operator|!=
-name|NULL
-operator|&&
+expr_stmt|;
+if|if
+condition|(
 name|sdl
 operator|->
 name|sdl_type
@@ -4842,6 +4839,7 @@ operator|==
 name|IFT_ETHER
 condition|)
 break|break;
+block|}
 if|if
 condition|(
 name|sdl

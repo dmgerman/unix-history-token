@@ -7083,16 +7083,6 @@ condition|(
 name|ifa
 operator|->
 name|ifa_addr
-operator|==
-name|NULL
-condition|)
-continue|continue;
-comment|/* just for safety */
-if|if
-condition|(
-name|ifa
-operator|->
-name|ifa_addr
 operator|->
 name|sa_family
 operator|!=
@@ -7630,16 +7620,6 @@ condition|(
 name|ifa
 operator|->
 name|ifa_addr
-operator|==
-name|NULL
-condition|)
-continue|continue;
-comment|/* just for safety */
-if|if
-condition|(
-name|ifa
-operator|->
-name|ifa_addr
 operator|->
 name|sa_family
 operator|!=
@@ -7732,16 +7712,6 @@ argument_list|,
 argument|ifa_list
 argument_list|)
 block|{
-if|if
-condition|(
-name|ifa
-operator|->
-name|ifa_addr
-operator|==
-name|NULL
-condition|)
-continue|continue;
-comment|/* just for safety */
 if|if
 condition|(
 name|ifa

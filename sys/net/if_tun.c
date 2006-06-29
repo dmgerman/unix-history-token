@@ -1932,6 +1932,9 @@ operator|->
 name|if_lastchange
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -1941,24 +1944,6 @@ argument_list|,
 argument|ifa_link
 argument_list|)
 block|{
-if|if
-condition|(
-name|ifa
-operator|->
-name|ifa_addr
-operator|==
-name|NULL
-condition|)
-name|error
-operator|=
-name|EFAULT
-expr_stmt|;
-comment|/* XXX: Should maybe return straight off? */
-else|else
-block|{
-ifdef|#
-directive|ifdef
-name|INET
 if|if
 condition|(
 name|ifa
@@ -2044,10 +2029,9 @@ name|tun_mtx
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 endif|#
 directive|endif
-block|}
-block|}
 return|return
 operator|(
 name|error

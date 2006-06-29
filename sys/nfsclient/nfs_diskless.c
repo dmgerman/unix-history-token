@@ -550,7 +550,6 @@ argument_list|)
 block|{
 if|if
 condition|(
-operator|(
 name|ifa
 operator|->
 name|ifa_addr
@@ -558,12 +557,10 @@ operator|->
 name|sa_family
 operator|==
 name|AF_LINK
-operator|)
-operator|&&
-operator|(
+condition|)
+block|{
 name|sdl
 operator|=
-operator|(
 operator|(
 expr|struct
 name|sockaddr_dl
@@ -572,10 +569,7 @@ operator|)
 name|ifa
 operator|->
 name|ifa_addr
-operator|)
-operator|)
-condition|)
-block|{
+expr_stmt|;
 if|if
 condition|(
 operator|(
