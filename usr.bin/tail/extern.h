@@ -225,6 +225,8 @@ name|Fflag
 decl_stmt|,
 name|fflag
 decl_stmt|,
+name|qflag
+decl_stmt|,
 name|rflag
 decl_stmt|,
 name|rval
