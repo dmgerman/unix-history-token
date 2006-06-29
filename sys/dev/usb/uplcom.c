@@ -814,7 +814,7 @@ block|,
 name|TYPE_PL2303X
 block|}
 block|,
-comment|/* PLANEX USB-RS232 URS-03 */
+comment|/* Willcom W-SIM*/
 block|{
 name|USB_VENDOR_PROLIFIC2
 block|,
@@ -826,6 +826,7 @@ block|,
 name|TYPE_PL2303X
 block|}
 block|,
+comment|/* PLANEX USB-RS232 URS-03 */
 block|{
 name|USB_VENDOR_ATEN
 block|,
