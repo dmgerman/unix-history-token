@@ -444,7 +444,7 @@ literal|0
 condition|)
 name|wild
 operator|=
-literal|1
+name|INPLOOKUP_WILDCARD
 expr_stmt|;
 if|if
 condition|(

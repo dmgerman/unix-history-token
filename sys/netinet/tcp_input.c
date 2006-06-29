@@ -2955,7 +2955,7 @@ name|th
 operator|->
 name|th_dport
 argument_list|,
-literal|1
+name|INPLOOKUP_WILDCARD
 argument_list|,
 name|m
 operator|->
@@ -3012,7 +3012,7 @@ name|th
 operator|->
 name|th_dport
 argument_list|,
-literal|1
+name|INPLOOKUP_WILDCARD
 argument_list|,
 name|m
 operator|->
@@ -3048,7 +3048,7 @@ name|th
 operator|->
 name|th_dport
 argument_list|,
-literal|1
+name|INPLOOKUP_WILDCARD
 argument_list|,
 name|m
 operator|->
