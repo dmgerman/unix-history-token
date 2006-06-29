@@ -2745,7 +2745,7 @@ operator|==
 literal|0
 condition|)
 name|sched_tdcnt
-operator|++
+operator|--
 expr_stmt|;
 block|}
 end_function
@@ -4130,7 +4130,6 @@ name|ke
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Hold this kse on this cpu so that sched_prio() doesn't 		 * cause excessive migration.  We only want migration to 		 * happen as the result of a wakeup. 		 */
 name|adjustrunqueue
 argument_list|(
 name|td
