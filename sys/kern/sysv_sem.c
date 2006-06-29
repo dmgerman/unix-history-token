@@ -2906,6 +2906,9 @@ name|usval
 decl_stmt|,
 name|count
 decl_stmt|;
+name|int
+name|semidx
+decl_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
@@ -2950,6 +2953,7 @@ block|{
 case|case
 name|SEM_STAT
 case|:
+comment|/* 		 * For this command we assume semid is an array index 		 * rather than an IPC id. 		 */
 if|if
 condition|(
 name|semid
@@ -3156,7 +3160,7 @@ name|error
 operator|)
 return|;
 block|}
-name|semid
+name|semidx
 operator|=
 name|IPCID_TO_IX
 argument_list|(
@@ -3165,11 +3169,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|semid
+name|semidx
 operator|<
 literal|0
 operator|||
-name|semid
+name|semidx
 operator|>=
 name|seminfo
 operator|.
@@ -3185,7 +3189,7 @@ operator|=
 operator|&
 name|sema
 index|[
-name|semid
+name|semidx
 index|]
 expr_stmt|;
 name|sema_mtxp
@@ -3193,7 +3197,7 @@ operator|=
 operator|&
 name|sema_mtx
 index|[
-name|semid
+name|semidx
 index|]
 expr_stmt|;
 ifdef|#
@@ -3467,7 +3471,7 @@ argument_list|()
 expr_stmt|;
 name|semundo_clear
 argument_list|(
-name|semid
+name|semidx
 argument_list|,
 operator|-
 literal|1
@@ -4358,7 +4362,7 @@ argument_list|()
 expr_stmt|;
 name|semundo_clear
 argument_list|(
-name|semid
+name|semidx
 argument_list|,
 name|semnum
 argument_list|)
@@ -4598,7 +4602,7 @@ argument_list|()
 expr_stmt|;
 name|semundo_clear
 argument_list|(
-name|semid
+name|semidx
 argument_list|,
 operator|-
 literal|1
