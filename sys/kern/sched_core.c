@@ -2871,21 +2871,6 @@ return|;
 block|}
 end_function
 
-begin_function_decl
-specifier|extern
-name|unsigned
-name|long
-name|long
-name|cycles_2_ns
-parameter_list|(
-name|unsigned
-name|long
-name|long
-name|cyc
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 specifier|static
 specifier|inline
@@ -3053,6 +3038,7 @@ name|pri
 operator|=
 name|PUSER
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|pri
@@ -7404,7 +7390,7 @@ condition|(
 name|td
 operator|->
 name|td_priority
-operator|<
+operator|<=
 name|PRI_MAX_ITHD
 condition|)
 name|ipi_selected
