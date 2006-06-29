@@ -1144,7 +1144,7 @@ parameter_list|(
 name|sc
 parameter_list|)
 define|\
-value|((sc)->bge_asicrev == BGE_ASICREV_BCM5700	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5701	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5703	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5714	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5714_A0	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5780	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5704)
+value|((sc)->bge_asicrev == BGE_ASICREV_BCM5700	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5701	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5703	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5704)
 end_define
 
 begin_function_decl
