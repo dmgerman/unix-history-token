@@ -816,6 +816,17 @@ block|}
 block|,
 comment|/* PLANEX USB-RS232 URS-03 */
 block|{
+name|USB_VENDOR_PROLIFIC2
+block|,
+name|USB_PRODUCT_PROLIFIC2_WSIM
+block|,
+operator|-
+literal|1
+block|,
+name|TYPE_PL2303X
+block|}
+block|,
+block|{
 name|USB_VENDOR_ATEN
 block|,
 name|USB_PRODUCT_ATEN_UC232A
