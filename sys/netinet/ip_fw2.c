@@ -2912,9 +2912,6 @@ parameter_list|,
 name|int
 name|code
 parameter_list|,
-name|u_short
-name|offset
-parameter_list|,
 name|u_int
 name|hlen
 parameter_list|)
@@ -2924,10 +2921,6 @@ condition|(
 name|code
 operator|==
 name|ICMP6_UNREACH_RST
-operator|&&
-name|offset
-operator|==
-literal|0
 operator|&&
 name|args
 operator|->
@@ -7608,9 +7601,6 @@ parameter_list|,
 name|int
 name|code
 parameter_list|,
-name|u_short
-name|offset
-parameter_list|,
 name|int
 name|ip_len
 parameter_list|)
@@ -7691,10 +7681,6 @@ block|}
 elseif|else
 if|if
 condition|(
-name|offset
-operator|==
-literal|0
-operator|&&
 name|args
 operator|->
 name|f_id
@@ -14155,8 +14141,6 @@ name|cmd
 operator|->
 name|arg1
 argument_list|,
-name|offset
-argument_list|,
 name|ip_len
 argument_list|)
 expr_stmt|;
@@ -14181,6 +14165,16 @@ operator|>
 literal|0
 operator|&&
 name|is_ipv6
+operator|&&
+operator|(
+operator|(
+name|offset
+operator|&
+name|IP6F_OFF_MASK
+operator|)
+operator|==
+literal|0
+operator|)
 operator|&&
 operator|(
 name|proto
@@ -14233,8 +14227,6 @@ argument_list|,
 name|cmd
 operator|->
 name|arg1
-argument_list|,
-name|offset
 argument_list|,
 name|hlen
 argument_list|)
