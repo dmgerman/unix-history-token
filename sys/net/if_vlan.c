@@ -3471,12 +3471,12 @@ literal|0
 condition|)
 block|{
 comment|/* 			 * Since we've partialy failed, we need to back 			 * out all the way, otherwise userland could get 			 * confused.  Thus, we destroy the interface. 			 */
-name|vlan_unconfig
+name|ether_ifdetach
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|ether_ifdetach
+name|vlan_unconfig
 argument_list|(
 name|ifp
 argument_list|)
@@ -3556,16 +3556,18 @@ name|ifp
 operator|->
 name|if_dunit
 decl_stmt|;
-name|vlan_unconfig
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 name|ether_ifdetach
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+comment|/* first, remove it from system-wide lists */
+name|vlan_unconfig
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+comment|/* now it can be unconfigured and freed */
 name|if_free_type
 argument_list|(
 name|ifp
@@ -5200,17 +5202,6 @@ name|if_drv_flags
 operator|&=
 operator|~
 name|IFF_DRV_RUNNING
-expr_stmt|;
-comment|/* Clear our MAC address. */
-name|bzero
-argument_list|(
-name|IF_LLADDR
-argument_list|(
-name|ifp
-argument_list|)
-argument_list|,
-name|ETHER_ADDR_LEN
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
