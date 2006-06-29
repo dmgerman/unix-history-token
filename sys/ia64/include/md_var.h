@@ -317,6 +317,21 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ia64_emulate
+parameter_list|(
+name|struct
+name|trapframe
+modifier|*
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ia64_flush_dirty
 parameter_list|(
 name|struct
