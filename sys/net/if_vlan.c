@@ -317,9 +317,6 @@ struct|struct
 name|ifv_linkmib
 block|{
 name|int
-name|ifvm_parent
-decl_stmt|;
-name|int
 name|ifvm_encaplen
 decl_stmt|;
 comment|/* encapsulation length */
@@ -332,10 +329,6 @@ name|ifvm_mintu
 decl_stmt|;
 comment|/* min transmission unit */
 name|uint16_t
-name|ifvm_proto
-decl_stmt|;
-comment|/* encapsulation ethertype */
-name|uint16_t
 name|ifvm_tag
 decl_stmt|;
 comment|/* tag to apply on packets leaving if */
@@ -344,7 +337,6 @@ name|ifv_mib
 struct|;
 name|SLIST_HEAD
 argument_list|(
-argument|__vlan_mchead
 argument_list|,
 argument|vlan_mc_entry
 argument_list|)
@@ -767,7 +759,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|vlan_ifinit
+name|vlan_init
 parameter_list|(
 name|void
 modifier|*
@@ -3108,26 +3100,15 @@ name|ifnet
 modifier|*
 name|p
 decl_stmt|;
+specifier|static
+specifier|const
 name|u_char
 name|eaddr
 index|[
 literal|6
 index|]
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
 decl_stmt|;
+comment|/* 00:00:00:00:00:00 */
 if|if
 condition|(
 operator|(
@@ -3412,7 +3393,7 @@ name|ifp
 operator|->
 name|if_init
 operator|=
-name|vlan_ifinit
+name|vlan_init
 expr_stmt|;
 name|ifp
 operator|->
@@ -3559,9 +3540,6 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-name|int
-name|unit
-decl_stmt|;
 name|struct
 name|ifvlan
 modifier|*
@@ -3571,12 +3549,13 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
+name|int
 name|unit
-operator|=
+init|=
 name|ifp
 operator|->
 name|if_dunit
-expr_stmt|;
+decl_stmt|;
 name|vlan_unconfig
 argument_list|(
 name|ifp
@@ -3623,13 +3602,14 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|vlan_ifinit
+name|vlan_init
 parameter_list|(
 name|void
 modifier|*
 name|foo
+name|__unused
 parameter_list|)
-block|{  }
+block|{ }
 end_function
 
 begin_comment
