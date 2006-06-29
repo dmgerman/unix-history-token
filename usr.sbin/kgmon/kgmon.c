@@ -692,7 +692,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check that profiling is enabled and open any ncessary files.  */
+comment|/*  * Check that profiling is enabled and open any necessary files.  */
 end_comment
 
 begin_function
