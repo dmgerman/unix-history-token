@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/puc/puc_bfe.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/puc/puc_bus.h>
 end_include
 
@@ -85,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|<dev/puc/puc_cfg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/puc/puc_bfe.h>
 end_include
 
 begin_decl_stmt
