@@ -79,11 +79,45 @@ directive|include
 file|<netatalk/at.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net80211/ieee80211_netbsd.h>
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|__FreeBSD__
+end_elif
+
 begin_include
 include|#
 directive|include
 file|<net80211/ieee80211_freebsd.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_error
+error|#
+directive|error
+literal|"No support for your operating system!"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1096,6 +1130,32 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SA_SIZE
+end_ifndef
+
+begin_comment
+comment|/*  * This macro returns the size of a struct sockaddr when passed  * through a routing socket. Basically we round up sa_len to  * a multiple of sizeof(long), with a minimum of sizeof(long).  * The check for a NULL pointer is just a convenience, probably never used.  * The case sa_len == 0 should only apply to empty structures.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SA_SIZE
+parameter_list|(
+name|sa
+parameter_list|)
+define|\
+value|(  (!(sa) || ((struct sockaddr *)(sa))->sa_len == 0) ?	\ 	sizeof(long)		:				\ 	1 + ( (((struct sockaddr *)(sa))->sa_len - 1) | (sizeof(long) - 1) ) )
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|void
@@ -1605,16 +1665,6 @@ name|printf
 argument_list|(
 literal|"%s station %sjoin"
 argument_list|,
-name|ifan
-operator|->
-name|ifan_what
-operator|==
-name|RTM_IEEE80211_REJOIN
-condition|?
-literal|"re"
-else|:
-literal|""
-argument_list|,
 name|ether_sprintf
 argument_list|(
 name|V
@@ -1624,6 +1674,16 @@ argument_list|)
 operator|->
 name|iev_addr
 argument_list|)
+argument_list|,
+name|ifan
+operator|->
+name|ifan_what
+operator|==
+name|RTM_IEEE80211_REJOIN
+condition|?
+literal|"re"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 break|break;
