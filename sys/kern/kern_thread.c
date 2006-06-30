@@ -2555,7 +2555,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Enforce single-threading.  *  * Returns 1 if the caller must abort (another thread is waiting to  * exit the process or similar). Process is locked!  * Returns 0 when you are successfully the only thread running.  * A process has successfully single threaded in the suspend mode when  * There are no threads in user mode. Threads in the kernel must be  * allowed to continue until they get to the user boundary. They may even  * copy out their return values and data before suspending. They may however be  * accellerated in reaching the user boundary as we will wake up  * any sleeping threads that are interruptable. (PCATCH).  */
+comment|/*  * Enforce single-threading.  *  * Returns 1 if the caller must abort (another thread is waiting to  * exit the process or similar). Process is locked!  * Returns 0 when you are successfully the only thread running.  * A process has successfully single threaded in the suspend mode when  * There are no threads in user mode. Threads in the kernel must be  * allowed to continue until they get to the user boundary. They may even  * copy out their return values and data before suspending. They may however be  * accelerated in reaching the user boundary as we will wake up  * any sleeping threads that are interruptable. (PCATCH).  */
 end_comment
 
 begin_function
