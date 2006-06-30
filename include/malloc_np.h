@@ -15,7 +15,20 @@ directive|define
 name|_MALLOC_NP_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_function_decl
+name|__BEGIN_DECLS
 name|size_t
 name|malloc_usable_size
 parameter_list|(
@@ -26,6 +39,10 @@ name|ptr
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
