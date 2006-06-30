@@ -454,10 +454,6 @@ expr_stmt|;
 comment|/* 	 * Secondly calculate a summary of the first mbuf excluding offset. 	 */
 while|while
 condition|(
-name|m
-operator|!=
-name|NULL
-operator|&&
 name|off
 operator|>
 literal|0
