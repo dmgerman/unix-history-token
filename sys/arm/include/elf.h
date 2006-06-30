@@ -626,6 +626,17 @@ name|ELF_TARG_VER
 value|1
 end_define
 
+begin_comment
+comment|/*   * Magic number for the elf trampoline, chosen wisely to be an immediate   * value.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAGIC_TRAMP_NUMBER
+value|0x5c000003
+end_define
+
 begin_endif
 endif|#
 directive|endif
