@@ -2929,6 +2929,12 @@ block|}
 return|return
 operator|(
 name|result
+operator|==
+literal|0
+condition|?
+name|BUS_PROBE_DEFAULT
+else|:
+name|result
 operator|)
 return|;
 block|}
@@ -3348,6 +3354,12 @@ expr_stmt|;
 block|}
 return|return
 operator|(
+name|result
+operator|==
+literal|0
+condition|?
+name|BUS_PROBE_DEFAULT
+else|:
 name|result
 operator|)
 return|;
