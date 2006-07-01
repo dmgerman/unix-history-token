@@ -7175,6 +7175,8 @@ operator|=
 name|penv_fpreg
 operator|->
 name|en_mxcsr_mask
+operator|&
+name|cpu_mxcsr_mask
 expr_stmt|;
 comment|/* FPU registers */
 for|for
@@ -7919,6 +7921,11 @@ modifier|*
 name|mcp
 parameter_list|)
 block|{
+name|struct
+name|savefpu
+modifier|*
+name|fpstate
+decl_stmt|;
 if|if
 condition|(
 name|mcp
@@ -7978,10 +7985,8 @@ name|_MC_FPOWNED_PCB
 condition|)
 block|{
 comment|/* 		 * XXX we violate the dubious requirement that fpusetregs() 		 * be called with interrupts disabled. 		 * XXX obsolete on trap-16 systems? 		 */
-name|fpusetregs
-argument_list|(
-name|td
-argument_list|,
+name|fpstate
+operator|=
 operator|(
 expr|struct
 name|savefpu
@@ -7991,6 +7996,20 @@ operator|&
 name|mcp
 operator|->
 name|mc_fpstate
+expr_stmt|;
+name|fpstate
+operator|->
+name|sv_env
+operator|.
+name|en_mxcsr
+operator|&=
+name|cpu_mxcsr_mask
+expr_stmt|;
+name|fpusetregs
+argument_list|(
+name|td
+argument_list|,
+name|fpstate
 argument_list|)
 expr_stmt|;
 block|}
