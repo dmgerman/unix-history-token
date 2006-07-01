@@ -9471,8 +9471,6 @@ name|i
 operator|=
 literal|0
 init|;
-name|i
-operator|<
 name|ural_rf5222
 index|[
 name|i
