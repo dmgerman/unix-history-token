@@ -198,9 +198,9 @@ name|en_mxcsr
 decl_stmt|;
 comment|/* SSE sontorol/status register */
 name|u_int32_t
-name|en_pad2
+name|en_mxcsr_mask
 decl_stmt|;
-comment|/* padding */
+comment|/* valid bits in mxcsr */
 block|}
 struct|;
 end_struct

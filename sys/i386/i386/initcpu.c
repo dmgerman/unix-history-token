@@ -444,6 +444,16 @@ begin_comment
 comment|/* SSE enabled */
 end_comment
 
+begin_decl_stmt
+name|u_int
+name|cpu_mxcsr_mask
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* valid bits in mxcsr */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
