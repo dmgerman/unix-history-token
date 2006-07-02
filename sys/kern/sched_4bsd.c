@@ -204,7 +204,7 @@ comment|/* Priorities per nice level. */
 end_comment
 
 begin_comment
-comment|/*  * The schedulable entity that can be given a context to run.  * A process may have several of these. Probably one per processor  * but posibly a few more. In this universe they are grouped  * with a KSEG that contains the priority and niceness  * for the group.  */
+comment|/*  * The schedulable entity that can be given a context to run.  * A process may have several of these. Probably one per processor  * but possibly a few more. In this universe they are grouped  * with a KSEG that contains the priority and niceness  * for the group.  */
 end_comment
 
 begin_struct
@@ -415,7 +415,7 @@ parameter_list|(
 name|kg
 parameter_list|)
 define|\
-value|do {									\ 	kg->kg_avail_opennings++; 					\ 	CTR3(KTR_RUNQ, "kg %p(%d) Slot released (->%d)",		\ 	kg,								\ 	kg->kg_concurrency,						\ 	 kg->kg_avail_opennings);					\
+value|do {									\ 	kg->kg_avail_opennings++; 					\ 	CTR3(KTR_RUNQ, "kg %p(%d) Slot released (->%d)",		\ 	    kg,								\ 	    kg->kg_concurrency,						\ 	    kg->kg_avail_opennings);					\
 comment|/*	KASSERT((kg->kg_avail_opennings<= kg->kg_concurrency),		\ 	    ("slots out of whack"));*/
 value|\ } while (0)
 end_define
@@ -428,7 +428,7 @@ parameter_list|(
 name|kg
 parameter_list|)
 define|\
-value|do {									\ 	kg->kg_avail_opennings--; 					\ 	CTR3(KTR_RUNQ, "kg %p(%d) Slot used (->%d)",			\ 	kg,								\ 	kg->kg_concurrency,						\ 	 kg->kg_avail_opennings);					\
+value|do {									\ 	kg->kg_avail_opennings--; 					\ 	CTR3(KTR_RUNQ, "kg %p(%d) Slot used (->%d)",			\ 	    kg,								\ 	    kg->kg_concurrency,						\ 	    kg->kg_avail_opennings);					\
 comment|/*	KASSERT((kg->kg_avail_opennings>= 0),				\ 	    ("slots out of whack"));*/
 value|\ } while (0)
 end_define
