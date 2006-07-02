@@ -7059,6 +7059,13 @@ argument_list|,
 name|ptepde
 argument_list|)
 expr_stmt|;
+name|free_pv_entry
+argument_list|(
+name|pmap
+argument_list|,
+name|pv
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pmap
@@ -7068,13 +7075,6 @@ condition|)
 name|PMAP_UNLOCK
 argument_list|(
 name|pmap
-argument_list|)
-expr_stmt|;
-name|free_pv_entry
-argument_list|(
-name|locked_pmap
-argument_list|,
-name|pv
 argument_list|)
 expr_stmt|;
 block|}
