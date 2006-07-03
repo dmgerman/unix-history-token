@@ -126,7 +126,7 @@ argument_list|)
 end_if
 
 begin_endif
-unit|static const char rcsid[] =   "$Id: tdkphy.c,v 1.3 2000/10/14 06:20:56 jon Exp $";
+unit|static const char rcsid[] =   "$Id: tdkphy.c,v 1.18 2006/05/16 14:36:28 phk Exp $";
 endif|#
 directive|endif
 end_endif
@@ -336,7 +336,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
