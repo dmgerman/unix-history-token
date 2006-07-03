@@ -4482,7 +4482,7 @@ name|si_note
 argument_list|,
 name|kn
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 name|BPFD_UNLOCK
@@ -4523,11 +4523,6 @@ name|kn
 operator|->
 name|kn_hook
 decl_stmt|;
-name|BPFD_LOCK
-argument_list|(
-name|d
-argument_list|)
-expr_stmt|;
 name|knlist_remove
 argument_list|(
 operator|&
@@ -4540,11 +4535,6 @@ argument_list|,
 name|kn
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|BPFD_UNLOCK
-argument_list|(
-name|d
 argument_list|)
 expr_stmt|;
 block|}
