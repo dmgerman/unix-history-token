@@ -1188,6 +1188,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|F_OPT
+case|:
+comment|/* just set flag bit */
+break|break;
+case|case
 name|F_SIZE
 case|:
 name|ip

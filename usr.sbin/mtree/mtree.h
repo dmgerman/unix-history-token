@@ -221,6 +221,11 @@ directive|define
 name|F_SHA256
 value|0x100000
 comment|/* SHA-256 digest */
+define|#
+directive|define
+name|F_OPT
+value|0x200000
+comment|/* existence optional */
 name|u_int
 name|flags
 decl_stmt|;
