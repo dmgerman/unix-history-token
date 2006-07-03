@@ -406,7 +406,7 @@ argument_list|,
 literal|"Keyboard controller (i8042)"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Adjust I/O port resources. 	 * The AT keyboard controller uses two ports (a command/data port 	 * 0x60 and a status port 0x64), which may be given to us in  	 * one resource (0x60 through 0x64) or as two separate resources 	 * (0x60 and 0x64). Furthermore, /boot/device.hints may contain 	 * just one port, 0x60. We shall adjust resource settings  	 * so that these two ports are available as two separate resources. 	 */
+comment|/* 	 * Adjust I/O port resources. 	 * The AT keyboard controller uses two ports (a command/data port 	 * 0x60 and a status port 0x64), which may be given to us in  	 * one resource (0x60 through 0x64) or as two separate resources 	 * (0x60 and 0x64). Some brain-damaged ACPI BIOS has reversed 	 * command/data port and status port. Furthermore, /boot/device.hints 	 * may contain just one port, 0x60. We shall adjust resource settings 	 * so that these two ports are available as two separate resources 	 * in correct order. 	 */
 name|device_quiet
 argument_list|(
 name|dev
@@ -440,11 +440,28 @@ name|ENXIO
 return|;
 if|if
 condition|(
+name|start
+operator|==
+name|IO_KBD
+operator|+
+name|KBD_STATUS_PORT
+condition|)
+block|{
+name|start
+operator|=
+name|IO_KBD
+expr_stmt|;
+name|count
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|count
 operator|>
 literal|1
 condition|)
-comment|/* adjust the count */
+comment|/* adjust the count and/or start port */
 name|bus_set_resource
 argument_list|(
 name|dev
