@@ -102,9 +102,12 @@ begin_comment
 comment|/*   c */
 end_comment
 
-begin_comment
-comment|/*   d */
-end_comment
+begin_define
+define|#
+directive|define
+name|MBOX_WRITE_RAM_WORD_EXTENDED
+value|0x000d
+end_define
 
 begin_define
 define|#
@@ -3260,6 +3263,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ICBXOPT_TIMER_MASK
+value|0x7
+end_define
+
+begin_define
+define|#
+directive|define
 name|ICBZOPT_ENA_RDXFR_RDY
 value|0x01
 end_define
@@ -3274,6 +3284,13 @@ end_define
 begin_comment
 comment|/* out of order frame handling */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ICBZOPT_50_OHM
+value|0x0200
+end_define
 
 begin_comment
 comment|/* These 3 only apply to the 2300 */

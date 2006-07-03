@@ -1038,7 +1038,7 @@ operator|:
 literal|3
 operator|,
 operator|:
-literal|2
+literal|1
 operator|,
 name|isp_iid_set
 operator|:
@@ -1055,7 +1055,7 @@ operator|,
 comment|/* Current Loop State */
 name|isp_fwstate
 operator|:
-literal|3
+literal|4
 operator|,
 comment|/* ISP F/W state */
 name|isp_gotdparms
@@ -1081,6 +1081,12 @@ expr_stmt|;
 comment|/* S_ID */
 name|uint16_t
 name|isp_fwoptions
+decl_stmt|;
+name|uint16_t
+name|isp_xfwoptions
+decl_stmt|;
+name|uint16_t
+name|isp_zfwoptions
 decl_stmt|;
 name|uint16_t
 name|isp_iid
@@ -1530,34 +1536,32 @@ decl_stmt|;
 comment|/* 	 * Volatile state 	 */
 specifier|volatile
 name|uint32_t
-name|isp_obits
-range|:
+operator|:
 literal|8
-decl_stmt|,
-comment|/* mailbox command output */
+operator|,
 name|isp_mboxbsy
-range|:
+operator|:
 literal|1
-decl_stmt|,
+operator|,
 comment|/* mailbox command active */
 name|isp_state
-range|:
+operator|:
 literal|3
-decl_stmt|,
+operator|,
 name|isp_sendmarker
-range|:
+operator|:
 literal|2
-decl_stmt|,
+operator|,
 comment|/* send a marker entry */
 name|isp_update
-range|:
+operator|:
 literal|2
-decl_stmt|,
+operator|,
 comment|/* update parameters */
 name|isp_nactive
-range|:
+operator|:
 literal|16
-decl_stmt|;
+expr_stmt|;
 comment|/* how many commands active */
 specifier|volatile
 name|uint16_t
@@ -1590,6 +1594,11 @@ decl_stmt|;
 comment|/* last handle seed */
 specifier|volatile
 name|uint16_t
+name|isp_obits
+decl_stmt|;
+comment|/* mailbox command output */
+specifier|volatile
+name|uint16_t
 name|isp_mboxtmp
 index|[
 name|MAILBOX_STORAGE
@@ -1611,6 +1620,10 @@ decl_stmt|;
 specifier|volatile
 name|uint16_t
 name|isp_mbxwrk2
+decl_stmt|;
+specifier|volatile
+name|uint16_t
+name|isp_mbxwrk8
 decl_stmt|;
 name|void
 modifier|*
@@ -1686,22 +1699,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|ISP_RESETSTATE
+name|ISP_CRASHED
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISP_INITSTATE
+name|ISP_RESETSTATE
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISP_RUNSTATE
+name|ISP_INITSTATE
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_RUNSTATE
+value|4
 end_define
 
 begin_comment
