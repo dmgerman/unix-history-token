@@ -15,6 +15,16 @@ directive|define
 name|_BSM_AUDIT_RECORD_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_comment
+comment|/* struct timeval */
+end_comment
+
 begin_comment
 comment|/*  * Token type identifiers.  */
 end_comment
