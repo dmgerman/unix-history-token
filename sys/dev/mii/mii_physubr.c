@@ -686,11 +686,20 @@ argument_list|)
 operator|!=
 name|IFM_AUTO
 condition|)
+block|{
+name|sc
+operator|->
+name|mii_ticks
+operator|=
+literal|0
+expr_stmt|;
+comment|/* reset autonegotiation timer. */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 comment|/* Read the status register twice; BMSR_LINK is latch-low. */
 name|reg
 operator|=
