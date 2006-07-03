@@ -1164,6 +1164,24 @@ name|kaudit_record
 modifier|*
 name|ar
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|p
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"audit_arg_process: p == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
+name|PROC_LOCK_ASSERT
+argument_list|(
+name|p
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|ar
 operator|=
 name|currecord
@@ -1171,20 +1189,11 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|ar
 operator|==
 name|NULL
-operator|)
-operator|||
-operator|(
-name|p
-operator|==
-name|NULL
-operator|)
 condition|)
 return|return;
-comment|/* 	 * XXXAUDIT: PROC_LOCK_ASSERT(p); 	 */
 name|ar
 operator|->
 name|k_ar
@@ -1422,10 +1431,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * XXXAUDIT: Argument here should be 'sa' not 'so'.  Caller is responsible  * for synchronizing access to the source of the address.  */
-end_comment
-
 begin_function
 name|void
 name|audit_arg_sockaddr
@@ -1438,7 +1443,7 @@ parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
-name|so
+name|sa
 parameter_list|)
 block|{
 name|struct
@@ -1446,6 +1451,28 @@ name|kaudit_record
 modifier|*
 name|ar
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|td
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"audit_arg_sockaddr: td == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|sa
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"audit_arg_sockaddr: sa == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 name|ar
 operator|=
 name|currecord
@@ -1456,19 +1483,11 @@ condition|(
 name|ar
 operator|==
 name|NULL
-operator|||
-name|td
-operator|==
-name|NULL
-operator|||
-name|so
-operator|==
-name|NULL
 condition|)
 return|return;
 name|bcopy
 argument_list|(
-name|so
+name|sa
 argument_list|,
 operator|&
 name|ar
@@ -1489,7 +1508,7 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|so
+name|sa
 operator|->
 name|sa_family
 condition|)
@@ -1529,7 +1548,7 @@ expr|struct
 name|sockaddr_un
 operator|*
 operator|)
-name|so
+name|sa
 operator|)
 operator|->
 name|sun_path
@@ -1726,6 +1745,17 @@ name|kaudit_record
 modifier|*
 name|ar
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|text
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"audit_arg_text: text == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 name|ar
 operator|=
 name|currecord
@@ -1738,7 +1768,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* 	 * XXXAUDIT: Why do we accept a possibly NULL string here? 	 */
 comment|/* Invalidate the text string */
 name|ar
 operator|->
@@ -1752,13 +1781,6 @@ operator|^
 name|ARG_TEXT
 operator|)
 expr_stmt|;
-if|if
-condition|(
-name|text
-operator|==
-name|NULL
-condition|)
-return|return;
 if|if
 condition|(
 name|ar
@@ -2213,7 +2235,18 @@ decl_stmt|;
 name|int
 name|vfslocked
 decl_stmt|;
-comment|/* 	 * XXXAUDIT: Why is the (ar == NULL) test only in the socket case? 	 */
+name|ar
+operator|=
+name|currecord
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ar
+operator|==
+name|NULL
+condition|)
+return|return;
 switch|switch
 condition|(
 name|fp
@@ -2279,19 +2312,6 @@ break|break;
 case|case
 name|DTYPE_SOCKET
 case|:
-name|ar
-operator|=
-name|currecord
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|ar
-operator|==
-name|NULL
-condition|)
-return|return;
-comment|/* 		 * XXXAUDIT: Socket locking?  Inpcb locking? 		 */
 name|so
 operator|=
 operator|(
@@ -2302,6 +2322,11 @@ operator|)
 name|fp
 operator|->
 name|f_data
+expr_stmt|;
+name|SOCK_LOCK
+argument_list|(
+name|so
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2432,6 +2457,11 @@ name|ARG_SOCKINFO
 argument_list|)
 expr_stmt|;
 block|}
+name|SOCK_UNLOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 comment|/* XXXAUDIT: else? */
@@ -2471,18 +2501,40 @@ modifier|*
 modifier|*
 name|pathp
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|td
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"audit_arg_upath: td == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|upath
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"audit_arg_upath: upath == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
+name|ar
+operator|=
+name|currecord
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
-name|td
-operator|==
-name|NULL
-operator|||
-name|upath
+name|ar
 operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* nothing to do! */
 comment|/* 	 * XXXAUDIT: Witness warning for possible sleep here? 	 */
 name|KASSERT
 argument_list|(
@@ -2536,18 +2588,6 @@ name|flag
 operator|)
 argument_list|)
 expr_stmt|;
-name|ar
-operator|=
-name|currecord
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|ar
-operator|==
-name|NULL
-condition|)
-return|return;
 if|if
 condition|(
 name|flag
@@ -2646,19 +2686,41 @@ name|vnode_au_info
 modifier|*
 name|vnp
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
-comment|/* 	 * XXXAUDIT: Why is vp possibly NULL here? 	 */
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|vp
-operator|==
+operator|!=
 name|NULL
-condition|)
-return|return;
+argument_list|,
+operator|(
+literal|"audit_arg_vnode: vp == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|flags
+operator|==
+name|ARG_VNODE1
+operator|)
+operator|||
+operator|(
+name|flags
+operator|==
+name|ARG_VNODE2
+operator|)
+argument_list|,
+operator|(
+literal|"audit_arg_vnode: flags %jd"
+operator|,
+operator|(
+name|intmax_t
+operator|)
+name|flags
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Assume that if the caller is calling audit_arg_vnode() on a 	 * non-MPSAFE vnode, then it will have acquired Giant. 	 */
 name|VFS_ASSERT_GIANT
 argument_list|(
@@ -2686,26 +2748,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* 	 * XXXAUDIT: KASSERT argument validity instead? 	 * 	 * XXXAUDIT: The below clears, and then resets the flags for valid 	 * arguments.  Ideally, either the new vnode is used, or the old one 	 * would be. 	 */
-if|if
-condition|(
-operator|(
-name|flags
-operator|&
-operator|(
-name|ARG_VNODE1
-operator||
-name|ARG_VNODE2
-operator|)
-operator|)
-operator|==
-literal|0
-condition|)
-return|return;
-name|td
-operator|=
-name|curthread
-expr_stmt|;
+comment|/* 	 * XXXAUDIT: The below clears, and then resets the flags for valid 	 * arguments.  Ideally, either the new vnode is used, or the old one 	 * would be. 	 */
 if|if
 condition|(
 name|flags
@@ -2768,11 +2811,11 @@ argument_list|,
 operator|&
 name|vattr
 argument_list|,
-name|td
+name|curthread
 operator|->
 name|td_ucred
 argument_list|,
-name|td
+name|curthread
 argument_list|)
 expr_stmt|;
 if|if
@@ -2881,6 +2924,11 @@ name|fd
 parameter_list|)
 block|{
 name|struct
+name|kaudit_record
+modifier|*
+name|ar
+decl_stmt|;
+name|struct
 name|vnode
 modifier|*
 name|vp
@@ -2893,6 +2941,29 @@ decl_stmt|;
 name|int
 name|vfslocked
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|td
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"audit_sysclose: td == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
+name|ar
+operator|=
+name|currecord
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ar
+operator|==
+name|NULL
+condition|)
+return|return;
 name|audit_arg_fd
 argument_list|(
 name|fd

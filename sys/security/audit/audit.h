@@ -764,7 +764,7 @@ parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
-name|so
+name|sa
 parameter_list|)
 function_decl|;
 end_function_decl
