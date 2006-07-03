@@ -5893,16 +5893,18 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* 	 * Our life seems so much better with 2200s and later with 	 * the latest f/w if we set Hard Address. 	 */
 if|if
 condition|(
-name|IS_2322
+name|ISP_FW_NEWER_THAN
 argument_list|(
 name|isp
-argument_list|)
-operator|||
-name|IS_24XX
-argument_list|(
-name|isp
+argument_list|,
+literal|2
+argument_list|,
+literal|2
+argument_list|,
+literal|5
 argument_list|)
 condition|)
 block|{
@@ -11002,7 +11004,7 @@ name|isp
 argument_list|,
 name|ISP_LOGDEBUG0
 argument_list|,
-literal|"no loop scasn\n"
+literal|"no loop topology to scan"
 argument_list|)
 expr_stmt|;
 name|fcp
