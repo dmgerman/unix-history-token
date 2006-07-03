@@ -7160,9 +7160,6 @@ literal|0xFFFFFFFF
 expr_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|SEND_CLIENT_IDENTIFIER
 comment|/* set unique client identifier */
 name|char
 name|client_ident
@@ -7294,8 +7291,6 @@ operator|=
 literal|0xFFFFFFFF
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* Set up the option buffer... */
 name|ip
 operator|->
@@ -8185,9 +8180,6 @@ literal|0xFFFFFFFF
 expr_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|SEND_CLIENT_IDENTIFIER
 comment|/* set unique client identifier */
 name|char
 name|client_ident
@@ -8319,8 +8311,6 @@ operator|=
 literal|0xFFFFFFFF
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* Set up the option buffer... */
 name|ip
 operator|->
