@@ -333,7 +333,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|enc_clone_destroy
 parameter_list|(
 name|struct
@@ -355,7 +355,7 @@ end_expr_stmt
 
 begin_function
 specifier|static
-name|int
+name|void
 name|enc_clone_destroy
 parameter_list|(
 name|struct
@@ -364,36 +364,17 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-name|mtx_lock
+name|KASSERT
 argument_list|(
-operator|&
-name|enc_mtx
-argument_list|)
-expr_stmt|;
-comment|/* do not allow enc0 to be destroyed */
-if|if
-condition|(
-name|encif
-operator|==
 name|ifp
-condition|)
-block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|enc_mtx
-argument_list|)
-expr_stmt|;
-return|return
+operator|!=
+name|encif
+argument_list|,
 operator|(
-name|EBUSY
+literal|"%s: destroying encif"
+operator|,
+name|__func__
 operator|)
-return|;
-block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|enc_mtx
 argument_list|)
 expr_stmt|;
 name|bpfdetach
@@ -411,11 +392,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
