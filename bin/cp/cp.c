@@ -1896,6 +1896,11 @@ argument_list|,
 literal|"fts_read"
 argument_list|)
 expr_stmt|;
+name|fts_close
+argument_list|(
+name|ftsp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|rval
