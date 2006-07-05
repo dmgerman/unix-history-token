@@ -1171,7 +1171,7 @@ name|arg
 operator|.
 name|nextstop
 operator|=
-name|time_second
+name|time_uptime
 operator|+
 name|rtq_timeout
 expr_stmt|;
@@ -1223,7 +1223,7 @@ name|rtq_toomany
 operator|)
 operator|&&
 operator|(
-name|time_second
+name|time_uptime
 operator|-
 name|last_adjusted_timeout
 operator|>=
@@ -1257,7 +1257,7 @@ expr_stmt|;
 block|}
 name|last_adjusted_timeout
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1326,7 +1326,7 @@ name|arg
 operator|.
 name|nextstop
 operator|-
-name|time_second
+name|time_uptime
 expr_stmt|;
 name|callout_reset
 argument_list|(
@@ -1525,7 +1525,7 @@ name|arg
 operator|.
 name|nextstop
 operator|=
-name|time_second
+name|time_uptime
 operator|+
 name|MTUTIMO_DEFAULT
 expr_stmt|;
@@ -1565,7 +1565,7 @@ name|arg
 operator|.
 name|nextstop
 operator|-
-name|time_second
+name|time_uptime
 expr_stmt|;
 if|if
 condition|(
@@ -1585,9 +1585,17 @@ name|arg
 operator|.
 name|nextstop
 operator|=
+name|time_uptime
+operator|+
 literal|30
 expr_stmt|;
 comment|/* last resort */
+name|atv
+operator|.
+name|tv_sec
+operator|=
+literal|30
+expr_stmt|;
 block|}
 name|callout_reset
 argument_list|(

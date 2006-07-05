@@ -1024,7 +1024,7 @@ name|arg
 operator|.
 name|nextstop
 operator|=
-name|time_second
+name|time_uptime
 operator|+
 name|rtq_timeout
 expr_stmt|;
@@ -1076,7 +1076,7 @@ name|rtq_toomany
 operator|)
 operator|&&
 operator|(
-name|time_second
+name|time_uptime
 operator|-
 name|last_adjusted_timeout
 operator|>=
@@ -1110,7 +1110,7 @@ expr_stmt|;
 block|}
 name|last_adjusted_timeout
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1179,7 +1179,7 @@ name|arg
 operator|.
 name|nextstop
 operator|-
-name|time_second
+name|time_uptime
 expr_stmt|;
 name|callout_reset
 argument_list|(
