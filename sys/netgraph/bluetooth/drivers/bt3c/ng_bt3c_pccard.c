@@ -336,7 +336,7 @@ parameter_list|,
 name|address
 parameter_list|)
 define|\
-value|do { \ 	outb(rman_get_start((sc)->iobase) + BT3C_ADDR_L, ((address)& 0xff)); \ 	outb(rman_get_start((sc)->iobase) + BT3C_ADDR_H, (((address)>> 8)& 0xff)); \ } while (0)
+value|do { \ 	bus_space_write_1((sc)->iot, (sc)->ioh, BT3C_ADDR_L, ((address)& 0xff)); \ 	bus_space_write_1((sc)->iot, (sc)->ioh, BT3C_ADDR_H, (((address)>> 8)& 0xff)); \ } while (0)
 end_define
 
 begin_define
@@ -349,7 +349,7 @@ parameter_list|,
 name|data
 parameter_list|)
 define|\
-value|do { \ 	(data)  = inb(rman_get_start((sc)->iobase) + BT3C_DATA_L); \ 	(data) |= ((inb(rman_get_start((sc)->iobase) + BT3C_DATA_H)& 0xff)<< 8); \ } while (0)
+value|do { \ 	(data)  = bus_space_read_1((sc)->iot, (sc)->ioh, BT3C_DATA_L); \ 	(data) |= ((bus_space_read_1((sc)->iot, (sc)->ioh, BT3C_DATA_H)& 0xff)<< 8); \ } while (0)
 end_define
 
 begin_define
@@ -362,7 +362,7 @@ parameter_list|,
 name|data
 parameter_list|)
 define|\
-value|do { \ 	outb(rman_get_start((sc)->iobase) + BT3C_DATA_L, ((data)& 0xff)); \ 	outb(rman_get_start((sc)->iobase) + BT3C_DATA_H, (((data)>> 8)& 0xff)); \ } while (0)
+value|do { \ 	bus_space_write_1((sc)->iot, (sc)->ioh, BT3C_DATA_L, ((data)& 0xff)); \ 	bus_space_write_1((sc)->iot, (sc)->ioh, BT3C_DATA_H, (((data)>> 8)& 0xff)); \ } while (0)
 end_define
 
 begin_define
@@ -375,7 +375,7 @@ parameter_list|,
 name|data
 parameter_list|)
 define|\
-value|do { \ 	(data) = inb(rman_get_start((sc)->iobase) + BT3C_CONTROL); \ } while (0)
+value|do { \ 	(data) = bus_space_read_1((sc)->iot, (sc)->ioh, BT3C_CONTROL); \ } while (0)
 end_define
 
 begin_define
@@ -388,7 +388,7 @@ parameter_list|,
 name|data
 parameter_list|)
 define|\
-value|do { \ 	outb(rman_get_start((sc)->iobase) + BT3C_CONTROL, (data)); \ } while (0)
+value|do { \ 	bus_space_write_1((sc)->iot, (sc)->ioh, BT3C_CONTROL, (data)); \ } while (0)
 end_define
 
 begin_define
@@ -2257,6 +2257,28 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|sc
+operator|->
+name|iot
+operator|=
+name|rman_get_bustag
+argument_list|(
+name|sc
+operator|->
+name|iobase
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|ioh
+operator|=
+name|rman_get_bushandle
+argument_list|(
+name|sc
+operator|->
+name|iobase
+argument_list|)
+expr_stmt|;
 comment|/* Allocate IRQ */
 name|sc
 operator|->
