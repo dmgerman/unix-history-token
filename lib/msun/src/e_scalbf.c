@@ -211,15 +211,5 @@ directive|endif
 block|}
 end_decl_stmt
 
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|scalbf
-argument_list|,
-name|ldexpf
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 end_unit
 
