@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000-2003 Marcel Moolenaar  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2000-2006 Marcel Moolenaar  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -528,6 +528,8 @@ name|ASM_CC_UNPACK
 block|,
 name|ASM_CC_UNS
 block|,
+name|ASM_CC_VMSW
+block|,
 name|ASM_CC_XMA
 block|}
 enum|;
@@ -965,6 +967,8 @@ name|ASM_FMT_F14
 block|,
 name|ASM_FMT_F15
 block|,
+name|ASM_FMT_F16
+block|,
 name|ASM_FMT_I
 init|=
 literal|0x0400
@@ -1003,6 +1007,8 @@ name|ASM_FMT_I16
 block|,
 name|ASM_FMT_I17
 block|,
+name|ASM_FMT_I18
+block|,
 name|ASM_FMT_I19
 block|,
 name|ASM_FMT_I20
@@ -1024,6 +1030,8 @@ block|,
 name|ASM_FMT_I28
 block|,
 name|ASM_FMT_I29
+block|,
+name|ASM_FMT_I30
 block|,
 name|ASM_FMT_M
 init|=
@@ -1121,6 +1129,10 @@ name|ASM_FMT_M45
 block|,
 name|ASM_FMT_M46
 block|,
+name|ASM_FMT_M47
+block|,
+name|ASM_FMT_M48
+block|,
 name|ASM_FMT_X
 init|=
 literal|0x0600
@@ -1132,6 +1144,8 @@ block|,
 name|ASM_FMT_X3
 block|,
 name|ASM_FMT_X4
+block|,
+name|ASM_FMT_X5
 block|}
 enum|;
 end_enum
@@ -1291,6 +1305,8 @@ block|,
 name|ASM_OP_ITC
 block|,
 name|ASM_OP_ITR
+block|,
+name|ASM_OP_HINT
 block|,
 name|ASM_OP_LD1
 block|,
@@ -1464,6 +1480,8 @@ name|ASM_OP_TAK
 block|,
 name|ASM_OP_TBIT
 block|,
+name|ASM_OP_TF
+block|,
 name|ASM_OP_THASH
 block|,
 name|ASM_OP_TNAT
@@ -1477,6 +1495,8 @@ block|,
 name|ASM_OP_UNPACK2
 block|,
 name|ASM_OP_UNPACK4
+block|,
+name|ASM_OP_VMSW
 block|,
 name|ASM_OP_XCHG1
 block|,
