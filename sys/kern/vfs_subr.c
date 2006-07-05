@@ -3561,6 +3561,11 @@ literal|"vp has namecache src"
 operator|)
 argument_list|)
 expr_stmt|;
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
