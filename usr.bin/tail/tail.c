@@ -121,6 +121,8 @@ name|Fflag
 decl_stmt|,
 name|fflag
 decl_stmt|,
+name|qflag
+decl_stmt|,
 name|rflag
 decl_stmt|,
 name|rval
@@ -243,7 +245,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Fb:c:fn:r"
+literal|"Fb:c:fn:qr"
 argument_list|)
 operator|)
 operator|!=
@@ -311,6 +313,14 @@ name|FLINES
 argument_list|,
 name|RLINES
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'q'
+case|:
+name|qflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -665,6 +675,9 @@ condition|(
 name|argc
 operator|>
 literal|1
+operator|&&
+operator|!
+name|qflag
 condition|)
 block|{
 operator|(
@@ -1201,7 +1214,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: tail [-F | -f | -r] [-b # | -c # | -n #] [file ...]\n"
+literal|"usage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #]"
+literal|" [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit

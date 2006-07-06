@@ -932,6 +932,11 @@ operator|>
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|qflag
+condition|)
 operator|(
 name|void
 operator|)
@@ -1313,6 +1318,9 @@ condition|(
 name|no_files
 operator|>
 literal|1
+operator|&&
+operator|!
+name|qflag
 condition|)
 operator|(
 name|void
