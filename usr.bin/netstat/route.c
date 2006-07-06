@@ -179,6 +179,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -186,12 +192,6 @@ begin_include
 include|#
 directive|include
 file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<time.h>
 end_include
 
 begin_include
@@ -429,6 +429,13 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|timespec
+name|uptime
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|struct
@@ -658,6 +665,26 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* 	 * Since kernel& userland use different timebase 	 * (time_uptime vs time_second) and we are reading kernel memory 	 * directly we should do rt_rmx.rmx_expire --> expire_time conversion. 	 */
+if|if
+condition|(
+name|clock_gettime
+argument_list|(
+name|CLOCK_UPTIME
+argument_list|,
+operator|&
+name|uptime
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"clock_gettime() failed"
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Routing tables\n"
@@ -1673,10 +1700,9 @@ name|rt_rmx
 operator|.
 name|rmx_expire
 operator|-
-name|time
-argument_list|(
-name|NULL
-argument_list|)
+name|uptime
+operator|.
+name|tv_sec
 operator|)
 operator|>
 literal|0
@@ -4009,14 +4035,9 @@ name|rt_rmx
 operator|.
 name|rmx_expire
 operator|-
-name|time
-argument_list|(
-operator|(
-name|time_t
-operator|*
-operator|)
-literal|0
-argument_list|)
+name|uptime
+operator|.
+name|tv_sec
 operator|)
 operator|>
 literal|0
