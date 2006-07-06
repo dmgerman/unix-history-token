@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_mac.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -37,12 +31,6 @@ begin_include
 include|#
 directive|include
 file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mac.h>
 end_include
 
 begin_include
