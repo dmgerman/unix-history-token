@@ -202,7 +202,7 @@ define|#
 directive|define
 name|KLD_LOCK
 parameter_list|()
-value|do { sx_xlock(&kld_sx); mtx_lock(&Giant); } while (0)
+value|sx_xlock(&kld_sx)
 end_define
 
 begin_define
@@ -210,7 +210,7 @@ define|#
 directive|define
 name|KLD_UNLOCK
 parameter_list|()
-value|do { mtx_unlock(&Giant); sx_xunlock(&kld_sx); } while (0)
+value|sx_xunlock(&kld_sx)
 end_define
 
 begin_define
@@ -226,7 +226,7 @@ define|#
 directive|define
 name|KLD_LOCK_ASSERT
 parameter_list|()
-value|do { if (!cold) sx_assert(&kld_sx, SX_XLOCKED); } while (0)
+value|do {						\ 	if (!cold)							\ 		sx_assert(&kld_sx, SX_XLOCKED);				\ } while (0)
 end_define
 
 begin_comment
@@ -862,6 +862,12 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 	 * Traverse the (now) ordered list of system initialization tasks. 	 * Perform each task, and continue on to the next task. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|sipp
@@ -911,6 +917,12 @@ name|udata
 operator|)
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1075,6 +1087,12 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 	 * Traverse the (now) ordered list of system initialization tasks. 	 * Perform each task, and continue on to the next task. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|sipp
@@ -1124,6 +1142,12 @@ name|udata
 operator|)
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
