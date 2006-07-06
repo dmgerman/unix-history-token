@@ -532,6 +532,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FDDSR
+value|4
+end_define
+
+begin_comment
+comment|/* Data Rate Select Register (W) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FDDATA
 value|5
 end_define
@@ -1242,6 +1253,32 @@ argument_list|,
 name|FDSTS
 argument_list|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|fddsr_wr
+parameter_list|(
+name|struct
+name|fdc_data
+modifier|*
+name|fdc
+parameter_list|,
+name|u_int8_t
+name|v
+parameter_list|)
+block|{
+name|fdregwr
+argument_list|(
+name|fdc
+argument_list|,
+name|FDDSR
+argument_list|,
+name|v
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1973,7 +2010,27 @@ index|[
 literal|10
 index|]
 decl_stmt|;
-comment|/* Try a reset, keep motor on */
+if|if
+condition|(
+name|fdc
+operator|->
+name|fdct
+operator|==
+name|FDC_ENHANCED
+condition|)
+block|{
+comment|/* Try a software reset, default precomp, and 500 kb/s */
+name|fddsr_wr
+argument_list|(
+name|fdc
+argument_list|,
+name|I8207X_DSR_SR
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Try a hardware reset, keep motor on */
 name|fdout_wr
 argument_list|(
 name|fdc
@@ -2022,6 +2079,7 @@ operator|->
 name|fdout
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* XXX after a reset, silently believe the FDC will accept commands */
 if|if
 condition|(
@@ -3589,6 +3647,26 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fdc
+operator|->
+name|fdct
+operator|==
+name|FDC_ENHANCED
+condition|)
+name|fddsr_wr
+argument_list|(
+name|fdc
+argument_list|,
+name|fd
+operator|->
+name|ft
+operator|->
+name|trans
+argument_list|)
+expr_stmt|;
+else|else
 name|fdctl_wr
 argument_list|(
 name|fdc

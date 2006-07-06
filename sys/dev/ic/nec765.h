@@ -452,6 +452,54 @@ comment|/* unit select */
 end_comment
 
 begin_comment
+comment|/* Data Rate Select Register DSR (enhanced controller) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I8207X_DSR_SR
+value|0x80
+end_define
+
+begin_comment
+comment|/* software reset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I8207X_DSR_LP
+value|0x40
+end_define
+
+begin_comment
+comment|/* low power */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I8207X_DSR_PS
+value|0x1c
+end_define
+
+begin_comment
+comment|/* precompensation select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I8207X_DSR_RS
+value|0x03
+end_define
+
+begin_comment
+comment|/* data rate select */
+end_comment
+
+begin_comment
 comment|/* Commands */
 end_comment
 
