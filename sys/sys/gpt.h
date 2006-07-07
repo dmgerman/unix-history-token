@@ -112,13 +112,13 @@ define|#
 directive|define
 name|GPT_ENT_ATTR_PLATFORM
 value|(1ULL<< 0)
-name|short
+name|uint16_t
 name|ent_name
 index|[
 literal|36
 index|]
 decl_stmt|;
-comment|/* UNICODE-16. */
+comment|/* UTF-16. */
 block|}
 struct|;
 end_struct
@@ -248,6 +248,14 @@ directive|define
 name|GPT_ENT_TYPE_LINUX_LVM
 define|\
 value|{0xe6d6d379,0xf507,0x44c2,0xa2,0x3c,{0x23,0x8f,0x2a,0x3d,0xf9,0x28}}
+end_define
+
+begin_define
+define|#
+directive|define
+name|GPT_ENT_TYPE_APPLE_HFS
+define|\
+value|{0x48465300,0x0000,0x11aa,0xaa,0x11,{0x00,0x30,0x65,0x43,0xec,0xac}}
 end_define
 
 begin_endif
