@@ -288,16 +288,16 @@ operator|(
 literal|0x007fffff
 operator|&
 operator|(
-literal|15
+literal|0x8000
 operator|+
 name|ix
 operator|)
 operator|)
 operator|<
-literal|16
+literal|0xc000
 condition|)
 block|{
-comment|/* |f|< 2**-20 */
+comment|/* -2**-9<= f< 2**-9 */
 if|if
 condition|(
 name|f
