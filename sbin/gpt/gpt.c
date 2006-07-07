@@ -1684,7 +1684,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|optarg
+name|s
 argument_list|,
 literal|"efi"
 argument_list|)
@@ -1716,7 +1716,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|optarg
+name|s
 argument_list|,
 literal|"hfs"
 argument_list|)
@@ -1748,7 +1748,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|optarg
+name|s
 argument_list|,
 literal|"linux"
 argument_list|)
@@ -1780,7 +1780,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|optarg
+name|s
 argument_list|,
 literal|"swap"
 argument_list|)
@@ -1812,7 +1812,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|optarg
+name|s
 argument_list|,
 literal|"ufs"
 argument_list|)
@@ -1844,7 +1844,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|optarg
+name|s
 argument_list|,
 literal|"windows"
 argument_list|)
