@@ -16,6 +16,12 @@ name|__UWX_INCLUDED
 value|1
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -27,6 +33,28 @@ include|#
 directive|include
 file|<inttypes.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

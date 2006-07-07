@@ -3,11 +3,22 @@ begin_comment
 comment|/* Copyright (c) 2003-2006 Hewlett-Packard Development Company, L.P. Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -20,6 +31,48 @@ include|#
 directive|include
 file|"uwx_str.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|uwx_str_pool
+name|uwx_str_pool
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|free
+parameter_list|(
+name|p
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* nullified */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|malloc
+parameter_list|(
+name|sz
+parameter_list|)
+value|((sz == sizeof(uwx_str_pool)) ?&uwx_str_pool : NULL)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *  uwx_str.c  *  *  This file contains the routines for maintaining a string  *  pool for the unwind environment. We preallocate enough  *  space for most purposes so that no memory allocation is  *  necessary during a normal unwind. If we do need more,  *  we use the allocate callback, if one is provided.  *  *  The string pool is reused with each call to step(),  *  and is completely freed when the unwind environment is  *  freed.  */

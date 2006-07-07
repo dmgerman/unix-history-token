@@ -33,6 +33,12 @@ directive|include
 file|"uwx_trace.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UWX_TRACE_ENABLE
+end_ifdef
+
 begin_function
 name|void
 name|uwx_trace_init
@@ -73,7 +79,6 @@ switch|switch
 condition|(
 operator|*
 name|tstr
-operator|++
 condition|)
 block|{
 case|case
@@ -159,6 +164,21 @@ break|break;
 case|case
 literal|'?'
 case|:
+ifdef|#
+directive|ifdef
+name|_KERNEL
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"UWX_TRACE flag `%c' unknown.\n"
+argument_list|,
+operator|*
+name|tstr
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|fprintf
 argument_list|(
 name|stderr
@@ -227,7 +247,12 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
+name|tstr
+operator|++
+expr_stmt|;
 block|}
 block|}
 block|}
@@ -586,8 +611,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"<%08x>\n"
+literal|"<%08lx>\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|rstate
 argument_list|)
 expr_stmt|;
@@ -814,7 +842,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" %08lx"
+literal|" %04x"
 argument_list|,
 operator|*
 name|uinfo
@@ -836,6 +864,15 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* UWX_TRACE_ENABLE */
+end_comment
 
 end_unit
 

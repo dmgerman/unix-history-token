@@ -39,6 +39,12 @@ directive|include
 file|"uwx_trace.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"uwx_swap.h"
+end_include
+
 begin_function_decl
 name|int
 name|uwx_count_ones

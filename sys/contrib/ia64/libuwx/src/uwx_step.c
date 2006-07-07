@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"uwx_context.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"uwx_utable.h"
 end_include
 
@@ -197,6 +191,7 @@ comment|/* uwx_get_frame_info: Gets unwind info for current frame */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|uwx_get_frame_info
 parameter_list|(
@@ -234,9 +229,6 @@ decl_stmt|;
 name|struct
 name|uwx_utable_entry
 name|uentry
-decl_stmt|;
-name|uint64_t
-name|uinfop
 decl_stmt|;
 name|uint64_t
 name|uvecout
@@ -1813,16 +1805,6 @@ parameter_list|)
 block|{
 name|int
 name|status
-decl_stmt|;
-name|uint64_t
-modifier|*
-name|uvec
-decl_stmt|;
-name|uint64_t
-name|uvecout
-index|[
-name|UVECSIZE
-index|]
 decl_stmt|;
 if|if
 condition|(

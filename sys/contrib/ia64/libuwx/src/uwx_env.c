@@ -3,11 +3,22 @@ begin_comment
 comment|/* Copyright (c) 2003-2006 Hewlett-Packard Development Company, L.P. Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<stdlib.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -32,6 +43,48 @@ include|#
 directive|include
 file|"uwx_trace.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|uwx_env
+name|uwx_env
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|free
+parameter_list|(
+name|p
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* nullified */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|malloc
+parameter_list|(
+name|sz
+parameter_list|)
+value|((sz == sizeof(uwx_env)) ?&uwx_env : NULL)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|alloc_cb
@@ -542,7 +595,7 @@ name|env
 operator|->
 name|allocate_cb
 operator|=
-name|malloc
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -561,7 +614,7 @@ name|env
 operator|->
 name|free_cb
 operator|=
-name|free
+name|NULL
 expr_stmt|;
 name|env
 operator|->
