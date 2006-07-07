@@ -418,9 +418,6 @@ decl_stmt|;
 name|u_int
 name|n
 decl_stmt|;
-name|g_topology_assert
-argument_list|()
-expr_stmt|;
 name|nargs
 operator|=
 name|gctl_get_paraml
