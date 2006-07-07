@@ -61,6 +61,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|parse_uuid
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|uuid_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_struct
 struct|struct
 name|mbr_part
