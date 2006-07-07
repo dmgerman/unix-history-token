@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 2003 Hewlett-Packard Development Company, L.P. Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
+comment|/* Copyright (c) 2003-2006 Hewlett-Packard Development Company, L.P. Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 end_comment
 
 begin_define
@@ -172,7 +172,18 @@ parameter_list|(
 name|id
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_SB) \ 	printf("uwx_alloc_scoreboard: reuse id %d\n", (id));
+value|if (env->trace& UWX_TRACE_SB) \ 	fprintf(stderr, "uwx_alloc_scoreboard: reuse id %d\n", (id));
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRACE_B_PREALLOC
+parameter_list|(
+name|id
+parameter_list|)
+define|\
+value|if (env->trace& UWX_TRACE_SB) \ 	fprintf(stderr, "uwx_prealloc_scoreboard: prealloc id %d\n", (id));
 end_define
 
 begin_define
@@ -183,7 +194,7 @@ parameter_list|(
 name|id
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_SB) \ 	printf("uwx_alloc_scoreboard: alloc id %d\n", (id));
+value|if (env->trace& UWX_TRACE_SB) \ 	fprintf(stderr, "uwx_alloc_scoreboard: alloc id %d\n", (id));
 end_define
 
 begin_define
@@ -194,7 +205,7 @@ parameter_list|(
 name|id
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_SB) \ 	printf("uwx_pop_scoreboards: free id %d\n", (id));
+value|if (env->trace& UWX_TRACE_SB) \ 	fprintf(stderr, "uwx_pop_scoreboards: free id %d\n", (id));
 end_define
 
 begin_define
@@ -205,7 +216,7 @@ parameter_list|(
 name|label
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_SB) \ 	printf("uwx_label_scoreboard: label %d\n", (label));
+value|if (env->trace& UWX_TRACE_SB) \ 	fprintf(stderr, "uwx_label_scoreboard: label %d\n", (label));
 end_define
 
 begin_define
@@ -216,7 +227,7 @@ parameter_list|(
 name|id
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_SB) \ 	printf("uwx_label_scoreboard: copy id %d\n", (id));
+value|if (env->trace& UWX_TRACE_SB) \ 	fprintf(stderr, "uwx_label_scoreboard: copy id %d\n", (id));
 end_define
 
 begin_define
@@ -229,7 +240,7 @@ parameter_list|,
 name|new
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_SB) \ 	printf("uwx_label_scoreboard: reverse link %d -> %d\n", \ 			    (new)->id, ((back) == 0) ? -1 : (back)->id);
+value|if (env->trace& UWX_TRACE_SB) \ 	fprintf(stderr, "uwx_label_scoreboard: reverse link %d -> %d\n", \ 			    (new)->id, ((back) == 0) ? -1 : (back)->id);
 end_define
 
 begin_define
@@ -242,7 +253,7 @@ parameter_list|,
 name|id
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_SB) \ 	printf("uwx_copy_scoreboard: label %d, cur sb id %d\n", (label), (id));
+value|if (env->trace& UWX_TRACE_SB) \ 	fprintf(stderr, "uwx_copy_scoreboard: label %d, cur sb id %d\n", (label), (id));
 end_define
 
 begin_define
@@ -253,7 +264,7 @@ parameter_list|(
 name|id
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_SB) \ 	printf("uwx_copy_scoreboard: free id %d\n", (id));
+value|if (env->trace& UWX_TRACE_SB) \ 	fprintf(stderr, "uwx_copy_scoreboard: free id %d\n", (id));
 end_define
 
 begin_define
@@ -264,7 +275,7 @@ parameter_list|(
 name|id
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_SB) \ 	printf("uwx_copy_scoreboard: found id %d\n", (id));
+value|if (env->trace& UWX_TRACE_SB) \ 	fprintf(stderr, "uwx_copy_scoreboard: found id %d\n", (id));
 end_define
 
 begin_define
@@ -275,7 +286,7 @@ parameter_list|(
 name|id
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_SB) \ 	printf("uwx_copy_scoreboard: copy id %d\n", (id));
+value|if (env->trace& UWX_TRACE_SB) \ 	fprintf(stderr, "uwx_copy_scoreboard: copy id %d\n", (id));
 end_define
 
 begin_define
@@ -288,7 +299,7 @@ parameter_list|,
 name|new
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_SB) \ 	printf("uwx_copy_scoreboard: reverse link %d -> %d\n", \ 			    (new)->id, ((back) == 0) ? -1 : (back)->id);
+value|if (env->trace& UWX_TRACE_SB) \ 	fprintf(stderr, "uwx_copy_scoreboard: reverse link %d -> %d\n", \ 			    (new)->id, ((back) == 0) ? -1 : (back)->id);
 end_define
 
 begin_define
@@ -299,7 +310,7 @@ parameter_list|(
 name|id
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_SB) \ 	printf("uwx_free_scoreboards: free id %d\n", (id));
+value|if (env->trace& UWX_TRACE_SB) \ 	fprintf(stderr, "uwx_free_scoreboards: free id %d\n", (id));
 end_define
 
 begin_define
@@ -312,7 +323,7 @@ parameter_list|,
 name|b0
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_UINFO) \ 	printf("uwx_decode_rhdr:     %02x                   %s\n", \ 			(b0), (name));
+value|if (env->trace& UWX_TRACE_UINFO) \ 	fprintf(stderr, "uwx_decode_rhdr:     %02x                   %s\n", \ 			(b0), (name));
 end_define
 
 begin_define
@@ -327,7 +338,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_UINFO) \ 	printf("uwx_decode_rhdr:     %02x %08x          %s\n", \ 			(b0), (int)(val), (name));
+value|if (env->trace& UWX_TRACE_UINFO) \ 	fprintf(stderr, "uwx_decode_rhdr:     %02x %08x          %s\n", \ 			(b0), (int)(val), (name));
 end_define
 
 begin_define
@@ -344,7 +355,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_UINFO) \ 	printf("uwx_decode_rhdr:     %02x %02x %08x       %s\n", \ 			(b0), (b1), (int)(val), (name));
+value|if (env->trace& UWX_TRACE_UINFO) \ 	fprintf(stderr, "uwx_decode_rhdr:     %02x %02x %08x       %s\n", \ 			(b0), (b1), (int)(val), (name));
 end_define
 
 begin_define
@@ -357,7 +368,7 @@ parameter_list|,
 name|b0
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_UINFO) \ 	printf("uwx_decode_prologue: %02x                   %s\n", \ 			(b0), (name));
+value|if (env->trace& UWX_TRACE_UINFO) \ 	fprintf(stderr, "uwx_decode_prologue: %02x                   %s\n", \ 			(b0), (name));
 end_define
 
 begin_define
@@ -372,7 +383,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_UINFO) \ 	printf("uwx_decode_prologue: %02x %08x          %s\n", \ 			(b0), (int)(val), (name));
+value|if (env->trace& UWX_TRACE_UINFO) \ 	fprintf(stderr, "uwx_decode_prologue: %02x %08x          %s\n", \ 			(b0), (int)(val), (name));
 end_define
 
 begin_define
@@ -389,7 +400,7 @@ parameter_list|,
 name|val2
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_UINFO) \ 	printf("uwx_decode_prologue: %02x %08x %08x %s\n", \ 			(b0), (int)(val1), (int)(val2), (name));
+value|if (env->trace& UWX_TRACE_UINFO) \ 	fprintf(stderr, "uwx_decode_prologue: %02x %08x %08x %s\n", \ 			(b0), (int)(val1), (int)(val2), (name));
 end_define
 
 begin_define
@@ -404,7 +415,7 @@ parameter_list|,
 name|b1
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_UINFO) \ 	printf("uwx_decode_prologue: %02x %02x                %s\n", \ 			(b0), (b1), (name));
+value|if (env->trace& UWX_TRACE_UINFO) \ 	fprintf(stderr, "uwx_decode_prologue: %02x %02x                %s\n", \ 			(b0), (b1), (name));
 end_define
 
 begin_define
@@ -421,7 +432,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_UINFO) \ 	printf("uwx_decode_prologue: %02x %02x %08x       %s\n", \ 			(b0), (b1), (int)(val), (name));
+value|if (env->trace& UWX_TRACE_UINFO) \ 	fprintf(stderr, "uwx_decode_prologue: %02x %02x %08x       %s\n", \ 			(b0), (b1), (int)(val), (name));
 end_define
 
 begin_define
@@ -438,7 +449,7 @@ parameter_list|,
 name|b2
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_UINFO) \ 	printf("uwx_decode_prologue: %02x %02x %02x             %s\n", \ 			(b0), (b1), (b2), (name));
+value|if (env->trace& UWX_TRACE_UINFO) \ 	fprintf(stderr, "uwx_decode_prologue: %02x %02x %02x             %s\n", \ 			(b0), (b1), (b2), (name));
 end_define
 
 begin_define
@@ -457,7 +468,7 @@ parameter_list|,
 name|b3
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_UINFO) \ 	printf("uwx_decode_prologue: %02x %02x %02x %02x          %s\n", \ 			(b0), (b1), (b2), (b3), (name));
+value|if (env->trace& UWX_TRACE_UINFO) \ 	fprintf(stderr, "uwx_decode_prologue: %02x %02x %02x %02x          %s\n", \ 			(b0), (b1), (b2), (b3), (name));
 end_define
 
 begin_define
@@ -468,7 +479,7 @@ parameter_list|(
 name|spill_base
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_UINFO) \ 	printf("uwx_decode_prologue: spill base = %08x\n", (int)(spill_base));
+value|if (env->trace& UWX_TRACE_UINFO) \ 	fprintf(stderr, "uwx_decode_prologue: spill base = %08x\n", (int)(spill_base));
 end_define
 
 begin_define
@@ -481,7 +492,7 @@ parameter_list|,
 name|gr_gr_mask
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_UINFO) \ 	printf("uwx_decode_prologue: gr_mem_mask = %02x; gr_gr_mask = %02x\n", \ 			(gr_mem_mask), (gr_gr_mask));
+value|if (env->trace& UWX_TRACE_UINFO) \ 	fprintf(stderr, "uwx_decode_prologue: gr_mem_mask = %02x; gr_gr_mask = %02x\n", \ 			(gr_mem_mask), (gr_gr_mask));
 end_define
 
 begin_define
@@ -492,7 +503,7 @@ parameter_list|(
 name|ngr
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_UINFO) \ 	printf("uwx_decode_prologue: ngr = %d\n", (ngr));
+value|if (env->trace& UWX_TRACE_UINFO) \ 	fprintf(stderr, "uwx_decode_prologue: ngr = %d\n", (ngr));
 end_define
 
 begin_define
@@ -505,7 +516,7 @@ parameter_list|,
 name|b0
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_UINFO) \ 	printf("uwx_decode_body:     %02x                   %s\n", \ 			(b0), (name));
+value|if (env->trace& UWX_TRACE_UINFO) \ 	fprintf(stderr, "uwx_decode_body:     %02x                   %s\n", \ 			(b0), (name));
 end_define
 
 begin_define
@@ -520,7 +531,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_UINFO) \ 	printf("uwx_decode_body:     %02x %08x          %s\n", \ 			(b0), (int)(val), (name));
+value|if (env->trace& UWX_TRACE_UINFO) \ 	fprintf(stderr, "uwx_decode_body:     %02x %08x          %s\n", \ 			(b0), (int)(val), (name));
 end_define
 
 begin_define
@@ -537,7 +548,7 @@ parameter_list|,
 name|val2
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_UINFO) \ 	printf("uwx_decode_body:     %02x %08x %08x %s\n", \ 			(b0), (int)(val1), (int)(val2), (name));
+value|if (env->trace& UWX_TRACE_UINFO) \ 	fprintf(stderr, "uwx_decode_body:     %02x %08x %08x %s\n", \ 			(b0), (int)(val1), (int)(val2), (name));
 end_define
 
 begin_define
@@ -550,7 +561,7 @@ parameter_list|,
 name|ulen
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_RSTATE) \ 	printf("Unwind info block (flags = %08x %08x, ulen = %d)\n", \ 		    (unsigned int)((uentry)->unwind_flags>> 32), \ 		    (unsigned int)(uentry)->unwind_flags, \ 		    (ulen));
+value|if (env->trace& UWX_TRACE_RSTATE) { \ 	fprintf(stderr, "Unwind info block (info = %08x %08x, flags = %08x %08x, ulen = %d)\n", \ 		    (unsigned int)((uentry)->unwind_info>> 32), \ 		    (unsigned int)(uentry)->unwind_info, \ 		    (unsigned int)((uentry)->unwind_flags>> 32), \ 		    (unsigned int)(uentry)->unwind_flags, \ 		    (ulen)); \ 	if (!env->remote) uwx_dump_uinfo_block(uentry, ulen); \     }
 end_define
 
 begin_define
@@ -578,7 +589,7 @@ parameter_list|(
 name|rstate
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_STEP) { \ 	printf("uwx_restore_markers:\n"); \ 	uwx_dump_rstate(SBREG_RP, (rstate)[SBREG_RP]); \ 	uwx_dump_rstate(SBREG_PSP, (rstate)[SBREG_PSP]); \ 	uwx_dump_rstate(SBREG_PFS, (rstate)[SBREG_PFS]); \     }
+value|if (env->trace& UWX_TRACE_STEP) { \ 	fprintf(stderr, "uwx_restore_markers:\n"); \ 	uwx_dump_rstate(SBREG_RP, (rstate)[SBREG_RP]); \ 	uwx_dump_rstate(SBREG_PSP, (rstate)[SBREG_PSP]); \ 	uwx_dump_rstate(SBREG_PFS, (rstate)[SBREG_PFS]); \     }
 end_define
 
 begin_define
@@ -593,7 +604,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_STEP) \ 	printf("  restore %-7s (rstate = %08x %08x) = %08x %08x\n", \ 			regname, \ 			(unsigned int) ((rstate)>> 32), \ 			(unsigned int) (rstate), \ 			(unsigned int) ((val)>> 32), \ 			(unsigned int) (val));
+value|if (env->trace& UWX_TRACE_STEP) \ 	fprintf(stderr, "  restore %-7s (rstate = %08x %08x) = %08x %08x\n", \ 			regname, \ 			(unsigned int) ((rstate)>> 32), \ 			(unsigned int) (rstate), \ 			(unsigned int) ((val)>> 32), \ 			(unsigned int) (val));
 end_define
 
 begin_define
@@ -608,7 +619,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_STEP) \ 	printf("  restore GR%d     (rstate = %08x %08x) = %08x %08x\n", \ 			(regid) + 4, \ 			(unsigned int) ((rstate)>> 32), \ 			(unsigned int) (rstate), \ 			(unsigned int) ((val)>> 32), \ 			(unsigned int) (val));
+value|if (env->trace& UWX_TRACE_STEP) \ 	fprintf(stderr, "  restore GR%d     (rstate = %08x %08x) = %08x %08x\n", \ 			(regid) + 4, \ 			(unsigned int) ((rstate)>> 32), \ 			(unsigned int) (rstate), \ 			(unsigned int) ((val)>> 32), \ 			(unsigned int) (val));
 end_define
 
 begin_define
@@ -623,7 +634,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_STEP) \ 	printf("  restore BR%d     (rstate = %08x %08x) = %08x %08x\n", \ 			(regid) + 1, \ 			(unsigned int) ((rstate)>> 32), \ 			(unsigned int) (rstate), \ 			(unsigned int) ((val)>> 32), \ 			(unsigned int) (val));
+value|if (env->trace& UWX_TRACE_STEP) \ 	fprintf(stderr, "  restore BR%d     (rstate = %08x %08x) = %08x %08x\n", \ 			(regid) + 1, \ 			(unsigned int) ((rstate)>> 32), \ 			(unsigned int) (rstate), \ 			(unsigned int) ((val)>> 32), \ 			(unsigned int) (val));
 end_define
 
 begin_define
@@ -638,7 +649,7 @@ parameter_list|,
 name|fval
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_STEP) \ 	printf("  restore FR%d     (rstate = %08x %08x) = %08x %08x %08x %08x\n", \ 			(regid) + 1, \ 			(unsigned int) ((rstate)>> 32), \ 			(unsigned int) (rstate), \ 			(unsigned int) ((fval[0])>> 32), \ 			(unsigned int) (fval[0]), \ 			(unsigned int) ((fval[1])>> 32), \ 			(unsigned int) (fval[1]));
+value|if (env->trace& UWX_TRACE_STEP) \ 	fprintf(stderr, "  restore FR%d     (rstate = %08x %08x) = %08x %08x %08x %08x\n", \ 			(regid) + 1, \ 			(unsigned int) ((rstate)>> 32), \ 			(unsigned int) (rstate), \ 			(unsigned int) ((fval[0])>> 32), \ 			(unsigned int) (fval[0]), \ 			(unsigned int) ((fval[1])>> 32), \ 			(unsigned int) (fval[1]));
 end_define
 
 begin_define
@@ -649,7 +660,7 @@ parameter_list|(
 name|ip
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_UTABLE) \ 	printf("uwx_search_utable32 (relative ip = %08x)\n", (ip));
+value|if (env->trace& UWX_TRACE_UTABLE) \ 	fprintf(stderr, "uwx_search_utable32 (relative ip = %08x)\n", (ip));
 end_define
 
 begin_define
@@ -668,7 +679,7 @@ parameter_list|,
 name|code_end
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_UTABLE) \ 	printf("    lb/ub = %d/%d, mid = %d, start/end = %08x %08x\n", \ 			    lb, ub, mid, code_start, code_end);
+value|if (env->trace& UWX_TRACE_UTABLE) \ 	fprintf(stderr, "    lb/ub = %d/%d, mid = %d, start/end = %08x %08x\n", \ 			    lb, ub, mid, code_start, code_end);
 end_define
 
 begin_define
@@ -681,7 +692,7 @@ parameter_list|,
 name|bsp
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_CONTEXT) \ 	    printf("uwx_get_reg (gr%d, bsp = %08x %08x)\n", \ 			(regid) - UWX_REG_GR(0), \ 			(unsigned int) ((bsp)>> 32), \ 			(unsigned int) (bsp));
+value|if (env->trace& UWX_TRACE_CONTEXT) \ 	    fprintf(stderr, "uwx_get_reg (gr%d, bsp = %08x %08x)\n", \ 			(regid) - UWX_REG_GR(0), \ 			(unsigned int) ((bsp)>> 32), \ 			(unsigned int) (bsp));
 end_define
 
 begin_define
@@ -698,7 +709,7 @@ parameter_list|,
 name|newregid
 parameter_list|)
 define|\
-value|if (env->trace& UWX_TRACE_CONTEXT) \ 	    printf("uwx_get_reg (gr%d, sor = %d, rrb = %d) --> gr%d\n", \ 			(regid) + 32, \ 			(sor), \ 			(rrb_gr), \ 			(newregid) + 32);
+value|if (env->trace& UWX_TRACE_CONTEXT) \ 	    fprintf(stderr, "uwx_get_reg (gr%d, sor = %d, rrb = %d) --> gr%d\n", \ 			(regid) + 32, \ 			(sor), \ 			(rrb_gr), \ 			(newregid) + 32);
 end_define
 
 begin_define
@@ -713,7 +724,7 @@ parameter_list|,
 name|wp
 parameter_list|)
 define|\
-value|if (info->trace& UWX_TRACE_COPYIN) \ 	printf("copyin (rem = %08x %08x, len = %d, val = %08x)\n", \ 			(unsigned int) ((rem)>> 32), \ 			(unsigned int) (rem), \ 			(len), *(wp));
+value|if (info->trace& UWX_TRACE_COPYIN) \ 	fprintf(stderr, "copyin (rem = %08x %08x, len = %d, val = %08x)\n", \ 			(unsigned int) ((rem)>> 32), \ 			(unsigned int) (rem), \ 			(len), *(wp));
 end_define
 
 begin_define
@@ -728,7 +739,7 @@ parameter_list|,
 name|dp
 parameter_list|)
 define|\
-value|if (info->trace& UWX_TRACE_COPYIN) \ 	printf("copyin (rem = %08x %08x, len = %d, val = %08x %08x)\n", \ 			(unsigned int) ((rem)>> 32), \ 			(unsigned int) (rem), \ 			(len), \ 			((unsigned int *)(dp))[0], \ 			((unsigned int *)(dp))[1]);
+value|if (info->trace& UWX_TRACE_COPYIN) \ 	fprintf(stderr, "copyin (rem = %08x %08x, len = %d, val = %08x %08x)\n", \ 			(unsigned int) ((rem)>> 32), \ 			(unsigned int) (rem), \ 			(len), \ 			((unsigned int *)(dp))[0], \ 			((unsigned int *)(dp))[1]);
 end_define
 
 begin_define
@@ -739,7 +750,7 @@ parameter_list|(
 name|ip
 parameter_list|)
 define|\
-value|if (info->trace& UWX_TRACE_LOOKUPIP) \ 	printf("Lookup IP callback: ip = %08x %08x\n", \ 			(unsigned int) ((ip)>> 32), \ 			(unsigned int) (ip));
+value|if (info->trace& UWX_TRACE_LOOKUPIP) \ 	fprintf(stderr, "Lookup IP callback: ip = %08x %08x\n", \ 			(unsigned int) ((ip)>> 32), \ 			(unsigned int) (ip));
 end_define
 
 begin_define
@@ -749,10 +760,12 @@ name|TRACE_SELF_LOOKUP_DESC
 parameter_list|(
 name|text_base
 parameter_list|,
+name|linkage_ptr
+parameter_list|,
 name|unwind_base
 parameter_list|)
 define|\
-value|if (info->trace& UWX_TRACE_LOOKUPIP) { \ 	    printf("  text base:    %08x %08x\n", \ 			(unsigned int) ((text_base)>> 32), \ 			(unsigned int) (text_base)); \ 	    printf("  unwind base:  %08x %08x\n", \ 			(unsigned int) ((uint64_t)(unwind_base)>> 32), \ 			(unsigned int) (unwind_base)); \ 	    printf("  unwind flags: %08x %08x\n", \ 			(unsigned int) ((unwind_base)[0]>> 32), \ 			(unsigned int) (unwind_base)[0]); \ 	    printf("  unwind start: %08x %08x\n", \ 			(unsigned int) (((text_base)+(unwind_base)[1])>> 32), \ 			(unsigned int) ((text_base)+(unwind_base)[1])); \ 	    printf("  unwind end:   %08x %08x\n", \ 			(unsigned int) (((text_base)+(unwind_base)[2])>> 32), \ 			(unsigned int) ((text_base)+(unwind_base)[2])); \ 	}
+value|if (info->trace& UWX_TRACE_LOOKUPIP) { \ 	    fprintf(stderr, "  text base:    %08x %08x\n", \ 			(unsigned int) ((text_base)>> 32), \ 			(unsigned int) (text_base)); \ 	    fprintf(stderr, "  linkage ptr:  %08x %08x\n", \ 			(unsigned int) ((linkage_ptr)>> 32), \ 			(unsigned int) (linkage_ptr)); \ 	    fprintf(stderr, "  unwind base:  %08x %08x\n", \ 			(unsigned int) ((uint64_t)(unwind_base)>> 32), \ 			(unsigned int) (unwind_base)); \ 	    fprintf(stderr, "  unwind flags: %08x %08x\n", \ 			(unsigned int) ((unwind_base)[0]>> 32), \ 			(unsigned int) (unwind_base)[0]); \ 	    fprintf(stderr, "  unwind start: %08x %08x\n", \ 			(unsigned int) (((text_base)+(unwind_base)[1])>> 32), \ 			(unsigned int) ((text_base)+(unwind_base)[1])); \ 	    fprintf(stderr, "  unwind end:   %08x %08x\n", \ 			(unsigned int) (((text_base)+(unwind_base)[2])>> 32), \ 			(unsigned int) ((text_base)+(unwind_base)[2])); \ 	}
 end_define
 
 begin_else
@@ -774,6 +787,15 @@ begin_define
 define|#
 directive|define
 name|TRACE_B_REUSE
+parameter_list|(
+name|id
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRACE_B_PREALLOC
 parameter_list|(
 name|id
 parameter_list|)
@@ -1270,6 +1292,8 @@ directive|define
 name|TRACE_SELF_LOOKUP_DESC
 parameter_list|(
 name|text_base
+parameter_list|,
+name|linkage_ptr
 parameter_list|,
 name|unwind_base
 parameter_list|)

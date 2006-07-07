@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 2003 Hewlett-Packard Development Company, L.P. Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
+comment|/* Copyright (c) 2003-2006 Hewlett-Packard Development Company, L.P. Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 end_comment
 
 begin_ifndef
@@ -16,12 +16,6 @@ name|__UWX_INCLUDED
 value|1
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_KERNEL
-end_ifndef
-
 begin_include
 include|#
 directive|include
@@ -33,28 +27,6 @@ include|#
 directive|include
 file|<inttypes.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/systm.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -93,7 +65,7 @@ begin_define
 define|#
 directive|define
 name|UWX_VERSION
-value|1
+value|3
 end_define
 
 begin_comment
@@ -107,6 +79,16 @@ end_comment
 begin_struct_decl
 struct_decl|struct
 name|uwx_env
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/* Symbol Cache for uwx_find_symbol (opaque) */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|uwx_symbol_cache
 struct_decl|;
 end_struct_decl
 
@@ -207,6 +189,23 @@ name|env
 parameter_list|,
 name|int
 name|is_big_endian_target
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Put unwind express into reduced-context mode (no floating-point regs) */
+end_comment
+
+begin_function_decl
+name|__EXTERN_C
+name|int
+name|uwx_set_nofr
+parameter_list|(
+name|struct
+name|uwx_env
+modifier|*
+name|env
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -454,6 +453,64 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Get module name and text base, if available, for current frame */
+end_comment
+
+begin_function_decl
+name|__EXTERN_C
+name|int
+name|uwx_get_module_info
+parameter_list|(
+name|struct
+name|uwx_env
+modifier|*
+name|env
+parameter_list|,
+comment|/* unwind environment */
+name|char
+modifier|*
+modifier|*
+name|modp
+parameter_list|,
+comment|/* load module name (out)  */
+name|uint64_t
+modifier|*
+name|text_base
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* base address of text segment (out)  */
+end_comment
+
+begin_comment
+comment|/* Get function start address for current frame */
+end_comment
+
+begin_function_decl
+name|__EXTERN_C
+name|int
+name|uwx_get_funcstart
+parameter_list|(
+name|struct
+name|uwx_env
+modifier|*
+name|env
+parameter_list|,
+comment|/* unwind environment */
+name|uint64_t
+modifier|*
+name|funcstart
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* function start address (out)  */
+end_comment
+
+begin_comment
 comment|/* Get symbol information, if available, for current frame */
 end_comment
 
@@ -489,6 +546,81 @@ end_function_decl
 
 begin_comment
 comment|/* offset from start of function (out)  */
+end_comment
+
+begin_comment
+comment|/* Get symbol information, given module name and IP */
+end_comment
+
+begin_function_decl
+name|__EXTERN_C
+name|int
+name|uwx_find_symbol
+parameter_list|(
+name|struct
+name|uwx_env
+modifier|*
+name|env
+parameter_list|,
+comment|/* unwind environment */
+name|struct
+name|uwx_symbol_cache
+modifier|*
+modifier|*
+name|cachep
+parameter_list|,
+comment|/* ptr to symbol cache ptr (in/out) */
+name|char
+modifier|*
+name|mod
+parameter_list|,
+comment|/* load module name */
+name|uint64_t
+name|relip
+parameter_list|,
+comment|/* IP, relative to text segment  */
+name|char
+modifier|*
+modifier|*
+name|symp
+parameter_list|,
+comment|/* function name (out) */
+name|uint64_t
+modifier|*
+name|offsetp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* offset from start of function (out) */
+end_comment
+
+begin_comment
+comment|/* Release memory used by symbol cache */
+end_comment
+
+begin_function_decl
+name|__EXTERN_C
+name|void
+name|uwx_release_symbol_cache
+parameter_list|(
+name|struct
+name|uwx_env
+modifier|*
+name|env
+parameter_list|,
+comment|/* unwind environment */
+name|struct
+name|uwx_symbol_cache
+modifier|*
+name|symbol_cache
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* symbol cache ptr */
 end_comment
 
 begin_comment
@@ -594,6 +726,28 @@ name|struct
 name|uwx_env
 modifier|*
 name|env
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Increment/Decrement the bsp by a number of slots */
+end_comment
+
+begin_comment
+comment|/* (accounts for NaT collections) */
+end_comment
+
+begin_function_decl
+name|__EXTERN_C
+name|uint64_t
+name|uwx_add_to_bsp
+parameter_list|(
+name|uint64_t
+name|bsp
+parameter_list|,
+name|int
+name|nslots
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -840,6 +994,28 @@ begin_comment
 comment|/* Context not initialized */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|UWX_ERR_UCACCESS
+value|(-20)
+end_define
+
+begin_comment
+comment|/* Failure in libuca */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UWX_ERR_NOSYM
+value|(-21)
+end_define
+
+begin_comment
+comment|/* Symbol not found */
+end_comment
+
 begin_comment
 comment|/* Request codes for copyin callback */
 end_comment
@@ -923,6 +1099,17 @@ end_define
 
 begin_comment
 comment|/* Lookup symbolic information */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UWX_LKUP_MODULE
+value|4
+end_define
+
+begin_comment
+comment|/* Get module name */
 end_comment
 
 begin_comment
@@ -1127,6 +1314,17 @@ begin_comment
 comment|/* End of unwind tbl */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|UWX_KEY_GP
+value|7
+end_define
+
+begin_comment
+comment|/* GP value for module */
+end_comment
+
 begin_comment
 comment|/* Keys returned with UWX_LKUP_FDESC */
 end_comment
@@ -1141,6 +1339,10 @@ end_comment
 
 begin_comment
 comment|/* If UWX_KEY_CONTEXT is returned, it must be the only key returned. */
+end_comment
+
+begin_comment
+comment|/* Use UWX_KEY_GP for the module's gp value. */
 end_comment
 
 begin_define
@@ -1199,6 +1401,10 @@ comment|/* Keys returned with UWX_LKUP_UINFO */
 end_comment
 
 begin_comment
+comment|/* Use UWX_KEY_GP for the module's gp value. */
+end_comment
+
+begin_comment
 comment|/* Use UWX_KEY_FUNCSTART for the start address of the function */
 end_comment
 
@@ -1227,6 +1433,10 @@ end_comment
 
 begin_comment
 comment|/* if the information is cheap to obtain. */
+end_comment
+
+begin_comment
+comment|/* Use UWX_KEY_TBASE for the base of the text segment */
 end_comment
 
 begin_define
@@ -1457,6 +1667,17 @@ end_define
 
 begin_comment
 comment|/* ar.pfs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UWX_REG_GP
+value|15
+end_define
+
+begin_comment
+comment|/* gp (pseudo-register) */
 end_comment
 
 begin_define
@@ -1876,6 +2097,53 @@ end_function
 
 begin_function
 name|int
+name|get_module_info
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+name|modp
+parameter_list|,
+name|uint64_t
+modifier|*
+name|text_base_p
+parameter_list|)
+block|{
+return|return
+name|uwx_get_module_info
+argument_list|(
+name|env
+argument_list|,
+name|modp
+argument_list|,
+name|text_base_p
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|get_funcstart
+parameter_list|(
+name|uint64_t
+modifier|*
+name|funcstart
+parameter_list|)
+block|{
+return|return
+name|uwx_get_funcstart
+argument_list|(
+name|env
+argument_list|,
+name|funcstart
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
 name|get_sym_info
 parameter_list|(
 name|char
@@ -1905,6 +2173,72 @@ argument_list|,
 name|offsetp
 argument_list|)
 return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|find_symbol
+parameter_list|(
+name|struct
+name|uwx_symbol_cache
+modifier|*
+modifier|*
+name|cachep
+parameter_list|,
+name|char
+modifier|*
+name|mod
+parameter_list|,
+name|uint64_t
+name|relip
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|symp
+parameter_list|,
+name|uint64_t
+modifier|*
+name|offsetp
+parameter_list|)
+block|{
+return|return
+name|uwx_find_symbol
+argument_list|(
+name|env
+argument_list|,
+name|cachep
+argument_list|,
+name|mod
+argument_list|,
+name|relip
+argument_list|,
+name|symp
+argument_list|,
+name|offsetp
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|release_symbol_cache
+parameter_list|(
+name|struct
+name|uwx_symbol_cache
+modifier|*
+name|symbol_cache
+parameter_list|)
+block|{
+name|uwx_release_symbol_cache
+argument_list|(
+name|env
+argument_list|,
+name|symbol_cache
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

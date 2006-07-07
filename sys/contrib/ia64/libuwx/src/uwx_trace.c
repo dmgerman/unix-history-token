@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 2003 Hewlett-Packard Development Company, L.P. Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
+comment|/* Copyright (c) 2003-2006 Hewlett-Packard Development Company, L.P. Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"uwx_env.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"uwx_utable.h"
 end_include
 
 begin_include
@@ -26,12 +32,6 @@ include|#
 directive|include
 file|"uwx_trace.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|UWX_TRACE_ENABLE
-end_ifdef
 
 begin_function
 name|void
@@ -73,6 +73,7 @@ switch|switch
 condition|(
 operator|*
 name|tstr
+operator|++
 condition|)
 block|{
 case|case
@@ -158,19 +159,6 @@ break|break;
 case|case
 literal|'?'
 case|:
-ifdef|#
-directive|ifdef
-name|_KERNEL
-name|printf
-argument_list|(
-literal|"UWX_TRACE flag `%c' unknown.\n"
-argument_list|,
-operator|*
-name|tstr
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|fprintf
 argument_list|(
 name|stderr
@@ -239,12 +227,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
-name|tstr
-operator|++
-expr_stmt|;
 block|}
 block|}
 block|}
@@ -357,8 +340,10 @@ operator|==
 name|UWX_DISP_NONE
 condition|)
 return|return;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"    %-7s"
 argument_list|,
 name|uwx_sb_rnames
@@ -378,8 +363,10 @@ block|{
 case|case
 name|UWX_DISP_NONE
 case|:
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"    unchanged\n"
 argument_list|)
 expr_stmt|;
@@ -390,8 +377,10 @@ argument_list|(
 literal|0
 argument_list|)
 case|:
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"    SP + %d\n"
 argument_list|,
 operator|(
@@ -410,8 +399,10 @@ argument_list|(
 literal|0
 argument_list|)
 case|:
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"    [SP + %d]\n"
 argument_list|,
 operator|(
@@ -430,8 +421,10 @@ argument_list|(
 literal|0
 argument_list|)
 case|:
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"    [PSP + 16 - %d]\n"
 argument_list|,
 operator|(
@@ -463,9 +456,11 @@ name|reg
 operator|==
 name|UWX_REG_AR_PFS
 condition|)
-name|printf
+name|fprintf
 argument_list|(
-literal|"    [AR.PFS]\n"
+name|stderr
+argument_list|,
+literal|"    AR.PFS\n"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -475,9 +470,11 @@ name|reg
 operator|==
 name|UWX_REG_AR_UNAT
 condition|)
-name|printf
+name|fprintf
 argument_list|(
-literal|"    [AR.UNAT]\n"
+name|stderr
+argument_list|,
+literal|"    AR.UNAT\n"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -497,9 +494,11 @@ argument_list|(
 literal|128
 argument_list|)
 condition|)
-name|printf
+name|fprintf
 argument_list|(
-literal|"    [GR%d]\n"
+name|stderr
+argument_list|,
+literal|"    GR%d\n"
 argument_list|,
 name|reg
 operator|-
@@ -526,9 +525,11 @@ argument_list|(
 literal|128
 argument_list|)
 condition|)
-name|printf
+name|fprintf
 argument_list|(
-literal|"    [FR%d]\n"
+name|stderr
+argument_list|,
+literal|"    FR%d\n"
 argument_list|,
 name|reg
 operator|-
@@ -555,9 +556,11 @@ argument_list|(
 literal|8
 argument_list|)
 condition|)
-name|printf
+name|fprintf
 argument_list|(
-literal|"    [BR%d]\n"
+name|stderr
+argument_list|,
+literal|"    BR%d\n"
 argument_list|,
 name|reg
 operator|-
@@ -568,24 +571,23 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|fprintf
 argument_list|(
-literal|"    [reg %d]\n"
+name|stderr
+argument_list|,
+literal|"<reg %d>\n"
 argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|fprintf
 argument_list|(
-literal|"<%08llx>\n"
+name|stderr
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
+literal|"<%08x>\n"
+argument_list|,
 name|rstate
 argument_list|)
 expr_stmt|;
@@ -627,8 +629,10 @@ name|rhdr
 operator|->
 name|is_prologue
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"  Prologue region (start = %d, length = %d)\n"
 argument_list|,
 operator|(
@@ -645,8 +649,10 @@ name|rlen
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"  Body region (start = %d, length = %d, ecount = %d)\n"
 argument_list|,
 name|cur_slot
@@ -671,8 +677,10 @@ name|rhdr
 operator|->
 name|rlen
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"    IP is in this region (offset = %d)\n"
 argument_list|,
 name|ip_slot
@@ -706,14 +714,128 @@ expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* UWX_TRACE_ENABLE */
-end_comment
+begin_function
+name|void
+name|uwx_dump_uinfo_block
+parameter_list|(
+name|struct
+name|uwx_utable_entry
+modifier|*
+name|uentry
+parameter_list|,
+name|unsigned
+name|int
+name|ulen
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+name|uint32_t
+modifier|*
+name|uinfo
+init|=
+operator|(
+name|uint32_t
+operator|*
+operator|)
+operator|(
+name|intptr_t
+operator|)
+name|uentry
+operator|->
+name|unwind_info
+decl_stmt|;
+name|ulen
+operator|+=
+name|DWORDSZ
+expr_stmt|;
+comment|/* Include unwind info header */
+if|if
+condition|(
+name|uentry
+operator|->
+name|unwind_flags
+operator|&
+name|UNWIND_TBL_32BIT
+condition|)
+comment|/* and personality routine */
+name|ulen
+operator|+=
+name|WORDSZ
+expr_stmt|;
+else|else
+name|ulen
+operator|+=
+name|DWORDSZ
+expr_stmt|;
+while|while
+condition|(
+name|ulen
+operator|>=
+name|WORDSZ
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  %08lx: "
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|uinfo
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|4
+operator|*
+name|WORDSZ
+operator|&&
+name|ulen
+operator|>=
+name|WORDSZ
+condition|;
+name|i
+operator|+=
+name|WORDSZ
+control|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|" %08lx"
+argument_list|,
+operator|*
+name|uinfo
+operator|++
+argument_list|)
+expr_stmt|;
+name|ulen
+operator|-=
+name|WORDSZ
+expr_stmt|;
+block|}
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
 
 end_unit
 
