@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 2003 Hewlett-Packard Development Company, L.P. Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
+comment|/* Copyright (c) 2003-2006 Hewlett-Packard Development Company, L.P. Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 end_comment
 
 begin_include
@@ -143,19 +143,7 @@ name|keys
 operator|=
 literal|0
 expr_stmt|;
-name|text_base
-operator|=
-literal|0
-expr_stmt|;
 name|unwind_flags
-operator|=
-literal|0
-expr_stmt|;
-name|unwind_start
-operator|=
-literal|0
-expr_stmt|;
-name|unwind_end
 operator|=
 literal|0
 expr_stmt|;
@@ -184,6 +172,10 @@ name|keys
 operator||=
 literal|1
 expr_stmt|;
+name|env
+operator|->
+name|text_base
+operator|=
 name|text_base
 operator|=
 operator|*
@@ -227,6 +219,21 @@ operator|=
 operator|*
 name|uvec
 operator|++
+expr_stmt|;
+break|break;
+case|case
+name|UWX_KEY_GP
+case|:
+name|uwx_set_reg
+argument_list|(
+name|env
+argument_list|,
+name|UWX_REG_GP
+argument_list|,
+operator|*
+name|uvec
+operator|++
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:
@@ -329,6 +336,16 @@ define|\
 value|(env->remote? \ 	(*env->copyin)(UWX_COPYIN_UINFO, (dest), (src), \ 						WORDSZ, env->cb_token) : \ 	(*(uint32_t *)(dest) = *(uint32_t *)(src), WORDSZ) )
 end_define
 
+begin_define
+define|#
+directive|define
+name|SWIZZLE
+parameter_list|(
+name|x
+parameter_list|)
+value|(((uint64_t)((x)& 0xc0000000)<< 31) | (x))
+end_define
+
 begin_function
 name|int
 name|uwx_search_utable32
@@ -356,6 +373,9 @@ modifier|*
 name|uentry
 parameter_list|)
 block|{
+name|int
+name|status
+decl_stmt|;
 name|int
 name|lb
 decl_stmt|;
@@ -407,10 +427,6 @@ operator|*
 name|WORDSZ
 operator|)
 expr_stmt|;
-name|mid
-operator|=
-literal|0
-expr_stmt|;
 while|while
 condition|(
 name|ub
@@ -439,10 +455,6 @@ operator|)
 operator|&
 name|code_start
 argument_list|,
-call|(
-name|uintptr_t
-call|)
-argument_list|(
 name|unwind_start
 operator|+
 name|mid
@@ -450,7 +462,6 @@ operator|*
 literal|3
 operator|*
 name|WORDSZ
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|len
@@ -464,10 +475,6 @@ operator|)
 operator|&
 name|code_end
 argument_list|,
-call|(
-name|uintptr_t
-call|)
-argument_list|(
 name|unwind_start
 operator|+
 name|mid
@@ -477,7 +484,6 @@ operator|*
 name|WORDSZ
 operator|+
 name|WORDSZ
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -569,10 +575,6 @@ operator|)
 operator|&
 name|unwind_info
 argument_list|,
-call|(
-name|uintptr_t
-call|)
-argument_list|(
 name|unwind_start
 operator|+
 name|mid
@@ -584,7 +586,6 @@ operator|+
 literal|2
 operator|*
 name|WORDSZ
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -610,27 +611,42 @@ argument_list|)
 expr_stmt|;
 name|uentry
 operator|->
+name|ptr_size
+operator|=
+name|WORDSZ
+expr_stmt|;
+name|uentry
+operator|->
 name|code_start
 operator|=
+name|SWIZZLE
+argument_list|(
 name|text_base
 operator|+
 name|code_start
+argument_list|)
 expr_stmt|;
 name|uentry
 operator|->
 name|code_end
 operator|=
+name|SWIZZLE
+argument_list|(
 name|text_base
 operator|+
 name|code_end
+argument_list|)
 expr_stmt|;
 name|uentry
 operator|->
 name|unwind_info
 operator|=
+name|SWIZZLE
+argument_list|(
 name|text_base
 operator|+
 name|unwind_info
+argument_list|)
 expr_stmt|;
 return|return
 name|UWX_OK
@@ -652,7 +668,7 @@ parameter_list|,
 name|src
 parameter_list|)
 define|\
-value|(env->remote? \ 	(*env->copyin)(UWX_COPYIN_UINFO, (dest), (src), \ 						DWORDSZ, env->cb_token) : \ 	(*(uint64_t *)(dest) = *(uint64_t *)(src), DWORDSZ) )
+value|(env->remote? \       (*env->copyin)(UWX_COPYIN_UINFO, (dest), (src), \ 						DWORDSZ, env->cb_token) : \       (*(uint64_t *)(intptr_t)(dest) = *(uint64_t *)(intptr_t)(src), DWORDSZ) )
 end_define
 
 begin_function
@@ -682,6 +698,9 @@ modifier|*
 name|uentry
 parameter_list|)
 block|{
+name|int
+name|status
+decl_stmt|;
 name|int
 name|lb
 decl_stmt|;
@@ -728,10 +747,6 @@ literal|3
 operator|*
 name|DWORDSZ
 operator|)
-expr_stmt|;
-name|mid
-operator|=
-literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -902,6 +917,12 @@ argument_list|(
 operator|&
 name|unwind_info
 argument_list|)
+expr_stmt|;
+name|uentry
+operator|->
+name|ptr_size
+operator|=
+name|DWORDSZ
 expr_stmt|;
 name|uentry
 operator|->

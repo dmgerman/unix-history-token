@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 2003 Hewlett-Packard Development Company, L.P. Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
+comment|/* Copyright (c) 2003-2006 Hewlett-Packard Development Company, L.P. Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 end_comment
 
 begin_include
@@ -39,12 +39,6 @@ directive|include
 file|"uwx_trace.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"uwx_swap.h"
-end_include
-
 begin_function_decl
 name|int
 name|uwx_count_ones
@@ -70,7 +64,7 @@ parameter_list|,
 name|src
 parameter_list|)
 define|\
-value|(env->remote? \ 	(*env->copyin)(UWX_COPYIN_UINFO, (dest), (src), \ 						WORDSZ, env->cb_token) : \ 	(*(uint32_t *)(dest) = *(uint32_t *)(src), WORDSZ) )
+value|(env->remote? \       (*env->copyin)(UWX_COPYIN_UINFO, (dest), (src), \ 						WORDSZ, env->cb_token) : \       (*(uint32_t *)(intptr_t)(dest) = *(uint32_t *)(intptr_t)(src), WORDSZ) )
 end_define
 
 begin_define
@@ -83,7 +77,7 @@ parameter_list|,
 name|src
 parameter_list|)
 define|\
-value|(env->remote? \ 	(*env->copyin)(UWX_COPYIN_UINFO, (dest), (src), \ 						DWORDSZ, env->cb_token) : \ 	(*(uint64_t *)(dest) = *(uint64_t *)(src), DWORDSZ) )
+value|(env->remote? \       (*env->copyin)(UWX_COPYIN_UINFO, (dest), (src), \ 						DWORDSZ, env->cb_token) : \       (*(uint64_t *)(intptr_t)(dest) = *(uint64_t *)(intptr_t)(src), DWORDSZ) )
 end_define
 
 begin_comment
@@ -336,6 +330,26 @@ name|ulen
 argument_list|,
 name|UWX_COPYIN_UINFO
 argument_list|)
+expr_stmt|;
+comment|/* Save the header and a pointer to the personality routine ptr */
+comment|/* for later use in exception handling. */
+name|env
+operator|->
+name|uinfo_hdr
+operator|=
+name|uinfohdr
+expr_stmt|;
+name|env
+operator|->
+name|uinfo_end
+operator|=
+name|uentry
+operator|->
+name|unwind_info
+operator|+
+name|DWORDSZ
+operator|+
+name|ulen
 expr_stmt|;
 name|TRACE_R_UIB
 argument_list|(
@@ -1145,15 +1159,15 @@ literal|0
 expr_stmt|;
 name|nfr
 operator|=
-literal|0
+literal|127
 expr_stmt|;
 name|ngr
 operator|=
-literal|0
+literal|127
 expr_stmt|;
 name|nbr
 operator|=
-literal|0
+literal|127
 expr_stmt|;
 name|spill_base
 operator|=
@@ -1693,6 +1707,34 @@ name|reg
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|newrstate
+index|[
+name|SBREG_RP
+index|]
+operator|==
+name|UWX_DISP_REG
+argument_list|(
+name|UWX_REG_BR
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+condition|)
+name|newrstate
+index|[
+name|SBREG_RP
+index|]
+operator|=
+name|UWX_DISP_REG
+argument_list|(
+name|UWX_REG_BR
+argument_list|(
+name|reg
+argument_list|)
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|7
@@ -1736,7 +1778,7 @@ comment|/* Don't track BSP yet */
 return|return
 name|UWX_ERR_CANTUNWIND
 return|;
-break|break;
+comment|/* break; */
 case|case
 literal|9
 case|:
@@ -1753,7 +1795,7 @@ comment|/* Don't track BSPSTORE yet */
 return|return
 name|UWX_ERR_CANTUNWIND
 return|;
-break|break;
+comment|/* break; */
 case|case
 literal|10
 case|:
@@ -1847,6 +1889,18 @@ comment|/* registers are spilled, and we put those */
 comment|/* two pieces of information together at the */
 comment|/* end of the main loop. */
 name|t
+operator|=
+literal|0
+expr_stmt|;
+name|nfr
+operator|=
+literal|0
+expr_stmt|;
+name|ngr
+operator|=
+literal|0
+expr_stmt|;
+name|nbr
 operator|=
 literal|0
 expr_stmt|;
@@ -2773,7 +2827,7 @@ comment|/* Don't track BSP yet */
 return|return
 name|UWX_ERR_CANTUNWIND
 return|;
-break|break;
+comment|/* break; */
 case|case
 literal|8
 case|:
@@ -2792,7 +2846,7 @@ comment|/* Don't track BSP yet */
 return|return
 name|UWX_ERR_CANTUNWIND
 return|;
-break|break;
+comment|/* break; */
 case|case
 literal|9
 case|:
@@ -2811,7 +2865,7 @@ comment|/* Don't track BSP yet */
 return|return
 name|UWX_ERR_CANTUNWIND
 return|;
-break|break;
+comment|/* break; */
 case|case
 literal|10
 case|:
@@ -2830,7 +2884,7 @@ comment|/* Don't track BSP yet */
 return|return
 name|UWX_ERR_CANTUNWIND
 return|;
-break|break;
+comment|/* break; */
 case|case
 literal|11
 case|:
@@ -2849,7 +2903,7 @@ comment|/* Don't track BSP yet */
 return|return
 name|UWX_ERR_CANTUNWIND
 return|;
-break|break;
+comment|/* break; */
 case|case
 literal|12
 case|:
@@ -2868,7 +2922,7 @@ comment|/* Don't track BSP yet */
 return|return
 name|UWX_ERR_CANTUNWIND
 return|;
-break|break;
+comment|/* break; */
 case|case
 literal|13
 case|:
@@ -4809,6 +4863,12 @@ comment|/* is restored, update the scoreboard entry for PSP */
 comment|/* and reset any entries for registers saved in memory. */
 if|if
 condition|(
+name|rhdr
+operator|->
+name|ecount
+operator|>
+literal|0
+operator|&&
 name|ip_slot
 operator|>
 name|t_sp_restore
