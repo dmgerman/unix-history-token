@@ -2390,6 +2390,8 @@ operator|=
 name|offset
 operator|+
 name|resid
+operator|+
+literal|1
 operator|)
 operator|<
 name|offset

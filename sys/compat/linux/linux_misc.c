@@ -3121,6 +3121,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|args
+operator|->
+name|buf
+operator|!=
+name|NULL
+condition|)
+block|{
 name|p
 operator|=
 name|td
@@ -3219,6 +3228,7 @@ condition|)
 return|return
 name|error
 return|;
+block|}
 name|microuptime
 argument_list|(
 operator|&
