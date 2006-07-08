@@ -413,7 +413,6 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
-operator|(
 name|resource_find_match
 argument_list|(
 operator|&
@@ -429,7 +428,6 @@ literal|"at"
 argument_list|,
 name|buf
 argument_list|)
-operator|)
 operator|==
 literal|0
 condition|)
@@ -449,7 +447,6 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
-operator|(
 name|resource_find_match
 argument_list|(
 operator|&
@@ -465,7 +462,6 @@ literal|"at"
 argument_list|,
 literal|"isa"
 argument_list|)
-operator|)
 operator|==
 literal|0
 condition|)
