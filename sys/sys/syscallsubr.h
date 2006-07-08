@@ -1241,9 +1241,9 @@ name|semun
 modifier|*
 name|arg
 parameter_list|,
-name|enum
-name|uio_seg
-name|bufseg
+name|register_t
+modifier|*
+name|rval
 parameter_list|)
 function_decl|;
 end_function_decl
