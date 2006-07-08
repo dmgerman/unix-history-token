@@ -678,6 +678,27 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|kern_ioctl
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|fd
+parameter_list|,
+name|u_long
+name|com
+parameter_list|,
+name|caddr_t
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|kern_kevent
 parameter_list|(
 name|struct
