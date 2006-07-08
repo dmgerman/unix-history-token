@@ -433,20 +433,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|dname
-argument_list|,
-literal|"atkbd"
-argument_list|)
-operator|==
-literal|0
-condition|)
-continue|continue;
-comment|/* old GENERIC kludge */
 name|isahint_add_device
 argument_list|(
 name|parent
@@ -456,7 +442,6 @@ argument_list|,
 name|dunit
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * and isa? 	 */
 name|i
 operator|=
@@ -484,20 +469,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|dname
-argument_list|,
-literal|"atkbd"
-argument_list|)
-operator|==
-literal|0
-condition|)
-continue|continue;
-comment|/* old GENERIC kludge */
 name|isahint_add_device
 argument_list|(
 name|parent
@@ -507,7 +478,6 @@ argument_list|,
 name|dunit
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
