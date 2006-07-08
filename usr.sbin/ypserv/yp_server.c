@@ -621,6 +621,8 @@ directive|ifdef
 name|DB_CACHE
 if|if
 condition|(
+name|do_dns
+operator|&&
 name|result
 operator|.
 name|stat
@@ -642,7 +644,6 @@ name|YP_INTERDOMAIN
 argument_list|)
 operator|||
 operator|(
-operator|(
 name|strstr
 argument_list|(
 name|argp
@@ -660,9 +661,6 @@ name|map
 argument_list|,
 literal|"ipnodes"
 argument_list|)
-operator|)
-operator|&&
-name|do_dns
 operator|)
 operator|)
 condition|)
