@@ -31,7 +31,7 @@ name|u_short
 name|seq
 decl_stmt|;
 comment|/* sequence # (to generate unique msg/sem/shm id) */
-name|key_t
+name|ibcs2_key_t
 name|key
 decl_stmt|;
 comment|/* user specified msg/sem/shm key */
