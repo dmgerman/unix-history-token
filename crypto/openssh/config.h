@@ -1147,9 +1147,12 @@ begin_comment
 comment|/* Define if your system glob() function has gl_matchc options in glob_t */
 end_comment
 
-begin_comment
-comment|/* #undef GLOB_HAS_GL_MATCHC */
-end_comment
+begin_define
+define|#
+directive|define
+name|GLOB_HAS_GL_MATCHC
+value|1
+end_define
 
 begin_comment
 comment|/* Define in your struct dirent expects you to allocate extra space for d_name */
