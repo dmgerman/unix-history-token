@@ -5246,6 +5246,9 @@ name|fsb
 decl_stmt|,
 modifier|*
 name|fsp
+decl_stmt|,
+modifier|*
+name|mntbufp
 decl_stmt|;
 name|struct
 name|xucred
@@ -5398,13 +5401,13 @@ operator|*
 operator|)
 name|NULL
 expr_stmt|;
-comment|/* 	 * And delete exports that are in the kernel for all local 	 * filesystems. 	 * XXX: Should know how to handle all local exportable filesystems 	 *      instead of just "ufs". 	 */
+comment|/* 	 * And delete exports that are in the kernel for all local 	 * filesystems. 	 * XXX: Should know how to handle all local exportable filesystems. 	 */
 name|num
 operator|=
 name|getmntinfo
 argument_list|(
 operator|&
-name|fsp
+name|mntbufp
 argument_list|,
 name|MNT_NOWAIT
 argument_list|)
@@ -5510,6 +5513,14 @@ name|i
 operator|++
 control|)
 block|{
+name|fsp
+operator|=
+operator|&
+name|mntbufp
+index|[
+name|i
+index|]
+expr_stmt|;
 if|if
 condition|(
 name|getvfsbyname
@@ -5683,9 +5694,6 @@ name|f_mntonname
 argument_list|)
 expr_stmt|;
 block|}
-name|fsp
-operator|++
-expr_stmt|;
 block|}
 if|if
 condition|(
