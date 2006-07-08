@@ -2793,11 +2793,6 @@ name|accept_args
 comment|/* { 		int	s; 		struct sockaddr * __restrict name; 		socklen_t * __restrict anamelen; 	} */
 name|bsd_args
 decl_stmt|;
-name|struct
-name|close_args
-comment|/* { 		int     fd; 	} */
-name|c_args
-decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -2920,26 +2915,19 @@ condition|(
 name|error
 condition|)
 block|{
-name|c_args
-operator|.
-name|fd
-operator|=
+operator|(
+name|void
+operator|)
+name|kern_close
+argument_list|(
+name|td
+argument_list|,
 name|td
 operator|->
 name|td_retval
 index|[
 literal|0
 index|]
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|td
-argument_list|,
-operator|&
-name|c_args
 argument_list|)
 expr_stmt|;
 return|return

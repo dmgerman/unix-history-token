@@ -94,7 +94,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysproto.h>
+file|<sys/syscallsubr.h>
 end_include
 
 begin_include
@@ -235,24 +235,13 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|struct
-name|close_args
-name|ua
-decl_stmt|;
-name|ua
-operator|.
-name|fd
-operator|=
-name|fd
-expr_stmt|;
 name|error
 operator|=
-name|close
+name|kern_close
 argument_list|(
 name|td
 argument_list|,
-operator|&
-name|ua
+name|fd
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We should never get an error, and there isn't anything 	 * we could do if we got one, so just print a message. 	 */
