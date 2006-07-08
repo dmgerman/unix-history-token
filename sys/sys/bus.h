@@ -1503,6 +1503,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|bus_enumerate_hinted_children
+parameter_list|(
+name|device_t
+name|bus
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_expr_stmt
 specifier|static
 name|__inline
