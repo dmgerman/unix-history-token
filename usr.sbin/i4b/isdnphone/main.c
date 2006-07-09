@@ -48,17 +48,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"isdnphone - i4b phone program, version %d.%d.%d, compiled %s %s\n"
+literal|"isdnphone - i4b phone program, version %d.%d.%d\n"
 argument_list|,
 name|VERSION
 argument_list|,
 name|REL
 argument_list|,
 name|STEP
-argument_list|,
-name|__DATE__
-argument_list|,
-name|__TIME__
 argument_list|)
 expr_stmt|;
 name|fprintf
