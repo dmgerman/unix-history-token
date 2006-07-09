@@ -32,7 +32,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sx.h>
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -227,7 +227,7 @@ condition|(
 name|dynamic_kenv
 condition|)
 block|{
-name|sx_slock
+name|mtx_lock
 argument_list|(
 operator|&
 name|kenv_lock
@@ -283,7 +283,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|sx_sunlock
+name|mtx_unlock
 argument_list|(
 operator|&
 name|kenv_lock
@@ -395,7 +395,7 @@ condition|(
 name|use_kenv
 condition|)
 block|{
-name|sx_slock
+name|mtx_lock
 argument_list|(
 operator|&
 name|kenv_lock
@@ -419,7 +419,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|sx_sunlock
+name|mtx_unlock
 argument_list|(
 operator|&
 name|kenv_lock
@@ -678,7 +678,7 @@ if|if
 condition|(
 name|use_kenv
 condition|)
-name|sx_sunlock
+name|mtx_unlock
 argument_list|(
 operator|&
 name|kenv_lock

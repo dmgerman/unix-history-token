@@ -414,7 +414,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|sx
+name|mtx
 name|kenv_lock
 decl_stmt|;
 end_decl_stmt
