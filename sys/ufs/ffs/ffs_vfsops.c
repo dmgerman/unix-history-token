@@ -4128,9 +4128,11 @@ name|printf
 argument_list|(
 literal|"WARNING: %s: multilabel flag on fs but no MAC support\n"
 argument_list|,
-name|fs
+name|mp
 operator|->
-name|fs_fsmnt
+name|mnt_stat
+operator|.
+name|f_mntonname
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4162,9 +4164,11 @@ name|printf
 argument_list|(
 literal|"WARNING: %s: ACLs flag on fs but no ACLs support\n"
 argument_list|,
-name|fs
+name|mp
 operator|->
-name|fs_fsmnt
+name|mnt_stat
+operator|.
+name|f_mntonname
 argument_list|)
 expr_stmt|;
 endif|#
