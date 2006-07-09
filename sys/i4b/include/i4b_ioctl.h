@@ -49,7 +49,7 @@ begin_define
 define|#
 directive|define
 name|STEP
-value|0
+value|1
 end_define
 
 begin_comment
@@ -192,8 +192,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CTRL_NUMTYPES
+name|CTRL_CAPIMGR
 value|6
+end_define
+
+begin_comment
+comment|/* boards accessed through the CAPI manager */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTRL_NUMTYPES
+value|7
 end_define
 
 begin_comment
