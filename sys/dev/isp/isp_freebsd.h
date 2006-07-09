@@ -364,24 +364,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_typedef
-typedef|typedef
-name|void
-name|ispfwfunc
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|uint16_t
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_typedef
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -621,6 +603,11 @@ directive|if
 name|__FreeBSD_version
 operator|>=
 literal|500000
+name|struct
+name|firmware
+modifier|*
+name|fw
+decl_stmt|;
 name|struct
 name|mtx
 name|lock

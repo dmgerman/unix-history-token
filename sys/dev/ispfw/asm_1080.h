@@ -15,6 +15,12 @@ begin_comment
 comment|/*  *	Firmware Version 8.15.00 (14:35 Aug 22, 2000)  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISP_1080
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -31376,6 +31382,11 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/************************************************************************  *									*  *	 --- ISP1240/ISP1080/ISP1280 Initiator/Target Firmware ---      *  *			    32 LUN Support				*  *									*  ************************************************************************/
 end_comment
@@ -31384,11 +31395,17 @@ begin_comment
 comment|/*  *	Firmware Version 9.11.01 (15:46 May 23, 2000)  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISP_1080_IT
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 specifier|const
 name|u_int16_t
-name|isp_1080_risc_code_it
+name|isp_1080_it_risc_code
 index|[]
 init|=
 block|{
@@ -72038,6 +72055,11 @@ literal|0xd27a
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

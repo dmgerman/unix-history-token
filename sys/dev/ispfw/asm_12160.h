@@ -15,6 +15,12 @@ begin_comment
 comment|/*  *	Firmware Version 10.04.41 (10:30 Mar 21, 2003)  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISP_12160
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -28076,15 +28082,26 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  *	Firmware Version 11.12.19 (17:10 Oct 25, 2001)  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISP_12160_IT
+end_ifdef
 
 begin_decl_stmt
 specifier|static
 specifier|const
 name|u_int16_t
-name|isp_12160_risc_code_it
+name|isp_12160_it_risc_code
 index|[]
 init|=
 block|{
@@ -68694,6 +68711,11 @@ literal|0x7a3c
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -104,15 +104,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|ispfwfunc
-modifier|*
-name|isp_get_firmware_p
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|d_ioctl_t
 name|ispioctl

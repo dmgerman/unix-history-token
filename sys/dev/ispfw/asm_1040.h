@@ -15,6 +15,12 @@ begin_comment
 comment|/*  *	Firmware Version 4.66.00 (14:49 Sep 05, 2000)  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISP_1040
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -22970,6 +22976,11 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/************************************************************************  *									*  * 	        --- ISP1040 Initiator/Target Firmware ---               *  *			    32 LUN Support				*  *									*  ************************************************************************/
 end_comment
@@ -22978,11 +22989,17 @@ begin_comment
 comment|/*  *	Firmware Version 7.65.00 (14:17 Jul 20, 1999)  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISP_1040_IT
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 specifier|const
 name|u_int16_t
-name|isp_1040_risc_code_it
+name|isp_1040_it_risc_code
 index|[]
 init|=
 block|{
@@ -55930,6 +55947,11 @@ literal|0xdf21
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
