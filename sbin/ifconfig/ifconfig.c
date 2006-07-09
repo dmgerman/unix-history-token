@@ -317,18 +317,6 @@ begin_comment
 comment|/* Print keying material for interfaces. */
 end_comment
 
-begin_decl_stmt
-name|int
-name|printname
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Print the name of the created interface. */
-end_comment
-
 begin_function_decl
 specifier|static
 name|int
@@ -997,7 +985,21 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
-comment|/* 		 * NOTE:  We must special-case the `create' command right 		 * here as we would otherwise fail when trying to find 		 * the interface. 		 */
+name|ifindex
+operator|=
+name|if_nametoindex
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ifindex
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 			 * NOTE:  We must special-case the `create' command 			 * right here as we would otherwise fail when trying 			 * to find the interface. 			 */
 if|if
 condition|(
 name|argc
@@ -1031,38 +1033,21 @@ literal|0
 operator|)
 condition|)
 block|{
-name|clone_create
-argument_list|()
-expr_stmt|;
-name|argc
-operator|--
-operator|,
-name|argv
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|argc
-operator|==
-literal|0
-condition|)
-goto|goto
-name|end
-goto|;
-block|}
-name|ifindex
-operator|=
-name|if_nametoindex
+name|ifconfig
 argument_list|(
-name|name
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ifindex
-operator|==
+name|exit
+argument_list|(
 literal|0
-condition|)
+argument_list|)
+expr_stmt|;
+block|}
 name|errx
 argument_list|(
 literal|1
@@ -1072,6 +1057,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* Check for address family */
 if|if
@@ -1666,19 +1652,6 @@ condition|)
 name|putchar
 argument_list|(
 literal|'\n'
-argument_list|)
-expr_stmt|;
-name|end
-label|:
-if|if
-condition|(
-name|printname
-condition|)
-name|printf
-argument_list|(
-literal|"%s\n"
-argument_list|,
-name|name
 argument_list|)
 expr_stmt|;
 name|exit
@@ -4069,11 +4042,6 @@ name|free
 argument_list|(
 name|newname
 argument_list|)
-expr_stmt|;
-comment|/* 	 * Even if we just created the interface, we don't need to print 	 * its name because we just nailed it down separately. 	 */
-name|printname
-operator|=
-literal|0
 expr_stmt|;
 block|}
 end_function
