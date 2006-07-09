@@ -751,6 +751,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SIOCIFCREATE2
+value|_IOWR('i', 124, struct ifreq)
+end_define
+
+begin_comment
+comment|/* create clone if */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SIOCIFDESTROY
 value|_IOW('i', 121, struct ifreq)
 end_define

@@ -127,6 +127,8 @@ name|char
 modifier|*
 parameter_list|,
 name|size_t
+parameter_list|,
+name|caddr_t
 parameter_list|)
 function_decl|;
 name|int
@@ -204,6 +206,8 @@ name|char
 modifier|*
 parameter_list|,
 name|size_t
+parameter_list|,
+name|caddr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -296,6 +300,8 @@ name|if_clone
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|caddr_t
 parameter_list|)
 function_decl|;
 name|void
@@ -396,6 +402,8 @@ name|char
 modifier|*
 parameter_list|,
 name|size_t
+parameter_list|,
+name|caddr_t
 parameter_list|)
 function_decl|;
 end_function_decl

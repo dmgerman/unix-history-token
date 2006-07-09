@@ -139,6 +139,9 @@ name|name
 parameter_list|,
 name|size_t
 name|len
+parameter_list|,
+name|caddr_t
+name|params
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -390,6 +393,9 @@ name|name
 parameter_list|,
 name|size_t
 name|len
+parameter_list|,
+name|caddr_t
+name|params
 parameter_list|)
 block|{
 name|struct
@@ -448,6 +454,8 @@ argument_list|,
 name|name
 argument_list|,
 name|len
+argument_list|,
+name|params
 argument_list|)
 operator|)
 return|;
@@ -474,6 +482,9 @@ name|name
 parameter_list|,
 name|size_t
 name|len
+parameter_list|,
+name|caddr_t
+name|params
 parameter_list|)
 block|{
 name|int
@@ -512,6 +523,8 @@ argument_list|,
 name|name
 argument_list|,
 name|len
+argument_list|,
+name|params
 argument_list|)
 expr_stmt|;
 if|if
@@ -1975,6 +1988,8 @@ argument_list|,
 name|name
 argument_list|,
 name|IFNAMSIZ
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -2118,6 +2133,9 @@ name|name
 parameter_list|,
 name|size_t
 name|len
+parameter_list|,
+name|caddr_t
+name|params
 parameter_list|)
 block|{
 name|char
@@ -2201,6 +2219,8 @@ argument_list|(
 name|ifc
 argument_list|,
 name|unit
+argument_list|,
+name|params
 argument_list|)
 expr_stmt|;
 if|if

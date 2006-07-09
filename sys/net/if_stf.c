@@ -609,6 +609,8 @@ name|char
 modifier|*
 parameter_list|,
 name|size_t
+parameter_list|,
+name|caddr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -733,6 +735,9 @@ name|name
 parameter_list|,
 name|size_t
 name|len
+parameter_list|,
+name|caddr_t
+name|params
 parameter_list|)
 block|{
 name|int

@@ -910,6 +910,8 @@ name|if_clone
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|caddr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2049,6 +2051,9 @@ name|ifc
 parameter_list|,
 name|int
 name|unit
+parameter_list|,
+name|caddr_t
+name|params
 parameter_list|)
 block|{
 name|struct
