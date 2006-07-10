@@ -1182,13 +1182,9 @@ name|ic
 argument_list|,
 name|IEEE80211_MSG_SCAN
 argument_list|,
-literal|"%s: notify scan done\n"
+literal|"%s\n"
 argument_list|,
-name|ic
-operator|->
-name|ic_ifp
-operator|->
-name|if_xname
+literal|"notify scan done"
 argument_list|)
 expr_stmt|;
 comment|/* dispatch wireless event indicating scan completed */
