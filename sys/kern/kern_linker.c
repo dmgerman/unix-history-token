@@ -5768,6 +5768,8 @@ name|modtype
 decl_stmt|;
 name|linker_file_t
 name|lf
+decl_stmt|,
+name|nlf
 decl_stmt|;
 name|linker_class_t
 name|lc
@@ -6262,13 +6264,6 @@ argument_list|,
 name|modname
 argument_list|)
 expr_stmt|;
-name|linker_file_unload
-argument_list|(
-name|lf
-argument_list|,
-name|LINKER_UNLOAD_FORCE
-argument_list|)
-expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -6277,6 +6272,13 @@ argument_list|,
 name|lf
 argument_list|,
 name|loaded
+argument_list|)
+expr_stmt|;
+name|linker_file_unload
+argument_list|(
+name|lf
+argument_list|,
+name|LINKER_UNLOAD_FORCE
 argument_list|)
 expr_stmt|;
 comment|/* we changed tailq next ptr */
@@ -6365,13 +6367,15 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * We made it. Finish off the linking in the order we determined. 	 */
-name|TAILQ_FOREACH
+name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|lf
 argument_list|,
 argument|&depended_files
 argument_list|,
 argument|loaded
+argument_list|,
+argument|nlf
 argument_list|)
 block|{
 if|if
@@ -6533,6 +6537,16 @@ condition|(
 name|error
 condition|)
 block|{
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|depended_files
+argument_list|,
+name|lf
+argument_list|,
+name|loaded
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"KLD file %s - could not finalize loading\n"
