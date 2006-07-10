@@ -129,16 +129,6 @@ begin_comment
 comment|/*  * Virtual memory MPSAFE temporary workarounds.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__powerpc__
-argument_list|)
-end_if
-
 begin_decl_stmt
 name|int
 name|debug_mpsafevm
@@ -146,22 +136,6 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|int
-name|debug_mpsafevm
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|TUNABLE_INT
