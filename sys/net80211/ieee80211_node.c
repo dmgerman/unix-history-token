@@ -126,6 +126,36 @@ define|\
 value|((w)[IEEE80211_AID(b) / 32]& (1<< (IEEE80211_AID(b) % 32)))
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IEEE80211_DEBUG_REFCNT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|REFCNT_LOC
+value|"%s (%s:%u) %p<%s> refcnt %d\n", __func__, func, line
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|REFCNT_LOC
+value|"%s %p<%s> refcnt %d\n", __func__
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|static
 name|struct
@@ -6910,25 +6940,8 @@ name|nt_ic
 argument_list|,
 name|IEEE80211_MSG_NODE
 argument_list|,
-ifdef|#
-directive|ifdef
-name|IEEE80211_DEBUG_REFCNT
-literal|"%s (%s:%u) %p<%s> refcnt %d\n"
+name|REFCNT_LOC
 argument_list|,
-name|__func__
-argument_list|,
-name|func
-argument_list|,
-name|line
-argument_list|,
-else|#
-directive|else
-literal|"%s %p<%s> refcnt %d\n"
-argument_list|,
-name|__func__
-argument_list|,
-endif|#
-directive|endif
 name|ni
 argument_list|,
 name|ether_sprintf
@@ -7158,25 +7171,8 @@ name|ic
 argument_list|,
 name|IEEE80211_MSG_NODE
 argument_list|,
-ifdef|#
-directive|ifdef
-name|IEEE80211_DEBUG_REFCNT
-literal|"%s (%s:%u) %p<%s> refcnt %d\n"
+name|REFCNT_LOC
 argument_list|,
-name|__func__
-argument_list|,
-name|func
-argument_list|,
-name|line
-argument_list|,
-else|#
-directive|else
-literal|"%s %p<%s> refcnt %d\n"
-argument_list|,
-name|__func__
-argument_list|,
-endif|#
-directive|endif
 name|ni
 argument_list|,
 name|ether_sprintf
