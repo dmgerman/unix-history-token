@@ -2391,24 +2391,16 @@ operator|->
 name|sc_tqproc
 argument_list|)
 expr_stmt|;
-comment|/* XXX return error */
-name|kthread_create
+name|taskqueue_start_threads
 argument_list|(
-name|taskqueue_thread_loop
-argument_list|,
 operator|&
 name|sc
 operator|->
 name|sc_tq
 argument_list|,
-operator|&
-name|sc
-operator|->
-name|sc_tqproc
+literal|1
 argument_list|,
-literal|0
-argument_list|,
-literal|0
+name|PI_NET
 argument_list|,
 literal|"%s taskq"
 argument_list|,
