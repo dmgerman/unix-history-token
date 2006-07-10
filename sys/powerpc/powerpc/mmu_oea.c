@@ -906,6 +906,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|struct
+name|mtx
+name|moea_pvo_zeropage_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|vm_offset_t
 name|moea_rkva_start
 init|=
@@ -5110,11 +5117,31 @@ name|moea_pvo_zeropage
 operator|==
 name|NULL
 condition|)
+block|{
 name|moea_pvo_zeropage
 operator|=
 name|moea_rkva_alloc
 argument_list|(
 name|mmu
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|moea_pvo_zeropage_mtx
+argument_list|,
+literal|"pvo zero page"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+block|}
+name|mtx_lock
+argument_list|(
+operator|&
+name|moea_pvo_zeropage_mtx
 argument_list|)
 expr_stmt|;
 name|moea_pa_map
@@ -5162,6 +5189,7 @@ name|pa
 operator|>=
 name|SEGMENT_LENGTH
 condition|)
+block|{
 name|moea_pa_unmap
 argument_list|(
 name|moea_pvo_zeropage
@@ -5171,6 +5199,13 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|moea_pvo_zeropage_mtx
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -5229,11 +5264,31 @@ name|moea_pvo_zeropage
 operator|==
 name|NULL
 condition|)
+block|{
 name|moea_pvo_zeropage
 operator|=
 name|moea_rkva_alloc
 argument_list|(
 name|mmu
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|moea_pvo_zeropage_mtx
+argument_list|,
+literal|"pvo zero page"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+block|}
+name|mtx_lock
+argument_list|(
+operator|&
+name|moea_pvo_zeropage_mtx
 argument_list|)
 expr_stmt|;
 name|moea_pa_map
@@ -5283,6 +5338,7 @@ name|pa
 operator|>=
 name|SEGMENT_LENGTH
 condition|)
+block|{
 name|moea_pa_unmap
 argument_list|(
 name|moea_pvo_zeropage
@@ -5292,6 +5348,13 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|moea_pvo_zeropage_mtx
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -5306,25 +5369,11 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-comment|/* XXX this is called outside of Giant, is moea_zero_page safe? */
-comment|/* XXX maybe have a dedicated mapping for this to avoid the problem? */
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|moea_zero_page
 argument_list|(
 name|mmu
 argument_list|,
 name|m
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 block|}
