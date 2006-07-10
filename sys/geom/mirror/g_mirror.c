@@ -15033,7 +15033,7 @@ name|g_mirror_destroy
 argument_list|(
 name|sc
 argument_list|,
-literal|1
+name|G_MIRROR_DESTROY_HARD
 argument_list|)
 expr_stmt|;
 name|g_topology_lock
@@ -15130,7 +15130,7 @@ name|gp
 operator|->
 name|softc
 argument_list|,
-literal|0
+name|G_MIRROR_DESTROY_SOFT
 argument_list|)
 expr_stmt|;
 if|if
