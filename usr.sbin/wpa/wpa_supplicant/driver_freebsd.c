@@ -470,11 +470,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
-argument_list|(
-literal|"ioctl[SIOCS80211]"
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -569,11 +564,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
-argument_list|(
-literal|"ioctl[SIOCG80211]"
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
