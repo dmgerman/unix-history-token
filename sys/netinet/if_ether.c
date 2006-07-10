@@ -4314,7 +4314,7 @@ directive|endif
 block|}
 else|else
 block|{
-comment|/* 			 * Return proxied ARP replies only on the interface 			 * where this network resides. Otherwise we may 			 * conflict with the host we are proxying for. 			 */
+comment|/* 			 * Return proxied ARP replies only on the interface 			 * or bridge cluster where this network resides. 			 * Otherwise we may conflict with the host we are 			 * proxying for. 			 */
 if|if
 condition|(
 name|rt
@@ -4322,6 +4322,24 @@ operator|->
 name|rt_ifp
 operator|!=
 name|ifp
+operator|&&
+operator|(
+name|rt
+operator|->
+name|rt_ifp
+operator|->
+name|if_bridge
+operator|!=
+name|ifp
+operator|->
+name|if_bridge
+operator|||
+name|ifp
+operator|->
+name|if_bridge
+operator|==
+name|NULL
+operator|)
 condition|)
 block|{
 name|RT_UNLOCK
