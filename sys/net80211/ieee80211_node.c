@@ -6665,6 +6665,7 @@ name|ic_bss
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|ni
 operator|=
 name|_ieee80211_find_node
@@ -6674,6 +6675,37 @@ argument_list|,
 name|macaddr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_opmode
+operator|==
+name|IEEE80211_M_HOSTAP
+operator|&&
+operator|(
+name|ni
+operator|!=
+name|NULL
+operator|&&
+name|ni
+operator|->
+name|ni_associd
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+comment|/* 			 * Station is not associated; don't permit the 			 * data frame to be sent by returning NULL.  This 			 * is kinda a kludge but the least intrusive way 			 * to add this check into all drivers. 			 */
+name|ieee80211_unref_node
+argument_list|(
+operator|&
+name|ni
+argument_list|)
+expr_stmt|;
+comment|/* NB: null's ni */
+block|}
+block|}
 name|IEEE80211_NODE_UNLOCK
 argument_list|(
 name|nt
