@@ -450,10 +450,17 @@ goto|goto
 name|bad
 goto|;
 block|}
+comment|/* XXX uintptr_t is a bandaid for ia64; to be fixed */
 name|sc
 operator|->
 name|sc_st
 operator|=
+operator|(
+name|HAL_BUS_TAG
+operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|rman_get_bustag
 argument_list|(
 name|psc
@@ -465,6 +472,12 @@ name|sc
 operator|->
 name|sc_sh
 operator|=
+operator|(
+name|HAL_BUS_HANDLE
+operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|rman_get_bushandle
 argument_list|(
 name|psc
@@ -588,9 +601,9 @@ comment|/* maxsize XXX */
 name|ATH_MAX_SCATTER
 argument_list|,
 comment|/* nsegments */
-name|BUS_SPACE_MAXADDR
+literal|0x3ffff
 argument_list|,
-comment|/* maxsegsize */
+comment|/* maxsegsize XXX */
 name|BUS_DMA_ALLOCNOW
 argument_list|,
 comment|/* flags */

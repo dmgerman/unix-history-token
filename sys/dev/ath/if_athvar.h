@@ -403,7 +403,7 @@ name|bus_addr_t
 name|dd_desc_paddr
 decl_stmt|;
 comment|/* physical addr of dd_desc */
-name|bus_addr_t
+name|bus_size_t
 name|dd_desc_len
 decl_stmt|;
 comment|/* size of dd_desc */
@@ -648,11 +648,11 @@ function_decl|;
 name|device_t
 name|sc_dev
 decl_stmt|;
-name|bus_space_tag_t
+name|HAL_BUS_TAG
 name|sc_st
 decl_stmt|;
 comment|/* bus space tag */
-name|bus_space_handle_t
+name|HAL_BUS_HANDLE
 name|sc_sh
 decl_stmt|;
 comment|/* bus space handle */
@@ -1899,21 +1899,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ath_hal_getfatalstate
-parameter_list|(
-name|_ah
-parameter_list|,
-name|_outdata
-parameter_list|,
-name|_outsize
-parameter_list|)
-define|\
-value|ath_hal_getdiagstate(_ah, 27, NULL, 0, (void **)(_outdata), _outsize)
-end_define
-
-begin_define
-define|#
-directive|define
 name|ath_hal_getdiagstate
 parameter_list|(
 name|_ah
@@ -1930,6 +1915,21 @@ name|_outsize
 parameter_list|)
 define|\
 value|((*(_ah)->ah_getDiagState)((_ah), (_id), \ 		(_indata), (_insize), (_outdata), (_outsize)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getfatalstate
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_outdata
+parameter_list|,
+name|_outsize
+parameter_list|)
+define|\
+value|ath_hal_getdiagstate(_ah, 27, NULL, 0, (void **)(_outdata), _outsize)
 end_define
 
 begin_define

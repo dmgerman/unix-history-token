@@ -9651,7 +9651,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Check if the previous beacon has gone out.  If 	 * not don't don't try to post another, skip this 	 * period and wait for the next.  Missed beacons 	 * indicate a problem and should not occur.  If we 	 * miss too many consecutive beacons reset the device. 	 */
+comment|/* 	 * Check if the previous beacon has gone out.  If 	 * not don't try to post another, skip this period 	 * and wait for the next.  Missed beacons indicate 	 * a problem and should not occur.  If we miss too 	 * many consecutive beacons reset the device. 	 */
 if|if
 condition|(
 name|ath_hal_numtxpending
@@ -11264,7 +11264,9 @@ comment|/* maxsize */
 literal|1
 argument_list|,
 comment|/* nsegments */
-name|BUS_SPACE_MAXADDR
+name|dd
+operator|->
+name|dd_desc_len
 argument_list|,
 comment|/* maxsegsize */
 name|BUS_DMA_ALLOCNOW
@@ -12414,7 +12416,6 @@ name|ni
 operator|->
 name|ni_rssi
 expr_stmt|;
-comment|/* NB: theoretically we shouldn't need this, but be paranoid */
 return|return
 name|rssi
 operator|<
@@ -13881,7 +13882,7 @@ goto|;
 block|}
 name|rx_accept
 label|:
-comment|/* 		 * Sync and unmap the frame.  At this point we're 		 * committed to passing the mbuf somewhere so clear 		 * bf_m; this means a new sk_buff must be allocated 		 * when the rx descriptor is setup again to receive 		 * another frame. 		 */
+comment|/* 		 * Sync and unmap the frame.  At this point we're 		 * committed to passing the mbuf somewhere so clear 		 * bf_m; this means a new mbuf must be allocated 		 * when the rx descriptor is setup again to receive 		 * another frame. 		 */
 name|bus_dmamap_sync
 argument_list|(
 name|sc
