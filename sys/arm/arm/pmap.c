@@ -347,6 +347,8 @@ parameter_list|,
 name|vm_prot_t
 parameter_list|,
 name|boolean_t
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1014,7 +1016,7 @@ directive|define
 name|pmap_alloc_l2_dtable
 parameter_list|()
 define|\
-value|(void*)uma_zalloc(l2table_zone, M_NOWAIT)
+value|(void*)uma_zalloc(l2table_zone, M_NOWAIT|M_USE_RESERVE)
 end_define
 
 begin_define
@@ -2833,6 +2835,8 @@ argument_list|(
 name|l2zone
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_USE_RESERVE
 argument_list|)
 expr_stmt|;
 name|vm_page_lock_queues
@@ -11799,6 +11803,8 @@ argument_list|,
 name|prot
 argument_list|,
 name|wired
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues
@@ -11835,6 +11841,9 @@ name|prot
 parameter_list|,
 name|boolean_t
 name|wired
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -12005,6 +12014,9 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+name|do_l2b_alloc
+label|:
 name|l2b
 operator|=
 name|pmap_alloc_l2_bucket
@@ -12014,17 +12026,45 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 name|l2b
-operator|!=
+operator|==
 name|NULL
-argument_list|,
-operator|(
-literal|"pmap_enter: failed to allocate l2 bucket"
-operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|M_WAITOK
+condition|)
+block|{
+name|PMAP_UNLOCK
+argument_list|(
+name|pmap
 argument_list|)
 expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
+name|VM_WAIT
+expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
+name|PMAP_LOCK
+argument_list|(
+name|pmap
+argument_list|)
+expr_stmt|;
+goto|goto
+name|do_l2b_alloc
+goto|;
+block|}
+return|return;
+block|}
+block|}
 name|ptep
 operator|=
 operator|&
@@ -12802,6 +12842,8 @@ name|VM_PROT_EXECUTE
 operator|)
 argument_list|,
 name|FALSE
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|m
@@ -12865,6 +12907,8 @@ name|VM_PROT_EXECUTE
 operator|)
 argument_list|,
 name|FALSE
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|PMAP_UNLOCK
