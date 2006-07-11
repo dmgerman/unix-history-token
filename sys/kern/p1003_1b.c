@@ -1300,19 +1300,6 @@ index|]
 operator|=
 name|prio
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"uap->policy=%d error=%d prio=%d\n"
-argument_list|,
-name|uap
-operator|->
-name|policy
-argument_list|,
-name|error
-argument_list|,
-name|prio
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
