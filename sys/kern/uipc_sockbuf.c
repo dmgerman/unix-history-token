@@ -4545,18 +4545,6 @@ comment|/*  * Some routines that return EOPNOTSUPP for entry points that are not
 end_comment
 
 begin_function
-name|void
-name|pru_abort_notsupp
-parameter_list|(
-name|struct
-name|socket
-modifier|*
-name|so
-parameter_list|)
-block|{  }
-end_function
-
-begin_function
 name|int
 name|pru_accept_notsupp
 parameter_list|(
@@ -4705,18 +4693,6 @@ return|return
 name|EOPNOTSUPP
 return|;
 block|}
-end_function
-
-begin_function
-name|void
-name|pru_detach_notsupp
-parameter_list|(
-name|struct
-name|socket
-modifier|*
-name|so
-parameter_list|)
-block|{  }
 end_function
 
 begin_function
@@ -5050,22 +5026,6 @@ return|return
 name|EOPNOTSUPP
 return|;
 block|}
-end_function
-
-begin_comment
-comment|/*  * For protocol types that don't keep cached copies of labels in their  * pcbs, provide a null sosetlabel that does a NOOP.  */
-end_comment
-
-begin_function
-name|void
-name|pru_sosetlabel_null
-parameter_list|(
-name|struct
-name|socket
-modifier|*
-name|so
-parameter_list|)
-block|{  }
 end_function
 
 begin_comment

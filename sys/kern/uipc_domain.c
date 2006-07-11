@@ -240,11 +240,6 @@ name|nousrreqs
 init|=
 block|{
 operator|.
-name|pru_abort
-operator|=
-name|pru_abort_notsupp
-block|,
-operator|.
 name|pru_accept
 operator|=
 name|pru_accept_notsupp
@@ -273,11 +268,6 @@ operator|.
 name|pru_control
 operator|=
 name|pru_control_notsupp
-block|,
-operator|.
-name|pru_detach
-operator|=
-name|pru_detach_notsupp
 block|,
 operator|.
 name|pru_disconnect
@@ -338,12 +328,7 @@ operator|.
 name|pru_sopoll
 operator|=
 name|pru_sopoll_notsupp
-block|,
-operator|.
-name|pru_sosetlabel
-operator|=
-name|pru_sosetlabel_null
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -505,15 +490,6 @@ operator|->
 name|pru_sopoll
 argument_list|,
 name|sopoll
-argument_list|)
-expr_stmt|;
-name|DEFAULT
-argument_list|(
-name|pu
-operator|->
-name|pru_sosetlabel
-argument_list|,
-name|pru_sosetlabel_null
 argument_list|)
 expr_stmt|;
 undef|#
