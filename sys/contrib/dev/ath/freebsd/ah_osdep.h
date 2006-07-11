@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002-2006 Sam Leffler, Errno Consulting, Atheros  * Communications, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the following conditions are met:  * 1. The materials contained herein are unmodified and are used  *    unmodified.  * 2. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following NO  *    ''WARRANTY'' disclaimer below (''Disclaimer''), without  *    modification.  * 3. Redistributions in binary form must reproduce at minimum a  *    disclaimer similar to the Disclaimer below and any redistribution  *    must be conditioned upon including a substantially similar  *    Disclaimer requirement for further binary redistribution.  * 4. Neither the names of the above-listed copyright holders nor the  *    names of any contributors may be used to endorse or promote  *    product derived from this software without specific prior written  *    permission.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT,  * MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE  * FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGES.  *  * $Id: //depot/sw/linuxsrc/src/802_11/madwifi/hal/main/freebsd/ah_osdep.h#17 $  */
+comment|/*-  * Copyright (c) 2002-2006 Sam Leffler, Errno Consulting, Atheros  * Communications, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the following conditions are met:  * 1. The materials contained herein are unmodified and are used  *    unmodified.  * 2. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following NO  *    ''WARRANTY'' disclaimer below (''Disclaimer''), without  *    modification.  * 3. Redistributions in binary form must reproduce at minimum a  *    disclaimer similar to the Disclaimer below and any redistribution  *    must be conditioned upon including a substantially similar  *    Disclaimer requirement for further binary redistribution.  * 4. Neither the names of the above-listed copyright holders nor the  *    names of any contributors may be used to endorse or promote  *    product derived from this software without specific prior written  *    permission.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT,  * MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE  * FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGES.  *  * $Id: //depot/sw/branches/sam_hal/freebsd/ah_osdep.h#2 $  */
 end_comment
 
 begin_ifndef
@@ -42,35 +42,6 @@ include|#
 directive|include
 file|<machine/bus.h>
 end_include
-
-begin_typedef
-typedef|typedef
-name|void
-modifier|*
-name|HAL_SOFTC
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|bus_space_tag_t
-name|HAL_BUS_TAG
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|bus_space_handle_t
-name|HAL_BUS_HANDLE
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|bus_addr_t
-name|HAL_BUS_ADDR
-typedef|;
-end_typedef
 
 begin_comment
 comment|/*  * Delay n microseconds.  */
@@ -199,7 +170,7 @@ value|ath_hal_getuptime(_ah)
 end_define
 
 begin_comment
-comment|/*  * Register read/write; we assume the registers will always  * be memory-mapped.  Note that register accesses are done  * using target-specific functions when debugging is enabled  * (AH_DEBUG) or we are explicitly configured this way.  The  * latter is used on some platforms where the full i/o space  * cannot be directly mapped.  */
+comment|/*  * Register read/write operations are either handled through  * platform-dependent routines (or when debugging is enabled  * with AH_DEBUG); or they are inline expanded using the macros  * defined below.  For public builds we inline expand only for  * platforms where it is certain what the requirements are to  * read/write registers--typically they are memory-mapped and  * no explicit synchronization or memory invalidation operations  * are required (e.g. i386).  */
 end_comment
 
 begin_if
@@ -288,7 +259,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/*  * The hardware registers are native little-endian byte order.  * Big-endian hosts are handled by enabling hardware byte-swap  * of register reads and writes at reset.  But the PCI clock  * domain registers are not byte swapped!  Thus, on big-endian  * platforms we have to byte-swap thoese registers specifically.  * Most of this code is collapsed at compile time because the  * register values are constants.  */
+comment|/*  * The hardware registers are native little-endian byte order.  * Big-endian hosts are handled by enabling hardware byte-swap  * of register reads and writes at reset.  But the PCI clock  * domain registers are not byte swapped!  Thus, on big-endian  * platforms we have to explicitly byte-swap those registers.  * Most of this code is collapsed at compile time because the  * register values are constants.  */
 end_comment
 
 begin_define
@@ -324,7 +295,7 @@ name|_reg
 parameter_list|,
 name|_val
 parameter_list|)
-value|do {				\ 	if ( (_reg)>= 0x4000&& (_reg)< 0x5000)			\ 		bus_space_write_4((_ah)->ah_st, (_ah)->ah_sh,		\ 			(_reg), htole32(_val));			\ 	else								\ 		bus_space_write_4((_ah)->ah_st, (_ah)->ah_sh,		\ 			(_reg), (_val));				\ } while (0)
+value|do {				\ 	if ( (_reg)>= 0x4000&& (_reg)< 0x5000)			\ 		bus_space_write_4((bus_space_tag_t)(_ah)->ah_st,	\ 		    (bus_space_handle_t)(_ah)->ah_sh, (_reg), (_val));	\ 	else								\ 		bus_space_write_stream_4((bus_space_tag_t)(_ah)->ah_st,	\ 		    (bus_space_handle_t)(_ah)->ah_sh, (_reg), (_val));	\ } while (0)
 end_define
 
 begin_define
@@ -337,7 +308,7 @@ parameter_list|,
 name|_reg
 parameter_list|)
 define|\
-value|(((_reg)>= 0x4000&& (_reg)< 0x5000) ?			\ 		le32toh(bus_space_read_4((_ah)->ah_st, (_ah)->ah_sh,	\ 			(_reg))) :					\ 		bus_space_read_4((_ah)->ah_st, (_ah)->ah_sh, (_reg)))
+value|(((_reg)>= 0x4000&& (_reg)< 0x5000) ?			\ 		bus_space_read_4((bus_space_tag_t)(_ah)->ah_st,		\ 		    (bus_space_handle_t)(_ah)->ah_sh, (_reg)) :		\ 		bus_space_read_stream_4((bus_space_tag_t)(_ah)->ah_st,	\ 		    (bus_space_handle_t)(_ah)->ah_sh, (_reg)))
 end_define
 
 begin_else
@@ -361,7 +332,7 @@ parameter_list|,
 name|_val
 parameter_list|)
 define|\
-value|bus_space_write_4((_ah)->ah_st, (_ah)->ah_sh, (_reg), (_val))
+value|bus_space_write_4((bus_space_tag_t)(_ah)->ah_st,		\ 	    (bus_space_handle_t)(_ah)->ah_sh, (_reg), (_val))
 end_define
 
 begin_define
@@ -374,7 +345,7 @@ parameter_list|,
 name|_reg
 parameter_list|)
 define|\
-value|((u_int32_t) bus_space_read_4((_ah)->ah_st, (_ah)->ah_sh, (_reg)))
+value|bus_space_read_4((bus_space_tag_t)(_ah)->ah_st,			\ 	    (bus_space_handle_t)(_ah)->ah_sh, (_reg))
 end_define
 
 begin_endif
