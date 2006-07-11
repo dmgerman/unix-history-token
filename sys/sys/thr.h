@@ -15,6 +15,27 @@ directive|define
 name|_SYS_THR_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<posix4/sched.h>
+end_include
+
+begin_struct
+struct|struct
+name|thr_sched_param
+block|{
+name|int
+name|policy
+decl_stmt|;
+name|struct
+name|sched_param
+name|param
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* Create the thread in the suspended state. */
 end_comment
@@ -89,11 +110,17 @@ name|int
 name|flags
 decl_stmt|;
 comment|/* thread flags. */
+name|struct
+name|thr_sched_param
+modifier|*
+name|sched
+decl_stmt|;
+comment|/* POSIX scheduler parameters .*/
 name|void
 modifier|*
 name|spare
 index|[
-literal|4
+literal|3
 index|]
 decl_stmt|;
 comment|/* TODO: cpu affinity mask etc. */
