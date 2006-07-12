@@ -3228,8 +3228,10 @@ literal|"\001LAHF"
 comment|/* LAHF/SAHF in long mode */
 literal|"\002CMP"
 comment|/* CMP legacy */
-literal|"\003<b2>"
-literal|"\004<b3>"
+literal|"\003SVM"
+comment|/* Secure Virtual Mode */
+literal|"\004ExtAPIC"
+comment|/* Extended APIC register */
 literal|"\005CR8"
 comment|/* CR8 in legacy mode */
 literal|"\006<b5>"
