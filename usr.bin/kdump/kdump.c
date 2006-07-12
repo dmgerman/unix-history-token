@@ -5569,12 +5569,26 @@ modifier|*
 name|psig
 parameter_list|)
 block|{
+if|if
+condition|(
+name|psig
+operator|->
+name|signo
+operator|>
+literal|0
+operator|&&
+name|psig
+operator|->
+name|signo
+operator|<
+name|NSIG
+condition|)
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"SIG%s "
+literal|"SIG%s"
 argument_list|,
 name|signames
 index|[
@@ -5582,6 +5596,19 @@ name|psig
 operator|->
 name|signo
 index|]
+argument_list|)
+expr_stmt|;
+else|else
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"SIG%s "
+argument_list|,
+name|psig
+operator|->
+name|signo
 argument_list|)
 expr_stmt|;
 if|if
