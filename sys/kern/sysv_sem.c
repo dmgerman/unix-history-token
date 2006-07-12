@@ -3052,7 +3052,7 @@ decl_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"call to semctl(%d, %d, %d, 0x%x)\n"
+literal|"call to semctl(%d, %d, %d, 0x%p)\n"
 operator|,
 name|semid
 operator|,
@@ -5299,7 +5299,7 @@ directive|endif
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"sembase = 0x%x, next = 0x%x\n"
+literal|"sembase = %p, next = %p\n"
 operator|,
 name|sema
 index|[
@@ -5502,10 +5502,19 @@ name|do_wakeup
 decl_stmt|,
 name|do_undos
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SEM_DEBUG
+name|sops
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"call to semop(%d, 0x%x, %u)\n"
+literal|"call to semop(%d, %p, %u)\n"
 operator|,
 name|semid
 operator|,
@@ -5646,7 +5655,7 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"error = %d from copyin(%08x, %08x, %d)\n"
+literal|"error = %d from copyin(%p, %p, %d)\n"
 operator|,
 name|error
 operator|,
@@ -5972,8 +5981,8 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"semop:  semakptr=%x, sem_base=%x, "
-literal|"semptr=%x, sem[%d]=%d : op=%d, flag=%s\n"
+literal|"semop:  semakptr=%p, sem_base=%p, "
+literal|"semptr=%p, sem[%d]=%d : op=%d, flag=%s\n"
 operator|,
 name|semakptr
 operator|,
@@ -6809,7 +6818,7 @@ return|return;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"proc @%08x has undo structure with %d entries\n"
+literal|"proc @%p has undo structure with %d entries\n"
 operator|,
 name|p
 operator|,
@@ -6957,7 +6966,7 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"semexit:  %08x id=%d num=%d(adj=%d) ; sem=%d\n"
+literal|"semexit:  %p id=%d num=%d(adj=%d) ; sem=%d\n"
 operator|,
 name|suptr
 operator|->
