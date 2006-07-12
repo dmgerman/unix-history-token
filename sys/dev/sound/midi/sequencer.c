@@ -2080,9 +2080,14 @@ operator|->
 name|seq_lock
 argument_list|)
 expr_stmt|;
+name|SEQ_DEBUG
+argument_list|(
+literal|2
+argument_list|,
 name|printf
 argument_list|(
 literal|"seq_eventthread started\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 while|while
@@ -2254,9 +2259,14 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+name|SEQ_DEBUG
+argument_list|(
+literal|2
+argument_list|,
 name|printf
 argument_list|(
 literal|"seq_eventthread finished\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|kthread_exit
@@ -2981,6 +2991,10 @@ name|si_drv1
 operator|=
 name|scp
 expr_stmt|;
+name|SEQ_DEBUG
+argument_list|(
+literal|2
+argument_list|,
 name|printf
 argument_list|(
 literal|"sequencer %d created scp %p\n"
@@ -2990,6 +3004,7 @@ operator|->
 name|unit
 argument_list|,
 name|scp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ret
