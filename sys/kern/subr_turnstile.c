@@ -4357,11 +4357,11 @@ modifier|*
 name|ts
 decl_stmt|;
 comment|/* 	 * Follow the chain.  We keep walking as long as the thread is 	 * blocked on a turnstile that has an owner. 	 */
-for|for
-control|(
-init|;
-condition|;
-control|)
+while|while
+condition|(
+operator|!
+name|db_pager_quit
+condition|)
 block|{
 name|db_printf
 argument_list|(
@@ -4651,6 +4651,11 @@ literal|" "
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|db_pager_quit
+condition|)
+return|return;
 block|}
 block|}
 block|}
@@ -4694,6 +4699,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|db_pager_quit
+condition|)
+return|return;
 for|for
 control|(
 name|i
@@ -4771,6 +4781,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|db_pager_quit
+condition|)
+return|return;
 name|lock
 operator|=
 name|ts
