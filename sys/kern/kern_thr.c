@@ -1106,9 +1106,7 @@ name|SCHED_OTHER
 case|:
 if|if
 condition|(
-name|curthread
-operator|->
-name|td_ksegrp
+name|newkg
 operator|->
 name|kg_pri_class
 operator|!=
