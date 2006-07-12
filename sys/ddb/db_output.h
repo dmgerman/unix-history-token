@@ -25,6 +25,24 @@ end_comment
 
 begin_function_decl
 name|void
+name|db_disable_pager
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|db_enable_pager
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|db_end_line
 parameter_list|(
 name|void

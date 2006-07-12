@@ -108,18 +108,6 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|void
-name|db_page_calloutfcn_t
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|)
-function_decl|;
-end_typedef
-
 begin_define
 define|#
 directive|define
@@ -216,6 +204,14 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|db_store_count
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|volatile
+name|int
+name|db_pager_quit
 decl_stmt|;
 end_decl_stmt
 
@@ -557,24 +553,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|db_setup_paging
-parameter_list|(
-name|db_page_calloutfcn_t
-modifier|*
-name|callout
-parameter_list|,
-name|void
-modifier|*
-name|arg
-parameter_list|,
-name|int
-name|maxlines
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|db_skip_to_eol
 parameter_list|(
 name|void
@@ -772,12 +750,6 @@ end_decl_stmt
 begin_decl_stmt
 name|db_cmdfcn_t
 name|db_write_cmd
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|db_page_calloutfcn_t
-name|db_simple_pager
 decl_stmt|;
 end_decl_stmt
 

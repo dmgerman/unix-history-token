@@ -8538,8 +8538,6 @@ decl_stmt|,
 name|error
 decl_stmt|,
 name|none_count
-decl_stmt|,
-name|quit
 decl_stmt|;
 name|none_count
 operator|=
@@ -8552,16 +8550,6 @@ operator|&
 name|pci_devq
 expr_stmt|;
 comment|/* 	 * Go through the list of devices and print out devices 	 */
-name|db_setup_paging
-argument_list|(
-name|db_simple_pager
-argument_list|,
-operator|&
-name|quit
-argument_list|,
-name|db_lines_per_page
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|error
@@ -8569,10 +8557,6 @@ operator|=
 literal|0
 operator|,
 name|i
-operator|=
-literal|0
-operator|,
-name|quit
 operator|=
 literal|0
 operator|,
@@ -8602,7 +8586,7 @@ name|pci_numdevs
 operator|)
 operator|&&
 operator|!
-name|quit
+name|db_pager_quit
 condition|;
 name|dinfo
 operator|=

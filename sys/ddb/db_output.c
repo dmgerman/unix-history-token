@@ -157,6 +157,17 @@ comment|/* lines per page */
 end_comment
 
 begin_decl_stmt
+specifier|volatile
+name|int
+name|db_pager_quit
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* user requested quit */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|int
 name|db_newlines
@@ -171,35 +182,12 @@ begin_decl_stmt
 specifier|static
 name|int
 name|db_maxlines
-init|=
-operator|-
-literal|1
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* max lines/page when paging */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|db_page_calloutfcn_t
-modifier|*
-name|db_page_callout
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-modifier|*
-name|db_page_callout_arg
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -242,6 +230,16 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|db_pager
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -389,10 +387,6 @@ operator|&&
 name|db_maxlines
 operator|>
 literal|0
-operator|&&
-name|db_page_callout
-operator|!=
-name|NULL
 condition|)
 block|{
 name|db_newlines
@@ -404,18 +398,9 @@ name|db_newlines
 operator|>=
 name|db_maxlines
 condition|)
-block|{
-name|db_maxlines
-operator|=
-operator|-
-literal|1
+name|db_pager
+argument_list|()
 expr_stmt|;
-name|db_page_callout
-argument_list|(
-name|db_page_callout_arg
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 return|return;
 block|}
@@ -481,10 +466,6 @@ condition|(
 name|db_maxlines
 operator|>
 literal|0
-operator|&&
-name|db_page_callout
-operator|!=
-name|NULL
 condition|)
 block|{
 name|db_newlines
@@ -496,18 +477,9 @@ name|db_newlines
 operator|>=
 name|db_maxlines
 condition|)
-block|{
-name|db_maxlines
-operator|=
-operator|-
-literal|1
+name|db_pager
+argument_list|()
 expr_stmt|;
-name|db_page_callout
-argument_list|(
-name|db_page_callout_arg
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 block|}
 elseif|else
@@ -589,53 +561,32 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Register callout for providing a pager for output.  */
+comment|/*  * Turn on the pager.  */
 end_comment
 
 begin_function
 name|void
-name|db_setup_paging
+name|db_enable_pager
 parameter_list|(
-name|db_page_calloutfcn_t
-modifier|*
-name|callout
-parameter_list|,
 name|void
-modifier|*
-name|arg
-parameter_list|,
-name|int
-name|maxlines
 parameter_list|)
 block|{
 if|if
 condition|(
-name|db_page_callout
+name|db_maxlines
 operator|==
-name|NULL
-operator|||
-name|callout
-operator|==
-name|NULL
-operator|||
-name|arg
-operator|==
-name|db_page_callout_arg
+literal|0
 condition|)
 block|{
-name|db_page_callout
-operator|=
-name|callout
-expr_stmt|;
-name|db_page_callout_arg
-operator|=
-name|arg
-expr_stmt|;
 name|db_maxlines
 operator|=
-name|maxlines
+name|db_lines_per_page
 expr_stmt|;
 name|db_newlines
+operator|=
+literal|0
+expr_stmt|;
+name|db_pager_quit
 operator|=
 literal|0
 expr_stmt|;
@@ -644,16 +595,32 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * A simple paging callout function.  If the argument is not null, it  * points to an integer that will be set to 1 if the user asks to quit.  */
+comment|/*  * Turn off the pager.  */
 end_comment
 
 begin_function
 name|void
-name|db_simple_pager
+name|db_disable_pager
 parameter_list|(
 name|void
-modifier|*
-name|arg
+parameter_list|)
+block|{
+name|db_maxlines
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * A simple paging callout function.  It supports several simple more(1)-like  * commands as well as a quit command that sets db_pager_quit which db  * commands can poll to see if they should terminate early.  */
+end_comment
+
+begin_function
+name|void
+name|db_pager
+parameter_list|(
+name|void
 parameter_list|)
 block|{
 name|int
@@ -696,14 +663,9 @@ case|case
 literal|'\n'
 case|:
 comment|/* Just one more line. */
-name|db_setup_paging
-argument_list|(
-name|db_simple_pager
-argument_list|,
-name|arg
-argument_list|,
+name|db_maxlines
+operator|=
 literal|1
-argument_list|)
 expr_stmt|;
 name|done
 operator|++
@@ -713,16 +675,11 @@ case|case
 literal|'d'
 case|:
 comment|/* Half a page. */
-name|db_setup_paging
-argument_list|(
-name|db_simple_pager
-argument_list|,
-name|arg
-argument_list|,
+name|db_maxlines
+operator|=
 name|db_lines_per_page
 operator|/
 literal|2
-argument_list|)
 expr_stmt|;
 name|done
 operator|++
@@ -735,14 +692,9 @@ case|case
 literal|' '
 case|:
 comment|/* Another page. */
-name|db_setup_paging
-argument_list|(
-name|db_simple_pager
-argument_list|,
-name|arg
-argument_list|,
+name|db_maxlines
+operator|=
 name|db_lines_per_page
-argument_list|)
 expr_stmt|;
 name|done
 operator|++
@@ -761,19 +713,11 @@ case|case
 literal|'X'
 case|:
 comment|/* Quit */
-if|if
-condition|(
-name|arg
-operator|!=
-name|NULL
-condition|)
-block|{
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
-name|arg
+name|db_maxlines
+operator|=
+literal|0
+expr_stmt|;
+name|db_pager_quit
 operator|=
 literal|1
 expr_stmt|;
@@ -781,7 +725,6 @@ name|done
 operator|++
 expr_stmt|;
 break|break;
-block|}
 if|#
 directive|if
 literal|0
@@ -795,6 +738,10 @@ name|db_printf
 argument_list|(
 literal|"        \r"
 argument_list|)
+expr_stmt|;
+name|db_newlines
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function

@@ -3302,8 +3302,6 @@ modifier|*
 name|isrc
 decl_stmt|;
 name|int
-name|quit
-decl_stmt|,
 name|i
 decl_stmt|,
 name|verbose
@@ -3311,10 +3309,6 @@ decl_stmt|;
 name|u_int
 name|irq
 decl_stmt|;
-name|quit
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -3351,16 +3345,6 @@ name|verbose
 operator|=
 literal|0
 expr_stmt|;
-name|db_setup_paging
-argument_list|(
-name|db_simple_pager
-argument_list|,
-operator|&
-name|quit
-argument_list|,
-name|db_lines_per_page
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -3374,7 +3358,7 @@ operator|+
 literal|1
 operator|&&
 operator|!
-name|quit
+name|db_pager_quit
 condition|;
 name|i
 operator|++

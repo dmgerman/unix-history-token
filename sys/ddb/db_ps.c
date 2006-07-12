@@ -168,8 +168,6 @@ decl_stmt|;
 name|int
 name|np
 decl_stmt|,
-name|quit
-decl_stmt|,
 name|rflag
 decl_stmt|,
 name|sflag
@@ -183,10 +181,6 @@ decl_stmt|;
 name|np
 operator|=
 name|nprocs
-expr_stmt|;
-name|quit
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -210,16 +204,6 @@ name|p
 operator|=
 operator|&
 name|proc0
-expr_stmt|;
-name|db_setup_paging
-argument_list|(
-name|db_simple_pager
-argument_list|,
-operator|&
-name|quit
-argument_list|,
-name|db_lines_per_page
-argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -246,7 +230,7 @@ operator|>=
 literal|0
 operator|&&
 operator|!
-name|quit
+name|db_pager_quit
 condition|)
 block|{
 if|if
@@ -793,7 +777,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|quit
+name|db_pager_quit
 condition|)
 break|break;
 block|}
@@ -1707,8 +1691,6 @@ name|p
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|quit
 decl_stmt|;
 comment|/* Determine which process to examine. */
 if|if
@@ -1728,20 +1710,6 @@ operator|=
 name|kdb_thread
 operator|->
 name|td_proc
-expr_stmt|;
-name|quit
-operator|=
-literal|0
-expr_stmt|;
-name|db_setup_paging
-argument_list|(
-name|db_simple_pager
-argument_list|,
-operator|&
-name|quit
-argument_list|,
-name|db_lines_per_page
-argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
@@ -2012,7 +1980,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|quit
+name|db_pager_quit
 condition|)
 break|break;
 block|}

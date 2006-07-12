@@ -4297,13 +4297,7 @@ name|int
 name|i
 decl_stmt|,
 name|j
-decl_stmt|,
-name|quit
 decl_stmt|;
-name|quit
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -4317,16 +4311,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|db_setup_paging
-argument_list|(
-name|db_simple_pager
-argument_list|,
-operator|&
-name|quit
-argument_list|,
-name|db_lines_per_page
-argument_list|)
-expr_stmt|;
 name|db_printf
 argument_list|(
 literal|"msgbufp = %p\n"
@@ -4376,7 +4360,7 @@ operator|->
 name|msg_size
 operator|&&
 operator|!
-name|quit
+name|db_pager_quit
 condition|;
 name|i
 operator|++
