@@ -1713,6 +1713,14 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|bp
+operator|->
+name|bio_resid
+operator|=
+name|bp
+operator|->
+name|bio_bcount
+expr_stmt|;
 name|biofinish
 argument_list|(
 name|bp
