@@ -2370,7 +2370,22 @@ comment|/* fixed (A0000-FFFFF) range enable */
 end_comment
 
 begin_comment
-comment|/* VIA ACE crypto featureset: for via_has_xcrypt */
+comment|/* VIA ACE crypto featureset: for via_feature_rng */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VIA_HAS_RNG
+value|1
+end_define
+
+begin_comment
+comment|/* cpu has RNG */
+end_comment
+
+begin_comment
+comment|/* VIA ACE crypto featureset: for via_feature_xcrypt */
 end_comment
 
 begin_define

@@ -2477,7 +2477,7 @@ condition|)
 break|break;
 comment|/* fall through. */
 case|case
-literal|0x6a9
+literal|0x6a0
 case|:
 name|strcpy
 argument_list|(
