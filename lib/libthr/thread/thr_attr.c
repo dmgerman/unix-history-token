@@ -1418,6 +1418,17 @@ name|sched_policy
 expr_stmt|;
 if|if
 condition|(
+name|policy
+operator|==
+name|SCHED_FIFO
+operator|||
+name|policy
+operator|==
+name|SCHED_RR
+condition|)
+block|{
+if|if
+condition|(
 name|param
 operator|->
 name|sched_priority
@@ -1449,6 +1460,11 @@ operator|(
 name|ENOTSUP
 operator|)
 return|;
+block|}
+else|else
+block|{
+comment|/* 		 * Ignore it for SCHED_OTHER now, patches for glib ports 		 * are wrongly using M:N thread library's internal macro 		 * THR_MIN_PRIORITY and THR_MAX_PRIORITY. 		 */
+block|}
 operator|(
 operator|*
 name|attr

@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rtprio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -211,10 +217,6 @@ name|_thr_atfork_lock
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * XXX these values should be updated from kernel at startup,  * but current they are same.  */
-end_comment
-
 begin_decl_stmt
 name|struct
 name|pthread_prio
@@ -225,28 +227,27 @@ index|]
 init|=
 block|{
 block|{
-literal|0
+name|RTP_PRIO_MIN
 block|,
-literal|31
+name|RTP_PRIO_MAX
 block|,
 literal|0
 block|}
 block|,
-comment|/* FIF0 */
+comment|/* FIFO */
 block|{
-operator|-
-literal|20
-block|,
-literal|20
+literal|0
 block|,
 literal|0
+block|,
+literal|63
 block|}
 block|,
 comment|/* OTHER */
 block|{
-literal|0
+name|RTP_PRIO_MIN
 block|,
-literal|31
+name|RTP_PRIO_MAX
 block|,
 literal|0
 block|}
@@ -744,22 +745,6 @@ begin_expr_stmt
 name|STATIC_LIB_REQUIRE
 argument_list|(
 name|_sigsuspend
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|STATIC_LIB_REQUIRE
-argument_list|(
-name|_socket
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|STATIC_LIB_REQUIRE
-argument_list|(
-name|_socketpair
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1879,25 +1864,6 @@ name|tid
 argument_list|,
 literal|"initial thread"
 argument_list|)
-expr_stmt|;
-comment|/* Default the priority of the initial thread: */
-name|thread
-operator|->
-name|base_priority
-operator|=
-name|THR_DEF_PRIORITY
-expr_stmt|;
-name|thread
-operator|->
-name|active_priority
-operator|=
-name|THR_DEF_PRIORITY
-expr_stmt|;
-name|thread
-operator|->
-name|inherited_priority
-operator|=
-literal|0
 expr_stmt|;
 comment|/* Initialize the mutex queue: */
 name|TAILQ_INIT

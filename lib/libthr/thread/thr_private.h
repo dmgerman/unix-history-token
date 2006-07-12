@@ -733,7 +733,7 @@ begin_define
 define|#
 directive|define
 name|THR_MAX_PRIORITY
-value|(_thr_priorities[SCHED_OTHER-1].pri_min)
+value|(_thr_priorities[SCHED_OTHER-1].pri_max)
 end_define
 
 begin_define
@@ -779,7 +779,7 @@ begin_define
 define|#
 directive|define
 name|THR_MAX_FIFO_PRIORITY
-value|(_thr_priorities[SCHED_FIFO-1].pri_min)
+value|(_thr_priorities[SCHED_FIFO-1].pri_max)
 end_define
 
 begin_define
@@ -1083,18 +1083,6 @@ directive|define
 name|TLFLAGS_DETACHED
 value|0x0008
 comment|/* thread is detached */
-comment|/* 	 * Base priority is the user setable and retrievable priority 	 * of the thread.  It is only affected by explicit calls to 	 * set thread priority and upon thread creation via a thread 	 * attribute or default priority. 	 */
-name|char
-name|base_priority
-decl_stmt|;
-comment|/* 	 * Inherited priority is the priority a thread inherits by 	 * taking a priority inheritence or protection mutex.  It 	 * is not affected by base priority changes.  Inherited 	 * priority defaults to and remains 0 until a mutex is taken 	 * that is being waited on by any other thread whose priority 	 * is non-zero. 	 */
-name|char
-name|inherited_priority
-decl_stmt|;
-comment|/* 	 * Active priority is always the maximum of the threads base 	 * priority and inherited priority.  When there is a change 	 * in either the base or inherited priority, the active 	 * priority must be recalculated. 	 */
-name|char
-name|active_priority
-decl_stmt|;
 comment|/* Queue of currently owned simple type mutexes. */
 name|TAILQ_HEAD
 argument_list|(
