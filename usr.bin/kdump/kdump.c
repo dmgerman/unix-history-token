@@ -5588,7 +5588,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"SIG%s"
+literal|"SIG%s "
 argument_list|,
 name|signames
 index|[
@@ -5604,7 +5604,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"SIG%s "
+literal|"SIG %d "
 argument_list|,
 name|psig
 operator|->
