@@ -845,7 +845,9 @@ case|:
 operator|*
 name|prio
 operator|=
-name|PRIO_MAX
+name|PRI_MAX_TIMESHARE
+operator|-
+name|PRI_MIN_TIMESHARE
 expr_stmt|;
 break|break;
 default|default:
@@ -905,7 +907,7 @@ case|:
 operator|*
 name|prio
 operator|=
-name|PRIO_MIN
+literal|0
 expr_stmt|;
 break|break;
 default|default:
