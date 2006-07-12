@@ -6725,12 +6725,13 @@ literal|1
 operator|)
 return|;
 block|}
-name|hdr
-operator|->
-name|PageType
-operator|&=
-name|MPI_CONFIG_PAGETYPE_MASK
-operator|,
+if|#
+directive|if
+literal|0
+comment|/* 	 * We shouldn't mask off other bits here. 	 */
+block|hdr->PageType&= MPI_CONFIG_PAGETYPE_MASK;
+endif|#
+directive|endif
 name|req
 operator|=
 name|mpt_get_request
@@ -6773,13 +6774,14 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+comment|/* 	 * There isn't any point in restoring stripped out attributes 	 * if you then mask them going down to issue the request. 	 */
+if|#
+directive|if
+literal|0
 comment|/* Restore stripped out attributes */
-name|hdr
-operator|->
-name|PageType
-operator||=
-name|hdr_attr
-expr_stmt|;
+block|hdr->PageType |= hdr_attr;  	error = mpt_issue_cfg_req(mpt, req, Action, hdr->PageVersion, 				  hdr->PageLength, hdr->PageNumber, 				  hdr->PageType& MPI_CONFIG_PAGETYPE_MASK, 				  PageAddress, req->req_pbuf + MPT_RQSL(mpt), 				  len, sleep_ok, timeout_ms);
+else|#
+directive|else
 name|error
 operator|=
 name|mpt_issue_cfg_req
@@ -6805,8 +6807,6 @@ argument_list|,
 name|hdr
 operator|->
 name|PageType
-operator|&
-name|MPI_CONFIG_PAGETYPE_MASK
 argument_list|,
 name|PageAddress
 argument_list|,
@@ -6826,6 +6826,8 @@ argument_list|,
 name|timeout_ms
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|error
@@ -8246,6 +8248,31 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Debugging/Verbose level"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|tree
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"role"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|mpt
+operator|->
+name|role
+argument_list|,
+literal|0
+argument_list|,
+literal|"HBA role"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -10394,7 +10421,7 @@ name|pfp
 operator|.
 name|MaxDevices
 expr_stmt|;
-comment|/* 		 * Set our expected role with what this port supports. 		 */
+comment|/* 		 * Set our role with what this port supports. 		 * 		 * Note this might be changed later in different modules 		 * if this is different from what is wanted. 		 */
 name|mpt
 operator|->
 name|role
@@ -10432,29 +10459,6 @@ name|role
 operator||=
 name|MPT_ROLE_TARGET
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|mpt
-operator|->
-name|role
-operator|==
-name|MPT_ROLE_NONE
-condition|)
-block|{
-name|mpt_prt
-argument_list|(
-name|mpt
-argument_list|,
-literal|"port does not support either target or "
-literal|"initiator role\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 block|}
 if|if
 condition|(
