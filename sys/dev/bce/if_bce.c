@@ -21106,12 +21106,31 @@ operator|&
 name|IFF_UP
 condition|)
 block|{
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+condition|)
+block|{
 comment|/* Change the promiscuous/multicast flags as necessary. */
 name|bce_set_rx_mode
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Start the HW */
+name|bce_init_locked
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
