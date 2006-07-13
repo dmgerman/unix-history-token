@@ -13612,7 +13612,7 @@ argument_list|(
 name|sc_if
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Reclaim first as there is a possibility of loosing Tx completion 	 * interrupt. 	 */
+comment|/* 	 * Reclaim first as there is a possibility of losing Tx completion 	 * interrupts. 	 */
 name|sk_txeof
 argument_list|(
 name|sc_if
