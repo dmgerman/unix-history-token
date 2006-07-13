@@ -1575,7 +1575,14 @@ name|src
 operator|==
 literal|0
 condition|)
+block|{
+name|ess_unlock
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 if|if
 condition|(
 name|sc
