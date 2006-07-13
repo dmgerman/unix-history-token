@@ -38,7 +38,7 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|/* "Math" Present (NPX or NPX emulator) */
+comment|/* "Math" (fpu) Present */
 end_comment
 
 begin_define
@@ -49,7 +49,7 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|/* EMulate non-NPX coproc. (trap ESC only) */
+comment|/* EMulate FPU instructions. (trap ESC only) */
 end_comment
 
 begin_define
@@ -62,28 +62,6 @@ end_define
 begin_comment
 comment|/* Task Switched (if MP, trap ESC and WAIT) */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notused
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|CR0_ET
-value|0x00000010
-end_define
-
-begin_comment
-comment|/* Extension Type (387 (if set) vs 287) */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -513,6 +491,69 @@ define|#
 directive|define
 name|CPUID_PBE
 value|0x80000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_SSE3
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_MON
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_DS_CPL
+value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_VMX
+value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_EST
+value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_TM2
+value|0x00000100
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_CNTXID
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_CX16
+value|0x00002000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_XTPR
+value|0x00004000
 end_define
 
 begin_comment
@@ -1087,56 +1128,56 @@ end_define
 begin_define
 define|#
 directive|define
-name|MSR_MC4_CTL
+name|MSR_MC3_CTL
 value|0x40c
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_MC4_STATUS
+name|MSR_MC3_STATUS
 value|0x40d
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_MC4_ADDR
+name|MSR_MC3_ADDR
 value|0x40e
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_MC4_MISC
+name|MSR_MC3_MISC
 value|0x40f
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_MC3_CTL
+name|MSR_MC4_CTL
 value|0x410
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_MC3_STATUS
+name|MSR_MC4_STATUS
 value|0x411
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_MC3_ADDR
+name|MSR_MC4_ADDR
 value|0x412
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_MC3_MISC
+name|MSR_MC4_MISC
 value|0x413
 end_define
 
