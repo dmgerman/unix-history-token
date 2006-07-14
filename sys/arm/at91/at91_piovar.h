@@ -28,6 +28,9 @@ name|pio
 parameter_list|,
 name|uint32_t
 name|periph_a_mask
+parameter_list|,
+name|int
+name|use_pullup
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -41,6 +44,9 @@ name|pio
 parameter_list|,
 name|uint32_t
 name|periph_b_mask
+parameter_list|,
+name|int
+name|use_pullup
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -80,6 +86,9 @@ name|pio
 parameter_list|,
 name|uint32_t
 name|output_enable_mask
+parameter_list|,
+name|int
+name|use_pullup
 parameter_list|)
 function_decl|;
 end_function_decl
