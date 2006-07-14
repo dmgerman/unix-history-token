@@ -6691,6 +6691,21 @@ operator|->
 name|isp_scdma
 argument_list|)
 expr_stmt|;
+name|MEMORYBARRIER
+argument_list|(
+name|isp
+argument_list|,
+name|SYNC_SFORDEV
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|icbp
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|isp_mboxcmd
 argument_list|(
 name|isp
@@ -6850,7 +6865,12 @@ index|[
 literal|6
 index|]
 operator|=
-literal|0
+name|DMA_WD3
+argument_list|(
+name|fcp
+operator|->
+name|isp_scdma
+argument_list|)
 expr_stmt|;
 name|mbs
 operator|.
@@ -6859,11 +6879,30 @@ index|[
 literal|7
 index|]
 operator|=
-literal|0
+name|DMA_WD2
+argument_list|(
+name|fcp
+operator|->
+name|isp_scdma
+argument_list|)
 expr_stmt|;
 name|FC_SCRATCH_ACQUIRE
 argument_list|(
 name|isp
+argument_list|)
+expr_stmt|;
+name|MEMORYBARRIER
+argument_list|(
+name|isp
+argument_list|,
+name|SYNC_SFORDEV
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|fcpos_map_t
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|isp_mboxcmd
@@ -7160,6 +7199,20 @@ expr_stmt|;
 name|FC_SCRATCH_ACQUIRE
 argument_list|(
 name|isp
+argument_list|)
+expr_stmt|;
+name|MEMORYBARRIER
+argument_list|(
+name|isp
+argument_list|,
+name|SYNC_SFORDEV
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|isp_pdb_t
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|isp_mboxcmd
@@ -15596,6 +15649,17 @@ operator|->
 name|isp_scdma
 argument_list|)
 expr_stmt|;
+name|MEMORYBARRIER
+argument_list|(
+name|isp
+argument_list|,
+name|SYNC_SFORDEV
+argument_list|,
+literal|0
+argument_list|,
+name|SNS_RFT_ID_REQ_SIZE
+argument_list|)
+expr_stmt|;
 name|isp_mboxcmd
 argument_list|(
 name|isp
@@ -21181,11 +21245,13 @@ argument_list|,
 name|mbox
 argument_list|)
 condition|)
+block|{
 name|rval
 operator|=
 operator|-
 literal|1
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 break|break;
@@ -21244,11 +21310,13 @@ argument_list|,
 name|mbox
 argument_list|)
 condition|)
+block|{
 name|rval
 operator|=
 operator|-
 literal|1
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 break|break;
@@ -21307,11 +21375,13 @@ argument_list|,
 name|mbox
 argument_list|)
 condition|)
+block|{
 name|rval
 operator|=
 operator|-
 literal|1
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 break|break;
@@ -27564,10 +27634,12 @@ argument_list|(
 name|MBOX_COMMAND_COMPLETE
 argument_list|)
 condition|)
+block|{
 name|xname
 operator|=
 literal|"INVALID COMMAND"
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|MBOX_HOST_INTERFACE_ERROR
@@ -27581,10 +27653,12 @@ argument_list|(
 name|MBOX_HOST_INTERFACE_ERROR
 argument_list|)
 condition|)
+block|{
 name|xname
 operator|=
 literal|"HOST INTERFACE ERROR"
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|MBOX_TEST_FAILED
@@ -27598,10 +27672,12 @@ argument_list|(
 name|MBOX_TEST_FAILED
 argument_list|)
 condition|)
+block|{
 name|xname
 operator|=
 literal|"TEST FAILED"
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|MBOX_COMMAND_ERROR
@@ -27615,10 +27691,12 @@ argument_list|(
 name|MBOX_COMMAND_ERROR
 argument_list|)
 condition|)
+block|{
 name|xname
 operator|=
 literal|"COMMAND ERROR"
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|MBOX_COMMAND_PARAM_ERROR
@@ -27632,10 +27710,12 @@ argument_list|(
 name|MBOX_COMMAND_PARAM_ERROR
 argument_list|)
 condition|)
+block|{
 name|xname
 operator|=
 literal|"COMMAND PARAMETER ERROR"
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|MBOX_LOOP_ID_USED
@@ -27649,10 +27729,12 @@ argument_list|(
 name|MBOX_LOOP_ID_USED
 argument_list|)
 condition|)
+block|{
 name|xname
 operator|=
 literal|"LOOP ID ALREADY IN USE"
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|MBOX_PORT_ID_USED
@@ -27666,10 +27748,12 @@ argument_list|(
 name|MBOX_PORT_ID_USED
 argument_list|)
 condition|)
+block|{
 name|xname
 operator|=
 literal|"PORT ID ALREADY IN USE"
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|MBOX_ALL_IDS_USED
@@ -27683,10 +27767,12 @@ argument_list|(
 name|MBOX_ALL_IDS_USED
 argument_list|)
 condition|)
+block|{
 name|xname
 operator|=
 literal|"ALL LOOP IDS IN USE"
 expr_stmt|;
+block|}
 break|break;
 case|case
 literal|0
@@ -27725,6 +27811,7 @@ if|if
 condition|(
 name|xname
 condition|)
+block|{
 name|isp_prt
 argument_list|(
 name|isp
@@ -27738,6 +27825,7 @@ argument_list|,
 name|xname
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
