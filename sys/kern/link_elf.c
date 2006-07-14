@@ -1433,7 +1433,7 @@ name|link_elf
 argument_list|,
 name|SI_SUB_KLD
 argument_list|,
-name|SI_ORDER_SECOND
+name|SI_ORDER_THIRD
 argument_list|,
 name|link_elf_init
 argument_list|,
