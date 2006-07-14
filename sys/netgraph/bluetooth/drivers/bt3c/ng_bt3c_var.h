@@ -140,6 +140,14 @@ modifier|*
 name|iobase
 decl_stmt|;
 comment|/* iobase */
+name|bus_space_tag_t
+name|iot
+decl_stmt|;
+comment|/* I/O tag */
+name|bus_space_handle_t
+name|ioh
+decl_stmt|;
+comment|/* I/O handle */
 name|int
 name|irq_rid
 decl_stmt|;
