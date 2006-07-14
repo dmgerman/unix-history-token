@@ -391,7 +391,7 @@ parameter_list|,
 name|dow
 parameter_list|)
 define|\
-value|((TOBCD((yr) / 100 + 19)<< RTC_CALR_CENTURY_S) | \ 		 (TOBCD((yr) % 100)<< RTC_CALR_YEAR_S) | \ 		 (TOBCD(mon)<< RTC_CALR_MON_S) | \ 		 (TOBCD(dow)<< RTC_CALR_DOW_S) | \ 		 (TOBCD(day)<< RTC_CALR_DAY_S))
+value|((TOBCD((yr) / 100 + 19)<< RTC_CALR_CEN_S) | \ 		 (TOBCD((yr) % 100)<< RTC_CALR_YEAR_S) | \ 		 (TOBCD(mon)<< RTC_CALR_MON_S) | \ 		 (TOBCD(dow)<< RTC_CALR_DOW_S) | \ 		 (TOBCD(day)<< RTC_CALR_DAY_S))
 end_define
 
 begin_endif
