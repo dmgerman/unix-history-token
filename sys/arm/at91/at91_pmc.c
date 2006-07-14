@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_at91.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -1898,6 +1904,18 @@ condition|)
 return|return
 name|err
 return|;
+ifdef|#
+directive|ifdef
+name|AT91_TSC
+name|at91_pmc_init_clock
+argument_list|(
+name|pmc_softc
+argument_list|,
+literal|16000000
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|at91_pmc_init_clock
 argument_list|(
 name|pmc_softc
@@ -1905,6 +1923,8 @@ argument_list|,
 literal|10000000
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
