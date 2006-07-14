@@ -414,16 +414,6 @@ end_expr_stmt
 
 begin_function_decl
 name|void
-name|counterhandler
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|clockhandler
 parameter_list|(
 name|void
