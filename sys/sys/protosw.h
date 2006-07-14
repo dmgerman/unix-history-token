@@ -724,8 +724,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PRU_SOSETLABEL
+value|23
+end_define
+
+begin_comment
+comment|/* MAC label change */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRU_CLOSE
+value|24
+end_define
+
+begin_comment
+comment|/* socket close */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PRU_NREQ
-value|22
+value|24
 end_define
 
 begin_ifdef
@@ -787,6 +809,10 @@ block|,
 literal|"PROTOSEND"
 block|,
 literal|"SEND_EOF"
+block|,
+literal|"SOSETLABEL"
+block|,
+literal|"CLOSE"
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1280,6 +1306,18 @@ name|void
 function_decl|(
 modifier|*
 name|pru_sosetlabel
+function_decl|)
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|pru_close
 function_decl|)
 parameter_list|(
 name|struct
