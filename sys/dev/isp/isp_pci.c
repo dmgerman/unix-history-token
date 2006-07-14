@@ -1511,17 +1511,12 @@ literal|"Qlogic ISP 2322 PCI FC-AL Adapter"
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|PCI_QLOGIC_ISP2422
-case|:
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"Qlogic ISP 2422 PCI FC-AL Adapter"
-argument_list|)
-expr_stmt|;
-break|break;
+if|#
+directive|if
+literal|0
+block|case PCI_QLOGIC_ISP2422: 		device_set_desc(dev, "Qlogic ISP 2422 PCI FC-AL Adapter"); 		break;
+endif|#
+directive|endif
 case|case
 name|PCI_QLOGIC_ISP6312
 case|:
