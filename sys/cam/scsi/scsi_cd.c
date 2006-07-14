@@ -2492,6 +2492,12 @@ argument_list|(
 literal|"cdsysctlinit: unable to allocate sysctl tree\n"
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Now register the sysctl handler, so the user can the value on 	 * the fly. 	 */
