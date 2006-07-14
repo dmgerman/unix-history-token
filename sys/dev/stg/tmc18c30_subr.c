@@ -604,17 +604,6 @@ decl_stmt|;
 name|intrmask_t
 name|s
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"%s: unload\n"
-argument_list|,
-name|sc
-operator|->
-name|sc_sclow
-operator|.
-name|sl_xname
-argument_list|)
-expr_stmt|;
 name|s
 operator|=
 name|splcam
