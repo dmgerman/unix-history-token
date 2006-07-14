@@ -230,6 +230,39 @@ value|4
 end_define
 
 begin_comment
+comment|/*  * max len (including '\0'), for device_entry::descr field below,  * according to MIB  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEV_DESCR_MLEN
+value|(64 + 1)
+end_define
+
+begin_comment
+comment|/*  * max len (including '\0'), for device_entry::name and  * device_map_entry::name_key fields below, according to MIB  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEV_NAME_MLEN
+value|(32 + 1)
+end_define
+
+begin_comment
+comment|/*  * max len (including '\0'), for device_entry::location and  * device_map_entry::location_key fields below, according to MIB  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEV_LOC_MLEN
+value|(128 + 1)
+end_define
+
+begin_comment
 comment|/*  * This structure is used to hold a SNMP table entry  * for HOST-RESOURCES-MIB's hrDeviceTable  */
 end_comment
 
@@ -240,22 +273,23 @@ block|{
 name|int32_t
 name|index
 decl_stmt|;
+specifier|const
 name|struct
 name|asn_oid
+modifier|*
 name|type
 decl_stmt|;
 name|u_char
+modifier|*
 name|descr
-index|[
-literal|64
-operator|+
-literal|1
-index|]
 decl_stmt|;
+specifier|const
 name|struct
 name|asn_oid
+modifier|*
 name|id
 decl_stmt|;
+comment|/* only oid_zeroDotZero as (*id) value*/
 name|int32_t
 name|status
 decl_stmt|;
@@ -277,20 +311,12 @@ name|uint32_t
 name|flags
 decl_stmt|;
 name|u_char
+modifier|*
 name|name
-index|[
-literal|32
-operator|+
-literal|1
-index|]
 decl_stmt|;
 name|u_char
+modifier|*
 name|location
-index|[
-literal|128
-operator|+
-literal|1
-index|]
 decl_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
@@ -316,21 +342,13 @@ decl_stmt|;
 comment|/* used for hrDeviceTblEntry::index */
 comment|/* map key is the pair (name_key, location_key) */
 name|u_char
+modifier|*
 name|name_key
-index|[
-literal|32
-operator|+
-literal|1
-index|]
 decl_stmt|;
 comment|/* copy of device name */
 name|u_char
+modifier|*
 name|location_key
-index|[
-literal|128
-operator|+
-literal|1
-index|]
 decl_stmt|;
 comment|/* 	 * Next may be NULL if the respective hrDeviceTblEntry 	 * is (temporally) gone. 	 */
 name|struct
@@ -728,6 +746,22 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Delete an entry from hrDeviceTbl */
+end_comment
+
+begin_function_decl
+name|void
+name|device_entry_delete
+parameter_list|(
+name|struct
+name|device_entry
+modifier|*
+name|entry
 parameter_list|)
 function_decl|;
 end_function_decl

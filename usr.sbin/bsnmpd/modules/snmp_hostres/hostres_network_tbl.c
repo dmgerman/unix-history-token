@@ -638,6 +638,7 @@ name|dev
 operator|->
 name|type
 operator|=
+operator|&
 name|OIDX_hrDeviceNetwork_c
 expr_stmt|;
 name|dev

@@ -968,6 +968,7 @@ name|dev_entry
 operator|->
 name|type
 operator|=
+operator|&
 name|OIDX_hrDevicePrinter_c
 expr_stmt|;
 name|dev_entry

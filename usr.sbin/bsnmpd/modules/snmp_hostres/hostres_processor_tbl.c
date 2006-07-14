@@ -84,8 +84,10 @@ block|{
 name|int32_t
 name|index
 decl_stmt|;
+specifier|const
 name|struct
 name|asn_oid
+modifier|*
 name|frwId
 decl_stmt|;
 name|int32_t
@@ -651,6 +653,7 @@ name|entry
 operator|->
 name|frwId
 operator|=
+operator|&
 name|oid_zeroDotZero
 expr_stmt|;
 comment|/* unknown id FIXME */
@@ -1803,12 +1806,22 @@ block|{
 case|case
 name|LEAF_hrProcessorFrwID
 case|:
+name|assert
+argument_list|(
+name|entry
+operator|->
+name|frwId
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|value
 operator|->
 name|v
 operator|.
 name|oid
 operator|=
+operator|*
 name|entry
 operator|->
 name|frwId

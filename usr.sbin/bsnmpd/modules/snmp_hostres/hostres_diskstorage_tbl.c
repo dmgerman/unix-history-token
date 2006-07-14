@@ -573,6 +573,11 @@ modifier|*
 name|entry
 parameter_list|)
 block|{
+name|struct
+name|device_entry
+modifier|*
+name|devEntry
+decl_stmt|;
 name|assert
 argument_list|(
 name|entry
@@ -590,9 +595,40 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
+name|devEntry
+operator|=
+name|device_find_by_index
+argument_list|(
+name|entry
+operator|->
+name|index
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|entry
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Also delete the respective device entry - 	 * this is needed for disk devices that are not 	 * detected by libdevinfo 	 */
+if|if
+condition|(
+name|devEntry
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|devEntry
+operator|->
+name|flags
+operator|&
+name|HR_DEVICE_IMMUTABLE
+operator|)
+operator|==
+name|HR_DEVICE_IMMUTABLE
+condition|)
+name|device_entry_delete
+argument_list|(
+name|devEntry
 argument_list|)
 expr_stmt|;
 block|}
@@ -1062,6 +1098,7 @@ name|entry
 operator|->
 name|type
 operator|=
+operator|&
 name|OIDX_hrDeviceDiskStorage_c
 expr_stmt|;
 comment|/* Then check hrDiskStorage table for this device */
@@ -1239,6 +1276,7 @@ name|entry
 operator|->
 name|type
 operator|=
+operator|&
 name|OIDX_hrDeviceDiskStorage_c
 expr_stmt|;
 comment|/* Then check hrDiskStorage table for this device */
@@ -1643,7 +1681,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 			 * not found there - insert it as immutable 			 * XXX somehow we should remove it if it disappears 			 */
+comment|/* 			 * not found there - insert it as immutable 			 */
 name|syslog
 argument_list|(
 name|LOG_WARNING
@@ -1685,6 +1723,7 @@ name|entry
 operator|->
 name|type
 operator|=
+operator|&
 name|OIDX_hrDeviceDiskStorage_c
 expr_stmt|;
 comment|/* Then check hrDiskStorage table for this device */
