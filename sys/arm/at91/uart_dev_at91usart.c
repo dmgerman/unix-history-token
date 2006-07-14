@@ -1216,7 +1216,7 @@ operator|*
 operator|)
 name|sc
 expr_stmt|;
-comment|/* 	 * See if we have a TIMEOUT bit.  We disable all interrupts to 	 * minimize interference. 	 */
+comment|/* 	 * See if we have a TIMEOUT bit.  We disable all interrupts as 	 * a side effect.  Boot loaders may have enabled them.  Since 	 * a TIMEOUT interrupt can't happen without other setup, the 	 * apparent race here can't actually happen. 	 */
 name|WR4
 argument_list|(
 operator|&
@@ -2664,6 +2664,21 @@ argument_list|,
 name|PDC_PTCR
 argument_list|,
 name|PDC_PTCR_RXTDIS
+argument_list|)
+expr_stmt|;
+name|bus_dmamap_sync
+argument_list|(
+name|atsc
+operator|->
+name|dmatag
+argument_list|,
+name|atsc
+operator|->
+name|ping
+operator|->
+name|map
+argument_list|,
+name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
 name|len
