@@ -56,18 +56,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/module.h>
 end_include
 
@@ -229,7 +217,7 @@ parameter_list|(
 name|_sc
 parameter_list|)
 define|\
-value|mtx_init(&_sc->sc_mtx, device_get_nameunit(_sc->dev), \ 	    "ssc", MTX_DEF)
+value|mtx_init(&(_sc)->sc_mtx, device_get_nameunit((_sc)->dev), \ 	    "ssc", MTX_DEF)
 end_define
 
 begin_define
@@ -239,7 +227,7 @@ name|AT91_SSC_LOCK_DESTROY
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_destroy(&_sc->sc_mtx);
+value|mtx_destroy(&(_sc)->sc_mtx);
 end_define
 
 begin_define
@@ -249,7 +237,7 @@ name|AT91_SSC_ASSERT_LOCKED
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_assert(&_sc->sc_mtx, MA_OWNED);
+value|mtx_assert(&(_sc)->sc_mtx, MA_OWNED);
 end_define
 
 begin_define
@@ -259,7 +247,7 @@ name|AT91_SSC_ASSERT_UNLOCKED
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_assert(&_sc->sc_mtx, MA_NOTOWNED);
+value|mtx_assert(&(_sc)->sc_mtx, MA_NOTOWNED);
 end_define
 
 begin_define
