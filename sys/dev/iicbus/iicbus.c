@@ -80,7 +80,6 @@ value|((struct iicbus_device*)device_get_ivars(dev))
 end_define
 
 begin_decl_stmt
-specifier|static
 name|devclass_t
 name|iicbus_devclass
 decl_stmt|;
@@ -214,7 +213,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|driver_t
 name|iicbus_driver
 init|=
@@ -454,22 +452,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* attach any known device */
 name|device_add_child
 argument_list|(
 name|dev
 argument_list|,
 literal|"ic"
-argument_list|,
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-name|device_add_child
-argument_list|(
-name|dev
-argument_list|,
-literal|"iic"
 argument_list|,
 operator|-
 literal|1
@@ -485,6 +472,13 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* attach any known device */
+block|device_add_child(dev, "iic", -1);
+endif|#
+directive|endif
 name|bus_generic_attach
 argument_list|(
 name|dev
