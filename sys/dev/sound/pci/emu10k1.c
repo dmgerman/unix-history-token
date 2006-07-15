@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<gnu/dev/sound/pci/emu10k1.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"emu10k1-alsa%diked.h"
 end_include
 
@@ -1441,7 +1435,7 @@ name|sc
 operator|->
 name|audigy
 condition|?
-name|AUDIGY_CODEBASE
+name|A_MICROCODEBASE
 else|:
 name|MICROCODEBASE
 expr_stmt|;
@@ -9290,7 +9284,7 @@ name|iACC3
 argument_list|,
 name|EXTOUT
 argument_list|(
-name|EXTOUT_CENTER
+name|EXTOUT_AC97_CENTER
 argument_list|)
 argument_list|,
 name|C_00000000
@@ -9318,7 +9312,7 @@ name|iACC3
 argument_list|,
 name|EXTOUT
 argument_list|(
-name|EXTOUT_LFE
+name|EXTOUT_AC97_LFE
 argument_list|)
 argument_list|,
 name|C_00000000

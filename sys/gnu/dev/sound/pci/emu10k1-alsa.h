@@ -58,7 +58,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sound/pcm-indirect.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sound/timer.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<linux/interrupt.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<linux/mutex.h>
 end_include
 
 begin_include
@@ -66,42 +84,6 @@ include|#
 directive|include
 file|<asm/io.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PCI_VENDOR_ID_CREATIVE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|PCI_VENDOR_ID_CREATIVE
-value|0x1102
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PCI_DEVICE_ID_CREATIVE_EMU10K1
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|PCI_DEVICE_ID_CREATIVE_EMU10K1
-value|0x0002
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* ------------------- DEFINES -------------------- */
@@ -163,6 +145,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|NUM_EFX_PLAYBACK
+value|16
+end_define
+
+begin_comment
+comment|/* FIXME? - according to the OSS driver the EMU10K1 needs a 29 bit DMA mask */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EMU10K1_DMA_MASK
 value|0x7fffffffUL
 end_define
@@ -175,11 +168,15 @@ begin_define
 define|#
 directive|define
 name|AUDIGY_DMA_MASK
-value|0xffffffffUL
+value|0x7fffffffUL
 end_define
 
 begin_comment
-comment|/* 32bit */
+comment|/* 31bit FIXME - 32 should work? */
+end_comment
+
+begin_comment
+comment|/* See ALSA bug #1276 - rlrevell */
 end_comment
 
 begin_define
@@ -312,6 +309,28 @@ begin_comment
 comment|/* the relevant bits and zero to the other bits	*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IPR_P16V
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Bit set when the CA0151 P16V chip wishes 						   to interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPR_GPIOMSG
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* GPIO message interrupt (RE'd, still not sure  						   which INTE bits enable it)			*/
+end_comment
+
 begin_comment
 comment|/* The next two interrupts are for the midi port on the Audigy Drive (A_MPU1)			*/
 end_comment
@@ -336,6 +355,28 @@ end_define
 
 begin_comment
 comment|/* MIDI UART receive buffer empty		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPR_SPDIFBUFFULL
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* SPDIF capture related, 10k2 only? (RE)	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPR_SPDIFBUFHALFFULL
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* SPDIF capture related? (RE)			*/
 end_comment
 
 begin_define
@@ -544,7 +585,7 @@ value|0x00000040
 end_define
 
 begin_comment
-comment|/* One or more channel loop interrupts pending	*/
+comment|/* Channel (half) loop interrupt(s) pending	*/
 end_comment
 
 begin_define
@@ -559,19 +600,19 @@ comment|/* When IPR_CHANNELLOOP is set, indicates the	*/
 end_comment
 
 begin_comment
-comment|/* Highest set channel in CLIPL or CLIPH.  When	*/
+comment|/* highest set channel in CLIPL, CLIPH, HLIPL,  */
 end_comment
 
 begin_comment
-comment|/* IP is written with CL set, the bit in CLIPL	*/
+comment|/* or HLIPH.  When IP is written with CL set,	*/
 end_comment
 
 begin_comment
-comment|/* or CLIPH corresponding to the CIN value 	*/
+comment|/* the bit in H/CLIPL or H/CLIPH corresponding	*/
 end_comment
 
 begin_comment
-comment|/* written will be cleared.			*/
+comment|/* to the CIN value written will be cleared.	*/
 end_comment
 
 begin_define
@@ -1602,6 +1643,10 @@ name|A_GPOUTPUT_MASK
 value|0x00ff
 end_define
 
+begin_comment
+comment|// Audigy output/GPIO stuff taken from the kX drivers
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1610,7 +1655,50 @@ value|0x0044
 end_define
 
 begin_comment
-comment|/* analog/digital? */
+comment|/* analog/digital				*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_IOCFG_DISABLE_ANALOG
+value|0x0040
+end_define
+
+begin_comment
+comment|/* = 'enable' for Audigy2 (chiprev=4)		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_IOCFG_ENABLE_DIGITAL
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_IOCFG_ENABLE_DIGITAL_AUDIGY4
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_IOCFG_UNKNOWN_20
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_IOCFG_DISABLE_AC97_FRONT
+value|0x0080
+end_define
+
+begin_comment
+comment|/* turn off ac97 front -> front (10k2.1)	*/
 end_comment
 
 begin_define
@@ -1621,7 +1709,7 @@ value|0x0002
 end_define
 
 begin_comment
-comment|/* IR */
+comment|/* IR? drive's internal bypass (?)		*/
 end_comment
 
 begin_define
@@ -1633,6 +1721,61 @@ end_define
 
 begin_comment
 comment|/* IR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_IOCFG_MULTIPURPOSE_JACK
+value|0x2000
+end_define
+
+begin_comment
+comment|/* center+lfe+rear_center (a2/a2ex)		*/
+end_comment
+
+begin_comment
+comment|/* + digital for generic 10k2			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_IOCFG_DIGITAL_JACK
+value|0x1000
+end_define
+
+begin_comment
+comment|/* digital for a2 platinum			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_IOCFG_FRONT_JACK
+value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_IOCFG_REAR_JACK
+value|0x8000
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_IOCFG_PHONES_JACK
+value|0x0100
+end_define
+
+begin_comment
+comment|/* LiveDrive					*/
+end_comment
+
+begin_comment
+comment|/* outputs:  *	for audigy2 platinum:	0xa00  *	for a2 platinum ex:	0x1c00  *	for a1 platinum:	0x0  */
 end_comment
 
 begin_define
@@ -1722,6 +1865,265 @@ end_define
 
 begin_comment
 comment|/* Address of indexed AC97 register		*/
+end_comment
+
+begin_comment
+comment|/* Available on the Audigy 2 and Audigy 4 only. This is the P16V chip. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTR2
+value|0x20
+end_define
+
+begin_comment
+comment|/* Indexed register set pointer register	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DATA2
+value|0x24
+end_define
+
+begin_comment
+comment|/* Indexed register set data register		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPR2
+value|0x28
+end_define
+
+begin_comment
+comment|/* P16V interrupt pending register		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPR2_PLAYBACK_CH_0_LOOP
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* Playback Channel 0 loop                               */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPR2_PLAYBACK_CH_0_HALF_LOOP
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* Playback Channel 0 half loop                          */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPR2_CAPTURE_CH_0_LOOP
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* Capture Channel 0 loop                               */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPR2_CAPTURE_CH_0_HALF_LOOP
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* Capture Channel 0 half loop                          */
+end_comment
+
+begin_comment
+comment|/* 0x00000100 Playback. Only in once per period. 						 * 0x00110000 Capture. Int on half buffer. 						 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTE2
+value|0x2c
+end_define
+
+begin_comment
+comment|/* P16V Interrupt enable register. 	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTE2_PLAYBACK_CH_0_LOOP
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* Playback Channel 0 loop                               */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTE2_PLAYBACK_CH_0_HALF_LOOP
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* Playback Channel 0 half loop                          */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTE2_PLAYBACK_CH_1_LOOP
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* Playback Channel 1 loop                               */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTE2_PLAYBACK_CH_1_HALF_LOOP
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* Playback Channel 1 half loop                          */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTE2_PLAYBACK_CH_2_LOOP
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* Playback Channel 2 loop                               */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTE2_PLAYBACK_CH_2_HALF_LOOP
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* Playback Channel 2 half loop                          */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTE2_PLAYBACK_CH_3_LOOP
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* Playback Channel 3 loop                               */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTE2_PLAYBACK_CH_3_HALF_LOOP
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* Playback Channel 3 half loop                          */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTE2_CAPTURE_CH_0_LOOP
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* Capture Channel 0 loop                               */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTE2_CAPTURE_CH_0_HALF_LOOP
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* Caputre Channel 0 half loop                          */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HCFG2
+value|0x34
+end_define
+
+begin_comment
+comment|/* Defaults: 0, win2000 sets it to 00004201 */
+end_comment
+
+begin_comment
+comment|/* 0x00000000 2-channel output. */
+end_comment
+
+begin_comment
+comment|/* 0x00000200 8-channel output. */
+end_comment
+
+begin_comment
+comment|/* 0x00000004 pauses stream/irq fail. */
+end_comment
+
+begin_comment
+comment|/* Rest of bits no nothing to sound output */
+end_comment
+
+begin_comment
+comment|/* bit 0: Enable P16V audio. 						 * bit 1: Lock P16V record memory cache. 						 * bit 2: Lock P16V playback memory cache. 						 * bit 3: Dummy record insert zero samples. 						 * bit 8: Record 8-channel in phase. 						 * bit 9: Playback 8-channel in phase. 						 * bit 11-12: Playback mixer attenuation: 0=0dB, 1=-6dB, 2=-12dB, 3=Mute. 						 * bit 13: Playback mixer enable. 						 * bit 14: Route SRC48 mixer output to fx engine. 						 * bit 15: Enable IEEE 1394 chip. 						 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPR3
+value|0x38
+end_define
+
+begin_comment
+comment|/* Cdif interrupt pending register		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTE3
+value|0x3c
+end_define
+
+begin_comment
+comment|/* Cdif interrupt enable register. 	*/
 end_comment
 
 begin_comment
@@ -3238,6 +3640,10 @@ begin_comment
 comment|/* not write to these locations.			*/
 end_comment
 
+begin_comment
+comment|/* 1f something */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3412,6 +3818,10 @@ end_define
 
 begin_comment
 comment|/* Cache data F register				*/
+end_comment
+
+begin_comment
+comment|/* 0x30-3f seem to be the same as 0x20-2f */
 end_comment
 
 begin_define
@@ -3672,7 +4082,19 @@ comment|/* When set, each bit enables the writing of the	*/
 end_comment
 
 begin_comment
-comment|/* corresponding FX output channel into host memory	*/
+comment|/* corresponding FX output channel (internal registers  */
+end_comment
+
+begin_comment
+comment|/* 0x20-0x3f) to host memory.  This mode of recording   */
+end_comment
+
+begin_comment
+comment|/* is 16bit, 48KHz only. All 32 channels can be enabled */
+end_comment
+
+begin_comment
+comment|/* simultaneously.					*/
 end_comment
 
 begin_define
@@ -3926,6 +4348,10 @@ begin_comment
 comment|/* 20 bit base address					*/
 end_comment
 
+begin_comment
+comment|/* 0x48 something - word access, defaults to 3f */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3957,6 +4383,10 @@ end_define
 
 begin_comment
 comment|/* FX buffer size register				*/
+end_comment
+
+begin_comment
+comment|/* register: 0x4c..4f: ffff-ffff current amounts, per-channel */
 end_comment
 
 begin_comment
@@ -4280,6 +4710,10 @@ directive|define
 name|A_DBG_SATURATION_ADDR
 value|0x0ffc0000
 end_define
+
+begin_comment
+comment|// NOTE: 0x54,55,56: 64-bit
+end_comment
 
 begin_define
 define|#
@@ -4651,12 +5085,38 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPBYPASS_ENABLE
-value|0x00000001
+name|SPBYPASS_SPDIF0_MASK
+value|0x00000003
 end_define
 
 begin_comment
-comment|/* Enable SPDIF bypass mode			*/
+comment|/* SPDIF 0 bypass mode				*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPBYPASS_SPDIF1_MASK
+value|0x0000000c
+end_define
+
+begin_comment
+comment|/* SPDIF 1 bypass mode				*/
+end_comment
+
+begin_comment
+comment|/* bypass mode: 0 - DSP; 1 - SPDIF A, 2 - SPDIF B, 3 - SPDIF C					*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPBYPASS_FORMAT
+value|0x00000f00
+end_define
+
+begin_comment
+comment|/* If 1, SPDIF XX uses 24 bit, if 0 - 20 bit	*/
 end_comment
 
 begin_define
@@ -4668,6 +5128,28 @@ end_define
 
 begin_comment
 comment|/* additional AC97 slots enable bits		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AC97SLOT_REAR_RIGHT
+value|0x01
+end_define
+
+begin_comment
+comment|/* Rear left */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AC97SLOT_REAR_LEFT
+value|0x02
+end_define
+
+begin_comment
+comment|/* Rear right */
 end_comment
 
 begin_define
@@ -4690,6 +5172,10 @@ end_define
 
 begin_comment
 comment|/* LFE enable */
+end_comment
+
+begin_comment
+comment|// NOTE: 0x60,61,62: 64-bit
 end_comment
 
 begin_define
@@ -4735,6 +5221,17 @@ end_comment
 
 begin_comment
 comment|/* These three bitfields apply to CDSRCS, GPSRCS, and (except as noted) ZVSRCS.			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SRCS_SPDIFVALID
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* SPDIF stream valid				*/
 end_comment
 
 begin_define
@@ -4911,6 +5408,66 @@ value|0x10000065
 end_define
 
 begin_comment
+comment|/* The 32-bit HLIx and HLIPx registers all have one bit per channel control/status      		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HLIEL
+value|0x66
+end_define
+
+begin_comment
+comment|/* Channel half loop interrupt enable low register	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HLIEH
+value|0x67
+end_define
+
+begin_comment
+comment|/* Channel half loop interrupt enable high register	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HLIPL
+value|0x68
+end_define
+
+begin_comment
+comment|/* Channel half loop interrupt pending low register	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HLIPH
+value|0x69
+end_define
+
+begin_comment
+comment|/* Channel half loop interrupt pending high register	*/
+end_comment
+
+begin_comment
+comment|// 0x6a,6b,6c used for some recording
+end_comment
+
+begin_comment
+comment|// 0x6d unused
+end_comment
+
+begin_comment
+comment|// 0x6e,6f - tanktable base / offset
+end_comment
+
+begin_comment
 comment|/* This is the MPU port on the card (via the game port)						*/
 end_comment
 
@@ -5008,15 +5565,59 @@ end_comment
 begin_define
 define|#
 directive|define
+name|A_SAMPLE_RATE
+value|0x76
+end_define
+
+begin_comment
+comment|/* Various sample rate settings. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_SAMPLE_RATE_NOT_USED
+value|0x0ffc111e
+end_define
+
+begin_comment
+comment|/* Bits that are not used and cannot be set. 	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_SAMPLE_RATE_UNKNOWN
+value|0xf0030001
+end_define
+
+begin_comment
+comment|/* Bits that can be set, but have unknown use. 	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_SPDIF_RATE_MASK
+value|0x000000e0
+end_define
+
+begin_comment
+comment|/* Any other values for rates, just use 48000	*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|A_SPDIF_48000
-value|0x00000080
+value|0x00000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|A_SPDIF_44100
-value|0x00000000
+name|A_SPDIF_192000
+value|0x00000020
 end_define
 
 begin_define
@@ -5025,6 +5626,103 @@ directive|define
 name|A_SPDIF_96000
 value|0x00000040
 end_define
+
+begin_define
+define|#
+directive|define
+name|A_SPDIF_44100
+value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_I2S_CAPTURE_RATE_MASK
+value|0x00000e00
+end_define
+
+begin_comment
+comment|/* This sets the capture PCM rate, but it is    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_I2S_CAPTURE_48000
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* unclear if this sets the ADC rate as well.	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_I2S_CAPTURE_192000
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_I2S_CAPTURE_96000
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_I2S_CAPTURE_44100
+value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_PCM_RATE_MASK
+value|0x0000e000
+end_define
+
+begin_comment
+comment|/* This sets the playback PCM rate on the P16V	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_PCM_48000
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_PCM_192000
+value|0x00002000
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_PCM_96000
+value|0x00004000
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_PCM_44100
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* 0x77,0x78,0x79 "something i2s-related" - default to 0x01080000 on my audigy 2 ZS --rlrevell	*/
+end_comment
+
+begin_comment
+comment|/* 0x7a, 0x7b - lookup tables */
+end_comment
 
 begin_define
 define|#
@@ -5113,6 +5811,10 @@ value|0x000000FF
 end_define
 
 begin_comment
+comment|/* 0x7c, 0x7e "high bit is used for filtering" */
+end_comment
+
+begin_comment
 comment|/* The send amounts for this one are the same as used with the emu10k1 */
 end_comment
 
@@ -5175,6 +5877,28 @@ end_define
 
 begin_comment
 comment|/* Audigy GPRs, 0x400 to 0x5ff			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_TANKMEMCTLREGBASE
+value|0x100
+end_define
+
+begin_comment
+comment|/* Tank memory control registers base - only for Audigy */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_TANKMEMCTLREG_MASK
+value|0x1f
+end_define
+
+begin_comment
+comment|/* only 5 bits used - only for Audigy */
 end_comment
 
 begin_comment
@@ -5405,61 +6129,49 @@ begin_comment
 comment|/* ------------------- STRUCTURES -------------------- */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|struct
-name|_snd_emu10k1
-name|emu10k1_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|struct
-name|_snd_emu10k1_voice
-name|emu10k1_voice_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|struct
-name|_snd_emu10k1_pcm
-name|emu10k1_pcm_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+begin_enum
 enum|enum
 block|{
+name|EMU10K1_EFX
+block|,
 name|EMU10K1_PCM
 block|,
 name|EMU10K1_SYNTH
 block|,
 name|EMU10K1_MIDI
 block|}
-name|emu10k1_voice_type_t
-typedef|;
-end_typedef
+enum|;
+end_enum
+
+begin_struct_decl
+struct_decl|struct
+name|snd_emu10k1
+struct_decl|;
+end_struct_decl
 
 begin_struct
 struct|struct
-name|_snd_emu10k1_voice
+name|snd_emu10k1_voice
 block|{
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 decl_stmt|;
 name|int
 name|number
 decl_stmt|;
+name|unsigned
 name|int
 name|use
 range|:
 literal|1
 decl_stmt|,
 name|pcm
+range|:
+literal|1
+decl_stmt|,
+name|efx
 range|:
 literal|1
 decl_stmt|,
@@ -5477,16 +6189,19 @@ modifier|*
 name|interrupt
 function_decl|)
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
-name|emu10k1_voice_t
+name|struct
+name|snd_emu10k1_voice
 modifier|*
 name|pvoice
 parameter_list|)
 function_decl|;
-name|emu10k1_pcm_t
+name|struct
+name|snd_emu10k1_pcm
 modifier|*
 name|epcm
 decl_stmt|;
@@ -5494,11 +6209,12 @@ block|}
 struct|;
 end_struct
 
-begin_typedef
-typedef|typedef
+begin_enum
 enum|enum
 block|{
 name|PLAYBACK_EMUVOICE
+block|,
+name|PLAYBACK_EFX
 block|,
 name|CAPTURE_AC97ADC
 block|,
@@ -5506,33 +6222,36 @@ name|CAPTURE_AC97MIC
 block|,
 name|CAPTURE_EFX
 block|}
-name|snd_emu10k1_pcm_type_t
-typedef|;
-end_typedef
+enum|;
+end_enum
 
 begin_struct
 struct|struct
-name|_snd_emu10k1_pcm
+name|snd_emu10k1_pcm
 block|{
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 decl_stmt|;
-name|snd_emu10k1_pcm_type_t
+name|int
 name|type
 decl_stmt|;
-name|snd_pcm_substream_t
+name|struct
+name|snd_pcm_substream
 modifier|*
 name|substream
 decl_stmt|;
-name|emu10k1_voice_t
+name|struct
+name|snd_emu10k1_voice
 modifier|*
 name|voices
 index|[
-literal|2
+name|NUM_EFX_PLAYBACK
 index|]
 decl_stmt|;
-name|emu10k1_voice_t
+name|struct
+name|snd_emu10k1_voice
 modifier|*
 name|extra
 decl_stmt|;
@@ -5544,7 +6263,8 @@ name|unsigned
 name|short
 name|first_ptr
 decl_stmt|;
-name|snd_util_memblk_t
+name|struct
+name|snd_util_memblk
 modifier|*
 name|memblk
 decl_stmt|;
@@ -5605,10 +6325,11 @@ block|}
 struct|;
 end_struct
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|snd_emu10k1_pcm_mixer
 block|{
+comment|/* mono, left, right x 8 sends (4 on emu10k1) */
 name|unsigned
 name|char
 name|send_routing
@@ -5636,14 +6357,14 @@ index|[
 literal|3
 index|]
 decl_stmt|;
-name|emu10k1_pcm_t
+name|struct
+name|snd_emu10k1_pcm
 modifier|*
 name|epcm
 decl_stmt|;
 block|}
-name|emu10k1_pcm_mixer_t
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -5664,7 +6385,7 @@ parameter_list|(
 name|route
 parameter_list|)
 define|\
-value|(((unsigned int)route[0] | ((unsigned int)route[1]<< 8) | ((unsigned int)route[2]<< 16) | ((unsigned int)route[3]<< 12))<< 24)
+value|((unsigned int)route[0] | ((unsigned int)route[1]<< 8) | ((unsigned int)route[2]<< 16) | ((unsigned int)route[3]<< 24))
 end_define
 
 begin_define
@@ -5675,19 +6396,19 @@ parameter_list|(
 name|route
 parameter_list|)
 define|\
-value|(((unsigned int)route[4] | ((unsigned int)route[5]<< 8) | ((unsigned int)route[6]<< 16) | ((unsigned int)route[7]<< 12))<< 24)
+value|((unsigned int)route[4] | ((unsigned int)route[5]<< 8) | ((unsigned int)route[6]<< 16) | ((unsigned int)route[7]<< 24))
 end_define
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
 name|snd_emu10k1_memblk
 block|{
-name|snd_util_memblk_t
+name|struct
+name|snd_util_memblk
 name|mem
 decl_stmt|;
 comment|/* private part */
-name|short
+name|int
 name|first_page
 decl_stmt|,
 name|last_page
@@ -5709,9 +6430,8 @@ name|list_head
 name|mapped_order_link
 decl_stmt|;
 block|}
-name|emu10k1_memblk_t
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -5730,9 +6450,9 @@ name|EMU10K1_MAX_TRAM_BLOCKS_PER_CODE
 value|16
 end_define
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|snd_emu10k1_fx8010_ctl
 block|{
 name|struct
 name|list_head
@@ -5749,7 +6469,7 @@ name|count
 decl_stmt|;
 comment|/* count of GPR (1..16) */
 name|unsigned
-name|char
+name|short
 name|gpr
 index|[
 literal|32
@@ -5778,14 +6498,14 @@ name|int
 name|translation
 decl_stmt|;
 comment|/* translation type (EMU10K1_GPR_TRANSLATION*) */
-name|snd_kcontrol_t
+name|struct
+name|snd_kcontrol
 modifier|*
 name|kcontrol
 decl_stmt|;
 block|}
-name|snd_emu10k1_fx8010_ctl_t
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_typedef
 typedef|typedef
@@ -5794,7 +6514,8 @@ function_decl|(
 name|snd_fx8010_irq_handler_t
 function_decl|)
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
@@ -5805,13 +6526,12 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
-name|_snd_emu10k1_fx8010_irq
+name|snd_emu10k1_fx8010_irq
 block|{
 name|struct
-name|_snd_emu10k1_fx8010_irq
+name|snd_emu10k1_fx8010_irq
 modifier|*
 name|next
 decl_stmt|;
@@ -5820,7 +6540,7 @@ modifier|*
 name|handler
 decl_stmt|;
 name|unsigned
-name|char
+name|short
 name|gpr_running
 decl_stmt|;
 name|void
@@ -5828,13 +6548,12 @@ modifier|*
 name|private_data
 decl_stmt|;
 block|}
-name|snd_emu10k1_fx8010_irq_t
-typedef|;
-end_typedef
+struct|;
+end_struct
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|snd_emu10k1_fx8010_pcm
 block|{
 name|unsigned
 name|int
@@ -5866,32 +6585,32 @@ name|buffer_size
 decl_stmt|;
 comment|/* count of buffered samples */
 name|unsigned
-name|char
+name|short
 name|gpr_size
 decl_stmt|;
 comment|/* GPR containing size of ring buffer in samples (host) */
 name|unsigned
-name|char
+name|short
 name|gpr_ptr
 decl_stmt|;
 comment|/* GPR containing current pointer in the ring buffer (host = reset, FX8010) */
 name|unsigned
-name|char
+name|short
 name|gpr_count
 decl_stmt|;
 comment|/* GPR containing count of samples between two interrupts (host) */
 name|unsigned
-name|char
+name|short
 name|gpr_tmpcount
 decl_stmt|;
 comment|/* GPR containing current count of samples to interrupt (host = set, FX8010) */
 name|unsigned
-name|char
+name|short
 name|gpr_trigger
 decl_stmt|;
 comment|/* GPR containing trigger (activate) information (host) */
 name|unsigned
-name|char
+name|short
 name|gpr_running
 decl_stmt|;
 comment|/* GPR containing info if PCM is running (FX8010) */
@@ -5903,27 +6622,9 @@ literal|32
 index|]
 decl_stmt|;
 comment|/* external TRAM address& data */
-name|unsigned
-name|int
-name|sw_data
-decl_stmt|,
-name|hw_data
-decl_stmt|;
-name|unsigned
-name|int
-name|sw_io
-decl_stmt|,
-name|hw_io
-decl_stmt|;
-name|unsigned
-name|int
-name|sw_ready
-decl_stmt|,
-name|hw_ready
-decl_stmt|;
-name|unsigned
-name|int
-name|appl_ptr
+name|struct
+name|snd_pcm_indirect
+name|pcm_rec
 decl_stmt|;
 name|unsigned
 name|int
@@ -5933,18 +6634,18 @@ name|unsigned
 name|int
 name|tram_shift
 decl_stmt|;
-name|snd_emu10k1_fx8010_irq_t
+name|struct
+name|snd_emu10k1_fx8010_irq
 modifier|*
 name|irq
 decl_stmt|;
 block|}
-name|snd_emu10k1_fx8010_pcm_t
-typedef|;
-end_typedef
+struct|;
+end_struct
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|snd_emu10k1_fx8010
 block|{
 name|unsigned
 name|short
@@ -5970,19 +6671,11 @@ name|int
 name|itram_size
 decl_stmt|;
 comment|/* internal TRAM size in samples */
-name|unsigned
-name|int
-name|etram_size
-decl_stmt|;
-comment|/* external TRAM size in samples */
-name|void
-modifier|*
+name|struct
+name|snd_dma_buffer
 name|etram_pages
 decl_stmt|;
-comment|/* allocated pages for external TRAM */
-name|dma_addr_t
-name|etram_pages_dmaaddr
-decl_stmt|;
+comment|/* external TRAM pages and size */
 name|unsigned
 name|int
 name|dbg
@@ -6009,10 +6702,11 @@ name|gpr_ctl
 decl_stmt|;
 comment|/* GPR controls */
 name|struct
-name|semaphore
+name|mutex
 name|lock
 decl_stmt|;
-name|snd_emu10k1_fx8010_pcm_t
+name|struct
+name|snd_emu10k1_fx8010_pcm
 name|pcm
 index|[
 literal|8
@@ -6021,14 +6715,14 @@ decl_stmt|;
 name|spinlock_t
 name|irq_lock
 decl_stmt|;
-name|snd_emu10k1_fx8010_irq_t
+name|struct
+name|snd_emu10k1_fx8010_irq
 modifier|*
 name|irq_handlers
 decl_stmt|;
 block|}
-name|snd_emu10k1_fx8010_t
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -6037,27 +6731,30 @@ name|emu10k1_gpr_ctl
 parameter_list|(
 name|n
 parameter_list|)
-value|list_entry(n, snd_emu10k1_fx8010_ctl_t, list)
+value|list_entry(n, struct snd_emu10k1_fx8010_ctl, list)
 end_define
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|snd_emu10k1_midi
 block|{
 name|struct
-name|_snd_emu10k1
+name|snd_emu10k1
 modifier|*
 name|emu
 decl_stmt|;
-name|snd_rawmidi_t
+name|struct
+name|snd_rawmidi
 modifier|*
 name|rmidi
 decl_stmt|;
-name|snd_rawmidi_substream_t
+name|struct
+name|snd_rawmidi_substream
 modifier|*
 name|substream_input
 decl_stmt|;
-name|snd_rawmidi_substream_t
+name|struct
+name|snd_rawmidi_substream
 modifier|*
 name|substream_output
 decl_stmt|;
@@ -6093,7 +6790,8 @@ modifier|*
 name|interrupt
 function_decl|)
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
@@ -6103,13 +6801,124 @@ name|status
 parameter_list|)
 function_decl|;
 block|}
-name|emu10k1_midi_t
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_struct
 struct|struct
-name|_snd_emu10k1
+name|snd_emu_chip_details
+block|{
+name|u32
+name|vendor
+decl_stmt|;
+name|u32
+name|device
+decl_stmt|;
+name|u32
+name|subsystem
+decl_stmt|;
+name|unsigned
+name|char
+name|revision
+decl_stmt|;
+name|unsigned
+name|char
+name|emu10k1_chip
+decl_stmt|;
+comment|/* Original SB Live. Not SB Live 24bit. */
+name|unsigned
+name|char
+name|emu10k2_chip
+decl_stmt|;
+comment|/* Audigy 1 or Audigy 2. */
+name|unsigned
+name|char
+name|ca0102_chip
+decl_stmt|;
+comment|/* Audigy 1 or Audigy 2. Not SB Audigy 2 Value. */
+name|unsigned
+name|char
+name|ca0108_chip
+decl_stmt|;
+comment|/* Audigy 2 Value */
+name|unsigned
+name|char
+name|ca_cardbus_chip
+decl_stmt|;
+comment|/* Audigy 2 ZS Notebook */
+name|unsigned
+name|char
+name|ca0151_chip
+decl_stmt|;
+comment|/* P16V */
+name|unsigned
+name|char
+name|spk71
+decl_stmt|;
+comment|/* Has 7.1 speakers */
+name|unsigned
+name|char
+name|sblive51
+decl_stmt|;
+comment|/* SBLive! 5.1 - extout 0x11 -> center, 0x12 -> lfe */
+name|unsigned
+name|char
+name|spdif_bug
+decl_stmt|;
+comment|/* Has Spdif phasing bug */
+name|unsigned
+name|char
+name|ac97_chip
+decl_stmt|;
+comment|/* Has an AC97 chip: 1 = mandatory, 2 = optional */
+name|unsigned
+name|char
+name|ecard
+decl_stmt|;
+comment|/* APS EEPROM */
+name|unsigned
+name|char
+name|emu1212m
+decl_stmt|;
+comment|/* EMU 1212m card */
+name|unsigned
+name|char
+name|spi_dac
+decl_stmt|;
+comment|/* SPI interface for DAC */
+name|unsigned
+name|char
+name|i2c_adc
+decl_stmt|;
+comment|/* I2C interface for ADC */
+name|unsigned
+name|char
+name|adc_1361t
+decl_stmt|;
+comment|/* Use Philips 1361T ADC */
+specifier|const
+name|char
+modifier|*
+name|driver
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|id
+decl_stmt|;
+comment|/* for backward compatibility - can be NULL if not needed */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|snd_emu10k1
 block|{
 name|int
 name|irq
@@ -6119,27 +6928,29 @@ name|long
 name|port
 decl_stmt|;
 comment|/* I/O port number */
-name|struct
-name|resource
-modifier|*
-name|res_port
-decl_stmt|;
+name|unsigned
 name|int
-name|APS
-range|:
-literal|1
-decl_stmt|,
-comment|/* APS flag */
-name|no_ac97
-range|:
-literal|1
-decl_stmt|,
-comment|/* no AC'97 */
 name|tos_link
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* tos link detected */
+name|rear_ac97
+range|:
+literal|1
+decl_stmt|,
+comment|/* rear channels are on AC'97 */
+name|enable_ir
+range|:
+literal|1
+decl_stmt|;
+comment|/* Contains profile of card capabilities */
+specifier|const
+name|struct
+name|snd_emu_chip_details
+modifier|*
+name|card_capabilities
+decl_stmt|;
 name|unsigned
 name|int
 name|audigy
@@ -6179,29 +6990,32 @@ name|int
 name|max_cache_pages
 decl_stmt|;
 comment|/* max memory size / PAGE_SIZE */
-name|void
-modifier|*
+name|struct
+name|snd_dma_buffer
 name|silent_page
 decl_stmt|;
 comment|/* silent page */
-name|dma_addr_t
-name|silent_page_dmaaddr
-decl_stmt|;
-specifier|volatile
-name|u32
-modifier|*
+name|struct
+name|snd_dma_buffer
 name|ptb_pages
 decl_stmt|;
 comment|/* page table pages */
-name|dma_addr_t
-name|ptb_pages_dmaaddr
+name|struct
+name|snd_dma_device
+name|p16v_dma_dev
 decl_stmt|;
-name|snd_util_memhdr_t
+name|struct
+name|snd_dma_buffer
+name|p16v_buffer
+decl_stmt|;
+name|struct
+name|snd_util_memhdr
 modifier|*
 name|memhdr
 decl_stmt|;
 comment|/* page allocation list */
-name|emu10k1_memblk_t
+name|struct
+name|snd_emu10k1_memblk
 modifier|*
 name|reserved_page
 decl_stmt|;
@@ -6235,14 +7049,16 @@ literal|3
 index|]
 decl_stmt|;
 comment|/* s/pdif out setup */
-name|snd_emu10k1_fx8010_t
+name|struct
+name|snd_emu10k1_fx8010
 name|fx8010
 decl_stmt|;
 comment|/* FX8010 info */
 name|int
 name|gpr_base
 decl_stmt|;
-name|ac97_t
+name|struct
+name|snd_ac97
 modifier|*
 name|ac97
 decl_stmt|;
@@ -6251,25 +7067,35 @@ name|pci_dev
 modifier|*
 name|pci
 decl_stmt|;
-name|snd_card_t
+name|struct
+name|snd_card
 modifier|*
 name|card
 decl_stmt|;
-name|snd_pcm_t
+name|struct
+name|snd_pcm
 modifier|*
 name|pcm
 decl_stmt|;
-name|snd_pcm_t
+name|struct
+name|snd_pcm
 modifier|*
 name|pcm_mic
 decl_stmt|;
-name|snd_pcm_t
+name|struct
+name|snd_pcm
 modifier|*
 name|pcm_efx
 decl_stmt|;
-name|snd_pcm_t
+name|struct
+name|snd_pcm
 modifier|*
-name|pcm_fx8010
+name|pcm_multi
+decl_stmt|;
+name|struct
+name|snd_pcm
+modifier|*
+name|pcm_p16v
 decl_stmt|;
 name|spinlock_t
 name|synth_lock
@@ -6284,7 +7110,8 @@ modifier|*
 name|get_synth_voice
 function_decl|)
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|)
@@ -6299,32 +7126,75 @@ name|spinlock_t
 name|voice_lock
 decl_stmt|;
 name|struct
-name|semaphore
-name|ptb_lock
-decl_stmt|;
-name|emu10k1_voice_t
+name|snd_emu10k1_voice
 name|voices
 index|[
-literal|64
+name|NUM_G
 index|]
 decl_stmt|;
-name|emu10k1_pcm_mixer_t
+name|struct
+name|snd_emu10k1_voice
+name|p16v_voices
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|struct
+name|snd_emu10k1_voice
+name|p16v_capture_voice
+decl_stmt|;
+name|int
+name|p16v_device_offset
+decl_stmt|;
+name|u32
+name|p16v_capture_source
+decl_stmt|;
+name|u32
+name|p16v_capture_channel
+decl_stmt|;
+name|struct
+name|snd_emu10k1_pcm_mixer
 name|pcm_mixer
 index|[
 literal|32
 index|]
 decl_stmt|;
-name|snd_kcontrol_t
+name|struct
+name|snd_emu10k1_pcm_mixer
+name|efx_pcm_mixer
+index|[
+name|NUM_EFX_PLAYBACK
+index|]
+decl_stmt|;
+name|struct
+name|snd_kcontrol
 modifier|*
 name|ctl_send_routing
 decl_stmt|;
-name|snd_kcontrol_t
+name|struct
+name|snd_kcontrol
 modifier|*
 name|ctl_send_volume
 decl_stmt|;
-name|snd_kcontrol_t
+name|struct
+name|snd_kcontrol
 modifier|*
 name|ctl_attn
+decl_stmt|;
+name|struct
+name|snd_kcontrol
+modifier|*
+name|ctl_efx_send_routing
+decl_stmt|;
+name|struct
+name|snd_kcontrol
+modifier|*
+name|ctl_efx_send_volume
+decl_stmt|;
+name|struct
+name|snd_kcontrol
+modifier|*
+name|ctl_efx_attn
 decl_stmt|;
 name|void
 function_decl|(
@@ -6332,7 +7202,8 @@ modifier|*
 name|hwvol_interrupt
 function_decl|)
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
@@ -6347,7 +7218,8 @@ modifier|*
 name|capture_interrupt
 function_decl|)
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
@@ -6362,7 +7234,8 @@ modifier|*
 name|capture_mic_interrupt
 function_decl|)
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
@@ -6377,7 +7250,8 @@ modifier|*
 name|capture_efx_interrupt
 function_decl|)
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
@@ -6389,21 +7263,11 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|timer_interrupt
-function_decl|)
-parameter_list|(
-name|emu10k1_t
-modifier|*
-name|emu
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
 name|spdif_interrupt
 function_decl|)
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
@@ -6418,27 +7282,43 @@ modifier|*
 name|dsp_interrupt
 function_decl|)
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|)
 function_decl|;
-name|snd_pcm_substream_t
+name|struct
+name|snd_pcm_substream
 modifier|*
 name|pcm_capture_substream
 decl_stmt|;
-name|snd_pcm_substream_t
+name|struct
+name|snd_pcm_substream
 modifier|*
 name|pcm_capture_mic_substream
 decl_stmt|;
-name|snd_pcm_substream_t
+name|struct
+name|snd_pcm_substream
 modifier|*
 name|pcm_capture_efx_substream
 decl_stmt|;
-name|emu10k1_midi_t
+name|struct
+name|snd_pcm_substream
+modifier|*
+name|pcm_playback_efx_substream
+decl_stmt|;
+name|struct
+name|snd_timer
+modifier|*
+name|timer
+decl_stmt|;
+name|struct
+name|snd_emu10k1_midi
 name|midi
 decl_stmt|;
-name|emu10k1_midi_t
+name|struct
+name|snd_emu10k1_midi
 name|midi2
 decl_stmt|;
 comment|/* for audigy */
@@ -6449,6 +7329,51 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|unsigned
+name|int
+name|next_free_voice
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_PM
+name|unsigned
+name|int
+modifier|*
+name|saved_ptr
+decl_stmt|;
+name|unsigned
+name|int
+modifier|*
+name|saved_gpr
+decl_stmt|;
+name|unsigned
+name|int
+modifier|*
+name|tram_val_saved
+decl_stmt|;
+name|unsigned
+name|int
+modifier|*
+name|tram_addr_saved
+decl_stmt|;
+name|unsigned
+name|int
+modifier|*
+name|saved_icode
+decl_stmt|;
+name|unsigned
+name|int
+modifier|*
+name|p16v_saved
+decl_stmt|;
+name|unsigned
+name|int
+name|saved_a_iocfg
+decl_stmt|,
+name|saved_hcfg
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -6457,7 +7382,8 @@ begin_function_decl
 name|int
 name|snd_emu10k1_create
 parameter_list|(
-name|snd_card_t
+name|struct
+name|snd_card
 modifier|*
 name|card
 parameter_list|,
@@ -6480,7 +7406,11 @@ parameter_list|,
 name|int
 name|enable_ir
 parameter_list|,
-name|emu10k1_t
+name|uint
+name|subsystem
+parameter_list|,
+name|struct
+name|snd_emu10k1
 modifier|*
 modifier|*
 name|remu
@@ -6492,14 +7422,16 @@ begin_function_decl
 name|int
 name|snd_emu10k1_pcm
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
 name|int
 name|device
 parameter_list|,
-name|snd_pcm_t
+name|struct
+name|snd_pcm
 modifier|*
 modifier|*
 name|rpcm
@@ -6511,14 +7443,16 @@ begin_function_decl
 name|int
 name|snd_emu10k1_pcm_mic
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
 name|int
 name|device
 parameter_list|,
-name|snd_pcm_t
+name|struct
+name|snd_pcm
 modifier|*
 modifier|*
 name|rpcm
@@ -6530,14 +7464,82 @@ begin_function_decl
 name|int
 name|snd_emu10k1_pcm_efx
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
 name|int
 name|device
 parameter_list|,
-name|snd_pcm_t
+name|struct
+name|snd_pcm
+modifier|*
+modifier|*
+name|rpcm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|snd_p16v_pcm
+parameter_list|(
+name|struct
+name|snd_emu10k1
+modifier|*
+name|emu
+parameter_list|,
+name|int
+name|device
+parameter_list|,
+name|struct
+name|snd_pcm
+modifier|*
+modifier|*
+name|rpcm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|snd_p16v_free
+parameter_list|(
+name|struct
+name|snd_emu10k1
+modifier|*
+name|emu
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|snd_p16v_mixer
+parameter_list|(
+name|struct
+name|snd_emu10k1
+modifier|*
+name|emu
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|snd_emu10k1_pcm_multi
+parameter_list|(
+name|struct
+name|snd_emu10k1
+modifier|*
+name|emu
+parameter_list|,
+name|int
+name|device
+parameter_list|,
+name|struct
+name|snd_pcm
 modifier|*
 modifier|*
 name|rpcm
@@ -6549,14 +7551,16 @@ begin_function_decl
 name|int
 name|snd_emu10k1_fx8010_pcm
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
 name|int
 name|device
 parameter_list|,
-name|snd_pcm_t
+name|struct
+name|snd_pcm
 modifier|*
 modifier|*
 name|rpcm
@@ -6568,9 +7572,31 @@ begin_function_decl
 name|int
 name|snd_emu10k1_mixer
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
+parameter_list|,
+name|int
+name|pcm_device
+parameter_list|,
+name|int
+name|multi_device
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|snd_emu10k1_timer
+parameter_list|(
+name|struct
+name|snd_emu10k1
+modifier|*
+name|emu
+parameter_list|,
+name|int
+name|device
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6579,14 +7605,16 @@ begin_function_decl
 name|int
 name|snd_emu10k1_fx8010_new
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
 name|int
 name|device
 parameter_list|,
-name|snd_hwdep_t
+name|struct
+name|snd_hwdep
 modifier|*
 modifier|*
 name|rhwdep
@@ -6613,15 +7641,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* initialization */
-end_comment
-
 begin_function_decl
 name|void
 name|snd_emu10k1_voice_init
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
@@ -6635,7 +7660,8 @@ begin_function_decl
 name|int
 name|snd_emu10k1_init_efx
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|)
@@ -6646,7 +7672,8 @@ begin_function_decl
 name|void
 name|snd_emu10k1_free_efx
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|)
@@ -6657,12 +7684,25 @@ begin_function_decl
 name|int
 name|snd_emu10k1_fx8010_tram_setup
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
 name|u32
 name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|snd_emu10k1_done
+parameter_list|(
+name|struct
+name|snd_emu10k1
+modifier|*
+name|emu
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6676,7 +7716,8 @@ name|unsigned
 name|int
 name|snd_emu10k1_ptr_read
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
@@ -6695,7 +7736,8 @@ begin_function_decl
 name|void
 name|snd_emu10k1_ptr_write
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
@@ -6715,16 +7757,58 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|snd_emu10k1_efx_write
+name|unsigned
+name|int
+name|snd_emu10k1_ptr20_read
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
 name|unsigned
 name|int
-name|pc
+name|reg
+parameter_list|,
+name|unsigned
+name|int
+name|chn
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|snd_emu10k1_ptr20_write
+parameter_list|(
+name|struct
+name|snd_emu10k1
+modifier|*
+name|emu
+parameter_list|,
+name|unsigned
+name|int
+name|reg
+parameter_list|,
+name|unsigned
+name|int
+name|chn
+parameter_list|,
+name|unsigned
+name|int
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|snd_emu10k1_spi_write
+parameter_list|(
+name|struct
+name|snd_emu10k1
+modifier|*
+name|emu
 parameter_list|,
 name|unsigned
 name|int
@@ -6738,7 +7822,8 @@ name|unsigned
 name|int
 name|snd_emu10k1_efx_read
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
@@ -6753,7 +7838,8 @@ begin_function_decl
 name|void
 name|snd_emu10k1_intr_enable
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
@@ -6768,7 +7854,8 @@ begin_function_decl
 name|void
 name|snd_emu10k1_intr_disable
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
@@ -6783,7 +7870,8 @@ begin_function_decl
 name|void
 name|snd_emu10k1_voice_intr_enable
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
@@ -6798,7 +7886,8 @@ begin_function_decl
 name|void
 name|snd_emu10k1_voice_intr_disable
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
@@ -6813,7 +7902,56 @@ begin_function_decl
 name|void
 name|snd_emu10k1_voice_intr_ack
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
+modifier|*
+name|emu
+parameter_list|,
+name|unsigned
+name|int
+name|voicenum
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|snd_emu10k1_voice_half_loop_intr_enable
+parameter_list|(
+name|struct
+name|snd_emu10k1
+modifier|*
+name|emu
+parameter_list|,
+name|unsigned
+name|int
+name|voicenum
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|snd_emu10k1_voice_half_loop_intr_disable
+parameter_list|(
+name|struct
+name|snd_emu10k1
+modifier|*
+name|emu
+parameter_list|,
+name|unsigned
+name|int
+name|voicenum
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|snd_emu10k1_voice_half_loop_intr_ack
+parameter_list|(
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
@@ -6828,7 +7966,8 @@ begin_function_decl
 name|void
 name|snd_emu10k1_voice_set_loop_stop
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
@@ -6843,7 +7982,8 @@ begin_function_decl
 name|void
 name|snd_emu10k1_voice_clear_loop_stop
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
@@ -6858,7 +7998,8 @@ begin_function_decl
 name|void
 name|snd_emu10k1_wait
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
@@ -6876,7 +8017,8 @@ name|unsigned
 name|int
 name|snd_emu10k1_wc
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|)
@@ -6905,7 +8047,8 @@ name|unsigned
 name|short
 name|snd_emu10k1_ac97_read
 parameter_list|(
-name|ac97_t
+name|struct
+name|snd_ac97
 modifier|*
 name|ac97
 parameter_list|,
@@ -6920,7 +8063,8 @@ begin_function_decl
 name|void
 name|snd_emu10k1_ac97_write
 parameter_list|(
-name|ac97_t
+name|struct
+name|snd_ac97
 modifier|*
 name|ac97
 parameter_list|,
@@ -6947,32 +8091,166 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_PM
+end_ifdef
+
 begin_function_decl
-name|unsigned
-name|char
-name|snd_emu10k1_sum_vol_attn
+name|void
+name|snd_emu10k1_suspend_regs
 parameter_list|(
-name|unsigned
-name|int
-name|value
+name|struct
+name|snd_emu10k1
+modifier|*
+name|emu
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|snd_emu10k1_resume_init
+parameter_list|(
+name|struct
+name|snd_emu10k1
+modifier|*
+name|emu
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|snd_emu10k1_resume_regs
+parameter_list|(
+name|struct
+name|snd_emu10k1
+modifier|*
+name|emu
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|snd_emu10k1_efx_alloc_pm_buffer
+parameter_list|(
+name|struct
+name|snd_emu10k1
+modifier|*
+name|emu
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|snd_emu10k1_efx_free_pm_buffer
+parameter_list|(
+name|struct
+name|snd_emu10k1
+modifier|*
+name|emu
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|snd_emu10k1_efx_suspend
+parameter_list|(
+name|struct
+name|snd_emu10k1
+modifier|*
+name|emu
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|snd_emu10k1_efx_resume
+parameter_list|(
+name|struct
+name|snd_emu10k1
+modifier|*
+name|emu
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|snd_p16v_alloc_pm_buffer
+parameter_list|(
+name|struct
+name|snd_emu10k1
+modifier|*
+name|emu
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|snd_p16v_free_pm_buffer
+parameter_list|(
+name|struct
+name|snd_emu10k1
+modifier|*
+name|emu
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|snd_p16v_suspend
+parameter_list|(
+name|struct
+name|snd_emu10k1
+modifier|*
+name|emu
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|snd_p16v_resume
+parameter_list|(
+name|struct
+name|snd_emu10k1
+modifier|*
+name|emu
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* memory allocation */
 end_comment
 
 begin_function_decl
-name|snd_util_memblk_t
+name|struct
+name|snd_util_memblk
 modifier|*
 name|snd_emu10k1_alloc_pages
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
-name|snd_pcm_substream_t
+name|struct
+name|snd_pcm_substream
 modifier|*
 name|substream
 parameter_list|)
@@ -6983,11 +8261,13 @@ begin_function_decl
 name|int
 name|snd_emu10k1_free_pages
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
-name|snd_util_memblk_t
+name|struct
+name|snd_util_memblk
 modifier|*
 name|blk
 parameter_list|)
@@ -6995,11 +8275,13 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|snd_util_memblk_t
+name|struct
+name|snd_util_memblk
 modifier|*
 name|snd_emu10k1_synth_alloc
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
@@ -7014,11 +8296,13 @@ begin_function_decl
 name|int
 name|snd_emu10k1_synth_free
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
-name|snd_util_memblk_t
+name|struct
+name|snd_util_memblk
 modifier|*
 name|blk
 parameter_list|)
@@ -7029,11 +8313,13 @@ begin_function_decl
 name|int
 name|snd_emu10k1_synth_bzero
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
-name|snd_util_memblk_t
+name|struct
+name|snd_util_memblk
 modifier|*
 name|blk
 parameter_list|,
@@ -7050,11 +8336,13 @@ begin_function_decl
 name|int
 name|snd_emu10k1_synth_copy_from_user
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
-name|snd_util_memblk_t
+name|struct
+name|snd_util_memblk
 modifier|*
 name|blk
 parameter_list|,
@@ -7063,6 +8351,7 @@ name|offset
 parameter_list|,
 specifier|const
 name|char
+name|__user
 modifier|*
 name|data
 parameter_list|,
@@ -7076,11 +8365,13 @@ begin_function_decl
 name|int
 name|snd_emu10k1_memblk_map
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
-name|emu10k1_memblk_t
+name|struct
+name|snd_emu10k1_memblk
 modifier|*
 name|blk
 parameter_list|)
@@ -7095,17 +8386,19 @@ begin_function_decl
 name|int
 name|snd_emu10k1_voice_alloc
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
-name|emu10k1_voice_type_t
+name|int
 name|type
 parameter_list|,
 name|int
 name|pair
 parameter_list|,
-name|emu10k1_voice_t
+name|struct
+name|snd_emu10k1_voice
 modifier|*
 modifier|*
 name|rvoice
@@ -7117,11 +8410,13 @@ begin_function_decl
 name|int
 name|snd_emu10k1_voice_free
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|,
-name|emu10k1_voice_t
+name|struct
+name|snd_emu10k1_voice
 modifier|*
 name|pvoice
 parameter_list|)
@@ -7136,7 +8431,8 @@ begin_function_decl
 name|int
 name|snd_emu10k1_midi
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|)
@@ -7147,7 +8443,8 @@ begin_function_decl
 name|int
 name|snd_emu10k1_audigy_midi
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
 parameter_list|)
@@ -7162,9 +8459,61 @@ begin_function_decl
 name|int
 name|snd_emu10k1_proc_init
 parameter_list|(
-name|emu10k1_t
+name|struct
+name|snd_emu10k1
 modifier|*
 name|emu
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* fx8010 irq handler */
+end_comment
+
+begin_function_decl
+name|int
+name|snd_emu10k1_fx8010_register_irq_handler
+parameter_list|(
+name|struct
+name|snd_emu10k1
+modifier|*
+name|emu
+parameter_list|,
+name|snd_fx8010_irq_handler_t
+modifier|*
+name|handler
+parameter_list|,
+name|unsigned
+name|char
+name|gpr_running
+parameter_list|,
+name|void
+modifier|*
+name|private_data
+parameter_list|,
+name|struct
+name|snd_emu10k1_fx8010_irq
+modifier|*
+modifier|*
+name|r_irq
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|snd_emu10k1_fx8010_unregister_irq_handler
+parameter_list|(
+name|struct
+name|snd_emu10k1
+modifier|*
+name|emu
+parameter_list|,
+name|struct
+name|snd_emu10k1_fx8010_irq
+modifier|*
+name|irq
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7426,7 +8775,25 @@ value|(0x20 + (x))
 end_define
 
 begin_comment
-comment|/* x = 0x00 - 0x0f */
+comment|/* x = 0x00 - 0x0f physical outs -> FXWC low 16 bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXBUS2
+parameter_list|(
+name|x
+parameter_list|)
+value|(0x30 + (x))
+end_define
+
+begin_comment
+comment|/* x = 0x00 - 0x0f copies of fx buses for capture -> FXWC high 16 bits */
+end_comment
+
+begin_comment
+comment|/* NB: 0x31 and 0x32 are shared with Center/LFE on SB live 5.1 */
 end_comment
 
 begin_define
@@ -7726,6 +9093,90 @@ end_comment
 begin_define
 define|#
 directive|define
+name|A_ITRAM_DATA
+parameter_list|(
+name|x
+parameter_list|)
+value|(TANKMEMDATAREGBASE + 0x00 + (x))
+end_define
+
+begin_comment
+comment|/* x = 0x00 - 0xbf */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_ETRAM_DATA
+parameter_list|(
+name|x
+parameter_list|)
+value|(TANKMEMDATAREGBASE + 0xc0 + (x))
+end_define
+
+begin_comment
+comment|/* x = 0x00 - 0x3f */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_ITRAM_ADDR
+parameter_list|(
+name|x
+parameter_list|)
+value|(TANKMEMADDRREGBASE + 0x00 + (x))
+end_define
+
+begin_comment
+comment|/* x = 0x00 - 0xbf */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_ETRAM_ADDR
+parameter_list|(
+name|x
+parameter_list|)
+value|(TANKMEMADDRREGBASE + 0xc0 + (x))
+end_define
+
+begin_comment
+comment|/* x = 0x00 - 0x3f */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_ITRAM_CTL
+parameter_list|(
+name|x
+parameter_list|)
+value|(A_TANKMEMCTLREGBASE + 0x00 + (x))
+end_define
+
+begin_comment
+comment|/* x = 0x00 - 0xbf */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_ETRAM_CTL
+parameter_list|(
+name|x
+parameter_list|)
+value|(A_TANKMEMCTLREGBASE + 0xc0 + (x))
+end_define
+
+begin_comment
+comment|/* x = 0x00 - 0x3f */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|A_FXBUS
 parameter_list|(
 name|x
@@ -7734,7 +9185,7 @@ value|(0x00 + (x))
 end_define
 
 begin_comment
-comment|/* x = 0x00 - 0x3f? */
+comment|/* x = 0x00 - 0x3f FX buses */
 end_comment
 
 begin_define
@@ -7748,7 +9199,21 @@ value|(0x40 + (x))
 end_define
 
 begin_comment
-comment|/* x = 0x00 - 0x1f? */
+comment|/* x = 0x00 - 0x0f physical ins */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_P16VIN
+parameter_list|(
+name|x
+parameter_list|)
+value|(0x50 + (x))
+end_define
+
+begin_comment
+comment|/* x = 0x00 - 0x0f p16v ins (A2 only) "EMU32 inputs" */
 end_comment
 
 begin_define
@@ -7762,7 +9227,49 @@ value|(0x60 + (x))
 end_define
 
 begin_comment
-comment|/* x = 0x00 - 0x1f? */
+comment|/* x = 0x00 - 0x1f physical outs -> A_FXWC1 0x79-7f unknown   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_FXBUS2
+parameter_list|(
+name|x
+parameter_list|)
+value|(0x80 + (x))
+end_define
+
+begin_comment
+comment|/* x = 0x00 - 0x1f extra outs used for EFX capture -> A_FXWC2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_EMU32OUTH
+parameter_list|(
+name|x
+parameter_list|)
+value|(0xa0 + (x))
+end_define
+
+begin_comment
+comment|/* x = 0x00 - 0x0f "EMU32_OUT_10 - _1F" - ??? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_EMU32OUTL
+parameter_list|(
+name|x
+parameter_list|)
+value|(0xb0 + (x))
+end_define
+
+begin_comment
+comment|/* x = 0x00 - 0x0f "EMU32_OUT_1 - _F" - ??? */
 end_comment
 
 begin_define
@@ -7907,6 +9414,20 @@ define|#
 directive|define
 name|FXBUS_MIDI_CHORUS
 value|0x0d
+end_define
+
+begin_define
+define|#
+directive|define
+name|FXBUS_PCM_LEFT_SIDE
+value|0x0e
+end_define
+
+begin_define
+define|#
+directive|define
+name|FXBUS_PCM_RIGHT_SIDE
+value|0x0f
 end_define
 
 begin_define
@@ -8132,7 +9653,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EXTOUT_CENTER
+name|EXTOUT_AC97_CENTER
 value|0x04
 end_define
 
@@ -8143,7 +9664,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EXTOUT_LFE
+name|EXTOUT_AC97_LFE
 value|0x05
 end_define
 
@@ -8226,6 +9747,28 @@ end_define
 
 begin_comment
 comment|/* MIC Capture buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXTOUT_AC97_REAR_L
+value|0x0d
+end_define
+
+begin_comment
+comment|/* SB Live 5.1 (c) 2003 - Rear Left */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXTOUT_AC97_REAR_R
+value|0x0e
+end_define
+
+begin_comment
+comment|/* SB Live 5.1 (c) 2003 - Rear Right */
 end_comment
 
 begin_define
@@ -8522,12 +10065,26 @@ begin_comment
 comment|/* analog LFE */
 end_comment
 
-begin_comment
-comment|/* 0x0c ?? */
-end_comment
+begin_define
+define|#
+directive|define
+name|A_EXTOUT_ASIDE_L
+value|0x0c
+end_define
 
 begin_comment
-comment|/* 0x0d ?? */
+comment|/* analog side left  - Audigy 2 ZS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_EXTOUT_ASIDE_R
+value|0x0d
+end_define
+
+begin_comment
+comment|/*             right - Audigy 2 ZS */
 end_comment
 
 begin_define
@@ -8787,12 +10344,59 @@ begin_comment
 comment|/* CCR, condition register */
 end_comment
 
-begin_comment
-comment|/* 0xd8 = noise1 */
-end_comment
+begin_define
+define|#
+directive|define
+name|A_GPR_NOISE0
+value|0xd8
+end_define
 
 begin_comment
-comment|/* 0xd9 = noise2 */
+comment|/* noise source */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_GPR_NOISE1
+value|0xd9
+end_define
+
+begin_comment
+comment|/* noise source */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_GPR_IRQ
+value|0xda
+end_define
+
+begin_comment
+comment|/* IRQ register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_GPR_DBAC
+value|0xdb
+end_define
+
+begin_comment
+comment|/* TRAM Delay Base Address Counter - internal */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_GPR_DBACE
+value|0xde
+end_define
+
+begin_comment
+comment|/* TRAM Delay Base Address Counter - external */
 end_comment
 
 begin_comment
@@ -8946,15 +10550,10 @@ endif|#
 directive|endif
 end_endif
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|snd_emu10k1_fx8010_info
 block|{
-name|unsigned
-name|int
-name|card
-decl_stmt|;
-comment|/* card type */
 name|unsigned
 name|int
 name|internal_tram_size
@@ -9001,9 +10600,8 @@ name|gpr_controls
 decl_stmt|;
 comment|/* count of GPR controls */
 block|}
-name|emu10k1_fx8010_info_t
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -9040,11 +10638,12 @@ name|EMU10K1_GPR_TRANSLATION_ONOFF
 value|4
 end_define
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|snd_emu10k1_fx8010_control_gpr
 block|{
-name|snd_ctl_elem_id_t
+name|struct
+name|snd_ctl_elem_id
 name|id
 decl_stmt|;
 comment|/* full control ID definition */
@@ -9059,7 +10658,7 @@ name|count
 decl_stmt|;
 comment|/* count of GPR (1..16) */
 name|unsigned
-name|char
+name|short
 name|gpr
 index|[
 literal|32
@@ -9090,13 +10689,12 @@ name|translation
 decl_stmt|;
 comment|/* translation type (EMU10K1_GPR_TRANSLATION*) */
 block|}
-name|emu10k1_fx8010_control_gpr_t
-typedef|;
-end_typedef
+struct|;
+end_struct
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|snd_emu10k1_fx8010_code
 block|{
 name|char
 name|name
@@ -9104,224 +10702,102 @@ index|[
 literal|128
 index|]
 decl_stmt|;
-name|unsigned
-name|long
+name|DECLARE_BITMAP
+argument_list|(
 name|gpr_valid
-index|[
-literal|0x100
-operator|/
-operator|(
-expr|sizeof
-operator|(
-name|unsigned
-name|long
-operator|)
-operator|*
-literal|8
-block|)
-struct|];
-end_typedef
-
-begin_comment
+argument_list|,
+literal|0x200
+argument_list|)
+expr_stmt|;
 comment|/* bitmask of valid initializers */
-end_comment
-
-begin_decl_stmt
-name|unsigned
-name|int
+name|u_int32_t
+name|__user
+modifier|*
 name|gpr_map
-index|[
-literal|0x100
-index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* initializers */
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|int
 name|gpr_add_control_count
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* count of GPR controls to add/replace */
-end_comment
-
-begin_decl_stmt
-name|emu10k1_fx8010_control_gpr_t
+name|struct
+name|snd_emu10k1_fx8010_control_gpr
+name|__user
 modifier|*
 name|gpr_add_controls
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* GPR controls to add/replace */
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|int
 name|gpr_del_control_count
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* count of GPR controls to remove */
-end_comment
-
-begin_decl_stmt
-name|snd_ctl_elem_id_t
+name|struct
+name|snd_ctl_elem_id
+name|__user
 modifier|*
 name|gpr_del_controls
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* IDs of GPR controls to remove */
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|int
 name|gpr_list_control_count
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* count of GPR controls to list */
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|int
 name|gpr_list_control_total
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* total count of GPR controls */
-end_comment
-
-begin_decl_stmt
-name|emu10k1_fx8010_control_gpr_t
+name|struct
+name|snd_emu10k1_fx8010_control_gpr
+name|__user
 modifier|*
 name|gpr_list_controls
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* listed GPR controls */
-end_comment
-
-begin_expr_stmt
-name|unsigned
-name|long
+name|DECLARE_BITMAP
+argument_list|(
 name|tram_valid
-index|[
-literal|0xa0
-operator|/
-operator|(
-expr|sizeof
-operator|(
-name|unsigned
-name|long
-operator|)
-operator|*
-literal|8
-end_expr_stmt
-
-begin_empty_stmt
-unit|)]
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+argument_list|,
+literal|0x100
+argument_list|)
+expr_stmt|;
 comment|/* bitmask of valid initializers */
-end_comment
-
-begin_decl_stmt
-name|unsigned
-name|int
+name|u_int32_t
+name|__user
+modifier|*
 name|tram_data_map
-index|[
-literal|0xa0
-index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* data initializers */
-end_comment
-
-begin_decl_stmt
-name|unsigned
-name|int
+name|u_int32_t
+name|__user
+modifier|*
 name|tram_addr_map
-index|[
-literal|0xa0
-index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* map initializers */
-end_comment
-
-begin_expr_stmt
-name|unsigned
-name|long
+name|DECLARE_BITMAP
+argument_list|(
 name|code_valid
-index|[
-literal|512
-operator|/
-operator|(
-expr|sizeof
-operator|(
-name|unsigned
-name|long
-operator|)
-operator|*
-literal|8
-end_expr_stmt
-
-begin_empty_stmt
-unit|)]
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+argument_list|,
+literal|1024
+argument_list|)
+expr_stmt|;
 comment|/* bitmask of valid instructions */
-end_comment
-
-begin_decl_stmt
-name|unsigned
-name|int
+name|u_int32_t
+name|__user
+modifier|*
 name|code
-index|[
-literal|512
-index|]
-index|[
-literal|2
-index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* one instruction - 64 bits */
-end_comment
+block|}
+struct|;
+end_struct
 
-begin_empty_stmt
-unit|} emu10k1_fx8010_code_t
-empty_stmt|;
-end_empty_stmt
-
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|snd_emu10k1_fx8010_tram
 block|{
 name|unsigned
 name|int
@@ -9341,13 +10817,12 @@ decl_stmt|;
 comment|/* pointer to samples (20-bit) */
 comment|/* NULL->clear memory */
 block|}
-name|emu10k1_fx8010_tram_t
-typedef|;
-end_typedef
+struct|;
+end_struct
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|snd_emu10k1_fx8010_pcm_rec
 block|{
 name|unsigned
 name|int
@@ -9375,32 +10850,32 @@ name|buffer_size
 decl_stmt|;
 comment|/* count of buffered samples */
 name|unsigned
-name|char
+name|short
 name|gpr_size
 decl_stmt|;
 comment|/* GPR containing size of ringbuffer in samples (host) */
 name|unsigned
-name|char
+name|short
 name|gpr_ptr
 decl_stmt|;
 comment|/* GPR containing current pointer in the ring buffer (host = reset, FX8010) */
 name|unsigned
-name|char
+name|short
 name|gpr_count
 decl_stmt|;
 comment|/* GPR containing count of samples between two interrupts (host) */
 name|unsigned
-name|char
+name|short
 name|gpr_tmpcount
 decl_stmt|;
 comment|/* GPR containing current count of samples to interrupt (host = set, FX8010) */
 name|unsigned
-name|char
+name|short
 name|gpr_trigger
 decl_stmt|;
 comment|/* GPR containing trigger (activate) information (host) */
 name|unsigned
-name|char
+name|short
 name|gpr_running
 decl_stmt|;
 comment|/* GPR containing info if PCM is running (FX8010) */
@@ -9423,29 +10898,28 @@ name|res2
 decl_stmt|;
 comment|/* reserved */
 block|}
-name|emu10k1_fx8010_pcm_t
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_define
 define|#
 directive|define
 name|SNDRV_EMU10K1_IOCTL_INFO
-value|_IOR ('H', 0x10, emu10k1_fx8010_info_t)
+value|_IOR ('H', 0x10, struct snd_emu10k1_fx8010_info)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SNDRV_EMU10K1_IOCTL_CODE_POKE
-value|_IOW ('H', 0x11, emu10k1_fx8010_code_t)
+value|_IOW ('H', 0x11, struct snd_emu10k1_fx8010_code)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SNDRV_EMU10K1_IOCTL_CODE_PEEK
-value|_IOWR('H', 0x12, emu10k1_fx8010_code_t)
+value|_IOWR('H', 0x12, struct snd_emu10k1_fx8010_code)
 end_define
 
 begin_define
@@ -9459,28 +10933,28 @@ begin_define
 define|#
 directive|define
 name|SNDRV_EMU10K1_IOCTL_TRAM_POKE
-value|_IOW ('H', 0x21, emu10k1_fx8010_tram_t)
+value|_IOW ('H', 0x21, struct snd_emu10k1_fx8010_tram)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SNDRV_EMU10K1_IOCTL_TRAM_PEEK
-value|_IOWR('H', 0x22, emu10k1_fx8010_tram_t)
+value|_IOWR('H', 0x22, struct snd_emu10k1_fx8010_tram)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SNDRV_EMU10K1_IOCTL_PCM_POKE
-value|_IOW ('H', 0x30, emu10k1_fx8010_pcm_t)
+value|_IOW ('H', 0x30, struct snd_emu10k1_fx8010_pcm_rec)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SNDRV_EMU10K1_IOCTL_PCM_PEEK
-value|_IOWR('H', 0x31, emu10k1_fx8010_pcm_t)
+value|_IOWR('H', 0x31, struct snd_emu10k1_fx8010_pcm_rec)
 end_define
 
 begin_define
@@ -9517,6 +10991,50 @@ directive|define
 name|SNDRV_EMU10K1_IOCTL_DBG_READ
 value|_IOR ('H', 0x84, int)
 end_define
+
+begin_comment
+comment|/* typedefs for compatibility to user-space */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
+name|snd_emu10k1_fx8010_info
+name|emu10k1_fx8010_info_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|snd_emu10k1_fx8010_control_gpr
+name|emu10k1_fx8010_control_gpr_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|snd_emu10k1_fx8010_code
+name|emu10k1_fx8010_code_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|snd_emu10k1_fx8010_tram
+name|emu10k1_fx8010_tram_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|snd_emu10k1_fx8010_pcm_rec
+name|emu10k1_fx8010_pcm_t
+typedef|;
+end_typedef
 
 begin_endif
 endif|#
