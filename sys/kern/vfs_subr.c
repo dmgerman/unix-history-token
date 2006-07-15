@@ -515,25 +515,10 @@ end_comment
 begin_if
 if|#
 directive|if
+operator|!
 name|defined
 argument_list|(
-name|__amd64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__sparc64__
+name|__powerpc__
 argument_list|)
 end_if
 
