@@ -2469,7 +2469,9 @@ operator|*
 name|head
 expr_stmt|;
 specifier|static
-name|int
+name|struct
+name|thread
+modifier|*
 name|in_alloc
 decl_stmt|;
 specifier|static
@@ -2546,6 +2548,10 @@ name|wait
 operator|&
 name|M_WAITOK
 operator|)
+operator|||
+name|in_alloc
+operator|==
+name|curthread
 condition|)
 block|{
 name|mtx_unlock
@@ -2579,6 +2585,8 @@ block|}
 if|if
 condition|(
 name|in_alloc
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* Somebody else is already doing the allocation. */
@@ -2609,7 +2617,7 @@ goto|;
 block|}
 name|in_alloc
 operator|=
-literal|1
+name|curthread
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
@@ -2644,15 +2652,7 @@ argument_list|)
 expr_stmt|;
 name|in_alloc
 operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|in_sleep
-condition|)
-name|should_wakeup
-operator|=
-literal|1
+name|NULL
 expr_stmt|;
 if|if
 condition|(
