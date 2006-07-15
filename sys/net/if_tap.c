@@ -2307,16 +2307,9 @@ name|tap_softc
 modifier|*
 name|tp
 init|=
-operator|(
-expr|struct
-name|tap_softc
-operator|*
-operator|)
-operator|(
 name|ifp
 operator|->
 name|if_softc
-operator|)
 decl_stmt|;
 name|struct
 name|ifstat
