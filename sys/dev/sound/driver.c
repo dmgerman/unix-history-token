@@ -244,7 +244,7 @@ name|MODULE_DEPEND
 argument_list|(
 name|snd_driver
 argument_list|,
-name|snd_emu10k1
+name|snd_emu10kx
 argument_list|,
 literal|1
 argument_list|,
