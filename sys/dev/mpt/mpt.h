@@ -1113,8 +1113,14 @@ modifier|*
 name|req
 decl_stmt|;
 comment|/* pointer to currently active assist request */
-name|int
+name|uint32_t
+name|is_local
+range|:
+literal|1
+decl_stmt|,
 name|nxfers
+range|:
+literal|31
 decl_stmt|;
 name|uint32_t
 name|tag_id
@@ -4319,6 +4325,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Task Management Types, purely for internal consumption  */
+end_comment
 
 begin_typedef
 typedef|typedef
