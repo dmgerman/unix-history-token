@@ -6470,7 +6470,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|uint64_t
+name|uint32_t
 name|pc_freemask
 index|[
 literal|11
