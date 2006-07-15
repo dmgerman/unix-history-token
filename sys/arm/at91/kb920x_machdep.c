@@ -565,6 +565,7 @@ block|,
 name|PTE_NOCACHE
 block|, 	}
 block|,
+comment|/* 	 * We can't just map the OHCI registers VA == PA, because 	 * AT91RM92_OHCI_BASE belongs to the userland address space. 	 * We could just choose a different virtual address, but a better 	 * solution would probably be to just use pmap_mapdev() to allocate 	 * KVA, as we don't need the OHCI controller before the vm 	 * initialization is done. However, the AT91 resource allocation 	 * system doesn't know how to use pmap_mapdev() yet. 	 */
 if|#
 directive|if
 literal|0
