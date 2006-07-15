@@ -2656,6 +2656,16 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
+name|in_sleep
+operator|>
+literal|0
+condition|)
+name|should_wakeup
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
 name|sp
 condition|)
 block|{
