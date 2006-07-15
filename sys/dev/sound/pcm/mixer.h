@@ -187,7 +187,7 @@ name|MIXER_DECLARE
 parameter_list|(
 name|name
 parameter_list|)
-value|DEFINE_CLASS(name, name ## _methods, MIXER_SIZE)
+value|static DEFINE_CLASS(name, name ## _methods, MIXER_SIZE)
 end_define
 
 end_unit
