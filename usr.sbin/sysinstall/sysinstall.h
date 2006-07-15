@@ -5996,6 +5996,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|getsysctlbyname
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|sysctlname
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* modules.c */
 end_comment
