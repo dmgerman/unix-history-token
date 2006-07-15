@@ -3904,6 +3904,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|DEFINE_CLASS
 argument_list|(
 name|cmi_mpu
