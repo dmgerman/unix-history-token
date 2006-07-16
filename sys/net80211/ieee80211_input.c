@@ -8415,6 +8415,8 @@ name|frm
 index|[
 literal|1
 index|]
+operator|+
+literal|2
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -9470,6 +9472,8 @@ name|frm
 index|[
 literal|1
 index|]
+operator|+
+literal|2
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -10301,6 +10305,8 @@ name|frm
 index|[
 literal|1
 index|]
+operator|+
+literal|2
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -11214,6 +11220,8 @@ name|frm
 index|[
 literal|1
 index|]
+operator|+
+literal|2
 argument_list|)
 expr_stmt|;
 switch|switch
