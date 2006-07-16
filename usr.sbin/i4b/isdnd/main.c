@@ -218,17 +218,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"isdnd - i4b ISDN manager daemon, version %02d.%02d.%d, %s %s\n"
+literal|"isdnd - i4b ISDN manager daemon, version %02d.%02d.%d\n"
 argument_list|,
 name|VERSION
 argument_list|,
 name|REL
 argument_list|,
 name|STEP
-argument_list|,
-name|__DATE__
-argument_list|,
-name|__TIME__
 argument_list|)
 expr_stmt|;
 ifdef|#

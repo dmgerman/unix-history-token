@@ -678,17 +678,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"isdnmonitor - version %02d.%02d.%d, %s %s (protocol %02d.%02d)\n"
+literal|"isdnmonitor - version %02d.%02d.%d, (protocol %02d.%02d)\n"
 argument_list|,
 name|VERSION
 argument_list|,
 name|REL
 argument_list|,
 name|STEP
-argument_list|,
-name|__DATE__
-argument_list|,
-name|__TIME__
 argument_list|,
 name|MPROT_VERSION
 argument_list|,
