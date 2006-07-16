@@ -1708,6 +1708,29 @@ name|req
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|req
+operator|->
+name|state
+operator|&
+name|REQ_STATE_TIMEDOUT
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 			 * Whew- we can free this request (late completion) 			 */
+name|mpt_free_request
+argument_list|(
+name|mpt
+argument_list|,
+name|req
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
@@ -4979,6 +5002,12 @@ name|req
 operator|->
 name|req_vbuf
 decl_stmt|;
+name|req
+operator|->
+name|state
+operator||=
+name|REQ_STATE_TIMEDOUT
+expr_stmt|;
 name|mpt_prt
 argument_list|(
 name|mpt
@@ -6309,13 +6338,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|mpt_free_request
-argument_list|(
-name|mpt
-argument_list|,
-name|req
-argument_list|)
-expr_stmt|;
+comment|/* 		 * Leave the request. Without resetting the chip, it's 		 * still owned by it and we'll just get into trouble 		 * freeing it now. Mark it as abandoned so that if it 		 * shows up later it can be freed. 		 */
 name|mpt_prt
 argument_list|(
 name|mpt

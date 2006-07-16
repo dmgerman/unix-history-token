@@ -10854,6 +10854,33 @@ name|REQ_STATE_DONE
 expr_stmt|;
 if|if
 condition|(
+name|req
+operator|->
+name|state
+operator|&
+name|REQ_STATE_TIMEDOUT
+condition|)
+block|{
+name|mpt_lprt
+argument_list|(
+name|mpt
+argument_list|,
+name|MPT_PRT_DEBUG
+argument_list|,
+literal|"Sync Primitive Send Completed After Timeout\n"
+argument_list|)
+expr_stmt|;
+name|mpt_free_request
+argument_list|(
+name|mpt
+argument_list|,
+name|req
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 operator|(
 name|req
 operator|->
@@ -10874,18 +10901,6 @@ argument_list|,
 literal|"Async Primitive Send Complete\n"
 argument_list|)
 expr_stmt|;
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|mpt
-operator|->
-name|request_pending_list
-argument_list|,
-name|req
-argument_list|,
-name|links
-argument_list|)
-expr_stmt|;
 name|mpt_free_request
 argument_list|(
 name|mpt
@@ -10902,7 +10917,7 @@ name|mpt
 argument_list|,
 name|MPT_PRT_DEBUG
 argument_list|,
-literal|"Sync Primitive Send Complete\n"
+literal|"Sync Primitive Send Complete- Waking Waiter\n"
 argument_list|)
 expr_stmt|;
 name|wakeup
