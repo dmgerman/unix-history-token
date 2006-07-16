@@ -812,7 +812,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Initialise maxsockets   */
+comment|/*  * Initialise maxsockets.  */
 end_comment
 
 begin_function
@@ -2932,7 +2932,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * soabort() allows the socket code or protocol code to detach a socket that  * has been in an incomplete or completed listen queue, but has not yet been  * accepted.  *  * This interface is tricky, because it is called on an unreferenced socket,  * and must be called only by a thread that has actually removed the socket  * from the listen queue it was on, or races with other threads are risked.  *  * This interface will call into the protocol code, so must not be called  * with any socket locks held.  Protocols do call it while holding their own  * recursible protocol mutexes, but this is something that should be subject  * to review in the future.  *  * XXXRW: Why do we maintain a distinction between pru_abort() and  * pru_detach()?  */
+comment|/*  * soabort() is used to abruptly tear down a connection, such as when a  * resource limit is reached (listen queue depth exceeded), or if a listen  * socket is closed while there are sockets waiting to be accepted.  *  * This interface is tricky, because it is called on an unreferenced socket,  * and must be called only by a thread that has actually removed the socket  * from the listen queue it was on, or races with other threads are risked.  *  * This interface will call into the protocol code, so must not be called  * with any socket locks held.  Protocols do call it while holding their own  * recursible protocol mutexes, but this is something that should be subject  * to review in the future.  *  * XXXRW: Why do we maintain a distinction between pru_abort() and  * pru_detach()?  */
 end_comment
 
 begin_function
@@ -7673,7 +7673,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/*  						 * m_copym() couldn't allocate an mbuf.  						 * Adjust uio_resid back (it was adjusted  						 * down by len bytes, which we didn't end  						 * up "copying" over).  						 */
+comment|/*  						 * m_copym() couldn't allocate an mbuf. 						 * Adjust uio_resid back (it was adjusted 						 * down by len bytes, which we didn't end 						 * up "copying" over).  						 */
 name|uio
 operator|->
 name|uio_resid
@@ -8064,7 +8064,7 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If soreceive() is being done from the socket callback, then  		 * don't need to generate ACK to peer to update window, since  		 * ACK will be generated on return to TCP. 		 */
+comment|/* 		 * If soreceive() is being done from the socket callback, then 		 * don't need to generate ACK to peer to update window, since 		 * ACK will be generated on return to TCP. 		 */
 if|if
 condition|(
 operator|!
