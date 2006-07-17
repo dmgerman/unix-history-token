@@ -787,8 +787,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|AT91_TSC
 comment|/* We're using TC0's A1 and A2 input */
 name|at91_pio_use_periph_b
@@ -824,8 +824,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Pin assignment */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|AT91_TSC
 comment|/* Assert PA24 low -- talk to rubidium */
 name|at91_pio_use_gpio
