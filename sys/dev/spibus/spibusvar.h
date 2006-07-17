@@ -1,10 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_expr_stmt
-operator|/
-operator|*
-name|$FreeBSD$
-operator|*
-operator|/
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|SPIBUS_IVAR
@@ -12,6 +11,9 @@ parameter_list|(
 name|d
 parameter_list|)
 value|(struct spibus_ivar *) device_get_ivars(d)
+end_define
+
+begin_define
 define|#
 directive|define
 name|SPIBUS_SOFTC
@@ -19,14 +21,18 @@ parameter_list|(
 name|d
 parameter_list|)
 value|(struct spibus_softc *) device_get_softc(d)
-expr|struct
+end_define
+
+begin_struct
+struct|struct
 name|spibus_softc
 block|{
 name|device_t
 name|dev
-block|; }
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
