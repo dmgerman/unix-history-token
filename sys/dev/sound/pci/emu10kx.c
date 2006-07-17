@@ -9540,6 +9540,12 @@ block|{
 name|int
 name|volgpr
 decl_stmt|;
+name|char
+name|sysctl_name
+index|[
+literal|32
+index|]
+decl_stmt|;
 name|volgpr
 operator|=
 name|emu_rm_gpr_alloc
@@ -9568,6 +9574,18 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* Temporary sysctls should start with underscore, 		 * see freebsd-current mailing list, emu10kx driver 		 * discussion around May, 24th. */
+name|snprintf
+argument_list|(
+name|sysctl_name
+argument_list|,
+literal|32
+argument_list|,
+literal|"_%s"
+argument_list|,
+name|mix_name
+argument_list|)
+expr_stmt|;
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|sc
@@ -9583,7 +9601,7 @@ argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|mix_name
+name|sysctl_name
 argument_list|,
 name|CTLTYPE_INT
 operator||
