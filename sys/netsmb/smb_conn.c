@@ -1117,8 +1117,8 @@ name|co_usecount
 operator|=
 literal|1
 expr_stmt|;
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 name|smb_co_lock
 argument_list|(
 name|cp
@@ -1127,12 +1127,12 @@ name|LK_EXCLUSIVE
 argument_list|,
 name|td
 argument_list|)
-operator|==
+operator|!=
 literal|0
-argument_list|,
-operator|(
+condition|)
+name|panic
+argument_list|(
 literal|"smb_co_init: lock failed"
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
