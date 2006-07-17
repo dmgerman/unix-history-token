@@ -1070,6 +1070,8 @@ name|errcnt
 decl_stmt|,
 name|jobcount
 decl_stmt|,
+name|statok
+decl_stmt|,
 name|tempfd
 decl_stmt|;
 name|jobcount
@@ -1237,8 +1239,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
+name|statok
+operator|=
 name|stat
 argument_list|(
 name|pp
@@ -1248,6 +1250,10 @@ argument_list|,
 operator|&
 name|stb
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|statok
 operator|==
 literal|0
 operator|&&
@@ -1329,6 +1335,25 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * If the initial call to stat() failed, then lock_file will have 	 * been created by open().  Update&stb to match that new file. 	 */
+if|if
+condition|(
+name|statok
+operator|!=
+literal|0
+condition|)
+name|statok
+operator|=
+name|stat
+argument_list|(
+name|pp
+operator|->
+name|lock_file
+argument_list|,
+operator|&
+name|stb
+argument_list|)
+expr_stmt|;
 comment|/* turn off non-blocking mode (was turned on for lock effects only) */
 if|if
 condition|(
