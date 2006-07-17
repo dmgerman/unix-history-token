@@ -114,7 +114,7 @@ parameter_list|(
 modifier|...
 parameter_list|)
 define|\
-value|_pam_verbose_error(pamh, flags, __FILE__, __FUNCTION__, __VA_ARGS__)
+value|_pam_verbose_error(pamh, flags, __FILE__, __func__, __VA_ARGS__)
 end_define
 
 begin_endif
