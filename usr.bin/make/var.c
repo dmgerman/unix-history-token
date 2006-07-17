@@ -3572,7 +3572,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 name|DEBUGF
 argument_list|(
 name|VAR
@@ -3590,6 +3589,7 @@ name|val
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|n
