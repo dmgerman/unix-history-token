@@ -3139,10 +3139,6 @@ name|ibuf
 decl_stmt|;
 name|DBG_ENTER
 expr_stmt|;
-name|f
-operator|=
-name|field
-expr_stmt|;
 for|for
 control|(
 name|f
