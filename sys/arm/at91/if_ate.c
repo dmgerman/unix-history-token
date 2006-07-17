@@ -3654,8 +3654,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|m_freem
+name|IFQ_DRV_PREPEND
 argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_snd
+argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
