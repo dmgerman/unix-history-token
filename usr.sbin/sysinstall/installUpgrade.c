@@ -1450,27 +1450,27 @@ name|void
 operator|)
 name|vsystem
 argument_list|(
-literal|"chflags -R noschg /bin /sbin /usr/sbin /usr/bin /usr/lib /usr/libexec /var/empty /kernel*"
+literal|"chflags -R noschg /bin /sbin /usr/sbin /usr/bin /usr/lib /usr/libexec /var/empty /boot/kernel*"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|file_readable
+name|directory_exists
 argument_list|(
-literal|"/kernel"
+literal|"/boot/kernel"
 argument_list|)
 condition|)
 block|{
 name|msgNotify
 argument_list|(
-literal|"Moving old kernel to /kernel.prev"
+literal|"Moving old kernel to /boot/kernel.prev"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|system
 argument_list|(
-literal|"mv /kernel /kernel.prev"
+literal|"mv /boot/kernel /boot/kernel.prev"
 argument_list|)
 condition|)
 block|{
@@ -1494,8 +1494,9 @@ block|}
 else|else
 name|msgConfirm
 argument_list|(
-literal|"NOTICE: Your old kernel is in /kernel.prev should this upgrade\n"
-literal|"fail for any reason and you need to boot your old kernel"
+literal|"NOTICE: Your old kernel is in /boot/kernel.prev should this\n"
+literal|"upgrade fail for any reason and you need to boot your old\n"
+literal|"kernel."
 argument_list|)
 expr_stmt|;
 block|}
