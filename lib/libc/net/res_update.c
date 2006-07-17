@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<res_update.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -170,11 +176,18 @@ end_struct
 
 begin_function
 name|int
-name|res_update
+name|res_nupdate
 parameter_list|(
+name|res_state
+name|statp
+parameter_list|,
 name|ns_updrec
 modifier|*
 name|rrecp_in
+parameter_list|,
+name|ns_tsig_key
+modifier|*
+name|key
 parameter_list|)
 block|{
 name|ns_updrec
@@ -332,26 +345,18 @@ name|ttl
 decl_stmt|;
 if|if
 condition|(
-operator|(
-name|_res
-operator|.
-name|options
-operator|&
-name|RES_INIT
-operator|)
-operator|==
-literal|0
-operator|&&
-name|res_init
-argument_list|()
-operator|==
-operator|-
-literal|1
+name|key
+operator|!=
+name|NULL
 condition|)
 block|{
-name|h_errno
-operator|=
-name|NETDB_INTERNAL
+comment|/* TSIG is not supported. */
+name|RES_SET_H_ERRNO
+argument_list|(
+name|statp
+argument_list|,
+name|NO_RECOVERY
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -688,8 +693,10 @@ condition|)
 break|break;
 name|n
 operator|=
-name|res_mkquery
+name|res_nmkquery
 argument_list|(
+name|statp
+argument_list|,
 name|QUERY
 argument_list|,
 name|dname
@@ -721,7 +728,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"res_update: mkquery failed\n"
+literal|"res_nupdate: mkquery failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -732,8 +739,10 @@ return|;
 block|}
 name|n
 operator|=
-name|res_send
+name|res_nsend
 argument_list|(
+name|statp
+argument_list|,
 name|buf
 argument_list|,
 name|n
@@ -755,7 +764,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"res_update: send error for %s\n"
+literal|"res_nupdate: send error for %s\n"
 argument_list|,
 name|rrecp
 operator|->
@@ -783,7 +792,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"res_update: buffer too small\n"
+literal|"res_nupdate: buffer too small\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2384,8 +2393,8 @@ block|}
 block|}
 comment|/* while */
 block|}
-name|_res
-operator|.
+name|statp
+operator|->
 name|options
 operator||=
 name|RES_DEBUG
@@ -2467,8 +2476,10 @@ name|rrecp
 expr_stmt|;
 name|n
 operator|=
-name|res_mkupdate
+name|res_nmkupdate
 argument_list|(
+name|statp
+argument_list|,
 name|zptr
 operator|->
 name|z_rr
@@ -2490,7 +2501,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"res_mkupdate error\n"
+literal|"res_nmkupdate error\n"
 argument_list|)
 expr_stmt|;
 name|fflush
@@ -2510,12 +2521,12 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"res_mkupdate: packet size = %d\n"
+literal|"res_nmkupdate: packet size = %d\n"
 argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Override the list of NS records from res_init() with 		 * the authoritative nameservers for the zone being updated. 		 * Sort primary to be the first in the list of nameservers. 		 */
+comment|/* 		 * Override the list of NS records from res_ninit() with 		 * the authoritative nameservers for the zone being updated. 		 * Sort primary to be the first in the list of nameservers. 		 */
 for|for
 control|(
 name|i
@@ -2659,8 +2670,8 @@ name|i
 operator|++
 control|)
 block|{
-name|_res
-operator|.
+name|statp
+operator|->
 name|nsaddr_list
 index|[
 name|i
@@ -2677,8 +2688,8 @@ index|]
 operator|.
 name|nsaddr1
 expr_stmt|;
-name|_res
-operator|.
+name|statp
+operator|->
 name|nsaddr_list
 index|[
 name|i
@@ -2688,8 +2699,8 @@ name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
-name|_res
-operator|.
+name|statp
+operator|->
 name|nsaddr_list
 index|[
 name|i
@@ -2703,8 +2714,8 @@ name|NAMESERVER_PORT
 argument_list|)
 expr_stmt|;
 block|}
-name|_res
-operator|.
+name|statp
+operator|->
 name|nscount
 operator|=
 operator|(
@@ -2723,8 +2734,10 @@ name|MAXNS
 expr_stmt|;
 name|n
 operator|=
-name|res_send
+name|res_nsend
 argument_list|(
+name|statp
+argument_list|,
 name|packet
 argument_list|,
 name|n
@@ -2748,7 +2761,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"res_send: send error, n=%d\n"
+literal|"res_nsend: send error, n=%d\n"
 argument_list|,
 name|n
 argument_list|)
@@ -2770,7 +2783,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"res_send: buffer too small\n"
+literal|"res_nsend: buffer too small\n"
 argument_list|)
 expr_stmt|;
 break|break;
