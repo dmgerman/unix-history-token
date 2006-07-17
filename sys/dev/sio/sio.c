@@ -2933,6 +2933,8 @@ operator|==
 literal|0
 condition|?
 name|BUS_PROBE_DEFAULT
+operator|+
+literal|1
 else|:
 name|result
 operator|)
@@ -3359,6 +3361,8 @@ operator|==
 literal|0
 condition|?
 name|BUS_PROBE_DEFAULT
+operator|+
+literal|1
 else|:
 name|result
 operator|)
