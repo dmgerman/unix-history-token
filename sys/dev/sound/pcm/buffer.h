@@ -609,7 +609,7 @@ name|b
 parameter_list|,
 name|unsigned
 name|int
-name|cnt
+name|xrun
 parameter_list|)
 function_decl|;
 end_function_decl

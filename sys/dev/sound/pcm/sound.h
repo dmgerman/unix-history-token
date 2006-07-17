@@ -1053,7 +1053,7 @@ name|dev
 parameter_list|,
 name|unsigned
 name|int
-name|min
+name|minbufsz
 parameter_list|,
 name|unsigned
 name|int
@@ -1061,7 +1061,7 @@ name|deflt
 parameter_list|,
 name|unsigned
 name|int
-name|max
+name|maxbufsz
 parameter_list|)
 function_decl|;
 end_function_decl

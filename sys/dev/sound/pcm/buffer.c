@@ -1801,7 +1801,7 @@ name|b
 parameter_list|,
 name|unsigned
 name|int
-name|cnt
+name|xrun
 parameter_list|)
 block|{
 name|SNDBUF_LOCKASSERT
@@ -1813,7 +1813,7 @@ name|b
 operator|->
 name|xrun
 operator|=
-name|cnt
+name|xrun
 expr_stmt|;
 block|}
 end_function
