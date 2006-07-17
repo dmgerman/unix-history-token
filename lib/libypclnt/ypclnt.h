@@ -175,7 +175,6 @@ define|#
 directive|define
 name|YPCLNT_DEBUG
 parameter_list|(
-name|fmt
 modifier|...
 parameter_list|)
 end_define
