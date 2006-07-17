@@ -62,7 +62,9 @@ literal|" connection are \"hook\" on the original node and \"peerhook\""
 literal|" on the new node."
 literal|" If \"path\" is omitted then \".\" is assumed."
 block|,
-block|{}
+block|{
+name|NULL
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -71,7 +71,9 @@ literal|"Get human readable status information from the node at<path>"
 block|,
 name|NULL
 block|,
-block|{}
+block|{
+name|NULL
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt

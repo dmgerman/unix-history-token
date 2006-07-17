@@ -83,7 +83,9 @@ literal|"get or set configuration of node at<path>"
 block|,
 name|NULL
 block|,
-block|{}
+block|{
+name|NULL
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt

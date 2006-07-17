@@ -70,7 +70,9 @@ literal|"Show information about all installed node types"
 block|,
 name|NULL
 block|,
-block|{}
+block|{
+name|NULL
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
