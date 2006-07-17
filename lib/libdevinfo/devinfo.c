@@ -171,13 +171,9 @@ define|#
 directive|define
 name|debug
 parameter_list|(
-name|fmt
-parameter_list|,
-name|args
 modifier|...
 parameter_list|)
-define|\
-value|fprintf(stderr, "%s:" fmt "\n", __func__ , ##args)
+value|do { \ 	fprintf(stderr, "%s:", __func__); \ 	fprintf(stderr, __VA_ARGS__); \ 	fprintf(stderr, "\n"); \ } while (0)
 end_define
 
 begin_else
@@ -190,9 +186,6 @@ define|#
 directive|define
 name|debug
 parameter_list|(
-name|fmt
-parameter_list|,
-name|args
 modifier|...
 parameter_list|)
 end_define
