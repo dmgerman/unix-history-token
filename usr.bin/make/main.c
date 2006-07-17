@@ -2019,7 +2019,7 @@ name|oldVars
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* 	 * Parse the rest of the arguments. 	 *	o Check for variable assignments and perform them if so. 	 *	o Check for more flags and restart getopt if so. 	 *      o Anything else is taken to be a target and added 	 *	  to the end of the "create" list. 	 */
+comment|/* 	 * Parse the rest of the arguments. 	 *	o Check for variable assignments and perform them if so. 	 *	o Check for more flags and restart getopt if so. 	 *	o Anything else is taken to be a target and added 	 *	  to the end of the "create" list. 	 */
 for|for
 control|(
 init|;
@@ -2180,7 +2180,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Main_ParseArgLine  *  	Used by the parse module when a .MFLAGS or .MAKEFLAGS target  *	is encountered and by main() when reading the .MAKEFLAGS envariable.  *	Takes a line of arguments and breaks it into its  * 	component words and passes those words and the number of them to the  *	MainParseArgs function.  *	The line should have all its leading whitespace removed.  *  * Side Effects:  *	Only those that come from the various arguments.  */
+comment|/**  * Main_ParseArgLine  *	Used by the parse module when a .MFLAGS or .MAKEFLAGS target  *	is encountered and by main() when reading the .MAKEFLAGS envariable.  *	Takes a line of arguments and breaks it into its  *	component words and passes those words and the number of them to the  *	MainParseArgs function.  *	The line should have all its leading whitespace removed.  *  * Side Effects:  *	Only those that come from the various arguments.  */
 end_comment
 
 begin_function
