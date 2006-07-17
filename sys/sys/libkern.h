@@ -1065,6 +1065,11 @@ name|uint8_t
 modifier|*
 name|p
 init|=
+operator|(
+specifier|const
+name|uint8_t
+operator|*
+operator|)
 name|buf
 decl_stmt|;
 while|while
