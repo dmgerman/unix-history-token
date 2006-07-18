@@ -1101,7 +1101,6 @@ operator|(
 name|front
 operator|)
 return|;
-break|break;
 case|case
 name|LESS
 case|:
@@ -1111,7 +1110,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-break|break;
 case|case
 name|GREATER
 case|:
