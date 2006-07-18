@@ -6096,8 +6096,6 @@ name|so
 argument_list|,
 operator|&
 name|tcbinfo
-argument_list|,
-literal|"tcpinp"
 argument_list|)
 expr_stmt|;
 if|if
@@ -6122,11 +6120,6 @@ operator|=
 name|sotoinpcb
 argument_list|(
 name|so
-argument_list|)
-expr_stmt|;
-name|INP_LOCK
-argument_list|(
-name|inp
 argument_list|)
 expr_stmt|;
 ifdef|#

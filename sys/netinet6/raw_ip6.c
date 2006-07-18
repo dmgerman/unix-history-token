@@ -2444,8 +2444,6 @@ name|so
 argument_list|,
 operator|&
 name|ripcbinfo
-argument_list|,
-literal|"raw6inp"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2480,11 +2478,6 @@ operator|)
 name|so
 operator|->
 name|so_pcb
-expr_stmt|;
-name|INP_LOCK
-argument_list|(
-name|inp
-argument_list|)
 expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(

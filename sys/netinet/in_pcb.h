@@ -481,6 +481,10 @@ modifier|*
 name|inp_phd
 decl_stmt|;
 comment|/* head of this list */
+define|#
+directive|define
+name|inp_zero_size
+value|offsetof(struct inpcb, inp_gencnt)
 name|inp_gen_t
 name|inp_gencnt
 decl_stmt|;
@@ -1377,10 +1381,6 @@ modifier|*
 parameter_list|,
 name|struct
 name|inpcbinfo
-modifier|*
-parameter_list|,
-specifier|const
-name|char
 modifier|*
 parameter_list|)
 function_decl|;
