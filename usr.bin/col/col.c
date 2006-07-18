@@ -1622,13 +1622,19 @@ modifier|*
 name|endc
 decl_stmt|;
 name|int
+name|i
+decl_stmt|,
 name|j
 decl_stmt|,
 name|nchars
 decl_stmt|,
 name|last_col
 decl_stmt|,
+name|save
+decl_stmt|,
 name|this_col
+decl_stmt|,
+name|tot
 decl_stmt|;
 name|last_col
 operator|=
@@ -1659,13 +1665,7 @@ decl_stmt|,
 modifier|*
 name|count
 decl_stmt|,
-name|i
-decl_stmt|,
-name|save
-decl_stmt|,
 name|sorted_size
-decl_stmt|,
-name|tot
 decl_stmt|;
 comment|/* 		 * Do an O(n) sort on l->l_line by column being careful to 		 * preserve the order of characters in the same column. 		 */
 if|if
