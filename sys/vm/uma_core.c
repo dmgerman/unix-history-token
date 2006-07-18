@@ -11126,6 +11126,12 @@ block|}
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DDB
+end_ifdef
+
 begin_comment
 comment|/*  * Generate statistics across both the zone and its per-cpu cache's.  Return  * desired statistics if the pointer is non-NULL for that statistic.  *  * Note: does not update the zone statistics, as it can't safely clear the  * per-CPU cache statistic.  *  * XXXRW: Following the uc_allocbucket and uc_freebucket pointers here isn't  * safe from off-CPU; we should modify the caches to track this information  * directly so that we don't have to.  */
 end_comment
@@ -11298,6 +11304,15 @@ name|frees
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DDB */
+end_comment
 
 begin_function
 specifier|static
