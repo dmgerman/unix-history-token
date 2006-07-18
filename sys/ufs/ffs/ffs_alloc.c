@@ -11673,10 +11673,6 @@ index|[
 name|start
 index|]
 argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
 name|fragtbl
 index|[
 name|fs
@@ -11742,10 +11738,6 @@ index|[
 literal|0
 index|]
 argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
 name|fragtbl
 index|[
 name|fs
