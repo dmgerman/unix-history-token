@@ -2294,7 +2294,6 @@ argument_list|)
 operator|)
 operator|)
 return|;
-break|break;
 case|case
 literal|'+'
 case|:
@@ -2310,7 +2309,6 @@ literal|1
 argument_list|)
 operator|)
 return|;
-break|break;
 block|}
 comment|/* 	 * some aliases: last, first, second, third, fourth 	 */
 comment|/* last */
