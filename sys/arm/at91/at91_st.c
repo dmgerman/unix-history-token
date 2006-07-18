@@ -260,7 +260,7 @@ comment|/* frequency */
 literal|"AT91RM9200 timer"
 block|,
 comment|/* name */
-literal|0
+literal|1000
 comment|/* quality */
 block|}
 decl_stmt|;
