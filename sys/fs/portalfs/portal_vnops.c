@@ -867,7 +867,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * Can't be opened unless the caller is set up 	 * to deal with the side effects.  Check for this 	 * by testing whether the p_dupfd has been set. 	 */
+comment|/* 	 * Can't be opened unless the caller is set up 	 * to deal with the side effects.  Check for this 	 * by testing whether td_dupfd has been set. 	 */
 if|if
 condition|(
 name|td
