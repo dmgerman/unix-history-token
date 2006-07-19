@@ -3296,9 +3296,6 @@ modifier|*
 name|np
 decl_stmt|,
 name|och
-decl_stmt|,
-modifier|*
-name|tp
 decl_stmt|;
 name|struct
 name|file_list
@@ -3524,13 +3521,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|tp
-operator|=
-name|tail
-argument_list|(
-name|np
-argument_list|)
-expr_stmt|;
 name|compilewith
 operator|=
 name|ftp
