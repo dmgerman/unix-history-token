@@ -7480,6 +7480,9 @@ name|unsigned
 name|int
 name|ncopy
 decl_stmt|;
+name|int
+name|vfslocked
+decl_stmt|;
 name|NDINIT
 argument_list|(
 operator|&
@@ -7490,6 +7493,8 @@ argument_list|,
 name|NOFOLLOW
 operator||
 name|SAVENAME
+operator||
+name|MPSAFE
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
@@ -7517,6 +7522,14 @@ condition|)
 return|return
 name|error
 return|;
+name|vfslocked
+operator|=
+name|NDHASGIANT
+argument_list|(
+operator|&
+name|nd
+argument_list|)
+expr_stmt|;
 name|ncopy
 operator|=
 name|min
@@ -7583,6 +7596,11 @@ argument_list|(
 name|nd
 operator|.
 name|ni_vp
+argument_list|)
+expr_stmt|;
+name|VFS_UNLOCK_GIANT
+argument_list|(
+name|vfslocked
 argument_list|)
 expr_stmt|;
 return|return
