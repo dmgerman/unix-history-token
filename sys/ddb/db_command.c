@@ -1863,6 +1863,9 @@ end_macro
 
 begin_block
 block|{
+name|db_disable_pager
+argument_list|()
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"from debugger"
@@ -2293,6 +2296,9 @@ return|return;
 block|}
 block|}
 name|db_skip_to_eol
+argument_list|()
+expr_stmt|;
+name|db_disable_pager
 argument_list|()
 expr_stmt|;
 if|if
