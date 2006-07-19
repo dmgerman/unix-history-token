@@ -326,11 +326,6 @@ name|struct
 name|uart_bas
 modifier|*
 name|bas
-parameter_list|,
-name|struct
-name|mtx
-modifier|*
-name|mtx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -840,11 +835,6 @@ name|struct
 name|uart_bas
 modifier|*
 name|bas
-parameter_list|,
-name|struct
-name|mtx
-modifier|*
-name|mtx
 parameter_list|)
 block|{
 name|int
@@ -2263,7 +2253,7 @@ name|sc_txbusy
 condition|)
 name|ipend
 operator||=
-name|SER_INT_TXIDLE
+name|UART_IPEND_TXIDLE
 expr_stmt|;
 name|WR4
 argument_list|(
@@ -2293,7 +2283,7 @@ name|sc_txbusy
 condition|)
 name|ipend
 operator||=
-name|SER_INT_TXIDLE
+name|UART_IPEND_TXIDLE
 expr_stmt|;
 name|WR4
 argument_list|(
@@ -2508,7 +2498,7 @@ argument_list|)
 expr_stmt|;
 name|ipend
 operator||=
-name|SER_INT_RXREADY
+name|UART_IPEND_RXREADY
 expr_stmt|;
 block|}
 if|if
@@ -2628,7 +2618,7 @@ argument_list|)
 expr_stmt|;
 name|ipend
 operator||=
-name|SER_INT_RXREADY
+name|UART_IPEND_RXREADY
 expr_stmt|;
 block|}
 if|if
@@ -2780,7 +2770,7 @@ argument_list|)
 expr_stmt|;
 name|ipend
 operator||=
-name|SER_INT_RXREADY
+name|UART_IPEND_RXREADY
 expr_stmt|;
 block|}
 if|if
@@ -2822,7 +2812,7 @@ argument_list|)
 expr_stmt|;
 name|ipend
 operator||=
-name|SER_INT_RXREADY
+name|UART_IPEND_RXREADY
 expr_stmt|;
 block|}
 if|if
@@ -2840,7 +2830,7 @@ name|USART_CR_RSTSTA
 decl_stmt|;
 name|ipend
 operator||=
-name|SER_INT_BREAK
+name|UART_IPEND_BREAK
 expr_stmt|;
 name|WR4
 argument_list|(
@@ -2979,7 +2969,7 @@ operator|=
 name|sig
 operator|&
 operator|~
-name|SER_MASK_DELTA
+name|UART_SIGMASK_DELTA
 expr_stmt|;
 name|sc
 operator|->
