@@ -7457,7 +7457,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_4((sc)->sk_btag, (sc)->sk_bhandle, (reg), (val))
+value|bus_write_4((sc)->sk_res[0], (reg), (val))
 end_define
 
 begin_define
@@ -7472,7 +7472,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_2((sc)->sk_btag, (sc)->sk_bhandle, (reg), (val))
+value|bus_write_2((sc)->sk_res[0], (reg), (val))
 end_define
 
 begin_define
@@ -7487,7 +7487,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_1((sc)->sk_btag, (sc)->sk_bhandle, (reg), (val))
+value|bus_write_1((sc)->sk_res[0], (reg), (val))
 end_define
 
 begin_define
@@ -7500,7 +7500,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_4((sc)->sk_btag, (sc)->sk_bhandle, (reg))
+value|bus_read_4((sc)->sk_res[0], (reg))
 end_define
 
 begin_define
@@ -7513,7 +7513,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_2((sc)->sk_btag, (sc)->sk_bhandle, (reg))
+value|bus_read_2((sc)->sk_res[0], (reg))
 end_define
 
 begin_define
@@ -7526,7 +7526,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_1((sc)->sk_btag, (sc)->sk_bhandle, (reg))
+value|bus_read_1((sc)->sk_res[0], (reg))
 end_define
 
 begin_struct
@@ -8253,31 +8253,25 @@ begin_struct
 struct|struct
 name|sk_softc
 block|{
-name|bus_space_handle_t
-name|sk_bhandle
+name|struct
+name|resource
+modifier|*
+name|sk_res
+index|[
+literal|2
+index|]
 decl_stmt|;
-comment|/* bus space handle */
-name|bus_space_tag_t
-name|sk_btag
+comment|/* I/O and IRQ resources */
+name|struct
+name|resource_spec
+modifier|*
+name|sk_res_spec
 decl_stmt|;
-comment|/* bus space tag */
 name|void
 modifier|*
 name|sk_intrhand
 decl_stmt|;
 comment|/* irq handler handle */
-name|struct
-name|resource
-modifier|*
-name|sk_irq
-decl_stmt|;
-comment|/* IRQ resource handle */
-name|struct
-name|resource
-modifier|*
-name|sk_res
-decl_stmt|;
-comment|/* I/O or shared mem handle */
 name|device_t
 name|sk_dev
 decl_stmt|;
