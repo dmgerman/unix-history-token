@@ -228,18 +228,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Initialization flag (set/queried by svr4_mod LKM) */
-end_comment
-
-begin_decl_stmt
-name|int
-name|svr4_str_initialized
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Device minor numbers  */
 end_comment
 
@@ -460,7 +448,12 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
-comment|/* XXX should make sure it isn't already loaded first */
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|svr4_head
+argument_list|)
+expr_stmt|;
 name|dt_ptm
 operator|=
 name|make_dev
@@ -1547,43 +1540,6 @@ operator|)
 operator|->
 name|so_emuldata
 decl_stmt|;
-while|while
-condition|(
-name|svr4_str_initialized
-operator|!=
-literal|2
-condition|)
-block|{
-if|if
-condition|(
-name|atomic_cmpset_acq_int
-argument_list|(
-operator|&
-name|svr4_str_initialized
-argument_list|,
-literal|0
-argument_list|,
-literal|1
-argument_list|)
-condition|)
-block|{
-name|TAILQ_INIT
-argument_list|(
-operator|&
-name|svr4_head
-argument_list|)
-expr_stmt|;
-name|atomic_store_rel_int
-argument_list|(
-operator|&
-name|svr4_str_initialized
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-block|}
-return|return;
-block|}
 name|TAILQ_FOREACH
 argument_list|(
 argument|e
