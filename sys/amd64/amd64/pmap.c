@@ -598,17 +598,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|pmap_clear_write
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|vm_page_t
 name|pmap_enter_quick_locked
 parameter_list|(
@@ -12745,8 +12734,6 @@ comment|/*  * Clear the write and modified bits in each of the given page's mapp
 end_comment
 
 begin_function
-specifier|static
-name|__inline
 name|void
 name|pmap_clear_write
 parameter_list|(
