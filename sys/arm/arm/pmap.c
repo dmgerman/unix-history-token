@@ -15671,6 +15671,58 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Clear the write and modified bits in each of the given page's mappings.  */
+end_comment
+
+begin_function
+name|void
+name|pmap_clear_write
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+block|{
+if|if
+condition|(
+name|m
+operator|->
+name|md
+operator|.
+name|pvh_attrs
+operator|&
+name|PVF_WRITE
+condition|)
+name|pmap_clearbit
+argument_list|(
+name|m
+argument_list|,
+name|PVF_WRITE
+argument_list|)
+expr_stmt|;
+else|else
+name|KASSERT
+argument_list|(
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_WRITEABLE
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"pmap_clear_write: page %p has PG_WRITEABLE set"
+operator|,
+name|m
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * perform the pmap work for mincore  */
 end_comment
 
