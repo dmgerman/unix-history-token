@@ -369,12 +369,9 @@ define|#
 directive|define
 name|debug
 parameter_list|(
-name|fmt
-parameter_list|,
-name|args
 modifier|...
 parameter_list|)
-value|do {				\ 	if (debug&& nodaemon)					\ 		warnx(fmt, ##args);				\ } while (0)
+value|do {						\ 	if (debug&& nodaemon)					\ 		warnx(__VA_ARGS__);				\ } while (0)
 end_define
 
 begin_define
@@ -384,12 +381,9 @@ name|logerr
 parameter_list|(
 name|e
 parameter_list|,
-name|fmt
-parameter_list|,
-name|args
 modifier|...
 parameter_list|)
-value|do {				\ 	log_or_warn(LOG_DAEMON | LOG_ERR, errno, fmt, ##args);	\ 	exit(e);						\ } while (0)
+value|do {					\ 	log_or_warn(LOG_DAEMON | LOG_ERR, errno, __VA_ARGS__);	\ 	exit(e);						\ } while (0)
 end_define
 
 begin_define
@@ -399,12 +393,9 @@ name|logerrx
 parameter_list|(
 name|e
 parameter_list|,
-name|fmt
-parameter_list|,
-name|args
 modifier|...
 parameter_list|)
-value|do {				\ 	log_or_warn(LOG_DAEMON | LOG_ERR, 0, fmt, ##args);	\ 	exit(e);						\ } while (0)
+value|do {					\ 	log_or_warn(LOG_DAEMON | LOG_ERR, 0, __VA_ARGS__);	\ 	exit(e);						\ } while (0)
 end_define
 
 begin_define
@@ -412,13 +403,10 @@ define|#
 directive|define
 name|logwarn
 parameter_list|(
-name|fmt
-parameter_list|,
-name|args
 modifier|...
 parameter_list|)
 define|\
-value|log_or_warn(LOG_DAEMON | LOG_WARNING, errno, fmt, ##args)
+value|log_or_warn(LOG_DAEMON | LOG_WARNING, errno, __VA_ARGS__)
 end_define
 
 begin_define
@@ -426,13 +414,10 @@ define|#
 directive|define
 name|logwarnx
 parameter_list|(
-name|fmt
-parameter_list|,
-name|args
 modifier|...
 parameter_list|)
 define|\
-value|log_or_warn(LOG_DAEMON | LOG_WARNING, 0, fmt, ##args)
+value|log_or_warn(LOG_DAEMON | LOG_WARNING, 0, __VA_ARGS__)
 end_define
 
 begin_comment
