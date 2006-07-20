@@ -21162,9 +21162,9 @@ if|if
 condition|(
 name|ifp
 operator|->
-name|if_drv_flags
+name|if_flags
 operator|&
-name|IFF_DRV_RUNNING
+name|IFF_RUNNING
 condition|)
 block|{
 comment|/* Change the promiscuous/multicast flags as necessary. */
@@ -21177,7 +21177,7 @@ block|}
 else|else
 block|{
 comment|/* Start the HW */
-name|bce_init_locked
+name|bce_init
 argument_list|(
 name|sc
 argument_list|)
