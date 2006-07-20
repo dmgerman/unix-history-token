@@ -1781,6 +1781,7 @@ specifier|static
 name|void
 name|sigchld_handler
 parameter_list|(
+name|int
 name|x
 parameter_list|)
 block|{
@@ -1882,6 +1883,7 @@ specifier|static
 name|void
 name|sighup_handler
 parameter_list|(
+name|int
 name|x
 parameter_list|)
 block|{
