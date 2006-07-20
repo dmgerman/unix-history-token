@@ -142,7 +142,7 @@ name|char
 name|bce_driver_version
 index|[]
 init|=
-literal|"v0.9.5"
+literal|"v0.9.6"
 decl_stmt|;
 end_decl_stmt
 
@@ -20410,6 +20410,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* Try to defrag the mbuf if there are too many segments. */
 if|if
 condition|(
 name|error
@@ -20428,6 +20429,21 @@ name|mbuf
 modifier|*
 name|m0
 decl_stmt|;
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_WARN
+argument_list|,
+literal|"%s(): fragmented mbuf (%d pieces)\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|,
+name|map_arg
+operator|.
+name|maxsegs
+argument_list|)
+expr_stmt|;
 name|m0
 operator|=
 name|m_defrag
@@ -20470,6 +20486,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Still getting an error after a defrag. */
 if|if
 condition|(
 name|error
@@ -21141,12 +21158,31 @@ operator|&
 name|IFF_UP
 condition|)
 block|{
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+condition|)
+block|{
 comment|/* Change the promiscuous/multicast flags as necessary. */
 name|bce_set_rx_mode
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Start the HW */
+name|bce_init_locked
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -22663,42 +22699,6 @@ operator|)
 name|stats
 operator|->
 name|stat_EtherStatsCollisions
-expr_stmt|;
-name|ifp
-operator|->
-name|if_ibytes
-operator|=
-name|BCE_STATS
-argument_list|(
-name|IfHCInOctets
-argument_list|)
-expr_stmt|;
-name|ifp
-operator|->
-name|if_obytes
-operator|=
-name|BCE_STATS
-argument_list|(
-name|IfHCOutOctets
-argument_list|)
-expr_stmt|;
-name|ifp
-operator|->
-name|if_imcasts
-operator|=
-name|BCE_STATS
-argument_list|(
-name|IfHCInMulticastPkts
-argument_list|)
-expr_stmt|;
-name|ifp
-operator|->
-name|if_omcasts
-operator|=
-name|BCE_STATS
-argument_list|(
-name|IfHCOutMulticastPkts
-argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
