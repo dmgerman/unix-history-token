@@ -1379,8 +1379,6 @@ name|rv
 init|=
 literal|0
 decl_stmt|,
-name|status
-decl_stmt|,
 name|fdopts
 decl_stmt|;
 name|unsigned
@@ -1491,9 +1489,6 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|status
-operator|=
 name|ioctl
 argument_list|(
 name|fd
@@ -1503,7 +1498,6 @@ argument_list|,
 operator|&
 name|info
 argument_list|)
-operator|)
 operator|==
 literal|0
 condition|)
