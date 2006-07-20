@@ -3921,6 +3921,11 @@ argument_list|(
 literal|"ioctl rcv'd: SIOCSIFMTU (Set Interface MTU)"
 argument_list|)
 expr_stmt|;
+name|EM_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|sc
@@ -3997,17 +4002,17 @@ operator|-
 name|ETHER_CRC_LEN
 condition|)
 block|{
+name|EM_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-name|EM_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|->
 name|if_mtu
