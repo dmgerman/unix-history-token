@@ -226,21 +226,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CE_COMPACTWAIT
-value|0x0004
-end_define
-
-begin_comment
-comment|/* wait until compressing one file finishes */
-end_comment
-
-begin_comment
-comment|/*    before starting the next step. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CE_BINARY
 value|0x0008
 end_define
@@ -5756,12 +5741,7 @@ break|break;
 case|case
 literal|'w'
 case|:
-name|working
-operator|->
-name|flags
-operator||=
-name|CE_COMPACTWAIT
-expr_stmt|;
+comment|/* Depreciated flag - keep for compatibility purposes */
 break|break;
 case|case
 literal|'z'
