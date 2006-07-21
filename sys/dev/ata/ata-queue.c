@@ -2332,6 +2332,12 @@ operator|.
 name|specific2
 argument_list|)
 expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
