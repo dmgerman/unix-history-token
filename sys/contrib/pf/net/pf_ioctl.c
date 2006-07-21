@@ -4,7 +4,11 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$OpenBSD: pf_ioctl.c,v 1.139 2005/03/03 07:13:39 dhartmei Exp $ */
+comment|/*	$OpenBSD: pf_ioctl.c,v 1.139 2005/03/03 07:13:39 dhartmei Exp $	*/
+end_comment
+
+begin_comment
+comment|/* add:	$OpenBSD: pf_ioctl.c,v 1.168 2006/07/21 01:21:17 dhartmei Exp $ */
 end_comment
 
 begin_comment
@@ -10029,12 +10033,9 @@ operator|)
 operator|)
 operator|&&
 operator|!
-name|pcr
+name|newrule
 operator|->
 name|anchor
-index|[
-literal|0
-index|]
 operator|)
 operator|)
 operator|&&
