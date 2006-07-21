@@ -6822,6 +6822,7 @@ comment|/* storage for these strings is allocated here! */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|ssi_cables
