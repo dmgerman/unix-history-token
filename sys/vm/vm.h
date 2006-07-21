@@ -256,37 +256,6 @@ comment|/* _KERNEL */
 end_comment
 
 begin_comment
-comment|/*  * Virtual memory MPSAFE temporary workarounds.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|debug_mpsafevm
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* defined in vm/vm_meter.c */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VM_LOCK_GIANT
-parameter_list|()
-value|do {						\ 	if (!debug_mpsafevm)						\ 		mtx_lock(&Giant);					\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VM_UNLOCK_GIANT
-parameter_list|()
-value|do {						\ 	if (!debug_mpsafevm)						\ 		mtx_unlock(&Giant);					\ } while (0)
-end_define
-
-begin_comment
 comment|/*  * Information passed from the machine-independant VM initialization code  * for use by machine-dependant code (mainly for MMU support)  */
 end_comment
 

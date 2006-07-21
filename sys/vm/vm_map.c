@@ -8501,10 +8501,6 @@ if|if
 condition|(
 name|invalidate
 condition|)
-block|{
-name|VM_LOCK_GIANT
-argument_list|()
-expr_stmt|;
 name|pmap_remove
 argument_list|(
 name|map
@@ -8516,10 +8512,6 @@ argument_list|,
 name|end
 argument_list|)
 expr_stmt|;
-name|VM_UNLOCK_GIANT
-argument_list|()
-expr_stmt|;
-block|}
 comment|/* 	 * Make a second pass, cleaning/uncaching pages from the indicated 	 * objects as we go. 	 */
 for|for
 control|(
@@ -9225,16 +9217,6 @@ name|entry
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|!
-name|map
-operator|->
-name|system_map
-condition|)
-name|VM_LOCK_GIANT
-argument_list|()
-expr_stmt|;
 name|pmap_remove
 argument_list|(
 name|map
@@ -9249,16 +9231,6 @@ name|entry
 operator|->
 name|end
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|map
-operator|->
-name|system_map
-condition|)
-name|VM_UNLOCK_GIANT
-argument_list|()
 expr_stmt|;
 comment|/* 		 * Delete the entry (which may delete the object) only after 		 * removing all pmap entries pointing to its pages. 		 * (Otherwise, its page frames may be reallocated, and any 		 * modify bits will be set in the wrong object!) 		 */
 name|vm_map_entry_delete
