@@ -3648,17 +3648,27 @@ name|socket
 modifier|*
 name|so
 parameter_list|)
-block|{
-name|ng_btsocket_hci_raw_detach
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-block|}
+block|{ }
 end_function
 
 begin_comment
 comment|/* ng_btsocket_hci_raw_abort */
+end_comment
+
+begin_function
+name|void
+name|ng_btsocket_hci_raw_close
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/* ng_btsocket_hci_raw_close */
 end_comment
 
 begin_comment

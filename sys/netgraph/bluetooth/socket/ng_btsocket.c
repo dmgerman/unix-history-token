@@ -233,6 +233,11 @@ operator|.
 name|pru_sockaddr
 operator|=
 name|ng_btsocket_hci_raw_sockaddr
+block|,
+operator|.
+name|pru_close
+operator|=
+name|ng_btsocket_hci_raw_close
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -302,6 +307,11 @@ operator|.
 name|pru_sockaddr
 operator|=
 name|ng_btsocket_l2cap_raw_sockaddr
+block|,
+operator|.
+name|pru_close
+operator|=
+name|ng_btsocket_l2cap_raw_close
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -381,6 +391,11 @@ operator|.
 name|pru_sockaddr
 operator|=
 name|ng_btsocket_l2cap_sockaddr
+block|,
+operator|.
+name|pru_close
+operator|=
+name|ng_btsocket_l2cap_close
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -460,6 +475,11 @@ operator|.
 name|pru_sockaddr
 operator|=
 name|ng_btsocket_rfcomm_sockaddr
+block|,
+operator|.
+name|pru_close
+operator|=
+name|ng_btsocket_rfcomm_close
 block|, }
 decl_stmt|;
 end_decl_stmt

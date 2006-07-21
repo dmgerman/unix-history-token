@@ -154,6 +154,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ng_btsocket_hci_raw_close
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ng_btsocket_hci_raw_attach
 parameter_list|(

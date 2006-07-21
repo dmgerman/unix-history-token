@@ -214,6 +214,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ng_btsocket_l2cap_raw_close
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ng_btsocket_l2cap_raw_attach
 parameter_list|(
@@ -610,6 +621,17 @@ end_function_decl
 begin_function_decl
 name|void
 name|ng_btsocket_l2cap_abort
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ng_btsocket_l2cap_close
 parameter_list|(
 name|struct
 name|socket

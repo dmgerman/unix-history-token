@@ -259,6 +259,11 @@ operator|.
 name|pru_sopoll
 operator|=
 name|NULL
+block|,
+operator|.
+name|pru_close
+operator|=
+name|atm_proto_notsupp5
 block|, }
 decl_stmt|;
 end_decl_stmt

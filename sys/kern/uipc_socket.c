@@ -2560,6 +2560,32 @@ operator|.
 name|si_note
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|so
+operator|->
+name|so_proto
+operator|->
+name|pr_usrreqs
+operator|->
+name|pru_detach
+operator|!=
+name|NULL
+condition|)
+call|(
+modifier|*
+name|so
+operator|->
+name|so_proto
+operator|->
+name|pr_usrreqs
+operator|->
+name|pru_detach
+call|)
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|sodealloc
 argument_list|(
 name|so
@@ -2862,14 +2888,13 @@ name|drop
 label|:
 if|if
 condition|(
-operator|*
 name|so
 operator|->
 name|so_proto
 operator|->
 name|pr_usrreqs
 operator|->
-name|pru_detach
+name|pru_close
 operator|!=
 name|NULL
 condition|)
@@ -2881,7 +2906,7 @@ name|so_proto
 operator|->
 name|pr_usrreqs
 operator|->
-name|pru_detach
+name|pru_close
 call|)
 argument_list|(
 name|so
@@ -2932,7 +2957,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * soabort() is used to abruptly tear down a connection, such as when a  * resource limit is reached (listen queue depth exceeded), or if a listen  * socket is closed while there are sockets waiting to be accepted.  *  * This interface is tricky, because it is called on an unreferenced socket,  * and must be called only by a thread that has actually removed the socket  * from the listen queue it was on, or races with other threads are risked.  *  * This interface will call into the protocol code, so must not be called  * with any socket locks held.  Protocols do call it while holding their own  * recursible protocol mutexes, but this is something that should be subject  * to review in the future.  *  * XXXRW: Why do we maintain a distinction between pru_abort() and  * pru_detach()?  */
+comment|/*  * soabort() is used to abruptly tear down a connection, such as when a  * resource limit is reached (listen queue depth exceeded), or if a listen  * socket is closed while there are sockets waiting to be accepted.  *  * This interface is tricky, because it is called on an unreferenced socket,  * and must be called only by a thread that has actually removed the socket  * from the listen queue it was on, or races with other threads are risked.  *  * This interface will call into the protocol code, so must not be called  * with any socket locks held.  Protocols do call it while holding their own  * recursible protocol mutexes, but this is something that should be subject  * to review in the future.  */
 end_comment
 
 begin_function
@@ -3027,7 +3052,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|so
 operator|->
 name|so_proto

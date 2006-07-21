@@ -4691,7 +4691,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Control and data socket type descriptors  */
+comment|/*  * Control and data socket type descriptors  *  * XXXRW: Perhaps _close should do something?  */
 end_comment
 
 begin_decl_stmt
@@ -4750,6 +4750,11 @@ operator|.
 name|pru_sockaddr
 operator|=
 name|ng_setsockaddr
+block|,
+operator|.
+name|pru_close
+operator|=
+name|NULL
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -4810,6 +4815,11 @@ operator|.
 name|pru_sockaddr
 operator|=
 name|ng_setsockaddr
+block|,
+operator|.
+name|pru_close
+operator|=
+name|NULL
 block|, }
 decl_stmt|;
 end_decl_stmt

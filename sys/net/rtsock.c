@@ -718,6 +718,27 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|rts_close
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|)
+block|{
+name|raw_usrreqs
+operator|.
+name|pru_close
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/* pru_accept is EOPNOTSUPP */
 end_comment
@@ -1345,6 +1366,11 @@ operator|.
 name|pru_sockaddr
 operator|=
 name|rts_sockaddr
+block|,
+operator|.
+name|pru_close
+operator|=
+name|rts_close
 block|, }
 decl_stmt|;
 end_decl_stmt

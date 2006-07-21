@@ -395,6 +395,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|ipx_usr_close
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|struct
 name|pr_usrreqs
@@ -455,6 +468,11 @@ operator|.
 name|pru_sockaddr
 operator|=
 name|ipx_sockaddr
+block|,
+operator|.
+name|pru_close
+operator|=
+name|ipx_usr_close
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -519,6 +537,11 @@ operator|.
 name|pru_sockaddr
 operator|=
 name|ipx_sockaddr
+block|,
+operator|.
+name|pru_close
+operator|=
+name|ipx_usr_close
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1847,48 +1870,7 @@ modifier|*
 name|so
 decl_stmt|;
 block|{
-name|struct
-name|ipxpcb
-modifier|*
-name|ipxp
-init|=
-name|sotoipxpcb
-argument_list|(
-name|so
-argument_list|)
-decl_stmt|;
-name|KASSERT
-argument_list|(
-name|ipxp
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"ipx_usr_abort: ipxp == NULL"
-operator|)
-argument_list|)
-expr_stmt|;
-name|IPX_LIST_LOCK
-argument_list|()
-expr_stmt|;
-name|IPX_LOCK
-argument_list|(
-name|ipxp
-argument_list|)
-expr_stmt|;
-name|ipx_pcbdetach
-argument_list|(
-name|ipxp
-argument_list|)
-expr_stmt|;
-name|ipx_pcbfree
-argument_list|(
-name|ipxp
-argument_list|)
-expr_stmt|;
-name|IPX_LIST_UNLOCK
-argument_list|()
-expr_stmt|;
+comment|/* XXXRW: Possibly ipx_disconnect() here? */
 name|soisdisconnected
 argument_list|(
 name|so
@@ -2087,6 +2069,28 @@ end_function
 
 begin_function
 specifier|static
+name|void
+name|ipx_usr_close
+parameter_list|(
+name|so
+parameter_list|)
+name|struct
+name|socket
+modifier|*
+name|so
+decl_stmt|;
+block|{
+comment|/* XXXRW: Possibly ipx_disconnect() here? */
+name|soisdisconnected
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|int
 name|ipx_connect
 parameter_list|(
@@ -2226,6 +2230,7 @@ argument_list|(
 name|so
 argument_list|)
 decl_stmt|;
+comment|/* XXXRW: Should assert detached. */
 name|KASSERT
 argument_list|(
 name|ipxp

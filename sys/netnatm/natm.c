@@ -1630,13 +1630,20 @@ name|socket
 modifier|*
 name|so
 parameter_list|)
-block|{
-name|natm_usr_detach
-argument_list|(
+block|{  }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|natm_usr_close
+parameter_list|(
+name|struct
+name|socket
+modifier|*
 name|so
-argument_list|)
-expr_stmt|;
-block|}
+parameter_list|)
+block|{  }
 end_function
 
 begin_function
@@ -1756,6 +1763,11 @@ operator|.
 name|pru_sockaddr
 operator|=
 name|natm_usr_sockaddr
+block|,
+operator|.
+name|pru_close
+operator|=
+name|natm_usr_close
 block|, }
 decl_stmt|;
 end_decl_stmt

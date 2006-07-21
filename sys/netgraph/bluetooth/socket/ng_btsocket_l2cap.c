@@ -8882,7 +8882,10 @@ name|so_error
 operator|=
 name|ECONNABORTED
 expr_stmt|;
-name|ng_btsocket_l2cap_detach
+operator|(
+name|void
+operator|)
+name|ng_btsocket_l2cap_disconnect
 argument_list|(
 name|so
 argument_list|)
@@ -8892,6 +8895,31 @@ end_function
 
 begin_comment
 comment|/* ng_btsocket_l2cap_abort */
+end_comment
+
+begin_function
+name|void
+name|ng_btsocket_l2cap_close
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|)
+block|{
+operator|(
+name|void
+operator|)
+name|ng_btsocket_l2cap_disconnect
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* ng_btsocket_l2cap_close */
 end_comment
 
 begin_comment
