@@ -185,6 +185,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<compat/svr4/svr4_socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<compat/svr4/svr4_sockio.h>
 end_include
 
@@ -944,20 +950,18 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
+block|{
 name|printf
 argument_list|(
 literal|"cannot insert svr4 elf brand handler\n"
 argument_list|)
 expr_stmt|;
-elseif|else
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|bootverbose
@@ -966,6 +970,9 @@ name|printf
 argument_list|(
 literal|"svr4 ELF exec handler installed\n"
 argument_list|)
+expr_stmt|;
+name|svr4_sockcache_init
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
@@ -1009,6 +1016,7 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"Could not deinstall ELF interpreter entry (error %d)\n"
@@ -1016,7 +1024,8 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-elseif|else
+break|break;
+block|}
 if|if
 condition|(
 name|bootverbose
@@ -1025,6 +1034,9 @@ name|printf
 argument_list|(
 literal|"svr4 ELF exec handler removed\n"
 argument_list|)
+expr_stmt|;
+name|svr4_sockcache_destroy
+argument_list|()
 expr_stmt|;
 break|break;
 default|default:
