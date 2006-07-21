@@ -1081,6 +1081,8 @@ name|error
 decl_stmt|;
 name|int
 name|locked
+decl_stmt|,
+name|vfslocked
 decl_stmt|;
 name|LCONVPATHEXIST
 argument_list|(
@@ -1122,6 +1124,10 @@ name|a_out
 operator|=
 name|NULL
 expr_stmt|;
+name|vfslocked
+operator|=
+literal|0
+expr_stmt|;
 name|locked
 operator|=
 literal|0
@@ -1130,7 +1136,6 @@ name|vp
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * XXX: This code should make use of vn_open(), rather than doing 	 * all this stuff itself. 	 */
 name|NDINIT
 argument_list|(
 operator|&
@@ -1143,6 +1148,10 @@ operator||
 name|FOLLOW
 operator||
 name|LOCKLEAF
+operator||
+name|MPSAFE
+operator||
+name|AUDITVNODE1
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
@@ -1177,23 +1186,14 @@ name|ni
 operator|.
 name|ni_vp
 expr_stmt|;
-comment|/* 	 * XXX - This looks like a bogus check. A LOCKLEAF namei should not 	 * succeed without returning a vnode. 	 */
-if|if
-condition|(
-name|vp
-operator|==
-name|NULL
-condition|)
-block|{
-name|error
+name|vfslocked
 operator|=
-name|ENOEXEC
+name|NDHASGIANT
+argument_list|(
+operator|&
+name|ni
+argument_list|)
 expr_stmt|;
-comment|/* ?? */
-goto|goto
-name|cleanup
-goto|;
-block|}
 name|NDFREE
 argument_list|(
 operator|&
@@ -1202,9 +1202,10 @@ argument_list|,
 name|NDF_ONLY_PNBUF
 argument_list|)
 expr_stmt|;
-comment|/* 	 * From here on down, we have a locked vnode that must be unlocked. 	 */
+comment|/* 	 * From here on down, we have a locked vnode that must be unlocked. 	 * XXX: The code below largely duplicates exec_check_permissions(). 	 */
 name|locked
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 comment|/* Writable? */
 if|if
@@ -1279,6 +1280,7 @@ name|VREG
 operator|)
 condition|)
 block|{
+comment|/* EACCESS is what exec(2) returns. */
 name|error
 operator|=
 name|ENOEXEC
@@ -1328,7 +1330,7 @@ condition|)
 goto|goto
 name|cleanup
 goto|;
-comment|/* 	 * XXX: This should use vn_open() so that it is properly authorized, 	 * and to reduce code redundancy all over the place here. 	 */
+comment|/* 	 * XXX: This should use vn_open() so that it is properly authorized, 	 * and to reduce code redundancy all over the place here. 	 * XXX: Not really, it duplicates far more of exec_check_permissions() 	 * than vn_open(). 	 */
 ifdef|#
 directive|ifdef
 name|MAC
@@ -1406,20 +1408,6 @@ argument_list|,
 name|vp
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Lock no longer needed 	 */
-name|locked
-operator|=
-literal|0
-expr_stmt|;
-name|VOP_UNLOCK
-argument_list|(
-name|vp
-argument_list|,
-literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1609,17 +1597,31 @@ operator|->
 name|td_proc
 argument_list|)
 expr_stmt|;
-name|mp_fixme
-argument_list|(
-literal|"Unlocked vflags access."
-argument_list|)
-expr_stmt|;
-comment|/* prevent more writers */
+comment|/* 	 * Prevent more writers. 	 * XXX: Note that if any of the VM operations fail below we don't 	 * clear this flag. 	 */
 name|vp
 operator|->
 name|v_vflag
 operator||=
 name|VV_TEXT
+expr_stmt|;
+comment|/* 	 * Lock no longer needed 	 */
+name|locked
+operator|=
+literal|0
+expr_stmt|;
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+name|VFS_UNLOCK_GIANT
+argument_list|(
+name|vfslocked
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Check if file_offset page aligned. Currently we cannot handle 	 * misalinged file offsets, and so we read in the entire image 	 * (what a waste). 	 */
 if|if
@@ -1982,6 +1984,7 @@ if|if
 condition|(
 name|locked
 condition|)
+block|{
 name|VOP_UNLOCK
 argument_list|(
 name|vp
@@ -1991,6 +1994,12 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+name|VFS_UNLOCK_GIANT
+argument_list|(
+name|vfslocked
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Release the kernel mapping. */
 if|if
 condition|(
