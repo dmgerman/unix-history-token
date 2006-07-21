@@ -8856,7 +8856,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* 	 * We qualify the scan for modified pages on whether the 	 * object has been flushed yet.  The OBJ_WRITEABLE flag 	 * is not cleared simply by protecting pages off. 	 */
+comment|/* 	 * We qualify the scan for modified pages on whether the 	 * object has been flushed yet. 	 */
 if|if
 condition|(
 operator|(
@@ -8883,58 +8883,6 @@ name|object
 expr_stmt|;
 name|VM_OBJECT_LOCK
 argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|object
-operator|->
-name|flags
-operator|&
-name|OBJ_WRITEABLE
-operator|)
-operator|&&
-operator|!
-operator|(
-name|object
-operator|->
-name|flags
-operator|&
-name|OBJ_MIGHTBEDIRTY
-operator|)
-condition|)
-name|printf
-argument_list|(
-literal|"Warning: object %p writeable but not mightbedirty\n"
-argument_list|,
-name|object
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|object
-operator|->
-name|flags
-operator|&
-name|OBJ_WRITEABLE
-operator|)
-operator|&&
-operator|(
-name|object
-operator|->
-name|flags
-operator|&
-name|OBJ_MIGHTBEDIRTY
-operator|)
-condition|)
-name|printf
-argument_list|(
-literal|"Warning: object %p mightbedirty but not writeable\n"
-argument_list|,
 name|object
 argument_list|)
 expr_stmt|;

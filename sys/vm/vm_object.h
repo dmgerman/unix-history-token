@@ -231,17 +231,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OBJ_WRITEABLE
-value|0x0080
-end_define
-
-begin_comment
-comment|/* object has been made writable */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|OBJ_MIGHTBEDIRTY
 value|0x0100
 end_define

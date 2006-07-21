@@ -2118,7 +2118,7 @@ operator|->
 name|handle
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Since we are inserting a new and possibly dirty page, 	 * update the object's OBJ_WRITEABLE and OBJ_MIGHTBEDIRTY flags. 	 */
+comment|/* 	 * Since we are inserting a new and possibly dirty page, 	 * update the object's OBJ_MIGHTBEDIRTY flag. 	 */
 if|if
 condition|(
 name|m
