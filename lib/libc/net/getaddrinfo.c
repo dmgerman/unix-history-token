@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All righ
 end_comment
 
 begin_comment
-comment|/*  * "#ifdef FAITH" part is local hack for supporting IPv4-v6 translator.  *  * Issues to be discussed:  * - Thread safe-ness must be checked.  * - Return values.  There are nonstandard return values defined and used  *   in the source code.  This is because RFC2553 is silent about which error  *   code must be returned for which situation.  * - freeaddrinfo(NULL).  RFC2553 is silent about it.  XNET 5.2 says it is  *   invalid.  current code - SEGV on freeaddrinfo(NULL)  *  * Note:  * - The code filters out AFs that are not supported by the kernel,  *   when globbing NULL hostname (to loopback, or wildcard).  Is it the right  *   thing to do?  What is the relationship with post-RFC2553 AI_ADDRCONFIG  *   in ai_flags?  * - (post-2553) semantics of AI_ADDRCONFIG itself is too vague.  *   (1) what should we do against numeric hostname (2) what should we do  *   against NULL hostname (3) what is AI_ADDRCONFIG itself.  AF not ready?  *   non-loopback address configured?  global address configured?  *  * OS specific notes for netbsd/openbsd/freebsd4/bsdi4:  * - To avoid search order issue, we have a big amount of code duplicate  *   from gethnamaddr.c and some other places.  The issues that there's no  *   lower layer function to lookup "IPv4 or IPv6" record.  Calling  *   gethostbyname2 from getaddrinfo will end up in wrong search order, as  *   presented above.  *  * OS specific notes for freebsd4:  * - FreeBSD supported $GAI.  The code does not.  * - FreeBSD allowed classful IPv4 numeric (127.1), the code does not.  */
+comment|/*  * "#ifdef FAITH" part is local hack for supporting IPv4-v6 translator.  *  * Issues to be discussed:  * - Thread safe-ness must be checked.  * - Return values.  There are nonstandard return values defined and used  *   in the source code.  This is because RFC2553 is silent about which error  *   code must be returned for which situation.  * - freeaddrinfo(NULL).  RFC2553 is silent about it.  XNET 5.2 says it is  *   invalid.  current code - SEGV on freeaddrinfo(NULL)  *  * Note:  * - The code filters out AFs that are not supported by the kernel,  *   when globbing NULL hostname (to loopback, or wildcard).  Is it the right  *   thing to do?  What is the relationship with post-RFC2553 AI_ADDRCONFIG  *   in ai_flags?  * - (post-2553) semantics of AI_ADDRCONFIG itself is too vague.  *   (1) what should we do against numeric hostname (2) what should we do  *   against NULL hostname (3) what is AI_ADDRCONFIG itself.  AF not ready?  *   non-loopback address configured?  global address configured?  *  * OS specific notes for netbsd/openbsd/freebsd4/bsdi4:  * - To avoid search order issue, we have a big amount of code duplicate  *   from gethnamaddr.c and some other places.  The issues that there's no  *   lower layer function to lookup "IPv4 or IPv6" record.  Calling  *   gethostbyname2 from getaddrinfo will end up in wrong search order, as  *   presented above.  *  * OS specific notes for freebsd4:  * - FreeBSD supported $GAI.  The code does not.  */
 end_comment
 
 begin_include
@@ -5675,13 +5675,10 @@ operator|->
 name|a_af
 condition|)
 block|{
-if|#
-directive|if
-literal|1
-comment|/*X/Open spec*/
 case|case
 name|AF_INET
 case|:
+comment|/* 		 * RFC3493 requires getaddrinfo() to accept AF_INET formats 		 * that are accepted by inet_addr() and its family.  The 		 * accepted forms includes the "classful" one, which inet_pton 		 * does not accept.  So we need to separate the case for 		 * AF_INET. 		 */
 if|if
 condition|(
 name|inet_aton
@@ -5763,8 +5760,6 @@ expr_stmt|;
 comment|/*xxx*/
 block|}
 break|break;
-endif|#
-directive|endif
 default|default:
 if|if
 condition|(
