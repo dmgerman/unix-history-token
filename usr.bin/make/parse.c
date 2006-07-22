@@ -6308,6 +6308,17 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|DEBUGF
+argument_list|(
+name|DIR
+argument_list|,
+operator|(
+literal|".include %s\n"
+operator|,
+name|fullname
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
