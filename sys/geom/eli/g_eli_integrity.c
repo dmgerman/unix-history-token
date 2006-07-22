@@ -2245,6 +2245,12 @@ name|uio_resid
 expr_stmt|;
 name|crp
 operator|->
+name|crp_olen
+operator|=
+name|data_secsize
+expr_stmt|;
+name|crp
+operator|->
 name|crp_opaque
 operator|=
 operator|(
