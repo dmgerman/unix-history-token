@@ -1835,7 +1835,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|key_abort
+name|key_close
 parameter_list|(
 name|struct
 name|socket
