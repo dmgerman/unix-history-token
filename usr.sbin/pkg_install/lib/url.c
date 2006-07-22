@@ -434,6 +434,14 @@ name|NULL
 return|;
 block|}
 block|}
+name|fetchDebug
+operator|=
+operator|(
+name|Verbose
+operator|>
+literal|0
+operator|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
