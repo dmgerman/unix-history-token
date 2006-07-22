@@ -1747,7 +1747,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__strongarm__
+name|__arm__
 argument_list|)
 end_if
 
