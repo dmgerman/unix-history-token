@@ -338,6 +338,32 @@ name|kmem_object_store
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_vm_stats
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_vm_stats
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|object
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+literal|"VM object stats"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|long
@@ -345,12 +371,54 @@ name|object_collapses
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|SYSCTL_LONG
+argument_list|(
+name|_vm_stats_object
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|collapses
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|object_collapses
+argument_list|,
+literal|0
+argument_list|,
+literal|"VM object collapses"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|long
 name|object_bypasses
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_LONG
+argument_list|(
+name|_vm_stats_object
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|bypasses
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|object_bypasses
+argument_list|,
+literal|0
+argument_list|,
+literal|"VM object bypasses"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * next_index determines the page color that is assigned to the next  * allocated object.  Accesses to next_index are not synchronized  * because the effects of two or more object allocations using  * next_index simultaneously are inconsequential.  At any given time,  * numerous objects have the same page color.  */
