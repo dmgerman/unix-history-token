@@ -2471,6 +2471,12 @@ argument_list|,
 name|M_CRYPTO_DATA
 argument_list|)
 expr_stmt|;
+name|ses
+operator|->
+name|ses_ictx
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2503,6 +2509,12 @@ name|ses_octx
 argument_list|,
 name|M_CRYPTO_DATA
 argument_list|)
+expr_stmt|;
+name|ses
+operator|->
+name|ses_octx
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 name|bzero
