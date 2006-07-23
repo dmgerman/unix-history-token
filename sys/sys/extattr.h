@@ -19,6 +19,10 @@ directive|define
 name|_SYS_EXTATTR_H_
 end_define
 
+begin_comment
+comment|/*  * Defined name spaces for extended attributes.  Numeric constants are passed  * via system calls, but a user-friendly string is also defined.  */
+end_comment
+
 begin_define
 define|#
 directive|define
