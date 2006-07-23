@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1982, 1986, 1988, 1990, 1993  *	The Regents of the 
 end_comment
 
 begin_comment
-comment|/*  * Comments on the socket life cycle:  *  * soalloc() sets of socket layer state for a socket, called only by  * socreate() and sonewconn().  Socket layer private.  *  * sdealloc() tears down socket layer state for a socket, called only by  * sofree() and sonewconn().  Socket layer private.  *  * pru_attach() associates protocol layer state with an allocated socket;  * called only once, may fail, aborting socket allocation.  This is called  * from socreate() and sonewconn().  Socket layer private.  *  * pru_detach() disassociates protocol layer state from an attached socket,  * and will be called exactly once for sockets in which pru_attach() has  * been successfully called.  If pru_attach() returned an error,  * pru_detach() will not be called.  Socket layer private.  *  * socreate() creates a socket and attaches protocol state.  This is a public  * interface that may be used by socket layer consumers to create new  * sockets.  *  * sonewconn() creates a socket and attaches protocol state.  This is a  * public interface  that may be used by protocols to create new sockets when  * a new connection is received and will be available for accept() on a  * listen socket.  *  * soclose() destroys a socket after possibly waiting for it to disconnect.  * This is a public interface that socket consumers should use to close and  * release a socket when done with it.  *  * soabort() destroys a socket without waiting for it to disconnect (used  * only for incoming connections that are already partially or fully  * connected).  This is used internally by the socket layer when clearing  * listen socket queues (due to overflow or close on the listen socket), but  * is also a public interface protocols may use to abort connections in  * their incomplete listen queues should they no longer be required.  Sockets  * placed in completed connection listen queues should not be aborted.  *  * sofree() will free a socket and its protocol state if all references on  * the socket have been released, and is the public interface to attempt to  * free a socket when a reference is removed.  This is a socket layer private  * interface.  *  * NOTE: In addition to socreate() and soclose(), which provide a single  * socket reference to the consumer to be managed as required, there are two  * calls to explicitly manage socket references, soref(), and sorele().  * Currently, these are generally required only when transitioning a socket  * from a listen queue to a file descriptor, in order to prevent garbage  * collection of the socket at an untimely moment.  For a number of reasons,  * these interfaces are not preferred, and should be avoided.  *  * XXXRW: The behavior of sockets after soclose() but before the last  * sorele() is poorly defined.  We can probably entirely eliminate them with  * a little work, since consumers are managing references anyway.  */
+comment|/*  * Comments on the socket life cycle:  *  * soalloc() sets of socket layer state for a socket, called only by  * socreate() and sonewconn().  Socket layer private.  *  * sodealloc() tears down socket layer state for a socket, called only by  * sofree() and sonewconn().  Socket layer private.  *  * pru_attach() associates protocol layer state with an allocated socket;  * called only once, may fail, aborting socket allocation.  This is called  * from socreate() and sonewconn().  Socket layer private.  *  * pru_detach() disassociates protocol layer state from an attached socket,  * and will be called exactly once for sockets in which pru_attach() has  * been successfully called.  If pru_attach() returned an error,  * pru_detach() will not be called.  Socket layer private.  *  * pru_abort() and pru_close() notify the protocol layer that the last  * consumer of a socket is starting to tear down the socket, and that the  * protocol should terminate the connection.  Historically, pru_abort() also  * detached protocol state from the socket state, but this is no longer the  * case.  *  * socreate() creates a socket and attaches protocol state.  This is a public  * interface that may be used by socket layer consumers to create new  * sockets.  *  * sonewconn() creates a socket and attaches protocol state.  This is a  * public interface  that may be used by protocols to create new sockets when  * a new connection is received and will be available for accept() on a  * listen socket.  *  * soclose() destroys a socket after possibly waiting for it to disconnect.  * This is a public interface that socket consumers should use to close and  * release a socket when done with it.  *  * soabort() destroys a socket without waiting for it to disconnect (used  * only for incoming connections that are already partially or fully  * connected).  This is used internally by the socket layer when clearing  * listen socket queues (due to overflow or close on the listen socket), but  * is also a public interface protocols may use to abort connections in  * their incomplete listen queues should they no longer be required.  Sockets  * placed in completed connection listen queues should not be aborted for  * reasons described in the comment above the soclose() implementation.  This  * is not a general purpose close routine, and except in the specific  * circumstances described here, should not be used.  *  * sofree() will free a socket and its protocol state if all references on  * the socket have been released, and is the public interface to attempt to  * free a socket when a reference is removed.  This is a socket layer private  * interface.  *  * NOTE: In addition to socreate() and soclose(), which provide a single  * socket reference to the consumer to be managed as required, there are two  * calls to explicitly manage socket references, soref(), and sorele().  * Currently, these are generally required only when transitioning a socket  * from a listen queue to a file descriptor, in order to prevent garbage  * collection of the socket at an untimely moment.  For a number of reasons,  * these interfaces are not preferred, and should be avoided.  */
 end_comment
 
 begin_include
@@ -654,6 +654,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * General IPC sysctl name space, used by sockets and a variety of other IPC  * types.  */
+end_comment
+
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -671,6 +675,10 @@ literal|"IPC"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Sysctl to get and set the maximum global sockets limit.  Notify protocols  * of the change so that they can update their dependent limits as required.  */
+end_comment
 
 begin_function
 specifier|static
@@ -867,11 +875,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Socket operation routines.  * These routines are called by the routines in  * sys_socket.c or from a system process, and  * implement the semantics of socket operations by  * switching out to the protocol specific routines.  */
+comment|/*  * Socket operation routines.  These routines are called by the routines in  * sys_socket.c or from a system process, and implement the semantics of  * socket operations by switching out to the protocol specific routines.  */
 end_comment
 
 begin_comment
-comment|/*  * Get a socket structure from our zone, and initialize it.  * Note that it would probably be better to allocate socket  * and PCB at the same time, but I'm not convinced that all  * the protocols can be easily modified to do this.  *  * soalloc() returns a socket with a ref count of 0.  */
+comment|/*  * Get a socket structure from our zone, and initialize it.  Note that it  * would probably be better to allocate socket and PCB at the same time, but  * I'm not convinced that all the protocols can be easily modified to do  * this.  *  * soalloc() returns a socket with a ref count of 0.  */
 end_comment
 
 begin_function
@@ -999,6 +1007,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Free the storage associated with a socket at the socket layer, tear down  * locks, labels, etc.  All protocol state is assumed already to have been  * torn down (and possibly never set up) by the caller.  */
+end_comment
 
 begin_function
 specifier|static
@@ -1579,7 +1591,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * When an attempt at a new connection is noted on a socket  * which accepts connections, sonewconn is called.  If the  * connection is possible (subject to space constraints, etc.)  * then we allocate a new structure, propoerly linked into the  * data structure of the original socket, and return this.  * Connstatus may be 0, or SO_ISCONFIRMING, or SO_ISCONNECTED.  *  * note: the ref count on the socket is 0 on return  */
+comment|/*  * When an attempt at a new connection is noted on a socket which accepts  * connections, sonewconn is called.  If the connection is possible (subject  * to space constraints, etc.) then we allocate a new structure, propoerly  * linked into the data structure of the original socket, and return this.  * Connstatus may be 0, or SO_ISCONFIRMING, or SO_ISCONNECTED.  *  * Note: the ref count on the socket is 0 on return.  */
 end_comment
 
 begin_function
@@ -2595,7 +2607,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Close a socket on last file table reference removal.  * Initiate disconnect if connected.  * Free socket when disconnect complete.  *  * This function will sorele() the socket.  Note that soclose() may be  * called prior to the ref count reaching zero.  The actual socket  * structure will not be freed until the ref count reaches zero.  */
+comment|/*  * Close a socket on last file table reference removal.  Initiate disconnect  * if connected.  Free socket when disconnect complete.  *  * This function will sorele() the socket.  Note that soclose() may be called  * prior to the ref count reaching zero.  The actual socket structure will  * not be freed until the ref count reaches zero.  */
 end_comment
 
 begin_function
@@ -3217,7 +3229,7 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
-comment|/* 	 * If protocol is connection-based, can only connect once. 	 * Otherwise, if connected, try to disconnect first. 	 * This allows user to disconnect by connecting to, e.g., 	 * a null address. 	 */
+comment|/* 	 * If protocol is connection-based, can only connect once. 	 * Otherwise, if connected, try to disconnect first.  This allows 	 * user to disconnect by connecting to, e.g., a null address. 	 */
 if|if
 condition|(
 name|so
@@ -3259,7 +3271,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Prevent accumulated error from previous connection 		 * from biting us. 		 */
+comment|/* 		 * Prevent accumulated error from previous connection from 		 * biting us. 		 */
 name|so
 operator|->
 name|so_error
@@ -4212,7 +4224,7 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
-comment|/* 	 * In theory resid should be unsigned. 	 * However, space must be signed, as it might be less than 0 	 * if we over-committed, and we must use a signed comparison 	 * of space and resid.  On the other hand, a negative resid 	 * causes us to loop sending 0-length segments to the protocol. 	 * 	 * Also check to make sure that MSG_EOR isn't used on SOCK_STREAM 	 * type sockets since that's an error. 	 */
+comment|/* 	 * In theory resid should be unsigned.  However, space must be 	 * signed, as it might be less than 0 if we over-committed, and we 	 * must use a signed comparison of space and resid.  On the other 	 * hand, a negative resid causes us to loop sending 0-length 	 * segments to the protocol. 	 * 	 * Also check to make sure that MSG_EOR isn't used on SOCK_STREAM 	 * type sockets since that's an error. 	 */
 if|if
 condition|(
 name|resid
@@ -4354,7 +4366,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * `sendto' and `sendmsg' is allowed on a connection- 		 * based socket if it supports implied connect. 		 * Return ENOTCONN if not connected and no address is 		 * supplied. 		 */
+comment|/* 		 * `sendto' and `sendmsg' is allowed on a connection-based 		 * socket if it supports implied connect.  Return ENOTCONN if 		 * not connected and no address is supplied. 		 */
 if|if
 condition|(
 operator|(
@@ -4600,7 +4612,7 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * XXX all the SBS_CANTSENDMORE checks previously 	 * done could be out of date.  We could have recieved 	 * a reset packet in an interrupt or maybe we slept 	 * while doing page faults in uiomove() etc. We could 	 * probably recheck again inside the locking protection 	 * here, but there are probably other places that this 	 * also happens.  We must rethink this. 	 */
+comment|/* 	 * XXX all the SBS_CANTSENDMORE checks previously done could be out 	 * of date.  We could have recieved a reset packet in an interrupt or 	 * maybe we slept while doing page faults in uiomove() etc.  We could 	 * probably recheck again inside the locking protection here, but 	 * there are probably other places that this also happens.  We must 	 * rethink this. 	 */
 name|error
 operator|=
 call|(
@@ -4624,7 +4636,7 @@ operator|)
 condition|?
 name|PRUS_OOB
 else|:
-comment|/* 	 * If the user set MSG_EOF, the protocol 	 * understands this flag and nothing left to 	 * send then use PRU_SEND_EOF instead of PRU_SEND. 	 */
+comment|/* 	 * If the user set MSG_EOF, the protocol understands this flag and 	 * nothing left to send then use PRU_SEND_EOF instead of PRU_SEND. 	 */
 operator|(
 operator|(
 name|flags
@@ -4743,7 +4755,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send on a socket.  * If send must go all at once and message is larger than  * send buffering, then hard error.  * Lock against other senders.  * If must go all at once and not enough room now, then  * inform user that this would block and do nothing.  * Otherwise, if nonblocking, send as much as possible.  * The data to be sent is described by "uio" if nonzero,  * otherwise by the mbuf chain "top" (which must be null  * if uio is not).  Data provided in mbuf chain must be small  * enough to send all at once.  *  * Returns nonzero on error, timeout or signal; callers  * must check for short counts if EINTR/ERESTART are returned.  * Data and control buffers are freed on return.  */
+comment|/*  * Send on a socket.  If send must go all at once and message is larger than  * send buffering, then hard error.  Lock against other senders.  If must go  * all at once and not enough room now, then inform user that this would  * block and do nothing.  Otherwise, if nonblocking, send as much as  * possible.  The data to be sent is described by "uio" if nonzero, otherwise  * by the mbuf chain "top" (which must be null if uio is not).  Data provided  * in mbuf chain must be small enough to send all at once.  *  * Returns nonzero on error, timeout or signal; callers must check for short  * counts if EINTR/ERESTART are returned.  Data and control buffers are freed  * on return.  */
 end_comment
 
 begin_define
@@ -4853,7 +4865,7 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
-comment|/* 	 * In theory resid should be unsigned. 	 * However, space must be signed, as it might be less than 0 	 * if we over-committed, and we must use a signed comparison 	 * of space and resid.  On the other hand, a negative resid 	 * causes us to loop sending 0-length segments to the protocol. 	 * 	 * Also check to make sure that MSG_EOR isn't used on SOCK_STREAM 	 * type sockets since that's an error. 	 */
+comment|/* 	 * In theory resid should be unsigned.  However, space must be 	 * signed, as it might be less than 0 if we over-committed, and we 	 * must use a signed comparison of space and resid.  On the other 	 * hand, a negative resid causes us to loop sending 0-length 	 * segments to the protocol. 	 * 	 * Also check to make sure that MSG_EOR isn't used on SOCK_STREAM 	 * type sockets since that's an error. 	 */
 if|if
 condition|(
 name|resid
@@ -5346,7 +5358,7 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * XXX all the SBS_CANTSENDMORE checks previously 			 * done could be out of date.  We could have recieved 			 * a reset packet in an interrupt or maybe we slept 			 * while doing page faults in uiomove() etc. We could 			 * probably recheck again inside the locking protection 			 * here, but there are probably other places that this 			 * also happens.  We must rethink this. 			 */
+comment|/* 			 * XXX all the SBS_CANTSENDMORE checks previously 			 * done could be out of date.  We could have recieved 			 * a reset packet in an interrupt or maybe we slept 			 * while doing page faults in uiomove() etc.  We 			 * could probably recheck again inside the locking 			 * protection here, but there are probably other 			 * places that this also happens.  We must rethink 			 * this. 			 */
 name|error
 operator|=
 call|(
@@ -5370,7 +5382,7 @@ operator|)
 condition|?
 name|PRUS_OOB
 else|:
-comment|/* 			 * If the user set MSG_EOF, the protocol 			 * understands this flag and nothing left to 			 * send then use PRU_SEND_EOF instead of PRU_SEND. 			 */
+comment|/* 			 * If the user set MSG_EOF, the protocol understands 			 * this flag and nothing left to send then use 			 * PRU_SEND_EOF instead of PRU_SEND. 			 */
 operator|(
 operator|(
 name|flags
@@ -5397,7 +5409,7 @@ operator|)
 condition|?
 name|PRUS_EOF
 else|:
-comment|/* If there is more to send set PRUS_MORETOCOME */
+comment|/* If there is more to send set PRUS_MORETOCOME. */
 operator|(
 name|resid
 operator|>
@@ -5917,7 +5929,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Implement receive operations on a socket.  * We depend on the way that records are added to the sockbuf  * by sbappend*.  In particular, each record (mbufs linked through m_next)  * must begin with an address if the protocol so specifies,  * followed by an optional mbuf or mbufs containing ancillary data,  * and then zero or more mbufs of data.  * In order to avoid blocking network interrupts for the entire time here,  * we splx() while doing the actual copy to user space.  * Although the sockbuf is locked, new data may still be appended,  * and thus we must maintain consistency of the sockbuf during that time.  *  * The caller may receive the data as a single mbuf chain by supplying  * an mbuf **mp0 for use in returning the chain.  The uio is then used  * only for the count in uio_resid.  */
+comment|/*  * Implement receive operations on a socket.  We depend on the way that  * records are added to the sockbuf by sbappend.  In particular, each record  * (mbufs linked through m_next) must begin with an address if the protocol  * so specifies, followed by an optional mbuf or mbufs containing ancillary  * data, and then zero or more mbufs of data.  In order to allow parallelism  * between network receive and copying to user space, as well as avoid  * sleeping with a mutex held, we release the socket buffer mutex during the  * user space copy.  Although the sockbuf is locked, new data may still be  * appended, and thus we must maintain consistency of the sockbuf during that  * time.  *  * The caller may receive the data as a single mbuf chain by supplying an  * mbuf **mp0 for use in returning the chain.  The uio is then used only for  * the count in uio_resid.  */
 end_comment
 
 begin_function
@@ -6173,7 +6185,7 @@ name|so_rcv
 operator|.
 name|sb_mb
 expr_stmt|;
-comment|/* 	 * If we have less data than requested, block awaiting more 	 * (subject to any timeout) if: 	 *   1. the current count is less than the low water mark, or 	 *   2. MSG_WAITALL is set, and it is possible to do the entire 	 *	receive operation at once if we block (resid<= hiwat). 	 *   3. MSG_DONTWAIT is not set 	 * If MSG_WAITALL is set but resid is larger than the receive buffer, 	 * we have to do the receive in sections, and thus risk returning 	 * a short count if a timeout or signal occurs after we start. 	 */
+comment|/* 	 * If we have less data than requested, block awaiting more (subject 	 * to any timeout) if: 	 *   1. the current count is less than the low water mark, or 	 *   2. MSG_WAITALL is set, and it is possible to do the entire 	 *	receive operation at once if we block (resid<= hiwat). 	 *   3. MSG_DONTWAIT is not set 	 * If MSG_WAITALL is set but resid is larger than the receive buffer, 	 * we have to do the receive in sections, and thus risk returning a 	 * short count if a timeout or signal occurs after we start. 	 */
 if|if
 condition|(
 name|m
@@ -7300,7 +7312,7 @@ name|m_len
 operator|-
 name|moff
 expr_stmt|;
-comment|/* 		 * If mp is set, just pass back the mbufs. 		 * Otherwise copy them out via the uio, then free. 		 * Sockbuf must be consistent here (points to current mbuf, 		 * it points to next record) when we drop priority; 		 * we must note any additions to the sockbuf when we 		 * block interrupts again. 		 */
+comment|/* 		 * If mp is set, just pass back the mbufs.  Otherwise copy 		 * them out via the uio, then free.  Sockbuf must be 		 * consistent here (points to current mbuf, it points to next 		 * record) when we drop priority; we must note any additions 		 * to the sockbuf when we block interrupts again. 		 */
 if|if
 condition|(
 name|mp
@@ -7697,7 +7709,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/*  						 * m_copym() couldn't allocate an mbuf. 						 * Adjust uio_resid back (it was adjusted 						 * down by len bytes, which we didn't end 						 * up "copying" over).  						 */
+comment|/*  						 * m_copym() couldn't 						 * allocate an mbuf.  Adjust 						 * uio_resid back (it was 						 * adjusted down by len 						 * bytes, which we didn't end 						 * up "copying" over).  						 */
 name|uio
 operator|->
 name|uio_resid
@@ -7805,7 +7817,7 @@ operator|&
 name|MSG_EOR
 condition|)
 break|break;
-comment|/* 		 * If the MSG_WAITALL flag is set (for non-atomic socket), 		 * we must not quit until "uio->uio_resid == 0" or an error 		 * termination.  If a signal/timeout occurs, return 		 * with a short count but without error. 		 * Keep sockbuf locked against other readers. 		 */
+comment|/* 		 * If the MSG_WAITALL flag is set (for non-atomic socket), we 		 * must not quit until "uio->uio_resid == 0" or an error 		 * termination.  If a signal/timeout occurs, return with a 		 * short count but without error.  Keep sockbuf locked 		 * against other readers. 		 */
 while|while
 condition|(
 name|flags
@@ -8088,7 +8100,7 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If soreceive() is being done from the socket callback, then 		 * don't need to generate ACK to peer to update window, since 		 * ACK will be generated on return to TCP. 		 */
+comment|/* 		 * If soreceive() is being done from the socket callback, 		 * then don't need to generate ACK to peer to update window, 		 * since ACK will be generated on return to TCP. 		 */
 if|if
 condition|(
 operator|!
@@ -8406,7 +8418,7 @@ argument_list|(
 name|sb
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Invalidate/clear most of the sockbuf structure, but leave 	 * selinfo and mutex data unchanged. 	 */
+comment|/* 	 * Invalidate/clear most of the sockbuf structure, but leave selinfo 	 * and mutex data unchanged. 	 */
 name|bzero
 argument_list|(
 operator|&
@@ -8531,7 +8543,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Perhaps this routine, and sooptcopyout(), below, ought to come in  * an additional variant to handle the case where the option value needs  * to be some kind of integer, but not a specific size.  * In addition to their use here, these functions are also called by the  * protocol-level pr_ctloutput() routines.  */
+comment|/*  * Perhaps this routine, and sooptcopyout(), below, ought to come in an  * additional variant to handle the case where the option value needs to be  * some kind of integer, but not a specific size.  In addition to their use  * here, these functions are also called by the protocol-level pr_ctloutput()  * routines.  */
 end_comment
 
 begin_function
@@ -8565,7 +8577,7 @@ block|{
 name|size_t
 name|valsize
 decl_stmt|;
-comment|/* 	 * If the user gives us more than we wanted, we ignore it, 	 * but if we don't get the minimum length the caller 	 * wants, we return EINVAL.  On success, sopt->sopt_valsize 	 * is set to however much we actually retrieved. 	 */
+comment|/* 	 * If the user gives us more than we wanted, we ignore it, but if we 	 * don't get the minimum length the caller wants, we return EINVAL. 	 * On success, sopt->sopt_valsize is set to however much we actually 	 * retrieved. 	 */
 if|if
 condition|(
 operator|(
@@ -8637,7 +8649,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Kernel version of setsockopt(2)/  * XXX: optlen is size_t, not socklen_t  */
+comment|/*  * Kernel version of setsockopt(2).  *  * XXX: optlen is size_t, not socklen_t  */
 end_comment
 
 begin_function
@@ -9031,7 +9043,7 @@ condition|)
 goto|goto
 name|bad
 goto|;
-comment|/* 			 * Values< 1 make no sense for any of these 			 * options, so disallow them. 			 */
+comment|/* 			 * Values< 1 make no sense for any of these options, 			 * so disallow them. 			 */
 if|if
 condition|(
 name|optval
@@ -9102,7 +9114,7 @@ name|bad
 goto|;
 block|}
 break|break;
-comment|/* 			 * Make sure the low-water is never greater than 			 * the high-water. 			 */
+comment|/* 			 * Make sure the low-water is never greater than the 			 * high-water. 			 */
 case|case
 name|SO_SNDLOWAT
 case|:
@@ -9516,7 +9528,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Helper routine for getsockopt */
+comment|/*  * Helper routine for getsockopt.  */
 end_comment
 
 begin_function
@@ -9547,7 +9559,7 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Documented get behavior is that we always return a value, 	 * possibly truncated to fit in the user's buffer. 	 * Traditional behavior is that we always tell the user 	 * precisely how much we copied, rather than something useful 	 * like the total amount we had available for her. 	 * Note that this interface is not idempotent; the entire answer must 	 * generated ahead of time. 	 */
+comment|/* 	 * Documented get behavior is that we always return a value, possibly 	 * truncated to fit in the user's buffer.  Traditional behavior is 	 * that we always tell the user precisely how much we copied, rather 	 * than something useful like the total amount we had available for 	 * her.  Note that this interface is not idempotent; the entire 	 * answer must generated ahead of time. 	 */
 name|valsize
 operator|=
 name|min
@@ -10927,6 +10939,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * sohasoutofband(): protocol notifies socket layer of the arrival of new  * out-of-band data, which will then notify socket consumers.  */
+end_comment
 
 begin_function
 name|void
