@@ -3,6 +3,10 @@ begin_comment
 comment|/*-  * Copyright (c) 1987, 1991, 1993  *	The Regents of the University of California.  * Copyright (c) 2005 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_malloc.c	8.3 (Berkeley) 1/4/94  */
 end_comment
 
+begin_comment
+comment|/*  * Kernel malloc(9) implementation -- general purpose kernel memory allocator  * based on memory types.  Back end is implemented using the UMA(9) zone  * allocator.  A set of fixed-size buckets are used for smaller allocations,  * and a special UMA allocation interface is used for larger allocations.  * Callers declare memory types, and statistics are maintained independently  * for each memory type.  Statistics are maintained per-CPU for performance  * reasons.  See malloc(9) and comments in malloc.h for a detailed  * description.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -258,6 +262,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Centrally define some common malloc types.  */
+end_comment
+
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
@@ -437,7 +445,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* These won't be powers of two for long */
+comment|/*  * Small malloc(9) memory allocations are allocated from a set of UMA buckets  * of various sizes.  *  * XXX: The comment here used to read "These won't be powers of two for  * long."  It's possible that a significant amount of wasted memory could be  * recovered by tuning the sizes of these buckets.  */
 end_comment
 
 begin_struct
@@ -614,6 +622,10 @@ block|, }
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Zone to allocate malloc type descriptions from.  For ABI reasons, memory  * types are described by a data structure passed by the declaring code, but  * the malloc(9) implementation has its own data structure describing the  * type and statistics.  This permits the malloc(9)-internal data structures  * to be modified without breaking binary-compiled kernel modules that  * declare malloc types.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|uma_zone_t
@@ -766,7 +778,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* time_uptime of last malloc(9) failure */
+comment|/*  * time_uptime of the last malloc(9) failure (induced or real).  */
 end_comment
 
 begin_decl_stmt
@@ -776,15 +788,15 @@ name|t_malloc_fail
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * malloc(9) fault injection -- cause malloc failures every (n) mallocs when  * the caller specifies M_NOWAIT.  If set to 0, no failures are caused.  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|MALLOC_MAKE_FAILURES
 end_ifdef
-
-begin_comment
-comment|/*  * Causes malloc failures every (n) mallocs with M_NOWAIT.  If set to 0,  * doesn't cause failures.  */
-end_comment
 
 begin_expr_stmt
 name|SYSCTL_NODE
@@ -901,7 +913,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add this to the informational malloc_type bucket.  */
+comment|/*  * An allocation has succeeded -- update malloc type statistics for the  * amount of bucket size.  Occurs within a critical section so that the  * thread isn't preempted and doesn't migrate while updating per-PCU  * statistics.  */
 end_comment
 
 begin_function
@@ -1025,7 +1037,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove this allocation from the informational malloc_type bucket.  */
+comment|/*  * A free operation has occurred -- update malloc type statistis for the  * amount of the bucket size.  Occurs within a critical section so that the  * thread isn't preempted and doesn't migrate while updating per-CPU  * statistics.  */
 end_comment
 
 begin_function
