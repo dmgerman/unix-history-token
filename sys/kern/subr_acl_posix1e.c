@@ -64,7 +64,7 @@ file|<sys/acl.h>
 end_include
 
 begin_comment
-comment|/*  * Implement a version of vaccess() that understands POSIX.1e ACL semantics.  * Return 0 on success, else an errno value.  Should be merged into  * vaccess() eventually.  */
+comment|/*  * Implement a version of vaccess() that understands POSIX.1e ACL semantics;  * the access ACL has already been prepared for evaluation by the file  * system and is passed via 'uid', 'gid', and 'acl'.  Return 0 on success,  * else an errno value.  */
 end_comment
 
 begin_function
@@ -121,7 +121,7 @@ name|group_matched
 decl_stmt|,
 name|i
 decl_stmt|;
-comment|/* 	 * Look for a normal, non-privileged way to access the file/directory 	 * as requested.  If it exists, go with that.  Otherwise, attempt 	 * to use privileges granted via cap_granted.  In some cases, 	 * which privileges to use may be ambiguous due to "best match", 	 * in which case fall back on first match for the time being. 	 */
+comment|/* 	 * Look for a normal, non-privileged way to access the file/directory 	 * as requested.  If it exists, go with that.  Otherwise, attempt to 	 * use privileges granted via cap_granted.  In some cases, which 	 * privileges to use may be ambiguous due to "best match", in which 	 * case fall back on first match for the time being. 	 */
 if|if
 condition|(
 name|privused
@@ -133,7 +133,7 @@ name|privused
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Determine privileges now, but don't apply until we've found 	 * a DAC entry that matches but has failed to allow access. 	 */
+comment|/* 	 * Determine privileges now, but don't apply until we've found a DAC 	 * entry that matches but has failed to allow access.  POSIX.1e 	 * capabilities are not implemented, but we document how they would 	 * behave here if implemented. 	 */
 ifndef|#
 directive|ifndef
 name|CAPABILITIES
@@ -309,7 +309,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* CAPABILITIES */
-comment|/* 	 * The owner matches if the effective uid associated with the 	 * credential matches that of the ACL_USER_OBJ entry.  While we're 	 * doing the first scan, also cache the location of the ACL_MASK 	 * and ACL_OTHER entries, preventing some future iterations. 	 */
+comment|/* 	 * The owner matches if the effective uid associated with the 	 * credential matches that of the ACL_USER_OBJ entry.  While we're 	 * doing the first scan, also cache the location of the ACL_MASK and 	 * ACL_OTHER entries, preventing some future iterations. 	 */
 name|acl_mask
 operator|=
 name|acl_other
@@ -501,7 +501,7 @@ default|default:
 break|break;
 block|}
 block|}
-comment|/* 	 * An ACL_OTHER entry should always exist in a valid access 	 * ACL.  If it doesn't, then generate a serious failure.  For now, 	 * this means a debugging message and EPERM, but in the future 	 * should probably be a panic. 	 */
+comment|/* 	 * An ACL_OTHER entry should always exist in a valid access ACL.  If 	 * it doesn't, then generate a serious failure.  For now, this means 	 * a debugging message and EPERM, but in the future should probably 	 * be a panic. 	 */
 if|if
 condition|(
 name|acl_other
@@ -521,7 +521,7 @@ name|EPERM
 operator|)
 return|;
 block|}
-comment|/* 	 * Checks against ACL_USER, ACL_GROUP_OBJ, and ACL_GROUP fields 	 * are masked by an ACL_MASK entry, if any.  As such, first identify 	 * the ACL_MASK field, then iterate through identifying potential 	 * user matches, then group matches.  If there is no ACL_MASK, 	 * assume that the mask allows all requests to succeed. 	 */
+comment|/* 	 * Checks against ACL_USER, ACL_GROUP_OBJ, and ACL_GROUP fields are 	 * masked by an ACL_MASK entry, if any.  As such, first identify the 	 * ACL_MASK field, then iterate through identifying potential user 	 * matches, then group matches.  If there is no ACL_MASK, assume that 	 * the mask allows all requests to succeed. 	 */
 if|if
 condition|(
 name|acl_mask
@@ -585,7 +585,7 @@ name|VWRITE
 operator||
 name|VAPPEND
 expr_stmt|;
-comment|/* 	 * Iterate through user ACL entries.  Do checks twice, first 	 * without privilege, and then if a match is found but failed, 	 * a second time with privilege. 	 */
+comment|/* 	 * Iterate through user ACL entries.  Do checks twice, first without 	 * privilege, and then if a match is found but failed, a second time 	 * with privilege. 	 */
 comment|/* 	 * Check ACL_USER ACL entries. 	 */
 for|for
 control|(
@@ -747,7 +747,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * Group match is best-match, not first-match, so find a  	 * "best" match.  Iterate across, testing each potential group 	 * match.  Make sure we keep track of whether we found a match 	 * or not, so that we know if we should try again with any 	 * available privilege, or if we should move on to ACL_OTHER. 	 */
+comment|/* 	 * Group match is best-match, not first-match, so find a "best" 	 * match.  Iterate across, testing each potential group match.  Make 	 * sure we keep track of whether we found a match or not, so that we 	 * know if we should try again with any available privilege, or if we 	 * should move on to ACL_OTHER. 	 */
 name|group_matched
 operator|=
 literal|0
@@ -992,7 +992,7 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* 		 * There was a match, but it did not grant rights via 		 * pure DAC.  Try again, this time with privilege. 		 */
+comment|/* 		 * There was a match, but it did not grant rights via pure 		 * DAC.  Try again, this time with privilege. 		 */
 for|for
 control|(
 name|i
@@ -1364,7 +1364,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * For the purposes of filesystems maintaining the _OBJ entries in an  * inode with a mode_t field, this routine converts a mode_t entry  * to an acl_perm_t.  */
+comment|/*  * For the purposes of filesystems maintaining the _OBJ entries in an inode  * with a mode_t field, this routine converts a mode_t entry to an  * acl_perm_t.  */
 end_comment
 
 begin_function
@@ -1768,7 +1768,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Utility function to generate a file mode given a complete POSIX.1e  * access ACL.  Note that if the ACL is improperly formed, this may  * result in a panic.  */
+comment|/*  * Utility function to generate a file mode given a complete POSIX.1e access  * ACL.  Note that if the ACL is improperly formed, this may result in a  * panic.  */
 end_comment
 
 begin_function
@@ -1963,7 +1963,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Perform a syntactic check of the ACL, sufficient to allow an  * implementing filesystem to determine if it should accept this and  * rely on the POSIX.1e ACL properties.  */
+comment|/*  * Perform a syntactic check of the ACL, sufficient to allow an implementing  * filesystem to determine if it should accept this and rely on the POSIX.1e  * ACL properties.  */
 end_comment
 
 begin_function
@@ -1992,7 +1992,7 @@ name|num_acl_other
 decl_stmt|,
 name|i
 decl_stmt|;
-comment|/* 	 * Verify that the number of entries does not exceed the maximum 	 * defined for acl_t. 	 * Verify that the correct number of various sorts of ae_tags are 	 * present: 	 *   Exactly one ACL_USER_OBJ 	 *   Exactly one ACL_GROUP_OBJ 	 *   Exactly one ACL_OTHER 	 *   If any ACL_USER or ACL_GROUP entries appear, then exactly one 	 *   ACL_MASK entry must also appear. 	 * Verify that all ae_perm entries are in ACL_PERM_BITS. 	 * Verify all ae_tag entries are understood by this implementation. 	 * Note: Does not check for uniqueness of qualifier (ae_id) field. 	 */
+comment|/* 	 * Verify that the number of entries does not exceed the maximum 	 * defined for acl_t. 	 * 	 * Verify that the correct number of various sorts of ae_tags are 	 * present: 	 *   Exactly one ACL_USER_OBJ 	 *   Exactly one ACL_GROUP_OBJ 	 *   Exactly one ACL_OTHER 	 *   If any ACL_USER or ACL_GROUP entries appear, then exactly one 	 *   ACL_MASK entry must also appear. 	 * 	 * Verify that all ae_perm entries are in ACL_PERM_BITS. 	 * 	 * Verify all ae_tag entries are understood by this implementation. 	 * 	 * Note: Does not check for uniqueness of qualifier (ae_id) field. 	 */
 name|num_acl_user_obj
 operator|=
 name|num_acl_user
@@ -2355,7 +2355,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a requested mode for a new object, and a default ACL, combine  * the two to produce a new mode.  Be careful not to clear any bits that  * aren't intended to be affected by the POSIX.1e ACL.  Eventually,  * this might also take the cmask as an argument, if we push that down  * into per-filesystem-code.  */
+comment|/*  * Given a requested mode for a new object, and a default ACL, combine the  * two to produce a new mode.  Be careful not to clear any bits that aren't  * intended to be affected by the POSIX.1e ACL.  Eventually, this might also  * take the cmask as an argument, if we push that down into  * per-filesystem-code.  */
 end_comment
 
 begin_function
@@ -2378,7 +2378,7 @@ name|mode
 operator|=
 name|cmode
 expr_stmt|;
-comment|/* 	 * The current composition policy is that a permission bit must 	 * be set in *both* the ACL and the requested creation mode for 	 * it to appear in the resulting mode/ACL.  First clear any 	 * possibly effected bits, then reconstruct. 	 */
+comment|/* 	 * The current composition policy is that a permission bit must be 	 * set in *both* the ACL and the requested creation mode for it to 	 * appear in the resulting mode/ACL.  First clear any possibly 	 * effected bits, then reconstruct. 	 */
 name|mode
 operator|&=
 name|ACL_PRESERVE_MASK
