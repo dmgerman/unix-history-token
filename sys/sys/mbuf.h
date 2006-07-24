@@ -985,17 +985,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MT_FTABLE
-value|11
-end_define
-
-begin_comment
-comment|/* fragment reassembly header */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MT_CONTROL
 value|14
 end_define
@@ -1038,7 +1027,7 @@ comment|/* Not a type but a flag to allocate 				   a non-initialized mbuf */
 end_comment
 
 begin_comment
-comment|/*  * General mbuf allocator statistics structure.  */
+comment|/*  * General mbuf allocator statistics structure.  *  * Many of these statistics are no longer used; we instead track many  * allocator statistics through UMA's built in statistics mechanism.  */
 end_comment
 
 begin_struct
