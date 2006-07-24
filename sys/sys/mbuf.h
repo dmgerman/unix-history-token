@@ -971,72 +971,6 @@ begin_comment
 comment|/* packet header, use M_PKTHDR instead */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|MT_SOCKET
-value|3
-end_define
-
-begin_comment
-comment|/* socket structure */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MT_PCB
-value|4
-end_define
-
-begin_comment
-comment|/* protocol control block */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MT_RTABLE
-value|5
-end_define
-
-begin_comment
-comment|/* routing tables */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MT_HTABLE
-value|6
-end_define
-
-begin_comment
-comment|/* IMP host tables */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MT_ATABLE
-value|7
-end_define
-
-begin_comment
-comment|/* address resolution tables */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -1048,28 +982,6 @@ begin_comment
 comment|/* socket name */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|MT_SOOPTS
-value|10
-end_define
-
-begin_comment
-comment|/* socket options */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -1080,39 +992,6 @@ end_define
 begin_comment
 comment|/* fragment reassembly header */
 end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|MT_RIGHTS
-value|12
-end_define
-
-begin_comment
-comment|/* access rights */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MT_IFADDR
-value|13
-end_define
-
-begin_comment
-comment|/* interface address */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
