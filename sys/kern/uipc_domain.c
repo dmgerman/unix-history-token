@@ -471,7 +471,7 @@ name|pu
 operator|->
 name|pru_sosend
 argument_list|,
-name|sosend
+name|sosend_generic
 argument_list|)
 expr_stmt|;
 name|DEFAULT
@@ -480,7 +480,7 @@ name|pu
 operator|->
 name|pru_soreceive
 argument_list|,
-name|soreceive
+name|soreceive_generic
 argument_list|)
 expr_stmt|;
 name|DEFAULT
@@ -489,7 +489,7 @@ name|pu
 operator|->
 name|pru_sopoll
 argument_list|,
-name|sopoll
+name|sopoll_generic
 argument_list|)
 expr_stmt|;
 undef|#

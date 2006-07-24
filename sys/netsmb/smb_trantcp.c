@@ -271,7 +271,7 @@ name|flags
 parameter_list|,
 name|td
 parameter_list|)
-value|(so)->so_proto->pr_usrreqs->pru_sosend( \ 				    so, NULL, 0, m, 0, flags, td)
+value|sosend(so, NULL, 0, m, 0, flags, td)
 end_define
 
 begin_function_decl
@@ -420,15 +420,7 @@ name|td
 parameter_list|)
 block|{
 return|return
-name|nbp
-operator|->
-name|nbp_tso
-operator|->
-name|so_proto
-operator|->
-name|pr_usrreqs
-operator|->
-name|pru_sopoll
+name|sopoll
 argument_list|(
 name|nbp
 operator|->
@@ -1923,13 +1915,7 @@ name|td
 expr_stmt|;
 name|error
 operator|=
-name|so
-operator|->
-name|so_proto
-operator|->
-name|pr_usrreqs
-operator|->
-name|pru_soreceive
+name|soreceive
 argument_list|(
 name|so
 argument_list|,
@@ -2284,13 +2270,7 @@ name|MSG_WAITALL
 expr_stmt|;
 name|error
 operator|=
-name|so
-operator|->
-name|so_proto
-operator|->
-name|pr_usrreqs
-operator|->
-name|pru_soreceive
+name|soreceive
 argument_list|(
 name|so
 argument_list|,

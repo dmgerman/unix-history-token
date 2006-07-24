@@ -1197,7 +1197,6 @@ modifier|*
 name|nam
 parameter_list|)
 function_decl|;
-comment|/* 	 * These four added later, so they are out of order.  They are used 	 * for shortcutting (fast path input/output) in some protocols. 	 * XXX - that's a lie, they are not implemented yet 	 * Rather than calling sosend() etc. directly, calls are made 	 * through these entry points.  For protocols which still use 	 * the generic code, these just point to those routines. 	 */
 name|int
 function_decl|(
 modifier|*

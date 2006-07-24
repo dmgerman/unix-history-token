@@ -4126,16 +4126,7 @@ expr_stmt|;
 comment|/* Send packet */
 name|error
 operator|=
-call|(
-modifier|*
-name|so
-operator|->
-name|so_proto
-operator|->
-name|pr_usrreqs
-operator|->
-name|pru_sosend
-call|)
+name|sosend
 argument_list|(
 name|so
 argument_list|,
@@ -4833,16 +4824,7 @@ condition|(
 operator|(
 name|error
 operator|=
-call|(
-modifier|*
-name|so
-operator|->
-name|so_proto
-operator|->
-name|pr_usrreqs
-operator|->
-name|pru_soreceive
-call|)
+name|soreceive
 argument_list|(
 name|so
 argument_list|,

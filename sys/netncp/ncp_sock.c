@@ -573,16 +573,10 @@ name|flags
 operator|=
 name|MSG_DONTWAIT
 expr_stmt|;
-comment|/*	error = so->so_proto->pr_usrreqs->pru_soreceive(so, 0,&auio, 	    (struct mbuf **)0, (struct mbuf **)0,&flags);*/
+comment|/*	error = soreceive(so, 0,&auio, (struct mbuf **)0, (struct mbuf **)0,&flags);*/
 name|error
 operator|=
-name|so
-operator|->
-name|so_proto
-operator|->
-name|pr_usrreqs
-operator|->
-name|pru_soreceive
+name|soreceive
 argument_list|(
 name|so
 argument_list|,
@@ -720,13 +714,7 @@ expr_stmt|;
 comment|/*		NCPDDEBUG(m);*/
 name|error
 operator|=
-name|so
-operator|->
-name|so_proto
-operator|->
-name|pr_usrreqs
-operator|->
-name|pru_sosend
+name|sosend
 argument_list|(
 name|so
 argument_list|,
@@ -862,13 +850,8 @@ init|=
 name|NULL
 decl_stmt|;
 return|return
-name|so
-operator|->
-name|so_proto
-operator|->
-name|pr_usrreqs
-operator|->
-name|pru_sopoll
+operator|(
+name|sopoll
 argument_list|(
 name|so
 argument_list|,
@@ -878,6 +861,7 @@ name|cred
 argument_list|,
 name|td
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -2300,13 +2284,7 @@ name|MSG_DONTWAIT
 expr_stmt|;
 name|error
 operator|=
-name|so
-operator|->
-name|so_proto
-operator|->
-name|pr_usrreqs
-operator|->
-name|pru_soreceive
+name|soreceive
 argument_list|(
 name|so
 argument_list|,
@@ -2391,13 +2369,7 @@ literal|'Y'
 expr_stmt|;
 name|error
 operator|=
-name|so
-operator|->
-name|so_proto
-operator|->
-name|pr_usrreqs
-operator|->
-name|pru_sosend
+name|sosend
 argument_list|(
 name|so
 argument_list|,
