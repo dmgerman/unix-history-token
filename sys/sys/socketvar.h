@@ -107,7 +107,7 @@ name|socket
 modifier|*
 name|so_head
 decl_stmt|;
-comment|/* (e) back pointer to accept socket */
+comment|/* (e) back pointer to listen socket */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
