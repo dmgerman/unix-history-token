@@ -778,11 +778,34 @@ name|uplcom_products
 index|[]
 init|=
 block|{
+block|{
+name|USB_VENDOR_RADIOSHACK
+block|,
+name|USB_PRODUCT_RADIOSHACK_USBCABLE
+block|,
+operator|-
+literal|1
+block|,
+name|TYPE_PL2303
+block|}
+block|,
 comment|/* I/O DATA USB-RSAQ */
 block|{
 name|USB_VENDOR_IODATA
 block|,
 name|USB_PRODUCT_IODATA_USBRSAQ
+block|,
+operator|-
+literal|1
+block|,
+name|TYPE_PL2303
+block|}
+block|,
+comment|/* Prolific Pharos */
+block|{
+name|USB_VENDOR_PROLIFIC
+block|,
+name|USB_PRODUCT_PROLIFIC_PHAROS
 block|,
 operator|-
 literal|1
