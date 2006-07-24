@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2004 Poul-Henning Kamp  * All rights reserved.  *  
 end_comment
 
 begin_comment
-comment|/*  * Architectural notes:  *  * bufobj is a new object which is what buffers hang from in the buffer  * cache.  *  * This used to be vnodes, but we need non-vnode code to be able  * to use the buffer cache as well, specifically geom classes like gbde,  * raid3 and raid5.  *  * All vnodes will contain a bufobj initially, but down the road we may  * want to only allocate bufobjs when they are needed.  There could be a  * large number of vnodes in the system which wouldn't need a bufobj during  * their lifetime.  *  * The exact relationship to the vmobject is not determined at this point,  * it may in fact bee that we find them to be two sides of the same object   * once things starts to crystalize.  */
+comment|/*  * Architectural notes:  *  * bufobj is a new object which is what buffers hang from in the buffer  * cache.  *  * This used to be vnodes, but we need non-vnode code to be able  * to use the buffer cache as well, specifically geom classes like gbde,  * raid3 and raid5.  *  * All vnodes will contain a bufobj initially, but down the road we may  * want to only allocate bufobjs when they are needed.  There could be a  * large number of vnodes in the system which wouldn't need a bufobj during  * their lifetime.  *  * The exact relationship to the vmobject is not determined at this point,  * it may in fact be that we find them to be two sides of the same object   * once things starts to crystalize.  */
 end_comment
 
 begin_ifndef
