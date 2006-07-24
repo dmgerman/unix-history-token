@@ -336,7 +336,7 @@ modifier|*
 name|so_peerlabel
 decl_stmt|;
 comment|/* (b) cached MAC label for peer */
-comment|/* NB: generation count must not be first; easiest to make it last. */
+comment|/* NB: generation count must not be first. */
 name|so_gen_t
 name|so_gencnt
 decl_stmt|;
