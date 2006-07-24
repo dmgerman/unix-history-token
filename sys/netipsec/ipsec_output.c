@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_enc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -1570,6 +1576,31 @@ name|isr
 operator|->
 name|sav
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_ENC
+comment|/* pass the mbuf to enc0 for packet filtering */
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|ipsec_filter
+argument_list|(
+operator|&
+name|m
+argument_list|,
+literal|2
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|bad
+goto|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -2070,6 +2101,21 @@ expr_stmt|;
 block|}
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|DEV_ENC
+comment|/* pass the mbuf to enc0 for bpf processing */
+name|ipsec_bpf
+argument_list|(
+name|m
+argument_list|,
+name|sav
+argument_list|,
+name|AF_INET
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Dispatch to the appropriate IPsec transform logic.  The 	 * packet will be returned for transmission after crypto 	 * processing, etc. are completed.  For encapsulation we 	 * bypass this call because of the explicit call done above 	 * (necessary to deal with IP_DF handling for IPv4). 	 * 	 * NB: m& sav are ``passed to caller'' who's reponsible for 	 *     for reclaiming their resources. 	 */
 if|if
 condition|(

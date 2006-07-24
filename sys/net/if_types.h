@@ -2145,6 +2145,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IFT_ENC
+value|0xf4
+end_define
+
+begin_define
+define|#
+directive|define
 name|IFT_PFLOG
 value|0xf6
 end_define

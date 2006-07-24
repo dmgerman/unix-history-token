@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_enc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -2120,6 +2126,48 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|/* record data transfer */
+ifdef|#
+directive|ifdef
+name|DEV_ENC
+comment|/* 	 * Pass the mbuf to enc0 for bpf and pfil. We will filter the IPIP 	 * packet later after it has been decapsulated. 	 */
+name|ipsec_bpf
+argument_list|(
+name|m
+argument_list|,
+name|sav
+argument_list|,
+name|AF_INET
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|prot
+operator|!=
+name|IPPROTO_IPIP
+condition|)
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|ipsec_filter
+argument_list|(
+operator|&
+name|m
+argument_list|,
+literal|1
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+endif|#
+directive|endif
 comment|/* 	 * Re-dispatch via software interrupt. 	 */
 if|if
 condition|(
