@@ -2213,56 +2213,70 @@ begin_define
 define|#
 directive|define
 name|AMDCABLE
-value|0x01
+value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
 name|AMDBUG
-value|0x02
+value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
 name|NVIDIA
-value|0x04
+value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
-name|NV4OFF
-value|0x08
+name|NV4
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|NV4BYTE
+value|0x0030
+end_define
+
+begin_define
+define|#
+directive|define
+name|NV4WORD
+value|0x0050
 end_define
 
 begin_define
 define|#
 directive|define
 name|VIACLK
-value|0x10
+value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
 name|VIABUG
-value|0x20
+value|0x0200
 end_define
 
 begin_define
 define|#
 directive|define
 name|VIABAR
-value|0x40
+value|0x0400
 end_define
 
 begin_define
 define|#
 directive|define
 name|VIAAHCI
-value|0x80
+value|0x0800
 end_define
 
 begin_comment
