@@ -160,12 +160,6 @@ literal|"socknames"
 block|}
 block|,
 block|{
-name|MT_FTABLE
-block|,
-literal|"frags"
-block|}
-block|,
-block|{
 name|MT_CONTROL
 block|,
 literal|"control"
