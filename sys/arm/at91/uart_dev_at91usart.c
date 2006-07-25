@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_comconsole.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -94,6 +100,23 @@ include|#
 directive|include
 file|<arm/at91/at91_pdcreg.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KDB
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
