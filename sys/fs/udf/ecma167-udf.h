@@ -631,13 +631,6 @@ name|__packed
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|UDF_PMAP_SIZE
-value|64
-end_define
-
 begin_comment
 comment|/* Type 1 Partition Map [3/10.7.2] */
 end_comment
@@ -663,6 +656,13 @@ name|__packed
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|UDF_PMAP_TYPE1_SIZE
+value|6
+end_define
+
 begin_comment
 comment|/* Type 2 Partition Map [3/10.7.3] */
 end_comment
@@ -687,6 +687,13 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|UDF_PMAP_TYPE2_SIZE
+value|64
+end_define
 
 begin_comment
 comment|/* Virtual Partition Map [UDF 2.01/2.2.8] */
@@ -787,12 +794,6 @@ begin_union
 union|union
 name|udf_pmap
 block|{
-name|uint8_t
-name|data
-index|[
-name|UDF_PMAP_SIZE
-index|]
-decl_stmt|;
 name|struct
 name|part_map_1
 name|pm1
