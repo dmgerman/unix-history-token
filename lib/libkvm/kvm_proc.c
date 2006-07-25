@@ -1927,6 +1927,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* 		 * XXX: This is plain wrong, rux_runtime has nothing 		 * to do with struct bintime, rux_runtime is just a 64-bit 		 * integer counter of cputicks.  What we need here is a way 		 * to convert cputicks to usecs.  The kernel does it in 		 * kern/kern_tc.c, but the function can't be just copied. 		 */
 name|bintime2timeval
 argument_list|(
 operator|&
