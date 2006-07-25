@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	"enigma.c" is in file cbw.tar from  *	anonymous FTP host watmsg.waterloo.edu: pub/crypt/cbw.tar.Z  *  *	A one-rotor machine designed along the lines of Enigma  *	but considerably trivialized.  *  *	A public-domain replacement for the UNIX "crypt" command.  *  *	Upgraded to function properly on 64-bit machines.  */
+comment|/*-  *	"enigma.c" is in file cbw.tar from  *	anonymous FTP host watmsg.waterloo.edu: pub/crypt/cbw.tar.Z  *  *	A one-rotor machine designed along the lines of Enigma  *	but considerably trivialized.  *  *	A public-domain replacement for the UNIX "crypt" command.  *  *	Upgraded to function properly on 64-bit machines.  */
 end_comment
 
 begin_include
@@ -167,7 +167,7 @@ decl_stmt|;
 name|unsigned
 name|rnd
 decl_stmt|;
-name|long
+name|int32_t
 name|seed
 decl_stmt|;
 name|strlcpy
@@ -283,41 +283,6 @@ operator|%
 literal|13
 index|]
 expr_stmt|;
-if|if
-condition|(
-sizeof|sizeof
-argument_list|(
-name|long
-argument_list|)
-operator|>
-literal|4
-condition|)
-block|{
-comment|/* Force seed to stay in 32-bit signed math */
-if|if
-condition|(
-name|seed
-operator|&
-literal|0x80000000
-condition|)
-name|seed
-operator|=
-name|seed
-operator||
-operator|(
-operator|-
-literal|1L
-operator|&
-operator|~
-literal|0xFFFFFFFFL
-operator|)
-expr_stmt|;
-else|else
-name|seed
-operator|&=
-literal|0x7FFFFFFF
-expr_stmt|;
-block|}
 name|rnd
 operator|=
 name|seed
@@ -795,7 +760,7 @@ name|unsigned
 name|rnd
 decl_stmt|;
 specifier|static
-name|long
+name|int32_t
 name|seed
 init|=
 literal|123
