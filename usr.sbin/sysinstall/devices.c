@@ -676,6 +676,13 @@ argument_list|)
 block|,
 name|NETWORK
 argument_list|(
+literal|"stge"
+argument_list|,
+literal|"Sundance/Tamarack TC9021 gigabit Ethernet"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
 literal|"sk"
 argument_list|,
 literal|"SysKonnect PCI gigabit ethernet card"
