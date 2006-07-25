@@ -1170,7 +1170,7 @@ name|PCSR_RPB
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Reset failed :'(\n"
+literal|"Reset failed!\n"
 argument_list|)
 expr_stmt|;
 for|for
