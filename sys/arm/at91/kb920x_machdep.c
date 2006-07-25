@@ -2112,7 +2112,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|freemempos
+name|virtual_avail
 operator|-
 name|KERNVIRTADDR
 operator|+
