@@ -3019,6 +3019,8 @@ operator|)
 operator|/
 literal|10
 argument_list|,
+name|abs
+argument_list|(
 operator|(
 operator|*
 operator|(
@@ -3031,6 +3033,7 @@ literal|2732
 operator|)
 operator|%
 literal|10
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3190,6 +3193,8 @@ operator|)
 operator|/
 literal|10
 argument_list|,
+name|abs
+argument_list|(
 operator|(
 operator|*
 operator|(
@@ -3202,6 +3207,7 @@ literal|2732
 operator|)
 operator|%
 literal|10
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
