@@ -846,26 +846,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|allocated
-operator|&&
-name|abuf
-operator|!=
-name|buf
-condition|)
-name|panic
-argument_list|(
-literal|"allocated=%d abuf=%p buf=%p"
-argument_list|,
-name|allocated
-argument_list|,
-name|abuf
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 operator|(
 name|enccrd
 operator|->
