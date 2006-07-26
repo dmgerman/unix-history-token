@@ -85,6 +85,40 @@ value|307200
 end_define
 
 begin_comment
+comment|/* Hack! */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|UART_PCLK
+value|0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|UART_PCLK
+value|MCB2_PCLK
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Multiplexed I/O. */
 end_comment
 
@@ -504,7 +538,7 @@ name|bas
 argument_list|,
 name|WR_MCB2
 argument_list|,
-name|MCB2_PCLK
+name|UART_PCLK
 argument_list|)
 expr_stmt|;
 name|uart_barrier
@@ -604,7 +638,7 @@ name|bas
 argument_list|,
 name|WR_MCB2
 argument_list|,
-name|MCB2_PCLK
+name|UART_PCLK
 operator||
 name|MCB2_BRGE
 argument_list|)
@@ -729,7 +763,7 @@ name|bas
 argument_list|,
 name|WR_MCB2
 argument_list|,
-name|MCB2_PCLK
+name|UART_PCLK
 argument_list|)
 expr_stmt|;
 name|uart_barrier
