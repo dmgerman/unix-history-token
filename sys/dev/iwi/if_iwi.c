@@ -2823,6 +2823,13 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
+name|ic
+operator|->
+name|ic_bmissthreshold
+operator|=
+literal|10
+expr_stmt|;
+comment|/* override default */
 comment|/* override default methods */
 name|ic
 operator|->
