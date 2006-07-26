@@ -1921,6 +1921,14 @@ argument_list|(
 name|ccb
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|aac_io_lock
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 default|default:
