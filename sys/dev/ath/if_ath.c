@@ -10037,12 +10037,20 @@ name|sc
 operator|->
 name|sc_boff
 operator|.
+name|bo_tim_len
+operator|&&
+operator|(
+name|sc
+operator|->
+name|sc_boff
+operator|.
 name|bo_tim
 index|[
 literal|4
 index|]
 operator|&
 literal|1
+operator|)
 condition|)
 block|{
 comment|/* NB: only at DTIM */
