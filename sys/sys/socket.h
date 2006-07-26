@@ -1192,8 +1192,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AF_MAX
+name|AF_IEEE80211
 value|37
+end_define
+
+begin_comment
+comment|/* IEEE 802.11 protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_MAX
+value|38
 end_define
 
 begin_endif

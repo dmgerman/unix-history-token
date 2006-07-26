@@ -450,6 +450,12 @@ operator|->
 name|ic_myaddr
 argument_list|)
 expr_stmt|;
+name|ifp
+operator|->
+name|if_output
+operator|=
+name|ieee80211_output
+expr_stmt|;
 name|bpfattach2
 argument_list|(
 name|ifp
@@ -834,6 +840,26 @@ name|ic_reset
 operator|=
 name|ieee80211_default_reset
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ifp
+operator|->
+name|if_spare2
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"oops, hosed"
+operator|)
+argument_list|)
+expr_stmt|;
+name|ifp
+operator|->
+name|if_spare2
+operator|=
+name|ic
+expr_stmt|;
+comment|/* XXX temp backpointer */
 block|}
 end_function
 

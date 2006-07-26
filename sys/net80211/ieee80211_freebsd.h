@@ -863,6 +863,112 @@ begin_comment
 comment|/* station re-associate (ap mode) */
 end_comment
 
+begin_comment
+comment|/*  * Structure prepended to raw packets sent through the bpf  * interface when set to DLT_IEEE802_11_RADIO.  This allows  * user applications to specify pretty much everything in  * an Atheros tx descriptor.  XXX need to generalize.  *  * XXX cannot be more than 14 bytes as it is copied to a sockaddr's  * XXX sa_data area.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ieee80211_bpf_params
+block|{
+name|uint8_t
+name|ibp_vers
+decl_stmt|;
+comment|/* version */
+define|#
+directive|define
+name|IEEE80211_BPF_VERSION
+value|0
+name|uint8_t
+name|ibp_len
+decl_stmt|;
+comment|/* header length in bytes */
+name|uint8_t
+name|ibp_flags
+decl_stmt|;
+define|#
+directive|define
+name|IEEE80211_BPF_SHORTPRE
+value|0x01
+comment|/* tx with short preamble */
+define|#
+directive|define
+name|IEEE80211_BPF_NOACK
+value|0x02
+comment|/* tx with no ack */
+define|#
+directive|define
+name|IEEE80211_BPF_CRYPTO
+value|0x04
+comment|/* tx with h/w encryption */
+define|#
+directive|define
+name|IEEE80211_BPF_FCS
+value|0x10
+comment|/* frame incldues FCS */
+define|#
+directive|define
+name|IEEE80211_BPF_DATAPAD
+value|0x20
+comment|/* frame includes data padding */
+define|#
+directive|define
+name|IEEE80211_BPF_RTS
+value|0x40
+comment|/* tx with RTS/CTS */
+define|#
+directive|define
+name|IEEE80211_BPF_CTS
+value|0x80
+comment|/* tx with CTS only */
+name|uint8_t
+name|ibp_pri
+decl_stmt|;
+comment|/* WME/WMM AC+tx antenna */
+name|uint8_t
+name|ibp_try0
+decl_stmt|;
+comment|/* series 1 try count */
+name|uint8_t
+name|ibp_rate0
+decl_stmt|;
+comment|/* series 1 IEEE tx rate */
+name|uint8_t
+name|ibp_power
+decl_stmt|;
+comment|/* tx power (device units) */
+name|uint8_t
+name|ibp_ctsrate
+decl_stmt|;
+comment|/* IEEE tx rate for CTS */
+name|uint8_t
+name|ibp_try1
+decl_stmt|;
+comment|/* series 2 try count */
+name|uint8_t
+name|ibp_rate1
+decl_stmt|;
+comment|/* series 2 IEEE tx rate */
+name|uint8_t
+name|ibp_try2
+decl_stmt|;
+comment|/* series 3 try count */
+name|uint8_t
+name|ibp_rate2
+decl_stmt|;
+comment|/* series 3 IEEE tx rate */
+name|uint8_t
+name|ibp_try3
+decl_stmt|;
+comment|/* series 4 try count */
+name|uint8_t
+name|ibp_rate3
+decl_stmt|;
+comment|/* series 4 IEEE tx rate */
+block|}
+struct|;
+end_struct
+
 begin_endif
 endif|#
 directive|endif

@@ -395,6 +395,12 @@ name|ic_send_mgmt
 operator|=
 name|ieee80211_send_mgmt
 expr_stmt|;
+name|ic
+operator|->
+name|ic_raw_xmit
+operator|=
+name|ieee80211_raw_xmit
+expr_stmt|;
 block|}
 end_function
 
