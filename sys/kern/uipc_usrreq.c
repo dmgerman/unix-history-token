@@ -2041,13 +2041,6 @@ name|ECONNRESET
 argument_list|)
 expr_stmt|;
 block|}
-name|soisdisconnected
-argument_list|(
-name|unp
-operator|->
-name|unp_socket
-argument_list|)
-expr_stmt|;
 name|unp
 operator|->
 name|unp_socket
