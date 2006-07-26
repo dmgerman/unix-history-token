@@ -360,6 +360,8 @@ name|struct
 name|syscall
 modifier|*
 name|sc
+init|=
+name|NULL
 decl_stmt|;
 if|if
 condition|(
