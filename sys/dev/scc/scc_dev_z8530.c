@@ -219,13 +219,9 @@ block|,
 operator|.
 name|cl_range
 operator|=
-operator|(
 name|CHAN_B
 operator|-
 name|CHAN_A
-operator|)
-operator|<<
-literal|1
 block|, }
 decl_stmt|;
 end_decl_stmt

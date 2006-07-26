@@ -544,6 +544,12 @@ name|cl
 operator|->
 name|cl_range
 argument_list|)
+operator|<<
+name|sc
+operator|->
+name|sc_bas
+operator|.
+name|regshft
 expr_stmt|;
 name|mtx_init
 argument_list|(
@@ -1882,6 +1888,8 @@ name|cl
 operator|->
 name|cl_range
 argument_list|)
+operator|<<
+name|regshft
 expr_stmt|;
 comment|/* 	 * Allocate the register resource. We assume that all SCCs have a 	 * single register window in either I/O port space or memory mapped 	 * I/O space. Any SCC that needs multiple windows will consequently 	 * not be supported by this driver as-is. 	 */
 name|sc
