@@ -2606,12 +2606,6 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
-name|if_mtu
-operator|=
-name|ETHERMTU
-expr_stmt|;
-name|ifp
-operator|->
 name|if_flags
 operator|=
 name|IFF_BROADCAST
@@ -2623,12 +2617,6 @@ operator|->
 name|if_ioctl
 operator|=
 name|bridge_ioctl
-expr_stmt|;
-name|ifp
-operator|->
-name|if_output
-operator|=
-name|bridge_output
 expr_stmt|;
 name|ifp
 operator|->
@@ -2673,12 +2661,6 @@ name|ifp
 operator|->
 name|if_snd
 argument_list|)
-expr_stmt|;
-name|ifp
-operator|->
-name|if_hdrlen
-operator|=
-name|ETHER_HDR_LEN
 expr_stmt|;
 comment|/* 	 * Generate a random ethernet address with a locally administered 	 * address. 	 * 	 * Since we are using random ethernet addresses for the bridge, it is 	 * possible that we might have address collisions, so make sure that 	 * this hardware address isn't already in use on another bridge. 	 */
 for|for
