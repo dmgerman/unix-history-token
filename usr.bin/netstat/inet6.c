@@ -189,6 +189,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -3548,6 +3554,13 @@ operator|<
 literal|0
 condition|)
 block|{
+comment|/* Just shut up if the kernel doesn't have ipv6. */
+if|if
+condition|(
+name|errno
+operator|!=
+name|ENOENT
+condition|)
 name|perror
 argument_list|(
 literal|"Warning: sysctl(net.inet6.ip6.rip6stats)"
