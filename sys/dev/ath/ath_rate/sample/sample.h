@@ -654,7 +654,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"rix %d (%d) bad ratekbps %d mode %u"
+literal|"rix %d (%d) bad ratekbps %d mode %u\n"
 argument_list|,
 name|rix
 argument_list|,
@@ -866,7 +866,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cix %d (%d) bad ratekbps %d mode %u"
+literal|"cix %d (%d) bad ratekbps %d mode %u\n"
 argument_list|,
 name|cix
 argument_list|,
