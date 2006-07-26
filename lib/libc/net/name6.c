@@ -10781,6 +10781,9 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 name|char
 modifier|*
 name|tld6
@@ -10792,6 +10795,8 @@ block|,
 name|NULL
 block|}
 decl_stmt|;
+endif|#
+directive|endif
 name|char
 modifier|*
 name|tld4
