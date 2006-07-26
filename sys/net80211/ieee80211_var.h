@@ -156,60 +156,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_DTIM_MAX
-value|15
-end_define
-
-begin_comment
-comment|/* max DTIM period */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_DTIM_MIN
-value|1
-end_define
-
-begin_comment
-comment|/* min DTIM period */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IEEE80211_DTIM_DEFAULT
 value|1
 end_define
 
 begin_comment
 comment|/* default DTIM period */
-end_comment
-
-begin_comment
-comment|/* NB: min+max come from WiFi requirements */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_BINTVAL_MAX
-value|1000
-end_define
-
-begin_comment
-comment|/* max beacon interval (TU's) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_BINTVAL_MIN
-value|25
-end_define
-
-begin_comment
-comment|/* min beacon interval (TU's) */
 end_comment
 
 begin_define
@@ -232,17 +184,6 @@ end_define
 
 begin_comment
 comment|/* maximum consecutive bmiss allowed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_SWBMISS_THRESHOLD
-value|50
-end_define
-
-begin_comment
-comment|/* s/w bmiss threshold (TU's) */
 end_comment
 
 begin_define
