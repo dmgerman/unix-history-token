@@ -43,10 +43,6 @@ directive|include
 file|"libc_private.h"
 end_include
 
-begin_comment
-comment|/* XXX not sure what variants to use for arm. */
-end_comment
-
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
