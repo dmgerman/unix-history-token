@@ -98,6 +98,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/powerpc.h>
 end_include
 
@@ -1041,6 +1053,37 @@ argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Return the physical address and the bus space to use for a node  * referenced by its package handle and the index of the register bank  * to decode. Intended to be used by console drivers in early boot only.  * Works by mapping the address of the node's bank given in the address  * space of its parent upward in the device tree at each bridge along the  * path.  */
+end_comment
+
+begin_function
+name|int
+name|OF_decode_addr
+parameter_list|(
+name|phandle_t
+name|node
+parameter_list|,
+name|int
+name|bank
+parameter_list|,
+name|bus_space_tag_t
+modifier|*
+name|tag
+parameter_list|,
+name|bus_space_handle_t
+modifier|*
+name|handle
+parameter_list|)
+block|{
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 block|}
 end_function
 
