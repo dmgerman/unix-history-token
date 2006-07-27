@@ -211,6 +211,17 @@ name|MTX_FLAGMASK
 value|(MTX_RECURSED | MTX_CONTESTED | MTX_UNOWNED)
 end_define
 
+begin_comment
+comment|/*  * Value stored in mutex->mtx_lock to denote a destroyed mutex.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTX_DESTROYED
+value|(MTX_CONTESTED | MTX_UNOWNED)
+end_define
+
 begin_endif
 endif|#
 directive|endif
