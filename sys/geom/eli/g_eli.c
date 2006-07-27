@@ -5097,7 +5097,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|geom_eli
+name|g_eli
 argument_list|,
 name|crypto
 argument_list|,
