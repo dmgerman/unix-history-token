@@ -47,6 +47,12 @@ end_include
 
 begin_struct_decl
 struct_decl|struct
+name|file
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|itimerval
 struct_decl|;
 end_struct_decl
@@ -167,6 +173,12 @@ parameter_list|,
 name|socklen_t
 modifier|*
 name|namelen
+parameter_list|,
+name|struct
+name|file
+modifier|*
+modifier|*
+name|fp
 parameter_list|)
 function_decl|;
 end_function_decl
