@@ -428,7 +428,15 @@ block|,
 block|{
 name|VENDORID_DLINK
 block|,
-name|DEVICEID_DLINK_DGE530T
+name|DEVICEID_DLINK_DGE530T_A1
+block|,
+literal|"D-Link DGE-530T Gigabit Ethernet"
+block|}
+block|,
+block|{
+name|VENDORID_DLINK
+block|,
+name|DEVICEID_DLINK_DGE530T_B1
 block|,
 literal|"D-Link DGE-530T Gigabit Ethernet"
 block|}
@@ -8420,7 +8428,10 @@ case|case
 name|DEVICEID_LINKSYS_EG1032
 case|:
 case|case
-name|DEVICEID_DLINK_DGE530T
+name|DEVICEID_DLINK_DGE530T_A1
+case|:
+case|case
+name|DEVICEID_DLINK_DGE530T_B1
 case|:
 comment|/* Stay with VPD PN. */
 name|pname
