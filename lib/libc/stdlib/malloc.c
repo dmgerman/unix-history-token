@@ -651,7 +651,7 @@ begin_define
 define|#
 directive|define
 name|QUANTUM_2POW_MIN
-value|3
+value|4
 end_define
 
 begin_define
