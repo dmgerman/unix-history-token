@@ -2379,9 +2379,6 @@ parameter_list|,
 name|arena_run_t
 modifier|*
 name|run
-parameter_list|,
-name|size_t
-name|size
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2402,9 +2399,6 @@ parameter_list|,
 name|arena_run_t
 modifier|*
 name|run
-parameter_list|,
-name|size_t
-name|size
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2460,9 +2454,6 @@ parameter_list|,
 name|arena_bin_t
 modifier|*
 name|bin
-parameter_list|,
-name|size_t
-name|size
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2480,9 +2471,6 @@ parameter_list|,
 name|arena_bin_t
 modifier|*
 name|bin
-parameter_list|,
-name|size_t
-name|size
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6948,9 +6936,6 @@ parameter_list|,
 name|arena_run_t
 modifier|*
 name|run
-parameter_list|,
-name|size_t
-name|size
 parameter_list|)
 block|{
 name|assert
@@ -7330,9 +7315,6 @@ parameter_list|,
 name|arena_run_t
 modifier|*
 name|run
-parameter_list|,
-name|size_t
-name|size
 parameter_list|)
 block|{
 name|assert
@@ -8339,9 +8321,6 @@ parameter_list|,
 name|arena_bin_t
 modifier|*
 name|bin
-parameter_list|,
-name|size_t
-name|size
 parameter_list|)
 block|{
 name|arena_run_t
@@ -8754,9 +8733,6 @@ parameter_list|,
 name|arena_run_t
 modifier|*
 name|run
-parameter_list|,
-name|size_t
-name|size
 parameter_list|)
 block|{
 name|void
@@ -8821,8 +8797,6 @@ argument_list|,
 name|bin
 argument_list|,
 name|run
-argument_list|,
-name|size
 argument_list|)
 expr_stmt|;
 block|}
@@ -8851,9 +8825,6 @@ parameter_list|,
 name|arena_bin_t
 modifier|*
 name|bin
-parameter_list|,
-name|size_t
-name|size
 parameter_list|)
 block|{
 name|assert
@@ -8882,8 +8853,6 @@ argument_list|(
 name|arena
 argument_list|,
 name|bin
-argument_list|,
-name|size
 argument_list|)
 expr_stmt|;
 if|if
@@ -8932,8 +8901,6 @@ argument_list|,
 name|bin
 operator|->
 name|runcur
-argument_list|,
-name|size
 argument_list|)
 operator|)
 return|;
@@ -9041,10 +9008,21 @@ operator|)
 argument_list|)
 index|]
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|NDEBUG
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|MALLOC_STATS
-comment|/* 			 * Bin calculation is always correct, but we may need to 			 * fix size for the purposes of stats accuracy. 			 */
+argument_list|)
+operator|)
+comment|/* 			 * Bin calculation is always correct, but we may need 			 * to fix size for the purposes of assertions and/or 			 * stats accuracy. 			 */
 if|if
 condition|(
 name|size
@@ -9173,8 +9151,6 @@ argument_list|,
 name|bin
 argument_list|,
 name|run
-argument_list|,
-name|size
 argument_list|)
 expr_stmt|;
 else|else
@@ -9185,8 +9161,6 @@ argument_list|(
 name|arena
 argument_list|,
 name|bin
-argument_list|,
-name|size
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -9970,8 +9944,6 @@ argument_list|,
 name|bin
 argument_list|,
 name|run
-argument_list|,
-name|size
 argument_list|)
 expr_stmt|;
 block|}
