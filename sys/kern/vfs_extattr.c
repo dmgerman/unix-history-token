@@ -1272,11 +1272,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|vfs_rel
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -1351,6 +1346,11 @@ name|sp
 expr_stmt|;
 name|out
 label|:
+name|vfs_rel
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 name|VFS_UNLOCK_GIANT
 argument_list|(
 name|vfslocked
@@ -1733,11 +1733,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|vfs_rel
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -1812,6 +1807,11 @@ name|sp
 expr_stmt|;
 name|out
 label|:
+name|vfs_rel
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 name|VFS_UNLOCK_GIANT
 argument_list|(
 name|vfslocked
