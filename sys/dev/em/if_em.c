@@ -13316,7 +13316,7 @@ comment|/* nsegments */
 name|MCLBYTES
 argument_list|,
 comment|/* maxsegsize */
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 comment|/* flags */
 name|NULL
