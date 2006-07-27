@@ -435,6 +435,188 @@ name|BRIDGE_IFCAPS_MASK
 value|IFCAP_TXCSUM
 end_define
 
+begin_comment
+comment|/*  * Bridge interface list entry.  */
+end_comment
+
+begin_struct
+struct|struct
+name|bridge_iflist
+block|{
+name|LIST_ENTRY
+argument_list|(
+argument|bridge_iflist
+argument_list|)
+name|bif_next
+expr_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|bif_ifp
+decl_stmt|;
+comment|/* member if */
+name|struct
+name|bstp_port
+name|bif_stp
+decl_stmt|;
+comment|/* STP state */
+name|uint32_t
+name|bif_flags
+decl_stmt|;
+comment|/* member if flags */
+name|int
+name|bif_mutecap
+decl_stmt|;
+comment|/* member muted caps */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Bridge route node.  */
+end_comment
+
+begin_struct
+struct|struct
+name|bridge_rtnode
+block|{
+name|LIST_ENTRY
+argument_list|(
+argument|bridge_rtnode
+argument_list|)
+name|brt_hash
+expr_stmt|;
+comment|/* hash table linkage */
+name|LIST_ENTRY
+argument_list|(
+argument|bridge_rtnode
+argument_list|)
+name|brt_list
+expr_stmt|;
+comment|/* list linkage */
+name|struct
+name|ifnet
+modifier|*
+name|brt_ifp
+decl_stmt|;
+comment|/* destination if */
+name|unsigned
+name|long
+name|brt_expire
+decl_stmt|;
+comment|/* expiration time */
+name|uint8_t
+name|brt_flags
+decl_stmt|;
+comment|/* address flags */
+name|uint8_t
+name|brt_addr
+index|[
+name|ETHER_ADDR_LEN
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Software state for each bridge.  */
+end_comment
+
+begin_struct
+struct|struct
+name|bridge_softc
+block|{
+name|struct
+name|ifnet
+modifier|*
+name|sc_ifp
+decl_stmt|;
+comment|/* make this an interface */
+name|LIST_ENTRY
+argument_list|(
+argument|bridge_softc
+argument_list|)
+name|sc_list
+expr_stmt|;
+name|struct
+name|mtx
+name|sc_mtx
+decl_stmt|;
+name|struct
+name|cv
+name|sc_cv
+decl_stmt|;
+name|uint32_t
+name|sc_brtmax
+decl_stmt|;
+comment|/* max # of addresses */
+name|uint32_t
+name|sc_brtcnt
+decl_stmt|;
+comment|/* cur. # of addresses */
+name|uint32_t
+name|sc_brttimeout
+decl_stmt|;
+comment|/* rt timeout in seconds */
+name|struct
+name|callout
+name|sc_brcallout
+decl_stmt|;
+comment|/* bridge callout */
+name|uint32_t
+name|sc_iflist_ref
+decl_stmt|;
+comment|/* refcount for sc_iflist */
+name|uint32_t
+name|sc_iflist_xcnt
+decl_stmt|;
+comment|/* refcount for sc_iflist */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|bridge_iflist
+argument_list|)
+name|sc_iflist
+expr_stmt|;
+comment|/* member interface list */
+name|LIST_HEAD
+argument_list|(,
+name|bridge_rtnode
+argument_list|)
+operator|*
+name|sc_rthash
+expr_stmt|;
+comment|/* our forwarding table */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|bridge_rtnode
+argument_list|)
+name|sc_rtlist
+expr_stmt|;
+comment|/* list version of above */
+name|uint32_t
+name|sc_rthash_key
+decl_stmt|;
+comment|/* key for hash */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|bridge_iflist
+argument_list|)
+name|sc_spanlist
+expr_stmt|;
+comment|/* span ports list */
+name|struct
+name|bstp_state
+name|sc_stp
+decl_stmt|;
+comment|/* STP state */
+block|}
+struct|;
+end_struct
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -631,6 +813,45 @@ parameter_list|,
 name|struct
 name|rtentry
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|bridge_enqueue
+parameter_list|(
+name|struct
+name|bridge_softc
+modifier|*
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|bridge_rtdelete
+parameter_list|(
+name|struct
+name|bridge_softc
+modifier|*
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6717,7 +6938,7 @@ comment|/*  * bridge_enqueue:  *  *	Enqueue a packet on a bridge member interfac
 end_comment
 
 begin_function
-name|__inline
+specifier|static
 name|void
 name|bridge_enqueue
 parameter_list|(
@@ -10135,6 +10356,7 @@ comment|/*  * bridge_rtdelete:  *  *	Delete routes to a speicifc member interfac
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|bridge_rtdelete
 parameter_list|(
