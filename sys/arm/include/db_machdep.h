@@ -263,6 +263,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__ARMEB__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|BYTE_MSF
+value|(1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
