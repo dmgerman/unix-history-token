@@ -7618,6 +7618,10 @@ name|dcons_addr
 decl_stmt|,
 name|dcons_size
 decl_stmt|;
+name|has_smap
+operator|=
+literal|0
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|XBOX
@@ -7693,10 +7697,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 name|basemem
-operator|=
-literal|0
-expr_stmt|;
-name|has_smap
 operator|=
 literal|0
 expr_stmt|;
