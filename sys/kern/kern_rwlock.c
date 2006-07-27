@@ -409,6 +409,11 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+name|curthread
+operator|->
+name|td_locks
+operator|++
+expr_stmt|;
 block|}
 end_function
 
@@ -447,6 +452,11 @@ name|file
 argument_list|,
 name|line
 argument_list|)
+expr_stmt|;
+name|curthread
+operator|->
+name|td_locks
+operator|--
 expr_stmt|;
 name|WITNESS_UNLOCK
 argument_list|(
@@ -945,6 +955,11 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+name|curthread
+operator|->
+name|td_locks
+operator|++
+expr_stmt|;
 block|}
 end_function
 
@@ -984,6 +999,11 @@ name|file
 argument_list|,
 name|line
 argument_list|)
+expr_stmt|;
+name|curthread
+operator|->
+name|td_locks
+operator|--
 expr_stmt|;
 name|WITNESS_UNLOCK
 argument_list|(
