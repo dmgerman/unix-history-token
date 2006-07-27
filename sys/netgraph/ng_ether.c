@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/bridgestp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_bridgevar.h>
 end_include
 
