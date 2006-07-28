@@ -263,7 +263,7 @@ name|PADLOCK_ALIGN
 parameter_list|(
 name|p
 parameter_list|)
-value|(void *)((uintptr_t)(p) - (((uintptr_t)(p) - 1) % 16) + 15)
+value|(void *)(roundup2((uintptr_t)(p), 16))
 end_define
 
 begin_function_decl
