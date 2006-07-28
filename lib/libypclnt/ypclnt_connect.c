@@ -141,15 +141,6 @@ operator|)
 return|;
 block|}
 block|}
-name|YPCLNT_DEBUG
-argument_list|(
-literal|"domain '%s'"
-argument_list|,
-name|ypclnt
-operator|->
-name|domain
-argument_list|)
-expr_stmt|;
 comment|/* map must be specified */
 if|if
 condition|(
@@ -176,15 +167,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|YPCLNT_DEBUG
-argument_list|(
-literal|"map '%s'"
-argument_list|,
-name|ypclnt
-operator|->
-name|map
-argument_list|)
-expr_stmt|;
 comment|/* get master server for requested map unless specified */
 if|if
 condition|(
@@ -242,15 +224,6 @@ operator|)
 return|;
 block|}
 block|}
-name|YPCLNT_DEBUG
-argument_list|(
-literal|"server '%s'"
-argument_list|,
-name|ypclnt
-operator|->
-name|server
-argument_list|)
-expr_stmt|;
 name|ypclnt_error
 argument_list|(
 name|ypclnt

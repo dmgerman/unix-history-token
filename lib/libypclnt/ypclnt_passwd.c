@@ -392,11 +392,6 @@ block|{
 case|case
 literal|0
 case|:
-name|YPCLNT_DEBUG
-argument_list|(
-literal|"using remote update method"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|yppasswd_remote
@@ -412,11 +407,6 @@ return|;
 case|case
 literal|1
 case|:
-name|YPCLNT_DEBUG
-argument_list|(
-literal|"using local update method"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|yppasswd_local
@@ -428,11 +418,6 @@ argument_list|)
 operator|)
 return|;
 default|default:
-name|YPCLNT_DEBUG
-argument_list|(
-literal|"no rpc.yppasswdd"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 operator|-
