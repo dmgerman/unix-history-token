@@ -76,20 +76,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|SYF_ARGMASK
-value|0x0000FFFF
-end_define
-
-begin_define
-define|#
-directive|define
-name|SYF_MPSAFE
-value|0x00010000
-end_define
-
 begin_struct_decl
 struct_decl|struct
 name|image_params

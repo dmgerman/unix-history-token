@@ -3441,8 +3441,6 @@ operator|=
 name|callp
 operator|->
 name|sy_narg
-operator|&
-name|SYF_ARGMASK
 expr_stmt|;
 name|memcpy
 argument_list|(
@@ -3586,13 +3584,9 @@ name|p
 argument_list|,
 name|S_SCE
 argument_list|,
-operator|(
 name|callp
 operator|->
 name|sy_narg
-operator|&
-name|SYF_ARGMASK
-operator|)
 argument_list|)
 expr_stmt|;
 name|PTRACESTOP_SC

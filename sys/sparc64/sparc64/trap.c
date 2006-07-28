@@ -2299,8 +2299,6 @@ operator|=
 name|callp
 operator|->
 name|sy_narg
-operator|&
-name|SYF_ARGMASK
 expr_stmt|;
 if|if
 condition|(
