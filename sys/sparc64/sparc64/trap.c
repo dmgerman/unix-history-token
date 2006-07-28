@@ -2456,25 +2456,6 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Try to run the syscall without the MP lock if the syscall 	 * is MP safe. 	 */
-if|if
-condition|(
-operator|(
-name|callp
-operator|->
-name|sy_narg
-operator|&
-name|SYF_MPSAFE
-operator|)
-operator|==
-literal|0
-condition|)
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KTRACE
@@ -2723,25 +2704,6 @@ name|TSTATE_XCC_C
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * Release Giant if we had to get it.  Don't use mtx_owned(), 	 * we want to catch broken syscalls. 	 */
-if|if
-condition|(
-operator|(
-name|callp
-operator|->
-name|sy_narg
-operator|&
-name|SYF_MPSAFE
-operator|)
-operator|==
-literal|0
-condition|)
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Check for misbehavior. 	 */
 name|WITNESS_WARN
 argument_list|(

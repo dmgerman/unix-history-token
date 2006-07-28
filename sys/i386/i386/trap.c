@@ -3641,25 +3641,6 @@ argument_list|,
 name|code
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Try to run the syscall without Giant if the syscall 	 * is MP safe. 	 */
-if|if
-condition|(
-operator|(
-name|callp
-operator|->
-name|sy_narg
-operator|&
-name|SYF_MPSAFE
-operator|)
-operator|==
-literal|0
-condition|)
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -3842,25 +3823,6 @@ name|PSL_C
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * Release Giant if we previously set it. 	 */
-if|if
-condition|(
-operator|(
-name|callp
-operator|->
-name|sy_narg
-operator|&
-name|SYF_MPSAFE
-operator|)
-operator|==
-literal|0
-condition|)
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Traced syscall. 	 */
 if|if
 condition|(

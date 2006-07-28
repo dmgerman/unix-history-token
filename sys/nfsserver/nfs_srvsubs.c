@@ -1586,6 +1586,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* XXX: Should use SYSCALL_MODULE() */
 name|nfs_prev_nfssvc_sy_narg
 operator|=
 name|sysent
@@ -1603,8 +1604,6 @@ operator|.
 name|sy_narg
 operator|=
 literal|2
-operator||
-name|SYF_MPSAFE
 expr_stmt|;
 name|nfs_prev_nfssvc_sy_call
 operator|=
