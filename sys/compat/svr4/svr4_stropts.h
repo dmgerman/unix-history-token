@@ -495,7 +495,7 @@ comment|/* all events mask */
 end_comment
 
 begin_comment
-comment|/*  * Our internal state for the stream  * For now we keep almost nothing... In the future we can keep more  * streams state.  */
+comment|/*  * Our internal state for the stream  * For now we keep almost nothing... In the future we can keep more  * streams state.  *  * Locking key:  *      r - Read only field only set during creation  *      G - Giant  */
 end_comment
 
 begin_struct
@@ -505,19 +505,19 @@ block|{
 name|int
 name|s_family
 decl_stmt|;
-comment|/* socket family */
+comment|/* (r) socket family */
 name|int
 name|s_cmd
 decl_stmt|;
-comment|/* last getmsg reply or putmsg request	*/
+comment|/* (G) last getmsg reply or putmsg request */
 name|int
 name|s_afd
 decl_stmt|;
-comment|/* last accepted fd; [for fd_insert]	*/
+comment|/* (G) last accepted fd; [for fd_insert] */
 name|int
 name|s_eventmask
 decl_stmt|;
-comment|/* state info from I_SETSIG et al */
+comment|/* (G) state info from I_SETSIG et al */
 block|}
 struct|;
 end_struct
