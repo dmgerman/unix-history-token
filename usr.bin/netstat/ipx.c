@@ -1967,6 +1967,9 @@ name|sockaddr_ipx
 name|ssipx
 init|=
 block|{
+operator|.
+name|sipx_family
+operator|=
 name|AF_IPX
 block|}
 decl_stmt|;

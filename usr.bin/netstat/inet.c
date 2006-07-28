@@ -2673,6 +2673,7 @@ name|carp_stats
 parameter_list|(
 name|u_long
 name|off
+name|__unused
 parameter_list|,
 specifier|const
 name|char
