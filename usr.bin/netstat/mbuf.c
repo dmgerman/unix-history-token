@@ -95,6 +95,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -142,7 +148,7 @@ name|memory_type
 modifier|*
 name|mtp
 decl_stmt|;
-name|u_int64_t
+name|uintmax_t
 name|mbuf_count
 decl_stmt|,
 name|mbuf_bytes
@@ -153,7 +159,7 @@ name|mbuf_failures
 decl_stmt|,
 name|mbuf_size
 decl_stmt|;
-name|u_int64_t
+name|uintmax_t
 name|cluster_count
 decl_stmt|,
 name|cluster_bytes
@@ -162,12 +168,12 @@ name|cluster_limit
 decl_stmt|,
 name|cluster_free
 decl_stmt|;
-name|u_int64_t
+name|uintmax_t
 name|cluster_failures
 decl_stmt|,
 name|cluster_size
 decl_stmt|;
-name|u_int64_t
+name|uintmax_t
 name|packet_count
 decl_stmt|,
 name|packet_bytes
@@ -176,12 +182,12 @@ name|packet_free
 decl_stmt|,
 name|packet_failures
 decl_stmt|;
-name|u_int64_t
+name|uintmax_t
 name|tag_count
 decl_stmt|,
 name|tag_bytes
 decl_stmt|;
-name|u_int64_t
+name|uintmax_t
 name|jumbop_count
 decl_stmt|,
 name|jumbop_bytes
@@ -190,12 +196,12 @@ name|jumbop_limit
 decl_stmt|,
 name|jumbop_free
 decl_stmt|;
-name|u_int64_t
+name|uintmax_t
 name|jumbop_failures
 decl_stmt|,
 name|jumbop_size
 decl_stmt|;
-name|u_int64_t
+name|uintmax_t
 name|jumbo9_count
 decl_stmt|,
 name|jumbo9_bytes
@@ -204,12 +210,12 @@ name|jumbo9_limit
 decl_stmt|,
 name|jumbo9_free
 decl_stmt|;
-name|u_int64_t
+name|uintmax_t
 name|jumbo9_failures
 decl_stmt|,
 name|jumbo9_size
 decl_stmt|;
-name|u_int64_t
+name|uintmax_t
 name|jumbo16_count
 decl_stmt|,
 name|jumbo16_bytes
@@ -218,12 +224,12 @@ name|jumbo16_limit
 decl_stmt|,
 name|jumbo16_free
 decl_stmt|;
-name|u_int64_t
+name|uintmax_t
 name|jumbo16_failures
 decl_stmt|,
 name|jumbo16_size
 decl_stmt|;
-name|u_int64_t
+name|uintmax_t
 name|bytes_inuse
 decl_stmt|,
 name|bytes_incache
@@ -815,7 +821,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%llu/%llu/%llu mbufs in use (current/cache/total)\n"
+literal|"%ju/%ju/%ju mbufs in use (current/cache/total)\n"
 argument_list|,
 name|mbuf_count
 operator|+
@@ -836,7 +842,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%llu/%llu/%llu/%llu mbuf clusters in use "
+literal|"%ju/%ju/%ju/%ju mbuf clusters in use "
 literal|"(current/cache/total/max)\n"
 argument_list|,
 name|cluster_count
@@ -856,7 +862,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%llu/%llu mbuf+clusters out of packet secondary zone in use "
+literal|"%ju/%ju mbuf+clusters out of packet secondary zone in use "
 literal|"(current/cache)\n"
 argument_list|,
 name|packet_count
@@ -866,7 +872,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%llu/%llu/%llu/%llu %lluk (page size) jumbo clusters in use "
+literal|"%ju/%ju/%ju/%ju %juk (page size) jumbo clusters in use "
 literal|"(current/cache/total/max)\n"
 argument_list|,
 name|jumbop_count
@@ -886,7 +892,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%llu/%llu/%llu/%llu 9k jumbo clusters in use "
+literal|"%ju/%ju/%ju/%ju 9k jumbo clusters in use "
 literal|"(current/cache/total/max)\n"
 argument_list|,
 name|jumbo9_count
@@ -902,7 +908,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%llu/%llu/%llu/%llu 16k jumbo clusters in use "
+literal|"%ju/%ju/%ju/%ju 16k jumbo clusters in use "
 literal|"(current/cache/total/max)\n"
 argument_list|,
 name|jumbo16_count
@@ -919,7 +925,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("%llu mbuf tags in use\n", tag_count);
+block|printf("%ju mbuf tags in use\n", tag_count);
 endif|#
 directive|endif
 comment|/*- 	 * Calculate in-use bytes as: 	 * - straight mbuf memory 	 * - mbuf memory in packets 	 * - the clusters attached to packets 	 * - and the rest of the non-packet-attached clusters. 	 * - m_tag memory 	 * This avoids counting the clusters attached to packets in the cache. 	 * This currently excludes sf_buf space. 	 */
@@ -1031,7 +1037,7 @@ name|bytes_incache
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%lluK/%lluK/%lluK bytes allocated to network "
+literal|"%juK/%juK/%juK bytes allocated to network "
 literal|"(current/cache/total)\n"
 argument_list|,
 name|bytes_inuse
@@ -1049,7 +1055,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%llu/%llu/%llu requests for mbufs denied (mbufs/clusters/"
+literal|"%ju/%ju/%ju requests for mbufs denied (mbufs/clusters/"
 literal|"mbuf+clusters)\n"
 argument_list|,
 name|mbuf_failures
@@ -1061,8 +1067,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%llu/%llu/%llu requests for jumbo clusters denied "
-literal|"(%lluk/9k/16k)\n"
+literal|"%ju/%ju/%ju requests for jumbo clusters denied "
+literal|"(%juk/9k/16k)\n"
 argument_list|,
 name|jumbop_failures
 argument_list|,

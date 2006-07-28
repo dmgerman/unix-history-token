@@ -156,6 +156,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -1372,17 +1378,6 @@ name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-specifier|const
-name|char
-modifier|*
-name|pluralies
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
@@ -3293,7 +3288,7 @@ name|char
 modifier|*
 name|plural
 parameter_list|(
-name|int
+name|uintmax_t
 name|n
 parameter_list|)
 block|{
@@ -3317,7 +3312,7 @@ name|char
 modifier|*
 name|plurales
 parameter_list|(
-name|int
+name|uintmax_t
 name|n
 parameter_list|)
 block|{
@@ -3341,7 +3336,7 @@ name|char
 modifier|*
 name|pluralies
 parameter_list|(
-name|int
+name|uintmax_t
 name|n
 parameter_list|)
 block|{

@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -369,21 +375,17 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %9llu  %9llu\n"
+literal|" %9ju  %9ju\n"
 argument_list|,
 operator|(
-name|unsigned
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|mifp
 operator|->
 name|m6_pkt_in
 argument_list|,
 operator|(
-name|unsigned
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|mifp
 operator|->
@@ -539,12 +541,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %9llu"
+literal|" %9ju"
 argument_list|,
 operator|(
-name|unsigned
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|mfc
 operator|.
@@ -753,7 +753,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (mrtstat.f || sflag<= 1) \ 	printf(m, (unsigned long long)mrtstat.f, plural(mrtstat.f))
+value|if (mrtstat.f || sflag<= 1) \ 	printf(m, (uintmax_t)mrtstat.f, plural(mrtstat.f))
 define|#
 directive|define
 name|p2
@@ -762,96 +762,96 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (mrtstat.f || sflag<= 1) \ 	printf(m, (unsigned long long)mrtstat.f, plurales(mrtstat.f))
+value|if (mrtstat.f || sflag<= 1) \ 	printf(m, (uintmax_t)mrtstat.f, plurales(mrtstat.f))
 name|p
 argument_list|(
 name|mrt6s_mfc_lookups
 argument_list|,
-literal|"\t%llu multicast forwarding cache lookup%s\n"
+literal|"\t%ju multicast forwarding cache lookup%s\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|mrt6s_mfc_misses
 argument_list|,
-literal|"\t%llu multicast forwarding cache miss%s\n"
+literal|"\t%ju multicast forwarding cache miss%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrt6s_upcalls
 argument_list|,
-literal|"\t%llu upcall%s to mrouted\n"
+literal|"\t%ju upcall%s to mrouted\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrt6s_upq_ovflw
 argument_list|,
-literal|"\t%llu upcall queue overflow%s\n"
+literal|"\t%ju upcall queue overflow%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrt6s_upq_sockfull
 argument_list|,
-literal|"\t%llu upcall%s dropped due to full socket buffer\n"
+literal|"\t%ju upcall%s dropped due to full socket buffer\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrt6s_cache_cleanups
 argument_list|,
-literal|"\t%llu cache cleanup%s\n"
+literal|"\t%ju cache cleanup%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrt6s_no_route
 argument_list|,
-literal|"\t%llu datagram%s with no route for origin\n"
+literal|"\t%ju datagram%s with no route for origin\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrt6s_bad_tunnel
 argument_list|,
-literal|"\t%llu datagram%s arrived with bad tunneling\n"
+literal|"\t%ju datagram%s arrived with bad tunneling\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrt6s_cant_tunnel
 argument_list|,
-literal|"\t%llu datagram%s could not be tunneled\n"
+literal|"\t%ju datagram%s could not be tunneled\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrt6s_wrong_if
 argument_list|,
-literal|"\t%llu datagram%s arrived on wrong interface\n"
+literal|"\t%ju datagram%s arrived on wrong interface\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrt6s_drop_sel
 argument_list|,
-literal|"\t%llu datagram%s selectively dropped\n"
+literal|"\t%ju datagram%s selectively dropped\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrt6s_q_overflow
 argument_list|,
-literal|"\t%llu datagram%s dropped due to queue overflow\n"
+literal|"\t%ju datagram%s dropped due to queue overflow\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrt6s_pkt2large
 argument_list|,
-literal|"\t%llu datagram%s dropped for being too large\n"
+literal|"\t%ju datagram%s dropped for being too large\n"
 argument_list|)
 expr_stmt|;
 undef|#

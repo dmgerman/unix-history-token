@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -835,8 +841,11 @@ name|sprintf
 argument_list|(
 name|s1
 argument_list|,
-literal|"%llu"
+literal|"%ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|bw_meter
 operator|->
 name|bm_measured
@@ -864,8 +873,11 @@ name|sprintf
 argument_list|(
 name|s2
 argument_list|,
-literal|"%llu"
+literal|"%ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|bw_meter
 operator|->
 name|bm_measured
@@ -982,8 +994,11 @@ name|sprintf
 argument_list|(
 name|s1
 argument_list|,
-literal|"%llu"
+literal|"%ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|bw_meter
 operator|->
 name|bm_threshold
@@ -1011,8 +1026,11 @@ name|sprintf
 argument_list|(
 name|s2
 argument_list|,
-literal|"%llu"
+literal|"%ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|bw_meter
 operator|->
 name|bm_threshold

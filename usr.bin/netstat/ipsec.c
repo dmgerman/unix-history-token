@@ -148,6 +148,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -585,16 +591,14 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\t\t%s: %llu\n"
+literal|"\t\t%s: %ju\n"
 argument_list|,
 name|p
 operator|->
 name|str
 argument_list|,
 operator|(
-name|unsigned
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|hist
 index|[
@@ -607,7 +611,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"\t\t#%ld: %llu\n"
+literal|"\t\t#%ld: %ju\n"
 argument_list|,
 operator|(
 name|long
@@ -615,9 +619,7 @@ operator|)
 name|proto
 argument_list|,
 operator|(
-name|unsigned
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|hist
 index|[
@@ -650,7 +652,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (ipsecstat->f || sflag<= 1) \     printf(m, (unsigned long long)ipsecstat->f, plural(ipsecstat->f))
+value|if (ipsecstat->f || sflag<= 1) \     printf(m, (uintmax_t)ipsecstat->f, plural(ipsecstat->f))
 define|#
 directive|define
 name|pes
@@ -659,7 +661,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (ipsecstat->f || sflag<= 1) \     printf(m, (unsigned long long)ipsecstat->f, plurales(ipsecstat->f))
+value|if (ipsecstat->f || sflag<= 1) \     printf(m, (uintmax_t)ipsecstat->f, plurales(ipsecstat->f))
 define|#
 directive|define
 name|hist
@@ -676,14 +678,14 @@ name|p
 argument_list|(
 name|in_success
 argument_list|,
-literal|"\t%llu inbound packet%s processed successfully\n"
+literal|"\t%ju inbound packet%s processed successfully\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|in_polvio
 argument_list|,
-literal|"\t%llu inbound packet%s violated process security "
+literal|"\t%ju inbound packet%s violated process security "
 literal|"policy\n"
 argument_list|)
 expr_stmt|;
@@ -691,56 +693,56 @@ name|p
 argument_list|(
 name|in_nosa
 argument_list|,
-literal|"\t%llu inbound packet%s with no SA available\n"
+literal|"\t%ju inbound packet%s with no SA available\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|in_inval
 argument_list|,
-literal|"\t%llu invalid inbound packet%s\n"
+literal|"\t%ju invalid inbound packet%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|in_nomem
 argument_list|,
-literal|"\t%llu inbound packet%s failed due to insufficient memory\n"
+literal|"\t%ju inbound packet%s failed due to insufficient memory\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|in_badspi
 argument_list|,
-literal|"\t%llu inbound packet%s failed getting SPI\n"
+literal|"\t%ju inbound packet%s failed getting SPI\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|in_ahreplay
 argument_list|,
-literal|"\t%llu inbound packet%s failed on AH replay check\n"
+literal|"\t%ju inbound packet%s failed on AH replay check\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|in_espreplay
 argument_list|,
-literal|"\t%llu inbound packet%s failed on ESP replay check\n"
+literal|"\t%ju inbound packet%s failed on ESP replay check\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|in_ahauthsucc
 argument_list|,
-literal|"\t%llu inbound packet%s considered authentic\n"
+literal|"\t%ju inbound packet%s considered authentic\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|in_ahauthfail
 argument_list|,
-literal|"\t%llu inbound packet%s failed on authentication\n"
+literal|"\t%ju inbound packet%s failed on authentication\n"
 argument_list|)
 expr_stmt|;
 name|hist
@@ -780,14 +782,14 @@ name|p
 argument_list|(
 name|out_success
 argument_list|,
-literal|"\t%llu outbound packet%s processed successfully\n"
+literal|"\t%ju outbound packet%s processed successfully\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_polvio
 argument_list|,
-literal|"\t%llu outbound packet%s violated process security "
+literal|"\t%ju outbound packet%s violated process security "
 literal|"policy\n"
 argument_list|)
 expr_stmt|;
@@ -795,28 +797,28 @@ name|p
 argument_list|(
 name|out_nosa
 argument_list|,
-literal|"\t%llu outbound packet%s with no SA available\n"
+literal|"\t%ju outbound packet%s with no SA available\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_inval
 argument_list|,
-literal|"\t%llu invalid outbound packet%s\n"
+literal|"\t%ju invalid outbound packet%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_nomem
 argument_list|,
-literal|"\t%llu outbound packet%s failed due to insufficient memory\n"
+literal|"\t%ju outbound packet%s failed due to insufficient memory\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_noroute
 argument_list|,
-literal|"\t%llu outbound packet%s with no route\n"
+literal|"\t%ju outbound packet%s with no route\n"
 argument_list|)
 expr_stmt|;
 name|hist
@@ -856,14 +858,14 @@ name|p
 argument_list|(
 name|spdcachelookup
 argument_list|,
-literal|"\t%llu SPD cache lookup%s\n"
+literal|"\t%ju SPD cache lookup%s\n"
 argument_list|)
 expr_stmt|;
 name|pes
 argument_list|(
 name|spdcachemiss
 argument_list|,
-literal|"\t%llu SPD cache miss%s\n"
+literal|"\t%ju SPD cache miss%s\n"
 argument_list|)
 expr_stmt|;
 undef|#
@@ -1388,7 +1390,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (ahstat->f || sflag<= 1) \     printf("\t%llu" m, (unsigned long long)ahstat->f, plural(ahstat->f))
+value|if (ahstat->f || sflag<= 1) \     printf("\t%ju" m, (uintmax_t)ahstat->f, plural(ahstat->f))
 define|#
 directive|define
 name|hist
@@ -1647,7 +1649,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (espstat->f || sflag<= 1) \     printf("\t%llu" m, (unsigned long long)espstat->f, plural(espstat->f))
+value|if (espstat->f || sflag<= 1) \     printf("\t%ju" m, (uintmax_t)espstat->f, plural(espstat->f))
 define|#
 directive|define
 name|hist
@@ -1913,7 +1915,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (ipcompstat->f || sflag<= 1) \     printf("\t%llu" m, (unsigned long long)ipcompstat->f, plural(ipcompstat->f))
+value|if (ipcompstat->f || sflag<= 1) \     printf("\t%ju" m, (uintmax_t)ipcompstat->f, plural(ipcompstat->f))
 define|#
 directive|define
 name|hist

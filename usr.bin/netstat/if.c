@@ -173,6 +173,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -369,7 +375,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (pfsyncstat.f || sflag<= 1) \ 	printf(m, (unsigned long long)pfsyncstat.f, plural(pfsyncstat.f))
+value|if (pfsyncstat.f || sflag<= 1) \ 	printf(m, (uintmax_t)pfsyncstat.f, plural(pfsyncstat.f))
 define|#
 directive|define
 name|p2
@@ -378,117 +384,117 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (pfsyncstat.f || sflag<= 1) \ 	printf(m, (unsigned long long)pfsyncstat.f)
+value|if (pfsyncstat.f || sflag<= 1) \ 	printf(m, (uintmax_t)pfsyncstat.f)
 name|p
 argument_list|(
 name|pfsyncs_ipackets
 argument_list|,
-literal|"\t%llu packet%s received (IPv4)\n"
+literal|"\t%ju packet%s received (IPv4)\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_ipackets6
 argument_list|,
-literal|"\t%llu packet%s received (IPv6)\n"
+literal|"\t%ju packet%s received (IPv6)\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_badif
 argument_list|,
-literal|"\t\t%llu packet%s discarded for bad interface\n"
+literal|"\t\t%ju packet%s discarded for bad interface\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_badttl
 argument_list|,
-literal|"\t\t%llu packet%s discarded for bad ttl\n"
+literal|"\t\t%ju packet%s discarded for bad ttl\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_hdrops
 argument_list|,
-literal|"\t\t%llu packet%s shorter than header\n"
+literal|"\t\t%ju packet%s shorter than header\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_badver
 argument_list|,
-literal|"\t\t%llu packet%s discarded for bad version\n"
+literal|"\t\t%ju packet%s discarded for bad version\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_badauth
 argument_list|,
-literal|"\t\t%llu packet%s discarded for bad HMAC\n"
+literal|"\t\t%ju packet%s discarded for bad HMAC\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_badact
 argument_list|,
-literal|"\t\t%llu packet%s discarded for bad action\n"
+literal|"\t\t%ju packet%s discarded for bad action\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_badlen
 argument_list|,
-literal|"\t\t%llu packet%s discarded for short packet\n"
+literal|"\t\t%ju packet%s discarded for short packet\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_badval
 argument_list|,
-literal|"\t\t%llu state%s discarded for bad values\n"
+literal|"\t\t%ju state%s discarded for bad values\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_stale
 argument_list|,
-literal|"\t\t%llu stale state%s\n"
+literal|"\t\t%ju stale state%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_badstate
 argument_list|,
-literal|"\t\t%llu failed state lookup/insert%s\n"
+literal|"\t\t%ju failed state lookup/insert%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_opackets
 argument_list|,
-literal|"\t%llu packet%s sent (IPv4)\n"
+literal|"\t%ju packet%s sent (IPv4)\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_opackets6
 argument_list|,
-literal|"\t%llu packet%s sent (IPv6)\n"
+literal|"\t%ju packet%s sent (IPv6)\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|pfsyncs_onomem
 argument_list|,
-literal|"\t\t%llu send failed due to mbuf memory error\n"
+literal|"\t\t%ju send failed due to mbuf memory error\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|pfsyncs_oerrors
 argument_list|,
-literal|"\t\t%llu send error\n"
+literal|"\t\t%ju send error\n"
 argument_list|)
 expr_stmt|;
 undef|#
