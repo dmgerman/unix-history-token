@@ -15,37 +15,152 @@ begin_comment
 comment|/* OpenSSL was configured with the following options: */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL_ALGORITHM_DEFINES
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_DOING_MAKEDEPEND
+end_ifndef
 
 begin_comment
-comment|/* no ciphers excluded */
+comment|/* libgmp is not in the FreeBSD base system. */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_GMP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|OPENSSL_NO_GMP
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL_THREAD_DEFINES
-end_ifdef
+begin_comment
+comment|/* The Kerberos 5 support is MIT-specific. */
+end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|THREADS
+name|OPENSSL_NO_KRB5
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|THREADS
+name|OPENSSL_NO_KRB5
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* OPENSSL_DOING_MAKEDEPEND */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_THREADS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|OPENSSL_THREADS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_STATIC_ENGINE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|OPENSSL_NO_STATIC_ENGINE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* The OPENSSL_NO_* macros are also defined as NO_* if the application    asks for it.  This is a transient feature that is provided for those    who haven't had the time to do the appropriate changes in their    applications.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_ALGORITHM_DEFINES
+end_ifdef
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OPENSSL_NO_GMP
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_GMP
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|NO_GMP
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OPENSSL_NO_KRB5
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_KRB5
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|NO_KRB5
 end_define
 
 begin_endif
@@ -139,6 +254,13 @@ end_if
 begin_define
 define|#
 directive|define
+name|ENGINESDIR
+value|"/usr/lib/engines"
+end_define
+
+begin_define
+define|#
+directive|define
 name|OPENSSLDIR
 value|"/etc/ssl"
 end_define
@@ -153,12 +275,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_undef
+undef|#
+directive|undef
+name|OPENSSL_UNISTD
+end_undef
+
 begin_define
 define|#
 directive|define
 name|OPENSSL_UNISTD
 value|<unistd.h>
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|OPENSSL_EXPORT_VAR_AS_FUNCTION
+end_undef
 
 begin_if
 if|#
@@ -320,12 +454,12 @@ directive|if
 operator|(
 name|defined
 argument_list|(
-name|HEADER_DES_H
+name|HEADER_NEW_DES_H
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|HEADER_NEW_DES_H
+name|HEADER_DES_H
 argument_list|)
 operator|)
 operator|&&
@@ -938,16 +1072,6 @@ end_endif
 begin_comment
 comment|/* HEADER_DES_LOCL_H */
 end_comment
-
-begin_comment
-comment|/* The Kerberos 5 support is MIT-specific. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OPENSSL_NO_KRB5
-end_define
 
 end_unit
 
