@@ -282,7 +282,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|void
+name|FILE
+modifier|*
 name|maketempfile
 parameter_list|(
 name|char
@@ -1184,7 +1185,8 @@ block|}
 end_function
 
 begin_function
-name|void
+name|FILE
+modifier|*
 name|maketempfile
 parameter_list|(
 name|char
@@ -1200,6 +1202,9 @@ block|{
 name|char
 modifier|*
 name|p
+decl_stmt|;
+name|int
+name|fd
 decl_stmt|;
 name|strncpy
 argument_list|(
@@ -1249,25 +1254,32 @@ argument_list|,
 literal|"lhint.XXXXXX"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|fd
+operator|=
 name|mkstemp
 argument_list|(
 name|dest
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|(
+name|fd
 operator|==
 operator|-
 literal|1
-condition|)
-name|err
+operator|)
+condition|?
+name|NULL
+else|:
+name|fdopen
 argument_list|(
-literal|1
+name|fd
 argument_list|,
-literal|"%s"
-argument_list|,
-name|dest
+literal|"w+"
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -1521,6 +1533,10 @@ argument_list|(
 name|fxref
 argument_list|)
 expr_stmt|;
+name|fxref
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|reccnt
@@ -1587,6 +1603,8 @@ argument_list|,
 name|xref_file
 argument_list|)
 expr_stmt|;
+name|fxref
+operator|=
 name|maketempfile
 argument_list|(
 name|tempname
@@ -1594,15 +1612,6 @@ argument_list|,
 name|ftsp
 operator|->
 name|fts_path
-argument_list|)
-expr_stmt|;
-name|fxref
-operator|=
-name|fopen
-argument_list|(
-name|tempname
-argument_list|,
-literal|"w+t"
 argument_list|)
 expr_stmt|;
 if|if
