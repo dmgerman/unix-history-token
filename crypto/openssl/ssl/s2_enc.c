@@ -251,12 +251,17 @@ name|c
 operator|->
 name|iv_len
 operator|<=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
+argument_list|(
 name|s
 operator|->
 name|session
 operator|->
 name|key_arg
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|EVP_EncryptInit_ex

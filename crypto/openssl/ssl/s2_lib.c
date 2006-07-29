@@ -28,12 +28,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<openssl/rsa.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<openssl/objects.h>
 end_include
 
@@ -48,16 +42,6 @@ include|#
 directive|include
 file|<openssl/md5.h>
 end_include
-
-begin_function_decl
-specifier|static
-name|long
-name|ssl2_default_timeout
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 specifier|const
@@ -77,6 +61,10 @@ name|SSL2_NUM_CIPHERS
 value|(sizeof(ssl2_ciphers)/sizeof(SSL_CIPHER))
 end_define
 
+begin_comment
+comment|/* list of available SSLv2 ciphers (sorted by id) */
+end_comment
+
 begin_decl_stmt
 name|OPENSSL_GLOBAL
 name|SSL_CIPHER
@@ -91,39 +79,6 @@ literal|0
 block|{ 	1, 	SSL2_TXT_NULL_WITH_MD5, 	SSL2_CK_NULL_WITH_MD5, 	SSL_kRSA|SSL_aRSA|SSL_eNULL|SSL_MD5|SSL_SSLV2, 	SSL_EXPORT|SSL_EXP40|SSL_STRONG_NONE, 	0, 	0, 	0, 	SSL_ALL_CIPHERS, 	SSL_ALL_STRENGTHS, 	},
 endif|#
 directive|endif
-comment|/* RC4_128_EXPORT40_WITH_MD5 */
-block|{
-literal|1
-block|,
-name|SSL2_TXT_RC4_128_EXPORT40_WITH_MD5
-block|,
-name|SSL2_CK_RC4_128_EXPORT40_WITH_MD5
-block|,
-name|SSL_kRSA
-operator||
-name|SSL_aRSA
-operator||
-name|SSL_RC4
-operator||
-name|SSL_MD5
-operator||
-name|SSL_SSLV2
-block|,
-name|SSL_EXPORT
-operator||
-name|SSL_EXP40
-block|,
-name|SSL2_CF_5_BYTE_ENC
-block|,
-literal|40
-block|,
-literal|128
-block|,
-name|SSL_ALL_CIPHERS
-block|,
-name|SSL_ALL_STRENGTHS
-block|, 	}
-block|,
 comment|/* RC4_128_WITH_MD5 */
 block|{
 literal|1
@@ -157,19 +112,19 @@ block|,
 name|SSL_ALL_STRENGTHS
 block|, 	}
 block|,
-comment|/* RC2_128_CBC_EXPORT40_WITH_MD5 */
+comment|/* RC4_128_EXPORT40_WITH_MD5 */
 block|{
 literal|1
 block|,
-name|SSL2_TXT_RC2_128_CBC_EXPORT40_WITH_MD5
+name|SSL2_TXT_RC4_128_EXPORT40_WITH_MD5
 block|,
-name|SSL2_CK_RC2_128_CBC_EXPORT40_WITH_MD5
+name|SSL2_CK_RC4_128_EXPORT40_WITH_MD5
 block|,
 name|SSL_kRSA
 operator||
 name|SSL_aRSA
 operator||
-name|SSL_RC2
+name|SSL_RC4
 operator||
 name|SSL_MD5
 operator||
@@ -215,6 +170,39 @@ block|,
 literal|0
 block|,
 literal|128
+block|,
+literal|128
+block|,
+name|SSL_ALL_CIPHERS
+block|,
+name|SSL_ALL_STRENGTHS
+block|, 	}
+block|,
+comment|/* RC2_128_CBC_EXPORT40_WITH_MD5 */
+block|{
+literal|1
+block|,
+name|SSL2_TXT_RC2_128_CBC_EXPORT40_WITH_MD5
+block|,
+name|SSL2_CK_RC2_128_CBC_EXPORT40_WITH_MD5
+block|,
+name|SSL_kRSA
+operator||
+name|SSL_aRSA
+operator||
+name|SSL_RC2
+operator||
+name|SSL_MD5
+operator||
+name|SSL_SSLV2
+block|,
+name|SSL_EXPORT
+operator||
+name|SSL_EXP40
+block|,
+name|SSL2_CF_5_BYTE_ENC
+block|,
+literal|40
 block|,
 literal|128
 block|,
@@ -377,78 +365,7 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|SSL_METHOD
-name|SSLv2_data
-init|=
-block|{
-name|SSL2_VERSION
-block|,
-name|ssl2_new
-block|,
-comment|/* local */
-name|ssl2_clear
-block|,
-comment|/* local */
-name|ssl2_free
-block|,
-comment|/* local */
-name|ssl_undefined_function
-block|,
-name|ssl_undefined_function
-block|,
-name|ssl2_read
-block|,
-name|ssl2_peek
-block|,
-name|ssl2_write
-block|,
-name|ssl2_shutdown
-block|,
-name|ssl_ok
-block|,
-comment|/* NULL - renegotiate */
-name|ssl_ok
-block|,
-comment|/* NULL - check renegotiate */
-name|ssl2_ctrl
-block|,
-comment|/* local */
-name|ssl2_ctx_ctrl
-block|,
-comment|/* local */
-name|ssl2_get_cipher_by_char
-block|,
-name|ssl2_put_cipher_by_char
-block|,
-name|ssl2_pending
-block|,
-name|ssl2_num_ciphers
-block|,
-name|ssl2_get_cipher
-block|,
-name|ssl_bad_method
-block|,
-name|ssl2_default_timeout
-block|,
-operator|&
-name|ssl3_undef_enc_method
-block|,
-name|ssl_undefined_function
-block|,
-name|ssl2_callback_ctrl
-block|,
-comment|/* local */
-name|ssl2_ctx_callback_ctrl
-block|,
-comment|/* local */
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_function
-specifier|static
 name|long
 name|ssl2_default_timeout
 parameter_list|(
@@ -463,22 +380,18 @@ return|;
 block|}
 end_function
 
-begin_function
-name|SSL_METHOD
-modifier|*
-name|sslv2_base_method
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-operator|&
-name|SSLv2_data
-operator|)
-return|;
-block|}
-end_function
+begin_macro
+name|IMPLEMENT_ssl2_meth_func
+argument_list|(
+argument|sslv2_base_method
+argument_list|,
+argument|ssl_undefined_function
+argument_list|,
+argument|ssl_undefined_function
+argument_list|,
+argument|ssl_bad_method
+argument_list|)
+end_macro
 
 begin_function
 name|int
@@ -539,6 +452,7 @@ begin_function
 name|int
 name|ssl2_pending
 parameter_list|(
+specifier|const
 name|SSL
 modifier|*
 name|s
@@ -963,7 +877,9 @@ function_decl|(
 modifier|*
 name|fp
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 parameter_list|)
 block|{
 return|return
@@ -1017,7 +933,9 @@ function_decl|(
 modifier|*
 name|fp
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 parameter_list|)
 block|{
 return|return
@@ -1044,103 +962,16 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-specifier|static
-name|int
-name|init
-init|=
-literal|1
-decl_stmt|;
-specifier|static
-name|SSL_CIPHER
-modifier|*
-name|sorted
-index|[
-name|SSL2_NUM_CIPHERS
-index|]
-decl_stmt|;
 name|SSL_CIPHER
 name|c
 decl_stmt|,
 modifier|*
 name|cp
-init|=
-operator|&
-name|c
-decl_stmt|,
-modifier|*
-modifier|*
-name|cpp
 decl_stmt|;
 name|unsigned
 name|long
 name|id
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-if|if
-condition|(
-name|init
-condition|)
-block|{
-name|CRYPTO_w_lock
-argument_list|(
-name|CRYPTO_LOCK_SSL
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|init
-condition|)
-block|{
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|SSL2_NUM_CIPHERS
-condition|;
-name|i
-operator|++
-control|)
-name|sorted
-index|[
-name|i
-index|]
-operator|=
-operator|&
-operator|(
-name|ssl2_ciphers
-index|[
-name|i
-index|]
-operator|)
-expr_stmt|;
-name|qsort
-argument_list|(
-argument|(char *)sorted
-argument_list|,
-argument|SSL2_NUM_CIPHERS
-argument_list|,
-argument|sizeof(SSL_CIPHER *)
-argument_list|,
-argument|FP_ICC ssl_cipher_ptr_id_cmp
-argument_list|)
-empty_stmt|;
-name|init
-operator|=
-literal|0
-expr_stmt|;
-block|}
-name|CRYPTO_w_unlock
-argument_list|(
-name|CRYPTO_LOCK_SSL
-argument_list|)
-expr_stmt|;
-block|}
 name|id
 operator|=
 literal|0x02000000L
@@ -1186,53 +1017,47 @@ name|id
 operator|=
 name|id
 expr_stmt|;
-name|cpp
+name|cp
 operator|=
 operator|(
 name|SSL_CIPHER
 operator|*
-operator|*
 operator|)
 name|OBJ_bsearch
 argument_list|(
-argument|(char *)&cp
+argument|(char *)&c
 argument_list|,
-argument|(char *)sorted
+argument|(char *)ssl2_ciphers
 argument_list|,
 argument|SSL2_NUM_CIPHERS
 argument_list|,
-argument|sizeof(SSL_CIPHER *)
+argument|sizeof(SSL_CIPHER)
 argument_list|,
-argument|FP_ICC ssl_cipher_ptr_id_cmp
+argument|FP_ICC ssl_cipher_id_cmp
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|(
-name|cpp
+name|cp
 operator|==
 name|NULL
 operator|)
 operator|||
-operator|!
 operator|(
-operator|*
-name|cpp
-operator|)
+name|cp
 operator|->
 name|valid
+operator|==
+literal|0
+operator|)
 condition|)
 return|return
-operator|(
 name|NULL
-operator|)
 return|;
 else|else
 return|return
-operator|(
-operator|*
-name|cpp
-operator|)
+name|cp
 return|;
 block|}
 end_function
@@ -1427,12 +1252,17 @@ name|session
 operator|->
 name|master_key_length
 operator|>
+operator|(
+name|int
+operator|)
 sizeof|sizeof
+argument_list|(
 name|s
 operator|->
 name|session
 operator|->
 name|master_key
+argument_list|)
 condition|)
 block|{
 name|SSLerr
@@ -1487,12 +1317,17 @@ name|md5
 argument_list|)
 operator|)
 operator|>
+operator|(
+name|int
+operator|)
 sizeof|sizeof
+argument_list|(
 name|s
 operator|->
 name|s2
 operator|->
 name|key_material
+argument_list|)
 condition|)
 block|{
 comment|/* EVP_DigestFinal_ex() below would write beyond buffer */
@@ -1533,12 +1368,17 @@ name|session
 operator|->
 name|master_key_length
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
+argument_list|(
 name|s
 operator|->
 name|session
 operator|->
 name|master_key
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|EVP_DigestUpdate
@@ -1758,8 +1598,13 @@ literal|0
 operator|&&
 name|error
 operator|<=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|i

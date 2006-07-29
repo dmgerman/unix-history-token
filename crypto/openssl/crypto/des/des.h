@@ -19,6 +19,16 @@ directive|define
 name|HEADER_NEW_DES_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<openssl/e_os2.h>
+end_include
+
+begin_comment
+comment|/* OPENSSL_EXTERN, OPENSSL_NO_DES, 				   DES_LONG (via openssl/opensslconf.h */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -35,26 +45,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<openssl/opensslconf.h>
-end_include
-
-begin_comment
-comment|/* DES_LONG */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<openssl/e_os2.h>
-end_include
-
-begin_comment
-comment|/* OPENSSL_EXTERN */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -293,14 +283,11 @@ function_decl|;
 name|void
 name|DES_ecb3_encrypt
 parameter_list|(
-specifier|const
-name|unsigned
-name|char
+name|const_DES_cblock
 modifier|*
 name|input
 parameter_list|,
-name|unsigned
-name|char
+name|DES_cblock
 modifier|*
 name|output
 parameter_list|,

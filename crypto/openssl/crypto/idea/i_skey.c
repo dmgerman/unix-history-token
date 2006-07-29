@@ -431,6 +431,7 @@ begin_function
 name|void
 name|idea_set_decrypt_key
 parameter_list|(
+specifier|const
 name|IDEA_KEY_SCHEDULE
 modifier|*
 name|ek
@@ -446,12 +447,14 @@ decl_stmt|;
 specifier|register
 name|IDEA_INT
 modifier|*
-name|fp
-decl_stmt|,
-modifier|*
 name|tp
 decl_stmt|,
 name|t
+decl_stmt|;
+specifier|const
+name|IDEA_INT
+modifier|*
+name|fp
 decl_stmt|;
 name|tp
 operator|=
