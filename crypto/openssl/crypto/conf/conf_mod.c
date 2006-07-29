@@ -779,7 +779,7 @@ index|]
 decl_stmt|;
 name|CONFerr
 argument_list|(
-name|CONF_F_CONF_MODULES_LOAD
+name|CONF_F_MODULE_RUN
 argument_list|,
 name|CONF_R_MODULE_INITIALIZATION_ERROR
 argument_list|)
@@ -896,7 +896,7 @@ operator|!
 name|path
 condition|)
 block|{
-name|ERR_get_error
+name|ERR_clear_error
 argument_list|()
 expr_stmt|;
 name|path

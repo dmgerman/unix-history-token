@@ -451,7 +451,7 @@ condition|)
 block|{
 name|PEMerr
 argument_list|(
-name|PEM_F_PEM_WRITE_BIO_PKCS8PRIVATEKEY
+name|PEM_F_DO_PK8PKEY
 argument_list|,
 name|PEM_R_ERROR_CONVERTING_PRIVATE_KEY
 argument_list|)
@@ -519,7 +519,7 @@ condition|)
 block|{
 name|PEMerr
 argument_list|(
-name|PEM_F_PEM_WRITE_BIO_PKCS8PRIVATEKEY
+name|PEM_F_DO_PK8PKEY
 argument_list|,
 name|PEM_R_READ_KEY
 argument_list|)
@@ -1137,7 +1137,7 @@ condition|)
 block|{
 name|PEMerr
 argument_list|(
-name|PEM_F_PEM_F_DO_PK8KEY_FP
+name|PEM_F_DO_PK8PKEY_FP
 argument_list|,
 name|ERR_R_BUF_LIB
 argument_list|)

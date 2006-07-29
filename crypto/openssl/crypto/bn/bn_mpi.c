@@ -459,6 +459,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|bn_check_top
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|a

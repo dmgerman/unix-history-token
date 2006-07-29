@@ -14,18 +14,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<openssl/crypto.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"cryptlib.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"eng_int.h"
 end_include
 
@@ -33,16 +21,6 @@ begin_include
 include|#
 directive|include
 file|<openssl/rand.h>
-end_include
-
-begin_comment
-comment|/* FIXME: This shouldn't be needed */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<openssl/engine.h>
 end_include
 
 begin_comment
@@ -188,6 +166,12 @@ name|NULL
 expr_stmt|;
 name|e
 operator|->
+name|store_meth
+operator|=
+name|NULL
+expr_stmt|;
+name|e
+operator|->
 name|ciphers
 operator|=
 name|NULL
@@ -273,7 +257,7 @@ condition|)
 block|{
 name|ENGINEerr
 argument_list|(
-name|ENGINE_F_ENGINE_FREE
+name|ENGINE_F_ENGINE_FREE_UTIL
 argument_list|,
 name|ERR_R_PASSED_NULL_PARAMETER
 argument_list|)
@@ -1164,6 +1148,34 @@ return|return
 name|e
 operator|->
 name|cmd_defns
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* eng_lib.o is pretty much linked into anything that touches ENGINE already, so  * put the "static_state" hack here. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|internal_static_hack
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+modifier|*
+name|ENGINE_get_static_state
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|&
+name|internal_static_hack
 return|;
 block|}
 end_function

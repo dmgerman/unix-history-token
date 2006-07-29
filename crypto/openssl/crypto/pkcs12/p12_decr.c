@@ -296,7 +296,10 @@ name|unsigned
 name|char
 modifier|*
 name|out
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|unsigned
+name|char
 modifier|*
 name|p
 decl_stmt|;
@@ -338,7 +341,7 @@ condition|)
 block|{
 name|PKCS12err
 argument_list|(
-name|PKCS12_F_PKCS12_DECRYPT_D2I
+name|PKCS12_F_PKCS12_ITEM_DECRYPT_D2I
 argument_list|,
 name|PKCS12_R_PKCS12_PBE_CRYPT_ERROR
 argument_list|)
@@ -441,7 +444,7 @@ name|ret
 condition|)
 name|PKCS12err
 argument_list|(
-name|PKCS12_F_PKCS12_DECRYPT_D2I
+name|PKCS12_F_PKCS12_ITEM_DECRYPT_D2I
 argument_list|,
 name|PKCS12_R_DECODE_ERROR
 argument_list|)
@@ -518,7 +521,7 @@ condition|)
 block|{
 name|PKCS12err
 argument_list|(
-name|PKCS12_F_PKCS12_I2D_ENCRYPT
+name|PKCS12_F_PKCS12_ITEM_I2D_ENCRYPT
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
@@ -547,7 +550,7 @@ condition|)
 block|{
 name|PKCS12err
 argument_list|(
-name|PKCS12_F_PKCS12_I2D_ENCRYPT
+name|PKCS12_F_PKCS12_ITEM_I2D_ENCRYPT
 argument_list|,
 name|PKCS12_R_ENCODE_ERROR
 argument_list|)
@@ -587,7 +590,7 @@ condition|)
 block|{
 name|PKCS12err
 argument_list|(
-name|PKCS12_F_PKCS12_I2D_ENCRYPT
+name|PKCS12_F_PKCS12_ITEM_I2D_ENCRYPT
 argument_list|,
 name|PKCS12_R_ENCRYPT_ERROR
 argument_list|)

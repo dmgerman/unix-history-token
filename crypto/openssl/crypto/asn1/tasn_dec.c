@@ -8,7 +8,7 @@ comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL 
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2000-2005 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -58,6 +58,7 @@ specifier|static
 name|int
 name|asn1_check_eoc
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -73,12 +74,34 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
+name|asn1_find_end
+parameter_list|(
+specifier|const
+name|unsigned
+name|char
+modifier|*
+modifier|*
+name|in
+parameter_list|,
+name|long
+name|len
+parameter_list|,
+name|char
+name|inf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|asn1_collect
 parameter_list|(
 name|BUF_MEM
 modifier|*
 name|buf
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -109,6 +132,7 @@ name|BUF_MEM
 modifier|*
 name|buf
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -147,6 +171,7 @@ name|char
 modifier|*
 name|cst
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -182,6 +207,7 @@ modifier|*
 modifier|*
 name|pval
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -216,6 +242,7 @@ modifier|*
 modifier|*
 name|val
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -250,6 +277,7 @@ modifier|*
 modifier|*
 name|pval
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -330,7 +358,7 @@ block|,
 name|B_ASN1_UNKNOWN
 block|,
 comment|/* tags 12-15 */
-literal|0
+name|B_ASN1_SEQUENCE
 block|,
 literal|0
 block|,
@@ -417,7 +445,7 @@ name|asn1_tlc_clear
 parameter_list|(
 name|c
 parameter_list|)
-value|if(c) (c)->valid = 0
+value|if (c) (c)->valid = 0
 end_define
 
 begin_comment
@@ -434,6 +462,7 @@ modifier|*
 modifier|*
 name|pval
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -518,6 +547,7 @@ modifier|*
 modifier|*
 name|pval
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -575,6 +605,7 @@ modifier|*
 modifier|*
 name|pval
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -636,14 +667,27 @@ name|ASN1_aux_cb
 modifier|*
 name|asn1_cb
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
 name|p
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|q
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|char
+modifier|*
+name|wp
+init|=
+name|NULL
+decl_stmt|;
+comment|/* BIG FAT WARNING!  BREAKS CONST WHERE USED */
+name|unsigned
+name|char
 name|imphack
 init|=
 literal|0
@@ -728,7 +772,7 @@ operator|->
 name|templates
 condition|)
 block|{
-comment|/* tagging or OPTIONAL is currently illegal on an item template 			 * because the flags can't get passed down. In practice this isn't 			 * a problem: we include the relevant flags from the item template 			 * in the template itself. 			 */
+comment|/* tagging or OPTIONAL is currently illegal on an item 			 * template because the flags can't get passed down. 			 * In practice this isn't a problem: we include the 			 * relevant flags from the item template in the 			 * template itself. 			 */
 if|if
 condition|(
 operator|(
@@ -1007,7 +1051,7 @@ name|exptag
 operator|=
 name|tag
 expr_stmt|;
-comment|/* Don't care about anything other than presence of expected tag */
+comment|/* Don't care about anything other than presence 			 * of expected tag */
 name|ret
 operator|=
 name|asn1_check_tlen
@@ -1074,18 +1118,42 @@ operator|-
 literal|1
 condition|)
 block|{
-name|p
+name|wp
 operator|=
 operator|*
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|*
+operator|)
 name|in
 expr_stmt|;
 name|imphack
 operator|=
 operator|*
-name|p
+name|wp
 expr_stmt|;
-operator|*
+if|if
+condition|(
 name|p
+operator|==
+name|NULL
+condition|)
+block|{
+name|ASN1err
+argument_list|(
+name|ASN1_F_ASN1_ITEM_EX_D2I
+argument_list|,
+name|ERR_R_NESTED_ASN1_ERROR
+argument_list|)
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
+operator|*
+name|wp
 operator|=
 call|(
 name|unsigned
@@ -1126,7 +1194,7 @@ operator|-
 literal|1
 condition|)
 operator|*
-name|p
+name|wp
 operator|=
 name|imphack
 expr_stmt|;
@@ -1173,10 +1241,7 @@ condition|(
 operator|!
 operator|*
 name|pval
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 operator|!
 name|ASN1_item_ex_new
 argument_list|(
@@ -1196,7 +1261,6 @@ expr_stmt|;
 goto|goto
 name|err
 goto|;
-block|}
 block|}
 comment|/* CHOICE type, try each possibility in turn */
 name|pchval
@@ -1369,6 +1433,9 @@ return|return
 literal|1
 return|;
 case|case
+name|ASN1_ITYPE_NDEF_SEQUENCE
+case|:
+case|case
 name|ASN1_ITYPE_SEQUENCE
 case|:
 name|p
@@ -1488,12 +1555,12 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+comment|/* If indefinite we don't do a length check */
 else|else
 name|seq_nolen
 operator|=
 name|seq_eoc
 expr_stmt|;
-comment|/* If indefinite we don't do a length check */
 if|if
 condition|(
 operator|!
@@ -1516,10 +1583,7 @@ condition|(
 operator|!
 operator|*
 name|pval
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 operator|!
 name|ASN1_item_ex_new
 argument_list|(
@@ -1539,7 +1603,6 @@ expr_stmt|;
 goto|goto
 name|err
 goto|;
-block|}
 block|}
 if|if
 condition|(
@@ -1677,7 +1740,7 @@ name|p
 expr_stmt|;
 break|break;
 block|}
-comment|/* This determines the OPTIONAL flag value. The field cannot 			 * be omitted if it is the last of a SEQUENCE and there is 			 * still data to be read. This isn't strictly necessary but 			 * it increases efficiency in some cases. 			 */
+comment|/* This determines the OPTIONAL flag value. The field 			 * cannot be omitted if it is the last of a SEQUENCE 			 * and there is still data to be read. This isn't 			 * strictly necessary but it increases efficiency in 			 * some cases. 			 */
 if|if
 condition|(
 name|i
@@ -1708,7 +1771,7 @@ operator|&
 name|ASN1_TFLG_OPTIONAL
 argument_list|)
 expr_stmt|;
-comment|/* attempt to read in field, allowing each to be OPTIONAL */
+comment|/* attempt to read in field, allowing each to be 			 * OPTIONAL */
 name|ret
 operator|=
 name|asn1_template_ex_d2i
@@ -1750,7 +1813,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* OPTIONAL component absent. Free and zero the field 				 */
+comment|/* OPTIONAL component absent. 				 * Free and zero the field. 				 */
 name|ASN1_template_free
 argument_list|(
 name|pseqval
@@ -2014,7 +2077,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Templates are handled with two separate functions. One handles any EXPLICIT tag and the other handles the  * rest.  */
+comment|/* Templates are handled with two separate functions.  * One handles any EXPLICIT tag and the other handles the rest.  */
 end_comment
 
 begin_function
@@ -2027,6 +2090,7 @@ modifier|*
 modifier|*
 name|val
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -2060,6 +2124,7 @@ decl_stmt|;
 name|long
 name|len
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -2107,7 +2172,7 @@ block|{
 name|char
 name|cst
 decl_stmt|;
-comment|/* Need to work out amount of data available to the inner content and where it 		 * starts: so read in EXPLICIT header to get the info. 		 */
+comment|/* Need to work out amount of data available to the inner 		 * content and where it starts: so read in EXPLICIT header to 		 * get the info. 		 */
 name|ret
 operator|=
 name|asn1_check_tlen
@@ -2254,7 +2319,7 @@ condition|)
 block|{
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_TEMPLATE_D2I
+name|ASN1_F_ASN1_TEMPLATE_EX_D2I
 argument_list|,
 name|ASN1_R_MISSING_EOC
 argument_list|)
@@ -2266,7 +2331,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* Otherwise we must hit the EXPLICIT tag end or its an error */
+comment|/* Otherwise we must hit the EXPLICIT tag end or its 			 * an error */
 if|if
 condition|(
 name|len
@@ -2274,7 +2339,7 @@ condition|)
 block|{
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_TEMPLATE_D2I
+name|ASN1_F_ASN1_TEMPLATE_EX_D2I
 argument_list|,
 name|ASN1_R_EXPLICIT_LENGTH_MISMATCH
 argument_list|)
@@ -2340,6 +2405,7 @@ modifier|*
 modifier|*
 name|val
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -2370,6 +2436,7 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -2503,7 +2570,7 @@ condition|)
 block|{
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_TEMPLATE_EX_D2I
+name|ASN1_F_ASN1_TEMPLATE_NOEXP_D2I
 argument_list|,
 name|ERR_R_NESTED_ASN1_ERROR
 argument_list|)
@@ -2603,7 +2670,7 @@ condition|)
 block|{
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_TEMPLATE_EX_D2I
+name|ASN1_F_ASN1_TEMPLATE_NOEXP_D2I
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
@@ -2648,7 +2715,7 @@ condition|)
 block|{
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_TEMPLATE_D2I
+name|ASN1_F_ASN1_TEMPLATE_NOEXP_D2I
 argument_list|,
 name|ASN1_R_UNEXPECTED_EOC
 argument_list|)
@@ -2706,7 +2773,7 @@ condition|)
 block|{
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_TEMPLATE_D2I
+name|ASN1_F_ASN1_TEMPLATE_NOEXP_D2I
 argument_list|,
 name|ERR_R_NESTED_ASN1_ERROR
 argument_list|)
@@ -2743,7 +2810,7 @@ condition|)
 block|{
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_TEMPLATE_D2I
+name|ASN1_F_ASN1_TEMPLATE_NOEXP_D2I
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
@@ -2760,7 +2827,7 @@ condition|)
 block|{
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_TEMPLATE_D2I
+name|ASN1_F_ASN1_TEMPLATE_NOEXP_D2I
 argument_list|,
 name|ASN1_R_MISSING_EOC
 argument_list|)
@@ -2816,7 +2883,7 @@ condition|)
 block|{
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_TEMPLATE_D2I
+name|ASN1_F_ASN1_TEMPLATE_NOEXP_D2I
 argument_list|,
 name|ERR_R_NESTED_ASN1_ERROR
 argument_list|)
@@ -2877,7 +2944,7 @@ condition|)
 block|{
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_TEMPLATE_D2I
+name|ASN1_F_ASN1_TEMPLATE_NOEXP_D2I
 argument_list|,
 name|ERR_R_NESTED_ASN1_ERROR
 argument_list|)
@@ -2937,6 +3004,7 @@ modifier|*
 modifier|*
 name|pval
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -2984,6 +3052,7 @@ name|free_cont
 init|=
 literal|0
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -2992,6 +3061,7 @@ decl_stmt|;
 name|BUF_MEM
 name|buf
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -3261,7 +3331,7 @@ name|V_ASN1_OTHER
 operator|)
 condition|)
 block|{
-comment|/* Clear context cache for type OTHER because the auto clear when 		 * we have a exact match wont work 		 */
+comment|/* Clear context cache for type OTHER because the auto clear 		 * when we have a exact match wont work 		 */
 if|if
 condition|(
 name|utype
@@ -3274,8 +3344,8 @@ argument_list|(
 name|ctx
 argument_list|)
 expr_stmt|;
-comment|/* SEQUENCE and SET must be constructed */
 block|}
+comment|/* SEQUENCE and SET must be constructed */
 elseif|else
 if|if
 condition|(
@@ -3308,22 +3378,14 @@ block|{
 if|if
 condition|(
 operator|!
-name|asn1_collect
+name|asn1_find_end
 argument_list|(
-name|NULL
-argument_list|,
 operator|&
 name|p
 argument_list|,
 name|plen
 argument_list|,
 name|inf
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-operator|-
-literal|1
 argument_list|)
 condition|)
 goto|goto
@@ -3451,6 +3513,7 @@ expr_stmt|;
 name|cont
 operator|=
 operator|(
+specifier|const
 name|unsigned
 name|char
 operator|*
@@ -3547,6 +3610,7 @@ modifier|*
 modifier|*
 name|pval
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -3654,6 +3718,15 @@ operator|=
 name|ASN1_TYPE_new
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|typ
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|err
+goto|;
 operator|*
 name|pval
 operator|=
@@ -3750,7 +3823,7 @@ condition|)
 block|{
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_D2I_EX_PRIMITIVE
+name|ASN1_F_ASN1_EX_C2I
 argument_list|,
 name|ASN1_R_NULL_IS_WRONG_LENGTH
 argument_list|)
@@ -3781,7 +3854,7 @@ condition|)
 block|{
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_D2I_EX_PRIMITIVE
+name|ASN1_F_ASN1_EX_C2I
 argument_list|,
 name|ASN1_R_BOOLEAN_IS_WRONG_LENGTH
 argument_list|)
@@ -3971,7 +4044,7 @@ condition|)
 block|{
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_D2I_EX_PRIMITIVE
+name|ASN1_F_ASN1_EX_C2I
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
@@ -4032,8 +4105,14 @@ name|stmp
 operator|->
 name|data
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|cont
 expr_stmt|;
+comment|/* UGLY CAST! RL */
 name|stmp
 operator|->
 name|length
@@ -4063,7 +4142,7 @@ condition|)
 block|{
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_D2I_EX_PRIMITIVE
+name|ASN1_F_ASN1_EX_C2I
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
@@ -4090,9 +4169,11 @@ if|if
 condition|(
 name|typ
 operator|&&
+operator|(
 name|utype
 operator|==
 name|V_ASN1_NULL
+operator|)
 condition|)
 name|typ
 operator|->
@@ -4136,7 +4217,199 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function collects the asn1 data from a constructred string  * type into a buffer. The values of 'in' and 'len' should refer  * to the contents of the constructed type and 'inf' should be set  * if it is indefinite length. If 'buf' is NULL then we just want  * to find the end of the current structure: useful for indefinite  * length constructed stuff.  */
+comment|/* This function finds the end of an ASN1 structure when passed its maximum  * length, whether it is indefinite length and a pointer to the content.  * This is more efficient than calling asn1_collect because it does not  * recurse on each indefinite length header.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|asn1_find_end
+parameter_list|(
+specifier|const
+name|unsigned
+name|char
+modifier|*
+modifier|*
+name|in
+parameter_list|,
+name|long
+name|len
+parameter_list|,
+name|char
+name|inf
+parameter_list|)
+block|{
+name|int
+name|expected_eoc
+decl_stmt|;
+name|long
+name|plen
+decl_stmt|;
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|p
+init|=
+operator|*
+name|in
+decl_stmt|,
+modifier|*
+name|q
+decl_stmt|;
+comment|/* If not indefinite length constructed just add length */
+if|if
+condition|(
+name|inf
+operator|==
+literal|0
+condition|)
+block|{
+operator|*
+name|in
+operator|+=
+name|len
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+name|expected_eoc
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Indefinite length constructed form. Find the end when enough EOCs 	 * are found. If more indefinite length constructed headers 	 * are encountered increment the expected eoc count otherwise just 	 * skip to the end of the data. 	 */
+while|while
+condition|(
+name|len
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|asn1_check_eoc
+argument_list|(
+operator|&
+name|p
+argument_list|,
+name|len
+argument_list|)
+condition|)
+block|{
+name|expected_eoc
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|expected_eoc
+operator|==
+literal|0
+condition|)
+break|break;
+name|len
+operator|-=
+literal|2
+expr_stmt|;
+continue|continue;
+block|}
+name|q
+operator|=
+name|p
+expr_stmt|;
+comment|/* Just read in a header: only care about the length */
+if|if
+condition|(
+operator|!
+name|asn1_check_tlen
+argument_list|(
+operator|&
+name|plen
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|inf
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|p
+argument_list|,
+name|len
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+block|{
+name|ASN1err
+argument_list|(
+name|ASN1_F_ASN1_FIND_END
+argument_list|,
+name|ERR_R_NESTED_ASN1_ERROR
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+if|if
+condition|(
+name|inf
+condition|)
+name|expected_eoc
+operator|++
+expr_stmt|;
+else|else
+name|p
+operator|+=
+name|plen
+expr_stmt|;
+name|len
+operator|-=
+name|p
+operator|-
+name|q
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|expected_eoc
+condition|)
+block|{
+name|ASN1err
+argument_list|(
+name|ASN1_F_ASN1_FIND_END
+argument_list|,
+name|ASN1_R_MISSING_EOC
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+operator|*
+name|in
+operator|=
+name|p
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* This function collects the asn1 data from a constructred string  * type into a buffer. The values of 'in' and 'len' should refer  * to the contents of the constructed type and 'inf' should be set  * if it is indefinite length.  */
 end_comment
 
 begin_function
@@ -4148,6 +4421,7 @@ name|BUF_MEM
 modifier|*
 name|buf
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -4167,6 +4441,7 @@ name|int
 name|aclass
 parameter_list|)
 block|{
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -4192,7 +4467,7 @@ name|inf
 operator|&=
 literal|1
 expr_stmt|;
-comment|/* If no buffer and not indefinite length constructed just pass over the encoded data */
+comment|/* If no buffer and not indefinite length constructed just pass over 	 * the encoded data */
 if|if
 condition|(
 operator|!
@@ -4234,7 +4509,7 @@ name|len
 argument_list|)
 condition|)
 block|{
-comment|/* EOC is illegal outside indefinite length constructed form */
+comment|/* EOC is illegal outside indefinite length 			 * constructed form */
 if|if
 condition|(
 operator|!
@@ -4308,6 +4583,9 @@ condition|(
 name|cst
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|OPENSSL_ALLOW_NESTED_ASN1_STRINGS
 if|if
 condition|(
 operator|!
@@ -4330,11 +4608,26 @@ condition|)
 return|return
 literal|0
 return|;
+else|#
+directive|else
+name|ASN1err
+argument_list|(
+name|ASN1_F_ASN1_COLLECT
+argument_list|,
+name|ASN1_R_NESTED_ASN1_STRING
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+endif|#
+directive|endif
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
+name|plen
+operator|&&
 operator|!
 name|collect_data
 argument_list|(
@@ -4349,7 +4642,6 @@ condition|)
 return|return
 literal|0
 return|;
-block|}
 name|len
 operator|-=
 name|p
@@ -4393,6 +4685,7 @@ name|BUF_MEM
 modifier|*
 name|buf
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -4476,6 +4769,7 @@ specifier|static
 name|int
 name|asn1_check_eoc
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -4486,6 +4780,7 @@ name|long
 name|len
 parameter_list|)
 block|{
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -4565,6 +4860,7 @@ name|char
 modifier|*
 name|cst
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -4599,6 +4895,7 @@ decl_stmt|;
 name|long
 name|plen
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -4806,7 +5103,7 @@ name|pclass
 operator|)
 condition|)
 block|{
-comment|/* If type is OPTIONAL, not an error, but indicate missing 			 * type. 			 */
+comment|/* If type is OPTIONAL, not an error: 			 * indicate missing type. 			 */
 if|if
 condition|(
 name|opt
@@ -4831,7 +5128,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* We have a tag and class match, so assume we are going to do something with it */
+comment|/* We have a tag and class match: 		 * assume we are going to do something with it */
 name|asn1_tlc_clear
 argument_list|(
 name|ctx

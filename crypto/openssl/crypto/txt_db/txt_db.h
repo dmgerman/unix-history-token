@@ -19,6 +19,12 @@ directive|define
 name|HEADER_TXT_DB_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<openssl/opensslconf.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -125,7 +131,11 @@ modifier|*
 modifier|*
 name|qual
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+parameter_list|)
 function_decl|;
 name|long
 name|error
@@ -214,7 +224,11 @@ function_decl|(
 modifier|*
 name|qual
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+parameter_list|)
 parameter_list|,
 name|LHASH_HASH_FN_TYPE
 name|hash

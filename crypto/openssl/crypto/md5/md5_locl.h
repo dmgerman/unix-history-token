@@ -81,6 +81,26 @@ name|defined
 argument_list|(
 name|__INTEL__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__x86_64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__x86_64__
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|B_ENDIAN
+argument_list|)
 end_if
 
 begin_define
@@ -89,6 +109,11 @@ directive|define
 name|md5_block_host_order
 value|md5_block_asm_host_order
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_elif
 elif|#
@@ -117,7 +142,7 @@ name|MD5_LONG
 modifier|*
 name|p
 parameter_list|,
-name|int
+name|size_t
 name|num
 parameter_list|)
 function_decl|;
@@ -153,7 +178,7 @@ name|void
 modifier|*
 name|p
 parameter_list|,
-name|int
+name|size_t
 name|num
 parameter_list|)
 function_decl|;
@@ -172,7 +197,7 @@ name|void
 modifier|*
 name|p
 parameter_list|,
-name|int
+name|size_t
 name|num
 parameter_list|)
 function_decl|;
@@ -200,6 +225,26 @@ name|defined
 argument_list|(
 name|__INTEL__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__x86_64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__x86_64__
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|B_ENDIAN
+argument_list|)
 end_if
 
 begin_comment
@@ -212,6 +257,11 @@ directive|define
 name|md5_block_data_order
 value|md5_block_host_order
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -733,8 +733,13 @@ if|if
 condition|(
 name|chunk
 operator|>
+operator|(
+name|int
+operator|)
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 condition|)
 name|chunk
 operator|=

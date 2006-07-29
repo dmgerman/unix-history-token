@@ -29,6 +29,7 @@ begin_function
 name|int
 name|ASN1_PRINTABLE_type
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*

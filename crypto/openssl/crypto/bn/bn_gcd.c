@@ -228,6 +228,11 @@ argument_list|(
 name|ctx
 argument_list|)
 expr_stmt|;
+name|bn_check_top
+argument_list|(
+name|r
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ret
@@ -501,6 +506,11 @@ goto|goto
 name|err
 goto|;
 block|}
+name|bn_check_top
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|a
@@ -1617,6 +1627,11 @@ expr_stmt|;
 name|BN_CTX_end
 argument_list|(
 name|ctx
+argument_list|)
+expr_stmt|;
+name|bn_check_top
+argument_list|(
+name|ret
 argument_list|)
 expr_stmt|;
 return|return

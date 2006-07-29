@@ -4,7 +4,7 @@ comment|/* -*- Mode: C; c-file-style: "bsd" -*- */
 end_comment
 
 begin_comment
-comment|/*  * easy-tls.c -- generic TLS proxy.  * $Id: easy-tls.c,v 1.2.2.2 2002/03/05 09:06:57 bodo Exp $  */
+comment|/*  * easy-tls.c -- generic TLS proxy.  * $Id: easy-tls.c,v 1.4 2002/03/05 09:07:16 bodo Exp $  */
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ specifier|const
 name|rcsid
 index|[]
 init|=
-literal|"$Id: easy-tls.c,v 1.2.2.2 2002/03/05 09:06:57 bodo Exp $"
+literal|"$Id: easy-tls.c,v 1.4 2002/03/05 09:07:16 bodo Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -192,6 +192,7 @@ name|passin
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|spkac
@@ -202,7 +203,8 @@ modifier|*
 name|spksect
 init|=
 literal|"default"
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|spkstr
 init|=
@@ -841,6 +843,9 @@ name|challenge
 argument_list|,
 name|challenge
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|challenge

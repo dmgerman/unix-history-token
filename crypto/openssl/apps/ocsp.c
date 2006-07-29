@@ -59,6 +59,12 @@ directive|include
 file|<openssl/ssl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/bn.h>
+end_include
+
 begin_comment
 comment|/* Maximum leeway in validity period: default 5 minutes */
 end_comment
@@ -3736,7 +3742,7 @@ name|BIO_printf
 argument_list|(
 name|out
 argument_list|,
-literal|"Responder Error: %s (%ld)\n"
+literal|"Responder Error: %s (%d)\n"
 argument_list|,
 name|OCSP_response_status_str
 argument_list|(
@@ -4007,8 +4013,6 @@ argument_list|(
 name|bio_err
 argument_list|,
 literal|"Response Verify Failure\n"
-argument_list|,
-name|i
 argument_list|)
 expr_stmt|;
 name|ERR_print_errors

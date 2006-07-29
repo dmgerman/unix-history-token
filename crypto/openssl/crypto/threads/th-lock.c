@@ -149,7 +149,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<openssl/e_os.h>
+file|"../../e_os.h"
 end_include
 
 begin_include

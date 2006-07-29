@@ -509,6 +509,9 @@ if|if
 condition|(
 name|idx
 operator|<
+operator|(
+name|int
+operator|)
 name|X509_TRUST_COUNT
 condition|)
 return|return
@@ -967,6 +970,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|unsigned
 name|int
 name|i
 decl_stmt|;

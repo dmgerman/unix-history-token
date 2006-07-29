@@ -78,10 +78,11 @@ argument_list|)
 define|#
 directive|define
 name|FIPS_RAND_SIZE_T
-value|int
+value|size_t
 endif|#
 directive|endif
-typedef|typedef
+comment|/* Already defined in ossl_typ.h */
+comment|/* typedef struct rand_meth_st RAND_METHOD; */
 struct|struct
 name|rand_meth_st
 block|{
@@ -167,8 +168,7 @@ name|void
 parameter_list|)
 function_decl|;
 block|}
-name|RAND_METHOD
-typedef|;
+struct|;
 ifdef|#
 directive|ifdef
 name|BN_DEBUG
@@ -397,10 +397,6 @@ comment|/* Error codes for the RAND functions. */
 comment|/* Function codes. */
 define|#
 directive|define
-name|RAND_F_FIPS_RAND_BYTES
-value|102
-define|#
-directive|define
 name|RAND_F_RAND_GET_RAND_METHOD
 value|101
 define|#
@@ -410,28 +406,8 @@ value|100
 comment|/* Reason codes. */
 define|#
 directive|define
-name|RAND_R_NON_FIPS_METHOD
-value|101
-define|#
-directive|define
-name|RAND_R_PRNG_ASKING_FOR_TOO_MUCH
-value|105
-define|#
-directive|define
-name|RAND_R_PRNG_NOT_REKEYED
-value|103
-define|#
-directive|define
-name|RAND_R_PRNG_NOT_RESEEDED
-value|104
-define|#
-directive|define
 name|RAND_R_PRNG_NOT_SEEDED
 value|100
-define|#
-directive|define
-name|RAND_R_PRNG_STUCK
-value|102
 ifdef|#
 directive|ifdef
 name|__cplusplus

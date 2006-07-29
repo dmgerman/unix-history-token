@@ -660,8 +660,10 @@ begin_if
 if|if
 condition|(
 operator|!
-name|ASN1_pack_string
+name|ASN1_pack_string_of
 argument_list|(
+name|PBKDF2PARAM
+argument_list|,
 name|kdf
 argument_list|,
 name|i2d_PBKDF2PARAM
@@ -769,8 +771,10 @@ begin_if
 if|if
 condition|(
 operator|!
-name|ASN1_pack_string
+name|ASN1_pack_string_of
 argument_list|(
+name|PBE2PARAM
+argument_list|,
 name|pbe2
 argument_list|,
 name|i2d_PBE2PARAM

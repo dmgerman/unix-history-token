@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* dso.h */
+comment|/* dso.h -*- mode:C; c-file-style: "eay" -*- */
 end_comment
 
 begin_comment
@@ -69,6 +69,11 @@ define|#
 directive|define
 name|DSO_FLAG_UPCASE_SYMBOL
 value|0x10
+comment|/* This flag loads the library with public symbols.  * Meaning: The exported symbols of this library are public  * to all libraries loaded after this library.  * At the moment only implemented in unix.  */
+define|#
+directive|define
+name|DSO_FLAG_GLOBAL_SYMBOLS
+value|0x20
 typedef|typedef
 name|void
 function_decl|(
@@ -94,6 +99,27 @@ name|DSO_NAME_CONVERTER_FUNC
 function_decl|)
 parameter_list|(
 name|DSO
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* The function prototype used for method functions (or caller-provided  * callbacks) that merge two file specifications. They are passed a  * DSO structure pointer (or NULL if they are to be used independantly of  * a DSO object) and two file specifications to merge. They should  * either return NULL (if there is an error condition) or a newly allocated  * string containing the result of merging that the caller will need  * to free with OPENSSL_free() when done.  * Here, merging means that bits and pieces are taken from each of the  * file specifications and added together in whatever fashion that is  * sensible for the DSO method in question.  The only rule that really  * applies is that if the two specification contain pieces of the same  * type, the copy from the first string takes priority.  One could see  * it as the first specification is the one given by the user and the  * second being a bunch of defaults to add on if they're missing in the  * first. */
+typedef|typedef
+name|char
+modifier|*
+function_decl|(
+modifier|*
+name|DSO_MERGER_FUNC
+function_decl|)
+parameter_list|(
+name|DSO
+modifier|*
+parameter_list|,
+specifier|const
+name|char
 modifier|*
 parameter_list|,
 specifier|const
@@ -205,6 +231,10 @@ comment|/* The default DSO_METHOD-specific function for converting filenames to 
 name|DSO_NAME_CONVERTER_FUNC
 name|dso_name_converter
 decl_stmt|;
+comment|/* The default DSO_METHOD-specific function for converting filenames to 	 * a canonical native form. */
+name|DSO_MERGER_FUNC
+name|dso_merger
+decl_stmt|;
 comment|/* [De]Initialisation handlers. */
 name|int
 function_decl|(
@@ -255,9 +285,13 @@ comment|/* For use by applications etc ... use this for your bits'n'pieces, 	 * 
 name|CRYPTO_EX_DATA
 name|ex_data
 decl_stmt|;
-comment|/* If this callback function pointer is set to non-NULL, then it will 	 * be used on DSO_load() in place of meth->dso_name_converter. NB: This 	 * should normally set using DSO_set_name_converter(). */
+comment|/* If this callback function pointer is set to non-NULL, then it will 	 * be used in DSO_load() in place of meth->dso_name_converter. NB: This 	 * should normally set using DSO_set_name_converter(). */
 name|DSO_NAME_CONVERTER_FUNC
 name|name_converter
+decl_stmt|;
+comment|/* If this callback function pointer is set to non-NULL, then it will 	 * be used in DSO_load() in place of meth->dso_merger. NB: This 	 * should normally set using DSO_set_merger(). */
+name|DSO_MERGER_FUNC
+name|merger
 decl_stmt|;
 comment|/* This is populated with (a copy of) the platform-independant 	 * filename used for this DSO. */
 name|char
@@ -382,6 +416,26 @@ specifier|const
 name|char
 modifier|*
 name|filename
+parameter_list|)
+function_decl|;
+comment|/* This function will invoke the DSO's merger callback to merge two file  * specifications, or if the callback isn't set it will instead use the  * DSO_METHOD's merger.  A non-NULL return value will need to be  * OPENSSL_free()'d. */
+name|char
+modifier|*
+name|DSO_merge
+parameter_list|(
+name|DSO
+modifier|*
+name|dso
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|filespec1
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|filespec2
 parameter_list|)
 function_decl|;
 comment|/* If the DSO is currently loaded, this returns the filename that it was loaded  * under, otherwise it returns NULL. So it is also useful as a test as to  * whether the DSO is currently loaded. NB: This will not necessarily return  * the same value as DSO_convert_filename(dso, dso->filename), because the  * DSO_METHOD's load function may have tried a variety of filenames (with  * and/or without the aid of the converters) before settling on the one it  * actually loaded. */
@@ -555,6 +609,10 @@ name|DSO_F_DLFCN_LOAD
 value|102
 define|#
 directive|define
+name|DSO_F_DLFCN_MERGER
+value|130
+define|#
+directive|define
 name|DSO_F_DLFCN_NAME_CONVERTER
 value|123
 define|#
@@ -573,6 +631,10 @@ define|#
 directive|define
 name|DSO_F_DL_LOAD
 value|106
+define|#
+directive|define
+name|DSO_F_DL_MERGER
+value|131
 define|#
 directive|define
 name|DSO_F_DL_NAME_CONVERTER
@@ -615,6 +677,10 @@ name|DSO_F_DSO_LOAD
 value|112
 define|#
 directive|define
+name|DSO_F_DSO_MERGE
+value|132
+define|#
+directive|define
 name|DSO_F_DSO_NEW_METHOD
 value|113
 define|#
@@ -631,12 +697,16 @@ name|DSO_F_DSO_UP_REF
 value|114
 define|#
 directive|define
-name|DSO_F_VMS_BIND_VAR
+name|DSO_F_VMS_BIND_SYM
 value|115
 define|#
 directive|define
 name|DSO_F_VMS_LOAD
 value|116
+define|#
+directive|define
+name|DSO_F_VMS_MERGER
+value|133
 define|#
 directive|define
 name|DSO_F_VMS_UNLOAD
@@ -651,12 +721,24 @@ name|DSO_F_WIN32_BIND_VAR
 value|119
 define|#
 directive|define
+name|DSO_F_WIN32_JOINER
+value|135
+define|#
+directive|define
 name|DSO_F_WIN32_LOAD
 value|120
 define|#
 directive|define
+name|DSO_F_WIN32_MERGER
+value|134
+define|#
+directive|define
 name|DSO_F_WIN32_NAME_CONVERTER
 value|125
+define|#
+directive|define
+name|DSO_F_WIN32_SPLITTER
+value|136
 define|#
 directive|define
 name|DSO_F_WIN32_UNLOAD
@@ -672,12 +754,24 @@ name|DSO_R_DSO_ALREADY_LOADED
 value|110
 define|#
 directive|define
+name|DSO_R_EMPTY_FILE_STRUCTURE
+value|113
+define|#
+directive|define
+name|DSO_R_FAILURE
+value|114
+define|#
+directive|define
 name|DSO_R_FILENAME_TOO_BIG
 value|101
 define|#
 directive|define
 name|DSO_R_FINISH_FAILED
 value|102
+define|#
+directive|define
+name|DSO_R_INCORRECT_FILE_SYNTAX
+value|115
 define|#
 directive|define
 name|DSO_R_LOAD_FAILED
@@ -690,6 +784,10 @@ define|#
 directive|define
 name|DSO_R_NO_FILENAME
 value|111
+define|#
+directive|define
+name|DSO_R_NO_FILE_SPECIFICATION
+value|116
 define|#
 directive|define
 name|DSO_R_NULL_HANDLE

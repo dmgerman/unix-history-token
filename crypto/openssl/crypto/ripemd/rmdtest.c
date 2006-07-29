@@ -285,10 +285,6 @@ literal|0
 index|]
 operator|)
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
 name|strlen
 argument_list|(
 operator|(

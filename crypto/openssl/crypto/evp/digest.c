@@ -235,7 +235,7 @@ condition|)
 block|{
 name|EVPerr
 argument_list|(
-name|EVP_F_EVP_DIGESTINIT
+name|EVP_F_EVP_DIGESTINIT_EX
 argument_list|,
 name|EVP_R_INITIALIZATION_ERROR
 argument_list|)
@@ -285,7 +285,7 @@ block|{
 comment|/* Same comment from evp_enc.c */
 name|EVPerr
 argument_list|(
-name|EVP_F_EVP_DIGESTINIT
+name|EVP_F_EVP_DIGESTINIT_EX
 argument_list|,
 name|EVP_R_INITIALIZATION_ERROR
 argument_list|)
@@ -326,7 +326,7 @@ condition|)
 block|{
 name|EVPerr
 argument_list|(
-name|EVP_F_EVP_DIGESTINIT
+name|EVP_F_EVP_DIGESTINIT_EX
 argument_list|,
 name|EVP_R_NO_DIGEST_SET
 argument_list|)
@@ -422,8 +422,7 @@ name|void
 modifier|*
 name|data
 parameter_list|,
-name|unsigned
-name|int
+name|size_t
 name|count
 parameter_list|)
 block|{
@@ -438,10 +437,6 @@ name|ctx
 argument_list|,
 name|data
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
 name|count
 argument_list|)
 return|;
@@ -676,7 +671,7 @@ condition|)
 block|{
 name|EVPerr
 argument_list|(
-name|EVP_F_EVP_MD_CTX_COPY
+name|EVP_F_EVP_MD_CTX_COPY_EX
 argument_list|,
 name|EVP_R_INPUT_NOT_INITIALIZED
 argument_list|)
@@ -706,7 +701,7 @@ condition|)
 block|{
 name|EVPerr
 argument_list|(
-name|EVP_F_EVP_MD_CTX_COPY
+name|EVP_F_EVP_MD_CTX_COPY_EX
 argument_list|,
 name|ERR_R_ENGINE_LIB
 argument_list|)
@@ -844,12 +839,12 @@ begin_function
 name|int
 name|EVP_Digest
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|data
 parameter_list|,
-name|unsigned
-name|int
+name|size_t
 name|count
 parameter_list|,
 name|unsigned

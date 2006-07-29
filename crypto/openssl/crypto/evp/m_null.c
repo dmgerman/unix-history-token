@@ -67,8 +67,7 @@ name|void
 modifier|*
 name|data
 parameter_list|,
-name|unsigned
-name|long
+name|size_t
 name|count
 parameter_list|)
 block|{

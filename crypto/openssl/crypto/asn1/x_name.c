@@ -41,6 +41,7 @@ modifier|*
 modifier|*
 name|val
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -366,7 +367,7 @@ name|memerr
 label|:
 name|ASN1err
 argument_list|(
-name|ASN1_F_X509_NAME_NEW
+name|ASN1_F_X509_NAME_EX_NEW
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
@@ -501,6 +502,7 @@ modifier|*
 modifier|*
 name|val
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -529,6 +531,7 @@ modifier|*
 name|ctx
 parameter_list|)
 block|{
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -545,6 +548,13 @@ modifier|*
 name|intname
 init|=
 name|NULL
+decl_stmt|,
+modifier|*
+modifier|*
+name|intname_pp
+init|=
+operator|&
+name|intname
 decl_stmt|;
 name|int
 name|i
@@ -558,6 +568,13 @@ modifier|*
 name|nm
 init|=
 name|NULL
+decl_stmt|,
+modifier|*
+modifier|*
+name|nm_pp
+init|=
+operator|&
+name|nm
 decl_stmt|;
 name|STACK_OF
 argument_list|(
@@ -584,8 +601,7 @@ name|ASN1_VALUE
 operator|*
 operator|*
 operator|)
-operator|&
-name|intname
+name|intname_pp
 argument_list|,
 operator|&
 name|p
@@ -637,8 +653,7 @@ name|ASN1_VALUE
 operator|*
 operator|*
 operator|)
-operator|&
-name|nm
+name|nm_pp
 argument_list|,
 name|NULL
 argument_list|)
@@ -799,7 +814,7 @@ name|err
 label|:
 name|ASN1err
 argument_list|(
-name|ASN1_F_D2I_X509_NAME
+name|ASN1_F_X509_NAME_EX_D2I
 argument_list|,
 name|ERR_R_NESTED_ASN1_ERROR
 argument_list|)
@@ -936,6 +951,13 @@ modifier|*
 name|intname
 init|=
 name|NULL
+decl_stmt|,
+modifier|*
+modifier|*
+name|intname_pp
+init|=
+operator|&
+name|intname
 decl_stmt|;
 name|int
 name|len
@@ -1078,8 +1100,7 @@ name|ASN1_VALUE
 operator|*
 operator|*
 operator|)
-operator|&
-name|intname
+name|intname_pp
 argument_list|,
 name|NULL
 argument_list|,
@@ -1130,8 +1151,7 @@ name|ASN1_VALUE
 operator|*
 operator|*
 operator|)
-operator|&
-name|intname
+name|intname_pp
 argument_list|,
 operator|&
 name|p
@@ -1175,7 +1195,7 @@ argument_list|)
 expr_stmt|;
 name|ASN1err
 argument_list|(
-name|ASN1_F_D2I_X509_NAME
+name|ASN1_F_X509_NAME_ENCODE
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)

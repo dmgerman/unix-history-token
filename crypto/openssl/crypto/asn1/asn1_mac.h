@@ -69,13 +69,13 @@ parameter_list|,
 name|func
 parameter_list|)
 define|\
-value|ASN1_CTX c; \ 	type ret=NULL; \ 	\ 	c.pp=(unsigned char **)pp; \ 	c.q= *(unsigned char **)pp; \ 	c.error=ERR_R_NESTED_ASN1_ERROR; \ 	if ((a == NULL) || ((*a) == NULL)) \ 		{ if ((ret=(type)func()) == NULL) \ 			{ c.line=__LINE__; goto err; } } \ 	else	ret=(*a);
+value|ASN1_const_CTX c; \ 	type ret=NULL; \ 	\ 	c.pp=(const unsigned char **)pp; \ 	c.q= *(const unsigned char **)pp; \ 	c.error=ERR_R_NESTED_ASN1_ERROR; \ 	if ((a == NULL) || ((*a) == NULL)) \ 		{ if ((ret=(type)func()) == NULL) \ 			{ c.line=__LINE__; goto err; } } \ 	else	ret=(*a);
 define|#
 directive|define
 name|M_ASN1_D2I_Init
 parameter_list|()
 define|\
-value|c.p= *(unsigned char **)pp; \ 	c.max=(length == 0)?0:(c.p+length);
+value|c.p= *(const unsigned char **)pp; \ 	c.max=(length == 0)?0:(c.p+length);
 define|#
 directive|define
 name|M_ASN1_D2I_Finish_2
@@ -83,7 +83,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|if (!asn1_Finish(&c)) \ 		{ c.line=__LINE__; goto err; } \ 	*(unsigned char **)pp=c.p; \ 	if (a != NULL) (*a)=ret; \ 	return(ret);
+value|if (!asn1_const_Finish(&c)) \ 		{ c.line=__LINE__; goto err; } \ 	*(const unsigned char **)pp=c.p; \ 	if (a != NULL) (*a)=ret; \ 	return(ret);
 define|#
 directive|define
 name|M_ASN1_D2I_Finish
@@ -95,7 +95,7 @@ parameter_list|,
 name|e
 parameter_list|)
 define|\
-value|M_ASN1_D2I_Finish_2(a); \ err:\ 	ASN1_MAC_H_err((e),c.error,c.line); \ 	asn1_add_error(*(unsigned char **)pp,(int)(c.q- *pp)); \ 	if ((ret != NULL)&& ((a == NULL) || (*a != ret))) func(ret); \ 	return(NULL)
+value|M_ASN1_D2I_Finish_2(a); \ err:\ 	ASN1_MAC_H_err((e),c.error,c.line); \ 	asn1_add_error(*(const unsigned char **)pp,(int)(c.q- *pp)); \ 	if ((ret != NULL)&& ((a == NULL) || (*a != ret))) func(ret); \ 	return(NULL)
 define|#
 directive|define
 name|M_ASN1_D2I_start_sequence
@@ -127,7 +127,7 @@ directive|define
 name|M_ASN1_D2I_end_sequence
 parameter_list|()
 define|\
-value|(((c.inf&1) == 0)?(c.slen<= 0): \ 		(c.eos=ASN1_check_infinite_end(&c.p,c.slen)))
+value|(((c.inf&1) == 0)?(c.slen<= 0): \ 		(c.eos=ASN1_const_check_infinite_end(&c.p,c.slen)))
 comment|/* Don't use this with d2i_ASN1_BOOLEAN() */
 define|#
 directive|define
@@ -139,6 +139,19 @@ name|func
 parameter_list|)
 define|\
 value|c.q=c.p; \ 	if (func(&(b),&c.p,c.slen) == NULL) \ 		{c.line=__LINE__; goto err; } \ 	c.slen-=(c.p-c.q);
+comment|/* Don't use this with d2i_ASN1_BOOLEAN() */
+define|#
+directive|define
+name|M_ASN1_D2I_get_x
+parameter_list|(
+name|type
+parameter_list|,
+name|b
+parameter_list|,
+name|func
+parameter_list|)
+define|\
+value|c.q=c.p; \ 	if (((D2I_OF(type))func)(&(b),&c.p,c.slen) == NULL) \ 		{c.line=__LINE__; goto err; } \ 	c.slen-=(c.p-c.q);
 comment|/* use this instead () */
 define|#
 directive|define
@@ -453,7 +466,7 @@ parameter_list|,
 name|tag
 parameter_list|)
 define|\
-value|if ((c.slen != 0L)&& (M_ASN1_next == \ 		(V_ASN1_CONSTRUCTED|V_ASN1_CONTEXT_SPECIFIC|tag))) \ 		{ \ 		int Tinf,Ttag,Tclass; \ 		long Tlen; \ 		\ 		c.q=c.p; \ 		Tinf=ASN1_get_object(&c.p,&Tlen,&Ttag,&Tclass,c.slen); \ 		if (Tinf& 0x80) \ 			{ c.error=ERR_R_BAD_ASN1_OBJECT_HEADER; \ 			c.line=__LINE__; goto err; } \ 		if (Tinf == (V_ASN1_CONSTRUCTED+1)) \ 					Tlen = c.slen - (c.p - c.q) - 2; \ 		if (func(&(r),&c.p,Tlen) == NULL) \ 			{ c.line=__LINE__; goto err; } \ 		if (Tinf == (V_ASN1_CONSTRUCTED+1)) { \ 			Tlen = c.slen - (c.p - c.q); \ 			if(!ASN1_check_infinite_end(&c.p, Tlen)) \ 				{ c.error=ERR_R_MISSING_ASN1_EOS; \ 				c.line=__LINE__; goto err; } \ 		}\ 		c.slen-=(c.p-c.q); \ 		}
+value|if ((c.slen != 0L)&& (M_ASN1_next == \ 		(V_ASN1_CONSTRUCTED|V_ASN1_CONTEXT_SPECIFIC|tag))) \ 		{ \ 		int Tinf,Ttag,Tclass; \ 		long Tlen; \ 		\ 		c.q=c.p; \ 		Tinf=ASN1_get_object(&c.p,&Tlen,&Ttag,&Tclass,c.slen); \ 		if (Tinf& 0x80) \ 			{ c.error=ERR_R_BAD_ASN1_OBJECT_HEADER; \ 			c.line=__LINE__; goto err; } \ 		if (Tinf == (V_ASN1_CONSTRUCTED+1)) \ 					Tlen = c.slen - (c.p - c.q) - 2; \ 		if (func(&(r),&c.p,Tlen) == NULL) \ 			{ c.line=__LINE__; goto err; } \ 		if (Tinf == (V_ASN1_CONSTRUCTED+1)) { \ 			Tlen = c.slen - (c.p - c.q); \ 			if(!ASN1_const_check_infinite_end(&c.p, Tlen)) \ 				{ c.error=ERR_R_MISSING_ASN1_EOS; \ 				c.line=__LINE__; goto err; } \ 		}\ 		c.slen-=(c.p-c.q); \ 		}
 define|#
 directive|define
 name|M_ASN1_D2I_get_EXP_set_opt
@@ -519,14 +532,15 @@ define|\
 comment|/*	err:	ASN1_MAC_H_err((a),ERR_R_NESTED_ASN1_ERROR,c.line); \ 		return(NULL);*/
 define|\
 value|err2:	ASN1_MAC_H_err((a),ERR_R_MALLOC_FAILURE,c.line); \ 		return(NULL)
+comment|/* BIG UGLY WARNING!  This is so damn ugly I wanna puke.  Unfortunately,    some macros that use ASN1_const_CTX still insist on writing in the input    stream.  ARGH!  ARGH!  ARGH!  Let's get rid of this macro package.    Please?						-- Richard Levitte */
 define|#
 directive|define
 name|M_ASN1_next
-value|(*c.p)
+value|(*((unsigned char *)(c.p)))
 define|#
 directive|define
 name|M_ASN1_next_prev
-value|(*c.q)
+value|(*((unsigned char *)(c.q)))
 comment|/*************************************************/
 define|#
 directive|define
@@ -1029,7 +1043,7 @@ value|*pp=p; \ 				return(r);
 name|int
 name|asn1_GetSequence
 parameter_list|(
-name|ASN1_CTX
+name|ASN1_const_CTX
 modifier|*
 name|c
 parameter_list|,
@@ -1041,6 +1055,7 @@ function_decl|;
 name|void
 name|asn1_add_error
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*

@@ -6,13 +6,19 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"cryptlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/evp.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<openssl/engine.h>
+file|<openssl/lhash.h>
 end_include
 
 begin_include
@@ -20,10 +26,6 @@ include|#
 directive|include
 file|"eng_int.h"
 end_include
-
-begin_comment
-comment|/* This is the type of item in the 'implementation' table. Each 'nid' hashes to  * a (potentially NULL) ENGINE_PILE structure which contains a stack of ENGINE*  * pointers. These pointers aren't references, because they're inserted and  * removed during ENGINE creation and ENGINE destruction. They point to ENGINEs  * that *exist* (ie. have a structural reference count greater than zero) rather  * than ENGINEs that are *functional*. Each pointer in those stacks are to  * ENGINEs that implements the algorithm corresponding to each 'nid'. */
-end_comment
 
 begin_comment
 comment|/* The type of the items in the table */
@@ -34,11 +36,11 @@ typedef|typedef
 struct|struct
 name|st_engine_pile
 block|{
-comment|/* The 'nid' of the algorithm/mode this ENGINE_PILE structure represents 	 * */
+comment|/* The 'nid' of this algorithm/mode */
 name|int
 name|nid
 decl_stmt|;
-comment|/* A stack of ENGINE pointers for ENGINEs that support this 	 * algorithm/mode. In the event that 'funct' is NULL, the first entry in 	 * this stack that initialises will be set as 'funct' and assumed as the 	 * default for operations of this type. */
+comment|/* ENGINEs that implement this algorithm/mode. */
 name|STACK_OF
 argument_list|(
 name|ENGINE
@@ -51,7 +53,7 @@ name|ENGINE
 modifier|*
 name|funct
 decl_stmt|;
-comment|/* This value optimises engine_table_select(). If it is called it sets 	 * this value to 1. Any changes to this ENGINE_PILE resets it to zero. 	 * As such, no ENGINE_init() thrashing is done unless ENGINEs 	 * continually register (and/or unregister). */
+comment|/* Zero if 'sk' is newer than the cached 'funct', non-zero otherwise */
 name|int
 name|uptodate
 decl_stmt|;
@@ -61,7 +63,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* The type of the hash table of ENGINE_PILE structures such that each are  * unique and keyed by the 'nid' value. */
+comment|/* The type exposed in eng_int.h */
 end_comment
 
 begin_struct
@@ -80,7 +82,7 @@ comment|/* ENGINE_TABLE */
 end_comment
 
 begin_comment
-comment|/* This value stores global options controlling behaviour of (mostly) the  * engine_table_select() function. It's a bitmask of flag values of the form  * ENGINE_TABLE_FLAG_*** (as defined in engine.h) and is controlled by the  * ENGINE_[get|set]_table_flags() function. */
+comment|/* Global flags (ENGINE_TABLE_FLAG_***). */
 end_comment
 
 begin_decl_stmt
@@ -410,7 +412,7 @@ name|fnd
 operator|->
 name|uptodate
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 name|fnd
 operator|->
@@ -494,7 +496,7 @@ name|fnd
 operator|->
 name|uptodate
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -614,7 +616,7 @@ name|pile
 operator|->
 name|uptodate
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 block|}
 if|if
@@ -807,7 +809,7 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|/* Exposed API function to get a functional reference from the implementation  * table (ie. try to get a functional reference from the tabled structural  * references) for a given cipher 'nid' */
+comment|/* return a functional reference for a given 'nid' */
 end_comment
 
 begin_ifndef
@@ -863,7 +865,6 @@ name|loop
 operator|=
 literal|0
 block|;
-comment|/* If 'engine_ciphers' is NULL, then it's absolutely *sure* that no 	 * ENGINEs have registered any implementations! */
 if|if
 condition|(
 operator|!
@@ -880,8 +881,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"engine_table_dbg: %s:%d, nid=%d, no "
-literal|"registered for anything!\n"
+literal|"engine_table_dbg: %s:%d, nid=%d, nothing "
+literal|"registered!\n"
 argument_list|,
 name|f
 argument_list|,
@@ -1086,24 +1087,8 @@ goto|;
 block|}
 end_if
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_comment
-comment|/* Don't need to get a reference if we hold the lock. If the locking has 	 * to change in future, that would be different ... */
-end_comment
-
-begin_endif
-unit|ret->struct_ref++; engine_ref_debug(ret, 0, 1)
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Try and initialise the ENGINE if it's already functional *or* if the 	 * ENGINE_TABLE_FLAG_NOINIT flag is not set. */
+comment|/* Try to initialise the ENGINE? */
 end_comment
 
 begin_if
@@ -1139,28 +1124,12 @@ expr_stmt|;
 end_if
 
 begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* Release the structural reference */
-end_comment
-
-begin_endif
-unit|ret->struct_ref--; engine_ref_debug(ret, 0, -1);
-endif|#
-directive|endif
-end_endif
-
-begin_if
 if|if
 condition|(
 name|initres
 condition|)
 block|{
-comment|/* If we didn't have a default (functional reference) for this 		 * 'nid' (or we had one but for whatever reason we're now 		 * initialising a different one), use this opportunity to set 		 * 'funct'. */
+comment|/* Update 'funct' */
 if|if
 condition|(
 operator|(
@@ -1193,7 +1162,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* We got an extra functional reference for the 			 * per-'nid' default */
 name|fnd
 operator|->
 name|funct
@@ -1265,7 +1233,7 @@ label|:
 end_label
 
 begin_comment
-comment|/* Whatever happened - we should "untouch" our uptodate file seeing as 	 * we have tried our best to find a functional reference for 'nid'. If 	 * it failed, it is unlikely to succeed again until some future 	 * registrations (or unregistrations) have taken place that affect that 	 * 'nid'. */
+comment|/* If it failed, it is unlikely to succeed again until some future 	 * registrations have taken place. In all cases, we cache. */
 end_comment
 
 begin_if

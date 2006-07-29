@@ -13,6 +13,12 @@ directive|include
 file|"des_locl.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/crypto.h>
+end_include
+
 begin_function
 name|void
 name|DES_string_to_key

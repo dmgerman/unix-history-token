@@ -160,7 +160,7 @@ begin_define
 define|#
 directive|define
 name|BUF_OFFSET
-value|EVP_MAX_BLOCK_LENGTH
+value|(EVP_MAX_BLOCK_LENGTH*2)
 end_define
 
 begin_typedef
@@ -1761,11 +1761,13 @@ name|EVP_CIPHER
 modifier|*
 name|c
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
 name|k
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*

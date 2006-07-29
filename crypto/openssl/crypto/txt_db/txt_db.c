@@ -261,7 +261,11 @@ argument_list|(
 operator|*
 operator|*
 argument_list|)
-argument_list|()
+argument_list|(
+name|char
+operator|*
+operator|*
+argument_list|)
 operator|)
 name|OPENSSL_malloc
 argument_list|(
@@ -272,7 +276,11 @@ argument_list|(
 operator|*
 operator|*
 argument_list|)
-argument_list|()
+argument_list|(
+name|char
+operator|*
+operator|*
+argument_list|)
 argument_list|)
 operator|*
 name|num
@@ -800,6 +808,13 @@ directive|endif
 if|if
 condition|(
 name|ret
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|ret
 operator|->
 name|data
 operator|!=
@@ -853,6 +868,7 @@ argument_list|(
 name|ret
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|NULL
@@ -989,7 +1005,11 @@ function_decl|(
 modifier|*
 name|qual
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+parameter_list|)
 parameter_list|,
 name|LHASH_HASH_FN_TYPE
 name|hash
@@ -1003,6 +1023,7 @@ modifier|*
 name|idx
 decl_stmt|;
 name|char
+modifier|*
 modifier|*
 name|r
 decl_stmt|;
@@ -1088,6 +1109,7 @@ operator|=
 operator|(
 name|char
 operator|*
+operator|*
 operator|)
 name|sk_value
 argument_list|(
@@ -1148,6 +1170,10 @@ name|db
 operator|->
 name|data
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|r
 argument_list|)
 expr_stmt|;

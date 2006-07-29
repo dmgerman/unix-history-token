@@ -485,27 +485,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|void
-name|fcrypt_body
-parameter_list|(
-name|DES_LONG
-modifier|*
-name|out
-parameter_list|,
-name|DES_key_schedule
-modifier|*
-name|ks
-parameter_list|,
-name|DES_LONG
-name|Eswap0
-parameter_list|,
-name|DES_LONG
-name|Eswap1
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|char
 modifier|*

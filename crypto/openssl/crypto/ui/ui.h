@@ -23,16 +23,33 @@ directive|define
 name|HEADER_UI_H
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_DEPRECATED
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<openssl/crypto.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<openssl/safestack.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/ossl_typ.h>
 end_include
 
 begin_ifdef
@@ -47,18 +64,9 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-comment|/* The UI type is a holder for a specific user interface session.  It can    contain an illimited number of informational or error strings as well    as things to prompt for, both passwords (noecho mode) and others (echo    mode), and verification of the same.  All of these are called strings,    and are further described below. */
-typedef|typedef
-name|struct
-name|ui_st
-name|UI
-typedef|;
-comment|/* All instances of UI have a reference to a method structure, which is a    ordered vector of functions that implement the lower level things to do.    There is an instruction on the implementation further down, in the section    for method implementors. */
-typedef|typedef
-name|struct
-name|ui_method_st
-name|UI_METHOD
-typedef|;
+comment|/* Declared already in ossl_typ.h */
+comment|/* typedef struct ui_st UI; */
+comment|/* typedef struct ui_method_st UI_METHOD; */
 comment|/* All the following functions return -1 or NULL on error and in some cases    (UI_process()) -2 if interrupted or in some other way cancelled.    When everything is fine, they return 0, a positive value or a non-NULL    pointer, all depending on their purpose. */
 comment|/* Creators and destructor.   */
 name|UI
@@ -429,7 +437,9 @@ function_decl|(
 modifier|*
 name|f
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 parameter_list|)
 function_decl|;
 comment|/* The commands */

@@ -374,7 +374,7 @@ condition|)
 block|{
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_MBSTRING_COPY
+name|ASN1_F_ASN1_MBSTRING_NCOPY
 argument_list|,
 name|ASN1_R_INVALID_BMPSTRING_LENGTH
 argument_list|)
@@ -403,7 +403,7 @@ condition|)
 block|{
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_MBSTRING_COPY
+name|ASN1_F_ASN1_MBSTRING_NCOPY
 argument_list|,
 name|ASN1_R_INVALID_UNIVERSALSTRING_LENGTH
 argument_list|)
@@ -453,7 +453,7 @@ condition|)
 block|{
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_MBSTRING_COPY
+name|ASN1_F_ASN1_MBSTRING_NCOPY
 argument_list|,
 name|ASN1_R_INVALID_UTF8STRING
 argument_list|)
@@ -475,7 +475,7 @@ break|break;
 default|default:
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_MBSTRING_COPY
+name|ASN1_F_ASN1_MBSTRING_NCOPY
 argument_list|,
 name|ASN1_R_UNKNOWN_FORMAT
 argument_list|)
@@ -502,7 +502,7 @@ condition|)
 block|{
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_MBSTRING_COPY
+name|ASN1_F_ASN1_MBSTRING_NCOPY
 argument_list|,
 name|ASN1_R_STRING_TOO_SHORT
 argument_list|)
@@ -550,7 +550,7 @@ condition|)
 block|{
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_MBSTRING_COPY
+name|ASN1_F_ASN1_MBSTRING_NCOPY
 argument_list|,
 name|ASN1_R_STRING_TOO_LONG
 argument_list|)
@@ -603,7 +603,7 @@ condition|)
 block|{
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_MBSTRING_COPY
+name|ASN1_F_ASN1_MBSTRING_NCOPY
 argument_list|,
 name|ASN1_R_ILLEGAL_CHARACTERS
 argument_list|)
@@ -773,7 +773,7 @@ condition|)
 block|{
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_MBSTRING_COPY
+name|ASN1_F_ASN1_MBSTRING_NCOPY
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
@@ -812,7 +812,7 @@ condition|)
 block|{
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_MBSTRING_COPY
+name|ASN1_F_ASN1_MBSTRING_NCOPY
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
@@ -925,7 +925,7 @@ argument_list|)
 expr_stmt|;
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_MBSTRING_COPY
+name|ASN1_F_ASN1_MBSTRING_NCOPY
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)

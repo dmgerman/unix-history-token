@@ -64,6 +64,7 @@ argument_list|,
 name|OBJ_NAME_TYPE_CIPHER_METH
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -95,6 +96,7 @@ argument_list|,
 name|OBJ_NAME_TYPE_CIPHER_METH
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -145,6 +147,7 @@ argument_list|,
 name|OBJ_NAME_TYPE_MD_METH
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -176,6 +179,7 @@ argument_list|,
 name|OBJ_NAME_TYPE_MD_METH
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)

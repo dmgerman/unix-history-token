@@ -89,6 +89,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|crl_usage
@@ -272,6 +273,7 @@ name|fingerprint
 init|=
 literal|0
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -312,7 +314,7 @@ decl_stmt|,
 modifier|*
 name|digest
 init|=
-name|EVP_md5
+name|EVP_sha1
 argument_list|()
 decl_stmt|;
 name|apps_startup
@@ -1591,9 +1593,15 @@ if|if
 condition|(
 name|noout
 condition|)
+block|{
+name|ret
+operator|=
+literal|0
+expr_stmt|;
 goto|goto
 name|end
 goto|;
+block|}
 if|if
 condition|(
 name|outformat

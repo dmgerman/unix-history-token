@@ -19,6 +19,12 @@ directive|define
 name|HEADER_BUFFER_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<openssl/ossl_typ.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -34,10 +40,20 @@ directive|endif
 include|#
 directive|include
 file|<stddef.h>
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NO_SYS_TYPES_H
+argument_list|)
 include|#
 directive|include
 file|<sys/types.h>
-typedef|typedef
+endif|#
+directive|endif
+comment|/* Already declared in ossl_typ.h */
+comment|/* typedef struct buf_mem_st BUF_MEM; */
 struct|struct
 name|buf_mem_st
 block|{
@@ -54,8 +70,7 @@ name|max
 decl_stmt|;
 comment|/* size of buffer */
 block|}
-name|BUF_MEM
-typedef|;
+struct|;
 name|BUF_MEM
 modifier|*
 name|BUF_MEM_new
@@ -103,6 +118,32 @@ modifier|*
 name|str
 parameter_list|)
 function_decl|;
+name|char
+modifier|*
+name|BUF_strndup
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|,
+name|size_t
+name|siz
+parameter_list|)
+function_decl|;
+name|void
+modifier|*
+name|BUF_memdup
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|size_t
+name|siz
+parameter_list|)
+function_decl|;
 comment|/* safe string functions */
 name|size_t
 name|BUF_strlcpy
@@ -148,8 +189,16 @@ comment|/* Error codes for the BUF functions. */
 comment|/* Function codes. */
 define|#
 directive|define
+name|BUF_F_BUF_MEMDUP
+value|103
+define|#
+directive|define
 name|BUF_F_BUF_MEM_GROW
 value|100
+define|#
+directive|define
+name|BUF_F_BUF_MEM_GROW_CLEAN
+value|105
 define|#
 directive|define
 name|BUF_F_BUF_MEM_NEW
@@ -158,6 +207,10 @@ define|#
 directive|define
 name|BUF_F_BUF_STRDUP
 value|102
+define|#
+directive|define
+name|BUF_F_BUF_STRNDUP
+value|104
 comment|/* Reason codes. */
 ifdef|#
 directive|ifdef

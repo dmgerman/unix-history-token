@@ -29,6 +29,12 @@ directive|include
 file|<openssl/asn1t.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/bn.h>
+end_include
+
 begin_comment
 comment|/* Custom primitive type for BIGNUM handling. This reads in an ASN1_INTEGER as a  * BIGNUM directly. Currently it ignores the sign which isn't a problem since all  * BIGNUMs used are non negative and anything that looks negative is normally due  * to an encoding error.  */
 end_comment
@@ -113,6 +119,7 @@ modifier|*
 modifier|*
 name|pval
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -415,6 +422,7 @@ modifier|*
 modifier|*
 name|pval
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*

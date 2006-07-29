@@ -1629,7 +1629,9 @@ name|salt_out
 decl_stmt|;
 name|int
 name|n
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|int
 name|i
 decl_stmt|;
 name|EVP_MD_CTX
@@ -1983,6 +1985,7 @@ operator|)
 condition|?
 operator|(
 name|unsigned
+specifier|const
 name|char
 operator|*
 operator|)
@@ -2049,6 +2052,7 @@ name|buf
 else|:
 operator|(
 name|unsigned
+specifier|const
 name|char
 operator|*
 operator|)
@@ -2726,12 +2730,16 @@ condition|(
 operator|!
 name|quiet
 condition|)
+comment|/* XXX: really we should know how to print a size_t, not cast it */
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
 literal|"Warning: truncating password to %u characters\n"
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|pw_maxlen
 argument_list|)
 expr_stmt|;

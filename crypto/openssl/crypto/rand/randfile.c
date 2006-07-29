@@ -15,7 +15,7 @@ begin_define
 define|#
 directive|define
 name|_XOPEN_SOURCE
-value|1
+value|500
 end_define
 
 begin_include
@@ -227,7 +227,7 @@ argument_list|(
 name|sb
 argument_list|)
 argument_list|,
-literal|0
+literal|0.0
 argument_list|)
 expr_stmt|;
 if|if
@@ -383,6 +383,9 @@ name|buf
 argument_list|,
 name|n
 argument_list|,
+operator|(
+name|double
+operator|)
 name|i
 argument_list|)
 expr_stmt|;

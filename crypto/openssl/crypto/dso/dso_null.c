@@ -68,6 +68,12 @@ block|,
 comment|/* ctrl */
 name|NULL
 block|,
+comment|/* dso_name_converter */
+name|NULL
+block|,
+comment|/* dso_merger */
+name|NULL
+block|,
 comment|/* init */
 name|NULL
 comment|/* finish */

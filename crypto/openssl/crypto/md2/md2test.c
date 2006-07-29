@@ -233,10 +233,6 @@ operator|)
 operator|*
 name|P
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
 name|strlen
 argument_list|(
 operator|*
@@ -313,11 +309,30 @@ name|P
 operator|++
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|OPENSSL_SYS_NETWARE
+if|if
+condition|(
+name|err
+condition|)
+name|printf
+argument_list|(
+literal|"ERROR: %d\n"
+argument_list|,
+name|err
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|EXIT
 argument_list|(
 name|err
 argument_list|)
 expr_stmt|;
+return|return
+name|err
+return|;
 block|}
 end_function
 

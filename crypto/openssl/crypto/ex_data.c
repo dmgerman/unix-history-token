@@ -18,37 +18,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/buffer.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/bio.h>
+file|"cryptlib.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|<openssl/lhash.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"cryptlib.h"
 end_include
 
 begin_comment
@@ -686,7 +662,6 @@ specifier|static
 name|void
 name|def_cleanup_cb
 parameter_list|(
-specifier|const
 name|void
 modifier|*
 name|a_void

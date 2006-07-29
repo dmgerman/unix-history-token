@@ -25,6 +25,7 @@ begin_define
 define|#
 directive|define
 name|_XOPEN_SOURCE
+value|500
 end_define
 
 begin_comment
@@ -37,6 +38,16 @@ directive|include
 file|<time.h>
 end_include
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* experimental */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
@@ -47,11 +58,23 @@ begin_comment
 comment|/* To avoid clashes with anything else... */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|KRB5_PRIVATE
+value|1
+end_define
 
 begin_include
 include|#
@@ -82,6 +105,24 @@ ifndef|#
 directive|ifndef
 name|OPENSSL_NO_KRB5
 end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ENOMEM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ENOMEM
+value|KRB5KRB_ERR_GENERIC
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*   * When OpenSSL is built on Windows, we do not want to require that  * the Kerberos DLLs be available in order for the OpenSSL DLLs to  * work.  Therefore, all Kerberos routines are loaded at run time  * and we do not link to a .LIB file.  */
@@ -1442,7 +1483,10 @@ name|hKRB5_32
 operator|=
 name|LoadLibrary
 argument_list|(
+name|TEXT
+argument_list|(
 literal|"KRB5_32"
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4127,6 +4171,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|int
+operator|)
 name|kdata
 operator|->
 name|length
@@ -4310,6 +4357,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|int
+operator|)
 name|keyblk
 operator|->
 name|keyvalue
@@ -4372,6 +4422,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|int
+operator|)
 name|keyblk
 operator|->
 name|length
@@ -4449,6 +4502,9 @@ literal|0
 init|;
 name|ui
 operator|<
+operator|(
+name|int
+operator|)
 name|princ
 operator|->
 name|realm
@@ -4491,6 +4547,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|int
+operator|)
 name|princ
 operator|->
 name|length
@@ -4523,6 +4582,9 @@ literal|0
 init|;
 name|uj
 operator|<
+operator|(
+name|int
+operator|)
 name|princ
 operator|->
 name|data
@@ -4958,6 +5020,7 @@ block|{
 name|krb5_data
 name|krb5in_data
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -5769,6 +5832,7 @@ name|asn1ticket
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -8969,11 +9033,14 @@ index|[
 name|EVP_MAX_IV_LENGTH
 index|]
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|char
 modifier|*
 name|unenc_authent
 decl_stmt|;

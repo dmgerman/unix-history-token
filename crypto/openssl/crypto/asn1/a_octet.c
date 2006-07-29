@@ -76,6 +76,7 @@ name|ASN1_OCTET_STRING
 modifier|*
 name|x
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*

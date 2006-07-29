@@ -235,6 +235,9 @@ modifier|*
 name|dh_special
 parameter_list|,
 name|int
+name|tmp_rsa
+parameter_list|,
+name|int
 name|ctx_options
 parameter_list|,
 name|int
@@ -553,6 +556,15 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|def_tmp_rsa
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|def_ctx_options
 init|=
 literal|0
@@ -638,6 +650,7 @@ literal|" -flipped<0|1>         (makes SSL servers be network clients, and vice 
 literal|" -cipher<list>         (specifies cipher list to use)\n"
 literal|" -dh_file<path>        (a PEM file containing DH parameters to use)\n"
 literal|" -dh_special<NULL|generate|standard> (see below: def=NULL)\n"
+literal|" -no_tmp_rsa            (don't generate temporary RSA keys)\n"
 literal|" -no_ssl2               (disable SSLv2)\n"
 literal|" -no_ssl3               (disable SSLv3)\n"
 literal|" -no_tls1               (disable TLSv1)\n"
@@ -1565,6 +1578,11 @@ init|=
 name|def_dh_special
 decl_stmt|;
 name|int
+name|tmp_rsa
+init|=
+name|def_tmp_rsa
+decl_stmt|;
+name|int
 name|ctx_options
 init|=
 name|def_ctx_options
@@ -2377,6 +2395,28 @@ argument_list|(
 operator|*
 name|argv
 argument_list|,
+literal|"-no_tmp_rsa"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|tmp_rsa
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|next_arg
+goto|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
 literal|"-no_ssl2"
 argument_list|)
 operator|==
@@ -2799,6 +2839,8 @@ name|dh_file
 argument_list|,
 name|dh_special
 argument_list|,
+name|tmp_rsa
+argument_list|,
 name|ctx_options
 argument_list|,
 name|out_state
@@ -3074,15 +3116,34 @@ case|case
 operator|-
 literal|1
 case|:
+if|if
+condition|(
+name|errno
+operator|!=
+name|EINTR
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"selector_select returned a badness error.\n"
+literal|"selector_select returned a "
+literal|"badness error.\n"
 argument_list|)
 expr_stmt|;
 goto|goto
 name|shouldnt_happen
+goto|;
+block|}
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Warn, selector interrupted by a signal\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|main_loop
 goto|;
 case|case
 literal|0
@@ -4011,6 +4072,9 @@ modifier|*
 name|dh_special
 parameter_list|,
 name|int
+name|tmp_rsa
+parameter_list|,
+name|int
 name|ctx_options
 parameter_list|,
 name|int
@@ -4275,6 +4339,18 @@ condition|)
 goto|goto
 name|err
 goto|;
+comment|/* temporary RSA key generation */
+if|if
+condition|(
+name|tmp_rsa
+condition|)
+name|SSL_CTX_set_tmp_rsa_callback
+argument_list|(
+name|ctx
+argument_list|,
+name|cb_generate_tmp_rsa
+argument_list|)
+expr_stmt|;
 comment|/* cipher_list */
 if|if
 condition|(

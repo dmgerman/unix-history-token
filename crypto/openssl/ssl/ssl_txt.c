@@ -39,6 +39,7 @@ name|FILE
 modifier|*
 name|fp
 parameter_list|,
+specifier|const
 name|SSL_SESSION
 modifier|*
 name|x
@@ -123,6 +124,7 @@ name|BIO
 modifier|*
 name|bp
 parameter_list|,
+specifier|const
 name|SSL_SESSION
 modifier|*
 name|x
@@ -132,6 +134,7 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|s
@@ -642,6 +645,9 @@ block|}
 endif|#
 directive|endif
 comment|/* OPENSSL_NO_KRB5 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_COMP
 if|if
 condition|(
 name|x
@@ -654,6 +660,8 @@ block|{
 name|SSL_COMP
 modifier|*
 name|comp
+init|=
+name|NULL
 decl_stmt|;
 name|ssl_cipher_get_evp
 argument_list|(
@@ -721,6 +729,8 @@ name|err
 goto|;
 block|}
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|x

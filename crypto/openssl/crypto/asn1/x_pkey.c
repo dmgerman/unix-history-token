@@ -80,6 +80,7 @@ modifier|*
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -109,8 +110,10 @@ expr_stmt|;
 name|M_ASN1_D2I_start_sequence
 argument_list|()
 expr_stmt|;
-name|M_ASN1_D2I_get
+name|M_ASN1_D2I_get_x
 argument_list|(
+name|X509_ALGOR
+argument_list|,
 name|ret
 operator|->
 name|enc_algor
@@ -118,8 +121,10 @@ argument_list|,
 name|d2i_X509_ALGOR
 argument_list|)
 expr_stmt|;
-name|M_ASN1_D2I_get
+name|M_ASN1_D2I_get_x
 argument_list|(
+name|ASN1_OCTET_STRING
+argument_list|,
 name|ret
 operator|->
 name|enc_pkey

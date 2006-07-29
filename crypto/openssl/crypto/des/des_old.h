@@ -27,6 +27,16 @@ directive|define
 name|HEADER_DES_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<openssl/e_os2.h>
+end_include
+
+begin_comment
+comment|/* OPENSSL_EXTERN, OPENSSL_NO_DES, DES_LONG */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -82,26 +92,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<openssl/opensslconf.h>
-end_include
-
-begin_comment
-comment|/* DES_LONG */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<openssl/e_os2.h>
-end_include
-
-begin_comment
-comment|/* OPENSSL_EXTERN */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<openssl/symhacks.h>
 end_include
 
@@ -139,6 +129,14 @@ begin_extern
 extern|extern
 literal|"C"
 block|{
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|_
+undef|#
+directive|undef
+name|_
 endif|#
 directive|endif
 typedef|typedef
@@ -521,6 +519,9 @@ name|r
 parameter_list|)
 define|\
 value|DES_fcrypt((b),(s),(r))
+if|#
+directive|if
+literal|0
 define|#
 directive|define
 name|des_crypt
@@ -531,9 +532,6 @@ name|s
 parameter_list|)
 define|\
 value|DES_crypt((b),(s))
-if|#
-directive|if
-literal|0
 if|#
 directive|if
 operator|!

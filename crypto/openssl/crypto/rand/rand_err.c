@@ -4,7 +4,7 @@ comment|/* crypto/rand/rand_err.c */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999-2003 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1999-2005 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
@@ -39,6 +39,26 @@ directive|ifndef
 name|OPENSSL_NO_ERR
 end_ifndef
 
+begin_define
+define|#
+directive|define
+name|ERR_FUNC
+parameter_list|(
+name|func
+parameter_list|)
+value|ERR_PACK(ERR_LIB_RAND,func,0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERR_REASON
+parameter_list|(
+name|reason
+parameter_list|)
+value|ERR_PACK(ERR_LIB_RAND,0,reason)
+end_define
+
 begin_decl_stmt
 specifier|static
 name|ERR_STRING_DATA
@@ -47,39 +67,18 @@ index|[]
 init|=
 block|{
 block|{
-name|ERR_PACK
+name|ERR_FUNC
 argument_list|(
-literal|0
-argument_list|,
-name|RAND_F_FIPS_RAND_BYTES
-argument_list|,
-literal|0
-argument_list|)
-block|,
-literal|"FIPS_RAND_BYTES"
-block|}
-block|,
-block|{
-name|ERR_PACK
-argument_list|(
-literal|0
-argument_list|,
 name|RAND_F_RAND_GET_RAND_METHOD
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|"RAND_get_rand_method"
 block|}
 block|,
 block|{
-name|ERR_PACK
+name|ERR_FUNC
 argument_list|(
-literal|0
-argument_list|,
 name|RAND_F_SSLEAY_RAND_BYTES
-argument_list|,
-literal|0
 argument_list|)
 block|,
 literal|"SSLEAY_RAND_BYTES"
@@ -102,39 +101,12 @@ index|[]
 init|=
 block|{
 block|{
-name|RAND_R_NON_FIPS_METHOD
-block|,
-literal|"non fips method"
-block|}
-block|,
-block|{
-name|RAND_R_PRNG_ASKING_FOR_TOO_MUCH
-block|,
-literal|"prng asking for too much"
-block|}
-block|,
-block|{
-name|RAND_R_PRNG_NOT_REKEYED
-block|,
-literal|"prng not rekeyed"
-block|}
-block|,
-block|{
-name|RAND_R_PRNG_NOT_RESEEDED
-block|,
-literal|"prng not reseeded"
-block|}
-block|,
-block|{
+name|ERR_REASON
+argument_list|(
 name|RAND_R_PRNG_NOT_SEEDED
+argument_list|)
 block|,
 literal|"PRNG not seeded"
-block|}
-block|,
-block|{
-name|RAND_R_PRNG_STUCK
-block|,
-literal|"prng stuck"
 block|}
 block|,
 block|{
@@ -178,14 +150,14 @@ directive|ifndef
 name|OPENSSL_NO_ERR
 name|ERR_load_strings
 argument_list|(
-name|ERR_LIB_RAND
+literal|0
 argument_list|,
 name|RAND_str_functs
 argument_list|)
 expr_stmt|;
 name|ERR_load_strings
 argument_list|(
-name|ERR_LIB_RAND
+literal|0
 argument_list|,
 name|RAND_str_reasons
 argument_list|)

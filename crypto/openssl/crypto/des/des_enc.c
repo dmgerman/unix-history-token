@@ -13,12 +13,6 @@ directive|include
 file|"des_locl.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|OPENSSL_FIPS
-end_ifndef
-
 begin_function
 name|void
 name|DES_encrypt1
@@ -1560,36 +1554,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ndef OPENSSL_FIPS */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|DES_DEFAULT_OPTIONS
 end_ifndef
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|OPENSSL_FIPS
-argument_list|)
-operator|||
-operator|!
-name|defined
-argument_list|(
-name|I386_ONLY
-argument_list|)
-end_if
 
 begin_undef
 undef|#
@@ -2226,15 +2195,6 @@ literal|0
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined(OPENSSL_FIPS) || !defined(I386_ONLY) */
-end_comment
 
 begin_endif
 endif|#

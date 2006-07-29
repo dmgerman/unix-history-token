@@ -68,17 +68,22 @@ argument_list|(
 name|_MSC_VER
 argument_list|)
 operator|&&
-operator|!
+operator|(
 name|defined
 argument_list|(
-name|_M_IA64
+name|_M_IX86
 argument_list|)
-operator|&&
-operator|!
+operator|||
 name|defined
 argument_list|(
-name|OPENSSL_SYS_WINCE
+name|_M_AMD64
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_M_X64
+argument_list|)
+operator|)
 end_if
 
 begin_define
@@ -145,6 +150,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AES_LONG
+end_ifdef
+
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -152,6 +163,24 @@ name|long
 name|u32
 typedef|;
 end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|u32
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef

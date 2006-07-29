@@ -19,6 +19,12 @@ directive|define
 name|HEADER_DH_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<openssl/e_os2.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -56,20 +62,25 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<openssl/ossl_typ.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_DEPRECATED
+end_ifndef
+
+begin_include
+include|#
+directive|include
 file|<openssl/bn.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<openssl/crypto.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/ossl_typ.h>
-end_include
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -77,6 +88,17 @@ directive|define
 name|DH_FLAG_CACHE_MONT_P
 value|0x01
 end_define
+
+begin_define
+define|#
+directive|define
+name|DH_FLAG_NO_EXP_CONSTTIME
+value|0x02
+end_define
+
+begin_comment
+comment|/* new with 0.9.7h; the built-in DH                                        * implementation now uses constant time                                        * modular exponentiation for secret exponents                                        * by default. This flag causes the                                        * faster variable sliding window method to                                        * be used for all exponents.                                        */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -90,12 +112,9 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-typedef|typedef
-name|struct
-name|dh_st
-name|DH
-typedef|;
-typedef|typedef
+comment|/* Already defined in ossl_typ.h */
+comment|/* typedef struct dh_st DH; */
+comment|/* typedef struct dh_method DH_METHOD; */
 struct|struct
 name|dh_method
 block|{
@@ -206,9 +225,30 @@ name|char
 modifier|*
 name|app_data
 decl_stmt|;
+comment|/* If this is non-NULL, it will be used to generate parameters */
+name|int
+function_decl|(
+modifier|*
+name|generate_params
+function_decl|)
+parameter_list|(
+name|DH
+modifier|*
+name|dh
+parameter_list|,
+name|int
+name|prime_len
+parameter_list|,
+name|int
+name|generator
+parameter_list|,
+name|BN_GENCB
+modifier|*
+name|cb
+parameter_list|)
+function_decl|;
 block|}
-name|DH_METHOD
-typedef|;
+struct|;
 struct|struct
 name|dh_st
 block|{
@@ -244,7 +284,7 @@ comment|/* x */
 name|int
 name|flags
 decl_stmt|;
-name|char
+name|BN_MONT_CTX
 modifier|*
 name|method_mont_p
 decl_stmt|;
@@ -312,6 +352,15 @@ define|#
 directive|define
 name|DH_NOT_SUITABLE_GENERATOR
 value|0x08
+comment|/* DH_check_pub_key error codes */
+define|#
+directive|define
+name|DH_CHECK_PUBKEY_TOO_SMALL
+value|0x01
+define|#
+directive|define
+name|DH_CHECK_PUBKEY_TOO_LARGE
+value|0x02
 comment|/* primes p where (p-1)/2 is prime too are called "safe"; we define    this for backward compatibility: */
 define|#
 directive|define
@@ -323,7 +372,7 @@ name|DHparams_dup
 parameter_list|(
 name|x
 parameter_list|)
-value|(DH *)ASN1_dup((int (*)())i2d_DHparams, \ 		(char *(*)())d2i_DHparams,(char *)(x))
+value|ASN1_dup_of_const(DH,i2d_DHparams,d2i_DHparams,x)
 define|#
 directive|define
 name|d2i_DHparams_fp
@@ -350,10 +399,7 @@ name|bp
 parameter_list|,
 name|x
 parameter_list|)
-value|(DH *)ASN1_d2i_bio((char *(*)())DH_new, \ 		(char *(*)())d2i_DHparams,(bp),(unsigned char **)(x))
-ifdef|#
-directive|ifdef
-name|__cplusplus
+value|ASN1_d2i_bio_of(DH,DH_new,d2i_DHparams,bp,x)
 define|#
 directive|define
 name|i2d_DHparams_bio
@@ -362,20 +408,7 @@ name|bp
 parameter_list|,
 name|x
 parameter_list|)
-value|ASN1_i2d_bio((int (*)())i2d_DHparams,(bp), \ 		(unsigned char *)(x))
-else|#
-directive|else
-define|#
-directive|define
-name|i2d_DHparams_bio
-parameter_list|(
-name|bp
-parameter_list|,
-name|x
-parameter_list|)
-value|ASN1_i2d_bio(i2d_DHparams,(bp), \ 		(unsigned char *)(x))
-endif|#
-directive|endif
+value|ASN1_i2d_bio_of_const(DH,i2d_DHparams,bp,x)
 specifier|const
 name|DH_METHOD
 modifier|*
@@ -505,6 +538,10 @@ name|int
 name|idx
 parameter_list|)
 function_decl|;
+comment|/* Deprecated version */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_DEPRECATED
 name|DH
 modifier|*
 name|DH_generate_parameters
@@ -534,6 +571,28 @@ modifier|*
 name|cb_arg
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
+comment|/* !defined(OPENSSL_NO_DEPRECATED) */
+comment|/* New version */
+name|int
+name|DH_generate_parameters_ex
+parameter_list|(
+name|DH
+modifier|*
+name|dh
+parameter_list|,
+name|int
+name|prime_len
+parameter_list|,
+name|int
+name|generator
+parameter_list|,
+name|BN_GENCB
+modifier|*
+name|cb
+parameter_list|)
+function_decl|;
 name|int
 name|DH_check
 parameter_list|(
@@ -541,6 +600,24 @@ specifier|const
 name|DH
 modifier|*
 name|dh
+parameter_list|,
+name|int
+modifier|*
+name|codes
+parameter_list|)
+function_decl|;
+name|int
+name|DH_check_pub_key
+parameter_list|(
+specifier|const
+name|DH
+modifier|*
+name|dh
+parameter_list|,
+specifier|const
+name|BIGNUM
+modifier|*
+name|pub_key
 parameter_list|,
 name|int
 modifier|*
@@ -671,6 +748,10 @@ comment|/* Error codes for the DH functions. */
 comment|/* Function codes. */
 define|#
 directive|define
+name|DH_F_COMPUTE_KEY
+value|102
+define|#
+directive|define
 name|DH_F_DHPARAMS_PRINT
 value|100
 define|#
@@ -679,25 +760,29 @@ name|DH_F_DHPARAMS_PRINT_FP
 value|101
 define|#
 directive|define
-name|DH_F_DH_COMPUTE_KEY
-value|102
-define|#
-directive|define
-name|DH_F_DH_GENERATE_KEY
-value|103
-define|#
-directive|define
-name|DH_F_DH_GENERATE_PARAMETERS
-value|104
+name|DH_F_DH_BUILTIN_GENPARAMS
+value|106
 define|#
 directive|define
 name|DH_F_DH_NEW_METHOD
 value|105
+define|#
+directive|define
+name|DH_F_GENERATE_KEY
+value|103
+define|#
+directive|define
+name|DH_F_GENERATE_PARAMETERS
+value|104
 comment|/* Reason codes. */
 define|#
 directive|define
 name|DH_R_BAD_GENERATOR
 value|101
+define|#
+directive|define
+name|DH_R_INVALID_PUBKEY
+value|102
 define|#
 directive|define
 name|DH_R_NO_PRIVATE_VALUE

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * x86_64 BIGNUM accelerator version 0.1, December 2002.  *  * Implemented by Andy Polyakov<appro@fy.chalmers.se> for the OpenSSL  * project.  *  * Rights for redistribution and usage in source and binary forms are  * granted according to the OpenSSL license. Warranty of any kind is  * disclaimed.  *  * Q. Version 0.1? It doesn't sound like Andy, he used to assign real  *    versions, like 1.0...  * A. Well, that's because this code is basically a quick-n-dirty  *    proof-of-concept hack. As you can see it's implemented with  *    inline assembler, which means that you're bound to GCC and that  *    there must be a room for fine-tuning.  *  * Q. Why inline assembler?  * A. x86_64 features own ABI I'm not familiar with. Which is why  *    I decided to let the compiler take care of subroutine  *    prologue/epilogue as well as register allocation.  *  * Q. How much faster does it get?  * A. Unfortunately people sitting on x86_64 hardware are prohibited  *    to disclose the performance numbers, so they (SuSE labs to be  *    specific) wouldn't tell me. However! Very similar coding technique  *    (reaching out for 128-bit result from 64x64-bit multiplication)  *    results in>3 times performance improvement on MIPS and I see no  *    reason why gain on x86_64 would be so much different:-)  */
+comment|/*  * x86_64 BIGNUM accelerator version 0.1, December 2002.  *  * Implemented by Andy Polyakov<appro@fy.chalmers.se> for the OpenSSL  * project.  *  * Rights for redistribution and usage in source and binary forms are  * granted according to the OpenSSL license. Warranty of any kind is  * disclaimed.  *  * Q. Version 0.1? It doesn't sound like Andy, he used to assign real  *    versions, like 1.0...  * A. Well, that's because this code is basically a quick-n-dirty  *    proof-of-concept hack. As you can see it's implemented with  *    inline assembler, which means that you're bound to GCC and that  *    there might be enough room for further improvement.  *  * Q. Why inline assembler?  * A. x86_64 features own ABI which I'm not familiar with. This is  *    why I decided to let the compiler take care of subroutine  *    prologue/epilogue as well as register allocation. For reference.  *    Win64 implements different ABI for AMD64, different from Linux.  *  * Q. How much faster does it get?  * A. 'apps/openssl speed rsa dsa' output with no-asm:  *  *	                  sign    verify    sign/s verify/s  *	rsa  512 bits   0.0006s   0.0001s   1683.8  18456.2  *	rsa 1024 bits   0.0028s   0.0002s    356.0   6407.0  *	rsa 2048 bits   0.0172s   0.0005s     58.0   1957.8  *	rsa 4096 bits   0.1155s   0.0018s      8.7    555.6  *	                  sign    verify    sign/s verify/s  *	dsa  512 bits   0.0005s   0.0006s   2100.8   1768.3  *	dsa 1024 bits   0.0014s   0.0018s    692.3    559.2  *	dsa 2048 bits   0.0049s   0.0061s    204.7    165.0  *  *    'apps/openssl speed rsa dsa' output with this module:  *  *	                  sign    verify    sign/s verify/s  *	rsa  512 bits   0.0004s   0.0000s   2767.1  33297.9  *	rsa 1024 bits   0.0012s   0.0001s    867.4  14674.7  *	rsa 2048 bits   0.0061s   0.0002s    164.0   5270.0  *	rsa 4096 bits   0.0384s   0.0006s     26.1   1650.8  *	                  sign    verify    sign/s verify/s  *	dsa  512 bits   0.0002s   0.0003s   4442.2   3786.3  *	dsa 1024 bits   0.0005s   0.0007s   1835.1   1497.4  *	dsa 2048 bits   0.0016s   0.0020s    620.4    504.6  *  *    For the reference. IA-32 assembler implementation performs  *    very much like 64-bit code compiled with no-asm on the same  *    machine.  */
 end_comment
 
 begin_define
@@ -725,8 +725,12 @@ parameter_list|)
 block|{
 name|BN_ULONG
 name|ret
+init|=
+literal|0
 decl_stmt|,
 name|i
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -737,7 +741,7 @@ condition|)
 return|return
 literal|0
 return|;
-asm|asm ( 	"	subq	%2,%2		\n" 	".align 16			\n" 	"1:	movq	(%4,%2,8),%0	\n" 	"	adcq	(%5,%2,8),%0	\n" 	"	movq	%0,(%3,%2,8)	\n" 	"	leaq	1(%2),%2	\n" 	"	loop	1b		\n" 	"	sbbq	%0,%0		\n" 		: "+a"(ret),"+c"(n),"+r"(i) 		: "r"(rp),"r"(ap),"r"(bp) 		: "cc" 	);
+asm|asm ( 	"	subq	%2,%2		\n" 	".align 16			\n" 	"1:	movq	(%4,%2,8),%0	\n" 	"	adcq	(%5,%2,8),%0	\n" 	"	movq	%0,(%3,%2,8)	\n" 	"	leaq	1(%2),%2	\n" 	"	loop	1b		\n" 	"	sbbq	%0,%0		\n" 		: "=&a"(ret),"+c"(n),"=&r"(i) 		: "r"(rp),"r"(ap),"r"(bp) 		: "cc" 	);
 return|return
 name|ret
 operator|&
@@ -774,8 +778,12 @@ parameter_list|)
 block|{
 name|BN_ULONG
 name|ret
+init|=
+literal|0
 decl_stmt|,
 name|i
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -786,7 +794,7 @@ condition|)
 return|return
 literal|0
 return|;
-asm|asm ( 	"	subq	%2,%2		\n" 	".align 16			\n" 	"1:	movq	(%4,%2,8),%0	\n" 	"	sbbq	(%5,%2,8),%0	\n" 	"	movq	%0,(%3,%2,8)	\n" 	"	leaq	1(%2),%2	\n" 	"	loop	1b		\n" 	"	sbbq	%0,%0		\n" 		: "+a"(ret),"+c"(n),"+r"(i) 		: "r"(rp),"r"(ap),"r"(bp) 		: "cc" 	);
+asm|asm ( 	"	subq	%2,%2		\n" 	".align 16			\n" 	"1:	movq	(%4,%2,8),%0	\n" 	"	sbbq	(%5,%2,8),%0	\n" 	"	movq	%0,(%3,%2,8)	\n" 	"	leaq	1(%2),%2	\n" 	"	loop	1b		\n" 	"	sbbq	%0,%0		\n" 		: "=&a"(ret),"+c"(n),"=&r"(i) 		: "r"(rp),"r"(ap),"r"(bp) 		: "cc" 	);
 return|return
 name|ret
 operator|&
@@ -1255,11 +1263,6 @@ modifier|*
 name|b
 parameter_list|)
 block|{
-name|BN_ULONG
-name|bl
-decl_stmt|,
-name|bh
-decl_stmt|;
 name|BN_ULONG
 name|t1
 decl_stmt|,
@@ -2689,11 +2692,6 @@ name|b
 parameter_list|)
 block|{
 name|BN_ULONG
-name|bl
-decl_stmt|,
-name|bh
-decl_stmt|;
-name|BN_ULONG
 name|t1
 decl_stmt|,
 name|t2
@@ -3117,11 +3115,6 @@ modifier|*
 name|a
 parameter_list|)
 block|{
-name|BN_ULONG
-name|bl
-decl_stmt|,
-name|bh
-decl_stmt|;
 name|BN_ULONG
 name|t1
 decl_stmt|,
@@ -3854,11 +3847,6 @@ modifier|*
 name|a
 parameter_list|)
 block|{
-name|BN_ULONG
-name|bl
-decl_stmt|,
-name|bh
-decl_stmt|;
 name|BN_ULONG
 name|t1
 decl_stmt|,

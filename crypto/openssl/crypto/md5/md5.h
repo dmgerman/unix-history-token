@@ -125,6 +125,7 @@ index|[
 name|MD5_LBLOCK
 index|]
 decl_stmt|;
+name|unsigned
 name|int
 name|num
 decl_stmt|;
@@ -151,8 +152,7 @@ name|void
 modifier|*
 name|data
 parameter_list|,
-name|unsigned
-name|long
+name|size_t
 name|len
 parameter_list|)
 function_decl|;
@@ -180,8 +180,7 @@ name|char
 modifier|*
 name|d
 parameter_list|,
-name|unsigned
-name|long
+name|size_t
 name|n
 parameter_list|,
 name|unsigned

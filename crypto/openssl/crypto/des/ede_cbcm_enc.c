@@ -15,6 +15,16 @@ begin_comment
 comment|/*  This is an implementation of Triple DES Cipher Block Chaining with Output Feedback Masking, by Coppersmith, Johnson and Matyas, (IBM and Certicom).  Note that there is a known attack on this by Biham and Knudsen but it takes a lot of work:  http://www.cs.technion.ac.il/users/wwwb/cgi-bin/tr-get.cgi/1998/CS/CS0928.ps.gz  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<openssl/opensslconf.h>
+end_include
+
+begin_comment
+comment|/* To see if OPENSSL_NO_DESCBCM is defined */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef

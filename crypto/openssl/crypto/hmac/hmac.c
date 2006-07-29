@@ -28,13 +28,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<openssl/hmac.h>
+file|"cryptlib.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"cryptlib.h"
+file|<openssl/hmac.h>
 end_include
 
 begin_function
@@ -126,10 +126,15 @@ name|OPENSSL_assert
 argument_list|(
 name|j
 operator|<=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
+argument_list|(
 name|ctx
 operator|->
 name|key
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -188,11 +193,20 @@ block|{
 name|OPENSSL_assert
 argument_list|(
 name|len
+operator|>=
+literal|0
+operator|&&
+name|len
 operator|<=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
+argument_list|(
 name|ctx
 operator|->
 name|key
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -436,7 +450,7 @@ name|char
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|size_t
 name|len
 parameter_list|)
 block|{
@@ -658,7 +672,7 @@ name|char
 modifier|*
 name|d
 parameter_list|,
-name|int
+name|size_t
 name|n
 parameter_list|,
 name|unsigned

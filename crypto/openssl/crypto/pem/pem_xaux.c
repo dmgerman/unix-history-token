@@ -72,5 +72,18 @@ argument|X509_AUX
 argument_list|)
 end_macro
 
+begin_macro
+name|IMPLEMENT_PEM_rw
+argument_list|(
+argument|X509_CERT_PAIR
+argument_list|,
+argument|X509_CERT_PAIR
+argument_list|,
+argument|PEM_STRING_X509_PAIR
+argument_list|,
+argument|X509_CERT_PAIR
+argument_list|)
+end_macro
+
 end_unit
 

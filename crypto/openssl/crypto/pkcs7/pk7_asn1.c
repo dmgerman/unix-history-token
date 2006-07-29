@@ -81,7 +81,7 @@ name|ADB_ENTRY
 argument_list|(
 name|NID_pkcs7_data
 argument_list|,
-name|ASN1_EXP_OPT
+name|ASN1_NDEF_EXP_OPT
 argument_list|(
 name|PKCS7
 argument_list|,
@@ -89,7 +89,7 @@ name|d
 operator|.
 name|data
 argument_list|,
-name|ASN1_OCTET_STRING
+name|ASN1_OCTET_STRING_NDEF
 argument_list|,
 literal|0
 argument_list|)
@@ -99,7 +99,7 @@ name|ADB_ENTRY
 argument_list|(
 name|NID_pkcs7_signed
 argument_list|,
-name|ASN1_EXP_OPT
+name|ASN1_NDEF_EXP_OPT
 argument_list|(
 name|PKCS7
 argument_list|,
@@ -117,7 +117,7 @@ name|ADB_ENTRY
 argument_list|(
 name|NID_pkcs7_enveloped
 argument_list|,
-name|ASN1_EXP_OPT
+name|ASN1_NDEF_EXP_OPT
 argument_list|(
 name|PKCS7
 argument_list|,
@@ -135,7 +135,7 @@ name|ADB_ENTRY
 argument_list|(
 name|NID_pkcs7_signedAndEnveloped
 argument_list|,
-name|ASN1_EXP_OPT
+name|ASN1_NDEF_EXP_OPT
 argument_list|(
 name|PKCS7
 argument_list|,
@@ -153,7 +153,7 @@ name|ADB_ENTRY
 argument_list|(
 name|NID_pkcs7_digest
 argument_list|,
-name|ASN1_EXP_OPT
+name|ASN1_NDEF_EXP_OPT
 argument_list|(
 name|PKCS7
 argument_list|,
@@ -171,7 +171,7 @@ name|ADB_ENTRY
 argument_list|(
 argument|NID_pkcs7_encrypted
 argument_list|,
-argument|ASN1_EXP_OPT(PKCS7, d.encrypted, PKCS7_ENCRYPT,
+argument|ASN1_NDEF_EXP_OPT(PKCS7, d.encrypted, PKCS7_ENCRYPT,
 literal|0
 argument|)
 argument_list|)
@@ -195,7 +195,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|ASN1_SEQUENCE
+name|ASN1_NDEF_SEQUENCE
 argument_list|(
 name|PKCS7
 argument_list|)
@@ -215,7 +215,7 @@ argument_list|(
 argument|PKCS7
 argument_list|)
 block|}
-name|ASN1_SEQUENCE_END
+name|ASN1_NDEF_SEQUENCE_END
 argument_list|(
 argument|PKCS7
 argument_list|)
@@ -223,11 +223,15 @@ name|IMPLEMENT_ASN1_FUNCTIONS
 argument_list|(
 argument|PKCS7
 argument_list|)
+name|IMPLEMENT_ASN1_NDEF_FUNCTION
+argument_list|(
+argument|PKCS7
+argument_list|)
 name|IMPLEMENT_ASN1_DUP_FUNCTION
 argument_list|(
 argument|PKCS7
 argument_list|)
-name|ASN1_SEQUENCE
+name|ASN1_NDEF_SEQUENCE
 argument_list|(
 name|PKCS7_SIGNED
 argument_list|)
@@ -291,7 +295,7 @@ argument_list|,
 argument|PKCS7_SIGNER_INFO
 argument_list|)
 block|}
-name|ASN1_SEQUENCE_END
+name|ASN1_NDEF_SEQUENCE_END
 argument_list|(
 argument|PKCS7_SIGNED
 argument_list|)
@@ -464,7 +468,7 @@ name|IMPLEMENT_ASN1_FUNCTIONS
 argument_list|(
 argument|PKCS7_ISSUER_AND_SERIAL
 argument_list|)
-name|ASN1_SEQUENCE
+name|ASN1_NDEF_SEQUENCE
 argument_list|(
 name|PKCS7_ENVELOPE
 argument_list|)
@@ -497,7 +501,7 @@ argument_list|,
 argument|PKCS7_ENC_CONTENT
 argument_list|)
 block|}
-name|ASN1_SEQUENCE_END
+name|ASN1_NDEF_SEQUENCE_END
 argument_list|(
 argument|PKCS7_ENVELOPE
 argument_list|)
@@ -606,7 +610,7 @@ name|IMPLEMENT_ASN1_FUNCTIONS
 argument_list|(
 argument|PKCS7_RECIP_INFO
 argument_list|)
-name|ASN1_SEQUENCE
+name|ASN1_NDEF_SEQUENCE
 argument_list|(
 name|PKCS7_ENC_CONTENT
 argument_list|)
@@ -641,7 +645,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|}
-name|ASN1_SEQUENCE_END
+name|ASN1_NDEF_SEQUENCE_END
 argument_list|(
 argument|PKCS7_ENC_CONTENT
 argument_list|)
@@ -649,7 +653,7 @@ name|IMPLEMENT_ASN1_FUNCTIONS
 argument_list|(
 argument|PKCS7_ENC_CONTENT
 argument_list|)
-name|ASN1_SEQUENCE
+name|ASN1_NDEF_SEQUENCE
 argument_list|(
 name|PKCS7_SIGN_ENVELOPE
 argument_list|)
@@ -722,7 +726,7 @@ argument_list|,
 argument|PKCS7_SIGNER_INFO
 argument_list|)
 block|}
-name|ASN1_SEQUENCE_END
+name|ASN1_NDEF_SEQUENCE_END
 argument_list|(
 argument|PKCS7_SIGN_ENVELOPE
 argument_list|)
@@ -730,7 +734,7 @@ name|IMPLEMENT_ASN1_FUNCTIONS
 argument_list|(
 argument|PKCS7_SIGN_ENVELOPE
 argument_list|)
-name|ASN1_SEQUENCE
+name|ASN1_NDEF_SEQUENCE
 argument_list|(
 name|PKCS7_ENCRYPT
 argument_list|)
@@ -754,7 +758,7 @@ argument_list|,
 argument|PKCS7_ENC_CONTENT
 argument_list|)
 block|}
-name|ASN1_SEQUENCE_END
+name|ASN1_NDEF_SEQUENCE_END
 argument_list|(
 argument|PKCS7_ENCRYPT
 argument_list|)
@@ -762,7 +766,7 @@ name|IMPLEMENT_ASN1_FUNCTIONS
 argument_list|(
 argument|PKCS7_ENCRYPT
 argument_list|)
-name|ASN1_SEQUENCE
+name|ASN1_NDEF_SEQUENCE
 argument_list|(
 name|PKCS7_DIGEST
 argument_list|)
@@ -804,7 +808,7 @@ argument_list|,
 argument|ASN1_OCTET_STRING
 argument_list|)
 block|}
-name|ASN1_SEQUENCE_END
+name|ASN1_NDEF_SEQUENCE_END
 argument_list|(
 argument|PKCS7_DIGEST
 argument_list|)

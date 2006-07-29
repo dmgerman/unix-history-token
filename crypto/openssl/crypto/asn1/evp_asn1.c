@@ -355,6 +355,9 @@ literal|0
 operator|)
 return|;
 comment|/* Grow the 'string' */
+if|if
+condition|(
+operator|!
 name|ASN1_STRING_set
 argument_list|(
 name|osp
@@ -363,7 +366,19 @@ name|NULL
 argument_list|,
 name|size
 argument_list|)
+condition|)
+block|{
+name|ASN1_STRING_free
+argument_list|(
+name|osp
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|M_ASN1_STRING_length_set
 argument_list|(
 name|osp
@@ -476,6 +491,7 @@ name|os
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -484,7 +500,7 @@ decl_stmt|;
 name|long
 name|length
 decl_stmt|;
-name|ASN1_CTX
+name|ASN1_const_CTX
 name|c
 decl_stmt|;
 if|if

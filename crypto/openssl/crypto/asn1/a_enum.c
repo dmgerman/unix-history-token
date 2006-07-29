@@ -25,6 +25,12 @@ directive|include
 file|<openssl/asn1.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/bn.h>
+end_include
+
 begin_comment
 comment|/*   * Code for ENUMERATED type: identical to INTEGER apart from a different tag.  * for comments on encoding see a_int.c  */
 end_comment
@@ -42,11 +48,13 @@ name|v
 parameter_list|)
 block|{
 name|int
-name|i
-decl_stmt|,
 name|j
 decl_stmt|,
 name|k
+decl_stmt|;
+name|unsigned
+name|int
+name|i
 decl_stmt|;
 name|unsigned
 name|char
@@ -75,14 +83,17 @@ name|a
 operator|->
 name|length
 operator|<
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|long
 argument_list|)
 operator|+
 literal|1
-operator|)
+argument_list|)
 condition|)
 block|{
 if|if
@@ -343,6 +354,9 @@ name|a
 operator|->
 name|length
 operator|>
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|long
@@ -477,9 +491,10 @@ goto|;
 block|}
 if|if
 condition|(
+name|BN_is_negative
+argument_list|(
 name|bn
-operator|->
-name|neg
+argument_list|)
 condition|)
 name|ret
 operator|->
@@ -558,7 +573,7 @@ condition|)
 block|{
 name|ASN1err
 argument_list|(
-name|ASN1_F_BN_TO_ASN1_INTEGER
+name|ASN1_F_BN_TO_ASN1_ENUMERATED
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
@@ -668,11 +683,12 @@ name|type
 operator|==
 name|V_ASN1_NEG_ENUMERATED
 condition|)
+name|BN_set_negative
+argument_list|(
 name|ret
-operator|->
-name|neg
-operator|=
+argument_list|,
 literal|1
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

@@ -8,7 +8,11 @@ comment|/* Written by Geoff Thorpe (geoff@geoffthorpe.net) for the OpenSSL  * pr
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1999-2004 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+end_comment
+
+begin_comment
+comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  * ECDH support in OpenSSL originally developed by   * SUN MICROSYSTEMS, INC., and contributed to the OpenSSL project.  */
 end_comment
 
 begin_ifndef
@@ -46,11 +50,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<openssl/ossl_typ.h>
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_DEPRECATED
+end_ifndef
 
 begin_include
 include|#
@@ -109,10 +113,50 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ECDH
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<openssl/ecdh.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ECDSA
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<openssl/ecdsa.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<openssl/rand.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/store.h>
 end_include
 
 begin_include
@@ -124,13 +168,24 @@ end_include
 begin_include
 include|#
 directive|include
-file|<openssl/symhacks.h>
+file|<openssl/err.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<openssl/ossl_typ.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<openssl/err.h>
+file|<openssl/symhacks.h>
 end_include
 
 begin_ifdef
@@ -143,34 +198,6 @@ begin_extern
 extern|extern
 literal|"C"
 block|{
-endif|#
-directive|endif
-comment|/* Fixups for missing algorithms */
-ifdef|#
-directive|ifdef
-name|OPENSSL_NO_RSA
-typedef|typedef
-name|void
-name|RSA_METHOD
-typedef|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|OPENSSL_NO_DSA
-typedef|typedef
-name|void
-name|DSA_METHOD
-typedef|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|OPENSSL_NO_DH
-typedef|typedef
-name|void
-name|DH_METHOD
-typedef|;
 endif|#
 directive|endif
 comment|/* These flags are used to control combinations of algorithm (methods)  * by bitwise "OR"ing. */
@@ -192,12 +219,24 @@ name|ENGINE_METHOD_RAND
 value|(unsigned int)0x0008
 define|#
 directive|define
+name|ENGINE_METHOD_ECDH
+value|(unsigned int)0x0010
+define|#
+directive|define
+name|ENGINE_METHOD_ECDSA
+value|(unsigned int)0x0020
+define|#
+directive|define
 name|ENGINE_METHOD_CIPHERS
 value|(unsigned int)0x0040
 define|#
 directive|define
 name|ENGINE_METHOD_DIGESTS
 value|(unsigned int)0x0080
+define|#
+directive|define
+name|ENGINE_METHOD_STORE
+value|(unsigned int)0x0100
 comment|/* Obvious all-or-nothing cases. */
 define|#
 directive|define
@@ -270,7 +309,17 @@ define|#
 directive|define
 name|ENGINE_CTRL_SET_CALLBACK_DATA
 value|5
-comment|/* User-specific data, used                                                      when calling the password                                                      callback and the user                                                      interface */
+comment|/* User-specific data, used 						     when calling the password 						     callback and the user 						     interface */
+define|#
+directive|define
+name|ENGINE_CTRL_LOAD_CONFIGURATION
+value|6
+comment|/* Load a configuration, given 						     a string that represents a 						     file name or so */
+define|#
+directive|define
+name|ENGINE_CTRL_LOAD_SECTION
+value|7
+comment|/* Load data from a given 						     section in the already loaded 						     configuration */
 comment|/* These control commands allow an application to deal with an arbitrary engine  * in a dynamic way. Warn: Negative return values indicate errors FOR THESE  * COMMANDS because zero is used to indicate 'end-of-list'. Other commands,  * including ENGINE-specific command types, return zero for an error.  *  * An ENGINE can choose to implement these ctrl functions, and can internally  * manage things however it chooses - it does so by setting the  * ENGINE_FLAGS_MANUAL_CMD_CTRL flag (using ENGINE_set_flags()). Otherwise the  * ENGINE_ctrl() code handles this on the ENGINE's behalf using the cmd_defns  * data (set using ENGINE_set_cmd_defns()). This means an ENGINE's ctrl()  * handler need only implement its own commands - the above "meta" commands will  * be taken care of. */
 comment|/* Returns non-zero if the supplied ENGINE has a ctrl() handler. If "not", then  * all the remaining control commands will return failure, so it is worth  * checking this first if the caller is trying to "discover" the engine's  * capabilities and doesn't want errors generated unnecessarily. */
 define|#
@@ -369,7 +418,9 @@ function_decl|(
 modifier|*
 name|ENGINE_GEN_FUNC_PTR
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 comment|/* Generic function pointer taking no arguments */
 typedef|typedef
@@ -406,7 +457,9 @@ function_decl|(
 modifier|*
 name|f
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 parameter_list|)
 function_decl|;
 comment|/* Generic load_key function pointer */
@@ -559,32 +612,11 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_STATIC_ENGINE
 name|void
-name|ENGINE_load_cswift
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-name|void
-name|ENGINE_load_chil
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-name|void
-name|ENGINE_load_atalla
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-name|void
-name|ENGINE_load_nuron
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-name|void
-name|ENGINE_load_ubsec
+name|ENGINE_load_4758cca
 parameter_list|(
 name|void
 parameter_list|)
@@ -596,19 +628,62 @@ name|void
 parameter_list|)
 function_decl|;
 name|void
+name|ENGINE_load_atalla
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|void
+name|ENGINE_load_chil
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|void
+name|ENGINE_load_cswift
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_GMP
+name|void
+name|ENGINE_load_gmp
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
+name|void
+name|ENGINE_load_nuron
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|void
 name|ENGINE_load_sureware
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
 name|void
-name|ENGINE_load_4758cca
+name|ENGINE_load_ubsec
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
+name|void
+name|ENGINE_load_cryptodev
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
 name|void
-name|ENGINE_load_cryptodev
+name|ENGINE_load_padlock
 parameter_list|(
 name|void
 parameter_list|)
@@ -681,6 +756,50 @@ name|void
 parameter_list|)
 function_decl|;
 name|int
+name|ENGINE_register_ECDH
+parameter_list|(
+name|ENGINE
+modifier|*
+name|e
+parameter_list|)
+function_decl|;
+name|void
+name|ENGINE_unregister_ECDH
+parameter_list|(
+name|ENGINE
+modifier|*
+name|e
+parameter_list|)
+function_decl|;
+name|void
+name|ENGINE_register_all_ECDH
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|int
+name|ENGINE_register_ECDSA
+parameter_list|(
+name|ENGINE
+modifier|*
+name|e
+parameter_list|)
+function_decl|;
+name|void
+name|ENGINE_unregister_ECDSA
+parameter_list|(
+name|ENGINE
+modifier|*
+name|e
+parameter_list|)
+function_decl|;
+name|void
+name|ENGINE_register_all_ECDSA
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|int
 name|ENGINE_register_DH
 parameter_list|(
 name|ENGINE
@@ -720,6 +839,28 @@ parameter_list|)
 function_decl|;
 name|void
 name|ENGINE_register_all_RAND
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|int
+name|ENGINE_register_STORE
+parameter_list|(
+name|ENGINE
+modifier|*
+name|e
+parameter_list|)
+function_decl|;
+name|void
+name|ENGINE_unregister_STORE
+parameter_list|(
+name|ENGINE
+modifier|*
+name|e
+parameter_list|)
+function_decl|;
+name|void
+name|ENGINE_register_all_STORE
 parameter_list|(
 name|void
 parameter_list|)
@@ -806,7 +947,9 @@ function_decl|(
 modifier|*
 name|f
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 parameter_list|)
 function_decl|;
 comment|/* This function tests if an ENGINE-specific command is usable as a "setting".  * Eg. in an application's config file that gets processed through  * ENGINE_ctrl_cmd_string(). If this returns zero, it is not available to  * ENGINE_ctrl_cmd_string(), only ENGINE_ctrl(). */
@@ -846,7 +989,9 @@ function_decl|(
 modifier|*
 name|f
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 parameter_list|,
 name|int
 name|cmd_optional
@@ -951,6 +1096,32 @@ name|dsa_meth
 parameter_list|)
 function_decl|;
 name|int
+name|ENGINE_set_ECDH
+parameter_list|(
+name|ENGINE
+modifier|*
+name|e
+parameter_list|,
+specifier|const
+name|ECDH_METHOD
+modifier|*
+name|ecdh_meth
+parameter_list|)
+function_decl|;
+name|int
+name|ENGINE_set_ECDSA
+parameter_list|(
+name|ENGINE
+modifier|*
+name|e
+parameter_list|,
+specifier|const
+name|ECDSA_METHOD
+modifier|*
+name|ecdsa_meth
+parameter_list|)
+function_decl|;
+name|int
 name|ENGINE_set_DH
 parameter_list|(
 name|ENGINE
@@ -974,6 +1145,19 @@ specifier|const
 name|RAND_METHOD
 modifier|*
 name|rand_meth
+parameter_list|)
+function_decl|;
+name|int
+name|ENGINE_set_STORE
+parameter_list|(
+name|ENGINE
+modifier|*
+name|e
+parameter_list|,
+specifier|const
+name|STORE_METHOD
+modifier|*
+name|store_meth
 parameter_list|)
 function_decl|;
 name|int
@@ -1088,7 +1272,7 @@ modifier|*
 name|defns
 parameter_list|)
 function_decl|;
-comment|/* These functions (and the "get" function lower down) allow control over any  * per-structure ENGINE data. */
+comment|/* These functions allow control over any per-structure ENGINE data. */
 name|int
 name|ENGINE_get_ex_new_index
 parameter_list|(
@@ -1125,6 +1309,19 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|)
+function_decl|;
+name|void
+modifier|*
+name|ENGINE_get_ex_data
+parameter_list|(
+specifier|const
+name|ENGINE
+modifier|*
+name|e
+parameter_list|,
+name|int
+name|idx
 parameter_list|)
 function_decl|;
 comment|/* This function cleans up anything that needs it. Eg. the ENGINE_add() function  * automatically ensures the list cleanup function is registered to be called  * from ENGINE_cleanup(). Similarly, all ENGINE_register_*** functions ensure  * ENGINE_cleanup() will clean up after them. */
@@ -1180,6 +1377,28 @@ name|e
 parameter_list|)
 function_decl|;
 specifier|const
+name|ECDH_METHOD
+modifier|*
+name|ENGINE_get_ECDH
+parameter_list|(
+specifier|const
+name|ENGINE
+modifier|*
+name|e
+parameter_list|)
+function_decl|;
+specifier|const
+name|ECDSA_METHOD
+modifier|*
+name|ENGINE_get_ECDSA
+parameter_list|(
+specifier|const
+name|ENGINE
+modifier|*
+name|e
+parameter_list|)
+function_decl|;
+specifier|const
 name|DH_METHOD
 modifier|*
 name|ENGINE_get_DH
@@ -1194,6 +1413,17 @@ specifier|const
 name|RAND_METHOD
 modifier|*
 name|ENGINE_get_RAND
+parameter_list|(
+specifier|const
+name|ENGINE
+modifier|*
+name|e
+parameter_list|)
+function_decl|;
+specifier|const
+name|STORE_METHOD
+modifier|*
+name|ENGINE_get_STORE
 parameter_list|(
 specifier|const
 name|ENGINE
@@ -1319,19 +1549,6 @@ modifier|*
 name|e
 parameter_list|)
 function_decl|;
-name|void
-modifier|*
-name|ENGINE_get_ex_data
-parameter_list|(
-specifier|const
-name|ENGINE
-modifier|*
-name|e
-parameter_list|,
-name|int
-name|idx
-parameter_list|)
-function_decl|;
 comment|/* FUNCTIONAL functions. These functions deal with ENGINE structures  * that have (or will) be initialised for use. Broadly speaking, the  * structural functions are useful for iterating the list of available  * engine types, creating new engine types, and other "list" operations.  * These functions actually deal with ENGINEs that are to be used. As  * such these functions can fail (if applicable) when particular  * engines are unavailable - eg. if a hardware accelerator is not  * attached or not functioning correctly. Each ENGINE has 2 reference  * counts; structural and functional. Every time a functional reference  * is obtained or released, a corresponding structural reference is  * automatically obtained or released too. */
 comment|/* Initialise a engine type for use (or up its reference count if it's  * already in use). This will fail if the engine is not currently  * operational and cannot initialise. */
 name|int
@@ -1414,6 +1631,20 @@ parameter_list|)
 function_decl|;
 name|ENGINE
 modifier|*
+name|ENGINE_get_default_ECDH
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|ENGINE
+modifier|*
+name|ENGINE_get_default_ECDSA
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|ENGINE
+modifier|*
 name|ENGINE_get_default_DH
 parameter_list|(
 name|void
@@ -1468,6 +1699,22 @@ function_decl|;
 comment|/* Same for the other "methods" */
 name|int
 name|ENGINE_set_default_DSA
+parameter_list|(
+name|ENGINE
+modifier|*
+name|e
+parameter_list|)
+function_decl|;
+name|int
+name|ENGINE_set_default_ECDH
+parameter_list|(
+name|ENGINE
+modifier|*
+name|e
+parameter_list|)
+function_decl|;
+name|int
+name|ENGINE_set_default_ECDSA
 parameter_list|(
 name|ENGINE
 modifier|*
@@ -1534,13 +1781,13 @@ comment|/* Binary/behaviour compatibility levels */
 define|#
 directive|define
 name|OSSL_DYNAMIC_VERSION
-value|(unsigned long)0x00010200
+value|(unsigned long)0x00020000
 comment|/* Binary versions older than this are too old for us (whether we're a loader or  * a loadee) */
 define|#
 directive|define
 name|OSSL_DYNAMIC_OLDEST
-value|(unsigned long)0x00010200
-comment|/* When compiling an ENGINE entirely as an external shared library, loadable by  * the "dynamic" ENGINE, these types are needed. The 'dynamic_fns' structure  * type provides the calling application's (or library's) error functionality  * and memory management function pointers to the loaded library. These should  * be used/set in the loaded library code so that the loading application's  * 'state' will be used/changed in all operations. */
+value|(unsigned long)0x00020000
+comment|/* When compiling an ENGINE entirely as an external shared library, loadable by  * the "dynamic" ENGINE, these types are needed. The 'dynamic_fns' structure  * type provides the calling application's (or library's) error functionality  * and memory management function pointers to the loaded library. These should  * be used/set in the loaded library code so that the loading application's  * 'state' will be used/changed in all operations. The 'static_state' pointer  * allows the loaded library to know if it shares the same static data as the  * calling application (or library), and thus whether these callbacks need to be  * set or not. */
 typedef|typedef
 name|void
 modifier|*
@@ -1714,6 +1961,10 @@ typedef|typedef
 struct|struct
 name|st_dynamic_fns
 block|{
+name|void
+modifier|*
+name|static_state
+decl_stmt|;
 specifier|const
 name|ERR_FNS
 modifier|*
@@ -1752,7 +2003,7 @@ directive|define
 name|IMPLEMENT_DYNAMIC_CHECK_FN
 parameter_list|()
 define|\
-value|unsigned long v_check(unsigned long v) { \ 		if(v>= OSSL_DYNAMIC_OLDEST) return OSSL_DYNAMIC_VERSION; \ 		return 0; }
+value|OPENSSL_EXPORT unsigned long v_check(unsigned long v) { \ 		if(v>= OSSL_DYNAMIC_OLDEST) return OSSL_DYNAMIC_VERSION; \ 		return 0; }
 comment|/* This function is passed the ENGINE structure to initialise with its own  * function and command settings. It should not adjust the structural or  * functional reference counts. If this function returns zero, (a) the load will  * be aborted, (b) the previous ENGINE state will be memcpy'd back onto the  * structure, and (c) the shared library will be unloaded. So implementations  * should do their own internal cleanup in failure circumstances otherwise they  * could leak. The 'id' parameter, if non-NULL, represents the ENGINE id that  * the loader is looking for. If this is NULL, the shared library can choose to  * return failure or to initialise a 'default' ENGINE. If non-NULL, the shared  * library must initialise only an ENGINE matching the passed 'id'. The function  * is expected to be implemented with the symbol name "bind_engine". A standard  * implementation can be instantiated with IMPLEMENT_DYNAMIC_BIND_FN(fn) where  * the parameter 'fn' is a callback function that populates the ENGINE structure  * and returns an int value (zero for failure). 'fn' should have prototype;  *    [static] int fn(ENGINE *e, const char *id); */
 typedef|typedef
 name|int
@@ -1783,7 +2034,15 @@ parameter_list|(
 name|fn
 parameter_list|)
 define|\
-value|int bind_engine(ENGINE *e, const char *id, const dynamic_fns *fns) { \ 		if (ERR_get_implementation() != fns->err_fns) \ 			{ \ 			if(!CRYPTO_set_mem_functions(fns->mem_fns.malloc_cb, \ 				fns->mem_fns.realloc_cb, fns->mem_fns.free_cb)) \ 				return 0; \ 			CRYPTO_set_locking_callback(fns->lock_fns.lock_locking_cb); \ 			CRYPTO_set_add_lock_callback(fns->lock_fns.lock_add_lock_cb); \ 			CRYPTO_set_dynlock_create_callback(fns->lock_fns.dynlock_create_cb); \ 			CRYPTO_set_dynlock_lock_callback(fns->lock_fns.dynlock_lock_cb); \ 			CRYPTO_set_dynlock_destroy_callback(fns->lock_fns.dynlock_destroy_cb); \ 			if(!CRYPTO_set_ex_data_implementation(fns->ex_data_fns)) \ 				return 0; \ 			if(!ERR_set_implementation(fns->err_fns)) return 0; \ 			} \ 		if(!fn(e,id)) return 0; \ 		return 1; }
+value|OPENSSL_EXPORT \ 	int bind_engine(ENGINE *e, const char *id, const dynamic_fns *fns) { \ 		if(ENGINE_get_static_state() == fns->static_state) goto skip_cbs; \ 		if(!CRYPTO_set_mem_functions(fns->mem_fns.malloc_cb, \ 			fns->mem_fns.realloc_cb, fns->mem_fns.free_cb)) \ 			return 0; \ 		CRYPTO_set_locking_callback(fns->lock_fns.lock_locking_cb); \ 		CRYPTO_set_add_lock_callback(fns->lock_fns.lock_add_lock_cb); \ 		CRYPTO_set_dynlock_create_callback(fns->lock_fns.dynlock_create_cb); \ 		CRYPTO_set_dynlock_lock_callback(fns->lock_fns.dynlock_lock_cb); \ 		CRYPTO_set_dynlock_destroy_callback(fns->lock_fns.dynlock_destroy_cb); \ 		if(!CRYPTO_set_ex_data_implementation(fns->ex_data_fns)) \ 			return 0; \ 		if(!ERR_set_implementation(fns->err_fns)) return 0; \ 	skip_cbs: \ 		if(!fn(e,id)) return 0; \ 		return 1; }
+comment|/* If the loading application (or library) and the loaded ENGINE library share  * the same static data (eg. they're both dynamically linked to the same  * libcrypto.so) we need a way to avoid trying to set system callbacks - this  * would fail, and for the same reason that it's unnecessary to try. If the  * loaded ENGINE has (or gets from through the loader) its own copy of the  * libcrypto static data, we will need to set the callbacks. The easiest way to  * detect this is to have a function that returns a pointer to some static data  * and let the loading application and loaded ENGINE compare their respective  * values. */
+name|void
+modifier|*
+name|ENGINE_get_static_state
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 if|#
 directive|if
 name|defined
@@ -1827,6 +2086,10 @@ name|ENGINE_F_DYNAMIC_LOAD
 value|182
 define|#
 directive|define
+name|ENGINE_F_DYNAMIC_SET_DATA_CTX
+value|183
+define|#
+directive|define
 name|ENGINE_F_ENGINE_ADD
 value|105
 define|#
@@ -1855,7 +2118,7 @@ name|ENGINE_F_ENGINE_FINISH
 value|107
 define|#
 directive|define
-name|ENGINE_F_ENGINE_FREE
+name|ENGINE_F_ENGINE_FREE_UTIL
 value|108
 define|#
 directive|define
@@ -1899,10 +2162,6 @@ name|ENGINE_F_ENGINE_LOAD_PUBLIC_KEY
 value|151
 define|#
 directive|define
-name|ENGINE_F_ENGINE_MODULE_INIT
-value|187
-define|#
-directive|define
 name|ENGINE_F_ENGINE_NEW
 value|122
 define|#
@@ -1935,6 +2194,10 @@ name|ENGINE_F_ENGINE_UNLOAD_KEY
 value|152
 define|#
 directive|define
+name|ENGINE_F_ENGINE_UNLOCKED_FINISH
+value|191
+define|#
+directive|define
 name|ENGINE_F_ENGINE_UP_REF
 value|190
 define|#
@@ -1947,12 +2210,12 @@ name|ENGINE_F_INT_ENGINE_CONFIGURE
 value|188
 define|#
 directive|define
-name|ENGINE_F_LOG_MESSAGE
-value|141
+name|ENGINE_F_INT_ENGINE_MODULE_INIT
+value|187
 define|#
 directive|define
-name|ENGINE_F_SET_DATA_CTX
-value|183
+name|ENGINE_F_LOG_MESSAGE
+value|141
 comment|/* Reason codes. */
 define|#
 directive|define

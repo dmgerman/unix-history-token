@@ -575,7 +575,7 @@ name|bp
 parameter_list|,
 name|p
 parameter_list|)
-value|(OCSP_REQUEST*)ASN1_d2i_bio((char*(*)()) \ 		OCSP_REQUEST_new,(char *(*)())d2i_OCSP_REQUEST, (bp),\ 		(unsigned char **)(p))
+value|ASN1_d2i_bio_of(OCSP_REQUEST,OCSP_REQUEST_new,d2i_OCSP_REQUEST,bp,p)
 define|#
 directive|define
 name|d2i_OCSP_RESPONSE_bio
@@ -584,7 +584,7 @@ name|bp
 parameter_list|,
 name|p
 parameter_list|)
-value|(OCSP_RESPONSE*)ASN1_d2i_bio((char*(*)())\ 		OCSP_REQUEST_new,(char *(*)())d2i_OCSP_RESPONSE, (bp),\ 		(unsigned char **)(p))
+value|ASN1_d2i_bio_of(OCSP_RESPONSE,OCSP_RESPONSE_new,d2i_OCSP_RESPONSE,bp,p)
 define|#
 directive|define
 name|PEM_read_bio_OCSP_REQUEST
@@ -635,7 +635,7 @@ name|bp
 parameter_list|,
 name|o
 parameter_list|)
-value|ASN1_i2d_bio(i2d_OCSP_RESPONSE,bp,\ 		(unsigned char *)o)
+value|ASN1_i2d_bio_of(OCSP_RESPONSE,i2d_OCSP_RESPONSE,bp,o)
 define|#
 directive|define
 name|i2d_OCSP_REQUEST_bio
@@ -644,7 +644,7 @@ name|bp
 parameter_list|,
 name|o
 parameter_list|)
-value|ASN1_i2d_bio(i2d_OCSP_REQUEST,bp,\ 		(unsigned char *)o)
+value|ASN1_i2d_bio_of(OCSP_REQUEST,i2d_OCSP_REQUEST,bp,o)
 define|#
 directive|define
 name|OCSP_REQUEST_sign
@@ -711,7 +711,7 @@ name|OCSP_CERTID_dup
 parameter_list|(
 name|cid
 parameter_list|)
-value|(OCSP_CERTID*)ASN1_dup((int(*)())i2d_OCSP_CERTID,\ 		(char *(*)())d2i_OCSP_CERTID,(char *)(cid))
+value|ASN1_dup_of(OCSP_CERTID,i2d_OCSP_CERTID,d2i_OCSP_CERTID,cid)
 define|#
 directive|define
 name|OCSP_CERTSTATUS_dup
@@ -1268,14 +1268,11 @@ name|ASN1_STRING
 operator|*
 name|s
 argument_list|,
-name|int
-argument_list|(
+name|i2d_of_void
 operator|*
 name|i2d
-argument_list|)
-argument_list|()
 argument_list|,
-name|char
+name|void
 operator|*
 name|data
 argument_list|,
@@ -1287,6 +1284,22 @@ operator|*
 name|sk
 argument_list|)
 decl_stmt|;
+define|#
+directive|define
+name|ASN1_STRING_encode_of
+parameter_list|(
+name|type
+parameter_list|,
+name|s
+parameter_list|,
+name|i2d
+parameter_list|,
+name|data
+parameter_list|,
+name|sk
+parameter_list|)
+define|\
+value|((ASN1_STRING *(*)(ASN1_STRING *,I2D_OF(type),type *,STACK_OF(ASN1_OBJECT) *))openssl_fcast(ASN1_STRING_encode))(s,i2d,data,sk)
 name|X509_EXTENSION
 modifier|*
 name|OCSP_crlID_new
@@ -2020,10 +2033,6 @@ name|OCSP_F_ASN1_STRING_ENCODE
 value|100
 define|#
 directive|define
-name|OCSP_F_CERT_ID_NEW
-value|101
-define|#
-directive|define
 name|OCSP_F_D2I_OCSP_NONCE
 value|102
 define|#
@@ -2038,6 +2047,10 @@ define|#
 directive|define
 name|OCSP_F_OCSP_BASIC_VERIFY
 value|105
+define|#
+directive|define
+name|OCSP_F_OCSP_CERT_ID_NEW
+value|101
 define|#
 directive|define
 name|OCSP_F_OCSP_CHECK_DELEGATED

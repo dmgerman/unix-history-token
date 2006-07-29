@@ -180,6 +180,7 @@ end_define
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|OPENSSL_SYS_WIN32
@@ -188,6 +189,12 @@ operator|&&
 name|defined
 argument_list|(
 name|_MSC_VER
+argument_list|)
+operator|)
+operator|||
+name|defined
+argument_list|(
+name|__ICC
 argument_list|)
 end_if
 

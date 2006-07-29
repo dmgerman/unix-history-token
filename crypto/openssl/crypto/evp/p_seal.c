@@ -153,11 +153,11 @@ literal|1
 return|;
 if|if
 condition|(
-name|RAND_bytes
+name|EVP_CIPHER_CTX_rand_key
 argument_list|(
-name|key
+name|ctx
 argument_list|,
-name|EVP_MAX_KEY_LENGTH
+name|key
 argument_list|)
 operator|<=
 literal|0

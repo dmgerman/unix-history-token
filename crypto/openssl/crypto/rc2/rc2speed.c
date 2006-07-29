@@ -75,9 +75,14 @@ end_include
 
 begin_decl_stmt
 name|OPENSSL_DECLARE_EXIT
+ifndef|#
+directive|ifndef
+name|OPENSSL_SYS_NETWARE
 include|#
 directive|include
 file|<signal.h>
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|_IRIX
@@ -159,8 +164,6 @@ define|#
 directive|define
 name|HZ
 value|100.0
-endif|#
-directive|endif
 else|#
 directive|else
 comment|/* CLK_TCK */
@@ -170,6 +173,10 @@ name|HZ
 value|((double)CLK_TCK)
 endif|#
 directive|endif
+comment|/* CLK_TCK */
+endif|#
+directive|endif
+comment|/* HZ */
 define|#
 directive|define
 name|BUFSIZE

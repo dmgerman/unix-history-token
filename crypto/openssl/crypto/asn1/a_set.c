@@ -163,12 +163,9 @@ modifier|*
 modifier|*
 name|pp
 parameter_list|,
-name|int
-function_decl|(
+name|i2d_of_void
 modifier|*
-name|func
-function_decl|)
-parameter_list|()
+name|i2d
 parameter_list|,
 name|int
 name|ex_tag
@@ -241,7 +238,7 @@ operator|--
 control|)
 name|ret
 operator|+=
-name|func
+name|i2d
 argument_list|(
 name|sk_value
 argument_list|(
@@ -328,7 +325,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|func
+name|i2d
 argument_list|(
 name|sk_value
 argument_list|(
@@ -357,10 +354,7 @@ operator|=
 name|p
 expr_stmt|;
 comment|/* Catch the beg of Setblobs*/
-if|if
-condition|(
-operator|!
-operator|(
+comment|/* In this array we will store the SET blobs */
 name|rgSetBlob
 operator|=
 operator|(
@@ -379,12 +373,27 @@ argument_list|(
 name|MYBLOB
 argument_list|)
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|rgSetBlob
+operator|==
+name|NULL
 condition|)
+block|{
+name|ASN1err
+argument_list|(
+name|ASN1_F_I2D_ASN1_SET
+argument_list|,
+name|ERR_R_MALLOC_FAILURE
+argument_list|)
+expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
-comment|/* In this array we will store the SET blobs */
+block|}
 for|for
 control|(
 name|i
@@ -412,7 +421,7 @@ operator|=
 name|p
 expr_stmt|;
 comment|/* catch each set encode blob */
-name|func
+name|i2d
 argument_list|(
 name|sk_value
 argument_list|(
@@ -485,9 +494,20 @@ name|totSize
 argument_list|)
 operator|)
 condition|)
+block|{
+name|ASN1err
+argument_list|(
+name|ASN1_F_I2D_ASN1_SET
+argument_list|,
+name|ERR_R_MALLOC_FAILURE
+argument_list|)
+expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
+block|}
 comment|/* Copy to temp mem */
 name|p
 operator|=
@@ -577,6 +597,7 @@ modifier|*
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -586,13 +607,9 @@ parameter_list|,
 name|long
 name|length
 parameter_list|,
-name|char
+name|d2i_of_void
 modifier|*
-function_decl|(
-modifier|*
-name|func
-function_decl|)
-parameter_list|()
+name|d2i
 parameter_list|,
 name|void
 function_decl|(
@@ -611,7 +628,7 @@ name|int
 name|ex_class
 parameter_list|)
 block|{
-name|ASN1_CTX
+name|ASN1_const_CTX
 name|c
 decl_stmt|;
 name|STACK
@@ -649,9 +666,18 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|ASN1err
+argument_list|(
+name|ASN1_F_D2I_ASN1_SET
+argument_list|,
+name|ERR_R_MALLOC_FAILURE
+argument_list|)
+expr_stmt|;
 goto|goto
 name|err
 goto|;
+block|}
 block|}
 else|else
 name|ret
@@ -861,12 +887,13 @@ name|M_ASN1_D2I_end_sequence
 argument_list|()
 condition|)
 break|break;
+comment|/* XXX: This was called with 4 arguments, incorrectly, it seems 		   if ((s=func(NULL,&c.p,c.slen,c.max-c.p)) == NULL) */
 if|if
 condition|(
 operator|(
 name|s
 operator|=
-name|func
+name|d2i
 argument_list|(
 name|NULL
 argument_list|,
@@ -878,14 +905,6 @@ argument_list|,
 name|c
 operator|.
 name|slen
-argument_list|,
-name|c
-operator|.
-name|max
-operator|-
-name|c
-operator|.
-name|p
 argument_list|)
 operator|)
 operator|==

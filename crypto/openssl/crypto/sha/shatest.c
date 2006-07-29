@@ -31,11 +31,19 @@ directive|include
 file|"../e_os.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|OPENSSL_NO_SHA
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|OPENSSL_NO_SHA0
+argument_list|)
+end_if
 
 begin_function
 name|int
@@ -52,7 +60,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"No SHA support\n"
+literal|"No SHA0 support\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -365,10 +373,6 @@ argument_list|(
 operator|*
 name|P
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
 name|strlen
 argument_list|(
 operator|(
@@ -570,6 +574,22 @@ argument_list|(
 literal|"test 3 ok\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OPENSSL_SYS_NETWARE
+if|if
+condition|(
+name|err
+condition|)
+name|printf
+argument_list|(
+literal|"ERROR: %d\n"
+argument_list|,
+name|err
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|EVP_MD_CTX_cleanup
 argument_list|(
 operator|&

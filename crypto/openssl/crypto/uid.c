@@ -71,6 +71,11 @@ name|defined
 argument_list|(
 name|OPENSSL_SYS_VXWORKS
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|OPENSSL_SYS_NETWARE
+argument_list|)
 end_elif
 
 begin_function

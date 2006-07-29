@@ -138,7 +138,7 @@ parameter_list|(
 name|tname
 parameter_list|)
 define|\
-value|const static ASN1_TEMPLATE tname##_item_tt
+value|static const ASN1_TEMPLATE tname##_item_tt
 define|#
 directive|define
 name|ASN1_ITEM_TEMPLATE_END
@@ -156,7 +156,7 @@ parameter_list|(
 name|tname
 parameter_list|)
 define|\
-value|const static ASN1_TEMPLATE tname##_seq_tt[]
+value|static const ASN1_TEMPLATE tname##_seq_tt[]
 define|#
 directive|define
 name|ASN1_SEQUENCE_END
@@ -176,6 +176,14 @@ define|\
 value|;\ 	ASN1_ITEM_start(tname) \ 		ASN1_ITYPE_SEQUENCE,\ 		V_ASN1_SEQUENCE,\ 		tname##_seq_tt,\ 		sizeof(tname##_seq_tt) / sizeof(ASN1_TEMPLATE),\ 		NULL,\ 		sizeof(stname),\ 		#stname \ 	ASN1_ITEM_end(tname)
 define|#
 directive|define
+name|ASN1_NDEF_SEQUENCE
+parameter_list|(
+name|tname
+parameter_list|)
+define|\
+value|ASN1_SEQUENCE(tname)
+define|#
+directive|define
 name|ASN1_SEQUENCE_cb
 parameter_list|(
 name|tname
@@ -183,7 +191,7 @@ parameter_list|,
 name|cb
 parameter_list|)
 define|\
-value|const static ASN1_AUX tname##_aux = {NULL, 0, 0, 0, cb, 0}; \ 	ASN1_SEQUENCE(tname)
+value|static const ASN1_AUX tname##_aux = {NULL, 0, 0, 0, cb, 0}; \ 	ASN1_SEQUENCE(tname)
 define|#
 directive|define
 name|ASN1_BROKEN_SEQUENCE
@@ -191,7 +199,7 @@ parameter_list|(
 name|tname
 parameter_list|)
 define|\
-value|const static ASN1_AUX tname##_aux = {NULL, ASN1_AFLG_BROKEN, 0, 0, 0, 0}; \ 	ASN1_SEQUENCE(tname)
+value|static const ASN1_AUX tname##_aux = {NULL, ASN1_AFLG_BROKEN, 0, 0, 0, 0}; \ 	ASN1_SEQUENCE(tname)
 define|#
 directive|define
 name|ASN1_SEQUENCE_ref
@@ -203,7 +211,7 @@ parameter_list|,
 name|lck
 parameter_list|)
 define|\
-value|const static ASN1_AUX tname##_aux = {NULL, ASN1_AFLG_REFCOUNT, offsetof(tname, references), lck, cb, 0}; \ 	ASN1_SEQUENCE(tname)
+value|static const ASN1_AUX tname##_aux = {NULL, ASN1_AFLG_REFCOUNT, offsetof(tname, references), lck, cb, 0}; \ 	ASN1_SEQUENCE(tname)
 define|#
 directive|define
 name|ASN1_SEQUENCE_enc
@@ -215,7 +223,15 @@ parameter_list|,
 name|cb
 parameter_list|)
 define|\
-value|const static ASN1_AUX tname##_aux = {NULL, ASN1_AFLG_ENCODING, 0, 0, cb, offsetof(tname, enc)}; \ 	ASN1_SEQUENCE(tname)
+value|static const ASN1_AUX tname##_aux = {NULL, ASN1_AFLG_ENCODING, 0, 0, cb, offsetof(tname, enc)}; \ 	ASN1_SEQUENCE(tname)
+define|#
+directive|define
+name|ASN1_NDEF_SEQUENCE_END
+parameter_list|(
+name|tname
+parameter_list|)
+define|\
+value|;\ 	ASN1_ITEM_start(tname) \ 		ASN1_ITYPE_NDEF_SEQUENCE,\ 		V_ASN1_SEQUENCE,\ 		tname##_seq_tt,\ 		sizeof(tname##_seq_tt) / sizeof(ASN1_TEMPLATE),\ 		NULL,\ 		sizeof(tname),\ 		#tname \ 	ASN1_ITEM_end(tname)
 define|#
 directive|define
 name|ASN1_BROKEN_SEQUENCE_END
@@ -259,7 +275,7 @@ parameter_list|(
 name|tname
 parameter_list|)
 define|\
-value|const static ASN1_TEMPLATE tname##_ch_tt[]
+value|static const ASN1_TEMPLATE tname##_ch_tt[]
 define|#
 directive|define
 name|ASN1_CHOICE_cb
@@ -269,7 +285,7 @@ parameter_list|,
 name|cb
 parameter_list|)
 define|\
-value|const static ASN1_AUX tname##_aux = {NULL, 0, 0, 0, cb, 0}; \ 	ASN1_CHOICE(tname)
+value|static const ASN1_AUX tname##_aux = {NULL, 0, 0, 0, cb, 0}; \ 	ASN1_CHOICE(tname)
 define|#
 directive|define
 name|ASN1_CHOICE_END
@@ -665,6 +681,21 @@ name|tag
 parameter_list|)
 define|\
 value|ASN1_EXP_EX(stname, field, type, tag, ASN1_TFLG_SEQUENCE_OF|ASN1_TFLG_OPTIONAL)
+comment|/* EXPLICIT OPTIONAL using indefinite length constructed form */
+define|#
+directive|define
+name|ASN1_NDEF_EXP_OPT
+parameter_list|(
+name|stname
+parameter_list|,
+name|field
+parameter_list|,
+name|type
+parameter_list|,
+name|tag
+parameter_list|)
+define|\
+value|ASN1_EXP_EX(stname, field, type, tag, ASN1_TFLG_OPTIONAL|ASN1_TFLG_NDEF)
 comment|/* Macros for the ASN1_ADB structure */
 define|#
 directive|define
@@ -673,7 +704,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|const static ASN1_ADB_TABLE name##_adbtbl[]
+value|static const ASN1_ADB_TABLE name##_adbtbl[]
 ifndef|#
 directive|ifndef
 name|OPENSSL_EXPORT_VAR_AS_FUNCTION
@@ -694,7 +725,7 @@ parameter_list|,
 name|none
 parameter_list|)
 define|\
-value|;\ 	const static ASN1_ADB name##_adb = {\ 		flags,\ 		offsetof(name, field),\ 		app_table,\ 		name##_adbtbl,\ 		sizeof(name##_adbtbl) / sizeof(ASN1_ADB_TABLE),\ 		def,\ 		none\ 	}
+value|;\ 	static const ASN1_ADB name##_adb = {\ 		flags,\ 		offsetof(name, field),\ 		app_table,\ 		name##_adbtbl,\ 		sizeof(name##_adbtbl) / sizeof(ASN1_ADB_TABLE),\ 		def,\ 		none\ 	}
 else|#
 directive|else
 define|#
@@ -714,7 +745,7 @@ parameter_list|,
 name|none
 parameter_list|)
 define|\
-value|;\ 	const static ASN1_ITEM *name##_adb(void) \ 	{ \ 	const static ASN1_ADB internal_adb = \ 		{\ 		flags,\ 		offsetof(name, field),\ 		app_table,\ 		name##_adbtbl,\ 		sizeof(name##_adbtbl) / sizeof(ASN1_ADB_TABLE),\ 		def,\ 		none\ 		}; \ 		return (const ASN1_ITEM *)&internal_adb; \ 	} \ 	void dummy_function(void)
+value|;\ 	static const ASN1_ITEM *name##_adb(void) \ 	{ \ 	static const ASN1_ADB internal_adb = \ 		{\ 		flags,\ 		offsetof(name, field),\ 		app_table,\ 		name##_adbtbl,\ 		sizeof(name##_adbtbl) / sizeof(ASN1_ADB_TABLE),\ 		def,\ 		none\ 		}; \ 		return (const ASN1_ITEM *)&internal_adb; \ 	} \ 	void dummy_function(void)
 endif|#
 directive|endif
 define|#
@@ -733,7 +764,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|const static ASN1_TEMPLATE name##_tt
+value|static const ASN1_TEMPLATE name##_tt
 comment|/* This is the ASN1 template structure that defines  * a wrapper round the actual type. It determines the  * actual position of the field in the value structure,  * various flags such as OPTIONAL and the field name.  */
 struct|struct
 name|ASN1_TEMPLATE_st
@@ -755,6 +786,7 @@ comment|/* Offset of this field in structure */
 ifndef|#
 directive|ifndef
 name|NO_ASN1_FIELD_NAMES
+specifier|const
 name|char
 modifier|*
 name|field_name
@@ -948,6 +980,11 @@ define|#
 directive|define
 name|ASN1_TFLG_COMBINE
 value|(0x1<<10)
+comment|/* This flag when present in a SEQUENCE OF, SET OF  * or EXPLICIT causes indefinite length constructed  * encoding to be used if required.  */
+define|#
+directive|define
+name|ASN1_TFLG_NDEF
+value|(0x1<<11)
 comment|/* This is the actual ASN1 item itself */
 struct|struct
 name|ASN1_ITEM_st
@@ -993,7 +1030,7 @@ endif|#
 directive|endif
 block|}
 struct|;
-comment|/* These are values for the itype field and  * determine how the type is interpreted.  *  * For PRIMITIVE types the underlying type  * determines the behaviour if items is NULL.  *  * Otherwise templates must contain a single   * template and the type is treated in the  * same way as the type specified in the template.  *  * For SEQUENCE types the templates field points  * to the members, the size field is the  * structure size.  *  * For CHOICE types the templates field points  * to each possible member (typically a union)  * and the 'size' field is the offset of the  * selector.  *  * The 'funcs' field is used for application  * specific functions.   *  * For COMPAT types the funcs field gives a  * set of functions that handle this type, this  * supports the old d2i, i2d convention.  *  * The EXTERN type uses a new style d2i/i2d.  * The new style should be used where possible  * because it avoids things like the d2i IMPLICIT  * hack.  *  * MSTRING is a multiple string type, it is used  * for a CHOICE of character strings where the  * actual strings all occupy an ASN1_STRING  * structure. In this case the 'utype' field  * has a special meaning, it is used as a mask  * of acceptable types using the B_ASN1 constants.  *  */
+comment|/* These are values for the itype field and  * determine how the type is interpreted.  *  * For PRIMITIVE types the underlying type  * determines the behaviour if items is NULL.  *  * Otherwise templates must contain a single   * template and the type is treated in the  * same way as the type specified in the template.  *  * For SEQUENCE types the templates field points  * to the members, the size field is the  * structure size.  *  * For CHOICE types the templates field points  * to each possible member (typically a union)  * and the 'size' field is the offset of the  * selector.  *  * The 'funcs' field is used for application  * specific functions.   *  * For COMPAT types the funcs field gives a  * set of functions that handle this type, this  * supports the old d2i, i2d convention.  *  * The EXTERN type uses a new style d2i/i2d.  * The new style should be used where possible  * because it avoids things like the d2i IMPLICIT  * hack.  *  * MSTRING is a multiple string type, it is used  * for a CHOICE of character strings where the  * actual strings all occupy an ASN1_STRING  * structure. In this case the 'utype' field  * has a special meaning, it is used as a mask  * of acceptable types using the B_ASN1 constants.  *  * NDEF_SEQUENCE is the same as SEQUENCE except  * that it will use indefinite length constructed  * encoding if requested.  *  */
 define|#
 directive|define
 name|ASN1_ITYPE_PRIMITIVE
@@ -1018,6 +1055,10 @@ define|#
 directive|define
 name|ASN1_ITYPE_MSTRING
 value|0x5
+define|#
+directive|define
+name|ASN1_ITYPE_NDEF_SEQUENCE
+value|0x6
 comment|/* Cache for ASN1 tag and length, so we  * don't keep re-reading it for things  * like CHOICE  */
 struct|struct
 name|ASN1_TLC_st
@@ -1076,6 +1117,7 @@ modifier|*
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1110,6 +1152,7 @@ modifier|*
 modifier|*
 name|pval
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1228,6 +1271,7 @@ modifier|*
 modifier|*
 name|pval
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1526,6 +1570,14 @@ define|\
 value|IMPLEMENT_ASN1_FUNCTIONS_ENCODE_fname(stname, itname, itname)
 define|#
 directive|define
+name|IMPLEMENT_ASN1_ALLOC_FUNCTIONS
+parameter_list|(
+name|stname
+parameter_list|)
+define|\
+value|IMPLEMENT_ASN1_ALLOC_FUNCTIONS_fname(stname, stname, stname)
+define|#
+directive|define
 name|IMPLEMENT_ASN1_ALLOC_FUNCTIONS_fname
 parameter_list|(
 name|stname
@@ -1559,7 +1611,15 @@ parameter_list|,
 name|fname
 parameter_list|)
 define|\
-value|stname *d2i_##fname(stname **a, unsigned char **in, long len) \ 	{ \ 		return (stname *)ASN1_item_d2i((ASN1_VALUE **)a, in, len, ASN1_ITEM_rptr(itname));\ 	} \ 	int i2d_##fname(stname *a, unsigned char **out) \ 	{ \ 		return ASN1_item_i2d((ASN1_VALUE *)a, out, ASN1_ITEM_rptr(itname));\ 	}
+value|stname *d2i_##fname(stname **a, const unsigned char **in, long len) \ 	{ \ 		return (stname *)ASN1_item_d2i((ASN1_VALUE **)a, in, len, ASN1_ITEM_rptr(itname));\ 	} \ 	int i2d_##fname(stname *a, unsigned char **out) \ 	{ \ 		return ASN1_item_i2d((ASN1_VALUE *)a, out, ASN1_ITEM_rptr(itname));\ 	}
+define|#
+directive|define
+name|IMPLEMENT_ASN1_NDEF_FUNCTION
+parameter_list|(
+name|stname
+parameter_list|)
+define|\
+value|int i2d_##stname##_NDEF(stname *a, unsigned char **out) \ 	{ \ 		return ASN1_item_ndef_i2d((ASN1_VALUE *)a, out, ASN1_ITEM_rptr(stname));\ 	}
 comment|/* This includes evil casts to remove const: they will go away when full  * ASN1 constification is done.  */
 define|#
 directive|define
@@ -1572,7 +1632,7 @@ parameter_list|,
 name|fname
 parameter_list|)
 define|\
-value|stname *d2i_##fname(stname **a, const unsigned char **in, long len) \ 	{ \ 		return (stname *)ASN1_item_d2i((ASN1_VALUE **)a, (unsigned char **)in, len, ASN1_ITEM_rptr(itname));\ 	} \ 	int i2d_##fname(const stname *a, unsigned char **out) \ 	{ \ 		return ASN1_item_i2d((ASN1_VALUE *)a, out, ASN1_ITEM_rptr(itname));\ 	}
+value|stname *d2i_##fname(stname **a, const unsigned char **in, long len) \ 	{ \ 		return (stname *)ASN1_item_d2i((ASN1_VALUE **)a, in, len, ASN1_ITEM_rptr(itname));\ 	} \ 	int i2d_##fname(const stname *a, unsigned char **out) \ 	{ \ 		return ASN1_item_i2d((ASN1_VALUE *)a, out, ASN1_ITEM_rptr(itname));\ 	}
 define|#
 directive|define
 name|IMPLEMENT_ASN1_DUP_FUNCTION
@@ -1613,10 +1673,6 @@ argument_list|)
 name|DECLARE_ASN1_ITEM
 argument_list|(
 argument|ASN1_FBOOLEAN
-argument_list|)
-name|DECLARE_ASN1_ITEM
-argument_list|(
-argument|ASN1_ANY
 argument_list|)
 name|DECLARE_ASN1_ITEM
 argument_list|(
@@ -1721,6 +1777,7 @@ modifier|*
 modifier|*
 name|pval
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1744,6 +1801,7 @@ modifier|*
 modifier|*
 name|pval
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1863,6 +1921,7 @@ modifier|*
 modifier|*
 name|pval
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -2027,6 +2086,7 @@ modifier|*
 modifier|*
 name|pval
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*

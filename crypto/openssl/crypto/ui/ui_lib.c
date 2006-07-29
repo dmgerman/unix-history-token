@@ -20,6 +20,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"cryptlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/e_os2.h>
 end_include
 
@@ -45,12 +51,6 @@ begin_include
 include|#
 directive|include
 file|"ui_locl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"cryptlib.h"
 end_include
 
 begin_macro
@@ -2457,7 +2457,9 @@ function_decl|(
 modifier|*
 name|f
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 parameter_list|)
 block|{
 if|if
@@ -2784,6 +2786,7 @@ if|if
 condition|(
 name|ui_method
 condition|)
+block|{
 name|memset
 argument_list|(
 name|ui_method
@@ -2806,6 +2809,7 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|ui_method
 return|;

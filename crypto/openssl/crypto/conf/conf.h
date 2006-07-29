@@ -49,6 +49,12 @@ directive|include
 file|<openssl/e_os2.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/ossl_typ.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -94,11 +100,6 @@ argument_list|)
 struct_decl|struct
 name|conf_st
 struct_decl|;
-typedef|typedef
-name|struct
-name|conf_st
-name|CONF
-typedef|;
 struct_decl|struct
 name|conf_method_st
 struct_decl|;
@@ -958,6 +959,14 @@ define|#
 directive|define
 name|CONF_F_CONF_MODULES_LOAD
 value|116
+define|#
+directive|define
+name|CONF_F_DEF_LOAD
+value|120
+define|#
+directive|define
+name|CONF_F_DEF_LOAD_BIO
+value|121
 define|#
 directive|define
 name|CONF_F_MODULE_INIT

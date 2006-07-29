@@ -375,5 +375,20 @@ literal|0
 argument_list|)
 end_macro
 
+begin_comment
+comment|/* Special, OCTET STRING with indefinite length constructed support */
+end_comment
+
+begin_macro
+name|IMPLEMENT_ASN1_TYPE_ex
+argument_list|(
+argument|ASN1_OCTET_STRING_NDEF
+argument_list|,
+argument|ASN1_OCTET_STRING
+argument_list|,
+argument|ASN1_TFLG_NDEF
+argument_list|)
+end_macro
+
 end_unit
 

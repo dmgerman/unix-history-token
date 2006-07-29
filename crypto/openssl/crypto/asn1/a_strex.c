@@ -8,7 +8,7 @@ comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL 
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2000-2004 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -21,6 +21,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cryptlib.h"
 end_include
 
 begin_include
@@ -45,12 +51,6 @@ begin_include
 include|#
 directive|include
 file|"charmap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"cryptlib.h"
 end_include
 
 begin_comment
@@ -750,6 +750,12 @@ operator|+=
 name|i
 expr_stmt|;
 break|break;
+default|default:
+return|return
+operator|-
+literal|1
+return|;
+comment|/* invalid width */
 block|}
 if|if
 condition|(
@@ -920,8 +926,8 @@ name|int
 name|buflen
 parameter_list|)
 block|{
-specifier|const
 specifier|static
+specifier|const
 name|char
 name|hexdig
 index|[]
@@ -1222,8 +1228,8 @@ comment|/* Lookup table to convert tags to character widths,  * 0 = UTF8 encoded
 end_comment
 
 begin_decl_stmt
-specifier|const
 specifier|static
+specifier|const
 name|signed
 name|char
 name|tag2nbyte
@@ -1620,7 +1626,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|outlen
+name|len
 operator|<
 literal|0
 condition|)
@@ -1666,6 +1672,8 @@ return|return
 operator|-
 literal|1
 return|;
+if|if
+condition|(
 name|do_buf
 argument_list|(
 name|str
@@ -1686,7 +1694,13 @@ name|io_ch
 argument_list|,
 name|arg
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 if|if
 condition|(
 name|quotes
@@ -2503,6 +2517,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_FP_API
+end_ifndef
+
 begin_function
 name|int
 name|X509_NAME_print_ex_fp
@@ -2592,6 +2612,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|int
 name|ASN1_STRING_print_ex
@@ -2624,6 +2649,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_FP_API
+end_ifndef
+
 begin_function
 name|int
 name|ASN1_STRING_print_ex_fp
@@ -2655,6 +2686,11 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Utility function: convert any string type to UTF8, returns number of bytes  * in output string or a negative error code  */
@@ -2742,28 +2778,6 @@ return|return
 operator|-
 literal|1
 return|;
-if|if
-condition|(
-name|mbflag
-operator|==
-literal|0
-condition|)
-name|mbflag
-operator|=
-name|MBSTRING_UTF8
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|mbflag
-operator|==
-literal|4
-condition|)
-name|mbflag
-operator|=
-name|MBSTRING_UNIV
-expr_stmt|;
-else|else
 name|mbflag
 operator||=
 name|MBSTRING_FLAG

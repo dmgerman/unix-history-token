@@ -81,7 +81,8 @@ name|char
 call|)
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|long
 operator|)
 name|p
 operator|&

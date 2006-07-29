@@ -144,7 +144,7 @@ name|void
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|size_t
 name|num
 parameter_list|)
 block|{
@@ -1241,7 +1241,7 @@ name|void
 modifier|*
 name|data_
 parameter_list|,
-name|int
+name|size_t
 name|num
 parameter_list|)
 block|{

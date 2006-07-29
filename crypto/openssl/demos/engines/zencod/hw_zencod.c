@@ -5990,7 +5990,7 @@ expr|sizeof
 operator|(
 name|ZEN_MD_DATA
 operator|)
-comment|/* sizeof ( MD_CTX_DATA )	The message digest data stucture ... */
+comment|/* sizeof ( MD_CTX_DATA )	The message digest data structure ... */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -6037,7 +6037,7 @@ expr|sizeof
 operator|(
 name|ZEN_MD_DATA
 operator|)
-comment|/* sizeof ( MD_CTX_DATA )	The message digest data stucture ... */
+comment|/* sizeof ( MD_CTX_DATA )	The message digest data structure ... */
 block|}
 decl_stmt|;
 end_decl_stmt

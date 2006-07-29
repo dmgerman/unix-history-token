@@ -19,6 +19,16 @@ directive|define
 name|HEADER_IDEA_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<openssl/opensslconf.h>
+end_include
+
+begin_comment
+comment|/* IDEA_INT, OPENSSL_NO_IDEA */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -49,16 +59,6 @@ directive|define
 name|IDEA_DECRYPT
 value|0
 end_define
-
-begin_include
-include|#
-directive|include
-file|<openssl/opensslconf.h>
-end_include
-
-begin_comment
-comment|/* IDEA_INT */
-end_comment
 
 begin_define
 define|#
@@ -146,6 +146,7 @@ function_decl|;
 name|void
 name|idea_set_decrypt_key
 parameter_list|(
+specifier|const
 name|IDEA_KEY_SCHEDULE
 modifier|*
 name|ek

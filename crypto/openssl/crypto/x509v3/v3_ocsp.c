@@ -165,6 +165,7 @@ name|void
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -249,6 +250,7 @@ name|X509V3_CTX
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -957,6 +959,7 @@ name|void
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1192,6 +1195,7 @@ name|X509V3_CTX
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
