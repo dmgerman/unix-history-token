@@ -75,7 +75,7 @@ condition|)
 block|{
 name|PKCS12err
 argument_list|(
-name|PKCS12_F_PKCS12_PACK_SAFEBAG
+name|PKCS12_F_PKCS12_ITEM_PACK_SAFEBAG
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
@@ -113,7 +113,7 @@ condition|)
 block|{
 name|PKCS12err
 argument_list|(
-name|PKCS12_F_PKCS12_PACK_SAFEBAG
+name|PKCS12_F_PKCS12_ITEM_PACK_SAFEBAG
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
@@ -135,7 +135,7 @@ condition|)
 block|{
 name|PKCS12err
 argument_list|(
-name|PKCS12_F_PKCS12_PACK_SAFEBAG
+name|PKCS12_F_PKCS12_ITEM_PACK_SAFEBAG
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
@@ -489,9 +489,18 @@ argument_list|(
 name|p7
 argument_list|)
 condition|)
+block|{
+name|PKCS12err
+argument_list|(
+name|PKCS12_F_PKCS12_UNPACK_P7DATA
+argument_list|,
+name|PKCS12_R_CONTENT_TYPE_NOT_DATA
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
+block|}
 end_expr_stmt
 
 begin_return
@@ -880,6 +889,31 @@ argument_list|(
 argument|PKCS12 *p12
 argument_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|PKCS7_type_is_data
+argument_list|(
+name|p12
+operator|->
+name|authsafes
+argument_list|)
+condition|)
+block|{
+name|PKCS12err
+argument_list|(
+name|PKCS12_F_PKCS12_UNPACK_AUTHSAFES
+argument_list|,
+name|PKCS12_R_CONTENT_TYPE_NOT_DATA
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+end_expr_stmt
+
+begin_return
 return|return
 name|ASN1_item_unpack
 argument_list|(
@@ -897,8 +931,8 @@ name|PKCS12_AUTHSAFES
 argument_list|)
 argument_list|)
 return|;
-block|}
-end_expr_stmt
+end_return
 
+unit|}
 end_unit
 

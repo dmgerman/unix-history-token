@@ -566,7 +566,7 @@ literal|0
 condition|)
 block|{
 comment|/* This function does not believe in errors... */
-name|ERR_get_error
+name|ERR_clear_error
 argument_list|()
 expr_stmt|;
 block|}

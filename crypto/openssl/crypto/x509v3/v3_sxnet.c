@@ -274,7 +274,7 @@ name|BIO_printf
 argument_list|(
 name|out
 argument_list|,
-literal|"%*sVersion: %d (0x%X)"
+literal|"%*sVersion: %ld (0x%lX)"
 argument_list|,
 name|indent
 argument_list|,
@@ -523,7 +523,7 @@ condition|)
 block|{
 name|X509V3err
 argument_list|(
-name|X509V3_F_SXNET_ADD_ASC
+name|X509V3_F_SXNET_ADD_ID_ASC
 argument_list|,
 name|X509V3_R_ERROR_CONVERTING_ZONE
 argument_list|)

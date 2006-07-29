@@ -10,25 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"cryptlib.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/crypto.h>
 end_include
 
 begin_ifndef

@@ -29,6 +29,12 @@ directive|include
 file|<openssl/ui.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/crypto.h>
+end_include
+
 begin_function
 name|int
 name|DES_read_password

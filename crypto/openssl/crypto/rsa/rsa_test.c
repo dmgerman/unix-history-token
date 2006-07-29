@@ -39,6 +39,12 @@ directive|include
 file|<openssl/rand.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/bn.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -599,7 +605,7 @@ literal|0
 init|;
 name|v
 operator|<
-literal|3
+literal|6
 condition|;
 name|v
 operator|++
@@ -613,6 +619,8 @@ expr_stmt|;
 switch|switch
 condition|(
 name|v
+operator|%
+literal|3
 condition|)
 block|{
 case|case
@@ -655,6 +663,20 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|v
+operator|/
+literal|3
+operator|>
+literal|1
+condition|)
+name|key
+operator|->
+name|flags
+operator||=
+name|RSA_FLAG_NO_EXP_CONSTTIME
+expr_stmt|;
 name|num
 operator|=
 name|RSA_public_encrypt
@@ -939,6 +961,22 @@ argument_list|(
 name|stderr
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OPENSSL_SYS_NETWARE
+if|if
+condition|(
+name|err
+condition|)
+name|printf
+argument_list|(
+literal|"ERROR: %d\n"
+argument_list|,
+name|err
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|err
 return|;

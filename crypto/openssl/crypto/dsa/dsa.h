@@ -23,6 +23,12 @@ directive|define
 name|HEADER_DSA_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<openssl/e_os2.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -60,12 +66,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<openssl/bn.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<openssl/crypto.h>
 end_include
 
@@ -73,6 +73,18 @@ begin_include
 include|#
 directive|include
 file|<openssl/ossl_typ.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_DEPRECATED
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<openssl/bn.h>
 end_include
 
 begin_ifndef
@@ -92,6 +104,11 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -99,26 +116,16 @@ name|DSA_FLAG_CACHE_MONT_P
 value|0x01
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|OPENSSL_FIPS
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
-name|FIPS_DSA_SIZE_T
-value|int
+name|DSA_FLAG_NO_EXP_CONSTTIME
+value|0x02
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* new with 0.9.7h; the built-in DSA                                               * implementation now uses constant time                                               * modular exponentiation for secret exponents                                               * by default. This flag causes the                                               * faster variable sliding window method to                                               * be used for all exponents.                                               */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -132,11 +139,9 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-typedef|typedef
-name|struct
-name|dsa_st
-name|DSA
-typedef|;
+comment|/* Already defined in ossl_typ.h */
+comment|/* typedef struct dsa_st DSA; */
+comment|/* typedef struct dsa_method DSA_METHOD; */
 typedef|typedef
 struct|struct
 name|DSA_SIG_st
@@ -152,7 +157,6 @@ decl_stmt|;
 block|}
 name|DSA_SIG
 typedef|;
-typedef|typedef
 struct|struct
 name|dsa_method
 block|{
@@ -341,9 +345,56 @@ name|char
 modifier|*
 name|app_data
 decl_stmt|;
+comment|/* If this is non-NULL, it is used to generate DSA parameters */
+name|int
+function_decl|(
+modifier|*
+name|dsa_paramgen
+function_decl|)
+parameter_list|(
+name|DSA
+modifier|*
+name|dsa
+parameter_list|,
+name|int
+name|bits
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|seed
+parameter_list|,
+name|int
+name|seed_len
+parameter_list|,
+name|int
+modifier|*
+name|counter_ret
+parameter_list|,
+name|unsigned
+name|long
+modifier|*
+name|h_ret
+parameter_list|,
+name|BN_GENCB
+modifier|*
+name|cb
+parameter_list|)
+function_decl|;
+comment|/* If this is non-NULL, it is used to generate DSA keys */
+name|int
+function_decl|(
+modifier|*
+name|dsa_keygen
+function_decl|)
+parameter_list|(
+name|DSA
+modifier|*
+name|dsa
+parameter_list|)
+function_decl|;
 block|}
-name|DSA_METHOD
-typedef|;
+struct|;
 struct|struct
 name|dsa_st
 block|{
@@ -394,7 +445,7 @@ name|int
 name|flags
 decl_stmt|;
 comment|/* Normally used to cache montgomery values */
-name|char
+name|BN_MONT_CTX
 modifier|*
 name|method_mont_p
 decl_stmt|;
@@ -422,7 +473,7 @@ name|DSAparams_dup
 parameter_list|(
 name|x
 parameter_list|)
-value|(DSA *)ASN1_dup((int (*)())i2d_DSAparams, \ 		(char *(*)())d2i_DSAparams,(char *)(x))
+value|ASN1_dup_of_const(DSA,i2d_DSAparams,d2i_DSAparams,x)
 define|#
 directive|define
 name|d2i_DSAparams_fp
@@ -449,7 +500,7 @@ name|bp
 parameter_list|,
 name|x
 parameter_list|)
-value|(DSA *)ASN1_d2i_bio((char *(*)())DSA_new, \ 		(char *(*)())d2i_DSAparams,(bp),(unsigned char **)(x))
+value|ASN1_d2i_bio_of(DSA,DSA_new,d2i_DSAparams,bp,x)
 define|#
 directive|define
 name|i2d_DSAparams_bio
@@ -458,7 +509,7 @@ name|bp
 parameter_list|,
 name|x
 parameter_list|)
-value|ASN1_i2d_bio(i2d_DSAparams,(bp), \ 		(unsigned char *)(x))
+value|ASN1_i2d_bio_of_const(DSA,i2d_DSAparams,bp,x)
 name|DSA_SIG
 modifier|*
 name|DSA_SIG_new
@@ -817,6 +868,10 @@ name|long
 name|length
 parameter_list|)
 function_decl|;
+comment|/* Deprecated version */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_DEPRECATED
 name|DSA
 modifier|*
 name|DSA_generate_parameters
@@ -858,6 +913,42 @@ parameter_list|,
 name|void
 modifier|*
 name|cb_arg
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
+comment|/* !defined(OPENSSL_NO_DEPRECATED) */
+comment|/* New version */
+name|int
+name|DSA_generate_parameters_ex
+parameter_list|(
+name|DSA
+modifier|*
+name|dsa
+parameter_list|,
+name|int
+name|bits
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|seed
+parameter_list|,
+name|int
+name|seed_len
+parameter_list|,
+name|int
+modifier|*
+name|counter_ret
+parameter_list|,
+name|unsigned
+name|long
+modifier|*
+name|h_ret
+parameter_list|,
+name|BN_GENCB
+modifier|*
+name|cb
 parameter_list|)
 function_decl|;
 name|int

@@ -81,6 +81,16 @@ typedef|;
 define|#
 directive|define
 name|FAR
+else|#
+directive|else
+ifndef|#
+directive|ifndef
+name|FAR
+define|#
+directive|define
+name|FAR
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/*	Uncomment this to debug kssl problems or **	to trace usage of the Kerberos session key ** **	#define		KSSL_DEBUG */

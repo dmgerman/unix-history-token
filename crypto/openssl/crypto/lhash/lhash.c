@@ -518,7 +518,6 @@ name|LHASH
 modifier|*
 name|lh
 parameter_list|,
-specifier|const
 name|void
 modifier|*
 name|data
@@ -536,7 +535,6 @@ modifier|*
 modifier|*
 name|rn
 decl_stmt|;
-specifier|const
 name|void
 modifier|*
 name|ret
@@ -694,10 +692,6 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-operator|(
-name|void
-operator|*
-operator|)
 name|ret
 operator|)
 return|;
@@ -731,7 +725,6 @@ modifier|*
 modifier|*
 name|rn
 decl_stmt|;
-specifier|const
 name|void
 modifier|*
 name|ret
@@ -844,10 +837,6 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|(
-name|void
-operator|*
-operator|)
 name|ret
 operator|)
 return|;
@@ -878,7 +867,6 @@ modifier|*
 modifier|*
 name|rn
 decl_stmt|;
-specifier|const
 name|void
 modifier|*
 name|ret
@@ -939,10 +927,6 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-operator|(
-name|void
-operator|*
-operator|)
 name|ret
 operator|)
 return|;
@@ -1356,10 +1340,10 @@ name|lh
 operator|->
 name|b
 argument_list|,
-operator|(
-name|unsigned
+call|(
 name|int
-operator|)
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|LHASH_NODE
@@ -1367,6 +1351,7 @@ operator|*
 argument_list|)
 operator|*
 name|j
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1709,13 +1694,9 @@ name|hash
 decl_stmt|,
 name|nn
 decl_stmt|;
-name|int
-function_decl|(
-modifier|*
+name|LHASH_COMP_FN_TYPE
 name|cf
-function_decl|)
-parameter_list|()
-function_decl|;
+decl_stmt|;
 name|hash
 operator|=
 operator|(

@@ -14,31 +14,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/crypto.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"cryptlib.h"
+file|"eng_int.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|<openssl/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/engine.h>
 end_include
 
 begin_comment
@@ -460,7 +442,6 @@ name|ctrlvalue
 operator|=
 name|NULL
 expr_stmt|;
-elseif|else
 if|if
 condition|(
 operator|!
@@ -688,7 +669,7 @@ condition|)
 block|{
 name|ENGINEerr
 argument_list|(
-name|ENGINE_F_ENGINE_MODULE_INIT
+name|ENGINE_F_INT_ENGINE_MODULE_INIT
 argument_list|,
 name|ENGINE_R_ENGINES_SECTION_ERROR
 argument_list|)

@@ -45,6 +45,7 @@ name|EVP_MD_CTX
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*

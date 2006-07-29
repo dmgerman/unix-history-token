@@ -23,6 +23,12 @@ directive|define
 name|HEADER_LHASH_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<openssl/e_os2.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -73,7 +79,6 @@ typedef|typedef
 struct|struct
 name|lhash_node_st
 block|{
-specifier|const
 name|void
 modifier|*
 name|data
@@ -131,7 +136,6 @@ modifier|*
 name|LHASH_DOALL_FN_TYPE
 function_decl|)
 parameter_list|(
-specifier|const
 name|void
 modifier|*
 parameter_list|)
@@ -143,7 +147,6 @@ modifier|*
 name|LHASH_DOALL_ARG_FN_TYPE
 function_decl|)
 parameter_list|(
-specifier|const
 name|void
 modifier|*
 parameter_list|,
@@ -218,7 +221,7 @@ parameter_list|,
 name|o_type
 parameter_list|)
 define|\
-value|void f_name##_LHASH_DOALL(const void *);
+value|void f_name##_LHASH_DOALL(void *);
 define|#
 directive|define
 name|IMPLEMENT_LHASH_DOALL_FN
@@ -228,7 +231,7 @@ parameter_list|,
 name|o_type
 parameter_list|)
 define|\
-value|void f_name##_LHASH_DOALL(const void *arg) { \ 		o_type a = (o_type)arg; \ 		f_name(a); }
+value|void f_name##_LHASH_DOALL(void *arg) { \ 		o_type a = (o_type)arg; \ 		f_name(a); }
 define|#
 directive|define
 name|LHASH_DOALL_FN
@@ -248,7 +251,7 @@ parameter_list|,
 name|a_type
 parameter_list|)
 define|\
-value|void f_name##_LHASH_DOALL_ARG(const void *, void *);
+value|void f_name##_LHASH_DOALL_ARG(void *, void *);
 define|#
 directive|define
 name|IMPLEMENT_LHASH_DOALL_ARG_FN
@@ -260,7 +263,7 @@ parameter_list|,
 name|a_type
 parameter_list|)
 define|\
-value|void f_name##_LHASH_DOALL_ARG(const void *arg1, void *arg2) { \ 		o_type a = (o_type)arg1; \ 		a_type b = (a_type)arg2; \ 		f_name(a,b); }
+value|void f_name##_LHASH_DOALL_ARG(void *arg1, void *arg2) { \ 		o_type a = (o_type)arg1; \ 		a_type b = (a_type)arg2; \ 		f_name(a,b); }
 define|#
 directive|define
 name|LHASH_DOALL_ARG_FN
@@ -410,7 +413,6 @@ name|LHASH
 modifier|*
 name|lh
 parameter_list|,
-specifier|const
 name|void
 modifier|*
 name|data

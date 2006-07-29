@@ -172,7 +172,7 @@ name|c
 parameter_list|,
 name|s
 parameter_list|)
-value|(des_crypt((c),(s)))
+value|(DES_crypt((c),(s)))
 end_define
 
 begin_comment
@@ -4055,13 +4055,15 @@ index|[]
 parameter_list|)
 block|{
 name|int
-name|i
-decl_stmt|,
 name|j
 decl_stmt|,
 name|err
 init|=
 literal|0
+decl_stmt|;
+name|unsigned
+name|int
+name|i
 decl_stmt|;
 name|des_cblock
 name|in
@@ -4429,6 +4431,7 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|unsigned
 name|int
 name|n
 decl_stmt|;
@@ -4794,8 +4797,10 @@ argument_list|)
 expr_stmt|;
 name|des_ecb2_encrypt
 argument_list|(
+operator|&
 name|in
 argument_list|,
+operator|&
 name|out
 argument_list|,
 name|ks
@@ -4807,8 +4812,10 @@ argument_list|)
 expr_stmt|;
 name|des_ecb2_encrypt
 argument_list|(
+operator|&
 name|out
 argument_list|,
+operator|&
 name|outin
 argument_list|,
 name|ks
@@ -5540,6 +5547,7 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|unsigned
 name|int
 name|n
 decl_stmt|;
@@ -5664,6 +5672,7 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|unsigned
 name|int
 name|n
 decl_stmt|;
@@ -7555,6 +7564,22 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|OPENSSL_SYS_NETWARE
+if|if
+condition|(
+name|err
+condition|)
+name|printf
+argument_list|(
+literal|"ERROR: %d\n"
+argument_list|,
+name|err
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"\n"

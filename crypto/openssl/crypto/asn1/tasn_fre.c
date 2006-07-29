@@ -436,6 +436,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|ASN1_ITYPE_NDEF_SEQUENCE
+case|:
+case|case
 name|ASN1_ITYPE_SEQUENCE
 case|:
 if|if

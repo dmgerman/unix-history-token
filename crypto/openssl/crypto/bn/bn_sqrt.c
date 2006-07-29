@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* crypto/bn/bn_mod.c */
+comment|/* crypto/bn/bn_sqrt.c */
 end_comment
 
 begin_comment
@@ -46,7 +46,7 @@ name|BN_CTX
 modifier|*
 name|ctx
 parameter_list|)
-comment|/* Returns 'ret' such that  *      ret^2 == a (mod p),  * using the Tonelli/Shanks algorithm (cf. Henri Cohen, "A Course  * in Algebraic Computational Number Theory", algorithm 1.5.1).  * 'p' must be prime!  * If 'a' is not a square, this is not necessarily detected by  * the algorithms; a bogus result must be expected in this case.  */
+comment|/* Returns 'ret' such that  *      ret^2 == a (mod p),  * using the Tonelli/Shanks algorithm (cf. Henri Cohen, "A Course  * in Algebraic Computational Number Theory", algorithm 1.5.1).  * 'p' must be prime!  */
 block|{
 name|BIGNUM
 modifier|*
@@ -63,6 +63,9 @@ name|int
 name|r
 decl_stmt|;
 name|BIGNUM
+modifier|*
+name|A
+decl_stmt|,
 modifier|*
 name|b
 decl_stmt|,
@@ -147,6 +150,12 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|ret
+operator|!=
+name|in
+condition|)
 name|BN_free
 argument_list|(
 name|ret
@@ -156,6 +165,11 @@ return|return
 name|NULL
 return|;
 block|}
+name|bn_check_top
+argument_list|(
+name|ret
+argument_list|)
+expr_stmt|;
 return|return
 name|ret
 return|;
@@ -220,6 +234,12 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|ret
+operator|!=
+name|in
+condition|)
 name|BN_free
 argument_list|(
 name|ret
@@ -229,18 +249,23 @@ return|return
 name|NULL
 return|;
 block|}
+name|bn_check_top
+argument_list|(
+name|ret
+argument_list|)
+expr_stmt|;
 return|return
 name|ret
 return|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* if BN_mod_sqrt is used with correct input, this just wastes time */
-block|r = BN_kronecker(a, p, ctx); 	if (r< -1) return NULL; 	if (r == -1) 		{ 		BNerr(BN_F_BN_MOD_SQRT, BN_R_NOT_A_SQUARE); 		return(NULL); 		}
-endif|#
-directive|endif
 name|BN_CTX_start
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|A
+operator|=
+name|BN_CTX_get
 argument_list|(
 name|ctx
 argument_list|)
@@ -305,6 +330,24 @@ condition|(
 name|ret
 operator|==
 name|NULL
+condition|)
+goto|goto
+name|end
+goto|;
+comment|/* A = a mod p */
+if|if
+condition|(
+operator|!
+name|BN_nnmod
+argument_list|(
+name|A
+argument_list|,
+name|a
+argument_list|,
+name|p
+argument_list|,
+name|ctx
+argument_list|)
 condition|)
 goto|goto
 name|end
@@ -377,7 +420,7 @@ name|BN_mod_exp
 argument_list|(
 name|ret
 argument_list|,
-name|a
+name|A
 argument_list|,
 name|q
 argument_list|,
@@ -394,7 +437,7 @@ operator|=
 literal|0
 expr_stmt|;
 goto|goto
-name|end
+name|vrfy
 goto|;
 block|}
 if|if
@@ -405,46 +448,6 @@ literal|2
 condition|)
 block|{
 comment|/* |p| == 5  (mod 8) 		 * 		 * In this case  2  is always a non-square since 		 * Legendre(2,p) = (-1)^((p^2-1)/8)  for any odd prime. 		 * So if  a  really is a square, then  2*a  is a non-square. 		 * Thus for 		 *      b := (2*a)^((|p|-5)/8), 		 *      i := (2*a)*b^2 		 * we have 		 *     i^2 = (2*a)^((1 + (|p|-5)/4)*2) 		 *         = (2*a)^((p-1)/2) 		 *         = -1; 		 * so if we set 		 *      x := a*b*(i-1), 		 * then 		 *     x^2 = a^2 * b^2 * (i^2 - 2*i + 1) 		 *         = a^2 * b^2 * (-2*i) 		 *         = a*(-i)*(2*a*b^2) 		 *         = a*(-i)*i 		 *         = a. 		 * 		 * (This is due to A.O.L. Atkin,  		 *<URL: http://listserv.nodak.edu/scripts/wa.exe?A2=ind9211&L=nmbrthry&O=T&P=562>, 		 * November 1992.) 		 */
-comment|/* make sure that  a  is reduced modulo p */
-if|if
-condition|(
-name|a
-operator|->
-name|neg
-operator|||
-name|BN_ucmp
-argument_list|(
-name|a
-argument_list|,
-name|p
-argument_list|)
-operator|>=
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|BN_nnmod
-argument_list|(
-name|x
-argument_list|,
-name|a
-argument_list|,
-name|p
-argument_list|,
-name|ctx
-argument_list|)
-condition|)
-goto|goto
-name|end
-goto|;
-name|a
-operator|=
-name|x
-expr_stmt|;
-comment|/* use x as temporary variable */
-block|}
 comment|/* t := 2*a */
 if|if
 condition|(
@@ -453,7 +456,7 @@ name|BN_mod_lshift1_quick
 argument_list|(
 name|t
 argument_list|,
-name|a
+name|A
 argument_list|,
 name|p
 argument_list|)
@@ -561,7 +564,7 @@ name|BN_mod_mul
 argument_list|(
 name|x
 argument_list|,
-name|a
+name|A
 argument_list|,
 name|b
 argument_list|,
@@ -610,7 +613,7 @@ operator|=
 literal|0
 expr_stmt|;
 goto|goto
-name|end
+name|vrfy
 goto|;
 block|}
 comment|/* e> 2, so we really have to use the Tonelli/Shanks algorithm. 	 * First, find some  y  that is not a square. */
@@ -903,7 +906,7 @@ name|BN_nnmod
 argument_list|(
 name|t
 argument_list|,
-name|a
+name|A
 argument_list|,
 name|p
 argument_list|,
@@ -922,17 +925,11 @@ argument_list|)
 condition|)
 block|{
 comment|/* special case: a == 0  (mod p) */
-if|if
-condition|(
-operator|!
 name|BN_zero
 argument_list|(
 name|ret
 argument_list|)
-condition|)
-goto|goto
-name|end
-goto|;
+expr_stmt|;
 name|err
 operator|=
 literal|0
@@ -963,7 +960,7 @@ name|BN_mod_exp
 argument_list|(
 name|x
 argument_list|,
-name|a
+name|A
 argument_list|,
 name|t
 argument_list|,
@@ -984,17 +981,11 @@ argument_list|)
 condition|)
 block|{
 comment|/* special case: a == 0  (mod p) */
-if|if
-condition|(
-operator|!
 name|BN_zero
 argument_list|(
 name|ret
 argument_list|)
-condition|)
-goto|goto
-name|end
-goto|;
+expr_stmt|;
 name|err
 operator|=
 literal|0
@@ -1031,7 +1022,7 @@ name|b
 argument_list|,
 name|b
 argument_list|,
-name|a
+name|A
 argument_list|,
 name|p
 argument_list|,
@@ -1051,7 +1042,7 @@ name|x
 argument_list|,
 name|x
 argument_list|,
-name|a
+name|A
 argument_list|,
 name|p
 argument_list|,
@@ -1093,7 +1084,7 @@ operator|=
 literal|0
 expr_stmt|;
 goto|goto
-name|end
+name|vrfy
 goto|;
 block|}
 comment|/* find smallest  i  such that  b^(2^i) = 1 */
@@ -1280,6 +1271,61 @@ operator|=
 name|i
 expr_stmt|;
 block|}
+name|vrfy
+label|:
+if|if
+condition|(
+operator|!
+name|err
+condition|)
+block|{
+comment|/* verify the result -- the input might have been not a square 		 * (test added in 0.9.8) */
+if|if
+condition|(
+operator|!
+name|BN_mod_sqr
+argument_list|(
+name|x
+argument_list|,
+name|ret
+argument_list|,
+name|p
+argument_list|,
+name|ctx
+argument_list|)
+condition|)
+name|err
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|err
+operator|&&
+literal|0
+operator|!=
+name|BN_cmp
+argument_list|(
+name|x
+argument_list|,
+name|A
+argument_list|)
+condition|)
+block|{
+name|BNerr
+argument_list|(
+name|BN_F_BN_MOD_SQRT
+argument_list|,
+name|BN_R_NOT_A_SQUARE
+argument_list|)
+expr_stmt|;
+name|err
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
 name|end
 label|:
 if|if
@@ -1312,6 +1358,11 @@ block|}
 name|BN_CTX_end
 argument_list|(
 name|ctx
+argument_list|)
+expr_stmt|;
+name|bn_check_top
+argument_list|(
+name|ret
 argument_list|)
 expr_stmt|;
 return|return

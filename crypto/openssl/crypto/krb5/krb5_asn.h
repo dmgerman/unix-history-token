@@ -283,7 +283,7 @@ name|DECLARE_STACK_OF
 argument_list|(
 argument|KRB5_AUTHENTBODY
 argument_list|)
-comment|/*  DECLARE_ASN1_FUNCTIONS(type) = DECLARE_ASN1_FUNCTIONS_name(type, type) = **	type *name##_new(void); **	void name##_free(type *a); **	DECLARE_ASN1_ENCODE_FUNCTIONS(type, name, name) = **	 DECLARE_ASN1_ENCODE_FUNCTIONS(type, itname, name) = **	  type *d2i_##name(type **a, unsigned char **in, long len); **	  int i2d_##name(type *a, unsigned char **out); **	  DECLARE_ASN1_ITEM(itname) = OPENSSL_EXTERN const ASN1_ITEM itname##_it */
+comment|/*  DECLARE_ASN1_FUNCTIONS(type) = DECLARE_ASN1_FUNCTIONS_name(type, type) = **	type *name##_new(void); **	void name##_free(type *a); **	DECLARE_ASN1_ENCODE_FUNCTIONS(type, name, name) = **	 DECLARE_ASN1_ENCODE_FUNCTIONS(type, itname, name) = **	  type *d2i_##name(type **a, const unsigned char **in, long len); **	  int i2d_##name(type *a, unsigned char **out); **	  DECLARE_ASN1_ITEM(itname) = OPENSSL_EXTERN const ASN1_ITEM itname##_it */
 name|DECLARE_ASN1_FUNCTIONS
 argument_list|(
 argument|KRB5_ENCDATA

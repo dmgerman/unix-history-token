@@ -57,6 +57,7 @@ typedef|typedef
 struct|struct
 name|mdc2_ctx_st
 block|{
+name|unsigned
 name|int
 name|num
 decl_stmt|;
@@ -100,8 +101,7 @@ name|char
 modifier|*
 name|data
 parameter_list|,
-name|unsigned
-name|long
+name|size_t
 name|len
 parameter_list|)
 function_decl|;
@@ -129,8 +129,7 @@ name|char
 modifier|*
 name|d
 parameter_list|,
-name|unsigned
-name|long
+name|size_t
 name|n
 parameter_list|,
 name|unsigned

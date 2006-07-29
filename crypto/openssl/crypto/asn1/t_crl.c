@@ -96,7 +96,7 @@ condition|)
 block|{
 name|X509err
 argument_list|(
-name|X509_F_X509_PRINT_FP
+name|X509_F_X509_CRL_PRINT_FP
 argument_list|,
 name|ERR_R_BUF_LIB
 argument_list|)
@@ -433,8 +433,6 @@ argument_list|(
 name|out
 argument_list|,
 literal|"\n        Revocation Date: "
-argument_list|,
-literal|""
 argument_list|)
 expr_stmt|;
 name|ASN1_TIME_print

@@ -19,6 +19,12 @@ directive|define
 name|HEADER_ERR_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<openssl/e_os2.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -41,6 +47,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<openssl/ossl_typ.h>
+end_include
 
 begin_ifndef
 ifndef|#
@@ -138,6 +150,10 @@ name|ERR_TXT_STRING
 value|0x02
 define|#
 directive|define
+name|ERR_FLAG_MARK
+value|0x01
+define|#
+directive|define
 name|ERR_NUM_ERRORS
 value|16
 typedef|typedef
@@ -147,6 +163,12 @@ block|{
 name|unsigned
 name|long
 name|pid
+decl_stmt|;
+name|int
+name|err_flags
+index|[
+name|ERR_NUM_ERRORS
+index|]
 decl_stmt|;
 name|unsigned
 name|long
@@ -303,8 +325,16 @@ name|ERR_LIB_COMP
 value|41
 define|#
 directive|define
-name|ERR_LIB_FIPS
+name|ERR_LIB_ECDSA
 value|42
+define|#
+directive|define
+name|ERR_LIB_ECDH
+value|43
+define|#
+directive|define
+name|ERR_LIB_STORE
+value|44
 define|#
 directive|define
 name|ERR_LIB_USER
@@ -536,13 +566,31 @@ parameter_list|)
 value|ERR_PUT_error(ERR_LIB_COMP,(f),(r),__FILE__,__LINE__)
 define|#
 directive|define
-name|FIPSerr
+name|ECDSAerr
 parameter_list|(
 name|f
 parameter_list|,
 name|r
 parameter_list|)
-value|ERR_PUT_error(ERR_LIB_FIPS,(f),(r),__FILE__,__LINE__)
+value|ERR_PUT_error(ERR_LIB_ECDSA,(f),(r),__FILE__,__LINE__)
+define|#
+directive|define
+name|ECDHerr
+parameter_list|(
+name|f
+parameter_list|,
+name|r
+parameter_list|)
+value|ERR_PUT_error(ERR_LIB_ECDH,(f),(r),__FILE__,__LINE__)
+define|#
+directive|define
+name|STOREerr
+parameter_list|(
+name|f
+parameter_list|,
+name|r
+parameter_list|)
+value|ERR_PUT_error(ERR_LIB_STORE,(f),(r),__FILE__,__LINE__)
 comment|/* Borland C seems too stupid to be able to shift and do longs in  * the pre-processor :-( */
 define|#
 directive|define
@@ -757,6 +805,21 @@ value|ERR_LIB_COMP
 comment|/* 41 */
 define|#
 directive|define
+name|ERR_R_ECDSA_LIB
+value|ERR_LIB_ECDSA
+comment|/* 42 */
+define|#
+directive|define
+name|ERR_R_ECDH_LIB
+value|ERR_LIB_ECDH
+comment|/* 43 */
+define|#
+directive|define
+name|ERR_R_STORE_LIB
+value|ERR_LIB_STORE
+comment|/* 44 */
+define|#
+directive|define
 name|ERR_R_NESTED_ASN1_ERROR
 value|58
 define|#
@@ -800,6 +863,10 @@ define|#
 directive|define
 name|ERR_R_INTERNAL_ERROR
 value|(4|ERR_R_FATAL)
+define|#
+directive|define
+name|ERR_R_DISABLED
+value|(5|ERR_R_FATAL)
 comment|/* 99 is the maximum possible ERR_R_... code, higher values  * are reserved for the individual libraries */
 typedef|typedef
 struct|struct
@@ -1206,12 +1273,20 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/* This opaque type encapsulates the low-level error-state functions */
-typedef|typedef
-name|struct
-name|st_ERR_FNS
-name|ERR_FNS
-typedef|;
+name|int
+name|ERR_set_mark
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|int
+name|ERR_pop_to_mark
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* Already defined in ossl_typ.h */
+comment|/* typedef struct st_ERR_FNS ERR_FNS; */
 comment|/* An application can use this function and provide the return value to loaded  * modules that should use the application's ERR state/functionality */
 specifier|const
 name|ERR_FNS

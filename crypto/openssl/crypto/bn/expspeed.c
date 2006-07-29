@@ -1685,7 +1685,7 @@ comment|/* TEST_SQRT */
 literal|"2*sqrt [prime == %d (mod 64)] %4d %4d mod %4d"
 endif|#
 directive|endif
-literal|" -> %8.3fms %5.1f (%ld)\n"
+literal|" -> %8.6fms %5.1f (%ld)\n"
 argument_list|,
 ifdef|#
 directive|ifdef

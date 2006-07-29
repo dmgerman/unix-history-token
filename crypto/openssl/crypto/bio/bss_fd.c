@@ -31,10 +31,14 @@ directive|include
 file|"cryptlib.h"
 end_include
 
+begin_comment
+comment|/*  * As for unconditional usage of "UPLINK" interface in this module.  * Trouble is that unlike Unix file descriptors [which are indexes  * in kernel-side per-process table], corresponding descriptors on  * platforms which require "UPLINK" interface seem to be indexes  * in a user-land, non-global table. Well, in fact they are indexes  * in stdio _iob[], and recall that _iob[] was the very reason why  * "UPLINK" interface was introduced in first place. But one way on  * another. Neither libcrypto or libssl use this BIO meaning that  * file descriptors can only be provided by application. Therefore  * "UPLINK" calls are due...  */
+end_comment
+
 begin_include
 include|#
 directive|include
-file|<openssl/bio.h>
+file|"bio_lcl.h"
 end_include
 
 begin_function_decl
@@ -268,7 +272,8 @@ name|bi
 operator|->
 name|num
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 name|bi
 operator|->
@@ -280,8 +285,9 @@ name|bi
 operator|->
 name|flags
 operator|=
-literal|0
+name|BIO_FLAGS_UPLINK
 expr_stmt|;
+comment|/* essentially redundant */
 return|return
 operator|(
 literal|1
@@ -325,7 +331,7 @@ operator|->
 name|init
 condition|)
 block|{
-name|close
+name|UP_close
 argument_list|(
 name|a
 operator|->
@@ -343,7 +349,7 @@ name|a
 operator|->
 name|flags
 operator|=
-literal|0
+name|BIO_FLAGS_UPLINK
 expr_stmt|;
 block|}
 return|return
@@ -388,7 +394,7 @@ argument_list|()
 expr_stmt|;
 name|ret
 operator|=
-name|read
+name|UP_read
 argument_list|(
 name|b
 operator|->
@@ -459,7 +465,7 @@ argument_list|()
 expr_stmt|;
 name|ret
 operator|=
-name|write
+name|UP_write
 argument_list|(
 name|b
 operator|->
@@ -552,7 +558,7 @@ operator|=
 operator|(
 name|long
 operator|)
-name|lseek
+name|UP_lseek
 argument_list|(
 name|b
 operator|->
@@ -575,7 +581,7 @@ operator|=
 operator|(
 name|long
 operator|)
-name|lseek
+name|UP_lseek
 argument_list|(
 name|b
 operator|->

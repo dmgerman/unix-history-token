@@ -19,6 +19,16 @@ directive|define
 name|HEADER_RC2_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<openssl/opensslconf.h>
+end_include
+
+begin_comment
+comment|/* OPENSSL_NO_RC2, RC2_INT */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -49,16 +59,6 @@ directive|define
 name|RC2_DECRYPT
 value|0
 end_define
-
-begin_include
-include|#
-directive|include
-file|<openssl/opensslconf.h>
-end_include
-
-begin_comment
-comment|/* RC2_INT */
-end_comment
 
 begin_define
 define|#

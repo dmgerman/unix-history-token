@@ -217,6 +217,16 @@ condition|(
 name|pitems_data
 operator|->
 name|length
+operator|&&
+operator|(
+name|total_length
+operator|+
+name|pitems_data
+operator|->
+name|length
+operator|<=
+literal|256
+operator|)
 condition|)
 block|{
 name|pitem
@@ -243,6 +253,7 @@ operator|(
 name|long
 operator|*
 operator|)
+operator|&
 name|data_buffer
 index|[
 name|total_length

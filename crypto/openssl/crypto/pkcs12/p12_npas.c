@@ -959,6 +959,7 @@ name|PBEPARAM
 modifier|*
 name|pbe
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*

@@ -94,7 +94,9 @@ begin_function
 specifier|static
 name|void
 name|display_engine_list
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ENGINE
 modifier|*

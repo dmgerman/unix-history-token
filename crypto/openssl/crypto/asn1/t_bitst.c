@@ -186,6 +186,10 @@ if|if
 condition|(
 name|bs
 condition|)
+block|{
+if|if
+condition|(
+operator|!
 name|ASN1_BIT_STRING_set_bit
 argument_list|(
 name|bs
@@ -194,7 +198,11 @@ name|bitnum
 argument_list|,
 name|value
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
+block|}
 return|return
 literal|1
 return|;

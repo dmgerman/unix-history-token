@@ -60,24 +60,65 @@ end_include
 begin_include
 include|#
 directive|include
-file|<openssl/fips.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"aes_locl.h"
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|OPENSSL_FIPS
-end_ifndef
 
 begin_comment
 comment|/* Te0[x] = S [x].[02, 01, 01, 03]; Te1[x] = S [x].[03, 02, 01, 01]; Te2[x] = S [x].[01, 03, 02, 01]; Te3[x] = S [x].[01, 01, 03, 02]; Te4[x] = S [x].[01, 01, 01, 01];  Td0[x] = Si[x].[0e, 09, 0d, 0b]; Td1[x] = Si[x].[0b, 0e, 09, 0d]; Td2[x] = Si[x].[0d, 0b, 0e, 09]; Td3[x] = Si[x].[09, 0d, 0b, 0e]; Td4[x] = Si[x].[01, 01, 01, 01]; */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AES_ASM
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|u32
+name|AES_Te
+index|[
+literal|5
+index|]
+index|[
+literal|256
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|Te0
+value|AES_Te[0]
+end_define
+
+begin_define
+define|#
+directive|define
+name|Te1
+value|AES_Te[1]
+end_define
+
+begin_define
+define|#
+directive|define
+name|Te2
+value|AES_Te[2]
+end_define
+
+begin_define
+define|#
+directive|define
+name|Te3
+value|AES_Te[3]
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_decl_stmt
 specifier|static
@@ -2179,6 +2220,11 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -2703,6 +2749,59 @@ literal|0x16161616U
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AES_ASM
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|u32
+name|AES_Td
+index|[
+literal|5
+index|]
+index|[
+literal|256
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|Td0
+value|AES_Td[0]
+end_define
+
+begin_define
+define|#
+directive|define
+name|Td1
+value|AES_Td[1]
+end_define
+
+begin_define
+define|#
+directive|define
+name|Td2
+value|AES_Td[2]
+end_define
+
+begin_define
+define|#
+directive|define
+name|Td3
+value|AES_Td[3]
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_decl_stmt
 specifier|static
@@ -4804,6 +4903,11 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -6724,6 +6828,12 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AES_ASM
+end_ifndef
 
 begin_comment
 comment|/*  * Encrypt a single block  * in and out can overlap  */
@@ -12947,7 +13057,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ndef OPENSSL_FIPS */
+comment|/* AES_ASM */
 end_comment
 
 end_unit

@@ -592,6 +592,7 @@ name|X509V3_EXT_METHOD
 modifier|*
 name|method
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1083,7 +1084,7 @@ condition|)
 block|{
 name|X509V3err
 argument_list|(
-name|X509V3_F_X509V3_ADD_I2D
+name|X509V3_F_X509V3_ADD1_I2D
 argument_list|,
 name|X509V3_R_ERROR_CREATING_EXTENSION
 argument_list|)
@@ -1186,7 +1187,7 @@ operator|)
 condition|)
 name|X509V3err
 argument_list|(
-name|X509V3_F_X509V3_ADD_I2D
+name|X509V3_F_X509V3_ADD1_I2D
 argument_list|,
 name|errcode
 argument_list|)

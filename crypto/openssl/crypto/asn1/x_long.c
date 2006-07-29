@@ -29,6 +29,12 @@ directive|include
 file|<openssl/asn1t.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/bn.h>
+end_include
+
 begin_comment
 comment|/* Custom primitive type for long handling. This converts between an ASN1_INTEGER  * and a long directly.  */
 end_comment
@@ -106,6 +112,7 @@ modifier|*
 modifier|*
 name|pval
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -480,6 +487,7 @@ modifier|*
 modifier|*
 name|pval
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -529,6 +537,9 @@ if|if
 condition|(
 name|len
 operator|>
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|long

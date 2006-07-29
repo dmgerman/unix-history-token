@@ -58,6 +58,11 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
+name|OPENSSL_SYS_NETWARE
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|OPENSSL_SYS_VOS
 argument_list|)
 end_if
@@ -632,7 +637,18 @@ expr_stmt|;
 if|if
 condition|(
 name|num
-operator|>=
+operator|==
+literal|0
+condition|)
+goto|goto
+name|err
+goto|;
+comment|/* descriptor closed */
+elseif|else
+if|if
+condition|(
+name|num
+operator|>
 literal|0
 condition|)
 name|numbytes
@@ -739,7 +755,18 @@ expr_stmt|;
 if|if
 condition|(
 name|num
-operator|>=
+operator|==
+literal|0
+condition|)
+goto|goto
+name|err
+goto|;
+comment|/* descriptor closed */
+elseif|else
+if|if
+condition|(
+name|num
+operator|>
 literal|0
 condition|)
 name|numbytes

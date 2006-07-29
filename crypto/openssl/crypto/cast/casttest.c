@@ -28,6 +28,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<openssl/opensslconf.h>
+end_include
+
+begin_comment
+comment|/* To see if OPENSSL_NO_CAST is defined */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|"../e_os.h"
 end_include
 

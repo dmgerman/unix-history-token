@@ -32,6 +32,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<openssl/opensslconf.h>
+end_include
+
+begin_comment
+comment|/* To see if OPENSSL_NO_BF is defined */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|"../e_os.h"
 end_include
 
@@ -2970,6 +2980,22 @@ operator|=
 name|test
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OPENSSL_SYS_NETWARE
+if|if
+condition|(
+name|ret
+condition|)
+name|printf
+argument_list|(
+literal|"ERROR: %d\n"
+argument_list|,
+name|ret
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|EXIT
 argument_list|(
 name|ret

@@ -67,6 +67,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|/* 	 * For the moment OPENSSL_cpuid_setup does something 	 * only on IA-32, but we reserve the option for all 	 * platforms... 	 */
+name|OPENSSL_cpuid_setup
+argument_list|()
+expr_stmt|;
 name|OpenSSL_add_all_ciphers
 argument_list|()
 expr_stmt|;

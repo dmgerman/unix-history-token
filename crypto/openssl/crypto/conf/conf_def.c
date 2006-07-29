@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"cryptlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/stack.h>
 end_include
 
@@ -63,12 +69,6 @@ begin_include
 include|#
 directive|include
 file|<openssl/err.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"cryptlib.h"
 end_include
 
 begin_function_decl
@@ -737,7 +737,7 @@ name|BIO_R_NO_SUCH_FILE
 condition|)
 name|CONFerr
 argument_list|(
-name|CONF_F_CONF_LOAD
+name|CONF_F_DEF_LOAD
 argument_list|,
 name|CONF_R_NO_SUCH_FILE
 argument_list|)
@@ -745,7 +745,7 @@ expr_stmt|;
 else|else
 name|CONFerr
 argument_list|(
-name|CONF_F_CONF_LOAD
+name|CONF_F_DEF_LOAD
 argument_list|,
 name|ERR_R_SYS_LIB
 argument_list|)
@@ -919,7 +919,7 @@ condition|)
 block|{
 name|CONFerr
 argument_list|(
-name|CONF_F_CONF_LOAD_BIO
+name|CONF_F_DEF_LOAD_BIO
 argument_list|,
 name|ERR_R_BUF_LIB
 argument_list|)
@@ -948,7 +948,7 @@ condition|)
 block|{
 name|CONFerr
 argument_list|(
-name|CONF_F_CONF_LOAD_BIO
+name|CONF_F_DEF_LOAD_BIO
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
@@ -978,7 +978,7 @@ condition|)
 block|{
 name|CONFerr
 argument_list|(
-name|CONF_F_CONF_LOAD_BIO
+name|CONF_F_DEF_LOAD_BIO
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
@@ -1005,7 +1005,7 @@ condition|)
 block|{
 name|CONFerr
 argument_list|(
-name|CONF_F_CONF_LOAD_BIO
+name|CONF_F_DEF_LOAD_BIO
 argument_list|,
 name|CONF_R_UNABLE_TO_CREATE_NEW_SECTION
 argument_list|)
@@ -1056,7 +1056,7 @@ condition|)
 block|{
 name|CONFerr
 argument_list|(
-name|CONF_F_CONF_LOAD_BIO
+name|CONF_F_DEF_LOAD_BIO
 argument_list|,
 name|ERR_R_BUF_LIB
 argument_list|)
@@ -1389,7 +1389,7 @@ goto|;
 block|}
 name|CONFerr
 argument_list|(
-name|CONF_F_CONF_LOAD_BIO
+name|CONF_F_DEF_LOAD_BIO
 argument_list|,
 name|CONF_R_MISSING_CLOSE_SQUARE_BRACKET
 argument_list|)
@@ -1454,7 +1454,7 @@ condition|)
 block|{
 name|CONFerr
 argument_list|(
-name|CONF_F_CONF_LOAD_BIO
+name|CONF_F_DEF_LOAD_BIO
 argument_list|,
 name|CONF_R_UNABLE_TO_CREATE_NEW_SECTION
 argument_list|)
@@ -1564,7 +1564,7 @@ condition|)
 block|{
 name|CONFerr
 argument_list|(
-name|CONF_F_CONF_LOAD_BIO
+name|CONF_F_DEF_LOAD_BIO
 argument_list|,
 name|CONF_R_MISSING_EQUAL_SIGN
 argument_list|)
@@ -1658,7 +1658,7 @@ condition|)
 block|{
 name|CONFerr
 argument_list|(
-name|CONF_F_CONF_LOAD_BIO
+name|CONF_F_DEF_LOAD_BIO
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
@@ -1712,7 +1712,7 @@ condition|)
 block|{
 name|CONFerr
 argument_list|(
-name|CONF_F_CONF_LOAD_BIO
+name|CONF_F_DEF_LOAD_BIO
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
@@ -1804,7 +1804,7 @@ condition|)
 block|{
 name|CONFerr
 argument_list|(
-name|CONF_F_CONF_LOAD_BIO
+name|CONF_F_DEF_LOAD_BIO
 argument_list|,
 name|CONF_R_UNABLE_TO_CREATE_NEW_SECTION
 argument_list|)
@@ -1857,7 +1857,7 @@ condition|)
 block|{
 name|CONFerr
 argument_list|(
-name|CONF_F_CONF_LOAD_BIO
+name|CONF_F_DEF_LOAD_BIO
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
@@ -1889,7 +1889,7 @@ condition|)
 block|{
 name|CONFerr
 argument_list|(
-name|CONF_F_CONF_LOAD_BIO
+name|CONF_F_DEF_LOAD_BIO
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
@@ -2874,7 +2874,7 @@ name|e
 operator|++
 expr_stmt|;
 block|}
-comment|/* So at this point we have 			 * ns which is the start of the name string which is 			 *   '\0' terminated.  			 * cs which is the start of the section string which is 			 *   '\0' terminated. 			 * e is the 'next point after'. 			 * r and s are the chars replaced by the '\0' 			 * rp and sp is where 'r' and 's' came from. 			 */
+comment|/* So at this point we have 			 * np which is the start of the name string which is 			 *   '\0' terminated.  			 * cp which is the start of the section string which is 			 *   '\0' terminated. 			 * e is the 'next point after'. 			 * r and rr are the chars replaced by the '\0' 			 * rp and rrp is where 'r' and 'rr' came from. 			 */
 name|p
 operator|=
 name|_CONF_get_string
@@ -2930,7 +2930,9 @@ argument_list|(
 name|p
 argument_list|)
 operator|+
-name|len
+name|buf
+operator|->
+name|length
 operator|-
 operator|(
 name|e
@@ -2969,6 +2971,12 @@ expr_stmt|;
 name|from
 operator|=
 name|e
+expr_stmt|;
+comment|/* In case there were no braces or parenthesis around 			   the variable reference, we have to put back the 			   character that was replaced with a '\0'.  /RL */
+operator|*
+name|rp
+operator|=
+name|r
 expr_stmt|;
 block|}
 else|else

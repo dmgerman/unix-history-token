@@ -45,6 +45,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<openssl/err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/evp.h>
 end_include
 
@@ -70,12 +76,9 @@ begin_function
 name|int
 name|ASN1_digest
 parameter_list|(
-name|int
-function_decl|(
+name|i2d_of_void
 modifier|*
 name|i2d
-function_decl|)
-parameter_list|()
 parameter_list|,
 specifier|const
 name|EVP_MD
@@ -135,11 +138,20 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|ASN1err
+argument_list|(
+name|ASN1_F_ASN1_DIGEST
+argument_list|,
+name|ERR_R_MALLOC_FAILURE
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 name|p
 operator|=
 name|str

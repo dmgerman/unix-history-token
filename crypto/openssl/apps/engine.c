@@ -91,6 +91,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|engine_usage
@@ -109,7 +110,9 @@ literal|"               -vvvv will also show internal input flags\n"
 block|,
 literal|" -c          - for each engine, also list the capabilities\n"
 block|,
-literal|" -t          - for each engine, check that they are really available\n"
+literal|" -t[t]       - for each engine, check that they are really available\n"
+block|,
+literal|"               -tt will display error trace for unavailable engines\n"
 block|,
 literal|" -pre<cmd>  - runs command 'cmd' against the ENGINE before any attempts\n"
 block|,
@@ -1382,6 +1385,7 @@ literal|1
 decl_stmt|,
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -1397,6 +1401,10 @@ init|=
 literal|0
 decl_stmt|,
 name|test_avail
+init|=
+literal|0
+decl_stmt|,
+name|test_avail_noise
 init|=
 literal|0
 decl_stmt|;
@@ -1603,20 +1611,68 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|strcmp
+name|strncmp
 argument_list|(
 operator|*
 name|argv
 argument_list|,
 literal|"-t"
+argument_list|,
+literal|2
 argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|test_avail
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|strspn
+argument_list|(
+operator|*
+name|argv
+operator|+
+literal|1
+argument_list|,
+literal|"t"
+argument_list|)
+operator|<
+name|strlen
+argument_list|(
+operator|*
+name|argv
+operator|+
+literal|1
+argument_list|)
+condition|)
+goto|goto
+name|skip_arg_loop
+goto|;
+if|if
+condition|(
+operator|(
+name|test_avail_noise
+operator|=
+name|strlen
+argument_list|(
+operator|*
+name|argv
+operator|+
+literal|1
+argument_list|)
+operator|-
+literal|1
+operator|)
+operator|>
+literal|1
+condition|)
+goto|goto
+name|skip_arg_loop
+goto|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -1637,6 +1693,15 @@ expr_stmt|;
 name|argv
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|==
+literal|0
+condition|)
+goto|goto
+name|skip_arg_loop
+goto|;
 name|sk_push
 argument_list|(
 name|pre_cmds
@@ -1666,6 +1731,15 @@ expr_stmt|;
 name|argv
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|==
+literal|0
+condition|)
+goto|goto
+name|skip_arg_loop
+goto|;
 name|sk_push
 argument_list|(
 name|post_cmds
@@ -2274,6 +2348,10 @@ argument_list|,
 literal|"[ unavailable ]\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|test_avail_noise
+condition|)
 name|ERR_print_errors_fp
 argument_list|(
 name|stdout

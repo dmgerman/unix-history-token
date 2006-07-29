@@ -228,7 +228,13 @@ block|,
 literal|0
 block|,
 name|NULL
-block|, 	}
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -279,7 +285,7 @@ parameter_list|)
 block|{
 name|RSAerr
 argument_list|(
-name|RSA_F_RSA_NULL
+name|RSA_F_RSA_NULL_PUBLIC_ENCRYPT
 argument_list|,
 name|RSA_R_RSA_OPERATIONS_NOT_SUPPORTED
 argument_list|)
@@ -320,7 +326,7 @@ parameter_list|)
 block|{
 name|RSAerr
 argument_list|(
-name|RSA_F_RSA_NULL
+name|RSA_F_RSA_NULL_PRIVATE_ENCRYPT
 argument_list|,
 name|RSA_R_RSA_OPERATIONS_NOT_SUPPORTED
 argument_list|)
@@ -361,7 +367,7 @@ parameter_list|)
 block|{
 name|RSAerr
 argument_list|(
-name|RSA_F_RSA_NULL
+name|RSA_F_RSA_NULL_PRIVATE_DECRYPT
 argument_list|,
 name|RSA_R_RSA_OPERATIONS_NOT_SUPPORTED
 argument_list|)
@@ -402,7 +408,7 @@ parameter_list|)
 block|{
 name|RSAerr
 argument_list|(
-name|RSA_F_RSA_NULL
+name|RSA_F_RSA_NULL_PUBLIC_DECRYPT
 argument_list|,
 name|RSA_R_RSA_OPERATIONS_NOT_SUPPORTED
 argument_list|)
@@ -425,7 +431,7 @@ comment|/* not currently used */
 end_comment
 
 begin_endif
-unit|static int RSA_null_mod_exp(BIGNUM *r0, BIGNUM *I, RSA *rsa) 	{ 	RSAerr(RSA_F_RSA_NULL, RSA_R_RSA_OPERATIONS_NOT_SUPPORTED); 	return -1; 	}
+unit|static int RSA_null_mod_exp(BIGNUM *r0, BIGNUM *I, RSA *rsa) 	{ 	...err(RSA_F_RSA_NULL_MOD_EXP, RSA_R_RSA_OPERATIONS_NOT_SUPPORTED); 	return -1; 	}
 endif|#
 directive|endif
 end_endif

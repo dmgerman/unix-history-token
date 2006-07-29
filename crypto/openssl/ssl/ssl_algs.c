@@ -216,6 +216,17 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ECDSA
+name|EVP_add_digest
+argument_list|(
+name|EVP_ecdsa
+argument_list|()
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* If you want support for phased out ciphers, add the following */
 if|#
 directive|if
@@ -223,6 +234,22 @@ literal|0
 block|EVP_add_digest(EVP_sha()); 	EVP_add_digest(EVP_dss());
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_COMP
+comment|/* This will initialise the built-in compression algorithms. 	   The value returned is a STACK_OF(SSL_COMP), but that can 	   be discarded safely */
+operator|(
+name|void
+operator|)
+name|SSL_COMP_get_compression_methods
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* initialize cipher/digest methods table */
+name|ssl_load_ciphers
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|1

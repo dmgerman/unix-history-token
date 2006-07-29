@@ -95,6 +95,8 @@ block|{
 name|PBEPARAM
 operator|*
 name|pbe
+operator|=
+name|NULL
 block|;
 name|ASN1_OBJECT
 operator|*
@@ -107,6 +109,8 @@ block|;
 name|ASN1_TYPE
 operator|*
 name|astype
+operator|=
+name|NULL
 block|;
 if|if
 condition|(
@@ -121,14 +125,14 @@ condition|)
 block|{
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_PBE_SET
+name|ASN1_F_PKCS5_PBE_SET
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
 expr_stmt|;
-return|return
-name|NULL
-return|;
+goto|goto
+name|err
+goto|;
 block|}
 end_expr_stmt
 
@@ -145,7 +149,10 @@ name|PKCS5_DEFAULT_ITER
 expr_stmt|;
 end_if
 
-begin_expr_stmt
+begin_if
+if|if
+condition|(
+operator|!
 name|ASN1_INTEGER_set
 argument_list|(
 name|pbe
@@ -154,8 +161,20 @@ name|iter
 argument_list|,
 name|iter
 argument_list|)
+condition|)
+block|{
+name|ASN1err
+argument_list|(
+name|ASN1_F_PKCS5_PBE_SET
+argument_list|,
+name|ERR_R_MALLOC_FAILURE
+argument_list|)
 expr_stmt|;
-end_expr_stmt
+goto|goto
+name|err
+goto|;
+block|}
+end_if
 
 begin_if
 if|if
@@ -189,14 +208,14 @@ condition|)
 block|{
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_PBE_SET
+name|ASN1_F_PKCS5_PBE_SET
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
 expr_stmt|;
-return|return
-name|NULL
-return|;
+goto|goto
+name|err
+goto|;
 block|}
 end_if
 
@@ -245,9 +264,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-return|return
-name|NULL
-return|;
+goto|goto
+name|err
+goto|;
 end_if
 
 begin_if
@@ -264,14 +283,14 @@ condition|)
 block|{
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_PBE_SET
+name|ASN1_F_PKCS5_PBE_SET
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
 expr_stmt|;
-return|return
-name|NULL
-return|;
+goto|goto
+name|err
+goto|;
 block|}
 end_if
 
@@ -288,8 +307,10 @@ begin_if
 if|if
 condition|(
 operator|!
-name|ASN1_pack_string
+name|ASN1_pack_string_of
 argument_list|(
+name|PBEPARAM
+argument_list|,
 name|pbe
 argument_list|,
 name|i2d_PBEPARAM
@@ -305,14 +326,14 @@ condition|)
 block|{
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_PBE_SET
+name|ASN1_F_PKCS5_PBE_SET
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
 expr_stmt|;
-return|return
-name|NULL
-return|;
+goto|goto
+name|err
+goto|;
 block|}
 end_if
 
@@ -321,6 +342,13 @@ name|PBEPARAM_free
 argument_list|(
 name|pbe
 argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|pbe
+operator|=
+name|NULL
 expr_stmt|;
 end_expr_stmt
 
@@ -352,14 +380,14 @@ condition|)
 block|{
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_PBE_SET
+name|ASN1_F_PKCS5_PBE_SET
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
 expr_stmt|;
-return|return
-name|NULL
-return|;
+goto|goto
+name|err
+goto|;
 block|}
 end_if
 
@@ -396,6 +424,45 @@ return|return
 operator|(
 name|algor
 operator|)
+return|;
+end_return
+
+begin_label
+name|err
+label|:
+end_label
+
+begin_if
+if|if
+condition|(
+name|pbe
+operator|!=
+name|NULL
+condition|)
+name|PBEPARAM_free
+argument_list|(
+name|pbe
+argument_list|)
+expr_stmt|;
+end_if
+
+begin_if
+if|if
+condition|(
+name|astype
+operator|!=
+name|NULL
+condition|)
+name|ASN1_TYPE_free
+argument_list|(
+name|astype
+argument_list|)
+expr_stmt|;
+end_if
+
+begin_return
+return|return
+name|NULL
 return|;
 end_return
 

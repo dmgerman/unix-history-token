@@ -439,7 +439,7 @@ condition|(
 operator|(
 name|ERR_GET_REASON
 argument_list|(
-name|ERR_peek_error
+name|ERR_peek_last_error
 argument_list|()
 argument_list|)
 operator|==
@@ -742,7 +742,7 @@ condition|(
 operator|(
 name|ERR_GET_REASON
 argument_list|(
-name|ERR_peek_error
+name|ERR_peek_last_error
 argument_list|()
 argument_list|)
 operator|==

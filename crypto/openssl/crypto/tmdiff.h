@@ -11,6 +11,10 @@ begin_comment
 comment|/* Header for dynamic hash table routines  * Author - Eric Young  */
 end_comment
 
+begin_comment
+comment|/* ... erm yeah, "dynamic hash tables" you say?  *   * And what would dynamic hash tables have to do with any of this code *now*?  * AFAICS, this code is only referenced by crypto/bn/exp.c which is an unused  * file that I doubt compiles any more. speed.c is the only thing that could  * use this (and it has nothing to do with hash tables), yet it instead has its  * own duplication of all this stuff and looks, if anything, more complete. See  * the corresponding note in apps/speed.c.  * The Bemused - Geoff  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -35,7 +39,12 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-name|char
+typedef|typedef
+name|struct
+name|ms_tm
+name|MS_TM
+typedef|;
+name|MS_TM
 modifier|*
 name|ms_time_new
 parameter_list|(
@@ -45,7 +54,7 @@ function_decl|;
 name|void
 name|ms_time_free
 parameter_list|(
-name|char
+name|MS_TM
 modifier|*
 name|a
 parameter_list|)
@@ -53,7 +62,7 @@ function_decl|;
 name|void
 name|ms_time_get
 parameter_list|(
-name|char
+name|MS_TM
 modifier|*
 name|a
 parameter_list|)
@@ -61,11 +70,11 @@ function_decl|;
 name|double
 name|ms_time_diff
 parameter_list|(
-name|char
+name|MS_TM
 modifier|*
 name|start
 parameter_list|,
-name|char
+name|MS_TM
 modifier|*
 name|end
 parameter_list|)
@@ -73,11 +82,13 @@ function_decl|;
 name|int
 name|ms_time_cmp
 parameter_list|(
-name|char
+specifier|const
+name|MS_TM
 modifier|*
 name|ap
 parameter_list|,
-name|char
+specifier|const
+name|MS_TM
 modifier|*
 name|bp
 parameter_list|)

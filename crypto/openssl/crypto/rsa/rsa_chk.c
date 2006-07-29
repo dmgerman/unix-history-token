@@ -139,15 +139,13 @@ block|}
 comment|/* p prime? */
 name|r
 operator|=
-name|BN_is_prime
+name|BN_is_prime_ex
 argument_list|(
 name|key
 operator|->
 name|p
 argument_list|,
 name|BN_prime_checks
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -185,15 +183,13 @@ block|}
 comment|/* q prime? */
 name|r
 operator|=
-name|BN_is_prime
+name|BN_is_prime_ex
 argument_list|(
 name|key
 operator|->
 name|q
 argument_list|,
 name|BN_prime_checks
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|,

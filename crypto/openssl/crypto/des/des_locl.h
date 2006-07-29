@@ -376,6 +376,7 @@ end_define
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|OPENSSL_SYS_WIN32
@@ -384,6 +385,12 @@ operator|&&
 name|defined
 argument_list|(
 name|_MSC_VER
+argument_list|)
+operator|)
+operator|||
+name|defined
+argument_list|(
+name|__ICC
 argument_list|)
 end_if
 
@@ -865,7 +872,7 @@ value|{ \ 	register DES_LONG tt; \ 	PERM_OP(l,r,tt, 1,0x55555555L); \ 	PERM_OP(r
 end_define
 
 begin_decl_stmt
-name|OPENSSL_EXTERN
+specifier|extern
 specifier|const
 name|DES_LONG
 name|DES_SPtrans

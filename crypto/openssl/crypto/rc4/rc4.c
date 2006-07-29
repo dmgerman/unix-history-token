@@ -31,6 +31,12 @@ directive|include
 file|<openssl/rc4.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/evp.h>
+end_include
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -469,10 +475,6 @@ operator|*
 operator|)
 name|keystr
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
 name|strlen
 argument_list|(
 name|keystr
@@ -484,6 +486,8 @@ name|NULL
 argument_list|,
 name|EVP_md5
 argument_list|()
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|OPENSSL_cleanse

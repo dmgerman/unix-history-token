@@ -280,7 +280,7 @@ condition|)
 block|{
 name|X509V3err
 argument_list|(
-name|X509V3_F_S2I_S2I_SKEY_ID
+name|X509V3_F_S2I_SKEY_ID
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
@@ -324,7 +324,7 @@ condition|)
 block|{
 name|X509V3err
 argument_list|(
-name|X509V3_F_S2I_ASN1_SKEY_ID
+name|X509V3_F_S2I_SKEY_ID
 argument_list|,
 name|X509V3_R_NO_PUBLIC_KEY
 argument_list|)
@@ -372,7 +372,7 @@ condition|)
 block|{
 name|X509V3err
 argument_list|(
-name|X509V3_F_S2I_ASN1_SKEY_ID
+name|X509V3_F_S2I_SKEY_ID
 argument_list|,
 name|X509V3_R_NO_PUBLIC_KEY
 argument_list|)
@@ -417,7 +417,7 @@ condition|)
 block|{
 name|X509V3err
 argument_list|(
-name|X509V3_F_S2I_S2I_SKEY_ID
+name|X509V3_F_S2I_SKEY_ID
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)

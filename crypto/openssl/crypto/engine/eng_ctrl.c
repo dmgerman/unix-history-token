@@ -10,25 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<openssl/crypto.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"cryptlib.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"eng_int.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/engine.h>
 end_include
 
 begin_comment
@@ -244,7 +226,9 @@ function_decl|(
 modifier|*
 name|f
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 parameter_list|)
 block|{
 name|int
@@ -677,7 +661,9 @@ function_decl|(
 modifier|*
 name|f
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 parameter_list|)
 block|{
 name|int
@@ -989,7 +975,9 @@ function_decl|(
 modifier|*
 name|f
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 parameter_list|,
 name|int
 name|cmd_optional
@@ -1015,7 +1003,7 @@ condition|)
 block|{
 name|ENGINEerr
 argument_list|(
-name|ENGINE_F_ENGINE_CTRL_CMD_STRING
+name|ENGINE_F_ENGINE_CTRL_CMD
 argument_list|,
 name|ERR_R_PASSED_NULL_PARAMETER
 argument_list|)

@@ -192,6 +192,15 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|gen
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
 operator|!
 name|X509_NAME_set
 argument_list|(

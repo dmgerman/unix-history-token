@@ -75,9 +75,23 @@ end_include
 
 begin_decl_stmt
 name|OPENSSL_DECLARE_EXIT
+ifndef|#
+directive|ifndef
+name|OPENSSL_SYS_NETWARE
 include|#
 directive|include
 file|<signal.h>
+define|#
+directive|define
+name|crypt
+parameter_list|(
+name|c
+parameter_list|,
+name|s
+parameter_list|)
+value|(des_crypt((c),(s)))
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|_IRIX

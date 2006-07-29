@@ -410,6 +410,16 @@ operator|=
 name|i
 expr_stmt|;
 block|}
+name|c
+operator|->
+name|crl
+operator|->
+name|enc
+operator|.
+name|modified
+operator|=
+literal|1
+expr_stmt|;
 return|return
 literal|1
 return|;

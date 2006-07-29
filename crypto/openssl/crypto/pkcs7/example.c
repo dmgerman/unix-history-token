@@ -649,7 +649,7 @@ name|V_ASN1_SEQUENCE
 operator|)
 condition|)
 block|{
-name|ASN1_CTX
+name|ASN1_const_CTX
 name|c
 decl_stmt|;
 name|ASN1_STRING
@@ -809,7 +809,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|asn1_Finish
+name|asn1_const_Finish
 argument_list|(
 operator|&
 name|c
@@ -1563,7 +1563,7 @@ operator|==
 name|V_ASN1_SEQUENCE
 condition|)
 block|{
-name|ASN1_CTX
+name|ASN1_const_CTX
 name|c
 decl_stmt|;
 name|ASN1_STRING
@@ -1723,7 +1723,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|asn1_Finish
+name|asn1_const_Finish
 argument_list|(
 operator|&
 name|c

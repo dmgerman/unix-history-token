@@ -66,7 +66,7 @@ name|void
 modifier|*
 name|p
 parameter_list|,
-name|int
+name|size_t
 name|num
 parameter_list|)
 function_decl|;
@@ -85,7 +85,7 @@ name|void
 modifier|*
 name|p
 parameter_list|,
-name|int
+name|size_t
 name|num
 parameter_list|)
 function_decl|;
@@ -115,6 +115,16 @@ name|__INTEL__
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|B_ENDIAN
+argument_list|)
+end_if
+
 begin_comment
 comment|/*  * *_block_host_order is expected to handle aligned data while  * *_block_data_order - unaligned. As algorithm and host (x86)  * are in this case of the same "endianness" these two are  * otherwise indistinguishable. But normally you don't want to  * call the same function because unaligned access in places  * where alignment is expected is usually a "Bad Thing". Indeed,  * on RISCs you get punished with BUS ERROR signal or *severe*  * performance degradation. Intel CPUs are in turn perfectly  * capable of loading unaligned data without such drastic side  * effect. Yes, they say it's slower than aligned load, but no  * exception is generated and therefore performance degradation  * is *incomparable* with RISCs. What we should weight here is  * costs of unaligned access against costs of aligning data.  * According to my measurements allowing unaligned access results  * in ~9% performance improvement on Pentium II operating at  * 266MHz. I won't be surprised if the difference will be higher  * on faster systems:-)  *  *<appro@fy.chalmers.se>  */
 end_comment
@@ -125,6 +135,11 @@ directive|define
 name|md4_block_data_order
 value|md4_block_host_order
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

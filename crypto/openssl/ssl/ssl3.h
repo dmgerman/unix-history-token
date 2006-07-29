@@ -11,6 +11,10 @@ begin_comment
 comment|/* ====================================================================  * Copyright (c) 1998-2002 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
+begin_comment
+comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  * ECC cipher suite support in OpenSSL originally developed by   * SUN MICROSYSTEMS, INC., and contributed to the OpenSSL project.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -56,6 +60,12 @@ begin_include
 include|#
 directive|include
 file|<openssl/ssl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/pq_compat.h>
 end_include
 
 begin_ifdef
@@ -490,10 +500,21 @@ define|#
 directive|define
 name|SSL3_RT_MAX_PLAIN_LENGTH
 value|16384
+ifdef|#
+directive|ifdef
+name|OPENSSL_NO_COMP
+define|#
+directive|define
+name|SSL3_RT_MAX_COMPRESSED_LENGTH
+value|SSL3_RT_MAX_PLAIN_LENGTH
+else|#
+directive|else
 define|#
 directive|define
 name|SSL3_RT_MAX_COMPRESSED_LENGTH
 value|(1024+SSL3_RT_MAX_PLAIN_LENGTH)
+endif|#
+directive|endif
 define|#
 directive|define
 name|SSL3_RT_MAX_ENCRYPTED_LENGTH
@@ -645,6 +666,17 @@ modifier|*
 name|comp
 decl_stmt|;
 comment|/* only used with decompression - malloc()ed */
+comment|/*r */
+name|unsigned
+name|long
+name|epoch
+decl_stmt|;
+comment|/* epoch number, needed by DTLS1 */
+comment|/*r */
+name|PQ_64BIT
+name|seq_num
+decl_stmt|;
+comment|/* sequence number, needed by DTLS1 */
 block|}
 name|SSL3_RECORD
 typedef|;
@@ -701,6 +733,7 @@ define|#
 directive|define
 name|SSL3_CT_FORTEZZA_DMS
 value|20
+comment|/* SSL3_CT_NUMBER is used to size arrays and it must be large  * enough to contain all of the cert types defined either for  * SSLv3 and TLSv1.  */
 define|#
 directive|define
 name|SSL3_CT_NUMBER
@@ -941,6 +974,16 @@ name|dh
 decl_stmt|;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ECDH
+name|EC_KEY
+modifier|*
+name|ecdh
+decl_stmt|;
+comment|/* holds short lived ECDH key */
+endif|#
+directive|endif
 comment|/* used when SSL_ST_FLUSH_DATA is entered */
 name|int
 name|next_state
@@ -1039,6 +1082,14 @@ define|#
 directive|define
 name|SSL3_ST_CR_SRVR_HELLO_B
 value|(0x121|SSL_ST_CONNECT)
+define|#
+directive|define
+name|DTLS1_ST_CR_HELLO_VERIFY_REQUEST_A
+value|(0x126|SSL_ST_CONNECT)
+define|#
+directive|define
+name|DTLS1_ST_CR_HELLO_VERIFY_REQUEST_B
+value|(0x127|SSL_ST_CONNECT)
 define|#
 directive|define
 name|SSL3_ST_CR_CERT_A
@@ -1158,6 +1209,14 @@ directive|define
 name|SSL3_ST_SR_CLNT_HELLO_C
 value|(0x112|SSL_ST_ACCEPT)
 comment|/* write to client */
+define|#
+directive|define
+name|DTLS1_ST_SW_HELLO_VERIFY_REQUEST_A
+value|(0x113|SSL_ST_ACCEPT)
+define|#
+directive|define
+name|DTLS1_ST_SW_HELLO_VERIFY_REQUEST_B
+value|(0x114|SSL_ST_ACCEPT)
 define|#
 directive|define
 name|SSL3_ST_SW_HELLO_REQ_A
@@ -1308,6 +1367,10 @@ define|#
 directive|define
 name|SSL3_MT_FINISHED
 value|20
+define|#
+directive|define
+name|DTLS1_MT_HELLO_VERIFY_REQUEST
+value|3
 define|#
 directive|define
 name|SSL3_MT_CCS

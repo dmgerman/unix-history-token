@@ -21,6 +21,29 @@ directive|include
 file|<openssl/stack.h>
 end_include
 
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|openssl_fptr
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|openssl_fcast
+parameter_list|(
+name|f
+parameter_list|)
+value|((openssl_fptr)f)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -85,7 +108,7 @@ parameter_list|,
 name|cmp
 parameter_list|)
 define|\
-value|((STACK_OF(type) * (*)(int (*)(const type * const *, const type * const *)))sk_new)(cmp)
+value|((STACK_OF(type) * (*)(int (*)(const type * const *, const type * const *)))openssl_fcast(sk_new))(cmp)
 end_define
 
 begin_define
@@ -96,7 +119,7 @@ parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|((STACK_OF(type) * (*)(void))sk_new_null)()
+value|((STACK_OF(type) * (*)(void))openssl_fcast(sk_new_null))()
 end_define
 
 begin_define
@@ -109,7 +132,7 @@ parameter_list|,
 name|st
 parameter_list|)
 define|\
-value|((void (*)(STACK_OF(type) *))sk_free)(st)
+value|((void (*)(STACK_OF(type) *))openssl_fcast(sk_free))(st)
 end_define
 
 begin_define
@@ -122,7 +145,7 @@ parameter_list|,
 name|st
 parameter_list|)
 define|\
-value|((int (*)(const STACK_OF(type) *))sk_num)(st)
+value|((int (*)(const STACK_OF(type) *))openssl_fcast(sk_num))(st)
 end_define
 
 begin_define
@@ -137,7 +160,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|((type * (*)(const STACK_OF(type) *, int))sk_value)(st, i)
+value|((type * (*)(const STACK_OF(type) *, int))openssl_fcast(sk_value))(st, i)
 end_define
 
 begin_define
@@ -154,7 +177,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|((type * (*)(STACK_OF(type) *, int, type *))sk_set)(st, i, val)
+value|((type * (*)(STACK_OF(type) *, int, type *))openssl_fcast(sk_set))(st, i, val)
 end_define
 
 begin_define
@@ -167,7 +190,7 @@ parameter_list|,
 name|st
 parameter_list|)
 define|\
-value|((void (*)(STACK_OF(type) *))sk_zero)(st)
+value|((void (*)(STACK_OF(type) *))openssl_fcast(sk_zero))(st)
 end_define
 
 begin_define
@@ -182,7 +205,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|((int (*)(STACK_OF(type) *, type *))sk_push)(st, val)
+value|((int (*)(STACK_OF(type) *, type *))openssl_fcast(sk_push))(st, val)
 end_define
 
 begin_define
@@ -197,7 +220,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|((int (*)(STACK_OF(type) *, type *))sk_unshift)(st, val)
+value|((int (*)(STACK_OF(type) *, type *))openssl_fcast(sk_unshift))(st, val)
 end_define
 
 begin_define
@@ -212,7 +235,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|((int (*)(STACK_OF(type) *, type *))sk_find)(st, val)
+value|((int (*)(STACK_OF(type) *, type *))openssl_fcast(sk_find))(st, val)
 end_define
 
 begin_define
@@ -227,7 +250,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|((type * (*)(STACK_OF(type) *, int))sk_delete)(st, i)
+value|((type * (*)(STACK_OF(type) *, int))openssl_fcast(sk_delete))(st, i)
 end_define
 
 begin_define
@@ -242,7 +265,7 @@ parameter_list|,
 name|ptr
 parameter_list|)
 define|\
-value|((type * (*)(STACK_OF(type) *, type *))sk_delete_ptr)(st, ptr)
+value|((type * (*)(STACK_OF(type) *, type *))openssl_fcast(sk_delete_ptr))(st, ptr)
 end_define
 
 begin_define
@@ -259,7 +282,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|((int (*)(STACK_OF(type) *, type *, int))sk_insert)(st, val, i)
+value|((int (*)(STACK_OF(type) *, type *, int))openssl_fcast(sk_insert))(st, val, i)
 end_define
 
 begin_define
@@ -274,7 +297,7 @@ parameter_list|,
 name|cmp
 parameter_list|)
 define|\
-value|((int (*(*)(STACK_OF(type) *, int (*)(const type * const *, const type * const *))) \ 	  (const type * const *, const type * const *))sk_set_cmp_func)\ 	(st, cmp)
+value|((int (*(*)(STACK_OF(type) *, int (*)(const type * const *, const type * const *))) \ 	  (const type * const *, const type * const *))openssl_fcast(sk_set_cmp_func))\ 	(st, cmp)
 end_define
 
 begin_define
@@ -287,7 +310,7 @@ parameter_list|,
 name|st
 parameter_list|)
 define|\
-value|((STACK_OF(type) *(*)(STACK_OF(type) *))sk_dup)(st)
+value|((STACK_OF(type) *(*)(STACK_OF(type) *))openssl_fcast(sk_dup))(st)
 end_define
 
 begin_define
@@ -302,7 +325,7 @@ parameter_list|,
 name|free_func
 parameter_list|)
 define|\
-value|((void (*)(STACK_OF(type) *, void (*)(type *)))sk_pop_free)\ 	(st, free_func)
+value|((void (*)(STACK_OF(type) *, void (*)(type *)))openssl_fcast(sk_pop_free))\ 	(st, free_func)
 end_define
 
 begin_define
@@ -315,7 +338,7 @@ parameter_list|,
 name|st
 parameter_list|)
 define|\
-value|((type * (*)(STACK_OF(type) *))sk_shift)(st)
+value|((type * (*)(STACK_OF(type) *))openssl_fcast(sk_shift))(st)
 end_define
 
 begin_define
@@ -328,7 +351,7 @@ parameter_list|,
 name|st
 parameter_list|)
 define|\
-value|((type * (*)(STACK_OF(type) *))sk_pop)(st)
+value|((type * (*)(STACK_OF(type) *))openssl_fcast(sk_pop))(st)
 end_define
 
 begin_define
@@ -341,7 +364,7 @@ parameter_list|,
 name|st
 parameter_list|)
 define|\
-value|((void (*)(STACK_OF(type) *))sk_sort)(st)
+value|((void (*)(STACK_OF(type) *))openssl_fcast(sk_sort))(st)
 end_define
 
 begin_define
@@ -354,7 +377,7 @@ parameter_list|,
 name|st
 parameter_list|)
 define|\
-value|((int (*)(const STACK_OF(type) *))sk_is_sorted)(st)
+value|((int (*)(const STACK_OF(type) *))openssl_fcast(sk_is_sorted))(st)
 end_define
 
 begin_define
@@ -379,7 +402,7 @@ parameter_list|,
 name|ex_class
 parameter_list|)
 define|\
-value|((STACK_OF(type) * (*) (STACK_OF(type) **,unsigned char **, long , \                                        type *(*)(type **, unsigned char **,long), \                                        void (*)(type *), int ,int )) d2i_ASN1_SET) \ 						(st,pp,length, d2i_func, free_func, ex_tag,ex_class)
+value|((STACK_OF(type) * (*) (STACK_OF(type) **,const unsigned char **, long , \                          type *(*)(type **, const unsigned char **,long), \                                 void (*)(type *), int ,int )) openssl_fcast(d2i_ASN1_SET)) \ 			(st,pp,length, d2i_func, free_func, ex_tag,ex_class)
 end_define
 
 begin_define
@@ -402,7 +425,7 @@ parameter_list|,
 name|is_set
 parameter_list|)
 define|\
-value|((int (*)(STACK_OF(type) *,unsigned char **, \                            int (*)(type *,unsigned char **), int , int , int)) i2d_ASN1_SET) \ 						(st,pp,i2d_func,ex_tag,ex_class,is_set)
+value|((int (*)(STACK_OF(type) *,unsigned char **, \         int (*)(type *,unsigned char **), int , int , int)) openssl_fcast(i2d_ASN1_SET)) \ 						(st,pp,i2d_func,ex_tag,ex_class,is_set)
 end_define
 
 begin_define
@@ -421,7 +444,7 @@ parameter_list|,
 name|len
 parameter_list|)
 define|\
-value|((unsigned char *(*)(STACK_OF(type) *, \                                     int (*)(type *,unsigned char **), unsigned char **,int *)) ASN1_seq_pack) \ 				(st, i2d_func, buf, len)
+value|((unsigned char *(*)(STACK_OF(type) *, \         int (*)(type *,unsigned char **), unsigned char **,int *)) openssl_fcast(ASN1_seq_pack)) \ 				(st, i2d_func, buf, len)
 end_define
 
 begin_define
@@ -440,7 +463,7 @@ parameter_list|,
 name|free_func
 parameter_list|)
 define|\
-value|((STACK_OF(type) * (*)(unsigned char *,int, \                                        type *(*)(type **,unsigned char **, long), \                                        void (*)(type *)))ASN1_seq_unpack) \ 					(buf,len,d2i_func, free_func)
+value|((STACK_OF(type) * (*)(const unsigned char *,int, \                               type *(*)(type **,const unsigned char **, long), \                               void (*)(type *)))openssl_fcast(ASN1_seq_unpack)) \ 					(buf,len,d2i_func, free_func)
 end_define
 
 begin_define
@@ -465,7 +488,7 @@ parameter_list|,
 name|seq
 parameter_list|)
 define|\
-value|((STACK_OF(type) * (*)(X509_ALGOR *, \                                 type *(*)(type **, unsigned char **, long), void (*)(type *), \                                 const char *, int, \                                 ASN1_STRING *, int))PKCS12_decrypt_d2i) \ 				(algor,d2i_func,free_func,pass,passlen,oct,seq)
+value|((STACK_OF(type) * (*)(X509_ALGOR *, \             		type *(*)(type **, const unsigned char **, long), \ 				void (*)(type *), \                                 const char *, int, \                                 ASN1_STRING *, int))PKCS12_decrypt_d2i) \ 				(algor,d2i_func,free_func,pass,passlen,oct,seq)
 end_define
 
 begin_else
@@ -826,7 +849,7 @@ parameter_list|,
 name|ex_class
 parameter_list|)
 define|\
-value|d2i_ASN1_SET(st,pp,length, (char *(*)())d2i_func, (void (*)(void *))free_func, ex_tag,ex_class)
+value|d2i_ASN1_SET(st,pp,length, (void *(*)(void ** ,const unsigned char ** ,long))d2i_func, (void (*)(void *))free_func, ex_tag,ex_class)
 end_define
 
 begin_define
@@ -849,7 +872,7 @@ parameter_list|,
 name|is_set
 parameter_list|)
 define|\
-value|i2d_ASN1_SET(st,pp,i2d_func,ex_tag,ex_class,is_set)
+value|i2d_ASN1_SET(st,pp,(int (*)(void *, unsigned char **))i2d_func,ex_tag,ex_class,is_set)
 end_define
 
 begin_define
@@ -868,7 +891,7 @@ parameter_list|,
 name|len
 parameter_list|)
 define|\
-value|ASN1_seq_pack(st, i2d_func, buf, len)
+value|ASN1_seq_pack(st, (int (*)(void *, unsigned char **))i2d_func, buf, len)
 end_define
 
 begin_define
@@ -887,7 +910,7 @@ parameter_list|,
 name|free_func
 parameter_list|)
 define|\
-value|ASN1_seq_unpack(buf,len,(char *(*)())d2i_func, (void(*)(void *))free_func)
+value|ASN1_seq_unpack(buf,len,(void *(*)(void **,const unsigned char **,long))d2i_func, (void(*)(void *))free_func)
 end_define
 
 begin_define
@@ -1032,6 +1055,18 @@ parameter_list|,
 name|val
 parameter_list|)
 value|SKM_sk_find(ACCESS_DESCRIPTION, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_ACCESS_DESCRIPTION_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(ACCESS_DESCRIPTION, (st), (val))
 end_define
 
 begin_define
@@ -1259,6 +1294,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_ASN1_GENERALSTRING_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(ASN1_GENERALSTRING, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_ASN1_GENERALSTRING_delete
 parameter_list|(
 name|st
@@ -1476,6 +1523,18 @@ parameter_list|,
 name|val
 parameter_list|)
 value|SKM_sk_find(ASN1_INTEGER, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_ASN1_INTEGER_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(ASN1_INTEGER, (st), (val))
 end_define
 
 begin_define
@@ -1703,6 +1762,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_ASN1_OBJECT_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(ASN1_OBJECT, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_ASN1_OBJECT_delete
 parameter_list|(
 name|st
@@ -1920,6 +1991,18 @@ parameter_list|,
 name|val
 parameter_list|)
 value|SKM_sk_find(ASN1_STRING_TABLE, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_ASN1_STRING_TABLE_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(ASN1_STRING_TABLE, (st), (val))
 end_define
 
 begin_define
@@ -2147,6 +2230,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_ASN1_TYPE_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(ASN1_TYPE, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_ASN1_TYPE_delete
 parameter_list|(
 name|st
@@ -2364,6 +2459,18 @@ parameter_list|,
 name|val
 parameter_list|)
 value|SKM_sk_find(ASN1_VALUE, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_ASN1_VALUE_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(ASN1_VALUE, (st), (val))
 end_define
 
 begin_define
@@ -2591,6 +2698,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_BIO_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(BIO, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_BIO_delete
 parameter_list|(
 name|st
@@ -2808,6 +2927,18 @@ parameter_list|,
 name|val
 parameter_list|)
 value|SKM_sk_find(CONF_IMODULE, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CONF_IMODULE_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(CONF_IMODULE, (st), (val))
 end_define
 
 begin_define
@@ -3035,6 +3166,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_CONF_MODULE_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(CONF_MODULE, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_CONF_MODULE_delete
 parameter_list|(
 name|st
@@ -3252,6 +3395,18 @@ parameter_list|,
 name|val
 parameter_list|)
 value|SKM_sk_find(CONF_VALUE, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CONF_VALUE_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(CONF_VALUE, (st), (val))
 end_define
 
 begin_define
@@ -3479,6 +3634,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_CRYPTO_EX_DATA_FUNCS_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(CRYPTO_EX_DATA_FUNCS, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_CRYPTO_EX_DATA_FUNCS_delete
 parameter_list|(
 name|st
@@ -3696,6 +3863,18 @@ parameter_list|,
 name|val
 parameter_list|)
 value|SKM_sk_find(CRYPTO_dynlock, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CRYPTO_dynlock_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(CRYPTO_dynlock, (st), (val))
 end_define
 
 begin_define
@@ -3923,6 +4102,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_DIST_POINT_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(DIST_POINT, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_DIST_POINT_delete
 parameter_list|(
 name|st
@@ -4140,6 +4331,18 @@ parameter_list|,
 name|val
 parameter_list|)
 value|SKM_sk_find(ENGINE, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_ENGINE_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(ENGINE, (st), (val))
 end_define
 
 begin_define
@@ -4367,6 +4570,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_ENGINE_CLEANUP_ITEM_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(ENGINE_CLEANUP_ITEM, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_ENGINE_CLEANUP_ITEM_delete
 parameter_list|(
 name|st
@@ -4589,6 +4804,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_GENERAL_NAME_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(GENERAL_NAME, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_GENERAL_NAME_delete
 parameter_list|(
 name|st
@@ -4701,6 +4928,240 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_GENERAL_SUBTREE_new
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_new(GENERAL_SUBTREE, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_SUBTREE_new_null
+parameter_list|()
+value|SKM_sk_new_null(GENERAL_SUBTREE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_SUBTREE_free
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_free(GENERAL_SUBTREE, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_SUBTREE_num
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_num(GENERAL_SUBTREE, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_SUBTREE_value
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_value(GENERAL_SUBTREE, (st), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_SUBTREE_set
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_set(GENERAL_SUBTREE, (st), (i), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_SUBTREE_zero
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_zero(GENERAL_SUBTREE, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_SUBTREE_push
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_push(GENERAL_SUBTREE, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_SUBTREE_unshift
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_unshift(GENERAL_SUBTREE, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_SUBTREE_find
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find(GENERAL_SUBTREE, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_SUBTREE_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(GENERAL_SUBTREE, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_SUBTREE_delete
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_delete(GENERAL_SUBTREE, (st), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_SUBTREE_delete_ptr
+parameter_list|(
+name|st
+parameter_list|,
+name|ptr
+parameter_list|)
+value|SKM_sk_delete_ptr(GENERAL_SUBTREE, (st), (ptr))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_SUBTREE_insert
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_insert(GENERAL_SUBTREE, (st), (val), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_SUBTREE_set_cmp_func
+parameter_list|(
+name|st
+parameter_list|,
+name|cmp
+parameter_list|)
+value|SKM_sk_set_cmp_func(GENERAL_SUBTREE, (st), (cmp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_SUBTREE_dup
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_dup(GENERAL_SUBTREE, st)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_SUBTREE_pop_free
+parameter_list|(
+name|st
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_pop_free(GENERAL_SUBTREE, (st), (free_func))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_SUBTREE_shift
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_shift(GENERAL_SUBTREE, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_SUBTREE_pop
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_pop(GENERAL_SUBTREE, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_SUBTREE_sort
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_sort(GENERAL_SUBTREE, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_SUBTREE_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(GENERAL_SUBTREE, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_KRB5_APREQBODY_new
 parameter_list|(
 name|st
@@ -4806,6 +5267,18 @@ parameter_list|,
 name|val
 parameter_list|)
 value|SKM_sk_find(KRB5_APREQBODY, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_KRB5_APREQBODY_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(KRB5_APREQBODY, (st), (val))
 end_define
 
 begin_define
@@ -5033,6 +5506,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_KRB5_AUTHDATA_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(KRB5_AUTHDATA, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_KRB5_AUTHDATA_delete
 parameter_list|(
 name|st
@@ -5250,6 +5735,18 @@ parameter_list|,
 name|val
 parameter_list|)
 value|SKM_sk_find(KRB5_AUTHENTBODY, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_KRB5_AUTHENTBODY_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(KRB5_AUTHENTBODY, (st), (val))
 end_define
 
 begin_define
@@ -5477,6 +5974,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_KRB5_CHECKSUM_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(KRB5_CHECKSUM, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_KRB5_CHECKSUM_delete
 parameter_list|(
 name|st
@@ -5694,6 +6203,18 @@ parameter_list|,
 name|val
 parameter_list|)
 value|SKM_sk_find(KRB5_ENCDATA, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_KRB5_ENCDATA_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(KRB5_ENCDATA, (st), (val))
 end_define
 
 begin_define
@@ -5921,6 +6442,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_KRB5_ENCKEY_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(KRB5_ENCKEY, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_KRB5_ENCKEY_delete
 parameter_list|(
 name|st
@@ -6138,6 +6671,18 @@ parameter_list|,
 name|val
 parameter_list|)
 value|SKM_sk_find(KRB5_PRINCNAME, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_KRB5_PRINCNAME_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(KRB5_PRINCNAME, (st), (val))
 end_define
 
 begin_define
@@ -6365,6 +6910,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_KRB5_TKTBODY_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(KRB5_TKTBODY, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_KRB5_TKTBODY_delete
 parameter_list|(
 name|st
@@ -6582,6 +7139,18 @@ parameter_list|,
 name|val
 parameter_list|)
 value|SKM_sk_find(MIME_HEADER, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_MIME_HEADER_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(MIME_HEADER, (st), (val))
 end_define
 
 begin_define
@@ -6809,6 +7378,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_MIME_PARAM_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(MIME_PARAM, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_MIME_PARAM_delete
 parameter_list|(
 name|st
@@ -7026,6 +7607,18 @@ parameter_list|,
 name|val
 parameter_list|)
 value|SKM_sk_find(NAME_FUNCS, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_NAME_FUNCS_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(NAME_FUNCS, (st), (val))
 end_define
 
 begin_define
@@ -7253,6 +7846,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_OCSP_CERTID_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(OCSP_CERTID, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_OCSP_CERTID_delete
 parameter_list|(
 name|st
@@ -7470,6 +8075,18 @@ parameter_list|,
 name|val
 parameter_list|)
 value|SKM_sk_find(OCSP_ONEREQ, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_OCSP_ONEREQ_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(OCSP_ONEREQ, (st), (val))
 end_define
 
 begin_define
@@ -7697,6 +8314,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_OCSP_SINGLERESP_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(OCSP_SINGLERESP, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_OCSP_SINGLERESP_delete
 parameter_list|(
 name|st
@@ -7914,6 +8543,18 @@ parameter_list|,
 name|val
 parameter_list|)
 value|SKM_sk_find(PKCS12_SAFEBAG, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_PKCS12_SAFEBAG_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(PKCS12_SAFEBAG, (st), (val))
 end_define
 
 begin_define
@@ -8141,6 +8782,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_PKCS7_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(PKCS7, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_PKCS7_delete
 parameter_list|(
 name|st
@@ -8358,6 +9011,18 @@ parameter_list|,
 name|val
 parameter_list|)
 value|SKM_sk_find(PKCS7_RECIP_INFO, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_PKCS7_RECIP_INFO_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(PKCS7_RECIP_INFO, (st), (val))
 end_define
 
 begin_define
@@ -8585,6 +9250,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_PKCS7_SIGNER_INFO_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(PKCS7_SIGNER_INFO, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_PKCS7_SIGNER_INFO_delete
 parameter_list|(
 name|st
@@ -8802,6 +9479,18 @@ parameter_list|,
 name|val
 parameter_list|)
 value|SKM_sk_find(POLICYINFO, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_POLICYINFO_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(POLICYINFO, (st), (val))
 end_define
 
 begin_define
@@ -9029,6 +9718,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_POLICYQUALINFO_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(POLICYQUALINFO, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_POLICYQUALINFO_delete
 parameter_list|(
 name|st
@@ -9141,6 +9842,240 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_POLICY_MAPPING_new
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_new(POLICY_MAPPING, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_POLICY_MAPPING_new_null
+parameter_list|()
+value|SKM_sk_new_null(POLICY_MAPPING)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_POLICY_MAPPING_free
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_free(POLICY_MAPPING, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_POLICY_MAPPING_num
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_num(POLICY_MAPPING, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_POLICY_MAPPING_value
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_value(POLICY_MAPPING, (st), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_POLICY_MAPPING_set
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_set(POLICY_MAPPING, (st), (i), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_POLICY_MAPPING_zero
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_zero(POLICY_MAPPING, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_POLICY_MAPPING_push
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_push(POLICY_MAPPING, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_POLICY_MAPPING_unshift
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_unshift(POLICY_MAPPING, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_POLICY_MAPPING_find
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find(POLICY_MAPPING, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_POLICY_MAPPING_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(POLICY_MAPPING, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_POLICY_MAPPING_delete
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_delete(POLICY_MAPPING, (st), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_POLICY_MAPPING_delete_ptr
+parameter_list|(
+name|st
+parameter_list|,
+name|ptr
+parameter_list|)
+value|SKM_sk_delete_ptr(POLICY_MAPPING, (st), (ptr))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_POLICY_MAPPING_insert
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_insert(POLICY_MAPPING, (st), (val), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_POLICY_MAPPING_set_cmp_func
+parameter_list|(
+name|st
+parameter_list|,
+name|cmp
+parameter_list|)
+value|SKM_sk_set_cmp_func(POLICY_MAPPING, (st), (cmp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_POLICY_MAPPING_dup
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_dup(POLICY_MAPPING, st)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_POLICY_MAPPING_pop_free
+parameter_list|(
+name|st
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_pop_free(POLICY_MAPPING, (st), (free_func))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_POLICY_MAPPING_shift
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_shift(POLICY_MAPPING, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_POLICY_MAPPING_pop
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_pop(POLICY_MAPPING, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_POLICY_MAPPING_sort
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_sort(POLICY_MAPPING, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_POLICY_MAPPING_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(POLICY_MAPPING, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_SSL_CIPHER_new
 parameter_list|(
 name|st
@@ -9246,6 +10181,18 @@ parameter_list|,
 name|val
 parameter_list|)
 value|SKM_sk_find(SSL_CIPHER, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_SSL_CIPHER_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(SSL_CIPHER, (st), (val))
 end_define
 
 begin_define
@@ -9473,6 +10420,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_SSL_COMP_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(SSL_COMP, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_SSL_COMP_delete
 parameter_list|(
 name|st
@@ -9585,6 +10544,240 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_STORE_OBJECT_new
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_new(STORE_OBJECT, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_STORE_OBJECT_new_null
+parameter_list|()
+value|SKM_sk_new_null(STORE_OBJECT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_STORE_OBJECT_free
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_free(STORE_OBJECT, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_STORE_OBJECT_num
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_num(STORE_OBJECT, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_STORE_OBJECT_value
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_value(STORE_OBJECT, (st), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_STORE_OBJECT_set
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_set(STORE_OBJECT, (st), (i), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_STORE_OBJECT_zero
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_zero(STORE_OBJECT, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_STORE_OBJECT_push
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_push(STORE_OBJECT, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_STORE_OBJECT_unshift
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_unshift(STORE_OBJECT, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_STORE_OBJECT_find
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find(STORE_OBJECT, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_STORE_OBJECT_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(STORE_OBJECT, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_STORE_OBJECT_delete
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_delete(STORE_OBJECT, (st), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_STORE_OBJECT_delete_ptr
+parameter_list|(
+name|st
+parameter_list|,
+name|ptr
+parameter_list|)
+value|SKM_sk_delete_ptr(STORE_OBJECT, (st), (ptr))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_STORE_OBJECT_insert
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_insert(STORE_OBJECT, (st), (val), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_STORE_OBJECT_set_cmp_func
+parameter_list|(
+name|st
+parameter_list|,
+name|cmp
+parameter_list|)
+value|SKM_sk_set_cmp_func(STORE_OBJECT, (st), (cmp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_STORE_OBJECT_dup
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_dup(STORE_OBJECT, st)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_STORE_OBJECT_pop_free
+parameter_list|(
+name|st
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_pop_free(STORE_OBJECT, (st), (free_func))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_STORE_OBJECT_shift
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_shift(STORE_OBJECT, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_STORE_OBJECT_pop
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_pop(STORE_OBJECT, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_STORE_OBJECT_sort
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_sort(STORE_OBJECT, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_STORE_OBJECT_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(STORE_OBJECT, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_SXNETID_new
 parameter_list|(
 name|st
@@ -9690,6 +10883,18 @@ parameter_list|,
 name|val
 parameter_list|)
 value|SKM_sk_find(SXNETID, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_SXNETID_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(SXNETID, (st), (val))
 end_define
 
 begin_define
@@ -9917,6 +11122,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_UI_STRING_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(UI_STRING, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_UI_STRING_delete
 parameter_list|(
 name|st
@@ -10134,6 +11351,18 @@ parameter_list|,
 name|val
 parameter_list|)
 value|SKM_sk_find(X509, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(X509, (st), (val))
 end_define
 
 begin_define
@@ -10361,6 +11590,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_X509V3_EXT_METHOD_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(X509V3_EXT_METHOD, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_X509V3_EXT_METHOD_delete
 parameter_list|(
 name|st
@@ -10578,6 +11819,18 @@ parameter_list|,
 name|val
 parameter_list|)
 value|SKM_sk_find(X509_ALGOR, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_ALGOR_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(X509_ALGOR, (st), (val))
 end_define
 
 begin_define
@@ -10805,6 +12058,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_X509_ATTRIBUTE_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(X509_ATTRIBUTE, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_X509_ATTRIBUTE_delete
 parameter_list|(
 name|st
@@ -11022,6 +12287,18 @@ parameter_list|,
 name|val
 parameter_list|)
 value|SKM_sk_find(X509_CRL, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_CRL_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(X509_CRL, (st), (val))
 end_define
 
 begin_define
@@ -11249,6 +12526,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_X509_EXTENSION_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(X509_EXTENSION, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_X509_EXTENSION_delete
 parameter_list|(
 name|st
@@ -11466,6 +12755,18 @@ parameter_list|,
 name|val
 parameter_list|)
 value|SKM_sk_find(X509_INFO, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_INFO_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(X509_INFO, (st), (val))
 end_define
 
 begin_define
@@ -11693,6 +12994,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_X509_LOOKUP_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(X509_LOOKUP, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_X509_LOOKUP_delete
 parameter_list|(
 name|st
@@ -11910,6 +13223,18 @@ parameter_list|,
 name|val
 parameter_list|)
 value|SKM_sk_find(X509_NAME, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_NAME_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(X509_NAME, (st), (val))
 end_define
 
 begin_define
@@ -12137,6 +13462,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_X509_NAME_ENTRY_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(X509_NAME_ENTRY, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_X509_NAME_ENTRY_delete
 parameter_list|(
 name|st
@@ -12359,6 +13696,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_X509_OBJECT_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(X509_OBJECT, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_X509_OBJECT_delete
 parameter_list|(
 name|st
@@ -12471,6 +13820,708 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_X509_POLICY_DATA_new
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_new(X509_POLICY_DATA, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_DATA_new_null
+parameter_list|()
+value|SKM_sk_new_null(X509_POLICY_DATA)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_DATA_free
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_free(X509_POLICY_DATA, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_DATA_num
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_num(X509_POLICY_DATA, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_DATA_value
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_value(X509_POLICY_DATA, (st), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_DATA_set
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_set(X509_POLICY_DATA, (st), (i), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_DATA_zero
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_zero(X509_POLICY_DATA, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_DATA_push
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_push(X509_POLICY_DATA, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_DATA_unshift
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_unshift(X509_POLICY_DATA, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_DATA_find
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find(X509_POLICY_DATA, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_DATA_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(X509_POLICY_DATA, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_DATA_delete
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_delete(X509_POLICY_DATA, (st), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_DATA_delete_ptr
+parameter_list|(
+name|st
+parameter_list|,
+name|ptr
+parameter_list|)
+value|SKM_sk_delete_ptr(X509_POLICY_DATA, (st), (ptr))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_DATA_insert
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_insert(X509_POLICY_DATA, (st), (val), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_DATA_set_cmp_func
+parameter_list|(
+name|st
+parameter_list|,
+name|cmp
+parameter_list|)
+value|SKM_sk_set_cmp_func(X509_POLICY_DATA, (st), (cmp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_DATA_dup
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_dup(X509_POLICY_DATA, st)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_DATA_pop_free
+parameter_list|(
+name|st
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_pop_free(X509_POLICY_DATA, (st), (free_func))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_DATA_shift
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_shift(X509_POLICY_DATA, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_DATA_pop
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_pop(X509_POLICY_DATA, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_DATA_sort
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_sort(X509_POLICY_DATA, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_DATA_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(X509_POLICY_DATA, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_NODE_new
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_new(X509_POLICY_NODE, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_NODE_new_null
+parameter_list|()
+value|SKM_sk_new_null(X509_POLICY_NODE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_NODE_free
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_free(X509_POLICY_NODE, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_NODE_num
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_num(X509_POLICY_NODE, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_NODE_value
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_value(X509_POLICY_NODE, (st), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_NODE_set
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_set(X509_POLICY_NODE, (st), (i), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_NODE_zero
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_zero(X509_POLICY_NODE, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_NODE_push
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_push(X509_POLICY_NODE, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_NODE_unshift
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_unshift(X509_POLICY_NODE, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_NODE_find
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find(X509_POLICY_NODE, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_NODE_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(X509_POLICY_NODE, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_NODE_delete
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_delete(X509_POLICY_NODE, (st), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_NODE_delete_ptr
+parameter_list|(
+name|st
+parameter_list|,
+name|ptr
+parameter_list|)
+value|SKM_sk_delete_ptr(X509_POLICY_NODE, (st), (ptr))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_NODE_insert
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_insert(X509_POLICY_NODE, (st), (val), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_NODE_set_cmp_func
+parameter_list|(
+name|st
+parameter_list|,
+name|cmp
+parameter_list|)
+value|SKM_sk_set_cmp_func(X509_POLICY_NODE, (st), (cmp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_NODE_dup
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_dup(X509_POLICY_NODE, st)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_NODE_pop_free
+parameter_list|(
+name|st
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_pop_free(X509_POLICY_NODE, (st), (free_func))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_NODE_shift
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_shift(X509_POLICY_NODE, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_NODE_pop
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_pop(X509_POLICY_NODE, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_NODE_sort
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_sort(X509_POLICY_NODE, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_NODE_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(X509_POLICY_NODE, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_REF_new
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_new(X509_POLICY_REF, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_REF_new_null
+parameter_list|()
+value|SKM_sk_new_null(X509_POLICY_REF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_REF_free
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_free(X509_POLICY_REF, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_REF_num
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_num(X509_POLICY_REF, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_REF_value
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_value(X509_POLICY_REF, (st), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_REF_set
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_set(X509_POLICY_REF, (st), (i), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_REF_zero
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_zero(X509_POLICY_REF, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_REF_push
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_push(X509_POLICY_REF, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_REF_unshift
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_unshift(X509_POLICY_REF, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_REF_find
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find(X509_POLICY_REF, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_REF_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(X509_POLICY_REF, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_REF_delete
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_delete(X509_POLICY_REF, (st), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_REF_delete_ptr
+parameter_list|(
+name|st
+parameter_list|,
+name|ptr
+parameter_list|)
+value|SKM_sk_delete_ptr(X509_POLICY_REF, (st), (ptr))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_REF_insert
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_insert(X509_POLICY_REF, (st), (val), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_REF_set_cmp_func
+parameter_list|(
+name|st
+parameter_list|,
+name|cmp
+parameter_list|)
+value|SKM_sk_set_cmp_func(X509_POLICY_REF, (st), (cmp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_REF_dup
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_dup(X509_POLICY_REF, st)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_REF_pop_free
+parameter_list|(
+name|st
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_pop_free(X509_POLICY_REF, (st), (free_func))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_REF_shift
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_shift(X509_POLICY_REF, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_REF_pop
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_pop(X509_POLICY_REF, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_REF_sort
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_sort(X509_POLICY_REF, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_POLICY_REF_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(X509_POLICY_REF, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_X509_PURPOSE_new
 parameter_list|(
 name|st
@@ -12576,6 +14627,18 @@ parameter_list|,
 name|val
 parameter_list|)
 value|SKM_sk_find(X509_PURPOSE, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_PURPOSE_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(X509_PURPOSE, (st), (val))
 end_define
 
 begin_define
@@ -12803,6 +14866,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_X509_REVOKED_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(X509_REVOKED, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_X509_REVOKED_delete
 parameter_list|(
 name|st
@@ -13025,6 +15100,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_X509_TRUST_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(X509_TRUST, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_X509_TRUST_delete
 parameter_list|(
 name|st
@@ -13132,6 +15219,240 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_is_sorted(X509_TRUST, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_VERIFY_PARAM_new
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_new(X509_VERIFY_PARAM, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_VERIFY_PARAM_new_null
+parameter_list|()
+value|SKM_sk_new_null(X509_VERIFY_PARAM)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_VERIFY_PARAM_free
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_free(X509_VERIFY_PARAM, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_VERIFY_PARAM_num
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_num(X509_VERIFY_PARAM, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_VERIFY_PARAM_value
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_value(X509_VERIFY_PARAM, (st), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_VERIFY_PARAM_set
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_set(X509_VERIFY_PARAM, (st), (i), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_VERIFY_PARAM_zero
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_zero(X509_VERIFY_PARAM, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_VERIFY_PARAM_push
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_push(X509_VERIFY_PARAM, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_VERIFY_PARAM_unshift
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_unshift(X509_VERIFY_PARAM, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_VERIFY_PARAM_find
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find(X509_VERIFY_PARAM, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_VERIFY_PARAM_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(X509_VERIFY_PARAM, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_VERIFY_PARAM_delete
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_delete(X509_VERIFY_PARAM, (st), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_VERIFY_PARAM_delete_ptr
+parameter_list|(
+name|st
+parameter_list|,
+name|ptr
+parameter_list|)
+value|SKM_sk_delete_ptr(X509_VERIFY_PARAM, (st), (ptr))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_VERIFY_PARAM_insert
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_insert(X509_VERIFY_PARAM, (st), (val), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_VERIFY_PARAM_set_cmp_func
+parameter_list|(
+name|st
+parameter_list|,
+name|cmp
+parameter_list|)
+value|SKM_sk_set_cmp_func(X509_VERIFY_PARAM, (st), (cmp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_VERIFY_PARAM_dup
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_dup(X509_VERIFY_PARAM, st)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_VERIFY_PARAM_pop_free
+parameter_list|(
+name|st
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_pop_free(X509_VERIFY_PARAM, (st), (free_func))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_VERIFY_PARAM_shift
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_shift(X509_VERIFY_PARAM, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_VERIFY_PARAM_pop
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_pop(X509_VERIFY_PARAM, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_VERIFY_PARAM_sort
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_sort(X509_VERIFY_PARAM, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_X509_VERIFY_PARAM_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(X509_VERIFY_PARAM, (st))
 end_define
 
 begin_define

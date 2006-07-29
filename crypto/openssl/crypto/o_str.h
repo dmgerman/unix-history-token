@@ -70,6 +70,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|OPENSSL_memcmp
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|p1
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|p2
+parameter_list|,
+name|size_t
+name|n
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

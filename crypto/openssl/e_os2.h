@@ -66,15 +66,30 @@ directive|define
 name|OPENSSL_SYS_MACINTOSH_CLASSIC
 endif|#
 directive|endif
-comment|/* ---------------------- Microsoft operating systems ---------------------- */
-comment|/* The 16 bit environments are pretty straightforward */
+comment|/* ----------------------- NetWare ----------------------------------------- */
 if|#
 directive|if
 name|defined
 argument_list|(
-name|OPENSSL_SYSNAME_WIN16
+name|NETWARE
 argument_list|)
 operator|||
+name|defined
+argument_list|(
+name|OPENSSL_SYSNAME_NETWARE
+argument_list|)
+undef|#
+directive|undef
+name|OPENSSL_SYS_UNIX
+define|#
+directive|define
+name|OPENSSL_SYS_NETWARE
+endif|#
+directive|endif
+comment|/* ---------------------- Microsoft operating systems ---------------------- */
+comment|/* Note that MSDOS actually denotes 32-bit environments running on top of    MS-DOS, such as DJGPP one. */
+if|#
+directive|if
 name|defined
 argument_list|(
 name|OPENSSL_SYSNAME_MSDOS
@@ -85,20 +100,6 @@ name|OPENSSL_SYS_UNIX
 define|#
 directive|define
 name|OPENSSL_SYS_MSDOS
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|OPENSSL_SYSNAME_WIN16
-argument_list|)
-undef|#
-directive|undef
-name|OPENSSL_SYS_UNIX
-define|#
-directive|define
-name|OPENSSL_SYS_WIN16
 endif|#
 directive|endif
 comment|/* For 32 bit environment, there seems to be the CygWin environment and then    all the others that try to do the same thing Microsoft does... */
@@ -189,11 +190,6 @@ directive|endif
 comment|/* Anything that tries to look like Microsoft is "Windows" */
 if|#
 directive|if
-name|defined
-argument_list|(
-name|OPENSSL_SYS_WIN16
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|OPENSSL_SYS_WIN32
@@ -514,11 +510,11 @@ argument_list|)
 define|#
 directive|define
 name|OPENSSL_EXPORT
-value|extern _declspec(dllexport)
+value|extern __declspec(dllexport)
 define|#
 directive|define
 name|OPENSSL_IMPORT
-value|extern _declspec(dllimport)
+value|extern __declspec(dllimport)
 define|#
 directive|define
 name|OPENSSL_GLOBAL
@@ -541,7 +537,7 @@ define|#
 directive|define
 name|OPENSSL_EXTERN
 value|OPENSSL_IMPORT
-comment|/* Macros to allow global variables to be reached through function calls when    required (if a shared library version requires it, for example.    The way it's done allows definitions like this:  	// in foobar.c 	OPENSSL_IMPLEMENT_GLOBAL(int,foobar) = 0; 	// in foobar.h 	OPENSSL_DECLARE_GLOBAL(int,foobar); 	#define foobar OPENSSL_GLOBAL_REF(foobar) */
+comment|/* Macros to allow global variables to be reached through function calls when    required (if a shared library version requvres it, for example.    The way it's done allows definitions like this:  	// in foobar.c 	OPENSSL_IMPLEMENT_GLOBAL(int,foobar) = 0; 	// in foobar.h 	OPENSSL_DECLARE_GLOBAL(int,foobar); 	#define foobar OPENSSL_GLOBAL_REF(foobar) */
 ifdef|#
 directive|ifdef
 name|OPENSSL_EXPORT_VAR_AS_FUNCTION

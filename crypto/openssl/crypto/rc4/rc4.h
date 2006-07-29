@@ -19,6 +19,16 @@ directive|define
 name|HEADER_RC4_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<openssl/opensslconf.h>
+end_include
+
+begin_comment
+comment|/* OPENSSL_NO_RC4, RC4_INT */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -35,16 +45,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<openssl/opensslconf.h>
-end_include
-
-begin_comment
-comment|/* RC4_INT */
-end_comment
 
 begin_ifdef
 ifdef|#

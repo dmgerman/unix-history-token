@@ -73,8 +73,8 @@ name|l
 decl_stmt|,
 name|r
 decl_stmt|;
-specifier|const
 specifier|register
+specifier|const
 name|BF_LONG
 modifier|*
 name|p
@@ -765,8 +765,8 @@ name|l
 decl_stmt|,
 name|r
 decl_stmt|;
-specifier|const
 specifier|register
+specifier|const
 name|BF_LONG
 modifier|*
 name|p

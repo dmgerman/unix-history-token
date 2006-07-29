@@ -87,12 +87,27 @@ name|__INTEL__
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|B_ENDIAN
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|ripemd160_block_host_order
 value|ripemd160_block_asm_host_order
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -117,7 +132,7 @@ name|void
 modifier|*
 name|p
 parameter_list|,
-name|int
+name|size_t
 name|num
 parameter_list|)
 function_decl|;
@@ -136,7 +151,7 @@ name|void
 modifier|*
 name|p
 parameter_list|,
-name|int
+name|size_t
 name|num
 parameter_list|)
 function_decl|;
@@ -166,12 +181,27 @@ name|__INTEL__
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|B_ENDIAN
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|ripemd160_block_data_order
 value|ripemd160_block_host_order
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

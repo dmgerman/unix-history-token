@@ -1179,6 +1179,7 @@ modifier|*
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1251,8 +1252,10 @@ name|length
 operator|=
 literal|0
 expr_stmt|;
-name|M_ASN1_D2I_get
+name|M_ASN1_D2I_get_x
 argument_list|(
+name|ASN1_INTEGER
+argument_list|,
 name|aip
 argument_list|,
 name|d2i_ASN1_INTEGER
@@ -1298,8 +1301,10 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* we don't care about the version right now :-) */
-name|M_ASN1_D2I_get
+name|M_ASN1_D2I_get_x
 argument_list|(
+name|ASN1_INTEGER
+argument_list|,
 name|aip
 argument_list|,
 name|d2i_ASN1_INTEGER
@@ -1362,8 +1367,10 @@ name|length
 operator|=
 literal|0
 expr_stmt|;
-name|M_ASN1_D2I_get
+name|M_ASN1_D2I_get_x
 argument_list|(
+name|ASN1_OCTET_STRING
+argument_list|,
 name|osp
 argument_list|,
 name|d2i_ASN1_OCTET_STRING
@@ -1450,7 +1457,7 @@ operator|>>
 literal|8
 operator|)
 operator|==
-literal|3
+name|SSL3_VERSION_MAJOR
 condition|)
 block|{
 if|if
@@ -1530,8 +1537,10 @@ name|cipher_id
 operator|=
 name|id
 expr_stmt|;
-name|M_ASN1_D2I_get
+name|M_ASN1_D2I_get_x
 argument_list|(
+name|ASN1_OCTET_STRING
+argument_list|,
 name|osp
 argument_list|,
 name|d2i_ASN1_OCTET_STRING
@@ -1545,14 +1554,14 @@ operator|>>
 literal|8
 operator|)
 operator|==
-name|SSL3_VERSION
+name|SSL3_VERSION_MAJOR
 condition|)
 name|i
 operator|=
 name|SSL3_MAX_SSL_SESSION_ID_LENGTH
 expr_stmt|;
 else|else
-comment|/* if (ssl_version == SSL2_VERSION) */
+comment|/* if (ssl_version>>8 == SSL2_VERSION_MAJOR) */
 name|i
 operator|=
 name|SSL2_MAX_SSL_SESSION_ID_LENGTH
@@ -1577,10 +1586,15 @@ name|os
 operator|.
 name|length
 operator|>
+operator|(
+name|int
+operator|)
 sizeof|sizeof
+argument_list|(
 name|ret
 operator|->
 name|session_id
+argument_list|)
 condition|)
 comment|/* can't happen */
 name|os
@@ -1588,9 +1602,11 @@ operator|.
 name|length
 operator|=
 sizeof|sizeof
+argument_list|(
 name|ret
 operator|->
 name|session_id
+argument_list|)
 expr_stmt|;
 name|ret
 operator|->
@@ -1606,10 +1622,15 @@ name|os
 operator|.
 name|length
 operator|<=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
+argument_list|(
 name|ret
 operator|->
 name|session_id
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -1627,8 +1648,10 @@ operator|.
 name|length
 argument_list|)
 expr_stmt|;
-name|M_ASN1_D2I_get
+name|M_ASN1_D2I_get_x
 argument_list|(
+name|ASN1_OCTET_STRING
+argument_list|,
 name|osp
 argument_list|,
 name|d2i_ASN1_OCTET_STRING
@@ -1893,6 +1916,10 @@ name|ret
 operator|->
 name|time
 operator|=
+operator|(
+name|unsigned
+name|long
+operator|)
 name|time
 argument_list|(
 name|NULL

@@ -237,6 +237,7 @@ name|ASN1_TYPE
 operator|*
 name|cap
 block|;
+specifier|const
 name|unsigned
 name|char
 operator|*

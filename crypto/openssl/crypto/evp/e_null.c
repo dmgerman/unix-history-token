@@ -115,6 +115,8 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -209,13 +211,14 @@ operator|)
 name|out
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
 name|in
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|)
 name|inl
 argument_list|)

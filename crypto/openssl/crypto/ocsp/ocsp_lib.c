@@ -266,7 +266,7 @@ condition|)
 block|{
 name|OCSPerr
 argument_list|(
-name|OCSP_F_CERT_ID_NEW
+name|OCSP_F_OCSP_CERT_ID_NEW
 argument_list|,
 name|OCSP_R_UNKNOWN_NID
 argument_list|)
@@ -430,7 +430,7 @@ name|digerr
 label|:
 name|OCSPerr
 argument_list|(
-name|OCSP_F_CERT_ID_NEW
+name|OCSP_F_OCSP_CERT_ID_NEW
 argument_list|,
 name|OCSP_R_DIGEST_ERR
 argument_list|)

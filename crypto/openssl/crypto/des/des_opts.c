@@ -99,11 +99,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_SYS_NETWARE
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<signal.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#

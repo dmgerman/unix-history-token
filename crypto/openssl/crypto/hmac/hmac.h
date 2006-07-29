@@ -19,6 +19,12 @@ directive|define
 name|HEADER_HMAC_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<openssl/opensslconf.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -46,8 +52,12 @@ begin_define
 define|#
 directive|define
 name|HMAC_MAX_MD_CBLOCK
-value|64
+value|128
 end_define
+
+begin_comment
+comment|/* largest known is SHA512 */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -184,7 +194,7 @@ name|char
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|size_t
 name|len
 parameter_list|)
 function_decl|;
@@ -230,7 +240,7 @@ name|char
 modifier|*
 name|d
 parameter_list|,
-name|int
+name|size_t
 name|n
 parameter_list|,
 name|unsigned

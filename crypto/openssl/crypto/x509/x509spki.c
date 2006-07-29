@@ -151,7 +151,10 @@ name|unsigned
 name|char
 modifier|*
 name|spki_der
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|unsigned
+name|char
 modifier|*
 name|p
 decl_stmt|;

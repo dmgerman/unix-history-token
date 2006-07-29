@@ -121,6 +121,7 @@ name|int
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -137,6 +138,7 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*

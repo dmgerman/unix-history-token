@@ -708,7 +708,7 @@ name|ASN1_R_TOO_LONG
 operator|)
 condition|)
 block|{
-name|ERR_get_error
+name|ERR_clear_error
 argument_list|()
 expr_stmt|;
 comment|/* clear the error */

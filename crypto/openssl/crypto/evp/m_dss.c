@@ -40,6 +40,23 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|OPENSSL_NO_DSA
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<openssl/dsa.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|OPENSSL_NO_SHA
 end_ifndef
 
@@ -78,8 +95,7 @@ name|void
 modifier|*
 name|data
 parameter_list|,
-name|unsigned
-name|long
+name|size_t
 name|count
 parameter_list|)
 block|{

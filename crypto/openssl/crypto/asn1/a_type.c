@@ -16,13 +16,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<openssl/asn1t.h>
+file|"cryptlib.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"cryptlib.h"
+file|<openssl/asn1t.h>
 end_include
 
 begin_function
@@ -96,6 +96,15 @@ name|ptr
 operator|!=
 name|NULL
 condition|)
+block|{
+name|ASN1_TYPE
+modifier|*
+modifier|*
+name|tmp_a
+init|=
+operator|&
+name|a
+decl_stmt|;
 name|ASN1_primitive_free
 argument_list|(
 operator|(
@@ -103,12 +112,12 @@ name|ASN1_VALUE
 operator|*
 operator|*
 operator|)
-operator|&
-name|a
+name|tmp_a
 argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 name|a
 operator|->
 name|type

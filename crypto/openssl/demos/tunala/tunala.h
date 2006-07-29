@@ -774,6 +774,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|RSA
+modifier|*
+name|cb_generate_tmp_rsa
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|,
+name|int
+name|is_export
+parameter_list|,
+name|int
+name|keylength
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

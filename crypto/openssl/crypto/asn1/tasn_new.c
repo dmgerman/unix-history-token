@@ -8,7 +8,7 @@ comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL 
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2000-2004 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -400,8 +400,7 @@ goto|goto
 name|memerr
 goto|;
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 operator|!
@@ -415,7 +414,6 @@ condition|)
 goto|goto
 name|memerr
 goto|;
-block|}
 break|break;
 case|case
 name|ASN1_ITYPE_MSTRING
@@ -553,6 +551,9 @@ goto|goto
 name|auxerr
 goto|;
 break|break;
+case|case
+name|ASN1_ITYPE_NDEF_SEQUENCE
+case|:
 case|case
 name|ASN1_ITYPE_SEQUENCE
 case|:
@@ -748,7 +749,7 @@ name|memerr
 label|:
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_ITEM_NEW
+name|ASN1_F_ASN1_ITEM_EX_COMBINE_NEW
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
@@ -774,7 +775,7 @@ name|auxerr
 label|:
 name|ASN1err
 argument_list|(
-name|ASN1_F_ASN1_ITEM_NEW
+name|ASN1_F_ASN1_ITEM_EX_COMBINE_NEW
 argument_list|,
 name|ASN1_R_AUX_ERROR
 argument_list|)
@@ -913,6 +914,9 @@ name|ASN1_ITYPE_CHOICE
 case|:
 case|case
 name|ASN1_ITYPE_SEQUENCE
+case|:
+case|case
+name|ASN1_ITYPE_NDEF_SEQUENCE
 case|:
 operator|*
 name|pval
@@ -1160,7 +1164,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* NB: could probably combine most of the real XXX_new() behaviour and junk all the old  * functions.  */
+comment|/* NB: could probably combine most of the real XXX_new() behaviour and junk  * all the old functions.  */
 end_comment
 
 begin_function
@@ -1185,21 +1189,26 @@ decl_stmt|;
 name|int
 name|utype
 decl_stmt|;
+if|if
+condition|(
+name|it
+operator|&&
+name|it
+operator|->
+name|funcs
+condition|)
+block|{
 specifier|const
 name|ASN1_PRIMITIVE_FUNCS
 modifier|*
 name|pf
-decl_stmt|;
-name|pf
-operator|=
+init|=
 name|it
 operator|->
 name|funcs
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
-name|pf
-operator|&&
 name|pf
 operator|->
 name|prim_new
@@ -1214,6 +1223,7 @@ argument_list|,
 name|it
 argument_list|)
 return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -1402,22 +1412,24 @@ block|{
 name|int
 name|utype
 decl_stmt|;
+if|if
+condition|(
+name|it
+operator|&&
+name|it
+operator|->
+name|funcs
+condition|)
+block|{
 specifier|const
 name|ASN1_PRIMITIVE_FUNCS
 modifier|*
 name|pf
-decl_stmt|;
-name|pf
-operator|=
+init|=
 name|it
 operator|->
 name|funcs
-expr_stmt|;
-if|if
-condition|(
-name|pf
-condition|)
-block|{
+decl_stmt|;
 if|if
 condition|(
 name|pf

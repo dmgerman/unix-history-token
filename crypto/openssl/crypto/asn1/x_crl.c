@@ -407,6 +407,14 @@ return|return
 literal|0
 return|;
 block|}
+name|inf
+operator|->
+name|enc
+operator|.
+name|modified
+operator|=
+literal|1
+expr_stmt|;
 return|return
 literal|1
 return|;

@@ -547,6 +547,22 @@ operator|&
 name|c
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OPENSSL_SYS_NETWARE
+if|if
+condition|(
+name|ret
+condition|)
+name|printf
+argument_list|(
+literal|"ERROR: %d\n"
+argument_list|,
+name|ret
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|EXIT
 argument_list|(
 name|ret

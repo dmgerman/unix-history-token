@@ -140,6 +140,14 @@ condition|)
 goto|goto
 name|err
 goto|;
+if|if
+condition|(
+name|o
+operator|->
+name|data
+operator|!=
+name|NULL
+condition|)
 name|memcpy
 argument_list|(
 name|r

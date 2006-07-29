@@ -853,7 +853,7 @@ name|BIO_printf
 argument_list|(
 name|bp
 argument_list|,
-literal|"    OCSP Response Status: %s (0x%x)\n"
+literal|"    OCSP Response Status: %s (0x%lx)\n"
 argument_list|,
 name|OCSP_response_status_str
 argument_list|(
@@ -1265,7 +1265,7 @@ name|BIO_printf
 argument_list|(
 name|bp
 argument_list|,
-literal|"\n    Revocation Reason: %s (0x%x)"
+literal|"\n    Revocation Reason: %s (0x%lx)"
 argument_list|,
 name|OCSP_crl_reason_str
 argument_list|(

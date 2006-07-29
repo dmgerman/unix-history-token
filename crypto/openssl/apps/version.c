@@ -47,6 +47,12 @@ directive|include
 file|<openssl/crypto.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/bn.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -425,6 +431,15 @@ if|if
 condition|(
 name|version
 condition|)
+block|{
+if|if
+condition|(
+name|SSLeay
+argument_list|()
+operator|==
+name|SSLEAY_VERSION_NUMBER
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"%s\n"
@@ -435,6 +450,23 @@ name|SSLEAY_VERSION
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"%s (Library: %s)\n"
+argument_list|,
+name|OPENSSL_VERSION_TEXT
+argument_list|,
+name|SSLeay_version
+argument_list|(
+name|SSLEAY_VERSION
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|date

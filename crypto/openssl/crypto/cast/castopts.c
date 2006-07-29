@@ -65,9 +65,14 @@ end_include
 
 begin_decl_stmt
 name|OPENSSL_DECLARE_EXIT
+ifndef|#
+directive|ifndef
+name|OPENSSL_SYS_NETWARE
 include|#
 directive|include
 file|<signal.h>
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|_IRIX

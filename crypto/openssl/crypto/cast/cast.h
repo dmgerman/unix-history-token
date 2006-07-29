@@ -31,6 +31,9 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+include|#
+directive|include
+file|<openssl/opensslconf.h>
 ifdef|#
 directive|ifdef
 name|OPENSSL_NO_CAST

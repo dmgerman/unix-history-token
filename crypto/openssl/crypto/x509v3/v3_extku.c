@@ -340,7 +340,7 @@ condition|)
 block|{
 name|X509V3err
 argument_list|(
-name|X509V3_F_V2I_EXT_KU
+name|X509V3_F_V2I_EXTENDED_KEY_USAGE
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
@@ -418,7 +418,7 @@ argument_list|)
 expr_stmt|;
 name|X509V3err
 argument_list|(
-name|X509V3_F_V2I_EXT_KU
+name|X509V3_F_V2I_EXTENDED_KEY_USAGE
 argument_list|,
 name|X509V3_R_INVALID_OBJECT_IDENTIFIER
 argument_list|)

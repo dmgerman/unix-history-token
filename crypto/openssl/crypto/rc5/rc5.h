@@ -19,6 +19,16 @@ directive|define
 name|HEADER_RC5_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<openssl/opensslconf.h>
+end_include
+
+begin_comment
+comment|/* OPENSSL_NO_RC5 */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef

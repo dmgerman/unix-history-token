@@ -372,6 +372,7 @@ name|value
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -896,8 +897,6 @@ name|j
 condition|?
 literal|"critical"
 else|:
-literal|""
-argument_list|,
 literal|""
 argument_list|)
 operator|<=

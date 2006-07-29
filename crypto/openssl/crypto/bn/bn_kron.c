@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"cryptlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bn_lcl.h"
 end_include
 
@@ -104,6 +110,16 @@ block|,
 literal|1
 block|}
 decl_stmt|;
+name|bn_check_top
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+name|bn_check_top
+argument_list|(
+name|b
+argument_list|)
+expr_stmt|;
 name|BN_CTX_start
 argument_list|(
 name|ctx

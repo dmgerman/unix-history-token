@@ -1977,7 +1977,7 @@ if|#
 directive|if
 literal|0
 comment|/* FIXME: Should this be used?  -- Richard Levitte */
-block|BIOerr(SSL_F_SSL_CTRL, ERR_R_SHOULD_NOT_HAVE_BEEN_CALLED); 		ret = -1;
+block|SSLerr(SSL_F_SSL_CTRL, ERR_R_SHOULD_NOT_HAVE_BEEN_CALLED); 		ret = -1;
 else|#
 directive|else
 name|ret
@@ -1998,17 +1998,38 @@ modifier|*
 modifier|*
 name|fptr
 function_decl|)
-parameter_list|()
+parameter_list|(
+specifier|const
+name|SSL
+modifier|*
+name|xssl
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+name|int
+name|val
+parameter_list|)
 function_decl|;
 name|fptr
 operator|=
 operator|(
 name|void
 argument_list|(
-operator|*
-operator|*
+argument|**
 argument_list|)
-argument_list|()
+operator|(
+specifier|const
+name|SSL
+operator|*
+name|xssl
+operator|,
+name|int
+name|type
+operator|,
+name|int
+name|val
+operator|)
 operator|)
 name|ptr
 expr_stmt|;

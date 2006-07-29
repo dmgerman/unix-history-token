@@ -10,25 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<openssl/crypto.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"cryptlib.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"eng_int.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/engine.h>
 end_include
 
 begin_comment
@@ -239,7 +221,7 @@ condition|)
 block|{
 name|ENGINEerr
 argument_list|(
-name|ENGINE_F_ENGINE_FINISH
+name|ENGINE_F_ENGINE_UNLOCKED_FINISH
 argument_list|,
 name|ENGINE_R_FINISH_FAILED
 argument_list|)

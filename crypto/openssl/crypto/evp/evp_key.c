@@ -61,6 +61,7 @@ begin_function
 name|void
 name|EVP_set_pw_prompt
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|prompt
@@ -395,6 +396,9 @@ init|;
 condition|;
 control|)
 block|{
+if|if
+condition|(
+operator|!
 name|EVP_DigestInit_ex
 argument_list|(
 operator|&
@@ -404,7 +408,10 @@ name|md
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 if|if
 condition|(
 name|addmd

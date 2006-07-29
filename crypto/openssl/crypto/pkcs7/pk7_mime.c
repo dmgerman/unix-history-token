@@ -4,11 +4,11 @@ comment|/* pk7_mime.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project 1999.  */
+comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999-2003 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1999-2005 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -122,6 +122,29 @@ argument_list|(
 argument|MIME_HEADER
 argument_list|)
 end_macro
+
+begin_function_decl
+specifier|static
+name|int
+name|pkcs7_output_data
+parameter_list|(
+name|BIO
+modifier|*
+name|bio
+parameter_list|,
+name|BIO
+modifier|*
+name|data
+parameter_list|,
+name|PKCS7
+modifier|*
+name|p7
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -431,17 +454,6 @@ begin_comment
 comment|/* x */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
-name|stkfree
-function_decl|)
-parameter_list|()
-function_decl|;
-end_typedef
-
 begin_comment
 comment|/* Base 64 read and write of PKCS#7 structure */
 end_comment
@@ -666,6 +678,11 @@ name|mime_prefix
 decl_stmt|,
 modifier|*
 name|mime_eol
+decl_stmt|,
+modifier|*
+name|msg_type
+init|=
+name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -838,11 +855,13 @@ argument_list|,
 name|mime_eol
 argument_list|)
 expr_stmt|;
-name|SMIME_crlf_copy
+name|pkcs7_output_data
 argument_list|(
+name|bio
+argument_list|,
 name|data
 argument_list|,
-name|bio
+name|p7
 argument_list|,
 name|flags
 argument_list|)
@@ -932,6 +951,61 @@ return|return
 literal|1
 return|;
 block|}
+comment|/* Determine smime-type header */
+if|if
+condition|(
+name|PKCS7_type_is_enveloped
+argument_list|(
+name|p7
+argument_list|)
+condition|)
+name|msg_type
+operator|=
+literal|"enveloped-data"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|PKCS7_type_is_signed
+argument_list|(
+name|p7
+argument_list|)
+condition|)
+block|{
+comment|/* If we have any signers it is signed-data othewise  		 * certs-only. 		 */
+name|STACK_OF
+argument_list|(
+name|PKCS7_SIGNER_INFO
+argument_list|)
+operator|*
+name|sinfos
+expr_stmt|;
+name|sinfos
+operator|=
+name|PKCS7_get_signer_info
+argument_list|(
+name|p7
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sk_PKCS7_SIGNER_INFO_num
+argument_list|(
+name|sinfos
+argument_list|)
+operator|>
+literal|0
+condition|)
+name|msg_type
+operator|=
+literal|"signed-data"
+expr_stmt|;
+else|else
+name|msg_type
+operator|=
+literal|"certs-only"
+expr_stmt|;
+block|}
 comment|/* MIME headers */
 name|BIO_printf
 argument_list|(
@@ -965,6 +1039,19 @@ argument_list|,
 literal|"Content-Type: %smime;"
 argument_list|,
 name|mime_prefix
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|msg_type
+condition|)
+name|BIO_printf
+argument_list|(
+name|bio
+argument_list|,
+literal|" smime-type=%s;"
+argument_list|,
+name|msg_type
 argument_list|)
 expr_stmt|;
 name|BIO_printf
@@ -1003,6 +1090,129 @@ argument_list|,
 name|mime_eol
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Handle output of PKCS#7 data */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|pkcs7_output_data
+parameter_list|(
+name|BIO
+modifier|*
+name|out
+parameter_list|,
+name|BIO
+modifier|*
+name|data
+parameter_list|,
+name|PKCS7
+modifier|*
+name|p7
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+block|{
+name|BIO
+modifier|*
+name|tmpbio
+decl_stmt|,
+modifier|*
+name|p7bio
+decl_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|PKCS7_STREAM
+operator|)
+condition|)
+block|{
+name|SMIME_crlf_copy
+argument_list|(
+name|data
+argument_list|,
+name|out
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+comment|/* Partial sign operation */
+comment|/* Initialize sign operation */
+name|p7bio
+operator|=
+name|PKCS7_dataInit
+argument_list|(
+name|p7
+argument_list|,
+name|out
+argument_list|)
+expr_stmt|;
+comment|/* Copy data across, computing digests etc */
+name|SMIME_crlf_copy
+argument_list|(
+name|data
+argument_list|,
+name|p7bio
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
+comment|/* Must be detached */
+name|PKCS7_set_detached
+argument_list|(
+name|p7
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Finalize signatures */
+name|PKCS7_dataFinal
+argument_list|(
+name|p7
+argument_list|,
+name|p7bio
+argument_list|)
+expr_stmt|;
+comment|/* Now remove any digests prepended to the BIO */
+while|while
+condition|(
+name|p7bio
+operator|!=
+name|out
+condition|)
+block|{
+name|tmpbio
+operator|=
+name|BIO_pop
+argument_list|(
+name|p7bio
+argument_list|)
+expr_stmt|;
+name|BIO_free
+argument_list|(
+name|p7bio
+argument_list|)
+expr_stmt|;
+name|p7bio
+operator|=
+name|tmpbio
+expr_stmt|;
+block|}
 return|return
 literal|1
 return|;

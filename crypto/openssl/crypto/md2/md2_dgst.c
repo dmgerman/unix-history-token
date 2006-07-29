@@ -720,8 +720,7 @@ name|char
 modifier|*
 name|data
 parameter_list|,
-name|unsigned
-name|long
+name|size_t
 name|len
 parameter_list|)
 block|{
@@ -841,9 +840,6 @@ operator|)
 argument_list|,
 name|data
 argument_list|,
-operator|(
-name|int
-operator|)
 name|len
 argument_list|)
 expr_stmt|;
@@ -892,9 +888,6 @@ name|p
 argument_list|,
 name|data
 argument_list|,
-operator|(
-name|int
-operator|)
 name|len
 argument_list|)
 expr_stmt|;

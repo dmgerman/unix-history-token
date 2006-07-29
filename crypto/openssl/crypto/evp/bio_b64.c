@@ -629,10 +629,15 @@ name|buf_off
 operator|+
 name|i
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
+argument_list|(
 name|ctx
 operator|->
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|memcpy

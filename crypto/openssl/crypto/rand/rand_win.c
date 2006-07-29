@@ -80,6 +80,17 @@ file|<tlhelp32.h>
 end_include
 
 begin_comment
+comment|/* Limit the time spent walking through the heap, processes, threads and modules to    a maximum of 1000 miliseconds each, unless CryptoGenRandom failed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXDELAY
+value|1000
+end_define
+
+begin_comment
 comment|/* Intel hardware RNG CSP -- available from  * http://developer.intel.com/design/security/rng/redist_license.htm  */
 end_comment
 
@@ -174,6 +185,16 @@ end_endif
 begin_comment
 comment|/* CURSOR_SHOWING */
 end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|OPENSSL_SYS_WINCE
+argument_list|)
+end_if
 
 begin_typedef
 typedef|typedef
@@ -318,7 +339,7 @@ name|LPHEAPENTRY32
 parameter_list|,
 name|DWORD
 parameter_list|,
-name|DWORD
+name|size_t
 parameter_list|)
 function_decl|;
 end_typedef
@@ -407,22 +428,11 @@ directive|include
 file|<lmcons.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|OPENSSL_SYS_WINCE
-end_ifndef
-
 begin_include
 include|#
 directive|include
 file|<lmstats.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -480,6 +490,15 @@ begin_comment
 comment|/* 1 */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !OPENSSL_SYS_WINCE */
+end_comment
+
 begin_function
 name|int
 name|RAND_poll
@@ -495,59 +514,14 @@ name|hProvider
 init|=
 literal|0
 decl_stmt|;
-name|BYTE
-name|buf
-index|[
-literal|64
-index|]
-decl_stmt|;
 name|DWORD
 name|w
 decl_stmt|;
-name|HWND
-name|h
-decl_stmt|;
-name|HMODULE
-name|advapi
-decl_stmt|,
-name|kernel
-decl_stmt|,
-name|user
-decl_stmt|,
-name|netapi
-decl_stmt|;
-name|CRYPTACQUIRECONTEXTW
-name|acquire
+name|int
+name|good
 init|=
 literal|0
 decl_stmt|;
-name|CRYPTGENRANDOM
-name|gen
-init|=
-literal|0
-decl_stmt|;
-name|CRYPTRELEASECONTEXT
-name|release
-init|=
-literal|0
-decl_stmt|;
-if|#
-directive|if
-literal|1
-comment|/* There was previously a problem with NETSTATGET.  Currently, this        * section is still experimental, but if all goes well, this conditional        * will be removed        */
-name|NETSTATGET
-name|netstatget
-init|=
-literal|0
-decl_stmt|;
-name|NETFREE
-name|netfree
-init|=
-literal|0
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* 1 */
 comment|/* Determine the OS version we are on so we can turn off things  	 * that do not work properly. 	 */
 name|OSVERSIONINFO
 name|osverinfo
@@ -573,31 +547,36 @@ name|defined
 argument_list|(
 name|OPENSSL_SYS_WINCE
 argument_list|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32_WCE
+argument_list|)
 operator|&&
-name|WCEPLATFORM
-operator|!=
-name|MS_HPC_PRO
-ifndef|#
-directive|ifndef
-name|CryptAcquireContext
-define|#
-directive|define
-name|CryptAcquireContext
-value|CryptAcquireContextW
-endif|#
-directive|endif
+name|_WIN32_WCE
+operator|>=
+literal|300
+comment|/* Even though MSDN says _WIN32_WCE>=210, it doesn't seem to be available  * in commonly available implementations prior 300... */
+block|{
+name|BYTE
+name|buf
+index|[
+literal|64
+index|]
+decl_stmt|;
 comment|/* poll the CryptoAPI PRNG */
 comment|/* The CryptoAPI returns sizeof(buf) bytes of randomness */
 if|if
 condition|(
-name|CryptAcquireContext
+name|CryptAcquireContextW
 argument_list|(
 operator|&
 name|hProvider
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 name|PROV_RSA_FULL
 argument_list|,
@@ -642,15 +621,18 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
-name|OPENSSL_SYS_WINCE
+else|#
+directive|else
+comment|/* OPENSSL_SYS_WINCE */
 comment|/* 	 * None of below libraries are present on Windows CE, which is 	 * why we #ifndef the whole section. This also excuses us from 	 * handling the GetProcAddress issue. The trouble is that in 	 * real Win32 API GetProcAddress is available in ANSI flavor 	 * only. In WinCE on the other hand GetProcAddress is a macro 	 * most commonly defined as GetProcAddressW, which accepts 	 * Unicode argument. If we were to call GetProcAddress under 	 * WinCE, I'd recommend to either redefine GetProcAddress as 	 * GetProcAddressA (there seem to be one in common CE spec) or 	 * implement own shim routine, which would accept ANSI argument 	 * and expand it to Unicode. 	 */
+block|{
 comment|/* load functions dynamically - not available on all systems */
+name|HMODULE
 name|advapi
-operator|=
+init|=
 name|LoadLibrary
 argument_list|(
 name|TEXT
@@ -658,9 +640,10 @@ argument_list|(
 literal|"ADVAPI32.DLL"
 argument_list|)
 argument_list|)
-expr_stmt|;
+decl_stmt|;
+name|HMODULE
 name|kernel
-operator|=
+init|=
 name|LoadLibrary
 argument_list|(
 name|TEXT
@@ -668,19 +651,15 @@ argument_list|(
 literal|"KERNEL32.DLL"
 argument_list|)
 argument_list|)
-expr_stmt|;
+decl_stmt|;
+name|HMODULE
 name|user
-operator|=
-name|LoadLibrary
-argument_list|(
-name|TEXT
-argument_list|(
-literal|"USER32.DLL"
-argument_list|)
-argument_list|)
-expr_stmt|;
+init|=
+name|NULL
+decl_stmt|;
+name|HMODULE
 name|netapi
-operator|=
+init|=
 name|LoadLibrary
 argument_list|(
 name|TEXT
@@ -688,11 +667,38 @@ argument_list|(
 literal|"NETAPI32.DLL"
 argument_list|)
 argument_list|)
-expr_stmt|;
-if|#
-directive|if
-literal|1
-comment|/* There was previously a problem with NETSTATGET.  Currently, this        * section is still experimental, but if all goes well, this conditional        * will be removed        */
+decl_stmt|;
+name|CRYPTACQUIRECONTEXTW
+name|acquire
+init|=
+name|NULL
+decl_stmt|;
+name|CRYPTGENRANDOM
+name|gen
+init|=
+name|NULL
+decl_stmt|;
+name|CRYPTRELEASECONTEXT
+name|release
+init|=
+name|NULL
+decl_stmt|;
+name|NETSTATGET
+name|netstatget
+init|=
+name|NULL
+decl_stmt|;
+name|NETFREE
+name|netfree
+init|=
+name|NULL
+decl_stmt|;
+name|BYTE
+name|buf
+index|[
+literal|64
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|netapi
@@ -818,9 +824,6 @@ argument_list|(
 name|netapi
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* 1 */
 comment|/* It appears like this can cause an exception deep within ADVAPI32.DLL          * at random times on Windows 2000.  Reported by Jeffrey Altman.            * Only use it on NT. 	 */
 comment|/* Wolfgang Marczy<WMarczy@topcall.co.at> reports that 	 * the RegQueryValueEx call below can hang on NT4.0 (SP6). 	 * So we don't use this at all for now. */
 if|#
@@ -896,9 +899,9 @@ argument_list|(
 operator|&
 name|hProvider
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 name|PROV_RSA_FULL
 argument_list|,
@@ -934,6 +937,10 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|good
+operator|=
+literal|1
 expr_stmt|;
 if|#
 directive|if
@@ -1000,6 +1007,10 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|good
+operator|=
+literal|1
+expr_stmt|;
 if|#
 directive|if
 literal|0
@@ -1027,7 +1038,29 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|osverinfo
+operator|.
+name|dwPlatformId
+operator|!=
+name|VER_PLATFORM_WIN32_NT
+operator|||
+operator|!
+name|OPENSSL_isservice
+argument_list|()
+operator|)
+operator|&&
+operator|(
 name|user
+operator|=
+name|LoadLibrary
+argument_list|(
+name|TEXT
+argument_list|(
+literal|"USER32.DLL"
+argument_list|)
+argument_list|)
+operator|)
 condition|)
 block|{
 name|GETCURSORINFO
@@ -1081,11 +1114,12 @@ name|win
 condition|)
 block|{
 comment|/* window handle */
+name|HWND
 name|h
-operator|=
+init|=
 name|win
 argument_list|()
-expr_stmt|;
+decl_stmt|;
 name|RAND_add
 argument_list|(
 operator|&
@@ -1254,6 +1288,11 @@ name|t
 decl_stmt|;
 name|MODULEENTRY32
 name|m
+decl_stmt|;
+name|DWORD
+name|stoptime
+init|=
+literal|0
 decl_stmt|;
 name|snap
 operator|=
@@ -1450,6 +1489,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|good
+condition|)
+name|stoptime
+operator|=
+name|GetTickCount
+argument_list|()
+operator|+
+name|MAXDELAY
+expr_stmt|;
+if|if
+condition|(
 name|heaplist_first
 argument_list|(
 name|handle
@@ -1541,6 +1591,11 @@ argument_list|,
 operator|&
 name|hlist
 argument_list|)
+operator|&&
+name|GetTickCount
+argument_list|()
+operator|<
+name|stoptime
 condition|)
 do|;
 comment|/* process walking */
@@ -1553,6 +1608,17 @@ sizeof|sizeof
 argument_list|(
 name|PROCESSENTRY32
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|good
+condition|)
+name|stoptime
+operator|=
+name|GetTickCount
+argument_list|()
+operator|+
+name|MAXDELAY
 expr_stmt|;
 if|if
 condition|(
@@ -1586,6 +1652,11 @@ argument_list|,
 operator|&
 name|p
 argument_list|)
+operator|&&
+name|GetTickCount
+argument_list|()
+operator|<
+name|stoptime
 condition|)
 do|;
 comment|/* thread walking */
@@ -1598,6 +1669,17 @@ sizeof|sizeof
 argument_list|(
 name|THREADENTRY32
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|good
+condition|)
+name|stoptime
+operator|=
+name|GetTickCount
+argument_list|()
+operator|+
+name|MAXDELAY
 expr_stmt|;
 if|if
 condition|(
@@ -1631,6 +1713,11 @@ argument_list|,
 operator|&
 name|t
 argument_list|)
+operator|&&
+name|GetTickCount
+argument_list|()
+operator|<
+name|stoptime
 condition|)
 do|;
 comment|/* module walking */
@@ -1643,6 +1730,17 @@ sizeof|sizeof
 argument_list|(
 name|MODULEENTRY32
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|good
+condition|)
+name|stoptime
+operator|=
+name|GetTickCount
+argument_list|()
+operator|+
+name|MAXDELAY
 expr_stmt|;
 if|if
 condition|(
@@ -1676,6 +1774,13 @@ argument_list|,
 operator|&
 name|m
 argument_list|)
+operator|&&
+operator|(
+name|GetTickCount
+argument_list|()
+operator|<
+name|stoptime
+operator|)
 condition|)
 do|;
 if|if
@@ -1699,6 +1804,7 @@ argument_list|(
 name|kernel
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
@@ -2140,9 +2246,19 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|OPENSSL_SYS_WINCE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|OPENSSL_SYS_WIN32_CYGWIN
+argument_list|)
 name|HDC
 name|hScrDC
 decl_stmt|;
@@ -2191,6 +2307,18 @@ init|=
 literal|16
 decl_stmt|;
 comment|/* number of screen lines to grab at a time */
+if|if
+condition|(
+name|GetVersion
+argument_list|()
+operator|>=
+literal|0x80000000
+operator|||
+operator|!
+name|OPENSSL_isservice
+argument_list|()
+condition|)
+return|return;
 comment|/* Create a screen DC and a memory DC compatible to screen DC */
 name|hScrDC
 operator|=

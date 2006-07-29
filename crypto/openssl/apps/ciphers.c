@@ -75,6 +75,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|ciphers_usage
@@ -134,6 +135,7 @@ name|verbose
 init|=
 literal|0
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 modifier|*

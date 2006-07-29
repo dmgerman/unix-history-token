@@ -6,18 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<openssl/evp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/engine.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"eng_int.h"
 end_include
 
@@ -188,7 +176,7 @@ name|dummy_nid
 argument_list|,
 literal|1
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 return|;
 return|return

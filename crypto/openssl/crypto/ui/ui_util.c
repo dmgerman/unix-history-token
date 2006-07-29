@@ -16,7 +16,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<openssl/ui.h>
+file|"ui_locl.h"
 end_include
 
 begin_function

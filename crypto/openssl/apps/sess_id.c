@@ -76,6 +76,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|sess_id_usage
@@ -208,6 +209,7 @@ name|text
 init|=
 literal|0
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -896,9 +898,6 @@ name|FORMAT_ASN1
 condition|)
 name|i
 operator|=
-operator|(
-name|int
-operator|)
 name|i2d_SSL_SESSION_bio
 argument_list|(
 name|out

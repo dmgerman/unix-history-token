@@ -17,6 +17,12 @@ directive|include
 file|<openssl/opensslconf.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cryptlib.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif

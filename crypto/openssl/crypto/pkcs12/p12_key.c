@@ -29,6 +29,12 @@ directive|include
 file|<openssl/pkcs12.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/bn.h>
+end_include
+
 begin_comment
 comment|/* Uncomment out this line to get debugging info about key generation */
 end_comment

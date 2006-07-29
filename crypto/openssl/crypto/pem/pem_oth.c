@@ -60,17 +60,13 @@ comment|/* Handle 'other' PEMs: not private keys */
 end_comment
 
 begin_function
-name|char
+name|void
 modifier|*
 name|PEM_ASN1_read_bio
 parameter_list|(
-name|char
-modifier|*
-function_decl|(
+name|d2i_of_void
 modifier|*
 name|d2i
-function_decl|)
-parameter_list|()
 parameter_list|,
 specifier|const
 name|char
@@ -81,7 +77,7 @@ name|BIO
 modifier|*
 name|bp
 parameter_list|,
-name|char
+name|void
 modifier|*
 modifier|*
 name|x
@@ -95,13 +91,16 @@ modifier|*
 name|u
 parameter_list|)
 block|{
+specifier|const
 name|unsigned
 name|char
 modifier|*
 name|p
 init|=
 name|NULL
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|char
 modifier|*
 name|data
 init|=

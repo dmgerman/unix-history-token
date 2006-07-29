@@ -30,30 +30,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL_BUILD_SHLIBCRYPTO
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|OPENSSL_EXTERN
-end_undef
-
-begin_define
-define|#
-directive|define
-name|OPENSSL_EXTERN
-value|OPENSSL_EXPORT
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_undef
 undef|#
 directive|undef
@@ -407,7 +383,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-name|OPENSSL_EXTERN
+specifier|extern
 specifier|const
 name|CAST_LONG
 name|CAST_S_table0
@@ -418,7 +394,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|OPENSSL_EXTERN
+specifier|extern
 specifier|const
 name|CAST_LONG
 name|CAST_S_table1
@@ -429,7 +405,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|OPENSSL_EXTERN
+specifier|extern
 specifier|const
 name|CAST_LONG
 name|CAST_S_table2
@@ -440,7 +416,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|OPENSSL_EXTERN
+specifier|extern
 specifier|const
 name|CAST_LONG
 name|CAST_S_table3
@@ -451,7 +427,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|OPENSSL_EXTERN
+specifier|extern
 specifier|const
 name|CAST_LONG
 name|CAST_S_table4
@@ -462,7 +438,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|OPENSSL_EXTERN
+specifier|extern
 specifier|const
 name|CAST_LONG
 name|CAST_S_table5
@@ -473,7 +449,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|OPENSSL_EXTERN
+specifier|extern
 specifier|const
 name|CAST_LONG
 name|CAST_S_table6
@@ -484,7 +460,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|OPENSSL_EXTERN
+specifier|extern
 specifier|const
 name|CAST_LONG
 name|CAST_S_table7

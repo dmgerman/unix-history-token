@@ -285,11 +285,35 @@ literal|"invalid CA certificate"
 operator|)
 return|;
 case|case
+name|X509_V_ERR_INVALID_NON_CA
+case|:
+return|return
+operator|(
+literal|"invalid non-CA certificate (has CA markings)"
+operator|)
+return|;
+case|case
 name|X509_V_ERR_PATH_LENGTH_EXCEEDED
 case|:
 return|return
 operator|(
 literal|"path length constraint exceeded"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_PROXY_PATH_LENGTH_EXCEEDED
+case|:
+return|return
+operator|(
+literal|"proxy path length constraint exceeded"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_PROXY_CERTIFICATES_NOT_ALLOWED
+case|:
+return|return
+operator|(
+literal|"proxy cerificates not allowed, please set the appropriate flag"
 operator|)
 return|;
 case|case
@@ -381,11 +405,43 @@ literal|"key usage does not include CRL signing"
 operator|)
 return|;
 case|case
+name|X509_V_ERR_KEYUSAGE_NO_DIGITAL_SIGNATURE
+case|:
+return|return
+operator|(
+literal|"key usage does not include digital signature"
+operator|)
+return|;
+case|case
 name|X509_V_ERR_UNHANDLED_CRITICAL_CRL_EXTENSION
 case|:
 return|return
 operator|(
 literal|"unhandled critical CRL extension"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_INVALID_EXTENSION
+case|:
+return|return
+operator|(
+literal|"invalid or inconsistent certificate extension"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_INVALID_POLICY_EXTENSION
+case|:
+return|return
+operator|(
+literal|"invalid or inconsistent certificate policy extension"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_NO_EXPLICIT_POLICY
+case|:
+return|return
+operator|(
+literal|"no explicit policy"
 operator|)
 return|;
 default|default:

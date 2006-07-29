@@ -122,12 +122,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-block|else 		CRYPTO_new_ex_data(rsa_meth,(char *)ret,&ret->ex_data);
-endif|#
-directive|endif
 return|return
 operator|(
 name|ret
@@ -145,7 +139,6 @@ modifier|*
 name|ctx
 parameter_list|)
 block|{
-comment|/* CRYPTO_free_ex_data(rsa_meth,(char *)ctx,&ctx->ex_data); */
 if|if
 condition|(
 name|ctx

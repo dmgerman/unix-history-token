@@ -55,7 +55,7 @@ name|long
 modifier|*
 name|p
 parameter_list|,
-name|int
+name|size_t
 name|num
 parameter_list|)
 function_decl|;
@@ -86,7 +86,7 @@ name|long
 modifier|*
 name|p
 parameter_list|,
-name|int
+name|size_t
 name|num
 parameter_list|)
 function_decl|;
@@ -206,7 +206,7 @@ name|void
 modifier|*
 name|p
 parameter_list|,
-name|int
+name|size_t
 name|num
 parameter_list|)
 block|{
@@ -3420,7 +3420,7 @@ name|void
 modifier|*
 name|p
 parameter_list|,
-name|int
+name|size_t
 name|num
 parameter_list|)
 block|{

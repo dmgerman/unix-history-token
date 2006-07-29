@@ -34,7 +34,7 @@ name|ASN1_STRING
 modifier|*
 name|a
 parameter_list|,
-name|ASN1_CTX
+name|ASN1_const_CTX
 modifier|*
 name|c
 parameter_list|)
@@ -55,6 +55,7 @@ modifier|*
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -74,11 +75,14 @@ name|ret
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|char
 modifier|*
 name|s
 decl_stmt|;
@@ -573,6 +577,7 @@ modifier|*
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -595,11 +600,14 @@ name|ret
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|char
 modifier|*
 name|s
 decl_stmt|;
@@ -722,7 +730,7 @@ operator|&
 name|V_ASN1_CONSTRUCTED
 condition|)
 block|{
-name|ASN1_CTX
+name|ASN1_const_CTX
 name|c
 decl_stmt|;
 name|c
@@ -1039,7 +1047,7 @@ name|ASN1_STRING
 modifier|*
 name|a
 parameter_list|,
-name|ASN1_CTX
+name|ASN1_const_CTX
 modifier|*
 name|c
 parameter_list|)
@@ -1114,7 +1122,7 @@ name|c
 operator|->
 name|eos
 operator|=
-name|ASN1_check_infinite_end
+name|ASN1_const_check_infinite_end
 argument_list|(
 operator|&
 name|c
@@ -1287,7 +1295,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|asn1_Finish
+name|asn1_const_Finish
 argument_list|(
 name|c
 argument_list|)

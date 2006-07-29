@@ -4,7 +4,15 @@ comment|/* crypto/crypto.h */
 end_comment
 
 begin_comment
+comment|/* ====================================================================  * Copyright (c) 1998-2003 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+end_comment
+
+begin_comment
 comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+end_comment
+
+begin_comment
+comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  * ECDH support in OpenSSL originally developed by   * SUN MICROSYSTEMS, INC., and contributed to the OpenSSL project.  */
 end_comment
 
 begin_ifndef
@@ -23,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/e_os2.h>
 end_include
 
 begin_ifndef
@@ -58,6 +72,12 @@ begin_include
 include|#
 directive|include
 file|<openssl/opensslv.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/ossl_typ.h>
 end_include
 
 begin_ifdef
@@ -126,6 +146,44 @@ define|#
 directive|define
 name|SSLEAY_DIR
 value|5
+comment|/* Already declared in ossl_typ.h */
+if|#
+directive|if
+literal|0
+block|typedef struct crypto_ex_data_st CRYPTO_EX_DATA;
+comment|/* Called when a new object is created */
+block|typedef int CRYPTO_EX_new(void *parent, void *ptr, CRYPTO_EX_DATA *ad, 					int idx, long argl, void *argp);
+comment|/* Called when an object is free()ed */
+block|typedef void CRYPTO_EX_free(void *parent, void *ptr, CRYPTO_EX_DATA *ad, 					int idx, long argl, void *argp);
+comment|/* Called when we need to dup an object */
+block|typedef int CRYPTO_EX_dup(CRYPTO_EX_DATA *to, CRYPTO_EX_DATA *from, void *from_d,  					int idx, long argl, void *argp);
+endif|#
+directive|endif
+comment|/* A generic structure to pass assorted data in a expandable way */
+typedef|typedef
+struct|struct
+name|openssl_item_st
+block|{
+name|int
+name|code
+decl_stmt|;
+name|void
+modifier|*
+name|value
+decl_stmt|;
+comment|/* Not used for flag attributes */
+name|size_t
+name|value_size
+decl_stmt|;
+comment|/* Max size of value for output, length for input */
+name|size_t
+modifier|*
+name|value_length
+decl_stmt|;
+comment|/* Returned length of value for output */
+block|}
+name|OPENSSL_ITEM
+typedef|;
 comment|/* When changing the CRYPTO_LOCK_* list, be sure to maintin the text lock  * names in cryptlib.c  */
 define|#
 directive|define
@@ -253,21 +311,36 @@ name|CRYPTO_LOCK_UI
 value|31
 define|#
 directive|define
-name|CRYPTO_LOCK_HWCRHK
+name|CRYPTO_LOCK_ECDSA
 value|32
-comment|/* This is a HACK which will disappear in 0.9.8 */
 define|#
 directive|define
-name|CRYPTO_LOCK_FIPS
+name|CRYPTO_LOCK_EC
 value|33
 define|#
 directive|define
-name|CRYPTO_LOCK_FIPS2
+name|CRYPTO_LOCK_ECDH
 value|34
 define|#
 directive|define
-name|CRYPTO_NUM_LOCKS
+name|CRYPTO_LOCK_BN
 value|35
+define|#
+directive|define
+name|CRYPTO_LOCK_EC_PRE_COMP
+value|36
+define|#
+directive|define
+name|CRYPTO_LOCK_STORE
+value|37
+define|#
+directive|define
+name|CRYPTO_LOCK_COMP
+value|38
+define|#
+directive|define
+name|CRYPTO_NUM_LOCKS
+value|39
 define|#
 directive|define
 name|CRYPTO_LOCK
@@ -435,7 +508,6 @@ name|struct
 name|bio_st
 name|BIO_dummy
 typedef|;
-typedef|typedef
 struct|struct
 name|crypto_ex_data_st
 block|{
@@ -448,92 +520,7 @@ name|dummy
 decl_stmt|;
 comment|/* gcc is screwing up this data structure :-( */
 block|}
-name|CRYPTO_EX_DATA
-typedef|;
-comment|/* Called when a new object is created */
-typedef|typedef
-name|int
-name|CRYPTO_EX_new
-parameter_list|(
-name|void
-modifier|*
-name|parent
-parameter_list|,
-name|void
-modifier|*
-name|ptr
-parameter_list|,
-name|CRYPTO_EX_DATA
-modifier|*
-name|ad
-parameter_list|,
-name|int
-name|idx
-parameter_list|,
-name|long
-name|argl
-parameter_list|,
-name|void
-modifier|*
-name|argp
-parameter_list|)
-function_decl|;
-comment|/* Called when an object is free()ed */
-typedef|typedef
-name|void
-name|CRYPTO_EX_free
-parameter_list|(
-name|void
-modifier|*
-name|parent
-parameter_list|,
-name|void
-modifier|*
-name|ptr
-parameter_list|,
-name|CRYPTO_EX_DATA
-modifier|*
-name|ad
-parameter_list|,
-name|int
-name|idx
-parameter_list|,
-name|long
-name|argl
-parameter_list|,
-name|void
-modifier|*
-name|argp
-parameter_list|)
-function_decl|;
-comment|/* Called when we need to dup an object */
-typedef|typedef
-name|int
-name|CRYPTO_EX_dup
-parameter_list|(
-name|CRYPTO_EX_DATA
-modifier|*
-name|to
-parameter_list|,
-name|CRYPTO_EX_DATA
-modifier|*
-name|from
-parameter_list|,
-name|void
-modifier|*
-name|from_d
-parameter_list|,
-name|int
-name|idx
-parameter_list|,
-name|long
-name|argl
-parameter_list|,
-name|void
-modifier|*
-name|argp
-parameter_list|)
-function_decl|;
+struct|;
 comment|/* This stuff is basically class callback functions  * The current classes are SSL_CTX, SSL, SSL_SESSION, and a few more */
 typedef|typedef
 struct|struct
@@ -616,6 +603,22 @@ define|#
 directive|define
 name|CRYPTO_EX_INDEX_UI
 value|11
+define|#
+directive|define
+name|CRYPTO_EX_INDEX_ECDSA
+value|12
+define|#
+directive|define
+name|CRYPTO_EX_INDEX_ECDH
+value|13
+define|#
+directive|define
+name|CRYPTO_EX_INDEX_COMP
+value|14
+define|#
+directive|define
+name|CRYPTO_EX_INDEX_STORE
+value|15
 comment|/* Dynamically assigned indexes start from this value (don't use directly, use  * via CRYPTO_ex_data_new_class). */
 define|#
 directive|define
@@ -2042,26 +2045,19 @@ name|OPENSSL_assert
 parameter_list|(
 name|e
 parameter_list|)
-value|((e) ? (void)0 : OpenSSLDie(__FILE__, __LINE__, #e))
-ifdef|#
-directive|ifdef
-name|OPENSSL_FIPS
-name|int
-name|FIPS_mode
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-name|void
+value|(void)((e) ? 0 : (OpenSSLDie(__FILE__, __LINE__, #e),1))
+name|unsigned
+name|long
 modifier|*
-name|FIPS_rand_check
+name|OPENSSL_ia32cap_loc
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-endif|#
-directive|endif
-comment|/* def OPENSSL_FIPS */
+define|#
+directive|define
+name|OPENSSL_ia32cap
+value|(*(OPENSSL_ia32cap_loc()))
 comment|/* BEGIN ERROR CODES */
 comment|/* The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
 name|void

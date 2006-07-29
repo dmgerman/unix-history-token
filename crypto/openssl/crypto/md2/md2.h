@@ -19,6 +19,16 @@ directive|define
 name|HEADER_MD2_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<openssl/opensslconf.h>
+end_include
+
+begin_comment
+comment|/* OPENSSL_NO_MD2, MD2_INT */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -50,16 +60,6 @@ name|MD2_BLOCK
 value|16
 end_define
 
-begin_include
-include|#
-directive|include
-file|<openssl/opensslconf.h>
-end_include
-
-begin_comment
-comment|/* MD2_INT */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -76,6 +76,7 @@ typedef|typedef
 struct|struct
 name|MD2state_st
 block|{
+name|unsigned
 name|int
 name|num
 decl_stmt|;
@@ -130,8 +131,7 @@ name|char
 modifier|*
 name|data
 parameter_list|,
-name|unsigned
-name|long
+name|size_t
 name|len
 parameter_list|)
 function_decl|;
@@ -159,8 +159,7 @@ name|char
 modifier|*
 name|d
 parameter_list|,
-name|unsigned
-name|long
+name|size_t
 name|n
 parameter_list|,
 name|unsigned
