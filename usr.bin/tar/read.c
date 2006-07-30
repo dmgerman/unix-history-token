@@ -38,18 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<archive.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<archive_entry.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -1053,9 +1041,14 @@ literal|"%s %d "
 argument_list|,
 name|tmp
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|st
 operator|->
 name|st_nlink
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Use uname if it's present, else uid. */

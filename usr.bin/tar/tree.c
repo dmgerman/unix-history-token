@@ -322,7 +322,7 @@ file|<stdio.h>
 end_include
 
 begin_endif
-unit|void tree_dump(struct tree *t, FILE *out) { 	struct tree_entry *te;  	fprintf(out, "\tdepth: %d\n", t->depth); 	fprintf(out, "\tbuff: %s\n", t->buff); 	fprintf(out, "\tpwd: "); fflush(stdout); system("pwd"); 	fprintf(out, "\taccess: %s\n", t->basename); 	fprintf(out, "\tstack:\n"); 	for(te = t->stack; te != NULL; te = te->next) { 		fprintf(out, "\t\tte->name: %s%s%s\n", te->name, 		    te->flags& needsPreVisit ? "" : " *", 		    t->current == te ? " (current)" : ""); 	} }
+unit|void tree_dump(struct tree *t, FILE *out) { 	struct tree_entry *te;  	fprintf(out, "\tdepth: %d\n", t->depth); 	fprintf(out, "\tbuff: %s\n", t->buff); 	fprintf(out, "\tpwd: "); fflush(stdout); system("pwd"); 	fprintf(out, "\taccess: %s\n", t->basename); 	fprintf(out, "\tstack:\n"); 	for (te = t->stack; te != NULL; te = te->next) { 		fprintf(out, "\t\tte->name: %s%s%s\n", te->name, 		    te->flags& needsPreVisit ? "" : " *", 		    t->current == te ? " (current)" : ""); 	} }
 endif|#
 directive|endif
 end_endif
@@ -1231,6 +1231,11 @@ return|;
 block|}
 name|t
 operator|->
+name|depth
+operator|++
+expr_stmt|;
+name|t
+operator|->
 name|d
 operator|=
 name|opendir
@@ -1247,6 +1252,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|tree_ascend
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
+comment|/* Undo "chdir" */
 name|tree_pop
 argument_list|(
 name|t
@@ -1268,11 +1279,6 @@ name|TREE_ERROR_DIR
 operator|)
 return|;
 block|}
-name|t
-operator|->
-name|depth
-operator|++
-expr_stmt|;
 name|t
 operator|->
 name|flags

@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<archive.h>
+file|"bsdtar_platform.h"
 end_include
 
 begin_include
