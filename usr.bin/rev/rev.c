@@ -308,14 +308,6 @@ condition|)
 operator|--
 name|len
 expr_stmt|;
-name|t
-operator|=
-name|p
-operator|+
-name|len
-operator|-
-literal|1
-expr_stmt|;
 for|for
 control|(
 name|t
