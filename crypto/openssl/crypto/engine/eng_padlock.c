@@ -1117,7 +1117,7 @@ parameter_list|)
 block|{
 asm|asm
 specifier|volatile
-asm|( 	"pushfl\n" "	bt	$30,(%%esp)\n" "	jnc	1f\n" "	cmp	%2,%1\n" "	je	1f\n" "	mov	%2,%0\n" "	popfl\n" "	sub	$4,%%esp\n" "1:	add	$4,%%esp" 	:"+m"(padlock_saved_context) 	: "r"(padlock_saved_context), "r"(cdata) : "cc");
+asm|( 	"pushfl\n" "	bt	$30,(%%esp)\n" "	jnc	1f\n" "	cmp	%2,%1\n" "	je	1f\n" "	popfl\n" "	sub	$4,%%esp\n" "1:	add	$4,%%esp\n" "	mov	%2,%0" 	:"+m"(padlock_saved_context) 	: "r"(padlock_saved_context), "r"(cdata) : "cc");
 block|}
 end_function
 
@@ -1391,10 +1391,6 @@ decl_stmt|,
 name|padlock_saved_context
 name|je
 name|skip
-name|mov
-name|padlock_saved_context
-decl_stmt|,
-name|ecx
 name|popfd
 name|sub
 name|esp
@@ -1404,6 +1400,10 @@ range|:
 name|add
 name|esp
 decl_stmt|,4
+name|mov
+name|padlock_saved_context
+decl_stmt|,
+name|ecx
 block|}
 block|}
 end_function
