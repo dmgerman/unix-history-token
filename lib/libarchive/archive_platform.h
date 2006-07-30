@@ -28,7 +28,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|"config.h"
+file|"../config.h"
 end_include
 
 begin_else
@@ -86,6 +86,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_ACL_SET_FILE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_ACL_USER
 value|1
 end_define
 
@@ -391,6 +398,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_TIMEGM
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_UNISTD_H
 value|1
 end_define
@@ -557,7 +571,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * If this platform has<sys/acl.h>, acl_create(), acl_init(), and  * acl_set_file(), we assume it has the rest of the POSIX.1e draft  * functions used in archive_read_extract.c.  */
+comment|/*  * If this platform has<sys/acl.h>, acl_create(), acl_init(),  * acl_set_file(), and ACL_USER, we assume it has the rest of the  * POSIX.1e draft functions used in archive_read_extract.c.  */
 end_comment
 
 begin_if
@@ -570,6 +584,8 @@ operator|&&
 name|HAVE_ACL_INIT
 operator|&&
 name|HAVE_ACL_SET_FILE
+operator|&&
+name|HAVE_ACL_USER
 end_if
 
 begin_define

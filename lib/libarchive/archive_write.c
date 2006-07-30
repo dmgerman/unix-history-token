@@ -108,6 +108,7 @@ name|archive
 modifier|*
 name|a
 decl_stmt|;
+name|unsigned
 name|char
 modifier|*
 name|nulls

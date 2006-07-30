@@ -18,12 +18,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<wchar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"archive.h"
 end_include
 
@@ -76,6 +70,7 @@ name|skip_file_ino
 decl_stmt|;
 comment|/* Utility:  Pointer to a block of nulls. */
 specifier|const
+name|unsigned
 name|char
 modifier|*
 name|nulls
@@ -365,7 +360,7 @@ comment|/* Format-specific data for readers. */
 block|}
 name|formats
 index|[
-literal|4
+literal|8
 index|]
 struct|;
 name|struct

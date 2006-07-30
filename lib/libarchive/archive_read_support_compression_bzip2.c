@@ -89,7 +89,6 @@ block|{
 name|bz_stream
 name|stream
 decl_stmt|;
-name|unsigned
 name|char
 modifier|*
 name|uncompressed_buffer
