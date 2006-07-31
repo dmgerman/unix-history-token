@@ -21057,6 +21057,11 @@ operator|->
 name|ifr_mtu
 argument_list|)
 expr_stmt|;
+name|BCE_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|->
 name|if_mtu
@@ -21072,7 +21077,12 @@ operator|&=
 operator|~
 name|IFF_DRV_RUNNING
 expr_stmt|;
-name|bce_init
+name|bce_init_locked
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|BCE_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -21177,6 +21187,11 @@ argument_list|,
 literal|"Received SIOCADDMULTI/SIOCDELMULTI\n"
 argument_list|)
 expr_stmt|;
+name|BCE_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -21186,17 +21201,7 @@ operator|&
 name|IFF_DRV_RUNNING
 condition|)
 block|{
-name|BCE_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|bce_set_rx_mode
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|BCE_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -21206,6 +21211,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|BCE_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 break|break;
 comment|/* Set/Get Interface media */
 case|case
@@ -21771,6 +21781,11 @@ name|__LINE__
 argument_list|)
 expr_stmt|;
 comment|/* DBRUN(BCE_FATAL, bce_breakpoint(sc)); */
+name|BCE_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|->
 name|if_drv_flags
@@ -21778,7 +21793,7 @@ operator|&=
 operator|~
 name|IFF_DRV_RUNNING
 expr_stmt|;
-name|bce_init
+name|bce_init_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -21787,6 +21802,11 @@ name|ifp
 operator|->
 name|if_oerrors
 operator|++
+expr_stmt|;
+name|BCE_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 block|}
 end_function
