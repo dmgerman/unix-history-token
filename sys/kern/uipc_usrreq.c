@@ -2807,12 +2807,26 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+comment|/* 		 * Because connect() and send() are non-atomic in a sendto() 		 * with a target address, it's possible that the socket will 		 * have disconnected before the send() can run.  In that case 		 * return the slightly counter-intuitive but otherwise 		 * correct error that the socket is not connected. 		 */
 name|unp2
 operator|=
 name|unp
 operator|->
 name|unp_conn
 expr_stmt|;
+if|if
+condition|(
+name|unp2
+operator|==
+name|NULL
+condition|)
+block|{
+name|error
+operator|=
+name|ENOTCONN
+expr_stmt|;
+break|break;
+block|}
 name|so2
 operator|=
 name|unp2
@@ -2997,6 +3011,7 @@ name|EPIPE
 expr_stmt|;
 break|break;
 block|}
+comment|/* 		 * Because connect() and send() are non-atomic in a sendto() 		 * with a target address, it's possible that the socket will 		 * have disconnected before the send() can run.  In that case 		 * return the slightly counter-intuitive but otherwise 		 * correct error that the socket is not connected. 		 */
 name|unp2
 operator|=
 name|unp
@@ -3009,11 +3024,13 @@ name|unp2
 operator|==
 name|NULL
 condition|)
-name|panic
-argument_list|(
-literal|"uipc_send connected but no connection?"
-argument_list|)
+block|{
+name|error
+operator|=
+name|ENOTCONN
 expr_stmt|;
+break|break;
+block|}
 name|so2
 operator|=
 name|unp2
