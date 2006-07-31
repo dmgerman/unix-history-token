@@ -493,6 +493,9 @@ decl_stmt|;
 name|uint8_t
 name|bp_priority
 decl_stmt|;
+name|uint32_t
+name|bp_forward_transitions
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -582,6 +585,10 @@ comment|/* STP callout */
 name|struct
 name|bstp_timer
 name|bs_link_timer
+decl_stmt|;
+name|struct
+name|timeval
+name|bs_last_tc_time
 decl_stmt|;
 name|LIST_HEAD
 argument_list|(
