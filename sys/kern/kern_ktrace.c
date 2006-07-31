@@ -2152,10 +2152,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Since the uio may not stay valid, we can not hand off this request to  * the thread and need to process it synchronously.  However, we wish to  * keep the relative order of records in a trace file correct, so we  * do put this request on the queue (if it isn't empty) and then block.  * The ktrace thread waks us back up when it is time for this event to  * be posted and blocks until we have completed writing out the event  * and woken it back up.  */
-end_comment
-
 begin_function
 name|void
 name|ktrgenio
