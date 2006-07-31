@@ -1292,11 +1292,6 @@ name|archive_entry
 modifier|*
 name|entry
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|filename
-decl_stmt|;
 name|int
 name|format
 decl_stmt|;
@@ -1328,10 +1323,6 @@ argument_list|(
 name|archive_dir
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|filename
-operator|=
-name|NULL
 expr_stmt|;
 name|format
 operator|=
@@ -4180,9 +4171,6 @@ operator|*
 literal|2
 condition|)
 block|{
-name|int
-name|count
-decl_stmt|;
 name|new_size
 operator|=
 name|links_cache
@@ -4204,10 +4192,6 @@ name|links_entry
 operator|*
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|count
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
