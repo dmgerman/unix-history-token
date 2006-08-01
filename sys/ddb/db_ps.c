@@ -113,7 +113,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Layout:  * - column counts  * - header  * - single-threaded process  * - multi-threaded process  * - thread in a MT process  *  *          1         2         3         4         5         6         7  * 1234567890123456789012345678901234567890123456789012345678901234567890  *  pid   uid  ppid  pgrp  state   wmesg      wchan    cmd  *<pid><ui><ppi><pgi><stat>< wmesg><  wchan><name>  *<pid><ui><ppi><pgi><stat>  (threaded)<command>  *<tid><stat>< wmesg><  wchan><name>  *  * For machines with 64-bit pointers, we expand the wchan field 8 more  * characters.  */
+comment|/*  * Layout:  * - column counts  * - header  * - single-threaded process  * - multi-threaded process  * - thread in a MT process  *  *          1         2         3         4         5         6         7  * 1234567890123456789012345678901234567890123456789012345678901234567890  *   pid  ppid  pgrp   uid  state   wmesg      wchan    cmd  *<pid><ppi><pgi><uid><stat>< wmesg><  wchan><name>  *<pid><ppi><pgi><uid><stat>  (threaded)<command>  *<tid><stat>< wmesg><  wchan><name>  *  * For machines with 64-bit pointers, we expand the wchan field 8 more  * characters.  */
 end_comment
 
 begin_function
@@ -210,14 +210,14 @@ directive|ifdef
 name|__LP64__
 name|db_printf
 argument_list|(
-literal|" pid   uid  ppid  pgrp  state   wmesg          wchan        cmd\n"
+literal|"  pid  ppid  pgrp   uid  state   wmesg          wchan        cmd\n"
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
 name|db_printf
 argument_list|(
-literal|" pid   uid  ppid  pgrp  state   wmesg      wchan    cmd\n"
+literal|"  pid  ppid  pgrp   uid  state   wmesg      wchan    cmd\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -277,21 +277,11 @@ name|p_pgrp
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"%5d %4d %5d %5d "
+literal|"%5d %5d %5d %5d "
 argument_list|,
 name|p
 operator|->
 name|p_pid
-argument_list|,
-name|cred
-operator|!=
-name|NULL
-condition|?
-name|cred
-operator|->
-name|cr_ruid
-else|:
-literal|0
 argument_list|,
 name|pp
 operator|->
@@ -304,6 +294,16 @@ condition|?
 name|pgrp
 operator|->
 name|pg_id
+else|:
+literal|0
+argument_list|,
+name|cred
+operator|!=
+name|NULL
+condition|?
+name|cred
+operator|->
+name|cr_ruid
 else|:
 literal|0
 argument_list|)
@@ -857,7 +857,7 @@ condition|)
 block|{
 name|db_printf
 argument_list|(
-literal|" %9d             "
+literal|"%6d                  "
 argument_list|,
 name|td
 operator|->
