@@ -4340,33 +4340,17 @@ name|evl_tag
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Restore the original ethertype.  We'll remove 			 * the encapsulation after we've found the vlan 			 * interface corresponding to the tag. 			 */
-name|evl
-operator|->
-name|evl_encap_proto
-operator|=
-name|evl
-operator|->
-name|evl_proto
-expr_stmt|;
 break|break;
 default|default:
-name|tag
-operator|=
-operator|(
-name|uint16_t
-operator|)
-operator|-
-literal|1
-expr_stmt|;
 ifdef|#
 directive|ifdef
-name|INVARIANTS
-name|panic
+name|DEBUG
+comment|/* XXX rate limit? */
+name|if_printf
 argument_list|(
-literal|"%s: unsupported if_type (%u)"
+name|ifp
 argument_list|,
-name|__func__
+literal|"unsupported if_type %u"
 argument_list|,
 name|ifp
 operator|->
@@ -4375,7 +4359,18 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-break|break;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|ifp
+operator|->
+name|if_noproto
+operator|++
+expr_stmt|;
+comment|/* XXX? */
+return|return;
 block|}
 block|}
 name|TRUNK_RLOCK
@@ -4456,7 +4451,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Packet had an in-line encapsulation header; 		 * remove it.  The original header has already 		 * been fixed up above. 		 */
+comment|/* 		 * Packet had an in-line encapsulation header; 		 * remove it.  Note that we leave the type field 		 * unchanged; we only copy up the mac addresses. 		 */
 name|bcopy
 argument_list|(
 name|mtod
@@ -4476,6 +4471,8 @@ operator|+
 name|ETHER_VLAN_ENCAP_LEN
 argument_list|,
 name|ETHER_HDR_LEN
+operator|-
+name|ETHER_TYPE_LEN
 argument_list|)
 expr_stmt|;
 name|m_adj
