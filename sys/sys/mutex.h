@@ -1229,7 +1229,7 @@ name|mtx_initialized
 parameter_list|(
 name|m
 parameter_list|)
-value|((m)->mtx_object.lo_flags& LO_INITIALIZED)
+value|lock_initalized(&(m)->mtx_object)
 end_define
 
 begin_define

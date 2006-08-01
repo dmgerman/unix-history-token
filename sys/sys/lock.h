@@ -211,6 +211,16 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LOCK_CLASS
+parameter_list|(
+name|lock
+parameter_list|)
+value|((lock)->lo_class)
+end_define
+
+begin_define
+define|#
+directive|define
 name|LI_RECURSEMASK
 value|0x0000ffff
 end_define
@@ -575,7 +585,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {	\ 	if (LOCK_LOG_TEST((lo), (flags)))				\ 		CTR5(KTR_LOCK, opname " (%s) %s r = %d at %s:%d",	\ 		    (lo)->lo_class->lc_name, (lo)->lo_name,		\ 		    (u_int)(recurse), (file), (line));			\ } while (0)
+value|do {	\ 	if (LOCK_LOG_TEST((lo), (flags)))				\ 		CTR5(KTR_LOCK, opname " (%s) %s r = %d at %s:%d",	\ 		    LOCK_CLASS(lo)->lc_name, (lo)->lo_name,		\ 		    (u_int)(recurse), (file), (line));			\ } while (0)
 end_define
 
 begin_define
@@ -595,7 +605,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {	\ 	if (LOCK_LOG_TEST((lo), (flags)))				\ 		CTR5(KTR_LOCK, "TRY_" opname " (%s) %s result=%d at %s:%d",\ 		    (lo)->lo_class->lc_name, (lo)->lo_name,		\ 		    (u_int)(result), (file), (line));			\ } while (0)
+value|do {	\ 	if (LOCK_LOG_TEST((lo), (flags)))				\ 		CTR5(KTR_LOCK, "TRY_" opname " (%s) %s result=%d at %s:%d",\ 		    LOCK_CLASS(lo)->lc_name, (lo)->lo_name,		\ 		    (u_int)(result), (file), (line));			\ } while (0)
 end_define
 
 begin_define
@@ -607,7 +617,7 @@ name|lo
 parameter_list|,
 name|flags
 parameter_list|)
-value|do {					\ 	if (LOCK_LOG_TEST((lo), (flags)))				\ 		CTR4(KTR_LOCK, "%s: %p (%s) %s", __func__, (lo),	\  		    (lo)->lo_class->lc_name, (lo)->lo_name);		\ } while (0)
+value|do {					\ 	if (LOCK_LOG_TEST((lo), (flags)))				\ 		CTR4(KTR_LOCK, "%s: %p (%s) %s", __func__, (lo),	\  		    LOCK_CLASS(lo)->lc_name, (lo)->lo_name);		\ } while (0)
 end_define
 
 begin_define
@@ -620,6 +630,16 @@ parameter_list|,
 name|flags
 parameter_list|)
 value|LOCK_LOG_INIT(lo, flags)
+end_define
+
+begin_define
+define|#
+directive|define
+name|lock_initalized
+parameter_list|(
+name|lo
+parameter_list|)
+value|((lo)->lo_flags& LO_INITIALIZED)
 end_define
 
 begin_comment
@@ -702,6 +722,48 @@ name|lock_class
 name|lock_class_sx
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|lock_init
+parameter_list|(
+name|struct
+name|lock_object
+modifier|*
+name|lock
+parameter_list|,
+name|struct
+name|lock_class
+modifier|*
+name|class
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|type
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|lock_destroy
+parameter_list|(
+name|struct
+name|lock_object
+modifier|*
+name|lock
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -1233,7 +1295,6 @@ name|WITNESS_INIT
 parameter_list|(
 name|lock
 parameter_list|)
-value|((lock)->lo_flags |= LO_INITIALIZED)
 end_define
 
 begin_define
@@ -1243,7 +1304,6 @@ name|WITNESS_DESTROY
 parameter_list|(
 name|lock
 parameter_list|)
-value|((lock)->lo_flags&= ~LO_INITIALIZED)
 end_define
 
 begin_define
