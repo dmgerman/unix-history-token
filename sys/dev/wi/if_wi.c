@@ -2842,6 +2842,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|WI_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|NBPFILTER
@@ -2867,11 +2872,6 @@ argument_list|(
 name|sc
 operator|->
 name|sc_ifp
-argument_list|)
-expr_stmt|;
-name|WI_UNLOCK
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 name|bus_teardown_intr
