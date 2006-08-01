@@ -4408,6 +4408,28 @@ value|0xAB06
 end_define
 
 begin_comment
+comment|/* US Robotics vendor ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USR_VENDORID
+value|0x16EC
+end_define
+
+begin_comment
+comment|/* US Robotics 997902 device ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USR_DEVICEID_997902
+value|0x0116
+end_define
+
+begin_comment
 comment|/*  * PCI low memory base and low I/O base register, and  * other PCI registers.  */
 end_comment
 
