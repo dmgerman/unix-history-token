@@ -916,9 +916,9 @@ literal|"\035<b28>"
 comment|/* Undefined */
 literal|"\036LM"
 comment|/* 64 bit long mode */
-literal|"\0373DNow+"
+literal|"\0373DNow!+"
 comment|/* AMD 3DNow! Extensions */
-literal|"\0403DNow"
+literal|"\0403DNow!"
 comment|/* AMD 3DNow! */
 argument_list|)
 expr_stmt|;
