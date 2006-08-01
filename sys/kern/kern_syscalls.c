@@ -372,9 +372,18 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+comment|/* Leave a mark so we know to safely unload below. */
+name|data
+operator|->
+name|offset
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 name|error
 return|;
+block|}
 name|ms
 operator|.
 name|intval
@@ -423,6 +432,20 @@ return|;
 case|case
 name|MOD_UNLOAD
 case|:
+comment|/*                 * MOD_LOAD failed, so just return without calling the                 * chained handler since we didn't pass along the MOD_LOAD                 * event.                 */
+if|if
+condition|(
+name|data
+operator|->
+name|offset
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|data
