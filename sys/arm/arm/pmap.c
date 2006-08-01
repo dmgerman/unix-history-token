@@ -9659,66 +9659,6 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *      pmap_page_protect:  *  *      Lower the permission for all mappings to a given page.  */
-end_comment
-
-begin_function
-name|void
-name|pmap_page_protect
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|,
-name|vm_prot_t
-name|prot
-parameter_list|)
-block|{
-switch|switch
-condition|(
-name|prot
-condition|)
-block|{
-case|case
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-operator||
-name|VM_PROT_EXECUTE
-case|:
-case|case
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-case|:
-return|return;
-case|case
-name|VM_PROT_READ
-case|:
-case|case
-name|VM_PROT_READ
-operator||
-name|VM_PROT_EXECUTE
-case|:
-name|pmap_clearbit
-argument_list|(
-name|m
-argument_list|,
-name|PVF_WRITE
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-name|pmap_remove_all
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-block|}
-end_function
-
-begin_comment
 comment|/*  * Remove all pages from specified address space  * this aids process exit speeds.  Also, this code  * is special cased for current process only, but  * can have the more generic (and slightly slower)  * mode enabled.  This is much faster than pmap_remove  * in the case of running down an entire address space.  */
 end_comment
 
@@ -15676,7 +15616,7 @@ end_comment
 
 begin_function
 name|void
-name|pmap_clear_write
+name|pmap_remove_write
 parameter_list|(
 name|vm_page_t
 name|m

@@ -5846,11 +5846,9 @@ operator|->
 name|cow
 operator|++
 expr_stmt|;
-name|pmap_page_protect
+name|pmap_remove_write
 argument_list|(
 name|m
-argument_list|,
-name|VM_PROT_READ
 argument_list|)
 expr_stmt|;
 block|}

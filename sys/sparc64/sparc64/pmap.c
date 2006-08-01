@@ -8399,74 +8399,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Lower the permission for all mappings to a given page.  */
-end_comment
-
-begin_function
-name|void
-name|pmap_page_protect
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|,
-name|vm_prot_t
-name|prot
-parameter_list|)
-block|{
-name|KASSERT
-argument_list|(
-operator|(
-name|m
-operator|->
-name|flags
-operator|&
-name|PG_FICTITIOUS
-operator|)
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"pmap_page_protect: fake page"
-operator|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|prot
-operator|&
-name|VM_PROT_WRITE
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|prot
-operator|&
-operator|(
-name|VM_PROT_READ
-operator||
-name|VM_PROT_EXECUTE
-operator|)
-condition|)
-name|pmap_clear_write
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-else|else
-name|pmap_remove_all
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_comment
 comment|/*  *	pmap_ts_referenced:  *  *	Return a count of reference bits for a page, clearing those bits.  *	It is not necessary for every reference bit to be cleared, but it  *	is necessary that 0 only be returned when there are truly no  *	reference bits set.  *  *	XXX: The exact number of bits to check and clear is a matter that  *	should be tested and standardized at some point in the future for  *	optimal aging of shared pages.  */
 end_comment
 
@@ -8979,7 +8911,7 @@ end_function
 
 begin_function
 name|void
-name|pmap_clear_write
+name|pmap_remove_write
 parameter_list|(
 name|vm_page_t
 name|m

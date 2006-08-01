@@ -118,16 +118,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|pmap_clear_write
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|pmap_copy
 parameter_list|(
 name|pmap_t
@@ -355,19 +345,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|pmap_page_protect
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|,
-name|vm_prot_t
-name|prot
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|pmap_pinit
 parameter_list|(
 name|pmap_t
@@ -461,6 +438,16 @@ name|void
 name|pmap_remove_pages
 parameter_list|(
 name|pmap_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pmap_remove_write
+parameter_list|(
+name|vm_page_t
+name|m
 parameter_list|)
 function_decl|;
 end_function_decl
