@@ -1443,6 +1443,16 @@ if|if
 condition|(
 name|xc
 operator|&
+name|UART_STAT_OVERRUN
+condition|)
+name|c
+operator||=
+name|TTY_OE
+expr_stmt|;
+if|if
+condition|(
+name|xc
+operator|&
 name|UART_STAT_PARERR
 condition|)
 name|c
