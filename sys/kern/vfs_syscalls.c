@@ -1219,16 +1219,9 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
-name|vfs_rel
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 goto|goto
 name|out
 goto|;
-block|}
 endif|#
 directive|endif
 comment|/* 	 * Set these in case the underlying filesystem fails to do so. 	 */
@@ -1645,15 +1638,6 @@ operator|&
 name|VI_DOOMED
 condition|)
 block|{
-if|if
-condition|(
-name|mp
-condition|)
-name|vfs_rel
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|EBADF
@@ -1680,16 +1664,9 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
-name|vfs_rel
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 goto|goto
 name|out
 goto|;
-block|}
 endif|#
 directive|endif
 comment|/* 	 * Set these in case the underlying filesystem fails to do so. 	 */
@@ -1807,6 +1784,10 @@ name|sp
 expr_stmt|;
 name|out
 label|:
+if|if
+condition|(
+name|mp
+condition|)
 name|vfs_rel
 argument_list|(
 name|mp
