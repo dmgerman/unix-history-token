@@ -4090,6 +4090,25 @@ argument_list|,
 name|IFBF_FLUSHALL
 argument_list|)
 expr_stmt|;
+name|BRIDGE_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|bstp_drain
+argument_list|(
+operator|&
+name|bif
+operator|->
+name|bif_stp
+argument_list|)
+expr_stmt|;
+comment|/* prepare to free */
+name|BRIDGE_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|bif
