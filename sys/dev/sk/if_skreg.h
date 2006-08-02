@@ -291,8 +291,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DEVICEID_DLINK_DGE530T
+name|DEVICEID_DLINK_DGE530T_A1
 value|0x4c00
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICEID_DLINK_DGE530T_B1
+value|0x4b01
 end_define
 
 begin_comment
