@@ -207,6 +207,27 @@ value|(BSTP_TICK_VAL * 30)
 end_define
 
 begin_comment
+comment|/*  *  * Driver callbacks for STP state changes  *   */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|bstp_state_cb_t
+function_decl|)
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
 comment|/*  * Because BPDU's do not make nicely aligned structures, two different  * declarations are used: bstp_?bpdu (wire representation, packed) and  * bstp_*_unit (internal, nicely aligned version).  */
 end_comment
 
@@ -496,6 +517,10 @@ decl_stmt|;
 name|uint32_t
 name|bp_forward_transitions
 decl_stmt|;
+name|struct
+name|task
+name|bp_statetask
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -597,6 +622,9 @@ argument|bstp_port
 argument_list|)
 name|bs_bplist
 expr_stmt|;
+name|bstp_state_cb_t
+name|bs_state_cb
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -686,6 +714,8 @@ parameter_list|(
 name|struct
 name|bstp_state
 modifier|*
+parameter_list|,
+name|bstp_state_cb_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -756,6 +786,17 @@ end_function_decl
 begin_function_decl
 name|void
 name|bstp_delete
+parameter_list|(
+name|struct
+name|bstp_port
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|bstp_drain
 parameter_list|(
 name|struct
 name|bstp_port
