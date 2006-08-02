@@ -3012,12 +3012,6 @@ name|uint8_t
 name|state
 parameter_list|)
 block|{
-name|bp
-operator|->
-name|bp_state
-operator|=
-name|state
-expr_stmt|;
 name|struct
 name|bstp_state
 modifier|*
@@ -3027,6 +3021,12 @@ name|bp
 operator|->
 name|bp_bs
 decl_stmt|;
+name|bp
+operator|->
+name|bp_state
+operator|=
+name|state
+expr_stmt|;
 comment|/* notify the parent bridge */
 if|if
 condition|(
