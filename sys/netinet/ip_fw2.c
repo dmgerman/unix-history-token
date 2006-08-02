@@ -17335,7 +17335,7 @@ operator|=
 name|layer3_chain
 operator|.
 name|reap
-operator|,
+expr_stmt|;
 name|layer3_chain
 operator|.
 name|reap
@@ -17350,9 +17350,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|layer3_chain
-operator|.
-name|reap
+name|rule
 operator|!=
 name|NULL
 condition|)
