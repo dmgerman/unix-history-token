@@ -398,7 +398,7 @@ modifier|*
 name|so
 decl_stmt|;
 block|{
-comment|/* 	 * XXXRW: This code assumes that SOCK_LOCK(so) and 	 * SOCKBUF_LOCK(&so->so_rcv) are the same. 	 */
+comment|/* 	 * Note: This code assumes that SOCK_LOCK(so) and 	 * SOCKBUF_LOCK(&so->so_rcv) are the same. 	 */
 name|SOCKBUF_LOCK
 argument_list|(
 operator|&
@@ -478,7 +478,7 @@ modifier|*
 name|so
 decl_stmt|;
 block|{
-comment|/* 	 * XXXRW: This code assumes that SOCK_LOCK(so) and 	 * SOCKBUF_LOCK(&so->so_rcv) are the same. 	 */
+comment|/* 	 * Note: This code assumes that SOCK_LOCK(so) and 	 * SOCKBUF_LOCK(&so->so_rcv) are the same. 	 */
 name|SOCKBUF_LOCK
 argument_list|(
 operator|&
