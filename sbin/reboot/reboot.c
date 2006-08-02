@@ -621,6 +621,17 @@ condition|)
 name|sync
 argument_list|()
 expr_stmt|;
+comment|/* Ignore the SIGHUP we get when our parent shell dies. */
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
 comment|/* Just stop init -- if we fail, we'll restart it. */
 if|if
 condition|(
@@ -639,17 +650,6 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"SIGTSTP init"
-argument_list|)
-expr_stmt|;
-comment|/* Ignore the SIGHUP we get when our parent shell dies. */
-operator|(
-name|void
-operator|)
-name|signal
-argument_list|(
-name|SIGHUP
-argument_list|,
-name|SIG_IGN
 argument_list|)
 expr_stmt|;
 comment|/* Send a SIGTERM first, a chance to save the buffers. */
