@@ -12455,12 +12455,6 @@ operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|ni
-operator|!=
-name|NULL
-condition|)
 name|ieee80211_free_node
 argument_list|(
 name|ni
