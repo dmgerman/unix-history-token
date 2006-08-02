@@ -946,7 +946,6 @@ literal|0
 operator|||
 name|error
 condition|)
-block|{
 name|intr_setup
 argument_list|(
 name|irq
@@ -958,11 +957,6 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|error
