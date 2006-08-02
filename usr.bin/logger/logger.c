@@ -177,6 +177,9 @@ modifier|*
 parameter_list|,
 name|char
 modifier|*
+parameter_list|,
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -292,6 +295,9 @@ decl_stmt|,
 modifier|*
 name|host
 decl_stmt|,
+modifier|*
+name|svcname
+decl_stmt|,
 name|buf
 index|[
 literal|1024
@@ -304,6 +310,10 @@ expr_stmt|;
 name|host
 operator|=
 name|NULL
+expr_stmt|;
+name|svcname
+operator|=
+literal|"syslog"
 expr_stmt|;
 name|pri
 operator|=
@@ -331,7 +341,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"46Af:h:ip:st:"
+literal|"46Af:h:iP:p:st:"
 argument_list|)
 operator|)
 operator|!=
@@ -417,6 +427,15 @@ comment|/* log process id also */
 name|logflags
 operator||=
 name|LOG_PID
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+comment|/* service name or port number */
+name|svcname
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -555,6 +574,8 @@ name|pri
 argument_list|,
 name|host
 argument_list|,
+name|svcname
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -579,6 +600,8 @@ argument_list|(
 name|pri
 argument_list|,
 name|host
+argument_list|,
+name|svcname
 argument_list|,
 operator|*
 name|argv
@@ -633,6 +656,8 @@ name|pri
 argument_list|,
 name|host
 argument_list|,
+name|svcname
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -660,6 +685,8 @@ name|pri
 argument_list|,
 name|host
 argument_list|,
+name|svcname
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -685,6 +712,10 @@ parameter_list|,
 name|char
 modifier|*
 name|host
+parameter_list|,
+name|char
+modifier|*
+name|svcname
 parameter_list|,
 name|char
 modifier|*
@@ -788,7 +819,7 @@ name|getaddrinfo
 argument_list|(
 name|host
 argument_list|,
-literal|"syslog"
+name|svcname
 argument_list|,
 operator|&
 name|hints
@@ -806,10 +837,11 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"syslog/udp: unknown service"
+literal|"%s/udp: unknown service"
+argument_list|,
+name|svcname
 argument_list|)
 expr_stmt|;
-comment|/* not fatal */
 name|error
 operator|=
 name|getaddrinfo
@@ -1349,7 +1381,8 @@ name|stderr
 argument_list|,
 literal|"usage: %s\n"
 argument_list|,
-literal|"logger [-46Ais] [-f file] [-h host] [-p pri] [-t tag] [message ...]"
+literal|"logger [-46Ais] [-f file] [-h host] [-P port] [-p pri] [-t tag]\n"
+literal|"              [message ...]"
 argument_list|)
 expr_stmt|;
 name|exit
