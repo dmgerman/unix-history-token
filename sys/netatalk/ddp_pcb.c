@@ -1430,12 +1430,6 @@ literal|"at_pcbdetach: so_pcb == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* XXXRW: Why bother to disconnect it now? */
-name|soisdisconnected
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 name|so
 operator|->
 name|so_pcb
