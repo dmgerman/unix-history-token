@@ -178,13 +178,11 @@ specifier|static
 name|void
 name|sbdrop_internal
 parameter_list|(
-specifier|register
 name|struct
 name|sockbuf
 modifier|*
 name|sb
 parameter_list|,
-specifier|register
 name|int
 name|len
 parameter_list|)
@@ -196,7 +194,6 @@ specifier|static
 name|void
 name|sbflush_internal
 parameter_list|(
-specifier|register
 name|struct
 name|sockbuf
 modifier|*
@@ -224,20 +221,18 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Socantsendmore indicates that no more data will be sent on the  * socket; it would normally be applied to a socket when the user  * informs the system that no more data is to be sent, by the protocol  * code (in case PRU_SHUTDOWN).  Socantrcvmore indicates that no more data  * will be received, and will normally be applied to the socket by a  * protocol when it detects that the peer will send no more data.  * Data queued for reading in the socket may yet be read.  */
+comment|/*  * Socantsendmore indicates that no more data will be sent on the socket; it  * would normally be applied to a socket when the user informs the system  * that no more data is to be sent, by the protocol code (in case  * PRU_SHUTDOWN).  Socantrcvmore indicates that no more data will be  * received, and will normally be applied to the socket by a protocol when it  * detects that the peer will send no more data.  Data queued for reading in  * the socket may yet be read.  */
 end_comment
 
 begin_function
 name|void
 name|socantsendmore_locked
 parameter_list|(
-name|so
-parameter_list|)
 name|struct
 name|socket
 modifier|*
 name|so
-decl_stmt|;
+parameter_list|)
 block|{
 name|SOCKBUF_LOCK_ASSERT
 argument_list|(
@@ -280,13 +275,11 @@ begin_function
 name|void
 name|socantsendmore
 parameter_list|(
-name|so
-parameter_list|)
 name|struct
 name|socket
 modifier|*
 name|so
-decl_stmt|;
+parameter_list|)
 block|{
 name|SOCKBUF_LOCK
 argument_list|(
@@ -321,13 +314,11 @@ begin_function
 name|void
 name|socantrcvmore_locked
 parameter_list|(
-name|so
-parameter_list|)
 name|struct
 name|socket
 modifier|*
 name|so
-decl_stmt|;
+parameter_list|)
 block|{
 name|SOCKBUF_LOCK_ASSERT
 argument_list|(
@@ -370,13 +361,11 @@ begin_function
 name|void
 name|socantrcvmore
 parameter_list|(
-name|so
-parameter_list|)
 name|struct
 name|socket
 modifier|*
 name|so
-decl_stmt|;
+parameter_list|)
 block|{
 name|SOCKBUF_LOCK
 argument_list|(
@@ -415,13 +404,11 @@ begin_function
 name|int
 name|sbwait
 parameter_list|(
-name|sb
-parameter_list|)
 name|struct
 name|sockbuf
 modifier|*
 name|sb
-decl_stmt|;
+parameter_list|)
 block|{
 name|SOCKBUF_LOCK_ASSERT
 argument_list|(
@@ -474,21 +461,18 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Lock a sockbuf already known to be locked;  * return any error returned from sleep (EINTR).  */
+comment|/*  * Lock a sockbuf already known to be locked; return any error returned from  * sleep (EINTR).  */
 end_comment
 
 begin_function
 name|int
 name|sb_lock
 parameter_list|(
-name|sb
-parameter_list|)
-specifier|register
 name|struct
 name|sockbuf
 modifier|*
 name|sb
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|error
@@ -571,29 +555,23 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Wakeup processes waiting on a socket buffer.  Do asynchronous  * notification via SIGIO if the socket has the SS_ASYNC flag set.  *  * Called with the socket buffer lock held; will release the lock by the end  * of the function.  This allows the caller to acquire the socket buffer lock  * while testing for the need for various sorts of wakeup and hold it through  * to the point where it's no longer required.  We currently hold the lock  * through calls out to other subsystems (with the exception of kqueue), and  * then release it to avoid lock order issues.  It's not clear that's  * correct.  */
+comment|/*  * Wakeup processes waiting on a socket buffer.  Do asynchronous notification  * via SIGIO if the socket has the SS_ASYNC flag set.  *  * Called with the socket buffer lock held; will release the lock by the end  * of the function.  This allows the caller to acquire the socket buffer lock  * while testing for the need for various sorts of wakeup and hold it through  * to the point where it's no longer required.  We currently hold the lock  * through calls out to other subsystems (with the exception of kqueue), and  * then release it to avoid lock order issues.  It's not clear that's  * correct.  */
 end_comment
 
 begin_function
 name|void
 name|sowakeup
 parameter_list|(
-name|so
-parameter_list|,
-name|sb
-parameter_list|)
-specifier|register
 name|struct
 name|socket
 modifier|*
 name|so
-decl_stmt|;
-specifier|register
+parameter_list|,
 name|struct
 name|sockbuf
 modifier|*
 name|sb
-decl_stmt|;
+parameter_list|)
 block|{
 name|SOCKBUF_LOCK_ASSERT
 argument_list|(
@@ -740,30 +718,24 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Socket buffer (struct sockbuf) utility routines.  *  * Each socket contains two socket buffers: one for sending data and  * one for receiving data.  Each buffer contains a queue of mbufs,  * information about the number of mbufs and amount of data in the  * queue, and other fields allowing select() statements and notification  * on data availability to be implemented.  *  * Data stored in a socket buffer is maintained as a list of records.  * Each record is a list of mbufs chained together with the m_next  * field.  Records are chained together with the m_nextpkt field. The upper  * level routine soreceive() expects the following conventions to be  * observed when placing information in the receive buffer:  *  * 1. If the protocol requires each message be preceded by the sender's  *    name, then a record containing that name must be present before  *    any associated data (mbuf's must be of type MT_SONAME).  * 2. If the protocol supports the exchange of ``access rights'' (really  *    just additional data associated with the message), and there are  *    ``rights'' to be received, then a record containing this data  *    should be present (mbuf's must be of type MT_RIGHTS).  * 3. If a name or rights record exists, then it must be followed by  *    a data record, perhaps of zero length.  *  * Before using a new socket structure it is first necessary to reserve  * buffer space to the socket, by calling sbreserve().  This should commit  * some of the available buffer space in the system buffer pool for the  * socket (currently, it does nothing but enforce limits).  The space  * should be released by calling sbrelease() when the socket is destroyed.  */
+comment|/*  * Socket buffer (struct sockbuf) utility routines.  *  * Each socket contains two socket buffers: one for sending data and one for  * receiving data.  Each buffer contains a queue of mbufs, information about  * the number of mbufs and amount of data in the queue, and other fields  * allowing select() statements and notification on data availability to be  * implemented.  *  * Data stored in a socket buffer is maintained as a list of records.  Each  * record is a list of mbufs chained together with the m_next field.  Records  * are chained together with the m_nextpkt field. The upper level routine  * soreceive() expects the following conventions to be observed when placing  * information in the receive buffer:  *  * 1. If the protocol requires each message be preceded by the sender's name,  *    then a record containing that name must be present before any  *    associated data (mbuf's must be of type MT_SONAME).  * 2. If the protocol supports the exchange of ``access rights'' (really just  *    additional data associated with the message), and there are ``rights''  *    to be received, then a record containing this data should be present  *    (mbuf's must be of type MT_RIGHTS).  * 3. If a name or rights record exists, then it must be followed by a data  *    record, perhaps of zero length.  *  * Before using a new socket structure it is first necessary to reserve  * buffer space to the socket, by calling sbreserve().  This should commit  * some of the available buffer space in the system buffer pool for the  * socket (currently, it does nothing but enforce limits).  The space should  * be released by calling sbrelease() when the socket is destroyed.  */
 end_comment
 
 begin_function
 name|int
 name|soreserve
 parameter_list|(
-name|so
-parameter_list|,
-name|sndcc
-parameter_list|,
-name|rcvcc
-parameter_list|)
-specifier|register
 name|struct
 name|socket
 modifier|*
 name|so
-decl_stmt|;
+parameter_list|,
 name|u_long
 name|sndcc
-decl_stmt|,
+parameter_list|,
+name|u_long
 name|rcvcc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|thread
@@ -1063,39 +1035,31 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allot mbufs to a sockbuf.  * Attempt to scale mbmax so that mbcnt doesn't become limiting  * if buffering efficiency is near the normal case.  */
+comment|/*  * Allot mbufs to a sockbuf.  Attempt to scale mbmax so that mbcnt doesn't  * become limiting if buffering efficiency is near the normal case.  */
 end_comment
 
 begin_function
 name|int
 name|sbreserve_locked
 parameter_list|(
-name|sb
-parameter_list|,
-name|cc
-parameter_list|,
-name|so
-parameter_list|,
-name|td
-parameter_list|)
 name|struct
 name|sockbuf
 modifier|*
 name|sb
-decl_stmt|;
+parameter_list|,
 name|u_long
 name|cc
-decl_stmt|;
+parameter_list|,
 name|struct
 name|socket
 modifier|*
 name|so
-decl_stmt|;
+parameter_list|,
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|)
 block|{
 name|rlim_t
 name|sbsize_limit
@@ -1105,7 +1069,7 @@ argument_list|(
 name|sb
 argument_list|)
 expr_stmt|;
-comment|/* 	 * td will only be NULL when we're in an interrupt 	 * (e.g. in tcp_input()) 	 */
+comment|/* 	 * td will only be NULL when we're in an interrupt (e.g. in 	 * tcp_input()). 	 * 	 * XXXRW: This comment needs updating, as might the code. 	 */
 if|if
 condition|(
 name|cc
@@ -1224,32 +1188,24 @@ begin_function
 name|int
 name|sbreserve
 parameter_list|(
-name|sb
-parameter_list|,
-name|cc
-parameter_list|,
-name|so
-parameter_list|,
-name|td
-parameter_list|)
 name|struct
 name|sockbuf
 modifier|*
 name|sb
-decl_stmt|;
+parameter_list|,
 name|u_long
 name|cc
-decl_stmt|;
+parameter_list|,
 name|struct
 name|socket
 modifier|*
 name|so
-decl_stmt|;
+parameter_list|,
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|error
@@ -1294,20 +1250,16 @@ specifier|static
 name|void
 name|sbrelease_internal
 parameter_list|(
-name|sb
-parameter_list|,
-name|so
-parameter_list|)
 name|struct
 name|sockbuf
 modifier|*
 name|sb
-decl_stmt|;
+parameter_list|,
 name|struct
 name|socket
 modifier|*
 name|so
-decl_stmt|;
+parameter_list|)
 block|{
 name|sbflush_internal
 argument_list|(
@@ -1348,20 +1300,16 @@ begin_function
 name|void
 name|sbrelease_locked
 parameter_list|(
-name|sb
-parameter_list|,
-name|so
-parameter_list|)
 name|struct
 name|sockbuf
 modifier|*
 name|sb
-decl_stmt|;
+parameter_list|,
 name|struct
 name|socket
 modifier|*
 name|so
-decl_stmt|;
+parameter_list|)
 block|{
 name|SOCKBUF_LOCK_ASSERT
 argument_list|(
@@ -1382,20 +1330,16 @@ begin_function
 name|void
 name|sbrelease
 parameter_list|(
-name|sb
-parameter_list|,
-name|so
-parameter_list|)
 name|struct
 name|sockbuf
 modifier|*
 name|sb
-decl_stmt|;
+parameter_list|,
 name|struct
 name|socket
 modifier|*
 name|so
-decl_stmt|;
+parameter_list|)
 block|{
 name|SOCKBUF_LOCK
 argument_list|(
@@ -1421,20 +1365,16 @@ begin_function
 name|void
 name|sbdestroy
 parameter_list|(
-name|sb
-parameter_list|,
-name|so
-parameter_list|)
 name|struct
 name|sockbuf
 modifier|*
 name|sb
-decl_stmt|;
+parameter_list|,
 name|struct
 name|socket
 modifier|*
 name|so
-decl_stmt|;
+parameter_list|)
 block|{
 name|sbrelease_internal
 argument_list|(
@@ -1447,7 +1387,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Routines to add and remove  * data from an mbuf queue.  *  * The routines sbappend() or sbappendrecord() are normally called to  * append new mbufs to a socket buffer, after checking that adequate  * space is available, comparing the function sbspace() with the amount  * of data to be added.  sbappendrecord() differs from sbappend() in  * that data supplied is treated as the beginning of a new record.  * To place a sender's address, optional access rights, and data in a  * socket receive buffer, sbappendaddr() should be used.  To place  * access rights and data in a socket receive buffer, sbappendrights()  * should be used.  In either case, the new data begins a new record.  * Note that unlike sbappend() and sbappendrecord(), these routines check  * for the caller that there will be enough space to store the data.  * Each fails if there is not enough space, or if it cannot find mbufs  * to store additional information in.  *  * Reliable protocols may use the socket send buffer to hold data  * awaiting acknowledgement.  Data is normally copied from a socket  * send buffer in a protocol with m_copy for output to a peer,  * and then removing the data from the socket buffer with sbdrop()  * or sbdroprecord() when the data is acknowledged by the peer.  */
+comment|/*  * Routines to add and remove data from an mbuf queue.  *  * The routines sbappend() or sbappendrecord() are normally called to append  * new mbufs to a socket buffer, after checking that adequate space is  * available, comparing the function sbspace() with the amount of data to be  * added.  sbappendrecord() differs from sbappend() in that data supplied is  * treated as the beginning of a new record.  To place a sender's address,  * optional access rights, and data in a socket receive buffer,  * sbappendaddr() should be used.  To place access rights and data in a  * socket receive buffer, sbappendrights() should be used.  In either case,  * the new data begins a new record.  Note that unlike sbappend() and  * sbappendrecord(), these routines check for the caller that there will be  * enough space to store the data.  Each fails if there is not enough space,  * or if it cannot find mbufs to store additional information in.  *  * Reliable protocols may use the socket send buffer to hold data awaiting  * acknowledgement.  Data is normally copied from a socket send buffer in a  * protocol with m_copy for output to a peer, and then removing the data from  * the socket buffer with sbdrop() or sbdroprecord() when the data is  * acknowledged by the peer.  */
 end_comment
 
 begin_ifdef
@@ -1761,29 +1701,24 @@ value|0)
 end_define
 
 begin_comment
-comment|/*  * Append mbuf chain m to the last record in the  * socket buffer sb.  The additional space associated  * the mbuf chain is recorded in sb.  Empty mbufs are  * discarded and mbufs are compacted where possible.  */
+comment|/*  * Append mbuf chain m to the last record in the socket buffer sb.  The  * additional space associated the mbuf chain is recorded in sb.  Empty mbufs  * are discarded and mbufs are compacted where possible.  */
 end_comment
 
 begin_function
 name|void
 name|sbappend_locked
 parameter_list|(
-name|sb
-parameter_list|,
-name|m
-parameter_list|)
 name|struct
 name|sockbuf
 modifier|*
 name|sb
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|struct
 name|mbuf
 modifier|*
@@ -1950,27 +1885,23 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Append mbuf chain m to the last record in the  * socket buffer sb.  The additional space associated  * the mbuf chain is recorded in sb.  Empty mbufs are  * discarded and mbufs are compacted where possible.  */
+comment|/*  * Append mbuf chain m to the last record in the socket buffer sb.  The  * additional space associated the mbuf chain is recorded in sb.  Empty mbufs  * are discarded and mbufs are compacted where possible.  */
 end_comment
 
 begin_function
 name|void
 name|sbappend
 parameter_list|(
-name|sb
-parameter_list|,
-name|m
-parameter_list|)
 name|struct
 name|sockbuf
 modifier|*
 name|sb
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|)
 block|{
 name|SOCKBUF_LOCK
 argument_list|(
@@ -1993,7 +1924,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This version of sbappend() should only be used when the caller  * absolutely knows that there will never be more than one record  * in the socket buffer, that is, a stream protocol (such as TCP).  */
+comment|/*  * This version of sbappend() should only be used when the caller absolutely  * knows that there will never be more than one record in the socket buffer,  * that is, a stream protocol (such as TCP).  */
 end_comment
 
 begin_function
@@ -2077,7 +2008,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This version of sbappend() should only be used when the caller  * absolutely knows that there will never be more than one record  * in the socket buffer, that is, a stream protocol (such as TCP).  */
+comment|/*  * This version of sbappend() should only be used when the caller absolutely  * knows that there will never be more than one record in the socket buffer,  * that is, a stream protocol (such as TCP).  */
 end_comment
 
 begin_function
@@ -2125,13 +2056,11 @@ begin_function
 name|void
 name|sbcheck
 parameter_list|(
-name|sb
-parameter_list|)
 name|struct
 name|sockbuf
 modifier|*
 name|sb
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|mbuf
@@ -2269,31 +2198,24 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * As above, except the mbuf chain  * begins a new record.  */
+comment|/*  * As above, except the mbuf chain begins a new record.  */
 end_comment
 
 begin_function
 name|void
 name|sbappendrecord_locked
 parameter_list|(
-name|sb
-parameter_list|,
-name|m0
-parameter_list|)
-specifier|register
 name|struct
 name|sockbuf
 modifier|*
 name|sb
-decl_stmt|;
-specifier|register
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|m0
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|struct
 name|mbuf
 modifier|*
@@ -2333,7 +2255,7 @@ name|m
 operator|->
 name|m_nextpkt
 expr_stmt|;
-comment|/* 	 * Put the first mbuf on the queue. 	 * Note this permits zero length records. 	 */
+comment|/* 	 * Put the first mbuf on the queue.  Note this permits zero length 	 * records. 	 */
 name|sballoc
 argument_list|(
 name|sb
@@ -2422,29 +2344,23 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * As above, except the mbuf chain  * begins a new record.  */
+comment|/*  * As above, except the mbuf chain begins a new record.  */
 end_comment
 
 begin_function
 name|void
 name|sbappendrecord
 parameter_list|(
-name|sb
-parameter_list|,
-name|m0
-parameter_list|)
-specifier|register
 name|struct
 name|sockbuf
 modifier|*
 name|sb
-decl_stmt|;
-specifier|register
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|m0
-decl_stmt|;
+parameter_list|)
 block|{
 name|SOCKBUF_LOCK
 argument_list|(
@@ -2467,43 +2383,34 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Append address and data, and optionally, control (ancillary) data  * to the receive queue of a socket.  If present,  * m0 must include a packet header with total length.  * Returns 0 if no space in sockbuf or insufficient mbufs.  */
+comment|/*  * Append address and data, and optionally, control (ancillary) data to the  * receive queue of a socket.  If present, m0 must include a packet header  * with total length.  Returns 0 if no space in sockbuf or insufficient  * mbufs.  */
 end_comment
 
 begin_function
 name|int
 name|sbappendaddr_locked
 parameter_list|(
-name|sb
-parameter_list|,
-name|asa
-parameter_list|,
-name|m0
-parameter_list|,
-name|control
-parameter_list|)
 name|struct
 name|sockbuf
 modifier|*
 name|sb
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|struct
 name|sockaddr
 modifier|*
 name|asa
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|m0
-decl_stmt|,
-decl|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
 name|control
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|struct
 name|mbuf
@@ -2734,46 +2641,37 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * Append address and data, and optionally, control (ancillary) data  * to the receive queue of a socket.  If present,  * m0 must include a packet header with total length.  * Returns 0 if no space in sockbuf or insufficient mbufs.  */
+comment|/*  * Append address and data, and optionally, control (ancillary) data to the  * receive queue of a socket.  If present, m0 must include a packet header  * with total length.  Returns 0 if no space in sockbuf or insufficient  * mbufs.  */
 end_comment
 
 begin_function
 name|int
 name|sbappendaddr
 parameter_list|(
-name|sb
-parameter_list|,
-name|asa
-parameter_list|,
-name|m0
-parameter_list|,
-name|control
-parameter_list|)
 name|struct
 name|sockbuf
 modifier|*
 name|sb
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|struct
 name|sockaddr
 modifier|*
 name|asa
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|m0
-decl_stmt|,
-decl|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
 name|control
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|retval
@@ -2807,34 +2705,27 @@ name|retval
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|int
 name|sbappendcontrol_locked
 parameter_list|(
-name|sb
-parameter_list|,
-name|m0
-parameter_list|,
-name|control
-parameter_list|)
 name|struct
 name|sockbuf
 modifier|*
 name|sb
-decl_stmt|;
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m0
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|control
-decl_stmt|,
-decl|*
-name|m0
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|struct
 name|mbuf
@@ -2972,34 +2863,27 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|int
 name|sbappendcontrol
 parameter_list|(
-name|sb
-parameter_list|,
-name|m0
-parameter_list|,
-name|control
-parameter_list|)
 name|struct
 name|sockbuf
 modifier|*
 name|sb
-decl_stmt|;
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m0
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|control
-decl_stmt|,
-decl|*
-name|m0
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|retval
@@ -3031,7 +2915,7 @@ name|retval
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Append the data in mbuf chain (m) into the socket buffer sb following mbuf  * (n).  If (n) is NULL, the buffer is presumed empty.  *  * When the data is compressed, mbufs in the chain may be handled in one of  * three ways:  *  * (1) The mbuf may simply be dropped, if it contributes nothing (no data, no  *     record boundary, and no change in data type).  *  * (2) The mbuf may be coalesced -- i.e., data in the mbuf may be copied into  *     an mbuf already in the socket buffer.  This can occur if an  *     appropriate mbuf exists, there is room, and no merging of data types  *     will occur.  *  * (3) The mbuf may be appended to the end of the existing mbuf chain.  *  * If any of the new mbufs is marked as M_EOR, mark the last mbuf appended as  * end-of-record.  */
@@ -3041,38 +2925,27 @@ begin_function
 name|void
 name|sbcompress
 parameter_list|(
-name|sb
-parameter_list|,
-name|m
-parameter_list|,
-name|n
-parameter_list|)
-specifier|register
 name|struct
 name|sockbuf
 modifier|*
 name|sb
-decl_stmt|;
-specifier|register
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|,
-decl|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
 name|n
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
-specifier|register
 name|int
 name|eor
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|struct
 name|mbuf
 modifier|*
@@ -3367,10 +3240,10 @@ name|sb
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * Free all mbufs in a sockbuf.  * Check that all resources are reclaimed.  */
+comment|/*  * Free all mbufs in a sockbuf.  Check that all resources are reclaimed.  */
 end_comment
 
 begin_function
@@ -3378,14 +3251,11 @@ specifier|static
 name|void
 name|sbflush_internal
 parameter_list|(
-name|sb
-parameter_list|)
-specifier|register
 name|struct
 name|sockbuf
 modifier|*
 name|sb
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -3397,7 +3267,7 @@ name|SB_LOCK
 condition|)
 name|panic
 argument_list|(
-literal|"sbflush_locked: locked"
+literal|"sbflush_internal: locked"
 argument_list|)
 expr_stmt|;
 while|while
@@ -3459,7 +3329,7 @@ name|sb_mbcnt
 condition|)
 name|panic
 argument_list|(
-literal|"sbflush_locked: cc %u || mb %p || mbcnt %u"
+literal|"sbflush_internal: cc %u || mb %p || mbcnt %u"
 argument_list|,
 name|sb
 operator|->
@@ -3485,14 +3355,11 @@ begin_function
 name|void
 name|sbflush_locked
 parameter_list|(
-name|sb
-parameter_list|)
-specifier|register
 name|struct
 name|sockbuf
 modifier|*
 name|sb
-decl_stmt|;
+parameter_list|)
 block|{
 name|SOCKBUF_LOCK_ASSERT
 argument_list|(
@@ -3511,14 +3378,11 @@ begin_function
 name|void
 name|sbflush
 parameter_list|(
-name|sb
-parameter_list|)
-specifier|register
 name|struct
 name|sockbuf
 modifier|*
 name|sb
-decl_stmt|;
+parameter_list|)
 block|{
 name|SOCKBUF_LOCK
 argument_list|(
@@ -3547,22 +3411,15 @@ specifier|static
 name|void
 name|sbdrop_internal
 parameter_list|(
-name|sb
-parameter_list|,
-name|len
-parameter_list|)
-specifier|register
 name|struct
 name|sockbuf
 modifier|*
 name|sb
-decl_stmt|;
-specifier|register
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|struct
 name|mbuf
 modifier|*
@@ -3747,7 +3604,7 @@ name|sb_mb
 operator|=
 name|next
 expr_stmt|;
-comment|/* 	 * First part is an inline SB_EMPTY_FIXUP().  Second part 	 * makes sure sb_lastrecord is up-to-date if we dropped 	 * part of the last record. 	 */
+comment|/* 	 * First part is an inline SB_EMPTY_FIXUP().  Second part makes sure 	 * sb_lastrecord is up-to-date if we dropped part of the last record. 	 */
 name|m
 operator|=
 name|sb
@@ -3802,20 +3659,14 @@ begin_function
 name|void
 name|sbdrop_locked
 parameter_list|(
-name|sb
-parameter_list|,
-name|len
-parameter_list|)
-specifier|register
 name|struct
 name|sockbuf
 modifier|*
 name|sb
-decl_stmt|;
-specifier|register
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|SOCKBUF_LOCK_ASSERT
 argument_list|(
@@ -3836,20 +3687,14 @@ begin_function
 name|void
 name|sbdrop
 parameter_list|(
-name|sb
-parameter_list|,
-name|len
-parameter_list|)
-specifier|register
 name|struct
 name|sockbuf
 modifier|*
 name|sb
-decl_stmt|;
-specifier|register
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|SOCKBUF_LOCK
 argument_list|(
@@ -3872,23 +3717,19 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Drop a record off the front of a sockbuf  * and move the next record to the front.  */
+comment|/*  * Drop a record off the front of a sockbuf and move the next record to the  * front.  */
 end_comment
 
 begin_function
 name|void
 name|sbdroprecord_locked
 parameter_list|(
-name|sb
-parameter_list|)
-specifier|register
 name|struct
 name|sockbuf
 modifier|*
 name|sb
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|struct
 name|mbuf
 modifier|*
@@ -3950,21 +3791,18 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Drop a record off the front of a sockbuf  * and move the next record to the front.  */
+comment|/*  * Drop a record off the front of a sockbuf and move the next record to the  * front.  */
 end_comment
 
 begin_function
 name|void
 name|sbdroprecord
 parameter_list|(
-name|sb
-parameter_list|)
-specifier|register
 name|struct
 name|sockbuf
 modifier|*
 name|sb
-decl_stmt|;
+parameter_list|)
 block|{
 name|SOCKBUF_LOCK
 argument_list|(
