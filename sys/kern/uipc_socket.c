@@ -1066,6 +1066,10 @@ operator|=
 operator|++
 name|so_gencnt
 expr_stmt|;
+operator|--
+name|numopensockets
+expr_stmt|;
+comment|/* Could be below, but faster here. */
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -1193,21 +1197,6 @@ argument_list|(
 name|socket_zone
 argument_list|,
 name|so
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|so_global_mtx
-argument_list|)
-expr_stmt|;
-operator|--
-name|numopensockets
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|so_global_mtx
 argument_list|)
 expr_stmt|;
 block|}
