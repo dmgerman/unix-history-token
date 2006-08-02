@@ -150,6 +150,9 @@ decl_stmt|;
 name|int
 name|acpi_verbose
 decl_stmt|;
+name|int
+name|acpi_handle_reboot
+decl_stmt|;
 name|bus_dma_tag_t
 name|acpi_waketag
 decl_stmt|;

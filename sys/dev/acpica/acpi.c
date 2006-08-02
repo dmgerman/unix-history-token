@@ -2861,6 +2861,36 @@ argument_list|,
 literal|"Disable ACPI when rebooting/halting system"
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|acpi_sysctl_ctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|sc
+operator|->
+name|acpi_sysctl_tree
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"handle_reboot"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|acpi_handle_reboot
+argument_list|,
+literal|0
+argument_list|,
+literal|"Use ACPI Reset Register to reboot"
+argument_list|)
+expr_stmt|;
 comment|/*      * Default to 1 second before sleeping to give some machines time to      * stabilize.      */
 name|sc
 operator|->
@@ -7549,6 +7579,10 @@ operator|&&
 name|AcpiGbl_FADT
 operator|->
 name|ResetRegSup
+operator|&&
+name|sc
+operator|->
+name|acpi_handle_reboot
 condition|)
 block|{
 comment|/* Reboot using the reset register. */
