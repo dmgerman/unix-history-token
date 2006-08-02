@@ -30,18 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/thr.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/umtx.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<posix4/_semaphore.h>
 end_include
 
