@@ -3481,7 +3481,6 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* INET6 */
-comment|/* 	 * XXXRW: This is all very well and good, but actually, we might be 	 * discarding the tcpcb after the socket is gone, so we can't do 	 * this: 	KASSERT(so != NULL, ("tcp_discardcb: so == NULL")); 	 */
 name|INP_LOCK_ASSERT
 argument_list|(
 name|inp
@@ -3551,7 +3550,7 @@ name|metrics
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Update the ssthresh always when the conditions below 		 * are satisfied. This gives us better new start value 		 * for the congestion avoidance for new connections. 		 * ssthresh is only set if packet loss occured on a session. 		 */
+comment|/* 		 * Update the ssthresh always when the conditions below 		 * are satisfied. This gives us better new start value 		 * for the congestion avoidance for new connections. 		 * ssthresh is only set if packet loss occured on a session. 		 * 		 * XXXRW: 'so' may be NULL here, and/or socket buffer may be 		 * being torn down.  Ideally this code would not use 'so'. 		 */
 name|ssthresh
 operator|=
 name|tp
@@ -3784,18 +3783,6 @@ argument_list|(
 name|tcpcb_zone
 argument_list|,
 name|tp
-argument_list|)
-expr_stmt|;
-comment|/* 	 * XXXRW: This seems a bit unclean. 	 */
-if|if
-condition|(
-name|so
-operator|!=
-name|NULL
-condition|)
-name|soisdisconnected
-argument_list|(
-name|so
 argument_list|)
 expr_stmt|;
 block|}
@@ -8452,7 +8439,7 @@ name|t_flags
 operator|&
 name|TF_ACKNOW
 expr_stmt|;
-comment|/* 	 * First, discard tcpcb state, which includes stopping its timers and 	 * freeing it.  tcp_discardcb() used to also release the inpcb, but 	 * that work is now done in the caller. 	 */
+comment|/* 	 * First, discard tcpcb state, which includes stopping its timers and 	 * freeing it.  tcp_discardcb() used to also release the inpcb, but 	 * that work is now done in the caller. 	 * 	 * Note: soisdisconnected() call used to be made in tcp_discardcb(), 	 * and might not be needed here any longer. 	 */
 name|tcp_discardcb
 argument_list|(
 name|tp
@@ -8463,6 +8450,11 @@ operator|=
 name|inp
 operator|->
 name|inp_socket
+expr_stmt|;
+name|soisdisconnected
+argument_list|(
+name|so
+argument_list|)
 expr_stmt|;
 name|SOCK_LOCK
 argument_list|(
