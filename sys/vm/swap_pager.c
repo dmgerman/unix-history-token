@@ -3486,8 +3486,10 @@ name|bp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * wait for the page we want to complete.  PG_SWAPINPROG is always 	 * cleared on completion.  If an I/O error occurs, SWAPBLK_NONE 	 * is set in the meta-data. 	 */
-name|vm_page_lock_queues
-argument_list|()
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -3502,6 +3504,9 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_flag_set
 argument_list|(
 name|mreq
@@ -3510,6 +3515,9 @@ name|PG_WANTED
 operator||
 name|PG_REFERENCED
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|cnt
 operator|.
@@ -3522,8 +3530,10 @@ name|msleep
 argument_list|(
 name|mreq
 argument_list|,
-operator|&
-name|vm_page_queue_mtx
+name|VM_OBJECT_MTX
+argument_list|(
+name|object
+argument_list|)
 argument_list|,
 name|PSWP
 argument_list|,
@@ -3557,14 +3567,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
-name|VM_OBJECT_LOCK
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 comment|/* 	 * mreq is left busied after completion, but all the other pages 	 * are freed.  If we had an unrecoverable read error the page will 	 * not be valid. 	 */
 if|if
 condition|(
