@@ -1358,7 +1358,7 @@ expr_stmt|;
 name|bcopy
 argument_list|(
 operator|&
-name|trapcode
+name|alitrap
 argument_list|,
 operator|(
 name|void
@@ -1370,7 +1370,7 @@ operator|(
 name|size_t
 operator|)
 operator|&
-name|trapsize
+name|alisize
 argument_list|)
 expr_stmt|;
 name|bcopy
