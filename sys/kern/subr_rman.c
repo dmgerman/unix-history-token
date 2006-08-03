@@ -924,8 +924,8 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"rman_reserve_resource:<%s> request: [%#lx, %#lx], length "
-literal|"%#lx, flags %u, device %s\n"
+literal|"rman_reserve_resource_bound:<%s> request: [%#lx, %#lx], "
+literal|"length %#lx, flags %u, device %s\n"
 operator|,
 name|rm
 operator|->
