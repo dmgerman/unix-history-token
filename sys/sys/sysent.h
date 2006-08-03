@@ -29,6 +29,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|sysent
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|thread
 struct_decl|;
 end_struct_decl
@@ -54,6 +60,63 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_comment
+comment|/* Used by the machine dependent syscall() code. */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|systrace_probe_func_t
+function_decl|)
+parameter_list|(
+name|u_int32_t
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|sysent
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/*  * Used by loaded syscalls to convert arguments to a DTrace array  * of 64-bit arguments.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|systrace_args_func_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|u_int64_t
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_decl_stmt
+specifier|extern
+name|systrace_probe_func_t
+name|systrace_probe_func
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|sysent
@@ -72,6 +135,18 @@ name|au_event_t
 name|sy_auevent
 decl_stmt|;
 comment|/* audit event associated with syscall */
+name|systrace_args_func_t
+name|sy_systrace_args_func
+decl_stmt|;
+comment|/* optional argument conversion function. */
+name|u_int32_t
+name|sy_entry
+decl_stmt|;
+comment|/* DTrace entry ID for systrace. */
+name|u_int32_t
+name|sy_return
+decl_stmt|;
+comment|/* DTrace return ID for systrace. */
 block|}
 struct|;
 end_struct
