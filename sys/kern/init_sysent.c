@@ -144,6 +144,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 0 = syscall */
@@ -160,6 +166,12 @@ operator|)
 name|sys_exit
 block|,
 name|AUE_EXIT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 1 = exit */
@@ -173,6 +185,12 @@ operator|)
 name|fork
 block|,
 name|AUE_FORK
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 2 = fork */
@@ -189,6 +207,12 @@ operator|)
 name|read
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 3 = read */
@@ -205,6 +229,12 @@ operator|)
 name|write
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 4 = write */
@@ -221,6 +251,12 @@ operator|)
 name|open
 block|,
 name|AUE_OPEN_RWTC
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 5 = open */
@@ -237,6 +273,12 @@ operator|)
 name|close
 block|,
 name|AUE_CLOSE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 6 = close */
@@ -253,6 +295,12 @@ operator|)
 name|wait4
 block|,
 name|AUE_WAIT4
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 7 = wait4 */
@@ -268,6 +316,12 @@ name|creat
 argument_list|)
 block|,
 name|AUE_O_CREAT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 8 = old creat */
@@ -284,6 +338,12 @@ operator|)
 name|link
 block|,
 name|AUE_LINK
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 9 = link */
@@ -300,6 +360,12 @@ operator|)
 name|unlink
 block|,
 name|AUE_UNLINK
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 10 = unlink */
@@ -313,6 +379,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 11 = obsolete execv */
@@ -329,6 +401,12 @@ operator|)
 name|chdir
 block|,
 name|AUE_CHDIR
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 12 = chdir */
@@ -345,6 +423,12 @@ operator|)
 name|fchdir
 block|,
 name|AUE_FCHDIR
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 13 = fchdir */
@@ -361,6 +445,12 @@ operator|)
 name|mknod
 block|,
 name|AUE_MKNOD
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 14 = mknod */
@@ -377,6 +467,12 @@ operator|)
 name|chmod
 block|,
 name|AUE_CHMOD
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 15 = chmod */
@@ -393,6 +489,12 @@ operator|)
 name|chown
 block|,
 name|AUE_CHOWN
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 16 = chown */
@@ -409,6 +511,12 @@ operator|)
 name|obreak
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 17 = break */
@@ -424,6 +532,12 @@ name|getfsstat
 argument_list|)
 block|,
 name|AUE_GETFSSTAT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 18 = old getfsstat */
@@ -439,6 +553,12 @@ name|lseek
 argument_list|)
 block|,
 name|AUE_LSEEK
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 19 = old lseek */
@@ -452,6 +572,12 @@ operator|)
 name|getpid
 block|,
 name|AUE_GETPID
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 20 = getpid */
@@ -468,6 +594,12 @@ operator|)
 name|mount
 block|,
 name|AUE_MOUNT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 21 = mount */
@@ -484,6 +616,12 @@ operator|)
 name|unmount
 block|,
 name|AUE_UMOUNT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 22 = unmount */
@@ -500,6 +638,12 @@ operator|)
 name|setuid
 block|,
 name|AUE_SETUID
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 23 = setuid */
@@ -513,6 +657,12 @@ operator|)
 name|getuid
 block|,
 name|AUE_GETUID
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 24 = getuid */
@@ -526,6 +676,12 @@ operator|)
 name|geteuid
 block|,
 name|AUE_GETEUID
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 25 = geteuid */
@@ -542,6 +698,12 @@ operator|)
 name|ptrace
 block|,
 name|AUE_PTRACE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 26 = ptrace */
@@ -558,6 +720,12 @@ operator|)
 name|recvmsg
 block|,
 name|AUE_RECVMSG
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 27 = recvmsg */
@@ -574,6 +742,12 @@ operator|)
 name|sendmsg
 block|,
 name|AUE_SENDMSG
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 28 = sendmsg */
@@ -590,6 +764,12 @@ operator|)
 name|recvfrom
 block|,
 name|AUE_RECVFROM
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 29 = recvfrom */
@@ -606,6 +786,12 @@ operator|)
 name|accept
 block|,
 name|AUE_ACCEPT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 30 = accept */
@@ -622,6 +808,12 @@ operator|)
 name|getpeername
 block|,
 name|AUE_GETPEERNAME
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 31 = getpeername */
@@ -638,6 +830,12 @@ operator|)
 name|getsockname
 block|,
 name|AUE_GETSOCKNAME
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 32 = getsockname */
@@ -654,6 +852,12 @@ operator|)
 name|access
 block|,
 name|AUE_ACCESS
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 33 = access */
@@ -670,6 +874,12 @@ operator|)
 name|chflags
 block|,
 name|AUE_CHFLAGS
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 34 = chflags */
@@ -686,6 +896,12 @@ operator|)
 name|fchflags
 block|,
 name|AUE_FCHFLAGS
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 35 = fchflags */
@@ -699,6 +915,12 @@ operator|)
 name|sync
 block|,
 name|AUE_SYNC
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 36 = sync */
@@ -715,6 +937,12 @@ operator|)
 name|kill
 block|,
 name|AUE_KILL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 37 = kill */
@@ -730,6 +958,12 @@ name|stat
 argument_list|)
 block|,
 name|AUE_STAT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 38 = old stat */
@@ -743,6 +977,12 @@ operator|)
 name|getppid
 block|,
 name|AUE_GETPPID
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 39 = getppid */
@@ -758,6 +998,12 @@ name|lstat
 argument_list|)
 block|,
 name|AUE_LSTAT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 40 = old lstat */
@@ -774,6 +1020,12 @@ operator|)
 name|dup
 block|,
 name|AUE_DUP
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 41 = dup */
@@ -787,6 +1039,12 @@ operator|)
 name|pipe
 block|,
 name|AUE_PIPE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 42 = pipe */
@@ -800,6 +1058,12 @@ operator|)
 name|getegid
 block|,
 name|AUE_GETEGID
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 43 = getegid */
@@ -816,6 +1080,12 @@ operator|)
 name|profil
 block|,
 name|AUE_PROFILE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 44 = profil */
@@ -832,6 +1102,12 @@ operator|)
 name|ktrace
 block|,
 name|AUE_KTRACE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 45 = ktrace */
@@ -847,6 +1123,12 @@ name|sigaction
 argument_list|)
 block|,
 name|AUE_SIGACTION
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 46 = old sigaction */
@@ -860,6 +1142,12 @@ operator|)
 name|getgid
 block|,
 name|AUE_GETGID
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 47 = getgid */
@@ -875,6 +1163,12 @@ name|sigprocmask
 argument_list|)
 block|,
 name|AUE_SIGPROCMASK
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 48 = old sigprocmask */
@@ -891,6 +1185,12 @@ operator|)
 name|getlogin
 block|,
 name|AUE_GETLOGIN
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 49 = getlogin */
@@ -907,6 +1207,12 @@ operator|)
 name|setlogin
 block|,
 name|AUE_SETLOGIN
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 50 = setlogin */
@@ -923,6 +1229,12 @@ operator|)
 name|acct
 block|,
 name|AUE_ACCT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 51 = acct */
@@ -935,6 +1247,12 @@ name|sigpending
 argument_list|)
 block|,
 name|AUE_SIGPENDING
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 52 = old sigpending */
@@ -951,6 +1269,12 @@ operator|)
 name|sigaltstack
 block|,
 name|AUE_SIGPENDING
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 53 = sigaltstack */
@@ -967,6 +1291,12 @@ operator|)
 name|ioctl
 block|,
 name|AUE_IOCTL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 54 = ioctl */
@@ -983,6 +1313,12 @@ operator|)
 name|reboot
 block|,
 name|AUE_REBOOT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 55 = reboot */
@@ -999,6 +1335,12 @@ operator|)
 name|revoke
 block|,
 name|AUE_REVOKE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 56 = revoke */
@@ -1015,6 +1357,12 @@ operator|)
 name|symlink
 block|,
 name|AUE_SYMLINK
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 57 = symlink */
@@ -1031,6 +1379,12 @@ operator|)
 name|readlink
 block|,
 name|AUE_READLINK
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 58 = readlink */
@@ -1047,6 +1401,12 @@ operator|)
 name|execve
 block|,
 name|AUE_EXECVE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 59 = execve */
@@ -1063,6 +1423,12 @@ operator|)
 name|umask
 block|,
 name|AUE_UMASK
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 60 = umask */
@@ -1079,6 +1445,12 @@ operator|)
 name|chroot
 block|,
 name|AUE_CHROOT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 61 = chroot */
@@ -1094,6 +1466,12 @@ name|fstat
 argument_list|)
 block|,
 name|AUE_FSTAT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 62 = old fstat */
@@ -1109,6 +1487,12 @@ name|getkerninfo
 argument_list|)
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 63 = old getkerninfo */
@@ -1121,6 +1505,12 @@ name|getpagesize
 argument_list|)
 block|,
 name|AUE_O_GETPAGESIZE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 64 = old getpagesize */
@@ -1137,6 +1527,12 @@ operator|)
 name|msync
 block|,
 name|AUE_MSYNC
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 65 = msync */
@@ -1150,6 +1546,12 @@ operator|)
 name|vfork
 block|,
 name|AUE_VFORK
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 66 = vfork */
@@ -1163,6 +1565,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 67 = obsolete vread */
@@ -1176,6 +1584,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 68 = obsolete vwrite */
@@ -1192,6 +1606,12 @@ operator|)
 name|sbrk
 block|,
 name|AUE_SBRK
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 69 = sbrk */
@@ -1208,6 +1628,12 @@ operator|)
 name|sstk
 block|,
 name|AUE_SSTK
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 70 = sstk */
@@ -1223,6 +1649,12 @@ name|mmap
 argument_list|)
 block|,
 name|AUE_MMAP
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 71 = old mmap */
@@ -1239,6 +1671,12 @@ operator|)
 name|ovadvise
 block|,
 name|AUE_O_VADVISE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 72 = vadvise */
@@ -1255,6 +1693,12 @@ operator|)
 name|munmap
 block|,
 name|AUE_MUNMAP
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 73 = munmap */
@@ -1271,6 +1715,12 @@ operator|)
 name|mprotect
 block|,
 name|AUE_MPROTECT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 74 = mprotect */
@@ -1287,6 +1737,12 @@ operator|)
 name|madvise
 block|,
 name|AUE_MADVISE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 75 = madvise */
@@ -1300,6 +1756,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 76 = obsolete vhangup */
@@ -1313,6 +1775,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 77 = obsolete vlimit */
@@ -1329,6 +1797,12 @@ operator|)
 name|mincore
 block|,
 name|AUE_MINCORE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 78 = mincore */
@@ -1345,6 +1819,12 @@ operator|)
 name|getgroups
 block|,
 name|AUE_GETGROUPS
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 79 = getgroups */
@@ -1361,6 +1841,12 @@ operator|)
 name|setgroups
 block|,
 name|AUE_SETGROUPS
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 80 = setgroups */
@@ -1374,6 +1860,12 @@ operator|)
 name|getpgrp
 block|,
 name|AUE_GETPGRP
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 81 = getpgrp */
@@ -1390,6 +1882,12 @@ operator|)
 name|setpgid
 block|,
 name|AUE_SETPGRP
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 82 = setpgid */
@@ -1406,6 +1904,12 @@ operator|)
 name|setitimer
 block|,
 name|AUE_SETITIMER
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 83 = setitimer */
@@ -1418,6 +1922,12 @@ name|wait
 argument_list|)
 block|,
 name|AUE_WAIT4
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 84 = old wait */
@@ -1434,6 +1944,12 @@ operator|)
 name|swapon
 block|,
 name|AUE_SWAPON
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 85 = swapon */
@@ -1450,6 +1966,12 @@ operator|)
 name|getitimer
 block|,
 name|AUE_GETITIMER
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 86 = getitimer */
@@ -1465,6 +1987,12 @@ name|gethostname
 argument_list|)
 block|,
 name|AUE_SYSCTL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 87 = old gethostname */
@@ -1480,6 +2008,12 @@ name|sethostname
 argument_list|)
 block|,
 name|AUE_SYSCTL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 88 = old sethostname */
@@ -1493,6 +2027,12 @@ operator|)
 name|getdtablesize
 block|,
 name|AUE_GETDTABLESIZE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 89 = getdtablesize */
@@ -1509,6 +2049,12 @@ operator|)
 name|dup2
 block|,
 name|AUE_DUP2
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 90 = dup2 */
@@ -1522,6 +2068,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 91 = getdopt */
@@ -1538,6 +2090,12 @@ operator|)
 name|fcntl
 block|,
 name|AUE_FCNTL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 92 = fcntl */
@@ -1554,6 +2112,12 @@ operator|)
 name|select
 block|,
 name|AUE_SELECT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 93 = select */
@@ -1567,6 +2131,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 94 = setdopt */
@@ -1583,6 +2153,12 @@ operator|)
 name|fsync
 block|,
 name|AUE_FSYNC
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 95 = fsync */
@@ -1599,6 +2175,12 @@ operator|)
 name|setpriority
 block|,
 name|AUE_SETPRIORITY
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 96 = setpriority */
@@ -1615,6 +2197,12 @@ operator|)
 name|socket
 block|,
 name|AUE_SOCKET
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 97 = socket */
@@ -1631,6 +2219,12 @@ operator|)
 name|connect
 block|,
 name|AUE_CONNECT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 98 = connect */
@@ -1646,6 +2240,12 @@ name|accept
 argument_list|)
 block|,
 name|AUE_ACCEPT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 99 = old accept */
@@ -1662,6 +2262,12 @@ operator|)
 name|getpriority
 block|,
 name|AUE_GETPRIORITY
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 100 = getpriority */
@@ -1677,6 +2283,12 @@ name|send
 argument_list|)
 block|,
 name|AUE_SEND
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 101 = old send */
@@ -1692,6 +2304,12 @@ name|recv
 argument_list|)
 block|,
 name|AUE_RECV
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 102 = old recv */
@@ -1707,6 +2325,12 @@ name|sigreturn
 argument_list|)
 block|,
 name|AUE_SIGRETURN
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 103 = old sigreturn */
@@ -1723,6 +2347,12 @@ operator|)
 name|bind
 block|,
 name|AUE_BIND
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 104 = bind */
@@ -1739,6 +2369,12 @@ operator|)
 name|setsockopt
 block|,
 name|AUE_SETSOCKOPT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 105 = setsockopt */
@@ -1755,6 +2391,12 @@ operator|)
 name|listen
 block|,
 name|AUE_LISTEN
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 106 = listen */
@@ -1768,6 +2410,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 107 = obsolete vtimes */
@@ -1783,6 +2431,12 @@ name|sigvec
 argument_list|)
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 108 = old sigvec */
@@ -1798,6 +2452,12 @@ name|sigblock
 argument_list|)
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 109 = old sigblock */
@@ -1813,6 +2473,12 @@ name|sigsetmask
 argument_list|)
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 110 = old sigsetmask */
@@ -1828,6 +2494,12 @@ name|sigsuspend
 argument_list|)
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 111 = old sigsuspend */
@@ -1843,6 +2515,12 @@ name|sigstack
 argument_list|)
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 112 = old sigstack */
@@ -1858,6 +2536,12 @@ name|recvmsg
 argument_list|)
 block|,
 name|AUE_RECVMSG
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 113 = old recvmsg */
@@ -1873,6 +2557,12 @@ name|sendmsg
 argument_list|)
 block|,
 name|AUE_SENDMSG
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 114 = old sendmsg */
@@ -1886,6 +2576,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 115 = obsolete vtrace */
@@ -1902,6 +2598,12 @@ operator|)
 name|gettimeofday
 block|,
 name|AUE_GETTIMEOFDAY
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 116 = gettimeofday */
@@ -1918,6 +2620,12 @@ operator|)
 name|getrusage
 block|,
 name|AUE_GETRUSAGE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 117 = getrusage */
@@ -1934,6 +2642,12 @@ operator|)
 name|getsockopt
 block|,
 name|AUE_GETSOCKOPT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 118 = getsockopt */
@@ -1947,6 +2661,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 119 = resuba */
@@ -1963,6 +2683,12 @@ operator|)
 name|readv
 block|,
 name|AUE_READV
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 120 = readv */
@@ -1979,6 +2705,12 @@ operator|)
 name|writev
 block|,
 name|AUE_WRITEV
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 121 = writev */
@@ -1995,6 +2727,12 @@ operator|)
 name|settimeofday
 block|,
 name|AUE_SETTIMEOFDAY
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 122 = settimeofday */
@@ -2011,6 +2749,12 @@ operator|)
 name|fchown
 block|,
 name|AUE_FCHOWN
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 123 = fchown */
@@ -2027,6 +2771,12 @@ operator|)
 name|fchmod
 block|,
 name|AUE_FCHMOD
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 124 = fchmod */
@@ -2042,6 +2792,12 @@ name|recvfrom
 argument_list|)
 block|,
 name|AUE_RECVFROM
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 125 = old recvfrom */
@@ -2058,6 +2814,12 @@ operator|)
 name|setreuid
 block|,
 name|AUE_SETREUID
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 126 = setreuid */
@@ -2074,6 +2836,12 @@ operator|)
 name|setregid
 block|,
 name|AUE_SETREGID
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 127 = setregid */
@@ -2090,6 +2858,12 @@ operator|)
 name|rename
 block|,
 name|AUE_RENAME
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 128 = rename */
@@ -2105,6 +2879,12 @@ name|truncate
 argument_list|)
 block|,
 name|AUE_TRUNCATE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 129 = old truncate */
@@ -2120,6 +2900,12 @@ name|ftruncate
 argument_list|)
 block|,
 name|AUE_FTRUNCATE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 130 = old ftruncate */
@@ -2136,6 +2922,12 @@ operator|)
 name|flock
 block|,
 name|AUE_FLOCK
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 131 = flock */
@@ -2152,6 +2944,12 @@ operator|)
 name|mkfifo
 block|,
 name|AUE_MKFIFO
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 132 = mkfifo */
@@ -2168,6 +2966,12 @@ operator|)
 name|sendto
 block|,
 name|AUE_SENDTO
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 133 = sendto */
@@ -2184,6 +2988,12 @@ operator|)
 name|shutdown
 block|,
 name|AUE_SHUTDOWN
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 134 = shutdown */
@@ -2200,6 +3010,12 @@ operator|)
 name|socketpair
 block|,
 name|AUE_SOCKETPAIR
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 135 = socketpair */
@@ -2216,6 +3032,12 @@ operator|)
 name|mkdir
 block|,
 name|AUE_MKDIR
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 136 = mkdir */
@@ -2232,6 +3054,12 @@ operator|)
 name|rmdir
 block|,
 name|AUE_RMDIR
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 137 = rmdir */
@@ -2248,6 +3076,12 @@ operator|)
 name|utimes
 block|,
 name|AUE_UTIMES
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 138 = utimes */
@@ -2261,6 +3095,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 139 = obsolete 4.2 sigreturn */
@@ -2277,6 +3117,12 @@ operator|)
 name|adjtime
 block|,
 name|AUE_ADJTIME
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 140 = adjtime */
@@ -2292,6 +3138,12 @@ name|getpeername
 argument_list|)
 block|,
 name|AUE_GETPEERNAME
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 141 = old getpeername */
@@ -2304,6 +3156,12 @@ name|gethostid
 argument_list|)
 block|,
 name|AUE_SYSCTL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 142 = old gethostid */
@@ -2319,6 +3177,12 @@ name|sethostid
 argument_list|)
 block|,
 name|AUE_SYSCTL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 143 = old sethostid */
@@ -2334,6 +3198,12 @@ name|getrlimit
 argument_list|)
 block|,
 name|AUE_GETRLIMIT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 144 = old getrlimit */
@@ -2349,6 +3219,12 @@ name|setrlimit
 argument_list|)
 block|,
 name|AUE_SETRLIMIT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 145 = old setrlimit */
@@ -2364,6 +3240,12 @@ name|killpg
 argument_list|)
 block|,
 name|AUE_KILLPG
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 146 = old killpg */
@@ -2377,6 +3259,12 @@ operator|)
 name|setsid
 block|,
 name|AUE_SETSID
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 147 = setsid */
@@ -2393,6 +3281,12 @@ operator|)
 name|quotactl
 block|,
 name|AUE_QUOTACTL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 148 = quotactl */
@@ -2405,6 +3299,12 @@ name|quota
 argument_list|)
 block|,
 name|AUE_O_QUOTA
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 149 = old quota */
@@ -2420,6 +3320,12 @@ name|getsockname
 argument_list|)
 block|,
 name|AUE_GETSOCKNAME
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 150 = old getsockname */
@@ -2433,6 +3339,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 151 = sem_lock */
@@ -2446,6 +3358,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 152 = sem_wakeup */
@@ -2459,6 +3377,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 153 = asyncdaemon */
@@ -2472,6 +3396,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 154 = nosys */
@@ -2488,6 +3418,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 155 = nfssvc */
@@ -2503,6 +3439,12 @@ name|getdirentries
 argument_list|)
 block|,
 name|AUE_GETDIRENTRIES
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 156 = old getdirentries */
@@ -2518,6 +3460,12 @@ name|statfs
 argument_list|)
 block|,
 name|AUE_STATFS
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 157 = old statfs */
@@ -2533,6 +3481,12 @@ name|fstatfs
 argument_list|)
 block|,
 name|AUE_FSTATFS
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 158 = old fstatfs */
@@ -2546,6 +3500,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 159 = nosys */
@@ -2562,6 +3522,12 @@ operator|)
 name|lgetfh
 block|,
 name|AUE_LGETFH
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 160 = lgetfh */
@@ -2578,6 +3544,12 @@ operator|)
 name|getfh
 block|,
 name|AUE_NFS_GETFH
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 161 = getfh */
@@ -2594,6 +3566,12 @@ operator|)
 name|getdomainname
 block|,
 name|AUE_SYSCTL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 162 = getdomainname */
@@ -2610,6 +3588,12 @@ operator|)
 name|setdomainname
 block|,
 name|AUE_SYSCTL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 163 = setdomainname */
@@ -2626,6 +3610,12 @@ operator|)
 name|uname
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 164 = uname */
@@ -2642,6 +3632,12 @@ operator|)
 name|sysarch
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 165 = sysarch */
@@ -2658,6 +3654,12 @@ operator|)
 name|rtprio
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 166 = rtprio */
@@ -2671,6 +3673,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 167 = nosys */
@@ -2684,6 +3692,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 168 = nosys */
@@ -2700,6 +3714,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 169 = semsys */
@@ -2716,6 +3736,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 170 = msgsys */
@@ -2732,6 +3758,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 171 = shmsys */
@@ -2745,6 +3777,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 172 = nosys */
@@ -2761,6 +3799,12 @@ operator|)
 name|pread
 block|,
 name|AUE_PREAD
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 173 = pread */
@@ -2777,6 +3821,12 @@ operator|)
 name|pwrite
 block|,
 name|AUE_PWRITE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 174 = pwrite */
@@ -2790,6 +3840,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 175 = nosys */
@@ -2806,6 +3862,12 @@ operator|)
 name|ntp_adjtime
 block|,
 name|AUE_ADJTIME
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 176 = ntp_adjtime */
@@ -2819,6 +3881,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 177 = sfork */
@@ -2832,6 +3900,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 178 = getdescriptor */
@@ -2845,6 +3919,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 179 = setdescriptor */
@@ -2858,6 +3938,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 180 = nosys */
@@ -2874,6 +3960,12 @@ operator|)
 name|setgid
 block|,
 name|AUE_SETGID
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 181 = setgid */
@@ -2890,6 +3982,12 @@ operator|)
 name|setegid
 block|,
 name|AUE_SETEGID
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 182 = setegid */
@@ -2906,6 +4004,12 @@ operator|)
 name|seteuid
 block|,
 name|AUE_SETEUID
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 183 = seteuid */
@@ -2919,6 +4023,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 184 = lfs_bmapv */
@@ -2932,6 +4042,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 185 = lfs_markv */
@@ -2945,6 +4061,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 186 = lfs_segclean */
@@ -2958,6 +4080,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 187 = lfs_segwait */
@@ -2974,6 +4102,12 @@ operator|)
 name|stat
 block|,
 name|AUE_STAT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 188 = stat */
@@ -2990,6 +4124,12 @@ operator|)
 name|fstat
 block|,
 name|AUE_FSTAT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 189 = fstat */
@@ -3006,6 +4146,12 @@ operator|)
 name|lstat
 block|,
 name|AUE_LSTAT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 190 = lstat */
@@ -3022,6 +4168,12 @@ operator|)
 name|pathconf
 block|,
 name|AUE_PATHCONF
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 191 = pathconf */
@@ -3038,6 +4190,12 @@ operator|)
 name|fpathconf
 block|,
 name|AUE_FPATHCONF
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 192 = fpathconf */
@@ -3051,6 +4209,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 193 = nosys */
@@ -3067,6 +4231,12 @@ operator|)
 name|getrlimit
 block|,
 name|AUE_GETRLIMIT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 194 = getrlimit */
@@ -3083,6 +4253,12 @@ operator|)
 name|setrlimit
 block|,
 name|AUE_SETRLIMIT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 195 = setrlimit */
@@ -3099,6 +4275,12 @@ operator|)
 name|getdirentries
 block|,
 name|AUE_GETDIRENTRIES
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 196 = getdirentries */
@@ -3115,6 +4297,12 @@ operator|)
 name|mmap
 block|,
 name|AUE_MMAP
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 197 = mmap */
@@ -3128,6 +4316,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 198 = __syscall */
@@ -3144,6 +4338,12 @@ operator|)
 name|lseek
 block|,
 name|AUE_LSEEK
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 199 = lseek */
@@ -3160,6 +4360,12 @@ operator|)
 name|truncate
 block|,
 name|AUE_TRUNCATE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 200 = truncate */
@@ -3176,6 +4382,12 @@ operator|)
 name|ftruncate
 block|,
 name|AUE_FTRUNCATE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 201 = ftruncate */
@@ -3192,6 +4404,12 @@ operator|)
 name|__sysctl
 block|,
 name|AUE_SYSCTL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 202 = __sysctl */
@@ -3208,6 +4426,12 @@ operator|)
 name|mlock
 block|,
 name|AUE_MLOCK
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 203 = mlock */
@@ -3224,6 +4448,12 @@ operator|)
 name|munlock
 block|,
 name|AUE_MUNLOCK
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 204 = munlock */
@@ -3240,6 +4470,12 @@ operator|)
 name|undelete
 block|,
 name|AUE_UNDELETE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 205 = undelete */
@@ -3256,6 +4492,12 @@ operator|)
 name|futimes
 block|,
 name|AUE_FUTIMES
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 206 = futimes */
@@ -3272,6 +4514,12 @@ operator|)
 name|getpgid
 block|,
 name|AUE_GETPGID
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 207 = getpgid */
@@ -3285,6 +4533,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 208 = newreboot */
@@ -3301,6 +4555,12 @@ operator|)
 name|poll
 block|,
 name|AUE_POLL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 209 = poll */
@@ -3317,6 +4577,12 @@ operator|)
 name|lkmnosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 210 = lkmnosys */
@@ -3333,6 +4599,12 @@ operator|)
 name|lkmnosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 211 = lkmnosys */
@@ -3349,6 +4621,12 @@ operator|)
 name|lkmnosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 212 = lkmnosys */
@@ -3365,6 +4643,12 @@ operator|)
 name|lkmnosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 213 = lkmnosys */
@@ -3381,6 +4665,12 @@ operator|)
 name|lkmnosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 214 = lkmnosys */
@@ -3397,6 +4687,12 @@ operator|)
 name|lkmnosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 215 = lkmnosys */
@@ -3413,6 +4709,12 @@ operator|)
 name|lkmnosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 216 = lkmnosys */
@@ -3429,6 +4731,12 @@ operator|)
 name|lkmnosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 217 = lkmnosys */
@@ -3445,6 +4753,12 @@ operator|)
 name|lkmnosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 218 = lkmnosys */
@@ -3461,6 +4775,12 @@ operator|)
 name|lkmnosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 219 = lkmnosys */
@@ -3477,6 +4797,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 220 = __semctl */
@@ -3493,6 +4819,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 221 = semget */
@@ -3509,6 +4841,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 222 = semop */
@@ -3522,6 +4860,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 223 = semconfig */
@@ -3538,6 +4882,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 224 = msgctl */
@@ -3554,6 +4904,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 225 = msgget */
@@ -3570,6 +4926,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 226 = msgsnd */
@@ -3586,6 +4948,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 227 = msgrcv */
@@ -3602,6 +4970,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 228 = shmat */
@@ -3618,6 +4992,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 229 = shmctl */
@@ -3634,6 +5014,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 230 = shmdt */
@@ -3650,6 +5036,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 231 = shmget */
@@ -3666,6 +5058,12 @@ operator|)
 name|clock_gettime
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 232 = clock_gettime */
@@ -3682,6 +5080,12 @@ operator|)
 name|clock_settime
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 233 = clock_settime */
@@ -3698,6 +5102,12 @@ operator|)
 name|clock_getres
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 234 = clock_getres */
@@ -3714,6 +5124,12 @@ operator|)
 name|ktimer_create
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 235 = ktimer_create */
@@ -3730,6 +5146,12 @@ operator|)
 name|ktimer_delete
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 236 = ktimer_delete */
@@ -3746,6 +5168,12 @@ operator|)
 name|ktimer_settime
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 237 = ktimer_settime */
@@ -3762,6 +5190,12 @@ operator|)
 name|ktimer_gettime
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 238 = ktimer_gettime */
@@ -3778,6 +5212,12 @@ operator|)
 name|ktimer_getoverrun
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 239 = ktimer_getoverrun */
@@ -3794,6 +5234,12 @@ operator|)
 name|nanosleep
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 240 = nanosleep */
@@ -3807,6 +5253,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 241 = nosys */
@@ -3820,6 +5272,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 242 = nosys */
@@ -3833,6 +5291,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 243 = nosys */
@@ -3846,6 +5310,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 244 = nosys */
@@ -3859,6 +5329,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 245 = nosys */
@@ -3872,6 +5348,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 246 = nosys */
@@ -3885,6 +5367,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 247 = nosys */
@@ -3901,6 +5389,12 @@ operator|)
 name|ntp_gettime
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 248 = ntp_gettime */
@@ -3914,6 +5408,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 249 = nosys */
@@ -3930,6 +5430,12 @@ operator|)
 name|minherit
 block|,
 name|AUE_MINHERIT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 250 = minherit */
@@ -3946,6 +5452,12 @@ operator|)
 name|rfork
 block|,
 name|AUE_RFORK
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 251 = rfork */
@@ -3962,6 +5474,12 @@ operator|)
 name|openbsd_poll
 block|,
 name|AUE_POLL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 252 = openbsd_poll */
@@ -3975,6 +5493,12 @@ operator|)
 name|issetugid
 block|,
 name|AUE_ISSETUGID
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 253 = issetugid */
@@ -3991,6 +5515,12 @@ operator|)
 name|lchown
 block|,
 name|AUE_LCHOWN
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 254 = lchown */
@@ -4007,6 +5537,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 255 = aio_read */
@@ -4023,6 +5559,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 256 = aio_write */
@@ -4039,6 +5581,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 257 = lio_listio */
@@ -4052,6 +5600,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 258 = nosys */
@@ -4065,6 +5619,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 259 = nosys */
@@ -4078,6 +5638,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 260 = nosys */
@@ -4091,6 +5657,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 261 = nosys */
@@ -4104,6 +5676,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 262 = nosys */
@@ -4117,6 +5695,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 263 = nosys */
@@ -4130,6 +5714,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 264 = nosys */
@@ -4143,6 +5733,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 265 = nosys */
@@ -4156,6 +5752,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 266 = nosys */
@@ -4169,6 +5771,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 267 = nosys */
@@ -4182,6 +5790,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 268 = nosys */
@@ -4195,6 +5809,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 269 = nosys */
@@ -4208,6 +5828,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 270 = nosys */
@@ -4221,6 +5847,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 271 = nosys */
@@ -4237,6 +5869,12 @@ operator|)
 name|getdents
 block|,
 name|AUE_O_GETDENTS
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 272 = getdents */
@@ -4250,6 +5888,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 273 = nosys */
@@ -4266,6 +5910,12 @@ operator|)
 name|lchmod
 block|,
 name|AUE_LCHMOD
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 274 = lchmod */
@@ -4282,6 +5932,12 @@ operator|)
 name|lchown
 block|,
 name|AUE_LCHOWN
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 275 = netbsd_lchown */
@@ -4298,6 +5954,12 @@ operator|)
 name|lutimes
 block|,
 name|AUE_LUTIMES
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 276 = lutimes */
@@ -4314,6 +5976,12 @@ operator|)
 name|msync
 block|,
 name|AUE_MSYNC
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 277 = netbsd_msync */
@@ -4330,6 +5998,12 @@ operator|)
 name|nstat
 block|,
 name|AUE_STAT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 278 = nstat */
@@ -4346,6 +6020,12 @@ operator|)
 name|nfstat
 block|,
 name|AUE_FSTAT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 279 = nfstat */
@@ -4362,6 +6042,12 @@ operator|)
 name|nlstat
 block|,
 name|AUE_LSTAT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 280 = nlstat */
@@ -4375,6 +6061,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 281 = nosys */
@@ -4388,6 +6080,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 282 = nosys */
@@ -4401,6 +6099,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 283 = nosys */
@@ -4414,6 +6118,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 284 = nosys */
@@ -4427,6 +6137,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 285 = nosys */
@@ -4440,6 +6156,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 286 = nosys */
@@ -4453,6 +6175,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 287 = nosys */
@@ -4466,6 +6194,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 288 = nosys */
@@ -4482,6 +6216,12 @@ operator|)
 name|preadv
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 289 = preadv */
@@ -4498,6 +6238,12 @@ operator|)
 name|pwritev
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 290 = pwritev */
@@ -4511,6 +6257,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 291 = nosys */
@@ -4524,6 +6276,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 292 = nosys */
@@ -4537,6 +6295,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 293 = nosys */
@@ -4550,6 +6314,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 294 = nosys */
@@ -4563,6 +6333,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 295 = nosys */
@@ -4576,6 +6352,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 296 = nosys */
@@ -4591,6 +6373,12 @@ name|fhstatfs
 argument_list|)
 block|,
 name|AUE_FHSTATFS
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 297 = old fhstatfs */
@@ -4607,6 +6395,12 @@ operator|)
 name|fhopen
 block|,
 name|AUE_FHOPEN
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 298 = fhopen */
@@ -4623,6 +6417,12 @@ operator|)
 name|fhstat
 block|,
 name|AUE_FHSTAT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 299 = fhstat */
@@ -4639,6 +6439,12 @@ operator|)
 name|modnext
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 300 = modnext */
@@ -4655,6 +6461,12 @@ operator|)
 name|modstat
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 301 = modstat */
@@ -4671,6 +6483,12 @@ operator|)
 name|modfnext
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 302 = modfnext */
@@ -4687,6 +6505,12 @@ operator|)
 name|modfind
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 303 = modfind */
@@ -4703,6 +6527,12 @@ operator|)
 name|kldload
 block|,
 name|AUE_MODLOAD
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 304 = kldload */
@@ -4719,6 +6549,12 @@ operator|)
 name|kldunload
 block|,
 name|AUE_MODUNLOAD
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 305 = kldunload */
@@ -4735,6 +6571,12 @@ operator|)
 name|kldfind
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 306 = kldfind */
@@ -4751,6 +6593,12 @@ operator|)
 name|kldnext
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 307 = kldnext */
@@ -4767,6 +6615,12 @@ operator|)
 name|kldstat
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 308 = kldstat */
@@ -4783,6 +6637,12 @@ operator|)
 name|kldfirstmod
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 309 = kldfirstmod */
@@ -4799,6 +6659,12 @@ operator|)
 name|getsid
 block|,
 name|AUE_GETSID
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 310 = getsid */
@@ -4815,6 +6681,12 @@ operator|)
 name|setresuid
 block|,
 name|AUE_SETRESUID
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 311 = setresuid */
@@ -4831,6 +6703,12 @@ operator|)
 name|setresgid
 block|,
 name|AUE_SETRESGID
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 312 = setresgid */
@@ -4844,6 +6722,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 313 = obsolete signanosleep */
@@ -4860,6 +6744,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 314 = aio_return */
@@ -4876,6 +6766,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 315 = aio_suspend */
@@ -4892,6 +6788,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 316 = aio_cancel */
@@ -4908,6 +6810,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 317 = aio_error */
@@ -4924,6 +6832,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 318 = oaio_read */
@@ -4940,6 +6854,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 319 = oaio_write */
@@ -4956,6 +6876,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 320 = olio_listio */
@@ -4969,6 +6895,12 @@ operator|)
 name|yield
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 321 = yield */
@@ -4982,6 +6914,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 322 = obsolete thr_sleep */
@@ -4995,6 +6933,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 323 = obsolete thr_wakeup */
@@ -5011,6 +6955,12 @@ operator|)
 name|mlockall
 block|,
 name|AUE_MLOCKALL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 324 = mlockall */
@@ -5024,6 +6974,12 @@ operator|)
 name|munlockall
 block|,
 name|AUE_MUNLOCKALL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 325 = munlockall */
@@ -5040,6 +6996,12 @@ operator|)
 name|__getcwd
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 326 = __getcwd */
@@ -5056,6 +7018,12 @@ operator|)
 name|sched_setparam
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 327 = sched_setparam */
@@ -5072,6 +7040,12 @@ operator|)
 name|sched_getparam
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 328 = sched_getparam */
@@ -5088,6 +7062,12 @@ operator|)
 name|sched_setscheduler
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 329 = sched_setscheduler */
@@ -5104,6 +7084,12 @@ operator|)
 name|sched_getscheduler
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 330 = sched_getscheduler */
@@ -5117,6 +7103,12 @@ operator|)
 name|sched_yield
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 331 = sched_yield */
@@ -5133,6 +7125,12 @@ operator|)
 name|sched_get_priority_max
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 332 = sched_get_priority_max */
@@ -5149,6 +7147,12 @@ operator|)
 name|sched_get_priority_min
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 333 = sched_get_priority_min */
@@ -5165,6 +7169,12 @@ operator|)
 name|sched_rr_get_interval
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 334 = sched_rr_get_interval */
@@ -5181,6 +7191,12 @@ operator|)
 name|utrace
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 335 = utrace */
@@ -5196,6 +7212,12 @@ name|sendfile
 argument_list|)
 block|,
 name|AUE_SENDFILE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 336 = old sendfile */
@@ -5212,6 +7234,12 @@ operator|)
 name|kldsym
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 337 = kldsym */
@@ -5228,6 +7256,12 @@ operator|)
 name|jail
 block|,
 name|AUE_JAIL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 338 = jail */
@@ -5241,6 +7275,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 339 = pioctl */
@@ -5257,6 +7297,12 @@ operator|)
 name|sigprocmask
 block|,
 name|AUE_SIGPROCMASK
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 340 = sigprocmask */
@@ -5273,6 +7319,12 @@ operator|)
 name|sigsuspend
 block|,
 name|AUE_SIGSUSPEND
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 341 = sigsuspend */
@@ -5288,6 +7340,12 @@ name|sigaction
 argument_list|)
 block|,
 name|AUE_SIGACTION
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 342 = old sigaction */
@@ -5304,6 +7362,12 @@ operator|)
 name|sigpending
 block|,
 name|AUE_SIGPENDING
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 343 = sigpending */
@@ -5319,6 +7383,12 @@ name|sigreturn
 argument_list|)
 block|,
 name|AUE_SIGRETURN
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 344 = old sigreturn */
@@ -5335,6 +7405,12 @@ operator|)
 name|sigtimedwait
 block|,
 name|AUE_SIGWAIT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 345 = sigtimedwait */
@@ -5351,6 +7427,12 @@ operator|)
 name|sigwaitinfo
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 346 = sigwaitinfo */
@@ -5367,6 +7449,12 @@ operator|)
 name|__acl_get_file
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 347 = __acl_get_file */
@@ -5383,6 +7471,12 @@ operator|)
 name|__acl_set_file
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 348 = __acl_set_file */
@@ -5399,6 +7493,12 @@ operator|)
 name|__acl_get_fd
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 349 = __acl_get_fd */
@@ -5415,6 +7515,12 @@ operator|)
 name|__acl_set_fd
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 350 = __acl_set_fd */
@@ -5431,6 +7537,12 @@ operator|)
 name|__acl_delete_file
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 351 = __acl_delete_file */
@@ -5447,6 +7559,12 @@ operator|)
 name|__acl_delete_fd
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 352 = __acl_delete_fd */
@@ -5463,6 +7581,12 @@ operator|)
 name|__acl_aclcheck_file
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 353 = __acl_aclcheck_file */
@@ -5479,6 +7603,12 @@ operator|)
 name|__acl_aclcheck_fd
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 354 = __acl_aclcheck_fd */
@@ -5495,6 +7625,12 @@ operator|)
 name|extattrctl
 block|,
 name|AUE_EXTATTRCTL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 355 = extattrctl */
@@ -5511,6 +7647,12 @@ operator|)
 name|extattr_set_file
 block|,
 name|AUE_EXTATTR_SET_FILE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 356 = extattr_set_file */
@@ -5527,6 +7669,12 @@ operator|)
 name|extattr_get_file
 block|,
 name|AUE_EXTATTR_GET_FILE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 357 = extattr_get_file */
@@ -5543,6 +7691,12 @@ operator|)
 name|extattr_delete_file
 block|,
 name|AUE_EXTATTR_DELETE_FILE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 358 = extattr_delete_file */
@@ -5559,6 +7713,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 359 = aio_waitcomplete */
@@ -5575,6 +7735,12 @@ operator|)
 name|getresuid
 block|,
 name|AUE_GETRESUID
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 360 = getresuid */
@@ -5591,6 +7757,12 @@ operator|)
 name|getresgid
 block|,
 name|AUE_GETRESGID
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 361 = getresgid */
@@ -5604,6 +7776,12 @@ operator|)
 name|kqueue
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 362 = kqueue */
@@ -5620,6 +7798,12 @@ operator|)
 name|kevent
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 363 = kevent */
@@ -5633,6 +7817,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 364 = __cap_get_proc */
@@ -5646,6 +7836,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 365 = __cap_set_proc */
@@ -5659,6 +7855,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 366 = __cap_get_fd */
@@ -5672,6 +7874,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 367 = __cap_get_file */
@@ -5685,6 +7893,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 368 = __cap_set_fd */
@@ -5698,6 +7912,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 369 = __cap_set_file */
@@ -5714,6 +7934,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 370 = lkmressys */
@@ -5730,6 +7956,12 @@ operator|)
 name|extattr_set_fd
 block|,
 name|AUE_EXTATTR_SET_FD
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 371 = extattr_set_fd */
@@ -5746,6 +7978,12 @@ operator|)
 name|extattr_get_fd
 block|,
 name|AUE_EXTATTR_GET_FD
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 372 = extattr_get_fd */
@@ -5762,6 +8000,12 @@ operator|)
 name|extattr_delete_fd
 block|,
 name|AUE_EXTATTR_DELETE_FD
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 373 = extattr_delete_fd */
@@ -5778,6 +8022,12 @@ operator|)
 name|__setugid
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 374 = __setugid */
@@ -5794,6 +8044,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 375 = nfsclnt */
@@ -5810,6 +8066,12 @@ operator|)
 name|eaccess
 block|,
 name|AUE_EACCESS
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 376 = eaccess */
@@ -5823,6 +8085,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 377 = afs_syscall */
@@ -5839,6 +8107,12 @@ operator|)
 name|nmount
 block|,
 name|AUE_NMOUNT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 378 = nmount */
@@ -5852,6 +8126,12 @@ operator|)
 name|kse_exit
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 379 = kse_exit */
@@ -5868,6 +8148,12 @@ operator|)
 name|kse_wakeup
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 380 = kse_wakeup */
@@ -5884,6 +8170,12 @@ operator|)
 name|kse_create
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 381 = kse_create */
@@ -5900,6 +8192,12 @@ operator|)
 name|kse_thr_interrupt
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 382 = kse_thr_interrupt */
@@ -5916,6 +8214,12 @@ operator|)
 name|kse_release
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 383 = kse_release */
@@ -5932,6 +8236,12 @@ operator|)
 name|__mac_get_proc
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 384 = __mac_get_proc */
@@ -5948,6 +8258,12 @@ operator|)
 name|__mac_set_proc
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 385 = __mac_set_proc */
@@ -5964,6 +8280,12 @@ operator|)
 name|__mac_get_fd
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 386 = __mac_get_fd */
@@ -5980,6 +8302,12 @@ operator|)
 name|__mac_get_file
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 387 = __mac_get_file */
@@ -5996,6 +8324,12 @@ operator|)
 name|__mac_set_fd
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 388 = __mac_set_fd */
@@ -6012,6 +8346,12 @@ operator|)
 name|__mac_set_file
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 389 = __mac_set_file */
@@ -6028,6 +8368,12 @@ operator|)
 name|kenv
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 390 = kenv */
@@ -6044,6 +8390,12 @@ operator|)
 name|lchflags
 block|,
 name|AUE_LCHFLAGS
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 391 = lchflags */
@@ -6060,6 +8412,12 @@ operator|)
 name|uuidgen
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 392 = uuidgen */
@@ -6076,6 +8434,12 @@ operator|)
 name|sendfile
 block|,
 name|AUE_SENDFILE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 393 = sendfile */
@@ -6092,6 +8456,12 @@ operator|)
 name|mac_syscall
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 394 = mac_syscall */
@@ -6108,6 +8478,12 @@ operator|)
 name|getfsstat
 block|,
 name|AUE_GETFSSTAT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 395 = getfsstat */
@@ -6124,6 +8500,12 @@ operator|)
 name|statfs
 block|,
 name|AUE_STATFS
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 396 = statfs */
@@ -6140,6 +8522,12 @@ operator|)
 name|fstatfs
 block|,
 name|AUE_FSTATFS
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 397 = fstatfs */
@@ -6156,6 +8544,12 @@ operator|)
 name|fhstatfs
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 398 = fhstatfs */
@@ -6169,6 +8563,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 399 = nosys */
@@ -6185,6 +8585,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 400 = ksem_close */
@@ -6201,6 +8607,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 401 = ksem_post */
@@ -6217,6 +8629,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 402 = ksem_wait */
@@ -6233,6 +8651,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 403 = ksem_trywait */
@@ -6249,6 +8673,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 404 = ksem_init */
@@ -6265,6 +8695,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 405 = ksem_open */
@@ -6281,6 +8717,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 406 = ksem_unlink */
@@ -6297,6 +8739,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 407 = ksem_getvalue */
@@ -6313,6 +8761,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 408 = ksem_destroy */
@@ -6329,6 +8783,12 @@ operator|)
 name|__mac_get_pid
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 409 = __mac_get_pid */
@@ -6345,6 +8805,12 @@ operator|)
 name|__mac_get_link
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 410 = __mac_get_link */
@@ -6361,6 +8827,12 @@ operator|)
 name|__mac_set_link
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 411 = __mac_set_link */
@@ -6377,6 +8849,12 @@ operator|)
 name|extattr_set_link
 block|,
 name|AUE_EXTATTR_SET_LINK
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 412 = extattr_set_link */
@@ -6393,6 +8871,12 @@ operator|)
 name|extattr_get_link
 block|,
 name|AUE_EXTATTR_GET_LINK
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 413 = extattr_get_link */
@@ -6409,6 +8893,12 @@ operator|)
 name|extattr_delete_link
 block|,
 name|AUE_EXTATTR_DELETE_LINK
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 414 = extattr_delete_link */
@@ -6425,6 +8915,12 @@ operator|)
 name|__mac_execve
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 415 = __mac_execve */
@@ -6441,6 +8937,12 @@ operator|)
 name|sigaction
 block|,
 name|AUE_SIGACTION
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 416 = sigaction */
@@ -6457,6 +8959,12 @@ operator|)
 name|sigreturn
 block|,
 name|AUE_SIGRETURN
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 417 = sigreturn */
@@ -6470,6 +8978,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 418 = __xstat */
@@ -6483,6 +8997,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 419 = __xfstat */
@@ -6496,6 +9016,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 420 = __xlstat */
@@ -6512,6 +9038,12 @@ operator|)
 name|getcontext
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 421 = getcontext */
@@ -6528,6 +9060,12 @@ operator|)
 name|setcontext
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 422 = setcontext */
@@ -6544,6 +9082,12 @@ operator|)
 name|swapcontext
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 423 = swapcontext */
@@ -6560,6 +9104,12 @@ operator|)
 name|swapoff
 block|,
 name|AUE_SWAPOFF
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 424 = swapoff */
@@ -6576,6 +9126,12 @@ operator|)
 name|__acl_get_link
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 425 = __acl_get_link */
@@ -6592,6 +9148,12 @@ operator|)
 name|__acl_set_link
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 426 = __acl_set_link */
@@ -6608,6 +9170,12 @@ operator|)
 name|__acl_delete_link
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 427 = __acl_delete_link */
@@ -6624,6 +9192,12 @@ operator|)
 name|__acl_aclcheck_link
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 428 = __acl_aclcheck_link */
@@ -6640,6 +9214,12 @@ operator|)
 name|sigwait
 block|,
 name|AUE_SIGWAIT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 429 = sigwait */
@@ -6656,6 +9236,12 @@ operator|)
 name|thr_create
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 430 = thr_create */
@@ -6672,6 +9258,12 @@ operator|)
 name|thr_exit
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 431 = thr_exit */
@@ -6688,6 +9280,12 @@ operator|)
 name|thr_self
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 432 = thr_self */
@@ -6704,6 +9302,12 @@ operator|)
 name|thr_kill
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 433 = thr_kill */
@@ -6720,6 +9324,12 @@ operator|)
 name|_umtx_lock
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 434 = _umtx_lock */
@@ -6736,6 +9346,12 @@ operator|)
 name|_umtx_unlock
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 435 = _umtx_unlock */
@@ -6752,6 +9368,12 @@ operator|)
 name|jail_attach
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 436 = jail_attach */
@@ -6768,6 +9390,12 @@ operator|)
 name|extattr_list_fd
 block|,
 name|AUE_EXTATTR_LIST_FD
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 437 = extattr_list_fd */
@@ -6784,6 +9412,12 @@ operator|)
 name|extattr_list_file
 block|,
 name|AUE_EXTATTR_LIST_FILE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 438 = extattr_list_file */
@@ -6800,6 +9434,12 @@ operator|)
 name|extattr_list_link
 block|,
 name|AUE_EXTATTR_LIST_LINK
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 439 = extattr_list_link */
@@ -6816,6 +9456,12 @@ operator|)
 name|kse_switchin
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 440 = kse_switchin */
@@ -6832,6 +9478,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 441 = ksem_timedwait */
@@ -6848,6 +9500,12 @@ operator|)
 name|thr_suspend
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 442 = thr_suspend */
@@ -6864,6 +9522,12 @@ operator|)
 name|thr_wake
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 443 = thr_wake */
@@ -6880,6 +9544,12 @@ operator|)
 name|kldunloadf
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 444 = kldunloadf */
@@ -6896,6 +9566,12 @@ operator|)
 name|audit
 block|,
 name|AUE_AUDIT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 445 = audit */
@@ -6912,6 +9588,12 @@ operator|)
 name|auditon
 block|,
 name|AUE_AUDITON
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 446 = auditon */
@@ -6928,6 +9610,12 @@ operator|)
 name|getauid
 block|,
 name|AUE_GETAUID
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 447 = getauid */
@@ -6944,6 +9632,12 @@ operator|)
 name|setauid
 block|,
 name|AUE_SETAUID
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 448 = setauid */
@@ -6960,6 +9654,12 @@ operator|)
 name|getaudit
 block|,
 name|AUE_GETAUDIT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 449 = getaudit */
@@ -6976,6 +9676,12 @@ operator|)
 name|setaudit
 block|,
 name|AUE_SETAUDIT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 450 = setaudit */
@@ -6992,6 +9698,12 @@ operator|)
 name|getaudit_addr
 block|,
 name|AUE_GETAUDIT_ADDR
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 451 = getaudit_addr */
@@ -7008,6 +9720,12 @@ operator|)
 name|setaudit_addr
 block|,
 name|AUE_SETAUDIT_ADDR
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 452 = setaudit_addr */
@@ -7024,6 +9742,12 @@ operator|)
 name|auditctl
 block|,
 name|AUE_AUDITCTL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 453 = auditctl */
@@ -7040,6 +9764,12 @@ operator|)
 name|_umtx_op
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 454 = _umtx_op */
@@ -7056,6 +9786,12 @@ operator|)
 name|thr_new
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 455 = thr_new */
@@ -7072,6 +9808,12 @@ operator|)
 name|sigqueue
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 456 = sigqueue */
@@ -7088,6 +9830,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 457 = kmq_open */
@@ -7104,6 +9852,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 458 = kmq_setattr */
@@ -7120,6 +9874,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 459 = kmq_timedreceive */
@@ -7136,6 +9896,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 460 = kmq_timedsend */
@@ -7152,6 +9918,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 461 = kmq_notify */
@@ -7168,6 +9940,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 462 = kmq_unlink */
@@ -7184,6 +9962,12 @@ operator|)
 name|abort2
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 463 = abort2 */
@@ -7200,6 +9984,12 @@ operator|)
 name|thr_set_name
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 464 = thr_set_name */
@@ -7216,6 +10006,12 @@ operator|)
 name|lkmressys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 465 = aio_fsync */
@@ -7232,6 +10028,12 @@ operator|)
 name|thr_setscheduler
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 466 = thr_setscheduler */
@@ -7248,6 +10050,12 @@ operator|)
 name|thr_getscheduler
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 467 = thr_getscheduler */
@@ -7264,6 +10072,12 @@ operator|)
 name|thr_setschedparam
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 468 = thr_setschedparam */
