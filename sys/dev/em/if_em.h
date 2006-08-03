@@ -165,7 +165,7 @@ begin_define
 define|#
 directive|define
 name|EM_TX_CLEANUP_THRESHOLD
-value|(sc->num_tx_desc / 8)
+value|(adapter->num_tx_desc / 8)
 end_define
 
 begin_comment
@@ -487,8 +487,8 @@ end_typedef
 
 begin_decl_stmt
 name|struct
-name|em_softc
-name|sc
+name|adapter
+name|adapter
 decl_stmt|;
 end_decl_stmt
 
@@ -501,9 +501,9 @@ struct|struct
 name|em_int_delay_info
 block|{
 name|struct
-name|em_softc
+name|adapter
 modifier|*
-name|sc
+name|adapter
 decl_stmt|;
 comment|/* XXX: ugly pointer */
 name|int
@@ -554,7 +554,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|em_softc
+name|adapter
 block|{
 name|struct
 name|ifnet
