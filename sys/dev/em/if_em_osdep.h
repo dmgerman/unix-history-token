@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**************************************************************************  Copyright (c) 2001-2005, Intel Corporation All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Redistributions in binary form must reproduce the above copyright     notice, this list of conditions and the following disclaimer in the     documentation and/or other materials provided with the distribution.   3. Neither the name of the Intel Corporation nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  ***************************************************************************/
+comment|/**************************************************************************  Copyright (c) 2001-2006, Intel Corporation All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Redistributions in binary form must reproduce the above copyright     notice, this list of conditions and the following disclaimer in the     documentation and/or other materials provided with the distribution.   3. Neither the name of the Intel Corporation nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  ***************************************************************************/
 end_comment
 
 begin_comment
@@ -354,6 +354,12 @@ decl_stmt|;
 name|bus_space_handle_t
 name|io_bus_space_handle
 decl_stmt|;
+name|bus_space_tag_t
+name|flash_bus_space_tag
+decl_stmt|;
+name|bus_space_handle_t
+name|flash_bus_space_handle
+decl_stmt|;
 name|device_t
 name|dev
 decl_stmt|;
@@ -385,7 +391,7 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|bus_space_read_4( ((struct em_osdep *)(hw)->back)->mem_bus_space_tag, \                       ((struct em_osdep *)(hw)->back)->mem_bus_space_handle, \                       offset)
+value|bus_space_read_4( ((struct em_osdep *)(hw)->back)->mem_bus_space_tag, \     ((struct em_osdep *)(hw)->back)->mem_bus_space_handle, offset)
 end_define
 
 begin_comment
@@ -404,7 +410,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|bus_space_write_4( ((struct em_osdep *)(hw)->back)->mem_bus_space_tag, \                        ((struct em_osdep *)(hw)->back)->mem_bus_space_handle, \                        offset, \                        value)
+value|bus_space_write_4( ((struct em_osdep *)(hw)->back)->mem_bus_space_tag, \     ((struct em_osdep *)(hw)->back)->mem_bus_space_handle, offset, value)
 end_define
 
 begin_comment
@@ -424,6 +430,23 @@ define|\
 value|((hw)->mac_type>= em_82543 ? E1000_##reg : E1000_82542_##reg)
 end_define
 
+begin_comment
+comment|/*  * Register READ/WRITE macros.  *  * XXXGL: Due to define's namespace mangling in recent version of  * if_em_hw.*, we prepend "_" to the register name in all macros,  * to prevent reg from being substituted, and then, in E1000_REG_OFFSET()  * we prepend either "E1000" or "E1000_82542".  *  * P.S. The problematic defines are E1000_PHY_CTRL and PHY_CTRL.  *  * P.P.S. Intel has removed E1000_REG_OFFSET() and copy-pasted it to all  * macros.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_E1000_REG_OFFSET
+parameter_list|(
+name|hw
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|((hw)->mac_type>= em_82543 ? E1000##reg : E1000_82542##reg)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -434,7 +457,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|E1000_READ_OFFSET(hw, E1000_REG_OFFSET(hw, reg))
+value|E1000_READ_OFFSET(hw, _E1000_REG_OFFSET(hw, _##reg))
 end_define
 
 begin_define
@@ -449,7 +472,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|E1000_WRITE_OFFSET(hw, E1000_REG_OFFSET(hw, reg), value)
+value|E1000_WRITE_OFFSET(hw, _E1000_REG_OFFSET(hw, _##reg), value)
 end_define
 
 begin_define
@@ -464,7 +487,7 @@ parameter_list|,
 name|index
 parameter_list|)
 define|\
-value|E1000_READ_OFFSET(hw, E1000_REG_OFFSET(hw, reg) + ((index)<< 2))
+value|E1000_READ_OFFSET(hw, _E1000_REG_OFFSET(hw, _##reg) + ((index)<< 2))
 end_define
 
 begin_define
@@ -488,7 +511,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|E1000_WRITE_OFFSET(hw, E1000_REG_OFFSET(hw, reg) + ((index)<< 2), value)
+value|E1000_WRITE_OFFSET(hw, _E1000_REG_OFFSET(hw, _##reg) + ((index)<< 2), value)
 end_define
 
 begin_define
@@ -505,7 +528,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|bus_space_write_1( ((struct em_osdep *)(hw)->back)->mem_bus_space_tag, \                        ((struct em_osdep *)(hw)->back)->mem_bus_space_handle, \                        E1000_REG_OFFSET(hw, reg) + (index), \                        value)
+value|bus_space_write_1( ((struct em_osdep *)(hw)->back)->mem_bus_space_tag, \                        ((struct em_osdep *)(hw)->back)->mem_bus_space_handle, \                        _E1000_REG_OFFSET(hw, _##reg) + (index), \                        value)
 end_define
 
 begin_define
@@ -522,7 +545,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|bus_space_write_2( ((struct em_osdep *)(hw)->back)->mem_bus_space_tag, \                        ((struct em_osdep *)(hw)->back)->mem_bus_space_handle, \                        E1000_REG_OFFSET(hw, reg) + (index), \                        value)
+value|bus_space_write_2( ((struct em_osdep *)(hw)->back)->mem_bus_space_tag, \                        ((struct em_osdep *)(hw)->back)->mem_bus_space_handle, \                        _E1000_REG_OFFSET(hw, _##reg) + (index), \                        value)
 end_define
 
 begin_define
@@ -539,7 +562,63 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|E1000_WRITE_OFFSET(hw, E1000_REG_OFFSET(hw, reg) + ((index)<< 2), value)
+value|E1000_WRITE_OFFSET(hw, _E1000_REG_OFFSET(hw, _##reg) + ((index)<< 2), value)
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_READ_ICH8_REG
+parameter_list|(
+name|hw
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|bus_space_read_4(((struct em_osdep *)(hw)->back)->flash_bus_space_tag, \         ((struct em_osdep *)(hw)->back)->flash_bus_space_handle, reg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_READ_ICH8_REG16
+parameter_list|(
+name|hw
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|bus_space_read_2(((struct em_osdep *)(hw)->back)->flash_bus_space_tag, \         ((struct em_osdep *)(hw)->back)->flash_bus_space_handle, reg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_WRITE_ICH8_REG
+parameter_list|(
+name|hw
+parameter_list|,
+name|reg
+parameter_list|,
+name|value
+parameter_list|)
+define|\
+value|bus_space_write_4(((struct em_osdep *)(hw)->back)->flash_bus_space_tag, \         ((struct em_osdep *)(hw)->back)->flash_bus_space_handle, reg, value)
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_WRITE_ICH8_REG16
+parameter_list|(
+name|hw
+parameter_list|,
+name|reg
+parameter_list|,
+name|value
+parameter_list|)
+define|\
+value|bus_space_write_2(((struct em_osdep *)(hw)->back)->flash_bus_space_tag, \         ((struct em_osdep *)(hw)->back)->flash_bus_space_handle, reg, value)
 end_define
 
 begin_define
