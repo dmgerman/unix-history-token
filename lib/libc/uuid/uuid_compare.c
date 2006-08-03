@@ -41,6 +41,9 @@ block|{
 name|int
 name|res
 decl_stmt|;
+name|int64_t
+name|res64
+decl_stmt|;
 if|if
 condition|(
 name|status
@@ -109,13 +112,9 @@ else|:
 literal|1
 operator|)
 return|;
-comment|/* We have to compare the hard way. */
-name|res
+comment|/* 	 * We have to compare the hard way. 	 * 	 * Note that time_low is defined as unsigned 32-bit 	 * integer, therefore, with a significantly large 	 * a->time_low and a small b->time_low, we will end 	 * up with a value which is larger than 0x7fffffff 	 * which is negative if casted to signed 32-bit 	 * integer. 	 */
+name|res64
 operator|=
-call|(
-name|int
-call|)
-argument_list|(
 operator|(
 name|int64_t
 operator|)
@@ -129,16 +128,15 @@ operator|)
 name|b
 operator|->
 name|time_low
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|res
+name|res64
 condition|)
 return|return
 operator|(
 operator|(
-name|res
+name|res64
 operator|<
 literal|0
 operator|)
