@@ -4351,22 +4351,18 @@ name|evl_proto
 expr_stmt|;
 break|break;
 default|default:
-name|tag
-operator|=
-operator|(
-name|uint16_t
-operator|)
-operator|-
-literal|1
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INVARIANTS
 name|panic
 argument_list|(
-literal|"%s: unsupported if_type (%u)"
+literal|"%s: %s has unsupported if_type %u"
 argument_list|,
 name|__func__
+argument_list|,
+name|ifp
+operator|->
+name|if_xname
 argument_list|,
 name|ifp
 operator|->
@@ -4375,7 +4371,17 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-break|break;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|ifp
+operator|->
+name|if_noproto
+operator|++
+expr_stmt|;
+return|return;
 block|}
 block|}
 name|TRUNK_RLOCK
