@@ -2768,7 +2768,7 @@ name|action
 condition|)
 block|{
 case|case
-name|CLEAR_ACA
+name|IPT_CLEAR_ACA
 case|:
 name|mbs
 operator|.
@@ -2801,7 +2801,7 @@ name|lun
 expr_stmt|;
 break|break;
 case|case
-name|TARGET_RESET
+name|IPT_TARGET_RESET
 case|:
 name|mbs
 operator|.
@@ -2827,7 +2827,7 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-name|LUN_RESET
+name|IPT_LUN_RESET
 case|:
 name|mbs
 operator|.
@@ -2864,7 +2864,7 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-name|CLEAR_TASK_SET
+name|IPT_CLEAR_TASK_SET
 case|:
 name|mbs
 operator|.
@@ -2901,7 +2901,7 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-name|ABORT_TASK_SET
+name|IPT_ABORT_TASK_SET
 case|:
 name|mbs
 operator|.
