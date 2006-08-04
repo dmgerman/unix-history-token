@@ -523,12 +523,12 @@ decl_stmt|;
 block|}
 name|cd_lreserved
 index|[
-literal|2
+literal|3
 index|]
 union|,
 name|cd_hreserved
 index|[
-literal|2
+literal|3
 index|]
 union|;
 block|}
