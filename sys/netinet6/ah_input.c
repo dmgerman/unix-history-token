@@ -308,12 +308,6 @@ directive|include
 file|<machine/stdarg.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/net_osdep.h>
-end_include
-
 begin_define
 define|#
 directive|define

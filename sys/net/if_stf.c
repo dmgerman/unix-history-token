@@ -216,12 +216,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/net_osdep.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/bpf.h>
 end_include
 

@@ -123,12 +123,6 @@ directive|include
 file|<netinet6/ipsec.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/net_osdep.h>
-end_include
-
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(

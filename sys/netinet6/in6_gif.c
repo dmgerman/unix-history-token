@@ -200,12 +200,6 @@ directive|include
 file|<net/if_gif.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/net_osdep.h>
-end_include
-
 begin_function_decl
 specifier|static
 name|int

@@ -251,12 +251,6 @@ begin_comment
 comment|/* IPSEC */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<net/net_osdep.h>
-end_include
-
 begin_comment
 comment|/*  * UDP protocol inplementation.  * Per RFC 768, August, 1980.  */
 end_comment

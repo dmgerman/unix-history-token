@@ -251,12 +251,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<net/net_osdep.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet6/ip6protosw.h>
 end_include
 

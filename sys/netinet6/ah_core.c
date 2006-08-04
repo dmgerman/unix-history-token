@@ -310,12 +310,6 @@ name|RIPEMD160_RESULTLEN
 value|20
 end_define
 
-begin_include
-include|#
-directive|include
-file|<net/net_osdep.h>
-end_include
-
 begin_decl_stmt
 specifier|static
 name|int

@@ -196,12 +196,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/net_osdep.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if_gre.h>
 end_include
 

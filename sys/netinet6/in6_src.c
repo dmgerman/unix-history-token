@@ -183,12 +183,6 @@ directive|include
 file|<netinet6/nd6.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/net_osdep.h>
-end_include
-
 begin_decl_stmt
 specifier|static
 name|struct

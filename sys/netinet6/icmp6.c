@@ -265,12 +265,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<net/net_osdep.h>
-end_include
-
 begin_decl_stmt
 specifier|extern
 name|struct

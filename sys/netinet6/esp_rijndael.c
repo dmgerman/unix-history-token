@@ -77,12 +77,6 @@ directive|include
 file|<crypto/rijndael/rijndael.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/net_osdep.h>
-end_include
-
 begin_function
 name|size_t
 name|esp_rijndael_schedlen

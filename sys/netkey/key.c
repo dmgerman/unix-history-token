@@ -401,12 +401,6 @@ directive|include
 file|<sys/random.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/net_osdep.h>
-end_include
-
 begin_ifndef
 ifndef|#
 directive|ifndef

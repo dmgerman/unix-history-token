@@ -139,12 +139,6 @@ begin_comment
 comment|/* for ECN definitions */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<net/net_osdep.h>
-end_include
-
 begin_comment
 comment|/*  * Define it to get a correct behavior on per-interface statistics.  * You will need to perform an extra routing table lookup, per fragment,  * to do it.  This may, or may not be, a performance hit.  */
 end_comment

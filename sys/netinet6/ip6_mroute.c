@@ -215,12 +215,6 @@ directive|include
 file|<netinet6/pim6_var.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/net_osdep.h>
-end_include
-
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE

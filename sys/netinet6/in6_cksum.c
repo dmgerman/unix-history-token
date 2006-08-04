@@ -51,12 +51,6 @@ directive|include
 file|<netinet6/scope6_var.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/net_osdep.h>
-end_include
-
 begin_comment
 comment|/*  * Checksum routine for Internet Protocol family headers (Portable Version).  *  * This routine is very heavily used in the network  * code and should be modified for each CPU to be as fast as possible.  */
 end_comment

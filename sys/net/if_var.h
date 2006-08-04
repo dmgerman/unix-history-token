@@ -804,6 +804,16 @@ name|if_list
 value|if_link
 end_define
 
+begin_define
+define|#
+directive|define
+name|if_name
+parameter_list|(
+name|ifp
+parameter_list|)
+value|((ifp)->if_xname)
+end_define
+
 begin_comment
 comment|/*  * Locks for address lists on the network interface.  */
 end_comment

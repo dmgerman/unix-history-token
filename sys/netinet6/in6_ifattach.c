@@ -155,12 +155,6 @@ directive|include
 file|<netinet6/scope6_var.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/net_osdep.h>
-end_include
-
 begin_decl_stmt
 name|unsigned
 name|long
