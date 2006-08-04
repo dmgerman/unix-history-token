@@ -12284,7 +12284,7 @@ block|}
 else|else
 comment|/* if (sc->sc_syncid< disk->d_sync.ds_syncid) */
 block|{
-comment|/* 		 * Not good, NOT GOOD! 		 * It means that device was started on stale disks 		 * and more fresh disk just arrive. 		 * If there were writes, device is broken, sorry. 		 * I think the best choice here is don't touch 		 * this disk and inform the user laudly. 		 */
+comment|/* 		 * Not good, NOT GOOD! 		 * It means that device was started on stale disks 		 * and more fresh disk just arrive. 		 * If there were writes, device is broken, sorry. 		 * I think the best choice here is don't touch 		 * this disk and inform the user loudly. 		 */
 name|G_RAID3_DEBUG
 argument_list|(
 literal|0

@@ -1495,7 +1495,7 @@ name|efp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * At end?  (if we were to loose last, we'd sure be 		 * messed up). 		 */
+comment|/* 		 * At end?  (if we were to lose last, we'd sure be 		 * messed up). 		 */
 if|if
 condition|(
 name|he

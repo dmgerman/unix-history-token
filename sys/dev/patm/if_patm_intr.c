@@ -1007,7 +1007,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Compute the amount of buffers to feed into a given free buffer queue  *  * Feeding buffers is actually not so easy as it seems. We cannot use the  * fraction fields in the status registers, because they round down, i.e.  * if we have 34 buffers in the queue, it will show 1. If we now feed  * 512 - 1 * 32 buffers, we loose two buffers. The only reliable way to know  * how many buffers are in the queue are the FBQP registers.  */
+comment|/*  * Compute the amount of buffers to feed into a given free buffer queue  *  * Feeding buffers is actually not so easy as it seems. We cannot use the  * fraction fields in the status registers, because they round down, i.e.  * if we have 34 buffers in the queue, it will show 1. If we now feed  * 512 - 1 * 32 buffers, we lose two buffers. The only reliable way to know  * how many buffers are in the queue are the FBQP registers.  */
 end_comment
 
 begin_function

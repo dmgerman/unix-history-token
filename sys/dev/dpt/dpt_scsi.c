@@ -8363,7 +8363,7 @@ operator|=
 name|splcam
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Try to clear any pending jobs.  FreeBSD will loose interrupts, 	 * leaving the controller suspended, and commands timed-out. 	 * By calling the interrupt handler, any command thus stuck will be 	 * completed. 	 */
+comment|/* 	 * Try to clear any pending jobs.  FreeBSD will lose interrupts, 	 * leaving the controller suspended, and commands timed-out. 	 * By calling the interrupt handler, any command thus stuck will be 	 * completed. 	 */
 name|dpt_intr
 argument_list|(
 name|dpt

@@ -4495,7 +4495,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * We need to be slightly careful converting cputicks to microseconds.  * There is plenty of margin in 64 bits of microseconds (half a million  * years) and in 64 bits at 4 GHz (146 years), but if we do a multiply  * before divide conversion (to retain precision) we find that the  * margin shrinks to 1.5 hours (one millionth of 146y).  * With a three prong approach we never loose significant bits, no  * matter what the cputick rate and length of timeinterval is.  */
+comment|/*  * We need to be slightly careful converting cputicks to microseconds.  * There is plenty of margin in 64 bits of microseconds (half a million  * years) and in 64 bits at 4 GHz (146 years), but if we do a multiply  * before divide conversion (to retain precision) we find that the  * margin shrinks to 1.5 hours (one millionth of 146y).  * With a three prong approach we never lose significant bits, no  * matter what the cputick rate and length of timeinterval is.  */
 end_comment
 
 begin_function

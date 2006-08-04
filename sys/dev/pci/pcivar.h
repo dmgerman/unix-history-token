@@ -1251,7 +1251,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * PCI power states are as defined by ACPI:  *  * D0	State in which device is on and running.  It is receiving full  *	power from the system and delivering full functionality to the user.  * D1	Class-specific low-power state in which device context may or may not  *	be lost.  Buses in D1 cannot do anything to the bus that would force  *	devices on that bus to loose context.  * D2	Class-specific low-power state in which device context may or may  *	not be lost.  Attains greater power savings than D1.  Buses in D2  *	can cause devices on that bus to loose some context.  Devices in D2  *	must be prepared for the bus to be in D2 or higher.  * D3	State in which the device is off and not running.  Device context is  *	lost.  Power can be removed from the device.  */
+comment|/*  * PCI power states are as defined by ACPI:  *  * D0	State in which device is on and running.  It is receiving full  *	power from the system and delivering full functionality to the user.  * D1	Class-specific low-power state in which device context may or may not  *	be lost.  Buses in D1 cannot do anything to the bus that would force  *	devices on that bus to lose context.  * D2	Class-specific low-power state in which device context may or may  *	not be lost.  Attains greater power savings than D1.  Buses in D2  *	can cause devices on that bus to lose some context.  Devices in D2  *	must be prepared for the bus to be in D2 or higher.  * D3	State in which the device is off and not running.  Device context is  *	lost.  Power can be removed from the device.  */
 end_comment
 
 begin_define

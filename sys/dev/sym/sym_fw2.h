@@ -871,7 +871,7 @@ argument_list|(
 name|ungetjob
 argument_list|)
 block|,
-comment|/* 	 *  Now there are 4 possibilities: 	 * 	 *  (1) The chip looses arbitration. 	 *  This is ok, because it will try again, 	 *  when the bus becomes idle. 	 *  (But beware of the timeout function!) 	 * 	 *  (2) The chip is reselected. 	 *  Then the script processor takes the jump 	 *  to the RESELECT label. 	 * 	 *  (3) The chip wins arbitration. 	 *  Then it will execute SCRIPTS instruction until  	 *  the next instruction that checks SCSI phase. 	 *  Then will stop and wait for selection to be  	 *  complete or selection time-out to occur. 	 * 	 *  After having won arbitration, the SCRIPTS   	 *  processor is able to execute instructions while  	 *  the SCSI core is performing SCSI selection. 	 */
+comment|/* 	 *  Now there are 4 possibilities: 	 * 	 *  (1) The chip loses arbitration. 	 *  This is ok, because it will try again, 	 *  when the bus becomes idle. 	 *  (But beware of the timeout function!) 	 * 	 *  (2) The chip is reselected. 	 *  Then the script processor takes the jump 	 *  to the RESELECT label. 	 * 	 *  (3) The chip wins arbitration. 	 *  Then it will execute SCRIPTS instruction until  	 *  the next instruction that checks SCSI phase. 	 *  Then will stop and wait for selection to be  	 *  complete or selection time-out to occur. 	 * 	 *  After having won arbitration, the SCRIPTS   	 *  processor is able to execute instructions while  	 *  the SCSI core is performing SCSI selection. 	 */
 comment|/* 	 *      load the savep (saved data pointer) into 	 *      the actual data pointer. 	 */
 name|SCR_LOAD_REL
 argument_list|(

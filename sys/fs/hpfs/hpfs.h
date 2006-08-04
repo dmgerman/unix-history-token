@@ -1190,7 +1190,7 @@ name|vnode
 modifier|*
 name|hpm_devvp
 decl_stmt|;
-comment|/* XXX: loose this, it's in hpfsmount */
+comment|/* XXX: lose this, it's in hpfsmount */
 name|struct
 name|g_consumer
 modifier|*

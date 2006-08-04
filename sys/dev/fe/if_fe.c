@@ -4734,7 +4734,7 @@ operator|->
 name|txb_free
 argument_list|)
 expr_stmt|;
-comment|/* 		 * So, what should I do, then? 		 * 		 * We now know txb_count and txb_free contradicts.  We 		 * cannot, however, tell which is wrong.  More 		 * over, we cannot peek 86960 transmission buffer or 		 * reset the transmission buffer.  (In fact, we can 		 * reset the entire interface.  I don't want to do it.) 		 * 		 * If txb_count is incorrect, leaving it as-is will cause 		 * sending of garbage after next interrupt.  We have to 		 * avoid it.  Hence, we reset the txb_count here.  If 		 * txb_free was incorrect, resetting txb_count just loose 		 * some packets.  We can live with it. 		 */
+comment|/* 		 * So, what should I do, then? 		 * 		 * We now know txb_count and txb_free contradicts.  We 		 * cannot, however, tell which is wrong.  More 		 * over, we cannot peek 86960 transmission buffer or 		 * reset the transmission buffer.  (In fact, we can 		 * reset the entire interface.  I don't want to do it.) 		 * 		 * If txb_count is incorrect, leaving it as-is will cause 		 * sending of garbage after next interrupt.  We have to 		 * avoid it.  Hence, we reset the txb_count here.  If 		 * txb_free was incorrect, resetting txb_count just loses 		 * some packets.  We can live with it. 		 */
 name|sc
 operator|->
 name|txb_count

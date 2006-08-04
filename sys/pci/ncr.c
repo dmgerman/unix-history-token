@@ -3868,7 +3868,7 @@ argument_list|(
 name|reselect
 argument_list|)
 block|,
-comment|/* 	**	Now there are 4 possibilities: 	** 	**	(1) The ncr looses arbitration. 	**	This is ok, because it will try again, 	**	when the bus becomes idle. 	**	(But beware of the timeout function!) 	** 	**	(2) The ncr is reselected. 	**	Then the script processor takes the jump 	**	to the RESELECT label. 	** 	**	(3) The ncr completes the selection. 	**	Then it will execute the next statement. 	** 	**	(4) There is a selection timeout. 	**	Then the ncr should interrupt the host and stop. 	**	Unfortunately, it seems to continue execution 	**	of the script. But it will fail with an 	**	IID-interrupt on the next WHEN. 	*/
+comment|/* 	**	Now there are 4 possibilities: 	** 	**	(1) The ncr loses arbitration. 	**	This is ok, because it will try again, 	**	when the bus becomes idle. 	**	(But beware of the timeout function!) 	** 	**	(2) The ncr is reselected. 	**	Then the script processor takes the jump 	**	to the RESELECT label. 	** 	**	(3) The ncr completes the selection. 	**	Then it will execute the next statement. 	** 	**	(4) There is a selection timeout. 	**	Then the ncr should interrupt the host and stop. 	**	Unfortunately, it seems to continue execution 	**	of the script. But it will fail with an 	**	IID-interrupt on the next WHEN. 	*/
 name|SCR_JUMPR
 operator|^
 name|IFTRUE

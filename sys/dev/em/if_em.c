@@ -5033,7 +5033,7 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-comment|/* Don't loose promiscuous settings */
+comment|/* Don't lose promiscuous settings */
 name|em_set_promisc
 argument_list|(
 name|adapter

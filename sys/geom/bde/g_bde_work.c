@@ -3092,7 +3092,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 block|{
-comment|/* 				 * Loose our skey cache in an orderly fashion. 				 * The exact rate can be tuned to be less 				 * aggressive if this is desirable.  10% per 				 * second means that the cache is gone in a 				 * few minutes. 				 */
+comment|/* 				 * Lose our skey cache in an orderly fashion. 				 * The exact rate can be tuned to be less 				 * aggressive if this is desirable.  10% per 				 * second means that the cache is gone in a 				 * few minutes. 				 */
 name|g_bde_purge_sector
 argument_list|(
 name|sc

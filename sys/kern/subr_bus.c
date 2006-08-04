@@ -1995,7 +1995,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The read channel for this device is used to report changes to  * userland in realtime.  We are required to free the data as well as  * the n1 object because we allocate them separately.  Also note that  * we return one record at a time.  If you try to read this device a  * character at a time, you will loose the rest of the data.  Listening  * programs are expected to cope.  */
+comment|/*  * The read channel for this device is used to report changes to  * userland in realtime.  We are required to free the data as well as  * the n1 object because we allocate them separately.  Also note that  * we return one record at a time.  If you try to read this device a  * character at a time, you will lose the rest of the data.  Listening  * programs are expected to cope.  */
 end_comment
 
 begin_function
