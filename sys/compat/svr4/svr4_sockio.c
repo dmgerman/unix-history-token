@@ -286,15 +286,13 @@ argument|if_link
 argument_list|)
 if|if
 condition|(
-name|TAILQ_FIRST
+name|TAILQ_EMPTY
 argument_list|(
 operator|&
 name|ifp
 operator|->
 name|if_addrhead
 argument_list|)
-operator|==
-name|NULL
 condition|)
 name|ifnum
 operator|++
