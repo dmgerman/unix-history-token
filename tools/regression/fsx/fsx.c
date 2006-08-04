@@ -2490,7 +2490,7 @@ name|int
 name|size
 parameter_list|)
 block|{
-name|unsigned
+name|uintptr_t
 name|last_page
 decl_stmt|,
 name|should_be_zero
@@ -2514,7 +2514,7 @@ name|last_page
 operator|=
 operator|(
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|p
 operator|+
