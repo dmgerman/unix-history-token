@@ -1107,12 +1107,6 @@ name|node
 expr_stmt|;
 name|priv
 operator|->
-name|autoSrcAddr
-operator|=
-literal|1
-expr_stmt|;
-name|priv
-operator|->
 name|hwassist
 operator|=
 name|ifp
