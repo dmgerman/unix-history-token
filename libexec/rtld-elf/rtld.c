@@ -11479,8 +11479,11 @@ block|{
 name|_rtld_error
 argument_list|(
 literal|"%s: object %s should provide version %s for "
-argument_list|,
 literal|"symbol %s"
+argument_list|,
+name|obj_rtld
+operator|.
+name|path
 argument_list|,
 name|obj
 operator|->
