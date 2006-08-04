@@ -10569,6 +10569,23 @@ decl_stmt|;
 name|bus_dmamap_t
 name|map
 decl_stmt|;
+comment|/* Copy the MAC address in case it was overridden */
+name|bcopy
+argument_list|(
+name|IF_LLADDR
+argument_list|(
+name|sc
+operator|->
+name|ifp
+argument_list|)
+argument_list|,
+name|sc
+operator|->
+name|mac_addr
+argument_list|,
+name|ETHER_ADDR_LEN
+argument_list|)
+expr_stmt|;
 name|err
 operator|=
 name|mxge_reset
