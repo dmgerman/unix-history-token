@@ -9403,9 +9403,6 @@ goto|goto
 name|retry_lookup
 goto|;
 block|}
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -9431,6 +9428,9 @@ name|vm_page_wire
 argument_list|(
 name|pg
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 block|}
 comment|/* 		 * If page is not valid for what we need, initiate I/O 		 */
@@ -9483,9 +9483,6 @@ name|vm_page_io_start
 argument_list|(
 name|pg
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 name|VM_OBJECT_UNLOCK
 argument_list|(
@@ -9596,6 +9593,9 @@ argument_list|(
 name|pg
 argument_list|)
 expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -9617,6 +9617,9 @@ condition|(
 name|error
 condition|)
 block|{
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_unwire
 argument_list|(
 name|pg
@@ -9703,9 +9706,6 @@ goto|goto
 name|done
 goto|;
 block|}
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 comment|/* 		 * Get a sendfile buf. We usually wait as long as necessary, 		 * but this wait can be interrupted. 		 */
 if|if
 condition|(
