@@ -1220,6 +1220,8 @@ expr_stmt|;
 name|dest
 index|[
 name|MAXPATHLEN
+operator|-
+literal|1
 index|]
 operator|=
 literal|'\0'
