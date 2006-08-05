@@ -879,6 +879,11 @@ argument_list|(
 name|ddp
 argument_list|)
 expr_stmt|;
+name|soisdisconnected
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -929,6 +934,11 @@ expr_stmt|;
 name|DDP_UNLOCK
 argument_list|(
 name|ddp
+argument_list|)
+expr_stmt|;
+name|soisdisconnected
+argument_list|(
+name|so
 argument_list|)
 expr_stmt|;
 block|}
