@@ -4385,7 +4385,7 @@ operator|==
 name|BIO_READ
 condition|)
 block|{
-comment|/* 				 * When reading, reqpage needs to stay 				 * locked for the parent, but all other 				 * pages can be freed.  We still want to 				 * wakeup the parent waiting on the page, 				 * though.  ( also: pg_reqpage can be -1 and  				 * not match anything ). 				 * 				 * We have to wake specifically requested pages 				 * up too because we cleared PG_SWAPINPROG and 				 * someone may be waiting for that. 				 * 				 * NOTE: for reads, m->dirty will probably 				 * be overridden by the original caller of 				 * getpages so don't play cute tricks here. 				 * 				 * XXX IT IS NOT LEGAL TO FREE THE PAGE HERE 				 * AS THIS MESSES WITH object->memq, and it is 				 * not legal to mess with object->memq from an 				 * interrupt. 				 */
+comment|/* 				 * When reading, reqpage needs to stay 				 * locked for the parent, but all other 				 * pages can be freed.  We still want to 				 * wakeup the parent waiting on the page, 				 * though.  ( also: pg_reqpage can be -1 and  				 * not match anything ). 				 * 				 * We have to wake specifically requested pages 				 * up too because we cleared PG_SWAPINPROG and 				 * someone may be waiting for that. 				 * 				 * NOTE: for reads, m->dirty will probably 				 * be overridden by the original caller of 				 * getpages so don't play cute tricks here. 				 */
 name|m
 operator|->
 name|valid
