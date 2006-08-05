@@ -291,9 +291,13 @@ name|ast_cabq_busy
 decl_stmt|;
 comment|/* cabq found busy */
 name|u_int32_t
+name|ast_tx_raw
+decl_stmt|;
+comment|/* tx frames through raw api */
+name|u_int32_t
 name|ast_pad
 index|[
-literal|30
+literal|29
 index|]
 decl_stmt|;
 block|}
