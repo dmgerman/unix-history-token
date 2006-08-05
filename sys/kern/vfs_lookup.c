@@ -271,7 +271,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Convert a pathname into a pointer to a locked inode.  *  * The FOLLOW flag is set when symbolic links are to be followed  * when they occur at the end of the name translation process.  * Symbolic links are always followed for all other pathname  * components other than the last.  *  * The segflg defines whether the name is to be copied from user  * space or kernel space.  *  * Overall outline of namei:  *  *	copy in name  *	get starting directory  *	while (!done&& !error) {  *		call lookup to search path.  *		if symbolic link, massage name in buffer and continue  *	}  */
+comment|/*  * Convert a pathname into a pointer to a locked vnode.  *  * The FOLLOW flag is set when symbolic links are to be followed  * when they occur at the end of the name translation process.  * Symbolic links are always followed for all other pathname  * components other than the last.  *  * The segflg defines whether the name is to be copied from user  * space or kernel space.  *  * Overall outline of namei:  *  *	copy in name  *	get starting directory  *	while (!done&& !error) {  *		call lookup to search path.  *		if symbolic link, massage name in buffer and continue  *	}  */
 end_comment
 
 begin_function
@@ -2614,7 +2614,7 @@ literal|"lookup: Unhandled case."
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We return with ni_vp NULL to indicate that the entry 		 * doesn't currently exist, leaving a pointer to the 		 * (possibly locked) directory inode in ndp->ni_dvp. 		 */
+comment|/* 		 * We return with ni_vp NULL to indicate that the entry 		 * doesn't currently exist, leaving a pointer to the 		 * (possibly locked) directory vnode in ndp->ni_dvp. 		 */
 if|if
 condition|(
 name|cnp
@@ -3735,7 +3735,7 @@ literal|"relookup: Unhandled case."
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We return with ni_vp NULL to indicate that the entry 		 * doesn't currently exist, leaving a pointer to the 		 * (possibly locked) directory inode in ndp->ni_dvp. 		 */
+comment|/* 		 * We return with ni_vp NULL to indicate that the entry 		 * doesn't currently exist, leaving a pointer to the 		 * (possibly locked) directory vnode in ndp->ni_dvp. 		 */
 return|return
 operator|(
 literal|0
