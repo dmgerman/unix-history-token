@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_mac.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -90,12 +84,6 @@ end_include
 begin_comment
 comment|/* Must come after sys/malloc.h */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/mac.h>
-end_include
 
 begin_include
 include|#
