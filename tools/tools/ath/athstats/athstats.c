@@ -477,6 +477,13 @@ argument_list|)
 expr_stmt|;
 name|STAT
 argument_list|(
+name|tx_raw
+argument_list|,
+literal|"tx frames through raw api"
+argument_list|)
+expr_stmt|;
+name|STAT
+argument_list|(
 name|rx_nombuf
 argument_list|,
 literal|"rx setup failed 'cuz no mbuf"
