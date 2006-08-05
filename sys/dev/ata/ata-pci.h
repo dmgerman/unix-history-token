@@ -2240,15 +2240,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|NV4BYTE
+name|NV4LONG
 value|0x0030
-end_define
-
-begin_define
-define|#
-directive|define
-name|NV4WORD
-value|0x0050
 end_define
 
 begin_define
