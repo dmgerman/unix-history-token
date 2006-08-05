@@ -967,6 +967,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|WI_RID_ALT_RETRY_CNT
+value|0xFC32
+end_define
+
+begin_define
+define|#
+directive|define
 name|PRIVACY_INVOKED
 value|0x01
 end_define
@@ -2191,7 +2198,7 @@ begin_define
 define|#
 directive|define
 name|WI_DATA_HDRLEN
-value|0x44
+value|0x3C
 end_define
 
 begin_define

@@ -1964,6 +1964,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|WI_PORTTYPE_APSILENT
+value|0x5
+end_define
+
+begin_define
+define|#
+directive|define
 name|WI_PORTTYPE_HOSTAP
 value|0x6
 end_define
