@@ -717,6 +717,10 @@ name|tnow
 decl_stmt|,
 name|tdone
 decl_stmt|;
+name|char
+modifier|*
+name|tdone_str
+decl_stmt|;
 name|int
 name|deltat
 decl_stmt|,
@@ -828,9 +832,17 @@ operator|)
 operator|/
 literal|60
 expr_stmt|;
+name|tdone_str
+operator|=
+name|ctime
+argument_list|(
+operator|&
+name|tdone
+argument_list|)
+expr_stmt|;
 name|setproctitle
 argument_list|(
-literal|"%s: pass %d: %3.2f%% done, finished in %d:%02d at %s"
+literal|"%s: pass %d: %3.2f%% done, finished in %d:%02d at %.*s"
 argument_list|,
 name|disk
 argument_list|,
@@ -842,11 +854,14 @@ name|hours
 argument_list|,
 name|mins
 argument_list|,
-name|ctime
+name|strlen
 argument_list|(
-operator|&
-name|tdone
+name|tdone_str
 argument_list|)
+operator|-
+literal|1
+argument_list|,
+name|tdone_str
 argument_list|)
 expr_stmt|;
 if|if
@@ -879,11 +894,7 @@ name|hours
 argument_list|,
 name|mins
 argument_list|,
-name|ctime
-argument_list|(
-operator|&
-name|tdone
-argument_list|)
+name|tdone_str
 argument_list|)
 expr_stmt|;
 block|}
