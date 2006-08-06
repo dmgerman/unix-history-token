@@ -9404,11 +9404,7 @@ name|retry_lookup
 goto|;
 block|}
 block|}
-else|else
-block|{
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|vm_page_sleep_if_busy
@@ -9423,7 +9419,12 @@ condition|)
 goto|goto
 name|retry_lookup
 goto|;
+else|else
+block|{
 comment|/* 			 * Wire the page so it does not get ripped out from 			 * under us. 			 */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_wire
 argument_list|(
 name|pg
