@@ -842,14 +842,12 @@ argument_list|)
 expr_stmt|;
 name|tdone_str
 index|[
-operator|(
 name|strlen
 argument_list|(
 name|tdone_str
 argument_list|)
 operator|-
 literal|1
-operator|)
 index|]
 operator|=
 literal|'\0'
