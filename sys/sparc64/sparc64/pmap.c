@@ -4519,9 +4519,6 @@ operator||
 name|VM_ALLOC_ZERO
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|m
 operator|->
 name|valid
@@ -4535,9 +4532,6 @@ operator|.
 name|pmap
 operator|=
 name|pm
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 name|ma
 index|[
