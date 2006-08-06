@@ -5828,7 +5828,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|int
+name|void
 function_decl|(
 modifier|*
 name|mpo_associate_nfsd_label_t

@@ -13402,7 +13402,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|mac_biba_associate_nfsd_label
 parameter_list|(
 name|struct
@@ -13453,11 +13453,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
