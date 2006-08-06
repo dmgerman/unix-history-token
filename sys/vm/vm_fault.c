@@ -1256,12 +1256,6 @@ name|pindex
 argument_list|)
 condition|)
 block|{
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-operator|!
 name|vm_page_sleep_if_busy
 argument_list|(
 name|fs
@@ -1272,9 +1266,6 @@ name|TRUE
 argument_list|,
 literal|"vmpfw"
 argument_list|)
-condition|)
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 block|}
 name|vm_object_pip_wakeup
