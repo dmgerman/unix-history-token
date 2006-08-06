@@ -4757,6 +4757,9 @@ operator|==
 literal|'\n'
 condition|)
 block|{
+name|plinno
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|doprompt
