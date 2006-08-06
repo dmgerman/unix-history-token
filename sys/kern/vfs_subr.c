@@ -13981,7 +13981,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Common filesystem object access control check routine.  Accepts a  * vnode's type, "mode", uid and gid, requested access mode, credentials,  * and optional call-by-reference privused argument allowing vaccess()  * to indicate to the caller whether privilege was used to satisfy the  * request (obsoleted).  Returns 0 on success, or an errno on failure.  */
+comment|/*  * Common filesystem object access control check routine.  Accepts a  * vnode's type, "mode", uid and gid, requested access mode, credentials,  * and optional call-by-reference privused argument allowing vaccess()  * to indicate to the caller whether privilege was used to satisfy the  * request (obsoleted).  Returns 0 on success, or an errno on failure.  *  * The ifdef'd CAPABILITIES version is here for reference, but is not  * actually used.  */
 end_comment
 
 begin_function
@@ -14256,7 +14256,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|CAPABILITIES
-comment|/* 	 * Build a capability mask to determine if the set of capabilities 	 * satisfies the requirements when combined with the granted mask 	 * from above. 	 * For each capability, if the capability is required, bitwise 	 * or the request type onto the cap_granted mask. 	 */
+comment|/* 	 * Build a capability mask to determine if the set of capabilities 	 * satisfies the requirements when combined with the granted mask 	 * from above.  For each capability, if the capability is required, 	 * bitwise or the request type onto the cap_granted mask. 	 * 	 * Note: This is never actually used, but is here for reference 	 * purposes. 	 */
 name|cap_granted
 operator|=
 literal|0
