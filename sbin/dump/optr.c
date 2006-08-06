@@ -840,9 +840,23 @@ operator|&
 name|tdone
 argument_list|)
 expr_stmt|;
+name|tdone_str
+index|[
+operator|(
+name|strlen
+argument_list|(
+name|tdone_str
+argument_list|)
+operator|-
+literal|1
+operator|)
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|setproctitle
 argument_list|(
-literal|"%s: pass %d: %3.2f%% done, finished in %d:%02d at %.*s"
+literal|"%s: pass %d: %3.2f%% done, finished in %d:%02d at %s"
 argument_list|,
 name|disk
 argument_list|,
@@ -853,13 +867,6 @@ argument_list|,
 name|hours
 argument_list|,
 name|mins
-argument_list|,
-name|strlen
-argument_list|(
-name|tdone_str
-argument_list|)
-operator|-
-literal|1
 argument_list|,
 name|tdone_str
 argument_list|)
@@ -886,7 +893,7 @@ condition|)
 return|return;
 name|msg
 argument_list|(
-literal|"%3.2f%% done, finished in %d:%02d at %s"
+literal|"%3.2f%% done, finished in %d:%02d at %s\n"
 argument_list|,
 name|percent
 argument_list|,
