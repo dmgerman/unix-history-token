@@ -711,13 +711,13 @@ operator|-
 literal|6
 block|,
 operator|.
-name|ibp_rate1
+name|ibp_rate0
 operator|=
 literal|2
 block|,
 comment|/* 1 MB/s XXX */
 operator|.
-name|ibp_try1
+name|ibp_try0
 operator|=
 literal|1
 block|,
