@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/ethernet.h>
 end_include
 
@@ -810,7 +816,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|sendpacket
+name|ng_pppoe_sendpacket
 parameter_list|(
 name|sessp
 name|sp
@@ -1349,9 +1355,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|log
 argument_list|(
-literal|"pppoe: asked to add too many tags to packet\n"
+name|LOG_NOTICE
+argument_list|,
+literal|"ng_pppoe: asked to add too many tags to "
+literal|"packet\n"
 argument_list|)
 expr_stmt|;
 name|neg
@@ -1433,7 +1442,7 @@ name|NULL
 operator|)
 argument_list|,
 operator|(
-literal|"%s: make_packet called from wrong state"
+literal|"%s: called from wrong state"
 operator|,
 name|__func__
 operator|)
@@ -1543,9 +1552,11 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
-literal|"pppoe: tags too long\n"
+name|LOG_NOTICE
+argument_list|,
+literal|"ng_pppoe: tags too long\n"
 argument_list|)
 expr_stmt|;
 name|sp
@@ -2809,9 +2820,16 @@ name|ourmsg
 argument_list|)
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
-literal|"pppoe: init data too small\n"
+name|LOG_ERR
+argument_list|,
+literal|"ng_pppoe[%x]: init data too "
+literal|"small\n"
+argument_list|,
+name|node
+operator|->
+name|nd_ID
 argument_list|)
 expr_stmt|;
 name|LEAVE
@@ -2837,9 +2855,16 @@ operator|>
 name|PPPOE_SERVICE_NAME_SIZE
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
-literal|"pppoe_rcvmsg: service name too big"
+name|LOG_ERR
+argument_list|,
+literal|"ng_pppoe[%x]: service name "
+literal|"too big\n"
+argument_list|,
+name|node
+operator|->
+name|nd_ID
 argument_list|)
 expr_stmt|;
 name|LEAVE
@@ -2867,10 +2892,16 @@ operator|->
 name|data_len
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
-literal|"pppoe: init data has bad length,"
-literal|" %d should be %zd\n"
+name|LOG_ERR
+argument_list|,
+literal|"ng_pppoe[%x]: init data has bad "
+literal|"length, %d should be %zd\n"
+argument_list|,
+name|node
+operator|->
+name|nd_ID
 argument_list|,
 name|ourmsg
 operator|->
@@ -3050,9 +3081,16 @@ operator|!=
 name|PPPOE_SNONE
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
-literal|"pppoe: Session already active\n"
+name|LOG_NOTICE
+argument_list|,
+literal|"ng_pppoe[%x]: Session already "
+literal|"active\n"
+argument_list|,
+name|node
+operator|->
+name|nd_ID
 argument_list|)
 expr_stmt|;
 name|LEAVE
@@ -3579,9 +3617,16 @@ operator|!=
 name|PPPOE_PRIMED
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
-literal|"pppoe: Session not primed\n"
+name|LOG_NOTICE
+argument_list|,
+literal|"ng_pppoe[%x]: session not "
+literal|"primed\n"
+argument_list|,
+name|node
+operator|->
+name|nd_ID
 argument_list|)
 expr_stmt|;
 name|LEAVE
@@ -4246,7 +4291,7 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
-name|sendpacket
+name|ng_pppoe_sendpacket
 argument_list|(
 name|sp
 argument_list|)
@@ -4722,9 +4767,16 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
-literal|"couldn't m_pullup\n"
+name|LOG_NOTICE
+argument_list|,
+literal|"ng_pppoe[%x]: couldn't "
+literal|"m_pullup(wh)\n"
+argument_list|,
+name|node
+operator|->
+name|nd_ID
 argument_list|)
 expr_stmt|;
 name|LEAVE
@@ -4817,9 +4869,17 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
-literal|"couldn't m_pullup\n"
+name|LOG_NOTICE
+argument_list|,
+literal|"ng_pppoe[%x]: "
+literal|"couldn't "
+literal|"m_pullup(pkthdr)\n"
+argument_list|,
+name|node
+operator|->
+name|nd_ID
 argument_list|)
 expr_stmt|;
 name|LEAVE
@@ -4904,9 +4964,16 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
-literal|"packet fragmented\n"
+name|LOG_NOTICE
+argument_list|,
+literal|"ng_pppoe[%x]: packet "
+literal|"fragmented\n"
+argument_list|,
+name|node
+operator|->
+name|nd_ID
 argument_list|)
 expr_stmt|;
 name|LEAVE
@@ -5100,9 +5167,16 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
-literal|"no host unique field\n"
+name|LOG_NOTICE
+argument_list|,
+literal|"ng_pppoe[%x]: no host "
+literal|"unique field\n"
+argument_list|,
+name|node
+operator|->
+name|nd_ID
 argument_list|)
 expr_stmt|;
 name|LEAVE
@@ -5127,9 +5201,16 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
-literal|"no matching session\n"
+name|LOG_NOTICE
+argument_list|,
+literal|"ng_pppoe[%x]: no "
+literal|"matching session\n"
+argument_list|,
+name|node
+operator|->
+name|nd_ID
 argument_list|)
 expr_stmt|;
 name|LEAVE
@@ -5155,9 +5236,16 @@ operator|!=
 name|PPPOE_SINIT
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
-literal|"session in wrong state\n"
+name|LOG_NOTICE
+argument_list|,
+literal|"ng_pppoe[%x]: session "
+literal|"in wrong state\n"
+argument_list|,
+name|node
+operator|->
+name|nd_ID
 argument_list|)
 expr_stmt|;
 name|LEAVE
@@ -5317,7 +5405,7 @@ name|state
 operator|=
 name|PPPOE_SREQ
 expr_stmt|;
-name|sendpacket
+name|ng_pppoe_sendpacket
 argument_list|(
 name|sp
 argument_list|)
@@ -5584,7 +5672,7 @@ name|state
 operator|=
 name|PPPOE_NEWCONNECTED
 expr_stmt|;
-name|sendpacket
+name|ng_pppoe_sendpacket
 argument_list|(
 name|sp
 argument_list|)
@@ -6663,7 +6751,7 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
-name|sendpacket
+name|ng_pppoe_sendpacket
 argument_list|(
 name|sp
 argument_list|)
@@ -7009,9 +7097,16 @@ name|m
 operator|==
 name|NULL
 condition|)
-name|printf
+name|log
 argument_list|(
-literal|"pppoe: Session out of mbufs\n"
+name|LOG_NOTICE
+argument_list|,
+literal|"ng_pppoe[%x]: session out of "
+literal|"mbufs\n"
+argument_list|,
+name|node
+operator|->
+name|nd_ID
 argument_list|)
 expr_stmt|;
 else|else
@@ -7478,9 +7573,15 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/* Timeouts have no meaning in other states. */
-name|printf
+name|log
 argument_list|(
-literal|"pppoe: unexpected timeout\n"
+name|LOG_NOTICE
+argument_list|,
+literal|"ng_pppoe[%x]: unexpected timeout\n"
+argument_list|,
+name|node
+operator|->
+name|nd_ID
 argument_list|)
 expr_stmt|;
 block|}
@@ -7490,7 +7591,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|sendpacket
+name|ng_pppoe_sendpacket
 parameter_list|(
 name|sessp
 name|sp
@@ -7570,9 +7671,17 @@ case|:
 case|case
 name|PPPOE_CONNECTED
 case|:
-name|printf
+name|log
 argument_list|(
-literal|"pppoe: sendpacket: unexpected state\n"
+name|LOG_NOTICE
+argument_list|,
+literal|"%s: unexpected state %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|sp
+operator|->
+name|state
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7749,9 +7858,17 @@ name|error
 operator|=
 name|EINVAL
 expr_stmt|;
-name|printf
+name|log
 argument_list|(
-literal|"pppoe: timeout: bad state\n"
+name|LOG_NOTICE
+argument_list|,
+literal|"%s: bad state %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|sp
+operator|->
+name|state
 argument_list|)
 expr_stmt|;
 block|}
