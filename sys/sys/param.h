@@ -1316,7 +1316,7 @@ value|PAGE_SIZE
 end_define
 
 begin_comment
-comment|/*  * The OpenSolaris version is set according to the version last imported  * from http://dlc.sun.com/osol/on/downloads/current/. In FreeBSD header  * files it can be used to detemine the level of compatibility that the  * FreeBSD headers provide to OpenSolaris code. Perhaps one day there  * will be a really, really Single Unix Specification.  */
+comment|/*  * The OpenSolaris version is set according to the version last imported  * from http://dlc.sun.com/osol/on/downloads/current/. In FreeBSD header  * files it can be used to determine the level of compatibility that the  * FreeBSD headers provide to OpenSolaris code. Perhaps one day there  * will be a really, really Single Unix Specification.  */
 end_comment
 
 begin_define
