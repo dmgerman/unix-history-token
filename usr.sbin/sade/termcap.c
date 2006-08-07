@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sysinstall.h"
+file|"sade.h"
 end_include
 
 begin_include
@@ -129,142 +129,6 @@ block|}
 block|}
 struct|;
 comment|/* must be last */
-if|if
-condition|(
-name|RunningAsInit
-condition|)
-block|{
-while|while
-condition|(
-literal|1
-condition|)
-block|{
-name|int
-name|i
-decl_stmt|;
-name|printf
-argument_list|(
-literal|"\nThese are the predefined terminal types available to\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"sysinstall when running stand-alone.  Please choose the\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"closest match for your particular terminal.\n\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"1 ...................... Standard ANSI terminal.\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"2 ...................... VT100 or compatible terminal.\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"3 ...................... FreeBSD system console (color).\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"4 ...................... FreeBSD system console (monochrome).\n\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"5 ...................... xterm terminal emulator.\n\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Your choice: (1-5) "
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
-name|fgets
-argument_list|(
-name|str
-argument_list|,
-literal|80
-argument_list|,
-name|stdin
-argument_list|)
-expr_stmt|;
-name|i
-operator|=
-name|str
-index|[
-literal|0
-index|]
-operator|-
-literal|'0'
-expr_stmt|;
-if|if
-condition|(
-name|i
-operator|>
-literal|0
-operator|&&
-name|i
-operator|<
-literal|6
-condition|)
-block|{
-operator|*
-name|termp
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|lookup
-index|[
-name|i
-operator|-
-literal|1
-index|]
-operator|.
-name|term
-expr_stmt|;
-operator|*
-name|termcapp
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|lookup
-index|[
-name|i
-operator|-
-literal|1
-index|]
-operator|.
-name|termcap
-expr_stmt|;
-break|break;
-block|}
-else|else
-name|printf
-argument_list|(
-literal|"\007Invalid choice, please try again.\n\n"
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
 name|printf
 argument_list|(
 literal|"\nPlease set your TERM variable before running this program.\n"
@@ -303,7 +167,6 @@ operator|*
 operator|)
 name|termcap_ansi
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -344,12 +207,6 @@ operator|&
 name|ColorDisplay
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|RunningAsInit
-condition|)
-block|{
 if|if
 condition|(
 name|isDebug
@@ -393,7 +250,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
