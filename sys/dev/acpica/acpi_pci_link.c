@@ -4103,7 +4103,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Check for a tunable override and use it if it is valid. */
+comment|/* Check for a tunable override. */
 if|if
 condition|(
 name|ACPI_SUCCESS
@@ -4157,7 +4157,11 @@ name|PCI_INTERRUPT_VALID
 argument_list|(
 name|i
 argument_list|)
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
+operator|!
 name|link_valid_irq
 argument_list|(
 name|link
@@ -4165,11 +4169,21 @@ argument_list|,
 name|i
 argument_list|)
 condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Warning, IRQ %d is not listed as valid\n"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|i
 operator|)
 return|;
+block|}
 name|snprintf
 argument_list|(
 name|tunable_buffer
@@ -4198,7 +4212,11 @@ name|PCI_INTERRUPT_VALID
 argument_list|(
 name|i
 argument_list|)
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
+operator|!
 name|link_valid_irq
 argument_list|(
 name|link
@@ -4206,11 +4224,21 @@ argument_list|,
 name|i
 argument_list|)
 condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Warning, IRQ %d is not listed as valid\n"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|i
 operator|)
 return|;
+block|}
 block|}
 comment|/* 	 * If we have a valid BIOS IRQ, use that.  We trust what the BIOS 	 * says it routed over what _CRS says the link thinks is routed. 	 */
 if|if
