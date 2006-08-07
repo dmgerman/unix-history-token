@@ -11257,7 +11257,7 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
-name|BUS_PROBE_DEFAULT
+name|BUS_PROBE_LOW_PRIORITY
 return|;
 block|}
 end_function
