@@ -61,28 +61,35 @@ comment|/* XXX */
 end_comment
 
 begin_comment
-comment|/* There is a problem playing sound files less then EMU_DEFAULT_BUFSZ in   * size. But using large buffer decreases interrupt rate and allow better   * sound quality on ATA systems... */
+comment|/*    * There are some problems when EMU_PLAY_BUFSZ is larger then EMU_PAGESIZE   *  1) there is a sound lag, because first round of playback is silence   *  2) the end of large file (equal to the lag duration) is lost   *  3) as a result of 1) and 2) no sound at all, when file size is less than    *    EMU_PLAY_BUFSZ (it plays silence and then stops)   */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EMU_DEFAULT_BUFSZ
-value|EMUPAGESIZE*4
+name|EMU_PLAY_BUFSZ
+value|EMUPAGESIZE
+end_define
+
+begin_define
+define|#
+directive|define
+name|EMU_REC_BUFSZ
+value|EMUPAGESIZE*16
 end_define
 
 begin_define
 define|#
 directive|define
 name|EMU_MAX_BUFSZ
-value|EMUPAGESIZE*8
+value|EMUPAGESIZE*16
 end_define
 
 begin_define
 define|#
 directive|define
-name|MAXPAGES
-value|(EMU_MAX_BUFSZ * NUM_G / EMUPAGESIZE)
+name|EMU_MAXPAGES
+value|8192
 end_define
 
 begin_define

@@ -1332,7 +1332,7 @@ block|{
 name|uint8_t
 name|bmap
 index|[
-name|MAXPAGES
+name|EMU_MAXPAGES
 operator|/
 literal|8
 index|]
@@ -1664,9 +1664,6 @@ name|emu_mem
 name|mem
 decl_stmt|;
 comment|/* memory */
-name|int
-name|bufsz
-decl_stmt|;
 comment|/* Mixer */
 name|int
 name|mixer_gpr
@@ -5921,6 +5918,19 @@ condition|)
 name|blksz
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|blksz
+operator|>
+name|EMU_MAX_BUFSZ
+operator|/
+name|EMUPAGESIZE
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 comment|/* find a free block in the bitmap */
 name|found
 operator|=
@@ -5939,7 +5949,7 @@ name|start
 operator|+
 name|blksz
 operator|<
-name|MAXPAGES
+name|EMU_MAXPAGES
 condition|)
 block|{
 name|found
@@ -9574,7 +9584,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Temporary sysctls should start with underscore, 		 * see freebsd-current mailing list, emu10kx driver 		 * discussion around May, 24th. */
+comment|/* Temporary sysctls should start with underscore, 		 * see freebsd-current mailing list, emu10kx driver 		 * discussion around 2006-05-24. */
 name|snprintf
 argument_list|(
 name|sysctl_name
@@ -14133,13 +14143,6 @@ literal|0xf00
 argument_list|)
 expr_stmt|;
 comment|/* What will happen if 							 * we write 1 here? */
-name|sc
-operator|->
-name|bufsz
-operator|=
-name|EMU_DEFAULT_BUFSZ
-expr_stmt|;
-comment|/* FIXME: pcm code can change this... */
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -14169,9 +14172,7 @@ comment|/* filterarg */
 name|NULL
 argument_list|,
 comment|/* maxsize */
-name|sc
-operator|->
-name|bufsz
+name|EMU_MAX_BUFSZ
 argument_list|,
 comment|/* nsegments */
 literal|1
@@ -14249,7 +14250,7 @@ name|sc
 operator|->
 name|mem
 argument_list|,
-name|MAXPAGES
+name|EMU_MAXPAGES
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -14368,7 +14369,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|MAXPAGES
+name|EMU_MAXPAGES
 condition|;
 name|i
 operator|++

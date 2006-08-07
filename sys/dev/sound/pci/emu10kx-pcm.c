@@ -2000,13 +2000,12 @@ name|channel
 operator|=
 name|c
 expr_stmt|;
+comment|/* XXX blksz should not be modified, see emu10kx.h for reasons */
 name|ch
 operator|->
 name|blksz
 operator|=
-name|sc
-operator|->
-name|bufsz
+name|EMU_PLAY_BUFSZ
 expr_stmt|;
 name|ch
 operator|->
@@ -2071,9 +2070,7 @@ name|ch
 operator|->
 name|slave
 argument_list|,
-name|sc
-operator|->
-name|bufsz
+name|EMU_PLAY_BUFSZ
 argument_list|,
 name|ch
 operator|->
@@ -3781,9 +3778,9 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|4096
+name|EMUPAGESIZE
 argument_list|,
-name|EMU_DEFAULT_BUFSZ
+name|EMU_REC_BUFSZ
 argument_list|,
 name|EMU_MAX_BUFSZ
 argument_list|)
