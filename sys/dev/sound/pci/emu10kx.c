@@ -11077,7 +11077,7 @@ name|NULL
 argument_list|,
 name|C_REC_R
 argument_list|,
-name|M_MASTER_REC_L
+name|M_MASTER_REC_R
 argument_list|,
 name|A_OUT_ADC_REC_R
 argument_list|,
@@ -11170,7 +11170,7 @@ name|EFX_OUTPUTD
 argument_list|(
 name|C_REAR_R
 argument_list|,
-name|M_MASTER_REAR_L
+name|M_MASTER_REAR_R
 argument_list|,
 name|A_OUT_D_REAR_R
 argument_list|)
