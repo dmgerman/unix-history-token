@@ -1984,7 +1984,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * If md_iterations is equal to 0, user don't want PKCS5v2. 		 */
+comment|/* 		 * If md_iterations is equal to 0, user don't want PKCS#5v2. 		 */
 if|if
 condition|(
 name|md
