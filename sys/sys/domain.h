@@ -174,14 +174,6 @@ name|domains
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|domain
-name|localdomain
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|extern
 name|void
