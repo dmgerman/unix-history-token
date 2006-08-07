@@ -450,7 +450,7 @@ name|len
 expr_stmt|;
 block|}
 return|return
-literal|0
+name|len
 return|;
 block|}
 end_function
