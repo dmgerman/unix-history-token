@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: mailwrapper.c,v 1.15 2003/03/09 01:24:26 millert Exp $	*/
+comment|/*	$OpenBSD: mailwrapper.c,v 1.16 2004/07/06 03:38:14 millert Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$NetBSD: mailwrapper.c,v 1.7 2003/02/17 21:18:46 is Exp $	*/
+comment|/*	$NetBSD: mailwrapper.c,v 1.9 2003/03/09 08:10:43 mjl Exp $	*/
 end_comment
 
 begin_comment
