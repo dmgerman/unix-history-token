@@ -1178,6 +1178,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_CHIPID_BCM5750_C2
+value|0x42020000
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_CHIPID_BCM5714_A0
 value|0x50000000
 end_define
