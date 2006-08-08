@@ -1543,18 +1543,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|int Mount_msdosfs(char *mountp, void *dev) {     struct msdosfs_args mount_args;     char device[80];     char mountpoint[FILENAME_MAX];      if (Fake) 	return DITEM_SUCCESS;      if (*((char *)dev) != '/') {     	sprintf(device, "/dev/%s", (char *)dev); 	sprintf(mountpoint, "%s", mountp);     }     else { 	strcpy(device, dev); 	strcpy(mountpoint, mountp);     }      if (Mkdir(mountpoint)) { 	msgConfirm("Unable to make directory mountpoint for %s!", mountpoint); 	return DITEM_FAILURE;     }     if (isDebug()) 	msgDebug("mount %s %s\n", device, mountpoint);      memset(&mount_args, 0, sizeof(mount_args));     mount_args.fspec = device;     mount_args.magic = MSDOSFS_ARGSMAGIC;     mount_args.mask = S_IRWXU | S_IRWXG | S_IRWXO;     if (mount("msdosfs", mountpoint, 0, 	    (caddr_t)&mount_args) == -1) { 	msgConfirm("Error mounting %s on %s : %s", device, mountpoint, strerror(errno)); 	return DITEM_FAILURE;     }     return DITEM_SUCCESS; }
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|WINDOW
 modifier|*

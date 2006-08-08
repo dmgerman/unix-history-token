@@ -101,6 +101,9 @@ block|,
 literal|"main"
 block|,
 block|{
+ifdef|#
+directive|ifdef
+name|WITH_SLICES
 block|{
 literal|"1 Partition"
 block|,
@@ -123,6 +126,8 @@ block|,
 literal|0
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"2 Label"
 block|,

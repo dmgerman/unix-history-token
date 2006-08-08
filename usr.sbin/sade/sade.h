@@ -2899,22 +2899,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|Mount_msdosfs
-parameter_list|(
-name|char
-modifier|*
-name|mountp
-parameter_list|,
-name|void
-modifier|*
-name|devicename
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|WINDOW
 modifier|*
 name|openLayoutDialog

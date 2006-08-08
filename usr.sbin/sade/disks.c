@@ -212,6 +212,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
+
+begin_comment
+comment|/* only meaningful on x86 */
+end_comment
+
 begin_function_decl
 specifier|static
 name|u_char
@@ -228,6 +246,11 @@ name|size
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -3239,6 +3262,18 @@ block|}
 endif|#
 directive|endif
 comment|/* WITH_SLICES */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+comment|/* only meaningful on x86 */
 specifier|static
 name|u_char
 modifier|*
@@ -3410,6 +3445,9 @@ return|return
 name|NULL
 return|;
 block|}
+endif|#
+directive|endif
+comment|/* __i386__ || __amd64 */
 ifdef|#
 directive|ifdef
 name|WITH_SLICES
@@ -3892,11 +3930,20 @@ index|]
 operator|->
 name|private
 decl_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
 specifier|static
 name|u_char
 modifier|*
 name|boot1
 decl_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined
