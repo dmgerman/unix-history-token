@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**************************************************************************  Copyright (c) 2001-2005, Intel Corporation All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Redistributions in binary form must reproduce the above copyright     notice, this list of conditions and the following disclaimer in the     documentation and/or other materials provided with the distribution.   3. Neither the name of the Intel Corporation nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  ***************************************************************************/
+comment|/**************************************************************************  Copyright (c) 2001-2006, Intel Corporation All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Redistributions in binary form must reproduce the above copyright     notice, this list of conditions and the following disclaimer in the     documentation and/or other materials provided with the distribution.   3. Neither the name of the Intel Corporation nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  ***************************************************************************/
 end_comment
 
 begin_comment
@@ -27,11 +27,209 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rman.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sockio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/taskqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/bpf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/ethernet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_arp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_dl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_media.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_vlan_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/if_ether.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/udp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/pcivar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/pcireg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/em/if_em_hw.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/em/if_em.h>
 end_include
 
 begin_comment
-comment|/*********************************************************************  *  Set this to one to display debug statistics                                                     *********************************************************************/
+comment|/*********************************************************************  *  Set this to one to display debug statistics  *********************************************************************/
 end_comment
 
 begin_decl_stmt
@@ -51,7 +249,7 @@ name|char
 name|em_driver_version
 index|[]
 init|=
-literal|"Version - 3.2.18"
+literal|"Version - 6.0.5"
 decl_stmt|;
 end_decl_stmt
 
@@ -454,6 +652,18 @@ block|,
 block|{
 literal|0x8086
 block|,
+name|E1000_DEV_ID_82546GB_QUAD_COPPER_KSP3
+block|,
+name|PCI_ANY_ID
+block|,
+name|PCI_ANY_ID
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
 name|E1000_DEV_ID_82547EI
 block|,
 name|PCI_ANY_ID
@@ -562,6 +772,18 @@ block|,
 block|{
 literal|0x8086
 block|,
+name|E1000_DEV_ID_82572EI
+block|,
+name|PCI_ANY_ID
+block|,
+name|PCI_ANY_ID
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
 name|E1000_DEV_ID_82573E
 block|,
 name|PCI_ANY_ID
@@ -587,6 +809,90 @@ block|{
 literal|0x8086
 block|,
 name|E1000_DEV_ID_82573L
+block|,
+name|PCI_ANY_ID
+block|,
+name|PCI_ANY_ID
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+name|E1000_DEV_ID_80003ES2LAN_COPPER_SPT
+block|,
+name|PCI_ANY_ID
+block|,
+name|PCI_ANY_ID
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+name|E1000_DEV_ID_80003ES2LAN_SERDES_SPT
+block|,
+name|PCI_ANY_ID
+block|,
+name|PCI_ANY_ID
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+name|E1000_DEV_ID_80003ES2LAN_COPPER_DPT
+block|,
+name|PCI_ANY_ID
+block|,
+name|PCI_ANY_ID
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+name|E1000_DEV_ID_80003ES2LAN_SERDES_DPT
+block|,
+name|PCI_ANY_ID
+block|,
+name|PCI_ANY_ID
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+name|E1000_DEV_ID_ICH8_IGP_AMT
+block|,
+name|PCI_ANY_ID
+block|,
+name|PCI_ANY_ID
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+name|E1000_DEV_ID_ICH8_IGP_C
+block|,
+name|PCI_ANY_ID
+block|,
+name|PCI_ANY_ID
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+name|E1000_DEV_ID_ICH8_IFE
 block|,
 name|PCI_ANY_ID
 block|,
@@ -629,7 +935,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*********************************************************************  *  Function prototypes              *********************************************************************/
+comment|/*********************************************************************  *  Function prototypes  *********************************************************************/
 end_comment
 
 begin_function_decl
@@ -688,17 +994,6 @@ name|int
 name|em_resume
 parameter_list|(
 name|device_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|em_intr
-parameter_list|(
-name|void
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -834,6 +1129,30 @@ begin_function_decl
 specifier|static
 name|int
 name|em_allocate_pci_resources
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|em_allocate_intr
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|em_free_intr
 parameter_list|(
 name|struct
 name|adapter
@@ -1002,7 +1321,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|em_clean_transmit_interrupts
+name|em_txeof
 parameter_list|(
 name|struct
 name|adapter
@@ -1037,8 +1356,8 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|em_process_receive_interrupts
+name|int
+name|em_rxeof
 parameter_list|(
 name|struct
 name|adapter
@@ -1105,10 +1424,10 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1165,7 +1484,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|em_print_link_status
+name|em_update_link_status
 parameter_list|(
 name|struct
 name|adapter
@@ -1363,7 +1682,7 @@ specifier|static
 name|int
 name|em_is_valid_ether_addr
 parameter_list|(
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1391,13 +1710,13 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|em_fill_descriptors
 parameter_list|(
 name|bus_addr_t
 name|address
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|length
 parameter_list|,
 name|PDESC_ARRAY
@@ -1444,6 +1763,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Fast interrupt handler and legacy ithread/polling modes are  * mutually exclusive.  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1457,13 +1780,95 @@ name|em_poll
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|void
+name|em_intr
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+specifier|static
+name|void
+name|em_intr_fast
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|em_add_int_process_limit
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|em_handle_rxtx
+parameter_list|(
+name|void
+modifier|*
+name|context
+parameter_list|,
+name|int
+name|pending
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|em_handle_link
+parameter_list|(
+name|void
+modifier|*
+name|context
+parameter_list|,
+name|int
+name|pending
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/*********************************************************************  *  FreeBSD Device Interface Entry Points                      *********************************************************************/
+comment|/*********************************************************************  *  FreeBSD Device Interface Entry Points  *********************************************************************/
 end_comment
 
 begin_decl_stmt
@@ -1691,6 +2096,15 @@ name|EM_DEFAULT_TXD
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|em_smart_pwr_down
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
@@ -1757,6 +2171,48 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.em.smart_pwr_down"
+argument_list|,
+operator|&
+name|em_smart_pwr_down
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DEVICE_POLLING
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|em_rx_process_limit
+init|=
+literal|100
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.em.rx_process_limit"
+argument_list|,
+operator|&
+name|em_rx_process_limit
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*********************************************************************  *  Device identification routine  *  *  em_probe determines if the driver should be loaded on  *  adapter based on PCI vendor/device id of the adapter.  *  *  return BUS_PROBE_DEFAULT on success, positive on failure  *********************************************************************/
 end_comment
@@ -1770,35 +2226,35 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|em_vendor_info_t
-modifier|*
-name|ent
-decl_stmt|;
-name|u_int16_t
-name|pci_vendor_id
-init|=
-literal|0
-decl_stmt|;
-name|u_int16_t
-name|pci_device_id
-init|=
-literal|0
-decl_stmt|;
-name|u_int16_t
-name|pci_subvendor_id
-init|=
-literal|0
-decl_stmt|;
-name|u_int16_t
-name|pci_subdevice_id
-init|=
-literal|0
-decl_stmt|;
 name|char
 name|adapter_name
 index|[
 literal|60
 index|]
+decl_stmt|;
+name|uint16_t
+name|pci_vendor_id
+init|=
+literal|0
+decl_stmt|;
+name|uint16_t
+name|pci_device_id
+init|=
+literal|0
+decl_stmt|;
+name|uint16_t
+name|pci_subvendor_id
+init|=
+literal|0
+decl_stmt|;
+name|uint16_t
+name|pci_subdevice_id
+init|=
+literal|0
+decl_stmt|;
+name|em_vendor_info_t
+modifier|*
+name|ent
 decl_stmt|;
 name|INIT_DEBUGOUT
 argument_list|(
@@ -1954,7 +2410,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  Device initialization routine  *  *  The attach entry point is called when the driver is being loaded.  *  This routine identifies the type of hardware, allocates all resources   *  and initializes the hardware.       *    *  return 0 on success, positive on failure  *********************************************************************/
+comment|/*********************************************************************  *  Device initialization routine  *  *  The attach entry point is called when the driver is being loaded.  *  This routine identifies the type of hardware, allocates all resources  *  and initializes the hardware.  *  *  return 0 on success, positive on failure  *********************************************************************/
 end_comment
 
 begin_function
@@ -1986,48 +2442,17 @@ argument_list|(
 literal|"em_attach: begin"
 argument_list|)
 expr_stmt|;
-comment|/* Allocate, clear, and link in our adapter structure */
-if|if
-condition|(
-operator|!
-operator|(
 name|adapter
 operator|=
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
-operator|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"em: adapter structure allocation failed\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-block|}
-name|bzero
-argument_list|(
-name|adapter
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|adapter
-argument_list|)
-argument_list|)
 expr_stmt|;
 name|adapter
 operator|->
 name|dev
 operator|=
-name|dev
-expr_stmt|;
 name|adapter
 operator|->
 name|osdep
@@ -2035,15 +2460,6 @@ operator|.
 name|dev
 operator|=
 name|dev
-expr_stmt|;
-name|adapter
-operator|->
-name|unit
-operator|=
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
 expr_stmt|;
 name|EM_LOCK_INIT
 argument_list|(
@@ -2079,10 +2495,6 @@ name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|adapter
 argument_list|,
 literal|0
@@ -2117,10 +2529,6 @@ name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|adapter
 argument_list|,
 literal|0
@@ -2275,7 +2683,29 @@ name|em_tx_abs_int_delay_dflt
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Validate number of transmit and receive descriptors. It 	 * must not exceed hardware maximum, and must be multiple 	 * of E1000_DBA_ALIGN. 	 */
+ifndef|#
+directive|ifndef
+name|DEVICE_POLLING
+comment|/* Sysctls for limiting the amount of work done in the taskqueue */
+name|em_add_int_process_limit
+argument_list|(
+name|adapter
+argument_list|,
+literal|"rx_processing_limit"
+argument_list|,
+literal|"max number of rx packets to process"
+argument_list|,
+operator|&
+name|adapter
+operator|->
+name|rx_process_limit
+argument_list|,
+name|em_rx_process_limit
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* 	 * Validate number of transmit and receive descriptors. It 	 * must not exceed hardware maximum, and must be multiple 	 * of EM_DBA_ALIGN. 	 */
 if|if
 condition|(
 operator|(
@@ -2289,7 +2719,7 @@ name|em_tx_desc
 argument_list|)
 operator|)
 operator|%
-name|E1000_DBA_ALIGN
+name|EM_DBA_ALIGN
 operator|)
 operator|!=
 literal|0
@@ -2329,13 +2759,11 @@ name|EM_MIN_TXD
 operator|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Using %d TX descriptors instead of %d!\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Using %d TX descriptors instead of %d!\n"
 argument_list|,
 name|EM_DEFAULT_TXD
 argument_list|,
@@ -2369,7 +2797,7 @@ name|em_rx_desc
 argument_list|)
 operator|)
 operator|%
-name|E1000_DBA_ALIGN
+name|EM_DBA_ALIGN
 operator|)
 operator|!=
 literal|0
@@ -2409,13 +2837,11 @@ name|EM_MIN_RXD
 operator|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Using %d RX descriptors instead of %d!\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Using %d RX descriptors instead of %d!\n"
 argument_list|,
 name|EM_DEFAULT_RXD
 argument_list|,
@@ -2513,7 +2939,7 @@ name|EM_MASTER_SLAVE
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*  	 * Set the max frame size assuming standard ethernet  	 * sized frames  	 */
+comment|/* 	 * Set the max frame size assuming standard ethernet 	 * sized frames. 	 */
 name|adapter
 operator|->
 name|hw
@@ -2536,7 +2962,7 @@ name|MINIMUM_ETHERNET_PACKET_SIZE
 operator|+
 name|ETHER_CRC_LEN
 expr_stmt|;
-comment|/*  	 * This controls when hardware reports transmit completion  	 * status.  	 */
+comment|/* 	 * This controls when hardware reports transmit completion 	 * status. 	 */
 name|adapter
 operator|->
 name|hw
@@ -2553,13 +2979,11 @@ name|adapter
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Allocation of PCI resources failed\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Allocation of PCI resources failed\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -2593,7 +3017,7 @@ expr|struct
 name|em_tx_desc
 argument_list|)
 argument_list|,
-name|E1000_DBA_ALIGN
+name|EM_DBA_ALIGN
 argument_list|)
 expr_stmt|;
 comment|/* Allocate Transmit Descriptor ring */
@@ -2614,13 +3038,11 @@ name|BUS_DMA_NOWAIT
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Unable to allocate tx_desc memory\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Unable to allocate tx_desc memory\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -2660,7 +3082,7 @@ expr|struct
 name|em_rx_desc
 argument_list|)
 argument_list|,
-name|E1000_DBA_ALIGN
+name|EM_DBA_ALIGN
 argument_list|)
 expr_stmt|;
 comment|/* Allocate Receive Descriptor ring */
@@ -2681,13 +3103,11 @@ name|BUS_DMA_NOWAIT
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Unable to allocate rx_desc memory\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Unable to allocate rx_desc memory\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -2722,13 +3142,11 @@ name|adapter
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Unable to initialize the hardware\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Unable to initialize the hardware\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -2753,13 +3171,12 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: EEPROM read error while reading mac address\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"EEPROM read error while reading MAC"
+literal|" address\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -2767,7 +3184,7 @@ operator|=
 name|EIO
 expr_stmt|;
 goto|goto
-name|err_mac_addr
+name|err_hw_init
 goto|;
 block|}
 if|if
@@ -2783,13 +3200,11 @@ name|mac_addr
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Invalid mac address\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Invalid MAC address\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -2797,7 +3212,7 @@ operator|=
 name|EIO
 expr_stmt|;
 goto|goto
-name|err_mac_addr
+name|err_hw_init
 goto|;
 block|}
 comment|/* Setup OS specific network interface */
@@ -2805,6 +3220,11 @@ name|em_setup_interface
 argument_list|(
 name|dev
 argument_list|,
+name|adapter
+argument_list|)
+expr_stmt|;
+name|em_allocate_intr
+argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
@@ -2830,82 +3250,29 @@ name|get_link_status
 operator|=
 literal|1
 expr_stmt|;
-name|em_check_for_link
+name|em_update_link_status
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+comment|/* Indicate SOL/IDER usage */
+if|if
+condition|(
+name|em_check_phy_reset_block
 argument_list|(
 operator|&
 name|adapter
 operator|->
 name|hw
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bootverbose
 condition|)
-block|{
-comment|/* Print the link status */
-if|if
-condition|(
-name|adapter
-operator|->
-name|link_active
-operator|==
-literal|1
-condition|)
-block|{
-name|em_get_speed_and_duplex
+name|device_printf
 argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
+name|dev
 argument_list|,
-operator|&
-name|adapter
-operator|->
-name|link_speed
-argument_list|,
-operator|&
-name|adapter
-operator|->
-name|link_duplex
+literal|"PHY reset is blocked due to SOL/IDER session.\n"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"em%d:  Speed:%d Mbps  Duplex:%s\n"
-argument_list|,
-name|adapter
-operator|->
-name|unit
-argument_list|,
-name|adapter
-operator|->
-name|link_speed
-argument_list|,
-name|adapter
-operator|->
-name|link_duplex
-operator|==
-name|FULL_DUPLEX
-condition|?
-literal|"Full"
-else|:
-literal|"Half"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|printf
-argument_list|(
-literal|"em%d:  Speed:N/A  Duplex:N/A\n"
-argument_list|,
-name|adapter
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Identify 82544 on PCIX */
 name|em_get_bus_info
 argument_list|(
@@ -2933,23 +3300,19 @@ name|mac_type
 operator|==
 name|em_82544
 condition|)
-block|{
 name|adapter
 operator|->
 name|pcix_82544
 operator|=
 name|TRUE
 expr_stmt|;
-block|}
 else|else
-block|{
 name|adapter
 operator|->
 name|pcix_82544
 operator|=
 name|FALSE
 expr_stmt|;
-block|}
 name|INIT_DEBUGOUT
 argument_list|(
 literal|"em_attach: end"
@@ -2960,8 +3323,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|err_mac_addr
-label|:
 name|err_hw_init
 label|:
 name|em_dma_free
@@ -2990,6 +3351,11 @@ name|err_tx_desc
 label|:
 name|err_pci
 label|:
+name|em_free_intr
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
 name|em_free_pci_resources
 argument_list|(
 name|adapter
@@ -3009,7 +3375,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  Device removal routine  *  *  The detach entry point is called when the driver is being removed.  *  This routine stops the adapter and deallocates all the resources  *  that were allocated for driver operation.  *    *  return 0 on success, positive on failure  *********************************************************************/
+comment|/*********************************************************************  *  Device removal routine  *  *  The detach entry point is called when the driver is being removed.  *  This routine stops the adapter and deallocates all the resources  *  that were allocated for driver operation.  *  *  return 0 on success, positive on failure  *********************************************************************/
 end_comment
 
 begin_function
@@ -3063,6 +3429,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|em_free_intr
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
 name|EM_LOCK
 argument_list|(
 name|adapter
@@ -3361,11 +3732,6 @@ name|ifp
 parameter_list|)
 block|{
 name|struct
-name|mbuf
-modifier|*
-name|m_head
-decl_stmt|;
-name|struct
 name|adapter
 modifier|*
 name|adapter
@@ -3374,16 +3740,33 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
-name|mtx_assert
+name|struct
+name|mbuf
+modifier|*
+name|m_head
+decl_stmt|;
+name|EM_LOCK_ASSERT
 argument_list|(
-operator|&
 name|adapter
-operator|->
-name|mtx
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+operator|(
+name|IFF_DRV_RUNNING
+operator||
+name|IFF_DRV_OACTIVE
+operator|)
+operator|)
+operator|!=
+name|IFF_DRV_RUNNING
+condition|)
+return|return;
 if|if
 condition|(
 operator|!
@@ -3466,7 +3849,7 @@ argument_list|,
 name|m_head
 argument_list|)
 expr_stmt|;
-comment|/* Set timeout in case hardware has problems transmitting */
+comment|/* Set timeout in case hardware has problems transmitting. */
 name|ifp
 operator|->
 name|if_timer
@@ -3474,7 +3857,6 @@ operator|=
 name|EM_TX_TIMEOUT
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3521,7 +3903,6 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3547,6 +3928,15 @@ name|data
 parameter_list|)
 block|{
 name|struct
+name|adapter
+modifier|*
+name|adapter
+init|=
+name|ifp
+operator|->
+name|if_softc
+decl_stmt|;
+name|struct
 name|ifreq
 modifier|*
 name|ifr
@@ -3559,13 +3949,16 @@ operator|)
 name|data
 decl_stmt|;
 name|struct
-name|adapter
+name|ifaddr
 modifier|*
-name|adapter
+name|ifa
 init|=
-name|ifp
-operator|->
-name|if_softc
+operator|(
+expr|struct
+name|ifaddr
+operator|*
+operator|)
+name|data
 decl_stmt|;
 name|int
 name|error
@@ -3594,11 +3987,63 @@ case|:
 case|case
 name|SIOCGIFADDR
 case|:
-name|IOCTL_DEBUGOUT
+if|if
+condition|(
+name|ifa
+operator|->
+name|ifa_addr
+operator|->
+name|sa_family
+operator|==
+name|AF_INET
+condition|)
+block|{
+comment|/* 			 * XXX 			 * Since resetting hardware takes a very long time 			 * and results in link renegotiation we only 			 * initialize the hardware only when it is absolutely 			 * required. 			 */
+name|ifp
+operator|->
+name|if_flags
+operator||=
+name|IFF_UP
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+condition|)
+block|{
+name|EM_LOCK
 argument_list|(
-literal|"ioctl rcv'd: SIOCxIFADDR (Get/Set Interface Addr)"
+name|adapter
 argument_list|)
 expr_stmt|;
+name|em_init_locked
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+name|EM_UNLOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+block|}
+name|arp_ifinit
+argument_list|(
+name|ifp
+argument_list|,
+name|ifa
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|error
+operator|=
 name|ether_ioctl
 argument_list|(
 name|ifp
@@ -3616,9 +4061,19 @@ block|{
 name|int
 name|max_frame_size
 decl_stmt|;
+name|uint16_t
+name|eeprom_data
+init|=
+literal|0
+decl_stmt|;
 name|IOCTL_DEBUGOUT
 argument_list|(
 literal|"ioctl rcv'd: SIOCSIFMTU (Set Interface MTU)"
+argument_list|)
+expr_stmt|;
+name|EM_LOCK
+argument_list|(
+name|adapter
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -3631,20 +4086,57 @@ name|mac_type
 condition|)
 block|{
 case|case
+name|em_82573
+case|:
+comment|/* 			 * 82573 only supports jumbo frames 			 * if ASPM is disabled. 			 */
+name|em_read_eeprom
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|EEPROM_INIT_3GIO_3
+argument_list|,
+literal|1
+argument_list|,
+operator|&
+name|eeprom_data
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|eeprom_data
+operator|&
+name|EEPROM_WORD1A_ASPM_MASK
+condition|)
+block|{
+name|max_frame_size
+operator|=
+name|ETHER_MAX_LEN
+expr_stmt|;
+break|break;
+block|}
+comment|/* Allow Jumbo frames - fall thru */
+case|case
 name|em_82571
 case|:
 case|case
 name|em_82572
 case|:
+case|case
+name|em_80003es2lan
+case|:
+comment|/* Limit Jumbo Frame size */
 name|max_frame_size
 operator|=
-literal|10500
+literal|9234
 expr_stmt|;
 break|break;
 case|case
-name|em_82573
+name|em_ich8lan
 case|:
-comment|/* 82573 does not support jumbo frames. */
+comment|/* ICH8 does not support jumbo frames */
 name|max_frame_size
 operator|=
 name|ETHER_MAX_LEN
@@ -3669,17 +4161,17 @@ operator|-
 name|ETHER_CRC_LEN
 condition|)
 block|{
+name|EM_UNLOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-name|EM_LOCK
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|->
 name|if_mtu
@@ -3738,7 +4230,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 operator|(
 name|ifp
 operator|->
@@ -3748,18 +4239,35 @@ name|IFF_DRV_RUNNING
 operator|)
 condition|)
 block|{
-name|em_init_locked
-argument_list|(
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_flags
+operator|^
 name|adapter
-argument_list|)
-expr_stmt|;
-block|}
+operator|->
+name|if_flags
+operator|)
+operator|&
+name|IFF_PROMISC
+condition|)
+block|{
 name|em_disable_promisc
 argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
 name|em_set_promisc
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+name|em_init_locked
 argument_list|(
 name|adapter
 argument_list|)
@@ -3783,6 +4291,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|adapter
+operator|->
+name|if_flags
+operator|=
+name|ifp
+operator|->
+name|if_flags
+expr_stmt|;
 name|EM_UNLOCK
 argument_list|(
 name|adapter
@@ -4076,20 +4592,18 @@ expr_stmt|;
 break|break;
 block|}
 default|default:
-name|IOCTL_DEBUGOUT1
-argument_list|(
-literal|"ioctl received: UNKNOWN (0x%x)"
-argument_list|,
-operator|(
-name|int
-operator|)
-name|command
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
-name|EINVAL
+name|ether_ioctl
+argument_list|(
+name|ifp
+argument_list|,
+name|command
+argument_list|,
+name|data
+argument_list|)
 expr_stmt|;
+break|break;
 block|}
 return|return
 operator|(
@@ -4118,13 +4632,11 @@ name|struct
 name|adapter
 modifier|*
 name|adapter
-decl_stmt|;
-name|adapter
-operator|=
+init|=
 name|ifp
 operator|->
 name|if_softc
-expr_stmt|;
+decl_stmt|;
 name|EM_LOCK
 argument_list|(
 name|adapter
@@ -4161,7 +4673,6 @@ return|return;
 block|}
 if|if
 condition|(
-operator|!
 name|em_check_for_link
 argument_list|(
 operator|&
@@ -4169,14 +4680,16 @@ name|adapter
 operator|->
 name|hw
 argument_list|)
+operator|==
+literal|0
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: watchdog timeout -- resetting\n"
-argument_list|,
 name|adapter
 operator|->
-name|unit
+name|dev
+argument_list|,
+literal|"watchdog timeout -- resetting\n"
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -4205,7 +4718,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  Init entry point  *  *  This routine is used in two ways. It is used by the stack as  *  init entry point in network interface structure. It is also used  *  by the driver as a hw/sw initialization routine to get to a   *  consistent state.  *  *  return 0 on success, positive on failure  **********************************************************************/
+comment|/*********************************************************************  *  Init entry point  *  *  This routine is used in two ways. It is used by the stack as  *  init entry point in network interface structure. It is also used  *  by the driver as a hw/sw initialization routine to get to a  *  consistent state.  *  *  return 0 on success, positive on failure  **********************************************************************/
 end_comment
 
 begin_function
@@ -4223,29 +4736,29 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
+init|=
+name|adapter
+operator|->
+name|ifp
+decl_stmt|;
+name|device_t
+name|dev
+init|=
+name|adapter
+operator|->
+name|dev
 decl_stmt|;
 name|uint32_t
 name|pba
 decl_stmt|;
-name|ifp
-operator|=
-name|adapter
-operator|->
-name|ifp
-expr_stmt|;
 name|INIT_DEBUGOUT
 argument_list|(
 literal|"em_init: begin"
 argument_list|)
 expr_stmt|;
-name|mtx_assert
+name|EM_LOCK_ASSERT
 argument_list|(
-operator|&
 name|adapter
-operator|->
-name|mtx
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|em_stop
@@ -4253,7 +4766,7 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Packet Buffer Allocation (PBA) 	 * Writing PBA sets the receive portion of the buffer 	 * the remainder is used for the transmit buffer. 	 */
+comment|/* 	 * Packet Buffer Allocation (PBA) 	 * Writing PBA sets the receive portion of the buffer 	 * the remainder is used for the transmit buffer. 	 * 	 * Devices before the 82547 had a Packet Buffer of 64K. 	 *   Default allocation: PBA=48K for Rx, leaving 16K for Tx. 	 * After the 82547 the buffer was reduced to 40K. 	 *   Default allocation: PBA=30K for Rx, leaving 10K for Tx. 	 *   Note: default does not leave enough room for Jumbo Frame>10k. 	 */
 switch|switch
 condition|(
 name|adapter
@@ -4319,6 +4832,10 @@ name|EM_PBA_BYTES_SHIFT
 expr_stmt|;
 break|break;
 case|case
+name|em_80003es2lan
+case|:
+comment|/* 80003es2lan: Total Packet Buffer is 48K */
+case|case
 name|em_82571
 case|:
 comment|/* 82571: Total Packet Buffer is 48K */
@@ -4342,6 +4859,14 @@ operator|=
 name|E1000_PBA_12K
 expr_stmt|;
 comment|/* 12K for Rx, 20K for Tx */
+break|break;
+case|case
+name|em_ich8lan
+case|:
+name|pba
+operator|=
+name|E1000_PBA_8K
+expr_stmt|;
 break|break;
 default|default:
 comment|/* Devices before 82547 had a Packet Buffer of 64K.   */
@@ -4414,17 +4939,20 @@ name|adapter
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Unable to initialize the hardware\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Unable to initialize the hardware\n"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|em_update_link_status
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -4447,13 +4975,11 @@ name|adapter
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Could not setup transmit structures\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Could not setup transmit structures\n"
 argument_list|)
 expr_stmt|;
 name|em_stop
@@ -4483,13 +5009,11 @@ name|adapter
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Could not setup receive structures\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Could not setup receive structures\n"
 argument_list|)
 expr_stmt|;
 name|em_stop
@@ -4504,7 +5028,7 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-comment|/* Don't loose promiscuous settings */
+comment|/* Don't lose promiscuous settings */
 name|em_set_promisc
 argument_list|(
 name|adapter
@@ -4581,7 +5105,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
-comment|/*          * Only enable interrupts if we are not polling, make sure          * they are off otherwise.          */
+comment|/* 	 * Only enable interrupts if we are not polling, make sure 	 * they are off otherwise. 	 */
 if|if
 condition|(
 name|ifp
@@ -4613,7 +5137,6 @@ name|phy_reset_disable
 operator|=
 name|TRUE
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4649,7 +5172,6 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4659,10 +5181,14 @@ directive|ifdef
 name|DEVICE_POLLING
 end_ifdef
 
+begin_comment
+comment|/*********************************************************************  *  *  Legacy polling routine    *  *********************************************************************/
+end_comment
+
 begin_function
 specifier|static
 name|void
-name|em_poll_locked
+name|em_poll
 parameter_list|(
 name|struct
 name|ifnet
@@ -4686,19 +5212,34 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|reg_icr
 decl_stmt|;
-name|mtx_assert
+name|EM_LOCK
 argument_list|(
-operator|&
 name|adapter
-operator|->
-name|mtx
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|EM_UNLOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|cmd
@@ -4753,7 +5294,7 @@ operator|->
 name|hw
 argument_list|)
 expr_stmt|;
-name|em_print_link_status
+name|em_update_link_status
 argument_list|(
 name|adapter
 argument_list|)
@@ -4774,14 +5315,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|em_process_receive_interrupts
+name|em_rxeof
 argument_list|(
 name|adapter
 argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
-name|em_clean_transmit_interrupts
+name|em_txeof
 argument_list|(
 name|adapter
 argument_list|)
@@ -4802,58 +5343,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|em_poll
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|,
-name|enum
-name|poll_cmd
-name|cmd
-parameter_list|,
-name|int
-name|count
-parameter_list|)
-block|{
-name|struct
-name|adapter
-modifier|*
-name|adapter
-init|=
-name|ifp
-operator|->
-name|if_softc
-decl_stmt|;
-name|EM_LOCK
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_drv_flags
-operator|&
-name|IFF_DRV_RUNNING
-condition|)
-name|em_poll_locked
-argument_list|(
-name|ifp
-argument_list|,
-name|cmd
-argument_list|,
-name|count
-argument_list|)
-expr_stmt|;
 name|EM_UNLOCK
 argument_list|(
 name|adapter
@@ -4862,17 +5351,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* DEVICE_POLLING */
-end_comment
-
-begin_comment
-comment|/*********************************************************************  *  *  Interrupt Service routine    *  **********************************************************************/
+comment|/*********************************************************************  *  *  Legacy Interrupt Service routine    *  *********************************************************************/
 end_comment
 
 begin_function
@@ -4900,11 +5380,6 @@ decl_stmt|;
 name|uint32_t
 name|reg_icr
 decl_stmt|;
-name|int
-name|wantinit
-init|=
-literal|0
-decl_stmt|;
 name|EM_LOCK
 argument_list|(
 name|adapter
@@ -4916,9 +5391,6 @@ name|adapter
 operator|->
 name|ifp
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVICE_POLLING
 if|if
 condition|(
 name|ifp
@@ -4935,9 +5407,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
-comment|/* DEVICE_POLLING */
 for|for
 control|(
 init|;
@@ -5000,7 +5469,7 @@ operator|&
 name|IFF_DRV_RUNNING
 condition|)
 block|{
-name|em_process_receive_interrupts
+name|em_rxeof
 argument_list|(
 name|adapter
 argument_list|,
@@ -5008,7 +5477,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|em_clean_transmit_interrupts
+name|em_txeof
 argument_list|(
 name|adapter
 argument_list|)
@@ -5050,7 +5519,7 @@ operator|->
 name|hw
 argument_list|)
 expr_stmt|;
-name|em_print_link_status
+name|em_update_link_status
 argument_list|(
 name|adapter
 argument_list|)
@@ -5076,24 +5545,12 @@ name|reg_icr
 operator|&
 name|E1000_ICR_RXO
 condition|)
-block|{
 name|adapter
 operator|->
 name|rx_overruns
 operator|++
 expr_stmt|;
-name|wantinit
-operator|=
-literal|1
-expr_stmt|;
 block|}
-block|}
-if|#
-directive|if
-literal|0
-block|if (wantinit) 		em_init_locked(adapter);
-endif|#
-directive|endif
 if|if
 condition|(
 name|ifp
@@ -5121,9 +5578,361 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* if not DEVICE_POLLING, then fast interrupt routines only */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|em_handle_link
+parameter_list|(
+name|void
+modifier|*
+name|context
+parameter_list|,
+name|int
+name|pending
+parameter_list|)
+block|{
+name|struct
+name|adapter
+modifier|*
+name|adapter
+init|=
+name|context
+decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+name|ifp
+operator|=
+name|adapter
+operator|->
+name|ifp
+expr_stmt|;
+name|EM_LOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+name|callout_stop
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|timer
+argument_list|)
+expr_stmt|;
+name|adapter
+operator|->
+name|hw
+operator|.
+name|get_link_status
+operator|=
+literal|1
+expr_stmt|;
+name|em_check_for_link
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|)
+expr_stmt|;
+name|em_update_link_status
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+name|callout_reset
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|timer
+argument_list|,
+name|hz
+argument_list|,
+name|em_local_timer
+argument_list|,
+name|adapter
+argument_list|)
+expr_stmt|;
+name|EM_UNLOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|em_handle_rxtx
+parameter_list|(
+name|void
+modifier|*
+name|context
+parameter_list|,
+name|int
+name|pending
+parameter_list|)
+block|{
+name|struct
+name|adapter
+modifier|*
+name|adapter
+init|=
+name|context
+decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+name|NET_LOCK_GIANT
+argument_list|()
+expr_stmt|;
+name|ifp
+operator|=
+name|adapter
+operator|->
+name|ifp
+expr_stmt|;
+comment|/* 	 * TODO: 	 * It should be possible to run the tx clean loop without the lock. 	 */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+condition|)
+block|{
+if|if
+condition|(
+name|em_rxeof
+argument_list|(
+name|adapter
+argument_list|,
+name|adapter
+operator|->
+name|rx_process_limit
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|taskqueue_enqueue
+argument_list|(
+name|adapter
+operator|->
+name|tq
+argument_list|,
+operator|&
+name|adapter
+operator|->
+name|rxtx_task
+argument_list|)
+expr_stmt|;
+name|EM_LOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+name|em_txeof
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|IFQ_DRV_IS_EMPTY
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_snd
+argument_list|)
+condition|)
+name|em_start_locked
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|EM_UNLOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+block|}
+name|em_enable_intr
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+name|NET_UNLOCK_GIANT
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*********************************************************************  *  *  Fast Interrupt Service routine    *  *********************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|em_intr_fast
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|struct
+name|adapter
+modifier|*
+name|adapter
+init|=
+name|arg
+decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+name|uint32_t
+name|reg_icr
+decl_stmt|;
+name|ifp
+operator|=
+name|adapter
+operator|->
+name|ifp
+expr_stmt|;
+name|reg_icr
+operator|=
+name|E1000_READ_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|ICR
+argument_list|)
+expr_stmt|;
+comment|/* Hot eject?  */
+if|if
+condition|(
+name|reg_icr
+operator|==
+literal|0xffffffff
+condition|)
+return|return;
+comment|/* Definitely not our interrupt.  */
+if|if
+condition|(
+name|reg_icr
+operator|==
+literal|0x0
+condition|)
+return|return;
+comment|/* 	 * Starting with the 82571 chip, bit 31 should be used to 	 * determine whether the interrupt belongs to us. 	 */
+if|if
+condition|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac_type
+operator|>=
+name|em_82571
+operator|&&
+operator|(
+name|reg_icr
+operator|&
+name|E1000_ICR_INT_ASSERTED
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
+comment|/* 	 * Mask interrupts until the taskqueue is finished running.  This is 	 * cheap, just assume that it is needed.  This also works around the 	 * MSI message reordering errata on certain systems. 	 */
+name|em_disable_intr
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+name|taskqueue_enqueue
+argument_list|(
+name|adapter
+operator|->
+name|tq
+argument_list|,
+operator|&
+name|adapter
+operator|->
+name|rxtx_task
+argument_list|)
+expr_stmt|;
+comment|/* Link status change */
+if|if
+condition|(
+name|reg_icr
+operator|&
+operator|(
+name|E1000_ICR_RXSEQ
+operator||
+name|E1000_ICR_LSC
+operator|)
+condition|)
+name|taskqueue_enqueue
+argument_list|(
+name|taskqueue_fast
+argument_list|,
+operator|&
+name|adapter
+operator|->
+name|link_task
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|reg_icr
+operator|&
+name|E1000_ICR_RXO
+condition|)
+name|adapter
+operator|->
+name|rx_overruns
+operator|++
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! DEVICE_POLLING */
+end_comment
 
 begin_comment
 comment|/*********************************************************************  *  *  Media Ioctl callback  *  *  This routine is called whenever the user queries the status of  *  the interface using ifconfig.  *  **********************************************************************/
@@ -5167,87 +5976,11 @@ operator|->
 name|hw
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|E1000_READ_REG
+name|em_update_link_status
 argument_list|(
-operator|&
 name|adapter
-operator|->
-name|hw
-argument_list|,
-name|STATUS
-argument_list|)
-operator|&
-name|E1000_STATUS_LU
-condition|)
-block|{
-if|if
-condition|(
-name|adapter
-operator|->
-name|link_active
-operator|==
-literal|0
-condition|)
-block|{
-name|em_get_speed_and_duplex
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-operator|&
-name|adapter
-operator|->
-name|link_speed
-argument_list|,
-operator|&
-name|adapter
-operator|->
-name|link_duplex
 argument_list|)
 expr_stmt|;
-name|adapter
-operator|->
-name|link_active
-operator|=
-literal|1
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|adapter
-operator|->
-name|link_active
-operator|==
-literal|1
-condition|)
-block|{
-name|adapter
-operator|->
-name|link_speed
-operator|=
-literal|0
-expr_stmt|;
-name|adapter
-operator|->
-name|link_duplex
-operator|=
-literal|0
-expr_stmt|;
-name|adapter
-operator|->
-name|link_active
-operator|=
-literal|0
-expr_stmt|;
-block|}
-block|}
 name|ifmr
 operator|->
 name|ifm_status
@@ -5356,7 +6089,6 @@ operator||=
 name|IFM_HDX
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -5567,13 +6299,13 @@ name|em_10_half
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Unsupported media type\n"
-argument_list|,
 name|adapter
 operator|->
-name|unit
+name|dev
+argument_list|,
+literal|"Unsupported media type\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5620,73 +6352,6 @@ modifier|*
 name|m_headp
 parameter_list|)
 block|{
-name|u_int32_t
-name|txd_upper
-decl_stmt|;
-name|u_int32_t
-name|txd_lower
-decl_stmt|,
-name|txd_used
-init|=
-literal|0
-decl_stmt|,
-name|txd_saved
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|i
-decl_stmt|,
-name|j
-decl_stmt|,
-name|error
-init|=
-literal|0
-decl_stmt|;
-name|bus_dmamap_t
-name|map
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|m_head
-decl_stmt|;
-comment|/* For 82544 Workaround */
-name|DESC_ARRAY
-name|desc_array
-decl_stmt|;
-name|u_int32_t
-name|array_elements
-decl_stmt|;
-name|u_int32_t
-name|counter
-decl_stmt|;
-name|struct
-name|m_tag
-modifier|*
-name|mtag
-decl_stmt|;
-name|bus_dma_segment_t
-name|segs
-index|[
-name|EM_MAX_SCATTER
-index|]
-decl_stmt|;
-name|int
-name|nsegs
-decl_stmt|;
-name|struct
-name|em_buffer
-modifier|*
-name|tx_buffer
-decl_stmt|;
-name|struct
-name|em_tx_desc
-modifier|*
-name|current_tx_desc
-init|=
-name|NULL
-decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -5696,12 +6361,73 @@ name|adapter
 operator|->
 name|ifp
 decl_stmt|;
+name|bus_dma_segment_t
+name|segs
+index|[
+name|EM_MAX_SCATTER
+index|]
+decl_stmt|;
+name|bus_dmamap_t
+name|map
+decl_stmt|;
+name|struct
+name|em_buffer
+modifier|*
+name|tx_buffer
+decl_stmt|,
+modifier|*
+name|tx_buffer_last
+decl_stmt|;
+name|struct
+name|em_tx_desc
+modifier|*
+name|current_tx_desc
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|m_head
+decl_stmt|;
+name|struct
+name|m_tag
+modifier|*
+name|mtag
+decl_stmt|;
+name|uint32_t
+name|txd_upper
+decl_stmt|,
+name|txd_lower
+decl_stmt|,
+name|txd_used
+decl_stmt|,
+name|txd_saved
+decl_stmt|;
+name|int
+name|nsegs
+decl_stmt|,
+name|i
+decl_stmt|,
+name|j
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|m_head
 operator|=
 operator|*
 name|m_headp
 expr_stmt|;
-comment|/*          * Force a cleanup if number of TX descriptors          * available hits the threshold          */
+name|current_tx_desc
+operator|=
+name|NULL
+expr_stmt|;
+name|txd_used
+operator|=
+name|txd_saved
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 	 * Force a cleanup if number of TX descriptors 	 * available hits the threshold. 	 */
 if|if
 condition|(
 name|adapter
@@ -5711,7 +6437,7 @@ operator|<=
 name|EM_TX_CLEANUP_THRESHOLD
 condition|)
 block|{
-name|em_clean_transmit_interrupts
+name|em_txeof
 argument_list|(
 name|adapter
 argument_list|)
@@ -5737,129 +6463,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/*          * Map the packet for DMA.          */
-name|tx_buffer
-operator|=
-operator|&
-name|adapter
-operator|->
-name|tx_buffer_area
-index|[
-name|adapter
-operator|->
-name|next_avail_tx_desc
-index|]
-expr_stmt|;
-name|error
-operator|=
-name|bus_dmamap_load_mbuf_sg
-argument_list|(
-name|adapter
-operator|->
-name|txtag
-argument_list|,
-name|tx_buffer
-operator|->
-name|map
-argument_list|,
-name|m_head
-argument_list|,
-name|segs
-argument_list|,
-operator|&
-name|nsegs
-argument_list|,
-name|BUS_DMA_NOWAIT
-argument_list|)
-expr_stmt|;
-name|map
-operator|=
-name|tx_buffer
-operator|->
-name|map
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-block|{
-name|adapter
-operator|->
-name|no_tx_dma_setup
-operator|++
-expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
-name|KASSERT
-argument_list|(
-name|nsegs
-operator|!=
-literal|0
-argument_list|,
-operator|(
-literal|"em_encap: empty packet"
-operator|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|nsegs
-operator|>
-name|adapter
-operator|->
-name|num_tx_desc_avail
-condition|)
-block|{
-name|adapter
-operator|->
-name|no_tx_desc_avail2
-operator|++
-expr_stmt|;
-name|error
-operator|=
-name|ENOBUFS
-expr_stmt|;
-goto|goto
-name|encap_fail
-goto|;
-block|}
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_hwassist
-operator|>
-literal|0
-condition|)
-block|{
-name|em_transmit_checksum_setup
-argument_list|(
-name|adapter
-argument_list|,
-name|m_head
-argument_list|,
-operator|&
-name|txd_upper
-argument_list|,
-operator|&
-name|txd_lower
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|txd_upper
-operator|=
-name|txd_lower
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Find out if we are in vlan mode */
+comment|/* Find out if we are in vlan mode. */
 name|mtag
 operator|=
 name|VLAN_OUTPUT_TAG
@@ -5914,13 +6518,11 @@ name|m_headp
 operator|=
 name|NULL
 expr_stmt|;
-name|error
-operator|=
+return|return
+operator|(
 name|ENOBUFS
-expr_stmt|;
-goto|goto
-name|encap_fail
-goto|;
+operator|)
+return|;
 block|}
 name|eh
 operator|=
@@ -5959,13 +6561,11 @@ name|m_headp
 operator|=
 name|NULL
 expr_stmt|;
-name|error
-operator|=
+return|return
+operator|(
 name|ENOBUFS
-expr_stmt|;
-goto|goto
-name|encap_fail
-goto|;
+operator|)
+return|;
 block|}
 name|m_head
 operator|=
@@ -5992,13 +6592,11 @@ name|m_headp
 operator|=
 name|NULL
 expr_stmt|;
-name|error
-operator|=
+return|return
+operator|(
 name|ENOBUFS
-expr_stmt|;
-goto|goto
-name|encap_fail
-goto|;
+operator|)
+return|;
 block|}
 name|evl
 operator|=
@@ -6071,6 +6669,128 @@ operator|=
 name|m_head
 expr_stmt|;
 block|}
+comment|/* 	 * Map the packet for DMA. 	 */
+name|tx_buffer
+operator|=
+operator|&
+name|adapter
+operator|->
+name|tx_buffer_area
+index|[
+name|adapter
+operator|->
+name|next_avail_tx_desc
+index|]
+expr_stmt|;
+name|tx_buffer_last
+operator|=
+name|tx_buffer
+expr_stmt|;
+name|map
+operator|=
+name|tx_buffer
+operator|->
+name|map
+expr_stmt|;
+name|error
+operator|=
+name|bus_dmamap_load_mbuf_sg
+argument_list|(
+name|adapter
+operator|->
+name|txtag
+argument_list|,
+name|map
+argument_list|,
+name|m_head
+argument_list|,
+name|segs
+argument_list|,
+operator|&
+name|nsegs
+argument_list|,
+name|BUS_DMA_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|adapter
+operator|->
+name|no_tx_dma_setup
+operator|++
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+name|KASSERT
+argument_list|(
+name|nsegs
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"em_encap: empty packet"
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nsegs
+operator|>
+name|adapter
+operator|->
+name|num_tx_desc_avail
+condition|)
+block|{
+name|adapter
+operator|->
+name|no_tx_desc_avail2
+operator|++
+expr_stmt|;
+name|error
+operator|=
+name|ENOBUFS
+expr_stmt|;
+goto|goto
+name|encap_fail
+goto|;
+block|}
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_hwassist
+operator|>
+literal|0
+condition|)
+name|em_transmit_checksum_setup
+argument_list|(
+name|adapter
+argument_list|,
+name|m_head
+argument_list|,
+operator|&
+name|txd_upper
+argument_list|,
+operator|&
+name|txd_lower
+argument_list|)
+expr_stmt|;
+else|else
+name|txd_upper
+operator|=
+name|txd_lower
+operator|=
+literal|0
+expr_stmt|;
 name|i
 operator|=
 name|adapter
@@ -6107,7 +6827,7 @@ name|j
 operator|++
 control|)
 block|{
-comment|/* If adapter is 82544 and on PCIX bus */
+comment|/* If adapter is 82544 and on PCIX bus. */
 if|if
 condition|(
 name|adapter
@@ -6115,7 +6835,15 @@ operator|->
 name|pcix_82544
 condition|)
 block|{
-comment|/*  			 * Check the Address and Length combination and  			 * split the data accordingly  			 */
+name|DESC_ARRAY
+name|desc_array
+decl_stmt|;
+name|uint32_t
+name|array_elements
+decl_stmt|,
+name|counter
+decl_stmt|;
+comment|/* 			 * Check the Address and Length combination and 			 * split the data accordingly 			 */
 name|array_elements
 operator|=
 name|em_fill_descriptors
@@ -6232,7 +6960,7 @@ operator||
 name|txd_lower
 operator||
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|)
 name|desc_array
 operator|.
@@ -6384,23 +7112,19 @@ name|adapter
 operator|->
 name|pcix_82544
 condition|)
-block|{
 name|adapter
 operator|->
 name|num_tx_desc_avail
 operator|-=
 name|txd_used
 expr_stmt|;
-block|}
 else|else
-block|{
 name|adapter
 operator|->
 name|num_tx_desc_avail
 operator|-=
 name|nsegs
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|mtag
@@ -6408,7 +7132,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Set the vlan id */
+comment|/* Set the vlan id. */
 name|current_tx_desc
 operator|->
 name|upper
@@ -6425,7 +7149,7 @@ name|mtag
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Tell hardware to add tag */
+comment|/* Tell hardware to add tag. */
 name|current_tx_desc
 operator|->
 name|lower
@@ -6444,6 +7168,20 @@ name|m_head
 operator|=
 name|m_head
 expr_stmt|;
+name|tx_buffer_last
+operator|->
+name|map
+operator|=
+name|tx_buffer
+operator|->
+name|map
+expr_stmt|;
+name|tx_buffer
+operator|->
+name|map
+operator|=
+name|map
+expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
 name|adapter
@@ -6455,7 +7193,7 @@ argument_list|,
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
-comment|/*          * Last Descriptor of Packet needs End Of Packet (EOP)          */
+comment|/* 	 * Last Descriptor of Packet needs End Of Packet (EOP). 	 */
 name|current_tx_desc
 operator|->
 name|lower
@@ -6467,7 +7205,7 @@ argument_list|(
 name|E1000_TXD_CMD_EOP
 argument_list|)
 expr_stmt|;
-comment|/*          * Advance the Transmit Descriptor Tail (Tdt), this tells the E1000          * that this frame is available to transmit.          */
+comment|/* 	 * Advance the Transmit Descriptor Tail (Tdt), this tells the E1000 	 * that this frame is available to transmit. 	 */
 name|bus_dmamap_sync
 argument_list|(
 name|adapter
@@ -6503,13 +7241,11 @@ name|link_duplex
 operator|==
 name|HALF_DUPLEX
 condition|)
-block|{
 name|em_82547_move_tail_locked
 argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 name|E1000_WRITE_REG
@@ -6534,7 +7270,6 @@ name|mac_type
 operator|==
 name|em_82547
 condition|)
-block|{
 name|em_82547_update_fifo_head
 argument_list|(
 name|adapter
@@ -6546,7 +7281,6 @@ operator|.
 name|len
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -6561,8 +7295,6 @@ name|adapter
 operator|->
 name|txtag
 argument_list|,
-name|tx_buffer
-operator|->
 name|map
 argument_list|)
 expr_stmt|;
@@ -6575,7 +7307,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  * 82547 workaround to avoid controller hang in half-duplex environment.  * The workaround is to avoid queuing a large packet that would span     * the internal Tx FIFO ring boundary. We need to reset the FIFO pointers  * in this case. We do that only when FIFO is quiescent.  *  **********************************************************************/
+comment|/*********************************************************************  *  * 82547 workaround to avoid controller hang in half-duplex environment.  * The workaround is to avoid queuing a large packet that would span  * the internal Tx FIFO ring boundary. We need to reset the FIFO pointers  * in this case. We do that only when FIFO is quiescent.  *  **********************************************************************/
 end_comment
 
 begin_function
@@ -6744,7 +7476,6 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -6850,21 +7581,17 @@ argument_list|(
 name|adapter
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 else|else
-block|{
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-block|}
 block|}
 block|}
 return|return
@@ -6928,7 +7655,6 @@ operator|->
 name|tx_fifo_size
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -7174,9 +7900,6 @@ modifier|*
 name|adapter
 parameter_list|)
 block|{
-name|u_int32_t
-name|reg_rctl
-decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -7185,6 +7908,9 @@ init|=
 name|adapter
 operator|->
 name|ifp
+decl_stmt|;
+name|uint32_t
+name|reg_rctl
 decl_stmt|;
 name|reg_rctl
 operator|=
@@ -7227,7 +7953,7 @@ argument_list|,
 name|reg_rctl
 argument_list|)
 expr_stmt|;
-comment|/* Disable VLAN stripping in promiscous mode  		 * This enables bridging of vlan tagged frames to occur  		 * and also allows vlan tags to be seen in tcpdump 		 */
+comment|/* Disable VLAN stripping in promiscous mode 		 * This enables bridging of vlan tagged frames to occur 		 * and also allows vlan tags to be seen in tcpdump 		 */
 if|if
 condition|(
 name|ifp
@@ -7293,7 +8019,6 @@ name|em_insert_vlan_header
 operator|=
 literal|0
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7308,9 +8033,6 @@ modifier|*
 name|adapter
 parameter_list|)
 block|{
-name|u_int32_t
-name|reg_rctl
-decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -7319,6 +8041,9 @@ init|=
 name|adapter
 operator|->
 name|ifp
+decl_stmt|;
+name|uint32_t
+name|reg_rctl
 decl_stmt|;
 name|reg_rctl
 operator|=
@@ -7377,7 +8102,6 @@ name|em_insert_vlan_header
 operator|=
 literal|0
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7396,29 +8120,6 @@ modifier|*
 name|adapter
 parameter_list|)
 block|{
-name|u_int32_t
-name|reg_rctl
-init|=
-literal|0
-decl_stmt|;
-name|u_int8_t
-name|mta
-index|[
-name|MAX_NUM_MULTICAST_ADDRESSES
-operator|*
-name|ETH_LENGTH_OF_ADDRESS
-index|]
-decl_stmt|;
-name|struct
-name|ifmultiaddr
-modifier|*
-name|ifma
-decl_stmt|;
-name|int
-name|mcnt
-init|=
-literal|0
-decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -7427,6 +8128,29 @@ init|=
 name|adapter
 operator|->
 name|ifp
+decl_stmt|;
+name|struct
+name|ifmultiaddr
+modifier|*
+name|ifma
+decl_stmt|;
+name|uint32_t
+name|reg_rctl
+init|=
+literal|0
+decl_stmt|;
+name|uint8_t
+name|mta
+index|[
+name|MAX_NUM_MULTICAST_ADDRESSES
+operator|*
+name|ETH_LENGTH_OF_ADDRESS
+index|]
+decl_stmt|;
+name|int
+name|mcnt
+init|=
+literal|0
 decl_stmt|;
 name|IOCTL_DEBUGOUT
 argument_list|(
@@ -7466,7 +8190,6 @@ name|pci_cmd_word
 operator|&
 name|CMD_MEM_WRT_INVALIDATE
 condition|)
-block|{
 name|em_pci_clear_mwi
 argument_list|(
 operator|&
@@ -7475,7 +8198,6 @@ operator|->
 name|hw
 argument_list|)
 expr_stmt|;
-block|}
 name|reg_rctl
 operator||=
 name|E1000_RCTL_RST
@@ -7672,7 +8394,6 @@ name|pci_cmd_word
 operator|&
 name|CMD_MEM_WRT_INVALIDATE
 condition|)
-block|{
 name|em_pci_set_mwi
 argument_list|(
 operator|&
@@ -7682,8 +8403,6 @@ name|hw
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-return|return;
 block|}
 end_function
 
@@ -7702,23 +8421,21 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|ifnet
-modifier|*
-name|ifp
-decl_stmt|;
-name|struct
 name|adapter
 modifier|*
 name|adapter
 init|=
 name|arg
 decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
 name|ifp
-operator|=
+init|=
 name|adapter
 operator|->
 name|ifp
-expr_stmt|;
+decl_stmt|;
 name|EM_LOCK
 argument_list|(
 name|adapter
@@ -7732,7 +8449,7 @@ operator|->
 name|hw
 argument_list|)
 expr_stmt|;
-name|em_print_link_status
+name|em_update_link_status
 argument_list|(
 name|adapter
 argument_list|)
@@ -7752,13 +8469,11 @@ name|if_drv_flags
 operator|&
 name|IFF_DRV_RUNNING
 condition|)
-block|{
 name|em_print_hw_stats
 argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-block|}
 name|em_smartspeed
 argument_list|(
 name|adapter
@@ -7783,14 +8498,13 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
 begin_function
 specifier|static
 name|void
-name|em_print_link_status
+name|em_update_link_status
 parameter_list|(
 name|struct
 name|adapter
@@ -7806,6 +8520,13 @@ init|=
 name|adapter
 operator|->
 name|ifp
+decl_stmt|;
+name|device_t
+name|dev
+init|=
+name|adapter
+operator|->
+name|dev
 decl_stmt|;
 if|if
 condition|(
@@ -7849,17 +8570,81 @@ operator|->
 name|link_duplex
 argument_list|)
 expr_stmt|;
+comment|/* Check if we may set SPEED_MODE bit on PCI-E */
+if|if
+condition|(
+operator|(
+name|adapter
+operator|->
+name|link_speed
+operator|==
+name|SPEED_1000
+operator|)
+operator|&&
+operator|(
+operator|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac_type
+operator|==
+name|em_82571
+operator|)
+operator|||
+operator|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac_type
+operator|==
+name|em_82572
+operator|)
+operator|)
+condition|)
+block|{
+name|int
+name|tarc0
+decl_stmt|;
+name|tarc0
+operator|=
+name|E1000_READ_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|TARC0
+argument_list|)
+expr_stmt|;
+name|tarc0
+operator||=
+name|SPEED_MODE_BIT
+expr_stmt|;
+name|E1000_WRITE_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|TARC0
+argument_list|,
+name|tarc0
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Link is up %d Mbps %s\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Link is up %d Mbps %s\n"
 argument_list|,
 name|adapter
 operator|->
@@ -7942,13 +8727,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Link is Down\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Link is Down\n"
 argument_list|)
 expr_stmt|;
 name|adapter
@@ -7966,12 +8749,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  *  This routine disables all traffic on the adapter by issuing a  *  global reset on the MAC and deallocates TX/RX buffers.   *  **********************************************************************/
+comment|/*********************************************************************  *  *  This routine disables all traffic on the adapter by issuing a  *  global reset on the MAC and deallocates TX/RX buffers.  *  **********************************************************************/
 end_comment
 
 begin_function
@@ -7985,31 +8767,24 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|ifnet
-modifier|*
-name|ifp
-decl_stmt|;
-name|struct
 name|adapter
 modifier|*
 name|adapter
 init|=
 name|arg
 decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
 name|ifp
-operator|=
+init|=
 name|adapter
 operator|->
 name|ifp
-expr_stmt|;
-name|mtx_assert
+decl_stmt|;
+name|EM_LOCK_ASSERT
 argument_list|(
-operator|&
 name|adapter
-operator|->
-name|mtx
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|INIT_DEBUGOUT
@@ -8068,7 +8843,6 @@ operator||
 name|IFF_DRV_OACTIVE
 operator|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8112,8 +8886,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
 operator|(
 name|adapter
 operator|->
@@ -8123,6 +8895,8 @@ name|pci_cmd_word
 operator|&
 name|PCIM_CMD_BUSMASTEREN
 operator|)
+operator|==
+literal|0
 operator|&&
 operator|(
 name|adapter
@@ -8133,16 +8907,14 @@ name|pci_cmd_word
 operator|&
 name|PCIM_CMD_MEMEN
 operator|)
-operator|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Memory Access and/or Bus Master bits were not set!\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Memory Access and/or Bus Master bits "
+literal|"were not set!\n"
 argument_list|)
 expr_stmt|;
 name|adapter
@@ -8252,13 +9024,11 @@ operator|->
 name|hw
 argument_list|)
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Unknown MAC Type\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Unknown MAC Type\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -8303,7 +9073,6 @@ name|phy_init_script
 operator|=
 name|TRUE
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8318,17 +9087,17 @@ modifier|*
 name|adapter
 parameter_list|)
 block|{
-name|int
-name|val
-decl_stmt|,
-name|rid
-decl_stmt|;
 name|device_t
 name|dev
 init|=
 name|adapter
 operator|->
 name|dev
+decl_stmt|;
+name|int
+name|val
+decl_stmt|,
+name|rid
 decl_stmt|;
 name|rid
 operator|=
@@ -8355,21 +9124,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
 name|adapter
 operator|->
 name|res_memory
-operator|)
+operator|==
+name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Unable to allocate bus resource: memory\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Unable to allocate bus resource: memory\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -8503,13 +9269,11 @@ operator|>=
 name|PCIR_CIS
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Unable to locate IO BAR\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Unable to locate IO BAR\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -8538,21 +9302,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
 name|adapter
 operator|->
 name|res_ioport
-operator|)
+operator|==
+name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Unable to allocate bus resource: ioport\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Unable to allocate bus resource: "
+literal|"ioport\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -8596,6 +9358,65 @@ name|res_ioport
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* For ICH8 we need to find the flash memory. */
+if|if
+condition|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac_type
+operator|==
+name|em_ich8lan
+condition|)
+block|{
+name|rid
+operator|=
+name|EM_FLASH
+expr_stmt|;
+name|adapter
+operator|->
+name|flash_mem
+operator|=
+name|bus_alloc_resource_any
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_MEMORY
+argument_list|,
+operator|&
+name|rid
+argument_list|,
+name|RF_ACTIVE
+argument_list|)
+expr_stmt|;
+name|adapter
+operator|->
+name|osdep
+operator|.
+name|flash_bus_space_tag
+operator|=
+name|rman_get_bustag
+argument_list|(
+name|adapter
+operator|->
+name|flash_mem
+argument_list|)
+expr_stmt|;
+name|adapter
+operator|->
+name|osdep
+operator|.
+name|flash_bus_space_handle
+operator|=
+name|rman_get_bushandle
+argument_list|(
+name|adapter
+operator|->
+name|flash_mem
+argument_list|)
+expr_stmt|;
+block|}
 name|rid
 operator|=
 literal|0x0
@@ -8620,71 +9441,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
 name|adapter
 operator|->
 name|res_interrupt
-operator|)
+operator|==
+name|NULL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"em%d: Unable to allocate bus resource: interrupt\n"
-argument_list|,
-name|adapter
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
-if|if
-condition|(
-name|bus_setup_intr
+name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-name|adapter
-operator|->
-name|res_interrupt
-argument_list|,
-name|INTR_TYPE_NET
-operator||
-name|INTR_MPSAFE
-argument_list|,
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
-name|void
-operator|*
-argument_list|)
-operator|)
-name|em_intr
-argument_list|,
-name|adapter
-argument_list|,
-operator|&
-name|adapter
-operator|->
-name|int_handler_tag
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"em%d: Error registering interrupt handler!\n"
-argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Unable to allocate bus resource: "
+literal|"interrupt\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -8713,9 +9482,240 @@ block|}
 end_function
 
 begin_function
+name|int
+name|em_allocate_intr
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+name|adapter
+parameter_list|)
+block|{
+name|device_t
+name|dev
+init|=
+name|adapter
+operator|->
+name|dev
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+comment|/* Manually turn off all interrupts */
+name|E1000_WRITE_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|IMC
+argument_list|,
+literal|0xffffffff
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
+if|if
+condition|(
+name|adapter
+operator|->
+name|int_handler_tag
+operator|==
+name|NULL
+operator|&&
+operator|(
+name|error
+operator|=
+name|bus_setup_intr
+argument_list|(
+name|dev
+argument_list|,
+name|adapter
+operator|->
+name|res_interrupt
+argument_list|,
+name|INTR_TYPE_NET
+operator||
+name|INTR_MPSAFE
+argument_list|,
+name|em_intr
+argument_list|,
+name|adapter
+argument_list|,
+operator|&
+name|adapter
+operator|->
+name|int_handler_tag
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Failed to register interrupt handler"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+else|#
+directive|else
+comment|/* 	 * Try allocating a fast interrupt and the associated deferred 	 * processing contexts. 	 */
+name|TASK_INIT
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|rxtx_task
+argument_list|,
+literal|0
+argument_list|,
+name|em_handle_rxtx
+argument_list|,
+name|adapter
+argument_list|)
+expr_stmt|;
+name|TASK_INIT
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|link_task
+argument_list|,
+literal|0
+argument_list|,
+name|em_handle_link
+argument_list|,
+name|adapter
+argument_list|)
+expr_stmt|;
+name|adapter
+operator|->
+name|tq
+operator|=
+name|taskqueue_create_fast
+argument_list|(
+literal|"em_taskq"
+argument_list|,
+name|M_NOWAIT
+argument_list|,
+name|taskqueue_thread_enqueue
+argument_list|,
+operator|&
+name|adapter
+operator|->
+name|tq
+argument_list|)
+expr_stmt|;
+name|taskqueue_start_threads
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|tq
+argument_list|,
+literal|1
+argument_list|,
+name|PI_NET
+argument_list|,
+literal|"%s taskq"
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|adapter
+operator|->
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|bus_setup_intr
+argument_list|(
+name|dev
+argument_list|,
+name|adapter
+operator|->
+name|res_interrupt
+argument_list|,
+name|INTR_TYPE_NET
+operator||
+name|INTR_FAST
+argument_list|,
+name|em_intr_fast
+argument_list|,
+name|adapter
+argument_list|,
+operator|&
+name|adapter
+operator|->
+name|int_handler_tag
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Failed to register fast interrupt "
+literal|"handler: %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+name|taskqueue_free
+argument_list|(
+name|adapter
+operator|->
+name|tq
+argument_list|)
+expr_stmt|;
+name|adapter
+operator|->
+name|tq
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
+name|em_enable_intr
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 specifier|static
 name|void
-name|em_free_pci_resources
+name|em_free_intr
 parameter_list|(
 name|struct
 name|adapter
@@ -8752,6 +9752,87 @@ operator|->
 name|int_handler_tag
 argument_list|)
 expr_stmt|;
+name|adapter
+operator|->
+name|int_handler_tag
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|adapter
+operator|->
+name|tq
+operator|!=
+name|NULL
+condition|)
+block|{
+name|taskqueue_drain
+argument_list|(
+name|adapter
+operator|->
+name|tq
+argument_list|,
+operator|&
+name|adapter
+operator|->
+name|rxtx_task
+argument_list|)
+expr_stmt|;
+name|taskqueue_drain
+argument_list|(
+name|taskqueue_fast
+argument_list|,
+operator|&
+name|adapter
+operator|->
+name|link_task
+argument_list|)
+expr_stmt|;
+name|taskqueue_free
+argument_list|(
+name|adapter
+operator|->
+name|tq
+argument_list|)
+expr_stmt|;
+name|adapter
+operator|->
+name|tq
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|em_free_pci_resources
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+name|adapter
+parameter_list|)
+block|{
+name|device_t
+name|dev
+init|=
+name|adapter
+operator|->
+name|dev
+decl_stmt|;
+if|if
+condition|(
+name|adapter
+operator|->
+name|res_interrupt
+operator|!=
+name|NULL
+condition|)
 name|bus_release_resource
 argument_list|(
 name|dev
@@ -8765,7 +9846,6 @@ operator|->
 name|res_interrupt
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|adapter
@@ -8774,7 +9854,6 @@ name|res_memory
 operator|!=
 name|NULL
 condition|)
-block|{
 name|bus_release_resource
 argument_list|(
 name|dev
@@ -8791,7 +9870,27 @@ operator|->
 name|res_memory
 argument_list|)
 expr_stmt|;
-block|}
+if|if
+condition|(
+name|adapter
+operator|->
+name|flash_mem
+operator|!=
+name|NULL
+condition|)
+name|bus_release_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_MEMORY
+argument_list|,
+name|EM_FLASH
+argument_list|,
+name|adapter
+operator|->
+name|flash_mem
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|adapter
@@ -8800,7 +9899,6 @@ name|res_ioport
 operator|!=
 name|NULL
 condition|)
-block|{
 name|bus_release_resource
 argument_list|(
 name|dev
@@ -8816,8 +9914,6 @@ operator|->
 name|res_ioport
 argument_list|)
 expr_stmt|;
-block|}
-return|return;
 block|}
 end_function
 
@@ -8836,6 +9932,13 @@ modifier|*
 name|adapter
 parameter_list|)
 block|{
+name|device_t
+name|dev
+init|=
+name|adapter
+operator|->
+name|dev
+decl_stmt|;
 name|uint16_t
 name|rx_buffer_size
 decl_stmt|;
@@ -8874,13 +9977,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: The EEPROM Checksum Is Not Valid\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"The EEPROM Checksum Is Not Valid\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -8909,13 +10010,12 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: EEPROM read error while reading part number\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"EEPROM read error while reading part "
+literal|"number\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -8924,7 +10024,69 @@ name|EIO
 operator|)
 return|;
 block|}
-comment|/* 	 * These parameters control the automatic generation (Tx) and  	 * response (Rx) to Ethernet PAUSE frames. 	 * - High water mark should allow for at least two frames to be 	 *   received after sending an XOFF. 	 * - Low water mark works best when it is very near the high water mark. 	 *   This allows the receiver to restart by sending XON when it has drained 	 *   a bit.  Here we use an arbitary value of 1500 which will restart after 	 *   one full frame is pulled from the buffer.  There could be several smaller 	 *   frames in the buffer and if so they will not trigger the XON until their 	 *   total number reduces the buffer by 1500. 	 * - The pause time is fairly large at 1000 x 512ns = 512 usec. 	 */
+comment|/* Set up smart power down as default off on newer adapters. */
+if|if
+condition|(
+operator|!
+name|em_smart_pwr_down
+operator|&&
+operator|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac_type
+operator|==
+name|em_82571
+operator|||
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac_type
+operator|==
+name|em_82572
+operator|)
+condition|)
+block|{
+name|uint16_t
+name|phy_tmp
+init|=
+literal|0
+decl_stmt|;
+comment|/* Speed up time to link by disabling smart power down. */
+name|em_read_phy_reg
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|IGP02E1000_PHY_POWER_MGMT
+argument_list|,
+operator|&
+name|phy_tmp
+argument_list|)
+expr_stmt|;
+name|phy_tmp
+operator|&=
+operator|~
+name|IGP02E1000_PM_SPD
+expr_stmt|;
+name|em_write_phy_reg
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|IGP02E1000_PHY_POWER_MGMT
+argument_list|,
+name|phy_tmp
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * These parameters control the automatic generation (Tx) and 	 * response (Rx) to Ethernet PAUSE frames. 	 * - High water mark should allow for at least two frames to be 	 *   received after sending an XOFF. 	 * - Low water mark works best when it is very near the high water mark. 	 *   This allows the receiver to restart by sending XON when it has 	 *   drained a bit. Here we use an arbitary value of 1500 which will 	 *   restart after one full frame is pulled from the buffer. There 	 *   could be several smaller frames in the buffer and if so they will 	 *   not trigger the XON until their total number reduces the buffer 	 *   by 1500. 	 * - The pause time is fairly large at 1000 x 512ns = 512 usec. 	 */
 name|rx_buffer_size
 operator|=
 operator|(
@@ -8978,6 +10140,25 @@ name|fc_high_water
 operator|-
 literal|1500
 expr_stmt|;
+if|if
+condition|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac_type
+operator|==
+name|em_80003es2lan
+condition|)
+name|adapter
+operator|->
+name|hw
+operator|.
+name|fc_pause_time
+operator|=
+literal|0xFFFF
+expr_stmt|;
+else|else
 name|adapter
 operator|->
 name|hw
@@ -9015,13 +10196,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Hardware Initialization Failed"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Hardware Initialization Failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -9038,74 +10217,6 @@ operator|->
 name|hw
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|E1000_READ_REG
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|STATUS
-argument_list|)
-operator|&
-name|E1000_STATUS_LU
-condition|)
-name|adapter
-operator|->
-name|link_active
-operator|=
-literal|1
-expr_stmt|;
-else|else
-name|adapter
-operator|->
-name|link_active
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|adapter
-operator|->
-name|link_active
-condition|)
-block|{
-name|em_get_speed_and_duplex
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-operator|&
-name|adapter
-operator|->
-name|link_speed
-argument_list|,
-operator|&
-name|adapter
-operator|->
-name|link_duplex
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|adapter
-operator|->
-name|link_speed
-operator|=
-literal|0
-expr_stmt|;
-name|adapter
-operator|->
-name|link_duplex
-operator|=
-literal|0
-expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -9347,7 +10458,7 @@ name|IFCAP_POLLING
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*  	 * Specify the media types supported by this adapter and register 	 * callbacks to update media and link information 	 */
+comment|/* 	 * Specify the media types supported by this adapter and register 	 * callbacks to update media and link information 	 */
 name|ifmedia_init
 argument_list|(
 operator|&
@@ -9541,7 +10652,6 @@ operator||
 name|IFM_AUTO
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9579,14 +10689,14 @@ operator|!=
 name|em_phy_igp
 operator|)
 operator|||
-operator|!
 name|adapter
 operator|->
 name|hw
 operator|.
 name|autoneg
+operator|==
+literal|0
 operator|||
-operator|!
 operator|(
 name|adapter
 operator|->
@@ -9596,6 +10706,8 @@ name|autoneg_advertised
 operator|&
 name|ADVERTISE_1000_FULL
 operator|)
+operator|==
+literal|0
 condition|)
 return|return;
 if|if
@@ -9607,7 +10719,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* If Master/Slave config fault is asserted twice,                  * we assume back-to-back */
+comment|/* If Master/Slave config fault is asserted twice, 		 * we assume back-to-back */
 name|em_read_phy_reg
 argument_list|(
 operator|&
@@ -9860,7 +10972,6 @@ name|smartspeed
 operator|=
 literal|0
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9933,16 +11044,16 @@ name|mapflags
 parameter_list|)
 block|{
 name|int
-name|r
+name|error
 decl_stmt|;
-name|r
+name|error
 operator|=
 name|bus_dma_tag_create
 argument_list|(
 name|NULL
 argument_list|,
 comment|/* parent */
-name|E1000_DBA_ALIGN
+name|EM_DBA_ALIGN
 argument_list|,
 literal|0
 argument_list|,
@@ -9967,7 +11078,7 @@ comment|/* nsegments */
 name|size
 argument_list|,
 comment|/* maxsegsize */
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 comment|/* flags */
 name|NULL
@@ -9984,28 +11095,27 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-literal|0
+name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: em_dma_malloc: bus_dma_tag_create failed; "
-literal|"error %u\n"
-argument_list|,
 name|adapter
 operator|->
-name|unit
+name|dev
 argument_list|,
-name|r
+literal|"%s: bus_dma_tag_create failed: %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 goto|goto
 name|fail_0
 goto|;
 block|}
-name|r
+name|error
 operator|=
 name|bus_dmamem_alloc
 argument_list|(
@@ -10033,26 +11143,25 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-literal|0
+name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: em_dma_malloc: bus_dmammem_alloc failed; "
-literal|"size %ju, error %d\n"
-argument_list|,
 name|adapter
 operator|->
-name|unit
+name|dev
+argument_list|,
+literal|"%s: bus_dmamem_alloc(%ju) failed: %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 operator|(
 name|uintmax_t
 operator|)
 name|size
 argument_list|,
-name|r
+name|error
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -10065,7 +11174,7 @@ name|dma_paddr
 operator|=
 literal|0
 expr_stmt|;
-name|r
+name|error
 operator|=
 name|bus_dmamap_load
 argument_list|(
@@ -10097,9 +11206,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-literal|0
+name|error
 operator|||
 name|dma
 operator|->
@@ -10108,16 +11215,17 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: em_dma_malloc: bus_dmamap_load failed; "
-literal|"error %u\n"
-argument_list|,
 name|adapter
 operator|->
-name|unit
+name|dev
 argument_list|,
-name|r
+literal|"%s: bus_dmamap_load failed: %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -10182,7 +11290,7 @@ name|NULL
 expr_stmt|;
 return|return
 operator|(
-name|r
+name|error
 operator|)
 return|;
 block|}
@@ -10287,7 +11395,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  *  Allocate memory for tx_buffer structures. The tx_buffer stores all   *  the information needed to transmit a packet on the wire.   *  **********************************************************************/
+comment|/*********************************************************************  *  *  Allocate memory for tx_buffer structures. The tx_buffer stores all  *  the information needed to transmit a packet on the wire.  *  **********************************************************************/
 end_comment
 
 begin_function
@@ -10301,19 +11409,10 @@ modifier|*
 name|adapter
 parameter_list|)
 block|{
-if|if
-condition|(
-operator|!
-operator|(
 name|adapter
 operator|->
 name|tx_buffer_area
 operator|=
-operator|(
-expr|struct
-name|em_buffer
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -10330,20 +11429,29 @@ name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
 argument_list|)
-operator|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"em%d: Unable to allocate tx_buffer memory\n"
-argument_list|,
+expr_stmt|;
+if|if
+condition|(
 name|adapter
 operator|->
-name|unit
+name|tx_buffer_area
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|adapter
+operator|->
+name|dev
+argument_list|,
+literal|"Unable to allocate tx_buffer memory\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 block|}
 name|bzero
@@ -10364,13 +11472,15 @@ name|num_tx_desc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  *  Allocate and initialize transmit structures.   *  **********************************************************************/
+comment|/*********************************************************************  *  *  Allocate and initialize transmit structures.  *  **********************************************************************/
 end_comment
 
 begin_function
@@ -10384,6 +11494,13 @@ modifier|*
 name|adapter
 parameter_list|)
 block|{
+name|device_t
+name|dev
+init|=
+name|adapter
+operator|->
+name|dev
+decl_stmt|;
 name|struct
 name|em_buffer
 modifier|*
@@ -10397,7 +11514,7 @@ name|error
 decl_stmt|,
 name|i
 decl_stmt|;
-comment|/*          * Setup DMA descriptor areas.          */
+comment|/* 	 * Setup DMA descriptor areas. 	 */
 name|size
 operator|=
 name|roundup2
@@ -10465,13 +11582,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Unable to allocate TX DMA tag\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Unable to allocate TX DMA tag\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -10496,10 +11611,6 @@ name|fail
 goto|;
 name|bzero
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|adapter
 operator|->
 name|tx_desc_base
@@ -10562,13 +11673,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Unable to create TX DMA map\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Unable to create TX DMA map\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -10661,15 +11770,17 @@ modifier|*
 name|adapter
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|reg_tctl
+decl_stmt|,
+name|reg_tarc
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|reg_tipg
 init|=
 literal|0
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|bus_addr
 decl_stmt|;
 name|INIT_DEBUGOUT
@@ -10693,12 +11804,17 @@ name|adapter
 operator|->
 name|hw
 argument_list|,
-name|TDBAL
+name|TDLEN
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|bus_addr
+name|adapter
+operator|->
+name|num_tx_desc
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|em_tx_desc
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|E1000_WRITE_REG
@@ -10711,7 +11827,7 @@ argument_list|,
 name|TDBAH
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|bus_addr
@@ -10727,17 +11843,12 @@ name|adapter
 operator|->
 name|hw
 argument_list|,
-name|TDLEN
+name|TDBAL
 argument_list|,
-name|adapter
-operator|->
-name|num_tx_desc
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|em_tx_desc
-argument_list|)
+operator|(
+name|uint32_t
+operator|)
+name|bus_addr
 argument_list|)
 expr_stmt|;
 comment|/* Setup the HW Tx Head and Tail descriptor pointers */
@@ -10748,7 +11859,7 @@ name|adapter
 operator|->
 name|hw
 argument_list|,
-name|TDH
+name|TDT
 argument_list|,
 literal|0
 argument_list|)
@@ -10760,7 +11871,7 @@ name|adapter
 operator|->
 name|hw
 argument_list|,
-name|TDT
+name|TDH
 argument_list|,
 literal|0
 argument_list|)
@@ -10819,6 +11930,20 @@ expr_stmt|;
 name|reg_tipg
 operator||=
 name|DEFAULT_82542_TIPG_IPGR2
+operator|<<
+name|E1000_TIPG_IPGR2_SHIFT
+expr_stmt|;
+break|break;
+case|case
+name|em_80003es2lan
+case|:
+name|reg_tipg
+operator|=
+name|DEFAULT_82543_TIPG_IPGR1
+expr_stmt|;
+name|reg_tipg
+operator||=
+name|DEFAULT_80003ES2LAN_TIPG_IPGR2
 operator|<<
 name|E1000_TIPG_IPGR2_SHIFT
 expr_stmt|;
@@ -10910,6 +12035,187 @@ operator|.
 name|value
 argument_list|)
 expr_stmt|;
+comment|/* Do adapter specific tweaks before we enable the transmitter. */
+if|if
+condition|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac_type
+operator|==
+name|em_82571
+operator|||
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac_type
+operator|==
+name|em_82572
+condition|)
+block|{
+name|reg_tarc
+operator|=
+name|E1000_READ_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|TARC0
+argument_list|)
+expr_stmt|;
+name|reg_tarc
+operator||=
+operator|(
+literal|1
+operator|<<
+literal|25
+operator|)
+expr_stmt|;
+name|E1000_WRITE_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|TARC0
+argument_list|,
+name|reg_tarc
+argument_list|)
+expr_stmt|;
+name|reg_tarc
+operator|=
+name|E1000_READ_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|TARC1
+argument_list|)
+expr_stmt|;
+name|reg_tarc
+operator||=
+operator|(
+literal|1
+operator|<<
+literal|25
+operator|)
+expr_stmt|;
+name|reg_tarc
+operator|&=
+operator|~
+operator|(
+literal|1
+operator|<<
+literal|28
+operator|)
+expr_stmt|;
+name|E1000_WRITE_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|TARC1
+argument_list|,
+name|reg_tarc
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac_type
+operator|==
+name|em_80003es2lan
+condition|)
+block|{
+name|reg_tarc
+operator|=
+name|E1000_READ_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|TARC0
+argument_list|)
+expr_stmt|;
+name|reg_tarc
+operator||=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|media_type
+operator|==
+name|em_media_type_internal_serdes
+condition|)
+name|reg_tarc
+operator||=
+operator|(
+literal|1
+operator|<<
+literal|20
+operator|)
+expr_stmt|;
+name|E1000_WRITE_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|TARC0
+argument_list|,
+name|reg_tarc
+argument_list|)
+expr_stmt|;
+name|reg_tarc
+operator|=
+name|E1000_READ_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|TARC1
+argument_list|)
+expr_stmt|;
+name|reg_tarc
+operator||=
+literal|1
+expr_stmt|;
+name|E1000_WRITE_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|TARC1
+argument_list|,
+name|reg_tarc
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Program the Transmit Control Register */
 name|reg_tctl
 operator|=
@@ -10962,6 +12268,7 @@ operator|<<
 name|E1000_COLD_SHIFT
 expr_stmt|;
 block|}
+comment|/* This write will effectively turn on the transmit unit. */
 name|E1000_WRITE_REG
 argument_list|(
 operator|&
@@ -10999,7 +12306,6 @@ name|txd_cmd
 operator||=
 name|E1000_TXD_CMD_IDE
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -11209,7 +12515,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -11232,11 +12537,11 @@ name|mbuf
 modifier|*
 name|mp
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|txd_upper
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|txd_lower
 parameter_list|)
@@ -11610,7 +12915,6 @@ name|next_avail_tx_desc
 operator|=
 name|curr_txd
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -11621,7 +12925,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|em_clean_transmit_interrupts
+name|em_txeof
 parameter_list|(
 name|struct
 name|adapter
@@ -11653,14 +12957,9 @@ name|adapter
 operator|->
 name|ifp
 decl_stmt|;
-name|mtx_assert
+name|EM_LOCK_ASSERT
 argument_list|(
-operator|&
 name|adapter
-operator|->
-name|mtx
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 if|if
@@ -11856,7 +13155,7 @@ name|oldest_used_tx_desc
 operator|=
 name|i
 expr_stmt|;
-comment|/*          * If we have enough room, clear IFF_DRV_OACTIVE to tell the stack          * that it is OK to send packets.          * If there are no pending descriptors, clear the timeout. Otherwise,          * if some descriptors have been freed, restart the timeout.          */
+comment|/* 	 * If we have enough room, clear IFF_DRV_OACTIVE to tell the stack 	 * that it is OK to send packets. 	 * If there are no pending descriptors, clear the timeout. Otherwise, 	 * if some descriptors have been freed, restart the timeout. 	 */
 if|if
 condition|(
 name|num_avail
@@ -11907,7 +13206,6 @@ name|num_tx_desc_avail
 operator|=
 name|num_avail
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -11931,24 +13229,16 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-name|nmp
+name|mp
 parameter_list|)
 block|{
 name|struct
-name|mbuf
-modifier|*
-name|mp
-init|=
-name|nmp
-decl_stmt|;
-name|struct
-name|em_buffer
-modifier|*
-name|rx_buffer
-decl_stmt|;
-name|struct
 name|ifnet
 modifier|*
+name|ifp
+init|=
+name|adapter
+operator|->
 name|ifp
 decl_stmt|;
 name|bus_dma_segment_t
@@ -11957,17 +13247,16 @@ index|[
 literal|1
 index|]
 decl_stmt|;
+name|struct
+name|em_buffer
+modifier|*
+name|rx_buffer
+decl_stmt|;
 name|int
 name|error
 decl_stmt|,
 name|nsegs
 decl_stmt|;
-name|ifp
-operator|=
-name|adapter
-operator|->
-name|ifp
-expr_stmt|;
 if|if
 condition|(
 name|mp
@@ -12056,7 +13345,6 @@ name|if_mtu
 operator|<=
 name|ETHERMTU
 condition|)
-block|{
 name|m_adj
 argument_list|(
 name|mp
@@ -12064,7 +13352,6 @@ argument_list|,
 name|ETHER_ALIGN
 argument_list|)
 expr_stmt|;
-block|}
 name|rx_buffer
 operator|=
 operator|&
@@ -12075,7 +13362,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-comment|/*          * Using memory from the mbuf cluster pool, invoke the          * bus_dma machinery to arrange the memory mapping.          */
+comment|/* 	 * Using memory from the mbuf cluster pool, invoke the 	 * bus_dma machinery to arrange the memory mapping. 	 */
 name|error
 operator|=
 name|bus_dmamap_load_mbuf_sg
@@ -12116,7 +13403,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* If nsegs is wrong then the stack is corrupt */
+comment|/* If nsegs is wrong then the stack is corrupt. */
 name|KASSERT
 argument_list|(
 name|nsegs
@@ -12175,7 +13462,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  *  Allocate memory for rx_buffer structures. Since we use one   *  rx_buffer per received packet, the maximum number of rx_buffer's   *  that we'll need is equal to the number of receive descriptors   *  that we've allocated.  *  **********************************************************************/
+comment|/*********************************************************************  *  *  Allocate memory for rx_buffer structures. Since we use one  *  rx_buffer per received packet, the maximum number of rx_buffer's  *  that we'll need is equal to the number of receive descriptors  *  that we've allocated.  *  **********************************************************************/
 end_comment
 
 begin_function
@@ -12189,29 +13476,27 @@ modifier|*
 name|adapter
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|,
-name|error
+name|device_t
+name|dev
+init|=
+name|adapter
+operator|->
+name|dev
 decl_stmt|;
 name|struct
 name|em_buffer
 modifier|*
 name|rx_buffer
 decl_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
+name|int
+name|i
+decl_stmt|,
+name|error
+decl_stmt|;
 name|adapter
 operator|->
 name|rx_buffer_area
 operator|=
-operator|(
-expr|struct
-name|em_buffer
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -12228,16 +13513,21 @@ name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
 argument_list|)
-operator|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"em%d: Unable to allocate rx_buffer memory\n"
-argument_list|,
+expr_stmt|;
+if|if
+condition|(
 name|adapter
 operator|->
-name|unit
+name|rx_buffer_area
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Unable to allocate rx_buffer memory\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -12295,7 +13585,7 @@ comment|/* nsegments */
 name|MCLBYTES
 argument_list|,
 comment|/* maxsegsize */
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 comment|/* flags */
 name|NULL
@@ -12313,18 +13603,15 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|!=
-literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: em_allocate_receive_structures: "
-literal|"bus_dma_tag_create failed; error %u\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"%s: bus_dma_tag_create failed %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|error
 argument_list|)
@@ -12377,18 +13664,15 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|!=
-literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: em_allocate_receive_structures: "
-literal|"bus_dmamap_create failed; error %u\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"%s: bus_dmamap_create failed: %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|error
 argument_list|)
@@ -12428,8 +13712,6 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|!=
-literal|0
 condition|)
 goto|goto
 name|fail
@@ -12475,7 +13757,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  *  Allocate and initialize receive structures.  *    **********************************************************************/
+comment|/*********************************************************************  *  *  Allocate and initialize receive structures.  *  **********************************************************************/
 end_comment
 
 begin_function
@@ -12489,12 +13771,11 @@ modifier|*
 name|adapter
 parameter_list|)
 block|{
+name|int
+name|error
+decl_stmt|;
 name|bzero
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|adapter
 operator|->
 name|rx_desc_base
@@ -12514,13 +13795,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|error
+operator|=
 name|em_allocate_receive_structures
 argument_list|(
 name|adapter
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
-name|ENOMEM
+operator|(
+name|error
+operator|)
 return|;
 comment|/* Setup our descriptor pointers */
 name|adapter
@@ -12538,7 +13827,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  *  Enable receive unit.  *    **********************************************************************/
+comment|/*********************************************************************  *  *  Enable receive unit.  *  **********************************************************************/
 end_comment
 
 begin_function
@@ -12552,32 +13841,30 @@ modifier|*
 name|adapter
 parameter_list|)
 block|{
-name|u_int32_t
-name|reg_rctl
-decl_stmt|;
-name|u_int32_t
-name|reg_rxcsum
-decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
 name|ifp
+init|=
+name|adapter
+operator|->
+name|ifp
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|bus_addr
+decl_stmt|;
+name|uint32_t
+name|reg_rctl
+decl_stmt|;
+name|uint32_t
+name|reg_rxcsum
 decl_stmt|;
 name|INIT_DEBUGOUT
 argument_list|(
 literal|"em_initialize_receive_unit: begin"
 argument_list|)
 expr_stmt|;
-name|ifp
-operator|=
-name|adapter
-operator|->
-name|ifp
-expr_stmt|;
-comment|/* Make sure receives are disabled while setting up the descriptor ring */
+comment|/* 	 * Make sure receives are disabled while setting 	 * up the descriptor ring 	 */
 name|E1000_WRITE_REG
 argument_list|(
 operator|&
@@ -12636,7 +13923,7 @@ operator|.
 name|value
 argument_list|)
 expr_stmt|;
-comment|/* Set the interrupt throttling rate.  Value is calculated                  * as DEFAULT_ITR = 1/(MAX_INTS_PER_SEC * 256ns) */
+comment|/* 		 * Set the interrupt throttling rate. Value is calculated 		 * as DEFAULT_ITR = 1/(MAX_INTS_PER_SEC * 256ns) 		 */
 define|#
 directive|define
 name|MAX_INTS_PER_SEC
@@ -12674,12 +13961,17 @@ name|adapter
 operator|->
 name|hw
 argument_list|,
-name|RDBAL
+name|RDLEN
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|bus_addr
+name|adapter
+operator|->
+name|num_rx_desc
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|em_rx_desc
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|E1000_WRITE_REG
@@ -12692,7 +13984,7 @@ argument_list|,
 name|RDBAH
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|bus_addr
@@ -12708,32 +14000,15 @@ name|adapter
 operator|->
 name|hw
 argument_list|,
-name|RDLEN
+name|RDBAL
 argument_list|,
-name|adapter
-operator|->
-name|num_rx_desc
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|em_rx_desc
-argument_list|)
+operator|(
+name|uint32_t
+operator|)
+name|bus_addr
 argument_list|)
 expr_stmt|;
 comment|/* Setup the HW Rx Head and Tail Descriptor Pointers */
-name|E1000_WRITE_REG
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|RDH
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|E1000_WRITE_REG
 argument_list|(
 operator|&
@@ -12748,6 +14023,18 @@ operator|->
 name|num_rx_desc
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+name|E1000_WRITE_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|RDH
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Setup the Receive Control Register */
@@ -12918,7 +14205,6 @@ argument_list|,
 name|reg_rctl
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -13128,7 +14414,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -13138,8 +14423,8 @@ end_comment
 
 begin_function
 specifier|static
-name|void
-name|em_process_receive_interrupts
+name|int
+name|em_rxeof
 parameter_list|(
 name|struct
 name|adapter
@@ -13160,17 +14445,17 @@ name|mbuf
 modifier|*
 name|mp
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|accept_frame
 init|=
 literal|0
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|eop
 init|=
 literal|0
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|len
 decl_stmt|,
 name|desc_len
@@ -13186,16 +14471,6 @@ name|em_rx_desc
 modifier|*
 name|current_desc
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|=
 name|adapter
@@ -13248,9 +14523,11 @@ operator|&
 name|E1000_RXD_STAT_DD
 operator|)
 condition|)
-block|{
-return|return;
-block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 while|while
 condition|(
 operator|(
@@ -13380,14 +14657,12 @@ name|desc_len
 expr_stmt|;
 block|}
 else|else
-block|{
 name|len
 operator|=
 name|desc_len
 operator|-
 name|ETHER_CRC_LEN
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -13409,10 +14684,10 @@ operator|&
 name|E1000_RXD_ERR_FRAME_ERR_MASK
 condition|)
 block|{
-name|u_int8_t
+name|uint8_t
 name|last_byte
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|pkt_len
 init|=
 name|desc_len
@@ -13506,12 +14781,10 @@ operator|--
 expr_stmt|;
 block|}
 else|else
-block|{
 name|accept_frame
 operator|=
 literal|0
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -13623,7 +14896,7 @@ operator|&=
 operator|~
 name|M_PKTHDR
 expr_stmt|;
-comment|/*                                   * Adjust length of previous mbuf in chain if we                                   * received less than 4 bytes in the last descriptor.                                  */
+comment|/* 				 * Adjust length of previous mbuf in chain if 				 * we received less than 4 bytes in the last 				 * descriptor. 				 */
 if|if
 condition|(
 name|prev_len_adj
@@ -13832,7 +15105,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* Zero out the receive descriptors status  */
+comment|/* Zero out the receive descriptors status. */
 name|current_desc
 operator|->
 name|status
@@ -13858,20 +15131,7 @@ operator||
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
-comment|/* Advance the E1000's Receive Queue #0  "Tail Pointer". */
-name|E1000_WRITE_REG
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|RDT
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-comment|/* Advance our pointers to the next descriptor */
+comment|/* Advance our pointers to the next descriptor. */
 if|if
 condition|(
 operator|++
@@ -13898,6 +15158,9 @@ name|next_rx_desc_to_check
 operator|=
 name|i
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
 name|EM_UNLOCK
 argument_list|(
 name|adapter
@@ -13920,6 +15183,22 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+call|(
+modifier|*
+name|ifp
+operator|->
+name|if_input
+call|)
+argument_list|(
+name|ifp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|i
 operator|=
 name|adapter
@@ -13944,7 +15223,57 @@ name|next_rx_desc_to_check
 operator|=
 name|i
 expr_stmt|;
-return|return;
+comment|/* Advance the E1000's Receive Queue #0  "Tail Pointer". */
+if|if
+condition|(
+operator|--
+name|i
+operator|<
+literal|0
+condition|)
+name|i
+operator|=
+name|adapter
+operator|->
+name|num_rx_desc
+operator|-
+literal|1
+expr_stmt|;
+name|E1000_WRITE_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|RDT
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+operator|(
+name|current_desc
+operator|->
+name|status
+operator|)
+operator|&
+name|E1000_RXD_STAT_DD
+operator|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
@@ -13955,7 +15284,7 @@ name|__NO_STRICT_ALIGNMENT
 end_ifndef
 
 begin_comment
-comment|/*  * When jumbo frames are enabled we should realign entire payload on  * architecures with strict alignment. This is serious design mistake of 8254x  * as it nullifies DMA operations. 8254x just allows RX buffer size to be  * 2048/4096/8192/16384. What we really want is 2048 - ETHER_ALIGN to align its  * payload. On architecures without strict alignment restrictions 8254x still  * performs unaligned memory access which would reduce the performance too.   * To avoid copying over an entire frame to align, we allocate a new mbuf and  * copy ethernet header to the new mbuf. The new mbuf is prepended into the  * existing mbuf chain.  *  * Be aware, best performance of the 8254x is achived only when jumbo frame is  * not used at all on architectures with strict alignment.  */
+comment|/*  * When jumbo frames are enabled we should realign entire payload on  * architecures with strict alignment. This is serious design mistake of 8254x  * as it nullifies DMA operations. 8254x just allows RX buffer size to be  * 2048/4096/8192/16384. What we really want is 2048 - ETHER_ALIGN to align its  * payload. On architecures without strict alignment restrictions 8254x still  * performs unaligned memory access which would reduce the performance too.  * To avoid copying over an entire frame to align, we allocate a new mbuf and  * copy ethernet header to the new mbuf. The new mbuf is prepended into the  * existing mbuf chain.  *  * Be aware, best performance of the 8254x is achived only when jumbo frame is  * not used at all on architectures with strict alignment.  */
 end_comment
 
 begin_function
@@ -14136,7 +15465,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*********************************************************************  *  *  Verify that the hardware indicated that the checksum is valid.   *  Inform the stack about the status of checksum so that stack  *  doesn't spend time verifying the checksum.  *  *********************************************************************/
+comment|/*********************************************************************  *  *  Verify that the hardware indicated that the checksum is valid.  *  Inform the stack about the status of checksum so that stack  *  doesn't spend time verifying the checksum.  *  *********************************************************************/
 end_comment
 
 begin_function
@@ -14292,7 +15621,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -14350,7 +15678,6 @@ argument_list|,
 name|ctrl
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -14397,7 +15724,6 @@ argument_list|,
 name|ctrl
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -14426,7 +15752,6 @@ name|IMS_ENABLE_MASK
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -14441,7 +15766,7 @@ modifier|*
 name|adapter
 parameter_list|)
 block|{
-comment|/* 	 * The first version of 82542 had an errata where when link was forced it 	 * would stay up even up even if the cable was disconnected.  Sequence errors 	 * were used to detect the disconnect and then the driver would unforce the link. 	 * This code in the in the ISR.  For this to work correctly the Sequence error  	 * interrupt had to be enabled all the time. 	 */
+comment|/* 	 * The first version of 82542 had an errata where when link was forced 	 * it would stay up even up even if the cable was disconnected. 	 * Sequence errors were used to detect the disconnect and then the 	 * driver would unforce the link. This code in the in the ISR. For this 	 * to work correctly the Sequence error interrupt had to be enabled 	 * all the time. 	 */
 if|if
 condition|(
 name|adapter
@@ -14482,7 +15807,6 @@ argument_list|,
 literal|0xffffffff
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -14491,7 +15815,7 @@ specifier|static
 name|int
 name|em_is_valid_ether_addr
 parameter_list|(
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|addr
 parameter_list|)
@@ -14637,7 +15961,6 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -14679,7 +16002,6 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -14722,23 +16044,22 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
 begin_comment
-comment|/********************************************************************* * 82544 Coexistence issue workaround. *    There are 2 issues. *       1. Transmit Hang issue. *    To detect this issue, following equation can be used... *          SIZE[3:0] + ADDR[2:0] = SUM[3:0]. *          If SUM[3:0] is in between 1 to 4, we will have this issue. * *       2. DAC issue. *    To detect this issue, following equation can be used... *          SIZE[3:0] + ADDR[2:0] = SUM[3:0]. *          If SUM[3:0] is in between 9 to c, we will have this issue. * * *    WORKAROUND: *          Make sure we do not have ending address as 1,2,3,4(Hang) or 9,a,b,c (DAC) * *** *********************************************************************/
+comment|/********************************************************************* * 82544 Coexistence issue workaround. *    There are 2 issues. *       1. Transmit Hang issue. *    To detect this issue, following equation can be used... *	  SIZE[3:0] + ADDR[2:0] = SUM[3:0]. *	  If SUM[3:0] is in between 1 to 4, we will have this issue. * *       2. DAC issue. *    To detect this issue, following equation can be used... *	  SIZE[3:0] + ADDR[2:0] = SUM[3:0]. *	  If SUM[3:0] is in between 9 to c, we will have this issue. * * *    WORKAROUND: *	  Make sure we do not have ending address as 1,2,3,4(Hang) or 9,a,b,c (DAC) * *** *********************************************************************/
 end_comment
 
 begin_function
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|em_fill_descriptors
 parameter_list|(
 name|bus_addr_t
 name|address
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|length
 parameter_list|,
 name|PDESC_ARRAY
@@ -14747,7 +16068,7 @@ parameter_list|)
 block|{
 comment|/* Since issue is sensitive to length and address.*/
 comment|/* Let us first check the address...*/
-name|u_int32_t
+name|uint32_t
 name|safe_terminator
 decl_stmt|;
 if|if
@@ -14786,21 +16107,23 @@ operator|=
 literal|1
 expr_stmt|;
 return|return
+operator|(
 name|desc_array
 operator|->
 name|elements
+operator|)
 return|;
 block|}
 name|safe_terminator
 operator|=
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 operator|(
 operator|(
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|address
 operator|&
@@ -14874,9 +16197,11 @@ operator|=
 literal|1
 expr_stmt|;
 return|return
+operator|(
 name|desc_array
 operator|->
 name|elements
+operator|)
 return|;
 block|}
 name|desc_array
@@ -14938,15 +16263,17 @@ operator|=
 literal|2
 expr_stmt|;
 return|return
+operator|(
 name|desc_array
 operator|->
 name|elements
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/**********************************************************************  *  *  Update the board statistics counters.   *  **********************************************************************/
+comment|/**********************************************************************  *  *  Update the board statistics counters.  *  **********************************************************************/
 end_comment
 
 begin_function
@@ -15932,7 +17259,13 @@ name|adapter
 operator|->
 name|stats
 operator|.
-name|rlec
+name|ruc
+operator|+
+name|adapter
+operator|->
+name|stats
+operator|.
+name|roc
 operator|+
 name|adapter
 operator|->
@@ -15985,12 +17318,12 @@ modifier|*
 name|adapter
 parameter_list|)
 block|{
-name|int
-name|unit
+name|device_t
+name|dev
 init|=
 name|adapter
 operator|->
-name|unit
+name|dev
 decl_stmt|;
 name|uint8_t
 modifier|*
@@ -16002,20 +17335,20 @@ name|hw
 operator|.
 name|hw_addr
 decl_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Adapter hardware address = %p \n"
+name|dev
 argument_list|,
-name|unit
+literal|"Adapter hardware address = %p \n"
 argument_list|,
 name|hw_addr
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: CTRL = 0x%x RCTL = 0x%x \n"
+name|dev
 argument_list|,
-name|unit
+literal|"CTRL = 0x%x RCTL = 0x%x \n"
 argument_list|,
 name|E1000_READ_REG
 argument_list|(
@@ -16038,11 +17371,11 @@ name|RCTL
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Packet buffer = Tx=%dk Rx=%dk \n"
+name|dev
 argument_list|,
-name|unit
+literal|"Packet buffer = Tx=%dk Rx=%dk \n"
 argument_list|,
 operator|(
 operator|(
@@ -16077,11 +17410,11 @@ literal|0xffff
 operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Flow control watermarks high = %d low = %d\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Flow control watermarks high = %d low = %d\n"
 argument_list|,
 name|adapter
 operator|->
@@ -16096,11 +17429,11 @@ operator|.
 name|fc_low_water
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: tx_int_delay = %d, tx_abs_int_delay = %d\n"
+name|dev
 argument_list|,
-name|unit
+literal|"tx_int_delay = %d, tx_abs_int_delay = %d\n"
 argument_list|,
 name|E1000_READ_REG
 argument_list|(
@@ -16123,11 +17456,11 @@ name|TADV
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: rx_int_delay = %d, rx_abs_int_delay = %d\n"
+name|dev
 argument_list|,
-name|unit
+literal|"rx_int_delay = %d, rx_abs_int_delay = %d\n"
 argument_list|,
 name|E1000_READ_REG
 argument_list|(
@@ -16150,11 +17483,11 @@ name|RADV
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: fifo workaround = %lld, fifo_reset_count = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"fifo workaround = %lld, fifo_reset_count = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -16173,11 +17506,11 @@ operator|->
 name|tx_fifo_reset_cnt
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: hw tdh = %d, hw tdt = %d\n"
+name|dev
 argument_list|,
-name|unit
+literal|"hw tdh = %d, hw tdt = %d\n"
 argument_list|,
 name|E1000_READ_REG
 argument_list|(
@@ -16200,73 +17533,72 @@ name|TDT
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Num Tx descriptors avail = %d\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Num Tx descriptors avail = %d\n"
 argument_list|,
 name|adapter
 operator|->
 name|num_tx_desc_avail
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Tx Descriptors not avail1 = %ld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Tx Descriptors not avail1 = %ld\n"
 argument_list|,
 name|adapter
 operator|->
 name|no_tx_desc_avail1
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Tx Descriptors not avail2 = %ld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Tx Descriptors not avail2 = %ld\n"
 argument_list|,
 name|adapter
 operator|->
 name|no_tx_desc_avail2
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Std mbuf failed = %ld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Std mbuf failed = %ld\n"
 argument_list|,
 name|adapter
 operator|->
 name|mbuf_alloc_failed
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Std mbuf cluster failed = %ld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Std mbuf cluster failed = %ld\n"
 argument_list|,
 name|adapter
 operator|->
 name|mbuf_cluster_failed
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Driver dropped packets = %ld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Driver dropped packets = %ld\n"
 argument_list|,
 name|adapter
 operator|->
 name|dropped_pkts
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -16281,18 +17613,18 @@ modifier|*
 name|adapter
 parameter_list|)
 block|{
-name|int
-name|unit
+name|device_t
+name|dev
 init|=
 name|adapter
 operator|->
-name|unit
+name|dev
 decl_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Excessive collisions = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Excessive collisions = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -16305,11 +17637,11 @@ operator|.
 name|ecol
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Symbol errors = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Symbol errors = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -16322,11 +17654,11 @@ operator|.
 name|symerrs
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Sequence errors = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Sequence errors = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -16339,11 +17671,11 @@ operator|.
 name|sec
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Defer count = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Defer count = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -16356,11 +17688,11 @@ operator|.
 name|dc
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Missed Packets = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Missed Packets = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -16373,11 +17705,11 @@ operator|.
 name|mpc
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Receive No Buffers = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Receive No Buffers = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -16390,12 +17722,14 @@ operator|.
 name|rnbc
 argument_list|)
 expr_stmt|;
-name|printf
+comment|/* RLEC is inaccurate on some hardware, calculate our own. */
+name|device_printf
 argument_list|(
-literal|"em%d: Receive length errors = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Receive Length Errors = %lld\n"
 argument_list|,
+operator|(
 operator|(
 name|long
 name|long
@@ -16404,14 +17738,25 @@ name|adapter
 operator|->
 name|stats
 operator|.
-name|rlec
+name|roc
+operator|+
+operator|(
+name|long
+name|long
+operator|)
+name|adapter
+operator|->
+name|stats
+operator|.
+name|ruc
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Receive errors = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Receive errors = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -16424,11 +17769,11 @@ operator|.
 name|rxerrc
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Crc errors = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Crc errors = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -16441,11 +17786,11 @@ operator|.
 name|crcerrs
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Alignment errors = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Alignment errors = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -16458,11 +17803,11 @@ operator|.
 name|algnerrc
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Carrier extension errors = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Carrier extension errors = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -16475,33 +17820,33 @@ operator|.
 name|cexterr
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: RX overruns = %ld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"RX overruns = %ld\n"
 argument_list|,
 name|adapter
 operator|->
 name|rx_overruns
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: watchdog timeouts = %ld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"watchdog timeouts = %ld\n"
 argument_list|,
 name|adapter
 operator|->
 name|watchdog_events
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: XON Rcvd = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"XON Rcvd = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -16514,11 +17859,11 @@ operator|.
 name|xonrxc
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: XON Xmtd = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"XON Xmtd = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -16531,11 +17876,11 @@ operator|.
 name|xontxc
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: XOFF Rcvd = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"XOFF Rcvd = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -16548,11 +17893,11 @@ operator|.
 name|xoffrxc
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: XOFF Xmtd = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"XOFF Xmtd = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -16565,11 +17910,11 @@ operator|.
 name|xofftxc
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Good Packets Rcvd = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Good Packets Rcvd = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -16582,11 +17927,11 @@ operator|.
 name|gprc
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"em%d: Good Packets Xmtd = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Good Packets Xmtd = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -16599,7 +17944,6 @@ operator|.
 name|gptc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -16611,16 +17955,16 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
+name|struct
+name|adapter
+modifier|*
+name|adapter
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
 name|int
 name|result
-decl_stmt|;
-name|struct
-name|adapter
-modifier|*
-name|adapter
 decl_stmt|;
 name|result
 operator|=
@@ -16678,7 +18022,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -16691,16 +18037,16 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
+name|struct
+name|adapter
+modifier|*
+name|adapter
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
 name|int
 name|result
-decl_stmt|;
-name|struct
-name|adapter
-modifier|*
-name|adapter
 decl_stmt|;
 name|result
 operator|=
@@ -16758,7 +18104,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -16781,7 +18129,7 @@ name|adapter
 modifier|*
 name|adapter
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|regval
 decl_stmt|;
 name|int
@@ -16835,7 +18183,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 if|if
 condition|(
@@ -16851,7 +18201,9 @@ literal|65535
 argument_list|)
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|info
 operator|->
@@ -16979,7 +18331,9 @@ name|adapter
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -17074,6 +18428,87 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DEVICE_POLLING
+end_ifndef
+
+begin_function
+specifier|static
+name|void
+name|em_add_int_process_limit
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+name|adapter
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|description
+parameter_list|,
+name|int
+modifier|*
+name|limit
+parameter_list|,
+name|int
+name|value
+parameter_list|)
+block|{
+operator|*
+name|limit
+operator|=
+name|value
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|device_get_sysctl_ctx
+argument_list|(
+name|adapter
+operator|->
+name|dev
+argument_list|)
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|device_get_sysctl_tree
+argument_list|(
+name|adapter
+operator|->
+name|dev
+argument_list|)
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|name
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+argument_list|,
+name|limit
+argument_list|,
+name|value
+argument_list|,
+name|description
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
