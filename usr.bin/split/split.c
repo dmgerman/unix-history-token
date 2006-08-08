@@ -627,40 +627,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'p'
-case|:
-comment|/* pattern matching. */
-if|if
-condition|(
-name|regcomp
-argument_list|(
-operator|&
-name|rgx
-argument_list|,
-name|optarg
-argument_list|,
-name|REG_EXTENDED
-operator||
-name|REG_NOSUB
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|errx
-argument_list|(
-name|EX_USAGE
-argument_list|,
-literal|"%s: illegal regexp"
-argument_list|,
-name|optarg
-argument_list|)
-expr_stmt|;
-name|pflag
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
 literal|'l'
 case|:
 comment|/* Line count. */
@@ -702,6 +668,40 @@ literal|"%s: illegal line count"
 argument_list|,
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+comment|/* pattern matching. */
+if|if
+condition|(
+name|regcomp
+argument_list|(
+operator|&
+name|rgx
+argument_list|,
+name|optarg
+argument_list|,
+name|REG_EXTENDED
+operator||
+name|REG_NOSUB
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"%s: illegal regexp"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|pflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 default|default:
@@ -1598,17 +1598,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: split [-a sufflen] [-b byte_count] [-l line_count] [-p pattern]\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"             [file [prefix]]\n"
+literal|"usage: split [-l line_count] [-a suffix_length] [file [prefix]]\n"
+literal|"       split -b byte_count[k|m] [-a suffix_length] [file [prefix]]\n"
+literal|"       split -p pattern [-a suffix_length] [file [prefix]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
