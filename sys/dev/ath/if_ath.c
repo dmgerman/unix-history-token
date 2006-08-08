@@ -16644,6 +16644,15 @@ argument_list|,
 name|m0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+name|error
+return|;
 name|bf
 operator|->
 name|bf_node
