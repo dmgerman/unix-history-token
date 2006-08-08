@@ -894,8 +894,6 @@ name|afterkern
 decl_stmt|;
 name|int
 name|i
-init|=
-literal|0
 decl_stmt|;
 name|uint32_t
 name|fake_preload
