@@ -125,10 +125,6 @@ name|ACPI_DOCK_STATUS_DOCKED
 value|1
 end_define
 
-begin_comment
-comment|/* Prevent the device from being removed or not. */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -136,12 +132,42 @@ name|ACPI_DOCK_UNLOCK
 value|0
 end_define
 
+begin_comment
+comment|/* Allow device to be ejected */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ACPI_DOCK_LOCK
 value|1
 end_define
+
+begin_comment
+comment|/* Prevent dev from being removed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DOCK_ISOLATE
+value|0
+end_define
+
+begin_comment
+comment|/* Isolate from dock connector */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DOCK_CONNECT
+value|1
+end_define
+
+begin_comment
+comment|/* Connect to dock */
+end_comment
 
 begin_struct
 struct|struct
@@ -172,19 +198,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/* Global docking status, for avoiding duplicated docking */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|acpi_dock_status
-init|=
-name|ACPI_DOCK_STATUS_UNKNOWN
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 name|ACPI_SERIAL_DECL
@@ -427,7 +440,7 @@ if|if
 condition|(
 name|dock
 operator|==
-name|ACPI_DOCK_STATUS_UNDOCKED
+name|ACPI_DOCK_ISOLATE
 condition|)
 return|return
 operator|(
@@ -471,7 +484,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Lock devices while docked. */
+comment|/* Lock devices while docked to prevent surprise removal. */
 end_comment
 
 begin_function
@@ -507,6 +520,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* Eject a device (i.e., motorized). */
+end_comment
 
 begin_function
 specifier|static
@@ -587,6 +604,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* Find dependent devices.  When their parent is removed, so are they. */
+end_comment
 
 begin_function
 specifier|static
@@ -981,11 +1002,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|acpi_dock_status
+name|sc
+operator|->
+name|status
 operator|==
 name|ACPI_DOCK_STATUS_UNDOCKED
 operator|||
-name|acpi_dock_status
+name|sc
+operator|->
+name|status
 operator|==
 name|ACPI_DOCK_STATUS_UNKNOWN
 condition|)
@@ -1003,7 +1028,7 @@ name|acpi_dock_execute_dck
 argument_list|(
 name|dev
 argument_list|,
-literal|1
+name|ACPI_DOCK_CONNECT
 argument_list|)
 operator|!=
 literal|0
@@ -1031,8 +1056,6 @@ expr_stmt|;
 name|sc
 operator|->
 name|status
-operator|=
-name|acpi_dock_status
 operator|=
 name|ACPI_DOCK_STATUS_DOCKED
 expr_stmt|;
@@ -1258,11 +1281,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|acpi_dock_status
+name|sc
+operator|->
+name|status
 operator|==
 name|ACPI_DOCK_STATUS_DOCKED
 operator|||
-name|acpi_dock_status
+name|sc
+operator|->
+name|status
 operator|==
 name|ACPI_DOCK_STATUS_UNKNOWN
 condition|)
@@ -1278,7 +1305,7 @@ name|acpi_dock_execute_dck
 argument_list|(
 name|dev
 argument_list|,
-literal|0
+name|ACPI_DOCK_ISOLATE
 argument_list|)
 operator|!=
 literal|0
@@ -1317,8 +1344,6 @@ block|}
 name|sc
 operator|->
 name|status
-operator|=
-name|acpi_dock_status
 operator|=
 name|ACPI_DOCK_STATUS_UNDOCKED
 expr_stmt|;
@@ -1385,9 +1410,15 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the _STA indicates 'present' and 'functioning', 	 * the system is docked. 	 */
+comment|/* 	 * If the _STA method indicates 'present' and 'functioning', the 	 * system is docked.  If _STA does not exist for this device, it 	 * is always present. 	 */
 if|if
 condition|(
+name|sc
+operator|->
+name|_sta
+operator|==
+name|ACPI_DOCK_STATUS_UNKNOWN
+operator|||
 name|ACPI_DEVICE_PRESENT
 argument_list|(
 name|sc
@@ -1400,6 +1431,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|sc
@@ -1711,17 +1743,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-if|if
-condition|(
-name|acpi_dock_status
-operator|==
-name|ACPI_DOCK_STATUS_DOCKED
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 name|device_set_desc
 argument_list|(
 name|dev
@@ -1762,17 +1783,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 name|h
 operator|=
 name|acpi_get_handle
@@ -1782,20 +1792,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|sc
+operator|==
+name|NULL
+operator|||
 name|h
 operator|==
 name|NULL
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-if|if
-condition|(
-name|acpi_dock_status
-operator|==
-name|ACPI_DOCK_STATUS_DOCKED
 condition|)
 return|return
 operator|(
