@@ -1597,6 +1597,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|_thr_smp_cpus
+name|__hidden
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|size_t
 name|_thr_guard_default
 name|__hidden

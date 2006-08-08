@@ -364,6 +364,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|_thr_smp_cpus
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|size_t
 name|_thr_guard_default
 decl_stmt|;
@@ -2029,6 +2037,28 @@ condition|)
 name|PANIC
 argument_list|(
 literal|"Cannot get kern.usrstack from sysctl"
+argument_list|)
+expr_stmt|;
+name|len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|_thr_smp_cpus
+argument_list|)
+expr_stmt|;
+name|sysctlbyname
+argument_list|(
+literal|"kern.smp.cpus"
+argument_list|,
+operator|&
+name|_thr_smp_cpus
+argument_list|,
+operator|&
+name|len
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|_thr_page_size

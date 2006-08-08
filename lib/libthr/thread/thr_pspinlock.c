@@ -376,9 +376,30 @@ operator|->
 name|s_lock
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|if
+condition|(
+name|_thr_smp_cpus
+operator|<=
+literal|1
+condition|)
+block|{
+name|_pthread_yield
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__x86_64__
+argument_list|)
 comment|/* tell cpu we are spinning */
 asm|__asm __volatile("pause");
 endif|#
@@ -398,6 +419,7 @@ expr_stmt|;
 name|_pthread_yield
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
