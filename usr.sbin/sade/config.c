@@ -775,8 +775,6 @@ name|fstab
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|cnt
 decl_stmt|;
 name|Chunk
 modifier|*

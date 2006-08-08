@@ -93,13 +93,6 @@ name|DOC_TMP_FILE
 value|"/tmp/.doc/doc.tmp"
 end_define
 
-begin_decl_stmt
-specifier|static
-name|pid_t
-name|ehs_pid
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Handle interrupt signals - this probably won't work in all cases  * due to our having bogotified the internal state of dialog or curses,  * but we'll give it a try.  */
 end_comment
@@ -213,6 +206,18 @@ block|,
 name|NULL
 block|,
 name|intr_restart
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -223,6 +228,18 @@ block|,
 name|NULL
 block|,
 name|intr_continue
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|, }
 decl_stmt|;
@@ -497,12 +514,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|char
-name|hname
-index|[
-literal|256
-index|]
-decl_stmt|;
 if|if
 condition|(
 name|set_termcap
@@ -1193,6 +1204,7 @@ begin_function
 name|int
 name|vsystem
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt

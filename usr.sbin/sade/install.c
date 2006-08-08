@@ -129,32 +129,12 @@ directive|include
 file|<termios.h>
 end_include
 
-begin_function_decl
-specifier|static
-name|void
-name|create_termcap
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
 name|TERMCAP_FILE
 value|"/usr/share/misc/termcap"
 end_define
-
-begin_function_decl
-specifier|static
-name|void
-name|installConfigure
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 name|Boolean
@@ -164,31 +144,8 @@ name|Boolean
 name|whinge
 parameter_list|)
 block|{
-name|Device
-modifier|*
-modifier|*
-name|devs
-decl_stmt|;
 name|Boolean
 name|status
-decl_stmt|;
-name|Disk
-modifier|*
-name|disk
-decl_stmt|;
-name|PartInfo
-modifier|*
-name|pi
-decl_stmt|;
-name|Chunk
-modifier|*
-name|c1
-decl_stmt|,
-modifier|*
-name|c2
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 comment|/* Don't allow whinging if noWarn is set */
 if|if
@@ -735,7 +692,7 @@ name|sprintf
 argument_list|(
 name|dname
 argument_list|,
-literal|"%s/dev/%s"
+literal|"/dev/%s"
 argument_list|,
 name|c2
 operator|->
@@ -780,19 +737,13 @@ name|tmp
 operator|->
 name|mountpoint
 argument_list|,
-literal|"fsck_ffs -y %s/dev/%s"
+literal|"fsck_ffs -y /dev/%s"
 argument_list|,
 name|c2
 operator|->
 name|name
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (tmp->soft) 			    command_shell_add(tmp->mountpoint, 			    "tunefs -n enable %s/dev/%s", RunningAsInit ? 			    "/mnt" : "", c2->name);
-endif|#
-directive|endif
 name|command_func_add
 argument_list|(
 name|tmp
@@ -843,7 +794,7 @@ name|sprintf
 argument_list|(
 name|fname
 argument_list|,
-literal|"%s/dev/%s"
+literal|"/dev/%s"
 argument_list|,
 name|c2
 operator|->
@@ -928,7 +879,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"%s/%s"
+literal|"/%s"
 argument_list|,
 operator|(
 operator|(
@@ -1136,10 +1087,6 @@ modifier|*
 name|self
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 comment|/* Set default startup options */
 name|variable_set2
 argument_list|(

@@ -393,15 +393,6 @@ index|[
 literal|80
 index|]
 decl_stmt|;
-name|mode_t
-name|m
-decl_stmt|;
-name|dev_t
-name|d
-decl_stmt|;
-name|int
-name|fail
-decl_stmt|;
 name|snprintf
 argument_list|(
 name|unit
@@ -725,8 +716,6 @@ decl_stmt|,
 name|j
 decl_stmt|,
 name|fd
-decl_stmt|,
-name|s
 decl_stmt|;
 name|char
 modifier|*
@@ -845,10 +834,6 @@ name|i
 operator|++
 control|)
 block|{
-name|Chunk
-modifier|*
-name|c1
-decl_stmt|;
 name|Disk
 modifier|*
 name|d

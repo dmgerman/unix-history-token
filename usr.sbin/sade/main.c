@@ -34,32 +34,6 @@ comment|/* Initial contents of argv[0] */
 end_comment
 
 begin_function
-specifier|static
-name|void
-name|screech
-parameter_list|(
-name|int
-name|sig
-parameter_list|)
-block|{
-name|msgDebug
-argument_list|(
-literal|"\007Signal %d caught!  That's bad!\n"
-argument_list|,
-name|sig
-argument_list|)
-expr_stmt|;
-name|longjmp
-argument_list|(
-name|BailOut
-argument_list|,
-name|sig
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
 name|int
 name|main
 parameter_list|(

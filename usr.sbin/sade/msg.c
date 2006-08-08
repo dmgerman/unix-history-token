@@ -66,6 +66,7 @@ begin_function
 name|void
 name|msgYap
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -157,6 +158,7 @@ begin_function
 name|void
 name|msgInfo
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -332,6 +334,7 @@ begin_function
 name|void
 name|msgWarn
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -458,6 +461,7 @@ begin_function
 name|void
 name|msgError
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -584,6 +588,7 @@ begin_function
 name|void
 name|msgFatal
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -738,6 +743,7 @@ begin_function
 name|void
 name|msgConfirm
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -844,6 +850,7 @@ begin_function
 name|void
 name|msgNotify
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -940,6 +947,7 @@ begin_function
 name|int
 name|msgYesNo
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -1074,6 +1082,7 @@ begin_function
 name|int
 name|msgNoYes
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -1213,6 +1222,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -1373,6 +1383,7 @@ begin_function
 name|void
 name|msgDebug
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -1470,6 +1481,7 @@ begin_function
 name|void
 name|msgWeHaveOutput
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -1581,6 +1593,7 @@ begin_function
 name|int
 name|msgSimpleConfirm
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -1603,6 +1616,7 @@ begin_function
 name|int
 name|msgSimpleNotify
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str

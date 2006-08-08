@@ -652,41 +652,11 @@ modifier|*
 name|helpfile
 decl_stmt|;
 comment|/* Help file for "F1"		*/
-if|#
-directive|if
-operator|(
-name|__STDC_VERSION__
-operator|>=
-literal|199901L
-operator|)
-operator|||
-operator|(
-name|__GNUC__
-operator|>=
-literal|3
-operator|)
 name|dialogMenuItem
 name|items
 index|[]
 decl_stmt|;
 comment|/* Array of menu items		*/
-elif|#
-directive|elif
-name|__GNUC__
-name|dialogMenuItem
-name|items
-index|[
-literal|0
-index|]
-decl_stmt|;
-comment|/* Array of menu items		*/
-else|#
-directive|else
-error|#
-directive|error
-literal|"Create hack for C89 and K&R compilers."
-endif|#
-directive|endif
 block|}
 name|DMenu
 typedef|;
@@ -1110,7 +1080,9 @@ function_decl|(
 modifier|*
 name|check
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 block|}
 name|Option
@@ -1522,6 +1494,7 @@ name|char
 modifier|*
 name|key
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -1771,7 +1744,7 @@ name|desc
 parameter_list|,
 name|char
 modifier|*
-name|devname
+name|devicename
 parameter_list|,
 name|DeviceType
 name|type
@@ -2149,7 +2122,7 @@ name|choice
 parameter_list|,
 name|int
 modifier|*
-name|scroll
+name|bscroll
 parameter_list|,
 name|int
 modifier|*
@@ -2935,7 +2908,7 @@ name|mountp
 parameter_list|,
 name|void
 modifier|*
-name|devname
+name|devicename
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3095,6 +3068,7 @@ specifier|extern
 name|void
 name|msgInfo
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -3118,6 +3092,7 @@ specifier|extern
 name|void
 name|msgYap
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -3141,6 +3116,7 @@ specifier|extern
 name|void
 name|msgWarn
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -3164,6 +3140,7 @@ specifier|extern
 name|void
 name|msgDebug
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -3187,6 +3164,7 @@ specifier|extern
 name|void
 name|msgError
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -3210,6 +3188,7 @@ specifier|extern
 name|void
 name|msgFatal
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -3233,6 +3212,7 @@ specifier|extern
 name|void
 name|msgConfirm
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -3256,6 +3236,7 @@ specifier|extern
 name|void
 name|msgNotify
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -3279,6 +3260,7 @@ specifier|extern
 name|void
 name|msgWeHaveOutput
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -3302,6 +3284,7 @@ specifier|extern
 name|int
 name|msgYesNo
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -3325,6 +3308,7 @@ specifier|extern
 name|int
 name|msgNoYes
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -3353,6 +3337,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -3376,6 +3361,7 @@ specifier|extern
 name|int
 name|msgSimpleConfirm
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -3387,6 +3373,7 @@ specifier|extern
 name|int
 name|msgSimpleNotify
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -3584,6 +3571,7 @@ specifier|extern
 name|int
 name|vsystem
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -3839,36 +3827,6 @@ name|d
 parameter_list|)
 value|((d) != NULL ? (d)->shutdown((d)) : (void)0)
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_GZIP
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|UNZIPPER
-value|"gunzip"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|UNZIPPER
-value|"bunzip2"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

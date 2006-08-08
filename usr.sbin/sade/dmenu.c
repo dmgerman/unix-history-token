@@ -1049,8 +1049,7 @@ operator|(
 operator|*
 operator|(
 operator|(
-name|unsigned
-name|int
+name|long
 operator|*
 operator|)
 name|item
