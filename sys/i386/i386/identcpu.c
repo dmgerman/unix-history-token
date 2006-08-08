@@ -2325,7 +2325,9 @@ operator|<
 literal|3
 condition|)
 break|break;
-comment|/* fall through. */
+goto|goto
+name|via_common
+goto|;
 case|case
 literal|0x6a0
 case|:
@@ -2336,6 +2338,8 @@ argument_list|,
 literal|"VIA C7 Esther"
 argument_list|)
 expr_stmt|;
+name|via_common
+label|:
 name|do_cpuid
 argument_list|(
 literal|0xc0000000
