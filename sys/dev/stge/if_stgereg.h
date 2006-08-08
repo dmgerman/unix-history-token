@@ -163,7 +163,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_write_4((_sc)->sc_res[0], (reg), (val))
+value|bus_space_write_4((_sc)->sc_st, (_sc)->sc_sh, (reg), (val))
 end_define
 
 begin_define
@@ -178,7 +178,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_write_2((_sc)->sc_res[0], (reg), (val))
+value|bus_space_write_2((_sc)->sc_st, (_sc)->sc_sh, (reg), (val))
 end_define
 
 begin_define
@@ -193,7 +193,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_write_1((_sc)->sc_res[0], (reg), (val))
+value|bus_space_write_1((_sc)->sc_st, (_sc)->sc_sh, (reg), (val))
 end_define
 
 begin_define
@@ -206,7 +206,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_read_4((_sc)->sc_res[0], (reg))
+value|bus_space_read_4((_sc)->sc_st, (_sc)->sc_sh, (reg))
 end_define
 
 begin_define
@@ -219,7 +219,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_read_2((_sc)->sc_res[0], (reg))
+value|bus_space_read_2((_sc)->sc_st, (_sc)->sc_sh, (reg))
 end_define
 
 begin_define
@@ -232,7 +232,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_read_1((_sc)->sc_res[0], (reg))
+value|bus_space_read_1((_sc)->sc_st, (_sc)->sc_sh, (reg))
 end_define
 
 begin_comment
@@ -2863,15 +2863,27 @@ name|struct
 name|resource
 modifier|*
 name|sc_res
-index|[
-literal|2
-index|]
 decl_stmt|;
 name|struct
-name|resource_spec
+name|resource
 modifier|*
-name|sc_spec
+name|sc_irq
 decl_stmt|;
+comment|/* IRQ resource handle */
+name|int
+name|sc_restype
+decl_stmt|;
+name|int
+name|sc_rid
+decl_stmt|;
+name|bus_space_tag_t
+name|sc_st
+decl_stmt|;
+comment|/* bus space tag */
+name|bus_space_handle_t
+name|sc_sh
+decl_stmt|;
+comment|/* bus space handle */
 name|void
 modifier|*
 name|sc_ih
