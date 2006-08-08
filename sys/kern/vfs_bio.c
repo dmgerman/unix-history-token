@@ -12974,9 +12974,6 @@ argument_list|)
 expr_stmt|;
 name|retry
 label|:
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -13020,6 +13017,9 @@ block|}
 name|bogus
 operator|=
 literal|0
+expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
 expr_stmt|;
 for|for
 control|(
