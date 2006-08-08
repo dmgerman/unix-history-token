@@ -361,10 +361,13 @@ argument_list|)
 condition|)
 break|break;
 block|}
+comment|/* Shut down curses */
+name|endwin
+argument_list|()
+expr_stmt|;
 return|return
 literal|0
 return|;
-comment|/* We should never get here */
 block|}
 end_function
 
