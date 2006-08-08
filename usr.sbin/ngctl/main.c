@@ -166,6 +166,7 @@ name|void
 name|ReadSockets
 parameter_list|(
 name|fd_set
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1080,6 +1081,7 @@ expr_stmt|;
 block|}
 name|ReadSockets
 argument_list|(
+operator|&
 name|rfds
 argument_list|)
 expr_stmt|;
@@ -1104,7 +1106,9 @@ name|el
 parameter_list|)
 block|{
 return|return
+operator|(
 name|PROMPT
+operator|)
 return|;
 block|}
 end_function
@@ -1595,6 +1599,7 @@ expr_stmt|;
 block|}
 name|ReadSockets
 argument_list|(
+operator|&
 name|rfds
 argument_list|)
 expr_stmt|;
@@ -1679,6 +1684,7 @@ name|void
 name|ReadSockets
 parameter_list|(
 name|fd_set
+modifier|*
 name|rfds
 parameter_list|)
 block|{
@@ -1689,7 +1695,6 @@ name|FD_ISSET
 argument_list|(
 name|csock
 argument_list|,
-operator|&
 name|rfds
 argument_list|)
 condition|)
@@ -1703,7 +1708,6 @@ name|FD_ISSET
 argument_list|(
 name|dsock
 argument_list|,
-operator|&
 name|rfds
 argument_list|)
 condition|)
