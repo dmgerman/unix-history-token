@@ -1814,6 +1814,7 @@ operator|->
 name|vm_map
 expr_stmt|;
 block|}
+comment|/* 	 * PGEX_I is defined only if the execute disable bit capability is 	 * supported and enabled; otherwise, that bit is reserved, i.e., zero. 	 */
 if|if
 condition|(
 name|frame
@@ -1825,6 +1826,19 @@ condition|)
 name|ftype
 operator|=
 name|VM_PROT_WRITE
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|frame
+operator|->
+name|tf_err
+operator|&
+name|PGEX_I
+condition|)
+name|ftype
+operator|=
+name|VM_PROT_EXECUTE
 expr_stmt|;
 else|else
 name|ftype
