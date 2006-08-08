@@ -348,12 +348,9 @@ decl_stmt|;
 name|int
 name|m_refcount
 decl_stmt|;
-comment|/* 	 * Used for priority inheritence and protection. 	 * 	 *   m_prio       - For priority inheritence, the highest active 	 *                  priority (threads locking the mutex inherit 	 *                  this priority).  For priority protection, the 	 *                  ceiling priority of this mutex. 	 *   m_saved_prio - mutex owners inherited priority before 	 *                  taking the mutex, restored when the owner 	 *                  unlocks the mutex. 	 */
+comment|/* 	 * Used for priority protection, the ceiling priority of 	 * this mutex. 	 */
 name|int
 name|m_prio
-decl_stmt|;
-name|int
-name|m_saved_prio
 decl_stmt|;
 comment|/* 	 * Link for list of all mutexes a thread currently owns. 	 */
 name|TAILQ_ENTRY
