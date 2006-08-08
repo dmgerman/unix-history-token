@@ -268,7 +268,7 @@ argument_list|)
 expr_stmt|;
 name|rval
 operator|=
-literal|0
+name|BUS_PROBE_DEFAULT
 expr_stmt|;
 if|if
 condition|(
@@ -312,8 +312,7 @@ argument_list|)
 expr_stmt|;
 name|rval
 operator|=
-operator|-
-literal|10
+name|BUS_PROBE_LOW_PRIORITY
 expr_stmt|;
 comment|/* Let exphy take precedence. */
 break|break;
@@ -329,8 +328,7 @@ argument_list|)
 expr_stmt|;
 name|rval
 operator|=
-operator|-
-literal|10
+name|BUS_PROBE_LOW_PRIORITY
 expr_stmt|;
 comment|/* Let exphy take precedence. */
 break|break;

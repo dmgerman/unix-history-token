@@ -350,7 +350,7 @@ name|MII_STR_MARVELL_E1000
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 end_function
