@@ -773,6 +773,14 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
+literal|"stge"
+block|,
+literal|"Sundance/Tamarack TC9021 gigabit Ethernet"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
 literal|"tx"
 block|,
 literal|"SMC 9432TX ethernet card"
