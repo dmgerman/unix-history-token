@@ -215,20 +215,12 @@ end_function_decl
 begin_if
 if|#
 directive|if
+operator|!
 name|defined
 argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__amd64__
+name|__ia64__
 argument_list|)
 end_if
-
-begin_comment
-comment|/* only meaningful on x86 */
-end_comment
 
 begin_function_decl
 specifier|static
@@ -3264,16 +3256,11 @@ directive|endif
 comment|/* WITH_SLICES */
 if|#
 directive|if
+operator|!
 name|defined
 argument_list|(
-name|__i386__
+name|__ia64__
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-comment|/* only meaningful on x86 */
 specifier|static
 name|u_char
 modifier|*
@@ -3447,7 +3434,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* __i386__ || __amd64 */
+comment|/* !__ia64__ */
 ifdef|#
 directive|ifdef
 name|WITH_SLICES
