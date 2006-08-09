@@ -233,6 +233,14 @@ name|NULL
 block|,
 operator|&
 name|BootMgr
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 block|{
