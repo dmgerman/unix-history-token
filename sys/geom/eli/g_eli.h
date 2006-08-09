@@ -147,6 +147,10 @@ value|1
 end_define
 
 begin_comment
+comment|/* ON DISK FLAGS. */
+end_comment
+
+begin_comment
 comment|/* Use random, onetime keys. */
 end_comment
 
@@ -200,6 +204,21 @@ directive|define
 name|G_ELI_FLAG_AUTH
 value|0x00000010
 end_define
+
+begin_comment
+comment|/* Provider is read-only, we should deny all write attempts. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|G_ELI_FLAG_RO
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* RUNTIME FLAGS. */
+end_comment
 
 begin_comment
 comment|/* Provider was open for writing. */

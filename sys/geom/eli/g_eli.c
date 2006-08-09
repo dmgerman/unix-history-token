@@ -2109,6 +2109,22 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|G_ELI_FLAG_RO
+condition|)
+block|{
+comment|/* Deny write attempts. */
+return|return
+operator|(
+name|EROFS
+operator|)
+return|;
+block|}
 comment|/* Someone is opening us for write, we need to remember that. */
 name|sc
 operator|->
@@ -2321,7 +2337,7 @@ name|start
 operator|=
 name|g_eli_start
 expr_stmt|;
-comment|/* 	 * Spoiling cannot happen actually, because we keep provider open for 	 * writing all the time. 	 */
+comment|/* 	 * Spoiling cannot happen actually, because we keep provider open for 	 * writing all the time or provider is read-only. 	 */
 name|gp
 operator|->
 name|spoiled
@@ -2334,14 +2350,24 @@ name|orphan
 operator|=
 name|g_eli_orphan
 expr_stmt|;
-comment|/* 	 * If detach-on-last-close feature is not enabled, we can simply use 	 * g_std_access(). 	 */
+name|gp
+operator|->
+name|dumpconf
+operator|=
+name|g_eli_dumpconf
+expr_stmt|;
+comment|/* 	 * If detach-on-last-close feature is not enabled and we don't operate 	 * on read-only provider, we can simply use g_std_access(). 	 */
 if|if
 condition|(
 name|md
 operator|->
 name|md_flags
 operator|&
+operator|(
 name|G_ELI_FLAG_WO_DETACH
+operator||
+name|G_ELI_FLAG_RO
+operator|)
 condition|)
 name|gp
 operator|->
@@ -2355,12 +2381,6 @@ operator|->
 name|access
 operator|=
 name|g_std_access
-expr_stmt|;
-name|gp
-operator|->
-name|dumpconf
-operator|=
-name|g_eli_dumpconf
 expr_stmt|;
 name|sc
 operator|->
@@ -2655,7 +2675,29 @@ goto|goto
 name|failed
 goto|;
 block|}
-comment|/* 	 * Keep provider open all the time, so we can run critical tasks, 	 * like Master Keys deletion, without wondering if we can open 	 * provider or not. 	 */
+comment|/* 	 * Keep provider open all the time, so we can run critical tasks, 	 * like Master Keys deletion, without wondering if we can open 	 * provider or not. 	 * We don't open provider for writing only when user requested read-only 	 * access. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|G_ELI_FLAG_RO
+condition|)
+name|error
+operator|=
+name|g_access
+argument_list|(
+name|cp
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+else|else
 name|error
 operator|=
 name|g_access
@@ -4932,6 +4974,13 @@ argument_list|(
 name|G_ELI_FLAG_DESTROY
 argument_list|,
 literal|"DESTROY"
+argument_list|)
+expr_stmt|;
+name|ADD_FLAG
+argument_list|(
+name|G_ELI_FLAG_RO
+argument_list|,
+literal|"READ-ONLY"
 argument_list|)
 expr_stmt|;
 undef|#
