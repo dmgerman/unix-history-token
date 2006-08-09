@@ -274,23 +274,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|XBOX
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/xbox.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * 32-bit time_t's can't reach leap years before 1904 or after 2036, so we  * can use a simple formula for leap years.  */
 end_comment
@@ -1993,20 +1976,6 @@ operator|)
 return|;
 name|fail
 label|:
-ifdef|#
-directive|ifdef
-name|XBOX
-if|if
-condition|(
-name|arch_i386_is_xbox
-condition|)
-name|timer_freq
-operator|=
-literal|1125000
-expr_stmt|;
-comment|/* gives ~733.34MHz CPU clock */
-endif|#
-directive|endif
 if|if
 condition|(
 name|bootverbose
