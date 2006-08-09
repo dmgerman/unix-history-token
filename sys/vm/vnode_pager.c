@@ -3855,9 +3855,9 @@ if|if
 condition|(
 name|mt
 operator|->
-name|flags
+name|oflags
 operator|&
-name|PG_WANTED
+name|VPO_WANTED
 condition|)
 name|vm_page_activate
 argument_list|(

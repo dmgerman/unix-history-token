@@ -109,6 +109,10 @@ name|short
 name|hold_count
 decl_stmt|;
 comment|/* page hold count */
+name|u_short
+name|oflags
+decl_stmt|;
+comment|/* page flags (O) */
 name|u_char
 name|act_count
 decl_stmt|;
@@ -176,6 +180,32 @@ directive|endif
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Page flags stored in oflags:  *  * Access to these page flags is synchronized by the lock on the object  * containing the page (O).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VPO_WANTED
+value|0x0002
+end_define
+
+begin_comment
+comment|/* someone is waiting for page */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VPO_SWAPINPROG
+value|0x0200
+end_define
+
+begin_comment
+comment|/* swap I/O in progress on page */
+end_comment
 
 begin_comment
 comment|/* Make sure that u_long is at least 64 bits when PAGE_SIZE is 32K. */
@@ -532,17 +562,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PG_WANTED
-value|0x0002
-end_define
-
-begin_comment
-comment|/* someone is waiting for page (O) */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PG_WINATCFLS
 value|0x0004
 end_define
@@ -604,17 +623,6 @@ end_define
 
 begin_comment
 comment|/* page will be checked for cleaning */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PG_SWAPINPROG
-value|0x0200
-end_define
-
-begin_comment
-comment|/* swap I/O in progress on page	     */
 end_comment
 
 begin_define

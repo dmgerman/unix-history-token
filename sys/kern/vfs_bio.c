@@ -12656,9 +12656,6 @@ argument_list|(
 name|obj
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -12761,9 +12758,6 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 name|vm_object_pip_wakeupn
 argument_list|(
 name|obj

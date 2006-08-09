@@ -4278,8 +4278,6 @@ name|vm_page_flag_set
 argument_list|(
 name|m
 argument_list|,
-name|PG_WANTED
-operator||
 name|PG_REFERENCED
 argument_list|)
 expr_stmt|;
@@ -4296,6 +4294,12 @@ name|VM_OBJECT_UNLOCK
 argument_list|(
 name|object
 argument_list|)
+expr_stmt|;
+name|m
+operator|->
+name|oflags
+operator||=
+name|VPO_WANTED
 expr_stmt|;
 name|msleep
 argument_list|(
@@ -4929,8 +4933,6 @@ name|vm_page_flag_set
 argument_list|(
 name|m
 argument_list|,
-name|PG_WANTED
-operator||
 name|PG_REFERENCED
 argument_list|)
 expr_stmt|;
@@ -4941,6 +4943,12 @@ name|VM_OBJECT_UNLOCK
 argument_list|(
 name|new_object
 argument_list|)
+expr_stmt|;
+name|m
+operator|->
+name|oflags
+operator||=
+name|VPO_WANTED
 expr_stmt|;
 name|msleep
 argument_list|(
@@ -5382,8 +5390,6 @@ name|vm_page_flag_set
 argument_list|(
 name|p
 argument_list|,
-name|PG_WANTED
-operator||
 name|PG_REFERENCED
 argument_list|)
 expr_stmt|;
@@ -5394,6 +5400,12 @@ name|VM_OBJECT_UNLOCK
 argument_list|(
 name|object
 argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|oflags
+operator||=
+name|VPO_WANTED
 expr_stmt|;
 name|msleep
 argument_list|(

@@ -3388,9 +3388,6 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 block|{
 name|int
 name|k
@@ -3423,21 +3420,17 @@ index|[
 name|k
 index|]
 expr_stmt|;
-name|vm_page_flag_set
-argument_list|(
 name|m
 index|[
 name|k
 index|]
-argument_list|,
-name|PG_SWAPINPROG
-argument_list|)
+operator|->
+name|oflags
+operator||=
+name|VPO_SWAPINPROG
 expr_stmt|;
 block|}
 block|}
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 name|bp
 operator|->
 name|b_npages
@@ -3485,7 +3478,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * wait for the page we want to complete.  PG_SWAPINPROG is always 	 * cleared on completion.  If an I/O error occurs, SWAPBLK_NONE 	 * is set in the meta-data. 	 */
+comment|/* 	 * wait for the page we want to complete.  VPO_SWAPINPROG is always 	 * cleared on completion.  If an I/O error occurs, SWAPBLK_NONE 	 * is set in the meta-data. 	 */
 name|VM_OBJECT_LOCK
 argument_list|(
 name|object
@@ -3496,14 +3489,20 @@ condition|(
 operator|(
 name|mreq
 operator|->
-name|flags
+name|oflags
 operator|&
-name|PG_SWAPINPROG
+name|VPO_SWAPINPROG
 operator|)
 operator|!=
 literal|0
 condition|)
 block|{
+name|mreq
+operator|->
+name|oflags
+operator||=
+name|VPO_WANTED
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -3511,8 +3510,6 @@ name|vm_page_flag_set
 argument_list|(
 name|mreq
 argument_list|,
-name|PG_WANTED
-operator||
 name|PG_REFERENCED
 argument_list|)
 expr_stmt|;
@@ -4048,18 +4045,11 @@ index|]
 operator|=
 name|VM_PAGER_OK
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
-name|vm_page_flag_set
-argument_list|(
 name|mreq
-argument_list|,
-name|PG_SWAPINPROG
-argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
+operator|->
+name|oflags
+operator||=
+name|VPO_SWAPINPROG
 expr_stmt|;
 name|bp
 operator|->
@@ -4359,12 +4349,12 @@ index|[
 name|i
 index|]
 decl_stmt|;
-name|vm_page_flag_clear
-argument_list|(
 name|m
-argument_list|,
-name|PG_SWAPINPROG
-argument_list|)
+operator|->
+name|oflags
+operator|&=
+operator|~
+name|VPO_SWAPINPROG
 expr_stmt|;
 if|if
 condition|(
@@ -4385,7 +4375,7 @@ operator|==
 name|BIO_READ
 condition|)
 block|{
-comment|/* 				 * When reading, reqpage needs to stay 				 * locked for the parent, but all other 				 * pages can be freed.  We still want to 				 * wakeup the parent waiting on the page, 				 * though.  ( also: pg_reqpage can be -1 and  				 * not match anything ). 				 * 				 * We have to wake specifically requested pages 				 * up too because we cleared PG_SWAPINPROG and 				 * someone may be waiting for that. 				 * 				 * NOTE: for reads, m->dirty will probably 				 * be overridden by the original caller of 				 * getpages so don't play cute tricks here. 				 */
+comment|/* 				 * When reading, reqpage needs to stay 				 * locked for the parent, but all other 				 * pages can be freed.  We still want to 				 * wakeup the parent waiting on the page, 				 * though.  ( also: pg_reqpage can be -1 and  				 * not match anything ). 				 * 				 * We have to wake specifically requested pages 				 * up too because we cleared VPO_SWAPINPROG and 				 * someone may be waiting for that. 				 * 				 * NOTE: for reads, m->dirty will probably 				 * be overridden by the original caller of 				 * getpages so don't play cute tricks here. 				 */
 name|m
 operator|->
 name|valid
@@ -4462,7 +4452,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* 			 * We have to wake specifically requested pages 			 * up too because we cleared PG_SWAPINPROG and 			 * could be waiting for it in getpages.  However, 			 * be sure to not unbusy getpages specifically 			 * requested page - getpages expects it to be  			 * left busy. 			 */
+comment|/* 			 * We have to wake specifically requested pages 			 * up too because we cleared VPO_SWAPINPROG and 			 * could be waiting for it in getpages.  However, 			 * be sure to not unbusy getpages specifically 			 * requested page - getpages expects it to be  			 * left busy. 			 */
 if|if
 condition|(
 name|i
