@@ -776,6 +776,10 @@ name|disk
 operator|->
 name|sector_size
 expr_stmt|;
+name|nsects
+operator|--
+expr_stmt|;
+comment|/* The GPT starts at LBA 1 */
 name|buffer
 operator|=
 name|calloc
