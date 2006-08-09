@@ -10598,6 +10598,17 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|phy_type
+operator|!=
+name|em_phy_ife
+condition|)
+block|{
 name|ifmedia_add
 argument_list|(
 operator|&
@@ -10632,6 +10643,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|ifmedia_add
 argument_list|(
