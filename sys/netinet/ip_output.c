@@ -700,7 +700,7 @@ name|ip
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Fill in IP header.  If we are not allowing fragmentation, 	 * then the ip_id field is meaningless, but we don't set it 	 * to zero.  Doing so causes various problems when devices along 	 * the path (routers, load balancers, firewalls, etc.) illegally 	 * disable DF on our packet.  Note that a 16-bit counter 	 * will wrap around in less than 10 seconds at 100 Mbit/s on a 	 * medium with MTU 1500.  See Steven M. Bellovin, "A Technique 	 * for Counting NATted Hosts", Proc. IMW'02, available at 	 *<http://www.research.att.com/~smb/papers/fnat.pdf>. 	 */
+comment|/* 	 * Fill in IP header.  If we are not allowing fragmentation, 	 * then the ip_id field is meaningless, but we don't set it 	 * to zero.  Doing so causes various problems when devices along 	 * the path (routers, load balancers, firewalls, etc.) illegally 	 * disable DF on our packet.  Note that a 16-bit counter 	 * will wrap around in less than 10 seconds at 100 Mbit/s on a 	 * medium with MTU 1500.  See Steven M. Bellovin, "A Technique 	 * for Counting NATted Hosts", Proc. IMW'02, available at 	 *<http://www.cs.columbia.edu/~smb/papers/fnat.pdf>. 	 */
 if|if
 condition|(
 operator|(
