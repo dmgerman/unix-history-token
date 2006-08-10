@@ -99,7 +99,7 @@ begin_define
 define|#
 directive|define
 name|SDRAM_WIDTH
-value|AT91C_SDRC_DBW_16_BITS
+value|AT91C_SDRC_DBW_32_BITS
 end_define
 
 begin_typedef
