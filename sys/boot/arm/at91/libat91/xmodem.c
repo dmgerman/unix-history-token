@@ -75,6 +75,13 @@ begin_comment
 comment|/* end of text */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TO
+value|10
+end_define
+
 begin_comment
 comment|/*  * int GetRecord(char , char *)  *  This private function receives a x-modem record to the pointer and  * returns non-zero on success.  */
 end_comment
@@ -114,7 +121,7 @@ name|ch
 operator|=
 name|getc
 argument_list|(
-literal|1
+name|TO
 argument_list|)
 operator|)
 operator|==
@@ -140,7 +147,7 @@ name|ch
 operator|=
 name|getc
 argument_list|(
-literal|1
+name|TO
 argument_list|)
 operator|)
 operator|==
@@ -185,7 +192,7 @@ name|ch
 operator|=
 name|getc
 argument_list|(
-literal|1
+name|TO
 argument_list|)
 operator|)
 operator|==
@@ -258,7 +265,7 @@ name|ch
 operator|=
 name|getc
 argument_list|(
-literal|1
+name|TO
 argument_list|)
 operator|)
 operator|==
@@ -295,7 +302,7 @@ name|ch
 operator|=
 name|getc
 argument_list|(
-literal|1
+name|TO
 argument_list|)
 operator|)
 operator|==
