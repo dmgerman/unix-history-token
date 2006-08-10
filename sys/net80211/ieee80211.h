@@ -2556,6 +2556,76 @@ name|IEEE80211_FRAG_MAX
 value|2346
 end_define
 
+begin_comment
+comment|/*  * Beacon interval (TU's).  Min+max come from WiFi requirements.  * As above, we treat default as implementation-dependent so  * define it elsewhere.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_BINTVAL_MAX
+value|1000
+end_define
+
+begin_comment
+comment|/* max beacon interval (TU's) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_BINTVAL_MIN
+value|25
+end_define
+
+begin_comment
+comment|/* min beacon interval (TU's) */
+end_comment
+
+begin_comment
+comment|/*  * DTIM period (beacons).  Min+max are not really defined  * by the protocol but we want them publicly visible so  * define them here.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_DTIM_MAX
+value|15
+end_define
+
+begin_comment
+comment|/* max DTIM period */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_DTIM_MIN
+value|1
+end_define
+
+begin_comment
+comment|/* min DTIM period */
+end_comment
+
+begin_comment
+comment|/*  * Beacon miss threshold (beacons).  As for DTIM, we define  * them here to be publicly visible.  Note the max may be  * clamped depending on device capabilities.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_HWBMISS_MIN
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_HWBMISS_MAX
+value|255
+end_define
+
 begin_endif
 endif|#
 directive|endif
