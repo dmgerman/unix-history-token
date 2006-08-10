@@ -6,6 +6,30 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<netgraph.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ngctl.h"
 end_include
 
@@ -43,7 +67,9 @@ literal|" debugging verbosity level. If the argument is ``+'' or ``-''"
 literal|" the debug level is incremented or decremented; otherwise,"
 literal|" it must be an absolute numerical level."
 block|,
-block|{}
+block|{
+name|NULL
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt

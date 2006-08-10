@@ -6,6 +6,24 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netgraph.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ngctl.h"
 end_include
 
@@ -44,7 +62,9 @@ literal|" connection are \"hook\" on the original node and \"peerhook\""
 literal|" on the new node."
 literal|" If \"path\" is omitted then \".\" is assumed."
 block|,
-block|{}
+block|{
+name|NULL
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
