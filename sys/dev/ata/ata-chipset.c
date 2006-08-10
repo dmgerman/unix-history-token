@@ -14631,7 +14631,7 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|bus_addr_t
-name|wordp
+name|work
 init|=
 name|ch
 operator|->
@@ -14642,6 +14642,20 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* clear work area */
+name|bzero
+argument_list|(
+name|ch
+operator|->
+name|dma
+operator|->
+name|work
+argument_list|,
+literal|1024
+operator|+
+literal|256
+argument_list|)
+expr_stmt|;
 comment|/* set legacy ATA resources */
 for|for
 control|(
@@ -15069,7 +15083,7 @@ name|ch
 argument_list|)
 argument_list|,
 operator|(
-name|wordp
+name|work
 operator|>>
 literal|16
 operator|)
@@ -15091,7 +15105,7 @@ argument_list|(
 name|ch
 argument_list|)
 argument_list|,
-name|wordp
+name|work
 operator|&
 literal|0xffffffff
 argument_list|)
@@ -15114,7 +15128,7 @@ literal|0x0
 argument_list|)
 expr_stmt|;
 comment|/* response queue base high */
-name|wordp
+name|work
 operator|+=
 literal|1024
 expr_stmt|;
@@ -15132,7 +15146,7 @@ name|ch
 argument_list|)
 argument_list|,
 operator|(
-name|wordp
+name|work
 operator|>>
 literal|16
 operator|)
@@ -15171,7 +15185,7 @@ argument_list|(
 name|ch
 argument_list|)
 argument_list|,
-name|wordp
+name|work
 operator|&
 literal|0xffffffff
 argument_list|)
@@ -16519,16 +16533,11 @@ name|ata_marvell_response
 operator|*
 operator|)
 operator|(
-name|int8_t
-operator|*
-operator|)
-operator|(
 name|ch
 operator|->
 name|dma
 operator|->
 name|work
-operator|)
 operator|+
 literal|1024
 operator|+
@@ -16536,6 +16545,7 @@ operator|(
 name|slot
 operator|<<
 literal|3
+operator|)
 operator|)
 expr_stmt|;
 comment|/* record status for this request */
