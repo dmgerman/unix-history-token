@@ -3893,10 +3893,16 @@ block|{
 if|if
 condition|(
 name|mp
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|mp
 operator|->
 name|mnt_kern_flag
 operator|&
 name|MNTK_SUSPEND
+operator|)
 condition|)
 block|{
 comment|/* 			 * File system is beeing suspended, we cannot risk a 			 * deadlock here, so allocate new vnode anyway. 			 */
