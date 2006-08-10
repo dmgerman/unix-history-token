@@ -366,17 +366,6 @@ end_ifdef
 
 begin_function_decl
 name|void
-name|carp_ifdetach
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|carp_carpdev_state
 parameter_list|(
 name|void
