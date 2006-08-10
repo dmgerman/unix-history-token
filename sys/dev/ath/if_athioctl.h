@@ -228,6 +228,14 @@ name|int8_t
 name|ast_rx_rssi
 decl_stmt|;
 comment|/* rx rssi from histogram */
+name|int8_t
+name|ast_rx_noise
+decl_stmt|;
+comment|/* rx noise floor */
+name|u_int8_t
+name|ast_tx_rate
+decl_stmt|;
+comment|/* IEEE rate of last unicast tx */
 name|u_int32_t
 name|ast_be_xmit
 decl_stmt|;
