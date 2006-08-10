@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"p_string.h"
+file|"lib.h"
 end_include
 
 begin_comment
