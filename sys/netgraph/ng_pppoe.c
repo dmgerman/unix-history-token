@@ -2653,8 +2653,6 @@ name|msg
 decl_stmt|;
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -4240,9 +4238,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|error
-operator|=
+name|LEAVE
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 block|}
 break|break;
