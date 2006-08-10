@@ -5654,6 +5654,8 @@ argument_list|,
 name|pindex
 argument_list|,
 name|VM_ALLOC_NORMAL
+operator||
+name|VM_ALLOC_NOBUSY
 argument_list|)
 expr_stmt|;
 if|if
@@ -5743,13 +5745,6 @@ expr_stmt|;
 name|vm_page_dirty
 argument_list|(
 name|mnew
-argument_list|)
-expr_stmt|;
-name|vm_page_flag_clear
-argument_list|(
-name|mnew
-argument_list|,
-name|PG_BUSY
 argument_list|)
 expr_stmt|;
 name|mnew
