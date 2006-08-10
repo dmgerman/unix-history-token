@@ -537,22 +537,15 @@ operator|)
 operator|<=
 literal|0
 operator|||
-operator|(
+name|strchr
+argument_list|(
+literal|"kKmMgG"
+argument_list|,
 operator|*
 name|ep
-operator|!=
-literal|'\0'
-operator|&&
-operator|*
-name|ep
-operator|!=
-literal|'k'
-operator|&&
-operator|*
-name|ep
-operator|!=
-literal|'m'
-operator|)
+argument_list|)
+operator|==
+name|NULL
 operator|||
 name|errno
 operator|!=
@@ -573,6 +566,11 @@ operator|*
 name|ep
 operator|==
 literal|'k'
+operator|||
+operator|*
+name|ep
+operator|==
+literal|'K'
 condition|)
 name|scale
 operator|=
@@ -585,9 +583,35 @@ operator|*
 name|ep
 operator|==
 literal|'m'
+operator|||
+operator|*
+name|ep
+operator|==
+literal|'M'
 condition|)
 name|scale
 operator|=
+literal|1024
+operator|*
+literal|1024
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|*
+name|ep
+operator|==
+literal|'g'
+operator|||
+operator|*
+name|ep
+operator|==
+literal|'G'
+condition|)
+name|scale
+operator|=
+literal|1024
+operator|*
 literal|1024
 operator|*
 literal|1024
@@ -1599,7 +1623,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: split [-l line_count] [-a suffix_length] [file [prefix]]\n"
-literal|"       split -b byte_count[k|m] [-a suffix_length] [file [prefix]]\n"
+literal|"       split -b byte_count[K|k|M|m|G|g] [-a suffix_length] [file [prefix]]\n"
 literal|"       split -p pattern [-a suffix_length] [file [prefix]]\n"
 argument_list|)
 expr_stmt|;
