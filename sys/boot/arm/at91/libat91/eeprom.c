@@ -175,7 +175,7 @@ name|void
 name|ReadEEPROM
 parameter_list|(
 name|unsigned
-name|ee_addr
+name|ee_off
 parameter_list|,
 name|char
 modifier|*
@@ -227,7 +227,7 @@ name|twiPtr
 operator|->
 name|TWI_IADR
 operator|=
-name|ee_addr
+name|ee_off
 expr_stmt|;
 comment|// Start transfer
 name|twiPtr
@@ -312,7 +312,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * .KB_C_FN_DEFINITION_START  * void WriteEEPROM(unsigned ee_addr, char *data_addr, unsigned size)  *  This global function writes data to the eeprom at ee_addr using data  * from data_addr for size bytes.  Assume the TWI has been initialized.  * This function does not utilize the page write mode as the write time is  * much greater than the time required to access the device for byte-write  * functionality.  This allows the function to be much simpler.  * .KB_C_FN_DEFINITION_END  */
+comment|/*  * .KB_C_FN_DEFINITION_START  * void WriteEEPROM(unsigned ee_off, char *data_addr, unsigned size)  *  This global function writes data to the eeprom at ee_off using data  * from data_addr for size bytes.  Assume the TWI has been initialized.  * This function does not utilize the page write mode as the write time is  * much greater than the time required to access the device for byte-write  * functionality.  This allows the function to be much simpler.  * .KB_C_FN_DEFINITION_END  */
 end_comment
 
 begin_function
@@ -320,7 +320,7 @@ name|void
 name|WriteEEPROM
 parameter_list|(
 name|unsigned
-name|ee_addr
+name|ee_off
 parameter_list|,
 name|char
 modifier|*
@@ -352,7 +352,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|ee_addr
+name|ee_off
 operator|&
 literal|0x3f
 operator|)
@@ -385,7 +385,7 @@ name|twiPtr
 operator|->
 name|TWI_IADR
 operator|=
-name|ee_addr
+name|ee_off
 operator|++
 expr_stmt|;
 name|status
@@ -451,7 +451,7 @@ continue|continue;
 comment|// wait for write operation to complete
 name|ReadEEPROM
 argument_list|(
-name|ee_addr
+name|ee_off
 argument_list|,
 operator|&
 name|test_data
