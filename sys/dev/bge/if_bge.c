@@ -953,6 +953,12 @@ literal|"BCM5750 C1"
 block|}
 block|,
 block|{
+name|BGE_CHIPID_BCM5750_C2
+block|,
+literal|"BCM5750 C2"
+block|}
+block|,
+block|{
 name|BGE_CHIPID_BCM5714_A0
 block|,
 literal|"BCM5714 A0"
