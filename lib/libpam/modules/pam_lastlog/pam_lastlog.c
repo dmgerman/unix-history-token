@@ -250,9 +250,16 @@ name|pam_err
 operator|!=
 name|PAM_SUCCESS
 condition|)
+block|{
+name|PAM_LOG
+argument_list|(
+literal|"No PAM_RHOST"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|err
 goto|;
+block|}
 name|pam_err
 operator|=
 name|pam_get_item
@@ -271,9 +278,16 @@ name|pam_err
 operator|!=
 name|PAM_SUCCESS
 condition|)
+block|{
+name|PAM_LOG
+argument_list|(
+literal|"No PAM_TTY"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|err
 goto|;
+block|}
 if|if
 condition|(
 name|tty
@@ -281,6 +295,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|PAM_LOG
+argument_list|(
+literal|"No PAM_TTY"
+argument_list|)
+expr_stmt|;
 name|pam_err
 operator|=
 name|PAM_SERVICE_ERR
@@ -356,9 +375,18 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+name|PAM_LOG
+argument_list|(
+literal|"Failed to open %s"
+argument_list|,
+name|_PATH_LASTLOG
+argument_list|)
+expr_stmt|;
 goto|goto
 name|file_err
 goto|;
+block|}
 comment|/* 	 * Record session in lastlog(5). 	 */
 name|llpos
 operator|=
