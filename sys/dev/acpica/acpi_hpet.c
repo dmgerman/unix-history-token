@@ -245,8 +245,7 @@ block|,
 operator|.
 name|tc_quality
 operator|=
-operator|-
-literal|200
+literal|2000
 block|, }
 decl_stmt|;
 end_decl_stmt
