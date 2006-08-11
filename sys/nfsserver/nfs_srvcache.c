@@ -342,6 +342,44 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Teardown the server request cache list  */
+end_comment
+
+begin_function
+name|void
+name|nfsrv_destroycache
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|KASSERT
+argument_list|(
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|nfsrvlruhead
+argument_list|)
+argument_list|,
+operator|(
+literal|"%s: pending requests"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
+name|hashdestroy
+argument_list|(
+name|nfsrvhashtbl
+argument_list|,
+name|M_NFSD
+argument_list|,
+name|nfsrvhash
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Look for the request in the cache  * If found then  *    return action and optionally reply  * else  *    insert it in the cache  *  * The rules are as follows:  * - if in progress, return DROP request  * - if completed within DELAY of the current time, return DROP it  * - if completed a longer time ago return REPLY if the reply was cached or  *   return DOIT  * Update/add new request at end of lru list  */
 end_comment
 

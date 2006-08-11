@@ -1639,7 +1639,7 @@ name|EBUSY
 expr_stmt|;
 break|break;
 block|}
-name|callout_stop
+name|callout_drain
 argument_list|(
 operator|&
 name|nfsrv_callout
@@ -1663,6 +1663,10 @@ name|sy_call
 operator|=
 name|nfs_prev_nfssvc_sy_call
 expr_stmt|;
+name|nfsrv_destroycache
+argument_list|()
+expr_stmt|;
+comment|/* Free the server request cache */
 name|mtx_destroy
 argument_list|(
 operator|&
