@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ptrace.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/reboot.h>
 end_include
 
@@ -1937,6 +1943,15 @@ argument_list|,
 name|narg
 argument_list|)
 expr_stmt|;
+name|PTRACESTOP_SC
+argument_list|(
+name|p
+argument_list|,
+name|td
+argument_list|,
+name|S_PT_SCE
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 call|(
@@ -2199,6 +2214,15 @@ argument_list|,
 name|S_SCX
 argument_list|,
 name|code
+argument_list|)
+expr_stmt|;
+name|PTRACESTOP_SC
+argument_list|(
+name|p
+argument_list|,
+name|td
+argument_list|,
+name|S_PT_SCX
 argument_list|)
 expr_stmt|;
 name|WITNESS_WARN
