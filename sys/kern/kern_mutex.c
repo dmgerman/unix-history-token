@@ -1401,6 +1401,11 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+name|curthread
+operator|->
+name|td_locks
+operator|++
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MUTEX_PROFILING
@@ -1518,6 +1523,11 @@ operator|,
 name|line
 operator|)
 argument_list|)
+expr_stmt|;
+name|curthread
+operator|->
+name|td_locks
+operator|--
 expr_stmt|;
 name|WITNESS_UNLOCK
 argument_list|(
@@ -2352,6 +2362,7 @@ if|if
 condition|(
 name|rval
 condition|)
+block|{
 name|WITNESS_LOCK
 argument_list|(
 operator|&
@@ -2370,6 +2381,12 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+name|curthread
+operator|->
+name|td_locks
+operator|++
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|rval
@@ -4137,6 +4154,12 @@ name|lock_class_mtx_spin
 condition|)
 name|spinlock_exit
 argument_list|()
+expr_stmt|;
+else|else
+name|curthread
+operator|->
+name|td_locks
+operator|--
 expr_stmt|;
 comment|/* Tell witness this isn't locked to make it happy. */
 name|WITNESS_UNLOCK
