@@ -369,6 +369,30 @@ parameter_list|)
 value|(!TAILQ_EMPTY(&(m)->md.pv_list))
 end_define
 
+begin_define
+define|#
+directive|define
+name|pmap_mapbios
+parameter_list|(
+name|pa
+parameter_list|,
+name|sz
+parameter_list|)
+value|pmap_mapdev(pa, sz)
+end_define
+
+begin_define
+define|#
+directive|define
+name|pmap_unmapbios
+parameter_list|(
+name|va
+parameter_list|,
+name|sz
+parameter_list|)
+value|pmap_unmapdev(va, sz)
+end_define
+
 begin_function_decl
 name|vm_offset_t
 name|pmap_steal_memory
