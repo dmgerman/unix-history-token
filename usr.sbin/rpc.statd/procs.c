@@ -542,7 +542,9 @@ name|arg
 operator|->
 name|mon_id
 operator|.
-name|mon_name
+name|my_id
+operator|.
+name|my_name
 argument_list|,
 name|arg
 operator|->
