@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2005 Pawel Jakub Dawidek<pjd@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2005-2006 Pawel Jakub Dawidek<pjd@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -1662,6 +1662,11 @@ name|size
 parameter_list|)
 block|{
 name|u_char
+name|off
+index|[
+literal|8
+index|]
+decl_stmt|,
 name|hash
 index|[
 name|SHA256_DIGEST_LENGTH
@@ -1670,6 +1675,27 @@ decl_stmt|;
 name|SHA256_CTX
 name|ctx
 decl_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|G_ELI_FLAG_NATIVE_BYTE_ORDER
+operator|)
+condition|)
+name|le64enc
+argument_list|(
+name|off
+argument_list|,
+operator|(
+name|uint64_t
+operator|)
+name|offset
+argument_list|)
+expr_stmt|;
 comment|/* Copy precalculated SHA256 context for IV-Key. */
 name|bcopy
 argument_list|(
@@ -2395,6 +2421,21 @@ operator|=
 name|md
 operator|->
 name|md_flags
+expr_stmt|;
+comment|/* Backward compatibility. */
+if|if
+condition|(
+name|md
+operator|->
+name|md_version
+operator|<
+literal|2
+condition|)
+name|sc
+operator|->
+name|sc_flags
+operator||=
+name|G_ELI_FLAG_NATIVE_BYTE_ORDER
 expr_stmt|;
 name|sc
 operator|->
@@ -4927,6 +4968,13 @@ parameter_list|,
 name|name
 parameter_list|)
 value|do {					\ 	if (sc->sc_flags& (flag)) {					\ 		if (!first)						\ 			sbuf_printf(sb, ", ");				\ 		else							\ 			first = 0;					\ 		sbuf_printf(sb, name);					\ 	}								\ } while (0)
+name|ADD_FLAG
+argument_list|(
+name|G_ELI_FLAG_NATIVE_BYTE_ORDER
+argument_list|,
+literal|"NATIVE-BYTE-ORDER"
+argument_list|)
+expr_stmt|;
 name|ADD_FLAG
 argument_list|(
 name|G_ELI_FLAG_ONETIME
