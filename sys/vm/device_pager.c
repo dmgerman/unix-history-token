@@ -1190,6 +1190,12 @@ name|PG_FICTITIOUS
 expr_stmt|;
 name|m
 operator|->
+name|oflags
+operator|=
+literal|0
+expr_stmt|;
+name|m
+operator|->
 name|valid
 operator|=
 name|VM_PAGE_BITS_ALL
