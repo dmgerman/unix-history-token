@@ -507,6 +507,11 @@ init|=
 literal|0xd000000
 block|,
 comment|/* proc 0 cleanup*/
+name|SI_SUB_SYSCALLS
+init|=
+literal|0xd800000
+block|,
+comment|/* register system calls */
 name|SI_SUB_KTHREAD_INIT
 init|=
 literal|0xe000000
