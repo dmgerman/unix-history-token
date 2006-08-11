@@ -249,7 +249,7 @@ name|char
 name|em_driver_version
 index|[]
 init|=
-literal|"Version - 6.0.5"
+literal|"Version - 6.1.4"
 decl_stmt|;
 end_decl_stmt
 
@@ -725,6 +725,18 @@ block|{
 literal|0x8086
 block|,
 name|E1000_DEV_ID_82571EB_SERDES
+block|,
+name|PCI_ANY_ID
+block|,
+name|PCI_ANY_ID
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+name|E1000_DEV_ID_82571EB_QUAD_COPPER
 block|,
 name|PCI_ANY_ID
 block|,
@@ -5187,7 +5199,7 @@ name|DEVICE_POLLING
 end_ifdef
 
 begin_comment
-comment|/*********************************************************************  *  *  Legacy polling routine    *  *********************************************************************/
+comment|/*********************************************************************  *  *  Legacy polling routine  *  *********************************************************************/
 end_comment
 
 begin_function
@@ -5357,7 +5369,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  *  Legacy Interrupt Service routine    *  *********************************************************************/
+comment|/*********************************************************************  *  *  Legacy Interrupt Service routine  *  *********************************************************************/
 end_comment
 
 begin_function
@@ -5795,7 +5807,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  *  Fast Interrupt Service routine    *  *********************************************************************/
+comment|/*********************************************************************  *  *  Fast Interrupt Service routine  *  *********************************************************************/
 end_comment
 
 begin_function
@@ -6014,6 +6026,7 @@ name|IFM_ACTIVE
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|adapter
 operator|->
 name|hw
@@ -6021,8 +6034,38 @@ operator|.
 name|media_type
 operator|==
 name|em_media_type_fiber
+operator|)
+operator|||
+operator|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|media_type
+operator|==
+name|em_media_type_internal_serdes
+operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac_type
+operator|==
+name|em_82545
+condition|)
+name|ifmr
+operator|->
+name|ifm_active
+operator||=
+name|IFM_1000_LX
+operator||
+name|IFM_FDX
+expr_stmt|;
+else|else
 name|ifmr
 operator|->
 name|ifm_active
@@ -6182,6 +6225,9 @@ operator|=
 name|AUTONEG_ADV_DEFAULT
 expr_stmt|;
 break|break;
+case|case
+name|IFM_1000_LX
+case|:
 case|case
 name|IFM_1000_SX
 case|:
@@ -10484,6 +10530,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|adapter
 operator|->
 name|hw
@@ -10491,8 +10538,39 @@ operator|.
 name|media_type
 operator|==
 name|em_media_type_fiber
+operator|)
+operator|||
+operator|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|media_type
+operator|==
+name|em_media_type_internal_serdes
+operator|)
 condition|)
 block|{
+name|u_char
+name|fiber_type
+init|=
+name|IFM_1000_SX
+decl_stmt|;
+comment|// default type;
+if|if
+condition|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac_type
+operator|==
+name|em_82545
+condition|)
+name|fiber_type
+operator|=
+name|IFM_1000_LX
+expr_stmt|;
 name|ifmedia_add
 argument_list|(
 operator|&
@@ -10502,7 +10580,7 @@ name|media
 argument_list|,
 name|IFM_ETHER
 operator||
-name|IFM_1000_SX
+name|fiber_type
 operator||
 name|IFM_FDX
 argument_list|,
@@ -10520,7 +10598,7 @@ name|media
 argument_list|,
 name|IFM_ETHER
 operator||
-name|IFM_1000_SX
+name|fiber_type
 argument_list|,
 literal|0
 argument_list|,
@@ -11972,6 +12050,7 @@ break|break;
 default|default:
 if|if
 condition|(
+operator|(
 name|adapter
 operator|->
 name|hw
@@ -11979,6 +12058,17 @@ operator|.
 name|media_type
 operator|==
 name|em_media_type_fiber
+operator|)
+operator|||
+operator|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|media_type
+operator|==
+name|em_media_type_internal_serdes
+operator|)
 condition|)
 name|reg_tipg
 operator|=
@@ -12177,24 +12267,6 @@ expr_stmt|;
 name|reg_tarc
 operator||=
 literal|1
-expr_stmt|;
-if|if
-condition|(
-name|adapter
-operator|->
-name|hw
-operator|.
-name|media_type
-operator|==
-name|em_media_type_internal_serdes
-condition|)
-name|reg_tarc
-operator||=
-operator|(
-literal|1
-operator|<<
-literal|20
-operator|)
 expr_stmt|;
 name|E1000_WRITE_REG
 argument_list|(
