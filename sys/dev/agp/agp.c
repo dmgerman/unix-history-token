@@ -1325,6 +1325,10 @@ expr_stmt|;
 comment|/* Construct the new mode word and tell the hardware */
 name|command
 operator|=
+literal|0
+expr_stmt|;
+name|command
+operator|=
 name|AGP_MODE_SET_RQ
 argument_list|(
 literal|0
@@ -1375,6 +1379,15 @@ argument_list|(
 name|command
 argument_list|,
 name|rate
+argument_list|)
+expr_stmt|;
+name|command
+operator|=
+name|AGP_MODE_SET_MODE_3
+argument_list|(
+name|command
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|command
@@ -1630,6 +1643,10 @@ expr_stmt|;
 comment|/* Construct the new mode word and tell the hardware */
 name|command
 operator|=
+literal|0
+expr_stmt|;
+name|command
+operator|=
 name|AGP_MODE_SET_RQ
 argument_list|(
 literal|0
@@ -1783,6 +1800,11 @@ expr_stmt|;
 comment|/* 	 * Check display and bridge for AGP v3 support.  AGP v3 allows 	 * more variety in topology than v2, e.g. multiple AGP devices 	 * attached to one bridge, or multiple AGP bridges in one 	 * system.  This doesn't attempt to address those situations, 	 * but should work fine for a classic single AGP slot system 	 * with AGP v3. 	 */
 if|if
 condition|(
+name|AGP_MODE_GET_MODE_3
+argument_list|(
+name|mode
+argument_list|)
+operator|&&
 name|AGP_MODE_GET_MODE_3
 argument_list|(
 name|tstatus
