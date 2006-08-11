@@ -405,7 +405,7 @@ parameter_list|,
 name|ret
 parameter_list|)
 define|\
-value|static ret FUNC_EXP(name)(void) __used;		\ 	static ret FUNC_INT(name)(void) __used;		\ 	WEAK_REF(FUNC_EXP(name), name);				\ 	WEAK_REF(FUNC_INT(name), __CONCAT(_, name));		\ 	typedef ret (*FUNC_TYPE(name))(void);			\ 	static ret FUNC_EXP(name)(void)				\ 	{							\ 		FUNC_TYPE(name) func;				\ 		func = (FUNC_TYPE(name))__thr_jtable[idx][0];	\ 		return (func());				\ 	}							\ 	static ret FUNC_INT(name)(void)				\ 	{							\ 		FUNC_TYPE(name) func;				\ 		func = (FUNC_TYPE(name))__thr_jtable[idx][1];	\ 		return (func());				\ 	}
+value|static ret FUNC_EXP(name)(void) __used;			\ 	static ret FUNC_INT(name)(void) __used;			\ 	WEAK_REF(FUNC_EXP(name), name);				\ 	WEAK_REF(FUNC_INT(name), __CONCAT(_, name));		\ 	typedef ret (*FUNC_TYPE(name))(void);			\ 	static ret FUNC_EXP(name)(void)				\ 	{							\ 		FUNC_TYPE(name) func;				\ 		func = (FUNC_TYPE(name))__thr_jtable[idx][0];	\ 		return (func());				\ 	}							\ 	static ret FUNC_INT(name)(void)				\ 	{							\ 		FUNC_TYPE(name) func;				\ 		func = (FUNC_TYPE(name))__thr_jtable[idx][1];	\ 		return (func());				\ 	}
 end_define
 
 begin_define
@@ -520,13 +520,15 @@ argument_list|)
 end_macro
 
 begin_macro
-name|STUB_FUNC1
+name|STUB_FUNC2
 argument_list|(
 argument|pthread_cond_wait
 argument_list|,
 argument|PJT_COND_WAIT
 argument_list|,
 argument|int
+argument_list|,
+argument|void *
 argument_list|,
 argument|void *
 argument_list|)
