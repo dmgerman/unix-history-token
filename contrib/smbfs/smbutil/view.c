@@ -552,7 +552,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"usage: smbutil view [connection optinons] //[user@]server\n"
+literal|"usage: smbutil view [connection options] //[user@]server\n"
 argument_list|)
 expr_stmt|;
 name|exit
