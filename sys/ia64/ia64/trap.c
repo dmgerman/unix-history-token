@@ -3905,6 +3905,29 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|CTR4
+argument_list|(
+name|KTR_SYSC
+argument_list|,
+literal|"syscall enter thread %p pid %d proc %s code %d"
+argument_list|,
+name|td
+argument_list|,
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_pid
+argument_list|,
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_comm
+argument_list|,
+name|code
+argument_list|)
+expr_stmt|;
 name|td
 operator|->
 name|td_retval
@@ -4101,6 +4124,7 @@ name|error
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Handle reschedule and other end-of-syscall issues 	 */
 name|userret
 argument_list|(
 name|td
@@ -4108,6 +4132,29 @@ argument_list|,
 name|tf
 argument_list|,
 name|sticks
+argument_list|)
+expr_stmt|;
+name|CTR4
+argument_list|(
+name|KTR_SYSC
+argument_list|,
+literal|"syscall exit thread %p pid %d proc %s code %d"
+argument_list|,
+name|td
+argument_list|,
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_pid
+argument_list|,
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_comm
+argument_list|,
+name|code
 argument_list|)
 expr_stmt|;
 ifdef|#
