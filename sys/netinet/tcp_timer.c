@@ -1134,6 +1134,9 @@ name|tw
 parameter_list|,
 name|int
 name|timeo
+parameter_list|,
+name|int
+name|rearm
 parameter_list|)
 block|{
 name|int
@@ -1159,11 +1162,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|tw
-operator|->
-name|tw_time
-operator|!=
-literal|0
+name|rearm
 condition|)
 name|LIST_REMOVE
 argument_list|(
@@ -1228,14 +1227,6 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|tw
-operator|->
-name|tw_time
-operator|!=
-literal|0
-condition|)
 name|LIST_REMOVE
 argument_list|(
 name|tw
