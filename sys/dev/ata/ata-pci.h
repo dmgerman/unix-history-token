@@ -2240,8 +2240,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|NV4LONG
-value|0x0030
+name|NVQ
+value|0x0020
 end_define
 
 begin_define

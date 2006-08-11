@@ -17806,7 +17806,9 @@ literal|0
 block|,
 literal|0
 block|,
-name|NV4LONG
+name|NV4
+operator||
+name|NVQ
 block|,
 name|ATA_SA300
 block|,
@@ -17820,7 +17822,9 @@ literal|0
 block|,
 literal|0
 block|,
-name|NV4LONG
+name|NV4
+operator||
+name|NVQ
 block|,
 name|ATA_SA300
 block|,
@@ -17848,7 +17852,9 @@ literal|0
 block|,
 literal|0
 block|,
-name|NV4LONG
+name|NV4
+operator||
+name|NVQ
 block|,
 name|ATA_SA300
 block|,
@@ -17862,7 +17868,9 @@ literal|0
 block|,
 literal|0
 block|,
-name|NV4LONG
+name|NV4
+operator||
+name|NVQ
 block|,
 name|ATA_SA300
 block|,
@@ -18109,7 +18117,7 @@ name|chip
 operator|->
 name|cfg2
 operator|&
-name|NV4LONG
+name|NVQ
 condition|)
 block|{
 comment|/* clear interrupt status */
@@ -18457,7 +18465,7 @@ name|chip
 operator|->
 name|cfg2
 operator|&
-name|NV4LONG
+name|NVQ
 condition|?
 literal|4
 else|:
@@ -18476,7 +18484,7 @@ name|chip
 operator|->
 name|cfg2
 operator|&
-name|NV4LONG
+name|NVQ
 condition|)
 block|{
 name|status
