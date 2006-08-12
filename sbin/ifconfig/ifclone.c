@@ -588,6 +588,15 @@ argument_list|)
 block|,
 name|DEF_CMD
 argument_list|(
+literal|"plumb"
+argument_list|,
+literal|0
+argument_list|,
+name|clone_create
+argument_list|)
+block|,
+name|DEF_CMD
+argument_list|(
 literal|"unplumb"
 argument_list|,
 literal|0
