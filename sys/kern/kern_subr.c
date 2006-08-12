@@ -335,16 +335,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|vm_page_sleep_if_busy
 argument_list|(
 name|user_pg
 argument_list|,
-literal|1
+name|TRUE
 argument_list|,
 literal|"vm_pgmoveco"
 argument_list|)
@@ -352,6 +349,9 @@ condition|)
 goto|goto
 name|retry
 goto|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|pmap_remove_all
 argument_list|(
 name|user_pg
