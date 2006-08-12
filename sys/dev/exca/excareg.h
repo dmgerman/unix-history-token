@@ -1919,6 +1919,24 @@ value|0x20
 end_define
 
 begin_comment
+comment|/*  * TOPIC specific registers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXCA_TOPIC97_CTRL
+value|0x3e
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXCA_TOPIC97_CTRL_LV_MASK
+value|0x03
+end_define
+
+begin_comment
 comment|/* Plug and play */
 end_comment
 
