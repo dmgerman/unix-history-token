@@ -503,14 +503,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBBR_TOPIC_SOCKETCTRL
+name|TOPIC95_SOCKETCTRL
 value|0x90
 end_define
 
 begin_define
 define|#
 directive|define
-name|CBBM_TOPIC_SOCKETCTRL_SCR_IRQSEL
+name|TOPIC95_SOCKETCTRL_SCR_IRQSEL
 value|0x00000001
 end_define
 
@@ -525,7 +525,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBBR_TOPIC_ZV_CONTROL
+name|TOPIC97_ZV_CONTROL
 value|0x9c
 end_define
 
@@ -536,7 +536,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBBM_TOPIC_ZVC_ENABLE
+name|TOPIC97_ZVC_ENABLE
 value|0x1
 end_define
 
@@ -547,7 +547,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBBR_TOPIC_SLOTCTRL
+name|TOPIC_SLOTCTRL
 value|0xa0
 end_define
 
@@ -558,56 +558,56 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBBM_TOPIC_SLOTCTRL_SLOTON
+name|TOPIC_SLOTCTRL_SLOTON
 value|0x80
 end_define
 
 begin_define
 define|#
 directive|define
-name|CBBM_TOPIC_SLOTCTRL_SLOTEN
+name|TOPIC_SLOTCTRL_SLOTEN
 value|0x40
 end_define
 
 begin_define
 define|#
 directive|define
-name|CBBM_TOPIC_SLOTCTRL_ID_LOCK
+name|TOPIC_SLOTCTRL_ID_LOCK
 value|0x20
 end_define
 
 begin_define
 define|#
 directive|define
-name|CBBM_TOPIC_SLOTCTRL_ID_WP
+name|TOPIC_SLOTCTRL_ID_WP
 value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|CBBM_TOPIC_SLOTCTRL_PORT_MASK
+name|TOPIC_SLOTCTRL_PORT_MASK
 value|0x0c
 end_define
 
 begin_define
 define|#
 directive|define
-name|CBBM_TOPIC_SLOTCTRL_PORT_SHIFT
+name|TOPIC_SLOTCTRL_PORT_SHIFT
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|CBBM_TOPIC_SLOTCTRL_OSF_MASK
+name|TOPIC_SLOTCTRL_OSF_MASK
 value|0x03
 end_define
 
 begin_define
 define|#
 directive|define
-name|CBBM_TOPIC_SLOTCTRL_OSF_SHIFT
+name|TOPIC_SLOTCTRL_OSF_SHIFT
 value|0
 end_define
 
@@ -618,7 +618,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBBR_TOPIC_INTCTRL
+name|TOPIC_INTCTRL
 value|0xa1
 end_define
 
@@ -629,21 +629,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBBM_TOPIC_INTCTRL_INTB
+name|TOPIC_INTCTRL_INTB
 value|0x20
 end_define
 
 begin_define
 define|#
 directive|define
-name|CBBM_TOPIC_INTCTRL_INTA
+name|TOPIC_INTCTRL_INTA
 value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|CBBM_TOPIC_INTCTRL_INT_MASK
+name|TOPIC_INTCTRL_INT_MASK
 value|0x30
 end_define
 
@@ -654,14 +654,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBBM_TOPIC_INTCTRL_CLOCK_MASK
+name|TOPIC95_INTCTRL_CLOCK_MASK
 value|0x0c
 end_define
 
 begin_define
 define|#
 directive|define
-name|CBBM_TOPIC_INTCTRL_CLOCK_2
+name|TOPIC95_INTCTRL_CLOCK_2
 value|0x08
 end_define
 
@@ -672,7 +672,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBBM_TOPIC_INTCTRL_CLOCK_1
+name|TOPIC95_INTCTRL_CLOCK_1
 value|0x04
 end_define
 
@@ -683,7 +683,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBBM_TOPIC_INTCTRL_CLOCK_0
+name|TOPIC95_INTCTRL_CLOCK_0
 value|0x00
 end_define
 
@@ -698,21 +698,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBBM_TOPIC_INTCTRL_STSIRQNP
+name|TOPIC97_INTCTRL_STSIRQNP
 value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|CBBM_TOPIC_INTCTRL_IRQNP
+name|TOPIC97_INTCTRL_IRQNP
 value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|CBBM_TOPIC_INTCTRL_INTIRQSEL
+name|TOPIC97_INTCTRL_INTIRQSEL
 value|0x01
 end_define
 
@@ -723,7 +723,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBBR_TOPIC_CDC
+name|TOPIC_CDC
 value|0xa3
 end_define
 
@@ -734,29 +734,128 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CBBM_TOPIC_CDC_CARDBUS
+name|TOPIC_CDC_CARDBUS
 value|0x80
 end_define
 
 begin_define
 define|#
 directive|define
-name|CBBM_TOPIC_CDC_VS1
+name|TOPIC_CDC_VS1
 value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|CBBM_TOPIC_CDC_VS2
+name|TOPIC_CDC_VS2
 value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|CBBM_TOPIC_CDC_SWDETECT
+name|TOPIC_CDC_SWDETECT
 value|0x01
+end_define
+
+begin_comment
+comment|/* TOPIC97+? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TOPIC_REG_CTRL
+value|0xa4
+end_define
+
+begin_comment
+comment|/* 4 bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TOPIC_REG_CTRL_RESUME_RESET
+value|0x80000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPIC_REG_CTRL_REMOVE_RESET
+value|0x40000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPIC97_REG_CTRL_CLKRUN_ENA
+value|0x20000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPIC97_REG_CTRL_TESTMODE
+value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPIC97_REG_CTRL_IOPLUP
+value|0x08000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPIC_REG_CTRL_BUFOFF_PWROFF
+value|0x02000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPIC_REG_CTRL_BUFOFF_SIGOFF
+value|0x01000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPIC97_REG_CTRL_CB_DEV_MASK
+value|0x0000f800
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPIC97_REG_CTRL_CB_DEV_SHIFT
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPIC97_REG_CTRL_RI_DISABLE
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPIC97_REG_CTRL_CAUDIO_OFF
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPIC_REG_CTRL_CAUDIO_INVERT
+value|0x00000001
 end_define
 
 begin_comment
