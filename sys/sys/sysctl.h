@@ -1102,6 +1102,54 @@ define|\
 value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_UINT|(access),	    \ 	ptr, val, sysctl_handle_int, "IU", __DESCR(descr))
 end_define
 
+begin_define
+define|#
+directive|define
+name|SYSCTL_XINT
+parameter_list|(
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|ptr
+parameter_list|,
+name|val
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_UINT|(access), \ 		ptr, val, sysctl_handle_int, "IX", descr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_ADD_XINT
+parameter_list|(
+name|ctx
+parameter_list|,
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|ptr
+parameter_list|,
+name|val
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_UINT|(access),	    \ 	ptr, val, sysctl_handle_int, "IX", __DESCR(descr))
+end_define
+
 begin_comment
 comment|/* Oid for a long.  The pointer must be non NULL. */
 end_comment
@@ -1200,6 +1248,52 @@ name|descr
 parameter_list|)
 define|\
 value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_ULONG|(access),	    \ 	ptr, 0, sysctl_handle_long, "LU", __DESCR(descr))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_XLONG
+parameter_list|(
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|ptr
+parameter_list|,
+name|val
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_ULONG|(access), \ 		ptr, val, sysctl_handle_long, "LX", __DESCR(descr))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_ADD_XLONG
+parameter_list|(
+name|ctx
+parameter_list|,
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|ptr
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_ULONG|(access),	    \ 	ptr, 0, sysctl_handle_long, "LX", __DESCR(descr))
 end_define
 
 begin_comment
