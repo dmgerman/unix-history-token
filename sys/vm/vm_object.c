@@ -2373,7 +2373,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_object_page_clean  *  *	Clean all dirty pages in the specified range of object.  Leaves page   * 	on whatever queue it is currently on.   If NOSYNC is set then do not  *	write out pages with PG_NOSYNC set (originally comes from MAP_NOSYNC),  *	leaving the object dirty.  *  *	When stuffing pages asynchronously, allow clustering.  XXX we need a  *	synchronous clustering mode implementation.  *  *	Odd semantics: if start == end, we clean everything.  *  *	The object must be locked.  */
+comment|/*  *	vm_object_page_clean  *  *	Clean all dirty pages in the specified range of object.  Leaves page   * 	on whatever queue it is currently on.   If NOSYNC is set then do not  *	write out pages with VPO_NOSYNC set (originally comes from MAP_NOSYNC),  *	leaving the object dirty.  *  *	When stuffing pages asynchronously, allow clustering.  XXX we need a  *	synchronous clustering mode implementation.  *  *	Odd semantics: if start == end, we clean everything.  *  *	The object must be locked.  */
 end_comment
 
 begin_function
@@ -2651,9 +2651,9 @@ operator|&&
 operator|(
 name|p
 operator|->
-name|flags
+name|oflags
 operator|&
-name|PG_NOSYNC
+name|VPO_NOSYNC
 operator|)
 condition|)
 block|{
@@ -2757,9 +2757,9 @@ operator|&&
 operator|(
 name|p
 operator|->
-name|flags
+name|oflags
 operator|&
-name|PG_NOSYNC
+name|VPO_NOSYNC
 operator|)
 condition|)
 name|clearobjflags
@@ -2994,9 +2994,9 @@ operator|&&
 operator|(
 name|p
 operator|->
-name|flags
+name|oflags
 operator|&
-name|PG_NOSYNC
+name|VPO_NOSYNC
 operator|)
 condition|)
 block|{

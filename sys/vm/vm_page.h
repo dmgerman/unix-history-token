@@ -207,6 +207,17 @@ begin_comment
 comment|/* swap I/O in progress on page */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VPO_NOSYNC
+value|0x0400
+end_define
+
+begin_comment
+comment|/* do not collect for syncer */
+end_comment
+
 begin_comment
 comment|/* Make sure that u_long is at least 64 bits when PAGE_SIZE is 32K. */
 end_comment
@@ -623,17 +634,6 @@ end_define
 
 begin_comment
 comment|/* page will be checked for cleaning */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PG_NOSYNC
-value|0x0400
-end_define
-
-begin_comment
-comment|/* do not collect for syncer */
 end_comment
 
 begin_define
