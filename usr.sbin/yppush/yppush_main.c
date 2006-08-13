@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<time.h>
 end_include
 
@@ -196,6 +202,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* Master NIS server for said domain. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|skip_master
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Do not attempt to push map to master. */
 end_comment
 
 begin_decl_stmt
@@ -1790,6 +1808,24 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|skip_master
+operator|&&
+name|strcasecmp
+argument_list|(
+name|server
+argument_list|,
+name|yppush_master
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* 	 * Restrict the number of concurrent jobs. If yppush_jobs number 	 * of jobs have already been dispatched and are still pending, 	 * wait for one of them to finish so we can reuse its slot. 	 */
 if|if
 condition|(
@@ -2291,7 +2327,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|strncmp
+name|strncasecmp
 argument_list|(
 name|myname
 argument_list|,
@@ -2303,7 +2339,23 @@ name|data
 operator|.
 name|size
 argument_list|)
+operator|==
+literal|0
 condition|)
+block|{
+comment|/* I am master server, and no explicit host list was 		   specified: do not push map to myself -- this will 		   fail with YPPUSH_AGE anyway. */
+if|if
+condition|(
+name|yppush_hostlist
+operator|==
+name|NULL
+condition|)
+name|skip_master
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
 block|{
 name|yp_error
 argument_list|(
