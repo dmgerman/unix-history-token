@@ -456,36 +456,6 @@ parameter_list|)
 value|do	{		\ 	void	*addr;						\ 	addr = (void *)(sc->acpi_wakeaddr + offset);		\ 	bcopy(&(val), addr, sizeof(type));			\ } while (0)
 end_define
 
-begin_comment
-comment|/* Turn off bits 1&2 of the PIT, stopping the beep. */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|acpi_stop_beep
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|)
-block|{
-name|outb
-argument_list|(
-literal|0x61
-argument_list|,
-name|inb
-argument_list|(
-literal|0x61
-argument_list|)
-operator|&
-operator|~
-literal|0x3
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_function
 name|int
 name|acpi_sleep_machdep
@@ -951,22 +921,6 @@ expr_stmt|;
 name|write_eflags
 argument_list|(
 name|ef
-argument_list|)
-expr_stmt|;
-comment|/* If we beeped, turn it off after a delay. */
-if|if
-condition|(
-name|acpi_resume_beep
-condition|)
-name|timeout
-argument_list|(
-name|acpi_stop_beep
-argument_list|,
-name|NULL
-argument_list|,
-literal|3
-operator|*
-name|hz
 argument_list|)
 expr_stmt|;
 return|return
