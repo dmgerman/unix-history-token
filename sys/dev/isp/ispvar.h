@@ -2423,7 +2423,8 @@ name|IS_23XX
 parameter_list|(
 name|isp
 parameter_list|)
-value|((isp)->isp_type>= ISP_HA_FC_2300)
+define|\
+value|((isp)->isp_type>= ISP_HA_FC_2300&& (isp)->isp_type< ISP_HA_FC_2400)
 end_define
 
 begin_define
