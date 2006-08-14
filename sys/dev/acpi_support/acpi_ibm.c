@@ -4417,13 +4417,6 @@ argument_list|,
 name|notify
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"IBM:NOTIFY:%x\n"
-argument_list|,
-name|notify
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|notify
@@ -4461,13 +4454,6 @@ operator|==
 literal|0
 condition|)
 break|break;
-name|printf
-argument_list|(
-literal|"notify:%x\n"
-argument_list|,
-name|event
-argument_list|)
-expr_stmt|;
 name|type
 operator|=
 operator|(
