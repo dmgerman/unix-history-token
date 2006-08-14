@@ -7191,7 +7191,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\r%ld/%ld packets received (%.0f%%)"
+literal|"\r%ld/%ld packets received (%.1f%%)"
 argument_list|,
 name|nreceived
 argument_list|,
@@ -7365,12 +7365,8 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%d%% packet loss"
+literal|"%.1f%% packet loss"
 argument_list|,
-call|(
-name|int
-call|)
-argument_list|(
 operator|(
 operator|(
 name|ntransmitted
@@ -7378,11 +7374,10 @@ operator|-
 name|nreceived
 operator|)
 operator|*
-literal|100
+literal|100.0
 operator|)
 operator|/
 name|ntransmitted
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
