@@ -10128,22 +10128,6 @@ name|newpte
 operator||=
 name|pgeflag
 expr_stmt|;
-comment|/* Preserve any caching attributes. */
-comment|/* XXX: Should this be conditional on something? */
-name|newpte
-operator||=
-operator|(
-name|origpte
-operator|&
-operator|(
-name|PG_PTE_PAT
-operator||
-name|PG_NC_PCD
-operator||
-name|PG_NC_PWT
-operator|)
-operator|)
-expr_stmt|;
 comment|/* 	 * if the mapping or permission bits are different, we need 	 * to update the pte. 	 */
 if|if
 condition|(
