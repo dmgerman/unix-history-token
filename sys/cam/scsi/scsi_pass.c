@@ -1403,7 +1403,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"can't do nonblocking accesss\n"
+literal|"can't do nonblocking access\n"
 argument_list|)
 expr_stmt|;
 name|splx
