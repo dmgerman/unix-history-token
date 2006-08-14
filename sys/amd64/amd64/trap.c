@@ -1721,8 +1721,6 @@ name|NULL
 decl_stmt|;
 name|vm_map_t
 name|map
-init|=
-literal|0
 decl_stmt|;
 name|int
 name|rv
