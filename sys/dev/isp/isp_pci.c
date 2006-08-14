@@ -5196,7 +5196,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|(((struct isp_pcisoftc *)a)->pci_poff[((x)& _BLK_REG_MASK)>> \ 	_BLK_REG_SHFT] + ((x)& 0xff))
+value|(((struct isp_pcisoftc *)a)->pci_poff[((x)& _BLK_REG_MASK)>> \ 	_BLK_REG_SHFT] + ((x)& 0xfff))
 end_define
 
 begin_define
