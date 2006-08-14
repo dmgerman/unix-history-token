@@ -3549,7 +3549,7 @@ name|sc
 operator|->
 name|nfe_parent_tag
 argument_list|,
-name|PAGE_SIZE
+name|ETHER_ALIGN
 argument_list|,
 literal|0
 argument_list|,
@@ -3717,7 +3717,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"nfe%d: could not load rx buf DMA map"
+literal|"nfe%d: could not load rx buf DMA map\n"
 argument_list|,
 name|sc
 operator|->
