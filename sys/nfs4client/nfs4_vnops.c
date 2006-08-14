@@ -12259,11 +12259,6 @@ name|ucred
 modifier|*
 name|cr
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
 name|int
 name|error
 init|=
@@ -12303,24 +12298,6 @@ name|bp
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_ASYNC
-condition|)
-name|td
-operator|=
-name|NULL
-expr_stmt|;
-else|else
-name|td
-operator|=
-name|curthread
-expr_stmt|;
-comment|/* XXX */
 if|if
 condition|(
 name|bp
@@ -12370,7 +12347,7 @@ name|bp
 argument_list|,
 name|NOCRED
 argument_list|,
-name|td
+name|curthread
 argument_list|)
 condition|)
 name|error
@@ -12385,7 +12362,7 @@ name|bp
 argument_list|,
 name|cr
 argument_list|,
-name|td
+name|curthread
 argument_list|)
 expr_stmt|;
 return|return
