@@ -4423,8 +4423,10 @@ name|notify
 operator|!=
 literal|0x80
 condition|)
-name|printf
+name|device_printf
 argument_list|(
+name|dev
+argument_list|,
 literal|"Unknown notify\n"
 argument_list|)
 expr_stmt|;
@@ -4498,8 +4500,10 @@ operator|)
 operator|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
+name|dev
+argument_list|,
 literal|"Unknown key %d\n"
 argument_list|,
 name|arg
