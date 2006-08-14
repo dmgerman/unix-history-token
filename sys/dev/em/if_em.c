@@ -12463,7 +12463,7 @@ name|adapter
 operator|->
 name|link_duplex
 operator|==
-literal|1
+name|FULL_DUPLEX
 condition|)
 block|{
 name|reg_tctl
