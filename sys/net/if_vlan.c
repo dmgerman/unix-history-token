@@ -5381,7 +5381,7 @@ name|if_vlantrunk
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 			 * XXXGL: If some ithread has already entered 			 * vlan_input() and is now blocked on the trunk 			 * lock, then it should preempt us right after 			 * unlock and finish its work. Then we will acquire 			 * lock again in trunk_destroy(). 			 * XXX: not true in case of VLAN_ARRAY 			 */
+comment|/* 			 * XXXGL: If some ithread has already entered 			 * vlan_input() and is now blocked on the trunk 			 * lock, then it should preempt us right after 			 * unlock and finish its work. Then we will acquire 			 * lock again in trunk_destroy(). 			 */
 name|TRUNK_UNLOCK
 argument_list|(
 name|trunk
