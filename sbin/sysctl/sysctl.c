@@ -309,9 +309,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: sysctl [-bdehNnox] name[=value] ..."
+literal|"usage: sysctl [-bdehNnoqx] name[=value] ..."
 argument_list|,
-literal|"       sysctl [-bdehNnox] -a"
+literal|"       sysctl [-bdehNnoqx] -a"
 argument_list|)
 expr_stmt|;
 name|exit
