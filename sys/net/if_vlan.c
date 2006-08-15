@@ -329,6 +329,10 @@ name|ifvm_mintu
 decl_stmt|;
 comment|/* min transmission unit */
 name|uint16_t
+name|ifvm_proto
+decl_stmt|;
+comment|/* encapsulation ethertype */
+name|uint16_t
 name|ifvm_tag
 decl_stmt|;
 comment|/* tag to apply on packets leaving if */
@@ -351,6 +355,13 @@ expr_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|ifv_proto
+value|ifv_mib.ifvm_proto
+end_define
 
 begin_define
 define|#
@@ -4158,7 +4169,9 @@ name|evl_encap_proto
 operator|=
 name|htons
 argument_list|(
-name|ETHERTYPE_VLAN
+name|ifv
+operator|->
+name|ifv_proto
 argument_list|)
 expr_stmt|;
 name|evl
@@ -4415,31 +4428,6 @@ argument_list|,
 expr|struct
 name|ether_vlan_header
 operator|*
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|ntohs
-argument_list|(
-name|evl
-operator|->
-name|evl_encap_proto
-argument_list|)
-operator|==
-name|ETHERTYPE_VLAN
-argument_list|,
-operator|(
-literal|"%s: bad encapsulation protocol (%u)"
-operator|,
-name|__func__
-operator|,
-name|ntohs
-argument_list|(
-name|evl
-operator|->
-name|evl_encap_proto
-argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 name|tag
@@ -4918,6 +4906,12 @@ name|done
 goto|;
 endif|#
 directive|endif
+name|ifv
+operator|->
+name|ifv_proto
+operator|=
+name|ETHERTYPE_VLAN
+expr_stmt|;
 name|ifv
 operator|->
 name|ifv_encaplen
