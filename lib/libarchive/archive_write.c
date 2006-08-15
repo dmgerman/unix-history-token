@@ -707,6 +707,12 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+name|a
+operator|->
+name|skip_file_dev
+operator|!=
+literal|0
+operator|&&
 name|archive_entry_dev
 argument_list|(
 name|entry
@@ -715,6 +721,12 @@ operator|==
 name|a
 operator|->
 name|skip_file_dev
+operator|&&
+name|a
+operator|->
+name|skip_file_ino
+operator|!=
+literal|0
 operator|&&
 name|archive_entry_ino
 argument_list|(
