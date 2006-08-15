@@ -6177,8 +6177,6 @@ name|cmd
 argument_list|)
 expr_stmt|;
 comment|/* Wait for completion. */
-operator|*
-operator|/
 for|for
 control|(
 name|j
