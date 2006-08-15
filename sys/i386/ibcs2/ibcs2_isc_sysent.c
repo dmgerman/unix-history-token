@@ -82,6 +82,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 0 = nosys */
@@ -95,6 +101,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 1 = isc_setostype */
@@ -111,6 +123,12 @@ operator|)
 name|ibcs2_rename
 block|,
 name|AUE_RENAME
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 2 = ibcs2_rename */
@@ -127,6 +145,12 @@ operator|)
 name|ibcs2_sigaction
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 3 = ibcs2_sigaction */
@@ -143,6 +167,12 @@ operator|)
 name|ibcs2_sigprocmask
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 4 = ibcs2_sigprocmask */
@@ -159,6 +189,12 @@ operator|)
 name|ibcs2_sigpending
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 5 = ibcs2_sigpending */
@@ -175,6 +211,12 @@ operator|)
 name|getgroups
 block|,
 name|AUE_GETGROUPS
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 6 = getgroups */
@@ -191,6 +233,12 @@ operator|)
 name|setgroups
 block|,
 name|AUE_SETGROUPS
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 7 = setgroups */
@@ -207,6 +255,12 @@ operator|)
 name|ibcs2_pathconf
 block|,
 name|AUE_PATHCONF
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 8 = ibcs2_pathconf */
@@ -223,6 +277,12 @@ operator|)
 name|ibcs2_fpathconf
 block|,
 name|AUE_FPATHCONF
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 9 = ibcs2_fpathconf */
@@ -236,6 +296,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 10 = nosys */
@@ -252,6 +318,12 @@ operator|)
 name|ibcs2_wait
 block|,
 name|AUE_WAIT4
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 11 = ibcs2_wait */
@@ -265,6 +337,12 @@ operator|)
 name|setsid
 block|,
 name|AUE_SETSID
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 12 = setsid */
@@ -278,6 +356,12 @@ operator|)
 name|getpid
 block|,
 name|AUE_GETPID
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 13 = getpid */
@@ -291,6 +375,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 14 = isc_adduser */
@@ -304,6 +394,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 15 = isc_setuser */
@@ -320,6 +416,12 @@ operator|)
 name|ibcs2_sysconf
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 16 = ibcs2_sysconf */
@@ -336,6 +438,12 @@ operator|)
 name|ibcs2_sigsuspend
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 17 = ibcs2_sigsuspend */
@@ -352,6 +460,12 @@ operator|)
 name|ibcs2_symlink
 block|,
 name|AUE_SYMLINK
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 18 = ibcs2_symlink */
@@ -368,6 +482,12 @@ operator|)
 name|ibcs2_readlink
 block|,
 name|AUE_READLINK
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 19 = ibcs2_readlink */
@@ -381,6 +501,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 20 = isc_getmajor */

@@ -88,6 +88,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 0 = unused */
@@ -104,6 +110,12 @@ operator|)
 name|sys_exit
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 1 = exit */
@@ -117,6 +129,12 @@ operator|)
 name|fork
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 2 = fork */
@@ -133,6 +151,12 @@ operator|)
 name|read
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 3 = read */
@@ -149,6 +173,12 @@ operator|)
 name|write
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 4 = write */
@@ -165,6 +195,12 @@ operator|)
 name|svr4_sys_open
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 5 = svr4_sys_open */
@@ -181,6 +217,12 @@ operator|)
 name|close
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 6 = close */
@@ -197,6 +239,12 @@ operator|)
 name|svr4_sys_wait
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 7 = svr4_sys_wait */
@@ -213,6 +261,12 @@ operator|)
 name|svr4_sys_creat
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 8 = svr4_sys_creat */
@@ -229,6 +283,12 @@ operator|)
 name|link
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 9 = link */
@@ -245,6 +305,12 @@ operator|)
 name|unlink
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 10 = unlink */
@@ -261,6 +327,12 @@ operator|)
 name|svr4_sys_execv
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 11 = svr4_sys_execv */
@@ -277,6 +349,12 @@ operator|)
 name|chdir
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 12 = chdir */
@@ -293,6 +371,12 @@ operator|)
 name|svr4_sys_time
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 13 = svr4_sys_time */
@@ -309,6 +393,12 @@ operator|)
 name|svr4_sys_mknod
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 14 = svr4_sys_mknod */
@@ -325,6 +415,12 @@ operator|)
 name|chmod
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 15 = chmod */
@@ -341,6 +437,12 @@ operator|)
 name|chown
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 16 = chown */
@@ -357,6 +459,12 @@ operator|)
 name|svr4_sys_break
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 17 = svr4_sys_break */
@@ -373,6 +481,12 @@ operator|)
 name|svr4_sys_stat
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 18 = svr4_sys_stat */
@@ -389,6 +503,12 @@ operator|)
 name|lseek
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 19 = lseek */
@@ -402,6 +522,12 @@ operator|)
 name|getpid
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 20 = getpid */
@@ -415,6 +541,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 21 = old_mount */
@@ -428,6 +560,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 22 = sysv_umount */
@@ -444,6 +582,12 @@ operator|)
 name|setuid
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 23 = setuid */
@@ -457,6 +601,12 @@ operator|)
 name|getuid
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 24 = getuid */
@@ -470,6 +620,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 25 = stime */
@@ -483,6 +639,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 26 = ptrace */
@@ -499,6 +661,12 @@ operator|)
 name|svr4_sys_alarm
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 27 = svr4_sys_alarm */
@@ -515,6 +683,12 @@ operator|)
 name|svr4_sys_fstat
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 28 = svr4_sys_fstat */
@@ -528,6 +702,12 @@ operator|)
 name|svr4_sys_pause
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 29 = svr4_sys_pause */
@@ -544,6 +724,12 @@ operator|)
 name|svr4_sys_utime
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 30 = svr4_sys_utime */
@@ -557,6 +743,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 31 = stty */
@@ -570,6 +762,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 32 = gtty */
@@ -586,6 +784,12 @@ operator|)
 name|svr4_sys_access
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 33 = svr4_sys_access */
@@ -602,6 +806,12 @@ operator|)
 name|svr4_sys_nice
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 34 = svr4_sys_nice */
@@ -615,6 +825,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 35 = statfs */
@@ -628,6 +844,12 @@ operator|)
 name|sync
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 36 = sync */
@@ -644,6 +866,12 @@ operator|)
 name|svr4_sys_kill
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 37 = svr4_sys_kill */
@@ -657,6 +885,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 38 = fstatfs */
@@ -673,6 +907,12 @@ operator|)
 name|svr4_sys_pgrpsys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 39 = svr4_sys_pgrpsys */
@@ -686,6 +926,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 40 = xenix */
@@ -702,6 +948,12 @@ operator|)
 name|dup
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 41 = dup */
@@ -715,6 +967,12 @@ operator|)
 name|pipe
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 42 = pipe */
@@ -731,6 +989,12 @@ operator|)
 name|svr4_sys_times
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 43 = svr4_sys_times */
@@ -744,6 +1008,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 44 = profil */
@@ -757,6 +1027,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 45 = plock */
@@ -773,6 +1049,12 @@ operator|)
 name|setgid
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 46 = setgid */
@@ -786,6 +1068,12 @@ operator|)
 name|getgid
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 47 = getgid */
@@ -802,6 +1090,12 @@ operator|)
 name|svr4_sys_signal
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 48 = svr4_sys_signal */
@@ -818,6 +1112,12 @@ operator|)
 name|svr4_sys_msgsys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 49 = svr4_sys_msgsys */
@@ -834,6 +1134,12 @@ operator|)
 name|svr4_sys_sysarch
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 50 = svr4_sys_sysarch */
@@ -847,6 +1153,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 51 = acct */
@@ -863,6 +1175,12 @@ operator|)
 name|svr4_sys_shmsys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 52 = svr4_sys_shmsys */
@@ -879,6 +1197,12 @@ operator|)
 name|svr4_sys_semsys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 53 = svr4_sys_semsys */
@@ -895,6 +1219,12 @@ operator|)
 name|svr4_sys_ioctl
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 54 = svr4_sys_ioctl */
@@ -908,6 +1238,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 55 = uadmin */
@@ -921,6 +1257,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 56 = exch */
@@ -937,6 +1279,12 @@ operator|)
 name|svr4_sys_utssys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 57 = svr4_sys_utssys */
@@ -953,6 +1301,12 @@ operator|)
 name|fsync
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 58 = fsync */
@@ -969,6 +1323,12 @@ operator|)
 name|svr4_sys_execve
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 59 = svr4_sys_execve */
@@ -985,6 +1345,12 @@ operator|)
 name|umask
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 60 = umask */
@@ -1001,6 +1367,12 @@ operator|)
 name|chroot
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 61 = chroot */
@@ -1017,6 +1389,12 @@ operator|)
 name|svr4_sys_fcntl
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 62 = svr4_sys_fcntl */
@@ -1033,6 +1411,12 @@ operator|)
 name|svr4_sys_ulimit
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 63 = svr4_sys_ulimit */
@@ -1046,6 +1430,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 64 = reserved */
@@ -1059,6 +1449,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 65 = reserved */
@@ -1072,6 +1468,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 66 = reserved */
@@ -1085,6 +1487,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 67 = reserved */
@@ -1098,6 +1506,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 68 = reserved */
@@ -1111,6 +1525,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 69 = reserved */
@@ -1124,6 +1544,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 70 = advfs */
@@ -1137,6 +1563,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 71 = unadvfs */
@@ -1150,6 +1582,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 72 = rmount */
@@ -1163,6 +1601,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 73 = rumount */
@@ -1176,6 +1620,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 74 = rfstart */
@@ -1189,6 +1639,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 75 = sigret */
@@ -1202,6 +1658,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 76 = rdebug */
@@ -1215,6 +1677,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 77 = rfstop */
@@ -1228,6 +1696,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 78 = rfsys */
@@ -1244,6 +1718,12 @@ operator|)
 name|rmdir
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 79 = rmdir */
@@ -1260,6 +1740,12 @@ operator|)
 name|mkdir
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 80 = mkdir */
@@ -1276,6 +1762,12 @@ operator|)
 name|svr4_sys_getdents
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 81 = svr4_sys_getdents */
@@ -1289,6 +1781,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 82 = libattach */
@@ -1302,6 +1800,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 83 = libdetach */
@@ -1315,6 +1819,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 84 = sysfs */
@@ -1331,6 +1841,12 @@ operator|)
 name|svr4_sys_getmsg
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 85 = svr4_sys_getmsg */
@@ -1347,6 +1863,12 @@ operator|)
 name|svr4_sys_putmsg
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 86 = svr4_sys_putmsg */
@@ -1363,6 +1885,12 @@ operator|)
 name|svr4_sys_poll
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 87 = svr4_sys_poll */
@@ -1379,6 +1907,12 @@ operator|)
 name|svr4_sys_lstat
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 88 = svr4_sys_lstat */
@@ -1395,6 +1929,12 @@ operator|)
 name|symlink
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 89 = symlink */
@@ -1411,6 +1951,12 @@ operator|)
 name|readlink
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 90 = readlink */
@@ -1427,6 +1973,12 @@ operator|)
 name|getgroups
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 91 = getgroups */
@@ -1443,6 +1995,12 @@ operator|)
 name|setgroups
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 92 = setgroups */
@@ -1459,6 +2017,12 @@ operator|)
 name|fchmod
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 93 = fchmod */
@@ -1475,6 +2039,12 @@ operator|)
 name|fchown
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 94 = fchown */
@@ -1491,6 +2061,12 @@ operator|)
 name|svr4_sys_sigprocmask
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 95 = svr4_sys_sigprocmask */
@@ -1507,6 +2083,12 @@ operator|)
 name|svr4_sys_sigsuspend
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 96 = svr4_sys_sigsuspend */
@@ -1523,6 +2105,12 @@ operator|)
 name|svr4_sys_sigaltstack
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 97 = svr4_sys_sigaltstack */
@@ -1539,6 +2127,12 @@ operator|)
 name|svr4_sys_sigaction
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 98 = svr4_sys_sigaction */
@@ -1555,6 +2149,12 @@ operator|)
 name|svr4_sys_sigpending
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 99 = svr4_sys_sigpending */
@@ -1571,6 +2171,12 @@ operator|)
 name|svr4_sys_context
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 100 = svr4_sys_context */
@@ -1584,6 +2190,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 101 = evsys */
@@ -1597,6 +2209,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 102 = evtrapret */
@@ -1613,6 +2231,12 @@ operator|)
 name|svr4_sys_statvfs
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 103 = svr4_sys_statvfs */
@@ -1629,6 +2253,12 @@ operator|)
 name|svr4_sys_fstatvfs
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 104 = svr4_sys_fstatvfs */
@@ -1642,6 +2272,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 105 = whoknows */
@@ -1655,6 +2291,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 106 = nfssvc */
@@ -1671,6 +2313,12 @@ operator|)
 name|svr4_sys_waitsys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 107 = svr4_sys_waitsys */
@@ -1684,6 +2332,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 108 = sigsendsys */
@@ -1700,6 +2354,12 @@ operator|)
 name|svr4_sys_hrtsys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 109 = svr4_sys_hrtsys */
@@ -1713,6 +2373,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 110 = acancel */
@@ -1726,6 +2392,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 111 = async */
@@ -1739,6 +2411,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 112 = priocntlsys */
@@ -1755,6 +2433,12 @@ operator|)
 name|svr4_sys_pathconf
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 113 = svr4_sys_pathconf */
@@ -1768,6 +2452,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 114 = mincore */
@@ -1784,6 +2474,12 @@ operator|)
 name|svr4_sys_mmap
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 115 = svr4_sys_mmap */
@@ -1800,6 +2496,12 @@ operator|)
 name|mprotect
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 116 = mprotect */
@@ -1816,6 +2518,12 @@ operator|)
 name|munmap
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 117 = munmap */
@@ -1832,6 +2540,12 @@ operator|)
 name|svr4_sys_fpathconf
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 118 = svr4_sys_fpathconf */
@@ -1845,6 +2559,12 @@ operator|)
 name|vfork
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 119 = vfork */
@@ -1861,6 +2581,12 @@ operator|)
 name|fchdir
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 120 = fchdir */
@@ -1877,6 +2603,12 @@ operator|)
 name|readv
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 121 = readv */
@@ -1893,6 +2625,12 @@ operator|)
 name|writev
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 122 = writev */
@@ -1909,6 +2647,12 @@ operator|)
 name|svr4_sys_xstat
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 123 = svr4_sys_xstat */
@@ -1925,6 +2669,12 @@ operator|)
 name|svr4_sys_lxstat
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 124 = svr4_sys_lxstat */
@@ -1941,6 +2691,12 @@ operator|)
 name|svr4_sys_fxstat
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 125 = svr4_sys_fxstat */
@@ -1957,6 +2713,12 @@ operator|)
 name|svr4_sys_xmknod
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 126 = svr4_sys_xmknod */
@@ -1970,6 +2732,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 127 = clocal */
@@ -1986,6 +2754,12 @@ operator|)
 name|svr4_sys_setrlimit
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 128 = svr4_sys_setrlimit */
@@ -2002,6 +2776,12 @@ operator|)
 name|svr4_sys_getrlimit
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 129 = svr4_sys_getrlimit */
@@ -2018,6 +2798,12 @@ operator|)
 name|lchown
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 130 = lchown */
@@ -2034,6 +2820,12 @@ operator|)
 name|svr4_sys_memcntl
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 131 = svr4_sys_memcntl */
@@ -2047,6 +2839,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 132 = getpmsg */
@@ -2060,6 +2858,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 133 = putpmsg */
@@ -2076,6 +2880,12 @@ operator|)
 name|rename
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 134 = rename */
@@ -2092,6 +2902,12 @@ operator|)
 name|svr4_sys_uname
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 135 = svr4_sys_uname */
@@ -2108,6 +2924,12 @@ operator|)
 name|setegid
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 136 = setegid */
@@ -2124,6 +2946,12 @@ operator|)
 name|svr4_sys_sysconfig
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 137 = svr4_sys_sysconfig */
@@ -2140,6 +2968,12 @@ operator|)
 name|adjtime
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 138 = adjtime */
@@ -2156,6 +2990,12 @@ operator|)
 name|svr4_sys_systeminfo
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 139 = svr4_sys_systeminfo */
@@ -2169,6 +3009,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 140 = notused */
@@ -2185,6 +3031,12 @@ operator|)
 name|seteuid
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 141 = seteuid */
@@ -2198,6 +3050,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 142 = vtrace */
@@ -2211,6 +3069,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 143 = { */
@@ -2224,6 +3088,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 144 = sigtimedwait */
@@ -2237,6 +3107,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 145 = lwp_info */
@@ -2250,6 +3126,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 146 = yield */
@@ -2263,6 +3145,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 147 = lwp_sema_wait */
@@ -2276,6 +3164,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 148 = lwp_sema_post */
@@ -2289,6 +3183,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 149 = lwp_sema_trywait */
@@ -2302,6 +3202,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 150 = notused */
@@ -2315,6 +3221,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 151 = notused */
@@ -2328,6 +3240,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 152 = modctl */
@@ -2344,6 +3262,12 @@ operator|)
 name|svr4_sys_fchroot
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 153 = svr4_sys_fchroot */
@@ -2360,6 +3284,12 @@ operator|)
 name|svr4_sys_utimes
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 154 = svr4_sys_utimes */
@@ -2373,6 +3303,12 @@ operator|)
 name|svr4_sys_vhangup
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 155 = svr4_sys_vhangup */
@@ -2389,6 +3325,12 @@ operator|)
 name|svr4_sys_gettimeofday
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 156 = svr4_sys_gettimeofday */
@@ -2405,6 +3347,12 @@ operator|)
 name|getitimer
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 157 = getitimer */
@@ -2421,6 +3369,12 @@ operator|)
 name|setitimer
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 158 = setitimer */
@@ -2434,6 +3388,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 159 = lwp_create */
@@ -2447,6 +3407,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 160 = lwp_exit */
@@ -2460,6 +3426,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 161 = lwp_suspend */
@@ -2473,6 +3445,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 162 = lwp_continue */
@@ -2486,6 +3464,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 163 = lwp_kill */
@@ -2499,6 +3483,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 164 = lwp_self */
@@ -2512,6 +3502,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 165 = lwp_getprivate */
@@ -2525,6 +3521,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 166 = lwp_setprivate */
@@ -2538,6 +3540,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 167 = lwp_wait */
@@ -2551,6 +3559,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 168 = lwp_mutex_unlock */
@@ -2564,6 +3578,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 169 = lwp_mutex_lock */
@@ -2577,6 +3597,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 170 = lwp_cond_wait */
@@ -2590,6 +3616,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 171 = lwp_cond_signal */
@@ -2603,6 +3635,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 172 = lwp_cond_broadcast */
@@ -2616,6 +3654,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 173 = { */
@@ -2629,6 +3673,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 174 = { */
@@ -2645,6 +3695,12 @@ operator|)
 name|svr4_sys_llseek
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 175 = svr4_sys_llseek */
@@ -2658,6 +3714,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 176 = inst_sync */
@@ -2671,6 +3733,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 177 = whoknows */
@@ -2684,6 +3752,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 178 = kaio */
@@ -2697,6 +3771,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 179 = whoknows */
@@ -2710,6 +3790,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 180 = whoknows */
@@ -2723,6 +3809,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 181 = whoknows */
@@ -2736,6 +3828,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 182 = whoknows */
@@ -2749,6 +3847,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 183 = whoknows */
@@ -2762,6 +3866,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 184 = tsolsys */
@@ -2778,6 +3888,12 @@ operator|)
 name|svr4_sys_acl
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 185 = svr4_sys_acl */
@@ -2794,6 +3910,12 @@ operator|)
 name|svr4_sys_auditsys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 186 = svr4_sys_auditsys */
@@ -2807,6 +3929,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 187 = processor_bind */
@@ -2820,6 +3948,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 188 = processor_info */
@@ -2833,6 +3967,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 189 = p_online */
@@ -2846,6 +3986,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 190 = sigqueue */
@@ -2859,6 +4005,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 191 = clock_gettime */
@@ -2872,6 +4024,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 192 = clock_settime */
@@ -2885,6 +4043,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 193 = clock_getres */
@@ -2898,6 +4062,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 194 = timer_create */
@@ -2911,6 +4081,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 195 = timer_delete */
@@ -2924,6 +4100,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 196 = timer_settime */
@@ -2937,6 +4119,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 197 = timer_gettime */
@@ -2950,6 +4138,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 198 = timer_overrun */
@@ -2966,6 +4160,12 @@ operator|)
 name|nanosleep
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 199 = nanosleep */
@@ -2982,6 +4182,12 @@ operator|)
 name|svr4_sys_facl
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 200 = svr4_sys_facl */
@@ -2995,6 +4201,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 201 = door */
@@ -3011,6 +4223,12 @@ operator|)
 name|setreuid
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 202 = setreuid */
@@ -3027,6 +4245,12 @@ operator|)
 name|setregid
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 203 = setregid */
@@ -3040,6 +4264,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 204 = install_utrap */
@@ -3053,6 +4283,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 205 = signotify */
@@ -3066,6 +4302,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 206 = schedctl */
@@ -3079,6 +4321,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 207 = pset */
@@ -3092,6 +4340,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 208 = whoknows */
@@ -3108,6 +4362,12 @@ operator|)
 name|svr4_sys_resolvepath
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 209 = svr4_sys_resolvepath */
@@ -3121,6 +4381,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 210 = signotifywait */
@@ -3134,6 +4400,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 211 = lwp_sigredirect */
@@ -3147,6 +4419,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 212 = lwp_alarm */
@@ -3163,6 +4441,12 @@ operator|)
 name|svr4_sys_getdents64
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 213 = svr4_sys_getdents64 */
@@ -3179,6 +4463,12 @@ operator|)
 name|svr4_sys_mmap64
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 214 = svr4_sys_mmap64 */
@@ -3195,6 +4485,12 @@ operator|)
 name|svr4_sys_stat64
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 215 = svr4_sys_stat64 */
@@ -3211,6 +4507,12 @@ operator|)
 name|svr4_sys_lstat64
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 216 = svr4_sys_lstat64 */
@@ -3227,6 +4529,12 @@ operator|)
 name|svr4_sys_fstat64
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 217 = svr4_sys_fstat64 */
@@ -3243,6 +4551,12 @@ operator|)
 name|svr4_sys_statvfs64
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 218 = svr4_sys_statvfs64 */
@@ -3259,6 +4573,12 @@ operator|)
 name|svr4_sys_fstatvfs64
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 219 = svr4_sys_fstatvfs64 */
@@ -3275,6 +4595,12 @@ operator|)
 name|svr4_sys_setrlimit64
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 220 = svr4_sys_setrlimit64 */
@@ -3291,6 +4617,12 @@ operator|)
 name|svr4_sys_getrlimit64
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 221 = svr4_sys_getrlimit64 */
@@ -3304,6 +4636,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 222 = pread64 */
@@ -3317,6 +4655,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 223 = pwrite64 */
@@ -3333,6 +4677,12 @@ operator|)
 name|svr4_sys_creat64
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 224 = svr4_sys_creat64 */
@@ -3349,6 +4699,12 @@ operator|)
 name|svr4_sys_open64
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 225 = svr4_sys_open64 */
@@ -3362,6 +4718,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 226 = rpcsys */
@@ -3375,6 +4737,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 227 = whoknows */
@@ -3388,6 +4756,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 228 = whoknows */
@@ -3401,6 +4775,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 229 = whoknows */
@@ -3417,6 +4797,12 @@ operator|)
 name|svr4_sys_socket
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 230 = svr4_sys_socket */
@@ -3433,6 +4819,12 @@ operator|)
 name|socketpair
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 231 = socketpair */
@@ -3449,6 +4841,12 @@ operator|)
 name|bind
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 232 = bind */
@@ -3465,6 +4863,12 @@ operator|)
 name|listen
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 233 = listen */
@@ -3481,6 +4885,12 @@ operator|)
 name|accept
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 234 = accept */
@@ -3497,6 +4907,12 @@ operator|)
 name|connect
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 235 = connect */
@@ -3513,6 +4929,12 @@ operator|)
 name|shutdown
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 236 = shutdown */
@@ -3529,6 +4951,12 @@ operator|)
 name|svr4_sys_recv
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 237 = svr4_sys_recv */
@@ -3545,6 +4973,12 @@ operator|)
 name|recvfrom
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 238 = recvfrom */
@@ -3561,6 +4995,12 @@ operator|)
 name|recvmsg
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 239 = recvmsg */
@@ -3577,6 +5017,12 @@ operator|)
 name|svr4_sys_send
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 240 = svr4_sys_send */
@@ -3593,6 +5039,12 @@ operator|)
 name|sendmsg
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 241 = sendmsg */
@@ -3609,6 +5061,12 @@ operator|)
 name|svr4_sys_sendto
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 242 = svr4_sys_sendto */
@@ -3625,6 +5083,12 @@ operator|)
 name|getpeername
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 243 = getpeername */
@@ -3641,6 +5105,12 @@ operator|)
 name|getsockname
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 244 = getsockname */
@@ -3657,6 +5127,12 @@ operator|)
 name|getsockopt
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 245 = getsockopt */
@@ -3673,6 +5149,12 @@ operator|)
 name|setsockopt
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 246 = setsockopt */
@@ -3686,6 +5168,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 247 = sockconfig */
@@ -3699,6 +5187,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 248 = { */
@@ -3712,6 +5206,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 249 = { */

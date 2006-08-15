@@ -76,6 +76,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 0 = syscall */
@@ -92,6 +98,12 @@ operator|)
 name|sys_exit
 block|,
 name|AUE_EXIT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 1 = exit */
@@ -105,6 +117,12 @@ operator|)
 name|fork
 block|,
 name|AUE_FORK
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 2 = fork */
@@ -121,6 +139,12 @@ operator|)
 name|ibcs2_read
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 3 = ibcs2_read */
@@ -137,6 +161,12 @@ operator|)
 name|write
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 4 = write */
@@ -153,6 +183,12 @@ operator|)
 name|ibcs2_open
 block|,
 name|AUE_OPEN_RWTC
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 5 = ibcs2_open */
@@ -169,6 +205,12 @@ operator|)
 name|close
 block|,
 name|AUE_CLOSE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 6 = close */
@@ -185,6 +227,12 @@ operator|)
 name|ibcs2_wait
 block|,
 name|AUE_WAIT4
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 7 = ibcs2_wait */
@@ -201,6 +249,12 @@ operator|)
 name|ibcs2_creat
 block|,
 name|AUE_CREAT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 8 = ibcs2_creat */
@@ -217,6 +271,12 @@ operator|)
 name|link
 block|,
 name|AUE_LINK
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 9 = link */
@@ -233,6 +293,12 @@ operator|)
 name|ibcs2_unlink
 block|,
 name|AUE_UNLINK
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 10 = ibcs2_unlink */
@@ -249,6 +315,12 @@ operator|)
 name|ibcs2_execv
 block|,
 name|AUE_EXECVE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 11 = ibcs2_execv */
@@ -265,6 +337,12 @@ operator|)
 name|ibcs2_chdir
 block|,
 name|AUE_CHDIR
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 12 = ibcs2_chdir */
@@ -281,6 +359,12 @@ operator|)
 name|ibcs2_time
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 13 = ibcs2_time */
@@ -297,6 +381,12 @@ operator|)
 name|ibcs2_mknod
 block|,
 name|AUE_MKNOD
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 14 = ibcs2_mknod */
@@ -313,6 +403,12 @@ operator|)
 name|ibcs2_chmod
 block|,
 name|AUE_CHMOD
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 15 = ibcs2_chmod */
@@ -329,6 +425,12 @@ operator|)
 name|ibcs2_chown
 block|,
 name|AUE_CHOWN
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 16 = ibcs2_chown */
@@ -345,6 +447,12 @@ operator|)
 name|obreak
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 17 = obreak */
@@ -361,6 +469,12 @@ operator|)
 name|ibcs2_stat
 block|,
 name|AUE_STAT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 18 = ibcs2_stat */
@@ -377,6 +491,12 @@ operator|)
 name|ibcs2_lseek
 block|,
 name|AUE_LSEEK
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 19 = ibcs2_lseek */
@@ -390,6 +510,12 @@ operator|)
 name|getpid
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 20 = getpid */
@@ -406,6 +532,12 @@ operator|)
 name|ibcs2_mount
 block|,
 name|AUE_MOUNT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 21 = ibcs2_mount */
@@ -422,6 +554,12 @@ operator|)
 name|ibcs2_umount
 block|,
 name|AUE_UMOUNT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 22 = ibcs2_umount */
@@ -438,6 +576,12 @@ operator|)
 name|ibcs2_setuid
 block|,
 name|AUE_SETUID
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 23 = ibcs2_setuid */
@@ -451,6 +595,12 @@ operator|)
 name|getuid
 block|,
 name|AUE_GETUID
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 24 = getuid */
@@ -467,6 +617,12 @@ operator|)
 name|ibcs2_stime
 block|,
 name|AUE_SETTIMEOFDAY
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 25 = ibcs2_stime */
@@ -483,6 +639,12 @@ operator|)
 name|ptrace
 block|,
 name|AUE_PTRACE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 26 = ptrace */
@@ -499,6 +661,12 @@ operator|)
 name|ibcs2_alarm
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 27 = ibcs2_alarm */
@@ -515,6 +683,12 @@ operator|)
 name|ibcs2_fstat
 block|,
 name|AUE_FSTAT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 28 = ibcs2_fstat */
@@ -528,6 +702,12 @@ operator|)
 name|ibcs2_pause
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 29 = ibcs2_pause */
@@ -544,6 +724,12 @@ operator|)
 name|ibcs2_utime
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 30 = ibcs2_utime */
@@ -560,6 +746,12 @@ operator|)
 name|ibcs2_stty
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 31 = ibcs2_stty */
@@ -576,6 +768,12 @@ operator|)
 name|ibcs2_gtty
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 32 = ibcs2_gtty */
@@ -592,6 +790,12 @@ operator|)
 name|ibcs2_access
 block|,
 name|AUE_ACCESS
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 33 = ibcs2_access */
@@ -608,6 +812,12 @@ operator|)
 name|ibcs2_nice
 block|,
 name|AUE_NICE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 34 = ibcs2_nice */
@@ -624,6 +834,12 @@ operator|)
 name|ibcs2_statfs
 block|,
 name|AUE_STATFS
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 35 = ibcs2_statfs */
@@ -637,6 +853,12 @@ operator|)
 name|sync
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 36 = sync */
@@ -653,6 +875,12 @@ operator|)
 name|ibcs2_kill
 block|,
 name|AUE_KILL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 37 = ibcs2_kill */
@@ -669,6 +897,12 @@ operator|)
 name|ibcs2_fstatfs
 block|,
 name|AUE_FSTATFS
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 38 = ibcs2_fstatfs */
@@ -685,6 +919,12 @@ operator|)
 name|ibcs2_pgrpsys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 39 = ibcs2_pgrpsys */
@@ -701,6 +941,12 @@ operator|)
 name|ibcs2_xenix
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 40 = ibcs2_xenix */
@@ -717,6 +963,12 @@ operator|)
 name|dup
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 41 = dup */
@@ -730,6 +982,12 @@ operator|)
 name|pipe
 block|,
 name|AUE_PIPE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 42 = pipe */
@@ -746,6 +1004,12 @@ operator|)
 name|ibcs2_times
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 43 = ibcs2_times */
@@ -762,6 +1026,12 @@ operator|)
 name|profil
 block|,
 name|AUE_PROFILE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 44 = profil */
@@ -778,6 +1048,12 @@ operator|)
 name|ibcs2_plock
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 45 = ibcs2_plock */
@@ -794,6 +1070,12 @@ operator|)
 name|ibcs2_setgid
 block|,
 name|AUE_SETGID
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 46 = ibcs2_setgid */
@@ -807,6 +1089,12 @@ operator|)
 name|getgid
 block|,
 name|AUE_GETGID
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 47 = getgid */
@@ -823,6 +1111,12 @@ operator|)
 name|ibcs2_sigsys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 48 = ibcs2_sigsys */
@@ -839,6 +1133,12 @@ operator|)
 name|ibcs2_msgsys
 block|,
 name|AUE_MSGSYS
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 49 = ibcs2_msgsys */
@@ -855,6 +1155,12 @@ operator|)
 name|ibcs2_sysi86
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 50 = ibcs2_sysi86 */
@@ -868,6 +1174,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 51 = ibcs2_acct */
@@ -884,6 +1196,12 @@ operator|)
 name|ibcs2_shmsys
 block|,
 name|AUE_SHMSYS
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 52 = ibcs2_shmsys */
@@ -900,6 +1218,12 @@ operator|)
 name|ibcs2_semsys
 block|,
 name|AUE_SEMSYS
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 53 = ibcs2_semsys */
@@ -916,6 +1240,12 @@ operator|)
 name|ibcs2_ioctl
 block|,
 name|AUE_IOCTL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 54 = ibcs2_ioctl */
@@ -932,6 +1262,12 @@ operator|)
 name|ibcs2_uadmin
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 55 = ibcs2_uadmin */
@@ -945,6 +1281,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 56 = nosys */
@@ -961,6 +1303,12 @@ operator|)
 name|ibcs2_utssys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 57 = ibcs2_utssys */
@@ -977,6 +1325,12 @@ operator|)
 name|fsync
 block|,
 name|AUE_FSYNC
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 58 = fsync */
@@ -993,6 +1347,12 @@ operator|)
 name|ibcs2_execve
 block|,
 name|AUE_EXECVE
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 59 = ibcs2_execve */
@@ -1009,6 +1369,12 @@ operator|)
 name|umask
 block|,
 name|AUE_UMASK
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 60 = umask */
@@ -1025,6 +1391,12 @@ operator|)
 name|chroot
 block|,
 name|AUE_CHROOT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 61 = chroot */
@@ -1041,6 +1413,12 @@ operator|)
 name|ibcs2_fcntl
 block|,
 name|AUE_FCNTL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 62 = ibcs2_fcntl */
@@ -1057,6 +1435,12 @@ operator|)
 name|ibcs2_ulimit
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 63 = ibcs2_ulimit */
@@ -1070,6 +1454,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 64 = reserved for unix/pc */
@@ -1083,6 +1473,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 65 = reserved for unix/pc */
@@ -1096,6 +1492,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 66 = reserved for unix/pc */
@@ -1109,6 +1511,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 67 = reserved for unix/pc */
@@ -1122,6 +1530,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 68 = reserved for unix/pc */
@@ -1135,6 +1549,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 69 = reserved for unix/pc */
@@ -1148,6 +1568,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 70 = obsolete rfs_advfs */
@@ -1161,6 +1587,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 71 = obsolete rfs_unadvfs */
@@ -1174,6 +1606,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 72 = obsolete rfs_rmount */
@@ -1187,6 +1625,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 73 = obsolete rfs_rumount */
@@ -1200,6 +1644,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 74 = obsolete rfs_rfstart */
@@ -1213,6 +1663,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 75 = obsolete rfs_sigret */
@@ -1226,6 +1682,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 76 = obsolete rfs_rdebug */
@@ -1239,6 +1701,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 77 = obsolete rfs_rfstop */
@@ -1252,6 +1720,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 78 = rfs_rfsys */
@@ -1268,6 +1742,12 @@ operator|)
 name|ibcs2_rmdir
 block|,
 name|AUE_RMDIR
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 79 = ibcs2_rmdir */
@@ -1284,6 +1764,12 @@ operator|)
 name|ibcs2_mkdir
 block|,
 name|AUE_MKDIR
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 80 = ibcs2_mkdir */
@@ -1300,6 +1786,12 @@ operator|)
 name|ibcs2_getdents
 block|,
 name|AUE_GETDIRENTRIES
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 81 = ibcs2_getdents */
@@ -1313,6 +1805,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 82 = nosys */
@@ -1326,6 +1824,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 83 = nosys */
@@ -1342,6 +1846,12 @@ operator|)
 name|ibcs2_sysfs
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 84 = ibcs2_sysfs */
@@ -1358,6 +1868,12 @@ operator|)
 name|ibcs2_getmsg
 block|,
 name|AUE_GETMSG
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 85 = ibcs2_getmsg */
@@ -1374,6 +1890,12 @@ operator|)
 name|ibcs2_putmsg
 block|,
 name|AUE_PUTMSG
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 86 = ibcs2_putmsg */
@@ -1390,6 +1912,12 @@ operator|)
 name|poll
 block|,
 name|AUE_POLL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 87 = poll */
@@ -1403,6 +1931,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 88 = nosys */
@@ -1419,6 +1953,12 @@ operator|)
 name|ibcs2_secure
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 89 = ibcs2_secure */
@@ -1435,6 +1975,12 @@ operator|)
 name|ibcs2_symlink
 block|,
 name|AUE_SYMLINK
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 90 = ibcs2_symlink */
@@ -1451,6 +1997,12 @@ operator|)
 name|ibcs2_lstat
 block|,
 name|AUE_LSTAT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 91 = ibcs2_lstat */
@@ -1467,6 +2019,12 @@ operator|)
 name|ibcs2_readlink
 block|,
 name|AUE_READLINK
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 92 = ibcs2_readlink */
@@ -1480,6 +2038,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 93 = nosys */
@@ -1493,6 +2057,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 94 = nosys */
@@ -1506,6 +2076,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 95 = nosys */
@@ -1519,6 +2095,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 96 = nosys */
@@ -1532,6 +2114,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 97 = nosys */
@@ -1545,6 +2133,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 98 = nosys */
@@ -1558,6 +2152,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 99 = nosys */
@@ -1571,6 +2171,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 100 = nosys */
@@ -1584,6 +2190,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 101 = nosys */
@@ -1597,6 +2209,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 102 = nosys */
@@ -1613,6 +2231,12 @@ operator|)
 name|sigreturn
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 103 = sigreturn */
@@ -1626,6 +2250,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 104 = nosys */
@@ -1639,6 +2269,12 @@ operator|)
 name|ibcs2_isc
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 105 = ibcs2_isc */
@@ -1652,6 +2288,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 106 = nosys */
@@ -1665,6 +2307,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 107 = nosys */
@@ -1678,6 +2326,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 108 = nosys */
@@ -1691,6 +2345,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 109 = nosys */
@@ -1704,6 +2364,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 110 = nosys */
@@ -1717,6 +2383,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 111 = nosys */
@@ -1730,6 +2402,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 112 = nosys */
@@ -1743,6 +2421,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 113 = nosys */
@@ -1756,6 +2440,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 114 = nosys */
@@ -1769,6 +2459,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 115 = nosys */
@@ -1782,6 +2478,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 116 = nosys */
@@ -1795,6 +2497,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 117 = nosys */
@@ -1808,6 +2516,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 118 = nosys */
@@ -1821,6 +2535,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 119 = nosys */
@@ -1834,6 +2554,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 120 = nosys */
@@ -1847,6 +2573,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 121 = nosys */
@@ -1860,6 +2592,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 122 = nosys */
@@ -1873,6 +2611,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 123 = nosys */
@@ -1886,6 +2630,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 124 = nosys */
@@ -1899,6 +2649,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 125 = nosys */
@@ -1912,6 +2668,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 126 = nosys */
@@ -1925,6 +2687,12 @@ operator|)
 name|nosys
 block|,
 name|AUE_NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* 127 = nosys */
