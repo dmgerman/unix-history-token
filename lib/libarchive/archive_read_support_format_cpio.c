@@ -23,6 +23,23 @@ directive|include
 file|<sys/stat.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MAJOR_IN_MKDEV
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/mkdev.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
