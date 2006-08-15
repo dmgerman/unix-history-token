@@ -4325,10 +4325,14 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Show all the threads a particular thread is waiting on based on  * non-sleepable and non-spin locks.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
-name|print_threadchain
+name|print_lockchain
 parameter_list|(
 name|struct
 name|thread
@@ -4533,9 +4537,9 @@ end_function
 begin_macro
 name|DB_SHOW_COMMAND
 argument_list|(
-argument|threadchain
+argument|lockchain
 argument_list|,
-argument|db_show_threadchain
+argument|db_show_lockchain
 argument_list|)
 end_macro
 
@@ -4565,7 +4569,7 @@ name|td
 operator|=
 name|kdb_thread
 expr_stmt|;
-name|print_threadchain
+name|print_lockchain
 argument_list|(
 name|td
 argument_list|,
@@ -4643,7 +4647,7 @@ name|i
 operator|++
 argument_list|)
 expr_stmt|;
-name|print_threadchain
+name|print_lockchain
 argument_list|(
 name|td
 argument_list|,
@@ -4889,9 +4893,9 @@ end_function
 begin_macro
 name|DB_SHOW_COMMAND
 argument_list|(
-argument|lockchain
+argument|locktree
 argument_list|,
-argument|db_show_lockchain
+argument|db_show_locktree
 argument_list|)
 end_macro
 
