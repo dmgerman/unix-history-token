@@ -4278,6 +4278,10 @@ case|case
 literal|0x81c5104d
 case|:
 comment|/* Sony VAIO VGN B1VP/B1XP */
+case|case
+literal|0x3089103c
+case|:
+comment|/* Compaq Presario B3800 */
 name|ac97_setflags
 argument_list|(
 name|sc
