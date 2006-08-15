@@ -60,7 +60,7 @@ end_ifndef
 begin_error
 error|#
 directive|error
-error|You must have a I686_CPU in your kernel if you want to make an XBOX-compitable kernel
+error|You must have a I686_CPU in your kernel if you want to make an XBOX-compatible kernel
 end_error
 
 begin_endif
