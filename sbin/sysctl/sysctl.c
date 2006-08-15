@@ -3007,7 +3007,7 @@ if|if
 condition|(
 operator|*
 operator|(
-name|long
+name|int
 operator|*
 operator|)
 name|p
@@ -3016,11 +3016,11 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%ld"
+literal|"%d"
 argument_list|,
 operator|*
 operator|(
-name|long
+name|int
 operator|*
 operator|)
 name|p
@@ -3034,7 +3034,7 @@ argument_list|,
 operator|(
 operator|*
 operator|(
-name|long
+name|int
 operator|*
 operator|)
 name|p
