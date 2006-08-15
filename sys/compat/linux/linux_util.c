@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_compat.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -94,6 +100,34 @@ include|#
 directive|include
 file|<compat/linux/linux_util.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_LINUX32
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/../linux32/linux.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<machine/../linux/linux.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|const
@@ -240,14 +274,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_LINUX
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_struct
 struct|struct
