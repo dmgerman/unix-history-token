@@ -156,6 +156,12 @@ modifier|*
 name|args
 decl_stmt|;
 comment|/* system call arguments */
+name|struct
+name|sysentvec
+modifier|*
+name|sysent
+decl_stmt|;
+comment|/* system entry vector */
 block|}
 struct|;
 end_struct

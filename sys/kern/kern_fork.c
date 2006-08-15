@@ -3296,6 +3296,13 @@ argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|schedtail
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
