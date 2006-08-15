@@ -3642,12 +3642,6 @@ name|error
 operator|)
 return|;
 block|}
-name|ifp
-operator|->
-name|if_drv_flags
-operator||=
-name|IFF_DRV_RUNNING
-expr_stmt|;
 comment|/* Update flags on the parent, if necessary. */
 name|vlan_setflags
 argument_list|(
@@ -5068,6 +5062,13 @@ name|ifp
 argument_list|)
 expr_stmt|;
 comment|/* XXX: VLAN lock held */
+comment|/* We are ready for operation now. */
+name|ifp
+operator|->
+name|if_drv_flags
+operator||=
+name|IFF_DRV_RUNNING
+expr_stmt|;
 name|done
 label|:
 name|TRUNK_UNLOCK
@@ -6452,12 +6453,6 @@ condition|(
 name|error
 condition|)
 break|break;
-name|ifp
-operator|->
-name|if_drv_flags
-operator||=
-name|IFF_DRV_RUNNING
-expr_stmt|;
 comment|/* Update flags on the parent, if necessary. */
 name|vlan_setflags
 argument_list|(
