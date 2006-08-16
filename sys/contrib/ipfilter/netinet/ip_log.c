@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1997-2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_log.c,v 2.75.2.7 2005/06/11 07:47:44 darrenr Exp $  */
+comment|/*  * Copyright (C) 1997-2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_log.c,v 2.75.2.11 2006/03/26 13:50:47 darrenr Exp $  */
 end_comment
 
 begin_include
@@ -446,6 +446,31 @@ include|#
 directive|include
 file|<sys/mbuf.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/select.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/selinfo.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -960,6 +985,17 @@ begin_decl_stmt
 specifier|extern
 name|kcondvar_t
 name|iplwait
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pollhead
+name|iplpollhead
+index|[
+name|IPL_LOGSIZE
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -2896,6 +2932,17 @@ operator|&
 name|ipl_mutex
 argument_list|)
 expr_stmt|;
+name|pollwakeup
+argument_list|(
+operator|&
+name|iplpollhead
+index|[
+name|dev
+index|]
+argument_list|,
+name|POLLRDNORM
+argument_list|)
+expr_stmt|;
 else|#
 directive|else
 name|MUTEX_EXIT
@@ -2908,6 +2955,11 @@ name|WAKEUP
 argument_list|(
 name|iplh
 argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
+name|POLLWAKEUP
+argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
@@ -3668,6 +3720,59 @@ argument_list|)
 expr_stmt|;
 return|return
 name|used
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* ------------------------------------------------------------------------ */
+end_comment
+
+begin_comment
+comment|/* Function:    ipflog_canread                                              */
+end_comment
+
+begin_comment
+comment|/* Returns:     int    - 0 == no data to read, 1 = data present             */
+end_comment
+
+begin_comment
+comment|/* Parameters:  unit(I) - device we are reading from                        */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns an indication of whether or not there is data present in the     */
+end_comment
+
+begin_comment
+comment|/* current buffer for the selected ipf device.                              */
+end_comment
+
+begin_comment
+comment|/* ------------------------------------------------------------------------ */
+end_comment
+
+begin_function
+name|int
+name|ipflog_canread
+parameter_list|(
+name|unit
+parameter_list|)
+name|int
+name|unit
+decl_stmt|;
+block|{
+return|return
+name|iplt
+index|[
+name|unit
+index|]
+operator|!=
+name|NULL
 return|;
 block|}
 end_function

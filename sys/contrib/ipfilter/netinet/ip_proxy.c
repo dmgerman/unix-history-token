@@ -683,7 +683,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_proxy.c,v 2.62.2.14 2005/06/18 02:41:33 darrenr Exp $"
+literal|"@(#)$Id: ip_proxy.c,v 2.62.2.16 2006/03/29 11:19:56 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1915,27 +1915,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|ctl
-operator|.
-name|apc_dsize
-operator|>
-literal|0
-operator|)
-operator|&&
-operator|(
 name|ptr
 operator|!=
 name|NULL
-operator|)
-operator|&&
-operator|(
-name|ctl
-operator|.
-name|apc_data
-operator|==
-name|ptr
-operator|)
 condition|)
 block|{
 name|KFREES
@@ -3106,9 +3088,9 @@ name|s1
 operator|=
 name|LONG_SUM
 argument_list|(
-name|ip
+name|fin
 operator|->
-name|ip_len
+name|fin_plen
 operator|-
 name|adjlen
 argument_list|)
@@ -3117,9 +3099,9 @@ name|s2
 operator|=
 name|LONG_SUM
 argument_list|(
-name|ip
+name|fin
 operator|->
-name|ip_len
+name|fin_plen
 argument_list|)
 expr_stmt|;
 name|CALC_SUMD
@@ -3203,6 +3185,10 @@ argument_list|,
 name|IPPROTO_TCP
 argument_list|,
 name|tcp
+argument_list|,
+name|fin
+operator|->
+name|fin_plen
 argument_list|)
 expr_stmt|;
 else|#
@@ -3222,6 +3208,10 @@ argument_list|,
 name|IPPROTO_TCP
 argument_list|,
 name|tcp
+argument_list|,
+name|fin
+operator|->
+name|fin_plen
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3278,6 +3268,10 @@ argument_list|,
 name|IPPROTO_UDP
 argument_list|,
 name|udp
+argument_list|,
+name|fin
+operator|->
+name|fin_plen
 argument_list|)
 expr_stmt|;
 else|#
@@ -3297,6 +3291,10 @@ argument_list|,
 name|IPPROTO_UDP
 argument_list|,
 name|udp
+argument_list|,
+name|fin
+operator|->
+name|fin_plen
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3717,12 +3715,12 @@ name|fin
 operator|->
 name|fin_out
 expr_stmt|;
-comment|/* 	 * ip_len has already been adjusted by 'inc'. 	 */
+comment|/* 	 * fin->fin_plen has already been adjusted by 'inc'. 	 */
 name|nlen
 operator|=
-name|ip
+name|fin
 operator|->
-name|ip_len
+name|fin_plen
 expr_stmt|;
 name|nlen
 operator|-=

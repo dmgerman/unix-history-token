@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1997-2003 by Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Simple FTP transparent proxy for in-kernel use.  For use with the NAT  * code.  *  * $Id: ip_ftp_pxy.c,v 2.88.2.16 2005/12/04 23:39:27 darrenr Exp $  */
+comment|/*  * Copyright (C) 1997-2003 by Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Simple FTP transparent proxy for in-kernel use.  For use with the NAT  * code.  *  * $Id: ip_ftp_pxy.c,v 2.88.2.19 2006/04/01 10:14:53 darrenr Exp $  */
 end_comment
 
 begin_define
@@ -2122,10 +2122,7 @@ argument_list|(
 operator|&
 name|fi
 argument_list|,
-operator|&
-name|nat2
-operator|->
-name|nat_state
+name|NULL
 argument_list|,
 name|SI_W_DPORT
 argument_list|)
@@ -4272,10 +4269,7 @@ argument_list|(
 operator|&
 name|fi
 argument_list|,
-operator|&
-name|nat2
-operator|->
-name|nat_state
+name|NULL
 argument_list|,
 name|sflags
 argument_list|)
@@ -5837,13 +5831,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|mlen
-operator|<=
+operator|==
 literal|0
-condition|)
-block|{
-if|if
-condition|(
+operator|)
+operator|&&
+operator|(
 operator|(
 name|tcp
 operator|->
@@ -5853,6 +5847,7 @@ name|TH_OPENING
 operator|)
 operator|==
 name|TH_OPENING
+operator|)
 condition|)
 block|{
 name|f
@@ -5875,7 +5870,18 @@ index|]
 operator|=
 name|thack
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
+elseif|else
+if|if
+condition|(
+name|mlen
+operator|<
+literal|0
+condition|)
+block|{
 return|return
 literal|0
 return|;
@@ -7977,6 +7983,7 @@ block|}
 if|if
 condition|(
 operator|!
+operator|*
 name|s
 condition|)
 return|return

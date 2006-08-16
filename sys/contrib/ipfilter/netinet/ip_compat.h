@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001, 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id: ip_compat.h,v 2.142.2.33 2005/12/04 23:40:17 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-2001, 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id: ip_compat.h,v 2.142.2.36 2006/03/26 05:50:29 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -2989,6 +2989,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|POLLWAKEUP
+parameter_list|(
+name|x
+parameter_list|)
+value|;
+end_define
+
+begin_define
+define|#
+directive|define
 name|KMALLOC
 parameter_list|(
 name|a
@@ -3969,6 +3979,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|POLLWAKEUP
+parameter_list|(
+name|x
+parameter_list|)
+value|;
+end_define
+
+begin_define
+define|#
+directive|define
 name|KFREE
 parameter_list|(
 name|x
@@ -4630,6 +4650,16 @@ parameter_list|,
 name|x
 parameter_list|)
 value|wakeup(id + x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|POLLWAKEUP
+parameter_list|(
+name|x
+parameter_list|)
+value|;
 end_define
 
 begin_define
@@ -7130,6 +7160,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|POLLWAKEUP
+parameter_list|(
+name|x
+parameter_list|)
+value|;
+end_define
+
+begin_define
+define|#
+directive|define
 name|UIOMOVE
 parameter_list|(
 name|a
@@ -7457,6 +7497,16 @@ parameter_list|,
 name|s
 parameter_list|)
 value|0, interruptible_sleep_on(x##_linux)
+end_define
+
+begin_define
+define|#
+directive|define
+name|POLLWAKEUP
+parameter_list|(
+name|x
+parameter_list|)
+value|;
 end_define
 
 begin_define
@@ -8703,6 +8753,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|POLLWAKEUP
+parameter_list|(
+name|x
+parameter_list|)
+value|;
+end_define
+
+begin_define
+define|#
+directive|define
 name|COPYIN
 parameter_list|(
 name|a
@@ -9589,6 +9649,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|POLLWAKEUP
+parameter_list|(
+name|y
+parameter_list|)
+value|;
+end_define
+
+begin_define
+define|#
+directive|define
 name|IPF_PANIC
 parameter_list|(
 name|x
@@ -9840,6 +9910,25 @@ operator|,
 expr|struct
 name|uio
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|bcopywrap
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|void
+operator|*
+operator|,
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -10389,6 +10478,26 @@ end_if
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|BSD
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|selinfo
+name|ipfselwait
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|MENTAT
 end_ifdef
 
@@ -10804,6 +10913,16 @@ parameter_list|,
 name|x
 parameter_list|)
 value|wakeup(id+x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|POLLWAKEUP
+parameter_list|(
+name|x
+parameter_list|)
+value|selwakeup(ipfselwait+x)
 end_define
 
 begin_define
