@@ -21,17 +21,6 @@ directive|include
 file|"at91rm9200_lowlevel.h"
 end_include
 
-begin_function_decl
-specifier|extern
-name|void
-name|doit
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|int
 name|main
@@ -67,9 +56,28 @@ operator|-
 literal|1
 condition|)
 continue|continue;
-name|doit
+name|InitEEPROM
+argument_list|()
+expr_stmt|;
+name|printf
 argument_list|(
+literal|"Writing EEPROM from 0x%x to addr 0\r\n"
+argument_list|,
 name|addr
+argument_list|)
+expr_stmt|;
+name|WriteEEPROM
+argument_list|(
+literal|0
+argument_list|,
+name|addr
+argument_list|,
+literal|8192
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Write complete.  Press reset\r\n"
 argument_list|)
 expr_stmt|;
 return|return
