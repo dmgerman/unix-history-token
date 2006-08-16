@@ -484,7 +484,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipfstat.c,v 1.44.2.13 2005/10/17 17:26:32 darrenr Exp $"
+literal|"@(#)$Id: ipfstat.c,v 1.44.2.14 2006/03/21 16:09:58 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5772,23 +5772,6 @@ argument_list|,
 name|ipsp
 operator|->
 name|iss_miss
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"\t%lu maximum\n\t%lu no memory\n\t%lu max bucket\n"
-argument_list|,
-name|ipsp
-operator|->
-name|iss_max
-argument_list|,
-name|ipsp
-operator|->
-name|iss_nomem
-argument_list|,
-name|ipsp
-operator|->
-name|iss_bucketfull
 argument_list|)
 expr_stmt|;
 name|PRINTF

@@ -190,6 +190,23 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -242,7 +259,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: sbpf.c,v 2.5 2002/02/24 07:30:03 darrenr Exp $"
+literal|"@(#)$Id: sbpf.c,v 2.5.4.1 2006/03/21 16:32:58 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -306,6 +323,48 @@ name|struct
 name|ifreq
 name|ifr
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|_PATH_BPF
+name|char
+modifier|*
+name|bpfname
+init|=
+name|_PATH_BPF
+decl_stmt|;
+name|int
+name|fd
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|fd
+operator|=
+name|open
+argument_list|(
+name|bpfname
+argument_list|,
+name|O_RDWR
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"no bpf devices available as /dev/bpfxx\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+else|#
+directive|else
 name|char
 name|bpfname
 index|[
@@ -381,6 +440,8 @@ operator|-
 literal|1
 return|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|ioctl
