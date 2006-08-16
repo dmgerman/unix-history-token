@@ -283,13 +283,6 @@ decl_stmt|;
 name|natlookup_t
 name|natlook
 decl_stmt|;
-name|natlookup_t
-modifier|*
-name|natlookp
-init|=
-operator|&
-name|natlook
-decl_stmt|;
 name|char
 name|buffer
 index|[

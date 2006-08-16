@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: printlog.c,v 1.6.4.1 2005/11/14 17:45:06 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: printlog.c,v 1.6.4.2 2005/12/18 14:49:06 darrenr Exp $  */
 end_comment
 
 begin_include
@@ -105,6 +105,11 @@ condition|(
 name|s
 operator|==
 name|NULL
+operator|||
+operator|*
+name|s
+operator|==
+literal|'\0'
 condition|)
 name|s
 operator|=
@@ -124,29 +129,21 @@ condition|(
 name|u
 operator|==
 name|NULL
+operator|||
+operator|*
+name|u
+operator|==
+literal|'\0'
 condition|)
 name|u
 operator|=
 literal|"!!!"
 expr_stmt|;
-if|if
-condition|(
-operator|*
-name|s
-condition|)
 name|printf
 argument_list|(
 literal|"%s.%s"
 argument_list|,
 name|s
-argument_list|,
-name|u
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"%s"
 argument_list|,
 name|u
 argument_list|)

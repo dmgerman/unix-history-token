@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001, 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ipf.h	1.12 6/5/96  * $Id: ipf.h,v 2.71.2.7 2005/06/12 07:18:31 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-2001, 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ipf.h	1.12 6/5/96  * $Id: ipf.h,v 2.71.2.8 2005/12/30 07:03:21 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -1075,25 +1075,6 @@ name|frentry
 operator|*
 operator|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|bcopywrap
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|,
-name|void
-operator|*
-operator|,
-name|size_t
 operator|)
 argument_list|)
 decl_stmt|;

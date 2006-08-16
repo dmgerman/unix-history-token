@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: facpri.c,v 1.6.2.1 2005/11/14 17:45:06 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: facpri.c,v 1.6.2.4 2006/03/17 22:28:41 darrenr Exp $  */
 end_comment
 
 begin_include
@@ -101,7 +101,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: facpri.c,v 1.6.2.1 2005/11/14 17:45:06 darrenr Exp $"
+literal|"@(#)$Id: facpri.c,v 1.6.2.4 2006/03/17 22:28:41 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -379,7 +379,20 @@ if|if
 condition|(
 name|j
 operator|<
-literal|24
+operator|(
+sizeof|sizeof
+argument_list|(
+name|facs
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|facs
+index|[
+literal|0
+index|]
+argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -401,6 +414,7 @@ index|]
 operator|.
 name|name
 return|;
+block|}
 for|for
 control|(
 name|i
@@ -436,7 +450,6 @@ index|]
 operator|.
 name|name
 return|;
-block|}
 return|return
 name|NULL
 return|;
@@ -569,70 +582,6 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  * map a priority name to its number  */
-end_comment
-
-begin_function
-name|int
-name|pri_findname
-parameter_list|(
-name|name
-parameter_list|)
-name|char
-modifier|*
-name|name
-decl_stmt|;
-block|{
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|pris
-index|[
-name|i
-index|]
-operator|.
-name|name
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|pris
-index|[
-name|i
-index|]
-operator|.
-name|name
-argument_list|,
-name|name
-argument_list|)
-condition|)
-return|return
-name|pris
-index|[
-name|i
-index|]
-operator|.
-name|value
-return|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/*  * map a priority number to its name  */

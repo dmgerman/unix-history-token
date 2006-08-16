@@ -107,7 +107,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipf.c,v 1.35.2.3 2004/12/15 18:27:17 darrenr Exp $"
+literal|"@(#)$Id: ipf.c,v 1.35.2.4 2006/03/17 11:48:08 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -929,6 +929,8 @@ parameter_list|()
 block|{
 name|int
 name|i
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(

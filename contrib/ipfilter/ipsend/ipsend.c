@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipsend.c,v 2.8.2.2 2004/11/13 16:50:10 darrenr Exp $"
+literal|"@(#)$Id: ipsend.c,v 2.8.2.3 2006/03/17 13:45:34 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -803,6 +803,17 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|wfd
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 return|return
 name|send_packet
 argument_list|(

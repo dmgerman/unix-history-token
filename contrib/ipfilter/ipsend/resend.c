@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: resend.c,v 2.8 2004/01/08 13:34:31 darrenr Exp $"
+literal|"@(#)$Id: resend.c,v 2.8.2.2 2006/03/17 13:45:34 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -521,6 +521,17 @@ name|i
 decl_stmt|;
 if|if
 condition|(
+name|wfd
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+if|if
+condition|(
 name|datain
 condition|)
 name|fd
@@ -634,6 +645,11 @@ block|{
 name|perror
 argument_list|(
 literal|"arp"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|eh
 argument_list|)
 expr_stmt|;
 return|return
@@ -873,6 +889,11 @@ operator|->
 name|r_close
 call|)
 argument_list|()
+expr_stmt|;
+name|free
+argument_list|(
+name|eh
+argument_list|)
 expr_stmt|;
 return|return
 literal|0

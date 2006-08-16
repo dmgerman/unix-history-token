@@ -55,7 +55,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipftest.c,v 1.44.2.7 2005/12/07 08:29:19 darrenr Exp $"
+literal|"@(#)$Id: ipftest.c,v 1.44.2.9 2006/03/29 11:21:13 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1370,14 +1370,18 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|iface
 operator|==
 name|NULL
+operator|)
 operator|||
+operator|(
 operator|*
 name|iface
 operator|==
 literal|'\0'
+operator|)
 condition|)
 name|iface
 operator|=
@@ -4400,6 +4404,10 @@ operator|->
 name|ip_p
 argument_list|,
 name|hdr
+argument_list|,
+name|ip
+operator|->
+name|ip_len
 argument_list|)
 expr_stmt|;
 block|}

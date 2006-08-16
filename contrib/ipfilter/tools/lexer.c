@@ -832,6 +832,14 @@ block|{
 case|case
 literal|'\n'
 case|:
+name|lnext
+operator|=
+literal|0
+expr_stmt|;
+name|nokey
+operator|=
+literal|0
+expr_stmt|;
 case|case
 literal|'\t'
 case|:

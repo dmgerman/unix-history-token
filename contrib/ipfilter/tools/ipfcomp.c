@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipfcomp.c,v 1.24.2.2 2004/04/28 10:34:44 darrenr Exp $"
+literal|"@(#)$Id: ipfcomp.c,v 1.24.2.3 2006/03/17 22:31:57 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -7400,6 +7400,11 @@ name|fg_name
 expr_stmt|;
 name|dogrp
 operator|=
+operator|*
+name|group
+condition|?
+literal|1
+else|:
 literal|0
 expr_stmt|;
 if|if

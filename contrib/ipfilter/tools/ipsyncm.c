@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipsyncm.c,v 1.4.2.2 2005/01/08 14:31:46 darrenr Exp $"
+literal|"@(#)$Id: ipsyncm.c,v 1.4.2.4 2006/03/27 02:09:46 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,7 +103,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<strings.h>
+file|<string.h>
 end_include
 
 begin_include
@@ -165,6 +165,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|terminate
 init|=
@@ -194,21 +208,17 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|handleterm
-parameter_list|(
-name|int
-name|sig
-parameter_list|)
-block|{
-name|terminate
-operator|=
-name|sig
-expr_stmt|;
-block|}
-end_function
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static void handleterm(int sig) { 	terminate = sig; }
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* should be large enough to hold header + any datatype */
@@ -547,7 +557,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"Established connection to %s"
+literal|"Sending data to %s"
 argument_list|,
 name|inet_ntoa
 argument_list|(
