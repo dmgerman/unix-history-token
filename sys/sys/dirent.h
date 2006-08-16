@@ -182,7 +182,7 @@ value|((dirtype)<< 12)
 end_define
 
 begin_comment
-comment|/*  * The _GENERIC_DIRSIZ macro gives the minimum record length which will hold  * the directory entry.  This requires the amount of space in struct direct  * without the d_name field, plus enough space for the name with a terminating  * null byte (dp->d_namlen+1), rounded up to a 4 byte boundary.  *  * XXX although this macro is in the implementation namespace, it requires  * a manifest constant that is not.  */
+comment|/*  * The _GENERIC_DIRSIZ macro gives the minimum record length which will hold  * the directory entry.  This returns the amount of space in struct direct  * without the d_name field, plus enough space for the name with a terminating  * null byte (dp->d_namlen+1), rounded up to a 4 byte boundary.  *  * XXX although this macro is in the implementation namespace, it requires  * a manifest constant that is not.  */
 end_comment
 
 begin_define
