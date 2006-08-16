@@ -4824,7 +4824,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|sem_exithook
+name|sem_exechook
 parameter_list|(
 name|void
 modifier|*
@@ -4842,7 +4842,7 @@ name|imgp
 name|__unused
 parameter_list|)
 block|{
-name|sem_exechook
+name|sem_exithook
 argument_list|(
 name|arg
 argument_list|,
@@ -4855,7 +4855,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|sem_exechook
+name|sem_exithook
 parameter_list|(
 name|void
 modifier|*
@@ -5038,7 +5038,7 @@ name|EVENTHANDLER_REGISTER
 argument_list|(
 name|process_exec
 argument_list|,
-name|sem_exithook
+name|sem_exechook
 argument_list|,
 name|NULL
 argument_list|,
