@@ -13667,18 +13667,6 @@ operator|.
 name|ds_addr
 argument_list|)
 expr_stmt|;
-comment|/* Zero out the receive descriptors status. */
-name|adapter
-operator|->
-name|rx_desc_base
-index|[
-name|i
-index|]
-operator|.
-name|status
-operator|=
-literal|0
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -14756,6 +14744,9 @@ name|em_rx_desc
 modifier|*
 name|current_desc
 decl_stmt|;
+name|uint8_t
+name|status
+decl_stmt|;
 name|ifp
 operator|=
 name|adapter
@@ -14892,10 +14883,14 @@ operator|->
 name|length
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|status
+operator|=
 name|current_desc
 operator|->
+name|status
+expr_stmt|;
+if|if
+condition|(
 name|status
 operator|&
 name|E1000_RXD_STAT_EOP
@@ -15005,8 +15000,6 @@ name|adapter
 operator|->
 name|hw
 argument_list|,
-name|current_desc
-operator|->
 name|status
 argument_list|,
 name|current_desc
@@ -15248,8 +15241,6 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|current_desc
-operator|->
 name|status
 operator|&
 name|E1000_RXD_STAT_VP
@@ -15400,23 +15391,18 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* Zero out the receive descriptors status. */
-name|adapter
-operator|->
-name|rx_desc_base
-index|[
-name|i
-index|]
-operator|.
-name|status
-operator|=
-literal|0
-expr_stmt|;
 name|m
 operator|=
 name|NULL
 expr_stmt|;
 block|}
+comment|/* Zero out the receive descriptors status. */
+name|current_desc
+operator|->
+name|status
+operator|=
+literal|0
+expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
 name|adapter
