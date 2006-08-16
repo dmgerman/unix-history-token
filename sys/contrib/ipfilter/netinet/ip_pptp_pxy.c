@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2002-2003 by Darren Reed  *  * Simple PPTP transparent proxy for in-kernel use.  For use with the NAT  * code.  *  * $Id: ip_pptp_pxy.c,v 2.10.2.11 2005/12/04 23:39:27 darrenr Exp $  *  */
+comment|/*  * Copyright (C) 2002-2003 by Darren Reed  *  * Simple PPTP transparent proxy for in-kernel use.  For use with the NAT  * code.  *  * $Id: ip_pptp_pxy.c,v 2.10.2.13 2006/03/17 10:40:05 darrenr Exp $  *  */
 end_comment
 
 begin_define
@@ -520,7 +520,9 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"ippr_pptp_new: GRE session already exists\n"
+literal|"ippr_pptp_new: GRE session %s\n"
+argument_list|,
+literal|"already exists"
 argument_list|)
 expr_stmt|;
 return|return
@@ -571,7 +573,9 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"ippr_pptp_new: malloc for aps_data failed\n"
+literal|"ippr_pptp_new: malloc for aps_data %s\n"
+argument_list|,
+literal|"failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1303,6 +1307,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|nat2
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
 name|nat
 operator|->
 name|nat_dir
@@ -1334,6 +1345,7 @@ name|nat_inip
 operator|.
 name|s_addr
 expr_stmt|;
+block|}
 name|fi
 operator|.
 name|fin_ifp
