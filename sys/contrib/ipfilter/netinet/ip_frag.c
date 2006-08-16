@@ -676,7 +676,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* static const char rcsid[] = "@(#)Id: ip_frag.c,v 2.77 2004/01/27 00:24:54 darrenr Exp"; */
+comment|/* static const char rcsid[] = "@(#)$Id: ip_frag.c,v 2.77.2.5 2006/02/26 08:26:54 darrenr Exp $";*/
 end_comment
 
 begin_endif
@@ -1336,6 +1336,10 @@ name|idx
 decl_stmt|,
 name|off
 decl_stmt|;
+name|frentry_t
+modifier|*
+name|fr
+decl_stmt|;
 name|ip_t
 modifier|*
 name|ip
@@ -1598,33 +1602,25 @@ return|return
 name|NULL
 return|;
 block|}
-name|fra
-operator|->
-name|ipfr_rule
+name|fr
 operator|=
 name|fin
 operator|->
 name|fin_fr
 expr_stmt|;
-if|if
-condition|(
 name|fra
 operator|->
 name|ipfr_rule
+operator|=
+name|fr
+expr_stmt|;
+if|if
+condition|(
+name|fr
 operator|!=
 name|NULL
 condition|)
 block|{
-name|frentry_t
-modifier|*
-name|fr
-decl_stmt|;
-name|fr
-operator|=
-name|fin
-operator|->
-name|fin_fr
-expr_stmt|;
 name|MUTEX_ENTER
 argument_list|(
 operator|&

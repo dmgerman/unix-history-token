@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001, 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_compat.h	1.8 1/14/96  * $FreeBSD$  * Id: ip_compat.h,v 2.142.2.25 2005/03/28 09:33:36 darrenr Exp  */
+comment|/*  * Copyright (C) 1993-2001, 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_compat.h	1.8 1/14/96  * $FreeBSD$  * Id: ip_compat.h,v 2.142.2.36 2006/03/26 05:50:29 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -3029,6 +3029,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|POLLWAKEUP
+parameter_list|(
+name|x
+parameter_list|)
+value|;
+end_define
+
+begin_define
+define|#
+directive|define
 name|KMALLOC
 parameter_list|(
 name|a
@@ -4009,6 +4019,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|POLLWAKEUP
+parameter_list|(
+name|x
+parameter_list|)
+value|;
+end_define
+
+begin_define
+define|#
+directive|define
 name|KFREE
 parameter_list|(
 name|x
@@ -4670,6 +4690,16 @@ parameter_list|,
 name|x
 parameter_list|)
 value|wakeup(id + x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|POLLWAKEUP
+parameter_list|(
+name|x
+parameter_list|)
+value|;
 end_define
 
 begin_define
@@ -7170,6 +7200,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|POLLWAKEUP
+parameter_list|(
+name|x
+parameter_list|)
+value|;
+end_define
+
+begin_define
+define|#
+directive|define
 name|UIOMOVE
 parameter_list|(
 name|a
@@ -7497,6 +7537,16 @@ parameter_list|,
 name|s
 parameter_list|)
 value|0, interruptible_sleep_on(x##_linux)
+end_define
+
+begin_define
+define|#
+directive|define
+name|POLLWAKEUP
+parameter_list|(
+name|x
+parameter_list|)
+value|;
 end_define
 
 begin_define
@@ -8743,6 +8793,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|POLLWAKEUP
+parameter_list|(
+name|x
+parameter_list|)
+value|;
+end_define
+
+begin_define
+define|#
+directive|define
 name|COPYIN
 parameter_list|(
 name|a
@@ -9621,6 +9681,16 @@ name|WAKEUP
 parameter_list|(
 name|x
 parameter_list|,
+name|y
+parameter_list|)
+value|;
+end_define
+
+begin_define
+define|#
+directive|define
+name|POLLWAKEUP
+parameter_list|(
 name|y
 parameter_list|)
 value|;
@@ -10865,6 +10935,16 @@ parameter_list|,
 name|x
 parameter_list|)
 value|wakeup(id+x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|POLLWAKEUP
+parameter_list|(
+name|x
+parameter_list|)
+value|selwakeup(ipfselwait+x)
 end_define
 
 begin_define
