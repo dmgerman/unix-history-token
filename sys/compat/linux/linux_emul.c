@@ -413,7 +413,7 @@ name|child_set_tid
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* allocate the shared struct only in clone()/fork cases  	 * in the case of clone() td = calling proc and child = pid of  	 * the newly created proc 	 */
+comment|/*  	 * allocate the shared struct only in clone()/fork cases  	 * in the case of clone() td = calling proc and child = pid of  	 * the newly created proc 	 */
 if|if
 condition|(
 name|child
@@ -773,7 +773,7 @@ operator|&
 name|cup
 argument_list|)
 expr_stmt|;
-comment|/* this cannot happen at the moment and if this happens 		 * it probably mean there is a userspace bug 		*/
+comment|/*  		 * this cannot happen at the moment and if this happens 		 * it probably mean there is a userspace bug 		 */
 if|if
 condition|(
 name|error
@@ -799,7 +799,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This is used in a case of transition from FreeBSD binary execing to linux binary  * in this case we create linux emuldata proc entry with the pid of the currently running  * process.  */
+comment|/*   * This is used in a case of transition from FreeBSD binary execing to linux binary  * in this case we create linux emuldata proc entry with the pid of the currently running  * process.  */
 end_comment
 
 begin_function
@@ -1062,7 +1062,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* We might have been called before proc_init for this process so 		 * tsleep and be woken up by it. We use p->p_emuldata for this 		 */
+comment|/*  		 * We might have been called before proc_init for this process so 		 * tsleep and be woken up by it. We use p->p_emuldata for this 		 */
 name|error
 operator|=
 name|tsleep
