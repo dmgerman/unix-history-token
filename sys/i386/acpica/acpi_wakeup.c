@@ -131,6 +131,25 @@ directive|include
 file|"acpi_wakecode.h"
 end_include
 
+begin_comment
+comment|/* Make sure the code is less than one page and leave room for the stack. */
+end_comment
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|wakecode
+argument_list|)
+operator|<
+name|PAGE_SIZE
+operator|-
+literal|1024
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -147,6 +166,13 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|acpi_resume_beep
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -169,9 +195,9 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|region_descriptor
-name|r_idt
+name|saved_idt
 decl_stmt|,
-name|r_gdt
+name|saved_gdt
 decl_stmt|,
 modifier|*
 name|p_gdt
@@ -181,7 +207,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|uint16_t
-name|r_ldt
+name|saved_ldt
 decl_stmt|;
 end_decl_stmt
 
@@ -239,8 +265,6 @@ begin_decl_stmt
 specifier|static
 name|uint32_t
 name|r_esp
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -317,7 +341,7 @@ name|__GNUCLIKE_ASM
 end_ifdef
 
 begin_asm
-asm|__asm__("				\n\ 	.text				\n\ 	.p2align 2, 0x90		\n\ 	.type acpi_restorecpu, @function\n\ acpi_restorecpu:			\n\ 	.align 4			\n\ 	movl	r_eax,%eax		\n\ 	movl	r_ebx,%ebx		\n\ 	movl	r_ecx,%ecx		\n\ 	movl	r_edx,%edx		\n\ 	movl	r_ebp,%ebp		\n\ 	movl	r_esi,%esi		\n\ 	movl	r_edi,%edi		\n\ 	movl	r_esp,%esp		\n\ 					\n\ 	pushl	r_efl			\n\ 	popfl				\n\ 					\n\ 	movl	ret_addr,%eax		\n\ 	movl	%eax,(%esp)		\n\ 	xorl	%eax,%eax		\n\ 	ret				\n\ 					\n\ 	.text				\n\ 	.p2align 2, 0x90		\n\ 	.type acpi_savecpu, @function	\n\ acpi_savecpu:				\n\ 	movw	%cs,r_cs		\n\ 	movw	%ds,r_ds		\n\ 	movw	%es,r_es		\n\ 	movw	%fs,r_fs		\n\ 	movw	%gs,r_gs		\n\ 	movw	%ss,r_ss		\n\ 					\n\ 	movl	%eax,r_eax		\n\ 	movl	%ebx,r_ebx		\n\ 	movl	%ecx,r_ecx		\n\ 	movl	%edx,r_edx		\n\ 	movl	%ebp,r_ebp		\n\ 	movl	%esi,r_esi		\n\ 	movl	%edi,r_edi		\n\ 					\n\ 	movl	%cr0,%eax		\n\ 	movl	%eax,r_cr0		\n\ 	movl	%cr2,%eax		\n\ 	movl	%eax,r_cr2		\n\ 	movl	%cr3,%eax		\n\ 	movl	%eax,r_cr3		\n\ 	movl	%cr4,%eax		\n\ 	movl	%eax,r_cr4		\n\ 					\n\ 	pushfl				\n\ 	popl	r_efl			\n\ 					\n\ 	movl	%esp,r_esp		\n\ 					\n\ 	sgdt	r_gdt			\n\ 	sidt	r_idt			\n\ 	sldt	r_ldt			\n\ 	str	r_tr			\n\ 					\n\ 	movl	(%esp),%eax		\n\ 	movl	%eax,ret_addr		\n\ 	movl	$1,%eax			\n\ 	ret				\n\ ");
+asm|__asm__("				\n\ 	.text				\n\ 	.p2align 2, 0x90		\n\ 	.type acpi_restorecpu, @function\n\ acpi_restorecpu:			\n\ 	.align 4			\n\ 	movl	r_eax,%eax		\n\ 	movl	r_ebx,%ebx		\n\ 	movl	r_ecx,%ecx		\n\ 	movl	r_edx,%edx		\n\ 	movl	r_ebp,%ebp		\n\ 	movl	r_esi,%esi		\n\ 	movl	r_edi,%edi		\n\ 	movl	r_esp,%esp		\n\ 					\n\ 	pushl	r_efl			\n\ 	popfl				\n\ 					\n\ 	movl	ret_addr,%eax		\n\ 	movl	%eax,(%esp)		\n\ 	xorl	%eax,%eax		\n\ 	ret				\n\ 					\n\ 	.text				\n\ 	.p2align 2, 0x90		\n\ 	.type acpi_savecpu, @function	\n\ acpi_savecpu:				\n\ 	movw	%cs,r_cs		\n\ 	movw	%ds,r_ds		\n\ 	movw	%es,r_es		\n\ 	movw	%fs,r_fs		\n\ 	movw	%gs,r_gs		\n\ 	movw	%ss,r_ss		\n\ 					\n\ 	movl	%eax,r_eax		\n\ 	movl	%ebx,r_ebx		\n\ 	movl	%ecx,r_ecx		\n\ 	movl	%edx,r_edx		\n\ 	movl	%ebp,r_ebp		\n\ 	movl	%esi,r_esi		\n\ 	movl	%edi,r_edi		\n\ 					\n\ 	movl	%cr0,%eax		\n\ 	movl	%eax,r_cr0		\n\ 	movl	%cr2,%eax		\n\ 	movl	%eax,r_cr2		\n\ 	movl	%cr3,%eax		\n\ 	movl	%eax,r_cr3		\n\ 	movl	%cr4,%eax		\n\ 	movl	%eax,r_cr4		\n\ 					\n\ 	pushfl				\n\ 	popl	r_efl			\n\ 					\n\ 	movl	%esp,r_esp		\n\ 					\n\ 	sgdt	saved_gdt		\n\ 	sidt	saved_idt		\n\ 	sldt	saved_ldt		\n\ 	str	r_tr			\n\ 					\n\ 	movl	(%esp),%eax		\n\ 	movl	%eax,ret_addr		\n\ 	movl	$1,%eax			\n\ 	ret				\n\ ");
 end_asm
 
 begin_endif
@@ -346,23 +370,23 @@ name|printf
 argument_list|(
 literal|"gdt[%04x:%08x] idt[%04x:%08x] ldt[%04x] tr[%04x] efl[%08x]\n"
 argument_list|,
-name|r_gdt
+name|saved_gdt
 operator|.
 name|rd_limit
 argument_list|,
-name|r_gdt
+name|saved_gdt
 operator|.
 name|rd_base
 argument_list|,
-name|r_idt
+name|saved_idt
 operator|.
 name|rd_limit
 argument_list|,
-name|r_idt
+name|saved_idt
 operator|.
 name|rd_base
 argument_list|,
-name|r_ldt
+name|saved_ldt
 argument_list|,
 name|r_tr
 argument_list|,
@@ -455,6 +479,36 @@ name|val
 parameter_list|)
 value|do	{		\ 	void	*addr;						\ 	addr = (void *)(sc->acpi_wakeaddr + offset);		\ 	bcopy(&(val), addr, sizeof(type));			\ } while (0)
 end_define
+
+begin_comment
+comment|/* Turn off bits 1&2 of the PIT, stopping the beep. */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|acpi_stop_beep
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|outb
+argument_list|(
+literal|0x61
+argument_list|,
+name|inb
+argument_list|(
+literal|0x61
+argument_list|)
+operator|&
+operator|~
+literal|0x3
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|int
@@ -644,7 +698,7 @@ name|p_gdt
 operator|->
 name|rd_limit
 operator|=
-name|r_gdt
+name|saved_gdt
 operator|.
 name|rd_limit
 expr_stmt|;
@@ -654,7 +708,7 @@ name|rd_base
 operator|=
 name|vtophys
 argument_list|(
-name|r_gdt
+name|saved_gdt
 operator|.
 name|rd_base
 argument_list|)
@@ -709,6 +763,15 @@ argument_list|)
 expr_stmt|;
 name|WAKECODE_FIXUP
 argument_list|(
+name|resume_beep
+argument_list|,
+name|uint32_t
+argument_list|,
+name|acpi_resume_beep
+argument_list|)
+expr_stmt|;
+name|WAKECODE_FIXUP
+argument_list|(
 name|reset_video
 argument_list|,
 name|uint32_t
@@ -732,7 +795,7 @@ argument_list|,
 expr|struct
 name|region_descriptor
 argument_list|,
-name|r_gdt
+name|saved_gdt
 argument_list|)
 expr_stmt|;
 name|WAKECODE_FIXUP
@@ -741,7 +804,7 @@ name|previous_ldt
 argument_list|,
 name|uint16_t
 argument_list|,
-name|r_ldt
+name|saved_ldt
 argument_list|)
 expr_stmt|;
 name|WAKECODE_BCOPY
@@ -751,7 +814,7 @@ argument_list|,
 expr|struct
 name|region_descriptor
 argument_list|,
-name|r_idt
+name|saved_idt
 argument_list|)
 expr_stmt|;
 name|WAKECODE_FIXUP
@@ -923,6 +986,22 @@ argument_list|(
 name|ef
 argument_list|)
 expr_stmt|;
+comment|/* If we beeped, turn it off after a delay. */
+if|if
+condition|(
+name|acpi_resume_beep
+condition|)
+name|timeout
+argument_list|(
+name|acpi_stop_beep
+argument_list|,
+name|NULL
+argument_list|,
+literal|3
+operator|*
+name|hz
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ret
@@ -949,8 +1028,6 @@ begin_decl_stmt
 specifier|static
 name|vm_offset_t
 name|acpi_wakeaddr
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -972,32 +1049,37 @@ operator|!
 name|cold
 condition|)
 return|return;
+comment|/* 	 * Specify the region for our wakeup code.  We want it in the low 1 MB 	 * region, excluding video memory and above (0xa0000).  We ask for 	 * it to be page-aligned, just to be safe. 	 */
 if|if
 condition|(
 name|bus_dma_tag_create
 argument_list|(
-comment|/* parent */
+comment|/*parent*/
 name|NULL
 argument_list|,
-comment|/* alignment */
-literal|2
+comment|/*alignment*/
+name|PAGE_SIZE
 argument_list|,
+comment|/*no boundary*/
 literal|0
 argument_list|,
-comment|/* lowaddr below 1MB */
+comment|/*lowaddr*/
 literal|0x9ffff
 argument_list|,
-comment|/* highaddr */
+comment|/*highaddr*/
 name|BUS_SPACE_MAXADDR
 argument_list|,
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+comment|/*maxsize*/
 name|PAGE_SIZE
 argument_list|,
+comment|/*segments*/
 literal|1
 argument_list|,
+comment|/*maxsegsize*/
 name|PAGE_SIZE
 argument_list|,
 literal|0
@@ -1035,6 +1117,8 @@ argument_list|,
 operator|&
 name|acpi_wakemap
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|printf
@@ -1093,13 +1177,27 @@ name|struct
 name|acpi_softc
 modifier|*
 name|sc
-init|=
-name|arg
 decl_stmt|;
 name|uint32_t
 modifier|*
 name|addr
 decl_stmt|;
+comment|/* Overwrite the ljmp target with the real address */
+name|sc
+operator|=
+name|arg
+expr_stmt|;
+name|sc
+operator|->
+name|acpi_wakephys
+operator|=
+name|segs
+index|[
+literal|0
+index|]
+operator|.
+name|ds_addr
+expr_stmt|;
 name|addr
 operator|=
 operator|(
@@ -1117,15 +1215,13 @@ expr_stmt|;
 operator|*
 name|addr
 operator|=
-name|segs
-index|[
-literal|0
-index|]
-operator|.
-name|ds_addr
+name|sc
+operator|->
+name|acpi_wakephys
 operator|+
 name|wakeup_32
 expr_stmt|;
+comment|/* Copy the wake code into our low page and save its physical addr. */
 name|bcopy
 argument_list|(
 name|wakecode
@@ -1144,17 +1240,30 @@ name|wakecode
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|acpi_dev
+argument_list|,
+literal|"wakeup code va %#x pa %#jx\n"
+argument_list|,
+name|acpi_wakeaddr
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sc
 operator|->
 name|acpi_wakephys
-operator|=
-name|segs
-index|[
-literal|0
-index|]
-operator|.
-name|ds_addr
+argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
