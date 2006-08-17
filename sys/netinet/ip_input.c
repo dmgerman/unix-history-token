@@ -1998,26 +1998,6 @@ goto|goto
 name|ours
 goto|;
 block|}
-ifndef|#
-directive|ifndef
-name|IPFIREWALL_FORWARD_EXTENDED
-name|dchg
-operator|=
-operator|(
-name|m_tag_find
-argument_list|(
-name|m
-argument_list|,
-name|PACKET_TAG_IPFORWARD
-argument_list|,
-name|NULL
-argument_list|)
-operator|!=
-name|NULL
-operator|)
-expr_stmt|;
-else|#
-directive|else
 if|if
 condition|(
 operator|(
@@ -2050,9 +2030,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
-comment|/* IPFIREWALL_FORWARD_EXTENDED */
 endif|#
 directive|endif
 comment|/* IPFIREWALL_FORWARD */
