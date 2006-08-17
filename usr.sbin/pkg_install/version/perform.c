@@ -1287,6 +1287,12 @@ condition|(
 name|ShowOrigin
 operator|!=
 name|FALSE
+operator|&&
+name|plist
+operator|.
+name|origin
+operator|!=
+name|NULL
 condition|)
 name|strlcpy
 argument_list|(
