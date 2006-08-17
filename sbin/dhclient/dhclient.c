@@ -2016,7 +2016,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-bdqu] "
+literal|"usage: %s [-bdpqu] "
 argument_list|,
 name|__progname
 argument_list|)
