@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: queue.c,v 8.954 2006/04/22 01:07:00 ca Exp $"
+literal|"@(#)$Id: queue.c,v 8.954.2.5 2006/07/31 21:44:18 ca Exp $"
 argument_list|)
 end_macro
 
@@ -9989,6 +9989,10 @@ operator|||
 name|QueueSortOrder
 operator|==
 name|QSO_BYMODTIME
+operator|||
+name|QueueSortOrder
+operator|==
+name|QSO_NONE
 operator|||
 name|QueueSortOrder
 operator|==
@@ -23732,9 +23736,28 @@ name|st
 operator|.
 name|st_dev
 condition|)
+block|{
+comment|/* 			**  Make sure the file system (FS) name is set: 			**  even though the source code indicates that 			**  FILE_SYS_DEV() is only set below, it could be 			**  set via shared memory, hence we need to perform 			**  this check/assignment here. 			*/
+if|if
+condition|(
+name|NULL
+operator|==
+name|FILE_SYS_NAME
+argument_list|(
+name|i
+argument_list|)
+condition|)
+name|FILE_SYS_NAME
+argument_list|(
+name|i
+argument_list|)
+operator|=
+name|name
+expr_stmt|;
 return|return
 name|i
 return|;
+block|}
 block|}
 if|if
 condition|(
@@ -24017,13 +24040,12 @@ decl_stmt|;
 if|#
 directive|if
 name|SM_CONF_SHM
-comment|/* only the daemon updates this structure */
 if|if
 condition|(
 name|ShmId
-operator|==
+operator|!=
 name|SM_SHM_NO_ID
-operator|||
+operator|&&
 name|DaemonPid
 operator|!=
 name|CurrentPid
