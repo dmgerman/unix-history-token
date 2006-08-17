@@ -1334,7 +1334,7 @@ define|#
 directive|define
 name|MUST_BE_FIRST
 parameter_list|()
-value|do {					\ 	if (!first) {						\ 		errmsg = "invalid address";			\ 		return ERR;					\ 	}							\ } while (0);
+value|do {					\ 	if (!first) {						\ 		errmsg = "invalid address";			\ 		return ERR;					\ 	}							\ } while (0)
 end_define
 
 begin_comment
