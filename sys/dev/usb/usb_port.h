@@ -1773,7 +1773,7 @@ parameter_list|,
 name|flag
 parameter_list|)
 define|\
-value|do { \ 		struct usb_attach_arg *uaap = device_get_ivars(dev); \ 		device_detach(dev); \ 		free(uaap, M_USB); \ 		device_delete_child(device_get_parent(dev), dev); \ 	} while (0);
+value|do { \ 		struct usb_attach_arg *uaap = device_get_ivars(dev); \ 		device_detach(dev); \ 		free(uaap, M_USB); \ 		device_delete_child(device_get_parent(dev), dev); \ 	} while (0)
 end_define
 
 begin_typedef
@@ -1897,7 +1897,7 @@ define|#
 directive|define
 name|USB_ATTACH_SETUP
 define|\
-value|do { \ 		sc->sc_dev = self; \ 		device_set_desc_copy(self, devinfo); \ 	} while (0);
+value|do { \ 		sc->sc_dev = self; \ 		device_set_desc_copy(self, devinfo); \ 	} while (0)
 end_define
 
 begin_define
