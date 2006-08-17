@@ -6448,6 +6448,13 @@ name|xl_type
 operator|=
 name|XL_TYPE_90X
 expr_stmt|;
+comment|/* Set the TX start threshold for best performance. */
+name|sc
+operator|->
+name|xl_tx_thresh
+operator|=
+name|XL_MIN_FRAMELEN
+expr_stmt|;
 name|ifp
 operator|->
 name|if_mtu
@@ -12409,12 +12416,6 @@ literal|8
 argument_list|)
 expr_stmt|;
 comment|/* Set the TX start threshold for best performance. */
-name|sc
-operator|->
-name|xl_tx_thresh
-operator|=
-name|XL_MIN_FRAMELEN
-expr_stmt|;
 name|CSR_WRITE_2
 argument_list|(
 name|sc
