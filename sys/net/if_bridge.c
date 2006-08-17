@@ -8484,11 +8484,6 @@ name|m_pkthdr
 operator|.
 name|rcvif
 expr_stmt|;
-name|BRIDGE_LOCK_ASSERT
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|=
 name|sc
@@ -9837,11 +9832,6 @@ literal|0
 decl_stmt|,
 name|i
 decl_stmt|;
-name|BRIDGE_LOCK_ASSERT
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|BRIDGE_LOCK2REF
 argument_list|(
 name|sc
