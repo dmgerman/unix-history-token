@@ -664,7 +664,7 @@ condition|)
 name|printf
 argument_list|(
 literal|"FUTEX_WAIT %d: val = %d, uaddr = %p, "
-literal|"*uaddr = %d, timeout = %d.%09ld\n"
+literal|"*uaddr = %d, timeout = %d.%09lu\n"
 argument_list|,
 name|td
 operator|->
@@ -686,6 +686,10 @@ name|timeout
 operator|.
 name|tv_sec
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|timeout
 operator|.
 name|tv_nsec
