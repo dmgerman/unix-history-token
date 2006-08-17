@@ -4811,11 +4811,10 @@ parameter_list|,
 name|ctx
 parameter_list|)
 define|\
-value|do {						\ 		(w)->wqi_func = (func);			\ 		(w)->wqi_ctx = (ctx);			\ 		InitializeListHead(&((w)->wqi_entry));	\ 	} while (0);
+value|do {						\ 		(w)->wqi_func = (func);			\ 		(w)->wqi_ctx = (ctx);			\ 		InitializeListHead(&((w)->wqi_entry));	\ 	} while (0)
 end_define
 
 begin_comment
-unit|\
 comment|/*  * FreeBSD's kernel stack is 2 pages in size by default. The  * Windows stack is larger, so we need to give our threads more  * stack pages. 4 should be enough, we use 8 just to extra safe.  */
 end_comment
 

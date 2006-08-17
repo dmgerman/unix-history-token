@@ -31,7 +31,7 @@ parameter_list|,
 name|pbp
 parameter_list|)
 define|\
-value|do { 							\ 		if (bp->bio_driver1 == NULL) {			\ 			bp->bio_driver1 = cbp;			\ 		} else {					\ 			pbp = bp->bio_driver1;			\ 			while (pbp->bio_caller1 != NULL)	\ 				pbp = pbp->bio_caller1;		\ 			pbp->bio_caller1 = cbp;			\ 		}						\ 	} while (0);
+value|do { 							\ 		if (bp->bio_driver1 == NULL) {			\ 			bp->bio_driver1 = cbp;			\ 		} else {					\ 			pbp = bp->bio_driver1;			\ 			while (pbp->bio_caller1 != NULL)	\ 				pbp = pbp->bio_caller1;		\ 			pbp->bio_caller1 = cbp;			\ 		}						\ 	} while (0)
 end_define
 
 begin_struct

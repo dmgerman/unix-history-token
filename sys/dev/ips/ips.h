@@ -250,7 +250,7 @@ name|command
 parameter_list|,
 name|error
 parameter_list|)
-value|do {				\ 	(command)->status.fields.basic_status = IPS_DRV_ERROR;		\ 	(command)->status.fields.reserved = ((error)& 0x0f);		\ } while (0);
+value|do {				\ 	(command)->status.fields.basic_status = IPS_DRV_ERROR;		\ 	(command)->status.fields.reserved = ((error)& 0x0f);		\ } while (0)
 end_define
 
 begin_ifndef

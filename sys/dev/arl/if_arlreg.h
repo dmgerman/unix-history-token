@@ -1088,7 +1088,7 @@ parameter_list|,
 name|delay
 parameter_list|)
 define|\
-value|do { \ 		int i; \ 		for (i = cnt; i&& ar->resetFlag; i--) { \ 			DELAY(delay); \ 		} \ 	} while (0);
+value|do { \ 		int i; \ 		for (i = cnt; i&& ar->resetFlag; i--) { \ 			DELAY(delay); \ 		} \ 	} while (0)
 end_define
 
 begin_ifdef
