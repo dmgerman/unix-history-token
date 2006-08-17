@@ -9482,13 +9482,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Clear the timeout timer. */
-name|ifp
-operator|->
-name|if_timer
-operator|=
-literal|0
-expr_stmt|;
 comment|/* 	 * Go through our tx list and free mbufs for those 	 * frames that have been uploaded. Note: the 3c905B 	 * sets a special bit in the status word to let us 	 * know that a frame has been downloaded, but the 	 * original 3c900/3c905 adapters don't do that. 	 * Consequently, we have to use a different test if 	 * xl_type != XL_TYPE_905B. 	 */
 while|while
 condition|(
@@ -9607,6 +9600,13 @@ name|if_drv_flags
 operator|&=
 operator|~
 name|IFF_DRV_OACTIVE
+expr_stmt|;
+comment|/* Clear the timeout timer. */
+name|ifp
+operator|->
+name|if_timer
+operator|=
+literal|0
 expr_stmt|;
 name|sc
 operator|->
@@ -9834,13 +9834,23 @@ argument_list|,
 name|XL_TX_LIST_CNT
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|xl_cdata
+operator|.
+name|xl_tx_cnt
+operator|==
+literal|0
+condition|)
 name|ifp
 operator|->
 name|if_timer
 operator|=
 literal|0
 expr_stmt|;
-block|}
 name|sc
 operator|->
 name|xl_cdata
