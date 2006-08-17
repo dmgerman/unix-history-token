@@ -58,7 +58,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: main.c,v 8.944 2006/04/21 23:56:42 ca Exp $"
+literal|"@(#)$Id: main.c,v 8.944.2.2 2006/08/03 22:05:03 ca Exp $"
 argument_list|)
 end_macro
 
@@ -9185,6 +9185,11 @@ index|[
 literal|200
 index|]
 decl_stmt|;
+comment|/* avoid cleanup in finis(), DaemonPid will be set below */
+name|DaemonPid
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -9285,6 +9290,7 @@ name|OpMode
 operator|==
 name|MD_DAEMON
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -9298,6 +9304,11 @@ sizeof|sizeof
 name|dtype
 argument_list|)
 expr_stmt|;
+name|DaemonPid
+operator|=
+name|CurrentPid
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|QueueIntvl
@@ -11376,6 +11387,13 @@ expr_stmt|;
 name|CurEnv
 operator|->
 name|e_rpool
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* this may have pointed to the rpool */
+name|CurEnv
+operator|->
+name|e_to
 operator|=
 name|NULL
 expr_stmt|;

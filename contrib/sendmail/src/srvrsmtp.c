@@ -39,7 +39,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: srvrsmtp.c,v 8.924.2.2 2006/05/31 20:56:37 ca Exp $"
+literal|"@(#)$Id: srvrsmtp.c,v 8.924.2.5 2006/07/07 16:29:39 ca Exp $"
 argument_list|)
 end_macro
 
@@ -3332,11 +3332,30 @@ name|char
 modifier|*
 name|response
 decl_stmt|;
+name|q
+operator|=
+name|macvalue
+argument_list|(
+name|macid
+argument_list|(
+literal|"{client_name}"
+argument_list|)
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|SM_ASSERT
+argument_list|(
+name|q
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|response
 operator|=
 name|milter_connect
 argument_list|(
-name|peerhostname
+name|q
 argument_list|,
 name|RealHostAddr
 argument_list|,
