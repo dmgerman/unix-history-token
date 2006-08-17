@@ -4082,7 +4082,8 @@ name|int
 name|gmatch
 decl_stmt|,
 name|gres
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|i
 decl_stmt|;
 name|char
