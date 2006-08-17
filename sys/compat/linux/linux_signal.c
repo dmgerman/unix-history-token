@@ -129,22 +129,6 @@ directive|include
 file|<compat/linux/linux_emul.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|sx
-name|emul_shared_lock
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|sx
-name|emul_lock
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|linux_to_bsd_sigset

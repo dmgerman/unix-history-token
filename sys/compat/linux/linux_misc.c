@@ -346,22 +346,6 @@ value|(((sig)<= LINUX_SIGTBLSZ) ? bsd_to_linux_signal[_SIG_IDX(sig)] : sig)
 end_define
 
 begin_decl_stmt
-specifier|extern
-name|struct
-name|sx
-name|emul_shared_lock
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|sx
-name|emul_lock
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|unsigned
 name|int
