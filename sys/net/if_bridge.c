@@ -8016,6 +8016,13 @@ name|used
 init|=
 literal|0
 decl_stmt|;
+name|bridge_span
+argument_list|(
+name|sc
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
 name|BRIDGE_LOCK2REF
 argument_list|(
 name|sc
@@ -8039,13 +8046,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|bridge_span
-argument_list|(
-name|sc
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|bif
