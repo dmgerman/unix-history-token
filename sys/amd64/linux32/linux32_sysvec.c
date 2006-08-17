@@ -5538,6 +5538,14 @@ expr_stmt|;
 name|sx_init
 argument_list|(
 operator|&
+name|emul_lock
+argument_list|,
+literal|"emuldata lock"
+argument_list|)
+expr_stmt|;
+name|sx_init
+argument_list|(
+operator|&
 name|emul_shared_lock
 argument_list|,
 literal|"emuldata->shared lock"
