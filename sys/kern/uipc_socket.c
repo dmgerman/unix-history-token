@@ -7118,11 +7118,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_mb
+name|m
+operator|!=
+name|NULL
 condition|)
 name|nextrecord
 operator|=
@@ -7137,7 +7135,11 @@ expr_stmt|;
 else|else
 name|nextrecord
 operator|=
-name|NULL
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_mb
 expr_stmt|;
 name|orig_resid
 operator|=
