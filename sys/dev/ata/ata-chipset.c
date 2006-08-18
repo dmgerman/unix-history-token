@@ -16248,7 +16248,7 @@ name|dma
 operator|->
 name|sg_bus
 operator|&
-literal|0xffffffff00000000
+literal|0xffffffff00000000ull
 operator|)
 operator|>>
 literal|32
