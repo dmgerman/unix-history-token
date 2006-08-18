@@ -20753,7 +20753,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|p
 operator|->
 name|sa
@@ -20764,10 +20763,7 @@ name|s_addr
 operator|=
 name|INADDR_ANY
 expr_stmt|;
-comment|/* htonl not needed */
-block|}
 else|else
-block|{
 name|lookup_host
 argument_list|(
 operator|*
@@ -20783,7 +20779,6 @@ name|sin_addr
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 name|ac
 operator|--
 expr_stmt|;
@@ -25211,7 +25206,7 @@ operator|++
 control|)
 block|{
 comment|/* Heuristic to print it the right way */
-comment|/* valuse< 64k are printed as numbers */
+comment|/* values< 64k are printed as numbers */
 name|unsigned
 name|int
 name|tval
