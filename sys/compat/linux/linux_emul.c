@@ -258,14 +258,10 @@ literal|0
 condition|)
 block|{
 comment|/* non-exec call */
-name|MALLOC
-argument_list|(
 name|em
-argument_list|,
-expr|struct
-name|linux_emuldata
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 expr|*
 name|em
@@ -299,14 +295,10 @@ name|linux_emuldata_shared
 modifier|*
 name|s
 decl_stmt|;
-name|MALLOC
-argument_list|(
 name|s
-argument_list|,
-expr|struct
-name|linux_emuldata_shared
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 expr|*
 name|s
@@ -671,7 +663,7 @@ name|refs
 operator|==
 literal|0
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|em
 operator|->
@@ -788,7 +780,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* clean the stuff up */
-name|FREE
+name|free
 argument_list|(
 name|em
 argument_list|,
