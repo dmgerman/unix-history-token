@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2002  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2004  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -71,6 +71,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|reading
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|quit_on_intr
 decl_stmt|;
 end_decl_stmt
 
@@ -748,6 +755,15 @@ operator|&
 name|S_INTERRUPT
 condition|)
 block|{
+if|if
+condition|(
+name|quit_on_intr
+condition|)
+name|quit
+argument_list|(
+name|QUIT_OK
+argument_list|)
+expr_stmt|;
 name|bell
 argument_list|()
 expr_stmt|;

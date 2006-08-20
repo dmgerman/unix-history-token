@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2002  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2005  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -79,6 +79,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|any_display
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|less_is_more
 decl_stmt|;
 end_decl_stmt
 
@@ -697,14 +704,12 @@ operator|=
 name|save_curr_ifile
 argument_list|()
 expr_stmt|;
+comment|/* 		 * Try to open the file containing the tag 		 * and search for the tag in that file. 		 */
 if|if
 condition|(
 name|edit_tagfile
 argument_list|()
-condition|)
-break|break;
-if|if
-condition|(
+operator|||
 operator|(
 name|pos
 operator|=
@@ -715,6 +720,7 @@ operator|==
 name|NULL_POSITION
 condition|)
 block|{
+comment|/* Failed: reopen the old file. */
 name|reedit_ifile
 argument_list|(
 name|save_ifile
@@ -861,6 +867,13 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+comment|/* 		 * In "more" mode, the -p argument is a command, 		 * not a search string, so we don't need a slash. 		 */
+if|if
+condition|(
+operator|!
+name|less_is_more
+condition|)
+empty_stmt|;
 name|ungetsc
 argument_list|(
 literal|"/"
@@ -1211,7 +1224,7 @@ argument_list|)
 expr_stmt|;
 name|putstr
 argument_list|(
-literal|"\nCopyright (C) 2002 Mark Nudelman\n\n"
+literal|"\nCopyright (C) 1984-2005 Mark Nudelman\n\n"
 argument_list|)
 expr_stmt|;
 name|putstr
@@ -1519,10 +1532,12 @@ operator|==
 name|TOGGLE
 condition|)
 block|{
-name|so_enter
-argument_list|()
+name|at_enter
+argument_list|(
+name|AT_STANDOUT
+argument_list|)
 expr_stmt|;
-name|so_exit
+name|at_exit
 argument_list|()
 expr_stmt|;
 block|}

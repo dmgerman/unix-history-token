@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2002  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2004  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -331,6 +331,17 @@ begin_comment
 comment|/* Use the LESSOPEN filter */
 end_comment
 
+begin_decl_stmt
+name|public
+name|int
+name|quit_on_intr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Quit on interrupt */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -352,6 +363,19 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+name|public
+name|int
+name|less_is_more
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Make compatible with POSIX more */
+end_comment
 
 begin_comment
 comment|/*  * Long option names.  */
@@ -599,6 +623,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|optname
+name|K__optname
+init|=
+block|{
+literal|"quit-on-intr"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1392,6 +1430,30 @@ block|,
 endif|#
 directive|endif
 block|{
+literal|'K'
+block|,
+operator|&
+name|K__optname
+block|,
+name|BOOL
+block|,
+name|OPT_OFF
+block|,
+operator|&
+name|quit_on_intr
+block|,
+name|NULL
+block|,
+block|{
+literal|"Interrupt (ctrl-C) returns to prompt"
+block|,
+literal|"Interrupt (ctrl-C) exits less"
+block|,
+name|NULL
+block|}
+block|}
+block|,
+block|{
 literal|'l'
 block|,
 name|NULL
@@ -2086,6 +2148,32 @@ name|loption
 modifier|*
 name|o
 decl_stmt|;
+name|char
+modifier|*
+name|p
+decl_stmt|;
+name|p
+operator|=
+name|lgetenv
+argument_list|(
+literal|"LESS_IS_MORE"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|)
+name|less_is_more
+operator|=
+literal|1
+expr_stmt|;
 for|for
 control|(
 name|o
@@ -2214,7 +2302,7 @@ operator|&
 name|TRIPLE
 operator|)
 operator|&&
-name|toupper
+name|ASCII_TO_UPPER
 argument_list|(
 name|o
 operator|->
@@ -2254,7 +2342,7 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-name|SIMPLE_IS_UPPER
+name|ASCII_IS_UPPER
 argument_list|(
 name|c
 argument_list|)
@@ -2264,7 +2352,7 @@ literal|1
 return|;
 if|if
 condition|(
-name|SIMPLE_IS_LOWER
+name|ASCII_IS_LOWER
 argument_list|(
 name|c
 argument_list|)
@@ -2373,10 +2461,6 @@ name|int
 name|exact
 init|=
 literal|0
-decl_stmt|;
-name|char
-modifier|*
-name|eq
 decl_stmt|;
 comment|/* 	 * Check all options. 	 */
 for|for

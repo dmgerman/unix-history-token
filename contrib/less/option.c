@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2002  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2004  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -390,7 +390,7 @@ argument_list|)
 expr_stmt|;
 name|lc
 operator|=
-name|SIMPLE_IS_LOWER
+name|ASCII_IS_LOWER
 argument_list|(
 name|optc
 argument_list|)
@@ -411,7 +411,7 @@ name|optname
 expr_stmt|;
 name|lc
 operator|=
-name|SIMPLE_IS_LOWER
+name|ASCII_IS_LOWER
 argument_list|(
 name|optname
 index|[
@@ -1086,7 +1086,7 @@ operator|->
 name|ovar
 operator|)
 argument_list|,
-name|islower
+name|ASCII_IS_LOWER
 argument_list|(
 name|c
 argument_list|)
@@ -1124,7 +1124,7 @@ name|o
 operator|->
 name|odefault
 argument_list|,
-name|islower
+name|ASCII_IS_LOWER
 argument_list|(
 name|c
 argument_list|)

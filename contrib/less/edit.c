@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2002  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2005  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_include
@@ -1075,6 +1075,20 @@ name|filename
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Re-open the current file. 		 */
+if|if
+condition|(
+name|was_curr_ifile
+operator|==
+name|ifile
+condition|)
+block|{
+comment|/* 			 * Whoops.  The "current" ifile is the one we just deleted. 			 * Just give up. 			 */
+name|quit
+argument_list|(
+name|QUIT_ERROR
+argument_list|)
+expr_stmt|;
+block|}
 name|reedit_ifile
 argument_list|(
 name|was_curr_ifile
@@ -1628,7 +1642,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Edit the next or previous file in the command line (ifile) list.  */
+comment|/*  * Edit the n-th next or previous file in the command line (ifile) list.  */
 end_comment
 
 begin_function
@@ -1764,6 +1778,7 @@ name|h
 argument_list|,
 name|n
 argument_list|,
+operator|+
 literal|1
 argument_list|)
 operator|)
@@ -1789,6 +1804,7 @@ name|curr_ifile
 argument_list|,
 name|n
 argument_list|,
+operator|+
 literal|1
 argument_list|)
 return|;

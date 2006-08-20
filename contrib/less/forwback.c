@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2002  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2005  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -345,15 +345,6 @@ operator|!
 name|do_repaint
 condition|)
 block|{
-comment|/* 		 * Forget any current line shift we might have 		 * (from the last line of the previous screenful). 		 */
-specifier|extern
-name|int
-name|cshift
-decl_stmt|;
-name|cshift
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|top_scroll
@@ -389,7 +380,13 @@ name|top_scroll
 operator|==
 name|OPT_ONPLUS
 operator|||
+operator|(
 name|first_time
+operator|&&
+name|top_scroll
+operator|!=
+name|OPT_ON
+operator|)
 condition|)
 name|clear
 argument_list|()
@@ -619,7 +616,10 @@ if|if
 condition|(
 name|clear_bg
 operator|&&
+name|apply_at_specials
+argument_list|(
 name|final_attr
+argument_list|)
 operator|!=
 name|AT_NORMAL
 condition|)

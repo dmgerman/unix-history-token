@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2002  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2004  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -603,6 +603,8 @@ operator|&&
 name|where
 operator|<
 name|sc_height
+operator|-
+literal|1
 condition|)
 name|pos
 operator|=
@@ -742,7 +744,7 @@ comment|/* Final line number known? */
 case|case
 literal|'D'
 case|:
-comment|/* Same as L */
+comment|/* Final page number known? */
 return|return
 operator|(
 name|linenums
@@ -963,6 +965,16 @@ decl_stmt|;
 name|IFILE
 name|h
 decl_stmt|;
+undef|#
+directive|undef
+name|PAGE_NUM
+define|#
+directive|define
+name|PAGE_NUM
+parameter_list|(
+name|linenum
+parameter_list|)
+value|((((linenum) - 1) / (sc_height - 1)) + 1)
 switch|switch
 condition|(
 name|c
@@ -1027,21 +1039,10 @@ literal|1
 condition|)
 name|ap_linenum
 argument_list|(
-operator|(
-operator|(
+name|PAGE_NUM
+argument_list|(
 name|linenum
-operator|-
-literal|1
-operator|)
-operator|/
-operator|(
-name|sc_height
-operator|-
-literal|1
-operator|)
-operator|)
-operator|+
-literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -1052,7 +1053,8 @@ break|break;
 case|case
 literal|'D'
 case|:
-comment|/* Last page number */
+comment|/* Final page number */
+comment|/* Find the page number of the last byte in the file (len-1). */
 name|len
 operator|=
 name|ch_length
@@ -1063,20 +1065,37 @@ condition|(
 name|len
 operator|==
 name|NULL_POSITION
-operator|||
+condition|)
+name|ap_quest
+argument_list|()
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|len
 operator|==
-name|ch_zero
-argument_list|()
-operator|||
-operator|(
+literal|0
+condition|)
+comment|/* An empty file has no pages. */
+name|ap_linenum
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|linenum
 operator|=
 name|find_linenum
 argument_list|(
 name|len
+operator|-
+literal|1
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|linenum
 operator|<=
 literal|0
 condition|)
@@ -1086,23 +1105,13 @@ expr_stmt|;
 else|else
 name|ap_linenum
 argument_list|(
-operator|(
-operator|(
+name|PAGE_NUM
+argument_list|(
 name|linenum
-operator|-
-literal|1
-operator|)
-operator|/
-operator|(
-name|sc_height
-operator|-
-literal|1
-operator|)
-operator|)
-operator|+
-literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 if|#
 directive|if
@@ -1932,7 +1941,7 @@ name|message
 condition|)
 return|return
 operator|(
-name|NULL
+literal|""
 operator|)
 return|;
 end_if
