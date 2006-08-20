@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1984-2002  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2005  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -58,6 +58,8 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|erase_char
+decl_stmt|,
+name|erase2_char
 decl_stmt|,
 name|kill_char
 decl_stmt|;
@@ -409,6 +411,13 @@ begin_decl_stmt
 specifier|static
 name|POSITION
 name|bottompos
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|save_hshift
 decl_stmt|;
 end_decl_stmt
 
@@ -1384,6 +1393,10 @@ name|erase_char
 operator|||
 name|c
 operator|==
+name|erase2_char
+operator|||
+name|c
+operator|==
 name|kill_char
 condition|)
 return|return
@@ -1419,7 +1432,7 @@ argument_list|()
 expr_stmt|;
 name|lc
 operator|=
-name|islower
+name|ASCII_IS_LOWER
 argument_list|(
 name|p
 index|[
@@ -1459,14 +1472,14 @@ condition|(
 operator|!
 name|lc
 operator|&&
-name|islower
+name|ASCII_IS_LOWER
 argument_list|(
 name|optchar
 argument_list|)
 condition|)
 name|optchar
 operator|=
-name|toupper
+name|ASCII_TO_UPPER
 argument_list|(
 name|optchar
 argument_list|)
@@ -1502,14 +1515,14 @@ condition|(
 operator|!
 name|lc
 operator|&&
-name|islower
+name|ASCII_IS_LOWER
 argument_list|(
 name|c
 argument_list|)
 condition|)
 name|c
 operator|=
-name|toupper
+name|ASCII_TO_UPPER
 argument_list|(
 name|c
 argument_list|)
@@ -1544,6 +1557,10 @@ condition|(
 name|c
 operator|==
 name|erase_char
+operator|||
+name|c
+operator|==
+name|erase2_char
 operator|||
 name|c
 operator|==
@@ -1973,7 +1990,7 @@ argument_list|(
 name|BOTTOM_PLUS_ONE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the -E flag is set and we've hit EOF on the last file, quit. 	 */
+comment|/* 	 * If we've hit EOF on the last file, and the -E flag is set 	 * (or -F is set and this is the first prompt), then quit. 	 * {{ Relying on "first prompt" to detect a single-screen file 	 * fails if +G is used, for example. }} 	 */
 if|if
 condition|(
 operator|(
@@ -2060,6 +2077,11 @@ condition|(
 name|p
 operator|==
 name|NULL
+operator|||
+operator|*
+name|p
+operator|==
+literal|'\0'
 condition|)
 name|putchr
 argument_list|(
@@ -2068,15 +2090,17 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|so_enter
-argument_list|()
+name|at_enter
+argument_list|(
+name|AT_STANDOUT
+argument_list|)
 expr_stmt|;
 name|putstr
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|so_exit
+name|at_exit
 argument_list|()
 expr_stmt|;
 block|}
@@ -2518,6 +2542,14 @@ condition|)
 block|{
 comment|/* 		 * Restore the file we were originally viewing. 		 */
 name|reedit_ifile
+argument_list|(
+name|save_ifile
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|unsave_ifile
 argument_list|(
 name|save_ifile
 argument_list|)
@@ -3474,6 +3506,10 @@ name|CH_HELPFILE
 condition|)
 block|{
 comment|/* 				 * Quit while viewing the help file 				 * just means return to viewing the 				 * previous file. 				 */
+name|hshift
+operator|=
+name|save_hshift
+expr_stmt|;
 if|if
 condition|(
 name|edit_prev
@@ -3659,6 +3695,14 @@ break|break;
 name|cmd_exec
 argument_list|()
 expr_stmt|;
+name|save_hshift
+operator|=
+name|hshift
+expr_stmt|;
+name|hshift
+operator|=
+literal|0
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -3782,12 +3826,11 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Cannot edit file processed with LESSOPEN"
+literal|"WARNING: This file was viewed via LESSOPEN"
 argument_list|,
 name|NULL_PARG
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
 name|start_mca
 argument_list|(
@@ -4414,6 +4457,10 @@ name|erase_char
 operator|||
 name|c
 operator|==
+name|erase2_char
+operator|||
+name|c
+operator|==
 name|kill_char
 operator|||
 name|c
@@ -4460,6 +4507,10 @@ condition|(
 name|c
 operator|==
 name|erase_char
+operator|||
+name|c
+operator|==
+name|erase2_char
 operator|||
 name|c
 operator|==
@@ -4525,6 +4576,10 @@ condition|(
 name|c
 operator|==
 name|erase_char
+operator|||
+name|c
+operator|==
+name|erase2_char
 operator|||
 name|c
 operator|==

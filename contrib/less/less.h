@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1984-2002  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2005  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -310,6 +310,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* OS-specific includes */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -326,6 +330,23 @@ begin_include
 include|#
 directive|include
 file|<strings.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__TANDEM
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<floss.h>
 end_include
 
 begin_endif
@@ -439,7 +460,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SIMPLE_IS_UPPER
+name|ASCII_IS_UPPER
 parameter_list|(
 name|c
 parameter_list|)
@@ -449,7 +470,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SIMPLE_IS_LOWER
+name|ASCII_IS_LOWER
 parameter_list|(
 name|c
 parameter_list|)
@@ -459,7 +480,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SIMPLE_TO_UPPER
+name|ASCII_TO_UPPER
 parameter_list|(
 name|c
 parameter_list|)
@@ -469,12 +490,48 @@ end_define
 begin_define
 define|#
 directive|define
-name|SIMPLE_TO_LOWER
+name|ASCII_TO_LOWER
 parameter_list|(
 name|c
 parameter_list|)
 value|((c) - 'A' + 'a')
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|IS_UPPER
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|IS_LOWER
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|TO_UPPER
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|TO_LOWER
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|IS_SPACE
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|IS_DIGIT
+end_undef
 
 begin_if
 if|#
@@ -486,41 +543,158 @@ end_if
 begin_define
 define|#
 directive|define
-name|isupper
+name|IS_UPPER
 parameter_list|(
 name|c
 parameter_list|)
-value|SIMPLE_IS_UPPER(c)
+value|ASCII_IS_UPPER(c)
 end_define
 
 begin_define
 define|#
 directive|define
-name|islower
+name|IS_LOWER
 parameter_list|(
 name|c
 parameter_list|)
-value|SIMPLE_IS_LOWER(c)
+value|ASCII_IS_LOWER(c)
 end_define
 
 begin_define
 define|#
 directive|define
-name|toupper
+name|TO_UPPER
 parameter_list|(
 name|c
 parameter_list|)
-value|SIMPLE_TO_UPPER(c)
+value|ASCII_TO_UPPER(c)
 end_define
 
 begin_define
 define|#
 directive|define
-name|tolower
+name|TO_LOWER
 parameter_list|(
 name|c
 parameter_list|)
-value|SIMPLE_TO_LOWER(c)
+value|ASCII_TO_LOWER(c)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|IS_UPPER
+parameter_list|(
+name|c
+parameter_list|)
+value|isupper((unsigned char) (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_LOWER
+parameter_list|(
+name|c
+parameter_list|)
+value|islower((unsigned char) (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TO_UPPER
+parameter_list|(
+name|c
+parameter_list|)
+value|toupper((unsigned char) (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TO_LOWER
+parameter_list|(
+name|c
+parameter_list|)
+value|tolower((unsigned char) (c))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|isspace
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|IS_SPACE
+parameter_list|(
+name|c
+parameter_list|)
+value|isspace((unsigned char)(c))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|IS_SPACE
+parameter_list|(
+name|c
+parameter_list|)
+value|((c) == ' ' || (c) == '\t' || (c) == '\n' || (c) == '\r' || (c) == '\f')
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|isdigit
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|IS_DIGIT
+parameter_list|(
+name|c
+parameter_list|)
+value|isdigit((unsigned char)(c))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|IS_DIGIT
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)>= '0'&& (c)<= '9')
 end_define
 
 begin_endif
@@ -640,6 +814,178 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|HAVE_SNPRINTF
+end_if
+
+begin_define
+define|#
+directive|define
+name|SNPRINTF1
+parameter_list|(
+name|str
+parameter_list|,
+name|size
+parameter_list|,
+name|fmt
+parameter_list|,
+name|v1
+parameter_list|)
+value|snprintf((str), (size), (fmt), (v1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNPRINTF2
+parameter_list|(
+name|str
+parameter_list|,
+name|size
+parameter_list|,
+name|fmt
+parameter_list|,
+name|v1
+parameter_list|,
+name|v2
+parameter_list|)
+value|snprintf((str), (size), (fmt), (v1), (v2))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNPRINTF3
+parameter_list|(
+name|str
+parameter_list|,
+name|size
+parameter_list|,
+name|fmt
+parameter_list|,
+name|v1
+parameter_list|,
+name|v2
+parameter_list|,
+name|v3
+parameter_list|)
+value|snprintf((str), (size), (fmt), (v1), (v2), (v3))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNPRINTF4
+parameter_list|(
+name|str
+parameter_list|,
+name|size
+parameter_list|,
+name|fmt
+parameter_list|,
+name|v1
+parameter_list|,
+name|v2
+parameter_list|,
+name|v3
+parameter_list|,
+name|v4
+parameter_list|)
+value|snprintf((str), (size), (fmt), (v1), (v2), (v3), (v4))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* Use unsafe sprintf if we don't have snprintf. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SNPRINTF1
+parameter_list|(
+name|str
+parameter_list|,
+name|size
+parameter_list|,
+name|fmt
+parameter_list|,
+name|v1
+parameter_list|)
+value|sprintf((str), (fmt), (v1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNPRINTF2
+parameter_list|(
+name|str
+parameter_list|,
+name|size
+parameter_list|,
+name|fmt
+parameter_list|,
+name|v1
+parameter_list|,
+name|v2
+parameter_list|)
+value|sprintf((str), (fmt), (v1), (v2))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNPRINTF3
+parameter_list|(
+name|str
+parameter_list|,
+name|size
+parameter_list|,
+name|fmt
+parameter_list|,
+name|v1
+parameter_list|,
+name|v2
+parameter_list|,
+name|v3
+parameter_list|)
+value|sprintf((str), (fmt), (v1), (v2), (v3))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNPRINTF4
+parameter_list|(
+name|str
+parameter_list|,
+name|size
+parameter_list|,
+name|fmt
+parameter_list|,
+name|v1
+parameter_list|,
+name|v2
+parameter_list|,
+name|v3
+parameter_list|,
+name|v4
+parameter_list|)
+value|sprintf((str), (fmt), (v1), (v2), (v3), (v4))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -685,6 +1031,14 @@ end_comment
 
 begin_typedef
 typedef|typedef
+name|unsigned
+name|long
+name|LWCHAR
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|off_t
 name|POSITION
 typedef|;
@@ -706,6 +1060,17 @@ end_define
 
 begin_comment
 comment|/* Min printing width of a line number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_UTF_CHAR_LEN
+value|6
+end_define
+
+begin_comment
+comment|/* Max bytes in one UTF-8 char */
 end_comment
 
 begin_define
@@ -1184,7 +1549,7 @@ begin_define
 define|#
 directive|define
 name|SRCH_FORW
-value|000001
+value|(1<< 0)
 end_define
 
 begin_comment
@@ -1195,7 +1560,7 @@ begin_define
 define|#
 directive|define
 name|SRCH_BACK
-value|000002
+value|(1<< 1)
 end_define
 
 begin_comment
@@ -1206,7 +1571,7 @@ begin_define
 define|#
 directive|define
 name|SRCH_NO_MOVE
-value|000004
+value|(1<< 2)
 end_define
 
 begin_comment
@@ -1217,7 +1582,7 @@ begin_define
 define|#
 directive|define
 name|SRCH_FIND_ALL
-value|000010
+value|(1<< 4)
 end_define
 
 begin_comment
@@ -1228,7 +1593,7 @@ begin_define
 define|#
 directive|define
 name|SRCH_NO_MATCH
-value|000100
+value|(1<< 8)
 end_define
 
 begin_comment
@@ -1239,7 +1604,7 @@ begin_define
 define|#
 directive|define
 name|SRCH_PAST_EOF
-value|000200
+value|(1<< 9)
 end_define
 
 begin_comment
@@ -1250,7 +1615,7 @@ begin_define
 define|#
 directive|define
 name|SRCH_FIRST_FILE
-value|000400
+value|(1<< 10)
 end_define
 
 begin_comment
@@ -1261,7 +1626,7 @@ begin_define
 define|#
 directive|define
 name|SRCH_NO_REGEX
-value|001000
+value|(1<< 12)
 end_define
 
 begin_comment
@@ -1359,7 +1724,7 @@ comment|/* Abort cmd if its entirely erased */
 end_comment
 
 begin_comment
-comment|/* Special chars used to tell put_line() to do something special */
+comment|/* Special char bit-flags used to tell put_line() to do something special */
 end_comment
 
 begin_define
@@ -1373,36 +1738,62 @@ begin_define
 define|#
 directive|define
 name|AT_UNDERLINE
-value|(1)
+value|(1<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AT_BOLD
-value|(2)
+value|(1<< 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AT_BLINK
-value|(3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AT_INVIS
-value|(4)
+value|(1<< 2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AT_STANDOUT
-value|(5)
+value|(1<< 3)
 end_define
+
+begin_define
+define|#
+directive|define
+name|AT_ANSI
+value|(1<< 4)
+end_define
+
+begin_comment
+comment|/* Content-supplied "ANSI" escape sequence */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_BINARY
+value|(1<< 5)
+end_define
+
+begin_comment
+comment|/* LESS*BINFMT representation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_HILITE
+value|(1<< 6)
+end_define
+
+begin_comment
+comment|/* Internal highlights (e.g., for search) */
+end_comment
 
 begin_if
 if|#
