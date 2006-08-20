@@ -646,8 +646,15 @@ name|ntohs
 argument_list|(
 name|lport
 argument_list|)
-operator|<
-name|IPV6PORT_RESERVED
+operator|<=
+name|ipport_reservedhigh
+operator|&&
+name|ntohs
+argument_list|(
+name|lport
+argument_list|)
+operator|>=
+name|ipport_reservedlow
 operator|&&
 name|suser_cred
 argument_list|(
