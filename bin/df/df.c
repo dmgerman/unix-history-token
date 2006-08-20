@@ -475,7 +475,7 @@ name|f_bsize
 operator|=
 name|DEV_BSIZE
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|totalbuf
 operator|.
@@ -2959,7 +2959,7 @@ name|strptr
 operator|++
 control|)
 block|{
-name|strncpy
+name|strlcpy
 argument_list|(
 name|strptr
 argument_list|,
