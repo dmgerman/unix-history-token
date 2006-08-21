@@ -1277,11 +1277,6 @@ name|immediate_daemon
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|persist
-init|=
-literal|0
-decl_stmt|;
 name|struct
 name|passwd
 modifier|*
@@ -1318,7 +1313,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"bc:dl:pqu"
+literal|"bc:dl:qu"
 argument_list|)
 operator|)
 operator|!=
@@ -1360,14 +1355,6 @@ case|:
 name|path_dhclient_db
 operator|=
 name|optarg
-expr_stmt|;
-break|break;
-case|case
-literal|'p'
-case|:
-name|persist
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1617,22 +1604,6 @@ operator|>
 literal|10
 condition|)
 block|{
-if|if
-condition|(
-name|persist
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|" giving up for now\n"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-else|else
-block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -1646,19 +1617,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 name|sleep
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|i
-operator|<=
-literal|10
-condition|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -2016,7 +1980,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-bdpqu] "
+literal|"usage: %s [-bdqu] "
 argument_list|,
 name|__progname
 argument_list|)
