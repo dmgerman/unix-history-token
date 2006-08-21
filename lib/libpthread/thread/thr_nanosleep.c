@@ -76,6 +76,10 @@ name|struct
 name|timespec
 name|remaining_time
 decl_stmt|;
+name|struct
+name|timespec
+name|wakeup_time
+decl_stmt|;
 comment|/* Check if the time to sleep is legal: */
 if|if
 condition|(
@@ -157,8 +161,6 @@ comment|/* Calculate the time for the current thread to wake up: */
 name|TIMESPEC_ADD
 argument_list|(
 operator|&
-name|curthread
-operator|->
 name|wakeup_time
 argument_list|,
 operator|&
@@ -177,6 +179,12 @@ operator|->
 name|interrupted
 operator|=
 literal|0
+expr_stmt|;
+name|curthread
+operator|->
+name|wakeup_time
+operator|=
+name|wakeup_time
 expr_stmt|;
 name|THR_SET_STATE
 argument_list|(
