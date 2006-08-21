@@ -101,14 +101,6 @@ directive|include
 file|<vm/vm_page.h>
 end_include
 
-begin_expr_stmt
-name|SYSCTL_DECL
-argument_list|(
-name|_vm_stats_misc
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 specifier|static
 name|int
