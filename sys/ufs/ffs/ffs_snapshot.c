@@ -12205,6 +12205,12 @@ name|saved_runningbufspace
 decl_stmt|;
 if|if
 condition|(
+name|devvp
+operator|!=
+name|bp
+operator|->
+name|b_vp
+operator|&&
 operator|(
 name|VTOI
 argument_list|(
