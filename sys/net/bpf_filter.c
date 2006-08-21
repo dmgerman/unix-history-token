@@ -1461,7 +1461,7 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
-name|char
+name|u_char
 operator|*
 argument_list|)
 index|[
@@ -1546,7 +1546,7 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
-name|char
+name|u_char
 operator|*
 argument_list|)
 index|[
