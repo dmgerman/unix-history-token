@@ -518,6 +518,9 @@ name|rtld_kse_lock
 modifier|*
 name|l
 decl_stmt|;
+if|if
+condition|(
+operator|(
 name|l
 operator|=
 name|malloc
@@ -528,7 +531,11 @@ expr|struct
 name|rtld_kse_lock
 argument_list|)
 argument_list|)
-expr_stmt|;
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
 name|_lock_init
 argument_list|(
 operator|&
@@ -561,6 +568,7 @@ name|write
 operator|=
 literal|0
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|l
