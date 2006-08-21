@@ -419,6 +419,13 @@ argument_list|)
 block|,
 name|NETWORK
 argument_list|(
+literal|"ath"
+argument_list|,
+literal|"Atheros IEEE 802.11 wireless adapter"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
 literal|"aue"
 argument_list|,
 literal|"ADMtek USB ethernet adapter"
@@ -429,6 +436,13 @@ argument_list|(
 literal|"axe"
 argument_list|,
 literal|"ASIX Electronics USB ethernet adapter"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
+literal|"bce"
+argument_list|,
+literal|"Broadcom NetXtreme II Gigabit Ethernet card"
 argument_list|)
 block|,
 name|NETWORK
@@ -517,13 +531,6 @@ argument_list|)
 block|,
 name|NETWORK
 argument_list|(
-literal|"el"
-argument_list|,
-literal|"3Com 3C501 ethernet card"
-argument_list|)
-block|,
-name|NETWORK
-argument_list|(
 literal|"em"
 argument_list|,
 literal|"Intel(R) PRO/1000 ethernet card"
@@ -559,9 +566,9 @@ argument_list|)
 block|,
 name|NETWORK
 argument_list|(
-literal|"ix"
+literal|"ixgb"
 argument_list|,
-literal|"Intel Etherexpress ethernet card"
+literal|"Intel(R) PRO/10Gb Ethernet card"
 argument_list|)
 block|,
 name|NETWORK
@@ -594,9 +601,30 @@ argument_list|)
 block|,
 name|NETWORK
 argument_list|(
+literal|"mxge"
+argument_list|,
+literal|"Myricom Myri10GE 10Gb Ethernet card"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
+literal|"nfe"
+argument_list|,
+literal|"NVIDIA nForce MCP Ethernet"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
 literal|"nge"
 argument_list|,
 literal|"NatSemi PCI gigabit ethernet card"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
+literal|"nve"
+argument_list|,
+literal|"NVIDIA nForce MCP Ethernet"
 argument_list|)
 block|,
 name|NETWORK
@@ -784,6 +812,13 @@ argument_list|(
 literal|"fwe"
 argument_list|,
 literal|"FireWire Ethernet emulation"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
+literal|"fwip"
+argument_list|,
+literal|"IP over FireWire"
 argument_list|)
 block|,
 name|NETWORK
