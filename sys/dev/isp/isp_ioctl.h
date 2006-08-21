@@ -94,24 +94,6 @@ name|ISP_ROLE_BOTH
 value|(ISP_ROLE_TARGET|ISP_ROLE_INITIATOR)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ISP_DEFAULT_ROLES
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ISP_DEFAULT_ROLES
-value|ISP_ROLE_BOTH
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Get the current adapter role  */
 end_comment
