@@ -3702,24 +3702,6 @@ literal|"vm_page_free: freeing wired page"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Clear the UNMANAGED flag when freeing an unmanaged page. 	 */
-if|if
-condition|(
-name|m
-operator|->
-name|flags
-operator|&
-name|PG_UNMANAGED
-condition|)
-block|{
-name|m
-operator|->
-name|flags
-operator|&=
-operator|~
-name|PG_UNMANAGED
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|m
