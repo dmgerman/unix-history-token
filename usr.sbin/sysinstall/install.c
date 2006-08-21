@@ -2349,7 +2349,7 @@ name|msgNotify
 argument_list|(
 literal|"Waiting for fixit shell to exit.  Go to VTY4 now by\n"
 literal|"typing ALT-F4.  When you are done, type ``exit'' to exit\n"
-literal|"the fixit shell and be returned here\n."
+literal|"the fixit shell and be returned here.\n"
 argument_list|)
 expr_stmt|;
 block|}
