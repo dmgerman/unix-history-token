@@ -335,7 +335,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|vm_page_zero_idle
 parameter_list|(
 name|void
@@ -463,11 +463,6 @@ operator|&
 name|vm_page_queue_free_mtx
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 
