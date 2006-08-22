@@ -297,10 +297,11 @@ name|u_char
 modifier|*
 name|sr_wcount
 decl_stmt|;
-name|u_short
+name|void
 modifier|*
 name|sr_bcount
 decl_stmt|;
+comment|/* Points to 2-byte buffer. */
 name|struct
 name|mdchain
 name|sr_rp
@@ -343,14 +344,16 @@ name|u_int8_t
 modifier|*
 name|sr_rqsig
 decl_stmt|;
-name|u_int16_t
+name|void
 modifier|*
 name|sr_rqtid
 decl_stmt|;
-name|u_int16_t
+comment|/* Points to 2-byte buffer. */
+name|void
 modifier|*
 name|sr_rquid
 decl_stmt|;
+comment|/* Points to 2-byte buffer. */
 name|u_int8_t
 name|sr_errclass
 decl_stmt|;
