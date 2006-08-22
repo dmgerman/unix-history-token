@@ -51,6 +51,12 @@ directive|include
 file|<vm/pmap.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_global.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -60,7 +66,7 @@ end_ifndef
 begin_error
 error|#
 directive|error
-error|You must have a I686_CPU in your kernel if you want to make an XBOX-compatible kernel
+error|You must have a I686_CPU in your kernel if you want to make an XBOX-compitable kernel
 end_error
 
 begin_endif

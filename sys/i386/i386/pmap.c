@@ -46,6 +46,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_xbox.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -131,6 +137,23 @@ begin_include
 include|#
 directive|include
 file|<sys/smp.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XBOX
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/xbox.h>
 end_include
 
 begin_endif
@@ -1528,6 +1551,17 @@ name|CMAP1
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XBOX
+comment|/* FIXME: This is gross, but needed for the XBOX. Since we are in such 	 * an early stadium, we cannot yet neatly map video memory ... :-( 	 * Better fixes are very welcome! 	 */
+if|if
+condition|(
+operator|!
+name|arch_i386_is_xbox
+condition|)
+endif|#
+directive|endif
 for|for
 control|(
 name|i

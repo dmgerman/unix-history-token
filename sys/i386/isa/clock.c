@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_xbox.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -249,6 +255,23 @@ begin_include
 include|#
 directive|include
 file|<i386/bios/mca_machdep.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XBOX
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/xbox.h>
 end_include
 
 begin_endif
@@ -1862,6 +1885,20 @@ operator|)
 return|;
 name|fail
 label|:
+ifdef|#
+directive|ifdef
+name|XBOX
+if|if
+condition|(
+name|arch_i386_is_xbox
+condition|)
+name|timer_freq
+operator|=
+literal|1125000
+expr_stmt|;
+comment|/* gives ~733.34MHz CPU clock */
+endif|#
+directive|endif
 if|if
 condition|(
 name|bootverbose

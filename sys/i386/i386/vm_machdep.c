@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_xbox.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -277,6 +283,23 @@ begin_include
 include|#
 directive|include
 file|<i386/isa/isa.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XBOX
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/xbox.h>
 end_include
 
 begin_endif
@@ -1955,6 +1978,27 @@ name|void
 name|cpu_reset
 parameter_list|()
 block|{
+ifdef|#
+directive|ifdef
+name|XBOX
+if|if
+condition|(
+name|arch_i386_is_xbox
+condition|)
+block|{
+comment|/* Kick the PIC16L, it can reboot the box */
+name|pic16l_reboot
+argument_list|()
+expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+empty_stmt|;
+block|}
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|SMP
