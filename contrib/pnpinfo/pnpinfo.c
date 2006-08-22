@@ -2860,22 +2860,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|__alpha__
-name|ioperm
-argument_list|(
-literal|0x203
-argument_list|,
-literal|0x400
-operator|-
-literal|0x203
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|printf
 argument_list|(
 literal|"Checking for Plug-n-Play devices...\n"
