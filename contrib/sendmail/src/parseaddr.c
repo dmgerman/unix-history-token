@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: parseaddr.c,v 8.383 2006/02/01 19:46:11 ca Exp $"
+literal|"@(#)$Id: parseaddr.c,v 8.384 2006/04/18 01:28:47 ca Exp $"
 argument_list|)
 end_macro
 
@@ -6601,11 +6601,19 @@ name|mapname
 operator|==
 name|NULL
 condition|)
+block|{
 name|syserr
 argument_list|(
 literal|"554 5.3.0 rewrite: missing mapname"
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
+name|SM_ASSERT
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|map
 operator|=
@@ -6643,6 +6651,7 @@ name|key_rvp
 operator|==
 name|NULL
 condition|)
+block|{
 name|syserr
 argument_list|(
 literal|"554 5.3.0 rewrite: missing key for map %s"
@@ -6650,6 +6659,13 @@ argument_list|,
 name|mapname
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
+name|SM_ASSERT
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 name|default_rvp
 operator|=
 name|NULL
@@ -13624,16 +13640,12 @@ else|:
 name|p2
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|SM_REQUIRE
+argument_list|(
 name|pvp
 operator|!=
 name|NULL
-condition|)
-operator|*
-name|pvp
-operator|=
-name|NULL
+argument_list|)
 expr_stmt|;
 name|rsno
 operator|=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$FreeBSD$  *  */
+comment|/*  * Copyright (c) 1998-2003, 2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$FreeBSD$  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: savemail.c,v 8.306 2006/02/25 02:16:53 ca Exp $"
+literal|"@(#)$Id: savemail.c,v 8.308 2006/04/18 01:31:33 ca Exp $"
 argument_list|)
 end_macro
 
@@ -2912,7 +2912,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  ERRBODY -- output the body of an error message. ** **	Typically this is a copy of the transcript plus a copy of the **	original offending message. ** **	Parameters: **		mci -- the mailer connection information. **		e -- the envelope we are working in. **		separator -- any possible MIME separator (unused). ** **	Returns: **		success ** **	Side Effects: **		Outputs the body of an error message. */
+comment|/* **  ERRBODY -- output the body of an error message. ** **	Typically this is a copy of the transcript plus a copy of the **	original offending message. ** **	Parameters: **		mci -- the mailer connection information. **		e -- the envelope we are working in. **		separator -- any possible MIME separator (unused). ** **	Returns: **		true iff body was written successfully ** **	Side Effects: **		Outputs the body of an error message. */
 end_comment
 
 begin_comment
@@ -5487,6 +5487,15 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|q
+operator|->
+name|q_mailer
+operator|==
+name|NULL
+operator|||
+operator|(
 name|p
 operator|=
 name|q
@@ -5494,10 +5503,7 @@ operator|->
 name|q_mailer
 operator|->
 name|m_diagtype
-expr_stmt|;
-if|if
-condition|(
-name|p
+operator|)
 operator|==
 name|NULL
 condition|)

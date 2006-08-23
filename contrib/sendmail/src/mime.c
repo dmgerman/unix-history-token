@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1994, 1996-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2003, 2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1994, 1996-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: mime.c,v 8.139 2006/03/01 18:07:45 ca Exp $"
+literal|"@(#)$Id: mime.c,v 8.142.2.1 2006/05/23 01:32:08 ca Exp $"
 argument_list|)
 end_macro
 
@@ -904,7 +904,7 @@ name|subtype
 operator|=
 literal|"-none-"
 expr_stmt|;
-comment|/* don't propogate some flags more than one level into the message */
+comment|/* don't propagate some flags more than one level into the message */
 name|flags
 operator|&=
 operator|~

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2005 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 2000-2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: tls.c,v 8.102 2006/03/02 19:18:27 ca Exp $"
+literal|"@(#)$Id: tls.c,v 8.105 2006/05/11 22:59:31 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1956,6 +1956,44 @@ literal|"sendmail8"
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* 0.9.8a and b have a problem with SSL_OP_TLS_BLOCK_PADDING_BUG */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|OPENSSL_VERSION_NUMBER
+operator|>=
+literal|0x0090800fL
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SM_SSL_OP_TLS_BLOCK_PADDING_BUG
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SM_SSL_OP_TLS_BLOCK_PADDING_BUG
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|bool
 name|inittls
@@ -2032,6 +2070,8 @@ name|long
 name|sff
 decl_stmt|,
 name|status
+decl_stmt|,
+name|options
 decl_stmt|;
 name|char
 modifier|*
@@ -2080,6 +2120,21 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* OPENSSL_VERSION_NUMBER> 0x00907000L */
+if|#
+directive|if
+name|SM_SSL_OP_TLS_BLOCK_PADDING_BUG
+name|long
+name|rt_version
+decl_stmt|;
+name|STACK_OF
+argument_list|(
+name|SSL_COMP
+argument_list|)
+operator|*
+name|comp_methods
+expr_stmt|;
+endif|#
+directive|endif
 name|status
 operator|=
 name|TLS_S_NONE
@@ -2098,6 +2153,7 @@ name|ctx
 operator|==
 name|NULL
 condition|)
+block|{
 name|syserr
 argument_list|(
 literal|"STARTTLS=%s, inittls: ctx == NULL"
@@ -2105,6 +2161,15 @@ argument_list|,
 name|who
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
+name|SM_ASSERT
+argument_list|(
+name|ctx
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* already initialized? (we could re-init...) */
 if|if
 condition|(
@@ -3553,15 +3618,65 @@ endif|#
 directive|endif
 comment|/* _FFR_TLS_1 */
 comment|/* SSL_CTX_set_quiet_shutdown(*ctx, 1); violation of standard? */
+name|options
+operator|=
+name|SSL_OP_ALL
+expr_stmt|;
+comment|/* bug compatibility? */
+if|#
+directive|if
+name|SM_SSL_OP_TLS_BLOCK_PADDING_BUG
+comment|/* 	**  In OpenSSL 0.9.8[ab], enabling zlib compression breaks the 	**  padding bug work-around, leading to false positives and 	**  failed connections. We may not interoperate with systems 	**  with the bug, but this is better than breaking on all 0.9.8[ab] 	**  systems that have zlib support enabled. 	**  Note: this checks the runtime version of the library, not 	**  just the compile time version. 	*/
+name|rt_version
+operator|=
+name|SSLeay
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|rt_version
+operator|>=
+literal|0x00908000L
+operator|&&
+name|rt_version
+operator|<=
+literal|0x0090802fL
+condition|)
+block|{
+name|comp_methods
+operator|=
+name|SSL_COMP_get_compression_methods
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|comp_methods
+operator|!=
+name|NULL
+operator|&&
+name|sk_SSL_COMP_num
+argument_list|(
+name|comp_methods
+argument_list|)
+operator|>
+literal|0
+condition|)
+name|options
+operator|&=
+operator|~
+name|SSL_OP_TLS_BLOCK_PADDING_BUG
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|SSL_CTX_set_options
 argument_list|(
 operator|*
 name|ctx
 argument_list|,
-name|SSL_OP_ALL
+name|options
 argument_list|)
 expr_stmt|;
-comment|/* XXX bug compatibility? */
 if|#
 directive|if
 operator|!
