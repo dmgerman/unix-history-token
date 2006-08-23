@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1999-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  *  Copyright (c) 1999-2004, 2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: engine.c,v 8.120 2004/10/20 21:09:00 ca Exp $"
+literal|"@(#)$Id: engine.c,v 8.121 2006/04/18 21:01:46 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1011,6 +1011,13 @@ name|NX_UNKN
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|SIZE_NEXT_STATES
+value|(sizeof(next_states) / sizeof(next_states[0]))
+end_define
 
 begin_comment
 comment|/* commands received by milter */
@@ -4819,6 +4826,15 @@ name|s
 operator|=
 name|old
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|>=
+name|SIZE_NEXT_STATES
+condition|)
+return|return
+name|false
+return|;
 do|do
 block|{
 comment|/* is this state transition allowed? */
@@ -4848,6 +4864,15 @@ name|s
 operator|+
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|>=
+name|SIZE_NEXT_STATES
+condition|)
+return|return
+name|false
+return|;
 comment|/* 		**  can we actually "skip" this state? 		**  see fix_stm() which sets this bit for those 		**  states which the filter program is not interested in 		*/
 if|if
 condition|(
@@ -4873,8 +4898,8 @@ block|}
 do|while
 condition|(
 name|s
-operator|<=
-name|ST_LAST
+operator|<
+name|SIZE_NEXT_STATES
 condition|)
 do|;
 return|return

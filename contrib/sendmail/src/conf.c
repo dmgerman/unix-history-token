@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: conf.c,v 8.1081 2006/02/24 02:21:53 ca Exp $"
+literal|"@(#)$Id: conf.c,v 8.1082 2006/03/22 22:49:33 ca Exp $"
 argument_list|)
 end_macro
 
@@ -9167,7 +9167,7 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"true (memfree=%ld< QueueLowMem)\n"
+literal|"true (memfree=%ld< QueueLowMem=%ld)\n"
 argument_list|,
 name|memfree
 argument_list|,

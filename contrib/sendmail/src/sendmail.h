@@ -230,7 +230,7 @@ end_macro
 
 begin_expr_stmt
 operator|=
-literal|"@(#)$Id: sendmail.h,v 8.1006 2006/02/27 17:49:09 ca Exp $"
+literal|"@(#)$Id: sendmail.h,v 8.1008.2.1 2006/05/23 01:32:07 ca Exp $"
 expr_stmt|;
 end_expr_stmt
 
@@ -14228,6 +14228,10 @@ modifier|*
 name|MessageAccept
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* "Message accepted for delivery" reply text */
+end_comment
 
 begin_endif
 endif|#

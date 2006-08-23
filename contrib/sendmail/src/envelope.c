@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: envelope.c,v 8.295 2005/06/15 20:32:18 ca Exp $"
+literal|"@(#)$Id: envelope.c,v 8.296 2006/03/31 18:53:50 ca Exp $"
 argument_list|)
 end_macro
 
@@ -2383,6 +2383,35 @@ condition|(
 operator|!
 name|panic
 condition|)
+block|{
+if|if
+condition|(
+name|e
+operator|->
+name|e_dfp
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sm_io_close
+argument_list|(
+name|e
+operator|->
+name|e_dfp
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|)
+expr_stmt|;
+name|e
+operator|->
+name|e_dfp
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -2396,6 +2425,7 @@ name|DATAFL_LETTER
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|panic

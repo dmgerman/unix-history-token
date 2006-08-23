@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2002, 2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * Contributed by Exactis.com, Inc.  *  */
+comment|/*  * Copyright (c) 1999-2002, 2004, 2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * Contributed by Exactis.com, Inc.  *  */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: bf.c,v 8.61 2004/08/03 23:59:02 ca Exp $"
+literal|"@(#)$Id: bf.c,v 8.62 2006/03/31 18:45:56 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1777,6 +1777,9 @@ block|{
 name|MODE_T
 name|omask
 decl_stmt|;
+name|int
+name|save_errno
+decl_stmt|;
 comment|/* Clear umask as bf_filemode are the true perms */
 name|omask
 operator|=
@@ -1810,6 +1813,10 @@ operator|->
 name|bf_flags
 argument_list|)
 expr_stmt|;
+name|save_errno
+operator|=
+name|errno
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1817,6 +1824,10 @@ name|umask
 argument_list|(
 name|omask
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|save_errno
 expr_stmt|;
 comment|/* Couldn't create file: failure */
 if|if
