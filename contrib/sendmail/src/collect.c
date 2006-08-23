@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: collect.c,v 8.272 2006/03/02 19:09:26 ca Exp $"
+literal|"@(#)$Id: collect.c,v 8.273 2006/03/31 18:51:47 ca Exp $"
 argument_list|)
 end_macro
 
@@ -3057,6 +3057,20 @@ operator|=
 name|QS_FATALERR
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|sm_io_close
+argument_list|(
+name|df
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|)
+expr_stmt|;
+name|df
+operator|=
+name|NULL
+expr_stmt|;
 name|finis
 argument_list|(
 name|true

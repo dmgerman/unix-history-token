@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: mfapi.h,v 8.60 2004/08/20 21:24:14 ca Exp $  */
+comment|/*  * Copyright (c) 1999-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: mfapi.h,v 8.61 2006/05/04 17:02:01 ca Exp $  */
 end_comment
 
 begin_comment
@@ -449,7 +449,7 @@ directive|if
 name|SMFI_VERSION
 operator|>
 literal|3
-comment|/* any unrecognized or unimplemented command filter */
+comment|/* SMTP DATA command filter */
 name|sfsistat
 argument_list|(
 argument|*xxfi_data

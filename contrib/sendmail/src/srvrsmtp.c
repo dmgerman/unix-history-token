@@ -39,7 +39,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: srvrsmtp.c,v 8.922 2006/02/28 00:42:13 ca Exp $"
+literal|"@(#)$Id: srvrsmtp.c,v 8.924.2.5 2006/07/07 16:29:39 ca Exp $"
 argument_list|)
 end_macro
 
@@ -488,6 +488,9 @@ operator|*
 operator|,
 name|ENVELOPE
 operator|*
+operator|,
+name|unsigned
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -529,6 +532,9 @@ operator|*
 operator|,
 name|ENVELOPE
 operator|*
+operator|,
+name|unsigned
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2254,12 +2260,17 @@ operator|)
 operator|)
 operator||
 operator|(
+operator|(
 name|bitset
 argument_list|(
 name|PRIV_NORECEIPTS
 argument_list|,
 name|PrivacyFlags
 argument_list|)
+operator|||
+operator|!
+name|SendMIMEErrors
+operator|)
 condition|?
 name|SRV_NONE
 else|:
@@ -3321,11 +3332,30 @@ name|char
 modifier|*
 name|response
 decl_stmt|;
+name|q
+operator|=
+name|macvalue
+argument_list|(
+name|macid
+argument_list|(
+literal|"{client_name}"
+argument_list|)
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|SM_ASSERT
+argument_list|(
+name|q
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|response
 operator|=
 name|milter_connect
 argument_list|(
-name|peerhostname
+name|q
 argument_list|,
 name|RealHostAddr
 argument_list|,
@@ -5150,7 +5180,18 @@ operator|>
 literal|0
 condition|)
 block|{
+name|int
+name|tmo
+decl_stmt|;
 comment|/* 					**  Convert I/O layer to use SASL. 					**  If the call fails, the connection 					**  is aborted. 					*/
+name|tmo
+operator|=
+name|TimeOuts
+operator|.
+name|to_datablock
+operator|*
+literal|1000
+expr_stmt|;
 if|if
 condition|(
 name|sfdcsasl
@@ -5162,6 +5203,8 @@ operator|&
 name|OutChannel
 argument_list|,
 name|conn
+argument_list|,
+name|tmo
 argument_list|)
 operator|==
 literal|0
@@ -7765,7 +7808,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"Milter: Milter: helo=%s, reject=421 4.7.0 %s closing connection"
+literal|"Milter: helo=%s, reject=421 4.7.0 %s closing connection"
 argument_list|,
 name|p
 argument_list|,
@@ -8973,6 +9016,8 @@ argument_list|,
 name|vp
 argument_list|,
 name|e
+argument_list|,
+name|features
 argument_list|)
 expr_stmt|;
 if|if
@@ -10035,6 +10080,8 @@ argument_list|,
 name|vp
 argument_list|,
 name|e
+argument_list|,
+name|features
 argument_list|)
 expr_stmt|;
 if|if
@@ -14933,7 +14980,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  MAIL_ESMTP_ARGS -- process ESMTP arguments from MAIL line ** **	Parameters: **		kp -- the parameter key. **		vp -- the value of that parameter. **		e -- the envelope. ** **	Returns: **		none. */
+comment|/* **  MAIL_ESMTP_ARGS -- process ESMTP arguments from MAIL line ** **	Parameters: **		kp -- the parameter key. **		vp -- the value of that parameter. **		e -- the envelope. **		features -- current server features ** **	Returns: **		none. */
 end_comment
 
 begin_function
@@ -14946,6 +14993,8 @@ parameter_list|,
 name|vp
 parameter_list|,
 name|e
+parameter_list|,
+name|features
 parameter_list|)
 name|char
 modifier|*
@@ -14958,6 +15007,10 @@ decl_stmt|;
 name|ENVELOPE
 modifier|*
 name|e
+decl_stmt|;
+name|unsigned
+name|int
+name|features
 decl_stmt|;
 block|{
 if|if
@@ -15165,11 +15218,12 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
 name|bitset
 argument_list|(
-name|PRIV_NORECEIPTS
+name|SRV_OFFER_DSN
 argument_list|,
-name|PrivacyFlags
+name|features
 argument_list|)
 condition|)
 block|{
@@ -15274,11 +15328,12 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
 name|bitset
 argument_list|(
-name|PRIV_NORECEIPTS
+name|SRV_OFFER_DSN
 argument_list|,
-name|PrivacyFlags
+name|features
 argument_list|)
 condition|)
 block|{
@@ -16006,7 +16061,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  RCPT_ESMTP_ARGS -- process ESMTP arguments from RCPT line ** **	Parameters: **		a -- the address corresponding to the To: parameter. **		kp -- the parameter key. **		vp -- the value of that parameter. **		e -- the envelope. ** **	Returns: **		none. */
+comment|/* **  RCPT_ESMTP_ARGS -- process ESMTP arguments from RCPT line ** **	Parameters: **		a -- the address corresponding to the To: parameter. **		kp -- the parameter key. **		vp -- the value of that parameter. **		e -- the envelope. **		features -- current server features ** **	Returns: **		none. */
 end_comment
 
 begin_function
@@ -16021,6 +16076,8 @@ parameter_list|,
 name|vp
 parameter_list|,
 name|e
+parameter_list|,
+name|features
 parameter_list|)
 name|ADDRESS
 modifier|*
@@ -16037,6 +16094,10 @@ decl_stmt|;
 name|ENVELOPE
 modifier|*
 name|e
+decl_stmt|;
+name|unsigned
+name|int
+name|features
 decl_stmt|;
 block|{
 if|if
@@ -16057,11 +16118,12 @@ name|p
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|bitset
 argument_list|(
-name|PRIV_NORECEIPTS
+name|SRV_OFFER_DSN
 argument_list|,
-name|PrivacyFlags
+name|features
 argument_list|)
 condition|)
 block|{
@@ -16268,11 +16330,12 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
 name|bitset
 argument_list|(
-name|PRIV_NORECEIPTS
+name|SRV_OFFER_DSN
 argument_list|,
-name|PrivacyFlags
+name|features
 argument_list|)
 condition|)
 block|{

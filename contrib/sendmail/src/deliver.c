@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: deliver.c,v 8.1000 2006/03/02 01:37:39 ca Exp $"
+literal|"@(#)$Id: deliver.c,v 8.1003.2.1 2006/05/23 01:32:08 ca Exp $"
 argument_list|)
 end_macro
 
@@ -12459,7 +12459,16 @@ operator|>
 literal|0
 condition|)
 block|{
+name|int
+name|tmo
+decl_stmt|;
 comment|/* 					**  Convert I/O layer to use SASL. 					**  If the call fails, the connection 					**  is aborted. 					*/
+name|tmo
+operator|=
+name|DATA_PROGRESS_TIMEOUT
+operator|*
+literal|1000
+expr_stmt|;
 if|if
 condition|(
 name|sfdcsasl
@@ -12477,6 +12486,8 @@ argument_list|,
 name|mci
 operator|->
 name|mci_conn
+argument_list|,
+name|tmo
 argument_list|)
 operator|==
 literal|0
@@ -15581,11 +15592,19 @@ name|e
 operator|==
 name|NULL
 condition|)
+block|{
 name|syserr
 argument_list|(
 literal|"giveresponse: null envelope"
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
+name|SM_ASSERT
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	**  Compute status message from code. 	*/
 name|exmsg
 operator|=
@@ -21008,11 +21027,12 @@ name|e_lockfp
 operator|!=
 name|NULL
 condition|)
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|fd
+operator|=
 name|sm_io_getinfo
 argument_list|(
 name|e
@@ -21023,8 +21043,23 @@ name|SM_IO_WHAT_FD
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+comment|/* SM_ASSERT(fd>= 0); */
+if|if
+condition|(
+name|fd
+operator|>=
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)

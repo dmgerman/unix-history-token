@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1986, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2004, 2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1986, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_if
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: domain.c,v 8.197 2005/03/04 00:54:42 ca Exp $ (with name server)"
+literal|"@(#)$Id: domain.c,v 8.199 2006/04/18 00:00:34 ca Exp $ (with name server)"
 argument_list|)
 end_macro
 
@@ -34,7 +34,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: domain.c,v 8.197 2005/03/04 00:54:42 ca Exp $ (without name server)"
+literal|"@(#)$Id: domain.c,v 8.199 2006/04/18 00:00:34 ca Exp $ (without name server)"
 argument_list|)
 end_macro
 
@@ -1911,7 +1911,7 @@ argument_list|(
 name|h
 argument_list|)
 expr_stmt|;
-name|hp
+name|h
 operator|=
 name|NULL
 expr_stmt|;
@@ -3563,22 +3563,13 @@ argument_list|(
 name|answer
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|SM_ASSERT
+argument_list|(
 name|ret
-operator|<
+operator|>=
 literal|0
-condition|)
-block|{
-operator|*
-name|statp
-operator|=
-name|EX_SOFTWARE
+argument_list|)
 expr_stmt|;
-return|return
-name|false
-return|;
-block|}
 comment|/* 		**  Appear to have a match.  Confirm it by searching for A or 		**  CNAME records.  If we don't have a local domain 		**  wild card MX record, we will accept MX as well. 		*/
 name|hp
 operator|=

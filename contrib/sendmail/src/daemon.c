@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: daemon.c,v 8.665 2006/03/02 19:12:00 ca Exp $"
+literal|"@(#)$Id: daemon.c,v 8.666 2006/04/18 01:23:42 ca Exp $"
 argument_list|)
 end_macro
 
@@ -2027,7 +2027,14 @@ argument_list|(
 literal|"getrequests: accept"
 argument_list|)
 expr_stmt|;
-comment|/* arrange to re-open the socket next time around */
+if|if
+condition|(
+name|curdaemon
+operator|>=
+literal|0
+condition|)
+block|{
+comment|/* arrange to re-open socket next time around */
 operator|(
 name|void
 operator|)
@@ -2054,7 +2061,7 @@ expr_stmt|;
 if|#
 directive|if
 name|SO_REUSEADDR_IS_BROKEN
-comment|/* 			**  Give time for bound socket to be released. 			**  This creates a denial-of-service if you can 			**  force accept() to fail on affected systems. 			*/
+comment|/* 				**  Give time for bound socket to be released. 				**  This creates a denial-of-service if you can 				**  force accept() to fail on affected systems. 				*/
 name|Daemons
 index|[
 name|curdaemon
@@ -2070,6 +2077,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* SO_REUSEADDR_IS_BROKEN */
+block|}
 continue|continue;
 block|}
 if|if
@@ -8087,6 +8095,8 @@ decl_stmt|;
 specifier|volatile
 name|bool
 name|firstconnect
+init|=
+name|true
 decl_stmt|;
 name|SM_EVENT
 modifier|*
@@ -9689,10 +9699,6 @@ block|}
 endif|#
 directive|endif
 comment|/* XLA */
-name|firstconnect
-operator|=
-name|true
-expr_stmt|;
 for|for
 control|(
 init|;
