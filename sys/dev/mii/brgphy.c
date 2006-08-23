@@ -2720,7 +2720,9 @@ if|if
 condition|(
 name|bge_sc
 operator|->
-name|bge_no_3_led
+name|bge_flags
+operator|&
+name|BGE_FLAG_NO3LED
 condition|)
 block|{
 name|PHY_WRITE
