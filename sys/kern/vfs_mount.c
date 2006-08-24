@@ -3423,8 +3423,10 @@ operator|==
 name|UIO_SYSSPACE
 condition|)
 block|{
-name|strncpy
+name|bcopy
 argument_list|(
+name|errmsg
+argument_list|,
 name|fsoptions
 operator|->
 name|uio_iov
@@ -3437,8 +3439,6 @@ literal|1
 index|]
 operator|.
 name|iov_base
-argument_list|,
-name|errmsg
 argument_list|,
 name|fsoptions
 operator|->
@@ -3457,7 +3457,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|copystr
+name|copyout
 argument_list|(
 name|errmsg
 argument_list|,
@@ -3486,8 +3486,6 @@ literal|1
 index|]
 operator|.
 name|iov_len
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 block|}
