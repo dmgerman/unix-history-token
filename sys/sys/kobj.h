@@ -272,7 +272,7 @@ value|struct kobj_class classvar = {				\ 	#name, methods, size, 0				\ }
 end_define
 
 begin_comment
-comment|/*  * Define a class inheriting a single base class. Use like this:  *  * DEFINE_CLASS1(foo, foo_class, foo_methods, sizeof(foo_softc),  *			  bar);  */
+comment|/*  * Define a class inheriting a single base class. Use like this:  *  * DEFINE_CLASS_1(foo, foo_class, foo_methods, sizeof(foo_softc),  *			  bar);  */
 end_comment
 
 begin_define
@@ -295,7 +295,7 @@ value|static kobj_class_t name ## _baseclasses[] =		\ 	{&base1, 0 };					\ struc
 end_define
 
 begin_comment
-comment|/*  * Define a class inheriting two base classes. Use like this:  *  * DEFINE_CLASS2(foo, foo_class, foo_methods, sizeof(foo_softc),  *			  bar, baz);  */
+comment|/*  * Define a class inheriting two base classes. Use like this:  *  * DEFINE_CLASS_2(foo, foo_class, foo_methods, sizeof(foo_softc),  *			  bar, baz);  */
 end_comment
 
 begin_define
@@ -318,7 +318,7 @@ value|static kobj_class_t name ## _baseclasses[] =		\ 	{&base1,					\&base2, 0 }
 end_define
 
 begin_comment
-comment|/*  * Define a class inheriting three base classes. Use like this:  *  * DEFINE_CLASS3(foo, foo_class, foo_methods, sizeof(foo_softc),  *			  bar, baz, foobar);  */
+comment|/*  * Define a class inheriting three base classes. Use like this:  *  * DEFINE_CLASS_3(foo, foo_class, foo_methods, sizeof(foo_softc),  *			  bar, baz, foobar);  */
 end_comment
 
 begin_define
