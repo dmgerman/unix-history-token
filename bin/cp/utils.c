@@ -188,12 +188,16 @@ decl_stmt|,
 name|checkch
 decl_stmt|,
 name|from_fd
+init|=
+literal|0
 decl_stmt|,
 name|rcount
 decl_stmt|,
 name|rval
 decl_stmt|,
 name|to_fd
+init|=
+literal|0
 decl_stmt|;
 name|ssize_t
 name|wcount
@@ -398,6 +402,11 @@ operator|.
 name|p_path
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|lflag
+condition|)
 name|to_fd
 operator|=
 name|open
@@ -426,6 +435,12 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+if|if
+condition|(
+operator|!
+name|lflag
+condition|)
 comment|/* overwrite existing destination file name */
 name|to_fd
 operator|=
@@ -443,7 +458,14 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 else|else
+block|{
+if|if
+condition|(
+operator|!
+name|lflag
+condition|)
 name|to_fd
 operator|=
 name|open
@@ -470,6 +492,7 @@ name|S_ISGID
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|to_fd
@@ -505,7 +528,13 @@ name|rval
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Mmap and write if less than 8M (the limit is so we don't totally 	 * trash memory on big files.  This is really a minor hack, but it 	 * wins some CPU back. 	 */
+if|if
+condition|(
+operator|!
+name|lflag
+condition|)
+block|{
+comment|/* 		 * Mmap and write if less than 8M (the limit is so we don't totally 		 * trash memory on big files.  This is really a minor hack, but it 		 * wins some CPU back. 		 */
 ifdef|#
 directive|ifdef
 name|VM_AND_BUFFER_CACHE_SYNCHRONIZED
@@ -893,7 +922,53 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|link
+argument_list|(
+name|entp
+operator|->
+name|fts_path
+argument_list|,
+name|to
+operator|.
+name|p_path
+argument_list|)
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"%s"
+argument_list|,
+name|to
+operator|.
+name|p_path
+argument_list|)
+expr_stmt|;
+name|rval
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|from_fd
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Don't remove the target even after an error.  The target might 	 * not be a regular file, or its attributes might be important, 	 * or its contents might be irreplaceable.  It would only be safe 	 * to remove it if we created it and its length is 0. 	 */
+if|if
+condition|(
+operator|!
+name|lflag
+condition|)
+block|{
 if|if
 condition|(
 name|pflag
@@ -955,6 +1030,7 @@ name|rval
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
@@ -2130,9 +2206,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: cp [-R [-H | -L | -P]] [-f | -i | -n] [-pv] source_file target_file"
+literal|"usage: cp [-R [-H | -L | -P]] [-f | -i | -n] [-aplv] source_file target_file"
 argument_list|,
-literal|"       cp [-R [-H | -L | -P]] [-f | -i | -n] [-pv] source_file ... "
+literal|"       cp [-R [-H | -L | -P]] [-f | -i | -n] [-aplv] source_file ... "
 literal|"target_directory"
 argument_list|)
 expr_stmt|;

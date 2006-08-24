@@ -178,6 +178,8 @@ name|fflag
 decl_stmt|,
 name|iflag
 decl_stmt|,
+name|lflag
+decl_stmt|,
 name|nflag
 decl_stmt|,
 name|pflag
@@ -324,7 +326,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"HLPRfinprv"
+literal|"HLPRfinprvl"
 argument_list|)
 operator|)
 operator|!=
@@ -448,6 +450,14 @@ case|case
 literal|'v'
 case|:
 name|vflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'l'
+case|:
+name|lflag
 operator|=
 literal|1
 expr_stmt|;
@@ -1797,6 +1807,18 @@ literal|1
 expr_stmt|;
 block|}
 break|break;
+case|case
+name|S_IFSOCK
+case|:
+name|warnx
+argument_list|(
+literal|"%s is a socket (not copied)."
+argument_list|,
+name|curr
+operator|->
+name|fts_path
+argument_list|)
+expr_stmt|;
 case|case
 name|S_IFIFO
 case|:
