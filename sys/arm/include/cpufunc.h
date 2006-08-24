@@ -1976,6 +1976,12 @@ name|defined
 argument_list|(
 name|CPU_XSCALE_IXP425
 argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|CPU_XSCALE_80219
+argument_list|)
 end_if
 
 begin_function_decl
@@ -2094,6 +2100,12 @@ operator|||
 name|defined
 argument_list|(
 name|CPU_XSCALE_IXP425
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|CPU_XSCALE_80219
 argument_list|)
 end_if
 
@@ -2374,7 +2386,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CPU_XSCALE_80200 || CPU_XSCALE_80321 || CPU_XSCALE_PXA2X0 || CPU_XSCALE_IXP425 */
+comment|/* CPU_XSCALE_80200 || CPU_XSCALE_80321 || CPU_XSCALE_PXA2X0 || CPU_XSCALE_IXP425  	   CPU_XSCALE_80219 */
 end_comment
 
 begin_define

@@ -249,6 +249,12 @@ name|defined
 argument_list|(
 name|CPU_XSCALE_IXP425
 argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|CPU_XSCALE_80219
+argument_list|)
 end_elif
 
 begin_define

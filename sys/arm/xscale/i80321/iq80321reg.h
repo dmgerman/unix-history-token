@@ -52,6 +52,13 @@ name|IQ80321_80321_VBASE
 value|(IQ80321_IOW_VBASE +			\ 				 VERDE_OUT_XLATE_IO_WIN_SIZE)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IQ80321_SDRAM_START
+value|0xa0000000
+end_define
+
 begin_comment
 comment|/*  * The IQ80321 on-board devices are mapped VA==PA during bootstrap.  * Conveniently, the size of the on-board register space is 1 section  * mapping.  */
 end_comment
@@ -84,6 +91,15 @@ end_define
 begin_comment
 comment|/* TI 16550 */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_XSCALE_80321
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -133,6 +149,15 @@ directive|define
 name|BATTERY_STAT_DISCHRG
 value|(1U<< 2)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CPU_XSCALE_80321 */
+end_comment
 
 begin_endif
 endif|#

@@ -811,6 +811,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPU_ID_80219_400
+value|0x69052e20
+end_define
+
+begin_comment
+comment|/* A0 stepping/revision. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_80219_600
+value|0x69052e30
+end_define
+
+begin_comment
+comment|/* A0 stepping/revision. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CPU_ID_IXP425_533
 value|0x690541c0
 end_define

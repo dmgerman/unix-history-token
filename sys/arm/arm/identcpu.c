@@ -951,6 +951,26 @@ name|i80321_steppings
 block|}
 block|,
 block|{
+name|CPU_ID_80219_400
+block|,
+name|CPU_CLASS_XSCALE
+block|,
+literal|"i80219 400MHz"
+block|,
+name|xscale_steppings
+block|}
+block|,
+block|{
+name|CPU_ID_80219_600
+block|,
+name|CPU_CLASS_XSCALE
+block|,
+literal|"i80219 600MHz"
+block|,
+name|xscale_steppings
+block|}
+block|,
+block|{
 name|CPU_ID_PXA250A
 block|,
 name|CPU_CLASS_XSCALE

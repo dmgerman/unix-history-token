@@ -570,19 +570,13 @@ name|proc0_tf
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|IQ80321_OBIO_BASE
-value|0xfe800000UL
-end_define
+begin_comment
+comment|/* #define IQ80321_OBIO_BASE 0xfe800000UL */
+end_comment
 
-begin_define
-define|#
-directive|define
-name|IQ80321_OBIO_SIZE
-value|0x00100000UL
-end_define
+begin_comment
+comment|/* #define IQ80321_OBIO_SIZE 0x00100000UL */
+end_comment
 
 begin_comment
 comment|/* Static device mappings. */
@@ -593,7 +587,7 @@ specifier|static
 specifier|const
 name|struct
 name|pmap_devmap
-name|iq80321_devmap
+name|ep80219_devmap
 index|[]
 init|=
 block|{
@@ -610,7 +604,7 @@ operator||
 name|VM_PROT_WRITE
 block|,
 name|PTE_NOCACHE
-block|, 	    }
+block|, 	}
 block|,
 block|{
 name|IQ80321_IOW_VBASE
@@ -624,7 +618,7 @@ operator||
 name|VM_PROT_WRITE
 block|,
 name|PTE_NOCACHE
-block|, 	    }
+block|, 	}
 block|,
 block|{
 name|IQ80321_80321_VBASE
@@ -638,7 +632,7 @@ operator||
 name|VM_PROT_WRITE
 block|,
 name|PTE_NOCACHE
-block|, 	    }
+block|, 	}
 block|,
 block|{
 literal|0
@@ -650,17 +644,10 @@ block|,
 literal|0
 block|,
 literal|0
-block|, 	    }
+block|, 	}
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|SDRAM_START
-value|0xa0000000
-end_define
 
 begin_ifdef
 ifdef|#
@@ -744,6 +731,8 @@ endif|#
 directive|endif
 name|int
 name|i
+init|=
+literal|0
 decl_stmt|;
 name|uint32_t
 name|fake_preload
@@ -1112,7 +1101,7 @@ parameter_list|,
 name|np
 parameter_list|)
 define|\
-value|alloc_pages((var).pv_pa, (np));		\ 	(var).pv_va = (var).pv_pa + 0x20000000;
+value|alloc_pages((var).pv_pa, (np));				\ 	(var).pv_va = (var).pv_pa + 0x20000000;
 define|#
 directive|define
 name|alloc_pages
@@ -1235,6 +1224,9 @@ operator|+
 literal|0x20000000
 expr_stmt|;
 block|}
+name|i
+operator|++
+expr_stmt|;
 block|}
 name|freemem_pt
 operator|=
@@ -1481,7 +1473,7 @@ name|l1pagetable
 argument_list|,
 name|KERNBASE
 argument_list|,
-name|SDRAM_START
+name|IQ80321_SDRAM_START
 argument_list|,
 literal|0x100000
 argument_list|,
@@ -1500,7 +1492,7 @@ name|KERNBASE
 operator|+
 literal|0x100000
 argument_list|,
-name|SDRAM_START
+name|IQ80321_SDRAM_START
 operator|+
 literal|0x100000
 argument_list|,
@@ -1521,7 +1513,7 @@ name|KERNBASE
 operator|+
 literal|0x200000
 argument_list|,
-name|SDRAM_START
+name|IQ80321_SDRAM_START
 operator|+
 literal|0x200000
 argument_list|,
@@ -1730,7 +1722,7 @@ name|pmap_devmap_bootstrap
 argument_list|(
 name|l1pagetable
 argument_list|,
-name|iq80321_devmap
+name|ep80219_devmap
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Give the XScale global cache clean code an appropriately 	 * sized chunk of unmapped VA space starting at 0xff000000 	 * (our device mappings end before this address). 	 */
@@ -1950,37 +1942,6 @@ name|afterkern
 operator|+
 name|PAGE_SIZE
 expr_stmt|;
-comment|/* 	 * ARM_USE_SMALL_ALLOC uses dump_avail, so it must be filled before 	 * calling pmap_bootstrap. 	 */
-name|dump_avail
-index|[
-literal|0
-index|]
-operator|=
-literal|0xa0000000
-expr_stmt|;
-name|dump_avail
-index|[
-literal|1
-index|]
-operator|=
-literal|0xa0000000
-operator|+
-name|memsize
-expr_stmt|;
-name|dump_avail
-index|[
-literal|2
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|dump_avail
-index|[
-literal|3
-index|]
-operator|=
-literal|0
-expr_stmt|;
 name|pmap_bootstrap
 argument_list|(
 name|pmap_curmaxkvaddr
@@ -2049,7 +2010,7 @@ name|virtual_avail
 operator|-
 name|KERNBASE
 operator|+
-name|SDRAM_START
+name|IQ80321_SDRAM_START
 argument_list|)
 expr_stmt|;
 name|phys_avail
@@ -2078,6 +2039,36 @@ expr_stmt|;
 name|phys_avail
 index|[
 name|i
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|dump_avail
+index|[
+literal|0
+index|]
+operator|=
+literal|0xa0000000
+expr_stmt|;
+name|dump_avail
+index|[
+literal|1
+index|]
+operator|=
+literal|0xa0000000
+operator|+
+name|memsize
+expr_stmt|;
+name|dump_avail
+index|[
+literal|2
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|dump_avail
+index|[
+literal|3
 index|]
 operator|=
 literal|0
@@ -2230,47 +2221,23 @@ condition|(
 name|device
 condition|)
 block|{
-comment|/* IQ31244 PCI */
+comment|/* EP80219 PCI */
 case|case
 literal|1
 case|:
-comment|/* PCIX-PCIX bridge */
-comment|/* 		 * The S-ATA chips are behind the bridge, and all of 		 * the S-ATA interrupts are wired together. 		 */
-return|return
-operator|(
+comment|/* Ethernet i82555 10/100 */
+name|printf
+argument_list|(
+literal|"Device %d routed to irq %d\n"
+argument_list|,
+name|device
+argument_list|,
 name|ICU_INT_XINT
 argument_list|(
-literal|2
+literal|0
 argument_list|)
-operator|)
-return|;
-case|case
-literal|2
-case|:
-comment|/* PCI slot */
-comment|/* All pins are wired together. */
-return|return
-operator|(
-name|ICU_INT_XINT
-argument_list|(
-literal|3
 argument_list|)
-operator|)
-return|;
-case|case
-literal|3
-case|:
-comment|/* i82546 dual Gig-E */
-if|if
-condition|(
-name|pin
-operator|==
-literal|1
-operator|||
-name|pin
-operator|==
-literal|2
-condition|)
+expr_stmt|;
 return|return
 operator|(
 name|ICU_INT_XINT
@@ -2279,59 +2246,70 @@ literal|0
 argument_list|)
 operator|)
 return|;
-goto|goto
-name|no_mapping
-goto|;
-comment|/* IQ80321 PCI */
+case|case
+literal|2
+case|:
+comment|/* UART */
+name|printf
+argument_list|(
+literal|"Device %d routed to irq %d\n"
+argument_list|,
+name|device
+argument_list|,
+name|ICU_INT_XINT
+argument_list|(
+literal|1
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ICU_INT_XINT
+argument_list|(
+literal|1
+argument_list|)
+operator|)
+return|;
+case|case
+literal|3
+case|:
+comment|/* 		 * The S-ATA chips are behind the bridge, and all of 		 * the S-ATA interrupts are wired together. 		 */
+name|printf
+argument_list|(
+literal|"Device %d routed to irq %d\n"
+argument_list|,
+name|device
+argument_list|,
+name|ICU_INT_XINT
+argument_list|(
+literal|2
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ICU_INT_XINT
+argument_list|(
+literal|2
+argument_list|)
+operator|)
+return|;
 case|case
 literal|4
 case|:
-comment|/* i82544 Gig-E */
-case|case
-literal|8
-case|:
-comment|/* 		 * Apparently you can set the device for the ethernet adapter 		 * to 8 with a jumper, so handle that as well 		 */
-if|if
-condition|(
-name|pin
-operator|==
-literal|1
-condition|)
-return|return
-operator|(
+comment|/* MINI-PIC_INT */
+name|printf
+argument_list|(
+literal|"Device %d routed to irq %d\n"
+argument_list|,
+name|device
+argument_list|,
 name|ICU_INT_XINT
 argument_list|(
-literal|0
+literal|3
 argument_list|)
-operator|)
-return|;
-goto|goto
-name|no_mapping
-goto|;
-case|case
-literal|6
-case|:
-comment|/* S-PCI-X slot */
-if|if
-condition|(
-name|pin
-operator|==
-literal|1
-condition|)
-return|return
-operator|(
-name|ICU_INT_XINT
-argument_list|(
-literal|2
 argument_list|)
-operator|)
-return|;
-if|if
-condition|(
-name|pin
-operator|==
-literal|2
-condition|)
+expr_stmt|;
 return|return
 operator|(
 name|ICU_INT_XINT
@@ -2340,9 +2318,6 @@ literal|3
 argument_list|)
 operator|)
 return|;
-goto|goto
-name|no_mapping
-goto|;
 default|default:
 name|no_mapping
 label|:

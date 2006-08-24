@@ -134,11 +134,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CPU_XSCALE_80321
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_XSCALE_80219
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -191,6 +199,12 @@ operator|||
 name|defined
 argument_list|(
 name|CPU_XSCALE_80321
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|CPU_XSCALE_80219
 argument_list|)
 end_if
 
@@ -1295,6 +1309,12 @@ name|defined
 argument_list|(
 name|CPU_XSCALE_IXP425
 argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|CPU_XSCALE_80219
+argument_list|)
 end_if
 
 begin_decl_stmt
@@ -1416,7 +1436,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CPU_XSCALE_80200 || CPU_XSCALE_80321 || CPU_XSCALE_PXA2X0 || CPU_XSCALE_IXP425 */
+comment|/* CPU_XSCALE_80200 || CPU_XSCALE_80321 || CPU_XSCALE_PXA2X0 || CPU_XSCALE_IXP425    CPU_XSCALE_80219 */
 end_comment
 
 begin_comment
@@ -1490,6 +1510,12 @@ operator|||
 name|defined
 argument_list|(
 name|CPU_XSCALE_IXP425
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|CPU_XSCALE_80219
 argument_list|)
 end_if
 
@@ -2811,11 +2837,19 @@ begin_comment
 comment|/* CPU_XSCALE_80200 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CPU_XSCALE_80321
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_XSCALE_80219
+argument_list|)
+end_if
 
 begin_expr_stmt
 unit|if
@@ -2835,6 +2869,14 @@ operator|||
 name|cputype
 operator|==
 name|CPU_ID_80321_600_B0
+operator|||
+name|cputype
+operator|==
+name|CPU_ID_80219_400
+operator|||
+name|cputype
+operator|==
+name|CPU_ID_80219_600
 operator|)
 block|{
 comment|/* 		 * Reset the Performance Monitoring Unit to a 		 * pristine state: 		 *	- CCNT, PMN0, PMN1 reset to 0 		 *	- overflow indications cleared 		 *	- all counters disabled 		 */
@@ -4351,6 +4393,12 @@ name|defined
 argument_list|(
 name|CPU_XSCALE_IXP425
 argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|CPU_XSCALE_80219
+argument_list|)
 end_if
 
 begin_define
@@ -4562,7 +4610,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CPU_ARM7TDMI || CPU_ARM8 || CPU_SA110 */
+comment|/* CPU_ARM7TDMI || CPU_ARM8 || CPU_SA110 || XSCALE*/
 end_comment
 
 begin_if
@@ -6575,6 +6623,12 @@ name|defined
 argument_list|(
 name|CPU_XSCALE_IXP425
 argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|CPU_XSCALE_80219
+argument_list|)
 end_if
 
 begin_decl_stmt
@@ -6901,7 +6955,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CPU_XSCALE_80200 || CPU_XSCALE_80321 || CPU_XSCALE_PXA2X0 || CPU_XSCALE_IXP425 */
+comment|/* CPU_XSCALE_80200 || CPU_XSCALE_80321 || CPU_XSCALE_PXA2X0 || CPU_XSCALE_IXP425  	   CPU_XSCALE_80219 */
 end_comment
 
 end_unit

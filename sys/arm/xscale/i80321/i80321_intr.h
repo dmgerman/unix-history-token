@@ -122,14 +122,41 @@ block|)
 function|;
 end_function
 
-begin_define
+begin_if
 unit|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_XSCALE_80219
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|INT_SWMASK
+define|\
+value|((1U<< ICU_INT_bit26) |											\ 	 (1U<< ICU_INT_bit25) |											\ 	 (1U<< ICU_INT_bit23) |											\ 	 (1U<< ICU_INT_bit22) |											\ 	 (1U<< ICU_INT_bit7)  |											\ 	 (1U<< ICU_INT_bit6)  |											\ 	 (1U<< ICU_INT_bit5)  |											\ 	 (1U<< ICU_INT_bit4))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
 define|#
 directive|define
 name|INT_SWMASK
 define|\
 value|((1U<< ICU_INT_bit26) | (1U<< ICU_INT_bit22) |                \          (1U<< ICU_INT_bit5)  | (1U<< ICU_INT_bit4))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

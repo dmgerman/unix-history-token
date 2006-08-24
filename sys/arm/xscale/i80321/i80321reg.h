@@ -178,6 +178,15 @@ name|VERDE_MCU_SIZE
 value|0x0100
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_XSCALE_80321
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -191,6 +200,11 @@ directive|define
 name|VERDE_SSP_SIZE
 value|0x0080
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -206,6 +220,15 @@ name|VERDE_PBIU_SIZE
 value|0x0080
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_XSCALE_80321
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -219,6 +242,11 @@ directive|define
 name|VERDE_AAU_SIZE
 value|0x0100
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1715,6 +1743,35 @@ name|ICU_INT_bit26
 value|26
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_XSCALE_80219
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ICU_INT_bit25
+value|25
+end_define
+
+begin_comment
+comment|/* reserved */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* CPU_XSCALE_80321 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1725,6 +1782,11 @@ end_define
 begin_comment
 comment|/* SSP serial port */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1737,6 +1799,35 @@ begin_comment
 comment|/* msg unit error */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_XSCALE_80219
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ICU_INT_bit23
+value|23
+end_define
+
+begin_comment
+comment|/* reserved */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* CPU_XSCALE_80321 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1747,6 +1838,11 @@ end_define
 begin_comment
 comment|/* AAU error */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1909,6 +2005,46 @@ begin_comment
 comment|/* core processor PMU */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_XSCALE_80219
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ICU_INT_bit7
+value|7
+end_define
+
+begin_comment
+comment|/* reserved */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICU_INT_bit6
+value|6
+end_define
+
+begin_comment
+comment|/* reserved */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* CPU_XSCALE_80321 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1930,6 +2066,11 @@ end_define
 begin_comment
 comment|/* AAU end-of-transfer */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1989,6 +2130,31 @@ begin_comment
 comment|/* DMA0 end-of-transfer */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_XSCALE_80219
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ICU_INT_HWMASK
+value|(0xffffffff&	 \ 							 ~((1<< ICU_INT_bit26) |	\ 							   (1<< ICU_INT_bit25) |	\ 							   (1<< ICU_INT_bit23) |	\ 							   (1<< ICU_INT_bit22) |	\ 							   (1<< ICU_INT_bit7)  |	\ 							   (1<< ICU_INT_bit6)  |	\ 							   (1<< ICU_INT_bit5)  |	\ 							   (1<< ICU_INT_bit4)))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* CPU_XSCALE_80321 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1996,9 +2162,23 @@ name|ICU_INT_HWMASK
 value|(0xffffffff& \ 					~((1<< ICU_INT_bit26) | \ 					  (1<< ICU_INT_bit22) | \ 					  (1<< ICU_INT_bit5)  | \ 					  (1<< ICU_INT_bit4)))
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * SSP Serial Port  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_XSCALE_80321
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -2388,6 +2568,15 @@ end_define
 
 begin_comment
 comment|/* Test Rx overrun */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CPU_XSCALE_80321 */
 end_comment
 
 begin_comment
