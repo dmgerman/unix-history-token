@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Id: printlog.c,v 1.6 2002/01/28 06:50:47 darrenr Exp  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: printlog.c,v 1.6.4.2 2005/12/18 14:49:06 darrenr Exp $  */
 end_comment
 
 begin_include
@@ -95,15 +95,6 @@ argument_list|(
 literal|" level "
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|fp
-operator|->
-name|fr_loglevel
-operator|&
-name|LOG_FACMASK
-condition|)
-block|{
 name|s
 operator|=
 name|fac_toname
@@ -118,16 +109,15 @@ condition|(
 name|s
 operator|==
 name|NULL
+operator|||
+operator|*
+name|s
+operator|==
+literal|'\0'
 condition|)
 name|s
 operator|=
 literal|"!!!"
-expr_stmt|;
-block|}
-else|else
-name|s
-operator|=
-literal|""
 expr_stmt|;
 name|u
 operator|=
@@ -143,29 +133,21 @@ condition|(
 name|u
 operator|==
 name|NULL
+operator|||
+operator|*
+name|u
+operator|==
+literal|'\0'
 condition|)
 name|u
 operator|=
 literal|"!!!"
 expr_stmt|;
-if|if
-condition|(
-operator|*
-name|s
-condition|)
 name|printf
 argument_list|(
 literal|"%s.%s"
 argument_list|,
 name|s
-argument_list|,
-name|u
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"%s"
 argument_list|,
 name|u
 argument_list|)

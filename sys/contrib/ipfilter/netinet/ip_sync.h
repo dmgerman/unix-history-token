@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_fil.h	1.35 6/5/96  * Id: ip_sync.h,v 2.11.2.2 2004/11/04 19:29:07 darrenr Exp  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_sync.h,v 2.11.2.3 2006/03/19 14:59:39 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -497,6 +493,32 @@ expr|struct
 name|uio
 operator|*
 name|uio
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipfsync_canread
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipfsync_canwrite
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;

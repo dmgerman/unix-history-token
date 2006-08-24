@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
 comment|/*  * Copyright (C) 2002-2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
@@ -216,6 +212,11 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
+name|AIX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|__hpux
 argument_list|)
 operator|||
@@ -401,7 +402,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)Id: ip_lookup.c,v 2.35.2.5 2004/07/06 11:16:25 darrenr Exp"
+literal|"@(#)$Id: ip_lookup.c,v 2.35.2.8 2005/11/13 15:35:45 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -705,28 +706,11 @@ block|{
 name|int
 name|err
 decl_stmt|;
-if|#
-directive|if
-name|defined
+name|SPL_INT
 argument_list|(
-name|_KERNEL
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|MENTAT
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|USE_SPL
-argument_list|)
-name|int
 name|s
-decl_stmt|;
-endif|#
-directive|endif
+argument_list|)
+expr_stmt|;
 name|mode
 operator|=
 name|mode
@@ -1676,6 +1660,42 @@ operator|=
 name|EINVAL
 expr_stmt|;
 break|break;
+block|}
+comment|/* 	 * For anonymous pools, copy back the operation struct because in the 	 * case of success it will contain the new table's name. 	 */
+if|if
+condition|(
+operator|(
+name|err
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
+name|op
+operator|.
+name|iplo_arg
+operator|&
+name|IPOOL_ANON
+operator|)
+operator|!=
+literal|0
+operator|)
+condition|)
+block|{
+name|BCOPYOUT
+argument_list|(
+operator|&
+name|op
+argument_list|,
+name|data
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|op
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 name|err

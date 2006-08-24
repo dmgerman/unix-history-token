@@ -49,6 +49,11 @@ name|defined
 argument_list|(
 name|__GNUC__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_AIX51
+argument_list|)
 end_if
 
 begin_define

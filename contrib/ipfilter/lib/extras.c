@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Id: extras.c,v 1.12 2002/07/13 12:06:49 darrenr Exp  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: extras.c,v 1.12 2002/07/13 12:06:49 darrenr Exp $  */
 end_comment
 
 begin_include

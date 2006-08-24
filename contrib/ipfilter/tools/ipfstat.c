@@ -484,7 +484,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)Id: ipfstat.c,v 1.44.2.11 2005/03/30 14:09:57 darrenr Exp"
+literal|"@(#)$Id: ipfstat.c,v 1.44.2.14 2006/03/21 16:09:58 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5776,23 +5776,6 @@ argument_list|)
 expr_stmt|;
 name|PRINTF
 argument_list|(
-literal|"\t%lu maximum\n\t%lu no memory\n\t%lu max bucket\n"
-argument_list|,
-name|ipsp
-operator|->
-name|iss_max
-argument_list|,
-name|ipsp
-operator|->
-name|iss_nomem
-argument_list|,
-name|ipsp
-operator|->
-name|iss_bucketfull
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
 literal|"\t%lu maximum\n\t%lu no memory\n\t%lu bkts in use\n"
 argument_list|,
 name|ipsp
@@ -6218,6 +6201,10 @@ decl_stmt|,
 name|redraw
 init|=
 literal|0
+decl_stmt|,
+name|ret
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|len
@@ -6251,6 +6238,13 @@ name|NULL
 decl_stmt|,
 modifier|*
 name|tp
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|errstr
+init|=
+literal|""
 decl_stmt|;
 name|ipstate_t
 name|ips
@@ -6449,17 +6443,18 @@ literal|1
 operator|)
 condition|)
 block|{
-name|perror
-argument_list|(
+name|errstr
+operator|=
 literal|"ioctl(SIOCGETFS)"
-argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
+name|ret
+operator|=
 operator|-
 literal|1
-argument_list|)
 expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 comment|/* clear the history */
 name|tsentry
@@ -8297,6 +8292,8 @@ block|}
 block|}
 block|}
 comment|/* while */
+name|out
+label|:
 name|printw
 argument_list|(
 literal|"\n"
@@ -8307,15 +8304,24 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|nocbreak
-argument_list|()
-expr_stmt|;
+comment|/* nocbreak(); XXX - endwin() should make this redundant */
 name|endwin
 argument_list|()
 expr_stmt|;
 name|free
 argument_list|(
 name|tstable
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+condition|)
+name|perror
+argument_list|(
+name|errstr
 argument_list|)
 expr_stmt|;
 block|}
@@ -9321,6 +9327,9 @@ modifier|*
 name|addr
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|USE_INET6
 specifier|static
 name|char
 name|hostbuf
@@ -9330,6 +9339,8 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|v

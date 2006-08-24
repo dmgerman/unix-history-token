@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Id: portname.c,v 1.7 2003/08/14 14:27:43 darrenr Exp  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: portname.c,v 1.7 2003/08/14 14:27:43 darrenr Exp $  */
 end_comment
 
 begin_include

@@ -31,6 +31,11 @@ name|defined
 argument_list|(
 name|__GNUC__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_AIX51
+argument_list|)
 end_if
 
 begin_define
@@ -275,10 +280,16 @@ name|is_tag
 decl_stmt|;
 name|u_32_t
 name|is_opt
+index|[
+literal|2
+index|]
 decl_stmt|;
 comment|/* packet options set */
 name|u_32_t
 name|is_optmsk
+index|[
+literal|2
+index|]
 decl_stmt|;
 comment|/*    "      "    mask */
 name|u_short

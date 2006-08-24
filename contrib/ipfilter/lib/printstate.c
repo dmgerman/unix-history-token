@@ -917,15 +917,35 @@ argument_list|)
 expr_stmt|;
 name|PRINTF
 argument_list|(
-literal|"\tpkt_options& %x = %x\n"
+literal|"\tpkt_options& %x = %x, %x = %x \n"
 argument_list|,
 name|ips
 operator|.
 name|is_optmsk
+index|[
+literal|0
+index|]
 argument_list|,
 name|ips
 operator|.
 name|is_opt
+index|[
+literal|0
+index|]
+argument_list|,
+name|ips
+operator|.
+name|is_optmsk
+index|[
+literal|1
+index|]
+argument_list|,
+name|ips
+operator|.
+name|is_opt
+index|[
+literal|1
+index|]
 argument_list|)
 expr_stmt|;
 name|PRINTF

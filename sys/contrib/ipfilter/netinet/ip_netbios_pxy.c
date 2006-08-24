@@ -1,14 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
+comment|/*  * Simple netbios-dgm transparent proxy for in-kernel use.  * For use with the NAT code.  * $Id: ip_netbios_pxy.c,v 2.8.2.1 2005/08/20 13:48:23 darrenr Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * Simple netbios-dgm transparent proxy for in-kernel use.  * For use with the NAT code.  * Id: ip_netbios_pxy.c,v 2.8 2003/12/01 02:52:16 darrenr Exp  */
-end_comment
-
-begin_comment
-comment|/*-  * Copyright (c) 2002-2003 Paul J. Ledbetter III  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Id: ip_netbios_pxy.c,v 2.8 2003/12/01 02:52:16 darrenr Exp  */
+comment|/*-  * Copyright (c) 2002-2003 Paul J. Ledbetter III  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: ip_netbios_pxy.c,v 2.8.2.1 2005/08/20 13:48:23 darrenr Exp $  */
 end_comment
 
 begin_define
@@ -221,45 +217,23 @@ operator|=
 name|nat
 expr_stmt|;
 comment|/* LINT */
-name|ip
-operator|=
-name|fin
-operator|->
-name|fin_ip
-expr_stmt|;
 name|m
 operator|=
-operator|*
-operator|(
-name|mb_t
-operator|*
-operator|*
-operator|)
 name|fin
 operator|->
-name|fin_mp
+name|fin_m
 expr_stmt|;
-name|off
+name|dlen
 operator|=
 name|fin
 operator|->
-name|fin_hlen
-operator|+
+name|fin_dlen
+operator|-
 sizeof|sizeof
 argument_list|(
-name|udphdr_t
+operator|*
+name|udp
 argument_list|)
-expr_stmt|;
-name|dlen
-operator|=
-name|M_LEN
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-name|dlen
-operator|-=
-name|off
 expr_stmt|;
 comment|/* 	 * no net bios datagram could possibly be shorter than this 	 */
 if|if
@@ -271,6 +245,12 @@ condition|)
 return|return
 literal|0
 return|;
+name|ip
+operator|=
+name|fin
+operator|->
+name|fin_ip
+expr_stmt|;
 name|udp
 operator|=
 operator|(
@@ -280,6 +260,30 @@ operator|)
 name|fin
 operator|->
 name|fin_dp
+expr_stmt|;
+name|off
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|udp
+operator|-
+operator|(
+name|char
+operator|*
+operator|)
+name|ip
+operator|+
+sizeof|sizeof
+argument_list|(
+operator|*
+name|udp
+argument_list|)
+operator|+
+name|fin
+operator|->
+name|fin_ipoff
 expr_stmt|;
 comment|/* 	 * move past the 	 *	ip header; 	 *	udp header; 	 *	4 bytes into the net bios dgm header. 	 *  According to rfc1002, this should be the exact location of 	 *  the source address/port 	 */
 name|off

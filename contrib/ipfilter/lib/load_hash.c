@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Id: load_hash.c,v 1.11.2.2 2005/02/01 02:44:05 darrenr Exp  */
+comment|/*  * Copyright (C) 2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: load_hash.c,v 1.11.2.3 2005/11/13 15:41:12 darrenr Exp $  */
 end_comment
 
 begin_include
@@ -408,13 +408,13 @@ block|}
 block|}
 name|strncpy
 argument_list|(
-name|op
-operator|.
-name|iplo_name
-argument_list|,
 name|iph
 operator|.
 name|iph_name
+argument_list|,
+name|op
+operator|.
+name|iplo_name
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -430,9 +430,9 @@ name|iphp
 operator|->
 name|iph_name
 argument_list|,
-name|iph
+name|op
 operator|.
-name|iph_name
+name|iplo_name
 argument_list|,
 sizeof|sizeof
 argument_list|(

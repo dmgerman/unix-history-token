@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1993-2001, 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ipf.h	1.12 6/5/96  * Id: ipf.h,v 2.71.2.6 2005/02/21 05:05:29 darrenr Exp  */
+comment|/*  * Copyright (C) 1993-2001, 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ipf.h	1.12 6/5/96  * $Id: ipf.h,v 2.71.2.8 2005/12/30 07:03:21 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -1079,25 +1079,6 @@ name|frentry
 operator|*
 operator|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|bcopywrap
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|,
-name|void
-operator|*
-operator|,
-name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2426,6 +2407,27 @@ name|ip_pool_node
 operator|*
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|printproto
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|protoent
+operator|*
+operator|,
+name|int
+operator|,
+expr|struct
+name|ipnat
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

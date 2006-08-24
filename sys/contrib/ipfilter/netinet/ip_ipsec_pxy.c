@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
-comment|/*  * Copyright (C) 2001-2003 by Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Simple ISAKMP transparent proxy for in-kernel use.  For use with the NAT  * code.  *  * Id: ip_ipsec_pxy.c,v 2.20.2.6 2005/03/28 10:47:53 darrenr Exp  *  */
+comment|/*  * Copyright (C) 2001-2003 by Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Simple ISAKMP transparent proxy for in-kernel use.  For use with the NAT  * code.  *  * $Id: ip_ipsec_pxy.c,v 2.20.2.7 2005/08/20 13:48:22 darrenr Exp $  *  */
 end_comment
 
 begin_define
@@ -447,6 +443,20 @@ name|ip_t
 modifier|*
 name|ip
 decl_stmt|;
+name|off
+operator|=
+name|fin
+operator|->
+name|fin_plen
+operator|-
+name|fin
+operator|->
+name|fin_dlen
+operator|+
+name|fin
+operator|->
+name|fin_ipoff
+expr_stmt|;
 name|bzero
 argument_list|(
 name|ipsec_buffer
@@ -455,17 +465,6 @@ sizeof|sizeof
 argument_list|(
 name|ipsec_buffer
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|off
-operator|=
-name|fin
-operator|->
-name|fin_hlen
-operator|+
-sizeof|sizeof
-argument_list|(
-name|udphdr_t
 argument_list|)
 expr_stmt|;
 name|ip
@@ -1597,22 +1596,25 @@ return|return
 operator|-
 literal|1
 return|;
+name|off
+operator|=
+name|fin
+operator|->
+name|fin_plen
+operator|-
+name|fin
+operator|->
+name|fin_dlen
+operator|+
+name|fin
+operator|->
+name|fin_ipoff
+expr_stmt|;
 name|ipsec
 operator|=
 name|aps
 operator|->
 name|aps_data
-expr_stmt|;
-name|off
-operator|=
-name|fin
-operator|->
-name|fin_hlen
-operator|+
-sizeof|sizeof
-argument_list|(
-name|udphdr_t
-argument_list|)
 expr_stmt|;
 name|m
 operator|=

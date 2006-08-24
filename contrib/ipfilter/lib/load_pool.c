@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Id: load_pool.c,v 1.14.2.2 2005/02/01 02:44:06 darrenr Exp  */
+comment|/*  * Copyright (C) 2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: load_pool.c,v 1.14.2.3 2005/11/13 15:41:13 darrenr Exp $  */
 end_comment
 
 begin_include
@@ -213,10 +213,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|plp
 operator|->
 name|ipo_name
+index|[
+literal|0
+index|]
 operator|==
 literal|'\0'
 condition|)
@@ -274,6 +276,32 @@ literal|1
 return|;
 block|}
 block|}
+if|if
+condition|(
+name|op
+operator|.
+name|iplo_arg
+operator|&
+name|IPOOL_ANON
+condition|)
+name|strncpy
+argument_list|(
+name|pool
+operator|.
+name|ipo_name
+argument_list|,
+name|op
+operator|.
+name|iplo_name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pool
+operator|.
+name|ipo_name
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -338,8 +366,8 @@ name|plp
 operator|->
 name|ipo_unit
 argument_list|,
-name|plp
-operator|->
+name|pool
+operator|.
 name|ipo_name
 argument_list|,
 name|a

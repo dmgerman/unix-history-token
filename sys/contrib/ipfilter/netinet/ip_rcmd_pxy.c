@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1998-2003 by Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Id: ip_rcmd_pxy.c,v 1.41.2.4 2005/02/04 10:22:55 darrenr Exp  *  * Simple RCMD transparent proxy for in-kernel use.  For use with the NAT  * code.  * $FreeBSD$  */
+comment|/*  * Copyright (C) 1998-2003 by Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_rcmd_pxy.c,v 1.41.2.6 2006/04/01 10:14:54 darrenr Exp $  *  * Simple RCMD transparent proxy for in-kernel use.  For use with the NAT  * code.  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -758,6 +758,18 @@ argument_list|)
 expr_stmt|;
 name|fi
 operator|.
+name|fin_state
+operator|=
+name|NULL
+expr_stmt|;
+name|fi
+operator|.
+name|fin_nat
+operator|=
+name|NULL
+expr_stmt|;
+name|fi
+operator|.
 name|fin_flx
 operator||=
 name|FI_IGNORE
@@ -1148,10 +1160,7 @@ argument_list|(
 operator|&
 name|fi
 argument_list|,
-operator|&
-name|nat2
-operator|->
-name|nat_state
+name|NULL
 argument_list|,
 name|SI_W_DPORT
 argument_list|)

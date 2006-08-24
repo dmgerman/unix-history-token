@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Id: opts.h,v 2.12 2003/08/14 14:24:27 darrenr Exp  */
+comment|/*  * Copyright (C) 2000 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: opts.h,v 2.12 2003/08/14 14:24:27 darrenr Exp $  */
 end_comment
 
 begin_ifndef

@@ -35,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)Id: ipft_hx.c,v 1.11.4.1 2004/12/09 19:41:20 darrenr Exp"
+literal|"@(#)$Id: ipft_hx.c,v 1.11.4.3 2005/12/04 10:07:21 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -445,12 +445,13 @@ condition|)
 continue|continue;
 if|if
 condition|(
-operator|!
 operator|(
 name|opts
 operator|&
-name|OPT_BRIEF
+name|OPT_DEBUG
 operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|printf
@@ -614,12 +615,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|opts
 operator|&
-name|OPT_BRIEF
+name|OPT_DEBUG
 operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
@@ -698,6 +700,16 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|feof
+argument_list|(
+name|tfp
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
 return|return
 operator|-
 literal|1

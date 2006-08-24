@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Id: optprint.c,v 1.6 2002/07/13 15:59:49 darrenr Exp  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: optprint.c,v 1.6.4.1 2005/12/18 14:51:28 darrenr Exp $  */
 end_comment
 
 begin_include
@@ -136,6 +136,7 @@ operator|->
 name|on_name
 argument_list|)
 expr_stmt|;
+comment|/* 				 * Because the ionames table has this entry 				 * twice. 				 */
 if|if
 condition|(
 name|io

@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1997-2001 by Darren Reed& Guido Van Rooij.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $FreeBSD$  * Id: ip_auth.h,v 2.16 2003/07/25 12:29:56 darrenr Exp  *  */
+comment|/*  * Copyright (C) 1997-2001 by Darren Reed& Guido Van Rooij.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $FreeBSD$  * Id: ip_auth.h,v 2.16.2.2 2006/03/16 06:45:49 darrenr Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -56,6 +56,10 @@ name|MENTAT
 name|queue_t
 modifier|*
 name|fra_q
+decl_stmt|;
+name|mb_t
+modifier|*
+name|fra_m
 decl_stmt|;
 endif|#
 directive|endif
@@ -313,6 +317,19 @@ operator|,
 name|ioctlcmd_t
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|fr_auth_waiting
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;

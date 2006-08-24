@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_fil.h	1.35 6/5/96  * Id: ipmon.h,v 2.8 2003/07/25 22:16:20 darrenr Exp  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ipmon.h,v 2.8.2.1 2006/03/21 16:13:31 darrenr Exp $  */
 end_comment
 
 begin_typedef
@@ -450,6 +450,20 @@ name|__P
 argument_list|(
 operator|(
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|fac_findname
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

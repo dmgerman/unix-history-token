@@ -35,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)Id: arp.c,v 2.8 2003/12/01 02:01:15 darrenr Exp"
+literal|"@(#)$Id: arp.c,v 2.8.2.1 2005/06/12 07:18:38 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,6 +81,12 @@ operator|!
 name|defined
 argument_list|(
 name|__osf__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_AIX51
 argument_list|)
 end_if
 

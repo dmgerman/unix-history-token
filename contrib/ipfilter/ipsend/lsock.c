@@ -35,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)Id: lsock.c,v 2.3 2001/06/09 17:09:26 darrenr Exp"
+literal|"@(#)$Id: lsock.c,v 2.3.4.1 2006/03/17 13:45:34 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1351,6 +1351,17 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|nfd
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 if|if
 condition|(
 operator|!

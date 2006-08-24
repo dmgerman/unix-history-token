@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
 comment|/*  * Copyright (C) 1993-2001, 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
@@ -363,12 +359,23 @@ end_endif
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
 operator|(
 name|defined
 argument_list|(
 name|__osf__
 argument_list|)
 operator|||
+name|defined
+argument_list|(
+name|AIX
+argument_list|)
+operator|||
+expr|\
 name|defined
 argument_list|(
 name|__hpux
@@ -379,11 +386,6 @@ argument_list|(
 name|__sgi
 argument_list|)
 operator|)
-operator|&&
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
 end_if
 
 begin_ifdef
@@ -547,7 +549,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)Id: ip_pool.c,v 2.55.2.12 2005/02/01 04:04:46 darrenr Exp"
+literal|"@(#)$Id: ip_pool.c,v 2.55.2.15 2005/11/13 15:38:37 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2116,19 +2118,16 @@ name|radix_node
 modifier|*
 name|n
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_SPL
-name|int
+name|SPL_INT
+argument_list|(
 name|s
-decl_stmt|;
+argument_list|)
+expr_stmt|;
 name|SPL_NET
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|RADIX_NODE_HEAD_LOCK
 argument_list|(
 name|ipo
@@ -3148,6 +3147,25 @@ argument_list|(
 name|h
 operator|->
 name|ipo_name
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strncpy
+argument_list|(
+name|op
+operator|->
+name|iplo_name
+argument_list|,
+name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|op
+operator|->
+name|iplo_name
 argument_list|)
 argument_list|)
 expr_stmt|;

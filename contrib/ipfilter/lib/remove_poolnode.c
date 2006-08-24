@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Id: remove_poolnode.c,v 1.3 2003/11/22 10:14:36 darrenr Exp  */
+comment|/*  * Copyright (C) 2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: remove_poolnode.c,v 1.3 2003/11/22 10:14:36 darrenr Exp $  */
 end_comment
 
 begin_include
