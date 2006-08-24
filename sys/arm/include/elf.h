@@ -605,12 +605,35 @@ name|ELF_TARG_CLASS
 value|ELFCLASS32
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__ARMEB__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ELF_TARG_DATA
+value|ELFDATA2MSB
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|ELF_TARG_DATA
 value|ELFDATA2LSB
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
