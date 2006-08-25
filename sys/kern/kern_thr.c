@@ -1069,6 +1069,8 @@ name|rtp
 operator|.
 name|prio
 operator|=
+name|RTP_PRIO_MAX
+operator|-
 name|sched
 operator|->
 name|param
@@ -1106,6 +1108,8 @@ name|rtp
 operator|.
 name|prio
 operator|=
+name|RTP_PRIO_MAX
+operator|-
 name|sched
 operator|->
 name|param
