@@ -890,12 +890,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_UNUSED9
+name|TDF_UBORROWING
 value|0x00000200
 end_define
 
 begin_comment
-comment|/* --available -- */
+comment|/* Thread is borrowing user pri. */
 end_comment
 
 begin_define
@@ -945,12 +945,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_UNUSED14
+name|TDF_UPIBLOCKED
 value|0x00004000
 end_define
 
 begin_comment
-comment|/* --available -- */
+comment|/* Thread blocked on user PI mutex. */
 end_comment
 
 begin_define
@@ -1519,6 +1519,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|TD_ON_UPILOCK
+parameter_list|(
+name|td
+parameter_list|)
+value|((td)->td_flags& TDF_UPIBLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TD_SET_INHIB
 parameter_list|(
 name|td
@@ -1852,6 +1862,10 @@ name|u_char
 name|kg_user_pri
 decl_stmt|;
 comment|/* (j) User pri from estcpu and nice. */
+name|u_char
+name|kg_base_user_pri
+decl_stmt|;
+comment|/* (j) Base user pri */
 define|#
 directive|define
 name|kg_endcopy
