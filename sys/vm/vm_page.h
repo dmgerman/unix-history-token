@@ -1108,7 +1108,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|vm_page_t
+name|void
 name|vm_pageq_add_new_page
 parameter_list|(
 name|vm_paddr_t

@@ -844,7 +844,7 @@ comment|/*  *	vm_add_new_page:  *  *	Add a new page to the freelist for use by t
 end_comment
 
 begin_function
-name|vm_page_t
+name|void
 name|vm_pageq_add_new_page
 parameter_list|(
 name|vm_paddr_t
@@ -923,11 +923,6 @@ operator|&
 name|vm_page_queue_free_mtx
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|m
-operator|)
-return|;
 block|}
 end_function
 
