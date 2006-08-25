@@ -43,28 +43,6 @@ comment|/*  * Override the default pager_map size, there's not enough KVA.  */
 end_comment
 
 begin_comment
-comment|/*  * Size of User Raw I/O map  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USRIOSIZE
-value|300
-end_define
-
-begin_comment
-comment|/* virtual sizes (bytes) for various kernel submaps */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VM_PHYS_SIZE
-value|(USRIOSIZE*PAGE_SIZE)
-end_define
-
-begin_comment
 comment|/*  * max number of non-contig chunks of physical RAM you can have  */
 end_comment
 

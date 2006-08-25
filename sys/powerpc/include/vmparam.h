@@ -162,17 +162,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Size of User Raw I/O map  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USRIOSIZE
-value|1024
-end_define
-
-begin_comment
 comment|/*  * The time for a process to be blocked before being very swappable.  * This is a number of seconds which the system takes as being a non-trivial  * amount of real time.  You probably shouldn't change this;  * it is used in subtle ways (fractions and multiples of it are, that is, like  * half of a ``long time'', almost a long time, etc.)  * It is related to human patience and other factors which don't really  * change over time.  */
 end_comment
 
@@ -264,13 +253,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|VM_PHYS_SIZE
-value|(USRIOSIZE * NBPG)
-end_define
 
 begin_struct
 struct|struct
