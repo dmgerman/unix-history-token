@@ -3374,7 +3374,7 @@ case|:
 if|if
 condition|(
 name|data
-operator|==
+operator|<=
 literal|0
 operator|||
 name|data
