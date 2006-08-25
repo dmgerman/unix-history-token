@@ -3856,7 +3856,7 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-comment|/* Flags common to all filesystems. */
+comment|/* Calling thread. */
 specifier|const
 name|char
 modifier|*
