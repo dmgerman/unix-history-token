@@ -1402,6 +1402,12 @@ name|dmat
 operator|=
 name|dmat
 expr_stmt|;
+name|newmap
+operator|->
+name|allocbuffer
+operator|=
+name|NULL
+expr_stmt|;
 name|dmat
 operator|->
 name|map_count
