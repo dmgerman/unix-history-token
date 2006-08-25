@@ -621,6 +621,68 @@ condition|)
 name|sync
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Ignore signals that we can get as a result of killing 	 * parents, group leaders, etc. 	 */
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGQUIT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGTERM
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGTSTP
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+comment|/* 	 * If we're running in a pipeline, we don't want to die 	 * after killing whatever we're writing to. 	 */
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
 comment|/* Just stop init -- if we fail, we'll restart it. */
 if|if
 condition|(
@@ -639,17 +701,6 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"SIGTSTP init"
-argument_list|)
-expr_stmt|;
-comment|/* Ignore the SIGHUP we get when our parent shell dies. */
-operator|(
-name|void
-operator|)
-name|signal
-argument_list|(
-name|SIGHUP
-argument_list|,
-name|SIG_IGN
 argument_list|)
 expr_stmt|;
 comment|/* Send a SIGTERM first, a chance to save the buffers. */
