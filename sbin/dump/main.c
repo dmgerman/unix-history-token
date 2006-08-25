@@ -1395,6 +1395,23 @@ operator|->
 name|fs_spec
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|disk
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+name|X_STARTUP
+argument_list|,
+literal|"%s: unknown file system"
+argument_list|,
+name|dt
+operator|->
+name|fs_spec
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
