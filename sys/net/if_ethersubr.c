@@ -1522,29 +1522,6 @@ name|ether_shost
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	* Bridges require special output handling. 	*/
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_bridge
-condition|)
-block|{
-name|BRIDGE_OUTPUT
-argument_list|(
-name|ifp
-argument_list|,
-name|m
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
 comment|/* 	 * If a simplex interface, and the packet is being sent to our 	 * Ethernet address or a broadcast address, loopback a copy. 	 * XXX To make a simplex device behave exactly like a duplex 	 * device, we should copy in the case of sending to our own 	 * ethernet address (thus letting the original actually appear 	 * on the wire). However, we don't do that here for security 	 * reasons and compatibility with the original behavior. 	 */
 if|if
 condition|(
@@ -1756,6 +1733,29 @@ operator|)
 return|;
 comment|/* XXX */
 block|}
+block|}
+comment|/* 	* Bridges require special output handling. 	*/
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_bridge
+condition|)
+block|{
+name|BRIDGE_OUTPUT
+argument_list|(
+name|ifp
+argument_list|,
+name|m
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 ifdef|#
 directive|ifdef
