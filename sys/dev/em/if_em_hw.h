@@ -3097,6 +3097,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_DEV_ID_82571EB_QUAD_COPPER
+value|0x10A4
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_DEV_ID_82572EI_COPPER
 value|0x107D
 end_define

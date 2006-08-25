@@ -740,6 +740,9 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|rxtag
 decl_stmt|;
+name|bus_dmamap_t
+name|rx_sparemap
+decl_stmt|;
 comment|/* First/last mbuf pointers, for collecting multisegment RX packets. */
 name|struct
 name|mbuf
@@ -752,10 +755,6 @@ modifier|*
 name|lmp
 decl_stmt|;
 comment|/* Misc stats maintained by the driver */
-name|unsigned
-name|long
-name|dropped_pkts
-decl_stmt|;
 name|unsigned
 name|long
 name|mbuf_alloc_failed

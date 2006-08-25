@@ -1801,6 +1801,9 @@ case|:
 case|case
 name|E1000_DEV_ID_82571EB_SERDES
 case|:
+case|case
+name|E1000_DEV_ID_82571EB_QUAD_COPPER
+case|:
 name|hw
 operator|->
 name|mac_type
@@ -2947,6 +2950,61 @@ argument_list|(
 literal|"em_init_hw"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|hw
+operator|->
+name|mac_type
+operator|==
+name|em_ich8lan
+condition|)
+block|{
+name|reg_data
+operator|=
+name|E1000_READ_REG
+argument_list|(
+name|hw
+argument_list|,
+name|TARC0
+argument_list|)
+expr_stmt|;
+name|reg_data
+operator||=
+literal|0x30000000
+expr_stmt|;
+name|E1000_WRITE_REG
+argument_list|(
+name|hw
+argument_list|,
+name|TARC0
+argument_list|,
+name|reg_data
+argument_list|)
+expr_stmt|;
+name|reg_data
+operator|=
+name|E1000_READ_REG
+argument_list|(
+name|hw
+argument_list|,
+name|STATUS
+argument_list|)
+expr_stmt|;
+name|reg_data
+operator|&=
+operator|~
+literal|0x80000000
+expr_stmt|;
+name|E1000_WRITE_REG
+argument_list|(
+name|hw
+argument_list|,
+name|STATUS
+argument_list|,
+name|reg_data
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Initialize Identification LED */
 name|ret_val
 operator|=
@@ -3616,7 +3674,7 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* ICH8/Nahum No-snoop bits are opposite polarity.      * Set to snoop by default after reset. */
+comment|/* ICH8 No-snoop bits are opposite polarity.      * Set to snoop by default after reset. */
 if|if
 condition|(
 name|hw
@@ -4991,6 +5049,16 @@ name|led_ctrl
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* The NVM settings will configure LPLU in D3 for IGP2 and IGP3 PHYs */
+if|if
+condition|(
+name|hw
+operator|->
+name|phy_type
+operator|==
+name|em_phy_igp
+condition|)
+block|{
 comment|/* disable lplu d3 during driver init */
 name|ret_val
 operator|=
@@ -5014,6 +5082,7 @@ expr_stmt|;
 return|return
 name|ret_val
 return|;
+block|}
 block|}
 comment|/* disable lplu d0 during driver init */
 name|ret_val
@@ -6339,36 +6408,6 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************** * Copper link setup for em_phy_ife (Fast Ethernet PHY) series. * * hw - Struct containing variables accessed by shared code *********************************************************************/
-end_comment
-
-begin_function
-specifier|static
-name|int32_t
-name|em_copper_link_ife_setup
-parameter_list|(
-name|struct
-name|em_hw
-modifier|*
-name|hw
-parameter_list|)
-block|{
-if|if
-condition|(
-name|hw
-operator|->
-name|phy_reset_disable
-condition|)
-return|return
-name|E1000_SUCCESS
-return|;
-return|return
-name|E1000_SUCCESS
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/****************************************************************************** * Config the MAC and the PHY after link is up. *   1) Set up the MAC to the current PHY speed/duplex *      if we are on 82543.  If we *      are on newer silicon, we only need to configure *      collision distance in the Transmit Control Register. *   2) Set up flow control on the MAC to that established with *      the link partner. *   3) Config DSP to improve Gigabit link quality for some PHY revisions. * * hw - Struct containing variables accessed by shared code ******************************************************************************/
 end_comment
 
@@ -6744,31 +6783,6 @@ block|{
 name|ret_val
 operator|=
 name|em_copper_link_ggp_setup
-argument_list|(
-name|hw
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret_val
-condition|)
-return|return
-name|ret_val
-return|;
-block|}
-elseif|else
-if|if
-condition|(
-name|hw
-operator|->
-name|phy_type
-operator|==
-name|em_phy_ife
-condition|)
-block|{
-name|ret_val
-operator|=
-name|em_copper_link_ife_setup
 argument_list|(
 name|hw
 argument_list|)
@@ -12856,6 +12870,15 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret_val
+operator|!=
+name|E1000_SUCCESS
+condition|)
+return|return
+name|ret_val
+return|;
 name|em_release_software_semaphore
 argument_list|(
 name|hw
@@ -12879,7 +12902,6 @@ operator|==
 name|em_phy_igp_3
 operator|)
 condition|)
-block|{
 name|ret_val
 operator|=
 name|em_init_lcd_from_nvm
@@ -12887,14 +12909,6 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ret_val
-condition|)
-return|return
-name|ret_val
-return|;
-block|}
 return|return
 name|ret_val
 return|;
@@ -13226,7 +13240,7 @@ condition|)
 return|return
 name|E1000_SUCCESS
 return|;
-comment|/* Make sure link is up before proceeding. If not just return.       * Attempting this while link is negotiating fouls up link      * stability */
+comment|/* Make sure link is up before proceeding.  If not just return.      * Attempting this while link is negotiating fouled up link      * stability */
 name|ret_val
 operator|=
 name|em_read_phy_reg
@@ -32329,6 +32343,10 @@ name|ret_val
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/******************************************************************************  * This function initializes the PHY from the NVM on ICH8 platforms. This  * is needed due to an issue where the NVM configuration is not properly  * autoloaded after power transitions. Therefore, after each PHY reset, we  * will load the configuration data out of the NVM manually.  *  * hw: Struct containing variables accessed by shared code  *****************************************************************************/
+end_comment
 
 begin_function
 name|int32_t
