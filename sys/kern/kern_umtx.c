@@ -3068,6 +3068,23 @@ block|}
 end_function
 
 begin_function
+name|void
+name|umtx_pi_adjust
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+name|__unused
+parameter_list|,
+name|u_char
+name|oldpri
+name|__unused
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
 name|int
 name|_umtx_lock
 parameter_list|(
