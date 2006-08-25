@@ -1604,6 +1604,12 @@ name|kg_user_pri
 operator|=
 name|PUSER
 expr_stmt|;
+name|kg
+operator|->
+name|kg_base_user_pri
+operator|=
+name|PUSER
+expr_stmt|;
 name|td
 operator|->
 name|td_priority
