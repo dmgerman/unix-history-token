@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2005 Apple Computer, Inc.  * All rights reserved.  *  * @APPLE_BSD_LICENSE_HEADER_START@  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * @APPLE_BSD_LICENSE_HEADER_END@  *  * $P4: //depot/projects/trustedbsd/audit3/sys/bsm/audit_kevents.h#23 $  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2005 Apple Computer, Inc.  * All rights reserved.  *  * @APPLE_BSD_LICENSE_HEADER_START@  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * @APPLE_BSD_LICENSE_HEADER_END@  *  * $P4: //depot/projects/trustedbsd/audit3/sys/bsm/audit_kevents.h#26 $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -1839,55 +1839,55 @@ value|288
 end_define
 
 begin_comment
-comment|/*  * Events not present in OpenSolaris BSM, generally derived from Apple Darwin  * BSM or added in OpenBSM.  This start a little too close to the top end of  * the OpenSolaris event list for my comfort.  */
+comment|/*  * Events added for Apple Darwin that potentially collide with future Solaris  * BSM events.  These are assigned AUE_DARWIN prefixes, and are deprecated in  * new trails.  Systems generating these events should switch to the new  * identifiers that avoid colliding with the Solaris identifier space.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|AUE_GETFSSTAT
+name|AUE_DARWIN_GETFSSTAT
 value|301
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUE_PTRACE
+name|AUE_DARWIN_PTRACE
 value|302
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUE_CHFLAGS
+name|AUE_DARWIN_CHFLAGS
 value|303
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUE_FCHFLAGS
+name|AUE_DARWIN_FCHFLAGS
 value|304
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUE_PROFILE
+name|AUE_DARWIN_PROFILE
 value|305
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUE_KTRACE
+name|AUE_DARWIN_KTRACE
 value|306
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUE_SETLOGIN
+name|AUE_DARWIN_SETLOGIN
 value|307
 end_define
 
@@ -1905,21 +1905,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AUE_REVOKE
+name|AUE_DARWIN_REVOKE
 value|309
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUE_UMASK
+name|AUE_DARWIN_UMASK
 value|310
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUE_MPROTECT
+name|AUE_DARWIN_MPROTECT
 value|311
 end_define
 
@@ -1959,14 +1959,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AUE_MKFIFO
+name|AUE_DARWIN_MKFIFO
 value|315
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUE_POLL
+name|AUE_DARWIN_POLL
 value|316
 end_define
 
@@ -1984,21 +1984,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AUE_FUTIMES
+name|AUE_DARWIN_FUTIMES
 value|318
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUE_SETSID
+name|AUE_DARWIN_SETSID
 value|319
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUE_SETPRIVEXEC
+name|AUE_DARWIN_SETPRIVEXEC
 value|320
 end_define
 
@@ -2042,7 +2042,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AUE_ADDPROFILE
+name|AUE_DARWIN_ADDPROFILE
 value|324
 end_define
 
@@ -2053,7 +2053,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AUE_KDEBUGTRACE
+name|AUE_DARWIN_KDEBUGTRACE
 value|325
 end_define
 
@@ -2064,28 +2064,28 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AUE_KDBUGTRACE
+name|AUE_DARWIN_KDBUGTRACE
 value|AUE_KDEBUGTRACE
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUE_FSTAT
+name|AUE_DARWIN_FSTAT
 value|326
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUE_FPATHCONF
+name|AUE_DARWIN_FPATHCONF
 value|327
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUE_GETDIRENTRIES
+name|AUE_DARWIN_GETDIRENTRIES
 value|328
 end_define
 
@@ -2114,35 +2114,35 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AUE_SYSCTL
+name|AUE_DARWIN_SYSCTL
 value|331
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUE_MLOCK
+name|AUE_DARWIN_MLOCK
 value|332
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUE_MUNLOCK
+name|AUE_DARWIN_MUNLOCK
 value|333
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUE_UNDELETE
+name|AUE_DARWIN_UNDELETE
 value|334
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUE_GETATTRLIST
+name|AUE_DARWIN_GETATTRLIST
 value|335
 end_define
 
@@ -2153,7 +2153,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AUE_SETATTRLIST
+name|AUE_DARWIN_SETATTRLIST
 value|336
 end_define
 
@@ -2164,7 +2164,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AUE_GETDIRENTRIESATTR
+name|AUE_DARWIN_GETDIRENTRIESATTR
 value|337
 end_define
 
@@ -2175,7 +2175,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AUE_EXCHANGEDATA
+name|AUE_DARWIN_EXCHANGEDATA
 value|338
 end_define
 
@@ -2186,7 +2186,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AUE_SEARCHFS
+name|AUE_DARWIN_SEARCHFS
 value|339
 end_define
 
@@ -2197,56 +2197,56 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AUE_MINHERIT
+name|AUE_DARWIN_MINHERIT
 value|340
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUE_SEMCONFIG
+name|AUE_DARWIN_SEMCONFIG
 value|341
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUE_SEMOPEN
+name|AUE_DARWIN_SEMOPEN
 value|342
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUE_SEMCLOSE
+name|AUE_DARWIN_SEMCLOSE
 value|343
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUE_SEMUNLINK
+name|AUE_DARWIN_SEMUNLINK
 value|344
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUE_SHMOPEN
+name|AUE_DARWIN_SHMOPEN
 value|345
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUE_SHMUNLINK
+name|AUE_DARWIN_SHMUNLINK
 value|346
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUE_LOADSHFILE
+name|AUE_DARWIN_LOADSHFILE
 value|347
 end_define
 
@@ -2257,7 +2257,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AUE_RESETSHFILE
+name|AUE_DARWIN_RESETSHFILE
 value|348
 end_define
 
@@ -2268,7 +2268,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AUE_NEWSYSTEMSHREG
+name|AUE_DARWIN_NEWSYSTEMSHREG
 value|349
 end_define
 
@@ -2279,7 +2279,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AUE_PTHREADKILL
+name|AUE_DARWIN_PTHREADKILL
 value|350
 end_define
 
@@ -2290,7 +2290,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AUE_PTHREADSIGMASK
+name|AUE_DARWIN_PTHREADSIGMASK
 value|351
 end_define
 
@@ -2301,35 +2301,35 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AUE_AUDITCTL
+name|AUE_DARWIN_AUDITCTL
 value|352
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUE_RFORK
+name|AUE_DARWIN_RFORK
 value|353
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUE_LCHMOD
+name|AUE_DARWIN_LCHMOD
 value|354
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUE_SWAPOFF
+name|AUE_DARWIN_SWAPOFF
 value|355
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUE_INITPROCESS
+name|AUE_DARWIN_INITPROCESS
 value|356
 end_define
 
@@ -2340,7 +2340,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AUE_MAPFD
+name|AUE_DARWIN_MAPFD
 value|357
 end_define
 
@@ -2351,7 +2351,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AUE_TASKFORPID
+name|AUE_DARWIN_TASKFORPID
 value|358
 end_define
 
@@ -2362,7 +2362,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AUE_PIDFORTASK
+name|AUE_DARWIN_PIDFORTASK
 value|359
 end_define
 
@@ -2373,15 +2373,128 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AUE_SYSCTL_NONADMIN
+name|AUE_DARWIN_SYSCTL_NONADMIN
 value|360
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUE_COPYFILE
+name|AUE_DARWIN_COPYFILE
 value|361
+end_define
+
+begin_comment
+comment|/* Darwin-specific. */
+end_comment
+
+begin_comment
+comment|/*  * Audit event identifiers added as part of OpenBSM, generally corresponding  * to events in FreeBSD, Darwin, and Linux that were not present in Solaris.  * These often duplicate events added to the Solaris set by Darwin, but use  * event identifiers in a higher range in order to avoid colliding with  * future Solaris additions.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_GETFSSTAT
+value|43001
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_PTRACE
+value|43002
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_CHFLAGS
+value|43003
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_FCHFLAGS
+value|43004
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_PROFILE
+value|43005
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_KTRACE
+value|43006
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_SETLOGIN
+value|43007
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_REVOKE
+value|43008
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_UMASK
+value|43009
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_MPROTECT
+value|43010
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_MKFIFO
+value|43011
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_POLL
+value|43012
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_FUTIMES
+value|43013
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_SETSID
+value|43014
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_SETPRIVEXEC
+value|43015
 end_define
 
 begin_comment
@@ -2391,15 +2504,346 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AUE_ADDPROFILE
+value|43016
+end_define
+
+begin_comment
+comment|/* Darwin-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_KDEBUGTRACE
+value|43017
+end_define
+
+begin_comment
+comment|/* Darwin-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_KDBUGTRACE
+value|AUE_KDEBUGTRACE
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_FSTAT
+value|43018
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_FPATHCONF
+value|43019
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_GETDIRENTRIES
+value|43020
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_SYSCTL
+value|43021
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_MLOCK
+value|43022
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_MUNLOCK
+value|43023
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_UNDELETE
+value|43024
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_GETATTRLIST
+value|43025
+end_define
+
+begin_comment
+comment|/* Darwin-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_SETATTRLIST
+value|43026
+end_define
+
+begin_comment
+comment|/* Darwin-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_GETDIRENTRIESATTR
+value|43027
+end_define
+
+begin_comment
+comment|/* Darwin-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_EXCHANGEDATA
+value|43028
+end_define
+
+begin_comment
+comment|/* Darwin-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_SEARCHFS
+value|43029
+end_define
+
+begin_comment
+comment|/* Darwin-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MINHERIT
+value|43030
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_SEMCONFIG
+value|43031
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_SEMOPEN
+value|43032
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_SEMCLOSE
+value|43033
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_SEMUNLINK
+value|43034
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_SHMOPEN
+value|43035
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_SHMUNLINK
+value|43036
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_LOADSHFILE
+value|43037
+end_define
+
+begin_comment
+comment|/* Darwin-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_RESETSHFILE
+value|43038
+end_define
+
+begin_comment
+comment|/* Darwin-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_NEWSYSTEMSHREG
+value|43039
+end_define
+
+begin_comment
+comment|/* Darwin-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_PTHREADKILL
+value|43040
+end_define
+
+begin_comment
+comment|/* Darwin-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_PTHREADSIGMASK
+value|43041
+end_define
+
+begin_comment
+comment|/* Darwin-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_AUDITCTL
+value|43042
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_RFORK
+value|43043
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_LCHMOD
+value|43044
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_SWAPOFF
+value|43045
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_INITPROCESS
+value|43046
+end_define
+
+begin_comment
+comment|/* Darwin-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MAPFD
+value|43047
+end_define
+
+begin_comment
+comment|/* Darwin-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_TASKFORPID
+value|43048
+end_define
+
+begin_comment
+comment|/* Darwin-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_PIDFORTASK
+value|43049
+end_define
+
+begin_comment
+comment|/* Darwin-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_SYSCTL_NONADMIN
+value|43050
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_COPYFILE
+value|43051
+end_define
+
+begin_comment
+comment|/* Darwin-specific. */
+end_comment
+
+begin_comment
+comment|/*  * Events added to OpenBSM for FreeBSD and Linux; may also be used by Darwin  * in the future.  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AUE_LUTIMES
-value|362
+value|43052
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUE_LCHFLAGS
-value|363
+value|43053
 end_define
 
 begin_comment
@@ -2410,7 +2854,7 @@ begin_define
 define|#
 directive|define
 name|AUE_SENDFILE
-value|364
+value|43054
 end_define
 
 begin_comment
@@ -2421,7 +2865,7 @@ begin_define
 define|#
 directive|define
 name|AUE_USELIB
-value|365
+value|43055
 end_define
 
 begin_comment
@@ -2432,35 +2876,35 @@ begin_define
 define|#
 directive|define
 name|AUE_GETRESUID
-value|366
+value|43056
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUE_SETRESUID
-value|367
+value|43057
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUE_GETRESGID
-value|368
+value|43058
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUE_SETRESGID
-value|369
+value|43059
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUE_WAIT4
-value|370
+value|43060
 end_define
 
 begin_comment
@@ -2471,7 +2915,7 @@ begin_define
 define|#
 directive|define
 name|AUE_LGETFH
-value|371
+value|43061
 end_define
 
 begin_comment
@@ -2482,7 +2926,7 @@ begin_define
 define|#
 directive|define
 name|AUE_FHSTATFS
-value|372
+value|43062
 end_define
 
 begin_comment
@@ -2493,7 +2937,7 @@ begin_define
 define|#
 directive|define
 name|AUE_FHOPEN
-value|373
+value|43063
 end_define
 
 begin_comment
@@ -2504,7 +2948,7 @@ begin_define
 define|#
 directive|define
 name|AUE_FHSTAT
-value|374
+value|43064
 end_define
 
 begin_comment
@@ -2515,7 +2959,7 @@ begin_define
 define|#
 directive|define
 name|AUE_JAIL
-value|375
+value|43065
 end_define
 
 begin_comment
@@ -2526,7 +2970,7 @@ begin_define
 define|#
 directive|define
 name|AUE_EACCESS
-value|376
+value|43066
 end_define
 
 begin_comment
@@ -2537,7 +2981,7 @@ begin_define
 define|#
 directive|define
 name|AUE_KQUEUE
-value|377
+value|43067
 end_define
 
 begin_comment
@@ -2548,7 +2992,7 @@ begin_define
 define|#
 directive|define
 name|AUE_KEVENT
-value|378
+value|43068
 end_define
 
 begin_comment
@@ -2559,14 +3003,14 @@ begin_define
 define|#
 directive|define
 name|AUE_FSYNC
-value|379
+value|43069
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUE_NMOUNT
-value|380
+value|43070
 end_define
 
 begin_comment
@@ -2577,7 +3021,7 @@ begin_define
 define|#
 directive|define
 name|AUE_BDFLUSH
-value|381
+value|43071
 end_define
 
 begin_comment
@@ -2588,7 +3032,7 @@ begin_define
 define|#
 directive|define
 name|AUE_SETFSUID
-value|382
+value|43072
 end_define
 
 begin_comment
@@ -2599,7 +3043,7 @@ begin_define
 define|#
 directive|define
 name|AUE_SETFSGID
-value|383
+value|43073
 end_define
 
 begin_comment
@@ -2610,7 +3054,7 @@ begin_define
 define|#
 directive|define
 name|AUE_PERSONALITY
-value|384
+value|43074
 end_define
 
 begin_comment
@@ -2621,7 +3065,7 @@ begin_define
 define|#
 directive|define
 name|AUE_SCHED_GETSCHEDULER
-value|385
+value|43075
 end_define
 
 begin_comment
@@ -2632,7 +3076,7 @@ begin_define
 define|#
 directive|define
 name|AUE_SCHED_SETSCHEDULER
-value|386
+value|43076
 end_define
 
 begin_comment
@@ -2643,7 +3087,7 @@ begin_define
 define|#
 directive|define
 name|AUE_PRCTL
-value|387
+value|43077
 end_define
 
 begin_comment
@@ -2654,7 +3098,7 @@ begin_define
 define|#
 directive|define
 name|AUE_GETCWD
-value|388
+value|43078
 end_define
 
 begin_comment
@@ -2665,7 +3109,7 @@ begin_define
 define|#
 directive|define
 name|AUE_CAPGET
-value|389
+value|43079
 end_define
 
 begin_comment
@@ -2676,7 +3120,7 @@ begin_define
 define|#
 directive|define
 name|AUE_CAPSET
-value|390
+value|43080
 end_define
 
 begin_comment
@@ -2687,7 +3131,7 @@ begin_define
 define|#
 directive|define
 name|AUE_PIVOT_ROOT
-value|391
+value|43081
 end_define
 
 begin_comment
@@ -2698,7 +3142,7 @@ begin_define
 define|#
 directive|define
 name|AUE_RTPRIO
-value|392
+value|43082
 end_define
 
 begin_comment
@@ -2709,7 +3153,7 @@ begin_define
 define|#
 directive|define
 name|AUE_SCHED_GETPARAM
-value|393
+value|43083
 end_define
 
 begin_comment
@@ -2720,7 +3164,7 @@ begin_define
 define|#
 directive|define
 name|AUE_SCHED_SETPARAM
-value|394
+value|43084
 end_define
 
 begin_comment
@@ -2731,7 +3175,7 @@ begin_define
 define|#
 directive|define
 name|AUE_SCHED_GET_PRIORITY_MAX
-value|395
+value|43085
 end_define
 
 begin_comment
@@ -2742,7 +3186,7 @@ begin_define
 define|#
 directive|define
 name|AUE_SCHED_GET_PRIORITY_MIN
-value|396
+value|43086
 end_define
 
 begin_comment
@@ -2753,7 +3197,7 @@ begin_define
 define|#
 directive|define
 name|AUE_SCHED_RR_GET_INTERVAL
-value|397
+value|43087
 end_define
 
 begin_comment
@@ -2764,7 +3208,7 @@ begin_define
 define|#
 directive|define
 name|AUE_ACL_GET_FILE
-value|398
+value|43088
 end_define
 
 begin_comment
@@ -2775,7 +3219,7 @@ begin_define
 define|#
 directive|define
 name|AUE_ACL_SET_FILE
-value|399
+value|43089
 end_define
 
 begin_comment
@@ -2786,7 +3230,7 @@ begin_define
 define|#
 directive|define
 name|AUE_ACL_GET_FD
-value|400
+value|43090
 end_define
 
 begin_comment
@@ -2797,7 +3241,7 @@ begin_define
 define|#
 directive|define
 name|AUE_ACL_SET_FD
-value|401
+value|43091
 end_define
 
 begin_comment
@@ -2808,7 +3252,7 @@ begin_define
 define|#
 directive|define
 name|AUE_ACL_DELETE_FILE
-value|402
+value|43092
 end_define
 
 begin_comment
@@ -2819,7 +3263,7 @@ begin_define
 define|#
 directive|define
 name|AUE_ACL_DELETE_FD
-value|403
+value|43093
 end_define
 
 begin_comment
@@ -2830,7 +3274,7 @@ begin_define
 define|#
 directive|define
 name|AUE_ACL_CHECK_FILE
-value|404
+value|43094
 end_define
 
 begin_comment
@@ -2841,7 +3285,7 @@ begin_define
 define|#
 directive|define
 name|AUE_ACL_CHECK_FD
-value|405
+value|43095
 end_define
 
 begin_comment
@@ -2852,7 +3296,7 @@ begin_define
 define|#
 directive|define
 name|AUE_ACL_GET_LINK
-value|406
+value|43096
 end_define
 
 begin_comment
@@ -2863,7 +3307,7 @@ begin_define
 define|#
 directive|define
 name|AUE_ACL_SET_LINK
-value|407
+value|43097
 end_define
 
 begin_comment
@@ -2874,7 +3318,7 @@ begin_define
 define|#
 directive|define
 name|AUE_ACL_DELETE_LINK
-value|408
+value|43098
 end_define
 
 begin_comment
@@ -2885,7 +3329,7 @@ begin_define
 define|#
 directive|define
 name|AUE_ACL_CHECK_LINK
-value|409
+value|43099
 end_define
 
 begin_comment
@@ -2896,7 +3340,7 @@ begin_define
 define|#
 directive|define
 name|AUE_SYSARCH
-value|410
+value|43100
 end_define
 
 begin_comment
@@ -2907,7 +3351,7 @@ begin_define
 define|#
 directive|define
 name|AUE_EXTATTRCTL
-value|411
+value|43101
 end_define
 
 begin_comment
@@ -2918,7 +3362,7 @@ begin_define
 define|#
 directive|define
 name|AUE_EXTATTR_GET_FILE
-value|412
+value|43102
 end_define
 
 begin_comment
@@ -2929,7 +3373,7 @@ begin_define
 define|#
 directive|define
 name|AUE_EXTATTR_SET_FILE
-value|413
+value|43103
 end_define
 
 begin_comment
@@ -2940,7 +3384,7 @@ begin_define
 define|#
 directive|define
 name|AUE_EXTATTR_LIST_FILE
-value|414
+value|43104
 end_define
 
 begin_comment
@@ -2951,7 +3395,7 @@ begin_define
 define|#
 directive|define
 name|AUE_EXTATTR_DELETE_FILE
-value|415
+value|43105
 end_define
 
 begin_comment
@@ -2962,7 +3406,7 @@ begin_define
 define|#
 directive|define
 name|AUE_EXTATTR_GET_FD
-value|416
+value|43106
 end_define
 
 begin_comment
@@ -2973,7 +3417,7 @@ begin_define
 define|#
 directive|define
 name|AUE_EXTATTR_SET_FD
-value|417
+value|43107
 end_define
 
 begin_comment
@@ -2984,7 +3428,7 @@ begin_define
 define|#
 directive|define
 name|AUE_EXTATTR_LIST_FD
-value|418
+value|43108
 end_define
 
 begin_comment
@@ -2995,7 +3439,7 @@ begin_define
 define|#
 directive|define
 name|AUE_EXTATTR_DELETE_FD
-value|419
+value|43109
 end_define
 
 begin_comment
@@ -3006,7 +3450,7 @@ begin_define
 define|#
 directive|define
 name|AUE_EXTATTR_GET_LINK
-value|420
+value|43110
 end_define
 
 begin_comment
@@ -3017,7 +3461,7 @@ begin_define
 define|#
 directive|define
 name|AUE_EXTATTR_SET_LINK
-value|421
+value|43111
 end_define
 
 begin_comment
@@ -3028,7 +3472,7 @@ begin_define
 define|#
 directive|define
 name|AUE_EXTATTR_LIST_LINK
-value|422
+value|43112
 end_define
 
 begin_comment
@@ -3039,7 +3483,7 @@ begin_define
 define|#
 directive|define
 name|AUE_EXTATTR_DELETE_LINK
-value|423
+value|43113
 end_define
 
 begin_comment

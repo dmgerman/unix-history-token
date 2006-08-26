@@ -365,9 +365,9 @@ name|rec
 operator|->
 name|len
 operator|+
-name|BSM_HEADER_SIZE
+name|AUDIT_HEADER_SIZE
 operator|+
-name|BSM_TRAILER_SIZE
+name|AUDIT_TRAILER_SIZE
 expr_stmt|;
 if|if
 condition|(
