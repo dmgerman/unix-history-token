@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2006 Robert N. M. Watson  * All rights reserved.  *  * This software was developed by Robert Watson for the TrustedBSD Project.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/bin/auditfilterd/auditfilterd.c#6 $  */
+comment|/*-  * Copyright (c) 2006 Robert N. M. Watson  * All rights reserved.  *  * This software was developed by Robert Watson for the TrustedBSD Project.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/bin/auditfilterd/auditfilterd.c#9 $  */
+end_comment
+
+begin_comment
+comment|/*  * Main file for the audit filter daemon, which presents audit records to a  * set of run-time registered loadable modules.  This is the main event loop  * of the daemon, which handles starting up, waiting for records, and  * presenting records to configured modules.  auditfilterd_conf.c handles the  * reading and management of the configuration, module list and module state,  * etc.  */
 end_comment
 
 begin_include
@@ -273,7 +277,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|present_bsmrecord
+name|present_rawrecord
 parameter_list|(
 name|struct
 name|timespec
@@ -306,19 +310,17 @@ if|if
 condition|(
 name|am
 operator|->
-name|am_bsmrecord
+name|am_rawrecord
 operator|!=
 name|NULL
 condition|)
 call|(
 name|am
 operator|->
-name|am_bsmrecord
+name|am_rawrecord
 call|)
 argument_list|(
 name|am
-operator|->
-name|am_instance
 argument_list|,
 name|ts
 argument_list|,
@@ -452,8 +454,6 @@ name|am_record
 call|)
 argument_list|(
 name|am
-operator|->
-name|am_instance
 argument_list|,
 name|ts
 argument_list|,
@@ -644,7 +644,7 @@ argument_list|,
 literal|"clock_gettime"
 argument_list|)
 expr_stmt|;
-name|present_bsmrecord
+name|present_rawrecord
 argument_list|(
 operator|&
 name|ts
@@ -822,7 +822,7 @@ argument_list|,
 literal|"clock_gettime"
 argument_list|)
 expr_stmt|;
-name|present_bsmrecord
+name|present_rawrecord
 argument_list|(
 operator|&
 name|ts
