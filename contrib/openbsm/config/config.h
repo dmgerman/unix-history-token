@@ -51,6 +51,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `clock_gettime' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_CLOCK_GETTIME
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<dlfcn.h> header file. */
 end_comment
 
@@ -498,7 +509,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"OpenBSM 1.0a6"
+value|"OpenBSM 1.0a9"
 end_define
 
 begin_comment
@@ -520,7 +531,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"1.0a6"
+value|"1.0a9"
 end_define
 
 begin_comment
@@ -572,7 +583,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"1.0a6"
+value|"1.0a9"
 end_define
 
 begin_comment
