@@ -3779,6 +3779,8 @@ name|sha2_word64
 name|T1
 decl_stmt|,
 name|T2
+init|=
+literal|0
 decl_stmt|,
 modifier|*
 name|W512
