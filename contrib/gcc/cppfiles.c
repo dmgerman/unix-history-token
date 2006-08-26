@@ -443,6 +443,8 @@ parameter_list|,
 name|_cpp_file
 modifier|*
 name|file
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1295,6 +1297,8 @@ argument_list|(
 name|pfile
 argument_list|,
 name|file
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -1363,6 +1367,9 @@ name|start_dir
 parameter_list|,
 name|bool
 name|fake
+parameter_list|,
+name|int
+name|angle_brackets
 parameter_list|)
 block|{
 name|struct
@@ -1502,6 +1509,8 @@ argument_list|(
 name|pfile
 argument_list|,
 name|file
+argument_list|,
+name|angle_brackets
 argument_list|)
 expr_stmt|;
 if|if
@@ -2017,6 +2026,8 @@ argument_list|(
 name|pfile
 argument_list|,
 name|file
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -2957,6 +2968,8 @@ argument_list|,
 name|dir
 argument_list|,
 name|false
+argument_list|,
+name|angle_brackets
 argument_list|)
 argument_list|,
 name|type
@@ -2983,6 +2996,9 @@ parameter_list|,
 name|_cpp_file
 modifier|*
 name|file
+parameter_list|,
+name|int
+name|angle_brackets
 parameter_list|)
 block|{
 name|int
@@ -3012,9 +3028,13 @@ operator|.
 name|style
 argument_list|)
 operator|>
+operator|(
+name|angle_brackets
+operator|||
 operator|!
 operator|!
 name|sysp
+operator|)
 decl_stmt|;
 name|errno
 operator|=
@@ -3885,6 +3905,8 @@ operator|->
 name|dir
 argument_list|,
 name|true
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -4227,6 +4249,8 @@ argument_list|,
 name|dir
 argument_list|,
 name|false
+argument_list|,
+name|angle_brackets
 argument_list|)
 expr_stmt|;
 if|if
@@ -4391,6 +4415,12 @@ operator|->
 name|buffer
 operator|=
 name|NULL
+expr_stmt|;
+name|file
+operator|->
+name|buffer_valid
+operator|=
+name|false
 expr_stmt|;
 block|}
 block|}

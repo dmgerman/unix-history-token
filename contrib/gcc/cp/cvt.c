@@ -170,6 +170,15 @@ name|rval
 decl_stmt|;
 if|if
 condition|(
+name|intype
+operator|==
+name|error_mark_node
+condition|)
+return|return
+name|error_mark_node
+return|;
+if|if
+condition|(
 name|IS_AGGR_TYPE
 argument_list|(
 name|intype
@@ -4179,6 +4188,9 @@ return|return
 name|expr
 return|;
 comment|/* else fall through...  */
+case|case
+name|VECTOR_TYPE
+case|:
 case|case
 name|BOOLEAN_TYPE
 case|:

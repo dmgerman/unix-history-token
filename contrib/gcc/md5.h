@@ -42,6 +42,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"ansidecl.h"
+end_include
+
 begin_comment
 comment|/* The following contortions are an attempt to use the C preprocessor    to determine an unsigned integral type that is 32 bits wide.  An    alternative approach is to use autoconf's AC_CHECK_SIZEOF macro, but    doing that would require that the configure script compile and *run*    the resulting executable.  Locally running cross-compiled executables    is usually not possible.  */
 end_comment
@@ -62,6 +68,13 @@ begin_typedef
 typedef|typedef
 name|u_int32_t
 name|md5_uint32
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|uintptr_t
+name|md5_uintptr
 typedef|;
 end_typedef
 
@@ -168,17 +181,48 @@ end_comment
 
 begin_expr_stmt
 literal|"Cannot determine unsigned 32-bit data type."
+end_expr_stmt
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
+comment|/* We have to make a guess about the integer type equivalent in size    to pointers which should always be correct.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|int
+name|md5_uintptr
+typedef|;
+end_typedef
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_undef
 undef|#
 directive|undef
 name|__P
+end_undef
+
+begin_if
 if|#
 directive|if
 name|defined
@@ -187,6 +231,9 @@ name|__STDC__
 argument_list|)
 operator|&&
 name|__STDC__
+end_if
+
+begin_define
 define|#
 directive|define
 name|__P
@@ -194,8 +241,14 @@ parameter_list|(
 name|x
 parameter_list|)
 value|x
+end_define
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_define
 define|#
 directive|define
 name|__P
@@ -203,41 +256,55 @@ parameter_list|(
 name|x
 parameter_list|)
 value|()
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* Structure to save state of computation between the single steps.  */
-expr|struct
+end_comment
+
+begin_struct
+struct|struct
 name|md5_ctx
 block|{
 name|md5_uint32
 name|A
-block|;
+decl_stmt|;
 name|md5_uint32
 name|B
-block|;
+decl_stmt|;
 name|md5_uint32
 name|C
-block|;
+decl_stmt|;
 name|md5_uint32
 name|D
-block|;
+decl_stmt|;
 name|md5_uint32
 name|total
 index|[
 literal|2
 index|]
-block|;
+decl_stmt|;
 name|md5_uint32
 name|buflen
-block|;
+decl_stmt|;
 name|char
 name|buffer
 index|[
 literal|128
 index|]
-block|; }
-expr_stmt|;
-end_expr_stmt
+name|ATTRIBUTE_ALIGNED_ALIGNOF
+parameter_list|(
+name|md5_uint32
+parameter_list|)
+function_decl|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * The following three functions are build up the low level used in  * the functions `md5_stream' and `md5_buffer'.  */

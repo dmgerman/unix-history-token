@@ -6237,12 +6237,9 @@ argument_list|)
 operator|||
 name|is_complete
 argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|TREE_TYPE
+name|TYPE_PTRMEM_POINTED_TO_TYPE
 argument_list|(
 name|type2
-argument_list|)
 argument_list|)
 argument_list|)
 operator|)
@@ -9858,9 +9855,10 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
+name|error_operand_p
+argument_list|(
 name|arg
-operator|==
-name|error_mark_node
+argument_list|)
 condition|)
 return|return
 name|error_mark_node
@@ -15615,6 +15613,14 @@ literal|0
 argument_list|)
 argument_list|)
 decl_stmt|;
+name|cp_lvalue_kind
+name|lvalue
+init|=
+name|real_lvalue_p
+argument_list|(
+name|expr
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -15628,14 +15634,6 @@ argument_list|)
 condition|)
 block|{
 comment|/* If the reference is volatile or non-const, we 		   cannot create a temporary.  */
-name|cp_lvalue_kind
-name|lvalue
-init|=
-name|real_lvalue_p
-argument_list|(
-name|expr
-argument_list|)
-decl_stmt|;
 if|if
 condition|(
 name|lvalue
@@ -15671,6 +15669,40 @@ else|else
 name|error
 argument_list|(
 literal|"cannot bind rvalue `%E' to `%T'"
+argument_list|,
+name|expr
+argument_list|,
+name|ref_type
+argument_list|)
+expr_stmt|;
+return|return
+name|error_mark_node
+return|;
+block|}
+comment|/* If the source is a packed field, and we must use a copy 	       constructor, then building the target expr will require 	       binding the field to the reference parameter to the 	       copy constructor, and we'll end up with an infinite 	       loop.  If we can use a bitwise copy, then we'll be 	       OK.  */
+if|if
+condition|(
+operator|(
+name|lvalue
+operator|&
+name|clk_packed
+operator|)
+operator|&&
+name|CLASS_TYPE_P
+argument_list|(
+name|type
+argument_list|)
+operator|&&
+operator|!
+name|TYPE_HAS_TRIVIAL_INIT_REF
+argument_list|(
+name|type
+argument_list|)
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"cannot bind packed field `%E' to `%T'"
 argument_list|,
 name|expr
 argument_list|,

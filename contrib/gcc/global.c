@@ -144,6 +144,10 @@ comment|/* Number of calls crossed by each allocno.  */
 name|int
 name|calls_crossed
 decl_stmt|;
+comment|/* Number of calls that might throw crossed by each allocno.  */
+name|int
+name|throwing_calls_crossed
+decl_stmt|;
 comment|/* Number of refs to each allocno.  */
 name|int
 name|n_refs
@@ -1524,6 +1528,18 @@ operator|.
 name|calls_crossed
 operator|+=
 name|REG_N_CALLS_CROSSED
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+name|allocno
+index|[
+name|num
+index|]
+operator|.
+name|throwing_calls_crossed
+operator|+=
+name|REG_N_THROWING_CALLS_CROSSED
 argument_list|(
 name|i
 argument_list|)
@@ -4432,7 +4448,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* Did not find a register.  If it would be profitable to 	 allocate a call-clobbered register and save and restore it 	 around calls, do that.  */
+comment|/* Did not find a register.  If it would be profitable to 	 allocate a call-clobbered register and save and restore it 	 around calls, do that.  Don't do this if it crosses any calls 	 that might throw.  */
 if|if
 condition|(
 operator|!
@@ -4445,6 +4461,15 @@ index|]
 operator|.
 name|calls_crossed
 operator|!=
+literal|0
+operator|&&
+name|allocno
+index|[
+name|num
+index|]
+operator|.
+name|throwing_calls_crossed
+operator|==
 literal|0
 operator|&&
 name|CALLER_SAVE_PROFITABLE

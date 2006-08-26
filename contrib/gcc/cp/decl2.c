@@ -196,16 +196,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|tree
-name|build_anon_union_vars
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|bool
 name|acceptable_java_type
 parameter_list|(
@@ -4244,7 +4234,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Walks through the namespace- or function-scope anonymous union OBJECT,    building appropriate ALIAS_DECLs.  Returns one of the fields for use in    the mangled name.  */
+comment|/* Walks through the namespace- or function-scope anonymous union    OBJECT, with the indicated TYPE, building appropriate ALIAS_DECLs.    Returns one of the fields for use in the mangled name.  */
 end_comment
 
 begin_function
@@ -4253,17 +4243,12 @@ name|tree
 name|build_anon_union_vars
 parameter_list|(
 name|tree
+name|type
+parameter_list|,
+name|tree
 name|object
 parameter_list|)
 block|{
-name|tree
-name|type
-init|=
-name|TREE_TYPE
-argument_list|(
-name|object
-argument_list|)
-decl_stmt|;
 name|tree
 name|main_decl
 init|=
@@ -4478,6 +4463,11 @@ name|decl
 operator|=
 name|build_anon_union_vars
 argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|field
+argument_list|)
+argument_list|,
 name|ref
 argument_list|)
 expr_stmt|;
@@ -4585,6 +4575,8 @@ name|main_decl
 operator|=
 name|build_anon_union_vars
 argument_list|(
+name|type
+argument_list|,
 name|anon_union_decl
 argument_list|)
 expr_stmt|;
@@ -10023,7 +10015,13 @@ argument_list|,
 name|x
 argument_list|)
 expr_stmt|;
-break|break;
+name|TREE_PURPOSE
+argument_list|(
+name|arg
+argument_list|)
+operator|=
+name|error_mark_node
+expr_stmt|;
 block|}
 block|}
 block|}
@@ -10037,6 +10035,40 @@ name|tree
 name|decl
 parameter_list|)
 block|{
+comment|/* If DECL is a BASELINK for a single function, then treat it just      like the DECL for the function.  Otherwise, if the BASELINK is      for an overloaded function, we don't know which function was      actually used until after overload resolution.  */
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|decl
+argument_list|)
+operator|==
+name|BASELINK
+condition|)
+block|{
+name|decl
+operator|=
+name|BASELINK_FUNCTIONS
+argument_list|(
+name|decl
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|really_overloaded_fn
+argument_list|(
+name|decl
+argument_list|)
+condition|)
+return|return;
+name|decl
+operator|=
+name|OVL_CURRENT
+argument_list|(
+name|decl
+argument_list|)
+expr_stmt|;
+block|}
 name|TREE_USED
 argument_list|(
 name|decl

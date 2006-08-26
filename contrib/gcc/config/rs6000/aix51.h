@@ -316,22 +316,5 @@ name|LD_INIT_SWITCH
 value|"-binitfini"
 end_define
 
-begin_comment
-comment|/* AIX 5.1 has the float and long double forms of math functions.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|TARGET_C99_FUNCTIONS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|TARGET_C99_FUNCTIONS
-value|1
-end_define
-
 end_unit
 

@@ -1093,6 +1093,64 @@ begin_comment
 comment|/* ATTRIBUTE_NULL_PRINTF */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATTRIBUTE_ALIGNED_ALIGNOF
+end_ifndef
+
+begin_if
+if|#
+directive|if
+operator|(
+name|GCC_VERSION
+operator|>=
+literal|3000
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_ALIGNED_ALIGNOF
+parameter_list|(
+name|m
+parameter_list|)
+value|__attribute__ ((__aligned__ (__alignof__ (m))))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_ALIGNED_ALIGNOF
+parameter_list|(
+name|m
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GNUC>= 3.0 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ATTRIBUTE_ALIGNED_ALIGNOF */
+end_comment
+
 begin_comment
 comment|/* We use __extension__ in some places to suppress -pedantic warnings    about GCC extensions.  This feature didn't work properly before    gcc 2.8.  */
 end_comment
