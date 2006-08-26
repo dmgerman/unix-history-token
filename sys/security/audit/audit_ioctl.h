@@ -204,6 +204,13 @@ name|AUDITPIPE_FLUSH
 value|_IO(AUDITPIPE_IOBASE, 16)
 end_define
 
+begin_define
+define|#
+directive|define
+name|AUDITPIPE_GET_MAXAUDITDATA
+value|_IOR(AUDITPIPE_IOBASE, 17, u_int)
+end_define
+
 begin_comment
 comment|/*  * Ioctls to retrieve audit pipe statistics.  */
 end_comment
