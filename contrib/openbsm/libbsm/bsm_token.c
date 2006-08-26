@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2004 Apple Computer, Inc.  * Copyright (c) 2005 SPARTA, Inc.  * All rights reserved.  *  * This code was developed in part by Robert N. M. Watson, Senior Principal  * Scientist, SPARTA, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/libbsm/bsm_token.c#48 $  */
+comment|/*  * Copyright (c) 2004 Apple Computer, Inc.  * Copyright (c) 2005 SPARTA, Inc.  * All rights reserved.  *  * This code was developed in part by Robert N. M. Watson, Senior Principal  * Scientist, SPARTA, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/libbsm/bsm_token.c#51 $  */
 end_comment
 
 begin_include
@@ -1089,7 +1089,7 @@ return|return
 operator|(
 name|au_to_newgroups
 argument_list|(
-name|BSM_MAX_GROUPS
+name|AUDIT_MAX_GROUPS
 argument_list|,
 name|groups
 argument_list|)
@@ -4264,11 +4264,10 @@ name|token_t
 modifier|*
 name|au_to_exec_args
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 modifier|*
-name|args
+name|argv
 parameter_list|)
 block|{
 name|token_t
@@ -4301,7 +4300,7 @@ decl_stmt|;
 name|nextarg
 operator|=
 operator|*
-name|args
+name|argv
 expr_stmt|;
 while|while
 condition|(
@@ -4333,7 +4332,7 @@ name|nextarg
 operator|=
 operator|*
 operator|(
-name|args
+name|argv
 operator|+
 name|count
 operator|)
@@ -4411,7 +4410,7 @@ name|nextarg
 operator|=
 operator|*
 operator|(
-name|args
+name|argv
 operator|+
 name|i
 operator|)
@@ -4448,11 +4447,10 @@ name|token_t
 modifier|*
 name|au_to_exec_env
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 modifier|*
-name|env
+name|envp
 parameter_list|)
 block|{
 name|token_t
@@ -4485,7 +4483,7 @@ decl_stmt|;
 name|nextenv
 operator|=
 operator|*
-name|env
+name|envp
 expr_stmt|;
 while|while
 condition|(
@@ -4517,7 +4515,7 @@ name|nextenv
 operator|=
 operator|*
 operator|(
-name|env
+name|envp
 operator|+
 name|count
 operator|)
@@ -4594,7 +4592,7 @@ name|nextenv
 operator|=
 operator|*
 operator|(
-name|env
+name|envp
 operator|+
 name|i
 operator|)
@@ -4723,7 +4721,7 @@ name|ADD_U_CHAR
 argument_list|(
 name|dptr
 argument_list|,
-name|HEADER_VERSION
+name|AUDIT_HEADER_VERSION_OPENBSM
 argument_list|)
 expr_stmt|;
 name|ADD_U_INT16

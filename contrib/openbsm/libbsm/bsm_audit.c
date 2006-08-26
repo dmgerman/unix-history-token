@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2004 Apple Computer, Inc.  * Copyright (c) 2005 SPARTA, Inc.  * All rights reserved.  *  * This code was developed in part by Robert N. M. Watson, Senior Principal  * Scientist, SPARTA, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/libbsm/bsm_audit.c#26 $  */
+comment|/*  * Copyright (c) 2004 Apple Computer, Inc.  * Copyright (c) 2005 SPARTA, Inc.  * All rights reserved.  *  * This code was developed in part by Robert N. M. Watson, Senior Principal  * Scientist, SPARTA, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/libbsm/bsm_audit.c#28 $  */
 end_comment
 
 begin_include
@@ -101,7 +101,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|bsm_rec_count
+name|audit_rec_count
 init|=
 literal|0
 decl_stmt|;
@@ -118,7 +118,7 @@ argument_list|(
 argument_list|,
 argument|au_record
 argument_list|)
-name|bsm_free_q
+name|audit_free_q
 expr_stmt|;
 end_expr_stmt
 
@@ -198,14 +198,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bsm_rec_count
+name|audit_rec_count
 operator|==
 literal|0
 condition|)
 name|LIST_INIT
 argument_list|(
 operator|&
-name|bsm_free_q
+name|audit_free_q
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Find an unused descriptor, remove it from the free list, mark as 	 * used. 	 */
@@ -215,7 +215,7 @@ operator|!
 name|LIST_EMPTY
 argument_list|(
 operator|&
-name|bsm_free_q
+name|audit_free_q
 argument_list|)
 condition|)
 block|{
@@ -224,7 +224,7 @@ operator|=
 name|LIST_FIRST
 argument_list|(
 operator|&
-name|bsm_free_q
+name|audit_free_q
 argument_list|)
 expr_stmt|;
 name|rec
@@ -324,7 +324,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bsm_rec_count
+name|audit_rec_count
 operator|==
 name|MAX_AUDIT_RECORDS
 condition|)
@@ -363,16 +363,16 @@ name|rec
 operator|->
 name|desc
 operator|=
-name|bsm_rec_count
+name|audit_rec_count
 expr_stmt|;
 name|open_desc_table
 index|[
-name|bsm_rec_count
+name|audit_rec_count
 index|]
 operator|=
 name|rec
 expr_stmt|;
-name|bsm_rec_count
+name|audit_rec_count
 operator|++
 expr_stmt|;
 name|pthread_mutex_unlock
@@ -509,7 +509,7 @@ name|tok
 operator|->
 name|len
 operator|+
-name|BSM_TRAILER_SIZE
+name|AUDIT_TRAILER_SIZE
 operator|>
 name|MAX_AUDIT_RECORD_SIZE
 condition|)
@@ -605,9 +605,9 @@ name|rec
 operator|->
 name|len
 operator|+
-name|BSM_HEADER_SIZE
+name|AUDIT_HEADER_SIZE
 operator|+
-name|BSM_TRAILER_SIZE
+name|AUDIT_TRAILER_SIZE
 expr_stmt|;
 name|header
 operator|=
@@ -822,7 +822,7 @@ comment|/* Add the record to the freelist tail */
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|bsm_free_q
+name|audit_free_q
 argument_list|,
 name|rec
 argument_list|,
@@ -931,9 +931,9 @@ name|rec
 operator|->
 name|len
 operator|+
-name|BSM_HEADER_SIZE
+name|AUDIT_HEADER_SIZE
 operator|+
-name|BSM_TRAILER_SIZE
+name|AUDIT_TRAILER_SIZE
 expr_stmt|;
 if|if
 condition|(
@@ -1102,9 +1102,9 @@ name|rec
 operator|->
 name|len
 operator|+
-name|BSM_HEADER_SIZE
+name|AUDIT_HEADER_SIZE
 operator|+
-name|BSM_TRAILER_SIZE
+name|AUDIT_TRAILER_SIZE
 expr_stmt|;
 if|if
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2006 Robert N. M. Watson  * All rights reserved.  *  * This software was developed by Robert Watson for the TrustedBSD Project.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/bsm/audit_filter.h#2 $  */
+comment|/*-  * Copyright (c) 2006 Robert N. M. Watson  * All rights reserved.  *  * This software was developed by Robert Watson for the TrustedBSD Project.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/bsm/audit_filter.h#4 $  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|_BSM_AUDIT_FILTER_H_
 end_define
 
 begin_comment
-comment|/*  * Module interface for audit filter modules.  *  * audit_filter_attach_t - filter module is being attached with arguments  * audit_filter_reinit_t - arguments to module have changed  * audit_filter_record_t - present parsed record to filter module, with  *                         receipt time  * audit_filter_bsmrecord_t - present bsm format record to filter module,  *                            with receipt time  * audit_filter_destach_t - filter module is being detached  *  * There may be many instances of the same filter, identified by the instance  * void pointer maintained by the filter instance.  */
+comment|/*  * Module interface for audit filter modules.  *  * audit_filter_attach_t - filter module is being attached with arguments  * audit_filter_reinit_t - arguments to module have changed  * audit_filter_record_t - present parsed record to filter module, with  *                         receipt time  * audit_filter_rawrecord_t - present BSM format record to filter module,  *                            with receipt time  * audit_filter_destach_t - filter module is being detached  *  * There may be many instances of the same filter, identified by the instance  * void pointer maintained by the filter instance.  */
 end_comment
 
 begin_typedef
@@ -28,7 +28,6 @@ name|audit_filter_attach_t
 function_decl|)
 parameter_list|(
 name|void
-modifier|*
 modifier|*
 name|instance
 parameter_list|,
@@ -99,7 +98,7 @@ typedef|typedef
 name|void
 function_decl|(
 modifier|*
-name|audit_filter_bsmrecord_t
+name|audit_filter_rawrecord_t
 function_decl|)
 parameter_list|(
 name|void
@@ -135,6 +134,41 @@ name|instance
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_comment
+comment|/*  * APIs that may be called by audit filters.  */
+end_comment
+
+begin_function_decl
+name|void
+name|audit_filter_getcookie
+parameter_list|(
+name|void
+modifier|*
+name|instance
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+name|cookie
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|audit_filter_setcookie
+parameter_list|(
+name|void
+modifier|*
+name|instance
+parameter_list|,
+name|void
+modifier|*
+name|cookie
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Values to be returned by audit_filter_init_t.  */
@@ -182,8 +216,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|AUDIT_FILTER_BSMRECORD
-value|audit_filter_bsmrecord
+name|AUDIT_FILTER_RAWRECORD
+value|audit_filter_rawrecord
 end_define
 
 begin_define
@@ -217,8 +251,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|AUDIT_FILTER_BSMRECORD_STRING
-value|"audit_filter_bsmrecord"
+name|AUDIT_FILTER_RAWRECORD_STRING
+value|"audit_filter_rawrecord"
 end_define
 
 begin_define
