@@ -1996,6 +1996,7 @@ operator|<
 name|typename
 name|_Tp
 operator|>
+specifier|inline
 name|int
 name|__capture_fpclassify
 argument_list|(
@@ -2014,6 +2015,7 @@ operator|<
 name|typename
 name|_Tp
 operator|>
+specifier|inline
 name|int
 name|__capture_isfinite
 argument_list|(
@@ -2032,6 +2034,7 @@ operator|<
 name|typename
 name|_Tp
 operator|>
+specifier|inline
 name|int
 name|__capture_isinf
 argument_list|(
@@ -2050,6 +2053,7 @@ operator|<
 name|typename
 name|_Tp
 operator|>
+specifier|inline
 name|int
 name|__capture_isnan
 argument_list|(
@@ -2068,6 +2072,7 @@ operator|<
 name|typename
 name|_Tp
 operator|>
+specifier|inline
 name|int
 name|__capture_isnormal
 argument_list|(
@@ -2086,6 +2091,7 @@ operator|<
 name|typename
 name|_Tp
 operator|>
+specifier|inline
 name|int
 name|__capture_signbit
 argument_list|(
@@ -2104,6 +2110,7 @@ operator|<
 name|typename
 name|_Tp
 operator|>
+specifier|inline
 name|int
 name|__capture_isgreater
 argument_list|(
@@ -2126,6 +2133,7 @@ operator|<
 name|typename
 name|_Tp
 operator|>
+specifier|inline
 name|int
 name|__capture_isgreaterequal
 argument_list|(
@@ -2148,6 +2156,7 @@ operator|<
 name|typename
 name|_Tp
 operator|>
+specifier|inline
 name|int
 name|__capture_isless
 argument_list|(
@@ -2170,6 +2179,7 @@ operator|<
 name|typename
 name|_Tp
 operator|>
+specifier|inline
 name|int
 name|__capture_islessequal
 argument_list|(
@@ -2192,6 +2202,7 @@ operator|<
 name|typename
 name|_Tp
 operator|>
+specifier|inline
 name|int
 name|__capture_islessgreater
 argument_list|(
@@ -2214,6 +2225,7 @@ operator|<
 name|typename
 name|_Tp
 operator|>
+specifier|inline
 name|int
 name|__capture_isunordered
 argument_list|(
@@ -2346,6 +2358,7 @@ operator|<
 name|typename
 name|_Tp
 operator|>
+specifier|inline
 name|int
 name|fpclassify
 argument_list|(
@@ -2364,6 +2377,7 @@ operator|<
 name|typename
 name|_Tp
 operator|>
+specifier|inline
 name|int
 name|isfinite
 argument_list|(
@@ -2382,6 +2396,7 @@ operator|<
 name|typename
 name|_Tp
 operator|>
+specifier|inline
 name|int
 name|isinf
 argument_list|(
@@ -2400,6 +2415,7 @@ operator|<
 name|typename
 name|_Tp
 operator|>
+specifier|inline
 name|int
 name|isnan
 argument_list|(
@@ -2418,6 +2434,7 @@ operator|<
 name|typename
 name|_Tp
 operator|>
+specifier|inline
 name|int
 name|isnormal
 argument_list|(
@@ -2436,6 +2453,7 @@ operator|<
 name|typename
 name|_Tp
 operator|>
+specifier|inline
 name|int
 name|signbit
 argument_list|(
@@ -2454,6 +2472,7 @@ operator|<
 name|typename
 name|_Tp
 operator|>
+specifier|inline
 name|int
 name|isgreater
 argument_list|(
@@ -2476,6 +2495,7 @@ operator|<
 name|typename
 name|_Tp
 operator|>
+specifier|inline
 name|int
 name|isgreaterequal
 argument_list|(
@@ -2498,6 +2518,7 @@ operator|<
 name|typename
 name|_Tp
 operator|>
+specifier|inline
 name|int
 name|isless
 argument_list|(
@@ -2520,6 +2541,7 @@ operator|<
 name|typename
 name|_Tp
 operator|>
+specifier|inline
 name|int
 name|islessequal
 argument_list|(
@@ -2542,6 +2564,7 @@ operator|<
 name|typename
 name|_Tp
 operator|>
+specifier|inline
 name|int
 name|islessgreater
 argument_list|(
@@ -2564,6 +2587,7 @@ operator|<
 name|typename
 name|_Tp
 operator|>
+specifier|inline
 name|int
 name|isunordered
 argument_list|(
