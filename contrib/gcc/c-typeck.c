@@ -17298,7 +17298,17 @@ name|code
 operator|==
 name|VECTOR_TYPE
 operator|&&
-name|comptypes
+name|TREE_CODE
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|inside_init
+argument_list|)
+argument_list|)
+operator|==
+name|VECTOR_TYPE
+operator|&&
+name|vector_types_convertible_p
 argument_list|(
 name|TREE_TYPE
 argument_list|(
@@ -17306,8 +17316,6 @@ name|inside_init
 argument_list|)
 argument_list|,
 name|type
-argument_list|,
-name|COMPARE_STRICT
 argument_list|)
 operator|&&
 name|TREE_CONSTANT
@@ -19291,7 +19299,14 @@ name|value
 init|=
 name|NULL_TREE
 decl_stmt|;
-comment|/* If we've exhausted any levels that didn't have braces,      pop them now.  */
+comment|/* If we've exhausted any levels that didn't have braces,      pop them now.  If implicit == 1, this will have been done in      process_init_element; do not repeat it here because in the case      of excess initializers for an empty aggregate this leads to an      infinite cycle of popping a level and immediately recreating      it.  */
+if|if
+condition|(
+name|implicit
+operator|!=
+literal|1
+condition|)
+block|{
 while|while
 condition|(
 name|constructor_stack
@@ -19358,6 +19373,7 @@ argument_list|)
 expr_stmt|;
 else|else
 break|break;
+block|}
 block|}
 comment|/* Unless this is an explicit brace, we need to preserve previous      content if any.  */
 if|if

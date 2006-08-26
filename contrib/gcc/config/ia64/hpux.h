@@ -122,31 +122,6 @@ define|\
 value|"%{!shared: \      %{mt|pthread:-lpthread} \      %{p:%{!mlp64:-L/usr/lib/hpux32/libp} \ 	 %{mlp64:-L/usr/lib/hpux64/libp} -lprof} \      %{pg:%{!mlp64:-L/usr/lib/hpux32/libp} \ 	  %{mlp64:-L/usr/lib/hpux64/libp} -lgprof} \      %{!symbolic:-lc}}"
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CROSS_COMPILE
-end_ifndef
-
-begin_undef
-undef|#
-directive|undef
-name|LIBGCC_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|LIBGCC_SPEC
-define|\
-value|"%{shared-libgcc:%{!mlp64:-lgcc_s}%{mlp64:-lgcc_s_hpux64} -lgcc} \    %{!shared-libgcc:-lgcc}"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_undef
 undef|#
 directive|undef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Darwin/powerpc host-specific hook definitions.    Copyright (C) 2003 Free Software Foundation, Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston,    MA 02111-1307, USA.  */
+comment|/* Darwin/powerpc host-specific hook definitions.    Copyright (C) 2003, 2004 Free Software Foundation, Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston,    MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -549,30 +549,6 @@ end_function
 begin_escape
 end_escape
 
-begin_function_decl
-specifier|static
-name|void
-modifier|*
-name|darwin_rs6000_gt_pch_get_address
-parameter_list|(
-name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|bool
-name|darwin_rs6000_gt_pch_use_address
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_undef
 undef|#
 directive|undef
@@ -638,6 +614,10 @@ name|darwin_rs6000_gt_pch_get_address
 parameter_list|(
 name|size_t
 name|sz
+parameter_list|,
+name|int
+name|fd
+name|ATTRIBUTE_UNUSED
 parameter_list|)
 block|{
 if|if
@@ -665,7 +645,7 @@ end_comment
 
 begin_function
 specifier|static
-name|bool
+name|int
 name|darwin_rs6000_gt_pch_use_address
 parameter_list|(
 name|void
@@ -674,6 +654,12 @@ name|addr
 parameter_list|,
 name|size_t
 name|sz
+parameter_list|,
+name|int
+name|fd
+parameter_list|,
+name|size_t
+name|off
 parameter_list|)
 block|{
 specifier|const
@@ -683,8 +669,12 @@ init|=
 name|getpagesize
 argument_list|()
 decl_stmt|;
-name|bool
-name|result
+name|void
+modifier|*
+name|mmap_result
+decl_stmt|;
+name|int
+name|ret
 decl_stmt|;
 if|if
 condition|(
@@ -709,7 +699,7 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
-name|result
+name|ret
 operator|=
 operator|(
 name|addr
@@ -727,7 +717,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|result
+name|ret
 condition|)
 name|sz
 operator|=
@@ -771,11 +761,64 @@ argument_list|(
 literal|"couldn't unmap pch_address_space: %m\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+block|{
+name|mmap_result
+operator|=
+name|mmap
+argument_list|(
+name|addr
+argument_list|,
+name|sz
+argument_list|,
+name|PROT_READ
+operator||
+name|PROT_WRITE
+argument_list|,
+name|MAP_PRIVATE
+operator||
+name|MAP_FIXED
+argument_list|,
+name|fd
+argument_list|,
+name|off
+argument_list|)
+expr_stmt|;
+comment|/* The file might not be mmap-able.  */
+name|ret
+operator|=
+name|mmap_result
+operator|!=
+operator|(
+name|void
+operator|*
+operator|)
+name|MAP_FAILED
+expr_stmt|;
+comment|/* Sanity check for broken MAP_FIXED.  */
+if|if
+condition|(
+name|ret
+operator|&&
+name|mmap_result
+operator|!=
+name|addr
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
+block|}
 return|return
-name|result
+name|ret
 return|;
 block|}
 end_function
+
+begin_escape
+end_escape
 
 begin_decl_stmt
 specifier|const

@@ -754,6 +754,29 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Return true if X is a MEM referencing the constant pool.  */
+end_comment
+
+begin_function
+name|bool
+name|constant_pool_reference_p
+parameter_list|(
+name|rtx
+name|x
+parameter_list|)
+block|{
+return|return
+name|avoid_constant_pool_reference
+argument_list|(
+name|x
+argument_list|)
+operator|!=
+name|x
+return|;
+block|}
+end_function
+
 begin_escape
 end_escape
 
@@ -15689,7 +15712,7 @@ control|(
 init|;
 name|i
 operator|<
-name|max_bitsize
+name|elem_bitsize
 condition|;
 name|i
 operator|+=

@@ -12589,6 +12589,13 @@ argument_list|,
 name|final_value
 argument_list|)
 operator|)
+operator|&&
+name|loop_invariant_p
+argument_list|(
+name|loop
+argument_list|,
+name|reg_term
+argument_list|)
 condition|)
 block|{
 name|initial_value

@@ -165,6 +165,10 @@ comment|/* Number of times a reg tied to given qty lives across a CALL_INSN.  */
 name|int
 name|n_calls_crossed
 decl_stmt|;
+comment|/* Number of times a reg tied to given qty lives across a CALL_INSN      that might throw.  */
+name|int
+name|n_throwing_calls_crossed
+decl_stmt|;
 comment|/* The register number of one pseudo register whose reg_qty value is Q.      This register should be the head of the chain      maintained in reg_next_in_qty.  */
 name|int
 name|first_reg
@@ -858,6 +862,18 @@ operator|.
 name|n_calls_crossed
 operator|=
 name|REG_N_CALLS_CROSSED
+argument_list|(
+name|regno
+argument_list|)
+expr_stmt|;
+name|qty
+index|[
+name|qtyno
+index|]
+operator|.
+name|n_throwing_calls_crossed
+operator|=
+name|REG_N_THROWING_CALLS_CROSSED
 argument_list|(
 name|regno
 argument_list|)
@@ -4065,6 +4081,13 @@ operator|->
 name|index
 expr_stmt|;
 name|REG_N_CALLS_CROSSED
+argument_list|(
+name|regno
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+name|REG_N_THROWING_CALLS_CROSSED
 argument_list|(
 name|regno
 argument_list|)
@@ -7543,6 +7566,18 @@ index|[
 name|sqty
 index|]
 operator|.
+name|n_throwing_calls_crossed
+operator|+=
+name|REG_N_THROWING_CALLS_CROSSED
+argument_list|(
+name|sreg
+argument_list|)
+expr_stmt|;
+name|qty
+index|[
+name|sqty
+index|]
+operator|.
 name|n_refs
 operator|+=
 name|REG_N_REFS
@@ -8746,7 +8781,7 @@ name|dead_index
 argument_list|)
 return|;
 block|}
-comment|/* We need not check to see if the current function has nonlocal      labels because we don't put any pseudos that are live over calls in      registers in that case.  */
+comment|/* We need not check to see if the current function has nonlocal      labels because we don't put any pseudos that are live over calls in      registers in that case.  Avoid putting pseudos crossing calls that      might throw into call used registers.  */
 if|if
 condition|(
 operator|!
@@ -8764,6 +8799,15 @@ index|]
 operator|.
 name|n_calls_crossed
 operator|!=
+literal|0
+operator|&&
+name|qty
+index|[
+name|qtyno
+index|]
+operator|.
+name|n_throwing_calls_crossed
+operator|==
 literal|0
 operator|&&
 name|CALLER_SAVE_PROFITABLE

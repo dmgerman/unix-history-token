@@ -1002,6 +1002,20 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|void
+name|push_local_binding
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|push_class_binding
 parameter_list|(

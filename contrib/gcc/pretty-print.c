@@ -571,7 +571,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Format a message pointed to by TEXT.  The following format specifiers are    recognized as being client independent:    %d, %i: (signed) integer in base ten.    %u: unsigned integer in base ten.    %o: unsigned integer in base eight.    %x: unsigned integer in base sixteen.    %ld, %li, %lo, %lu, %lx: long versions of the above.    %lld, %lli, %llo, %llu, %llx: long long versions.    %wd, %wi, %wo, %wu, %wx: HOST_WIDE_INT versions.    %c: character.    %s: string.    %p: pointer.    %m: strerror(text->err_no) - does not consume a value from args_ptr.    %%: `%'.    %*.s: a substring the length of which is specified by an integer.    %H: location_t.  */
+comment|/* Format a message pointed to by TEXT.  The following format specifiers are    recognized as being client independent:    %d, %i: (signed) integer in base ten.    %u: unsigned integer in base ten.    %o: unsigned integer in base eight.    %x: unsigned integer in base sixteen.    %ld, %li, %lo, %lu, %lx: long versions of the above.    %lld, %lli, %llo, %llu, %llx: long long versions.    %wd, %wi, %wo, %wu, %wx: HOST_WIDE_INT versions.    %c: character.    %s: string.    %p: pointer.    %m: strerror(text->err_no) - does not consume a value from args_ptr.    %%: `%'.    %.*s: a substring the length of which is specified by an integer.    %H: location_t.  */
 end_comment
 
 begin_function

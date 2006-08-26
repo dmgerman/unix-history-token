@@ -54652,9 +54652,11 @@ argument_list|(
 name|inner_mode
 argument_list|)
 operator|-
+operator|(
 name|mode_width
 operator|-
 literal|1
+operator|)
 argument_list|)
 operator|)
 condition|)

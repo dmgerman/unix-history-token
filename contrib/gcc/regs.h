@@ -134,6 +134,10 @@ name|calls_crossed
 decl_stmt|;
 comment|/* # of calls (REG n) is live across */
 name|int
+name|throw_calls_crossed
+decl_stmt|;
+comment|/* # of calls that may throw (REG n) is live across */
+name|int
 name|basic_block
 decl_stmt|;
 comment|/* # of basic blocks (REG n) is used in */
@@ -290,6 +294,21 @@ parameter_list|(
 name|N
 parameter_list|)
 value|(VARRAY_REG (reg_n_info, N)->calls_crossed)
+end_define
+
+begin_comment
+comment|/* Indexed by N, gives number of CALL_INSNS that may throw, across which    (REG n) is live.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REG_N_THROWING_CALLS_CROSSED
+parameter_list|(
+name|N
+parameter_list|)
+define|\
+value|(VARRAY_REG (reg_n_info, N)->throw_calls_crossed)
 end_define
 
 begin_comment

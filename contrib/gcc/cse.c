@@ -13712,6 +13712,16 @@ operator|->
 name|const_rtx
 expr_stmt|;
 block|}
+comment|/* Call target hook to avoid the effects of -fpic etc....  */
+name|addr
+operator|=
+name|targetm
+operator|.
+name|delegitimize_address
+argument_list|(
+name|addr
+argument_list|)
+expr_stmt|;
 comment|/* If address is constant, split it into a base and integer offset.  */
 if|if
 condition|(

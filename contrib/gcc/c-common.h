@@ -4567,6 +4567,20 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|int
+name|vector_types_convertible_p
+parameter_list|(
+name|tree
+name|t1
+parameter_list|,
+name|tree
+name|t2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|rtx
 name|c_expand_expr
 parameter_list|(

@@ -3294,9 +3294,9 @@ argument_list|)
 condition|)
 name|error
 argument_list|(
-literal|"type `%D' is not a direct or virtual base of `%T'"
+literal|"type `%T' is not a direct or virtual base of `%T'"
 argument_list|,
-name|name
+name|basetype
 argument_list|,
 name|current_class_type
 argument_list|)
@@ -3304,9 +3304,9 @@ expr_stmt|;
 else|else
 name|error
 argument_list|(
-literal|"type `%D' is not a direct base of `%T'"
+literal|"type `%T' is not a direct base of `%T'"
 argument_list|,
-name|name
+name|basetype
 argument_list|,
 name|current_class_type
 argument_list|)
@@ -7077,7 +7077,6 @@ operator|!
 name|fns
 condition|)
 block|{
-comment|/* See PR 15967. This should never happen (and it is 		 fixed correctly in mainline), but on the release branch 		 we prefer this less-intrusive approacch.  */
 name|error
 argument_list|(
 literal|"no suitable or ambiguous `%D' found in class `%T'"

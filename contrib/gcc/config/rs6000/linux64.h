@@ -622,6 +622,34 @@ value|((TARGET_ALTIVEC&& TREE_CODE (STRUCT) == VECTOR_TYPE)		\    ? MAX (MAX ((C
 end_define
 
 begin_comment
+comment|/* Use the default for compiling target libs.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IN_TARGET_LIBS
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_ALIGN_NATURAL
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_ALIGN_NATURAL
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Indicate that jump tables go in the text section.  */
 end_comment
 

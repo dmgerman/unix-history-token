@@ -567,50 +567,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Generic hook that takes a size_t and returns NULL.  */
-end_comment
-
-begin_function
-name|void
-modifier|*
-name|hook_voidp_size_t_null
-parameter_list|(
-name|size_t
-name|a
-name|ATTRIBUTE_UNUSED
-parameter_list|)
-block|{
-return|return
-name|NULL
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Generic hook that takes a size_t and a pointer and returns false.  */
-end_comment
-
-begin_function
-name|bool
-name|hook_bool_voidp_size_t_false
-parameter_list|(
-name|void
-modifier|*
-name|a
-name|ATTRIBUTE_UNUSED
-parameter_list|,
-name|size_t
-name|b
-name|ATTRIBUTE_UNUSED
-parameter_list|)
-block|{
-return|return
-name|false
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/* Generic hook that takes a tree and returns a NULL string.  */
 end_comment
 

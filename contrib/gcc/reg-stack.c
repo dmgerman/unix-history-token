@@ -1295,7 +1295,11 @@ operator|!
 name|optimize
 operator|||
 operator|(
+operator|(
 name|flag_sched2_use_superblocks
+operator|||
+name|flag_sched2_use_traces
+operator|)
 operator|&&
 name|flag_schedule_insns_after_reload
 operator|)
@@ -4862,7 +4866,7 @@ name|insn
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* See if this is, or ends in, a fnstsw, aka unspec 9.  If so, we're      not doing anything with the cc value right now.  We may be able to      search for one though.  */
+comment|/* See if this is, or ends in, a fnstsw.  If so, we're not doing anything      with the cc value right now.  We may be able to search for one      though.  */
 if|if
 condition|(
 name|GET_CODE
@@ -4949,7 +4953,20 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* So we've found the insn using this value.  If it is anything 	 other than sahf, aka unspec 10, or the value does not die 	 (meaning we'd have to search further), then we must give up.  */
+comment|/* We haven't found it.  */
+if|if
+condition|(
+name|insn
+operator|==
+name|BB_END
+argument_list|(
+name|current_block
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+comment|/* So we've found the insn using this value.  If it is anything 	 other than sahf or the value does not die (meaning we'd have 	 to search further), then we must give up.  */
 name|pat
 operator|=
 name|PATTERN

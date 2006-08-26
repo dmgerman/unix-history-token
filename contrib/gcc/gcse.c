@@ -24748,7 +24748,7 @@ if|if
 condition|(
 name|TEST_BIT
 argument_list|(
-name|hoist_vbeout
+name|hoist_exprs
 index|[
 name|bb
 operator|->

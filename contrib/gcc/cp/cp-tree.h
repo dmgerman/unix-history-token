@@ -12351,8 +12351,6 @@ name|grok_op_properties
 parameter_list|(
 name|tree
 parameter_list|,
-name|int
-parameter_list|,
 name|bool
 parameter_list|)
 function_decl|;

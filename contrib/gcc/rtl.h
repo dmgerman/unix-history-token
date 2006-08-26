@@ -6694,6 +6694,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|bool
+name|constant_pool_reference_p
+parameter_list|(
+name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* In function.c  */
 end_comment

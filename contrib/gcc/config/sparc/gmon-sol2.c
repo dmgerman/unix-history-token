@@ -1166,7 +1166,7 @@ modifier|*
 parameter_list|)
 function_decl|__attribute__
 parameter_list|(
-function_decl|(__unused__
+function_decl|(used
 end_function_decl
 
 begin_empty_stmt

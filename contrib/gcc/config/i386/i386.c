@@ -22365,7 +22365,7 @@ name|TARGET_MACHO
 condition|)
 name|output_asm_insn
 argument_list|(
-literal|"add{l}\t{%1+[.-%a2], %0|%0, %a1+(.-%a2)}"
+literal|"add{l}\t{%1+[.-%a2], %0|%0, %1+(.-%a2)}"
 argument_list|,
 name|xops
 argument_list|)
@@ -67201,6 +67201,17 @@ name|target
 argument_list|)
 operator|!=
 name|tmode
+operator|||
+operator|(
+name|do_load
+operator|&&
+name|GET_CODE
+argument_list|(
+name|target
+argument_list|)
+operator|==
+name|MEM
+operator|)
 operator|||
 operator|!
 operator|(
