@@ -2718,6 +2718,10 @@ name|has_rw
 decl_stmt|,
 name|has_noro
 decl_stmt|;
+name|errmsg
+operator|=
+name|NULL
+expr_stmt|;
 name|errmsg_len
 operator|=
 literal|0
@@ -2784,11 +2788,6 @@ name|optlist
 argument_list|,
 literal|"errmsg"
 argument_list|)
-expr_stmt|;
-else|else
-name|errmsg_len
-operator|=
-literal|0
 expr_stmt|;
 comment|/* 	 * We need these two options before the others, 	 * and they are mandatory for any filesystem. 	 * Ensure they are NUL terminated as well. 	 */
 name|fstypelen
