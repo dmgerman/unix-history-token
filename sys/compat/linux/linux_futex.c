@@ -1338,14 +1338,14 @@ name|op_ret
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Linux always puts there 0 retries */
+comment|/* 			 * Linux uses the address of the timespec parameter 			 * as the number of retries, so any large number will 			 * be ok. 			 */
 name|op_ret
 operator|+=
 name|futex_wake
 argument_list|(
 name|f2
 argument_list|,
-literal|0
+literal|0x7fffffff
 argument_list|,
 name|NULL
 argument_list|)
