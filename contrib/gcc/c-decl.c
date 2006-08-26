@@ -3256,6 +3256,37 @@ return|return
 name|false
 return|;
 block|}
+comment|/* Enumerators have no linkage, so may only be declared once in a      given scope.  */
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|olddecl
+argument_list|)
+operator|==
+name|CONST_DECL
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"%Jredeclaration of enumerator `%D'"
+argument_list|,
+name|newdecl
+argument_list|,
+name|newdecl
+argument_list|)
+expr_stmt|;
+name|locate_old_decl
+argument_list|(
+name|olddecl
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+return|return
+name|false
+return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -10547,6 +10578,11 @@ block|{
 name|tree
 name|decl
 decl_stmt|;
+name|int
+name|old_dont_save_pending_sizes_p
+init|=
+literal|0
+decl_stmt|;
 comment|/* Don't attempt to expand sizes while parsing this decl.      (We can get here with i_s_e 1 somehow from Objective-C.)  */
 name|int
 name|save_immediate_size_expand
@@ -10557,6 +10593,25 @@ name|immediate_size_expand
 operator|=
 literal|0
 expr_stmt|;
+comment|/* If this is a nested function, we do want to keep SAVE_EXPRs for      the argument sizes, regardless of the parent's setting.  */
+if|if
+condition|(
+name|cfun
+condition|)
+block|{
+name|old_dont_save_pending_sizes_p
+operator|=
+name|cfun
+operator|->
+name|x_dont_save_pending_sizes_p
+expr_stmt|;
+name|cfun
+operator|->
+name|x_dont_save_pending_sizes_p
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|decl
 operator|=
 name|grokdeclarator
@@ -10612,6 +10667,16 @@ name|NULL_TREE
 argument_list|,
 name|NULL_TREE
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cfun
+condition|)
+name|cfun
+operator|->
+name|x_dont_save_pending_sizes_p
+operator|=
+name|old_dont_save_pending_sizes_p
 expr_stmt|;
 name|immediate_size_expand
 operator|=
@@ -17810,7 +17875,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|TYPE_FIELDS
+name|TYPE_SIZE
 argument_list|(
 name|ref
 argument_list|)
@@ -17836,6 +17901,43 @@ else|else
 name|error
 argument_list|(
 literal|"redefinition of `struct %s'"
+argument_list|,
+name|IDENTIFIER_POINTER
+argument_list|(
+name|name
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|C_TYPE_BEING_DEFINED
+argument_list|(
+name|ref
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|code
+operator|==
+name|UNION_TYPE
+condition|)
+name|error
+argument_list|(
+literal|"nested redefinition of `union %s'"
+argument_list|,
+name|IDENTIFIER_POINTER
+argument_list|(
+name|name
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|error
+argument_list|(
+literal|"nested redefinition of `struct %s'"
 argument_list|,
 name|IDENTIFIER_POINTER
 argument_list|(
@@ -18640,29 +18742,6 @@ argument_list|)
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Detect invalid nested redefinition.  */
-if|if
-condition|(
-name|TREE_TYPE
-argument_list|(
-name|x
-argument_list|)
-operator|==
-name|t
-condition|)
-name|error
-argument_list|(
-literal|"nested redefinition of `%s'"
-argument_list|,
-name|IDENTIFIER_POINTER
-argument_list|(
-name|TYPE_NAME
-argument_list|(
-name|t
-argument_list|)
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|DECL_INITIAL
@@ -19222,6 +19301,36 @@ argument_list|(
 name|t
 argument_list|)
 expr_stmt|;
+name|C_TYPE_FIELDS_READONLY
+argument_list|(
+name|x
+argument_list|)
+operator|=
+name|C_TYPE_FIELDS_READONLY
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
+name|C_TYPE_FIELDS_VOLATILE
+argument_list|(
+name|x
+argument_list|)
+operator|=
+name|C_TYPE_FIELDS_VOLATILE
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
+name|C_TYPE_VARIABLE_SIZE
+argument_list|(
+name|x
+argument_list|)
+operator|=
+name|C_TYPE_VARIABLE_SIZE
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* If this was supposed to be a transparent union, but we can't      make it one, warn and turn off the flag.  */
 if|if
@@ -19506,6 +19615,23 @@ name|enumtype
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|C_TYPE_BEING_DEFINED
+argument_list|(
+name|enumtype
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|"nested redefinition of `enum %s'"
+argument_list|,
+name|IDENTIFIER_POINTER
+argument_list|(
+name|name
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|C_TYPE_BEING_DEFINED
 argument_list|(
 name|enumtype
@@ -22578,15 +22704,6 @@ name|fndecl
 init|=
 name|current_function_decl
 decl_stmt|;
-comment|/* The function containing FNDECL, if any.  */
-name|tree
-name|context
-init|=
-name|decl_function_context
-argument_list|(
-name|fndecl
-argument_list|)
-decl_stmt|;
 comment|/* True if this definition is written with a prototype.  */
 name|bool
 name|prototype
@@ -22646,15 +22763,7 @@ name|fndecl
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* If this is a nested function, save away the sizes of any      variable-size types so that we can expand them when generating      RTL.  */
-if|if
-condition|(
-name|context
-condition|)
-block|{
-name|tree
-name|t
-decl_stmt|;
+comment|/* Save away the sizes of any variable-size types so that we can      expand them when generating RTL.  */
 name|DECL_LANG_SPECIFIC
 argument_list|(
 name|fndecl
@@ -22662,43 +22771,9 @@ argument_list|)
 operator|->
 name|pending_sizes
 operator|=
-name|nreverse
-argument_list|(
 name|get_pending_sizes
 argument_list|()
-argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|t
-operator|=
-name|DECL_LANG_SPECIFIC
-argument_list|(
-name|fndecl
-argument_list|)
-operator|->
-name|pending_sizes
-init|;
-name|t
-condition|;
-name|t
-operator|=
-name|TREE_CHAIN
-argument_list|(
-name|t
-argument_list|)
-control|)
-name|SAVE_EXPR_CONTEXT
-argument_list|(
-name|TREE_VALUE
-argument_list|(
-name|t
-argument_list|)
-argument_list|)
-operator|=
-name|context
-expr_stmt|;
-block|}
 comment|/* This function is being processed in whole-function mode.  */
 name|cfun
 operator|->
@@ -23152,9 +23227,12 @@ if|if
 condition|(
 name|nested_p
 condition|)
-block|{
-comment|/* Make sure that we will evaluate variable-sized types involved 	 in our function's type.  */
-name|expand_pending_sizes
+comment|/* Squirrel away our current state.  */
+name|push_function_context
+argument_list|()
+expr_stmt|;
+comment|/* Make sure that we will evaluate variable-sized types involved      in our function's type.  */
+name|put_pending_sizes
 argument_list|(
 name|DECL_LANG_SPECIFIC
 argument_list|(
@@ -23164,11 +23242,6 @@ operator|->
 name|pending_sizes
 argument_list|)
 expr_stmt|;
-comment|/* Squirrel away our current state.  */
-name|push_function_context
-argument_list|()
-expr_stmt|;
-block|}
 name|tree_rest_of_compilation
 argument_list|(
 name|fndecl
@@ -23929,7 +24002,7 @@ name|build_stmt
 argument_list|(
 name|COMPOUND_STMT
 argument_list|,
-name|NULL_TREE
+name|error_mark_node
 argument_list|)
 argument_list|)
 expr_stmt|;

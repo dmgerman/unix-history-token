@@ -5350,24 +5350,7 @@ return|return
 name|NULL_TREE
 return|;
 block|}
-comment|/* Already complained about this, so don't do so again.  */
-elseif|else
-if|if
-condition|(
-name|current_class_type
-operator|==
-name|NULL_TREE
-operator|||
-name|IDENTIFIER_ERROR_LOCUS
-argument_list|(
-name|DECL_ASSEMBLER_NAME
-argument_list|(
-name|newdecl
-argument_list|)
-argument_list|)
-operator|!=
-name|current_class_type
-condition|)
+else|else
 block|{
 name|error
 argument_list|(
@@ -10454,36 +10437,16 @@ argument_list|,
 literal|20030802
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|TREE_CODE
+name|my_friendly_assert
+argument_list|(
+name|TYPE_P
 argument_list|(
 name|context
 argument_list|)
-operator|==
-name|NAMESPACE_DECL
-condition|)
-block|{
-comment|/* We can get here from typename_sub0 in the explicit_template_type 	 expansion.  Just fail.  */
-if|if
-condition|(
-name|complain
-operator|&
-name|tf_error
-condition|)
-name|error
-argument_list|(
-literal|"no class template named `%#T' in `%#T'"
 argument_list|,
-name|name
-argument_list|,
-name|context
+literal|20050905
 argument_list|)
 expr_stmt|;
-return|return
-name|error_mark_node
-return|;
-block|}
 if|if
 condition|(
 operator|!
@@ -18760,6 +18723,37 @@ operator|=
 name|NULL_TREE
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|DECL_EXTERNAL
+argument_list|(
+name|decl
+argument_list|)
+operator|&&
+name|init
+condition|)
+block|{
+comment|/* The static data member cannot be initialized by a 		 non-constant when being declared.  */
+name|error
+argument_list|(
+literal|"`%D' cannot be initialized by a non-constant expression"
+literal|" when being declared"
+argument_list|,
+name|decl
+argument_list|)
+expr_stmt|;
+name|DECL_INITIALIZED_IN_CLASS_P
+argument_list|(
+name|decl
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+name|init
+operator|=
+name|NULL_TREE
+expr_stmt|;
+block|}
 comment|/* Handle: 	      	     [dcl.init] 	      	     The memory occupied by any object of static storage 	     duration is zero-initialized at program startup before 	     any other initialization takes place. 	      	     We cannot create an appropriate initializer until after 	     the type of DECL is finalized.  If DECL_INITIAL is set, 	     then the DECL is statically initialized, and any 	     necessary zero-initialization has already been performed.  */
 if|if
 condition|(
@@ -21435,8 +21429,6 @@ name|grok_op_properties
 argument_list|(
 name|decl
 argument_list|,
-name|friendp
-argument_list|,
 comment|/*complain=*/
 name|true
 argument_list|)
@@ -22050,6 +22042,9 @@ block|{
 name|tree
 name|decl
 decl_stmt|;
+name|tree
+name|explicit_scope
+decl_stmt|;
 name|RID_BIT_TYPE
 name|specbits
 decl_stmt|;
@@ -22073,7 +22068,11 @@ operator|=
 operator|*
 name|specbits_in
 expr_stmt|;
-comment|/* Compute the scope in which to place the variable.  */
+comment|/* Compute the scope in which to place the variable, but remember      whether or not that scope was explicitly specified by the user.  */
+name|explicit_scope
+operator|=
+name|scope
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -22181,11 +22180,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|scope
+name|explicit_scope
 operator|&&
 name|TREE_CODE
 argument_list|(
-name|scope
+name|explicit_scope
 argument_list|)
 operator|==
 name|NAMESPACE_DECL
@@ -22194,7 +22193,7 @@ name|set_decl_namespace
 argument_list|(
 name|decl
 argument_list|,
-name|scope
+name|explicit_scope
 argument_list|,
 literal|0
 argument_list|)
@@ -26623,6 +26622,13 @@ argument_list|(
 literal|"member `%D' cannot be declared both virtual and static"
 argument_list|,
 name|dname
+argument_list|)
+expr_stmt|;
+name|RIDBIT_RESET
+argument_list|(
+name|RID_STATIC
+argument_list|,
+name|specbits
 argument_list|)
 expr_stmt|;
 name|staticp
@@ -33147,9 +33153,6 @@ parameter_list|(
 name|tree
 name|decl
 parameter_list|,
-name|int
-name|friendp
-parameter_list|,
 name|bool
 name|complain
 parameter_list|)
@@ -33199,14 +33202,20 @@ name|int
 name|arity
 decl_stmt|;
 name|bool
+name|ellipsis_p
+decl_stmt|;
+name|bool
 name|ok
+decl_stmt|;
+name|tree
+name|class_type
 decl_stmt|;
 comment|/* Assume that the declaration is valid.  */
 name|ok
 operator|=
 name|true
 expr_stmt|;
-comment|/* Count the number of arguments.  */
+comment|/* Count the number of arguments. and check for ellipsis  */
 for|for
 control|(
 name|argtype
@@ -33233,15 +33242,31 @@ control|)
 operator|++
 name|arity
 expr_stmt|;
+name|ellipsis_p
+operator|=
+operator|!
+name|argtype
+expr_stmt|;
+name|class_type
+operator|=
+name|DECL_CONTEXT
+argument_list|(
+name|decl
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|current_class_type
-operator|==
-name|NULL_TREE
+name|class_type
+operator|&&
+operator|!
+name|CLASS_TYPE_P
+argument_list|(
+name|class_type
+argument_list|)
 condition|)
-name|friendp
+name|class_type
 operator|=
-literal|1
+name|NULL_TREE
 expr_stmt|;
 if|if
 condition|(
@@ -33306,10 +33331,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|friendp
+name|class_type
 condition|)
-block|{
 switch|switch
 condition|(
 name|operator_code
@@ -33320,7 +33343,7 @@ name|NEW_EXPR
 case|:
 name|TYPE_HAS_NEW_OPERATOR
 argument_list|(
-name|current_class_type
+name|class_type
 argument_list|)
 operator|=
 literal|1
@@ -33331,7 +33354,7 @@ name|DELETE_EXPR
 case|:
 name|TYPE_GETS_DELETE
 argument_list|(
-name|current_class_type
+name|class_type
 argument_list|)
 operator||=
 literal|1
@@ -33342,7 +33365,7 @@ name|VEC_NEW_EXPR
 case|:
 name|TYPE_HAS_ARRAY_NEW_OPERATOR
 argument_list|(
-name|current_class_type
+name|class_type
 argument_list|)
 operator|=
 literal|1
@@ -33353,7 +33376,7 @@ name|VEC_DELETE_EXPR
 case|:
 name|TYPE_GETS_DELETE
 argument_list|(
-name|current_class_type
+name|class_type
 argument_list|)
 operator||=
 literal|2
@@ -33361,7 +33384,6 @@ expr_stmt|;
 break|break;
 default|default:
 break|break;
-block|}
 block|}
 if|if
 condition|(
@@ -33563,6 +33585,7 @@ condition|)
 return|return
 name|ok
 return|;
+comment|/* Warn about conversion operators that will never be used.  */
 if|if
 condition|(
 name|IDENTIFIER_TYPENAME_P
@@ -33575,6 +33598,13 @@ name|DECL_TEMPLATE_INFO
 argument_list|(
 name|decl
 argument_list|)
+operator|&&
+name|warn_conversion
+comment|/* Warn only declaring the function; there is no need to 	     warn again about out-of-class definitions.  */
+operator|&&
+name|class_type
+operator|==
+name|current_class_type
 condition|)
 block|{
 name|tree
@@ -33585,12 +33615,6 @@ argument_list|(
 name|name
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|friendp
-condition|)
-block|{
 name|int
 name|ref
 init|=
@@ -33640,9 +33664,14 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|class_type
+condition|)
+block|{
+if|if
+condition|(
 name|t
 operator|==
-name|current_class_type
+name|class_type
 condition|)
 name|what
 operator|=
@@ -33666,18 +33695,17 @@ name|DERIVED_FROM_P
 argument_list|(
 name|t
 argument_list|,
-name|current_class_type
+name|class_type
 argument_list|)
 condition|)
 name|what
 operator|=
 literal|"a base class"
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|what
-operator|&&
-name|warn_conversion
 condition|)
 name|warning
 argument_list|(
@@ -33693,7 +33721,6 @@ name|what
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 if|if
 condition|(
 name|operator_code
@@ -33708,6 +33735,18 @@ literal|"ISO C++ prohibits overloading operator ?:"
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|ellipsis_p
+condition|)
+name|error
+argument_list|(
+literal|"`%D' must not have variable number of arguments"
+argument_list|,
+name|decl
+argument_list|)
+expr_stmt|;
 elseif|else
 if|if
 condition|(
@@ -34272,13 +34311,19 @@ case|case
 name|union_type
 case|:
 return|return
-literal|"union "
+literal|"union"
 return|;
 case|case
 name|enum_type
 case|:
 return|return
 literal|"enum"
+return|;
+case|case
+name|typename_type
+case|:
+return|return
+literal|"typename"
 return|;
 default|default:
 name|abort
@@ -34343,6 +34388,10 @@ name|DECL_IMPLICIT_TYPEDEF_P
 argument_list|(
 name|decl
 argument_list|)
+operator|&&
+name|tag_code
+operator|!=
+name|typename_type
 condition|)
 block|{
 name|error
@@ -34414,6 +34463,10 @@ operator|&&
 name|tag_code
 operator|!=
 name|enum_type
+operator|&&
+name|tag_code
+operator|!=
+name|typename_type
 condition|)
 block|{
 name|error
@@ -37340,13 +37393,26 @@ if|if
 condition|(
 name|processing_template_decl
 condition|)
-name|decl1
-operator|=
+block|{
+name|tree
+name|newdecl1
+init|=
 name|push_template_decl
 argument_list|(
 name|decl1
 argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|newdecl1
+operator|!=
+name|error_mark_node
+condition|)
+name|decl1
+operator|=
+name|newdecl1
 expr_stmt|;
+block|}
 comment|/* We are now in the scope of the function being defined.  */
 name|current_function_decl
 operator|=
@@ -37371,6 +37437,12 @@ argument_list|(
 name|decl1
 argument_list|,
 name|current_function_parms
+argument_list|)
+expr_stmt|;
+comment|/* Make sure no default arg is missing.  */
+name|check_default_args
+argument_list|(
+name|decl1
 argument_list|)
 expr_stmt|;
 comment|/* Build the return declaration for the function.  */
@@ -37568,12 +37640,6 @@ name|DECL_TI_TEMPLATE
 argument_list|(
 name|decl1
 argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* And make sure we have enough default args.  */
-name|check_default_args
-argument_list|(
-name|decl1
 argument_list|)
 expr_stmt|;
 block|}

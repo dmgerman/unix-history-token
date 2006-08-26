@@ -19495,12 +19495,14 @@ name|len
 decl_stmt|,
 name|fn
 decl_stmt|;
+comment|/* If we're using an unlocked function, assume the other unlocked      functions exist explicitly.  */
 name|tree
+specifier|const
 name|fn_fputc
 init|=
 name|unlocked
 condition|?
-name|implicit_built_in_decls
+name|built_in_decls
 index|[
 name|BUILT_IN_FPUTC_UNLOCKED
 index|]
@@ -19511,11 +19513,12 @@ name|BUILT_IN_FPUTC
 index|]
 decl_stmt|;
 name|tree
+specifier|const
 name|fn_fwrite
 init|=
 name|unlocked
 condition|?
-name|implicit_built_in_decls
+name|built_in_decls
 index|[
 name|BUILT_IN_FWRITE_UNLOCKED
 index|]
@@ -19525,18 +19528,12 @@ index|[
 name|BUILT_IN_FWRITE
 index|]
 decl_stmt|;
-comment|/* If the return value is used, or the replacement _DECL isn't      initialized, don't do the transformation.  */
+comment|/* If the return value is used, don't do the transformation.  */
 if|if
 condition|(
 name|target
 operator|!=
 name|const0_rtx
-operator|||
-operator|!
-name|fn_fputc
-operator|||
-operator|!
-name|fn_fwrite
 condition|)
 return|return
 literal|0
@@ -19776,6 +19773,15 @@ name|abort
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* If the replacement _DECL isn't initialized, don't do the      transformation.  */
+if|if
+condition|(
+operator|!
+name|fn
+condition|)
+return|return
+literal|0
+return|;
 return|return
 name|expand_expr
 argument_list|(
@@ -20913,12 +20919,14 @@ name|bool
 name|unlocked
 parameter_list|)
 block|{
+comment|/* If we're using an unlocked function, assume the other unlocked      functions exist explicitly.  */
 name|tree
+specifier|const
 name|fn_putchar
 init|=
 name|unlocked
 condition|?
-name|implicit_built_in_decls
+name|built_in_decls
 index|[
 name|BUILT_IN_PUTCHAR_UNLOCKED
 index|]
@@ -20929,11 +20937,12 @@ name|BUILT_IN_PUTCHAR
 index|]
 decl_stmt|;
 name|tree
+specifier|const
 name|fn_puts
 init|=
 name|unlocked
 condition|?
-name|implicit_built_in_decls
+name|built_in_decls
 index|[
 name|BUILT_IN_PUTS_UNLOCKED
 index|]
@@ -21320,12 +21329,14 @@ name|bool
 name|unlocked
 parameter_list|)
 block|{
+comment|/* If we're using an unlocked function, assume the other unlocked      functions exist explicitly.  */
 name|tree
+specifier|const
 name|fn_fputc
 init|=
 name|unlocked
 condition|?
-name|implicit_built_in_decls
+name|built_in_decls
 index|[
 name|BUILT_IN_FPUTC_UNLOCKED
 index|]
@@ -21336,11 +21347,12 @@ name|BUILT_IN_FPUTC
 index|]
 decl_stmt|;
 name|tree
+specifier|const
 name|fn_fputs
 init|=
 name|unlocked
 condition|?
-name|implicit_built_in_decls
+name|built_in_decls
 index|[
 name|BUILT_IN_FPUTS_UNLOCKED
 index|]

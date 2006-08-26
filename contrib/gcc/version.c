@@ -19,7 +19,7 @@ name|char
 name|version_string
 index|[]
 init|=
-literal|"3.4.4 [FreeBSD] 20050518"
+literal|"3.4.6 [FreeBSD] 20060825"
 decl_stmt|;
 end_decl_stmt
 
