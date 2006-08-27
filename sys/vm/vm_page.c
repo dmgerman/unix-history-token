@@ -1458,18 +1458,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_sleep_if_busy:  *  *	Sleep and release the page queues lock if PG_BUSY is set or,  *	if also_m_busy is TRUE, busy is non-zero.  Returns TRUE if the  *	thread slept and the page queues lock was released.  *	Otherwise, retains the page queues lock and returns FALSE.  */
+comment|/*  *	vm_page_sleep:  *  *	Sleep and release the page queues lock.  *  *	The object containing the given page must be locked.  */
 end_comment
 
 begin_function
-name|int
-name|vm_page_sleep_if_busy
+name|void
+name|vm_page_sleep
 parameter_list|(
 name|vm_page_t
 name|m
-parameter_list|,
-name|int
-name|also_m_busy
 parameter_list|,
 specifier|const
 name|char
@@ -1486,25 +1483,6 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|m
-operator|->
-name|flags
-operator|&
-name|PG_BUSY
-operator|)
-operator|||
-operator|(
-name|also_m_busy
-operator|&&
-name|m
-operator|->
-name|busy
-operator|)
-condition|)
-block|{
 if|if
 condition|(
 operator|!
@@ -1527,7 +1505,7 @@ expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-comment|/* 		 * It's possible that while we sleep, the page will get 		 * unbusied and freed.  If we are holding the object 		 * lock, we will assume we hold a reference to the object 		 * such that even if m->object changes, we can re-lock 		 * it. 		 */
+comment|/* 	 * It's possible that while we sleep, the page will get 	 * unbusied and freed.  If we are holding the object 	 * lock, we will assume we hold a reference to the object 	 * such that even if m->object changes, we can re-lock 	 * it. 	 */
 name|m
 operator|->
 name|oflags
@@ -1552,17 +1530,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|TRUE
-operator|)
-return|;
-block|}
-return|return
-operator|(
-name|FALSE
-operator|)
-return|;
 block|}
 end_function
 
