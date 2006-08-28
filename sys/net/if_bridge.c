@@ -2625,6 +2625,8 @@ name|if_flags
 operator|=
 name|IFF_BROADCAST
 operator||
+name|IFF_SIMPLEX
+operator||
 name|IFF_MULTICAST
 expr_stmt|;
 name|ifp
