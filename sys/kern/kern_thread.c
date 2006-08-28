@@ -558,6 +558,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|umtx_thread_alloc
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -734,13 +739,6 @@ argument_list|()
 expr_stmt|;
 name|td
 operator|->
-name|td_umtxq
-operator|=
-name|umtxq_alloc
-argument_list|()
-expr_stmt|;
-name|td
-operator|->
 name|td_sched
 operator|=
 operator|(
@@ -755,6 +753,11 @@ literal|1
 index|]
 expr_stmt|;
 name|sched_newthread
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+name|umtx_thread_init
 argument_list|(
 name|td
 argument_list|)
@@ -812,11 +815,9 @@ operator|->
 name|td_sleepqueue
 argument_list|)
 expr_stmt|;
-name|umtxq_free
+name|umtx_thread_fini
 argument_list|(
 name|td
-operator|->
-name|td_umtxq
 argument_list|)
 expr_stmt|;
 name|vm_thread_dispose
@@ -1810,6 +1811,11 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|umtx_thread_exit
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 comment|/* 	 * drop FPU& debug register state storage, or any other 	 * architecture specific resources that 	 * would not be on a new untouched process. 	 */
 name|cpu_thread_exit
 argument_list|(
