@@ -944,7 +944,7 @@ name|refs
 operator|==
 literal|0
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|em
 operator|->
@@ -959,7 +959,7 @@ operator|&
 name|emul_shared_lock
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|em
 argument_list|,
