@@ -163,6 +163,16 @@ name|atfork_head
 expr_stmt|;
 end_typedef
 
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|mutex_queue
+argument_list|,
+name|pthread_mutex
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Signal to do cancellation */
 end_comment
@@ -323,16 +333,13 @@ struct|struct
 name|pthread_mutex
 block|{
 comment|/* 	 * Lock for accesses to this structure. 	 */
-specifier|volatile
-name|umtx_t
+name|struct
+name|umutex
 name|m_lock
 decl_stmt|;
 name|enum
 name|pthread_mutextype
 name|m_type
-decl_stmt|;
-name|int
-name|m_protocol
 decl_stmt|;
 name|struct
 name|pthread
@@ -348,11 +355,7 @@ decl_stmt|;
 name|int
 name|m_refcount
 decl_stmt|;
-comment|/* 	 * Used for priority protection, the ceiling priority of 	 * this mutex. 	 */
-name|int
-name|m_prio
-decl_stmt|;
-comment|/* 	 * Link for list of all mutexes a thread currently owns. 	 */
+comment|/* 	 * Link for all mutexes a thread currently owns. 	 */
 name|TAILQ_ENTRY
 argument_list|(
 argument|pthread_mutex
@@ -896,6 +899,20 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * lwpid_t is 32bit but kernel thr API exports tid as long type  * in very earily date.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TID
+parameter_list|(
+name|thread
+parameter_list|)
+value|((uint32_t) ((thread)->tid))
+end_define
+
+begin_comment
 comment|/*  * Thread structure.  */
 end_comment
 
@@ -1031,13 +1048,6 @@ name|pthread
 modifier|*
 name|joiner
 decl_stmt|;
-comment|/* 	 * The current thread can belong to a priority mutex queue. 	 * This is the synchronization queue link. 	 */
-name|TAILQ_ENTRY
-argument_list|(
-argument|pthread
-argument_list|)
-name|sqe
-expr_stmt|;
 comment|/* Miscellaneous flags; only set with scheduling lock held. */
 name|int
 name|flags
@@ -1080,14 +1090,16 @@ directive|define
 name|TLFLAGS_DETACHED
 value|0x0008
 comment|/* thread is detached */
-comment|/* Queue of currently owned simple type mutexes. */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|pthread_mutex
-argument_list|)
+comment|/* Queue of currently owned NORMAL or PRIO_INHERIT type mutexes. */
+name|struct
+name|mutex_queue
 name|mutexq
-expr_stmt|;
+decl_stmt|;
+comment|/* Queue of all owned PRIO_PROTECT mutexes. */
+name|struct
+name|mutex_queue
+name|pp_mutexq
+decl_stmt|;
 name|void
 modifier|*
 name|ret

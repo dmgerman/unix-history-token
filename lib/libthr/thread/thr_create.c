@@ -408,6 +408,14 @@ operator|->
 name|mutexq
 argument_list|)
 expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|new_thread
+operator|->
+name|pp_mutexq
+argument_list|)
+expr_stmt|;
 comment|/* Initialise hooks in the thread structure: */
 if|if
 condition|(

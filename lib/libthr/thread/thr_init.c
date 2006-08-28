@@ -1878,6 +1878,14 @@ operator|->
 name|mutexq
 argument_list|)
 expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|thread
+operator|->
+name|pp_mutexq
+argument_list|)
+expr_stmt|;
 name|thread
 operator|->
 name|state
