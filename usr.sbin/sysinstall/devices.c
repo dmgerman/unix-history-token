@@ -472,6 +472,14 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
+literal|"ath"
+block|,
+literal|"Atheros IEEE 802.11 wireless adapter"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
 literal|"aue"
 block|,
 literal|"ADMtek USB ethernet adapter"
@@ -483,6 +491,14 @@ block|,
 literal|"axe"
 block|,
 literal|"ASIX Electronics USB ethernet adapter"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
+literal|"bce"
+block|,
+literal|"Broadcom NetXtreme II Gigabit Ethernet card"
 block|}
 block|,
 block|{
@@ -632,9 +648,9 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
-literal|"ix"
+literal|"ixgb"
 block|,
-literal|"Intel Etherexpress ethernet card"
+literal|"Intel(R) PRO/10Gb Ethernet card"
 block|}
 block|,
 block|{
@@ -675,6 +691,14 @@ block|,
 literal|"nge"
 block|,
 literal|"NatSemi PCI gigabit ethernet card"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
+literal|"nve"
+block|,
+literal|"NVIDIA nForce MCP Ethernet"
 block|}
 block|,
 block|{
@@ -904,6 +928,14 @@ block|,
 literal|"fwe"
 block|,
 literal|"FireWire Ethernet emulation"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
+literal|"fwip"
+block|,
+literal|"IP over FireWire"
 block|}
 block|,
 block|{
