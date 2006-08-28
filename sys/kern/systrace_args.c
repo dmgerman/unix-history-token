@@ -14015,9 +14015,9 @@ name|intptr_t
 operator|)
 name|p
 operator|->
-name|umtx
+name|obj
 expr_stmt|;
-comment|/* struct umtx * */
+comment|/* void * */
 name|iarg
 index|[
 literal|1
@@ -14028,16 +14028,16 @@ operator|->
 name|op
 expr_stmt|;
 comment|/* int */
-name|iarg
+name|uarg
 index|[
 literal|2
 index|]
 operator|=
 name|p
 operator|->
-name|id
+name|val
 expr_stmt|;
-comment|/* long */
+comment|/* uintptr_t */
 name|uarg
 index|[
 literal|3
@@ -14048,7 +14048,7 @@ name|intptr_t
 operator|)
 name|p
 operator|->
-name|uaddr
+name|uaddr1
 expr_stmt|;
 comment|/* void * */
 name|uarg
