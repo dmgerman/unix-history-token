@@ -5126,6 +5126,17 @@ name|EINVAL
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|inp
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 switch|switch
 condition|(
 name|sopt
