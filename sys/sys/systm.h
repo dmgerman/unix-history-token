@@ -1692,6 +1692,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int32_t
+name|casuword32
+parameter_list|(
+name|int32_t
+modifier|*
+name|base
+parameter_list|,
+name|int32_t
+name|oldval
+parameter_list|,
+name|int32_t
+name|newval
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|intptr_t
 name|casuptr
 parameter_list|(
@@ -1700,10 +1717,10 @@ modifier|*
 name|p
 parameter_list|,
 name|intptr_t
-name|old
+name|oldval
 parameter_list|,
 name|intptr_t
-name|new
+name|newval
 parameter_list|)
 function_decl|;
 end_function_decl
