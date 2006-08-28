@@ -2839,7 +2839,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * This lets userland back off critical region if needed. 	 */
+comment|/* Mutex locking is be restarted if it is interrupted. */
 if|if
 condition|(
 name|error
@@ -3484,6 +3484,7 @@ operator|->
 name|uq_key
 argument_list|)
 expr_stmt|;
+comment|/* Mutex locking is be restarted if it is interrupted. */
 if|if
 condition|(
 name|error
@@ -4153,7 +4154,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * This lets userland back off critical region if needed. 	 */
+comment|/* Mutex locking is be restarted if it is interrupted. */
 if|if
 condition|(
 name|error
@@ -6840,7 +6841,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * This lets userland back off critical region if needed. 	 */
+comment|/* Mutex locking is be restarted if it is interrupted. */
 if|if
 condition|(
 name|error
@@ -8111,7 +8112,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * This lets userland back off critical region if needed. 	 */
+comment|/* Mutex locking is be restarted if it is interrupted. */
 if|if
 condition|(
 name|error
