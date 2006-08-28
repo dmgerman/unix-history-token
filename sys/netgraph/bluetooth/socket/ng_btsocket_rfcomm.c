@@ -5269,9 +5269,10 @@ name|sockopt
 name|l2sopt
 decl_stmt|;
 name|int
-name|mtu
-decl_stmt|,
 name|error
+decl_stmt|;
+name|u_int16_t
+name|mtu
 decl_stmt|;
 name|mtx_assert
 argument_list|(
