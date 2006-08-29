@@ -2065,6 +2065,7 @@ operator|~
 name|FDO_FDMAEN
 argument_list|)
 expr_stmt|;
+block|}
 name|DELAY
 argument_list|(
 literal|100
@@ -2079,7 +2080,6 @@ operator|->
 name|fdout
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* XXX after a reset, silently believe the FDC will accept commands */
 if|if
 condition|(
