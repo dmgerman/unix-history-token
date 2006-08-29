@@ -1225,6 +1225,12 @@ name|total_bytes_skipped
 operator|+=
 name|bytes_skipped
 expr_stmt|;
+name|a
+operator|->
+name|file_position
+operator|+=
+name|bytes_skipped
+expr_stmt|;
 name|request
 operator|-=
 name|bytes_skipped
