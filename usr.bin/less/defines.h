@@ -20,14 +20,14 @@ comment|/* User preferences.  */
 end_comment
 
 begin_comment
-comment|/*  * SECURE is 1 if you wish to disable a bunch of features in order to  * be safe to run by unprivileged users.  */
+comment|/*  * SECURE is 1 if you wish to disable a bunch of features in order to  * be safe to run by unprivileged users.  * SECURE_COMPILE is set by the --with-secure configure option.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SECURE
-value|0
+value|SECURE_COMPILE
 end_define
 
 begin_comment
@@ -174,7 +174,7 @@ value|0
 end_define
 
 begin_comment
-comment|/*  * LESSKEYFILE is the filename of the default lesskey output file  * (in the HOME directory).  * LESSKEYFILE_SYS is the filename of the system-wide lesskey output file.  * DEF_LESSKEYINFILE is the filename of the default lesskey input  * (in the HOME directory).  */
+comment|/*  * LESSKEYFILE is the filename of the default lesskey output file  * (in the HOME directory).  * LESSKEYFILE_SYS is the filename of the system-wide lesskey output file.  * DEF_LESSKEYINFILE is the filename of the default lesskey input  * (in the HOME directory).  * LESSHISTFILE is the filename of the history file  * (in the HOME directory).  */
 end_comment
 
 begin_define
@@ -196,6 +196,13 @@ define|#
 directive|define
 name|DEF_LESSKEYINFILE
 value|".lesskey"
+end_define
+
+begin_define
+define|#
+directive|define
+name|LESSHISTFILE
+value|".lesshst"
 end_define
 
 begin_comment
@@ -284,7 +291,7 @@ begin_define
 define|#
 directive|define
 name|DEF_METACHARS
-value|"; *?\t\n'\"()<>|&^`#\\"
+value|"; *?\t\n'\"()<>[]|&^`#\\"
 end_define
 
 begin_define
@@ -464,6 +471,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_ERRNO_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `fchmod' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FCHMOD
 value|1
 end_define
 
@@ -684,6 +702,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_SIGSET_T */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `snprintf' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SNPRINTF
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `stat' function. */
@@ -1066,6 +1095,17 @@ define|#
 directive|define
 name|RETSIGTYPE
 value|void
+end_define
+
+begin_comment
+comment|/* Define SECURE_COMPILE=1 to build a secure version of less. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SECURE_COMPILE
+value|0
 end_define
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2002  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2005  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -659,6 +659,9 @@ name|char
 modifier|*
 name|m
 decl_stmt|;
+name|int
+name|len
+decl_stmt|;
 if|#
 directive|if
 name|HAVE_ERRNO
@@ -686,14 +689,8 @@ literal|"cannot open"
 expr_stmt|;
 endif|#
 directive|endif
-name|m
+name|len
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|ecalloc
-argument_list|(
 name|strlen
 argument_list|(
 name|filename
@@ -705,6 +702,16 @@ name|p
 argument_list|)
 operator|+
 literal|3
+expr_stmt|;
+name|m
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|ecalloc
+argument_list|(
+name|len
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -712,9 +719,11 @@ name|char
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|SNPRINTF2
 argument_list|(
 name|m
+argument_list|,
+name|len
 argument_list|,
 literal|"%s: %s"
 argument_list|,
