@@ -12,19 +12,7 @@ modifier|*
 name|tpval
 parameter_list|)
 block|{
-specifier|register
-name|void
-modifier|*
-name|tp
-name|__asm__
-argument_list|(
-literal|"r13"
-argument_list|)
-decl_stmt|;
-name|tp
-operator|=
-name|tpval
-expr_stmt|;
+asm|__asm __volatile("mov r13 = %0" :: "r"(tpval));
 block|}
 end_function
 
