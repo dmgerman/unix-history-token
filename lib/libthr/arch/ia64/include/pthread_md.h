@@ -56,10 +56,6 @@ name|tcb
 operator|*
 name|_tp
 asm|__asm("%r13");
-define|#
-directive|define
-name|_tcb
-value|_tp
 comment|/*  * The tcb constructors.  */
 expr|struct
 name|tcb
@@ -102,10 +98,7 @@ modifier|*
 name|tcb
 parameter_list|)
 block|{
-name|_tp
-operator|=
-name|tcb
-expr_stmt|;
+asm|__asm __volatile("mov r13 = %0;;" :: "r"(tcb));
 block|}
 end_function
 
@@ -122,7 +115,7 @@ argument_list|)
 block|{
 return|return
 operator|(
-name|_tcb
+name|_tp
 operator|)
 return|;
 block|}
@@ -154,7 +147,7 @@ name|_thr_initial
 condition|)
 return|return
 operator|(
-name|_tcb
+name|_tp
 operator|->
 name|tcb_thread
 operator|)
