@@ -2932,7 +2932,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"::1\t\t\tlocalhost.%s localhost\n"
+literal|"::1\t\t\tlocalhost localhost.%s\n"
 argument_list|,
 name|dp
 argument_list|)
@@ -2941,7 +2941,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"127.0.0.1\t\tlocalhost.%s localhost\n"
+literal|"127.0.0.1\t\tlocalhost localhost.%s\n"
 argument_list|,
 name|dp
 argument_list|)
