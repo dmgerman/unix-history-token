@@ -17279,10 +17279,23 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 operator|*
 name|end
 operator|==
 literal|'B'
+operator|&&
+name|_substrcmp2
+argument_list|(
+name|end
+argument_list|,
+literal|"Bi"
+argument_list|,
+literal|"Bit/s"
+argument_list|)
+operator|!=
+literal|0
+operator|)
 operator|||
 name|_substrcmp2
 argument_list|(
@@ -19523,12 +19536,11 @@ expr_stmt|;
 comment|/* XXX: should check for IPv4, not !IPv6 */
 if|if
 condition|(
-operator|(
 name|ret
 operator|==
 name|NULL
-operator|)
 operator|&&
+operator|(
 name|proto
 operator|==
 name|IPPROTO_IP
@@ -19552,6 +19564,7 @@ argument_list|,
 operator|&
 name|a
 argument_list|)
+operator|)
 condition|)
 name|ret
 operator|=
@@ -19564,11 +19577,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|ret
 operator|==
 name|NULL
-operator|)
 operator|&&
 name|strcmp
 argument_list|(
@@ -19702,12 +19713,11 @@ expr_stmt|;
 comment|/* XXX: should check for IPv4, not !IPv6 */
 if|if
 condition|(
-operator|(
 name|ret
 operator|==
 name|NULL
-operator|)
 operator|&&
+operator|(
 name|proto
 operator|==
 name|IPPROTO_IP
@@ -19726,11 +19736,12 @@ name|inet_pton
 argument_list|(
 name|AF_INET6
 argument_list|,
-name|av
+name|host
 argument_list|,
 operator|&
 name|a
 argument_list|)
+operator|)
 condition|)
 name|ret
 operator|=
@@ -19743,11 +19754,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|ret
 operator|==
 name|NULL
-operator|)
 operator|&&
 name|strcmp
 argument_list|(
