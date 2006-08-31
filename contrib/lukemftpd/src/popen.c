@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: popen.c,v 1.30 2004-08-09 12:56:48 lukem Exp $	*/
+comment|/*	$NetBSD: popen.c,v 1.31 2006/02/01 14:20:14 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: popen.c,v 1.30 2004-08-09 12:56:48 lukem Exp $"
+literal|"$NetBSD: popen.c,v 1.31 2006/02/01 14:20:14 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -372,7 +372,7 @@ name|sl_add
 argument_list|(
 name|sl
 argument_list|,
-name|xstrdup
+name|ftpd_strdup
 argument_list|(
 name|argv
 index|[
@@ -453,7 +453,7 @@ name|sl_add
 argument_list|(
 name|sl
 argument_list|,
-name|xstrdup
+name|ftpd_strdup
 argument_list|(
 name|argv
 index|[
@@ -500,7 +500,7 @@ name|sl_add
 argument_list|(
 name|sl
 argument_list|,
-name|xstrdup
+name|ftpd_strdup
 argument_list|(
 operator|*
 name|pop
