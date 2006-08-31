@@ -405,6 +405,13 @@ name|MII_PHY_DESC
 argument_list|(
 name|xxBROADCOM
 argument_list|,
+name|BCM5752
+argument_list|)
+block|,
+name|MII_PHY_DESC
+argument_list|(
+name|xxBROADCOM
+argument_list|,
 name|BCM5701
 argument_list|)
 block|,
@@ -2575,6 +2582,9 @@ expr_stmt|;
 break|break;
 case|case
 name|MII_MODEL_xxBROADCOM_BCM5750
+case|:
+case|case
+name|MII_MODEL_xxBROADCOM_BCM5752
 case|:
 case|case
 name|MII_MODEL_xxBROADCOM_BCM5714
