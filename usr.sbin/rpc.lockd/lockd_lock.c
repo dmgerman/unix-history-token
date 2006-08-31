@@ -7961,7 +7961,7 @@ name|my_id
 operator|.
 name|my_name
 operator|=
-literal|"localhost\0"
+literal|"localhost"
 expr_stmt|;
 name|smon
 operator|.
