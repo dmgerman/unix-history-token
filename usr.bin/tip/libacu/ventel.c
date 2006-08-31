@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: ventel.c,v 1.7 2001/11/19 19:02:16 mpech Exp $	*/
+comment|/*	$OpenBSD: ventel.c,v 1.12 2006/03/17 19:17:13 moritz Exp $	*/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*	$NetBSD: ventel.c,v 1.6 1997/02/11 09:24:21 mrg Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -31,11 +31,12 @@ end_endif
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$OpenBSD: ventel.c,v 1.7 2001/11/19 19:02:16 mpech Exp $"
+literal|"$OpenBSD: ventel.c,v 1.12 2006/03/17 19:17:13 moritz Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,18 +78,10 @@ name|MAXRETRY
 value|5
 end_define
 
-begin_function_decl
-specifier|static
-name|void
-name|sigALRM
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|int
-name|timeout
+name|dialtimeout
 init|=
 literal|0
 decl_stmt|;
@@ -101,22 +94,47 @@ name|timeoutbuf
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|gobble
-argument_list|()
-decl_stmt|,
-name|vensync
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void
 name|echo
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|sigALRM
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|gobble
+parameter_list|(
+name|char
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|vensync
+parameter_list|(
+name|int
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -171,18 +189,14 @@ begin_function
 name|int
 name|ven_dialer
 parameter_list|(
+name|char
+modifier|*
 name|num
 parameter_list|,
+name|char
+modifier|*
 name|acu
 parameter_list|)
-name|char
-modifier|*
-name|num
-decl_stmt|;
-name|char
-modifier|*
-name|acu
-decl_stmt|;
 block|{
 name|char
 modifier|*
@@ -378,14 +392,17 @@ directive|ifdef
 name|ACULOG
 if|if
 condition|(
-name|timeout
+name|dialtimeout
 condition|)
 block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|line
+argument_list|,
+sizeof|sizeof
 name|line
 argument_list|,
 literal|"%ld second dial timeout"
@@ -418,7 +435,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|timeout
+name|dialtimeout
 condition|)
 name|ven_disconnect
 argument_list|()
@@ -428,7 +445,7 @@ if|if
 condition|(
 name|connected
 operator|||
-name|timeout
+name|dialtimeout
 operator|||
 operator|!
 name|boolean
@@ -469,6 +486,7 @@ name|cp
 operator|=
 name|line
 init|;
+operator|(
 name|cp
 operator|=
 name|strchr
@@ -477,6 +495,9 @@ name|cp
 argument_list|,
 literal|' '
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|;
 name|cp
 operator|++
@@ -556,7 +577,9 @@ end_function
 begin_function
 name|void
 name|ven_disconnect
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|close
 argument_list|(
@@ -569,7 +592,9 @@ end_function
 begin_function
 name|void
 name|ven_abort
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|write
 argument_list|(
@@ -593,23 +618,25 @@ specifier|static
 name|void
 name|echo
 parameter_list|(
-name|s
-parameter_list|)
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|c
 decl_stmt|;
 while|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 name|s
 operator|++
+operator|)
+operator|!=
+name|NULL
 condition|)
 switch|switch
 condition|(
@@ -678,18 +705,25 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_function
 specifier|static
 name|void
 name|sigALRM
-parameter_list|()
+parameter_list|(
+name|int
+name|signo
+parameter_list|)
 block|{
 name|printf
 argument_list|(
 literal|"\07timeout waiting for reply\n"
 argument_list|)
 expr_stmt|;
-name|timeout
+name|dialtimeout
 operator|=
 literal|1
 expr_stmt|;
@@ -708,17 +742,13 @@ specifier|static
 name|int
 name|gobble
 parameter_list|(
-name|match
-parameter_list|,
-name|response
-parameter_list|)
 name|char
 name|match
-decl_stmt|;
+parameter_list|,
 name|char
 name|response
 index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -741,7 +771,7 @@ argument_list|,
 name|sigALRM
 argument_list|)
 expr_stmt|;
-name|timeout
+name|dialtimeout
 operator|=
 literal|0
 expr_stmt|;
@@ -883,6 +913,7 @@ specifier|static
 name|int
 name|vensync
 parameter_list|(
+name|int
 name|fd
 parameter_list|)
 block|{

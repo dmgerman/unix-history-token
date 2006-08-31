@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: v3451.c,v 1.6 2001/10/24 18:38:58 millert Exp $	*/
+comment|/*	$OpenBSD: v3451.c,v 1.9 2006/03/17 19:17:13 moritz Exp $	*/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*	$NetBSD: v3451.c,v 1.6 1997/02/11 09:24:20 mrg Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -31,11 +31,12 @@ end_endif
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$OpenBSD: v3451.c,v 1.6 2001/10/24 18:38:58 millert Exp $"
+literal|"$OpenBSD: v3451.c,v 1.9 2006/03/17 19:17:13 moritz Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,47 +66,80 @@ name|Sjbuf
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|expect
-argument_list|()
-decl_stmt|,
-name|notin
-argument_list|()
-decl_stmt|,
-name|prefix
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|vawrite
-argument_list|()
-decl_stmt|,
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|expect
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|alarmtr
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|notin
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|prefix
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int
 name|v3451_dialer
 parameter_list|(
+name|char
+modifier|*
 name|num
 parameter_list|,
+name|char
+modifier|*
 name|acu
 parameter_list|)
-name|char
-modifier|*
-name|num
-decl_stmt|;
-name|char
-modifier|*
-name|acu
-decl_stmt|;
 block|{
 name|sig_t
 name|func
@@ -502,7 +536,9 @@ end_function
 begin_function
 name|void
 name|v3451_disconnect
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|close
 argument_list|(
@@ -515,7 +551,9 @@ end_function
 begin_function
 name|void
 name|v3451_abort
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|close
 argument_list|(
@@ -530,17 +568,13 @@ specifier|static
 name|void
 name|vawrite
 parameter_list|(
-name|cp
-parameter_list|,
-name|delay
-parameter_list|)
 name|char
 modifier|*
 name|cp
-decl_stmt|;
+parameter_list|,
 name|int
 name|delay
-decl_stmt|;
+parameter_list|)
 block|{
 for|for
 control|(
@@ -573,12 +607,10 @@ specifier|static
 name|int
 name|expect
 parameter_list|(
-name|cp
-parameter_list|)
 name|char
 modifier|*
 name|cp
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -765,11 +797,18 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_function
 specifier|static
 name|void
 name|alarmtr
-parameter_list|()
+parameter_list|(
+name|int
+name|signo
+parameter_list|)
 block|{
 name|longjmp
 argument_list|(
@@ -786,20 +825,14 @@ specifier|static
 name|int
 name|notin
 parameter_list|(
-name|sh
-parameter_list|,
-name|lg
-parameter_list|)
 name|char
 modifier|*
 name|sh
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 name|lg
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 for|for
 control|(
@@ -830,27 +863,21 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
 name|int
 name|prefix
 parameter_list|(
-name|s1
-parameter_list|,
-name|s2
-parameter_list|)
 name|char
 modifier|*
 name|s1
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 name|s2
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|char
 name|c
@@ -888,7 +915,7 @@ literal|'\0'
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

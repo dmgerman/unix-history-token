@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: cu.c,v 1.10 2001/09/26 06:07:28 pvalchev Exp $	*/
+comment|/*	$OpenBSD: cu.c,v 1.19 2006/05/25 08:41:52 jmc Exp $	*/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*	$NetBSD: cu.c,v 1.5 1997/02/11 09:24:05 mrg Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -31,11 +31,12 @@ end_endif
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$OpenBSD: cu.c,v 1.10 2001/09/26 06:07:28 pvalchev Exp $"
+literal|"$OpenBSD: cu.c,v 1.19 2006/05/25 08:41:52 jmc Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,16 +56,12 @@ file|"tip.h"
 end_include
 
 begin_function_decl
-name|void
-name|cleanup
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|static
 name|void
 name|cuusage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -76,23 +73,21 @@ begin_function
 name|void
 name|cumain
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|argv
 index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|ch
 decl_stmt|,
 name|i
+decl_stmt|,
+name|parity
 decl_stmt|;
 name|long
 name|l
@@ -127,6 +122,11 @@ name|BR
 operator|=
 name|DEFBR
 expr_stmt|;
+name|parity
+operator|=
+literal|0
+expr_stmt|;
+comment|/* none */
 while|while
 condition|(
 operator|(
@@ -238,16 +238,6 @@ operator|||
 name|l
 operator|>=
 name|INT_MAX
-operator|||
-name|speed
-argument_list|(
-operator|(
-name|int
-operator|)
-name|l
-argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 name|fprintf
@@ -309,20 +299,45 @@ break|break;
 case|case
 literal|'o'
 case|:
-name|setparity
-argument_list|(
-literal|"odd"
-argument_list|)
+if|if
+condition|(
+name|parity
+operator|!=
+literal|0
+condition|)
+name|parity
+operator|=
+literal|0
 expr_stmt|;
+comment|/* -e -o */
+else|else
+name|parity
+operator|=
+literal|1
+expr_stmt|;
+comment|/* odd */
 break|break;
 case|case
 literal|'e'
 case|:
-name|setparity
-argument_list|(
-literal|"even"
-argument_list|)
+if|if
+condition|(
+name|parity
+operator|!=
+literal|0
+condition|)
+name|parity
+operator|=
+literal|0
 expr_stmt|;
+comment|/* -o -e */
+else|else
+name|parity
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* even */
 break|break;
 case|case
 literal|'0'
@@ -456,6 +471,13 @@ argument_list|,
 name|cleanup
 argument_list|)
 expr_stmt|;
+name|signal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
 comment|/* 	 * The "cu" host name is used to define the 	 * attributes of the generic dialer. 	 */
 operator|(
 name|void
@@ -542,11 +564,38 @@ expr_stmt|;
 name|vinit
 argument_list|()
 expr_stmt|;
+switch|switch
+condition|(
+name|parity
+condition|)
+block|{
+case|case
+operator|-
+literal|1
+case|:
+name|setparity
+argument_list|(
+literal|"even"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|setparity
+argument_list|(
+literal|"odd"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
 name|setparity
 argument_list|(
 literal|"none"
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 name|setboolean
 argument_list|(
 name|value
@@ -560,18 +609,44 @@ expr_stmt|;
 if|if
 condition|(
 name|HW
-condition|)
+operator|&&
 name|ttysetup
-argument_list|(
-name|speed
 argument_list|(
 name|BR
 argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: unsupported speed %ld\n"
+argument_list|,
+name|__progname
+argument_list|,
+name|BR
 argument_list|)
 expr_stmt|;
+name|daemon_uid
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|uu_unlock
+argument_list|(
+name|uucplock
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|3
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
-name|connect
+name|con
 argument_list|()
 condition|)
 block|{
@@ -601,29 +676,58 @@ if|if
 condition|(
 operator|!
 name|HW
-condition|)
+operator|&&
 name|ttysetup
-argument_list|(
-name|speed
 argument_list|(
 name|BR
 argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|cuusage
-parameter_list|()
+condition|)
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: cu [-ehot] [-a acu] [-l line] [-s speed] [-#] "
-literal|"[phone-number]\n"
+literal|"%s: unsupported speed %ld\n"
+argument_list|,
+name|__progname
+argument_list|,
+name|BR
+argument_list|)
+expr_stmt|;
+name|daemon_uid
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|uu_unlock
+argument_list|(
+name|uucplock
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|3
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|cuusage
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: cu [-ehot] [-a acu] [-l line] "
+literal|"[-s speed | -speed] [phone-number]\n"
 argument_list|)
 expr_stmt|;
 name|exit
