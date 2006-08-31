@@ -860,7 +860,7 @@ literal|0
 expr_stmt|;
 name|alarm
 argument_list|(
-literal|10
+name|grace_period
 argument_list|)
 expr_stmt|;
 name|init_nsm
