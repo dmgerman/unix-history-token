@@ -9930,7 +9930,7 @@ if|if
 condition|(
 name|adapter
 operator|->
-name|res_interrupt
+name|int_handler_tag
 operator|!=
 name|NULL
 condition|)
