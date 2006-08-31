@@ -123,5 +123,40 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* NetBSD pwd.h */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PASSWORD_CHGNOW
+value|-1
+end_define
+
+begin_comment
+comment|/* special day to force password 					 * change at next login */
+end_comment
+
+begin_comment
+comment|/* Need this for some LOGIN_CAP functionality NetBSD has doesn't have    the infastructure for. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|notyet
+end_define
+
+begin_comment
+comment|/* Need this for some USE_PAM functionality NetBSD has doesn't have    the infastructure for. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|notdef
+end_define
+
 end_unit
 
