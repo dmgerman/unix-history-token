@@ -38,6 +38,13 @@ name|DTV_OFFSET
 value|offsetof(struct tcb, tcb_dtv)
 end_define
 
+begin_define
+define|#
+directive|define
+name|TLS_TP_OFFSET
+value|0x7000
+end_define
+
 begin_comment
 comment|/*  * Variant I tcb. The structure layout is fixed, don't blindly  * change it.  * %r2 points to end of the structure.  */
 end_comment
@@ -68,7 +75,7 @@ asm|__asm("%r2");
 define|#
 directive|define
 name|_tcb
-value|((struct tcb *)(_tp - sizeof(struct tcb)))
+value|((struct tcb *)(_tp - TLS_TP_OFFSET - sizeof(struct tcb)))
 expr|struct
 name|tcb
 operator|*
@@ -106,7 +113,11 @@ modifier|*
 name|tcb
 parameter_list|)
 block|{
-name|_tp
+name|uint8_t
+modifier|*
+name|tp
+decl_stmt|;
+name|tp
 operator|=
 operator|(
 name|uint8_t
@@ -114,12 +125,15 @@ operator|*
 operator|)
 name|tcb
 operator|+
+name|TLS_TP_OFFSET
+operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|tcb
 argument_list|)
 expr_stmt|;
+asm|__asm __volatile("mr %0,%1" : "=r"(_tp) : "r"(tp));
 block|}
 end_function
 

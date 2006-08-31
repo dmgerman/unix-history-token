@@ -55,7 +55,8 @@ name|initial
 condition|)
 name|oldtls
 operator|=
-name|_tp
+name|_tcb_get
+argument_list|()
 expr_stmt|;
 else|else
 name|oldtls
@@ -111,6 +112,7 @@ name|tcb
 argument_list|,
 sizeof|sizeof
 argument_list|(
+expr|struct
 name|tcb
 argument_list|)
 argument_list|,
