@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: biz22.c,v 1.7 2001/10/24 18:38:58 millert Exp $	*/
+comment|/*	$OpenBSD: biz22.c,v 1.13 2006/03/17 19:17:13 moritz Exp $	*/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*	$NetBSD: biz22.c,v 1.6 1997/02/11 09:24:11 mrg Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -38,7 +38,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char sccsid[] = "@(#)biz22.c	8.1 (Berkeley) 6/6/93"; static char rcsid[] = "$OpenBSD: biz22.c,v 1.7 2001/10/24 18:38:58 millert Exp $";
+unit|static char sccsid[] = "@(#)biz22.c	8.1 (Berkeley) 6/6/93"; static const char rcsid[] = "$OpenBSD: biz22.c,v 1.13 2006/03/17 19:17:13 moritz Exp $";
 endif|#
 directive|endif
 end_endif
@@ -69,18 +69,10 @@ begin_comment
 comment|/* disconnection string */
 end_comment
 
-begin_function_decl
-specifier|static
-name|void
-name|sigALRM
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|int
-name|timeout
+name|dialtimeout
 init|=
 literal|0
 decl_stmt|;
@@ -93,21 +85,49 @@ name|timeoutbuf
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
+specifier|static
+name|int
+name|biz_dialer
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|sigALRM
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|int
 name|cmd
-argument_list|()
-decl_stmt|,
-name|detect
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
-name|void
-name|biz22_disconnect
-parameter_list|()
+specifier|static
+name|int
+name|detect
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -120,20 +140,14 @@ specifier|static
 name|int
 name|biz_dialer
 parameter_list|(
-name|num
-parameter_list|,
-name|mod
-parameter_list|)
 name|char
 modifier|*
 name|num
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 name|mod
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|connected
@@ -184,11 +198,14 @@ block|}
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|cbuf
 argument_list|,
 literal|"\02.\r"
+argument_list|,
+sizeof|sizeof
+name|cbuf
 argument_list|)
 expr_stmt|;
 name|cbuf
@@ -295,7 +312,7 @@ directive|ifdef
 name|ACULOG
 if|if
 condition|(
-name|timeout
+name|dialtimeout
 condition|)
 block|{
 name|char
@@ -307,8 +324,11 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|line
+argument_list|,
+sizeof|sizeof
 name|line
 argument_list|,
 literal|"%ld second dial timeout"
@@ -341,7 +361,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|timeout
+name|dialtimeout
 condition|)
 name|biz22_disconnect
 argument_list|()
@@ -353,26 +373,20 @@ name|connected
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|int
 name|biz22w_dialer
 parameter_list|(
-name|num
-parameter_list|,
-name|acu
-parameter_list|)
 name|char
 modifier|*
 name|num
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 name|acu
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -385,26 +399,20 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|int
 name|biz22f_dialer
 parameter_list|(
-name|num
-parameter_list|,
-name|acu
-parameter_list|)
 name|char
 modifier|*
 name|num
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 name|acu
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -417,12 +425,14 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
 name|biz22_disconnect
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|write
 argument_list|(
@@ -430,7 +440,12 @@ name|FD
 argument_list|,
 name|DISCONNECT_CMD
 argument_list|,
-literal|4
+sizeof|sizeof
+argument_list|(
+name|DISCONNECT_CMD
+argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|sleep
@@ -451,7 +466,9 @@ end_function
 begin_function
 name|void
 name|biz22_abort
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|write
 argument_list|(
@@ -465,13 +482,20 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_function
 specifier|static
 name|void
 name|sigALRM
-parameter_list|()
+parameter_list|(
+name|int
+name|signo
+parameter_list|)
 block|{
-name|timeout
+name|dialtimeout
 operator|=
 literal|1
 expr_stmt|;
@@ -490,12 +514,10 @@ specifier|static
 name|int
 name|cmd
 parameter_list|(
-name|s
-parameter_list|)
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|sig_t
 name|f
@@ -600,12 +622,10 @@ specifier|static
 name|int
 name|detect
 parameter_list|(
-name|s
-parameter_list|)
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|sig_t
 name|f
@@ -622,7 +642,7 @@ argument_list|,
 name|sigALRM
 argument_list|)
 expr_stmt|;
-name|timeout
+name|dialtimeout
 operator|=
 literal|0
 expr_stmt|;
@@ -698,7 +718,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|timeout
+name|dialtimeout
 operator|==
 literal|0
 operator|)

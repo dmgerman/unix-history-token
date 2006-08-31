@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: acutab.c,v 1.2 1996/06/26 05:40:41 deraadt Exp $	*/
+comment|/*	$OpenBSD: acutab.c,v 1.5 2006/03/17 19:17:13 moritz Exp $	*/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*	$NetBSD: acutab.c,v 1.3 1994/12/08 09:30:41 jtc Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -38,7 +38,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char sccsid[] = "@(#)acutab.c	8.1 (Berkeley) 6/6/93"; static char rcsid[] = "$OpenBSD: acutab.c,v 1.2 1996/06/26 05:40:41 deraadt Exp $";
+unit|static char sccsid[] = "@(#)acutab.c	8.1 (Berkeley) 6/6/93"; static const char rcsid[] = "$OpenBSD: acutab.c,v 1.5 2006/03/17 19:17:13 moritz Exp $";
 endif|#
 directive|endif
 end_endif
@@ -67,6 +67,7 @@ block|{
 if|#
 directive|if
 name|BIZ1031
+block|{
 literal|"biz31f"
 block|,
 name|biz31f_dialer
@@ -74,7 +75,9 @@ block|,
 name|biz31_disconnect
 block|,
 name|biz31_abort
+block|}
 block|,
+block|{
 literal|"biz31w"
 block|,
 name|biz31w_dialer
@@ -82,12 +85,14 @@ block|,
 name|biz31_disconnect
 block|,
 name|biz31_abort
+block|}
 block|,
 endif|#
 directive|endif
 if|#
 directive|if
 name|BIZ1022
+block|{
 literal|"biz22f"
 block|,
 name|biz22f_dialer
@@ -95,7 +100,9 @@ block|,
 name|biz22_disconnect
 block|,
 name|biz22_abort
+block|}
 block|,
+block|{
 literal|"biz22w"
 block|,
 name|biz22w_dialer
@@ -103,12 +110,14 @@ block|,
 name|biz22_disconnect
 block|,
 name|biz22_abort
+block|}
 block|,
 endif|#
 directive|endif
 if|#
 directive|if
 name|DF02
+block|{
 literal|"df02"
 block|,
 name|df02_dialer
@@ -116,12 +125,14 @@ block|,
 name|df_disconnect
 block|,
 name|df_abort
+block|}
 block|,
 endif|#
 directive|endif
 if|#
 directive|if
 name|DF03
+block|{
 literal|"df03"
 block|,
 name|df03_dialer
@@ -129,12 +140,14 @@ block|,
 name|df_disconnect
 block|,
 name|df_abort
+block|}
 block|,
 endif|#
 directive|endif
 if|#
 directive|if
 name|DN11
+block|{
 literal|"dn11"
 block|,
 name|dn_dialer
@@ -142,12 +155,14 @@ block|,
 name|dn_disconnect
 block|,
 name|dn_abort
+block|}
 block|,
 endif|#
 directive|endif
 ifdef|#
 directive|ifdef
 name|VENTEL
+block|{
 literal|"ventel"
 block|,
 name|ven_dialer
@@ -155,12 +170,14 @@ block|,
 name|ven_disconnect
 block|,
 name|ven_abort
+block|}
 block|,
 endif|#
 directive|endif
 ifdef|#
 directive|ifdef
 name|HAYES
+block|{
 literal|"hayes"
 block|,
 name|hay_dialer
@@ -168,12 +185,14 @@ block|,
 name|hay_disconnect
 block|,
 name|hay_abort
+block|}
 block|,
 endif|#
 directive|endif
 ifdef|#
 directive|ifdef
 name|COURIER
+block|{
 literal|"courier"
 block|,
 name|cour_dialer
@@ -181,12 +200,14 @@ block|,
 name|cour_disconnect
 block|,
 name|cour_abort
+block|}
 block|,
 endif|#
 directive|endif
 ifdef|#
 directive|ifdef
 name|T3000
+block|{
 literal|"t3000"
 block|,
 name|t3000_dialer
@@ -194,6 +215,7 @@ block|,
 name|t3000_disconnect
 block|,
 name|t3000_abort
+block|}
 block|,
 endif|#
 directive|endif
@@ -203,6 +225,7 @@ name|V3451
 ifndef|#
 directive|ifndef
 name|V831
+block|{
 literal|"vadic"
 block|,
 name|v3451_dialer
@@ -210,9 +233,11 @@ block|,
 name|v3451_disconnect
 block|,
 name|v3451_abort
+block|}
 block|,
 endif|#
 directive|endif
+block|{
 literal|"v3451"
 block|,
 name|v3451_dialer
@@ -220,6 +245,7 @@ block|,
 name|v3451_disconnect
 block|,
 name|v3451_abort
+block|}
 block|,
 endif|#
 directive|endif
@@ -229,6 +255,7 @@ name|V831
 ifndef|#
 directive|ifndef
 name|V3451
+block|{
 literal|"vadic"
 block|,
 name|v831_dialer
@@ -236,9 +263,11 @@ block|,
 name|v831_disconnect
 block|,
 name|v831_abort
+block|}
 block|,
 endif|#
 directive|endif
+block|{
 literal|"v831"
 block|,
 name|v831_dialer
@@ -246,9 +275,11 @@ block|,
 name|v831_disconnect
 block|,
 name|v831_abort
+block|}
 block|,
 endif|#
 directive|endif
+block|{
 literal|0
 block|,
 literal|0
@@ -256,6 +287,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt

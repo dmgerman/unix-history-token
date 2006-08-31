@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: tipout.c,v 1.8 2001/10/24 18:38:58 millert Exp $	*/
+comment|/*	$OpenBSD: tipout.c,v 1.18 2006/05/31 07:03:08 jason Exp $	*/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*	$NetBSD: tipout.c,v 1.5 1996/12/29 10:34:12 cgd Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -38,7 +38,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char sccsid[] = "@(#)tipout.c	8.1 (Berkeley) 6/6/93"; static char rcsid[] = "$OpenBSD: tipout.c,v 1.8 2001/10/24 18:38:58 millert Exp $";
+unit|static char sccsid[] = "@(#)tipout.c	8.1 (Berkeley) 6/6/93"; static const char rcsid[] = "$OpenBSD: tipout.c,v 1.18 2006/05/31 07:03:08 jason Exp $";
 endif|#
 directive|endif
 end_endif
@@ -69,14 +69,62 @@ name|sigbuf
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|void
+name|intIOT
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|intEMT
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|intTERM
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|intSYS
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * TIPOUT wait state routine --  *   sent by TIPIN when it wants to posses the remote host  */
 end_comment
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_function
+specifier|static
 name|void
 name|intIOT
-parameter_list|()
+parameter_list|(
+name|int
+name|signo
+parameter_list|)
 block|{
 name|write
 argument_list|(
@@ -118,10 +166,18 @@ begin_comment
 comment|/*  * Scripting command interpreter --  *  accepts script file name over the pipe and acts accordingly  */
 end_comment
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_function
+specifier|static
 name|void
 name|intEMT
-parameter_list|()
+parameter_list|(
+name|int
+name|signo
+parameter_list|)
 block|{
 name|char
 name|c
@@ -298,9 +354,13 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|intTERM
-parameter_list|()
+parameter_list|(
+name|int
+name|signo
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -321,6 +381,19 @@ argument_list|(
 name|fscript
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|signo
+operator|&&
+name|tipin_pid
+condition|)
+name|kill
+argument_list|(
+name|tipin_pid
+argument_list|,
+name|signo
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
@@ -329,10 +402,18 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_function
+specifier|static
 name|void
 name|intSYS
-parameter_list|()
+parameter_list|(
+name|int
+name|signo
+parameter_list|)
 block|{
 name|setboolean
 argument_list|(
@@ -368,7 +449,9 @@ end_comment
 begin_function
 name|void
 name|tipout
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -380,7 +463,10 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|int
+name|ssize_t
+name|scnt
+decl_stmt|;
+name|size_t
 name|cnt
 decl_stmt|;
 name|sigset_t
@@ -476,7 +562,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|cnt
+name|scnt
 operator|=
 name|read
 argument_list|(
@@ -489,7 +575,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cnt
+name|scnt
 operator|<=
 literal|0
 condition|)
@@ -497,13 +583,19 @@ block|{
 comment|/* lost carrier */
 if|if
 condition|(
-name|cnt
+name|scnt
+operator|==
+literal|0
+operator|||
+operator|(
+name|scnt
 operator|<
 literal|0
 operator|&&
 name|errno
 operator|==
 name|EIO
+operator|)
 condition|)
 block|{
 name|sigemptyset
@@ -531,12 +623,18 @@ name|NULL
 argument_list|)
 expr_stmt|;
 name|intTERM
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 block|}
 continue|continue;
 block|}
+name|cnt
+operator|=
+name|scnt
+expr_stmt|;
 name|sigemptyset
 argument_list|(
 operator|&
@@ -607,7 +705,7 @@ name|STRIP_PAR
 expr_stmt|;
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 name|buf
 argument_list|,
