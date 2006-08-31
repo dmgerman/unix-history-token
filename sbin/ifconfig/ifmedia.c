@@ -502,6 +502,9 @@ block|{
 case|case
 name|IFM_ETHER
 case|:
+case|case
+name|IFM_ATM
+case|:
 if|if
 condition|(
 name|ifmr
@@ -545,29 +548,6 @@ else|else
 name|printf
 argument_list|(
 literal|"no ring"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|IFM_ATM
-case|:
-if|if
-condition|(
-name|ifmr
-operator|.
-name|ifm_status
-operator|&
-name|IFM_ACTIVE
-condition|)
-name|printf
-argument_list|(
-literal|"active"
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"no carrier"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3110,21 +3090,17 @@ expr_stmt|;
 if|if
 condition|(
 name|desc
-operator|!=
+operator|==
 name|NULL
 condition|)
-goto|goto
-name|got_subtype
-goto|;
-comment|/* Falling to here means unknown subtype. */
+block|{
 name|printf
 argument_list|(
 literal|"<unknown subtype>"
 argument_list|)
 expr_stmt|;
 return|return;
-name|got_subtype
-label|:
+block|}
 if|if
 condition|(
 name|print_toptype
@@ -3359,21 +3335,17 @@ expr_stmt|;
 if|if
 condition|(
 name|desc
-operator|!=
+operator|==
 name|NULL
 condition|)
-goto|goto
-name|got_subtype
-goto|;
-comment|/* Falling to here means unknown subtype. */
+block|{
 name|printf
 argument_list|(
 literal|"<unknown subtype>"
 argument_list|)
 expr_stmt|;
 return|return;
-name|got_subtype
-label|:
+block|}
 name|printf
 argument_list|(
 literal|"media %s"
