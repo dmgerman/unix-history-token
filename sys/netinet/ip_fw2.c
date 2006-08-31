@@ -269,6 +269,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/pim.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/tcp.h>
 end_include
 
@@ -10415,6 +10421,21 @@ name|ulp
 argument_list|,
 expr|struct
 name|ip6_ext
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IPPROTO_PIM
+case|:
+comment|/* XXX PIM header check? */
+name|PULLUP_TO
+argument_list|(
+name|hlen
+argument_list|,
+name|ulp
+argument_list|,
+expr|struct
+name|pim
 argument_list|)
 expr_stmt|;
 break|break;
