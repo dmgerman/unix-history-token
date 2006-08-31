@@ -2548,7 +2548,7 @@ name|list
 argument_list|,
 literal|0
 argument_list|,
-literal|16
+name|TLS_TCB_SIZE
 argument_list|,
 literal|16
 argument_list|)
