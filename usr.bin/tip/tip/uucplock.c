@@ -109,6 +109,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"tip.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pathnames.h"
 end_include
 

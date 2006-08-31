@@ -638,9 +638,10 @@ decl_stmt|;
 name|sig_t
 name|f
 decl_stmt|;
-name|int
+name|size_t
 name|i
-decl_stmt|,
+decl_stmt|;
+name|int
 name|status
 init|=
 literal|0

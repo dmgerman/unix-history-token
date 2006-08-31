@@ -1012,6 +1012,9 @@ init|=
 operator|(
 name|int
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|value
 argument_list|(
 name|LINEDISC
@@ -2466,7 +2469,7 @@ name|size_t
 name|n
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|char

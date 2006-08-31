@@ -215,9 +215,14 @@ name|c
 operator|!=
 literal|'\n'
 operator|&&
+call|(
+name|size_t
+call|)
+argument_list|(
 name|pline
 operator|-
 name|line
+argument_list|)
 operator|<
 sizeof|sizeof
 argument_list|(

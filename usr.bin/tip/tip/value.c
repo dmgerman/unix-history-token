@@ -805,6 +805,9 @@ operator|(
 name|char
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|atoi
 argument_list|(
 name|cp
@@ -1623,6 +1626,9 @@ argument_list|,
 operator|(
 name|char
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|atoi
 argument_list|(

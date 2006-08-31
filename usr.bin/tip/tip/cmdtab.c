@@ -249,11 +249,13 @@ name|genbrk
 block|}
 block|,
 block|{
-literal|0
+literal|'\0'
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
+block|,
+name|NULL
 block|}
 block|}
 decl_stmt|;

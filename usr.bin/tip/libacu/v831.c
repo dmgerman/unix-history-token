@@ -687,7 +687,11 @@ literal|'1'
 block|}
 block|,
 block|{
-literal|0
+name|NULL
+block|,
+literal|'\0'
+block|,
+literal|'\0'
 block|}
 block|}
 struct|;

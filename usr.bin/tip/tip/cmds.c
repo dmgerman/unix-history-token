@@ -874,6 +874,9 @@ name|buffer
 operator|)
 operator|)
 operator|==
+operator|(
+name|size_t
+operator|)
 name|number
 argument_list|(
 name|value
@@ -885,6 +888,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|write
 argument_list|(
 name|fd
@@ -927,6 +933,9 @@ operator|)
 condition|)
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|write
 argument_list|(
 name|fd
@@ -4535,6 +4544,9 @@ name|ld
 init|=
 operator|(
 name|int
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|value
 argument_list|(
