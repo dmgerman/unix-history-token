@@ -111,6 +111,7 @@ name|tcb
 argument_list|,
 sizeof|sizeof
 argument_list|(
+expr|struct
 name|tcb
 argument_list|)
 argument_list|,
