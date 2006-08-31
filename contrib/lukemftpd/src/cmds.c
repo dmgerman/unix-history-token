@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: cmds.c,v 1.23 2004-08-09 12:56:47 lukem Exp $	*/
+comment|/*	$NetBSD: cmds.c,v 1.24 2006/02/01 14:20:12 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -30,7 +30,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: cmds.c,v 1.23 2004-08-09 12:56:47 lukem Exp $"
+literal|"$NetBSD: cmds.c,v 1.24 2006/02/01 14:20:12 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1700,7 +1700,7 @@ name|c
 operator|->
 name|options
 argument_list|,
-name|xstrdup
+name|ftpd_strdup
 argument_list|(
 name|ep
 argument_list|)
@@ -1937,7 +1937,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|xstrdup
+name|ftpd_strdup
 argument_list|(
 name|name
 argument_list|)

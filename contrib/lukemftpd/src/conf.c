@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: conf.c,v 1.52 2004-08-09 12:56:47 lukem Exp $	*/
+comment|/*	$NetBSD: conf.c,v 1.57 2006/02/01 14:20:12 christos Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997-2004 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Simon Burge and Luke Mewburn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1997-2005 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Simon Burge and Luke Mewburn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -22,7 +22,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: conf.c,v 1.52 2004-08-09 12:56:47 lukem Exp $"
+literal|"$NetBSD: conf.c,v 1.57 2006/02/01 14:20:12 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -258,7 +258,7 @@ value|027
 end_define
 
 begin_comment
-comment|/* 15 minutes */
+comment|/* rw-r----- */
 end_comment
 
 begin_comment
@@ -462,9 +462,9 @@ name|curclass
 operator|.
 name|motd
 argument_list|,
-name|xstrdup
+name|ftpd_strdup
 argument_list|(
-name|_PATH_FTPLOGINMESG
+name|_NAME_FTPLOGINMESG
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -552,6 +552,11 @@ expr_stmt|;
 name|CURCLASS_FLAGS_CLR
 argument_list|(
 name|denyquick
+argument_list|)
+expr_stmt|;
+name|CURCLASS_FLAGS_CLR
+argument_list|(
+name|hidesymlinks
 argument_list|)
 expr_stmt|;
 name|CURCLASS_FLAGS_SET
@@ -665,7 +670,7 @@ name|curclass
 operator|.
 name|classname
 argument_list|,
-name|xstrdup
+name|ftpd_strdup
 argument_list|(
 name|findclass
 argument_list|)
@@ -700,7 +705,7 @@ name|infile
 operator|=
 name|conffilename
 argument_list|(
-name|_PATH_FTPDCONF
+name|_NAME_FTPDCONF
 argument_list|)
 expr_stmt|;
 if|if
@@ -910,7 +915,7 @@ parameter_list|(
 name|Field
 parameter_list|)
 define|\
-value|do {								\ 		if (none || EMPTYSTR(arg))				\ 			arg = NULL;					\ 		else							\ 			arg = xstrdup(arg);				\ 		REASSIGN(curclass.Field, arg);				\ 	} while (0)
+value|do {								\ 		if (none || EMPTYSTR(arg))				\ 			arg = NULL;					\ 		else							\ 			arg = ftpd_strdup(arg);				\ 		REASSIGN(curclass.Field, arg);				\ 	} while (0)
 define|#
 directive|define
 name|CONF_LL
@@ -1431,7 +1436,7 @@ argument_list|)
 expr_stmt|;
 name|suffix
 operator|=
-name|xstrdup
+name|ftpd_strdup
 argument_list|(
 name|arg
 argument_list|)
@@ -1473,21 +1478,21 @@ else|else
 block|{
 name|types
 operator|=
-name|xstrdup
+name|ftpd_strdup
 argument_list|(
 name|types
 argument_list|)
 expr_stmt|;
 name|disable
 operator|=
-name|xstrdup
+name|ftpd_strdup
 argument_list|(
 name|disable
 argument_list|)
 expr_stmt|;
 name|convcmd
 operator|=
-name|xstrdup
+name|ftpd_strdup
 argument_list|(
 name|convcmd
 argument_list|)
@@ -1703,6 +1708,25 @@ name|strcasecmp
 argument_list|(
 name|word
 argument_list|,
+literal|"hidesymlinks"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|CONF_FLAG
+argument_list|(
+name|hidesymlinks
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|word
+argument_list|,
 literal|"homedir"
 argument_list|)
 operator|==
@@ -1768,7 +1792,7 @@ argument_list|)
 condition|?
 name|NULL
 else|:
-name|xstrdup
+name|ftpd_strdup
 argument_list|(
 name|p
 argument_list|)
@@ -1929,6 +1953,37 @@ expr_stmt|;
 name|CONF_LL
 argument_list|(
 name|writesize
+argument_list|,
+name|arg
+argument_list|,
+literal|0
+argument_list|,
+name|LLTMAX
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|word
+argument_list|,
+literal|"recvbufsize"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|curclass
+operator|.
+name|recvbufsize
+operator|=
+literal|0
+expr_stmt|;
+name|CONF_LL
+argument_list|(
+name|recvbufsize
 argument_list|,
 name|arg
 argument_list|,
@@ -2464,7 +2519,7 @@ argument_list|)
 condition|?
 name|NULL
 else|:
-name|xstrdup
+name|ftpd_strdup
 argument_list|(
 name|arg
 argument_list|)
@@ -2800,7 +2855,7 @@ condition|)
 return|return;
 name|cp
 operator|=
-name|xstrdup
+name|ftpd_strdup
 argument_list|(
 name|curwd
 argument_list|)
@@ -4164,7 +4219,7 @@ name|cleanup_do_conv
 goto|;
 name|cmd
 operator|=
-name|xstrdup
+name|ftpd_strdup
 argument_list|(
 name|cp
 operator|->
@@ -4208,7 +4263,7 @@ name|sl_add
 argument_list|(
 name|sl
 argument_list|,
-name|xstrdup
+name|ftpd_strdup
 argument_list|(
 name|lp
 argument_list|)

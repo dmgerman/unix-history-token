@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: pathnames.h,v 1.11 2003-08-07 09:46:40 agc Exp $	*/
+comment|/*	$NetBSD: pathnames.h,v 1.12 2004/12/11 18:37:26 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -34,35 +34,35 @@ end_endif
 begin_define
 define|#
 directive|define
-name|_PATH_FTPCHROOT
+name|_NAME_FTPCHROOT
 value|"ftpchroot"
 end_define
 
 begin_define
 define|#
 directive|define
-name|_PATH_FTPDCONF
+name|_NAME_FTPDCONF
 value|"ftpd.conf"
 end_define
 
 begin_define
 define|#
 directive|define
-name|_PATH_FTPLOGINMESG
+name|_NAME_FTPLOGINMESG
 value|"motd"
 end_define
 
 begin_define
 define|#
 directive|define
-name|_PATH_FTPUSERS
+name|_NAME_FTPUSERS
 value|"ftpusers"
 end_define
 
 begin_define
 define|#
 directive|define
-name|_PATH_FTPWELCOME
+name|_NAME_FTPWELCOME
 value|"ftpwelcome"
 end_define
 

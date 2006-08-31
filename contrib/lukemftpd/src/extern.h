@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: extern.h,v 1.50 2004-08-09 12:56:47 lukem Exp $	*/
+comment|/*	$NetBSD: extern.h,v 1.55 2006/02/01 14:20:12 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of Cali
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997-2004 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Luke Mewburn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1997-2005 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Luke Mewburn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -831,7 +831,7 @@ end_function_decl
 begin_function_decl
 name|char
 modifier|*
-name|xstrdup
+name|ftpd_strdup
 parameter_list|(
 specifier|const
 name|char
@@ -864,6 +864,15 @@ end_struct_decl
 
 begin_function_decl
 name|void
+name|ftpd_initwtmp
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ftpd_logwtmp
 parameter_list|(
 specifier|const
@@ -889,7 +898,6 @@ specifier|const
 name|struct
 name|utmp
 modifier|*
-name|ut
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -901,7 +909,6 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|line
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -923,14 +930,17 @@ name|utmpx
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|sockinet
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
-name|ftpd_loginx
+name|ftpd_initwtmpx
 parameter_list|(
-specifier|const
-name|struct
-name|utmpx
-modifier|*
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -947,6 +957,37 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|struct
+name|sockinet
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ftpd_loginx
+parameter_list|(
+specifier|const
+name|struct
+name|utmpx
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ftpd_logoutx
+parameter_list|(
 specifier|const
 name|char
 modifier|*
@@ -1205,39 +1246,46 @@ operator|<<
 literal|1
 block|,
 comment|/* Check ftpusers(5) before PASS */
-name|FLAG_modify
+name|FLAG_hidesymlinks
 init|=
 literal|1
 operator|<<
 literal|2
+block|,
+comment|/* For symbolic links, list the file 					   or directory the link references 					   rather than the link itself */
+name|FLAG_modify
+init|=
+literal|1
+operator|<<
+literal|3
 block|,
 comment|/* Allow CHMOD, DELE, MKD, RMD, RNFR, 					   UMASK */
 name|FLAG_passive
 init|=
 literal|1
 operator|<<
-literal|3
+literal|4
 block|,
 comment|/* Allow PASV mode */
 name|FLAG_private
 init|=
 literal|1
 operator|<<
-literal|4
+literal|5
 block|,
 comment|/* Don't publish class info in STAT */
 name|FLAG_sanenames
 init|=
 literal|1
 operator|<<
-literal|5
+literal|6
 block|,
 comment|/* Restrict names of uploaded files */
 name|FLAG_upload
 init|=
 literal|1
 operator|<<
-literal|6
+literal|7
 block|,
 comment|/* As per modify, but also allow 					   APPE, STOR, STOU */
 block|}
@@ -1390,6 +1438,10 @@ name|writesize
 decl_stmt|;
 comment|/* data write size */
 name|LLT
+name|recvbufsize
+decl_stmt|;
+comment|/* SO_RCVBUF size */
+name|LLT
 name|sendbufsize
 decl_stmt|;
 comment|/* SO_SNDBUF size */
@@ -1505,7 +1557,7 @@ end_decl_stmt
 begin_decl_stmt
 name|GLOBAL
 name|int
-name|debug
+name|ftpd_debug
 decl_stmt|;
 end_decl_stmt
 
