@@ -7239,7 +7239,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ********************************************************************** **  **  start background rebulid ** ********************************************************************** */
+comment|/* ********************************************************************** **  **  start background rebuild ** ********************************************************************** */
 end_comment
 
 begin_function
@@ -7290,7 +7290,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ********************************************************************** **  **  start background rebulid ** ********************************************************************** */
+comment|/* ********************************************************************** **  **  start background rebuild ** ********************************************************************** */
 end_comment
 
 begin_function
@@ -7393,7 +7393,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"arcmsr_HwInitialize: wait 'start adapter background rebulid' timeout................. \n"
+literal|"arcmsr_HwInitialize: wait 'start adapter background rebuild' timeout................. \n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -9425,7 +9425,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"arcmsr_pcidev_disattach: wait 'stop adapter rebulid' timeout.... \n"
+literal|"arcmsr_pcidev_disattach: wait 'stop adapter rebuild' timeout.... \n"
 argument_list|)
 expr_stmt|;
 block|}
