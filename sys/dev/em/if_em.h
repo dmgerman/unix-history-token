@@ -485,16 +485,11 @@ name|XSUM_CONTEXT_T
 typedef|;
 end_typedef
 
-begin_decl_stmt
-name|struct
+begin_struct_decl
+struct_decl|struct
 name|adapter
-name|adapter
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX: ugly forward declaration */
-end_comment
+struct_decl|;
+end_struct_decl
 
 begin_struct
 struct|struct
@@ -505,7 +500,7 @@ name|adapter
 modifier|*
 name|adapter
 decl_stmt|;
-comment|/* XXX: ugly pointer */
+comment|/* Back-pointer to the adapter struct */
 name|int
 name|offset
 decl_stmt|;
