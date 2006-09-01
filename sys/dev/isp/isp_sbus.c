@@ -464,24 +464,6 @@ else|#
 directive|else
 end_else
 
-begin_typedef
-typedef|typedef
-name|void
-name|ispfwfunc
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|uint16_t
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_typedef
-
 begin_decl_stmt
 specifier|extern
 name|ispfwfunc
