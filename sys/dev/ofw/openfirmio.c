@@ -677,7 +677,7 @@ break|break;
 case|case
 name|OFIOCSET
 case|:
-comment|/* 		 * Note: Text string values for at least the /options node 		 * have to be null-terminated and the length paramter must 		 * include this terminating null. However, like OF_getprop(), 		 * OF_setprop() will return the the actual length of the text 		 * string, i.e. omitting the terminating null. 		 */
+comment|/* 		 * Note: Text string values for at least the /options node 		 * have to be null-terminated and the length parameter must 		 * include this terminating null. However, like OF_getprop(), 		 * OF_setprop() will return the actual length of the text 		 * string, i.e. omitting the terminating null. 		 */
 if|if
 condition|(
 operator|(
