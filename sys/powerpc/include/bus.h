@@ -155,17 +155,39 @@ begin_comment
 comment|/*  *	int bus_space_map(bus_space_tag_t t, bus_addr_t addr,  *	    bus_size_t size, int flags, bus_space_handle_t *bshp));  *  * Map a region of bus space.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|bus_space_map(t, addr, size, flags, bshp) ! not implemented !
-endif|#
-directive|endif
-end_endif
+begin_function
+specifier|static
+name|__inline
+name|int
+name|bus_space_map
+parameter_list|(
+name|bus_space_tag_t
+name|t
+name|__unused
+parameter_list|,
+name|bus_addr_t
+name|addr
+parameter_list|,
+name|bus_size_t
+name|size
+name|__unused
+parameter_list|,
+name|int
+name|flags
+name|__unused
+parameter_list|,
+name|bus_space_handle_t
+modifier|*
+name|bshp
+parameter_list|)
+block|{
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  *	int bus_space_unmap(bus_space_tag_t t,  *	    bus_space_handle_t bsh, bus_size_t size));  *  * Unmap a region of bus space.  */
