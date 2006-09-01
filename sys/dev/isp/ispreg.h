@@ -1029,12 +1029,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BIU2100_PCI64
+name|BIU2100_NVRAM_OFFSET
+value|(1<< 14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIU2100_FLASH_UPPER_64K
 value|0x04
 end_define
 
 begin_comment
-comment|/*  R: 64 Bit PCI slot */
+comment|/* RW: Upper 64K Bank Select */
 end_comment
 
 begin_define
@@ -1431,6 +1438,17 @@ directive|define
 name|BIU_NVRAM_DATAIN
 value|0x0008
 end_define
+
+begin_define
+define|#
+directive|define
+name|BIU_NVRAM_BUSY
+value|0x0080
+end_define
+
+begin_comment
+comment|/* 2322/24xx only */
+end_comment
 
 begin_define
 define|#
@@ -5895,7 +5913,7 @@ name|ISP2100_NVRAM_OPTIONS
 parameter_list|(
 name|c
 parameter_list|)
-value|(c)[8]
+value|((c)[8] | ((c)[9]<< 8))
 end_define
 
 begin_define
@@ -5965,13 +5983,23 @@ name|ISP2100_NVRAM_HARDLOOPID
 parameter_list|(
 name|c
 parameter_list|)
-value|(c)[26]
+value|((c)[26] | ((c)[27]<< 8))
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISP2200_NVRAM_NODE_NAME
+name|ISP2100_NVRAM_TOV
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)[29])
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2100_NVRAM_NODE_NAME
 parameter_list|(
 name|c
 parameter_list|)
@@ -5981,11 +6009,61 @@ end_define
 begin_define
 define|#
 directive|define
+name|ISP2100_XFW_OPTIONS
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)[38] | ((c)[39]<< 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2100_RACC_TIMER
+parameter_list|(
+name|c
+parameter_list|)
+value|(c)[40]
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2100_IDELAY_TIMER
+parameter_list|(
+name|c
+parameter_list|)
+value|(c)[41]
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2100_ZFW_OPTIONS
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)[42] | ((c)[43]<< 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2100_SERIAL_LINK
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)[68] | ((c)[69]<< 8))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ISP2100_NVRAM_HBA_OPTIONS
 parameter_list|(
 name|c
 parameter_list|)
-value|(c)[70]
+value|((c)[70] | ((c)[71]<< 8))
 end_define
 
 begin_define
@@ -6071,11 +6149,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|ISP2200_HBA_FEATURES
+name|ISP2100_RESET_DELAY
 parameter_list|(
 name|c
 parameter_list|)
-value|(c)[232] | ((c)[233]<< 8)
+value|(c)[81]
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2100_HBA_FEATURES
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)[232] | ((c)[233]<< 8))
 end_define
 
 begin_comment

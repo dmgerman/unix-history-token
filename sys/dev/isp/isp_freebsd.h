@@ -364,6 +364,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|700000
+end_if
+
 begin_typedef
 typedef|typedef
 name|void
@@ -381,6 +389,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -621,6 +634,11 @@ directive|if
 name|__FreeBSD_version
 operator|>=
 literal|500000
+name|struct
+name|firmware
+modifier|*
+name|fw
+decl_stmt|;
 name|struct
 name|mtx
 name|lock

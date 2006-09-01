@@ -561,6 +561,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TASK_FLAGS_RESERVED_MASK
+value|(0xe700)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TASK_FLAGS_CLEAR_ACA
 value|(1<<14)
 end_define
@@ -834,15 +841,14 @@ name|uint32_t
 name|na_reserved
 decl_stmt|;
 name|uint8_t
-name|na_lun
+name|na_reserved1
 decl_stmt|;
-comment|/* lun */
 name|uint8_t
 name|na_iid
 decl_stmt|;
-comment|/* initiator */
+comment|/* initiator loop id */
 name|uint16_t
-name|na_scclun
+name|na_response
 decl_stmt|;
 name|uint16_t
 name|na_flags
@@ -884,10 +890,11 @@ decl_stmt|;
 name|uint16_t
 name|na_iid
 decl_stmt|;
-comment|/* initiator */
+comment|/* initiator loop id */
 name|uint16_t
-name|na_scclun
+name|na_response
 decl_stmt|;
+comment|/* response code */
 name|uint16_t
 name|na_flags
 decl_stmt|;
@@ -935,6 +942,17 @@ end_define
 
 begin_comment
 comment|/* Clear LIP Reset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NAFC_TVALID
+value|0x10
+end_define
+
+begin_comment
+comment|/* task mangement response code is valid */
 end_comment
 
 begin_comment
