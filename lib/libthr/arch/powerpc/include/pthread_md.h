@@ -41,7 +41,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|TLS_TP_OFFSET
+name|TP_OFFSET
 value|0x7008
 end_define
 
@@ -122,7 +122,7 @@ operator|*
 operator|)
 name|tcb
 operator|+
-name|TLS_TP_OFFSET
+name|TP_OFFSET
 operator|)
 block|)
 function|;
@@ -158,7 +158,7 @@ operator|)
 operator|(
 name|_tp
 operator|-
-name|TLS_TP_OFFSET
+name|TP_OFFSET
 operator|)
 operator|)
 return|;
