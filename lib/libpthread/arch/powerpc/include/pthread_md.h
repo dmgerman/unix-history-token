@@ -195,6 +195,12 @@ decl_stmt|;
 name|long
 name|tcb_isfake
 decl_stmt|;
+name|long
+name|tcb_spare
+index|[
+literal|3
+index|]
+decl_stmt|;
 name|struct
 name|ppc32_tp
 name|tcb_tp
