@@ -42,7 +42,7 @@ begin_define
 define|#
 directive|define
 name|TLS_TP_OFFSET
-value|0x7000
+value|0x7008
 end_define
 
 begin_comment
@@ -66,29 +66,20 @@ block|}
 struct|;
 end_struct
 
-begin_expr_stmt
-specifier|register
-name|uint8_t
-operator|*
-name|_tp
-asm|__asm("%r2");
-define|#
-directive|define
-name|_tcb
-value|((struct tcb *)(_tp - TLS_TP_OFFSET - sizeof(struct tcb)))
-expr|struct
+begin_function_decl
+name|struct
 name|tcb
-operator|*
+modifier|*
 name|_tcb_ctor
-argument_list|(
-expr|struct
+parameter_list|(
+name|struct
 name|pthread
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 name|int
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -113,12 +104,18 @@ modifier|*
 name|tcb
 parameter_list|)
 block|{
+specifier|register
 name|uint8_t
 modifier|*
-name|tp
+name|_tp
+name|__asm__
+argument_list|(
+literal|"%r2"
+argument_list|)
 decl_stmt|;
-name|tp
-operator|=
+asm|__asm __volatile("mr %0,%1" : "=r"(_tp) :
+literal|"r"
+operator|(
 operator|(
 name|uint8_t
 operator|*
@@ -126,35 +123,47 @@ operator|)
 name|tcb
 operator|+
 name|TLS_TP_OFFSET
-operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|tcb
-argument_list|)
-expr_stmt|;
-asm|__asm __volatile("mr %0,%1" : "=r"(_tp) : "r"(tp));
-block|}
+operator|)
+block|)
+function|;
 end_function
 
-begin_expr_stmt
-specifier|static
+begin_function
+unit|}  static
 name|__inline
+name|struct
+name|tcb
+modifier|*
+name|_tcb_get
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+specifier|register
+name|uint8_t
+modifier|*
+name|_tp
+name|__asm__
+argument_list|(
+literal|"%r2"
+argument_list|)
+decl_stmt|;
+return|return
+operator|(
+operator|(
 expr|struct
 name|tcb
 operator|*
-name|_tcb_get
-argument_list|(
-argument|void
-argument_list|)
-block|{
-return|return
+operator|)
 operator|(
-name|_tcb
+name|_tp
+operator|-
+name|TLS_TP_OFFSET
+operator|)
 operator|)
 return|;
 block|}
-end_expr_stmt
+end_function
 
 begin_decl_stmt
 specifier|extern
@@ -182,7 +191,8 @@ name|_thr_initial
 condition|)
 return|return
 operator|(
-name|_tcb
+name|_tcb_get
+argument_list|()
 operator|->
 name|tcb_thread
 operator|)
