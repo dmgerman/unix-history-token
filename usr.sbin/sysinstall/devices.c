@@ -554,7 +554,14 @@ name|NETWORK
 argument_list|(
 literal|"gem"
 argument_list|,
-literal|"Apple/Sun GMAC ethernet adapter"
+literal|"Apple GMAC or Sun ERI/GEM ethernet adapter"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
+literal|"hme"
+argument_list|,
+literal|"Sun HME (Happy Meal Ethernet) ethernet adapter"
 argument_list|)
 block|,
 name|NETWORK
@@ -582,14 +589,7 @@ name|NETWORK
 argument_list|(
 literal|"le"
 argument_list|,
-literal|"DEC EtherWorks 2 or 3 ethernet card"
-argument_list|)
-block|,
-name|NETWORK
-argument_list|(
-literal|"lnc"
-argument_list|,
-literal|"Lance/PCnet (Isolan/Novell NE2100/NE32-VL) ethernet"
+literal|"AMD Am7900 LANCE or Am79C9xx PCnet ethernet adapter"
 argument_list|)
 block|,
 name|NETWORK
