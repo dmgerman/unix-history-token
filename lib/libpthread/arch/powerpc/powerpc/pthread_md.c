@@ -73,9 +73,8 @@ operator|(
 name|initial
 operator|)
 condition|?
-name|_tp
-operator|-
-name|TP_OFFSET
+name|ppc_get_tp
+argument_list|()
 else|:
 name|NULL
 argument_list|,
