@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2003 Marcel Moolenaar  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2003-2006 Marcel Moolenaar  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -44,7 +44,7 @@ begin_define
 define|#
 directive|define
 name|DTV_OFFSET
-value|offsetof(struct tcb, tcb_tp.tp_tdv)
+value|offsetof(struct tcb, tcb_tp.tp_dtv)
 end_define
 
 begin_define
@@ -97,16 +97,6 @@ name|tcb
 struct_decl|;
 end_struct_decl
 
-begin_struct_decl
-struct_decl|struct
-name|tdv
-struct_decl|;
-end_struct_decl
-
-begin_comment
-comment|/* We don't know what this is yet? */
-end_comment
-
 begin_comment
 comment|/*  * tp points to one of these. We define the static TLS as an array  * of long double to enforce 16-byte alignment of the TLS memory,  * struct ia64_tp, struct tcb and also struct kcb. Both static and  * dynamic allocation of any of these structures will result in a  * valid, well-aligned thread pointer.  */
 end_comment
@@ -115,12 +105,11 @@ begin_struct
 struct|struct
 name|ia64_tp
 block|{
-name|struct
-name|tdv
+name|void
 modifier|*
-name|tp_tdv
+name|tp_dtv
 decl_stmt|;
-comment|/* dynamic TLS */
+comment|/* dynamic thread vector. */
 name|uint64_t
 name|_reserved_
 decl_stmt|;
@@ -174,8 +163,9 @@ name|kse_mailbox
 name|kcb_kmbx
 decl_stmt|;
 name|struct
-name|tcb
-name|kcb_faketcb
+name|kse
+modifier|*
+name|kcb_kse
 decl_stmt|;
 name|struct
 name|tcb
@@ -183,9 +173,8 @@ modifier|*
 name|kcb_curtcb
 decl_stmt|;
 name|struct
-name|kse
-modifier|*
-name|kcb_kse
+name|tcb
+name|kcb_faketcb
 decl_stmt|;
 block|}
 struct|;
@@ -197,7 +186,14 @@ expr|struct
 name|ia64_tp
 operator|*
 name|_tp
-asm|__asm("%r13");
+asm|__asm("r13");
+define|#
+directive|define
+name|IA64_SET_TP
+parameter_list|(
+name|x
+parameter_list|)
+value|__asm __volatile("mov r13 = %0;;" :: "r"(x))
 define|#
 directive|define
 name|_tcb
@@ -270,14 +266,15 @@ name|kcb
 parameter_list|)
 block|{
 comment|/* There is no thread yet; use the fake tcb. */
-name|_tp
-operator|=
+name|IA64_SET_TP
+argument_list|(
 operator|&
 name|kcb
 operator|->
 name|kcb_faketcb
 operator|.
 name|tcb_tp
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -559,12 +556,13 @@ name|tcb_curkcb
 operator|=
 name|kcb
 expr_stmt|;
-name|_tp
-operator|=
+name|IA64_SET_TP
+argument_list|(
 operator|&
 name|tcb
 operator|->
 name|tcb_tp
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -742,14 +740,15 @@ name|kcb
 operator|->
 name|kcb_faketcb
 expr_stmt|;
-name|_tp
-operator|=
+name|IA64_SET_TP
+argument_list|(
 operator|&
 name|kcb
 operator|->
 name|kcb_faketcb
 operator|.
 name|tcb_tp
+argument_list|)
 expr_stmt|;
 name|_ia64_enter_uts
 argument_list|(

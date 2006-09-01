@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 2004 by Peter Grehan. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright 2004 by Peter Grehan.  * Copyright 2006 Marcel Moolenaar  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -94,7 +94,7 @@ begin_define
 define|#
 directive|define
 name|DTV_OFFSET
-value|offsetof(struct tcb, tcb_tp.tp_tdv)
+value|offsetof(struct tcb, tcb_tp.tp_dtv)
 end_define
 
 begin_define
@@ -147,12 +147,6 @@ name|tcb
 struct_decl|;
 end_struct_decl
 
-begin_struct_decl
-struct_decl|struct
-name|tdv
-struct_decl|;
-end_struct_decl
-
 begin_comment
 comment|/*  * %r2 points to a struct kcb.  */
 end_comment
@@ -161,16 +155,14 @@ begin_struct
 struct|struct
 name|ppc32_tp
 block|{
-name|struct
-name|tdv
+name|void
 modifier|*
-name|tp_tdv
+name|tp_dtv
 decl_stmt|;
-comment|/* dynamic TLS */
+comment|/* dynamic thread vector */
 name|uint32_t
 name|_reserved_
 decl_stmt|;
-name|long
 name|double
 name|tp_tls
 index|[
@@ -220,8 +212,9 @@ name|kse_mailbox
 name|kcb_kmbx
 decl_stmt|;
 name|struct
-name|tcb
-name|kcb_faketcb
+name|kse
+modifier|*
+name|kcb_kse
 decl_stmt|;
 name|struct
 name|tcb
@@ -229,9 +222,8 @@ modifier|*
 name|kcb_curtcb
 decl_stmt|;
 name|struct
-name|kse
-modifier|*
-name|kcb_kse
+name|tcb
+name|kcb_faketcb
 decl_stmt|;
 block|}
 struct|;
@@ -248,30 +240,54 @@ name|TP_OFFSET
 value|0x7008
 end_define
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|register
 name|uint8_t
-operator|*
-name|_tpr
-asm|__asm("%r2");
+modifier|*
+name|_tp
+name|__asm__
+argument_list|(
+literal|"%r2"
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|PPC_SET_TP
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|__asm __volatile("mr %0,%1" : "=r"(_tp) : "r"((char*)(x) + TP_OFFSET))
+end_define
+
+begin_define
 define|#
 directive|define
 name|_tcb
-value|((struct tcb *)(_tpr - TP_OFFSET - offsetof(struct tcb, tcb_tp)))
+value|((struct tcb *)(_tp - TP_OFFSET - offsetof(struct tcb, tcb_tp)))
+end_define
+
+begin_comment
 comment|/*  * The kcb and tcb constructors.  */
-expr|struct
+end_comment
+
+begin_function_decl
+name|struct
 name|tcb
-operator|*
+modifier|*
 name|_tcb_ctor
-argument_list|(
-expr|struct
+parameter_list|(
+name|struct
 name|pthread
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 name|int
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -326,20 +342,15 @@ name|kcb
 parameter_list|)
 block|{
 comment|/* There is no thread yet; use the fake tcb. */
-name|_tpr
-operator|=
-operator|(
-name|uint8_t
-operator|*
-operator|)
+name|PPC_SET_TP
+argument_list|(
 operator|&
 name|kcb
 operator|->
 name|kcb_faketcb
 operator|.
 name|tcb_tp
-operator|+
-name|TP_OFFSET
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -621,18 +632,13 @@ name|tcb_curkcb
 operator|=
 name|kcb
 expr_stmt|;
-name|_tpr
-operator|=
-operator|(
-name|uint8_t
-operator|*
-operator|)
+name|PPC_SET_TP
+argument_list|(
 operator|&
 name|tcb
 operator|->
 name|tcb_tp
-operator|+
-name|TP_OFFSET
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -748,20 +754,15 @@ name|kcb
 operator|->
 name|kcb_faketcb
 expr_stmt|;
-name|_tpr
-operator|=
-operator|(
-name|uint8_t
-operator|*
-operator|)
+name|PPC_SET_TP
+argument_list|(
 operator|&
 name|kcb
 operator|->
 name|kcb_faketcb
 operator|.
 name|tcb_tp
-operator|+
-name|TP_OFFSET
+argument_list|)
 expr_stmt|;
 name|_ppc32_enter_uts
 argument_list|(
