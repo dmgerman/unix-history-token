@@ -1250,6 +1250,8 @@ operator|(
 name|register_t
 operator|)
 name|tls_base
+operator|+
+literal|0x7008
 expr_stmt|;
 return|return
 operator|(
