@@ -9070,7 +9070,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  *  Determine hardware revision.  *  **********************************************************************/
+comment|/********************************************************************  *  *  Determine hardware revision.  *  **********************************************************************/
 end_comment
 
 begin_function
@@ -10667,7 +10667,7 @@ name|fiber_type
 init|=
 name|IFM_1000_SX
 decl_stmt|;
-comment|// default type;
+comment|/* default type; */
 if|if
 condition|(
 name|adapter
