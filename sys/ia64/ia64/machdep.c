@@ -1474,8 +1474,8 @@ name|old
 operator|->
 name|td_pcb
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|COMPAT_IA32
 name|ia32_savectx
 argument_list|(
@@ -1536,8 +1536,8 @@ argument_list|,
 name|new
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|COMPAT_IA32
 name|ia32_restorectx
 argument_list|(
@@ -1626,8 +1626,8 @@ argument_list|,
 name|new
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|COMPAT_IA32
 name|ia32_restorectx
 argument_list|(
