@@ -2546,7 +2546,7 @@ name|allocate_tls
 argument_list|(
 name|list
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 name|TLS_TCB_SIZE
 argument_list|,
