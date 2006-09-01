@@ -4264,7 +4264,6 @@ name|token_t
 modifier|*
 name|au_to_exec_args
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 modifier|*
@@ -4448,7 +4447,6 @@ name|token_t
 modifier|*
 name|au_to_exec_env
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 modifier|*
