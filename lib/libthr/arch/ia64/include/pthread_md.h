@@ -49,27 +49,24 @@ block|}
 struct|;
 end_struct
 
-begin_expr_stmt
-specifier|register
-expr|struct
-name|tcb
-operator|*
-name|_tp
-asm|__asm("%r13");
+begin_comment
 comment|/*  * The tcb constructors.  */
-expr|struct
+end_comment
+
+begin_function_decl
+name|struct
 name|tcb
-operator|*
+modifier|*
 name|_tcb_ctor
-argument_list|(
-expr|struct
+parameter_list|(
+name|struct
 name|pthread
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 name|int
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -98,7 +95,13 @@ modifier|*
 name|tcb
 parameter_list|)
 block|{
-asm|__asm __volatile("mov r13 = %0;;" :: "r"(tcb));
+specifier|register
+expr|struct
+name|tcb
+operator|*
+name|tp
+asm|__asm("%r13");
+asm|__asm __volatile("mov %0 = %1;;" : "=r"(tp) : "r"(tcb));
 block|}
 end_function
 
@@ -113,9 +116,15 @@ argument_list|(
 argument|void
 argument_list|)
 block|{
+specifier|register
+expr|struct
+name|tcb
+operator|*
+name|tp
+asm|__asm("%r13");
 return|return
 operator|(
-name|_tp
+name|tp
 operator|)
 return|;
 block|}
@@ -147,7 +156,8 @@ name|_thr_initial
 condition|)
 return|return
 operator|(
-name|_tp
+name|_tcb_get
+argument_list|()
 operator|->
 name|tcb_thread
 operator|)

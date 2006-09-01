@@ -53,7 +53,8 @@ operator|(
 name|initial
 operator|)
 condition|?
-name|_tp
+name|_tcb_get
+argument_list|()
 else|:
 name|NULL
 argument_list|,
