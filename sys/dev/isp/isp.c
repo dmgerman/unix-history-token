@@ -2787,7 +2787,7 @@ index|[
 literal|4
 index|]
 operator|&
-literal|0xff
+literal|0x3f
 argument_list|)
 operator|)
 operator|<<
@@ -2812,7 +2812,7 @@ name|ptr
 index|[
 literal|3
 index|]
-operator|+
+operator|-
 literal|1
 expr_stmt|;
 name|isp
@@ -2953,7 +2953,7 @@ index|[
 literal|4
 index|]
 operator|&
-literal|0xff
+literal|0x3f
 argument_list|)
 operator|)
 operator|<<
