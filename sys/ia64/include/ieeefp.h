@@ -87,25 +87,19 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
-name|FP_RZ
+name|FP_RN
 init|=
 literal|0
 block|,
-comment|/* round to zero (truncate) */
+comment|/* round to nearest */
 name|FP_RM
-init|=
-literal|1
 block|,
-comment|/* round toward negative infinity */
-name|FP_RN
-init|=
-literal|2
-block|,
-comment|/* round to nearest representable number */
+comment|/* round toward minus infinity */
 name|FP_RP
-init|=
-literal|3
-comment|/* round toward positive infinity */
+block|,
+comment|/* round toward plus infinity */
+name|FP_RZ
+comment|/* round toward zero */
 block|}
 name|fp_rnd_t
 typedef|;
@@ -117,7 +111,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _MACHINE_IEEEFP_H_ */
+comment|/* !_MACHINE_IEEEFP_H_ */
 end_comment
 
 end_unit
