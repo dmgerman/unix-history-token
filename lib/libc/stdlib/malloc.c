@@ -698,12 +698,6 @@ directive|define
 name|USE_BRK
 end_define
 
-begin_define
-define|#
-directive|define
-name|NO_TLS
-end_define
-
 begin_endif
 endif|#
 directive|endif
