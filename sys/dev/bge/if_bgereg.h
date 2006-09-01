@@ -10163,7 +10163,7 @@ value|do {								\ 		pci_write_config(sc->bge_dev, BGE_PCI_MEMWIN_BASEADDR,	\ 	
 end_define
 
 begin_comment
-comment|/*  * This magic number is used to prevent PXE restart when we  * issue a software reset. We write this magic number to the  * firmware mailbox at 0xB50 in order to prevent the PXE boot  * code from running.  */
+comment|/*  * This magic number is written to the firmware mailbox at 0xb50  * before a software reset is issued.  After the internal firmware  * has completed its initialization it will write the opposite of   * this value, ~BGE_MAGIC_NUMBER, to the same location, allowing the  * driver to synchronize with the firmware.  */
 end_comment
 
 begin_define
