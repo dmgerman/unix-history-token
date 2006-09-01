@@ -6004,6 +6004,11 @@ argument_list|(
 literal|"em_media_status: begin"
 argument_list|)
 expr_stmt|;
+name|EM_LOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
 name|em_check_for_link
 argument_list|(
 operator|&
@@ -6036,7 +6041,14 @@ name|adapter
 operator|->
 name|link_active
 condition|)
+block|{
+name|EM_UNLOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|ifmr
 operator|->
 name|ifm_status
@@ -6156,6 +6168,11 @@ operator||=
 name|IFM_HDX
 expr_stmt|;
 block|}
+name|EM_UNLOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -6214,6 +6231,11 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|EM_LOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|IFM_SUBTYPE
@@ -6388,7 +6410,12 @@ name|phy_reset_disable
 operator|=
 name|FALSE
 expr_stmt|;
-name|em_init
+name|em_init_locked
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+name|EM_UNLOCK
 argument_list|(
 name|adapter
 argument_list|)
