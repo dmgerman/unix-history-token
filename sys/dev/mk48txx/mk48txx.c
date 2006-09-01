@@ -612,7 +612,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"watchdog registered, timeout intervall max. 128 sec\n"
+literal|"watchdog registered, timeout interval max. 128 sec\n"
 argument_list|)
 expr_stmt|;
 block|}
