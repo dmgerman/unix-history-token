@@ -9082,6 +9082,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
 operator|(
 name|adapter
 operator|->
@@ -9091,8 +9093,6 @@ name|pci_cmd_word
 operator|&
 name|PCIM_CMD_BUSMASTEREN
 operator|)
-operator|==
-literal|0
 operator|&&
 operator|(
 name|adapter
@@ -9102,6 +9102,7 @@ operator|.
 name|pci_cmd_word
 operator|&
 name|PCIM_CMD_MEMEN
+operator|)
 operator|)
 condition|)
 block|{
