@@ -182,6 +182,20 @@ name|audit_fail_stop
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|audit_argv
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|audit_arge
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Success/failure conditions for the conversion of a kernel audit record to  * BSM format.  */
 end_comment
@@ -597,6 +611,20 @@ decl_stmt|;
 name|union
 name|auditon_udata
 name|ar_arg_auditon
+decl_stmt|;
+name|char
+modifier|*
+name|ar_arg_argv
+decl_stmt|;
+name|int
+name|ar_arg_argc
+decl_stmt|;
+name|char
+modifier|*
+name|ar_arg_envv
+decl_stmt|;
+name|int
+name|ar_arg_envc
 decl_stmt|;
 name|int
 name|ar_arg_exitstatus
