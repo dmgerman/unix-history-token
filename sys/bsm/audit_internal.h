@@ -112,7 +112,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * We could determined the header and trailer sizes by defining appropriate  * structures.  We hold off that approach until we have a consistant way of  * using structures for all tokens.  This is not straightforward since these  * token structures may contain pointers of whose contents we dont know the  * size (e.g text tokens).  */
+comment|/*  * We could determined the header and trailer sizes by defining appropriate  * structures.  We hold off that approach until we have a consistent way of  * using structures for all tokens.  This is not straightforward since these  * token structures may contain pointers of whose contents we do not know the  * size (e.g text tokens).  */
 end_comment
 
 begin_define
