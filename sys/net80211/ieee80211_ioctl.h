@@ -38,7 +38,7 @@ file|<net80211/ieee80211_crypto.h>
 end_include
 
 begin_comment
-comment|/*  * Per/node (station) statistics available when operating as an AP.  */
+comment|/*  * Per/node (station) statistics.  */
 end_comment
 
 begin_struct
@@ -911,9 +911,10 @@ name|u_int8_t
 name|isi_authmode
 decl_stmt|;
 comment|/* authentication algorithm */
-name|u_int8_t
+name|int8_t
 name|isi_rssi
 decl_stmt|;
+comment|/* receive signal strength */
 name|u_int8_t
 name|isi_capinfo
 decl_stmt|;
@@ -942,6 +943,10 @@ name|u_int8_t
 name|isi_txrate
 decl_stmt|;
 comment|/* index to isi_rates[] */
+name|int8_t
+name|isi_noise
+decl_stmt|;
+comment|/* noise floor */
 name|u_int16_t
 name|isi_ie_len
 decl_stmt|;
@@ -1634,15 +1639,8 @@ begin_comment
 comment|/* per-station tx power limit */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IEEE80211_IOC_STA_INFO
-value|45
-end_define
-
 begin_comment
-comment|/* station/neighbor info */
+comment|/* 45 was IEEE80211_IOC_STA_INFO */
 end_comment
 
 begin_define
@@ -1808,6 +1806,17 @@ end_define
 
 begin_comment
 comment|/* beacon miss threshold */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_STA_INFO
+value|78
+end_define
+
+begin_comment
+comment|/* station/neighbor info */
 end_comment
 
 begin_comment
