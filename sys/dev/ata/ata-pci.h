@@ -1928,6 +1928,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_VIA8237A
+value|0x05911106
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_VIA8251
 value|0x33491106
 end_define
