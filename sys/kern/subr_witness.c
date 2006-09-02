@@ -1712,7 +1712,7 @@ name|lock_class_mtx_spin
 block|}
 block|,
 block|{
-literal|"taskqueue_fast"
+literal|"fast_taskqueue"
 block|,
 operator|&
 name|lock_class_mtx_spin
