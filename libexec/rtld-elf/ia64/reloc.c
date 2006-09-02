@@ -2527,15 +2527,9 @@ modifier|*
 name|list
 parameter_list|)
 block|{
-specifier|register
-name|Elf_Addr
+name|void
 modifier|*
-modifier|*
-name|tp
-name|__asm__
-argument_list|(
-literal|"r13"
-argument_list|)
+name|tpval
 decl_stmt|;
 comment|/*      * Fix the size of the static TLS block by using the maximum      * offset allocated so far and adding a bit for dynamic modules to      * use.      */
 name|tls_static_space
@@ -2546,19 +2540,20 @@ name|tls_last_size
 operator|+
 name|RTLD_STATIC_TLS_EXTRA
 expr_stmt|;
-name|tp
+name|tpval
 operator|=
 name|allocate_tls
 argument_list|(
 name|list
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|16
+name|TLS_TCB_SIZE
 argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
+asm|__asm __volatile("mov r13 = %0" :: "r"(tpval));
 block|}
 end_function
 

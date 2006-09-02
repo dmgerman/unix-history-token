@@ -900,8 +900,6 @@ operator|->
 name|tlsoffset
 operator|-
 name|TLS_TP_OFFSET
-operator|-
-name|TLS_TCB_SIZE
 operator|)
 expr_stmt|;
 break|break;
@@ -2105,9 +2103,9 @@ name|allocate_tls
 argument_list|(
 name|list
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|8
+name|TLS_TCB_SIZE
 argument_list|,
 literal|8
 argument_list|)
