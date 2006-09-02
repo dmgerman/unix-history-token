@@ -1008,6 +1008,24 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|numthreads
+operator|>
+name|MAXTHREADS
+condition|)
+name|errx
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"%d exceeds max threads %d"
+argument_list|,
+name|numthreads
+argument_list|,
+name|MAXTHREADS
+argument_list|)
+expr_stmt|;
 name|len
 operator|=
 name|roundup
