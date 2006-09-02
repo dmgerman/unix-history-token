@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2003 Marcel Moolenaar  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2003-2006 Marcel Moolenaar  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -44,7 +44,7 @@ begin_define
 define|#
 directive|define
 name|DTV_OFFSET
-value|offsetof(struct tcb, tcb_tp.tp_tdv)
+value|offsetof(struct tcb, tcb_tp.tp_dtv)
 end_define
 
 begin_define
@@ -97,44 +97,25 @@ name|tcb
 struct_decl|;
 end_struct_decl
 
-begin_struct_decl
-struct_decl|struct
-name|tdv
-struct_decl|;
-end_struct_decl
-
 begin_comment
-comment|/* We don't know what this is yet? */
+comment|/*  * tp points to one of these. We define the TLS structure as a union  * containing a long double to enforce 16-byte alignment. This makes  * sure that there will not be any padding in struct tcb after the  * TLS structure.  */
 end_comment
 
-begin_comment
-comment|/*  * tp points to one of these. We define the static TLS as an array  * of long double to enforce 16-byte alignment of the TLS memory,  * struct ia64_tp, struct tcb and also struct kcb. Both static and  * dynamic allocation of any of these structures will result in a  * valid, well-aligned thread pointer.  */
-end_comment
-
-begin_struct
-struct|struct
+begin_union
+union|union
 name|ia64_tp
 block|{
-name|struct
-name|tdv
+name|void
 modifier|*
-name|tp_tdv
-decl_stmt|;
-comment|/* dynamic TLS */
-name|uint64_t
-name|_reserved_
+name|tp_dtv
 decl_stmt|;
 name|long
 name|double
-name|tp_tls
-index|[
-literal|0
-index|]
+name|_align_
 decl_stmt|;
-comment|/* static TLS */
 block|}
-struct|;
-end_struct
+union|;
+end_union
 
 begin_struct
 struct|struct
@@ -157,7 +138,7 @@ decl_stmt|;
 name|long
 name|tcb_isfake
 decl_stmt|;
-name|struct
+name|union
 name|ia64_tp
 name|tcb_tp
 decl_stmt|;
@@ -174,8 +155,9 @@ name|kse_mailbox
 name|kcb_kmbx
 decl_stmt|;
 name|struct
-name|tcb
-name|kcb_faketcb
+name|kse
+modifier|*
+name|kcb_kse
 decl_stmt|;
 name|struct
 name|tcb
@@ -183,39 +165,89 @@ modifier|*
 name|kcb_curtcb
 decl_stmt|;
 name|struct
-name|kse
-modifier|*
-name|kcb_kse
+name|tcb
+name|kcb_faketcb
 decl_stmt|;
 block|}
 struct|;
 end_struct
 
 begin_expr_stmt
-specifier|register
-expr|struct
-name|ia64_tp
-operator|*
-name|_tp
-asm|__asm("%r13");
-define|#
-directive|define
-name|_tcb
-value|((struct tcb*)((char*)(_tp) - offsetof(struct tcb, tcb_tp)))
-comment|/*  * The kcb and tcb constructors.  */
+specifier|static
+name|__inline
 expr|struct
 name|tcb
 operator|*
-name|_tcb_ctor
+name|ia64_get_tcb
+argument_list|()
+block|{
+specifier|register
+name|char
+operator|*
+name|tp
+asm|__asm("%r13");
+return|return
+operator|(
+operator|(
+expr|struct
+name|tcb
+operator|*
+operator|)
+operator|(
+name|tp
+operator|-
+name|offsetof
 argument_list|(
 expr|struct
-name|pthread
-operator|*
+name|tcb
 argument_list|,
-name|int
+name|tcb_tp
 argument_list|)
-expr_stmt|;
+operator|)
+operator|)
+return|;
+block|}
 end_expr_stmt
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ia64_set_tcb
+parameter_list|(
+name|struct
+name|tcb
+modifier|*
+name|tcb
+parameter_list|)
+block|{
+specifier|register
+name|char
+operator|*
+name|tp
+asm|__asm("%r13");
+asm|__asm __volatile("mov %0 = %1;;" : "=r"(tp) : "r"(&tcb->tcb_tp));
+block|}
+end_function
+
+begin_comment
+comment|/*  * The kcb and tcb constructors.  */
+end_comment
+
+begin_function_decl
+name|struct
+name|tcb
+modifier|*
+name|_tcb_ctor
+parameter_list|(
+name|struct
+name|pthread
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -270,14 +302,13 @@ name|kcb
 parameter_list|)
 block|{
 comment|/* There is no thread yet; use the fake tcb. */
-name|_tp
-operator|=
+name|ia64_set_tcb
+argument_list|(
 operator|&
 name|kcb
 operator|->
 name|kcb_faketcb
-operator|.
-name|tcb_tp
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -299,7 +330,8 @@ argument_list|)
 block|{
 return|return
 operator|(
-name|_tcb
+name|ia64_get_tcb
+argument_list|()
 operator|->
 name|tcb_curkcb
 operator|)
@@ -322,6 +354,10 @@ argument_list|(
 argument|void
 argument_list|)
 block|{ 	struct
+name|tcb
+operator|*
+name|tcb
+block|; 	struct
 name|kse_thr_mailbox
 operator|*
 name|crit
@@ -329,9 +365,14 @@ block|;
 name|uint32_t
 name|flags
 block|;
+name|tcb
+operator|=
+name|ia64_get_tcb
+argument_list|()
+block|;
 if|if
 condition|(
-name|_tcb
+name|tcb
 operator|->
 name|tcb_isfake
 operator|!=
@@ -351,13 +392,13 @@ else|else
 block|{
 name|flags
 operator|=
-name|_tcb
+name|tcb
 operator|->
 name|tcb_tmbx
 operator|.
 name|tm_flags
 expr_stmt|;
-name|_tcb
+name|tcb
 operator|->
 name|tcb_tmbx
 operator|.
@@ -367,7 +408,7 @@ name|TMF_NOUPCALL
 expr_stmt|;
 name|crit
 operator|=
-name|_tcb
+name|tcb
 operator|->
 name|tcb_curkcb
 operator|->
@@ -375,7 +416,7 @@ name|kcb_kmbx
 operator|.
 name|km_curthread
 expr_stmt|;
-name|_tcb
+name|tcb
 operator|->
 name|tcb_curkcb
 operator|->
@@ -385,7 +426,7 @@ name|km_curthread
 operator|=
 name|NULL
 expr_stmt|;
-name|_tcb
+name|tcb
 operator|->
 name|tcb_tmbx
 operator|.
@@ -416,16 +457,26 @@ modifier|*
 name|crit
 parameter_list|)
 block|{
+name|struct
+name|tcb
+modifier|*
+name|tcb
+decl_stmt|;
+name|tcb
+operator|=
+name|ia64_get_tcb
+argument_list|()
+expr_stmt|;
 comment|/* No need to do anything if this is a fake tcb. */
 if|if
 condition|(
-name|_tcb
+name|tcb
 operator|->
 name|tcb_isfake
 operator|==
 literal|0
 condition|)
-name|_tcb
+name|tcb
 operator|->
 name|tcb_curkcb
 operator|->
@@ -447,15 +498,25 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|struct
+name|tcb
+modifier|*
+name|tcb
+decl_stmt|;
 name|uint32_t
 name|flags
 decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+name|tcb
+operator|=
+name|ia64_get_tcb
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
-name|_tcb
+name|tcb
 operator|->
 name|tcb_isfake
 operator|!=
@@ -472,13 +533,13 @@ else|else
 block|{
 name|flags
 operator|=
-name|_tcb
+name|tcb
 operator|->
 name|tcb_tmbx
 operator|.
 name|tm_flags
 expr_stmt|;
-name|_tcb
+name|tcb
 operator|->
 name|tcb_tmbx
 operator|.
@@ -489,7 +550,7 @@ expr_stmt|;
 name|ret
 operator|=
 operator|(
-name|_tcb
+name|tcb
 operator|->
 name|tcb_curkcb
 operator|->
@@ -500,7 +561,7 @@ operator|==
 name|NULL
 operator|)
 expr_stmt|;
-name|_tcb
+name|tcb
 operator|->
 name|tcb_tmbx
 operator|.
@@ -559,12 +620,10 @@ name|tcb_curkcb
 operator|=
 name|kcb
 expr_stmt|;
-name|_tp
-operator|=
-operator|&
+name|ia64_set_tcb
+argument_list|(
 name|tcb
-operator|->
-name|tcb_tp
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -582,7 +641,8 @@ argument_list|)
 block|{
 return|return
 operator|(
-name|_tcb
+name|ia64_get_tcb
+argument_list|()
 operator|)
 return|;
 block|}
@@ -601,7 +661,8 @@ argument_list|)
 block|{
 return|return
 operator|(
-name|_tcb
+name|ia64_get_tcb
+argument_list|()
 operator|->
 name|tcb_thread
 operator|)
@@ -626,7 +687,8 @@ argument_list|)
 block|{
 return|return
 operator|(
-name|_tcb
+name|ia64_get_tcb
+argument_list|()
 operator|->
 name|tcb_curkcb
 operator|->
@@ -742,14 +804,13 @@ name|kcb
 operator|->
 name|kcb_faketcb
 expr_stmt|;
-name|_tp
-operator|=
+name|ia64_set_tcb
+argument_list|(
 operator|&
 name|kcb
 operator|->
 name|kcb_faketcb
-operator|.
-name|tcb_tp
+argument_list|)
 expr_stmt|;
 name|_ia64_enter_uts
 argument_list|(
