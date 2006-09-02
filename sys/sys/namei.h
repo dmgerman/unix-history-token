@@ -505,8 +505,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AUDITVNODE1
+value|0x4000000
+end_define
+
+begin_comment
+comment|/* audit the looked up vnode information */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUDITVNODE2
+value|0x8000000
+end_define
+
+begin_comment
+comment|/* audit the looked up vnode information */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PARAMASK
-value|0x3fffe00
+value|0xffffe00
 end_define
 
 begin_comment
