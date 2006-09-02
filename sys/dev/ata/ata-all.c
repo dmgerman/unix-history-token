@@ -1378,10 +1378,12 @@ condition|)
 return|return
 name|ENXIO
 return|;
-comment|/* wait for the channel to be IDLE before entering suspend mode */
+comment|/* wait for the channel to be IDLE or detached before suspending */
 while|while
 condition|(
-literal|1
+name|ch
+operator|->
+name|r_irq
 condition|)
 block|{
 name|mtx_lock

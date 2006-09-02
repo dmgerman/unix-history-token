@@ -8056,6 +8056,10 @@ condition|(
 name|error
 condition|)
 block|{
+if|if
+condition|(
+name|length
+condition|)
 name|free
 argument_list|(
 name|d
@@ -8313,6 +8317,10 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|length
+condition|)
 name|free
 argument_list|(
 name|d

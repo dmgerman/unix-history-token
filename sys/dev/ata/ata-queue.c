@@ -1395,6 +1395,7 @@ operator|->
 name|flags
 operator||=
 name|ATA_R_DANGER2
+expr_stmt|;
 name|ATA_DEBUG_RQ
 argument_list|(
 name|request
@@ -2329,6 +2330,12 @@ operator|.
 name|sense
 operator|.
 name|specific2
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
