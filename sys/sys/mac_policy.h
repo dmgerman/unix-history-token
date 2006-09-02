@@ -2543,10 +2543,13 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|_mpo_placeholder8
+name|mpo_associate_nfsd_label
 function_decl|)
 parameter_list|(
-name|void
+name|struct
+name|ucred
+modifier|*
+name|cred
 parameter_list|)
 function_decl|;
 name|void

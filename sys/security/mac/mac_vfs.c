@@ -4266,5 +4266,25 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|mac_associate_nfsd_label
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|)
+block|{
+name|MAC_PERFORM
+argument_list|(
+name|associate_nfsd_label
+argument_list|,
+name|cred
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

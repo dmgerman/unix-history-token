@@ -4142,6 +4142,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|mac_associate_nfsd_label
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Calls to help various file systems implement labeling functionality  * using their existing EA implementation.  */
 end_comment

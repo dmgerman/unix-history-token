@@ -24,6 +24,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -43,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -1526,6 +1538,18 @@ name|tl
 operator|++
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_associate_nfsd_label
+argument_list|(
+name|nd
+operator|->
+name|nd_cr
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|len
 operator|=
 name|fxdr_unsigned
