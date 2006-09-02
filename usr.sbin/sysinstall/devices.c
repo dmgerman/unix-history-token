@@ -634,7 +634,15 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"gem"
 block|,
-literal|"Apple/Sun GMAC ethernet adapter"
+literal|"Apple GMAC or Sun ERI/GEM ethernet adapter"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
+literal|"hme"
+block|,
+literal|"Sun HME (Happy Meal Ethernet) ethernet adapter"
 block|}
 block|,
 block|{
@@ -666,7 +674,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"le"
 block|,
-literal|"DEC EtherWorks 2 or 3 ethernet card"
+literal|"AMD Am7900 LANCE or Am79C9xx PCnet ethernet adapter"
 block|}
 block|,
 block|{
