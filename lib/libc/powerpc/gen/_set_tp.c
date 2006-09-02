@@ -21,16 +21,7 @@ argument_list|(
 literal|"r2"
 argument_list|)
 decl_stmt|;
-name|tp
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|tpval
-operator|+
-literal|0x7008
-expr_stmt|;
+asm|__asm __volatile("mr %0,%1" : "=r"(tp) : "r"((char*)tpval + 0x7008));
 block|}
 end_function
 
