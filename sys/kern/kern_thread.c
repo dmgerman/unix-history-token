@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<security/audit/audit.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -542,6 +548,16 @@ name|td_critnest
 operator|=
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AUDIT
+name|audit_thread_alloc
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
