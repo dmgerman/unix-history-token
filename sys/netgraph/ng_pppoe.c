@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/ethernet.h>
 end_include
 
@@ -77,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|<netgraph/ng_pppoe.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netgraph/ng_ether.h>
 end_include
 
 begin_ifdef
@@ -162,6 +174,13 @@ begin_decl_stmt
 specifier|static
 name|ng_newhook_t
 name|ng_pppoe_newhook
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|ng_connect_t
+name|ng_pppoe_connect
 decl_stmt|;
 end_decl_stmt
 
@@ -376,6 +395,19 @@ name|ng_parse_string_type
 block|}
 block|,
 block|{
+name|NGM_PPPOE_COOKIE
+block|,
+name|NGM_PPPOE_SETENADDR
+block|,
+literal|"setenaddr"
+block|,
+operator|&
+name|ng_parse_enaddr_type
+block|,
+name|NULL
+block|}
+block|,
+block|{
 literal|0
 block|}
 block|}
@@ -422,6 +454,11 @@ operator|.
 name|newhook
 operator|=
 name|ng_pppoe_newhook
+block|,
+operator|.
+name|connect
+operator|=
+name|ng_pppoe_connect
 block|,
 operator|.
 name|rcvdata
@@ -625,88 +662,6 @@ parameter_list|)
 value|NG_HOOK_NODE(sp->hook)
 end_define
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|struct
-name|ether_header
-name|eh_standard
-init|=
-block|{
-block|{
-literal|0xff
-block|,
-literal|0xff
-block|,
-literal|0xff
-block|,
-literal|0xff
-block|,
-literal|0xff
-block|,
-literal|0xff
-block|}
-block|,
-block|{
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|}
-block|,
-name|ETHERTYPE_PPPOE_DISC
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|struct
-name|ether_header
-name|eh_3Com
-init|=
-block|{
-block|{
-literal|0xff
-block|,
-literal|0xff
-block|,
-literal|0xff
-block|,
-literal|0xff
-block|,
-literal|0xff
-block|,
-literal|0xff
-block|}
-block|,
-block|{
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|}
-block|,
-name|ETHERTYPE_PPPOE_3COM_DISC
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Information we store for each node  */
 end_comment
@@ -744,13 +699,10 @@ define|#
 directive|define
 name|COMPAT_DLINK
 value|0x00000002
-specifier|const
 name|struct
 name|ether_header
-modifier|*
 name|eh
 decl_stmt|;
-comment|/* standard PPPoE or 3Com? */
 block|}
 struct|;
 end_struct
@@ -810,7 +762,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|sendpacket
+name|ng_pppoe_sendpacket
 parameter_list|(
 name|sessp
 name|sp
@@ -1349,9 +1301,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|log
 argument_list|(
-literal|"pppoe: asked to add too many tags to packet\n"
+name|LOG_NOTICE
+argument_list|,
+literal|"ng_pppoe: asked to add too many tags to "
+literal|"packet\n"
 argument_list|)
 expr_stmt|;
 name|neg
@@ -1433,7 +1388,7 @@ name|NULL
 operator|)
 argument_list|,
 operator|(
-literal|"%s: make_packet called from wrong state"
+literal|"%s: called from wrong state"
 operator|,
 name|__func__
 operator|)
@@ -1543,9 +1498,11 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
-literal|"pppoe: tags too long\n"
+name|LOG_NOTICE
+argument_list|,
+literal|"ng_pppoe: tags too long\n"
 argument_list|)
 expr_stmt|;
 name|sp
@@ -2455,12 +2412,27 @@ operator|=
 name|node
 expr_stmt|;
 comment|/* Initialize to standard mode. */
+name|memset
+argument_list|(
+operator|&
 name|privp
 operator|->
 name|eh
+operator|.
+name|ether_dhost
+argument_list|,
+literal|0xff
+argument_list|,
+name|ETHER_ADDR_LEN
+argument_list|)
+expr_stmt|;
+name|privp
+operator|->
+name|eh
+operator|.
+name|ether_type
 operator|=
-operator|&
-name|eh_standard
+name|ETHERTYPE_PPPOE_DISC
 expr_stmt|;
 name|CTR3
 argument_list|(
@@ -2650,6 +2622,114 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Hook has been added successfully. Request the MAC address of  * the underlying Ethernet node.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|ng_pppoe_connect
+parameter_list|(
+name|hook_p
+name|hook
+parameter_list|)
+block|{
+specifier|const
+name|priv_p
+name|privp
+init|=
+name|NG_NODE_PRIVATE
+argument_list|(
+name|NG_HOOK_NODE
+argument_list|(
+name|hook
+argument_list|)
+argument_list|)
+decl_stmt|;
+name|struct
+name|ng_mesg
+modifier|*
+name|msg
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+if|if
+condition|(
+name|hook
+operator|!=
+name|privp
+operator|->
+name|ethernet_hook
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* 	 * If this is Ethernet hook, then request MAC address 	 * from our downstream. 	 */
+name|NG_MKMESSAGE
+argument_list|(
+name|msg
+argument_list|,
+name|NGM_ETHER_COOKIE
+argument_list|,
+name|NGM_ETHER_GET_ENADDR
+argument_list|,
+literal|0
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|msg
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOBUFS
+operator|)
+return|;
+comment|/* 	 * Our hook and peer hook have HK_INVALID flag set, 	 * so we can't use NG_SEND_MSG_HOOK() macro here. 	 */
+name|NG_SEND_MSG_ID
+argument_list|(
+name|error
+argument_list|,
+name|privp
+operator|->
+name|node
+argument_list|,
+name|msg
+argument_list|,
+name|NG_NODE_ID
+argument_list|(
+name|NG_PEER_NODE
+argument_list|(
+name|privp
+operator|->
+name|ethernet_hook
+argument_list|)
+argument_list|)
+argument_list|,
+name|NG_NODE_ID
+argument_list|(
+name|privp
+operator|->
+name|node
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Get a netgraph control message.  * Check it is one we understand. If needed, send a response.  * We sometimes save the address for an async action later.  * Always free the message.  */
 end_comment
 
@@ -2809,9 +2889,16 @@ name|ourmsg
 argument_list|)
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
-literal|"pppoe: init data too small\n"
+name|LOG_ERR
+argument_list|,
+literal|"ng_pppoe[%x]: init data too "
+literal|"small\n"
+argument_list|,
+name|node
+operator|->
+name|nd_ID
 argument_list|)
 expr_stmt|;
 name|LEAVE
@@ -2837,9 +2924,16 @@ operator|>
 name|PPPOE_SERVICE_NAME_SIZE
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
-literal|"pppoe_rcvmsg: service name too big"
+name|LOG_ERR
+argument_list|,
+literal|"ng_pppoe[%x]: service name "
+literal|"too big\n"
+argument_list|,
+name|node
+operator|->
+name|nd_ID
 argument_list|)
 expr_stmt|;
 name|LEAVE
@@ -2867,10 +2961,16 @@ operator|->
 name|data_len
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
-literal|"pppoe: init data has bad length,"
-literal|" %d should be %zd\n"
+name|LOG_ERR
+argument_list|,
+literal|"ng_pppoe[%x]: init data has bad "
+literal|"length, %d should be %zd\n"
+argument_list|,
+name|node
+operator|->
+name|nd_ID
 argument_list|,
 name|ourmsg
 operator|->
@@ -3050,9 +3150,16 @@ operator|!=
 name|PPPOE_SNONE
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
-literal|"pppoe: Session already active\n"
+name|LOG_NOTICE
+argument_list|,
+literal|"ng_pppoe[%x]: Session already "
+literal|"active\n"
+argument_list|,
+name|node
+operator|->
+name|nd_ID
 argument_list|)
 expr_stmt|;
 name|LEAVE
@@ -3191,11 +3298,7 @@ name|pkt_header
 operator|.
 name|eh
 argument_list|,
-operator|(
-specifier|const
-name|void
-operator|*
-operator|)
+operator|&
 name|privp
 operator|->
 name|eh
@@ -3579,9 +3682,16 @@ operator|!=
 name|PPPOE_PRIMED
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
-literal|"pppoe: Session not primed\n"
+name|LOG_NOTICE
+argument_list|,
+literal|"ng_pppoe[%x]: session not "
+literal|"primed\n"
+argument_list|,
+name|node
+operator|->
+name|nd_ID
 argument_list|)
 expr_stmt|;
 name|LEAVE
@@ -3735,9 +3845,10 @@ expr_stmt|;
 name|privp
 operator|->
 name|eh
+operator|.
+name|ether_type
 operator|=
-operator|&
-name|eh_standard
+name|ETHERTYPE_PPPOE_DISC
 expr_stmt|;
 break|break;
 block|}
@@ -3773,9 +3884,10 @@ expr_stmt|;
 name|privp
 operator|->
 name|eh
+operator|.
+name|ether_type
 operator|=
-operator|&
-name|eh_3Com
+name|ETHERTYPE_PPPOE_3COM_DISC
 expr_stmt|;
 break|break;
 block|}
@@ -4017,6 +4129,114 @@ expr_stmt|;
 block|}
 break|break;
 block|}
+case|case
+name|NGM_PPPOE_SETENADDR
+case|:
+if|if
+condition|(
+name|msg
+operator|->
+name|header
+operator|.
+name|arglen
+operator|!=
+name|ETHER_ADDR_LEN
+condition|)
+name|LEAVE
+argument_list|(
+name|EINVAL
+argument_list|)
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|msg
+operator|->
+name|data
+argument_list|,
+operator|&
+name|privp
+operator|->
+name|eh
+operator|.
+name|ether_shost
+argument_list|,
+name|ETHER_ADDR_LEN
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|LEAVE
+argument_list|(
+name|EINVAL
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|NGM_ETHER_COOKIE
+case|:
+if|if
+condition|(
+operator|!
+operator|(
+name|msg
+operator|->
+name|header
+operator|.
+name|flags
+operator|&
+name|NGF_RESP
+operator|)
+condition|)
+name|LEAVE
+argument_list|(
+name|EINVAL
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|msg
+operator|->
+name|header
+operator|.
+name|cmd
+condition|)
+block|{
+case|case
+name|NGM_ETHER_GET_ENADDR
+case|:
+if|if
+condition|(
+name|msg
+operator|->
+name|header
+operator|.
+name|arglen
+operator|!=
+name|ETHER_ADDR_LEN
+condition|)
+name|LEAVE
+argument_list|(
+name|EINVAL
+argument_list|)
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|msg
+operator|->
+name|data
+argument_list|,
+operator|&
+name|privp
+operator|->
+name|eh
+operator|.
+name|ether_shost
+argument_list|,
+name|ETHER_ADDR_LEN
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|LEAVE
 argument_list|(
@@ -4129,7 +4349,7 @@ name|state
 operator|=
 name|PPPOE_SINIT
 expr_stmt|;
-comment|/* 	 * Reset the packet header to broadcast. Since we are 	 * in a client 	 * mode use configured ethertype. 	 */
+comment|/* 	 * Reset the packet header to broadcast. Since we are 	 * in a client mode use configured ethertype. 	 */
 name|memcpy
 argument_list|(
 operator|(
@@ -4147,11 +4367,7 @@ name|pkt_header
 operator|.
 name|eh
 argument_list|,
-operator|(
-specifier|const
-name|void
-operator|*
-operator|)
+operator|&
 name|privp
 operator|->
 name|eh
@@ -4246,7 +4462,7 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
-name|sendpacket
+name|ng_pppoe_sendpacket
 argument_list|(
 name|sp
 argument_list|)
@@ -4722,9 +4938,16 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
-literal|"couldn't m_pullup\n"
+name|LOG_NOTICE
+argument_list|,
+literal|"ng_pppoe[%x]: couldn't "
+literal|"m_pullup(wh)\n"
+argument_list|,
+name|node
+operator|->
+name|nd_ID
 argument_list|)
 expr_stmt|;
 name|LEAVE
@@ -4817,9 +5040,17 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
-literal|"couldn't m_pullup\n"
+name|LOG_NOTICE
+argument_list|,
+literal|"ng_pppoe[%x]: "
+literal|"couldn't "
+literal|"m_pullup(pkthdr)\n"
+argument_list|,
+name|node
+operator|->
+name|nd_ID
 argument_list|)
 expr_stmt|;
 name|LEAVE
@@ -4904,9 +5135,16 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
-literal|"packet fragmented\n"
+name|LOG_NOTICE
+argument_list|,
+literal|"ng_pppoe[%x]: packet "
+literal|"fragmented\n"
+argument_list|,
+name|node
+operator|->
+name|nd_ID
 argument_list|)
 expr_stmt|;
 name|LEAVE
@@ -5100,9 +5338,16 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
-literal|"no host unique field\n"
+name|LOG_NOTICE
+argument_list|,
+literal|"ng_pppoe[%x]: no host "
+literal|"unique field\n"
+argument_list|,
+name|node
+operator|->
+name|nd_ID
 argument_list|)
 expr_stmt|;
 name|LEAVE
@@ -5127,9 +5372,16 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
-literal|"no matching session\n"
+name|LOG_NOTICE
+argument_list|,
+literal|"ng_pppoe[%x]: no "
+literal|"matching session\n"
+argument_list|,
+name|node
+operator|->
+name|nd_ID
 argument_list|)
 expr_stmt|;
 name|LEAVE
@@ -5155,9 +5407,16 @@ operator|!=
 name|PPPOE_SINIT
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
-literal|"session in wrong state\n"
+name|LOG_NOTICE
+argument_list|,
+literal|"ng_pppoe[%x]: session "
+literal|"in wrong state\n"
+argument_list|,
+name|node
+operator|->
+name|nd_ID
 argument_list|)
 expr_stmt|;
 name|LEAVE
@@ -5317,7 +5576,7 @@ name|state
 operator|=
 name|PPPOE_SREQ
 expr_stmt|;
-name|sendpacket
+name|ng_pppoe_sendpacket
 argument_list|(
 name|sp
 argument_list|)
@@ -5584,7 +5843,7 @@ name|state
 operator|=
 name|PPPOE_NEWCONNECTED
 expr_stmt|;
-name|sendpacket
+name|ng_pppoe_sendpacket
 argument_list|(
 name|sp
 argument_list|)
@@ -6663,7 +6922,7 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
-name|sendpacket
+name|ng_pppoe_sendpacket
 argument_list|(
 name|sp
 argument_list|)
@@ -7009,9 +7268,16 @@ name|m
 operator|==
 name|NULL
 condition|)
-name|printf
+name|log
 argument_list|(
-literal|"pppoe: Session out of mbufs\n"
+name|LOG_NOTICE
+argument_list|,
+literal|"ng_pppoe[%x]: session out of "
+literal|"mbufs\n"
+argument_list|,
+name|node
+operator|->
+name|nd_ID
 argument_list|)
 expr_stmt|;
 else|else
@@ -7478,9 +7744,15 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/* Timeouts have no meaning in other states. */
-name|printf
+name|log
 argument_list|(
-literal|"pppoe: unexpected timeout\n"
+name|LOG_NOTICE
+argument_list|,
+literal|"ng_pppoe[%x]: unexpected timeout\n"
+argument_list|,
+name|node
+operator|->
+name|nd_ID
 argument_list|)
 expr_stmt|;
 block|}
@@ -7490,7 +7762,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|sendpacket
+name|ng_pppoe_sendpacket
 parameter_list|(
 name|sessp
 name|sp
@@ -7570,9 +7842,17 @@ case|:
 case|case
 name|PPPOE_CONNECTED
 case|:
-name|printf
+name|log
 argument_list|(
-literal|"pppoe: sendpacket: unexpected state\n"
+name|LOG_NOTICE
+argument_list|,
+literal|"%s: unexpected state %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|sp
+operator|->
+name|state
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7749,9 +8029,17 @@ name|error
 operator|=
 name|EINVAL
 expr_stmt|;
-name|printf
+name|log
 argument_list|(
-literal|"pppoe: timeout: bad state\n"
+name|LOG_NOTICE
+argument_list|,
+literal|"%s: bad state %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|sp
+operator|->
+name|state
 argument_list|)
 expr_stmt|;
 block|}

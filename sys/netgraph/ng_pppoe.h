@@ -216,12 +216,17 @@ name|NGM_PPPOE_SETMODE
 init|=
 literal|12
 block|,
-comment|/* set to standard or 3Com mode */
+comment|/* set to standard or compat modes */
 name|NGM_PPPOE_GETMODE
 init|=
 literal|13
 block|,
 comment|/* see current mode */
+name|NGM_PPPOE_SETENADDR
+init|=
+literal|14
+block|,
+comment|/* set Ethernet address */
 block|}
 enum|;
 end_enum
