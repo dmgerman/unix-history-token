@@ -555,9 +555,21 @@ name|is_rx_badbintval
 decl_stmt|;
 comment|/* rx frame w/ bogus bintval */
 name|u_int32_t
+name|is_rx_demicfail
+decl_stmt|;
+comment|/* rx demic failed */
+name|u_int32_t
+name|is_rx_defrag
+decl_stmt|;
+comment|/* rx defragmentation failed */
+name|u_int32_t
+name|is_rx_mgmt
+decl_stmt|;
+comment|/* rx management frames */
+name|u_int32_t
 name|is_spare
 index|[
-literal|9
+literal|6
 index|]
 decl_stmt|;
 block|}
