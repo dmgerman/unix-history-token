@@ -6927,7 +6927,12 @@ if|if
 condition|(
 name|isp_dma_tag_create
 argument_list|(
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|pcs
+operator|->
+name|pci_dev
+argument_list|)
 argument_list|,
 literal|1
 argument_list|,

@@ -15,6 +15,12 @@ directive|define
 name|_SYS_BUS_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/_bus_dma.h>
+end_include
+
 begin_comment
 comment|/**  * @defgroup NEWBUS newbus - a generic framework for managing devices  * @{  */
 end_comment
@@ -830,6 +836,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|bus_dma_tag_t
+name|bus_generic_get_dma_tag
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|resource_list
 modifier|*
@@ -1273,6 +1292,16 @@ name|struct
 name|resource
 modifier|*
 name|r
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bus_dma_tag_t
+name|bus_get_dma_tag
+parameter_list|(
+name|device_t
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
