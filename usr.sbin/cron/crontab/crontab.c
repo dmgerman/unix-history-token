@@ -945,7 +945,7 @@ name|strcmp
 argument_list|(
 name|resolved_path
 argument_list|,
-literal|"/etc/crontab"
+name|SYSCRONTAB
 argument_list|)
 condition|)
 block|{
@@ -953,7 +953,8 @@ name|err
 argument_list|(
 name|ERROR_EXIT
 argument_list|,
-literal|"/etc/crontab must be edited manually"
+name|SYSCRONTAB
+literal|" must be edited manually"
 argument_list|)
 expr_stmt|;
 block|}
