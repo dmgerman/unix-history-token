@@ -8196,6 +8196,8 @@ decl_stmt|,
 name|pri
 decl_stmt|,
 name|new_inherited_pri
+decl_stmt|,
+name|su
 decl_stmt|;
 name|id
 operator|=
@@ -8208,6 +8210,17 @@ operator|=
 name|td
 operator|->
 name|td_umtxq
+expr_stmt|;
+name|su
+operator|=
+operator|(
+name|suser
+argument_list|(
+name|td
+argument_list|)
+operator|==
+literal|0
+operator|)
 expr_stmt|;
 comment|/* 	 * Make sure we own this mtx. 	 */
 name|owner
@@ -8427,6 +8440,12 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|su
+operator|!=
+literal|0
+condition|)
 name|uq
 operator|->
 name|uq_inherited_pri
