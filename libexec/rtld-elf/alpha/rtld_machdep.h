@@ -127,6 +127,13 @@ end_function_decl
 begin_define
 define|#
 directive|define
+name|TLS_TCB_SIZE
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
 name|round
 parameter_list|(
 name|size
@@ -147,7 +154,7 @@ parameter_list|,
 name|align
 parameter_list|)
 define|\
-value|round(16, align)
+value|round(TLS_TCB_SIZE, align)
 end_define
 
 begin_define
