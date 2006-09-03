@@ -397,6 +397,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|sx_xlocked
+parameter_list|(
+name|sx
+parameter_list|)
+value|((sx)->sx_cnt< 0&& (sx)->sx_xholder == curthread)
+end_define
+
+begin_define
+define|#
+directive|define
 name|sx_slock
 parameter_list|(
 name|sx
@@ -481,8 +491,7 @@ name|sx_unlock
 parameter_list|(
 name|sx
 parameter_list|)
-define|\
-value|do { \ 			if ((sx)->sx_cnt< 0) \ 				sx_xunlock(sx); \ 			else \ 				sx_sunlock(sx); \ 		} while (0)
+value|do {						\ 	if (sx_xlocked(sx))						\ 		sx_xunlock(sx);						\ 	else								\ 		sx_sunlock(sx);						\ } while (0)
 end_define
 
 begin_if
