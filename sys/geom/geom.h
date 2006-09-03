@@ -1622,6 +1622,14 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|sx
+name|topology_lock
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|g_kerneldump
@@ -1695,6 +1703,15 @@ block|{
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
+if|if
+condition|(
+name|sx_xlocked
+argument_list|(
+operator|&
+name|topology_lock
+argument_list|)
+condition|)
+block|{
 name|KASSERT
 argument_list|(
 name|g_valid_obj
@@ -1716,6 +1733,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|free
@@ -1727,14 +1745,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|sx
-name|topology_lock
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
