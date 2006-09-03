@@ -3633,16 +3633,6 @@ name|EPERM
 operator|)
 return|;
 comment|/* Check user-supplied value for sanity. */
-name|temp
-operator|=
-operator|(
-name|temp
-operator|*
-literal|10
-operator|)
-operator|+
-name|TZ_ZEROC
-expr_stmt|;
 name|acpi_tz_sanity
 argument_list|(
 name|sc
