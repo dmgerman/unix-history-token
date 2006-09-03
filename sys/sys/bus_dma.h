@@ -27,6 +27,12 @@ directive|define
 name|_BUS_DMA_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/_bus_dma.h>
+end_include
+
 begin_comment
 comment|/*  * Machine independent interface for mapping physical addresses to peripheral  * bus 'physical' addresses, and assisting with DMA operations.  *  * XXX This file is always included from<machine/bus_dma.h> and should not  *     (yet) be included directly.  */
 end_comment
@@ -171,13 +177,6 @@ begin_comment
 comment|/*  * Operations performed by bus_dmamap_sync().  */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|int
-name|bus_dmasync_op_t
-typedef|;
-end_typedef
-
 begin_define
 define|#
 directive|define
@@ -205,32 +204,6 @@ directive|define
 name|BUS_DMASYNC_POSTWRITE
 value|8
 end_define
-
-begin_comment
-comment|/*  *	bus_dma_tag_t  *  *	A machine-dependent opaque type describing the characteristics  *	of how to perform DMA mappings.  This structure encapsultes  *	information concerning address and alignment restrictions, number  *	of S/G segments, amount of data per S/G segment, etc.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|struct
-name|bus_dma_tag
-modifier|*
-name|bus_dma_tag_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  *	bus_dmamap_t  *  *	DMA mapping instance information.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|struct
-name|bus_dmamap
-modifier|*
-name|bus_dmamap_t
-typedef|;
-end_typedef
 
 begin_comment
 comment|/*  *	bus_dma_segment_t  *  *	Describes a single contiguous DMA transaction.  Values  *	are suitable for programming into DMA registers.  */
@@ -267,39 +240,6 @@ name|void
 modifier|*
 parameter_list|,
 name|bus_addr_t
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_comment
-comment|/*  * A function that performs driver-specific synchronization on behalf of  * busdma.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|BUS_DMA_LOCK
-init|=
-literal|0x01
-block|,
-name|BUS_DMA_UNLOCK
-init|=
-literal|0x02
-block|, }
-name|bus_dma_lock_op_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|void
-name|bus_dma_lock_t
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|bus_dma_lock_op_t
 parameter_list|)
 function_decl|;
 end_typedef
