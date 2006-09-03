@@ -433,6 +433,8 @@ operator||
 name|LOCKLEAF
 operator||
 name|MPSAFE
+operator||
+name|AUDITVNODE1
 expr_stmt|;
 if|if
 condition|(
@@ -820,6 +822,8 @@ operator||
 name|LOCKLEAF
 operator||
 name|MPSAFE
+operator||
+name|AUDITVNODE1
 expr_stmt|;
 if|if
 condition|(
