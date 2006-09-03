@@ -1548,6 +1548,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|vm_page_release_contig
 parameter_list|(
