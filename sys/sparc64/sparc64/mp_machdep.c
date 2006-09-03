@@ -2084,6 +2084,12 @@ operator|==
 literal|0
 condition|)
 return|return;
+comment|/* 		 * Leave interrupts enabled for a bit before retrying 		 * in order to avoid deadlocks if the other CPU is also 		 * trying to send an IPI. 		 */
+name|DELAY
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
