@@ -4146,6 +4146,80 @@ block|}
 block|, 	    }
 block|, 	}
 block|,
+block|{
+literal|"SIIG Cyber 4S PCI 16C650 (20x family)"
+block|,
+block|{
+literal|0x1415
+block|,
+literal|0x9501
+block|,
+literal|0x131f
+block|,
+literal|0x2051
+block|}
+block|,
+block|{
+literal|0xffff
+block|,
+literal|0xffff
+block|,
+literal|0xffff
+block|,
+literal|0xffff
+block|}
+block|,
+block|{
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x10
+block|,
+literal|0x00
+block|,
+name|COM_FREQ
+operator|*
+literal|10
+block|}
+block|,
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x10
+block|,
+literal|0x08
+block|,
+name|COM_FREQ
+operator|*
+literal|10
+block|}
+block|,
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x10
+block|,
+literal|0x10
+block|,
+name|COM_FREQ
+operator|*
+literal|10
+block|}
+block|,
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x10
+block|,
+literal|0x18
+block|,
+name|COM_FREQ
+operator|*
+literal|10
+block|}
+block|, 	    }
+block|, 	}
+block|,
 comment|/* Oxford Semiconductor OX16PCI954 PCI UARTs */
 block|{
 literal|"Oxford Semiconductor OX16PCI954 UARTs"
