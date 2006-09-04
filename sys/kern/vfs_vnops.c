@@ -1820,6 +1820,12 @@ condition|(
 name|rw
 operator|==
 name|UIO_WRITE
+operator|&&
+name|vp
+operator|->
+name|v_type
+operator|!=
+name|VCHR
 condition|)
 name|vn_finished_write
 argument_list|(
@@ -2753,6 +2759,14 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|->
+name|v_type
+operator|!=
+name|VCHR
+condition|)
 name|vn_finished_write
 argument_list|(
 name|mp
