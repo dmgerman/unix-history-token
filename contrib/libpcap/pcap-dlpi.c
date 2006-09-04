@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-dlpi.c,v 1.108.2.5 2005/05/03 18:54:35 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-dlpi.c,v 1.108.2.6 2005/08/13 23:15:58 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4014,12 +4014,15 @@ name|uerror
 operator|!=
 name|EBUSY
 condition|)
+block|{
+comment|/* 			 * dlbindack() has already filled in ebuf for 			 * this error. 			 */
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 comment|/* 		 * For EBUSY, try the next SAP value; that means that 		 * somebody else is using that SAP.  Clear ebuf so 		 * that application doesn't report the "Device busy" 		 * error as a warning. 		 */
 operator|*
 name|ebuf
@@ -4035,6 +4038,16 @@ name|hpsap
 operator|>
 literal|100
 condition|)
+block|{
+name|strlcpy
+argument_list|(
+name|ebuf
+argument_list|,
+literal|"All SAPs from 22 through 100 are in use"
+argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -4042,6 +4055,12 @@ literal|1
 operator|)
 return|;
 block|}
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -4376,6 +4395,18 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
+comment|/* 	 * Clear out "*uerror", so it's only set for DL_ERROR_ACK/DL_SYSERR, 	 * making that the only place where EBUSY is treated specially. 	 */
+if|if
+condition|(
+name|uerror
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|uerror
+operator|=
+literal|0
+expr_stmt|;
 name|ctl
 operator|.
 name|maxlen
@@ -4533,17 +4564,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-if|if
-condition|(
-name|uerror
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|uerror
-operator|=
-literal|0
-expr_stmt|;
 name|snprintf
 argument_list|(
 name|ebuf
@@ -4573,17 +4593,6 @@ literal|1
 operator|)
 return|;
 default|default:
-if|if
-condition|(
-name|uerror
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|uerror
-operator|=
-literal|0
-expr_stmt|;
 name|snprintf
 argument_list|(
 name|ebuf
@@ -4618,17 +4627,6 @@ operator|<
 name|size
 condition|)
 block|{
-if|if
-condition|(
-name|uerror
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|uerror
-operator|=
-literal|0
-expr_stmt|;
 name|snprintf
 argument_list|(
 name|ebuf

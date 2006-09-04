@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the Computer Systems  *	Engineering Group at Lawrence Berkeley Laboratory.  * 4. Neither the name of the University nor of the Laboratory may be used  *    to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * @(#) $Header: /tcpdump/master/libpcap/pcap-int.h,v 1.68.2.2 2005/05/03 18:54:36 guy Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the Computer Systems  *	Engineering Group at Lawrence Berkeley Laboratory.  * 4. Neither the name of the University nor of the Laboratory may be used  *    to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * @(#) $Header: /tcpdump/master/libpcap/pcap-int.h,v 1.68.2.6 2005/07/07 06:56:04 guy Exp $ (LBL)  */
 end_comment
 
 begin_ifndef
@@ -165,6 +165,21 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|HAVE_DAG_API
+ifdef|#
+directive|ifdef
+name|HAVE_DAG_STREAMS_API
+name|u_char
+modifier|*
+name|dag_mem_bottom
+decl_stmt|;
+comment|/* DAG card current memory bottom pointer */
+name|u_char
+modifier|*
+name|dag_mem_top
+decl_stmt|;
+comment|/* DAG card current memory top pointer */
+else|#
+directive|else
 name|void
 modifier|*
 name|dag_mem_base
@@ -173,11 +188,14 @@ comment|/* DAG card memory base address */
 name|u_int
 name|dag_mem_bottom
 decl_stmt|;
-comment|/* DAG card current memory bottom pointer */
+comment|/* DAG card current memory bottom offset */
 name|u_int
 name|dag_mem_top
 decl_stmt|;
-comment|/* DAG card current memory top pointer */
+comment|/* DAG card current memory top offset */
+endif|#
+directive|endif
+comment|/* HAVE_DAG_STREAMS_API */
 name|int
 name|dag_fcs_bits
 decl_stmt|;
@@ -186,8 +204,17 @@ name|int
 name|dag_offset_flags
 decl_stmt|;
 comment|/* Flags to pass to dag_offset(). */
+name|int
+name|dag_stream
+decl_stmt|;
+comment|/* DAG stream number */
+name|int
+name|dag_timeout
+decl_stmt|;
+comment|/* timeout specified to pcap_open_live. 				 * Same as in linux above, introduce 				 * generally? */
 endif|#
 directive|endif
+comment|/* HAVE_DAG_API */
 block|}
 struct|;
 comment|/*  * Ultrix, DEC OSF/1^H^H^H^H^H^H^H^H^HDigital UNIX^H^H^H^H^H^H^H^H^H^H^H^H  * Tru64 UNIX, and NetBSD pad to make everything line up on a nice boundary.  */
@@ -326,7 +353,7 @@ modifier|*
 name|pkt
 decl_stmt|;
 comment|/* We're accepting only packets in this direction/these directions. */
-name|direction_t
+name|pcap_direction_t
 name|direction
 decl_stmt|;
 comment|/* 	 * Methods. 	 */
@@ -387,7 +414,7 @@ parameter_list|(
 name|pcap_t
 modifier|*
 parameter_list|,
-name|direction_t
+name|pcap_direction_t
 parameter_list|)
 function_decl|;
 name|int
