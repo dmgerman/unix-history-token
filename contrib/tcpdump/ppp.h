@@ -18,12 +18,6 @@ begin_comment
 comment|/* length of PPP header */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|PPP_ADDRESS
-end_undef
-
 begin_define
 define|#
 directive|define
@@ -34,12 +28,6 @@ end_define
 begin_comment
 comment|/* The address byte value */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|PPP_CONTROL
-end_undef
 
 begin_define
 define|#
@@ -78,12 +66,6 @@ begin_comment
 comment|/* Protocol numbers */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PPP_IP
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -94,11 +76,6 @@ end_define
 begin_comment
 comment|/* Raw IP */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -144,12 +121,6 @@ begin_comment
 comment|/* Appletalk */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PPP_IPX
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -160,11 +131,6 @@ end_define
 begin_comment
 comment|/* Novell IPX */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

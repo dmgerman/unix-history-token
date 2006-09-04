@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-pim.c,v 1.45.2.2 2005/04/20 22:08:44 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-pim.c,v 1.45.2.3 2005/07/11 20:24:34 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -679,7 +679,11 @@ index|[
 literal|0
 index|]
 argument_list|,
-literal|4
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -821,7 +825,11 @@ index|[
 literal|0
 index|]
 argument_list|,
-literal|4
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -844,7 +852,11 @@ index|[
 literal|4
 index|]
 argument_list|,
-literal|4
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1327,7 +1339,11 @@ index|[
 literal|12
 index|]
 argument_list|,
-literal|4
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1508,7 +1524,11 @@ index|[
 literal|16
 index|]
 argument_list|,
-literal|4
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2429,7 +2449,11 @@ name|AF_INET
 expr_stmt|;
 name|len
 operator|=
-literal|4
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
+argument_list|)
 expr_stmt|;
 break|break;
 ifdef|#
@@ -2444,7 +2468,11 @@ name|AF_INET6
 expr_stmt|;
 name|len
 operator|=
-literal|16
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_addr
+argument_list|)
 expr_stmt|;
 break|break;
 endif|#
@@ -2481,7 +2509,11 @@ name|pimv2_addr_len
 condition|)
 block|{
 case|case
-literal|4
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
+argument_list|)
 case|:
 name|af
 operator|=
@@ -2492,7 +2524,11 @@ ifdef|#
 directive|ifdef
 name|INET6
 case|case
-literal|16
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_addr
+argument_list|)
 case|:
 name|af
 operator|=
