@@ -284,6 +284,9 @@ block|{
 name|int
 name|hs_used
 decl_stmt|;
+name|int
+name|hs_mlen
+decl_stmt|;
 name|u_int8_t
 name|hs_iv
 index|[
@@ -653,6 +656,10 @@ name|uio
 modifier|*
 name|io
 decl_stmt|;
+name|void
+modifier|*
+name|buf
+decl_stmt|;
 block|}
 name|u
 union|;
@@ -758,6 +765,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|src_buf
+value|src.u.buf
+end_define
+
+begin_define
+define|#
+directive|define
 name|src_map
 value|src.map
 end_define
@@ -795,6 +809,13 @@ define|#
 directive|define
 name|dst_io
 value|dst.u.io
+end_define
+
+begin_define
+define|#
+directive|define
+name|dst_buf
+value|dst.u.buf
 end_define
 
 begin_define

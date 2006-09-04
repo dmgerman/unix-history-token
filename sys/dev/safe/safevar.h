@@ -251,6 +251,10 @@ name|uio
 modifier|*
 name|io
 decl_stmt|;
+name|void
+modifier|*
+name|buf
+decl_stmt|;
 block|}
 name|u
 union|;
@@ -350,6 +354,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|re_src_buf
+value|re_src.u.buf
+end_define
+
+begin_define
+define|#
+directive|define
 name|re_src_map
 value|re_src.map
 end_define
@@ -387,6 +398,13 @@ define|#
 directive|define
 name|re_dst_io
 value|re_dst.u.io
+end_define
+
+begin_define
+define|#
+directive|define
+name|re_dst_buf
+value|re_dst.u.buf
 end_define
 
 begin_define
@@ -441,6 +459,10 @@ literal|8
 index|]
 decl_stmt|;
 comment|/* DES/3DES/AES key */
+name|u_int32_t
+name|ses_mlen
+decl_stmt|;
+comment|/* hmac length in bytes */
 name|u_int32_t
 name|ses_hminner
 index|[

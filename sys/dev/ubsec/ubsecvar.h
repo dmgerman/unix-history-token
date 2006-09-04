@@ -521,6 +521,10 @@ name|uio
 modifier|*
 name|io
 decl_stmt|;
+name|void
+modifier|*
+name|buf
+decl_stmt|;
 block|}
 name|u
 union|;
@@ -611,6 +615,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|q_src_buf
+value|q_src.u.buf
+end_define
+
+begin_define
+define|#
+directive|define
 name|q_src_map
 value|q_src.map
 end_define
@@ -648,6 +659,13 @@ define|#
 directive|define
 name|q_dst_io
 value|q_dst.u.io
+end_define
+
+begin_define
+define|#
+directive|define
+name|q_dst_buf
+value|q_dst.u.buf
 end_define
 
 begin_define
@@ -899,6 +917,10 @@ literal|6
 index|]
 decl_stmt|;
 comment|/* 3DES key */
+name|u_int32_t
+name|ses_mlen
+decl_stmt|;
+comment|/* hmac length */
 name|u_int32_t
 name|ses_hminner
 index|[
