@@ -8975,6 +8975,11 @@ name|ifp
 operator|->
 name|if_softc
 expr_stmt|;
+name|VGE_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|mii
 operator|=
 name|device_get_softc
@@ -8987,6 +8992,11 @@ expr_stmt|;
 name|mii_mediachg
 argument_list|(
 name|mii
+argument_list|)
+expr_stmt|;
+name|VGE_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 return|return
