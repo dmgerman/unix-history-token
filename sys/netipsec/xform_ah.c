@@ -194,7 +194,7 @@ value|(((sav)->flags& SADB_X_EXT_OLD) ? \ 		sizeof (struct ah) : sizeof (struct 
 end_define
 
 begin_comment
-comment|/*   * Return authenticator size in bytes.  The old protocol is known  * to use a fixed 16-byte authenticator.  The new algorithm gets  * this size from the xform but is (currently) always 12.  */
+comment|/*   * Return authenticator size in bytes.  The old protocol is known  * to use a fixed 16-byte authenticator.  The new algorithm use 12-byte  * authenticator.  */
 end_comment
 
 begin_define
@@ -205,7 +205,7 @@ parameter_list|(
 name|sav
 parameter_list|)
 define|\
-value|((sav->flags& SADB_X_EXT_OLD) ? 16 : (sav)->tdb_authalgxform->authsize)
+value|((sav->flags& SADB_X_EXT_OLD) ? 16 : AH_HMAC_HASHLEN)
 end_define
 
 begin_decl_stmt
@@ -389,21 +389,21 @@ name|SADB_AALG_MD5HMAC
 case|:
 return|return
 operator|&
-name|auth_hash_hmac_md5_96
+name|auth_hash_hmac_md5
 return|;
 case|case
 name|SADB_AALG_SHA1HMAC
 case|:
 return|return
 operator|&
-name|auth_hash_hmac_sha1_96
+name|auth_hash_hmac_sha1
 return|;
 case|case
 name|SADB_X_AALG_RIPEMD160HMAC
 case|:
 return|return
 operator|&
-name|auth_hash_hmac_ripemd_160_96
+name|auth_hash_hmac_ripemd_160
 return|;
 case|case
 name|SADB_X_AALG_MD5
@@ -788,6 +788,15 @@ argument_list|(
 name|sav
 operator|->
 name|key_auth
+argument_list|)
+expr_stmt|;
+name|cria
+operator|->
+name|cri_mlen
+operator|=
+name|AUTHSIZE
+argument_list|(
+name|sav
 argument_list|)
 expr_stmt|;
 return|return
@@ -3138,6 +3147,9 @@ decl_stmt|;
 name|int
 name|authsize
 decl_stmt|;
+name|NET_LOCK_GIANT
+argument_list|()
+expr_stmt|;
 name|crd
 operator|=
 name|crp
@@ -3341,12 +3353,21 @@ name|crp_etype
 operator|==
 name|EAGAIN
 condition|)
-return|return
+block|{
+name|error
+operator|=
 name|crypto_dispatch
 argument_list|(
 name|crp
 argument_list|)
+expr_stmt|;
+name|NET_UNLOCK_GIANT
+argument_list|()
+expr_stmt|;
+return|return
+name|error
 return|;
+block|}
 name|ahstat
 operator|.
 name|ahs_noxform
@@ -3740,6 +3761,9 @@ operator|&
 name|sav
 argument_list|)
 expr_stmt|;
+name|NET_UNLOCK_GIANT
+argument_list|()
+expr_stmt|;
 return|return
 name|error
 return|;
@@ -3789,6 +3813,9 @@ name|crypto_freereq
 argument_list|(
 name|crp
 argument_list|)
+expr_stmt|;
+name|NET_UNLOCK_GIANT
+argument_list|()
 expr_stmt|;
 return|return
 name|error
@@ -5073,6 +5100,9 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+name|NET_LOCK_GIANT
+argument_list|()
+expr_stmt|;
 name|tc
 operator|=
 operator|(
@@ -5245,11 +5275,18 @@ argument_list|(
 name|isr
 argument_list|)
 expr_stmt|;
-return|return
+name|error
+operator|=
 name|crypto_dispatch
 argument_list|(
 name|crp
 argument_list|)
+expr_stmt|;
+name|NET_UNLOCK_GIANT
+argument_list|()
+expr_stmt|;
+return|return
+name|error
 return|;
 block|}
 name|ahstat
@@ -5366,6 +5403,9 @@ argument_list|(
 name|isr
 argument_list|)
 expr_stmt|;
+name|NET_UNLOCK_GIANT
+argument_list|()
+expr_stmt|;
 return|return
 name|err
 return|;
@@ -5406,6 +5446,9 @@ name|crypto_freereq
 argument_list|(
 name|crp
 argument_list|)
+expr_stmt|;
+name|NET_UNLOCK_GIANT
+argument_list|()
 expr_stmt|;
 return|return
 name|error
