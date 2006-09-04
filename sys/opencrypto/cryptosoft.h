@@ -47,8 +47,11 @@ name|u_int8_t
 modifier|*
 name|SW_octx
 decl_stmt|;
-name|u_int32_t
+name|u_int16_t
 name|SW_klen
+decl_stmt|;
+name|u_int16_t
+name|SW_mlen
 decl_stmt|;
 name|struct
 name|auth_hash
@@ -102,6 +105,10 @@ name|sw_klen
 value|SWCR_UN.SWCR_AUTH.SW_klen
 define|#
 directive|define
+name|sw_mlen
+value|SWCR_UN.SWCR_AUTH.SW_mlen
+define|#
+directive|define
 name|sw_axf
 value|SWCR_UN.SWCR_AUTH.SW_axf
 define|#
@@ -138,20 +145,16 @@ end_ifdef
 begin_decl_stmt
 specifier|extern
 name|u_int8_t
+modifier|*
 name|hmac_ipad_buffer
-index|[
-literal|64
-index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|u_int8_t
+modifier|*
 name|hmac_opad_buffer
-index|[
-literal|64
-index|]
 decl_stmt|;
 end_decl_stmt
 

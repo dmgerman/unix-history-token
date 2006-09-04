@@ -48,15 +48,154 @@ value|32
 end_define
 
 begin_comment
+comment|/* Hash values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NULL_HASH_LEN
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|MD5_HASH_LEN
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHA1_HASH_LEN
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|RIPEMD160_HASH_LEN
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHA2_256_HASH_LEN
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHA2_384_HASH_LEN
+value|48
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHA2_512_HASH_LEN
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|MD5_KPDK_HASH_LEN
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHA1_KPDK_HASH_LEN
+value|20
+end_define
+
+begin_comment
+comment|/* Maximum hash algorithm result length */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASH_MAX_LEN
+value|SHA2_512_HASH_LEN
+end_define
+
+begin_comment
+comment|/* Keep this updated */
+end_comment
+
+begin_comment
 comment|/* HMAC values */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HMAC_BLOCK_LEN
+name|NULL_HMAC_BLOCK_LEN
 value|64
 end_define
+
+begin_define
+define|#
+directive|define
+name|MD5_HMAC_BLOCK_LEN
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHA1_HMAC_BLOCK_LEN
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|RIPEMD160_HMAC_BLOCK_LEN
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHA2_256_HMAC_BLOCK_LEN
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHA2_384_HMAC_BLOCK_LEN
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHA2_512_HMAC_BLOCK_LEN
+value|128
+end_define
+
+begin_comment
+comment|/* Maximum HMAC block length */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HMAC_MAX_BLOCK_LEN
+value|SHA2_512_HMAC_BLOCK_LEN
+end_define
+
+begin_comment
+comment|/* Keep this updated */
+end_comment
 
 begin_define
 define|#
@@ -75,6 +214,13 @@ end_define
 begin_comment
 comment|/* Encryption algorithm block sizes */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NULL_BLOCK_LEN
+value|4
+end_define
 
 begin_define
 define|#
@@ -121,23 +267,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|EALG_MAX_BLOCK_LEN
-value|16
+name|AES_BLOCK_LEN
+value|RIJNDAEL128_BLOCK_LEN
 end_define
-
-begin_comment
-comment|/* Keep this updated */
-end_comment
-
-begin_comment
-comment|/* Maximum hash algorithm result length */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|AALG_MAX_RESULT_LEN
-value|64
+name|EALG_MAX_BLOCK_LEN
+value|AES_BLOCK_LEN
 end_define
 
 begin_comment
@@ -267,29 +405,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|CRYPTO_SHA2_HMAC
+name|CRYPTO_NULL_HMAC
 value|15
 end_define
 
 begin_define
 define|#
 directive|define
-name|CRYPTO_NULL_HMAC
+name|CRYPTO_NULL_CBC
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|CRYPTO_NULL_CBC
-value|17
-end_define
-
-begin_define
-define|#
-directive|define
 name|CRYPTO_DEFLATE_COMP
-value|18
+value|17
 end_define
 
 begin_comment
@@ -299,8 +430,29 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CRYPTO_ALGORITHM_MAX
+name|CRYPTO_SHA2_256_HMAC
 value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_SHA2_384_HMAC
+value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_SHA2_512_HMAC
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_ALGORITHM_MAX
+value|20
 end_define
 
 begin_comment
@@ -424,13 +576,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|CRYPTO_MAX_MAC_LEN
-value|20
-end_define
 
 begin_comment
 comment|/* bignum parameter, in packed bytes, ... */
@@ -740,9 +885,9 @@ name|cri_klen
 decl_stmt|;
 comment|/* Key length, in bits */
 name|int
-name|cri_rnd
+name|cri_mlen
 decl_stmt|;
-comment|/* Algorithm rounds, where relevant */
+comment|/* Number of bytes we want from the 					   entire hash. 0 means all. */
 name|caddr_t
 name|cri_key
 decl_stmt|;
@@ -829,10 +974,6 @@ define|#
 directive|define
 name|crd_key
 value|CRD_INI.cri_key
-define|#
-directive|define
-name|crd_rnd
-value|CRD_INI.cri_rnd
 define|#
 directive|define
 name|crd_alg
@@ -944,9 +1085,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|/* Callback function */
-name|caddr_t
-name|crp_mac
-decl_stmt|;
 name|struct
 name|bintime
 name|crp_tstamp
@@ -1059,7 +1197,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Crypto capabilities structure */
+comment|/*  * Crypto capabilities structure.  *  * Synchronization:  * (d) - protected by CRYPTO_DRIVER_LOCK()  * (q) - protected by CRYPTO_Q_LOCK()  * Not tagged fields are read-only.  */
 end_comment
 
 begin_struct
@@ -1069,6 +1207,11 @@ block|{
 name|u_int32_t
 name|cc_sessions
 decl_stmt|;
+comment|/* (d) number of sessions */
+name|u_int32_t
+name|cc_koperations
+decl_stmt|;
+comment|/* (d) number os asym operations */
 comment|/* 	 * Largest possible operator length (in bits) for each type of 	 * encryption algorithm. 	 */
 name|u_int16_t
 name|cc_max_op_len
@@ -1097,14 +1240,7 @@ decl_stmt|;
 name|u_int8_t
 name|cc_flags
 decl_stmt|;
-name|u_int8_t
-name|cc_qblocked
-decl_stmt|;
-comment|/* symmetric q blocked */
-name|u_int8_t
-name|cc_kqblocked
-decl_stmt|;
-comment|/* asymmetric q blocked */
+comment|/* (d) flags */
 define|#
 directive|define
 name|CRYPTOCAP_F_CLEANUP
@@ -1120,6 +1256,14 @@ directive|define
 name|CRYPTOCAP_F_SYNC
 value|0x04
 comment|/* operates synchronously */
+name|u_int8_t
+name|cc_qblocked
+decl_stmt|;
+comment|/* (q) symmetric q blocked */
+name|u_int8_t
+name|cc_kqblocked
+decl_stmt|;
+comment|/* (q) asymmetric q blocked */
 name|void
 modifier|*
 name|cc_arg
@@ -1624,6 +1768,129 @@ parameter_list|,
 name|int
 modifier|*
 name|off
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|cuio_apply
+parameter_list|(
+name|struct
+name|uio
+modifier|*
+name|uio
+parameter_list|,
+name|int
+name|off
+parameter_list|,
+name|int
+name|len
+parameter_list|,
+name|int
+function_decl|(
+modifier|*
+name|f
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|crypto_copyback
+parameter_list|(
+name|int
+name|flags
+parameter_list|,
+name|caddr_t
+name|buf
+parameter_list|,
+name|int
+name|off
+parameter_list|,
+name|int
+name|size
+parameter_list|,
+name|caddr_t
+name|in
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|crypto_copydata
+parameter_list|(
+name|int
+name|flags
+parameter_list|,
+name|caddr_t
+name|buf
+parameter_list|,
+name|int
+name|off
+parameter_list|,
+name|int
+name|size
+parameter_list|,
+name|caddr_t
+name|out
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|crypto_apply
+parameter_list|(
+name|int
+name|flags
+parameter_list|,
+name|caddr_t
+name|buf
+parameter_list|,
+name|int
+name|off
+parameter_list|,
+name|int
+name|len
+parameter_list|,
+name|int
+function_decl|(
+modifier|*
+name|f
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+parameter_list|,
+name|void
+modifier|*
+name|arg
 parameter_list|)
 function_decl|;
 end_function_decl

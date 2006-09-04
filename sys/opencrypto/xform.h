@@ -69,7 +69,7 @@ name|u_int16_t
 name|hashsize
 decl_stmt|;
 name|u_int16_t
-name|authsize
+name|blocksize
 decl_stmt|;
 name|u_int16_t
 name|ctxsize
@@ -370,7 +370,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|auth_hash
-name|auth_hash_hmac_md5_96
+name|auth_hash_hmac_md5
 decl_stmt|;
 end_decl_stmt
 
@@ -378,7 +378,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|auth_hash
-name|auth_hash_hmac_sha1_96
+name|auth_hash_hmac_sha1
 decl_stmt|;
 end_decl_stmt
 
@@ -386,7 +386,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|auth_hash
-name|auth_hash_hmac_ripemd_160_96
+name|auth_hash_hmac_ripemd_160
 decl_stmt|;
 end_decl_stmt
 
