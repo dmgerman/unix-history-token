@@ -97,6 +97,31 @@ begin_comment
 comment|/* for IP_MAXPACKET */
 end_comment
 
+begin_comment
+comment|/* XXX normally defined in config.h */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRLCPY
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_SNPRINTF
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_VSNPRINTF
+value|1
+end_define
+
 begin_include
 include|#
 directive|include
