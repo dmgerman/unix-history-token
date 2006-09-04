@@ -676,7 +676,7 @@ comment|/* __NetBSD__ */
 end_comment
 
 begin_comment
-comment|/*  * 8. Test for "privileged" socket opened by superuser.  * FreeBSD tests  ((so)->so_cred&& (so)->so_cred.cr_uid == 0),   * NetBSD (1.6N) tests (so)->so_uid == 0).  * This difference is wrapped inside  the IPSEC_PRIVILEGED_SO() macro.  *  */
+comment|/*  * 8. Test for "privileged" socket opened by superuser.  * FreeBSD tests  ((so)->so_cred != NULL&& suser_cred((so)->so_cred, SUSER_ALLOWJAIL == 0))  * NetBSD (1.6N) tests (so)->so_uid == 0).  * This difference is wrapped inside  the IPSEC_PRIVILEGED_SO() macro.  *  */
 end_comment
 
 begin_ifdef
@@ -693,7 +693,7 @@ parameter_list|(
 name|_so
 parameter_list|)
 define|\
-value|((_so)->so_cred&& (_so)->so_cred->cr_uid == 0)
+value|((_so)->so_cred != NULL&& \ 	 suser_cred((_so)->so_cred, SUSER_ALLOWJAIL) == 0)
 end_define
 
 begin_endif
