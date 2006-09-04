@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/gencode.c,v 1.221.2.24 2005/06/20 21:52:53 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/gencode.c,v 1.221.2.34 2005/09/05 09:08:04 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -330,12 +330,6 @@ directive|include
 file|<pcap-namedb.h>
 end_include
 
-begin_undef
-undef|#
-directive|undef
-name|ETHERMTU
-end_undef
-
 begin_define
 define|#
 directive|define
@@ -408,7 +402,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Hack for updating VLAN, MPLS offsets. */
+comment|/* Hack for updating VLAN, MPLS, and PPPoE offsets. */
 end_comment
 
 begin_decl_stmt
@@ -420,6 +414,11 @@ operator|-
 literal|1U
 decl_stmt|,
 name|orig_nl
+init|=
+operator|-
+literal|1U
+decl_stmt|,
+name|label_stack_depth
 init|=
 operator|-
 literal|1U
@@ -1242,6 +1241,18 @@ name|gen_dnhostop
 parameter_list|(
 name|bpf_u_int32
 parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|struct
+name|block
+modifier|*
+name|gen_mpls_linktype
+parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
@@ -3846,6 +3857,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+comment|/* 	 * And assume we're not doing SS7. 	 */
 name|off_sio
 operator|=
 operator|-
@@ -3880,6 +3892,10 @@ name|orig_nl
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|label_stack_depth
+operator|=
+literal|0
 expr_stmt|;
 name|reg_ll_size
 operator|=
@@ -4499,10 +4515,22 @@ expr_stmt|;
 comment|/* no 802.2 LLC */
 return|return;
 case|case
+name|DLT_JUNIPER_MFR
+case|:
+case|case
 name|DLT_JUNIPER_MLFR
 case|:
 case|case
 name|DLT_JUNIPER_MLPPP
+case|:
+case|case
+name|DLT_JUNIPER_PPP
+case|:
+case|case
+name|DLT_JUNIPER_CHDLC
+case|:
+case|case
+name|DLT_JUNIPER_FRELAY
 case|:
 name|off_linktype
 operator|=
@@ -4556,6 +4584,9 @@ return|return;
 comment|/* frames captured on a Juniper PPPoE service PIC 		 * contain raw ethernet frames */
 case|case
 name|DLT_JUNIPER_PPPOE
+case|:
+case|case
+name|DLT_JUNIPER_ETHER
 case|:
 name|off_linktype
 operator|=
@@ -6398,6 +6429,54 @@ decl_stmt|,
 modifier|*
 name|b2
 decl_stmt|;
+comment|/* are we checking MPLS-encapsulated packets? */
+if|if
+condition|(
+name|label_stack_depth
+operator|>
+literal|0
+condition|)
+block|{
+switch|switch
+condition|(
+name|proto
+condition|)
+block|{
+case|case
+name|ETHERTYPE_IP
+case|:
+case|case
+name|PPP_IP
+case|:
+comment|/* FIXME add other L3 proto IDs */
+return|return
+name|gen_mpls_linktype
+argument_list|(
+name|Q_IP
+argument_list|)
+return|;
+case|case
+name|ETHERTYPE_IPV6
+case|:
+case|case
+name|PPP_IPV6
+case|:
+comment|/* FIXME add other L3 proto IDs */
+return|return
+name|gen_mpls_linktype
+argument_list|(
+name|Q_IPV6
+argument_list|)
+return|;
+default|default:
+name|bpf_error
+argument_list|(
+literal|"unsupported protocol over mpls"
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+block|}
 switch|switch
 condition|(
 name|linktype
@@ -7375,6 +7454,9 @@ block|}
 comment|/*NOTREACHED*/
 break|break;
 case|case
+name|DLT_JUNIPER_MFR
+case|:
+case|case
 name|DLT_JUNIPER_MLFR
 case|:
 case|case
@@ -7403,6 +7485,18 @@ name|DLT_JUNIPER_MONITOR
 case|:
 case|case
 name|DLT_JUNIPER_SERVICES
+case|:
+case|case
+name|DLT_JUNIPER_ETHER
+case|:
+case|case
+name|DLT_JUNIPER_PPP
+case|:
+case|case
+name|DLT_JUNIPER_FRELAY
+case|:
+case|case
+name|DLT_JUNIPER_CHDLC
 case|:
 comment|/* just lets verify the magic number for now - 		 * on ATM we may have up to 6 different encapsulations on the wire 		 * and need a lot of heuristics to figure out that the payload 		 * might be; 		 * 		 * FIXME encapsulation specific BPF_ filters 		 */
 return|return
@@ -10197,6 +10291,136 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Generate a check for IPv4 or IPv6 for MPLS-encapsulated packets;  * test the bottom-of-stack bit, and then check the version number  * field in the IP header.  */
+end_comment
+
+begin_function
+specifier|static
+name|struct
+name|block
+modifier|*
+name|gen_mpls_linktype
+parameter_list|(
+name|proto
+parameter_list|)
+name|int
+name|proto
+decl_stmt|;
+block|{
+name|struct
+name|block
+modifier|*
+name|b0
+decl_stmt|,
+modifier|*
+name|b1
+decl_stmt|;
+switch|switch
+condition|(
+name|proto
+condition|)
+block|{
+case|case
+name|Q_IP
+case|:
+comment|/* match the bottom-of-stack bit */
+name|b0
+operator|=
+name|gen_mcmp
+argument_list|(
+name|OR_NET
+argument_list|,
+operator|-
+literal|2
+argument_list|,
+name|BPF_B
+argument_list|,
+literal|0x01
+argument_list|,
+literal|0x01
+argument_list|)
+expr_stmt|;
+comment|/* match the IPv4 version number */
+name|b1
+operator|=
+name|gen_mcmp
+argument_list|(
+name|OR_NET
+argument_list|,
+literal|0
+argument_list|,
+name|BPF_B
+argument_list|,
+literal|0x40
+argument_list|,
+literal|0xf0
+argument_list|)
+expr_stmt|;
+name|gen_and
+argument_list|(
+name|b0
+argument_list|,
+name|b1
+argument_list|)
+expr_stmt|;
+return|return
+name|b1
+return|;
+case|case
+name|Q_IPV6
+case|:
+comment|/* match the bottom-of-stack bit */
+name|b0
+operator|=
+name|gen_mcmp
+argument_list|(
+name|OR_NET
+argument_list|,
+operator|-
+literal|2
+argument_list|,
+name|BPF_B
+argument_list|,
+literal|0x01
+argument_list|,
+literal|0x01
+argument_list|)
+expr_stmt|;
+comment|/* match the IPv4 version number */
+name|b1
+operator|=
+name|gen_mcmp
+argument_list|(
+name|OR_NET
+argument_list|,
+literal|0
+argument_list|,
+name|BPF_B
+argument_list|,
+literal|0x60
+argument_list|,
+literal|0xf0
+argument_list|)
+expr_stmt|;
+name|gen_and
+argument_list|(
+name|b0
+argument_list|,
+name|b1
+argument_list|)
+expr_stmt|;
+return|return
+name|b1
+return|;
+default|default:
+name|abort
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+end_function
+
 begin_function
 specifier|static
 name|struct
@@ -10254,15 +10478,12 @@ argument_list|,
 name|dir
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Only check for non-IPv4 addresses if we're not 		 * checking MPLS-encapsulated packets. 		 */
 if|if
 condition|(
-name|off_linktype
-operator|!=
-operator|(
-name|u_int
-operator|)
-operator|-
-literal|1
+name|label_stack_depth
+operator|==
+literal|0
 condition|)
 block|{
 name|b1
@@ -22219,6 +22440,9 @@ expr_stmt|;
 block|}
 break|break;
 case|case
+name|DLT_JUNIPER_MFR
+case|:
+case|case
 name|DLT_JUNIPER_MLFR
 case|:
 case|case
@@ -22247,6 +22471,18 @@ name|DLT_JUNIPER_MONITOR
 case|:
 case|case
 name|DLT_JUNIPER_SERVICES
+case|:
+case|case
+name|DLT_JUNIPER_ETHER
+case|:
+case|case
+name|DLT_JUNIPER_PPP
+case|:
+case|case
+name|DLT_JUNIPER_FRELAY
+case|:
+case|case
+name|DLT_JUNIPER_CHDLC
 case|:
 comment|/* juniper flags (including direction) are stored 		 * the byte after the 3-byte magic number */
 if|if
@@ -22435,7 +22671,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* PF firewall log matched interface */
+comment|/* PF firewall log ruleset name */
 end_comment
 
 begin_function
@@ -23061,7 +23297,22 @@ name|struct
 name|block
 modifier|*
 name|b0
+decl_stmt|,
+modifier|*
+name|b1
 decl_stmt|;
+comment|/* can't check for VLAN-encapsulated packets inside MPLS */
+if|if
+condition|(
+name|label_stack_depth
+operator|>
+literal|0
+condition|)
+name|bpf_error
+argument_list|(
+literal|"no VLAN match after MPLS"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Change the offsets to point to the type and data fields within 	 * the VLAN packet.  Just increment the offsets, so that we 	 * can support a hierarchy, e.g. "vlan 300&& vlan 200" to 	 * capture VLAN 200 encapsulated within VLAN 100. 	 * 	 * XXX - this is a bit of a kludge.  If we were to split the 	 * compiler into a parser that parses an expression and 	 * generates an expression tree, and a code generator that 	 * takes an expression tree (which could come from our 	 * parser or from some other parser) and generates BPF code, 	 * we could perhaps make the offsets parameters of routines 	 * and, in the handler for an "AND" node, pass to subnodes 	 * other than the VLAN node the adjusted offsets. 	 * 	 * This would mean that "vlan" would, instead of changing the 	 * behavior of *all* tests after it, change only the behavior 	 * of tests ANDed with it.  That would change the documented 	 * semantics of "vlan", which might break some expressions. 	 * However, it would mean that "(vlan and ip) or ip" would check 	 * both for VLAN-encapsulated IP and IP-over-Ethernet, rather than 	 * checking only for VLAN-encapsulated IP, so that could still 	 * be considered worth doing; it wouldn't break expressions 	 * that are of the form "vlan and ..." or "vlan N and ...", 	 * which I suspect are the most common expressions involving 	 * "vlan".  "vlan or ..." doesn't necessarily do what the user 	 * would really want, now, as all the "or ..." tests would 	 * be done assuming a VLAN, even though the "or" could be viewed 	 * as meaning "or, if this isn't a VLAN packet...". 	 */
 name|orig_linktype
 operator|=
@@ -23128,11 +23379,6 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|struct
-name|block
-modifier|*
-name|b1
-decl_stmt|;
 name|b1
 operator|=
 name|gen_mcmp
@@ -23191,17 +23437,44 @@ name|struct
 name|block
 modifier|*
 name|b0
+decl_stmt|,
+modifier|*
+name|b1
 decl_stmt|;
 comment|/* 	 * Change the offsets to point to the type and data fields within 	 * the MPLS packet.  Just increment the offsets, so that we 	 * can support a hierarchy, e.g. "mpls 100000&& mpls 1024" to 	 * capture packets with an outer label of 100000 and an inner 	 * label of 1024. 	 * 	 * XXX - this is a bit of a kludge.  See comments in gen_vlan(). 	 */
-name|orig_linktype
-operator|=
-name|off_linktype
-expr_stmt|;
-comment|/* save original values */
 name|orig_nl
 operator|=
 name|off_nl
 expr_stmt|;
+if|if
+condition|(
+name|label_stack_depth
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* just match the bottom-of-stack bit clear */
+name|b0
+operator|=
+name|gen_mcmp
+argument_list|(
+name|OR_LINK
+argument_list|,
+name|orig_nl
+operator|-
+literal|2
+argument_list|,
+name|BPF_B
+argument_list|,
+literal|0
+argument_list|,
+literal|0x01
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/*              * Indicate that we're checking MPLS-encapsulated headers,              * to make sure higher level code generators don't try to              * match against IP-related protocols such as Q_ARP, Q_RARP              * etc.              */
 switch|switch
 condition|(
 name|linktype
@@ -23214,21 +23487,13 @@ comment|/* fall through */
 case|case
 name|DLT_EN10MB
 case|:
-name|off_nl_nosnap
-operator|+=
-literal|4
-expr_stmt|;
-name|off_nl
-operator|+=
-literal|4
-expr_stmt|;
 name|b0
 operator|=
 name|gen_cmp
 argument_list|(
 name|OR_LINK
 argument_list|,
-name|orig_linktype
+name|off_linktype
 argument_list|,
 name|BPF_H
 argument_list|,
@@ -23242,21 +23507,13 @@ break|break;
 case|case
 name|DLT_PPP
 case|:
-name|off_nl_nosnap
-operator|+=
-literal|4
-expr_stmt|;
-name|off_nl
-operator|+=
-literal|4
-expr_stmt|;
 name|b0
 operator|=
 name|gen_cmp
 argument_list|(
 name|OR_LINK
 argument_list|,
-name|orig_linktype
+name|off_linktype
 argument_list|,
 name|BPF_H
 argument_list|,
@@ -23267,7 +23524,7 @@ name|PPP_MPLS_UCAST
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* FIXME add other DLT_s ...                  * for Frame-Relay/and ATM this may get messy due to SNAP headers                  * leave it for now */
+comment|/* FIXME add other DLT_s ...                      * for Frame-Relay/and ATM this may get messy due to SNAP headers                      * leave it for now */
 default|default:
 name|bpf_error
 argument_list|(
@@ -23283,6 +23540,7 @@ expr_stmt|;
 comment|/*NOTREACHED*/
 break|break;
 block|}
+block|}
 comment|/* If a specific MPLS label is requested, check it */
 if|if
 condition|(
@@ -23291,11 +23549,6 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|struct
-name|block
-modifier|*
-name|b1
-decl_stmt|;
 name|label_num
 operator|=
 name|label_num
@@ -23334,10 +23587,112 @@ operator|=
 name|b1
 expr_stmt|;
 block|}
+name|off_nl_nosnap
+operator|+=
+literal|4
+expr_stmt|;
+name|off_nl
+operator|+=
+literal|4
+expr_stmt|;
+name|label_stack_depth
+operator|++
+expr_stmt|;
 return|return
 operator|(
 name|b0
 operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Support PPPOE discovery and session.  */
+end_comment
+
+begin_function
+name|struct
+name|block
+modifier|*
+name|gen_pppoed
+parameter_list|()
+block|{
+comment|/* check for PPPoE discovery */
+return|return
+name|gen_linktype
+argument_list|(
+operator|(
+name|bpf_int32
+operator|)
+name|ETHERTYPE_PPPOED
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|struct
+name|block
+modifier|*
+name|gen_pppoes
+parameter_list|()
+block|{
+name|struct
+name|block
+modifier|*
+name|b0
+decl_stmt|;
+comment|/* 	 * Test against the PPPoE session link-layer type. 	 */
+name|b0
+operator|=
+name|gen_linktype
+argument_list|(
+operator|(
+name|bpf_int32
+operator|)
+name|ETHERTYPE_PPPOES
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Change the offsets to point to the type and data fields within 	 * the PPP packet. 	 * 	 * XXX - this is a bit of a kludge.  If we were to split the 	 * compiler into a parser that parses an expression and 	 * generates an expression tree, and a code generator that 	 * takes an expression tree (which could come from our 	 * parser or from some other parser) and generates BPF code, 	 * we could perhaps make the offsets parameters of routines 	 * and, in the handler for an "AND" node, pass to subnodes 	 * other than the PPPoE node the adjusted offsets. 	 * 	 * This would mean that "pppoes" would, instead of changing the 	 * behavior of *all* tests after it, change only the behavior 	 * of tests ANDed with it.  That would change the documented 	 * semantics of "pppoes", which might break some expressions. 	 * However, it would mean that "(pppoes and ip) or ip" would check 	 * both for VLAN-encapsulated IP and IP-over-Ethernet, rather than 	 * checking only for VLAN-encapsulated IP, so that could still 	 * be considered worth doing; it wouldn't break expressions 	 * that are of the form "pppoes and ..." which I suspect are the 	 * most common expressions involving "pppoes".  "pppoes or ..." 	 * doesn't necessarily do what the user would really want, now, 	 * as all the "or ..." tests would be done assuming PPPoE, even 	 * though the "or" could be viewed as meaning "or, if this isn't 	 * a PPPoE packet...". 	 */
+name|orig_linktype
+operator|=
+name|off_linktype
+expr_stmt|;
+comment|/* save original values */
+name|orig_nl
+operator|=
+name|off_nl
+expr_stmt|;
+comment|/* 	 * The "network-layer" protocol is PPPoE, which has a 6-byte 	 * PPPoE header, followed by PPP payload, so we set the 	 * offsets to the network layer offset plus 6 bytes for 	 * the PPPoE header plus the values appropriate for PPP when 	 * encapsulated in Ethernet (which means there's no HDLC 	 * encapsulation). 	 */
+name|off_linktype
+operator|=
+name|orig_nl
+operator|+
+literal|6
+expr_stmt|;
+name|off_nl
+operator|=
+name|orig_nl
+operator|+
+literal|6
+operator|+
+literal|2
+expr_stmt|;
+name|off_nl_nosnap
+operator|=
+name|orig_nl
+operator|+
+literal|6
+operator|+
+literal|2
+expr_stmt|;
+comment|/* 	 * Set the link-layer type to PPP, as all subsequent tests will 	 * be on the encapsulated PPP header. 	 */
+name|linktype
+operator|=
+name|DLT_PPP
+expr_stmt|;
+return|return
+name|b0
 return|;
 block|}
 end_function
