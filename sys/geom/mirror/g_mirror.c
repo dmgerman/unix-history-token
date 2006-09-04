@@ -9078,6 +9078,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|bp
+operator|->
+name|bio_to
+operator|!=
+name|sc
+operator|->
+name|sc_provider
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|bp
 operator|->
@@ -9112,11 +9123,36 @@ name|bp
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|KASSERT
+argument_list|(
+literal|0
+argument_list|,
+operator|(
+literal|"Invalid request cflags=0x%hhx to=%s."
+operator|,
+name|bp
+operator|->
+name|bio_cflags
+operator|,
+name|bp
+operator|->
+name|bio_to
+operator|->
+name|name
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
 name|g_mirror_register_request
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+block|}
 name|G_MIRROR_DEBUG
 argument_list|(
 literal|5
@@ -10482,7 +10518,7 @@ block|}
 else|else
 comment|/* if (sc->sc_syncid< disk->d_sync.ds_syncid) */
 block|{
-comment|/* 		 * Not good, NOT GOOD! 		 * It means that mirror was started on stale disks 		 * and more fresh disk just arrive. 		 * If there were writes, mirror is fucked up, sorry. 		 * I think the best choice here is don't touch 		 * this disk and inform the user laudly. 		 */
+comment|/* 		 * Not good, NOT GOOD! 		 * It means that mirror was started on stale disks 		 * and more fresh disk just arrive. 		 * If there were writes, mirror is broken, sorry. 		 * I think the best choice here is don't touch 		 * this disk and inform the user loudly. 		 */
 name|G_MIRROR_DEBUG
 argument_list|(
 literal|0

@@ -10703,6 +10703,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|bp
+operator|->
+name|bio_to
+operator|!=
+name|sc
+operator|->
+name|sc_provider
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|bp
 operator|->
@@ -10736,6 +10747,29 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+name|KASSERT
+argument_list|(
+literal|0
+argument_list|,
+operator|(
+literal|"Invalid request cflags=0x%hhx to=%s."
+operator|,
+name|bp
+operator|->
+name|bio_cflags
+operator|,
+name|bp
+operator|->
+name|bio_to
+operator|->
+name|name
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 elseif|else
 if|if
 condition|(
@@ -12284,7 +12318,7 @@ block|}
 else|else
 comment|/* if (sc->sc_syncid< disk->d_sync.ds_syncid) */
 block|{
-comment|/* 		 * Not good, NOT GOOD! 		 * It means that device was started on stale disks 		 * and more fresh disk just arrive. 		 * If there were writes, device is fucked up, sorry. 		 * I think the best choice here is don't touch 		 * this disk and inform the user laudly. 		 */
+comment|/* 		 * Not good, NOT GOOD! 		 * It means that device was started on stale disks 		 * and more fresh disk just arrive. 		 * If there were writes, device is broken, sorry. 		 * I think the best choice here is don't touch 		 * this disk and inform the user loudly. 		 */
 name|G_RAID3_DEBUG
 argument_list|(
 literal|0
