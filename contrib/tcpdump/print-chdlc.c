@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-chdlc.c,v 1.32.2.7 2005/04/27 14:35:56 hannes Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-chdlc.c,v 1.32.2.8 2005/08/23 10:29:42 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -148,15 +148,6 @@ name|h
 operator|->
 name|caplen
 decl_stmt|;
-specifier|const
-name|struct
-name|ip
-modifier|*
-name|ip
-decl_stmt|;
-name|u_int
-name|proto
-decl_stmt|;
 if|if
 condition|(
 name|caplen
@@ -175,6 +166,42 @@ name|caplen
 operator|)
 return|;
 block|}
+return|return
+operator|(
+name|chdlc_print
+argument_list|(
+name|p
+argument_list|,
+name|length
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|u_int
+name|chdlc_print
+parameter_list|(
+specifier|register
+specifier|const
+name|u_char
+modifier|*
+name|p
+parameter_list|,
+name|u_int
+name|length
+parameter_list|)
+block|{
+name|u_int
+name|proto
+decl_stmt|;
+specifier|const
+name|struct
+name|ip
+modifier|*
+name|ip
+decl_stmt|;
 name|proto
 operator|=
 name|EXTRACT_16BITS

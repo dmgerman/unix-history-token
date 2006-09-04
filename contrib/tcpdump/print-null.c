@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-null.c,v 1.53.2.2 2005/05/19 07:26:18 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-null.c,v 1.53.2.3 2005/07/07 01:24:38 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -544,10 +544,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|xflag
-operator|&&
-operator|!
-name|qflag
+name|suppress_default_print
 condition|)
 name|default_print
 argument_list|(

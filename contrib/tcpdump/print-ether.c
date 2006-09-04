@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ether.c,v 1.95.2.2 2005/07/01 16:16:30 hannes Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ether.c,v 1.95.2.4 2005/07/10 14:47:57 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -247,6 +247,12 @@ block|{
 name|ETHERTYPE_PPP
 block|,
 literal|"PPP"
+block|}
+block|,
+block|{
+name|ETHERTYPE_SLOW
+block|,
+literal|"Slow Protocols"
 block|}
 block|,
 block|{
@@ -615,10 +621,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|xflag
-operator|&&
-operator|!
-name|qflag
+name|suppress_default_print
 condition|)
 name|default_print
 argument_list|(
@@ -671,10 +674,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|xflag
-operator|&&
-operator|!
-name|qflag
+name|suppress_default_print
 condition|)
 name|default_print
 argument_list|(
@@ -1060,10 +1060,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|xflag
-operator|&&
-operator|!
-name|qflag
+name|suppress_default_print
 condition|)
 name|default_print
 argument_list|(
@@ -1183,10 +1180,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|xflag
-operator|&&
-operator|!
-name|qflag
+name|suppress_default_print
 condition|)
 name|default_print
 argument_list|(
@@ -1283,6 +1277,21 @@ name|length
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+case|case
+name|ETHERTYPE_SLOW
+case|:
+name|slow_print
+argument_list|(
+name|p
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1

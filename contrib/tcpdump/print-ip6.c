@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ip6.c,v 1.47.2.2 2005/07/03 20:36:33 hannes Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ip6.c,v 1.47.2.3 2005/09/20 06:05:38 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -433,6 +433,10 @@ name|IPPROTO_UDP
 operator|&&
 name|nh
 operator|!=
+name|IPPROTO_DCCP
+operator|&&
+name|nh
+operator|!=
 name|IPPROTO_SCTP
 condition|)
 block|{
@@ -588,6 +592,24 @@ case|case
 name|IPPROTO_SCTP
 case|:
 name|sctp_print
+argument_list|(
+name|cp
+argument_list|,
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|)
+name|ip6
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+return|return;
+case|case
+name|IPPROTO_DCCP
+case|:
+name|dccp_print
 argument_list|(
 name|cp
 argument_list|,

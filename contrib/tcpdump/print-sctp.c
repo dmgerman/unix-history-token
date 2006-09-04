@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-sctp.c,v 1.16.2.3 2005/05/06 10:53:20 guy Exp $ (NETLAB/PEL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-sctp.c,v 1.16.2.4 2005/07/07 01:24:38 guy Exp $ (NETLAB/PEL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -832,10 +832,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|xflag
-operator|&&
-operator|!
-name|qflag
+name|suppress_default_print
 condition|)
 block|{
 name|payloadPtr

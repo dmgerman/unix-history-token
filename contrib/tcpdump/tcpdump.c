@@ -29,7 +29,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/tcpdump.c,v 1.253.2.8 2005/07/05 21:09:05 mcr Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/tcpdump.c,v 1.253.2.11 2005/08/23 10:29:41 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1110,6 +1110,50 @@ block|{
 name|juniper_services_print
 block|,
 name|DLT_JUNIPER_SERVICES
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DLT_JUNIPER_ETHER
+block|{
+name|juniper_ether_print
+block|,
+name|DLT_JUNIPER_ETHER
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DLT_JUNIPER_PPP
+block|{
+name|juniper_ppp_print
+block|,
+name|DLT_JUNIPER_PPP
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DLT_JUNIPER_FRELAY
+block|{
+name|juniper_frelay_print
+block|,
+name|DLT_JUNIPER_FRELAY
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DLT_JUNIPER_CHDLC
+block|{
+name|juniper_chdlc_print
+block|,
+name|DLT_JUNIPER_CHDLC
 block|}
 block|,
 endif|#
@@ -2222,12 +2266,6 @@ case|case
 literal|'A'
 case|:
 operator|++
-name|xflag
-expr_stmt|;
-operator|++
-name|Xflag
-expr_stmt|;
-operator|++
 name|Aflag
 expr_stmt|;
 break|break;
@@ -2743,6 +2781,9 @@ case|:
 operator|++
 name|qflag
 expr_stmt|;
+operator|++
+name|suppress_default_print
+expr_stmt|;
 break|break;
 case|case
 literal|'r'
@@ -3059,12 +3100,18 @@ case|:
 operator|++
 name|xflag
 expr_stmt|;
+operator|++
+name|suppress_default_print
+expr_stmt|;
 break|break;
 case|case
 literal|'X'
 case|:
 operator|++
 name|Xflag
+expr_stmt|;
+operator|++
+name|suppress_default_print
 expr_stmt|;
 break|break;
 case|case
@@ -5116,10 +5163,65 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|Xflag
+condition|)
+block|{
+comment|/* 		 * Print the raw packet data in hex and ASCII. 		 */
+if|if
+condition|(
+name|Xflag
+operator|>
+literal|1
+condition|)
+block|{
+comment|/* 			 * Include the link-layer header. 			 */
+name|hex_and_ascii_print
+argument_list|(
+literal|"\n\t"
+argument_list|,
+name|sp
+argument_list|,
+name|h
+operator|->
+name|caplen
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 			 * Don't include the link-layer header - and if 			 * we have nothing past the link-layer header, 			 * print nothing. 			 */
+if|if
+condition|(
+name|h
+operator|->
+name|caplen
+operator|>
+name|hdrlen
+condition|)
+name|hex_and_ascii_print
+argument_list|(
+literal|"\n\t"
+argument_list|,
+name|sp
+operator|+
+name|hdrlen
+argument_list|,
+name|h
+operator|->
+name|caplen
+operator|-
+name|hdrlen
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
 name|xflag
 condition|)
 block|{
-comment|/* 		 * Print the raw packet data. 		 */
+comment|/* 		 * Print the raw packet data in hex. 		 */
 if|if
 condition|(
 name|xflag
@@ -5171,13 +5273,13 @@ block|}
 elseif|else
 if|if
 condition|(
-name|Xflag
+name|Aflag
 condition|)
 block|{
-comment|/* 		 * Print the raw packet data. 		 */
+comment|/* 		 * Print the raw packet data in ASCII. 		 */
 if|if
 condition|(
-name|Xflag
+name|Aflag
 operator|>
 literal|1
 condition|)
@@ -5185,8 +5287,6 @@ block|{
 comment|/* 			 * Include the link-layer header. 			 */
 name|ascii_print
 argument_list|(
-literal|"\n\t"
-argument_list|,
 name|sp
 argument_list|,
 name|h
@@ -5208,8 +5308,6 @@ name|hdrlen
 condition|)
 name|ascii_print
 argument_list|(
-literal|"\n\t"
-argument_list|,
 name|sp
 operator|+
 name|hdrlen
@@ -5310,7 +5408,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * By default, print the specified data out in hex.  */
+comment|/*  * By default, print the specified data out in hex and ASCII.  */
 end_comment
 
 begin_function
@@ -5332,7 +5430,7 @@ name|u_int
 name|length
 parameter_list|)
 block|{
-name|ascii_print
+name|hex_and_ascii_print
 argument_list|(
 literal|"\n\t"
 argument_list|,
