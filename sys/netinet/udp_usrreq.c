@@ -1686,7 +1686,7 @@ name|last
 operator|=
 name|inp
 expr_stmt|;
-comment|/* 			 * Don't look for additional matches if this one does 			 * not have either the SO_REUSEPORT or SO_REUSEADDR 			 * socket options set.  This heuristic avoids searching 			 * through all pcbs in the common case of a non-shared 			 * port.  It * assumes that an application will never 			 * clear these options after setting them. 			 */
+comment|/* 			 * Don't look for additional matches if this one does 			 * not have either the SO_REUSEPORT or SO_REUSEADDR 			 * socket options set.  This heuristic avoids searching 			 * through all pcbs in the common case of a non-shared 			 * port.  It assumes that an application will never 			 * clear these options after setting them. 			 */
 if|if
 condition|(
 operator|(
