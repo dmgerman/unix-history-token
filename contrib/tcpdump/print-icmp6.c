@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-icmp6.c,v 1.79.2.4 2005/05/14 00:42:54 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-icmp6.c,v 1.79.2.6 2005/09/05 09:29:28 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -377,7 +377,7 @@ block|,
 block|{
 name|ND_NEIGHBOR_ADVERT
 block|,
-literal|"neighbor advertisment"
+literal|"neighbor advertisement"
 block|}
 block|,
 block|{
@@ -672,7 +672,7 @@ block|,
 block|{
 name|ND_OPT_ADVINTERVAL
 block|,
-literal|"advertisment interval"
+literal|"advertisement interval"
 block|}
 block|,
 block|{
@@ -3918,7 +3918,11 @@ operator|+
 literal|4
 index|]
 argument_list|,
-literal|16
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3986,7 +3990,11 @@ operator|+
 operator|(
 name|nsrcs
 operator|*
-literal|16
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_addr
+argument_list|)
 operator|)
 condition|)
 block|{
@@ -4047,10 +4055,18 @@ literal|20
 operator|+
 name|j
 operator|*
-literal|16
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_addr
+argument_list|)
 index|]
 argument_list|,
-literal|16
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -4068,7 +4084,11 @@ literal|20
 operator|+
 name|j
 operator|*
-literal|16
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_addr
+argument_list|)
 index|]
 argument_list|)
 argument_list|)
@@ -4090,7 +4110,11 @@ literal|20
 operator|+
 name|nsrcs
 operator|*
-literal|16
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_addr
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
@@ -4258,7 +4282,11 @@ index|[
 literal|8
 index|]
 argument_list|,
-literal|16
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -4429,7 +4457,11 @@ literal|28
 operator|+
 name|nsrcs
 operator|*
-literal|16
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_addr
+argument_list|)
 condition|)
 name|printf
 argument_list|(
@@ -4471,10 +4503,18 @@ literal|28
 operator|+
 name|i
 operator|*
-literal|16
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_addr
+argument_list|)
 index|]
 argument_list|,
-literal|16
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -4490,7 +4530,11 @@ literal|28
 operator|+
 name|i
 operator|*
-literal|16
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_addr
+argument_list|)
 index|]
 argument_list|)
 argument_list|)

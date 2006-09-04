@@ -4358,8 +4358,6 @@ name|sig
 argument_list|,
 literal|16
 argument_list|)
-operator|==
-literal|0
 condition|)
 return|return
 operator|(

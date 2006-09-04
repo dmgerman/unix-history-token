@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/ospf.h,v 1.16 2004/09/20 14:56:34 hannes Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/ospf.h,v 1.16.2.1 2005/08/23 11:16:30 hannes Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -561,12 +561,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LS_OPAQUE_TE_LINK_SUBTLV_DIFFSERV_TE
+name|LS_OPAQUE_TE_LINK_SUBTLV_BW_CONSTRAINTS
 value|17
 end_define
 
 begin_comment
-comment|/* draft-ietf-tewg-diff-te-proto-06 */
+comment|/* rfc4124 */
 end_comment
 
 begin_define
