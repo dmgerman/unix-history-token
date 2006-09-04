@@ -2092,6 +2092,7 @@ argument_list|,
 name|PWSCAN_MASTER
 argument_list|)
 expr_stmt|;
+comment|/* 		 * fpw is either the struct password for the current line, 		 * or NULL if the line is malformed. 		 */
 operator|*
 name|q
 operator|=
@@ -2099,6 +2100,10 @@ name|t
 expr_stmt|;
 if|if
 condition|(
+name|fpw
+operator|==
+name|NULL
+operator|||
 name|strcmp
 argument_list|(
 name|fpw
@@ -2114,6 +2119,12 @@ literal|0
 condition|)
 block|{
 comment|/* nope */
+if|if
+condition|(
+name|fpw
+operator|!=
+name|NULL
+condition|)
 name|free
 argument_list|(
 name|fpw
