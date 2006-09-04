@@ -1341,6 +1341,38 @@ value|177
 end_define
 
 begin_comment
+comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.   * The DLT_ are used for prepending meta-information  * like interface index, interface name  * before standard Ethernet, PPP, Frelay& C-HDLC Frames  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_JUNIPER_ETHER
+value|178
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_JUNIPER_PPP
+value|179
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_JUNIPER_FRELAY
+value|180
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_JUNIPER_CHDLC
+value|181
+end_define
+
+begin_comment
 comment|/*  * The instruction encodings.  */
 end_comment
 
