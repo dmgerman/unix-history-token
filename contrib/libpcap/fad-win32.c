@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/fad-win32.c,v 1.11 2005/01/29 00:52:22 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/fad-win32.c,v 1.11.2.1 2005/09/01 22:07:41 risso Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -762,6 +762,9 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
+if|if
+condition|(
+operator|!
 name|PacketGetAdapterNames
 argument_list|(
 name|NULL
@@ -769,7 +772,35 @@ argument_list|,
 operator|&
 name|NameLength
 argument_list|)
+operator|&&
+name|NameLength
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 		 * If PacketGetAdapterNames *and* sets the lenght of the buffer to zero,  		 * it means there was an error. 		 */
+name|snprintf
+argument_list|(
+name|errbuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"PacketGetAdapterNames failed: %s"
+argument_list|,
+name|pcap_win32strerror
+argument_list|()
+argument_list|)
 expr_stmt|;
+operator|*
+name|alldevsp
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|NameLength
@@ -789,6 +820,15 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+name|snprintf
+argument_list|(
+name|errbuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"no adapters found."
+argument_list|)
+expr_stmt|;
 operator|*
 name|alldevsp
 operator|=

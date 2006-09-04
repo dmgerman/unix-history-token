@@ -24,6 +24,24 @@ name|SIZEOF_INT
 value|4
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_MSC_EXTENSIONS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SIZEOF_LONG_LONG
+value|8
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Avoids a compiler warning in case this was already defined        * (someone defined _WINSOCKAPI_ when including 'windows.h', in order  * to prevent it from including 'winsock.h')  */
 end_comment

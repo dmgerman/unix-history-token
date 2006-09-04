@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-win32.c,v 1.25.2.2 2005/06/10 03:48:56 risso Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-win32.c,v 1.25.2.3 2005/07/10 17:52:54 risso Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1860,6 +1860,13 @@ operator|->
 name|bufsize
 operator|=
 name|PcapBufSize
+expr_stmt|;
+comment|/* Store the timeout. Used by pcap_setnonblock() */
+name|p
+operator|->
+name|timeout
+operator|=
+name|to_ms
 expr_stmt|;
 comment|/* allocate Packet structure used during the capture */
 if|if

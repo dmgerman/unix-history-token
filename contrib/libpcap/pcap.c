@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap.c,v 1.88.2.3 2005/05/27 23:33:00 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap.c,v 1.88.2.8 2005/08/13 22:29:46 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1573,6 +1573,41 @@ argument_list|(
 name|DLT_JUNIPER_SERVICES
 argument_list|,
 literal|"Juniper Advanced Services PIC"
+argument_list|)
+block|,
+name|DLT_CHOICE
+argument_list|(
+name|DLT_JUNIPER_MFR
+argument_list|,
+literal|"Juniper FRF.16 Frame Relay"
+argument_list|)
+block|,
+name|DLT_CHOICE
+argument_list|(
+name|DLT_JUNIPER_ETHER
+argument_list|,
+literal|"Juniper Ethernet"
+argument_list|)
+block|,
+name|DLT_CHOICE
+argument_list|(
+name|DLT_JUNIPER_PPP
+argument_list|,
+literal|"Juniper PPP"
+argument_list|)
+block|,
+name|DLT_CHOICE
+argument_list|(
+name|DLT_JUNIPER_FRELAY
+argument_list|,
+literal|"Juniper Frame Relay"
+argument_list|)
+block|,
+name|DLT_CHOICE
+argument_list|(
+name|DLT_JUNIPER_CHDLC
+argument_list|,
+literal|"Juniper C-HDLC"
 argument_list|)
 block|,
 name|DLT_CHOICE_SENTINEL
@@ -3996,7 +4031,7 @@ name|pcap_t
 modifier|*
 name|p
 parameter_list|,
-name|direction_t
+name|pcap_direction_t
 name|d
 parameter_list|)
 block|{
