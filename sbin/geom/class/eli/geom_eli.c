@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2004 Pawel Jakub Dawidek<pjd@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2004-2006 Pawel Jakub Dawidek<pjd@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -156,7 +156,17 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|char
-name|algo
+name|aalgo
+index|[]
+init|=
+literal|"none"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|ealgo
 index|[]
 init|=
 literal|"aes"
@@ -350,7 +360,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Available commands:  *  * init [-bhPv] [-a algo] [-i iterations] [-l keylen] [-K newkeyfile] prov  * label - alias for 'init'  * attach [-dpv] [-k keyfile] prov  * detach [-fl] prov ...  * stop - alias for 'detach'  * onetime [-d] [-a algo] [-l keylen] prov ...  * setkey [-pPv] [-n keyno] [-k keyfile] [-K newkeyfile] prov  * delkey [-afv] [-n keyno] prov  * kill [-av] [prov ...]  * backup [-v] prov file  * restore [-v] file prov  * clear [-v] prov ...  * dump [-v] prov ...  */
+comment|/*  * Available commands:  *  * init [-bhPv] [-a aalgo] [-e ealgo] [-i iterations] [-l keylen] [-K newkeyfile] prov  * label - alias for 'init'  * attach [-dprv] [-k keyfile] prov  * detach [-fl] prov ...  * stop - alias for 'detach'  * onetime [-d] [-a aalgo] [-e ealgo] [-l keylen] prov ...  * setkey [-pPv] [-n keyno] [-k keyfile] [-K newkeyfile] prov  * delkey [-afv] [-n keyno] prov  * kill [-av] [prov ...]  * backup [-v] prov file  * restore [-v] file prov  * clear [-v] prov ...  * dump [-v] prov ...  */
 end_comment
 
 begin_decl_stmt
@@ -371,9 +381,9 @@ block|{
 block|{
 literal|'a'
 block|,
-literal|"algo"
+literal|"aalgo"
 block|,
-name|algo
+name|aalgo
 block|,
 name|G_TYPE_STRING
 block|}
@@ -386,6 +396,16 @@ block|,
 name|NULL
 block|,
 name|G_TYPE_NONE
+block|}
+block|,
+block|{
+literal|'e'
+block|,
+literal|"ealgo"
+block|,
+name|ealgo
+block|,
+name|G_TYPE_STRING
 block|}
 block|,
 block|{
@@ -444,7 +464,7 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-literal|"[-bPv] [-a algo] [-i iterations] [-l keylen] [-K newkeyfile] [-s sectorsize] prov"
+literal|"[-bPv] [-a aalgo] [-e ealgo] [-i iterations] [-l keylen] [-K newkeyfile] [-s sectorsize] prov"
 block|}
 block|,
 block|{
@@ -458,9 +478,9 @@ block|{
 block|{
 literal|'a'
 block|,
-literal|"algo"
+literal|"aalgo"
 block|,
-name|algo
+name|aalgo
 block|,
 name|G_TYPE_STRING
 block|}
@@ -473,6 +493,16 @@ block|,
 name|NULL
 block|,
 name|G_TYPE_NONE
+block|}
+block|,
+block|{
+literal|'e'
+block|,
+literal|"ealgo"
+block|,
+name|ealgo
+block|,
+name|G_TYPE_STRING
 block|}
 block|,
 block|{
@@ -574,10 +604,20 @@ block|,
 name|G_TYPE_NONE
 block|}
 block|,
+block|{
+literal|'r'
+block|,
+literal|"readonly"
+block|,
+name|NULL
+block|,
+name|G_TYPE_NONE
+block|}
+block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-literal|"[-dpv] [-k keyfile] prov"
+literal|"[-dprv] [-k keyfile] prov"
 block|}
 block|,
 block|{
@@ -661,9 +701,9 @@ block|{
 block|{
 literal|'a'
 block|,
-literal|"algo"
+literal|"aalgo"
 block|,
-name|algo
+name|aalgo
 block|,
 name|G_TYPE_STRING
 block|}
@@ -676,6 +716,16 @@ block|,
 name|NULL
 block|,
 name|G_TYPE_NONE
+block|}
+block|,
+block|{
+literal|'e'
+block|,
+literal|"ealgo"
+block|,
+name|ealgo
+block|,
+name|G_TYPE_STRING
 block|}
 block|,
 block|{
@@ -703,7 +753,7 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-literal|"[-d] [-a algo] [-l keylen] [-s sectorsize] prov ..."
+literal|"[-d] [-a aalgo] [-e ealgo] [-l keylen] [-s sectorsize] prov ..."
 block|}
 block|,
 block|{
@@ -1944,7 +1994,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * If md_iterations is equal to 0, user don't want PKCS5v2. 		 */
+comment|/* 		 * If md_iterations is equal to 0, user don't want PKCS#5v2. 		 */
 if|if
 condition|(
 name|md
@@ -2724,20 +2774,40 @@ name|md_flags
 operator||=
 name|G_ELI_FLAG_BOOT
 expr_stmt|;
+name|md
+operator|.
+name|md_ealgo
+operator|=
+name|CRYPTO_ALGORITHM_MIN
+operator|-
+literal|1
+expr_stmt|;
 name|str
 operator|=
 name|gctl_get_ascii
 argument_list|(
 name|req
 argument_list|,
-literal|"algo"
+literal|"aalgo"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|str
+argument_list|,
+literal|"none"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
 name|md
 operator|.
-name|md_algo
+name|md_aalgo
 operator|=
-name|g_eli_str2algo
+name|g_eli_str2aalgo
 argument_list|(
 name|str
 argument_list|)
@@ -2746,13 +2816,118 @@ if|if
 condition|(
 name|md
 operator|.
-name|md_algo
+name|md_aalgo
+operator|>=
+name|CRYPTO_ALGORITHM_MIN
+operator|&&
+name|md
+operator|.
+name|md_aalgo
+operator|<=
+name|CRYPTO_ALGORITHM_MAX
+condition|)
+block|{
+name|md
+operator|.
+name|md_flags
+operator||=
+name|G_ELI_FLAG_AUTH
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 			 * For backward compatibility, check if the -a option 			 * was used to provide encryption algorithm. 			 */
+name|md
+operator|.
+name|md_ealgo
+operator|=
+name|g_eli_str2ealgo
+argument_list|(
+name|str
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|md
+operator|.
+name|md_ealgo
 operator|<
 name|CRYPTO_ALGORITHM_MIN
 operator|||
 name|md
 operator|.
-name|md_algo
+name|md_ealgo
+operator|>
+name|CRYPTO_ALGORITHM_MAX
+condition|)
+block|{
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"Invalid authentication algorithm."
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+else|else
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"warning: The -e option, not "
+literal|"the -a option is now used to specify "
+literal|"encryption algorithm to use.\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+if|if
+condition|(
+name|md
+operator|.
+name|md_ealgo
+operator|<
+name|CRYPTO_ALGORITHM_MIN
+operator|||
+name|md
+operator|.
+name|md_ealgo
+operator|>
+name|CRYPTO_ALGORITHM_MAX
+condition|)
+block|{
+name|str
+operator|=
+name|gctl_get_ascii
+argument_list|(
+name|req
+argument_list|,
+literal|"ealgo"
+argument_list|)
+expr_stmt|;
+name|md
+operator|.
+name|md_ealgo
+operator|=
+name|g_eli_str2ealgo
+argument_list|(
+name|str
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|md
+operator|.
+name|md_ealgo
+operator|<
+name|CRYPTO_ALGORITHM_MIN
+operator|||
+name|md
+operator|.
+name|md_ealgo
 operator|>
 name|CRYPTO_ALGORITHM_MAX
 condition|)
@@ -2765,6 +2940,7 @@ literal|"Invalid encryption algorithm."
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 block|}
 name|val
 operator|=
@@ -2789,7 +2965,7 @@ name|g_eli_keylen
 argument_list|(
 name|md
 operator|.
-name|md_algo
+name|md_ealgo
 argument_list|,
 name|md
 operator|.
@@ -3007,7 +3183,7 @@ name|g_eli_mkey_encrypt
 argument_list|(
 name|md
 operator|.
-name|md_algo
+name|md_ealgo
 argument_list|,
 name|key
 argument_list|,
@@ -3798,7 +3974,7 @@ name|g_eli_mkey_encrypt
 argument_list|(
 name|md
 operator|->
-name|md_algo
+name|md_ealgo
 argument_list|,
 name|key
 argument_list|,
