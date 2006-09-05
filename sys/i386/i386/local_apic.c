@@ -2636,6 +2636,25 @@ comment|/* Send EOI first thing. */
 name|lapic_eoi
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Don't do any accounting for the disabled HTT cores, since it 	 * will provide misleading numbers for the userland. 	 * 	 * No locking is necessary here, since even if we loose the race 	 * when hlt_cpus_mask changes it is not a big deal, really. 	 */
+if|if
+condition|(
+operator|(
+name|hlt_cpus_mask
+operator|&
+operator|(
+literal|1
+operator|<<
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+operator|)
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return;
 comment|/* Look up our local APIC structure for the tick counters. */
 name|la
 operator|=
