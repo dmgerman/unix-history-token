@@ -1790,6 +1790,8 @@ expr_stmt|;
 comment|/* 	 * If we are to forward the packet using the same interface 	 * as one we got the packet from, perhaps we should send a redirect 	 * to sender to shortcut a hop. 	 * Only send redirect if source is sending directly to us, 	 * and if packet was not source routed (or has any options). 	 * Also, don't send redirect if forwarding using a route 	 * modified by a redirect. 	 */
 if|if
 condition|(
+name|ip6_sendredirects
+operator|&&
 name|rt
 operator|->
 name|rt_ifp
