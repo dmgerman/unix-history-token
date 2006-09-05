@@ -766,6 +766,11 @@ decl_stmt|;
 name|pid_t
 name|pid
 decl_stmt|;
+name|char
+name|auditsuccess
+init|=
+literal|1
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -1318,6 +1323,13 @@ argument_list|(
 literal|"pam_start()"
 argument_list|)
 expr_stmt|;
+name|au_login_fail
+argument_list|(
+literal|"PAM Error"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|bail
 argument_list|(
 name|NO_SLEEP_EXIT
@@ -1349,6 +1361,13 @@ argument_list|(
 literal|"pam_set_item(PAM_TTY)"
 argument_list|)
 expr_stmt|;
+name|au_login_fail
+argument_list|(
+literal|"PAM Error"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|bail
 argument_list|(
 name|NO_SLEEP_EXIT
@@ -1378,6 +1397,13 @@ block|{
 name|pam_syslog
 argument_list|(
 literal|"pam_set_item(PAM_RHOST)"
+argument_list|)
+expr_stmt|;
+name|au_login_fail
+argument_list|(
+literal|"PAM Error"
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|bail
@@ -1444,6 +1470,11 @@ name|rval
 operator|=
 literal|0
 expr_stmt|;
+name|auditsuccess
+operator|=
+literal|0
+expr_stmt|;
+comment|/* opened a terminal window only */
 block|}
 else|else
 block|{
@@ -1493,6 +1524,14 @@ condition|)
 break|break;
 name|pam_cleanup
 argument_list|()
+expr_stmt|;
+comment|/* 		 * We are not exiting here, but this corresponds to a failed 		 * login event, so set exitstatus to 1. 		 */
+name|au_login_fail
+argument_list|(
+literal|"Login incorrect"
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -1575,6 +1614,14 @@ name|SIG_DFL
 argument_list|)
 expr_stmt|;
 name|endpwent
+argument_list|()
+expr_stmt|;
+comment|/* Audit successful login. */
+if|if
+condition|(
+name|auditsuccess
+condition|)
+name|au_login_success
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Establish the login class. 	 */
@@ -4055,6 +4102,9 @@ name|eval
 parameter_list|)
 block|{
 name|pam_cleanup
+argument_list|()
+expr_stmt|;
+name|audit_logout
 argument_list|()
 expr_stmt|;
 operator|(
