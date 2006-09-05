@@ -4,7 +4,7 @@ comment|// Hashtable implementation used by containers -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -1265,9 +1265,18 @@ end_label
 
 begin_typedef
 typedef|typedef
+name|typename
 name|_Alloc
+operator|::
+name|template
+name|rebind
+operator|<
+name|value_type
+operator|>
+operator|::
+name|other
 name|allocator_type
-typedef|;
+expr_stmt|;
 end_typedef
 
 begin_expr_stmt
