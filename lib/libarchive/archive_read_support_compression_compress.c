@@ -490,6 +490,13 @@ name|read_consume
 expr_stmt|;
 name|a
 operator|->
+name|compression_skip
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* not supported */
+name|a
+operator|->
 name|compression_finish
 operator|=
 name|finish
