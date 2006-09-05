@@ -1999,9 +1999,8 @@ comment|/* There are no candidates at all. */
 if|if
 condition|(
 name|i
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
 block|{
 name|vm_page_unlock_queues
