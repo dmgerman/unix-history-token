@@ -155,7 +155,8 @@ name|param
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|param
+expr|struct
+name|sched_param
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -288,7 +289,8 @@ name|param
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|param
+expr|struct
+name|sched_param
 argument_list|)
 argument_list|)
 expr_stmt|;
