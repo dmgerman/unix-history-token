@@ -486,7 +486,7 @@ name|void
 modifier|*
 name|extract_progress_user_data
 decl_stmt|;
-name|void
+name|int
 function_decl|(
 modifier|*
 name|cleanup_archive_extract

@@ -279,12 +279,50 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set the block size.  */
+comment|/*  * Record the do-not-extract-to file. This belongs in archive_read_extract.c.  */
 end_comment
 
-begin_comment
-comment|/* int archive_read_set_bytes_per_block(struct archive *a, int bytes_per_block) { 	__archive_check_magic(a, ARCHIVE_READ_MAGIC, ARCHIVE_STATE_NEW, "archive_read_set_bytes_per_block"); 	if (bytes_per_block< 1) 		bytes_per_block = 1; 	a->bytes_per_block = bytes_per_block; 	return (0); } */
-end_comment
+begin_function
+name|void
+name|archive_read_extract_set_skip_file
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+name|a
+parameter_list|,
+name|dev_t
+name|d
+parameter_list|,
+name|ino_t
+name|i
+parameter_list|)
+block|{
+name|__archive_check_magic
+argument_list|(
+name|a
+argument_list|,
+name|ARCHIVE_READ_MAGIC
+argument_list|,
+name|ARCHIVE_STATE_ANY
+argument_list|,
+literal|"archive_read_extract_set_skip_file"
+argument_list|)
+expr_stmt|;
+name|a
+operator|->
+name|skip_file_dev
+operator|=
+name|d
+expr_stmt|;
+name|a
+operator|->
+name|skip_file_ino
+operator|=
+name|i
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Open the archive  */
@@ -1775,6 +1813,15 @@ modifier|*
 name|a
 parameter_list|)
 block|{
+name|int
+name|r
+init|=
+name|ARCHIVE_OK
+decl_stmt|,
+name|r1
+init|=
+name|ARCHIVE_OK
+decl_stmt|;
 name|__archive_check_magic
 argument_list|(
 name|a
@@ -1801,6 +1848,8 @@ name|cleanup_archive_extract
 operator|!=
 name|NULL
 condition|)
+name|r
+operator|=
 call|(
 name|a
 operator|->
@@ -1820,6 +1869,9 @@ name|compression_finish
 operator|!=
 name|NULL
 condition|)
+block|{
+name|r1
+operator|=
 call|(
 name|a
 operator|->
@@ -1829,9 +1881,20 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|r1
+operator|<
+name|r
+condition|)
+name|r
+operator|=
+name|r1
+expr_stmt|;
+block|}
 return|return
 operator|(
-name|ARCHIVE_OK
+name|r
 operator|)
 return|;
 block|}

@@ -363,7 +363,7 @@ end_define
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|archive_extract_cleanup
 parameter_list|(
 name|struct
@@ -1507,7 +1507,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|archive_extract_cleanup
 parameter_list|(
 name|struct
@@ -1732,6 +1732,11 @@ name|extract
 operator|=
 name|NULL
 expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_OK
+operator|)
+return|;
 block|}
 end_function
 
