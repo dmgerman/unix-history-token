@@ -71,11 +71,24 @@ directive|include
 file|"dev/mpt/mpilib/mpi_fc.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+end_if
+
 begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -975,6 +988,10 @@ block|}
 comment|/* 	 * If we support target mode, we register a reply handler for it, 	 * but don't add resources until we actually enable target mode. 	 */
 if|if
 condition|(
+name|mpt
+operator|->
+name|is_fc
+operator|&&
 operator|(
 name|mpt
 operator|->
@@ -3697,9 +3714,15 @@ if|if
 condition|(
 name|mpt
 operator|->
+name|is_fc
+operator|&&
+operator|(
+name|mpt
+operator|->
 name|role
 operator|&
 name|MPT_ROLE_TARGET
+operator|)
 condition|)
 block|{
 comment|/* 		 * Try to add some target command resources 		 */
@@ -14360,6 +14383,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|mpt
+operator|->
+name|is_fc
+operator|&&
 operator|(
 name|mpt
 operator|->
@@ -14367,8 +14394,6 @@ name|role
 operator|&
 name|MPT_ROLE_TARGET
 operator|)
-operator|!=
-literal|0
 condition|)
 block|{
 name|cpi
