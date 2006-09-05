@@ -179,7 +179,7 @@ name|int
 name|sc_unit
 decl_stmt|;
 comment|/* P: (read-only) */
-name|int16_t
+name|int
 name|sc_ref
 decl_stmt|;
 comment|/* P: g_gate_list_mtx */
@@ -192,7 +192,7 @@ comment|/* P: (read-only) */
 name|uint32_t
 name|sc_flags
 decl_stmt|;
-comment|/* P: (read-only) */
+comment|/* P: sc_queue_mtx */
 name|struct
 name|bio_queue_head
 name|sc_inqueue
