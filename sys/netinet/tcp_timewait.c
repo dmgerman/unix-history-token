@@ -773,6 +773,13 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
+name|uma_zone_t
+name|tcptw_zone
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
 name|maxtcptw
 decl_stmt|;
@@ -842,10 +849,19 @@ name|new
 operator|>
 name|maxtcptw
 condition|)
+block|{
 name|maxtcptw
 operator|=
 name|new
 expr_stmt|;
+name|uma_zone_set_max
+argument_list|(
+name|tcptw_zone
+argument_list|,
+name|maxtcptw
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 name|error
 operator|=
@@ -1184,13 +1200,6 @@ begin_decl_stmt
 specifier|static
 name|uma_zone_t
 name|tcpcb_zone
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|uma_zone_t
-name|tcptw_zone
 decl_stmt|;
 end_decl_stmt
 
