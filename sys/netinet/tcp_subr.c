@@ -842,12 +842,10 @@ name|new
 operator|>
 name|maxtcptw
 condition|)
-block|{
 name|maxtcptw
 operator|=
 name|new
 expr_stmt|;
-block|}
 else|else
 name|error
 operator|=
