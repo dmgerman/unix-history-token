@@ -3025,6 +3025,12 @@ operator|->
 name|type
 operator|==
 name|dns_rdatatype_rrsig
+operator|||
+name|fctx
+operator|->
+name|type
+operator|==
+name|dns_rdatatype_sig
 argument_list|)
 expr_stmt|;
 name|isc_task_sendanddetach
@@ -13137,6 +13143,12 @@ operator|->
 name|type
 operator|==
 name|dns_rdatatype_rrsig
+operator|||
+name|fctx
+operator|->
+name|type
+operator|==
+name|dns_rdatatype_sig
 operator|)
 condition|)
 block|{
@@ -13615,6 +13627,12 @@ operator|->
 name|type
 operator|==
 name|dns_rdatatype_rrsig
+operator|||
+name|fctx
+operator|->
+name|type
+operator|==
+name|dns_rdatatype_sig
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Don't send a response yet - we have 		 * more rdatasets that still need to 		 * be validated. 		 */
@@ -14271,7 +14289,7 @@ name|event
 operator|->
 name|node
 expr_stmt|;
-comment|/* 			 * If this is an ANY or SIG query, we're not going 			 * to return any rdatasets, unless we encountered 			 * a CNAME or DNAME as "the answer".  In this case, 			 * we're going to return DNS_R_CNAME or DNS_R_DNAME 			 * and we must set up the rdatasets. 			 */
+comment|/* 			 * If this is an ANY, SIG or RRSIG query, we're not 			 * going to return any rdatasets, unless we encountered 			 * a CNAME or DNAME as "the answer".  In this case, 			 * we're going to return DNS_R_CNAME or DNS_R_DNAME 			 * and we must set up the rdatasets. 			 */
 if|if
 condition|(
 operator|(
@@ -14286,6 +14304,12 @@ operator|->
 name|type
 operator|!=
 name|dns_rdatatype_rrsig
+operator|&&
+name|fctx
+operator|->
+name|type
+operator|!=
+name|dns_rdatatype_sig
 operator|)
 operator|||
 operator|(
@@ -14541,7 +14565,7 @@ operator|!=
 name|dns_trust_glue
 condition|)
 block|{
-comment|/* 			 * SIGs are validated as part of validating the 			 * type they cover. 			 */
+comment|/* 			 * RRSIGs are validated as part of validating the 			 * type they cover. 			 */
 if|if
 condition|(
 name|rdataset
@@ -14813,6 +14837,12 @@ operator|->
 name|type
 operator|!=
 name|dns_rdatatype_rrsig
+operator|&&
+name|fctx
+operator|->
+name|type
+operator|!=
+name|dns_rdatatype_sig
 condition|)
 block|{
 comment|/* 					 * This is The Answer.  We will 					 * validate it, but first we cache 					 * the rest of the response - it may 					 * contain useful keys. 					 */
@@ -15465,6 +15495,28 @@ block|{
 name|isc_result_t
 name|result
 decl_stmt|;
+name|dns_rdataset_t
+name|rdataset
+decl_stmt|;
+if|if
+condition|(
+name|ardataset
+operator|==
+name|NULL
+condition|)
+block|{
+name|dns_rdataset_init
+argument_list|(
+operator|&
+name|rdataset
+argument_list|)
+expr_stmt|;
+name|ardataset
+operator|=
+operator|&
+name|rdataset
+expr_stmt|;
+block|}
 name|result
 operator|=
 name|dns_ncache_add
@@ -15489,15 +15541,15 @@ condition|(
 name|result
 operator|==
 name|DNS_R_UNCHANGED
+operator|||
+name|result
+operator|==
+name|ISC_R_SUCCESS
 condition|)
 block|{
-comment|/* 		 * The data in the cache are better than the negative cache 		 * entry we're trying to add. 		 */
+comment|/* 		 * If the cache now contains a negative entry and we 		 * care about whether it is DNS_R_NCACHENXDOMAIN or 		 * DNS_R_NCACHENXRRSET then extract it. 		 */
 if|if
 condition|(
-name|ardataset
-operator|!=
-name|NULL
-operator|&&
 name|ardataset
 operator|->
 name|type
@@ -15505,7 +15557,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * The cache data is also a negative cache 			 * entry. 			 */
+comment|/* 			 * The cache data is a negative cache entry. 			 */
 if|if
 condition|(
 name|NXDOMAIN
@@ -15523,10 +15575,6 @@ operator|*
 name|eresultp
 operator|=
 name|DNS_R_NCACHENXRRSET
-expr_stmt|;
-name|result
-operator|=
-name|ISC_R_SUCCESS
 expr_stmt|;
 block|}
 else|else
@@ -15537,39 +15585,29 @@ name|eresultp
 operator|=
 name|ISC_R_SUCCESS
 expr_stmt|;
+block|}
 name|result
 operator|=
 name|ISC_R_SUCCESS
 expr_stmt|;
 block|}
-block|}
-elseif|else
 if|if
 condition|(
-name|result
+name|ardataset
 operator|==
-name|ISC_R_SUCCESS
-condition|)
-block|{
-if|if
-condition|(
-name|NXDOMAIN
+operator|&
+name|rdataset
+operator|&&
+name|dns_rdataset_isassociated
 argument_list|(
 name|ardataset
 argument_list|)
 condition|)
-operator|*
-name|eresultp
-operator|=
-name|DNS_R_NCACHENXDOMAIN
+name|dns_rdataset_disassociate
+argument_list|(
+name|ardataset
+argument_list|)
 expr_stmt|;
-else|else
-operator|*
-name|eresultp
-operator|=
-name|DNS_R_NCACHENXRRSET
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|result
