@@ -293,6 +293,10 @@ name|u_int16_t
 name|tso_segsz
 decl_stmt|;
 comment|/* TSO segment size */
+name|u_int16_t
+name|ether_vlan
+decl_stmt|;
+comment|/* Ethernet 802.1p+q vlan tag */
 name|SLIST_HEAD
 argument_list|(
 argument|packet_tags
