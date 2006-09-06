@@ -1139,6 +1139,14 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|STAILQ_INIT
+argument_list|(
+operator|&
+name|newproc
+operator|->
+name|p_ktr
+argument_list|)
+expr_stmt|;
 comment|/* We have to lock the process tree while we look for a pid. */
 name|sx_slock
 argument_list|(

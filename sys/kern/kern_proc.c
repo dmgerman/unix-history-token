@@ -822,6 +822,21 @@ literal|"proc_dtor: bad kg pointer"
 operator|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|STAILQ_EMPTY
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_ktr
+argument_list|)
+argument_list|,
+operator|(
+literal|"proc_dtor: non-empty p_ktr"
+operator|)
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* Dispose of an alternate kstack, if it exists. 	 * XXX What if there are more than one thread in the proc? 	 *     The first thread in the proc is special and not 	 *     freed, so you gotta do this here. 	 */

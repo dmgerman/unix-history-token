@@ -1353,6 +1353,14 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|STAILQ_INIT
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_ktr
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_nice

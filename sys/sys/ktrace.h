@@ -152,6 +152,36 @@ define|\
 value|(KTRCHECK((td), (type))&& !((td)->td_pflags& TDP_INKTRACE))
 end_define
 
+begin_define
+define|#
+directive|define
+name|KTRCHECKDRAIN
+parameter_list|(
+name|td
+parameter_list|)
+value|(!(STAILQ_EMPTY(&(td)->td_proc->p_ktr)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|KTRUSERRET
+parameter_list|(
+name|td
+parameter_list|)
+value|do {						\ 	if (KTRCHECKDRAIN(td))						\ 		ktruserret(td);						\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KTRPROCEXIT
+parameter_list|(
+name|td
+parameter_list|)
+value|do {						\ 	if (KTRCHECKDRAIN(td))						\ 		ktrprocexit(td);					\ } while (0)
+end_define
+
 begin_comment
 comment|/*  * ktrace record types  */
 end_comment
@@ -322,7 +352,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * KTR_USER - data comming from userland  */
+comment|/*  * KTR_USER - data coming from userland  */
 end_comment
 
 begin_define
@@ -545,6 +575,28 @@ parameter_list|,
 name|int
 parameter_list|,
 name|register_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ktrprocexit
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ktruserret
+parameter_list|(
+name|struct
+name|thread
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

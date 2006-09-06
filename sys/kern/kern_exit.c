@@ -1188,7 +1188,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KTRACE
-comment|/* 	 * release trace file 	 */
+comment|/* 	 * Drain any pending records on the thread and release the trace 	 * file.  It might be better if drain-and-clear were atomic. 	 */
+name|ktrprocexit
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p

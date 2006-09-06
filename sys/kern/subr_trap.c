@@ -275,6 +275,16 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|KTRACE
+name|KTRUSERRET
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * If this thread tickled GEOM, we need to wait for the giggling to 	 * stop before we return to userland 	 */
 if|if
 condition|(
