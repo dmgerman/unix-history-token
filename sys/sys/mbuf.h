@@ -814,7 +814,7 @@ value|(M_PROTO1|M_PROTO2|M_PROTO3|M_PROTO4|M_PROTO5)
 end_define
 
 begin_comment
-comment|/*  * Flags indicating hw checksum support and sw checksum requirements.  */
+comment|/*  * Flags indicating hw checksum support and sw checksum requirements.  * This field can be directly tested against if_data.ifi_hwassist.  */
 end_comment
 
 begin_define

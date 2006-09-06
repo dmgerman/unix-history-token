@@ -351,11 +351,11 @@ comment|/* up/down, broadcast, etc. */
 name|int
 name|if_capabilities
 decl_stmt|;
-comment|/* interface capabilities */
+comment|/* interface features& capabilities */
 name|int
 name|if_capenable
 decl_stmt|;
-comment|/* enabled features */
+comment|/* enabled features& capabilities */
 name|void
 modifier|*
 name|if_linkmib
