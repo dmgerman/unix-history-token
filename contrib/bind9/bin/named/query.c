@@ -10045,6 +10045,10 @@ condition|(
 name|qtype
 operator|==
 name|dns_rdatatype_rrsig
+operator|||
+name|qtype
+operator|==
+name|dns_rdatatype_sig
 condition|)
 name|type
 operator|=
@@ -10185,6 +10189,10 @@ condition|(
 name|qtype
 operator|==
 name|dns_rdatatype_rrsig
+operator|||
+name|qtype
+operator|==
+name|dns_rdatatype_sig
 condition|)
 name|type
 operator|=
