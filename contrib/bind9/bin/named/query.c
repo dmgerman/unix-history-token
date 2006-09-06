@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: query.c,v 1.198.2.13.4.36 2005/08/11 05:25:20 marka Exp $ */
+comment|/* $Id: query.c,v 1.198.2.13.4.36.6.1 2006/08/17 07:12:31 marka Exp $ */
 end_comment
 
 begin_include
@@ -10045,6 +10045,10 @@ condition|(
 name|qtype
 operator|==
 name|dns_rdatatype_rrsig
+operator|||
+name|qtype
+operator|==
+name|dns_rdatatype_sig
 condition|)
 name|type
 operator|=
@@ -10185,6 +10189,10 @@ condition|(
 name|qtype
 operator|==
 name|dns_rdatatype_rrsig
+operator|||
+name|qtype
+operator|==
+name|dns_rdatatype_sig
 condition|)
 name|type
 operator|=
