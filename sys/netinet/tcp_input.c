@@ -11039,6 +11039,11 @@ name|origoffer
 init|=
 name|offer
 decl_stmt|;
+name|int
+name|mtuflags
+init|=
+literal|0
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
@@ -11115,6 +11120,9 @@ operator|&
 name|inp
 operator|->
 name|inp_inc
+argument_list|,
+operator|&
+name|mtuflags
 argument_list|)
 expr_stmt|;
 name|tp
@@ -11140,6 +11148,9 @@ operator|&
 name|inp
 operator|->
 name|inp_inc
+argument_list|,
+operator|&
+name|mtuflags
 argument_list|)
 expr_stmt|;
 name|tp
@@ -11932,6 +11943,19 @@ name|mss
 operator|*
 name|ss_fltsz
 expr_stmt|;
+comment|/* Check the interface for TSO capabilities. */
+if|if
+condition|(
+name|mtuflags
+operator|&
+name|CSUM_TSO
+condition|)
+name|tp
+operator|->
+name|t_flags
+operator||=
+name|TF_TSO
+expr_stmt|;
 block|}
 end_function
 
@@ -12013,6 +12037,8 @@ operator|=
 name|tcp_maxmtu6
 argument_list|(
 name|inc
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|thcmtu
@@ -12051,6 +12077,8 @@ operator|=
 name|tcp_maxmtu
 argument_list|(
 name|inc
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|thcmtu

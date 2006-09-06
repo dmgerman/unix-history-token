@@ -289,6 +289,10 @@ name|int
 name|csum_data
 decl_stmt|;
 comment|/* data field used by csum routines */
+name|u_int16_t
+name|tso_segsz
+decl_stmt|;
+comment|/* TSO segment size */
 name|SLIST_HEAD
 argument_list|(
 argument|packet_tags
@@ -870,6 +874,17 @@ end_define
 
 begin_comment
 comment|/* will do IP fragmentation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_TSO
+value|0x0020
+end_define
+
+begin_comment
+comment|/* will do TSO */
 end_comment
 
 begin_define

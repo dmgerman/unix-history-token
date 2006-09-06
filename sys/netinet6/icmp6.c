@@ -4937,6 +4937,8 @@ name|tcp_maxmtu6
 argument_list|(
 operator|&
 name|inc
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 block|{

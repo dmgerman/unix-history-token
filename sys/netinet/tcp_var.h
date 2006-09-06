@@ -350,6 +350,11 @@ directive|define
 name|TF_FORCEDATA
 value|0x800000
 comment|/* force out a byte */
+define|#
+directive|define
+name|TF_TSO
+value|0x1000000
+comment|/* TSO enabled on this connection */
 name|tcp_seq
 name|snd_una
 decl_stmt|;
@@ -1907,6 +1912,9 @@ parameter_list|(
 name|struct
 name|in_conninfo
 modifier|*
+parameter_list|,
+name|int
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1917,6 +1925,9 @@ name|tcp_maxmtu6
 parameter_list|(
 name|struct
 name|in_conninfo
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|)
 function_decl|;
