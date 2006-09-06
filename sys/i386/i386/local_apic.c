@@ -2636,6 +2636,9 @@ comment|/* Send EOI first thing. */
 name|lapic_eoi
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
 comment|/* 	 * Don't do any accounting for the disabled HTT cores, since it 	 * will provide misleading numbers for the userland. 	 * 	 * No locking is necessary here, since even if we loose the race 	 * when hlt_cpus_mask changes it is not a big deal, really. 	 */
 if|if
 condition|(
@@ -2655,6 +2658,8 @@ operator|!=
 literal|0
 condition|)
 return|return;
+endif|#
+directive|endif
 comment|/* Look up our local APIC structure for the tick counters. */
 name|la
 operator|=
