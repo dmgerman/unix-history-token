@@ -1768,17 +1768,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|tcp_twrecycleable
-parameter_list|(
-name|struct
-name|tcptw
-modifier|*
-name|tw
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|int	 tcp_twrecycleable(struct tcptw *tw);
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
