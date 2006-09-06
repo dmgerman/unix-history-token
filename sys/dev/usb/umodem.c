@@ -438,7 +438,7 @@ struct|;
 end_struct
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 modifier|*
 name|umodem_get_desc
@@ -456,7 +456,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|umodem_set_comm_feature
 parameter_list|(
@@ -475,7 +475,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|umodem_set_line_coding
 parameter_list|(
@@ -492,7 +492,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umodem_get_caps
 parameter_list|(
@@ -508,7 +508,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umodem_get_status
 parameter_list|(
@@ -530,7 +530,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umodem_set
 parameter_list|(
@@ -547,7 +547,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umodem_dtr
 parameter_list|(
@@ -561,7 +561,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umodem_rts
 parameter_list|(
@@ -575,7 +575,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umodem_break
 parameter_list|(
@@ -589,7 +589,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umodem_set_line_state
 parameter_list|(
@@ -601,7 +601,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|umodem_param
 parameter_list|(
@@ -618,7 +618,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|umodem_ioctl
 parameter_list|(
@@ -639,7 +639,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|umodem_open
 parameter_list|(
@@ -653,7 +653,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umodem_close
 parameter_list|(
@@ -667,7 +667,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umodem_intr
 parameter_list|(
@@ -681,7 +681,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umodem_notify
 parameter_list|(
@@ -694,7 +694,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|struct
 name|ucom_callback
 name|umodem_callback
@@ -720,28 +720,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_probe_t
 name|umodem_match
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_attach_t
 name|umodem_attach
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_detach_t
 name|umodem_detach
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_method_t
 name|umodem_methods
 index|[]
@@ -779,7 +779,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|driver_t
 name|umodem_driver
 init|=
@@ -1913,7 +1913,7 @@ block|}
 end_block
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|umodem_open
 parameter_list|(
@@ -2027,7 +2027,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|umodem_close
 parameter_list|(
@@ -2138,7 +2138,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|umodem_intr
 parameter_list|(
@@ -2429,7 +2429,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|umodem_notify
 parameter_list|(

@@ -1061,7 +1061,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|struct
 name|umass_devdescr_t
 name|umass_devdescrs
@@ -2217,7 +2217,7 @@ comment|/* If device cannot return valid inquiry data, fake it */
 end_comment
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|uint8_t
 name|fake_inq_data
 index|[
@@ -2259,7 +2259,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|umass_match_proto
 parameter_list|(
@@ -2282,7 +2282,7 @@ comment|/* quirk functions */
 end_comment
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umass_init_shuttle
 parameter_list|(
@@ -2299,7 +2299,7 @@ comment|/* generic transfer functions */
 end_comment
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|umass_setup_transfer
 parameter_list|(
@@ -2328,7 +2328,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|umass_setup_ctrl_transfer
 parameter_list|(
@@ -2361,7 +2361,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umass_clear_endpoint_stall
 parameter_list|(
@@ -2386,7 +2386,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umass_reset
 parameter_list|(
@@ -2410,7 +2410,7 @@ comment|/* Bulk-Only related functions */
 end_comment
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umass_bbb_reset
 parameter_list|(
@@ -2426,7 +2426,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umass_bbb_transfer
 parameter_list|(
@@ -2469,7 +2469,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umass_bbb_state
 parameter_list|(
@@ -2486,7 +2486,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|umass_bbb_get_max_lun
 parameter_list|(
@@ -2503,7 +2503,7 @@ comment|/* CBI related functions */
 end_comment
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|umass_cbi_adsc
 parameter_list|(
@@ -2526,7 +2526,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umass_cbi_reset
 parameter_list|(
@@ -2542,7 +2542,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umass_cbi_transfer
 parameter_list|(
@@ -2585,7 +2585,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umass_cbi_state
 parameter_list|(
@@ -2606,7 +2606,7 @@ comment|/* CAM related functions */
 end_comment
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umass_cam_action
 parameter_list|(
@@ -2624,7 +2624,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umass_cam_poll
 parameter_list|(
@@ -2637,7 +2637,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umass_cam_cb
 parameter_list|(
@@ -2660,7 +2660,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umass_cam_sense_cb
 parameter_list|(
@@ -2683,7 +2683,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umass_cam_quirk_cb
 parameter_list|(
@@ -2706,7 +2706,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umass_cam_rescan_callback
 parameter_list|(
@@ -2724,7 +2724,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umass_cam_rescan
 parameter_list|(
@@ -2736,7 +2736,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|umass_cam_attach_sim
 parameter_list|(
@@ -2749,7 +2749,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|umass_cam_attach
 parameter_list|(
@@ -2762,7 +2762,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|umass_cam_detach_sim
 parameter_list|(
@@ -2779,7 +2779,7 @@ comment|/* SCSI specific functions */
 end_comment
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|umass_scsi_transform
 parameter_list|(
@@ -2825,7 +2825,7 @@ comment|/* UFI commands are always 12 bytes */
 end_comment
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|umass_ufi_transform
 parameter_list|(
@@ -2871,7 +2871,7 @@ comment|/* ATAPI commands are always 12 bytes */
 end_comment
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|umass_atapi_transform
 parameter_list|(
@@ -2906,7 +2906,7 @@ comment|/* RBC specific functions */
 end_comment
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|umass_rbc_transform
 parameter_list|(
@@ -2947,7 +2947,7 @@ comment|/* General debugging functions */
 end_comment
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umass_bbb_dump_cbw
 parameter_list|(
@@ -2964,7 +2964,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umass_bbb_dump_csw
 parameter_list|(
@@ -2981,7 +2981,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umass_cbi_dump_cmd
 parameter_list|(
@@ -3001,7 +3001,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umass_dump_buffer
 parameter_list|(
@@ -3067,7 +3067,7 @@ comment|/*  * Match the device we are seeing with the devices supported. Fill in
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|umass_match_proto
 parameter_list|(
@@ -5067,7 +5067,7 @@ block|}
 end_block
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|umass_init_shuttle
 parameter_list|(
@@ -5180,7 +5180,7 @@ comment|/*  * Generic functions to handle transfers  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|umass_setup_transfer
 parameter_list|(
@@ -5292,7 +5292,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|umass_setup_ctrl_transfer
 parameter_list|(
@@ -5411,7 +5411,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|umass_clear_endpoint_stall
 parameter_list|(
@@ -5548,7 +5548,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|umass_reset
 parameter_list|(
@@ -5595,7 +5595,7 @@ comment|/*  * Bulk protocol specific functions  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|umass_bbb_reset
 parameter_list|(
@@ -5755,7 +5755,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|umass_bbb_transfer
 parameter_list|(
@@ -6177,7 +6177,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|umass_bbb_state
 parameter_list|(
@@ -7439,7 +7439,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|umass_bbb_get_max_lun
 parameter_list|(
@@ -7618,7 +7618,7 @@ comment|/*  * Command/Bulk/Interrupt (CBI) specific functions  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|umass_cbi_adsc
 parameter_list|(
@@ -7755,7 +7755,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|umass_cbi_reset
 parameter_list|(
@@ -7932,7 +7932,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|umass_cbi_transfer
 parameter_list|(
@@ -8149,7 +8149,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|umass_cbi_state
 parameter_list|(
@@ -9379,7 +9379,7 @@ comment|/*  * CAM specific functions (used by SCSI, UFI, 8070i (ATAPI))  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|umass_cam_attach_sim
 parameter_list|(
@@ -9499,7 +9499,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|umass_cam_rescan_callback
 parameter_list|(
@@ -9594,7 +9594,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|umass_cam_rescan
 parameter_list|(
@@ -9768,7 +9768,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|umass_cam_attach
 parameter_list|(
@@ -9860,7 +9860,7 @@ comment|/* umass_cam_detach  *	detach from the CAM layer  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|umass_cam_detach_sim
 parameter_list|(
@@ -9925,7 +9925,7 @@ comment|/* umass_cam_action  * 	CAM requests for action come through here  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|umass_cam_action
 parameter_list|(
@@ -11361,7 +11361,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|umass_cam_poll
 parameter_list|(
@@ -11434,7 +11434,7 @@ comment|/* umass_cam_cb  *	finalise a completed CAM command  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|umass_cam_cb
 parameter_list|(
@@ -11797,7 +11797,7 @@ comment|/* Finalise a completed autosense operation  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|umass_cam_sense_cb
 parameter_list|(
@@ -12205,7 +12205,7 @@ comment|/*  * This completion code just handles the fact that we sent a test-uni
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|umass_cam_quirk_cb
 parameter_list|(
@@ -12312,7 +12312,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|umass_driver_load
 parameter_list|(
@@ -12360,7 +12360,7 @@ comment|/*  * SCSI specific functions  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|umass_scsi_transform
 parameter_list|(
@@ -12556,7 +12556,7 @@ comment|/* RBC specific functions */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|umass_rbc_transform
 parameter_list|(
@@ -12731,7 +12731,7 @@ comment|/*  * UFI specific functions  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|umass_ufi_transform
 parameter_list|(
@@ -12967,7 +12967,7 @@ comment|/*  * 8070i (ATAPI) specific functions  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|umass_atapi_transform
 parameter_list|(
@@ -13369,7 +13369,7 @@ name|USB_DEBUG
 end_ifdef
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|umass_bbb_dump_cbw
 parameter_list|(
@@ -13511,7 +13511,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|umass_bbb_dump_csw
 parameter_list|(
@@ -13629,7 +13629,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|umass_cbi_dump_cmd
 parameter_list|(
@@ -13753,7 +13753,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|umass_dump_buffer
 parameter_list|(

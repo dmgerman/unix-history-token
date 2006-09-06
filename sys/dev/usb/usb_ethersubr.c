@@ -106,7 +106,7 @@ file|<dev/usb/usb_ethersubr.h>
 end_include
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|struct
 name|ifqueue
 name|usbq_rx
@@ -114,7 +114,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|struct
 name|ifqueue
 name|usbq_tx
@@ -122,7 +122,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|int
 name|mtx_inited
 init|=
@@ -131,7 +131,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|usbintr
 parameter_list|(
@@ -141,7 +141,7 @@ function_decl|;
 end_function_decl
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|usbintr
 parameter_list|(

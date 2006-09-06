@@ -251,7 +251,7 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|usbd_set_config
 parameter_list|(
@@ -263,7 +263,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|usbd_devinfo_vp
 parameter_list|(
@@ -281,7 +281,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|usbd_getnewaddr
 parameter_list|(
@@ -301,7 +301,7 @@ argument_list|)
 end_if
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|usbd_print
 parameter_list|(
@@ -318,11 +318,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|usbd_submatch
 parameter_list|(
-name|device_ptr_t
+name|device_t
 parameter_list|,
 name|struct
 name|cfdata
@@ -345,7 +345,7 @@ argument_list|)
 end_elif
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|usbd_print
 parameter_list|(
@@ -362,11 +362,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|usbd_submatch
 parameter_list|(
-name|device_ptr_t
+name|device_t
 parameter_list|,
 name|void
 modifier|*
@@ -383,7 +383,7 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|usbd_free_iface_data
 parameter_list|(
@@ -397,7 +397,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|usbd_kill_pipe
 parameter_list|(
@@ -407,11 +407,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|usbd_probe_and_attach
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|parent
 parameter_list|,
 name|usbd_device_handle
@@ -427,7 +427,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|u_int32_t
 name|usb_cookie_no
 init|=
@@ -510,7 +510,7 @@ comment|/* USBVERBOSE */
 end_comment
 
 begin_decl_stmt
-name|Static
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -806,7 +806,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|usbd_trim_spaces
 parameter_list|(
@@ -881,7 +881,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|usbd_devinfo_vp
 parameter_list|(
@@ -2736,7 +2736,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|usbd_set_config
 parameter_list|(
@@ -4201,7 +4201,7 @@ begin_function
 name|usbd_status
 name|usbd_probe_and_attach
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|parent
 parameter_list|,
 name|usbd_device_handle
@@ -4239,10 +4239,10 @@ decl_stmt|;
 name|usbd_status
 name|err
 decl_stmt|;
-name|device_ptr_t
+name|device_t
 name|dv
 decl_stmt|;
-name|device_ptr_t
+name|device_t
 modifier|*
 name|tmpdv
 decl_stmt|;
@@ -5360,7 +5360,7 @@ begin_function
 name|usbd_status
 name|usbd_new_device
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|parent
 parameter_list|,
 name|usbd_bus_handle
@@ -7520,7 +7520,7 @@ name|usbd_port
 modifier|*
 name|up
 parameter_list|,
-name|device_ptr_t
+name|device_t
 name|parent
 parameter_list|)
 block|{

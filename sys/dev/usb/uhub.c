@@ -326,7 +326,7 @@ value|(UHUB_PROTO(sc) == UDPROTO_HSHUBSTT)
 end_define
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uhub_explore
 parameter_list|(
@@ -337,7 +337,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhub_intr
 parameter_list|(
@@ -360,14 +360,14 @@ argument_list|)
 end_if
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|bus_child_location_str_t
 name|uhub_child_location_str
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|bus_child_pnpinfo_str_t
 name|uhub_child_pnpinfo_str
 decl_stmt|;
@@ -500,7 +500,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_method_t
 name|uhubroot_methods
 index|[]
@@ -579,7 +579,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|driver_t
 name|uhubroot_driver
 init|=
@@ -2556,7 +2556,7 @@ begin_function
 name|int
 name|uhub_activate
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|self
 parameter_list|,
 name|enum

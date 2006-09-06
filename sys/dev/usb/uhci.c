@@ -626,7 +626,7 @@ struct|;
 end_struct
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_globalreset
 parameter_list|(
@@ -637,7 +637,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uhci_portreset
 parameter_list|(
@@ -650,7 +650,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_reset
 parameter_list|(
@@ -675,7 +675,7 @@ argument_list|)
 end_if
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_shutdown
 parameter_list|(
@@ -687,7 +687,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_power
 parameter_list|(
@@ -705,7 +705,7 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uhci_run
 parameter_list|(
@@ -719,7 +719,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|uhci_soft_td_t
 modifier|*
 name|uhci_alloc_std
@@ -731,7 +731,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_free_std
 parameter_list|(
@@ -745,7 +745,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|uhci_soft_qh_t
 modifier|*
 name|uhci_alloc_sqh
@@ -757,7 +757,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_free_sqh
 parameter_list|(
@@ -771,7 +771,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uhci_aux_dma_alloc
 parameter_list|(
@@ -792,7 +792,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|uhci_physaddr_t
 name|uhci_aux_dma_prepare
 parameter_list|(
@@ -805,7 +805,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_aux_dma_complete
 parameter_list|(
@@ -824,13 +824,13 @@ literal|0
 end_if
 
 begin_endif
-unit|Static void		uhci_enter_ctl_q(uhci_softc_t *, uhci_soft_qh_t *, 					 uhci_intr_info_t *); Static void		uhci_exit_ctl_q(uhci_softc_t *, uhci_soft_qh_t *);
+unit|static void		uhci_enter_ctl_q(uhci_softc_t *, uhci_soft_qh_t *, 					 uhci_intr_info_t *); static void		uhci_exit_ctl_q(uhci_softc_t *, uhci_soft_qh_t *);
 endif|#
 directive|endif
 end_endif
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_free_std_chain
 parameter_list|(
@@ -847,7 +847,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uhci_alloc_std_chain
 parameter_list|(
@@ -879,7 +879,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_poll_hub
 parameter_list|(
@@ -890,7 +890,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_waitintr
 parameter_list|(
@@ -903,7 +903,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_check_intr
 parameter_list|(
@@ -917,7 +917,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_idone
 parameter_list|(
@@ -928,7 +928,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_abort_xfer
 parameter_list|(
@@ -941,7 +941,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_transfer_complete
 parameter_list|(
@@ -952,7 +952,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_timeout
 parameter_list|(
@@ -963,7 +963,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_timeout_task
 parameter_list|(
@@ -974,7 +974,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_add_ls_ctrl
 parameter_list|(
@@ -988,7 +988,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_add_hs_ctrl
 parameter_list|(
@@ -1002,7 +1002,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_add_bulk
 parameter_list|(
@@ -1016,7 +1016,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_remove_ls_ctrl
 parameter_list|(
@@ -1030,7 +1030,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_remove_hs_ctrl
 parameter_list|(
@@ -1044,7 +1044,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_remove_bulk
 parameter_list|(
@@ -1058,7 +1058,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uhci_str
 parameter_list|(
@@ -1074,7 +1074,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_add_loop
 parameter_list|(
@@ -1086,7 +1086,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_rem_loop
 parameter_list|(
@@ -1098,7 +1098,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uhci_setup_isoc
 parameter_list|(
@@ -1109,7 +1109,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_device_isoc_enter
 parameter_list|(
@@ -1119,7 +1119,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uhci_allocm
 parameter_list|(
@@ -1136,7 +1136,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_freem
 parameter_list|(
@@ -1151,7 +1151,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_xfer_handle
 name|uhci_allocx
 parameter_list|(
@@ -1163,7 +1163,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_freex
 parameter_list|(
@@ -1177,7 +1177,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uhci_device_ctrl_transfer
 parameter_list|(
@@ -1187,7 +1187,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uhci_device_ctrl_start
 parameter_list|(
@@ -1197,7 +1197,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_device_ctrl_abort
 parameter_list|(
@@ -1207,7 +1207,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_device_ctrl_close
 parameter_list|(
@@ -1217,7 +1217,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_device_ctrl_done
 parameter_list|(
@@ -1227,7 +1227,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uhci_device_intr_transfer
 parameter_list|(
@@ -1237,7 +1237,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uhci_device_intr_start
 parameter_list|(
@@ -1247,7 +1247,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_device_intr_abort
 parameter_list|(
@@ -1257,7 +1257,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_device_intr_close
 parameter_list|(
@@ -1267,7 +1267,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_device_intr_done
 parameter_list|(
@@ -1277,7 +1277,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uhci_device_bulk_transfer
 parameter_list|(
@@ -1287,7 +1287,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uhci_device_bulk_start
 parameter_list|(
@@ -1297,7 +1297,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_device_bulk_abort
 parameter_list|(
@@ -1307,7 +1307,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_device_bulk_close
 parameter_list|(
@@ -1317,7 +1317,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_device_bulk_done
 parameter_list|(
@@ -1327,7 +1327,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uhci_device_isoc_transfer
 parameter_list|(
@@ -1337,7 +1337,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uhci_device_isoc_start
 parameter_list|(
@@ -1347,7 +1347,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_device_isoc_abort
 parameter_list|(
@@ -1357,7 +1357,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_device_isoc_close
 parameter_list|(
@@ -1367,7 +1367,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_device_isoc_done
 parameter_list|(
@@ -1377,7 +1377,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uhci_root_ctrl_transfer
 parameter_list|(
@@ -1387,7 +1387,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uhci_root_ctrl_start
 parameter_list|(
@@ -1397,7 +1397,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_root_ctrl_abort
 parameter_list|(
@@ -1407,7 +1407,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_root_ctrl_close
 parameter_list|(
@@ -1417,7 +1417,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_root_ctrl_done
 parameter_list|(
@@ -1427,7 +1427,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uhci_root_intr_transfer
 parameter_list|(
@@ -1437,7 +1437,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uhci_root_intr_start
 parameter_list|(
@@ -1447,7 +1447,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_root_intr_abort
 parameter_list|(
@@ -1457,7 +1457,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_root_intr_close
 parameter_list|(
@@ -1467,7 +1467,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_root_intr_done
 parameter_list|(
@@ -1477,7 +1477,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uhci_open
 parameter_list|(
@@ -1487,7 +1487,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_poll
 parameter_list|(
@@ -1499,7 +1499,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_softintr
 parameter_list|(
@@ -1510,7 +1510,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uhci_device_request
 parameter_list|(
@@ -1521,7 +1521,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_add_intr
 parameter_list|(
@@ -1535,7 +1535,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_remove_intr
 parameter_list|(
@@ -1549,7 +1549,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uhci_device_setintr
 parameter_list|(
@@ -1569,7 +1569,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_device_clear_toggle
 parameter_list|(
@@ -1580,7 +1580,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_noop
 parameter_list|(
@@ -1591,7 +1591,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|__inline
 name|uhci_soft_qh_t
 modifier|*
@@ -1613,7 +1613,7 @@ name|USB_DEBUG
 end_ifdef
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_dump_all
 parameter_list|(
@@ -1624,7 +1624,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_dumpregs
 parameter_list|(
@@ -1635,7 +1635,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_dump_qhs
 parameter_list|(
@@ -1646,7 +1646,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_dump_qh
 parameter_list|(
@@ -1657,7 +1657,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_dump_tds
 parameter_list|(
@@ -1668,7 +1668,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_dump_td
 parameter_list|(
@@ -1679,7 +1679,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhci_dump_ii
 parameter_list|(
@@ -2035,7 +2035,7 @@ value|((ii)->list.le_prev != NULL)
 end_define
 
 begin_function
-name|Static
+specifier|static
 name|__inline
 name|uhci_soft_qh_t
 modifier|*
@@ -3028,7 +3028,7 @@ begin_function
 name|int
 name|uhci_activate
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|self
 parameter_list|,
 name|enum
@@ -4105,7 +4105,7 @@ name|USB_DEBUG
 end_ifdef
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uhci_dumpregs
 parameter_list|(
@@ -4703,7 +4703,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uhci_dump_ii
 parameter_list|(
@@ -6010,7 +6010,7 @@ block|}
 end_function
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uhci_intr1
 parameter_list|(
@@ -9441,7 +9441,7 @@ comment|/*  * Allocate a physically contiguous buffer to handle cases where UHCI
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|uhci_aux_dma_alloc
 parameter_list|(
@@ -9590,7 +9590,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|uhci_physaddr_t
 name|uhci_aux_dma_prepare
 parameter_list|(
@@ -9668,7 +9668,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uhci_aux_dma_complete
 parameter_list|(
@@ -10766,7 +10766,7 @@ comment|/*  * Perform any UHCI-specific transfer completion operations, then  * 
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uhci_transfer_complete
 parameter_list|(
@@ -16802,7 +16802,7 @@ comment|/*  * The USB hub protocol requires that SET_FEATURE(PORT_RESET) also  *
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|uhci_portreset
 parameter_list|(

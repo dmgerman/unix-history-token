@@ -190,7 +190,7 @@ name|USB_DEBUG
 end_ifdef
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|int
 name|ubsadebug
 init|=
@@ -722,7 +722,7 @@ struct|;
 end_struct
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ubsa_intr
 parameter_list|(
@@ -736,7 +736,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ubsa_notify
 parameter_list|(
@@ -750,7 +750,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ubsa_get_status
 parameter_list|(
@@ -769,7 +769,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ubsa_set
 parameter_list|(
@@ -786,7 +786,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|ubsa_param
 parameter_list|(
@@ -803,7 +803,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|ubsa_open
 parameter_list|(
@@ -816,7 +816,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ubsa_close
 parameter_list|(
@@ -829,7 +829,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|ubsa_request
 parameter_list|(
@@ -845,7 +845,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ubsa_dtr
 parameter_list|(
@@ -859,7 +859,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ubsa_rts
 parameter_list|(
@@ -873,7 +873,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ubsa_baudrate
 parameter_list|(
@@ -887,7 +887,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ubsa_parity
 parameter_list|(
@@ -901,7 +901,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ubsa_databits
 parameter_list|(
@@ -915,7 +915,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ubsa_stopbits
 parameter_list|(
@@ -929,7 +929,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ubsa_flow
 parameter_list|(
@@ -969,21 +969,22 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|Static
+begin_struct
+specifier|static
 specifier|const
-expr|struct
+struct|struct
 name|ubsa_product
 block|{
 name|uint16_t
 name|vendor
-block|;
+decl_stmt|;
 name|uint16_t
 name|product
-block|; }
+decl_stmt|;
+block|}
 name|ubsa_products
 index|[]
-operator|=
+init|=
 block|{
 comment|/* BELKIN F5U103 */
 block|{
@@ -1033,32 +1034,32 @@ block|,
 literal|0
 block|}
 block|}
-expr_stmt|;
-end_expr_stmt
+struct|;
+end_struct
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_probe_t
 name|ubsa_match
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_attach_t
 name|ubsa_attach
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_detach_t
 name|ubsa_detach
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_method_t
 name|ubsa_methods
 index|[]
@@ -1096,7 +1097,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|driver_t
 name|ubsa_driver
 init|=
@@ -2080,7 +2081,7 @@ block|}
 end_block
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ubsa_request
 parameter_list|(
@@ -2191,7 +2192,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubsa_dtr
 parameter_list|(
@@ -2245,7 +2246,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubsa_rts
 parameter_list|(
@@ -2299,7 +2300,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubsa_break
 parameter_list|(
@@ -2338,7 +2339,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubsa_set
 parameter_list|(
@@ -2410,7 +2411,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubsa_baudrate
 parameter_list|(
@@ -2556,7 +2557,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubsa_parity
 parameter_list|(
@@ -2617,7 +2618,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubsa_databits
 parameter_list|(
@@ -2715,7 +2716,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubsa_stopbits
 parameter_list|(
@@ -2765,7 +2766,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubsa_flow
 parameter_list|(
@@ -2840,7 +2841,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ubsa_param
 parameter_list|(
@@ -2933,7 +2934,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ubsa_open
 parameter_list|(
@@ -3083,7 +3084,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubsa_close
 parameter_list|(
@@ -3216,7 +3217,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubsa_intr
 parameter_list|(
@@ -3367,7 +3368,7 @@ comment|/* Handle delayed events. */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubsa_notify
 parameter_list|(
@@ -3400,7 +3401,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubsa_get_status
 parameter_list|(

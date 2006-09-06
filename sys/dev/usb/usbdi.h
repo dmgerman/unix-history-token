@@ -836,7 +836,7 @@ name|int
 parameter_list|,
 name|usbd_device_handle
 parameter_list|,
-name|device_ptr_t
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -416,7 +416,7 @@ struct|;
 end_struct
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|ubserparam
 parameter_list|(
@@ -432,7 +432,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ubserstart
 parameter_list|(
@@ -444,7 +444,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ubserstop
 parameter_list|(
@@ -458,7 +458,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|ubserstartread
 parameter_list|(
@@ -470,7 +470,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ubserreadcb
 parameter_list|(
@@ -484,7 +484,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ubserwritecb
 parameter_list|(
@@ -498,7 +498,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ubser_cleanup
 parameter_list|(
@@ -511,28 +511,28 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|t_break_t
 name|ubserbreak
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|t_open_t
 name|ubseropen
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|t_close_t
 name|ubserclose
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|t_modem_t
 name|ubsermodem
 decl_stmt|;
@@ -2132,7 +2132,7 @@ block|}
 end_block
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ubserparam
 parameter_list|(
@@ -2308,7 +2308,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubserstart
 parameter_list|(
@@ -2757,7 +2757,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubserstop
 parameter_list|(
@@ -2851,7 +2851,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubserwritecb
 parameter_list|(
@@ -3087,7 +3087,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|ubserstartread
 parameter_list|(
@@ -3195,7 +3195,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubserreadcb
 parameter_list|(
@@ -3693,7 +3693,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubser_cleanup
 parameter_list|(

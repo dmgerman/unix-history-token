@@ -176,7 +176,7 @@ file|<dev/usb/if_cdcereg.h>
 end_include
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_shutdown_t
 name|cdce_shutdown
 decl_stmt|;
@@ -247,7 +247,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|cdce_encap
 parameter_list|(
@@ -265,7 +265,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|cdce_rxeof
 parameter_list|(
@@ -279,7 +279,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|cdce_txeof
 parameter_list|(
@@ -293,7 +293,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|cdce_start
 parameter_list|(
@@ -305,7 +305,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|cdce_ioctl
 parameter_list|(
@@ -321,7 +321,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|cdce_init
 parameter_list|(
@@ -332,7 +332,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|cdce_reset
 parameter_list|(
@@ -344,7 +344,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|cdce_stop
 parameter_list|(
@@ -356,7 +356,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|cdce_rxstart
 parameter_list|(
@@ -368,7 +368,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|cdce_ifmedia_upd
 parameter_list|(
@@ -381,7 +381,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|cdce_ifmedia_sts
 parameter_list|(
@@ -398,14 +398,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-name|Static
+begin_decl_stmt
+specifier|static
 specifier|const
-expr|struct
+name|struct
 name|cdce_type
 name|cdce_devs
 index|[]
-operator|=
+init|=
 block|{
 block|{
 block|{
@@ -495,8 +495,8 @@ block|,
 name|CDCE_NO_UNION
 block|}
 block|, }
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -1789,7 +1789,7 @@ block|}
 end_block
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|cdce_start
 parameter_list|(
@@ -1933,7 +1933,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|cdce_encap
 parameter_list|(
@@ -2127,7 +2127,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|cdce_stop
 parameter_list|(
@@ -2357,11 +2357,11 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|cdce_shutdown
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|dev
 parameter_list|)
 block|{
@@ -2391,7 +2391,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|cdce_ioctl
 parameter_list|(
@@ -2545,7 +2545,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|cdce_reset
 parameter_list|(
@@ -2561,7 +2561,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|cdce_init
 parameter_list|(
@@ -2880,7 +2880,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|cdce_rxeof
 parameter_list|(
@@ -3196,7 +3196,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|cdce_txeof
 parameter_list|(
@@ -3417,7 +3417,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|cdce_rxstart
 parameter_list|(
@@ -3576,7 +3576,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|cdce_ifmedia_upd
 parameter_list|(
@@ -3594,7 +3594,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|cdce_ifmedia_sts
 parameter_list|(

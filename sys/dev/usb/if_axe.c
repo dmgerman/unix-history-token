@@ -221,7 +221,7 @@ comment|/*  * Various supported device vendors/products.  */
 end_comment
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|struct
 name|axe_type
 name|axe_devs
@@ -286,37 +286,37 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|axe_match
 parameter_list|(
-name|device_ptr_t
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|axe_attach
 parameter_list|(
-name|device_ptr_t
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|axe_detach
 parameter_list|(
-name|device_ptr_t
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|axe_encap
 parameter_list|(
@@ -334,7 +334,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|axe_rxeof
 parameter_list|(
@@ -348,7 +348,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|axe_txeof
 parameter_list|(
@@ -362,7 +362,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|axe_tick
 parameter_list|(
@@ -373,7 +373,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|axe_tick_task
 parameter_list|(
@@ -384,7 +384,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|axe_rxstart
 parameter_list|(
@@ -396,7 +396,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|axe_start
 parameter_list|(
@@ -408,7 +408,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|axe_ioctl
 parameter_list|(
@@ -424,7 +424,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|axe_init
 parameter_list|(
@@ -435,7 +435,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|axe_stop
 parameter_list|(
@@ -447,7 +447,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|axe_watchdog
 parameter_list|(
@@ -459,21 +459,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|axe_shutdown
 parameter_list|(
-name|device_ptr_t
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|axe_miibus_readreg
 parameter_list|(
-name|device_ptr_t
+name|device_t
 parameter_list|,
 name|int
 parameter_list|,
@@ -483,11 +483,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|axe_miibus_writereg
 parameter_list|(
-name|device_ptr_t
+name|device_t
 parameter_list|,
 name|int
 parameter_list|,
@@ -499,17 +499,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|axe_miibus_statchg
 parameter_list|(
-name|device_ptr_t
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|axe_cmd
 parameter_list|(
@@ -530,7 +530,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|axe_ifmedia_upd
 parameter_list|(
@@ -542,7 +542,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|axe_ifmedia_sts
 parameter_list|(
@@ -558,7 +558,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|axe_setmulti
 parameter_list|(
@@ -570,7 +570,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_method_t
 name|axe_methods
 index|[]
@@ -652,7 +652,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|driver_t
 name|axe_driver
 init|=
@@ -671,7 +671,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|devclass_t
 name|axe_devclass
 decl_stmt|;
@@ -746,7 +746,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|axe_cmd
 parameter_list|(
@@ -883,11 +883,11 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|axe_miibus_readreg
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|dev
 parameter_list|,
 name|int
@@ -1109,11 +1109,11 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|axe_miibus_writereg
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|dev
 parameter_list|,
 name|int
@@ -1241,11 +1241,11 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|axe_miibus_statchg
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|dev
 parameter_list|)
 block|{
@@ -1284,7 +1284,7 @@ comment|/*  * Set media options.  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|axe_ifmedia_upd
 parameter_list|(
@@ -1363,7 +1363,7 @@ comment|/*  * Report current media status.  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|axe_ifmedia_sts
 parameter_list|(
@@ -1423,7 +1423,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|axe_setmulti
 parameter_list|(
@@ -1674,7 +1674,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|axe_reset
 parameter_list|(
@@ -2556,11 +2556,11 @@ block|}
 end_block
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|axe_detach
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|dev
 parameter_list|)
 block|{
@@ -2747,7 +2747,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|axe_rxstart
 parameter_list|(
@@ -2891,7 +2891,7 @@ comment|/*  * A frame has been uploaded: pass the resulting mbuf chain up to  * 
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|axe_rxeof
 parameter_list|(
@@ -3181,7 +3181,7 @@ comment|/*  * A frame was downloaded to the chip. It's safe for us to clean up  
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|axe_txeof
 parameter_list|(
@@ -3383,7 +3383,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|axe_tick
 parameter_list|(
@@ -3430,7 +3430,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|axe_tick_task
 parameter_list|(
@@ -3584,7 +3584,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|axe_encap
 parameter_list|(
@@ -3733,7 +3733,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|axe_start
 parameter_list|(
@@ -3887,7 +3887,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|axe_init
 parameter_list|(
@@ -4387,7 +4387,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|axe_ioctl
 parameter_list|(
@@ -4774,7 +4774,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|axe_watchdog
 parameter_list|(
@@ -4890,7 +4890,7 @@ comment|/*  * Stop the adapter and free any mbufs allocated to the  * RX and TX 
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|axe_stop
 parameter_list|(
@@ -5254,11 +5254,11 @@ comment|/*  * Stop all chip I/O so that the kernel's probe routines don't  * get
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|axe_shutdown
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|dev
 parameter_list|)
 block|{

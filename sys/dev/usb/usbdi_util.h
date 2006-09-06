@@ -339,7 +339,9 @@ name|int
 modifier|*
 name|sizep
 parameter_list|,
-name|usb_malloc_type
+name|struct
+name|malloc_type
+modifier|*
 name|mem
 parameter_list|)
 function_decl|;
@@ -492,7 +494,7 @@ begin_function_decl
 name|void
 name|usb_detach_wait
 parameter_list|(
-name|device_ptr_t
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -501,7 +503,7 @@ begin_function_decl
 name|void
 name|usb_detach_wakeup
 parameter_list|(
-name|device_ptr_t
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl

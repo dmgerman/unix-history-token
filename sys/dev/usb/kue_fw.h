@@ -151,7 +151,7 @@ comment|/* Firmware code segment */
 end_comment
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|unsigned
 name|char
 name|kue_code_seg
@@ -7848,7 +7848,7 @@ comment|/* Firmware fixup (data?) segment */
 end_comment
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|unsigned
 name|char
 name|kue_fix_seg
@@ -9316,7 +9316,7 @@ value|5
 end_define
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|unsigned
 name|char
 name|kue_trig_seg

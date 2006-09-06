@@ -601,42 +601,42 @@ argument_list|)
 end_elif
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|d_open_t
 name|ulptopen
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|d_close_t
 name|ulptclose
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|d_write_t
 name|ulptwrite
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|d_read_t
 name|ulptread
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|d_ioctl_t
 name|ulptioctl
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|struct
 name|cdevsw
 name|ulpt_cdevsw
@@ -1625,7 +1625,7 @@ begin_function
 name|int
 name|ulpt_activate
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|self
 parameter_list|,
 name|enum

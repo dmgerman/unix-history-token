@@ -143,7 +143,7 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|hid_clear_local
 parameter_list|(
@@ -207,7 +207,7 @@ struct|;
 end_struct
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|hid_clear_local
 parameter_list|(

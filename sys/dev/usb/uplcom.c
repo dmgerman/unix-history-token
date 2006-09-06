@@ -514,7 +514,7 @@ value|256
 end_define
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uplcom_reset
 parameter_list|(
@@ -526,7 +526,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uplcom_set_line_coding
 parameter_list|(
@@ -541,7 +541,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uplcom_set_crtscts
 parameter_list|(
@@ -553,7 +553,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uplcom_intr
 parameter_list|(
@@ -567,7 +567,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uplcom_set
 parameter_list|(
@@ -584,7 +584,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uplcom_dtr
 parameter_list|(
@@ -598,7 +598,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uplcom_rts
 parameter_list|(
@@ -612,7 +612,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uplcom_break
 parameter_list|(
@@ -626,7 +626,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uplcom_set_line_state
 parameter_list|(
@@ -638,7 +638,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uplcom_get_status
 parameter_list|(
@@ -667,13 +667,13 @@ comment|/* TODO */
 end_comment
 
 begin_endif
-unit|Static	int  uplcom_ioctl(void *, int, u_long, caddr_t, int, usb_proc_ptr);
+unit|static	int  uplcom_ioctl(void *, int, u_long, caddr_t, int, usb_proc_ptr);
 endif|#
 directive|endif
 end_endif
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uplcom_param
 parameter_list|(
@@ -690,7 +690,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uplcom_open
 parameter_list|(
@@ -703,7 +703,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uplcom_close
 parameter_list|(
@@ -716,7 +716,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uplcom_notify
 parameter_list|(
@@ -1025,28 +1025,28 @@ struct|;
 end_struct
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_probe_t
 name|uplcom_match
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_attach_t
 name|uplcom_attach
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_detach_t
 name|uplcom_detach
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_method_t
 name|uplcom_methods
 index|[]
@@ -1084,7 +1084,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|driver_t
 name|uplcom_driver
 init|=
@@ -2500,7 +2500,7 @@ block|}
 end_block
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|uplcom_reset
 parameter_list|(
@@ -2634,14 +2634,14 @@ block|}
 struct|;
 end_struct
 
-begin_expr_stmt
-name|Static
+begin_decl_stmt
+specifier|static
 specifier|const
-expr|struct
+name|struct
 name|pl2303x_init
 name|pl2303x
 index|[]
-operator|=
+init|=
 block|{
 block|{
 name|UT_READ_VENDOR_DEVICE
@@ -2775,8 +2775,8 @@ block|,
 literal|0
 block|}
 block|}
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -2786,7 +2786,7 @@ value|(sizeof(pl2303x)/sizeof(pl2303x[0]))
 end_define
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|uplcom_pl2303x_init
 parameter_list|(
@@ -2941,7 +2941,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uplcom_set_line_state
 parameter_list|(
@@ -3066,7 +3066,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uplcom_set
 parameter_list|(
@@ -3136,7 +3136,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uplcom_dtr
 parameter_list|(
@@ -3182,7 +3182,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uplcom_rts
 parameter_list|(
@@ -3228,7 +3228,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uplcom_break
 parameter_list|(
@@ -3344,7 +3344,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|uplcom_set_crtscts
 parameter_list|(
@@ -3479,7 +3479,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|uplcom_set_line_coding
 parameter_list|(
@@ -3658,7 +3658,7 @@ block|}
 end_function
 
 begin_decl_stmt
-name|Static
+specifier|static
 specifier|const
 name|int
 name|uplcom_rates
@@ -3721,7 +3721,7 @@ value|(sizeof(uplcom_rates)/sizeof(uplcom_rates[0]))
 end_define
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|uplcom_param
 parameter_list|(
@@ -4002,7 +4002,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|uplcom_open
 parameter_list|(
@@ -4173,7 +4173,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uplcom_close
 parameter_list|(
@@ -4304,7 +4304,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uplcom_intr
 parameter_list|(
@@ -4515,7 +4515,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uplcom_notify
 parameter_list|(
@@ -4562,7 +4562,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uplcom_get_status
 parameter_list|(
@@ -4636,7 +4636,7 @@ comment|/* TODO */
 end_comment
 
 begin_endif
-unit|Static int uplcom_ioctl(void *addr, int portno, u_long cmd, caddr_t data, int flag, 	     usb_proc_ptr p) { 	struct uplcom_softc *sc = addr; 	int error = 0;  	if (sc->sc_ucom.sc_dying) 		return (EIO);  	DPRINTF(("uplcom_ioctl: cmd = 0x%08lx\n", cmd));  	switch (cmd) { 	case TIOCNOTTY: 	case TIOCMGET: 	case TIOCMSET: 	case USB_GET_CM_OVER_DATA: 	case USB_SET_CM_OVER_DATA: 		break;  	default: 		DPRINTF(("uplcom_ioctl: unknown\n")); 		error = ENOTTY; 		break; 	}  	return (error); }
+unit|static int uplcom_ioctl(void *addr, int portno, u_long cmd, caddr_t data, int flag, 	     usb_proc_ptr p) { 	struct uplcom_softc *sc = addr; 	int error = 0;  	if (sc->sc_ucom.sc_dying) 		return (EIO);  	DPRINTF(("uplcom_ioctl: cmd = 0x%08lx\n", cmd));  	switch (cmd) { 	case TIOCNOTTY: 	case TIOCMGET: 	case TIOCMSET: 	case USB_GET_CM_OVER_DATA: 	case USB_SET_CM_OVER_DATA: 		break;  	default: 		DPRINTF(("uplcom_ioctl: unknown\n")); 		error = ENOTTY; 		break; 	}  	return (error); }
 endif|#
 directive|endif
 end_endif

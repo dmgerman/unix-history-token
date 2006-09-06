@@ -290,14 +290,14 @@ struct|;
 end_struct
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|bus_dmamap_callback_t
 name|usbmem_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|usb_block_allocmem
 parameter_list|(
@@ -315,7 +315,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|usb_block_freemem
 parameter_list|(
@@ -325,23 +325,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|Static
+begin_expr_stmt
+specifier|static
 name|LIST_HEAD
-argument_list|(,
-name|usb_dma_block
+argument_list|(
+argument_list|,
+argument|usb_dma_block
 argument_list|)
 name|usb_blk_freelist
-init|=
+operator|=
 name|LIST_HEAD_INITIALIZER
 argument_list|(
 name|usb_blk_freelist
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|int
 name|usb_blk_nfree
 init|=
@@ -353,23 +354,24 @@ begin_comment
 comment|/* XXX should have different free list for different tags (for speed) */
 end_comment
 
-begin_decl_stmt
-name|Static
+begin_expr_stmt
+specifier|static
 name|LIST_HEAD
-argument_list|(,
-name|usb_frag_dma
+argument_list|(
+argument_list|,
+argument|usb_frag_dma
 argument_list|)
 name|usb_frag_freelist
-init|=
+operator|=
 name|LIST_HEAD_INITIALIZER
 argument_list|(
 name|usb_frag_freelist
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|usbmem_callback
 parameter_list|(
@@ -459,7 +461,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|usb_block_allocmem
 parameter_list|(
@@ -937,7 +939,7 @@ comment|/*  * Do not free the memory unconditionally since we might be called  *
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|usb_block_freemem
 parameter_list|(

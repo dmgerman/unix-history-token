@@ -76,27 +76,29 @@ name|ANY
 value|0xffff
 end_define
 
-begin_expr_stmt
-name|Static
+begin_struct
+specifier|static
 specifier|const
-expr|struct
+struct|struct
 name|usbd_quirk_entry
 block|{
 name|u_int16_t
 name|idVendor
-block|;
+decl_stmt|;
 name|u_int16_t
 name|idProduct
-block|;
+decl_stmt|;
 name|u_int16_t
 name|bcdDevice
-block|; 	struct
+decl_stmt|;
+name|struct
 name|usbd_quirks
 name|quirks
-block|; }
+decl_stmt|;
+block|}
 name|usb_quirks
 index|[]
-operator|=
+init|=
 block|{
 block|{
 name|USB_VENDOR_KYE
@@ -497,8 +499,8 @@ literal|0
 block|}
 block|}
 block|}
-expr_stmt|;
-end_expr_stmt
+struct|;
+end_struct
 
 begin_decl_stmt
 specifier|const

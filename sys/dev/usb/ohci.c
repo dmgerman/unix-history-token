@@ -481,7 +481,7 @@ struct_decl|;
 end_struct_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|ohci_soft_ed_t
 modifier|*
 name|ohci_alloc_sed
@@ -493,7 +493,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_free_sed
 parameter_list|(
@@ -507,7 +507,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|ohci_soft_td_t
 modifier|*
 name|ohci_alloc_std
@@ -519,7 +519,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_free_std
 parameter_list|(
@@ -533,7 +533,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|ohci_soft_itd_t
 modifier|*
 name|ohci_alloc_sitd
@@ -545,7 +545,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_free_sitd
 parameter_list|(
@@ -565,13 +565,13 @@ literal|0
 end_if
 
 begin_endif
-unit|Static void		ohci_free_std_chain(ohci_softc_t *, ohci_soft_td_t *, 					    ohci_soft_td_t *);
+unit|static void		ohci_free_std_chain(ohci_softc_t *, ohci_soft_td_t *, 					    ohci_soft_td_t *);
 endif|#
 directive|endif
 end_endif
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_alloc_std_chain
 parameter_list|(
@@ -613,7 +613,7 @@ argument_list|)
 end_if
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_shutdown
 parameter_list|(
@@ -625,7 +625,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_power
 parameter_list|(
@@ -643,7 +643,7 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_open
 parameter_list|(
@@ -653,7 +653,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_poll
 parameter_list|(
@@ -665,7 +665,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_softintr
 parameter_list|(
@@ -676,7 +676,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_waitintr
 parameter_list|(
@@ -689,7 +689,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_add_done
 parameter_list|(
@@ -702,7 +702,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_rhsc
 parameter_list|(
@@ -715,7 +715,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_device_request
 parameter_list|(
@@ -726,7 +726,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_add_ed
 parameter_list|(
@@ -740,7 +740,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_rem_ed
 parameter_list|(
@@ -754,7 +754,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_hash_add_td
 parameter_list|(
@@ -768,7 +768,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_hash_rem_td
 parameter_list|(
@@ -782,7 +782,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|ohci_soft_td_t
 modifier|*
 name|ohci_hash_find_td
@@ -796,7 +796,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_hash_add_itd
 parameter_list|(
@@ -810,7 +810,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_hash_rem_itd
 parameter_list|(
@@ -824,7 +824,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|ohci_soft_itd_t
 modifier|*
 name|ohci_hash_find_itd
@@ -838,7 +838,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_setup_isoc
 parameter_list|(
@@ -849,7 +849,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_device_isoc_enter
 parameter_list|(
@@ -859,7 +859,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_allocm
 parameter_list|(
@@ -876,7 +876,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_freem
 parameter_list|(
@@ -891,7 +891,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_xfer_handle
 name|ohci_allocx
 parameter_list|(
@@ -903,7 +903,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_freex
 parameter_list|(
@@ -917,7 +917,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_root_ctrl_transfer
 parameter_list|(
@@ -927,7 +927,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_root_ctrl_start
 parameter_list|(
@@ -937,7 +937,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_root_ctrl_abort
 parameter_list|(
@@ -947,7 +947,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_root_ctrl_close
 parameter_list|(
@@ -957,7 +957,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_root_ctrl_done
 parameter_list|(
@@ -967,7 +967,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_root_intr_transfer
 parameter_list|(
@@ -977,7 +977,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_root_intr_start
 parameter_list|(
@@ -987,7 +987,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_root_intr_abort
 parameter_list|(
@@ -997,7 +997,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_root_intr_close
 parameter_list|(
@@ -1007,7 +1007,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_root_intr_done
 parameter_list|(
@@ -1017,7 +1017,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_device_ctrl_transfer
 parameter_list|(
@@ -1027,7 +1027,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_device_ctrl_start
 parameter_list|(
@@ -1037,7 +1037,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_device_ctrl_abort
 parameter_list|(
@@ -1047,7 +1047,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_device_ctrl_close
 parameter_list|(
@@ -1057,7 +1057,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_device_ctrl_done
 parameter_list|(
@@ -1067,7 +1067,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_device_bulk_transfer
 parameter_list|(
@@ -1077,7 +1077,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_device_bulk_start
 parameter_list|(
@@ -1087,7 +1087,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_device_bulk_abort
 parameter_list|(
@@ -1097,7 +1097,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_device_bulk_close
 parameter_list|(
@@ -1107,7 +1107,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_device_bulk_done
 parameter_list|(
@@ -1117,7 +1117,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_device_intr_transfer
 parameter_list|(
@@ -1127,7 +1127,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_device_intr_start
 parameter_list|(
@@ -1137,7 +1137,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_device_intr_abort
 parameter_list|(
@@ -1147,7 +1147,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_device_intr_close
 parameter_list|(
@@ -1157,7 +1157,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_device_intr_done
 parameter_list|(
@@ -1167,7 +1167,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_device_isoc_transfer
 parameter_list|(
@@ -1177,7 +1177,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_device_isoc_start
 parameter_list|(
@@ -1187,7 +1187,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_device_isoc_abort
 parameter_list|(
@@ -1197,7 +1197,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_device_isoc_close
 parameter_list|(
@@ -1207,7 +1207,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_device_isoc_done
 parameter_list|(
@@ -1217,7 +1217,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_device_setintr
 parameter_list|(
@@ -1237,7 +1237,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_device_intr_insert
 parameter_list|(
@@ -1252,7 +1252,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|ohci_str
 parameter_list|(
@@ -1269,7 +1269,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_timeout
 parameter_list|(
@@ -1280,7 +1280,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_timeout_task
 parameter_list|(
@@ -1291,7 +1291,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_rhsc_able
 parameter_list|(
@@ -1304,7 +1304,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_rhsc_enable
 parameter_list|(
@@ -1315,7 +1315,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_close_pipe
 parameter_list|(
@@ -1328,7 +1328,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_abort_xfer
 parameter_list|(
@@ -1340,7 +1340,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_device_clear_toggle
 parameter_list|(
@@ -1351,7 +1351,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_noop
 parameter_list|(
@@ -1362,7 +1362,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_controller_init
 parameter_list|(
@@ -1380,7 +1380,7 @@ name|USB_DEBUG
 end_ifdef
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_dumpregs
 parameter_list|(
@@ -1391,7 +1391,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_dump_tds
 parameter_list|(
@@ -1402,7 +1402,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_dump_td
 parameter_list|(
@@ -1413,7 +1413,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_dump_ed
 parameter_list|(
@@ -1424,7 +1424,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_dump_itd
 parameter_list|(
@@ -1435,7 +1435,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ohci_dump_itds
 parameter_list|(
@@ -1546,7 +1546,7 @@ comment|/* Reverse the bits in a value 0 .. 31 */
 end_comment
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|u_int8_t
 name|revbits
 index|[
@@ -1725,7 +1725,7 @@ value|1
 end_define
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|struct
 name|usbd_bus_methods
 name|ohci_bus_methods
@@ -1749,7 +1749,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|struct
 name|usbd_pipe_methods
 name|ohci_root_ctrl_methods
@@ -1771,7 +1771,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|struct
 name|usbd_pipe_methods
 name|ohci_root_intr_methods
@@ -1793,7 +1793,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|struct
 name|usbd_pipe_methods
 name|ohci_device_ctrl_methods
@@ -1815,7 +1815,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|struct
 name|usbd_pipe_methods
 name|ohci_device_intr_methods
@@ -1837,7 +1837,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|struct
 name|usbd_pipe_methods
 name|ohci_device_bulk_methods
@@ -1859,7 +1859,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|struct
 name|usbd_pipe_methods
 name|ohci_device_isoc_methods
@@ -1898,7 +1898,7 @@ begin_function
 name|int
 name|ohci_activate
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|self
 parameter_list|,
 name|enum
@@ -3504,7 +3504,7 @@ literal|0
 end_if
 
 begin_endif
-unit|Static void ohci_free_std_chain(ohci_softc_t *sc, ohci_soft_td_t *std, 		    ohci_soft_td_t *stdend) { 	ohci_soft_td_t *p;  	for (; std != stdend; std = p) { 		p = std->nexttd; 		ohci_free_std(sc, std); 	} }
+unit|static void ohci_free_std_chain(ohci_softc_t *sc, ohci_soft_td_t *std, 		    ohci_soft_td_t *stdend) { 	ohci_soft_td_t *p;  	for (; std != stdend; std = p) { 		p = std->nexttd; 		ohci_free_std(sc, std); 	} }
 endif|#
 directive|endif
 end_endif
@@ -4604,7 +4604,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_controller_init
 parameter_list|(
@@ -6097,7 +6097,7 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|ohci_intr1
 parameter_list|(
@@ -6164,7 +6164,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ohci_intr1
 parameter_list|(
@@ -12231,7 +12231,7 @@ comment|/*  * Data structures and routines to emulate the root hub.  */
 end_comment
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|usb_device_descriptor_t
 name|ohci_devd
 init|=
@@ -12289,7 +12289,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|usb_config_descriptor_t
 name|ohci_confd
 init|=
@@ -12321,7 +12321,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|usb_interface_descriptor_t
 name|ohci_ifcd
 init|=
@@ -12348,7 +12348,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|usb_endpoint_descriptor_t
 name|ohci_endpd
 init|=
@@ -12376,7 +12376,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|usb_hub_descriptor_t
 name|ohci_hubd
 init|=
@@ -12405,7 +12405,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ohci_str
 parameter_list|(
@@ -12526,7 +12526,7 @@ comment|/*  * Simulate a hardware hub by handling all the necessary requests.  *
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_root_ctrl_transfer
 parameter_list|(
@@ -12575,7 +12575,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_root_ctrl_start
 parameter_list|(
@@ -14166,7 +14166,7 @@ comment|/* Abort a root control request. */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ohci_root_ctrl_abort
 parameter_list|(
@@ -14183,7 +14183,7 @@ comment|/* Close the root pipe. */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ohci_root_ctrl_close
 parameter_list|(
@@ -14203,7 +14203,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_root_intr_transfer
 parameter_list|(
@@ -14252,7 +14252,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_root_intr_start
 parameter_list|(
@@ -14311,7 +14311,7 @@ comment|/* Abort a root interrupt request. */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ohci_root_intr_abort
 parameter_list|(
@@ -14378,7 +14378,7 @@ comment|/* Close the root pipe. */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ohci_root_intr_close
 parameter_list|(
@@ -14421,7 +14421,7 @@ comment|/************************/
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_device_ctrl_transfer
 parameter_list|(
@@ -14470,7 +14470,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_device_ctrl_start
 parameter_list|(
@@ -14581,7 +14581,7 @@ comment|/* Abort a device control request. */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ohci_device_ctrl_abort
 parameter_list|(
@@ -14613,7 +14613,7 @@ comment|/* Close a device control pipe. */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ohci_device_ctrl_close
 parameter_list|(
@@ -14684,7 +14684,7 @@ comment|/************************/
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ohci_device_clear_toggle
 parameter_list|(
@@ -14722,7 +14722,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ohci_noop
 parameter_list|(
@@ -14733,7 +14733,7 @@ block|{ }
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_device_bulk_transfer
 parameter_list|(
@@ -14782,7 +14782,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_device_bulk_start
 parameter_list|(
@@ -15311,7 +15311,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ohci_device_bulk_abort
 parameter_list|(
@@ -15343,7 +15343,7 @@ comment|/*  * Close a device bulk pipe.  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ohci_device_bulk_close
 parameter_list|(
@@ -15414,7 +15414,7 @@ comment|/************************/
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_device_intr_transfer
 parameter_list|(
@@ -15463,7 +15463,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_device_intr_start
 parameter_list|(
@@ -15608,7 +15608,7 @@ comment|/*  * Insert an interrupt transfer into an endpoint descriptor list  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_device_intr_insert
 parameter_list|(
@@ -16030,7 +16030,7 @@ comment|/* Abort a device control request. */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ohci_device_intr_abort
 parameter_list|(
@@ -16080,7 +16080,7 @@ comment|/* Close a device interrupt pipe. */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ohci_device_intr_close
 parameter_list|(
@@ -16391,7 +16391,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|ohci_device_setintr
 parameter_list|(

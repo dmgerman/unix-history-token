@@ -1582,7 +1582,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|struct
 name|cdevsw
 name|uscanner_cdevsw
@@ -1649,7 +1649,7 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uscanner_do_read
 parameter_list|(
@@ -1667,7 +1667,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uscanner_do_write
 parameter_list|(
@@ -1685,7 +1685,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uscanner_do_close
 parameter_list|(
@@ -2766,7 +2766,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|uscanner_do_read
 parameter_list|(
@@ -3042,7 +3042,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|uscanner_do_write
 parameter_list|(
@@ -3303,7 +3303,7 @@ begin_function
 name|int
 name|uscanner_activate
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|self
 parameter_list|,
 name|enum

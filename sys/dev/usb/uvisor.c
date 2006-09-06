@@ -489,7 +489,7 @@ struct|;
 end_struct
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uvisor_init
 parameter_list|(
@@ -501,11 +501,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*Static usbd_status clie_3_5_init(struct uvisor_softc *);*/
+comment|/*static usbd_status clie_3_5_init(struct uvisor_softc *);*/
 end_comment
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uvisor_close
 parameter_list|(
@@ -543,28 +543,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_probe_t
 name|uvisor_match
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_attach_t
 name|uvisor_attach
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_detach_t
 name|uvisor_detach
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_method_t
 name|uvisor_methods
 index|[]
@@ -602,7 +602,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|driver_t
 name|uvisor_driver
 init|=
@@ -1602,7 +1602,7 @@ literal|0
 end_if
 
 begin_endif
-unit|int uvisor_activate(device_ptr_t self, enum devact act) { 	struct uvisor_softc *sc = (struct uvisor_softc *)self; 	int rv = 0;  	switch (act) { 	case DVACT_ACTIVATE: 		return (EOPNOTSUPP); 		break;  	case DVACT_DEACTIVATE: 		if (sc->sc_subdev != NULL) 			rv = config_deactivate(sc->sc_subdev); 		sc->sc_dying = 1; 		break; 	} 	return (rv); }
+unit|int uvisor_activate(device_t self, enum devact act) { 	struct uvisor_softc *sc = (struct uvisor_softc *)self; 	int rv = 0;  	switch (act) { 	case DVACT_ACTIVATE: 		return (EOPNOTSUPP); 		break;  	case DVACT_DEACTIVATE: 		if (sc->sc_subdev != NULL) 			rv = config_deactivate(sc->sc_subdev); 		sc->sc_dying = 1; 		break; 	} 	return (rv); }
 endif|#
 directive|endif
 end_endif

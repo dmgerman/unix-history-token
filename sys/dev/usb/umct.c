@@ -262,7 +262,7 @@ struct|;
 end_struct
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umct_intr
 parameter_list|(
@@ -276,7 +276,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umct_get_status
 parameter_list|(
@@ -295,7 +295,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umct_set
 parameter_list|(
@@ -312,7 +312,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|umct_param
 parameter_list|(
@@ -329,7 +329,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|umct_open
 parameter_list|(
@@ -342,7 +342,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umct_close
 parameter_list|(
@@ -355,7 +355,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|umct_notify
 parameter_list|(
@@ -369,7 +369,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|struct
 name|ucom_callback
 name|umct_callback
@@ -402,21 +402,22 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|Static
+begin_struct
+specifier|static
 specifier|const
-expr|struct
+struct|struct
 name|umct_product
 block|{
 name|uint16_t
 name|vendor
-block|;
+decl_stmt|;
 name|uint16_t
 name|product
-block|; }
+decl_stmt|;
+block|}
 name|umct_products
 index|[]
-operator|=
+init|=
 block|{
 block|{
 name|USB_VENDOR_MCT
@@ -454,32 +455,32 @@ block|,
 literal|0
 block|}
 block|}
-expr_stmt|;
-end_expr_stmt
+struct|;
+end_struct
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_probe_t
 name|umct_match
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_attach_t
 name|umct_attach
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_detach_t
 name|umct_detach
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_method_t
 name|umct_methods
 index|[]
@@ -516,7 +517,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|driver_t
 name|umct_driver
 init|=
@@ -1399,7 +1400,7 @@ block|}
 end_block
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|umct_request
 parameter_list|(
@@ -1526,7 +1527,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|umct_intr
 parameter_list|(
@@ -1633,7 +1634,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|umct_notify
 parameter_list|(
@@ -1681,7 +1682,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|umct_get_status
 parameter_list|(
@@ -1741,7 +1742,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|umct_set
 parameter_list|(
@@ -1888,7 +1889,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|umct_calc_baud
 parameter_list|(
@@ -1996,7 +1997,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|umct_param
 parameter_list|(
@@ -2170,7 +2171,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|umct_open
 parameter_list|(
@@ -2322,7 +2323,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|umct_close
 parameter_list|(

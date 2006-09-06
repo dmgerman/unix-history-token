@@ -498,7 +498,7 @@ name|defined
 argument_list|(
 name|__OpenBSD__
 argument_list|)
-name|device_ptr_t
+name|device_t
 name|sc_child
 decl_stmt|;
 comment|/* /dev/usb# device */
@@ -730,7 +730,7 @@ begin_function_decl
 name|int
 name|ehci_activate
 parameter_list|(
-name|device_ptr_t
+name|device_t
 parameter_list|,
 name|enum
 name|devact

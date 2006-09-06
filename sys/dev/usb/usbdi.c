@@ -266,7 +266,7 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|usbd_ar_pipe
 parameter_list|(
@@ -277,7 +277,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|usbd_do_request_async_cb
 parameter_list|(
@@ -291,7 +291,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|usbd_start_next
 parameter_list|(
@@ -302,7 +302,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|usbd_open_pipe_ival
 parameter_list|(
@@ -321,7 +321,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|usbd_xfer_isread
 parameter_list|(
@@ -332,7 +332,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|usbd_start_transfer
 parameter_list|(
@@ -354,7 +354,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|usbd_alloc_callback
 parameter_list|(
@@ -376,7 +376,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|int
 name|usbd_nbuses
 init|=
@@ -1647,7 +1647,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|usbd_start_transfer
 parameter_list|(
@@ -2416,7 +2416,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|usbd_alloc_callback
 parameter_list|(
@@ -4171,7 +4171,7 @@ comment|/* Dequeue all pipe operations, called at splusb(). */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|usbd_ar_pipe
 parameter_list|(

@@ -346,7 +346,7 @@ struct|;
 end_struct
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uftdi_get_status
 parameter_list|(
@@ -368,7 +368,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uftdi_set
 parameter_list|(
@@ -385,7 +385,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uftdi_param
 parameter_list|(
@@ -402,7 +402,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uftdi_open
 parameter_list|(
@@ -417,7 +417,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uftdi_read
 parameter_list|(
@@ -441,7 +441,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uftdi_write
 parameter_list|(
@@ -468,7 +468,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uftdi_break
 parameter_list|(
@@ -1475,7 +1475,7 @@ literal|0
 end_if
 
 begin_endif
-unit|int uftdi_activate(device_ptr_t self, enum devact act) { 	struct uftdi_softc *sc = (struct uftdi_softc *)self; 	int rv = 0;  	switch (act) { 	case DVACT_ACTIVATE: 		return (EOPNOTSUPP);  	case DVACT_DEACTIVATE: 		if (sc->sc_subdev != NULL) 			rv = config_deactivate(sc->sc_subdev); 		sc->sc_ucom.sc_dying = 1; 		break; 	} 	return (rv); }
+unit|int uftdi_activate(device_t self, enum devact act) { 	struct uftdi_softc *sc = (struct uftdi_softc *)self; 	int rv = 0;  	switch (act) { 	case DVACT_ACTIVATE: 		return (EOPNOTSUPP);  	case DVACT_DEACTIVATE: 		if (sc->sc_subdev != NULL) 			rv = config_deactivate(sc->sc_subdev); 		sc->sc_ucom.sc_dying = 1; 		break; 	} 	return (rv); }
 endif|#
 directive|endif
 end_endif
@@ -1546,7 +1546,7 @@ directive|endif
 end_endif
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|uftdi_open
 parameter_list|(
@@ -1770,7 +1770,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uftdi_read
 parameter_list|(
@@ -1951,7 +1951,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uftdi_write
 parameter_list|(
@@ -2048,7 +2048,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uftdi_set
 parameter_list|(
@@ -2243,7 +2243,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|uftdi_param
 parameter_list|(
@@ -3225,7 +3225,7 @@ block|}
 end_function
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_method_t
 name|uftdi_methods
 index|[]
@@ -3263,7 +3263,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|driver_t
 name|uftdi_driver
 init|=

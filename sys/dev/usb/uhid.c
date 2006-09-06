@@ -615,7 +615,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|struct
 name|cdevsw
 name|uhid_cdevsw
@@ -687,7 +687,7 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uhid_intr
 parameter_list|(
@@ -701,7 +701,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uhid_do_read
 parameter_list|(
@@ -720,7 +720,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uhid_do_write
 parameter_list|(
@@ -739,7 +739,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uhid_do_ioctl
 parameter_list|(
@@ -1497,7 +1497,7 @@ begin_function
 name|int
 name|uhid_activate
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|self
 parameter_list|,
 name|enum

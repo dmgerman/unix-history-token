@@ -2014,7 +2014,9 @@ name|int
 modifier|*
 name|sizep
 parameter_list|,
-name|usb_malloc_type
+name|struct
+name|malloc_type
+modifier|*
 name|mem
 parameter_list|)
 block|{
@@ -2236,7 +2238,7 @@ block|}
 end_function
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|usbd_bulk_transfer_cb
 parameter_list|(
@@ -2253,7 +2255,7 @@ function_decl|;
 end_function_decl
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|usbd_bulk_transfer_cb
 parameter_list|(
@@ -2478,7 +2480,7 @@ block|}
 end_function
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|usbd_intr_transfer_cb
 parameter_list|(
@@ -2495,7 +2497,7 @@ function_decl|;
 end_function_decl
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|usbd_intr_transfer_cb
 parameter_list|(
@@ -2720,7 +2722,7 @@ begin_function
 name|void
 name|usb_detach_wait
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|dv
 parameter_list|)
 block|{
@@ -2780,7 +2782,7 @@ begin_function
 name|void
 name|usb_detach_wakeup
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|dv
 parameter_list|)
 block|{

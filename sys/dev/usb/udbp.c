@@ -452,49 +452,49 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|ng_constructor_t
 name|ng_udbp_constructor
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|ng_rcvmsg_t
 name|ng_udbp_rcvmsg
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|ng_shutdown_t
 name|ng_udbp_rmnode
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|ng_newhook_t
 name|ng_udbp_newhook
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|ng_connect_t
 name|ng_udbp_connect
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|ng_rcvdata_t
 name|ng_udbp_rcvdata
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|ng_disconnect_t
 name|ng_udbp_disconnect
 decl_stmt|;
@@ -504,25 +504,25 @@ begin_comment
 comment|/* Parse type for struct ngudbpstat */
 end_comment
 
-begin_expr_stmt
-name|Static
+begin_decl_stmt
+specifier|static
 specifier|const
-expr|struct
+name|struct
 name|ng_parse_struct_field
 name|ng_udbp_stat_type_fields
 index|[]
-operator|=
+init|=
 name|NG_UDBP_STATS_TYPE_INFO
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
-name|Static
+begin_decl_stmt
+specifier|static
 specifier|const
-expr|struct
+name|struct
 name|ng_parse_type
 name|ng_udbp_stat_type
-operator|=
+init|=
 block|{
 operator|&
 name|ng_parse_struct_type
@@ -530,21 +530,21 @@ block|,
 operator|&
 name|ng_udbp_stat_type_fields
 block|}
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* List of commands and how to convert arguments to/from ASCII */
 end_comment
 
-begin_expr_stmt
-name|Static
+begin_decl_stmt
+specifier|static
 specifier|const
-expr|struct
+name|struct
 name|ng_cmdlist
 name|ng_udbp_cmdlist
 index|[]
-operator|=
+init|=
 block|{
 block|{
 name|NGM_UDBP_COOKIE
@@ -576,15 +576,15 @@ block|{
 literal|0
 block|}
 block|}
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Netgraph node type descriptor */
 end_comment
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|struct
 name|ng_type
 name|ng_udbp_typestruct
@@ -644,7 +644,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|udbp_setup_in_transfer
 parameter_list|(
@@ -655,7 +655,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|udbp_in_transfer_cb
 parameter_list|(
@@ -672,7 +672,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|udbp_setup_out_transfer
 parameter_list|(
@@ -683,7 +683,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|udbp_out_transfer_cb
 parameter_list|(
@@ -1780,7 +1780,7 @@ block|}
 end_block
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|udbp_setup_in_transfer
 parameter_list|(
@@ -1882,7 +1882,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|udbp_in_transfer_cb
 parameter_list|(
@@ -2019,7 +2019,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|udbp_setup_out_transfer
 parameter_list|(
@@ -2277,7 +2277,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|udbp_out_transfer_cb
 parameter_list|(
@@ -2398,7 +2398,7 @@ comment|/*  * If this is a device node so this work is done in the attach()  * r
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ng_udbp_constructor
 parameter_list|(
@@ -2419,7 +2419,7 @@ comment|/*  * Give our ok for a hook to be added...  * If we are not running thi
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ng_udbp_newhook
 parameter_list|(
@@ -2499,7 +2499,7 @@ comment|/*  * Get a netgraph control message.  * Check it is one we understand. 
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ng_udbp_rcvmsg
 parameter_list|(
@@ -2719,7 +2719,7 @@ comment|/*  * Accept data from the hook and queue it for output.  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ng_udbp_rcvdata
 parameter_list|(
@@ -2927,7 +2927,7 @@ comment|/*  * Do local shutdown processing..  * We are a persistant device, we r
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ng_udbp_rmnode
 parameter_list|(
@@ -3104,7 +3104,7 @@ comment|/*  * This is called once we've already connected a new hook to the othe
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ng_udbp_connect
 parameter_list|(
@@ -3135,7 +3135,7 @@ comment|/*  * Dook disconnection  *  * For this type, removal of the last link d
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ng_udbp_disconnect
 parameter_list|(

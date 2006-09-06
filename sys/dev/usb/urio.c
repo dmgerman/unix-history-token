@@ -502,7 +502,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|struct
 name|cdevsw
 name|urio_cdevsw
@@ -2869,7 +2869,7 @@ begin_function
 name|int
 name|urio_activate
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|self
 parameter_list|,
 name|enum
@@ -3178,7 +3178,7 @@ argument_list|)
 end_if
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|urio_detach
 parameter_list|(

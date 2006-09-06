@@ -645,41 +645,41 @@ argument_list|)
 end_if
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|udav_match
 parameter_list|(
-name|device_ptr_t
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|udav_attach
 parameter_list|(
-name|device_ptr_t
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|udav_detach
 parameter_list|(
-name|device_ptr_t
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|udav_shutdown
 parameter_list|(
-name|device_ptr_t
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -690,7 +690,7 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|udav_openpipes
 parameter_list|(
@@ -702,7 +702,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|udav_start
 parameter_list|(
@@ -714,7 +714,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|udav_send
 parameter_list|(
@@ -732,7 +732,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|udav_txeof
 parameter_list|(
@@ -755,7 +755,7 @@ argument_list|)
 end_if
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|udav_rxstart
 parameter_list|(
@@ -773,7 +773,7 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|udav_rxeof
 parameter_list|(
@@ -787,7 +787,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|udav_tick
 parameter_list|(
@@ -798,7 +798,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|udav_tick_task
 parameter_list|(
@@ -809,7 +809,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|udav_ioctl
 parameter_list|(
@@ -825,7 +825,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|udav_stop_task
 parameter_list|(
@@ -837,7 +837,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|udav_stop
 parameter_list|(
@@ -851,7 +851,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|udav_watchdog
 parameter_list|(
@@ -863,7 +863,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|udav_ifmedia_change
 parameter_list|(
@@ -875,7 +875,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|udav_ifmedia_status
 parameter_list|(
@@ -891,7 +891,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|udav_lock_mii
 parameter_list|(
@@ -903,7 +903,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|udav_unlock_mii
 parameter_list|(
@@ -915,11 +915,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|udav_miibus_readreg
 parameter_list|(
-name|device_ptr_t
+name|device_t
 parameter_list|,
 name|int
 parameter_list|,
@@ -929,11 +929,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|udav_miibus_writereg
 parameter_list|(
-name|device_ptr_t
+name|device_t
 parameter_list|,
 name|int
 parameter_list|,
@@ -945,11 +945,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|udav_miibus_statchg
 parameter_list|(
-name|device_ptr_t
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -964,7 +964,7 @@ argument_list|)
 end_if
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|udav_init
 parameter_list|(
@@ -985,7 +985,7 @@ argument_list|)
 end_elif
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|udav_init
 parameter_list|(
@@ -1001,7 +1001,7 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|udav_setmulti
 parameter_list|(
@@ -1013,7 +1013,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|udav_reset
 parameter_list|(
@@ -1025,7 +1025,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|udav_csr_read
 parameter_list|(
@@ -1044,7 +1044,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|udav_csr_write
 parameter_list|(
@@ -1063,7 +1063,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|udav_csr_read1
 parameter_list|(
@@ -1077,7 +1077,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|udav_csr_write1
 parameter_list|(
@@ -1100,7 +1100,7 @@ literal|0
 end_if
 
 begin_endif
-unit|Static int udav_mem_read(struct udav_softc *, int, void *, int); Static int udav_mem_write(struct udav_softc *, int, void *, int); Static int udav_mem_write1(struct udav_softc *, int, unsigned char);
+unit|static int udav_mem_read(struct udav_softc *, int, void *, int); static int udav_mem_write(struct udav_softc *, int, void *, int); static int udav_mem_write1(struct udav_softc *, int, unsigned char);
 endif|#
 directive|endif
 end_endif
@@ -1115,7 +1115,7 @@ argument_list|)
 end_if
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_method_t
 name|udav_methods
 index|[]
@@ -1197,7 +1197,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|driver_t
 name|udav_driver
 init|=
@@ -1216,7 +1216,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|devclass_t
 name|udav_devclass
 decl_stmt|;
@@ -3044,17 +3044,17 @@ comment|/* read memory */
 end_comment
 
 begin_comment
-unit|Static int udav_mem_read(struct udav_softc *sc, int offset, void *buf, int len) { 	usb_device_request_t req; 	usbd_status err;  	if (sc == NULL) 		return (0);  	DPRINTFN(0x200, 		("%s: %s: enter\n", USBDEVNAME(sc->sc_dev), __func__));  	if (sc->sc_dying) 		return (0);  	offset&= 0xffff; 	len&= 0xff;  	req.bmRequestType = UT_READ_VENDOR_DEVICE; 	req.bRequest = UDAV_REQ_MEM_READ; 	USETW(req.wValue, 0x0000); 	USETW(req.wIndex, offset); 	USETW(req.wLength, len);  	sc->sc_refcnt++; 	err = usbd_do_request(sc->sc_udev,&req, buf); 	if (--sc->sc_refcnt< 0) 		usb_detach_wakeup(USBDEV(sc->sc_dev)); 	if (err) { 		DPRINTF(("%s: %s: read failed. off=%04x, err=%d\n", 			 USBDEVNAME(sc->sc_dev), __func__, offset, err)); 	}  	return (err); }
+unit|static int udav_mem_read(struct udav_softc *sc, int offset, void *buf, int len) { 	usb_device_request_t req; 	usbd_status err;  	if (sc == NULL) 		return (0);  	DPRINTFN(0x200, 		("%s: %s: enter\n", USBDEVNAME(sc->sc_dev), __func__));  	if (sc->sc_dying) 		return (0);  	offset&= 0xffff; 	len&= 0xff;  	req.bmRequestType = UT_READ_VENDOR_DEVICE; 	req.bRequest = UDAV_REQ_MEM_READ; 	USETW(req.wValue, 0x0000); 	USETW(req.wIndex, offset); 	USETW(req.wLength, len);  	sc->sc_refcnt++; 	err = usbd_do_request(sc->sc_udev,&req, buf); 	if (--sc->sc_refcnt< 0) 		usb_detach_wakeup(USBDEV(sc->sc_dev)); 	if (err) { 		DPRINTF(("%s: %s: read failed. off=%04x, err=%d\n", 			 USBDEVNAME(sc->sc_dev), __func__, offset, err)); 	}  	return (err); }
 comment|/* write memory */
 end_comment
 
 begin_comment
-unit|Static int udav_mem_write(struct udav_softc *sc, int offset, void *buf, int len) { 	usb_device_request_t req; 	usbd_status err;  	if (sc == NULL) 		return (0);  	DPRINTFN(0x200, 		("%s: %s: enter\n", USBDEVNAME(sc->sc_dev), __func__));  	if (sc->sc_dying) 		return (0);  	offset&= 0xffff; 	len&= 0xff;  	req.bmRequestType = UT_WRITE_VENDOR_DEVICE; 	req.bRequest = UDAV_REQ_MEM_WRITE; 	USETW(req.wValue, 0x0000); 	USETW(req.wIndex, offset); 	USETW(req.wLength, len);  	sc->sc_refcnt++; 	err = usbd_do_request(sc->sc_udev,&req, buf); 	if (--sc->sc_refcnt< 0) 		usb_detach_wakeup(USBDEV(sc->sc_dev)); 	if (err) { 		DPRINTF(("%s: %s: write failed. off=%04x, err=%d\n", 			 USBDEVNAME(sc->sc_dev), __func__, offset, err)); 	}  	return (err); }
+unit|static int udav_mem_write(struct udav_softc *sc, int offset, void *buf, int len) { 	usb_device_request_t req; 	usbd_status err;  	if (sc == NULL) 		return (0);  	DPRINTFN(0x200, 		("%s: %s: enter\n", USBDEVNAME(sc->sc_dev), __func__));  	if (sc->sc_dying) 		return (0);  	offset&= 0xffff; 	len&= 0xff;  	req.bmRequestType = UT_WRITE_VENDOR_DEVICE; 	req.bRequest = UDAV_REQ_MEM_WRITE; 	USETW(req.wValue, 0x0000); 	USETW(req.wIndex, offset); 	USETW(req.wLength, len);  	sc->sc_refcnt++; 	err = usbd_do_request(sc->sc_udev,&req, buf); 	if (--sc->sc_refcnt< 0) 		usb_detach_wakeup(USBDEV(sc->sc_dev)); 	if (err) { 		DPRINTF(("%s: %s: write failed. off=%04x, err=%d\n", 			 USBDEVNAME(sc->sc_dev), __func__, offset, err)); 	}  	return (err); }
 comment|/* write memory */
 end_comment
 
 begin_endif
-unit|Static int udav_mem_write1(struct udav_softc *sc, int offset, unsigned char ch) { 	usb_device_request_t req; 	usbd_status err;  	if (sc == NULL) 		return (0);  	DPRINTFN(0x200, 		("%s: %s: enter\n", USBDEVNAME(sc->sc_dev), __func__));  	if (sc->sc_dying) 		return (0);  	offset&= 0xffff;  	req.bmRequestType = UT_WRITE_VENDOR_DEVICE; 	req.bRequest = UDAV_REQ_MEM_WRITE1; 	USETW(req.wValue, ch); 	USETW(req.wIndex, offset); 	USETW(req.wLength, 0x0000);  	sc->sc_refcnt++; 	err = usbd_do_request(sc->sc_udev,&req, NULL); 	if (--sc->sc_refcnt< 0) 		usb_detach_wakeup(USBDEV(sc->sc_dev)); 	if (err) { 		DPRINTF(("%s: %s: write failed. off=%04x, err=%d\n", 			 USBDEVNAME(sc->sc_dev), __func__, offset, err)); 	}  	return (err); }
+unit|static int udav_mem_write1(struct udav_softc *sc, int offset, unsigned char ch) { 	usb_device_request_t req; 	usbd_status err;  	if (sc == NULL) 		return (0);  	DPRINTFN(0x200, 		("%s: %s: enter\n", USBDEVNAME(sc->sc_dev), __func__));  	if (sc->sc_dying) 		return (0);  	offset&= 0xffff;  	req.bmRequestType = UT_WRITE_VENDOR_DEVICE; 	req.bRequest = UDAV_REQ_MEM_WRITE1; 	USETW(req.wValue, ch); 	USETW(req.wIndex, offset); 	USETW(req.wLength, 0x0000);  	sc->sc_refcnt++; 	err = usbd_do_request(sc->sc_udev,&req, NULL); 	if (--sc->sc_refcnt< 0) 		usb_detach_wakeup(USBDEV(sc->sc_dev)); 	if (err) { 		DPRINTF(("%s: %s: write failed. off=%04x, err=%d\n", 			 USBDEVNAME(sc->sc_dev), __func__, offset, err)); 	}  	return (err); }
 endif|#
 directive|endif
 end_endif
@@ -3064,7 +3064,7 @@ comment|/* read register(s) */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|udav_csr_read
 parameter_list|(
@@ -3254,7 +3254,7 @@ comment|/* write register(s) */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|udav_csr_write
 parameter_list|(
@@ -3440,7 +3440,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|udav_csr_read1
 parameter_list|(
@@ -3525,7 +3525,7 @@ comment|/* write a register */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|udav_csr_write1
 parameter_list|(
@@ -3713,7 +3713,7 @@ argument_list|)
 end_if
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|int
 name|udav_init
 argument_list|(
@@ -3728,7 +3728,7 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-name|Static
+decl|static
 name|void
 name|udav_init
 argument_list|(
@@ -4299,7 +4299,7 @@ block|}
 end_decl_stmt
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|udav_reset
 parameter_list|(
@@ -4456,7 +4456,7 @@ begin_function
 name|int
 name|udav_activate
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|self
 parameter_list|,
 name|enum
@@ -4561,7 +4561,7 @@ value|(ether_crc32_le((addr), ETHER_ADDR_LEN)& ((1<< UDAV_BITS) - 1))
 end_define
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|udav_setmulti
 parameter_list|(
@@ -4950,7 +4950,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|udav_openpipes
 parameter_list|(
@@ -5213,7 +5213,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|udav_start
 parameter_list|(
@@ -5453,7 +5453,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|udav_send
 parameter_list|(
@@ -5745,7 +5745,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|udav_txeof
 parameter_list|(
@@ -6091,7 +6091,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|udav_rxeof
 parameter_list|(
@@ -6729,13 +6729,13 @@ literal|0
 end_if
 
 begin_endif
-unit|Static void udav_intr() { }
+unit|static void udav_intr() { }
 endif|#
 directive|endif
 end_endif
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|udav_ioctl
 parameter_list|(
@@ -7104,7 +7104,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|udav_watchdog
 parameter_list|(
@@ -7306,7 +7306,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|udav_stop_task
 parameter_list|(
@@ -7334,7 +7334,7 @@ comment|/* Stop the adapter and free any mbufs allocated to the RX and TX lists.
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|udav_stop
 parameter_list|(
@@ -7624,7 +7624,7 @@ comment|/* Set media options */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|udav_ifmedia_change
 parameter_list|(
@@ -7745,7 +7745,7 @@ comment|/* Report current media status. */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|udav_ifmedia_status
 parameter_list|(
@@ -7876,7 +7876,7 @@ operator|->
 name|mii_media_status
 expr_stmt|;
 block|}
-name|Static
+specifier|static
 name|void
 name|udav_tick
 parameter_list|(
@@ -7938,7 +7938,7 @@ name|sc_tick_task
 argument_list|)
 expr_stmt|;
 block|}
-name|Static
+specifier|static
 name|void
 name|udav_tick_task
 parameter_list|(
@@ -8191,7 +8191,7 @@ endif|#
 directive|endif
 block|}
 comment|/* Get exclusive access to the MII registers */
-name|Static
+specifier|static
 name|void
 name|udav_lock_mii
 parameter_list|(
@@ -8265,7 +8265,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-name|Static
+specifier|static
 name|void
 name|udav_unlock_mii
 parameter_list|(
@@ -8353,11 +8353,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|Static
+specifier|static
 name|int
 name|udav_miibus_readreg
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|dev
 parameter_list|,
 name|int
@@ -8594,11 +8594,11 @@ name|data16
 operator|)
 return|;
 block|}
-name|Static
+specifier|static
 name|void
 name|udav_miibus_writereg
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|dev
 parameter_list|,
 name|int
@@ -8803,11 +8803,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|Static
+specifier|static
 name|void
 name|udav_miibus_statchg
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|dev
 parameter_list|)
 block|{
@@ -8860,11 +8860,11 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 comment|/*  * Stop all chip I/O so that the kernel's probe routines don't  * get confused by errant DMAs when rebooting.  */
-name|Static
+specifier|static
 name|void
 name|udav_shutdown
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|dev
 parameter_list|)
 block|{
@@ -8887,7 +8887,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|Static
+specifier|static
 name|void
 name|udav_rxstart
 parameter_list|(

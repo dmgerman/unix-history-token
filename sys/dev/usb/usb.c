@@ -651,7 +651,7 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|usb_discover
 parameter_list|(
@@ -668,7 +668,7 @@ name|__FreeBSD__
 end_ifdef
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|bus_child_detached_t
 name|usb_child_detached
 decl_stmt|;
@@ -680,7 +680,7 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|usb_create_event_thread
 parameter_list|(
@@ -691,7 +691,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|usb_event_thread
 parameter_list|(
@@ -702,7 +702,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|usb_task_thread
 parameter_list|(
@@ -713,7 +713,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|struct
 name|proc
 modifier|*
@@ -730,7 +730,7 @@ name|__FreeBSD__
 end_ifdef
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|struct
 name|cdev
 modifier|*
@@ -743,7 +743,7 @@ comment|/* The /dev/usb device. */
 end_comment
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|int
 name|usb_ndevs
 decl_stmt|;
@@ -754,7 +754,7 @@ comment|/* Number of /dev/usbN devices. */
 end_comment
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|int
 name|usb_taskcreated
 decl_stmt|;
@@ -768,20 +768,21 @@ begin_comment
 comment|/* Busses to explore at the end of boot-time device configuration. */
 end_comment
 
-begin_decl_stmt
-name|Static
+begin_expr_stmt
+specifier|static
 name|TAILQ_HEAD
-argument_list|(,
-name|usb_softc
+argument_list|(
+argument_list|,
+argument|usb_softc
 argument_list|)
 name|usb_coldexplist
-init|=
+operator|=
 name|TAILQ_HEAD_INITIALIZER
 argument_list|(
 name|usb_coldexplist
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -813,23 +814,24 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-name|Static
+begin_expr_stmt
+specifier|static
 name|TAILQ_HEAD
-argument_list|(,
-name|usb_event_q
+argument_list|(
+argument_list|,
+argument|usb_event_q
 argument_list|)
 name|usb_events
-init|=
+operator|=
 name|TAILQ_HEAD_INITIALIZER
 argument_list|(
 name|usb_events
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|int
 name|usb_nevents
 init|=
@@ -838,7 +840,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|struct
 name|selinfo
 name|usb_selevent
@@ -846,7 +848,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|struct
 name|proc
 modifier|*
@@ -859,7 +861,7 @@ comment|/* process that wants USB SIGIO */
 end_comment
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|int
 name|usb_dev_open
 init|=
@@ -868,7 +870,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|usb_add_event
 parameter_list|(
@@ -882,7 +884,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|usb_get_next_event
 parameter_list|(
@@ -894,7 +896,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|Static
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -3292,7 +3294,7 @@ comment|/* Explore device tree from the root. */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|usb_discover
 parameter_list|(
@@ -3630,7 +3632,7 @@ parameter_list|,
 name|usbd_device_handle
 name|udev
 parameter_list|,
-name|device_ptr_t
+name|device_t
 name|dev
 parameter_list|)
 block|{
@@ -4073,7 +4075,7 @@ begin_function
 name|int
 name|usb_activate
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|self
 parameter_list|,
 name|enum
@@ -4455,7 +4457,7 @@ argument_list|)
 end_if
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|usb_child_detached
 parameter_list|(
@@ -4493,7 +4495,7 @@ comment|/* Explore USB busses at the end of device configuration. */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|usb_cold_explore
 parameter_list|(

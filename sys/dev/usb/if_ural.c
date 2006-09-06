@@ -493,7 +493,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|ural_alloc_tx_list
 parameter_list|(
@@ -505,7 +505,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_free_tx_list
 parameter_list|(
@@ -517,7 +517,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|ural_alloc_rx_list
 parameter_list|(
@@ -529,7 +529,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_free_rx_list
 parameter_list|(
@@ -541,7 +541,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|ural_media_change
 parameter_list|(
@@ -553,7 +553,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_next_scan
 parameter_list|(
@@ -564,7 +564,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_task
 parameter_list|(
@@ -575,7 +575,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|ural_newstate
 parameter_list|(
@@ -592,7 +592,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|ural_rxrate
 parameter_list|(
@@ -604,7 +604,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_txeof
 parameter_list|(
@@ -618,7 +618,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_rxeof
 parameter_list|(
@@ -632,7 +632,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|ural_ack_rate
 parameter_list|(
@@ -646,7 +646,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|uint16_t
 name|ural_txtime
 parameter_list|(
@@ -660,7 +660,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|uint8_t
 name|ural_plcp_signal
 parameter_list|(
@@ -670,7 +670,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_setup_tx_desc
 parameter_list|(
@@ -692,7 +692,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|ural_tx_bcn
 parameter_list|(
@@ -712,7 +712,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|ural_tx_mgt
 parameter_list|(
@@ -732,7 +732,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|ural_tx_data
 parameter_list|(
@@ -752,7 +752,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_start
 parameter_list|(
@@ -764,7 +764,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_watchdog
 parameter_list|(
@@ -776,7 +776,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|ural_reset
 parameter_list|(
@@ -788,7 +788,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|ural_ioctl
 parameter_list|(
@@ -804,7 +804,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_set_testmode
 parameter_list|(
@@ -816,7 +816,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_eeprom_read
 parameter_list|(
@@ -835,7 +835,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|uint16_t
 name|ural_read
 parameter_list|(
@@ -849,7 +849,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_read_multi
 parameter_list|(
@@ -868,7 +868,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_write
 parameter_list|(
@@ -884,7 +884,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_write_multi
 parameter_list|(
@@ -903,7 +903,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_bbp_write
 parameter_list|(
@@ -919,7 +919,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|uint8_t
 name|ural_bbp_read
 parameter_list|(
@@ -933,7 +933,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_rf_write
 parameter_list|(
@@ -949,7 +949,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_set_chan
 parameter_list|(
@@ -965,7 +965,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_disable_rf_tune
 parameter_list|(
@@ -977,7 +977,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_enable_tsf_sync
 parameter_list|(
@@ -989,7 +989,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_update_slot
 parameter_list|(
@@ -1001,7 +1001,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_set_txpreamble
 parameter_list|(
@@ -1013,7 +1013,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_set_basicrates
 parameter_list|(
@@ -1025,7 +1025,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_set_bssid
 parameter_list|(
@@ -1040,7 +1040,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_set_macaddr
 parameter_list|(
@@ -1055,7 +1055,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_update_promisc
 parameter_list|(
@@ -1067,7 +1067,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1079,7 +1079,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_read_eeprom
 parameter_list|(
@@ -1091,7 +1091,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|ural_bbp_init
 parameter_list|(
@@ -1103,7 +1103,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_set_txantenna
 parameter_list|(
@@ -1117,7 +1117,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_set_rxantenna
 parameter_list|(
@@ -1131,7 +1131,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_init
 parameter_list|(
@@ -1142,7 +1142,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_stop
 parameter_list|(
@@ -1174,7 +1174,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_amrr_start
 parameter_list|(
@@ -1190,7 +1190,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_amrr_timeout
 parameter_list|(
@@ -1201,7 +1201,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_amrr_update
 parameter_list|(
@@ -1216,7 +1216,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ural_ratectl
 parameter_list|(
@@ -3568,7 +3568,7 @@ block|}
 end_block
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ural_alloc_tx_list
 parameter_list|(
@@ -3726,7 +3726,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_free_tx_list
 parameter_list|(
@@ -3819,7 +3819,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ural_alloc_rx_list
 parameter_list|(
@@ -4017,7 +4017,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_free_rx_list
 parameter_list|(
@@ -4110,7 +4110,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ural_media_change
 parameter_list|(
@@ -4199,7 +4199,7 @@ comment|/*  * This function is called periodically (every 200ms) during scanning
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_next_scan
 parameter_list|(
@@ -4242,7 +4242,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_task
 parameter_list|(
@@ -4580,7 +4580,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ural_newstate
 parameter_list|(
@@ -4724,7 +4724,7 @@ comment|/*  * This function is only used by the Rx radiotap code.  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ural_rxrate
 parameter_list|(
@@ -4859,7 +4859,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_txeof
 parameter_list|(
@@ -5022,7 +5022,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_rxeof
 parameter_list|(
@@ -5522,7 +5522,7 @@ comment|/*  * Return the expected ack rate for a frame transmitted at rate `rate
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ural_ack_rate
 parameter_list|(
@@ -5616,7 +5616,7 @@ comment|/*  * Compute the duration (in us) needed to transmit `len' bytes at rat
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|uint16_t
 name|ural_txtime
 parameter_list|(
@@ -5723,7 +5723,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|uint8_t
 name|ural_plcp_signal
 parameter_list|(
@@ -5820,7 +5820,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_setup_tx_desc
 parameter_list|(
@@ -6097,7 +6097,7 @@ value|5000
 end_define
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ural_tx_bcn
 parameter_list|(
@@ -6368,7 +6368,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ural_tx_mgt
 parameter_list|(
@@ -6795,7 +6795,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ural_tx_raw
 parameter_list|(
@@ -7155,7 +7155,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ural_tx_data
 parameter_list|(
@@ -7646,7 +7646,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_start
 parameter_list|(
@@ -8008,7 +8008,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_watchdog
 parameter_list|(
@@ -8114,7 +8114,7 @@ comment|/*  * This function allows for fast channel switching in monitor mode (u
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ural_reset
 parameter_list|(
@@ -8170,7 +8170,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ural_ioctl
 parameter_list|(
@@ -8337,7 +8337,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_set_testmode
 parameter_list|(
@@ -8435,7 +8435,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_eeprom_read
 parameter_list|(
@@ -8543,7 +8543,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|uint16_t
 name|ural_read
 parameter_list|(
@@ -8660,7 +8660,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_read_multi
 parameter_list|(
@@ -8768,7 +8768,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_write
 parameter_list|(
@@ -8872,7 +8872,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_write_multi
 parameter_list|(
@@ -8980,7 +8980,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_bbp_write
 parameter_list|(
@@ -9074,7 +9074,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|uint8_t
 name|ural_bbp_read
 parameter_list|(
@@ -9177,7 +9177,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_rf_write
 parameter_list|(
@@ -9323,7 +9323,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_set_chan
 parameter_list|(
@@ -10004,7 +10004,7 @@ comment|/*  * Disable RF auto-tuning.  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_disable_rf_tune
 parameter_list|(
@@ -10086,7 +10086,7 @@ comment|/*  * Refer to IEEE Std 802.11-1999 pp. 123 for more information on TSF 
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_enable_tsf_sync
 parameter_list|(
@@ -10243,7 +10243,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_update_slot
 parameter_list|(
@@ -10358,7 +10358,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_set_txpreamble
 parameter_list|(
@@ -10412,7 +10412,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_set_basicrates
 parameter_list|(
@@ -10494,7 +10494,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_set_bssid
 parameter_list|(
@@ -10595,7 +10595,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_set_macaddr
 parameter_list|(
@@ -10696,7 +10696,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_update_promisc
 parameter_list|(
@@ -10781,7 +10781,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -10847,7 +10847,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_read_eeprom
 parameter_list|(
@@ -11005,7 +11005,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ural_bbp_init
 parameter_list|(
@@ -11133,7 +11133,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_set_txantenna
 parameter_list|(
@@ -11283,7 +11283,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_set_rxantenna
 parameter_list|(
@@ -11370,7 +11370,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_init
 parameter_list|(
@@ -12085,7 +12085,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_stop
 parameter_list|(
@@ -12482,7 +12482,7 @@ value|10
 end_define
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_amrr_start
 parameter_list|(
@@ -12615,7 +12615,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_amrr_timeout
 parameter_list|(
@@ -12740,7 +12740,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_amrr_update
 parameter_list|(
@@ -12983,7 +12983,7 @@ value|do { (amrr)->txcnt = (amrr)->retrycnt = 0; } while (0)
 end_define
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ural_ratectl
 parameter_list|(

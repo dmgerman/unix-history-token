@@ -556,7 +556,7 @@ modifier|*
 name|hub
 decl_stmt|;
 comment|/* only if this is a hub */
-name|device_ptr_t
+name|device_t
 modifier|*
 name|subdevs
 decl_stmt|;
@@ -980,7 +980,7 @@ begin_function_decl
 name|usbd_status
 name|usbd_new_device
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|parent
 parameter_list|,
 name|usbd_bus_handle
@@ -1083,7 +1083,7 @@ name|usbd_port
 modifier|*
 name|up
 parameter_list|,
-name|device_ptr_t
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl

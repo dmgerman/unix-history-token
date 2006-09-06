@@ -292,14 +292,14 @@ block|}
 struct|;
 end_struct
 
-begin_expr_stmt
-name|Static
+begin_decl_stmt
+specifier|static
 specifier|const
-expr|struct
+name|struct
 name|aue_type
 name|aue_devs
 index|[]
-operator|=
+init|=
 block|{
 block|{
 block|{
@@ -885,8 +885,8 @@ block|,
 literal|0
 block|}
 block|, }
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -901,37 +901,37 @@ value|((const struct aue_type *)usb_lookup(aue_devs, v, p))
 end_define
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|aue_match
 parameter_list|(
-name|device_ptr_t
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|aue_attach
 parameter_list|(
-name|device_ptr_t
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|aue_detach
 parameter_list|(
-name|device_ptr_t
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|aue_reset_pegasus_II
 parameter_list|(
@@ -944,7 +944,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|aue_encap
 parameter_list|(
@@ -968,7 +968,7 @@ name|AUE_INTR_PIPE
 end_ifdef
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|aue_intr
 parameter_list|(
@@ -987,7 +987,7 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|aue_rxeof
 parameter_list|(
@@ -1001,7 +1001,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|aue_txeof
 parameter_list|(
@@ -1015,7 +1015,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|aue_tick
 parameter_list|(
@@ -1026,7 +1026,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|aue_rxstart
 parameter_list|(
@@ -1038,7 +1038,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|aue_start
 parameter_list|(
@@ -1050,7 +1050,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|aue_ioctl
 parameter_list|(
@@ -1066,7 +1066,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|aue_init
 parameter_list|(
@@ -1077,7 +1077,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|aue_stop
 parameter_list|(
@@ -1089,7 +1089,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|aue_watchdog
 parameter_list|(
@@ -1101,17 +1101,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|aue_shutdown
 parameter_list|(
-name|device_ptr_t
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|aue_ifmedia_upd
 parameter_list|(
@@ -1123,7 +1123,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|aue_ifmedia_sts
 parameter_list|(
@@ -1139,7 +1139,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|aue_eeprom_getword
 parameter_list|(
@@ -1156,7 +1156,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|aue_read_eeprom
 parameter_list|(
@@ -1176,11 +1176,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|aue_miibus_readreg
 parameter_list|(
-name|device_ptr_t
+name|device_t
 parameter_list|,
 name|int
 parameter_list|,
@@ -1190,11 +1190,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|aue_miibus_writereg
 parameter_list|(
-name|device_ptr_t
+name|device_t
 parameter_list|,
 name|int
 parameter_list|,
@@ -1206,17 +1206,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|aue_miibus_statchg
 parameter_list|(
-name|device_ptr_t
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|aue_setmulti
 parameter_list|(
@@ -1228,7 +1228,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|aue_reset
 parameter_list|(
@@ -1240,7 +1240,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|aue_csr_read_1
 parameter_list|(
@@ -1254,7 +1254,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|aue_csr_write_1
 parameter_list|(
@@ -1270,7 +1270,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|aue_csr_read_2
 parameter_list|(
@@ -1284,7 +1284,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|aue_csr_write_2
 parameter_list|(
@@ -1300,7 +1300,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_method_t
 name|aue_methods
 index|[]
@@ -1382,7 +1382,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|driver_t
 name|aue_driver
 init|=
@@ -1401,7 +1401,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|devclass_t
 name|aue_devclass
 decl_stmt|;
@@ -1474,7 +1474,7 @@ value|aue_csr_write_1(sc, reg, aue_csr_read_1(sc, reg)& ~(x))
 end_define
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|aue_csr_read_1
 parameter_list|(
@@ -1593,7 +1593,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|aue_csr_read_2
 parameter_list|(
@@ -1712,7 +1712,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|aue_csr_write_1
 parameter_list|(
@@ -1830,7 +1830,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|aue_csr_write_2
 parameter_list|(
@@ -1952,7 +1952,7 @@ comment|/*  * Read a word of data stored in the EEPROM at address 'addr.'  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|aue_eeprom_getword
 parameter_list|(
@@ -2062,7 +2062,7 @@ comment|/*  * Read a sequence of words from the EEPROM.  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|aue_read_eeprom
 parameter_list|(
@@ -2161,11 +2161,11 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|aue_miibus_readreg
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|dev
 parameter_list|,
 name|int
@@ -2319,11 +2319,11 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|aue_miibus_writereg
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|dev
 parameter_list|,
 name|int
@@ -2442,11 +2442,11 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|aue_miibus_statchg
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|dev
 parameter_list|)
 block|{
@@ -2607,7 +2607,7 @@ value|6
 end_define
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|aue_setmulti
 parameter_list|(
@@ -2827,7 +2827,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|aue_reset_pegasus_II
 parameter_list|(
@@ -2875,7 +2875,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|aue_reset
 parameter_list|(
@@ -3761,11 +3761,11 @@ block|}
 end_block
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|aue_detach
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|dev
 parameter_list|)
 block|{
@@ -3943,7 +3943,7 @@ name|AUE_INTR_PIPE
 end_ifdef
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|aue_intr
 parameter_list|(
@@ -4128,7 +4128,7 @@ directive|endif
 end_endif
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|aue_rxstart
 parameter_list|(
@@ -4272,7 +4272,7 @@ comment|/*  * A frame has been uploaded: pass the resulting mbuf chain up to  * 
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|aue_rxeof
 parameter_list|(
@@ -4622,7 +4622,7 @@ comment|/*  * A frame was downloaded to the chip. It's safe for us to clean up  
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|aue_txeof
 parameter_list|(
@@ -4820,7 +4820,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|aue_tick
 parameter_list|(
@@ -4957,7 +4957,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|aue_encap
 parameter_list|(
@@ -5143,7 +5143,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|aue_start
 parameter_list|(
@@ -5295,7 +5295,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|aue_init
 parameter_list|(
@@ -5847,7 +5847,7 @@ comment|/*  * Set media options.  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|aue_ifmedia_upd
 parameter_list|(
@@ -5926,7 +5926,7 @@ comment|/*  * Report current media status.  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|aue_ifmedia_sts
 parameter_list|(
@@ -5986,7 +5986,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|aue_ioctl
 parameter_list|(
@@ -6245,7 +6245,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|aue_watchdog
 parameter_list|(
@@ -6359,7 +6359,7 @@ comment|/*  * Stop the adapter and free any mbufs allocated to the  * RX and TX 
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|aue_stop
 parameter_list|(
@@ -6765,11 +6765,11 @@ comment|/*  * Stop all chip I/O so that the kernel's probe routines don't  * get
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|aue_shutdown
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|dev
 parameter_list|)
 block|{

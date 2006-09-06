@@ -300,7 +300,7 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ucom_cleanup
 parameter_list|(
@@ -312,7 +312,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|ucomparam
 parameter_list|(
@@ -328,7 +328,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ucomstart
 parameter_list|(
@@ -340,7 +340,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ucomstop
 parameter_list|(
@@ -354,7 +354,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ucom_shutdown
 parameter_list|(
@@ -366,7 +366,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ucom_dtr
 parameter_list|(
@@ -380,7 +380,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ucom_rts
 parameter_list|(
@@ -394,7 +394,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ucombreak
 parameter_list|(
@@ -408,7 +408,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|ucomstartread
 parameter_list|(
@@ -420,7 +420,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ucomreadcb
 parameter_list|(
@@ -434,7 +434,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ucomwritecb
 parameter_list|(
@@ -448,7 +448,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ucomstopread
 parameter_list|(
@@ -460,28 +460,28 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|t_open_t
 name|ucomopen
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|t_close_t
 name|ucomclose
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|t_modem_t
 name|ucommodem
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|t_ioctl_t
 name|ucomioctl
 decl_stmt|;
@@ -787,7 +787,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ucom_shutdown
 parameter_list|(
@@ -857,7 +857,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ucomopen
 parameter_list|(
@@ -1460,7 +1460,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ucommodem
 parameter_list|(
@@ -1722,7 +1722,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ucombreak
 parameter_list|(
@@ -1789,7 +1789,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ucom_dtr
 parameter_list|(
@@ -1845,7 +1845,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ucom_rts
 parameter_list|(
@@ -2042,7 +2042,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ucomparam
 parameter_list|(
@@ -2334,7 +2334,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ucomstart
 parameter_list|(
@@ -2877,7 +2877,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ucomstop
 parameter_list|(
@@ -3026,7 +3026,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ucomwritecb
 parameter_list|(
@@ -3270,7 +3270,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|ucomstartread
 parameter_list|(
@@ -3403,7 +3403,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ucomreadcb
 parameter_list|(
@@ -3926,7 +3926,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ucom_cleanup
 parameter_list|(
@@ -4064,7 +4064,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ucomstopread
 parameter_list|(

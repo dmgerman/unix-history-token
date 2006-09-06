@@ -793,7 +793,7 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uvscom_shutdown
 parameter_list|(
@@ -805,7 +805,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uvscom_reset
 parameter_list|(
@@ -817,7 +817,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uvscom_set_line_coding
 parameter_list|(
@@ -833,7 +833,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uvscom_set_line
 parameter_list|(
@@ -847,7 +847,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uvscom_set_crtscts
 parameter_list|(
@@ -859,7 +859,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uvscom_get_status
 parameter_list|(
@@ -878,7 +878,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uvscom_dtr
 parameter_list|(
@@ -892,7 +892,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uvscom_rts
 parameter_list|(
@@ -906,7 +906,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uvscom_break
 parameter_list|(
@@ -920,7 +920,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uvscom_set
 parameter_list|(
@@ -937,7 +937,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uvscom_intr
 parameter_list|(
@@ -961,13 +961,13 @@ comment|/* TODO */
 end_comment
 
 begin_endif
-unit|Static	int  uvscom_ioctl(void *, int, u_long, caddr_t, int, usb_proc_ptr);
+unit|static	int  uvscom_ioctl(void *, int, u_long, caddr_t, int, usb_proc_ptr);
 endif|#
 directive|endif
 end_endif
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uvscom_param
 parameter_list|(
@@ -984,7 +984,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uvscom_open
 parameter_list|(
@@ -997,7 +997,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uvscom_close
 parameter_list|(
@@ -1010,7 +1010,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uvscom_notify
 parameter_list|(
@@ -1108,28 +1108,28 @@ value|usb_lookup(uvscom_devs, v, p)
 end_define
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_probe_t
 name|uvscom_match
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_attach_t
 name|uvscom_attach
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_detach_t
 name|uvscom_detach
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_method_t
 name|uvscom_methods
 index|[]
@@ -1167,7 +1167,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|driver_t
 name|uvscom_driver
 init|=
@@ -2318,7 +2318,7 @@ block|}
 end_block
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|uvscom_readstat
 parameter_list|(
@@ -2466,7 +2466,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|uvscom_shutdown
 parameter_list|(
@@ -2592,7 +2592,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|uvscom_reset
 parameter_list|(
@@ -2627,7 +2627,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|uvscom_set_crtscts
 parameter_list|(
@@ -2662,7 +2662,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|uvscom_set_line
 parameter_list|(
@@ -2793,7 +2793,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|uvscom_set_line_coding
 parameter_list|(
@@ -3014,7 +3014,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uvscom_dtr
 parameter_list|(
@@ -3097,7 +3097,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uvscom_rts
 parameter_list|(
@@ -3180,7 +3180,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uvscom_break
 parameter_list|(
@@ -3233,7 +3233,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uvscom_set
 parameter_list|(
@@ -3303,7 +3303,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|uvscom_param
 parameter_list|(
@@ -3654,7 +3654,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|uvscom_open
 parameter_list|(
@@ -3993,7 +3993,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uvscom_close
 parameter_list|(
@@ -4129,7 +4129,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uvscom_intr
 parameter_list|(
@@ -4382,7 +4382,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uvscom_notify
 parameter_list|(
@@ -4429,7 +4429,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uvscom_get_status
 parameter_list|(
@@ -4496,7 +4496,7 @@ comment|/* TODO */
 end_comment
 
 begin_endif
-unit|Static int uvscom_ioctl(void *addr, int portno, u_long cmd, caddr_t data, int flag, 	     usb_proc_ptr p) { 	struct uvscom_softc *sc = addr; 	int error = 0;  	if (sc->sc_ucom.sc_dying) 		return (EIO);  	DPRINTF(("uvscom_ioctl: cmd = 0x%08lx\n", cmd));  	switch (cmd) { 	case TIOCNOTTY: 	case TIOCMGET: 	case TIOCMSET: 		break;  	default: 		DPRINTF(("uvscom_ioctl: unknown\n")); 		error = ENOTTY; 		break; 	}  	return (error); }
+unit|static int uvscom_ioctl(void *addr, int portno, u_long cmd, caddr_t data, int flag, 	     usb_proc_ptr p) { 	struct uvscom_softc *sc = addr; 	int error = 0;  	if (sc->sc_ucom.sc_dying) 		return (EIO);  	DPRINTF(("uvscom_ioctl: cmd = 0x%08lx\n", cmd));  	switch (cmd) { 	case TIOCNOTTY: 	case TIOCMGET: 	case TIOCMSET: 		break;  	default: 		DPRINTF(("uvscom_ioctl: unknown\n")); 		error = ENOTTY; 		break; 	}  	return (error); }
 endif|#
 directive|endif
 end_endif
