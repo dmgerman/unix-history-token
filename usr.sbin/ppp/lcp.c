@@ -4855,6 +4855,25 @@ operator|.
 name|id
 operator|)
 expr_stmt|;
+comment|/* Set the MTU to what we want anyway - the peer won't care! */
+if|if
+condition|(
+name|lcp
+operator|->
+name|his_mru
+operator|>
+name|lcp
+operator|->
+name|want_mru
+condition|)
+name|lcp
+operator|->
+name|his_mru
+operator|=
+name|lcp
+operator|->
+name|want_mru
+expr_stmt|;
 break|break;
 block|}
 break|break;
