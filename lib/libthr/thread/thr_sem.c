@@ -263,16 +263,15 @@ name|NULL
 operator|)
 return|;
 block|}
-name|_thr_umtx_init
+name|bzero
 argument_list|(
-operator|(
-name|umtx_t
-operator|*
-operator|)
-operator|&
 name|sem
-operator|->
-name|lock
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|sem
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Fortunatly count and nwaiters are adjacency, so we can 	 * use umtx_wait to wait on it, umtx_wait needs an address 	 * can be accessed as a long interger. 	 */

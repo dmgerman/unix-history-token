@@ -70,7 +70,7 @@ name|data
 operator|=
 literal|0
 expr_stmt|;
-name|THR_UMTX_LOCK
+name|THR_UMUTEX_LOCK
 argument_list|(
 name|curthread
 argument_list|,
@@ -89,7 +89,7 @@ name|_thread_last_event
 operator|=
 name|NULL
 expr_stmt|;
-name|THR_UMTX_UNLOCK
+name|THR_UMUTEX_UNLOCK
 argument_list|(
 name|curthread
 argument_list|,
@@ -138,7 +138,7 @@ name|data
 operator|=
 literal|0
 expr_stmt|;
-name|THR_UMTX_LOCK
+name|THR_UMUTEX_LOCK
 argument_list|(
 name|curthread
 argument_list|,
@@ -157,7 +157,7 @@ name|_thread_last_event
 operator|=
 name|NULL
 expr_stmt|;
-name|THR_UMTX_UNLOCK
+name|THR_UMUTEX_UNLOCK
 argument_list|(
 name|curthread
 argument_list|,

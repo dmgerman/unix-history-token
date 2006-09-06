@@ -264,7 +264,7 @@ block|}
 else|else
 block|{
 comment|/* 		 * Initialise the condition variable structure: 		 */
-name|_thr_umtx_init
+name|_thr_umutex_init
 argument_list|(
 operator|&
 name|pcond

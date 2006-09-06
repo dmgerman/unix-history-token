@@ -195,7 +195,7 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-name|_thr_umtx_init
+name|_thr_umutex_init
 argument_list|(
 operator|&
 name|bar
@@ -281,7 +281,7 @@ operator|=
 operator|*
 name|barrier
 expr_stmt|;
-name|THR_UMTX_LOCK
+name|THR_UMUTEX_LOCK
 argument_list|(
 name|curthread
 argument_list|,
@@ -329,7 +329,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|THR_UMTX_UNLOCK
+name|THR_UMUTEX_UNLOCK
 argument_list|(
 name|curthread
 argument_list|,
@@ -352,7 +352,7 @@ name|bar
 operator|->
 name|b_cycle
 expr_stmt|;
-name|THR_UMTX_UNLOCK
+name|THR_UMUTEX_UNLOCK
 argument_list|(
 name|curthread
 argument_list|,

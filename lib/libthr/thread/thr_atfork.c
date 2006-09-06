@@ -133,7 +133,7 @@ name|child
 operator|=
 name|child
 expr_stmt|;
-name|THR_UMTX_LOCK
+name|THR_UMUTEX_LOCK
 argument_list|(
 name|curthread
 argument_list|,
@@ -151,7 +151,7 @@ argument_list|,
 name|qe
 argument_list|)
 expr_stmt|;
-name|THR_UMTX_UNLOCK
+name|THR_UMUTEX_UNLOCK
 argument_list|(
 name|curthread
 argument_list|,

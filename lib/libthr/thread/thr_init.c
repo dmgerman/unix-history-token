@@ -212,8 +212,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|umtx_t
+name|struct
+name|umutex
 name|_thr_atfork_lock
+init|=
+name|DEFAULT_UMUTEX
 decl_stmt|;
 end_decl_stmt
 
@@ -406,38 +409,56 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|umtx_t
+name|struct
+name|umutex
 name|_mutex_static_lock
+init|=
+name|DEFAULT_UMUTEX
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|umtx_t
+name|struct
+name|umutex
 name|_cond_static_lock
+init|=
+name|DEFAULT_UMUTEX
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|umtx_t
+name|struct
+name|umutex
 name|_rwlock_static_lock
+init|=
+name|DEFAULT_UMUTEX
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|umtx_t
+name|struct
+name|umutex
 name|_keytable_lock
+init|=
+name|DEFAULT_UMUTEX
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|umtx_t
+name|struct
+name|umutex
 name|_thr_list_lock
+init|=
+name|DEFAULT_UMUTEX
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|umtx_t
+name|struct
+name|umutex
 name|_thr_event_lock
+init|=
+name|DEFAULT_UMUTEX
 decl_stmt|;
 end_decl_stmt
 
@@ -1945,37 +1966,37 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|_thr_umtx_init
+name|_thr_umutex_init
 argument_list|(
 operator|&
 name|_mutex_static_lock
 argument_list|)
 expr_stmt|;
-name|_thr_umtx_init
+name|_thr_umutex_init
 argument_list|(
 operator|&
 name|_cond_static_lock
 argument_list|)
 expr_stmt|;
-name|_thr_umtx_init
+name|_thr_umutex_init
 argument_list|(
 operator|&
 name|_rwlock_static_lock
 argument_list|)
 expr_stmt|;
-name|_thr_umtx_init
+name|_thr_umutex_init
 argument_list|(
 operator|&
 name|_keytable_lock
 argument_list|)
 expr_stmt|;
-name|_thr_umtx_init
+name|_thr_umutex_init
 argument_list|(
 operator|&
 name|_thr_atfork_lock
 argument_list|)
 expr_stmt|;
-name|_thr_umtx_init
+name|_thr_umutex_init
 argument_list|(
 operator|&
 name|_thr_event_lock

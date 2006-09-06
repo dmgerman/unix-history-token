@@ -167,7 +167,7 @@ name|child
 operator|=
 name|child
 expr_stmt|;
-name|THR_UMTX_LOCK
+name|THR_UMUTEX_LOCK
 argument_list|(
 name|curthread
 argument_list|,
@@ -185,7 +185,7 @@ argument_list|,
 name|qe
 argument_list|)
 expr_stmt|;
-name|THR_UMTX_UNLOCK
+name|THR_UMUTEX_UNLOCK
 argument_list|(
 name|curthread
 argument_list|,
@@ -263,7 +263,7 @@ operator|=
 name|_get_curthread
 argument_list|()
 expr_stmt|;
-name|THR_UMTX_LOCK
+name|THR_UMUTEX_LOCK
 argument_list|(
 name|curthread
 argument_list|,
@@ -374,7 +374,7 @@ name|tid
 argument_list|)
 expr_stmt|;
 comment|/* clear other threads locked us. */
-name|_thr_umtx_init
+name|_thr_umutex_init
 argument_list|(
 operator|&
 name|curthread
@@ -382,7 +382,7 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-name|_thr_umtx_init
+name|_thr_umutex_init
 argument_list|(
 operator|&
 name|_thr_atfork_lock
@@ -483,7 +483,7 @@ name|parent
 argument_list|()
 expr_stmt|;
 block|}
-name|THR_UMTX_UNLOCK
+name|THR_UMUTEX_UNLOCK
 argument_list|(
 name|curthread
 argument_list|,

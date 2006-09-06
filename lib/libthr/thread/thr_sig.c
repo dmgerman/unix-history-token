@@ -324,7 +324,7 @@ operator|->
 name|critical_count
 operator|++
 expr_stmt|;
-name|THR_UMTX_LOCK
+name|THR_UMUTEX_LOCK
 argument_list|(
 name|curthread
 argument_list|,
@@ -391,7 +391,7 @@ name|flags
 operator||=
 name|THR_FLAGS_SUSPENDED
 expr_stmt|;
-name|THR_UMTX_UNLOCK
+name|THR_UMUTEX_UNLOCK
 argument_list|(
 name|curthread
 argument_list|,
@@ -415,7 +415,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|THR_UMTX_LOCK
+name|THR_UMUTEX_LOCK
 argument_list|(
 name|curthread
 argument_list|,
@@ -435,7 +435,7 @@ operator|~
 name|THR_FLAGS_SUSPENDED
 expr_stmt|;
 block|}
-name|THR_UMTX_UNLOCK
+name|THR_UMUTEX_UNLOCK
 argument_list|(
 name|curthread
 argument_list|,

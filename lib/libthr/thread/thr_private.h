@@ -425,8 +425,8 @@ struct|struct
 name|pthread_cond
 block|{
 comment|/* 	 * Lock for accesses to this structure. 	 */
-specifier|volatile
-name|umtx_t
+name|struct
+name|umutex
 name|c_lock
 decl_stmt|;
 specifier|volatile
@@ -469,8 +469,8 @@ begin_struct
 struct|struct
 name|pthread_barrier
 block|{
-specifier|volatile
-name|umtx_t
+name|struct
+name|umutex
 name|b_lock
 decl_stmt|;
 specifier|volatile
@@ -504,8 +504,8 @@ begin_struct
 struct|struct
 name|pthread_spinlock
 block|{
-specifier|volatile
-name|umtx_t
+name|struct
+name|umutex
 name|s_lock
 decl_stmt|;
 block|}
@@ -929,7 +929,8 @@ directive|define
 name|TID_TERMINATED
 value|1
 comment|/* 	 * Lock for accesses to this thread structure. 	 */
-name|umtx_t
+name|struct
+name|umutex
 name|lock
 decl_stmt|;
 comment|/* Internal condition variable cycle number. */
@@ -1192,33 +1193,33 @@ end_define
 begin_define
 define|#
 directive|define
-name|THR_UMTX_TRYLOCK
+name|THR_UMUTEX_TRYLOCK
 parameter_list|(
 name|thrd
 parameter_list|,
 name|lck
 parameter_list|)
 define|\
-value|_thr_umtx_trylock((lck), (thrd)->tid)
+value|_thr_umutex_trylock((lck), TID(thrd))
 end_define
 
 begin_define
 define|#
 directive|define
-name|THR_UMTX_LOCK
+name|THR_UMUTEX_LOCK
 parameter_list|(
 name|thrd
 parameter_list|,
 name|lck
 parameter_list|)
 define|\
-value|_thr_umtx_lock((lck), (thrd)->tid)
+value|_thr_umutex_lock((lck), TID(thrd))
 end_define
 
 begin_define
 define|#
 directive|define
-name|THR_UMTX_TIMEDLOCK
+name|THR_UMUTEX_TIMEDLOCK
 parameter_list|(
 name|thrd
 parameter_list|,
@@ -1227,20 +1228,20 @@ parameter_list|,
 name|timo
 parameter_list|)
 define|\
-value|_thr_umtx_timedlock((lck), (thrd)->tid, (timo))
+value|_thr_umutex_timedlock((lck), TID(thrd), (timo))
 end_define
 
 begin_define
 define|#
 directive|define
-name|THR_UMTX_UNLOCK
+name|THR_UMUTEX_UNLOCK
 parameter_list|(
 name|thrd
 parameter_list|,
 name|lck
 parameter_list|)
 define|\
-value|_thr_umtx_unlock((lck), (thrd)->tid)
+value|_thr_umutex_unlock((lck), TID(thrd))
 end_define
 
 begin_define
@@ -1253,7 +1254,7 @@ parameter_list|,
 name|lck
 parameter_list|)
 define|\
-value|do {							\ 	(thrd)->locklevel++;				\ 	_thr_umtx_lock(lck, (thrd)->tid);		\ } while (0)
+value|do {							\ 	(thrd)->locklevel++;				\ 	_thr_umutex_lock(lck, TID(thrd));		\ } while (0)
 end_define
 
 begin_ifdef
@@ -1302,7 +1303,7 @@ parameter_list|,
 name|lck
 parameter_list|)
 define|\
-value|do {							\ 	THR_ASSERT_LOCKLEVEL(thrd);			\ 	_thr_umtx_unlock((lck), (thrd)->tid);		\ 	(thrd)->locklevel--;				\ 	_thr_ast(thrd);					\ } while (0)
+value|do {							\ 	THR_ASSERT_LOCKLEVEL(thrd);			\ 	_thr_umutex_unlock((lck), TID(thrd));		\ 	(thrd)->locklevel--;				\ 	_thr_ast(thrd);					\ } while (0)
 end_define
 
 begin_define
@@ -1541,7 +1542,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|umtx_t
+name|struct
+name|umutex
 name|_thr_atfork_lock
 name|__hidden
 decl_stmt|;
@@ -1658,7 +1660,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|umtx_t
+name|struct
+name|umutex
 name|_mutex_static_lock
 name|__hidden
 decl_stmt|;
@@ -1666,7 +1669,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|umtx_t
+name|struct
+name|umutex
 name|_cond_static_lock
 name|__hidden
 decl_stmt|;
@@ -1674,7 +1678,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|umtx_t
+name|struct
+name|umutex
 name|_rwlock_static_lock
 name|__hidden
 decl_stmt|;
@@ -1682,7 +1687,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|umtx_t
+name|struct
+name|umutex
 name|_keytable_lock
 name|__hidden
 decl_stmt|;
@@ -1690,7 +1696,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|umtx_t
+name|struct
+name|umutex
 name|_thr_list_lock
 name|__hidden
 decl_stmt|;
@@ -1698,7 +1705,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|umtx_t
+name|struct
+name|umutex
 name|_thr_event_lock
 name|__hidden
 decl_stmt|;

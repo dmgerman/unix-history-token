@@ -117,15 +117,21 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|umtx_t
+name|struct
+name|umutex
 name|free_thread_lock
+init|=
+name|DEFAULT_UMUTEX
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|umtx_t
+name|struct
+name|umutex
 name|tcb_lock
+init|=
+name|DEFAULT_UMUTEX
 decl_stmt|;
 end_decl_stmt
 
@@ -228,7 +234,7 @@ name|total_threads
 operator|=
 literal|1
 expr_stmt|;
-name|_thr_umtx_init
+name|_thr_umutex_init
 argument_list|(
 operator|&
 name|_thr_list_lock
@@ -246,13 +252,13 @@ operator|&
 name|free_threadq
 argument_list|)
 expr_stmt|;
-name|_thr_umtx_init
+name|_thr_umutex_init
 argument_list|(
 operator|&
 name|free_thread_lock
 argument_list|)
 expr_stmt|;
-name|_thr_umtx_init
+name|_thr_umutex_init
 argument_list|(
 operator|&
 name|tcb_lock

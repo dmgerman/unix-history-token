@@ -154,7 +154,7 @@ name|ENOMEM
 expr_stmt|;
 else|else
 block|{
-name|_thr_umtx_init
+name|_thr_umutex_init
 argument_list|(
 operator|&
 name|lck
@@ -280,7 +280,7 @@ expr_stmt|;
 else|else
 name|ret
 operator|=
-name|THR_UMTX_TRYLOCK
+name|THR_UMUTEX_TRYLOCK
 argument_list|(
 name|curthread
 argument_list|,
@@ -355,7 +355,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|THR_UMTX_TRYLOCK
+name|THR_UMUTEX_TRYLOCK
 argument_list|(
 name|curthread
 argument_list|,
@@ -374,6 +374,8 @@ condition|(
 name|lck
 operator|->
 name|s_lock
+operator|.
+name|m_owner
 condition|)
 block|{
 if|if
@@ -484,7 +486,7 @@ else|else
 block|{
 name|ret
 operator|=
-name|THR_UMTX_UNLOCK
+name|THR_UMUTEX_UNLOCK
 argument_list|(
 name|curthread
 argument_list|,
