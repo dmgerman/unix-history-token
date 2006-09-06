@@ -3457,23 +3457,6 @@ index|[
 name|arg
 index|]
 operator|=
-name|subst
-argument_list|(
-name|nargv
-index|[
-name|arg
-index|]
-argument_list|,
-literal|"COMPILATIONDATE"
-argument_list|,
-name|__DATE__
-argument_list|)
-expr_stmt|;
-name|nargv
-index|[
-name|arg
-index|]
-operator|=
 name|substip
 argument_list|(
 name|nargv
@@ -6618,11 +6601,9 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|"PPP Version %s - %s\n"
+literal|"PPP Version %s\n"
 argument_list|,
 name|Version
-argument_list|,
-name|__DATE__
 argument_list|)
 expr_stmt|;
 return|return
