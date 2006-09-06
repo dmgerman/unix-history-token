@@ -409,7 +409,7 @@ begin_struct
 struct|struct
 name|ugen_softc
 block|{
-name|USBBASEDEVICE
+name|device_t
 name|sc_dev
 decl_stmt|;
 comment|/* base device */
@@ -730,7 +730,9 @@ name|caddr_t
 parameter_list|,
 name|int
 parameter_list|,
-name|usb_proc_ptr
+name|struct
+name|thread
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1126,7 +1128,7 @@ name|printf
 argument_list|(
 literal|"%s: setting configuration index 0 failed\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1174,7 +1176,7 @@ name|printf
 argument_list|(
 literal|"%s: setting configuration %d failed\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1208,7 +1210,7 @@ name|ugenctl_cdevsw
 argument_list|,
 name|UGENMINOR
 argument_list|(
-name|USBDEVUNIT
+name|device_get_unit
 argument_list|(
 name|sc
 operator|->
@@ -1226,7 +1228,7 @@ literal|0644
 argument_list|,
 literal|"%s"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1247,12 +1249,9 @@ name|sc
 operator|->
 name|sc_udev
 argument_list|,
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1337,7 +1336,7 @@ name|ugen_cdevsw
 argument_list|,
 name|UGENMINOR
 argument_list|(
-name|USBDEVUNIT
+name|device_get_unit
 argument_list|(
 name|sc
 operator|->
@@ -1355,7 +1354,7 @@ literal|0644
 argument_list|,
 literal|"%s.%d"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1697,7 +1696,7 @@ argument_list|,
 operator|(
 literal|"ugen_set_config: %s to configno %d, sc=%p\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1741,7 +1740,7 @@ argument_list|,
 operator|(
 literal|"ugen_set_config: %s - endpoint %d is open\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2400,7 +2399,9 @@ parameter_list|,
 name|int
 name|mode
 parameter_list|,
-name|usb_proc_ptr
+name|struct
+name|thread
+modifier|*
 name|p
 parameter_list|)
 block|{
@@ -2788,7 +2789,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|clalloc
+operator|(
+name|clist_alloc_cblocks
 argument_list|(
 operator|&
 name|sce
@@ -2797,8 +2799,11 @@ name|q
 argument_list|,
 name|UGEN_IBSIZE
 argument_list|,
-literal|0
+name|UGEN_IBSIZE
 argument_list|)
+operator|,
+literal|0
+operator|)
 operator|==
 operator|-
 literal|1
@@ -2854,7 +2859,7 @@ argument_list|,
 name|M_USBDEV
 argument_list|)
 expr_stmt|;
-name|clfree
+name|clist_free_cblocks
 argument_list|(
 operator|&
 name|sce
@@ -3288,7 +3293,9 @@ parameter_list|,
 name|int
 name|mode
 parameter_list|,
-name|usb_proc_ptr
+name|struct
+name|thread
+modifier|*
 name|p
 parameter_list|)
 block|{
@@ -3530,7 +3537,7 @@ operator|.
 name|c_cc
 argument_list|)
 expr_stmt|;
-name|clfree
+name|clist_free_cblocks
 argument_list|(
 operator|&
 name|sce
@@ -3594,7 +3601,7 @@ name|ibuf
 operator|=
 name|NULL
 expr_stmt|;
-name|clfree
+name|clist_free_cblocks
 argument_list|(
 operator|&
 name|sce
@@ -3708,7 +3715,7 @@ argument_list|,
 operator|(
 literal|"%s: ugenread: %d\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4572,7 +4579,7 @@ argument_list|,
 operator|(
 literal|"%s: ugenwrite: %d\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5354,12 +5361,9 @@ name|sc
 operator|->
 name|sc_udev
 argument_list|,
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -6621,7 +6625,9 @@ parameter_list|,
 name|int
 name|flag
 parameter_list|,
-name|usb_proc_ptr
+name|struct
+name|thread
+modifier|*
 name|p
 parameter_list|)
 block|{
@@ -7631,7 +7637,7 @@ name|UIO_READ
 expr_stmt|;
 name|uio
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
 name|p
 expr_stmt|;
@@ -7929,7 +7935,7 @@ name|UIO_WRITE
 expr_stmt|;
 name|uio
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
 name|p
 expr_stmt|;
@@ -8138,7 +8144,9 @@ parameter_list|,
 name|int
 name|flag
 parameter_list|,
-name|usb_proc_ptr
+name|struct
+name|thread
+modifier|*
 name|p
 parameter_list|)
 block|{
@@ -8232,7 +8240,9 @@ parameter_list|,
 name|int
 name|events
 parameter_list|,
-name|usb_proc_ptr
+name|struct
+name|thread
+modifier|*
 name|p
 parameter_list|)
 block|{
