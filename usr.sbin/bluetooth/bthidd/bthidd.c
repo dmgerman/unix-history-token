@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * bthidd.c  *  * Copyright (c) 2004 Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: bthidd.c,v 1.7 2004/11/17 21:59:42 max Exp $  * $FreeBSD$  */
+comment|/*  * bthidd.c  */
+end_comment
+
+begin_comment
+comment|/*-  * Copyright (c) 2006 Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: bthidd.c,v 1.8 2006/09/07 21:06:53 max Exp $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -84,18 +88,18 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bthidd.h"
+file|"bthid_config.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"bthid_config.h"
+file|"bthidd.h"
 end_include
 
 begin_function_decl
 specifier|static
-name|int
+name|int32_t
 name|write_pid_file
 parameter_list|(
 name|char
@@ -108,7 +112,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|int32_t
 name|remove_pid_file
 parameter_list|(
 name|char
@@ -121,10 +125,10 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|int32_t
 name|elapsed
 parameter_list|(
-name|int
+name|int32_t
 name|tval
 parameter_list|)
 function_decl|;
@@ -135,18 +139,7 @@ specifier|static
 name|void
 name|sighandler
 parameter_list|(
-name|int
-name|s
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|sighup
-parameter_list|(
-name|int
+name|int32_t
 name|s
 parameter_list|)
 function_decl|;
@@ -168,7 +161,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
+name|int32_t
 name|done
 init|=
 literal|0
@@ -179,24 +172,11 @@ begin_comment
 comment|/* are we done? */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|int
-name|reload
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* reload config file */
-end_comment
-
 begin_function
-name|int
+name|int32_t
 name|main
 parameter_list|(
-name|int
+name|int32_t
 name|argc
 parameter_list|,
 name|char
@@ -219,13 +199,12 @@ modifier|*
 name|pid_file
 init|=
 name|BTHIDD_PIDFILE
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|ep
-init|=
-name|NULL
 decl_stmt|;
-name|int
+name|int32_t
 name|opt
 decl_stmt|,
 name|detach
@@ -245,14 +224,14 @@ name|srv
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memset
 argument_list|(
 operator|&
 name|srv
 operator|.
 name|bdaddr
 argument_list|,
-name|NG_HCI_BDADDR_ANY
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -261,13 +240,6 @@ operator|.
 name|bdaddr
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|srv
-operator|.
-name|windex
-operator|=
-operator|-
-literal|1
 expr_stmt|;
 name|detach
 operator|=
@@ -289,7 +261,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:c:dH:hp:s:t:"
+literal|"a:c:dH:hp:t:"
 argument_list|)
 operator|)
 operator|!=
@@ -324,8 +296,6 @@ name|struct
 name|hostent
 modifier|*
 name|he
-init|=
-name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -412,17 +382,6 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
-literal|'s'
-case|:
-comment|/* switch script */
-name|srv
-operator|.
-name|script
-operator|=
-name|optarg
-expr_stmt|;
-break|break;
-case|case
 literal|'t'
 case|:
 comment|/* rescan interval */
@@ -452,46 +411,6 @@ literal|'\0'
 operator|||
 name|tval
 operator|<=
-literal|0
-condition|)
-name|usage
-argument_list|()
-expr_stmt|;
-break|break;
-case|case
-literal|'u'
-case|:
-comment|/* wired keyboard index */
-name|srv
-operator|.
-name|windex
-operator|=
-name|strtol
-argument_list|(
-name|optarg
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
-operator|&
-name|ep
-argument_list|,
-literal|10
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|ep
-operator|!=
-literal|'\0'
-operator|||
-name|srv
-operator|.
-name|windex
-operator|<
 literal|0
 condition|)
 name|usage
@@ -592,7 +511,7 @@ literal|0
 operator|||
 name|sigaction
 argument_list|(
-name|SIGINT
+name|SIGHUP
 argument_list|,
 operator|&
 name|sa
@@ -601,39 +520,10 @@ name|NULL
 argument_list|)
 operator|<
 literal|0
-condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_CRIT
-argument_list|,
-literal|"Could not install signal handlers. %s (%d)"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|,
-name|errno
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-name|sa
-operator|.
-name|sa_handler
-operator|=
-name|sighup
-expr_stmt|;
-if|if
-condition|(
+operator|||
 name|sigaction
 argument_list|(
-name|SIGHUP
+name|SIGINT
 argument_list|,
 operator|&
 name|sa
@@ -821,34 +711,6 @@ operator|<
 literal|0
 condition|)
 break|break;
-if|if
-condition|(
-name|reload
-condition|)
-block|{
-if|if
-condition|(
-name|write_hids_file
-argument_list|()
-operator|<
-literal|0
-operator|||
-name|read_config_file
-argument_list|()
-operator|<
-literal|0
-operator|||
-name|read_hids_file
-argument_list|()
-operator|<
-literal|0
-condition|)
-break|break;
-name|reload
-operator|=
-literal|0
-expr_stmt|;
-block|}
 block|}
 name|server_shutdown
 argument_list|(
@@ -881,7 +743,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|int32_t
 name|write_pid_file
 parameter_list|(
 name|char
@@ -893,8 +755,6 @@ block|{
 name|FILE
 modifier|*
 name|pid
-init|=
-name|NULL
 decl_stmt|;
 name|assert
 argument_list|(
@@ -971,7 +831,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|int32_t
 name|remove_pid_file
 parameter_list|(
 name|char
@@ -1034,10 +894,10 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|int32_t
 name|elapsed
 parameter_list|(
-name|int
+name|int32_t
 name|tval
 parameter_list|)
 block|{
@@ -1048,7 +908,9 @@ name|last
 init|=
 block|{
 literal|0
-block|, }
+block|,
+literal|0
+block|}
 decl_stmt|;
 name|struct
 name|timeval
@@ -1094,7 +956,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Signal handlers  */
+comment|/*  * Signal handler  */
 end_comment
 
 begin_function
@@ -1102,7 +964,7 @@ specifier|static
 name|void
 name|sighandler
 parameter_list|(
-name|int
+name|int32_t
 name|s
 parameter_list|)
 block|{
@@ -1117,29 +979,6 @@ argument_list|,
 operator|++
 name|done
 argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|sighup
-parameter_list|(
-name|int
-name|s
-parameter_list|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_NOTICE
-argument_list|,
-literal|"Got SIGHUP: reload config"
-argument_list|)
-expr_stmt|;
-name|reload
-operator|=
-literal|1
 expr_stmt|;
 block|}
 end_function
@@ -1176,11 +1015,7 @@ literal|"	-h		display this message\n"
 expr|\
 literal|"	-p file		specify PID file name\n"
 expr|\
-literal|"	-s script	specify keyboard switching script\n"
-expr|\
 literal|"	-t tval		specify client rescan interval (sec)\n"
-expr|\
-literal|"	-u unit		specify wired keyboard unit\n"
 expr|\
 literal|""
 argument_list|,

@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * bthidd.h  *  * Copyright (c) 2004 Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: bthidd.h,v 1.6 2004/11/17 21:59:42 max Exp $  * $FreeBSD$  */
+comment|/*  * bthidd.h  */
+end_comment
+
+begin_comment
+comment|/*-  * Copyright (c) 2006 Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: bthidd.h,v 1.7 2006/09/07 21:06:53 max Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -44,38 +48,19 @@ name|bdaddr_t
 name|bdaddr
 decl_stmt|;
 comment|/* local bdaddr */
-name|int
+name|int32_t
 name|cons
 decl_stmt|;
 comment|/* /dev/consolectl */
-name|int
-name|vkbd
-decl_stmt|;
-comment|/* /dev/vkbdctl */
-name|char
-specifier|const
-modifier|*
-name|script
-decl_stmt|;
-comment|/* keyboard switching script */
-name|int
-name|windex
-decl_stmt|;
-comment|/* wired keyboard index */
-name|bitstr_t
-modifier|*
-name|keys
-decl_stmt|;
-comment|/* pressed keys map */
-name|int
+name|int32_t
 name|ctrl
 decl_stmt|;
 comment|/* control channel (listen) */
-name|int
+name|int32_t
 name|intr
 decl_stmt|;
 comment|/* intr. channel (listen) */
-name|int
+name|int32_t
 name|maxfd
 decl_stmt|;
 comment|/* max fd in sets */
@@ -123,19 +108,23 @@ name|bthid_server_p
 name|srv
 decl_stmt|;
 comment|/* pointer back to server */
-name|int
+name|int32_t
 name|ctrl
 decl_stmt|;
 comment|/* control channel */
-name|int
+name|int32_t
 name|intr
 decl_stmt|;
 comment|/* interrupt channel */
+name|int32_t
+name|vkbd
+decl_stmt|;
+comment|/* virual keyboard */
 name|bdaddr_t
 name|bdaddr
 decl_stmt|;
 comment|/* remote bdaddr */
-name|short
+name|uint16_t
 name|state
 decl_stmt|;
 comment|/* session state */
@@ -157,9 +146,14 @@ name|OPEN
 value|3
 name|bitstr_t
 modifier|*
-name|keys
+name|keys1
 decl_stmt|;
-comment|/* pressed keys map */
+comment|/* keys map (new) */
+name|bitstr_t
+modifier|*
+name|keys2
+decl_stmt|;
+comment|/* keys map (old) */
 name|LIST_ENTRY
 argument_list|(
 argument|bthid_session
@@ -189,7 +183,7 @@ typedef|;
 end_typedef
 
 begin_function_decl
-name|int
+name|int32_t
 name|server_init
 parameter_list|(
 name|bthid_server_p
@@ -209,7 +203,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|int32_t
 name|server_do
 parameter_list|(
 name|bthid_server_p
@@ -219,7 +213,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|int32_t
 name|client_rescan
 parameter_list|(
 name|bthid_server_p
@@ -229,7 +223,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|int32_t
 name|client_connect
 parameter_list|(
 name|bthid_server_p
@@ -248,8 +242,9 @@ parameter_list|(
 name|bthid_server_p
 name|srv
 parameter_list|,
-name|bdaddr_p
-name|bdaddr
+name|hid_device_p
+specifier|const
+name|d
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -274,7 +269,7 @@ parameter_list|(
 name|bthid_server_p
 name|srv
 parameter_list|,
-name|int
+name|int32_t
 name|fd
 parameter_list|)
 function_decl|;
@@ -291,34 +286,34 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|int32_t
 name|hid_control
 parameter_list|(
 name|bthid_session_p
 name|s
 parameter_list|,
-name|char
+name|uint8_t
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|int32_t
 name|len
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|int32_t
 name|hid_interrupt
 parameter_list|(
 name|bthid_session_p
 name|s
 parameter_list|,
-name|char
+name|uint8_t
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|int32_t
 name|len
 parameter_list|)
 function_decl|;

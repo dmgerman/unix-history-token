@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * client.c  *  * Copyright (c) 2004 Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: client.c,v 1.6 2004/02/26 21:57:55 max Exp $  * $FreeBSD$  */
+comment|/*  * client.c  */
+end_comment
+
+begin_comment
+comment|/*-  * Copyright (c) 2006 Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: client.c,v 1.7 2006/09/07 21:06:53 max Exp $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -72,24 +76,24 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bthidd.h"
+file|"bthid_config.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"bthid_config.h"
+file|"bthidd.h"
 end_include
 
 begin_function_decl
 specifier|static
-name|int
+name|int32_t
 name|client_socket
 parameter_list|(
 name|bdaddr_p
 name|bdaddr
 parameter_list|,
-name|int
+name|int32_t
 name|psm
 parameter_list|)
 function_decl|;
@@ -101,7 +105,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
+name|int32_t
 name|connect_in_progress
 init|=
 literal|0
@@ -109,7 +113,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|int
+name|int32_t
 name|client_rescan
 parameter_list|(
 name|bthid_server_p
@@ -119,13 +123,9 @@ block|{
 specifier|static
 name|hid_device_p
 name|d
-init|=
-name|NULL
 decl_stmt|;
 name|bthid_session_p
 name|s
-init|=
-name|NULL
 decl_stmt|;
 name|assert
 argument_list|(
@@ -244,10 +244,7 @@ name|session_open
 argument_list|(
 name|srv
 argument_list|,
-operator|&
 name|d
-operator|->
-name|bdaddr
 argument_list|)
 operator|)
 operator|==
@@ -258,9 +255,7 @@ name|syslog
 argument_list|(
 name|LOG_CRIT
 argument_list|,
-literal|"Could not open outbound session for %s. "
-expr|\
-literal|"Not enough memory"
+literal|"Could not create outbound session for %s"
 argument_list|,
 name|bt_ntoa
 argument_list|(
@@ -395,27 +390,23 @@ comment|/*  * Process connect on the socket  */
 end_comment
 
 begin_function
-name|int
+name|int32_t
 name|client_connect
 parameter_list|(
 name|bthid_server_p
 name|srv
 parameter_list|,
-name|int
+name|int32_t
 name|fd
 parameter_list|)
 block|{
 name|bthid_session_p
 name|s
-init|=
-name|NULL
 decl_stmt|;
 name|hid_device_p
 name|d
-init|=
-name|NULL
 decl_stmt|;
-name|int
+name|int32_t
 name|error
 decl_stmt|,
 name|len
@@ -762,6 +753,61 @@ name|connect_in_progress
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Register session's vkbd descriptor (if any) for read */
+if|if
+condition|(
+name|s
+operator|->
+name|state
+operator|==
+name|OPEN
+operator|&&
+name|d
+operator|->
+name|keyboard
+condition|)
+block|{
+name|assert
+argument_list|(
+name|s
+operator|->
+name|vkbd
+operator|!=
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|FD_SET
+argument_list|(
+name|s
+operator|->
+name|vkbd
+argument_list|,
+operator|&
+name|srv
+operator|->
+name|rfdset
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|->
+name|vkbd
+operator|>
+name|srv
+operator|->
+name|maxfd
+condition|)
+name|srv
+operator|->
+name|maxfd
+operator|=
+name|s
+operator|->
+name|vkbd
+expr_stmt|;
+block|}
 break|break;
 default|default:
 name|assert
@@ -812,7 +858,7 @@ parameter_list|(
 name|bdaddr_p
 name|bdaddr
 parameter_list|,
-name|int
+name|int32_t
 name|psm
 parameter_list|)
 block|{
@@ -820,7 +866,7 @@ name|struct
 name|sockaddr_l2cap
 name|l2addr
 decl_stmt|;
-name|int
+name|int32_t
 name|s
 decl_stmt|,
 name|m
@@ -921,14 +967,14 @@ name|l2cap_family
 operator|=
 name|AF_BLUETOOTH
 expr_stmt|;
-name|memcpy
+name|memset
 argument_list|(
 operator|&
 name|l2addr
 operator|.
 name|l2cap_bdaddr
 argument_list|,
-name|NG_HCI_BDADDR_ANY
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1000,10 +1046,7 @@ name|l2addr
 operator|.
 name|l2cap_psm
 operator|=
-name|htole16
-argument_list|(
 name|psm
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
