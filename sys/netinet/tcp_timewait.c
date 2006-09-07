@@ -8434,8 +8434,6 @@ modifier|*
 name|inp
 decl_stmt|;
 name|int
-name|tw_time
-decl_stmt|,
 name|acknow
 decl_stmt|;
 name|struct
@@ -8626,12 +8624,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* XXX  * If this code will  * be used for fin-wait-2 state also, then we may need  * a ts_recent from the last segment.  */
-name|tw_time
-operator|=
-literal|2
-operator|*
-name|tcp_msl
-expr_stmt|;
 name|acknow
 operator|=
 name|tp
@@ -8712,8 +8704,6 @@ expr_stmt|;
 name|tcp_timer_2msl_reset
 argument_list|(
 name|tw
-argument_list|,
-name|tw_time
 argument_list|,
 literal|0
 argument_list|)
