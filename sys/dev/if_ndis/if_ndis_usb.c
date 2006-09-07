@@ -202,27 +202,27 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|ndisusb_match
 parameter_list|(
-name|device_ptr_t
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|ndisusb_attach
 parameter_list|(
-name|device_ptr_t
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|struct
 name|resource_list
 modifier|*
