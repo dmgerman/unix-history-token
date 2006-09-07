@@ -360,7 +360,7 @@ name|struct
 name|ucom_softc
 name|sc_ucom
 decl_stmt|;
-name|USBBASEDEVICE
+name|device_t
 name|sc_dev
 decl_stmt|;
 comment|/* base device */
@@ -1233,7 +1233,7 @@ name|iface
 expr_stmt|;
 name|devname
 operator|=
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2084,7 +2084,7 @@ name|printf
 argument_list|(
 literal|"%s: abort notify pipe failed: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2114,7 +2114,7 @@ name|printf
 argument_list|(
 literal|"%s: close notify pipe failed: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2193,7 +2193,7 @@ name|printf
 argument_list|(
 literal|"%s: abnormal status: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2224,7 +2224,7 @@ argument_list|(
 operator|(
 literal|"%s: unknown message type (%02x) on notify pipe\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2272,7 +2272,7 @@ name|printf
 argument_list|(
 literal|"%s: Invalid notification length! (%d)\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2296,7 +2296,7 @@ argument_list|(
 operator|(
 literal|"%s: notify bytes = %02x%02x\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2408,7 +2408,7 @@ argument_list|(
 operator|(
 literal|"%s: unknown notify message: %02x\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->

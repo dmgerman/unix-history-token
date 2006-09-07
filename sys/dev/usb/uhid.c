@@ -403,7 +403,7 @@ begin_struct
 struct|struct
 name|uhid_softc
 block|{
-name|USBBASEDEVICE
+name|device_t
 name|sc_dev
 decl_stmt|;
 comment|/* base device */
@@ -995,7 +995,7 @@ name|printf
 argument_list|(
 literal|"%s: could not read endpoint descriptor\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1093,7 +1093,7 @@ name|printf
 argument_list|(
 literal|"%s: unexpected endpoint\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1343,7 +1343,7 @@ name|printf
 argument_list|(
 literal|"%s: no report descriptor\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->

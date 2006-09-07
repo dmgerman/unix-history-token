@@ -3595,7 +3595,7 @@ argument_list|(
 literal|"%s: device addr %d (config %d) exceeds power "
 literal|"budget, %d mA> %d mA\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|dev
 operator|->
@@ -3966,7 +3966,7 @@ name|interval
 operator|=
 name|ival
 expr_stmt|;
-name|SIMPLEQ_INIT
+name|STAILQ_INIT
 argument_list|(
 operator|&
 name|p
@@ -4683,7 +4683,7 @@ operator|(
 literal|"%s: port %d, set config at addr %d failed, "
 literal|"error=%s\n"
 operator|,
-name|USBDEVPTRNAME
+name|device_get_nameunit
 argument_list|(
 name|parent
 argument_list|)
@@ -4705,7 +4705,7 @@ name|printf
 argument_list|(
 literal|"%s: port %d, set config at addr %d failed\n"
 argument_list|,
-name|USBDEVPTRNAME
+name|device_get_nameunit
 argument_list|(
 name|parent
 argument_list|)
@@ -5443,7 +5443,7 @@ name|printf
 argument_list|(
 literal|"%s: No free USB addresses, new device ignored.\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|bus
 operator|->
@@ -6958,7 +6958,7 @@ name|di
 operator|->
 name|udi_bus
 operator|=
-name|USBDEVUNIT
+name|device_get_unit
 argument_list|(
 name|dev
 operator|->
@@ -7164,7 +7164,7 @@ index|[
 name|i
 index|]
 argument_list|,
-name|USBDEVPTRNAME
+name|device_get_nameunit
 argument_list|(
 name|dev
 operator|->
@@ -7536,7 +7536,7 @@ name|char
 modifier|*
 name|hubname
 init|=
-name|USBDEVPTRNAME
+name|device_get_nameunit
 argument_list|(
 name|parent
 argument_list|)
@@ -7619,7 +7619,7 @@ name|printf
 argument_list|(
 literal|"%s: at %s"
 argument_list|,
-name|USBDEVPTRNAME
+name|device_get_nameunit
 argument_list|(
 name|dev
 operator|->

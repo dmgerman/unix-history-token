@@ -1811,7 +1811,7 @@ name|printf
 argument_list|(
 literal|"%s: ScanLogic %s USB Host Controller"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1918,7 +1918,7 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* XXX */
-name|SIMPLEQ_INIT
+name|STAILQ_INIT
 argument_list|(
 operator|&
 name|sc
@@ -2806,7 +2806,7 @@ argument_list|)
 expr_stmt|;
 name|xfer
 operator|=
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|sc
@@ -2819,7 +2819,7 @@ condition|(
 name|xfer
 condition|)
 block|{
-name|SIMPLEQ_REMOVE_HEAD
+name|STAILQ_REMOVE_HEAD
 argument_list|(
 operator|&
 name|sc
@@ -2977,7 +2977,7 @@ name|XFER_FREE
 expr_stmt|;
 endif|#
 directive|endif
-name|SIMPLEQ_INSERT_HEAD
+name|STAILQ_INSERT_HEAD
 argument_list|(
 operator|&
 name|sc
@@ -3383,7 +3383,7 @@ comment|/* 	 * Pipe isn't running (otherwise error would be USBD_INPROG), 	 * so
 return|return
 name|slhci_root_ctrl_start
 argument_list|(
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|xfer
@@ -5040,7 +5040,7 @@ comment|/* 	 * Pipe isn't running (otherwise error would be USBD_INPROG), 	 * st
 return|return
 name|slhci_root_intr_start
 argument_list|(
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|xfer
@@ -5267,7 +5267,7 @@ return|;
 return|return
 name|slhci_device_ctrl_start
 argument_list|(
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|xfer
@@ -5765,7 +5765,7 @@ return|;
 return|return
 name|slhci_device_intr_start
 argument_list|(
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|xfer

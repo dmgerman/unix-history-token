@@ -1101,7 +1101,7 @@ name|sc_ifp
 decl_stmt|;
 endif|#
 directive|endif
-name|USBBASEDEVICE
+name|device_t
 name|sc_dev
 decl_stmt|;
 comment|/* base device */

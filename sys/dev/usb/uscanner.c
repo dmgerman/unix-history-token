@@ -1438,7 +1438,7 @@ begin_struct
 struct|struct
 name|uscanner_softc
 block|{
-name|USBBASEDEVICE
+name|device_t
 name|sc_dev
 decl_stmt|;
 comment|/* base device */
@@ -1875,7 +1875,7 @@ name|printf
 argument_list|(
 literal|"%s: setting config no failed\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1934,7 +1934,7 @@ name|printf
 argument_list|(
 literal|"%s: could not get interface descriptor, err=%d,id=%p\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1988,7 +1988,7 @@ name|printf
 argument_list|(
 literal|"%s: could not read endpoint descriptor\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2079,7 +2079,7 @@ name|printf
 argument_list|(
 literal|"%s: bulk-in and/or bulk-out endpoint not found\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2119,7 +2119,7 @@ argument_list|(
 operator|&
 name|uscanner_cdevsw
 argument_list|,
-name|USBDEVUNIT
+name|device_get_unit
 argument_list|(
 name|sc
 operator|->
@@ -2134,7 +2134,7 @@ literal|0644
 argument_list|,
 literal|"%s"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2332,7 +2332,7 @@ name|printf
 argument_list|(
 literal|"%s: cannot open bulk-in pipe (addr %d)\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2394,7 +2394,7 @@ name|printf
 argument_list|(
 literal|"%s: cannot open bulk-out pipe (addr %d)\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2804,7 +2804,7 @@ argument_list|,
 operator|(
 literal|"%s: uscannerread\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3078,7 +3078,7 @@ argument_list|,
 operator|(
 literal|"%s: uscanner_do_write\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->

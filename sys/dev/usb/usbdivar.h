@@ -341,7 +341,7 @@ struct|struct
 name|usbd_bus
 block|{
 comment|/* Filled by HC driver */
-name|USBBASEDEVICE
+name|device_t
 name|bdev
 decl_stmt|;
 comment|/* base device, host adapter */
@@ -637,7 +637,7 @@ decl_stmt|;
 name|char
 name|aborting
 decl_stmt|;
-name|SIMPLEQ_HEAD
+name|STAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|usbd_xfer
@@ -804,7 +804,7 @@ define|#
 directive|define
 name|URQ_DEV_DMABUF
 value|0x20
-name|SIMPLEQ_ENTRY
+name|STAILQ_ENTRY
 argument_list|(
 argument|usbd_xfer
 argument_list|)

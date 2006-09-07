@@ -840,7 +840,7 @@ name|dev
 expr_stmt|;
 name|devname
 operator|=
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->

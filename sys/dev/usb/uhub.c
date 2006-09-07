@@ -269,7 +269,7 @@ begin_struct
 struct|struct
 name|uhub_softc
 block|{
-name|USBBASEDEVICE
+name|device_t
 name|sc_dev
 decl_stmt|;
 comment|/* base device */
@@ -803,7 +803,7 @@ name|printf
 argument_list|(
 literal|"%s: %s transaction translator%s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -851,7 +851,7 @@ argument_list|(
 operator|(
 literal|"%s: configuration failed, error=%s\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -888,7 +888,7 @@ name|printf
 argument_list|(
 literal|"%s: hub depth (%d) exceeded, hub ignored\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1039,7 +1039,7 @@ argument_list|(
 operator|(
 literal|"%s: getting hub descriptor failed, error=%s\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1098,7 +1098,7 @@ name|printf
 argument_list|(
 literal|"%s: %d port%s with %d removable, %s powered\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1137,7 +1137,7 @@ name|printf
 argument_list|(
 literal|"%s: no ports, hub ignored\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1285,7 +1285,7 @@ argument_list|(
 literal|"%s: bus powered hub connected to bus powered hub, "
 literal|"ignored\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1319,7 +1319,7 @@ name|printf
 argument_list|(
 literal|"%s: no interface handle\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1351,7 +1351,7 @@ name|printf
 argument_list|(
 literal|"%s: no endpoint descriptor\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1380,7 +1380,7 @@ name|printf
 argument_list|(
 literal|"%s: bad interrupt endpoint\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1436,7 +1436,7 @@ name|printf
 argument_list|(
 literal|"%s: cannot open interrupt pipe\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1681,7 +1681,7 @@ name|printf
 argument_list|(
 literal|"%s: port %d power on failed, %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1937,7 +1937,7 @@ argument_list|,
 operator|(
 literal|"uhub_explore: %s port %d status 0x%04x 0x%04x\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1998,7 +1998,7 @@ name|printf
 argument_list|(
 literal|"%s: illegal enable change, port %d\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2024,7 +2024,7 @@ argument_list|(
 literal|"%s: port error, restarting "
 literal|"port %d\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2052,7 +2052,7 @@ argument_list|(
 literal|"%s: port error, giving up "
 literal|"port %d\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2124,7 +2124,7 @@ name|defined
 argument_list|(
 name|DIAGNOSTIC
 argument_list|)
-block|if (up->device == NULL&& 			    (status& UPS_CURRENT_CONNECT_STATUS)) 				printf("%s: connected, no device\n", 				       USBDEVNAME(sc->sc_dev));
+block|if (up->device == NULL&& 			    (status& UPS_CURRENT_CONNECT_STATUS)) 				printf("%s: connected, no device\n", 				       device_get_nameunit(sc->sc_dev));
 endif|#
 directive|endif
 continue|continue;
@@ -2243,7 +2243,7 @@ name|printf
 argument_list|(
 literal|"%s: strange, connected port %d has no power\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2281,7 +2281,7 @@ name|printf
 argument_list|(
 literal|"%s: port %d reset failed\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2368,7 +2368,7 @@ name|printf
 argument_list|(
 literal|"%s: port %d, device disappeared after reset\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2385,7 +2385,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if (UHUB_IS_HIGH_SPEED(sc)&& !(status& UPS_HIGH_SPEED)) { 			printf("%s: port %d, transaction translation not " 			    "implemented, low/full speed device ignored\n", 			    USBDEVNAME(sc->sc_dev), port); 			continue; 		}
+block|if (UHUB_IS_HIGH_SPEED(sc)&& !(status& UPS_HIGH_SPEED)) { 			printf("%s: port %d, transaction translation not " 			    "implemented, low/full speed device ignored\n", 			    device_get_nameunit(sc->sc_dev), port); 			continue; 		}
 endif|#
 directive|endif
 comment|/* Figure out device speed */
@@ -2473,7 +2473,7 @@ name|printf
 argument_list|(
 literal|"%s: device problem (%s), disabling port %d\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->

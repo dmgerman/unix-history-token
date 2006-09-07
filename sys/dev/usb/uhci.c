@@ -2885,7 +2885,7 @@ operator|->
 name|sc_intrhead
 argument_list|)
 expr_stmt|;
-name|SIMPLEQ_INIT
+name|STAILQ_INIT
 argument_list|(
 operator|&
 name|sc
@@ -3226,7 +3226,7 @@ control|)
 block|{
 name|xfer
 operator|=
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|sc
@@ -3241,7 +3241,7 @@ operator|==
 name|NULL
 condition|)
 break|break;
-name|SIMPLEQ_REMOVE_HEAD
+name|STAILQ_REMOVE_HEAD
 argument_list|(
 operator|&
 name|sc
@@ -3366,7 +3366,7 @@ name|xfer
 decl_stmt|;
 name|xfer
 operator|=
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|sc
@@ -3381,7 +3381,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|SIMPLEQ_REMOVE_HEAD
+name|STAILQ_REMOVE_HEAD
 argument_list|(
 operator|&
 name|sc
@@ -3600,7 +3600,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-name|SIMPLEQ_INSERT_HEAD
+name|STAILQ_INSERT_HEAD
 argument_list|(
 operator|&
 name|sc
@@ -4123,7 +4123,7 @@ operator|(
 literal|"%s regs: cmd=%04x, sts=%04x, intr=%04x, frnum=%04x, "
 literal|"flbase=%08x, sof=%04x, portsc1=%04x, portsc2=%04x\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6167,7 +6167,7 @@ argument_list|(
 operator|(
 literal|"%s: uhci_intr1\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6250,7 +6250,7 @@ name|printf
 argument_list|(
 literal|"%s: interrupt while not operating ignored\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6318,7 +6318,7 @@ name|printf
 argument_list|(
 literal|"%s: resume detect\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6346,7 +6346,7 @@ name|printf
 argument_list|(
 literal|"%s: host system error\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6372,7 +6372,7 @@ name|printf
 argument_list|(
 literal|"%s: host controller process error\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6403,7 +6403,7 @@ name|printf
 argument_list|(
 literal|"%s: host controller halted\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6474,7 +6474,7 @@ argument_list|,
 operator|(
 literal|"%s: uhci_intr: exit\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6522,7 +6522,7 @@ argument_list|,
 operator|(
 literal|"%s: uhci_softintr (%d)\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7932,7 +7932,7 @@ name|printf
 argument_list|(
 literal|"%s: controller did not reset\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8105,7 +8105,7 @@ name|printf
 argument_list|(
 literal|"%s: cannot %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -9803,7 +9803,7 @@ return|return
 operator|(
 name|uhci_device_bulk_start
 argument_list|(
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|xfer
@@ -11087,7 +11087,7 @@ return|return
 operator|(
 name|uhci_device_ctrl_start
 argument_list|(
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|xfer
@@ -11233,7 +11233,7 @@ return|return
 operator|(
 name|uhci_device_intr_start
 argument_list|(
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|xfer
@@ -12864,7 +12864,7 @@ name|err
 condition|)
 name|uhci_device_isoc_start
 argument_list|(
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|xfer
@@ -17194,7 +17194,7 @@ return|return
 operator|(
 name|uhci_root_ctrl_start
 argument_list|(
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|xfer
@@ -19001,7 +19001,7 @@ return|return
 operator|(
 name|uhci_root_intr_start
 argument_list|(
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|xfer

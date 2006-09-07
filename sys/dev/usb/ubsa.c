@@ -1409,7 +1409,7 @@ name|iface
 expr_stmt|;
 name|devname
 operator|=
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -1519,7 +1519,7 @@ name|printf
 argument_list|(
 literal|"%s: failed to get configuration descriptor\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -1635,7 +1635,7 @@ name|printf
 argument_list|(
 literal|"%s: no endpoint descriptor for %d\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -1795,7 +1795,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not find interrupt in\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -1836,7 +1836,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not find data bulk in\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -1868,7 +1868,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not find data bulk out\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -2168,7 +2168,7 @@ name|printf
 argument_list|(
 literal|"%s: ubsa_request: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2493,7 +2493,7 @@ argument_list|(
 literal|"%s: ubsa_param: unsupported baudrate, "
 literal|"forcing default of 9600\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2688,7 +2688,7 @@ argument_list|(
 literal|"%s: ubsa_param: unsupported databits requested, "
 literal|"forcing default of 8\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3054,7 +3054,7 @@ name|printf
 argument_list|(
 literal|"%s: cannot open interrupt pipe (addr %d)\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3150,7 +3150,7 @@ name|printf
 argument_list|(
 literal|"%s: abort interrupt pipe failed: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3182,7 +3182,7 @@ name|printf
 argument_list|(
 literal|"%s: close interrupt pipe failed: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3282,7 +3282,7 @@ argument_list|(
 operator|(
 literal|"%s: ubsa_intr: abnormal status: %s\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3331,7 +3331,7 @@ argument_list|(
 operator|(
 literal|"%s: ubsa lsr = 0x%02x, msr = 0x%02x\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->

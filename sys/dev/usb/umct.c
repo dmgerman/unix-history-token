@@ -825,7 +825,7 @@ argument_list|)
 expr_stmt|;
 name|devname
 operator|=
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -1503,7 +1503,7 @@ name|printf
 argument_list|(
 literal|"%s: ubsa_request: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2284,7 +2284,7 @@ name|printf
 argument_list|(
 literal|"%s: cannot open interrupt pipe (addr %d)\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2382,7 +2382,7 @@ name|printf
 argument_list|(
 literal|"%s: abort interrupt pipe failed: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2414,7 +2414,7 @@ name|printf
 argument_list|(
 literal|"%s: close interrupt pipe failed: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->

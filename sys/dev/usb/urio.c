@@ -594,7 +594,7 @@ begin_struct
 struct|struct
 name|urio_softc
 block|{
-name|USBBASEDEVICE
+name|device_t
 name|sc_dev
 decl_stmt|;
 name|usbd_device_handle
@@ -1266,7 +1266,7 @@ name|printf
 argument_list|(
 literal|"%s: could not find %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2717,7 +2717,7 @@ name|UIO_WRITE
 expr_stmt|;
 name|uio
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
 name|p
 expr_stmt|;
@@ -3201,7 +3201,7 @@ argument_list|(
 operator|(
 literal|"%s: disconnected\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|self
 argument_list|)

@@ -926,7 +926,7 @@ name|printf
 argument_list|(
 literal|"%s: could not read endpoint descriptor\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1019,7 +1019,7 @@ name|printf
 argument_list|(
 literal|"%s: unexpected endpoint\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1085,7 +1085,7 @@ name|printf
 argument_list|(
 literal|"%s: mouse has no X report\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1111,7 +1111,7 @@ name|printf
 argument_list|(
 literal|"%s: X report 0x%04x not supported\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1156,7 +1156,7 @@ name|printf
 argument_list|(
 literal|"%s: mouse has no Y report\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1182,7 +1182,7 @@ name|printf
 argument_list|(
 literal|"%s: Y report 0x%04x not supported\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1431,7 +1431,7 @@ name|printf
 argument_list|(
 literal|"%s: no memory\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1446,7 +1446,7 @@ name|printf
 argument_list|(
 literal|"%s: %d buttons%s%s.\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1566,7 +1566,7 @@ name|printf
 argument_list|(
 literal|"%s: no memory\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1996,7 +1996,7 @@ argument_list|(
 operator|(
 literal|"%s: Spurious button up events\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2052,7 +2052,7 @@ argument_list|(
 operator|(
 literal|"%s: disconnected\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|self
 argument_list|)

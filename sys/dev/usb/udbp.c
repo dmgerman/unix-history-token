@@ -967,7 +967,7 @@ name|printf
 argument_list|(
 literal|"%s: could not read endpoint descriptor\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1058,7 +1058,7 @@ name|printf
 argument_list|(
 literal|"%s: bulk-in and/or bulk-out endpoint not found\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1104,7 +1104,7 @@ name|printf
 argument_list|(
 literal|"%s: bulk-in and bulk-out have different packet sizes %d %d %d %d\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1164,7 +1164,7 @@ argument_list|(
 operator|(
 literal|"%s: Bulk-in: 0x%02x, bulk-out 0x%02x, packet size = %d\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1330,7 +1330,7 @@ name|printf
 argument_list|(
 literal|"%s: cannot open bulk-in pipe (addr %d)\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1373,7 +1373,7 @@ name|printf
 argument_list|(
 literal|"%s: cannot open bulk-out pipe (addr %d)\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1450,7 +1450,7 @@ name|nodename
 argument_list|,
 literal|"%s"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1626,7 +1626,7 @@ argument_list|(
 operator|(
 literal|"%s: disconnected\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|self
 argument_list|)
@@ -1853,7 +1853,7 @@ argument_list|(
 operator|(
 literal|"%s: failed to setup in-transfer, %s\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1930,7 +1930,7 @@ argument_list|(
 operator|(
 literal|"%s: bulk-out transfer failed: %s\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2158,7 +2158,7 @@ name|printf
 argument_list|(
 literal|"%s: Packet too large, %d> %d\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2248,7 +2248,7 @@ argument_list|(
 operator|(
 literal|"%s: failed to setup out-transfer, %s\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2310,7 +2310,7 @@ argument_list|(
 operator|(
 literal|"%s: bulk-out transfer failed: %s\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3032,7 +3032,7 @@ name|nodename
 argument_list|,
 literal|"%s"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->

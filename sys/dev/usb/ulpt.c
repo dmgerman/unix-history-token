@@ -390,7 +390,7 @@ begin_struct
 struct|struct
 name|ulpt_softc
 block|{
-name|USBBASEDEVICE
+name|device_t
 name|sc_dev
 decl_stmt|;
 name|usbd_device_handle
@@ -1068,7 +1068,7 @@ name|printf
 argument_list|(
 literal|"%s: failed to get configuration descriptor\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1248,7 +1248,7 @@ name|printf
 argument_list|(
 literal|"%s: setting alternate interface failed\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1329,7 +1329,7 @@ name|printf
 argument_list|(
 literal|"%s: couldn't get ep %d\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1418,7 +1418,7 @@ name|printf
 argument_list|(
 literal|"%s: could not find bulk out endpoint\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1460,7 +1460,7 @@ name|printf
 argument_list|(
 literal|"%s: using %s-directional mode\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1515,9 +1515,9 @@ if|#
 directive|if
 literal|0
 comment|/*  * This code is disabled because for some mysterious reason it causes  * printing not to work.  But only sometimes, and mostly with  * UHCI and less often with OHCI.  *sigh*  */
-block|{ 	usb_config_descriptor_t *cd = usbd_get_config_descriptor(dev); 	usb_device_request_t req; 	int len, alen;  	req.bmRequestType = UT_READ_CLASS_INTERFACE; 	req.bRequest = UR_GET_DEVICE_ID; 	USETW(req.wValue, cd->bConfigurationValue); 	USETW2(req.wIndex, id->bInterfaceNumber, id->bAlternateSetting); 	USETW(req.wLength, sizeof devinfo - 1); 	err = usbd_do_request_flags(dev,&req, devinfo, USBD_SHORT_XFER_OK,&alen, USBD_DEFAULT_TIMEOUT); 	if (err) { 		printf("%s: cannot get device id\n", USBDEVNAME(sc->sc_dev)); 	} else if (alen<= 2) { 		printf("%s: empty device id, no printer connected?\n", 		       USBDEVNAME(sc->sc_dev)); 	} else {
+block|{ 	usb_config_descriptor_t *cd = usbd_get_config_descriptor(dev); 	usb_device_request_t req; 	int len, alen;  	req.bmRequestType = UT_READ_CLASS_INTERFACE; 	req.bRequest = UR_GET_DEVICE_ID; 	USETW(req.wValue, cd->bConfigurationValue); 	USETW2(req.wIndex, id->bInterfaceNumber, id->bAlternateSetting); 	USETW(req.wLength, sizeof devinfo - 1); 	err = usbd_do_request_flags(dev,&req, devinfo, USBD_SHORT_XFER_OK,&alen, USBD_DEFAULT_TIMEOUT); 	if (err) { 		printf("%s: cannot get device id\n", device_get_nameunit(sc->sc_dev)); 	} else if (alen<= 2) { 		printf("%s: empty device id, no printer connected?\n", 		       device_get_nameunit(sc->sc_dev)); 	} else {
 comment|/* devinfo now contains an IEEE-1284 device ID */
-block|len = ((devinfo[0]& 0xff)<< 8) | (devinfo[1]& 0xff); 		if (len> sizeof devinfo - 3) 			len = sizeof devinfo - 3; 		devinfo[len] = 0; 		printf("%s: device id<", USBDEVNAME(sc->sc_dev)); 		ieee1284_print_id(devinfo+2); 		printf(">\n"); 	} 	}
+block|len = ((devinfo[0]& 0xff)<< 8) | (devinfo[1]& 0xff); 		if (len> sizeof devinfo - 3) 			len = sizeof devinfo - 3; 		devinfo[len] = 0; 		printf("%s: device id<", device_get_nameunit(sc->sc_dev)); 		ieee1284_print_id(devinfo+2); 		printf(">\n"); 	} 	}
 endif|#
 directive|endif
 if|#
@@ -2801,7 +2801,7 @@ name|LOG_NOTICE
 argument_list|,
 literal|"%s: offline\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2822,7 +2822,7 @@ name|LOG_NOTICE
 argument_list|,
 literal|"%s: out of paper\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2843,7 +2843,7 @@ name|LOG_NOTICE
 argument_list|,
 literal|"%s: output error\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->

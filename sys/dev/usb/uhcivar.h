@@ -419,7 +419,7 @@ modifier|*
 name|sc_freeqhs
 decl_stmt|;
 comment|/* QH free list */
-name|SIMPLEQ_HEAD
+name|STAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|usbd_xfer

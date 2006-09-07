@@ -469,7 +469,7 @@ name|ehci_soft_qh_t
 modifier|*
 name|sc_async_head
 decl_stmt|;
-name|SIMPLEQ_HEAD
+name|STAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|usbd_xfer

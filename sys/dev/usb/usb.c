@@ -466,7 +466,7 @@ begin_struct
 struct|struct
 name|usb_softc
 block|{
-name|USBBASEDEVICE
+name|device_t
 name|sc_dev
 decl_stmt|;
 comment|/* base device */
@@ -1114,7 +1114,7 @@ name|printf
 argument_list|(
 literal|"%s"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1206,7 +1206,7 @@ name|ue_ctrlr
 operator|.
 name|ue_bus
 operator|=
-name|USBDEVUNIT
+name|device_get_unit
 argument_list|(
 name|sc
 operator|->
@@ -1266,7 +1266,7 @@ name|printf
 argument_list|(
 literal|"%s: can't register softintr\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1358,7 +1358,7 @@ name|printf
 argument_list|(
 literal|"%s: root device is not a hub\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1466,7 +1466,7 @@ name|printf
 argument_list|(
 literal|"%s: root hub problem, error=%d\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1624,7 +1624,7 @@ name|sc_event_thread
 argument_list|,
 literal|"%s"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1637,7 +1637,7 @@ name|printf
 argument_list|(
 literal|"%s: unable to create event thread for\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2912,7 +2912,7 @@ name|UIO_WRITE
 expr_stmt|;
 name|uio
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
 name|p
 expr_stmt|;
@@ -3662,7 +3662,7 @@ name|ue_driver
 operator|.
 name|ue_devname
 argument_list|,
-name|USBDEVPTRNAME
+name|device_get_nameunit
 argument_list|(
 name|dev
 argument_list|)
@@ -4289,7 +4289,7 @@ name|printf
 argument_list|(
 literal|"%s: event thread didn't die\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4424,7 +4424,7 @@ name|ue_ctrlr
 operator|.
 name|ue_bus
 operator|=
-name|USBDEVUNIT
+name|device_get_unit
 argument_list|(
 name|sc
 operator|->

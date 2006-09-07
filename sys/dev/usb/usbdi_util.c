@@ -2731,7 +2731,7 @@ argument_list|(
 operator|(
 literal|"usb_detach_wait: waiting for %s\n"
 operator|,
-name|USBDEVPTRNAME
+name|device_get_nameunit
 argument_list|(
 name|dv
 argument_list|)
@@ -2757,7 +2757,7 @@ name|printf
 argument_list|(
 literal|"usb_detach_wait: %s didn't detach\n"
 argument_list|,
-name|USBDEVPTRNAME
+name|device_get_nameunit
 argument_list|(
 name|dv
 argument_list|)
@@ -2768,7 +2768,7 @@ argument_list|(
 operator|(
 literal|"usb_detach_wait: %s done\n"
 operator|,
-name|USBDEVPTRNAME
+name|device_get_nameunit
 argument_list|(
 name|dv
 argument_list|)
@@ -2791,7 +2791,7 @@ argument_list|(
 operator|(
 literal|"usb_detach_wakeup: for %s\n"
 operator|,
-name|USBDEVPTRNAME
+name|device_get_nameunit
 argument_list|(
 name|dv
 argument_list|)

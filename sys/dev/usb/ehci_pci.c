@@ -1831,7 +1831,7 @@ argument_list|(
 operator|(
 literal|"ehci_pci_attach: companion %s\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|bsc
 operator|->
@@ -2424,7 +2424,7 @@ name|printf
 argument_list|(
 literal|"%s: waiting for BIOS to give up control\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2486,7 +2486,7 @@ name|printf
 argument_list|(
 literal|"%s: timed out waiting for BIOS\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->

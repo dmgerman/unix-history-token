@@ -665,7 +665,7 @@ argument_list|,
 name|pipe
 argument_list|)
 expr_stmt|;
-name|SIMPLEQ_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|xfer
 argument_list|,
@@ -1238,7 +1238,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|SIMPLEQ_EMPTY
+name|STAILQ_EMPTY
 argument_list|(
 operator|&
 name|pipe
@@ -4228,7 +4228,7 @@ condition|(
 operator|(
 name|xfer
 operator|=
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|pipe
@@ -4269,7 +4269,7 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|pipe
@@ -4597,7 +4597,7 @@ endif|#
 directive|endif
 name|KASSERT
 argument_list|(
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|pipe
@@ -4612,7 +4612,7 @@ literal|"usb_transfer_complete: bad dequeue"
 operator|)
 argument_list|)
 expr_stmt|;
-name|SIMPLEQ_REMOVE_HEAD
+name|STAILQ_REMOVE_HEAD
 argument_list|(
 operator|&
 name|pipe
@@ -4632,7 +4632,7 @@ literal|"usb_transfer_complete: repeat=%d new head=%p\n"
 operator|,
 name|repeat
 operator|,
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|pipe
@@ -4921,7 +4921,7 @@ argument_list|()
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|pipe
@@ -4936,7 +4936,7 @@ literal|"usb_insert_transfer"
 operator|)
 argument_list|)
 expr_stmt|;
-name|SIMPLEQ_INSERT_TAIL
+name|STAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|pipe
@@ -5052,7 +5052,7 @@ directive|endif
 comment|/* Get next request in queue. */
 name|xfer
 operator|=
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|pipe

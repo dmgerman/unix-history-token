@@ -1124,7 +1124,7 @@ name|iface
 expr_stmt|;
 name|devname
 operator|=
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -1413,7 +1413,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not find data bulk in\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -1439,7 +1439,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not find data bulk out\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -1517,7 +1517,7 @@ name|printf
 argument_list|(
 literal|"%s: init failed, %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -1834,7 +1834,7 @@ name|printf
 argument_list|(
 literal|"%s: Number of ports: %d\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1915,7 +1915,7 @@ name|printf
 argument_list|(
 literal|"%s: port %d, is for %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2395,7 +2395,7 @@ name|USB_DEBUG
 end_ifdef
 
 begin_endif
-unit|{ 		struct uvisor_connection_info coninfo; 		int i, np; 		char *string;  		np = UGETW(coninfo.num_ports); 		DPRINTF(("%s: Number of ports: %d\n", USBDEVNAME(sc->sc_ucom.sc_dev), np)); 		for (i = 0; i< np; ++i) { 			switch (coninfo.connections[i].port_function_id) { 			case UVISOR_FUNCTION_GENERIC: 				string = "Generic"; 				break; 			case UVISOR_FUNCTION_DEBUGGER: 				string = "Debugger"; 				break; 			case UVISOR_FUNCTION_HOTSYNC: 				string = "HotSync"; 				break; 			case UVISOR_FUNCTION_REMOTE_FILE_SYS: 				string = "Remote File System"; 				break; 			default: 				string = "unknown"; 				break;	 			} 			DPRINTF(("%s: port %d, is for %s\n", 			    USBDEVNAME(sc->sc_ucom.sc_dev), coninfo.connections[i].port, 			    string)); 		} 	}
+unit|{ 		struct uvisor_connection_info coninfo; 		int i, np; 		char *string;  		np = UGETW(coninfo.num_ports); 		DPRINTF(("%s: Number of ports: %d\n", device_get_nameunit(sc->sc_ucom.sc_dev), np)); 		for (i = 0; i< np; ++i) { 			switch (coninfo.connections[i].port_function_id) { 			case UVISOR_FUNCTION_GENERIC: 				string = "Generic"; 				break; 			case UVISOR_FUNCTION_DEBUGGER: 				string = "Debugger"; 				break; 			case UVISOR_FUNCTION_HOTSYNC: 				string = "HotSync"; 				break; 			case UVISOR_FUNCTION_REMOTE_FILE_SYS: 				string = "Remote File System"; 				break; 			default: 				string = "unknown"; 				break;	 			} 			DPRINTF(("%s: port %d, is for %s\n", 			    device_get_nameunit(sc->sc_ucom.sc_dev), coninfo.connections[i].port, 			    string)); 		} 	}
 endif|#
 directive|endif
 end_endif

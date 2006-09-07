@@ -2537,7 +2537,7 @@ name|printf
 argument_list|(
 literal|"%s: could not set configuration no\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2576,7 +2576,7 @@ name|printf
 argument_list|(
 literal|"%s: could not get interface handle\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2646,7 +2646,7 @@ name|printf
 argument_list|(
 literal|"%s: no endpoint descriptor for %d\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2738,7 +2738,7 @@ name|printf
 argument_list|(
 literal|"%s: missing endpoint\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2756,7 +2756,7 @@ name|sc
 operator|->
 name|sc_mtx
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2828,7 +2828,7 @@ name|printf
 argument_list|(
 literal|"%s: MAC/BBP RT2570 (rev 0x%02x), RF %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2869,7 +2869,7 @@ name|printf
 argument_list|(
 literal|"%s: can not if_alloc()\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2892,7 +2892,7 @@ name|ifp
 argument_list|,
 literal|"ural"
 argument_list|,
-name|USBDEVUNIT
+name|device_get_unit
 argument_list|(
 name|sc
 operator|->
@@ -3648,7 +3648,7 @@ name|printf
 argument_list|(
 literal|"%s: could not allocate tx xfer\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3692,7 +3692,7 @@ name|printf
 argument_list|(
 literal|"%s: could not allocate tx buffer\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3893,7 +3893,7 @@ name|printf
 argument_list|(
 literal|"%s: could not allocate rx xfer\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3927,7 +3927,7 @@ name|printf
 argument_list|(
 literal|"%s: could not allocate rx buffer\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3969,7 +3969,7 @@ name|printf
 argument_list|(
 literal|"%s: could not allocate rx mbuf\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4476,7 +4476,7 @@ name|printf
 argument_list|(
 literal|"%s: could not allocate beacon\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4504,7 +4504,7 @@ name|printf
 argument_list|(
 literal|"%s: could not send beacon\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4922,7 +4922,7 @@ name|printf
 argument_list|(
 literal|"%s: could not transmit buffer: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5160,7 +5160,7 @@ argument_list|(
 operator|(
 literal|"%s: xfer too short %d\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8417,7 +8417,7 @@ name|printf
 argument_list|(
 literal|"%s: could not set test mode: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8525,7 +8525,7 @@ name|printf
 argument_list|(
 literal|"%s: could not read EEPROM: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8633,7 +8633,7 @@ name|printf
 argument_list|(
 literal|"%s: could not read MAC register: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8750,7 +8750,7 @@ name|printf
 argument_list|(
 literal|"%s: could not read MAC register: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8854,7 +8854,7 @@ name|printf
 argument_list|(
 literal|"%s: could not write MAC register: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8962,7 +8962,7 @@ name|printf
 argument_list|(
 literal|"%s: could not write MAC register: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -9043,7 +9043,7 @@ name|printf
 argument_list|(
 literal|"%s: could not write to BBP\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -9151,7 +9151,7 @@ name|printf
 argument_list|(
 literal|"%s: could not read BBP\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -9240,7 +9240,7 @@ name|printf
 argument_list|(
 literal|"%s: could not write to RF\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -11549,7 +11549,7 @@ name|printf
 argument_list|(
 literal|"%s: timeout waiting for BBP/RF to wakeup\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -11731,7 +11731,7 @@ name|printf
 argument_list|(
 literal|"%s: could not allocate AMRR xfer\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -11775,7 +11775,7 @@ name|printf
 argument_list|(
 literal|"%s: could not open Tx pipe: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -11823,7 +11823,7 @@ name|printf
 argument_list|(
 literal|"%s: could not open Rx pipe: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -11859,7 +11859,7 @@ name|printf
 argument_list|(
 literal|"%s: could not allocate Tx list\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -11889,7 +11889,7 @@ name|printf
 argument_list|(
 literal|"%s: could not allocate Rx list\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->

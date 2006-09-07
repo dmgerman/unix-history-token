@@ -207,7 +207,7 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-name|USBBASEDEVICE
+name|device_t
 name|sc_dev
 decl_stmt|;
 name|usbd_device_handle

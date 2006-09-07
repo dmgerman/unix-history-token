@@ -1346,7 +1346,7 @@ name|bInterfaceNumber
 expr_stmt|;
 name|devname
 operator|=
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|self
 argument_list|)
@@ -2552,7 +2552,7 @@ name|printf
 argument_list|(
 literal|"%s:ACTIVATE:%s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -2598,7 +2598,7 @@ name|printf
 argument_list|(
 literal|"%s:NO response"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -2942,7 +2942,7 @@ name|printf
 argument_list|(
 literal|"%s: abnormal status: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -3013,7 +3013,7 @@ name|printf
 argument_list|(
 literal|"%s:Mode change Failed\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -3067,7 +3067,7 @@ name|printf
 argument_list|(
 literal|"%s:wrong response request?\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -3158,7 +3158,7 @@ name|printf
 argument_list|(
 literal|"%s:wrong sereal request?\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -3187,7 +3187,7 @@ name|printf
 argument_list|(
 literal|"%s: Invalid notification length! (%d)\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -3211,7 +3211,7 @@ argument_list|(
 operator|(
 literal|"%s: notify bytes = %02x%02x\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -4664,7 +4664,7 @@ name|char
 modifier|*
 name|devname
 init|=
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->

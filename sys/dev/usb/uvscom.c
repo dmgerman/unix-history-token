@@ -1655,7 +1655,7 @@ name|iface
 expr_stmt|;
 name|devname
 operator|=
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -1759,7 +1759,7 @@ name|printf
 argument_list|(
 literal|"%s: failed to get configuration descriptor\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -1863,7 +1863,7 @@ name|printf
 argument_list|(
 literal|"%s: no endpoint descriptor for %d\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -1995,7 +1995,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not find data bulk in\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -2021,7 +2021,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not find data bulk out\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -2047,7 +2047,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not find interrupt in\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -2135,7 +2135,7 @@ name|printf
 argument_list|(
 literal|"%s: reset failed, %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -2342,7 +2342,7 @@ argument_list|(
 operator|(
 literal|"%s: send readstat\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2418,7 +2418,7 @@ name|printf
 argument_list|(
 literal|"%s: uvscom_readstat: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2444,7 +2444,7 @@ argument_list|(
 operator|(
 literal|"%s: uvscom_readstat: r = %d\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2487,7 +2487,7 @@ argument_list|(
 operator|(
 literal|"%s: send shutdown\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2562,7 +2562,7 @@ name|printf
 argument_list|(
 literal|"%s: uvscom_shutdown: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2607,7 +2607,7 @@ argument_list|(
 operator|(
 literal|"%s: uvscom_reset\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2642,7 +2642,7 @@ argument_list|(
 operator|(
 literal|"%s: uvscom_set_crtscts\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2686,7 +2686,7 @@ argument_list|(
 operator|(
 literal|"%s: uvscom_set_line: %04x\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2763,7 +2763,7 @@ name|printf
 argument_list|(
 literal|"%s: uvscom_set_line: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2820,7 +2820,7 @@ argument_list|(
 operator|(
 literal|"%s: uvscom_set_line_coding: %02x %02x\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2899,7 +2899,7 @@ name|printf
 argument_list|(
 literal|"%s: uvscom_set_line_coding: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2984,7 +2984,7 @@ name|printf
 argument_list|(
 literal|"%s: uvscom_set_line_coding: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3032,7 +3032,7 @@ argument_list|(
 operator|(
 literal|"%s: uvscom_dtr: onoff = %d\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3115,7 +3115,7 @@ argument_list|(
 operator|(
 literal|"%s: uvscom_rts: onoff = %d\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3198,7 +3198,7 @@ argument_list|(
 operator|(
 literal|"%s: uvscom_break: onoff = %d\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3341,7 +3341,7 @@ argument_list|(
 operator|(
 literal|"%s: uvscom_param: sc = %p\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3757,7 +3757,7 @@ argument_list|(
 operator|(
 literal|"%s: uvscom_open: readstat faild\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3834,7 +3834,7 @@ name|printf
 argument_list|(
 literal|"%s: cannot open interrupt pipe (addr %d)\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3931,7 +3931,7 @@ argument_list|(
 operator|(
 literal|"%s: unit is not ready\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3966,7 +3966,7 @@ argument_list|(
 operator|(
 literal|"%s: no card\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4062,7 +4062,7 @@ name|printf
 argument_list|(
 literal|"%s: abort interrupt pipe failed: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4094,7 +4094,7 @@ name|printf
 argument_list|(
 literal|"%s: close interrupt pipe failed: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4192,7 +4192,7 @@ name|printf
 argument_list|(
 literal|"%s: uvscom_intr: abnormal status: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4223,7 +4223,7 @@ argument_list|,
 operator|(
 literal|"%s: uvscom status = %02x %02x\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->

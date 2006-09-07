@@ -1623,7 +1623,7 @@ name|printf
 argument_list|(
 literal|"%s: EHCI version %x.%x\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1688,7 +1688,7 @@ name|printf
 argument_list|(
 literal|"%s: wrong number of companions (%d != %d)\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1732,7 +1732,7 @@ name|printf
 argument_list|(
 literal|"%s: companion controller%s, %d port%s each:"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1787,7 +1787,7 @@ name|printf
 argument_list|(
 literal|" %s"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1866,7 +1866,7 @@ argument_list|(
 operator|(
 literal|"%s: resetting\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1957,7 +1957,7 @@ name|printf
 argument_list|(
 literal|"%s: reset timeout\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2066,7 +2066,7 @@ argument_list|(
 operator|(
 literal|"%s: flsize=%d\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2730,7 +2730,7 @@ name|printf
 argument_list|(
 literal|"%s: run timeout\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3111,7 +3111,7 @@ name|printf
 argument_list|(
 literal|"%s: unrecoverable error, controller halted\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3204,7 +3204,7 @@ name|printf
 argument_list|(
 literal|"%s: blocking intrs 0x%x\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3486,7 +3486,7 @@ argument_list|,
 operator|(
 literal|"%s: ehci_softintr (%d)\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5251,7 +5251,7 @@ name|printf
 argument_list|(
 literal|"%s: reset timeout\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5330,7 +5330,7 @@ name|printf
 argument_list|(
 literal|"%s: config timeout\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5626,7 +5626,7 @@ name|printf
 argument_list|(
 literal|"%s: config timeout\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5868,7 +5868,7 @@ name|xfer
 decl_stmt|;
 name|xfer
 operator|=
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|sc
@@ -5883,7 +5883,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|SIMPLEQ_REMOVE_HEAD
+name|STAILQ_REMOVE_HEAD
 argument_list|(
 operator|&
 name|sc
@@ -6087,7 +6087,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-name|SIMPLEQ_INSERT_HEAD
+name|STAILQ_INSERT_HEAD
 argument_list|(
 operator|&
 name|sc
@@ -7228,7 +7228,7 @@ argument_list|(
 literal|"%s: *** WARNING: opening low/full speed device, this "
 literal|"does not work yet.\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8516,7 +8516,7 @@ return|return
 operator|(
 name|ehci_root_ctrl_start
 argument_list|(
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|xfer
@@ -10285,7 +10285,7 @@ name|printf
 argument_list|(
 literal|"%s: port reset timeout\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -10573,7 +10573,7 @@ name|printf
 argument_list|(
 literal|"%s: strange port\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -10589,7 +10589,7 @@ argument_list|(
 literal|"%s: handing over %s speed device on "
 literal|"port %d to %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -10606,7 +10606,7 @@ literal|"full"
 argument_list|,
 name|index
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -10626,7 +10626,7 @@ name|printf
 argument_list|(
 literal|"%s: npcomp == 0\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -10757,7 +10757,7 @@ return|return
 operator|(
 name|ehci_root_intr_start
 argument_list|(
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|xfer
@@ -13602,7 +13602,7 @@ return|return
 operator|(
 name|ehci_device_ctrl_start
 argument_list|(
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|xfer
@@ -14870,7 +14870,7 @@ return|return
 operator|(
 name|ehci_device_bulk_start
 argument_list|(
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|xfer
@@ -15774,7 +15774,7 @@ return|return
 operator|(
 name|ehci_device_intr_start
 argument_list|(
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|xfer

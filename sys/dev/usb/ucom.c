@@ -905,7 +905,7 @@ argument_list|(
 operator|(
 literal|"%s: ucomopen: tp = %p\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1042,7 +1042,7 @@ name|printf
 argument_list|(
 literal|"%s: open bulk in error (addr %d): %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1097,7 +1097,7 @@ name|printf
 argument_list|(
 literal|"%s: open bulk out error (addr %d): %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1311,7 +1311,7 @@ argument_list|(
 operator|(
 literal|"%s: ucomclose \n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3100,7 +3100,7 @@ name|printf
 argument_list|(
 literal|"%s: ucomwritecb: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3167,7 +3167,7 @@ name|printf
 argument_list|(
 literal|"%s: sent size too small, cc = %d\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3485,7 +3485,7 @@ name|printf
 argument_list|(
 literal|"%s: ucomreadcb: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3610,7 +3610,7 @@ name|printf
 argument_list|(
 literal|"%s: invalid receive data size, %d chars\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3779,7 +3779,7 @@ name|printf
 argument_list|(
 literal|"%s: lost %d chars\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3831,7 +3831,7 @@ name|printf
 argument_list|(
 literal|"%s: lost %d chars\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3874,7 +3874,7 @@ name|printf
 argument_list|(
 literal|"%s: read start failed\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->

@@ -731,7 +731,7 @@ name|printf
 argument_list|(
 literal|"%s: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -832,7 +832,7 @@ name|printf
 argument_list|(
 literal|"%s: no union descriptor\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -942,7 +942,7 @@ name|printf
 argument_list|(
 literal|"%s: no data interface\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1013,7 +1013,7 @@ name|printf
 argument_list|(
 literal|"%s: setting alternate interface failed\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1082,7 +1082,7 @@ name|printf
 argument_list|(
 literal|"%s: could not read endpoint descriptor\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1184,7 +1184,7 @@ name|printf
 argument_list|(
 literal|"%s: unexpected endpoint\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1231,7 +1231,7 @@ name|printf
 argument_list|(
 literal|"%s: could not find data bulk in\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1256,7 +1256,7 @@ name|printf
 argument_list|(
 literal|"%s: could not find data bulk out\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1274,7 +1274,7 @@ name|sc
 operator|->
 name|cdce_mtx
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1345,7 +1345,7 @@ name|printf
 argument_list|(
 literal|"%s: faking MAC address\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1501,7 +1501,7 @@ name|printf
 argument_list|(
 literal|"%s: can not if_alloc()\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2194,7 +2194,7 @@ name|printf
 argument_list|(
 literal|"%s: abort rx pipe failed: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2224,7 +2224,7 @@ name|printf
 argument_list|(
 literal|"%s: close rx pipe failed: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2270,7 +2270,7 @@ name|printf
 argument_list|(
 literal|"%s: abort tx pipe failed: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2300,7 +2300,7 @@ name|printf
 argument_list|(
 literal|"%s: close tx pipe failed: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2640,7 +2640,7 @@ name|printf
 argument_list|(
 literal|"%s: tx list init failed\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2678,7 +2678,7 @@ name|printf
 argument_list|(
 literal|"%s: rx list init failed\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2723,7 +2723,7 @@ name|printf
 argument_list|(
 literal|"%s: open rx pipe failed: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2772,7 +2772,7 @@ name|printf
 argument_list|(
 literal|"%s: open tx pipe failed: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2997,7 +2997,7 @@ name|printf
 argument_list|(
 literal|"%s: usb error on rx: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3303,7 +3303,7 @@ name|printf
 argument_list|(
 literal|"%s: usb error on tx: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3508,7 +3508,7 @@ argument_list|(
 literal|"%s: no memory for rx list "
 literal|"-- packet dropped!\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->

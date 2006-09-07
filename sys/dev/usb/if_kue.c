@@ -1712,7 +1712,7 @@ name|printf
 argument_list|(
 literal|"%s: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|self
 argument_list|)
@@ -2425,7 +2425,7 @@ argument_list|(
 literal|"%s: no memory for rx list "
 literal|"-- packet dropped!\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->

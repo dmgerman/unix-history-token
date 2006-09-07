@@ -191,7 +191,7 @@ comment|/* device address of root hub */
 name|u_int8_t
 name|sc_conf
 decl_stmt|;
-name|SIMPLEQ_HEAD
+name|STAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|usbd_xfer

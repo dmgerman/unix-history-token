@@ -337,7 +337,7 @@ begin_struct
 struct|struct
 name|ubser_softc
 block|{
-name|USBBASEDEVICE
+name|device_t
 name|sc_dev
 decl_stmt|;
 name|usbd_device_handle
@@ -971,7 +971,7 @@ name|printf
 argument_list|(
 literal|"%s: failed to get number of serials\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -995,7 +995,7 @@ name|printf
 argument_list|(
 literal|"%s: bogus answer on get_numser\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1025,7 +1025,7 @@ name|printf
 argument_list|(
 literal|"%s: found %i serials\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1125,7 +1125,7 @@ name|printf
 argument_list|(
 literal|"%s: couldn't get ep %d\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1264,7 +1264,7 @@ name|printf
 argument_list|(
 literal|"%s: could not find bulk in/out endpoint\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1313,7 +1313,7 @@ name|printf
 argument_list|(
 literal|"%s: open bulk in error (addr %d): %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1364,7 +1364,7 @@ name|printf
 argument_list|(
 literal|"%s: open bulk out error (addr %d): %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1550,7 +1550,7 @@ literal|0
 argument_list|,
 literal|"y%r%r"
 argument_list|,
-name|USBDEVUNIT
+name|device_get_unit
 argument_list|(
 name|sc
 operator|->
@@ -2937,7 +2937,7 @@ name|printf
 argument_list|(
 literal|"%s: ubserwritecb: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3004,7 +3004,7 @@ name|printf
 argument_list|(
 literal|"%s: sent size too small, cc = %d\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3250,7 +3250,7 @@ name|printf
 argument_list|(
 literal|"%s: ubserreadcb: %s - restarting\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3294,7 +3294,7 @@ name|printf
 argument_list|(
 literal|"%s: ubserreadcb: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3374,7 +3374,7 @@ name|printf
 argument_list|(
 literal|"%s: invalid receive data size, %d chars\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3589,7 +3589,7 @@ name|printf
 argument_list|(
 literal|"%s: lost %d chars\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3641,7 +3641,7 @@ name|printf
 argument_list|(
 literal|"%s: lost %d chars\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3679,7 +3679,7 @@ name|printf
 argument_list|(
 literal|"%s: read start failed\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->

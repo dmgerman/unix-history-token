@@ -3866,7 +3866,7 @@ name|printf
 argument_list|(
 literal|"%s:"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3932,7 +3932,7 @@ name|printf
 argument_list|(
 literal|"%s: unsupported OHCI revision\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4012,7 +4012,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|SIMPLEQ_INIT
+name|STAILQ_INIT
 argument_list|(
 operator|&
 name|sc
@@ -4731,7 +4731,7 @@ name|printf
 argument_list|(
 literal|"%s: SMM does not respond, resetting\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4793,7 +4793,7 @@ argument_list|(
 operator|(
 literal|"%s: resetting\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4893,7 +4893,7 @@ name|printf
 argument_list|(
 literal|"%s: reset timeout\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5302,7 +5302,7 @@ name|xfer
 decl_stmt|;
 name|xfer
 operator|=
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|sc
@@ -5317,7 +5317,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|SIMPLEQ_REMOVE_HEAD
+name|STAILQ_REMOVE_HEAD
 argument_list|(
 operator|&
 name|sc
@@ -5494,7 +5494,7 @@ name|XFER_FREE
 expr_stmt|;
 endif|#
 directive|endif
-name|SIMPLEQ_INSERT_HEAD
+name|STAILQ_INSERT_HEAD
 argument_list|(
 operator|&
 name|sc
@@ -6412,7 +6412,7 @@ name|printf
 argument_list|(
 literal|"%s: %u scheduling overruns\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6482,7 +6482,7 @@ name|printf
 argument_list|(
 literal|"%s: resume detect\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6505,7 +6505,7 @@ name|printf
 argument_list|(
 literal|"%s: unrecoverable error, controller halted\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6605,7 +6605,7 @@ name|printf
 argument_list|(
 literal|"%s: blocking intrs 0x%x\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -9775,7 +9775,7 @@ argument_list|,
 operator|(
 literal|"%s: 0x%b has lower bits set\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -9839,7 +9839,7 @@ argument_list|(
 operator|(
 literal|"%s: ohci_hash_find_td: addr 0x%08lx not found\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -12559,7 +12559,7 @@ return|return
 operator|(
 name|ohci_root_ctrl_start
 argument_list|(
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|xfer
@@ -14236,7 +14236,7 @@ return|return
 operator|(
 name|ohci_root_intr_start
 argument_list|(
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|xfer
@@ -14454,7 +14454,7 @@ return|return
 operator|(
 name|ohci_device_ctrl_start
 argument_list|(
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|xfer
@@ -14766,7 +14766,7 @@ return|return
 operator|(
 name|ohci_device_bulk_start
 argument_list|(
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|xfer
@@ -15447,7 +15447,7 @@ return|return
 operator|(
 name|ohci_device_intr_start
 argument_list|(
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|xfer
@@ -16257,7 +16257,7 @@ name|panic
 argument_list|(
 literal|"%s: Intr pipe %p still has TDs queued"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -16795,7 +16795,7 @@ name|err
 condition|)
 name|ohci_device_isoc_start
 argument_list|(
-name|SIMPLEQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|xfer
@@ -17393,7 +17393,7 @@ name|printf
 argument_list|(
 literal|"%s: isoc TD alloc failed\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->

@@ -1606,7 +1606,7 @@ name|USB_ATTACH_SETUP
 expr_stmt|;
 name|devname
 operator|=
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2464,7 +2464,7 @@ name|printf
 argument_list|(
 literal|"%s: MII without any PHY!\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2668,7 +2668,7 @@ argument_list|(
 operator|(
 literal|"%s: %s: enter\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2913,7 +2913,7 @@ name|printf
 argument_list|(
 literal|"%s: detach has active tx endpoint.\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2933,7 +2933,7 @@ name|printf
 argument_list|(
 literal|"%s: detach has active rx endpoint.\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2953,7 +2953,7 @@ name|printf
 argument_list|(
 literal|"%s: detach has active intr endpoint.\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3044,17 +3044,17 @@ comment|/* read memory */
 end_comment
 
 begin_comment
-unit|static int udav_mem_read(struct udav_softc *sc, int offset, void *buf, int len) { 	usb_device_request_t req; 	usbd_status err;  	if (sc == NULL) 		return (0);  	DPRINTFN(0x200, 		("%s: %s: enter\n", USBDEVNAME(sc->sc_dev), __func__));  	if (sc->sc_dying) 		return (0);  	offset&= 0xffff; 	len&= 0xff;  	req.bmRequestType = UT_READ_VENDOR_DEVICE; 	req.bRequest = UDAV_REQ_MEM_READ; 	USETW(req.wValue, 0x0000); 	USETW(req.wIndex, offset); 	USETW(req.wLength, len);  	sc->sc_refcnt++; 	err = usbd_do_request(sc->sc_udev,&req, buf); 	if (--sc->sc_refcnt< 0) 		usb_detach_wakeup(USBDEV(sc->sc_dev)); 	if (err) { 		DPRINTF(("%s: %s: read failed. off=%04x, err=%d\n", 			 USBDEVNAME(sc->sc_dev), __func__, offset, err)); 	}  	return (err); }
+unit|static int udav_mem_read(struct udav_softc *sc, int offset, void *buf, int len) { 	usb_device_request_t req; 	usbd_status err;  	if (sc == NULL) 		return (0);  	DPRINTFN(0x200, 		("%s: %s: enter\n", device_get_nameunit(sc->sc_dev), __func__));  	if (sc->sc_dying) 		return (0);  	offset&= 0xffff; 	len&= 0xff;  	req.bmRequestType = UT_READ_VENDOR_DEVICE; 	req.bRequest = UDAV_REQ_MEM_READ; 	USETW(req.wValue, 0x0000); 	USETW(req.wIndex, offset); 	USETW(req.wLength, len);  	sc->sc_refcnt++; 	err = usbd_do_request(sc->sc_udev,&req, buf); 	if (--sc->sc_refcnt< 0) 		usb_detach_wakeup(USBDEV(sc->sc_dev)); 	if (err) { 		DPRINTF(("%s: %s: read failed. off=%04x, err=%d\n", 			 device_get_nameunit(sc->sc_dev), __func__, offset, err)); 	}  	return (err); }
 comment|/* write memory */
 end_comment
 
 begin_comment
-unit|static int udav_mem_write(struct udav_softc *sc, int offset, void *buf, int len) { 	usb_device_request_t req; 	usbd_status err;  	if (sc == NULL) 		return (0);  	DPRINTFN(0x200, 		("%s: %s: enter\n", USBDEVNAME(sc->sc_dev), __func__));  	if (sc->sc_dying) 		return (0);  	offset&= 0xffff; 	len&= 0xff;  	req.bmRequestType = UT_WRITE_VENDOR_DEVICE; 	req.bRequest = UDAV_REQ_MEM_WRITE; 	USETW(req.wValue, 0x0000); 	USETW(req.wIndex, offset); 	USETW(req.wLength, len);  	sc->sc_refcnt++; 	err = usbd_do_request(sc->sc_udev,&req, buf); 	if (--sc->sc_refcnt< 0) 		usb_detach_wakeup(USBDEV(sc->sc_dev)); 	if (err) { 		DPRINTF(("%s: %s: write failed. off=%04x, err=%d\n", 			 USBDEVNAME(sc->sc_dev), __func__, offset, err)); 	}  	return (err); }
+unit|static int udav_mem_write(struct udav_softc *sc, int offset, void *buf, int len) { 	usb_device_request_t req; 	usbd_status err;  	if (sc == NULL) 		return (0);  	DPRINTFN(0x200, 		("%s: %s: enter\n", device_get_nameunit(sc->sc_dev), __func__));  	if (sc->sc_dying) 		return (0);  	offset&= 0xffff; 	len&= 0xff;  	req.bmRequestType = UT_WRITE_VENDOR_DEVICE; 	req.bRequest = UDAV_REQ_MEM_WRITE; 	USETW(req.wValue, 0x0000); 	USETW(req.wIndex, offset); 	USETW(req.wLength, len);  	sc->sc_refcnt++; 	err = usbd_do_request(sc->sc_udev,&req, buf); 	if (--sc->sc_refcnt< 0) 		usb_detach_wakeup(USBDEV(sc->sc_dev)); 	if (err) { 		DPRINTF(("%s: %s: write failed. off=%04x, err=%d\n", 			 device_get_nameunit(sc->sc_dev), __func__, offset, err)); 	}  	return (err); }
 comment|/* write memory */
 end_comment
 
 begin_endif
-unit|static int udav_mem_write1(struct udav_softc *sc, int offset, unsigned char ch) { 	usb_device_request_t req; 	usbd_status err;  	if (sc == NULL) 		return (0);  	DPRINTFN(0x200, 		("%s: %s: enter\n", USBDEVNAME(sc->sc_dev), __func__));  	if (sc->sc_dying) 		return (0);  	offset&= 0xffff;  	req.bmRequestType = UT_WRITE_VENDOR_DEVICE; 	req.bRequest = UDAV_REQ_MEM_WRITE1; 	USETW(req.wValue, ch); 	USETW(req.wIndex, offset); 	USETW(req.wLength, 0x0000);  	sc->sc_refcnt++; 	err = usbd_do_request(sc->sc_udev,&req, NULL); 	if (--sc->sc_refcnt< 0) 		usb_detach_wakeup(USBDEV(sc->sc_dev)); 	if (err) { 		DPRINTF(("%s: %s: write failed. off=%04x, err=%d\n", 			 USBDEVNAME(sc->sc_dev), __func__, offset, err)); 	}  	return (err); }
+unit|static int udav_mem_write1(struct udav_softc *sc, int offset, unsigned char ch) { 	usb_device_request_t req; 	usbd_status err;  	if (sc == NULL) 		return (0);  	DPRINTFN(0x200, 		("%s: %s: enter\n", device_get_nameunit(sc->sc_dev), __func__));  	if (sc->sc_dying) 		return (0);  	offset&= 0xffff;  	req.bmRequestType = UT_WRITE_VENDOR_DEVICE; 	req.bRequest = UDAV_REQ_MEM_WRITE1; 	USETW(req.wValue, ch); 	USETW(req.wIndex, offset); 	USETW(req.wLength, 0x0000);  	sc->sc_refcnt++; 	err = usbd_do_request(sc->sc_udev,&req, NULL); 	if (--sc->sc_refcnt< 0) 		usb_detach_wakeup(USBDEV(sc->sc_dev)); 	if (err) { 		DPRINTF(("%s: %s: write failed. off=%04x, err=%d\n", 			 device_get_nameunit(sc->sc_dev), __func__, offset, err)); 	}  	return (err); }
 endif|#
 directive|endif
 end_endif
@@ -3108,7 +3108,7 @@ argument_list|,
 operator|(
 literal|"%s: %s: enter\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3225,7 +3225,7 @@ argument_list|(
 operator|(
 literal|"%s: %s: read failed. off=%04x, err=%d\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3298,7 +3298,7 @@ argument_list|,
 operator|(
 literal|"%s: %s: enter\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3415,7 +3415,7 @@ argument_list|(
 operator|(
 literal|"%s: %s: write failed. off=%04x, err=%d\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3476,7 +3476,7 @@ argument_list|,
 operator|(
 literal|"%s: %s: enter\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3566,7 +3566,7 @@ argument_list|,
 operator|(
 literal|"%s: %s: enter\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3679,7 +3679,7 @@ argument_list|(
 operator|(
 literal|"%s: %s: write failed. off=%04x, err=%d\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3814,7 +3814,7 @@ argument_list|(
 operator|(
 literal|"%s: %s: enter\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4005,7 +4005,7 @@ name|printf
 argument_list|(
 literal|"%s: tx list init failed\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4068,7 +4068,7 @@ name|printf
 argument_list|(
 literal|"%s: rx list init failed\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4317,7 +4317,7 @@ argument_list|(
 operator|(
 literal|"%s: %s: enter\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4481,7 +4481,7 @@ argument_list|(
 operator|(
 literal|"%s: %s: enter, act=%d\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4620,7 +4620,7 @@ argument_list|(
 operator|(
 literal|"%s: %s: enter\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5022,7 +5022,7 @@ name|printf
 argument_list|(
 literal|"%s: open rx pipe failed: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5073,7 +5073,7 @@ name|printf
 argument_list|(
 literal|"%s: open tx pipe failed: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5099,7 +5099,7 @@ directive|if
 literal|0
 comment|/* XXX: interrupt endpoint is not yet supported */
 comment|/* Open Interrupt pipe */
-block|err = usbd_open_pipe_intr(sc->sc_ctl_iface, sc->sc_intrin_no, 				  USBD_EXCLUSIVE_USE,&sc->sc_pipe_intr, sc,&sc->sc_cdata.ue_ibuf, UDAV_INTR_PKGLEN, 				  udav_intr, UDAV_INTR_INTERVAL); 	if (err) { 		printf("%s: open intr pipe failed: %s\n", 		       USBDEVNAME(sc->sc_dev), usbd_errstr(err)); 		error = EIO; 		goto done; 	}
+block|err = usbd_open_pipe_intr(sc->sc_ctl_iface, sc->sc_intrin_no, 				  USBD_EXCLUSIVE_USE,&sc->sc_pipe_intr, sc,&sc->sc_cdata.ue_ibuf, UDAV_INTR_PKGLEN, 				  udav_intr, UDAV_INTR_INTERVAL); 	if (err) { 		printf("%s: open intr pipe failed: %s\n", 		       device_get_nameunit(sc->sc_dev), usbd_errstr(err)); 		error = EIO; 		goto done; 	}
 endif|#
 directive|endif
 comment|/* Start up the receive pipe. */
@@ -5171,7 +5171,7 @@ argument_list|(
 operator|(
 literal|"%s: %s: start read\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5244,7 +5244,7 @@ argument_list|(
 operator|(
 literal|"%s: %s: enter, link=%d\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5487,7 +5487,7 @@ argument_list|(
 operator|(
 literal|"%s: %s: enter\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5679,7 +5679,7 @@ name|printf
 argument_list|(
 literal|"%s: udav_send error=%s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5716,7 +5716,7 @@ argument_list|(
 operator|(
 literal|"%s: %s: send %d bytes\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5832,7 +5832,7 @@ argument_list|(
 operator|(
 literal|"%s: %s: enter\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5926,7 +5926,7 @@ name|printf
 argument_list|(
 literal|"%s: usb error on tx: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6159,7 +6159,7 @@ argument_list|(
 operator|(
 literal|"%s: %s: enter\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6215,7 +6215,7 @@ name|printf
 argument_list|(
 literal|"%s: %u usb errors on rx: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6346,7 +6346,7 @@ argument_list|(
 operator|(
 literal|"%s: RX Status: 0x%02x\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6533,7 +6533,7 @@ argument_list|(
 literal|"%s: no memory for rx list "
 literal|"-- packet dropped!\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6571,7 +6571,7 @@ argument_list|(
 operator|(
 literal|"%s: %s: deliver %d\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6708,7 +6708,7 @@ argument_list|(
 operator|(
 literal|"%s: %s: start rx\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6798,7 +6798,7 @@ argument_list|(
 operator|(
 literal|"%s: %s: enter\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7147,7 +7147,7 @@ argument_list|(
 operator|(
 literal|"%s: %s: enter\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7167,7 +7167,7 @@ name|printf
 argument_list|(
 literal|"%s: watchdog timeout\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7364,7 +7364,7 @@ argument_list|(
 operator|(
 literal|"%s: %s: enter\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7425,7 +7425,7 @@ name|printf
 argument_list|(
 literal|"%s: abort rx pipe failed: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7455,7 +7455,7 @@ name|printf
 argument_list|(
 literal|"%s: close rx pipe failed: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7502,7 +7502,7 @@ name|printf
 argument_list|(
 literal|"%s: abort tx pipe failed: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7532,7 +7532,7 @@ name|printf
 argument_list|(
 literal|"%s: close tx pipe failed: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7557,7 +7557,7 @@ directive|if
 literal|0
 comment|/* XXX: Interrupt endpoint is not yet supported!! */
 comment|/* Interrupt endpoint */
-block|if (sc->sc_pipe_intr != NULL) { 		err = usbd_abort_pipe(sc->sc_pipe_intr); 		if (err) 			printf("%s: abort intr pipe failed: %s\n", 			       USBDEVNAME(sc->sc_dev), usbd_errstr(err)); 		err = usbd_close_pipe(sc->sc_pipe_intr); 		if (err) 			printf("%s: close intr pipe failed: %s\n", 			       USBDEVNAME(sc->sc_dev), usbd_errstr(err)); 		sc->sc_pipe_intr = NULL; 	}
+block|if (sc->sc_pipe_intr != NULL) { 		err = usbd_abort_pipe(sc->sc_pipe_intr); 		if (err) 			printf("%s: abort intr pipe failed: %s\n", 			       device_get_nameunit(sc->sc_dev), usbd_errstr(err)); 		err = usbd_close_pipe(sc->sc_pipe_intr); 		if (err) 			printf("%s: close intr pipe failed: %s\n", 			       device_get_nameunit(sc->sc_dev), usbd_errstr(err)); 		sc->sc_pipe_intr = NULL; 	}
 endif|#
 directive|endif
 comment|/* Free RX resources. */
@@ -7658,7 +7658,7 @@ argument_list|(
 operator|(
 literal|"%s: %s: enter\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7784,7 +7784,7 @@ argument_list|(
 operator|(
 literal|"%s: %s: enter\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7906,7 +7906,7 @@ argument_list|,
 operator|(
 literal|"%s: %s: enter\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7989,7 +7989,7 @@ argument_list|,
 operator|(
 literal|"%s: %s: enter\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8093,7 +8093,7 @@ argument_list|(
 operator|(
 literal|"%s: %s: got link\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8208,7 +8208,7 @@ argument_list|,
 operator|(
 literal|"%s: %s: enter\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8282,7 +8282,7 @@ argument_list|,
 operator|(
 literal|"%s: %s: enter\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8406,7 +8406,7 @@ argument_list|,
 operator|(
 literal|"%s: %s: enter, phy=%d reg=0x%04x\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8435,7 +8435,7 @@ name|printf
 argument_list|(
 literal|"%s: %s: dying\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8468,7 +8468,7 @@ argument_list|,
 operator|(
 literal|"%s: %s: phy=%d is not supported\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8571,7 +8571,7 @@ argument_list|,
 operator|(
 literal|"%s: %s: phy=%d reg=0x%04x => 0x%04x\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8643,7 +8643,7 @@ argument_list|,
 operator|(
 literal|"%s: %s: enter, phy=%d reg=0x%04x data=0x%04x\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8674,7 +8674,7 @@ name|printf
 argument_list|(
 literal|"%s: %s: dying\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8703,7 +8703,7 @@ argument_list|,
 operator|(
 literal|"%s: %s: phy=%d is not supported\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8838,7 +8838,7 @@ argument_list|(
 operator|(
 literal|"%s: %s: enter\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8955,7 +8955,7 @@ argument_list|(
 literal|"%s: no memory for rx list "
 literal|"-- packet dropped!\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->

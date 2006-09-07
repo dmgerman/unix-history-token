@@ -1518,7 +1518,7 @@ name|iface
 expr_stmt|;
 name|devname
 operator|=
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -1773,7 +1773,7 @@ name|printf
 argument_list|(
 literal|"%s: failed to get configuration descriptor\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -1889,7 +1889,7 @@ name|printf
 argument_list|(
 literal|"%s: no endpoint descriptor for %d\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -1965,7 +1965,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not find interrupt in\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -2100,7 +2100,7 @@ name|printf
 argument_list|(
 literal|"%s: no endpoint descriptor for %d\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -2196,7 +2196,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not find data bulk in\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -2228,7 +2228,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not find data bulk out\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -2317,7 +2317,7 @@ name|printf
 argument_list|(
 literal|"%s: reset failed: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|ucom
 operator|->
@@ -2582,7 +2582,7 @@ name|printf
 argument_list|(
 literal|"%s: uplcom_reset: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2908,7 +2908,7 @@ name|printf
 argument_list|(
 literal|"%s: uplcom_pl2303x_init: %d: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3047,7 +3047,7 @@ name|printf
 argument_list|(
 literal|"%s: uplcom_set_line_status: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3325,7 +3325,7 @@ name|printf
 argument_list|(
 literal|"%s: uplcom_break: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3449,7 +3449,7 @@ name|printf
 argument_list|(
 literal|"%s: uplcom_set_crtscts: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3621,7 +3621,7 @@ name|printf
 argument_list|(
 literal|"%s: uplcom_set_line_coding: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4127,7 +4127,7 @@ name|printf
 argument_list|(
 literal|"%s: cannot open interrupt pipe (addr %d)\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4237,7 +4237,7 @@ name|printf
 argument_list|(
 literal|"%s: abort interrupt pipe failed: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4269,7 +4269,7 @@ name|printf
 argument_list|(
 literal|"%s: close interrupt pipe failed: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4368,7 +4368,7 @@ argument_list|(
 operator|(
 literal|"%s: uplcom_intr: abnormal status: %s\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4398,7 +4398,7 @@ argument_list|(
 operator|(
 literal|"%s: uplcom status = %02x\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->

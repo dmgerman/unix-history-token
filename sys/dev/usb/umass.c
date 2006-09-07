@@ -1792,7 +1792,7 @@ begin_struct
 struct|struct
 name|umass_softc
 block|{
-name|USBBASEDEVICE
+name|device_t
 name|sc_dev
 decl_stmt|;
 comment|/* base device */
@@ -3496,7 +3496,7 @@ argument_list|,
 operator|(
 literal|"%s: Unsupported command protocol %d\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3563,7 +3563,7 @@ argument_list|,
 operator|(
 literal|"%s: Unsupported wire protocol %d\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3758,7 +3758,7 @@ name|printf
 argument_list|(
 literal|"%s: "
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3966,7 +3966,7 @@ operator|(
 literal|"%s: could not switch to "
 literal|"Alt Interface %d\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4024,7 +4024,7 @@ name|printf
 argument_list|(
 literal|"%s: could not read endpoint descriptor\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4157,7 +4157,7 @@ argument_list|,
 operator|(
 literal|"%s: intr size is %d\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4212,7 +4212,7 @@ argument_list|,
 operator|(
 literal|"%s: endpoint not found %d/%d/%d\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4274,7 +4274,7 @@ argument_list|,
 operator|(
 literal|"%s: cannot open %d-out pipe (bulk)\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4327,7 +4327,7 @@ argument_list|,
 operator|(
 literal|"%s: could not open %d-in pipe (bulk)\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4390,7 +4390,7 @@ argument_list|,
 operator|(
 literal|"%s: couldn't open %d-in (intr)\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4466,7 +4466,7 @@ argument_list|,
 operator|(
 literal|"%s: Out of memory\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4826,7 +4826,7 @@ argument_list|,
 operator|(
 literal|"%s: Attach finished\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4871,7 +4871,7 @@ argument_list|,
 operator|(
 literal|"%s: detached\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5153,7 +5153,7 @@ argument_list|,
 operator|(
 literal|"%s: Shuttle init returned 0x%02x%02x\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5263,7 +5263,7 @@ argument_list|,
 operator|(
 literal|"%s: failed to setup transfer, %s\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5381,7 +5381,7 @@ argument_list|,
 operator|(
 literal|"%s: failed to setup ctrl transfer, %s\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5443,7 +5443,7 @@ argument_list|,
 operator|(
 literal|"%s: Clear endpoint 0x%02x stall\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5622,7 +5622,7 @@ argument_list|,
 operator|(
 literal|"%s: umass_bbb_reset: wrong sc->proto 0x%02x\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5643,7 +5643,7 @@ argument_list|,
 operator|(
 literal|"%s: Bulk Reset\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5806,7 +5806,7 @@ argument_list|,
 operator|(
 literal|"%s: umass_bbb_transfer: wrong sc->proto 0x%02x\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5843,7 +5843,7 @@ argument_list|,
 operator|(
 literal|"%s: datalen> 0, but no buffer"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5861,7 +5861,7 @@ argument_list|,
 operator|(
 literal|"%s: cmdlen exceeds CDB length in CBW (%d> %d)"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5887,7 +5887,7 @@ argument_list|,
 operator|(
 literal|"%s: datalen == 0 while direction is not NONE\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5909,7 +5909,7 @@ argument_list|,
 operator|(
 literal|"%s: direction is NONE while datalen is not zero\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5930,7 +5930,7 @@ argument_list|,
 operator|(
 literal|"%s: CBW struct does not have the right size (%ld vs. %d)\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5961,7 +5961,7 @@ argument_list|,
 operator|(
 literal|"%s: CSW struct does not have the right size (%ld vs. %d)\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6217,7 +6217,7 @@ argument_list|,
 operator|(
 literal|"%s: umass_bbb_state: wrong sc->proto 0x%02x\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6238,7 +6238,7 @@ argument_list|,
 operator|(
 literal|"%s: Handling BBB state %d (%s), xfer=%p, %s\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6324,7 +6324,7 @@ argument_list|,
 operator|(
 literal|"%s: failed to send CBW\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6453,7 +6453,7 @@ argument_list|,
 operator|(
 literal|"%s: no data phase\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6507,7 +6507,7 @@ operator|(
 literal|"%s: Data-%s %db failed, "
 literal|"%s\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6640,7 +6640,7 @@ operator|(
 literal|"%s: bulk-%s stall clear failed"
 literal|", %s\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6788,7 +6788,7 @@ argument_list|,
 operator|(
 literal|"%s: Failed to read CSW, %s%s\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6979,7 +6979,7 @@ name|printf
 argument_list|(
 literal|"%s: Invalid CSW: sig 0x%08x should be 0x%08x\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7033,7 +7033,7 @@ name|printf
 argument_list|(
 literal|"%s: Invalid CSW: tag %d should be %d\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7085,7 +7085,7 @@ name|printf
 argument_list|(
 literal|"%s: Invalid CSW: status %d> %d\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7126,7 +7126,7 @@ name|printf
 argument_list|(
 literal|"%s: Phase Error, residue = %d\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7162,7 +7162,7 @@ name|panic
 argument_list|(
 literal|"%s: transferred %db instead of %db"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7198,7 +7198,7 @@ argument_list|,
 operator|(
 literal|"%s: Command Failed, res = %d\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7271,7 +7271,7 @@ name|printf
 argument_list|(
 literal|"%s: BBB reset failed, %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7319,7 +7319,7 @@ name|printf
 argument_list|(
 literal|"%s: BBB bulk-in clear stall failed, %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7368,7 +7368,7 @@ name|printf
 argument_list|(
 literal|"%s: BBB bulk-out clear stall failed, %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7422,7 +7422,7 @@ name|panic
 argument_list|(
 literal|"%s: Unknown state %d"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7565,7 +7565,7 @@ argument_list|,
 operator|(
 literal|"%s: Max Lun is %d\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7589,7 +7589,7 @@ name|printf
 argument_list|(
 literal|"%s: Get Max Lun not supported (%s)\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7656,7 +7656,7 @@ argument_list|,
 operator|(
 literal|"%s: umass_cbi_adsc: wrong sc->proto 0x%02x\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7790,7 +7790,7 @@ argument_list|,
 operator|(
 literal|"%s: umass_cbi_reset: wrong sc->proto 0x%02x\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7811,7 +7811,7 @@ argument_list|,
 operator|(
 literal|"%s: CBI Reset\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7834,7 +7834,7 @@ argument_list|,
 operator|(
 literal|"%s: CBL struct is too small (%ld< %d)\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7987,7 +7987,7 @@ argument_list|,
 operator|(
 literal|"%s: umass_cbi_transfer: wrong sc->proto 0x%02x\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8024,7 +8024,7 @@ argument_list|,
 operator|(
 literal|"%s: datalen> 0, but no buffer"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8046,7 +8046,7 @@ argument_list|,
 operator|(
 literal|"%s: direction is NONE while datalen is not zero\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8190,7 +8190,7 @@ argument_list|,
 operator|(
 literal|"%s: umass_cbi_state: wrong sc->proto 0x%02x\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8211,7 +8211,7 @@ argument_list|,
 operator|(
 literal|"%s: Handling CBI state %d (%s), xfer=%p, %s\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8298,7 +8298,7 @@ argument_list|,
 operator|(
 literal|"%s: Command Transport failed\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8346,7 +8346,7 @@ argument_list|,
 operator|(
 literal|"%s: failed to send ADSC\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8479,7 +8479,7 @@ argument_list|,
 operator|(
 literal|"%s: no data phase\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8546,7 +8546,7 @@ argument_list|,
 operator|(
 literal|"%s: no data phase\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8612,7 +8612,7 @@ operator|(
 literal|"%s: Data-%s %db failed, "
 literal|"%s\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8798,7 +8798,7 @@ argument_list|,
 operator|(
 literal|"%s: Status Transport failed\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8872,7 +8872,7 @@ operator|(
 literal|"%s: UFI CCI, ASC = 0x%02x, "
 literal|"ASCQ = 0x%02x\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8966,7 +8966,7 @@ argument_list|,
 operator|(
 literal|"%s: type=0x%02x, value=0x%02x\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -9116,7 +9116,7 @@ name|printf
 argument_list|(
 literal|"%s: CBI bulk-in/out stall clear failed, %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -9173,7 +9173,7 @@ name|printf
 argument_list|(
 literal|"%s: CBI intr-in stall clear failed, %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -9207,7 +9207,7 @@ name|printf
 argument_list|(
 literal|"%s: CBI reset failed, %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -9255,7 +9255,7 @@ name|printf
 argument_list|(
 literal|"%s: CBI bulk-in stall clear failed, %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -9304,7 +9304,7 @@ name|printf
 argument_list|(
 literal|"%s: CBI bulk-out stall clear failed, %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -9358,7 +9358,7 @@ name|panic
 argument_list|(
 literal|"%s: Unknown state %d"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -9430,7 +9430,7 @@ argument_list|,
 name|sc
 comment|/*priv*/
 argument_list|,
-name|USBDEVUNIT
+name|device_get_unit
 argument_list|(
 name|sc
 operator|->
@@ -9475,7 +9475,7 @@ name|sc
 operator|->
 name|umass_sim
 argument_list|,
-name|USBDEVUNIT
+name|device_get_unit
 argument_list|(
 name|sc
 operator|->
@@ -9639,7 +9639,7 @@ operator|->
 name|umass_sim
 argument_list|)
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -9653,7 +9653,7 @@ operator|->
 name|umass_sim
 argument_list|)
 operator|,
-name|USBDEVUNIT
+name|device_get_unit
 argument_list|(
 name|sc
 operator|->
@@ -9791,7 +9791,7 @@ name|printf
 argument_list|(
 literal|"%s:%d:%d:%d: Attached to scbus%d\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -9805,7 +9805,7 @@ operator|->
 name|umass_sim
 argument_list|)
 argument_list|,
-name|USBDEVUNIT
+name|device_get_unit
 argument_list|(
 name|sc
 operator|->
@@ -9976,7 +9976,7 @@ operator|(
 literal|"%s:%d:%d:%d:func_code 0x%04x: "
 literal|"Invalid target (gone)\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -10239,7 +10239,7 @@ literal|"%s:%d:%d:%d:XPT_SCSI_IO: "
 literal|"cmd: 0x%02x, flags: 0x%02x, "
 literal|"%db cmd/%db data/%db sense\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -10323,7 +10323,7 @@ operator|(
 literal|"%s:%d:%d:%d:XPT_SCSI_IO: "
 literal|"I/O in progress, deferring (state %d, %s)\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -10794,7 +10794,7 @@ name|NULL
 condition|?
 name|DEVNAME_SIM
 else|:
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -10916,7 +10916,7 @@ name|cpi
 operator|->
 name|bus_id
 operator|=
-name|USBDEVUNIT
+name|device_get_unit
 argument_list|(
 name|sc
 operator|->
@@ -11025,7 +11025,7 @@ argument_list|,
 operator|(
 literal|"%s:%d:%d:%d:XPT_RESET_DEV:.\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -11097,7 +11097,7 @@ argument_list|,
 operator|(
 literal|"%s:%d:%d:%d:XPT_GET_TRAN_SETTINGS:.\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -11164,7 +11164,7 @@ argument_list|,
 operator|(
 literal|"%s:%d:%d:%d:XPT_SET_TRAN_SETTINGS:.\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -11247,7 +11247,7 @@ name|NULL
 condition|?
 name|DEVNAME_SIM
 else|:
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -11307,7 +11307,7 @@ name|NULL
 condition|?
 name|DEVNAME_SIM
 else|:
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -11392,7 +11392,7 @@ argument_list|,
 operator|(
 literal|"%s: CAM poll\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -11576,7 +11576,7 @@ argument_list|,
 operator|(
 literal|"%s: Fetching %db sense data\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -11778,7 +11778,7 @@ name|panic
 argument_list|(
 literal|"%s: Unknown status %d in umass_cam_cb"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -12027,7 +12027,7 @@ operator|(
 literal|"%s: Doing a sneaky"
 literal|"TEST_UNIT_READY\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -12172,7 +12172,7 @@ argument_list|,
 operator|(
 literal|"%s: Autosense failed, status %d\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -12244,7 +12244,7 @@ argument_list|,
 operator|(
 literal|"%s: Test unit ready returned status %d\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -12444,7 +12444,7 @@ operator|(
 literal|"%s: Converted TEST_UNIT_READY "
 literal|"to START_UNIT\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -12700,7 +12700,7 @@ name|printf
 argument_list|(
 literal|"%s: Unsupported RBC command 0x%02x"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -12822,7 +12822,7 @@ operator|(
 literal|"%s: Converted TEST_UNIT_READY "
 literal|"to START_UNIT\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -12941,7 +12941,7 @@ name|printf
 argument_list|(
 literal|"%s: Unsupported UFI command 0x%02x\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -13120,7 +13120,7 @@ operator|(
 literal|"%s: Converted TEST_UNIT_READY "
 literal|"to START_UNIT\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -13310,7 +13310,7 @@ argument_list|(
 literal|"%s: Unsupported ATAPI command 0x%02x"
 literal|" - trying anyway\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -13434,7 +13434,7 @@ literal|"%s: CBW %d: cmd = %db "
 literal|"(0x%02x%02x%02x%02x%02x%02x%s), "
 literal|"data = %db, dir = %s\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -13570,7 +13570,7 @@ operator|(
 literal|"%s: CSW %d: sig = 0x%08x (%s), tag = %d, "
 literal|"res = %d, status = 0x%02x (%s)\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -13668,7 +13668,7 @@ literal|"%s: cmd = %db "
 literal|"(0x%02x%02x%02x%02x%02x%02x%s), "
 literal|"data = %db, dir = %s\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -13863,7 +13863,7 @@ argument_list|,
 operator|(
 literal|"%s: 0x %s%s\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -13925,7 +13925,7 @@ argument_list|,
 operator|(
 literal|"%s: 0x %s%s%s\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->

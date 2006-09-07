@@ -876,7 +876,7 @@ argument_list|(
 operator|(
 literal|"%s: keyboard not attached!?\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|self
 argument_list|)
@@ -950,7 +950,7 @@ argument_list|(
 operator|(
 literal|"%s: disconnected\n"
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|self
 argument_list|)

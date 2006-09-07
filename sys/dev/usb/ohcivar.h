@@ -341,7 +341,7 @@ name|ohci_soft_itd_t
 modifier|*
 name|sc_freeitds
 decl_stmt|;
-name|SIMPLEQ_HEAD
+name|STAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|usbd_xfer
