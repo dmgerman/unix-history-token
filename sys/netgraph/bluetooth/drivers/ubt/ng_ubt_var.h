@@ -20,24 +20,6 @@ name|_NG_UBT_VAR_H_
 end_define
 
 begin_comment
-comment|/* FreeBSD 7.0 defines */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USBBASEDEVICE
-value|device_t
-end_define
-
-begin_define
-define|#
-directive|define
-name|USBDEVNAME
-value|device_get_nameunit
-end_define
-
-begin_comment
 comment|/* pullup wrapper */
 end_comment
 
@@ -51,7 +33,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|do { \ 		if ((m)->m_len< (s)) \ 			(m) = m_pullup((m), (s)); \ 		if ((m) == NULL) \ 			NG_UBT_ALERT("%s: %s - m_pullup(%d) failed\n", \ 				__func__, USBDEVNAME(sc->sc_dev), (s)); \ 	} while (0)
+value|do { \ 		if ((m)->m_len< (s)) \ 			(m) = m_pullup((m), (s)); \ 		if ((m) == NULL) \ 			NG_UBT_ALERT("%s: %s - m_pullup(%d) failed\n", \ 				__func__, device_get_nameunit(sc->sc_dev), (s)); \ 	} while (0)
 end_define
 
 begin_comment
@@ -237,7 +219,7 @@ name|s
 parameter_list|)
 value|bzero(&(s), sizeof((s)))
 comment|/* USB device specific */
-name|USBBASEDEVICE
+name|device_t
 name|sc_dev
 decl_stmt|;
 comment|/* pointer back to USB device */

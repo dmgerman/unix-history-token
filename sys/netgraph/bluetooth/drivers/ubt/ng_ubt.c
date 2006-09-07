@@ -1210,7 +1210,7 @@ name|printf
 argument_list|(
 literal|"%s: %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1468,7 +1468,7 @@ literal|"%s: Could not get interface 0 handle. %s (%d), "
 expr|\
 literal|"handle=%p\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1511,7 +1511,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not get interface 0 descriptor\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1563,7 +1563,7 @@ literal|"%s: Could not read endpoint descriptor for "
 expr|\
 literal|"interface 0, i=%d\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1648,7 +1648,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not detect interrupt endpoint\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1674,7 +1674,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not detect bulk-in endpoint\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1700,7 +1700,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not detect bulk-out endpoint\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1718,7 +1718,7 @@ literal|"%s: Interface 0 endpoints: interrupt=%#x, bulk-in=%#x, "
 expr|\
 literal|"bulk-out=%#x\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1759,7 +1759,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not get device configuration descriptor\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1804,7 +1804,7 @@ literal|"%s: Could not get interface 1 handle. %s (%d), "
 expr|\
 literal|"handle=%p\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1847,7 +1847,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not get interface 1 descriptor\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1906,7 +1906,7 @@ literal|"%s: [SCAN] Could not set alternate "
 expr|\
 literal|"configuration %d for interface 1. %s (%d)\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -1949,7 +1949,7 @@ literal|"%s: Could not get interface 1 descriptor for "
 expr|\
 literal|"alternate configuration %d\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2018,7 +2018,7 @@ literal|"descriptor for interface 1, "
 expr|\
 literal|"alternate configuration %d, i=%d\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2164,7 +2164,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not detect isoc-in endpoint\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2190,7 +2190,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not detect isoc-out endpoint\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2215,7 +2215,7 @@ name|printf
 argument_list|(
 literal|"%s: Invalid isoc. packet size=%d\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2253,7 +2253,7 @@ literal|"%s: Could not set alternate configuration "
 expr|\
 literal|"%d for interface 1. %s (%d)\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2299,7 +2299,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not allocate control xfer handle\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2337,7 +2337,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not allocate control buffer\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2373,7 +2373,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not allocate interrupt xfer handle\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2409,7 +2409,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not allocate bulk-in xfer handle\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2445,7 +2445,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not allocate bulk-out xfer handle\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2483,7 +2483,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not allocate bulk-out buffer\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2534,7 +2534,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not allocate isoc-in xfer handle\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2578,7 +2578,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not allocate isoc-in buffer\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2623,7 +2623,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not allocate isoc-in frame sizes buffer\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2659,7 +2659,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not allocate isoc-out xfer handle\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2703,7 +2703,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not allocate isoc-out buffer\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2748,7 +2748,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not allocate isoc-out frame sizes buffer\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2766,7 +2766,7 @@ literal|"%s: Interface 1 (alt.config %d) endpoints: isoc-in=%#x, "
 expr|\
 literal|"isoc-out=%#x; wMaxPacketSize=%d; nframes=%d, buffer size=%d\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2837,7 +2837,7 @@ literal|"%s: %s - Could not open interrupt pipe. %s (%d)\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2890,7 +2890,7 @@ literal|"%s: %s - Could not open bulk-in pipe. %s (%d)\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2943,7 +2943,7 @@ literal|"%s: %s - Could not open bulk-out pipe. %s (%d)\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2967,9 +2967,9 @@ directive|if
 literal|0
 comment|/* XXX FIXME */
 comment|/* Isoc-in */
-block|error = usbd_open_pipe(sc->sc_iface1, sc->sc_isoc_in_ep, 			USBD_EXCLUSIVE_USE,&sc->sc_isoc_in_pipe); 	if (error != USBD_NORMAL_COMPLETION) { 		printf("%s: %s - Could not open isoc-in pipe. %s (%d)\n", 			__func__, USBDEVNAME(sc->sc_dev), usbd_errstr(error), 			error); 		goto bad; 	}
+block|error = usbd_open_pipe(sc->sc_iface1, sc->sc_isoc_in_ep, 			USBD_EXCLUSIVE_USE,&sc->sc_isoc_in_pipe); 	if (error != USBD_NORMAL_COMPLETION) { 		printf("%s: %s - Could not open isoc-in pipe. %s (%d)\n", 			__func__, device_get_nameunit(sc->sc_dev), usbd_errstr(error), 			error); 		goto bad; 	}
 comment|/* Isoc-out */
-block|error = usbd_open_pipe(sc->sc_iface1, sc->sc_isoc_out_ep,  			USBD_EXCLUSIVE_USE,&sc->sc_isoc_out_pipe); 	if (error != USBD_NORMAL_COMPLETION) { 		printf("%s: %s - Could not open isoc-out pipe. %s (%d)\n", 			__func__, USBDEVNAME(sc->sc_dev), usbd_errstr(error), 			error); 		goto bad; 	}
+block|error = usbd_open_pipe(sc->sc_iface1, sc->sc_isoc_out_ep,  			USBD_EXCLUSIVE_USE,&sc->sc_isoc_out_pipe); 	if (error != USBD_NORMAL_COMPLETION) { 		printf("%s: %s - Could not open isoc-out pipe. %s (%d)\n", 			__func__, device_get_nameunit(sc->sc_dev), usbd_errstr(error), 			error); 		goto bad; 	}
 endif|#
 directive|endif
 comment|/* Create Netgraph node */
@@ -2993,7 +2993,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not create Netgraph node\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3020,7 +3020,7 @@ name|sc
 operator|->
 name|sc_node
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3035,7 +3035,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not name Netgraph node\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3589,7 +3589,7 @@ literal|"%s: %s - Another control request is pending\n"
 operator|,
 name|__func__
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3621,7 +3621,7 @@ literal|"%s: %s - HCI command queue is empty\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3652,7 +3652,7 @@ literal|"%s: %s - HCI command frame too big, size=%zd, len=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3722,7 +3722,7 @@ literal|"%s: %s - Sending control request, bmRequestType=%#x, wLength=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3812,7 +3812,7 @@ literal|"%s: %s - Could not start control request. %s (%d)\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3859,7 +3859,7 @@ literal|"%s: %s - Control request has been started\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4017,7 +4017,7 @@ literal|"%s: %s - No control request is pending\n"
 operator|,
 name|__func__
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4046,7 +4046,7 @@ literal|"%s: %s - Control request cancelled\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4069,7 +4069,7 @@ literal|"%s: %s - Control request failed. %s (%d)\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4113,7 +4113,7 @@ literal|"%s: %s - Sent %d bytes to control pipe\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4207,7 +4207,7 @@ literal|"%s: %s - Another interrupt request is pending\n"
 operator|,
 name|__func__
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4398,7 +4398,7 @@ literal|"%s: %s - Failed to start intrerrupt transfer. %s (%d)\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4593,7 +4593,7 @@ literal|"%s: %s - No interrupt request is pending\n"
 operator|,
 name|__func__
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4653,7 +4653,7 @@ literal|"%s: %s - No upstream hook\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4681,7 +4681,7 @@ literal|"%s: %s - Interrupt xfer cancelled\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4709,7 +4709,7 @@ literal|"%s: %s - Interrupt xfer failed, %s (%d). No new xfer will be submitted!
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4787,7 +4787,7 @@ literal|"%s: %s - Got %d bytes from interrupt pipe\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4848,7 +4848,7 @@ literal|"%s: %s - Got complete HCI event frame, pktlen=%d, length=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4906,7 +4906,7 @@ literal|"%s: %s - Invalid HCI event frame size, length=%d, pktlen=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4990,7 +4990,7 @@ literal|"%s: %s - Another bulk-in request is pending\n"
 operator|,
 name|__func__
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5181,7 +5181,7 @@ literal|"%s: %s - Failed to start bulk-in transfer. %s (%d)\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5376,7 +5376,7 @@ literal|"%s: %s - No bulk-in request is pending\n"
 operator|,
 name|__func__
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5436,7 +5436,7 @@ literal|"%s: %s - No upstream hook\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5464,7 +5464,7 @@ literal|"%s: %s - Bulk-in xfer cancelled, pipe=%p\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5496,7 +5496,7 @@ literal|"%s: %s - Bulk-in xfer failed, %s (%d). No new xfer will be submitted!\n
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5574,7 +5574,7 @@ literal|"%s: %s - Got %d bytes from bulk-in pipe\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5642,7 +5642,7 @@ literal|"%s: %s - Got complete ACL data frame, pktlen=%d, length=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5698,7 +5698,7 @@ literal|"%s: %s - Invalid ACL frame size, length=%d, pktlen=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5780,7 +5780,7 @@ literal|"%s: %s - Another bulk-out request is pending\n"
 operator|,
 name|__func__
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5812,7 +5812,7 @@ literal|"%s: %s - ACL data queue is empty\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5843,7 +5843,7 @@ literal|"%s: %s - ACL data frame too big, size=%d, len=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5945,7 +5945,7 @@ literal|"%s: %s - Could not start bulk-out transfer. %s (%d)\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5992,7 +5992,7 @@ literal|"%s: %s - Bulk-out transfer has been started, len=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6156,7 +6156,7 @@ literal|"%s: %s - No bulk-out request is pending\n"
 operator|,
 name|__func__
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6185,7 +6185,7 @@ literal|"%s: %s - Bulk-out xfer cancelled, pipe=%p\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6212,7 +6212,7 @@ literal|"%s: %s - Bulk-out xfer failed. %s (%d)\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6256,7 +6256,7 @@ literal|"%s: %s - Sent %d bytes to bulk-out pipe\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6346,7 +6346,7 @@ literal|"%s: %s - Another isoc-in request is pending\n"
 operator|,
 name|__func__
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6446,7 +6446,7 @@ literal|"%s: %s - Failed to start isoc-in transfer. %s (%d)\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6636,7 +6636,7 @@ literal|"%s: %s - No isoc-in request is pending\n"
 operator|,
 name|__func__
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6674,7 +6674,7 @@ literal|"%s: %s - No upstream hook\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6697,7 +6697,7 @@ literal|"%s: %s - Isoc-in xfer cancelled, pipe=%p\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6724,7 +6724,7 @@ literal|"%s: %s - Isoc-in xfer failed, %s (%d). No new xfer will be submitted!\n
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6779,7 +6779,7 @@ literal|"%s: %s - Got %d bytes from isoc-in pipe\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -6814,7 +6814,7 @@ literal|"%s: %s - Could not allocate mbuf\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7028,7 +7028,7 @@ literal|"%s: %s - Got complete SCO data frame, pktlen=%d, length=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7086,7 +7086,7 @@ literal|"%s: %s - Invalid SCO frame size, length=%d, pktlen=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7183,7 +7183,7 @@ literal|"%s: %s - Another isoc-out request is pending\n"
 operator|,
 name|__func__
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7215,7 +7215,7 @@ literal|"%s: %s - SCO data queue is empty\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7340,7 +7340,7 @@ literal|"%s: %s - SCO data frame is too big, nframes=%d, size=%d, len=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7429,7 +7429,7 @@ literal|"%s: %s - Could not start isoc-out transfer. %s (%d)\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7475,7 +7475,7 @@ literal|"%s: %s - Isoc-out transfer has been started, nframes=%d, size=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7634,7 +7634,7 @@ literal|"%s: %s - No isoc-out request is pending\n"
 operator|,
 name|__func__
 operator|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7663,7 +7663,7 @@ literal|"%s: %s - Isoc-out xfer cancelled, pipe=%p\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7690,7 +7690,7 @@ literal|"%s: %s - Isoc-out xfer failed. %s (%d)\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -7734,7 +7734,7 @@ literal|"%s: %s - Sent %d bytes to isoc-out pipe\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8008,7 +8008,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not create Netgraph node\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8035,7 +8035,7 @@ name|sc
 operator|->
 name|sc_node
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8050,7 +8050,7 @@ name|printf
 argument_list|(
 literal|"%s: Could not name Netgraph node\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8243,7 +8243,7 @@ literal|"%s: %s - Could not start interrupt transfer. %s (%d)\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8283,7 +8283,7 @@ literal|"%s: %s - Could not start bulk-in transfer. %s (%d)\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -8307,7 +8307,7 @@ directive|if
 literal|0
 comment|/* XXX FIXME */
 comment|/* Start isoc-in transfer */
-block|status = ubt_isoc_in_start(sc); 	if (status != USBD_NORMAL_COMPLETION) { 		NG_UBT_ALERT( "%s: %s - Could not start isoc-in transfer. %s (%d)\n", 			__func__, USBDEVNAME(sc->sc_dev), usbd_errstr(status), 			status); 		goto fail; 	}
+block|status = ubt_isoc_in_start(sc); 	if (status != USBD_NORMAL_COMPLETION) { 		NG_UBT_ALERT( "%s: %s - Could not start isoc-in transfer. %s (%d)\n", 			__func__, device_get_nameunit(sc->sc_dev), usbd_errstr(status), 			status); 		goto fail; 	}
 endif|#
 directive|endif
 return|return
@@ -9285,7 +9285,7 @@ literal|"%s: %s - Dropping unknown/unsupported HCI frame, type=%d, pktlen=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -9358,7 +9358,7 @@ literal|"%s: %s - Dropping HCI frame %#x, len=%d. Queue full\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
