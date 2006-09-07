@@ -963,12 +963,12 @@ condition|)
 block|{
 name|INP_LOCK
 argument_list|(
-name|in6p
+name|last
 argument_list|)
 expr_stmt|;
 name|udp6_append
 argument_list|(
-name|in6p
+name|last
 argument_list|,
 name|n
 argument_list|,
@@ -980,7 +980,7 @@ argument_list|)
 expr_stmt|;
 name|INP_UNLOCK
 argument_list|(
-name|in6p
+name|last
 argument_list|)
 expr_stmt|;
 block|}
