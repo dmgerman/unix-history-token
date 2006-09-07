@@ -76,6 +76,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u32
 name|R200_cp_microcode
 index|[]
@@ -1625,6 +1626,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u32
 name|radeon_cp_microcode
 index|[]
@@ -3174,6 +3176,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u32
 name|R300_cp_microcode
 index|[]
@@ -4966,16 +4969,16 @@ name|tmp
 operator|=
 name|RADEON_READ
 argument_list|(
-name|RADEON_RB2D_DSTCACHE_CTLSTAT
+name|RADEON_RB3D_DSTCACHE_CTLSTAT
 argument_list|)
 expr_stmt|;
 name|tmp
 operator||=
-name|RADEON_RB2D_DC_FLUSH_ALL
+name|RADEON_RB3D_DC_FLUSH_ALL
 expr_stmt|;
 name|RADEON_WRITE
 argument_list|(
-name|RADEON_RB2D_DSTCACHE_CTLSTAT
+name|RADEON_RB3D_DSTCACHE_CTLSTAT
 argument_list|,
 name|tmp
 argument_list|)
@@ -5002,10 +5005,10 @@ operator|!
 operator|(
 name|RADEON_READ
 argument_list|(
-name|RADEON_RB2D_DSTCACHE_CTLSTAT
+name|RADEON_RB3D_DSTCACHE_CTLSTAT
 argument_list|)
 operator|&
-name|RADEON_RB2D_DC_BUSY
+name|RADEON_RB3D_DC_BUSY
 operator|)
 condition|)
 block|{
@@ -6509,6 +6512,35 @@ literal|"writeback forced off\n"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|dev_priv
+operator|->
+name|writeback_works
+condition|)
+block|{
+comment|/* Disable writeback to avoid unnecessary bus master transfers */
+name|RADEON_WRITE
+argument_list|(
+name|RADEON_CP_RB_CNTL
+argument_list|,
+name|RADEON_READ
+argument_list|(
+name|RADEON_CP_RB_CNTL
+argument_list|)
+operator||
+name|RADEON_RB_NO_UPDATE
+argument_list|)
+expr_stmt|;
+name|RADEON_WRITE
+argument_list|(
+name|RADEON_SCRATCH_UMSK
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -6858,6 +6890,42 @@ operator|->
 name|flags
 operator|&=
 operator|~
+name|CHIP_IS_AGP
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+operator|(
+name|dev_priv
+operator|->
+name|flags
+operator|&
+operator|(
+name|CHIP_IS_AGP
+operator||
+name|CHIP_IS_PCI
+operator||
+name|CHIP_IS_PCIE
+operator|)
+operator|)
+operator|&&
+operator|!
+name|init
+operator|->
+name|is_pci
+condition|)
+block|{
+name|DRM_DEBUG
+argument_list|(
+literal|"Restoring AGP flag\n"
+argument_list|)
+expr_stmt|;
+name|dev_priv
+operator|->
+name|flags
+operator||=
 name|CHIP_IS_AGP
 expr_stmt|;
 block|}
@@ -10323,6 +10391,7 @@ name|flags
 operator||=
 name|CHIP_IS_AGP
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|drm_device_is_pcie
@@ -10335,6 +10404,13 @@ operator|->
 name|flags
 operator||=
 name|CHIP_IS_PCIE
+expr_stmt|;
+else|else
+name|dev_priv
+operator|->
+name|flags
+operator||=
+name|CHIP_IS_PCI
 expr_stmt|;
 name|DRM_DEBUG
 argument_list|(

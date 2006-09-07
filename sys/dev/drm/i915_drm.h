@@ -263,6 +263,26 @@ name|virtualX
 decl_stmt|,
 name|virtualY
 decl_stmt|;
+name|unsigned
+name|int
+name|front_tiled
+decl_stmt|;
+name|unsigned
+name|int
+name|back_tiled
+decl_stmt|;
+name|unsigned
+name|int
+name|depth_tiled
+decl_stmt|;
+name|unsigned
+name|int
+name|rotated_tiled
+decl_stmt|;
+name|unsigned
+name|int
+name|rotated2_tiled
+decl_stmt|;
 block|}
 name|drm_i915_sarea_t
 typedef|;
@@ -405,6 +425,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|DRM_I915_SET_VBLANK_PIPE
+value|0x0d
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_I915_GET_VBLANK_PIPE
+value|0x0e
+end_define
+
+begin_define
+define|#
+directive|define
 name|DRM_IOCTL_I915_INIT
 value|DRM_IOW( DRM_COMMAND_BASE + DRM_I915_INIT, drm_i915_init_t)
 end_define
@@ -491,6 +525,20 @@ define|#
 directive|define
 name|DRM_IOCTL_I915_DESTROY_HEAP
 value|DRM_IOW( DRM_COMMAND_BASE + DRM_I915_DESTROY_HEAP, drm_i915_mem_destroy_heap_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_I915_SET_VBLANK_PIPE
+value|DRM_IOW( DRM_COMMAND_BASE + DRM_I915_SET_VBLANK_PIPE, drm_i915_vblank_pipe_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_I915_GET_VBLANK_PIPE
+value|DRM_IOR( DRM_COMMAND_BASE + DRM_I915_GET_VBLANK_PIPE, drm_i915_vblank_pipe_t)
 end_define
 
 begin_comment
@@ -776,6 +824,37 @@ name|region
 decl_stmt|;
 block|}
 name|drm_i915_mem_destroy_heap_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Allow X server to configure which pipes to monitor for vblank signals  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DRM_I915_VBLANK_PIPE_A
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_I915_VBLANK_PIPE_B
+value|2
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|drm_i915_vblank_pipe
+block|{
+name|int
+name|pipe
+decl_stmt|;
+block|}
+name|drm_i915_vblank_pipe_t
 typedef|;
 end_typedef
 

@@ -181,7 +181,7 @@ begin_define
 define|#
 directive|define
 name|MACH64_MAX_QUEUED_FRAMES
-value|3
+value|3U
 end_define
 
 begin_comment

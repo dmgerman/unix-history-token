@@ -58,11 +58,11 @@ begin_define
 define|#
 directive|define
 name|DRIVER_DATE
-value|"20060225"
+value|"20060524"
 end_define
 
 begin_comment
-comment|/* Interface history:  *  * 1.1 - ??  * 1.2 - Add vertex2 ioctl (keith)  *     - Add stencil capability to clear ioctl (gareth, keith)  *     - Increase MAX_TEXTURE_LEVELS (brian)  * 1.3 - Add cmdbuf ioctl (keith)  *     - Add support for new radeon packets (keith)  *     - Add getparam ioctl (keith)  *     - Add flip-buffers ioctl, deprecate fullscreen foo (keith).  * 1.4 - Add scratch registers to get_param ioctl.  * 1.5 - Add r200 packets to cmdbuf ioctl  *     - Add r200 function to init ioctl  *     - Add 'scalar2' instruction to cmdbuf  * 1.6 - Add static GART memory manager  *       Add irq handler (won't be turned on unless X server knows to)  *       Add irq ioctls and irq_active getparam.  *       Add wait command for cmdbuf ioctl  *       Add GART offset query for getparam  * 1.7 - Add support for cube map registers: R200_PP_CUBIC_FACES_[0..5]  *       and R200_PP_CUBIC_OFFSET_F1_[0..5].  *       Added packets R200_EMIT_PP_CUBIC_FACES_[0..5] and  *       R200_EMIT_PP_CUBIC_OFFSETS_[0..5].  (brian)  * 1.8 - Remove need to call cleanup ioctls on last client exit (keith)  *       Add 'GET' queries for starting additional clients on different VT's.  * 1.9 - Add DRM_IOCTL_RADEON_CP_RESUME ioctl.  *       Add texture rectangle support for r100.  * 1.10- Add SETPARAM ioctl; first parameter to set is FB_LOCATION, which  *       clients use to tell the DRM where they think the framebuffer is  *       located in the card's address space  * 1.11- Add packet R200_EMIT_RB3D_BLENDCOLOR to support GL_EXT_blend_color  *       and GL_EXT_blend_[func|equation]_separate on r200  * 1.12- Add R300 CP microcode support - this just loads the CP on r300  *       (No 3D support yet - just microcode loading).  * 1.13- Add packet R200_EMIT_TCL_POINT_SPRITE_CNTL for ARB_point_parameters  *     - Add hyperz support, add hyperz flags to clear ioctl.  * 1.14- Add support for color tiling  *     - Add R100/R200 surface allocation/free support  * 1.15- Add support for texture micro tiling  *     - Add support for r100 cube maps  * 1.16- Add R200_EMIT_PP_TRI_PERF_CNTL packet to support brilinear  *       texture filtering on r200  * 1.17- Add initial support for R300 (3D).  * 1.18- Add support for GL_ATI_fragment_shader, new packets  *       R200_EMIT_PP_AFS_0/1, R200_EMIT_PP_TXCTLALL_0-5 (replaces  *       R200_EMIT_PP_TXFILTER_0-5, 2 more regs) and R200_EMIT_ATF_TFACTOR  *       (replaces R200_EMIT_TFACTOR_0 (8 consts instead of 6)  * 1.19- Add support for gart table in FB memory and PCIE r300  * 1.20- Add support for r300 texrect  * 1.21- Add support for card type getparam  * 1.22- Add support for texture cache flushes (R300_TX_CNTL)  * 1.23- Add new radeon memory map work from benh  * 1.24- Add general-purpose packet for manipulating scratch registers (r300)  */
+comment|/* Interface history:  *  * 1.1 - ??  * 1.2 - Add vertex2 ioctl (keith)  *     - Add stencil capability to clear ioctl (gareth, keith)  *     - Increase MAX_TEXTURE_LEVELS (brian)  * 1.3 - Add cmdbuf ioctl (keith)  *     - Add support for new radeon packets (keith)  *     - Add getparam ioctl (keith)  *     - Add flip-buffers ioctl, deprecate fullscreen foo (keith).  * 1.4 - Add scratch registers to get_param ioctl.  * 1.5 - Add r200 packets to cmdbuf ioctl  *     - Add r200 function to init ioctl  *     - Add 'scalar2' instruction to cmdbuf  * 1.6 - Add static GART memory manager  *       Add irq handler (won't be turned on unless X server knows to)  *       Add irq ioctls and irq_active getparam.  *       Add wait command for cmdbuf ioctl  *       Add GART offset query for getparam  * 1.7 - Add support for cube map registers: R200_PP_CUBIC_FACES_[0..5]  *       and R200_PP_CUBIC_OFFSET_F1_[0..5].  *       Added packets R200_EMIT_PP_CUBIC_FACES_[0..5] and  *       R200_EMIT_PP_CUBIC_OFFSETS_[0..5].  (brian)  * 1.8 - Remove need to call cleanup ioctls on last client exit (keith)  *       Add 'GET' queries for starting additional clients on different VT's.  * 1.9 - Add DRM_IOCTL_RADEON_CP_RESUME ioctl.  *       Add texture rectangle support for r100.  * 1.10- Add SETPARAM ioctl; first parameter to set is FB_LOCATION, which  *       clients use to tell the DRM where they think the framebuffer is  *       located in the card's address space  * 1.11- Add packet R200_EMIT_RB3D_BLENDCOLOR to support GL_EXT_blend_color  *       and GL_EXT_blend_[func|equation]_separate on r200  * 1.12- Add R300 CP microcode support - this just loads the CP on r300  *       (No 3D support yet - just microcode loading).  * 1.13- Add packet R200_EMIT_TCL_POINT_SPRITE_CNTL for ARB_point_parameters  *     - Add hyperz support, add hyperz flags to clear ioctl.  * 1.14- Add support for color tiling  *     - Add R100/R200 surface allocation/free support  * 1.15- Add support for texture micro tiling  *     - Add support for r100 cube maps  * 1.16- Add R200_EMIT_PP_TRI_PERF_CNTL packet to support brilinear  *       texture filtering on r200  * 1.17- Add initial support for R300 (3D).  * 1.18- Add support for GL_ATI_fragment_shader, new packets  *       R200_EMIT_PP_AFS_0/1, R200_EMIT_PP_TXCTLALL_0-5 (replaces  *       R200_EMIT_PP_TXFILTER_0-5, 2 more regs) and R200_EMIT_ATF_TFACTOR  *       (replaces R200_EMIT_TFACTOR_0 (8 consts instead of 6)  * 1.19- Add support for gart table in FB memory and PCIE r300  * 1.20- Add support for r300 texrect  * 1.21- Add support for card type getparam  * 1.22- Add support for texture cache flushes (R300_TX_CNTL)  * 1.23- Add new radeon memory map work from benh  * 1.24- Add general-purpose packet for manipulating scratch registers (r300)  * 1.25- Add support for r200 vertex programs (R200_EMIT_VAP_PVS_CNTL,  *       new packet type)  */
 end_comment
 
 begin_define
@@ -76,7 +76,7 @@ begin_define
 define|#
 directive|define
 name|DRIVER_MINOR
-value|24
+value|25
 end_define
 
 begin_define
@@ -187,6 +187,10 @@ block|,
 name|CHIP_NEW_MEMMAP
 init|=
 literal|0x00400000UL
+block|,
+name|CHIP_IS_PCI
+init|=
+literal|0x00800000UL
 block|, }
 enum|;
 end_enum
@@ -2278,6 +2282,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|RADEON_RB3D_DSTCACHE_CTLSTAT
+value|0x325c
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_RB3D_DC_FLUSH
+value|(3<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_RB3D_DC_FREE
+value|(3<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_RB3D_DC_FLUSH_ALL
+value|0xf
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_RB3D_DC_BUSY
+value|(1<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
 name|RADEON_RB3D_ZSTENCILCNTL
 value|0x1c2c
 end_define
@@ -3187,6 +3226,13 @@ define|#
 directive|define
 name|RADEON_BUF_SWAP_32BIT
 value|(2<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_RB_NO_UPDATE
+value|(1<< 27)
 end_define
 
 begin_define
@@ -4517,6 +4563,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RADEON_SE_TCL_STATE_FLUSH
+value|0x2284
+end_define
+
+begin_define
+define|#
+directive|define
 name|SE_VAP_CNTL__TCL_ENA_MASK
 value|0x00000001
 end_define
@@ -4629,6 +4682,13 @@ end_define
 begin_comment
 comment|/* same as txcblend_0 */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|R200_VAP_PVS_CNTL_1
+value|0x22D0
+end_define
 
 begin_comment
 comment|/* MPEG settings from VHA code */
@@ -5056,7 +5116,7 @@ define|#
 directive|define
 name|RADEON_FLUSH_CACHE
 parameter_list|()
-value|do {					\ 	OUT_RING( CP_PACKET0( RADEON_RB2D_DSTCACHE_CTLSTAT, 0 ) );	\ 	OUT_RING( RADEON_RB2D_DC_FLUSH );				\ } while (0)
+value|do {					\ 	OUT_RING( CP_PACKET0( RADEON_RB3D_DSTCACHE_CTLSTAT, 0 ) );	\ 	OUT_RING( RADEON_RB3D_DC_FLUSH );				\ } while (0)
 end_define
 
 begin_define
@@ -5064,7 +5124,7 @@ define|#
 directive|define
 name|RADEON_PURGE_CACHE
 parameter_list|()
-value|do {					\ 	OUT_RING( CP_PACKET0( RADEON_RB2D_DSTCACHE_CTLSTAT, 0 ) );	\ 	OUT_RING( RADEON_RB2D_DC_FLUSH_ALL );				\ } while (0)
+value|do {					\ 	OUT_RING( CP_PACKET0( RADEON_RB3D_DSTCACHE_CTLSTAT, 0 ) );	\ 	OUT_RING( RADEON_RB3D_DC_FLUSH_ALL );				\ } while (0)
 end_define
 
 begin_define
@@ -5168,7 +5228,7 @@ name|BEGIN_RING
 parameter_list|(
 name|n
 parameter_list|)
-value|do {						\ 	if ( RADEON_VERBOSE ) {						\ 		DRM_INFO( "BEGIN_RING( %d ) in %s\n",			\ 			   n, __FUNCTION__ );				\ 	}								\ 	if ( dev_priv->ring.space<= (n) * sizeof(u32) ) {		\                 COMMIT_RING();						\ 		radeon_wait_ring( dev_priv, (n) * sizeof(u32) );	\ 	}								\ 	_nr = n; dev_priv->ring.space -= (n) * sizeof(u32);		\ 	ring = dev_priv->ring.start;					\ 	write = dev_priv->ring.tail;					\ 	mask = dev_priv->ring.tail_mask;				\ } while (0)
+value|do {						\ 	if ( RADEON_VERBOSE ) {						\ 		DRM_INFO( "BEGIN_RING( %d ) in %s\n",			\ 			   n, __FUNCTION__ );				\ 	}								\ 	if ( dev_priv->ring.space<= (n) * sizeof(u32) ) {		\ 		COMMIT_RING();						\ 		radeon_wait_ring( dev_priv, (n) * sizeof(u32) );	\ 	}								\ 	_nr = n; dev_priv->ring.space -= (n) * sizeof(u32);		\ 	ring = dev_priv->ring.start;					\ 	write = dev_priv->ring.tail;					\ 	mask = dev_priv->ring.tail_mask;				\ } while (0)
 end_define
 
 begin_define
