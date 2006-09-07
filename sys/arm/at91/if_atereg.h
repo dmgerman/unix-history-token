@@ -276,19 +276,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ETH_CSE
-value|0x64
-end_define
-
-begin_comment
-comment|/* Carrier Sense Error Register */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ETH_TUE
-value|0x68
+value|0x64
 end_define
 
 begin_comment
@@ -298,8 +287,41 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ETH_CDE
+name|ETH_CSE
+value|0x68
+end_define
+
+begin_comment
+comment|/* Carrier Sense Error Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETH_DRFC
 value|0x6c
+end_define
+
+begin_comment
+comment|/* Discarded RX Frame Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETH_ROV
+value|0x68
+end_define
+
+begin_comment
+comment|/* Receive Overrun Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETH_CDE
+value|0x64
 end_define
 
 begin_comment
@@ -310,7 +332,7 @@ begin_define
 define|#
 directive|define
 name|ETH_ELR
-value|0x70
+value|0x78
 end_define
 
 begin_comment
@@ -321,7 +343,7 @@ begin_define
 define|#
 directive|define
 name|ETH_RJB
-value|0x74
+value|0x7c
 end_define
 
 begin_comment
@@ -332,7 +354,7 @@ begin_define
 define|#
 directive|define
 name|ETH_USF
-value|0x78
+value|0x80
 end_define
 
 begin_comment
@@ -343,26 +365,11 @@ begin_define
 define|#
 directive|define
 name|ETH_SQEE
-value|0x7c
+value|0x84
 end_define
 
 begin_comment
 comment|/* SQE Test Error Register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ETH_DRFC
-value|0x80
-end_define
-
-begin_comment
-comment|/* Discarded RX Frame Register */
-end_comment
-
-begin_comment
-comment|/*	0x84		   reserved */
 end_comment
 
 begin_comment
