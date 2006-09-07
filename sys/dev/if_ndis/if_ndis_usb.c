@@ -310,7 +310,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|device_method_t
 name|ndis_methods
 index|[]
@@ -377,7 +377,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|driver_t
 name|ndis_driver
 init|=
@@ -396,7 +396,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|devclass_t
 name|ndis_devclass
 decl_stmt|;
