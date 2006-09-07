@@ -639,6 +639,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|mpt_ready_handler_t
+name|mpt_cam_ready
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|mpt_event_handler_t
 name|mpt_cam_event
 decl_stmt|;
@@ -684,6 +691,11 @@ operator|.
 name|enable
 operator|=
 name|mpt_cam_enable
+block|,
+operator|.
+name|ready
+operator|=
+name|mpt_cam_ready
 block|,
 operator|.
 name|event
@@ -985,7 +997,7 @@ operator|->
 name|els_cmds_allocated
 expr_stmt|;
 block|}
-comment|/* 	 * If we support target mode, we register a reply handler for it, 	 * but don't add resources until we actually enable target mode. 	 */
+comment|/* 	 * If we support target mode, we register a reply handler for it, 	 * but don't add command resources until we actually enable target 	 * mode. 	 */
 if|if
 condition|(
 name|mpt
@@ -3709,6 +3721,24 @@ operator|)
 return|;
 block|}
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|mpt_cam_ready
+parameter_list|(
+name|struct
+name|mpt_softc
+modifier|*
+name|mpt
+parameter_list|)
+block|{
 comment|/* 	 * If we're in target mode, hang out resources now 	 * so we don't cause the world to hang talking to us. 	 */
 if|if
 condition|(
@@ -3726,6 +3756,11 @@ operator|)
 condition|)
 block|{
 comment|/* 		 * Try to add some target command resources 		 */
+name|MPT_LOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mpt_add_target_commands
@@ -3736,18 +3771,20 @@ operator|==
 name|FALSE
 condition|)
 block|{
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
+name|mpt_prt
+argument_list|(
+name|mpt
+argument_list|,
+literal|"failed to add target commands\n"
+argument_list|)
+expr_stmt|;
 block|}
+name|MPT_UNLOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -9141,7 +9178,7 @@ name|mpt_prt
 argument_list|(
 name|mpt
 argument_list|,
-literal|"Bus: 0x%02x TargetID: 0x%02x\n"
+literal|"UNIT ATTENTION: Bus: 0x%02x TargetID: 0x%02x\n"
 argument_list|,
 operator|(
 name|msg
@@ -9175,7 +9212,7 @@ name|mpt_prt
 argument_list|(
 name|mpt
 argument_list|,
-literal|"IOC Bus Reset Port: %d\n"
+literal|"IOC Generated Bus Reset Port: %d\n"
 argument_list|,
 operator|(
 name|msg
@@ -9725,17 +9762,70 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|MPI_EVENT_SAS_DEVICE_STATUS_CHANGE
+name|MPI_EVENT_QUEUE_FULL
 case|:
-comment|/* 		 * Devices are attachin'..... 		 */
+block|{
+name|PTR_EVENT_DATA_QUEUE_FULL
+name|pqf
+init|=
+operator|(
+name|PTR_EVENT_DATA_QUEUE_FULL
+operator|)
+name|msg
+operator|->
+name|Data
+decl_stmt|;
 name|mpt_prt
 argument_list|(
 name|mpt
 argument_list|,
-literal|"mpt_cam_event: MPI_EVENT_SAS_DEVICE_STATUS_CHANGE\n"
+literal|"QUEUE_FULL: Bus 0x%02x Target 0x%02x Depth %d\n"
+argument_list|,
+name|pqf
+operator|->
+name|Bus
+argument_list|,
+name|pqf
+operator|->
+name|TargetID
+argument_list|,
+name|pqf
+operator|->
+name|CurrentDepth
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
+case|case
+name|MPI_EVENT_SAS_DEVICE_STATUS_CHANGE
+case|:
+block|{
+name|mpt_lprt
+argument_list|(
+name|mpt
+argument_list|,
+name|MPT_PRT_DEBUG
+argument_list|,
+literal|"mpt_cam_event: SAS_DEVICE_STATUS_CHANGE\n"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+case|case
+name|MPI_EVENT_SAS_SES
+case|:
+block|{
+name|mpt_lprt
+argument_list|(
+name|mpt
+argument_list|,
+name|MPT_PRT_DEBUG
+argument_list|,
+literal|"mpt_cam_event: MPI_EVENT_SAS_SES\n"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 default|default:
 name|mpt_lprt
 argument_list|(

@@ -443,6 +443,18 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|void
+name|mpt_ready_handler_t
+parameter_list|(
+name|struct
+name|mpt_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|int
 name|mpt_event_handler_t
 parameter_list|(
@@ -558,6 +570,11 @@ modifier|*
 name|enable
 decl_stmt|;
 comment|/* enable device */
+name|mpt_ready_handler_t
+modifier|*
+name|ready
+decl_stmt|;
+comment|/* final open for business */
 name|mpt_event_handler_t
 modifier|*
 name|event
