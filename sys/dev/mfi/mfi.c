@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -241,12 +247,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NOTYET
-end_ifdef
-
 begin_function_decl
 specifier|static
 name|int
@@ -260,11 +260,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -541,6 +536,84 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|mfi
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+literal|"MFI driver parameters"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|mfi_event_locale
+init|=
+name|MFI_EVT_LOCALE_ALL
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_mfi
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|event_locale
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|mfi_event_locale
+argument_list|,
+literal|0
+argument_list|,
+literal|"event message locale"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|mfi_event_class
+init|=
+name|MFI_EVT_CLASS_DEBUG
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_mfi
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|event_class
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|mfi_event_class
+argument_list|,
+literal|0
+argument_list|,
+literal|"event message class"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Management interface */
@@ -3253,7 +3326,7 @@ name|members
 operator|.
 name|locale
 operator|=
-name|MFI_EVT_LOCALE_ALL
+name|mfi_event_locale
 expr_stmt|;
 name|class_locale
 operator|.
@@ -3261,7 +3334,7 @@ name|members
 operator|.
 name|class
 operator|=
-name|MFI_EVT_CLASS_DEBUG
+name|mfi_event_class
 expr_stmt|;
 if|if
 condition|(
@@ -3303,9 +3376,6 @@ operator|)
 return|;
 block|}
 comment|/* 		 * Don't run them yet since we can't parse them. 		 * We can indirectly get the contents from 		 * the AEN mechanism via setting it lower then 		 * current.  The firmware will iterate through them. 		 */
-ifdef|#
-directive|ifdef
-name|NOTYET
 for|for
 control|(
 name|seq
@@ -3332,16 +3402,6 @@ name|seq
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-name|seq
-operator|=
-name|log_state
-operator|->
-name|shutdown_seq_num
-operator|+
-literal|1
-expr_stmt|;
 block|}
 else|else
 name|seq
@@ -4494,63 +4554,6 @@ return|return;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NOTYET
-end_ifdef
-
-begin_function
-specifier|static
-name|void
-name|mfi_decode_log
-parameter_list|(
-name|struct
-name|mfi_softc
-modifier|*
-name|sc
-parameter_list|,
-name|struct
-name|mfi_log_detail
-modifier|*
-name|detail
-parameter_list|)
-block|{
-switch|switch
-condition|(
-name|detail
-operator|->
-name|arg_type
-condition|)
-block|{
-default|default:
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mfi_dev
-argument_list|,
-literal|"%d - Log entry type %d\n"
-argument_list|,
-name|detail
-operator|->
-name|seq
-argument_list|,
-name|detail
-operator|->
-name|arg_type
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|void
@@ -4583,11 +4586,31 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"%d - %s\n"
+literal|"%d (%us/0x%04x/%d) - %s\n"
 argument_list|,
 name|detail
 operator|->
 name|seq
+argument_list|,
+name|detail
+operator|->
+name|time
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|locale
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|class
 argument_list|,
 name|detail
 operator|->
@@ -4604,12 +4627,32 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"%d - PD %02d(e%d/s%d) CDB %*D"
+literal|"%d (%us/0x%04x/%d) - PD %02d(e%d/s%d) CDB %*D"
 literal|"Sense %*D\n: %s\n"
 argument_list|,
 name|detail
 operator|->
 name|seq
+argument_list|,
+name|detail
+operator|->
+name|time
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|locale
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|class
 argument_list|,
 name|detail
 operator|->
@@ -4692,12 +4735,32 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"%d - VD %02d/%d "
+literal|"%d (%us/0x%04x/%d) - VD %02d/%d "
 literal|"event: %s\n"
 argument_list|,
 name|detail
 operator|->
 name|seq
+argument_list|,
+name|detail
+operator|->
+name|time
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|locale
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|class
 argument_list|,
 name|detail
 operator|->
@@ -4730,12 +4793,32 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"%d - VD %02d/%d "
+literal|"%d (%us/0x%04x/%d) - VD %02d/%d "
 literal|"count %lld: %s\n"
 argument_list|,
 name|detail
 operator|->
 name|seq
+argument_list|,
+name|detail
+operator|->
+name|time
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|locale
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|class
 argument_list|,
 name|detail
 operator|->
@@ -4784,12 +4867,32 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"%d - VD %02d/%d "
+literal|"%d (%us/0x%04x/%d) - VD %02d/%d "
 literal|"lba %lld: %s\n"
 argument_list|,
 name|detail
 operator|->
 name|seq
+argument_list|,
+name|detail
+operator|->
+name|time
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|locale
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|class
 argument_list|,
 name|detail
 operator|->
@@ -4838,12 +4941,32 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"%d - VD %02d/%d "
+literal|"%d (%us/0x%04x/%d) - VD %02d/%d "
 literal|"owner changed: prior %d, new %d: %s\n"
 argument_list|,
 name|detail
 operator|->
 name|seq
+argument_list|,
+name|detail
+operator|->
+name|time
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|locale
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|class
 argument_list|,
 name|detail
 operator|->
@@ -4896,12 +5019,32 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"%d - VD %02d/%d "
+literal|"%d (%us/0x%04x/%d) - VD %02d/%d "
 literal|"lba %lld, physical drive PD %02d(e%d/s%d) lba %lld: %s\n"
 argument_list|,
 name|detail
 operator|->
 name|seq
+argument_list|,
+name|detail
+operator|->
+name|time
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|locale
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|class
 argument_list|,
 name|detail
 operator|->
@@ -4992,12 +5135,32 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"%d - VD %02d/%d "
+literal|"%d (%us/0x%04x/%d) - VD %02d/%d "
 literal|"progress %d%% in %ds: %s\n"
 argument_list|,
 name|detail
 operator|->
 name|seq
+argument_list|,
+name|detail
+operator|->
+name|time
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|locale
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|class
 argument_list|,
 name|detail
 operator|->
@@ -5056,12 +5219,32 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"%d - VD %02d/%d "
+literal|"%d (%us/0x%04x/%d) - VD %02d/%d "
 literal|"state prior %d new %d: %s\n"
 argument_list|,
 name|detail
 operator|->
 name|seq
+argument_list|,
+name|detail
+operator|->
+name|time
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|locale
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|class
 argument_list|,
 name|detail
 operator|->
@@ -5114,12 +5297,32 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"%d - VD %02d/%d "
+literal|"%d (%us/0x%04x/%d) - VD %02d/%d "
 literal|"strip %lld: %s\n"
 argument_list|,
 name|detail
 operator|->
 name|seq
+argument_list|,
+name|detail
+operator|->
+name|time
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|locale
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|class
 argument_list|,
 name|detail
 operator|->
@@ -5168,12 +5371,32 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"%d - PD %02d(e%d/s%d) "
+literal|"%d (%us/0x%04x/%d) - PD %02d(e%d/s%d) "
 literal|"event: %s\n"
 argument_list|,
 name|detail
 operator|->
 name|seq
+argument_list|,
+name|detail
+operator|->
+name|time
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|locale
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|class
 argument_list|,
 name|detail
 operator|->
@@ -5214,12 +5437,32 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"%d - PD %02d(e%d/s%d) "
+literal|"%d (%us/0x%04x/%d) - PD %02d(e%d/s%d) "
 literal|"err %d: %s\n"
 argument_list|,
 name|detail
 operator|->
 name|seq
+argument_list|,
+name|detail
+operator|->
+name|time
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|locale
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|class
 argument_list|,
 name|detail
 operator|->
@@ -5274,12 +5517,32 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"%d - PD %02d(e%d/s%d) "
+literal|"%d (%us/0x%04x/%d) - PD %02d(e%d/s%d) "
 literal|"lba %lld: %s\n"
 argument_list|,
 name|detail
 operator|->
 name|seq
+argument_list|,
+name|detail
+operator|->
+name|time
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|locale
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|class
 argument_list|,
 name|detail
 operator|->
@@ -5338,12 +5601,32 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"%d - PD %02d(e%d/s%d) "
+literal|"%d (%us/0x%04x/%d) - PD %02d(e%d/s%d) "
 literal|"lba %lld VD %02d/%d: %s\n"
 argument_list|,
 name|detail
 operator|->
 name|seq
+argument_list|,
+name|detail
+operator|->
+name|time
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|locale
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|class
 argument_list|,
 name|detail
 operator|->
@@ -5422,12 +5705,32 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"%d - PD %02d(e%d/s%d) "
+literal|"%d (%us/0x%04x/%d) - PD %02d(e%d/s%d) "
 literal|"progress %d%% seconds %ds: %s\n"
 argument_list|,
 name|detail
 operator|->
 name|seq
+argument_list|,
+name|detail
+operator|->
+name|time
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|locale
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|class
 argument_list|,
 name|detail
 operator|->
@@ -5496,12 +5799,32 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"%d - PD %02d(e%d/s%d) "
+literal|"%d (%us/0x%04x/%d) - PD %02d(e%d/s%d) "
 literal|"state prior %d new %d: %s\n"
 argument_list|,
 name|detail
 operator|->
 name|seq
+argument_list|,
+name|detail
+operator|->
+name|time
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|locale
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|class
 argument_list|,
 name|detail
 operator|->
@@ -5564,12 +5887,32 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"%d - PCI 0x04%x 0x04%x "
+literal|"%d (%us/0x%04x/%d) - PCI 0x04%x 0x04%x "
 literal|"0x04%x 0x04%x: %s\n"
 argument_list|,
 name|detail
 operator|->
 name|seq
+argument_list|,
+name|detail
+operator|->
+name|time
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|locale
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|class
 argument_list|,
 name|detail
 operator|->
@@ -5618,11 +5961,31 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"%d - Rebuild rate %d: %s\n"
+literal|"%d (%us/0x%04x/%d) - Rebuild rate %d: %s\n"
 argument_list|,
 name|detail
 operator|->
 name|seq
+argument_list|,
+name|detail
+operator|->
+name|time
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|locale
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|class
 argument_list|,
 name|detail
 operator|->
@@ -5645,12 +6008,32 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"%d - Adapter ticks %d "
+literal|"%d (%us/0x%04x/%d) - Adapter ticks %d "
 literal|"elapsed %ds: %s\n"
 argument_list|,
 name|detail
 operator|->
 name|seq
+argument_list|,
+name|detail
+operator|->
+name|time
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|locale
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|class
 argument_list|,
 name|detail
 operator|->
@@ -5683,11 +6066,31 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"%d - Adapter ECC %x,%x: %s: %s\n"
+literal|"%d (%us/0x%04x/%d) - Adapter ECC %x,%x: %s: %s\n"
 argument_list|,
 name|detail
 operator|->
 name|seq
+argument_list|,
+name|detail
+operator|->
+name|time
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|locale
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|class
 argument_list|,
 name|detail
 operator|->
@@ -5726,11 +6129,31 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"%d - Type %d: %s\n"
+literal|"%d (%us/0x%04x/%d) - Type %d: %s\n"
 argument_list|,
 name|detail
 operator|->
 name|seq
+argument_list|,
+name|detail
+operator|->
+name|time
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|locale
+argument_list|,
+name|detail
+operator|->
+name|class
+operator|.
+name|members
+operator|.
+name|class
 argument_list|,
 name|detail
 operator|->
@@ -6302,11 +6725,16 @@ block|}
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NOTYET
-end_ifdef
+begin_comment
+comment|/* Only do one event for now so we can easily iterate through them */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_EVENTS
+value|1
+end_define
 
 begin_function
 specifier|static
@@ -6333,12 +6761,18 @@ modifier|*
 name|dcmd
 decl_stmt|;
 name|struct
-name|mfi_log_detail
+name|mfi_evt_list
 modifier|*
-name|ed
+name|el
 decl_stmt|;
 name|int
 name|error
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|int
+name|size
 decl_stmt|;
 name|mtx_lock
 argument_list|(
@@ -6384,15 +6818,31 @@ operator|->
 name|mfi_io_lock
 argument_list|)
 expr_stmt|;
-name|ed
+name|size
 operator|=
-name|malloc
-argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|mfi_log_detail
+name|mfi_evt_list
 argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|mfi_evt_detail
+argument_list|)
+operator|*
+operator|(
+name|MAX_EVENTS
+operator|-
+literal|1
+operator|)
+expr_stmt|;
+name|el
+operator|=
+name|malloc
+argument_list|(
+name|size
 argument_list|,
 name|M_MFIBUF
 argument_list|,
@@ -6403,7 +6853,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ed
+name|el
 operator|==
 name|NULL
 condition|)
@@ -6475,11 +6925,7 @@ name|header
 operator|.
 name|data_len
 operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|mfi_log_detail
-argument_list|)
+name|size
 expr_stmt|;
 name|dcmd
 operator|->
@@ -6546,17 +6992,13 @@ name|cm
 operator|->
 name|cm_data
 operator|=
-name|ed
+name|el
 expr_stmt|;
 name|cm
 operator|->
 name|cm_len
 operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|mfi_evt_detail
-argument_list|)
+name|size
 expr_stmt|;
 if|if
 condition|(
@@ -6585,7 +7027,7 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|ed
+name|el
 argument_list|,
 name|M_MFIBUF
 argument_list|)
@@ -6644,7 +7086,7 @@ name|MFI_SECTOR_LEN
 expr_stmt|;
 name|free
 argument_list|(
-name|ed
+name|el
 argument_list|,
 name|M_MFIBUF
 argument_list|)
@@ -6684,13 +7126,36 @@ operator|->
 name|cm_dmamap
 argument_list|)
 expr_stmt|;
-name|mfi_decode_log
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|el
+operator|->
+name|count
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|mfi_decode_evt
 argument_list|(
 name|sc
 argument_list|,
-name|ed
+operator|&
+name|el
+operator|->
+name|event
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
+block|}
 name|mtx_lock
 argument_list|(
 operator|&
@@ -6728,11 +7193,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
