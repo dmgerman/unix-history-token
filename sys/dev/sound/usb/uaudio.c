@@ -931,7 +931,7 @@ begin_struct
 struct|struct
 name|uaudio_softc
 block|{
-name|USBBASEDEVICE
+name|device_t
 name|sc_dev
 decl_stmt|;
 comment|/* base device */
@@ -1022,7 +1022,7 @@ name|int
 name|sc_nctls
 decl_stmt|;
 comment|/* # of mixer controls */
-name|device_ptr_t
+name|device_t
 name|sc_audiodev
 decl_stmt|;
 name|char
@@ -1238,7 +1238,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-name|Static
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1263,7 +1263,7 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uaudio_identify_ac
 parameter_list|(
@@ -1279,7 +1279,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uaudio_identify_as
 parameter_list|(
@@ -1295,7 +1295,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uaudio_process_as
 parameter_list|(
@@ -1320,7 +1320,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uaudio_add_alt
 parameter_list|(
@@ -1337,7 +1337,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 specifier|const
 name|usb_interface_descriptor_t
 modifier|*
@@ -1358,7 +1358,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uaudio_mixer_add_ctl
 parameter_list|(
@@ -1388,7 +1388,7 @@ argument_list|)
 end_if
 
 begin_function_decl
-name|Static
+specifier|static
 name|char
 modifier|*
 name|uaudio_id_name
@@ -1419,7 +1419,7 @@ name|USB_DEBUG
 end_ifdef
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uaudio_dump_cluster
 parameter_list|(
@@ -1437,7 +1437,7 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|Static
+specifier|static
 name|struct
 name|usb_audio_cluster
 name|uaudio_get_cluster
@@ -1453,7 +1453,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uaudio_add_input
 parameter_list|(
@@ -1472,7 +1472,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uaudio_add_output
 parameter_list|(
@@ -1491,7 +1491,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uaudio_add_mixer
 parameter_list|(
@@ -1510,7 +1510,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uaudio_add_selector
 parameter_list|(
@@ -1535,7 +1535,7 @@ name|USB_DEBUG
 end_ifdef
 
 begin_function_decl
-name|Static
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1552,7 +1552,7 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uaudio_determine_class
 parameter_list|(
@@ -1578,7 +1578,7 @@ argument_list|)
 end_if
 
 begin_function_decl
-name|Static
+specifier|static
 specifier|const
 name|int
 name|uaudio_feature_name
@@ -1601,7 +1601,7 @@ directive|else
 end_else
 
 begin_function_decl
-name|Static
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1625,7 +1625,7 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uaudio_add_feature
 parameter_list|(
@@ -1644,7 +1644,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uaudio_add_processing_updown
 parameter_list|(
@@ -1663,7 +1663,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uaudio_add_processing
 parameter_list|(
@@ -1682,7 +1682,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uaudio_add_extension
 parameter_list|(
@@ -1701,7 +1701,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|struct
 name|terminal_list
 modifier|*
@@ -1716,7 +1716,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|struct
 name|terminal_list
 modifier|*
@@ -1734,7 +1734,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uaudio_identify
 parameter_list|(
@@ -1750,7 +1750,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uaudio_signext
 parameter_list|(
@@ -1776,7 +1776,7 @@ argument_list|)
 end_if
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uaudio_value2bsd
 parameter_list|(
@@ -1795,7 +1795,7 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uaudio_bsd2value
 parameter_list|(
@@ -1809,7 +1809,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uaudio_get
 parameter_list|(
@@ -1845,7 +1845,7 @@ argument_list|)
 end_if
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uaudio_ctl_get
 parameter_list|(
@@ -1870,7 +1870,7 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uaudio_set
 parameter_list|(
@@ -1894,7 +1894,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uaudio_ctl_set
 parameter_list|(
@@ -1916,7 +1916,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uaudio_set_speed
 parameter_list|(
@@ -1932,7 +1932,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uaudio_chan_open
 parameter_list|(
@@ -1948,7 +1948,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uaudio_chan_close
 parameter_list|(
@@ -1964,7 +1964,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|uaudio_chan_alloc_buffers
 parameter_list|(
@@ -1980,7 +1980,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uaudio_chan_free_buffers
 parameter_list|(
@@ -2010,7 +2010,7 @@ argument_list|)
 end_if
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uaudio_chan_init
 parameter_list|(
@@ -2031,7 +2031,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uaudio_chan_set_param
 parameter_list|(
@@ -2056,7 +2056,7 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uaudio_chan_ptransfer
 parameter_list|(
@@ -2068,7 +2068,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uaudio_chan_pintr
 parameter_list|(
@@ -2082,7 +2082,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uaudio_chan_rtransfer
 parameter_list|(
@@ -2094,7 +2094,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uaudio_chan_rintr
 parameter_list|(
@@ -2122,7 +2122,7 @@ argument_list|)
 end_if
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uaudio_open
 parameter_list|(
@@ -2135,7 +2135,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uaudio_close
 parameter_list|(
@@ -2146,7 +2146,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uaudio_drain
 parameter_list|(
@@ -2157,7 +2157,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uaudio_query_encoding
 parameter_list|(
@@ -2172,7 +2172,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|uaudio_get_minmax_rates
 parameter_list|(
@@ -2200,7 +2200,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uaudio_match_alt_sub
 parameter_list|(
@@ -2224,7 +2224,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uaudio_match_alt_chan
 parameter_list|(
@@ -2245,7 +2245,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uaudio_match_alt
 parameter_list|(
@@ -2266,7 +2266,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uaudio_set_params
 parameter_list|(
@@ -2289,7 +2289,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uaudio_round_blocksize
 parameter_list|(
@@ -2302,7 +2302,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uaudio_trigger_output
 parameter_list|(
@@ -2337,7 +2337,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uaudio_trigger_input
 parameter_list|(
@@ -2372,7 +2372,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uaudio_halt_in_dma
 parameter_list|(
@@ -2383,7 +2383,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uaudio_halt_out_dma
 parameter_list|(
@@ -2394,7 +2394,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uaudio_getdev
 parameter_list|(
@@ -2409,7 +2409,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uaudio_mixer_set_port
 parameter_list|(
@@ -2423,7 +2423,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uaudio_mixer_get_port
 parameter_list|(
@@ -2437,7 +2437,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uaudio_query_devinfo
 parameter_list|(
@@ -2451,7 +2451,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uaudio_get_props
 parameter_list|(
@@ -2461,13 +2461,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-name|Static
+begin_decl_stmt
+specifier|static
 specifier|const
-expr|struct
+name|struct
 name|audio_hw_if
 name|uaudio_hw_if
-operator|=
+init|=
 block|{
 name|uaudio_open
 block|,
@@ -2523,11 +2523,11 @@ name|uaudio_trigger_input
 block|,
 name|NULL
 block|, }
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|struct
 name|audio_device
 name|uaudio_device
@@ -2552,7 +2552,7 @@ argument_list|)
 end_elif
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|audio_attach_mi
 parameter_list|(
@@ -2562,7 +2562,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|uaudio_init_params
 parameter_list|(
@@ -2946,7 +2946,7 @@ name|printf
 argument_list|(
 literal|"%s: failed to get configuration descriptor\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -2975,7 +2975,7 @@ name|printf
 argument_list|(
 literal|"%s: audio descriptors make no sense, error=%d\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3152,7 +3152,7 @@ name|printf
 argument_list|(
 literal|"%s: alt %d missing AS interface(s)\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3170,7 +3170,7 @@ name|printf
 argument_list|(
 literal|"%s: audio rev %d.%02x\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3254,7 +3254,7 @@ name|printf
 argument_list|(
 literal|"%s: %d mixer controls\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -3395,7 +3395,7 @@ begin_function
 name|int
 name|uaudio_activate
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|self
 parameter_list|,
 name|enum
@@ -3492,7 +3492,7 @@ begin_function
 name|int
 name|uaudio_detach
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|self
 parameter_list|,
 name|int
@@ -3660,7 +3660,7 @@ argument_list|)
 end_if
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|uaudio_query_encoding
 parameter_list|(
@@ -4106,7 +4106,7 @@ directive|endif
 end_endif
 
 begin_function
-name|Static
+specifier|static
 specifier|const
 name|usb_interface_descriptor_t
 modifier|*
@@ -4193,7 +4193,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uaudio_mixer_add_ctl
 parameter_list|(
@@ -4772,7 +4772,7 @@ argument_list|)
 end_if
 
 begin_function
-name|Static
+specifier|static
 name|char
 modifier|*
 name|uaudio_id_name
@@ -4831,7 +4831,7 @@ name|USB_DEBUG
 end_ifdef
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uaudio_dump_cluster
 parameter_list|(
@@ -4983,7 +4983,7 @@ directive|endif
 end_endif
 
 begin_function
-name|Static
+specifier|static
 name|struct
 name|usb_audio_cluster
 name|uaudio_get_cluster
@@ -5312,7 +5312,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uaudio_add_input
 parameter_list|(
@@ -5400,7 +5400,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uaudio_add_output
 parameter_list|(
@@ -5478,7 +5478,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uaudio_add_mixer
 parameter_list|(
@@ -5963,7 +5963,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uaudio_add_selector
 parameter_list|(
@@ -6329,7 +6329,7 @@ name|USB_DEBUG
 end_ifdef
 
 begin_function
-name|Static
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -6722,7 +6722,7 @@ directive|endif
 end_endif
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|uaudio_determine_class
 parameter_list|(
@@ -7249,7 +7249,7 @@ directive|else
 end_else
 
 begin_function
-name|Static
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -7550,7 +7550,7 @@ directive|endif
 end_endif
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uaudio_add_feature
 parameter_list|(
@@ -8445,7 +8445,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uaudio_add_processing_updown
 parameter_list|(
@@ -8720,7 +8720,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uaudio_add_processing
 parameter_list|(
@@ -8983,7 +8983,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uaudio_add_extension
 parameter_list|(
@@ -9191,7 +9191,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|struct
 name|terminal_list
 modifier|*
@@ -9427,7 +9427,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|struct
 name|terminal_list
 modifier|*
@@ -10524,7 +10524,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|uaudio_identify
 parameter_list|(
@@ -10570,7 +10570,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uaudio_add_alt
 parameter_list|(
@@ -10716,7 +10716,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|uaudio_process_as
 parameter_list|(
@@ -10921,7 +10921,7 @@ name|printf
 argument_list|(
 literal|"%s: ignored setting with type %d format\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -11109,7 +11109,7 @@ name|printf
 argument_list|(
 literal|"%s: ignored input endpoint of type adaptive\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -11145,7 +11145,7 @@ name|printf
 argument_list|(
 literal|"%s: ignored output endpoint of type async\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -11232,7 +11232,7 @@ name|printf
 argument_list|(
 literal|"%s: a sync-pipe endpoint but no other endpoint\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -11260,7 +11260,7 @@ name|printf
 argument_list|(
 literal|"%s: non sync-pipe endpoint but multiple endpoints\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -11382,7 +11382,7 @@ name|printf
 argument_list|(
 literal|"%s: invalid endpoint: bSynchAddress=0\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -11410,7 +11410,7 @@ name|printf
 argument_list|(
 literal|"%s: invalid endpoint: bmAttributes=0x%x\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -11443,7 +11443,7 @@ literal|"%s: invalid endpoint addresses: "
 literal|"ep[0]->bSynchAddress=0x%x "
 literal|"ep[1]->bEndpointAddress=0x%x\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -11509,7 +11509,7 @@ name|printf
 argument_list|(
 literal|"%s: ignored setting with precision %d\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -11661,7 +11661,7 @@ name|printf
 argument_list|(
 literal|"%s: ignored setting with format %d\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -11682,7 +11682,7 @@ name|printf
 argument_list|(
 literal|"%s: %s: %dch, %d/%dbit, %s,"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -12082,7 +12082,7 @@ name|offs
 end_undef
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|uaudio_identify_as
 parameter_list|(
@@ -12285,7 +12285,7 @@ argument_list|(
 literal|"%s: ignored audio interface with %d "
 literal|"endpoints\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -12372,7 +12372,7 @@ name|printf
 argument_list|(
 literal|"%s: no usable endpoint found\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -12391,7 +12391,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|uaudio_identify_ac
 parameter_list|(
@@ -13847,7 +13847,7 @@ argument_list|)
 end_if
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|uaudio_query_devinfo
 parameter_list|(
@@ -14487,7 +14487,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|uaudio_open
 parameter_list|(
@@ -14577,7 +14577,7 @@ comment|/*  * Close function is called at splaudio().  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uaudio_close
 parameter_list|(
@@ -14589,7 +14589,7 @@ block|{ }
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|uaudio_drain
 parameter_list|(
@@ -14625,7 +14625,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|uaudio_halt_out_dma
 parameter_list|(
@@ -14714,7 +14714,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|uaudio_halt_in_dma
 parameter_list|(
@@ -14794,7 +14794,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|uaudio_getdev
 parameter_list|(
@@ -14849,7 +14849,7 @@ comment|/*  * Make sure the block size is large enough to hold all outstanding t
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|uaudio_round_blocksize
 parameter_list|(
@@ -15014,7 +15014,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|uaudio_get_props
 parameter_list|(
@@ -15041,7 +15041,7 @@ comment|/* NetBSD or OpenBSD */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|uaudio_get
 parameter_list|(
@@ -15272,7 +15272,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uaudio_set
 parameter_list|(
@@ -15473,7 +15473,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|uaudio_signext
 parameter_list|(
@@ -15539,7 +15539,7 @@ argument_list|)
 end_if
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|uaudio_value2bsd
 parameter_list|(
@@ -15818,7 +15818,7 @@ argument_list|)
 end_if
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|uaudio_ctl_get
 parameter_list|(
@@ -15901,7 +15901,7 @@ directive|endif
 end_endif
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uaudio_ctl_set
 parameter_list|(
@@ -15981,7 +15981,7 @@ argument_list|)
 end_if
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|uaudio_mixer_get_port
 parameter_list|(
@@ -16325,7 +16325,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|uaudio_mixer_set_port
 parameter_list|(
@@ -16639,7 +16639,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|uaudio_trigger_input
 parameter_list|(
@@ -16858,7 +16858,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|uaudio_trigger_output
 parameter_list|(
@@ -17090,7 +17090,7 @@ comment|/* Set up a pipe for a channel. */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|uaudio_chan_open
 parameter_list|(
@@ -17331,7 +17331,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uaudio_chan_close
 parameter_list|(
@@ -17464,7 +17464,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|uaudio_chan_alloc_buffers
 parameter_list|(
@@ -17626,7 +17626,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uaudio_chan_free_buffers
 parameter_list|(
@@ -17677,7 +17677,7 @@ comment|/* Called at splusb() */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uaudio_chan_ptransfer
 parameter_list|(
@@ -18031,7 +18031,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uaudio_chan_pintr
 parameter_list|(
@@ -18241,7 +18241,7 @@ comment|/* Called at splusb() */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uaudio_chan_rtransfer
 parameter_list|(
@@ -18478,7 +18478,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uaudio_chan_rintr
 parameter_list|(
@@ -18822,7 +18822,7 @@ argument_list|)
 end_if
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uaudio_chan_init
 parameter_list|(
@@ -18944,7 +18944,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uaudio_chan_set_param
 parameter_list|(
@@ -19005,7 +19005,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|uaudio_get_minmax_rates
 parameter_list|(
@@ -19295,7 +19295,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|uaudio_match_alt_sub
 parameter_list|(
@@ -19541,7 +19541,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|uaudio_match_alt_chan
 parameter_list|(
@@ -19799,7 +19799,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|uaudio_match_alt
 parameter_list|(
@@ -19939,7 +19939,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|uaudio_set_params
 parameter_list|(
@@ -20965,7 +20965,7 @@ comment|/* NetBSD or OpenBSD */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|uaudio_set_speed
 parameter_list|(
@@ -25182,7 +25182,7 @@ block|}
 end_function
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|audio_attach_mi
 parameter_list|(
