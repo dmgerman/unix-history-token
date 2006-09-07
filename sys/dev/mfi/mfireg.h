@@ -1937,7 +1937,7 @@ decl_stmt|;
 name|uint8_t
 name|reserved
 decl_stmt|;
-name|uint8_t
+name|int8_t
 name|class
 decl_stmt|;
 block|}
