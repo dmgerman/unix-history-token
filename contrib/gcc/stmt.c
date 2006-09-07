@@ -12441,6 +12441,10 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Insert the pre-call sequence point.  This is important in cases      where the actual values post-modify the formals: we want the final      values of the formals to be the ones that we assign below, not the      result of the post-modification.  */
+name|emit_queue
+argument_list|()
+expr_stmt|;
 comment|/* Store the values of the actuals into the formals.  */
 for|for
 control|(

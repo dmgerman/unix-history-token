@@ -224,7 +224,7 @@ parameter_list|,
 name|NUM
 parameter_list|)
 define|\
-value|sprintf ((LABEL), "*.L%s%ld", (PREFIX), (long)(NUM))
+value|sprintf ((LABEL), "*.L%s%lu", (PREFIX), (unsigned long)(NUM))
 end_define
 
 begin_comment
@@ -251,6 +251,27 @@ parameter_list|)
 define|\
 value|do								\     {								\       HOST_WIDE_INT size;					\ 								\       if (DECL_THREAD_LOCAL (DECL))				\ 	ASM_OUTPUT_TYPE_DIRECTIVE (FILE, NAME, "tls_object");	\       else							\ 	ASM_OUTPUT_TYPE_DIRECTIVE (FILE, NAME, "object");	\ 								\       size_directive_output = 0;				\       if (!flag_inhibit_size_directive				\&& (DECL)&& DECL_SIZE (DECL))			\ 	{							\ 	  size_directive_output = 1;				\ 	  size = int_size_in_bytes (TREE_TYPE (DECL));		\ 	  ASM_OUTPUT_SIZE_DIRECTIVE (FILE, NAME, size);		\ 	}							\ 								\       ASM_OUTPUT_LABEL (FILE, NAME);				\     }								\   while (0)
 end_define
+
+begin_comment
+comment|/* The Solaris assembler cannot grok r_tls_dtpoff.  This is    a kludge as ASM_OUTPUT_DWARF_DTPREL is defined in sparc.h,    undefined here and defined again in sol2-gas-bi.h.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_AS_TLS
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_OUTPUT_DWARF_DTPREL
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_escape
 end_escape

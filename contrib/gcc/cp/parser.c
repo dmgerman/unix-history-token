@@ -5738,6 +5738,16 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|bool
+name|cp_parser_typedef_p
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|cp_token
 modifier|*
 name|cp_parser_require
@@ -6028,7 +6038,7 @@ name|cp_parser_check_for_definition_in_return_type
 parameter_list|(
 name|tree
 parameter_list|,
-name|int
+name|tree
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6574,7 +6584,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function is called when a declaration is parsed.  If    DECLARATOR is a function declarator and DECLARES_CLASS_OR_ENUM    indicates that a type was defined in the decl-specifiers for DECL,    then an error is issued.  */
+comment|/* This function is called when the DECLARATOR is processed.  The TYPE    was a type defined in the decl-specifiers.  If it is invalid to    define a type in the decl-specifiers for DECLARATOR, an error is    issued.  */
 end_comment
 
 begin_function
@@ -6585,8 +6595,8 @@ parameter_list|(
 name|tree
 name|declarator
 parameter_list|,
-name|int
-name|declares_class_or_enum
+name|tree
+name|type
 parameter_list|)
 block|{
 comment|/* [dcl.fct] forbids type definitions in return types.      Unfortunately, it's not easy to know whether or not we are      processing a return type until after the fact.  */
@@ -6629,16 +6639,21 @@ name|declarator
 argument_list|)
 operator|==
 name|CALL_EXPR
-operator|&&
-name|declares_class_or_enum
-operator|&
-literal|2
 condition|)
+block|{
 name|error
 argument_list|(
 literal|"new types may not be defined in a return type"
 argument_list|)
 expr_stmt|;
+name|inform
+argument_list|(
+literal|"(perhaps a semicolon is missing after the definition of `%T')"
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -11067,153 +11082,21 @@ case|case
 name|RID_TYPENAME
 case|:
 block|{
-name|bool
-name|template_p
-init|=
-name|false
-decl_stmt|;
-name|tree
-name|id
-decl_stmt|;
 name|tree
 name|type
 decl_stmt|;
-name|tree
-name|scope
-decl_stmt|;
-comment|/* Consume the `typename' token.  */
-name|cp_lexer_consume_token
-argument_list|(
-name|parser
-operator|->
-name|lexer
-argument_list|)
-expr_stmt|;
-comment|/* Look for the optional `::' operator.  */
-name|cp_parser_global_scope_opt
-argument_list|(
-name|parser
-argument_list|,
-comment|/*current_scope_valid_p=*/
-name|false
-argument_list|)
-expr_stmt|;
-comment|/* Look for the nested-name-specifier.  In case of error here, 	   consume the trailing id to avoid subsequent error messages 	   for usual cases.  */
-name|scope
+comment|/* The syntax permitted here is the same permitted for an 	   elaborated-type-specifier.  */
+name|type
 operator|=
-name|cp_parser_nested_name_specifier
+name|cp_parser_elaborated_type_specifier
 argument_list|(
 name|parser
 argument_list|,
-comment|/*typename_keyword_p=*/
-name|true
-argument_list|,
-comment|/*check_dependency_p=*/
-name|true
-argument_list|,
-comment|/*type_p=*/
-name|true
+comment|/*is_friend=*/
+name|false
 argument_list|,
 comment|/*is_declaration=*/
-name|true
-argument_list|)
-expr_stmt|;
-comment|/* Look for the optional `template' keyword.  */
-name|template_p
-operator|=
-name|cp_parser_optional_template_keyword
-argument_list|(
-name|parser
-argument_list|)
-expr_stmt|;
-comment|/* We don't know whether we're looking at a template-id or an 	   identifier.  */
-name|cp_parser_parse_tentatively
-argument_list|(
-name|parser
-argument_list|)
-expr_stmt|;
-comment|/* Try a template-id.  */
-name|id
-operator|=
-name|cp_parser_template_id
-argument_list|(
-name|parser
-argument_list|,
-name|template_p
-argument_list|,
-comment|/*check_dependency_p=*/
-name|true
-argument_list|,
-comment|/*is_declaration=*/
-name|true
-argument_list|)
-expr_stmt|;
-comment|/* If that didn't work, try an identifier.  */
-if|if
-condition|(
-operator|!
-name|cp_parser_parse_definitely
-argument_list|(
-name|parser
-argument_list|)
-condition|)
-name|id
-operator|=
-name|cp_parser_identifier
-argument_list|(
-name|parser
-argument_list|)
-expr_stmt|;
-comment|/* Don't process id if nested name specifier is invalid.  */
-if|if
-condition|(
-name|scope
-operator|==
-name|error_mark_node
-condition|)
-return|return
-name|error_mark_node
-return|;
-comment|/* If we look up a template-id in a non-dependent qualifying 	   scope, there's no need to create a dependent type.  */
-elseif|else
-if|if
-condition|(
-name|TREE_CODE
-argument_list|(
-name|id
-argument_list|)
-operator|==
-name|TYPE_DECL
-operator|&&
-operator|!
-name|dependent_type_p
-argument_list|(
-name|parser
-operator|->
-name|scope
-argument_list|)
-condition|)
-name|type
-operator|=
-name|TREE_TYPE
-argument_list|(
-name|id
-argument_list|)
-expr_stmt|;
-comment|/* Create a TYPENAME_TYPE to represent the type to which the 	   functional cast is being performed.  */
-else|else
-name|type
-operator|=
-name|make_typename_type
-argument_list|(
-name|parser
-operator|->
-name|scope
-argument_list|,
-name|id
-argument_list|,
-comment|/*complain=*/
-literal|1
+name|false
 argument_list|)
 expr_stmt|;
 name|postfix_expression
@@ -12318,6 +12201,31 @@ name|idk
 operator|=
 name|CP_ID_KIND_QUALIFIED
 expr_stmt|;
+comment|/* If the name is a template-id that names a type, we will 		   get a TYPE_DECL here.  That is invalid code.  */
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|name
+argument_list|)
+operator|==
+name|TYPE_DECL
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"invalid use of `%D'"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|postfix_expression
+operator|=
+name|error_mark_node
+expr_stmt|;
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|name
@@ -12402,6 +12310,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* We no longer need to look up names in the scope of the 	       object on the left-hand side of the `.' or `->' 	       operator.  */
 name|parser
@@ -18727,6 +18636,25 @@ goto|goto
 name|done
 goto|;
 block|}
+comment|/* If we have seen at least one decl-specifier, and the next token      is not a parenthesis, then we must be looking at a declaration.      (After "int (" we might be looking at a functional cast.)  */
+if|if
+condition|(
+name|decl_specifiers
+operator|&&
+name|cp_lexer_next_token_is_not
+argument_list|(
+name|parser
+operator|->
+name|lexer
+argument_list|,
+name|CPP_OPEN_PAREN
+argument_list|)
+condition|)
+name|cp_parser_commit_to_tentative_parse
+argument_list|(
+name|parser
+argument_list|)
+expr_stmt|;
 comment|/* Keep going until we hit the `;' at the end of the simple      declaration.  */
 name|saw_declarator
 operator|=
@@ -18863,6 +18791,26 @@ break|break;
 comment|/* Anything else is an error.  */
 else|else
 block|{
+comment|/* If we have already issued an error message we don't need 	     to issue another one.  */
+if|if
+condition|(
+name|decl
+operator|!=
+name|error_mark_node
+operator|||
+operator|(
+name|cp_parser_parsing_tentatively
+argument_list|(
+name|parser
+argument_list|)
+operator|&&
+operator|!
+name|cp_parser_committed_to_tentative_parse
+argument_list|(
+name|parser
+argument_list|)
+operator|)
+condition|)
 name|cp_parser_error
 argument_list|(
 name|parser
@@ -21729,6 +21677,7 @@ argument_list|,
 name|CPP_COMMA
 argument_list|)
 condition|)
+block|{
 name|identifier
 operator|=
 name|cp_parser_identifier
@@ -21736,6 +21685,18 @@ argument_list|(
 name|parser
 argument_list|)
 expr_stmt|;
+comment|/* Treat invalid names as if the parameter were nameless. */
+if|if
+condition|(
+name|identifier
+operator|==
+name|error_mark_node
+condition|)
+name|identifier
+operator|=
+name|NULL_TREE
+expr_stmt|;
+block|}
 else|else
 name|identifier
 operator|=
@@ -21857,18 +21818,10 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-comment|/* Anything else is an error.  */
-name|cp_parser_error
-argument_list|(
-name|parser
-argument_list|,
-literal|"expected `class', `typename', or `template'"
-argument_list|)
+name|abort
+argument_list|()
 expr_stmt|;
-name|parameter
-operator|=
-name|error_mark_node
-expr_stmt|;
+break|break;
 block|}
 return|return
 name|parameter
@@ -23987,11 +23940,20 @@ comment|/*member_p=*/
 name|false
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|declares_class_or_enum
+operator|&
+literal|2
+condition|)
 name|cp_parser_check_for_definition_in_return_type
 argument_list|(
 name|declarator
 argument_list|,
-name|declares_class_or_enum
+name|TREE_VALUE
+argument_list|(
+name|decl_specifiers
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -25501,6 +25463,15 @@ condition|(
 name|tag_type
 operator|==
 name|typename_type
+operator|&&
+name|TREE_CODE
+argument_list|(
+name|parser
+operator|->
+name|scope
+argument_list|)
+operator|!=
+name|NAMESPACE_DECL
 condition|)
 return|return
 name|make_typename_type
@@ -25575,9 +25546,9 @@ operator|!=
 name|TYPE_DECL
 condition|)
 block|{
-name|error
+name|cp_parser_diagnose_invalid_type_name
 argument_list|(
-literal|"expected type-name"
+name|parser
 argument_list|)
 expr_stmt|;
 return|return
@@ -26119,6 +26090,26 @@ operator|!=
 name|NAMESPACE_DECL
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|cp_parser_parsing_tentatively
+argument_list|(
+name|parser
+argument_list|)
+operator|||
+name|cp_parser_committed_to_tentative_parse
+argument_list|(
+name|parser
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|"`%D' is not a namespace-name"
+argument_list|,
+name|identifier
+argument_list|)
+expr_stmt|;
 name|cp_parser_error
 argument_list|(
 name|parser
@@ -27375,11 +27366,20 @@ condition|)
 return|return
 name|error_mark_node
 return|;
+if|if
+condition|(
+name|declares_class_or_enum
+operator|&
+literal|2
+condition|)
 name|cp_parser_check_for_definition_in_return_type
 argument_list|(
 name|declarator
 argument_list|,
-name|declares_class_or_enum
+name|TREE_VALUE
+argument_list|(
+name|decl_specifiers
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Figure out what scope the entity declared by the DECLARATOR is      located in.  `grokdeclarator' sometimes changes the scope, so      we compute it now.  */
@@ -27592,7 +27592,7 @@ name|cp_parser_error
 argument_list|(
 name|parser
 argument_list|,
-literal|"expected init-declarator"
+literal|"expected initializer"
 argument_list|)
 expr_stmt|;
 return|return
@@ -29548,6 +29548,10 @@ condition|(
 name|parser
 operator|->
 name|scope
+operator|&&
+name|id_expression
+operator|!=
+name|error_mark_node
 condition|)
 block|{
 name|id_expression
@@ -33549,7 +33553,41 @@ name|RID_TEMPLATE
 argument_list|)
 condition|)
 block|{
-comment|/* Parse the template-declaration.  */
+comment|/* An explicit specialization here is an error condition, and we 	 expect the specialization handler to detect and report this.  */
+if|if
+condition|(
+name|cp_lexer_peek_nth_token
+argument_list|(
+name|parser
+operator|->
+name|lexer
+argument_list|,
+literal|2
+argument_list|)
+operator|->
+name|type
+operator|==
+name|CPP_LESS
+operator|&&
+name|cp_lexer_peek_nth_token
+argument_list|(
+name|parser
+operator|->
+name|lexer
+argument_list|,
+literal|3
+argument_list|)
+operator|->
+name|type
+operator|==
+name|CPP_GREATER
+condition|)
+name|cp_parser_explicit_specialization
+argument_list|(
+name|parser
+argument_list|)
+expr_stmt|;
+else|else
 name|cp_parser_template_declaration
 argument_list|(
 name|parser
@@ -34081,11 +34119,20 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|declares_class_or_enum
+operator|&
+literal|2
+condition|)
 name|cp_parser_check_for_definition_in_return_type
 argument_list|(
 name|declarator
 argument_list|,
-name|declares_class_or_enum
+name|TREE_VALUE
+argument_list|(
+name|decl_specifiers
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Look for an asm-specification.  */
@@ -36586,7 +36633,15 @@ argument_list|(
 name|parser
 argument_list|)
 expr_stmt|;
-comment|/* Declare it as a lobel.  */
+comment|/* If we failed, stop.  */
+if|if
+condition|(
+name|identifier
+operator|==
+name|error_mark_node
+condition|)
+break|break;
+comment|/* Declare it as a label.  */
 name|finish_label_decl
 argument_list|(
 name|identifier
@@ -36662,6 +36717,11 @@ name|bool
 name|check_dependency
 parameter_list|)
 block|{
+name|int
+name|flags
+init|=
+literal|0
+decl_stmt|;
 name|tree
 name|decl
 decl_stmt|;
@@ -36692,6 +36752,23 @@ condition|)
 return|return
 name|error_mark_node
 return|;
+if|if
+condition|(
+operator|!
+name|cp_parser_parsing_tentatively
+argument_list|(
+name|parser
+argument_list|)
+operator|||
+name|cp_parser_committed_to_tentative_parse
+argument_list|(
+name|parser
+argument_list|)
+condition|)
+name|flags
+operator||=
+name|LOOKUP_COMPLAIN
+expr_stmt|;
 comment|/* A template-id has already been resolved; there is no lookup to      do.  */
 if|if
 condition|(
@@ -37063,8 +37140,7 @@ literal|0
 argument_list|,
 name|is_namespace
 argument_list|,
-comment|/*flags=*/
-literal|0
+name|flags
 argument_list|)
 expr_stmt|;
 name|parser
@@ -37103,8 +37179,7 @@ literal|0
 argument_list|,
 name|is_namespace
 argument_list|,
-comment|/*flags=*/
-literal|0
+name|flags
 argument_list|)
 expr_stmt|;
 name|parser
@@ -38887,6 +38962,22 @@ name|function_definition_p
 init|=
 name|false
 decl_stmt|;
+comment|/* This function is only used when processing a template      declaration.  */
+if|if
+condition|(
+name|innermost_scope_kind
+argument_list|()
+operator|!=
+name|sk_template_parms
+operator|&&
+name|innermost_scope_kind
+argument_list|()
+operator|!=
+name|sk_template_spec
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
 comment|/* Defer access checks until we know what is being declared.  */
 name|push_deferring_access_checks
 argument_list|(
@@ -38921,6 +39012,25 @@ argument_list|(
 name|decl_specifiers
 argument_list|)
 expr_stmt|;
+comment|/* There are no template typedefs.  */
+if|if
+condition|(
+name|cp_parser_typedef_p
+argument_list|(
+name|decl_specifiers
+argument_list|)
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"template declaration of `typedef'"
+argument_list|)
+expr_stmt|;
+name|decl
+operator|=
+name|error_mark_node
+expr_stmt|;
+block|}
 comment|/* Gather up the access checks that occurred the      decl-specifier-seq.  */
 name|stop_deferring_access_checks
 argument_list|()
@@ -38964,11 +39074,6 @@ name|error_mark_node
 expr_stmt|;
 block|}
 block|}
-else|else
-name|decl
-operator|=
-name|NULL_TREE
-expr_stmt|;
 comment|/* If it's not a template class, try for a template function.  If      the next token is a `;', then this declaration does not declare      anything.  But, if there were errors in the decl-specifiers, then      the error might well have come from an attempted class-specifier.      In that case, there's no need to warn about a missing declarator.  */
 if|if
 condition|(
@@ -39043,6 +39148,11 @@ condition|(
 operator|!
 name|function_definition_p
 operator|&&
+operator|(
+name|decl
+operator|==
+name|error_mark_node
+operator|||
 operator|!
 name|cp_parser_require
 argument_list|(
@@ -39052,6 +39162,7 @@ name|CPP_SEMICOLON
 argument_list|,
 literal|"`;'"
 argument_list|)
+operator|)
 condition|)
 name|cp_parser_skip_to_end_of_block_or_statement
 argument_list|(
@@ -39137,12 +39248,28 @@ expr_stmt|;
 comment|/* [expr.const]/1: In an integral constant expression "only type      conversions to integral or enumeration type can be used".  */
 if|if
 condition|(
+name|TREE_CODE
+argument_list|(
+name|type
+argument_list|)
+operator|==
+name|TYPE_DECL
+condition|)
+name|type
+operator|=
+name|TREE_TYPE
+argument_list|(
+name|type
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|cast
 operator|!=
 name|error_mark_node
 operator|&&
 operator|!
-name|type_dependent_expression_p
+name|dependent_type_p
 argument_list|(
 name|type
 argument_list|)
@@ -39150,10 +39277,7 @@ operator|&&
 operator|!
 name|INTEGRAL_OR_ENUMERATION_TYPE_P
 argument_list|(
-name|TREE_TYPE
-argument_list|(
 name|type
-argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -39503,22 +39627,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-elseif|else
-if|if
-condition|(
-operator|!
-name|cp_parser_require
+else|else
+name|cp_parser_skip_until_found
 argument_list|(
 name|parser
 argument_list|,
 name|CPP_GREATER
 argument_list|,
 literal|"`>'"
-argument_list|)
-condition|)
-name|error
-argument_list|(
-literal|"missing `>' to terminate the template argument list"
 argument_list|)
 expr_stmt|;
 comment|/* The `>' token might be a greater-than operator again now.  */
@@ -39661,13 +39777,10 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
-comment|/* If this was an inline function in a local class, enter the scope 	 of the containing function.  */
+comment|/* If this is a local class, enter the scope of the containing 	 function.  */
 name|function_scope
 operator|=
-name|decl_function_context
-argument_list|(
-name|member_function
-argument_list|)
+name|current_function_decl
 expr_stmt|;
 if|if
 condition|(
@@ -39916,24 +40029,33 @@ name|parameters
 argument_list|)
 control|)
 block|{
+name|tree
+name|default_arg
+init|=
+name|TREE_PURPOSE
+argument_list|(
+name|parameters
+argument_list|)
+decl_stmt|;
+name|tree
+name|parsed_arg
+decl_stmt|;
 if|if
 condition|(
 operator|!
-name|TREE_PURPOSE
-argument_list|(
-name|parameters
-argument_list|)
-operator|||
+name|default_arg
+condition|)
+continue|continue;
+if|if
+condition|(
 name|TREE_CODE
 argument_list|(
-name|TREE_PURPOSE
-argument_list|(
-name|parameters
-argument_list|)
+name|default_arg
 argument_list|)
 operator|!=
 name|DEFAULT_ARG
 condition|)
+comment|/* This can happen for a friend declaration for a function 	   already declared with default arguments.  */
 continue|continue;
 comment|/* Save away the current lexer.  */
 name|saved_lexer
@@ -39947,10 +40069,7 @@ name|tokens
 operator|=
 name|DEFARG_TOKENS
 argument_list|(
-name|TREE_PURPOSE
-argument_list|(
-name|parameters
-argument_list|)
+name|default_arg
 argument_list|)
 expr_stmt|;
 name|parser
@@ -39962,7 +40081,7 @@ argument_list|(
 name|tokens
 argument_list|)
 expr_stmt|;
-comment|/* Set the current source position to be the location of the      	  first token in the default argument.  */
+comment|/* Set the current source position to be the location of the          first token in the default argument.  */
 name|cp_lexer_peek_token
 argument_list|(
 name|parser
@@ -39970,7 +40089,7 @@ operator|->
 name|lexer
 argument_list|)
 expr_stmt|;
-comment|/* Local variable names (and the `this' keyword) may not appear      	  in a default argument.  */
+comment|/* Local variable names (and the `this' keyword) may not appear      	 in a default argument.  */
 name|saved_local_variables_forbidden_p
 operator|=
 name|parser
@@ -40015,10 +40134,7 @@ name|fn
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|TREE_PURPOSE
-argument_list|(
-name|parameters
-argument_list|)
+name|parsed_arg
 operator|=
 name|cp_parser_assignment_expression
 argument_list|(
@@ -40039,6 +40155,42 @@ argument_list|)
 condition|)
 name|pop_nested_class
 argument_list|()
+expr_stmt|;
+name|TREE_PURPOSE
+argument_list|(
+name|parameters
+argument_list|)
+operator|=
+name|parsed_arg
+expr_stmt|;
+comment|/* Update any instantiations we've already created.  */
+for|for
+control|(
+name|default_arg
+operator|=
+name|TREE_CHAIN
+argument_list|(
+name|default_arg
+argument_list|)
+init|;
+name|default_arg
+condition|;
+name|default_arg
+operator|=
+name|TREE_CHAIN
+argument_list|(
+name|default_arg
+argument_list|)
+control|)
+name|TREE_PURPOSE
+argument_list|(
+name|TREE_PURPOSE
+argument_list|(
+name|default_arg
+argument_list|)
+argument_list|)
+operator|=
+name|parsed_arg
 expr_stmt|;
 comment|/* If the token stream has not been completely used up, then 	 there was extra junk after the end of the default 	 argument.  */
 if|if
@@ -40074,6 +40226,12 @@ operator|=
 name|saved_local_variables_forbidden_p
 expr_stmt|;
 block|}
+comment|/* Make sure no default arg is missing.  */
+name|check_default_args
+argument_list|(
+name|fn
+argument_list|)
+expr_stmt|;
 comment|/* Restore the queue.  */
 name|parser
 operator|->
@@ -40446,6 +40604,65 @@ argument_list|)
 argument_list|)
 operator|==
 name|RID_FRIEND
+condition|)
+return|return
+name|true
+return|;
+comment|/* Go on to the next decl-specifier.  */
+name|decl_specifiers
+operator|=
+name|TREE_CHAIN
+argument_list|(
+name|decl_specifiers
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|false
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* DECL_SPECIFIERS is the representation of a decl-specifier-seq.    Returns TRUE iff `typedef' appears among the DECL_SPECIFIERS.  */
+end_comment
+
+begin_function
+specifier|static
+name|bool
+name|cp_parser_typedef_p
+parameter_list|(
+name|tree
+name|decl_specifiers
+parameter_list|)
+block|{
+while|while
+condition|(
+name|decl_specifiers
+condition|)
+block|{
+comment|/* See if this decl-specifier is `typedef'.  */
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|TREE_VALUE
+argument_list|(
+name|decl_specifiers
+argument_list|)
+argument_list|)
+operator|==
+name|IDENTIFIER_NODE
+operator|&&
+name|C_RID_CODE
+argument_list|(
+name|TREE_VALUE
+argument_list|(
+name|decl_specifiers
+argument_list|)
+argument_list|)
+operator|==
+name|RID_TYPEDEF
 condition|)
 return|return
 name|true

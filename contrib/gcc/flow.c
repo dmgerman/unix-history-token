@@ -4,7 +4,7 @@ comment|/* Data flow analysis for GNU compiler.    Copyright (C) 1987, 1988, 199
 end_comment
 
 begin_comment
-comment|/* This file contains the data flow analysis pass of the compiler.  It    computes data flow information which tells combine_instructions    which insns to consider combining and controls register allocation.     Additional data flow information that is too bulky to record is    generated during the analysis, and is used at that time to create    autoincrement and autodecrement addressing.     The first step is dividing the function into basic blocks.    find_basic_blocks does this.  Then life_analysis determines    where each register is live and where it is dead.     ** find_basic_blocks **     find_basic_blocks divides the current function's rtl into basic    blocks and constructs the CFG.  The blocks are recorded in the    basic_block_info array; the CFG exists in the edge structures    referenced by the blocks.     find_basic_blocks also finds any unreachable loops and deletes them.     ** life_analysis **     life_analysis is called immediately after find_basic_blocks.    It uses the basic block information to determine where each    hard or pseudo register is live.     ** live-register info **     The information about where each register is live is in two parts:    the REG_NOTES of insns, and the vector basic_block->global_live_at_start.     basic_block->global_live_at_start has an element for each basic    block, and the element is a bit-vector with a bit for each hard or    pseudo register.  The bit is 1 if the register is live at the    beginning of the basic block.     Two types of elements can be added to an insn's REG_NOTES.    A REG_DEAD note is added to an insn's REG_NOTES for any register    that meets both of two conditions:  The value in the register is not    needed in subsequent insns and the insn does not replace the value in    the register (in the case of multi-word hard registers, the value in    each register must be replaced by the insn to avoid a REG_DEAD note).     In the vast majority of cases, an object in a REG_DEAD note will be    used somewhere in the insn.  The (rare) exception to this is if an    insn uses a multi-word hard register and only some of the registers are    needed in subsequent insns.  In that case, REG_DEAD notes will be    provided for those hard registers that are not subsequently needed.    Partial REG_DEAD notes of this type do not occur when an insn sets    only some of the hard registers used in such a multi-word operand;    omitting REG_DEAD notes for objects stored in an insn is optional and    the desire to do so does not justify the complexity of the partial    REG_DEAD notes.     REG_UNUSED notes are added for each register that is set by the insn    but is unused subsequently (if every register set by the insn is unused    and the insn does not reference memory or have some other side-effect,    the insn is deleted instead).  If only part of a multi-word hard    register is used in a subsequent insn, REG_UNUSED notes are made for    the parts that will not be used.     To determine which registers are live after any insn, one can    start from the beginning of the basic block and scan insns, noting    which registers are set by each insn and which die there.     ** Other actions of life_analysis **     life_analysis sets up the LOG_LINKS fields of insns because the    information needed to do so is readily available.     life_analysis deletes insns whose only effect is to store a value    that is never used.     life_analysis notices cases where a reference to a register as    a memory address can be combined with a preceding or following    incrementation or decrementation of the register.  The separate    instruction to increment or decrement is deleted and the address    is changed to a POST_INC or similar rtx.     Each time an incrementing or decrementing address is created,    a REG_INC element is added to the insn's REG_NOTES list.     life_analysis fills in certain vectors containing information about    register usage: REG_N_REFS, REG_N_DEATHS, REG_N_SETS, REG_LIVE_LENGTH,    REG_N_CALLS_CROSSED and REG_BASIC_BLOCK.     life_analysis sets current_function_sp_is_unchanging if the function    doesn't modify the stack pointer.  */
+comment|/* This file contains the data flow analysis pass of the compiler.  It    computes data flow information which tells combine_instructions    which insns to consider combining and controls register allocation.     Additional data flow information that is too bulky to record is    generated during the analysis, and is used at that time to create    autoincrement and autodecrement addressing.     The first step is dividing the function into basic blocks.    find_basic_blocks does this.  Then life_analysis determines    where each register is live and where it is dead.     ** find_basic_blocks **     find_basic_blocks divides the current function's rtl into basic    blocks and constructs the CFG.  The blocks are recorded in the    basic_block_info array; the CFG exists in the edge structures    referenced by the blocks.     find_basic_blocks also finds any unreachable loops and deletes them.     ** life_analysis **     life_analysis is called immediately after find_basic_blocks.    It uses the basic block information to determine where each    hard or pseudo register is live.     ** live-register info **     The information about where each register is live is in two parts:    the REG_NOTES of insns, and the vector basic_block->global_live_at_start.     basic_block->global_live_at_start has an element for each basic    block, and the element is a bit-vector with a bit for each hard or    pseudo register.  The bit is 1 if the register is live at the    beginning of the basic block.     Two types of elements can be added to an insn's REG_NOTES.    A REG_DEAD note is added to an insn's REG_NOTES for any register    that meets both of two conditions:  The value in the register is not    needed in subsequent insns and the insn does not replace the value in    the register (in the case of multi-word hard registers, the value in    each register must be replaced by the insn to avoid a REG_DEAD note).     In the vast majority of cases, an object in a REG_DEAD note will be    used somewhere in the insn.  The (rare) exception to this is if an    insn uses a multi-word hard register and only some of the registers are    needed in subsequent insns.  In that case, REG_DEAD notes will be    provided for those hard registers that are not subsequently needed.    Partial REG_DEAD notes of this type do not occur when an insn sets    only some of the hard registers used in such a multi-word operand;    omitting REG_DEAD notes for objects stored in an insn is optional and    the desire to do so does not justify the complexity of the partial    REG_DEAD notes.     REG_UNUSED notes are added for each register that is set by the insn    but is unused subsequently (if every register set by the insn is unused    and the insn does not reference memory or have some other side-effect,    the insn is deleted instead).  If only part of a multi-word hard    register is used in a subsequent insn, REG_UNUSED notes are made for    the parts that will not be used.     To determine which registers are live after any insn, one can    start from the beginning of the basic block and scan insns, noting    which registers are set by each insn and which die there.     ** Other actions of life_analysis **     life_analysis sets up the LOG_LINKS fields of insns because the    information needed to do so is readily available.     life_analysis deletes insns whose only effect is to store a value    that is never used.     life_analysis notices cases where a reference to a register as    a memory address can be combined with a preceding or following    incrementation or decrementation of the register.  The separate    instruction to increment or decrement is deleted and the address    is changed to a POST_INC or similar rtx.     Each time an incrementing or decrementing address is created,    a REG_INC element is added to the insn's REG_NOTES list.     life_analysis fills in certain vectors containing information about    register usage: REG_N_REFS, REG_N_DEATHS, REG_N_SETS, REG_LIVE_LENGTH,    REG_N_CALLS_CROSSED, REG_N_THROWING_CALLS_CROSSED and REG_BASIC_BLOCK.     life_analysis sets current_function_sp_is_unchanging if the function    doesn't modify the stack pointer.  */
 end_comment
 
 begin_comment
@@ -4559,6 +4559,13 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
+name|REG_N_THROWING_CALLS_CROSSED
+argument_list|(
+name|i
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
 name|REG_LIVE_LENGTH
 argument_list|(
 name|i
@@ -5398,6 +5405,7 @@ operator|&
 name|PROP_REG_INFO
 operator|)
 condition|)
+block|{
 name|EXECUTE_IF_SET_IN_REG_SET
 argument_list|(
 argument|pbi->reg_live
@@ -5409,6 +5417,25 @@ argument_list|,
 argument|{ REG_N_CALLS_CROSSED (i)++; }
 argument_list|)
 empty_stmt|;
+if|if
+condition|(
+name|can_throw_internal
+argument_list|(
+name|insn
+argument_list|)
+condition|)
+name|EXECUTE_IF_SET_IN_REG_SET
+argument_list|(
+argument|pbi->reg_live
+argument_list|,
+literal|0
+argument_list|,
+argument|i
+argument_list|,
+argument|{ REG_N_THROWING_CALLS_CROSSED (i)++; }
+argument_list|)
+empty_stmt|;
+block|}
 comment|/* Record sets.  Do this even for dead instructions, since they 	 would have killed the values if they hadn't been deleted.  */
 name|mark_set_regs
 argument_list|(
@@ -12756,12 +12783,27 @@ argument_list|)
 operator|==
 name|CALL_INSN
 condition|)
+block|{
 name|REG_N_CALLS_CROSSED
 argument_list|(
 name|regno
 argument_list|)
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|can_throw_internal
+argument_list|(
+name|temp
+argument_list|)
+condition|)
+name|REG_N_THROWING_CALLS_CROSSED
+argument_list|(
+name|regno
+argument_list|)
+operator|++
+expr_stmt|;
+block|}
 comment|/* Invalidate alias info for Q since we just changed its value.  */
 name|clear_reg_alias_info
 argument_list|(

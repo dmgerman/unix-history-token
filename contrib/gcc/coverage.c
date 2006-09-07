@@ -776,11 +776,15 @@ argument_list|)
 expr_stmt|;
 name|warning
 argument_list|(
-literal|"`%s' is version `%.4s', expected version `%.4s'"
+literal|"`%s' is version `%.*s', expected version `%.*s'"
 argument_list|,
 name|da_file_name
 argument_list|,
+literal|4
+argument_list|,
 name|v
+argument_list|,
+literal|4
 argument_list|,
 name|e
 argument_list|)

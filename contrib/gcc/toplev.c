@@ -15730,6 +15730,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|/* Just in case lang_hooks.post_options ends up calling a debug_hook.      This can happen with incorrect pre-processed input. */
+name|debug_hooks
+operator|=
+operator|&
+name|do_nothing_debug_hooks
+expr_stmt|;
 comment|/* Allow the front end to perform consistency checks and do further      initialization based on the command line options.  This hook also      sets the original filename if appropriate (e.g. foo.i -> foo.c)      so we can correctly initialize debug output.  */
 name|no_backend
 operator|=
@@ -16184,11 +16190,7 @@ name|write_symbols
 operator|==
 name|NO_DEBUG
 condition|)
-name|debug_hooks
-operator|=
-operator|&
-name|do_nothing_debug_hooks
-expr_stmt|;
+empty_stmt|;
 if|#
 directive|if
 name|defined

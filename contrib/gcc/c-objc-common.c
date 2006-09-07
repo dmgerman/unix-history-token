@@ -414,16 +414,6 @@ block|}
 block|}
 if|if
 condition|(
-operator|!
-name|DECL_FILE_SCOPE_P
-argument_list|(
-name|fn
-argument_list|)
-condition|)
-block|{
-comment|/* If a nested function has pending sizes, we may have already          saved them.  */
-if|if
-condition|(
 name|DECL_LANG_SPECIFIC
 argument_list|(
 name|fn
@@ -438,8 +428,8 @@ name|do_warning
 condition|)
 name|warning
 argument_list|(
-literal|"%Jnested function '%F' can never be inlined because it "
-literal|"has possibly saved pending sizes"
+literal|"%Jfunction '%F' can never be inlined because it has "
+literal|"pending sizes"
 argument_list|,
 name|fn
 argument_list|,
@@ -449,7 +439,6 @@ expr_stmt|;
 goto|goto
 name|cannot_inline
 goto|;
-block|}
 block|}
 return|return
 literal|0

@@ -2240,6 +2240,8 @@ operator|->
 name|no_search_path
 argument_list|,
 name|false
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2281,6 +2283,16 @@ argument_list|(
 name|pfile
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|pfile
+operator|->
+name|map
+condition|)
+return|return
+name|NULL
+return|;
 name|fname
 operator|=
 name|pfile
@@ -2335,6 +2347,14 @@ operator|==
 name|CPP_HASH
 condition|)
 block|{
+name|pfile
+operator|->
+name|state
+operator|.
+name|in_directive
+operator|=
+literal|1
+expr_stmt|;
 name|token1
 operator|=
 name|_cpp_lex_direct
@@ -2348,6 +2368,14 @@ name|pfile
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+name|pfile
+operator|->
+name|state
+operator|.
+name|in_directive
+operator|=
+literal|0
 expr_stmt|;
 comment|/* If it's a #line directive, handle it.  */
 if|if

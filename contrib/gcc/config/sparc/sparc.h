@@ -3817,8 +3817,12 @@ begin_comment
 comment|/* Output the special assembly code needed to tell the assembler some    register is used as global register variable.     SPARC 64bit psABI declares registers %g2 and %g3 as application    registers and %g6 and %g7 as OS registers.  Any object using them    should declare (for %g2/%g3 has to, for %g6/%g7 can) that it uses them    and how they are used (scratch or some global variable).    Linker will then refuse to link together objects which use those    registers incompatibly.     Unless the registers are used for scratch, two different global    registers cannot be declared to the same name, so in the unlikely    case of a global register variable occupying more than one register    we prefix the second and following registers with .gnu.part1. etc.  */
 end_comment
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|char
 name|sparc_hard_reg_printed
 index|[

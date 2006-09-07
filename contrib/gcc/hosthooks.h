@@ -28,6 +28,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+comment|/* Identify an address that's likely to be free in a subsequent invocation      of the compiler.  The area should be able to hold SIZE bytes.  FD is an      open file descriptor if the host would like to probe with mmap.  */
 name|void
 modifier|*
 function_decl|(
@@ -36,9 +37,14 @@ name|gt_pch_get_address
 function_decl|)
 parameter_list|(
 name|size_t
+name|size
+parameter_list|,
+name|int
+name|fd
 parameter_list|)
 function_decl|;
-name|bool
+comment|/* ADDR is an address returned by gt_pch_get_address.  Attempt to allocate      SIZE bytes at the same address and load it with the data from FD at       OFFSET.  Return -1 if we couldn't allocate memory at ADDR, return 0      if the memory is allocated but the data not loaded, return 1 if done.  */
+name|int
 function_decl|(
 modifier|*
 name|gt_pch_use_address
@@ -46,8 +52,16 @@ function_decl|)
 parameter_list|(
 name|void
 modifier|*
+name|addr
 parameter_list|,
 name|size_t
+name|size
+parameter_list|,
+name|int
+name|fd
+parameter_list|,
+name|size_t
+name|offset
 parameter_list|)
 function_decl|;
 comment|/* Whenever you add entries here, make sure you adjust hosthooks-def.h.  */

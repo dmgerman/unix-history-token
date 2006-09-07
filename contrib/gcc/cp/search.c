@@ -3404,10 +3404,19 @@ condition|)
 return|return
 literal|1
 return|;
-comment|/* In a template declaration, we cannot be sure whether the      particular specialization that is instantiated will be a friend      or not.  Therefore, all access checks are deferred until      instantiation.  */
+comment|/* In a template declaration, we cannot be sure whether the      particular specialization that is instantiated will be a friend      or not.  Therefore, all access checks are deferred until      instantiation.  However, PROCESSING_TEMPLATE_DECL is set in the      parameter list for a template (because we may see dependent types      in default arguments for template parameters), and access      checking should be performed in the outermost parameter list.  */
 if|if
 condition|(
 name|processing_template_decl
+operator|&&
+operator|(
+operator|!
+name|processing_template_parmlist
+operator|||
+name|processing_template_decl
+operator|>
+literal|1
+operator|)
 condition|)
 return|return
 literal|1
