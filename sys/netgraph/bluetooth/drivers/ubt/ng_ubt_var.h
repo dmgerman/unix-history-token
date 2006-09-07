@@ -20,6 +20,24 @@ name|_NG_UBT_VAR_H_
 end_define
 
 begin_comment
+comment|/* FreeBSD 7.0 defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USBBASEDEVICE
+value|device_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|USBDEVNAME
+value|device_get_nameunit
+end_define
+
+begin_comment
 comment|/* pullup wrapper */
 end_comment
 

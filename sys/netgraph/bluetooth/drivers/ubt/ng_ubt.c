@@ -176,7 +176,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function_decl
-name|Static
+specifier|static
 name|int
 name|ubt_modevent
 parameter_list|(
@@ -191,7 +191,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|ubt_request_start
 parameter_list|(
@@ -201,7 +201,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ubt_request_complete
 parameter_list|(
@@ -215,7 +215,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ubt_request_complete2
 parameter_list|(
@@ -232,7 +232,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|ubt_intr_start
 parameter_list|(
@@ -242,7 +242,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ubt_intr_complete
 parameter_list|(
@@ -256,7 +256,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ubt_intr_complete2
 parameter_list|(
@@ -273,7 +273,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|ubt_bulk_in_start
 parameter_list|(
@@ -283,7 +283,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ubt_bulk_in_complete
 parameter_list|(
@@ -297,7 +297,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ubt_bulk_in_complete2
 parameter_list|(
@@ -314,7 +314,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|ubt_bulk_out_start
 parameter_list|(
@@ -324,7 +324,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ubt_bulk_out_complete
 parameter_list|(
@@ -338,7 +338,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ubt_bulk_out_complete2
 parameter_list|(
@@ -355,7 +355,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|ubt_isoc_in_start
 parameter_list|(
@@ -365,7 +365,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ubt_isoc_in_complete
 parameter_list|(
@@ -379,7 +379,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ubt_isoc_in_complete2
 parameter_list|(
@@ -396,7 +396,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|usbd_status
 name|ubt_isoc_out_start
 parameter_list|(
@@ -406,7 +406,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ubt_isoc_out_complete
 parameter_list|(
@@ -420,7 +420,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ubt_isoc_out_complete2
 parameter_list|(
@@ -437,7 +437,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Static
+specifier|static
 name|void
 name|ubt_reset
 parameter_list|(
@@ -451,49 +451,49 @@ comment|/*  * Netgraph methods  */
 end_comment
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|ng_constructor_t
 name|ng_ubt_constructor
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|ng_shutdown_t
 name|ng_ubt_shutdown
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|ng_newhook_t
 name|ng_ubt_newhook
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|ng_connect_t
 name|ng_ubt_connect
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|ng_disconnect_t
 name|ng_ubt_disconnect
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|ng_rcvmsg_t
 name|ng_ubt_rcvmsg
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|ng_rcvdata_t
 name|ng_ubt_rcvdata
 decl_stmt|;
@@ -503,14 +503,14 @@ begin_comment
 comment|/* Queue length */
 end_comment
 
-begin_expr_stmt
-name|Static
+begin_decl_stmt
+specifier|static
 specifier|const
-expr|struct
+name|struct
 name|ng_parse_struct_field
 name|ng_ubt_node_qlen_type_fields
 index|[]
-operator|=
+init|=
 block|{
 block|{
 literal|"queue"
@@ -530,16 +530,16 @@ block|{
 name|NULL
 block|, }
 block|}
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
-name|Static
+begin_decl_stmt
+specifier|static
 specifier|const
-expr|struct
+name|struct
 name|ng_parse_type
 name|ng_ubt_node_qlen_type
-operator|=
+init|=
 block|{
 operator|&
 name|ng_parse_struct_type
@@ -547,21 +547,21 @@ block|,
 operator|&
 name|ng_ubt_node_qlen_type_fields
 block|}
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Stat info */
 end_comment
 
-begin_expr_stmt
-name|Static
+begin_decl_stmt
+specifier|static
 specifier|const
-expr|struct
+name|struct
 name|ng_parse_struct_field
 name|ng_ubt_node_stat_type_fields
 index|[]
-operator|=
+init|=
 block|{
 block|{
 literal|"pckts_recv"
@@ -609,16 +609,16 @@ block|{
 name|NULL
 block|, }
 block|}
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
-name|Static
+begin_decl_stmt
+specifier|static
 specifier|const
-expr|struct
+name|struct
 name|ng_parse_type
 name|ng_ubt_node_stat_type
-operator|=
+init|=
 block|{
 operator|&
 name|ng_parse_struct_type
@@ -626,21 +626,21 @@ block|,
 operator|&
 name|ng_ubt_node_stat_type_fields
 block|}
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Netgraph node command list */
 end_comment
 
-begin_expr_stmt
-name|Static
+begin_decl_stmt
+specifier|static
 specifier|const
-expr|struct
+name|struct
 name|ng_cmdlist
 name|ng_ubt_cmdlist
 index|[]
-operator|=
+init|=
 block|{
 block|{
 name|NGM_UBT_COOKIE
@@ -724,15 +724,15 @@ block|{
 literal|0
 block|, }
 block|}
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Netgraph node type */
 end_comment
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|struct
 name|ng_type
 name|typestruct
@@ -848,7 +848,7 @@ comment|/*  * Load/Unload the driver module  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ubt_modevent
 parameter_list|(
@@ -972,7 +972,7 @@ end_macro
 begin_block
 block|{
 comment|/* 	 * If for some reason device should not be attached then put 	 * VendorID/ProductID pair into the list below. The format is 	 * as follows: 	 * 	 *	{ VENDOR_ID, PRODUCT_ID }, 	 * 	 * where VENDOR_ID and PRODUCT_ID are hex numbers. 	 */
-name|Static
+specifier|static
 name|struct
 name|usb_devno
 specifier|const
@@ -996,7 +996,7 @@ comment|/* This should be the last item in the list */
 block|}
 decl_stmt|;
 comment|/* 	 * If device violates Bluetooth specification and has bDeviceClass, 	 * bDeviceSubClass and bDeviceProtocol set to wrong values then you 	 * could try to put VendorID/ProductID pair into the list below. 	 * Adding VendorID/ProductID pair into this list forces ng_ubt(4) 	 * to attach to the broken device. 	 */
-name|Static
+specifier|static
 name|struct
 name|usb_devno
 specifier|const
@@ -3552,7 +3552,7 @@ comment|/*  * Start USB control request (HCI command). Must be called with node 
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|ubt_request_start
 parameter_list|(
@@ -3900,7 +3900,7 @@ comment|/*  * USB control request callback  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubt_request_complete
 parameter_list|(
@@ -3950,7 +3950,7 @@ comment|/* ubt_request_complete */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubt_request_complete2
 parameter_list|(
@@ -4173,7 +4173,7 @@ comment|/*  * Start interrupt transfer. Must be called when node is locked  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|ubt_intr_start
 parameter_list|(
@@ -4460,7 +4460,7 @@ comment|/*  * Process interrupt from USB device (We got data from interrupt pipe
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubt_intr_complete
 parameter_list|(
@@ -4510,7 +4510,7 @@ comment|/* ubt_intr_complete */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubt_intr_complete2
 parameter_list|(
@@ -4956,7 +4956,7 @@ comment|/*  * Start bulk-in USB transfer (ACL data). Must be called when node is
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|ubt_bulk_in_start
 parameter_list|(
@@ -5243,7 +5243,7 @@ comment|/*  * USB bulk-in transfer callback  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubt_bulk_in_complete
 parameter_list|(
@@ -5293,7 +5293,7 @@ comment|/* ubt_bulk_in_complete */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubt_bulk_in_complete2
 parameter_list|(
@@ -5746,7 +5746,7 @@ comment|/*  * Start bulk-out USB transfer. Must be called with node locked  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|ubt_bulk_out_start
 parameter_list|(
@@ -6039,7 +6039,7 @@ comment|/*  * USB bulk-out transfer callback  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubt_bulk_out_complete
 parameter_list|(
@@ -6089,7 +6089,7 @@ comment|/* ubt_bulk_out_complete */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubt_bulk_out_complete2
 parameter_list|(
@@ -6316,7 +6316,7 @@ comment|/*  * Start Isochronous-in USB transfer. Must be called with node locked
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|ubt_isoc_in_start
 parameter_list|(
@@ -6497,7 +6497,7 @@ comment|/*  * USB isochronous transfer callback  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubt_isoc_in_complete
 parameter_list|(
@@ -6547,7 +6547,7 @@ comment|/* ubt_isoc_in_complete */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubt_isoc_in_complete2
 parameter_list|(
@@ -7136,7 +7136,7 @@ comment|/*  * Start isochronous-out USB transfer. Must be called with node locke
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|usbd_status
 name|ubt_isoc_out_start
 parameter_list|(
@@ -7517,7 +7517,7 @@ comment|/*  * USB isoc-out. transfer callback  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubt_isoc_out_complete
 parameter_list|(
@@ -7567,7 +7567,7 @@ comment|/* ubt_isoc_out_complete */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubt_isoc_out_complete2
 parameter_list|(
@@ -7794,7 +7794,7 @@ comment|/*  * Abort transfers on all USB pipes  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|void
 name|ubt_reset
 parameter_list|(
@@ -7921,7 +7921,7 @@ comment|/*  * Netgraph node constructor. Do not allow to create node of this typ
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ng_ubt_constructor
 parameter_list|(
@@ -7946,7 +7946,7 @@ comment|/*  * Netgraph node destructor. Destroy node only when device has been d
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ng_ubt_shutdown
 parameter_list|(
@@ -8110,7 +8110,7 @@ comment|/*  * Create new hook. There can only be one.  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ng_ubt_newhook
 parameter_list|(
@@ -8189,7 +8189,7 @@ comment|/*  * Connect hook. Start incoming USB transfers  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ng_ubt_connect
 parameter_list|(
@@ -8345,7 +8345,7 @@ comment|/*  * Disconnect hook  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ng_ubt_disconnect
 parameter_list|(
@@ -8416,7 +8416,7 @@ comment|/*  * Process control message  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ng_ubt_rcvmsg
 parameter_list|(
@@ -9122,7 +9122,7 @@ comment|/*  * Process data  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ng_ubt_rcvdata
 parameter_list|(

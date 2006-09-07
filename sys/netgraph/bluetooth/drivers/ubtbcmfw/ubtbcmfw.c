@@ -104,6 +104,34 @@ file|"usbdevs.h"
 end_include
 
 begin_comment
+comment|/* FreeBSD 7.0 defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USBBASEDEVICE
+value|device_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|USBDEVNAME
+value|device_get_nameunit
+end_define
+
+begin_define
+define|#
+directive|define
+name|USBDEVUNIT
+parameter_list|(
+name|bdev
+parameter_list|)
+value|device_get_unit(bdev)
+end_define
+
+begin_comment
 comment|/*  * Download firmware to BCM2033.  */
 end_comment
 
@@ -281,49 +309,49 @@ value|1024
 end_define
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|d_open_t
 name|ubtbcmfw_open
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|d_close_t
 name|ubtbcmfw_close
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|d_read_t
 name|ubtbcmfw_read
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|d_write_t
 name|ubtbcmfw_write
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|d_ioctl_t
 name|ubtbcmfw_ioctl
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|d_poll_t
 name|ubtbcmfw_poll
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Static
+specifier|static
 name|struct
 name|cdevsw
 name|ubtbcmfw_cdevsw
@@ -1080,7 +1108,7 @@ comment|/*  * Open endpoint device  * XXX FIXME softc locking  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ubtbcmfw_open
 parameter_list|(
@@ -1269,7 +1297,7 @@ comment|/*  * Close endpoint device  * XXX FIXME softc locking  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ubtbcmfw_close
 parameter_list|(
@@ -1401,7 +1429,7 @@ comment|/*  * Read from the endpoint device  * XXX FIXME softc locking  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ubtbcmfw_read
 parameter_list|(
@@ -1663,7 +1691,7 @@ comment|/*  * Write into the endpoint device  * XXX FIXME softc locking  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ubtbcmfw_write
 parameter_list|(
@@ -1922,7 +1950,7 @@ comment|/*  * Process ioctl on the endpoint device  * XXX FIXME softc locking  *
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ubtbcmfw_ioctl
 parameter_list|(
@@ -2063,7 +2091,7 @@ comment|/*  * Poll the endpoint device  * XXX FIXME softc locking  */
 end_comment
 
 begin_function
-name|Static
+specifier|static
 name|int
 name|ubtbcmfw_poll
 parameter_list|(
