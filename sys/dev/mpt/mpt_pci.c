@@ -190,6 +190,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|PCI_PRODUCT_LSI_FC646
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT_LSI_FC646
+value|0x0646
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|PCI_PRODUCT_LSI_1030
 end_ifndef
 
@@ -654,7 +672,7 @@ name|PCI_PRODUCT_LSI_FC929
 case|:
 name|desc
 operator|=
-literal|"LSILogic FC929 FC Adapter"
+literal|"Dual LSILogic FC929 FC Adapter"
 expr_stmt|;
 break|break;
 case|case
@@ -662,7 +680,7 @@ name|PCI_PRODUCT_LSI_FC919X
 case|:
 name|desc
 operator|=
-literal|"LSILogic FC919X FC Adapter"
+literal|"LSILogic FC919 FC PCI-X Adapter"
 expr_stmt|;
 break|break;
 case|case
@@ -670,7 +688,15 @@ name|PCI_PRODUCT_LSI_FC929X
 case|:
 name|desc
 operator|=
-literal|"LSILogic FC929X 2Gb/s FC Adapter"
+literal|"Dual LSILogic FC929X 2Gb/s FC PCI-X Adapter"
+expr_stmt|;
+break|break;
+case|case
+name|PCI_PRODUCT_LSI_FC646
+case|:
+name|desc
+operator|=
+literal|"Dual LSILogic FC7X04X 4Gb/s FC PCI-Express Adapter"
 expr_stmt|;
 break|break;
 case|case
@@ -678,7 +704,7 @@ name|PCI_PRODUCT_LSI_FC7X04X
 case|:
 name|desc
 operator|=
-literal|"LSILogic FC7X04X 4Gb/s FC Adapter"
+literal|"Dual LSILogic FC7X04X 4Gb/s FC PCI-X Adapter"
 expr_stmt|;
 break|break;
 case|case
@@ -715,7 +741,7 @@ name|PCI_PRODUCT_LSI_SAS1078
 case|:
 name|desc
 operator|=
-literal|"LSILogic SAS Adapter"
+literal|"LSILogic SAS/SATA Adapter"
 expr_stmt|;
 break|break;
 default|default:
@@ -1500,6 +1526,9 @@ case|case
 name|PCI_PRODUCT_LSI_FC919X
 case|:
 case|case
+name|PCI_PRODUCT_LSI_FC646
+case|:
+case|case
 name|PCI_PRODUCT_LSI_FC7X04X
 case|:
 name|mpt
@@ -1730,6 +1759,18 @@ literal|1
 operator|)
 operator|==
 name|PCI_PRODUCT_LSI_FC929
+operator|||
+operator|(
+name|pci_get_device
+argument_list|(
+name|dev
+argument_list|)
+operator|&
+operator|~
+literal|1
+operator|)
+operator|==
+name|PCI_PRODUCT_LSI_FC646
 operator|||
 operator|(
 name|pci_get_device
