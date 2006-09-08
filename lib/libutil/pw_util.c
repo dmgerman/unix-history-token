@@ -2092,7 +2092,7 @@ argument_list|,
 name|PWSCAN_MASTER
 argument_list|)
 expr_stmt|;
-comment|/* 		 * fpw is either the struct password for the current line, 		 * or NULL if the line is malformed. 		 */
+comment|/* 		 * fpw is either the struct passwd for the current line, 		 * or NULL if the line is malformed. 		 */
 operator|*
 name|q
 operator|=
