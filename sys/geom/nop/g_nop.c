@@ -3378,7 +3378,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%s<Error>%ju</Error>\n"
+literal|"%s<Error>%d</Error>\n"
 argument_list|,
 name|indent
 argument_list|,
