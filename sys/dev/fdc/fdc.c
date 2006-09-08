@@ -2124,7 +2124,7 @@ name|fdc
 argument_list|,
 literal|4
 argument_list|,
-name|I8207X_CONFIGURE
+name|I8207X_CONFIG
 argument_list|,
 literal|0
 argument_list|,
@@ -2171,9 +2171,8 @@ name|fdc
 argument_list|,
 literal|1
 argument_list|,
-literal|0x0e
+name|I8207X_DUMPREG
 argument_list|,
-comment|/* DUMPREG */
 literal|10
 argument_list|,
 operator|&

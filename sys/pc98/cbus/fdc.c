@@ -2461,7 +2461,7 @@ name|out_fdc
 argument_list|(
 name|fdc
 argument_list|,
-name|I8207X_CONFIGURE
+name|I8207X_CONFIG
 argument_list|)
 operator|<
 literal|0
@@ -2592,7 +2592,7 @@ name|fdc
 argument_list|,
 literal|4
 argument_list|,
-name|I8207X_CONFIGURE
+name|I8207X_CONFIG
 argument_list|,
 literal|0
 argument_list|,
