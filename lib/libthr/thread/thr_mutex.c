@@ -1501,6 +1501,8 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|ret
+operator|=
 name|_thr_umutex_lock
 argument_list|(
 operator|&
@@ -1510,10 +1512,6 @@ name|m_lock
 argument_list|,
 name|id
 argument_list|)
-expr_stmt|;
-name|ret
-operator|=
-literal|0
 expr_stmt|;
 block|}
 elseif|else
