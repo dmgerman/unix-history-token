@@ -2153,11 +2153,11 @@ name|int32_t
 name|len
 parameter_list|)
 block|{
-name|int32_t
-name|leds
+name|vkbd_status_t
+name|st
 decl_stmt|;
 name|uint8_t
-name|hleds
+name|leds
 decl_stmt|,
 name|report_id
 decl_stmt|;
@@ -2187,18 +2187,20 @@ name|vkbd_status_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|leds
-operator|=
-operator|(
-operator|(
-name|vkbd_status_p
-operator|)
+name|memcpy
+argument_list|(
+operator|&
+name|st
+argument_list|,
 name|data
-operator|)
-operator|->
-name|leds
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|st
+argument_list|)
+argument_list|)
 expr_stmt|;
-name|hleds
+name|leds
 operator|=
 literal|0
 expr_stmt|;
@@ -2329,6 +2331,8 @@ case|:
 comment|/* Num Lock LED */
 if|if
 condition|(
+name|st
+operator|.
 name|leds
 operator|&
 name|LED_NUM
@@ -2336,7 +2340,7 @@ condition|)
 name|hid_set_data
 argument_list|(
 operator|&
-name|hleds
+name|leds
 argument_list|,
 operator|&
 name|h
@@ -2351,6 +2355,8 @@ case|:
 comment|/* Caps Lock LED */
 if|if
 condition|(
+name|st
+operator|.
 name|leds
 operator|&
 name|LED_CAP
@@ -2358,7 +2364,7 @@ condition|)
 name|hid_set_data
 argument_list|(
 operator|&
-name|hleds
+name|leds
 argument_list|,
 operator|&
 name|h
@@ -2373,6 +2379,8 @@ case|:
 comment|/* Scroll Lock LED */
 if|if
 condition|(
+name|st
+operator|.
 name|leds
 operator|&
 name|LED_SCR
@@ -2380,7 +2388,7 @@ condition|)
 name|hid_set_data
 argument_list|(
 operator|&
-name|hleds
+name|leds
 argument_list|,
 operator|&
 name|h
@@ -2425,7 +2433,7 @@ index|[
 literal|2
 index|]
 operator|=
-name|hleds
+name|leds
 expr_stmt|;
 name|len
 operator|=
@@ -2439,7 +2447,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|hleds
+name|leds
 expr_stmt|;
 name|len
 operator|=
