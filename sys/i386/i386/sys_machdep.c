@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<security/audit/audit.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_kern.h>
 end_include
 
@@ -320,6 +326,15 @@ decl_stmt|,
 modifier|*
 name|sdp
 decl_stmt|;
+name|AUDIT_ARG
+argument_list|(
+name|cmd
+argument_list|,
+name|uap
+operator|->
+name|op
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|uap
