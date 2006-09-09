@@ -23005,7 +23005,7 @@ elseif|else
 if|if
 condition|(
 name|speed
-operator|<
+operator|>
 name|UA_SAMP_HI
 argument_list|(
 name|asf1d
