@@ -341,6 +341,9 @@ comment|/* 		 * the unfortunate side effect of non-recursion is that in 		 * the
 if|if
 condition|(
 name|freeing
+operator|&&
+operator|*
+name|rp
 condition|)
 name|next
 operator|=
@@ -401,7 +404,12 @@ name|next_copy
 expr_stmt|;
 comment|/* 			 * Note that in the subsequent iteration, next_copy 			 * gets nulled out by the xdr_reference 			 * but next itself survives. 			 */
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|*
+name|rp
+condition|)
 block|{
 name|rp
 operator|=
@@ -758,6 +766,9 @@ block|}
 if|if
 condition|(
 name|freeing
+operator|&&
+operator|*
+name|rp
 condition|)
 block|{
 name|next_copy
@@ -771,7 +782,12 @@ name|next_copy
 expr_stmt|;
 comment|/* 			 * Note that in the subsequent iteration, next_copy 			 * gets nulled out by the xdr_reference 			 * but next itself survives. 			 */
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|*
+name|rp
+condition|)
 block|{
 name|rp
 operator|=
