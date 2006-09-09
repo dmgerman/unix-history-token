@@ -143,6 +143,17 @@ value|(CSUM_TCP | CSUM_UDP)
 end_define
 
 begin_comment
+comment|/*  * Inform the stack about transmit segmentation offload capabilities.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_TCPSEG_FEATURES
+value|CSUM_TSO
+end_define
+
+begin_comment
 comment|/*  * This parameter controls the duration of transmit watchdog timer.  */
 end_comment
 
@@ -470,6 +481,13 @@ name|EM_MAX_SCATTER
 value|64
 end_define
 
+begin_define
+define|#
+directive|define
+name|EM_TSO_SIZE
+value|65535
+end_define
+
 begin_typedef
 typedef|typedef
 enum|enum
@@ -704,6 +722,10 @@ name|bus_dma_tag_t
 name|txtag
 decl_stmt|;
 comment|/* dma tag for tx */
+name|uint32_t
+name|tx_tso
+decl_stmt|;
+comment|/* last tx was tso */
 comment|/*  	 * Receive definitions 	 * 	 * we have an array of num_rx_desc rx_desc (handled by the 	 * controller), and paired with an array of rx_buffers 	 * (at rx_buffer_area). 	 * The next pair to check on receive is at offset next_rx_desc_to_check 	 */
 name|struct
 name|em_dma_alloc
