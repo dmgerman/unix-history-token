@@ -4041,12 +4041,6 @@ operator|&
 name|aio_freeproc_mtx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Get rid of our current filedescriptors.  AIOD's don't need any 	 * filedescriptors, except as temporarily inherited from the client. 	 */
-name|fdfree
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
 comment|/* The daemon resides in its own pgrp. */
 name|MALLOC
 argument_list|(
