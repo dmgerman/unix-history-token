@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -214,8 +220,8 @@ end_expr_stmt
 
 begin_decl_stmt
 name|struct
-name|mtx
-name|futex_mtx
+name|sx
+name|futex_sx
 decl_stmt|;
 end_decl_stmt
 
@@ -227,14 +233,14 @@ begin_define
 define|#
 directive|define
 name|FUTEX_LOCK
-value|mtx_lock(&futex_mtx)
+value|sx_xlock(&futex_sx)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FUTEX_UNLOCK
-value|mtx_unlock(&futex_mtx)
+value|sx_xunlock(&futex_sx)
 end_define
 
 begin_define
@@ -1453,15 +1459,6 @@ name|f
 return|;
 block|}
 block|}
-if|if
-condition|(
-name|locked
-operator|==
-name|FUTEX_UNLOCKED
-condition|)
-name|FUTEX_UNLOCK
-expr_stmt|;
-comment|/* Not found, create it */
 name|f
 operator|=
 name|malloc
@@ -1496,14 +1493,6 @@ name|f
 operator|->
 name|f_waiting_proc
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|locked
-operator|==
-name|FUTEX_UNLOCKED
-condition|)
-name|FUTEX_LOCK
 expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
