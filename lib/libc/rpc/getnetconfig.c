@@ -2856,6 +2856,11 @@ operator|->
 name|nc_netid
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
