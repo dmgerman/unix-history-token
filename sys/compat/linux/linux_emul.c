@@ -366,6 +366,12 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|EMUL_LOCK
+argument_list|(
+operator|&
+name|emul_lock
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -471,6 +477,12 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|EMUL_UNLOCK
+argument_list|(
+operator|&
+name|emul_lock
+argument_list|)
+expr_stmt|;
 name|EMUL_SHARED_WLOCK
 argument_list|(
 operator|&
@@ -504,11 +516,6 @@ argument_list|(
 name|child
 argument_list|)
 expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 comment|/* we might have a sleeping linux_schedtail */
 name|wakeup
 argument_list|(
@@ -516,6 +523,11 @@ operator|&
 name|p
 operator|->
 name|p_emuldata
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 block|}
