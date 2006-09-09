@@ -10079,15 +10079,22 @@ name|G_MIRROR_DEBUG
 argument_list|(
 literal|0
 argument_list|,
-literal|"Device %s: provider %s launched."
-argument_list|,
-name|sc
-operator|->
-name|sc_name
+literal|"Device %s launched (%u/%u)."
 argument_list|,
 name|pp
 operator|->
 name|name
+argument_list|,
+name|g_mirror_ndisks
+argument_list|(
+name|sc
+argument_list|,
+name|G_MIRROR_DISK_STATE_ACTIVE
+argument_list|)
+argument_list|,
+name|sc
+operator|->
+name|sc_ndisks
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -11713,7 +11720,7 @@ expr_stmt|;
 block|}
 name|G_MIRROR_DEBUG
 argument_list|(
-literal|0
+literal|1
 argument_list|,
 literal|"Device %s: provider %s detected."
 argument_list|,
@@ -11931,7 +11938,7 @@ argument_list|)
 expr_stmt|;
 name|G_MIRROR_DEBUG
 argument_list|(
-literal|0
+literal|1
 argument_list|,
 literal|"Device %s: provider %s activated."
 argument_list|,
@@ -14156,13 +14163,17 @@ return|;
 block|}
 name|G_MIRROR_DEBUG
 argument_list|(
-literal|0
+literal|1
 argument_list|,
-literal|"Device %s created (id=%u)."
+literal|"Device %s created (%u components, id=%u)."
 argument_list|,
 name|sc
 operator|->
 name|sc_name
+argument_list|,
+name|sc
+operator|->
+name|sc_ndisks
 argument_list|,
 name|sc
 operator|->
