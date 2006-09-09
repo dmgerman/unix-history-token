@@ -267,6 +267,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|free
+argument_list|(
+name|np_sessionp
+argument_list|)
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR
