@@ -123,6 +123,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/in_cksum.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/bpf.h>
 end_include
 
