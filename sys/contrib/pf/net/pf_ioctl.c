@@ -18421,16 +18421,32 @@ modifier|*
 name|inp
 parameter_list|)
 block|{
-comment|/* 	 * IPv6 does not affected ip_len/ip_off byte order changes. 	 */
+comment|/* 	 * IPv6 is not affected by ip_len/ip_off byte order changes. 	 */
 name|int
 name|chk
 decl_stmt|;
+comment|/* 	 * In case of loopback traffic IPv6 uses the real interface in 	 * order to support scoped addresses. In order to support stateful 	 * filtering we have change this to lo0 as it is the case in IPv4. 	 */
 name|chk
 operator|=
 name|pf_test6
 argument_list|(
 name|PF_IN
 argument_list|,
+operator|(
+operator|*
+name|m
+operator|)
+operator|->
+name|m_flags
+operator|&
+name|M_LOOP
+condition|?
+operator|&
+name|loif
+index|[
+literal|0
+index|]
+else|:
 name|ifp
 argument_list|,
 name|m
