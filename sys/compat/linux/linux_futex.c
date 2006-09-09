@@ -1324,16 +1324,6 @@ operator|>
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"second wakeup\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|op_ret
 operator|=
 literal|0
@@ -1815,7 +1805,7 @@ operator|<=
 name|n
 condition|)
 block|{
-name|wakeup
+name|wakeup_one
 argument_list|(
 name|wp
 argument_list|)
@@ -1847,7 +1837,7 @@ argument_list|,
 name|FUTEX_LOCKED
 argument_list|)
 expr_stmt|;
-name|wakeup
+name|wakeup_one
 argument_list|(
 name|wp
 argument_list|)
