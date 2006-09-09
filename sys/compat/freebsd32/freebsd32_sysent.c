@@ -9528,13 +9528,16 @@ block|}
 block|,
 comment|/* 455 = thr_new */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|sigqueue_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nosys
+name|sigqueue
 block|,
 name|AUE_NULL
 block|,
@@ -9683,13 +9686,16 @@ block|}
 block|,
 comment|/* 463 = abort2 */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|thr_set_name_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nosys
+name|thr_set_name
 block|,
 name|AUE_NULL
 block|,
@@ -9721,13 +9727,16 @@ block|}
 block|,
 comment|/* 465 = aio_fsync */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|thr_setscheduler_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nosys
+name|thr_setscheduler
 block|,
 name|AUE_NULL
 block|,
@@ -9740,13 +9749,16 @@ block|}
 block|,
 comment|/* 466 = thr_setscheduler */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|thr_getscheduler_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nosys
+name|thr_getscheduler
 block|,
 name|AUE_NULL
 block|,
@@ -9759,13 +9771,16 @@ block|}
 block|,
 comment|/* 467 = thr_getscheduler */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|thr_setschedparam_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nosys
+name|thr_setschedparam
 block|,
 name|AUE_NULL
 block|,

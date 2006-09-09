@@ -1379,7 +1379,7 @@ comment|/* 454 = _umtx_op */
 literal|"#455"
 block|,
 comment|/* 455 = thr_new */
-literal|"#456"
+literal|"sigqueue"
 block|,
 comment|/* 456 = sigqueue */
 literal|"#457"
@@ -1403,19 +1403,19 @@ comment|/* 462 = kmq_unlink */
 literal|"abort2"
 block|,
 comment|/* 463 = abort2 */
-literal|"#464"
+literal|"thr_set_name"
 block|,
 comment|/* 464 = thr_set_name */
 literal|"#465"
 block|,
 comment|/* 465 = aio_fsync */
-literal|"#466"
+literal|"thr_setscheduler"
 block|,
 comment|/* 466 = thr_setscheduler */
-literal|"#467"
+literal|"thr_getscheduler"
 block|,
 comment|/* 467 = thr_getscheduler */
-literal|"#468"
+literal|"thr_setschedparam"
 block|,
 comment|/* 468 = thr_setschedparam */
 literal|"#469"
