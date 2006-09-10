@@ -6858,7 +6858,7 @@ operator|=
 name|m_head
 expr_stmt|;
 block|}
-comment|/*          * TSO workaround:          *  If an mbuf is only header we need          *     to pull 4 bytes of data into it.          */
+comment|/* 	 * TSO workaround: 	 *  If an mbuf is only header we need 	 *     to pull 4 bytes of data into it. 	 */
 if|if
 condition|(
 name|do_tso
@@ -7090,7 +7090,7 @@ name|EIO
 operator|)
 return|;
 block|}
-comment|/*          * TSO Hardware workaround, if this packet is not          * TSO, and is only a single descriptor long, and          * it follows a TSO burst, then we need to add a          * sentinel descriptor to prevent premature writeback.          */
+comment|/* 	 * TSO Hardware workaround, if this packet is not 	 * TSO, and is only a single descriptor long, and 	 * it follows a TSO burst, then we need to add a 	 * sentinel descriptor to prevent premature writeback. 	 */
 if|if
 condition|(
 operator|(
@@ -7477,7 +7477,7 @@ index|]
 operator|.
 name|ds_len
 expr_stmt|;
-comment|/*                         ** TSO Workaround:                         ** If this is the last descriptor, we want to                         ** split it so we have a small final sentinel                         */
+comment|/* 			** TSO Workaround: 			** If this is the last descriptor, we want to 			** split it so we have a small final sentinel 			*/
 if|if
 condition|(
 name|tso_desc
