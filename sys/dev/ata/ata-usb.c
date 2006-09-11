@@ -279,7 +279,7 @@ begin_struct
 struct|struct
 name|atausb_softc
 block|{
-name|USBBASEDEVICE
+name|device_t
 name|dev
 decl_stmt|;
 comment|/* base device */
@@ -1673,7 +1673,7 @@ specifier|static
 name|int
 name|atausb_detach
 parameter_list|(
-name|device_ptr_t
+name|device_t
 name|dev
 parameter_list|)
 block|{
