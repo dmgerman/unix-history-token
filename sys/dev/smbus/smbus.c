@@ -135,6 +135,13 @@ block|,
 comment|/* bus interface */
 name|DEVMETHOD
 argument_list|(
+name|bus_add_child
+argument_list|,
+name|bus_generic_add_child
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
 name|bus_print_child
 argument_list|,
 name|bus_generic_print_child
