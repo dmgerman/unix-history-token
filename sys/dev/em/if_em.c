@@ -6883,17 +6883,24 @@ operator|+
 literal|4
 argument_list|)
 expr_stmt|;
+operator|*
+name|m_headp
+operator|=
+name|m_head
+expr_stmt|;
 if|if
 condition|(
 name|m_head
 operator|==
 name|NULL
 condition|)
+block|{
 return|return
 operator|(
 name|ENOBUFS
 operator|)
 return|;
+block|}
 block|}
 comment|/* 	 * Map the packet for DMA. 	 */
 name|tx_buffer
