@@ -1219,7 +1219,7 @@ literal|0
 block|}
 block|,
 block|{
-comment|/* Does not support other than LUN 0 */
+comment|/* This does not support other than LUN 0 */
 block|{
 name|T_DIRECT
 block|,
