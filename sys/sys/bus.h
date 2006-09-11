@@ -714,6 +714,27 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|device_t
+name|bus_generic_add_child
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|int
+name|order
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|unit
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|resource
 modifier|*
