@@ -457,7 +457,7 @@ parameter_list|,
 name|int
 name|index
 parameter_list|,
-name|caddr_t
+name|void
 modifier|*
 name|data
 parameter_list|)
@@ -1496,6 +1496,24 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|smbus
+argument_list|,
+name|bktr
+argument_list|,
+name|smbus_driver
+argument_list|,
+name|smbus_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
