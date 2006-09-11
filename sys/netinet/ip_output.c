@@ -1098,6 +1098,13 @@ condition|(
 name|ro
 operator|->
 name|ro_rt
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|ro
+operator|->
+name|ro_rt
 operator|->
 name|rt_flags
 operator|&
@@ -1105,6 +1112,7 @@ operator|(
 name|RTF_UP
 operator||
 name|RTF_HOST
+operator|)
 operator|)
 condition|)
 block|{
