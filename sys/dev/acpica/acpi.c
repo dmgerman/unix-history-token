@@ -2226,7 +2226,7 @@ name|acpi_rman_io
 operator|.
 name|rm_descr
 operator|=
-literal|"I/O ports"
+literal|"ACPI I/O ports"
 expr_stmt|;
 if|if
 condition|(
@@ -2266,7 +2266,7 @@ name|acpi_rman_mem
 operator|.
 name|rm_descr
 operator|=
-literal|"I/O memory addresses"
+literal|"ACPI I/O memory addresses"
 expr_stmt|;
 if|if
 condition|(
