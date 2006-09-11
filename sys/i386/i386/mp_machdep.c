@@ -1605,6 +1605,28 @@ name|SEL_KPL
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Install an inter-CPU IPI for cache invalidation. */
+name|setidt
+argument_list|(
+name|IPI_INVLCACHE
+argument_list|,
+name|IDTVEC
+argument_list|(
+name|invlcache
+argument_list|)
+argument_list|,
+name|SDT_SYS386IGT
+argument_list|,
+name|SEL_KPL
+argument_list|,
+name|GSEL
+argument_list|(
+name|GCODE_SEL
+argument_list|,
+name|SEL_KPL
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Install an inter-CPU IPI for lazy pmap release */
 name|setidt
 argument_list|(
