@@ -121,19 +121,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/iicbus/iicbus.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/smbus/smbconf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/smbus/smbus.h>
 end_include
 
 begin_include
