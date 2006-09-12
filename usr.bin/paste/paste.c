@@ -524,6 +524,8 @@ literal|0
 operator|,
 name|head
 operator|=
+name|tmp
+operator|=
 name|NULL
 init|;
 operator|(
