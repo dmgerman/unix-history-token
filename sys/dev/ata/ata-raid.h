@@ -206,7 +206,7 @@ value|0x2000
 define|#
 directive|define
 name|AR_F_FORMAT_MASK
-value|0x1fff
+value|0x3fff
 name|u_int
 name|generation
 decl_stmt|;
