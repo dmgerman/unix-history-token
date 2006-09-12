@@ -6946,6 +6946,47 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|mac_lomac_create_mbuf_from_firewall
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|struct
+name|label
+modifier|*
+name|label
+parameter_list|)
+block|{
+name|struct
+name|mac_lomac
+modifier|*
+name|dest
+decl_stmt|;
+name|dest
+operator|=
+name|SLOT
+argument_list|(
+name|label
+argument_list|)
+expr_stmt|;
+comment|/* XXX: where is the label for the firewall really comming from? */
+name|mac_lomac_set_single
+argument_list|(
+name|dest
+argument_list|,
+name|MAC_LOMAC_TYPE_EQUAL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Labeling event operations: processes.  */
 end_comment
@@ -12237,6 +12278,11 @@ operator|.
 name|mpo_thread_userret
 operator|=
 name|mac_lomac_thread_userret
+block|,
+operator|.
+name|mpo_create_mbuf_from_firewall
+operator|=
+name|mac_lomac_create_mbuf_from_firewall
 block|, }
 decl_stmt|;
 end_decl_stmt

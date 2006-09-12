@@ -2732,6 +2732,27 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|mpo_create_mbuf_from_firewall_t
+function_decl|)
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|struct
+name|label
+modifier|*
+name|label
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_comment
 comment|/*  * Labeling event operations: processes.  */
 end_comment
@@ -6587,6 +6608,9 @@ name|mpo_check_vnode_write
 decl_stmt|;
 name|mpo_associate_nfsd_label_t
 name|mpo_associate_nfsd_label
+decl_stmt|;
+name|mpo_create_mbuf_from_firewall_t
+name|mpo_create_mbuf_from_firewall
 decl_stmt|;
 block|}
 struct|;

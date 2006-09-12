@@ -95,6 +95,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -138,6 +144,12 @@ begin_include
 include|#
 directive|include
 file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -7178,7 +7190,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Generate a TCP packet, containing either a RST or a keepalive.  * When flags& TH_RST, we are sending a RST packet, because of a  * "reset" action matched the packet.  * Otherwise we are sending a keepalive, and flags& TH_  */
+comment|/*  * Generate a TCP packet, containing either a RST or a keepalive.  * When flags& TH_RST, we are sending a RST packet, because of a  * "reset" action matched the packet.  * Otherwise we are sending a keepalive, and flags& TH_  * The 'replyto' mbuf is the mbuf being replied to, if any, and is required  * so that MAC can label the reply appropriately.  */
 end_comment
 
 begin_function
@@ -7188,6 +7200,11 @@ name|mbuf
 modifier|*
 name|send_pkt
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|replyto
+parameter_list|,
 name|struct
 name|ipfw_flow_id
 modifier|*
@@ -7251,6 +7268,38 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+if|if
+condition|(
+name|replyto
+operator|!=
+name|NULL
+condition|)
+name|mac_create_mbuf_netlayer
+argument_list|(
+name|replyto
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+else|else
+name|mac_create_mbuf_from_firewall
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+operator|(
+name|void
+operator|)
+name|replyto
+expr_stmt|;
+comment|/* don't warn about unused arg */
+endif|#
+directive|endif
 name|m
 operator|->
 name|m_pkthdr
@@ -7749,6 +7798,10 @@ name|m
 operator|=
 name|send_pkt
 argument_list|(
+name|args
+operator|->
+name|m
+argument_list|,
 operator|&
 operator|(
 name|args
@@ -18359,6 +18412,8 @@ name|mtailp
 operator|=
 name|send_pkt
 argument_list|(
+name|NULL
+argument_list|,
 operator|&
 operator|(
 name|q
@@ -18401,6 +18456,8 @@ name|mtailp
 operator|=
 name|send_pkt
 argument_list|(
+name|NULL
+argument_list|,
 operator|&
 operator|(
 name|q
