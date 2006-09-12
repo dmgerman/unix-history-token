@@ -846,6 +846,12 @@ name|incr
 expr_stmt|;
 name|dirp
 operator|->
+name|dd_size
+operator|=
+literal|0
+expr_stmt|;
+name|dirp
+operator|->
 name|dd_buf
 operator|=
 name|malloc
