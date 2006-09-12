@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Channel configuration utility for Cronyx serial adapters.  *  * Copyright (C) 1997-2002 Cronyx Engineering.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Copyright (C) 1999-2005 Cronyx Engineering.  * Author: Roman Kurakin,<rik@cronyx.ru>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * Cronyx Id: sconfig.c,v 1.4.2.2 2005/11/09 13:01:35 rik Exp $  * $FreeBSD$  */
+comment|/*  * Channel configuration utility for Cronyx serial adapters.  *  * Copyright (C) 1997-2002 Cronyx Engineering.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Copyright (C) 1999-2005 Cronyx Engineering.  * Author: Roman Kurakin,<rik@cronyx.ru>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * Cronyx Id: sconfig.c,v 1.4.2.2 2005/11/09 13:01:35 rik Exp $  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -143,21 +157,6 @@ name|chan_name
 index|[
 literal|16
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|optind
 decl_stmt|;
 end_decl_stmt
 
@@ -948,11 +947,24 @@ end_function
 begin_function
 specifier|static
 name|void
+ifdef|#
+directive|ifdef
+name|__linux__
 name|print_ifconfig
 parameter_list|(
 name|int
 name|fd
 parameter_list|)
+else|#
+directive|else
+function|print_ifconfig
+parameter_list|(
+name|int
+name|fd
+name|__unused
+parameter_list|)
+endif|#
+directive|endif
 block|{
 name|char
 name|buf
@@ -2677,7 +2689,7 @@ name|baud
 parameter_list|,
 name|unsigned
 name|long
-name|time
+name|atime
 parameter_list|)
 block|{
 specifier|static
@@ -2696,7 +2708,7 @@ operator|!
 name|baud
 operator|||
 operator|!
-name|time
+name|atime
 condition|)
 name|sprintf
 argument_list|(
@@ -2721,7 +2733,7 @@ name|cv
 operator|/
 name|baud
 operator|/
-name|time
+name|atime
 argument_list|)
 expr_stmt|;
 return|return
