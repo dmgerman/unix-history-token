@@ -284,7 +284,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Flags controlling behavior in low storage situations.  * Should we panic if a write fails?  Should we fail stop  * if we're out of disk space?  */
+comment|/*  * Flags controlling behavior in low storage situations.  Should we panic if  * a write fails?  Should we fail stop if we're out of disk space?  */
 end_comment
 
 begin_decl_stmt
