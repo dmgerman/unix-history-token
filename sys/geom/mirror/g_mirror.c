@@ -4519,7 +4519,7 @@ expr_stmt|;
 name|bp
 operator|->
 name|bio_cflags
-operator||=
+operator|=
 name|G_MIRROR_BIO_FLAG_REGULAR
 expr_stmt|;
 name|mtx_lock
@@ -5167,7 +5167,7 @@ expr_stmt|;
 name|bp
 operator|->
 name|bio_cflags
-operator||=
+operator|=
 name|G_MIRROR_BIO_FLAG_SYNC
 expr_stmt|;
 name|mtx_lock
@@ -9080,6 +9080,39 @@ if|if
 condition|(
 name|bp
 operator|->
+name|bio_from
+operator|->
+name|geom
+operator|==
+name|sc
+operator|->
+name|sc_sync
+operator|.
+name|ds_geom
+operator|&&
+operator|(
+name|bp
+operator|->
+name|bio_cflags
+operator|&
+name|G_MIRROR_BIO_FLAG_SYNC
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|g_mirror_sync_request
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+comment|/* READ */
+block|}
+elseif|else
+if|if
+condition|(
+name|bp
+operator|->
 name|bio_to
 operator|!=
 name|sc
@@ -9122,6 +9155,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+comment|/* WRITE */
 else|else
 block|{
 name|KASSERT
