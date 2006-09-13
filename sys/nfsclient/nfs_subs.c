@@ -4583,6 +4583,8 @@ name|ttfhsize
 argument_list|,
 operator|&
 name|ttnp
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|)
 expr_stmt|;
 if|if

@@ -293,6 +293,9 @@ name|nfsnode
 modifier|*
 modifier|*
 name|npp
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -378,7 +381,7 @@ name|mntp
 argument_list|,
 name|hash
 argument_list|,
-name|LK_EXCLUSIVE
+name|flags
 argument_list|,
 name|td
 argument_list|,
@@ -559,7 +562,7 @@ name|vp
 argument_list|,
 name|hash
 argument_list|,
-name|LK_EXCLUSIVE
+name|flags
 argument_list|,
 name|td
 argument_list|,

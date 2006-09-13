@@ -1351,6 +1351,8 @@ name|nm_fhsize
 argument_list|,
 operator|&
 name|np
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|)
 expr_stmt|;
 if|if
@@ -4340,7 +4342,11 @@ name|mp
 operator|->
 name|mnt_kern_flag
 operator||=
+operator|(
 name|MNTK_MPSAFE
+operator||
+name|MNTK_LOOKUP_SHARED
+operator|)
 expr_stmt|;
 return|return
 operator|(
@@ -4915,6 +4921,8 @@ name|nm_fhsize
 argument_list|,
 operator|&
 name|np
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|)
 expr_stmt|;
 if|if
@@ -5235,6 +5243,8 @@ name|nm_fhsize
 argument_list|,
 operator|&
 name|np
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
