@@ -618,6 +618,10 @@ name|output
 operator|=
 literal|0
 expr_stmt|;
+name|tabs_to_var
+operator|=
+literal|0
+expr_stmt|;
 comment|/*--------------------------------------------------*\     |   		COMMAND LINE SCAN		 |     \*--------------------------------------------------*/
 ifdef|#
 directive|ifdef
