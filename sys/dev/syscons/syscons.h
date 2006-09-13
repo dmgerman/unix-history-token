@@ -15,6 +15,18 @@ directive|define
 name|_DEV_SYSCONS_SYSCONS_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
 begin_comment
 comment|/* machine-dependent part of the header */
 end_comment
@@ -850,13 +862,14 @@ name|char
 name|switch_in_progress
 decl_stmt|;
 name|char
-name|videoio_in_progress
-decl_stmt|;
-name|char
 name|write_in_progress
 decl_stmt|;
 name|char
 name|blink_in_progress
+decl_stmt|;
+name|struct
+name|mtx
+name|video_mtx
 decl_stmt|;
 name|long
 name|scrn_time_stamp
@@ -2082,6 +2095,39 @@ name|on
 parameter_list|)
 define|\
 value|(*kbdsw[(kbd)->kb_index]->poll)((kbd), (on))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SC_VIDEO_LOCKINIT
+parameter_list|(
+name|sc
+parameter_list|)
+define|\
+value|mtx_init(&(sc)->video_mtx, "syscons video lock", NULL,MTX_SPIN);
+end_define
+
+begin_define
+define|#
+directive|define
+name|SC_VIDEO_LOCK
+parameter_list|(
+name|sc
+parameter_list|)
+define|\
+value|do {							\ 			if (!cold)					\ 				mtx_lock_spin(&(sc)->video_mtx);	\ 		} while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SC_VIDEO_UNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+define|\
+value|do {							\ 			if (!cold)					\ 				mtx_unlock_spin(&(sc)->video_mtx);	\ 		} while(0)
 end_define
 
 begin_comment
