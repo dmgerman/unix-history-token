@@ -612,6 +612,8 @@ name|i
 decl_stmt|,
 name|init_flags
 decl_stmt|,
+name|late
+decl_stmt|,
 name|mntsize
 decl_stmt|,
 name|rval
@@ -631,6 +633,8 @@ decl_stmt|;
 name|all
 operator|=
 name|init_flags
+operator|=
+name|late
 operator|=
 literal|0
 expr_stmt|;
@@ -657,7 +661,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"adF:fo:prwt:uv"
+literal|"adlF:fo:prwt:uv"
 argument_list|)
 operator|)
 operator|!=
@@ -700,6 +704,14 @@ case|:
 name|init_flags
 operator||=
 name|MNT_FORCE
+expr_stmt|;
+break|break;
+case|case
+literal|'l'
+case|:
+name|late
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -911,6 +923,21 @@ name|fs_mntops
 argument_list|,
 literal|"noauto"
 argument_list|)
+condition|)
+continue|continue;
+if|if
+condition|(
+name|hasopt
+argument_list|(
+name|fs
+operator|->
+name|fs_mntops
+argument_list|,
+literal|"late"
+argument_list|)
+operator|&&
+operator|!
+name|late
 condition|)
 continue|continue;
 if|if
@@ -3745,7 +3772,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: mount [-adfpruvw] [-F fstab] [-o options] [-t ufs | external_type]"
+literal|"usage: mount [-adflpruvw] [-F fstab] [-o options] [-t ufs | external_type]"
 argument_list|,
 literal|"       mount [-dfpruvw] special | node"
 argument_list|,
