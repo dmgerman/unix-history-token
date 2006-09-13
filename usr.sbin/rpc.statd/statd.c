@@ -114,23 +114,6 @@ comment|/* Controls syslog() calls for debug messages	*/
 end_comment
 
 begin_function_decl
-specifier|extern
-name|void
-name|sm_prog_1
-parameter_list|(
-name|struct
-name|svc_req
-modifier|*
-name|rqstp
-parameter_list|,
-name|SVCXPRT
-modifier|*
-name|transp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|static
 name|void
 name|handle_sigchld
