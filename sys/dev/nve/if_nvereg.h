@@ -113,6 +113,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|NFORCE_MCPNET12_DEVICEID
+value|0x0268
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFORCE_MCPNET13_DEVICEID
+value|0x0269
+end_define
+
+begin_define
+define|#
+directive|define
 name|NV_RID
 value|0x10
 end_define
@@ -135,8 +149,12 @@ begin_define
 define|#
 directive|define
 name|NV_MAX_FRAGS
-value|63
+value|32
 end_define
+
+begin_comment
+comment|// match adapter.h:ADAPTER_WRITE_DATA.sElement[]
+end_comment
 
 begin_define
 define|#
