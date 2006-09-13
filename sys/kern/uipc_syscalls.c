@@ -6150,6 +6150,9 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|valsize
 operator|<
 literal|0
@@ -6489,6 +6492,9 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 operator|*
 name|valsize
 operator|<
