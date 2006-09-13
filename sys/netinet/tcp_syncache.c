@@ -30,18 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_tcpdebug.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_tcp_sack.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -118,12 +106,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/rwlock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/socket.h>
 end_include
 
@@ -131,6 +113,12 @@ begin_include
 include|#
 directive|include
 file|<sys/socketvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
 end_include
 
 begin_include
@@ -234,23 +222,6 @@ directive|include
 file|<netinet/tcp.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TCPDEBUG
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/tcpip.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -274,23 +245,6 @@ include|#
 directive|include
 file|<netinet/tcp_var.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TCPDEBUG
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/tcp_debug.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -395,12 +349,6 @@ begin_include
 include|#
 directive|include
 file|<machine/in_cksum.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/uma.h>
 end_include
 
 begin_decl_stmt
