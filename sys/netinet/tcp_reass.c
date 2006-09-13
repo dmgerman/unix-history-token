@@ -3771,6 +3771,19 @@ operator|==
 name|TH_ACK
 condition|)
 block|{
+comment|/* 				 * Parse the TCP options here because 				 * syncookies need access to the reflected 				 * timestamp. 				 */
+name|tcp_dooptions
+argument_list|(
+operator|&
+name|to
+argument_list|,
+name|optp
+argument_list|,
+name|optlen
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -3778,6 +3791,9 @@ name|syncache_expand
 argument_list|(
 operator|&
 name|inc
+argument_list|,
+operator|&
+name|to
 argument_list|,
 name|th
 argument_list|,
@@ -4526,7 +4542,7 @@ else|:
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If echoed timestamp is later than the current time, 	 * fall back to non RFC1323 RTT calculation. 	 */
+comment|/* 	 * If echoed timestamp is later than the current time, 	 * fall back to non RFC1323 RTT calculation.  Normalize 	 * timestamp if syncookies were used when this connection 	 * was established. 	 */
 if|if
 condition|(
 operator|(
@@ -4544,7 +4560,19 @@ name|to_tsecr
 operator|!=
 literal|0
 operator|)
-operator|&&
+condition|)
+block|{
+name|to
+operator|.
+name|to_tsecr
+operator|=
+operator|-
+name|tp
+operator|->
+name|ts_offset
+expr_stmt|;
+if|if
+condition|(
 name|TSTMP_GT
 argument_list|(
 name|to
@@ -4560,6 +4588,7 @@ name|to_tsecr
 operator|=
 literal|0
 expr_stmt|;
+block|}
 comment|/* 	 * Process options only when we get SYN/ACK back. The SYN case 	 * for incoming connections is handled in tcp_syncache. 	 * XXX this is traditional behavior, may need to be cleaned up. 	 */
 if|if
 condition|(

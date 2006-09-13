@@ -2193,6 +2193,10 @@ operator|=
 name|htonl
 argument_list|(
 name|ticks
+operator|+
+name|tp
+operator|->
+name|ts_offset
 argument_list|)
 expr_stmt|;
 operator|*

@@ -529,7 +529,7 @@ name|u_char
 name|requested_s_scale
 decl_stmt|;
 comment|/* unused, to be reused later */
-name|u_long
+name|u_int32_t
 name|ts_recent
 decl_stmt|;
 comment|/* timestamp echo data */
@@ -537,6 +537,10 @@ name|u_long
 name|ts_recent_age
 decl_stmt|;
 comment|/* when last updated */
+name|u_int32_t
+name|ts_offset
+decl_stmt|;
+comment|/* our timestamp offset */
 name|tcp_seq
 name|last_ack_sent
 decl_stmt|;
@@ -2219,6 +2223,10 @@ name|syncache_expand
 parameter_list|(
 name|struct
 name|in_conninfo
+modifier|*
+parameter_list|,
+name|struct
+name|tcpopt
 modifier|*
 parameter_list|,
 name|struct
