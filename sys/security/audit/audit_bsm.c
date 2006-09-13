@@ -5820,6 +5820,10 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+case|case
+name|AUE_GETCWD
+case|:
+break|break;
 default|default:
 name|printf
 argument_list|(
