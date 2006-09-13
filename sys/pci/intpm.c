@@ -150,7 +150,7 @@ if|#
 directive|if
 literal|0
 comment|/* Not a good idea yet, this stops isab0 functioning */
-block|{ 0x02001166,"ServerWorks OSB4 PCI to ISA Bridge"},
+block|{ 0x02001166, "ServerWorks OSB4 PCI to ISA Bridge" },
 endif|#
 directive|endif
 block|{
@@ -512,6 +512,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|intpm_intr
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|devclass_t
@@ -526,6 +538,7 @@ name|intpm_methods
 index|[]
 init|=
 block|{
+comment|/* Device interface */
 name|DEVMETHOD
 argument_list|(
 name|device_probe
@@ -540,6 +553,7 @@ argument_list|,
 name|intsmb_attach
 argument_list|)
 block|,
+comment|/* Bus interface */
 name|DEVMETHOD
 argument_list|(
 name|bus_print_child
@@ -547,6 +561,7 @@ argument_list|,
 name|bus_generic_print_child
 argument_list|)
 block|,
+comment|/* SMBus interface */
 name|DEVMETHOD
 argument_list|(
 name|smbus_callback
@@ -770,11 +785,6 @@ name|intsmb_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|intsmb_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|dev
@@ -837,11 +847,6 @@ name|intsmb_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|intsmb_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|dev
@@ -991,7 +996,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*counterpart of smbtx_smb_free*/
+comment|/* Counterpart of smbtx_smb_free(). */
 end_comment
 
 begin_function
@@ -1003,23 +1008,18 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|intrmask_t
-name|s
-decl_stmt|;
 name|struct
 name|intsmb_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|intsmb_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
+decl_stmt|;
+name|intrmask_t
+name|s
 decl_stmt|;
 if|if
 condition|(
@@ -1039,10 +1039,10 @@ argument_list|)
 operator|&
 name|PIIX4_SMBHSTSTAT_BUSY
 operator|)
+operator|||
 ifdef|#
 directive|ifdef
 name|ENABLE_ALART
-operator|||
 operator|(
 name|bus_space_read_1
 argument_list|(
@@ -1059,15 +1059,17 @@ argument_list|)
 operator|&
 name|PIIX4_SMBSLVSTS_BUSY
 operator|)
+operator|||
 endif|#
 directive|endif
-operator|||
 name|sc
 operator|->
 name|isbusy
 condition|)
 return|return
+operator|(
 name|EBUSY
+operator|)
 return|;
 name|s
 operator|=
@@ -1080,7 +1082,7 @@ name|isbusy
 operator|=
 literal|1
 expr_stmt|;
-comment|/*Disable Intrrupt in slave part*/
+comment|/* Disable Interrupt in slave part. */
 ifndef|#
 directive|ifndef
 name|ENABLE_ALART
@@ -1101,7 +1103,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*Reset INTR Flag to prepare INTR*/
+comment|/* Reset INTR Flag to prepare INTR. */
 name|bus_space_write_1
 argument_list|(
 name|sc
@@ -1131,7 +1133,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1150,11 +1154,6 @@ name|intsmb_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|intsmb_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|dev
@@ -1184,11 +1183,11 @@ name|status
 operator|&
 name|PIIX4_SMBHSTSTAT_BUSY
 condition|)
-block|{
 return|return
+operator|(
 literal|1
+operator|)
 return|;
-block|}
 if|if
 condition|(
 name|status
@@ -1260,13 +1259,17 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|1
+operator|)
 return|;
-comment|/* Not Completed*/
+comment|/* Not Completed */
 block|}
 end_function
 
@@ -1284,11 +1287,6 @@ name|intsmb_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|intsmb_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|dev
@@ -1325,7 +1323,9 @@ operator|&
 name|PIIX4_SMBSLVSTS_BUSY
 condition|)
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 if|if
 condition|(
@@ -1364,7 +1364,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/*Reset Status Register*/
+comment|/* Reset Status Register */
 name|bus_space_write_1
 argument_list|(
 name|sc
@@ -1387,7 +1387,9 @@ name|PIIX4_SMBSLVSTS_SLV
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
 end_function
@@ -1406,11 +1408,6 @@ name|intsmb_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|intsmb_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|dev
@@ -1427,7 +1424,7 @@ name|error
 decl_stmt|;
 endif|#
 directive|endif
-comment|/*stop generating INTR from ALART*/
+comment|/* Stop generating INTR from ALART. */
 name|slvcnt
 operator|=
 name|bus_space_read_1
@@ -1471,7 +1468,7 @@ argument_list|(
 literal|5
 argument_list|)
 expr_stmt|;
-comment|/*ask bus who assert it and then ask it what's the matter. */
+comment|/* Ask bus who asserted it and then ask it what's the matter. */
 ifdef|#
 directive|ifdef
 name|ENABLE_ALART
@@ -1555,14 +1552,12 @@ expr_stmt|;
 block|}
 block|}
 else|else
-block|{
 name|printf
 argument_list|(
 literal|"ERROR\n"
 argument_list|)
 expr_stmt|;
-block|}
-comment|/*Re-enable INTR from ALART*/
+comment|/* Re-enable INTR from ALART. */
 name|bus_space_write_1
 argument_list|(
 name|sc
@@ -1587,7 +1582,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-return|return;
 block|}
 end_function
 
@@ -1612,11 +1606,6 @@ name|intsmb_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|intsmb_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|dev
@@ -1653,7 +1642,7 @@ name|tmp
 operator||=
 name|PIIX4_SMBHSTCNT_START
 expr_stmt|;
-comment|/*While not in autoconfiguration Intrrupt Enabled*/
+comment|/* While not in autoconfiguration enable interrupts. */
 if|if
 condition|(
 operator|!
@@ -1685,7 +1674,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*Polling Code. Polling is not encouraged   * because It is required to wait for the device get busy.  *(29063505.pdf from Intel)  * But during boot,intrrupt cannot be used.  * so use polling code while in autoconfiguration.  */
+comment|/*  * Polling Code.  *  * Polling is not encouraged because it requires waiting for the  * device if it is busy.  * (29063505.pdf from Intel) But during boot, interrupt cannot be used, so use  * polling code then.  */
 end_comment
 
 begin_function
@@ -1697,27 +1686,25 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|,
-name|i
-decl_stmt|;
 name|struct
 name|intsmb_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|intsmb_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-comment|/* 	 *  In smbtx driver ,Simply waiting. 	 *  This loops 100-200 times. 	 */
+name|int
+name|error
+decl_stmt|,
+name|i
+decl_stmt|;
+name|int
+name|tmp
+decl_stmt|;
+comment|/* 	 *  In smbtx driver, Simply waiting. 	 *  This loops 100-200 times. 	 */
 for|for
 control|(
 name|i
@@ -1731,10 +1718,8 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
-operator|(
 name|bus_space_read_1
 argument_list|(
 name|sc
@@ -1749,12 +1734,8 @@ name|PIIX4_SMBHSTSTS
 argument_list|)
 operator|&
 name|PIIX4_SMBHSTSTAT_BUSY
-operator|)
 condition|)
-block|{
 break|break;
-block|}
-block|}
 for|for
 control|(
 name|i
@@ -1844,22 +1825,18 @@ operator|&
 name|PIIX4_SMBHSTSTAT_INTR
 operator|)
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"unknown cause why?"
 argument_list|)
 expr_stmt|;
-block|}
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 block|}
-block|{
-name|int
-name|tmp
-decl_stmt|;
 name|sc
 operator|->
 name|isbusy
@@ -1899,15 +1876,16 @@ operator|~
 name|PIIX4_SMBHSTCNT_INTREN
 argument_list|)
 expr_stmt|;
-block|}
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  *wait for completion and return result.  */
+comment|/*  * Wait for completion and return result.  */
 end_comment
 
 begin_function
@@ -1919,33 +1897,28 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|struct
+name|intsmb_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
 name|intrmask_t
 name|s
 decl_stmt|;
-name|struct
-name|intsmb_softc
-modifier|*
-name|sc
-init|=
-operator|(
-expr|struct
-name|intsmb_softc
-operator|*
-operator|)
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
 if|if
 condition|(
 name|cold
 condition|)
 block|{
-comment|/*So that it can use device during probing device on SMBus.*/
+comment|/* So that it can use device during device probe on SMBus. */
 name|error
 operator|=
 name|intsmb_stop_poll
@@ -1954,11 +1927,11 @@ name|dev
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
-else|else
-block|{
 if|if
 condition|(
 operator|!
@@ -2049,10 +2022,9 @@ operator|&
 name|PIIX4_SMBHSTSTAT_INTR
 operator|)
 condition|)
-block|{
 name|printf
 argument_list|(
-literal|"intsmb%d:unknown cause why?\n"
+literal|"intsmb%d: unknown cause why?\n"
 argument_list|,
 name|device_get_unit
 argument_list|(
@@ -2060,7 +2032,6 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|ENABLE_ALART
@@ -2082,12 +2053,13 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 block|}
-block|}
-comment|/*Timeout Procedure*/
+comment|/* Timeout Procedure. */
 name|s
 operator|=
 name|splhigh
@@ -2099,7 +2071,7 @@ name|isbusy
 operator|=
 literal|0
 expr_stmt|;
-comment|/*Re-enable supressed intrrupt from slave part*/
+comment|/* Re-enable supressed interrupt from slave part. */
 name|bus_space_write_1
 argument_list|(
 name|sc
@@ -2121,7 +2093,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 block|}
 end_function
@@ -2141,6 +2115,16 @@ name|int
 name|how
 parameter_list|)
 block|{
+name|struct
+name|intsmb_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 name|int
 name|error
 init|=
@@ -2149,26 +2133,11 @@ decl_stmt|;
 name|u_char
 name|data
 decl_stmt|;
-name|struct
-name|intsmb_softc
-modifier|*
-name|sc
-init|=
-operator|(
-expr|struct
-name|intsmb_softc
-operator|*
-operator|)
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
 name|data
 operator|=
 name|slave
 expr_stmt|;
-comment|/*Quick command is part of Address, I think*/
+comment|/* Quick command is part of Address, I think. */
 switch|switch
 condition|(
 name|how
@@ -2272,23 +2241,18 @@ name|char
 name|byte
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
 name|struct
 name|intsmb_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|intsmb_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|error
 operator|=
@@ -2377,23 +2341,18 @@ modifier|*
 name|byte
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
 name|struct
 name|intsmb_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|intsmb_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|error
 operator|=
@@ -2450,7 +2409,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|RECV_IS_IN_CMD
-comment|/*Linux SMBus stuff also troubles 			  Because Intel's datasheet will not make clear. 			 */
+comment|/* 			 * Linux SMBus stuff also troubles 			 * Because Intel's datasheet does not make clear. 			 */
 operator|*
 name|byte
 operator|=
@@ -2515,23 +2474,18 @@ name|char
 name|byte
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
 name|struct
 name|intsmb_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|intsmb_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|error
 operator|=
@@ -2637,23 +2591,18 @@ name|short
 name|word
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
 name|struct
 name|intsmb_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|intsmb_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|error
 operator|=
@@ -2783,23 +2732,18 @@ modifier|*
 name|byte
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
 name|struct
 name|intsmb_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|intsmb_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|error
 operator|=
@@ -2867,7 +2811,6 @@ name|dev
 argument_list|)
 operator|)
 condition|)
-block|{
 operator|*
 name|byte
 operator|=
@@ -2884,7 +2827,6 @@ argument_list|,
 name|PIIX4_SMBHSTDAT0
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -2913,23 +2855,18 @@ modifier|*
 name|word
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
 name|struct
 name|intsmb_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|intsmb_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|error
 operator|=
@@ -3013,13 +2950,10 @@ name|sh
 argument_list|,
 name|PIIX4_SMBHSTDAT0
 argument_list|)
-operator|&
-literal|0xff
 expr_stmt|;
 operator|*
 name|word
 operator||=
-operator|(
 name|bus_space_read_1
 argument_list|(
 name|sc
@@ -3032,9 +2966,6 @@ name|sh
 argument_list|,
 name|PIIX4_SMBHSTDAT1
 argument_list|)
-operator|&
-literal|0xff
-operator|)
 operator|<<
 literal|8
 expr_stmt|;
@@ -3077,23 +3008,18 @@ block|{
 ifdef|#
 directive|ifdef
 name|PROCCALL_TEST
-name|int
-name|error
-decl_stmt|;
 name|struct
 name|intsmb_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|intsmb_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|error
 operator|=
@@ -3217,13 +3143,10 @@ name|sh
 argument_list|,
 name|PIIX4_SMBHSTDAT0
 argument_list|)
-operator|&
-literal|0xff
 expr_stmt|;
 operator|*
 name|rdata
 operator||=
-operator|(
 name|bus_space_read_1
 argument_list|(
 name|sc
@@ -3236,20 +3159,21 @@ name|sh
 argument_list|,
 name|PIIX4_SMBHSTDAT1
 argument_list|)
-operator|&
-literal|0xff
-operator|)
 operator|<<
 literal|8
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|error
+operator|)
 return|;
 else|#
 directive|else
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 endif|#
 directive|endif
@@ -3278,25 +3202,20 @@ modifier|*
 name|buf
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|,
-name|i
-decl_stmt|;
 name|struct
 name|intsmb_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|intsmb_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
+decl_stmt|;
+name|int
+name|error
+decl_stmt|,
+name|i
 decl_stmt|;
 name|error
 operator|=
@@ -3325,7 +3244,7 @@ operator|!
 name|error
 condition|)
 block|{
-comment|/*Reset internal array index*/
+comment|/* Reset internal array index. */
 name|bus_space_read_1
 argument_list|(
 name|sc
@@ -3385,7 +3304,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|bus_space_write_1
 argument_list|(
 name|sc
@@ -3404,7 +3322,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 name|bus_space_write_1
 argument_list|(
 name|sc
@@ -3468,6 +3385,16 @@ modifier|*
 name|buf
 parameter_list|)
 block|{
+name|struct
+name|intsmb_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -3477,21 +3404,6 @@ name|u_char
 name|data
 decl_stmt|,
 name|nread
-decl_stmt|;
-name|struct
-name|intsmb_softc
-modifier|*
-name|sc
-init|=
-operator|(
-expr|struct
-name|intsmb_softc
-operator|*
-operator|)
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
 decl_stmt|;
 name|error
 operator|=
@@ -3522,7 +3434,7 @@ operator|!
 name|error
 condition|)
 block|{
-comment|/*Reset internal array index*/
+comment|/* Reset internal array index. */
 name|bus_space_read_1
 argument_list|(
 name|sc
@@ -3717,18 +3629,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_function_decl
-specifier|static
-name|void
-name|intpm_intr
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 specifier|static
 name|int
@@ -3738,7 +3638,32 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|struct
+name|intpm_pci_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|res
+decl_stmt|;
+name|device_t
+name|smbinterface
+decl_stmt|;
+name|void
+modifier|*
+name|ih
+decl_stmt|;
+name|char
+modifier|*
+name|str
+decl_stmt|;
 name|int
+name|error
+decl_stmt|,
+name|rid
+decl_stmt|,
 name|value
 decl_stmt|;
 name|int
@@ -3749,35 +3674,7 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|void
-modifier|*
-name|ih
-decl_stmt|;
-name|int
-name|error
-decl_stmt|;
-name|char
-modifier|*
-name|str
-decl_stmt|;
-block|{
-name|struct
-name|intpm_pci_softc
-modifier|*
-name|sciic
-decl_stmt|;
-name|device_t
-name|smbinterface
-decl_stmt|;
-name|int
-name|rid
-decl_stmt|;
-name|struct
-name|resource
-modifier|*
-name|res
-decl_stmt|;
-name|sciic
+name|sc
 operator|=
 name|device_get_softc
 argument_list|(
@@ -3786,15 +3683,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sciic
+name|sc
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
-block|}
 name|rid
 operator|=
 name|PCI_BASE_ADDR_SMB
@@ -3828,10 +3725,12 @@ literal|"Could not allocate Bus space\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 block|}
-name|sciic
+name|sc
 operator|->
 name|smbst
 operator|=
@@ -3840,7 +3739,7 @@ argument_list|(
 name|res
 argument_list|)
 expr_stmt|;
-name|sciic
+name|sc
 operator|->
 name|smbsh
 operator|=
@@ -3859,7 +3758,7 @@ argument_list|,
 literal|"%s %lx\n"
 argument_list|,
 operator|(
-name|sciic
+name|sc
 operator|->
 name|smbst
 operator|==
@@ -3956,7 +3855,6 @@ argument_list|,
 name|str
 argument_list|,
 operator|(
-operator|(
 name|value
 operator|&
 literal|1
@@ -3965,7 +3863,6 @@ condition|?
 literal|"enabled"
 else|:
 literal|"disabled"
-operator|)
 argument_list|)
 expr_stmt|;
 name|value
@@ -3986,7 +3883,7 @@ argument_list|,
 name|value
 argument_list|)
 expr_stmt|;
-comment|/*                  * Install intr HANDLER here                  */
+comment|/* Install interrupt handler. */
 name|rid
 operator|=
 literal|0
@@ -4028,7 +3925,9 @@ literal|"could not allocate irq"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 block|}
 name|error
@@ -4041,13 +3940,9 @@ name|res
 argument_list|,
 name|INTR_TYPE_MISC
 argument_list|,
-operator|(
-name|driver_intr_t
-operator|*
-operator|)
 name|intpm_intr
 argument_list|,
-name|sciic
+name|sc
 argument_list|,
 operator|&
 name|ih
@@ -4066,7 +3961,9 @@ literal|"Failed to map intr\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|smbinterface
@@ -4085,21 +3982,18 @@ condition|(
 operator|!
 name|smbinterface
 condition|)
-block|{
 name|printf
 argument_list|(
-literal|"intsmb%d:could not add SMBus device\n"
+literal|"intsmb%d: could not add SMBus device\n"
 argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-block|}
 name|device_probe_and_attach
 argument_list|(
 name|smbinterface
 argument_list|)
 expr_stmt|;
-block|}
 name|value
 operator|=
 name|pci_read_config
@@ -4133,7 +4027,9 @@ literal|0xfffe
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -4154,7 +4050,7 @@ name|ep
 init|=
 name|pci_ids
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|device_id
 init|=
 name|pci_get_devid
@@ -4218,9 +4114,45 @@ block|}
 else|else
 block|{
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|intpm_intr
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|struct
+name|intpm_pci_softc
+modifier|*
+name|sc
+init|=
+name|arg
+decl_stmt|;
+name|intsmb_intr
+argument_list|(
+name|sc
+operator|->
+name|smbus
+argument_list|)
+expr_stmt|;
+name|intsmb_slvintr
+argument_list|(
+name|sc
+operator|->
+name|smbus
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4285,47 +4217,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_function
-specifier|static
-name|void
-name|intpm_intr
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|)
-block|{
-name|struct
-name|intpm_pci_softc
-modifier|*
-name|sc
-decl_stmt|;
-name|sc
-operator|=
-operator|(
-expr|struct
-name|intpm_pci_softc
-operator|*
-operator|)
-name|arg
-expr_stmt|;
-name|intsmb_intr
-argument_list|(
-name|sc
-operator|->
-name|smbus
-argument_list|)
-expr_stmt|;
-name|intsmb_slvintr
-argument_list|(
-name|sc
-operator|->
-name|smbus
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 end_unit
 
