@@ -77,13 +77,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|TTCP_TYPE
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
 name|FAITH_TYPE
 value|4
 end_define
@@ -106,16 +99,6 @@ parameter_list|(
 name|sep
 parameter_list|)
 value|((sep)->se_type == MUXPLUS_TYPE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISTTCP
-parameter_list|(
-name|sep
-parameter_list|)
-value|((sep)->se_type == TTCP_TYPE)
 end_define
 
 begin_struct
