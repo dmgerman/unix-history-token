@@ -5992,6 +5992,9 @@ name|sc_iss
 operator|=
 name|data
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 operator|*
 name|flowlabel
 operator|=
@@ -6002,6 +6005,8 @@ index|]
 operator|&
 name|IPV6_FLOWLABEL_MASK
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Additional parameters are stored in the timestamp if present. */
 if|if
 condition|(
