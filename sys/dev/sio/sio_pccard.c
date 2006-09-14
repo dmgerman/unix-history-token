@@ -294,7 +294,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator|)
-operator|!=
+operator|>
 literal|0
 condition|)
 return|return
