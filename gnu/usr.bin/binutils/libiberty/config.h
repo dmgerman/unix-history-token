@@ -35,11 +35,6 @@ name|defined
 argument_list|(
 name|__ARMEB__
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|TARGET_BIG_ENDIAN
-argument_list|)
 end_if
 
 begin_define
@@ -1151,11 +1146,6 @@ operator|||
 name|defined
 argument_list|(
 name|__ARMEB__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|TARGET_BIG_ENDIAN
 argument_list|)
 end_if
 
