@@ -1383,6 +1383,11 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|mp
+operator|==
+name|NULL
+operator|||
+operator|(
 operator|(
 name|lkflags
 operator|&
@@ -1396,6 +1401,7 @@ operator|->
 name|mnt_kern_flag
 operator|&
 name|MNTK_LOOKUP_SHARED
+operator|)
 operator|)
 condition|)
 block|{
