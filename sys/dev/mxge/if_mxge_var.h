@@ -63,8 +63,12 @@ begin_define
 define|#
 directive|define
 name|MXGE_MAX_SEND_DESC
-value|12
+value|64
 end_define
+
+begin_comment
+comment|/* should be large enough for 				 any TSO packet */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -234,6 +238,10 @@ comment|/* host shadow of sendq */
 name|char
 modifier|*
 name|req_bytes
+decl_stmt|;
+name|bus_dma_segment_t
+modifier|*
+name|seg_list
 decl_stmt|;
 name|struct
 name|mxge_tx_buffer_state
@@ -458,6 +466,12 @@ name|char
 name|serial_number_string
 index|[
 literal|64
+index|]
+decl_stmt|;
+name|char
+name|scratch
+index|[
+literal|256
 index|]
 decl_stmt|;
 block|}
