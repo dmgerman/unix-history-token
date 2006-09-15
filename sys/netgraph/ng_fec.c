@@ -3193,12 +3193,8 @@ name|rcvif
 operator|=
 name|bifp
 expr_stmt|;
-name|bifp
-operator|->
-name|if_ipackets
-operator|++
-expr_stmt|;
-name|bifp
+comment|/* 	 * Count bytes on an individual interface in a bundle. 	 * The bytes will also be added to the aggregate interface 	 * once we call ether_input(). 	 */
+name|ifp
 operator|->
 name|if_ibytes
 operator|+=
@@ -3207,12 +3203,11 @@ operator|->
 name|m_pkthdr
 operator|.
 name|len
-operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_header
-argument_list|)
+expr_stmt|;
+name|bifp
+operator|->
+name|if_ipackets
+operator|++
 expr_stmt|;
 call|(
 modifier|*
