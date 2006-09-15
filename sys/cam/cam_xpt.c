@@ -1096,10 +1096,10 @@ block|,
 name|CAM_QUIRK_NOLUNS
 block|,
 comment|/*mintags*/
-literal|0
+literal|2
 block|,
 comment|/*maxtags*/
-literal|0
+literal|255
 block|}
 block|,
 block|{
