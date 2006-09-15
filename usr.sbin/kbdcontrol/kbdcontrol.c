@@ -917,7 +917,7 @@ begin_function_decl
 name|void
 name|mux_keyboard
 parameter_list|(
-name|int
+name|u_int
 name|op
 parameter_list|,
 name|char
@@ -5773,7 +5773,7 @@ begin_function
 name|void
 name|mux_keyboard
 parameter_list|(
-name|int
+name|u_int
 name|op
 parameter_list|,
 name|char
