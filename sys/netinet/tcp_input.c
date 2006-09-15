@@ -12412,7 +12412,7 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* tcbinfo lock required for tcp_twclose(), tcp_2msl_reset. */
+comment|/* tcbinfo lock required for tcp_twclose(), tcp_timer_2msl_reset(). */
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
 operator|&
@@ -12542,10 +12542,6 @@ condition|)
 name|tcp_timer_2msl_reset
 argument_list|(
 name|tw
-argument_list|,
-literal|2
-operator|*
-name|tcp_msl
 argument_list|,
 literal|1
 argument_list|)

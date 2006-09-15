@@ -436,9 +436,6 @@ modifier|*
 name|_tw
 parameter_list|,
 name|int
-name|_timeo
-parameter_list|,
-name|int
 name|rearm
 parameter_list|)
 function_decl|;

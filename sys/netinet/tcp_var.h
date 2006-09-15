@@ -1021,7 +1021,7 @@ decl_stmt|;
 name|int
 name|tw_time
 decl_stmt|;
-name|LIST_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|tcptw
 argument_list|)
