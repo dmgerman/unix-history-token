@@ -250,6 +250,9 @@ name|ifnet
 modifier|*
 name|tl_ifp
 decl_stmt|;
+name|device_t
+name|tl_dev
+decl_stmt|;
 name|struct
 name|ifmedia
 name|ifmedia

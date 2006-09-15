@@ -2094,7 +2094,7 @@ modifier|*
 name|sis_intrhand
 decl_stmt|;
 name|device_t
-name|sis_self
+name|sis_dev
 decl_stmt|;
 name|device_t
 name|sis_miibus

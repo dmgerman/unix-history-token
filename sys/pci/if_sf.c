@@ -2831,11 +2831,11 @@ name|i
 operator|==
 name|SF_TIMEOUT
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|sf_ifp
+name|sf_dev
 argument_list|,
 literal|"reset never completed!\n"
 argument_list|)
@@ -3083,6 +3083,12 @@ name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sf_dev
+operator|=
+name|dev
 expr_stmt|;
 name|mtx_init
 argument_list|(
@@ -4855,11 +4861,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|sf_ifp
+name|sf_dev
 argument_list|,
 literal|"tx underrun, increasing "
 literal|"tx threshold to %d bytes\n"
@@ -5583,11 +5589,11 @@ operator|==
 name|ENOBUFS
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|sf_ifp
+name|sf_dev
 argument_list|,
 literal|"initialization failed: no memory for rx buffers\n"
 argument_list|)

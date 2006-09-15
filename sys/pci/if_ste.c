@@ -2302,11 +2302,11 @@ name|i
 operator|==
 name|STE_TIMEOUT
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|ste_ifp
+name|ste_dev
 argument_list|,
 literal|"command never completed!\n"
 argument_list|)
@@ -2380,11 +2380,11 @@ operator|==
 literal|100
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|ste_ifp
+name|ste_dev
 argument_list|,
 literal|"eeprom failed to come ready\n"
 argument_list|)
@@ -3615,9 +3615,11 @@ name|STE_RXSTAT_DMADONE
 operator|)
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|ste_dev
 argument_list|,
 literal|"bad receive status -- packet dropped\n"
 argument_list|)
@@ -3810,9 +3812,11 @@ operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|ste_dev
 argument_list|,
 literal|"transmission error: %x\n"
 argument_list|,
@@ -3848,9 +3852,11 @@ name|ste_tx_thresh
 operator|+=
 name|STE_MIN_FRAMELEN
 expr_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|ste_dev
 argument_list|,
 literal|"tx underrun, increasing tx"
 literal|" start threshold to %d bytes\n"
@@ -5842,9 +5848,11 @@ operator|==
 name|ENOBUFS
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|ste_dev
 argument_list|,
 literal|"initialization failed: no memory for RX buffers\n"
 argument_list|)
@@ -6582,11 +6590,11 @@ name|i
 operator|==
 name|STE_TIMEOUT
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|ste_ifp
+name|ste_dev
 argument_list|,
 literal|"global reset never completed\n"
 argument_list|)

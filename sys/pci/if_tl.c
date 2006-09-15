@@ -2062,14 +2062,12 @@ name|byte
 init|=
 literal|0
 decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|ifp
+name|device_t
+name|tl_dev
 init|=
 name|sc
 operator|->
-name|tl_ifp
+name|tl_dev
 decl_stmt|;
 name|tl_dio_write8
 argument_list|(
@@ -2093,9 +2091,9 @@ name|EEPROM_CTL_WRITE
 argument_list|)
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|tl_dev
 argument_list|,
 literal|"failed to send write command, status: %x\n"
 argument_list|,
@@ -2124,9 +2122,9 @@ name|addr
 argument_list|)
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|tl_dev
 argument_list|,
 literal|"failed to send address, status: %x\n"
 argument_list|,
@@ -2159,9 +2157,9 @@ name|EEPROM_CTL_READ
 argument_list|)
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|tl_dev
 argument_list|,
 literal|"failed to send write command, status: %x\n"
 argument_list|,
@@ -4404,6 +4402,12 @@ name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|tl_dev
+operator|=
+name|dev
 expr_stmt|;
 name|unit
 operator|=
@@ -6778,11 +6782,11 @@ if|if
 condition|(
 name|type
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|tl_ifp
+name|tl_dev
 argument_list|,
 literal|"adapter check: %x\n"
 argument_list|,
@@ -6877,11 +6881,11 @@ argument_list|,
 name|netsts
 argument_list|)
 expr_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|tl_ifp
+name|tl_dev
 argument_list|,
 literal|"network status: %x\n"
 argument_list|,
@@ -7015,9 +7019,11 @@ case|:
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|tl_dev
 argument_list|,
 literal|"got an invalid interrupt!\n"
 argument_list|)
@@ -7114,9 +7120,11 @@ operator|(
 name|TL_INTR_DUMMY
 operator|)
 case|:
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|tl_dev
 argument_list|,
 literal|"got a dummy interrupt\n"
 argument_list|)
@@ -7183,9 +7191,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|tl_dev
 argument_list|,
 literal|"bogus interrupt type\n"
 argument_list|)
@@ -7467,9 +7477,11 @@ expr_stmt|;
 name|tx_thresh
 operator|++
 expr_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|tl_dev
 argument_list|,
 literal|"tx underrun -- increasing "
 literal|"tx threshold to %d bytes\n"
@@ -8565,9 +8577,11 @@ operator|==
 name|ENOBUFS
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|tl_dev
 argument_list|,
 literal|"initialization failed: no memory for rx buffers\n"
 argument_list|)

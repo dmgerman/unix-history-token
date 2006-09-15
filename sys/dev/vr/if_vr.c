@@ -2703,11 +2703,11 @@ name|vr_revid
 operator|<
 name|REV_ID_VT3065_A
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|vr_ifp
+name|vr_dev
 argument_list|,
 literal|"reset never completed!\n"
 argument_list|)
@@ -2715,11 +2715,11 @@ expr_stmt|;
 else|else
 block|{
 comment|/* Use newer force reset command */
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|vr_ifp
+name|vr_dev
 argument_list|,
 literal|"Using force reset command.\n"
 argument_list|)
@@ -2874,6 +2874,12 @@ name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|vr_dev
+operator|=
+name|dev
 expr_stmt|;
 name|unit
 operator|=
@@ -4380,9 +4386,11 @@ operator|->
 name|if_ierrors
 operator|++
 expr_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|vr_dev
 argument_list|,
 literal|"rx error (%02x):"
 argument_list|,
@@ -4659,9 +4667,11 @@ operator|!
 name|i
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|vr_dev
 argument_list|,
 literal|"rx shutdown error!\n"
 argument_list|)
@@ -4829,9 +4839,11 @@ operator|!
 name|i
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|vr_dev
 argument_list|,
 literal|"tx shutdown timeout\n"
 argument_list|)
@@ -5014,11 +5026,11 @@ operator|&
 name|VR_F_RESTART
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|vr_ifp
+name|vr_dev
 argument_list|,
 literal|"restarting\n"
 argument_list|)
@@ -5621,9 +5633,11 @@ operator|&
 name|VR_ISR_RX_DROPPED
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|vr_dev
 argument_list|,
 literal|"rx packet lost\n"
 argument_list|)
@@ -5661,9 +5675,11 @@ name|VR_ISR_RX_OFLOW
 operator|)
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|vr_dev
 argument_list|,
 literal|"receive error (%04x)"
 argument_list|,
@@ -6493,9 +6509,11 @@ operator|==
 name|ENOBUFS
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|vr_dev
 argument_list|,
 literal|"initialization failed: no memory for rx buffers\n"
 argument_list|)

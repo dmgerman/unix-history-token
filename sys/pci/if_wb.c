@@ -2673,11 +2673,11 @@ name|i
 operator|==
 name|WB_TIMEOUT
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|wb_ifp
+name|wb_dev
 argument_list|,
 literal|"failed to force tx and rx to idle state\n"
 argument_list|)
@@ -2876,11 +2876,11 @@ name|i
 operator|==
 name|WB_TIMEOUT
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|wb_ifp
+name|wb_dev
 argument_list|,
 literal|"reset never completed!\n"
 argument_list|)
@@ -3201,6 +3201,12 @@ name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|wb_dev
+operator|=
+name|dev
 expr_stmt|;
 name|mtx_init
 argument_list|(
@@ -4655,12 +4661,14 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|wb_dev
 argument_list|,
-literal|"receiver babbling: possible chip "
-literal|"bug, forcing reset\n"
+literal|"receiver babbling: possible chip bug,"
+literal|" forcing reset\n"
 argument_list|)
 expr_stmt|;
 name|wb_fixmedia
@@ -6665,9 +6673,11 @@ operator|==
 name|ENOBUFS
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|wb_dev
 argument_list|,
 literal|"initialization failed: no memory for rx buffers\n"
 argument_list|)

@@ -4547,6 +4547,10 @@ modifier|*
 name|sf_ifp
 decl_stmt|;
 comment|/* interface info */
+name|device_t
+name|sf_dev
+decl_stmt|;
+comment|/* device info */
 name|bus_space_handle_t
 name|sf_bhandle
 decl_stmt|;

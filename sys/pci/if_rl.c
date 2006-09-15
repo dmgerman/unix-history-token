@@ -2421,11 +2421,11 @@ name|rval
 operator|)
 return|;
 default|default:
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|rl_ifp
+name|rl_dev
 argument_list|,
 literal|"bad phy register\n"
 argument_list|)
@@ -2614,11 +2614,11 @@ operator|)
 return|;
 break|break;
 default|default:
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|rl_ifp
+name|rl_dev
 argument_list|,
 literal|"bad phy register\n"
 argument_list|)
@@ -3048,11 +3048,11 @@ name|i
 operator|==
 name|RL_TIMEOUT
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|rl_ifp
+name|rl_dev
 argument_list|,
 literal|"reset never completed!\n"
 argument_list|)
@@ -3351,6 +3351,12 @@ name|device_get_unit
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|rl_dev
+operator|=
+name|dev
 expr_stmt|;
 name|mtx_init
 argument_list|(
@@ -4160,9 +4166,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|rl_dev
 argument_list|,
 literal|"couldn't set up irq\n"
 argument_list|)

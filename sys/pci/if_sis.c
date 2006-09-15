@@ -2693,11 +2693,11 @@ operator|==
 name|SIS_TIMEOUT
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|sis_ifp
+name|sis_dev
 argument_list|,
 literal|"PHY failed to come ready\n"
 argument_list|)
@@ -2965,11 +2965,11 @@ name|i
 operator|==
 name|SIS_TIMEOUT
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|sis_ifp
+name|sis_dev
 argument_list|,
 literal|"PHY failed to come ready\n"
 argument_list|)
@@ -3777,11 +3777,11 @@ name|i
 operator|==
 name|SIS_TIMEOUT
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|sis_ifp
+name|sis_dev
 argument_list|,
 literal|"reset never completed\n"
 argument_list|)
@@ -3959,7 +3959,7 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|sis_self
+name|sis_dev
 operator|=
 name|dev
 expr_stmt|;
@@ -8155,9 +8155,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sis_dev
 argument_list|,
 literal|"initialization failed: no memory for rx buffers\n"
 argument_list|)
@@ -8661,7 +8663,7 @@ name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|sis_self
+name|sis_dev
 argument_list|,
 literal|"Applying short cable fix (reg=%x)\n"
 argument_list|,

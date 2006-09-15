@@ -1795,6 +1795,9 @@ name|wb_ifp
 decl_stmt|;
 comment|/* interface info */
 name|device_t
+name|wb_dev
+decl_stmt|;
+name|device_t
 name|wb_miibus
 decl_stmt|;
 name|bus_space_handle_t

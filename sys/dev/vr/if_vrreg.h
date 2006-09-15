@@ -2420,6 +2420,9 @@ modifier|*
 name|vr_ifp
 decl_stmt|;
 comment|/* interface info */
+name|device_t
+name|vr_dev
+decl_stmt|;
 name|bus_space_handle_t
 name|vr_bhandle
 decl_stmt|;

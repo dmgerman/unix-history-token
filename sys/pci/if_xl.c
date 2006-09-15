@@ -1807,11 +1807,11 @@ name|i
 operator|==
 name|XL_TIMEOUT
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|xl_ifp
+name|xl_dev
 argument_list|,
 literal|"command never completed!\n"
 argument_list|)
@@ -2808,11 +2808,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|xl_ifp
+name|xl_dev
 argument_list|,
 literal|"found 10baseFL\n"
 argument_list|)
@@ -2875,11 +2875,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|xl_ifp
+name|xl_dev
 argument_list|,
 literal|"found AUI\n"
 argument_list|)
@@ -2912,11 +2912,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|xl_ifp
+name|xl_dev
 argument_list|,
 literal|"found BNC\n"
 argument_list|)
@@ -2996,11 +2996,11 @@ operator|==
 literal|100
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|xl_ifp
+name|xl_dev
 argument_list|,
 literal|"eeprom failed to come ready\n"
 argument_list|)
@@ -4322,11 +4322,11 @@ argument_list|(
 literal|7
 argument_list|)
 expr_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|xl_ifp
+name|xl_dev
 argument_list|,
 literal|"selecting %s, %s duplex\n"
 argument_list|,
@@ -4441,11 +4441,11 @@ name|i
 operator|==
 name|XL_TIMEOUT
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|xl_ifp
+name|xl_dev
 argument_list|,
 literal|"reset didn't complete\n"
 argument_list|)
@@ -4682,11 +4682,11 @@ condition|)
 return|return;
 else|else
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|xl_ifp
+name|xl_dev
 argument_list|,
 literal|"bogus xcvr value in EEPROM (%x)\n"
 argument_list|,
@@ -4695,11 +4695,11 @@ operator|->
 name|xl_xcvr
 argument_list|)
 expr_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|xl_ifp
+name|xl_dev
 argument_list|,
 literal|"choosing new default based on card type\n"
 argument_list|)
@@ -4723,29 +4723,29 @@ operator|&
 name|XL_MEDIAOPT_10FL
 condition|)
 return|return;
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|xl_ifp
+name|xl_dev
 argument_list|,
 literal|"WARNING: no media options bits set in the media options register!!\n"
 argument_list|)
 expr_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|xl_ifp
+name|xl_dev
 argument_list|,
 literal|"this could be a manufacturing defect in your adapter or system\n"
 argument_list|)
 expr_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|xl_ifp
+name|xl_dev
 argument_list|,
 literal|"attempting to guess media type; you should probably consult your vendor\n"
 argument_list|)
@@ -4825,11 +4825,11 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|xl_ifp
+name|xl_dev
 argument_list|,
 literal|"guessing 10BaseT transceiver\n"
 argument_list|)
@@ -4863,11 +4863,11 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|xl_ifp
+name|xl_dev
 argument_list|,
 literal|"guessing COMBO (AUI/BNC/TP)\n"
 argument_list|)
@@ -4895,11 +4895,11 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|xl_ifp
+name|xl_dev
 argument_list|,
 literal|"guessing TPC (BNC/TP)\n"
 argument_list|)
@@ -4925,11 +4925,11 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|xl_ifp
+name|xl_dev
 argument_list|,
 literal|"guessing 10baseFL\n"
 argument_list|)
@@ -4999,11 +4999,11 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|xl_ifp
+name|xl_dev
 argument_list|,
 literal|"guessing MII\n"
 argument_list|)
@@ -5033,11 +5033,11 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|xl_ifp
+name|xl_dev
 argument_list|,
 literal|"guessing 100baseT4/MII\n"
 argument_list|)
@@ -5083,11 +5083,11 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|xl_ifp
+name|xl_dev
 argument_list|,
 literal|"guessing 10/100 internal\n"
 argument_list|)
@@ -5117,22 +5117,22 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|xl_ifp
+name|xl_dev
 argument_list|,
 literal|"guessing 10/100 plus BNC/AUI\n"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|xl_ifp
+name|xl_dev
 argument_list|,
 literal|"unknown device ID: %x -- defaulting to 10baseT\n"
 argument_list|,
@@ -5208,6 +5208,12 @@ name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|xl_dev
+operator|=
+name|dev
 expr_stmt|;
 name|unit
 operator|=
@@ -7342,11 +7348,11 @@ name|IFM_100_FX
 expr_stmt|;
 break|break;
 default|default:
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|xl_ifp
+name|xl_dev
 argument_list|,
 literal|"unknown XCVR type: %d\n"
 argument_list|,
@@ -8654,11 +8660,11 @@ argument_list|(
 name|m_new
 argument_list|)
 expr_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|xl_ifp
+name|xl_dev
 argument_list|,
 literal|"can't map mbuf (error %d)\n"
 argument_list|,
@@ -9061,9 +9067,11 @@ name|XL_RXSTAT_UP_CMPLT
 operator|)
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|xl_dev
 argument_list|,
 literal|"bad receive status -- packet dropped\n"
 argument_list|)
@@ -9954,11 +9962,11 @@ operator|&
 name|XL_TXSTATUS_RECLAIM
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|xl_ifp
+name|xl_dev
 argument_list|,
 literal|"transmission error: %x\n"
 argument_list|,
@@ -10106,11 +10114,11 @@ name|xl_tx_thresh
 operator|+=
 name|XL_MIN_FRAMELEN
 expr_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|xl_ifp
+name|xl_dev
 argument_list|,
 literal|"tx underrun, increasing tx start threshold to %d bytes\n"
 argument_list|,
@@ -12362,9 +12370,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|xl_dev
 argument_list|,
 literal|"initialization of the rx ring failed (%d)\n"
 argument_list|,
@@ -12407,9 +12417,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|xl_dev
 argument_list|,
 literal|"initialization of the tx ring failed (%d)\n"
 argument_list|,
