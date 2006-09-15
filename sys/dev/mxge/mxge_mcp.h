@@ -428,8 +428,84 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MXGEFW_CMD_OFFSET
+name|MXGEFW_BOOT_HANDOFF
+value|0xfc0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MXGEFW_BOOT_DUMMY_RDMA
+value|0xfc01c0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MXGEFW_ETH_CMD
 value|0xf80000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MXGEFW_ETH_SEND_4
+value|0x200000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MXGEFW_ETH_SEND_1
+value|0x240000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MXGEFW_ETH_SEND_2
+value|0x280000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MXGEFW_ETH_SEND_3
+value|0x2c0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MXGEFW_ETH_RECV_SMALL
+value|0x300000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MXGEFW_ETH_RECV_BIG
+value|0x340000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MXGEFW_ETH_SEND
+parameter_list|(
+name|n
+parameter_list|)
+value|(0x200000 + (((n)& 0x03) * 0x40000))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MXGEFW_ETH_SEND_OFFSET
+parameter_list|(
+name|n
+parameter_list|)
+value|(MXGEFW_ETH_SEND(n) - MXGEFW_ETH_SEND_4)
 end_define
 
 begin_enum
@@ -492,8 +568,9 @@ comment|/* in microseconds */
 name|MXGEFW_CMD_SET_STATS_INTERVAL
 block|,
 comment|/* in microseconds */
-name|MXGEFW_CMD_SET_STATS_DMA
+name|MXGEFW_CMD_SET_STATS_DMA_OBSOLETE
 block|,
+comment|/* replaced by SET_STATS_DMA_V2 */
 name|MXGEFW_ENABLE_PROMISC
 block|,
 name|MXGEFW_DISABLE_PROMISC
@@ -506,6 +583,22 @@ name|MXGEFW_DISABLE_FLOW_CONTROL
 block|,
 comment|/* do a DMA test      data0,data1 = DMA address      data2       = RDMA length (MSH), WDMA length (LSH)      command return data = repetitions (MSH), 0.5-ms ticks (LSH)   */
 name|MXGEFW_DMA_TEST
+block|,
+name|MXGEFW_ENABLE_ALLMULTI
+block|,
+name|MXGEFW_DISABLE_ALLMULTI
+block|,
+comment|/* returns MXGEFW_CMD_ERROR_MULTICAST      if there is no room in the cache      data0,MSH(data1) = multicast group address */
+name|MXGEFW_JOIN_MULTICAST_GROUP
+block|,
+comment|/* returns MXGEFW_CMD_ERROR_MULTICAST      if the address is not in the cache,      or is equal to FF-FF-FF-FF-FF-FF      data0,MSH(data1) = multicast group address */
+name|MXGEFW_LEAVE_MULTICAST_GROUP
+block|,
+name|MXGEFW_LEAVE_ALL_MULTICAST_GROUPS
+block|,
+name|MXGEFW_CMD_SET_STATS_DMA_V2
+block|,
+comment|/* data0, data1 = bus addr,      data2 = sizeof(struct mcp_irq_data) from driver point of view, allows      adding new stuff to mcp_irq_data without changing the ABI */
 block|}
 enum|;
 end_enum
@@ -541,6 +634,8 @@ block|,
 name|MXGEFW_CMD_ERROR_BAD_PORT
 block|,
 name|MXGEFW_CMD_ERROR_RESOURCES
+block|,
+name|MXGEFW_CMD_ERROR_MULTICAST
 block|}
 enum|;
 end_enum
@@ -553,14 +648,28 @@ name|myri10ge_mcp_cmd_status_t
 typedef|;
 end_typedef
 
-begin_comment
-comment|/* 40 Bytes */
-end_comment
+begin_define
+define|#
+directive|define
+name|MXGEFW_OLD_IRQ_DATA_LEN
+value|40
+end_define
 
 begin_struct
 struct|struct
 name|mcp_irq_data
 block|{
+comment|/* add new counters at the beginning */
+name|uint32_t
+name|future_use
+index|[
+literal|5
+index|]
+decl_stmt|;
+name|uint32_t
+name|dropped_multicast_filtered
+decl_stmt|;
+comment|/* 40 Bytes */
 name|uint32_t
 name|send_done_count
 decl_stmt|;

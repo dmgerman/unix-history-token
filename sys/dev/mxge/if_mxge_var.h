@@ -452,6 +452,9 @@ decl_stmt|;
 name|int
 name|read_write_dma
 decl_stmt|;
+name|int
+name|fw_multicast_support
+decl_stmt|;
 name|char
 modifier|*
 name|mac_addr_string
