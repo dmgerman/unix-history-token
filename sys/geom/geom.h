@@ -1337,11 +1337,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|DIAGNOSTIC
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|DDB
+argument_list|)
+end_if
 
 begin_function_decl
 name|int
@@ -1354,6 +1362,17 @@ name|ptr
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+end_ifdef
 
 begin_define
 define|#
