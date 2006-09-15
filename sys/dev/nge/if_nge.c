@@ -3020,11 +3020,11 @@ name|i
 operator|==
 name|NGE_TIMEOUT
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|nge_ifp
+name|nge_dev
 argument_list|,
 literal|"reset never completed\n"
 argument_list|)
@@ -3189,6 +3189,12 @@ name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|nge_dev
+operator|=
+name|dev
 expr_stmt|;
 name|NGE_LOCK_INIT
 argument_list|(
@@ -5663,11 +5669,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|nge_ifp
+name|nge_dev
 argument_list|,
 literal|"gigabit link up\n"
 argument_list|)
@@ -5762,11 +5768,11 @@ name|IFM_1000_T
 operator|&&
 name|bootverbose
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|nge_ifp
+name|nge_dev
 argument_list|,
 literal|"gigabit link up\n"
 argument_list|)
@@ -7140,11 +7146,11 @@ operator|==
 name|ENOBUFS
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|nge_ifp
+name|nge_dev
 argument_list|,
 literal|"initialization failed: no "
 literal|"memory for rx buffers\n"
@@ -8783,9 +8789,7 @@ operator|++
 expr_stmt|;
 name|if_printf
 argument_list|(
-name|sc
-operator|->
-name|nge_ifp
+name|ifp
 argument_list|,
 literal|"watchdog timeout\n"
 argument_list|)

@@ -1570,6 +1570,9 @@ begin_struct
 struct|struct
 name|tulip_softc
 block|{
+name|device_t
+name|tulip_dev
+decl_stmt|;
 name|struct
 name|ifmedia
 name|tulip_ifmedia

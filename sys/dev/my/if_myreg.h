@@ -2130,6 +2130,9 @@ name|ifnet
 modifier|*
 name|my_ifp
 decl_stmt|;
+name|device_t
+name|my_dev
+decl_stmt|;
 name|struct
 name|ifmedia
 name|ifmedia

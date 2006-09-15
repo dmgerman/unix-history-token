@@ -124,7 +124,7 @@ name|FL
 parameter_list|,
 name|PRINT
 parameter_list|)
-value|do {						\ 	if ((SC)->debug& DBG_##FL) {					\ 		if_printf((SC)->ifp, "%s: "#FL": ", __func__);	\ 		printf PRINT;						\ 		printf("\n");						\ 	}								\     } while (0)
+value|do {						\ 	if ((SC)->debug& DBG_##FL) {					\ 		device_printf((SC)->dev, "%s: "#FL": ", __func__);	\ 		printf PRINT;						\ 		printf("\n");						\ 	}								\     } while (0)
 end_define
 
 begin_enum
@@ -1490,11 +1490,11 @@ name|u_char
 modifier|*
 name|ptr
 decl_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|ifp
+name|dev
 argument_list|,
 literal|"packet len=%d"
 argument_list|,
@@ -1686,11 +1686,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|ifp
+name|dev
 argument_list|,
 literal|"cannot create DMA map %d\n"
 argument_list|,
@@ -2956,11 +2956,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|ifp
+name|dev
 argument_list|,
 literal|"loading TX map failed %d\n"
 argument_list|,
@@ -5785,11 +5785,11 @@ decl_stmt|;
 name|int
 name|lcv
 decl_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|ifp
+name|dev
 argument_list|,
 literal|"reset\n"
 argument_list|)
@@ -9896,11 +9896,11 @@ name|pdu
 argument_list|)
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|ifp
+name|dev
 argument_list|,
 literal|"invalid AAL5 length\n"
 argument_list|)
@@ -9936,11 +9936,11 @@ operator|&
 name|MID_RBD_CRCERR
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|ifp
+name|dev
 argument_list|,
 literal|"CRC error\n"
 argument_list|)
@@ -10352,11 +10352,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|ifp
+name|dev
 argument_list|,
 literal|"loading RX map failed "
 literal|"%d\n"
@@ -10818,11 +10818,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|ifp
+name|dev
 argument_list|,
 literal|"unexpected interrupt=0x%b, "
 literal|"resetting\n"
@@ -12760,11 +12760,11 @@ argument_list|,
 name|MID_RESID
 argument_list|)
 expr_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|ifp
+name|dev
 argument_list|,
 literal|"ATM midway v%d, board IDs %d.%d, %s%s%s, "
 literal|"%ldKB on-board RAM\n"
@@ -13003,21 +13003,21 @@ name|alburst
 operator|==
 literal|0
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|ifp
+name|dev
 argument_list|,
 literal|"passed 64 byte DMA test\n"
 argument_list|)
 expr_stmt|;
 else|else
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|ifp
+name|dev
 argument_list|,
 literal|"FAILED DMA TEST: "
 literal|"burst=%d, alburst=%d\n"
@@ -13047,11 +13047,11 @@ name|device
 operator|=
 name|ATM_DEVICE_ENI155P
 expr_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|ifp
+name|dev
 argument_list|,
 literal|"maximum DMA burst length = %d "
 literal|"bytes%s\n"
@@ -13524,11 +13524,11 @@ operator|>
 name|sz
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|ifp
+name|dev
 argument_list|,
 literal|"EN_NTX/EN_TXSZ too big\n"
 argument_list|)
@@ -13690,11 +13690,11 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|ifp
+name|dev
 argument_list|,
 literal|"EN_NTX/EN_TXSZ/EN_RXSZ too big\n"
 argument_list|)
@@ -13893,11 +13893,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|ifp
+name|dev
 argument_list|,
 literal|"%d %dKB receive buffers, %d %dKB transmit "
 literal|"buffers\n"
@@ -13913,11 +13913,11 @@ argument_list|,
 name|EN_TXSZ
 argument_list|)
 expr_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|ifp
+name|dev
 argument_list|,
 literal|"end station identifier (mac address) "
 literal|"%6D\n"
@@ -15535,11 +15535,11 @@ operator|!=
 name|lcv
 condition|)
 continue|continue;
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|ifp
+name|dev
 argument_list|,
 literal|"dumping device at level 0x%b\n"
 argument_list|,

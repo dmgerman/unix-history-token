@@ -2784,11 +2784,11 @@ operator|==
 name|BGE_TIMEOUT
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|bge_ifp
+name|bge_dev
 argument_list|,
 literal|"PHY read timed out\n"
 argument_list|)
@@ -3005,11 +3005,11 @@ operator|==
 name|BGE_TIMEOUT
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|bge_ifp
+name|bge_dev
 argument_list|,
 literal|"PHY read timed out\n"
 argument_list|)

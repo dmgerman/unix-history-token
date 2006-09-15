@@ -1053,11 +1053,11 @@ operator|==
 name|LGE_TIMEOUT
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|lge_ifp
+name|lge_dev
 argument_list|,
 literal|"EEPROM read timed out\n"
 argument_list|)
@@ -1320,11 +1320,11 @@ operator|==
 name|LGE_TIMEOUT
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|lge_ifp
+name|lge_dev
 argument_list|,
 literal|"PHY read timed out\n"
 argument_list|)
@@ -1447,11 +1447,11 @@ operator|==
 name|LGE_TIMEOUT
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|lge_ifp
+name|lge_dev
 argument_list|,
 literal|"PHY write timed out\n"
 argument_list|)
@@ -1914,11 +1914,11 @@ name|i
 operator|==
 name|LGE_TIMEOUT
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|lge_ifp
+name|lge_dev
 argument_list|,
 literal|"reset never completed\n"
 argument_list|)
@@ -2064,6 +2064,12 @@ name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|lge_dev
+operator|=
+name|dev
 expr_stmt|;
 name|mtx_init
 argument_list|(
@@ -3142,11 +3148,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|lge_ifp
+name|lge_dev
 argument_list|,
 literal|"no memory for rx list "
 literal|"-- packet dropped!\n"
@@ -3176,11 +3182,11 @@ block|{
 ifdef|#
 directive|ifdef
 name|LGE_VERBOSE
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|lge_ifp
+name|lge_dev
 argument_list|,
 literal|"jumbo allocation failed "
 literal|"-- packet dropped!\n"
@@ -3429,11 +3435,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|lge_ifp
+name|lge_dev
 argument_list|,
 literal|"no memory for jumbo buffers!\n"
 argument_list|)
@@ -3520,11 +3526,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|lge_ifp
+name|lge_dev
 argument_list|,
 literal|"no memory for jumbo "
 literal|"buffer queue!\n"
@@ -3686,11 +3692,11 @@ block|{
 ifdef|#
 directive|ifdef
 name|LGE_VERBOSE
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|lge_ifp
+name|lge_dev
 argument_list|,
 literal|"no free jumbo buffers\n"
 argument_list|)
@@ -4109,9 +4115,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|lge_dev
 argument_list|,
 literal|"no receive buffers "
 literal|"available -- packet dropped!\n"
@@ -4629,9 +4637,11 @@ operator|==
 name|IFM_1000_T
 operator|)
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|lge_dev
 argument_list|,
 literal|"gigabit link up\n"
 argument_list|)
@@ -5454,9 +5464,11 @@ operator|==
 name|ENOBUFS
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|lge_dev
 argument_list|,
 literal|"initialization failed: no "
 literal|"memory for rx buffers\n"

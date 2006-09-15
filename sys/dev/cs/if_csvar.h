@@ -41,6 +41,9 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+name|device_t
+name|dev
+decl_stmt|;
 comment|/* Configuration words from EEPROM */
 name|int
 name|auto_neg_cnf

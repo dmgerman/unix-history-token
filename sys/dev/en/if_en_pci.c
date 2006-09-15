@@ -604,14 +604,15 @@ operator|)
 operator|!=
 name|ADP_PCIREG_SWAP_DMA
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|ifp
+name|dev
 argument_list|,
-literal|"adp_busreset: Adaptec ATM did "
-literal|"NOT reset!\n"
+literal|"%s: Adaptec ATM did NOT reset!\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -757,6 +758,12 @@ name|sc
 expr_stmt|;
 name|sc
 operator|->
+name|dev
+operator|=
+name|dev
+expr_stmt|;
+name|sc
+operator|->
 name|ifp
 operator|=
 name|if_alloc
@@ -863,12 +870,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|sc
-operator|->
-name|dev
-operator|=
-name|dev
-expr_stmt|;
 name|sc
 operator|->
 name|en_memt
@@ -1262,11 +1263,11 @@ name|IFF_DRV_RUNNING
 operator|)
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|ifp
+name|dev
 argument_list|,
 literal|"still running\n"
 argument_list|)

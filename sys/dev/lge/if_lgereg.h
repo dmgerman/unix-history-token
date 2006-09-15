@@ -2870,6 +2870,9 @@ name|ifnet
 modifier|*
 name|lge_ifp
 decl_stmt|;
+name|device_t
+name|lge_dev
+decl_stmt|;
 name|bus_space_handle_t
 name|lge_bhandle
 decl_stmt|;

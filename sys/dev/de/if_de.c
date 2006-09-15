@@ -2235,15 +2235,6 @@ specifier|const
 name|sc
 parameter_list|)
 block|{
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|sc
-operator|->
-name|tulip_ifp
-decl_stmt|;
 name|TULIP_LOCK_ASSERT
 argument_list|(
 name|sc
@@ -2271,9 +2262,11 @@ operator|&
 name|TULIP_PRINTMEDIA
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|tulip_dev
 argument_list|,
 literal|"enabling %s port\n"
 argument_list|,
@@ -2307,9 +2300,11 @@ operator|&
 name|TULIP_PRINTLINKUP
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|tulip_dev
 argument_list|,
 literal|"link up\n"
 argument_list|)
@@ -2474,11 +2469,15 @@ name|defined
 argument_list|(
 name|TULIP_DEBUG
 argument_list|)
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|tulip_dev
 argument_list|,
-literal|"gpr_media_sense: %s: 0x%02x& 0x%02x == 0x%02x\n"
+literal|"%s: %s: 0x%02x& 0x%02x == 0x%02x\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|tulip_mediums
 index|[
@@ -2566,15 +2565,6 @@ specifier|const
 name|sc
 parameter_list|)
 block|{
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|sc
-operator|->
-name|tulip_ifp
-decl_stmt|;
 specifier|const
 name|tulip_media_info_t
 modifier|*
@@ -2947,9 +2937,11 @@ name|tulip_probe_timeout
 operator|<=
 literal|0
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|tulip_dev
 argument_list|,
 literal|"sia status = 0x%08x\n"
 argument_list|,
@@ -3018,9 +3010,11 @@ operator|&=
 operator|~
 name|TULIP_LINKUP
 expr_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|tulip_dev
 argument_list|,
 literal|"link down: cable problem?\n"
 argument_list|)
@@ -3061,15 +3055,6 @@ name|tulip_mediapoll_event_t
 name|event
 parameter_list|)
 block|{
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|sc
-operator|->
-name|tulip_ifp
-decl_stmt|;
 name|TULIP_LOCK_ASSERT
 argument_list|(
 name|sc
@@ -3521,11 +3506,15 @@ name|defined
 argument_list|(
 name|TULIP_DEBUG
 argument_list|)
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|tulip_dev
 argument_list|,
-literal|"media_poll: gpr sensing = %s\n"
+literal|"%s: gpr sensing = %s\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|tulip_mediums
 index|[
@@ -3877,9 +3866,11 @@ operator|==
 name|TULIP_MEDIA_UNKNOWN
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|tulip_dev
 argument_list|,
 literal|"poll media unknown!\n"
 argument_list|)
@@ -3921,9 +3912,11 @@ operator|==
 literal|3
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|tulip_dev
 argument_list|,
 literal|"autosense failed: cable problem?\n"
 argument_list|)
@@ -4024,9 +4017,11 @@ name|defined
 argument_list|(
 name|TULIP_DEBUG
 argument_list|)
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|tulip_dev
 argument_list|,
 literal|"%s: probing %s\n"
 argument_list|,
@@ -5482,11 +5477,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|tulip_ifp
+name|tulip_dev
 argument_list|,
 literal|"autosense failed: cable problem?\n"
 argument_list|)
@@ -7189,11 +7184,11 @@ argument_list|)
 block|}
 else|else
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|tulip_ifp
+name|tulip_dev
 argument_list|,
 literal|"preset: bad media %d!\n"
 argument_list|,
@@ -7400,11 +7395,11 @@ name|defined
 argument_list|(
 name|DIAGNOSTIC
 argument_list|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|tulip_ifp
+name|tulip_dev
 argument_list|,
 literal|"botch(media_poll) at line %d\n"
 argument_list|,
@@ -11627,11 +11622,11 @@ operator|==
 name|TULIP_MII_NOPHY
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|tulip_ifp
+name|tulip_dev
 argument_list|,
 literal|"can't find phy 0\n"
 argument_list|)
@@ -13104,11 +13099,11 @@ name|defined
 argument_list|(
 name|TULIP_DEBUG
 argument_list|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|tulip_ifp
+name|tulip_dev
 argument_list|,
 literal|"can't find phy %d\n"
 argument_list|,
@@ -13866,11 +13861,11 @@ name|defined
 argument_list|(
 name|TULIP_DEBUG
 argument_list|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|tulip_ifp
+name|tulip_dev
 argument_list|,
 literal|"can't find phy %d\n"
 argument_list|,
@@ -17174,11 +17169,11 @@ operator|)
 operator|==
 name|TULIP_NEEDRESET
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|tulip_ifp
+name|tulip_dev
 argument_list|,
 literal|"tulip_reset: additional reset needed?!?\n"
 argument_list|)
@@ -18314,11 +18309,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|tulip_ifp
+name|tulip_dev
 argument_list|,
 literal|"receive: %6D: %s\n"
 argument_list|,
@@ -18664,11 +18659,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|tulip_ifp
+name|tulip_dev
 argument_list|,
 literal|"unable to load rx map, error = %d\n"
 argument_list|,
@@ -19161,11 +19156,11 @@ argument_list|)
 block|}
 else|else
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|tulip_ifp
+name|tulip_dev
 argument_list|,
 literal|"tx_intr: failed to dequeue mbuf?!?\n"
 argument_list|)
@@ -19631,11 +19626,11 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|tulip_ifp
+name|tulip_dev
 argument_list|,
 literal|"abnormal interrupt:"
 argument_list|)
@@ -19858,11 +19853,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|tulip_ifp
+name|tulip_dev
 argument_list|,
 literal|"system error: %s\n"
 argument_list|,
@@ -20506,11 +20501,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|tulip_ifp
+name|tulip_dev
 argument_list|,
 literal|"txput%s: tx not running\n"
 argument_list|,
@@ -20803,11 +20798,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|tulip_ifp
+name|tulip_dev
 argument_list|,
 literal|"unable to load tx map, error = %d\n"
 argument_list|,
@@ -21553,11 +21548,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|tulip_ifp
+name|tulip_dev
 argument_list|,
 literal|"txput_setup: tx not running\n"
 argument_list|)
@@ -22798,9 +22793,11 @@ operator|->
 name|if_snd
 argument_list|)
 expr_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|tulip_dev
 argument_list|,
 literal|"%s%s pass %d.%d%s\n"
 argument_list|,
@@ -24695,6 +24692,12 @@ name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|tulip_dev
+operator|=
+name|dev
 expr_stmt|;
 name|sc
 operator|->

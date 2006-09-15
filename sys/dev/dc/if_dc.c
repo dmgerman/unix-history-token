@@ -6733,11 +6733,11 @@ name|i
 operator|==
 name|DC_TIMEOUT
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|dc_ifp
+name|dc_dev
 argument_list|,
 literal|"failed to force tx and rx to idle state\n"
 argument_list|)
@@ -7569,11 +7569,11 @@ name|i
 operator|==
 name|DC_TIMEOUT
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|dc_ifp
+name|dc_dev
 argument_list|,
 literal|"reset never completed!\n"
 argument_list|)
@@ -8811,6 +8811,12 @@ name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|dc_dev
+operator|=
+name|dev
 expr_stmt|;
 name|mtx_init
 argument_list|(
@@ -14057,11 +14063,11 @@ operator|==
 name|DC_TIMEOUT
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|dc_ifp
+name|dc_dev
 argument_list|,
 literal|"failed to force tx to idle state\n"
 argument_list|)
@@ -14073,11 +14079,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|dc_ifp
+name|dc_dev
 argument_list|,
 literal|"TX underrun -- "
 argument_list|)
@@ -14421,7 +14427,9 @@ name|if_printf
 argument_list|(
 name|ifp
 argument_list|,
-literal|"dc_poll: bus error\n"
+literal|"%s: bus error\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|dc_reset
@@ -16262,9 +16270,11 @@ operator|==
 name|ENOBUFS
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|dc_dev
 argument_list|,
 literal|"initialization failed: no memory for rx buffers\n"
 argument_list|)

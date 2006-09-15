@@ -1022,11 +1022,11 @@ operator|>
 literal|40000
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|ifp
+name|dev
 argument_list|,
 literal|"full/half duplex auto negotiation timeout\n"
 argument_list|)
@@ -1109,11 +1109,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|ifp
+name|dev
 argument_list|,
 literal|"failed to enable TP\n"
 argument_list|)
@@ -1464,11 +1464,11 @@ name|sc
 argument_list|)
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|ifp
+name|dev
 argument_list|,
 literal|"failed to enable AUI\n"
 argument_list|)
@@ -1536,11 +1536,11 @@ name|sc
 argument_list|)
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|ifp
+name|dev
 argument_list|,
 literal|"failed to enable BNC\n"
 argument_list|)
@@ -2794,6 +2794,12 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+name|sc
+operator|->
+name|dev
+operator|=
+name|dev
+expr_stmt|;
 name|ifp
 operator|=
 name|sc
@@ -2924,9 +2930,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|dev
 argument_list|,
 literal|"Couldn't allocate memory for NIC\n"
 argument_list|)
@@ -3147,9 +3155,11 @@ name|IFM_10_5
 expr_stmt|;
 break|break;
 default|default:
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|dev
 argument_list|,
 literal|"no media, assuming 10baseT\n"
 argument_list|)
@@ -3656,9 +3666,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CS_DEBUG
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|dev
 argument_list|,
 literal|"rcvd: stat %x, len %d\n"
 argument_list|,
@@ -3682,9 +3694,11 @@ block|{
 ifdef|#
 directive|ifdef
 name|CS_DEBUG
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|dev
 argument_list|,
 literal|"bad pkt stat %x\n"
 argument_list|,
@@ -3977,9 +3991,11 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|CS_DEBUG
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|dev
 argument_list|,
 literal|"Interrupt.\n"
 argument_list|)
@@ -4003,9 +4019,11 @@ block|{
 ifdef|#
 directive|ifdef
 name|CS_DEBUG
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|dev
 argument_list|,
 literal|"from ISQ: %04x\n"
 argument_list|,
@@ -5116,7 +5134,9 @@ name|if_printf
 argument_list|(
 name|ifp
 argument_list|,
-literal|"ioctl(%lx)\n"
+literal|"%s command=%lx\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|command
 argument_list|)
@@ -5624,13 +5644,15 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CS_DEBUG
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|ifp
+name|dev
 argument_list|,
-literal|"cs_setmedia(%x)\n"
+literal|"%s media=%x\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|media
 argument_list|)

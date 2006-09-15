@@ -3401,6 +3401,9 @@ name|ifnet
 modifier|*
 name|nge_ifp
 decl_stmt|;
+name|device_t
+name|nge_dev
+decl_stmt|;
 name|bus_space_handle_t
 name|nge_bhandle
 decl_stmt|;

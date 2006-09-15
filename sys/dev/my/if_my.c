@@ -1944,9 +1944,11 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|my_dev
 argument_list|,
 literal|"autonegotiation not supported\n"
 argument_list|)
@@ -2054,9 +2056,11 @@ literal|0
 expr_stmt|;
 break|break;
 default|default:
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|my_dev
 argument_list|,
 literal|"invalid autoneg flag: %d\n"
 argument_list|,
@@ -2081,9 +2085,11 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|my_dev
 argument_list|,
 literal|"autoneg complete, "
 argument_list|)
@@ -2104,9 +2110,11 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|my_dev
 argument_list|,
 literal|"autoneg not complete, "
 argument_list|)
@@ -2138,9 +2146,11 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|my_dev
 argument_list|,
 literal|"link status good. "
 argument_list|)
@@ -2491,9 +2501,11 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|my_dev
 argument_list|,
 literal|"no carrier\n"
 argument_list|)
@@ -2580,9 +2592,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|my_dev
 argument_list|,
 literal|"PHY status word: %x\n"
 argument_list|,
@@ -2613,9 +2627,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|my_dev
 argument_list|,
 literal|"10Mbps half-duplex mode supported\n"
 argument_list|)
@@ -2666,9 +2682,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|my_dev
 argument_list|,
 literal|"10Mbps full-duplex mode supported\n"
 argument_list|)
@@ -2715,9 +2733,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|my_dev
 argument_list|,
 literal|"100Mbps half-duplex mode supported\n"
 argument_list|)
@@ -2786,9 +2806,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|my_dev
 argument_list|,
 literal|"100Mbps full-duplex mode supported\n"
 argument_list|)
@@ -2842,9 +2864,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|my_dev
 argument_list|,
 literal|"100baseT4 mode supported\n"
 argument_list|)
@@ -2888,9 +2912,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|my_dev
 argument_list|,
 literal|"forcing on autoneg support for BT4\n"
 argument_list|)
@@ -2927,7 +2953,7 @@ if|#
 directive|if
 literal|0
 comment|/* this version did not support 1000M, */
-block|if (sc->my_pinfo->my_vid == MarvellPHYID0) { 		if (bootverbose) 			if_printf(ifp, "1000Mbps half-duplex mode supported\n");  		ifp->if_baudrate = 1000000000; 		ifmedia_add(&sc->ifmedia, IFM_ETHER | IFM_1000_T, 0, NULL); 		ifmedia_add(&sc->ifmedia, IFM_ETHER | IFM_1000_T | IFM_HDX, 		    0, NULL); 		if (bootverbose) 			if_printf(ifp, "1000Mbps full-duplex mode supported\n"); 		ifp->if_baudrate = 1000000000; 		ifmedia_add(&sc->ifmedia, IFM_ETHER | IFM_1000_T | IFM_FDX, 		    0, NULL); 		sc->ifmedia.ifm_media = IFM_ETHER | IFM_1000_T | IFM_FDX; 	}
+block|if (sc->my_pinfo->my_vid == MarvellPHYID0) { 		if (bootverbose) 			device_printf(sc->my_dev, 			    "1000Mbps half-duplex mode supported\n");  		ifp->if_baudrate = 1000000000; 		ifmedia_add(&sc->ifmedia, IFM_ETHER | IFM_1000_T, 0, NULL); 		ifmedia_add(&sc->ifmedia, IFM_ETHER | IFM_1000_T | IFM_HDX, 		    0, NULL); 		if (bootverbose) 			device_printf(sc->my_dev, 			    "1000Mbps full-duplex mode supported\n"); 		ifp->if_baudrate = 1000000000; 		ifmedia_add(&sc->ifmedia, IFM_ETHER | IFM_1000_T | IFM_FDX, 		    0, NULL); 		sc->ifmedia.ifm_media = IFM_ETHER | IFM_1000_T | IFM_FDX; 	}
 endif|#
 directive|endif
 if|if
@@ -2941,9 +2967,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|my_dev
 argument_list|,
 literal|"autoneg supported\n"
 argument_list|)
@@ -3024,9 +3052,11 @@ operator|->
 name|my_autoneg
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|my_dev
 argument_list|,
 literal|"canceling autoneg session\n"
 argument_list|)
@@ -3069,9 +3099,11 @@ name|bmcr
 argument_list|)
 expr_stmt|;
 block|}
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|my_dev
 argument_list|,
 literal|"selecting MII, "
 argument_list|)
@@ -3335,11 +3367,11 @@ name|i
 operator|==
 name|MY_TIMEOUT
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|my_ifp
+name|my_dev
 argument_list|,
 literal|"failed to force tx and rx to idle \n"
 argument_list|)
@@ -3511,11 +3543,11 @@ name|i
 operator|==
 name|MY_TIMEOUT
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|my_ifp
+name|my_dev
 argument_list|,
 literal|"reset never completed!\n"
 argument_list|)
@@ -3695,6 +3727,12 @@ name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|my_dev
+operator|=
+name|dev
 expr_stmt|;
 name|mtx_init
 argument_list|(
@@ -5146,11 +5184,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|my_ifp
+name|my_dev
 argument_list|,
 literal|"no memory for rx list -- packet dropped!\n"
 argument_list|)
@@ -5180,11 +5218,11 @@ name|M_EXT
 operator|)
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|my_ifp
+name|my_dev
 argument_list|,
 literal|"no memory for rx list -- packet dropped!\n"
 argument_list|)
@@ -6326,11 +6364,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|my_ifp
+name|my_dev
 argument_list|,
 literal|"no memory for tx list"
 argument_list|)
@@ -6376,11 +6414,11 @@ argument_list|(
 name|m_new
 argument_list|)
 expr_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|my_ifp
+name|my_dev
 argument_list|,
 literal|"no memory for tx list"
 argument_list|)
@@ -7052,9 +7090,11 @@ operator|==
 name|ENOBUFS
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|my_dev
 argument_list|,
 literal|"init failed: no memory for rx buffers\n"
 argument_list|)
