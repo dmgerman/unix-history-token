@@ -5969,6 +5969,50 @@ name|addr
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 			 * Because GEOM code just will panic us if we 			 * give them an 'illegal' value we'll avoid that 			 * here. 			 */
+if|if
+condition|(
+name|block_size
+operator|>=
+name|MAXPHYS
+operator|||
+name|block_size
+operator|==
+literal|0
+condition|)
+block|{
+name|xpt_print_path
+argument_list|(
+name|periph
+operator|->
+name|path
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"unsupportable block size %ju\n"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|block_size
+argument_list|)
+expr_stmt|;
+name|announce_buf
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|cam_periph_invalidate
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|dasetgeom
 argument_list|(
 name|periph
@@ -5994,7 +6038,8 @@ argument_list|(
 name|announce_buf
 argument_list|)
 argument_list|,
-literal|"%juMB (%ju %u byte sectors: %dH %dS/T %dC)"
+literal|"%juMB (%ju %u byte sectors: %dH %dS/T "
+literal|"%dC)"
 argument_list|,
 call|(
 name|uintmax_t
@@ -6044,6 +6089,7 @@ operator|->
 name|cylinders
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
