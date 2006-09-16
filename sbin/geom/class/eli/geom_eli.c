@@ -5835,7 +5835,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* Read metadata from the provider. */
+comment|/* Write metadata from the provider. */
 if|if
 condition|(
 name|pwrite
