@@ -608,12 +608,6 @@ argument_list|(
 name|req
 argument_list|,
 literal|"Options -d and -r are mutually exclusive."
-argument_list|,
-name|pp
-operator|->
-name|name
-argument_list|,
-name|error
 argument_list|)
 expr_stmt|;
 return|return;
