@@ -4651,13 +4651,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * How '-a' option combine with a list of providers: 	 * Delete Master Keys from all attached providers: 	 * geli kill -a 	 * Delete Master Keys from all attached provider and from 	 * detached da0 and da1: 	 * geli kill -a da0 da1 	 * Delete Master Keys from (attached or detached) da0 and da1: 	 * geli kill da0 da1 	 */
-comment|/* 	 * First attached providers. 	 */
-name|gctl_issue
-argument_list|(
-name|req
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Now the rest. 	 */
+comment|/* First detached provider. */
 for|for
 control|(
 name|i
@@ -4699,6 +4693,12 @@ name|prov
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Now attached providers. */
+name|gctl_issue
+argument_list|(
+name|req
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
