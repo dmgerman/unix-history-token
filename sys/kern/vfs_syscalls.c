@@ -6822,14 +6822,6 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
-name|SYSCTL_DECL
-argument_list|(
-name|_security_bsd
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 specifier|static
 name|int

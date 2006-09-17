@@ -168,14 +168,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_DECL
-argument_list|(
-name|_security
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
 name|_security

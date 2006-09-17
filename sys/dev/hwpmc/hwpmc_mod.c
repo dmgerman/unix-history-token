@@ -1261,14 +1261,6 @@ begin_comment
 comment|/*  * security.bsd.unprivileged_syspmcs -- allow non-root processes to  * allocate system-wide PMCs.  *  * Allowing unprivileged processes to allocate system PMCs is convenient  * if system-wide measurements need to be taken concurrently with other  * per-process measurements.  This feature is turned off by default.  */
 end_comment
 
-begin_expr_stmt
-name|SYSCTL_DECL
-argument_list|(
-name|_security_bsd
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 specifier|static
 name|int

@@ -137,14 +137,6 @@ directive|include
 file|<ufs/ufs/ufs_extern.h>
 end_include
 
-begin_expr_stmt
-name|SYSCTL_DECL
-argument_list|(
-name|_security_bsd
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 specifier|static
 name|int
