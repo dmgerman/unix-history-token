@@ -209,6 +209,13 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
+name|acct_configured
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|acct_suspended
 decl_stmt|;
 end_decl_stmt
@@ -492,6 +499,27 @@ argument_list|,
 literal|"I"
 argument_list|,
 literal|"frequency for checking the free space"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|acct_configured
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|acct_configured
+argument_list|,
+literal|0
+argument_list|,
+literal|"Accounting configured or not"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -954,6 +982,10 @@ argument_list|(
 name|acct_cred
 argument_list|)
 expr_stmt|;
+name|acct_configured
+operator|=
+literal|0
+expr_stmt|;
 name|acct_vp
 operator|=
 name|NULL
@@ -986,6 +1018,10 @@ operator|)
 return|;
 block|}
 block|}
+name|acct_configured
+operator|=
+literal|1
+expr_stmt|;
 name|sx_xunlock
 argument_list|(
 operator|&
@@ -1050,6 +1086,10 @@ name|crfree
 argument_list|(
 name|acct_cred
 argument_list|)
+expr_stmt|;
+name|acct_configured
+operator|=
+literal|0
 expr_stmt|;
 name|acct_vp
 operator|=
