@@ -253,6 +253,20 @@ name|AR_PRESELECT_PIPE
 value|0x00002000U
 end_define
 
+begin_define
+define|#
+directive|define
+name|AR_PRESELECT_USER_TRAIL
+value|0x00004000U
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PRESELECT_USER_PIPE
+value|0x00008000U
+end_define
+
 begin_comment
 comment|/*  * Audit data is generated as a stream of struct audit_record structures,  * linked by struct kaudit_record, and contain storage for possible audit so  * that it will not need to be allocated during the processing of a system  * call, both improving efficiency and avoiding sleeping at untimely moments.  * This structure is converted to BSM format before being written to disk.  */
 end_comment
