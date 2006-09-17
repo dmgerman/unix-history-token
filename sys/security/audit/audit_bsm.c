@@ -5823,6 +5823,9 @@ break|break;
 case|case
 name|AUE_GETCWD
 case|:
+case|case
+name|AUE_SYSARCH
+case|:
 break|break;
 default|default:
 name|printf
