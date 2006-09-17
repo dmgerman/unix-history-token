@@ -294,7 +294,7 @@ name|tso_segsz
 decl_stmt|;
 comment|/* TSO segment size */
 name|u_int16_t
-name|ether_vlan
+name|ether_vtag
 decl_stmt|;
 comment|/* Ethernet 802.1p+q vlan tag */
 name|SLIST_HEAD
@@ -1300,13 +1300,6 @@ begin_decl_stmt
 specifier|extern
 name|uma_zone_t
 name|zone_ext_refcnt
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|uma_zone_t
-name|zone_mtag_vlan
 decl_stmt|;
 end_decl_stmt
 
@@ -3354,24 +3347,6 @@ end_comment
 
 begin_comment
 comment|/* Specific cookies and tags. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MTAG_VLAN
-value|1035328035
-end_define
-
-begin_define
-define|#
-directive|define
-name|MTAG_VLAN_TAG
-value|0
-end_define
-
-begin_comment
-comment|/* tag of VLAN interface */
 end_comment
 
 begin_comment
