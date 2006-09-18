@@ -16096,6 +16096,7 @@ name|status
 operator|&
 name|E1000_RXD_STAT_VP
 condition|)
+block|{
 name|adapter
 operator|->
 name|fmp
@@ -16123,6 +16124,7 @@ name|m_flags
 operator||=
 name|M_VLANTAG
 expr_stmt|;
+block|}
 ifndef|#
 directive|ifndef
 name|__NO_STRICT_ALIGNMENT
