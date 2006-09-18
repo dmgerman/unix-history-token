@@ -523,9 +523,9 @@ case|:
 comment|/* 		 * If the interface is marked up and stopped, then start it. 		 * If it is marked down and running, then stop it. 		 */
 if|if
 condition|(
-name|ifr
+name|ifp
 operator|->
-name|ifr_flags
+name|if_flags
 operator|&
 name|IFF_UP
 condition|)
