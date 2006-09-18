@@ -2055,6 +2055,9 @@ case|case
 name|AUE_GETATTRLIST
 case|:
 case|case
+name|AUE_LUTIMES
+case|:
+case|case
 name|AUE_NFS_GETFH
 case|:
 case|case
