@@ -2219,12 +2219,36 @@ end_define
 begin_define
 define|#
 directive|define
-name|ath_hal_tkipsplit
+name|ath_hal_hastkipsplit
 parameter_list|(
 name|_ah
 parameter_list|)
 define|\
 value|(ath_hal_getcapability(_ah, HAL_CAP_TKIP_SPLIT, 0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_gettkipsplit
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_TKIP_SPLIT, 1, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_settkipsplit
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_v
+parameter_list|)
+define|\
+value|ath_hal_setcapability(_ah, HAL_CAP_TKIP_SPLIT, 1, _v, NULL)
 end_define
 
 begin_define
