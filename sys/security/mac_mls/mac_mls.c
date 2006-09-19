@@ -6090,6 +6090,49 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|mac_mls_create_mbuf_from_firewall
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|struct
+name|label
+modifier|*
+name|mbuflabel
+parameter_list|)
+block|{
+name|struct
+name|mac_mls
+modifier|*
+name|dest
+decl_stmt|;
+name|dest
+operator|=
+name|SLOT
+argument_list|(
+name|mbuflabel
+argument_list|)
+expr_stmt|;
+comment|/* XXX: where is the label for the firewall really comming from? */
+name|mac_mls_set_effective
+argument_list|(
+name|dest
+argument_list|,
+name|MAC_MLS_TYPE_EQUAL
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Labeling event operations: processes.  */
 end_comment
@@ -13304,6 +13347,11 @@ operator|.
 name|mpo_associate_nfsd_label
 operator|=
 name|mac_mls_associate_nfsd_label
+block|,
+operator|.
+name|mpo_create_mbuf_from_firewall
+operator|=
+name|mac_mls_create_mbuf_from_firewall
 block|, }
 decl_stmt|;
 end_decl_stmt
