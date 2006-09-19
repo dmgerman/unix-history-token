@@ -125,6 +125,12 @@ directive|include
 file|<i386/include/psl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<security/audit/audit.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -568,6 +574,13 @@ argument_list|,
 name|S_PT_SCE
 argument_list|)
 expr_stmt|;
+name|AUDIT_SYSCALL_ENTER
+argument_list|(
+name|code
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 call|(
@@ -580,6 +593,13 @@ argument_list|(
 name|td
 argument_list|,
 name|args64
+argument_list|)
+expr_stmt|;
+name|AUDIT_SYSCALL_EXIT
+argument_list|(
+name|error
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 block|}
