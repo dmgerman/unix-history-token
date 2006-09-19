@@ -1304,6 +1304,18 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MIN
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a)<= (b) ? (a) : (b))
+end_define
+
+begin_define
+define|#
+directive|define
 name|get_byte
 parameter_list|()
 value|(inptr< insize ? inbuf[inptr++] : fill_inbuf(0))

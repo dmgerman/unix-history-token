@@ -1084,7 +1084,7 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-literal|0
+literal|2
 return|;
 block|}
 comment|/* Find minimum and maximum length, bound *m by those */
