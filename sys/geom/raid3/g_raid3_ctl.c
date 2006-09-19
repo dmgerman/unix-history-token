@@ -1364,8 +1364,6 @@ argument_list|(
 name|req
 argument_list|,
 literal|"There is one stale disk already."
-argument_list|,
-name|name
 argument_list|)
 expr_stmt|;
 name|sx_xunlock
@@ -2302,7 +2300,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"Component %u is already connected."
+literal|"Component %jd is already connected."
 argument_list|,
 operator|*
 name|no
@@ -2887,7 +2885,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"Cannot replace component number %u."
+literal|"Cannot replace component number %jd."
 argument_list|,
 operator|*
 name|no
@@ -2947,7 +2945,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"Cannot replace component number %u."
+literal|"Cannot replace component number %jd."
 argument_list|,
 operator|*
 name|no
