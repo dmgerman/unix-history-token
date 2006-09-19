@@ -949,7 +949,7 @@ name|ses
 operator|->
 name|ses_iv
 argument_list|,
-literal|16
+name|AES_BLOCK_LEN
 argument_list|)
 expr_stmt|;
 if|if
@@ -1089,7 +1089,7 @@ name|enccrd
 operator|->
 name|crd_len
 operator|/
-literal|16
+name|AES_BLOCK_LEN
 argument_list|,
 name|key
 argument_list|,
