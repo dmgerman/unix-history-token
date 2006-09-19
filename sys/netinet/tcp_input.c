@@ -12473,9 +12473,6 @@ name|rcv_nxt
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|tcp_twclose
 argument_list|(
 name|tw

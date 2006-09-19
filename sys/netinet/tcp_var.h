@@ -1889,9 +1889,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|tcptw
-modifier|*
+name|void
 name|tcp_twclose
 parameter_list|(
 name|struct

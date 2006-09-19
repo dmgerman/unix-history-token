@@ -8521,9 +8521,7 @@ directive|endif
 end_endif
 
 begin_function
-name|struct
-name|tcptw
-modifier|*
+name|void
 name|tcp_twclose
 parameter_list|(
 name|struct
@@ -8621,11 +8619,7 @@ if|if
 condition|(
 name|reuse
 condition|)
-return|return
-operator|(
-name|tw
-operator|)
-return|;
+return|return;
 name|uma_zfree
 argument_list|(
 name|tcptw_zone
@@ -8633,11 +8627,6 @@ argument_list|,
 name|tw
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
 block|}
 end_function
 
