@@ -136,14 +136,14 @@ value|".eli"
 end_define
 
 begin_comment
-comment|/*  * Version history:  * 0 - Initial version number.  * 1 - Added data authentication support (md_aalgo field and  *     G_ELI_FLAG_AUTH flag).  * 2 - Added G_ELI_FLAG_READONLY.  *   - IV is generated from offset converted to little-endian  *     (flag G_ELI_FLAG_NATIVE_BYTE_ORDER will be set for older versions).  */
+comment|/*  * Version history:  * 0 - Initial version number.  * 1 - Added data authentication support (md_aalgo field and  *     G_ELI_FLAG_AUTH flag).  * 2 - Added G_ELI_FLAG_READONLY.  *   - IV is generated from offset converted to little-endian  *     (flag G_ELI_FLAG_NATIVE_BYTE_ORDER will be set for older versions).  * 3 - Added 'configure' subcommand.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|G_ELI_VERSION
-value|2
+value|3
 end_define
 
 begin_comment
@@ -1203,7 +1203,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|eli_metadata_decode_v1v2
+name|eli_metadata_decode_v1v2v3
 parameter_list|(
 specifier|const
 name|u_char
@@ -1568,9 +1568,12 @@ case|:
 case|case
 literal|2
 case|:
+case|case
+literal|3
+case|:
 name|error
 operator|=
-name|eli_metadata_decode_v1v2
+name|eli_metadata_decode_v1v2v3
 argument_list|(
 name|data
 argument_list|,
