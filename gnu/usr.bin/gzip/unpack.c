@@ -42,18 +42,6 @@ directive|include
 file|"crypt.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|MIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((a)<= (b) ? (a) : (b))
-end_define
-
 begin_comment
 comment|/* The arguments must not have side effects. */
 end_comment
@@ -506,6 +494,10 @@ init|;
 name|n
 operator|>
 literal|0
+operator|&&
+name|base
+operator|<
+name|LITERALS
 condition|;
 name|n
 operator|--
@@ -656,6 +648,10 @@ while|while
 condition|(
 name|prefixes
 operator|--
+operator|&&
+name|prefixp
+operator|>
+name|prefix_len
 condition|)
 operator|*
 operator|--
