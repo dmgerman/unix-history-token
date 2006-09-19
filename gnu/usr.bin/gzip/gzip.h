@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* gzip.h -- common declarations for all gzip modules  * Copyright (C) 1992-1993 Jean-loup Gailly.  * This is free software; you can redistribute it and/or modify it under the  * terms of the GNU General Public License, see the file COPYING.  */
+comment|/* gzip.h -- common declarations for all gzip modules  * Copyright (C) 1992-1993 Jean-loup Gailly.  * This is free software; you can redistribute it and/or modify it under the  * terms of the GNU General Public License, see the file COPYING.  *  * $FreeBSD$  */
 end_comment
 
 begin_if
@@ -1297,6 +1297,18 @@ end_decl_stmt
 begin_comment
 comment|/* set if original name must be saved */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MIN
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a)<= (b) ? (a) : (b))
+end_define
 
 begin_define
 define|#
