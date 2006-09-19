@@ -5604,6 +5604,10 @@ condition|(
 name|error
 condition|)
 block|{
+if|if
+condition|(
+name|coveredvp
+condition|)
 name|VOP_UNLOCK
 argument_list|(
 name|coveredvp
