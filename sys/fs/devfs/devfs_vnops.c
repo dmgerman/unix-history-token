@@ -610,7 +610,13 @@ name|not_found
 operator|==
 literal|1
 operator|||
+operator|(
 name|drop_dm_lock
+operator|&&
+name|not_found
+operator|!=
+literal|2
+operator|)
 condition|)
 name|sx_unlock
 argument_list|(
