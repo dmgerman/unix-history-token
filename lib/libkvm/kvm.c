@@ -1516,6 +1516,9 @@ name|struct
 name|kld_sym_lookup
 name|lookup
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 comment|/* 	 * If we can't use the kld symbol lookup, revert to the 	 * slow library call. 	 */
 if|if
 condition|(
@@ -1656,8 +1659,9 @@ expr_stmt|;
 comment|/* lookup.symsize */
 block|}
 block|}
-comment|/* 	 * Return the number of entries that weren't found. 	 */
-return|return
+comment|/* 	 * Return the number of entries that weren't found. If they exist, 	 * also fill internal error buffer. 	 */
+name|error
+operator|=
 operator|(
 operator|(
 name|p
@@ -1666,6 +1670,26 @@ name|nl
 operator|)
 operator|-
 name|nvalid
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|_kvm_syserr
+argument_list|(
+name|kd
+argument_list|,
+name|kd
+operator|->
+name|program
+argument_list|,
+literal|"kvm_nlist"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
