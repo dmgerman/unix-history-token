@@ -975,6 +975,13 @@ name|a_vp
 operator|->
 name|v_mount
 expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|!=
+name|NULL
+condition|)
+block|{
 name|vfs_ref
 argument_list|(
 name|mp
@@ -1000,6 +1007,7 @@ name|mp
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 block|}
 operator|*
 operator|(
