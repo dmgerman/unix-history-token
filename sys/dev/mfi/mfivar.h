@@ -394,21 +394,17 @@ comment|/* 	 * How many commands the firmware can handle.  Also how big the repl
 name|int
 name|mfi_max_fw_cmds
 decl_stmt|;
-comment|/* 	 * Max number of S/G elements the firmware can handle 	 */
-name|int
-name|mfi_max_fw_sgl
-decl_stmt|;
 comment|/* 	 * How many S/G elements we'll ever actually use  	 */
 name|int
-name|mfi_total_sgl
+name|mfi_max_sge
 decl_stmt|;
 comment|/* 	 * How many bytes a compound frame is, including all of the extra frames 	 * that are used for S/G elements. 	 */
 name|int
-name|mfi_frame_size
+name|mfi_cmd_size
 decl_stmt|;
 comment|/* 	 * How large an S/G element is.  Used to calculate the number of single 	 * frames in a command. 	 */
 name|int
-name|mfi_sgsize
+name|mfi_sge_size
 decl_stmt|;
 comment|/* 	 * Max number of sectors that the firmware allows 	 */
 name|uint32_t

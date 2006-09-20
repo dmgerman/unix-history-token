@@ -1011,6 +1011,8 @@ name|int
 name|frames
 decl_stmt|,
 name|unit
+decl_stmt|,
+name|max_fw_sge
 decl_stmt|;
 name|mtx_init
 argument_list|(
@@ -1113,9 +1115,7 @@ name|status
 operator|&
 name|MFI_FWSTATE_MAXCMD_MASK
 expr_stmt|;
-name|sc
-operator|->
-name|mfi_max_fw_sgl
+name|max_fw_sge
 operator|=
 operator|(
 name|status
@@ -1127,13 +1127,11 @@ literal|16
 expr_stmt|;
 name|sc
 operator|->
-name|mfi_total_sgl
+name|mfi_max_sge
 operator|=
 name|min
 argument_list|(
-name|sc
-operator|->
-name|mfi_max_fw_sgl
+name|max_fw_sge
 argument_list|,
 operator|(
 operator|(
@@ -1177,7 +1175,7 @@ argument_list|,
 comment|/* maxsize */
 name|sc
 operator|->
-name|mfi_total_sgl
+name|mfi_max_sge
 argument_list|,
 comment|/* nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT
@@ -1378,7 +1376,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Allocate DMA memory for the command frames.  Keep them in the 	 * lower 4GB for efficiency.  Calculate the size of the frames at 	 * the same time; the frame is 64 bytes plus space for the SG lists. 	 * The assumption here is that the SG list will start at the second 	 * 64 byte segment of the frame and not use the unused bytes in the 	 * frame.  While this might seem wasteful, apparently the frames must 	 * be 64 byte aligned, so any savings would be negated by the extra 	 * alignment padding. 	 */
+comment|/* 	 * Allocate DMA memory for the command frames.  Keep them in the 	 * lower 4GB for efficiency.  Calculate the size of the commands at 	 * the same time; each command is one 64 byte frame plus a set of          * additional frames for holding sg lists or other data. 	 * The assumption here is that the SG list will start at the second 	 * frame and not use the unused bytes in the first frame.  While this 	 * isn't technically correct, it simplifies the calculation and allows 	 * for command frames that might be larger than an mfi_io_frame. 	 */
 if|if
 condition|(
 sizeof|sizeof
@@ -1391,7 +1389,7 @@ condition|)
 block|{
 name|sc
 operator|->
-name|mfi_sgsize
+name|mfi_sge_size
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -1410,7 +1408,7 @@ else|else
 block|{
 name|sc
 operator|->
-name|mfi_sgsize
+name|mfi_sge_size
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -1424,24 +1422,22 @@ operator|=
 operator|(
 name|sc
 operator|->
-name|mfi_sgsize
+name|mfi_sge_size
 operator|*
 name|sc
 operator|->
-name|mfi_total_sgl
-operator|+
-name|MFI_FRAME_SIZE
+name|mfi_max_sge
 operator|-
 literal|1
 operator|)
 operator|/
 name|MFI_FRAME_SIZE
 operator|+
-literal|1
+literal|2
 expr_stmt|;
 name|sc
 operator|->
-name|mfi_frame_size
+name|mfi_cmd_size
 operator|=
 name|frames
 operator|*
@@ -1451,7 +1447,7 @@ name|framessz
 operator|=
 name|sc
 operator|->
-name|mfi_frame_size
+name|mfi_cmd_size
 operator|*
 name|sc
 operator|->
@@ -2151,7 +2147,7 @@ name|mfi_frames
 operator|+
 name|sc
 operator|->
-name|mfi_frame_size
+name|mfi_cmd_size
 operator|*
 name|i
 operator|)
@@ -2166,7 +2162,7 @@ name|mfi_frames_busaddr
 operator|+
 name|sc
 operator|->
-name|mfi_frame_size
+name|mfi_cmd_size
 operator|*
 name|i
 expr_stmt|;
@@ -2982,7 +2978,7 @@ operator|=
 operator|(
 name|sc
 operator|->
-name|mfi_total_sgl
+name|mfi_max_sge
 operator|-
 literal|1
 operator|)
@@ -7075,7 +7071,7 @@ operator|=
 operator|(
 name|sc
 operator|->
-name|mfi_total_sgl
+name|mfi_max_sge
 operator|-
 literal|1
 operator|)
@@ -8505,7 +8501,7 @@ operator|+=
 operator|(
 name|sc
 operator|->
-name|mfi_sgsize
+name|mfi_sge_size
 operator|*
 name|nsegs
 operator|)
@@ -8571,7 +8567,21 @@ modifier|*
 name|cm
 parameter_list|)
 block|{
-comment|/* 	 * The bus address of the command is aligned on a 64 byte boundary, 	 * leaving the least 6 bits as zero.  For whatever reason, the 	 * hardware wants the address shifted right by three, leaving just 	 * 3 zero bits.  These three bits are then used to indicate how many 	 * 64 byte frames beyond the first one are used in the command.  The 	 * extra frames are typically filled with S/G elements.  The extra 	 * frames must also be contiguous.  Thus, a compound frame can be at 	 * most 512 bytes long, allowing for up to 59 32-bit S/G elements or 	 * 39 64-bit S/G elements for block I/O commands.  This means that 	 * I/O transfers of 256k and higher simply are not possible, which 	 * is quite odd for such a modern adapter. 	 */
+comment|/* 	 * The bus address of the command is aligned on a 64 byte boundary, 	 * leaving the least 6 bits as zero.  For whatever reason, the 	 * hardware wants the address shifted right by three, leaving just 	 * 3 zero bits.  These three bits are then used as a prefetching 	 * hint for the hardware to predict how many frames need to be 	 * fetched across the bus.  If a command has more than 8 frames 	 * then the 3 bits are set to 0x7 and the firmware uses other 	 * information in the command to determine the total amount to fetch. 	 * However, FreeBSD doesn't support I/O larger than 128K, so 8 frames 	 * is enough for both 32bit and 64bit systems. 	 */
+if|if
+condition|(
+name|cm
+operator|->
+name|cm_extra_frames
+operator|>
+literal|7
+condition|)
+name|cm
+operator|->
+name|cm_extra_frames
+operator|=
+literal|7
+expr_stmt|;
 name|MFI_WRITE4
 argument_list|(
 name|sc
