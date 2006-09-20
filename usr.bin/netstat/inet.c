@@ -2094,6 +2094,13 @@ argument_list|,
 literal|"\t\t%lu discarded because packet too short\n"
 argument_list|)
 expr_stmt|;
+name|p1a
+argument_list|(
+name|tcps_rcvmemdrop
+argument_list|,
+literal|"\t\t%lu discarded due to memory problems\n"
+argument_list|)
+expr_stmt|;
 name|p
 argument_list|(
 name|tcps_connattempt
