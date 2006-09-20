@@ -21945,10 +21945,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|sp
-operator|=
-name|NULL
-expr_stmt|;
 name|error
 operator|=
 name|prison_canseemount
