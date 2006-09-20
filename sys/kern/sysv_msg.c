@@ -214,41 +214,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MAC_DEBUG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MPRINTF
-parameter_list|(
-name|a
-parameter_list|)
-value|printf a
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MPRINTF
-parameter_list|(
-name|a
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|static
 name|void
@@ -2055,20 +2020,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
-name|MPRINTF
-argument_list|(
-operator|(
-literal|"mac_check_sysv_msqctl returned %d\n"
-operator|,
-name|error
-operator|)
-argument_list|)
-expr_stmt|;
 goto|goto
 name|done2
 goto|;
-block|}
 endif|#
 directive|endif
 name|error
@@ -2158,20 +2112,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
-name|MPRINTF
-argument_list|(
-operator|(
-literal|"mac_check_sysv_msgrmid returned %d\n"
-operator|,
-name|error
-operator|)
-argument_list|)
-expr_stmt|;
 goto|goto
 name|done2
 goto|;
-block|}
 block|}
 endif|#
 directive|endif
@@ -2846,20 +2789,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
-name|MPRINTF
-argument_list|(
-operator|(
-literal|"mac_check_sysv_msqget returned %d\n"
-operator|,
-name|error
-operator|)
-argument_list|)
-expr_stmt|;
 goto|goto
 name|done2
 goto|;
-block|}
 endif|#
 directive|endif
 goto|goto
@@ -3522,20 +3454,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
-name|MPRINTF
-argument_list|(
-operator|(
-literal|"mac_check_sysv_msqsnd returned %d\n"
-operator|,
-name|error
-operator|)
-argument_list|)
-expr_stmt|;
 goto|goto
 name|done2
 goto|;
-block|}
 endif|#
 directive|endif
 name|segs_needed
@@ -4526,15 +4447,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|MPRINTF
-argument_list|(
-operator|(
-literal|"mac_check_sysv_msqmsq returned %d\n"
-operator|,
-name|error
-operator|)
-argument_list|)
-expr_stmt|;
 name|msg_freehdr
 argument_list|(
 name|msghdr
@@ -4994,20 +4906,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
-name|MPRINTF
-argument_list|(
-operator|(
-literal|"mac_check_sysv_msqrcv returned %d\n"
-operator|,
-name|error
-operator|)
-argument_list|)
-expr_stmt|;
 goto|goto
 name|done2
 goto|;
-block|}
 endif|#
 directive|endif
 name|msghdr
@@ -5102,21 +5003,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
-name|MPRINTF
-argument_list|(
-operator|(
-literal|"mac_check_sysv_msgrcv "
-literal|"returned %d\n"
-operator|,
-name|error
-operator|)
-argument_list|)
-expr_stmt|;
 goto|goto
 name|done2
 goto|;
-block|}
 endif|#
 directive|endif
 if|if
@@ -5312,21 +5201,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
-name|MPRINTF
-argument_list|(
-operator|(
-literal|"mac_check_sysv_"
-literal|"msgrcv returned %d\n"
-operator|,
-name|error
-operator|)
-argument_list|)
-expr_stmt|;
 goto|goto
 name|done2
 goto|;
-block|}
 endif|#
 directive|endif
 operator|*

@@ -189,41 +189,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MAC_DEBUG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MPRINTF
-parameter_list|(
-name|a
-parameter_list|)
-value|printf a
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MPRINTF
-parameter_list|(
-name|a
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|static
 name|void
@@ -3200,20 +3165,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
-name|MPRINTF
-argument_list|(
-operator|(
-literal|"mac_check_sysv_semctl returned %d\n"
-operator|,
-name|error
-operator|)
-argument_list|)
-expr_stmt|;
 goto|goto
 name|done2
 goto|;
-block|}
 endif|#
 directive|endif
 name|bcopy
@@ -3324,20 +3278,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
-name|MPRINTF
-argument_list|(
-operator|(
-literal|"mac_check_sysv_semctl returned %d\n"
-operator|,
-name|error
-operator|)
-argument_list|)
-expr_stmt|;
 goto|goto
 name|done2
 goto|;
-block|}
 endif|#
 directive|endif
 name|error
@@ -4900,20 +4843,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
-name|MPRINTF
-argument_list|(
-operator|(
-literal|"mac_check_sysv_semget returned %d\n"
-operator|,
-name|error
-operator|)
-argument_list|)
-expr_stmt|;
 goto|goto
 name|done2
 goto|;
-block|}
 endif|#
 directive|endif
 goto|goto
@@ -5910,20 +5842,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
-name|MPRINTF
-argument_list|(
-operator|(
-literal|"mac_check_sysv_semop returned %d\n"
-operator|,
-name|error
-operator|)
-argument_list|)
-expr_stmt|;
 goto|goto
 name|done2
 goto|;
-block|}
 endif|#
 directive|endif
 comment|/* 	 * Loop trying to satisfy the vector of requests. 	 * If we reach a point where we must wait, any requests already 	 * performed are rolled back and we go to sleep until some other 	 * process wakes us up.  At this point, we start all over again. 	 * 	 * This ensures that from the perspective of other tasks, a set 	 * of requests is atomic (never partially satisfied). 	 */
