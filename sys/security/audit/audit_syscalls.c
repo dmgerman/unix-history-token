@@ -284,6 +284,17 @@ name|k_ar_commit
 operator||=
 name|AR_COMMIT_USER
 expr_stmt|;
+comment|/* 	 * Currently we assume that all preselection has been performed in 	 * userspace. We unconditionally set these masks so that the records 	 * get committed both to the trail and pipe.  In the future we will 	 * want to setup kernel based preselection. 	 */
+name|ar
+operator|->
+name|k_ar_commit
+operator||=
+operator|(
+name|AR_PRESELECT_USER_TRAIL
+operator||
+name|AR_PRESELECT_USER_PIPE
+operator|)
+expr_stmt|;
 return|return
 operator|(
 literal|0

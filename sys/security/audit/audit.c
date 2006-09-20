@@ -1463,6 +1463,10 @@ operator|(
 name|AR_PRESELECT_TRAIL
 operator||
 name|AR_PRESELECT_PIPE
+operator||
+name|AR_PRESELECT_USER_TRAIL
+operator||
+name|AR_PRESELECT_USER_PIPE
 operator|)
 operator|)
 operator|==
