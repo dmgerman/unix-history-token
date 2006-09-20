@@ -24074,7 +24074,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-break|break;
+goto|goto
+name|loop_end
+goto|;
 block|}
 name|ACQUIRE_LOCK
 argument_list|(
@@ -24193,7 +24195,9 @@ operator|&
 name|lk
 argument_list|)
 expr_stmt|;
-break|break;
+goto|goto
+name|loop_end
+goto|;
 block|}
 block|}
 continue|continue;
@@ -24362,6 +24366,8 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
+name|loop_end
+label|:
 comment|/* We reach here only in error and unlocked */
 if|if
 condition|(
