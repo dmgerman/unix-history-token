@@ -14376,6 +14376,21 @@ literal|2
 expr_stmt|;
 block|}
 comment|/* end while */
+if|if
+condition|(
+name|len
+operator|+
+literal|1
+operator|>
+name|F_LEN_MASK
+condition|)
+name|errx
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"address list too long"
+argument_list|)
+expr_stmt|;
 name|cmd
 operator|->
 name|o
@@ -14955,6 +14970,21 @@ expr_stmt|;
 block|}
 comment|/* end while */
 comment|/* 	 * Total length of the command, remember that 1 is the size of 	 * the base command. 	 */
+if|if
+condition|(
+name|len
+operator|+
+literal|1
+operator|>
+name|F_LEN_MASK
+condition|)
+name|errx
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"address list too long"
+argument_list|)
+expr_stmt|;
 name|cmd
 operator|->
 name|o
