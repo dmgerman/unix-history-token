@@ -3762,6 +3762,12 @@ name|flags
 operator||=
 name|value
 expr_stmt|;
+name|flags
+operator|&=
+name|ifr
+operator|.
+name|ifr_reqcap
+expr_stmt|;
 name|ifr
 operator|.
 name|ifr_reqcap
