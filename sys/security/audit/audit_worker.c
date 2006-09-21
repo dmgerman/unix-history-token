@@ -541,7 +541,7 @@ name|void
 operator|)
 name|send_trigger
 argument_list|(
-name|AUDIT_TRIGGER_OPEN_NEW
+name|AUDIT_TRIGGER_ROTATE_KERNEL
 argument_list|)
 expr_stmt|;
 block|}

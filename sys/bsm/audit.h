@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2005 Apple Computer, Inc.  * All rights reserved.  *  * @APPLE_BSD_LICENSE_HEADER_START@  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * @APPLE_BSD_LICENSE_HEADER_END@  *  * $P4: //depot/projects/trustedbsd/audit3/sys/bsm/audit.h#31 $  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2005 Apple Computer, Inc.  * All rights reserved.  *  * @APPLE_BSD_LICENSE_HEADER_START@  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * @APPLE_BSD_LICENSE_HEADER_END@  *  * $P4: //depot/projects/trustedbsd/audit3/sys/bsm/audit.h#34 $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -97,12 +97,20 @@ name|AUDIT_TRIGGER_LOW_SPACE
 value|1
 end_define
 
+begin_comment
+comment|/* Below low watermark. */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|AUDIT_TRIGGER_OPEN_NEW
+name|AUDIT_TRIGGER_ROTATE_KERNEL
 value|2
 end_define
+
+begin_comment
+comment|/* Kernel requests rotate. */
+end_comment
 
 begin_define
 define|#
@@ -111,12 +119,20 @@ name|AUDIT_TRIGGER_READ_FILE
 value|3
 end_define
 
+begin_comment
+comment|/* Re-read config file. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|AUDIT_TRIGGER_CLOSE_AND_DIE
 value|4
 end_define
+
+begin_comment
+comment|/* Terminate audit. */
+end_comment
 
 begin_define
 define|#
@@ -125,26 +141,30 @@ name|AUDIT_TRIGGER_NO_SPACE
 value|5
 end_define
 
-begin_define
-define|#
-directive|define
-name|AUDIT_TRIGGER_MAX
-value|5
-end_define
-
 begin_comment
-comment|/*  * Special file that will be read for trigger events from the kernel  * (FreeBSD).  */
+comment|/* Below min free space. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|AUDIT_TRIGGER_FILE
-value|"/dev/audit"
+name|AUDIT_TRIGGER_ROTATE_USER
+value|6
 end_define
 
 begin_comment
-comment|/*  * The special device filename.  */
+comment|/* User requests roate. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUDIT_TRIGGER_MAX
+value|6
+end_define
+
+begin_comment
+comment|/*  * The special device filename (FreeBSD).  */
 end_comment
 
 begin_define
@@ -152,6 +172,13 @@ define|#
 directive|define
 name|AUDITDEV_FILENAME
 value|"audit"
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUDIT_TRIGGER_FILE
+value|("/dev/" AUDITDEV_FILENAME)
 end_define
 
 begin_comment
@@ -751,7 +778,7 @@ value|0x2000
 end_define
 
 begin_comment
-comment|/*  * Audit queue control parameters.  */
+comment|/*  * Default audit queue control parameters.  */
 end_comment
 
 begin_define
@@ -779,7 +806,7 @@ begin_define
 define|#
 directive|define
 name|AQ_BUFSZ
-value|1024
+value|MAXAUDITDATA
 end_define
 
 begin_define
