@@ -244,7 +244,8 @@ decl_stmt|,
 name|detach
 decl_stmt|,
 name|sock
-decl_stmt|,
+decl_stmt|;
+name|socklen_t
 name|size
 decl_stmt|;
 name|struct

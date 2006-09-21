@@ -408,7 +408,8 @@ name|d
 decl_stmt|;
 name|int32_t
 name|error
-decl_stmt|,
+decl_stmt|;
+name|socklen_t
 name|len
 decl_stmt|;
 name|assert

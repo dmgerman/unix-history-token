@@ -217,7 +217,8 @@ name|int32_t
 name|unsock
 decl_stmt|,
 name|l2sock
-decl_stmt|,
+decl_stmt|;
+name|socklen_t
 name|size
 decl_stmt|;
 name|uint16_t
@@ -1490,12 +1491,13 @@ decl_stmt|;
 name|int32_t
 name|cfd
 decl_stmt|,
-name|size
-decl_stmt|,
 name|priv
 decl_stmt|;
 name|uint16_t
 name|omtu
+decl_stmt|;
+name|socklen_t
+name|size
 decl_stmt|;
 do|do
 block|{

@@ -1051,9 +1051,10 @@ name|sockaddr_l2cap
 name|l2addr
 decl_stmt|;
 name|int32_t
-name|len
-decl_stmt|,
 name|new_fd
+decl_stmt|;
+name|socklen_t
+name|len
 decl_stmt|;
 name|len
 operator|=

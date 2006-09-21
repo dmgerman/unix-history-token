@@ -1274,7 +1274,7 @@ name|done
 condition|;
 control|)
 block|{
-name|int
+name|socklen_t
 name|len
 init|=
 sizeof|sizeof
