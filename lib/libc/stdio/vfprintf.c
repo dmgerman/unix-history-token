@@ -6226,7 +6226,7 @@ name|va_arg
 argument_list|(
 name|ap
 argument_list|,
-name|ssize_t
+name|size_t
 operator|*
 argument_list|)
 expr_stmt|;
