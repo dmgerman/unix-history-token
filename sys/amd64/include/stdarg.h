@@ -67,7 +67,7 @@ parameter_list|,
 name|last
 parameter_list|)
 define|\
-value|__builtin_stdarg_start((ap), (last))
+value|__builtin_va_start((ap), (last))
 end_define
 
 begin_define
