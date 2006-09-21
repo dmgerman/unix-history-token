@@ -41,7 +41,6 @@ begin_function
 name|char
 specifier|const
 modifier|*
-specifier|const
 name|hci_link2str
 parameter_list|(
 name|int
@@ -92,7 +91,6 @@ begin_function
 name|char
 specifier|const
 modifier|*
-specifier|const
 name|hci_pin2str
 parameter_list|(
 name|int
@@ -143,7 +141,6 @@ begin_function
 name|char
 specifier|const
 modifier|*
-specifier|const
 name|hci_scan2str
 parameter_list|(
 name|int
@@ -200,7 +197,6 @@ begin_function
 name|char
 specifier|const
 modifier|*
-specifier|const
 name|hci_encrypt2str
 parameter_list|(
 name|int
@@ -297,7 +293,6 @@ begin_function
 name|char
 specifier|const
 modifier|*
-specifier|const
 name|hci_coding2str
 parameter_list|(
 name|int
@@ -354,7 +349,6 @@ begin_function
 name|char
 specifier|const
 modifier|*
-specifier|const
 name|hci_vdata2str
 parameter_list|(
 name|int
@@ -411,7 +405,6 @@ begin_function
 name|char
 specifier|const
 modifier|*
-specifier|const
 name|hci_hmode2str
 parameter_list|(
 name|int
@@ -541,7 +534,6 @@ begin_function
 name|char
 specifier|const
 modifier|*
-specifier|const
 name|hci_ver2str
 parameter_list|(
 name|int
@@ -598,7 +590,6 @@ begin_function
 name|char
 specifier|const
 modifier|*
-specifier|const
 name|hci_lmpver2str
 parameter_list|(
 name|int
@@ -655,7 +646,6 @@ begin_function
 name|char
 specifier|const
 modifier|*
-specifier|const
 name|hci_manufacturer2str
 parameter_list|(
 name|int
@@ -895,7 +885,6 @@ begin_function
 name|char
 specifier|const
 modifier|*
-specifier|const
 name|hci_features2str
 parameter_list|(
 name|uint8_t
@@ -1188,7 +1177,6 @@ begin_function
 name|char
 specifier|const
 modifier|*
-specifier|const
 name|hci_cc2str
 parameter_list|(
 name|int
@@ -1239,7 +1227,6 @@ begin_function
 name|char
 specifier|const
 modifier|*
-specifier|const
 name|hci_con_state2str
 parameter_list|(
 name|int
@@ -1296,7 +1283,6 @@ begin_function
 name|char
 specifier|const
 modifier|*
-specifier|const
 name|hci_status2str
 parameter_list|(
 name|int
@@ -1467,7 +1453,6 @@ begin_function
 name|char
 specifier|const
 modifier|*
-specifier|const
 name|hci_bdaddr2str
 parameter_list|(
 name|bdaddr_t
