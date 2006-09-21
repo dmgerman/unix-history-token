@@ -263,8 +263,6 @@ decl_stmt|,
 name|n
 decl_stmt|,
 name|len
-decl_stmt|,
-name|flen
 decl_stmt|;
 name|int
 name|c
@@ -277,6 +275,9 @@ literal|1
 decl_stmt|;
 name|int
 name|error
+decl_stmt|;
+name|socklen_t
+name|flen
 decl_stmt|;
 name|char
 name|pbuf
