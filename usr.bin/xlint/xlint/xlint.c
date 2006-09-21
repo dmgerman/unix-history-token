@@ -2126,7 +2126,15 @@ argument_list|(
 operator|&
 name|lcflags
 argument_list|,
-literal|"-Wtraditional -Wno-system-headers"
+literal|"-Wtraditional"
+argument_list|)
+expr_stmt|;
+name|appcstrg
+argument_list|(
+operator|&
+name|lcflags
+argument_list|,
+literal|"-Wno-system-headers"
 argument_list|)
 expr_stmt|;
 name|appcstrg
