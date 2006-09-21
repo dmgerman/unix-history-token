@@ -5233,7 +5233,7 @@ argument_list|(
 name|r
 argument_list|)
 argument_list|)
-operator|==
+operator|!=
 name|NULL
 condition|)
 block|{
