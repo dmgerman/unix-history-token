@@ -1513,6 +1513,11 @@ argument_list|)
 expr_stmt|;
 name|ptr
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|sysfile
 expr_stmt|;
 while|while

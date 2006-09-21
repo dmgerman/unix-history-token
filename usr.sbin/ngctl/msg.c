@@ -515,6 +515,11 @@ expr_stmt|;
 else|else
 name|DumpAscii
 argument_list|(
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|)
 name|m
 operator|->
 name|data
