@@ -1409,15 +1409,15 @@ comment|/* 464 = thr_set_name */
 literal|"#465"
 block|,
 comment|/* 465 = aio_fsync */
-literal|"thr_setscheduler"
+literal|"rtprio_thread"
 block|,
-comment|/* 466 = thr_setscheduler */
-literal|"thr_getscheduler"
+comment|/* 466 = rtprio_thread */
+literal|"#467"
 block|,
-comment|/* 467 = thr_getscheduler */
-literal|"thr_setschedparam"
+comment|/* 467 = nosys */
+literal|"#468"
 block|,
-comment|/* 468 = thr_setschedparam */
+comment|/* 468 = nosys */
 literal|"#469"
 block|,
 comment|/* 469 = __getpath_fromfd */

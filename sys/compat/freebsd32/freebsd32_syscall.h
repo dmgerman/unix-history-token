@@ -1993,22 +1993,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|FREEBSD32_SYS_thr_setscheduler
+name|FREEBSD32_SYS_rtprio_thread
 value|466
-end_define
-
-begin_define
-define|#
-directive|define
-name|FREEBSD32_SYS_thr_getscheduler
-value|467
-end_define
-
-begin_define
-define|#
-directive|define
-name|FREEBSD32_SYS_thr_setschedparam
-value|468
 end_define
 
 begin_define
