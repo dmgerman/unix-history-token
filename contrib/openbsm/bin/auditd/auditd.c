@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2004 Apple Computer, Inc.  * All rights reserved.  *  * @APPLE_BSD_LICENSE_HEADER_START@  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * @APPLE_BSD_LICENSE_HEADER_END@  *  * $P4: //depot/projects/trustedbsd/openbsm/bin/auditd/auditd.c#18 $  */
+comment|/*  * Copyright (c) 2004 Apple Computer, Inc.  * All rights reserved.  *  * @APPLE_BSD_LICENSE_HEADER_START@  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * @APPLE_BSD_LICENSE_HEADER_END@  *  * $P4: //depot/projects/trustedbsd/openbsm/bin/auditd/auditd.c#21 $  */
 end_comment
 
 begin_include
@@ -136,6 +136,13 @@ name|NA_EVENT_STR_SIZE
 value|25
 end_define
 
+begin_define
+define|#
+directive|define
+name|POL_STR_SIZE
+value|128
+end_define
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -197,13 +204,6 @@ name|int
 name|sigterms
 decl_stmt|,
 name|sigterms_handled
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|long
-name|global_flags
 decl_stmt|;
 end_decl_stmt
 
@@ -620,7 +620,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Could not rename %s to %s"
+literal|"Could not rename %s to %s: %m"
 argument_list|,
 name|oldname
 argument_list|,
@@ -1110,7 +1110,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Log directories exhausted\n"
+literal|"Log directories exhausted"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1304,7 +1304,7 @@ name|syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"min free = %d\n"
+literal|"min free = %d"
 argument_list|,
 name|minval
 argument_list|)
@@ -1958,7 +1958,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Suppress duplicate messages within a 30 second interval.   This should be  * enough to time to rotate log files without thrashing from soft warnings  * generated before the log is actually rotated.  */
+comment|/*  * Handle the audit trigger event.  *  * We suppress (ignore) duplicated triggers in close succession in order to  * try to avoid thrashing-like behavior.  However, not all triggers can be  * ignored, as triggers generally represent edge triggers, not level  * triggers, and won't be retransmitted if the condition persists.  Of  * specific concern is the rotate trigger -- if one is dropped, then it will  * not be retransmitted, and the log file will grow in an unbounded fashion.  */
 end_comment
 
 begin_define
@@ -1980,6 +1980,8 @@ block|{
 specifier|static
 name|int
 name|last_trigger
+decl_stmt|,
+name|last_warning
 decl_stmt|;
 specifier|static
 name|time_t
@@ -1990,7 +1992,6 @@ name|dir_ent
 modifier|*
 name|dirent
 decl_stmt|;
-comment|/* 	 * Suppres duplicate messages from the kernel within the specified 	 * interval. 	 */
 name|struct
 name|timeval
 name|ts
@@ -2002,6 +2003,7 @@ decl_stmt|;
 name|time_t
 name|tt
 decl_stmt|;
+comment|/* 	 * Suppress duplicate messages from the kernel within the specified 	 * interval. 	 */
 if|if
 condition|(
 name|gettimeofday
@@ -2025,6 +2027,18 @@ name|ts
 operator|.
 name|tv_sec
 expr_stmt|;
+switch|switch
+condition|(
+name|trigger
+condition|)
+block|{
+case|case
+name|AUDIT_TRIGGER_LOW_SPACE
+case|:
+case|case
+name|AUDIT_TRIGGER_NO_SPACE
+case|:
+comment|/* 			 * Triggers we can suppress.  Of course, we also need 			 * to rate limit the warnings, so apply the same 			 * interval limit on syslog messages. 			 */
 if|if
 condition|(
 operator|(
@@ -2043,7 +2057,46 @@ name|DUPLICATE_INTERVAL
 operator|)
 operator|)
 condition|)
+block|{
+if|if
+condition|(
+name|tt
+operator|>=
+operator|(
+name|last_warning
+operator|+
+name|DUPLICATE_INTERVAL
+operator|)
+condition|)
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"Suppressing duplicate trigger %d"
+argument_list|,
+name|trigger
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
+name|last_warning
+operator|=
+name|tt
+expr_stmt|;
+break|break;
+case|case
+name|AUDIT_TRIGGER_ROTATE_KERNEL
+case|:
+case|case
+name|AUDIT_TRIGGER_ROTATE_USER
+case|:
+case|case
+name|AUDIT_TRIGGER_READ_FILE
+case|:
+comment|/* 			 * Triggers that we cannot suppress. 			 */
+break|break;
+block|}
+comment|/* 		 * Only update last_trigger after aborting due to a duplicate 		 * trigger, not before, or we will never allow that trigger 		 * again. 		 */
 name|last_trigger
 operator|=
 name|trigger
@@ -2178,7 +2231,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 			 * Continue auditing to the current file.  Also 			 * generate  an allsoft warning. 			 * XXX do we want to do this ? 			 */
+comment|/* 			 * Continue auditing to the current file.  Also 			 * generate an allsoft warning. 			 * 			 * XXX do we want to do this ? 			 */
 name|audit_warn_allsoft
 argument_list|()
 expr_stmt|;
@@ -2248,14 +2301,25 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|AUDIT_TRIGGER_OPEN_NEW
+name|AUDIT_TRIGGER_ROTATE_KERNEL
+case|:
+case|case
+name|AUDIT_TRIGGER_ROTATE_USER
 case|:
 comment|/* 		 * Create a new file and swap with the one being used in 		 * kernel 		 */
 name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"Got open new trigger"
+literal|"Got open new trigger from %s"
+argument_list|,
+name|trigger
+operator|==
+name|AUDIT_TRIGGER_ROTATE_KERNEL
+condition|?
+literal|"kernel"
+else|:
+literal|"user"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2553,20 +2617,9 @@ name|sigchlds
 operator|!=
 name|sigchlds_handled
 condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|"%s: SIGCHLD"
-argument_list|,
-name|__FUNCTION__
-argument_list|)
-expr_stmt|;
 name|handle_sigchld
 argument_list|()
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|sighups
@@ -2626,17 +2679,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|syslog
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|"%s: read %d"
-argument_list|,
-name|__FUNCTION__
-argument_list|,
-name|trigger
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|trigger
@@ -2695,7 +2737,16 @@ index|[
 name|NA_EVENT_STR_SIZE
 index|]
 decl_stmt|;
-comment|/* 	 * Process the audit event file, obtaining a class mapping for each 	 * event, and send that mapping into the kernel. 	 * XXX There's a risk here that the BSM library will return NULL 	 * for an event when it can't properly map it to a class. In that 	 * case, we will not process any events beyond the one that failed, 	 * but should. We need a way to get a count of the events. 	*/
+name|char
+name|polstr
+index|[
+name|POL_STR_SIZE
+index|]
+decl_stmt|;
+name|long
+name|policy
+decl_stmt|;
+comment|/* 	 * Process the audit event file, obtaining a class mapping for each 	 * event, and send that mapping into the kernel. 	 * 	 * XXX There's a risk here that the BSM library will return NULL 	 * for an event when it can't properly map it to a class. In that 	 * case, we will not process any events beyond the one that failed, 	 * but should. We need a way to get a count of the events. 	*/
 name|ev
 operator|.
 name|ae_name
@@ -2741,6 +2792,21 @@ name|NULL
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|ev
+operator|.
+name|ae_name
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|ev
+operator|.
+name|ae_name
+argument_list|)
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -2755,6 +2821,7 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/* 	 * XXXRW: Currently we have no way to remove mappings from the kernel 	 * when they are removed from the file-based mappings. 	 */
 name|evp
 operator|=
 operator|&
@@ -2932,7 +2999,33 @@ argument_list|,
 literal|"Failed to obtain non-attributable event mask."
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set the audit policy flags based on passed in parameter values. 	 */
+comment|/* 	 * If a policy is configured in audit_control(5), implement the 	 * policy.  However, if one isn't defined, set AUDIT_CNT to avoid 	 * leaving the system in a fragile state. 	 */
+if|if
+condition|(
+operator|(
+name|getacpol
+argument_list|(
+name|polstr
+argument_list|,
+name|POL_STR_SIZE
+argument_list|)
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|au_strtopol
+argument_list|(
+name|polstr
+argument_list|,
+operator|&
+name|policy
+argument_list|)
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
 if|if
 condition|(
 name|auditon
@@ -2940,11 +3033,11 @@ argument_list|(
 name|A_SETPOLICY
 argument_list|,
 operator|&
-name|global_flags
+name|policy
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|global_flags
+name|policy
 argument_list|)
 argument_list|)
 condition|)
@@ -2952,9 +3045,46 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Failed to set audit policy."
+literal|"Failed to set audit policy: %m"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Failed to obtain policy flags: %m"
+argument_list|)
+expr_stmt|;
+name|policy
+operator|=
+name|AUDIT_CNT
+expr_stmt|;
+if|if
+condition|(
+name|auditon
+argument_list|(
+name|A_SETPOLICY
+argument_list|,
+operator|&
+name|policy
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|policy
+argument_list|)
+argument_list|)
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Failed to set default audit policy: %m"
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -3273,10 +3403,6 @@ decl_stmt|;
 name|int
 name|rc
 decl_stmt|;
-name|global_flags
-operator||=
-name|AUDIT_CNT
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -3311,27 +3437,6 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'s'
-case|:
-comment|/* Fail-stop option. */
-name|global_flags
-operator|&=
-operator|~
-operator|(
-name|AUDIT_CNT
-operator|)
-expr_stmt|;
-break|break;
-case|case
-literal|'h'
-case|:
-comment|/* Halt-stop option. */
-name|global_flags
-operator||=
-name|AUDIT_AHLT
-expr_stmt|;
-break|break;
-case|case
 literal|'?'
 case|:
 default|default:
@@ -3342,7 +3447,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: auditd [-h | -s] [-d] \n"
+literal|"usage: auditd [-d] \n"
 argument_list|)
 expr_stmt|;
 name|exit
