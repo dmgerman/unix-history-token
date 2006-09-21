@@ -79,7 +79,7 @@ name|n2
 decl_stmt|,
 name|timo
 decl_stmt|;
-name|uint8_t
+name|char
 name|b
 index|[
 literal|512

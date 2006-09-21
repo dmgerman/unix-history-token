@@ -1359,6 +1359,10 @@ argument_list|)
 expr_stmt|;
 name|strncpy
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|cp
 operator|->
 name|pin
@@ -1379,6 +1383,11 @@ name|pin_size
 operator|=
 name|strlen
 argument_list|(
+operator|(
+name|char
+specifier|const
+operator|*
+operator|)
 name|cp
 operator|->
 name|pin
