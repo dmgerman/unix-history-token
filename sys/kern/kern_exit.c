@@ -895,6 +895,13 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* XXX TTY */
 name|sx_xlock
 argument_list|(
 operator|&
@@ -927,17 +934,6 @@ operator|->
 name|s_ttyvp
 condition|)
 block|{
-name|locked
-operator|=
-name|VFS_LOCK_GIANT
-argument_list|(
-name|sp
-operator|->
-name|s_ttyvp
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Controlling process. 			 * Signal foreground pgrp, 			 * drain controlling terminal 			 * and revoke access to controlling terminal. 			 */
 if|if
 condition|(
@@ -1133,11 +1129,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 			 * s_ttyp is not zero'd; we use this to indicate 			 * that the session once had a controlling terminal. 			 * (for logging and informational purposes) 			 */
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|locked
-argument_list|)
-expr_stmt|;
 block|}
 name|SESS_LOCK
 argument_list|(
@@ -1183,6 +1174,12 @@ operator|)
 name|acct_process
 argument_list|(
 name|td
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 ifdef|#
