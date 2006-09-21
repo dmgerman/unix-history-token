@@ -8687,13 +8687,6 @@ argument_list|,
 name|TS_CONNECTED
 argument_list|)
 expr_stmt|;
-name|sx_slock
-argument_list|(
-operator|&
-name|proctree_lock
-argument_list|)
-expr_stmt|;
-comment|/* XXX: protect t_session */
 if|if
 condition|(
 name|tp
@@ -8701,6 +8694,12 @@ operator|->
 name|t_session
 condition|)
 block|{
+name|sx_slock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tp
@@ -8741,13 +8740,13 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 name|sx_sunlock
 argument_list|(
 operator|&
 name|proctree_lock
 argument_list|)
 expr_stmt|;
+block|}
 name|ttyflush
 argument_list|(
 name|tp
