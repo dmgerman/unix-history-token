@@ -943,7 +943,7 @@ operator|-
 literal|1
 argument_list|)
 operator|==
-literal|0
+literal|1
 condition|)
 block|{
 switch|switch
