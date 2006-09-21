@@ -1913,7 +1913,7 @@ name|state
 operator|=
 name|PS_RUNNING
 expr_stmt|;
-name|thr_getscheduler
+name|_thr_getscheduler
 argument_list|(
 name|thread
 operator|->
@@ -1928,11 +1928,6 @@ name|sched_policy
 argument_list|,
 operator|&
 name|sched_param
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sched_param
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|thread

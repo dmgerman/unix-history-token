@@ -143,7 +143,7 @@ return|;
 block|}
 name|ret
 operator|=
-name|thr_setscheduler
+name|_thr_setscheduler
 argument_list|(
 name|curthread
 operator|->
@@ -152,12 +152,6 @@ argument_list|,
 name|policy
 argument_list|,
 name|param
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sched_param
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -277,7 +271,7 @@ return|;
 block|}
 name|ret
 operator|=
-name|thr_setscheduler
+name|_thr_setscheduler
 argument_list|(
 name|pthread
 operator|->
@@ -286,12 +280,6 @@ argument_list|,
 name|policy
 argument_list|,
 name|param
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sched_param
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
