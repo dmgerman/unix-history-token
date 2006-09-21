@@ -10018,16 +10018,16 @@ comment|/* 465 = aio_fsync */
 block|{
 name|AS
 argument_list|(
-name|thr_setscheduler_args
+name|rtprio_thread_args
 argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|thr_setscheduler
+name|rtprio_thread
 block|,
-name|AUE_NULL
+name|AUE_RTPRIO
 block|,
 name|NULL
 block|,
@@ -10036,18 +10036,15 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* 466 = thr_setscheduler */
+comment|/* 466 = rtprio_thread */
 block|{
-name|AS
-argument_list|(
-name|thr_getscheduler_args
-argument_list|)
+literal|0
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|thr_getscheduler
+name|nosys
 block|,
 name|AUE_NULL
 block|,
@@ -10058,18 +10055,15 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* 467 = thr_getscheduler */
+comment|/* 467 = nosys */
 block|{
-name|AS
-argument_list|(
-name|thr_setschedparam_args
-argument_list|)
+literal|0
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|thr_setschedparam
+name|nosys
 block|,
 name|AUE_NULL
 block|,
@@ -10080,7 +10074,7 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* 468 = thr_setschedparam */
+comment|/* 468 = nosys */
 block|{
 literal|0
 block|,

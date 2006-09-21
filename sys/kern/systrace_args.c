@@ -14651,13 +14651,13 @@ literal|2
 expr_stmt|;
 break|break;
 block|}
-comment|/* thr_setscheduler */
+comment|/* rtprio_thread */
 case|case
 literal|466
 case|:
 block|{
 name|struct
-name|thr_setscheduler_args
+name|rtprio_thread_args
 modifier|*
 name|p
 init|=
@@ -14670,9 +14670,9 @@ index|]
 operator|=
 name|p
 operator|->
-name|id
+name|function
 expr_stmt|;
-comment|/* long */
+comment|/* int */
 name|iarg
 index|[
 literal|1
@@ -14680,9 +14680,9 @@ index|]
 operator|=
 name|p
 operator|->
-name|policy
+name|lwpid
 expr_stmt|;
-comment|/* int */
+comment|/* lwpid_t */
 name|uarg
 index|[
 literal|2
@@ -14693,136 +14693,9 @@ name|intptr_t
 operator|)
 name|p
 operator|->
-name|param
+name|rtp
 expr_stmt|;
-comment|/* const struct sched_param * */
-name|iarg
-index|[
-literal|3
-index|]
-operator|=
-name|p
-operator|->
-name|param_size
-expr_stmt|;
-comment|/* int */
-operator|*
-name|n_args
-operator|=
-literal|4
-expr_stmt|;
-break|break;
-block|}
-comment|/* thr_getscheduler */
-case|case
-literal|467
-case|:
-block|{
-name|struct
-name|thr_getscheduler_args
-modifier|*
-name|p
-init|=
-name|params
-decl_stmt|;
-name|iarg
-index|[
-literal|0
-index|]
-operator|=
-name|p
-operator|->
-name|id
-expr_stmt|;
-comment|/* long */
-name|uarg
-index|[
-literal|1
-index|]
-operator|=
-operator|(
-name|intptr_t
-operator|)
-name|p
-operator|->
-name|policy
-expr_stmt|;
-comment|/* int * */
-name|uarg
-index|[
-literal|2
-index|]
-operator|=
-operator|(
-name|intptr_t
-operator|)
-name|p
-operator|->
-name|param
-expr_stmt|;
-comment|/* struct sched_param * */
-name|iarg
-index|[
-literal|3
-index|]
-operator|=
-name|p
-operator|->
-name|param_size
-expr_stmt|;
-comment|/* int */
-operator|*
-name|n_args
-operator|=
-literal|4
-expr_stmt|;
-break|break;
-block|}
-comment|/* thr_setschedparam */
-case|case
-literal|468
-case|:
-block|{
-name|struct
-name|thr_setschedparam_args
-modifier|*
-name|p
-init|=
-name|params
-decl_stmt|;
-name|iarg
-index|[
-literal|0
-index|]
-operator|=
-name|p
-operator|->
-name|id
-expr_stmt|;
-comment|/* long */
-name|uarg
-index|[
-literal|1
-index|]
-operator|=
-operator|(
-name|intptr_t
-operator|)
-name|p
-operator|->
-name|param
-expr_stmt|;
-comment|/* const struct sched_param * */
-name|iarg
-index|[
-literal|2
-index|]
-operator|=
-name|p
-operator|->
-name|param_size
-expr_stmt|;
-comment|/* int */
+comment|/* struct rtprio * */
 operator|*
 name|n_args
 operator|=

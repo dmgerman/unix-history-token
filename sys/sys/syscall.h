@@ -2522,22 +2522,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYS_thr_setscheduler
+name|SYS_rtprio_thread
 value|466
-end_define
-
-begin_define
-define|#
-directive|define
-name|SYS_thr_getscheduler
-value|467
-end_define
-
-begin_define
-define|#
-directive|define
-name|SYS_thr_setschedparam
-value|468
 end_define
 
 begin_define
