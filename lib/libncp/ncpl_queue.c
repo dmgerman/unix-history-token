@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netncp/ncp_lib.h>
 end_include
 
