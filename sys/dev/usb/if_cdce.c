@@ -3016,7 +3016,7 @@ name|status
 operator|==
 name|USBD_STALLED
 condition|)
-name|usbd_clear_endpoint_stall
+name|usbd_clear_endpoint_stall_async
 argument_list|(
 name|sc
 operator|->
@@ -3322,7 +3322,7 @@ name|status
 operator|==
 name|USBD_STALLED
 condition|)
-name|usbd_clear_endpoint_stall
+name|usbd_clear_endpoint_stall_async
 argument_list|(
 name|sc
 operator|->
