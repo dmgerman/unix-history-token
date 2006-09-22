@@ -7170,16 +7170,9 @@ comment|/* we could do in(6)_socktrim here, but just omit it at this moment. */
 if|if
 condition|(
 name|newhost
-operator|&&
-name|nd6_need_cache
-argument_list|(
-name|ifp
-argument_list|)
-operator|!=
-literal|0
 condition|)
 block|{
-comment|/* set the rtrequest function to create llinfo */
+comment|/* 		 * set the rtrequest function to create llinfo.  It also 		 * adjust outgoing interface of the route for the local 		 * address when called via in6_ifaddloop() below. 		 */
 name|ia
 operator|->
 name|ia_ifa
