@@ -2368,7 +2368,6 @@ name|optarg
 operator|=
 name|place
 expr_stmt|;
-comment|/* XXX: disable test for :: if PC? (GNU doesn't) */
 elseif|else
 if|if
 condition|(
@@ -2424,6 +2423,10 @@ name|optind
 index|]
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|GNU_COMPATIBLE
+comment|/* XXX: disable test for :: if PC? (GNU doesn't) */
 elseif|else
 if|if
 condition|(
@@ -2463,6 +2466,8 @@ name|optind
 index|]
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|place
 operator|=
 name|EMSG
