@@ -10805,12 +10805,12 @@ comment|/* UMTX_OP_WAIT */
 name|__umtx_op_wake
 block|,
 comment|/* UMTX_OP_WAKE */
-name|__umtx_op_lock_umutex_compat32
-block|,
-comment|/* UMTX_OP_MUTEX_TRYLOCK */
 name|__umtx_op_trylock_umutex
 block|,
 comment|/* UMTX_OP_MUTEX_LOCK */
+name|__umtx_op_lock_umutex_compat32
+block|,
+comment|/* UMTX_OP_MUTEX_TRYLOCK */
 name|__umtx_op_unlock_umutex
 block|,
 comment|/* UMTX_OP_MUTEX_UNLOCK	*/
