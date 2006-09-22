@@ -1206,12 +1206,23 @@ begin_comment
 comment|/* Global options */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_LIBC
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 name|int
 name|__evOptMonoTime
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
