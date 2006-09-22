@@ -682,7 +682,7 @@ value|0x10000
 end_define
 
 begin_comment
-comment|/* packet has VLAN tag attached */
+comment|/* ether_vtag is valid */
 end_comment
 
 begin_comment
