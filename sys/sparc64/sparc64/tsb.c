@@ -925,7 +925,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Traverse the tsb of a pmap, calling the callback function for any tte entry  * that has a virtual address between start and end. If this function returns 0,  * tsb_foreach() terminates.  * This is used by pmap_remove() and pmap_protect() in the case that the number  * of pages in the range given to them reaches the dimensions of the tsb size as  * an optimization.  */
+comment|/*  * Traverse the tsb of a pmap, calling the callback function for any tte entry  * that has a virtual address between start and end. If this function returns 0,  * tsb_foreach() terminates.  * This is used by pmap_remove(), pmap_protect(), and pmap_copy() in the case  * that the number of pages in the range given to them reaches the  * dimensions of the tsb size as an optimization.  */
 end_comment
 
 begin_function
@@ -957,14 +957,57 @@ name|tte
 modifier|*
 name|tp
 decl_stmt|;
-name|int
+name|struct
+name|tte
+modifier|*
+name|tsbp
+decl_stmt|;
+name|uintptr_t
 name|i
+decl_stmt|;
+name|uintptr_t
+name|n
 decl_stmt|;
 name|PMAP_STATS_INC
 argument_list|(
 name|tsb_nforeach
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pm1
+operator|==
+name|kernel_pmap
+condition|)
+block|{
+name|tsbp
+operator|=
+name|tsb_kernel
+expr_stmt|;
+name|n
+operator|=
+name|tsb_kernel_size
+operator|/
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|tte
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|tsbp
+operator|=
+name|pm1
+operator|->
+name|pm_tsb
+expr_stmt|;
+name|n
+operator|=
+name|TSB_SIZE
+expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -973,7 +1016,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|TSB_SIZE
+name|n
 condition|;
 name|i
 operator|++
@@ -982,9 +1025,7 @@ block|{
 name|tp
 operator|=
 operator|&
-name|pm1
-operator|->
-name|pm_tsb
+name|tsbp
 index|[
 name|i
 index|]
