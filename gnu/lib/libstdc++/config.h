@@ -212,6 +212,14 @@ comment|/* #undef _GLIBCXX_USE_LFS */
 end_comment
 
 begin_comment
+comment|// Define if a fully dynamic basic_string is wanted.
+end_comment
+
+begin_comment
+comment|/* #undef _GLIBCXX_FULLY_DYNAMIC_STRING */
+end_comment
+
+begin_comment
 comment|// Define if NLS translations are to be used.
 end_comment
 
@@ -1278,6 +1286,61 @@ value|1
 end_define
 
 begin_comment
+comment|/* Only used in build directory testsuite_hooks.h. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LIMIT_AS
+value|1
+end_define
+
+begin_comment
+comment|/* Only used in build directory testsuite_hooks.h. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LIMIT_DATA
+value|1
+end_define
+
+begin_comment
+comment|/* Only used in build directory testsuite_hooks.h. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LIMIT_FSIZE
+value|1
+end_define
+
+begin_comment
+comment|/* Only used in build directory testsuite_hooks.h. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LIMIT_RSS
+value|1
+end_define
+
+begin_comment
+comment|/* Only used in build directory testsuite_hooks.h. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LIMIT_VMEM
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<locale.h> header file. */
 end_comment
 
@@ -1389,50 +1452,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_MBSRTOWCS
-value|1
-end_define
-
-begin_comment
-comment|/* Only used in build directory testsuite_hooks.h. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_MEMLIMIT_AS
-value|0
-end_define
-
-begin_comment
-comment|/* Only used in build directory testsuite_hooks.h. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_MEMLIMIT_DATA
-value|1
-end_define
-
-begin_comment
-comment|/* Only used in build directory testsuite_hooks.h. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_MEMLIMIT_RSS
-value|1
-end_define
-
-begin_comment
-comment|/* Only used in build directory testsuite_hooks.h. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_MEMLIMIT_VMEM
 value|1
 end_define
 
