@@ -205,6 +205,13 @@ name|UMTX_OP_SET_CEILING
 value|7
 end_define
 
+begin_define
+define|#
+directive|define
+name|UMTX_OP_MAX
+value|8
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
