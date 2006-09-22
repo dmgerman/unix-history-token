@@ -23,12 +23,15 @@ name|device_t
 name|owner
 decl_stmt|;
 comment|/* smbus owner device structure */
+name|struct
+name|mtx
+name|lock
+decl_stmt|;
 block|}
 struct|;
 end_struct
 
 begin_function_decl
-specifier|extern
 name|void
 name|smbus_generic_intr
 parameter_list|(

@@ -120,7 +120,7 @@ name|device_t
 parameter_list|,
 name|int
 parameter_list|,
-name|caddr_t
+name|void
 modifier|*
 parameter_list|)
 function_decl|;

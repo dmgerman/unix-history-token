@@ -153,8 +153,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|SMB_BREAD
+name|SMB_OLD_BREAD
 value|_IOW('i', 11, struct smbcmd)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMB_BREAD
+value|_IOWR('i', 11, struct smbcmd)
 end_define
 
 begin_endif

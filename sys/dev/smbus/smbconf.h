@@ -152,6 +152,13 @@ name|SMB_EBUSY
 value|0x40
 end_define
 
+begin_define
+define|#
+directive|define
+name|SMB_EINVAL
+value|0x100
+end_define
+
 begin_comment
 comment|/*  * How Quick command is executed  */
 end_comment
@@ -182,11 +189,10 @@ value|0x1
 end_define
 
 begin_comment
-comment|/* I2C address of the device */
+comment|/* slave address of the device */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|smbus_request_bus
 parameter_list|(
@@ -200,7 +206,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|smbus_release_bus
 parameter_list|(
@@ -212,7 +217,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|device_t
 name|smbus_alloc_bus
 parameter_list|(
@@ -222,7 +226,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|smbus_error
 parameter_list|(
@@ -233,7 +236,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|smbus_intr
 parameter_list|(
@@ -254,7 +256,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|u_char
 name|smbus_get_addr
 parameter_list|(
@@ -262,6 +263,20 @@ name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|driver_t
+name|smbus_driver
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|devclass_t
+name|smbus_devclass
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
