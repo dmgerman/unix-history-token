@@ -1797,6 +1797,19 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
+name|pfil_ipfw_arp
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* layer2 filter with ipfw */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
 name|log_stp
 init|=
 literal|0
@@ -1824,6 +1837,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Only pass IP packets when pfil is enabled"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_link_bridge
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ipfw_arp
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|pfil_ipfw_arp
+argument_list|,
+literal|0
+argument_list|,
+literal|"Filter ARP packets through IPFW layer2"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12007,6 +12041,54 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * If we're trying to filter bridge traffic, don't look at anything 	 * other than IP and ARP traffic.  If the filter doesn't understand 	 * IPv6, don't allow IPv6 through the bridge either.  This is lame 	 * since if we really wanted, say, an AppleTalk filter, we are hosed, 	 * but of course we don't have an AppleTalk filter to begin with. 	 * (Note that since pfil doesn't understand ARP it will pass *ALL* 	 * ARP traffic.) 	 */
+switch|switch
+condition|(
+name|ether_type
+condition|)
+block|{
+case|case
+name|ETHERTYPE_ARP
+case|:
+case|case
+name|ETHERTYPE_REVARP
+case|:
+if|if
+condition|(
+name|pfil_ipfw_arp
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* Automatically pass */
+break|break;
+case|case
+name|ETHERTYPE_IP
+case|:
+ifdef|#
+directive|ifdef
+name|INET6
+case|case
+name|ETHERTYPE_IPV6
+case|:
+endif|#
+directive|endif
+comment|/* INET6 */
+break|break;
+default|default:
+comment|/* 			 * Check to see if the user wants to pass non-ip 			 * packets, these will not be checked by pfil(9) and 			 * passed unconditionally so the default is to drop. 			 */
+if|if
+condition|(
+name|pfil_onlyip
+condition|)
+goto|goto
+name|bad
+goto|;
+block|}
 comment|/* Strip off the Ethernet header and keep a copy. */
 name|m_copydata
 argument_list|(
@@ -12323,24 +12405,12 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Run the packet through pfil. Note that since pfil doesn't understand 	 * ARP it will pass all ARP traffic. 	 */
+comment|/* 	 * Run the packet through pfil 	 */
 switch|switch
 condition|(
 name|ether_type
 condition|)
 block|{
-case|case
-name|ETHERTYPE_ARP
-case|:
-case|case
-name|ETHERTYPE_REVARP
-case|:
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* Automatically pass */
 case|case
 name|ETHERTYPE_IP
 case|:
@@ -12823,21 +12893,10 @@ break|break;
 endif|#
 directive|endif
 default|default:
-comment|/* 		 * Check to see if the user wants to pass non-ip 		 * packets. 		 */
-if|if
-condition|(
-name|pfil_onlyip
-condition|)
-block|{
 name|error
 operator|=
-operator|-
-literal|1
+literal|0
 expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
 break|break;
 block|}
 if|if
