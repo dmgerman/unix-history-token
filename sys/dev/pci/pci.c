@@ -7152,7 +7152,7 @@ block|,
 block|{
 name|PCIC_CRYPTO
 block|,
-name|PCIS_CRYPTO_NETCOMP
+name|PCIS_CRYPTO_ENTERTAIN
 block|,
 literal|"entertainment crypto"
 block|}
