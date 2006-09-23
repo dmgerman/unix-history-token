@@ -57,6 +57,10 @@ name|cluster_softc
 modifier|*
 name|cluster
 decl_stmt|;
+name|u_long
+name|hwassist
+decl_stmt|;
+comment|/* saved ifp->if_hwassist field */
 block|}
 struct|;
 end_struct
