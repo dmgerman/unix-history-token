@@ -15270,6 +15270,26 @@ name|dev
 operator|->
 name|si_tty
 expr_stmt|;
+comment|/* XXX It can happen that devfs_open calls us with tp->t_refcnt == 0 */
+if|if
+condition|(
+name|tp
+operator|==
+name|NULL
+operator|||
+name|tp
+operator|->
+name|t_refcnt
+operator|==
+literal|0
+condition|)
+block|{
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 name|s
 operator|=
 name|spltty
