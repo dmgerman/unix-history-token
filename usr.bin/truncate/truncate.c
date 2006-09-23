@@ -553,7 +553,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return the numeric value of a string given in the form [+-][0-9]+[GMK]  * or -1 on format error or overflow.  */
+comment|/*  * Return the numeric value of a string given in the form [+-][0-9]+[GMKT]  * or -1 on format error or overflow.  */
 end_comment
 
 begin_function
@@ -652,6 +652,25 @@ operator|*
 name|ls
 condition|)
 block|{
+case|case
+literal|'T'
+case|:
+case|case
+literal|'t'
+case|:
+name|oflow
+operator|=
+name|length
+operator|*
+literal|1024
+expr_stmt|;
+name|ASSIGN_CHK_OFLOW
+argument_list|(
+name|oflow
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
 case|case
 literal|'G'
 case|:
@@ -759,7 +778,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: truncate [-c] -s [+|-]size[K|k|M|m|G|g] file ..."
+literal|"usage: truncate [-c] -s [+|-]size[K|k|M|m|G|g|T|t] file ..."
 argument_list|,
 literal|"       truncate [-c] -r rfile file ..."
 argument_list|)
