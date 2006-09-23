@@ -1438,12 +1438,24 @@ if|if
 condition|(
 name|useloopback
 condition|)
+block|{
 name|rt
 operator|->
 name|rt_ifp
 operator|=
 name|loif
 expr_stmt|;
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_mtu
+operator|=
+name|loif
+operator|->
+name|if_mtu
+expr_stmt|;
+block|}
 comment|/* 		     * make sure to set rt->rt_ifa to the interface 		     * address we are using, otherwise we will have trouble 		     * with source address selection. 		     */
 name|ifa
 operator|=
