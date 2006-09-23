@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: getopt_long.c,v 1.17 2004/06/03 18:46:52 millert Exp $	*/
+comment|/*	$OpenBSD: getopt_long.c,v 1.21 2006/09/22 17:22:05 millert Exp $	*/
 end_comment
 
 begin_comment
@@ -105,11 +105,15 @@ begin_comment
 comment|/* Be more compatible, configure's use us! */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|GNU_COMPATIBLE
-end_ifndef
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* we prefer to keep our getopt(3) */
+end_comment
 
 begin_define
 define|#
@@ -1535,6 +1539,7 @@ decl_stmt|;
 name|int
 name|posixly_correct
 decl_stmt|;
+comment|/* no static, can be changed on the fly */
 if|if
 condition|(
 name|options
@@ -2508,40 +2513,30 @@ begin_function
 name|int
 name|getopt_long
 parameter_list|(
-name|nargc
-parameter_list|,
-name|nargv
-parameter_list|,
-name|options
-parameter_list|,
-name|long_options
-parameter_list|,
-name|idx
-parameter_list|)
 name|int
 name|nargc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 specifier|const
 modifier|*
 name|nargv
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|options
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|struct
 name|option
 modifier|*
 name|long_options
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|idx
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -2572,40 +2567,30 @@ begin_function
 name|int
 name|getopt_long_only
 parameter_list|(
-name|nargc
-parameter_list|,
-name|nargv
-parameter_list|,
-name|options
-parameter_list|,
-name|long_options
-parameter_list|,
-name|idx
-parameter_list|)
 name|int
 name|nargc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 specifier|const
 modifier|*
 name|nargv
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|options
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|struct
 name|option
 modifier|*
 name|long_options
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|idx
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
