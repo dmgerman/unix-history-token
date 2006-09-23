@@ -135,6 +135,17 @@ name|year
 operator|+=
 literal|2000
 expr_stmt|;
+comment|/* Make sure our year is still>= 1970.  We fix 3-digit years 	 * this way, because localtime(3) can return tm_year>= 100, 	 * starting in year 2000. 	 */
+if|if
+condition|(
+name|year
+operator|<
+literal|1970
+condition|)
+name|year
+operator|+=
+literal|1900
+expr_stmt|;
 name|days
 operator|=
 literal|0

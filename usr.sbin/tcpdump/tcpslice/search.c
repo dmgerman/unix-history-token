@@ -770,7 +770,7 @@ name|MAX_BYTES_FOR_DEFINITE_HEADER
 expr_stmt|;
 if|if
 condition|(
-name|fseek
+name|fseeko
 argument_list|(
 name|pcap_file
 argument_list|(
@@ -778,7 +778,7 @@ name|p
 argument_list|)
 argument_list|,
 operator|(
-name|long
+name|off_t
 operator|)
 operator|-
 name|num_bytes
@@ -980,7 +980,7 @@ expr_stmt|;
 comment|/* Seek so that the next read will start at last valid packet. */
 if|if
 condition|(
-name|fseek
+name|fseeko
 argument_list|(
 name|pcap_file
 argument_list|(
@@ -988,7 +988,7 @@ name|p
 argument_list|)
 argument_list|,
 operator|(
-name|long
+name|off_t
 operator|)
 operator|-
 operator|(
@@ -1004,7 +1004,7 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"final fseek() failed in sf_find_end()"
+literal|"final fseeko() failed in sf_find_end()"
 argument_list|)
 expr_stmt|;
 name|done
@@ -1251,7 +1251,7 @@ name|u_char
 modifier|*
 name|buf
 decl_stmt|;
-name|long
+name|fpos_t
 name|pos
 decl_stmt|;
 name|int
@@ -1268,14 +1268,15 @@ name|timeval
 modifier|*
 name|timestamp
 decl_stmt|;
-name|pos
-operator|=
-name|ftell
+name|fgetpos
 argument_list|(
 name|pcap_file
 argument_list|(
 name|p
 argument_list|)
+argument_list|,
+operator|&
+name|pos
 argument_list|)
 expr_stmt|;
 name|buf
@@ -1353,23 +1354,22 @@ block|}
 block|}
 if|if
 condition|(
-name|fseek
+name|fsetpos
 argument_list|(
 name|pcap_file
 argument_list|(
 name|p
 argument_list|)
 argument_list|,
+operator|&
 name|pos
-argument_list|,
-literal|0
 argument_list|)
 operator|<
 literal|0
 condition|)
 name|error
 argument_list|(
-literal|"fseek() failed in read_up_to()"
+literal|"fsetpos() failed in read_up_to()"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1433,7 +1433,7 @@ decl_stmt|;
 name|int
 name|num_bytes_read
 decl_stmt|;
-name|long
+name|fpos_t
 name|desired_pos
 decl_stmt|,
 name|present_pos
@@ -1525,14 +1525,15 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-name|present_pos
-operator|=
-name|ftell
+name|fgetpos
 argument_list|(
 name|pcap_file
 argument_list|(
 name|p
 argument_list|)
+argument_list|,
+operator|&
+name|present_pos
 argument_list|)
 expr_stmt|;
 if|if
@@ -1579,23 +1580,22 @@ name|min_pos
 expr_stmt|;
 if|if
 condition|(
-name|fseek
+name|fsetpos
 argument_list|(
 name|pcap_file
 argument_list|(
 name|p
 argument_list|)
 argument_list|,
+operator|&
 name|desired_pos
-argument_list|,
-literal|0
 argument_list|)
 operator|<
 literal|0
 condition|)
 name|error
 argument_list|(
-literal|"fseek() failed in sf_find_packet()"
+literal|"fsetpos() failed in sf_find_packet()"
 argument_list|)
 expr_stmt|;
 name|num_bytes_read
@@ -1676,23 +1676,22 @@ expr_stmt|;
 comment|/* Seek to the beginning of the header. */
 if|if
 condition|(
-name|fseek
+name|fsetpos
 argument_list|(
 name|pcap_file
 argument_list|(
 name|p
 argument_list|)
 argument_list|,
+operator|&
 name|desired_pos
-argument_list|,
-literal|0
 argument_list|)
 operator|<
 literal|0
 condition|)
 name|error
 argument_list|(
-literal|"fseek() failed in sf_find_packet()"
+literal|"fsetpos() failed in sf_find_packet()"
 argument_list|)
 expr_stmt|;
 if|if
