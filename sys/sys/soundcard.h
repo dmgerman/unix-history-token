@@ -4,7 +4,11 @@ comment|/*  * soundcard.h  */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright by Hannu Savolainen 1993  * Modified for the new FreeBSD sound driver by Luigi Rizzo, 1997  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above  *    copyright notice, this list of conditions and the following  *    disclaimer in the documentation and/or other materials provided  *    with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS''  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A  * PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR  * OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright by Hannu Savolainen 1993 / 4Front Technologies 1993-2006  * Modified for the new FreeBSD sound driver by Luigi Rizzo, 1997  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above  *    copyright notice, this list of conditions and the following  *    disclaimer in the documentation and/or other materials provided  *    with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS''  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A  * PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR  * OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+end_comment
+
+begin_comment
+comment|/*  * Unless coordinating changes with 4Front Technologies, do NOT make any  * modifications to ioctl commands, types, etc. that would break  * compatibility with the OSS API.  */
 end_comment
 
 begin_ifndef
@@ -2405,17 +2409,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|MIDI_CAP_MPU401
-value|1
-end_define
-
-begin_comment
-comment|/* MPU-401 intelligent mode */
-end_comment
 
 begin_struct
 struct|struct
@@ -5234,6 +5227,1528 @@ define|#
 directive|define
 name|SOUND_PCM_MAPOUTBUF
 value|SNDCTL_DSP_MAPOUTBUF
+end_define
+
+begin_comment
+comment|/***********************************************************************/
+end_comment
+
+begin_comment
+comment|/**  * XXX OSSv4 defines -- some bits taken straight out of the new  * sys/soundcard.h bundled with recent OSS releases.  *  * NB:  These macros and structures will be reorganized and inserted  * 	in appropriate places throughout this file once the code begins  * 	to take shape.  *  * @todo reorganize layout more like the 4Front version  * @todo ask about maintaining __SIOWR vs. _IOWR ioctl cmd defines  */
+end_comment
+
+begin_comment
+comment|/**  * @note The @c OSSV4_EXPERIMENT macro is meant to wrap new development code  * in the sound system relevant to adopting 4Front's OSSv4 specification.  * Users should not enable this!  Really!  */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|OSSV4_EXPERIMENT
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_undef
+undef|#
+directive|undef
+name|OSSV4_EXPERIMENT
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SOUND_VERSION
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|SOUND_VERSION
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SOUND_VERSION
+value|0x040000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !SOUND_VERSION */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OSS_LONGNAME_SIZE
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|OSS_LABEL_SIZE
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|OSS_DEVNODE_SIZE
+value|32
+end_define
+
+begin_typedef
+typedef|typedef
+name|char
+name|oss_longname_t
+index|[
+name|OSS_LONGNAME_SIZE
+index|]
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|char
+name|oss_label_t
+index|[
+name|OSS_LABEL_SIZE
+index|]
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|char
+name|oss_devnode_t
+index|[
+name|OSS_DEVNODE_SIZE
+index|]
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|audio_errinfo
+block|{
+name|int
+name|play_underruns
+decl_stmt|;
+name|int
+name|rec_overruns
+decl_stmt|;
+name|unsigned
+name|int
+name|play_ptradjust
+decl_stmt|;
+name|unsigned
+name|int
+name|rec_ptradjust
+decl_stmt|;
+name|int
+name|play_errorcount
+decl_stmt|;
+name|int
+name|rec_errorcount
+decl_stmt|;
+name|int
+name|play_lasterror
+decl_stmt|;
+name|int
+name|rec_lasterror
+decl_stmt|;
+name|long
+name|play_errorparm
+decl_stmt|;
+name|long
+name|rec_errorparm
+decl_stmt|;
+name|int
+name|filler
+index|[
+literal|16
+index|]
+decl_stmt|;
+block|}
+name|audio_errinfo
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_GETPLAYVOL
+value|_IOR ('P', 24, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_SETPLAYVOL
+value|_IOWR('P', 24, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_GETERROR
+value|_IOR ('P', 25, audio_errinfo)
+end_define
+
+begin_comment
+comment|/*  ****************************************************************************  * Sync groups for audio devices  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|oss_syncgroup
+block|{
+name|int
+name|id
+decl_stmt|;
+name|int
+name|mode
+decl_stmt|;
+name|int
+name|filler
+index|[
+literal|16
+index|]
+decl_stmt|;
+block|}
+name|oss_syncgroup
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_SYNCGROUP
+value|_IOWR('P', 28, oss_syncgroup)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_SYNCSTART
+value|_IOW ('P', 29, int)
+end_define
+
+begin_comment
+comment|/*  **************************************************************************  * "cooked" mode enables software based conversions for sample rate, sample  * format (bits) and number of channels (mono/stereo). These conversions are  * required with some devices that support only one sample rate or just stereo  * to let the applications to use other formats. The cooked mode is enabled by  * default. However it's necessary to disable this mode when mmap() is used or  * when very deterministic timing is required. SNDCTL_DSP_COOKEDMODE is an  * optional call introduced in OSS 3.9.6f. It's _error return must be ignored_  * since normally this call will return erno=EINVAL.  *  * SNDCTL_DSP_COOKEDMODE must be called immediately after open before doing  * anything else. Otherwise the call will not have any effect.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_COOKEDMODE
+value|_IOW ('P', 30, int)
+end_define
+
+begin_comment
+comment|/*  **************************************************************************  * SNDCTL_DSP_SILENCE and SNDCTL_DSP_SKIP are new calls in OSS 3.99.0  * that can be used to implement pause/continue during playback (no effect  * on recording).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_SILENCE
+value|_IO  ('P', 31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_SKIP
+value|_IO  ('P', 32)
+end_define
+
+begin_comment
+comment|/*  ****************************************************************************  * Abort transfer (reset) functions for input and output  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_HALT_INPUT
+value|_IO  ('P', 33)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_RESET_INPUT
+value|SNDCTL_DSP_HALT_INPUT
+end_define
+
+begin_comment
+comment|/* Old name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_HALT_OUTPUT
+value|_IO  ('P', 34)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_RESET_OUTPUT
+value|SNDCTL_DSP_HALT_OUTPUT
+end_define
+
+begin_comment
+comment|/* Old name */
+end_comment
+
+begin_comment
+comment|/*  ****************************************************************************  * Low water level control  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_LOW_WATER
+value|_IOW ('P', 34, int)
+end_define
+
+begin_comment
+comment|/** @todo Get rid of OSS_NO_LONG_LONG references? */
+end_comment
+
+begin_comment
+comment|/*  ****************************************************************************  * 64 bit pointer support. Only available in environments that support  * the 64 bit (long long) integer type.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OSS_NO_LONG_LONG
+end_ifndef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|long
+name|long
+name|samples
+decl_stmt|;
+name|int
+name|fifo_samples
+decl_stmt|;
+name|int
+name|filler
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/* For future use */
+block|}
+name|oss_count_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_CURRENT_IPTR
+value|_IOR ('P', 35, oss_count_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_CURRENT_OPTR
+value|_IOR ('P', 36, oss_count_t)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  ****************************************************************************  * Interface for selecting recording sources and playback output routings.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_GET_RECSRC_NAMES
+value|_IOR ('P', 37, oss_mixer_enuminfo)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_GET_RECSRC
+value|_IOR ('P', 38, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_SET_RECSRC
+value|_IOWR('P', 38, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_GET_PLAYTGT_NAMES
+value|_IOR ('P', 39, oss_mixer_enuminfo)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_GET_PLAYTGT
+value|_IOR ('P', 40, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_SET_PLAYTGT
+value|_IOWR('P', 40, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_GETRECVOL
+value|_IOR ('P', 41, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_SETRECVOL
+value|_IOWR('P', 41, int)
+end_define
+
+begin_comment
+comment|/*  ***************************************************************************  * Some calls for setting the channel assignment with multi channel devices  * (see the manual for details).                                                 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_GET_CHNORDER
+value|_IOR ('P', 42, unsigned long long)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_SET_CHNORDER
+value|_IOWR('P', 42, unsigned long long)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHID_UNDEF
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHID_L
+value|1                                               #       define CHID_R           2
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHID_C
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHID_LFE
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHID_LS
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHID_RS
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHID_LR
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHID_RR
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHNORDER_UNDEF
+value|0x0000000000000000ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHNORDER_NORMAL
+value|0x0000000087654321ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_PEAK_CHANNELS
+value|128
+end_define
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|short
+name|oss_peaks_t
+index|[
+name|MAX_PEAK_CHANNELS
+index|]
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_GETIPEAKS
+value|_IOR('P', 43, oss_peaks_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_GETOPEAKS
+value|_IOR('P', 44, oss_peaks_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_POLICY
+value|_IOW('P', 45, int)
+end_define
+
+begin_comment
+comment|/* See the manual */
+end_comment
+
+begin_comment
+comment|/**  * @brief	Argument for SNDCTL_SYSINFO ioctl.  *  * For use w/ the SNDCTL_SYSINFO ioctl available on audio (/dev/dsp*),  * mixer, and MIDI devices.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|oss_sysinfo
+block|{
+name|char
+name|product
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/* For example OSS/Free, OSS/Linux or 				   OSS/Solaris */
+name|char
+name|version
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/* For example 4.0a */
+name|int
+name|versionnum
+decl_stmt|;
+comment|/* See OSS_GETVERSION */
+name|char
+name|options
+index|[
+literal|128
+index|]
+decl_stmt|;
+comment|/* Reserved */
+name|int
+name|numaudios
+decl_stmt|;
+comment|/* # of audio/dsp devices */
+name|int
+name|openedaudio
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* Bit mask telling which audio devices 				   are busy */
+name|int
+name|numsynths
+decl_stmt|;
+comment|/* # of availavle synth devices */
+name|int
+name|nummidis
+decl_stmt|;
+comment|/* # of available MIDI ports */
+name|int
+name|numtimers
+decl_stmt|;
+comment|/* # of available timer devices */
+name|int
+name|nummixers
+decl_stmt|;
+comment|/* # of mixer devices */
+name|int
+name|openedmidi
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* Bit mask telling which midi devices 				   are busy */
+name|int
+name|numcards
+decl_stmt|;
+comment|/* Number of sound cards in the system */
+name|int
+name|filler
+index|[
+literal|241
+index|]
+decl_stmt|;
+comment|/* For future expansion (set to -1) */
+block|}
+name|oss_sysinfo
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|oss_mixext
+block|{
+name|int
+name|dev
+decl_stmt|;
+comment|/* Mixer device number */
+name|int
+name|ctrl
+decl_stmt|;
+comment|/* Controller number */
+name|int
+name|type
+decl_stmt|;
+comment|/* Entry type */
+define|#
+directive|define
+name|MIXT_DEVROOT
+value|0
+comment|/* Device root entry */
+define|#
+directive|define
+name|MIXT_GROUP
+value|1
+comment|/* Controller group */
+define|#
+directive|define
+name|MIXT_ONOFF
+value|2
+comment|/* OFF (0) or ON (1) */
+define|#
+directive|define
+name|MIXT_ENUM
+value|3
+comment|/* Enumerated (0 to maxvalue) */
+define|#
+directive|define
+name|MIXT_MONOSLIDER
+value|4
+comment|/* Mono slider (0 to 100) */
+define|#
+directive|define
+name|MIXT_STEREOSLIDER
+value|5
+comment|/* Stereo slider (dual 0 to 100) */
+define|#
+directive|define
+name|MIXT_MESSAGE
+value|6
+comment|/* (Readable) textual message */
+define|#
+directive|define
+name|MIXT_MONOVU
+value|7
+comment|/* VU meter value (mono) */
+define|#
+directive|define
+name|MIXT_STEREOVU
+value|8
+comment|/* VU meter value (stereo) */
+define|#
+directive|define
+name|MIXT_MONOPEAK
+value|9
+comment|/* VU meter peak value (mono) */
+define|#
+directive|define
+name|MIXT_STEREOPEAK
+value|10
+comment|/* VU meter peak value (stereo) */
+define|#
+directive|define
+name|MIXT_RADIOGROUP
+value|11
+comment|/* Radio button group */
+define|#
+directive|define
+name|MIXT_MARKER
+value|12
+comment|/* Separator between normal and extension entries */
+define|#
+directive|define
+name|MIXT_VALUE
+value|13
+comment|/* Decimal value entry */
+define|#
+directive|define
+name|MIXT_HEXVALUE
+value|14
+comment|/* Hexadecimal value entry */
+define|#
+directive|define
+name|MIXT_MONODB
+value|15
+comment|/* Mono atten. slider (0 to -144) */
+define|#
+directive|define
+name|MIXT_STEREODB
+value|16
+comment|/* Stereo atten. slider (dual 0 to -144) */
+define|#
+directive|define
+name|MIXT_SLIDER
+value|17
+comment|/* Slider (mono) with full integer range */
+define|#
+directive|define
+name|MIXT_3D
+value|18
+comment|/* Possible value range (minvalue to maxvalue) */
+comment|/* Note that maxvalue may also be smaller than minvalue */
+name|int
+name|maxvalue
+decl_stmt|;
+name|int
+name|minvalue
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|MIXF_READABLE
+value|0x00000001
+comment|/* Has readable value */
+define|#
+directive|define
+name|MIXF_WRITEABLE
+value|0x00000002
+comment|/* Has writeable value */
+define|#
+directive|define
+name|MIXF_POLL
+value|0x00000004
+comment|/* May change itself */
+define|#
+directive|define
+name|MIXF_HZ
+value|0x00000008
+comment|/* Herz scale */
+define|#
+directive|define
+name|MIXF_STRING
+value|0x00000010
+comment|/* Use dynamic extensions for value */
+define|#
+directive|define
+name|MIXF_DYNAMIC
+value|0x00000010
+comment|/* Supports dynamic extensions */
+define|#
+directive|define
+name|MIXF_OKFAIL
+value|0x00000020
+comment|/* Interpret value as 1=OK, 0=FAIL */
+define|#
+directive|define
+name|MIXF_FLAT
+value|0x00000040
+comment|/* Flat vertical space requirements */
+define|#
+directive|define
+name|MIXF_LEGACY
+value|0x00000080
+comment|/* Legacy mixer control group */
+name|char
+name|id
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* Mnemonic ID (mainly for internal use) */
+name|int
+name|parent
+decl_stmt|;
+comment|/* Entry# of parent (group) node (-1 if root) */
+name|int
+name|dummy
+decl_stmt|;
+comment|/* Internal use */
+name|int
+name|timestamp
+decl_stmt|;
+name|char
+name|data
+index|[
+literal|64
+index|]
+decl_stmt|;
+comment|/* Misc data (entry type dependent) */
+name|unsigned
+name|char
+name|enum_present
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/* Mask of allowed enum values */
+name|int
+name|control_no
+decl_stmt|;
+comment|/* SOUND_MIXER_VOLUME..SOUND_MIXER_MIDI */
+comment|/* (-1 means not indicated) */
+comment|/*  * The desc field is reserved for internal purposes of OSS. It should not be   * used by applications.  */
+name|unsigned
+name|int
+name|desc
+decl_stmt|;
+define|#
+directive|define
+name|MIXEXT_SCOPE_MASK
+value|0x0000003f
+define|#
+directive|define
+name|MIXEXT_SCOPE_OTHER
+value|0x00000000
+define|#
+directive|define
+name|MIXEXT_SCOPE_INPUT
+value|0x00000001
+define|#
+directive|define
+name|MIXEXT_SCOPE_OUTPUT
+value|0x00000002
+define|#
+directive|define
+name|MIXEXT_SCOPE_MONITOR
+value|0x00000003
+define|#
+directive|define
+name|MIXEXT_SCOPE_RECSWITCH
+value|0x00000004
+name|char
+name|extname
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|int
+name|update_counter
+decl_stmt|;
+name|int
+name|filler
+index|[
+literal|7
+index|]
+decl_stmt|;
+block|}
+name|oss_mixext
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|oss_mixext_root
+block|{
+name|char
+name|id
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|char
+name|name
+index|[
+literal|48
+index|]
+decl_stmt|;
+block|}
+name|oss_mixext_root
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|oss_mixer_value
+block|{
+name|int
+name|dev
+decl_stmt|;
+name|int
+name|ctrl
+decl_stmt|;
+name|int
+name|value
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+comment|/* Reserved for future use. Initialize to 0 */
+name|int
+name|timestamp
+decl_stmt|;
+comment|/* Must be set to oss_mixext.timestamp */
+name|int
+name|filler
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* Reserved for future use. Initialize to 0 */
+block|}
+name|oss_mixer_value
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|OSS_ENUM_MAXVALUE
+value|255
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|oss_mixer_enuminfo
+block|{
+name|int
+name|dev
+decl_stmt|;
+name|int
+name|ctrl
+decl_stmt|;
+name|int
+name|nvalues
+decl_stmt|;
+name|int
+name|version
+decl_stmt|;
+comment|/* Read the manual */
+name|short
+name|strindex
+index|[
+name|OSS_ENUM_MAXVALUE
+index|]
+decl_stmt|;
+name|char
+name|strings
+index|[
+literal|3000
+index|]
+decl_stmt|;
+block|}
+name|oss_mixer_enuminfo
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|OPEN_READ
+value|PCM_ENABLE_INPUT
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPEN_WRITE
+value|PCM_ENABLE_OUTPUT
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPEN_READWRITE
+value|(OPEN_READ|OPEN_WRITE)
+end_define
+
+begin_comment
+comment|/**  * @brief	Argument for SNDCTL_AUDIOINFO ioctl.  *  * For use w/ the SNDCTL_AUDIOINFO ioctl available on audio (/dev/dsp*)  * devices.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|oss_audioinfo
+block|{
+name|int
+name|dev
+decl_stmt|;
+comment|/* Audio device number */
+name|char
+name|name
+index|[
+literal|64
+index|]
+decl_stmt|;
+name|int
+name|busy
+decl_stmt|;
+comment|/* 0, OPEN_READ, OPEN_WRITE or OPEN_READWRITE */
+name|int
+name|pid
+decl_stmt|;
+name|int
+name|caps
+decl_stmt|;
+comment|/* DSP_CAP_INPUT, DSP_CAP_OUTPUT */
+name|int
+name|iformats
+decl_stmt|;
+name|int
+name|oformats
+decl_stmt|;
+name|int
+name|magic
+decl_stmt|;
+comment|/* Reserved for internal use */
+name|char
+name|cmd
+index|[
+literal|64
+index|]
+decl_stmt|;
+comment|/* Command using the device (if known) */
+name|int
+name|card_number
+decl_stmt|;
+name|int
+name|port_number
+decl_stmt|;
+name|int
+name|mixer_dev
+decl_stmt|;
+name|int
+name|real_device
+decl_stmt|;
+comment|/* Obsolete field. Replaced by devnode */
+name|int
+name|enabled
+decl_stmt|;
+comment|/* 1=enabled, 0=device not ready at this 				   moment */
+name|int
+name|flags
+decl_stmt|;
+comment|/* For internal use only - no practical 				   meaning */
+name|int
+name|min_rate
+decl_stmt|;
+comment|/* Sample rate limits */
+name|int
+name|max_rate
+decl_stmt|;
+name|int
+name|min_channels
+decl_stmt|;
+comment|/* Number of channels supported */
+name|int
+name|max_channels
+decl_stmt|;
+name|int
+name|binding
+decl_stmt|;
+comment|/* DSP_BIND_FRONT, etc. 0 means undefined */
+name|int
+name|rate_source
+decl_stmt|;
+name|char
+name|handle
+index|[
+literal|32
+index|]
+decl_stmt|;
+define|#
+directive|define
+name|MAX_SAMPLE_RATES
+value|20
+comment|/* Cannot be changed  */
+name|unsigned
+name|int
+name|nrates
+decl_stmt|;
+name|unsigned
+name|int
+name|rates
+index|[
+name|MAX_SAMPLE_RATES
+index|]
+decl_stmt|;
+comment|/* Please read the manual before using these */
+name|oss_longname_t
+name|song_name
+decl_stmt|;
+comment|/* Song name (if given) */
+name|oss_label_t
+name|label
+decl_stmt|;
+comment|/* Device label (if given) */
+name|int
+name|latency
+decl_stmt|;
+comment|/* In usecs, -1=unknown */
+name|oss_devnode_t
+name|devnode
+decl_stmt|;
+comment|/* Device special file name (inside 					   /dev) */
+name|int
+name|filler
+index|[
+literal|186
+index|]
+decl_stmt|;
+block|}
+name|oss_audioinfo
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|oss_mixerinfo
+block|{
+name|int
+name|dev
+decl_stmt|;
+name|char
+name|id
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|char
+name|name
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|int
+name|modify_counter
+decl_stmt|;
+name|int
+name|card_number
+decl_stmt|;
+name|int
+name|port_number
+decl_stmt|;
+name|char
+name|handle
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|int
+name|magic
+decl_stmt|;
+comment|/* Reserved */
+name|int
+name|enabled
+decl_stmt|;
+comment|/* Reserved */
+name|int
+name|caps
+decl_stmt|;
+define|#
+directive|define
+name|MIXER_CAP_VIRTUAL
+value|0x00000001
+name|int
+name|flags
+decl_stmt|;
+comment|/* Reserved */
+name|int
+name|nrext
+decl_stmt|;
+comment|/*    * The priority field can be used to select the default (motherboard)    * mixer device. The mixer with the highest priority is the    * most preferred one. -2 or less means that this device cannot be used    * as the default mixer.    */
+name|int
+name|priority
+decl_stmt|;
+name|int
+name|filler
+index|[
+literal|254
+index|]
+decl_stmt|;
+comment|/* Reserved */
+block|}
+name|oss_mixerinfo
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|oss_midi_info
+block|{
+name|int
+name|dev
+decl_stmt|;
+comment|/* Midi device number */
+name|char
+name|name
+index|[
+literal|64
+index|]
+decl_stmt|;
+name|int
+name|busy
+decl_stmt|;
+comment|/* 0, OPEN_READ, OPEN_WRITE or OPEN_READWRITE */
+name|int
+name|pid
+decl_stmt|;
+name|char
+name|cmd
+index|[
+literal|64
+index|]
+decl_stmt|;
+comment|/* Command using the device (if known) */
+name|int
+name|caps
+decl_stmt|;
+define|#
+directive|define
+name|MIDI_CAP_MPU401
+value|0x00000001
+comment|/**** OBSOLETE ****/
+define|#
+directive|define
+name|MIDI_CAP_INPUT
+value|0x00000002
+define|#
+directive|define
+name|MIDI_CAP_OUTPUT
+value|0x00000004
+define|#
+directive|define
+name|MIDI_CAP_INOUT
+value|(MIDI_CAP_INPUT|MIDI_CAP_OUTPUT)
+define|#
+directive|define
+name|MIDI_CAP_VIRTUAL
+value|0x00000008
+comment|/* Pseudo device */
+define|#
+directive|define
+name|MIDI_CAP_MTCINPUT
+value|0x00000010
+comment|/* Supports SNDCTL_MIDI_MTCINPUT */
+define|#
+directive|define
+name|MIDI_CAP_CLIENT
+value|0x00000020
+comment|/* Virtual client side device */
+define|#
+directive|define
+name|MIDI_CAP_SERVER
+value|0x00000040
+comment|/* Virtual server side device */
+define|#
+directive|define
+name|MIDI_CAP_INTERNAL
+value|0x00000080
+comment|/* Internal (synth) device */
+define|#
+directive|define
+name|MIDI_CAP_EXTERNAL
+value|0x00000100
+comment|/* external (MIDI port) device */
+define|#
+directive|define
+name|MIDI_CAP_PTOP
+value|0x00000200
+comment|/* Point to point link to one device */
+define|#
+directive|define
+name|MIDI_CAP_MTC
+value|0x00000400
+comment|/* MTC/SMPTE (control) device */
+name|int
+name|magic
+decl_stmt|;
+comment|/* Reserved for internal use */
+name|int
+name|card_number
+decl_stmt|;
+name|int
+name|port_number
+decl_stmt|;
+name|int
+name|enabled
+decl_stmt|;
+comment|/* 1=enabled, 0=device not ready at this moment */
+name|int
+name|flags
+decl_stmt|;
+comment|/* For internal use only - no practical meaning */
+name|char
+name|handle
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|oss_longname_t
+name|song_name
+decl_stmt|;
+comment|/* Song name (if known) */
+name|oss_label_t
+name|label
+decl_stmt|;
+comment|/* Device label (if given) */
+name|int
+name|latency
+decl_stmt|;
+comment|/* In usecs, -1=unknown */
+name|int
+name|filler
+index|[
+literal|244
+index|]
+decl_stmt|;
+block|}
+name|oss_midi_info
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|oss_card_info
+block|{
+name|int
+name|card
+decl_stmt|;
+name|char
+name|shortname
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|char
+name|longname
+index|[
+literal|128
+index|]
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+name|int
+name|filler
+index|[
+literal|256
+index|]
+decl_stmt|;
+block|}
+name|oss_card_info
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_SYSINFO
+value|_IOR ('X', 1, oss_sysinfo)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OSS_SYSINFO
+value|SNDCTL_SYSINFO
+end_define
+
+begin_comment
+comment|/* Old name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_MIX_NRMIX
+value|_IOR ('X', 2, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_MIX_NREXT
+value|_IOWR('X', 3, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_MIX_EXTINFO
+value|_IOWR('X', 4, oss_mixext)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_MIX_READ
+value|_IOWR('X', 5, oss_mixer_value)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_MIX_WRITE
+value|_IOWR('X', 6, oss_mixer_value)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_AUDIOINFO
+value|_IOWR('X', 7, oss_audioinfo)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_MIX_ENUMINFO
+value|_IOWR('X', 8, oss_mixer_enuminfo)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_MIDIINFO
+value|_IOWR('X', 9, oss_midi_info)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_MIXERINFO
+value|_IOWR('X',10, oss_mixerinfo)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_CARDINFO
+value|_IOWR('X',11, oss_card_info)
+end_define
+
+begin_comment
+comment|/*  * Few more "globally" available ioctl calls.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_SETSONG
+value|_IOW ('Y', 2, oss_longname_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_GETSONG
+value|_IOR ('Y', 2, oss_longname_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_SETNAME
+value|_IOW ('Y', 3, oss_longname_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_SETLABEL
+value|_IOW ('Y', 4, oss_label_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_GETLABEL
+value|_IOR ('Y', 4, oss_label_t)
 end_define
 
 begin_endif

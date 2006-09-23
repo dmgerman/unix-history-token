@@ -248,6 +248,12 @@ directive|include
 file|<sys/mutex.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/condvar.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -336,6 +342,12 @@ begin_include
 include|#
 directive|include
 file|<dev/sound/pcm/mixer.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/sound/pcm/dsp.h>
 end_include
 
 begin_define
@@ -796,6 +808,15 @@ begin_decl_stmt
 specifier|extern
 name|devclass_t
 name|pcm_devclass
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|unrhdr
+modifier|*
+name|pcmsg_unrhdr
 decl_stmt|;
 end_decl_stmt
 
@@ -1543,6 +1564,16 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_function_decl
+name|void
+name|sound_oss_sysinfo
+parameter_list|(
+name|oss_sysinfo
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#

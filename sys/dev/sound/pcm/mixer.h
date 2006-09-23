@@ -68,6 +68,22 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|mixer_oss_mixerinfo
+parameter_list|(
+name|struct
+name|cdev
+modifier|*
+name|i_dev
+parameter_list|,
+name|oss_mixerinfo
+modifier|*
+name|mi
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|mixer_hwvol_init
 parameter_list|(
 name|device_t
@@ -169,9 +185,34 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|mixer_count
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * this is a kludge to allow hiding of the struct snd_mixer definition  * 512 should be enough for all architectures  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OSSV4_EXPERIMENT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MIXER_SIZE
+value|(512 + sizeof(struct kobj) + \ 				 sizeof(oss_mixer_enuminfo))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -179,6 +220,11 @@ directive|define
 name|MIXER_SIZE
 value|(512 + sizeof(struct kobj))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
