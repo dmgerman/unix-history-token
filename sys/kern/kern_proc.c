@@ -1473,6 +1473,13 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* XXX TTY */
 name|PGRP_LOCK
 argument_list|(
 name|pgrp
@@ -1550,6 +1557,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* XXX TTY */
 name|pgrp
 operator|->
 name|pg_session
@@ -1631,6 +1645,13 @@ argument_list|(
 name|pgrp
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* XXX TTY */
 name|doenterpgrp
 argument_list|(
 name|p
