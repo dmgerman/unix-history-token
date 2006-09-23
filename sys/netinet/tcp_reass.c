@@ -2511,9 +2511,6 @@ goto|goto
 name|drop
 goto|;
 block|}
-ifdef|#
-directive|ifdef
-name|INET6
 comment|/* Re-initialization for later version check */
 name|ip
 operator|->
@@ -2521,8 +2518,6 @@ name|ip_v
 operator|=
 name|IPVERSION
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 comment|/* 	 * Check that TCP offset makes sense, 	 * pull out TCP options and adjust length.		XXX 	 */
 name|off
