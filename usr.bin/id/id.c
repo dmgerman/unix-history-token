@@ -291,7 +291,7 @@ decl_stmt|,
 name|uflag
 decl_stmt|;
 name|int
-name|aflag
+name|Aflag
 decl_stmt|;
 specifier|const
 name|char
@@ -316,7 +316,7 @@ name|uflag
 operator|=
 literal|0
 expr_stmt|;
-name|aflag
+name|Aflag
 operator|=
 literal|0
 expr_stmt|;
@@ -415,7 +415,7 @@ operator|)
 condition|?
 literal|""
 else|:
-literal|"PGMagnpru"
+literal|"APGMgnpru"
 argument_list|)
 operator|)
 operator|!=
@@ -427,6 +427,19 @@ condition|(
 name|ch
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|USE_BSM_AUDIT
+case|case
+literal|'A'
+case|:
+name|Aflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 case|case
 literal|'G'
 case|:
@@ -447,14 +460,6 @@ case|case
 literal|'P'
 case|:
 name|Pflag
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'a'
-case|:
-name|aflag
 operator|=
 literal|1
 expr_stmt|;
@@ -528,13 +533,13 @@ argument_list|()
 expr_stmt|;
 switch|switch
 condition|(
+name|Aflag
+operator|+
 name|Gflag
 operator|+
 name|Mflag
 operator|+
 name|Pflag
-operator|+
-name|aflag
 operator|+
 name|gflag
 operator|+
@@ -594,7 +599,7 @@ directive|ifdef
 name|USE_BSM_AUDIT
 if|if
 condition|(
-name|aflag
+name|Aflag
 condition|)
 block|{
 name|auditid
@@ -606,15 +611,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-else|#
-directive|else
-if|if
-condition|(
-name|aflag
-condition|)
-name|usage
-argument_list|()
-expr_stmt|;
 endif|#
 directive|endif
 if|if
@@ -2107,20 +2103,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n%s%s\n%s\n%s\n%s\n"
+literal|"%s\n%s%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: id [user]"
-argument_list|,
-literal|"       id -G [-n] [user]"
-argument_list|,
-literal|"       id -M"
-argument_list|,
-literal|"       id -P [user]"
 argument_list|,
 ifdef|#
 directive|ifdef
 name|USE_BSM_AUDIT
-literal|"       id -a\n"
+literal|"       id -A\n"
 argument_list|,
 else|#
 directive|else
@@ -2128,6 +2118,12 @@ literal|""
 argument_list|,
 endif|#
 directive|endif
+literal|"       id -G [-n] [user]"
+argument_list|,
+literal|"       id -M"
+argument_list|,
+literal|"       id -P [user]"
+argument_list|,
 literal|"       id -g [-nr] [user]"
 argument_list|,
 literal|"       id -p [user]"
