@@ -3247,6 +3247,10 @@ condition|)
 return|return
 name|EINVAL
 return|;
+name|d
+operator|=
+name|NULL
+expr_stmt|;
 name|m
 operator|=
 name|NULL
