@@ -1189,12 +1189,10 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|kqueue_register
+name|kqfd_register
 parameter_list|(
-name|struct
-name|kqueue
-modifier|*
-name|kq
+name|int
+name|fd
 parameter_list|,
 name|struct
 name|kevent
