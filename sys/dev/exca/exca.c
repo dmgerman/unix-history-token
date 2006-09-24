@@ -566,19 +566,12 @@ decl_stmt|;
 name|uint32_t
 name|offset
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|int mem8 = (mem->kind == PCCARD_A_MEM_ATTR);
-else|#
-directive|else
 name|int
 name|mem8
 init|=
 literal|1
+comment|/* mem->kind == PCCARD_A_MEM_ATTR */
 decl_stmt|;
-endif|#
-directive|endif
 name|map
 operator|=
 operator|&
