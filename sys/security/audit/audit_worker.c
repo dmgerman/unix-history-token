@@ -269,12 +269,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * XXXAUDIT: Should adjust comments below to make it clear that we get to  * this point only if we believe we have storage, so not having space here is  * a violation of invariants derived from administrative procedures. I.e.,  * someone else has written to the audit partition, leaving less space than  * we accounted for.  */
+comment|/*  * Write an audit record to a file, performed as the last stage after both  * preselection and BSM conversion.  Both space management and write failures  * are handled in this function.  *  * No attempt is made to deal with possible failure to deliver a trigger to  * the audit daemon, since the message is asynchronous anyway.  */
 end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|audit_record_write
 parameter_list|(
 name|struct
@@ -300,15 +300,19 @@ name|size_t
 name|len
 parameter_list|)
 block|{
-name|int
-name|ret
-decl_stmt|;
-name|long
-name|temp
-decl_stmt|;
+specifier|static
 name|struct
-name|vattr
-name|vattr
+name|timeval
+name|last_lowspace_trigger
+decl_stmt|;
+specifier|static
+name|struct
+name|timeval
+name|last_fail
+decl_stmt|;
+specifier|static
+name|int
+name|cur_lowspace_trigger
 decl_stmt|;
 name|struct
 name|statfs
@@ -316,7 +320,20 @@ modifier|*
 name|mnt_stat
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|vfslocked
+decl_stmt|;
+specifier|static
+name|int
+name|cur_fail
+decl_stmt|;
+name|struct
+name|vattr
+name|vattr
+decl_stmt|;
+name|long
+name|temp
 decl_stmt|;
 if|if
 condition|(
@@ -324,11 +341,7 @@ name|vp
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 name|mnt_stat
 operator|=
 operator|&
@@ -347,8 +360,8 @@ operator|->
 name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* 	 * First, gather statistics on the audit log file and file system so 	 * that we know how we're doing on space.  In both cases, if we're 	 * unable to perform the operation, we drop the record and return. 	 * However, this is arguably an assertion failure. 	 * XXX Need a FreeBSD equivalent. 	 */
-name|ret
+comment|/* 	 * First, gather statistics on the audit log file and file system so 	 * that we know how we're doing on space.  Consider failure of these 	 * operations to indicate a future inability to write to the file. 	 */
+name|error
 operator|=
 name|VFS_STATFS
 argument_list|(
@@ -363,10 +376,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
+name|error
 condition|)
 goto|goto
-name|out
+name|fail
 goto|;
 name|vn_lock
 argument_list|(
@@ -379,7 +392,7 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|ret
+name|error
 operator|=
 name|VOP_GETATTR
 argument_list|(
@@ -404,12 +417,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
+name|error
 condition|)
 goto|goto
-name|out
+name|fail
 goto|;
-comment|/* update the global stats struct */
 name|audit_fstat
 operator|.
 name|af_currsz
@@ -418,8 +430,7 @@ name|vattr
 operator|.
 name|va_size
 expr_stmt|;
-comment|/* 	 * XXX Need to decide what to do if the trigger to the audit daemon 	 * fails. 	 */
-comment|/* 	 * If we fall below minimum free blocks (hard limit), tell the audit 	 * daemon to force a rotation off of the file system. We also stop 	 * writing, which means this audit record is probably lost.  If we 	 * fall below the minimum percent free blocks (soft limit), then 	 * kindly suggest to the audit daemon to do something. 	 */
+comment|/* 	 * We handle four different space-related limits: 	 * 	 * - A fixed (hard) limit on the minimum free blocks we require on 	 *   the file system, and results in record loss, a trigger, and 	 *   possible fail stop due to violating invariants. 	 * 	 * - An administrative (soft) limit, which when fallen below, results 	 *   in the kernel notifying the audit daemon of low space. 	 * 	 * - An audit trail size limit, which when gone above, results in the 	 *   kernel notifying the audit daemon that rotation is desired. 	 * 	 * - The total depth of the kernel audit record exceeding free space, 	 *   which can lead to possible fail stop (with drain), in order to 	 *   prevent violating invariants.  Failure here doesn't halt 	 *   immediately, but prevents new records from being generated. 	 * 	 * Possibly, the last of these should be handled differently, always 	 * allowing a full queue to be lost, rather than trying to prevent 	 * loss. 	 * 	 * First, handle the hard limit, which generates a trigger and may 	 * fail stop.  This is handled in the same manner as ENOSPC from 	 * VOP_WRITE, and results in record loss. 	 */
 if|if
 condition|(
 name|mnt_stat
@@ -429,41 +440,15 @@ operator|<
 name|AUDIT_HARD_LIMIT_FREE_BLOCKS
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|send_trigger
-argument_list|(
-name|AUDIT_TRIGGER_NO_SPACE
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Hopefully userspace did something about all the previous 		 * triggers that were sent prior to this critical condition. 		 * If fail-stop is set, then we're done; goodnight Gracie. 		 */
-if|if
-condition|(
-name|audit_fail_stop
-condition|)
-name|panic
-argument_list|(
-literal|"Audit log space exhausted and fail-stop set."
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-name|audit_suspended
-operator|=
-literal|1
-expr_stmt|;
-name|ret
+name|error
 operator|=
 name|ENOSPC
 expr_stmt|;
 goto|goto
-name|out
+name|fail_enospc
 goto|;
 block|}
-block|}
-elseif|else
-comment|/* 		 * Send a message to the audit daemon that disk space is 		 * getting low. 		 * 		 * XXXAUDIT: Check math and block size calculation here. 		 */
+comment|/* 	 * Second, handle falling below the soft limit, if defined; we send 	 * the daemon a trigger and continue processing the record.  Triggers 	 * are limited to 1/sec. 	 */
 if|if
 condition|(
 name|audit_qctrl
@@ -473,6 +458,7 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* 		 * XXXAUDIT: Check math and block size calculations here. 		 */
 name|temp
 operator|=
 name|mnt_stat
@@ -495,6 +481,21 @@ name|f_bfree
 operator|<
 name|temp
 condition|)
+block|{
+if|if
+condition|(
+name|ppsratecheck
+argument_list|(
+operator|&
+name|last_lowspace_trigger
+argument_list|,
+operator|&
+name|cur_lowspace_trigger
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -503,8 +504,15 @@ argument_list|(
 name|AUDIT_TRIGGER_LOW_SPACE
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"Warning: audit space low\n"
+argument_list|)
+expr_stmt|;
 block|}
-comment|/* 	 * Check if the current log file is full; if so, call for a log 	 * rotate. This is not an exact comparison; we may write some records 	 * over the limit. If that's not acceptable, then add a fudge factor 	 * here. 	 */
+block|}
+block|}
+comment|/* 	 * If the current file is getting full, generate a rotation trigger 	 * to the daemon.  This is only approximate, which is fine as more 	 * records may be generated before the daemon rotates the file. 	 */
 if|if
 condition|(
 operator|(
@@ -545,11 +553,14 @@ name|AUDIT_TRIGGER_ROTATE_KERNEL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If the estimated amount of audit data in the audit event queue 	 * (plus records allocated but not yet queued) has reached the amount 	 * of free space on the disk, then we need to go into an audit fail 	 * stop state, in which we do not permit the allocation/committing of 	 * any new audit records.  We continue to process packets but don't 	 * allow any activities that might generate new records.  In the 	 * future, we might want to detect when space is available again and 	 * allow operation to continue, but this behavior is sufficient to 	 * meet fail stop requirements in CAPP. 	 */
+comment|/* 	 * If the estimated amount of audit data in the audit event queue 	 * (plus records allocated but not yet queued) has reached the amount 	 * of free space on the disk, then we need to go into an audit fail 	 * stop state, in which we do not permit the allocation/committing of 	 * any new audit records.  We continue to process records but don't 	 * allow any activities that might generate new records.  In the 	 * future, we might want to detect when space is available again and 	 * allow operation to continue, but this behavior is sufficient to 	 * meet fail stop requirements in CAPP. 	 */
 if|if
 condition|(
 name|audit_fail_stop
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 call|(
 name|unsigned
 name|long
@@ -581,10 +592,24 @@ name|f_bfree
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|ppsratecheck
+argument_list|(
+operator|&
+name|last_fail
+argument_list|,
+operator|&
+name|cur_fail
+argument_list|,
+literal|1
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"audit_record_write: free space below size of audit "
-literal|"queue, failing stop\n"
+literal|"audit_record_write: free space "
+literal|"below size of audit queue, failing "
+literal|"stop\n"
 argument_list|)
 expr_stmt|;
 name|audit_in_failure
@@ -592,7 +617,16 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|ret
+elseif|else
+if|if
+condition|(
+name|audit_in_failure
+condition|)
+block|{
+comment|/* 			 * XXXRW: If we want to handle recovery, this is the 			 * spot to do it: unset audit_in_failure, and issue a 			 * wakeup on the cv. 			 */
+block|}
+block|}
+name|error
 operator|=
 name|vn_rdwr
 argument_list|(
@@ -624,13 +658,31 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|out
-label|:
-comment|/* 	 * When we're done processing the current record, we have to check to 	 * see if we're in a failure mode, and if so, whether this was the 	 * last record left to be drained.  If we're done draining, then we 	 * fsync the vnode and panic. 	 */
+if|if
+condition|(
+name|error
+operator|==
+name|ENOSPC
+condition|)
+goto|goto
+name|fail_enospc
+goto|;
+elseif|else
+if|if
+condition|(
+name|error
+condition|)
+goto|goto
+name|fail
+goto|;
+comment|/* 	 * Catch completion of a queue drain here; if we're draining and the 	 * queue is now empty, fail stop.  That audit_fail_stop is implicitly 	 * true, since audit_in_failure can only be set of audit_fail_stop is 	 * set. 	 * 	 * XXXRW: If we handle recovery from audit_in_failure, then we need 	 * to make panic here conditional. 	 */
 if|if
 condition|(
 name|audit_in_failure
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|audit_q_len
 operator|==
 literal|0
@@ -678,16 +730,146 @@ literal|"Audit store overflow; record queue drained."
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 name|VFS_UNLOCK_GIANT
 argument_list|(
 name|vfslocked
 argument_list|)
 expr_stmt|;
-return|return
+return|return;
+name|fail_enospc
+label|:
+comment|/* 	 * ENOSPC is considered a special case with respect to failures, as 	 * this can reflect either our preemptive detection of insufficient 	 * space, or ENOSPC returned by the vnode write call. 	 */
+if|if
+condition|(
+name|audit_fail_stop
+condition|)
+block|{
+name|VOP_LOCK
+argument_list|(
+name|vp
+argument_list|,
+name|LK_DRAIN
+operator||
+name|LK_INTERLOCK
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 operator|(
-name|ret
+name|void
 operator|)
-return|;
+name|VOP_FSYNC
+argument_list|(
+name|vp
+argument_list|,
+name|MNT_WAIT
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"Audit log space exhausted and fail-stop set."
+argument_list|)
+expr_stmt|;
+block|}
+operator|(
+name|void
+operator|)
+name|send_trigger
+argument_list|(
+name|AUDIT_TRIGGER_NO_SPACE
+argument_list|)
+expr_stmt|;
+name|audit_suspended
+operator|=
+literal|1
+expr_stmt|;
+comment|/* FALLTHROUGH */
+name|fail
+label|:
+comment|/* 	 * We have failed to write to the file, so the current record is 	 * lost, which may require an immediate system halt. 	 */
+if|if
+condition|(
+name|audit_panic_on_write_fail
+condition|)
+block|{
+name|VOP_LOCK
+argument_list|(
+name|vp
+argument_list|,
+name|LK_DRAIN
+operator||
+name|LK_INTERLOCK
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|VOP_FSYNC
+argument_list|(
+name|vp
+argument_list|,
+name|MNT_WAIT
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"audit_worker: write error %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ppsratecheck
+argument_list|(
+operator|&
+name|last_fail
+argument_list|,
+operator|&
+name|cur_fail
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"audit_worker: write error %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+name|VFS_UNLOCK_GIANT
+argument_list|(
+name|vfslocked
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -942,17 +1124,15 @@ decl_stmt|;
 name|au_event_t
 name|event
 decl_stmt|;
-name|int
-name|error
-decl_stmt|,
-name|ret
-decl_stmt|;
 name|au_id_t
 name|auid
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|sorf
 decl_stmt|;
+comment|/* 	 * First, handle the user record, if any: commit to the system trail 	 * and audit pipes as selected. 	 */
 if|if
 condition|(
 operator|(
@@ -971,9 +1151,6 @@ operator|&
 name|AR_PRESELECT_USER_TRAIL
 operator|)
 condition|)
-block|{
-name|error
-operator|=
 name|audit_record_write
 argument_list|(
 name|audit_vp
@@ -991,32 +1168,6 @@ operator|->
 name|k_ulen
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|&&
-name|audit_panic_on_write_fail
-condition|)
-name|panic
-argument_list|(
-literal|"audit_worker: write error %d\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|error
-condition|)
-name|printf
-argument_list|(
-literal|"audit_worker: write error %d\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -1122,7 +1273,7 @@ name|sorf
 operator|=
 name|AU_PRS_FAILURE
 expr_stmt|;
-name|ret
+name|error
 operator|=
 name|kaudit_to_bsm
 argument_list|(
@@ -1134,7 +1285,7 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|ret
+name|error
 condition|)
 block|{
 case|case
@@ -1159,7 +1310,7 @@ name|panic
 argument_list|(
 literal|"kaudit_to_bsm returned %d"
 argument_list|,
-name|ret
+name|error
 argument_list|)
 expr_stmt|;
 block|}
@@ -1171,9 +1322,6 @@ name|k_ar_commit
 operator|&
 name|AR_PRESELECT_TRAIL
 condition|)
-block|{
-name|error
-operator|=
 name|audit_record_write
 argument_list|(
 name|audit_vp
@@ -1191,32 +1339,6 @@ operator|->
 name|len
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|&&
-name|audit_panic_on_write_fail
-condition|)
-name|panic
-argument_list|(
-literal|"audit_worker: write error %d\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|error
-condition|)
-name|printf
-argument_list|(
-literal|"audit_worker: write error %d\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|ar
