@@ -265,6 +265,27 @@ value|(&in_ifaddrhashtbl[INADDR_HASHVAL(x)& in_ifaddrhmask])
 end_define
 
 begin_comment
+comment|/*  * Macro for finding the internet address structure (in_ifaddr) corresponding  * corresponding to one of our IP addresses (in_addr).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INADDR_TO_IFADDR
+parameter_list|(
+name|addr
+parameter_list|,
+name|ia
+parameter_list|)
+define|\
+comment|/* struct in_addr addr; */
+define|\
+comment|/* struct in_ifaddr *ia; */
+define|\
+value|do { \ \ 	LIST_FOREACH(ia, INADDR_HASH((addr).s_addr), ia_hash) \ 		if (IA_SIN(ia)->sin_addr.s_addr == (addr).s_addr) \ 			break; \ } while (0)
+end_define
+
+begin_comment
 comment|/*  * Macro for finding the interface (ifnet structure) corresponding to one  * of our IP addresses.  */
 end_comment
 
@@ -282,7 +303,7 @@ comment|/* struct in_addr addr; */
 define|\
 comment|/* struct ifnet *ifp; */
 define|\
-value|{ \ 	struct in_ifaddr *ia; \ \ 	LIST_FOREACH(ia, INADDR_HASH((addr).s_addr), ia_hash) \ 		if (IA_SIN(ia)->sin_addr.s_addr == (addr).s_addr) \ 			break; \ 	(ifp) = (ia == NULL) ? NULL : ia->ia_ifp; \ }
+value|{ \ 	struct in_ifaddr *ia; \ \ 	INADDR_TO_IFADDR(addr, ia); \ 	(ifp) = (ia == NULL) ? NULL : ia->ia_ifp; \ }
 end_define
 
 begin_comment
