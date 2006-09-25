@@ -265,7 +265,7 @@ value|(&in_ifaddrhashtbl[INADDR_HASHVAL(x)& in_ifaddrhmask])
 end_define
 
 begin_comment
-comment|/*  * Macro for finding the internet address structure (in_ifaddr) corresponding  * corresponding to one of our IP addresses (in_addr).  */
+comment|/*  * Macro for finding the internet address structure (in_ifaddr)  * corresponding to one of our IP addresses (in_addr).  */
 end_comment
 
 begin_define
