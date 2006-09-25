@@ -2219,6 +2219,15 @@ name|imo_max_memberships
 operator|=
 name|IP_MIN_MEMBERSHIPS
 expr_stmt|;
+name|sc
+operator|->
+name|sc_imo
+operator|.
+name|imo_multicast_vif
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|callout_init
 argument_list|(
 operator|&
