@@ -9504,12 +9504,6 @@ argument_list|)
 expr_stmt|;
 name|noaquire
 label|:
-if|if
-condition|(
-name|fp
-operator|!=
-name|NULL
-condition|)
 name|fdrop
 argument_list|(
 name|fp
