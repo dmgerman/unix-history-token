@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2004 Apple Computer, Inc.  * All rights reserved.  *  * @APPLE_BSD_LICENSE_HEADER_START@  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * @APPLE_BSD_LICENSE_HEADER_END@  *  * $P4: //depot/projects/trustedbsd/openbsm/bin/auditd/auditd.c#21 $  */
+comment|/*  * Copyright (c) 2004 Apple Computer, Inc.  * All rights reserved.  *  * @APPLE_BSD_LICENSE_HEADER_START@  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * @APPLE_BSD_LICENSE_HEADER_END@  *  * $P4: //depot/projects/trustedbsd/openbsm/bin/auditd/auditd.c#23 $  */
 end_comment
 
 begin_include
@@ -628,6 +628,7 @@ name|lastfile
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|syslog
 argument_list|(
 name|LOG_INFO
@@ -639,6 +640,12 @@ argument_list|,
 name|lastfile
 argument_list|)
 expr_stmt|;
+name|audit_warn_closefile
+argument_list|(
+name|lastfile
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|free
 argument_list|(
@@ -2746,6 +2753,12 @@ decl_stmt|;
 name|long
 name|policy
 decl_stmt|;
+name|au_fstat_t
+name|au_fstat
+decl_stmt|;
+name|size_t
+name|filesz
+decl_stmt|;
 comment|/* 	 * Process the audit event file, obtaining a class mapping for each 	 * event, and send that mapping into the kernel. 	 * 	 * XXX There's a risk here that the BSM library will return NULL 	 * for an event when it can't properly map it to a class. In that 	 * case, we will not process any events beyond the one that failed, 	 * but should. We need a way to get a count of the events. 	*/
 name|ev
 operator|.
@@ -3085,6 +3098,68 @@ literal|"Failed to set default audit policy: %m"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Set trail rotation size. 	 */
+if|if
+condition|(
+name|getacfilesz
+argument_list|(
+operator|&
+name|filesz
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|bzero
+argument_list|(
+operator|&
+name|au_fstat
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|au_fstat
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|au_fstat
+operator|.
+name|af_filesz
+operator|=
+name|filesz
+expr_stmt|;
+if|if
+condition|(
+name|auditon
+argument_list|(
+name|A_SETFSIZE
+argument_list|,
+operator|&
+name|au_fstat
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|au_fstat
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Failed to set filesz: %m"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Failed to obtain filesz: %m"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
