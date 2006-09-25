@@ -2176,6 +2176,15 @@ name|CARP_DFLTTL
 expr_stmt|;
 endif|#
 directive|endif
+name|sc
+operator|->
+name|sc_imo
+operator|.
+name|imo_multicast_vif
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|callout_init
 argument_list|(
 operator|&
