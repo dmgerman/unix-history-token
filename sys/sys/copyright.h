@@ -20,6 +20,18 @@ value|"Copyright (c) 1992-2006 The FreeBSD Project.\n"
 end_define
 
 begin_comment
+comment|/* Foundation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRADEMARK_Foundation
+define|\
+value|"FreeBSD is a registered trademark of The FreeBSD Foundation.\n"
+end_define
+
+begin_comment
 comment|/* Berkeley */
 end_comment
 
@@ -75,6 +87,15 @@ index|[]
 init|=
 name|COPYRIGHT_FreeBSD
 name|COPYRIGHT_UCB
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|trademark
+index|[]
+init|=
+name|TRADEMARK_Foundation
 decl_stmt|;
 end_decl_stmt
 
