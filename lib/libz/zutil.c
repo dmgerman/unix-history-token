@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* zutil.c -- target dependent utility functions for the compression library  * Copyright (C) 1995-2003 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* zutil.c -- target dependent utility functions for the compression library  * Copyright (C) 1995-2005 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -33,30 +33,6 @@ end_struct
 begin_comment
 comment|/* for buggy compilers */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|STDC
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|exit
-name|OF
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#
@@ -355,7 +331,7 @@ directive|ifdef
 name|NO_GZCOMPRESS
 name|flags
 operator|+=
-literal|1
+literal|1L
 operator|<<
 literal|16
 expr_stmt|;
@@ -366,7 +342,7 @@ directive|ifdef
 name|NO_GZIP
 name|flags
 operator|+=
-literal|1
+literal|1L
 operator|<<
 literal|17
 expr_stmt|;
@@ -377,7 +353,7 @@ directive|ifdef
 name|PKZIP_BUG_WORKAROUND
 name|flags
 operator|+=
-literal|1
+literal|1L
 operator|<<
 literal|20
 expr_stmt|;
@@ -388,7 +364,7 @@ directive|ifdef
 name|FASTEST
 name|flags
 operator|+=
-literal|1
+literal|1L
 operator|<<
 literal|21
 expr_stmt|;
@@ -402,7 +378,7 @@ directive|ifdef
 name|NO_vsnprintf
 name|flags
 operator|+=
-literal|1
+literal|1L
 operator|<<
 literal|25
 expr_stmt|;
@@ -411,7 +387,7 @@ directive|ifdef
 name|HAS_vsprintf_void
 name|flags
 operator|+=
-literal|1
+literal|1L
 operator|<<
 literal|26
 expr_stmt|;
@@ -424,7 +400,7 @@ directive|ifdef
 name|HAS_vsnprintf_void
 name|flags
 operator|+=
-literal|1
+literal|1L
 operator|<<
 literal|26
 expr_stmt|;
@@ -436,7 +412,7 @@ else|#
 directive|else
 name|flags
 operator|+=
-literal|1
+literal|1L
 operator|<<
 literal|24
 expr_stmt|;
@@ -445,7 +421,7 @@ directive|ifdef
 name|NO_snprintf
 name|flags
 operator|+=
-literal|1
+literal|1L
 operator|<<
 literal|25
 expr_stmt|;
@@ -454,7 +430,7 @@ directive|ifdef
 name|HAS_sprintf_void
 name|flags
 operator|+=
-literal|1
+literal|1L
 operator|<<
 literal|26
 expr_stmt|;
@@ -467,7 +443,7 @@ directive|ifdef
 name|HAS_snprintf_void
 name|flags
 operator|+=
-literal|1
+literal|1L
 operator|<<
 literal|26
 expr_stmt|;
@@ -584,7 +560,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/* does not exist on WCE */
+comment|/* The Microsoft C Run-Time Library for Windows CE doesn't have      * errno.  We define it as a global variable to simplify porting.      * Its value is always 0 and should not be used.      */
 end_comment
 
 begin_decl_stmt

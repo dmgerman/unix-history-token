@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* zutil.h -- internal interface and configuration of the compression library  * Copyright (C) 1995-2003 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* zutil.h -- internal interface and configuration of the compression library  * Copyright (C) 1995-2005 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -41,11 +41,22 @@ directive|ifdef
 name|STDC
 end_ifdef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_WIN32_WCE
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<stddef.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -70,6 +81,28 @@ directive|ifdef
 name|NO_ERRNO_H
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_WIN32_WCE
+end_ifdef
+
+begin_comment
+comment|/* The Microsoft C Run-Time Library for Windows CE doesn't have        * errno.  We define it as a global variable to simplify porting.        * Its value is always 0 and should not be used.  We rename it to        * avoid conflict with other libraries that use the same workaround.        */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|errno
+value|z_errno
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -82,11 +115,22 @@ else|#
 directive|else
 end_else
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_WIN32_WCE
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<errno.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -553,6 +597,23 @@ directive|define
 name|OS_CODE
 value|0x06
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|M_I86
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<malloc.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1095,67 +1156,6 @@ begin_define
 define|#
 directive|define
 name|NO_vsnprintf
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_STRERROR
-end_ifdef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VMS
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|strerror
-name|OF
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|zstrerror
-parameter_list|(
-name|errnum
-parameter_list|)
-value|strerror(errnum)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|zstrerror
-parameter_list|(
-name|errnum
-parameter_list|)
-value|""
 end_define
 
 begin_endif

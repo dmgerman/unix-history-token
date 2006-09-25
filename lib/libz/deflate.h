@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* deflate.h -- internal compression state  * Copyright (C) 1995-2002 Jean-loup Gailly  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* deflate.h -- internal compression state  * Copyright (C) 1995-2004 Jean-loup Gailly  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -136,6 +136,34 @@ define|#
 directive|define
 name|INIT_STATE
 value|42
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXTRA_STATE
+value|69
+end_define
+
+begin_define
+define|#
+directive|define
+name|NAME_STATE
+value|73
+end_define
+
+begin_define
+define|#
+directive|define
+name|COMMENT_STATE
+value|91
+end_define
+
+begin_define
+define|#
+directive|define
+name|HCRC_STATE
+value|103
 end_define
 
 begin_define
@@ -311,7 +339,7 @@ modifier|*
 name|pending_out
 decl_stmt|;
 comment|/* next pending byte to output to the stream */
-name|int
+name|uInt
 name|pending
 decl_stmt|;
 comment|/* nb of bytes in the pending buffer */
@@ -319,6 +347,14 @@ name|int
 name|wrap
 decl_stmt|;
 comment|/* bit 0 true for zlib, bit 1 true for gzip */
+name|gz_headerp
+name|gzhead
+decl_stmt|;
+comment|/* gzip header information to write */
+name|uInt
+name|gzindex
+decl_stmt|;
+comment|/* where in extra, name, or comment */
 name|Byte
 name|method
 decl_stmt|;

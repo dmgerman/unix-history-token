@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* inflate.h -- internal inflate state definition  * Copyright (C) 1995-2003 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* inflate.h -- internal inflate state definition  * Copyright (C) 1995-2004 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -39,9 +39,6 @@ block|{
 name|HEAD
 block|,
 comment|/* i: waiting for magic header */
-ifdef|#
-directive|ifdef
-name|GUNZIP
 name|FLAGS
 block|,
 comment|/* i: waiting for method and flags (gzip) */
@@ -66,8 +63,6 @@ comment|/* i: waiting for end of comment (gzip) */
 name|HCRC
 block|,
 comment|/* i: waiting for header crc (gzip) */
-endif|#
-directive|endif
 name|DICTID
 block|,
 comment|/* i: waiting for dictionary check value */
@@ -116,14 +111,9 @@ comment|/* o: waiting for output space to write literal */
 name|CHECK
 block|,
 comment|/* i: waiting for 32-bit check value */
-ifdef|#
-directive|ifdef
-name|GUNZIP
 name|LENGTH
 block|,
 comment|/* i: waiting for 32-bit length (gzip) */
-endif|#
-directive|endif
 name|DONE
 block|,
 comment|/* finished check, done -- remain here until reset */
@@ -173,6 +163,10 @@ name|flags
 decl_stmt|;
 comment|/* gzip header method and flags (0 if zlib) */
 name|unsigned
+name|dmax
+decl_stmt|;
+comment|/* zlib header max distance (INFLATE_STRICT) */
+name|unsigned
 name|long
 name|check
 decl_stmt|;
@@ -182,6 +176,10 @@ name|long
 name|total
 decl_stmt|;
 comment|/* protected copy of output count */
+name|gz_headerp
+name|head
+decl_stmt|;
+comment|/* where to save gzip header information */
 comment|/* sliding window */
 name|unsigned
 name|wbits
