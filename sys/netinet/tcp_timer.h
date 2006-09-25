@@ -273,7 +273,7 @@ name|tvmin
 parameter_list|,
 name|tvmax
 parameter_list|)
-value|do { \ 	(tv) = (value) + tcp_rexmit_slop; \ 	if ((u_long)(tv)< (u_long)(tvmin)) \ 		(tv) = (tvmin); \ 	else if ((u_long)(tv)> (u_long)(tvmax)) \ 		(tv) = (tvmax); \ } while(0)
+value|do { \ 	(tv) = (value) + tcp_rexmit_slop; \ 	if ((u_long)(tv)< (u_long)(tvmin)) \ 		(tv) = (tvmin); \ 	if ((u_long)(tv)> (u_long)(tvmax)) \ 		(tv) = (tvmax); \ } while(0)
 end_define
 
 begin_ifdef
