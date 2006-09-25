@@ -3064,7 +3064,7 @@ operator|.
 name|af_ridreq
 operator|=
 operator|&
-name|in6_addreq
+name|in6_ridreq
 block|,
 operator|.
 name|af_addreq
