@@ -17,6 +17,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_include
+include|#
+directive|include
+file|"opt_compat.h"
+end_include
+
 begin_comment
 comment|/*  * IEEE 802.11 ioctl support (FreeBSD-specific)  */
 end_comment
@@ -5477,12 +5483,6 @@ name|error
 return|;
 block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|COMPAT_FREEBSD6
-end_define
 
 begin_ifdef
 ifdef|#
