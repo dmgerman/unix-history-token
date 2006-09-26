@@ -52,18 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/limits.h>
 end_include
 
@@ -76,12 +64,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
 end_include
 
 begin_include
@@ -105,47 +87,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netdb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<arpa/inet.h>
+file|<string.h>
 end_include
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* BSD IPV4 includes */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
-end_include
 
 begin_include
 include|#
@@ -171,10 +125,22 @@ directive|include
 file|<netinet/libalias/alias_local.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/libalias/alias_mod.h>
+end_include
+
 begin_else
 else|#
 directive|else
 end_else
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
+end_include
 
 begin_include
 include|#

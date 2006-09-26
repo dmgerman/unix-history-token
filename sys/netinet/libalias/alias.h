@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 2001 Charles Mott<cm@linktel.net>  * All rights res
 end_comment
 
 begin_comment
-comment|/*-  * Alias.h defines the outside world interfaces for the packet aliasing  * software.  *  * This software is placed into the public domain with no restrictions on its  * distribution.  */
+comment|/*  * Alias.h defines the outside world interfaces for the packet aliasing  * software.  *  * This software is placed into the public domain with no restrictions on its  * distribution.  */
 end_comment
 
 begin_ifndef
@@ -21,6 +21,31 @@ begin_define
 define|#
 directive|define
 name|_ALIAS_H_
+end_define
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|LIBALIAS_BUF_SIZE
+value|128
 end_define
 
 begin_ifdef
@@ -37,12 +62,6 @@ begin_define
 define|#
 directive|define
 name|NO_FW_PUNCH
-end_define
-
-begin_define
-define|#
-directive|define
-name|NO_LOGGING
 end_define
 
 begin_define
@@ -886,6 +905,38 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Module handling API */
+end_comment
+
+begin_function_decl
+name|int
+name|LibAliasLoadModule
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|LibAliasUnLoadAllModule
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|LibAliasRefreshModules
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Mode flags and other constants.  */
 end_comment
 
@@ -897,23 +948,12 @@ begin_comment
 comment|/*  * If PKT_ALIAS_LOG is set, a message will be printed to /var/log/alias.log  * every time a link is created or deleted.  This is useful for debugging.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_LOGGING
-end_ifndef
-
 begin_define
 define|#
 directive|define
 name|PKT_ALIAS_LOG
 value|0x01
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * If PKT_ALIAS_DENY_INCOMING is set, then incoming connections (e.g. to ftp,  * telnet or web servers will be prevented by the aliasing mechanism.  */
