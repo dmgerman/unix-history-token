@@ -1469,10 +1469,9 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
-literal|"getauditinfo"
+literal|"getaudit"
 argument_list|)
 expr_stmt|;
 name|printf
