@@ -4560,8 +4560,7 @@ block|{
 name|to
 operator|.
 name|to_tsecr
-operator|=
-operator|-
+operator|-=
 name|tp
 operator|->
 name|ts_offset
