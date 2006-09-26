@@ -514,6 +514,10 @@ name|u_int
 name|mnt_flag
 decl_stmt|;
 comment|/* (i) flags shared with user */
+name|u_int
+name|mnt_noasync
+decl_stmt|;
+comment|/* (i) # noasync overrides */
 name|struct
 name|vfsoptlist
 modifier|*
@@ -1189,6 +1193,17 @@ end_define
 
 begin_comment
 comment|/* forced unmount in progress */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNTK_ASYNC
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* filtered async flag */
 end_comment
 
 begin_define

@@ -313,9 +313,9 @@ name|vp
 operator|->
 name|v_mount
 operator|->
-name|mnt_flag
+name|mnt_kern_flag
 operator|&
-name|MNT_ASYNC
+name|MNTK_ASYNC
 operator|)
 operator|==
 literal|0
