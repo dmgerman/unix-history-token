@@ -4726,6 +4726,8 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
 name|devclass_get_devices
 argument_list|(
 name|ipmi_devclass
@@ -4736,7 +4738,10 @@ argument_list|,
 operator|&
 name|count
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+return|return;
 for|for
 control|(
 name|i
@@ -4764,6 +4769,13 @@ name|devs
 index|[
 name|i
 index|]
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|devs
+argument_list|,
+name|M_TEMP
 argument_list|)
 expr_stmt|;
 block|}
