@@ -90,6 +90,11 @@ name|COPYRIGHT_UCB
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|char
 name|trademark
@@ -98,11 +103,6 @@ init|=
 name|TRADEMARK_Foundation
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
