@@ -4520,6 +4520,14 @@ ifdef|#
 directive|ifdef
 name|QUOTA
 comment|/* 	 * Our bufobj must require giant for snapshots when quotas are 	 * enabled. 	 */
+name|BO_LOCK
+argument_list|(
+operator|&
+name|devvp
+operator|->
+name|v_bufobj
+argument_list|)
+expr_stmt|;
 name|devvp
 operator|->
 name|v_bufobj
@@ -4527,6 +4535,14 @@ operator|.
 name|bo_flag
 operator||=
 name|BO_NEEDSGIANT
+expr_stmt|;
+name|BO_UNLOCK
+argument_list|(
+operator|&
+name|devvp
+operator|->
+name|v_bufobj
+argument_list|)
 expr_stmt|;
 else|#
 directive|else
