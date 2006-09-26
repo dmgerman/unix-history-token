@@ -1209,6 +1209,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MNTK_SOFTDEP
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* async disabled by softdep */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MNTK_UNMOUNT
 value|0x01000000
 end_define
