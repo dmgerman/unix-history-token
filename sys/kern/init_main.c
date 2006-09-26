@@ -1235,7 +1235,7 @@ argument|diagwarn
 argument_list|,
 argument|SI_SUB_COPYRIGHT
 argument_list|,
-argument|SI_ORDER_FOURTH +
+argument|SI_ORDER_THIRD +
 literal|2
 argument_list|,
 argument|print_caddr_t
