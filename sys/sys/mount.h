@@ -513,7 +513,7 @@ comment|/* (i) kernel only flags */
 name|u_int
 name|mnt_flag
 decl_stmt|;
-comment|/* flags shared with user */
+comment|/* (i) flags shared with user */
 name|struct
 name|vfsoptlist
 modifier|*

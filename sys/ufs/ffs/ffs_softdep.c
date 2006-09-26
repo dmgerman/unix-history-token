@@ -6640,6 +6640,11 @@ name|error
 decl_stmt|,
 name|cyl
 decl_stmt|;
+name|MNT_ILOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 name|mp
 operator|->
 name|mnt_flag
@@ -6652,6 +6657,11 @@ operator|->
 name|mnt_flag
 operator||=
 name|MNT_SOFTDEP
+expr_stmt|;
+name|MNT_IUNLOCK
+argument_list|(
+name|mp
+argument_list|)
 expr_stmt|;
 name|ump
 operator|=

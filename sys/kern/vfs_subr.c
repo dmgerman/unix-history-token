@@ -13766,6 +13766,11 @@ literal|0
 operator|)
 return|;
 block|}
+name|MNT_ILOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 name|asyncflag
 operator|=
 name|mp
@@ -13780,6 +13785,11 @@ name|mnt_flag
 operator|&=
 operator|~
 name|MNT_ASYNC
+expr_stmt|;
+name|MNT_IUNLOCK
+argument_list|(
+name|mp
+argument_list|)
 expr_stmt|;
 name|vfs_msync
 argument_list|(
@@ -13799,6 +13809,11 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+name|MNT_ILOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|asyncflag
@@ -13808,6 +13823,11 @@ operator|->
 name|mnt_flag
 operator||=
 name|MNT_ASYNC
+expr_stmt|;
+name|MNT_IUNLOCK
+argument_list|(
+name|mp
+argument_list|)
 expr_stmt|;
 name|vn_finished_write
 argument_list|(
