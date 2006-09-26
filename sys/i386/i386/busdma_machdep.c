@@ -159,13 +159,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|BUS_DMA_USE_FILTER
-value|BUS_DMA_BUS2
-end_define
-
-begin_define
-define|#
-directive|define
 name|BUS_DMA_COULD_BOUNCE
 value|BUS_DMA_BUS3
 end_define
@@ -1204,7 +1197,7 @@ name|parent
 operator|->
 name|flags
 operator|&
-name|BUS_DMA_USE_FILTER
+name|BUS_DMA_COULD_BOUNCE
 operator|)
 operator|!=
 literal|0
@@ -1214,7 +1207,7 @@ name|newtag
 operator|->
 name|flags
 operator||=
-name|BUS_DMA_USE_FILTER
+name|BUS_DMA_COULD_BOUNCE
 expr_stmt|;
 if|if
 condition|(
@@ -2626,7 +2619,7 @@ name|dmat
 operator|->
 name|flags
 operator|&
-name|BUS_DMA_USE_FILTER
+name|BUS_DMA_COULD_BOUNCE
 operator|)
 operator|!=
 literal|0
@@ -3050,7 +3043,7 @@ name|dmat
 operator|->
 name|flags
 operator|&
-name|BUS_DMA_USE_FILTER
+name|BUS_DMA_COULD_BOUNCE
 operator|)
 operator|!=
 literal|0
