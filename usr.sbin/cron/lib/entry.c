@@ -2384,6 +2384,17 @@ return|;
 if|if
 condition|(
 name|ch
+operator|==
+literal|'/'
+condition|)
+name|num2
+operator|=
+name|high
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ch
 operator|!=
 literal|'-'
 condition|)
