@@ -556,12 +556,6 @@ literal|0
 argument_list|,
 name|VT_ACTIVATE
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|(
-name|long
-operator|)
 name|cur_info
 operator|.
 name|active_vty
@@ -3651,12 +3645,6 @@ literal|0
 argument_list|,
 name|VT_ACTIVATE
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|(
-name|long
-operator|)
 name|n
 argument_list|)
 operator|==
