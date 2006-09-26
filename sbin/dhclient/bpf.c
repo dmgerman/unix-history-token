@@ -1155,7 +1155,7 @@ condition|(
 name|interface
 operator|->
 name|rbuf_offset
-operator|==
+operator|>=
 name|interface
 operator|->
 name|rbuf_len
