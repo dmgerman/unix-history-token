@@ -444,6 +444,10 @@ begin_struct
 struct|struct
 name|mount
 block|{
+define|#
+directive|define
+name|mnt_startzero
+value|mnt_list
 name|TAILQ_ENTRY
 argument_list|(
 argument|mount
@@ -480,6 +484,10 @@ name|vnodelst
 name|mnt_nvnodelist
 decl_stmt|;
 comment|/* (i) list of vnodes */
+define|#
+directive|define
+name|mnt_endzero
+value|mnt_lock
 name|struct
 name|lock
 name|mnt_lock
@@ -490,6 +498,10 @@ name|mtx
 name|mnt_mtx
 decl_stmt|;
 comment|/* mount structure interlock */
+define|#
+directive|define
+name|mnt_startzero2
+value|mnt_writeopcount
 name|int
 name|mnt_writeopcount
 decl_stmt|;
@@ -584,6 +596,10 @@ name|int
 name|mnt_secondary_writes
 decl_stmt|;
 comment|/* (i) # of secondary writes */
+define|#
+directive|define
+name|mnt_endzero2
+value|mnt_secondary_accwrites
 name|int
 name|mnt_secondary_accwrites
 decl_stmt|;
