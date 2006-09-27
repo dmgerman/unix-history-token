@@ -9140,6 +9140,9 @@ name|ptepindex
 index|]
 operator|=
 name|srcptepaddr
+operator|&
+operator|~
+name|PG_W
 expr_stmt|;
 name|dst_pmap
 operator|->
@@ -9254,7 +9257,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 					 * Clear the modified and 					 * accessed (referenced) bits 					 * during the copy. 					 */
+comment|/* 					 * Clear the wired, modified, and 					 * accessed (referenced) bits 					 * during the copy. 					 */
 name|m
 operator|=
 name|PHYS_TO_VM_PAGE
@@ -9269,6 +9272,8 @@ name|ptetemp
 operator|&
 operator|~
 operator|(
+name|PG_W
+operator||
 name|PG_M
 operator||
 name|PG_A
