@@ -148,7 +148,7 @@ begin_define
 define|#
 directive|define
 name|DIGIIO_RING
-value|_IO('e', 'C')
+value|_IOWINT('e', 'C')
 end_define
 
 begin_define
