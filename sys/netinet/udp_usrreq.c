@@ -4500,7 +4500,7 @@ comment|/* 40 1K datagrams */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_ULONG
 argument_list|(
 name|_net_inet_udp
 argument_list|,
@@ -4551,7 +4551,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_ULONG
 argument_list|(
 name|_net_inet_udp
 argument_list|,
