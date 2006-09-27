@@ -242,7 +242,11 @@ name|NULL
 condition|)
 block|{
 comment|/* e.g. s_ttyvp was revoked */
-return|return;
+operator|*
+name|dev
+operator|=
+name|ctty
+expr_stmt|;
 block|}
 else|else
 operator|*
