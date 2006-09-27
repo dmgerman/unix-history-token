@@ -2636,9 +2636,18 @@ comment|/* Send EOI first thing. */
 name|lapic_eoi
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|SMP
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SCHED_ULE
+argument_list|)
 comment|/* 	 * Don't do any accounting for the disabled HTT cores, since it 	 * will provide misleading numbers for the userland. 	 * 	 * No locking is necessary here, since even if we loose the race 	 * when hlt_cpus_mask changes it is not a big deal, really. 	 */
 if|if
 condition|(
