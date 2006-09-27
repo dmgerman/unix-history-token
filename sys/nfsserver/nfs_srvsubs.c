@@ -4074,6 +4074,9 @@ name|error
 decl_stmt|,
 name|exflags
 decl_stmt|;
+name|int
+name|vfslocked
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|MNT_EXNORESPORT
@@ -4147,13 +4150,13 @@ return|;
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|mp
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|error
 operator|=
 name|VFS_CHECKEXP
@@ -4369,13 +4372,16 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|mtx_unlock
+name|vfs_rel
 argument_list|(
-operator|&
-name|Giant
+name|mp
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
+name|VFS_UNLOCK_GIANT
+argument_list|(
+name|vfslocked
+argument_list|)
+expr_stmt|;
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
