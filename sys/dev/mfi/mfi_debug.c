@@ -20,7 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<opt_mfi.h>
+file|"opt_mfi.h"
 end_include
 
 begin_ifdef
