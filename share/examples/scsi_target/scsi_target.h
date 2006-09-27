@@ -16,14 +16,14 @@ name|_SCSI_TARGET_H
 end_define
 
 begin_comment
-comment|/*  * Maximum number of parallel commands to accept,  * 256 for Fibre Channel (SPI is 16).  */
+comment|/*  * Maximum number of parallel commands to accept,  * 1024 for Fibre Channel (SPI is 16).  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MAX_INITIATORS
-value|256
+value|1024
 end_define
 
 begin_define
@@ -391,6 +391,53 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* Global Data */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|notaio
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Compat Defines  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+end_if
+
+begin_define
+define|#
+directive|define
+name|OFF_FMT
+value|"%ju"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|OFF_FMT
+value|"%llu"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
