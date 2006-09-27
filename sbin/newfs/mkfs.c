@@ -4639,7 +4639,7 @@ else|else
 block|{
 name|warnx
 argument_list|(
-literal|"Cannot retrieve operator gid."
+literal|"Cannot retrieve operator gid, using gid 0."
 argument_list|)
 expr_stmt|;
 name|gid
