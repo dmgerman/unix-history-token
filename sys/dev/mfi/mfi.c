@@ -10864,6 +10864,15 @@ argument_list|)
 block|{
 if|if
 condition|(
+name|sc
+operator|->
+name|mfi_aen_cm
+operator|==
+name|cm
+condition|)
+continue|continue;
+if|if
+condition|(
 name|cm
 operator|->
 name|cm_timestamp
