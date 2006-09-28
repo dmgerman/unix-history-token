@@ -4516,9 +4516,14 @@ condition|(
 name|error
 condition|)
 block|{
-comment|/* 		 * We know that the packet was lost, so back out the 		 * sequence number advance, if any. 		 */
+comment|/* 		 * We know that the packet was lost, so back out the 		 * sequence number advance, if any. 		 * 		 * If the error is EPERM the packet got blocked by the 		 * local firewall.  Normally we should terminate the 		 * connection but the blocking may have been spurious 		 * due to a firewall reconfiguration cycle.  So we treat 		 * it like a packet loss and let the retransmit timer and 		 * timeouts do their work over time. 		 * XXX: It is a POLA question whether calling tcp_drop right 		 * away would be the really correct behavior instead. 		 */
 if|if
 condition|(
+name|error
+operator|!=
+name|EPERM
+operator|&&
+operator|(
 operator|(
 name|tp
 operator|->
@@ -4536,6 +4541,7 @@ name|tp
 operator|->
 name|tt_persist
 argument_list|)
+operator|)
 condition|)
 block|{
 comment|/* 			 * No need to check for TH_FIN here because 			 * the TF_SENTFIN flag handles that case. 			 */
@@ -4593,6 +4599,25 @@ operator|-=
 name|len
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|error
+operator|==
+name|EPERM
+condition|)
+block|{
+name|tp
+operator|->
+name|t_softerror
+operator|=
+name|error
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 name|out
 label|:
