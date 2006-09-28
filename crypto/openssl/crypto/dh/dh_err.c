@@ -147,6 +147,12 @@ literal|"bad generator"
 block|}
 block|,
 block|{
+name|DH_R_MODULUS_TOO_LARGE
+block|,
+literal|"modulus too large"
+block|}
+block|,
+block|{
 name|DH_R_NO_PRIVATE_VALUE
 block|,
 literal|"no private value"

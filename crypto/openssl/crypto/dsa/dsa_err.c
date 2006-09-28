@@ -245,6 +245,12 @@ index|[]
 init|=
 block|{
 block|{
+name|DSA_R_BAD_Q_VALUE
+block|,
+literal|"bad q value"
+block|}
+block|,
+block|{
 name|DSA_R_DATA_TOO_LARGE_FOR_KEY_SIZE
 block|,
 literal|"data too large for key size"
@@ -254,6 +260,12 @@ block|{
 name|DSA_R_MISSING_PARAMETERS
 block|,
 literal|"missing parameters"
+block|}
+block|,
+block|{
+name|DSA_R_MODULUS_TOO_LARGE
+block|,
+literal|"modulus too large"
 block|}
 block|,
 block|{
