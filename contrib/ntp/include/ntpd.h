@@ -2218,20 +2218,17 @@ begin_comment
 comment|/* ntp_control.c */
 end_comment
 
-begin_struct_decl
-struct_decl|struct
-name|ctl_trap
-struct_decl|;
-end_struct_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|ctl_trap
-name|ctl_trap
-index|[]
-decl_stmt|;
-end_decl_stmt
+begin_endif
+unit|struct ctl_trap; extern struct ctl_trap ctl_trap[];
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
