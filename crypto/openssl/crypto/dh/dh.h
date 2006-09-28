@@ -71,6 +71,24 @@ directive|include
 file|<openssl/ossl_typ.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_DH_MAX_MODULUS_BITS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|OPENSSL_DH_MAX_MODULUS_BITS
+value|10000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -702,6 +720,10 @@ define|#
 directive|define
 name|DH_R_NO_PRIVATE_VALUE
 value|100
+define|#
+directive|define
+name|DH_R_MODULUS_TOO_LARGE
+value|103
 ifdef|#
 directive|ifdef
 name|__cplusplus

@@ -508,6 +508,12 @@ literal|"key size too small"
 block|}
 block|,
 block|{
+name|RSA_R_MODULUS_TOO_LARGE
+block|,
+literal|"modulus too large"
+block|}
+block|,
+block|{
 name|RSA_R_NULL_BEFORE_BLOCK_MISSING
 block|,
 literal|"null before block missing"
