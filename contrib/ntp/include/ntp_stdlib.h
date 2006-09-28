@@ -1357,6 +1357,12 @@ begin_comment
 comment|/* clocktypes.c */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NTP_REFCLOCK_H
+end_ifdef
+
 begin_struct_decl
 struct_decl|struct
 name|clktype
@@ -1371,6 +1377,11 @@ name|clktypes
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* getopt.c */
