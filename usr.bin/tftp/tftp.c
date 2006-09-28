@@ -982,6 +982,10 @@ argument_list|,
 name|amount
 argument_list|)
 expr_stmt|;
+name|txrx_error
+operator|=
+literal|1
+expr_stmt|;
 block|}
 end_function
 
@@ -1672,6 +1676,10 @@ literal|"Received"
 argument_list|,
 name|amount
 argument_list|)
+expr_stmt|;
+name|txrx_error
+operator|=
+literal|1
 expr_stmt|;
 block|}
 end_function
