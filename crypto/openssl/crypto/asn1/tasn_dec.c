@@ -3239,6 +3239,10 @@ return|return
 operator|-
 literal|1
 return|;
+name|ret
+operator|=
+literal|0
+expr_stmt|;
 comment|/* SEQUENCE, SET and "OTHER" are left in encoded form */
 if|if
 condition|(

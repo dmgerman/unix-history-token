@@ -5217,7 +5217,7 @@ if|if
 condition|(
 name|len
 operator|--
-operator|==
+operator|<=
 literal|0
 condition|)
 block|{
