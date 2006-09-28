@@ -488,7 +488,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SD_F_SOFTVOL
+name|SD_F_SOFTPCMVOL
 value|0x00000004
 end_define
 

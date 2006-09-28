@@ -42,6 +42,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ad1981b_patch
+parameter_list|(
+name|struct
+name|ac97_info
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|cmi9739_patch
 parameter_list|(
 name|struct
