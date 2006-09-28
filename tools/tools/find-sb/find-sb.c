@@ -143,6 +143,10 @@ decl_stmt|;
 name|intmax_t
 name|offset
 decl_stmt|;
+name|offset
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
