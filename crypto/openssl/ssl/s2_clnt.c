@@ -2103,6 +2103,14 @@ name|s
 operator|->
 name|session
 operator|->
+name|sess_cert
+operator|==
+name|NULL
+operator|||
+name|s
+operator|->
+name|session
+operator|->
 name|peer
 operator|!=
 name|s
