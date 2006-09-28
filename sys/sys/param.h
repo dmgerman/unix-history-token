@@ -1196,63 +1196,6 @@ comment|/* _KERNEL */
 end_comment
 
 begin_comment
-comment|/*  * Constants for setting the parameters of the kernel memory allocator.  *  * 2 ** MINBUCKET is the smallest unit of memory that will be  * allocated. It must be at least large enough to hold a pointer.  *  * Units of memory less or equal to MAXALLOCSAVE will permanently  * allocate physical memory; requests for these size pieces of  * memory are quite fast. Allocations greater than MAXALLOCSAVE must  * always allocate and free physical memory; requests for these  * size allocations should be done infrequently as they will be slow.  *  * Constraints: PAGE_SIZE<= MAXALLOCSAVE<= 2 ** (MINBUCKET + 14), and  * MAXALLOCSIZE must be a power of two.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__sparc64__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|MINBUCKET
-value|5
-end_define
-
-begin_comment
-comment|/* 5 => min allocation of 32 bytes */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MINBUCKET
-value|4
-end_define
-
-begin_comment
-comment|/* 4 => min allocation of 16 bytes */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|MAXALLOCSAVE
-value|(2 * PAGE_SIZE)
-end_define
-
-begin_comment
 comment|/*  * Scale factor for scaled integers used to count %cpu time and load avgs.  *  * The number of CPU `tick's that map to a unique `%age' can be expressed  * by the formula (1 / (2 ^ (FSHIFT - 11))).  The maximum load average that  * can be calculated (assuming 32 bits) can be closely approximated using  * the formula (2 ^ (2 * (16 - FSHIFT))) for (FSHIFT< 15).  *  * For the scheduler to maintain a 1:1 mapping of CPU `tick' to `%age',  * FSHIFT must be at least 11; this gives us a maximum load avg of ~1024.  */
 end_comment
 
