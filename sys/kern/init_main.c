@@ -929,11 +929,26 @@ end_macro
 begin_macro
 name|SYSINIT
 argument_list|(
-argument|version
+argument|trademark
 argument_list|,
 argument|SI_SUB_COPYRIGHT
 argument_list|,
 argument|SI_ORDER_SECOND
+argument_list|,
+argument|print_caddr_t
+argument_list|,
+argument|trademark
+argument_list|)
+end_macro
+
+begin_macro
+name|SYSINIT
+argument_list|(
+argument|version
+argument_list|,
+argument|SI_SUB_COPYRIGHT
+argument_list|,
+argument|SI_ORDER_THIRD
 argument_list|,
 argument|print_caddr_t
 argument_list|,
@@ -964,7 +979,7 @@ argument|witwarn
 argument_list|,
 argument|SI_SUB_COPYRIGHT
 argument_list|,
-argument|SI_ORDER_SECOND +
+argument|SI_ORDER_THIRD +
 literal|1
 argument_list|,
 argument|print_caddr_t
@@ -1001,7 +1016,7 @@ argument|diagwarn
 argument_list|,
 argument|SI_SUB_COPYRIGHT
 argument_list|,
-argument|SI_ORDER_SECOND +
+argument|SI_ORDER_THIRD +
 literal|2
 argument_list|,
 argument|print_caddr_t
