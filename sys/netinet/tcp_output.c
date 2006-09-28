@@ -2736,6 +2736,8 @@ condition|(
 name|len
 operator|>
 name|TCP_MAXWIN
+operator|-
+name|hdrlen
 condition|)
 block|{
 name|len
