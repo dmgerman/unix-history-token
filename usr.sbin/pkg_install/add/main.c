@@ -1745,7 +1745,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: pkg_add [-vInrfRMSK] [-t template] [-p prefix] [-P prefix] [-C chrootdir]"
+literal|"usage: pkg_add [-vInfFrRMSK] [-t template] [-p prefix] [-P prefix] [-C chrootdir]"
 argument_list|,
 literal|"               pkg-name [pkg-name ...]"
 argument_list|)
