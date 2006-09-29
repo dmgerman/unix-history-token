@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -900,16 +906,20 @@ operator|++
 expr_stmt|;
 break|break;
 default|default:
-name|errx
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s\n%s\n"
+argument_list|,
+literal|"usage: devinfo [-rv]"
+argument_list|,
+literal|"       devinfo -u"
+argument_list|)
+expr_stmt|;
+name|exit
 argument_list|(
 literal|1
-argument_list|,
-literal|"usage: %s [-ruv]"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
 argument_list|)
 expr_stmt|;
 block|}
