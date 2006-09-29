@@ -1086,12 +1086,12 @@ name|rcvif
 operator|=
 name|ifp
 expr_stmt|;
-comment|/* Let BPF see incoming packet */
+comment|/* 	 * Let BPF see incoming packet in the following manner: 	 *  - Emulated packet loopback for a simplex interface  	 *    (net/if_ethersubr.c) 	 *	-> passes it to ifp's BPF 	 *  - IPv4/v6 multicast packet loopback (netinet(6)/ip(6)_output.c) 	 *	-> not passes it to any BPF 	 *  - Normal packet loopback from myself to myself (net/if_loop.c) 	 *	-> passes to lo0's BPF (even in case of IPv6, where ifp!=lo0) 	 */
 if|if
 condition|(
-name|ifp
-operator|->
-name|if_bpf
+name|hlen
+operator|>
+literal|0
 condition|)
 block|{
 if|if
@@ -1099,22 +1099,59 @@ condition|(
 name|ifp
 operator|->
 name|if_bpf
+operator|!=
+name|NULL
+condition|)
+block|{
+name|bpf_mtap
+argument_list|(
+name|ifp
 operator|->
-name|bif_dlt
+name|if_bpf
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|loif
+operator|->
+name|if_bpf
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_MCAST
+operator|)
 operator|==
-name|DLT_NULL
+literal|0
+operator|||
+name|loif
+operator|==
+name|ifp
 condition|)
 block|{
+comment|/* XXX beware sizeof(af) != 4 */
 name|u_int32_t
 name|af1
 init|=
 name|af
 decl_stmt|;
-comment|/* XXX beware sizeof(af) != 4 */
-comment|/* 			 * We need to prepend the address family. 			 */
+comment|/* 				 * We need to prepend the address family. 				 */
 name|bpf_mtap2
 argument_list|(
-name|ifp
+name|loif
 operator|->
 name|if_bpf
 argument_list|,
@@ -1130,16 +1167,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|bpf_mtap
-argument_list|(
-name|ifp
-operator|->
-name|if_bpf
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
+block|}
 block|}
 comment|/* Strip away media header */
 if|if
