@@ -467,7 +467,11 @@ name|smaplen
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+operator|(
+name|CMD_ERROR
+operator|)
+return|;
 for|for
 control|(
 name|i
@@ -507,6 +511,11 @@ operator|.
 name|length
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|CMD_OK
+operator|)
+return|;
 block|}
 end_function
 
