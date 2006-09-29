@@ -643,9 +643,10 @@ argument_list|,
 name|DH_R_MODULUS_TOO_LARGE
 argument_list|)
 expr_stmt|;
-goto|goto
-name|err
-goto|;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 name|ctx
 operator|=
