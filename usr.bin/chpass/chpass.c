@@ -860,6 +860,7 @@ argument_list|,
 literal|"edit()"
 argument_list|)
 expr_stmt|;
+comment|/*  		 * pw_equal does not check for crypted passwords, so we 		 * should do it explicitly 		 */
 if|if
 condition|(
 name|pw_equal
@@ -868,6 +869,19 @@ name|old_pw
 argument_list|,
 name|pw
 argument_list|)
+operator|&&
+name|strcmp
+argument_list|(
+name|old_pw
+operator|->
+name|pw_passwd
+argument_list|,
+name|pw
+operator|->
+name|pw_passwd
+argument_list|)
+operator|==
+literal|0
 condition|)
 name|errx
 argument_list|(
