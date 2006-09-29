@@ -411,7 +411,7 @@ literal|"%s%s\n"
 argument_list|,
 literal|"usage: jexec [-u username | -U username]"
 argument_list|,
-literal|" jid command [...]"
+literal|" jid command ..."
 argument_list|)
 expr_stmt|;
 name|exit
