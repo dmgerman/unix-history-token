@@ -3789,9 +3789,9 @@ literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: syslogd [-46ACcdknosuv] [-a allowed_peer]"
 argument_list|,
-literal|"               [-b bind address] [-f config_file]"
+literal|"               [-b bind_address] [-f config_file]"
 argument_list|,
-literal|"               [-l log_socket] [-m mark_interval]"
+literal|"               [-l [mode:]path] [-m mark_interval]"
 argument_list|,
 literal|"               [-P pid_file] [-p log_socket]"
 argument_list|)
