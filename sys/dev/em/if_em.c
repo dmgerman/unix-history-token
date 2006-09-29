@@ -4600,14 +4600,14 @@ if|if
 condition|(
 name|mask
 operator|&
-name|IFCAP_TSO
+name|IFCAP_TSO4
 condition|)
 block|{
 name|ifp
 operator|->
 name|if_capenable
 operator|^=
-name|IFCAP_TSO
+name|IFCAP_TSO4
 expr_stmt|;
 name|reinit
 operator|=
@@ -10987,13 +10987,13 @@ name|ifp
 operator|->
 name|if_capabilities
 operator||=
-name|IFCAP_TSO
+name|IFCAP_TSO4
 expr_stmt|;
 name|ifp
 operator|->
 name|if_capenable
 operator||=
-name|IFCAP_TSO
+name|IFCAP_TSO4
 expr_stmt|;
 block|}
 comment|/* 	 * Tell the upper layer(s) we support long frames. 	 */
