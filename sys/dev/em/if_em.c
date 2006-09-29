@@ -6654,7 +6654,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * TSO workaround: 	 *  If an mbuf is only header we need 	 *     to pull 4 bytes of data into it. 	 */
+comment|/* 	 * TSO workaround: 	 *  If an mbuf contains only the IP and TCP header we have 	 *  to pull 4 bytes of data into it. 	 */
 if|if
 condition|(
 name|do_tso
