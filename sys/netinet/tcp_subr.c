@@ -796,7 +796,7 @@ block|{
 name|int
 name|halfrange
 decl_stmt|;
-comment|/*          * Max out at half the ephemeral port range so that TIME_WAIT          * sockets don't tie up too many ephemeral ports.          */
+comment|/* 	 * Max out at half the ephemeral port range so that TIME_WAIT 	 * sockets don't tie up too many ephemeral ports. 	 */
 if|if
 condition|(
 name|ipport_lastauto
