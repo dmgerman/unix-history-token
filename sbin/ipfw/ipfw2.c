@@ -26707,6 +26707,19 @@ name|optind
 operator|-
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|ac
+operator|<
+literal|2
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"no filename argument"
+argument_list|)
+expr_stmt|;
 name|av
 index|[
 name|ac
