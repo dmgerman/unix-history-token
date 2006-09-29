@@ -622,7 +622,7 @@ comment|/* # forw. cache hash table misses */
 name|u_long
 name|mrts_upcalls
 decl_stmt|;
-comment|/* # calls to mrouted              */
+comment|/* # calls to routing daemon       */
 name|u_long
 name|mrts_no_route
 decl_stmt|;

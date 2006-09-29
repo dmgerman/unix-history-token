@@ -6264,7 +6264,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send a message to mrouted on the multicast routing socket  */
+comment|/*  * Send a message to the routing daemon on the multicast routing socket  */
 end_comment
 
 begin_function
