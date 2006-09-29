@@ -3285,9 +3285,9 @@ literal|"       arp -d hostname [pub]"
 argument_list|,
 literal|"       arp -d [-i interface] -a"
 argument_list|,
-literal|"       arp -s hostname ether_addr [temp] [pub]"
+literal|"       arp -s hostname ether_addr [temp] [pub [only]]"
 argument_list|,
-literal|"       arp -S hostname ether_addr [temp] [pub]"
+literal|"       arp -S hostname ether_addr [temp] [pub [only]]"
 argument_list|,
 literal|"       arp -f filename"
 argument_list|)
