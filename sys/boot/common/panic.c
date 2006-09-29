@@ -33,6 +33,17 @@ directive|include
 file|<machine/stdarg.h>
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|exit
+argument_list|(
+name|int
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|panic
