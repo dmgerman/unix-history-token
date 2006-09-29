@@ -51,6 +51,12 @@ directive|include
 file|<btxv86.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"libi386.h"
+end_include
+
 begin_comment
 comment|/*  * Stupid PCI BIOS interface doesn't let you simply enumerate everything  * that's there, instead you have to ask it if it has something.  *  * So we have to scan by class code, subclass code and sometimes programming  * interface.  */
 end_comment

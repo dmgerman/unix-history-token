@@ -221,14 +221,13 @@ name|entry_lo
 decl_stmt|;
 end_decl_stmt
 
-begin_extern
-extern|extern amd64_tramp(
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+begin_function_decl
+specifier|extern
+name|void
+name|amd64_tramp
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * There is an a.out kernel and one or more a.out modules loaded.    * We wish to start executing the kernel image, so make such   * preparations as are required, and do so.  */

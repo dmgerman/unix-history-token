@@ -449,6 +449,10 @@ name|class
 parameter_list|,
 name|int
 name|index
+parameter_list|,
+name|uint32_t
+modifier|*
+name|locator
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -466,7 +470,7 @@ parameter_list|,
 name|int
 name|width
 parameter_list|,
-name|int
+name|uint32_t
 name|val
 parameter_list|)
 function_decl|;
