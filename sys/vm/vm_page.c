@@ -2874,7 +2874,9 @@ operator|!=
 name|VM_ALLOC_SYSTEM
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 name|mtx_lock_spin
 argument_list|(
