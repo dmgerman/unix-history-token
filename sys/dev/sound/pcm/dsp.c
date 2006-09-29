@@ -3331,6 +3331,7 @@ break|break;
 case|case
 name|SNDCTL_DSP_NONBLOCK
 case|:
+comment|/* set non-blocking i/o */
 case|case
 name|FIONBIO
 case|:
@@ -3347,6 +3348,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|cmd
+operator|==
+name|SNDCTL_DSP_NONBLOCK
+operator|||
 operator|*
 name|arg_i
 condition|)
@@ -3382,6 +3387,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|cmd
+operator|==
+name|SNDCTL_DSP_NONBLOCK
+operator|||
 operator|*
 name|arg_i
 condition|)
