@@ -121,6 +121,10 @@ decl_stmt|;
 name|intmax_t
 name|offset
 decl_stmt|;
+name|offset
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -536,7 +540,7 @@ name|fsbegin
 init|=
 name|offset
 operator|-
-name|SBLOCK_UFS1
+name|SBLOCK_UFS2
 decl_stmt|;
 name|printf
 argument_list|(
