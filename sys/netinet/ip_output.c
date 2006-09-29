@@ -1470,9 +1470,6 @@ goto|goto
 name|sendit
 goto|;
 block|}
-ifndef|#
-directive|ifndef
-name|notdef
 comment|/* 	 * If the source address is not specified yet, use the address 	 * of the outoing interface. 	 */
 if|if
 condition|(
@@ -1506,9 +1503,6 @@ name|sin_addr
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
-comment|/* notdef */
 comment|/* 	 * Verify that we have any chance at all of being able to queue the 	 * packet or packet fragments, unless ALTQ is enabled on the given 	 * interface in which case packetdrop should be done by queueing. 	 */
 ifdef|#
 directive|ifdef
