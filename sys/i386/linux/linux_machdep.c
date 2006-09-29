@@ -2215,7 +2215,9 @@ operator|)
 operator|)
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -2457,7 +2459,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 if|if
 condition|(
@@ -2476,7 +2480,9 @@ name|td
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 comment|/* Linux mmap() just fails for O_WRONLY files */
@@ -2500,7 +2506,9 @@ name|td
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EACCES
+operator|)
 return|;
 block|}
 name|bsd_args
