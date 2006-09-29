@@ -1322,7 +1322,7 @@ name|p
 argument_list|(
 name|mrts_upcalls
 argument_list|,
-literal|"\t%lu upcall%s to routing daemon\n"
+literal|"\t%lu upcall%s to multicast routing daemon\n"
 argument_list|)
 expr_stmt|;
 name|p

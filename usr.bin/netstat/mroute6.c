@@ -781,7 +781,7 @@ name|p
 argument_list|(
 name|mrt6s_upcalls
 argument_list|,
-literal|"\t%ju upcall%s to routing daemon\n"
+literal|"\t%ju upcall%s to multicast routing daemon\n"
 argument_list|)
 expr_stmt|;
 name|p

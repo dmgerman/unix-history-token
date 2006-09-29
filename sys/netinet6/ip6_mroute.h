@@ -445,7 +445,7 @@ comment|/* # forw. cache hash table misses */
 name|u_quad_t
 name|mrt6s_upcalls
 decl_stmt|;
-comment|/* # calls to routing daemon       */
+comment|/* # calls to multicast routing daemon */
 name|u_quad_t
 name|mrt6s_no_route
 decl_stmt|;
