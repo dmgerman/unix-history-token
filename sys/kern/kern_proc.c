@@ -1379,6 +1379,13 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* XXX TTY */
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -1473,6 +1480,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* XXX TTY */
 name|pgrp
 operator|->
 name|pg_session
@@ -1554,6 +1568,13 @@ argument_list|(
 name|pgrp
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* XXX TTY */
 name|doenterpgrp
 argument_list|(
 name|p
@@ -1784,6 +1805,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* XXX TTY */
 name|PGRP_LOCK
 argument_list|(
 name|pgrp
@@ -1839,6 +1867,13 @@ argument_list|(
 name|pgrp
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* XXX TTY */
 if|if
 condition|(
 name|LIST_EMPTY
@@ -1893,6 +1928,13 @@ name|p
 operator|->
 name|p_pgrp
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* XXX TTY */
 name|PGRP_LOCK
 argument_list|(
 name|savepgrp
@@ -1926,6 +1968,13 @@ argument_list|(
 name|savepgrp
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* XXX TTY */
 if|if
 condition|(
 name|LIST_EMPTY
@@ -2005,6 +2054,13 @@ operator|->
 name|pg_sigiolst
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* XXX TTY */
 name|PGRP_LOCK
 argument_list|(
 name|pgrp
@@ -2078,6 +2134,13 @@ argument_list|,
 name|M_PGRP
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* XXX TTY */
 block|}
 end_function
 
