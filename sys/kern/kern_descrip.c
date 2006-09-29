@@ -11834,7 +11834,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-literal|0
+name|EBADF
 operator|)
 return|;
 block|}
