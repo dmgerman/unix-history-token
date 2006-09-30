@@ -150,6 +150,13 @@ name|OPIE_CHALLENGE_MAX
 index|]
 decl_stmt|;
 name|char
+name|principal
+index|[
+name|OPIE_PRINCIPAL_MAX
+index|]
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|user
 decl_stmt|;
@@ -208,12 +215,6 @@ name|pam_get_user
 argument_list|(
 name|pamh
 argument_list|,
-operator|(
-specifier|const
-name|char
-operator|*
-operator|*
-operator|)
 operator|&
 name|user
 argument_list|,
@@ -239,12 +240,41 @@ argument_list|,
 name|user
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Watch out: libopie feels entitled to truncate the user name 	 * passed to it if it's longer than OPIE_PRINCIPAL_MAX, which is 	 * not uncommon in Windows environments. 	 */
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|user
+argument_list|)
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|principal
+argument_list|)
+condition|)
+return|return
+operator|(
+name|PAM_AUTH_ERR
+operator|)
+return|;
+name|strlcpy
+argument_list|(
+name|principal
+argument_list|,
+name|user
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|principal
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Don't call the OPIE atexit() handler when our program exits, 	 * since the module has been unloaded and we will SEGV. 	 */
 name|opiedisableaeh
 argument_list|()
 expr_stmt|;
 comment|/* 	 * If the no_fake_prompts option was given, and the user 	 * doesn't have an OPIE key, just fail rather than present the 	 * user with a bogus OPIE challenge. 	 */
-comment|/* XXX generates a const warning because of incorrect prototype */
 if|if
 condition|(
 name|opiechallenge
@@ -252,11 +282,7 @@ argument_list|(
 operator|&
 name|opie
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|user
+name|principal
 argument_list|,
 name|challenge
 argument_list|)
