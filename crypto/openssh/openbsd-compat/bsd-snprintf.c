@@ -13,14 +13,6 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: bsd-snprintf.c,v 1.11 2005/12/17 11:32:04 dtucker Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_if
 if|#
 directive|if
@@ -145,6 +137,30 @@ argument_list|(
 name|HAVE_VSNPRINTF
 argument_list|)
 end_if
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_ifdef
 ifdef|#
@@ -459,7 +475,7 @@ parameter_list|,
 name|size_t
 name|maxlen
 parameter_list|,
-name|long
+name|LLONG
 name|value
 parameter_list|,
 name|int
@@ -2143,7 +2159,7 @@ parameter_list|,
 name|size_t
 name|maxlen
 parameter_list|,
-name|long
+name|LLONG
 name|value
 parameter_list|,
 name|int
@@ -2165,7 +2181,7 @@ init|=
 literal|0
 decl_stmt|;
 name|unsigned
-name|long
+name|LLONG
 name|uvalue
 decl_stmt|;
 name|char

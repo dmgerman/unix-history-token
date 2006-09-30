@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: openbsd-compat.h,v 1.33 2005/12/31 05:33:37 djm Exp $ */
+comment|/* $Id: openbsd-compat.h,v 1.42 2006/09/03 12:44:50 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -23,6 +23,24 @@ begin_include
 include|#
 directive|include
 file|"includes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
 end_include
 
 begin_comment
@@ -63,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|"getrrsetbyname.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sha2.h"
 end_include
 
 begin_ifndef
@@ -694,6 +718,51 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_DECL_WRITEV
+argument_list|)
+operator|&&
+name|HAVE_DECL_WRITEV
+operator|==
+literal|0
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
+end_include
+
+begin_function_decl
+name|int
+name|writev
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|iovec
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Home grown routines */
 end_comment
@@ -709,10 +778,6 @@ include|#
 directive|include
 file|"bsd-waitpid.h"
 end_include
-
-begin_comment
-comment|/*#include<sys/types.h> XXX Still needed? * For uid_t, gid_t * */
-end_comment
 
 begin_ifndef
 ifndef|#
@@ -808,6 +873,16 @@ directive|ifndef
 name|HAVE_OPENPTY
 end_ifndef
 
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_comment
+comment|/* for struct winsize */
+end_comment
+
 begin_function_decl
 name|int
 name|openpty
@@ -860,7 +935,7 @@ modifier|*
 parameter_list|,
 name|size_t
 parameter_list|,
-specifier|const
+name|SNPRINTF_CONST
 name|char
 modifier|*
 parameter_list|,
@@ -931,6 +1006,33 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HAVE_VASPRINTF
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|HAVE_VSNPRINTF
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
 
 begin_endif
 endif|#
@@ -1065,25 +1167,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|"port-irix.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"port-aix.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"port-uw.h"
+file|"port-irix.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"port-linux.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"port-solaris.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"port-tun.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"port-uw.h"
 end_include
 
 begin_endif

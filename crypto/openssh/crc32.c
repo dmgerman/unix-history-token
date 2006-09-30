@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: crc32.c,v 1.9 2003/02/12 21:39:50 markus Exp $	*/
+comment|/* $OpenBSD: crc32.c,v 1.11 2006/04/22 18:29:33 stevesk Exp $ */
 end_comment
 
 begin_comment

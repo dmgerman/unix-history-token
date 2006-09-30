@@ -25,28 +25,6 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_comment
-comment|/* RCSID("$Id: loginrec.h,v 1.10 2005/06/19 00:19:44 djm Exp $"); */
-end_comment
-
 begin_comment
 comment|/**  ** you should use the login_* calls to work around platform dependencies  **/
 end_comment

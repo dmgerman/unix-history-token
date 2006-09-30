@@ -15,6 +15,12 @@ directive|ifdef
 name|HAVE_LIBIAF
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -35,6 +41,42 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xmalloc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"packet.h"
 end_include
 
@@ -42,6 +84,12 @@ begin_include
 include|#
 directive|include
 file|"buffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"auth-options.h"
 end_include
 
 begin_include
@@ -59,13 +107,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"key.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"hostfile.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"auth.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"auth-options.h"
+file|"ssh.h"
 end_include
 
 begin_function_decl

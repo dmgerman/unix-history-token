@@ -15,6 +15,24 @@ directive|ifndef
 name|HAVE_VASPRINTF
 end_ifndef
 
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef

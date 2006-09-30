@@ -27,16 +27,20 @@ end_if
 begin_include
 include|#
 directive|include
-file|<openssl/md5.h>
+file|<sys/types.h>
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: md5crypt.c,v 1.9 2003/11/21 12:56:47 djm Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/md5.h>
+end_include
 
 begin_comment
 comment|/* 0 ... 63 => ascii - 64 */

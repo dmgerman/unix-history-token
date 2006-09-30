@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2004 Todd C. Miller<Todd.Miller@courtesan.com>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2004-2005 Todd C. Miller<Todd.Miller@courtesan.com>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_include
@@ -39,6 +39,23 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_FCNTL_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -55,6 +72,18 @@ begin_include
 include|#
 directive|include
 file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_ifdef
@@ -175,32 +204,14 @@ endif|#
 directive|endif
 end_endif
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: bsd-closefrom.c,v 1.2 2005/11/10 08:29:13 dtucker Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|sudorcsid
-index|[]
-init|=
-literal|"$Sudo: closefrom.c,v 1.6 2004/06/01 20:51:56 millert Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_endif
+unit|__unused static const char rcsid[] = "$Sudo: closefrom.c,v 1.11 2006/08/17 15:26:54 millert Exp $";
 endif|#
 directive|endif
 end_endif
@@ -212,6 +223,40 @@ end_comment
 begin_comment
 comment|/*  * Close all file descriptors greater than or equal to lowfd.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_FCNTL_CLOSEM
+end_ifdef
+
+begin_function
+name|void
+name|closefrom
+parameter_list|(
+name|int
+name|lowfd
+parameter_list|)
+block|{
+operator|(
+name|void
+operator|)
+name|fcntl
+argument_list|(
+name|lowfd
+argument_list|,
+name|F_CLOSEM
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_function
 name|void
@@ -282,11 +327,11 @@ expr_stmt|;
 if|if
 condition|(
 name|len
-operator|>=
+operator|>
 literal|0
 operator|&&
 operator|(
-name|u_int
+name|size_t
 operator|)
 name|len
 operator|<=
@@ -448,6 +493,15 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !HAVE_FCNTL_CLOSEM */
+end_comment
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: auth2-gss.c,v 1.12 2005/10/13 22:24:31 stevesk Exp $	*/
+comment|/* $OpenBSD: auth2-gss.c,v 1.15 2006/08/03 03:34:41 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -22,6 +22,36 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xmalloc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"key.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"hostfile.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"auth.h"
 end_include
 
@@ -29,12 +59,6 @@ begin_include
 include|#
 directive|include
 file|"ssh2.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xmalloc.h"
 end_include
 
 begin_include
@@ -52,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"buffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"servconf.h"
 end_include
 
@@ -64,13 +94,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"monitor_wrap.h"
+file|"ssh-gss.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ssh-gss.h"
+file|"monitor_wrap.h"
 end_include
 
 begin_decl_stmt
@@ -389,6 +419,18 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|ctxt
+operator|!=
+name|NULL
+condition|)
+name|ssh_gssapi_delete_ctx
+argument_list|(
+operator|&
+name|ctxt
+argument_list|)
+expr_stmt|;
 name|xfree
 argument_list|(
 name|doid

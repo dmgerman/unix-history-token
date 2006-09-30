@@ -9,14 +9,6 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: bsd-getpeereid.c,v 1.3 2004/02/17 05:49:55 djm Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_if
 if|#
 directive|if
@@ -26,6 +18,24 @@ argument_list|(
 name|HAVE_GETPEEREID
 argument_list|)
 end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_if
 if|#

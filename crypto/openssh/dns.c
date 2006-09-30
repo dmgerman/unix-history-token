@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: dns.c,v 1.16 2005/10/17 14:13:35 stevesk Exp $	*/
+comment|/* $OpenBSD: dns.c,v 1.23 2006/08/03 03:34:42 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -13,18 +13,40 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$OpenBSD: dns.c,v 1.16 2005/10/17 14:13:35 stevesk Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
 
 begin_include
 include|#
 directive|include
 file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -418,6 +440,10 @@ block|{
 operator|*
 name|digest
 operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
 name|xstrdup
 argument_list|(
 literal|""

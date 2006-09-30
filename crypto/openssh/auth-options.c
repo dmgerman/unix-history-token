@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $OpenBSD: auth-options.c,v 1.40 2006/08/03 03:34:41 deraadt Exp $ */
+end_comment
+
+begin_comment
 comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
 end_comment
 
@@ -9,13 +13,41 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$OpenBSD: auth-options.c,v 1.33 2005/12/08 18:34:11 reyk Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
 
 begin_include
 include|#
@@ -39,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|"canohost.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"buffer.h"
 end_include
 
 begin_include
@@ -68,13 +106,42 @@ end_include
 begin_include
 include|#
 directive|include
-file|"monitor_wrap.h"
+file|"key.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"hostfile.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"auth.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GSSAPI
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"ssh-gss.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|"monitor_wrap.h"
 end_include
 
 begin_comment
@@ -609,7 +676,7 @@ index|[
 name|i
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 name|auth_debug_add
 argument_list|(
@@ -775,7 +842,7 @@ index|[
 name|i
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 name|auth_debug_add
 argument_list|(
@@ -984,7 +1051,7 @@ index|[
 name|i
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 name|opts
 operator|++
@@ -1196,7 +1263,7 @@ index|[
 name|i
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 name|opts
 operator|++
@@ -1459,7 +1526,7 @@ index|[
 name|i
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 name|forced_tun_device
 operator|=
