@@ -262,35 +262,12 @@ begin_comment
 comment|/*  * this is a kludge to allow hiding of the struct snd_mixer definition  * 512 should be enough for all architectures  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OSSV4_EXPERIMENT
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|MIXER_SIZE
 value|(512 + sizeof(struct kobj) + \ 				 sizeof(oss_mixer_enuminfo))
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MIXER_SIZE
-value|(512 + sizeof(struct kobj))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
