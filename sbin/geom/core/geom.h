@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|G_LIB_VERSION
-value|1
+value|2
 end_define
 
 begin_define
@@ -47,21 +47,42 @@ begin_define
 define|#
 directive|define
 name|G_TYPE_NONE
-value|0
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_TYPE_BOOL
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|G_TYPE_STRING
-value|1
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
 name|G_TYPE_NUMBER
-value|2
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_TYPE_MASK
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_TYPE_DONE
+value|0x10
 end_define
 
 begin_define
@@ -78,7 +99,7 @@ name|G_OPT_DONE
 parameter_list|(
 name|opt
 parameter_list|)
-value|(opt)->go_char = '\0'
+value|do { (opt)->go_type |= G_TYPE_DONE; } while (0)
 end_define
 
 begin_define
@@ -88,7 +109,17 @@ name|G_OPT_ISDONE
 parameter_list|(
 name|opt
 parameter_list|)
-value|((opt)->go_char == '\0')
+value|((opt)->go_type& G_TYPE_DONE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_OPT_TYPE
+parameter_list|(
+name|opt
+parameter_list|)
+value|((opt)->go_type& G_TYPE_MASK)
 end_define
 
 begin_define

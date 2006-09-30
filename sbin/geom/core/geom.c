@@ -370,7 +370,7 @@ literal|"script"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 name|G_OPT_SENTINEL
@@ -528,11 +528,12 @@ name|go_val
 operator|!=
 name|NULL
 operator|||
+name|G_OPT_TYPE
+argument_list|(
 name|opt
-operator|->
-name|go_type
+argument_list|)
 operator|==
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 condition|)
 name|fprintf
 argument_list|(
@@ -562,11 +563,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|G_OPT_TYPE
+argument_list|(
 name|opt
-operator|->
-name|go_type
+argument_list|)
 operator|!=
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 condition|)
 name|fprintf
 argument_list|(
@@ -587,11 +589,12 @@ name|go_val
 operator|!=
 name|NULL
 operator|||
+name|G_OPT_TYPE
+argument_list|(
 name|opt
-operator|->
-name|go_type
+argument_list|)
 operator|==
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 condition|)
 name|fprintf
 argument_list|(
@@ -1053,9 +1056,10 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|G_OPT_TYPE
+argument_list|(
 name|opt
-operator|->
-name|go_type
+argument_list|)
 operator|==
 name|G_TYPE_NUMBER
 condition|)
@@ -1157,9 +1161,10 @@ block|}
 elseif|else
 if|if
 condition|(
+name|G_OPT_TYPE
+argument_list|(
 name|opt
-operator|->
-name|go_type
+argument_list|)
 operator|==
 name|G_TYPE_STRING
 condition|)
@@ -1179,8 +1184,16 @@ name|optarg
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-comment|/* if (opt->go_type == G_TYPE_NONE) */
+elseif|else
+if|if
+condition|(
+name|G_OPT_TYPE
+argument_list|(
+name|opt
+argument_list|)
+operator|==
+name|G_TYPE_BOOL
+condition|)
 block|{
 name|opt
 operator|->
@@ -1239,6 +1252,15 @@ argument_list|,
 name|opt
 operator|->
 name|go_val
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|assert
+argument_list|(
+operator|!
+literal|"Invalid type"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1351,6 +1373,30 @@ operator|==
 name|NULL
 condition|)
 break|break;
+name|assert
+argument_list|(
+name|G_OPT_TYPE
+argument_list|(
+name|opt
+argument_list|)
+operator|!=
+literal|0
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|(
+name|opt
+operator|->
+name|go_type
+operator|&
+operator|~
+name|G_TYPE_MASK
+operator|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
 name|strlcatf
 argument_list|(
 name|opts
@@ -1369,11 +1415,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|G_OPT_TYPE
+argument_list|(
 name|opt
-operator|->
-name|go_type
+argument_list|)
 operator|!=
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 condition|)
 name|strlcat
 argument_list|(
@@ -1452,11 +1499,9 @@ name|opt
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Flag '%c' specified twice.\n"
+literal|"Option '%c' specified twice."
 argument_list|,
 name|opt
 operator|->
@@ -1474,11 +1519,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|G_OPT_TYPE
+argument_list|(
 name|opt
-operator|->
-name|go_type
+argument_list|)
 operator|==
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 condition|)
 name|set_option
 argument_list|(
@@ -1551,11 +1597,12 @@ condition|)
 continue|continue;
 if|if
 condition|(
+name|G_OPT_TYPE
+argument_list|(
 name|opt
-operator|->
-name|go_type
+argument_list|)
 operator|==
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 condition|)
 block|{
 name|assert
@@ -1588,11 +1635,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Flag '%c' not specified.\n"
+literal|"Option '%c' not specified."
 argument_list|,
 name|opt
 operator|->
@@ -1607,9 +1652,10 @@ else|else
 block|{
 if|if
 condition|(
+name|G_OPT_TYPE
+argument_list|(
 name|opt
-operator|->
-name|go_type
+argument_list|)
 operator|==
 name|G_TYPE_NUMBER
 condition|)
@@ -1633,8 +1679,16 @@ name|go_val
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-comment|/* if (opt->go_type == G_TYPE_STRING)*/
+elseif|else
+if|if
+condition|(
+name|G_OPT_TYPE
+argument_list|(
+name|opt
+argument_list|)
+operator|==
+name|G_TYPE_STRING
+condition|)
 block|{
 name|gctl_ro_param
 argument_list|(
@@ -1650,6 +1704,15 @@ argument_list|,
 name|opt
 operator|->
 name|go_val
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|assert
+argument_list|(
+operator|!
+literal|"Invalid type"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2012,11 +2075,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Unknown command: %s\n"
+literal|"Unknown command: %s."
 argument_list|,
 name|argv
 index|[
@@ -2039,11 +2100,9 @@ name|gc_name
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Command '%s' not available.\n"
+literal|"Command '%s' not available."
 argument_list|,
 name|argv
 index|[
@@ -2222,11 +2281,9 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s\n"
+literal|"%s"
 argument_list|,
 name|errstr
 argument_list|)
@@ -2449,11 +2506,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Cannot find symbol %s: %s.\n"
+literal|"Cannot find symbol %s: %s."
 argument_list|,
 literal|"lib_version"
 argument_list|,
@@ -2514,11 +2569,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Cannot find symbol %s: %s.\n"
+literal|"Cannot find symbol %s: %s."
 argument_list|,
 literal|"version"
 argument_list|,
@@ -2553,11 +2606,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Cannot find symbol %s: %s.\n"
+literal|"Cannot find symbol %s: %s."
 argument_list|,
 literal|"class_commands"
 argument_list|,
@@ -3546,25 +3597,15 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Cannot get GEOM tree: %s.\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|error
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|errc
 argument_list|(
 name|EXIT_FAILURE
+argument_list|,
+name|error
+argument_list|,
+literal|"Cannot get GEOM tree"
 argument_list|)
 expr_stmt|;
-block|}
 name|classp
 operator|=
 name|find_class
@@ -3655,25 +3696,15 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Cannot get GEOM tree: %s.\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|error
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|errc
 argument_list|(
 name|EXIT_FAILURE
+argument_list|,
+name|error
+argument_list|,
+literal|"Cannot get GEOM tree"
 argument_list|)
 expr_stmt|;
-block|}
 name|classp
 operator|=
 name|find_class
@@ -3697,11 +3728,9 @@ operator|&
 name|mesh
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Class %s not found.\n"
+literal|"Class %s not found."
 argument_list|,
 name|gclass_name
 argument_list|)
@@ -3770,11 +3799,9 @@ name|gp
 argument_list|)
 expr_stmt|;
 else|else
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"No such geom: %s.\n"
+literal|"No such geom: %s."
 argument_list|,
 name|name
 argument_list|)
@@ -4375,25 +4402,15 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Cannot get GEOM tree: %s.\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|error
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|errc
 argument_list|(
 name|EXIT_FAILURE
+argument_list|,
+name|error
+argument_list|,
+literal|"Cannot get GEOM tree"
 argument_list|)
 expr_stmt|;
-block|}
 name|classp
 operator|=
 name|find_class
@@ -4411,11 +4428,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Class %s not found.\n"
+literal|"Class %s not found."
 argument_list|,
 name|gclass_name
 argument_list|)
@@ -4507,11 +4522,9 @@ name|gp
 operator|==
 name|NULL
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"No such geom: %s.\n"
+literal|"No such geom: %s."
 argument_list|,
 name|name
 argument_list|)
