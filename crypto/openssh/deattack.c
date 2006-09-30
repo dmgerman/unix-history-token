@@ -54,6 +54,17 @@ file|"deattack.h"
 end_include
 
 begin_comment
+comment|/*  * CRC attack detection has a worst-case behaviour that is O(N^3) over  * the number of identical blocks in a packet. This behaviour can be   * exploited to create a limited denial of service attack.   *   * However, because we are dealing with encrypted data, identical  * blocks should only occur every 2^35 maximally-sized packets or so.   * Consequently, we can detect this DoS by looking for identical blocks  * in a packet.  *  * The parameter below determines how many identical blocks we will  * accept in a single packet, trading off between attack detection and  * likelihood of terminating a legitimate connection. A value of 32   * corresponds to an average of 2^40 messages before an attack is  * misdetected  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_IDENTICAL
+value|32
+end_define
+
+begin_comment
 comment|/* SSH Constants */
 end_comment
 
@@ -379,6 +390,8 @@ name|j
 decl_stmt|;
 name|u_int32_t
 name|l
+decl_stmt|,
+name|same
 decl_stmt|;
 name|u_char
 modifier|*
@@ -651,6 +664,8 @@ name|c
 operator|=
 name|buf
 operator|,
+name|same
+operator|=
 name|j
 operator|=
 literal|0
@@ -770,6 +785,18 @@ name|SSH_BLOCKSIZE
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+operator|++
+name|same
+operator|>
+name|MAX_IDENTICAL
+condition|)
+return|return
+operator|(
+name|DEATTACK_DOS_DETECTED
+operator|)
+return|;
 if|if
 condition|(
 name|check_crc
