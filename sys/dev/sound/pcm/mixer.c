@@ -90,7 +90,7 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-name|u_int32_t
+name|u_int8_t
 name|parent
 index|[
 literal|32
@@ -102,7 +102,7 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-name|u_int32_t
+name|u_int8_t
 name|realdev
 index|[
 literal|32
