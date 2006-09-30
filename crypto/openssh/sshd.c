@@ -1086,7 +1086,7 @@ name|SIGALRM
 argument_list|)
 expr_stmt|;
 comment|/* Log error and exit. */
-name|fatal
+name|sigdie
 argument_list|(
 literal|"Timeout before authentication for %s"
 argument_list|,
@@ -6159,6 +6159,12 @@ expr_stmt|;
 block|}
 name|authenticated
 label|:
+name|authctxt
+operator|->
+name|authenticated
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * In privilege separation, we fork another child and prepare 	 * file descriptor passing. 	 */
 if|if
 condition|(
