@@ -445,7 +445,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: cached [-nstiId]\n"
+literal|"usage: cached [-dnst] [-i cachename] [-I cachename]\n"
 argument_list|)
 expr_stmt|;
 name|exit
