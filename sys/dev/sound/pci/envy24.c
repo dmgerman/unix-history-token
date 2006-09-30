@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/sound/pci/ak452x.h>
+file|<dev/sound/pci/spicds.h>
 end_include
 
 begin_include
@@ -3034,7 +3034,7 @@ struct|struct
 name|envy24_delta_ak4524_codec
 block|{
 name|struct
-name|ak452x_info
+name|spicds_info
 modifier|*
 name|info
 decl_stmt|;
@@ -3341,7 +3341,7 @@ name|buff
 operator|->
 name|info
 operator|=
-name|ak452x_create
+name|spicds_create
 argument_list|(
 name|dev
 argument_list|,
@@ -3457,7 +3457,7 @@ name|ptr
 operator|->
 name|parent
 operator|->
-name|adc
+name|dac
 index|[
 name|ptr
 operator|->
@@ -3466,7 +3466,7 @@ index|]
 operator|!=
 name|NULL
 condition|)
-name|ak452x_destroy
+name|spicds_destroy
 argument_list|(
 name|ptr
 operator|->
@@ -3482,7 +3482,7 @@ name|ptr
 operator|->
 name|parent
 operator|->
-name|dac
+name|adc
 index|[
 name|ptr
 operator|->
@@ -3491,7 +3491,7 @@ index|]
 operator|!=
 name|NULL
 condition|)
-name|ak452x_destroy
+name|spicds_destroy
 argument_list|(
 name|ptr
 operator|->
@@ -3588,12 +3588,6 @@ name|cfg
 operator|->
 name|cclk
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|ptr->cdti = ENVY24_GPIO_AK4524_CDTI;
-endif|#
-directive|endif
 name|ptr
 operator|->
 name|cdti
@@ -3606,13 +3600,7 @@ name|cfg
 operator|->
 name|cdti
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|ak452x_settype(ptr->info, AK452X_TYPE_4524);
-endif|#
-directive|endif
-name|ak452x_settype
+name|spicds_settype
 argument_list|(
 name|ptr
 operator|->
@@ -3627,13 +3615,7 @@ operator|->
 name|type
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|ak452x_setcif(ptr->info, ENVY24_DELTA_AK4524_CIF);
-endif|#
-directive|endif
-name|ak452x_setcif
+name|spicds_setcif
 argument_list|(
 name|ptr
 operator|->
@@ -3648,7 +3630,7 @@ operator|->
 name|cif
 argument_list|)
 expr_stmt|;
-name|ak452x_setformat
+name|spicds_setformat
 argument_list|(
 name|ptr
 operator|->
@@ -3661,7 +3643,7 @@ operator||
 name|AK452X_FORMAT_1X
 argument_list|)
 expr_stmt|;
-name|ak452x_setdvc
+name|spicds_setdvc
 argument_list|(
 name|ptr
 operator|->
@@ -3670,7 +3652,16 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|ak452x_init
+comment|/* for the time being, init only first codec */
+if|if
+condition|(
+name|ptr
+operator|->
+name|num
+operator|==
+literal|0
+condition|)
+name|spicds_init
 argument_list|(
 name|ptr
 operator|->
@@ -3722,7 +3713,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|ak452x_reinit
+name|spicds_reinit
 argument_list|(
 name|ptr
 operator|->
@@ -3785,7 +3776,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|ak452x_set
+name|spicds_set
 argument_list|(
 name|ptr
 operator|->
@@ -13306,7 +13297,7 @@ name|MODULE_DEPEND
 argument_list|(
 name|snd_envy24
 argument_list|,
-name|snd_ak452x
+name|snd_spicds
 argument_list|,
 name|SOUND_MINVER
 argument_list|,
