@@ -1064,7 +1064,7 @@ parameter_list|)
 block|{
 comment|/* XXX no idea how fix this signal handler */
 comment|/* Log error and exit. */
-name|fatal
+name|sigdie
 argument_list|(
 literal|"Timeout before authentication for %s"
 argument_list|,
