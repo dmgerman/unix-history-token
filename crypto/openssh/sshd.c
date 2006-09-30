@@ -1125,7 +1125,7 @@ name|SIGALRM
 argument_list|)
 expr_stmt|;
 comment|/* Log error and exit. */
-name|fatal
+name|sigdie
 argument_list|(
 literal|"Timeout before authentication for %s"
 argument_list|,
@@ -7380,6 +7380,12 @@ expr_stmt|;
 block|}
 name|authenticated
 label|:
+name|authctxt
+operator|->
+name|authenticated
+operator|=
+literal|1
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SSH_AUDIT_EVENTS
