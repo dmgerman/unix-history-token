@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001 Katsurajima Naoto<raven@katsurajima.seya.yokohama.jp>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHERIN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THEPOSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2006 Konstantin Dimitrov<kosio.dimitrov@gmail.com>  * Copyright (c) 2001 Katsurajima Naoto<raven@katsurajima.seya.yokohama.jp>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHERIN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THEPOSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -12,17 +12,17 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/sound/pci/ak452x.h>
+file|<dev/sound/pci/spicds.h>
 end_include
 
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
-name|M_AK452X
+name|M_SPICDS
 argument_list|,
-literal|"ak452x"
+literal|"spicds"
 argument_list|,
-literal|"ak452x codec"
+literal|"SPI codec"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -30,18 +30,18 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
-name|AK452X_NAMELEN
+name|SPICDS_NAMELEN
 value|16
 end_define
 
 begin_struct
 struct|struct
-name|ak452x_info
+name|spicds_info
 block|{
 name|device_t
 name|dev
 decl_stmt|;
-name|ak452x_ctrl
+name|spicds_ctrl
 name|ctrl
 decl_stmt|;
 name|void
@@ -81,7 +81,7 @@ decl_stmt|;
 name|char
 name|name
 index|[
-name|AK452X_NAMELEN
+name|SPICDS_NAMELEN
 index|]
 decl_stmt|;
 name|void
@@ -95,10 +95,10 @@ end_struct
 begin_function
 specifier|static
 name|void
-name|ak452x_wrbit
+name|spicds_wrbit
 parameter_list|(
 name|struct
-name|ak452x_info
+name|spicds_info
 modifier|*
 name|codec
 parameter_list|,
@@ -187,17 +187,17 @@ end_function
 begin_function
 specifier|static
 name|void
-name|ak452x_wrcd
+name|spicds_wrcd
 parameter_list|(
 name|struct
-name|ak452x_info
+name|spicds_info
 modifier|*
 name|codec
 parameter_list|,
 name|int
 name|reg
 parameter_list|,
-name|u_int8_t
+name|u_int16_t
 name|val
 parameter_list|)
 block|{
@@ -215,7 +215,7 @@ name|codec
 operator|->
 name|dev
 argument_list|,
-literal|"ak452x_wrcd(codec, 0x%02x, 0x%02x)\n"
+literal|"spicds_wrcd(codec, 0x%02x, 0x%02x)\n"
 argument_list|,
 name|reg
 argument_list|,
@@ -267,23 +267,60 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* chip address */
-name|ak452x_wrbit
-argument_list|(
+if|if
+condition|(
 name|codec
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|ak452x_wrbit
+operator|->
+name|type
+operator|!=
+name|SPICDS_TYPE_WM8770
+condition|)
+block|{
+if|if
+condition|(
+name|codec
+operator|->
+name|type
+operator|==
+name|SPICDS_TYPE_AK4381
+condition|)
+block|{
+comment|/* AK4381 chip address */
+name|spicds_wrbit
 argument_list|(
 name|codec
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|spicds_wrbit
+argument_list|(
+name|codec
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* chip address */
+name|spicds_wrbit
+argument_list|(
+name|codec
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|spicds_wrbit
+argument_list|(
+name|codec
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* write */
-name|ak452x_wrbit
+name|spicds_wrbit
 argument_list|(
 name|codec
 argument_list|,
@@ -305,7 +342,7 @@ name|mask
 operator|>>=
 literal|1
 control|)
-name|ak452x_wrbit
+name|spicds_wrbit
 argument_list|(
 name|codec
 argument_list|,
@@ -329,7 +366,7 @@ name|mask
 operator|>>=
 literal|1
 control|)
-name|ak452x_wrbit
+name|spicds_wrbit
 argument_list|(
 name|codec
 argument_list|,
@@ -344,6 +381,64 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* register address */
+for|for
+control|(
+name|mask
+operator|=
+literal|0x40
+init|;
+name|mask
+operator|!=
+literal|0
+condition|;
+name|mask
+operator|>>=
+literal|1
+control|)
+name|spicds_wrbit
+argument_list|(
+name|codec
+argument_list|,
+name|reg
+operator|&
+name|mask
+argument_list|)
+expr_stmt|;
+comment|/* data */
+for|for
+control|(
+name|mask
+operator|=
+literal|0x100
+init|;
+name|mask
+operator|!=
+literal|0
+condition|;
+name|mask
+operator|>>=
+literal|1
+control|)
+name|spicds_wrbit
+argument_list|(
+name|codec
+argument_list|,
+name|val
+operator|&
+name|mask
+argument_list|)
+expr_stmt|;
+comment|/* stop */
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|codec
@@ -411,9 +506,9 @@ end_function
 
 begin_function
 name|struct
-name|ak452x_info
+name|spicds_info
 modifier|*
-name|ak452x_create
+name|spicds_create
 parameter_list|(
 name|device_t
 name|dev
@@ -425,12 +520,12 @@ parameter_list|,
 name|int
 name|num
 parameter_list|,
-name|ak452x_ctrl
+name|spicds_ctrl
 name|ctrl
 parameter_list|)
 block|{
 name|struct
-name|ak452x_info
+name|spicds_info
 modifier|*
 name|codec
 decl_stmt|;
@@ -443,7 +538,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"ak452x_create(dev, devinfo, %d, ctrl)\n"
+literal|"spicds_create(dev, devinfo, %d, ctrl)\n"
 argument_list|,
 name|num
 argument_list|)
@@ -454,7 +549,7 @@ name|codec
 operator|=
 operator|(
 expr|struct
-name|ak452x_info
+name|spicds_info
 operator|*
 operator|)
 name|malloc
@@ -463,7 +558,7 @@ sizeof|sizeof
 expr|*
 name|codec
 argument_list|,
-name|M_AK452X
+name|M_SPICDS
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -483,9 +578,9 @@ name|codec
 operator|->
 name|name
 argument_list|,
-name|AK452X_NAMELEN
+name|SPICDS_NAMELEN
 argument_list|,
-literal|"%s:ak452x%d"
+literal|"%s:spicds%d"
 argument_list|,
 name|device_get_nameunit
 argument_list|(
@@ -538,7 +633,7 @@ name|codec
 operator|->
 name|type
 operator|=
-name|AK452X_TYPE_4524
+name|SPICDS_TYPE_AK4524
 expr_stmt|;
 name|codec
 operator|->
@@ -574,10 +669,10 @@ end_function
 
 begin_function
 name|void
-name|ak452x_destroy
+name|spicds_destroy
 parameter_list|(
 name|struct
-name|ak452x_info
+name|spicds_info
 modifier|*
 name|codec
 parameter_list|)
@@ -593,7 +688,7 @@ name|free
 argument_list|(
 name|codec
 argument_list|,
-name|M_AK452X
+name|M_SPICDS
 argument_list|)
 expr_stmt|;
 block|}
@@ -601,10 +696,10 @@ end_function
 
 begin_function
 name|void
-name|ak452x_settype
+name|spicds_settype
 parameter_list|(
 name|struct
-name|ak452x_info
+name|spicds_info
 modifier|*
 name|codec
 parameter_list|,
@@ -638,10 +733,10 @@ end_function
 
 begin_function
 name|void
-name|ak452x_setcif
+name|spicds_setcif
 parameter_list|(
 name|struct
-name|ak452x_info
+name|spicds_info
 modifier|*
 name|codec
 parameter_list|,
@@ -675,10 +770,10 @@ end_function
 
 begin_function
 name|void
-name|ak452x_setformat
+name|spicds_setformat
 parameter_list|(
 name|struct
-name|ak452x_info
+name|spicds_info
 modifier|*
 name|codec
 parameter_list|,
@@ -712,10 +807,10 @@ end_function
 
 begin_function
 name|void
-name|ak452x_setdvc
+name|spicds_setdvc
 parameter_list|(
 name|struct
-name|ak452x_info
+name|spicds_info
 modifier|*
 name|codec
 parameter_list|,
@@ -749,10 +844,10 @@ end_function
 
 begin_function
 name|void
-name|ak452x_init
+name|spicds_init
 parameter_list|(
 name|struct
-name|ak452x_info
+name|spicds_info
 modifier|*
 name|codec
 parameter_list|)
@@ -768,7 +863,7 @@ name|codec
 operator|->
 name|dev
 argument_list|,
-literal|"ak452x_init(codec)\n"
+literal|"spicds_init(codec)\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -780,8 +875,24 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|codec
+operator|->
+name|type
+operator|==
+name|SPICDS_TYPE_AK4524
+operator|||
+expr|\
+name|codec
+operator|->
+name|type
+operator|==
+name|SPICDS_TYPE_AK4528
+condition|)
+block|{
 comment|/* power off */
-name|ak452x_wrcd
+name|spicds_wrcd
 argument_list|(
 name|codec
 argument_list|,
@@ -791,7 +902,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* set parameter */
-name|ak452x_wrcd
+name|spicds_wrcd
 argument_list|(
 name|codec
 argument_list|,
@@ -802,7 +913,7 @@ operator|->
 name|format
 argument_list|)
 expr_stmt|;
-name|ak452x_wrcd
+name|spicds_wrcd
 argument_list|(
 name|codec
 argument_list|,
@@ -814,7 +925,7 @@ name|dvc
 argument_list|)
 expr_stmt|;
 comment|/* power on */
-name|ak452x_wrcd
+name|spicds_wrcd
 argument_list|(
 name|codec
 argument_list|,
@@ -828,7 +939,7 @@ name|AK452X_POWER_PWVR
 argument_list|)
 expr_stmt|;
 comment|/* free reset register */
-name|ak452x_wrcd
+name|spicds_wrcd
 argument_list|(
 name|codec
 argument_list|,
@@ -839,6 +950,135 @@ operator||
 name|AK452X_RESET_RSAD
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|codec
+operator|->
+name|type
+operator|==
+name|SPICDS_TYPE_WM8770
+condition|)
+block|{
+comment|/* WM8770 init values are taken from ALSA */
+comment|/* These come first to reduce init pop noise */
+name|spicds_wrcd
+argument_list|(
+name|codec
+argument_list|,
+literal|0x1b
+argument_list|,
+literal|0x044
+argument_list|)
+expr_stmt|;
+comment|/* ADC Mux (AC'97 source) */
+name|spicds_wrcd
+argument_list|(
+name|codec
+argument_list|,
+literal|0x1c
+argument_list|,
+literal|0x00B
+argument_list|)
+expr_stmt|;
+comment|/* Out Mux1 (VOUT1 = DAC+AUX, VOUT2 = DAC) */
+name|spicds_wrcd
+argument_list|(
+name|codec
+argument_list|,
+literal|0x1d
+argument_list|,
+literal|0x009
+argument_list|)
+expr_stmt|;
+comment|/* Out Mux2 (VOUT2 = DAC, VOUT3 = DAC) */
+name|spicds_wrcd
+argument_list|(
+name|codec
+argument_list|,
+literal|0x18
+argument_list|,
+literal|0x000
+argument_list|)
+expr_stmt|;
+comment|/* All power-up */
+name|spicds_wrcd
+argument_list|(
+name|codec
+argument_list|,
+literal|0x16
+argument_list|,
+literal|0x122
+argument_list|)
+expr_stmt|;
+comment|/* I2S, normal polarity, 24bit */
+name|spicds_wrcd
+argument_list|(
+name|codec
+argument_list|,
+literal|0x17
+argument_list|,
+literal|0x022
+argument_list|)
+expr_stmt|;
+comment|/* 256fs, slave mode */
+name|spicds_wrcd
+argument_list|(
+name|codec
+argument_list|,
+literal|0x19
+argument_list|,
+literal|0x000
+argument_list|)
+expr_stmt|;
+comment|/* -12dB ADC/L */
+name|spicds_wrcd
+argument_list|(
+name|codec
+argument_list|,
+literal|0x1a
+argument_list|,
+literal|0x000
+argument_list|)
+expr_stmt|;
+comment|/* -12dB ADC/R */
+block|}
+if|if
+condition|(
+name|codec
+operator|->
+name|type
+operator|==
+name|SPICDS_TYPE_AK4358
+condition|)
+name|spicds_wrcd
+argument_list|(
+name|codec
+argument_list|,
+literal|0x00
+argument_list|,
+literal|0x07
+argument_list|)
+expr_stmt|;
+comment|/* I2S, 24bit, power-up */
+if|if
+condition|(
+name|codec
+operator|->
+name|type
+operator|==
+name|SPICDS_TYPE_AK4381
+condition|)
+name|spicds_wrcd
+argument_list|(
+name|codec
+argument_list|,
+literal|0x00
+argument_list|,
+literal|0x0f
+argument_list|)
+expr_stmt|;
+comment|/* I2S, 24bit, power-up */
 name|snd_mtxunlock
 argument_list|(
 name|codec
@@ -851,10 +1091,10 @@ end_function
 
 begin_function
 name|void
-name|ak452x_reinit
+name|spicds_reinit
 parameter_list|(
 name|struct
-name|ak452x_info
+name|spicds_info
 modifier|*
 name|codec
 parameter_list|)
@@ -866,8 +1106,17 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|codec
+operator|->
+name|type
+operator|!=
+name|SPICDS_TYPE_WM8770
+condition|)
+block|{
 comment|/* reset */
-name|ak452x_wrcd
+name|spicds_wrcd
 argument_list|(
 name|codec
 argument_list|,
@@ -877,7 +1126,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* set parameter */
-name|ak452x_wrcd
+name|spicds_wrcd
 argument_list|(
 name|codec
 argument_list|,
@@ -888,7 +1137,7 @@ operator|->
 name|format
 argument_list|)
 expr_stmt|;
-name|ak452x_wrcd
+name|spicds_wrcd
 argument_list|(
 name|codec
 argument_list|,
@@ -900,7 +1149,7 @@ name|dvc
 argument_list|)
 expr_stmt|;
 comment|/* free reset register */
-name|ak452x_wrcd
+name|spicds_wrcd
 argument_list|(
 name|codec
 argument_list|,
@@ -911,6 +1160,13 @@ operator||
 name|AK452X_RESET_RSAD
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* WM8770 reinit */
+comment|/* AK4358 reinit */
+comment|/* AK4381 reinit */
+block|}
 name|snd_mtxunlock
 argument_list|(
 name|codec
@@ -923,10 +1179,10 @@ end_function
 
 begin_function
 name|void
-name|ak452x_set
+name|spicds_set
 parameter_list|(
 name|struct
-name|ak452x_info
+name|spicds_info
 modifier|*
 name|codec
 parameter_list|,
@@ -953,7 +1209,7 @@ name|codec
 operator|->
 name|dev
 argument_list|,
-literal|"ak452x_set(codec, %d, %d, %d)\n"
+literal|"spicds_set(codec, %d, %d, %d)\n"
 argument_list|,
 name|dir
 argument_list|,
@@ -977,11 +1233,54 @@ name|left
 operator|>=
 literal|100
 condition|)
+if|if
+condition|(
+name|codec
+operator|->
+name|type
+operator|==
+name|SPICDS_TYPE_AK4381
+condition|)
+name|left
+operator|=
+literal|255
+expr_stmt|;
+else|else
 name|left
 operator|=
 literal|127
 expr_stmt|;
 else|else
+switch|switch
+condition|(
+name|codec
+operator|->
+name|type
+condition|)
+block|{
+case|case
+name|SPICDS_TYPE_WM8770
+case|:
+name|left
+operator|=
+name|left
+operator|+
+literal|27
+expr_stmt|;
+break|break;
+case|case
+name|SPICDS_TYPE_AK4381
+case|:
+name|left
+operator|=
+name|left
+operator|*
+literal|255
+operator|/
+literal|100
+expr_stmt|;
+break|break;
+default|default:
 name|left
 operator|=
 name|left
@@ -990,17 +1289,61 @@ literal|127
 operator|/
 literal|100
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|right
 operator|>=
 literal|100
 condition|)
+if|if
+condition|(
+name|codec
+operator|->
+name|type
+operator|==
+name|SPICDS_TYPE_AK4381
+condition|)
+name|right
+operator|=
+literal|255
+expr_stmt|;
+else|else
 name|right
 operator|=
 literal|127
 expr_stmt|;
 else|else
+switch|switch
+condition|(
+name|codec
+operator|->
+name|type
+condition|)
+block|{
+case|case
+name|SPICDS_TYPE_WM8770
+case|:
+name|right
+operator|=
+name|right
+operator|+
+literal|27
+expr_stmt|;
+break|break;
+case|case
+name|SPICDS_TYPE_AK4381
+case|:
+name|right
+operator|=
+name|right
+operator|*
+literal|255
+operator|/
+literal|100
+expr_stmt|;
+break|break;
+default|default:
 name|right
 operator|=
 name|right
@@ -1009,6 +1352,7 @@ literal|127
 operator|/
 literal|100
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|dir
@@ -1019,7 +1363,7 @@ name|codec
 operator|->
 name|type
 operator|==
-name|AK452X_TYPE_4524
+name|SPICDS_TYPE_AK4524
 condition|)
 block|{
 if|#
@@ -1033,7 +1377,7 @@ name|codec
 operator|->
 name|dev
 argument_list|,
-literal|"ak452x_set(): AK4524(REC) %d/%d\n"
+literal|"spicds_set(): AK4524(REC) %d/%d\n"
 argument_list|,
 name|left
 argument_list|,
@@ -1042,7 +1386,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|ak452x_wrcd
+name|spicds_wrcd
 argument_list|(
 name|codec
 argument_list|,
@@ -1051,7 +1395,7 @@ argument_list|,
 name|left
 argument_list|)
 expr_stmt|;
-name|ak452x_wrcd
+name|spicds_wrcd
 argument_list|(
 name|codec
 argument_list|,
@@ -1071,7 +1415,7 @@ name|codec
 operator|->
 name|type
 operator|==
-name|AK452X_TYPE_4524
+name|SPICDS_TYPE_AK4524
 condition|)
 block|{
 if|#
@@ -1085,7 +1429,7 @@ name|codec
 operator|->
 name|dev
 argument_list|,
-literal|"ak452x_set(): AK4524(PLAY) %d/%d\n"
+literal|"spicds_set(): AK4524(PLAY) %d/%d\n"
 argument_list|,
 name|left
 argument_list|,
@@ -1094,7 +1438,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|ak452x_wrcd
+name|spicds_wrcd
 argument_list|(
 name|codec
 argument_list|,
@@ -1103,7 +1447,7 @@ argument_list|,
 name|left
 argument_list|)
 expr_stmt|;
-name|ak452x_wrcd
+name|spicds_wrcd
 argument_list|(
 name|codec
 argument_list|,
@@ -1123,7 +1467,7 @@ name|codec
 operator|->
 name|type
 operator|==
-name|AK452X_TYPE_4528
+name|SPICDS_TYPE_AK4528
 condition|)
 block|{
 if|#
@@ -1137,7 +1481,7 @@ name|codec
 operator|->
 name|dev
 argument_list|,
-literal|"ak452x_set(): AK4528(PLAY) %d/%d\n"
+literal|"spicds_set(): AK4528(PLAY) %d/%d\n"
 argument_list|,
 name|left
 argument_list|,
@@ -1146,7 +1490,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|ak452x_wrcd
+name|spicds_wrcd
 argument_list|(
 name|codec
 argument_list|,
@@ -1155,11 +1499,175 @@ argument_list|,
 name|left
 argument_list|)
 expr_stmt|;
-name|ak452x_wrcd
+name|spicds_wrcd
 argument_list|(
 name|codec
 argument_list|,
 name|AK4528_ROATT
+argument_list|,
+name|right
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|dir
+operator|==
+name|PCMDIR_PLAY
+operator|&&
+name|codec
+operator|->
+name|type
+operator|==
+name|SPICDS_TYPE_WM8770
+condition|)
+block|{
+if|#
+directive|if
+operator|(
+literal|0
+operator|)
+name|device_printf
+argument_list|(
+name|codec
+operator|->
+name|dev
+argument_list|,
+literal|"spicds_set(): WM8770(PLAY) %d/%d\n"
+argument_list|,
+name|left
+argument_list|,
+name|right
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|spicds_wrcd
+argument_list|(
+name|codec
+argument_list|,
+name|WM8770_AOATT_L1
+argument_list|,
+name|left
+operator||
+name|WM8770_AOATT_UPDATE
+argument_list|)
+expr_stmt|;
+name|spicds_wrcd
+argument_list|(
+name|codec
+argument_list|,
+name|WM8770_AOATT_R1
+argument_list|,
+name|right
+operator||
+name|WM8770_AOATT_UPDATE
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|dir
+operator|==
+name|PCMDIR_PLAY
+operator|&&
+name|codec
+operator|->
+name|type
+operator|==
+name|SPICDS_TYPE_AK4358
+condition|)
+block|{
+if|#
+directive|if
+operator|(
+literal|0
+operator|)
+name|device_printf
+argument_list|(
+name|codec
+operator|->
+name|dev
+argument_list|,
+literal|"spicds_set(): AK4358(PLAY) %d/%d\n"
+argument_list|,
+name|left
+argument_list|,
+name|right
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|spicds_wrcd
+argument_list|(
+name|codec
+argument_list|,
+name|AK4358_LO1ATT
+argument_list|,
+name|left
+operator||
+name|AK4358_OATT_ENABLE
+argument_list|)
+expr_stmt|;
+name|spicds_wrcd
+argument_list|(
+name|codec
+argument_list|,
+name|AK4358_RO1ATT
+argument_list|,
+name|right
+operator||
+name|AK4358_OATT_ENABLE
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|dir
+operator|==
+name|PCMDIR_PLAY
+operator|&&
+name|codec
+operator|->
+name|type
+operator|==
+name|SPICDS_TYPE_AK4381
+condition|)
+block|{
+if|#
+directive|if
+operator|(
+literal|0
+operator|)
+name|device_printf
+argument_list|(
+name|codec
+operator|->
+name|dev
+argument_list|,
+literal|"spicds_set(): AK4381(PLAY) %d/%d\n"
+argument_list|,
+name|left
+argument_list|,
+name|right
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|spicds_wrcd
+argument_list|(
+name|codec
+argument_list|,
+name|AK4381_LOATT
+argument_list|,
+name|left
+argument_list|)
+expr_stmt|;
+name|spicds_wrcd
+argument_list|(
+name|codec
+argument_list|,
+name|AK4381_ROATT
 argument_list|,
 name|right
 argument_list|)
@@ -1178,7 +1686,7 @@ end_function
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|snd_ak452x
+name|snd_spicds
 argument_list|,
 name|sound
 argument_list|,
@@ -1194,7 +1702,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
-name|snd_ak452x
+name|snd_spicds
 argument_list|,
 literal|1
 argument_list|)
