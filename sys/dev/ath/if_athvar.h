@@ -982,11 +982,6 @@ name|task
 name|sc_rxorntask
 decl_stmt|;
 comment|/* rxorn int processing */
-name|struct
-name|task
-name|sc_radartask
-decl_stmt|;
-comment|/* radar processing */
 name|u_int8_t
 name|sc_defant
 decl_stmt|;
@@ -2925,45 +2920,6 @@ name|_b
 parameter_list|)
 define|\
 value|((*(_ah)->ah_gpioSetIntr)((_ah), (_gpio), (_b)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ath_hal_radar_event
-parameter_list|(
-name|_ah
-parameter_list|)
-define|\
-value|((*(_ah)->ah_radarHaveEvent)((_ah)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ath_hal_procdfs
-parameter_list|(
-name|_ah
-parameter_list|,
-name|_chan
-parameter_list|)
-define|\
-value|((*(_ah)->ah_processDfs)((_ah), (_chan)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ath_hal_checknol
-parameter_list|(
-name|_ah
-parameter_list|,
-name|_chan
-parameter_list|,
-name|_nchans
-parameter_list|)
-define|\
-value|((*(_ah)->ah_dfsNolCheck)((_ah), (_chan), (_nchans)))
 end_define
 
 begin_define
