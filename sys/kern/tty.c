@@ -2086,6 +2086,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Any close with tp->t_refcnt == 1 is wrong and is 	 * an indication of a locking bug somewhere and that 	 * our open call has not been finished properly. 	 * Instead of putting an assert here we skip decrementing 	 * the refcount to work around any problems. 	 */
+if|if
+condition|(
+name|tp
+operator|->
+name|t_refcnt
+operator|>
+literal|1
+condition|)
 name|ttyrel
 argument_list|(
 name|tp
