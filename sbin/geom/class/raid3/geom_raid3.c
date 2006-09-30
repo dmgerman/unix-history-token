@@ -200,7 +200,7 @@ literal|"autosync"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 block|{
@@ -210,7 +210,7 @@ literal|"dynamic"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 block|{
@@ -220,7 +220,7 @@ literal|"hardcode"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 block|{
@@ -230,7 +230,7 @@ literal|"noautosync"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 block|{
@@ -240,7 +240,7 @@ literal|"round_robin"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 block|{
@@ -250,7 +250,7 @@ literal|"noround_robin"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 block|{
@@ -260,7 +260,7 @@ literal|"verify"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 block|{
@@ -270,7 +270,7 @@ literal|"noverify"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 name|G_OPT_SENTINEL
@@ -306,7 +306,7 @@ literal|"hardcode"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 block|{
@@ -340,7 +340,7 @@ literal|"hardcode"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 block|{
@@ -350,7 +350,7 @@ literal|"noautosync"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 block|{
@@ -360,7 +360,7 @@ literal|"round_robin"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 block|{
@@ -370,7 +370,7 @@ literal|"verify"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 name|G_OPT_SENTINEL
@@ -430,7 +430,7 @@ literal|"force"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 name|G_OPT_SENTINEL

@@ -408,7 +408,7 @@ literal|"boot"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 block|{
@@ -460,7 +460,7 @@ literal|"nonewpassphrase"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 block|{
@@ -505,7 +505,7 @@ literal|"boot"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 block|{
@@ -557,7 +557,7 @@ literal|"nonewpassphrase"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 block|{
@@ -594,7 +594,7 @@ literal|"detach"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 block|{
@@ -614,7 +614,7 @@ literal|"nopassphrase"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 block|{
@@ -624,7 +624,7 @@ literal|"readonly"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 name|G_OPT_SENTINEL
@@ -648,7 +648,7 @@ literal|"force"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 block|{
@@ -658,7 +658,7 @@ literal|"last"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 name|G_OPT_SENTINEL
@@ -682,7 +682,7 @@ literal|"force"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 block|{
@@ -692,7 +692,7 @@ literal|"last"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 name|G_OPT_SENTINEL
@@ -728,7 +728,7 @@ literal|"detach"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 block|{
@@ -784,7 +784,7 @@ literal|"boot"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 block|{
@@ -794,7 +794,7 @@ literal|"noboot"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 name|G_OPT_SENTINEL
@@ -860,7 +860,7 @@ literal|"nopassphrase"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 block|{
@@ -870,7 +870,7 @@ literal|"nonewpassphrase"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 name|G_OPT_SENTINEL
@@ -894,7 +894,7 @@ literal|"all"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 block|{
@@ -904,7 +904,7 @@ literal|"force"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 block|{
@@ -939,7 +939,7 @@ literal|"all"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 name|G_OPT_SENTINEL
