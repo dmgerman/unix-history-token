@@ -37,6 +37,13 @@ name|DEATTACK_DETECTED
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEATTACK_DOS_DETECTED
+value|2
+end_define
+
 begin_function_decl
 name|int
 name|detect_attack

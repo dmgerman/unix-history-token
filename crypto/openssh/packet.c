@@ -3552,7 +3552,10 @@ operator|!
 name|receive_context
 operator|.
 name|plaintext
-operator|&&
+condition|)
+block|{
+switch|switch
+condition|(
 name|detect_attack
 argument_list|(
 name|buffer_ptr
@@ -3565,14 +3568,28 @@ name|padded_len
 argument_list|,
 name|NULL
 argument_list|)
-operator|==
-name|DEATTACK_DETECTED
 condition|)
+block|{
+case|case
+name|DEATTACK_DETECTED
+case|:
 name|packet_disconnect
 argument_list|(
-literal|"crc32 compensation attack: network attack detected"
+literal|"crc32 compensation attack: "
+literal|"network attack detected"
 argument_list|)
 expr_stmt|;
+case|case
+name|DEATTACK_DOS_DETECTED
+case|:
+name|packet_disconnect
+argument_list|(
+literal|"deattack denial of "
+literal|"service detected"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* Decrypt data to incoming_packet. */
 name|buffer_clear
 argument_list|(
