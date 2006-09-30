@@ -6151,27 +6151,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_STRUCT
-argument_list|(
-name|_machdep
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|bootinfo
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|bootinfo
-argument_list|,
-name|bootinfo
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_machdep
