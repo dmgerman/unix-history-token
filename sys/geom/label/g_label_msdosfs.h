@@ -34,7 +34,7 @@ value|((uint32_t)((p)[0] + (256*(p)[1]) +		\ 	    (65536*(p)[2]) + (16777216*(p)
 end_define
 
 begin_comment
-comment|/*  * All following structures are according to:  *   * Microsoft Extensible Firmware Initiative FAT32 File System Specification  * FAT: General Overview of On-Disk Format  * Version 1.03, December 6, 2000  * Microsoft Corporation  */
+comment|/*  * All following structures are according to:  *  * Microsoft Extensible Firmware Initiative FAT32 File System Specification  * FAT: General Overview of On-Disk Format  * Version 1.03, December 6, 2000  * Microsoft Corporation  */
 end_comment
 
 begin_comment
@@ -160,7 +160,7 @@ comment|/* 62 bytes */
 end_comment
 
 begin_comment
-comment|/*   * FAT boot sector and boot parameter block for  * FAT32 volumes  */
+comment|/*  * FAT boot sector and boot parameter block for  * FAT32 volumes  */
 end_comment
 
 begin_typedef
@@ -324,7 +324,7 @@ comment|/* 90 bytes */
 end_comment
 
 begin_comment
-comment|/*   * FAT directory entry structure  */
+comment|/*  * FAT directory entry structure  */
 end_comment
 
 begin_define
