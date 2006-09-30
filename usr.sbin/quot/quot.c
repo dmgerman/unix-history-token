@@ -548,6 +548,10 @@ expr_stmt|;
 if|if
 condition|(
 name|super
+operator|!=
+name|NULL
+operator|&&
+name|super
 operator|->
 name|fs_magic
 operator|==
