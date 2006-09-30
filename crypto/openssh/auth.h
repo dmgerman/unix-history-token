@@ -124,6 +124,10 @@ name|int
 name|success
 decl_stmt|;
 name|int
+name|authenticated
+decl_stmt|;
+comment|/* authenticated and alarms cancelled */
+name|int
 name|postponed
 decl_stmt|;
 comment|/* authentication needs another step */
