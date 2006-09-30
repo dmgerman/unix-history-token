@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $OpenBSD: key.c,v 1.67 2006/08/03 03:34:42 deraadt Exp $ */
+end_comment
+
+begin_comment
 comment|/*  * read_bignum():  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  *  *  * Copyright (c) 2000, 2001 Markus Friedl.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
@@ -9,18 +13,34 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$OpenBSD: key.c,v 1.58 2005/06/17 02:44:32 djm Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#
 directive|include
 file|<openssl/evp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -56,12 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bufaux.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"log.h"
 end_include
 
@@ -88,8 +102,10 @@ name|dsa
 decl_stmt|;
 name|k
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -102,12 +118,6 @@ operator|->
 name|type
 operator|=
 name|type
-expr_stmt|;
-name|k
-operator|->
-name|flags
-operator|=
-literal|0
 expr_stmt|;
 name|k
 operator|->
@@ -511,6 +521,17 @@ modifier|*
 name|k
 parameter_list|)
 block|{
+if|if
+condition|(
+name|k
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"key_free: key is NULL"
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|k
@@ -691,7 +712,6 @@ argument_list|)
 operator|==
 literal|0
 return|;
-break|break;
 case|case
 name|KEY_DSA
 case|:
@@ -776,7 +796,6 @@ argument_list|)
 operator|==
 literal|0
 return|;
-break|break;
 default|default:
 name|fatal
 argument_list|(
@@ -977,7 +996,6 @@ case|:
 return|return
 name|retval
 return|;
-break|break;
 default|default:
 name|fatal
 argument_list|(
@@ -1084,21 +1102,16 @@ name|i
 decl_stmt|;
 name|retval
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+literal|1
+argument_list|,
 name|dgst_raw_len
 operator|*
 literal|3
 operator|+
 literal|1
 argument_list|)
-expr_stmt|;
-name|retval
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 for|for
 control|(
@@ -1272,18 +1285,18 @@ literal|1
 expr_stmt|;
 name|retval
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
-sizeof|sizeof
-argument_list|(
-name|char
-argument_list|)
-operator|*
 operator|(
 name|rounds
 operator|*
 literal|6
 operator|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|char
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|retval
@@ -2819,21 +2832,18 @@ case|:
 return|return
 literal|"RSA1"
 return|;
-break|break;
 case|case
 name|KEY_RSA
 case|:
 return|return
 literal|"RSA"
 return|;
-break|break;
 case|case
 name|KEY_DSA
 case|:
 return|return
 literal|"DSA"
 return|;
-break|break;
 block|}
 return|return
 literal|"unknown"
@@ -2866,14 +2876,12 @@ case|:
 return|return
 literal|"ssh-rsa"
 return|;
-break|break;
 case|case
 name|KEY_DSA
 case|:
 return|return
 literal|"ssh-dss"
 return|;
-break|break;
 block|}
 return|return
 literal|"ssh-unknown"
@@ -2914,7 +2922,6 @@ operator|->
 name|n
 argument_list|)
 return|;
-break|break;
 case|case
 name|KEY_DSA
 case|:
@@ -2928,7 +2935,6 @@ operator|->
 name|p
 argument_list|)
 return|;
-break|break;
 block|}
 return|return
 literal|0
@@ -4180,7 +4186,6 @@ argument_list|,
 name|datalen
 argument_list|)
 return|;
-break|break;
 case|case
 name|KEY_RSA
 case|:
@@ -4198,7 +4203,6 @@ argument_list|,
 name|datalen
 argument_list|)
 return|;
-break|break;
 default|default:
 name|error
 argument_list|(
@@ -4213,7 +4217,6 @@ return|return
 operator|-
 literal|1
 return|;
-break|break;
 block|}
 block|}
 end_function
@@ -4282,7 +4285,6 @@ argument_list|,
 name|datalen
 argument_list|)
 return|;
-break|break;
 case|case
 name|KEY_RSA
 case|:
@@ -4300,7 +4302,6 @@ argument_list|,
 name|datalen
 argument_list|)
 return|;
-break|break;
 default|default:
 name|error
 argument_list|(
@@ -4315,7 +4316,6 @@ return|return
 operator|-
 literal|1
 return|;
-break|break;
 block|}
 block|}
 end_function
@@ -4341,8 +4341,10 @@ name|pk
 decl_stmt|;
 name|pk
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*

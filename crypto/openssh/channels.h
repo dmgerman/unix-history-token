@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: channels.h,v 1.83 2005/12/30 15:56:37 reyk Exp $	*/
+comment|/* $OpenBSD: channels.h,v 1.88 2006/08/03 03:34:42 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -22,12 +22,6 @@ define|#
 directive|define
 name|CHANNEL_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|"buffer.h"
-end_include
 
 begin_comment
 comment|/* Definitions for channel types. */
@@ -1083,6 +1077,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|channel_add_adm_permitted_opens
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|channel_clear_permitted_opens
 parameter_list|(
@@ -1093,6 +1099,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|channel_clear_adm_permitted_opens
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|channel_input_port_forward_request
 parameter_list|(
 name|int
@@ -1125,7 +1140,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|channel_request_remote_forwarding
 parameter_list|(
 specifier|const

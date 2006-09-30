@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $OpenBSD: authfd.c,v 1.80 2006/08/03 03:34:41 deraadt Exp $ */
+end_comment
+
+begin_comment
 comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Functions for connecting the local authentication agent.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  *  * SSH2 implementation,  * Copyright (c) 2000 Markus Friedl.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
@@ -9,18 +13,76 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$OpenBSD: authfd.c,v 1.66 2005/06/17 02:44:32 djm Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/un.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
 
 begin_include
 include|#
 directive|include
 file|<openssl/evp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/crypto.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xmalloc.h"
 end_include
 
 begin_include
@@ -39,24 +101,6 @@ begin_include
 include|#
 directive|include
 file|"buffer.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"bufaux.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xmalloc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"getput.h"
 end_include
 
 begin_include
@@ -99,6 +143,12 @@ begin_include
 include|#
 directive|include
 file|"atomicio.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"misc.h"
 end_include
 
 begin_decl_stmt
@@ -371,7 +421,7 @@ argument_list|(
 name|request
 argument_list|)
 expr_stmt|;
-name|PUT_32BIT
+name|put_u32
 argument_list|(
 name|buf
 argument_list|,
@@ -461,7 +511,7 @@ block|}
 comment|/* Extract the length, and check it for sanity. */
 name|len
 operator|=
-name|GET_32BIT
+name|get_u32
 argument_list|(
 name|buf
 argument_list|)
@@ -1249,7 +1299,6 @@ default|default:
 return|return
 name|NULL
 return|;
-break|break;
 block|}
 comment|/* Decrement the number of remaining entries. */
 name|auth
@@ -1508,6 +1557,9 @@ index|[
 name|i
 index|]
 operator|=
+operator|(
+name|u_char
+operator|)
 name|buffer_get_char
 argument_list|(
 operator|&
@@ -2167,7 +2219,6 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-break|break;
 block|}
 if|if
 condition|(

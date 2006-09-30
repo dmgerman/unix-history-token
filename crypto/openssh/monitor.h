@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: monitor.h,v 1.13 2003/11/17 11:06:07 markus Exp $	*/
+comment|/* $OpenBSD: monitor.h,v 1.14 2006/03/25 22:22:43 djm Exp $ */
 end_comment
 
 begin_comment
-comment|/*	$FreeBSD$	*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

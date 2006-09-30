@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: monitor_wrap.h,v 1.14 2004/06/21 17:36:31 avsm Exp $	*/
+comment|/* $OpenBSD: monitor_wrap.h,v 1.20 2006/08/03 03:34:42 deraadt Exp $ */
 end_comment
 
 begin_comment
-comment|/*	$FreeBSD$	*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
@@ -22,18 +22,6 @@ define|#
 directive|define
 name|_MM_WRAP_H_
 end_define
-
-begin_include
-include|#
-directive|include
-file|"key.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"buffer.h"
-end_include
 
 begin_decl_stmt
 specifier|extern
@@ -78,12 +66,6 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|mm_master
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|passwd
 struct_decl|;
 end_struct_decl
 
@@ -332,12 +314,6 @@ directive|ifdef
 name|GSSAPI
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|"ssh-gss.h"
-end_include
-
 begin_function_decl
 name|OM_uint32
 name|mm_ssh_gssapi_server_ctx
@@ -564,7 +540,7 @@ parameter_list|,
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -822,7 +798,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _MM_H_ */
+comment|/* _MM_WRAP_H_ */
 end_comment
 
 end_unit

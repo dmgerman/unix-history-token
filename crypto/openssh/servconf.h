@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: servconf.h,v 1.72 2005/12/06 22:38:27 reyk Exp $	*/
+comment|/* $OpenBSD: servconf.h,v 1.79 2006/08/14 12:40:25 dtucker Exp $ */
 end_comment
 
 begin_comment
-comment|/*	$FreeBSD$	*/
+comment|/* $FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -22,12 +22,6 @@ define|#
 directive|define
 name|SERVCONF_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|"buffer.h"
-end_include
 
 begin_define
 define|#
@@ -115,6 +109,17 @@ end_define
 
 begin_comment
 comment|/* Max # of env vars. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_MATCH_GROUPS
+value|256
+end_define
+
+begin_comment
+comment|/* Max # of groups for Match. */
 end_comment
 
 begin_comment
@@ -430,6 +435,13 @@ index|[
 name|MAX_SUBSYSTEMS
 index|]
 decl_stmt|;
+name|char
+modifier|*
+name|subsystem_args
+index|[
+name|MAX_SUBSYSTEMS
+index|]
+decl_stmt|;
 name|u_int
 name|num_accept_env
 decl_stmt|;
@@ -477,12 +489,19 @@ name|char
 modifier|*
 name|authorized_keys_file2
 decl_stmt|;
+name|char
+modifier|*
+name|adm_forced_command
+decl_stmt|;
 name|int
 name|use_pam
 decl_stmt|;
 comment|/* Enable auth via PAM */
 name|int
 name|permit_tun
+decl_stmt|;
+name|int
+name|num_permitted_opens
 decl_stmt|;
 block|}
 name|ServerOptions
@@ -524,6 +543,21 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -554,6 +588,53 @@ name|char
 modifier|*
 parameter_list|,
 name|Buffer
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|parse_server_match_config
+parameter_list|(
+name|ServerOptions
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|copy_set_server_options
+parameter_list|(
+name|ServerOptions
+modifier|*
+parameter_list|,
+name|ServerOptions
 modifier|*
 parameter_list|)
 function_decl|;

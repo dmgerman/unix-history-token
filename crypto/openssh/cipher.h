@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: cipher.h,v 1.35 2004/07/28 09:40:29 markus Exp $	*/
+comment|/* $OpenBSD: cipher.h,v 1.36 2006/03/25 22:22:42 djm Exp $ */
 end_comment
 
 begin_comment

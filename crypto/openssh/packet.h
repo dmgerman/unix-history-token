@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: packet.h,v 1.43 2005/07/25 11:59:40 markus Exp $	*/
+comment|/* $OpenBSD: packet.h,v 1.45 2006/03/25 22:22:43 djm Exp $ */
 end_comment
 
 begin_comment
@@ -18,6 +18,12 @@ define|#
 directive|define
 name|PACKET_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|<termios.h>
+end_include
 
 begin_include
 include|#

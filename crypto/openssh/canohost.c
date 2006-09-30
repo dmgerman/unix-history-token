@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $OpenBSD: canohost.c,v 1.61 2006/08/03 03:34:41 deraadt Exp $ */
+end_comment
+
+begin_comment
 comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Functions for returning the canonical host name of the remote site.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
 end_comment
 
@@ -9,24 +13,82 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$OpenBSD: canohost.c,v 1.48 2005/12/28 22:46:06 stevesk Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#
 directive|include
-file|"packet.h"
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|"xmalloc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"packet.h"
 end_include
 
 begin_include
@@ -165,6 +227,21 @@ literal|255
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|from
+operator|.
+name|ss_family
+operator|==
+name|AF_INET
+condition|)
+name|check_ip_options
+argument_list|(
+name|sock
+argument_list|,
+name|ntop
+argument_list|)
+expr_stmt|;
 name|ipv64_normalise_mapped
 argument_list|(
 operator|&
@@ -223,21 +300,6 @@ condition|)
 name|fatal
 argument_list|(
 literal|"get_remote_hostname: getnameinfo NI_NUMERICHOST failed"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|from
-operator|.
-name|ss_family
-operator|==
-name|AF_INET
-condition|)
-name|check_ip_options
-argument_list|(
-name|sock
-argument_list|,
-name|ntop
 argument_list|)
 expr_stmt|;
 if|if
@@ -394,6 +456,9 @@ index|[
 name|i
 index|]
 operator|=
+operator|(
+name|char
+operator|)
 name|tolower
 argument_list|(
 name|name
@@ -451,9 +516,11 @@ block|{
 name|logit
 argument_list|(
 literal|"reverse mapping checking getaddrinfo for %.700s "
-literal|"failed - POSSIBLE BREAK-IN ATTEMPT!"
+literal|"[%s] failed - POSSIBLE BREAK-IN ATTEMPT!"
 argument_list|,
 name|name
+argument_list|,
+name|ntop
 argument_list|)
 expr_stmt|;
 return|return

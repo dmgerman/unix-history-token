@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $OpenBSD: sshlogin.c,v 1.25 2006/08/03 03:34:42 deraadt Exp $ */
+end_comment
+
+begin_comment
 comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * This file performs some of the things login(1) normally does.  We cannot  * easily use something like login -p -h host -f user, because there are  * several different logins around, and it is hard to determined what kind of  * login the current system has.  Also, we want to be able to execute commands  * on a tty.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  *  * Copyright (c) 1999 Theo de Raadt.  All rights reserved.  * Copyright (c) 1999 Markus Friedl.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
@@ -9,13 +13,71 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$OpenBSD: sshlogin.c,v 1.13 2004/08/12 09:18:24 djm Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_include
 include|#
@@ -60,7 +122,7 @@ comment|/*  * Returns the time when the user last logged in.  Returns 0 if the  
 end_comment
 
 begin_function
-name|u_long
+name|time_t
 name|get_last_login_time
 parameter_list|(
 name|uid_t
@@ -75,7 +137,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|u_int
+name|size_t
 name|bufsize
 parameter_list|)
 block|{
@@ -103,6 +165,9 @@ name|bufsize
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
+name|time_t
+operator|)
 name|li
 operator|.
 name|tv_sec

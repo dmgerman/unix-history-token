@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $OpenBSD: auth-krb5.c,v 1.19 2006/08/03 03:34:41 deraadt Exp $ */
+end_comment
+
+begin_comment
 comment|/*  *    Kerberos v5 authentication and ticket-passing routines.  *  * $xFreeBSD: src/crypto/openssh/auth-krb5.c,v 1.6 2001/02/13 16:58:04 assar Exp$  */
 end_comment
 
@@ -14,20 +18,36 @@ file|"includes.h"
 end_include
 
 begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$OpenBSD: auth-krb5.c,v 1.16 2005/11/21 09:42:10 dtucker Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|RCSID
+name|__RCSID
 argument_list|(
 literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xmalloc.h"
+end_include
 
 begin_include
 include|#
@@ -50,13 +70,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xmalloc.h"
+file|"log.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"log.h"
+file|"buffer.h"
 end_include
 
 begin_include
@@ -74,6 +94,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"key.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"hostfile.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"auth.h"
 end_include
 
@@ -82,6 +114,24 @@ ifdef|#
 directive|ifdef
 name|KRB5
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_include
 include|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Namespace munging inspired by an equivalent hack in NetBSD's tree: add  * the "ssh_" prefix to every symbol in libssh which doesn't already have  * it.  This prevents collisions between symbols in libssh and symbols in  * other libraries or applications which link with libssh, either directly  * or indirectly (e.g. through PAM loading pam_ssh).  *  * A list of symbols which need munging is obtained as follows:  *  * nm libssh.a | awk '$2 == "T"&& $3 !~ /^ssh_/ { print $3 }'  *  * $FreeBSD$  */
+comment|/*  * Namespace munging inspired by an equivalent hack in NetBSD's tree: add  * the "ssh_" prefix to every symbol in libssh which doesn't already have  * it.  This prevents collisions between symbols in libssh and symbols in  * other libraries or applications which link with libssh, either directly  * or indirectly (e.g. through PAM loading pam_ssh).  *  * A list of symbols which need munging is obtained as follows:  *  * nm libssh.a | awk '$2 == "T"&& $3 !~ /^ssh_/ { print "#define", $3, "ssh_" $3 }'  *  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -69,6 +69,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|atomiciov
+value|ssh_atomiciov
+end_define
+
+begin_define
+define|#
+directive|define
 name|auth_request_forwarding
 value|ssh_auth_request_forwarding
 end_define
@@ -85,6 +92,13 @@ define|#
 directive|define
 name|buffer_append_space
 value|ssh_buffer_append_space
+end_define
+
+begin_define
+define|#
+directive|define
+name|buffer_check_alloc
+value|ssh_buffer_check_alloc
 end_define
 
 begin_define
@@ -433,6 +447,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|channel_add_adm_permitted_opens
+value|ssh_channel_add_adm_permitted_opens
+end_define
+
+begin_define
+define|#
+directive|define
 name|channel_add_permitted_opens
 value|ssh_channel_add_permitted_opens
 end_define
@@ -463,6 +484,13 @@ define|#
 directive|define
 name|channel_cancel_rport_listener
 value|ssh_channel_cancel_rport_listener
+end_define
+
+begin_define
+define|#
+directive|define
+name|channel_clear_adm_permitted_opens
+value|ssh_channel_clear_adm_permitted_opens
 end_define
 
 begin_define
@@ -1217,6 +1245,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|get_u16
+value|ssh_get_u16
+end_define
+
+begin_define
+define|#
+directive|define
+name|get_u32
+value|ssh_get_u32
+end_define
+
+begin_define
+define|#
+directive|define
+name|get_u64
+value|ssh_get_u64
+end_define
+
+begin_define
+define|#
+directive|define
 name|getrrsetbyname
 value|ssh_getrrsetbyname
 end_define
@@ -1436,6 +1485,13 @@ define|#
 directive|define
 name|key_new_private
 value|ssh_key_new_private
+end_define
+
+begin_define
+define|#
+directive|define
+name|key_perm_ok
+value|ssh_key_perm_ok
 end_define
 
 begin_define
@@ -2029,6 +2085,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|permanently_drop_suid
+value|ssh_permanently_drop_suid
+end_define
+
+begin_define
+define|#
+directive|define
 name|permanently_set_uid
 value|ssh_permanently_set_uid
 end_define
@@ -2045,6 +2108,34 @@ define|#
 directive|define
 name|proto_spec
 value|ssh_proto_spec
+end_define
+
+begin_define
+define|#
+directive|define
+name|put_host_port
+value|ssh_put_host_port
+end_define
+
+begin_define
+define|#
+directive|define
+name|put_u16
+value|ssh_put_u16
+end_define
+
+begin_define
+define|#
+directive|define
+name|put_u32
+value|ssh_put_u32
+end_define
+
+begin_define
+define|#
+directive|define
+name|put_u64
+value|ssh_put_u64
 end_define
 
 begin_define
@@ -2171,6 +2262,13 @@ define|#
 directive|define
 name|shadow_pw
 value|ssh_shadow_pw
+end_define
+
+begin_define
+define|#
+directive|define
+name|sigdie
+value|ssh_sigdie
 end_define
 
 begin_define
@@ -2332,6 +2430,20 @@ define|#
 directive|define
 name|x11_request_forwarding_with_spoofing
 value|ssh_x11_request_forwarding_with_spoofing
+end_define
+
+begin_define
+define|#
+directive|define
+name|xasprintf
+value|ssh_xasprintf
+end_define
+
+begin_define
+define|#
+directive|define
+name|xcalloc
+value|ssh_xcalloc
 end_define
 
 begin_define
