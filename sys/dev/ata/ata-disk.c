@@ -411,6 +411,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|atadev
 operator|->
 name|param
@@ -418,6 +419,19 @@ operator|.
 name|atavalid
 operator|&
 name|ATA_FLAG_54_58
+operator|)
+operator|&&
+name|atadev
+operator|->
+name|param
+operator|.
+name|current_heads
+operator|&&
+name|atadev
+operator|->
+name|param
+operator|.
+name|current_sectors
 condition|)
 block|{
 name|adp
