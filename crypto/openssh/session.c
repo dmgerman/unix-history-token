@@ -10422,6 +10422,11 @@ condition|(
 name|authctxt
 operator|==
 name|NULL
+operator|||
+operator|!
+name|authctxt
+operator|->
+name|authenticated
 condition|)
 return|return;
 ifdef|#
