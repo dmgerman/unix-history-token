@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: ssh-gss.h,v 1.5 2004/06/21 17:36:31 avsm Exp $	*/
+comment|/* $OpenBSD: ssh-gss.h,v 1.9 2006/08/18 14:40:34 djm Exp $ */
 end_comment
 
 begin_comment
@@ -24,12 +24,6 @@ ifdef|#
 directive|ifdef
 name|GSSAPI
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"buffer.h"
-end_include
 
 begin_ifdef
 ifdef|#
@@ -603,6 +597,23 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ssh_gssapi_check_mechanism
+parameter_list|(
+name|Gssctxt
+modifier|*
+modifier|*
+parameter_list|,
+name|gss_OID
 parameter_list|,
 specifier|const
 name|char

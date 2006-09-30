@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: log.h,v 1.11 2004/06/21 22:02:58 djm Exp $	*/
+comment|/* $OpenBSD: log.h,v 1.15 2006/08/18 09:13:25 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -18,16 +18,6 @@ define|#
 directive|define
 name|SSH_LOG_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|<syslog.h>
-end_include
-
-begin_comment
-comment|/* Needed for LOG_AUTHPRIV (if present) */
-end_comment
 
 begin_comment
 comment|/* Supported syslog facilities and levels. */
@@ -170,6 +160,32 @@ end_decl_stmt
 begin_function_decl
 name|void
 name|error
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(format
+parameter_list|(
+name|printf
+parameter_list|,
+function_decl|1
+operator|,
+function_decl|2
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|void
+name|sigdie
 parameter_list|(
 specifier|const
 name|char

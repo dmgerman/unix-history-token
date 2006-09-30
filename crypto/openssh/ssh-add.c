@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $OpenBSD: ssh-add.c,v 1.89 2006/08/03 03:34:42 deraadt Exp $ */
+end_comment
+
+begin_comment
 comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Adds an identity to the authentication server, or removes an identity.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  *  * SSH2 implementation,  * Copyright (c) 2000, 2001 Markus Friedl.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
@@ -9,18 +13,76 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$OpenBSD: ssh-add.c,v 1.74 2005/11/12 18:37:59 deraadt Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
 
 begin_include
 include|#
 directive|include
 file|<openssl/evp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xmalloc.h"
 end_include
 
 begin_include
@@ -44,13 +106,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xmalloc.h"
+file|"key.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"key.h"
+file|"buffer.h"
 end_include
 
 begin_include
@@ -385,10 +447,6 @@ modifier|*
 name|filename
 parameter_list|)
 block|{
-name|struct
-name|stat
-name|st
-decl_stmt|;
 name|Key
 modifier|*
 name|private
@@ -406,6 +464,10 @@ literal|1024
 index|]
 decl_stmt|;
 name|int
+name|fd
+decl_stmt|,
+name|perms_ok
+decl_stmt|,
 name|ret
 init|=
 operator|-
@@ -413,13 +475,16 @@ literal|1
 decl_stmt|;
 if|if
 condition|(
-name|stat
+operator|(
+name|fd
+operator|=
+name|open
 argument_list|(
 name|filename
 argument_list|,
-operator|&
-name|st
+name|O_RDONLY
 argument_list|)
+operator|)
 operator|<
 literal|0
 condition|)
@@ -434,6 +499,30 @@ operator|-
 literal|1
 return|;
 block|}
+comment|/* 	 * Since we'll try to load a keyfile multiple times, permission errors 	 * will occur multiple times, so check perms first and bail if wrong. 	 */
+name|perms_ok
+operator|=
+name|key_perm_ok
+argument_list|(
+name|fd
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|perms_ok
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 comment|/* At first, try empty passphrase */
 name|private
 operator|=
@@ -1271,7 +1360,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [options]\n"
+literal|"Usage: %s [options] [file ...]\n"
 argument_list|,
 name|__progname
 argument_list|)
@@ -1512,7 +1601,6 @@ expr_stmt|;
 goto|goto
 name|done
 goto|;
-break|break;
 case|case
 literal|'x'
 case|:
@@ -1544,7 +1632,6 @@ expr_stmt|;
 goto|goto
 name|done
 goto|;
-break|break;
 case|case
 literal|'c'
 case|:
@@ -1581,7 +1668,6 @@ expr_stmt|;
 goto|goto
 name|done
 goto|;
-break|break;
 case|case
 literal|'s'
 case|:

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: readconf.h,v 1.68 2005/12/06 22:38:27 reyk Exp $	*/
+comment|/* $OpenBSD: readconf.h,v 1.71 2006/08/03 03:34:42 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -18,12 +18,6 @@ define|#
 directive|define
 name|READCONF_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|"key.h"
-end_include
 
 begin_comment
 comment|/* Data structure for representing a forwarding request. */
@@ -83,6 +77,10 @@ name|int
 name|forward_x11_trusted
 decl_stmt|;
 comment|/* Trust Forward X11 display. */
+name|int
+name|exit_on_forward_failure
+decl_stmt|;
+comment|/* Exit if bind(2) fails for -L/-R */
 name|char
 modifier|*
 name|xauth_location

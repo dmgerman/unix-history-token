@@ -36,6 +36,17 @@ name|defined
 argument_list|(
 name|GLOB_HAS_GL_MATCHC
 argument_list|)
+operator|||
+expr|\
+operator|!
+name|defined
+argument_list|(
+name|HAVE_DECL_GLOB_NOMATCH
+argument_list|)
+operator|||
+name|HAVE_DECL_GLOB_NOMATCH
+operator|==
+literal|0
 end_if
 
 begin_ifndef

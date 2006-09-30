@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: kex.h,v 1.38 2005/11/04 05:15:59 djm Exp $	*/
+comment|/* $OpenBSD: kex.h,v 1.44 2006/08/03 03:34:42 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -22,25 +22,13 @@ end_define
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/evp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"buffer.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"cipher.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"key.h"
 end_include
 
 begin_define
@@ -62,6 +50,13 @@ define|#
 directive|define
 name|KEX_DHGEX_SHA1
 value|"diffie-hellman-group-exchange-sha1"
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEX_DHGEX_SHA256
+value|"diffie-hellman-group-exchange-sha256"
 end_define
 
 begin_define
@@ -136,6 +131,8 @@ block|,
 name|KEX_DH_GRP14_SHA1
 block|,
 name|KEX_DH_GEX_SHA1
+block|,
+name|KEX_DH_GEX_SHA256
 block|,
 name|KEX_MAX
 block|}
@@ -327,7 +324,7 @@ decl_stmt|;
 name|Buffer
 name|peer
 decl_stmt|;
-name|int
+name|sig_atomic_t
 name|done
 decl_stmt|;
 name|int

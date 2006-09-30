@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: auth.h,v 1.51 2005/06/06 11:20:36 djm Exp $	*/
+comment|/* $OpenBSD: auth.h,v 1.58 2006/08/18 09:15:20 markus Exp $ */
 end_comment
 
 begin_comment
@@ -22,19 +22,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"key.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"hostfile.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"buffer.h"
+file|<signal.h>
 end_include
 
 begin_include
@@ -122,9 +110,13 @@ begin_struct
 struct|struct
 name|Authctxt
 block|{
-name|int
+name|sig_atomic_t
 name|success
 decl_stmt|;
+name|int
+name|authenticated
+decl_stmt|;
+comment|/* authenticated and alarms cancelled */
 name|int
 name|postponed
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: scard.h,v 1.12 2003/06/12 19:12:03 markus Exp $	*/
+comment|/* $OpenBSD: scard.h,v 1.14 2006/08/03 03:34:42 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -18,12 +18,6 @@ define|#
 directive|define
 name|SCARD_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|"key.h"
-end_include
 
 begin_define
 define|#

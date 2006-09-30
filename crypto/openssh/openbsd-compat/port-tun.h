@@ -15,11 +15,11 @@ directive|define
 name|_PORT_TUN_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|"channels.h"
-end_include
+begin_struct_decl
+struct_decl|struct
+name|Channel
+struct_decl|;
+end_struct_decl
 
 begin_if
 if|#

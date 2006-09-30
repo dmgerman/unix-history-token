@@ -15,13 +15,11 @@ directive|include
 file|<openssl/evp.h>
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: cipher-acss.c,v 1.3 2005/07/17 07:04:47 djm Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_if
 if|#

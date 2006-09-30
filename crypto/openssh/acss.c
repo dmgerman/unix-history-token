@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: acss.c,v 1.3 2005/07/17 07:04:47 djm Exp $ */
+comment|/*	$Id: acss.c,v 1.4 2006/07/24 04:51:01 djm Exp $ */
 end_comment
 
 begin_comment
@@ -11,6 +11,12 @@ begin_include
 include|#
 directive|include
 file|"includes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include

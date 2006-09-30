@@ -25,18 +25,28 @@ directive|ifdef
 name|USE_BUILTIN_RIJNDAEL
 end_ifdef
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$OpenBSD: cipher-aes.c,v 1.2 2003/11/26 21:44:29 djm Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#
 directive|include
 file|<openssl/evp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include

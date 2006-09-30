@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: groupaccess.h,v 1.4 2001/06/26 17:27:23 markus Exp $	*/
+comment|/* $OpenBSD: groupaccess.h,v 1.7 2006/08/03 03:34:42 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -18,12 +18,6 @@ define|#
 directive|define
 name|GROUPACCESS_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|<grp.h>
-end_include
 
 begin_function_decl
 name|int

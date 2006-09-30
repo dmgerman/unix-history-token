@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: auth-options.h,v 1.13 2005/12/06 22:38:27 reyk Exp $	*/
+comment|/* $OpenBSD: auth-options.h,v 1.16 2006/08/03 03:34:41 deraadt Exp $ */
 end_comment
 
 begin_comment

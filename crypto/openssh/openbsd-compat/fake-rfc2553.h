@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: fake-rfc2553.h,v 1.12 2005/08/03 05:36:21 dtucker Exp $ */
+comment|/* $Id: fake-rfc2553.h,v 1.13 2006/07/24 03:51:52 djm Exp $ */
 end_comment
 
 begin_comment
@@ -32,8 +32,28 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sys/types.h"
+file|<sys/types.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_NETDB_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * First, socket and INET6 related definitions   */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: bufaux.h,v 1.21 2005/03/10 22:01:05 deraadt Exp $	*/
+comment|/* $OpenBSD: bufaux.h,v 1.22 2006/03/25 22:22:42 djm Exp $ */
 end_comment
 
 begin_comment

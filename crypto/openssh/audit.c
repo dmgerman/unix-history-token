@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: audit.c,v 1.3 2005/07/17 07:26:44 djm Exp $ */
+comment|/* $Id: audit.c,v 1.5 2006/09/01 05:38:36 djm Exp $ */
 end_comment
 
 begin_comment
@@ -11,6 +11,18 @@ begin_include
 include|#
 directive|include
 file|"includes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_ifdef
@@ -29,6 +41,18 @@ begin_include
 include|#
 directive|include
 file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"key.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"hostfile.h"
 end_include
 
 begin_include

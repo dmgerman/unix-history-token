@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: gss-serv-krb5.c,v 1.4 2005/10/13 19:08:08 stevesk Exp $	*/
+comment|/* $OpenBSD: gss-serv-krb5.c,v 1.7 2006/08/03 03:34:42 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -28,13 +28,43 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"auth.h"
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|"xmalloc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"key.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"hostfile.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"auth.h"
 end_include
 
 begin_include
@@ -47,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|"servconf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"buffer.h"
 end_include
 
 begin_include
@@ -82,7 +118,7 @@ end_else
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_GSSAPI_KRB5
+name|HAVE_GSSAPI_KRB5_H
 end_ifdef
 
 begin_include
@@ -94,7 +130,7 @@ end_include
 begin_elif
 elif|#
 directive|elif
-name|HAVE_GSSAPI_GSSAPI_KRB5
+name|HAVE_GSSAPI_GSSAPI_KRB5_H
 end_elif
 
 begin_include

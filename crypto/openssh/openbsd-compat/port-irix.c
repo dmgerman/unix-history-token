@@ -30,6 +30,24 @@ name|WITH_IRIX_ARRAY
 argument_list|)
 end_if
 
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef

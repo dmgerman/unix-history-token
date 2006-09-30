@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: includes.h,v 1.22 2006/01/01 08:59:27 stevesk Exp $	*/
+comment|/* $OpenBSD: includes.h,v 1.54 2006/07/22 20:48:23 stevesk Exp $ */
 end_comment
 
 begin_comment
@@ -17,19 +17,6 @@ begin_define
 define|#
 directive|define
 name|INCLUDES_H
-end_define
-
-begin_define
-define|#
-directive|define
-name|RCSID
-parameter_list|(
-name|msg
-parameter_list|)
-define|\
-value|static
-comment|/**/
-value|const char *const rcsid[] = { (const char *)rcsid, "\100(#)" msg }
 end_define
 
 begin_include
@@ -51,90 +38,18 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdarg.h>
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
+file|<sys/socket.h>
 end_include
 
 begin_comment
-comment|/* For O_NONBLOCK */
+comment|/* For CMSG_* */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<grp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dirent.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stddef.h>
-end_include
 
 begin_ifdef
 ifdef|#
@@ -151,23 +66,6 @@ end_include
 begin_comment
 comment|/* For PATH_MAX */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_GETOPT_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<getopt.h>
-end_include
 
 begin_endif
 endif|#
@@ -209,29 +107,22 @@ name|defined
 argument_list|(
 name|GLOB_HAS_GL_MATCHC
 argument_list|)
+operator|&&
+expr|\
+name|defined
+argument_list|(
+name|HAVE_DECL_GLOB_NOMATCH
+argument_list|)
+operator|&&
+name|HAVE_DECL_GLOB_NOMATCH
+operator|!=
+literal|0
 end_if
 
 begin_include
 include|#
 directive|include
 file|<glob.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_NETGROUP_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netgroup.h>
 end_include
 
 begin_endif
@@ -328,25 +219,22 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_comment
-comment|/* For STDIN_FILENO, etc */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_PATHS
+end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<termios.h>
+file|<paths.h>
 end_include
 
-begin_comment
-comment|/* Struct winsize */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *-*-nto-qnx needs these headers for strcasecmp and LASTLOG_FILE respectively  */
@@ -409,23 +297,6 @@ directive|ifdef
 name|HAVE_UTMPX_H
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_TV_IN_UTMPX
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -453,78 +324,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_PATHS_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<paths.h>
-end_include
-
-begin_comment
-comment|/* For _PATH_XXX */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/wait.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_SYS_TIME_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_comment
-comment|/* For timersub */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/resource.h>
-end_include
 
 begin_ifdef
 ifdef|#
@@ -560,37 +359,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_comment
-comment|/* For MAXPATHLEN and roundup() */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_SYS_UN_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/un.h>
-end_include
-
-begin_comment
-comment|/* For sockaddr_un */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -607,6 +375,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<termios.h>
+end_include
 
 begin_ifdef
 ifdef|#
@@ -790,64 +564,18 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in_systm.h>
 end_include
 
 begin_comment
 comment|/* For typedefs */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_comment
-comment|/* For IPv6 macros */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
-end_include
-
-begin_comment
-comment|/* For IPTOS macros */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<netinet/tcp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<arpa/inet.h>
-end_include
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_NETDB_H
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -1107,7 +835,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"version.h"
+file|"platform.h"
 end_include
 
 begin_include

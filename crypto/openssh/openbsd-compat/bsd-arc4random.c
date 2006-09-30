@@ -12,16 +12,26 @@ end_include
 begin_include
 include|#
 directive|include
-file|"log.h"
+file|<sys/types.h>
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: bsd-arc4random.c,v 1.10 2005/02/16 02:01:28 djm Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"log.h"
+end_include
 
 begin_ifndef
 ifndef|#
