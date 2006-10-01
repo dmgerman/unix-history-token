@@ -627,6 +627,8 @@ block|{
 name|BN_CTX
 modifier|*
 name|ctx
+init|=
+name|NULL
 decl_stmt|;
 name|BN_MONT_CTX
 modifier|*
