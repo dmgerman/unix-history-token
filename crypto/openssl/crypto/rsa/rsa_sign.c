@@ -797,13 +797,14 @@ name|algor
 operator|->
 name|parameter
 operator|&&
+name|ASN1_TYPE_get
+argument_list|(
 name|sig
 operator|->
 name|algor
 operator|->
 name|parameter
-operator|->
-name|type
+argument_list|)
 operator|!=
 name|V_ASN1_NULL
 condition|)
