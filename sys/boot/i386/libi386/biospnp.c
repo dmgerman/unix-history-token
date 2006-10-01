@@ -595,7 +595,7 @@ expr|struct
 name|pnp_devNode
 operator|*
 operator|)
-name|malloc
+name|alloca
 argument_list|(
 name|pnp_NodeSize
 argument_list|)

@@ -42,6 +42,8 @@ end_include
 begin_decl_stmt
 name|vm_offset_t
 name|memtop
+decl_stmt|,
+name|memtop_copyin
 decl_stmt|;
 end_decl_stmt
 
@@ -404,6 +406,8 @@ expr_stmt|;
 block|}
 comment|/* Set memtop to actual top of memory */
 name|memtop
+operator|=
+name|memtop_copyin
 operator|=
 literal|0x100000
 operator|+
