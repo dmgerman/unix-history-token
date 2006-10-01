@@ -90,7 +90,7 @@ name|unsigned
 name|char
 name|key
 index|[
-name|PKCS12_MAC_KEY_LENGTH
+name|EVP_MAX_MD_SIZE
 index|]
 decl_stmt|,
 modifier|*
@@ -217,7 +217,10 @@ name|PKCS12_MAC_ID
 argument_list|,
 name|iter
 argument_list|,
-name|PKCS12_MAC_KEY_LENGTH
+name|EVP_MD_size
+argument_list|(
+name|md_type
+argument_list|)
 argument_list|,
 name|key
 argument_list|,
@@ -249,7 +252,10 @@ name|hmac
 argument_list|,
 name|key
 argument_list|,
-name|PKCS12_MAC_KEY_LENGTH
+name|EVP_MD_size
+argument_list|(
+name|md_type
+argument_list|)
 argument_list|,
 name|md_type
 argument_list|,

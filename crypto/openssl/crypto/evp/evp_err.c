@@ -78,6 +78,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|EVP_F_CAMELLIA_INIT_KEY
+argument_list|)
+block|,
+literal|"CAMELLIA_INIT_KEY"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|EVP_F_D2I_PKEY
 argument_list|)
 block|,
@@ -458,6 +467,15 @@ name|EVP_R_BN_PUBKEY_ERROR
 argument_list|)
 block|,
 literal|"bn pubkey error"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|EVP_R_CAMELLIA_KEY_SETUP_FAILED
+argument_list|)
+block|,
+literal|"camellia key setup failed"
 block|}
 block|,
 block|{

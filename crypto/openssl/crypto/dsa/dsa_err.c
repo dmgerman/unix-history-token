@@ -211,6 +211,15 @@ block|{
 block|{
 name|ERR_REASON
 argument_list|(
+name|DSA_R_BAD_Q_VALUE
+argument_list|)
+block|,
+literal|"bad q value"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|DSA_R_DATA_TOO_LARGE_FOR_KEY_SIZE
 argument_list|)
 block|,
@@ -224,6 +233,15 @@ name|DSA_R_MISSING_PARAMETERS
 argument_list|)
 block|,
 literal|"missing parameters"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|DSA_R_MODULUS_TOO_LARGE
+argument_list|)
+block|,
+literal|"modulus too large"
 block|}
 block|,
 block|{

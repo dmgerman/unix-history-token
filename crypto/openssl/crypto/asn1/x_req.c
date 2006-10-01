@@ -162,7 +162,7 @@ name|X509_REQ
 argument_list|,
 literal|0
 argument_list|,
-name|CRYPTO_LOCK_X509_INFO
+name|CRYPTO_LOCK_X509_REQ
 argument_list|)
 operator|=
 block|{

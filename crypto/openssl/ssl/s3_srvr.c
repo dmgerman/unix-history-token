@@ -8221,7 +8221,7 @@ operator|->
 name|client_princ
 condition|)
 block|{
-name|int
+name|size_t
 name|len
 init|=
 name|strlen

@@ -1102,6 +1102,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|EC_R_FIELD_TOO_LARGE
+argument_list|)
+block|,
+literal|"field too large"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|EC_R_GROUP2PKPARAMETERS_FAILURE
 argument_list|)
 block|,
@@ -1192,10 +1201,28 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|EC_R_INVALID_PENTANOMIAL_BASIS
+argument_list|)
+block|,
+literal|"invalid pentanomial basis"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|EC_R_INVALID_PRIVATE_KEY
 argument_list|)
 block|,
 literal|"invalid private key"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|EC_R_INVALID_TRINOMIAL_BASIS
+argument_list|)
+block|,
+literal|"invalid trinomial basis"
 block|}
 block|,
 block|{

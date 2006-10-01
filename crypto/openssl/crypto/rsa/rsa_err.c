@@ -643,6 +643,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|RSA_R_MODULUS_TOO_LARGE
+argument_list|)
+block|,
+literal|"modulus too large"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|RSA_R_NO_PUBLIC_EXPONENT
 argument_list|)
 block|,
