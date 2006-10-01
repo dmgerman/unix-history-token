@@ -72,17 +72,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATI_IXP_DEFAULT_BUFSZ
-value|(1<< 13)
-end_define
-
-begin_comment
-comment|/* 8192 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ATI_VENDOR_ID
 value|0x1002
 end_define
