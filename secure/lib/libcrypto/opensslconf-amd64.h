@@ -22,6 +22,27 @@ name|OPENSSL_DOING_MAKEDEPEND
 end_ifndef
 
 begin_comment
+comment|/* Disabled by default in OpenSSL 0.9.8. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_CAMELLIA
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|OPENSSL_NO_CAMELLIA
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* libgmp is not in the FreeBSD base system. */
 end_comment
 
