@@ -166,6 +166,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|DH_R_MODULUS_TOO_LARGE
+argument_list|)
+block|,
+literal|"modulus too large"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|DH_R_NO_PRIVATE_VALUE
 argument_list|)
 block|,

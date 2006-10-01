@@ -318,39 +318,8 @@ block|,
 comment|/* RC4_64_WITH_MD5 */
 if|#
 directive|if
-literal|1
-block|{
-literal|1
-block|,
-name|SSL2_TXT_RC4_64_WITH_MD5
-block|,
-name|SSL2_CK_RC4_64_WITH_MD5
-block|,
-name|SSL_kRSA
-operator||
-name|SSL_aRSA
-operator||
-name|SSL_RC4
-operator||
-name|SSL_MD5
-operator||
-name|SSL_SSLV2
-block|,
-name|SSL_NOT_EXP
-operator||
-name|SSL_LOW
-block|,
-name|SSL2_CF_8_BYTE_ENC
-block|,
-literal|64
-block|,
-literal|64
-block|,
-name|SSL_ALL_CIPHERS
-block|,
-name|SSL_ALL_STRENGTHS
-block|, 	}
-block|,
+literal|0
+block|{ 	1, 	SSL2_TXT_RC4_64_WITH_MD5, 	SSL2_CK_RC4_64_WITH_MD5, 	SSL_kRSA|SSL_aRSA|SSL_RC4|SSL_MD5|SSL_SSLV2, 	SSL_NOT_EXP|SSL_LOW, 	SSL2_CF_8_BYTE_ENC, 	64, 	64, 	SSL_ALL_CIPHERS, 	SSL_ALL_STRENGTHS, 	},
 endif|#
 directive|endif
 comment|/* NULL SSLeay (testing) */

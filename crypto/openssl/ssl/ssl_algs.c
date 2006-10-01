@@ -111,6 +111,24 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* The Camellia algorithm is registered in the management table of EVP. */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_CAMELLIA
+name|EVP_add_cipher
+argument_list|(
+name|EVP_camellia_128_cbc
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|EVP_add_cipher
+argument_list|(
+name|EVP_camellia_256_cbc
+argument_list|()
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_MD2

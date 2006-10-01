@@ -109,6 +109,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_DSA_MAX_MODULUS_BITS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|OPENSSL_DSA_MAX_MODULUS_BITS
+value|10000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -1174,12 +1192,20 @@ value|114
 comment|/* Reason codes. */
 define|#
 directive|define
+name|DSA_R_BAD_Q_VALUE
+value|102
+define|#
+directive|define
 name|DSA_R_DATA_TOO_LARGE_FOR_KEY_SIZE
 value|100
 define|#
 directive|define
 name|DSA_R_MISSING_PARAMETERS
 value|101
+define|#
+directive|define
+name|DSA_R_MODULUS_TOO_LARGE
+value|103
 ifdef|#
 directive|ifdef
 name|__cplusplus

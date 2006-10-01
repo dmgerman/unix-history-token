@@ -3386,13 +3386,21 @@ comment|/* padding_length */
 name|i
 operator|++
 expr_stmt|;
+comment|/* NB: if compression is in operation the first packet 			 * may not be of even length so the padding bug check 			 * cannot be performed. This bug workaround has been 			 * around since SSLeay so hopefully it is either fixed 			 * now or no buggy implementation supports compression  			 * [steve] 			 */
 if|if
 condition|(
+operator|(
 name|s
 operator|->
 name|options
 operator|&
 name|SSL_OP_TLS_BLOCK_PADDING_BUG
+operator|)
+operator|&&
+operator|!
+name|s
+operator|->
+name|expand
 condition|)
 block|{
 comment|/* First packet is even in size, so check */

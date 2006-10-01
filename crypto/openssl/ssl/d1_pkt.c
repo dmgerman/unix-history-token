@@ -2620,17 +2620,33 @@ operator|->
 name|alert_fragment_len
 expr_stmt|;
 block|}
-else|else
-comment|/* else it's a CCS message */
-name|OPENSSL_assert
-argument_list|(
+comment|/* else it's a CCS message, or it's wrong */
+elseif|else
+if|if
+condition|(
 name|rr
 operator|->
 name|type
-operator|==
+operator|!=
 name|SSL3_RT_CHANGE_CIPHER_SPEC
+condition|)
+block|{
+comment|/* Not certain if this is the right error handling */
+name|al
+operator|=
+name|SSL_AD_UNEXPECTED_MESSAGE
+expr_stmt|;
+name|SSLerr
+argument_list|(
+name|SSL_F_DTLS1_READ_BYTES
+argument_list|,
+name|SSL_R_UNEXPECTED_RECORD
 argument_list|)
 expr_stmt|;
+goto|goto
+name|f_err
+goto|;
+block|}
 if|if
 condition|(
 name|dest_maxlen

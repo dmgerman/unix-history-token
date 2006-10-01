@@ -3309,6 +3309,10 @@ return|return
 operator|-
 literal|1
 return|;
+name|ret
+operator|=
+literal|0
+expr_stmt|;
 comment|/* SEQUENCE, SET and "OTHER" are left in encoded form */
 if|if
 condition|(
@@ -3466,9 +3470,15 @@ argument_list|,
 name|V_ASN1_UNIVERSAL
 argument_list|)
 condition|)
+block|{
+name|free_cont
+operator|=
+literal|1
+expr_stmt|;
 goto|goto
 name|err
 goto|;
+block|}
 name|len
 operator|=
 name|buf

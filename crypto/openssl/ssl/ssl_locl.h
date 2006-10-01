@@ -642,7 +642,7 @@ begin_define
 define|#
 directive|define
 name|SSL_ENC_MASK
-value|0x043F8000L
+value|0x0C3F8000L
 end_define
 
 begin_define
@@ -699,6 +699,13 @@ define|#
 directive|define
 name|SSL_AES
 value|0x04000000L
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_CAMELLIA
+value|0x08000000L
 end_define
 
 begin_define
@@ -762,7 +769,7 @@ comment|/* for now */
 end_comment
 
 begin_comment
-comment|/* we have used 07ffffff - 5 bits left to go. */
+comment|/* we have used 0fffffff - 4 bits left to go. */
 end_comment
 
 begin_comment
