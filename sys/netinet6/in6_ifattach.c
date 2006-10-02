@@ -187,12 +187,12 @@ begin_decl_stmt
 name|int
 name|ip6_auto_linklocal
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* enable by default */
+comment|/* disable by default */
 end_comment
 
 begin_endif
