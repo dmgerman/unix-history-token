@@ -1355,9 +1355,12 @@ begin_comment
 comment|/* Define to 1 if you have the<inttypes.h> header file. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_INTTYPES_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_INTTYPES_H
+value|1
+end_define
 
 begin_comment
 comment|/* define if you have intxx_t data type */
@@ -1640,9 +1643,12 @@ begin_comment
 comment|/* Define to 1 if you have the<memory.h> header file. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_MEMORY_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_MEMORY_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `mkdtemp' function. */
@@ -2400,9 +2406,12 @@ begin_comment
 comment|/* Define to 1 if you have the<stdlib.h> header file. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_STDLIB_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_STDLIB_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `strdup' function. */
@@ -2847,9 +2856,12 @@ begin_comment
 comment|/* Define to 1 if you have the<sys/types.h> header file. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_SYS_TYPES_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_TYPES_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<sys/un.h> header file. */
@@ -3855,9 +3867,12 @@ begin_comment
 comment|/* Define to 1 if you have the ANSI C header files. */
 end_comment
 
-begin_comment
-comment|/* #undef STDC_HEADERS */
-end_comment
+begin_define
+define|#
+directive|define
+name|STDC_HEADERS
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you want a different $PATH for the superuser */
