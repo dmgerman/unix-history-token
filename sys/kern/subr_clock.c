@@ -783,5 +783,30 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|int
+name|utc_offset
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|tz_minuteswest
+operator|*
+literal|60
+operator|+
+operator|(
+name|wall_cmos_clock
+condition|?
+name|adjkerntz
+else|:
+literal|0
+operator|)
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 

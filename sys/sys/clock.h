@@ -96,6 +96,15 @@ name|tz_dsttime
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|int
+name|utc_offset
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Structure to hold the values typically reported by time-of-day clocks.  * This can be passed to the generic conversion functions to be converted  * to a struct timespec.  */
 end_comment
