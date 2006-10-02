@@ -5098,6 +5098,17 @@ modifier|*
 name|ptr
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
 name|pt_entry_t
 modifier|*
 name|pte
@@ -5133,6 +5144,8 @@ name|invltlb
 argument_list|()
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 end_function
 
