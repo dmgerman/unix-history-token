@@ -169,18 +169,6 @@ value|(CLOCK_MONOTONIC+1)
 end_define
 
 begin_decl_stmt
-name|int
-name|tz_minuteswest
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|tz_dsttime
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|struct
 name|kclock

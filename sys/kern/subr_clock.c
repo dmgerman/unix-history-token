@@ -89,6 +89,18 @@ begin_comment
 comment|/* wall CMOS clock assumed if != 0 */
 end_comment
 
+begin_decl_stmt
+name|int
+name|tz_minuteswest
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tz_dsttime
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * These have traditionally been in machdep, but should probably be moved to  * kern.  */
 end_comment
