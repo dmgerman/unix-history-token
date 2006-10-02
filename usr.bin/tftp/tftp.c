@@ -416,7 +416,7 @@ name|struct
 name|sockaddr_storage
 name|from
 decl_stmt|;
-name|int
+name|socklen_t
 name|fromlen
 decl_stmt|;
 name|FILE
@@ -982,6 +982,10 @@ argument_list|,
 name|amount
 argument_list|)
 expr_stmt|;
+name|txrx_error
+operator|=
+literal|1
+expr_stmt|;
 block|}
 end_function
 
@@ -1044,7 +1048,7 @@ name|struct
 name|sockaddr_storage
 name|from
 decl_stmt|;
-name|int
+name|socklen_t
 name|fromlen
 decl_stmt|;
 name|FILE
@@ -1672,6 +1676,10 @@ literal|"Received"
 argument_list|,
 name|amount
 argument_list|)
+expr_stmt|;
+name|txrx_error
+operator|=
+literal|1
 expr_stmt|;
 block|}
 end_function
