@@ -313,29 +313,9 @@ end_define
 
 begin_decl_stmt
 name|int
-name|adjkerntz
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* local offset from GMT in seconds */
-end_comment
-
-begin_decl_stmt
-name|int
 name|clkintr_pending
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|disable_rtc_set
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* disable resettodr() if != 0 */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -396,16 +376,6 @@ name|int
 name|timer0_real_max_count
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|wall_cmos_clock
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* wall CMOS clock assumed if != 0 */
-end_comment
 
 begin_decl_stmt
 name|struct
