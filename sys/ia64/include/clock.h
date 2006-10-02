@@ -30,27 +30,6 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|adjkerntz
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|disable_rtc_set
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|wall_cmos_clock
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|uint64_t
 name|ia64_clock_reload
 decl_stmt|;

@@ -21,27 +21,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|disable_rtc_set
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|wall_cmos_clock
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|adjkerntz
-decl_stmt|;
-end_decl_stmt
-
 begin_struct_decl
 struct_decl|struct
 name|trapframe

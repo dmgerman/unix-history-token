@@ -167,20 +167,6 @@ begin_comment
 comment|/* once a second sleep address */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|tz_minuteswest
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|tz_dsttime
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif

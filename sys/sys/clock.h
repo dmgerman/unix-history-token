@@ -15,6 +15,87 @@ directive|define
 name|_SYS_CLOCK_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_comment
+comment|/* No user serviceable parts */
+end_comment
+
+begin_comment
+comment|/*  * Kernel to clock driver interface.  */
+end_comment
+
+begin_function_decl
+name|void
+name|inittodr
+parameter_list|(
+name|time_t
+name|base
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|resettodr
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|startrtclock
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|wall_cmos_clock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|adjkerntz
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|disable_rtc_set
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Timezone info from settimeofday(2), usually not used  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tz_minuteswest
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tz_dsttime
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Structure to hold the values typically reported by time-of-day clocks.  * This can be passed to the generic conversion functions to be converted  * to a struct timespec.  */
 end_comment
@@ -111,7 +192,7 @@ name|FROMBCD
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)>> 4) * 10 + ((x)& 0xf))
+value|bcd2bin(x)
 end_define
 
 begin_define
@@ -121,7 +202,7 @@ name|TOBCD
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x) / 10 * 16) + ((x) % 10))
+value|bin2bcd(x)
 end_define
 
 begin_comment
@@ -152,6 +233,15 @@ directive|define
 name|POSIX_BASE_YEAR
 value|1970
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#

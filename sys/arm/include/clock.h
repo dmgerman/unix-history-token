@@ -15,20 +15,6 @@ directive|define
 name|_MACHINE_CLOCK_H_
 end_define
 
-begin_define
-define|#
-directive|define
-name|wall_cmos_clock
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|adjkerntz
-value|0
-end_define
-
 begin_endif
 endif|#
 directive|endif

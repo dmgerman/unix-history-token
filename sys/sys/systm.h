@@ -2217,38 +2217,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Kernel to clock driver interface.  */
-end_comment
-
-begin_function_decl
-name|void
-name|inittodr
-parameter_list|(
-name|time_t
-name|base
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|resettodr
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|startrtclock
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Timeouts */
 end_comment
 

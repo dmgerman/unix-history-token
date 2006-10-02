@@ -28,21 +28,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|adjkerntz
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|clkintr_pending
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|disable_rtc_set
 decl_stmt|;
 end_decl_stmt
 
@@ -92,13 +78,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|tsc_is_broken
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|wall_cmos_clock
 decl_stmt|;
 end_decl_stmt
 
