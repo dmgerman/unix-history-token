@@ -2393,6 +2393,53 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Determine the number of waiters on a lock.  */
+end_comment
+
+begin_function
+name|int
+name|lockwaiters
+parameter_list|(
+name|lkp
+parameter_list|)
+name|struct
+name|lock
+modifier|*
+name|lkp
+decl_stmt|;
+block|{
+name|int
+name|count
+decl_stmt|;
+name|mtx_lock
+argument_list|(
+name|lkp
+operator|->
+name|lk_interlock
+argument_list|)
+expr_stmt|;
+name|count
+operator|=
+name|lkp
+operator|->
+name|lk_waitcount
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+name|lkp
+operator|->
+name|lk_interlock
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|count
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Print out information about state of a lock. Used by VOP_PRINT  * routines to display status about contained locks.  */
 end_comment
 
