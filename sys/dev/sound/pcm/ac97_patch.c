@@ -95,22 +95,12 @@ modifier|*
 name|codec
 parameter_list|)
 block|{
-name|ac97_wrcd
-argument_list|(
-name|codec
-argument_list|,
-name|AC97_AD_JACK_SPDIF
-argument_list|,
-name|ac97_rdcd
-argument_list|(
-name|codec
-argument_list|,
-name|AC97_AD_JACK_SPDIF
-argument_list|)
-operator||
-literal|0x0800
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|ac97_wrcd(codec, AC97_AD_JACK_SPDIF, 	    ac97_rdcd(codec, AC97_AD_JACK_SPDIF) | 0x0800);
+endif|#
+directive|endif
 block|}
 end_function
 
