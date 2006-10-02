@@ -2440,17 +2440,8 @@ expr_stmt|;
 comment|/* sec now contains the number of seconds, since Jan 1 1970, 	   in the local time zone */
 name|sec
 operator|+=
-name|tz_minuteswest
-operator|*
-literal|60
-operator|+
-operator|(
-name|wall_cmos_clock
-condition|?
-name|adjkerntz
-else|:
-literal|0
-operator|)
+name|utc_offset
+argument_list|()
 expr_stmt|;
 name|y
 operator|=
@@ -2563,17 +2554,8 @@ expr_stmt|;
 comment|/* Calculate local time to put in RTC */
 name|tm
 operator|-=
-name|tz_minuteswest
-operator|*
-literal|60
-operator|+
-operator|(
-name|wall_cmos_clock
-condition|?
-name|adjkerntz
-else|:
-literal|0
-operator|)
+name|utc_offset
+argument_list|()
 expr_stmt|;
 name|writertc
 argument_list|(

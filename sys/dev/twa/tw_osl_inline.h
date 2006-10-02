@@ -482,7 +482,7 @@ directive|define
 name|tw_osl_get_local_time
 parameter_list|()
 define|\
-value|(time_second - (tz_minuteswest * 60) -				\ 		(wall_cmos_clock ? adjkerntz : 0))
+value|(time_second - utc_offset())
 end_define
 
 begin_comment

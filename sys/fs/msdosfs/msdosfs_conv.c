@@ -50,7 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/clock.h>
+file|<sys/clock.h>
 end_include
 
 begin_include
@@ -401,19 +401,8 @@ name|tsp
 operator|->
 name|tv_sec
 operator|-
-operator|(
-name|tz_minuteswest
-operator|*
-literal|60
-operator|)
-operator|-
-operator|(
-name|wall_cmos_clock
-condition|?
-name|adjkerntz
-else|:
-literal|0
-operator|)
+name|utc_offset
+argument_list|()
 expr_stmt|;
 comment|/* - daylight savings time correction */
 name|t
@@ -944,13 +933,8 @@ name|seconds
 operator|+
 name|lastseconds
 operator|+
-operator|(
-name|tz_minuteswest
-operator|*
-literal|60
-operator|)
-operator|+
-name|adjkerntz
+name|utc_offset
+argument_list|()
 expr_stmt|;
 comment|/* + daylight savings time correction */
 name|tsp

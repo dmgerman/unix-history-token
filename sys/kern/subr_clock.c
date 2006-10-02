@@ -60,6 +60,7 @@ file|<sys/timetc.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|int
 name|adjkerntz
 decl_stmt|;
@@ -70,16 +71,7 @@ comment|/* local offset from GMT in seconds */
 end_comment
 
 begin_decl_stmt
-name|int
-name|disable_rtc_set
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* disable resettodr() if != 0 */
-end_comment
-
-begin_decl_stmt
+specifier|static
 name|int
 name|wall_cmos_clock
 decl_stmt|;
@@ -87,6 +79,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* wall CMOS clock assumed if != 0 */
+end_comment
+
+begin_decl_stmt
+name|int
+name|disable_rtc_set
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* disable resettodr() if != 0 */
 end_comment
 
 begin_decl_stmt

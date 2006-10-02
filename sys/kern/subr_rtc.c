@@ -63,16 +63,6 @@ directive|include
 file|<sys/timetc.h>
 end_include
 
-begin_comment
-comment|/* XXX: for the  CPU_* sysctl OID constants. */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/cpu.h>
-end_include
-
 begin_include
 include|#
 directive|include
@@ -319,17 +309,8 @@ name|ts
 operator|.
 name|tv_sec
 operator|+=
-name|tz_minuteswest
-operator|*
-literal|60
-operator|+
-operator|(
-name|wall_cmos_clock
-condition|?
-name|adjkerntz
-else|:
-literal|0
-operator|)
+name|utc_offset
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -430,17 +411,8 @@ name|ts
 operator|.
 name|tv_sec
 operator|-=
-name|tz_minuteswest
-operator|*
-literal|60
-operator|+
-operator|(
-name|wall_cmos_clock
-condition|?
-name|adjkerntz
-else|:
-literal|0
-operator|)
+name|utc_offset
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
