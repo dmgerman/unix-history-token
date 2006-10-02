@@ -546,7 +546,7 @@ comment|/* (k*) Preempt on last critical_exit */
 name|short
 name|td_locks
 decl_stmt|;
-comment|/* (k) DEBUG: lockmgr count of locks. */
+comment|/* (k) Count of non-spin locks. */
 name|u_char
 name|td_tsqueue
 decl_stmt|;
