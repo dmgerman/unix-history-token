@@ -2297,11 +2297,20 @@ begin_comment
 comment|/* the initial key map, accent map and fkey strings */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|UKBD_DFLT_KEYMAP
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|KLD_MODULE
+argument_list|)
+end_if
 
 begin_define
 define|#
