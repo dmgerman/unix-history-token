@@ -1666,7 +1666,7 @@ literal|"audit_syscall_enter: td->td_ar != NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * In FreeBSD, each ABI has its own system call table, and hence 	 * mapping of system call codes to audit events.  Convert the code to 	 * an audit event identifier using the process system call table 	 * reference.  In Darwin, there's only one, so we use the global 	 * symbol for the system call table. 	 * 	 * XXXAUDIT: Should we audit that a bad system call was made, and if 	 * so, how? 	 */
+comment|/* 	 * In FreeBSD, each ABI has its own system call table, and hence 	 * mapping of system call codes to audit events.  Convert the code to 	 * an audit event identifier using the process system call table 	 * reference.  In Darwin, there's only one, so we use the global 	 * symbol for the system call table.  No audit record is generated 	 * for bad system calls, as no operation has been performed. 	 */
 if|if
 condition|(
 name|code
@@ -1968,8 +1968,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-comment|/* XXXAUDIT: Zero?  Slab allocate? */
-comment|//printf("audit_proc_alloc: pid %d p_au %p\n", p->p_pid, p->p_au);
 block|}
 end_function
 
@@ -2027,7 +2025,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize the audit information for the a process, presumably the first  * process in the system.  * XXX It is not clear what the initial values should be for audit ID,  * session ID, etc.  */
+comment|/*  * Initialize audit information for the first kernel process (proc 0) and for  * the first user process (init).  *  * XXX It is not clear what the initial values should be for audit ID,  * session ID, etc.  */
 end_comment
 
 begin_function
@@ -2057,7 +2055,6 @@ name|p_pid
 operator|)
 argument_list|)
 expr_stmt|;
-comment|//printf("audit_proc_kproc0: pid %d p_au %p\n", p->p_pid, p->p_au);
 name|bzero
 argument_list|(
 name|p
@@ -2105,7 +2102,6 @@ name|p_pid
 operator|)
 argument_list|)
 expr_stmt|;
-comment|//printf("audit_proc_init: pid %d p_au %p\n", p->p_pid, p->p_au);
 name|bzero
 argument_list|(
 name|p
@@ -2201,10 +2197,6 @@ name|p_pid
 operator|)
 argument_list|)
 expr_stmt|;
-comment|//printf("audit_proc_fork: parent pid %d p_au %p\n", parent->p_pid,
-comment|//    parent->p_au);
-comment|//printf("audit_proc_fork: child pid %d p_au %p\n", child->p_pid,
-comment|//    child->p_au);
 name|bcopy
 argument_list|(
 name|parent
@@ -2224,7 +2216,6 @@ name|p_au
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXXAUDIT: Zero pointers to external memory, or assert they are 	 * zero? 	 */
 block|}
 end_function
 
@@ -2259,8 +2250,6 @@ name|p_pid
 operator|)
 argument_list|)
 expr_stmt|;
-comment|//printf("audit_proc_free: pid %d p_au %p\n", p->p_pid, p->p_au);
-comment|/* 	 * XXXAUDIT: Assert that external memory pointers are NULL? 	 */
 name|free
 argument_list|(
 name|p
