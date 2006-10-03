@@ -454,6 +454,10 @@ name|mtx
 name|mnt_mtx
 decl_stmt|;
 comment|/* mount structure interlock */
+name|int
+name|mnt_gen
+decl_stmt|;
+comment|/* struct mount generation */
 define|#
 directive|define
 name|mnt_startzero
