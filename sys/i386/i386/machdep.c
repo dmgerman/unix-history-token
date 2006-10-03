@@ -7042,6 +7042,7 @@ name|length
 expr_stmt|;
 name|next_run
 label|:
+empty_stmt|;
 block|}
 do|while
 condition|(
