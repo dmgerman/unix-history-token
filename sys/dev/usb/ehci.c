@@ -14197,57 +14197,6 @@ name|length
 operator|=
 name|len
 expr_stmt|;
-comment|/* Update device address and length since they may have changed 	   during the setup of the control pipe in usbd_new_device(). */
-comment|/* XXX This only needs to be done once, but it's too early in open. */
-comment|/* XXXX Should not touch ED here! */
-name|sqh
-operator|->
-name|qh
-operator|.
-name|qh_endp
-operator|=
-operator|(
-name|sqh
-operator|->
-name|qh
-operator|.
-name|qh_endp
-operator|&
-name|htole32
-argument_list|(
-operator|~
-operator|(
-name|EHCI_QH_ADDRMASK
-operator||
-name|EHCI_QH_MPLMASK
-operator|)
-argument_list|)
-operator|)
-operator||
-name|htole32
-argument_list|(
-name|EHCI_QH_SET_ADDR
-argument_list|(
-name|addr
-argument_list|)
-operator||
-name|EHCI_QH_SET_MPL
-argument_list|(
-name|UGETW
-argument_list|(
-name|epipe
-operator|->
-name|pipe
-operator|.
-name|endpoint
-operator|->
-name|edesc
-operator|->
-name|wMaxPacketSize
-argument_list|)
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* Set up data transaction */
 if|if
 condition|(
