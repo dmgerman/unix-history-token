@@ -1929,12 +1929,6 @@ operator|~
 name|URQ_AUTO_DMABUF
 expr_stmt|;
 block|}
-comment|/* XXX */
-name|usb_insert_transfer
-argument_list|(
-name|xfer
-argument_list|)
-expr_stmt|;
 name|xfer
 operator|->
 name|status
