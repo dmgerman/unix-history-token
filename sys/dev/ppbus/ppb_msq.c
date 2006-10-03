@@ -1223,6 +1223,7 @@ break|break;
 block|}
 name|next
 label|:
+continue|continue;
 block|}
 name|error
 label|:
