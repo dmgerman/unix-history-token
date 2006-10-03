@@ -1481,7 +1481,9 @@ specifier|static
 name|__inline
 name|hrtime_t
 name|gethrtime
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|timespec
