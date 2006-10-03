@@ -424,7 +424,7 @@ define|#
 directive|define
 name|nfsm_reqdone
 define|\
-value|do { \ 		m_freem(mrep); \ 		nfsmout: \ 	} while (0)
+value|do { \ 		m_freem(mrep); \ 		nfsmout: ; \ 	} while (0)
 end_define
 
 begin_define
