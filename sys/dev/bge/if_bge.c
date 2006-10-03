@@ -659,12 +659,6 @@ block|,
 block|{
 name|TC_VENDORID
 block|,
-name|TC_DEVICEID_3C985
-block|}
-block|,
-block|{
-name|TC_VENDORID
-block|,
 name|TC_DEVICEID_3C996
 block|}
 block|,

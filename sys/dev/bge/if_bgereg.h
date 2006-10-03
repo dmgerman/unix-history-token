@@ -11287,7 +11287,7 @@ value|0x0004
 end_define
 
 begin_comment
-comment|/*  * 3Com 3c985 PCI vendor/device ID.  */
+comment|/*  * 3Com 3c996 PCI vendor/device ID.  */
 end_comment
 
 begin_define
@@ -11295,13 +11295,6 @@ define|#
 directive|define
 name|TC_VENDORID
 value|0x10B7
-end_define
-
-begin_define
-define|#
-directive|define
-name|TC_DEVICEID_3C985
-value|0x0001
 end_define
 
 begin_define
