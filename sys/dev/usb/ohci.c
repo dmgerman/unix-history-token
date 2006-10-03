@@ -8776,13 +8776,6 @@ name|dev
 operator|->
 name|bus
 decl_stmt|;
-name|int
-name|addr
-init|=
-name|dev
-operator|->
-name|address
-decl_stmt|;
 name|ohci_soft_td_t
 modifier|*
 name|setup
@@ -8861,7 +8854,9 @@ argument_list|)
 operator|,
 name|len
 operator|,
-name|addr
+name|dev
+operator|->
+name|address
 operator|,
 name|opipe
 operator|->

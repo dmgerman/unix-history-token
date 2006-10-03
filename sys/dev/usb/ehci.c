@@ -13999,13 +13999,6 @@ name|dev
 operator|->
 name|bus
 decl_stmt|;
-name|int
-name|addr
-init|=
-name|dev
-operator|->
-name|address
-decl_stmt|;
 name|ehci_soft_qtd_t
 modifier|*
 name|newinactive
@@ -14084,7 +14077,9 @@ argument_list|)
 operator|,
 name|len
 operator|,
-name|addr
+name|dev
+operator|->
+name|address
 operator|,
 name|epipe
 operator|->
