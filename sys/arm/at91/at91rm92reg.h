@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|AT91RM92_BASE
-value|0xf0000000
+value|0xd0000000
 end_define
 
 begin_comment

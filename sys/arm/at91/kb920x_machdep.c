@@ -552,7 +552,7 @@ block|{
 comment|/*  	 * Map the on-board devices VA == PA so that we can access them 	 * with the MMU on or off. 	 */
 block|{
 comment|/* 		 * This at least maps the interrupt controller, the UART 		 * and the timer. Other devices should use newbus to 		 * map their memory anyway. 		 */
-literal|0xfff00000
+literal|0xdff00000
 block|,
 literal|0xfff00000
 block|,
@@ -1481,7 +1481,7 @@ name|pmap_link_l2pt
 argument_list|(
 name|l1pagetable
 argument_list|,
-name|ARM_VECTORS_LOW
+name|ARM_VECTORS_HIGH
 argument_list|,
 operator|&
 name|kernel_pt_table
@@ -1633,7 +1633,7 @@ name|pmap_map_entry
 argument_list|(
 name|l1pagetable
 argument_list|,
-name|ARM_VECTORS_LOW
+name|ARM_VECTORS_HIGH
 argument_list|,
 name|systempage
 operator|.
@@ -2022,7 +2022,7 @@ name|td_pcb
 expr_stmt|;
 name|arm_vector_init
 argument_list|(
-name|ARM_VECTORS_LOW
+name|ARM_VECTORS_HIGH
 argument_list|,
 name|ARM_VEC_ALL
 argument_list|)
@@ -2112,7 +2112,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|freemempos
+name|virtual_avail
 operator|-
 name|KERNVIRTADDR
 operator|+
