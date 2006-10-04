@@ -2844,6 +2844,9 @@ decl_stmt|;
 name|int
 name|f
 decl_stmt|;
+name|int
+name|ival
+decl_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -3211,6 +3214,30 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|_IO
+argument_list|(
+literal|'V'
+argument_list|,
+literal|0
+argument_list|)
+case|:
+name|ival
+operator|=
+name|IOCPARM_IVAL
+argument_list|(
+name|data
+argument_list|)
+expr_stmt|;
+name|data
+operator|=
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|ival
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
 name|VMIO_SIOCSIFFLAGS
 case|:
 comment|/* VMware/VMnet SIOCSIFFLAGS */
@@ -3218,7 +3245,7 @@ name|f
 operator|=
 operator|*
 operator|(
-name|intptr_t
+name|int
 operator|*
 operator|)
 name|data

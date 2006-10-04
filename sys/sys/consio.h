@@ -112,9 +112,7 @@ begin_define
 define|#
 directive|define
 name|KDSETMODE
-value|_IO('K', 10
-comment|/*, int */
-value|)
+value|_IOWINT('K', 10)
 end_define
 
 begin_comment
@@ -125,9 +123,7 @@ begin_define
 define|#
 directive|define
 name|KDSBORDER
-value|_IO('K', 13
-comment|/*, int */
-value|)
+value|_IOWINT('K', 13)
 end_define
 
 begin_comment
@@ -935,9 +931,7 @@ begin_define
 define|#
 directive|define
 name|CONS_SETWINORG
-value|_IO('c', 104
-comment|/*, u_int */
-value|)
+value|_IOWINT('c', 104)
 end_define
 
 begin_comment
@@ -948,9 +942,7 @@ begin_define
 define|#
 directive|define
 name|CONS_SETKBD
-value|_IO('c', 110
-comment|/*, int */
-value|)
+value|_IOWINT('c', 110)
 end_define
 
 begin_comment
@@ -1204,9 +1196,7 @@ begin_define
 define|#
 directive|define
 name|VT_RELDISP
-value|_IO('v', 4
-comment|/*, int */
-value|)
+value|_IOWINT('v', 4)
 end_define
 
 begin_comment
@@ -1217,9 +1207,7 @@ begin_define
 define|#
 directive|define
 name|VT_ACTIVATE
-value|_IO('v', 5
-comment|/*, int */
-value|)
+value|_IOWINT('v', 5)
 end_define
 
 begin_comment
@@ -1230,9 +1218,7 @@ begin_define
 define|#
 directive|define
 name|VT_WAITACTIVE
-value|_IO('v', 6
-comment|/*, int */
-value|)
+value|_IOWINT('v', 6)
 end_define
 
 begin_comment

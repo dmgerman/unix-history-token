@@ -59,7 +59,7 @@ begin_define
 define|#
 directive|define
 name|PIOCBIS
-value|_IO('p', 1)
+value|_IOWINT('p', 1)
 end_define
 
 begin_comment
@@ -70,7 +70,7 @@ begin_define
 define|#
 directive|define
 name|PIOCBIC
-value|_IO('p', 2)
+value|_IOWINT('p', 2)
 end_define
 
 begin_comment
@@ -81,7 +81,7 @@ begin_define
 define|#
 directive|define
 name|PIOCSFL
-value|_IO('p', 3)
+value|_IOWINT('p', 3)
 end_define
 
 begin_comment
@@ -103,7 +103,7 @@ begin_define
 define|#
 directive|define
 name|PIOCCONT
-value|_IO('p', 5)
+value|_IOWINT('p', 5)
 end_define
 
 begin_comment

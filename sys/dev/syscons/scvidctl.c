@@ -2136,6 +2136,9 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|int
+name|ival
+decl_stmt|;
 name|scp
 operator|=
 name|SC_STAT
@@ -2847,6 +2850,30 @@ name|data
 argument_list|)
 return|;
 case|case
+name|_IO
+argument_list|(
+literal|'c'
+argument_list|,
+literal|104
+argument_list|)
+case|:
+name|ival
+operator|=
+name|IOCPARM_IVAL
+argument_list|(
+name|data
+argument_list|)
+expr_stmt|;
+name|data
+operator|=
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|ival
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
 name|CONS_SETWINORG
 case|:
 comment|/* set frame buffer window origin */
@@ -3267,6 +3294,30 @@ endif|#
 directive|endif
 comment|/* SC_NO_MODE_CHANGE */
 case|case
+name|_IO
+argument_list|(
+literal|'K'
+argument_list|,
+literal|10
+argument_list|)
+case|:
+name|ival
+operator|=
+name|IOCPARM_IVAL
+argument_list|(
+name|data
+argument_list|)
+expr_stmt|;
+name|data
+operator|=
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|ival
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
 name|KDSETMODE
 case|:
 comment|/* set current mode of this (virtual) console */
@@ -3274,7 +3325,7 @@ switch|switch
 condition|(
 operator|*
 operator|(
-name|intptr_t
+name|int
 operator|*
 operator|)
 name|data
@@ -3795,6 +3846,30 @@ return|return
 literal|0
 return|;
 case|case
+name|_IO
+argument_list|(
+literal|'K'
+argument_list|,
+literal|13
+argument_list|)
+case|:
+name|ival
+operator|=
+name|IOCPARM_IVAL
+argument_list|(
+name|data
+argument_list|)
+expr_stmt|;
+name|data
+operator|=
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|ival
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
 name|KDSBORDER
 case|:
 comment|/* set border color of this (virtual) console */
@@ -3804,7 +3879,7 @@ name|border
 operator|=
 operator|*
 operator|(
-name|intptr_t
+name|int
 operator|*
 operator|)
 name|data

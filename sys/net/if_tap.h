@@ -98,7 +98,7 @@ begin_define
 define|#
 directive|define
 name|VMIO_SIOCSIFFLAGS
-value|_IO('V', 0)
+value|_IOWINT('V', 0)
 end_define
 
 begin_define

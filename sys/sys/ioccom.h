@@ -115,12 +115,8 @@ begin_define
 define|#
 directive|define
 name|IOC_DIRMASK
-value|0xe0000000
+value|(IOC_VOID|IOC_OUT|IOC_IN)
 end_define
-
-begin_comment
-comment|/* mask for IN/OUT/VOID */
-end_comment
 
 begin_define
 define|#
@@ -149,6 +145,18 @@ parameter_list|,
 name|n
 parameter_list|)
 value|_IOC(IOC_VOID,	(g), (n), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_IOWINT
+parameter_list|(
+name|g
+parameter_list|,
+name|n
+parameter_list|)
+value|_IOC(IOC_VOID,	(g), (n), sizeof(int))
 end_define
 
 begin_define
@@ -197,11 +205,26 @@ parameter_list|)
 value|_IOC(IOC_INOUT,	(g), (n), sizeof(t))
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|_KERNEL
-end_ifndef
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|IOCPARM_IVAL
+parameter_list|(
+name|x
+parameter_list|)
+value|((int)(intptr_t)(void *)*(caddr_t *)(void *)(x))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#

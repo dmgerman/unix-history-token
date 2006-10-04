@@ -86,9 +86,7 @@ begin_define
 define|#
 directive|define
 name|KDSKBMODE
-value|_IO('K', 7
-comment|/*, int */
-value|)
+value|_IOWINT('K', 7)
 end_define
 
 begin_comment
@@ -99,9 +97,7 @@ begin_define
 define|#
 directive|define
 name|KDMKTONE
-value|_IO('K', 8
-comment|/*, int */
-value|)
+value|_IOWINT('K', 8)
 end_define
 
 begin_comment
@@ -125,18 +121,14 @@ begin_define
 define|#
 directive|define
 name|KDSETMODE
-value|_IO('K', 10
-comment|/*, int */
-value|)
+value|_IOWINT('K', 10)
 end_define
 
 begin_define
 define|#
 directive|define
 name|KDSBORDER
-value|_IO('K', 13
-comment|/*, int */
-value|)
+value|_IOWINT('K', 13)
 end_define
 
 begin_endif
@@ -210,9 +202,7 @@ begin_define
 define|#
 directive|define
 name|KDSKBSTATE
-value|_IO('K', 20
-comment|/*, int */
-value|)
+value|_IOWINT('K', 20)
 end_define
 
 begin_comment
@@ -241,9 +231,7 @@ begin_define
 define|#
 directive|define
 name|KIOCSOUND
-value|_IO('K', 63
-comment|/*, int */
-value|)
+value|_IOWINT('K', 63)
 end_define
 
 begin_comment
@@ -345,9 +333,7 @@ begin_define
 define|#
 directive|define
 name|KDSETLED
-value|_IO('K', 66
-comment|/*, int */
-value|)
+value|_IOWINT('K', 66)
 end_define
 
 begin_comment
@@ -358,9 +344,7 @@ begin_define
 define|#
 directive|define
 name|KDSETRAD
-value|_IO('K', 67
-comment|/*, int */
-value|)
+value|_IOWINT('K', 67)
 end_define
 
 begin_struct

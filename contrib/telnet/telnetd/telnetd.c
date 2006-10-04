@@ -4668,10 +4668,6 @@ name|pty
 argument_list|,
 name|TCSIG
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|SIGINT
 argument_list|)
 expr_stmt|;
@@ -4739,10 +4735,6 @@ name|pty
 argument_list|,
 name|TCSIG
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|SIGQUIT
 argument_list|)
 expr_stmt|;
@@ -4809,10 +4801,6 @@ name|pty
 argument_list|,
 name|TCSIG
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|SIGTSTP
 argument_list|)
 expr_stmt|;
@@ -4904,10 +4892,6 @@ name|pty
 argument_list|,
 name|TCSIG
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|SIGINFO
 argument_list|)
 expr_stmt|;

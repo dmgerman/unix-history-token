@@ -691,7 +691,7 @@ begin_define
 define|#
 directive|define
 name|TIOCSIG
-value|_IO('t', 95)
+value|_IOWINT('t', 95)
 end_define
 
 begin_comment

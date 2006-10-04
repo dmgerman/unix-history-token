@@ -3885,6 +3885,9 @@ literal|0
 decl_stmt|,
 name|mode
 decl_stmt|;
+name|int
+name|ival
+decl_stmt|;
 if|if
 condition|(
 name|state
@@ -4423,6 +4426,30 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|_IO
+argument_list|(
+literal|'K'
+argument_list|,
+literal|7
+argument_list|)
+case|:
+name|ival
+operator|=
+name|IOCPARM_IVAL
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
+name|arg
+operator|=
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|ival
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
 name|KDSKBMODE
 case|:
 comment|/* set keyboard mode */
@@ -4551,6 +4578,30 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|_IO
+argument_list|(
+literal|'K'
+argument_list|,
+literal|66
+argument_list|)
+case|:
+name|ival
+operator|=
+name|IOCPARM_IVAL
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
+name|arg
+operator|=
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|ival
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
 name|KDSETLED
 case|:
 comment|/* set keyboard LED */
@@ -4651,6 +4702,30 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|_IO
+argument_list|(
+literal|'K'
+argument_list|,
+literal|20
+argument_list|)
+case|:
+name|ival
+operator|=
+name|IOCPARM_IVAL
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
+name|arg
+operator|=
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|ival
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
 name|KDSKBSTATE
 case|:
 comment|/* set lock key state */
@@ -4739,6 +4814,34 @@ argument_list|)
 operator|)
 return|;
 comment|/* NOT REACHED */
+case|case
+name|_IO
+argument_list|(
+literal|'K'
+argument_list|,
+literal|67
+argument_list|)
+case|:
+name|cmd
+operator|=
+name|KDSETRAD
+expr_stmt|;
+name|ival
+operator|=
+name|IOCPARM_IVAL
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
+name|arg
+operator|=
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|ival
+expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 name|KDSETREPEAT
 case|:
