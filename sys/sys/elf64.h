@@ -71,6 +71,13 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|uint64_t
+name|Elf64_Lword
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|uint64_t
 name|Elf64_Xword
 typedef|;
 end_typedef
@@ -395,6 +402,157 @@ parameter_list|)
 value|(((sym)<< 32) + ((type)& 0xffffffffL))
 end_define
 
+begin_define
+define|#
+directive|define
+name|ELF64_R_TYPE_DATA
+parameter_list|(
+name|info
+parameter_list|)
+value|(((Elf64_Xword)(info)<<32)>>40)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELF64_R_TYPE_ID
+parameter_list|(
+name|info
+parameter_list|)
+value|(((Elf64_Xword)(info)<<56)>>56)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELF64_R_TYPE_INFO
+parameter_list|(
+name|data
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|(((Elf64_Xword)(data)<<8)+(Elf64_Xword)(type))
+end_define
+
+begin_comment
+comment|/*  *	Note entry header  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|Elf64_Word
+name|n_namesz
+decl_stmt|;
+comment|/* length of note's name */
+name|Elf64_Word
+name|n_descsz
+decl_stmt|;
+comment|/* length of note's "desc" */
+name|Elf64_Word
+name|n_type
+decl_stmt|;
+comment|/* type of note */
+block|}
+name|Elf64_Nhdr
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  *	Move entry  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|Elf64_Lword
+name|m_value
+decl_stmt|;
+comment|/* symbol value */
+name|Elf64_Xword
+name|m_info
+decl_stmt|;
+comment|/* size + index */
+name|Elf64_Xword
+name|m_poffset
+decl_stmt|;
+comment|/* symbol offset */
+name|Elf64_Half
+name|m_repeat
+decl_stmt|;
+comment|/* repeat count */
+name|Elf64_Half
+name|m_stride
+decl_stmt|;
+comment|/* stride info */
+block|}
+name|Elf64_Move
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|ELF64_M_SYM
+parameter_list|(
+name|info
+parameter_list|)
+value|((info)>>8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELF64_M_SIZE
+parameter_list|(
+name|info
+parameter_list|)
+value|((unsigned char)(info))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELF64_M_INFO
+parameter_list|(
+name|sym
+parameter_list|,
+name|size
+parameter_list|)
+value|(((sym)<<8)+(unsigned char)(size))
+end_define
+
+begin_comment
+comment|/*  *	Hardware/Software capabilities entry  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|Elf64_Xword
+name|c_tag
+decl_stmt|;
+comment|/* how to interpret value */
+union|union
+block|{
+name|Elf64_Xword
+name|c_val
+decl_stmt|;
+name|Elf64_Addr
+name|c_ptr
+decl_stmt|;
+block|}
+name|c_un
+union|;
+block|}
+name|Elf64_Cap
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*  * Symbol table entries.  */
 end_comment
@@ -589,6 +747,23 @@ begin_typedef
 typedef|typedef
 name|Elf64_Half
 name|Elf64_Versym
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|Elf64_Half
+name|si_boundto
+decl_stmt|;
+comment|/* direct bindings - symbol bound to */
+name|Elf64_Half
+name|si_flags
+decl_stmt|;
+comment|/* per symbol flags */
+block|}
+name|Elf64_Syminfo
 typedef|;
 end_typedef
 
