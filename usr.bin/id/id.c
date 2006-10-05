@@ -415,7 +415,7 @@ operator|)
 condition|?
 literal|""
 else|:
-literal|"APGMgnpru"
+literal|"APGMagnpru"
 argument_list|)
 operator|)
 operator|!=
@@ -463,6 +463,10 @@ name|Pflag
 operator|=
 literal|1
 expr_stmt|;
+break|break;
+case|case
+literal|'a'
+case|:
 break|break;
 case|case
 literal|'g'
