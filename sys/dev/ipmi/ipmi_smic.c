@@ -1270,13 +1270,6 @@ operator|)
 return|;
 if|if
 condition|(
-name|state
-operator|==
-literal|2
-condition|)
-break|break;
-if|if
-condition|(
 name|i
 operator|<
 name|req
