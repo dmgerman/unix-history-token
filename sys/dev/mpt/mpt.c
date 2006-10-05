@@ -122,15 +122,13 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|mpt_softc
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|mpt_tailq
 operator|=
 name|TAILQ_HEAD_INITIALIZER
@@ -521,6 +519,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|mpt_ready_handler_t
+name|mpt_stdready
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|mpt_event_handler_t
 name|mpt_stdevent
 decl_stmt|;
@@ -580,6 +585,11 @@ operator|.
 name|enable
 operator|=
 name|mpt_stdenable
+block|,
+operator|.
+name|ready
+operator|=
+name|mpt_stdready
 block|,
 operator|.
 name|event
@@ -1086,6 +1096,18 @@ block|}
 end_function
 
 begin_function
+name|void
+name|mpt_stdready
+parameter_list|(
+name|struct
+name|mpt_softc
+modifier|*
+name|mpt
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
 name|int
 name|mpt_stdevent
 parameter_list|(
@@ -1184,6 +1206,72 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Post driver attachment, we may want to perform some global actions.  * Here is the hook to do so.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|mpt_postattach
+parameter_list|(
+name|void
+modifier|*
+name|unused
+parameter_list|)
+block|{
+name|struct
+name|mpt_softc
+modifier|*
+name|mpt
+decl_stmt|;
+name|struct
+name|mpt_personality
+modifier|*
+name|pers
+decl_stmt|;
+name|TAILQ_FOREACH
+argument_list|(
+argument|mpt
+argument_list|,
+argument|&mpt_tailq
+argument_list|,
+argument|links
+argument_list|)
+block|{
+name|MPT_PERS_FOREACH
+argument_list|(
+argument|mpt
+argument_list|,
+argument|pers
+argument_list|)
+name|pers
+operator|->
+name|ready
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|mptdev
+argument_list|,
+name|SI_SUB_CONFIGURE
+argument_list|,
+name|SI_ORDER_MIDDLE
+argument_list|,
+name|mpt_postattach
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/******************************* Bus DMA Support ******************************/
@@ -1704,6 +1792,29 @@ condition|)
 block|{
 name|wakeup
 argument_list|(
+name|req
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|req
+operator|->
+name|state
+operator|&
+name|REQ_STATE_TIMEDOUT
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 			 * Whew- we can free this request (late completion) 			 */
+name|mpt_free_request
+argument_list|(
+name|mpt
+argument_list|,
 name|req
 argument_list|)
 expr_stmt|;
@@ -4979,6 +5090,12 @@ name|req
 operator|->
 name|req_vbuf
 decl_stmt|;
+name|req
+operator|->
+name|state
+operator||=
+name|REQ_STATE_TIMEDOUT
+expr_stmt|;
 name|mpt_prt
 argument_list|(
 name|mpt
@@ -6309,13 +6426,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|mpt_free_request
-argument_list|(
-name|mpt
-argument_list|,
-name|req
-argument_list|)
-expr_stmt|;
+comment|/* 		 * Leave the request. Without resetting the chip, it's 		 * still owned by it and we'll just get into trouble 		 * freeing it now. Mark it as abandoned so that if it 		 * shows up later it can be freed. 		 */
 name|mpt_prt
 argument_list|(
 name|mpt
@@ -6725,12 +6836,13 @@ literal|1
 operator|)
 return|;
 block|}
-name|hdr
-operator|->
-name|PageType
-operator|&=
-name|MPI_CONFIG_PAGETYPE_MASK
-operator|,
+if|#
+directive|if
+literal|0
+comment|/* 	 * We shouldn't mask off other bits here. 	 */
+block|hdr->PageType&= MPI_CONFIG_PAGETYPE_MASK;
+endif|#
+directive|endif
 name|req
 operator|=
 name|mpt_get_request
@@ -6773,13 +6885,14 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+comment|/* 	 * There isn't any point in restoring stripped out attributes 	 * if you then mask them going down to issue the request. 	 */
+if|#
+directive|if
+literal|0
 comment|/* Restore stripped out attributes */
-name|hdr
-operator|->
-name|PageType
-operator||=
-name|hdr_attr
-expr_stmt|;
+block|hdr->PageType |= hdr_attr;  	error = mpt_issue_cfg_req(mpt, req, Action, hdr->PageVersion, 				  hdr->PageLength, hdr->PageNumber, 				  hdr->PageType& MPI_CONFIG_PAGETYPE_MASK, 				  PageAddress, req->req_pbuf + MPT_RQSL(mpt), 				  len, sleep_ok, timeout_ms);
+else|#
+directive|else
 name|error
 operator|=
 name|mpt_issue_cfg_req
@@ -6805,8 +6918,6 @@ argument_list|,
 name|hdr
 operator|->
 name|PageType
-operator|&
-name|MPI_CONFIG_PAGETYPE_MASK
 argument_list|,
 name|PageAddress
 argument_list|,
@@ -6826,6 +6937,8 @@ argument_list|,
 name|timeout_ms
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|error
@@ -8248,6 +8361,31 @@ argument_list|,
 literal|"Debugging/Verbose level"
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|tree
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"role"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|mpt
+operator|->
+name|role
+argument_list|,
+literal|0
+argument_list|,
+literal|"HBA role"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 block|}
@@ -8274,6 +8412,16 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|TAILQ_INSERT_TAIL
+argument_list|(
+operator|&
+name|mpt_tailq
+argument_list|,
+name|mpt
+argument_list|,
+name|links
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -8537,6 +8685,16 @@ name|use_count
 operator|--
 expr_stmt|;
 block|}
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|mpt_tailq
+argument_list|,
+name|mpt
+argument_list|,
+name|links
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -10394,7 +10552,7 @@ name|pfp
 operator|.
 name|MaxDevices
 expr_stmt|;
-comment|/* 		 * Set our expected role with what this port supports. 		 */
+comment|/* 		 * Set our role with what this port supports. 		 * 		 * Note this might be changed later in different modules 		 * if this is different from what is wanted. 		 */
 name|mpt
 operator|->
 name|role
@@ -10432,29 +10590,6 @@ name|role
 operator||=
 name|MPT_ROLE_TARGET
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|mpt
-operator|->
-name|role
-operator|==
-name|MPT_ROLE_NONE
-condition|)
-block|{
-name|mpt_prt
-argument_list|(
-name|mpt
-argument_list|,
-literal|"port does not support either target or "
-literal|"initiator role\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 block|}
 if|if
 condition|(

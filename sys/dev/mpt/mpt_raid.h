@@ -198,23 +198,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|cam_status
-name|mpt_raid_quiesce_disk
-parameter_list|(
-name|struct
-name|mpt_softc
-modifier|*
-parameter_list|,
-name|struct
-name|mpt_raid_disk
-modifier|*
-parameter_list|,
-name|request_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|cam_status mpt_raid_quiesce_disk(struct mpt_softc *, struct mpt_raid_disk *, request_t *);
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int
