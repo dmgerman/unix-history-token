@@ -154,6 +154,12 @@ block|,
 literal|"ServeRAID 6M (marco)"
 block|,
 literal|"ServeRAID 6i (sebring)"
+block|,
+literal|"ServeRAID 7t"
+block|,
+literal|"ServeRAID 7k"
+block|,
+literal|"ServeRAID 7M"
 block|}
 decl_stmt|;
 end_decl_stmt
