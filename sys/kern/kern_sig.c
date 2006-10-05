@@ -445,27 +445,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|kern_sigtimedwait
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-parameter_list|,
-name|sigset_t
-parameter_list|,
-name|ksiginfo_t
-modifier|*
-parameter_list|,
-name|struct
-name|timespec
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
 name|do_tdsignal
 parameter_list|(
 name|struct
@@ -6176,7 +6155,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|kern_sigtimedwait
 parameter_list|(

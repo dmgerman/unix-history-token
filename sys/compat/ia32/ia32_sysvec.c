@@ -213,6 +213,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<compat/freebsd32/freebsd32_signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<compat/freebsd32/freebsd32_util.h>
 end_include
 
@@ -358,7 +364,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|ia32_siginfo
+name|siginfo32
 argument_list|)
 operator|==
 literal|64

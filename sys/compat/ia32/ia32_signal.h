@@ -5,26 +5,6 @@ end_comment
 
 begin_struct
 struct|struct
-name|ia32_sigaltstack
-block|{
-name|u_int32_t
-name|ss_sp
-decl_stmt|;
-comment|/* signal stack base */
-name|u_int32_t
-name|ss_size
-decl_stmt|;
-comment|/* signal stack length */
-name|int
-name|ss_flags
-decl_stmt|;
-comment|/* SS_DISABLE and/or SS_ONSTACK */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|ia32_mcontext
 block|{
 name|u_int32_t
@@ -143,7 +123,7 @@ name|u_int32_t
 name|uc_link
 decl_stmt|;
 name|struct
-name|ia32_sigaltstack
+name|sigaltstack32
 name|uc_stack
 decl_stmt|;
 name|u_int32_t
@@ -265,7 +245,7 @@ name|u_int32_t
 name|uc_link
 decl_stmt|;
 name|struct
-name|ia32_sigaltstack
+name|sigaltstack32
 name|uc_stack
 decl_stmt|;
 name|u_int32_t
@@ -369,118 +349,6 @@ begin_comment
 comment|/*  * Signal frames, arguments passed to application signal handlers.  */
 end_comment
 
-begin_union
-union|union
-name|ia32_sigval
-block|{
-name|int
-name|sigval_int
-decl_stmt|;
-name|u_int32_t
-name|sigval_ptr
-decl_stmt|;
-block|}
-union|;
-end_union
-
-begin_struct
-struct|struct
-name|ia32_siginfo
-block|{
-name|int
-name|si_signo
-decl_stmt|;
-comment|/* signal number */
-name|int
-name|si_errno
-decl_stmt|;
-comment|/* errno association */
-name|int
-name|si_code
-decl_stmt|;
-comment|/* signal code */
-name|int32_t
-name|si_pid
-decl_stmt|;
-comment|/* sending process */
-name|u_int32_t
-name|si_uid
-decl_stmt|;
-comment|/* sender's ruid */
-name|int
-name|si_status
-decl_stmt|;
-comment|/* exit value */
-name|u_int32_t
-name|si_addr
-decl_stmt|;
-comment|/* faulting instruction */
-name|union
-name|ia32_sigval
-name|si_value
-decl_stmt|;
-comment|/* signal value */
-union|union
-block|{
-struct|struct
-block|{
-name|int
-name|_trapno
-decl_stmt|;
-comment|/* machine specific trap code */
-block|}
-name|_fault
-struct|;
-struct|struct
-block|{
-name|int
-name|_timerid
-decl_stmt|;
-name|int
-name|_overrun
-decl_stmt|;
-block|}
-name|_timer
-struct|;
-struct|struct
-block|{
-name|int
-name|_mqd
-decl_stmt|;
-block|}
-name|_mesgq
-struct|;
-struct|struct
-block|{
-name|int
-name|_band
-decl_stmt|;
-comment|/* band event for SIGPOLL */
-block|}
-name|_poll
-struct|;
-comment|/* was this ever used ? */
-struct|struct
-block|{
-name|int
-name|__spare1__
-decl_stmt|;
-name|int
-name|__spare2__
-index|[
-literal|7
-index|]
-decl_stmt|;
-block|}
-name|__spare__
-struct|;
-block|}
-name|_reason
-union|;
-block|}
-struct|;
-end_struct
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -516,7 +384,7 @@ name|sf_uc
 decl_stmt|;
 comment|/* = *sf_ucontext */
 name|struct
-name|ia32_siginfo
+name|siginfo32
 name|sf_si
 decl_stmt|;
 comment|/* = *sf_siginfo (SA_SIGINFO case) */
@@ -559,7 +427,7 @@ name|sf_uc
 decl_stmt|;
 comment|/* = *sf_ucontext */
 name|struct
-name|ia32_siginfo
+name|siginfo32
 name|sf_si
 decl_stmt|;
 comment|/* = *sf_siginfo (SA_SIGINFO case) */
@@ -588,7 +456,7 @@ name|int
 name|si_code
 decl_stmt|;
 name|union
-name|ia32_sigval
+name|sigval32
 name|si_value
 decl_stmt|;
 block|}
@@ -700,23 +568,6 @@ name|stack
 parameter_list|,
 name|u_long
 name|ps_strings
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|siginfo_to_ia32siginfo
-parameter_list|(
-name|siginfo_t
-modifier|*
-name|src
-parameter_list|,
-name|struct
-name|ia32_siginfo
-modifier|*
-name|dst
 parameter_list|)
 function_decl|;
 end_function_decl
