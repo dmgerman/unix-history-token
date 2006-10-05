@@ -1441,6 +1441,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|REPORT_LUNS
+value|0xa0
+end_define
+
+begin_define
+define|#
+directive|define
 name|MOVE_MEDIUM
 value|0xa5
 end_define
