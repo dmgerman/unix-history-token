@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/timetc.h>
 end_include
 
@@ -134,13 +140,6 @@ name|u_long
 name|lasttb
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|SECDAY
-value|86400
-end_define
 
 begin_define
 define|#
