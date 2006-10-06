@@ -4346,7 +4346,7 @@ name|OID_AUTO
 argument_list|,
 name|i8254_freq
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -4461,7 +4461,7 @@ name|OID_AUTO
 argument_list|,
 name|tsc_freq
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
