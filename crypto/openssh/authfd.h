@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: authfd.h,v 1.34 2003/11/21 11:57:03 djm Exp $	*/
+comment|/* $OpenBSD: authfd.h,v 1.36 2006/08/03 03:34:41 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -18,12 +18,6 @@ define|#
 directive|define
 name|AUTHFD_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|"buffer.h"
-end_include
 
 begin_comment
 comment|/* Messages for the authentication agent connection. */

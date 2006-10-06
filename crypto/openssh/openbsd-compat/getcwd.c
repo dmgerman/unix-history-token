@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* OPENBSD ORIGINAL: lib/libc/gen/getcwd.c */
+comment|/*	$OpenBSD: getcwd.c,v 1.14 2005/08/08 08:05:34 espie Exp $ */
 end_comment
 
 begin_comment
 comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+end_comment
+
+begin_comment
+comment|/* OPENBSD ORIGINAL: lib/libc/gen/getcwd.c */
 end_comment
 
 begin_include
@@ -22,40 +26,6 @@ argument_list|(
 name|HAVE_GETCWD
 argument_list|)
 end_if
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|lint
-argument_list|)
-end_if
-
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$OpenBSD: getcwd.c,v 1.9 2003/06/11 21:03:10 deraadt Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* LIBC_SCCS and not lint */
-end_comment
 
 begin_include
 include|#
@@ -135,32 +105,26 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|dirent
 modifier|*
 name|dp
 decl_stmt|;
-specifier|register
 name|DIR
 modifier|*
 name|dir
 init|=
 name|NULL
 decl_stmt|;
-specifier|register
 name|dev_t
 name|dev
 decl_stmt|;
-specifier|register
 name|ino_t
 name|ino
 decl_stmt|;
-specifier|register
 name|int
 name|first
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|bpt
@@ -240,9 +204,7 @@ name|malloc
 argument_list|(
 name|ptsize
 operator|=
-literal|1024
-operator|-
-literal|4
+name|MAXPATHLEN
 argument_list|)
 operator|)
 operator|==
@@ -271,7 +233,7 @@ name|bpt
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* 	 * Allocate bytes (1024 - malloc space) for the string of "../"'s. 	 * Should always be enough (it's 340 levels).  If it's not, allocate 	 * as necessary.  Special * case the first stat, it's ".", not "..". 	 */
+comment|/* 	 * Allocate bytes for the string of "../"'s. 	 * Should always be enough (it's 340 levels).  If it's not, allocate 	 * as necessary.  Special * case the first stat, it's ".", not "..". 	 */
 if|if
 condition|(
 operator|(
@@ -281,9 +243,7 @@ name|malloc
 argument_list|(
 name|upsize
 operator|=
-literal|1024
-operator|-
-literal|4
+name|MAXPATHLEN
 argument_list|)
 operator|)
 operator|==
@@ -296,7 +256,7 @@ name|eup
 operator|=
 name|up
 operator|+
-name|MAXPATHLEN
+name|upsize
 expr_stmt|;
 name|bup
 operator|=
@@ -465,13 +425,19 @@ condition|)
 goto|goto
 name|err
 goto|;
+name|bup
+operator|=
+name|nup
+operator|+
+operator|(
+name|bup
+operator|-
+name|up
+operator|)
+expr_stmt|;
 name|up
 operator|=
 name|nup
-expr_stmt|;
-name|bup
-operator|=
-name|up
 expr_stmt|;
 name|eup
 operator|=
@@ -497,7 +463,7 @@ name|bup
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* Open and stat parent directory.  		 * RACE?? - replaced fstat(dirfd(dir),&s) w/ lstat(up,&s)                   */
+comment|/* Open and stat parent directory. */
 if|if
 condition|(
 operator|!
@@ -510,9 +476,12 @@ name|up
 argument_list|)
 operator|)
 operator|||
-name|lstat
+name|fstat
 argument_list|(
-name|up
+name|dirfd
+argument_list|(
+name|dir
+argument_list|)
 argument_list|,
 operator|&
 name|s
@@ -604,7 +573,7 @@ name|dp
 argument_list|)
 condition|)
 continue|continue;
-name|memmove
+name|memcpy
 argument_list|(
 name|bup
 argument_list|,
@@ -684,8 +653,6 @@ condition|)
 block|{
 name|size_t
 name|len
-decl_stmt|,
-name|off
 decl_stmt|;
 name|char
 modifier|*
@@ -705,12 +672,6 @@ goto|goto
 name|err
 goto|;
 block|}
-name|off
-operator|=
-name|bpt
-operator|-
-name|pt
-expr_stmt|;
 name|len
 operator|=
 name|ept
@@ -737,15 +698,19 @@ condition|)
 goto|goto
 name|err
 goto|;
+name|bpt
+operator|=
+name|npt
+operator|+
+operator|(
+name|bpt
+operator|-
+name|pt
+operator|)
+expr_stmt|;
 name|pt
 operator|=
 name|npt
-expr_stmt|;
-name|bpt
-operator|=
-name|pt
-operator|+
-name|off
 expr_stmt|;
 name|ept
 operator|=
@@ -788,7 +753,7 @@ name|dp
 operator|->
 name|d_namlen
 expr_stmt|;
-name|memmove
+name|memcpy
 argument_list|(
 name|bpt
 argument_list|,
@@ -835,6 +800,10 @@ expr_stmt|;
 comment|/* FALLTHROUGH */
 name|err
 label|:
+name|save_errno
+operator|=
+name|errno
+expr_stmt|;
 if|if
 condition|(
 name|ptsize
@@ -844,10 +813,6 @@ argument_list|(
 name|pt
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|up
-condition|)
 name|free
 argument_list|(
 name|up
@@ -864,6 +829,10 @@ name|closedir
 argument_list|(
 name|dir
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|save_errno
 expr_stmt|;
 return|return
 operator|(

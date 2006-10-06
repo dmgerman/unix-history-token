@@ -8,317 +8,11 @@ comment|/* config.h.in.  Generated from configure.ac by autoheader.  */
 end_comment
 
 begin_comment
-comment|/* $Id: acconfig.h,v 1.183 2005/07/07 10:33:36 dtucker Exp $ */
+comment|/* Define if you have a getaddrinfo that fails for the all-zeros IPv6 address    */
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
-comment|/*  * Copyright (c) 1999-2003 Damien Miller.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_CONFIG_H
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_CONFIG_H
-end_define
-
-begin_comment
-comment|/* Generated automatically from acconfig.h by autoheader. */
-end_comment
-
-begin_comment
-comment|/* Please make your changes there */
-end_comment
-
-begin_comment
-comment|/* Define if your platform breaks doing a seteuid before a setuid */
-end_comment
-
-begin_comment
-comment|/* #undef SETEUID_BREAKS_SETUID */
-end_comment
-
-begin_comment
-comment|/* Define if your setreuid() is broken */
-end_comment
-
-begin_comment
-comment|/* #undef BROKEN_SETREUID */
-end_comment
-
-begin_comment
-comment|/* Define if your setregid() is broken */
-end_comment
-
-begin_comment
-comment|/* #undef BROKEN_SETREGID */
-end_comment
-
-begin_comment
-comment|/* Define if your setresuid() is broken */
-end_comment
-
-begin_comment
-comment|/* #undef BROKEN_SETRESUID */
-end_comment
-
-begin_comment
-comment|/* Define if your setresgid() is broken */
-end_comment
-
-begin_comment
-comment|/* #undef BROKEN_SETRESGID */
-end_comment
-
-begin_comment
-comment|/* Define to a Set Process Title type if your system is */
-end_comment
-
-begin_comment
-comment|/* supported by bsd-setproctitle.c */
-end_comment
-
-begin_comment
-comment|/* #undef SPT_TYPE */
-end_comment
-
-begin_comment
-comment|/* #undef SPT_PADCHAR */
-end_comment
-
-begin_comment
-comment|/* SCO workaround */
-end_comment
-
-begin_comment
-comment|/* #undef BROKEN_SYS_TERMIO_H */
-end_comment
-
-begin_comment
-comment|/* Define if you have SecureWare-based protected password database */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_SECUREWARE */
-end_comment
-
-begin_comment
-comment|/* If your header files don't define LOGIN_PROGRAM, then use this (detected) */
-end_comment
-
-begin_comment
-comment|/* from environment and PATH */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOGIN_PROGRAM_FALLBACK
-value|"/usr/bin/login"
-end_define
-
-begin_comment
-comment|/* Full path of your "passwd" program */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_PATH_PASSWD_PROG
-value|"/usr/bin/passwd"
-end_define
-
-begin_comment
-comment|/* Define if your password has a pw_class field */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_PW_CLASS_IN_PASSWD
-value|1
-end_define
-
-begin_comment
-comment|/* Define if your password has a pw_expire field */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_PW_EXPIRE_IN_PASSWD
-value|1
-end_define
-
-begin_comment
-comment|/* Define if your password has a pw_change field */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_PW_CHANGE_IN_PASSWD
-value|1
-end_define
-
-begin_comment
-comment|/* Define if your system uses access rights style file descriptor passing */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_ACCRIGHTS_IN_MSGHDR */
-end_comment
-
-begin_comment
-comment|/* Define if your system uses ancillary data style file descriptor passing */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_CONTROL_IN_MSGHDR
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you system's inet_ntoa is busted (e.g. Irix gcc issue) */
-end_comment
-
-begin_comment
-comment|/* #undef BROKEN_INET_NTOA */
-end_comment
-
-begin_comment
-comment|/* Define if your system defines sys_errlist[] */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_SYS_ERRLIST
-value|1
-end_define
-
-begin_comment
-comment|/* Define if your system defines sys_nerr */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_SYS_NERR
-value|1
-end_define
-
-begin_comment
-comment|/* Define if your system choked on IP TOS setting */
-end_comment
-
-begin_comment
-comment|/* #undef IP_TOS_IS_BROKEN */
-end_comment
-
-begin_comment
-comment|/* Define if you have the getuserattr function.  */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_GETUSERATTR */
-end_comment
-
-begin_comment
-comment|/* Define if you have the basename function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_BASENAME
-value|1
-end_define
-
-begin_comment
-comment|/* Work around problematic Linux PAM modules handling of PAM_TTY */
-end_comment
-
-begin_comment
-comment|/* #undef PAM_TTY_KLUDGE */
-end_comment
-
-begin_comment
-comment|/* Define if pam_chauthtok wants real uid set to the unpriv'ed user */
-end_comment
-
-begin_comment
-comment|/* #undef SSHPAM_CHAUTHTOK_NEEDS_RUID */
-end_comment
-
-begin_comment
-comment|/* Use PIPES instead of a socketpair() */
-end_comment
-
-begin_comment
-comment|/* #undef USE_PIPES */
-end_comment
-
-begin_comment
-comment|/* Define if your snprintf is busted */
-end_comment
-
-begin_comment
-comment|/* #undef BROKEN_SNPRINTF */
-end_comment
-
-begin_comment
-comment|/* Define if you are on Cygwin */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_CYGWIN */
-end_comment
-
-begin_comment
-comment|/* Define if you have a broken realpath. */
-end_comment
-
-begin_comment
-comment|/* #undef BROKEN_REALPATH */
-end_comment
-
-begin_comment
-comment|/* Define if you are on NeXT */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_NEXT */
-end_comment
-
-begin_comment
-comment|/* Define if you want to enable PAM support */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USE_PAM
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you want to enable AIX4's authenticate function */
-end_comment
-
-begin_comment
-comment|/* #undef WITH_AIXAUTHENTICATE */
+comment|/* #undef AIX_GETNAMEINFO_HACK */
 end_comment
 
 begin_comment
@@ -330,197 +24,209 @@ comment|/* #undef AIX_LOGINFAILED_4ARG */
 end_comment
 
 begin_comment
-comment|/* Define if your skeychallenge() function takes 4 arguments (eg NetBSD) */
+comment|/* Define if your resolver libs need this for getrrsetbyname */
 end_comment
 
 begin_comment
-comment|/* #undef SKEYCHALLENGE_4ARG */
+comment|/* #undef BIND_8_COMPAT */
 end_comment
 
 begin_comment
-comment|/* Define if you have/want arrays (cluster-wide session managment, not C arrays) */
+comment|/* Define if cmsg_type is not passed correctly */
 end_comment
 
 begin_comment
-comment|/* #undef WITH_IRIX_ARRAY */
+comment|/* #undef BROKEN_CMSG_TYPE */
 end_comment
 
 begin_comment
-comment|/* Define if you want IRIX project management */
+comment|/* getaddrinfo is broken (if present) */
 end_comment
 
 begin_comment
-comment|/* #undef WITH_IRIX_PROJECT */
+comment|/* #undef BROKEN_GETADDRINFO */
 end_comment
 
 begin_comment
-comment|/* Define if you want IRIX audit trails */
+comment|/* getgroups(0,NULL) will return -1 */
 end_comment
 
 begin_comment
-comment|/* #undef WITH_IRIX_AUDIT */
+comment|/* #undef BROKEN_GETGROUPS */
 end_comment
 
 begin_comment
-comment|/* Define if you want IRIX kernel jobs */
+comment|/* Define if you system's inet_ntoa is busted (e.g. Irix gcc issue) */
 end_comment
 
 begin_comment
-comment|/* #undef WITH_IRIX_JOBS */
+comment|/* #undef BROKEN_INET_NTOA */
 end_comment
 
 begin_comment
-comment|/* Location of PRNGD/EGD random number socket */
+comment|/* ia_uinfo routines not supported by OS yet */
 end_comment
 
 begin_comment
-comment|/* #undef PRNGD_SOCKET */
+comment|/* #undef BROKEN_LIBIAF */
 end_comment
 
 begin_comment
-comment|/* Port number of PRNGD/EGD random number socket */
+comment|/* Ultrix mmap can't map files */
 end_comment
 
 begin_comment
-comment|/* #undef PRNGD_PORT */
+comment|/* #undef BROKEN_MMAP */
 end_comment
 
 begin_comment
-comment|/* Builtin PRNG command timeout */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ENTROPY_TIMEOUT_MSEC
-value|200
-end_define
-
-begin_comment
-comment|/* non-privileged user for privilege separation */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSH_PRIVSEP_USER
-value|"sshd"
-end_define
-
-begin_comment
-comment|/* Define if you want to install preformatted manpages.*/
+comment|/* Define if your struct dirent expects you to allocate extra space for d_name    */
 end_comment
 
 begin_comment
-comment|/* #undef MANTYPE */
+comment|/* #undef BROKEN_ONE_BYTE_DIRENT_D_NAME */
 end_comment
 
 begin_comment
-comment|/* Define if your ssl headers are included with #include<openssl/header.h>  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_OPENSSL
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you are linking against RSAref.  Used only to print the right  * message at run-time. */
+comment|/* Define if you have a broken realpath. */
 end_comment
 
 begin_comment
-comment|/* #undef RSAREF */
+comment|/* #undef BROKEN_REALPATH */
 end_comment
 
 begin_comment
-comment|/* struct timeval */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_STRUCT_TIMEVAL
-value|1
-end_define
-
-begin_comment
-comment|/* struct utmp and struct utmpx fields */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_HOST_IN_UTMP
-value|1
-end_define
-
-begin_comment
-comment|/* #undef HAVE_HOST_IN_UTMPX */
+comment|/* Needed for NeXT */
 end_comment
 
 begin_comment
-comment|/* #undef HAVE_ADDR_IN_UTMP */
+comment|/* #undef BROKEN_SAVED_UIDS */
 end_comment
 
 begin_comment
-comment|/* #undef HAVE_ADDR_IN_UTMPX */
+comment|/* Define if your setregid() is broken */
 end_comment
 
 begin_comment
-comment|/* #undef HAVE_ADDR_V6_IN_UTMP */
+comment|/* #undef BROKEN_SETREGID */
 end_comment
 
 begin_comment
-comment|/* #undef HAVE_ADDR_V6_IN_UTMPX */
+comment|/* Define if your setresgid() is broken */
 end_comment
 
 begin_comment
-comment|/* #undef HAVE_SYSLEN_IN_UTMPX */
+comment|/* #undef BROKEN_SETRESGID */
 end_comment
 
 begin_comment
-comment|/* #undef HAVE_PID_IN_UTMP */
+comment|/* Define if your setresuid() is broken */
 end_comment
 
 begin_comment
-comment|/* #undef HAVE_TYPE_IN_UTMP */
+comment|/* #undef BROKEN_SETRESUID */
 end_comment
 
 begin_comment
-comment|/* #undef HAVE_TYPE_IN_UTMPX */
+comment|/* Define if your setreuid() is broken */
 end_comment
 
 begin_comment
-comment|/* #undef HAVE_TV_IN_UTMP */
+comment|/* #undef BROKEN_SETREUID */
 end_comment
 
 begin_comment
-comment|/* #undef HAVE_TV_IN_UTMPX */
+comment|/* LynxOS has broken setvbuf() implementation */
 end_comment
 
 begin_comment
-comment|/* #undef HAVE_ID_IN_UTMP */
+comment|/* #undef BROKEN_SETVBUF */
 end_comment
 
 begin_comment
-comment|/* #undef HAVE_ID_IN_UTMPX */
+comment|/* Define if your snprintf is busted */
 end_comment
 
 begin_comment
-comment|/* #undef HAVE_EXIT_IN_UTMP */
+comment|/* #undef BROKEN_SNPRINTF */
+end_comment
+
+begin_comment
+comment|/* updwtmpx is broken (if present) */
+end_comment
+
+begin_comment
+comment|/* #undef BROKEN_UPDWTMPX */
+end_comment
+
+begin_comment
+comment|/* Define if you have BSD auth support */
+end_comment
+
+begin_comment
+comment|/* #undef BSD_AUTH */
+end_comment
+
+begin_comment
+comment|/* Define if you want to specify the path to your lastlog file */
+end_comment
+
+begin_comment
+comment|/* #undef CONF_LASTLOG_FILE */
+end_comment
+
+begin_comment
+comment|/* Define if you want to specify the path to your utmpx file */
+end_comment
+
+begin_comment
+comment|/* #undef CONF_UTMPX_FILE */
+end_comment
+
+begin_comment
+comment|/* Define if you want to specify the path to your utmp file */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_TIME_IN_UTMP
-value|1
+name|CONF_UTMP_FILE
+value|"/var/run/utmp"
 end_define
 
 begin_comment
-comment|/* #undef HAVE_TIME_IN_UTMPX */
+comment|/* Define if you want to specify the path to your wtmpx file */
+end_comment
+
+begin_comment
+comment|/* #undef CONF_WTMPX_FILE */
+end_comment
+
+begin_comment
+comment|/* Define if you want to specify the path to your wtmp file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CONF_WTMP_FILE
+value|"/var/log/wtmp"
+end_define
+
+begin_comment
+comment|/* Define if your platform needs to skip post auth file descriptor passing */
+end_comment
+
+begin_comment
+comment|/* #undef DISABLE_FD_PASSING */
+end_comment
+
+begin_comment
+comment|/* Define if you don't want to use lastlog */
+end_comment
+
+begin_comment
+comment|/* #undef DISABLE_LASTLOG */
 end_comment
 
 begin_comment
@@ -548,19 +254,11 @@ comment|/* #undef DISABLE_PUTUTXLINE */
 end_comment
 
 begin_comment
-comment|/* Define if you don't want to use lastlog */
+comment|/* Define if you want to disable shadow passwords */
 end_comment
 
 begin_comment
-comment|/* #undef DISABLE_LASTLOG */
-end_comment
-
-begin_comment
-comment|/* Define if you don't want to use lastlog in session.c */
-end_comment
-
-begin_comment
-comment|/* #undef NO_SSH_LASTLOG */
+comment|/* #undef DISABLE_SHADOW */
 end_comment
 
 begin_comment
@@ -602,489 +300,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Some systems need a utmpx entry for /bin/login to work */
-end_comment
-
-begin_comment
-comment|/* #undef LOGIN_NEEDS_UTMPX */
-end_comment
-
-begin_comment
-comment|/* Some versions of /bin/login need the TERM supplied on the commandline */
-end_comment
-
-begin_comment
-comment|/* #undef LOGIN_NEEDS_TERM */
-end_comment
-
-begin_comment
-comment|/* Define if your login program cannot handle end of options ("--") */
-end_comment
-
-begin_comment
-comment|/* #undef LOGIN_NO_ENDOPT */
-end_comment
-
-begin_comment
-comment|/* Define if you want to specify the path to your lastlog file */
-end_comment
-
-begin_comment
-comment|/* #undef CONF_LASTLOG_FILE */
-end_comment
-
-begin_comment
-comment|/* Define if you want to specify the path to your utmp file */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CONF_UTMP_FILE
-value|"/var/run/utmp"
-end_define
-
-begin_comment
-comment|/* Define if you want to specify the path to your wtmp file */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CONF_WTMP_FILE
-value|"/var/log/wtmp"
-end_define
-
-begin_comment
-comment|/* Define if you want to specify the path to your utmpx file */
-end_comment
-
-begin_comment
-comment|/* #undef CONF_UTMPX_FILE */
-end_comment
-
-begin_comment
-comment|/* Define if you want to specify the path to your wtmpx file */
-end_comment
-
-begin_comment
-comment|/* #undef CONF_WTMPX_FILE */
-end_comment
-
-begin_comment
-comment|/* Define if you want external askpass support */
-end_comment
-
-begin_comment
-comment|/* #undef USE_EXTERNAL_ASKPASS */
-end_comment
-
-begin_comment
-comment|/* Define if libc defines __progname */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE___PROGNAME
-value|1
-end_define
-
-begin_comment
-comment|/* Define if compiler implements __FUNCTION__ */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE___FUNCTION__
-value|1
-end_define
-
-begin_comment
-comment|/* Define if compiler implements __func__ */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE___func__
-value|1
-end_define
-
-begin_comment
-comment|/* Define this is you want GSSAPI support in the version 2 protocol */
-end_comment
-
-begin_comment
-comment|/* #undef GSSAPI */
-end_comment
-
-begin_comment
-comment|/* Define if you want Kerberos 5 support */
-end_comment
-
-begin_comment
-comment|/* #undef KRB5 */
-end_comment
-
-begin_comment
-comment|/* Define this if you are using the Heimdal version of Kerberos V5 */
-end_comment
-
-begin_comment
-comment|/* #undef HEIMDAL */
-end_comment
-
-begin_comment
-comment|/* Define this if you want to use libkafs' AFS support */
-end_comment
-
-begin_comment
-comment|/* #undef USE_AFS */
-end_comment
-
-begin_comment
-comment|/* Define if you want S/Key support */
-end_comment
-
-begin_comment
-comment|/* #undef SKEY */
-end_comment
-
-begin_comment
-comment|/* Define if you want OPIE support */
-end_comment
-
-begin_comment
-comment|/* #undef OPIE */
-end_comment
-
-begin_comment
-comment|/* Define if you want TCP Wrappers support */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LIBWRAP
-value|1
-end_define
-
-begin_comment
-comment|/* Define if your libraries define login() */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_LOGIN
-value|1
-end_define
-
-begin_comment
-comment|/* Define if your libraries define daemon() */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_DAEMON
-value|1
-end_define
-
-begin_comment
-comment|/* Define if your libraries define getpagesize() */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_GETPAGESIZE
-value|1
-end_define
-
-begin_comment
-comment|/* Define if xauth is found in your path */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|XAUTH_PATH
-value|"/usr/X11R6/bin/xauth"
-end_define
-
-begin_comment
-comment|/* Define if you want to allow MD5 passwords */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_MD5_PASSWORDS */
-end_comment
-
-begin_comment
-comment|/* Define if you want to disable shadow passwords */
-end_comment
-
-begin_comment
-comment|/* #undef DISABLE_SHADOW */
-end_comment
-
-begin_comment
-comment|/* Define if you want to use shadow password expire field */
-end_comment
-
-begin_comment
-comment|/* #undef HAS_SHADOW_EXPIRE */
-end_comment
-
-begin_comment
-comment|/* Define if you have Digital Unix Security Integration Architecture */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_OSF_SIA */
-end_comment
-
-begin_comment
-comment|/* Define if you have getpwanam(3) [SunOS 4.x] */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_GETPWANAM */
-end_comment
-
-begin_comment
-comment|/* Define if you have an old version of PAM which takes only one argument */
-end_comment
-
-begin_comment
-comment|/* to pam_strerror */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_OLD_PAM */
-end_comment
-
-begin_comment
-comment|/* Define if you are using Solaris-derived PAM which passes pam_messages  */
-end_comment
-
-begin_comment
-comment|/* to the conversation function with an extra level of indirection */
-end_comment
-
-begin_comment
-comment|/* #undef PAM_SUN_CODEBASE */
-end_comment
-
-begin_comment
-comment|/* Set this to your mail directory if you don't have maillock.h */
-end_comment
-
-begin_comment
-comment|/* #undef MAIL_DIRECTORY */
-end_comment
-
-begin_comment
-comment|/* Data types */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_U_INT
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_INTXX_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_U_INTXX_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_UINTXX_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_INT64_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_U_INT64_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_U_CHAR
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_SIZE_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_SSIZE_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_CLOCK_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_MODE_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_PID_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_SA_FAMILY_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_STRUCT_SOCKADDR_STORAGE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_STRUCT_ADDRINFO
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_STRUCT_IN6_ADDR
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_STRUCT_SOCKADDR_IN6
-value|1
-end_define
-
-begin_comment
-comment|/* Fields in struct sockaddr_storage */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_SS_FAMILY_IN_SS
-value|1
-end_define
-
-begin_comment
-comment|/* #undef HAVE___SS_FAMILY_IN_SS */
-end_comment
-
-begin_comment
-comment|/* Define if you have /dev/ptmx */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_DEV_PTMX */
-end_comment
-
-begin_comment
-comment|/* Define if you have /dev/ptc */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_DEV_PTS_AND_PTC */
-end_comment
-
-begin_comment
-comment|/* Define if you need to use IP address instead of hostname in $DISPLAY */
-end_comment
-
-begin_comment
-comment|/* #undef IPADDR_IN_DISPLAY */
-end_comment
-
-begin_comment
-comment|/* Specify default $PATH */
-end_comment
-
-begin_comment
-comment|/* #undef USER_PATH */
-end_comment
-
-begin_comment
-comment|/* Specify location of ssh.pid */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_PATH_SSH_PIDDIR
-value|"/var/run"
-end_define
-
-begin_comment
-comment|/* getaddrinfo is broken (if present) */
-end_comment
-
-begin_comment
-comment|/* #undef BROKEN_GETADDRINFO */
-end_comment
-
-begin_comment
-comment|/* updwtmpx is broken (if present) */
-end_comment
-
-begin_comment
-comment|/* #undef BROKEN_UPDWTMPX */
-end_comment
-
-begin_comment
 comment|/* Workaround more Linux IPv6 quirks */
 end_comment
 
@@ -1093,43 +308,33 @@ comment|/* #undef DONT_TRY_OTHER_AF */
 end_comment
 
 begin_comment
-comment|/* Detect IPv4 in IPv6 mapped addresses and treat as IPv4 */
+comment|/* Builtin PRNG command timeout */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENTROPY_TIMEOUT_MSEC
+value|200
+end_define
+
+begin_comment
+comment|/* Define to 1 if the `getpgrp' function requires zero arguments. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GETPGRP_VOID
+value|1
+end_define
+
+begin_comment
+comment|/* Conflicting defs for getspnam */
 end_comment
 
 begin_comment
-comment|/* #undef IPV4_IN_IPV6 */
-end_comment
-
-begin_comment
-comment|/* Define if you have BSD auth support */
-end_comment
-
-begin_comment
-comment|/* #undef BSD_AUTH */
-end_comment
-
-begin_comment
-comment|/* Define if X11 doesn't support AF_UNIX sockets on that system */
-end_comment
-
-begin_comment
-comment|/* #undef NO_X11_UNIX_SOCKETS */
-end_comment
-
-begin_comment
-comment|/* Define if the concept of ports only accessible to superusers isn't known */
-end_comment
-
-begin_comment
-comment|/* #undef NO_IPPORT_RESERVED_CONCEPT */
-end_comment
-
-begin_comment
-comment|/* Needed for SCO and NeXT */
-end_comment
-
-begin_comment
-comment|/* #undef BROKEN_SAVED_UIDS */
+comment|/* #undef GETSPNAM_CONFLICTING_DEFS */
 end_comment
 
 begin_comment
@@ -1155,274 +360,59 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define in your struct dirent expects you to allocate extra space for d_name */
+comment|/* Define this if you want GSSAPI support in the version 2 protocol */
 end_comment
 
 begin_comment
-comment|/* #undef BROKEN_ONE_BYTE_DIRENT_D_NAME */
+comment|/* #undef GSSAPI */
 end_comment
 
 begin_comment
-comment|/* Define if your system has /etc/default/login */
+comment|/* Define if you want to use shadow password expire field */
 end_comment
 
 begin_comment
-comment|/* #undef HAVE_ETC_DEFAULT_LOGIN */
+comment|/* #undef HAS_SHADOW_EXPIRE */
 end_comment
 
 begin_comment
-comment|/* Define if your getopt(3) defines and uses optreset */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_GETOPT_OPTRESET
-value|1
-end_define
-
-begin_comment
-comment|/* Define on *nto-qnx systems */
+comment|/* Define if your system uses access rights style file descriptor passing */
 end_comment
 
 begin_comment
-comment|/* #undef MISSING_NFDBITS */
+comment|/* #undef HAVE_ACCRIGHTS_IN_MSGHDR */
 end_comment
 
 begin_comment
-comment|/* Define on *nto-qnx systems */
+comment|/* Define if you have ut_addr in utmp.h */
 end_comment
 
 begin_comment
-comment|/* #undef MISSING_HOWMANY */
+comment|/* #undef HAVE_ADDR_IN_UTMP */
 end_comment
 
 begin_comment
-comment|/* Define on *nto-qnx systems */
+comment|/* Define if you have ut_addr in utmpx.h */
 end_comment
 
 begin_comment
-comment|/* #undef MISSING_FD_MASK */
+comment|/* #undef HAVE_ADDR_IN_UTMPX */
 end_comment
 
 begin_comment
-comment|/* Define if you want smartcard support */
+comment|/* Define if you have ut_addr_v6 in utmp.h */
 end_comment
 
 begin_comment
-comment|/* #undef SMARTCARD */
+comment|/* #undef HAVE_ADDR_V6_IN_UTMP */
 end_comment
 
 begin_comment
-comment|/* Define if you want smartcard support using sectok */
+comment|/* Define if you have ut_addr_v6 in utmpx.h */
 end_comment
 
 begin_comment
-comment|/* #undef USE_SECTOK */
-end_comment
-
-begin_comment
-comment|/* Define if you want smartcard support using OpenSC */
-end_comment
-
-begin_comment
-comment|/* #undef USE_OPENSC */
-end_comment
-
-begin_comment
-comment|/* Define if you want to use OpenSSL's internally seeded PRNG only */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OPENSSL_PRNG_ONLY
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you shouldn't strip 'tty' from your ttyname in [uw]tmp */
-end_comment
-
-begin_comment
-comment|/* #undef WITH_ABBREV_NO_TTY */
-end_comment
-
-begin_comment
-comment|/* Define if you want a different $PATH for the superuser */
-end_comment
-
-begin_comment
-comment|/* #undef SUPERUSER_PATH */
-end_comment
-
-begin_comment
-comment|/* Path that unprivileged child will chroot() to in privep mode */
-end_comment
-
-begin_comment
-comment|/* #undef PRIVSEP_PATH */
-end_comment
-
-begin_comment
-comment|/* Define if your platform needs to skip post auth file descriptor passing */
-end_comment
-
-begin_comment
-comment|/* #undef DISABLE_FD_PASSING */
-end_comment
-
-begin_comment
-comment|/* Silly mkstemp() */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_STRICT_MKSTEMP */
-end_comment
-
-begin_comment
-comment|/* Some systems put this outside of libc */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_NANOSLEEP
-value|1
-end_define
-
-begin_comment
-comment|/* Define if sshd somehow reacquires a controlling TTY after setsid() */
-end_comment
-
-begin_comment
-comment|/* #undef SSHD_ACQUIRES_CTTY */
-end_comment
-
-begin_comment
-comment|/* Define if cmsg_type is not passed correctly */
-end_comment
-
-begin_comment
-comment|/* #undef BROKEN_CMSG_TYPE */
-end_comment
-
-begin_comment
-comment|/*  * Define to whatever link() returns for "not supported" if it doesn't  * return EOPNOTSUPP.  */
-end_comment
-
-begin_comment
-comment|/* #undef LINK_OPNOTSUPP_ERRNO */
-end_comment
-
-begin_comment
-comment|/* Strings used in /etc/passwd to denote locked account */
-end_comment
-
-begin_comment
-comment|/* #undef LOCKED_PASSWD_STRING */
-end_comment
-
-begin_comment
-comment|/* #undef LOCKED_PASSWD_PREFIX */
-end_comment
-
-begin_comment
-comment|/* #undef LOCKED_PASSWD_SUBSTR */
-end_comment
-
-begin_comment
-comment|/* Define if getrrsetbyname() exists */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_GETRRSETBYNAME */
-end_comment
-
-begin_comment
-comment|/* Define if HEADER.ad exists in arpa/nameser.h */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_HEADER_AD
-value|1
-end_define
-
-begin_comment
-comment|/* Define if your resolver libs need this for getrrsetbyname */
-end_comment
-
-begin_comment
-comment|/* #undef BIND_8_COMPAT */
-end_comment
-
-begin_comment
-comment|/* Define if you have /proc/$pid/fd */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_PROC_PID */
-end_comment
-
-begin_comment
-comment|/* Define if you have a getaddrinfo that fails for the all-zeros IPv6 address    */
-end_comment
-
-begin_comment
-comment|/* #undef AIX_GETNAMEINFO_HACK */
-end_comment
-
-begin_comment
-comment|/* getgroups(0,NULL) will return -1 */
-end_comment
-
-begin_comment
-comment|/* #undef BROKEN_GETGROUPS */
-end_comment
-
-begin_comment
-comment|/* ia_uinfo routines not supported by OS yet */
-end_comment
-
-begin_comment
-comment|/* #undef BROKEN_LIBIAF */
-end_comment
-
-begin_comment
-comment|/* Ultrix mmap can't map files */
-end_comment
-
-begin_comment
-comment|/* #undef BROKEN_MMAP */
-end_comment
-
-begin_comment
-comment|/* LynxOS has broken setvbuf() implementation */
-end_comment
-
-begin_comment
-comment|/* #undef BROKEN_SETVBUF */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if the `getpgrp' function requires zero arguments. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GETPGRP_VOID
-value|1
-end_define
-
-begin_comment
-comment|/* Conflicting defs for getspnam */
-end_comment
-
-begin_comment
-comment|/* #undef GETSPNAM_CONFLICTING_DEFS */
+comment|/* #undef HAVE_ADDR_V6_IN_UTMPX */
 end_comment
 
 begin_comment
@@ -1435,6 +425,25 @@ directive|define
 name|HAVE_ARC4RANDOM
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `asprintf' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ASPRINTF
+value|1
+end_define
+
+begin_comment
+comment|/* OpenBSD's gcc has bounded */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_ATTRIBUTE__BOUNDED__ */
+end_comment
 
 begin_comment
 comment|/* OpenBSD's gcc has sentinel */
@@ -1459,6 +468,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_B64_PTON */
 end_comment
+
+begin_comment
+comment|/* Define if you have the basename function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_BASENAME
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `bcopy' function. */
@@ -1510,6 +530,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* define if you have clock_t data type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_CLOCK_T
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `closefrom' function. */
 end_comment
 
@@ -1529,6 +560,25 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if your system uses ancillary data style file descriptor passing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_CONTROL_IN_MSGHDR
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<crypto/sha2.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_CRYPTO_SHA2_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<crypt.h> header file. */
 end_comment
 
@@ -1537,12 +587,42 @@ comment|/* #undef HAVE_CRYPT_H */
 end_comment
 
 begin_comment
+comment|/* Define if you are on Cygwin */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_CYGWIN */
+end_comment
+
+begin_comment
+comment|/* Define if your libraries define daemon() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DAEMON
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the declaration of `authenticate', and to 0 if you    don't. */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_DECL_AUTHENTICATE */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `GLOB_NOMATCH', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_GLOB_NOMATCH
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the declaration of `h_errno', and to 0 if you    don't. */
@@ -1580,6 +660,17 @@ comment|/* #undef HAVE_DECL_LOGINSUCCESS */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the declaration of `O_NONBLOCK', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_O_NONBLOCK
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the declaration of `passwdexpired', and to 0 if you    don't. */
 end_comment
 
@@ -1594,6 +685,28 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_DECL_SETAUTHDB */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `SHUT_RD', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_SHUT_RD
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `writev', and to 0 if you don't.    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_WRITEV
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the declaration of `_getlong', and to 0 if you    don't. */
@@ -1616,6 +729,22 @@ directive|define
 name|HAVE_DECL__GETSHORT
 value|0
 end_define
+
+begin_comment
+comment|/* Define if you have /dev/ptmx */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DEV_PTMX */
+end_comment
+
+begin_comment
+comment|/* Define if you have /dev/ptc */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DEV_PTS_AND_PTC */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<dirent.h> header file. */
@@ -1672,6 +801,30 @@ comment|/* #undef HAVE_ENDUTXENT */
 end_comment
 
 begin_comment
+comment|/* Define if your system has /etc/default/login */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_ETC_DEFAULT_LOGIN */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `EVP_sha256' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_EVP_SHA256 */
+end_comment
+
+begin_comment
+comment|/* Define if you have ut_exit in utmp.h */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_EXIT_IN_UTMP */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `fchmod' function. */
 end_comment
 
@@ -1690,6 +843,25 @@ begin_define
 define|#
 directive|define
 name|HAVE_FCHOWN
+value|1
+end_define
+
+begin_comment
+comment|/* Use F_CLOSEM fcntl for closefrom */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_FCNTL_CLOSEM */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<fcntl.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FCNTL_H
 value|1
 end_define
 
@@ -1836,6 +1008,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if your getopt(3) defines and uses optreset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETOPT_OPTRESET
+value|1
+end_define
+
+begin_comment
+comment|/* Define if your libraries define getpagesize() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETPAGESIZE
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `getpeereid' function. */
 end_comment
 
@@ -1866,11 +1060,27 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if getrrsetbyname() exists */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GETRRSETBYNAME */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `getrusage' function. */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_GETRUSAGE */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `getseuserbyname' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GETSEUSERBYNAME */
 end_comment
 
 begin_comment
@@ -1944,6 +1154,14 @@ comment|/* #undef HAVE_GETUTXLINE */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `get_default_context_with_level' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GET_DEFAULT_CONTEXT_WITH_LEVEL */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `glob' function. */
 end_comment
 
@@ -2014,6 +1232,36 @@ comment|/* #undef HAVE_GSSAPI_KRB5_H */
 end_comment
 
 begin_comment
+comment|/* Define if HEADER.ad exists in arpa/nameser.h */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_HEADER_AD
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have ut_host in utmp.h */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_HOST_IN_UTMP
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have ut_host in utmpx.h */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_HOST_IN_UTMPX */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<iaf.h> header file. */
 end_comment
 
@@ -2027,6 +1275,22 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_IA_H */
+end_comment
+
+begin_comment
+comment|/* Define if you have ut_id in utmp.h */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_ID_IN_UTMP */
+end_comment
+
+begin_comment
+comment|/* Define if you have ut_id in utmpx.h */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_ID_IN_UTMPX */
 end_comment
 
 begin_comment
@@ -2074,6 +1338,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* define if you have int64_t data type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_INT64_T
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<inttypes.h> header file. */
 end_comment
 
@@ -2081,6 +1356,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_INTTYPES_H
+value|1
+end_define
+
+begin_comment
+comment|/* define if you have intxx_t data type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_INTXX_T
 value|1
 end_define
 
@@ -2223,6 +1509,25 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<linux/if_tun.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LINUX_IF_TUN_H */
+end_comment
+
+begin_comment
+comment|/* Define if your libraries define login() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LOGIN
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<login_cap.h> header file. */
 end_comment
 
@@ -2275,6 +1580,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if the system has the type `long double'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LONG_DOUBLE
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if the system has the type `long long'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LONG_LONG
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<maillock.h> header file. */
 end_comment
 
@@ -2288,6 +1615,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_MD5_CRYPT */
+end_comment
+
+begin_comment
+comment|/* Define if you want to allow MD5 passwords */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_MD5_PASSWORDS */
 end_comment
 
 begin_comment
@@ -2335,6 +1670,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* define if you have mode_t data type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MODE_T
+value|1
+end_define
+
+begin_comment
+comment|/* Some systems put nanosleep outside of libc */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_NANOSLEEP
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<ndir.h> header file. */
 end_comment
 
@@ -2362,15 +1719,23 @@ comment|/* #undef HAVE_NETGROUP_H */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the<netinet/in_systm.h> header file. */
+comment|/* Define to 1 if you have the<net/if_tun.h> header file. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_NETINET_IN_SYSTM_H
+name|HAVE_NET_IF_TUN_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define if you are on NeXT */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_NEXT */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `ngetaddrinfo' function. */
@@ -2397,6 +1762,14 @@ comment|/* #undef HAVE_OGETADDRINFO */
 end_comment
 
 begin_comment
+comment|/* Define if you have an old version of PAM which takes only one argument to    pam_strerror */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_OLD_PAM */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `openlog_r' function. */
 end_comment
 
@@ -2414,6 +1787,25 @@ directive|define
 name|HAVE_OPENPTY
 value|1
 end_define
+
+begin_comment
+comment|/* Define if your ssl headers are included with #include<openssl/header.h> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_OPENSSL
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have Digital Unix Security Integration Architecture */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_OSF_SIA */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `pam_getenvlist' function. */
@@ -2457,11 +1849,38 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have ut_pid in utmp.h */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PID_IN_UTMP */
+end_comment
+
+begin_comment
+comment|/* define if you have pid_t data type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_PID_T
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `prctl' function. */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_PRCTL */
+end_comment
+
+begin_comment
+comment|/* Define if you have /proc/$pid/fd */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PROC_PID */
 end_comment
 
 begin_comment
@@ -2495,6 +1914,39 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_PUTUTXLINE */
 end_comment
+
+begin_comment
+comment|/* Define if your password has a pw_change field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_PW_CHANGE_IN_PASSWD
+value|1
+end_define
+
+begin_comment
+comment|/* Define if your password has a pw_class field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_PW_CLASS_IN_PASSWD
+value|1
+end_define
+
+begin_comment
+comment|/* Define if your password has a pw_expire field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_PW_EXPIRE_IN_PASSWD
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `readpassphrase' function. */
@@ -2563,11 +2015,30 @@ value|1
 end_define
 
 begin_comment
+comment|/* define if you have sa_family_t data type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SA_FAMILY_T
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<sectok.h> header file. */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_SECTOK_H */
+end_comment
+
+begin_comment
+comment|/* Define if you have SecureWare-based protected password database */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SECUREWARE */
 end_comment
 
 begin_comment
@@ -2784,6 +2255,22 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `SHA256_Update' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SHA256_UPDATE */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<sha2.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SHA2_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<shadow.h> header file. */
 end_comment
 
@@ -2825,6 +2312,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* define if you have size_t data type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SIZE_T
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `snprintf' function. */
 end_comment
 
@@ -2853,6 +2351,28 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_SO_PEERCRED */
 end_comment
+
+begin_comment
+comment|/* define if you have ssize_t data type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SSIZE_T
+value|1
+end_define
+
+begin_comment
+comment|/* Fields in struct sockaddr_storage */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SS_FAMILY_IN_SS
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<stddef.h> header file. */
@@ -2919,6 +2439,14 @@ directive|define
 name|HAVE_STRFTIME
 value|1
 end_define
+
+begin_comment
+comment|/* Silly mkstemp() */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STRICT_MKSTEMP */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<strings.h> header file. */
@@ -3009,9 +2537,12 @@ begin_comment
 comment|/* Define to 1 if you have the `strtonum' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_STRTONUM */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_STRTONUM
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `strtoul' function. */
@@ -3021,6 +2552,50 @@ begin_define
 define|#
 directive|define
 name|HAVE_STRTOUL
+value|1
+end_define
+
+begin_comment
+comment|/* define if you have struct addrinfo data type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_ADDRINFO
+value|1
+end_define
+
+begin_comment
+comment|/* define if you have struct in6_addr data type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_IN6_ADDR
+value|1
+end_define
+
+begin_comment
+comment|/* define if you have struct sockaddr_in6 data type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_SOCKADDR_IN6
+value|1
+end_define
+
+begin_comment
+comment|/* define if you have struct sockaddr_storage data type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_SOCKADDR_STORAGE
 value|1
 end_define
 
@@ -3047,6 +2622,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* define if you have struct timeval */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_TIMEVAL
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `sysconf' function. */
 end_comment
 
@@ -3056,6 +2642,14 @@ directive|define
 name|HAVE_SYSCONF
 value|1
 end_define
+
+begin_comment
+comment|/* Define if you have syslen in utmpx.h */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYSLEN_IN_UTMPX */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<sys/audit.h> header file. */
@@ -3104,6 +2698,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if your system defines sys_errlist[] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_ERRLIST
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<sys/mman.h> header file. */
 end_comment
 
@@ -3121,6 +2726,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_SYS_NDIR_H */
 end_comment
+
+begin_comment
+comment|/* Define if your system defines sys_nerr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_NERR
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<sys/prctl.h> header file. */
@@ -3297,6 +2913,25 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have ut_time in utmp.h */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_TIME_IN_UTMP
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have ut_time in utmpx.h */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_TIME_IN_UTMPX */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<tmpdir.h> header file. */
 end_comment
 
@@ -3327,6 +2962,49 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have ut_tv in utmp.h */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_TV_IN_UTMP */
+end_comment
+
+begin_comment
+comment|/* Define if you have ut_tv in utmpx.h */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_TV_IN_UTMPX */
+end_comment
+
+begin_comment
+comment|/* Define if you have ut_type in utmp.h */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_TYPE_IN_UTMP */
+end_comment
+
+begin_comment
+comment|/* Define if you have ut_type in utmpx.h */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_TYPE_IN_UTMPX */
+end_comment
+
+begin_comment
+comment|/* define if you have uintxx_t data type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_UINTXX_T
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<unistd.h> header file. */
 end_comment
 
@@ -3345,6 +3023,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_UNSETENV
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if the system has the type `unsigned long long'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_UNSIGNED_LONG_LONG
 value|1
 end_define
 
@@ -3434,6 +3123,72 @@ begin_define
 define|#
 directive|define
 name|HAVE_UTMP_H
+value|1
+end_define
+
+begin_comment
+comment|/* define if you have u_char data type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_U_CHAR
+value|1
+end_define
+
+begin_comment
+comment|/* define if you have u_int data type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_U_INT
+value|1
+end_define
+
+begin_comment
+comment|/* define if you have u_int64_t data type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_U_INT64_T
+value|1
+end_define
+
+begin_comment
+comment|/* define if you have u_intxx_t data type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_U_INTXX_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `vasprintf' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_VASPRINTF
+value|1
+end_define
+
+begin_comment
+comment|/* Define if va_copy exists */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_VA_COPY
 value|1
 end_define
 
@@ -3531,6 +3286,114 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if compiler implements __FUNCTION__ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE___FUNCTION__
+value|1
+end_define
+
+begin_comment
+comment|/* Define if libc defines __progname */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE___PROGNAME
+value|1
+end_define
+
+begin_comment
+comment|/* Fields in struct sockaddr_storage */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE___SS_FAMILY_IN_SS */
+end_comment
+
+begin_comment
+comment|/* Define if __va_copy exists */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE___VA_COPY */
+end_comment
+
+begin_comment
+comment|/* Define if compiler implements __func__ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE___func__
+value|1
+end_define
+
+begin_comment
+comment|/* Define this if you are using the Heimdal version of Kerberos V5 */
+end_comment
+
+begin_comment
+comment|/* #undef HEIMDAL */
+end_comment
+
+begin_comment
+comment|/* Define if you need to use IP address instead of hostname in $DISPLAY */
+end_comment
+
+begin_comment
+comment|/* #undef IPADDR_IN_DISPLAY */
+end_comment
+
+begin_comment
+comment|/* Detect IPv4 in IPv6 mapped addresses and treat as IPv4 */
+end_comment
+
+begin_comment
+comment|/* #undef IPV4_IN_IPV6 */
+end_comment
+
+begin_comment
+comment|/* Define if your system choked on IP TOS setting */
+end_comment
+
+begin_comment
+comment|/* #undef IP_TOS_IS_BROKEN */
+end_comment
+
+begin_comment
+comment|/* Define if you want Kerberos 5 support */
+end_comment
+
+begin_comment
+comment|/* #undef KRB5 */
+end_comment
+
+begin_comment
+comment|/* Define if you want TCP Wrappers support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LIBWRAP
+value|1
+end_define
+
+begin_comment
+comment|/* Define to whatever link() returns for "not supported" if it doesn't return    EOPNOTSUPP. */
+end_comment
+
+begin_comment
+comment|/* #undef LINK_OPNOTSUPP_ERRNO */
+end_comment
+
+begin_comment
 comment|/* max value of long long calculated by configure */
 end_comment
 
@@ -3547,11 +3410,156 @@ comment|/* #undef LLONG_MIN */
 end_comment
 
 begin_comment
+comment|/* Account locked with pw(1) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOCKED_PASSWD_PREFIX
+value|"*LOCKED*"
+end_define
+
+begin_comment
+comment|/* String used in /etc/passwd to denote locked account */
+end_comment
+
+begin_comment
+comment|/* #undef LOCKED_PASSWD_STRING */
+end_comment
+
+begin_comment
+comment|/* String used in /etc/passwd to denote locked account */
+end_comment
+
+begin_comment
+comment|/* #undef LOCKED_PASSWD_SUBSTR */
+end_comment
+
+begin_comment
+comment|/* Some versions of /bin/login need the TERM supplied on the commandline */
+end_comment
+
+begin_comment
+comment|/* #undef LOGIN_NEEDS_TERM */
+end_comment
+
+begin_comment
+comment|/* Some systems need a utmpx entry for /bin/login to work */
+end_comment
+
+begin_comment
+comment|/* #undef LOGIN_NEEDS_UTMPX */
+end_comment
+
+begin_comment
+comment|/* Define if your login program cannot handle end of options ("--") */
+end_comment
+
+begin_comment
+comment|/* #undef LOGIN_NO_ENDOPT */
+end_comment
+
+begin_comment
+comment|/* If your header files don't define LOGIN_PROGRAM, then use this (detected)    from environment and PATH */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOGIN_PROGRAM_FALLBACK
+value|"/usr/bin/login"
+end_define
+
+begin_comment
+comment|/* Set this to your mail directory if you don't have maillock.h */
+end_comment
+
+begin_comment
+comment|/* #undef MAIL_DIRECTORY */
+end_comment
+
+begin_comment
+comment|/* Define on *nto-qnx systems */
+end_comment
+
+begin_comment
+comment|/* #undef MISSING_FD_MASK */
+end_comment
+
+begin_comment
+comment|/* Define on *nto-qnx systems */
+end_comment
+
+begin_comment
+comment|/* #undef MISSING_HOWMANY */
+end_comment
+
+begin_comment
+comment|/* Define on *nto-qnx systems */
+end_comment
+
+begin_comment
+comment|/* #undef MISSING_NFDBITS */
+end_comment
+
+begin_comment
 comment|/* Need setpgrp to acquire controlling tty */
 end_comment
 
 begin_comment
-comment|/* #undef NEED_SETPRGP */
+comment|/* #undef NEED_SETPGRP */
+end_comment
+
+begin_comment
+comment|/* Define if the concept of ports only accessible to superusers isn't known */
+end_comment
+
+begin_comment
+comment|/* #undef NO_IPPORT_RESERVED_CONCEPT */
+end_comment
+
+begin_comment
+comment|/* Define if you don't want to use lastlog in session.c */
+end_comment
+
+begin_comment
+comment|/* #undef NO_SSH_LASTLOG */
+end_comment
+
+begin_comment
+comment|/* Define if X11 doesn't support AF_UNIX sockets on that system */
+end_comment
+
+begin_comment
+comment|/* #undef NO_X11_UNIX_SOCKETS */
+end_comment
+
+begin_comment
+comment|/* libcrypto is missing AES 192 and 256 bit functions */
+end_comment
+
+begin_comment
+comment|/* #undef OPENSSL_LOBOTOMISED_AES */
+end_comment
+
+begin_comment
+comment|/* Define if you want OpenSSL's internally seeded PRNG only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPENSSL_PRNG_ONLY
+value|1
+end_define
+
+begin_comment
+comment|/* Define if S/Key is actually OPIE */
+end_comment
+
+begin_comment
+comment|/* #undef OPIE */
 end_comment
 
 begin_comment
@@ -3562,7 +3570,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_BUGREPORT
-value|"des@freebsd.org"
+value|"openssh-unix-dev@mindrot.org"
 end_define
 
 begin_comment
@@ -3610,11 +3618,59 @@ value|"Portable"
 end_define
 
 begin_comment
+comment|/* Define if you are using Solaris-derived PAM which passes pam_messages to    the conversation function with an extra level of indirection */
+end_comment
+
+begin_comment
+comment|/* #undef PAM_SUN_CODEBASE */
+end_comment
+
+begin_comment
+comment|/* Work around problematic Linux PAM modules handling of PAM_TTY */
+end_comment
+
+begin_comment
+comment|/* #undef PAM_TTY_KLUDGE */
+end_comment
+
+begin_comment
 comment|/* must supply username to passwd */
 end_comment
 
 begin_comment
 comment|/* #undef PASSWD_NEEDS_USERNAME */
+end_comment
+
+begin_comment
+comment|/* Port number of PRNGD/EGD random number socket */
+end_comment
+
+begin_comment
+comment|/* #undef PRNGD_PORT */
+end_comment
+
+begin_comment
+comment|/* Location of PRNGD/EGD random number socket */
+end_comment
+
+begin_comment
+comment|/* #undef PRNGD_SOCKET */
+end_comment
+
+begin_comment
+comment|/* read(1) can return 0 for a non-closed fd */
+end_comment
+
+begin_comment
+comment|/* #undef PTY_ZEROREAD */
+end_comment
+
+begin_comment
+comment|/* Define if your platform breaks doing a seteuid before a setuid */
+end_comment
+
+begin_comment
+comment|/* #undef SETEUID_BREAKS_SETUID */
 end_comment
 
 begin_comment
@@ -3673,11 +3729,132 @@ value|2
 end_define
 
 begin_comment
+comment|/* Define if you want S/Key support */
+end_comment
+
+begin_comment
+comment|/* #undef SKEY */
+end_comment
+
+begin_comment
+comment|/* Define if your skeychallenge() function takes 4 arguments (NetBSD) */
+end_comment
+
+begin_comment
+comment|/* #undef SKEYCHALLENGE_4ARG */
+end_comment
+
+begin_comment
+comment|/* Define if you want smartcard support */
+end_comment
+
+begin_comment
+comment|/* #undef SMARTCARD */
+end_comment
+
+begin_comment
+comment|/* Define as const if snprintf() can declare const char *fmt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SNPRINTF_CONST
+value|const
+end_define
+
+begin_comment
+comment|/* Define to a Set Process Title type if your system is supported by    bsd-setproctitle.c */
+end_comment
+
+begin_comment
+comment|/* #undef SPT_TYPE */
+end_comment
+
+begin_comment
+comment|/* Define if sshd somehow reacquires a controlling TTY after setsid() */
+end_comment
+
+begin_comment
+comment|/* #undef SSHD_ACQUIRES_CTTY */
+end_comment
+
+begin_comment
+comment|/* Define if pam_chauthtok wants real uid set to the unpriv'ed user */
+end_comment
+
+begin_comment
+comment|/* #undef SSHPAM_CHAUTHTOK_NEEDS_RUID */
+end_comment
+
+begin_comment
 comment|/* Use audit debugging module */
 end_comment
 
 begin_comment
 comment|/* #undef SSH_AUDIT_EVENTS */
+end_comment
+
+begin_comment
+comment|/* non-privileged user for privilege separation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH_PRIVSEP_USER
+value|"sshd"
+end_define
+
+begin_comment
+comment|/* Use tunnel device compatibility to OpenBSD */
+end_comment
+
+begin_comment
+comment|/* #undef SSH_TUN_COMPAT_AF */
+end_comment
+
+begin_comment
+comment|/* Open tunnel devices the FreeBSD way */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH_TUN_FREEBSD
+value|1
+end_define
+
+begin_comment
+comment|/* Open tunnel devices the Linux tun/tap way */
+end_comment
+
+begin_comment
+comment|/* #undef SSH_TUN_LINUX */
+end_comment
+
+begin_comment
+comment|/* No layer 2 tunnel support */
+end_comment
+
+begin_comment
+comment|/* #undef SSH_TUN_NO_L2 */
+end_comment
+
+begin_comment
+comment|/* Open tunnel devices the OpenBSD way */
+end_comment
+
+begin_comment
+comment|/* #undef SSH_TUN_OPENBSD */
+end_comment
+
+begin_comment
+comment|/* Prepend the address family to IP tunnel traffic */
+end_comment
+
+begin_comment
+comment|/* #undef SSH_TUN_PREPEND_AF */
 end_comment
 
 begin_comment
@@ -3692,11 +3869,43 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you want a different $PATH for the superuser */
+end_comment
+
+begin_comment
+comment|/* #undef SUPERUSER_PATH */
+end_comment
+
+begin_comment
+comment|/* syslog_r function is safe to use in in a signal handler */
+end_comment
+
+begin_comment
+comment|/* #undef SYSLOG_R_SAFE_IN_SIGHAND */
+end_comment
+
+begin_comment
 comment|/* Support passwords> 8 chars */
 end_comment
 
 begin_comment
 comment|/* #undef UNIXWARE_LONG_PASSWORDS */
+end_comment
+
+begin_comment
+comment|/* Specify default $PATH */
+end_comment
+
+begin_comment
+comment|/* #undef USER_PATH */
+end_comment
+
+begin_comment
+comment|/* Define this if you want to use libkafs' AFS support */
+end_comment
+
+begin_comment
+comment|/* #undef USE_AFS */
 end_comment
 
 begin_comment
@@ -3723,7 +3932,118 @@ begin_define
 define|#
 directive|define
 name|USE_LIBEDIT
+value|1
 end_define
+
+begin_comment
+comment|/* Define if you want smartcard support using OpenSC */
+end_comment
+
+begin_comment
+comment|/* #undef USE_OPENSC */
+end_comment
+
+begin_comment
+comment|/* Enable OpenSSL engine support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USE_OPENSSL_ENGINE
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you want to enable PAM support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USE_PAM
+value|1
+end_define
+
+begin_comment
+comment|/* Use PIPES instead of a socketpair() */
+end_comment
+
+begin_comment
+comment|/* #undef USE_PIPES */
+end_comment
+
+begin_comment
+comment|/* Define if you want smartcard support using sectok */
+end_comment
+
+begin_comment
+comment|/* #undef USE_SECTOK */
+end_comment
+
+begin_comment
+comment|/* Define if you have Solaris process contracts */
+end_comment
+
+begin_comment
+comment|/* #undef USE_SOLARIS_PROCESS_CONTRACTS */
+end_comment
+
+begin_comment
+comment|/* Define if you shouldn't strip 'tty' from your ttyname in [uw]tmp */
+end_comment
+
+begin_comment
+comment|/* #undef WITH_ABBREV_NO_TTY */
+end_comment
+
+begin_comment
+comment|/* Define if you want to enable AIX4's authenticate function */
+end_comment
+
+begin_comment
+comment|/* #undef WITH_AIXAUTHENTICATE */
+end_comment
+
+begin_comment
+comment|/* Define if you have/want arrays (cluster-wide session managment, not C    arrays) */
+end_comment
+
+begin_comment
+comment|/* #undef WITH_IRIX_ARRAY */
+end_comment
+
+begin_comment
+comment|/* Define if you want IRIX audit trails */
+end_comment
+
+begin_comment
+comment|/* #undef WITH_IRIX_AUDIT */
+end_comment
+
+begin_comment
+comment|/* Define if you want IRIX kernel jobs */
+end_comment
+
+begin_comment
+comment|/* #undef WITH_IRIX_JOBS */
+end_comment
+
+begin_comment
+comment|/* Define if you want IRIX project management */
+end_comment
+
+begin_comment
+comment|/* #undef WITH_IRIX_PROJECT */
+end_comment
+
+begin_comment
+comment|/* Define if you want SELinux support. */
+end_comment
+
+begin_comment
+comment|/* #undef WITH_SELINUX */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if your processor stores words with the most significant byte    first (like Motorola and SPARC, unlike Intel and VAX). */
@@ -3731,6 +4051,14 @@ end_comment
 
 begin_comment
 comment|/* #undef WORDS_BIGENDIAN */
+end_comment
+
+begin_comment
+comment|/* Define if xauth is found in your path */
+end_comment
+
+begin_comment
+comment|/* #undef XAUTH_PATH */
 end_comment
 
 begin_comment
@@ -3758,6 +4086,36 @@ comment|/* #undef _PATH_BTMP */
 end_comment
 
 begin_comment
+comment|/* Full path of your "passwd" program */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PATH_PASSWD_PROG
+value|"/usr/bin/passwd"
+end_define
+
+begin_comment
+comment|/* Specify location of ssh.pid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PATH_SSH_PIDDIR
+value|"/var/run"
+end_define
+
+begin_comment
+comment|/* Define if we don't have struct __res_state in resolv.h */
+end_comment
+
+begin_comment
+comment|/* #undef __res_state */
+end_comment
+
+begin_comment
 comment|/* Define to `__inline__' or `__inline' if that's what the C compiler    calls it, or to nothing if 'inline' is not supported under any name.  */
 end_comment
 
@@ -3782,19 +4140,6 @@ end_comment
 
 begin_comment
 comment|/* #undef socklen_t */
-end_comment
-
-begin_comment
-comment|/* ******************* Shouldn't need to edit below this line ************** */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _CONFIG_H */
 end_comment
 
 end_unit

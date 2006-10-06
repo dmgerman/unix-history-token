@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: openssl-compat.h,v 1.1 2005/06/09 11:45:11 dtucker Exp $ */
+comment|/* $Id: openssl-compat.h,v 1.6 2006/02/22 11:24:47 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -51,10 +51,34 @@ end_endif
 begin_if
 if|#
 directive|if
+operator|(
 name|OPENSSL_VERSION_NUMBER
 operator|<
 literal|0x00907000L
+operator|)
+operator|||
+name|defined
+argument_list|(
+name|OPENSSL_LOBOTOMISED_AES
+argument_list|)
 end_if
+
+begin_define
+define|#
+directive|define
+name|USE_BUILTIN_RIJNDAEL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_BUILTIN_RIJNDAEL
+end_ifdef
 
 begin_define
 define|#
@@ -181,20 +205,20 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * insert comment here  */
+comment|/*  * We overload some of the OpenSSL crypto functions with ssh_* equivalents  * which cater for older and/or less featureful OpenSSL version.  *  * In order for the compat library to call the real functions, it must  * define SSH_DONT_OVERLOAD_OPENSSL_FUNCS before including this file and  * implement the ssh_* equivalents.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SSH_DONT_OVERLOAD_OPENSSL_FUNCS
+end_ifndef
 
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|SSH_OLD_EVP
 end_ifdef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SSH_DONT_REDEF_EVP
-end_ifndef
 
 begin_ifdef
 ifdef|#
@@ -262,6 +286,46 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* SSH_OLD_EVP */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_OPENSSL_ENGINE
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SSLeay_add_all_algorithms
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|SSLeay_add_all_algorithms
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|SSLeay_add_all_algorithms
+parameter_list|()
+value|ssh_SSLeay_add_all_algorithms()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|int
 name|ssh_EVP_CipherInit
@@ -314,10 +378,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|ssh_SSLeay_add_all_algorithms
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* SSH_DONT_OVERLOAD_OPENSSL_FUNCS */
+end_comment
 
 end_unit
 

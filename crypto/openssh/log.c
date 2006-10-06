@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $OpenBSD: log.c,v 1.39 2006/08/18 09:13:25 deraadt Exp $ */
+end_comment
+
+begin_comment
 comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
 end_comment
 
@@ -13,30 +17,46 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$OpenBSD: log.c,v 1.29 2003/09/23 20:17:11 markus Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_include
 include|#
 directive|include
-file|"log.h"
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"xmalloc.h"
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_if
@@ -63,6 +83,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"xmalloc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"log.h"
+end_include
 
 begin_decl_stmt
 specifier|static
@@ -491,12 +523,12 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
-name|va_list
-name|args
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DO_LOG_SAFE_IN_SIGHAND
+name|va_list
+name|args
+decl_stmt|;
 name|va_start
 argument_list|(
 name|args

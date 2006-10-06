@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* OPENBSD ORIGINAL: lib/libc/net/inet_ntop.c */
-end_comment
-
-begin_comment
-comment|/*	$OpenBSD: inet_ntop.c,v 1.5 2002/08/23 16:27:31 itojun Exp $	*/
+comment|/*	$OpenBSD: inet_ntop.c,v 1.7 2005/08/06 20:30:03 espie Exp $	*/
 end_comment
 
 begin_comment
 comment|/* Copyright (c) 1996 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+end_comment
+
+begin_comment
+comment|/* OPENBSD ORIGINAL: lib/libc/net/inet_ntop.c */
 end_comment
 
 begin_include
@@ -22,57 +22,6 @@ ifndef|#
 directive|ifndef
 name|HAVE_INET_NTOP
 end_ifndef
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|lint
-argument_list|)
-end_if
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_else
-unit|static char rcsid[] = "$From: inet_ntop.c,v 8.7 1996/08/05 08:41:18 vixie Exp $";
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$OpenBSD: inet_ntop.c,v 1.5 2002/08/23 16:27:31 itojun Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* LIBC_SCCS and not lint */
-end_comment
 
 begin_include
 include|#
@@ -230,29 +179,21 @@ name|char
 modifier|*
 name|inet_ntop
 parameter_list|(
-name|af
-parameter_list|,
-name|src
-parameter_list|,
-name|dst
-parameter_list|,
-name|size
-parameter_list|)
 name|int
 name|af
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|void
 modifier|*
 name|src
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|dst
-decl_stmt|;
+parameter_list|,
 name|size_t
 name|size
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -315,24 +256,18 @@ name|char
 modifier|*
 name|inet_ntop4
 parameter_list|(
-name|src
-parameter_list|,
-name|dst
-parameter_list|,
-name|size
-parameter_list|)
 specifier|const
 name|u_char
 modifier|*
 name|src
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|dst
-decl_stmt|;
+parameter_list|,
 name|size_t
 name|size
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 specifier|const
@@ -431,24 +366,18 @@ name|char
 modifier|*
 name|inet_ntop6
 parameter_list|(
-name|src
-parameter_list|,
-name|dst
-parameter_list|,
-name|size
-parameter_list|)
 specifier|const
 name|u_char
 modifier|*
 name|src
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|dst
-decl_stmt|;
+parameter_list|,
 name|size_t
 name|size
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* 	 * Note that int32_t and int16_t need only be "at least" large enough 	 * to contain a value of the specified size.  On some systems, like 	 * Crays, there is no such thing as an integer variable with 16 bits. 	 * Keep this in mind if you think this function should have been coded 	 * to use pointer overlays.  All the world's not a VAX. 	 */
 name|char

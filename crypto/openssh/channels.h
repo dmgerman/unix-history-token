@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: channels.h,v 1.79 2005/07/17 06:49:04 djm Exp $	*/
+comment|/* $OpenBSD: channels.h,v 1.88 2006/08/03 03:34:42 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -22,12 +22,6 @@ define|#
 directive|define
 name|CHANNEL_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|"buffer.h"
-end_include
 
 begin_comment
 comment|/* Definitions for channel types. */
@@ -223,7 +217,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|int
-name|channel_filter_fn
+name|channel_infilter_fn
 parameter_list|(
 name|struct
 name|Channel
@@ -233,6 +227,26 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|u_char
+modifier|*
+name|channel_outfilter_fn
+parameter_list|(
+name|struct
+name|Channel
+modifier|*
+parameter_list|,
+name|u_char
+modifier|*
+modifier|*
+parameter_list|,
+name|u_int
+modifier|*
 parameter_list|)
 function_decl|;
 end_typedef
@@ -370,19 +384,30 @@ name|channel_callback_fn
 modifier|*
 name|confirm
 decl_stmt|;
-name|channel_callback_fn
-modifier|*
-name|detach_user
-decl_stmt|;
 name|void
 modifier|*
 name|confirm_ctx
 decl_stmt|;
+name|channel_callback_fn
+modifier|*
+name|detach_user
+decl_stmt|;
+name|int
+name|detach_close
+decl_stmt|;
 comment|/* filter */
-name|channel_filter_fn
+name|channel_infilter_fn
 modifier|*
 name|input_filter
 decl_stmt|;
+name|channel_outfilter_fn
+modifier|*
+name|output_filter
+decl_stmt|;
+name|int
+name|datagram
+decl_stmt|;
+comment|/* keep boundaries */
 block|}
 struct|;
 end_struct
@@ -546,6 +571,13 @@ name|CHAN_EOF_RCVD
 value|0x08
 end_define
 
+begin_define
+define|#
+directive|define
+name|CHAN_RBUF
+value|16*1024
+end_define
+
 begin_comment
 comment|/* check whether 'efd' is still in use */
 end_comment
@@ -575,6 +607,16 @@ end_define
 begin_comment
 comment|/* channel management */
 end_comment
+
+begin_function_decl
+name|Channel
+modifier|*
+name|channel_by_id
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|Channel
@@ -696,6 +738,8 @@ name|int
 parameter_list|,
 name|channel_callback_fn
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -721,7 +765,10 @@ name|channel_register_filter
 parameter_list|(
 name|int
 parameter_list|,
-name|channel_filter_fn
+name|channel_infilter_fn
+modifier|*
+parameter_list|,
+name|channel_outfilter_fn
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1030,6 +1077,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|channel_add_adm_permitted_opens
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|channel_clear_permitted_opens
 parameter_list|(
@@ -1040,6 +1099,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|channel_clear_adm_permitted_opens
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|channel_input_port_forward_request
 parameter_list|(
 name|int
@@ -1072,7 +1140,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|channel_request_remote_forwarding
 parameter_list|(
 specifier|const

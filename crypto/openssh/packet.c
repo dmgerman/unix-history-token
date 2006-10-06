@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $OpenBSD: packet.c,v 1.145 2006/09/19 21:14:08 markus Exp $ */
+end_comment
+
+begin_comment
 comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * This file contains code implementing the packet protocol and communication  * with the other side.  This same code is used both on client and server side.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  *  *  * SSH2 packet format added by Markus Friedl.  * Copyright (c) 2000, 2001 Markus Friedl.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
@@ -9,18 +13,111 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$OpenBSD: packet.c,v 1.119 2005/07/28 17:36:22 markus Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#
 directive|include
 file|"openbsd-compat/sys-queue.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_TIME_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -44,19 +141,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bufaux.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"crc32.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"getput.h"
 end_include
 
 begin_include
@@ -99,6 +184,12 @@ begin_include
 include|#
 directive|include
 file|"cipher.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"key.h"
 end_include
 
 begin_include
@@ -2157,7 +2248,7 @@ name|outgoing_packet
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|PUT_32BIT
+name|put_u32
 argument_list|(
 name|buf
 argument_list|,
@@ -2193,7 +2284,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* Append to output. */
-name|PUT_32BIT
+name|put_u32
 argument_list|(
 name|buf
 argument_list|,
@@ -2268,7 +2359,7 @@ operator|&
 name|outgoing_packet
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Note that the packet is now only buffered in output.  It won\'t be 	 * actually sent until packet_write_wait or packet_write_poll is 	 * called. 	 */
+comment|/* 	 * Note that the packet is now only buffered in output.  It won't be 	 * actually sent until packet_write_wait or packet_write_poll is 	 * called. 	 */
 block|}
 end_function
 
@@ -2709,7 +2800,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Delayed compression for SSH2 is enabled after authentication:  * This happans on the server side after a SSH2_MSG_USERAUTH_SUCCESS is sent,  * and on the client side after a SSH2_MSG_USERAUTH_SUCCESS is received.  */
+comment|/*  * Delayed compression for SSH2 is enabled after authentication:  * This happens on the server side after a SSH2_MSG_USERAUTH_SUCCESS is sent,  * and on the client side after a SSH2_MSG_USERAUTH_SUCCESS is received.  */
 end_comment
 
 begin_function
@@ -2748,6 +2839,17 @@ name|mode
 operator|++
 control|)
 block|{
+comment|/* protocol error: USERAUTH_SUCCESS received before NEWKEYS */
+if|if
+condition|(
+name|newkeys
+index|[
+name|mode
+index|]
+operator|==
+name|NULL
+condition|)
+continue|continue;
 name|comp
 operator|=
 operator|&
@@ -3219,7 +3321,7 @@ operator|&
 name|outgoing_packet
 argument_list|)
 expr_stmt|;
-name|PUT_32BIT
+name|put_u32
 argument_list|(
 name|cp
 argument_list|,
@@ -3342,10 +3444,6 @@ argument_list|(
 operator|&
 name|output
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|macbuf
 argument_list|,
 name|mac
@@ -3744,7 +3842,7 @@ operator|(
 name|fd_set
 operator|*
 operator|)
-name|xmalloc
+name|xcalloc
 argument_list|(
 name|howmany
 argument_list|(
@@ -3754,7 +3852,7 @@ literal|1
 argument_list|,
 name|NFDBITS
 argument_list|)
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|fd_mask
@@ -4058,7 +4156,7 @@ argument_list|)
 expr_stmt|;
 name|len
 operator|=
-name|GET_32BIT
+name|get_u32
 argument_list|(
 name|cp
 argument_list|)
@@ -4143,8 +4241,6 @@ name|input
 argument_list|)
 argument_list|,
 name|padded_len
-argument_list|,
-name|NULL
 argument_list|)
 condition|)
 block|{
@@ -4302,7 +4398,7 @@ literal|4
 expr_stmt|;
 name|stored_checksum
 operator|=
-name|GET_32BIT
+name|get_u32
 argument_list|(
 name|cp
 argument_list|)
@@ -4583,7 +4679,7 @@ argument_list|)
 expr_stmt|;
 name|packet_length
 operator|=
-name|GET_32BIT
+name|get_u32
 argument_list|(
 name|cp
 argument_list|)
@@ -5271,7 +5367,6 @@ default|default:
 return|return
 name|type
 return|;
-break|break;
 block|}
 block|}
 else|else
@@ -5362,7 +5457,6 @@ expr_stmt|;
 return|return
 name|type
 return|;
-break|break;
 block|}
 block|}
 block|}
@@ -5951,7 +6045,7 @@ operator|(
 name|fd_set
 operator|*
 operator|)
-name|xmalloc
+name|xcalloc
 argument_list|(
 name|howmany
 argument_list|(
@@ -5961,7 +6055,7 @@ literal|1
 argument_list|,
 name|NFDBITS
 argument_list|)
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|fd_mask
@@ -6229,10 +6323,6 @@ name|packet_connection_is_on_socket
 argument_list|()
 condition|)
 return|return;
-if|if
-condition|(
-name|interactive
-condition|)
 name|set_nodelay
 argument_list|(
 name|connection_in
@@ -6426,6 +6516,9 @@ argument_list|()
 expr_stmt|;
 name|packet_put_char
 argument_list|(
+operator|(
+name|u_char
+operator|)
 name|rnd
 operator|&
 literal|0xff

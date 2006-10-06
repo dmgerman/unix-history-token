@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"buffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"authfd.h"
 end_include
 

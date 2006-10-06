@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: dns.c,v 1.12 2005/06/17 02:44:32 djm Exp $	*/
+comment|/* $OpenBSD: dns.c,v 1.23 2006/08/03 03:34:42 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -16,35 +16,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<openssl/bn.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LWRES
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<lwres/netdb.h>
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dns/result.h>
+file|<sys/socket.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* LWRES */
-end_comment
 
 begin_include
 include|#
@@ -52,14 +31,23 @@ directive|include
 file|<netdb.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
 
-begin_comment
-comment|/* LWRES */
-end_comment
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_include
 include|#
@@ -84,34 +72,6 @@ include|#
 directive|include
 file|"log.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|"uuencode.h"
-end_include
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$OpenBSD: dns.c,v 1.12 2005/06/17 02:44:32 djm Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LWRES
-end_ifndef
 
 begin_decl_stmt
 specifier|static
@@ -223,15 +183,6 @@ block|}
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* LWRES */
-end_comment
-
 begin_comment
 comment|/*  * Read SSHFP parameters from key buffer.  */
 end_comment
@@ -300,6 +251,7 @@ name|algorithm
 operator|=
 name|SSHFP_KEY_RESERVED
 expr_stmt|;
+comment|/* 0 */
 block|}
 if|if
 condition|(
@@ -322,6 +274,18 @@ argument_list|,
 name|SSH_FP_SHA1
 argument_list|,
 name|digest_len
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|digest
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"dns_read_key: null from key_fingerprint_raw()"
 argument_list|)
 expr_stmt|;
 name|success
@@ -476,7 +440,14 @@ block|{
 operator|*
 name|digest
 operator|=
-name|NULL
+operator|(
+name|u_char
+operator|*
+operator|)
+name|xstrdup
+argument_list|(
+literal|""
+argument_list|)
 expr_stmt|;
 block|}
 name|success
@@ -645,7 +616,7 @@ literal|0
 expr_stmt|;
 name|debug3
 argument_list|(
-literal|"verify_hostkey_dns"
+literal|"verify_host_key_dns"
 argument_list|)
 expr_stmt|;
 if|if
@@ -895,7 +866,18 @@ name|DNS_VERIFY_MATCH
 expr_stmt|;
 block|}
 block|}
+name|xfree
+argument_list|(
+name|dnskey_digest
+argument_list|)
+expr_stmt|;
 block|}
+name|xfree
+argument_list|(
+name|hostkey_digest
+argument_list|)
+expr_stmt|;
+comment|/* from key_fingerprint_raw() */
 name|freerrset
 argument_list|(
 name|fingerprints
@@ -1078,6 +1060,12 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+name|xfree
+argument_list|(
+name|rdata_digest
+argument_list|)
+expr_stmt|;
+comment|/* from key_fingerprint_raw() */
 name|success
 operator|=
 literal|1
@@ -1087,7 +1075,7 @@ else|else
 block|{
 name|error
 argument_list|(
-literal|"dns_export_rr: unsupported algorithm"
+literal|"export_dns_rr: unsupported algorithm"
 argument_list|)
 expr_stmt|;
 block|}

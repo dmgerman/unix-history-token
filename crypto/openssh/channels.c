@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $OpenBSD: channels.c,v 1.266 2006/08/29 10:40:18 djm Exp $ */
+end_comment
+
+begin_comment
 comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * This file contains functions for generic socket connection forwarding.  * There is also code for initiating connection forwarding for X11 connections,  * arbitrary tcp/ip connections, and the authentication agent connection.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  *  * SSH2 support added by Markus Friedl.  * Copyright (c) 1999, 2000, 2001, 2002 Markus Friedl.  All rights reserved.  * Copyright (c) 1999 Dug Song.  All rights reserved.  * Copyright (c) 1999 Theo de Raadt.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
@@ -9,13 +13,112 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$OpenBSD: channels.c,v 1.223 2005/07/17 07:17:54 djm Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/un.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_TIME_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xmalloc.h"
+end_include
 
 begin_include
 include|#
@@ -44,12 +147,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xmalloc.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"log.h"
 end_include
 
@@ -57,6 +154,12 @@ begin_include
 include|#
 directive|include
 file|"misc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"buffer.h"
 end_include
 
 begin_include
@@ -95,22 +198,9 @@ directive|include
 file|"pathnames.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"bufaux.h"
-end_include
-
 begin_comment
 comment|/* -- channel core */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|CHAN_RBUF
-value|16*1024
-end_define
 
 begin_comment
 comment|/*  * Pointer to an array containing all allocated channels.  The array is  * dynamically extended as needed.  */
@@ -184,7 +274,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* List of all permitted host/port pairs to connect. */
+comment|/* List of all permitted host/port pairs to connect by the user. */
 end_comment
 
 begin_decl_stmt
@@ -198,13 +288,40 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Number of permitted host/port pairs in the array. */
+comment|/* List of all permitted host/port pairs to connect by the admin. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|ForwardPermission
+name|permitted_adm_opens
+index|[
+name|SSH_MAX_FORWARDS_PER_DIRECTION
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Number of permitted host/port pairs in the array permitted by the user. */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|int
 name|num_permitted_opens
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Number of permitted host/port pair in the array permitted by the admin. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|num_adm_permitted_opens
 init|=
 literal|0
 decl_stmt|;
@@ -295,7 +412,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|char
+name|u_char
 modifier|*
 name|x11_fake_data
 init|=
@@ -361,7 +478,7 @@ end_comment
 begin_function
 name|Channel
 modifier|*
-name|channel_lookup
+name|channel_by_id
 parameter_list|(
 name|int
 name|id
@@ -387,7 +504,7 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"channel_lookup: %d: bad id"
+literal|"channel_by_id: %d: bad id"
 argument_list|,
 name|id
 argument_list|)
@@ -412,7 +529,7 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"channel_lookup: %d: bad id: channel free"
+literal|"channel_by_id: %d: bad id: channel free"
 argument_list|,
 name|id
 argument_list|)
@@ -423,6 +540,97 @@ return|;
 block|}
 return|return
 name|c
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Returns the channel if it is allowed to receive protocol messages.  * Private channels, like listening sockets, may not receive messages.  */
+end_comment
+
+begin_function
+name|Channel
+modifier|*
+name|channel_lookup
+parameter_list|(
+name|int
+name|id
+parameter_list|)
+block|{
+name|Channel
+modifier|*
+name|c
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|c
+operator|=
+name|channel_by_id
+argument_list|(
+name|id
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+switch|switch
+condition|(
+name|c
+operator|->
+name|type
+condition|)
+block|{
+case|case
+name|SSH_CHANNEL_X11_OPEN
+case|:
+case|case
+name|SSH_CHANNEL_LARVAL
+case|:
+case|case
+name|SSH_CHANNEL_CONNECTING
+case|:
+case|case
+name|SSH_CHANNEL_DYNAMIC
+case|:
+case|case
+name|SSH_CHANNEL_OPENING
+case|:
+case|case
+name|SSH_CHANNEL_OPEN
+case|:
+case|case
+name|SSH_CHANNEL_INPUT_DRAINING
+case|:
+case|case
+name|SSH_CHANNEL_OUTPUT_DRAINING
+case|:
+return|return
+operator|(
+name|c
+operator|)
+return|;
+block|}
+name|logit
+argument_list|(
+literal|"Non-public channel %d, type %d."
+argument_list|,
+name|id
+argument_list|,
+name|c
+operator|->
+name|type
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
 return|;
 block|}
 end_function
@@ -722,10 +930,10 @@ literal|10
 expr_stmt|;
 name|channels
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
 name|channels_alloc
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|Channel
@@ -825,12 +1033,10 @@ name|xrealloc
 argument_list|(
 name|channels
 argument_list|,
-operator|(
 name|channels_alloc
 operator|+
 literal|10
-operator|)
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|Channel
@@ -878,19 +1084,9 @@ index|[
 name|found
 index|]
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
-sizeof|sizeof
-argument_list|(
-name|Channel
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-name|c
-argument_list|,
-literal|0
+literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1045,6 +1241,12 @@ name|NULL
 expr_stmt|;
 name|c
 operator|->
+name|detach_close
+operator|=
+literal|0
+expr_stmt|;
+name|c
+operator|->
 name|confirm
 operator|=
 name|NULL
@@ -1058,6 +1260,12 @@ expr_stmt|;
 name|c
 operator|->
 name|input_filter
+operator|=
+name|NULL
+expr_stmt|;
+name|c
+operator|->
+name|output_filter
 operator|=
 name|NULL
 expr_stmt|;
@@ -2539,13 +2747,16 @@ parameter_list|,
 name|channel_callback_fn
 modifier|*
 name|fn
+parameter_list|,
+name|int
+name|do_close
 parameter_list|)
 block|{
 name|Channel
 modifier|*
 name|c
 init|=
-name|channel_lookup
+name|channel_by_id
 argument_list|(
 name|id
 argument_list|)
@@ -2572,6 +2783,12 @@ name|detach_user
 operator|=
 name|fn
 expr_stmt|;
+name|c
+operator|->
+name|detach_close
+operator|=
+name|do_close
+expr_stmt|;
 block|}
 end_function
 
@@ -2587,7 +2804,7 @@ name|Channel
 modifier|*
 name|c
 init|=
-name|channel_lookup
+name|channel_by_id
 argument_list|(
 name|id
 argument_list|)
@@ -2614,6 +2831,12 @@ name|detach_user
 operator|=
 name|NULL
 expr_stmt|;
+name|c
+operator|->
+name|detach_close
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
@@ -2624,9 +2847,13 @@ parameter_list|(
 name|int
 name|id
 parameter_list|,
-name|channel_filter_fn
+name|channel_infilter_fn
 modifier|*
-name|fn
+name|ifn
+parameter_list|,
+name|channel_outfilter_fn
+modifier|*
+name|ofn
 parameter_list|)
 block|{
 name|Channel
@@ -2658,7 +2885,13 @@ name|c
 operator|->
 name|input_filter
 operator|=
-name|fn
+name|ifn
+expr_stmt|;
+name|c
+operator|->
+name|output_filter
+operator|=
+name|ofn
 expr_stmt|;
 block|}
 end_function
@@ -2821,6 +3054,10 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -2850,6 +3087,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
 
 begin_function
 specifier|static
@@ -2984,22 +3225,6 @@ else|:
 name|packet_get_maxsize
 argument_list|()
 decl_stmt|;
-comment|/* check buffer limits */
-name|limit
-operator|=
-name|MIN
-argument_list|(
-name|limit
-argument_list|,
-operator|(
-name|BUFFER_MAX_LEN
-operator|-
-name|BUFFER_MAX_CHUNK
-operator|-
-name|CHAN_RBUF
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|c
@@ -3021,6 +3246,16 @@ name|input
 argument_list|)
 operator|<
 name|limit
+operator|&&
+name|buffer_check_alloc
+argument_list|(
+operator|&
+name|c
+operator|->
+name|input
+argument_list|,
+name|CHAN_RBUF
+argument_list|)
 condition|)
 name|FD_SET
 argument_list|(
@@ -3231,6 +3466,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -3295,6 +3534,10 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
 
 begin_function
 specifier|static
@@ -3924,6 +4167,10 @@ begin_comment
 comment|/* try to decode a socks4 header */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -4381,10 +4628,6 @@ name|c
 operator|->
 name|output
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|s4_rsp
 argument_list|,
@@ -4453,6 +4696,10 @@ name|SSH_SOCKS5_SUCCESS
 value|0x00
 end_define
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -4506,6 +4753,8 @@ index|]
 decl_stmt|;
 name|u_int
 name|have
+decl_stmt|,
+name|need
 decl_stmt|,
 name|i
 decl_stmt|,
@@ -4746,10 +4995,6 @@ return|;
 comment|/* need more */
 name|memcpy
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|s5_req
 argument_list|,
@@ -4865,15 +5110,33 @@ operator|-
 literal|1
 return|;
 block|}
-if|if
-condition|(
-name|have
-operator|<
-literal|4
+name|need
+operator|=
+sizeof|sizeof
+argument_list|(
+name|s5_req
+argument_list|)
 operator|+
 name|addrlen
 operator|+
 literal|2
+expr_stmt|;
+if|if
+condition|(
+name|s5_req
+operator|.
+name|atyp
+operator|==
+name|SSH_SOCKS5_DOMAIN
+condition|)
+name|need
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|have
+operator|<
+name|need
 condition|)
 return|return
 literal|0
@@ -5087,10 +5350,6 @@ name|c
 operator|->
 name|output
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|s5_rsp
 argument_list|,
@@ -5107,10 +5366,6 @@ name|c
 operator|->
 name|output
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|dest_addr
 argument_list|,
@@ -5128,10 +5383,6 @@ name|c
 operator|->
 name|output
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|dest_port
 argument_list|,
@@ -5347,6 +5598,10 @@ end_function
 
 begin_comment
 comment|/* This is our fake X11 server socket. */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
 end_comment
 
 begin_function
@@ -5895,8 +6150,64 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|channel_set_reuseaddr
+parameter_list|(
+name|int
+name|fd
+parameter_list|)
+block|{
+name|int
+name|on
+init|=
+literal|1
+decl_stmt|;
+comment|/* 	 * Set socket options. 	 * Allow local port reuse in TIME_WAIT. 	 */
+if|if
+condition|(
+name|setsockopt
+argument_list|(
+name|fd
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_REUSEADDR
+argument_list|,
+operator|&
+name|on
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|on
+argument_list|)
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|error
+argument_list|(
+literal|"setsockopt SO_REUSEADDR fd %d: %s"
+argument_list|,
+name|fd
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * This socket is listening for connections to a forwarded TCP/IP port.  */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
 end_comment
 
 begin_function
@@ -6160,6 +6471,10 @@ begin_comment
 comment|/*  * This is the authentication agent socket listening for connections from  * clients.  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -6333,6 +6648,10 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
 
 begin_function
 specifier|static
@@ -6584,6 +6903,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -6630,6 +6953,10 @@ name|readset
 argument_list|)
 condition|)
 block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|len
 operator|=
 name|read
@@ -6665,6 +6992,9 @@ condition|)
 return|return
 literal|1
 return|;
+ifndef|#
+directive|ifndef
+name|PTY_ZEROREAD
 if|if
 condition|(
 name|len
@@ -6672,6 +7002,46 @@ operator|<=
 literal|0
 condition|)
 block|{
+else|#
+directive|else
+if|if
+condition|(
+operator|(
+operator|!
+name|c
+operator|->
+name|isatty
+operator|&&
+name|len
+operator|<=
+literal|0
+operator|)
+operator|||
+operator|(
+name|c
+operator|->
+name|isatty
+operator|&&
+operator|(
+name|len
+operator|<
+literal|0
+operator|||
+operator|(
+name|len
+operator|==
+literal|0
+operator|&&
+name|errno
+operator|!=
+literal|0
+operator|)
+operator|)
+operator|)
+condition|)
+block|{
+endif|#
+directive|endif
 name|debug2
 argument_list|(
 literal|"channel %d: read<=0 rfd %d len %d"
@@ -6800,6 +7170,27 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+elseif|else
+if|if
+condition|(
+name|c
+operator|->
+name|datagram
+condition|)
+block|{
+name|buffer_put_string
+argument_list|(
+operator|&
+name|c
+operator|->
+name|input
+argument_list|,
+name|buf
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 name|buffer_append
@@ -6820,9 +7211,7 @@ return|return
 literal|1
 return|;
 block|}
-end_function
-
-begin_function
+comment|/* ARGSUSED */
 specifier|static
 name|int
 name|channel_handle_wfd
@@ -6847,6 +7236,11 @@ decl_stmt|;
 name|u_char
 modifier|*
 name|data
+init|=
+name|NULL
+decl_stmt|,
+modifier|*
+name|buf
 decl_stmt|;
 name|u_int
 name|dlen
@@ -6884,6 +7278,99 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|c
+operator|->
+name|output_filter
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|buf
+operator|=
+name|c
+operator|->
+name|output_filter
+argument_list|(
+name|c
+argument_list|,
+operator|&
+name|data
+argument_list|,
+operator|&
+name|dlen
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|debug2
+argument_list|(
+literal|"channel %d: filter stops"
+argument_list|,
+name|c
+operator|->
+name|self
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|->
+name|type
+operator|!=
+name|SSH_CHANNEL_OPEN
+condition|)
+name|chan_mark_dead
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+else|else
+name|chan_write_failed
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|c
+operator|->
+name|datagram
+condition|)
+block|{
+name|buf
+operator|=
+name|data
+operator|=
+name|buffer_get_string
+argument_list|(
+operator|&
+name|c
+operator|->
+name|output
+argument_list|,
+operator|&
+name|dlen
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|buf
+operator|=
 name|data
 operator|=
 name|buffer_ptr
@@ -6904,6 +7391,95 @@ operator|->
 name|output
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|c
+operator|->
+name|datagram
+condition|)
+block|{
+comment|/* ignore truncated writes, datagrams might get lost */
+name|c
+operator|->
+name|local_consumed
+operator|+=
+name|dlen
+operator|+
+literal|4
+expr_stmt|;
+name|len
+operator|=
+name|write
+argument_list|(
+name|c
+operator|->
+name|wfd
+argument_list|,
+name|buf
+argument_list|,
+name|dlen
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|data
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|<
+literal|0
+operator|&&
+operator|(
+name|errno
+operator|==
+name|EINTR
+operator|||
+name|errno
+operator|==
+name|EAGAIN
+operator|)
+condition|)
+return|return
+literal|1
+return|;
+if|if
+condition|(
+name|len
+operator|<=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|c
+operator|->
+name|type
+operator|!=
+name|SSH_CHANNEL_OPEN
+condition|)
+name|chan_mark_dead
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+else|else
+name|chan_write_failed
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+return|return
+literal|1
+return|;
+block|}
 ifdef|#
 directive|ifdef
 name|_AIX
@@ -6937,7 +7513,7 @@ name|c
 operator|->
 name|wfd
 argument_list|,
-name|data
+name|buf
 argument_list|,
 name|dlen
 argument_list|)
@@ -7051,7 +7627,7 @@ name|dlen
 operator|>=
 literal|1
 operator|&&
-name|data
+name|buf
 index|[
 literal|0
 index|]
@@ -7091,7 +7667,7 @@ name|ICANON
 operator|)
 condition|)
 block|{
-comment|/* 				 * Simulate echo to reduce the impact of 				 * traffic analysis. We need to match the 				 * size of a SSH2_MSG_CHANNEL_DATA message 				 * (4 byte channel id + data) 				 */
+comment|/* 				 * Simulate echo to reduce the impact of 				 * traffic analysis. We need to match the 				 * size of a SSH2_MSG_CHANNEL_DATA message 				 * (4 byte channel id + buf) 				 */
 name|packet_send_ignore
 argument_list|(
 literal|4
@@ -7135,9 +7711,6 @@ return|return
 literal|1
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|channel_handle_efd
@@ -7430,9 +8003,7 @@ return|return
 literal|1
 return|;
 block|}
-end_function
-
-begin_function
+comment|/* ARGSUSED */
 specifier|static
 name|int
 name|channel_handle_ctl
@@ -7589,9 +8160,6 @@ return|return
 literal|1
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|channel_check_window
@@ -7697,9 +8265,6 @@ return|return
 literal|1
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|channel_post_open
@@ -7772,9 +8337,7 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
+comment|/* ARGSUSED */
 specifier|static
 name|void
 name|channel_post_output_drain_13
@@ -7870,9 +8433,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|channel_handler_init_20
@@ -8001,9 +8561,6 @@ operator|&
 name|channel_post_open
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|channel_handler_init_13
@@ -8140,9 +8697,6 @@ operator|&
 name|channel_post_open
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|channel_handler_init_15
@@ -8255,9 +8809,6 @@ operator|&
 name|channel_post_open
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|channel_handler_init
@@ -8317,13 +8868,7 @@ name|channel_handler_init_15
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* gc dead channels */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|channel_garbage_collect
@@ -8356,7 +8901,9 @@ name|chan_is_dead
 argument_list|(
 name|c
 argument_list|,
-literal|0
+name|c
+operator|->
+name|detach_close
 argument_list|)
 condition|)
 return|return;
@@ -8426,9 +8973,6 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|channel_handler
@@ -8537,13 +9081,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  * Allocate/update select bitmasks and add any bits relevant to channels in  * select bitmasks.  */
-end_comment
-
-begin_function
 name|void
 name|channel_prepare_select
 parameter_list|(
@@ -8573,6 +9111,8 @@ name|u_int
 name|n
 decl_stmt|,
 name|sz
+decl_stmt|,
+name|nfdset
 decl_stmt|;
 name|n
 operator|=
@@ -8584,7 +9124,7 @@ argument_list|,
 name|channel_max_fd
 argument_list|)
 expr_stmt|;
-name|sz
+name|nfdset
 operator|=
 name|howmany
 argument_list|(
@@ -8594,6 +9134,31 @@ literal|1
 argument_list|,
 name|NFDBITS
 argument_list|)
+expr_stmt|;
+comment|/* Explicitly test here, because xrealloc isn't always called */
+if|if
+condition|(
+name|nfdset
+operator|&&
+name|SIZE_T_MAX
+operator|/
+name|nfdset
+operator|<
+sizeof|sizeof
+argument_list|(
+name|fd_mask
+argument_list|)
+condition|)
+name|fatal
+argument_list|(
+literal|"channel_prepare_select: max_fd (%d) is too large"
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+name|sz
+operator|=
+name|nfdset
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -8622,7 +9187,12 @@ argument_list|(
 operator|*
 name|readsetp
 argument_list|,
-name|sz
+name|nfdset
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|fd_mask
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|*
@@ -8633,7 +9203,12 @@ argument_list|(
 operator|*
 name|writesetp
 argument_list|,
-name|sz
+name|nfdset
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|fd_mask
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|*
@@ -8684,13 +9259,7 @@ name|writesetp
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * After select, perform any appropriate operations for channels which have  * events pending.  */
-end_comment
-
-begin_function
 name|void
 name|channel_after_select
 parameter_list|(
@@ -8713,13 +9282,7 @@ name|writeset
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* If there is data to send to the connection, enqueue some of it now. */
-end_comment
-
-begin_function
 name|void
 name|channel_output_poll
 parameter_list|(
@@ -8858,6 +9421,78 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|c
+operator|->
+name|datagram
+condition|)
+block|{
+if|if
+condition|(
+name|len
+operator|>
+literal|0
+condition|)
+block|{
+name|u_char
+modifier|*
+name|data
+decl_stmt|;
+name|u_int
+name|dlen
+decl_stmt|;
+name|data
+operator|=
+name|buffer_get_string
+argument_list|(
+operator|&
+name|c
+operator|->
+name|input
+argument_list|,
+operator|&
+name|dlen
+argument_list|)
+expr_stmt|;
+name|packet_start
+argument_list|(
+name|SSH2_MSG_CHANNEL_DATA
+argument_list|)
+expr_stmt|;
+name|packet_put_int
+argument_list|(
+name|c
+operator|->
+name|remote_id
+argument_list|)
+expr_stmt|;
+name|packet_put_string
+argument_list|(
+name|data
+argument_list|,
+name|dlen
+argument_list|)
+expr_stmt|;
+name|packet_send
+argument_list|()
+expr_stmt|;
+name|c
+operator|->
+name|remote_window
+operator|-=
+name|dlen
+operator|+
+literal|4
+expr_stmt|;
+name|xfree
+argument_list|(
+name|data
+argument_list|)
+expr_stmt|;
+block|}
+continue|continue;
+block|}
 comment|/* 			 * Send some data for the other side over the secure 			 * connection. 			 */
 if|if
 condition|(
@@ -9202,13 +9837,8 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/* -- protocol input */
-end_comment
-
-begin_function
+comment|/* ARGSUSED */
 name|void
 name|channel_input_data
 parameter_list|(
@@ -9397,6 +10027,25 @@ block|}
 name|packet_check_eom
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|c
+operator|->
+name|datagram
+condition|)
+name|buffer_put_string
+argument_list|(
+operator|&
+name|c
+operator|->
+name|output
+argument_list|,
+name|data
+argument_list|,
+name|data_len
+argument_list|)
+expr_stmt|;
+else|else
 name|buffer_append
 argument_list|(
 operator|&
@@ -9415,9 +10064,7 @@ name|data
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
+comment|/* ARGSUSED */
 name|void
 name|channel_input_extended_data
 parameter_list|(
@@ -9637,9 +10284,7 @@ name|data
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
+comment|/* ARGSUSED */
 name|void
 name|channel_input_ieof
 parameter_list|(
@@ -9742,9 +10387,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
+comment|/* ARGSUSED */
 name|void
 name|channel_input_close
 parameter_list|(
@@ -9837,13 +10480,8 @@ name|SSH_CHANNEL_OUTPUT_DRAINING
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/* proto version 1.5 overloads CLOSE_CONFIRMATION with OCLOSE */
-end_comment
-
-begin_function
+comment|/* ARGSUSED */
 name|void
 name|channel_input_oclose
 parameter_list|(
@@ -9895,9 +10533,7 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
+comment|/* ARGSUSED */
 name|void
 name|channel_input_close_confirmation
 parameter_list|(
@@ -9970,9 +10606,7 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
+comment|/* ARGSUSED */
 name|void
 name|channel_input_open_confirmation
 parameter_list|(
@@ -10118,9 +10752,6 @@ name|packet_check_eom
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|char
 modifier|*
@@ -10164,9 +10795,7 @@ return|return
 literal|"unknown reason"
 return|;
 block|}
-end_function
-
-begin_function
+comment|/* ARGSUSED */
 name|void
 name|channel_input_open_failure
 parameter_list|(
@@ -10325,9 +10954,7 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
+comment|/* ARGSUSED */
 name|void
 name|channel_input_window_adjust
 parameter_list|(
@@ -10376,18 +11003,11 @@ condition|(
 name|c
 operator|==
 name|NULL
-operator|||
-name|c
-operator|->
-name|type
-operator|!=
-name|SSH_CHANNEL_OPEN
 condition|)
 block|{
 name|logit
 argument_list|(
-literal|"Received window adjust for "
-literal|"non-open channel %d."
+literal|"Received window adjust for non-open channel %d."
 argument_list|,
 name|id
 argument_list|)
@@ -10418,9 +11038,7 @@ operator|+=
 name|adjust
 expr_stmt|;
 block|}
-end_function
-
-begin_function
+comment|/* ARGSUSED */
 name|void
 name|channel_input_port_open
 parameter_list|(
@@ -10587,13 +11205,7 @@ name|host
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* -- tcp forwarding */
-end_comment
-
-begin_function
 name|void
 name|channel_set_af
 parameter_list|(
@@ -10606,9 +11218,6 @@ operator|=
 name|af
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|channel_setup_fwd_listener
@@ -10648,10 +11257,6 @@ decl_stmt|,
 name|success
 init|=
 literal|0
-decl_stmt|,
-name|on
-init|=
-literal|1
 decl_stmt|,
 name|wildcard
 init|=
@@ -11075,37 +11680,9 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * Set socket options. 		 * Allow local port reuse in TIME_WAIT. 		 */
-if|if
-condition|(
-name|setsockopt
+name|channel_set_reuseaddr
 argument_list|(
 name|sock
-argument_list|,
-name|SOL_SOCKET
-argument_list|,
-name|SO_REUSEADDR
-argument_list|,
-operator|&
-name|on
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|on
-argument_list|)
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|error
-argument_list|(
-literal|"setsockopt SO_REUSEADDR: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|debug
@@ -11284,9 +11861,6 @@ return|return
 name|success
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|channel_cancel_rport_listener
 parameter_list|(
@@ -11393,13 +11967,7 @@ name|found
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* protocol local port fwd, used by ssh (and sshd in v1) */
-end_comment
-
-begin_function
 name|int
 name|channel_setup_local_fwd_listener
 parameter_list|(
@@ -11440,13 +12008,7 @@ name|gateway_ports
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* protocol v2 remote port fwd, used by sshd */
-end_comment
-
-begin_function
 name|int
 name|channel_setup_remote_fwd_listener
 parameter_list|(
@@ -11479,14 +12041,8 @@ name|gateway_ports
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Initiate forwarding of connections to port "port" on remote host through  * the secure channel to host:port from local side.  */
-end_comment
-
-begin_function
-name|void
+name|int
 name|channel_request_remote_forwarding
 parameter_list|(
 specifier|const
@@ -11660,11 +12216,6 @@ break|break;
 case|case
 name|SSH_SMSG_FAILURE
 case|:
-name|logit
-argument_list|(
-literal|"Warning: Server denied remote port forwarding."
-argument_list|)
-expr_stmt|;
 break|break;
 default|default:
 comment|/* Unknown packet */
@@ -11717,14 +12268,18 @@ name|num_permitted_opens
 operator|++
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|success
+condition|?
+literal|0
+else|:
+operator|-
+literal|1
+operator|)
+return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Request cancellation of remote forwarding of connection host:port from  * local side.  */
-end_comment
-
-begin_function
 name|void
 name|channel_request_rforward_cancel
 parameter_list|(
@@ -11850,7 +12405,7 @@ name|port_to_connect
 operator|=
 literal|0
 expr_stmt|;
-name|free
+name|xfree
 argument_list|(
 name|permitted_opens
 index|[
@@ -11870,14 +12425,8 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
-comment|/*  * This is called after receiving CHANNEL_FORWARDING_REQUEST.  This initates  * listening for the port, and sends back a success reply (or disconnect  * message if there was an error).  This never returns if there was an error.  */
-end_comment
-
-begin_function
-name|void
+comment|/*  * This is called after receiving CHANNEL_FORWARDING_REQUEST.  This initates  * listening for the port, and sends back a success reply (or disconnect  * message if there was an error).  */
+name|int
 name|channel_input_port_forward_request
 parameter_list|(
 name|int
@@ -11891,6 +12440,11 @@ name|u_short
 name|port
 decl_stmt|,
 name|host_port
+decl_stmt|;
+name|int
+name|success
+init|=
+literal|0
 decl_stmt|;
 name|char
 modifier|*
@@ -11948,6 +12502,8 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* Initiate forwarding */
+name|success
+operator|=
 name|channel_setup_local_fwd_listener
 argument_list|(
 name|NULL
@@ -11967,14 +12523,18 @@ argument_list|(
 name|hostname
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|success
+condition|?
+literal|0
+else|:
+operator|-
+literal|1
+operator|)
+return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Permits opening to any host/port if permitted_opens[] is empty.  This is  * usually called by the server, because the user could connect to any port  * anyway, and the server has no way to know but to trust the client anyway.  */
-end_comment
-
-begin_function
 name|void
 name|channel_permit_all_opens
 parameter_list|(
@@ -11992,9 +12552,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|channel_add_permitted_opens
 parameter_list|(
@@ -12014,7 +12571,7 @@ name|SSH_MAX_FORWARDS_PER_DIRECTION
 condition|)
 name|fatal
 argument_list|(
-literal|"channel_request_remote_forwarding: too many forwards"
+literal|"channel_add_permitted_opens: too many forwards"
 argument_list|)
 expr_stmt|;
 name|debug
@@ -12055,9 +12612,63 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_function
-
-begin_function
+name|int
+name|channel_add_adm_permitted_opens
+parameter_list|(
+name|char
+modifier|*
+name|host
+parameter_list|,
+name|int
+name|port
+parameter_list|)
+block|{
+if|if
+condition|(
+name|num_adm_permitted_opens
+operator|>=
+name|SSH_MAX_FORWARDS_PER_DIRECTION
+condition|)
+name|fatal
+argument_list|(
+literal|"channel_add_adm_permitted_opens: too many forwards"
+argument_list|)
+expr_stmt|;
+name|debug
+argument_list|(
+literal|"config allows port forwarding to host %s port %d"
+argument_list|,
+name|host
+argument_list|,
+name|port
+argument_list|)
+expr_stmt|;
+name|permitted_adm_opens
+index|[
+name|num_adm_permitted_opens
+index|]
+operator|.
+name|host_to_connect
+operator|=
+name|xstrdup
+argument_list|(
+name|host
+argument_list|)
+expr_stmt|;
+name|permitted_adm_opens
+index|[
+name|num_adm_permitted_opens
+index|]
+operator|.
+name|port_to_connect
+operator|=
+name|port
+expr_stmt|;
+return|return
+operator|++
+name|num_adm_permitted_opens
+return|;
+block|}
 name|void
 name|channel_clear_permitted_opens
 parameter_list|(
@@ -12106,13 +12717,55 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
+name|void
+name|channel_clear_adm_permitted_opens
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|num_adm_permitted_opens
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|permitted_adm_opens
+index|[
+name|i
+index|]
+operator|.
+name|host_to_connect
+operator|!=
+name|NULL
+condition|)
+name|xfree
+argument_list|(
+name|permitted_adm_opens
+index|[
+name|i
+index|]
+operator|.
+name|host_to_connect
+argument_list|)
+expr_stmt|;
+name|num_adm_permitted_opens
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* return socket to remote host, port */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|connect_to
@@ -12459,9 +13112,6 @@ return|return
 name|sock
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|channel_connect_by_listen_address
 parameter_list|(
@@ -12535,13 +13185,7 @@ operator|-
 literal|1
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* Check if connecting to that port is permitted and connect. */
-end_comment
-
-begin_function
 name|int
 name|channel_connect_to
 parameter_list|(
@@ -12558,6 +13202,10 @@ name|int
 name|i
 decl_stmt|,
 name|permit
+decl_stmt|,
+name|permit_adm
+init|=
+literal|1
 decl_stmt|;
 name|permit
 operator|=
@@ -12623,8 +13271,74 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|num_adm_permitted_opens
+operator|>
+literal|0
+condition|)
+block|{
+name|permit_adm
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|num_adm_permitted_opens
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|permitted_adm_opens
+index|[
+name|i
+index|]
+operator|.
+name|host_to_connect
+operator|!=
+name|NULL
+operator|&&
+name|permitted_adm_opens
+index|[
+name|i
+index|]
+operator|.
+name|port_to_connect
+operator|==
+name|port
+operator|&&
+name|strcmp
+argument_list|(
+name|permitted_adm_opens
+index|[
+name|i
+index|]
+operator|.
+name|host_to_connect
+argument_list|,
+name|host
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|permit_adm
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
 operator|!
 name|permit
+operator|||
+operator|!
+name|permit_adm
 condition|)
 block|{
 name|logit
@@ -12651,9 +13365,6 @@ name|port
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|channel_send_window_changes
 parameter_list|(
@@ -12739,6 +13450,9 @@ argument_list|)
 expr_stmt|;
 name|packet_put_int
 argument_list|(
+operator|(
+name|u_int
+operator|)
 name|ws
 operator|.
 name|ws_col
@@ -12746,6 +13460,9 @@ argument_list|)
 expr_stmt|;
 name|packet_put_int
 argument_list|(
+operator|(
+name|u_int
+operator|)
 name|ws
 operator|.
 name|ws_row
@@ -12753,6 +13470,9 @@ argument_list|)
 expr_stmt|;
 name|packet_put_int
 argument_list|(
+operator|(
+name|u_int
+operator|)
 name|ws
 operator|.
 name|ws_xpixel
@@ -12760,6 +13480,9 @@ argument_list|)
 expr_stmt|;
 name|packet_put_int
 argument_list|(
+operator|(
+name|u_int
+operator|)
 name|ws
 operator|.
 name|ws_ypixel
@@ -12770,17 +13493,8 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/* -- X11 forwarding */
-end_comment
-
-begin_comment
 comment|/*  * Creates an internet domain socket for listening for X11 connections.  * Returns 0 and a suitable display number for the DISPLAY variable  * stored in display_numberp , or -1 if an error occurs.  */
-end_comment
-
-begin_function
 name|int
 name|x11_create_display_inet
 parameter_list|(
@@ -12847,6 +13561,16 @@ index|[
 name|NUM_SOCKS
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|chanids
+operator|==
+name|NULL
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 for|for
 control|(
 name|display_number
@@ -13105,6 +13829,11 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|channel_set_reuseaddr
+argument_list|(
+name|sock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bind
@@ -13302,29 +14031,21 @@ return|;
 block|}
 block|}
 comment|/* Allocate a channel for each socket. */
-if|if
-condition|(
-name|chanids
-operator|!=
-name|NULL
-condition|)
 operator|*
 name|chanids
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+name|num_socks
+operator|+
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
 operator|*
 name|chanids
 argument_list|)
-operator|*
-operator|(
-name|num_socks
-operator|+
-literal|1
-operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -13380,13 +14101,6 @@ name|single_connection
 operator|=
 name|single_connection
 expr_stmt|;
-if|if
-condition|(
-operator|*
-name|chanids
-operator|!=
-name|NULL
-condition|)
 operator|(
 operator|*
 name|chanids
@@ -13400,13 +14114,6 @@ operator|->
 name|self
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|*
-name|chanids
-operator|!=
-name|NULL
-condition|)
 operator|(
 operator|*
 name|chanids
@@ -13430,9 +14137,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|connect_local_xsocket
@@ -13559,21 +14263,14 @@ operator|-
 literal|1
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|x11_connect_display
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|display_number
-decl_stmt|,
-name|sock
-init|=
-literal|0
 decl_stmt|;
 specifier|const
 name|char
@@ -13607,6 +14304,10 @@ index|]
 decl_stmt|;
 name|int
 name|gaierr
+decl_stmt|,
+name|sock
+init|=
+literal|0
 decl_stmt|;
 comment|/* Try to open a socket for the local X server. */
 name|display
@@ -13669,7 +14370,7 @@ argument_list|)
 operator|+
 literal|1
 argument_list|,
-literal|"%d"
+literal|"%u"
 argument_list|,
 operator|&
 name|display_number
@@ -13767,7 +14468,7 @@ name|cp
 operator|+
 literal|1
 argument_list|,
-literal|"%d"
+literal|"%u"
 argument_list|,
 operator|&
 name|display_number
@@ -13821,7 +14522,7 @@ argument_list|,
 sizeof|sizeof
 name|strport
 argument_list|,
-literal|"%d"
+literal|"%u"
 argument_list|,
 literal|6000
 operator|+
@@ -13940,7 +14641,7 @@ condition|)
 block|{
 name|debug2
 argument_list|(
-literal|"connect %.100s port %d: %.100s"
+literal|"connect %.100s port %u: %.100s"
 argument_list|,
 name|buf
 argument_list|,
@@ -13977,7 +14678,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"connect %.100s port %d: %.100s"
+literal|"connect %.100s port %u: %.100s"
 argument_list|,
 name|buf
 argument_list|,
@@ -14005,13 +14706,8 @@ return|return
 name|sock
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * This is called when SSH_SMSG_X11_OPEN is received.  The packet contains  * the remote channel number.  We should do whatever we want, and respond  * with either SSH_MSG_OPEN_CONFIRMATION or SSH_MSG_OPEN_FAILURE.  */
-end_comment
-
-begin_function
+comment|/* ARGSUSED */
 name|void
 name|x11_input_open
 parameter_list|(
@@ -14185,13 +14881,8 @@ name|packet_send
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* dummy protocol handler that denies SSH-1 requests (agent/x11) */
-end_comment
-
-begin_function
+comment|/* ARGSUSED */
 name|void
 name|deny_input_open
 parameter_list|(
@@ -14247,7 +14938,7 @@ break|break;
 block|}
 name|error
 argument_list|(
-literal|"Warning: this is probably a break in attempt by a malicious server."
+literal|"Warning: this is probably a break-in attempt by a malicious server."
 argument_list|)
 expr_stmt|;
 name|packet_start
@@ -14264,13 +14955,7 @@ name|packet_send
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Requests forwarding of X11 connections, generates fake authentication  * data, and enables authentication spoofing.  * This should be called in the client only.  */
-end_comment
-
-begin_function
 name|void
 name|x11_request_forwarding_with_spoofing
 parameter_list|(
@@ -14364,14 +15049,6 @@ return|return;
 block|}
 name|cp
 operator|=
-name|disp
-expr_stmt|;
-if|if
-condition|(
-name|disp
-condition|)
-name|cp
-operator|=
 name|strchr
 argument_list|(
 name|disp
@@ -14398,11 +15075,20 @@ name|cp
 condition|)
 name|screen_number
 operator|=
-name|atoi
+operator|(
+name|u_int
+operator|)
+name|strtonum
 argument_list|(
 name|cp
 operator|+
 literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|400
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 else|else
@@ -14590,17 +15276,8 @@ name|new_data
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* -- agent forwarding */
-end_comment
-
-begin_comment
 comment|/* Sends a message to the server to request authentication fd forwarding. */
-end_comment
-
-begin_function
 name|void
 name|auth_request_forwarding
 parameter_list|(

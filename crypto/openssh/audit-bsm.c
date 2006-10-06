@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: audit-bsm.c,v 1.1 2005/02/20 10:08:00 dtucker Exp $ */
+comment|/* $Id: audit-bsm.c,v 1.4 2006/09/01 05:38:36 djm Exp $ */
 end_comment
 
 begin_comment
@@ -21,6 +21,14 @@ directive|include
 file|"includes.h"
 end_include
 
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_if
 if|#
 directive|if
@@ -33,6 +41,30 @@ end_if
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ssh.h"
 end_include
 
@@ -40,6 +72,18 @@ begin_include
 include|#
 directive|include
 file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"key.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"hostfile.h"
 end_include
 
 begin_include

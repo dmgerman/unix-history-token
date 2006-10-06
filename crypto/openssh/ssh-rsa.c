@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $OpenBSD: ssh-rsa.c,v 1.39 2006/08/03 03:34:42 deraadt Exp $ */
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 2000, 2003 Markus Friedl<markus@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
@@ -9,13 +13,11 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$OpenBSD: ssh-rsa.c,v 1.32 2005/06/17 02:44:33 djm Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#
@@ -27,6 +29,18 @@ begin_include
 include|#
 directive|include
 file|<openssl/err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -45,12 +59,6 @@ begin_include
 include|#
 directive|include
 file|"buffer.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"bufaux.h"
 end_include
 
 begin_include
@@ -816,6 +824,8 @@ name|xrealloc
 argument_list|(
 name|sigblob
 argument_list|,
+literal|1
+argument_list|,
 name|modlen
 argument_list|)
 expr_stmt|;
@@ -1201,7 +1211,6 @@ default|default:
 goto|goto
 name|done
 goto|;
-break|break;
 block|}
 if|if
 condition|(

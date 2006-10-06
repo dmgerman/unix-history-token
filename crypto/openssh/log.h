@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: log.h,v 1.11 2004/06/21 22:02:58 djm Exp $	*/
+comment|/* $OpenBSD: log.h,v 1.15 2006/08/18 09:13:25 deraadt Exp $ */
 end_comment
 
 begin_comment
-comment|/*	$FreeBSD$	*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
@@ -22,16 +22,6 @@ define|#
 directive|define
 name|SSH_LOG_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|<syslog.h>
-end_include
-
-begin_comment
-comment|/* Needed for LOG_AUTHPRIV (if present) */
-end_comment
 
 begin_comment
 comment|/* Supported syslog facilities and levels. */

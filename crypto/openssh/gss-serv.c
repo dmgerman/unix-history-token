@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: gss-serv.c,v 1.8 2005/08/30 22:08:05 djm Exp $	*/
+comment|/* $OpenBSD: gss-serv.c,v 1.20 2006/08/03 03:34:42 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -22,13 +22,49 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"bufaux.h"
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"compat.h"
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xmalloc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"buffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"key.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"hostfile.h"
 end_include
 
 begin_include
@@ -58,25 +94,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"servconf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"monitor_wrap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xmalloc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"getput.h"
+file|"misc.h"
 end_include
 
 begin_include
@@ -84,13 +102,6 @@ include|#
 directive|include
 file|"ssh-gss.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|ServerOptions
-name|options
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -183,7 +194,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Unpriviledged */
+comment|/* Unprivileged */
 end_comment
 
 begin_function
@@ -290,6 +301,15 @@ name|i
 operator|++
 expr_stmt|;
 block|}
+name|gss_release_oid_set
+argument_list|(
+operator|&
+name|min_status
+argument_list|,
+operator|&
+name|supported
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -298,7 +318,7 @@ comment|/* Wrapper around accept_sec_context  * Requires that the context contai
 end_comment
 
 begin_comment
-comment|/* Priviledged */
+comment|/* Privileged */
 end_comment
 
 begin_function
@@ -531,7 +551,7 @@ return|;
 comment|/* 	 * Extract the OID, and check it. Here GSSAPI breaks with tradition 	 * and does use the OID type and length bytes. To confuse things 	 * there are two lengths - the first including these, and the 	 * second without. 	 */
 name|oidl
 operator|=
-name|GET_16BIT
+name|get_u16
 argument_list|(
 name|tok
 operator|+
@@ -609,7 +629,7 @@ name|name
 operator|->
 name|length
 operator|=
-name|GET_32BIT
+name|get_u32
 argument_list|(
 name|tok
 operator|+
@@ -691,7 +711,7 @@ comment|/* Extract the client details from a given context. This can only reliab
 end_comment
 
 begin_comment
-comment|/* Priviledged (called from accept_secure_ctx) */
+comment|/* Privileged (called from accept_secure_ctx) */
 end_comment
 
 begin_function
@@ -1112,7 +1132,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Priviledged */
+comment|/* Privileged */
 end_comment
 
 begin_function
@@ -1255,7 +1275,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Priviledged */
+comment|/* Privileged */
 end_comment
 
 begin_function

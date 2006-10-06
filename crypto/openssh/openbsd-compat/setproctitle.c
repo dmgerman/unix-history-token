@@ -22,6 +22,18 @@ end_ifndef
 begin_include
 include|#
 directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -41,6 +53,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_define
 define|#
@@ -235,19 +253,17 @@ condition|(
 operator|(
 name|environ
 operator|=
-name|malloc
+name|calloc
 argument_list|(
+name|i
+operator|+
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
 name|environ
 argument_list|)
-operator|*
-operator|(
-name|i
-operator|+
-literal|1
-operator|)
 argument_list|)
 operator|)
 operator|==

@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* OPENBSD ORIGINAL: lib/libc/gen/getgrouplist.c */
+comment|/*	$OpenBSD: getgrouplist.c,v 1.12 2005/08/08 08:05:34 espie Exp $ */
 end_comment
 
 begin_comment
 comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+end_comment
+
+begin_comment
+comment|/* OPENBSD ORIGINAL: lib/libc/gen/getgrouplist.c */
 end_comment
 
 begin_include
@@ -18,40 +22,6 @@ ifndef|#
 directive|ifndef
 name|HAVE_GETGROUPLIST
 end_ifndef
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|lint
-argument_list|)
-end_if
-
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$OpenBSD: getgrouplist.c,v 1.9 2003/06/25 21:16:47 deraadt Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* LIBC_SCCS and not lint */
-end_comment
 
 begin_comment
 comment|/*  * get credential  */
@@ -85,39 +55,28 @@ begin_function
 name|int
 name|getgrouplist
 parameter_list|(
-name|uname
-parameter_list|,
-name|agroup
-parameter_list|,
-name|groups
-parameter_list|,
-name|grpcnt
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|uname
-decl_stmt|;
+parameter_list|,
 name|gid_t
 name|agroup
-decl_stmt|;
-specifier|register
+parameter_list|,
 name|gid_t
 modifier|*
 name|groups
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|grpcnt
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|struct
 name|group
 modifier|*
 name|grp
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|,

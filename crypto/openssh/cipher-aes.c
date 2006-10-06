@@ -9,26 +9,44 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|OPENSSL_VERSION_NUMBER
-operator|<
-literal|0x00907000L
-end_if
+begin_comment
+comment|/* compatibility with old or broken OpenSSL versions */
+end_comment
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$OpenBSD: cipher-aes.c,v 1.2 2003/11/26 21:44:29 djm Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_include
+include|#
+directive|include
+file|"openbsd-compat/openssl-compat.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_BUILTIN_RIJNDAEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#
 directive|include
 file|<openssl/evp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -48,25 +66,6 @@ include|#
 directive|include
 file|"log.h"
 end_include
-
-begin_if
-if|#
-directive|if
-name|OPENSSL_VERSION_NUMBER
-operator|<
-literal|0x00906000L
-end_if
-
-begin_define
-define|#
-directive|define
-name|SSH_OLD_EVP
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -822,7 +821,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* OPENSSL_VERSION_NUMBER */
+comment|/* USE_BUILTIN_RIJNDAEL */
 end_comment
 
 end_unit

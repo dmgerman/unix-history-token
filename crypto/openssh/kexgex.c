@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $OpenBSD: kexgex.c,v 1.27 2006/08/03 03:34:42 deraadt Exp $ */
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 2000 Niels Provos.  All rights reserved.  * Copyright (c) 2001 Markus Friedl.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
@@ -9,18 +13,22 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$OpenBSD: kexgex.c,v 1.23 2003/02/16 17:09:57 markus Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#
 directive|include
 file|<openssl/evp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -32,7 +40,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bufaux.h"
+file|"key.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cipher.h"
 end_include
 
 begin_include
@@ -48,10 +62,14 @@ file|"ssh2.h"
 end_include
 
 begin_function
-name|u_char
-modifier|*
+name|void
 name|kexgex_hash
 parameter_list|(
+specifier|const
+name|EVP_MD
+modifier|*
+name|evp_md
+parameter_list|,
 name|char
 modifier|*
 name|client_version_string
@@ -109,6 +127,15 @@ parameter_list|,
 name|BIGNUM
 modifier|*
 name|shared_secret
+parameter_list|,
+name|u_char
+modifier|*
+modifier|*
+name|hash
+parameter_list|,
+name|u_int
+modifier|*
+name|hashlen
 parameter_list|)
 block|{
 name|Buffer
@@ -120,14 +147,6 @@ name|digest
 index|[
 name|EVP_MAX_MD_SIZE
 index|]
-decl_stmt|;
-specifier|const
-name|EVP_MD
-modifier|*
-name|evp_md
-init|=
-name|EVP_sha1
-argument_list|()
 decl_stmt|;
 name|EVP_MD_CTX
 name|md
@@ -361,6 +380,19 @@ operator|&
 name|b
 argument_list|)
 expr_stmt|;
+operator|*
+name|hash
+operator|=
+name|digest
+expr_stmt|;
+operator|*
+name|hashlen
+operator|=
+name|EVP_MD_size
+argument_list|(
+name|evp_md
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG_KEXDH
@@ -370,17 +402,12 @@ literal|"hash"
 argument_list|,
 name|digest
 argument_list|,
-name|EVP_MD_size
-argument_list|(
-name|evp_md
-argument_list|)
+operator|*
+name|hashlen
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-return|return
-name|digest
-return|;
 block|}
 end_function
 

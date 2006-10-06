@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: openssl-compat.c,v 1.2 2005/06/17 11:15:21 dtucker Exp $ */
+comment|/* $Id: openssl-compat.c,v 1.4 2006/02/22 11:24:47 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -13,10 +13,27 @@ directive|include
 file|"includes.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_OPENSSL_ENGINE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<openssl/engine.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
-name|SSH_DONT_REDEF_EVP
+name|SSH_DONT_OVERLOAD_OPENSSL_FUNCS
 end_define
 
 begin_include
@@ -131,6 +148,37 @@ expr_stmt|;
 return|return
 literal|1
 return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_OPENSSL_ENGINE
+end_ifdef
+
+begin_function
+name|void
+name|ssh_SSLeay_add_all_algorithms
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|SSLeay_add_all_algorithms
+argument_list|()
+expr_stmt|;
+comment|/* Enable use of crypto hardware */
+name|ENGINE_load_builtin_engines
+argument_list|()
+expr_stmt|;
+name|ENGINE_register_all_complete
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

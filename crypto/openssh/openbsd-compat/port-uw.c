@@ -9,20 +9,17 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_LIBIAF
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|BROKEN_LIBIAF
-argument_list|)
-end_if
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_ifdef
 ifdef|#
@@ -44,6 +41,42 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xmalloc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"packet.h"
 end_include
 
@@ -51,6 +84,12 @@ begin_include
 include|#
 directive|include
 file|"buffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"auth-options.h"
 end_include
 
 begin_include
@@ -68,13 +107,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"key.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"hostfile.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"auth.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"auth-options.h"
+file|"ssh.h"
 end_include
 
 begin_function_decl
@@ -109,10 +160,6 @@ init|=
 name|authctxt
 operator|->
 name|pw
-decl_stmt|;
-name|char
-modifier|*
-name|encrypted_password
 decl_stmt|;
 name|char
 modifier|*
@@ -184,6 +231,7 @@ name|pw_password
 else|:
 literal|"xx"
 expr_stmt|;
+comment|/* 	 * Authentication is accepted if the encrypted passwords 	 * are identical. 	 */
 ifdef|#
 directive|ifdef
 name|UNIXWARE_LONG_PASSWORDS
@@ -197,35 +245,59 @@ operator|->
 name|pw_name
 argument_list|)
 condition|)
-name|encrypted_password
+block|{
+name|result
 operator|=
+operator|(
+operator|(
+name|strcmp
+argument_list|(
 name|bigcrypt
 argument_list|(
 name|password
 argument_list|,
 name|salt
 argument_list|)
+argument_list|,
+name|pw_password
+argument_list|)
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+name|strcmp
+argument_list|(
+name|osr5bigcrypt
+argument_list|(
+name|password
+argument_list|,
+name|salt
+argument_list|)
+argument_list|,
+name|pw_password
+argument_list|)
+operator|==
+literal|0
+operator|)
+operator|)
 expr_stmt|;
+block|}
 else|else
 endif|#
 directive|endif
 comment|/* UNIXWARE_LONG_PASSWORDS */
-name|encrypted_password
+name|result
 operator|=
+operator|(
+name|strcmp
+argument_list|(
 name|xcrypt
 argument_list|(
 name|password
 argument_list|,
 name|salt
 argument_list|)
-expr_stmt|;
-comment|/* 	 * Authentication is accepted if the encrypted passwords 	 * are identical. 	 */
-name|result
-operator|=
-operator|(
-name|strcmp
-argument_list|(
-name|encrypted_password
 argument_list|,
 name|pw_password
 argument_list|)
@@ -233,6 +305,13 @@ operator|==
 literal|0
 operator|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|BROKEN_LIBIAF
+argument_list|)
 if|if
 condition|(
 name|authctxt
@@ -244,6 +323,8 @@ argument_list|(
 name|pw_password
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|result
@@ -371,6 +452,16 @@ begin_comment
 comment|/* 	NOTE: ia_get_logpwd() allocates memory for arg 2 	functions that call shadow_pw() will need to free  */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|BROKEN_LIBIAF
+argument_list|)
+end_if
+
 begin_function
 name|char
 modifier|*
@@ -448,7 +539,16 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_LIBIAF&& !BROKEN_LIBIAF */
+comment|/* !BROKEN_LIBIAF */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_LIBIAF */
 end_comment
 
 end_unit

@@ -9,14 +9,6 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: auth-shadow.c,v 1.7 2005/07/17 07:04:47 djm Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_if
 if|#
 directive|if
@@ -35,6 +27,30 @@ begin_include
 include|#
 directive|include
 file|<shadow.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"key.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"hostfile.h"
 end_include
 
 begin_include

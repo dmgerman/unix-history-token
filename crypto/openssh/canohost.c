@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $OpenBSD: canohost.c,v 1.61 2006/08/03 03:34:41 deraadt Exp $ */
+end_comment
+
+begin_comment
 comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Functions for returning the canonical host name of the remote site.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
 end_comment
 
@@ -9,24 +13,82 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$OpenBSD: canohost.c,v 1.44 2005/06/17 02:44:32 djm Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#
 directive|include
-file|"packet.h"
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|"xmalloc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"packet.h"
 end_include
 
 begin_include
@@ -394,6 +456,9 @@ index|[
 name|i
 index|]
 operator|=
+operator|(
+name|char
+operator|)
 name|tolower
 argument_list|(
 name|name
@@ -451,9 +516,11 @@ block|{
 name|logit
 argument_list|(
 literal|"reverse mapping checking getaddrinfo for %.700s "
-literal|"failed - POSSIBLE BREAKIN ATTEMPT!"
+literal|"[%s] failed - POSSIBLE BREAK-IN ATTEMPT!"
 argument_list|,
 name|name
+argument_list|,
+name|ntop
 argument_list|)
 expr_stmt|;
 return|return
@@ -536,7 +603,7 @@ comment|/* Address not found for the host name. */
 name|logit
 argument_list|(
 literal|"Address %.100s maps to %.600s, but this does not "
-literal|"map back to the address - POSSIBLE BREAKIN ATTEMPT!"
+literal|"map back to the address - POSSIBLE BREAK-IN ATTEMPT!"
 argument_list|,
 name|ntop
 argument_list|,
@@ -715,16 +782,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|logit
-argument_list|(
-literal|"Connection from %.100s with IP options:%.800s"
-argument_list|,
-name|ipaddr
-argument_list|,
-name|text
-argument_list|)
-expr_stmt|;
-name|packet_disconnect
+name|fatal
 argument_list|(
 literal|"Connection from %.100s with IP options:%.800s"
 argument_list|,
@@ -905,6 +963,10 @@ name|int
 name|use_dns
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|host
+decl_stmt|;
 specifier|static
 name|char
 modifier|*
@@ -913,42 +975,43 @@ init|=
 name|NULL
 decl_stmt|;
 specifier|static
-name|int
-name|use_dns_done
+name|char
+modifier|*
+name|remote_ip
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 comment|/* Check if we have previously retrieved name with same option. */
 if|if
 condition|(
+name|use_dns
+operator|&&
 name|canonical_host_name
 operator|!=
 name|NULL
 condition|)
-block|{
-if|if
-condition|(
-name|use_dns_done
-operator|!=
-name|use_dns
-condition|)
-name|xfree
-argument_list|(
-name|canonical_host_name
-argument_list|)
-expr_stmt|;
-else|else
 return|return
 name|canonical_host_name
 return|;
-block|}
+if|if
+condition|(
+operator|!
+name|use_dns
+operator|&&
+name|remote_ip
+operator|!=
+name|NULL
+condition|)
+return|return
+name|remote_ip
+return|;
 comment|/* Get the real hostname if socket; otherwise return UNKNOWN. */
 if|if
 condition|(
 name|packet_connection_is_on_socket
 argument_list|()
 condition|)
-name|canonical_host_name
+name|host
 operator|=
 name|get_remote_hostname
 argument_list|(
@@ -959,19 +1022,25 @@ name|use_dns
 argument_list|)
 expr_stmt|;
 else|else
+name|host
+operator|=
+literal|"UNKNOWN"
+expr_stmt|;
+if|if
+condition|(
+name|use_dns
+condition|)
 name|canonical_host_name
 operator|=
-name|xstrdup
-argument_list|(
-literal|"UNKNOWN"
-argument_list|)
+name|host
 expr_stmt|;
-name|use_dns_done
+else|else
+name|remote_ip
 operator|=
-name|use_dns
+name|host
 expr_stmt|;
 return|return
-name|canonical_host_name
+name|host
 return|;
 block|}
 end_function

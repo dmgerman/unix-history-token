@@ -4,13 +4,19 @@ comment|/*  * Copyright (c) 2002 Tim Rice.  All rights reserved.  * MAP_FAILED c
 end_comment
 
 begin_comment
-comment|/* $Id: xmmap.c,v 1.6 2004/10/06 13:15:44 dtucker Exp $ */
+comment|/* $Id: xmmap.c,v 1.12 2006/08/24 09:58:36 dtucker Exp $ */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"includes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
 end_include
 
 begin_ifdef
@@ -33,6 +39,53 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_FCNTL_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"log.h"
 end_include
 
@@ -45,13 +98,13 @@ name|size_t
 name|size
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_MMAP
 name|void
 modifier|*
 name|address
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_MMAP
 ifdef|#
 directive|ifdef
 name|MAP_ANON

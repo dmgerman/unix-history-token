@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $OpenBSD: clientloop.c,v 1.175 2006/08/03 03:34:42 deraadt Exp $ */
+end_comment
+
+begin_comment
 comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * The main loop for the interactive session (client side).  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  *  *  * Copyright (c) 1999 Theo de Raadt.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * SSH2 support added by Markus Friedl.  * Copyright (c) 1999, 2000, 2001 Markus Friedl.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
@@ -9,13 +13,146 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$OpenBSD: clientloop.c,v 1.141 2005/07/16 01:35:24 djm Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_STAT_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_TIME_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_PATHS_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xmalloc.h"
+end_include
 
 begin_include
 include|#
@@ -33,12 +170,6 @@ begin_include
 include|#
 directive|include
 file|"ssh2.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xmalloc.h"
 end_include
 
 begin_include
@@ -74,19 +205,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"buffer.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"bufaux.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"key.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cipher.h"
 end_include
 
 begin_include
@@ -111,6 +236,12 @@ begin_include
 include|#
 directive|include
 file|"clientloop.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sshconnect.h"
 end_include
 
 begin_include
@@ -236,7 +367,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Flag indicating whether the user\'s terminal is in non-blocking mode. */
+comment|/* Flag indicating whether the user's terminal is in non-blocking mode. */
 end_comment
 
 begin_decl_stmt
@@ -254,13 +385,14 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
+specifier|volatile
+name|sig_atomic_t
 name|quit_pending
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Set to non-zero to quit the client loop. */
+comment|/* Set non-zero to quit the loop. */
 end_comment
 
 begin_decl_stmt
@@ -575,6 +707,10 @@ begin_comment
 comment|/*  * Signal handler for the window change signal (SIGWINCH).  This just sets a  * flag indicating that the window has changed.  */
 end_comment
 
+begin_comment
+comment|/*ARGSUSED */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -600,6 +736,10 @@ end_function
 
 begin_comment
 comment|/*  * Signal handler for signals that cause the program to terminate.  These  * signals must be trapped to restore terminal modes.  */
+end_comment
+
+begin_comment
+comment|/*ARGSUSED */
 end_comment
 
 begin_function
@@ -974,7 +1114,7 @@ argument_list|(
 name|cmd
 argument_list|)
 argument_list|,
-literal|"%s %s%s list %s . 2>"
+literal|"%s %s%s list %s 2>"
 name|_PATH_DEVNULL
 argument_list|,
 name|xauth_path
@@ -1486,6 +1626,9 @@ argument_list|)
 expr_stmt|;
 name|packet_put_int
 argument_list|(
+operator|(
+name|u_int
+operator|)
 name|ws
 operator|.
 name|ws_row
@@ -1493,6 +1636,9 @@ argument_list|)
 expr_stmt|;
 name|packet_put_int
 argument_list|(
+operator|(
+name|u_int
+operator|)
 name|ws
 operator|.
 name|ws_col
@@ -1500,6 +1646,9 @@ argument_list|)
 expr_stmt|;
 name|packet_put_int
 argument_list|(
+operator|(
+name|u_int
+operator|)
 name|ws
 operator|.
 name|ws_xpixel
@@ -1507,6 +1656,9 @@ argument_list|)
 expr_stmt|;
 name|packet_put_int
 argument_list|(
+operator|(
+name|u_int
+operator|)
 name|ws
 operator|.
 name|ws_ypixel
@@ -3293,20 +3445,9 @@ return|return;
 block|}
 name|cctx
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
-sizeof|sizeof
-argument_list|(
-operator|*
-name|cctx
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-name|cctx
-argument_list|,
-literal|0
+literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3447,8 +3588,12 @@ name|cctx
 operator|->
 name|env
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+name|env_len
+operator|+
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -3456,12 +3601,6 @@ name|cctx
 operator|->
 name|env
 argument_list|)
-operator|*
-operator|(
-name|env_len
-operator|+
-literal|1
-operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -3517,6 +3656,11 @@ name|cctx
 operator|->
 name|want_subsys
 argument_list|,
+name|cmd
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
 name|cmd
 argument_list|)
 expr_stmt|;
@@ -3998,17 +4142,60 @@ argument_list|)
 expr_stmt|;
 name|logit
 argument_list|(
-literal|"      -Lport:host:hostport    Request local forward"
+literal|"      -L[bind_address:]port:host:hostport    "
+literal|"Request local forward"
 argument_list|)
 expr_stmt|;
 name|logit
 argument_list|(
-literal|"      -Rport:host:hostport    Request remote forward"
+literal|"      -R[bind_address:]port:host:hostport    "
+literal|"Request remote forward"
 argument_list|)
 expr_stmt|;
 name|logit
 argument_list|(
-literal|"      -KRhostport             Cancel remote forward"
+literal|"      -KR[bind_address:]port                 "
+literal|"Cancel remote forward"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|options
+operator|.
+name|permit_local_command
+condition|)
+goto|goto
+name|out
+goto|;
+name|logit
+argument_list|(
+literal|"      !args                                  "
+literal|"Execute local command"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+if|if
+condition|(
+operator|*
+name|s
+operator|==
+literal|'!'
+operator|&&
+name|options
+operator|.
+name|permit_local_command
+condition|)
+block|{
+name|s
+operator|++
+expr_stmt|;
+name|ssh_local_cmd
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4265,6 +4452,8 @@ block|}
 block|}
 else|else
 block|{
+if|if
+condition|(
 name|channel_request_remote_forwarding
 argument_list|(
 name|fwd
@@ -4283,7 +4472,19 @@ name|fwd
 operator|.
 name|connect_port
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|logit
+argument_list|(
+literal|"Port forwarding failed."
+argument_list|)
 expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 block|}
 name|logit
 argument_list|(
@@ -5789,6 +5990,8 @@ argument_list|(
 name|session_ident
 argument_list|,
 name|simple_escape_filter
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -5803,6 +6006,8 @@ argument_list|(
 name|session_ident
 argument_list|,
 name|client_channel_closed
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -6886,7 +7091,7 @@ argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
-literal|"Warning: this is probably a break in attempt by a malicious server."
+literal|"Warning: this is probably a break-in attempt by a malicious server."
 argument_list|)
 expr_stmt|;
 return|return
@@ -7034,7 +7239,7 @@ argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
-literal|"Warning: this is probably a break in attempt by a malicious server."
+literal|"Warning: this is probably a break-in attempt by a malicious server."
 argument_list|)
 expr_stmt|;
 return|return
@@ -7807,6 +8012,9 @@ argument_list|)
 expr_stmt|;
 name|packet_put_int
 argument_list|(
+operator|(
+name|u_int
+operator|)
 name|ws
 operator|.
 name|ws_col
@@ -7814,6 +8022,9 @@ argument_list|)
 expr_stmt|;
 name|packet_put_int
 argument_list|(
+operator|(
+name|u_int
+operator|)
 name|ws
 operator|.
 name|ws_row
@@ -7821,6 +8032,9 @@ argument_list|)
 expr_stmt|;
 name|packet_put_int
 argument_list|(
+operator|(
+name|u_int
+operator|)
 name|ws
 operator|.
 name|ws_xpixel
@@ -7828,6 +8042,9 @@ argument_list|)
 expr_stmt|;
 name|packet_put_int
 argument_list|(
+operator|(
+name|u_int
+operator|)
 name|ws
 operator|.
 name|ws_ypixel
@@ -7941,7 +8158,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|free
+name|xfree
 argument_list|(
 name|name
 argument_list|)
@@ -8009,7 +8226,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|free
+name|xfree
 argument_list|(
 name|name
 argument_list|)
@@ -8047,7 +8264,7 @@ expr_stmt|;
 name|packet_send
 argument_list|()
 expr_stmt|;
-name|free
+name|xfree
 argument_list|(
 name|name
 argument_list|)
