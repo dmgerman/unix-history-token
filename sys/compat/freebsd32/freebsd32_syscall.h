@@ -1944,14 +1944,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|FREEBSD32_SYS__umtx_lock
+name|FREEBSD32_SYS_freebsd32_umtx_lock
 value|434
 end_define
 
 begin_define
 define|#
 directive|define
-name|FREEBSD32_SYS__umtx_unlock
+name|FREEBSD32_SYS_freebsd32_umtx_unlock
 value|435
 end_define
 

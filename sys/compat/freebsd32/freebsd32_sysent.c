@@ -9100,14 +9100,14 @@ comment|/* 433 = thr_kill */
 block|{
 name|AS
 argument_list|(
-name|_umtx_lock_args
+name|freebsd32_umtx_lock_args
 argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|_umtx_lock
+name|freebsd32_umtx_lock
 block|,
 name|AUE_NULL
 block|,
@@ -9118,18 +9118,18 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* 434 = _umtx_lock */
+comment|/* 434 = freebsd32_umtx_lock */
 block|{
 name|AS
 argument_list|(
-name|_umtx_unlock_args
+name|freebsd32_umtx_unlock_args
 argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|_umtx_unlock
+name|freebsd32_umtx_unlock
 block|,
 name|AUE_NULL
 block|,
@@ -9140,7 +9140,7 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* 435 = _umtx_unlock */
+comment|/* 435 = freebsd32_umtx_unlock */
 block|{
 name|AS
 argument_list|(

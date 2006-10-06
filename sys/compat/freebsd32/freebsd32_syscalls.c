@@ -1313,12 +1313,12 @@ comment|/* 432 = thr_self */
 literal|"thr_kill"
 block|,
 comment|/* 433 = thr_kill */
-literal|"_umtx_lock"
+literal|"freebsd32_umtx_lock"
 block|,
-comment|/* 434 = _umtx_lock */
-literal|"_umtx_unlock"
+comment|/* 434 = freebsd32_umtx_lock */
+literal|"freebsd32_umtx_unlock"
 block|,
-comment|/* 435 = _umtx_unlock */
+comment|/* 435 = freebsd32_umtx_unlock */
 literal|"jail_attach"
 block|,
 comment|/* 436 = jail_attach */
