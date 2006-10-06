@@ -4063,12 +4063,9 @@ begin_comment
 comment|/* Define if xauth is found in your path */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|XAUTH_PATH
-value|"/usr/X11R6/bin/xauth"
-end_define
+begin_comment
+comment|/* #undef XAUTH_PATH */
+end_comment
 
 begin_comment
 comment|/* Number of bits in a file offset, on hosts where this is settable. */
