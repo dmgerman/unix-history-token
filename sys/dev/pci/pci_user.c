@@ -1422,9 +1422,10 @@ case|:
 case|case
 literal|1
 case|:
-comment|/* make sure register is in bounds and aligned */
+comment|/* Make sure register is in bounds and aligned. */
 if|if
 condition|(
+operator|(
 name|cmd
 operator|==
 name|PCIOCREAD
@@ -1432,9 +1433,9 @@ operator|||
 name|cmd
 operator|==
 name|PCIOCWRITE
-condition|)
-if|if
-condition|(
+operator|)
+operator|&&
+operator|(
 name|io
 operator|->
 name|pi_reg
@@ -1450,6 +1451,8 @@ operator|->
 name|pi_width
 operator|>
 name|PCI_REGMAX
+operator|+
+literal|1
 operator|||
 name|io
 operator|->
@@ -1462,11 +1465,15 @@ name|pi_width
 operator|-
 literal|1
 operator|)
+operator|)
 condition|)
+block|{
 name|error
 operator|=
 name|EINVAL
 expr_stmt|;
+break|break;
+block|}
 comment|/* 			 * Assume that the user-level bus number is 			 * in fact the physical PCI bus number. 			 * Look up the grandparent, i.e. the bridge device, 			 * so that we can issue configuration space cycles. 			 */
 name|pcidev
 operator|=
