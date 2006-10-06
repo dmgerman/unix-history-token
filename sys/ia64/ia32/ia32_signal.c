@@ -237,6 +237,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<compat/freebsd32/freebsd32_signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<compat/freebsd32/freebsd32_util.h>
 end_include
 
