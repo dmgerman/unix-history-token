@@ -205,7 +205,7 @@ decl_stmt|;
 name|size_t
 name|wresid
 decl_stmt|;
-name|size_t
+name|off_t
 name|wtotal
 decl_stmt|;
 name|char
