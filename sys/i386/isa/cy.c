@@ -1984,6 +1984,17 @@ name|dev
 operator|->
 name|id_maddr
 expr_stmt|;
+if|if
+condition|(
+name|iobase
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* Cyclom-16Y hardware reset (Cyclom-8Ys don't care) */
 name|cy_inb
 argument_list|(
