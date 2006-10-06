@@ -627,12 +627,6 @@ name|hdac_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|SLIST_ENTRY
-argument_list|(
-argument|hdac_codec
-argument_list|)
-name|next_codec
-expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -1122,14 +1116,6 @@ index|[
 name|HDAC_CODEC_MAX
 index|]
 decl_stmt|;
-name|SLIST_HEAD
-argument_list|(
-argument|hdac_codec_list_head
-argument_list|,
-argument|hdac_codec
-argument_list|)
-name|codec_list
-expr_stmt|;
 name|int
 name|registered
 decl_stmt|;
