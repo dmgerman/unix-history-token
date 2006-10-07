@@ -280,6 +280,18 @@ name|UQ_AU_INP_ASYNC
 block|}
 block|}
 block|,
+block|{
+name|USB_VENDOR_LOGITECH
+block|,
+name|USB_PRODUCT_LOGITECH_UN53B
+block|,
+name|ANY
+block|,
+block|{
+name|UQ_NO_STRINGS
+block|}
+block|}
+block|,
 comment|/* XXX These should have a revision number, but I don't know what they are. */
 block|{
 name|USB_VENDOR_HP
