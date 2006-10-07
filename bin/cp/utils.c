@@ -154,7 +154,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|(int)(100.0 * (double)(x) / (double)(y))
+value|((y == 0) ? 0 : (int)(100.0 * (x) / (y)))
 end_define
 
 begin_function
@@ -650,6 +650,13 @@ argument_list|,
 name|wresid
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|wcount
+operator|<=
+literal|0
+condition|)
+break|break;
 name|wtotal
 operator|+=
 name|wcount
@@ -699,10 +706,6 @@ operator|(
 name|ssize_t
 operator|)
 name|wresid
-operator|||
-name|wcount
-operator|<=
-literal|0
 condition|)
 break|break;
 block|}
@@ -818,6 +821,13 @@ argument_list|,
 name|wresid
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|wcount
+operator|<=
+literal|0
+condition|)
+break|break;
 name|wtotal
 operator|+=
 name|wcount
@@ -867,10 +877,6 @@ operator|(
 name|ssize_t
 operator|)
 name|wresid
-operator|||
-name|wcount
-operator|<=
-literal|0
 condition|)
 break|break;
 block|}
