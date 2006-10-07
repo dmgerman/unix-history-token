@@ -768,7 +768,7 @@ argument_list|()
 expr_stmt|;
 name|block
 operator|=
-name|strtol
+name|strtoll
 argument_list|(
 name|optarg
 argument_list|,
@@ -846,7 +846,7 @@ argument_list|()
 expr_stmt|;
 name|size
 operator|=
-name|strtol
+name|strtoll
 argument_list|(
 name|optarg
 argument_list|,
