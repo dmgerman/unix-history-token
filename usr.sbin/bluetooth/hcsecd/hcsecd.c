@@ -244,7 +244,8 @@ decl_stmt|,
 name|detach
 decl_stmt|,
 name|sock
-decl_stmt|,
+decl_stmt|;
+name|socklen_t
 name|size
 decl_stmt|;
 name|struct
@@ -1358,6 +1359,10 @@ argument_list|)
 expr_stmt|;
 name|strncpy
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|cp
 operator|->
 name|pin
@@ -1378,6 +1383,11 @@ name|pin_size
 operator|=
 name|strlen
 argument_list|(
+operator|(
+name|char
+specifier|const
+operator|*
+operator|)
 name|cp
 operator|->
 name|pin
