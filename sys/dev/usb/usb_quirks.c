@@ -450,6 +450,18 @@ name|UQ_ASSUME_CM_OVER_DATA
 block|}
 block|}
 block|,
+block|{
+name|USB_VENDOR_MOTOROLA2
+block|,
+name|USB_PRODUCT_MOTOROLA2_A41XV32X
+block|,
+name|ANY
+block|,
+block|{
+name|UQ_ASSUME_CM_OVER_DATA
+block|}
+block|}
+block|,
 comment|/* Devices which should be ignored by uhid */
 block|{
 name|USB_VENDOR_APC
