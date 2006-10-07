@@ -837,6 +837,16 @@ block|}
 block|,
 block|{
 block|{
+name|USB_VENDOR_NETGEAR
+block|,
+name|USB_PRODUCT_NETGEAR_FA101
+block|}
+block|,
+name|PII
+block|}
+block|,
+block|{
+block|{
 name|USB_VENDOR_SIEMENS
 block|,
 name|USB_PRODUCT_SIEMENS_SPEEDSTREAM
