@@ -292,6 +292,18 @@ name|UQ_NO_STRINGS
 block|}
 block|}
 block|,
+block|{
+name|USB_VENDOR_CMOTECH
+block|,
+name|USB_PRODUCT_CMOTECH_CDMAMODEM
+block|,
+name|ANY
+block|,
+block|{
+name|UQ_ASSUME_CM_OVER_DATA
+block|}
+block|}
+block|,
 comment|/* XXX These should have a revision number, but I don't know what they are. */
 block|{
 name|USB_VENDOR_HP
