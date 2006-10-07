@@ -1162,6 +1162,24 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
+comment|/* 		 * Rekam Digital CAMERA 		 * PR: usb/98713 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"CAMERA*"
+block|,
+literal|"4MP-9J6*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
 comment|/* 		 * iRiver H10 MP3 player 		 * PR: usb/102547 		 */
 block|{
 name|T_DIRECT
