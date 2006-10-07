@@ -494,6 +494,16 @@ block|}
 block|,
 name|CDCE_NO_UNION
 block|}
+block|,
+block|{
+block|{
+name|USB_VENDOR_COMPAQ
+block|,
+name|USB_PRODUCT_COMPAQ_IPAQLINUX
+block|}
+block|,
+name|CDCE_NO_UNION
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
