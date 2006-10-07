@@ -147,6 +147,24 @@ block|}
 struct|;
 end_struct
 
+begin_enum
+enum|enum
+block|{
+name|SHOWJOBS_DEFAULT
+block|,
+comment|/* job number, status, command */
+name|SHOWJOBS_VERBOSE
+block|,
+comment|/* job number, PID, status, command */
+name|SHOWJOBS_PIDS
+block|,
+comment|/* PID only */
+name|SHOWJOBS_PGIDS
+comment|/* PID of the group leader only */
+block|}
+enum|;
+end_enum
+
 begin_decl_stmt
 specifier|extern
 name|pid_t
@@ -255,8 +273,6 @@ begin_function_decl
 name|void
 name|showjobs
 parameter_list|(
-name|int
-parameter_list|,
 name|int
 parameter_list|,
 name|int
