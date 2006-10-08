@@ -385,7 +385,7 @@ block|}
 block|,
 block|{
 comment|/* grp  */
-literal|"V:C:qn:g:h:H:M:pNPY"
+literal|"V:C:qn:g:h:H:M:opNPY"
 block|,
 literal|"V:C:qn:g:Y"
 block|,
