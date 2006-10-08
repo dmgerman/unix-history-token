@@ -65,7 +65,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20061007_0030"
+value|"20061009_0031"
 end_define
 
 begin_define
@@ -276,6 +276,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_INTEL_82801H
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x284b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_INTEL_63XXESB
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x269a)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_INTEL_ALL
 value|HDA_MODEL_CONSTRUCT(INTEL, 0xffff)
 end_define
@@ -308,6 +322,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_NVIDIA_MCP61A
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x03e4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP61B
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x03f0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP65A
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x044a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP65B
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x044b)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_NVIDIA_ALL
 value|HDA_MODEL_CONSTRUCT(NVIDIA, 0xffff)
 end_define
@@ -333,8 +375,65 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_ATI_SB600
+value|HDA_MODEL_CONSTRUCT(ATI, 0x4383)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_ATI_ALL
 value|HDA_MODEL_CONSTRUCT(ATI, 0xffff)
+end_define
+
+begin_comment
+comment|/* VIA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VIA_VENDORID
+value|0x1106
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_VIA_VT82XX
+value|HDA_MODEL_CONSTRUCT(VIA, 0x3288)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_VIA_ALL
+value|HDA_MODEL_CONSTRUCT(VIA, 0xffff)
+end_define
+
+begin_comment
+comment|/* SiS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIS_VENDORID
+value|0x1039
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_SIS_966
+value|HDA_MODEL_CONSTRUCT(SIS, 0x7502)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_SIS_ALL
+value|HDA_MODEL_CONSTRUCT(SIS, 0xffff)
 end_define
 
 begin_comment
@@ -686,7 +785,7 @@ literal|"forcestereo"
 block|,
 name|HDA_QUIRK_FORCESTEREO
 block|}
-block|}
+block|, }
 struct|;
 end_struct
 
@@ -845,6 +944,18 @@ literal|"Intel 82801G"
 block|}
 block|,
 block|{
+name|HDA_INTEL_82801H
+block|,
+literal|"Intel 82801H"
+block|}
+block|,
+block|{
+name|HDA_INTEL_63XXESB
+block|,
+literal|"Intel 631x/632xESB"
+block|}
+block|,
+block|{
 name|HDA_NVIDIA_MCP51
 block|,
 literal|"NVidia MCP51"
@@ -857,9 +968,51 @@ literal|"NVidia MCP55"
 block|}
 block|,
 block|{
+name|HDA_NVIDIA_MCP61A
+block|,
+literal|"NVidia MCP61A"
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP61B
+block|,
+literal|"NVidia MCP61B"
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP65A
+block|,
+literal|"NVidia MCP65A"
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP65B
+block|,
+literal|"NVidia MCP65B"
+block|}
+block|,
+block|{
 name|HDA_ATI_SB450
 block|,
 literal|"ATI SB450"
+block|}
+block|,
+block|{
+name|HDA_ATI_SB600
+block|,
+literal|"ATI SB600"
+block|}
+block|,
+block|{
+name|HDA_VIA_VT82XX
+block|,
+literal|"VIA VT8251/8237A"
+block|}
+block|,
+block|{
+name|HDA_SIS_966
+block|,
+literal|"SiS 966"
 block|}
 block|,
 comment|/* Unknown */
@@ -879,6 +1032,18 @@ block|{
 name|HDA_ATI_ALL
 block|,
 literal|"ATI (Unknown)"
+block|}
+block|,
+block|{
+name|HDA_VIA_ALL
+block|,
+literal|"VIA (Unknown)"
+block|}
+block|,
+block|{
+name|HDA_SIS_ALL
+block|,
+literal|"SiS (Unknown)"
 block|}
 block|, }
 struct|;
