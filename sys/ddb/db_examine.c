@@ -724,7 +724,9 @@ operator|!=
 literal|0
 condition|)
 name|db_end_line
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 break|break;
 block|}

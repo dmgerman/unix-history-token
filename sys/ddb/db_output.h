@@ -45,7 +45,7 @@ begin_function_decl
 name|void
 name|db_end_line
 parameter_list|(
-name|void
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

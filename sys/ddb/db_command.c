@@ -1306,7 +1306,9 @@ name|name
 argument_list|)
 expr_stmt|;
 name|db_end_line
-argument_list|()
+argument_list|(
+literal|12
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -1349,7 +1351,9 @@ name|name
 argument_list|)
 expr_stmt|;
 name|db_end_line
-argument_list|()
+argument_list|(
+literal|12
+argument_list|)
 expr_stmt|;
 block|}
 block|}
