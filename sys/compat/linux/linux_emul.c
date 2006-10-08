@@ -344,15 +344,15 @@ argument_list|(
 name|child
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p
-operator|==
-name|NULL
-condition|)
-name|panic
+name|KASSERT
 argument_list|(
+name|p
+operator|!=
+name|NULL
+argument_list|,
+operator|(
 literal|"process not found in proc_init\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|p
@@ -725,7 +725,16 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|free
+argument_list|(
+name|em
+argument_list|,
+name|M_LINUX
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 comment|/* futexes stuff */
 name|cup
 operator|.
