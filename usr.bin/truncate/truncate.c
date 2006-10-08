@@ -75,7 +75,7 @@ end_include
 
 begin_function_decl
 specifier|static
-name|off_t
+name|int
 name|parselength
 parameter_list|(
 name|char
@@ -391,6 +391,18 @@ condition|)
 block|{
 if|if
 condition|(
+name|fd
+operator|!=
+operator|-
+literal|1
+condition|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|fd
 operator|=
@@ -536,12 +548,19 @@ operator|++
 expr_stmt|;
 continue|continue;
 block|}
+block|}
+if|if
+condition|(
+name|fd
+operator|!=
+operator|-
+literal|1
+condition|)
 name|close
 argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 name|error
 condition|?
@@ -558,7 +577,7 @@ end_comment
 
 begin_function
 specifier|static
-name|off_t
+name|int
 name|parselength
 parameter_list|(
 name|char
