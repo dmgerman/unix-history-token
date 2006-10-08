@@ -367,9 +367,6 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
-name|__sparc_utrap_setup
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|&
@@ -383,9 +380,14 @@ name|cleanup
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|__sparc_utrap_setup
+argument_list|()
+expr_stmt|;
 name|_init_tls
 argument_list|()
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|GCRT

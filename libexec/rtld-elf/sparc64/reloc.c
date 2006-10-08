@@ -3718,15 +3718,9 @@ modifier|*
 name|objs
 parameter_list|)
 block|{
-specifier|register
 name|Elf_Addr
 modifier|*
-modifier|*
-name|tp
-name|__asm__
-argument_list|(
-literal|"%g7"
-argument_list|)
+name|tpval
 decl_stmt|;
 comment|/*      * Fix the size of the static TLS block by using the maximum      * offset allocated so far and adding a bit for dynamic modules to      * use.      */
 name|tls_static_space
@@ -3735,7 +3729,7 @@ name|tls_last_offset
 operator|+
 name|RTLD_STATIC_TLS_EXTRA
 expr_stmt|;
-name|tp
+name|tpval
 operator|=
 name|allocate_tls
 argument_list|(
@@ -3756,6 +3750,7 @@ name|Elf_Addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+asm|__asm __volatile("mov %0, %%g7" : : "r" (tpval));
 block|}
 end_function
 
