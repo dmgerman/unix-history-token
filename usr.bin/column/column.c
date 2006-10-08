@@ -1256,11 +1256,13 @@ argument_list|(
 name|cols
 argument_list|,
 operator|(
+operator|(
 name|u_int
 operator|)
 name|maxcols
 operator|+
 name|DEFCOLS
+operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -1279,11 +1281,13 @@ argument_list|(
 name|lens
 argument_list|,
 operator|(
+operator|(
 name|u_int
 operator|)
 name|maxcols
 operator|+
 name|DEFCOLS
+operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
