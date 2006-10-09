@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * bthid_config.h  *  * Copyright (c) 2004 Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: bthid_config.h,v 1.3 2004/02/17 22:05:02 max Exp $  * $FreeBSD$  */
+comment|/*  * bthid_config.h  */
+end_comment
+
+begin_comment
+comment|/*-  * Copyright (c) 2006 Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: bthid_config.h,v 1.4 2006/09/07 21:06:53 max Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -67,9 +71,14 @@ range|:
 literal|1
 decl_stmt|;
 name|unsigned
+name|keyboard
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
 name|reserved
 range|:
-literal|12
+literal|11
 decl_stmt|;
 name|report_desc_t
 name|desc
@@ -106,6 +115,7 @@ end_typedef
 begin_decl_stmt
 specifier|extern
 name|char
+specifier|const
 modifier|*
 name|config_file
 decl_stmt|;
@@ -114,13 +124,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|char
+specifier|const
 modifier|*
 name|hids_file
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|int
+name|int32_t
 name|read_config_file
 parameter_list|(
 name|void
@@ -172,7 +183,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|int32_t
 name|read_hids_file
 parameter_list|(
 name|void
@@ -181,7 +192,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|int32_t
 name|write_hids_file
 parameter_list|(
 name|void

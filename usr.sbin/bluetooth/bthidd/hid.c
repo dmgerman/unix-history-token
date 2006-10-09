@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * hid.c  *  * Copyright (c) 2004 Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: hid.c,v 1.4 2004/11/17 21:59:42 max Exp $  * $FreeBSD$  */
+comment|/*  * hid.c  */
+end_comment
+
+begin_comment
+comment|/*-  * Copyright (c) 2006 Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: hid.c,v 1.5 2006/09/07 21:06:53 max Exp $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -36,12 +40,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb/usb.h>
 end_include
 
@@ -49,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<dev/usb/usbhid.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -84,13 +88,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bthidd.h"
+file|"bthid_config.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"bthid_config.h"
+file|"bthidd.h"
 end_include
 
 begin_include
@@ -133,38 +137,22 @@ parameter_list|)
 value|(sizeof(a)/sizeof(a[0]))
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|HID_BUT
-end_undef
-
-begin_define
-define|#
-directive|define
-name|HID_BUT
-parameter_list|(
-name|i
-parameter_list|)
-value|((i)< 3 ? (((i) ^ 3) % 3) : (i))
-end_define
-
 begin_comment
 comment|/*  * Process data from control channel  */
 end_comment
 
 begin_function
-name|int
+name|int32_t
 name|hid_control
 parameter_list|(
 name|bthid_session_p
 name|s
 parameter_list|,
-name|char
+name|uint8_t
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|int32_t
 name|len
 parameter_list|)
 block|{
@@ -438,24 +426,22 @@ comment|/*  * Process data from the interrupt channel  */
 end_comment
 
 begin_function
-name|int
+name|int32_t
 name|hid_interrupt
 parameter_list|(
 name|bthid_session_p
 name|s
 parameter_list|,
-name|char
+name|uint8_t
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|int32_t
 name|len
 parameter_list|)
 block|{
 name|hid_device_p
 name|hid_device
-init|=
-name|NULL
 decl_stmt|;
 name|hid_data_t
 name|d
@@ -463,7 +449,7 @@ decl_stmt|;
 name|hid_item_t
 name|h
 decl_stmt|;
-name|int
+name|int32_t
 name|report_id
 decl_stmt|,
 name|usage
@@ -544,10 +530,6 @@ return|;
 block|}
 if|if
 condition|(
-operator|(
-name|unsigned
-name|char
-operator|)
 name|data
 index|[
 literal|0
@@ -802,9 +784,7 @@ name|bit_set
 argument_list|(
 name|s
 operator|->
-name|srv
-operator|->
-name|keys
+name|keys1
 argument_list|,
 name|usage
 argument_list|)
@@ -825,9 +805,7 @@ name|bit_set
 argument_list|(
 name|s
 operator|->
-name|srv
-operator|->
-name|keys
+name|keys1
 argument_list|,
 name|val
 argument_list|)
@@ -879,9 +857,7 @@ name|bit_set
 argument_list|(
 name|s
 operator|->
-name|srv
-operator|->
-name|keys
+name|keys1
 argument_list|,
 name|val
 argument_list|)
@@ -898,22 +874,50 @@ break|break;
 case|case
 name|HUP_BUTTON
 case|:
+if|if
+condition|(
+name|usage
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|usage
+operator|==
+literal|2
+condition|)
+name|usage
+operator|=
+literal|3
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|usage
+operator|==
+literal|3
+condition|)
+name|usage
+operator|=
+literal|2
+expr_stmt|;
 name|mouse_butt
 operator||=
 operator|(
 name|val
 operator|<<
-name|HID_BUT
-argument_list|(
+operator|(
 name|usage
 operator|-
 literal|1
-argument_list|)
+operator|)
 operator|)
 expr_stmt|;
 name|mevents
 operator|++
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|HUP_CONSUMER
@@ -1074,7 +1078,7 @@ literal|0x68
 expr_stmt|;
 break|break;
 case|case
-literal|0x227
+literal|0227
 case|:
 comment|/* WWW Refresh */
 name|val
@@ -1106,7 +1110,14 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|int
+if|if
+condition|(
+name|hid_device
+operator|->
+name|keyboard
+condition|)
+block|{
+name|int32_t
 name|buf
 index|[
 literal|4
@@ -1124,11 +1135,19 @@ operator||
 literal|0x80
 block|}
 decl_stmt|;
-name|write
+name|assert
 argument_list|(
 name|s
 operator|->
-name|srv
+name|vkbd
+operator|!=
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|write
+argument_list|(
+name|s
 operator|->
 name|vkbd
 argument_list|,
@@ -1137,6 +1156,29 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Keyboard events "
+expr|\
+literal|"received from non-keyboard "
+expr|\
+literal|"device %s. Please report"
+argument_list|,
+name|bt_ntoa
+argument_list|(
+operator|&
+name|s
+operator|->
+name|bdaddr
+argument_list|,
+name|NULL
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1242,19 +1284,59 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-comment|/* Feed keyboard events into kernel */
+comment|/* 	 * XXX FIXME Feed keyboard events into kernel. 	 * The code below works, bit host also needs to track 	 * and handle repeat. 	 * 	 * Key repeat currently works in X, but not in console. 	 */
 if|if
 condition|(
 name|kevents
 operator|>
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|hid_device
+operator|->
+name|keyboard
+condition|)
+block|{
+name|assert
+argument_list|(
+name|s
+operator|->
+name|vkbd
+operator|!=
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 name|kbd_process_keys
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/*  	 * XXX FIXME Feed mouse events into kernel. 	 * The code block below works, but it is not good enough. 	 * Need to track double-clicks etc. 	 */
+block|}
+else|else
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Keyboard events received from "
+expr|\
+literal|"non-keyboard device %s. Please report"
+argument_list|,
+name|bt_ntoa
+argument_list|(
+operator|&
+name|s
+operator|->
+name|bdaddr
+argument_list|,
+name|NULL
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*  	 * XXX FIXME Feed mouse events into kernel. 	 * The code block below works, but it is not good enough. 	 * Need to track double-clicks etc. 	 * 	 * Double click currently works in X, but not in console. 	 */
 if|if
 condition|(
 name|mevents
