@@ -336,6 +336,66 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|periph_selto_delay
+init|=
+literal|1000
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.cam.periph_selto_delay"
+argument_list|,
+operator|&
+name|periph_selto_delay
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|periph_noresrc_delay
+init|=
+literal|500
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.cam.periph_noresrc_delay"
+argument_list|,
+operator|&
+name|periph_noresrc_delay
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|periph_busy_delay
+init|=
+literal|500
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.cam.periph_busy_delay"
+argument_list|,
+operator|&
+name|periph_busy_delay
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|void
 name|periphdriver_register
@@ -6052,6 +6112,8 @@ name|relsim_flags
 decl_stmt|;
 name|u_int32_t
 name|timeout
+init|=
+literal|0
 decl_stmt|;
 name|action_string
 operator|=
@@ -6426,14 +6488,14 @@ name|printed
 operator|++
 expr_stmt|;
 block|}
-comment|/* 				 * Wait a second to give the device 				 * time to recover before we try again. 				 */
+comment|/* 				 * Wait a bit to give the device 				 * time to recover before we try again. 				 */
 name|relsim_flags
 operator|=
 name|RELSIM_RELEASE_AFTER_TIMEOUT
 expr_stmt|;
 name|timeout
 operator|=
-literal|1000
+name|periph_selto_delay
 expr_stmt|;
 break|break;
 block|}
@@ -6615,10 +6677,33 @@ break|break;
 case|case
 name|CAM_RESRC_UNAVAIL
 case|:
+comment|/* Wait a bit for the resource shortage to abate. */
+name|timeout
+operator|=
+name|periph_noresrc_delay
+expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 name|CAM_BUSY
 case|:
-comment|/* timeout??? */
+if|if
+condition|(
+name|timeout
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Wait a bit for the busy condition to abate. */
+name|timeout
+operator|=
+name|periph_busy_delay
+expr_stmt|;
+block|}
+name|relsim_flags
+operator|=
+name|RELSIM_RELEASE_AFTER_TIMEOUT
+expr_stmt|;
+comment|/* FALLTHROUGH */
 default|default:
 comment|/* decrement the number of retries */
 if|if
