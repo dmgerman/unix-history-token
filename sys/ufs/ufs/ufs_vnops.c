@@ -5935,6 +5935,7 @@ name|IO_NORMAL
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|DOINGASYNC
 argument_list|(
 name|tvp
@@ -8100,6 +8101,7 @@ name|IO_NORMAL
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|DOINGASYNC
 argument_list|(
 name|vp
