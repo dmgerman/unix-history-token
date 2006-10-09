@@ -95,11 +95,22 @@ directive|include
 file|<machine/bus_common.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SUN4V
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<machine/cache.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -444,9 +455,15 @@ parameter_list|)
 block|{
 name|u_int
 name|lat
-decl_stmt|,
+decl_stmt|;
+ifndef|#
+directive|ifndef
+name|SUN4V
+name|u_int
 name|clnsz
 decl_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Initialize the latency timer register for busmaster devices to work 	 * properly. This is another task which the firmware does not always 	 * perform. The Min_Gnt register can be used to compute it's recommended 	 * value: it contains the desired latency in units of 1/4 us. To 	 * calculate the correct latency timer value, a bus clock of 33MHz and 	 * no wait states should be assumed. 	 */
 name|lat
 operator|=
@@ -536,6 +553,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|SUN4V
 comment|/* 	 * Compute a value to write into the cache line size register. 	 * The role of the streaming cache is unclear in write invalidate 	 * transfers, so it is made sure that it's line size is always reached. 	 */
 name|clnsz
 operator|=
@@ -610,6 +630,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * The preset in the intline register is usually wrong. Reset it to 255, 	 * so that the PCI code will reroute the interrupt if needed. 	 */
 name|PCIB_WRITE_CONFIG
 argument_list|(

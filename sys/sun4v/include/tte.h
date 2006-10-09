@@ -522,6 +522,38 @@ value|TTE256M
 end_define
 
 begin_comment
+comment|/*  * sparc64 compatibility for the loader  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TD_SIZE_SHIFT
+value|(61)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TS_4M
+value|(3UL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_V
+value|(1UL<< 63)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_4M
+value|(TS_4M<< TD_SIZE_SHIFT)
+end_define
+
+begin_comment
 comment|/*  * default flags for kernel pages  */
 end_comment
 

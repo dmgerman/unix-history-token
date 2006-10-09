@@ -1676,6 +1676,9 @@ operator|&
 name|proc0
 argument_list|,
 operator|&
+name|ksegrp0
+argument_list|,
+operator|&
 name|thread0
 argument_list|)
 expr_stmt|;

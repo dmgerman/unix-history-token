@@ -522,14 +522,12 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
-name|vm_page_release_contig
+name|vm_page_free
 argument_list|(
-name|m
-argument_list|,
-name|TSB_SIZE
+name|tm
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
