@@ -594,7 +594,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Number of vnodes in existence.  Increased whenever getnewvnode()  * allocates a new vnode, never decreased.  */
+comment|/*  * Number of vnodes in existence.  Increased whenever getnewvnode()  * allocates a new vnode, decreased on vdestroy() called on VI_DOOMed  * vnode.  */
 end_comment
 
 begin_decl_stmt
