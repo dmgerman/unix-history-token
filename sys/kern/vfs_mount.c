@@ -3658,10 +3658,6 @@ decl_stmt|,
 name|flag
 init|=
 literal|0
-decl_stmt|,
-name|kern_flag
-init|=
-literal|0
 decl_stmt|;
 name|struct
 name|vattr
@@ -3944,12 +3940,6 @@ operator|=
 name|mp
 operator|->
 name|mnt_flag
-expr_stmt|;
-name|kern_flag
-operator|=
-name|mp
-operator|->
-name|mnt_kern_flag
 expr_stmt|;
 comment|/* 		 * We only allow the filesystem to be reloaded if it 		 * is currently mounted read-only. 		 */
 if|if
@@ -4571,20 +4561,12 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 name|mp
 operator|->
 name|mnt_flag
 operator|=
 name|flag
 expr_stmt|;
-name|mp
-operator|->
-name|mnt_kern_flag
-operator|=
-name|kern_flag
-expr_stmt|;
-block|}
 name|MNT_IUNLOCK
 argument_list|(
 name|mp
