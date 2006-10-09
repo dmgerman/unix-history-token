@@ -1919,7 +1919,7 @@ parameter_list|,
 name|_outsize
 parameter_list|)
 define|\
-value|ath_hal_getdiagstate(_ah, 27, NULL, 0, (void **)(_outdata), _outsize)
+value|ath_hal_getdiagstate(_ah, 29, NULL, 0, (void **)(_outdata), _outsize)
 end_define
 
 begin_define
