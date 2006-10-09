@@ -570,6 +570,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASI_ITLB_TAG_READ_REG
+value|0x56
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASI_IMMU_DEMAP
 value|0x57
 end_define
