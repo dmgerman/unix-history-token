@@ -396,6 +396,10 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"acpi: bad read from port 0x%03x (%d)\n"
@@ -531,6 +535,10 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"acpi: bad write to port 0x%03x (%d), val %#x\n"
