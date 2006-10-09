@@ -973,10 +973,6 @@ name|loc
 decl_stmt|;
 name|int
 name|flag
-init|=
-name|mp
-operator|->
-name|mnt_flag
 decl_stmt|;
 name|struct
 name|timespec
@@ -1114,6 +1110,22 @@ expr_stmt|;
 name|sn
 operator|=
 name|NULL
+expr_stmt|;
+name|MNT_ILOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+name|flag
+operator|=
+name|mp
+operator|->
+name|mnt_flag
+expr_stmt|;
+name|MNT_IUNLOCK
+argument_list|(
+name|mp
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Need to serialize access to snapshot code per filesystem. 	 */
 comment|/* 	 * Assign a snapshot slot in the superblock. 	 */
@@ -4737,11 +4749,21 @@ argument_list|(
 name|ump
 argument_list|)
 expr_stmt|;
+name|MNT_ILOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 name|mp
 operator|->
 name|mnt_flag
 operator|=
 name|flag
+expr_stmt|;
+name|MNT_IUNLOCK
+argument_list|(
+name|mp
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

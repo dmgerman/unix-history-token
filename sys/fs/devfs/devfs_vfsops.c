@@ -241,6 +241,11 @@ argument_list|,
 literal|"devfsmount"
 argument_list|)
 expr_stmt|;
+name|MNT_ILOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 name|mp
 operator|->
 name|mnt_flag
@@ -264,6 +269,11 @@ name|MNT_MULTILABEL
 expr_stmt|;
 endif|#
 directive|endif
+name|MNT_IUNLOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 name|fmp
 operator|->
 name|dm_mount

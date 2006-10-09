@@ -2124,6 +2124,11 @@ name|vfsp
 operator|->
 name|vfc_typenum
 expr_stmt|;
+name|MNT_ILOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 name|mp
 operator|->
 name|mnt_flag
@@ -2133,6 +2138,11 @@ operator|->
 name|vfc_flags
 operator|&
 name|MNT_VISFLAGMASK
+expr_stmt|;
+name|MNT_IUNLOCK
+argument_list|(
+name|mp
+argument_list|)
 expr_stmt|;
 name|strlcpy
 argument_list|(
@@ -3924,6 +3934,11 @@ name|vp
 operator|->
 name|v_mount
 expr_stmt|;
+name|MNT_ILOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 name|flag
 operator|=
 name|mp
@@ -3958,6 +3973,11 @@ literal|0
 operator|)
 condition|)
 block|{
+name|MNT_IUNLOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 name|vput
 argument_list|(
 name|vp
@@ -3970,6 +3990,11 @@ operator|)
 return|;
 comment|/* Needs translation */
 block|}
+name|MNT_IUNLOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Only privileged root, or (if MNT_USER is set) the user that 		 * did the original mount is permitted to update it. 		 */
 name|error
 operator|=
@@ -4079,6 +4104,11 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+name|MNT_ILOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 name|mp
 operator|->
 name|mnt_flag
@@ -4096,6 +4126,11 @@ name|MNT_SNAPSHOT
 operator||
 name|MNT_ROOTFS
 operator|)
+expr_stmt|;
+name|MNT_IUNLOCK
+argument_list|(
+name|mp
+argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
@@ -4353,6 +4388,11 @@ name|fsdata
 expr_stmt|;
 block|}
 comment|/* 	 * Set the mount level flags. 	 */
+name|MNT_ILOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fsflags
@@ -4385,6 +4425,11 @@ name|MNT_FORCE
 operator||
 name|MNT_ROOTFS
 operator|)
+expr_stmt|;
+name|MNT_IUNLOCK
+argument_list|(
+name|mp
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Mount the filesystem. 	 * XXX The final recipients of VFS_MOUNT just overwrite the ndp they 	 * get.  No freeing of cn_pnbuf. 	 */
 name|error
@@ -4502,6 +4547,11 @@ operator|&
 name|MNT_UPDATE
 condition|)
 block|{
+name|MNT_ILOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 name|mp
 operator|->
 name|mnt_flag
@@ -4535,6 +4585,11 @@ operator|=
 name|kern_flag
 expr_stmt|;
 block|}
+name|MNT_IUNLOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5482,6 +5537,11 @@ argument_list|,
 name|MNT_WAIT
 argument_list|)
 expr_stmt|;
+name|MNT_ILOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 name|async_flag
 operator|=
 name|mp
@@ -5496,6 +5556,11 @@ name|mnt_flag
 operator|&=
 operator|~
 name|MNT_ASYNC
+expr_stmt|;
+name|MNT_IUNLOCK
+argument_list|(
+name|mp
+argument_list|)
 expr_stmt|;
 name|cache_purgevfs
 argument_list|(
