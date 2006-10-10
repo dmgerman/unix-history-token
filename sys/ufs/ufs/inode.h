@@ -45,7 +45,7 @@ value|int32_t
 end_define
 
 begin_comment
-comment|/*  * The inode is used to describe each active (or recently active) file in the  * UFS filesystem. It is composed of two types of information. The first part  * is the information that is needed only while the file is active (such as  * the identity of the file and linkage to speed its lookup). The second part  * is the permanent meta-data associated with the file which is read in  * from the permanent dinode from long term storage when the file becomes  * active, and is put back when the file is no longer being used.  */
+comment|/*  * The inode is used to describe each active (or recently active) file in the  * UFS filesystem. It is composed of two types of information. The first part  * is the information that is needed only while the file is active (such as  * the identity of the file and linkage to speed its lookup). The second part  * is the permanent meta-data associated with the file which is read in  * from the permanent dinode from long term storage when the file becomes  * active, and is put back when the file is no longer being used.  *  * An inode may only be changed while holding either the exclusive  * vnode lock or the shared vnode lock and the vnode interlock. We use  * the latter only for "read" and "get" operations that require  * changing i_flag, or a timestamp. This locking protocol allows executing  * those operations without having to upgrade the vnode lock from shared to  * exclusive.  */
 end_comment
 
 begin_struct
@@ -299,6 +299,17 @@ end_define
 
 begin_comment
 comment|/* Blocks to be freed in free count. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IN_LAZYACCESS
+value|0x0100
+end_define
+
+begin_comment
+comment|/* Process IN_ACCESS after the 					   suspension finished */
 end_comment
 
 begin_define
