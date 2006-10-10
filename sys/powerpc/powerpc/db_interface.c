@@ -44,12 +44,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/linker_set.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/lock.h>
 end_include
 
@@ -433,44 +427,6 @@ name|pc
 parameter_list|)
 block|{ }
 end_function
-
-begin_comment
-comment|/*  * PowerPC-specific ddb commands:  */
-end_comment
-
-begin_macro
-name|DB_COMMAND
-argument_list|(
-argument|reboot
-argument_list|,
-argument|db_reboot
-argument_list|)
-end_macro
-
-begin_block
-block|{
-name|cpu_reset
-argument_list|()
-expr_stmt|;
-block|}
-end_block
-
-begin_macro
-name|DB_COMMAND
-argument_list|(
-argument|halt
-argument_list|,
-argument|db_halt
-argument_list|)
-end_macro
-
-begin_block
-block|{
-name|cpu_halt
-argument_list|()
-expr_stmt|;
-block|}
-end_block
 
 end_unit
 
