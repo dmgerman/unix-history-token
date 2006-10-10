@@ -2218,7 +2218,9 @@ argument_list|)
 expr_stmt|;
 comment|/* Init local apic for irq's */
 name|lapic_setup
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* Set memory range attributes for this CPU to match the BSP */
 name|mem_range_AP_init
