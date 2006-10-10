@@ -343,17 +343,13 @@ operator|++
 name|argv
 control|)
 block|{
-name|success
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|pflag
 condition|)
 block|{
-if|if
-condition|(
+name|success
+operator|=
 name|build
 argument_list|(
 operator|*
@@ -361,10 +357,6 @@ name|argv
 argument_list|,
 name|omode
 argument_list|)
-condition|)
-name|success
-operator|=
-literal|0
 expr_stmt|;
 block|}
 elseif|else
@@ -416,7 +408,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
+name|success
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|vflag
@@ -432,6 +429,7 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -441,10 +439,12 @@ name|exitval
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 		 * The mkdir() and umask() calls both honor only the low 		 * nine bits, so if you try to set a mode including the 		 * sticky, setuid, setgid bits you lose them.  Don't do 		 * this unless the user has specifically requested a mode, 		 * as chmod will (obviously) ignore the umask. 		 */
+comment|/* 		 * The mkdir() and umask() calls both honor only the low 		 * nine bits, so if you try to set a mode including the 		 * sticky, setuid, setgid bits you lose them.  Don't do 		 * this unless the user has specifically requested a mode, 		 * as chmod will (obviously) ignore the umask.  Do this 		 * on newly created directories only. 		 */
 if|if
 condition|(
 name|success
+operator|==
+literal|1
 operator|&&
 name|mode
 operator|!=
@@ -483,6 +483,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Returns 1 if a directory has been created,  * 2 if it already existed, and 0 on failure.  */
+end_comment
 
 begin_function
 name|int
@@ -526,7 +530,7 @@ literal|0
 expr_stmt|;
 name|retval
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -608,7 +612,7 @@ condition|(
 name|first
 condition|)
 block|{
-comment|/* 			 * POSIX 1003.2: 			 * For each dir operand that does not name an existing 			 * directory, effects equivalent to those cased by the 			 * following command shall occcur: 			 * 			 * mkdir -p -m $(umask -S),u+wx $(dirname dir)&& 			 *    mkdir [-m mode] dir 			 * 			 * We change the user's umask and then restore it, 			 * instead of doing chmod's. 			 */
+comment|/* 			 * POSIX 1003.2: 			 * For each dir operand that does not name an existing 			 * directory, effects equivalent to those caused by the 			 * following command shall occcur: 			 * 			 * mkdir -p -m $(umask -S),u+wx $(dirname dir)&& 			 *    mkdir [-m mode] dir 			 * 			 * We change the user's umask and then restore it, 			 * instead of doing chmod's. 			 */
 name|oumask
 operator|=
 name|umask
@@ -705,7 +709,7 @@ argument_list|)
 expr_stmt|;
 name|retval
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 break|break;
 block|}
@@ -743,10 +747,18 @@ argument_list|)
 expr_stmt|;
 name|retval
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|last
+condition|)
+name|retval
+operator|=
+literal|2
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -759,7 +771,7 @@ argument_list|)
 expr_stmt|;
 name|retval
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 break|break;
 block|}
