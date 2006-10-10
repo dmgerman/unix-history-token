@@ -2320,11 +2320,6 @@ name|bsd_args
 operator|.
 name|sops
 operator|=
-operator|(
-expr|struct
-name|sembuf
-operator|*
-operator|)
 name|PTRIN
 argument_list|(
 name|args
@@ -2548,9 +2543,6 @@ argument_list|,
 operator|&
 name|linux_semid
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|PTRIN
 argument_list|(
 name|args
@@ -2700,9 +2692,6 @@ argument_list|,
 operator|&
 name|linux_semid
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|PTRIN
 argument_list|(
 name|args
@@ -3092,9 +3081,6 @@ argument_list|,
 operator|&
 name|linux_msqid
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|PTRIN
 argument_list|(
 name|args
@@ -3204,9 +3190,6 @@ argument_list|,
 operator|&
 name|linux_msqid
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|PTRIN
 argument_list|(
 name|args
@@ -3593,9 +3576,6 @@ argument_list|,
 operator|&
 name|linux_shminfo
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|PTRIN
 argument_list|(
 name|args
@@ -3660,9 +3640,6 @@ argument_list|(
 operator|&
 name|linux_shm_info
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|PTRIN
 argument_list|(
 name|args
@@ -3734,9 +3711,6 @@ argument_list|,
 operator|&
 name|linux_shmid
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|PTRIN
 argument_list|(
 name|args
@@ -3802,9 +3776,6 @@ argument_list|,
 operator|&
 name|linux_shmid
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|PTRIN
 argument_list|(
 name|args
@@ -3830,9 +3801,6 @@ argument_list|,
 operator|&
 name|linux_shmid
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|PTRIN
 argument_list|(
 name|args
@@ -3915,9 +3883,6 @@ argument_list|,
 operator|&
 name|linux_shmid
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|PTRIN
 argument_list|(
 name|args
