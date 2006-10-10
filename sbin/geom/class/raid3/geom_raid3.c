@@ -995,6 +995,20 @@ operator|-
 literal|2
 operator|)
 expr_stmt|;
+name|md
+operator|.
+name|md_mediasize
+operator|-=
+operator|(
+name|md
+operator|.
+name|md_mediasize
+operator|%
+name|md
+operator|.
+name|md_sectorsize
+operator|)
+expr_stmt|;
 comment|/* 	 * Clear last sector first, to spoil all components if device exists. 	 */
 for|for
 control|(
