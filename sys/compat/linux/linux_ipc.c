@@ -3499,9 +3499,6 @@ name|struct
 name|shmid_ds
 name|bsd_shmid
 decl_stmt|;
-name|size_t
-name|bufsz
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -3543,8 +3540,7 @@ operator|)
 operator|&
 name|bsd_shminfo
 argument_list|,
-operator|&
-name|bufsz
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3614,8 +3610,7 @@ operator|)
 operator|&
 name|bsd_shm_info
 argument_list|,
-operator|&
-name|bufsz
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3678,8 +3673,7 @@ operator|)
 operator|&
 name|bsd_shmid
 argument_list|,
-operator|&
-name|bufsz
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3743,8 +3737,7 @@ operator|)
 operator|&
 name|bsd_shmid
 argument_list|,
-operator|&
-name|bufsz
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3844,8 +3837,7 @@ operator|)
 operator|&
 name|bsd_shmid
 argument_list|,
-operator|&
-name|bufsz
+name|NULL
 argument_list|)
 return|;
 case|case
@@ -3930,8 +3922,7 @@ name|IPC_RMID
 argument_list|,
 name|buf
 argument_list|,
-operator|&
-name|bufsz
+name|NULL
 argument_list|)
 return|;
 block|}
