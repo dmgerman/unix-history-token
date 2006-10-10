@@ -442,9 +442,6 @@ literal|'\n'
 condition|)
 block|{
 comment|/* Newline */
-name|db_force_whitespace
-argument_list|()
-expr_stmt|;
 name|cnputc
 argument_list|(
 name|c
@@ -491,9 +488,6 @@ literal|'\r'
 condition|)
 block|{
 comment|/* Return */
-name|db_force_whitespace
-argument_list|()
-expr_stmt|;
 name|cnputc
 argument_list|(
 name|c
@@ -736,7 +730,15 @@ block|}
 block|}
 name|db_printf
 argument_list|(
-literal|"        \r"
+literal|"        "
+argument_list|)
+expr_stmt|;
+name|db_force_whitespace
+argument_list|()
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"\r"
 argument_list|)
 expr_stmt|;
 name|db_newlines
