@@ -46,7 +46,7 @@ begin_define
 define|#
 directive|define
 name|INTRCNT_COUNT
-value|(1 + NUM_IO_INTS * 2 + 1)
+value|(1 + NUM_IO_INTS * 2 + (1 + 7) * MAXCPU)
 end_define
 
 begin_else
@@ -58,7 +58,7 @@ begin_define
 define|#
 directive|define
 name|INTRCNT_COUNT
-value|(1 + NUM_IO_INTS * 2 + (1 + 7) * MAXCPU)
+value|(1 + NUM_IO_INTS * 2 + 1)
 end_define
 
 begin_endif
