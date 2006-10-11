@@ -7141,7 +7141,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
-comment|/* 					 * XXX IPv6 flows are not 					 * supported yet. 					 * */
+comment|/* 					 * XXX IPv6 flows are not 					 * supported yet. 					 */
 if|if
 condition|(
 name|IS_IP6_FLOW_ID
