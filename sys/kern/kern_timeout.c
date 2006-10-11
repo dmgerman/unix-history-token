@@ -878,13 +878,17 @@ block|{
 name|gcalls
 operator|++
 expr_stmt|;
-name|CTR1
+name|CTR3
 argument_list|(
 name|KTR_CALLOUT
 argument_list|,
-literal|"callout %p"
+literal|"callout %p func %p arg %p"
+argument_list|,
+name|c
 argument_list|,
 name|c_func
+argument_list|,
+name|c_arg
 argument_list|)
 expr_stmt|;
 block|}
@@ -893,13 +897,18 @@ block|{
 name|mtxcalls
 operator|++
 expr_stmt|;
-name|CTR1
+name|CTR3
 argument_list|(
 name|KTR_CALLOUT
 argument_list|,
-literal|"callout mtx %p"
+literal|"callout mtx"
+literal|" %p func %p arg %p"
+argument_list|,
+name|c
 argument_list|,
 name|c_func
+argument_list|,
+name|c_arg
 argument_list|)
 expr_stmt|;
 block|}
@@ -909,13 +918,17 @@ block|{
 name|mpcalls
 operator|++
 expr_stmt|;
-name|CTR1
+name|CTR3
 argument_list|(
 name|KTR_CALLOUT
 argument_list|,
-literal|"callout mpsafe %p"
+literal|"callout mpsafe %p func %p arg %p"
+argument_list|,
+name|c
 argument_list|,
 name|c_func
+argument_list|,
+name|c_arg
 argument_list|)
 expr_stmt|;
 block|}
@@ -1454,6 +1467,29 @@ name|callout_wait
 condition|)
 block|{
 comment|/* 			 * Someone has called callout_drain to kill this 			 * callout.  Don't reschedule. 			 */
+name|CTR4
+argument_list|(
+name|KTR_CALLOUT
+argument_list|,
+literal|"%s %p func %p arg %p"
+argument_list|,
+name|cancelled
+condition|?
+literal|"cancelled"
+else|:
+literal|"failed to cancel"
+argument_list|,
+name|c
+argument_list|,
+name|c
+operator|->
+name|c_func
+argument_list|,
+name|c
+operator|->
+name|c_arg
+argument_list|)
+expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -1580,6 +1616,31 @@ operator|.
 name|tqe
 argument_list|)
 expr_stmt|;
+name|CTR5
+argument_list|(
+name|KTR_CALLOUT
+argument_list|,
+literal|"%sscheduled %p func %p arg %p in %d"
+argument_list|,
+name|cancelled
+condition|?
+literal|"re"
+else|:
+literal|""
+argument_list|,
+name|c
+argument_list|,
+name|c
+operator|->
+name|c_func
+argument_list|,
+name|c
+operator|->
+name|c_arg
+argument_list|,
+name|to_ticks
+argument_list|)
+expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -1698,6 +1759,23 @@ operator|!=
 name|curr_callout
 condition|)
 block|{
+name|CTR3
+argument_list|(
+name|KTR_CALLOUT
+argument_list|,
+literal|"failed to stop %p func %p arg %p"
+argument_list|,
+name|c
+argument_list|,
+name|c
+operator|->
+name|c_func
+argument_list|,
+name|c
+operator|->
+name|c_arg
+argument_list|)
+expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -1756,6 +1834,23 @@ name|curr_cancelled
 operator|=
 literal|1
 expr_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_CALLOUT
+argument_list|,
+literal|"cancelled %p func %p arg %p"
+argument_list|,
+name|c
+argument_list|,
+name|c
+operator|->
+name|c_func
+argument_list|,
+name|c
+operator|->
+name|c_arg
+argument_list|)
+expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -1768,6 +1863,23 @@ literal|1
 operator|)
 return|;
 block|}
+name|CTR3
+argument_list|(
+name|KTR_CALLOUT
+argument_list|,
+literal|"failed to stop %p func %p arg %p"
+argument_list|,
+name|c
+argument_list|,
+name|c
+operator|->
+name|c_func
+argument_list|,
+name|c
+operator|->
+name|c_arg
+argument_list|)
+expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -1827,6 +1939,23 @@ argument_list|,
 name|c_links
 operator|.
 name|tqe
+argument_list|)
+expr_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_CALLOUT
+argument_list|,
+literal|"cancelled %p func %p arg %p"
+argument_list|,
+name|c
+argument_list|,
+name|c
+operator|->
+name|c_func
+argument_list|,
+name|c
+operator|->
+name|c_arg
 argument_list|)
 expr_stmt|;
 if|if
