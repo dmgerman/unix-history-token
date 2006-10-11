@@ -1326,6 +1326,8 @@ decl_stmt|,
 name|ch
 decl_stmt|,
 name|quiet
+decl_stmt|,
+name|writecore
 decl_stmt|;
 name|dumpnr
 operator|=
@@ -1460,6 +1462,10 @@ name|quiet
 operator|=
 literal|0
 expr_stmt|;
+name|writecore
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1471,7 +1477,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ac:d:fn:qr:v"
+literal|"ac:d:fn:qr:vw"
 argument_list|)
 operator|)
 operator|!=
@@ -1633,6 +1639,15 @@ case|:
 comment|/* increase verbosity. */
 name|verbose
 operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'w'
+case|:
+comment|/* core file is writeable. */
+name|writecore
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -2153,6 +2168,10 @@ name|vmcore
 argument_list|,
 name|NULL
 argument_list|,
+name|writecore
+condition|?
+name|O_RDWR
+else|:
 name|O_RDONLY
 argument_list|,
 name|kvm_err
