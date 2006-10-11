@@ -501,30 +501,20 @@ name|FTS_PHYSICAL
 expr_stmt|;
 if|if
 condition|(
-name|rflag
-condition|)
-block|{
-if|if
-condition|(
 name|Rflag
+operator|&&
+name|rflag
 condition|)
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"the -R and -r options may not be specified together."
+literal|"the -R and -r options may not be specified together"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|rflag
-operator|&&
-operator|!
-name|Hflag
-operator|&&
-operator|!
-name|Pflag
 condition|)
 name|Rflag
 operator|=
@@ -822,9 +812,7 @@ operator|.
 name|st_mode
 argument_list|)
 operator|&&
-operator|(
 name|Rflag
-operator|)
 condition|)
 name|type
 operator|=
