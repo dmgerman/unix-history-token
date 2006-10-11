@@ -140,7 +140,7 @@ comment|/* must be power of 2 */
 end_comment
 
 begin_comment
-comment|/* This hash is for TCP or UDP packets */
+comment|/* This hash is for TCP or UDP packets. */
 end_comment
 
 begin_define
@@ -157,11 +157,11 @@ parameter_list|,
 name|port2
 parameter_list|)
 define|\
-value|(((addr1>> 16) ^		\ 	  (addr2& 0x00FF) ^		\ 	  ((port1 ^ port2)<< 8) )&	\ 	 (NBUCKETS - 1))
+value|(((addr1 ^ (addr1>> 16) ^ 		\ 	htons(addr2 ^ (addr2>> 16))) ^ 	\ 	srcport ^ htons(dstport))&		\ 	(NBUCKETS - 1))
 end_define
 
 begin_comment
-comment|/* This hash is for all other IP packets */
+comment|/* This hash is for all other IP packets. */
 end_comment
 
 begin_define
@@ -174,7 +174,7 @@ parameter_list|,
 name|addr2
 parameter_list|)
 define|\
-value|(((addr1>> 16) ^		\ 	  (addr2& 0x00FF) )&		\ 	 (NBUCKETS - 1))
+value|((addr1 ^ (addr1>> 16) ^ 		\ 	htons(addr2 ^ (addr2>> 16)))&		\ 	(NBUCKETS - 1))
 end_define
 
 begin_comment
