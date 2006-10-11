@@ -4489,7 +4489,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Filler function for proc/pid_max  */
+comment|/*  * Filler function for proc/sys/kernel/pid_max  */
 end_comment
 
 begin_function
