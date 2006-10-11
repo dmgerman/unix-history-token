@@ -157,7 +157,7 @@ parameter_list|,
 name|port2
 parameter_list|)
 define|\
-value|(((addr1 ^ (addr1>> 16) ^ 		\ 	htons(addr2 ^ (addr2>> 16))) ^ 	\ 	srcport ^ htons(dstport))&		\ 	(NBUCKETS - 1))
+value|(((addr1 ^ (addr1>> 16) ^ 		\ 	htons(addr2 ^ (addr2>> 16))) ^ 	\ 	port1 ^ htons(port2))&			\ 	(NBUCKETS - 1))
 end_define
 
 begin_comment
