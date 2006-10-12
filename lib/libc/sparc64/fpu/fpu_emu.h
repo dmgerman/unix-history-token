@@ -305,6 +305,10 @@ name|int
 name|fe_cx
 decl_stmt|;
 comment|/* exceptions */
+name|int
+name|pad
+decl_stmt|;
+comment|/* align access to following fields */
 name|struct
 name|fpn
 name|fe_f1
