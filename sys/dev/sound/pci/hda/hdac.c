@@ -65,7 +65,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20061009_0031"
+value|"20061013_0032"
 end_define
 
 begin_define
@@ -587,6 +587,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASUS_U5F_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(ASUS, 0x1263)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASUS_ALL_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(ASUS, 0xffff)
 end_define
@@ -770,6 +777,13 @@ name|HDA_QUIRK_FORCESTEREO
 value|(1<< 17)
 end_define
 
+begin_define
+define|#
+directive|define
+name|HDA_QUIRK_EAPDINV
+value|(1<< 18)
+end_define
+
 begin_struct
 specifier|static
 specifier|const
@@ -821,6 +835,12 @@ block|{
 literal|"forcestereo"
 block|,
 name|HDA_QUIRK_FORCESTEREO
+block|}
+block|,
+block|{
+literal|"eapdinv"
+block|,
+name|HDA_QUIRK_EAPDINV
 block|}
 block|, }
 struct|;
@@ -13419,6 +13439,9 @@ block|{
 name|uint32_t
 name|orig
 decl_stmt|;
+name|int
+name|set
+decl_stmt|;
 comment|/*if (left != right || !(left == 0 || left == 1)) { 			hdac_unlock(sc); 			return (-1); 		}*/
 name|id
 operator|=
@@ -13542,9 +13565,37 @@ name|param
 operator|.
 name|eapdbtl
 expr_stmt|;
+name|set
+operator|=
+operator|(
+name|left
+operator|!=
+literal|0
+operator|)
+condition|?
+literal|1
+else|:
+literal|0
+expr_stmt|;
 if|if
 condition|(
-name|left
+name|devinfo
+operator|->
+name|function
+operator|.
+name|audio
+operator|.
+name|quirks
+operator|&
+name|HDA_QUIRK_EAPDINV
+condition|)
+name|set
+operator|^=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|set
 operator|==
 literal|0
 condition|)
@@ -16303,6 +16354,16 @@ block|,
 name|HDA_CODEC_ALC880
 block|,
 name|HDA_QUIRK_GPIO1
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ASUS_U5F_SUBVENDOR
+block|,
+name|HDA_CODEC_AD1986A
+block|,
+name|HDA_QUIRK_EAPDINV
 block|,
 literal|0
 block|}
@@ -20018,6 +20079,49 @@ name|eapdbtl
 operator|!=
 name|HDAC_INVALID
 condition|)
+block|{
+if|if
+condition|(
+name|devinfo
+operator|->
+name|function
+operator|.
+name|audio
+operator|.
+name|quirks
+operator|&
+name|HDA_QUIRK_EAPDINV
+condition|)
+block|{
+if|if
+condition|(
+name|w
+operator|->
+name|param
+operator|.
+name|eapdbtl
+operator|&
+name|HDA_CMD_SET_EAPD_BTL_ENABLE_EAPD
+condition|)
+name|w
+operator|->
+name|param
+operator|.
+name|eapdbtl
+operator|&=
+operator|~
+name|HDA_CMD_SET_EAPD_BTL_ENABLE_EAPD
+expr_stmt|;
+else|else
+name|w
+operator|->
+name|param
+operator|.
+name|eapdbtl
+operator||=
+name|HDA_CMD_SET_EAPD_BTL_ENABLE_EAPD
+expr_stmt|;
+block|}
 name|hdac_command
 argument_list|(
 name|sc
@@ -20040,6 +20144,7 @@ argument_list|,
 name|cad
 argument_list|)
 expr_stmt|;
+block|}
 name|DELAY
 argument_list|(
 literal|1000
