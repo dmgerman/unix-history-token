@@ -253,6 +253,15 @@ name|optind
 expr_stmt|;
 if|if
 condition|(
+name|argc
+operator|<
+literal|1
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
 operator|!
 name|term
 operator|&&
