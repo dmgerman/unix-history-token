@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_global.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -414,6 +420,21 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SUN4V
+name|device_add_child
+argument_list|(
+name|dev
+argument_list|,
+literal|"pci"
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|device_add_child
 argument_list|(
 name|dev
@@ -427,6 +448,8 @@ operator|.
 name|secbus
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|bus_generic_attach

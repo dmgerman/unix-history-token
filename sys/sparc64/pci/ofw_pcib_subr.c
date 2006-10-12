@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_global.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -120,9 +126,14 @@ name|ofw_pcib_gen_softc
 modifier|*
 name|sc
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|SUN4V
 name|u_int
 name|secbus
 decl_stmt|;
+endif|#
+directive|endif
 name|sc
 operator|=
 name|device_get_softc
@@ -161,6 +172,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Setup the secondary bus number register, by allocating a new unique 	 * bus number for it; the firmware preset does not always seem to be 	 * correct. 	 */
+ifndef|#
+directive|ifndef
+name|SUN4V
 name|secbus
 operator|=
 name|ofw_pci_alloc_busno
@@ -231,6 +245,8 @@ argument_list|,
 name|secbus
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ofw_bus_setup_iinfo
 argument_list|(
 name|sc
