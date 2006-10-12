@@ -481,11 +481,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<dev/ic/i8259.h>
-end_include
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_ATPIC
+end_ifdef
 
 begin_include
 include|#
@@ -493,11 +493,21 @@ directive|include
 file|<amd64/isa/icu.h>
 end_include
 
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<machine/apicvar.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
