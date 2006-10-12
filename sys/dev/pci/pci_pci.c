@@ -670,9 +670,6 @@ name|pmembase
 operator|=
 name|PCI_PPBMEMBASE
 argument_list|(
-operator|(
-name|pci_addr_t
-operator|)
 name|pci_read_config
 argument_list|(
 name|dev
@@ -698,9 +695,6 @@ name|pmemlimit
 operator|=
 name|PCI_PPBMEMLIMIT
 argument_list|(
-operator|(
-name|pci_addr_t
-operator|)
 name|pci_read_config
 argument_list|(
 name|dev
