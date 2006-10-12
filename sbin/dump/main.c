@@ -3418,7 +3418,7 @@ operator|=
 operator|*
 name|argcp
 expr_stmt|;
-comment|/* Return if no arguments or first argument has leading dash. */
+comment|/* 	 * Return if no arguments or first argument has leading 	 * dash or slash. 	 */
 name|ap
 operator|=
 name|argv
@@ -3436,6 +3436,11 @@ operator|*
 name|ap
 operator|==
 literal|'-'
+operator|||
+operator|*
+name|ap
+operator|==
+literal|'/'
 condition|)
 return|return;
 comment|/* Allocate space for new arguments. */
