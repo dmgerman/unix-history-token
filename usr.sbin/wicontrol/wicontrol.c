@@ -4613,7 +4613,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage:  %s -i iface\n"
+literal|"usage:  %s [[-i] iface]\n"
 argument_list|,
 name|p
 argument_list|)
@@ -4622,7 +4622,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface -o\n"
+literal|"\t%s [[-i] iface] -o\n"
 argument_list|,
 name|p
 argument_list|)
@@ -4631,7 +4631,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface -l\n"
+literal|"\t%s [[-i] iface] -l\n"
 argument_list|,
 name|p
 argument_list|)
@@ -4640,7 +4640,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface -L\n"
+literal|"\t%s [[-i] iface] -L\n"
 argument_list|,
 name|p
 argument_list|)
@@ -4649,7 +4649,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface -t tx rate\n"
+literal|"\t%s [[-i] iface] -t tx_rate\n"
 argument_list|,
 name|p
 argument_list|)
@@ -4658,7 +4658,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface -n network name\n"
+literal|"\t%s [[-i] iface] -n network_name\n"
 argument_list|,
 name|p
 argument_list|)
@@ -4667,7 +4667,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface -s station name\n"
+literal|"\t%s [[-i] iface] -s station_name\n"
 argument_list|,
 name|p
 argument_list|)
@@ -4676,7 +4676,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface -c 0|1\n"
+literal|"\t%s [[-i] iface] -c 0|1\n"
 argument_list|,
 name|p
 argument_list|)
@@ -4685,7 +4685,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface -q SSID\n"
+literal|"\t%s [[-i] iface] -q SSID\n"
 argument_list|,
 name|p
 argument_list|)
@@ -4694,7 +4694,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface -p port type\n"
+literal|"\t%s [[-i] iface] -p port_type\n"
 argument_list|,
 name|p
 argument_list|)
@@ -4703,7 +4703,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface -a access point density\n"
+literal|"\t%s [[-i] iface] -a access_point_density\n"
 argument_list|,
 name|p
 argument_list|)
@@ -4712,7 +4712,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface -m mac address\n"
+literal|"\t%s [[-i] iface] -m mac_address\n"
 argument_list|,
 name|p
 argument_list|)
@@ -4721,7 +4721,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface -d max data length\n"
+literal|"\t%s [[-i] iface] -d max_data_length\n"
 argument_list|,
 name|p
 argument_list|)
@@ -4730,7 +4730,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface -e 0|1\n"
+literal|"\t%s [[-i] iface] -e 0|1\n"
 argument_list|,
 name|p
 argument_list|)
@@ -4739,7 +4739,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface -k encryption key [-v 1|2|3|4]\n"
+literal|"\t%s [[-i] iface] -k key [-v 1|2|3|4]\n"
 argument_list|,
 name|p
 argument_list|)
@@ -4748,7 +4748,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface -r RTS threshold\n"
+literal|"\t%s [[-i] iface] -r RTS_threshold\n"
 argument_list|,
 name|p
 argument_list|)
@@ -4757,7 +4757,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface -f frequency\n"
+literal|"\t%s [[-i] iface] -f frequency\n"
 argument_list|,
 name|p
 argument_list|)
@@ -4766,7 +4766,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface -F 0|1\n"
+literal|"\t%s [[-i] iface] -F 0|1\n"
 argument_list|,
 name|p
 argument_list|)
@@ -4775,7 +4775,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface -P 0|1\n"
+literal|"\t%s [[-i] iface] -P 0|1\n"
 argument_list|,
 name|p
 argument_list|)
@@ -4784,7 +4784,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface -S max sleep duration\n"
+literal|"\t%s [[-i] iface] -S max_sleep_duration\n"
 argument_list|,
 name|p
 argument_list|)
@@ -4793,7 +4793,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface -T 1|2|3|4\n"
+literal|"\t%s [[-i] iface] -T 1|2|3|4\n"
 argument_list|,
 name|p
 argument_list|)
@@ -4805,7 +4805,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface -Z zero out signal cache\n"
+literal|"\t%s [[-i] iface] -Z (zero signal cache)\n"
 argument_list|,
 name|p
 argument_list|)
@@ -4814,7 +4814,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface -C print signal cache\n"
+literal|"\t%s [[-i] iface] -C (display signal cache)\n"
 argument_list|,
 name|p
 argument_list|)
