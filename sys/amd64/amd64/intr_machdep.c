@@ -91,18 +91,6 @@ directive|include
 file|<machine/intr_machdep.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/segments.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<amd64/isa/isa.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -129,6 +117,12 @@ end_ifndef
 begin_include
 include|#
 directive|include
+file|<machine/segments.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ic/i8259.h>
 end_include
 
@@ -136,6 +130,12 @@ begin_include
 include|#
 directive|include
 file|<amd64/isa/icu.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<amd64/isa/isa.h>
 end_include
 
 begin_endif
