@@ -91,6 +91,18 @@ directive|include
 file|<machine/intr_machdep.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/segments.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<amd64/isa/isa.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
