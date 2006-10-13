@@ -4084,6 +4084,16 @@ operator|=
 operator|&
 name|ng_deadhook
 expr_stmt|;
+name|NG_HOOK_UNREF
+argument_list|(
+name|hook1
+argument_list|)
+expr_stmt|;
+name|NG_HOOK_UNREF
+argument_list|(
+name|hook2
+argument_list|)
+expr_stmt|;
 comment|/* XXX If we ever cache methods on hooks update them as well */
 name|ng_destroy_hook
 argument_list|(
