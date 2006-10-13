@@ -49,9 +49,6 @@ expr|struct
 name|umutex
 operator|*
 name|mtx
-argument_list|,
-name|uint32_t
-name|id
 argument_list|)
 name|__hidden
 decl_stmt|;
@@ -65,9 +62,6 @@ expr|struct
 name|umutex
 operator|*
 name|mtx
-argument_list|,
-name|uint32_t
-name|id
 argument_list|,
 specifier|const
 expr|struct
@@ -87,9 +81,6 @@ expr|struct
 name|umutex
 operator|*
 name|mtx
-argument_list|,
-name|uint32_t
-name|id
 argument_list|)
 name|__hidden
 decl_stmt|;
@@ -97,7 +88,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|__thr_umutex_kern_trylock
+name|__thr_umutex_trylock
 argument_list|(
 expr|struct
 name|umutex
@@ -123,6 +114,19 @@ argument_list|,
 name|uint32_t
 operator|*
 name|oldceiling
+argument_list|)
+name|__hidden
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|_thr_umutex_init
+argument_list|(
+expr|struct
+name|umutex
+operator|*
+name|mtx
 argument_list|)
 name|__hidden
 decl_stmt|;
@@ -165,32 +169,6 @@ argument_list|)
 name|__hidden
 decl_stmt|;
 end_decl_stmt
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|_thr_umutex_init
-parameter_list|(
-name|struct
-name|umutex
-modifier|*
-name|mtx
-parameter_list|)
-block|{
-name|struct
-name|umutex
-name|tmp
-init|=
-name|DEFAULT_UMUTEX
-decl_stmt|;
-operator|*
-name|mtx
-operator|=
-name|tmp
-expr_stmt|;
-block|}
-end_function
 
 begin_function
 specifier|static
@@ -245,7 +223,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|__thr_umutex_kern_trylock
+name|__thr_umutex_trylock
 argument_list|(
 name|mtx
 argument_list|)
@@ -293,8 +271,6 @@ operator|(
 name|__thr_umutex_lock
 argument_list|(
 name|mtx
-argument_list|,
-name|id
 argument_list|)
 operator|)
 return|;
@@ -347,8 +323,6 @@ name|__thr_umutex_timedlock
 argument_list|(
 name|mtx
 argument_list|,
-name|id
-argument_list|,
 name|timeout
 argument_list|)
 operator|)
@@ -395,8 +369,6 @@ operator|(
 name|__thr_umutex_unlock
 argument_list|(
 name|mtx
-argument_list|,
-name|id
 argument_list|)
 operator|)
 return|;

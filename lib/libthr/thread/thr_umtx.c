@@ -16,6 +16,31 @@ file|"thr_umtx.h"
 end_include
 
 begin_function
+name|void
+name|_thr_umutex_init
+parameter_list|(
+name|struct
+name|umutex
+modifier|*
+name|mtx
+parameter_list|)
+block|{
+specifier|static
+name|struct
+name|umutex
+name|default_mtx
+init|=
+name|DEFAULT_UMUTEX
+decl_stmt|;
+operator|*
+name|mtx
+operator|=
+name|default_mtx
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|int
 name|__thr_umutex_lock
 parameter_list|(
@@ -23,9 +48,6 @@ name|struct
 name|umutex
 modifier|*
 name|mtx
-parameter_list|,
-name|uint32_t
-name|id
 parameter_list|)
 block|{
 if|if
@@ -64,9 +86,6 @@ name|struct
 name|umutex
 modifier|*
 name|mtx
-parameter_list|,
-name|uint32_t
-name|id
 parameter_list|,
 specifier|const
 name|struct
@@ -150,9 +169,6 @@ name|struct
 name|umutex
 modifier|*
 name|mtx
-parameter_list|,
-name|uint32_t
-name|id
 parameter_list|)
 block|{
 if|if
@@ -187,7 +203,7 @@ end_function
 
 begin_function
 name|int
-name|__thr_umutex_kern_trylock
+name|__thr_umutex_trylock
 parameter_list|(
 name|struct
 name|umutex
@@ -328,8 +344,7 @@ name|_umtx_op
 argument_list|(
 name|__DEVOLATILE
 argument_list|(
-expr|struct
-name|umtx
+name|void
 operator|*
 argument_list|,
 name|mtx
@@ -384,8 +399,7 @@ name|_umtx_op
 argument_list|(
 name|__DEVOLATILE
 argument_list|(
-expr|struct
-name|umtx
+name|void
 operator|*
 argument_list|,
 name|mtx
