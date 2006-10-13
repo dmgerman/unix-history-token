@@ -300,7 +300,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|ng_priv_priv
+name|ng_nat_priv
 block|{
 name|node_p
 name|node
@@ -331,7 +331,7 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|ng_priv_priv
+name|ng_nat_priv
 modifier|*
 name|priv_p
 typedef|;
