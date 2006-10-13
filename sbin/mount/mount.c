@@ -2190,6 +2190,13 @@ argument_list|,
 name|options
 argument_list|)
 expr_stmt|;
+name|remopt
+argument_list|(
+name|fstab
+argument_list|,
+literal|"late"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|strcmp
