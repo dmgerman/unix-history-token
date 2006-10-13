@@ -2951,6 +2951,12 @@ operator|~
 name|SI_CLONELIST
 expr_stmt|;
 block|}
+name|dev
+operator|->
+name|si_refcount
+operator|++
+expr_stmt|;
+comment|/* Avoid race with dev_rel() */
 name|csw
 operator|=
 name|dev
@@ -3025,6 +3031,34 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+while|while
+condition|(
+name|dev
+operator|->
+name|si_threadcount
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Use unique dummy wait ident */
+name|msleep
+argument_list|(
+operator|&
+name|csw
+argument_list|,
+operator|&
+name|devmtx
+argument_list|,
+name|PRIBIO
+argument_list|,
+literal|"devdrn"
+argument_list|,
+name|hz
+operator|/
+literal|10
+argument_list|)
+expr_stmt|;
+block|}
 name|dev
 operator|->
 name|si_drv1
@@ -3096,6 +3130,12 @@ operator|&=
 operator|~
 name|SI_ALIAS
 expr_stmt|;
+name|dev
+operator|->
+name|si_refcount
+operator|--
+expr_stmt|;
+comment|/* Avoid race with dev_rel() */
 if|if
 condition|(
 name|dev
