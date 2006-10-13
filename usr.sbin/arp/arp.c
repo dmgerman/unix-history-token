@@ -3942,7 +3942,6 @@ operator|!=
 name|AF_INET
 condition|)
 continue|continue;
-comment|/* XXX can't we use *ifr instead of ifreq ? */
 name|strncpy
 argument_list|(
 name|ifreq
@@ -3960,6 +3959,14 @@ operator|.
 name|ifr_name
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|ifreq
+operator|.
+name|ifr_addr
+operator|=
+name|ifr
+operator|->
+name|ifr_addr
 expr_stmt|;
 comment|/* 		 * Check that the interface is up, 		 * and not point-to-point or loopback. 		 */
 if|if
