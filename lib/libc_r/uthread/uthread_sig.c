@@ -184,6 +184,9 @@ parameter_list|,
 name|ucontext_t
 modifier|*
 name|ucp
+parameter_list|,
+name|int
+name|unblock
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -314,6 +317,9 @@ decl_stmt|;
 name|char
 name|c
 decl_stmt|;
+name|sigset_t
+name|sigset
+decl_stmt|;
 if|if
 condition|(
 name|ucp
@@ -432,6 +438,13 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|ssize_t
+name|wgot
+decl_stmt|;
+do|do
+block|{
+name|wgot
+operator|=
 name|__sys_write
 argument_list|(
 name|_thread_kern_pipe
@@ -445,6 +458,35 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
+do|while
+condition|(
+name|wgot
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|==
+name|EINTR
+condition|)
+do|;
+if|if
+condition|(
+name|wgot
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|!=
+name|EAGAIN
+condition|)
+block|{
+name|PANIC
+argument_list|(
+literal|"Failed to queue signal"
+argument_list|)
+expr_stmt|;
+block|}
 name|DBG_MSG
 argument_list|(
 literal|"Got signal %d, queueing to kernel pipe\n"
@@ -751,28 +793,6 @@ operator|==
 name|curthread
 condition|)
 block|{
-comment|/* 			 * Unblock the signal and restore the process signal 			 * mask in case we don't return from the handler: 			 */
-name|_thread_sigq
-index|[
-name|sig
-operator|-
-literal|1
-index|]
-operator|.
-name|blocked
-operator|=
-literal|0
-expr_stmt|;
-name|__sys_sigprocmask
-argument_list|(
-name|SIG_SETMASK
-argument_list|,
-operator|&
-name|_process_sigmask
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 comment|/* Call the signal handler for the current thread: */
 name|thread_sig_invoke_handler
 argument_list|(
@@ -781,6 +801,8 @@ argument_list|,
 name|info
 argument_list|,
 name|ucp
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Set the process signal mask in the context; it 			 * could have changed by the handler.  			 */
@@ -789,6 +811,42 @@ operator|->
 name|uc_sigmask
 operator|=
 name|_process_sigmask
+expr_stmt|;
+comment|/* 			 * The signal mask was restored; check for any 			 * pending signals:  			 */
+name|sigset
+operator|=
+name|curthread
+operator|->
+name|sigpend
+expr_stmt|;
+name|SIGSETOR
+argument_list|(
+name|sigset
+argument_list|,
+name|_process_sigpending
+argument_list|)
+expr_stmt|;
+name|SIGSETNAND
+argument_list|(
+name|sigset
+argument_list|,
+name|curthread
+operator|->
+name|sigmask
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|SIGNOTEMPTY
+argument_list|(
+name|sigset
+argument_list|)
+condition|)
+name|curthread
+operator|->
+name|check_pending
+operator|=
+literal|1
 expr_stmt|;
 comment|/* Resume the interrupted thread: */
 name|__sys_sigreturn
@@ -896,6 +954,9 @@ parameter_list|,
 name|ucontext_t
 modifier|*
 name|ucp
+parameter_list|,
+name|int
+name|unblock
 parameter_list|)
 block|{
 name|struct
@@ -977,6 +1038,42 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|unblock
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* 		 * Unblock the signal and restore the process signal 		 * mask in case we don't return from the handler: 		 */
+name|_thread_sigq
+index|[
+name|sig
+operator|-
+literal|1
+index|]
+operator|.
+name|blocked
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|unblock
+operator|>
+literal|1
+condition|)
+name|__sys_sigprocmask
+argument_list|(
+name|SIG_SETMASK
+argument_list|,
+operator|&
+name|_process_sigmask
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Check that a custom handler is installed and if 	 * the signal is not blocked: 	 */
 name|sigfunc
 operator|=
@@ -1490,7 +1587,19 @@ name|signaled_thread
 operator|==
 name|NULL
 condition|)
+block|{
 comment|/* 				 * Add it to the set of signals pending 				 * on the process: 				 */
+name|_thread_sigq
+index|[
+name|sig
+operator|-
+literal|1
+index|]
+operator|.
+name|blocked
+operator|=
+literal|0
+expr_stmt|;
 name|sigaddset
 argument_list|(
 operator|&
@@ -1499,6 +1608,7 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 comment|/* 				 * We only deliver the signal to one thread; 				 * give preference to the suspended thread: 				 */
@@ -2820,6 +2930,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 else|else
@@ -2979,20 +3091,6 @@ default|default:
 break|break;
 block|}
 block|}
-comment|/* Unblock the signal in case we don't return from the handler: */
-name|_thread_sigq
-index|[
-name|psf
-operator|->
-name|signo
-operator|-
-literal|1
-index|]
-operator|.
-name|blocked
-operator|=
-literal|0
-expr_stmt|;
 comment|/* 	 * Lower the priority before calling the handler in case 	 * it never returns (longjmps back): 	 */
 name|thread
 operator|->
@@ -3026,6 +3124,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 else|else
@@ -3044,6 +3144,8 @@ operator|&
 name|psf
 operator|->
 name|uc
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Call the kernel scheduler to safely restore the frame and 	 * schedule the next thread: 	 */
