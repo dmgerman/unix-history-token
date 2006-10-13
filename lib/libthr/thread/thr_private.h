@@ -1036,7 +1036,8 @@ name|sigset_t
 name|sigmask
 decl_stmt|;
 comment|/* Thread state: */
-name|umtx_t
+name|enum
+name|pthread_state
 name|state
 decl_stmt|;
 comment|/* 	 * Error variable used instead of errno. The function __error() 	 * returns a pointer to this.  	 */
