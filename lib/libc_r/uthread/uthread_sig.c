@@ -1587,19 +1587,7 @@ name|signaled_thread
 operator|==
 name|NULL
 condition|)
-block|{
 comment|/* 				 * Add it to the set of signals pending 				 * on the process: 				 */
-name|_thread_sigq
-index|[
-name|sig
-operator|-
-literal|1
-index|]
-operator|.
-name|blocked
-operator|=
-literal|0
-expr_stmt|;
 name|sigaddset
 argument_list|(
 operator|&
@@ -1608,7 +1596,6 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 comment|/* 				 * We only deliver the signal to one thread; 				 * give preference to the suspended thread: 				 */
