@@ -352,6 +352,13 @@ operator|&=
 operator|~
 name|THR_CANCEL_NEEDED
 expr_stmt|;
+name|curthread
+operator|->
+name|flags
+operator|&=
+operator|~
+name|THR_FLAGS_NEED_SUSPEND
+expr_stmt|;
 comment|/* 		 * Thread list will be reinitialized, and later we call 		 * _libpthread_init(), it will add us back to list. 		 */
 name|curthread
 operator|->
