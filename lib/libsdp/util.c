@@ -493,6 +493,24 @@ literal|"SIM Access"
 block|, }
 block|,
 block|{
+name|SDP_SERVICE_CLASS_PHONEBOOK_ACCESS_PCE
+block|,
+literal|"Phonebook Access - PCE"
+block|, }
+block|,
+block|{
+name|SDP_SERVICE_CLASS_PHONEBOOK_ACCESS_PSE
+block|,
+literal|"Phonebook Access - PSE"
+block|, }
+block|,
+block|{
+name|SDP_SERVICE_CLASS_PHONEBOOK_ACCESS
+block|,
+literal|"Phonebook Access"
+block|, }
+block|,
+block|{
 name|SDP_SERVICE_CLASS_PNP_INFORMATION
 block|,
 literal|"PNP Information"
@@ -550,6 +568,24 @@ block|{
 name|SDP_SERVICE_CLASS_ESDP_UPNP_L2CAP
 block|,
 literal|"ESDP UPNP L2CAP"
+block|, }
+block|,
+block|{
+name|SDP_SERVICE_CLASS_VIDEO_SOURCE
+block|,
+literal|"Video Source"
+block|, }
+block|,
+block|{
+name|SDP_SERVICE_CLASS_VIDEO_SINK
+block|,
+literal|"Video Sink"
+block|, }
+block|,
+block|{
+name|SDP_SERVICE_CLASS_VIDEO_DISTRIBUTION
+block|,
+literal|"Video Distribution"
 block|, }
 block|,
 block|{
@@ -780,6 +816,12 @@ block|{
 name|SDP_ATTR_TOTAL_IMAGING_DATA_CAPACITY
 block|,
 literal|"Total Imaging Data Capacity"
+block|,   }
+block|,
+block|{
+name|SDP_ATTR_SUPPORTED_REPOSITORIES
+block|,
+literal|"Supported Repositories"
 block|,   }
 block|,
 block|{
