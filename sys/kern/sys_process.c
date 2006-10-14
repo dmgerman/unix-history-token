@@ -3728,7 +3728,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|num
+name|tmp
 expr_stmt|;
 name|PROC_LOCK
 argument_list|(
