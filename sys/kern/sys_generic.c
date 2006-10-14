@@ -2661,6 +2661,12 @@ condition|(
 name|error
 condition|)
 block|{
+if|if
+condition|(
+name|size
+operator|>
+literal|0
+condition|)
 name|free
 argument_list|(
 name|data
