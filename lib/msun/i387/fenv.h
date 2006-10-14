@@ -200,22 +200,23 @@ name|_SSE_EMASK_SHIFT
 value|7
 end_define
 
-begin_comment
+begin_decl_stmt
+name|__BEGIN_DECLS
 comment|/* After testing for SSE support once, we cache the result in __has_sse. */
-end_comment
-
-begin_enum
-enum|enum
+name|enum
 name|__sse_support
 block|{
 name|__SSE_YES
-block|,
+operator|,
 name|__SSE_NO
-block|,
+operator|,
 name|__SSE_UNK
 block|}
-enum|;
-end_enum
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -266,9 +267,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-name|__BEGIN_DECLS
+begin_comment
 comment|/* Default floating-point environment */
+end_comment
+
+begin_decl_stmt
 specifier|extern
 specifier|const
 name|fenv_t
