@@ -9987,7 +9987,9 @@ name|iov
 argument_list|,
 name|iovlen
 argument_list|,
-literal|0
+name|fsb
+operator|->
+name|f_flags
 argument_list|)
 operator|<
 literal|0
