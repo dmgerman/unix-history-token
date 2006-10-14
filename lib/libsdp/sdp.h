@@ -249,7 +249,7 @@ value|0x47
 end_define
 
 begin_comment
-comment|/*  * Protocols UUID (short) http://www.bluetoothsig.org/assigned-numbers/sdp.htm  * BASE UUID 00000000-0000-1000-8000-00805F9B34FB  */
+comment|/*  * Protocols UUID (short) https://www.bluetooth.org/assigned-numbers/service_discovery.php  * BASE UUID 00000000-0000-1000-8000-00805F9B34FB  */
 end_comment
 
 begin_define
@@ -407,7 +407,7 @@ value|0x0100
 end_define
 
 begin_comment
-comment|/*  * Service class IDs http://www.bluetoothsig.org/assigned-numbers/sdp.htm  */
+comment|/*  * Service class IDs https://www.bluetooth.org/assigned-numbers/service_discovery.php  */
 end_comment
 
 begin_define
@@ -749,6 +749,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|SDP_SERVICE_CLASS_PHONEBOOK_ACCESS_PCE
+value|0x112E
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDP_SERVICE_CLASS_PHONEBOOK_ACCESS_PSE
+value|0x112F
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDP_SERVICE_CLASS_PHONEBOOK_ACCESS
+value|0x1130
+end_define
+
+begin_define
+define|#
+directive|define
 name|SDP_SERVICE_CLASS_PNP_INFORMATION
 value|0x1200
 end_define
@@ -816,8 +837,29 @@ name|SDP_SERVICE_CLASS_ESDP_UPNP_L2CAP
 value|0x1302
 end_define
 
+begin_define
+define|#
+directive|define
+name|SDP_SERVICE_CLASS_VIDEO_SOURCE
+value|0x1303
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDP_SERVICE_CLASS_VIDEO_SINK
+value|0x1304
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDP_SERVICE_CLASS_VIDEO_DISTRIBUTION
+value|0x1305
+end_define
+
 begin_comment
-comment|/*  * Universal attribute definitions (page 366) and  * http://www.bluetoothsig.org/assigned-numbers/sdp.htm  */
+comment|/*  * Universal attribute definitions (page 366) and  * https://www.bluetooth.org/assigned-numbers/service_discovery.php  */
 end_comment
 
 begin_define
@@ -1118,6 +1160,13 @@ define|#
 directive|define
 name|SDP_ATTR_TOTAL_IMAGING_DATA_CAPACITY
 value|0x0313
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDP_ATTR_SUPPORTED_REPOSITORIES
+value|0x0314
 end_define
 
 begin_comment
