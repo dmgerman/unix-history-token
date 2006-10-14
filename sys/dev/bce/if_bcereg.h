@@ -26779,14 +26779,6 @@ comment|/* Max segments supported for this mapped memory */
 name|u32
 name|prod_bseq
 decl_stmt|;
-name|struct
-name|tx_bd
-modifier|*
-name|tx_chain
-index|[
-name|TX_PAGES
-index|]
-decl_stmt|;
 block|}
 struct|;
 end_struct

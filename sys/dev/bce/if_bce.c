@@ -9705,9 +9705,9 @@ comment|/* 	 * Cycle through each mbuf segment that makes up 	 * the outgoing fr
 name|txbd
 operator|=
 operator|&
-name|map_arg
+name|sc
 operator|->
-name|tx_chain
+name|tx_bd_chain
 index|[
 name|TX_PAGE
 argument_list|(
@@ -9824,9 +9824,9 @@ expr_stmt|;
 name|txbd
 operator|=
 operator|&
-name|map_arg
+name|sc
 operator|->
-name|tx_chain
+name|tx_bd_chain
 index|[
 name|TX_PAGE
 argument_list|(
@@ -20235,8 +20235,6 @@ name|bus_dmamap_t
 name|map
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|error
 decl_stmt|,
 name|rc
@@ -20379,33 +20377,6 @@ operator|(
 literal|"Invalid TX maxsegs value!"
 operator|)
 argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|TX_PAGES
-condition|;
-name|i
-operator|++
-control|)
-name|map_arg
-operator|.
-name|tx_chain
-index|[
-name|i
-index|]
-operator|=
-name|sc
-operator|->
-name|tx_bd_chain
-index|[
-name|i
-index|]
 expr_stmt|;
 comment|/* Map the mbuf into our DMA address space. */
 name|error
