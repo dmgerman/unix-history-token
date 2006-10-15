@@ -2417,6 +2417,12 @@ argument_list|(
 name|p2
 argument_list|)
 expr_stmt|;
+name|p2
+operator|->
+name|p_flag
+operator||=
+name|P_PPWAIT
+expr_stmt|;
 while|while
 condition|(
 name|p2
