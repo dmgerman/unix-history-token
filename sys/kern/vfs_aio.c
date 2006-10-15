@@ -1443,7 +1443,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|static
 name|void
 name|aio_init_aioinfo
 parameter_list|(
@@ -1503,7 +1502,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
 name|int
 name|aio_aqueue
 parameter_list|(
@@ -2561,7 +2559,6 @@ comment|/*  * Init the per-process aioinfo structure.  The aioinfo limits are se
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|aio_init_aioinfo
 parameter_list|(
@@ -6199,7 +6196,6 @@ comment|/*  * Queue a new AIO request.  Choosing either the threaded or direct p
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|aio_aqueue
 parameter_list|(

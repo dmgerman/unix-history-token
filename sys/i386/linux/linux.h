@@ -3510,6 +3510,12 @@ name|THREADING_FLAGS
 value|(CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND)
 end_define
 
+begin_include
+include|#
+directive|include
+file|<compat/linux/linux_aio.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
