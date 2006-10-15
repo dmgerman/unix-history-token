@@ -26744,45 +26744,6 @@ name|BCE_RX_CHAIN_PAGE_SZ
 value|BCM_PAGE_SIZE
 end_define
 
-begin_comment
-comment|/*  * Mbuf pointers. We need these to keep track of the virtual addresses  * of our mbuf chains since we can only convert from physical to virtual,  * not the other way around.  */
-end_comment
-
-begin_struct
-struct|struct
-name|bce_dmamap_arg
-block|{
-name|struct
-name|bce_softc
-modifier|*
-name|sc
-decl_stmt|;
-comment|/* Pointer back to device context */
-name|bus_addr_t
-name|busaddr
-decl_stmt|;
-comment|/* Physical address of mapped memory */
-name|u32
-name|tx_flags
-decl_stmt|;
-comment|/* Flags for frame transmit */
-name|u16
-name|prod
-decl_stmt|;
-name|u16
-name|chain_prod
-decl_stmt|;
-name|int
-name|maxsegs
-decl_stmt|;
-comment|/* Max segments supported for this mapped memory */
-name|u32
-name|prod_bseq
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_struct
 struct|struct
 name|bce_softc
