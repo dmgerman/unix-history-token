@@ -3457,6 +3457,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CLONE_VFORK
+value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
 name|CLONE_PARENT
 value|0x00008000
 end_define
