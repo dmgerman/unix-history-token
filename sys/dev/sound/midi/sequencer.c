@@ -3185,9 +3185,14 @@ name|int
 name|i
 decl_stmt|;
 comment|//SEQ_DEBUG(4,printf("seq_delunit: %d\n", unit));
+name|SEQ_DEBUG
+argument_list|(
+literal|1
+argument_list|,
 name|printf
 argument_list|(
 literal|"seq_delunit: 1 \n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -3234,9 +3239,14 @@ operator|->
 name|reset_cv
 argument_list|)
 expr_stmt|;
+name|SEQ_DEBUG
+argument_list|(
+literal|1
+argument_list|,
 name|printf
 argument_list|(
 literal|"seq_delunit: 2 \n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|cv_wait
@@ -3252,9 +3262,14 @@ operator|->
 name|seq_lock
 argument_list|)
 expr_stmt|;
+name|SEQ_DEBUG
+argument_list|(
+literal|1
+argument_list|,
 name|printf
 argument_list|(
 literal|"seq_delunit: 3.0 \n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -3265,9 +3280,14 @@ operator|->
 name|seq_lock
 argument_list|)
 expr_stmt|;
+name|SEQ_DEBUG
+argument_list|(
+literal|1
+argument_list|,
 name|printf
 argument_list|(
 literal|"seq_delunit: 3.1 \n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|cv_destroy
@@ -3278,9 +3298,14 @@ operator|->
 name|state_cv
 argument_list|)
 expr_stmt|;
+name|SEQ_DEBUG
+argument_list|(
+literal|1
+argument_list|,
 name|printf
 argument_list|(
 literal|"seq_delunit: 4 \n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|cv_destroy
@@ -3291,9 +3316,14 @@ operator|->
 name|empty_cv
 argument_list|)
 expr_stmt|;
+name|SEQ_DEBUG
+argument_list|(
+literal|1
+argument_list|,
 name|printf
 argument_list|(
 literal|"seq_delunit: 5 \n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|cv_destroy
@@ -3304,9 +3334,14 @@ operator|->
 name|reset_cv
 argument_list|)
 expr_stmt|;
+name|SEQ_DEBUG
+argument_list|(
+literal|1
+argument_list|,
 name|printf
 argument_list|(
 literal|"seq_delunit: 6 \n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|cv_destroy
@@ -3317,9 +3352,14 @@ operator|->
 name|out_cv
 argument_list|)
 expr_stmt|;
+name|SEQ_DEBUG
+argument_list|(
+literal|1
+argument_list|,
 name|printf
 argument_list|(
 literal|"seq_delunit: 7 \n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|cv_destroy
@@ -3330,9 +3370,14 @@ operator|->
 name|in_cv
 argument_list|)
 expr_stmt|;
+name|SEQ_DEBUG
+argument_list|(
+literal|1
+argument_list|,
 name|printf
 argument_list|(
 literal|"seq_delunit: 8 \n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|cv_destroy
@@ -3343,10 +3388,15 @@ operator|->
 name|th_cv
 argument_list|)
 expr_stmt|;
+name|SEQ_DEBUG
+argument_list|(
+literal|1
+argument_list|,
 name|printf
 argument_list|(
 literal|"seq_delunit: 10 \n"
 argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3361,10 +3411,15 @@ operator|->
 name|seqdev
 argument_list|)
 expr_stmt|;
+name|SEQ_DEBUG
+argument_list|(
+literal|1
+argument_list|,
 name|printf
 argument_list|(
 literal|"seq_delunit: 11 \n"
 argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3379,9 +3434,14 @@ operator|->
 name|musicdev
 argument_list|)
 expr_stmt|;
+name|SEQ_DEBUG
+argument_list|(
+literal|1
+argument_list|,
 name|printf
 argument_list|(
 literal|"seq_delunit: 12 \n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|scp
@@ -3411,9 +3471,14 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
+name|SEQ_DEBUG
+argument_list|(
+literal|1
+argument_list|,
 name|printf
 argument_list|(
 literal|"seq_delunit: 13 \n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3433,9 +3498,14 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
+name|SEQ_DEBUG
+argument_list|(
+literal|1
+argument_list|,
 name|printf
 argument_list|(
 literal|"seq_delunit: 14 \n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|free
@@ -3449,9 +3519,14 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
+name|SEQ_DEBUG
+argument_list|(
+literal|1
+argument_list|,
 name|printf
 argument_list|(
 literal|"seq_delunit: 15 \n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|free
@@ -3465,9 +3540,14 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
+name|SEQ_DEBUG
+argument_list|(
+literal|1
+argument_list|,
 name|printf
 argument_list|(
 literal|"seq_delunit: 16 \n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mtx_destroy
@@ -3478,9 +3558,14 @@ operator|->
 name|seq_lock
 argument_list|)
 expr_stmt|;
+name|SEQ_DEBUG
+argument_list|(
+literal|1
+argument_list|,
 name|printf
 argument_list|(
 literal|"seq_delunit: 17 \n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|free
@@ -6661,6 +6746,10 @@ name|unit
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|SEQ_DEBUG
+argument_list|(
+literal|1
+argument_list|,
 name|printf
 argument_list|(
 literal|"seq_poll: unit %d.\n"
@@ -6668,6 +6757,7 @@ argument_list|,
 name|scp
 operator|->
 name|unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -8449,6 +8539,10 @@ index|]
 condition|)
 block|{
 default|default:
+name|SEQ_DEBUG
+argument_list|(
+literal|1
+argument_list|,
 name|printf
 argument_list|(
 literal|"seq_local event type %d not handled\n"
@@ -8457,6 +8551,7 @@ name|event
 index|[
 literal|1
 index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ret
