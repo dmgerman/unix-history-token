@@ -8479,7 +8479,7 @@ name|Fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-dDFInrSvx] [-g gateway] [-i iface] [-f first_ttl]\n"
+literal|"Usage: %s [-dDeFInrSvx] [-f first_ttl] [-g gateway] [-i iface]\n"
 literal|"\t[-m max_ttl] [-p port] [-P proto] [-q nqueries] [-s src_addr]\n"
 literal|"\t[-t tos] [-w waittime] [-z pausemsecs] host [packetlen]\n"
 argument_list|,
