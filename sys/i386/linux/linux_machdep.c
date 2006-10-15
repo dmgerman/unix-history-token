@@ -1800,6 +1800,7 @@ name|ff
 operator||=
 name|RFSIGSHARE
 expr_stmt|;
+comment|/*  	 * XXX: in linux sharing of fs info (chroot/cwd/umask) 	 * and open files is independant. in fbsd its in one 	 * structure but in reality it doesnt make any problems 	 * because both this flags are set at once usually. 	 */
 if|if
 condition|(
 operator|!
@@ -1808,7 +1809,11 @@ name|args
 operator|->
 name|flags
 operator|&
+operator|(
 name|CLONE_FILES
+operator||
+name|CLONE_FS
+operator|)
 operator|)
 condition|)
 name|ff
