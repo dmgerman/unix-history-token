@@ -2227,7 +2227,9 @@ condition|(
 operator|!
 name|LINUX_SIG_VALID
 argument_list|(
-name|linux_sig
+name|args
+operator|->
+name|signum
 argument_list|)
 operator|&&
 name|args
