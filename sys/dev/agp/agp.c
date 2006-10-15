@@ -742,7 +742,7 @@ end_function
 
 begin_decl_stmt
 specifier|static
-name|int
+name|u_int
 name|agp_max
 index|[]
 index|[
@@ -835,9 +835,10 @@ decl_stmt|;
 name|int
 name|rid
 decl_stmt|,
-name|memsize
-decl_stmt|,
 name|i
+decl_stmt|;
+name|u_int
+name|memsize
 decl_stmt|;
 comment|/* 	 * Find and map the aperture. 	 */
 name|rid
