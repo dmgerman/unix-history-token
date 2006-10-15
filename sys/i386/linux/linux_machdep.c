@@ -1749,9 +1749,11 @@ literal|0x000000ff
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|LINUX_SIG_VALID
+argument_list|(
 name|exit_signal
-operator|>=
-name|LINUX_NSIG
+argument_list|)
 condition|)
 return|return
 operator|(
