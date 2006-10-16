@@ -7813,14 +7813,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
-name|int
-name|mfi_io
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|struct
@@ -8101,9 +8093,6 @@ name|cm_flags
 operator|=
 name|flags
 expr_stmt|;
-name|mfi_io
-operator|++
-expr_stmt|;
 return|return
 operator|(
 name|cm
@@ -8229,9 +8218,6 @@ name|mfi_disk_complete
 argument_list|(
 name|bio
 argument_list|)
-expr_stmt|;
-name|mfi_io
-operator|--
 expr_stmt|;
 block|}
 end_function
