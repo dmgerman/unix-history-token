@@ -431,7 +431,7 @@ begin_define
 define|#
 directive|define
 name|NFE_WOL_MAGIC
-value|0x7770
+value|0x1111
 end_define
 
 begin_define
