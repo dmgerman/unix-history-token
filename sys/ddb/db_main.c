@@ -949,6 +949,11 @@ operator|(
 literal|0
 operator|)
 return|;
+name|cndbctl
+argument_list|(
+name|TRUE
+argument_list|)
+expr_stmt|;
 name|bkpt
 operator|=
 name|IS_BREAKPOINT_TRAP
@@ -1064,6 +1069,11 @@ block|}
 name|db_restart_at_pc
 argument_list|(
 name|watchpt
+argument_list|)
+expr_stmt|;
+name|cndbctl
+argument_list|(
+name|FALSE
 argument_list|)
 expr_stmt|;
 return|return
