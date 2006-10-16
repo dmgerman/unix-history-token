@@ -251,6 +251,10 @@ define|#
 directive|define
 name|MFI_FLAGS_OPEN
 value|(1<<2)
+define|#
+directive|define
+name|MFI_FLAGS_STOP
+value|(1<<3)
 name|struct
 name|mfi_hwcomms
 modifier|*
@@ -926,6 +930,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|mfi_validate_sg
+parameter_list|(
+name|struct
+name|mfi_softc
+modifier|*
+parameter_list|,
+name|struct
+name|mfi_command
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -943,7 +969,19 @@ name|MFI_DUMP_CMDS
 parameter_list|(
 name|sc
 parameter_list|)
-value|mfi_dump_cmds(sc);
+value|mfi_dump_cmds(sc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MFI_VALIDATE_CMD
+parameter_list|(
+name|sc
+parameter_list|,
+name|cm
+parameter_list|)
+value|mfi_validate_sg(sc, cm, __FUNCTION__, __LINE__)
 end_define
 
 begin_else
@@ -966,6 +1004,17 @@ directive|define
 name|MFI_DUMP_CMDS
 parameter_list|(
 name|sc
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MFI_VALIDATE_CMD
+parameter_list|(
+name|sc
+parameter_list|,
+name|cm
 parameter_list|)
 end_define
 
