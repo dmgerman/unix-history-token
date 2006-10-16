@@ -2529,6 +2529,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.inet6.ip6.auto_linklocal"
+argument_list|,
+operator|&
+name|ip6_auto_linklocal
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_net_inet6_ip6
