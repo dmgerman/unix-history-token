@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ospf.c,v 1.56.2.2 2005/05/06 07:57:19 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ospf.c,v 1.56.2.3 2005/08/23 11:16:29 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -548,9 +548,9 @@ literal|"Shared Risk Link Group"
 block|}
 block|,
 block|{
-name|LS_OPAQUE_TE_LINK_SUBTLV_DIFFSERV_TE
+name|LS_OPAQUE_TE_LINK_SUBTLV_BW_CONSTRAINTS
 block|,
-literal|"Diffserv TE"
+literal|"Bandwidth Constraints"
 block|}
 block|,
 block|{
@@ -1205,7 +1205,7 @@ name|subtlv_length
 decl_stmt|,
 name|priority_level
 decl_stmt|,
-name|bandwidth_constraint
+name|te_class
 decl_stmt|;
 specifier|register
 name|int
@@ -3086,15 +3086,15 @@ name|LS_OPAQUE_TE_LINK_SUBTLV_UNRES_BW
 case|:
 for|for
 control|(
-name|priority_level
+name|te_class
 operator|=
 literal|0
 init|;
-name|priority_level
+name|te_class
 operator|<
 literal|8
 condition|;
-name|priority_level
+name|te_class
 operator|++
 control|)
 block|{
@@ -3106,16 +3106,16 @@ name|EXTRACT_32BITS
 argument_list|(
 name|tptr
 operator|+
-name|priority_level
+name|te_class
 operator|*
 literal|4
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\t\tpriority level %d: %.3f Mbps"
+literal|"\n\t\tTE-Class %u: %.3f Mbps"
 argument_list|,
-name|priority_level
+name|te_class
 argument_list|,
 name|bw
 operator|.
@@ -3129,7 +3129,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|LS_OPAQUE_TE_LINK_SUBTLV_DIFFSERV_TE
+name|LS_OPAQUE_TE_LINK_SUBTLV_BW_CONSTRAINTS
 case|:
 name|printf
 argument_list|(
@@ -3152,11 +3152,11 @@ expr_stmt|;
 comment|/* decode BCs until the subTLV ends */
 for|for
 control|(
-name|bandwidth_constraint
+name|te_class
 operator|=
 literal|0
 init|;
-name|bandwidth_constraint
+name|te_class
 operator|<
 operator|(
 name|subtlv_length
@@ -3166,7 +3166,7 @@ operator|)
 operator|/
 literal|4
 condition|;
-name|bandwidth_constraint
+name|te_class
 operator|++
 control|)
 block|{
@@ -3180,16 +3180,16 @@ name|tptr
 operator|+
 literal|4
 operator|+
-name|bandwidth_constraint
+name|te_class
 operator|*
 literal|4
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\t\t  Bandwidth constraint %d: %.3f Mbps"
+literal|"\n\t\t  Bandwidth constraint CT%u: %.3f Mbps"
 argument_list|,
-name|bandwidth_constraint
+name|te_class
 argument_list|,
 name|bw
 operator|.

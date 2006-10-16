@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-isoclns.c,v 1.133.2.12 2005/06/16 01:14:52 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-isoclns.c,v 1.133.2.19 2005/09/20 10:15:22 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -474,6 +474,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ISIS_TLV_CHECKSUM_MINLEN
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
 name|ISIS_TLV_LSP_BUFFERSIZE
 value|14
 end_define
@@ -481,6 +488,13 @@ end_define
 begin_comment
 comment|/* iso10589 rev2 */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ISIS_TLV_LSP_BUFFERSIZE_MINLEN
+value|2
+end_define
 
 begin_define
 define|#
@@ -561,6 +575,13 @@ end_define
 begin_comment
 comment|/* rfc1195 */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ISIS_TLV_IDRP_INFO_MINLEN
+value|1
+end_define
 
 begin_define
 define|#
@@ -656,6 +677,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ISIS_TLV_RESTART_SIGNALING_FLAGLEN
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISIS_TLV_RESTART_SIGNALING_HOLDTIMELEN
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
 name|ISIS_TLV_MT_IS_REACH
 value|222
 end_define
@@ -674,6 +709,13 @@ end_define
 begin_comment
 comment|/* draft-ietf-isis-wg-multi-topology-05 */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ISIS_TLV_MT_SUPPORTED_MINLEN
+value|2
+end_define
 
 begin_define
 define|#
@@ -744,6 +786,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ISIS_TLV_IIH_SEQNR_MINLEN
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|ISIS_TLV_VENDOR_PRIVATE
 value|250
 end_define
@@ -751,6 +800,13 @@ end_define
 begin_comment
 comment|/* draft-ietf-isis-experimental-tlv-01 */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ISIS_TLV_VENDOR_PRIVATE_MINLEN
+value|3
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -1862,13 +1918,13 @@ value|11
 end_define
 
 begin_comment
-comment|/* draft-ietf-isis-traffic-05 */
+comment|/* rfc4124 */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ISIS_SUBTLV_EXT_IS_REACH_DIFFSERV_TE
+name|ISIS_SUBTLV_EXT_IS_REACH_BW_CONSTRAINTS_OLD
 value|12
 end_define
 
@@ -1907,6 +1963,17 @@ end_define
 
 begin_comment
 comment|/* draft-ietf-isis-gmpls-extensions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISIS_SUBTLV_EXT_IS_REACH_BW_CONSTRAINTS
+value|22
+end_define
+
+begin_comment
+comment|/* rfc4124 */
 end_comment
 
 begin_decl_stmt
@@ -1966,12 +2033,6 @@ literal|"Unreserved bandwidth"
 block|}
 block|,
 block|{
-name|ISIS_SUBTLV_EXT_IS_REACH_DIFFSERV_TE
-block|,
-literal|"Diffserv TE"
-block|}
-block|,
-block|{
 name|ISIS_SUBTLV_EXT_IS_REACH_TE_METRIC
 block|,
 literal|"Traffic Engineering Metric"
@@ -1987,6 +2048,18 @@ block|{
 name|ISIS_SUBTLV_EXT_IS_REACH_INTF_SW_CAP_DESCR
 block|,
 literal|"Interface Switching Capability"
+block|}
+block|,
+block|{
+name|ISIS_SUBTLV_EXT_IS_REACH_BW_CONSTRAINTS_OLD
+block|,
+literal|"Bandwidth Constraints (old)"
+block|}
+block|,
+block|{
+name|ISIS_SUBTLV_EXT_IS_REACH_BW_CONSTRAINTS
+block|,
+literal|"Bandwidth Constraints"
 block|}
 block|,
 block|{
@@ -4033,6 +4106,12 @@ name|clnp_segment_header_t
 operator|*
 operator|)
 name|pptr
+expr_stmt|;
+name|TCHECK
+argument_list|(
+operator|*
+name|clnp_segment_header
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
@@ -6712,10 +6791,10 @@ name|u_int8_t
 modifier|*
 name|tptr
 parameter_list|,
-name|int
+name|u_int
 name|subt
 parameter_list|,
-name|int
+name|u_int
 name|subl
 parameter_list|,
 specifier|const
@@ -6724,10 +6803,10 @@ modifier|*
 name|ident
 parameter_list|)
 block|{
-name|int
-name|priority_level
+name|u_int
+name|te_class
 decl_stmt|,
-name|bandwidth_constraint
+name|priority_level
 decl_stmt|;
 union|union
 block|{
@@ -6838,7 +6917,11 @@ if|if
 condition|(
 name|subl
 operator|>=
-literal|4
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
+argument_list|)
 condition|)
 name|printf
 argument_list|(
@@ -6900,15 +6983,15 @@ condition|)
 block|{
 for|for
 control|(
-name|priority_level
+name|te_class
 operator|=
 literal|0
 init|;
-name|priority_level
+name|te_class
 operator|<
 literal|8
 condition|;
-name|priority_level
+name|te_class
 operator|++
 control|)
 block|{
@@ -6923,11 +7006,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s  priority level %d: %.3f Mbps"
+literal|"%s  TE-Class %u: %.3f Mbps"
 argument_list|,
 name|ident
 argument_list|,
-name|priority_level
+name|te_class
 argument_list|,
 name|bw
 operator|.
@@ -6946,7 +7029,11 @@ block|}
 block|}
 break|break;
 case|case
-name|ISIS_SUBTLV_EXT_IS_REACH_DIFFSERV_TE
+name|ISIS_SUBTLV_EXT_IS_REACH_BW_CONSTRAINTS
+case|:
+comment|/* fall through */
+case|case
+name|ISIS_SUBTLV_EXT_IS_REACH_BW_CONSTRAINTS_OLD
 case|:
 name|printf
 argument_list|(
@@ -6974,11 +7061,11 @@ expr_stmt|;
 comment|/* decode BCs until the subTLV ends */
 for|for
 control|(
-name|bandwidth_constraint
+name|te_class
 operator|=
 literal|0
 init|;
-name|bandwidth_constraint
+name|te_class
 operator|<
 operator|(
 name|subl
@@ -6988,7 +7075,7 @@ operator|)
 operator|/
 literal|4
 condition|;
-name|bandwidth_constraint
+name|te_class
 operator|++
 control|)
 block|{
@@ -7003,11 +7090,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s  Bandwidth constraint %d: %.3f Mbps"
+literal|"%s  Bandwidth constraint CT%u: %.3f Mbps"
 argument_list|,
 name|ident
 argument_list|,
-name|bandwidth_constraint
+name|te_class
 argument_list|,
 name|bw
 operator|.
@@ -7659,7 +7746,11 @@ decl_stmt|;
 name|u_int8_t
 name|prefix
 index|[
-literal|16
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_addr
+argument_list|)
 index|]
 decl_stmt|;
 comment|/* shared copy buffer for IPv4 and IPv6 prefixes */
@@ -7844,7 +7935,11 @@ name|prefix
 argument_list|,
 literal|0
 argument_list|,
-literal|16
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* clear the copy buffer */
@@ -10747,7 +10842,11 @@ while|while
 condition|(
 name|tmp
 operator|>=
-literal|16
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_addr
+argument_list|)
 condition|)
 block|{
 if|if
@@ -10758,7 +10857,11 @@ argument_list|(
 operator|*
 name|tptr
 argument_list|,
-literal|16
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_addr
+argument_list|)
 argument_list|)
 condition|)
 goto|goto
@@ -10776,11 +10879,19 @@ argument_list|)
 expr_stmt|;
 name|tptr
 operator|+=
-literal|16
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_addr
+argument_list|)
 expr_stmt|;
 name|tmp
 operator|-=
-literal|16
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_addr
+argument_list|)
 expr_stmt|;
 block|}
 break|break;
@@ -11240,7 +11351,11 @@ argument_list|(
 operator|*
 name|pptr
 argument_list|,
-literal|4
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
+argument_list|)
 argument_list|)
 condition|)
 goto|goto
@@ -11264,7 +11379,11 @@ while|while
 condition|(
 name|tmp
 operator|>=
-literal|4
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
+argument_list|)
 condition|)
 block|{
 if|if
@@ -11275,7 +11394,11 @@ argument_list|(
 operator|*
 name|tptr
 argument_list|,
-literal|4
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
+argument_list|)
 argument_list|)
 condition|)
 goto|goto
@@ -11293,11 +11416,19 @@ argument_list|)
 expr_stmt|;
 name|tptr
 operator|+=
-literal|4
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
+argument_list|)
 expr_stmt|;
 name|tmp
 operator|-=
-literal|4
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
+argument_list|)
 expr_stmt|;
 block|}
 break|break;
@@ -11436,7 +11567,11 @@ if|if
 condition|(
 name|tmp
 operator|<
-literal|4
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
+argument_list|)
 condition|)
 break|break;
 if|if
@@ -11447,7 +11582,11 @@ argument_list|(
 operator|*
 name|tptr
 argument_list|,
-literal|4
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
+argument_list|)
 argument_list|)
 condition|)
 goto|goto
@@ -11465,17 +11604,29 @@ argument_list|)
 expr_stmt|;
 name|tptr
 operator|+=
-literal|4
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
+argument_list|)
 expr_stmt|;
 name|tmp
 operator|-=
-literal|4
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|tmp
 operator|<
-literal|4
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
+argument_list|)
 condition|)
 break|break;
 if|if
@@ -11486,7 +11637,11 @@ argument_list|(
 operator|*
 name|tptr
 argument_list|,
-literal|4
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
+argument_list|)
 argument_list|)
 condition|)
 goto|goto
@@ -11504,11 +11659,19 @@ argument_list|)
 expr_stmt|;
 name|tptr
 operator|+=
-literal|4
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
+argument_list|)
 expr_stmt|;
 name|tmp
 operator|-=
-literal|4
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -11710,7 +11873,7 @@ if|if
 condition|(
 name|tmp
 operator|<
-literal|2
+name|ISIS_TLV_CHECKSUM_MINLEN
 condition|)
 break|break;
 if|if
@@ -11721,7 +11884,7 @@ argument_list|(
 operator|*
 name|tptr
 argument_list|,
-literal|2
+name|ISIS_TLV_CHECKSUM_MINLEN
 argument_list|)
 condition|)
 goto|goto
@@ -11773,6 +11936,13 @@ break|break;
 case|case
 name|ISIS_TLV_MT_SUPPORTED
 case|:
+if|if
+condition|(
+name|tmp
+operator|<
+name|ISIS_TLV_MT_SUPPORTED_MINLEN
+condition|)
+break|break;
 while|while
 condition|(
 name|tmp
@@ -11830,11 +12000,12 @@ break|break;
 case|case
 name|ISIS_TLV_RESTART_SIGNALING
 case|:
+comment|/* first attempt to decode the flags */
 if|if
 condition|(
 name|tmp
 operator|<
-literal|3
+name|ISIS_TLV_RESTART_SIGNALING_FLAGLEN
 condition|)
 break|break;
 if|if
@@ -11845,7 +12016,7 @@ argument_list|(
 operator|*
 name|tptr
 argument_list|,
-literal|3
+name|ISIS_TLV_RESTART_SIGNALING_FLAGLEN
 argument_list|)
 condition|)
 goto|goto
@@ -11853,7 +12024,7 @@ name|trunctlv
 goto|;
 name|printf
 argument_list|(
-literal|"\n\t      Flags [%s], Remaining holding time %us"
+literal|"\n\t      Flags [%s]"
 argument_list|,
 name|bittok2str
 argument_list|(
@@ -11864,6 +12035,48 @@ argument_list|,
 operator|*
 name|tptr
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|tptr
+operator|+=
+name|ISIS_TLV_RESTART_SIGNALING_FLAGLEN
+expr_stmt|;
+name|tmp
+operator|-=
+name|ISIS_TLV_RESTART_SIGNALING_FLAGLEN
+expr_stmt|;
+comment|/* is there anything other than the flags field? */
+if|if
+condition|(
+name|tmp
+operator|==
+literal|0
+condition|)
+break|break;
+if|if
+condition|(
+name|tmp
+operator|<
+name|ISIS_TLV_RESTART_SIGNALING_HOLDTIMELEN
+condition|)
+break|break;
+if|if
+condition|(
+operator|!
+name|TTEST2
+argument_list|(
+operator|*
+name|tptr
+argument_list|,
+name|ISIS_TLV_RESTART_SIGNALING_HOLDTIMELEN
+argument_list|)
+condition|)
+goto|goto
+name|trunctlv
+goto|;
+name|printf
+argument_list|(
+literal|", Remaining holding time %us"
 argument_list|,
 name|EXTRACT_16BITS
 argument_list|(
@@ -11875,12 +12088,13 @@ argument_list|)
 expr_stmt|;
 name|tptr
 operator|+=
-literal|3
+name|ISIS_TLV_RESTART_SIGNALING_HOLDTIMELEN
 expr_stmt|;
 name|tmp
 operator|-=
-literal|3
+name|ISIS_TLV_RESTART_SIGNALING_HOLDTIMELEN
 expr_stmt|;
+comment|/* is there an additional sysid field present ?*/
 if|if
 condition|(
 name|tmp
@@ -11911,41 +12125,6 @@ argument_list|(
 name|tptr
 argument_list|,
 name|SYSTEM_ID_LEN
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|tmp
-operator|==
-name|NODE_ID_LEN
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|TTEST2
-argument_list|(
-operator|*
-name|tptr
-argument_list|,
-name|NODE_ID_LEN
-argument_list|)
-condition|)
-goto|goto
-name|trunctlv
-goto|;
-name|printf
-argument_list|(
-literal|", for %s"
-argument_list|,
-name|isis_print_id
-argument_list|(
-name|tptr
-argument_list|,
-name|NODE_ID_LEN
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -11958,7 +12137,7 @@ if|if
 condition|(
 name|tmp
 operator|<
-literal|1
+name|ISIS_TLV_IDRP_INFO_MINLEN
 condition|)
 break|break;
 if|if
@@ -11969,7 +12148,7 @@ argument_list|(
 operator|*
 name|tptr
 argument_list|,
-literal|1
+name|ISIS_TLV_IDRP_INFO_MINLEN
 argument_list|)
 condition|)
 goto|goto
@@ -12062,7 +12241,7 @@ if|if
 condition|(
 name|tmp
 operator|<
-literal|2
+name|ISIS_TLV_LSP_BUFFERSIZE_MINLEN
 condition|)
 break|break;
 if|if
@@ -12073,7 +12252,7 @@ argument_list|(
 operator|*
 name|tptr
 argument_list|,
-literal|2
+name|ISIS_TLV_LSP_BUFFERSIZE_MINLEN
 argument_list|)
 condition|)
 goto|goto
@@ -12311,7 +12490,7 @@ if|if
 condition|(
 name|tmp
 operator|<
-literal|4
+name|ISIS_TLV_IIH_SEQNR_MINLEN
 condition|)
 break|break;
 if|if
@@ -12322,7 +12501,7 @@ argument_list|(
 operator|*
 name|tptr
 argument_list|,
-literal|4
+name|ISIS_TLV_IIH_SEQNR_MINLEN
 argument_list|)
 condition|)
 comment|/* check if four bytes are on the wire */
@@ -12347,7 +12526,7 @@ if|if
 condition|(
 name|tmp
 operator|<
-literal|3
+name|ISIS_TLV_VENDOR_PRIVATE_MINLEN
 condition|)
 break|break;
 if|if
@@ -12358,7 +12537,7 @@ argument_list|(
 operator|*
 name|tptr
 argument_list|,
-literal|3
+name|ISIS_TLV_VENDOR_PRIVATE_MINLEN
 argument_list|)
 condition|)
 comment|/* check if enough byte for a full oui */

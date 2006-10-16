@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ldp.c,v 1.8.2.5 2005/06/16 01:10:35 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ldp.c,v 1.8.2.6 2005/07/11 20:24:34 hannes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1267,7 +1267,11 @@ argument_list|)
 expr_stmt|;
 name|tptr
 operator|+=
-literal|4
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -1319,7 +1323,11 @@ argument_list|)
 expr_stmt|;
 name|tptr
 operator|+=
-literal|16
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_addr
+argument_list|)
 expr_stmt|;
 block|}
 block|}

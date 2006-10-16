@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-symantec.c,v 1.4 2004/04/05 00:13:59 mcr Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-symantec.c,v 1.4.2.1 2005/07/07 01:24:39 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -397,10 +397,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|xflag
-operator|&&
-operator|!
-name|qflag
+name|suppress_default_print
 condition|)
 name|default_print
 argument_list|(
@@ -456,10 +453,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|xflag
-operator|&&
-operator|!
-name|qflag
+name|suppress_default_print
 condition|)
 name|default_print
 argument_list|(

@@ -919,7 +919,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %x/%d.%d"
+literal|" %u/%d.%d"
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -993,7 +993,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %x/%d.%d"
+literal|" %u/%d.%d"
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(

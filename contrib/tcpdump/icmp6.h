@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/icmp6.h,v 1.16 2005/01/14 10:41:50 hannes Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/icmp6.h,v 1.16.2.1 2005/09/05 09:29:28 guy Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -304,7 +304,7 @@ value|134
 end_define
 
 begin_comment
-comment|/* router advertisment */
+comment|/* router advertisement */
 end_comment
 
 begin_define
@@ -326,7 +326,7 @@ value|136
 end_define
 
 begin_comment
-comment|/* neighbor advertisment */
+comment|/* neighbor advertisement */
 end_comment
 
 begin_define

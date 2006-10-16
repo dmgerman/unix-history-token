@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-linux.c,v 1.110.2.2 2005/06/20 21:30:18 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-linux.c,v 1.110.2.6 2005/08/16 04:25:26 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -478,7 +478,7 @@ parameter_list|(
 name|pcap_t
 modifier|*
 parameter_list|,
-name|direction_t
+name|pcap_direction_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1619,7 +1619,7 @@ name|handle
 operator|->
 name|direction
 operator|==
-name|D_IN
+name|PCAP_D_IN
 condition|)
 return|return
 literal|0
@@ -1634,7 +1634,7 @@ name|handle
 operator|->
 name|direction
 operator|==
-name|D_OUT
+name|PCAP_D_OUT
 condition|)
 return|return
 literal|0
@@ -2672,7 +2672,7 @@ name|pcap_t
 modifier|*
 name|handle
 parameter_list|,
-name|direction_t
+name|pcap_direction_t
 name|d
 parameter_list|)
 block|{
@@ -3003,6 +3003,26 @@ operator|->
 name|linktype
 operator|=
 name|DLT_PRISM_HEADER
+expr_stmt|;
+break|break;
+ifndef|#
+directive|ifndef
+name|ARPHRD_IEEE80211_RADIOTAP
+comment|/* new */
+define|#
+directive|define
+name|ARPHRD_IEEE80211_RADIOTAP
+value|803
+endif|#
+directive|endif
+case|case
+name|ARPHRD_IEEE80211_RADIOTAP
+case|:
+name|handle
+operator|->
+name|linktype
+operator|=
+name|DLT_IEEE802_11_RADIO
 expr_stmt|;
 break|break;
 case|case

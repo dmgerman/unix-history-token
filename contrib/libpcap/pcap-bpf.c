@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, 1994, 1995, 1996, 1998  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (c) 1993, 1994, 1995, 1996, 1998  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-bpf.c,v 1.86.2.4 2005/06/04 02:53:16 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-bpf.c,v 1.86.2.8 2005/07/10 10:55:31 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -423,7 +423,7 @@ parameter_list|(
 name|pcap_t
 modifier|*
 parameter_list|,
-name|direction_t
+name|pcap_direction_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3567,7 +3567,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* 	 * On most BPF platforms, either you can do a "select()" or 	 * "poll()" on a BPF file descriptor and it works correctly, 	 * or you can do it and it will return "readable" if the 	 * hold buffer is full but not if the timeout expires *and* 	 * a non-blocking read will, if the hold buffer is empty 	 * but the store buffer isn't empty, rotate the buffers 	 * and return what packets are available. 	 * 	 * In the latter case, the fact that a non-blocking read 	 * will give you the available packets means you can work 	 * around the failure of "select()" and "poll()" to wake up 	 * and return "readable" when the timeout expires by using 	 * the timeout as the "select()" or "poll()" timeout, putting 	 * the BPF descriptor into non-blocking mode, and read from 	 * it regardless of whether "select()" reports it as readable 	 * or not. 	 * 	 * However, in FreeBSD 4.3 and 4.4, "select()" and "poll()" 	 * won't wake up and return "readable" if the timer expires 	 * and non-blocking reads return EWOULDBLOCK if the hold 	 * buffer is empty, even if the store buffer is non-empty. 	 * 	 * This means the workaround in question won't work. 	 * 	 * Therefore, on FreeBSD 4.3 and 4.4, we set "p->selectable_fd" 	 * to -1, which means "sorry, you can't use 'select()' or 'poll()' 	 * here".  On all other BPF platforms, we set it to the FD for 	 * the BPF device; in NetBSD, OpenBSD, and Darwin, a non-blocking 	 * read will, if the hold buffer is empty and the store buffer 	 * isn't empty, rotate the buffers and return what packets are 	 * there (and in sufficiently recent versions of OpenBSD 	 * "select()" and "poll()" should work correctly). 	 * 	 * In addition, in Mac OS X 10.4, "select()" and "poll()" don't 	 * work on *any* character devices, including BPF devices. 	 * 	 * XXX - what about AIX? 	 */
+comment|/* 	 * On most BPF platforms, either you can do a "select()" or 	 * "poll()" on a BPF file descriptor and it works correctly, 	 * or you can do it and it will return "readable" if the 	 * hold buffer is full but not if the timeout expires *and* 	 * a non-blocking read will, if the hold buffer is empty 	 * but the store buffer isn't empty, rotate the buffers 	 * and return what packets are available. 	 * 	 * In the latter case, the fact that a non-blocking read 	 * will give you the available packets means you can work 	 * around the failure of "select()" and "poll()" to wake up 	 * and return "readable" when the timeout expires by using 	 * the timeout as the "select()" or "poll()" timeout, putting 	 * the BPF descriptor into non-blocking mode, and read from 	 * it regardless of whether "select()" reports it as readable 	 * or not. 	 * 	 * However, in FreeBSD 4.3 and 4.4, "select()" and "poll()" 	 * won't wake up and return "readable" if the timer expires 	 * and non-blocking reads return EWOULDBLOCK if the hold 	 * buffer is empty, even if the store buffer is non-empty. 	 * 	 * This means the workaround in question won't work. 	 * 	 * Therefore, on FreeBSD 4.3 and 4.4, we set "p->selectable_fd" 	 * to -1, which means "sorry, you can't use 'select()' or 'poll()' 	 * here".  On all other BPF platforms, we set it to the FD for 	 * the BPF device; in NetBSD, OpenBSD, and Darwin, a non-blocking 	 * read will, if the hold buffer is empty and the store buffer 	 * isn't empty, rotate the buffers and return what packets are 	 * there (and in sufficiently recent versions of OpenBSD 	 * "select()" and "poll()" should work correctly). 	 * 	 * XXX - what about AIX? 	 */
 name|p
 operator|->
 name|selectable_fd
@@ -3627,44 +3627,6 @@ argument_list|,
 literal|"4.4-"
 argument_list|,
 literal|4
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|p
-operator|->
-name|selectable_fd
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|osinfo
-operator|.
-name|sysname
-argument_list|,
-literal|"Darwin"
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|strncmp
-argument_list|(
-name|osinfo
-operator|.
-name|release
-argument_list|,
-literal|"8."
-argument_list|,
-literal|2
 argument_list|)
 operator|==
 literal|0
@@ -3963,7 +3925,7 @@ name|pcap_t
 modifier|*
 name|p
 parameter_list|,
-name|direction_t
+name|pcap_direction_t
 name|d
 parameter_list|)
 block|{
@@ -3975,12 +3937,12 @@ name|seesent
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * We don't support D_OUT. 	 */
+comment|/* 	 * We don't support PCAP_D_OUT. 	 */
 if|if
 condition|(
 name|d
 operator|==
-name|D_OUT
+name|PCAP_D_OUT
 condition|)
 block|{
 name|snprintf
@@ -3996,7 +3958,7 @@ operator|->
 name|errbuf
 argument_list|)
 argument_list|,
-literal|"Setting direction to D_OUT is not supported on BPF"
+literal|"Setting direction to PCAP_D_OUT is not supported on BPF"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4012,7 +3974,7 @@ operator|=
 operator|(
 name|d
 operator|==
-name|D_INOUT
+name|PCAP_D_INOUT
 operator|)
 expr_stmt|;
 if|if
@@ -4054,12 +4016,12 @@ argument_list|,
 operator|(
 name|d
 operator|==
-name|D_INOUT
+name|PCAP_D_INOUT
 operator|)
 condition|?
-literal|"D_INOUT"
+literal|"PCAP_D_INOUT"
 else|:
-literal|"D_IN"
+literal|"PCAP_D_IN"
 argument_list|,
 name|strerror
 argument_list|(

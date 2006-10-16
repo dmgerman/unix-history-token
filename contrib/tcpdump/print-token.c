@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-token.c,v 1.25 2004/03/17 23:24:38 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-token.c,v 1.25.2.1 2005/07/07 01:24:40 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -734,10 +734,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|xflag
-operator|&&
-operator|!
-name|qflag
+name|suppress_default_print
 condition|)
 name|default_print
 argument_list|(
@@ -783,10 +780,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|xflag
-operator|&&
-operator|!
-name|qflag
+name|suppress_default_print
 condition|)
 name|default_print
 argument_list|(

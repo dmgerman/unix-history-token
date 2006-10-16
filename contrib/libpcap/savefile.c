@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/savefile.c,v 1.126.2.8 2005/06/03 20:36:57 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/savefile.c,v 1.126.2.13 2005/08/29 21:05:45 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -138,6 +138,17 @@ define|#
 directive|define
 name|NAVTEL_TCPDUMP_MAGIC
 value|0xa12b3c4d
+end_define
+
+begin_comment
+comment|/*  * Normal libpcap format, except for seconds/nanoseconds timestamps,  * as per a request by Ulf Lamping<ulf.lamping@web.de>  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NSEC_TCPDUMP_MAGIC
+value|0xa1b23c4d
 end_define
 
 begin_comment
@@ -1170,6 +1181,38 @@ name|LINKTYPE_LINUX_LAPD
 value|177
 end_define
 
+begin_comment
+comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.   * The Link Types are used for prepending meta-information  * like interface index, interface name  * before standard Ethernet, PPP, Frelay& C-HDLC Frames  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_JUNIPER_ETHER
+value|178
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_JUNIPER_PPP
+value|179
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_JUNIPER_FRELAY
+value|180
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_JUNIPER_CHDLC
+value|181
+end_define
+
 begin_struct
 specifier|static
 struct|struct
@@ -1668,6 +1711,31 @@ block|,
 name|LINKTYPE_LINUX_LAPD
 block|}
 block|,
+comment|/* Juniper meta-information before Ether, PPP, Frame Relay, C-HDLC Frames */
+block|{
+name|DLT_JUNIPER_ETHER
+block|,
+name|LINKTYPE_JUNIPER_ETHER
+block|}
+block|,
+block|{
+name|DLT_JUNIPER_PPP
+block|,
+name|LINKTYPE_JUNIPER_PPP
+block|}
+block|,
+block|{
+name|DLT_JUNIPER_FRELAY
+block|,
+name|LINKTYPE_JUNIPER_FRELAY
+block|}
+block|,
+block|{
+name|DLT_JUNIPER_CHDLC
+block|,
+name|LINKTYPE_JUNIPER_CHDLC
+block|}
+block|,
 block|{
 operator|-
 literal|1
@@ -2123,7 +2191,7 @@ name|pcap_t
 modifier|*
 name|p
 parameter_list|,
-name|direction_t
+name|pcap_direction_t
 name|d
 parameter_list|)
 block|{

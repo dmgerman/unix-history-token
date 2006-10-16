@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-802_11.c,v 1.31.2.1 2005/04/20 19:32:41 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-802_11.c,v 1.31.2.5 2005/07/30 21:37:50 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -153,47 +153,12 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|subtype_text
-index|[]
-init|=
-block|{
-literal|"Assoc Request"
-block|,
-literal|"Assoc Response"
-block|,
-literal|"ReAssoc Request"
-block|,
-literal|"ReAssoc Response"
-block|,
-literal|"Probe Request"
-block|,
-literal|"Probe Response"
-block|,
-literal|""
-block|,
-literal|""
-block|,
-literal|"Beacon"
-block|,
-literal|"ATIM"
-block|,
-literal|"Disassociation"
-block|,
-literal|"Authentication"
-block|,
-literal|"DeAuthentication"
-block|,
-literal|""
-block|,
-literal|""
-block|}
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|NUM_AUTH_ALGS
+value|(sizeof auth_alg_text / sizeof auth_alg_text[0])
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -265,10 +230,16 @@ expr|\
 literal|"data rates in BSSBasicRateSet parameter"
 block|,
 comment|/*  18 */
-name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|NUM_STATUSES
+value|(sizeof status_text / sizeof status_text[0])
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -297,7 +268,7 @@ comment|/* 4 */
 literal|"Disassociated because AP is unable to handle all currently associated stations"
 block|,
 comment|/* 5 */
-literal|"Class 2 frame receivedfrom nonauthenticated station"
+literal|"Class 2 frame received from nonauthenticated station"
 block|,
 comment|/* 6 */
 literal|"Class 3 frame received from nonassociated station"
@@ -309,10 +280,16 @@ comment|/* 8 */
 literal|"Station requesting (re)association is not authenticated with responding station"
 block|,
 comment|/* 9 */
-name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|NUM_REASONS
+value|(sizeof reason_text / sizeof reason_text[0])
+end_define
 
 begin_function
 specifier|static
@@ -1480,7 +1457,7 @@ name|pbody
 operator|.
 name|status_code
 operator|<
-literal|19
+name|NUM_STATUSES
 condition|?
 name|status_text
 index|[
@@ -1990,7 +1967,7 @@ name|pbody
 operator|.
 name|reason_code
 operator|<
-literal|10
+name|NUM_REASONS
 operator|)
 condition|?
 name|reason_text
@@ -2153,7 +2130,7 @@ name|pbody
 operator|.
 name|auth_alg
 operator|<
-literal|4
+name|NUM_AUTH_ALGS
 operator|)
 condition|?
 name|auth_alg_text
@@ -2184,7 +2161,7 @@ name|pbody
 operator|.
 name|status_code
 operator|<
-literal|19
+name|NUM_STATUSES
 operator|)
 condition|?
 name|status_text
@@ -2214,7 +2191,7 @@ name|pbody
 operator|.
 name|auth_alg
 operator|<
-literal|4
+name|NUM_AUTH_ALGS
 operator|)
 condition|?
 name|auth_alg_text
@@ -2244,7 +2221,7 @@ name|pbody
 operator|.
 name|status_code
 operator|<
-literal|19
+name|NUM_STATUSES
 operator|)
 condition|?
 name|status_text
@@ -2346,7 +2323,7 @@ name|pbody
 operator|.
 name|reason_code
 operator|<
-literal|10
+name|NUM_REASONS
 operator|)
 condition|?
 name|reason_text
@@ -2418,19 +2395,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|printf
-argument_list|(
-literal|"%s"
-argument_list|,
-name|subtype_text
-index|[
-name|FC_SUBTYPE
-argument_list|(
-name|fc
-argument_list|)
-index|]
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|FC_SUBTYPE
@@ -2442,6 +2406,11 @@ block|{
 case|case
 name|ST_ASSOC_REQUEST
 case|:
+name|printf
+argument_list|(
+literal|"Assoc Request"
+argument_list|)
+expr_stmt|;
 return|return
 name|handle_assoc_request
 argument_list|(
@@ -2451,6 +2420,11 @@ return|;
 case|case
 name|ST_ASSOC_RESPONSE
 case|:
+name|printf
+argument_list|(
+literal|"Assoc Response"
+argument_list|)
+expr_stmt|;
 return|return
 name|handle_assoc_response
 argument_list|(
@@ -2460,6 +2434,11 @@ return|;
 case|case
 name|ST_REASSOC_REQUEST
 case|:
+name|printf
+argument_list|(
+literal|"ReAssoc Request"
+argument_list|)
+expr_stmt|;
 return|return
 name|handle_reassoc_request
 argument_list|(
@@ -2469,6 +2448,11 @@ return|;
 case|case
 name|ST_REASSOC_RESPONSE
 case|:
+name|printf
+argument_list|(
+literal|"ReAssoc Response"
+argument_list|)
+expr_stmt|;
 return|return
 name|handle_reassoc_response
 argument_list|(
@@ -2478,6 +2462,11 @@ return|;
 case|case
 name|ST_PROBE_REQUEST
 case|:
+name|printf
+argument_list|(
+literal|"Probe Request"
+argument_list|)
+expr_stmt|;
 return|return
 name|handle_probe_request
 argument_list|(
@@ -2487,6 +2476,11 @@ return|;
 case|case
 name|ST_PROBE_RESPONSE
 case|:
+name|printf
+argument_list|(
+literal|"Probe Response"
+argument_list|)
+expr_stmt|;
 return|return
 name|handle_probe_response
 argument_list|(
@@ -2496,6 +2490,11 @@ return|;
 case|case
 name|ST_BEACON
 case|:
+name|printf
+argument_list|(
+literal|"Beacon"
+argument_list|)
+expr_stmt|;
 return|return
 name|handle_beacon
 argument_list|(
@@ -2505,6 +2504,11 @@ return|;
 case|case
 name|ST_ATIM
 case|:
+name|printf
+argument_list|(
+literal|"ATIM"
+argument_list|)
+expr_stmt|;
 return|return
 name|handle_atim
 argument_list|()
@@ -2512,6 +2516,11 @@ return|;
 case|case
 name|ST_DISASSOC
 case|:
+name|printf
+argument_list|(
+literal|"Disassociation"
+argument_list|)
+expr_stmt|;
 return|return
 name|handle_disassoc
 argument_list|(
@@ -2521,6 +2530,11 @@ return|;
 case|case
 name|ST_AUTH
 case|:
+name|printf
+argument_list|(
+literal|"Authentication"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2586,6 +2600,11 @@ return|;
 case|case
 name|ST_DEAUTH
 case|:
+name|printf
+argument_list|(
+literal|"DeAuthentication"
+argument_list|)
+expr_stmt|;
 return|return
 name|handle_deauth
 argument_list|(
@@ -4300,10 +4319,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|xflag
-operator|&&
-operator|!
-name|qflag
+name|suppress_default_print
 condition|)
 name|default_print
 argument_list|(
