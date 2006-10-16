@@ -123,6 +123,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/frame.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ic/i8259.h>
 end_include
 
