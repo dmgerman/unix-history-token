@@ -877,6 +877,16 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|str
+index|[
+literal|1
+index|]
+operator|!=
+literal|'\0'
+condition|)
+block|{
 operator|++
 name|str
 expr_stmt|;
@@ -889,6 +899,7 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+block|}
 block|}
 break|break;
 default|default:
