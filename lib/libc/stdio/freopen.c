@@ -182,6 +182,10 @@ operator|==
 literal|0
 condition|)
 block|{
+name|sverrno
+operator|=
+name|errno
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -189,6 +193,10 @@ name|fclose
 argument_list|(
 name|fp
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|sverrno
 expr_stmt|;
 return|return
 operator|(
@@ -813,16 +821,16 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* set it free */
-name|errno
-operator|=
-name|sverrno
-expr_stmt|;
-comment|/* restore in case _close clobbered */
 name|FUNLOCKFILE
 argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+name|sverrno
+expr_stmt|;
+comment|/* restore in case _close clobbered */
 return|return
 operator|(
 name|NULL
