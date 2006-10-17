@@ -274,14 +274,14 @@ comment|/* the message is a response */
 end_comment
 
 begin_comment
-comment|/* Type of a unique node ID */
+comment|/* Type of a unique node ID. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ng_ID_t
-value|unsigned int
+value|uint32_t
 end_define
 
 begin_comment
