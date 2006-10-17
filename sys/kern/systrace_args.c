@@ -14037,7 +14037,7 @@ name|p
 operator|->
 name|val
 expr_stmt|;
-comment|/* uintptr_t */
+comment|/* u_long */
 name|uarg
 index|[
 literal|3
