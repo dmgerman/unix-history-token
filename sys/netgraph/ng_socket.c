@@ -26,18 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -86,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/signalvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/socket.h>
 end_include
 
@@ -104,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sx.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/syscallsubr.h>
 end_include
 
@@ -117,12 +93,6 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/systm.h>
 end_include
 
 begin_ifdef
@@ -352,9 +322,34 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*static int	ng_internalize(struct mbuf *m, struct thread *p); */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NOTYET
+end_ifdef
+
+begin_function_decl
+specifier|static
+name|int
+name|ng_internalize
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -598,29 +593,6 @@ literal|"Maximum space for incoming Netgraph datagrams"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/* List of all sockets */
-end_comment
-
-begin_expr_stmt
-specifier|static
-name|LIST_HEAD
-argument_list|(
-argument_list|,
-argument|ngpcb
-argument_list|)
-name|ngsocklist
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|mtx
-name|ngsocketlist_mtx
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -919,7 +891,7 @@ block|}
 endif|#
 directive|endif
 comment|/* NOTYET */
-comment|/* Require destination as there may be>= 1 hooks on this node */
+comment|/* Require destination as there may be>= 1 hooks on this node. */
 if|if
 condition|(
 name|addr
@@ -935,7 +907,7 @@ goto|goto
 name|release
 goto|;
 block|}
-comment|/* Allocate an expendable buffer for the path, chop off 	 * the sockaddr header, and make sure it's NUL terminated */
+comment|/* 	 * Allocate an expendable buffer for the path, chop off 	 * the sockaddr header, and make sure it's NUL terminated. 	 */
 name|len
 operator|=
 name|sap
@@ -944,13 +916,10 @@ name|sg_len
 operator|-
 literal|2
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|path
-argument_list|,
-name|char
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|len
 operator|+
 literal|1
@@ -960,21 +929,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|path
-operator|==
-name|NULL
-condition|)
-block|{
-name|error
-operator|=
-name|ENOMEM
-expr_stmt|;
-goto|goto
-name|release
-goto|;
-block|}
 name|bcopy
 argument_list|(
 name|sap
@@ -993,7 +947,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* Move the actual message out of mbufs into a linear buffer. 	 * Start by adding up the size of the data. (could use mh_len?) */
+comment|/* 	 * Move the actual message out of mbufs into a linear buffer. 	 * Start by adding up the size of the data. (could use mh_len?) 	 */
 for|for
 control|(
 name|len
@@ -1020,15 +974,11 @@ name|m0
 operator|->
 name|m_len
 expr_stmt|;
-comment|/* Move the data into a linear buffer as well. Messages are not 	 * delivered in mbufs. */
-name|MALLOC
-argument_list|(
+comment|/* 	 * Move the data into a linear buffer as well. 	 * Messages are not delivered in mbufs. 	 */
 name|msg
-argument_list|,
-expr|struct
-name|ng_mesg
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|len
 operator|+
 literal|1
@@ -1038,21 +988,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|msg
-operator|==
-name|NULL
-condition|)
-block|{
-name|error
-operator|=
-name|ENOMEM
-expr_stmt|;
-goto|goto
-name|release
-goto|;
-block|}
 name|m_copydata
 argument_list|(
 name|m
@@ -1079,7 +1014,7 @@ operator|!=
 name|NG_VERSION
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|msg
 argument_list|,
@@ -1197,7 +1132,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|msg
 argument_list|,
@@ -1225,7 +1160,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|msg
 argument_list|,
@@ -1254,9 +1189,6 @@ goto|;
 block|}
 block|}
 block|}
-if|if
-condition|(
-operator|(
 name|item
 operator|=
 name|ng_package_msg
@@ -1265,31 +1197,7 @@ name|msg
 argument_list|,
 name|M_WAITOK
 argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|error
-operator|=
-name|ENOMEM
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TRACE_MESSAGES
-name|printf
-argument_list|(
-literal|"ng_package_msg: err=%d\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-goto|goto
-name|release
-goto|;
-block|}
 if|if
 condition|(
 operator|(
@@ -1497,7 +1405,7 @@ name|path
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|path
 argument_list|,
@@ -1611,12 +1519,12 @@ modifier|*
 name|td
 parameter_list|)
 block|{
+comment|/* 	 * At this time refuse to do this.. it used to 	 * do something but it was undocumented and not used. 	 */
 name|printf
 argument_list|(
-literal|" program tried to connect control socket to remote node\n "
+literal|"program tried to connect control socket to remote node\n"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * At this time refuse to do this.. it used to 	 * do something but it was undocumented and not used. 	 */
 return|return
 operator|(
 name|EINVAL
@@ -1905,7 +1813,7 @@ goto|goto
 name|release
 goto|;
 block|}
-comment|/* 		 * if exactly one hook exists, just use it. 		 * Special case to allow write(2) to work on an ng_socket. 		 */
+comment|/* 		 * If exactly one hook exists, just use it. 		 * Special case to allow write(2) to work on an ng_socket. 		 */
 name|hook
 operator|=
 name|LIST_FIRST
@@ -1958,33 +1866,19 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* Find the correct hook from 'hookname' */
-name|LIST_FOREACH
-argument_list|(
-argument|hook
-argument_list|,
-argument|&pcbp->sockdata->node->nd_hooks
-argument_list|,
-argument|hk_hooks
-argument_list|)
-block|{
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|hookname
-argument_list|,
-name|NG_HOOK_NAME
-argument_list|(
 name|hook
+operator|=
+name|ng_findhook
+argument_list|(
+name|pcbp
+operator|->
+name|sockdata
+operator|->
+name|node
+argument_list|,
+name|hookname
 argument_list|)
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-break|break;
-block|}
-block|}
+expr_stmt|;
 if|if
 condition|(
 name|hook
@@ -1996,19 +1890,23 @@ name|error
 operator|=
 name|EHOSTUNREACH
 expr_stmt|;
+goto|goto
+name|release
+goto|;
 block|}
 block|}
-comment|/* Send data (OK if hook is NULL) */
-name|NG_SEND_DATA_ONLY
+comment|/* Send data. */
+name|NG_SEND_DATA_FLAGS
 argument_list|(
 name|error
 argument_list|,
 name|hook
 argument_list|,
 name|m
+argument_list|,
+name|NG_WAITOK
 argument_list|)
 expr_stmt|;
-comment|/* makes m NULL */
 name|release
 label|:
 if|if
@@ -2359,14 +2257,10 @@ name|int
 name|error
 decl_stmt|;
 comment|/* Allocate node private info */
-name|MALLOC
-argument_list|(
 name|priv
-argument_list|,
-expr|struct
-name|ngsock
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -2380,17 +2274,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|priv
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
 comment|/* Setup protocol control block */
 if|if
 condition|(
@@ -2408,7 +2291,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|priv
 argument_list|,
@@ -2482,7 +2365,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|priv
 argument_list|,
@@ -2582,7 +2465,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* Standard socket setup stuff */
+comment|/* Standard socket setup stuff. */
 name|error
 operator|=
 name|soreserve
@@ -2603,19 +2486,15 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* Allocate the pcb */
-name|MALLOC
-argument_list|(
+comment|/* Allocate the pcb. */
 name|pcbp
-argument_list|,
-expr|struct
-name|ngpcb
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
-operator|*
-name|pcbp
+expr|struct
+name|ngpcb
 argument_list|)
 argument_list|,
 name|M_PCB
@@ -2625,24 +2504,13 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pcbp
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
 name|pcbp
 operator|->
 name|type
 operator|=
 name|type
 expr_stmt|;
-comment|/* Link the pcb and the socket */
+comment|/* Link the pcb and the socket. */
 name|so
 operator|->
 name|so_pcb
@@ -2657,29 +2525,6 @@ operator|->
 name|ng_socket
 operator|=
 name|so
-expr_stmt|;
-comment|/* Add the socket to linked list */
-name|mtx_lock
-argument_list|(
-operator|&
-name|ngsocketlist_mtx
-argument_list|)
-expr_stmt|;
-name|LIST_INSERT_HEAD
-argument_list|(
-operator|&
-name|ngsocklist
-argument_list|,
-name|pcbp
-argument_list|,
-name|socks
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ngsocketlist_mtx
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -2783,26 +2628,7 @@ name|so_pcb
 operator|=
 name|NULL
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|ngsocketlist_mtx
-argument_list|)
-expr_stmt|;
-name|LIST_REMOVE
-argument_list|(
-name|pcbp
-argument_list|,
-name|socks
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ngsocketlist_mtx
-argument_list|)
-expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|pcbp
 argument_list|,
@@ -2859,7 +2685,7 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|priv
 argument_list|,
@@ -3226,7 +3052,7 @@ decl_stmt|;
 name|item_p
 name|item
 decl_stmt|;
-comment|/* If we are already connected, don't do it again */
+comment|/* If we are already connected, don't do it again. */
 if|if
 condition|(
 name|pcbp
@@ -3240,7 +3066,7 @@ operator|(
 name|EISCONN
 operator|)
 return|;
-comment|/* Find the target (victim) and check it doesn't already have a data 	 * socket. Also check it is a 'socket' type node. 	 * Use ng_package_data() and address_path() to do this. 	 */
+comment|/* 	 * Find the target (victim) and check it doesn't already have 	 * a data socket. Also check it is a 'socket' type node. 	 * Use ng_package_data() and ng_address_path() to do this. 	 */
 name|sap
 operator|=
 operator|(
@@ -3250,7 +3076,7 @@ operator|*
 operator|)
 name|nam
 expr_stmt|;
-comment|/* The item will hold the node reference */
+comment|/* The item will hold the node reference. */
 name|item
 operator|=
 name|ng_package_data
@@ -3260,19 +3086,6 @@ argument_list|,
 name|NG_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|item
-operator|==
-name|NULL
-condition|)
-block|{
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-block|}
 if|if
 condition|(
 operator|(
@@ -3763,7 +3576,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * if only one hook, allow read(2) and write(2) to work.  */
+comment|/*  * If only one hook, allow read(2) and write(2) to work.  */
 end_comment
 
 begin_function
@@ -3819,7 +3632,6 @@ argument_list|)
 operator|==
 literal|1
 condition|)
-block|{
 name|priv
 operator|->
 name|datasock
@@ -3830,9 +3642,7 @@ name|so_state
 operator||=
 name|SS_ISCONNECTED
 expr_stmt|;
-block|}
 else|else
-block|{
 name|priv
 operator|->
 name|datasock
@@ -3844,7 +3654,6 @@ operator|&=
 operator|~
 name|SS_ISCONNECTED
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -4246,7 +4055,7 @@ argument_list|(
 name|item
 argument_list|)
 expr_stmt|;
-comment|/* If there is no data socket, black-hole it */
+comment|/* If there is no data socket, black-hole it. */
 if|if
 condition|(
 name|pcbp
@@ -4329,7 +4138,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* Try to tell the socket which hook it came in on */
+comment|/* Try to tell the socket which hook it came in on. */
 if|if
 condition|(
 name|sbappendaddr
@@ -4438,7 +4247,6 @@ argument_list|)
 operator|==
 literal|1
 condition|)
-block|{
 name|priv
 operator|->
 name|datasock
@@ -4449,9 +4257,7 @@ name|so_state
 operator||=
 name|SS_ISCONNECTED
 expr_stmt|;
-block|}
 else|else
-block|{
 name|priv
 operator|->
 name|datasock
@@ -4463,7 +4269,6 @@ operator|&=
 operator|~
 name|SS_ISCONNECTED
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -4491,13 +4296,11 @@ name|node
 argument_list|)
 operator|)
 condition|)
-block|{
 name|ng_rmnode_self
 argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -4959,7 +4762,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Handle loading and unloading for this node type  * This is to handle auxiliary linkages (e.g protocol domain addition).  */
+comment|/*  * Handle loading and unloading for this node type.  * This is to handle auxiliary linkages (e.g protocol domain addition).  */
 end_comment
 
 begin_function
@@ -4991,19 +4794,7 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
-name|mtx_init
-argument_list|(
-operator|&
-name|ngsocketlist_mtx
-argument_list|,
-literal|"ng_socketlist"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
-comment|/* Register protocol domain */
+comment|/* Register protocol domain. */
 name|net_add_domain
 argument_list|(
 operator|&
@@ -5014,45 +4805,9 @@ break|break;
 case|case
 name|MOD_UNLOAD
 case|:
-comment|/* Insure there are no open netgraph sockets */
-if|if
-condition|(
-operator|!
-name|LIST_EMPTY
-argument_list|(
-operator|&
-name|ngsocklist
-argument_list|)
-condition|)
-block|{
-name|error
-operator|=
-name|EBUSY
-expr_stmt|;
-break|break;
-block|}
 ifdef|#
 directive|ifdef
 name|NOTYET
-if|if
-condition|(
-operator|(
-name|LIST_EMPTY
-argument_list|(
-operator|&
-name|ngsocklist
-argument_list|)
-operator|)
-operator|&&
-operator|(
-name|typestruct
-operator|.
-name|refs
-operator|==
-literal|0
-operator|)
-condition|)
-block|{
 comment|/* Unregister protocol domain XXX can't do this yet.. */
 if|if
 condition|(
@@ -5069,13 +4824,6 @@ operator|!=
 literal|0
 condition|)
 break|break;
-name|mtx_destroy
-argument_list|(
-operator|&
-name|ngsocketlist_mtx
-argument_list|)
-expr_stmt|;
-block|}
 else|else
 endif|#
 directive|endif
