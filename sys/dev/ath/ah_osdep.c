@@ -1245,6 +1245,9 @@ init|=
 operator|(
 name|bus_space_handle_t
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|ah
 operator|->
 name|ah_sh
@@ -1379,6 +1382,9 @@ name|h
 init|=
 operator|(
 name|bus_space_handle_t
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|ah
 operator|->
@@ -1622,6 +1628,9 @@ init|=
 operator|(
 name|bus_space_handle_t
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|ah
 operator|->
 name|ah_sh
@@ -1695,6 +1704,9 @@ name|h
 init|=
 operator|(
 name|bus_space_handle_t
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|ah
 operator|->
