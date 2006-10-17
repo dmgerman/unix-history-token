@@ -81,11 +81,12 @@ begin_struct
 struct|struct
 name|sockaddr_ng
 block|{
-name|u_char
+name|unsigned
+name|char
 name|sg_len
 decl_stmt|;
 comment|/* total length */
-name|u_char
+name|sa_family_t
 name|sg_family
 decl_stmt|;
 comment|/* address family */
