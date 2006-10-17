@@ -390,21 +390,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-struct|struct
-block|{
-name|Elf32_Word
-name|n_namesz
-decl_stmt|;
-comment|/* length of note's name */
-name|Elf32_Word
-name|n_descsz
-decl_stmt|;
-comment|/* length of note's "desc" */
-name|Elf32_Word
-name|n_type
-decl_stmt|;
-comment|/* type of note */
-block|}
+name|Elf_Note
 name|Elf32_Nhdr
 typedef|;
 end_typedef
