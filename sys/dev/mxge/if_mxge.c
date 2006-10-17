@@ -9456,7 +9456,11 @@ if|if
 condition|(
 name|length
 operator|<=
+operator|(
 name|MHLEN
+operator|-
+name|MXGEFW_PAD
+operator|)
 condition|)
 name|mxge_rx_done_small
 argument_list|(
@@ -12419,6 +12423,8 @@ operator|.
 name|data0
 operator|=
 name|MHLEN
+operator|-
+name|MXGEFW_PAD
 expr_stmt|;
 name|err
 operator||=
