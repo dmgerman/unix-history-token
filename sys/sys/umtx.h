@@ -49,7 +49,8 @@ begin_struct
 struct|struct
 name|umtx
 block|{
-name|uintptr_t
+specifier|volatile
+name|u_long
 name|u_owner
 decl_stmt|;
 comment|/* Owner of the mutex. */
@@ -119,6 +120,7 @@ begin_struct
 struct|struct
 name|umutex
 block|{
+specifier|volatile
 name|__lwpid_t
 name|m_owner
 decl_stmt|;
@@ -218,10 +220,6 @@ directive|ifndef
 name|_KERNEL
 end_ifndef
 
-begin_comment
-comment|/*  * System call for userland mutex operations.  * Bug: assume sizeof(uintptr_t) == sizeof(long)  */
-end_comment
-
 begin_function_decl
 name|int
 name|_umtx_op
@@ -233,7 +231,7 @@ parameter_list|,
 name|int
 name|op
 parameter_list|,
-name|uintptr_t
+name|u_long
 name|val
 parameter_list|,
 name|void
@@ -303,7 +301,7 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|uintptr_t
+name|u_long
 name|umtx_owner
 parameter_list|(
 name|struct
@@ -336,13 +334,13 @@ name|umtx
 modifier|*
 name|umtx
 parameter_list|,
-name|uintptr_t
+name|u_long
 name|id
 parameter_list|)
 block|{
 if|if
 condition|(
-name|atomic_cmpset_acq_ptr
+name|atomic_cmpset_acq_long
 argument_list|(
 operator|&
 name|umtx
@@ -390,13 +388,13 @@ name|umtx
 modifier|*
 name|umtx
 parameter_list|,
-name|uintptr_t
+name|u_long
 name|id
 parameter_list|)
 block|{
 if|if
 condition|(
-name|atomic_cmpset_acq_ptr
+name|atomic_cmpset_acq_long
 argument_list|(
 operator|&
 name|umtx
@@ -434,7 +432,7 @@ name|umtx
 modifier|*
 name|umtx
 parameter_list|,
-name|uintptr_t
+name|u_long
 name|id
 parameter_list|,
 specifier|const
@@ -446,7 +444,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|atomic_cmpset_acq_ptr
+name|atomic_cmpset_acq_long
 argument_list|(
 operator|&
 name|umtx
@@ -508,13 +506,13 @@ name|umtx
 modifier|*
 name|umtx
 parameter_list|,
-name|uintptr_t
+name|u_long
 name|id
 parameter_list|)
 block|{
 if|if
 condition|(
-name|atomic_cmpset_rel_ptr
+name|atomic_cmpset_rel_long
 argument_list|(
 operator|&
 name|umtx
@@ -557,7 +555,7 @@ name|__inline
 name|int
 name|umtx_wait
 parameter_list|(
-name|long
+name|u_long
 modifier|*
 name|p
 parameter_list|,
@@ -618,7 +616,7 @@ name|__inline
 name|int
 name|umtx_wake
 parameter_list|(
-name|long
+name|u_long
 modifier|*
 name|p
 parameter_list|,

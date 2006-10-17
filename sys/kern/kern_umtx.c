@@ -2362,7 +2362,7 @@ name|umtx
 modifier|*
 name|umtx
 parameter_list|,
-name|uintptr_t
+name|u_long
 name|id
 parameter_list|,
 name|int
@@ -2374,10 +2374,10 @@ name|umtx_q
 modifier|*
 name|uq
 decl_stmt|;
-name|intptr_t
+name|u_long
 name|owner
 decl_stmt|;
-name|intptr_t
+name|u_long
 name|old
 decl_stmt|;
 name|int
@@ -2401,12 +2401,8 @@ block|{
 comment|/* 		 * Try the uncontested case.  This should be done in userland. 		 */
 name|owner
 operator|=
-name|casuptr
+name|casuword
 argument_list|(
-operator|(
-name|intptr_t
-operator|*
-operator|)
 operator|&
 name|umtx
 operator|->
@@ -2452,12 +2448,8 @@ condition|)
 block|{
 name|owner
 operator|=
-name|casuptr
+name|casuword
 argument_list|(
-operator|(
-name|intptr_t
-operator|*
-operator|)
 operator|&
 name|umtx
 operator|->
@@ -2576,12 +2568,8 @@ expr_stmt|;
 comment|/* 		 * Set the contested bit so that a release in user space 		 * knows to use the system call for unlock.  If this fails 		 * either some one else has acquired the lock or it has been 		 * released. 		 */
 name|old
 operator|=
-name|casuptr
+name|casuword
 argument_list|(
-operator|(
-name|intptr_t
-operator|*
-operator|)
 operator|&
 name|umtx
 operator|->
@@ -2713,7 +2701,7 @@ name|umtx
 modifier|*
 name|umtx
 parameter_list|,
-name|uintptr_t
+name|u_long
 name|id
 parameter_list|,
 name|struct
@@ -2911,7 +2899,7 @@ name|umtx
 modifier|*
 name|umtx
 parameter_list|,
-name|uintptr_t
+name|u_long
 name|id
 parameter_list|)
 block|{
@@ -2919,10 +2907,10 @@ name|struct
 name|umtx_key
 name|key
 decl_stmt|;
-name|intptr_t
+name|u_long
 name|owner
 decl_stmt|;
-name|intptr_t
+name|u_long
 name|old
 decl_stmt|;
 name|int
@@ -2931,15 +2919,21 @@ decl_stmt|;
 name|int
 name|count
 decl_stmt|;
-comment|/* 	 * Make sure we own this mtx. 	 * 	 * XXX Need a {fu,su}ptr this is not correct on arch where 	 * sizeof(intptr_t) != sizeof(long). 	 */
+comment|/* 	 * Make sure we own this mtx. 	 */
 name|owner
 operator|=
 name|fuword
 argument_list|(
+name|__DEVOLATILE
+argument_list|(
+name|u_long
+operator|*
+argument_list|,
 operator|&
 name|umtx
 operator|->
 name|u_owner
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2984,12 +2978,8 @@ condition|)
 block|{
 name|old
 operator|=
-name|casuptr
+name|casuword
 argument_list|(
-operator|(
-name|intptr_t
-operator|*
-operator|)
 operator|&
 name|umtx
 operator|->
@@ -3083,12 +3073,8 @@ expr_stmt|;
 comment|/* 	 * When unlocking the umtx, it must be marked as unowned if 	 * there is zero or one thread only waiting for it. 	 * Otherwise, it must be marked as contested. 	 */
 name|old
 operator|=
-name|casuptr
+name|casuword
 argument_list|(
-operator|(
-name|intptr_t
-operator|*
-operator|)
 operator|&
 name|umtx
 operator|->
@@ -3738,7 +3724,7 @@ decl_stmt|;
 name|int
 name|count
 decl_stmt|;
-comment|/* 	 * Make sure we own this mtx. 	 * 	 * XXX Need a {fu,su}ptr this is not correct on arch where 	 * sizeof(intptr_t) != sizeof(long). 	 */
+comment|/* 	 * Make sure we own this mtx. 	 */
 name|owner
 operator|=
 name|fuword32
@@ -3981,7 +3967,7 @@ name|void
 modifier|*
 name|addr
 parameter_list|,
-name|uintptr_t
+name|u_long
 name|id
 parameter_list|,
 name|struct
@@ -4010,7 +3996,7 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
-name|uintptr_t
+name|u_long
 name|tmp
 decl_stmt|;
 name|int
@@ -4879,10 +4865,16 @@ name|owner
 operator|=
 name|fuword32
 argument_list|(
+name|__DEVOLATILE
+argument_list|(
+name|uint32_t
+operator|*
+argument_list|,
 operator|&
 name|m
 operator|->
 name|m_owner
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -7402,10 +7394,16 @@ name|owner
 operator|=
 name|fuword32
 argument_list|(
+name|__DEVOLATILE
+argument_list|(
+name|uint32_t
+operator|*
+argument_list|,
 operator|&
 name|m
 operator|->
 name|m_owner
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -8494,10 +8492,16 @@ name|owner
 operator|=
 name|fuword32
 argument_list|(
+name|__DEVOLATILE
+argument_list|(
+name|uint32_t
+operator|*
+argument_list|,
 operator|&
 name|m
 operator|->
 name|m_owner
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -8648,10 +8652,16 @@ name|error
 operator|=
 name|suword32
 argument_list|(
+name|__DEVOLATILE
+argument_list|(
+name|uint32_t
+operator|*
+argument_list|,
 operator|&
 name|m
 operator|->
 name|m_owner
+argument_list|)
 argument_list|,
 name|UMUTEX_CONTESTED
 argument_list|)
@@ -9014,10 +9024,16 @@ argument_list|)
 expr_stmt|;
 name|suword32
 argument_list|(
+name|__DEVOLATILE
+argument_list|(
+name|uint32_t
+operator|*
+argument_list|,
 operator|&
 name|m
 operator|->
 name|m_owner
+argument_list|)
 argument_list|,
 name|UMUTEX_CONTESTED
 argument_list|)
