@@ -1283,6 +1283,17 @@ name|char
 modifier|*
 name|f
 decl_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|sb
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sb
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Remove a file.  POSIX 1003.2 states that, by default, attempting 	 * to remove a directory is an error, so must always stat the file. 	 */
 while|while
 condition|(
