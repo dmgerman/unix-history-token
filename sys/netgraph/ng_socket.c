@@ -3527,12 +3527,7 @@ decl_stmt|;
 name|struct
 name|socket
 modifier|*
-specifier|const
 name|so
-init|=
-name|pcbp
-operator|->
-name|ng_socket
 decl_stmt|;
 name|struct
 name|sockaddr_ng
@@ -3597,6 +3592,12 @@ name|EINVAL
 operator|)
 return|;
 block|}
+name|so
+operator|=
+name|pcbp
+operator|->
+name|ng_socket
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TRACE_MESSAGES
