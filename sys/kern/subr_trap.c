@@ -633,7 +633,7 @@ operator|)
 expr_stmt|;
 name|cnt
 operator|.
-name|v_soft
+name|v_trap
 operator|++
 expr_stmt|;
 name|mtx_unlock_spin

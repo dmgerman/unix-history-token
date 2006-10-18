@@ -2778,13 +2778,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|PCPU_LAZY_INC
-argument_list|(
-name|cnt
-operator|.
-name|v_intr
-argument_list|)
-expr_stmt|;
 name|CTR3
 argument_list|(
 name|KTR_INTR
@@ -2825,6 +2818,13 @@ name|SWI_DELAY
 operator|)
 condition|)
 block|{
+name|PCPU_LAZY_INC
+argument_list|(
+name|cnt
+operator|.
+name|v_soft
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|intr_event_schedule_thread
