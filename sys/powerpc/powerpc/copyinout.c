@@ -1402,6 +1402,11 @@ name|void
 operator|)
 name|atomic_cmpset_32
 argument_list|(
+operator|(
+specifier|volatile
+name|uint32_t
+operator|*
+operator|)
 name|p
 argument_list|,
 name|old
