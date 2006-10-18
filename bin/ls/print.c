@@ -3231,10 +3231,19 @@ operator|->
 name|fts_name
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We have no way to tell whether a symbolic link has an ACL since 	 * pathconf() and acl_get_file() both follow them. 	 */
+comment|/* 	 * We have no way to tell whether a symbolic link has an ACL since 	 * pathconf() and acl_get_file() both follow them.  They also don't 	 * support whiteouts. 	 */
 if|if
 condition|(
 name|S_ISLNK
+argument_list|(
+name|p
+operator|->
+name|fts_statp
+operator|->
+name|st_mode
+argument_list|)
+operator|||
+name|S_ISWHT
 argument_list|(
 name|p
 operator|->
