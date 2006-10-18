@@ -560,6 +560,9 @@ name|struct
 name|devfs_dirent
 modifier|*
 name|de
+parameter_list|,
+name|int
+name|vp_locked
 parameter_list|)
 function_decl|;
 end_function_decl
