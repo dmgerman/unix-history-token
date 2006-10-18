@@ -1763,7 +1763,7 @@ modifier|*
 name|stop_time
 parameter_list|)
 block|{
-name|long
+name|off_t
 name|start_pos
 decl_stmt|,
 name|stop_pos
@@ -1818,14 +1818,15 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|start_pos
-operator|=
-name|ftell
+name|fgetpos
 argument_list|(
 name|pcap_file
 argument_list|(
 name|p
 argument_list|)
+argument_list|,
+operator|&
+name|start_pos
 argument_list|)
 expr_stmt|;
 if|if
@@ -1912,14 +1913,15 @@ argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-name|stop_pos
-operator|=
-name|ftell
+name|fgetpos
 argument_list|(
 name|pcap_file
 argument_list|(
 name|p
 argument_list|)
+argument_list|,
+operator|&
+name|stop_pos
 argument_list|)
 expr_stmt|;
 comment|/* sf_find_packet() requires that the time it's passed as its last 	 * argument be in the range [min_time, max_time], so we enforce 	 * that constraint here. 	 */
