@@ -1264,6 +1264,11 @@ return|return
 operator|(
 name|casuword
 argument_list|(
+operator|(
+specifier|volatile
+name|u_long
+operator|*
+operator|)
 name|base
 argument_list|,
 name|oldval
