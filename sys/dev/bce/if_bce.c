@@ -9522,7 +9522,7 @@ argument_list|(
 name|NULL
 argument_list|,
 comment|/* parent     */
-name|BCE_DMA_ALIGN
+literal|1
 argument_list|,
 comment|/* alignment  */
 name|BCE_DMA_BOUNDARY
@@ -10267,7 +10267,7 @@ operator|->
 name|parent_tag
 argument_list|,
 comment|/* parent      */
-name|BCE_DMA_ALIGN
+literal|1
 argument_list|,
 comment|/* alignment   */
 name|BCE_DMA_BOUNDARY
@@ -10653,7 +10653,7 @@ operator|->
 name|parent_tag
 argument_list|,
 comment|/* parent      */
-name|BCE_DMA_ALIGN
+literal|1
 argument_list|,
 comment|/* alignment   */
 name|BCE_DMA_BOUNDARY
