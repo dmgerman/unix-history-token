@@ -420,8 +420,6 @@ operator|=
 name|tm
 operator|.
 name|tm_mday
-operator|-
-literal|1
 expr_stmt|;
 name|ct
 operator|.
@@ -438,6 +436,13 @@ operator|=
 name|tm
 operator|.
 name|tm_year
+expr_stmt|;
+name|ct
+operator|.
+name|dow
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 name|clock_ct_to_ts
 argument_list|(
