@@ -30,7 +30,7 @@ comment|/* Uncomment the following line to enable polling. */
 end_comment
 
 begin_comment
-comment|/* #define DEVICE_POLLING */
+comment|/* #define	DEVICE_POLLING */
 end_comment
 
 begin_define
@@ -4346,7 +4346,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|bus_dmamem_unmap(ring->rx_jumbo_tag, ring->jpool, NFE_JPOOL_SIZE);
+block|bus_dmamem_unmap(ring->rx_jumbo_tag, ring->jpool, 		    NFE_JPOOL_SIZE);
 endif|#
 directive|endif
 name|bus_dmamem_free
@@ -6022,11 +6022,6 @@ name|caddr_t
 name|data
 parameter_list|)
 block|{
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
 name|struct
 name|nfe_softc
 modifier|*
@@ -6052,6 +6047,11 @@ name|struct
 name|mii_data
 modifier|*
 name|mii
+decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
 decl_stmt|;
 switch|switch
 condition|(
@@ -6102,10 +6102,12 @@ operator|>
 name|ETHERMTU
 operator|)
 condition|)
+block|{
 name|error
 operator|=
 name|EINVAL
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -6422,6 +6424,7 @@ block|}
 block|}
 endif|#
 directive|endif
+comment|/* DEVICE_POLLING */
 if|if
 condition|(
 name|mask
@@ -8399,11 +8402,6 @@ decl_stmt|;
 name|bus_dmamap_t
 name|map
 decl_stmt|;
-name|u_int16_t
-name|flags
-init|=
-name|NFE_TX_VALID
-decl_stmt|;
 name|bus_dma_segment_t
 name|segs
 index|[
@@ -8411,12 +8409,16 @@ name|NFE_MAX_SCATTER
 index|]
 decl_stmt|;
 name|int
-name|nsegs
-decl_stmt|;
-name|int
 name|error
 decl_stmt|,
 name|i
+decl_stmt|,
+name|nsegs
+decl_stmt|;
+name|u_int16_t
+name|flags
+init|=
+name|NFE_TX_VALID
 decl_stmt|;
 name|map
 operator|=
@@ -8930,6 +8932,14 @@ name|ifmultiaddr
 modifier|*
 name|ifma
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|u_int32_t
+name|filter
+init|=
+name|NFE_RXFILTER_MAGIC
+decl_stmt|;
 name|u_int8_t
 name|addr
 index|[
@@ -8940,11 +8950,6 @@ name|mask
 index|[
 name|ETHER_ADDR_LEN
 index|]
-decl_stmt|;
-name|u_int32_t
-name|filter
-init|=
-name|NFE_RXFILTER_MAGIC
 decl_stmt|;
 name|u_int8_t
 name|etherbroadcastaddr
@@ -8965,9 +8970,6 @@ literal|0xff
 block|,
 literal|0xff
 block|}
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|NFE_LOCK_ASSERT
 argument_list|(
@@ -9339,6 +9341,11 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|m0
+decl_stmt|;
 name|int
 name|old
 init|=
@@ -9347,11 +9354,6 @@ operator|->
 name|txq
 operator|.
 name|cur
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|m0
 decl_stmt|;
 if|if
 condition|(
