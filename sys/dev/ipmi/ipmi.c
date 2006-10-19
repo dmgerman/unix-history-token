@@ -2862,7 +2862,7 @@ modifier|*
 name|req
 parameter_list|)
 block|{
-name|IPMI_LOCK
+name|IPMI_LOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -2877,11 +2877,6 @@ argument_list|,
 name|req
 argument_list|,
 name|ir_link
-argument_list|)
-expr_stmt|;
-name|IPMI_UNLOCK
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 name|cv_signal
