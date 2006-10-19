@@ -10060,6 +10060,7 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
+comment|/* 		 * Remount the filesystem, but chop off the MNT_ROOTFS flag 		 * as it is used internally (and will result in an error if 		 * specified) 		 */
 while|while
 condition|(
 name|nmount
@@ -10071,6 +10072,9 @@ argument_list|,
 name|fsb
 operator|->
 name|f_flags
+operator|&
+operator|~
+name|MNT_ROOTFS
 argument_list|)
 operator|<
 literal|0
