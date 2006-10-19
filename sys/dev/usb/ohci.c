@@ -10084,6 +10084,8 @@ operator|&
 name|oxfer
 operator|->
 name|abort_task
+argument_list|,
+name|USB_TASKQ_HC
 argument_list|)
 expr_stmt|;
 block|}

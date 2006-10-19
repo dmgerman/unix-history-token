@@ -3424,6 +3424,8 @@ operator|&
 name|sc
 operator|->
 name|axe_tick_task
+argument_list|,
+name|USB_TASKQ_DRIVER
 argument_list|)
 expr_stmt|;
 block|}

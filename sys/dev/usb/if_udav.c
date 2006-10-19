@@ -5703,6 +5703,8 @@ operator|&
 name|sc
 operator|->
 name|sc_stop_task
+argument_list|,
+name|USB_TASKQ_DRIVER
 argument_list|)
 expr_stmt|;
 return|return
@@ -7935,6 +7937,8 @@ operator|&
 name|sc
 operator|->
 name|sc_tick_task
+argument_list|,
+name|USB_TASKQ_DRIVER
 argument_list|)
 expr_stmt|;
 block|}

@@ -995,12 +995,40 @@ name|void
 modifier|*
 name|arg
 decl_stmt|;
-name|char
-name|onqueue
+name|int
+name|queue
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|USB_TASKQ_HC
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_TASKQ_DRIVER
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_NUM_TASKQS
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_TASKQ_NAMES
+value|{"usbtask-hc", "usbtask-dr"}
+end_define
 
 begin_function_decl
 name|void
@@ -1011,6 +1039,9 @@ parameter_list|,
 name|struct
 name|usb_task
 modifier|*
+parameter_list|,
+name|int
+name|queue
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1039,7 +1070,7 @@ name|f
 parameter_list|,
 name|a
 parameter_list|)
-value|((t)->fun = (f), (t)->arg = (a), (t)->onqueue = 0)
+value|((t)->fun = (f), (t)->arg = (a), (t)->queue = -1)
 end_define
 
 begin_struct
