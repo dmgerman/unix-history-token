@@ -730,7 +730,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|1
-comment|/* 	 * XXX: awi needs to access memory with 8bit, 	 * but pccardd apparently maps memory with MDF_16BITS flag. 	 * So memory mapped access is disabled and use IO port instead. 	 */
+comment|/* 	 * XXX: awi needs to access memory with 8bit, 	 * but OLDCARD apparently maps memory with MDF_16BITS flag. 	 * So memory mapped access is disabled and use IO port instead. 	 * XXX: Should check to see if this is true of NEWCARD 	 */
 name|psc
 operator|->
 name|sc_mem_res
