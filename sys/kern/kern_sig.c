@@ -10780,7 +10780,7 @@ operator|->
 name|td_sigqueue
 expr_stmt|;
 block|}
-comment|/* 	 * If the signal is being ignored, 	 * or process is exiting or thread is exiting, 	 * then we forget about it immediately. 	 * (Note: we don't set SIGCONT in ps_sigignore, 	 * and if it is set to SIG_IGN, 	 * action will be SIG_DFL here.) 	 */
+comment|/* 	 * If the signal is being ignored, 	 * then we forget about it immediately. 	 * (Note: we don't set SIGCONT in ps_sigignore, 	 * and if it is set to SIG_IGN, 	 * action will be SIG_DFL here.) 	 */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -10799,14 +10799,6 @@ name|ps_sigignore
 argument_list|,
 name|sig
 argument_list|)
-operator|||
-operator|(
-name|p
-operator|->
-name|p_flag
-operator|&
-name|P_WEXIT
-operator|)
 condition|)
 block|{
 name|mtx_unlock
