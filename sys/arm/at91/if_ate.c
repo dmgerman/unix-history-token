@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2006 M. Warner Losh.  All rights reserved.  *  * Re
 end_comment
 
 begin_comment
-comment|/* TODO: (in no order)  *  * 8) Need to sync busdma goo in atestop  * 9) atestop should maybe free the mbufs?  *  * 1) detach  * 2) Free dma setup  * 3) Turn on the clock in pmc and turn on pins?  Turn off?  */
+comment|/* TODO: (in no order)  *  * 8) Need to sync busdma goo in atestop  * 9) atestop should maybe free the mbufs?  *  * 1) detach  * 2) Free dma setup  * 3) Turn on the clock in pmc?  Turn off?  */
 end_comment
 
 begin_include
@@ -79,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sockio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -743,6 +749,16 @@ name|ifp
 init|=
 name|NULL
 decl_stmt|;
+name|struct
+name|sysctl_ctx_list
+modifier|*
+name|sctx
+decl_stmt|;
+name|struct
+name|sysctl_oid
+modifier|*
+name|soid
+decl_stmt|;
 name|int
 name|err
 decl_stmt|;
@@ -788,6 +804,46 @@ name|ETH_CFG_RMII
 operator|)
 operator|==
 name|ETH_CFG_RMII
+expr_stmt|;
+comment|/*Sysctls*/
+name|sctx
+operator|=
+name|device_get_sysctl_ctx
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|soid
+operator|=
+name|device_get_sysctl_tree
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_UINT
+argument_list|(
+name|sctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|soid
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"rmii"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|use_rmii
+argument_list|,
+literal|0
+argument_list|,
+literal|"rmii in use"
+argument_list|)
 expr_stmt|;
 comment|/* calling atestop before ifp is set is OK */
 name|atestop
@@ -1509,7 +1565,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|mem_res
+name|irq_res
 operator|==
 name|NULL
 condition|)
