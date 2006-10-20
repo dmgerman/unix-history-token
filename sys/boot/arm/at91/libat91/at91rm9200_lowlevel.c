@@ -15,6 +15,22 @@ directive|include
 file|"at91rm9200_lowlevel.h"
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|__bss_start__
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|__bss_end__
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -40,6 +56,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|int
+modifier|*
+name|i
+decl_stmt|;
 name|AT91PS_USART
 name|pUSART
 init|=
@@ -76,29 +96,17 @@ operator|*
 operator|)
 name|SDRAM_BASE
 decl_stmt|;
+if|#
+directive|if
+literal|0
 ifdef|#
 directive|ifdef
 name|BOOT_TSC
 comment|// For the TSC board, we turn ON the one LED we have while
 comment|// early in boot.
-name|AT91C_BASE_PIOC
-operator|->
-name|PIO_PER
-operator|=
-name|AT91C_PIO_PC10
-expr_stmt|;
-name|AT91C_BASE_PIOC
-operator|->
-name|PIO_OER
-operator|=
-name|AT91C_PIO_PC10
-expr_stmt|;
-name|AT91C_BASE_PIOC
-operator|->
-name|PIO_CODR
-operator|=
-name|AT91C_PIO_PC10
-expr_stmt|;
+block|AT91C_BASE_PIOC->PIO_PER = AT91C_PIO_PC10; 	AT91C_BASE_PIOC->PIO_OER = AT91C_PIO_PC10; 	AT91C_BASE_PIOC->PIO_CODR = AT91C_PIO_PC10;
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|// configure clocks
@@ -691,6 +699,31 @@ operator|->
 name|US_CR
 operator|=
 name|AT91C_US_RXEN
+expr_stmt|;
+comment|/* Zero BSS now that we have memory setup */
+name|i
+operator|=
+operator|(
+name|int
+operator|*
+operator|)
+name|__bss_start__
+expr_stmt|;
+while|while
+condition|(
+name|i
+operator|<
+operator|(
+name|int
+operator|*
+operator|)
+name|__bss_end__
+condition|)
+operator|*
+name|i
+operator|++
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function

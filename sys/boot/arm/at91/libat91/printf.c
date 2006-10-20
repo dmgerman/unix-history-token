@@ -92,7 +92,7 @@ block|{
 case|case
 literal|'c'
 case|:
-name|putchar
+name|xputchar
 argument_list|(
 name|va_arg
 argument_list|(
@@ -124,13 +124,17 @@ condition|;
 name|s
 operator|++
 control|)
-name|putchar
+name|xputchar
 argument_list|(
 operator|*
 name|s
 argument_list|)
 expr_stmt|;
 continue|continue;
+case|case
+literal|'d'
+case|:
+comment|/* A lie, always prints unsigned */
 case|case
 literal|'u'
 case|:
@@ -175,7 +179,7 @@ name|s
 operator|>=
 name|buf
 condition|)
-name|putchar
+name|xputchar
 argument_list|(
 operator|*
 name|s
@@ -222,7 +226,7 @@ name|dumpbuf
 goto|;
 block|}
 block|}
-name|putchar
+name|xputchar
 argument_list|(
 name|c
 argument_list|)

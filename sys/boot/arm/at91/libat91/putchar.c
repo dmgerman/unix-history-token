@@ -66,5 +66,32 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|xputchar
+parameter_list|(
+name|int
+name|ch
+parameter_list|)
+block|{
+if|if
+condition|(
+name|ch
+operator|==
+literal|'\n'
+condition|)
+name|putchar
+argument_list|(
+literal|'\r'
+argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

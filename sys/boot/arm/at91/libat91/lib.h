@@ -35,6 +35,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|xputchar
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|printf
 parameter_list|(
 specifier|const
@@ -236,7 +245,7 @@ end_function_decl
 begin_function_decl
 name|char
 modifier|*
-name|p_strcpy
+name|strcpy
 parameter_list|(
 name|char
 modifier|*
@@ -252,14 +261,14 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|p_memcpy
+name|memcpy
 parameter_list|(
-name|char
+name|void
 modifier|*
 name|to
 parameter_list|,
 specifier|const
-name|char
+name|void
 modifier|*
 name|from
 parameter_list|,
@@ -291,7 +300,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|p_strcmp
+name|strcmp
 parameter_list|(
 specifier|const
 name|char

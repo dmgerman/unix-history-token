@@ -871,7 +871,7 @@ literal|0xBC
 condition|)
 name|printf
 argument_list|(
-literal|" Bad SPI status: 0x%x\r\n"
+literal|" Bad SPI status: 0x%x\n"
 argument_list|,
 name|value
 argument_list|)

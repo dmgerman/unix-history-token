@@ -239,25 +239,6 @@ literal|0
 operator|)
 condition|)
 do|;
-if|#
-directive|if
-name|IMP_DEBUG
-if|if
-condition|(
-name|timeout
-operator|==
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"Timeout, status is 0x%x\r\n"
-argument_list|,
-name|status
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|//TODO: Make interrupts work!
 name|AT91F_MCI_Handler
 argument_list|()
 expr_stmt|;
@@ -270,73 +251,8 @@ directive|if
 literal|0
 end_if
 
-begin_if
-unit|int MCI_write (unsigned dest, char* source, unsigned length) { 	unsigned sectorLength = MCI_Device.pMCI_DeviceFeatures->Max_Read_DataBlock_Lenfgth; 	unsigned offset = dest % sectorLength; 	AT91S_MCIDeviceStatus status; 	int sizeToWrite;
-if|#
-directive|if
-name|IMP_DEBUG
-end_if
-
-begin_endif
-unit|printf("\r\n");
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|//See if we are requested to write partial sectors, and have the capability to do so
-end_comment
-
-begin_comment
-unit|if ((length % sectorLength)&& !(MCI_Device_Features.Write_Partial))
-comment|//Return error if appropriat
-end_comment
-
-begin_comment
-unit|return MCI_UNSUPP_SIZE_ERROR;
-comment|//See if we are requested to write to anywhere but a sectors' boundary
-end_comment
-
-begin_comment
-comment|//and have the capability to do so
-end_comment
-
-begin_comment
-unit|if ((offset)&& !(MCI_Device_Features.Write_Partial))
-comment|//Return error if appropriat
-end_comment
-
-begin_comment
-unit|return MCI_UNSUPP_OFFSET_ERROR;
-comment|//If the address we're trying to write != sector boundary
-end_comment
-
-begin_comment
-unit|if (offset) 	{
-comment|//* Wait MCI Device Ready
-end_comment
-
-begin_comment
-unit|AT91F_MCIDeviceWaitReady(AT91C_MCI_TIMEOUT);
-comment|//Calculate the nr of bytes to write
-end_comment
-
-begin_comment
-unit|sizeToWrite = sectorLength - offset;
-comment|//Do the writing
-end_comment
-
-begin_comment
-unit|status = AT91F_MCI_WriteBlock(&MCI_Device, dest, (unsigned int*)source, sizeToWrite);
-comment|//TODO:Status checking
-end_comment
-
-begin_comment
-comment|//Update counters& pointers
-end_comment
-
-begin_comment
-unit|length -= sizeToWrite; 		dest += sizeToWrite; 		source += sizeToWrite; 	}
+unit|int MCI_write (unsigned dest, char* source, unsigned length) { 	unsigned sectorLength = 1<< MCI_Device.pMCI_DeviceFeatures->WRITE_BL_LEN; 	unsigned offset = dest % sectorLength; 	AT91S_MCIDeviceStatus status; 	int sizeToWrite;
 comment|//As long as there is data to write
 end_comment
 
@@ -444,15 +360,6 @@ name|length
 parameter_list|)
 block|{
 name|unsigned
-name|sectorLength
-init|=
-name|MCI_Device
-operator|.
-name|pMCI_DeviceFeatures
-operator|->
-name|Max_Read_DataBlock_Length
-decl_stmt|;
-name|unsigned
 name|log2sl
 init|=
 name|MCI_Device
@@ -462,28 +369,11 @@ operator|->
 name|READ_BL_LEN
 decl_stmt|;
 name|unsigned
-name|slmask
+name|sectorLength
 init|=
-operator|(
-operator|(
 literal|1
 operator|<<
 name|log2sl
-operator|)
-operator|-
-literal|1
-operator|)
-decl_stmt|;
-comment|//	unsigned sector = (unsigned)source>> log2sl;
-name|unsigned
-name|offset
-init|=
-operator|(
-name|unsigned
-operator|)
-name|source
-operator|&
-name|slmask
 decl_stmt|;
 name|AT91S_MCIDeviceStatus
 name|status
@@ -496,189 +386,12 @@ name|int
 modifier|*
 name|walker
 decl_stmt|;
-if|#
-directive|if
-name|IMP_DEBUG
-name|printf
-argument_list|(
-literal|"Reading 0x%x bytes into ARM Addr 0x%x from card offset 0x%x\r\n"
-argument_list|,
-name|length
-argument_list|,
-name|dest
-argument_list|,
-name|source
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|//See if we are requested to read partial sectors, and have the capability to do so
-if|if
-condition|(
-operator|(
-name|length
-operator|&
-name|slmask
-operator|)
-operator|&&
-operator|!
-operator|(
-name|MCI_Device_Features
-operator|.
-name|Read_Partial
-operator|)
-condition|)
-comment|//Return error if appropriat
-return|return
-name|MCI_UNSUPP_SIZE_ERROR
-return|;
-comment|//See if we are requested to read from anywhere but a sectors' boundary
-comment|//and have the capability to do so
-if|if
-condition|(
-operator|(
-name|offset
-operator|)
-operator|&&
-operator|!
-operator|(
-name|MCI_Device_Features
-operator|.
-name|Read_Partial
-operator|)
-condition|)
-comment|//Return error if appropriat
-return|return
-name|MCI_UNSUPP_OFFSET_ERROR
-return|;
-comment|//If the address we're trying to read != sector boundary
-if|if
-condition|(
-name|offset
-condition|)
-block|{
-comment|//* Wait MCI Device Ready
-name|AT91F_MCIDeviceWaitReady
-argument_list|(
-name|AT91C_MCI_TIMEOUT
-argument_list|)
-expr_stmt|;
-comment|//Calculate the nr of bytes to read
-name|sizeToRead
-operator|=
-name|sectorLength
-operator|-
-name|offset
-expr_stmt|;
-comment|//Do the writing
-name|status
-operator|=
-name|AT91F_MCI_ReadBlock
-argument_list|(
-operator|&
-name|MCI_Device
-argument_list|,
-name|source
-argument_list|,
-operator|(
-name|unsigned
-name|int
-operator|*
-operator|)
-name|dest
-argument_list|,
-name|sizeToRead
-argument_list|)
-expr_stmt|;
-comment|//TODO:Status checking
-if|if
-condition|(
-name|status
-operator|!=
-name|AT91C_READ_OK
-condition|)
-block|{
-if|#
-directive|if
-name|IMP_DEBUG
-name|printf
-argument_list|(
-literal|"STATUS is 0x%x\r\n"
-argument_list|,
-name|status
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-return|return
-operator|-
-literal|1
-return|;
-block|}
-comment|//* Wait MCI Device Ready
-name|AT91F_MCIDeviceWaitReady
-argument_list|(
-name|AT91C_MCI_TIMEOUT
-argument_list|)
-expr_stmt|;
-comment|// Fix erratum in MCI part
-for|for
-control|(
-name|walker
-operator|=
-operator|(
-name|unsigned
-name|int
-operator|*
-operator|)
-name|dest
-init|;
-name|walker
-operator|<
-operator|(
-name|unsigned
-name|int
-operator|*
-operator|)
-operator|(
-name|dest
-operator|+
-name|sizeToRead
-operator|)
-condition|;
-name|walker
-operator|++
-control|)
-operator|*
-name|walker
-operator|=
-name|swap
-argument_list|(
-operator|*
-name|walker
-argument_list|)
-expr_stmt|;
-comment|//Update counters& pointers
-name|length
-operator|-=
-name|sizeToRead
-expr_stmt|;
-name|dest
-operator|+=
-name|sizeToRead
-expr_stmt|;
-name|source
-operator|+=
-name|sizeToRead
-expr_stmt|;
-block|}
 comment|//As long as there is data to read
 while|while
 condition|(
 name|length
 condition|)
 block|{
-comment|//See if we've got at least a sector to read
 if|if
 condition|(
 name|length
@@ -689,7 +402,6 @@ name|sizeToRead
 operator|=
 name|sectorLength
 expr_stmt|;
-comment|//Else just write the remainder
 else|else
 name|sizeToRead
 operator|=
@@ -700,7 +412,7 @@ argument_list|(
 name|AT91C_MCI_TIMEOUT
 argument_list|)
 expr_stmt|;
-comment|//Do the writing
+comment|//Do the reading
 name|status
 operator|=
 name|AT91F_MCI_ReadBlock
@@ -720,22 +432,6 @@ argument_list|,
 name|sizeToRead
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|IMP_DEBUG
-name|printf
-argument_list|(
-literal|"Reading 0x%x Addr 0x%x card 0x%x\r\n"
-argument_list|,
-name|sizeToRead
-argument_list|,
-name|dest
-argument_list|,
-name|source
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|//TODO:Status checking
 if|if
 condition|(
@@ -743,24 +439,10 @@ name|status
 operator|!=
 name|AT91C_READ_OK
 condition|)
-block|{
-if|#
-directive|if
-name|IMP_DEBUG
-name|printf
-argument_list|(
-literal|"STATUS is 0x%x\r\n"
-argument_list|,
-name|status
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|-
 literal|1
 return|;
-block|}
 comment|//* Wait MCI Device Ready
 name|AT91F_MCIDeviceWaitReady
 argument_list|(
@@ -863,13 +545,13 @@ name|AT91C_SD_CARD_INSERTED
 expr_stmt|;
 name|MCI_Device_Features
 operator|.
-name|Max_Read_DataBlock_Length
+name|READ_BL_LEN
 operator|=
 literal|0
 expr_stmt|;
 name|MCI_Device_Features
 operator|.
-name|Max_Write_DataBlock_Length
+name|WRITE_BL_LEN
 operator|=
 literal|0
 expr_stmt|;
@@ -1010,9 +692,8 @@ name|AT91C_BASE_MCI
 argument_list|,
 name|AT91C_MCI_DTOR_1MEGA_CYCLES
 argument_list|,
-name|AT91C_MCI_MR_PDCMODE
+name|AT91C_MCI_PDCMODE
 argument_list|,
-comment|// 15MHz for MCK = 60MHz (CLKDIV = 1)
 name|AT91C_MCI_SDCARD_4BITS_SLOTA
 argument_list|)
 expr_stmt|;
