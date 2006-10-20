@@ -77,14 +77,6 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|ta_ops
-name|libc_r_db_ops
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|ta_ops
 name|libpthread_db_ops
 decl_stmt|;
 end_decl_stmt
@@ -111,10 +103,7 @@ name|libpthread_db_ops
 block|,
 operator|&
 name|libthr_db_ops
-block|,
-operator|&
-name|libc_r_db_ops
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
