@@ -281,6 +281,36 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * ipfw_ether and ipfw_bridge hooks.  * XXX: Temporary until those are converted to pfil_hooks as well.  */
+end_comment
+
+begin_decl_stmt
+name|ip_fw_chk_t
+modifier|*
+name|ip_fw_chk_ptr
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ip_dn_io_t
+modifier|*
+name|ip_dn_io_ptr
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|fw_one_pass
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Forward declarations. */
 end_comment
 
