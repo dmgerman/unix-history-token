@@ -1754,6 +1754,10 @@ name|LINUX_SIG_VALID
 argument_list|(
 name|exit_signal
 argument_list|)
+operator|&&
+name|exit_signal
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
