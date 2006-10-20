@@ -376,6 +376,11 @@ block|,
 name|db_frame
 block|}
 block|,
+define|#
+directive|define
+name|DB_N_SHOW_REGS
+value|15
+comment|/* Don't show registers after here. */
 block|{
 literal|"dr0"
 block|,
@@ -451,18 +456,7 @@ name|db_eregs
 init|=
 name|db_regs
 operator|+
-sizeof|sizeof
-argument_list|(
-name|db_regs
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|db_regs
-index|[
-literal|0
-index|]
-argument_list|)
+name|DB_N_SHOW_REGS
 decl_stmt|;
 end_decl_stmt
 
