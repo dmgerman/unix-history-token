@@ -798,22 +798,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|sigqueue_flush
-argument_list|(
-operator|&
-name|p
-operator|->
-name|p_sigqueue
-argument_list|)
-expr_stmt|;
-name|sigqueue_flush
-argument_list|(
-operator|&
-name|td
-operator|->
-name|td_sigqueue
-argument_list|)
-expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
@@ -1806,6 +1790,23 @@ name|sx_xunlock
 argument_list|(
 operator|&
 name|proctree_lock
+argument_list|)
+expr_stmt|;
+comment|/* 	 * The state PRS_ZOMBIE prevents other proesses from sending 	 * signal to the process, to avoid memory leak, we free memory 	 * for signal queue at the time when the state is set. 	 */
+name|sigqueue_flush
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_sigqueue
+argument_list|)
+expr_stmt|;
+name|sigqueue_flush
+argument_list|(
+operator|&
+name|td
+operator|->
+name|td_sigqueue
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We have to wait until after acquiring all locks before 	 * changing p_state.  We need to avoid all possible context 	 * switches (including ones from blocking on a mutex) while 	 * marked as a zombie.  We also have to set the zombie state 	 * before we release the parent process' proc lock to avoid 	 * a lost wakeup.  So, we first call wakeup, then we grab the 	 * sched lock, update the state, and release the parent process' 	 * proc lock. 	 */
