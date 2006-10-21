@@ -1491,15 +1491,10 @@ argument_list|,
 operator|&
 name|sb2
 argument_list|)
-operator|!=
+operator|==
 literal|0
-condition|)
-block|{
-comment|/* file was rotated, skip it until it reappears */
-continue|continue;
-block|}
-if|if
-condition|(
+operator|&&
+operator|(
 name|sb2
 operator|.
 name|st_ino
@@ -1525,8 +1520,14 @@ operator|.
 name|st_nlink
 operator|==
 literal|0
+operator|)
 condition|)
 block|{
+name|show
+argument_list|(
+name|file
+argument_list|)
+expr_stmt|;
 name|file
 operator|->
 name|fp
