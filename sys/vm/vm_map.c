@@ -5722,11 +5722,7 @@ name|p
 operator|->
 name|flags
 operator|&
-operator|(
-name|PG_BUSY
-operator||
 name|PG_FICTITIOUS
-operator|)
 operator|)
 operator|==
 literal|0
