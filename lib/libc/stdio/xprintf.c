@@ -1448,7 +1448,7 @@ name|pct
 parameter_list|,
 specifier|const
 name|va_list
-name|ap
+name|ap1
 parameter_list|)
 block|{
 name|struct
@@ -1511,6 +1511,16 @@ name|struct
 name|__printf_io
 name|io
 decl_stmt|;
+name|va_list
+name|ap
+decl_stmt|;
+name|va_copy
+argument_list|(
+name|ap
+argument_list|,
+name|ap1
+argument_list|)
+expr_stmt|;
 name|__printf_init
 argument_list|(
 operator|&
@@ -2878,6 +2888,11 @@ name|__printf_flush
 argument_list|(
 operator|&
 name|io
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
 argument_list|)
 expr_stmt|;
 return|return
