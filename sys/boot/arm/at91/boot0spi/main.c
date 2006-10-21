@@ -106,7 +106,7 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Waiting for data\r\n"
+literal|"Waiting for data\n"
 argument_list|)
 expr_stmt|;
 while|while
@@ -126,12 +126,12 @@ condition|)
 continue|continue;
 name|printf
 argument_list|(
-literal|"\r\nDownloaded %u bytes.\r\n"
+literal|"\nDownloaded %u bytes.\n"
 argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|p_memcpy
+name|memcpy
 argument_list|(
 name|addr3
 argument_list|,
@@ -152,7 +152,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Writing %u bytes to flash at %u\r\n"
+literal|"Writing %u bytes to flash at %u\n"
 argument_list|,
 name|len
 argument_list|,
@@ -243,7 +243,7 @@ literal|10
 condition|)
 name|printf
 argument_list|(
-literal|"Bad Readback at %u\r\n"
+literal|"Bad Readback at %u\n"
 argument_list|,
 name|i
 argument_list|)
