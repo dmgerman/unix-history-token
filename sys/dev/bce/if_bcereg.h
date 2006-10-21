@@ -26605,12 +26605,39 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* XXX UDP checksum offload seems to cause problems on transmit */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BCE_UDP_CSUM
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|BCE_IF_HWASSIST
 value|(CSUM_IP | CSUM_TCP | CSUM_UDP)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|BCE_IF_HWASSIST
+value|(CSUM_TCP)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
