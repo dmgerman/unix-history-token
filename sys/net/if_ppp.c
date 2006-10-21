@@ -2440,7 +2440,11 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-break|break;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 if|if
 condition|(
