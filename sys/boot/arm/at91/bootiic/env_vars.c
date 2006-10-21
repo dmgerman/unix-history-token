@@ -226,7 +226,7 @@ condition|)
 block|{
 continue|continue;
 block|}
-name|p_memcpy
+name|memcpy
 argument_list|(
 name|cPtr
 argument_list|,

@@ -302,7 +302,7 @@ control|)
 if|if
 condition|(
 operator|!
-name|p_strcmp
+name|strcmp
 argument_list|(
 name|CommandTable
 index|[
@@ -645,7 +645,7 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
-name|p_memcpy
+name|memcpy
 argument_list|(
 name|to
 argument_list|,
@@ -793,23 +793,23 @@ case|:
 comment|// dump command info
 name|printf
 argument_list|(
-literal|"Commands:\r\n"
-literal|"\tc\r\n"
-literal|"\td\r\n"
-literal|"\te\r\n"
-literal|"\tip\r\n"
-literal|"\tserver_ip\r\n"
-literal|"\tm\r\n"
-literal|"\ttftp\r\n"
-literal|"\ts\r\n"
+literal|"Commands:\n"
+literal|"\tc\n"
+literal|"\td\n"
+literal|"\te\n"
+literal|"\tip\n"
+literal|"\tserver_ip\n"
+literal|"\tm\n"
+literal|"\ttftp\n"
+literal|"\ts\n"
 ifdef|#
 directive|ifdef
 name|SUPPORT_TAG_LIST
-literal|"\tt\r\n"
+literal|"\tt\n"
 endif|#
 directive|endif
-literal|"\tw\r\n"
-literal|"\tx\r\n"
+literal|"\tw\n"
+literal|"\tx\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1021,14 +1021,14 @@ break|break;
 block|}
 name|printf
 argument_list|(
-literal|"\r\n"
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * .KB_C_FN_DEFINITION_START  * void ServicePrompt(char)  *  This private function process each character checking for valid commands.  * This function is only executed if the character is considered valid.  * Each command is terminated with NULL (0) or '\r'.  * .KB_C_FN_DEFINITION_END  */
+comment|/*  * .KB_C_FN_DEFINITION_START  * void ServicePrompt(char)  *  This private function process each character checking for valid commands.  * This function is only executed if the character is considered valid.  * Each command is terminated with NULL (0) or ''.  * .KB_C_FN_DEFINITION_END  */
 end_comment
 
 begin_function
@@ -1110,7 +1110,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\r\n"
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|ParseCommand
@@ -1133,7 +1133,7 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\r\n>"
+literal|"\n>"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1200,7 +1200,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\r\n>"
+literal|"\n>"
 argument_list|)
 expr_stmt|;
 while|while
