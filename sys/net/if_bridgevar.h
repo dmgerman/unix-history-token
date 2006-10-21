@@ -312,6 +312,39 @@ begin_comment
 comment|/* delete bridge span member (ifbreq) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|BRDGPARAM
+value|25
+end_define
+
+begin_comment
+comment|/* get bridge STP params (ifbropreq) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BRDGGRTE
+value|26
+end_define
+
+begin_comment
+comment|/* get cache drops (ifbrparam) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BRDGGIFSSTP
+value|27
+end_define
+
+begin_comment
+comment|/* get member STP params list 					 * (ifbpstpconf) */
+end_comment
+
 begin_comment
 comment|/*  * Generic bridge control request.  */
 end_comment
@@ -712,6 +745,124 @@ begin_comment
 comment|/* max age (sec) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ifbrp_cexceeded
+value|ifbrp_ifbrpu.ifbrpu_int32
+end_define
+
+begin_comment
+comment|/* # of cache dropped 							 * adresses */
+end_comment
+
+begin_comment
+comment|/*  * Bridge current operational parameters structure.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ifbropreq
+block|{
+name|uint8_t
+name|ifbop_maxage
+decl_stmt|;
+name|uint8_t
+name|ifbop_hellotime
+decl_stmt|;
+name|uint8_t
+name|ifbop_fwddelay
+decl_stmt|;
+name|uint16_t
+name|ifbop_root_port
+decl_stmt|;
+name|uint32_t
+name|ifbop_root_path_cost
+decl_stmt|;
+name|uint64_t
+name|ifbop_designated_root
+decl_stmt|;
+name|struct
+name|timeval
+name|ifbop_last_tc_time
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Bridge member operational STP params structure.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ifbpstpreq
+block|{
+name|uint8_t
+name|ifbp_portno
+decl_stmt|;
+comment|/* bp STP port number */
+name|uint32_t
+name|ifbp_fwd_trans
+decl_stmt|;
+comment|/* bp STP fwd transitions */
+name|uint32_t
+name|ifbp_design_cost
+decl_stmt|;
+comment|/* bp STP designated cost */
+name|uint32_t
+name|ifbp_design_port
+decl_stmt|;
+comment|/* bp STP designated port */
+name|uint64_t
+name|ifbp_design_bridge
+decl_stmt|;
+comment|/* bp STP designated bridge */
+name|uint64_t
+name|ifbp_design_root
+decl_stmt|;
+comment|/* bp STP designated root */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Bridge STP ports list structure.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ifbpstpconf
+block|{
+name|uint32_t
+name|ifbpstp_len
+decl_stmt|;
+comment|/* buffer size */
+union|union
+block|{
+name|caddr_t
+name|ifbpstpu_buf
+decl_stmt|;
+name|struct
+name|ifbpstpreq
+modifier|*
+name|ifbpstpu_req
+decl_stmt|;
+block|}
+name|ifbpstp_ifbpstpu
+union|;
+define|#
+directive|define
+name|ifbpstp_buf
+value|ifbpstp_ifbpstpu.ifbpstpu_buf
+define|#
+directive|define
+name|ifbpstp_req
+value|ifbpstp_ifbpstpu.ifbpstpu_req
+block|}
+struct|;
+end_struct
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -865,6 +1016,9 @@ name|int
 name|bif_mutecap
 decl_stmt|;
 comment|/* member muted caps */
+name|uint32_t
+name|bif_forward_transitions
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1072,6 +1226,14 @@ comment|/* span ports list */
 name|struct
 name|bridge_timer
 name|sc_link_timer
+decl_stmt|;
+name|uint32_t
+name|sc_brtexceeded
+decl_stmt|;
+comment|/* # of cache drops */
+name|struct
+name|timeval
+name|sc_last_tc_time
 decl_stmt|;
 block|}
 struct|;
