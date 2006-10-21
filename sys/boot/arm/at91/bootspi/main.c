@@ -45,6 +45,12 @@ directive|include
 file|"spi_flash.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ee.h"
+end_include
+
 begin_function
 name|int
 name|main
@@ -54,12 +60,23 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"\r\nBoot\r\n"
+literal|"\nBoot\n"
 argument_list|)
+expr_stmt|;
+name|EEInit
+argument_list|()
 expr_stmt|;
 name|SPI_InitFlash
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TSC_FPGA
+name|fpga_load
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|EMAC_Init
 argument_list|()
 expr_stmt|;

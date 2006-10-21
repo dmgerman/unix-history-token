@@ -182,7 +182,7 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"0x%x : %s[E]\r\n"
+literal|"0x%x : %s[E]\n"
 argument_list|,
 name|i
 argument_list|,
@@ -304,7 +304,7 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Autoboot...\r\n"
+literal|"Autoboot...\n"
 argument_list|)
 expr_stmt|;
 name|Bootloader

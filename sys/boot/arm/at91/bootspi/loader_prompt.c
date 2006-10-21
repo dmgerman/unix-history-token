@@ -45,6 +45,18 @@ directive|include
 file|"spi_flash.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"fpga.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ee.h"
+end_include
+
 begin_comment
 comment|/******************************* GLOBALS *************************************/
 end_comment
@@ -226,6 +238,154 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TSC_FPGA
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"fpga.h"
+end_include
+
+begin_decl_stmt
+specifier|const
+name|struct
+name|fpga
+name|main_fpga
+init|=
+block|{
+name|AT91C_BASE_PIOB
+block|,
+name|AT91C_PIO_PB0
+block|,
+name|AT91C_BASE_PIOC
+block|,
+name|AT91C_PIO_PC11
+block|,
+name|AT91C_BASE_PIOB
+block|,
+name|AT91C_PIO_PB2
+block|,
+name|AT91C_BASE_PIOC
+block|,
+name|AT91C_PIO_PC12
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|fpga_load
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|len
+decl_stmt|,
+name|off
+decl_stmt|,
+name|i
+decl_stmt|,
+name|offset
+decl_stmt|;
+name|char
+modifier|*
+name|addr
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+name|SDRAM_BASE
+operator|+
+operator|(
+literal|1
+operator|<<
+literal|20
+operator|)
+decl_stmt|;
+comment|/* Load to base + 1MB */
+name|len
+operator|=
+name|FPGA_LEN
+expr_stmt|;
+name|offset
+operator|=
+name|FPGA_OFFSET
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|len
+condition|;
+name|i
+operator|+=
+name|FLASH_PAGE_SIZE
+control|)
+block|{
+name|off
+operator|=
+name|i
+operator|+
+name|offset
+expr_stmt|;
+name|SPI_ReadFlash
+argument_list|(
+name|off
+argument_list|,
+name|addr
+operator|+
+name|i
+argument_list|,
+name|FLASH_PAGE_SIZE
+argument_list|)
+expr_stmt|;
+block|}
+name|fpga_init
+argument_list|(
+operator|&
+name|main_fpga
+argument_list|)
+expr_stmt|;
+name|fpga_clear
+argument_list|(
+operator|&
+name|main_fpga
+argument_list|)
+expr_stmt|;
+name|fpga_write_bytes
+argument_list|(
+operator|&
+name|main_fpga
+argument_list|,
+name|addr
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+name|fpga_done
+argument_list|(
+operator|&
+name|main_fpga
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * .KB_C_FN_DEFINITION_START  * unsigned BuildIP(void)  *  This private function packs the test IP info to an unsigned value.  * .KB_C_FN_DEFINITION_END  */
 end_comment
@@ -326,7 +486,7 @@ control|)
 if|if
 condition|(
 operator|!
-name|p_strcmp
+name|strcmp
 argument_list|(
 name|CommandTable
 index|[
@@ -522,7 +682,7 @@ comment|/* Load to base + 1MB */
 end_comment
 
 begin_endif
-unit|int len;  	while ((len = xmodem_rx(addr)) == -1) 		continue; 	printf("\r\nDownloaded %u bytes.\r\n", len); 	WriteEEPROM(eeaddr, 0, addr, len); }
+unit|int len;  	while ((len = xmodem_rx(addr)) == -1) 		continue; 	printf("\nDownloaded %u bytes.\n", len); 	WriteEEPROM(eeaddr, 0, addr, len); }
 endif|#
 directive|endif
 end_endif
@@ -577,7 +737,7 @@ condition|)
 continue|continue;
 name|printf
 argument_list|(
-literal|"\r\nDownloaded %u bytes.\r\n"
+literal|"\nDownloaded %u bytes.\n"
 argument_list|,
 name|len
 argument_list|)
@@ -969,7 +1129,7 @@ name|COMMAND_RESET
 case|:
 name|printf
 argument_list|(
-literal|"Reset\r\n"
+literal|"Reset\n"
 argument_list|)
 expr_stmt|;
 name|reset
@@ -986,7 +1146,7 @@ name|COMMAND_REPLACE_KERNEL_VIA_XMODEM
 case|:
 name|printf
 argument_list|(
-literal|"Updating KERNEL image\r\n"
+literal|"Updating KERNEL image\n"
 argument_list|)
 expr_stmt|;
 name|UpdateFlash
@@ -1000,7 +1160,7 @@ name|COMMAND_REPLACE_FPGA_VIA_XMODEM
 case|:
 name|printf
 argument_list|(
-literal|"Updating FPGA image\r\n"
+literal|"Updating FPGA image\n"
 argument_list|)
 expr_stmt|;
 name|UpdateFlash
@@ -1014,7 +1174,7 @@ name|COMMAND_REPLACE_FLASH_VIA_XMODEM
 case|:
 name|printf
 argument_list|(
-literal|"Updating FLASH image\r\n"
+literal|"Updating FLASH image\n"
 argument_list|)
 expr_stmt|;
 name|UpdateFlash
@@ -1023,19 +1183,61 @@ name|FLASH_OFFSET
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|COMMAND_REPLACE_ID_EEPROM
+case|:
+block|{
+name|char
+name|buf
+index|[
+literal|25
+index|]
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"Testing Config EEPROM\n"
+argument_list|)
+expr_stmt|;
+name|EEWrite
+argument_list|(
+literal|0
+argument_list|,
+literal|"This is a test"
+argument_list|,
+literal|15
+argument_list|)
+expr_stmt|;
+name|EERead
+argument_list|(
+literal|0
+argument_list|,
+name|buf
+argument_list|,
+literal|15
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Found '%s'\n"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 default|default:
 break|break;
 block|}
 name|printf
 argument_list|(
-literal|"\r\n"
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * .KB_C_FN_DEFINITION_START  * void ServicePrompt(char)  *  This private function process each character checking for valid commands.  * This function is only executed if the character is considered valid.  * Each command is terminated with NULL (0) or '\r'.  * .KB_C_FN_DEFINITION_END  */
+comment|/*  * .KB_C_FN_DEFINITION_START  * void ServicePrompt(char)  *  This private function process each character checking for valid commands.  * This function is only executed if the character is considered valid.  * Each command is terminated with NULL (0) or ''.  * .KB_C_FN_DEFINITION_END  */
 end_comment
 
 begin_function
@@ -1117,7 +1319,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\r\n"
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|ParseCommand
@@ -1140,7 +1342,7 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\r\n>"
+literal|"\n>"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1196,7 +1398,7 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\r\n>"
+literal|"\n>"
 argument_list|)
 expr_stmt|;
 while|while
