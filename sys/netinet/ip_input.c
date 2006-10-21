@@ -265,6 +265,22 @@ directive|include
 file|<sys/socketvar.h>
 end_include
 
+begin_comment
+comment|/* XXX: Temporary until ipfw_ether and ipfw_bridge are converted. */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip_fw.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip_dummynet.h>
+end_include
+
 begin_decl_stmt
 name|int
 name|rsvp_on
@@ -921,6 +937,36 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * ipfw_ether and ipfw_bridge hooks.  * XXX: Temporary until those are converted to pfil_hooks as well.  */
+end_comment
+
+begin_decl_stmt
+name|ip_fw_chk_t
+modifier|*
+name|ip_fw_chk_ptr
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ip_dn_io_t
+modifier|*
+name|ip_dn_io_ptr
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|fw_one_pass
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
