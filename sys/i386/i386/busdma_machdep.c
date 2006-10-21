@@ -2295,7 +2295,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bus_dmamem_alloc failed to align memory properly."
+literal|"bus_dmamem_alloc failed to align memory properly.\n"
 argument_list|)
 expr_stmt|;
 block|}
