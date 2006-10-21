@@ -5508,7 +5508,7 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|"%-15s %-8s %-9s %-7s %-5s %-8s %-8s\n\n"
+literal|"%-20s %8s  %8s  %8s  %8s  %8s  %8s\n\n"
 argument_list|,
 literal|"ITEM"
 argument_list|,
@@ -5567,7 +5567,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-15s %4llu, %8llu, %7llu, %6llu, %8llu %8llu\n"
+literal|"%-20s %8llu, %8llu, %8llu, %8llu, %8llu, %8llu\n"
 argument_list|,
 name|name
 argument_list|,
