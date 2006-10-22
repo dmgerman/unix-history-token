@@ -43,10 +43,12 @@ name|TYPE
 parameter_list|,
 name|OP
 parameter_list|,
+name|CONS
+parameter_list|,
 name|V
 parameter_list|)
 define|\
-value|extern void atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v);
+value|void atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)
 end_define
 
 begin_else
@@ -105,10 +107,12 @@ name|TYPE
 parameter_list|,
 name|OP
 parameter_list|,
+name|CONS
+parameter_list|,
 name|V
 parameter_list|)
 define|\
-value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(MPLOCKED OP			\ 			 : "+m" (*p)			\ 			 : "ir" (V));			\ }
+value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(MPLOCKED OP			\ 			 : "=m" (*p)			\ 			 : CONS (V), "m" (*p));		\ }							\ struct __hack
 end_define
 
 begin_endif
@@ -120,213 +124,265 @@ begin_comment
 comment|/* KLD_MODULE */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|ATOMIC_ASM
 argument_list|(
-argument|set
+name|set
 argument_list|,
-argument|char
+name|char
 argument_list|,
 literal|"orb %b1,%0"
 argument_list|,
-argument|v
+literal|"iq"
+argument_list|,
+name|v
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 name|ATOMIC_ASM
 argument_list|(
-argument|clear
+name|clear
 argument_list|,
-argument|char
+name|char
 argument_list|,
 literal|"andb %b1,%0"
 argument_list|,
-argument|~v
+literal|"iq"
+argument_list|,
+operator|~
+name|v
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 name|ATOMIC_ASM
 argument_list|(
-argument|add
+name|add
 argument_list|,
-argument|char
+name|char
 argument_list|,
 literal|"addb %b1,%0"
 argument_list|,
-argument|v
+literal|"iq"
+argument_list|,
+name|v
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 name|ATOMIC_ASM
 argument_list|(
-argument|subtract
+name|subtract
 argument_list|,
-argument|char
+name|char
 argument_list|,
 literal|"subb %b1,%0"
 argument_list|,
-argument|v
+literal|"iq"
+argument_list|,
+name|v
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 name|ATOMIC_ASM
 argument_list|(
-argument|set
+name|set
 argument_list|,
-argument|short
+name|short
 argument_list|,
 literal|"orw %w1,%0"
 argument_list|,
-argument|v
+literal|"ir"
+argument_list|,
+name|v
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 name|ATOMIC_ASM
 argument_list|(
-argument|clear
+name|clear
 argument_list|,
-argument|short
+name|short
 argument_list|,
 literal|"andw %w1,%0"
 argument_list|,
-argument|~v
+literal|"ir"
+argument_list|,
+operator|~
+name|v
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 name|ATOMIC_ASM
 argument_list|(
-argument|add
+name|add
 argument_list|,
-argument|short
+name|short
 argument_list|,
 literal|"addw %w1,%0"
 argument_list|,
-argument|v
+literal|"ir"
+argument_list|,
+name|v
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 name|ATOMIC_ASM
 argument_list|(
-argument|subtract
+name|subtract
 argument_list|,
-argument|short
+name|short
 argument_list|,
 literal|"subw %w1,%0"
 argument_list|,
-argument|v
+literal|"ir"
+argument_list|,
+name|v
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 name|ATOMIC_ASM
 argument_list|(
-argument|set
+name|set
 argument_list|,
-argument|int
+name|int
 argument_list|,
 literal|"orl %1,%0"
 argument_list|,
-argument|v
+literal|"ir"
+argument_list|,
+name|v
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 name|ATOMIC_ASM
 argument_list|(
-argument|clear
+name|clear
 argument_list|,
-argument|int
+name|int
 argument_list|,
 literal|"andl %1,%0"
 argument_list|,
-argument|~v
+literal|"ir"
+argument_list|,
+operator|~
+name|v
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 name|ATOMIC_ASM
 argument_list|(
-argument|add
+name|add
 argument_list|,
-argument|int
+name|int
 argument_list|,
 literal|"addl %1,%0"
 argument_list|,
-argument|v
+literal|"ir"
+argument_list|,
+name|v
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 name|ATOMIC_ASM
 argument_list|(
-argument|subtract
+name|subtract
 argument_list|,
-argument|int
+name|int
 argument_list|,
 literal|"subl %1,%0"
 argument_list|,
-argument|v
+literal|"ir"
+argument_list|,
+name|v
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 name|ATOMIC_ASM
 argument_list|(
-argument|set
+name|set
 argument_list|,
-argument|long
+name|long
 argument_list|,
 literal|"orl %1,%0"
 argument_list|,
-argument|v
+literal|"ir"
+argument_list|,
+name|v
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 name|ATOMIC_ASM
 argument_list|(
-argument|clear
+name|clear
 argument_list|,
-argument|long
+name|long
 argument_list|,
 literal|"andl %1,%0"
 argument_list|,
-argument|~v
+literal|"ir"
+argument_list|,
+operator|~
+name|v
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 name|ATOMIC_ASM
 argument_list|(
-argument|add
+name|add
 argument_list|,
-argument|long
+name|long
 argument_list|,
 literal|"addl %1,%0"
 argument_list|,
-argument|v
+literal|"ir"
+argument_list|,
+name|v
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 name|ATOMIC_ASM
 argument_list|(
-argument|subtract
+name|subtract
 argument_list|,
-argument|long
+name|long
 argument_list|,
 literal|"subl %1,%0"
 argument_list|,
-argument|v
+literal|"ir"
+argument_list|,
+name|v
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
