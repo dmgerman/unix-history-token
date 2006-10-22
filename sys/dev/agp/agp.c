@@ -2384,16 +2384,10 @@ name|error
 condition|)
 block|{
 comment|/* 				 * Bail out. Reverse all the mappings 				 * and unwire the pages. 				 */
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_wakeup
 argument_list|(
 name|m
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -2425,16 +2419,10 @@ name|bad
 goto|;
 block|}
 block|}
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_wakeup
 argument_list|(
 name|m
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 block|}
 name|VM_OBJECT_UNLOCK
