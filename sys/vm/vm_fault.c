@@ -1101,7 +1101,7 @@ goto|goto
 name|RetryFault
 goto|;
 block|}
-comment|/* 			 * Wait/Retry if the page is busy.  We have to do this 			 * if the page is busy via either PG_BUSY or  			 * vm_page_t->busy because the vm_pager may be using 			 * vm_page_t->busy for pageouts ( and even pageins if 			 * it is the vnode pager ), and we could end up trying 			 * to pagein and pageout the same page simultaneously. 			 * 			 * We can theoretically allow the busy case on a read 			 * fault if the page is marked valid, but since such 			 * pages are typically already pmap'd, putting that 			 * special case in might be more effort then it is  			 * worth.  We cannot under any circumstances mess 			 * around with a vm_page_t->busy page except, perhaps, 			 * to pmap it. 			 */
+comment|/* 			 * Wait/Retry if the page is busy.  We have to do this 			 * if the page is busy via either VPO_BUSY or  			 * vm_page_t->busy because the vm_pager may be using 			 * vm_page_t->busy for pageouts ( and even pageins if 			 * it is the vnode pager ), and we could end up trying 			 * to pagein and pageout the same page simultaneously. 			 * 			 * We can theoretically allow the busy case on a read 			 * fault if the page is marked valid, but since such 			 * pages are typically already pmap'd, putting that 			 * special case in might be more effort then it is  			 * worth.  We cannot under any circumstances mess 			 * around with a vm_page_t->busy page except, perhaps, 			 * to pmap it. 			 */
 if|if
 condition|(
 operator|(
@@ -1109,9 +1109,9 @@ name|fs
 operator|.
 name|m
 operator|->
-name|flags
+name|oflags
 operator|&
-name|PG_BUSY
+name|VPO_BUSY
 operator|)
 operator|||
 name|fs
@@ -1774,11 +1774,17 @@ operator|||
 operator|(
 name|mt
 operator|->
+name|oflags
+operator|&
+name|VPO_BUSY
+operator|)
+operator|||
+operator|(
+name|mt
+operator|->
 name|flags
 operator|&
 operator|(
-name|PG_BUSY
-operator||
 name|PG_FICTITIOUS
 operator||
 name|PG_UNMANAGED
@@ -1844,7 +1850,7 @@ operator|.
 name|first_object
 argument_list|)
 expr_stmt|;
-comment|/* 			 * now we find out if any other pages should be paged 			 * in at this time this routine checks to see if the 			 * pages surrounding this fault reside in the same 			 * object as the page for this fault.  If they do, 			 * then they are faulted in also into the object.  The 			 * array "marray" returned contains an array of 			 * vm_page_t structs where one of them is the 			 * vm_page_t passed to the routine.  The reqpage 			 * return value is the index into the marray for the 			 * vm_page_t passed to the routine. 			 * 			 * fs.m plus the additional pages are PG_BUSY'd. 			 * 			 * XXX vm_fault_additional_pages() can block 			 * without releasing the map lock. 			 */
+comment|/* 			 * now we find out if any other pages should be paged 			 * in at this time this routine checks to see if the 			 * pages surrounding this fault reside in the same 			 * object as the page for this fault.  If they do, 			 * then they are faulted in also into the object.  The 			 * array "marray" returned contains an array of 			 * vm_page_t structs where one of them is the 			 * vm_page_t passed to the routine.  The reqpage 			 * return value is the index into the marray for the 			 * vm_page_t passed to the routine. 			 * 			 * fs.m plus the additional pages are VPO_BUSY'd. 			 * 			 * XXX vm_fault_additional_pages() can block 			 * without releasing the map lock. 			 */
 name|faultcount
 operator|=
 name|vm_fault_additional_pages
@@ -1878,7 +1884,7 @@ name|faultcount
 operator|-
 name|behind
 expr_stmt|;
-comment|/* 			 * Call the pager to retrieve the data, if any, after 			 * releasing the lock on the map.  We hold a ref on 			 * fs.object and the pages are PG_BUSY'd. 			 */
+comment|/* 			 * Call the pager to retrieve the data, if any, after 			 * releasing the lock on the map.  We hold a ref on 			 * fs.object and the pages are VPO_BUSY'd. 			 */
 name|unlock_map
 argument_list|(
 operator|&
@@ -2309,9 +2315,9 @@ name|fs
 operator|.
 name|m
 operator|->
-name|flags
+name|oflags
 operator|&
-name|PG_BUSY
+name|VPO_BUSY
 operator|)
 operator|!=
 literal|0
@@ -2873,9 +2879,9 @@ name|fs
 operator|.
 name|m
 operator|->
-name|flags
+name|oflags
 operator|&
-name|PG_BUSY
+name|VPO_BUSY
 argument_list|,
 operator|(
 literal|"vm_fault: page %p not busy!"

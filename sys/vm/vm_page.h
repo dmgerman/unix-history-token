@@ -188,6 +188,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VPO_BUSY
+value|0x0001
+end_define
+
+begin_comment
+comment|/* page is in transit */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VPO_WANTED
 value|0x0002
 end_define
@@ -557,17 +568,6 @@ end_decl_stmt
 
 begin_comment
 comment|/*  * These are the flags defined for vm_page.  *  * Note: PG_UNMANAGED (used by OBJT_PHYS) indicates that the page is  * 	 not under PV management but otherwise should be treated as a  *	 normal page.  Pages not under PV management cannot be paged out  *	 via the object/vm_page_t because there is no knowledge of their  *	 pte mappings, nor can they be removed from their objects via   *	 the object, and such pages are also not on any PQ queue.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PG_BUSY
-value|0x0001
-end_define
-
-begin_comment
-comment|/* page is in transit (O) */
 end_comment
 
 begin_define
@@ -1509,7 +1509,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	vm_page_sleep_if_busy:  *  *	Sleep and release the page queues lock if PG_BUSY is set or,  *	if also_m_busy is TRUE, busy is non-zero.  Returns TRUE if the  *	thread slept and the page queues lock was released.  *	Otherwise, retains the page queues lock and returns FALSE.  *  *	The object containing the given page must be locked.  */
+comment|/*  *	vm_page_sleep_if_busy:  *  *	Sleep and release the page queues lock if VPO_BUSY is set or,  *	if also_m_busy is TRUE, busy is non-zero.  Returns TRUE if the  *	thread slept and the page queues lock was released.  *	Otherwise, retains the page queues lock and returns FALSE.  *  *	The object containing the given page must be locked.  */
 end_comment
 
 begin_function
@@ -1535,9 +1535,9 @@ condition|(
 operator|(
 name|m
 operator|->
-name|flags
+name|oflags
 operator|&
-name|PG_BUSY
+name|VPO_BUSY
 operator|)
 operator|||
 operator|(

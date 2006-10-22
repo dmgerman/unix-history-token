@@ -3312,9 +3312,9 @@ index|[
 name|i
 index|]
 operator|->
-name|flags
+name|oflags
 operator|&
-name|PG_BUSY
+name|VPO_BUSY
 operator|)
 operator|||
 name|ma

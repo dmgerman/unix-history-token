@@ -9647,9 +9647,9 @@ operator|!
 operator|(
 name|pg
 operator|->
-name|flags
+name|oflags
 operator|&
-name|PG_BUSY
+name|VPO_BUSY
 operator|)
 operator|&&
 name|pg

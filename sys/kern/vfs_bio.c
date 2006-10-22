@@ -6030,9 +6030,9 @@ condition|(
 operator|(
 name|m
 operator|->
-name|flags
+name|oflags
 operator|&
-name|PG_BUSY
+name|VPO_BUSY
 operator|)
 operator|||
 operator|(
@@ -10876,7 +10876,7 @@ expr_stmt|;
 block|}
 continue|continue;
 block|}
-comment|/* 				 * We found a page.  If we have to sleep on it, 				 * retry because it might have gotten freed out 				 * from under us. 				 * 				 * We can only test PG_BUSY here.  Blocking on 				 * m->busy might lead to a deadlock: 				 * 				 *  vm_fault->getpages->cluster_read->allocbuf 				 * 				 */
+comment|/* 				 * We found a page.  If we have to sleep on it, 				 * retry because it might have gotten freed out 				 * from under us. 				 * 				 * We can only test VPO_BUSY here.  Blocking on 				 * m->busy might lead to a deadlock: 				 * 				 *  vm_fault->getpages->cluster_read->allocbuf 				 * 				 */
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -12922,7 +12922,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine is called before a device strategy routine.  * It is used to tell the VM system that paging I/O is in  * progress, and treat the pages associated with the buffer  * almost as being PG_BUSY.  Also the object paging_in_progress  * flag is handled to make sure that the object doesn't become  * inconsistant.  *  * Since I/O has not been initiated yet, certain buffer flags  * such as BIO_ERROR or B_INVAL may be in an inconsistant state  * and should be ignored.  */
+comment|/*  * This routine is called before a device strategy routine.  * It is used to tell the VM system that paging I/O is in  * progress, and treat the pages associated with the buffer  * almost as being VPO_BUSY.  Also the object paging_in_progress  * flag is handled to make sure that the object doesn't become  * inconsistant.  *  * Since I/O has not been initiated yet, certain buffer flags  * such as BIO_ERROR or B_INVAL may be in an inconsistant state  * and should be ignored.  */
 end_comment
 
 begin_function

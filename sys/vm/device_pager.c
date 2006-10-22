@@ -1184,15 +1184,13 @@ name|m
 operator|->
 name|flags
 operator|=
-name|PG_BUSY
-operator||
 name|PG_FICTITIOUS
 expr_stmt|;
 name|m
 operator|->
 name|oflags
 operator|=
-literal|0
+name|VPO_BUSY
 expr_stmt|;
 name|m
 operator|->

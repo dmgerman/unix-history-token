@@ -3830,9 +3830,9 @@ if|if
 condition|(
 name|m
 operator|->
-name|flags
+name|oflags
 operator|&
-name|PG_BUSY
+name|VPO_BUSY
 condition|)
 block|{
 name|VM_OBJECT_UNLOCK
