@@ -66,12 +66,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mac.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -407,6 +401,12 @@ end_endif
 begin_comment
 comment|/* NETATALK */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<security/mac/mac_framework.h>
+end_include
 
 begin_comment
 comment|/* netgraph node hooks for ng_ether(4) */

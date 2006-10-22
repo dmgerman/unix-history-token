@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mac.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/mbuf.h>
 end_include
 
@@ -210,6 +204,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<security/mac/mac_framework.h>
+end_include
 
 begin_comment
 comment|/*  * Netgraph interface functions.  * These need not be protected by a lock, because ng_atm nodes are persitent.  * The ng_atm module can be unloaded only if all ATM interfaces have been  * unloaded, so nobody should be in the code paths accessing these function  * pointers.  */

@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mac.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/mount.h>
 end_include
 
@@ -201,6 +195,12 @@ begin_include
 include|#
 directive|include
 file|<security/audit/audit.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<security/mac/mac_framework.h>
 end_include
 
 begin_include

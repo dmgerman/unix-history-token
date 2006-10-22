@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mac.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/mutex.h>
 end_include
 
@@ -127,6 +121,12 @@ begin_include
 include|#
 directive|include
 file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<security/mac/mac_framework.h>
 end_include
 
 begin_expr_stmt

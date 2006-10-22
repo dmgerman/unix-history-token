@@ -60,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mac.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -157,6 +151,12 @@ begin_include
 include|#
 directive|include
 file|<compat/svr4/svr4_fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<security/mac/mac_framework.h>
 end_include
 
 begin_function_decl

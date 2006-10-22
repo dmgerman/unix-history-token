@@ -23,6 +23,16 @@ begin_comment
 comment|/*-  * Pluggable access control policy definition structure.  *  * List of operations that are performed as part of the implementation  * of a MAC policy.  Policy implementors declare operations with a  * mac_policy_ops structure, and using the MAC_POLICY_SET() macro.  * If an entry point is not declared, then then the policy will be ignored  * during evaluation of that event or check.  *  * Operations are sorted first by general class of operation, then  * alphabetically.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/acl.h>
+end_include
+
+begin_comment
+comment|/* XXX acl_type_t */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|acl

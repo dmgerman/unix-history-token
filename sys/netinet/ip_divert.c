@@ -97,12 +97,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mac.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/mbuf.h>
 end_include
 
@@ -230,6 +224,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/ip_fw.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<security/mac/mac_framework.h>
 end_include
 
 begin_comment

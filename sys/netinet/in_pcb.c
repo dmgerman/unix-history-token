@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mac.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -270,6 +264,12 @@ end_endif
 begin_comment
 comment|/* FAST_IPSEC */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<security/mac/mac_framework.h>
+end_include
 
 begin_comment
 comment|/*  * These configure the range of local port addresses assigned to  * "unspecified" outgoing connections/packets/whatever.  */

@@ -112,12 +112,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mac.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -181,6 +175,12 @@ begin_include
 include|#
 directive|include
 file|<compat/linux/linux_util.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<security/mac/mac_framework.h>
 end_include
 
 begin_function_decl

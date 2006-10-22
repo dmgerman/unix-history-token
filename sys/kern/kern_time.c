@@ -92,12 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mac.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/syscallsubr.h>
 end_include
 
@@ -147,6 +141,12 @@ begin_include
 include|#
 directive|include
 file|<posix4/posix4.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<security/mac/mac_framework.h>
 end_include
 
 begin_include
