@@ -1404,10 +1404,14 @@ value|1
 name|uint8_t
 name|reserved
 decl_stmt|;
+define|#
+directive|define
+name|IWI_RATESET_SIZE
+value|12
 name|uint8_t
 name|rates
 index|[
-literal|12
+name|IWI_RATESET_SIZE
 index|]
 decl_stmt|;
 block|}
