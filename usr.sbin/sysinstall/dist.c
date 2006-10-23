@@ -1160,7 +1160,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|selectKernel
 parameter_list|(

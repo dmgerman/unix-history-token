@@ -3204,6 +3204,16 @@ name|Dists
 operator|=
 name|_DIST_USER
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|KernelDists
+condition|)
+name|KernelDists
+operator|=
+name|selectKernel
+argument_list|()
+expr_stmt|;
 block|}
 if|if
 condition|(
