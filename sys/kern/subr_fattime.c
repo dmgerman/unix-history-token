@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2006 Poul-Henning Kamp  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  *  * Convert MS-DOS FAT format timestamps to and from unix timespecs  *  * FAT filestamps originally consisted of two 16 bit integers, encoded like  * this:  *  *	yyyyyyymmmmddddd (year - 1980, month, day)  *  *      hhhhhmmmmmmsssss (hour, minutes, seconds divided by two)  *  * Subsequently even Microsoft realized that files could be accessed in less  * than two seconds and a byte was added containing:  *  *      sfffffff	 (second mod two, 100ths of second)  *  * FAT timestamps are in the local timezone, with no indication of which  * timezone much less if daylight savings time applies.  *  * Later on again, in Windows NT, timestamps were defined relative to GMT.  *  * Purists will point out that UTC replaced GMT for such uses around  * a century ago, already then.  Ironically "NT" was an abbreviation of   * "New Technology".  Anyway...  *  * The functions below always assume UTC time, and the calling code  * must apply the local timezone offset as appropriate.  Unless special  * conditions apply, the utc_offset() function be used for this.  *  * The conversion functions below cut time into four-year leap-second  * cycles rather than single years and uses table lookups inside those  * cycles to get the months and years sorted out.  *  * Obviously we cannot calculate the correct table index going from  * a posix seconds count to Y/M/D, but we can get pretty close by  * dividing the daycount by 32 (giving a too low index), and then  * adjusting upwards a couple of steps if necessary.  *  * FAT timestamps have 7 bits for the year and starts at 1980, so  * they can represent up to 2107 which means that the non-leap-year  * 2100 must be handled.  *  * XXX: As long as time_t is 32 bits this is not relevant or easily  * XXX: testable.  Revisit when time_t grows bigger.  * XXX: grepfodder: 64 bit time_t, y2100, y2.1k, 2100, leap year  *  */
+comment|/*-  * Copyright (c) 2006 Poul-Henning Kamp  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  *  * Convert MS-DOS FAT format timestamps to and from unix timespecs  *  * FAT filestamps originally consisted of two 16 bit integers, encoded like  * this:  *  *	yyyyyyymmmmddddd (year - 1980, month, day)  *  *      hhhhhmmmmmmsssss (hour, minutes, seconds divided by two)  *  * Subsequently even Microsoft realized that files could be accessed in less  * than two seconds and a byte was added containing:  *  *      sfffffff	 (second mod two, 100ths of second)  *  * FAT timestamps are in the local timezone, with no indication of which  * timezone much less if daylight savings time applies.  *  * Later on again, in Windows NT, timestamps were defined relative to GMT.  *  * Purists will point out that UTC replaced GMT for such uses around  * a century ago, already then.  Ironically "NT" was an abbreviation of   * "New Technology".  Anyway...  *  * The 'utc' argument determines if the resulting FATTIME timestamp  * should b on the UTC or local timezone calendar.  *  * The conversion functions below cut time into four-year leap-second  * cycles rather than single years and uses table lookups inside those  * cycles to get the months and years sorted out.  *  * Obviously we cannot calculate the correct table index going from  * a posix seconds count to Y/M/D, but we can get pretty close by  * dividing the daycount by 32 (giving a too low index), and then  * adjusting upwards a couple of steps if necessary.  *  * FAT timestamps have 7 bits for the year and starts at 1980, so  * they can represent up to 2107 which means that the non-leap-year  * 2100 must be handled.  *  * XXX: As long as time_t is 32 bits this is not relevant or easily  * XXX: testable.  Revisit when time_t grows bigger.  * XXX: grepfodder: 64 bit time_t, y2100, y2.1k, 2100, leap year  *  */
 end_comment
 
 begin_include
@@ -1012,12 +1012,15 @@ end_struct
 
 begin_function
 name|void
-name|timet2fattime
+name|timespec2fattime
 parameter_list|(
 name|struct
 name|timespec
 modifier|*
 name|tsp
+parameter_list|,
+name|int
+name|utc
 parameter_list|,
 name|u_int16_t
 modifier|*
@@ -1047,6 +1050,16 @@ operator|=
 name|tsp
 operator|->
 name|tv_sec
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|utc
+condition|)
+name|t1
+operator|-=
+name|utc_offset
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1787,7 +1800,7 @@ end_decl_stmt
 
 begin_function
 name|void
-name|fattime2timet
+name|fattime2timespec
 parameter_list|(
 name|unsigned
 name|dd
@@ -1797,6 +1810,9 @@ name|dt
 parameter_list|,
 name|unsigned
 name|dh
+parameter_list|,
+name|int
+name|utc
 parameter_list|,
 name|struct
 name|timespec
@@ -1946,6 +1962,18 @@ operator|+=
 name|DAY
 operator|*
 name|day
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|utc
+condition|)
+name|tsp
+operator|->
+name|tv_sec
+operator|+=
+name|utc_offset
+argument_list|()
 expr_stmt|;
 block|}
 end_function

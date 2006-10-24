@@ -231,12 +231,15 @@ end_define
 
 begin_function_decl
 name|void
-name|timet2fattime
+name|timespec2fattime
 parameter_list|(
 name|struct
 name|timespec
 modifier|*
 name|tsp
+parameter_list|,
+name|int
+name|utc
 parameter_list|,
 name|u_int16_t
 modifier|*
@@ -255,7 +258,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|fattime2timet
+name|fattime2timespec
 parameter_list|(
 name|unsigned
 name|dd
@@ -265,6 +268,9 @@ name|dt
 parameter_list|,
 name|unsigned
 name|dh
+parameter_list|,
+name|int
+name|utc
 parameter_list|,
 name|struct
 name|timespec
