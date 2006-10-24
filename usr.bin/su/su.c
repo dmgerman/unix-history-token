@@ -479,13 +479,6 @@ decl_stmt|;
 name|au_id_t
 name|auid
 decl_stmt|;
-name|signal
-argument_list|(
-name|SIGSYS
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 name|shell
