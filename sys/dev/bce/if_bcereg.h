@@ -26606,13 +26606,13 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* XXX UDP checksum offload seems to cause problems on transmit */
+comment|/*  * XXX Checksum offload involving IP fragments seems to cause problems on  * transmit.  Disable it for now, hopefully there will be a more elegant  * solution later.  */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|BCE_UDP_CSUM
+name|BCE_IP_CSUM
 end_ifdef
 
 begin_define
@@ -26631,7 +26631,7 @@ begin_define
 define|#
 directive|define
 name|BCE_IF_HWASSIST
-value|(CSUM_TCP)
+value|(CSUM_TCP | CSUM_UDP)
 end_define
 
 begin_endif
