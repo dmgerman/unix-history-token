@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/buf.h>
 end_include
 
@@ -1288,7 +1294,7 @@ name|dep
 operator|->
 name|de_FileSize
 expr_stmt|;
-name|dos2unixtime
+name|fattime2timespec
 argument_list|(
 name|dep
 operator|->
@@ -1297,6 +1303,8 @@ argument_list|,
 name|dep
 operator|->
 name|de_MTime
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -1315,11 +1323,13 @@ operator|&
 name|MSDOSFSMNT_LONGNAME
 condition|)
 block|{
-name|dos2unixtime
+name|fattime2timespec
 argument_list|(
 name|dep
 operator|->
 name|de_ADate
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -1331,7 +1341,7 @@ operator|->
 name|va_atime
 argument_list|)
 expr_stmt|;
-name|dos2unixtime
+name|fattime2timespec
 argument_list|(
 name|dep
 operator|->
@@ -1344,6 +1354,8 @@ argument_list|,
 name|dep
 operator|->
 name|de_CHun
+argument_list|,
+literal|0
 argument_list|,
 operator|&
 name|vap
@@ -2163,12 +2175,14 @@ operator|&=
 operator|~
 name|DE_ACCESS
 expr_stmt|;
-name|unix2dostime
+name|timespec2fattime
 argument_list|(
 operator|&
 name|vap
 operator|->
 name|va_atime
+argument_list|,
+literal|0
 argument_list|,
 operator|&
 name|dep
@@ -2199,12 +2213,14 @@ operator|&=
 operator|~
 name|DE_UPDATE
 expr_stmt|;
-name|unix2dostime
+name|timespec2fattime
 argument_list|(
 operator|&
 name|vap
 operator|->
 name|va_mtime
+argument_list|,
+literal|0
 argument_list|,
 operator|&
 name|dep

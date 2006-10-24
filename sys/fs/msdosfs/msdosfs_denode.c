@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vnode.h>
 end_include
 
@@ -645,7 +651,7 @@ operator|*
 name|DEV_BSIZE
 expr_stmt|;
 block|}
-comment|/* 		 * fill in time and date so that dos2unixtime() doesn't 		 * spit up when called from msdosfs_getattr() with root 		 * denode 		 */
+comment|/* 		 * fill in time and date so that fattime2timespec() doesn't 		 * spit up when called from msdosfs_getattr() with root 		 * denode 		 */
 name|ldep
 operator|->
 name|de_CHun
