@@ -608,6 +608,10 @@ name|int
 name|mnt_ref
 decl_stmt|;
 comment|/* (i) Reference count */
+name|int
+name|mnt_gen
+decl_stmt|;
+comment|/* struct mount generation */
 block|}
 struct|;
 end_struct
