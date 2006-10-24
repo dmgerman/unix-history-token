@@ -3170,11 +3170,6 @@ operator|->
 name|p_xstat
 argument_list|)
 expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|q
@@ -3190,6 +3185,11 @@ expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|q
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -3243,11 +3243,6 @@ operator|&=
 operator|~
 name|P_CONTINUED
 expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|q
@@ -3263,6 +3258,11 @@ expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|q
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 if|if
