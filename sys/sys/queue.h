@@ -557,20 +557,6 @@ parameter_list|)
 value|do {				\ 	if ((STAILQ_FIRST((head)) =					\ 	     STAILQ_NEXT(STAILQ_FIRST((head)), field)) == NULL)		\ 		(head)->stqh_last =&STAILQ_FIRST((head));		\ } while (0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|STAILQ_REMOVE_HEAD_UNTIL
-parameter_list|(
-name|head
-parameter_list|,
-name|elm
-parameter_list|,
-name|field
-parameter_list|)
-value|do {			\ 	if ((STAILQ_FIRST((head)) = STAILQ_NEXT((elm), field)) == NULL)	\ 		(head)->stqh_last =&STAILQ_FIRST((head));		\ } while (0)
-end_define
-
 begin_comment
 comment|/*  * List declarations.  */
 end_comment
