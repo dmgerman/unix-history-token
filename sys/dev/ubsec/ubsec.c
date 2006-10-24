@@ -231,7 +231,7 @@ begin_define
 define|#
 directive|define
 name|SIMPLEQ_REMOVE_HEAD
-value|STAILQ_REMOVE_HEAD_UNTIL
+value|STAILQ_REMOVE_HEAD
 end_define
 
 begin_define
@@ -2786,8 +2786,6 @@ name|sc
 operator|->
 name|sc_freequeue
 argument_list|,
-name|q
-argument_list|,
 name|q_next
 argument_list|)
 expr_stmt|;
@@ -3208,8 +3206,6 @@ name|sc
 operator|->
 name|sc_qchip
 argument_list|,
-name|q
-argument_list|,
 name|q_next
 argument_list|)
 expr_stmt|;
@@ -3425,8 +3421,6 @@ operator|&
 name|sc
 operator|->
 name|sc_qchip2
-argument_list|,
-name|q2
 argument_list|,
 name|q_next
 argument_list|)
@@ -3846,8 +3840,6 @@ name|sc
 operator|->
 name|sc_queue
 argument_list|,
-name|q
-argument_list|,
 name|q_next
 argument_list|)
 expr_stmt|;
@@ -3965,8 +3957,6 @@ operator|&
 name|sc
 operator|->
 name|sc_queue
-argument_list|,
-name|q2
 argument_list|,
 name|q_next
 argument_list|)
@@ -4256,8 +4246,6 @@ operator|&
 name|sc
 operator|->
 name|sc_queue
-argument_list|,
-name|q
 argument_list|,
 name|q_next
 argument_list|)
@@ -5726,8 +5714,6 @@ operator|&
 name|sc
 operator|->
 name|sc_freequeue
-argument_list|,
-name|q
 argument_list|,
 name|q_next
 argument_list|)
@@ -9400,8 +9386,6 @@ name|sc
 operator|->
 name|sc_queue2
 argument_list|,
-name|q
-argument_list|,
 name|q_next
 argument_list|)
 expr_stmt|;
@@ -11050,8 +11034,6 @@ name|sc
 operator|->
 name|sc_qchip
 argument_list|,
-name|q
-argument_list|,
 name|q_next
 argument_list|)
 expr_stmt|;
@@ -11684,8 +11666,6 @@ operator|&
 name|sc
 operator|->
 name|sc_q2free
-argument_list|,
-name|q
 argument_list|,
 name|q_next
 argument_list|)
