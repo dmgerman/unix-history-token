@@ -685,6 +685,12 @@ operator|&
 name|ftab
 argument_list|)
 expr_stmt|;
+name|STAILQ_INIT
+argument_list|(
+operator|&
+name|hints
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|yyparse
