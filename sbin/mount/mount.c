@@ -1060,7 +1060,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"adlF:fo:prwt:uv"
+literal|"adF:flo:prt:uvw"
 argument_list|)
 operator|)
 operator|!=
