@@ -2181,6 +2181,8 @@ init|;
 name|dump_avail
 index|[
 name|i
+operator|+
+literal|1
 index|]
 condition|;
 name|i
@@ -2237,6 +2239,8 @@ argument_list|(
 name|dump_avail
 index|[
 name|i
+operator|+
+literal|1
 index|]
 operator|!=
 literal|0
@@ -2294,6 +2298,8 @@ init|;
 name|dump_avail
 index|[
 name|i
+operator|+
+literal|1
 index|]
 condition|;
 name|i
@@ -2343,6 +2349,8 @@ init|;
 name|dump_avail
 index|[
 name|i
+operator|+
+literal|1
 index|]
 condition|;
 name|i
