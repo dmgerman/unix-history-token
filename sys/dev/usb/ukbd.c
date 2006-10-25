@@ -6276,6 +6276,12 @@ expr_stmt|;
 comment|/* replace CAPS LED with ALTGR LED for ALTGR keyboards */
 if|if
 condition|(
+name|state
+operator|->
+name|ks_mode
+operator|==
+name|K_XLATE
+operator|&&
 name|kbd
 operator|->
 name|kb_keymap
