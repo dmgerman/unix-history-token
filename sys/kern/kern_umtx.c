@@ -2124,9 +2124,10 @@ operator|)
 name|addr
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
+else|else
+block|{
+name|MPASS
+argument_list|(
 name|share
 operator|==
 name|PROCESS_SHARE
@@ -2134,8 +2135,8 @@ operator|||
 name|share
 operator|==
 name|AUTO_SHARE
-condition|)
-block|{
+argument_list|)
+expr_stmt|;
 name|map
 operator|=
 operator|&
