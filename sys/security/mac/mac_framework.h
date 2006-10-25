@@ -16,7 +16,7 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|_SYS_SECURITY_MAC_MAC_MAC_FRAMEWORK_H_
+name|_SYS_SECURITY_MAC_MAC_FRAMEWORK_H_
 end_define
 
 begin_ifndef
