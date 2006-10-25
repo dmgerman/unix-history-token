@@ -847,6 +847,94 @@ begin_comment
 comment|/* DATLEN: Data Length */
 end_comment
 
+begin_comment
+comment|/* SSC_SR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSC_SR_TXRDY
+value|(1u<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSC_SR_TXEMPTY
+value|(1u<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSC_SR_ENDTX
+value|(1u<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSC_SR_TXBUFE
+value|(1u<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSC_SR_RXRDY
+value|(1u<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSC_SR_OVRUN
+value|(1u<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSC_SR_ENDRX
+value|(1u<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSC_SR_RXBUFF
+value|(1u<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSC_SR_TXSYN
+value|(1u<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSC_SR_RSSYN
+value|(1u<< 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSC_SR_TXEN
+value|(1u<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSC_SR_RXEN
+value|(1u<< 17)
+end_define
+
 begin_endif
 endif|#
 directive|endif
