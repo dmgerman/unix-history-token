@@ -230,7 +230,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * There is an a.out kernel and one or more a.out modules loaded.    * We wish to start executing the kernel image, so make such   * preparations as are required, and do so.  */
+comment|/*  * There is an ELF kernel and one or more ELF modules loaded.    * We wish to start executing the kernel image, so make such   * preparations as are required, and do so.  */
 end_comment
 
 begin_function
