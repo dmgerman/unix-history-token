@@ -359,7 +359,7 @@ begin_define
 define|#
 directive|define
 name|NOPT
-value|12
+value|14
 end_define
 
 begin_define
@@ -481,7 +481,7 @@ index|[
 name|NOPT
 index|]
 init|=
-literal|"DhaCgmnpqrsv"
+literal|"DhaCcdgmnpqrsv"
 decl_stmt|;
 end_decl_stmt
 
@@ -507,6 +507,10 @@ block|,
 name|RBX_ASKNAME
 block|,
 name|RBX_CDROM
+block|,
+name|RBX_CONFIG
+block|,
+name|RBX_KDB
 block|,
 name|RBX_GDB
 block|,
