@@ -314,6 +314,9 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|KSE
 comment|/* 	 * Do special thread processing, e.g. upcall tweaking and such. 	 */
 if|if
 condition|(
@@ -330,6 +333,8 @@ argument_list|,
 name|frame
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Charge system time if profiling. 	 */
 if|if
 condition|(
@@ -407,11 +412,16 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|struct
 name|ksegrp
 modifier|*
 name|kg
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|rlimit
 name|rlim
@@ -455,12 +465,17 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|kg
 operator|=
 name|td
 operator|->
 name|td_ksegrp
 expr_stmt|;
+endif|#
+directive|endif
 name|CTR3
 argument_list|(
 name|KTR_SYSC
@@ -527,6 +542,9 @@ name|td_pticks
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 if|if
 condition|(
 operator|(
@@ -550,6 +568,8 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * This updates the p_sflag's for the checks below in one 	 * "atomic" operation with turning off the astpending flag. 	 * If another AST is triggered while we are handling the 	 * AST's saved in sflag, the astpending flag will be set and 	 * ast() will be called again. 	 */
 name|mtx_lock_spin
 argument_list|(
@@ -976,6 +996,9 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|sched_prio
 argument_list|(
 name|td
@@ -985,6 +1008,19 @@ operator|->
 name|kg_user_pri
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|sched_prio
+argument_list|(
+name|td
+argument_list|,
+name|td
+operator|->
+name|td_user_pri
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|mi_switch
 argument_list|(
 name|SW_INVOL

@@ -1670,6 +1670,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Initialize proc0 stuff (p_contested needs to be done early). 	 */
+ifdef|#
+directive|ifdef
+name|KSE
 name|proc_linkup
 argument_list|(
 operator|&
@@ -1682,6 +1685,19 @@ operator|&
 name|thread0
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|proc_linkup
+argument_list|(
+operator|&
+name|proc0
+argument_list|,
+operator|&
+name|thread0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|proc0
 operator|.
 name|p_md

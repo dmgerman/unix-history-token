@@ -1350,6 +1350,9 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|db_printf
 argument_list|(
 literal|" proc (pid %d): %p "
@@ -1374,6 +1377,25 @@ operator|->
 name|td_ksegrp
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|db_printf
+argument_list|(
+literal|" proc (pid %d): %p\n"
+argument_list|,
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_pid
+argument_list|,
+name|td
+operator|->
+name|td_proc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|td

@@ -2166,6 +2166,9 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 if|if
 condition|(
 name|p
@@ -2179,6 +2182,8 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|code
 operator|=
 name|tf

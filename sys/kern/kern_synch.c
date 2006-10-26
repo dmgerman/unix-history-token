@@ -1579,6 +1579,9 @@ operator|->
 name|p_comm
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 if|if
 condition|(
 operator|(
@@ -1608,6 +1611,8 @@ argument_list|,
 name|newtd
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 operator|(

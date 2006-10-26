@@ -1954,6 +1954,9 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Set stack for exception handlers */
+ifdef|#
+directive|ifdef
+name|KSE
 name|proc_linkup
 argument_list|(
 operator|&
@@ -1966,6 +1969,19 @@ operator|&
 name|thread0
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|proc_linkup
+argument_list|(
+operator|&
+name|proc0
+argument_list|,
+operator|&
+name|thread0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|thread0
 operator|.
 name|td_kstack

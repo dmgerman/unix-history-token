@@ -679,6 +679,9 @@ argument_list|(
 name|pagezero_proc
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|sched_class
 argument_list|(
 name|td
@@ -688,6 +691,17 @@ argument_list|,
 name|PRI_IDLE
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|sched_class
+argument_list|(
+name|td
+argument_list|,
+name|PRI_IDLE
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|sched_prio
 argument_list|(
 name|td

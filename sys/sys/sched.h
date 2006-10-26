@@ -88,6 +88,12 @@ begin_comment
 comment|/*  * KSE Groups contain scheduling priority information.  They record the  * behavior of groups of KSEs and threads.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
+
 begin_function_decl
 name|void
 name|sched_class
@@ -137,6 +143,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+name|void
+name|sched_class
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|class
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|void
 name|sched_nice
@@ -155,6 +186,12 @@ end_function_decl
 begin_comment
 comment|/*  * Threads are switched in and out, block on resources, have temporary  * priorities inherited from their ksegs, and use up cpu time.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
 
 begin_function_decl
 name|void
@@ -189,6 +226,11 @@ name|child
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -309,6 +351,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
+
 begin_function_decl
 name|void
 name|sched_user_prio
@@ -323,6 +371,31 @@ name|prio
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+name|void
+name|sched_user_prio
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|u_char
+name|prio
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -481,6 +554,12 @@ begin_comment
 comment|/*  * These procedures tell the process data structure allocation code how  * many bytes to actually allocate.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
+
 begin_function_decl
 name|int
 name|sched_sizeof_ksegrp
@@ -489,6 +568,11 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int
@@ -555,6 +639,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
+
 begin_function_decl
 name|void
 name|sched_init_concurrency
@@ -582,6 +672,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|void
 name|sched_schedinit
@@ -590,6 +685,12 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
 
 begin_function_decl
 name|void
@@ -624,6 +725,11 @@ name|td
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void

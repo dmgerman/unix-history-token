@@ -442,6 +442,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|int
@@ -462,6 +468,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -2877,11 +2888,21 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|sigset_t
 name|set
 decl_stmt|,
 name|saved
 decl_stmt|;
+else|#
+directive|else
+name|sigset_t
+name|set
+decl_stmt|;
+endif|#
+directive|endif
 name|p
 operator|=
 name|td
@@ -2904,6 +2925,9 @@ name|p_sigqueue
 operator|.
 name|sq_signals
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 if|if
 condition|(
 name|p
@@ -2920,6 +2944,8 @@ name|p_sigqueue
 operator|.
 name|sq_signals
 expr_stmt|;
+endif|#
+directive|endif
 name|SIGSETNAND
 argument_list|(
 name|set
@@ -2982,6 +3008,9 @@ name|sched_lock
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|KSE
 if|if
 condition|(
 operator|(
@@ -3034,6 +3063,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -3875,6 +3906,9 @@ name|SIG_DFL
 operator|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|KSE
 if|if
 condition|(
 operator|(
@@ -3912,6 +3946,8 @@ name|p_siglist
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* never to be seen again */
 name|sigqueue_delete_proc
 argument_list|(
@@ -6293,6 +6329,9 @@ name|i
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|KSE
 if|if
 condition|(
 name|p
@@ -6317,6 +6356,8 @@ name|p_siglist
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|sigqueue_move
 argument_list|(
 operator|&
@@ -9554,9 +9595,14 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|int
 name|error
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|sig
 decl_stmt|;
@@ -9593,6 +9639,9 @@ literal|"invalid signal"
 operator|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 if|if
 condition|(
 name|td
@@ -9665,6 +9714,15 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+else|#
+directive|else
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ps
 operator|=
 name|p
@@ -9756,6 +9814,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|KSE
 if|if
 condition|(
 operator|!
@@ -9794,6 +9855,40 @@ operator|->
 name|td_sigmask
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+call|(
+modifier|*
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_sendsig
+call|)
+argument_list|(
+name|ps
+operator|->
+name|ps_sigact
+index|[
+name|_SIG_IDX
+argument_list|(
+name|sig
+argument_list|)
+index|]
+argument_list|,
+name|ksi
+argument_list|,
+operator|&
+name|td
+operator|->
+name|td_sigmask
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|KSE
 elseif|else
 if|if
 condition|(
@@ -9907,6 +10002,8 @@ name|ps_mtx
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|SIGSETOR
 argument_list|(
 name|td
@@ -10418,6 +10515,9 @@ modifier|*
 name|ksi
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|KSE
 name|sigset_t
 name|saved
 decl_stmt|;
@@ -10536,6 +10636,8 @@ modifier|*
 name|ksi
 parameter_list|)
 block|{
+endif|#
+directive|endif
 name|sig_t
 name|action
 decl_stmt|;
@@ -10574,11 +10676,26 @@ argument_list|(
 name|sig
 argument_list|)
 condition|)
+ifdef|#
+directive|ifdef
+name|KSE
 name|panic
 argument_list|(
 literal|"do_tdsignal(): invalid signal"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|panic
+argument_list|(
+literal|"tdsignal(): invalid signal"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|KSE
 name|KASSERT
 argument_list|(
 name|ksi
@@ -10596,6 +10713,27 @@ literal|"do_tdsignal: ksi on queue"
 operator|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|KASSERT
+argument_list|(
+name|ksi
+operator|==
+name|NULL
+operator|||
+operator|!
+name|KSI_ONQ
+argument_list|(
+name|ksi
+argument_list|)
+argument_list|,
+operator|(
+literal|"tdsignal: ksi on queue"
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * IEEE Std 1003.1-2001: return success when killing a zombie. 	 */
 if|if
 condition|(
@@ -11164,7 +11302,15 @@ operator|==
 name|SIG_CATCH
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|KSE
 comment|/* 				 * The process wants to catch it so it needs 				 * to run at least one thread, but which one? 				 * It would seem that the answer would be to 				 * run an upcall in the next KSE to run, and 				 * deliver the signal that way. In a NON KSE 				 * process, we need to make sure that the 				 * single thread is runnable asap. 				 * XXXKSE for now however, make them all run. 				 */
+else|#
+directive|else
+comment|/* 				 * The process wants to catch it so it needs 				 * to run at least one thread, but which one? 				 */
+endif|#
+directive|endif
 goto|goto
 name|runfast
 goto|;
@@ -12282,6 +12428,9 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 if|if
 condition|(
 name|td
@@ -12299,6 +12448,8 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 continue|continue;
 block|}
 if|if
@@ -12346,6 +12497,9 @@ operator|->
 name|ps_mtx
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 if|if
 condition|(
 name|td
@@ -12363,6 +12517,8 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|sig
@@ -12411,6 +12567,9 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 if|if
 condition|(
 name|td
@@ -12428,6 +12587,8 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|SIGISMEMBER
@@ -13069,6 +13230,9 @@ name|ps_mtx
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|KSE
 if|if
 condition|(
 operator|!
@@ -13085,6 +13249,17 @@ operator|==
 name|SIG_DFL
 condition|)
 block|{
+else|#
+directive|else
+if|if
+condition|(
+name|action
+operator|==
+name|SIG_DFL
+condition|)
+block|{
+endif|#
+directive|endif
 comment|/* 		 * Default action, where the default is to kill 		 * the process.  (Other cases were ignored above.) 		 */
 name|mtx_unlock
 argument_list|(
@@ -13105,6 +13280,9 @@ comment|/* NOTREACHED */
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|KSE
 if|if
 condition|(
 name|td
@@ -13138,6 +13316,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 comment|/* 		 * If we get here, the signal must be caught. 		 */
 name|KASSERT
 argument_list|(
@@ -13330,6 +13510,9 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|KSE
 if|if
 condition|(
 name|td
@@ -13365,15 +13548,31 @@ operator|&
 name|returnmask
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+call|(
+modifier|*
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_sendsig
+call|)
+argument_list|(
+name|action
+argument_list|,
+operator|&
+name|ksi
+argument_list|,
+operator|&
+name|returnmask
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  * Kill the current process for stated reason.  */
-end_comment
-
-begin_function
 name|void
 name|killproc
 parameter_list|(
@@ -13453,13 +13652,7 @@ name|SIGKILL
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Force the current process to exit with the specified signal, dumping core  * if appropriate.  We bypass the normal tests for masked and caught signals,  * allowing unrecoverable failures to terminate the process without changing  * signal state.  Mark the accounting record with the signal termination.  * If dumping core, save the signal number for the debugger.  Calls exit and  * does not return.  *  * MPSAFE  */
-end_comment
-
-begin_function
 name|void
 name|sigexit
 parameter_list|(
@@ -13606,13 +13799,7 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
-end_function
-
-begin_comment
 comment|/*  * Send queued SIGCHLD to parent when child process's state  * is changed.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|sigparent
@@ -13727,9 +13914,6 @@ name|p_ksi
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|childproc_jobstate
@@ -13840,9 +14024,6 @@ name|ps_mtx
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|childproc_stopped
 parameter_list|(
@@ -13867,9 +14048,6 @@ name|p_xstat
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|childproc_continued
 parameter_list|(
@@ -13889,9 +14067,6 @@ name|SIGCONT
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|childproc_exited
 parameter_list|(
@@ -13950,9 +14125,6 @@ name|status
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_decl_stmt
 specifier|static
 name|char
 name|corefilename
@@ -13964,9 +14136,6 @@ block|{
 literal|"%N.core"
 block|}
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|SYSCTL_STRING
 argument_list|(
 name|_kern
@@ -13987,13 +14156,7 @@ argument_list|,
 literal|"process corefile name format string"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/*  * expand_name(name, uid, pid)  * Expand the name described in corefilename, using name, uid, and pid.  * corefilename is a printf-like string, with three format specifiers:  *	%N	name of process ("name")  *	%P	process id (pid)  *	%U	user id (uid)  * For example, "%N.core" is the default; they can be disabled completely  * by using "/dev/null", or all core files can be stored in "/cores/%U/%N-%P".  * This is controlled by the sysctl variable kern.corefile (see above).  */
-end_comment
-
-begin_function
 specifier|static
 name|char
 modifier|*
@@ -14291,13 +14454,7 @@ name|NULL
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Dump a process' core.  The main routine does some  * policy checking, and creates the name of the coredump;  * then it passes on a vnode and a size limit to the process-specific  * coredump routine if there is one; if there _is not_ one, it returns  * ENOSYS; otherwise it returns the error from the process-specific routine.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|coredump
@@ -14953,19 +15110,10 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Nonexistent system call-- signal process (may want to handle it).  * Flag error in case process won't see signal immediately (blocked or ignored).  */
-end_comment
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|_SYS_SYSPROTO_H_
-end_ifndef
-
-begin_struct
 struct|struct
 name|nosys_args
 block|{
@@ -14974,22 +15122,10 @@ name|dummy
 decl_stmt|;
 block|}
 struct|;
-end_struct
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED */
-end_comment
-
-begin_function
 name|int
 name|nosys
 parameter_list|(
@@ -15040,13 +15176,7 @@ name|ENOSYS
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Send a SIGIO or SIGURG signal to a process or process group using  * stored credentials rather than those of the current process.  */
-end_comment
-
-begin_function
 name|void
 name|pgsigio
 parameter_list|(
@@ -15229,9 +15359,6 @@ name|SIGIO_UNLOCK
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|filt_sigattach
@@ -15282,9 +15409,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|filt_sigdetach
@@ -15319,13 +15443,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * signal knotes are shared with proc knotes, so we apply a mask to   * the hint in order to differentiate them from process hints.  This  * could be avoided by using a signal-specific knote list, but probably  * isn't worth the trouble.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|filt_signal
@@ -15375,9 +15493,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|struct
 name|sigacts
 modifier|*
@@ -15434,9 +15549,6 @@ name|ps
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|sigacts_free
 parameter_list|(
@@ -15494,9 +15606,6 @@ name|ps_mtx
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|struct
 name|sigacts
 modifier|*
@@ -15535,9 +15644,6 @@ name|ps
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|sigacts_copy
 parameter_list|(
@@ -15597,9 +15703,6 @@ name|ps_mtx
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|int
 name|sigacts_shared
 parameter_list|(

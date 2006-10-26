@@ -296,12 +296,23 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|ksegrp
 name|ksegrp0
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|struct
@@ -1380,11 +1391,16 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|struct
 name|ksegrp
 modifier|*
 name|kg
 decl_stmt|;
+endif|#
+directive|endif
 name|GIANT_REQUIRED
 expr_stmt|;
 name|p
@@ -1397,11 +1413,16 @@ operator|=
 operator|&
 name|thread0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|kg
 operator|=
 operator|&
 name|ksegrp0
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Initialize magic number. 	 */
 name|p
 operator|->
@@ -1409,6 +1430,9 @@ name|p_magic
 operator|=
 name|P_MAGIC
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 comment|/* 	 * Initialize thread, process and ksegrp structures. 	 */
 name|procinit
 argument_list|()
@@ -1419,6 +1443,20 @@ argument_list|()
 expr_stmt|;
 comment|/* set up thead, upcall and KSEGRP zones */
 comment|/* 	 * Initialise scheduler resources. 	 * Add scheduler specific parts to proc, ksegrp, thread as needed. 	 */
+else|#
+directive|else
+comment|/* 	 * Initialize thread and process structures. 	 */
+name|procinit
+argument_list|()
+expr_stmt|;
+comment|/* set up proc zone */
+name|threadinit
+argument_list|()
+expr_stmt|;
+comment|/* set up UMA zones */
+comment|/* 	 * Initialise scheduler resources. 	 * Add scheduler specific parts to proc, thread as needed. 	 */
+endif|#
+directive|endif
 name|schedinit
 argument_list|()
 expr_stmt|;
@@ -1607,6 +1645,9 @@ name|td_state
 operator|=
 name|TDS_RUNNING
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|kg
 operator|->
 name|kg_pri_class
@@ -1625,6 +1666,22 @@ name|kg_base_user_pri
 operator|=
 name|PUSER
 expr_stmt|;
+else|#
+directive|else
+name|td
+operator|->
+name|td_pri_class
+operator|=
+name|PRI_TIMESHARE
+expr_stmt|;
+name|td
+operator|->
+name|td_user_pri
+operator|=
+name|PUSER
+expr_stmt|;
+endif|#
+directive|endif
 name|td
 operator|->
 name|td_priority
@@ -3117,6 +3174,9 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|setrunqueue
 argument_list|(
 name|td
@@ -3125,6 +3185,17 @@ name|SRQ_BORING
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
+else|#
+directive|else
+name|setrunqueue
+argument_list|(
+name|td
+argument_list|,
+name|SRQ_BORING
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|mtx_unlock_spin
 argument_list|(
 operator|&

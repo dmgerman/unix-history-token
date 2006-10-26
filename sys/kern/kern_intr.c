@@ -1398,6 +1398,9 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|td
 operator|->
 name|td_ksegrp
@@ -1406,6 +1409,16 @@ name|kg_pri_class
 operator|=
 name|PRI_ITHD
 expr_stmt|;
+else|#
+directive|else
+name|td
+operator|->
+name|td_pri_class
+operator|=
+name|PRI_ITHD
+expr_stmt|;
+endif|#
+directive|endif
 name|TD_SET_IWAIT
 argument_list|(
 name|td

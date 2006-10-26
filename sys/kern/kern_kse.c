@@ -119,6 +119,12 @@ directive|include
 file|<vm/uma.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
+
 begin_comment
 comment|/*  * KSEGRP related storage.  */
 end_comment
@@ -442,6 +448,11 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -484,6 +495,9 @@ modifier|*
 name|uap
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|KSE
 name|struct
 name|kse_thr_mailbox
 name|tmbx
@@ -765,6 +779,16 @@ else|:
 name|error
 operator|)
 return|;
+else|#
+directive|else
+comment|/* !KSE */
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -787,6 +811,9 @@ modifier|*
 name|uap
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|KSE
 name|struct
 name|kse_execve_args
 name|args
@@ -1400,6 +1427,16 @@ operator|(
 literal|0
 operator|)
 return|;
+else|#
+directive|else
+comment|/* !KSE */
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1422,6 +1459,9 @@ modifier|*
 name|uap
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|KSE
 name|struct
 name|proc
 modifier|*
@@ -1709,6 +1749,16 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+else|#
+directive|else
+comment|/* !KSE */
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1735,6 +1785,9 @@ modifier|*
 name|uap
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|KSE
 name|struct
 name|proc
 modifier|*
@@ -2161,6 +2214,16 @@ operator|(
 literal|0
 operator|)
 return|;
+else|#
+directive|else
+comment|/* !KSE */
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -2183,6 +2246,9 @@ modifier|*
 name|uap
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|KSE
 name|struct
 name|proc
 modifier|*
@@ -2481,6 +2547,16 @@ operator|(
 literal|0
 operator|)
 return|;
+else|#
+directive|else
+comment|/* !KSE */
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -2507,6 +2583,9 @@ modifier|*
 name|uap
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|KSE
 name|struct
 name|ksegrp
 modifier|*
@@ -3322,8 +3401,24 @@ operator|(
 literal|0
 operator|)
 return|;
+else|#
+directive|else
+comment|/* !KSE */
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
 
 begin_comment
 comment|/*  * Initialize global thread allocation resources.  */
@@ -6104,6 +6199,11 @@ block|}
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

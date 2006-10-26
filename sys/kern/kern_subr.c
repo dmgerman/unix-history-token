@@ -1975,6 +1975,9 @@ expr_stmt|;
 name|DROP_GIANT
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|sched_prio
 argument_list|(
 name|td
@@ -1987,6 +1990,19 @@ name|kg_user_pri
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
+else|#
+directive|else
+name|sched_prio
+argument_list|(
+name|td
+argument_list|,
+name|td
+operator|->
+name|td_user_pri
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|mi_switch
 argument_list|(
 name|SW_INVOL

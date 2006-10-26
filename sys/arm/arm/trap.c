@@ -912,6 +912,9 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 if|if
 condition|(
 name|td
@@ -925,6 +928,8 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* Grab the current pcb */
 name|pcb
@@ -2571,6 +2576,9 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 if|if
 condition|(
 name|td
@@ -2586,6 +2594,8 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|fault_pc
 operator|=
@@ -3977,6 +3987,9 @@ name|td_pticks
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 if|if
 condition|(
 name|td
@@ -3992,6 +4005,8 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/*       	 * Make sure the program counter is correctly aligned so we 	 * don't take an alignment fault trying to read the opcode. 	 */
 if|if
 condition|(

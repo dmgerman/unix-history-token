@@ -301,7 +301,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*-  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(CPU)" below,  * which might be addressable only on a processor on which the process  * is running.  *  * Below is a key of locks used to protect each member of struct proc.  The  * lock is indicated by a reference to a specific character in parens in the  * associated comment.  *      * - not yet protected  *      a - only touched by curproc or parent during fork/wait  *      b - created at fork, never changes  *		(exception aiods switch vmspaces, but they are also  *		marked 'P_SYSTEM' so hopefully it will be left alone)  *      c - locked by proc mtx  *      d - locked by allproc_lock lock  *      e - locked by proctree_lock lock  *      f - session mtx  *      g - process group mtx  *      h - callout_lock mtx  *      i - by curproc or the master session mtx  *      j - locked by sched_lock mtx  *      k - only accessed by curthread  *	k*- only accessed by curthread and from an interrupt  *      l - the attaching proc or attaching proc parent  *      m - Giant  *      n - not locked, lazy  *      o - ktrace lock  *      p - select lock (sellock)  *      q - td_contested lock  *      r - p_peers lock  *      x - created at fork, only changes during single threading in exec  *      z - zombie threads/ksegroup lock  *  * If the locking key specifies two identifiers (for example, p_pptr) then  * either lock is sufficient for read access, but both locks must be held  * for write access.  */
+comment|/*-  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(CPU)" below,  * which might be addressable only on a processor on which the process  * is running.  *  * Below is a key of locks used to protect each member of struct proc.  The  * lock is indicated by a reference to a specific character in parens in the  * associated comment.  *      * - not yet protected  *      a - only touched by curproc or parent during fork/wait  *      b - created at fork, never changes  *		(exception aiods switch vmspaces, but they are also  *		marked 'P_SYSTEM' so hopefully it will be left alone)  *      c - locked by proc mtx  *      d - locked by allproc_lock lock  *      e - locked by proctree_lock lock  *      f - session mtx  *      g - process group mtx  *      h - callout_lock mtx  *      i - by curproc or the master session mtx  *      j - locked by sched_lock mtx  *      k - only accessed by curthread  *	k*- only accessed by curthread and from an interrupt  *      l - the attaching proc or attaching proc parent  *      m - Giant  *      n - not locked, lazy  *      o - ktrace lock  *      p - select lock (sellock)  *      q - td_contested lock  *      r - p_peers lock  *      x - created at fork, only changes during single threading in exec  *      z - zombie threads lock  *  * If the locking key specifies two identifiers (for example, p_pptr) then  * either lock is sufficient for read access, but both locks must be held  * for write access.  */
 end_comment
 
 begin_struct_decl
@@ -316,11 +316,33 @@ name|kaudit_record
 struct_decl|;
 end_struct_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
+
 begin_struct_decl
 struct_decl|struct
 name|kg_sched
 struct_decl|;
 end_struct_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_struct_decl
+struct_decl|struct
+name|td_sched
+struct_decl|;
+end_struct_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct_decl
 struct_decl|struct
@@ -342,15 +364,43 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|proc
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|sleepqueue
 struct_decl|;
 end_struct_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
 
 begin_struct_decl
 struct_decl|struct
 name|td_sched
 struct_decl|;
 end_struct_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_struct_decl
+struct_decl|struct
+name|thread
+struct_decl|;
+end_struct_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct_decl
 struct_decl|struct
@@ -369,6 +419,12 @@ struct_decl|struct
 name|mqueue_notifier
 struct_decl|;
 end_struct_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
 
 begin_comment
 comment|/*  * Here we define the three structures used for process information.  *  * The first is the thread. It might be thought of as a "Kernel  * Schedulable Entity Context".  * This structure contains all the information as to where a thread of  * execution is now, or was when it was suspended, why it was suspended,  * and anything else that will be needed to restart it when it is  * rescheduled. Always associated with a KSE when running, but can be  * reassigned to an equivalent KSE when being restarted for  * load balancing. Each of these is associated with a kernel stack  * and a pcb.  *  * It is important to remember that a particular thread structure may only  * exist as long as the system call or kernel entrance (e.g. by pagefault)  * which it is currently executing. It should therefore NEVER be referenced  * by pointers in long lived structures that live longer than a single  * request. If several threads complete their work at the same time,  * they will all rewind their stacks to the user boundary, report their  * completion state, and all but one will be freed. That last one will  * be kept to provide a kernel stack and pcb for the NEXT syscall or kernel  * entrance (basically to save freeing and then re-allocating it).  The existing  * thread keeps a cached spare thread available to allow it to quickly  * get one when it needs a new one. There is also a system  * cache of free threads. Threads have priority and partake in priority  * inheritance schemes.  */
@@ -404,9 +460,34 @@ begin_comment
 comment|/***************  * In pictures:  With a single run queue used by all processors:   RUNQ: --->KSE---KSE--...               SLEEPQ:[]---THREAD---THREAD---THREAD 	     \      \                          []---THREAD       KSEG---THREAD--THREAD--THREAD            [] 					       []---THREAD---THREAD    (processors run THREADs from the KSEG until they are exhausted or   the KSEG exhausts its quantum)  With PER-CPU run queues: KSEs on the separate run queues directly They would be given priorities calculated from the KSEG.   *  *****************/
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
+
 begin_comment
 comment|/*  * Kernel runnable context (thread).  * This is what is put to sleep and reactivated.  * The first KSE available in the correct group will run this thread.  * If several are available, use the one on the same CPU as last time.  * When waiting to be run, threads are hung off the KSEGRP in priority order.  * With N runnable and queued KSEs in the KSEGRP, the first N threads  * are linked to them. Other threads are not yet assigned.  */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*  * Thread context.  Processes may have multiple threads.  */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -418,12 +499,24 @@ modifier|*
 name|td_proc
 decl_stmt|;
 comment|/* (*) Associated process. */
+ifdef|#
+directive|ifdef
+name|KSE
 name|struct
 name|ksegrp
 modifier|*
 name|td_ksegrp
 decl_stmt|;
 comment|/* (*) Associated KSEG. */
+else|#
+directive|else
+name|void
+modifier|*
+name|was_td_ksegrp
+decl_stmt|;
+comment|/* Temporary padding. */
+endif|#
+directive|endif
 name|TAILQ_ENTRY
 argument_list|(
 argument|thread
@@ -431,6 +524,9 @@ argument_list|)
 name|td_plist
 expr_stmt|;
 comment|/* (*) All threads in this proc. */
+ifdef|#
+directive|ifdef
+name|KSE
 name|TAILQ_ENTRY
 argument_list|(
 argument|thread
@@ -438,6 +534,17 @@ argument_list|)
 name|td_kglist
 expr_stmt|;
 comment|/* (*) All threads in this ksegrp. */
+else|#
+directive|else
+name|TAILQ_ENTRY
+argument_list|(
+argument|thread
+argument_list|)
+name|was_td_kglist
+expr_stmt|;
+comment|/* Temporary padding. */
+endif|#
+directive|endif
 comment|/* The two queues below should someday be merged. */
 name|TAILQ_ENTRY
 argument_list|(
@@ -453,6 +560,9 @@ argument_list|)
 name|td_lockq
 expr_stmt|;
 comment|/* (j) Lock queue. */
+ifdef|#
+directive|ifdef
+name|KSE
 name|TAILQ_ENTRY
 argument_list|(
 argument|thread
@@ -460,6 +570,17 @@ argument_list|)
 name|td_runq
 expr_stmt|;
 comment|/* (j/z) Run queue(s). XXXKSE */
+else|#
+directive|else
+name|TAILQ_ENTRY
+argument_list|(
+argument|thread
+argument_list|)
+name|td_runq
+expr_stmt|;
+comment|/* (j/z) Run queue(s). */
+endif|#
+directive|endif
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -585,18 +706,33 @@ name|int
 name|td_pinned
 decl_stmt|;
 comment|/* (k) Temporary cpu pin count. */
+ifdef|#
+directive|ifdef
+name|KSE
 name|struct
 name|kse_thr_mailbox
 modifier|*
 name|td_mailbox
 decl_stmt|;
 comment|/* (*) Userland mailbox address. */
+else|#
+directive|else
+name|void
+modifier|*
+name|was_td_mailbox
+decl_stmt|;
+comment|/* Temporary padding. */
+endif|#
+directive|endif
 name|struct
 name|ucred
 modifier|*
 name|td_ucred
 decl_stmt|;
 comment|/* (k) Reference to credentials. */
+ifdef|#
+directive|ifdef
+name|KSE
 name|struct
 name|thread
 modifier|*
@@ -609,6 +745,36 @@ modifier|*
 name|td_upcall
 decl_stmt|;
 comment|/* (k + j) Upcall structure. */
+name|u_int
+name|new_td_estcpu
+decl_stmt|;
+comment|/*  Temporary padding. */
+name|u_int
+name|new_td_slptime
+decl_stmt|;
+comment|/*  Temporary padding. */
+else|#
+directive|else
+name|void
+modifier|*
+name|was_td_standin
+decl_stmt|;
+comment|/* Temporary padding. */
+name|void
+modifier|*
+name|was_td_upcall
+decl_stmt|;
+comment|/* Temporary padding. */
+name|u_int
+name|td_estcpu
+decl_stmt|;
+comment|/* (j) Sum of the same field in KSEs. */
+name|u_int
+name|td_slptime
+decl_stmt|;
+comment|/* (j) How long completely blocked. */
+endif|#
+directive|endif
 name|u_int
 name|td_pticks
 decl_stmt|;
@@ -654,10 +820,21 @@ name|stack_t
 name|td_sigstk
 decl_stmt|;
 comment|/* (k) Stack ptr and on-stack flag. */
+ifdef|#
+directive|ifdef
+name|KSE
 name|int
 name|td_kflags
 decl_stmt|;
 comment|/* (c) Flags for KSE threading. */
+else|#
+directive|else
+name|int
+name|was_td_kflags
+decl_stmt|;
+comment|/* Temporary padding. */
+endif|#
+directive|endif
 name|int
 name|td_xsig
 decl_stmt|;
@@ -696,6 +873,37 @@ name|u_char
 name|td_priority
 decl_stmt|;
 comment|/* (j) Thread active priority. */
+ifdef|#
+directive|ifdef
+name|KSE
+name|u_char
+name|new_td_pri_class
+decl_stmt|;
+comment|/* Temporary padding. */
+name|u_char
+name|new_td_user_pri
+decl_stmt|;
+comment|/* Temporary padding. */
+name|u_char
+name|new_td_base_user_pri
+decl_stmt|;
+comment|/* Temporary padding. */
+else|#
+directive|else
+name|u_char
+name|td_pri_class
+decl_stmt|;
+comment|/* (j) Scheduling class. */
+name|u_char
+name|td_user_pri
+decl_stmt|;
+comment|/* (j) User pri from estcpu and nice. */
+name|u_char
+name|td_base_user_pri
+decl_stmt|;
+comment|/* (j) Base user pri */
+endif|#
+directive|endif
 define|#
 directive|define
 name|td_endcopy
@@ -1133,6 +1341,12 @@ begin_comment
 comment|/* Thread is currently in KTRACE code. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -1143,6 +1357,20 @@ end_define
 begin_comment
 comment|/* This thread is doing an upcall. */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*			0x00000008 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1177,6 +1405,12 @@ begin_comment
 comment|/* Lock aquisition - deadlock treatment. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -1187,6 +1421,20 @@ end_define
 begin_comment
 comment|/* A scheduler activation based thread. */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*			0x00000080 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1221,6 +1469,12 @@ begin_comment
 comment|/* Thread is an interrupt thread. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -1231,6 +1485,20 @@ end_define
 begin_comment
 comment|/* Only temporarily bound. */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* 			0x00000800 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1368,6 +1636,12 @@ begin_comment
 comment|/* Awaiting interrupt. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
+
 begin_comment
 comment|/*  * flags (in kflags) related to M:N threading.  */
 end_comment
@@ -1415,6 +1689,11 @@ parameter_list|)
 define|\
 value|(((td)->td_pflags& TDP_CAN_UNBIND)&&	\      ((td)->td_upcall != NULL))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1690,6 +1969,12 @@ parameter_list|)
 value|(td)->td_state = TDS_CAN_RUN
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
+
 begin_comment
 comment|/*  * An upcall is used when returning to userland.  If a thread does not have  * an upcall on return to userland the thread exports its context and exits.  */
 end_comment
@@ -1884,6 +2169,11 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * XXX: Does this belong in resource.h or resourcevar.h instead?  * Resource usage extension.  The times in rusage structs in the kernel are  * never up to date.  The actual times are kept as runtimes and tick counts  * (with control info in the "previous" times), and are converted when  * userland asks for rusage info.  Backwards compatibility prevents putting  * this directly in the user-visible rusage struct.  *  * Locking: (cj) means (j) for p_rux and (c) for p_crux.  */
 end_comment
@@ -1939,6 +2229,9 @@ argument_list|)
 name|p_list
 expr_stmt|;
 comment|/* (d) List of all processes. */
+ifdef|#
+directive|ifdef
+name|KSE
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -1947,6 +2240,8 @@ argument_list|)
 name|p_ksegrps
 expr_stmt|;
 comment|/* (c)(kg_ksegrp) All KSEGs. */
+endif|#
+directive|endif
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -2215,11 +2510,16 @@ name|int
 name|p_boundary_count
 decl_stmt|;
 comment|/* (c) Num threads at user boundary */
+ifdef|#
+directive|ifdef
+name|KSE
 name|struct
 name|ksegrp
 modifier|*
 name|p_procscopegrp
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|p_pendingcnt
 decl_stmt|;
@@ -2298,10 +2598,15 @@ name|int
 name|p_numthreads
 decl_stmt|;
 comment|/* (j) Number of threads. */
+ifdef|#
+directive|ifdef
+name|KSE
 name|int
 name|p_numksegrps
 decl_stmt|;
 comment|/* (c) Number of ksegrps. */
+endif|#
+directive|endif
 name|struct
 name|mdproc
 name|p_md
@@ -3093,6 +3398,12 @@ define|\
 value|LIST_FOREACH((p),&allproc, p_list)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -3132,6 +3443,11 @@ define|\
 value|TAILQ_FOREACH((ku),&(kg)->kg_upcalls, ku_link)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -3159,6 +3475,12 @@ parameter_list|)
 value|TAILQ_FIRST(&(p)->p_threads)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -3168,6 +3490,11 @@ name|p
 parameter_list|)
 value|TAILQ_FIRST(&(p)->p_ksegrps)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * We use process IDs<= PID_MAX; PID_MAX + 1 must also fit in a pid_t,  * as it is used to represent "no process group".  */
@@ -3575,6 +3902,12 @@ name|ppeers_lock
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -3586,6 +3919,11 @@ end_decl_stmt
 begin_comment
 comment|/* Primary ksegrp in proc0. */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -4194,6 +4532,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
+
 begin_function_decl
 name|void
 name|proc_linkup
@@ -4215,6 +4559,33 @@ name|td
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+name|void
+name|proc_linkup
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -4554,6 +4925,12 @@ begin_comment
 comment|/* New in KSE. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
+
 begin_function_decl
 name|struct
 name|ksegrp
@@ -4588,6 +4965,11 @@ name|kg
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -4721,6 +5103,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
+
 begin_function_decl
 name|void
 name|ksegrp_link
@@ -4749,6 +5137,11 @@ name|kg
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|struct
@@ -4810,6 +5203,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
+
 begin_function_decl
 name|void
 name|thread_link
@@ -4827,6 +5226,33 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+name|void
+name|thread_link
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|void
 name|thread_reap
@@ -4835,6 +5261,12 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
 
 begin_function_decl
 name|struct
@@ -4854,6 +5286,11 @@ name|ku
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -5054,6 +5491,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
+
 begin_function_decl
 name|int
 name|thread_userret
@@ -5082,6 +5525,11 @@ name|td
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -5120,6 +5568,12 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
 
 begin_function_decl
 name|struct
@@ -5196,6 +5650,11 @@ name|ke
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

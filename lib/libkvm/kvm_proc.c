@@ -357,10 +357,7 @@ name|thread
 name|mtd
 decl_stmt|;
 comment|/*struct kse mke;*/
-name|struct
-name|ksegrp
-name|mkg
-decl_stmt|;
+comment|/*struct ksegrp mkg;*/
 name|struct
 name|proc
 name|proc
@@ -523,74 +520,12 @@ literal|1
 operator|)
 return|;
 block|}
-if|if
-condition|(
-operator|(
-name|proc
-operator|.
-name|p_flag
-operator|&
-name|P_SA
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|KREAD
-argument_list|(
-name|kd
-argument_list|,
-operator|(
-name|u_long
-operator|)
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|proc
-operator|.
-name|p_ksegrps
-argument_list|)
-argument_list|,
-operator|&
-name|mkg
-argument_list|)
-condition|)
-block|{
-name|_kvm_err
-argument_list|(
-name|kd
-argument_list|,
-name|kd
-operator|->
-name|program
-argument_list|,
-literal|"can't read ksegrp at %x"
-argument_list|,
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|proc
-operator|.
-name|p_ksegrps
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
 if|#
 directive|if
 literal|0
-block|if (KREAD(kd, 				    (u_long)TAILQ_FIRST(&mkg.kg_kseq),&mke)) { 					_kvm_err(kd, kd->program, 					    "can't read kse at %x", 					    TAILQ_FIRST(&mkg.kg_kseq)); 					return (-1); 				}
+block|if ((proc.p_flag& P_SA) == 0) { 				if (KREAD(kd, 				    (u_long)TAILQ_FIRST(&proc.p_ksegrps),&mkg)) { 					_kvm_err(kd, kd->program, 					    "can't read ksegrp at %x", 					    TAILQ_FIRST(&proc.p_ksegrps)); 					return (-1); 				} 				if (KREAD(kd, 				    (u_long)TAILQ_FIRST(&mkg.kg_kseq),&mke)) { 					_kvm_err(kd, kd->program, 					    "can't read kse at %x", 					    TAILQ_FIRST(&mkg.kg_kseq)); 					return (-1); 				} 			}
 endif|#
 directive|endif
-block|}
 block|}
 if|if
 condition|(
@@ -2240,46 +2175,11 @@ name|P_SA
 operator|)
 condition|)
 block|{
-comment|/* stuff from the ksegrp */
-name|kp
-operator|->
-name|ki_slptime
-operator|=
-name|mkg
-operator|.
-name|kg_slptime
-expr_stmt|;
-name|kp
-operator|->
-name|ki_pri
-operator|.
-name|pri_class
-operator|=
-name|mkg
-operator|.
-name|kg_pri_class
-expr_stmt|;
-name|kp
-operator|->
-name|ki_pri
-operator|.
-name|pri_user
-operator|=
-name|mkg
-operator|.
-name|kg_user_pri
-expr_stmt|;
-name|kp
-operator|->
-name|ki_estcpu
-operator|=
-name|mkg
-operator|.
-name|kg_estcpu
-expr_stmt|;
 if|#
 directive|if
 literal|0
+comment|/* stuff from the ksegrp */
+block|kp->ki_slptime = mkg.kg_slptime; 				kp->ki_pri.pri_class = mkg.kg_pri_class; 				kp->ki_pri.pri_user = mkg.kg_user_pri; 				kp->ki_estcpu = mkg.kg_estcpu;
 comment|/* Stuff from the kse */
 block|kp->ki_pctcpu = mke.ke_pctcpu; 				kp->ki_rqindex = mke.ke_rqindex;
 else|#

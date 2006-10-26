@@ -834,11 +834,16 @@ name|thread
 modifier|*
 name|td2
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|struct
 name|ksegrp
 modifier|*
 name|kg2
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|sigacts
 modifier|*
@@ -1802,6 +1807,9 @@ argument_list|(
 name|p2
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|kg2
 operator|=
 name|FIRST_KSEGRP_IN_PROC
@@ -1809,6 +1817,8 @@ argument_list|(
 name|p2
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Allocate and switch to an alternate kstack if specified. */
 if|if
 condition|(
@@ -1869,6 +1879,9 @@ name|td_endzero
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|bzero
 argument_list|(
 operator|&
@@ -1887,6 +1900,8 @@ name|kg_endzero
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|bcopy
 argument_list|(
 operator|&
@@ -1933,6 +1948,9 @@ name|td_endcopy
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|bcopy
 argument_list|(
 operator|&
@@ -1958,6 +1976,8 @@ name|kg_endcopy
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|td2
 operator|->
 name|td_sigstk
@@ -2031,6 +2051,9 @@ operator|->
 name|td_ucred
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|td2
 operator|->
 name|td_ucred
@@ -2043,6 +2066,21 @@ name|p_ucred
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
+else|#
+directive|else
+name|td2
+operator|->
+name|td_ucred
+operator|=
+name|crhold
+argument_list|(
+name|p2
+operator|->
+name|p_ucred
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|AUDIT

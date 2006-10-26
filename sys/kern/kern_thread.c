@@ -125,6 +125,12 @@ directive|include
 file|<vm/uma.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
+
 begin_comment
 comment|/*  * KSEGRP related storage.  */
 end_comment
@@ -135,6 +141,20 @@ name|uma_zone_t
 name|ksegrp_zone
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*  * thread related storage.  */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -280,11 +300,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
+
 begin_decl_stmt
 name|int
 name|virtual_cpu
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|TAILQ_HEAD
@@ -304,6 +335,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
+
 begin_macro
 name|TAILQ_HEAD
 argument_list|(
@@ -321,6 +358,11 @@ name|zombie_ksegrps
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|struct
@@ -343,6 +385,12 @@ name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
 
 begin_function
 specifier|static
@@ -465,6 +513,11 @@ literal|"debug virtual cpus"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|struct
@@ -828,6 +881,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
+
 begin_comment
 comment|/*  * Initialize type-stable parts of a ksegrp (when newly created).  */
 end_comment
@@ -1075,12 +1134,20 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * For a newly created process,  * link up all the structures and its initial threads etc.  * called from:  * {arch}/{arch}/machdep.c   ia64_init(), init386() etc.  * proc_dtor() (should go away)  * proc_init()  */
 end_comment
 
 begin_function
 name|void
+ifdef|#
+directive|ifdef
+name|KSE
 name|proc_linkup
 parameter_list|(
 name|struct
@@ -1098,7 +1165,26 @@ name|thread
 modifier|*
 name|td
 parameter_list|)
+else|#
+directive|else
+function|proc_linkup
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+endif|#
+directive|endif
 block|{
+ifdef|#
+directive|ifdef
+name|KSE
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -1108,6 +1194,8 @@ name|p_ksegrps
 argument_list|)
 expr_stmt|;
 comment|/* all ksegrps in proc */
+endif|#
+directive|endif
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -1174,18 +1262,26 @@ operator|->
 name|p_mqnotifier
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|p
 operator|->
 name|p_numksegrps
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 name|p
 operator|->
 name|p_numthreads
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|ksegrp_link
 argument_list|(
 name|kg
@@ -1200,6 +1296,17 @@ argument_list|,
 name|kg
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|thread_link
+argument_list|(
+name|td
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1262,6 +1369,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|ksegrp_zone
 operator|=
 name|uma_zcreate
@@ -1288,6 +1398,8 @@ name|kseinit
 argument_list|()
 expr_stmt|;
 comment|/* set up kse specific stuff  e.g. upcall zone*/
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1330,6 +1442,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
+
 begin_comment
 comment|/*  * Stash an embarasingly extra ksegrp into the zombie ksegrp queue.  */
 end_comment
@@ -1369,6 +1487,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Reap zombie kse resource.  */
 end_comment
@@ -1388,6 +1511,9 @@ decl_stmt|,
 modifier|*
 name|td_next
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|struct
 name|ksegrp
 modifier|*
@@ -1396,7 +1522,12 @@ decl_stmt|,
 modifier|*
 name|kg_next
 decl_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Don't even bother to lock if none at this instant, 	 * we really don't care about the next instant.. 	 */
+ifdef|#
+directive|ifdef
+name|KSE
 if|if
 condition|(
 operator|(
@@ -1418,6 +1549,20 @@ argument_list|)
 operator|)
 condition|)
 block|{
+else|#
+directive|else
+if|if
+condition|(
+operator|!
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|zombie_threads
+argument_list|)
+condition|)
+block|{
+endif|#
+directive|endif
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1432,6 +1577,9 @@ operator|&
 name|zombie_threads
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|kg_first
 operator|=
 name|TAILQ_FIRST
@@ -1440,6 +1588,8 @@ operator|&
 name|zombie_ksegrps
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|td_first
@@ -1450,6 +1600,9 @@ operator|&
 name|zombie_threads
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 if|if
 condition|(
 name|kg_first
@@ -1460,6 +1613,8 @@ operator|&
 name|zombie_ksegrps
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -1503,6 +1658,9 @@ operator|=
 name|td_next
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|KSE
 while|while
 condition|(
 name|kg_first
@@ -1531,15 +1689,14 @@ comment|/* 		 * there will always be a thread on the list if one of these 		 * i
 name|kse_GC
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
-end_function
-
-begin_comment
+ifdef|#
+directive|ifdef
+name|KSE
 comment|/*  * Allocate a ksegrp.  */
-end_comment
-
-begin_function
 name|struct
 name|ksegrp
 modifier|*
@@ -1559,13 +1716,9 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
+endif|#
+directive|endif
 comment|/*  * Allocate a thread.  */
-end_comment
-
-begin_function
 name|struct
 name|thread
 modifier|*
@@ -1589,13 +1742,10 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
+ifdef|#
+directive|ifdef
+name|KSE
 comment|/*  * Deallocate a ksegrp.  */
-end_comment
-
-begin_function
 name|void
 name|ksegrp_free
 parameter_list|(
@@ -1613,13 +1763,9 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
+endif|#
+directive|endif
 comment|/*  * Deallocate a thread.  */
-end_comment
-
-begin_function
 name|void
 name|thread_free
 parameter_list|(
@@ -1642,17 +1788,8 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Discard the current thread and exit from its context.  * Always called with scheduler locked.  *  * Because we can't free a thread while we're operating under its context,  * push the current thread into our CPU's deadthread holder. This means  * we needn't worry about someone else grabbing our context before we  * do a cpu_throw().  This may not be needed now as we are under schedlock.  * Maybe we can just do a thread_stash() as thr_exit1 does.  */
-end_comment
-
-begin_comment
-comment|/*  XXX  * libthr expects its thread exit to return for the last  * thread, meaning that the program is back to non-threaded  * mode I guess. Because we do this (cpu_throw) unconditionally  * here, they have their own version of it. (thr_exit1())   * that doesn't do it all if this was the last thread.  * It is also called from thread_suspend_check().  * Of course in the end, they end up coming here through exit1  * anyhow..  After fixing 'thr' to play by the rules we should be able   * to merge these two functions together.  *  * called from:  * exit1()  * kse_exit()  * thr_exit()  * thread_user_enter()  * thread_userret()  * thread_suspend_check()  */
-end_comment
-
-begin_function
+comment|/*  XXX  * libthr expects its thread exit to return for the last  * thread, meaning that the program is back to non-threaded  * mode I guess. Because we do this (cpu_throw) unconditionally  * here, they have their own version of it. (thr_exit1())   * that doesn't do it all if this was the last thread.  * It is also called from thread_suspend_check().  * Of course in the end, they end up coming here through exit1  * anyhow..  After fixing 'thr' to play by the rules we should be able   * to merge these two functions together.  *  * called from:  * exit1()  * kse_exit()  * thr_exit()  * ifdef KSE  * thread_user_enter()  * thread_userret()  * endif  * thread_suspend_check()  */
 name|void
 name|thread_exit
 parameter_list|(
@@ -1672,21 +1809,31 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|struct
 name|ksegrp
 modifier|*
 name|kg
 decl_stmt|;
+endif|#
+directive|endif
 name|td
 operator|=
 name|curthread
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|kg
 operator|=
 name|td
 operator|->
 name|td_ksegrp
 expr_stmt|;
+endif|#
+directive|endif
 name|p
 operator|=
 name|td
@@ -1727,6 +1874,9 @@ literal|"thread exiting without a process"
 operator|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|KASSERT
 argument_list|(
 name|kg
@@ -1738,6 +1888,8 @@ literal|"thread exiting without a kse group"
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|CTR3
 argument_list|(
 name|KTR_PROC
@@ -1787,6 +1939,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|KSE
 if|if
 condition|(
 name|td
@@ -1811,6 +1966,8 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|umtx_thread_exit
 argument_list|(
 name|td
@@ -1823,12 +1980,17 @@ name|td
 argument_list|)
 expr_stmt|;
 comment|/* XXXSMP */
+ifdef|#
+directive|ifdef
+name|KSE
 comment|/* 	 * The thread is exiting. scheduler can release its stuff 	 * and collect stats etc. 	 * XXX this is not very right, since PROC_UNLOCK may still 	 * need scheduler stuff. 	 */
 name|sched_thread_exit
 argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Do the same timestamp bookkeeping that mi_switch() would do. */
 name|new_switchtime
 operator|=
@@ -1956,6 +2118,9 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 comment|/* XXX first arg not used in 4BSD or ULE */
 name|sched_exit_thread
 argument_list|(
@@ -1967,6 +2132,17 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|sched_exit
+argument_list|(
+name|p
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 			 * The test below is NOT true if we are the 			 * sole exiting thread. P_STOPPED_SNGL is unset 			 * in exit1() after it is the only survivor. 			 */
 if|if
 condition|(
@@ -1998,6 +2174,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|KSE
 comment|/* 			 * Because each upcall structure has an owner thread, 			 * owner thread exits only when process is in exiting 			 * state, so upcall to userland is no longer needed, 			 * deleting upcall structure is safe here. 			 * So when all threads in a group is exited, all upcalls 			 * in the group should be automatically freed. 			 *  XXXKSE This is a KSE thing and should be exported 			 * there somehow. 			 */
 name|upcall_remove
 argument_list|(
@@ -2044,17 +2223,24 @@ name|kg
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|PROC_UNLOCK
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|td
 operator|->
 name|td_ksegrp
 operator|=
 name|NULL
 expr_stmt|;
+endif|#
+directive|endif
 name|PCPU_SET
 argument_list|(
 name|deadthread
@@ -2065,7 +2251,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * The last thread is exiting.. but not through exit() 			 * what should we do? 			 * Theoretically this can't happen  			 * exit1() - clears threading flags before coming here  			 * kse_exit() - treats last thread specially  			 * thr_exit() - treats last thread specially  			 * thread_user_enter() - only if more exist  			 * thread_userret() - only if more exist  			 * thread_suspend_check() - only if more exist 			 */
+comment|/* 			 * The last thread is exiting.. but not through exit() 			 * what should we do? 			 * Theoretically this can't happen  			 * exit1() - clears threading flags before coming here  			 * kse_exit() - treats last thread specially  			 * thr_exit() - treats last thread specially 			 * ifdef KSE  			 * thread_user_enter() - only if more exist  			 * thread_userret() - only if more exist 			 * endif  			 * thread_suspend_check() - only if more exist 			 */
 name|panic
 argument_list|(
 literal|"thread_exit: Last thread exiting on its own"
@@ -2112,13 +2298,7 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
-end_function
-
-begin_comment
 comment|/*  * Do any thread specific cleanups that may be needed in wait()  * called with Giant, proc and schedlock not held.  */
-end_comment
-
-begin_function
 name|void
 name|thread_wait
 parameter_list|(
@@ -2156,6 +2336,9 @@ literal|"Multiple threads in wait1()"
 operator|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|KASSERT
 argument_list|(
 operator|(
@@ -2171,6 +2354,8 @@ literal|"Multiple ksegrps in wait1()"
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|FOREACH_THREAD_IN_PROC
 argument_list|(
 argument|p
@@ -2178,6 +2363,9 @@ argument_list|,
 argument|td
 argument_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|KSE
 if|if
 condition|(
 name|td
@@ -2230,6 +2418,8 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|cpu_thread_clean
 argument_list|(
 name|td
@@ -2248,14 +2438,11 @@ argument_list|()
 expr_stmt|;
 comment|/* check for zombie threads etc. */
 block|}
-end_function
-
-begin_comment
-comment|/*  * Link a thread to a process.  * set up anything that needs to be initialized for it to  * be used by the process.  *  * Note that we do not link to the proc's ucred here.  * The thread is linked as if running but no KSE assigned.  * Called from:  *  proc_linkup()  *  thread_schedule_upcall()  *  thr_create()  */
-end_comment
-
-begin_function
+comment|/*  * Link a thread to a process.  * set up anything that needs to be initialized for it to  * be used by the process.  *  * Note that we do not link to the proc's ucred here.  * The thread is linked as if running but no KSE assigned.  * Called from:  *  proc_linkup()  * ifdef KSE  *  thread_schedule_upcall()  * endif  *  thr_create()  */
 name|void
+ifdef|#
+directive|ifdef
+name|KSE
 name|thread_link
 parameter_list|(
 name|struct
@@ -2268,18 +2455,44 @@ name|ksegrp
 modifier|*
 name|kg
 parameter_list|)
+else|#
+directive|else
+function|thread_link
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|)
+endif|#
+directive|endif
 block|{
+ifdef|#
+directive|ifdef
+name|KSE
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|KSE
 name|p
 operator|=
 name|kg
 operator|->
 name|kg_proc
 expr_stmt|;
+endif|#
+directive|endif
 name|td
 operator|->
 name|td_state
@@ -2292,24 +2505,34 @@ name|td_proc
 operator|=
 name|p
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|td
 operator|->
 name|td_ksegrp
 operator|=
 name|kg
 expr_stmt|;
+endif|#
+directive|endif
 name|td
 operator|->
 name|td_flags
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|td
 operator|->
 name|td_kflags
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 name|LIST_INIT
 argument_list|(
 operator|&
@@ -2350,6 +2573,9 @@ argument_list|,
 name|td_plist
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
@@ -2362,24 +2588,25 @@ argument_list|,
 name|td_kglist
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|p
 operator|->
 name|p_numthreads
 operator|++
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|kg
 operator|->
 name|kg_numthreads
 operator|++
 expr_stmt|;
+endif|#
+directive|endif
 block|}
-end_function
-
-begin_comment
 comment|/*  * Convert a process with one thread to an unthreaded process.  * Called from:  *  thread_single(exit)  (called from execve and exit)  *  kse_exit()		XXX may need cleaning up wrt KSE stuff  */
-end_comment
-
-begin_function
 name|void
 name|thread_unthread
 parameter_list|(
@@ -2413,6 +2640,9 @@ literal|"Unthreading with>1 threads"
 operator|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|upcall_remove
 argument_list|(
 name|td
@@ -2478,14 +2708,19 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|p
+operator|->
+name|p_flag
+operator|&=
+operator|~
+name|P_HADTHREADS
+expr_stmt|;
+endif|#
+directive|endif
 block|}
-end_function
-
-begin_comment
 comment|/*  * Called from:  *  thread_exit()  */
-end_comment
-
-begin_function
 name|void
 name|thread_unlink
 parameter_list|(
@@ -2504,6 +2739,9 @@ name|td
 operator|->
 name|td_proc
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|struct
 name|ksegrp
 modifier|*
@@ -2513,6 +2751,8 @@ name|td
 operator|->
 name|td_ksegrp
 decl_stmt|;
+endif|#
+directive|endif
 name|mtx_assert
 argument_list|(
 operator|&
@@ -2538,6 +2778,9 @@ operator|->
 name|p_numthreads
 operator|--
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -2555,16 +2798,20 @@ operator|->
 name|kg_numthreads
 operator|--
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* could clear a few other things here */
+ifdef|#
+directive|ifdef
+name|KSE
 comment|/* Must  NOT clear links to proc and ksegrp! */
+else|#
+directive|else
+comment|/* Must  NOT clear links to proc! */
+endif|#
+directive|endif
 block|}
-end_function
-
-begin_comment
 comment|/*  * Enforce single-threading.  *  * Returns 1 if the caller must abort (another thread is waiting to  * exit the process or similar). Process is locked!  * Returns 0 when you are successfully the only thread running.  * A process has successfully single threaded in the suspend mode when  * There are no threads in user mode. Threads in the kernel must be  * allowed to continue until they get to the user boundary. They may even  * copy out their return values and data before suspending. They may however be  * accelerated in reaching the user boundary as we will wake up  * any sleeping threads that are interruptable. (PCATCH).  */
-end_comment
-
-begin_function
 name|int
 name|thread_single
 parameter_list|(
@@ -3165,13 +3412,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Called in from locations that can safely check to see  * whether we have to suspend or at least throttle for a  * single-thread event (e.g. fork).  *  * Such locations include userret().  * If the "return_instead" argument is non zero, the thread must be able to  * accept 0 (caller may continue), or 1 (caller must abort) as a result.  *  * The 'return_instead' argument tells the function if it may do a  * thread_exit() or suspend, or whether the caller must abort and back  * out instead.  *  * If the thread that set the single_threading request has set the  * P_SINGLE_EXIT bit in the process flags then this call will never return  * if 'return_instead' is false, but will exit.  *  * P_SINGLE_EXIT | return_instead == 0| return_instead != 0  *---------------+--------------------+---------------------  *       0       | returns 0          |   returns 0 or 1  *               | when ST ends       |   immediatly  *---------------+--------------------+---------------------  *       1       | thread exits       |   returns 1  *               |                    |  immediatly  * 0 = thread_exit() or suspension ok,  * other = return error instead of stopping the thread.  *  * While a full suspension is under effect, even a single threading  * thread would be suspended if it made this call (but it shouldn't).  * This call should only be made from places where  * thread_exit() would be safe as that may be the outcome unless  * return_instead is set.  */
-end_comment
-
-begin_function
 name|int
 name|thread_suspend_check
 parameter_list|(
@@ -3484,9 +3725,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|thread_suspend_one
 parameter_list|(
@@ -3556,9 +3794,6 @@ name|td_runq
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|thread_unsuspend_one
 parameter_list|(
@@ -3620,13 +3855,7 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Allow all threads blocked by single threading to continue running.  */
-end_comment
-
-begin_function
 name|void
 name|thread_unsuspend
 parameter_list|(
@@ -3720,13 +3949,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  * End the single threading mode..  */
-end_comment
-
-begin_function
 name|void
 name|thread_single_end
 parameter_list|(
@@ -3785,12 +4008,17 @@ name|p_singlethread
 operator|=
 name|NULL
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 name|p
 operator|->
 name|p_procscopegrp
 operator|=
 name|NULL
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * If there are other threads they mey now run, 	 * unless of course there is a blanket 'stop order' 	 * on the process. The single threader must be allowed 	 * to continue however as this is a bad place to stop. 	 */
 if|if
 condition|(
@@ -3840,9 +4068,6 @@ name|sched_lock
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|struct
 name|thread
 modifier|*

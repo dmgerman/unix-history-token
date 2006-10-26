@@ -1025,6 +1025,9 @@ name|frame
 operator|.
 name|tf_addr
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 if|if
 condition|(
 name|td
@@ -1038,6 +1041,8 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|i
 operator|=
 name|trap_pfault
@@ -2683,6 +2688,9 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSE
 if|if
 condition|(
 name|p
@@ -2696,6 +2704,8 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|params
 operator|=
 operator|(
