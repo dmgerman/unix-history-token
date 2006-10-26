@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2003  * 	Hidetoshi Shimokawa. All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *  *	This product includes software developed by Hidetoshi Shimokawa.  *  * 4. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * $FreeBSD$  */
+comment|/*  * Copyright (C) 2003  * 	Hidetoshi Shimokawa. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *  *	This product includes software developed by Hidetoshi Shimokawa.  *  * 4. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -97,6 +97,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/firewire/firewire.h>
 end_include
 
@@ -104,6 +110,12 @@ begin_include
 include|#
 directive|include
 file|<dev/firewire/iec68113.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"fwmethods.h"
 end_include
 
 begin_define
@@ -310,12 +322,13 @@ value|0xc00
 end_define
 
 begin_function
-name|int
+name|void
 name|dvrecv
 parameter_list|(
 name|int
 name|d
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|filename
@@ -402,6 +415,25 @@ index|[
 name|NPACKET_R
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|filename
+argument_list|,
+literal|"-"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|fd
+operator|=
+name|STDOUT_FILENO
+expr_stmt|;
+block|}
+else|else
+block|{
 name|fd
 operator|=
 name|open
@@ -417,12 +449,23 @@ argument_list|,
 literal|0660
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+name|EX_NOINPUT
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
+block|}
 name|buf
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|RBUFSIZE
@@ -430,10 +473,6 @@ argument_list|)
 expr_stmt|;
 name|pad
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|DSIZE
@@ -524,15 +563,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
 name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"ioctl"
+literal|"ioctl FW_SSTBUF"
 argument_list|)
 expr_stmt|;
-block|}
 name|isoreq
 operator|.
 name|ch
@@ -630,7 +667,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"(EAGAIN)\n"
+literal|"(EAGAIN) - push 'Play'?\n"
 argument_list|)
 expr_stmt|;
 name|fflush
@@ -917,8 +954,10 @@ name|dv
 operator|.
 name|fs
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s\n"
 argument_list|,
 name|system_name
@@ -1208,11 +1247,19 @@ name|vec
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|fd
+operator|!=
+name|STDOUT_FILENO
+condition|)
+block|{
 name|close
 argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
 name|stderr
@@ -1220,19 +1267,17 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|dvsend
 parameter_list|(
 name|int
 name|d
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|filename
@@ -1352,12 +1397,22 @@ argument_list|,
 name|O_RDONLY
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+name|EX_NOINPUT
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
 name|pbuf
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|DSIZE
@@ -1437,15 +1492,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
 name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"ioctl"
+literal|"ioctl FW_SSTBUF"
 argument_list|)
 expr_stmt|;
-block|}
 name|isoreq
 operator|.
 name|ch
@@ -1484,7 +1537,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"ioctl"
+literal|"ioctl FW_STSTREAM"
 argument_list|)
 expr_stmt|;
 name|iso_data
@@ -1665,7 +1718,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|bcopy
 argument_list|(
 name|hdr
@@ -1687,7 +1739,6 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|gettimeofday
 argument_list|(
 operator|&
@@ -1805,8 +1856,10 @@ literal|"read"
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\nend of file\n"
 argument_list|)
 expr_stmt|;
@@ -2315,12 +2368,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"(EAGAIN)\n"
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stderr
+literal|"(EAGAIN) - push 'Play'?\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2395,9 +2443,6 @@ operator|/
 name|rtime
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 end_function
 
