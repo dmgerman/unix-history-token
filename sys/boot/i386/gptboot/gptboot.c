@@ -1678,6 +1678,8 @@ operator|.
 name|ex
 operator|.
 name|a_entry
+operator|&
+literal|0xffffff
 expr_stmt|;
 name|p
 operator|=
@@ -1977,6 +1979,8 @@ name|i
 index|]
 operator|.
 name|p_paddr
+operator|&
+literal|0xffffff
 argument_list|)
 expr_stmt|;
 name|fs_off
@@ -2181,6 +2185,8 @@ operator|.
 name|eh
 operator|.
 name|e_entry
+operator|&
+literal|0xffffff
 expr_stmt|;
 block|}
 name|bootinfo
