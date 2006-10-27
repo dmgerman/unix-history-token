@@ -3263,7 +3263,8 @@ name|curr_time
 condition|)
 name|printf
 argument_list|(
-literal|"dummynet: warning, heap %d is %d ticks late\n"
+literal|"dummynet: warning, "
+literal|"heap %d is %d ticks late\n"
 argument_list|,
 name|i
 argument_list|,
@@ -3284,6 +3285,7 @@ name|key
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* store a copy before heap_extract */
 name|p
 operator|=
 name|h
@@ -3295,7 +3297,7 @@ index|]
 operator|.
 name|object
 expr_stmt|;
-comment|/* store a copy before heap_extract */
+comment|/* need to extract before processing */
 name|heap_extract
 argument_list|(
 name|h
@@ -3303,7 +3305,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* need to extract before processing */
 if|if
 condition|(
 name|i
@@ -3349,7 +3350,8 @@ literal|'\0'
 condition|)
 name|printf
 argument_list|(
-literal|"dummynet: bad ready_event_wfq for pipe %s\n"
+literal|"dummynet: bad ready_event_wfq "
+literal|"for pipe %s\n"
 argument_list|,
 name|pipe
 operator|->
@@ -3462,6 +3464,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* Mark timestamp as invalid. */
 name|q
 operator|->
 name|S
@@ -3472,7 +3475,6 @@ name|F
 operator|+
 literal|1
 expr_stmt|;
-comment|/* Mark timestamp as invalid. */
 name|pipe
 operator|->
 name|sum
@@ -5053,13 +5055,13 @@ name|int
 name|len
 parameter_list|)
 block|{
-comment|/*      * RED algorithm      *      * RED calculates the average queue size (avg) using a low-pass filter      * with an exponential weighted (w_q) moving average:      * 	avg<-  (1-w_q) * avg + w_q * q_size      * where q_size is the queue length (measured in bytes or * packets).      *      * If q_size == 0, we compute the idle time for the link, and set      *	avg = (1 - w_q)^(idle/s)      * where s is the time needed for transmitting a medium-sized packet.      *      * Now, if avg< min_th the packet is enqueued.      * If avg> max_th the packet is dropped. Otherwise, the packet is      * dropped with probability P function of avg.      *      */
+comment|/* 	 * RED algorithm 	 * 	 * RED calculates the average queue size (avg) using a low-pass filter 	 * with an exponential weighted (w_q) moving average: 	 * 	avg<-  (1-w_q) * avg + w_q * q_size 	 * where q_size is the queue length (measured in bytes or * packets). 	 * 	 * If q_size == 0, we compute the idle time for the link, and set 	 *	avg = (1 - w_q)^(idle/s) 	 * where s is the time needed for transmitting a medium-sized packet. 	 * 	 * Now, if avg< min_th the packet is enqueued. 	 * If avg> max_th the packet is dropped. Otherwise, the packet is 	 * dropped with probability P function of avg. 	 */
 name|int64_t
 name|p_b
 init|=
 literal|0
 decl_stmt|;
-comment|/* queue in bytes or packets ? */
+comment|/* Queue in bytes or packets? */
 name|u_int
 name|q_size
 init|=
@@ -5093,7 +5095,7 @@ name|q_size
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* average queue size estimation */
+comment|/* Average queue size estimation. */
 if|if
 condition|(
 name|q_size
@@ -5101,7 +5103,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 	 * queue is not empty, avg<- avg + (q_size - avg) * w_q 	 */
+comment|/* Queue is not empty, avg<- avg + (q_size - avg) * w_q */
 name|int
 name|diff
 init|=
@@ -5144,7 +5146,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 	 * queue is empty, find for how long the queue has been 	 * empty and use a lookup table for computing 	 * (1 - * w_q)^(idle_time/s) where s is the time to send a 	 * (small) packet. 	 * XXX check wraps... 	 */
+comment|/* 		 * Queue is empty, find for how long the queue has been 		 * empty and use a lookup table for computing 		 * (1 - * w_q)^(idle_time/s) where s is the time to send a 		 * (small) packet. 		 * XXX check wraps... 		 */
 if|if
 condition|(
 name|q
@@ -5211,7 +5213,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* should i drop ? */
+comment|/* Should i drop? */
 if|if
 condition|(
 name|q
@@ -5231,9 +5233,11 @@ operator|-
 literal|1
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
-comment|/* accept packet ; */
+comment|/* accept packet */
 block|}
 if|if
 condition|(
@@ -5256,7 +5260,7 @@ operator|&
 name|DN_IS_GENTLE_RED
 condition|)
 block|{
-comment|/* 	     * According to Gentle-RED, if avg is greater than max_th the 	     * packet is dropped with a probability 	     *	p_b = c_3 * avg - c_4 	     * where c_3 = (1 - max_p) / max_th, and c_4 = 1 - 2 * max_p 	     */
+comment|/* 			 * According to Gentle-RED, if avg is greater than 			 * max_th the packet is dropped with a probability 			 *	 p_b = c_3 * avg - c_4 			 * where c_3 = (1 - max_p) / max_th 			 *       c_4 = 1 - 2 * max_p 			 */
 name|p_b
 operator|=
 name|SCALE_MUL
@@ -5298,7 +5302,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 block|}
@@ -5314,7 +5320,7 @@ operator|->
 name|min_th
 condition|)
 block|{
-comment|/* 	 * we compute p_b using the linear dropping function p_b = c_1 * 	 * avg - c_2, where c_1 = max_p / (max_th - min_th), and c_2 = 	 * max_p * min_th / (max_th - min_th) 	 */
+comment|/* 		 * We compute p_b using the linear dropping function 		 *	 p_b = c_1 * avg - c_2 		 * where c_1 = max_p / (max_th - min_th) 		 * 	 c_2 = max_p * min_th / (max_th - min_th) 		 */
 name|p_b
 operator|=
 name|SCALE_MUL
@@ -5379,7 +5385,7 @@ literal|0xffff
 expr_stmt|;
 else|else
 block|{
-comment|/* 	 * q->count counts packets arrived since last drop, so a greater 	 * value of q->count means a greater packet drop probability. 	 */
+comment|/* 		 * q->count counts packets arrived since last drop, so a greater 		 * value of q->count means a greater packet drop probability. 		 */
 if|if
 condition|(
 name|SCALE_MUL
@@ -5415,7 +5421,7 @@ literal|"dummynet: - red drop"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* after a drop we calculate a new random value */
+comment|/* After a drop we calculate a new random value. */
 name|q
 operator|->
 name|random
@@ -5426,14 +5432,18 @@ operator|&
 literal|0xffff
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 comment|/* drop */
 block|}
 block|}
-comment|/* end of RED algorithm */
+comment|/* End of RED algorithm. */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/* accept */
 block|}
@@ -7285,7 +7295,6 @@ name|x
 operator|->
 name|c_4
 operator|=
-operator|(
 name|SCALE
 argument_list|(
 literal|1
@@ -7296,10 +7305,9 @@ operator|*
 name|p
 operator|->
 name|max_p
-operator|)
 expr_stmt|;
 block|}
-comment|/* if the lookup table already exist, free and create it again */
+comment|/* If the lookup table already exist, free and create it again. */
 if|if
 condition|(
 name|x
@@ -7332,7 +7340,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\ndummynet: net.inet.ip.dummynet.red_lookup_depth must be> 0\n"
+literal|"\ndummynet: net.inet.ip.dummynet.red_lookup_depth"
+literal|"must be> 0\n"
 argument_list|)
 expr_stmt|;
 name|free
@@ -7343,7 +7352,9 @@ name|M_DUMMYNET
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 name|x
@@ -7398,10 +7409,12 @@ name|M_DUMMYNET
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOSPC
+operator|)
 return|;
 block|}
-comment|/* fill the lookup table with (1 - w_q)^x */
+comment|/* Fill the lookup table with (1 - w_q)^x */
 name|x
 operator|->
 name|lookup_step
@@ -7505,7 +7518,9 @@ operator|=
 name|red_max_pkt_size
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -7756,7 +7771,7 @@ operator|=
 literal|50
 expr_stmt|;
 block|}
-comment|/* configuring RED */
+comment|/* Configuring RED. */
 if|if
 condition|(
 name|x
@@ -7777,7 +7792,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * setup pipe or queue parameters.  */
+comment|/*  * Setup pipe or queue parameters.  */
 end_comment
 
 begin_function
@@ -7813,7 +7828,7 @@ name|i
 decl_stmt|,
 name|error
 decl_stmt|;
-comment|/*      * The config program passes parameters as follows:      * bw = bits/second (0 means no limits),      * delay = ms, must be translated into ticks.      * qsize = slots/bytes      */
+comment|/* 	 * The config program passes parameters as follows: 	 * bw = bits/second (0 means no limits), 	 * delay = ms, must be translated into ticks. 	 * qsize = slots/bytes 	 */
 name|p
 operator|->
 name|delay
@@ -7828,7 +7843,7 @@ operator|)
 operator|/
 literal|1000
 expr_stmt|;
-comment|/* We need either a pipe number or a flow_set number */
+comment|/* We need either a pipe number or a flow_set number. */
 if|if
 condition|(
 name|p
@@ -7844,7 +7859,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -7861,7 +7878,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -7953,7 +7972,7 @@ name|pipe
 operator|=
 name|pipe
 expr_stmt|;
-comment|/* idle_heap is the only one from which we extract from the middle. 	     */
+comment|/* 			 * idle_heap is the only one from which 			 * we extract from the middle. 			 */
 name|pipe
 operator|->
 name|idle_heap
@@ -7984,7 +8003,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-comment|/* Flush accumulated credit for all queues */
+comment|/* Flush accumulated credit for all queues. */
 for|for
 control|(
 name|i
@@ -8202,7 +8221,9 @@ name|DUMMYNET_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 name|fs
@@ -8299,7 +8320,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Change parent pipe not allowed; must delete and recreate */
+comment|/* 			 * Change parent pipe not allowed; 			 * must delete and recreate. 			 */
 if|if
 condition|(
 name|pfs
@@ -8321,7 +8342,9 @@ name|DUMMYNET_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 block|}
@@ -8396,7 +8419,9 @@ argument_list|()
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
