@@ -223,6 +223,12 @@ parameter_list|)
 value|GEN_ENTRY(name) ; nop ; ALIGN_TEXT
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GUPROF
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -236,6 +242,22 @@ directive|define
 name|ret
 value|MEXITCOUNT ; NON_GPROF_RET
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MEXITCOUNT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#

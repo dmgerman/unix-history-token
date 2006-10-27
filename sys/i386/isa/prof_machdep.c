@@ -1043,34 +1043,6 @@ directive|endif
 block|}
 end_function
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !GUPROF */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUCLIKE_ASM
-end_ifdef
-
-begin_asm
-asm|__asm("								\n\ 	.text							\n\ 	.p2align 4,0x90						\n\ 	.globl	" __XSTRING(HIDENAME(mexitcount)) "		\n\ " __XSTRING(HIDENAME(mexitcount)) ":				\n\ 	ret							\n\ ");
-end_asm
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __GNUCLIKE_ASM */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
