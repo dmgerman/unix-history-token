@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_send.c,v 1.5.2.2.4.7 2005/08/15 02:04:41 marka Exp $"
+literal|"$Id: res_send.c,v 1.5.2.2.4.8 2006/03/08 04:13:31 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -432,6 +432,8 @@ name|int
 parameter_list|,
 name|int
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|,
@@ -2418,6 +2420,8 @@ name|terrno
 argument_list|,
 name|ns
 argument_list|,
+name|try
+argument_list|,
 operator|&
 name|v_circuit
 argument_list|,
@@ -3868,6 +3872,9 @@ name|int
 name|ns
 parameter_list|,
 name|int
+name|try
+parameter_list|,
+name|int
 modifier|*
 name|v_circuit
 parameter_list|,
@@ -4370,7 +4377,7 @@ name|statp
 operator|->
 name|retrans
 operator|<<
-name|ns
+name|try
 operator|)
 expr_stmt|;
 if|if
