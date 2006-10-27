@@ -1116,21 +1116,6 @@ operator|->
 name|p_numksegrps
 operator|--
 expr_stmt|;
-comment|/* 	 * Aggregate stats from the KSE 	 */
-if|if
-condition|(
-name|p
-operator|->
-name|p_procscopegrp
-operator|==
-name|kg
-condition|)
-name|p
-operator|->
-name|p_procscopegrp
-operator|=
-name|NULL
-expr_stmt|;
 block|}
 end_function
 
@@ -4008,17 +3993,6 @@ name|p_singlethread
 operator|=
 name|NULL
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KSE
-name|p
-operator|->
-name|p_procscopegrp
-operator|=
-name|NULL
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * If there are other threads they mey now run, 	 * unless of course there is a blanket 'stop order' 	 * on the process. The single threader must be allowed 	 * to continue however as this is a bad place to stop. 	 */
 if|if
 condition|(

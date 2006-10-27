@@ -2510,16 +2510,6 @@ name|int
 name|p_boundary_count
 decl_stmt|;
 comment|/* (c) Num threads at user boundary */
-ifdef|#
-directive|ifdef
-name|KSE
-name|struct
-name|ksegrp
-modifier|*
-name|p_procscopegrp
-decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|p_pendingcnt
 decl_stmt|;
