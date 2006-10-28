@@ -105,22 +105,10 @@ directive|include
 file|<machine/profile.h>
 end_include
 
-begin_undef
-undef|#
-directive|undef
-name|MCOUNT
-end_undef
-
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<machine/asmacros.h>
-end_include
 
 begin_include
 include|#
@@ -241,7 +229,7 @@ name|__GNUCLIKE_ASM
 end_ifdef
 
 begin_asm
-asm|__asm("								\n\ GM_STATE	=	0					\n\ GMON_PROF_OFF	=	3					\n\ 								\n\ 	.text							\n\ 	.p2align 4,0x90						\n\ 	.globl	__mcount					\n\ 	.type	__mcount,@function				\n\ __mcount:							\n\ 	#							\n\ 	# Check that we are profiling.  Do it early for speed.	\n\ 	#							\n\ 	cmpl	$GMON_PROF_OFF," __XSTRING(CNAME(_gmonparam)) "+GM_STATE \n\  	je	.mcount_exit					\n\  	#							\n\  	# __mcount is the same as [.]mcount except the caller	\n\  	# hasn't changed the stack except to call here, so the	\n\ 	# caller's raddr is above our raddr.			\n\ 	#							\n\ 	pushq	%rax						\n\ 	pushq	%rdx						\n\ 	pushq	%rcx						\n\ 	pushq	%rsi						\n\ 	pushq	%rdi						\n\ 	pushq	%r8						\n\ 	pushq	%r9						\n\ 	movq	7*8+8(%rsp),%rdi				\n\  	jmp	.got_frompc					\n\  								\n\  	.p2align 4,0x90						\n\  	.globl	" __XSTRING(HIDENAME(mcount)) "			\n\ " __XSTRING(HIDENAME(mcount)) ":				\n\  	.globl	__cyg_profile_func_enter			\n\ __cyg_profile_func_enter:					\n\ 	cmpl	$GMON_PROF_OFF," __XSTRING(CNAME(_gmonparam)) "+GM_STATE \n\ 	je	.mcount_exit					\n\ 	#							\n\ 	# The caller's stack frame has already been built, so	\n\ 	# %rbp is the caller's frame pointer.  The caller's	\n\ 	# raddr is in the caller's frame following the caller's	\n\ 	# caller's frame pointer.				\n\ 	#							\n\ 	pushq	%rax						\n\ 	pushq	%rdx						\n\ 	pushq	%rcx						\n\ 	pushq	%rsi						\n\ 	pushq	%rdi						\n\ 	pushq	%r8						\n\ 	pushq	%r9						\n\ 	movq	8(%rbp),%rdi					\n\ .got_frompc:							\n\ 	#							\n\ 	# Our raddr is the caller's pc.				\n\ 	#							\n\ 	movq	7*8(%rsp),%rsi					\n\ 								\n\ 	pushfq							\n\ 	cli							\n\ 	call	" __XSTRING(CNAME(mcount)) "			\n\ 	popfq							\n\ 	popq	%r9						\n\ 	popq	%r8						\n\ 	popq	%rdi						\n\ 	popq	%rsi						\n\ 	popq	%rcx						\n\ 	popq	%rdx						\n\ 	popq	%rax						\n\ .mcount_exit:							\n\ 	ret							\n\ ");
+asm|__asm("								\n\ GM_STATE	=	0					\n\ GMON_PROF_OFF	=	3					\n\ 								\n\ 	.text							\n\ 	.p2align 4,0x90						\n\ 	.globl	__mcount					\n\ 	.type	__mcount,@function				\n\ __mcount:							\n\ 	#							\n\ 	# Check that we are profiling.  Do it early for speed.	\n\ 	#							\n\ 	cmpl	$GMON_PROF_OFF,_gmonparam+GM_STATE		\n\  	je	.mcount_exit					\n\  	#							\n\  	# __mcount is the same as [.]mcount except the caller	\n\  	# hasn't changed the stack except to call here, so the	\n\ 	# caller's raddr is above our raddr.			\n\ 	#							\n\ 	pushq	%rax						\n\ 	pushq	%rdx						\n\ 	pushq	%rcx						\n\ 	pushq	%rsi						\n\ 	pushq	%rdi						\n\ 	pushq	%r8						\n\ 	pushq	%r9						\n\ 	movq	7*8+8(%rsp),%rdi				\n\  	jmp	.got_frompc					\n\  								\n\  	.p2align 4,0x90						\n\  	.globl	.mcount						\n\ .mcount:							\n\  	.globl	__cyg_profile_func_enter			\n\ __cyg_profile_func_enter:					\n\ 	cmpl	$GMON_PROF_OFF,_gmonparam+GM_STATE		\n\ 	je	.mcount_exit					\n\ 	#							\n\ 	# The caller's stack frame has already been built, so	\n\ 	# %rbp is the caller's frame pointer.  The caller's	\n\ 	# raddr is in the caller's frame following the caller's	\n\ 	# caller's frame pointer.				\n\ 	#							\n\ 	pushq	%rax						\n\ 	pushq	%rdx						\n\ 	pushq	%rcx						\n\ 	pushq	%rsi						\n\ 	pushq	%rdi						\n\ 	pushq	%r8						\n\ 	pushq	%r9						\n\ 	movq	8(%rbp),%rdi					\n\ .got_frompc:							\n\ 	#							\n\ 	# Our raddr is the caller's pc.				\n\ 	#							\n\ 	movq	7*8(%rsp),%rsi					\n\ 								\n\ 	pushfq							\n\ 	cli							\n\ 	call	mcount						\n\ 	popfq							\n\ 	popq	%r9						\n\ 	popq	%r8						\n\ 	popq	%rdi						\n\ 	popq	%rsi						\n\ 	popq	%rcx						\n\ 	popq	%rdx						\n\ 	popq	%rax						\n\ .mcount_exit:							\n\ 	ret							\n\ ");
 end_asm
 
 begin_else
@@ -285,7 +273,7 @@ name|__GNUCLIKE_ASM
 end_ifdef
 
 begin_asm
-asm|__asm("								\n\ 	.text							\n\ #								\n\ # Dummy label to be seen when gprof -u hides [.]mexitcount.	\n\ #								\n\ 	.p2align 4,0x90						\n\ 	.globl	__mexitcount					\n\ 	.type	__mexitcount,@function				\n\ __mexitcount:							\n\ 	nop							\n\ 								\n\ GMON_PROF_HIRES	=	4					\n\ 								\n\ 	.p2align 4,0x90						\n\ 	.globl	" __XSTRING(HIDENAME(mexitcount)) "		\n\ " __XSTRING(HIDENAME(mexitcount)) ":				\n\  	.globl	__cyg_profile_func_exit				\n\ __cyg_profile_func_exit:					\n\ 	cmpl	$GMON_PROF_HIRES," __XSTRING(CNAME(_gmonparam)) "+GM_STATE \n\ 	jne	.mexitcount_exit				\n\ 	pushq	%rax						\n\ 	pushq	%rdx						\n\ 	pushq	%rcx						\n\ 	pushq	%rsi						\n\ 	pushq	%rdi						\n\ 	pushq	%r8						\n\ 	pushq	%r9						\n\ 	movq	7*8(%rsp),%rdi					\n\ 	pushfq							\n\ 	cli							\n\ 	call	" __XSTRING(CNAME(mexitcount)) "		\n\ 	popfq							\n\ 	popq	%r9						\n\ 	popq	%r8						\n\ 	popq	%rdi						\n\ 	popq	%rsi						\n\ 	popq	%rcx						\n\ 	popq	%rdx						\n\ 	popq	%rax						\n\ .mexitcount_exit:						\n\ 	ret							\n\ ");
+asm|__asm("								\n\ 	.text							\n\ #								\n\ # Dummy label to be seen when gprof -u hides [.]mexitcount.	\n\ #								\n\ 	.p2align 4,0x90						\n\ 	.globl	__mexitcount					\n\ 	.type	__mexitcount,@function				\n\ __mexitcount:							\n\ 	nop							\n\ 								\n\ GMON_PROF_HIRES	=	4					\n\ 								\n\ 	.p2align 4,0x90						\n\ 	.globl	.mexitcount					\n\ .mexitcount:							\n\  	.globl	__cyg_profile_func_exit				\n\ __cyg_profile_func_exit:					\n\ 	cmpl	$GMON_PROF_HIRES,_gmonparam+GM_STATE		\n\ 	jne	.mexitcount_exit				\n\ 	pushq	%rax						\n\ 	pushq	%rdx						\n\ 	pushq	%rcx						\n\ 	pushq	%rsi						\n\ 	pushq	%rdi						\n\ 	pushq	%r8						\n\ 	pushq	%r9						\n\ 	movq	7*8(%rsp),%rdi					\n\ 	pushfq							\n\ 	cli							\n\ 	call	mexitcount					\n\ 	popfq							\n\ 	popq	%r9						\n\ 	popq	%r8						\n\ 	popq	%rdi						\n\ 	popq	%rsi						\n\ 	popq	%rcx						\n\ 	popq	%rdx						\n\ 	popq	%rax						\n\ .mexitcount_exit:						\n\ 	ret							\n\ ");
 end_asm
 
 begin_else

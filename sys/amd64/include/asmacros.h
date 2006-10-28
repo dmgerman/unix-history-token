@@ -26,7 +26,7 @@ comment|/* XXX too much duplication in various asm*.h's. */
 end_comment
 
 begin_comment
-comment|/*  * CNAME and HIDENAME manage the relationship between symbol names in C  * and the equivalent assembly language names.  CNAME is given a name as  * it would be used in a C program.  It expands to the equivalent assembly  * language name.  HIDENAME is given an assembly-language name, and expands  * to a possibly-modified form that will be invisible to C programs.  */
+comment|/*  * CNAME is used to manage the relationship between symbol names in C  * and the equivalent assembly language names.  CNAME is given a name as  * it would be used in a C program.  It expands to the equivalent assembly  * language name.  */
 end_comment
 
 begin_define
@@ -37,16 +37,6 @@ parameter_list|(
 name|csym
 parameter_list|)
 value|csym
-end_define
-
-begin_define
-define|#
-directive|define
-name|HIDENAME
-parameter_list|(
-name|asmsym
-parameter_list|)
-value|.asmsym
 end_define
 
 begin_define
@@ -233,7 +223,7 @@ begin_define
 define|#
 directive|define
 name|MEXITCOUNT
-value|call HIDENAME(mexitcount)
+value|call .mexitcount
 end_define
 
 begin_define
