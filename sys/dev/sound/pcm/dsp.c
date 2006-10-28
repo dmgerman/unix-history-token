@@ -7907,13 +7907,13 @@ name|ai
 operator|->
 name|nrates
 operator|>
-name|MAX_SAMPLE_RATES
+name|OSS_MAX_SAMPLE_RATES
 condition|)
 name|ai
 operator|->
 name|nrates
 operator|=
-name|MAX_SAMPLE_RATES
+name|OSS_MAX_SAMPLE_RATES
 expr_stmt|;
 for|for
 control|(

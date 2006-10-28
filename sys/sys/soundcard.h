@@ -6339,7 +6339,7 @@ index|]
 decl_stmt|;
 define|#
 directive|define
-name|MAX_SAMPLE_RATES
+name|OSS_MAX_SAMPLE_RATES
 value|20
 comment|/* Cannot be changed  */
 name|unsigned
@@ -6350,7 +6350,7 @@ name|unsigned
 name|int
 name|rates
 index|[
-name|MAX_SAMPLE_RATES
+name|OSS_MAX_SAMPLE_RATES
 index|]
 decl_stmt|;
 comment|/* Please read the manual before using these */
