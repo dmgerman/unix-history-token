@@ -17,24 +17,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/timerreg.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -51,6 +33,18 @@ begin_include
 include|#
 directive|include
 file|"opt_perfmon.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -86,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/profile.h>
+file|<machine/timerreg.h>
 end_include
 
 begin_define
@@ -211,7 +205,7 @@ end_comment
 begin_error
 error|#
 directive|error
-error|this file needs to be ported to your compiler
+literal|"this file needs to be ported to your compiler"
 end_error
 
 begin_endif

@@ -102,25 +102,8 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<machine/profile.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
 file|<machine/timerreg.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GUPROF
-end_ifdef
 
 begin_define
 define|#
@@ -244,7 +227,7 @@ end_comment
 begin_error
 error|#
 directive|error
-error|this file needs to be ported to your compiler
+literal|"this file needs to be ported to your compiler"
 end_error
 
 begin_endif
@@ -275,21 +258,6 @@ end_ifdef
 begin_asm
 asm|__asm("								\n\ 	.text							\n\ #								\n\ # Dummy label to be seen when gprof -u hides [.]mexitcount.	\n\ #								\n\ 	.p2align 4,0x90						\n\ 	.globl	__mexitcount					\n\ 	.type	__mexitcount,@function				\n\ __mexitcount:							\n\ 	nop							\n\ 								\n\ GMON_PROF_HIRES	=	4					\n\ 								\n\ 	.p2align 4,0x90						\n\ 	.globl	.mexitcount					\n\ .mexitcount:							\n\  	.globl	__cyg_profile_func_exit				\n\ __cyg_profile_func_exit:					\n\ 	cmpl	$GMON_PROF_HIRES,_gmonparam+GM_STATE		\n\ 	jne	.mexitcount_exit				\n\ 	pushq	%rax						\n\ 	pushq	%rdx						\n\ 	pushq	%rcx						\n\ 	pushq	%rsi						\n\ 	pushq	%rdi						\n\ 	pushq	%r8						\n\ 	pushq	%r9						\n\ 	movq	7*8(%rsp),%rdi					\n\ 	pushfq							\n\ 	cli							\n\ 	call	mexitcount					\n\ 	popfq							\n\ 	popq	%r9						\n\ 	popq	%r8						\n\ 	popq	%rdi						\n\ 	popq	%rsi						\n\ 	popq	%rcx						\n\ 	popq	%rdx						\n\ 	popq	%rax						\n\ .mexitcount_exit:						\n\ 	ret							\n\ ");
 end_asm
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !__GNUCLIKE_ASM */
-end_comment
-
-begin_error
-error|#
-directive|error
-error|this file needs to be ported to your compiler
-end_error
 
 begin_endif
 endif|#
