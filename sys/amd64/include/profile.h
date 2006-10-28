@@ -416,8 +416,6 @@ begin_define
 define|#
 directive|define
 name|MCOUNT
-define|\
-value|void									\ mcount()								\ {									\ }
 end_define
 
 begin_endif

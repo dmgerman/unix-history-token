@@ -388,18 +388,11 @@ begin_comment
 comment|/* !__GNUCLIKE_ASM */
 end_comment
 
-begin_expr_stmt
-name|void
-expr|\
-operator|#
-name|define
+begin_define
+define|#
+directive|define
 name|MCOUNT
-expr|\
-name|mcount
-argument_list|()
-expr|\
-block|{									\ }
-end_expr_stmt
+end_define
 
 begin_endif
 endif|#
