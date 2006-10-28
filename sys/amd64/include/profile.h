@@ -113,7 +113,7 @@ parameter_list|(
 name|label
 parameter_list|)
 define|\
-value|__asm __volatile("pushq %0; call __mcount; popq %%rcx"		\ 			 :						\ 			 : "i" (profil)					\ 			 : "ax", "dx", "cx", "di", "si", "r8", "r9", "memory")
+value|__asm __volatile("pushq %0; call __mcount; popq %%rcx"		\ 			 :						\ 			 : "i" (label)					\ 			 : "ax", "dx", "cx", "di", "si", "r8", "r9", "memory")
 end_define
 
 begin_define
