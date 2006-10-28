@@ -63,6 +63,10 @@ name|linux_emuldata_shared
 modifier|*
 name|shared
 decl_stmt|;
+name|int
+name|pdeath_signal
+decl_stmt|;
+comment|/* parent death signal */
 name|LIST_ENTRY
 argument_list|(
 argument|linux_emuldata
