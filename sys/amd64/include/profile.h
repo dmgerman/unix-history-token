@@ -373,7 +373,7 @@ begin_define
 define|#
 directive|define
 name|MCOUNT
-value|__asm("			\n\ 	.globl	.mcount			\n\ 	.type	.mcount @function	\n\ .mcount:				\n\ 	pushq	%rbp			\n\ 	movq	%rsp,%rbp		\n\ 	pushq	%rdi			\n\ 	pushq	%rsi			\n\ 	pushq	%rdx			\n\ 	pushq	%rcx			\n\ 	pushq	%r8			\n\ 	pushq	%r9			\n\ 	pushq	%rax			\n\ 	movq	8(%rbp),%rsi		\n\ 	movq	(%rbp),%rdi		\n\ 	movq	8(%rdi),%rdi		\n\ 	call	_mcount			\n\ 	popq	%rax			\n\ 	popq	%r9			\n\ 	popq	%r8			\n\ 	popq	%rcx			\n\ 	popq	%rdx			\n\ 	popq	%rsi			\n\ 	popq	%rdi			\n\ 	leave				\n\ 	ret				\n\ 	.size	.mcount, . - .mcount");
+value|__asm("			\n\ 	.text				\n\ 	.p2align 4,0x90			\n\ 	.globl	.mcount			\n\ 	.type	.mcount,@function	\n\ .mcount:				\n\ 	pushq	%rdi			\n\ 	pushq	%rsi			\n\ 	pushq	%rdx			\n\ 	pushq	%rcx			\n\ 	pushq	%r8			\n\ 	pushq	%r9			\n\ 	pushq	%rax			\n\ 	movq	8(%rbp),%rdi		\n\ 	movq	7*8(%rsp),%rsi		\n\ 	call	_mcount			\n\ 	popq	%rax			\n\ 	popq	%r9			\n\ 	popq	%r8			\n\ 	popq	%rcx			\n\ 	popq	%rdx			\n\ 	popq	%rsi			\n\ 	popq	%rdi			\n\ 	ret				\n\ 	.size	.mcount, . - .mcount");
 end_define
 
 begin_if
