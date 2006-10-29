@@ -100,6 +100,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/netisr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/route.h>
 end_include
 
@@ -1069,17 +1075,13 @@ name|dummynet_mtx
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * NB: Recursion is needed to deal with re-entry via ICMP.  That is,  *     a packet may be dispatched via ip_input from dummynet_io and  *     re-enter through ip_output.  Yech.  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|DUMMYNET_LOCK_INIT
 parameter_list|()
 define|\
-value|mtx_init(&dummynet_mtx, "dummynet", NULL, MTX_DEF | MTX_RECURSE)
+value|mtx_init(&dummynet_mtx, "dummynet", NULL, MTX_DEF)
 end_define
 
 begin_define
@@ -4004,8 +4006,10 @@ operator|->
 name|ip_off
 argument_list|)
 expr_stmt|;
-name|ip_input
+name|netisr_dispatch
 argument_list|(
+name|NETISR_IP
+argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
@@ -4016,8 +4020,10 @@ name|INET6
 case|case
 name|DN_TO_IP6_IN
 case|:
-name|ip6_input
+name|netisr_dispatch
 argument_list|(
+name|NETISR_IPV6
+argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
@@ -6873,6 +6879,8 @@ name|i
 index|]
 init|;
 name|q
+operator|!=
+name|NULL
 condition|;
 name|q
 operator|=
@@ -6951,12 +6959,14 @@ condition|(
 name|all
 condition|)
 block|{
-comment|/* RED - free lookup table */
+comment|/* RED - free lookup table. */
 if|if
 condition|(
 name|fs
 operator|->
 name|w_q_lookup
+operator|!=
+name|NULL
 condition|)
 name|free
 argument_list|(
@@ -6972,6 +6982,8 @@ condition|(
 name|fs
 operator|->
 name|rq
+operator|!=
+name|NULL
 condition|)
 name|free
 argument_list|(
@@ -6982,13 +6994,15 @@ argument_list|,
 name|M_DUMMYNET
 argument_list|)
 expr_stmt|;
-comment|/* if this fs is not part of a pipe, free it */
+comment|/* If this fs is not part of a pipe, free it. */
 if|if
 condition|(
 name|fs
 operator|->
 name|pipe
-operator|&&
+operator|==
+name|NULL
+operator|||
 name|fs
 operator|!=
 operator|&
