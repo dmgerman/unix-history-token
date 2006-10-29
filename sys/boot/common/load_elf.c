@@ -1194,7 +1194,7 @@ operator|-
 operator|(
 name|off
 operator|&
-literal|0xff000000u
+literal|0xc0000000u
 operator|)
 expr_stmt|;
 comment|/* i386 relocates after locore */

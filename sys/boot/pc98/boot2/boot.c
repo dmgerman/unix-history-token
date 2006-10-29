@@ -714,14 +714,14 @@ name|head
 argument_list|)
 expr_stmt|;
 comment|/*if(poff==0) 		poff = 32;*/
-comment|/* 	 * We assume that the entry address is the same as the lowest text 	 * address and that the kernel startup code handles relocation by 	 * this address rounded down to a multiple of 16M. 	 */
+comment|/* 	 * We assume that the entry address is the same as the lowest text 	 * address and that the kernel startup code handles relocation by 	 * this address rounded down to a multiple of 1G. 	 */
 name|startaddr
 operator|=
 name|head
 operator|.
 name|a_entry
 operator|&
-literal|0x00FFFFFF
+literal|0x3FFFFFFF
 expr_stmt|;
 name|addr
 operator|=
