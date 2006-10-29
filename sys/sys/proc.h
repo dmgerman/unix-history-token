@@ -2240,6 +2240,16 @@ argument_list|)
 name|p_ksegrps
 expr_stmt|;
 comment|/* (c)(kg_ksegrp) All KSEGs. */
+else|#
+directive|else
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|thread
+argument_list|)
+name|was_p_ksegrps
+expr_stmt|;
+comment|/* Temporary padding. */
 endif|#
 directive|endif
 name|TAILQ_HEAD
@@ -2595,6 +2605,12 @@ name|int
 name|p_numksegrps
 decl_stmt|;
 comment|/* (c) Number of ksegrps. */
+else|#
+directive|else
+name|int
+name|was_p_numksegrps
+decl_stmt|;
+comment|/* Temporary padding. */
 endif|#
 directive|endif
 name|struct
