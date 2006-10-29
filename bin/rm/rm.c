@@ -1436,6 +1436,14 @@ condition|(
 operator|!
 name|uid
 operator|&&
+operator|!
+name|S_ISWHT
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+operator|&&
 operator|(
 name|sb
 operator|.
