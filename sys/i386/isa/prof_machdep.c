@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -139,11 +145,19 @@ name|CPUTIME_CLOCK_UNINITIALIZED
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|PERFMON
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
 name|I586_PMC_GUPROF
-end_ifdef
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -307,7 +321,6 @@ name|prev_count
 decl_stmt|;
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
 name|I586_CPU
@@ -316,13 +329,6 @@ operator|||
 name|defined
 argument_list|(
 name|I686_CPU
-argument_list|)
-operator|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|SMP
 argument_list|)
 if|if
 condition|(
@@ -377,6 +383,12 @@ name|defined
 argument_list|(
 name|I586_PMC_GUPROF
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SMP
+argument_list|)
 if|if
 condition|(
 name|cputime_clock
@@ -423,10 +435,10 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* PERFMON&& I586_PMC_GUPROF */
+comment|/* PERFMON&& I586_PMC_GUPROF&& !SMP */
 endif|#
 directive|endif
-comment|/* (I586_CPU || I686_CPU)&& !SMP */
+comment|/* I586_CPU || I686_CPU */
 comment|/* 	 * Read the current value of the 8254 timer counter 0. 	 */
 name|outb
 argument_list|(
@@ -774,7 +786,6 @@ name|CPUTIME_CLOCK_I8254
 expr_stmt|;
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
 name|I586_CPU
@@ -784,18 +795,18 @@ name|defined
 argument_list|(
 name|I686_CPU
 argument_list|)
-operator|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|SMP
-argument_list|)
 if|if
 condition|(
 name|tsc_freq
 operator|!=
 literal|0
+operator|&&
+operator|!
+name|tsc_is_broken
+operator|&&
+name|mp_ncpus
+operator|<
+literal|2
 condition|)
 name|cputime_clock
 operator|=
@@ -814,7 +825,6 @@ name|CPUTIME_CLOCK_I8254_SHIFT
 expr_stmt|;
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
 name|I586_CPU
@@ -823,13 +833,6 @@ operator|||
 name|defined
 argument_list|(
 name|I686_CPU
-argument_list|)
-operator|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|SMP
 argument_list|)
 if|if
 condition|(
@@ -962,7 +965,7 @@ directive|endif
 comment|/* PERFMON&& I586_PMC_GUPROF */
 endif|#
 directive|endif
-comment|/* (I586_CPU || I686_CPU)&& !SMP */
+comment|/* I586_CPU || I686_CPU */
 name|cputime_bias
 operator|=
 literal|0
