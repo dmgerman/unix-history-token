@@ -93,7 +93,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -6096,6 +6096,9 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+decl_stmt|,
+modifier|*
+name|m0
 decl_stmt|;
 name|struct
 name|ifnet
@@ -6274,18 +6277,10 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* No errors; receive the packet. */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-comment|/* 		 * On the x86 we do not have alignment problems, so try to 		 * allocate a new buffer for the receive ring, and pass up 		 * the one where the packet is already, saving the expensive 		 * copy done in m_devget(). 		 * If we are on an architecture with alignment problems, or 		 * if the allocation fails, then use m_devget and leave the 		 * existing buffer in the receive ring. 		 */
+ifdef|#
+directive|ifdef
+name|__NO_STRICT_ALIGNMENT
+comment|/* 		 * On architectures without alignment problems we try to 		 * allocate a new buffer for the receive ring, and pass up 		 * the one where the packet is already, saving the expensive 		 * copy done in m_devget(). 		 * If we are on an architecture with alignment problems, or 		 * if the allocation fails, then use m_devget and leave the 		 * existing buffer in the receive ring. 		 */
 if|if
 condition|(
 name|sis_newbuf
@@ -6315,11 +6310,6 @@ else|else
 endif|#
 directive|endif
 block|{
-name|struct
-name|mbuf
-modifier|*
-name|m0
-decl_stmt|;
 name|m0
 operator|=
 name|m_devget
