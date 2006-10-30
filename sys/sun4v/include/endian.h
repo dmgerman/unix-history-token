@@ -183,7 +183,7 @@ name|__bswap16_const
 parameter_list|(
 name|x
 parameter_list|)
-value|((x>> 8) | ((x<< 8)& 0xff00))
+value|((((x)>> 8)& 0xff) |			\ 	(((x)<< 8)& 0xff00))
 end_define
 
 begin_define
@@ -193,7 +193,7 @@ name|__bswap32_const
 parameter_list|(
 name|x
 parameter_list|)
-value|((x>> 24) | ((x>> 8)& 0xff00) |	\ 	((x<< 8)& 0xff0000) | ((x<< 24)& 0xff000000))
+value|((((x)>> 24)& 0xff) |			\ 	(((x)>> 8)& 0xff00) | (((x)<< 8)& 0xff0000) |		\ 	(((x)<< 24)& 0xff000000))
 end_define
 
 begin_define
@@ -203,7 +203,7 @@ name|__bswap64_const
 parameter_list|(
 name|x
 parameter_list|)
-value|((x>> 56) | ((x>> 40)& 0xff00) |	\ 	((x>> 24)& 0xff0000) | ((x>> 8)& 0xff000000) |		\ 	((x<< 8)& ((__uint64_t)0xff<< 32)) |				\ 	((x<< 24)& ((__uint64_t)0xff<< 40)) |			\ 	((x<< 40)& ((__uint64_t)0xff<< 48)) | ((x<< 56)))
+value|((((x)>> 56)& 0xff) |			\ 	(((x)>> 40)& 0xff00) | (((x)>> 24)& 0xff0000) |		\ 	(((x)>> 8)& 0xff000000) |					\ 	(((x)<< 8)& ((__uint64_t)0xff<< 32)) |			\ 	(((x)<< 24)& ((__uint64_t)0xff<< 40)) |			\ 	(((x)<< 40)& ((__uint64_t)0xff<< 48)) |			\ 	(((x)<< 56)& ((__uint64_t)0xff<< 56)))
 end_define
 
 begin_function
