@@ -145,6 +145,26 @@ name|devmtx
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|devfs_de_interlock
+decl_stmt|;
+end_decl_stmt
+
+begin_extern
+extern|extern TAILQ_HEAD(cdev_priv_list
+operator|,
+extern|cdev_priv
+end_extern
+
+begin_expr_stmt
+unit|)
+name|cdevp_list
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif
