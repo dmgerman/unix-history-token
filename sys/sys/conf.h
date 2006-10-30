@@ -300,6 +300,12 @@ name|clonedevs
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|vnode
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * Note: d_thread_t is provided as a transition aid for those drivers  * that treat struct proc/struct thread as an opaque data type and  * exist in substantially the same form in both 4.x and 5.x.  Writers  * of drivers that dips into the d_thread_t structure should use  * struct thread or struct proc as appropriate for the version of the  * OS they are using.  It is provided in lieu of each device driver  * inventing its own way of doing this.  While it does violate style(9)  * in a number of ways, this violation is deemed to be less  * important than the benefits that a uniform API between releases  * gives.  *  * Users of struct thread/struct proc that aren't device drivers should  * not use d_thread_t.  */
 end_comment
@@ -1023,6 +1029,26 @@ name|struct
 name|cdev
 modifier|*
 name|_dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|cdevsw
+modifier|*
+name|devvn_refthread
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+name|struct
+name|cdev
+modifier|*
+modifier|*
+name|devp
 parameter_list|)
 function_decl|;
 end_function_decl
