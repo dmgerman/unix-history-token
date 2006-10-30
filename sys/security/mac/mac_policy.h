@@ -47,6 +47,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|cdev
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|componentname
 struct_decl|;
 end_struct_decl
