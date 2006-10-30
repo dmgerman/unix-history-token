@@ -881,7 +881,8 @@ begin_function_decl
 name|void
 name|lapic_setup
 parameter_list|(
-name|void
+name|int
+name|boot
 parameter_list|)
 function_decl|;
 end_function_decl
