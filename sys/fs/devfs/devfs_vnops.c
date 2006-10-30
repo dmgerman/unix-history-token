@@ -4374,11 +4374,6 @@ argument_list|,
 name|ioflag
 argument_list|)
 expr_stmt|;
-name|dev_relthread
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|uio
@@ -4403,6 +4398,11 @@ operator|&
 name|dev
 operator|->
 name|si_atime
+argument_list|)
+expr_stmt|;
+name|dev_relthread
+argument_list|(
+name|dev
 argument_list|)
 expr_stmt|;
 if|if
@@ -6658,11 +6658,6 @@ argument_list|,
 name|ioflag
 argument_list|)
 expr_stmt|;
-name|dev_relthread
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|uio
@@ -6699,6 +6694,11 @@ operator|->
 name|si_ctime
 expr_stmt|;
 block|}
+name|dev_relthread
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
