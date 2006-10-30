@@ -1446,7 +1446,6 @@ parameter_list|,
 name|unsigned
 name|pct
 parameter_list|,
-specifier|const
 name|va_list
 name|ap
 parameter_list|)
