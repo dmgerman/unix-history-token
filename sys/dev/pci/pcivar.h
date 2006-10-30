@@ -102,47 +102,12 @@ begin_comment
 comment|/* max. no. of maps for CardBus bridge */
 end_comment
 
-begin_comment
-comment|/* pci_addr_t covers this system's PCI bus address space: 32 or 64 bit */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PCI_A64
-end_ifdef
-
 begin_typedef
 typedef|typedef
 name|uint64_t
 name|pci_addr_t
 typedef|;
 end_typedef
-
-begin_comment
-comment|/* uint64_t for system with 64bit addresses */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-name|uint32_t
-name|pci_addr_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* uint64_t for system with 64bit addresses */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Interesting values for PCI power management */
@@ -409,12 +374,6 @@ begin_comment
 comment|/* additional type 1 device config header information (PCI to PCI bridge) */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PCI_A64
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -438,44 +397,6 @@ name|l
 parameter_list|)
 value|((((pci_addr_t)(h)<< 32) + ((l)<<16)) | 0xfffff)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PCI_PPBMEMBASE
-parameter_list|(
-name|h
-parameter_list|,
-name|l
-parameter_list|)
-value|(((l)<<16)& ~0xfffff)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCI_PPBMEMLIMIT
-parameter_list|(
-name|h
-parameter_list|,
-name|l
-parameter_list|)
-value|(((l)<<16) | 0xfffff)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PCI_A64 */
-end_comment
 
 begin_define
 define|#
