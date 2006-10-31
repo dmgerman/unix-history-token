@@ -464,6 +464,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|ffs_sbupdate
+parameter_list|(
+name|struct
+name|ufsmount
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ffs_setblock
 parameter_list|(

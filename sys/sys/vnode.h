@@ -765,6 +765,17 @@ begin_comment
 comment|/* don't activate knotes on this vnode */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VV_DELETED
+value|0x0400
+end_define
+
+begin_comment
+comment|/* should be removed */
+end_comment
+
 begin_comment
 comment|/*  * Vnode attributes.  A field value of VNOVAL represents a field whose value  * is unavailable (getattr) or which is not to be changed (setattr).  */
 end_comment

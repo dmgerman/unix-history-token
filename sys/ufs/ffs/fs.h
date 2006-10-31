@@ -740,9 +740,13 @@ name|fs_maxbsize
 decl_stmt|;
 comment|/* maximum blocking factor permitted */
 name|int64_t
+name|fs_unrefs
+decl_stmt|;
+comment|/* number of unreferenced inodes */
+name|int64_t
 name|fs_sparecon64
 index|[
-literal|17
+literal|16
 index|]
 decl_stmt|;
 comment|/* old rotation block list head */
@@ -1059,6 +1063,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FS_GJOURNAL
+value|0x40
+end_define
+
+begin_comment
+comment|/* gjournaled file system */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FS_FLAGS_UPDATED
 value|0x80
 end_define
@@ -1282,9 +1297,13 @@ name|cg_initediblk
 decl_stmt|;
 comment|/* last initialized inode */
 name|int32_t
+name|cg_unrefs
+decl_stmt|;
+comment|/* number of unreferenced inodes */
+name|int32_t
 name|cg_sparecon32
 index|[
-literal|3
+literal|2
 index|]
 decl_stmt|;
 comment|/* reserved for future use */

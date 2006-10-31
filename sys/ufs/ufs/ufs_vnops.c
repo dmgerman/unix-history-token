@@ -254,6 +254,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UFS_GJOURNAL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/gjournal.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -4169,6 +4186,16 @@ goto|goto
 name|out
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|UFS_GJOURNAL
+name|ufs_gjournal_orphan
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|error
 operator|=
 name|ufs_dirremove
@@ -8091,6 +8118,16 @@ goto|goto
 name|out
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|UFS_GJOURNAL
+name|ufs_gjournal_orphan
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Delete reference to directory before purging 	 * inode.  If we crash in between, the directory 	 * will be reattached to lost+found, 	 */
 name|dp
 operator|->

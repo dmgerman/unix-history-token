@@ -124,6 +124,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UFS_GJOURNAL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/gjournal.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Last reference to an inode.  If necessary, write or delete it.  */
 end_comment
@@ -215,6 +232,16 @@ condition|)
 goto|goto
 name|out
 goto|;
+ifdef|#
+directive|ifdef
+name|UFS_GJOURNAL
+name|ufs_gjournal_close
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
