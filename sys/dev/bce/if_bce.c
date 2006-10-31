@@ -301,13 +301,13 @@ comment|/* BCM5708S controllers and OEM boards. */
 block|{
 name|BRCM_VENDORID
 block|,
-name|BRCM_DEVICEID_BCM5708
+name|BRCM_DEVICEID_BCM5708S
 block|,
 name|PCI_ANY_ID
 block|,
 name|PCI_ANY_ID
 block|,
-literal|"Broadcom NetXtreme II BCM5708 1000Base-T"
+literal|"Broadcom NetXtreme II BCM5708S 1000Base-T"
 block|}
 block|,
 block|{
