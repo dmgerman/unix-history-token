@@ -1564,6 +1564,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|g_io_flush
+parameter_list|(
+name|struct
+name|g_consumer
+modifier|*
+name|cp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|g_io_request
 parameter_list|(

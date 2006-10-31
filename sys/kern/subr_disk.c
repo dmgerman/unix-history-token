@@ -188,6 +188,15 @@ literal|"cmd=getattr "
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|BIO_FLUSH
+case|:
+name|printf
+argument_list|(
+literal|"cmd=flush "
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|printf
 argument_list|(

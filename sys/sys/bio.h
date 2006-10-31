@@ -253,6 +253,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BIO_FLUSH
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
 name|BIO_CMD0
 value|0x20
 end_define
