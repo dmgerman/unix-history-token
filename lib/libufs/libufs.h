@@ -270,6 +270,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|cgwrite1
+parameter_list|(
+name|struct
+name|uufsd
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * inode.c  */
 end_comment
