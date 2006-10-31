@@ -767,7 +767,7 @@ name|uint32_t
 name|next_avail_tx_desc
 decl_stmt|;
 name|uint32_t
-name|oldest_used_tx_desc
+name|next_tx_to_clean
 decl_stmt|;
 specifier|volatile
 name|uint16_t
@@ -962,6 +962,10 @@ begin_struct
 struct|struct
 name|em_buffer
 block|{
+name|int
+name|next_eop
+decl_stmt|;
+comment|/* Index of the desc to watch */
 name|struct
 name|mbuf
 modifier|*
