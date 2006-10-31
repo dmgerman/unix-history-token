@@ -1454,7 +1454,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|bread
+name|blread
 parameter_list|(
 name|int
 name|fd
@@ -1483,7 +1483,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|bwrite
+name|blwrite
 parameter_list|(
 name|int
 name|fd
@@ -2241,6 +2241,18 @@ parameter_list|(
 name|char
 modifier|*
 name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|gjournal_check
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|filesys
 parameter_list|)
 function_decl|;
 end_function_decl

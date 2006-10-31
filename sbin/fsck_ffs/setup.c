@@ -1227,7 +1227,7 @@ name|fs_bsize
 expr_stmt|;
 if|if
 condition|(
-name|bread
+name|blread
 argument_list|(
 name|fsreadfd
 argument_list|,
@@ -1601,7 +1601,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|bread
+name|blread
 argument_list|(
 name|fsreadfd
 argument_list|,
@@ -1711,7 +1711,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|bread
+name|blread
 argument_list|(
 name|fsreadfd
 argument_list|,

@@ -911,6 +911,14 @@ name|cg_old_time
 expr_stmt|;
 name|newcg
 operator|->
+name|cg_unrefs
+operator|=
+name|cg
+operator|->
+name|cg_unrefs
+expr_stmt|;
+name|newcg
+operator|->
 name|cg_cgx
 operator|=
 name|c

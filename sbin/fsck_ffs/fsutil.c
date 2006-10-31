@@ -1064,7 +1064,7 @@ name|bp
 operator|->
 name|b_errs
 operator|=
-name|bread
+name|blread
 argument_list|(
 name|fsreadfd
 argument_list|,
@@ -1184,7 +1184,7 @@ name|b_errs
 operator|=
 literal|0
 expr_stmt|;
-name|bwrite
+name|blwrite
 argument_list|(
 name|fd
 argument_list|,
@@ -1240,7 +1240,7 @@ name|j
 operator|++
 control|)
 block|{
-name|bwrite
+name|blwrite
 argument_list|(
 name|fswritefd
 argument_list|,
@@ -1849,7 +1849,7 @@ end_function
 
 begin_function
 name|int
-name|bread
+name|blread
 parameter_list|(
 name|int
 name|fd
@@ -2127,7 +2127,7 @@ end_function
 
 begin_function
 name|void
-name|bwrite
+name|blwrite
 parameter_list|(
 name|int
 name|fd

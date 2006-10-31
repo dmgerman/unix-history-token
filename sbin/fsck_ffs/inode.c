@@ -1874,11 +1874,11 @@ operator|+=
 name|fullcnt
 expr_stmt|;
 block|}
-comment|/* 		 * If bread returns an error, it will already have zeroed 		 * out the buffer, so we do not need to do so here. 		 */
+comment|/* 		 * If blread returns an error, it will already have zeroed 		 * out the buffer, so we do not need to do so here. 		 */
 operator|(
 name|void
 operator|)
-name|bread
+name|blread
 argument_list|(
 name|fsreadfd
 argument_list|,
