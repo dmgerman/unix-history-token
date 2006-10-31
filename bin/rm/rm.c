@@ -1697,6 +1697,9 @@ operator|->
 name|st_nlink
 operator|>
 literal|1
+operator|&&
+operator|!
+name|fflag
 condition|)
 block|{
 name|warnx
@@ -1712,7 +1715,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
