@@ -1163,6 +1163,9 @@ case|:
 case|case
 name|BIO_GETATTR
 case|:
+case|case
+name|BIO_FLUSH
+case|:
 break|break;
 case|case
 name|BIO_DELETE
@@ -1324,6 +1327,9 @@ expr_stmt|;
 break|break;
 case|case
 name|BIO_GETATTR
+case|:
+case|case
+name|BIO_FLUSH
 case|:
 name|cbp
 operator|->

@@ -1287,6 +1287,10 @@ name|length
 expr_stmt|;
 comment|/* now, pass it on downwards... */
 block|}
+comment|/* FALLTHROUGH */
+case|case
+name|BIO_FLUSH
+case|:
 name|bp2
 operator|=
 name|g_clone_bio
