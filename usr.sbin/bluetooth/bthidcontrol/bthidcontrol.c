@@ -158,6 +158,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|uint32_t
+name|verbose
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * bthidcontrol  */
 end_comment
@@ -210,7 +218,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:c:H:h"
+literal|"a:c:H:hv"
 argument_list|)
 operator|)
 operator|!=
@@ -306,6 +314,14 @@ comment|/* HIDs file */
 name|hids_file
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'v'
+case|:
+comment|/* verbose */
+name|verbose
+operator|++
 expr_stmt|;
 break|break;
 case|case
@@ -821,6 +837,8 @@ expr|\
 literal|"	-H file		specify path to the bthidd HIDs file\n"
 expr|\
 literal|"	-h		display usage and quit\n"
+expr|\
+literal|"	-v		be verbose\n"
 expr|\
 literal|"	command		one of the supported commands\n"
 argument_list|)

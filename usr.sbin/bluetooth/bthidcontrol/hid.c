@@ -57,6 +57,13 @@ directive|include
 file|"bthidcontrol.h"
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|verbose
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -563,6 +570,20 @@ modifier|*
 name|h
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|(
+name|h
+operator|->
+name|flags
+operator|&
+name|HIO_CONST
+operator|)
+operator|&&
+operator|!
+name|verbose
+condition|)
+return|return;
 name|fprintf
 argument_list|(
 name|stdout
