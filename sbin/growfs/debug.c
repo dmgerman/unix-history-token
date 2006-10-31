@@ -1095,6 +1095,17 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
+literal|"unrefs            int64_t          0x%08x\n"
+argument_list|,
+name|sb
+operator|->
+name|fs_unrefs
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
 literal|"sblockloc         int64_t          0x%08x%08x\n"
 argument_list|,
 operator|(
@@ -1971,6 +1982,17 @@ argument_list|,
 name|cgr
 operator|->
 name|cg_initediblk
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|dbg_log
+argument_list|,
+literal|"unrefs        int32_t    0x%08x\n"
+argument_list|,
+name|cgr
+operator|->
+name|cg_unrefs
 argument_list|)
 expr_stmt|;
 name|fprintf

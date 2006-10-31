@@ -730,7 +730,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"bpg\t%d\tfpg\t%d\tipg\t%d\n"
+literal|"bpg\t%d\tfpg\t%d\tipg\t%d\tunrefs\t%jd\n"
 argument_list|,
 name|afs
 operator|.
@@ -747,6 +747,13 @@ argument_list|,
 name|afs
 operator|.
 name|fs_ipg
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|afs
+operator|.
+name|fs_unrefs
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1132,6 +1139,17 @@ if|if
 condition|(
 name|fsflags
 operator|&
+name|FS_GJOURNAL
+condition|)
+name|printf
+argument_list|(
+literal|"gjournal "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fsflags
+operator|&
 name|FS_FLAGS_UPDATED
 condition|)
 name|printf
@@ -1154,6 +1172,8 @@ operator||
 name|FS_ACLS
 operator||
 name|FS_MULTILABEL
+operator||
+name|FS_GJOURNAL
 operator||
 name|FS_FLAGS_UPDATED
 operator|)
@@ -1525,7 +1545,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cgx\t%d\tndblk\t%d\tniblk\t%d\tinitiblk %d\n"
+literal|"cgx\t%d\tndblk\t%d\tniblk\t%d\tinitiblk %d\tunrefs %d\n"
 argument_list|,
 name|acg
 operator|.
@@ -1542,6 +1562,10 @@ argument_list|,
 name|acg
 operator|.
 name|cg_initediblk
+argument_list|,
+name|acg
+operator|.
+name|cg_unrefs
 argument_list|)
 expr_stmt|;
 break|break;
