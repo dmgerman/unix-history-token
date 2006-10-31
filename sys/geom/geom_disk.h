@@ -238,6 +238,13 @@ name|DISKFLAG_CANDELETE
 value|0x4
 end_define
 
+begin_define
+define|#
+directive|define
+name|DISKFLAG_CANFLUSHCACHE
+value|0x8
+end_define
+
 begin_function_decl
 name|struct
 name|disk
