@@ -600,14 +600,19 @@ name|int
 name|mnt_secondary_writes
 decl_stmt|;
 comment|/* (i) # of secondary writes */
-define|#
-directive|define
-name|mnt_endzero
-value|mnt_secondary_accwrites
 name|int
 name|mnt_secondary_accwrites
 decl_stmt|;
 comment|/* (i) secondary wr. starts */
+define|#
+directive|define
+name|mnt_endzero
+value|mnt_gjprovider
+name|char
+modifier|*
+name|mnt_gjprovider
+decl_stmt|;
+comment|/* gjournal provider name */
 block|}
 struct|;
 end_struct
@@ -886,6 +891,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MNT_GJOURNAL
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* GEOM journal support enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MNT_MULTILABEL
 value|0x04000000
 end_define
@@ -1075,7 +1091,7 @@ begin_define
 define|#
 directive|define
 name|MNT_VISFLAGMASK
-value|(MNT_RDONLY	| MNT_SYNCHRONOUS | MNT_NOEXEC	| \ 			MNT_NOSUID	| MNT_UNION	| \ 			MNT_ASYNC	| MNT_EXRDONLY	| MNT_EXPORTED	| \ 			MNT_DEFEXPORTED	| MNT_EXPORTANON| MNT_EXKERB	| \ 			MNT_LOCAL	| MNT_USER	| MNT_QUOTA	| \ 			MNT_ROOTFS	| MNT_NOATIME	| MNT_NOCLUSTERR| \ 			MNT_NOCLUSTERW	| MNT_SUIDDIR	| MNT_SOFTDEP	| \ 			MNT_IGNORE	| MNT_EXPUBLIC	| MNT_NOSYMFOLLOW | \ 			MNT_MULTILABEL	| MNT_ACLS)
+value|(MNT_RDONLY	| MNT_SYNCHRONOUS | MNT_NOEXEC	| \ 			MNT_NOSUID	| MNT_UNION	| \ 			MNT_ASYNC	| MNT_EXRDONLY	| MNT_EXPORTED	| \ 			MNT_DEFEXPORTED	| MNT_EXPORTANON| MNT_EXKERB	| \ 			MNT_LOCAL	| MNT_USER	| MNT_QUOTA	| \ 			MNT_ROOTFS	| MNT_NOATIME	| MNT_NOCLUSTERR| \ 			MNT_NOCLUSTERW	| MNT_SUIDDIR	| MNT_SOFTDEP	| \ 			MNT_IGNORE	| MNT_EXPUBLIC	| MNT_NOSYMFOLLOW | \ 			MNT_GJOURNAL	| MNT_MULTILABEL | MNT_ACLS)
 end_define
 
 begin_comment
@@ -1175,13 +1191,6 @@ define|#
 directive|define
 name|MNT_SPARE_0x00000010
 value|0x00000010
-end_define
-
-begin_define
-define|#
-directive|define
-name|MNT_SPARE_0x02000000
-value|0x02000000
 end_define
 
 begin_comment
