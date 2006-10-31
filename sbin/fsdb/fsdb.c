@@ -3406,7 +3406,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|bread
+name|blread
 argument_list|(
 name|fsreadfd
 argument_list|,
@@ -3658,7 +3658,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|bread
+name|blread
 argument_list|(
 name|fsreadfd
 argument_list|,
