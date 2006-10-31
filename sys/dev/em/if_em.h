@@ -99,7 +99,7 @@ value|64
 end_define
 
 begin_comment
-comment|/*  * EM_TADV - Transmit Absolute Interrupt Delay Value (Not valid for 82542/82543/82544)  * Valid Range: 0-65535 (0=off)  * Default Value: 64  *   This value, in units of 1.024 microseconds, limits the delay in which a  *   transmit interrupt is generated. Useful only if EM_TIDV is non-zero,  *   this value ensures that an interrupt is generated after the initial  *   packet is sent on the wire within the set amount of time.  Proper tuning,  *   along with EM_TIDV, may improve traffic throughput in specific  *   network conditions.  */
+comment|/*  * EM_TADV - Transmit Absolute Interrupt Delay Value  * (Not valid for 82542/82543/82544)  * Valid Range: 0-65535 (0=off)  * Default Value: 64  *   This value, in units of 1.024 microseconds, limits the delay in which a  *   transmit interrupt is generated. Useful only if EM_TIDV is non-zero,  *   this value ensures that an interrupt is generated after the initial  *   packet is sent on the wire within the set amount of time.  Proper tuning,  *   along with EM_TIDV, may improve traffic throughput in specific  *   network conditions.  */
 end_comment
 
 begin_define
@@ -110,7 +110,7 @@ value|64
 end_define
 
 begin_comment
-comment|/*  * EM_RDTR - Receive Interrupt Delay Timer (Packet Timer)  * Valid Range: 0-65535 (0=off)  * Default Value: 0  *   This value delays the generation of receive interrupts in units of 1.024  *   microseconds.  Receive interrupt reduction can improve CPU efficiency if  *   properly tuned for specific network traffic. Increasing this value adds  *   extra latency to frame reception and can end up decreasing the throughput  *   of TCP traffic. If the system is reporting dropped receives, this value  *   may be set too high, causing the driver to run out of available receive  *   descriptors.  *  *   CAUTION: When setting EM_RDTR to a value other than 0, adapters  *            may hang (stop transmitting) under certain network conditions.  *            If this occurs a WATCHDOG message is logged in the system event log.  *            In addition, the controller is automatically reset, restoring the  *            network connection. To eliminate the potential for the hang  *            ensure that EM_RDTR is set to 0.  */
+comment|/*  * EM_RDTR - Receive Interrupt Delay Timer (Packet Timer)  * Valid Range: 0-65535 (0=off)  * Default Value: 0  *   This value delays the generation of receive interrupts in units of 1.024  *   microseconds.  Receive interrupt reduction can improve CPU efficiency if  *   properly tuned for specific network traffic. Increasing this value adds  *   extra latency to frame reception and can end up decreasing the throughput  *   of TCP traffic. If the system is reporting dropped receives, this value  *   may be set too high, causing the driver to run out of available receive  *   descriptors.  *  *   CAUTION: When setting EM_RDTR to a value other than 0, adapters  *            may hang (stop transmitting) under certain network conditions.  *            If this occurs a WATCHDOG message is logged in the system  *            event log. In addition, the controller is automatically reset,  *            restoring the network connection. To eliminate the potential  *            for the hang ensure that EM_RDTR is set to 0.  */
 end_comment
 
 begin_define
@@ -308,6 +308,72 @@ end_define
 begin_comment
 comment|/* On PCI-E MACs only */
 end_comment
+
+begin_comment
+comment|/* PCI Config defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_BAR_TYPE
+parameter_list|(
+name|v
+parameter_list|)
+value|((v)& EM_BAR_TYPE_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_BAR_TYPE_MASK
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_BAR_TYPE_MMEM
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_BAR_TYPE_IO
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_BAR_MEM_TYPE
+parameter_list|(
+name|v
+parameter_list|)
+value|((v)& EM_BAR_MEM_TYPE_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_BAR_MEM_TYPE_MASK
+value|0x00000006
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_BAR_MEM_TYPE_32BIT
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_BAR_MEM_TYPE_64BIT
+value|0x00000004
+end_define
 
 begin_comment
 comment|/* Defines for printing debug information */
@@ -918,10 +984,10 @@ typedef|typedef
 struct|struct
 name|_ADDRESS_LENGTH_PAIR
 block|{
-name|u_int64_t
+name|uint64_t
 name|address
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|length
 decl_stmt|;
 block|}
@@ -943,7 +1009,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|elements
 decl_stmt|;
 block|}

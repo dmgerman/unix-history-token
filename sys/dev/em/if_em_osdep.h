@@ -568,7 +568,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_READ_ICH8_REG
+name|E1000_READ_ICH_FLASH_REG
 parameter_list|(
 name|hw
 parameter_list|,
@@ -581,7 +581,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_READ_ICH8_REG16
+name|E1000_READ_ICH_FLASH_REG16
 parameter_list|(
 name|hw
 parameter_list|,
@@ -594,7 +594,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_WRITE_ICH8_REG
+name|E1000_WRITE_ICH_FLASH_REG
 parameter_list|(
 name|hw
 parameter_list|,
@@ -609,7 +609,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_WRITE_ICH8_REG16
+name|E1000_WRITE_ICH_FLASH_REG16
 parameter_list|(
 name|hw
 parameter_list|,
