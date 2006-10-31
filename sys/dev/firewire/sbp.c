@@ -9339,13 +9339,37 @@ argument|; 		strncpy(cpi->sim_vid,
 literal|"FreeBSD"
 argument|, SIM_IDLEN); 		strncpy(cpi->hba_vid,
 literal|"SBP"
-argument|, HBA_IDLEN); 		strncpy(cpi->dev_name, sim->sim_name, DEV_IDLEN); 		cpi->unit_number = sim->unit_number;  		cpi->ccb_h.status = CAM_REQ_CMP; 		xpt_done(ccb); 		break; 	} 	case XPT_GET_TRAN_SETTINGS: 	{ 		struct ccb_trans_settings *cts =&ccb->cts; SBP_DEBUG(
+argument|, HBA_IDLEN); 		strncpy(cpi->dev_name, sim->sim_name, DEV_IDLEN); 		cpi->unit_number = sim->unit_number;
+ifdef|#
+directive|ifdef
+name|CAM_NEW_TRAN_CODE
+argument|cpi->transport = XPORT_SPI;
+comment|/* XX should have a FireWire */
+argument|cpi->transport_version =
+literal|2
+argument|;                 cpi->protocol = PROTO_SCSI;                 cpi->protocol_version = SCSI_REV_2;
+endif|#
+directive|endif
+argument|cpi->ccb_h.status = CAM_REQ_CMP; 		xpt_done(ccb); 		break; 	} 	case XPT_GET_TRAN_SETTINGS: 	{ 		struct ccb_trans_settings *cts =&ccb->cts;
+ifdef|#
+directive|ifdef
+name|CAM_NEW_TRAN_CODE
+argument|struct ccb_trans_settings_scsi *scsi =&cts->proto_specific.scsi; 		struct ccb_trans_settings_spi *spi =&cts->xport_specific.spi;  		cts->protocol = PROTO_SCSI; 		cts->protocol_version = SCSI_REV_2; 		cts->transport = XPORT_SPI;
+comment|/* should have a FireWire */
+argument|cts->transport_version =
+literal|2
+argument|; 		spi->valid = CTS_SPI_VALID_DISC; 		spi->flags = CTS_SPI_FLAGS_DISC_ENB; 		scsi->valid = CTS_SCSI_VALID_TQ; 		scsi->flags = CTS_SCSI_FLAGS_TAG_ENB;
+else|#
+directive|else
+comment|/* Enable disconnect and tagged queuing */
+argument|cts->valid = CCB_TRANS_DISC_VALID | CCB_TRANS_TQ_VALID; 		cts->flags = CCB_TRANS_DISC_ENB | CCB_TRANS_TAG_ENB;
+endif|#
+directive|endif
+argument|SBP_DEBUG(
 literal|1
 argument|) 		printf(
 literal|"%s:%d:%d XPT_GET_TRAN_SETTINGS:.\n"
-argument|, 			device_get_nameunit(sbp->fd.dev), 			ccb->ccb_h.target_id, ccb->ccb_h.target_lun); END_DEBUG
-comment|/* Enable disconnect and tagged queuing */
-argument|cts->valid = CCB_TRANS_DISC_VALID | CCB_TRANS_TQ_VALID; 		cts->flags = CCB_TRANS_DISC_ENB | CCB_TRANS_TAG_ENB;  		cts->ccb_h.status = CAM_REQ_CMP; 		xpt_done(ccb); 		break; 	} 	case XPT_ABORT: 		ccb->ccb_h.status = CAM_UA_ABORT; 		xpt_done(ccb); 		break; 	case XPT_SET_TRAN_SETTINGS:
+argument|, 			device_get_nameunit(sbp->fd.dev), 			ccb->ccb_h.target_id, ccb->ccb_h.target_lun); END_DEBUG 		cts->ccb_h.status = CAM_REQ_CMP; 		xpt_done(ccb); 		break; 	} 	case XPT_ABORT: 		ccb->ccb_h.status = CAM_UA_ABORT; 		xpt_done(ccb); 		break; 	case XPT_SET_TRAN_SETTINGS:
 comment|/* XXX */
 argument|default: 		ccb->ccb_h.status = CAM_REQ_INVALID; 		xpt_done(ccb); 		break; 	} 	return; }  static void sbp_action(struct cam_sim *sim, union ccb *ccb) { 	int s;  	s = splfw(); 	sbp_action1(sim, ccb); 	splx(s); }  static void sbp_execute_ocb(void *arg,  bus_dma_segment_t *segments, int seg, int error) { 	int i; 	struct sbp_ocb *ocb; 	struct sbp_ocb *prev; 	bus_dma_segment_t *s;  	if (error) 		printf(
 literal|"sbp_execute_ocb: error=%d\n"

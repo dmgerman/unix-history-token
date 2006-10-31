@@ -15295,12 +15295,6 @@ name|flags
 operator||=
 name|CTS_SCSI_FLAGS_TAG_ENB
 expr_stmt|;
-name|spi
-operator|->
-name|flags
-operator||=
-name|CTS_SPI_FLAGS_TAG_ENB
-expr_stmt|;
 block|}
 if|if
 condition|(
