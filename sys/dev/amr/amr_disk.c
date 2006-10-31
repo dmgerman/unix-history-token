@@ -854,7 +854,7 @@ name|amrd_disk
 operator|->
 name|d_flags
 operator|=
-literal|0
+name|DISKFLAG_CANFLUSHCACHE
 expr_stmt|;
 name|sc
 operator|->
