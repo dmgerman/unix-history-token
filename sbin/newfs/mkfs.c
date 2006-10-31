@@ -579,6 +579,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|Jflag
+condition|)
+name|sblock
+operator|.
+name|fs_flags
+operator||=
+name|FS_GJOURNAL
+expr_stmt|;
+if|if
+condition|(
 name|lflag
 condition|)
 name|sblock

@@ -320,6 +320,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|Jflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* enable gjournal for file system */
+end_comment
+
+begin_decl_stmt
+name|int
 name|lflag
 decl_stmt|;
 end_decl_stmt
@@ -643,7 +653,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"EL:NO:RS:T:Ua:b:c:d:e:f:g:h:i:lm:no:s:"
+literal|"EJL:NO:RS:T:Ua:b:c:d:e:f:g:h:i:lm:no:s:"
 argument_list|)
 operator|)
 operator|!=
@@ -660,6 +670,14 @@ literal|'E'
 case|:
 name|Eflag
 operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'J'
+case|:
+name|Jflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case

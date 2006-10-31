@@ -82,6 +82,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|Jflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* enable gjournal for file system */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|lflag
 decl_stmt|;
 end_decl_stmt
