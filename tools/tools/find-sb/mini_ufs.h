@@ -449,9 +449,13 @@ name|fs_maxbsize
 decl_stmt|;
 comment|/* maximum blocking factor permitted */
 name|int64_t
+name|fs_unrefs
+decl_stmt|;
+comment|/* number of unreferenced inodes */
+name|int64_t
 name|fs_sparecon64
 index|[
-literal|17
+literal|16
 index|]
 decl_stmt|;
 comment|/* old rotation block list head */
