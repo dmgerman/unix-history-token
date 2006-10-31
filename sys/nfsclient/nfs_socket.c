@@ -2871,7 +2871,7 @@ name|r_mtx
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Handle any recoverable (soft) socket errors here. (?) 		 */
+comment|/* 		 * Handle any recoverable (soft) socket errors here. (?) 		 * Make EWOULDBLOCK a recoverable error, we'll rexmit from nfs_timer(). 		 */
 if|if
 condition|(
 name|error
@@ -2885,10 +2885,6 @@ operator|&&
 name|error
 operator|!=
 name|EIO
-operator|&&
-name|error
-operator|!=
-name|EWOULDBLOCK
 operator|&&
 name|error
 operator|!=
