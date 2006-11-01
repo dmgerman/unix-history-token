@@ -345,6 +345,50 @@ begin_comment
 comment|/* get member STP params list 					 * (ifbpstpconf) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|BRDGSPROTO
+value|28
+end_define
+
+begin_comment
+comment|/* set protocol (ifbrparam) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BRDGSTXHC
+value|29
+end_define
+
+begin_comment
+comment|/* set tx hold count (ifbrparam) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BRDGSEDGE
+value|30
+end_define
+
+begin_comment
+comment|/* set edge status (ifbreq) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BRDGSAEDGE
+value|31
+end_define
+
+begin_comment
+comment|/* set autoedge status (ifbreq) */
+end_comment
+
 begin_comment
 comment|/*  * Generic bridge control request.  */
 end_comment
@@ -364,15 +408,23 @@ name|uint32_t
 name|ifbr_ifsflags
 decl_stmt|;
 comment|/* member if flags */
-name|uint8_t
-name|ifbr_state
+name|uint32_t
+name|ifbr_stpflags
 decl_stmt|;
-comment|/* member if STP state */
+comment|/* member if STP flags */
 name|uint8_t
-name|ifbr_priority
+name|ifbr_edge
 decl_stmt|;
-comment|/* member if STP priority */
+comment|/* member if STP edge */
 name|uint8_t
+name|ifbr_autoedge
+decl_stmt|;
+comment|/* member if STP autoedge */
+name|uint8_t
+name|ifbr_p2p
+decl_stmt|;
+comment|/* member if STP p2p */
+name|uint32_t
 name|ifbr_path_cost
 decl_stmt|;
 comment|/* member if STP cost */
@@ -380,6 +432,22 @@ name|uint8_t
 name|ifbr_portno
 decl_stmt|;
 comment|/* member if port number */
+name|uint8_t
+name|ifbr_priority
+decl_stmt|;
+comment|/* member if STP priority */
+name|uint8_t
+name|ifbr_proto
+decl_stmt|;
+comment|/* member if STP protocol */
+name|uint8_t
+name|ifbr_role
+decl_stmt|;
+comment|/* member if STP role */
+name|uint8_t
+name|ifbr_state
+decl_stmt|;
+comment|/* member if STP state */
 block|}
 struct|;
 end_struct
@@ -676,6 +744,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ifbrp_proto
+value|ifbrp_ifbrpu.ifbrpu_int8
+end_define
+
+begin_comment
+comment|/* bridge protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ifbrp_txhc
+value|ifbrp_ifbrpu.ifbrpu_int8
+end_define
+
+begin_comment
+comment|/* bpdu tx holdcount */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ifbrp_hellotime
 value|ifbrp_ifbrpu.ifbrpu_int8
 end_define
@@ -726,6 +816,9 @@ struct|struct
 name|ifbropreq
 block|{
 name|uint8_t
+name|ifbop_holdcount
+decl_stmt|;
+name|uint8_t
 name|ifbop_maxage
 decl_stmt|;
 name|uint8_t
@@ -733,6 +826,12 @@ name|ifbop_hellotime
 decl_stmt|;
 name|uint8_t
 name|ifbop_fwddelay
+decl_stmt|;
+name|uint8_t
+name|ifbop_protocol
+decl_stmt|;
+name|uint16_t
+name|ifbop_priority
 decl_stmt|;
 name|uint16_t
 name|ifbop_root_port
