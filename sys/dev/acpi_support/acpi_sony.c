@@ -200,7 +200,7 @@ literal|"GCDP"
 block|,
 literal|"CDPW"
 block|,
-literal|"??????"
+literal|"CD Power"
 block|}
 block|,
 comment|/*shares [\GL03]&0x8 flag*/
