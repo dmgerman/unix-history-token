@@ -6995,6 +6995,10 @@ name|offset
 expr_stmt|;
 comment|/* FALLTHROUGH */
 block|}
+comment|/* FALLTHROUGH */
+case|case
+name|BIO_FLUSH
+case|:
 name|bp2
 operator|=
 name|g_clone_bio
