@@ -5177,11 +5177,6 @@ name|n
 argument_list|)
 expr_stmt|;
 block|}
-name|sbuf_delete
-argument_list|(
-name|sb
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|n
