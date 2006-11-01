@@ -42,14 +42,14 @@ value|"GEOM::MIRROR"
 end_define
 
 begin_comment
-comment|/*  * Version history:  * 0 - Initial version number.  * 1 - Added 'prefer' balance algorithm.  * 2 - Added md_genid field to metadata.  * 3 - Added md_provsize field to metadata.  */
+comment|/*  * Version history:  * 0 - Initial version number.  * 1 - Added 'prefer' balance algorithm.  * 2 - Added md_genid field to metadata.  * 3 - Added md_provsize field to metadata.  * 4 - Added 'no failure synchronization' flag.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|G_MIRROR_VERSION
-value|3
+value|4
 end_define
 
 begin_define
@@ -160,8 +160,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|G_MIRROR_DEVICE_FLAG_NOFAILSYNC
+value|0x0000000000000002ULL
+end_define
+
+begin_define
+define|#
+directive|define
 name|G_MIRROR_DEVICE_FLAG_MASK
-value|(G_MIRROR_DEVICE_FLAG_NOAUTOSYNC)
+value|(G_MIRROR_DEVICE_FLAG_NOAUTOSYNC | \ 					 G_MIRROR_DEVICE_FLAG_NOFAILSYNC)
 end_define
 
 begin_ifdef
@@ -1706,7 +1713,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|mirror_metadata_decode_v3
+name|mirror_metadata_decode_v3v4
 parameter_list|(
 specifier|const
 name|u_char
@@ -2052,9 +2059,12 @@ break|break;
 case|case
 literal|3
 case|:
+case|case
+literal|4
+case|:
 name|error
 operator|=
-name|mirror_metadata_decode_v3
+name|mirror_metadata_decode_v3v4
 argument_list|(
 name|data
 argument_list|,
@@ -2475,6 +2485,23 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+if|if
+condition|(
+operator|(
+name|md
+operator|->
+name|md_mflags
+operator|&
+name|G_MIRROR_DEVICE_FLAG_NOFAILSYNC
+operator|)
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|" NOFAILSYNC"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
