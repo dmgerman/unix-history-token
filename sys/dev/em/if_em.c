@@ -12232,15 +12232,6 @@ modifier|*
 name|adapter
 parameter_list|)
 block|{
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|adapter
-operator|->
-name|ifp
-decl_stmt|;
 name|device_t
 name|dev
 init|=
