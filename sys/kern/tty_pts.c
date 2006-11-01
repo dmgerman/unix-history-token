@@ -753,6 +753,9 @@ name|NULL
 operator|)
 return|;
 block|}
+name|nb_allocated
+operator|++
+expr_stmt|;
 name|pt
 operator|=
 name|LIST_FIRST
@@ -856,9 +859,6 @@ name|ttyalloc
 argument_list|()
 expr_stmt|;
 block|}
-name|nb_allocated
-operator|++
-expr_stmt|;
 return|return
 operator|(
 name|pt
