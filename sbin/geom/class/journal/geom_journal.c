@@ -576,6 +576,11 @@ argument_list|,
 literal|"nargs"
 argument_list|)
 expr_stmt|;
+name|str
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* gcc */
 name|strlcpy
 argument_list|(
 name|md
