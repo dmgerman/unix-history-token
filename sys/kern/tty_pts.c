@@ -466,7 +466,7 @@ value|((c& 0xff) | ((c& ~0xff)<< 16))
 end_define
 
 begin_comment
-comment|/*-  * Once a tty is allocated, it cannot (currently) be freed.  As such,  * we keep a global list of ptys that have been used so we can recycle  * them.  An another list is provided for released pts, whiiich are   * not currently allocated, permitting reuse.  pt_flags holds state  * associated with a particular session, so isn't overloaded for this.  * When a pty descriptor is unused, its number is set to -1 giving  * more consistent and traditional allocation orders to pty numbers.  *  * Locking: (p) indicates that the field is locked by the global pt_mtx.  * (c) indicates the value is constant after allocation.   Other fields  * await tty locking generally, and are protected by Giant.  */
+comment|/*-  * Once a tty is allocated, it cannot (currently) be freed.  As such,  * we keep a global list of ptys that have been used so we can recycle  * them.  Another list is provided for released pts, which are   * not currently allocated, permitting reuse.  pt_flags holds state  * associated with a particular session, so isn't overloaded for this.  * When a pty descriptor is unused, its number is set to -1 giving  * more consistent and traditional allocation orders to pty numbers.  *  * Locking: (p) indicates that the field is locked by the global pt_mtx.  * (c) indicates the value is constant after allocation.   Other fields  * await tty locking generally, and are protected by Giant.  */
 end_comment
 
 begin_struct
