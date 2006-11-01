@@ -286,7 +286,7 @@ literal|"force"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 name|G_OPT_SENTINEL
@@ -372,7 +372,7 @@ literal|"force"
 block|,
 name|NULL
 block|,
-name|G_TYPE_NONE
+name|G_TYPE_BOOL
 block|}
 block|,
 name|G_OPT_SENTINEL
