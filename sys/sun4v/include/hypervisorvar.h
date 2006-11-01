@@ -58,6 +58,13 @@ name|MMU_UNMAP_ADDR
 value|0x84
 end_define
 
+begin_define
+define|#
+directive|define
+name|TTRACE_ADDENTRY
+value|0x85
+end_define
+
 begin_comment
 comment|/*  * Error returns in %o0.  * (Additional result is returned in %o1.)  */
 end_comment
