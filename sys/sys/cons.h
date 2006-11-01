@@ -388,6 +388,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|cnputs
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|cnunavailable
 parameter_list|(
