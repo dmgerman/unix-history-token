@@ -1558,6 +1558,9 @@ case|:
 case|case
 name|BIO_WRITE
 case|:
+case|case
+name|BIO_FLUSH
+case|:
 comment|/* 		 * Only those requests are supported. 		 */
 break|break;
 case|case
