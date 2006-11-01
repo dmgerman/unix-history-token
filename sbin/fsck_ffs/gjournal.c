@@ -3165,6 +3165,10 @@ name|ufs2_dinode
 modifier|*
 name|dino
 decl_stmt|;
+name|void
+modifier|*
+name|p
+decl_stmt|;
 name|struct
 name|cgchain
 modifier|*
@@ -3383,13 +3387,8 @@ name|getino
 argument_list|(
 name|disk
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|*
-operator|)
 operator|&
-name|dino
+name|p
 argument_list|,
 name|ino
 argument_list|,
@@ -3410,6 +3409,10 @@ name|cg
 argument_list|,
 name|ino
 argument_list|)
+expr_stmt|;
+name|dino
+operator|=
+name|p
 expr_stmt|;
 comment|/* Not a regular file nor directory? Skip it. */
 if|if
