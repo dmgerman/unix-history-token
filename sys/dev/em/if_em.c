@@ -5272,7 +5272,6 @@ name|if_hwassist
 operator|=
 name|EM_CHECKSUM_FEATURES
 expr_stmt|;
-comment|/* 		 * em_setup_transmit_structures() will behave differently 		 * based on the state of TSO. 		 */
 if|if
 condition|(
 name|ifp
@@ -12283,11 +12282,25 @@ expr_stmt|;
 comment|/* Overrides for TSO - want large sizes */
 if|if
 condition|(
-name|ifp
+operator|(
+name|adapter
 operator|->
-name|if_hwassist
-operator|&
-name|EM_TCPSEG_FEATURES
+name|hw
+operator|.
+name|mac_type
+operator|>
+name|em_82544
+operator|)
+operator|&&
+operator|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac_type
+operator|!=
+name|em_82547
+operator|)
 condition|)
 block|{
 name|size
